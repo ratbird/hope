@@ -130,13 +130,14 @@
 	<? endforeach; ?>
 </table>
 </div>
-<? elseif (isset($vorname) || isset($nachname)): ?>
-<p>
-	<b><?=_("Es wurde niemand gefunden!")?></b>
-</p>
-<? endif; ?>
+<? elseif (isset($vorname) || isset($nachname)):
+		if($vorname != "" || $nachname != "") {
+			echo MessageBox::info(_("Es wurde niemand gefunden!"));
+		} elseif ($vorname == "" && $nachname == "") {
+			echo MessageBox::error(_("Bitte einen Vor- oder Nachnamen eingeben!"));
+		}
+endif;
 
-<?php
 $infobox = array(
 	'picture' => 'board2.jpg',
 	'content' => array(

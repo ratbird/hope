@@ -151,8 +151,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
 			}
 			echo ELearningUtils::getHeader(_("Suche"));
 			if ( ( strlen( trim($search_key) ) > 2 ) AND ($searchresult_content_modules == false))
-			echo "<br>\n<b><font size=\"-1\">&nbsp;" . sprintf( _("Es gibt im System %s zu diesem Suchbegriff keine Content-Module."),  $connected_cms[$cms_select]->getName()) . "</font></b>";
-			echo "<br>\n";
+			echo MessageBox::info(sprintf( _("Es gibt im System %s zu diesem Suchbegriff keine Content-Module."),  $connected_cms[$cms_select]->getName()));
 			echo ELearningUtils::getCMSFooter($connected_cms[$cms_select]->getLogo());
 		}
 

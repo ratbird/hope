@@ -566,7 +566,7 @@ if ($archiv_data["perform_search"]) {
 		}
 		echo "</table><br><br>";
 	} else {
-		echo "<tr><td class=\"blank\" colspan=2><blockquote><font size=\"-1\"><b>" . (($string_too_short) ? _("Der Suchbegriff ist zu kurz.") : _("Es wurde keine Veranstaltung gefunden.")) . "</b></font></blockquote>";
+		echo "<tr><td class=\"blank\" colspan=2>" . (($string_too_short) ? MessageBox::error(_("Der Suchbegriff ist zu kurz.")) : MessageBox::info(_("Es wurde keine Veranstaltung gefunden.")));
   }
 }
 

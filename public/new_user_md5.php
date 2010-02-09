@@ -934,7 +934,7 @@ if (isset($_GET['details']) || $showform ) {
 		if ($db->num_rows() == 0) { // kein Suchergebnis
 			print "<table border=0 bgcolor=\"#eeeeee\" align=\"center\" cellspacing=0 cellpadding=2 width=\"80%\">";
 			print "<tr valign=\"top\" align=\"middle\">";
-			print "<td>" . _("Es wurden keine Personen gefunden, auf die die obigen Kriterien zutreffen.") . "</td>";
+			print "<td>" . MessageBox::info(_("Es wurden keine Personen gefunden, auf die die obigen Kriterien zutreffen.")) . "</td>";
 			print "</tr><tr><td class=\"blank\">&nbsp;</td></tr></table>";
 
 		} else { // wir haben ein Suchergebnis

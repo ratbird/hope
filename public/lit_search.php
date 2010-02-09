@@ -67,8 +67,12 @@ if ($_the_search->outer_form->isClicked("search")
 	&& !$_the_search->outer_form->isChanged("search_plugin") //scheiss IE
 	)){
 	$hits = $_the_search->doSearch();
-	if(!$_the_search->search_plugin->getNumError()){
-		$_msg .= "msg§" . sprintf(_("Ihre Suche ergab %s Treffer."), $_the_search->getNumHits()) . "§";
+	if(!$_the_search->search_plugin->getNumError()) {
+		if($_the_search->getNumHits() == 0) {
+			$_msg .= "info§" . sprintf(_("Ihre Suche ergab %s Treffer."), $_the_search->getNumHits()) . "§";
+		} else {
+			$_msg .= "msg§" . sprintf(_("Ihre Suche ergab %s Treffer."), $_the_search->getNumHits()) . "§";
+		}
 	}
 	$_the_search->start_result = 1;
 }

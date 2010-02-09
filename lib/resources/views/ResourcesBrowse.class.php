@@ -451,8 +451,7 @@ class ResourcesBrowse {
 			<td <? echo ($this->mode == "browse") ? " colspan=\"2\"" : "" ?>>
 				<?$result_count=$this->list->showListObjects($this->open_object);
 		if (!$result_count) {
-			?>
-				<font size=-1><b><?=_("Es existieren keine Eintr&auml;ge auf dieser Ebene.")?></b></font>
+			echo MessageBox::info(_("Es existieren keine Eintr&auml;ge auf dieser Ebene.")); ?>
 			</td>
 		</tr>
 			<?
@@ -466,8 +465,7 @@ class ResourcesBrowse {
 			<td <? echo ($this->mode == "browse") ? " colspan=\"2\"" : "" ?>>
 				<?$result_count=$this->list->showSearchList($this->searchArray, $check_assigns);
 		if (!$result_count) {
-			?>
-				<font size=-1><b><?=_("Es wurden keine Eintr&auml;ge zu Ihren Suchkriterien gefunden.")?></b></font>
+			echo MessageBox::info(_("Es wurden keine Eintr&auml;ge zu Ihren Suchkriterien gefunden.")); ?>
 			</td>
 		</tr>
 			<?

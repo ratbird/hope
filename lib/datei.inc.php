@@ -1495,12 +1495,13 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
 	//Workaround for older data from previous versions (chdate is 0)
 	print " ".date("d.m.Y - H:i", (($datei["chdate"]) ? $datei["chdate"] : $datei["mkdate"]));
 	
-	if (($all) && (!$upload) && ($datei["url"]=="")) {
-		$box = sprintf ("<input type=\"CHECKBOX\" %s name=\"download_ids[]\" value=\"%s\">",($check_all) ? "checked" : "" , $datei["dokument_id"]);
-		print $box;
-	} else {
-		if ($all)
-			print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	if ($all) {
+	  if ((!$upload) && ($datei["url"]=="") && check_protected_download($datei["dokument_id"])) {
+	  	$box = sprintf ("<input type=\"CHECKBOX\" %s name=\"download_ids[]\" value=\"%s\">",($check_all) ? "checked" : "" , $datei["dokument_id"]);
+	  	print $box;
+	  } else {
+  		print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+  	}
 	}
 	print "</td></tr>";
 	

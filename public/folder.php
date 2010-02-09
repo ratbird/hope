@@ -177,10 +177,10 @@ if (($_REQUEST["copyintofolder"]) && ($_REQUEST["copyfile"])) {
 	die();
 }
 
-if ($folderzip) {
-	$zip_file_id = createFolderZip($folderzip, true, true);
+if ($_REQUEST['folderzip']) {
+	$zip_file_id = createFolderZip($_REQUEST['folderzip'], true, true);
 	if($zip_file_id){
-		$query = sprintf ("SELECT name FROM folder WHERE folder_id = '%s'", $folderzip);
+		$query = sprintf ("SELECT name FROM folder WHERE folder_id = '%s'", $_REQUEST['folderzip']);
 		$result = $db->query($query)->fetch();
 		$zip_name = prepareFilename(_("Dateiordner").'_'.$result['name'].'.zip');
 		header('Location: ' . getDownloadLink( $zip_file_id, $zip_name, 4));
@@ -189,19 +189,20 @@ if ($folderzip) {
 	}
 }
 
-if ($zipnewest) {
+if ($_REQUEST['zipnewest']) {
 	//Abfrage der neuen Dateien
 	$folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 	$download_ids = $db->query("SELECT * " .
 			"FROM dokumente " .
 			"WHERE seminar_id = '$SessionSeminar' " .
 			"AND user_id != '".$user->id."' " .
-			"AND ( chdate > '".(($zipnewest) ? $zipnewest : time())."' " .
-					"OR mkdate > '".(($zipnewest) ? $zipnewest : time())."')")->fetchAll();
+			"AND ( chdate > '".(($_REQUEST['zipnewest']) ? $_REQUEST['zipnewest'] : time())."' " .
+					"OR mkdate > '".(($_REQUEST['zipnewest']) ? $_REQUEST['zipnewest'] : time())."')")->fetchAll();
 	foreach($download_ids as $key => $dl_id) {
-		if ($folder_tree->isReadable($dl_id['range_id'], $user->id))
+		if ($folder_tree->isReadable($dl_id['range_id'], $user->id) 
+		    && check_protected_download($dl_id['dokument_id']) && $dl_id['url'] == "") {
 			$download_ids[$key] = $dl_id['dokument_id'];
-		else {
+		} else {
 			unset($download_ids[$key]);
 		}
 	}

@@ -153,4 +153,3 @@ class PluginRepository
         return $result;
     }
 }
-?>

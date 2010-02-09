@@ -38,6 +38,14 @@
 <?
 $infobox_content = array(
     array(
+        'kategorie' => _('Aktionen:'),
+        'eintrag'   => array(
+            array(
+                'icon' => 'link_intern.gif',
+                'text' => '<a href="'.$controller->url_for('plugin_admin').'">'._('Verwaltung von Plugins').'</a>'
+            )
+        )
+    ), array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(

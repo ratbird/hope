@@ -511,5 +511,3 @@ class PluginManager
         return $plugins;
     }
 }
-
-?>

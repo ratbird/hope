@@ -165,6 +165,8 @@ class RoleAdminController extends AuthenticatedController
      */
     public function assign_role_action($userid = NULL)
     {
+        $usersel = Request::option('usersel', $userid);
+
         // user search was started
         if (Request::submitted('search')) {
             $username = Request::get('username');
@@ -172,29 +174,23 @@ class RoleAdminController extends AuthenticatedController
             if ($username == '') {
                 $this->error = _('Es wurde kein Suchwort eingegeben.');
             } else {
-                $users = $this->search_user($username);
+                $this->users = $this->search_user($username);
 
-                if (empty($users)) {
+                if (empty($this->users)) {
                     $this->error = _('Es wurde kein Benutzer gefunden.');
+                    $this->username = $username;
                 }
             }
         }
 
         // a user was selected
-        if (!Request::submitted('reset')) {
-            $usersel = Request::option('usersel', $userid);
-
-            if (isset($usersel)) {
-                $users[$usersel] = new StudIPUser($usersel);
-                $this->currentuser = $users[$usersel];
-                $this->assignedroles = $this->currentuser->getAssignedRoles();
-                $this->all_userroles = $this->currentuser->getAssignedRoles(true);
-            }
+        if (isset($usersel)) {
+            $this->users[$usersel] = new StudIPUser($usersel);
+            $this->currentuser = $this->users[$usersel];
+            $this->assignedroles = $this->currentuser->getAssignedRoles();
+            $this->all_userroles = $this->currentuser->getAssignedRoles(true);
+            $this->roles = RolePersistence::getAllRoles();
         }
-
-        $this->users = $users;
-        $this->username = $username;
-        $this->roles = RolePersistence::getAllRoles();
     }
 
     /**
@@ -316,4 +312,3 @@ class RoleAdminController extends AuthenticatedController
         }
     }
 }
-?>

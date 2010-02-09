@@ -19,7 +19,9 @@
         <? endforeach ?>
         </select>
         <?= makeButton('auswaehlen', 'input', _('Benutzer auswählen'), 'select') ?>
-        <?= makeButton('zuruecksetzen', 'input', _('Suche zurücksetzen'), 'reset') ?>
+        <a href="<?= $controller->url_for('role_admin/assign_role') ?>">
+            <?= makeButton('zuruecksetzen', 'img', _('Suche zurücksetzen')) ?>
+        </a>
     <? endif ?>
 </form>
 

@@ -1,5 +1,4 @@
 <?php
-// vim: noexpandtab
 /*
  * plugin_administration.php - plugin administration model class
  *

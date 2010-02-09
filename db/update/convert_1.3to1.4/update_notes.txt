@@ -1,0 +1,56 @@
+Update Notes
+============
+
+Ursprungsversion: 1.3
+Updateversion 1.4
+
+1. Ablauf
+---------
+
+Zunächst werden Datenbank und Webserver heruntergefahren. Anschließend wird ein Backup der Datenbank und aller Scripte im vorliegenden 
+Zustand vorgenommen. Die neue Version wird über die alte vorhandene Version installiert - auf diese Weise bleiben die Konfigurationsdateien 
+local.inc und config.inc.php erhalten. Weitere eigene Scripte, die nur auf diesem Server zum Einsatz kommen, bleiben ebenfalls erhalten.
+Aktualisiert werden muss das Stud.IP-Webroot und das Verzeichnis der PHP-Lib.
+
+Anpassung der Konfigurationsdateien:
+
+Die Konfigurationsdateien local.inc im Verzeichnis der php-lib und die config.inc im Stud.IP-Root Verzeichnis müssen mit dem aktuellen
+Stand der entsprechenden Distributionsversionen abgeglichen werden. Dabei können die alten Konfigurationsdateien als Ausgangszustand 
+genommen werden und neu hinzugekommene Werte ergänzt (und nach eigenen Wünschen angepasst) sowie alte Einträge entfernt werden. 
+Je nach Umfang der eigenen Anpassungen kann natürlich auch die aktuelle Distributionsversion eingespielt werden und alte Einträge wieder 
+gesetzt werden. Dabei muss jedoch sehr genau darauf geachtet werden, dass keine Inkonsitenzen zwischen der alten und der neuen Version 
+auftreten.
+Es empfielt sich, den Abgleich der neuen Distributionsversionen und der eigenen Datei mit einem Differ vorzunehmen.
+
+Datenbankupdate:
+
+Das Datenbankupdate erfolgt in der Reihenfolge, wie sie in der Datei migration_1.2_to_1.3.sql angegeben ist.
+Konvertierungsscripte werden bei diesem Update nicht benutzt.
+
+2. Anmerkungen & Neuerungen zur aktuellen Version
+-------------------------------------------------
+
+Neues Hilfe-System
+
+Mit der aktuellen Version wurde das Stud.IP-Hilfe-System auf ein zentrales Wiki, das für alle Installationen jeweils den aktuellen
+Stand der Hilfe enthält, umgestellt. Wenn Sie das Migrationsscript durchführen, wird das Hilfesytem automatisch auf die neue Hilfe 
+umgestellt. Sie können jedoch die alte Hilfe weiterhin nutzen, indem Sie im Konfigurationseditor (Adminbereich, globale Einstellungen,
+Konfigurationseditor) den Wert "EXTERNAL_HELP" auf 0 setzen.
+Dazu besteht nun die Möglichkeit, über den Wert "EXTERNAL_HELP_LOCATIONID" eine vom Default abweichende ID für ihre Installation 
+anzugeben, um für Sie angepasste Hilfetexte im Hilfe-Wiki zu verfassen und ihren Nutzern anzuzeigen.
+Für weitere Informationen wenden Sie sich bitte an die Entwickler.
+
+
+Sichtbarkeit von Nutzen
+
+Ab dieser Version können Nutzern unischtbar geschaltet werden bzw. sich selbst unsichtbar schalten. Im Konfiguartionseditor können Sie
+über den Wert "USER_VISIBILITY_UNKNOWN" im Konfigurationseditor können Sie nach der Migration festlegen, wie das System Nutzer anzeigt oder
+versteckt, für die noch kein Eintrag vorgenommen wurde.
+
+
+Assets-Verzeichnis
+
+Sämtliche Bilder, Javascript-Dateien und Stylesheets sind nun in das Assets Verzeichnis ausgelagert worde. Wenn Sie die Installation
+auf normale Art und Weise vornehmen, brauchen Sie nichts weiter anzupassen. Sollte Sie jedoch diese Assets auslagern, achten Sie bitte darauf, 
+auf jeden Fall in der local.inc die vollständige URL zu Ihrem Assets-Verzeichnis anzugeben, da es anosnten zu Fehlern in der Bilddarstellung
+kommen kann.

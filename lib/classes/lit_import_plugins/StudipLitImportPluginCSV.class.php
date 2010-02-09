@@ -1,0 +1,99 @@
+<?php
+# Lifter002: TODO
+# Lifter007: TODO
+# Lifter003: TODO
+// +---------------------------------------------------------------------------+
+// This file is part of Stud.IP
+// StudipLitImportPluginCSV.class.php
+// 
+// 
+// Copyright (c) 2006 Jan Kulmann <jankul@zmml.uni-bremen.de>
+// +---------------------------------------------------------------------------+
+// This program is free software; you can redistribute it and/or
+// modify it under the terms of the GNU General Public License
+// as published by the Free Software Foundation; either version 2
+// of the License, or any later version.
+// +---------------------------------------------------------------------------+
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+// You should have received a copy of the GNU General Public License
+// along with this program; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+// +---------------------------------------------------------------------------+
+
+require_once ("lib/classes/lit_import_plugins/StudipLitImportPluginAbstract.class.php");
+
+/**
+*
+*
+* 
+*
+* @access	public	
+* @author 	Jan Kulmann <jankul@zmml.uni-bremen.de>	
+* @package	
+**/
+class StudipLitImportPluginCSV extends StudipLitImportPluginAbstract {
+	
+	function StudipLitImportPluginCSV(){
+		// immer erst den parent-contructor aufrufen!
+		parent::StudipLitImportPluginAbstract();
+	}
+
+	function parse($data){
+		return $data;
+	}
+	
+	function import($data) {
+		global $auth, $_msg;
+	        $db = new DB_Seminar();
+      		$msg = &$_msg;
+        	if ($data) {
+
+			$fields_arr = array();
+			$lines = explode("\n",$data);
+			foreach ($lines as $line) {
+				if (strlen($line)>0) {
+					$parts = explode(";",$line);
+					/*
+						1. Titel
+						2. Autor
+						3. Herausgeber
+						4. Ort
+						5. Jahr
+						6. Beschreibung
+						7. ISBN
+					*/
+                        		$fields = array();
+                        		$fields["catalog_id"] = "new_entry";
+                        		$fields["user_id"] = $auth->auth["uid"];
+
+					$fields["dc_title"]      = $parts[0];
+					$fields["dc_creator"]    = $parts[1];
+					$fields["dc_publisher"]  = $parts[2];
+					$fields["dc_publisher"] .= " ".$parts[3];
+					$fields["dc_date"]       = $parts[4]."-01-01";
+					$fields["dc_subject"]    = $parts[5];
+					$fields["dc_identifier"] = " ISBN: ".$parts[6];				
+
+                        		/*if ($fields["dc_identifier"]) $fields["dc_identifier"] = utf8_decode($fields["dc_identifier"]);
+                        		if ($fields["dc_publisher"]) $fields["dc_publisher"] = utf8_decode($fields["dc_publisher"]);
+                        		if ($fields["dc_title"]) $fields["dc_title"] = utf8_decode($fields["dc_title"]);
+                        		if ($fields["dc_creator"]) $fields["dc_creator"] = utf8_decode($fields["dc_creator"]);
+                        		if ($fields["dc_subject"]) $fields["dc_subject"] = utf8_decode($fields["dc_subject"]);*/
+
+                        		if (!trim($fields["dc_creator"])) $fields["dc_creator"] = "Unbekannt";
+                        		if (!trim($fields["dc_title"])) $fields["dc_title"] = "";
+
+					if ( $fields["dc_title"] != "") array_push($fields_arr, $fields);
+					
+				}
+			}
+
+			return (count($fields_arr)>0 ? $fields_arr : FALSE);
+        	}
+
+	}
+}
+?>

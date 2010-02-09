@@ -1,0 +1,57 @@
+Updateprotokoll (Göttingen)
+
+Datum: 05.10.03
+Server: www.goettingen.studip.de
+Ursprungsversion: 0.9.0
+Zielversion: 0.9.5 (cvs vom 05.10.03)
+siehe migration.sql für SQL Befehle / Ablauf
+
+Anmerkungen:
+
+Achtung: Dieses Updateprotokoll soll Updates von einer Stud.IP Version auf die andere erleichtern. Der hier beschriebene
+Ablauf wurde in dieser Reihenfolge auf der Göttinger Referenz-Installation getestet. Dennoch kann es im Einzelfall zu Abweichungen
+kommen (insbesondere, falls eigene Anpassungen vorgenommen wurde).
+
+Ausgangsituation:
+
+Auf dem Server ist die Version 0.9.0 ohne spezielle Anpassungen installiert. Lediglich ein Nutzertrackingscript ist aktiv, das mit 
+dem Update wieder entfernt werden soll.
+Es soll die Version 0.9.5 mit sämtlichen Modulen installiert werden.
+
+Vorbereitungen:
+
+Zunächst werden Datenbank und Webserver heruntergefahren. Anschließend wird ein Backup der Datenbank und aller Scripte im vorliegenden 
+Zustand vorgenommen. Danach werden alle Scripte und Unterverzeichnisse gelöscht (mit Ausnahme des Verzeichnisses User, hier liegen die 
+Bilder der Stud.IP Nutzer), um die neue Version frisch zu installieren. Zum Einsatz kommt die Version Stud.IP 0.9.5 aus dem CVS vom 05.10.03.
+
+Anpassung der Konfigurationsdateien:
+
+Die Konfigurationsdateien local.inc im Verzeichnis der php-lib und die config.inc im Stud.IP-Root Verzeichnis müssen mit dem aktuellen
+Stand abgeglichen werden. Dabei können die alten Konfigurationsdateien als Ausgangszustand genommen werden und neu hinzugekommene Werte 
+ergänzt (und nach eigenen Wünschen angepasst) sowie alte Einträge entfernt werden. Je nach Umfang der eigenen Anpassungen kann natürlich auch 
+die neue Version eingespielt werden und alte Einträge wieder gesetzt werden. Dabei muss jedoch sehr genau darauf geachtet werden, dass
+keine Inkonsitenzen zwischen der alten und der neuen Version auftreten.
+
+Datenbankupdate:
+
+Das Datenbankupdate erfolgt in der angegebenen Reihenfolge (in Klammern stehen die Verweise auf die jeweiligen Abschnitte des
+Migrationsscripts):
+
+* Entfernen von alten, nicht mehr benutzen Feldern, Ändern eines default-Eintrages und Ändern der Länge von
+  News-Titelzeilen (#1-#4)
+* neue Felder für die Modularisierung von Komponenten anlegen (#5)
+* neues Feld für das Modul ILIAS-Anbindung (Lernmodule) anlegen (kann unterbleiben wenn das Modul nicht installiert ist) (#6)
+* neue Tabelle für das WikiWiki-Web anlegen (#7)
+* Veränderungen an der Tabelle auth_user_md5 für Authentifizierungsplugins vornehmen (#8)
+* neue Tabellen für Object-Operationen (Views und Rates) anlegen (#9)
+* neue Tabellen für das Vote-Modul anlegen (kann unterbleiben wenn das Modul nicht installiert wird) (#10)
+* Veränderungen für Änderungen am Anmeldesystem (#11)
+* Veränderungen an der Tabelle dokumente (#12)
+* neue Tabellen für neues Messaging (#13)
+* vorhandene alte Nachrichten in neue Tabellen konvertieren 
+  Script: convert_globalmessages.php (#14)
+* neue Tabellen für generische Datenfelder anlegen (#15)
+* Veränderung an den Tabellen der Ressourcenverwaltung (#16)
+* Datenbestand des Forums für neue Version konvertieren
+  Script: convert_forum_edit.php (#17)
+* alte Tabelle globalmessages löschen (dieser Schritt kann aus Sicherheitsgründen auch später nachgehholt werden) (#18)

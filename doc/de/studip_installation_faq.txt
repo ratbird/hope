@@ -1,0 +1,150 @@
+1. "Undefined function: _()"
+
+Q: Ich bekomme die Meldung Fatal error: Call to undefined function: _() in /srv/www/htdocs/studip/config.inc.php
+
+A: die Funktion _() ist die PHP-gettext-Funktion, die in Stud.IP für die Internationalisierung benutzt wird.
+Die obige Fehlermeldung deutet darauf hin, das Ihre PHP-Version ohne gettext-Unterstützung kompiliert wurde 
+(Option 'with-gettext').
+Dies läßt sich mit der Ausgabe der phpinfo()-Funktion überprüfen, dort sollte oben unter "Configure Command" 
+die Option auftauchen und unten unter dem Block "gettext" ein "GetTextSupport enabled" stehen.
+
+2. "undefined function: sem_get()"
+
+Q: Jetzt komme ich gerade mal bis zur Eingangs-Hintergrundgrafik. Der Fehler, den ich jetzt erhalte ist: Fatal error: 
+Call to undefined function: sem_get() in /srv/www/htdocs/studip/chat/ShmHandler.class.php on line 88
+
+A: Die Fehlermeldung, die sie bekommen bedeutet, dass die Semaphoren Funktionen für den Zugriff auf gemeinsam 
+genutzte Speicherbereiche nicht korrekt in PHP einkompiliert wurden. Diese Funktionen werden für den Chat benötigt. 
+Überprüfen können sie das mit einem phpinfo(), in der Ausgabe sollte unter 'Additional Modules' (ziemlich weit unten) 
+sysvshm (shared memory) und sysvsem (semaphores) angezeigt werden.
+Wenn sich der Fehler durch erneutes Konpilieren nicht beheben läßt, so haben sie die Möglichkeit, den Chat auf dateibasierte 
+Speicherung umzustellen. Dazu müssen sie in der Datei local.inc im PHPLIB-Verzeichnis die Variable $CHAT_SERVER_NAME auf 
+"ChatFileServer" umstellen. Dies führt aber u.U. zu einer erhöhten Belastung des Webservers, wenn mehrere Chaträume 
+gleichzeitig aktiv sind. Alternativ können sie den Chat an dieser Stelle in der local.inc auch deaktivieren 
+($CHAT_ENABLE = FALSE)
+
+3. Die Startseite kommt immer wieder
+
+Q: Ich habe alles fertig installiert und bekomme die Startseite von Stud.IP zu sehen. Wenn ich mich jedoch einloggen 
+möchte erhalte ich immer wieder nur die Startseite.
+
+A: In der PHP.INI muss "register_globals = On" stehen.
+
+4. TeX und Solaris
+
+Q: Wie bekomme ich das TeX-Modul unter Solaris zum laufen?
+
+A: Unser Problem war, dass in der latextrenderer.class.php innerhalb der Funktion renderLatex die Option 
+"interaction=nonstopmode" angegeben war (Zeile 225). Die Solaris-Latex-Variante (teTeX) kam mit dieser Option nicht 
+zurecht. Nachdem diese Option entfernt war, funkionierte der Teil dann.
+Das zweite Problem war der dvips-Befehl in Zeile 231. Die Solaris-Variante verlangt die Angabe der Ausgabedatei 
+mit der Option "-o" usw. Nachdem diese auch angegeben war, funktionierte das Latex-Forum endlich
+
+5. Sortierung der Umlaute
+
+Q: Stud.IP sortiert Umlaute immer am Ende einer Liste ein, nicht da wo sie hingehören. Wie kann ich das ändern?
+
+A: Das ist kein Problem von Stud.IP, sondern von MySQL(?). Was helfen sollte:
+   - MySQL(?) runterfahren
+   - in die my.cnf folgende Zeile unter [mysqld] eintragen: "default-character-set=german1"
+   - in das Verzeichnis mit den Tabellen wechseln
+   - "myisamchk -r -q --set-character-set=german1 *.MYI" ausführen
+   - MySQL(?) wieder starten
+   
+   Vorher ein Backup der DB machen :)
+
+6. Gefährliches Latex
+
+Q: Ich bekomme immer [potentially dangerous Latex formula] egal was ich zwischen den tex Tags eingebe?
+
+A: Überprüfen Sie, ob der Webserver Schreibrechte auf den Image Cache unter pictures/tex hat. Setzen Sie eine SuSE 
+Installation ein, stellen Sie sicher, dass das Paket "tetex" installiert ist.
+
+7. LDAP
+
+Q: Wie richte ich LDAP Authentifizierung ein ?
+
+Zur Authentifizierung gegen einen LDAP Server stehen im Release zwei Plugins zur Verfügung (in der config/config_local.inc als 
+Ldap und LdapReader bezeichnet). Die entsprechenden Klassen befinden sich im Verzeichnis 
+lib/classes/auth_plugins und heissen dort StudipAuthLdap.class.php und StudipAuthLdapReader.class.php. 
+Die Konfiguration dieser Plugins sollte in der local.inc vorgenommen werden. Hierzu muss der Name des Plugins in die 
+Konfigurationsvariable $STUDIP_AUTH_PLUGIN[] eingetragen werden, normalerweise reicht das entfernen der 
+Kommentarzeichen. Es kann mehr als ein Plugin aktiviert sein, die Reihenfolge, in der die Plugins bei einem 
+Authentifizierungsvorgang abgearbeitet werden, kann hier auch vorgenommen werden. Unterhalb von $STUDIP_AUTH_PLUGIN[] 
+müssen dann die Optionen für das ausgewählte Plugin konfiguriert werden ($STUDIP_AUTH_CONFIG_xxx). Für Ldap sind 
+folgende Einstellungen nötig:
+
+    - host : Hostname des LDAP Servers, oder eine URL der Form ldap[s]://[hostname]:[port]
+    - protocol_version : LDAPv2 oder LDAPv3, für OpenLDAP 2.x.x besser 3
+    - base_dn : base DN, die Suchbasis unterhalb derer die Einträge zu finden sein müssen
+    - username_attribute : Attribut, welches den Nutzernamen enthält
+    - anonymous_bind : lässt der LDAP Server ein anonymes anmelden zu, so kann vor der eigentlichen Authentifizierung 
+      das Verzeichnis nach dem eingegebenen Nutzernamen durchsucht werden, um den korrekten Nutzer DN zu finden. 
+      Ist das anonyme Binden ausgeschaltet, muss die Suchbasis dem Zweig entsprechen, indem die Nutzerdaten zu finden 
+      sind, da der Nutzer DN in diesem Fall direkt aus der Suchbasis gebildet wird. Außerdem ist dann keine Möglichkeit 
+      gegeben eine Meldung über ein falsches Passwort zu geben.
+    - error_head : Präfix der Fehlermeldung bei fehlgeschlagener Anmeldung mit diesem Plugin
+    - user_data_mapping : in diesem Array werden die Zuordnungen von LDAP Attributen zu Stud.IP Datenbankeinträgen 
+      vorgenommen. Diese Zurodnungen werden bei jeder erfolgreichen Anmeldung in der Stud.IP Datenbank aktualisiert. 
+      Der Schlüssel eines Eintrages ist das Stud.IP Datenbankfeld in der Form <tabelle>.<feld>. Zu jedem Schlüssel sind 
+      zwei weitere Einträge nötig. In "callback" wird der Name der Methode im Plugin angegeben, die die Zuordnung 
+      vornehmen soll, "map_args" enthält die Argumente, die an die Methode übergeben werden. Der Eintrag dummy als 
+      callback nimmt keine Zuordnung vor, verhindert aber, dass die entsprechenden Felder im Stud.IP vom Nutzer 
+      verändert werden können, man sollte die default Einträge für username und password besser nicht verändern. 
+      Im LDAP PLugin existieren zwei simple mapping Methoden doLdapMap und doLdapMapVorname. Erstere erwartet als 
+      Argument den Namen des LDAP Attributes (z.B. sn für den Nachnamen) und gibt einfach den Inhalt zurück. Letztere 
+      nimmt zwei Argumente entgegen und versucht aus dem cn den Vornamen zu extrahieren (nur ein Beispiel). 
+      Benötigt man komplexere Mappings, so empfiehlt es sich ein eigenenes Plugin von AuthLdap abzuleiten und 
+      die entsprechenden Methoden dort zu realisieren.
+
+
+LdapReader authentifiziert nicht den Nutzer direkt gegen den LDAP Server, sondern benutzt einen konfigurierten LDAP 
+Account mit Leserechten, um das Passwort des Nutzers aus dem Verzeichnis zu lesen und mit dem eingegebenen zu vergleichen. 
+Anonymes Binden wird dazu nicht benötigt. Der Vorteil dieser Lösung ist, dass das JavaScript basierte challenge-response 
+Verfahren zur verschlüsselten Übertragung des Passwortes in Stud.IP weiter genutzt werden kann (bei Verwendung von LdapAuth 
+wird es automatisch deaktiviert). Im Verzeichnis aber muss das Passwort als MD5 Hash vorliegen (Standard ist meist CRYPT, 
+es sollte aber unproblematisch sein ein zusätzliches Attribut einzuführen). Dieses Plugin ist als Beispiel gedacht, und 
+sollte als Vorlage für eigene Plugins dienen.
+Einstellungen:
+
+    - user_password_attribute : das Attribut des Nutzerpasswortes (Passwort muss als MD5 Hash vorliegen!)
+    - reader_dn : der Nutzer DN des Accounts, der zum auslesen benutzt wird
+    - reader_password : das Passwort des Accounts, der zum auslesen benutzt wird
+    
+8. Literaturverwaltung unter SuSE ab 9.2
+
+Q: Probleme mit der Literaturverwaltung (Modul php-yaz fehlt) mit neueren PHP-Versionen/SuSE-Distributionen (SuSE Linux > 9.2)
+
+Das von der Literaturverwaltung benötigte Modul php-yaz ist nicht mehr standardmäßig in php enthalten und muss 
+nachinstalliert werden. Dabei gibt es mehrere Probleme, mit denen ein Linux-Laie schlecht umgehen kann.
+
+Zumindest in SuSE Linux 9.2 und 9.3 gibt es für phpyaz nämlich kein rpm. Erforderlich ist es also, die 
+Datei yaz.so aus der Source zu generieren. Dazu holt man sich die Aktuelle Source (bei mir 1.04) von 
+http://www.indexdata.dk/phpyaz/.
+
+Nach dem Entpacken:
+
+phpize
+./configure
+make
+
+Unter  modules/yaz.so  ist die Extension erzeugt worden. Die Datei
+
+yaz.so speichert man in das Verzeichnis der php-Extensions (unter SuSE Linux 9.3 ist das /usr/lib/php/extensions ).
+
+In php.ini  (bei mir /etc/php.ini)
+
+Ergänzt man im extensions-Abschnitt
+
+extension = yaz.so
+
+Neuladen des Apache-Webservers nicht vergessen!
+
+Q: Ich möchte Grafiken, CSS und Javascrips gerne auslagern. Wie gehe ich dabei vor?
+
+Bitte passen Sie den Wert $ASSETS_URL in der config/config_local.inc.php an. Achten Sie bitte unbedingt darauf, dass Sie den absoluten Pfad zu dem Assets-Verzeichnis
+angeben, da die Bildarstellung ansonsten nicht korrekt funktioniert.
+In der E-Learning-Schnittstelle müssen ggf. die Pfade zu den verwendeten Grafiken anpassen, wenn diese nach dem Verschieben des Assets-
+Verzeichnisses nicht korrekt dargestellt werden. Sie finden diese Einstellungen in der local.inc.
+
+- The Stud.IP Core Group <info@studip.de> 2007

@@ -1,0 +1,20 @@
+Ressourcen-Verwaltung
+
+Q: Was heißt Berechtigung jedeR mit Status "autor" in einer Oberkategorie?
+
+A: JedeR (wirklich jeder Autor im System!) meint hier, Belegungen einzutragen und 
+einzusehen, aber die Ressource selbst nicht zu verwalten (löschen usw.). In einer 
+Oberkategorie gilt dieses Recht dann auch entsprechend für alle Untergeordneten Objekte.
+
+
+Chat
+
+Q: Warum werde ich aus dem Chat immer rausgeworfen?
+
+A: Der Chat bindet relativ große Ressourcen des Stud.IP-Servers, daher sollen 
+Chat-Fenster geschlossen werden, wenn sie nicht mehr benötigt werden. Da dies leider nicht immer 
+alle Benutzer tun, wird man nach 10 Minuten Inaktivität aus dem Chat rausgeworfen (dies gilt nicht 
+für den Besitzer eines Chatraumes).
+Merke: Reines Lurken (also Lesen ohne sich zu beteiligen) gilt in Chats als unfein
+
+- The Stud.IP Core Group <info@studip.de> 2006

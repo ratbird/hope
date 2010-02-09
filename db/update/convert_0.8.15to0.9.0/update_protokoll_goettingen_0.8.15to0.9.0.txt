@@ -1,0 +1,65 @@
+Updateprotokoll (Göttingen)
+
+Datum: 23.02.03
+Server: www.goettingen.studip.de
+Ursprungsversion: 0.8.15
+Zielversion: 0.9 (cvs vom 23.02.03)
+siehe migration.sql für SQL Befehler / Ablauf
+
+
+Ausgangsituation
+
+Auf dem Server ist die normale Version 0.8.15 installiert, eine Vorversion des Ressourcen Moduls wurde installiert, jedoch nicht genutzt und kann daher ohne weiteres durch die neuere Version ersetzt werden.
+Es soll die Version 0.9 mit sämtlichen Modulen installiert werden. Als Anpassung ist ein Nutzertrackingmodul vorgesehen, dass nicht zum Funktionsumfang von Stud.IP 0.9 gehört.
+
+Vorbereitungen
+
+Zunächst werden Datenbank und Webserver heruntergefahren. Anschließend wird ein Backup der Datenbank und aller Scripte im vorliegenden Zustand vorgenommen. Danach werden alle Scripte und Unterverzeichnisse gelöscht (mit Ausnahme des Verzeichnisses User, hier liegen die Bilder der Stud.IP Nutzer), um die neue Version frisch zu installieren. Zum Einsatz kommt die Version Stud.IP 0.9 aus dem CVS vom 23.03.03.
+
+Nachdem alle Dateien kopiert wurden und auch die local.inc der php-lib im entsprechenden Verzeichnis aktualisiert wurde, werden die Einstellungen in der local.inc an die Gegebenheiten des Servers angepasst. 
+
+Datenbankupdate
+
+Das Datenbankupdate erfolgt in der angegebenen Reihenfolge (in Klammern stehen die Verweise das Migrationsscript):
+
+* Erweiterungen für das Chatsystem (#1)
+* altes Feld ?Funktion? aus ?user_inst? löschen (#2)
+* Veränderung für die eingestellte Sprache des Nutzers (#3)
+* Veränderungen für Titel (#4)
+* vorangestellten Titel aus vorhandenen Daten importieren (kann unterbleiben)
+  Script: convert_title_front (#5)
+  Achtung: Bei diesem Script ist es erforderlich, die Liste der gefundenen Änderungen jeweils zu überprüfen, da auch z.B.       
+  Doppelnamen als vorangestellter Titel gefunden werden.
+  Unter Umständen müssen Accounts nachträglich per Hand geändert werden. (muss unter Schritt x passieren)
+* nachgestellten Titel aus vorhandenen Daten importieren (kann unterbleiben)
+  Script: convert_title_rear (#6)
+  Achtung: Auch hier muss überprüft werden, ob die vorgeschlagenen Änderungen Sinn machen. Es sollten sämtliche nachgesteltten   
+  Zusätze als nachgestellte Titel konvertiert werden, die nicht Namen enthalten.
+  Unter Umständen müssen Accounts nachträglich per Hand geändert werden. (muss unter Schritt x passieren)
+* Tabellen für den Einrichtungsbaum anlegen (#7)
+* Veränderungen an der Tabelle ?kategorien? vornehmen, Erweiterung für Einrichtungsbaum (#8)
+* Fakultäten werden nun als Einrichtungen abgelegt
+  Script: convert_fakultaeten (#9)
+* Einrichtungsbaum aus alten Daten erstellen 
+  Script: import_tree (#10)
+* Fakultätstabellen können nun gelöscht werden (#11)
+* Tabellen für das Adressbuch anlegen (#12)
+* Importieren der Buddies aus User-Variable 
+  Script: convert_buddies (#13)
+* Tabellen für das Zusatzmodul SRI-Interface anlegen (nur wenn das Modul installiert ist) (#14)
+* Tabellen für das Zusatzmodul zur ILIAS Anbindung anlegen (nur wenn das Modul installiert ist) (#15)
+* Tabellen für den Veranstaltungsbaum anlegen (#16)
+* Veränderungen an der Archiv-Tabelle für den Veranstaltungsbaum (#17)
+* Veranstaltungsbaum aus alten Daten erstellen 
+  Script: import_sem_tree (#18)
+* Tabellen löschen, nach dem die Daten im Veranstaltungsbaum gespeichert wurden (#19)
+* Downloadcounter hinzufügen (#20)
+* Tabellen für das Zusatzmodul Ressourcenverwaltung anlegen (nur wenn das Modul installiert ist) (#21)
+* Default für die Ressourcenverwaltung eintragen (nur wenn das Modul installiert ist) (#22)
+* Räume konvertieren, da jetzt zu jedem Eintrag der allgemeinen Zeiten ein Raum gespeichert werden kann.
+  Script: convert_rooms (#23)
+# Das Feld VeranstaltungNummer konvertieren (#24)
+  Achtung: Diese Änderung war noch nicht in der 0.9.0-beta enthalten, dh.
+  muss diese Veränderung auch druchgeführt werden, wenn vorher die 0.9.0-beta
+  installiert war.
+* Namenskorrekturen können jetzt durchgeführt werden

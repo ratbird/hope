@@ -1,0 +1,51 @@
+#!/bin/sh
+
+args=`getopt hl: ${1+"$@"}` || exit 1
+set -- $args
+
+while [ $# -gt 0 ]; do
+    case "$1"
+    in -h)
+	echo >&2 "usage: $0 [-h] [-l num] [files ...]"; exit
+    ;; -l)
+	lifter=$2; shift
+    ;; --)
+	shift; break
+    ;; *)
+	break
+    esac
+    shift
+done
+
+done=0
+total=0
+tmpfile=`mktemp`
+
+trap "rm -f $tmpfile" 0 1 2 3 15
+
+find ${1+"$@"} -name '*.php' -o -name '*.inc' | sed 's/^\.\///' |
+    xargs egrep -H '^# Lifter[0-9]+: [A-Z]*' | sort -ut: -k2,2 -k1,1 >$tmpfile
+    
+while read line; do
+    file_name=`expr "$line" : '\\([^:]*\\)'`
+    file_lifter=`expr "$line" : '[^:]*:# Lifter\\([^:]*\\)'`
+    file_status=`expr "$line" : '[^:]*:# [^:]*: \\([A-Z]*\\)'`
+    file_comment=`expr "$line" : '[^:]*:# [^:]*: [A-Z]*\( - .*\)'`
+
+    if [ -z "$lifter" ] || [ "$lifter" -eq "$file_lifter" ]; then
+	if [ -z "$lifter" ]; then
+	    echo -n "Lifter$file_lifter: "
+	fi
+	echo "$file_name: $file_status$file_comment"
+
+	if [ "$file_status" = DONE ]; then
+	    done=`expr $done + 1`
+	fi
+	total=`expr $total + 1`
+    fi
+done <$tmpfile
+
+if [ $total -gt 0 ]; then
+    percent=`echo "100*$done/$total" | bc`
+    echo "status: $done/$total ($percent% done)"
+fi

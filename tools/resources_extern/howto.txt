@@ -1,0 +1,30 @@
+Externe Raum / Ressourcenbelegungsansichten
+-------------------------------------------
+(c) 2005 André Noack <noack@data-quest.de>
+data-quest Suchi & Berg GmbH <info@data-quest.de>
+
+So wirds gemacht:
+1. In der Ressourcenverwaltung unter /Anpassen/Eigenschaften verwalten eine neue
+Eigenschaft ('Zustand') anlegen. (Name z.B. "Belegungsplan extern sichtbar",
+Bezeichnung z.B. "sichtbar")
+2. In der Datenbank in der Tabelle `resources_properties` die `property_id` der
+angelegten Eigenschaft herausfinden.
+(Alternativ kann der Eintrag auch direkt in der Datenbank geschehen z.B.:
+INSERT INTO `resources_properties` 
+(`property_id`, `name`, `description`, `type`, `options`, `system`) VALUES
+('539dd9e5bea93208b7e6b5415a01f661', 'Belegungsplan extern sichtbar', '', 'bool', 'sichtbar', 0);
+3. Die `property_id` in der Datei resources_extern_config.inc.php als 
+$VIEWABLE_PROPERTY_ID eintragen.
+4. In der Ressourcenverwaltung unter /Anpassen/Typen verwalten den Typen, deren
+Pläne extern sichtbar sein sollen die neue Eigenschaft zuweisen.
+5. Bei den gewünschten Ressourcen die neue Eigenschaft aktivieren.
+6. Falls das /resources_extern Verzeichnis nicht innerhalb des studip-htdocs
+Verzeichnis liegen soll, muss in der resources_extern_config.inc.php noch die
+Zeile require_once "<pfad zur phplib>/prepend.php"; aktiviert werden. Hierbei
+ist der korrekte Pfad zur phplib einzugeben, und die benuzte prepend Datei
+(prepend.php oder prepend4.php)
+7. fertig. Das Design kann über das Stylesheet angepasst werden, außerdem können
+die Dateien header.inc.php und footer.inc.php nach eigenen Wünschen geändert
+werden.
+
+

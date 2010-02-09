@@ -1,0 +1,38 @@
+Update Notes
+============
+
+Ursprungsversion: 1.1.5
+Updateversion 1.2
+
+1. Ablauf
+---------
+
+Zunächst werden Datenbank und Webserver heruntergefahren. Anschließend wird ein Backup der Datenbank und aller Scripte im vorliegenden 
+Zustand vorgenommen. Die neue Version wird über die alte vorhandene Version installiert - auf diese Weise bleiben die Konfigurationsdateien 
+local.inc und config.inc.php erhalten. Weitere eigene Scripte, die nur auf diesem Server zum Einsatz kommen, bleiben ebenfalls erhalten.
+Aktualisiert werden muss das Stud.IP-Webroot und das Verzeichnis der PHP-Lib.
+
+Anpassung der Konfigurationsdateien:
+
+Die Konfigurationsdateien local.inc im Verzeichnis der php-lib und die config.inc im Stud.IP-Root Verzeichnis müssen mit dem aktuellen
+Stand der entsprechenden Distributionsversionen abgeglichen werden. Dabei können die alten Konfigurationsdateien als Ausgangszustand 
+genommen werden und neu hinzugekommene Werte ergänzt (und nach eigenen Wünschen angepasst) sowie alte Einträge entfernt werden. 
+Je nach Umfang der eigenen Anpassungen kann natürlich auch die aktuelle Distributionsversion eingespielt werden und alte Einträge wieder 
+gesetzt werden. Dabei muss jedoch sehr genau darauf geachtet werden, dass keine Inkonsitenzen zwischen der alten und der neuen Version 
+auftreten.
+Es empfielt sich, den Abgleich der neuen Distributionsversionen und der eigenen Datei mit einem Differ vorzunehmen.
+
+Datenbankupdate:
+
+Das Datenbankupdate erfolgt in der Reihenfolge, wie sie in der Datei migration_1.1.5to1.2.sql angegeben ist. Die Konvertierungsscripte,
+die jeweils angesprochen werden, müssen an den entsprechenden Positionen ausgeführt werden. In der Regel ist es nötig, dass die Scripte
+einen als Root angemeldeten Stud.IP-Nutzer verlangen.
+Die Scripte müssen zudem vor dem Ausführen aus dem Verzeichnis studip-update/<version> in das Webroot kopiert werden. Nach dem Ausführen 
+sollten die Scripte wieder entfernt werden.
+
+2. Anmerkungen & Neuerungen zur aktuellen Version
+-------------------------------------------------
+
+2.1 Neues Sessionmanagement
+
+2.2 Veränderungen bei der SRI-Schnittstelle (externe Seiten) zur Verbesserung der Sicherheit

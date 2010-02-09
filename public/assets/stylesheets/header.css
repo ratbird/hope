@@ -1,0 +1,176 @@
+/*******************************************************************************
+    Ergänzung-Stylesheet für Stud.IP im Safire-Design
+    Hauptnavigation etc., also der obere Bereich
+    //TODO: mit ins hauptstylesheet nehmen?
+*******************************************************************************/
+div#wrap2 {
+	position: absolute;
+	top: 150px;
+}
+div#barBottom {
+	position: absolute;
+	top: 100px;
+	left: 0px;
+	background-color: #7387ac;
+}
+div#barBottomLeft {
+	background-color: #5d74a0;
+	padding-left: 15px;
+	padding-right: 15px;
+	height: 1.4em;
+	text-align: right;
+	vertical-align: middle;
+	float: left;
+	color: #a1b9c0;
+}
+
+div#barBottommiddle {
+	background-color: #7387ac;
+	text-align: left;
+	vertical-align: middle;
+	height: 1.4em;
+	float: left;
+	margin-right: -3px;
+	padding: 0px;
+	color: #ffffff;
+	font-weight: bold;
+}
+
+div#barBottomright {
+	background-color: #7387ac;
+	text-align: right;
+	vertical-align: middle;
+	height: 1.4em;
+}
+
+div#barBottomright ul {
+	margin: 0px;
+	padding-bottom: 0px;
+}
+div#barBottomright li {
+	display: inline;
+	list-style-type: none;
+}
+div#barBottomright a {
+	text-decoration: none;
+	color: #e3e3e3;
+	padding-left: 6px;
+	padding-right: 6px;
+	padding-bottom: 0.19em;
+}
+div#barBottomright a:hover {
+	color: #FFF;
+    background-image: url('../images/fill1.gif');
+}
+
+div#barBottomshadow {
+	padding-top: 20px;
+    background-image: url('../images/header_schatten.png');
+}
+
+
+div#barTopFont {
+	position: absolute;
+	top: 10px;
+	left: 15px;
+	font-size: 16pt;
+	color: #cccccc;
+}
+
+div#barTopTools ul {
+	margin: 0px;
+	padding: 0px;
+}
+div#barTopTools li {
+	display: inline;
+	list-style-type: none;
+	font-size: 9pt;
+}
+div#barTopTools a {
+	text-decoration: none;
+	font-weight: bold;
+	color: #7387ac;
+	padding-left: 6px;
+	padding-right: 6px;
+}
+div#barTopTools a:hover {
+	color: #FFF;
+    background-image: url('../images/fill1.gif');
+}
+div#barTopTools {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	text-align: right;
+}
+
+div#barTopStudip {
+	position: absolute;
+	top: 50px;
+	right: 5px;
+	text-align: right;
+	border: none;
+}
+div#barTopStudip img {
+	border: none;
+}
+
+div#barTopLogo {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+div#header {
+	height: 100px;
+	background-image: url("../images/headerbackground4.jpg");
+	background-repeat: repeat-x;
+}
+
+div#barTopMenu {
+	position: absolute;
+	top: 48px;
+	left: 0px;
+	text-align: right;
+}
+
+div#barTopMenu ul {
+	margin: 0px;
+	padding: 0px;
+	text-align: center;
+}
+
+div#barTopMenu li {
+	float: left;
+	list-style-type: none;
+	font-size: 9pt;
+	font-weight: bold;
+}
+
+div#barTopMenu li:hover {
+ 	background-image: url('../images/headnaviback2.jpg');
+}
+
+div#barTopMenu a {
+	list-style-type: none;
+	color: #7387ac;
+}
+
+div#barTopMenu a:hover {
+	list-style-type: none;
+	color: white;
+}
+
+div#barTopMenu img {
+	border: 0px;
+}
+
+/*****************************************************************************/
+/* DIFFERENT LOOK FOR PUBLIC COURSES                                         */
+
+/*****************************************************************************/
+
+
+body.public_course div#barBottommiddle {
+	background-color: #c53d3d;
+}
+

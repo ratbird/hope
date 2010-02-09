@@ -1,0 +1,80 @@
+Max-Konfiguration
+=================
+
+Im Folgenden werden die Parameter aufgeführt und beschrieben, die für einen Betrieb von Stud.IP
+unter großer Last beachtet werden müssen. Die hier angegebene Konfiguration wurde an der Stud.IP-
+Installation der Universitaet Goettingen getestet. 
+
+Ein paar Eckdaten zu dieser Installation:
+
+registrierte Nutzer: 12.000
+Veranstaltungen: 1.500
+Postings: 32.000
+Dateien: 9.500
+Termine: 7.500
+Umfragen: 6.500
+
+Server:
+
+2 x Athlon MP 2500 Ghz Prozessor
+1 GB Speicher
+2 x 40 MB Raid
+Linux 9.0
+Apache 1.3.8
+MySQL 4.0.15
+PHP 4.3.3
+
+In Spitzenzeiten sind bis zu 100 Nutzer (auf 5 Minuten) in Stud.IP angemeldet. Die hier beschriebene 
+Konfiguration sollte ein fluessiges Arbeiten mit etwa 30-50 angemeldeten Nutzern ermoeglichen, bei mehr
+Nutzern sinkt die Performance, ein Arbeiten bleibt weiterhin moeglich.
+Bitte haben Sie Verstaednis dafuer, dass wir keine Garantien geben können, bis zu welchen Nutzerzahlen 
+das System bei der verwendeten Hardware belastbar ist, da je nach konkreten Bedingungen (Nutzerverhalten,
+Verwendung von Verschluesselung, besondere Belastungen durch zeitgleiche Anmeldeverfahren o.ae.) die Zahlen 
+stark schwanken koennen. 
+
+
+Apache-Konfiguration
+--------------------
+
+Hier muss in erster Linie die Anzahl der maximal gleichzeitig laufenden Apache-Prozesse an den verfuegbaren 
+Hauptspeicher angepasst werden.
+
+Empfohlene Werte (Datei httpd.conf) bei einem GB Hauptspeicher und Apache-1.x (bei Verwendung von Apache-2 
+muss man die Werte um ca. 40% niedriger wählen):
+
+- MaxClients 70
+- MinSpareServers 10
+- MaxSpareServers 30
+- StartServers 30
+
+Mysql
+-----
+
+Die Einstellungen für Mysql sind direkt abhaengig von MaxClients in der Apache-Konfiguration.
+
+Empfohlene Werte (Datei my.cnf) bei einem GB Hauptspeicher:
+
+- max_connections = 80 (MaxClients + 10)
+- table_cache = 160 (max_connections * 2)
+- key_buffer = 64M (bei genuegend Hauptspeicher 128M)
+
+Kernel
+------
+
+Mysql benötigt ca. table_cache + 80 Datei-Deskriptoren für die Verwaltung der offenen Dateien, 
+dazu kommen die offenen Dateien des Webservers (ca. 25 pro Prozess) und der uebrigen Systemdienste.
+Daher muss sichergestellt werden, das ausreichend Datei-Deskriptoren zur Verfuegung stehen.
+
+Der Shell-Befehl cat /proc/sys/fs/file-nr gibt Auskunft ueber die benoetigten und maximal zur Verfuegung 
+stehenden Deskriptoren.
+
+- der erste Werte gibt die bisher maximal benutze Anzahl an
+- der zweite Wert die aktuell davon unbenutzten Deskriptoren
+- der dritte Wert die maximal moegliche Anzahl der Deskriptoren
+
+
+Zwischen erstem und dritten Wert sollte auch bei Vollast ein ausreichender Sicherheitsabstand 
+bestehen bleiben.
+
+
+- The Stud.IP Core Group <info@studip.de> 2006

@@ -1,0 +1,29 @@
+Q: Wie kann ich eine Person einer Einrichtung zuordnen?
+
+A: Zuerst eine entsprechende Stud.IP-Einrichtung auswählen. Dann über die Rubrik "Mitarbeiter" 
+die Person in die Einrichtung aufnehmen. Über "Gruppen/Funktionen" kann sie anschließend entsprechend 
+ihrem Status im Personalverzeichnis einsortiert werden.
+Alternativ kann die Person aus direkt über "freie Personensuche" innerhalb von "Gruppe/Funktionen" 
+zugeordnet werden.
+
+Q: Wie lege ich ein bestimmte Sorte von Veranstaltungen an ?
+
+A: Dies erfolgt innerhalb der Datei config/config.inc.php im Abschnitt $SEM_TYPE & $SEM_CLASS.
+
+Q: Wie lege ich fest, welche Dateitypen hochgeladen werden können?
+
+A: Dies erfolgt innerhalb der Datei config/config.inc.php mit hilfe des
+Arrays $UPLOAD_TYPES getrennt für die einzelnen Veranstaltungstypen und Rechtestufen
+
+Q: Warum bekommt der User, den ich per Hand angelegt habe, keine Bestätigungsmail ?
+
+A: Der User bekommt nur dann eine Bestätigungsmail, wenn er sich selber über das Frontend 
+registriert hat. Der Bestätigungslink dieser Mail setzt den Status des neuen Benutzers von 
+"user" auf "autor" um.
+Ein selbstangelegter User mit dem Rechtestatus eines "user" wird immer aufgefordert den 
+Bestätigungslink der Email anzuklicken. Man kann also sagen, der Rechtestatus eines "user"
+ist dem eines Gastes fast gleich.
+Man sollte neue User als "autor" direkt anlegen, damit ist das Problem der Bestätigungsmail 
+bei Nutzern, die per Hand in die Datenbank eingetragen wurden, gelöst.
+
+- The Stud.IP Core Group <info@studip.de> 2006

@@ -1,0 +1,31 @@
+--- magpierss/rss_parse.inc	2005-03-08 16:46:02.000000000 +0100
++++ ../lib/classes/magpierss/rss_parse.inc	2006-11-09 13:48:44.000000000 +0100
+@@ -239,16 +239,25 @@
+         //
+         elseif ($this->feed_type == ATOM and $el == 'link' ) 
+         {
+-            if ( isset($attrs['rel']) and $attrs['rel'] == 'alternate' ) 
++            //bugfix ATOM links anoack
++			if ( isset($attrs['rel']) and $attrs['rel'] != 'alternate' ) 
+             {
+-                $link_el = 'link';
++                $link_el = 'link_' . $attrs['rel'];
+             }
+             else {
+-                $link_el = 'link_' . $attrs['rel'];
++                $link_el = 'link';
+             }
+             
+             $this->append($link_el, $attrs['href']);
+         }
++		elseif ($this->feed_type == RSS
++				&& $el == 'enclosure'
++				&& $this->initem
++				&& $attrs['url'])
++		{
++			foreach ($attrs as $a => $v)
++				$this->append($el.'_'.$a, $v);
++		}
+         // set stack[0] to current element
+         else {
+             array_unshift($this->stack, $el);

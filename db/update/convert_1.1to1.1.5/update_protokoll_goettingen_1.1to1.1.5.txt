@@ -1,0 +1,68 @@
+Updateprotokoll (Göttingen)
+
+Datum: 26.09.04
+Server: www.goettingen.studip.de
+Ursprungsversion: 1.1
+Zielversion: 1.1.5 (cvs vom 26.04.04)
+siehe migration.sql für SQL Befehle / Ablauf
+
+Anmerkungen:
+
+Achtung: Dieses Updateprotokoll soll Updates von einer Stud.IP Version auf die andere erleichtern. Der hier beschriebene
+Ablauf wurde in dieser Reihenfolge auf der Göttinger Referenz-Installation getestet. Dennoch kann es im Einzelfall zu Abweichungen
+kommen (insbesondere, falls eigene Anpassungen vorgenommen wurden).
+
+Ausgangssituation:
+
+Auf dem Server ist die Version 1.1 ohne spezielle Anpassungen installiert. 
+Es soll die Version 1.1.5 mit sämtlichen in der Distribution enthaltenen Modulen installiert werden.
+
+Vorbereitungen:
+
+Zunächst werden Datenbank und Webserver heruntergefahren. Anschließend wird ein Backup der Datenbank und aller Scripte im vorliegenden 
+Zustand vorgenommen. Die neue Version wird über die alte vorhandenen Version installiert - auf diese Weise bleiben die Konfigurationsdateien 
+local.inc und config.inc.php erhalten. Weitere eigene Scripte, die nur auf diesem Server zum Einsatz kommen, bleiben ebenfalls erhalten.
+Aktualisiert werden muss das Stud.IP-Webroot und das Verzeichnis der PHP-Lib.
+Zum Einsatz kommen die entsprechenden Version der CVS-Module studip und studip-phplib aus dem CVS vom 29.12.03 (Version 1.0beta).
+
+PHP-Module:
+
+Die Version 1.1.5 benötigt keine neuen PHP-Module oder andere Erweiterungen (einen Überblick über alle benötigten PHP-Module, Zusatzprogramme
+und andere Erweiterungen wird in der Datei "studip_installation_guide.txt" im Verzeichnis studip-doc der Distribution gegeben).
+
+Anpassung der Konfigurationsdateien:
+
+Die Konfigurationsdateien local.inc im Verzeichnis der php-lib und die config.inc im Stud.IP-Root Verzeichnis müssen mit dem aktuellen
+Stand der entsprechenden Distributionsversionen abgeglichen werden. Dabei können die alten Konfigurationsdateien als Ausgangszustand 
+genommen werden und neu hinzugekommene Werte ergänzt (und nach eigenen Wünschen angepasst) sowie alte Einträge entfernt werden. 
+Je nach Umfang der eigenen Anpassungen kann natürlich auch die aktuelle Distributionsversion eingespielt werden und alte Einträge wieder 
+gesetzt werden. Dabei muss jedoch sehr genau darauf geachtet werden, dass keine Inkonsitenzen zwischen der alten und der neuen Version 
+auftreten.
+Es empfielt sich, den Abgleich der neuen Distributionsversionen und der eigenen Datei mit einem Differ vorzunehmen.
+
+Datenbankupdate:
+
+Das Datenbankupdate erfolgt in der angegebenen Reihenfolge (in Klammern stehen die Verweise auf die jeweiligen Abschnitte des
+Migrationsscripts). 
+ACHTUNG: Zum Ausführen der SQL-Befehle und Updatescripte müssen Datenbank und Werbserver wieder gestartet werden. 
+
+* neue Tabellen für die object_user_visits (Anzeige von neuen Inhalten) in der Datenbank anlegen (#1)
+* Konvertierungen für die object_user_visits aus alten Daten vornehmen 
+  Script: convert_loginfile.php als root ausführen (#2)
+  ACHTUNG: Dieser Schritt kann bei einer großen Installation einige Zeit dauern, da eine große Anzahl an Einträgen erzeugt
+  werden (mehrere Minuten)
+* Änderungen am Messaging vornehmen (#3)
+  ACHTUNG: Dieser Schritt kann bei einer großen Installation eine Zeit dauern (etwa 1 Minute)
+* Indexe am Messaging verändern (#4)
+  ACHTUNG: Dieser Schritt kann bei einer großen Installation eine Zeit dauern (etwa 1 Minute)
+* Konvertierungen für Betreffzeilen im Messaging vornehmen
+  Script: convert_sms_subject.php als root ausführen (#5)
+  ACHTUNG: Da dieses Script sehr viel Speicher verbraucht, wenn eine große Anzahl an Nachrichten im System vorliegen,
+  muß entweder das Speicherlimit von PHP temporär sehr hoch gesetzt werden (etwa 50 MB) oder das Script mehrfach ausgeführt 
+  werden, bis alle Einträge konvertiert sind.
+* Konvertierungen für Einstellungen der Weiterleitung im Messaging vornehmen
+  Script: convert_sms_user_info.php als root ausführen (#6)
+* Änderungen am Wiki (#7)
+* Änderungen an der Smileyverwaltung (#8)
+* Änderungen an der Tabelle user_indo (#9)
+* Änderungen an Indexes der Votes zur Steigerung der Performance (#10)

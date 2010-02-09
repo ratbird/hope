@@ -1,0 +1,29 @@
+--- pclzip.lib.php	2005-09-24 16:31:49.000000000 +0200
++++ ../pclzip.lib.php	2006-11-09 14:25:17.000000000 +0100
+@@ -56,7 +56,7 @@
+   //       Samples :
+   // define( 'PCLZIP_TEMPORARY_DIR', '/temp/' );
+   // define( 'PCLZIP_TEMPORARY_DIR', 'C:/Temp/' );
+-  define( 'PCLZIP_TEMPORARY_DIR', '' );
++  define( 'PCLZIP_TEMPORARY_DIR', $GLOBALS['TMP_PATH'] . '/' );
+ 
+ // --------------------------------------------------------------------------------
+ // ***** UNDER THIS LINE NOTHING NEEDS TO BE MODIFIED *****
+@@ -1122,7 +1122,7 @@
+     $this->privErrorReset();
+ 
+     // ----- Look if the $p_archive is a PclZip object
+-    if ((is_object($p_archive)) && (get_class($p_archive) == 'pclzip'))
++    if ((is_object($p_archive)) && (strtolower(get_class($p_archive)) == 'pclzip'))
+     {
+       //--(MAGIC-PclTrace)--//PclTraceFctMessage(__FILE__, __LINE__, 2, "The parameter is valid PclZip object '".$p_archive->zipname."'");
+ 
+@@ -1191,7 +1191,7 @@
+     }
+ 
+     // ----- Look if the $p_archive_to_add is a PclZip object
+-    if ((is_object($p_archive_to_add)) && (get_class($p_archive_to_add) == 'pclzip'))
++    if ((is_object($p_archive_to_add)) && (strtolower(get_class($p_archive_to_add)) == 'pclzip'))
+     {
+       //--(MAGIC-PclTrace)--//PclTraceFctMessage(__FILE__, __LINE__, 3, "The parameter is valid PclZip object");
+ 

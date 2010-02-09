@@ -1,0 +1,29 @@
+/*******************************************************************************
+    Druck-Stylesheet für Stud.IP
+*******************************************************************************/
+/* //TODO: für druck noch weiter optmieren */
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	background-image: none;
+}
+
+a:visited, a:link, a:hover, a:active {
+	text-decoration : none;
+}
+
+td.angemeldet {
+	border:1px solid #000000;
+}
+td.rahmen_white {
+	border:1px solid #000000;
+	background-color: #FFFFFF;
+	background-image: none;
+}
+td.rahmen_steel {
+	border:1px solid #000000;
+	background-image: url('../images/steel1.jpg');
+}
+td.rahmen_steelgraulight {
+	border:1px solid #000000;
+	background-image: url('../images/steelgraulight.jpg');
+}

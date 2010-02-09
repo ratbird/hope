@@ -168,7 +168,9 @@ function folder_openclose($folder, $x) {
 
 // print_snd_message
 function print_snd_message($psm) {
-	global $n, $LastLogin, $my_messaging_settings, $cmd, $db7, $PHP_SELF, $msging, $cmd_show, $sms_data, $_fullname_sql, $user;
+	global $n, $LastLogin, $my_messaging_settings, $cmd, $PHP_SELF, $msging, $cmd_show, $sms_data, $_fullname_sql, $user;
+	
+	$db = DBManager::get();
 
 	// open?!
 	if ($sms_data["open"] == $psm['message_id']) {
@@ -235,14 +237,14 @@ function print_snd_message($psm) {
 				LEFT JOIN user_info USING(user_id)
 				WHERE message_user.message_id = '".$psm['message_id']."'
 				AND message_user.snd_rec = 'rec'";
-			$db7->query($query);
+			$res = $db->query($query);
 			$i = 0;
-			while ($db7->next_record()) {
-				if ($db7->f("user_id") != $user->id && $db7->f("username") != "") {
+			while ($row = $res->fetch()) {
+				if ($row["user_id"] != $user->id && $row["username"] != "") {
 					if ($i > "0") {
 						$content .= ",&nbsp;";
 					}
-					$content .= "<a href=\"about.php?username=".$db7->f("username")."\"><font size=-1 color=\"#333399\">".htmlReady($db7->f("fullname"))."</font></a>";
+					$content .= "<a href=\"about.php?username=".$row["username"]."\"><font size=-1 color=\"#333399\">".htmlReady($row["fullname"])."</font></a>";
 					++$i;
 				} else {
 					$msg_sndnote = _("und an Sie selbst");

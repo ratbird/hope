@@ -870,7 +870,8 @@ div.droppable.hover {
 			if ($folder_tree->isExecutable($general_folder["folder_id"], $user->id) || $rechte) {
 				display_folder($general_folder["folder_id"], 
 						$folder_system_data["open"], 
-						$change, $folder_system_data["move"], 
+						$change, 
+						$folder_system_data["move"], 
 						$folder_system_data["upload"], 
 						$folder_system_data["refresh"], 
 						$folder_system_data["link"],
@@ -889,7 +890,8 @@ div.droppable.hover {
 			if ($folder_tree->isExecutable($general_folder['folder_id'], $user->id) || $rechte) {
 				display_folder($general_folder["folder_id"], 
 						$folder_system_data["open"], 
-						$change, $folder_system_data["move"], 
+						$change, 
+						$folder_system_data["move"], 
 						$folder_system_data["upload"], 
 						$folder_system_data["refresh"], 
 						$folder_system_data["link"],
@@ -903,7 +905,14 @@ div.droppable.hover {
 			
 			$result = $db->query($query)->fetchAll();
 			foreach ($result as $row) {
-				display_folder($row['folder_id'], $folder_system_data["open"], $change, $folder_system_data["move"], $folder_system_data["upload"], FALSE, $folder_system_data["refresh"], $folder_system_data["link"]);
+				display_folder($row['folder_id'], 
+				    $folder_system_data["open"], 
+				    $change, 
+				    $folder_system_data["move"], 
+				    $folder_system_data["upload"], 
+				    $folder_system_data["refresh"], 
+				    $folder_system_data["link"], 
+				    $open_id);
 			}
 			//Gruppenordner:
 			$query = "SELECT sg.statusgruppe_id FROM statusgruppen sg "
@@ -926,8 +935,8 @@ div.droppable.hover {
 					}
 				}
 			}
-		print "</div>";
-		print '</td><td width=1px>&nbsp;</td></tr></table>';
+		  print "</div>";
+		  print '</td><td width=1px>&nbsp;</td></tr></table>';
 		}
 	}	else {
 		//Flatview ohne Ordnerstruktur

@@ -879,8 +879,8 @@ class Seminar_Perm extends Perm {
 
 	function have_perm($perm, $user_id = false) {
 
-		$pageperm = split(",", $perm);
-		$userperm = split(",", $this->get_perm($user_id));
+		$pageperm = explode(",", $perm);
+		$userperm = explode(",", $this->get_perm($user_id));
 
 		list($ok0, $pagebits) = $this->permsum($pageperm);
 		list($ok1, $userbits) = $this->permsum($userperm);

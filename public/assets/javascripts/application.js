@@ -724,8 +724,12 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
       $("folder_" + md5_id + "_arrow_td").removeClassName('printhead3');
     } else {
       if ($("folder_" + md5_id + "_body").innerHTML === "") {
-        var request = new Ajax.Request(document.URL + '&getfolderbody=' + md5_id, {
+    	var adress = document.URL.substring(0, document.URL.indexOf("#"));
+    	var request = new Ajax.Request(adress, {
           method: 'get',
+          parameters: {
+        	getfolderbody: md5_id
+          },
           onSuccess: function (transport) {
             $("folder_" + md5_id + "_body").innerHTML = transport.responseText;
             $("folder_" + md5_id + "_header").style.fontWeight = 'bold';
@@ -772,8 +776,12 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
       window.setTimeout("$('file_" + md5_id + "_body_row').style.visibility = 'collapse'", 310);
     } else {
       if ($("file_" + md5_id + "_body").innerHTML === "") {
-        var request = new Ajax.Request(document.URL + '&getfilebody=' + md5_id, {
+    	var adress = document.URL.substring(0, document.URL.indexOf("#"));
+        var request = new Ajax.Request(adress, {
           method: 'get',
+          parameters: {
+        	getfilebody: md5_id
+          },
           onSuccess: function (transport) {
             $("file_" + md5_id + "_header").style.fontWeight = 'bold';
             $("file_" + md5_id + "_arrow_td").addClassName('printhead3');

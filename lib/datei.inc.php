@@ -1680,7 +1680,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
 	$folders_kids = $db->query("SELECT folder_id " .
 			"FROM folder " .
 			"WHERE range_id = ".$db->quote($folder_id)." " .
-					"ORDER BY priority ASC, name ASC")->fetchAll();;
+					"ORDER BY priority ASC, name ASC")->fetchAll();
 	
 	$hasrealkids = $folder_tree->hasKids($folder_id);
 	if ( ((count($folders_kids)) || ($document_count > 0)) 
@@ -1705,7 +1705,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
 		if ($subfolders) {
 			foreach ($subfolders as $key => $subfolder) {
 				$folder_pos = ((count($subfolders) > 1) ? (($key == 0) ? "top" : (($key == count($subfolders)-1) ? "bottom" : "middle")) : "alone");
-				display_folder($subfolder, $open, $change, $move, $upload, $refresh, $filelink, $anchor_id, $folder_pos);
+				display_folder($subfolder, $open, $change, $move, $upload, $refresh, $filelink, $anchor_id, $folder_pos, false);
 			}
 		}
 		print "</div>";
@@ -1723,7 +1723,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
 							"LEFT JOIN auth_user_md5 USING (user_id) " .
 							"LEFT JOIN user_info USING (user_id) " .
 					"WHERE range_id = '".$result["folder_id"]."' " .
-					"ORDER BY a.priority ASC, a.chdate DESC, t_name ";
+					"ORDER BY a.priority ASC, t_name ASC, a.chdate DESC ";
 			$result2 = $db->query($query)->fetchAll();
 			foreach ($result2 as $key => $datei) {
 				$file_pos = ((count($result2) > 1) ? (($key == 0) ? "top" : (($key == count($result2)-1) ? "bottom" : "middle")) : "alone");
@@ -1744,7 +1744,7 @@ $droppable_folder = 0;
  * This function is not dependent on the recursive-level so it looks as if it all starts from here.
  * 
  */
-function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FALSE, $filelink="", $anchor_id, $position="middle") {
+function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FALSE, $filelink="", $anchor_id, $position="middle", $isissuefolder = false) {
 	global $_fullname_sql,$SessionSeminar,$SessSemName, $rechte, $anfang,
 		$user, $SemSecLevelWrite, $SemUserStatus, $check_all, $countfolder, $droppable_folder;
 	$option = true;
@@ -1818,7 +1818,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 		//print "<td width=1px class=\"printhead\">&nbsp;</td>";
 		print "<td id=\"folder_".$folder_id."_arrow_td\" nowrap valign=\"top\" align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead3\" valign=\"baseline\">";
 		print "&nbsp;<a href=\"".URLHelper::getLink("?close=".$folder_id."#anker");
-		print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."', '".$SessionSeminar."')\"><img id=\"folder_".$folder_id."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL']."images/forumgraurunt2.gif\"".tooltip(_("Objekt zuklappen"))." border=0></a>";
+		print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><img id=\"folder_".$folder_id."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL']."images/forumgraurunt2.gif\"".tooltip(_("Objekt zuklappen"))." border=0></a>";
 		print "</td>";
 		//print ($javascriptok ? "<td class=\"printhead\"><a href=\"Javascript: changefolderbody('".$folder_id."')\" class=\"tree\"><span id=\"folder_".$folder_id."_header\" style=\"font-weight: bold\">" : 
 		print "<td class=\"printhead\" valign=\"baseline\">";
@@ -1835,14 +1835,14 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 		print "<td id=\"folder_".$folder_id."_arrow_td\" nowrap valign=\"top\" align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead2\" valign=\"baseline\">";
 		print "&nbsp;<a href=\"";
 		print URLHelper::getLink("?open=".$folder_id."#anker");
-		print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."','".$SessionSeminar."')\"><img id=\"folder_".$folder_id."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL']."images/forumgrau2.gif\"".tooltip(_("Objekt aufklappen"))." border=0></a></td>";
+		print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><img id=\"folder_".$folder_id."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL']."images/forumgrau2.gif\"".tooltip(_("Objekt aufklappen"))." border=0></a></td>";
 		print "<td class=\"printhead\" valign=\"baseline\">";
 				if ($move && ($move != $folder_id) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
 				print "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=0></a>";
 		}
 		print $bewegeflaeche_anfasser;
 		print "<a href=\"".URLHelper::getLink("?open=".$folder_id."#anker")."\" class=\"tree\" " .
-				"onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."', '".$SessionSeminar."')\"><span id=\"folder_".$folder_id."_header\" " .
+				"onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><span id=\"folder_".$folder_id."_header\" " .
 				"style=\"font-weight: normal\">";
 	}
 		
@@ -1872,7 +1872,17 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 	}
 	
 	//Dateiname, Rechte und Dokumente anzeigen
-	$tmp_titel=htmlReady(mila($result['name']));
+	$tmp_titel = htmlReady(mila($result['name']));
+	if ($isissuefolder) {
+		$issue_id = $db->query("SELECT range_id FROM folder WHERE folder_id = ".$db->quote($folder_id))->fetch(); 
+		$dates_for_issue = IssueDB::getDatesforIssue($issue_id['range_id']);
+  	$dates_title = array();
+    foreach ($dates_for_issue as $date) {
+      $dates_title[] .= date('d.m.y, H:i', $date['date']).' - '.date('H:i', $date['end_time']);
+    }
+		$tmp_titel = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title)) . 
+		     ", " . ($tmp_titel ? $tmp_titel : _("ohne Titel"));
+	}
 	if (($change == $folder_id) 
 			&& ((count($folder_tree->getParents($folder_id)) > 1) 
 			 || $result['range_id'] == md5($SessSemName[1] . 'top_folder') 

@@ -621,7 +621,10 @@ STUDIP.Filesystem.setdraggables = function () {
               }
             });
             var sort_var = md5_id;
-            var request = new Ajax.Request(document.URL, {
+            var adress = (document.URL.indexOf("#") != -1 
+                ? document.URL.substring(0, document.URL.indexOf("#")) 
+                : document.URL);
+            var request = new Ajax.Request(adress, {
               method: "post",
               parameters: {
                 folder_sort: sort_var,
@@ -661,26 +664,29 @@ STUDIP.Filesystem.setdroppables = function () {
         folder_md5_id = folder_md5_id.substr(folder_md5_id.lastIndexOf('_') + 1);
         //alert("Drop "+file_md5_id+" on "+folder_md5_id);
         var request;
+        var adress = (document.URL.indexOf("#") != -1 
+            ? document.URL.substring(0, document.URL.indexOf("#")) 
+            : document.URL);
         if ((event.keyCode === 17)  || (event.ctrlKey)) {
-          request = new Ajax.Request(document.URL, {
+          request = new Ajax.Request(adress, {
             method: "post",
             parameters: {
               copyintofolder: folder_md5_id,
               copyfile: file_md5_id
             },
             onSuccess: function (transport) {
-              location.href = document.URL + '&cmd=tree&open=' + folder_md5_id;
+              location.href = adress + '&cmd=tree&open=' + folder_md5_id;
             }
           });
         } else {
-          request = new Ajax.Request(document.URL, {
+          request = new Ajax.Request(adress, {
             method: "post",
             parameters: {
               moveintofolder: folder_md5_id,
               movefile: file_md5_id
             },
             onSuccess: function (transport) {
-              location.href = document.URL + '&cmd=tree&open=' + folder_md5_id;
+              location.href = adress + '&cmd=tree&open=' + folder_md5_id;
             }
           });
         }
@@ -724,7 +730,9 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
       $("folder_" + md5_id + "_arrow_td").removeClassName('printhead3');
     } else {
       if ($("folder_" + md5_id + "_body").innerHTML === "") {
-    	var adress = document.URL.substring(0, document.URL.indexOf("#"));
+    	  var adress = (document.URL.indexOf("#") != -1 
+              ? document.URL.substring(0, document.URL.indexOf("#")) 
+              : document.URL);
     	var request = new Ajax.Request(adress, {
           method: 'get',
           parameters: {
@@ -776,7 +784,9 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
       window.setTimeout("$('file_" + md5_id + "_body_row').style.visibility = 'collapse'", 310);
     } else {
       if ($("file_" + md5_id + "_body").innerHTML === "") {
-    	var adress = document.URL.substring(0, document.URL.indexOf("#"));
+    	  var adress = (document.URL.indexOf("#") != -1 
+    	      ? document.URL.substring(0, document.URL.indexOf("#")) 
+    	      : document.URL);
         var request = new Ajax.Request(adress, {
           method: 'get',
           parameters: {

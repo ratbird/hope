@@ -46,15 +46,17 @@ $db2 = DBManager::get();
 
 //Switch fuer die Ansichten
 URLHelper::bindLinkParam('data', $folder_system_data);
-if ($cmd == 'tree') {
+if ($_REQUEST['cmd'] == 'tree') {
+	URLHelper::removeLinkParam('data');
 	$folder_system_data = array();
 	$folder_system_data['cmd'] = 'tree';
-} elseif ($cmd == 'all') {
+	URLHelper::addLinkParam('data', $folder_system_data);
+} elseif ($_REQUEST['cmd'] == 'all') {
 	URLHelper::removeLinkParam('data');
 	$folder_system_data = array();
 	$folder_system_data['cmd'] = 'all';
+	URLHelper::addLinkParam('data', $folder_system_data);
 } elseif(!isset($folder_system_data['cmd'])) {
-	//'all' und 'tree' verhalten sich leider asymmetrisch:
 	$folder_system_data['cmd'] = 'all';
 }
 
@@ -64,6 +66,8 @@ if (strpos($open, "_") !== false) {
 
 if ($_REQUEST['orderby']) {
 	$folder_system_data['orderby'] = $_REQUEST['orderby'];
+} else {
+	unset($folder_system_data['orderby']);
 }
 
 ///////////////////////////////////////////////////////////
@@ -72,7 +76,7 @@ if ($_REQUEST['orderby']) {
 
 //Frage den Dateienkörper ab
 if ($_REQUEST["getfilebody"]) {
-	URLHelper::bindLinkParam('data', $folder_system_data);
+	//URLHelper::bindLinkParam('data', $folder_system_data);
 	$folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 	$result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = ".$db->quote($_REQUEST["getfilebody"]))->fetch();
 	if ($folder_tree->isReadable($result['range_id'] , $user->id)) {
@@ -88,7 +92,7 @@ if ($_REQUEST["getfilebody"]) {
 
 //Frage den Ordnerkörper ab
 if ($_REQUEST["getfolderbody"]) {
-	URLHelper::bindLinkParam('data', $folder_system_data);
+	//URLHelper::bindLinkParam('data', $folder_system_data);
 	$folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 	if ($folder_tree->isExecutable($_REQUEST["getfolderbody"] , $user->id)) {
 		ob_start();
@@ -876,7 +880,9 @@ div.droppable.hover {
 						$folder_system_data["upload"], 
 						$folder_system_data["refresh"], 
 						$folder_system_data["link"],
-						$open_id);
+						$open_id,
+						NULL,
+						false);
 			}
 		}
 		//display_folder_system($range_id, 0, $folder_system_data["open"], '', $change, $folder_system_data["move"], $folder_system_data["upload"], $folder_system_data["refresh"], $folder_system_data["link"]);
@@ -896,14 +902,21 @@ div.droppable.hover {
 						$folder_system_data["upload"], 
 						$folder_system_data["refresh"], 
 						$folder_system_data["link"],
-						$open_id);
+						$open_id,
+						NULL,
+						false);
 			}
 		}
 		
-		if($SessSemName['class'] == 'sem'){
-			// Themenordner zu Terminen:
-			$query = "SELECT DISTINCT folder_id FROM themen as th LEFT JOIN themen_termine as tt ON(th.issue_id = tt.issue_id) LEFT JOIN termine as t ON (t.termin_id = tt.termin_id) INNER JOIN folder ON (th.issue_id=folder.range_id) WHERE th.seminar_id='$range_id' ORDER BY th.title, t.date, th.priority";
-			
+		// Themenordner zu Terminen:
+		if($SessSemName['class'] == 'sem') {
+			$query = "SELECT DISTINCT folder_id " .
+			    "FROM themen as th " . 
+			    "LEFT JOIN themen_termine as tt ON(th.issue_id = tt.issue_id) " .
+			    "LEFT JOIN termine as t ON (t.termin_id = tt.termin_id) " .
+			    "INNER JOIN folder ON (th.issue_id=folder.range_id) " .
+			  "WHERE th.seminar_id='$range_id' " . 
+			  "ORDER BY th.title, t.date, th.priority";
 			$result = $db->query($query)->fetchAll();
 			foreach ($result as $row) {
 				display_folder($row['folder_id'], 
@@ -913,8 +926,11 @@ div.droppable.hover {
 				    $folder_system_data["upload"], 
 				    $folder_system_data["refresh"], 
 				    $folder_system_data["link"], 
-				    $open_id);
+				    $open_id, 
+				    NULL, 
+				    true);
 			}
+			
 			//Gruppenordner:
 			$query = "SELECT sg.statusgruppe_id FROM statusgruppen sg "
 					. (!$rechte ? "INNER JOIN statusgruppe_user sgu ON sgu.statusgruppe_id=sg.statusgruppe_id AND sgu.user_id='$user->id'" : "")
@@ -932,7 +948,9 @@ div.droppable.hover {
 							FALSE, 
 							$folder_system_data["refresh"], 
 							$folder_system_data["link"],
-							$open_id);
+							$open_id,
+							NULL,
+							false);
 					}
 				}
 			}

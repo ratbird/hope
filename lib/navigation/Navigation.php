@@ -62,7 +62,7 @@ class Navigation implements IteratorAggregate
      */
     public static function addItem($path, Navigation $navigation)
     {
-        $nav = self::getItem(dirname($path));
+        $nav = self::getItem(strtr(dirname($path), '\\', '/'));
         $nav->addSubNavigation(basename($path), $navigation);
     }
 
@@ -77,7 +77,7 @@ class Navigation implements IteratorAggregate
      */
     public static function insertItem($path, $where, Navigation $navigation)
     {
-        $nav = self::getItem(dirname($path));
+        $nav = self::getItem(strtr(dirname($path), '\\', '/'));
         $nav->insertSubNavigation(basename($path), $where, $navigation);
     }
 
@@ -89,7 +89,7 @@ class Navigation implements IteratorAggregate
      */
     public static function removeItem($path)
     {
-        $nav = self::getItem(dirname($path));
+        $nav = self::getItem(strtr(dirname($path), '\\', '/'));
         $nav->removeSubNavigation(basename($path));
     }
 

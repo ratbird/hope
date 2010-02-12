@@ -203,7 +203,7 @@ class StudipCacheFactory {
      */
     static function retrieveConstructorArguments()
     {
-        $cfg_args = self::getConfig()->getValue('cache_init_args');
+        $cfg_args = $GLOBALS['CACHING_ENABLE'] ? self::getConfig()->getValue('cache_init_args') : null;
         return isset($cfg_args) ? json_decode($cfg_args, TRUE) : array();
     }
 

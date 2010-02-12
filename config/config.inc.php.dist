@@ -1,4 +1,4 @@
-<?
+<?php
 /**
 * config.inc.php
 *

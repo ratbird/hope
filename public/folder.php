@@ -919,16 +919,18 @@ div.droppable.hover {
 			  "ORDER BY th.title, t.date, th.priority";
 			$result = $db->query($query)->fetchAll();
 			foreach ($result as $row) {
-				display_folder($row['folder_id'], 
-				    $folder_system_data["open"], 
-				    $change, 
-				    $folder_system_data["move"], 
-				    $folder_system_data["upload"], 
-				    $folder_system_data["refresh"], 
-				    $folder_system_data["link"], 
-				    $open_id, 
-				    NULL, 
-				    true);
+				if ($folder_tree->isExecutable($row['folder_id'], $user->id) || $rechte) {
+				  display_folder($row['folder_id'], 
+				      $folder_system_data["open"], 
+				      $change, 
+				      $folder_system_data["move"], 
+				      $folder_system_data["upload"], 
+				      $folder_system_data["refresh"], 
+				      $folder_system_data["link"], 
+				      $open_id, 
+				      NULL, 
+				      true);
+				}
 			}
 			
 			//Gruppenordner:

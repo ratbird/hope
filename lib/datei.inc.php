@@ -695,13 +695,13 @@ function form($refresh = FALSE) {
 	}
 	$print.="</font></td></tr>";
 	$print.="\n<tr><td class=\"steel1\" width=\"20%\"><font size=-1><b>" . _("Maximale Gr&ouml;&szlig;e:") . "</b></font></td><td class=\"steel1\" width=\"80%\"><font size=-1><b>".($max_filesize / 1048576)." </b>" . _("Megabyte") . "</font></td></tr>";
-	if ($folder_system_data['zipupload']){
+	if ($folder_system_data['zipupload']) {
 		$print.="\n<tr><td class=\"steel1\" width=\"20%\"><font size=-1><b>" . _("Maximaler Inhalt des Ziparchivs:")
 			. "</b></font></td><td class=\"steel1\" width=\"80%\"><font size=-1>"
 			. sprintf(_("<b>%d</b> Dateien und <b>%d</b> Ordner"),get_config('ZIP_UPLOAD_MAX_FILES'), get_config('ZIP_UPLOAD_MAX_DIRS'))
 			. "</font></td></tr>";
 	}
-	$print.= "\n<form enctype=\"multipart/form-data\" NAME=\"upload_form\" action=\"" . URLHelper::getLink('') . "\" method=\"post\">";
+	$print.= "\n<form enctype=\"multipart/form-data\" NAME=\"upload_form\" action=\"" . URLHelper::getLink('#anker') . "\" method=\"post\">";
 	$print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("1. Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuw&auml;hlen.") . " </font></td></tr>";
 	$print.= "\n<tr>";
 	$print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
@@ -718,16 +718,16 @@ function form($refresh = FALSE) {
 		$print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
 		$print.= "\n&nbsp;<input type=\"TEXT\" name=\"name\" style=\"width: 70%\" size=\"40\" maxlength\"255\"></td></tr>";
 		$print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
-		$print.= "\n&nbsp;<TEXTAREA NAME=\"description\"  style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL></TEXTAREA>&nbsp;</td></tr>";
-		$print.= "\n<tr><td class=\"steelgraudunkel\"colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen") . "</font></td></tr>";
-	} else if ($folder_system_data['zipupload']){
-		$print.= "\n<tr><td class=\"steelgraudunkel\"colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um das Ziparchiv hochzuladen und in diesem Ordner zu entpacken.") . "</font></td></tr>";
+		$print.= "\n&nbsp;<TEXTAREA NAME=\"description\" style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL></TEXTAREA>&nbsp;</td></tr>";
+		$print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen") . "</font></td></tr>";
+	} else if ($folder_system_data['zipupload']) {
+		$print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um das Ziparchiv hochzuladen und in diesem Ordner zu entpacken.") . "</font></td></tr>";
 	} else {
-		$print.= "\n<tr><td class=\"steelgraudunkel\"colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
+		$print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
 	}
 	$print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"center\" valign=\"center\">";
 	$print.= "\n<input type=\"image\" " . makeButton("absenden", "src") . " value=\"Senden\" align=\"absmiddle\" onClick=\"return upload_start();\" name=\"create\" border=\"0\">";
-	$print.="&nbsp;<a href=\"".URLHelper::getLink("?cancel_x=true")."\">" . makeButton("abbrechen", "img") . "</a></td></tr>";
+	$print.="&nbsp;<a href=\"".URLHelper::getLink("?cancel_x=true#anker")."\">" . makeButton("abbrechen", "img") . "</a></td></tr>";
 	$print.= "\n<input type=\"hidden\" name=\"cmd\" value=\"upload\">";
 	$print.= "\n<input type=\"hidden\" name=\"upload_seminar_id\" value=\"".$SessSemName[1]."\">";
 	$print.= "\n</form></table><br></center>";
@@ -967,7 +967,7 @@ function insert_entry_db($range_id, $sem_id=0, $refresh = FALSE) {
 
 	if ($the_file_size > 0) {
 		$doc =& new StudipDocument($dokument_id);
-		if (!$refresh){
+		if (!$refresh) {
 			$doc->setValue('range_id' , $range_id);
 			$doc->setValue('seminar_id' , $upload_seminar_id);
 			$doc->setValue('description' , stripslashes($description));
@@ -1240,7 +1240,7 @@ function link_form ($range_id, $updating=FALSE) {
 	$print.="\n<br><br>" . _("Sie haben diesen Ordner zum Upload ausgewählt:") . "<br><br><center><table width=\"90%\" style=\"{border-style: solid; border-color: #000000;  border-width: 1px;}\" border=0 cellpadding=2 cellspacing=3>";
 
 	$print.="</font></td></tr>";
-	$print.= "\n<form enctype=\"multipart/form-data\" NAME=\"link_form\" action=\"" . URLHelper::getLink('') . "\" method=\"post\">";
+	$print.= "\n<form enctype=\"multipart/form-data\" NAME=\"link_form\" action=\"" . URLHelper::getLink('#anker') . "\" method=\"post\">";
 	$print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("1. Geben Sie hier den <b>vollständigen Pfad</b> zu der Datei an die sie verlinken wollen.") . " </font></td></tr>";
 	$print.= "\n<tr>";
 	$print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
@@ -1267,7 +1267,7 @@ function link_form ($range_id, $updating=FALSE) {
 		$print.= "\n<tr><td class=\"steelgraudunkel\"colspan=2 ><font size=-1>" . _("2. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
 	$print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"center\" valign=\"center\">";
 	$print.= "\n<input type=\"image\" " . makeButton("absenden", "src") . " value=\"Senden\" align=\"absmiddle\" name=\"create\" border=\"0\">";
-	$print.="&nbsp;<a href=\"".URLHelper::getLink("?cancel_x=true")."\">" . makeButton("abbrechen", "img") . "</a></td></tr>";
+	$print.="&nbsp;<a href=\"".URLHelper::getLink("?cancel_x=true#anker")."\">" . makeButton("abbrechen", "img") . "</a></td></tr>";
 	$print.= "\n<input type=\"hidden\" name=\"upload_seminar_id\" value=\"".$SessSemName[1]."\">";
 	if ($updating == TRUE) {
 		$print.= "\n<input type=\"hidden\" name=\"cmd\" value=\"link_update\">";
@@ -1693,12 +1693,10 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
 		
 		print "<div class=\"folder_container\" id=\"folder_subfolders_".$folder_id."\">";
 		//Unterordner darstellen:
-		if (!is_array($folders_kids)) {
-			$folders_kids = array();
-		}
+		is_array($folders_kids) || $folders_kids = array();
 		$subfolders = array();
 		foreach ($folders_kids as $key => $unterordner) {
-			if (($folder_tree->isReadable($folder_id, $user->id)) || ($rechte)) { //habe ich Rechte?
+			if (($folder_tree->isExecutable($unterordner['folder_id'], $user->id)) || ($rechte)) { //bin ich Dozent oder Tutor?
 				$subfolders[] = $unterordner['folder_id'];
 			}
 		}
@@ -1971,7 +1969,9 @@ function GetFileIcon($ext, $with_img_tag = false){
 		case 'rtf':
 		case 'doc':
 			$icon = 'rtf-icon.gif';
-		break;
+		case 'docx':
+      $icon = 'rtf-icon.gif';
+    break;
 		case 'xls':
 		case 'csv':
 			$icon = 'xls-icon.gif';

@@ -32,7 +32,7 @@
 // +---------------------------------------------------------------------------+
 
 function CliErrorHandler($errno, $errstr, $errfile, $errline) {
-	if ($errno & ~(E_NOTICE | E_STRICT | E_WARNING) && error_reporting()){
+	if ($errno & ~(E_NOTICE | E_STRICT | E_DEPRECATED | E_WARNING) && error_reporting()){
 		fwrite(STDERR,"$errstr \n$errfile line $errline\n");
 		exit(1);
 	}

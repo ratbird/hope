@@ -43,7 +43,7 @@ require_once 'lib/classes/SemBrowse.class.php';
 
 	$group_by = Request::int('group_by', 0);
 
-	$sem_browse_obj = new SemBrowse();
+	$sem_browse_obj = new SemBrowse(array('group_by' => 0));
 	$sem_browse_obj->sem_browse_data['default_sem'] = "all";
 	$sem_browse_obj->sem_number = false;
 	$sem_browse_obj->target_url="details.php";	//teilt der nachfolgenden Include mit, wo sie die Leute hinschicken soll

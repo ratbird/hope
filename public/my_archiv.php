@@ -72,25 +72,25 @@ if (!isset($sortby))
 if ($sortby == "count")
 	$sortby = "count DESC";
 
-$db->query ("SELECT archiv.name, archiv.seminar_id, archiv_user.status, archiv.semester, archiv.archiv_file_id, archiv.forumdump FROM archiv_user LEFT JOIN archiv  USING (seminar_id) WHERE archiv_user.user_id = '$user->id' GROUP BY seminar_id ORDER BY start_time DESC, $sortby");
+$db->query ("SELECT archiv.name, archiv.seminar_id, archiv_user.status, archiv.semester, archiv.archiv_file_id, archiv.forumdump, archiv.wikidump FROM archiv_user LEFT JOIN archiv  USING (seminar_id) WHERE archiv_user.user_id = '$user->id' GROUP BY seminar_id ORDER BY start_time DESC, $sortby");
 $num_my_sem=$db->num_rows();
 if (!$num_my_sem)
 	$meldung.= "info§" . _("Es befinden sich zur Zeit keine Veranstaltungen im Archiv, an denen Sie teilgenommen haben.");
 
  ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
+<tr valign="top">
+	<td class="blank" align="center"><br>
 <?
 
 if ($num_my_sem) {
 	?>
-	<tr valign="top">
-		<td valign="top" class="blank" align="center"><br>
-			<table border="0" cellpadding="1" cellspacing="0" width="98%" align="center" valign="top" class="blank">
-				<tr align="center" valign="top">
+			<table cellpadding="1" cellspacing="0" width="98%">
+				<tr>
 					<th width="1%"></th>
 					<th width="82%" align="left"><a href="<?= URLHelper::getLink("?sortby=name&view=". $view) ?>"><? echo(_("Name")) ?></a></th>
 					<th width="7%"><b><? echo(_("Inhalt")) ?></b></th>
-					<th width="10%"><a href="<?= URLHelper::getLink("?sortby=status&view=". $view) ?>">&nbsp;<? echo(_("Status")) ?>&nbsp;</a></th>
+					<th width="10%"><a href="<?= URLHelper::getLink("?sortby=status&view=". $view) ?>"><? echo(_("Status")) ?></a></th>
 				</tr>
 	<?
 	while ($db->next_record()) {
@@ -98,31 +98,39 @@ if ($num_my_sem) {
 		if ($last_sem != $db->f("semester")) {
 			$cssSw->resetClass();
 			$cssSw->switchClass();
-			print "<tr><td class=\"steelkante\" colspan=\"4\">&nbsp; <b>".$db->f("semester")."</b></td></tr>";
-			}
+			print "<tr><td class=\"steelkante\" colspan=\"4\"> <b>".$db->f("semester")."</b></td></tr>";
+		}
 		echo "<tr ".$cssSw->getHover()." >";
-		echo "<td class=\"".$cssSw->getClass()."\">&nbsp; </td>";
+		echo "<td class=\"".$cssSw->getClass()."\"></td>";
 		// name-field
-		echo "<td class=\"".$cssSw->getClass()."\" ><a href=\"". URLHelper::getLink("archiv.php?dump_id=".$db->f('seminar_id')."") ."\" target=\"_blank\">";
-		echo "<font size=-1>".htmlReady($db->f("name"))."</font>";
+		echo "<td class=\"".$cssSw->getClass()."\" ><a href=\"". URLHelper::getLink("archiv.php?dump_id=".$db->f('seminar_id')) ."\" target=\"_blank\">";
+		echo htmlReady($db->f("name"));
 		print ("</a></td>");
 		// content-field
-		echo "<td class=\"".$cssSw->getClass()."\" align=\"left\" nowrap>";
+		echo "<td class=\"".$cssSw->getClass()."\" nowrap>";
+		echo '&nbsp; ';
 		// postings-field
 		if ($db->f("forumdump"))
-			echo "<a href=\"". URLHelper::getLink("archiv.php?forum_dump_id=".$db->f('seminar_id'))."" ."\" target=\"blank\">&nbsp; <img src=\"".$GLOBALS['ASSETS_URL']."images/icon-posting.gif\"border=0 ".tooltip(_("Beiträge des Forums der Veranstaltung"))."></a>";
+			echo "<a href=\"". URLHelper::getLink("archiv.php?forum_dump_id=".$db->f('seminar_id')) ."\" target=\"blank\">". Assets::img('icon-posting.gif', array('title' => 'Beiträge des Forums der Veranstaltung')) ."</a>";
 		else
-			echo "&nbsp; <img src='".$GLOBALS['ASSETS_URL']."images/icon-leer.gif' border=0>";
-		 //documents-field
+			echo Assets::img('icon-leer.gif');
+		echo '&nbsp; ';
+		// documents-field
  		$file_name = _("Dateisammlung") . '-' . substr($db->f('name'),0,200) . '.zip';
 		if ($db->f('archiv_file_id')) {
-			echo '<a href="'. URLHelper::getLink(GetDownloadLink($db->f('archiv_file_id'), $file_name, 1)) . '">&nbsp; <img src="'.$GLOBALS['ASSETS_URL'].'images/icon-disc.gif" border=0 '.tooltip(_("Dateisammlung der Veranstaltung herunterladen")).'></a>';
+			echo "<a href=\"". URLHelper::getLink(GetDownloadLink($db->f('archiv_file_id'), $file_name, 1)) ."\">". Assets::img('icon-disc.gif', array('title' => 'Dateisammlung der Veranstaltung herunterladen')) ."</a>";
 		} else {
-			echo '&nbsp; <img src="'.$GLOBALS['ASSETS_URL'].'images/icon-leer.gif" border=0>';
+			echo Assets::img('icon-leer.gif');
 		}
+		echo '&nbsp; ';
+		// wiki-field
+		if ($db->f("wikidump"))
+			echo "<a href=\"". URLHelper::getLink("archiv.php?wiki_dump_id=".$db->f('seminar_id')) ."\" target=\"blank\">". Assets::img('icon-wiki.gif', array('title' => 'Beiträge des Wikis der Veranstaltung')) ."</a>";
+		else
+			echo Assets::img('icon-leer.gif');
 		echo '</td>';
 		//status-field
-		echo "<td class=\"".$cssSw->getClass()."\"  align=\"center\" nowrap><font size=-1>". $db->f("status")."&nbsp;</font></td>";
+		echo "<td class=\"".$cssSw->getClass()."\" align=\"center\">". $db->f("status")."</td>";
 		$last_sem=$db->f("semester");
 	}
 	echo "</table><br><br>";
@@ -130,8 +138,6 @@ if ($num_my_sem) {
 } else {  // es sind keine Veranstaltungen abboniert
 
  ?>
- <tr>
-	 <td valign="top" class="blank"><br>
 		<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center" class="blank">
 	<?
 	if ($meldung)	{

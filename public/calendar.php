@@ -44,10 +44,6 @@ define("PHPDOC_DUMMY",true);
 
 // Default_Auth
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-if ($perm->have_perm("admin")) {
-	$perm->perm_invalid($auth->auth["perm"], "");
-	exit;
-}
 $perm->check("user");
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session

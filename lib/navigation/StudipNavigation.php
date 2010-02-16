@@ -58,7 +58,7 @@ class StudipNavigation extends Navigation
             $this->addSubNavigation('homepage', new HomepageNavigation());
         }
 
-        if (is_object($user) && $user->id != 'nobody' && !$perm->have_perm('admin')) {
+        if (is_object($user) && $user->id != 'nobody') {
             $this->addSubNavigation('calendar', new CalendarNavigation());
         }
 

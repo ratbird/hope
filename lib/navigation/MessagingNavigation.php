@@ -56,21 +56,22 @@ class MessagingNavigation extends Navigation
 
         parent::initSubNavigation();
 
-        // calendar / schedule
-        if (!$perm->have_perm('admin')) {
-            if (get_config('CALENDAR_ENABLE')) {
-                $navigation = new Navigation(_('Terminkalender'), 'calendar.php');
-                $navigation->addSubNavigation('day', new Navigation(_('Tag'), 'calendar.php', array('cmd' => 'showday')));
-                $navigation->addSubNavigation('week', new Navigation(_('Woche'), 'calendar.php', array('cmd' => 'showweek')));
-                $navigation->addSubNavigation('month', new Navigation(_('Monat'), 'calendar.php', array('cmd' => 'showmonth')));
-                $navigation->addSubNavigation('year', new Navigation(_('Jahr'), 'calendar.php', array('cmd' => 'showyear')));
-                $navigation->addSubNavigation('edit', new Navigation(_('Termin anlegen/bearbeiten'), 'calendar.php', array('cmd' => 'edit')));
-                $navigation->addSubNavigation('course', new Navigation(_('Veranstaltungstermine'), 'calendar.php', array('cmd' => 'bind')));
-                $navigation->addSubNavigation('export', new Navigation(_('Export/Sync'), 'calendar.php', array('cmd' => 'export')));
-                $navigation->addSubNavigation('settings', new Navigation(_('Ansicht anpassen'), 'calendar.php', array('cmd' => 'changeview')));
-                $this->addSubNavigation('calendar', $navigation);
-            }
+        // calendar
+        if (get_config('CALENDAR_ENABLE')) {
+            $navigation = new Navigation(_('Terminkalender'), 'calendar.php');
+            $navigation->addSubNavigation('day', new Navigation(_('Tag'), 'calendar.php', array('cmd' => 'showday')));
+            $navigation->addSubNavigation('week', new Navigation(_('Woche'), 'calendar.php', array('cmd' => 'showweek')));
+            $navigation->addSubNavigation('month', new Navigation(_('Monat'), 'calendar.php', array('cmd' => 'showmonth')));
+            $navigation->addSubNavigation('year', new Navigation(_('Jahr'), 'calendar.php', array('cmd' => 'showyear')));
+            $navigation->addSubNavigation('edit', new Navigation(_('Termin anlegen/bearbeiten'), 'calendar.php', array('cmd' => 'edit')));
+            $navigation->addSubNavigation('course', new Navigation(_('Veranstaltungstermine'), 'calendar.php', array('cmd' => 'bind')));
+            $navigation->addSubNavigation('export', new Navigation(_('Export/Sync'), 'calendar.php', array('cmd' => 'export')));
+            $navigation->addSubNavigation('settings', new Navigation(_('Ansicht anpassen'), 'calendar.php', array('cmd' => 'changeview')));
+            $this->addSubNavigation('calendar', $navigation);
+        }
 
+        // schedule
+        if (!$perm->have_perm('admin')) {
             $navigation = new Navigation(_('Stundenplan'), 'mein_stundenplan.php');
             $this->addSubNavigation('schedule', $navigation);
         }

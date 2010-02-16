@@ -145,6 +145,10 @@ class StudipCacheFactory {
 
         if (is_null(self::$cache)) {
 
+            if (!$GLOBALS['CACHING_ENABLE']) {
+                return self::$cache = new StudipNullCache();
+            }
+
             try {
                 $class = self::loadCacheClass();
                 $args = self::retrieveConstructorArguments();
@@ -168,11 +172,7 @@ class StudipCacheFactory {
      */
     static function loadCacheClass()
     {
-        if (!$GLOBALS['CACHING_ENABLE']) {
-            return 'StudipNullCache';
-        }
-
-    	$cfg = self::getConfig();
+        $cfg = self::getConfig();
         $cache_class_file = $cfg->getValue('cache_class_file');
         $cache_class      = $cfg->getValue('cache_class');
 
@@ -203,7 +203,7 @@ class StudipCacheFactory {
      */
     static function retrieveConstructorArguments()
     {
-        $cfg_args = $GLOBALS['CACHING_ENABLE'] ? self::getConfig()->getValue('cache_init_args') : null;
+        $cfg_args = self::getConfig()->getValue('cache_init_args');
         return isset($cfg_args) ? json_decode($cfg_args, TRUE) : array();
     }
 

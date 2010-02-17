@@ -247,7 +247,7 @@ class StudipForm {
 			}
 			$ret .= "&nbsp; <img align=\"absmiddle\" src=\"{$GLOBALS['ASSETS_URL']}images/popupkalender.gif\" border=\"0\" ";
 			$ret .= "onClick=\"window.open('";
-			$ret .= "termin_eingabe_dispatch.php?form_name={$this->form_name}&element_switch={$this->form_name}_{$name}&imt={$atime}&atime={$atime}', 'InsertDate', ";
+			$ret .= $GLOBALS['ABSOLUTE_URI_STUDIP']."termin_eingabe_dispatch.php?form_name={$this->form_name}&element_switch={$this->form_name}_{$name}&imt={$atime}&atime={$atime}', 'InsertDate', ";
 			$ret .= "'dependent=yes, width=210, height=210, left=500, top=150')\">";
 		}
 		return $ret;

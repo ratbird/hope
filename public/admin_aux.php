@@ -25,13 +25,7 @@
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $auth->login_if($auth->auth["uid"] == "nobody");
 $perm->check("dozent");
-if ($aux_rule_x && $aux_rule_y) {
-	$list=TRUE;
-	$new_session=TRUE;
-}
 include ("lib/seminar_open.php"); // initialise Stud.IP-Session
-
-//var_dump($_REQUEST);
 
 // -- here you have to put initialisations for the current page
 require_once("lib/dates.inc.php"); // Funktionen zum Loeschen von Terminen
@@ -42,6 +36,11 @@ require_once("lib/classes/Table.class.php");
 require_once("lib/classes/ZebraTable.class.php");
 require_once("lib/classes/AuxLockRules.class.php");
 require_once 'lib/admin_search.inc.php';
+
+if (Request::submitted('aux_rule')) {
+	$list=TRUE;
+	$message = 'info§' . _("Diese Daten sind noch nicht gespeichert.");
+}
 
 $CURRENT_PAGE = _("Verwaltung der Zusatzangaben von Veranstaltungen");
 Navigation::activateItem('/admin/course/aux_data');
@@ -110,7 +109,7 @@ if (isset($SessSemName[1]) && isset($selected)) {
 
 }
 
-if (is_array($aux_sem) && (!$selected)) {
+if (!Request::submitted('aux_rule') && is_array($aux_sem) && (!$selected)) {
 	foreach ($aux_sem as $key => $val) {
 		$sql = "SELECT Veranstaltungsnummer, Name, aux_lock_rule FROM seminare WHERE seminar_id='".$key."'";
 		$db->query($sql);

@@ -26,11 +26,6 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
                 "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($auth->auth["uid"] == "nobody");
 $perm->check("admin");
-if ($general_lock_x && $general_lock_y) {
-	$list=TRUE;
-	$new_session=TRUE;
-	$message = 'info§' . _("Diese Daten sind noch nicht gespeichert.");
-}
 
 include ("lib/seminar_open.php"); // initialise Stud.IP-Session
 
@@ -43,6 +38,11 @@ require_once("lib/classes/Table.class.php");
 require_once("lib/classes/ZebraTable.class.php");
 require_once("lib/classes/LockRules.class.php");
 require_once 'lib/admin_search.inc.php';
+
+if (Request::submitted('general_lock')) {
+	$list=TRUE;
+	$message = 'info§' . _("Diese Daten sind noch nicht gespeichert.");
+}
 
 $CURRENT_PAGE = _("Sperren von Veranstaltungen");
 Navigation::activateItem('/admin/course/lock_rules');
@@ -106,7 +106,7 @@ if (isset($SessSemName[1]) && isset($selected)) {
 
 }
 
-if (is_array($lock_sem) && !$selected) {
+if (!Request::submitted('general_lock') && is_array($lock_sem) && !$selected) {
 	$db = DBManager::get();
 
 	$stmt = $db->prepare("SELECT Veranstaltungsnummer, Name, lock_rule ".

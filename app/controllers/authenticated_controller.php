@@ -28,7 +28,7 @@ abstract class AuthenticatedController extends StudipController {
    * @return bool
    */
   function before_filter(&$action, &$args) {
-    global $_language_path, $_language, $auth;
+    global $auth;
 
     # open session
     page_open(array('sess' => 'Seminar_Session',
@@ -41,8 +41,8 @@ abstract class AuthenticatedController extends StudipController {
 
     $this->flash = Trails_Flash::instance();
 
-    # set up language prefs
-    $_language_path = init_i18n($_language);
+    // set up user session
+    include 'lib/seminar_open.php';
 
     # Set base layout
     #

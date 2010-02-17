@@ -18,44 +18,24 @@ require_once 'lib/classes/StudipStudyAreaSelection.class.php';
 require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/webservices/api/studip_lecture_tree.php';
 require_once 'lib/classes/LockRules.class.php';
+require_once 'app/controllers/authenticated_controller.php';
 
-
-class Course_StudyAreasController extends Trails_Controller {
+class Course_StudyAreasController extends AuthenticatedController {
 
 
   # see Trails_Controller#before_filter
   function before_filter(&$action, &$args) {
 
-    global $perm, $_language_path, $_language;
+    global $perm;
 
-    # open session
-    page_open(array('sess' => 'Seminar_Session',
-                    'auth' => 'Seminar_Auth',
-                    'perm' => 'Seminar_Perm',
-                    'user' => 'Seminar_User'));
-
-    # set up language prefs
-    #$_language_path = init_i18n($_language);
-    include 'lib/seminar_open.php';
+    parent::before_filter($action, $args);
 
     # user must have tutor permission
-    $perm->check('tutor');
-
-    # user must be logged in
-    $GLOBALS['auth']->login_if($_REQUEST['again']
-                               && ($GLOBALS['auth']->auth['uid'] == 'nobody'));
-
     $course_id = current($args);
     if ($course_id && !$perm->have_studip_perm("tutor", $course_id)) {
       $this->set_status(403);
       return FALSE;
     }
-  }
-
-
-  # see Trails_Controller#after_filter  # see Trails_Controller#after_filter
-  function after_filter($action, $args) {
-    page_close();
   }
 
 

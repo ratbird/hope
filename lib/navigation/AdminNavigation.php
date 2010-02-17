@@ -78,15 +78,15 @@ class AdminNavigation extends Navigation
             }
 
             if (get_config('ALLOW_DOZENT_VISIBILITY') || $perm->have_perm('admin')) {
-                $navigation->addSubNavigation('visibility', new Navigation(_('Sichtbarkeit'), 'admin_visibility.php?list=TRUE&new_session=TRUE'));
+                $navigation->addSubNavigation('visibility', new Navigation(_('Sichtbarkeit'), 'admin_visibility.php?list=TRUE'));
             }
         }
 
         if (get_config('SEMINAR_LOCK_ENABLE') && $perm->have_perm('admin')) {
-            $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperren'), 'admin_lock.php?list=TRUE&new_session=TRUE'));
+            $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperren'), 'admin_lock.php?list=TRUE'));
         }
 
-        $navigation->addSubNavigation('aux_data', new Navigation(_('Zusatzangaben'), 'admin_aux.php?list=TRUE&new_session=TRUE'));
+        $navigation->addSubNavigation('aux_data', new Navigation(_('Zusatzangaben'), 'admin_aux.php?list=TRUE'));
         $this->addSubNavigation('course', $navigation);
 
         // institute administration

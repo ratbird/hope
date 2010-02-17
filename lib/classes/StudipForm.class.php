@@ -247,7 +247,12 @@ class StudipForm {
 			}
 			$ret .= "&nbsp; <img align=\"absmiddle\" src=\"{$GLOBALS['ASSETS_URL']}images/popupkalender.gif\" border=\"0\" ";
 			$ret .= "onClick=\"window.open('";
-			$ret .= $GLOBALS['ABSOLUTE_URI_STUDIP']."termin_eingabe_dispatch.php?form_name={$this->form_name}&element_switch={$this->form_name}_{$name}&imt={$atime}&atime={$atime}', 'InsertDate', ";
+			$ret .= URLHelper::getURL("termin_eingabe_dispatch.php", 
+			     array("form_name" => $this->form_name, 
+			           "element_switch" => $this->form_name."_".$name, 
+			           "imt" => $atime, 
+			           "atime" => $atime));
+			$ret .= "', 'InsertDate', ";
 			$ret .= "'dependent=yes, width=210, height=210, left=500, top=150')\">";
 		}
 		return $ret;

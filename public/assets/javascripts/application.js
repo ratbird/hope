@@ -541,7 +541,7 @@ STUDIP.Filesystem.movelock = false;       //wenn auf true gesetzt, findet gerade
 STUDIP.Filesystem.sendstop = false;       //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lädt sich gerade neu.
 
 STUDIP.Filesystem.getURL = function () {
-  return document.URL.split("#", 1);
+  return document.URL.split("#", 1)[0];
 };
 
 /**

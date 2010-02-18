@@ -540,6 +540,10 @@ STUDIP.Filesystem.hovered_folder = '';    //letzter Ordner, über den eine gezoge
 STUDIP.Filesystem.movelock = false;       //wenn auf true gesetzt, findet gerade eine Animation statt.
 STUDIP.Filesystem.sendstop = false;       //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lädt sich gerade neu.
 
+STUDIP.Filesystem.getURL = function () {
+  return document.URL.split("#", 1);
+};
+
 /**
  * Lässt die gelben Pfeile verschwinden und ersetzt sie durch Anfassersymbole.
  * Wichtig für Javascript-Nichtjavascript Behandlung. Nutzer ohne Javascript
@@ -571,10 +575,13 @@ STUDIP.Filesystem.setdraggables = function () {
         scroll: window,
         tag: 'div',
         starteffect: function (element) {
-          element._opacity = Element.getOpacity(element);
+          var opacity = element.getOpacity();
+          element.store("opacity", opacity);
           Draggable._dragging[element] = true;
-          new Effect.Opacity(element, {
-            duration:0.2, from:element._opacity, to:0.7
+          var effect = new Effect.Opacity(element, {
+            duration: 0.2,
+            from: opacity,
+            to: 0.7
           });
           //wenn es ein aufgeklappter Ordner ist:
           var id = element.getAttribute('id');
@@ -582,23 +589,29 @@ STUDIP.Filesystem.setdraggables = function () {
           var md5_id = element.down().innerHTML;
           if (element_type === "folder") {
             if ($("folder_" + md5_id + "_body").style.display !== "none") {
-          	  aufgeklappt = true;
-          	  STUDIP.Filesystem.changefolderbody(md5_id);
-          	} else {
-          	  aufgeklappt = false;
-          	}
+              aufgeklappt = true;
+              STUDIP.Filesystem.changefolderbody(md5_id);
+            } else {
+              aufgeklappt = false;
+            }
           }
         },
         endeffect: function (element) {
-          var toOpacity = Object.isNumber(element._opacity) ? element._opacity : 1.0;
-          new Effect.Opacity(element, {
-            duration:0.2, from:0.7, to:toOpacity,
-            queue: {scope:'_draggable', position:'end'},
-            afterFinish: function(){
-              Draggable._dragging[element] = false
+          var opacity = element.retrieve("opacity");
+          var toOpacity = Object.isNumber(opacity) ? opacity : 1.0;
+          var effect = new Effect.Opacity(element, {
+            duration: 0.2,
+            from: 0.7,
+            to: toOpacity,
+            queue: {
+              scope: '_draggable',
+              position: 'end'
+            },
+            afterFinish: function () {
+              Draggable._dragging[element] = false;
             }
           });
-          //wenn es ein Ordner ist, der vorher aufgeklappt war 
+          //wenn es ein Ordner ist, der vorher aufgeklappt war
           //(User sind ja zum Glück nicht multitaskingfähig):
           if (aufgeklappt) {
             var md5_id = element.down().innerHTML;
@@ -621,9 +634,7 @@ STUDIP.Filesystem.setdraggables = function () {
               }
             });
             var sort_var = md5_id;
-            var adress = (document.URL.indexOf("#") != -1 
-                ? document.URL.substring(0, document.URL.indexOf("#")) 
-                : document.URL);
+            var adress = STUDIP.Filesystem.getURL();
             var request = new Ajax.Request(adress, {
               method: "post",
               parameters: {
@@ -664,9 +675,7 @@ STUDIP.Filesystem.setdroppables = function () {
         folder_md5_id = folder_md5_id.substr(folder_md5_id.lastIndexOf('_') + 1);
         //alert("Drop "+file_md5_id+" on "+folder_md5_id);
         var request;
-        var adress = (document.URL.indexOf("#") != -1 
-            ? document.URL.substring(0, document.URL.indexOf("#")) 
-            : document.URL);
+        var adress = STUDIP.Filesystem.getURL();
         if ((event.keyCode === 17)  || (event.ctrlKey)) {
           request = new Ajax.Request(adress, {
             method: "post",
@@ -730,13 +739,11 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
       $("folder_" + md5_id + "_arrow_td").removeClassName('printhead3');
     } else {
       if ($("folder_" + md5_id + "_body").innerHTML === "") {
-    	  var adress = (document.URL.indexOf("#") != -1 
-              ? document.URL.substring(0, document.URL.indexOf("#")) 
-              : document.URL);
-    	var request = new Ajax.Request(adress, {
+        var adress = STUDIP.Filesystem.getURL();
+        var request = new Ajax.Request(adress, {
           method: 'get',
           parameters: {
-        	getfolderbody: md5_id
+            getfolderbody: md5_id
           },
           onSuccess: function (transport) {
             $("folder_" + md5_id + "_body").innerHTML = transport.responseText;
@@ -784,13 +791,11 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
       window.setTimeout("$('file_" + md5_id + "_body_row').style.visibility = 'collapse'", 310);
     } else {
       if ($("file_" + md5_id + "_body").innerHTML === "") {
-    	  var adress = (document.URL.indexOf("#") != -1 
-    	      ? document.URL.substring(0, document.URL.indexOf("#")) 
-    	      : document.URL);
+        var adress = STUDIP.Filesystem.getURL();
         var request = new Ajax.Request(adress, {
           method: 'get',
           parameters: {
-        	getfilebody: md5_id
+            getfilebody: md5_id
           },
           onSuccess: function (transport) {
             $("file_" + md5_id + "_header").style.fontWeight = 'bold';

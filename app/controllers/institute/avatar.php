@@ -28,12 +28,6 @@ class Institute_AvatarController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
-        include 'lib/seminar_open.php';
-
-        # user must be logged in
-        $GLOBALS['auth']->login_if(
-            $GLOBALS['auth']->auth['uid'] == 'nobody');
-
         $this->institute_id = current($args);
         if ($this->institute_id === '' || !in_array(get_object_type($this->institute_id), words('inst fak'))
             || !$GLOBALS['perm']->have_studip_perm("admin", $this->institute_id)) {

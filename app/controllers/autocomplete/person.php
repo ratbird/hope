@@ -13,8 +13,9 @@
 
 require_once 'lib/functions.php';
 require_once 'app/models/autocomplete_person.php';
+require_once 'app/controllers/authenticated_controller.php';
 
-class Autocomplete_PersonController extends Trails_Controller {
+class Autocomplete_PersonController extends AuthenticatedController {
 
   function given_action() {
     $search_term = strtr(self::get_param('value'), array('%' => '\%'));
@@ -38,21 +39,10 @@ class Autocomplete_PersonController extends Trails_Controller {
     return studip_utf8decode(Request::get($key));
   }
 
-  function before_filter($action, &$args) {
-    # open session
-    page_open(array('sess' => 'Seminar_Session',
-                    'auth' => 'Seminar_Auth',
-                    'perm' => 'Seminar_Perm',
-                    'user' => 'Seminar_User'));
-    require_once 'lib/seminar_open.php';
-    # user must be logged in
-    $GLOBALS['auth']->login_if($_REQUEST['again']
-                               && ($GLOBALS['auth']->auth['uid'] == 'nobody'));
+  function before_filter(&$action, &$args) {
+    parent::before_filter($action, $args);
 
     $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
-  }
-
-  function after_filter($action, &$args) {
-    page_close();
+    $this->set_layout(NULL);
   }
 }

@@ -30,12 +30,6 @@ class Course_AvatarController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
-        include 'lib/seminar_open.php';
-
-        # user must be logged in
-        $GLOBALS['auth']->login_if(
-            $GLOBALS['auth']->auth['uid'] == 'nobody');
-
         $this->course_id = current($args);
         if ($this->course_id === '' || get_object_type($this->course_id) !== 'sem'
             || !$GLOBALS['perm']->have_studip_perm("tutor", $this->course_id)) {

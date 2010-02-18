@@ -33,8 +33,6 @@ class Course_StudygroupController extends AuthenticatedController {
 	    if (Config::GetInstance()->getValue('STUDYGROUPS_ENABLE')
 	        || in_array($action, words('globalmodules savemodules deactivate'))) {
 
-    		include 'lib/seminar_open.php';
-
 		// args at position zero is always the studygroup-id
 		if ($args[0]) {
     			if (SeminarCategories::GetBySeminarId($args[0])->studygroup_mode == false) {

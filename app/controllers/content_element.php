@@ -4,16 +4,14 @@
 
 require_once 'lib/functions.php';
 require_once 'app/models/content_element.php';
+require_once 'app/controllers/authenticated_controller.php';
 
-class ContentElementController extends Trails_Controller {
+class ContentElementController extends AuthenticatedController {
 
 
-  function before_filter($action, &$args) {
-    page_open(array('sess' => 'Seminar_Session',
-                    'auth' => 'Seminar_Auth',
-                    'perm' => 'Seminar_Perm',
-                    'user' => 'Seminar_User'));
-    require_once 'lib/seminar_open.php';
+  function before_filter(&$action, &$args) {
+	parent::before_filter($action, $args);
+
 	list($type, $id) = $args;
 	$content_class = 'StudipContentElement' . $type;
 	if($type && class_exists($content_class)){
@@ -28,11 +26,6 @@ class ContentElementController extends Trails_Controller {
 		$this->render_nothing();
 		return false;
 	}
-  }
-
-
-  function after_filter($action, &$args) {
-    page_close();
   }
 
   function get_formatted_action(){

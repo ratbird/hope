@@ -15,8 +15,8 @@ require_once 'app/controllers/authenticated_controller.php';
 class MessagesController extends AuthenticatedController {
 
 
-  function before_filter($action, &$args) {
-    parent::before_filter($action, &$args);
+  function before_filter(&$action, &$args) {
+    parent::before_filter($action, $args);
     $this->set_layout(NULL);
   }
   

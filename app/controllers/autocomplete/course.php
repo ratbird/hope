@@ -14,8 +14,9 @@
 require_once 'lib/functions.php';
 require_once 'lib/classes/SemesterData.class.php';
 require_once 'app/models/autocomplete_course.php';
+require_once 'app/controllers/authenticated_controller.php';
 
-class Autocomplete_CourseController extends Trails_Controller {
+class Autocomplete_CourseController extends AuthenticatedController {
 
   function index_action() {
 
@@ -56,21 +57,10 @@ class Autocomplete_CourseController extends Trails_Controller {
     return studip_utf8decode(Request::get($key));
   }
 
-  function before_filter($action, &$args) {
-    # open session
-    page_open(array('sess' => 'Seminar_Session',
-                    'auth' => 'Seminar_Auth',
-                    'perm' => 'Seminar_Perm',
-                    'user' => 'Seminar_User'));
-    require_once 'lib/seminar_open.php';
-    # user must be logged in
-    $GLOBALS['auth']->login_if($_REQUEST['again']
-                               && ($GLOBALS['auth']->auth['uid'] == 'nobody'));
+  function before_filter(&$action, &$args) {
+    parent::before_filter($action, $args);
 
     $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
-  }
-
-  function after_filter($action, &$args) {
-    page_close();
+    $this->set_layout(NULL);
   }
 }

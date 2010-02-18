@@ -15,8 +15,9 @@
 require_once 'lib/functions.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/classes/UserDomain.php';
+require_once 'app/controllers/authenticated_controller.php';
 
-class DomainAdminController extends Trails_Controller
+class DomainAdminController extends AuthenticatedController
 {
     /**
      * common tasks for all actions
@@ -24,16 +25,8 @@ class DomainAdminController extends Trails_Controller
     function before_filter (&$action, &$args)
     {
         global $perm, $template_factory, $CURRENT_PAGE, $HELP_KEYWORD;
-        global $_language_path, $_language;
 
-        # open session
-        page_open(array('sess' => 'Seminar_Session',
-                        'auth' => 'Seminar_Auth',
-                        'perm' => 'Seminar_Perm',
-                        'user' => 'Seminar_User'));
-
-        # set up language prefs
-        $_language_path = init_i18n($_language);
+        parent::before_filter($action, $args);
 
         # user must have root permission
         $perm->check('root');
@@ -49,14 +42,6 @@ class DomainAdminController extends Trails_Controller
 
         # fetch user domain
         $this->domains = UserDomain::getUserDomains();
-    }
-
-    /**
-     * common tasks for all actions
-     */
-    function after_filter ($action, $args)
-    {
-        page_close();
     }
 
     /**

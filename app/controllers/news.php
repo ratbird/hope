@@ -16,28 +16,10 @@
 require_once 'lib/functions.php';
 require_once 'lib/showNews.inc.php';
 require_once 'lib/user_visible.inc.php';
+require_once 'app/controllers/authenticated_controller.php';
 
 
-class NewsController extends Trails_Controller {
-
-
-  function before_filter($action, &$args) {
-    # open session
-    page_open(array('sess' => 'Seminar_Session',
-                    'auth' => 'Seminar_Auth',
-                    'perm' => 'Seminar_Perm',
-                    'user' => 'Seminar_User'));
-    require_once 'lib/seminar_open.php';
-    # user must be logged in
-    $GLOBALS['auth']->login_if($_REQUEST['again']
-                               && ($GLOBALS['auth']->auth['uid'] == 'nobody'));
-  }
-
-
-  function after_filter($action, &$args) {
-    page_close();
-  }
-
+class NewsController extends AuthenticatedController {
 
   function open_action($id = NULL) {
     $this->open_or_close(TRUE, $id);

@@ -545,6 +545,15 @@ STUDIP.Filesystem.getURL = function () {
 };
 
 /**
+ * Funktion, um Fehlermeldungen zu behandeln.
+ */
+STUDIP.Filesystem.alertOnError = function (transport) {
+  if (transport.responseText) {
+    alert(transport.responseText);
+  }
+};
+
+/**
  * Lässt die gelben Pfeile verschwinden und ersetzt sie durch Anfassersymbole.
  * Wichtig für Javascript-Nichtjavascript Behandlung. Nutzer ohne Javascript
  * sehen nur die gelben Pfeile zum Sortieren.
@@ -558,11 +567,6 @@ STUDIP.Filesystem.unsetarrows = function () {
  * deklariert Ordner und Dateien als ziehbare Elemente bzw. macht sie sortierbar
  */
 STUDIP.Filesystem.setdraggables = function () {
-  var alertOnError = function (transport) {
-    if (transport.responseText) {
-      alert(transport.responseText);
-    }
-  };
   $$("div.folder_container").each(function (div) {
     var id = div.getAttribute('id');
     var md5_id = id.substr(id.lastIndexOf('_') + 1);
@@ -641,7 +645,8 @@ STUDIP.Filesystem.setdraggables = function () {
                 folder_sort: sort_var,
                 file_order: order_ids.join(",")
               },
-              onSuccess: alertOnError
+              onSuccess: function () {},
+              onFailure: STUDIP.Filesystem.alertOnError
             }); //of Ajax-Request
           }
         },
@@ -685,7 +690,8 @@ STUDIP.Filesystem.setdroppables = function () {
             },
             onSuccess: function (transport) {
               location.href = adress + '&cmd=tree&open=' + folder_md5_id;
-            }
+            },
+            onFailure: STUDIP.Filesystem.alertOnError
           });
         } else {
           request = new Ajax.Request(adress, {
@@ -696,7 +702,8 @@ STUDIP.Filesystem.setdroppables = function () {
             },
             onSuccess: function (transport) {
               location.href = adress + '&cmd=tree&open=' + folder_md5_id;
-            }
+            },
+            onFailure: STUDIP.Filesystem.alertOnError
           });
         }
         STUDIP.Filesystem.sendstop = true;
@@ -757,9 +764,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
             $("folder_" + md5_id + "_body").style.display = "none";
             Effect.BlindDown("folder_" + md5_id + "_body", { duration: 0.4 });
           },
-          onFailure: function () {
-            alert('Something went wrong...');
-          }
+          onFailure: STUDIP.Filesystem.alertOnError
         });
       } else {
         Effect.BlindDown("folder_" + md5_id + "_body", { duration: 0.4 });
@@ -807,9 +812,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
             $("file_" + md5_id + "_body_row").style.visibility = "visible";
             Effect.BlindDown("file_" + md5_id + "_body", { duration: 0.3 });
           },
-          onFailure: function () {
-            alert('Konnte Ordner nicht laden.');
-          }
+          onFailure: STUDIP.Filesystem.alertOnError
         });
       } else {
         //Falls der Dateikörper schon geladen ist.

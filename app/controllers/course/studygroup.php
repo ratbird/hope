@@ -24,7 +24,7 @@ require_once('lib/classes/Config.class.php');
 if (!defined('ELEMENTS_PER_PAGE')) define("ELEMENTS_PER_PAGE", 20); 
 
 /**
- * This controller realises the basal functionlities of a studygroup.
+ * This controller realises the basal functionalities of a studygroup.
  * 
  * @since 1.10
  * @author aklassen 
@@ -48,7 +48,7 @@ class Course_StudygroupController extends AuthenticatedController {
     	$GLOBALS['CURRENT_PAGE'] =  _("Studiengruppe bearbeiten");
 		$GLOBALS['HELP_KEYWORD'] = 'Basis.Studiengruppen';
 	    } else {
-		throw new Exception(_("Die von Ihnen gewählte Option ist im System nicht aktiviert"));
+			throw new Exception(_("Die von Ihnen gewählte Option ist im System nicht aktiviert."));
 	    }
 	}
 
@@ -59,7 +59,8 @@ class Course_StudygroupController extends AuthenticatedController {
 	 * 
 	 * @return void
 	 */
-	function details_action( $id ) {
+	function details_action($id)
+	{
 		global $perm;
 
 		$GLOBALS['CURRENT_PAGE'] = getHeaderLine($id) . ' - ' . _('Studiengruppendetails');
@@ -71,13 +72,13 @@ class Course_StudygroupController extends AuthenticatedController {
 
 		if ($data['status'] == 'accepted') $this->membership_requested = true;
 
-		if ($perm->have_studip_perm('autor',$id)) {
+		if ($perm->have_studip_perm('autor', $id)) {
 			$this->participant = true;
 		} else {
 			$this->participant = false;
 		}
 
-		$this->studygroup = new Seminar( $id );
+		$this->studygroup = new Seminar($id);
 		if (!preg_match('/^(' . preg_quote($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'],'/') . ')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', $_REQUEST['send_from_search_page'])) {
 			$this->send_from_search_page = '';
 		} else {
@@ -122,7 +123,7 @@ class Course_StudygroupController extends AuthenticatedController {
 		if ($admin && (Request::get('search_founder') || Request::get('search_founder_x'))) {
 			$search_for_founder = Request::get('search_for_founder');
 
-			// don't allow to search with the empty string
+			// do not allow to search with the empty string
 			if ($search_for_founder) {
 
 				// search for the user
@@ -222,38 +223,33 @@ class Course_StudygroupController extends AuthenticatedController {
 			} else {
 				// Everything seems fine, let's create a studygroup
 
-				$sem_types = studygroup_sem_types();
-
-				$sem = new Seminar();
-				$sem->name        = Request::get('groupname');         // seminar-class quotes itself
-				$sem->description = Request::get('groupdescription');  // seminar-class quotes itself
-				$sem->status      = $sem_types[0];
-				$sem->read_level  = 1;
-				$sem->write_level = 1;
-
-				$sem->institut_id = Config::GetInstance()->getValue('STUDYGROUP_DEFAULT_INST');
-
-				$mods=new Modules();
-				$bitmask=0;
-
-
-				$sem->admission_type=0; 
+				$sem_types           = studygroup_sem_types();
+				$sem                 = new Seminar();
+				$sem->name           = Request::get('groupname');         // seminar-class quotes itself
+				$sem->description    = Request::get('groupdescription');  // seminar-class quotes itself
+				$sem->status         = $sem_types[0];
+				$sem->read_level     = 1;
+				$sem->write_level    = 1;
+				$sem->institut_id    = Config::GetInstance()->getValue('STUDYGROUP_DEFAULT_INST');
+				$mods                = new Modules();
+				$bitmask             = 0;
+				$sem->admission_type = 0; 
 				if (Request::get('groupaccess') == 'all') {
 					$sem->admission_prelim = 0;
 				} else {
-					$sem->admission_prelim = 1;
+					$sem->admission_prelim    = 1;
 					$sem->admission_prelim_txt = _("Die ModeratorInnen der Studiengruppe können Ihren Aufnahmewunsch bestätigen oder ablehnen. Erst nach Bestätigung erhalten Sie vollen Zugriff auf die Gruppe.");
 				}
-				$sem->admission_endtime=-1;
-				$sem->admission_binding=0;
-				$sem->admission_starttime=-1;
-				$sem->admission_endtime_sem=-1;
-				$sem->visible=1;
+				$sem->admission_endtime     = -1;
+				$sem->admission_binding     = 0;
+				$sem->admission_starttime   = -1;
+				$sem->admission_endtime_sem = -1;
+				$sem->visible               = 1;
 
-				$semdata=new SemesterData();
-				$this_semester=$semdata->getSemesterDataByDate(time());
-				$sem->semester_start_time=$this_semester['beginn'];
-				$sem->semester_duration_time=-1;
+				$semdata                     = new SemesterData();
+				$this_semester               = $semdata->getSemesterDataByDate(time());
+				$sem->semester_start_time    = $this_semester['beginn'];
+				$sem->semester_duration_time = -1;
 
 				if ($admin) {
 					// insert founder(s)
@@ -335,8 +331,8 @@ class Course_StudygroupController extends AuthenticatedController {
 	{
 		global $perm;
 		
-		// if we are permitted to do edit the studygroup get some data...
-		if ($perm->have_studip_perm('dozent',$id)) {
+		// if we are permitted to edit the studygroup get some data...
+		if ($perm->have_studip_perm('dozent', $id)) {
 
 			$GLOBALS['CURRENT_PAGE'] = getHeaderLine($id) . ' - ' . _('Studiengruppe bearbeiten');
 			Navigation::activateItem('/course/studygroup/admin');
@@ -368,8 +364,8 @@ class Course_StudygroupController extends AuthenticatedController {
 	{
 		global $perm;
 		
-		// if we are permitted to do edit the studygroup get some data...
-		if ($perm->have_studip_perm('dozent',$id)) { 
+		// if we are permitted to edit the studygroup get some data...
+		if ($perm->have_studip_perm('dozent', $id)) { 
 
 			$errors   = array();
 			$admin    = $perm->have_studip_perm('admin', $id); 
@@ -558,10 +554,10 @@ class Course_StudygroupController extends AuthenticatedController {
 	 * 
 	 * @return void
 	 */
-	function edit_members_action($id,$user,$action,$status='')
+	function edit_members_action($id, $user, $action, $status = '')
 	{
 		global $perm;
-		if ($perm->have_studip_perm('tutor',$id)) {
+		if ($perm->have_studip_perm('tutor', $id)) {
 
 			if (!$action) {
 				$this->flash['success'] = _("Es wurde keine korrekte Option gewählt.");
@@ -683,7 +679,7 @@ class Course_StudygroupController extends AuthenticatedController {
 		
 		// get available modules
 		$modules = StudygroupModel::getInstalledModules() + StudygroupModel::getInstalledPlugins();
-		$enabled = StudygroupModel::getAvailability( $modules );
+		$enabled = StudygroupModel::getAvailability($modules);
 
 		// get institutes
 		$institutes = StudygroupModel::getInstitutes();
@@ -799,8 +795,8 @@ class Course_StudygroupController extends AuthenticatedController {
 				'title' => sprintf(_("Sie können die Studiengruppen nicht deaktivieren, da noch %s Studiengruppen vorhanden sind!"), $count)
 			));
 		} else {
-			$cfg=new Config();
-			$cfg->setValue(FALSE,"STUDYGROUPS_ENABLE","Studiengruppen");
+			$cfg = new Config();
+			$cfg->setValue(FALSE, "STUDYGROUPS_ENABLE","Studiengruppen");
 			$this->flash['success'] = _("Die Studiengruppen wurden deaktiviert.");
 		}
 		$this->redirect('course/studygroup/globalmodules');

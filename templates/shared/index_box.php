@@ -1,7 +1,7 @@
 <? if ($content_for_layout != ''): ?>
     <? if (!isset($admin_title)) $admin_title = _('Administration') ?>
 
-    <table class="index_box" cellpadding="0" cellspacing="0">
+    <table class="index_box">
         <tr>
             <td class="topic" style="font-weight: bold;">
                 <? if (isset($icon_url)): ?>

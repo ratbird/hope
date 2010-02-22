@@ -662,13 +662,14 @@ dd {
 
 /* index.php anpassungen an den boxen zur vereinheitlichung */
 table.index_box {
-    width:70%;
-    margin:auto;
-    margin-bottom:1em;
+    width: 70%;
+    margin: auto;
+    margin-bottom: 1em;
+    border-collapse: collapse;
 }
 
 td.index_box_cell {
-    padding:4px;
+    padding: 4px;
     background-image: url('../images/steel1.jpg');
 }
 

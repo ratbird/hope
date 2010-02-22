@@ -1,7 +1,7 @@
 <? if ($content_for_layout != ''): ?>
     <? if (!isset($admin_title)) $admin_title = _('Administration') ?>
 
-    <table class="blank" style="width: 100%;" cellpadding="0" cellspacing="0">
+    <table class="index_box" style="width: 100%;">
         <tr>
             <td class="topic" style="font-weight: bold;">
                 <? if (isset($icon_url)): ?>
@@ -20,10 +20,8 @@
         </tr>
 
         <tr>
-            <td class="index_box_cell" style="padding: 1em 0em;" colspan="2">
-                <blockquote>
-                    <?= $content_for_layout ?>
-                </blockquote>
+            <td class="index_box_cell" colspan="2">
+                <?= $content_for_layout ?>
             </td>
         </tr>
     </table>

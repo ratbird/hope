@@ -22,6 +22,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+$GLOBALS['body_id'] = 'index'; //needs to be at the beginning
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
 
 $auth->login_if($again && ($auth->auth['uid'] == 'nobody'));
@@ -82,7 +83,6 @@ if (get_config('NEWS_RSS_EXPORT_ENABLE') && ($auth->is_authenticated() && $user-
 $HELP_KEYWORD="Basis.Startseite"; // set keyword for new help
 $CURRENT_PAGE = _("Startseite");
 // Start of Output
-$GLOBALS['body_id'] = 'index';
 $navigation = Navigation::getItem('/start');
 
 include 'lib/include/html_head.inc.php'; // Output of html head

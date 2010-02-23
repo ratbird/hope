@@ -982,7 +982,7 @@ div.modalshadow {
     position: absolute;
     max-width: 40%;
     left: 30%;
-    top: 50%;
+    top: 40%;
 }
 
 /* --- Editor Toolbar ------------------------------------------------------- */
@@ -1001,8 +1001,8 @@ div.messagebox {
     margin: 5px;
     background-repeat: no-repeat;
     background-position: 10px 10px;
-    padding: 15px 15px 15px 55px;
     border: 1px solid;
+    padding: 15px 15px 15px 55px;
     position: relative;
     font-size: 12pt;
     font-weight: bold;
@@ -1021,31 +1021,34 @@ div.messagebox_details {
 
 div.messagebox_info {
     color: #000000;
+    border-color: #4B6FCB;
     background-color: #d8e3fc;
     background-image: url("../images/icons/icon_info.png");
 }
 
 div.messagebox_success {
     color: #000000;
+    border-color: #4B8847;
     background-color: #dcf1da;
     background-image: url("../images/icons/icon_success.png");
 }
 
 div.messagebox_error {
     color: #000000;
+    border-color: #C74039;
     background-color: #ffdddc;
     background-image: url("../images/icons/icon_error.png");
 }
 
 div.messagebox_exception {
-    color: #ff0400;
+    color: #D8000C;
     background-color: #ffbaba;
     background-image: url("../images/icons/icon_exception.png");
 }
 
 div.messagebox_modal {
     color: #000000;
-    background-color: #d8e3fc;
+    background-color: #e6d2ea; /* todo farbe anpassen*/
     background-image: url("../images/icons/icon_modal.png");
     margin: -8px 8px 8px -8px;
 }

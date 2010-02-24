@@ -567,8 +567,8 @@ this options are only needed, if you are using the addional modules (please see 
 which modules are activated). It's a good idea to leave them untouched...*/
 
 // Literature-Import Plugins
-$LIT_IMPORT_PLUGINS[] = array('name' => 'EndNote', 'visual_name' => 'EndNote ab Version 7 / Reference Manager 11', 'description' => _("Exportieren Sie Ihre Literaturliste aus EndNote / Reference Manager als XML-Datei."));
-$LIT_IMPORT_PLUGINS[] = array('name' => 'GenericXML', 'visual_name' => _("Einfaches XML nach fester Vorgabe"),
+$LIT_IMPORT_PLUGINS[1] = array('name' => 'EndNote', 'visual_name' => 'EndNote ab Version 7 / Reference Manager 11', 'description' => _("Exportieren Sie Ihre Literaturliste aus EndNote / Reference Manager als XML-Datei."));
+$LIT_IMPORT_PLUGINS[2] = array('name' => 'GenericXML', 'visual_name' => _("Einfaches XML nach fester Vorgabe"),
         'description' => _("Die XML-Datei muss folgende Struktur besitzen:").'[code]
         <?xml version="1.0" encoding="UTF-8"?>
         <xml>
@@ -583,8 +583,8 @@ $LIT_IMPORT_PLUGINS[] = array('name' => 'GenericXML', 'visual_name' => _("Einfac
         </eintrag>
         </xml>[/code]'.
         _("Jeder Abschnitt darf mehrfach vorkommen oder kann weggelassen werden, mindestens ein Titel pro Eintrag muss vorhanden sein."));
-$LIT_IMPORT_PLUGINS[] = array('name' => 'CSV', 'visual_name' => _("CSV mit Semikolon als Trennzeichen"), 'description' => _("Exportieren Sie Ihre Literaturliste in eine mit Trennzeichen getrennte Datei (CSV). Wichtig hierbei ist die Verwendung des Semikolons als Trennzeichen. Folgende Formatierung wird dabei in jeder Zeile erwartet:").'[pre]'._("Titel;Verfasser oder Urheber;Verleger;Herausgeber;Thema und Stichworte;ISBN").'[/pre]');
-$LIT_IMPORT_PLUGINS[] = array('name' => 'StudipLitList', 'visual_name' => _("Literaturliste im Stud.IP Format"), 'description' => _("Benutzen Sie die Export-Funktion innerhalb von Stud.IP, um eine Literaturliste im Stud.IP Format zu exportieren."));
+$LIT_IMPORT_PLUGINS[3] = array('name' => 'CSV', 'visual_name' => _("CSV mit Semikolon als Trennzeichen"), 'description' => _("Exportieren Sie Ihre Literaturliste in eine mit Trennzeichen getrennte Datei (CSV). Wichtig hierbei ist die Verwendung des Semikolons als Trennzeichen. Folgende Formatierung wird dabei in jeder Zeile erwartet:").'[pre]'._("Titel;Verfasser oder Urheber;Verleger;Herausgeber;Thema und Stichworte;ISBN").'[/pre]');
+$LIT_IMPORT_PLUGINS[4] = array('name' => 'StudipLitList', 'visual_name' => _("Literaturliste im Stud.IP Format"), 'description' => _("Benutzen Sie die Export-Funktion innerhalb von Stud.IP, um eine Literaturliste im Stud.IP Format zu exportieren."));
 
 // <<-- EXPORT-EINSTELLUNGEN
 // Ausgabemodi für den Export

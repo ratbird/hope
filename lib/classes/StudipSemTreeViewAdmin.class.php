@@ -360,18 +360,25 @@ class StudipSemTreeViewAdmin extends TreeView {
 				}
 			}
 			if ($count_mark){
-				$this->msg[$item_id] = "msg§" . sprintf(_("Es wurde(n) %s Veranstaltung(en) der Merkliste hinzugef&uuml;gt."),$count_mark);
+				echo MessageBox::success(sprintf(_("Es wurde(n) %s Veranstaltung(en) der Merkliste hinzugef&uuml;gt."),$count_mark));
 			}
 		}
 		if ($this->isItemAdmin($item_id)){
 			if (($sem_aktion[0] == 'del' || $sem_aktion[1] == 'del') && count($marked_sem)){
-				$count_del = $this->tree->DeleteSemEntries($item_id, $marked_sem);
-				if ($this->msg[$item_id]){
-					$this->msg[$item_id] .= "<br>";
-				} else {
-					$this->msg[$item_id] = "msg§";
-				}
-				$this->msg[$item_id] .= sprintf(_("%s Veranstaltungszuordnung(en) wurde(n) aufgehoben."),$count_del);
+				$not_deleted = array();
+				$count_del = $this->tree->DeleteSemEntries($item_id, $marked_sem, $not_deleted);
+				if($count_del){
+					echo MessageBox::success(sprintf(_("%s Veranstaltungszuordnung(en) wurde(n) aufgehoben."),$count_del));
+				} 
+				if($not_deleted) {
+					$message = _('Bei den folgenden Veranstaltung(en) konnte der Studienbereich nicht gelöscht werden,'
+							 . ' da es ihr einziger ist:') . '<ul>';
+					foreach($not_deleted as $broke) {
+						$message = $message . '<li>' . $broke->getName() . '</li>';
+					}
+					$message = $message . '</ul>';
+					echo MessageBox::error($message);	
+				} 
 			}
 			$this->anchor = $item_id;
 			$this->open_items[$item_id] = true;

@@ -45,26 +45,27 @@ require_once ('lib/language.inc.php');
 
 //vorgenommene Anpassungen der Ansicht in Uservariablen schreiben
 if ($schedule_cmd=="change_view_insert") {
-	if($ende_zeit <= $beginn_zeit) {
+	$beginn_zeit = Request::int('beginn_zeit',8);
+	$ende_zeit = Request::int('ende_zeit',19) ;
+	if($ende_zeit <= $beginn_zeit ) {
 		$ende_zeit = $beginn_zeit + 1;
 	}
-	$hidden = $my_schedule_settings['hidden'];
 	$my_schedule_settings=array(
 		"glb_start_time"=>$beginn_zeit,
 		"glb_end_time"=>$ende_zeit,
 		"glb_days"=>array(
-			"mo"=>$mo,
-			"di"=>$di,
-			"mi"=>$mi,
-			"do"=>$do,
-			"fr"=>$fr,
-			"sa"=>$sa,
-			"so"=>$so
+			"mo"=>Request::option( 'mo' , "TRUE" ),
+			"di"=>Request::option( 'di' , "TRUE" ),
+			"mi"=>Request::option( 'mi' , "TRUE" ),
+			"do"=>Request::option( 'do' , "TRUE" ),
+			"fr"=>Request::option( 'fr' , "TRUE" ),
+			"sa"=>Request::option( 'sa' , "" ),
+			"so"=>Request::option( 'so' , "" )
 			),
-		"glb_sem"=>$sem,
-		"glb_inst_id"=>$institut_id,
+		"glb_sem"=>Request::get( 'sem' , $my_schedule_settings[ "glb_sem" ] ),
+		"glb_inst_id"=>Request::option( 'institut_id' , $my_schedule_settings[ "glb_inst_id" ] ),
 		"changed"=>"TRUE",
-		'hidden'=> $hidden
+		'hidden'=> $my_schedule_settings['hidden']
 		);
 }
 

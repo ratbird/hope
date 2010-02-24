@@ -72,7 +72,9 @@ function check_messaging_default() {
 function check_schedule_default() {
 	global $my_schedule_settings;
 
-	if (!$my_schedule_settings) {
+	if (!$my_schedule_settings ||
+		$my_schedule_settings[ "glb_start_time" ] === NULL ||
+		$my_schedule_settings[ "glb_end_time" ] === NULL ) {
 		$my_schedule_settings=array(
 			"glb_start_time"=>8,
 			"glb_end_time"=>19,

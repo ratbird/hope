@@ -285,7 +285,6 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Content-Type: $content_type; name=\"$file_name\"");
 header("Content-Description: File Transfer");
 header("Content-Transfer-Encoding: binary");
-header("Accept-Ranges: bytes");
 if ($filesize != FALSE) header("Content-Length: $filesize");
 header("Content-Disposition: $content_disposition; filename=\"$file_name\"");
 ob_end_flush();

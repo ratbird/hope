@@ -226,8 +226,10 @@ if ($auth->is_authenticated() && $user->id != "nobody") {
 
 
 // init of output via I18N
-
 $_language_path = init_i18n($_language);
+
+//force reload of config to get translated data
+include 'config.inc.php';
 
 // Try to select the course or institute given by the parameter 'cid'
 // in the current request. This also binds the global $SessionSeminar

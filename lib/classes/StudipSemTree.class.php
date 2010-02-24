@@ -250,21 +250,9 @@ class StudipSemTree extends TreeAbstract {
 		return $deleted;
 	}
 	
-	function DeleteSemEntries($item_ids = null, $sem_entries = null, &$not_deleted){
+	function DeleteSemEntries($item_ids = null, $sem_entries = null){
 		$view = new DbView();
-		$not_deletable = array();
-		//Get the sem path for every seminar
-		foreach($sem_entries as $sem_id) {
-			$sem_paths[] = (array)get_sem_tree_path($sem_id);
-		}
-		if ($item_ids && $sem_entries) {
-			//check for one path only seminars
-			foreach($sem_paths as $key=>$val) {
-				if(count($val) == 1) {
-					$not_deletable[] = $sem_entries[$key];
-					unset($sem_entries[$key]);
-				}
-			}
+		if ($item_ids && $sem_entries){
 			$sem_tree_ids = $view->params[0] = (is_array($item_ids)) ? $item_ids : array($item_ids);
 			$seminar_ids = $view->params[1] = (is_array($sem_entries)) ? $sem_entries : array($sem_entries);
 			$rs = $view->get_query("view:SEMINAR_SEM_TREE_DEL_SEM_RANGE");
@@ -278,19 +266,13 @@ class StudipSemTree extends TreeAbstract {
 			if($ret){
 				foreach($sem_tree_ids as $sem_tree_id){
 					$studyarea = StudipStudyArea::find($sem_tree_id);
-					if($studyarea->isModule()) {
-						foreach($seminar_ids as $seminar_id) {
+					if($studyarea->isModule()){
+						foreach($seminar_ids as $seminar_id){
 							NotificationCenter::postNotification('CourseRemovedFromModule', $studyarea, array('module_id' => $sem_tree_id, 'course_id' => $seminar_id));
 						}
 					}
 				}
-			}		
-		//retrieve information about non deletable seminars
-		if($not_deletable) {
-			foreach($not_deletable as $semID) {
-				$not_deleted[] = Seminar::getInstance($semID);
 			}
-		}
 		} elseif ($item_ids){
 			$view->params[0] = (is_array($item_ids)) ? $item_ids : array($item_ids);
 			// Logging
@@ -310,7 +292,7 @@ class StudipSemTree extends TreeAbstract {
 		} else {
 			$ret = false;
 		}
-		
+
 		return $ret;
 	}
 

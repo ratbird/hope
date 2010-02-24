@@ -47,11 +47,8 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
 $view = new DbView();
-
-?><table class="default blank"><tr><td><?
 $the_tree = new StudipSemTreeViewAdmin($_REQUEST['start_item_id']);
 $search_obj = new StudipSemSearch();
-?></td></tr></table><?
 
 $_open_items =& $the_tree->open_items;
 $_open_ranges =& $the_tree->open_ranges;

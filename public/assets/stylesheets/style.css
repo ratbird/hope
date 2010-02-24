@@ -981,8 +981,8 @@ div.overdiv div.content {
 div.modalshadow {
     background-image: url('../images/background-transparent.png');
     position: absolute;
-    max-width: 40%;
-    left: 30%;
+    max-width: 50%;
+    left: 25%;
     top: 40%;
 }
 
@@ -1049,7 +1049,7 @@ div.messagebox_exception {
 
 div.messagebox_modal {
     color: #000000;
-    background-color: #e6d2ea; /* todo farbe anpassen*/
+    background-color: #f3e180;
     background-image: url("../images/icons/icon_modal.png");
     margin: -8px 8px 8px -8px;
 }

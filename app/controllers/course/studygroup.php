@@ -568,7 +568,7 @@ class Course_StudygroupController extends AuthenticatedController {
 				StudygroupModel::deny_user($user,$id);
 				$this->flash['success'] = sprintf(_("Der Nutzer %s wurde nicht akzeptiert."), get_fullname_from_uname($user));
 			} elseif ($action == 'add_invites') {
-				if (Request::get('search_member') || Request::get('search_member_x')) {
+				if (Request::submitted('search_member')) {
 					$search_for_member = Request::get('search_for_member');
 					if ($search_for_member) {
 						// search for the user
@@ -581,9 +581,9 @@ class Course_StudygroupController extends AuthenticatedController {
 									. "WHERE perms  NOT IN ('root', 'admin') "
 									. "AND seminar_user.Seminar_id IS NULL "
 									. "AND " . get_vis_query() 
-									. " AND username LIKE $search_for_member OR Vorname LIKE $search_for_member "
-									. "OR Nachname LIKE $search_for_member "
-									. "LIMIT 500");
+									. " AND (username LIKE $search_for_member OR Vorname LIKE $search_for_member "
+									. "OR Nachname LIKE $search_for_member)"
+									. "LIMIT 50");
 						while ($data = $stmt->fetch()) {
 							$results_members[$data['user_id']] = array( 
 								'fullname' => $data['fullname'],

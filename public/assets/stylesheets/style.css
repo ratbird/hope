@@ -862,6 +862,7 @@ div.clear {
 #tabs2 {
     width: 100%;
     background: url("../images/steelblau4.jpg") repeat left top;
+    min-height: 8pt;
     clear: both;
     margin: 0 0 0 0;
     padding: 4px 0 4px 0;

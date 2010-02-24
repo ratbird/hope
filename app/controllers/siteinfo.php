@@ -13,8 +13,9 @@
  */
 
 require_once 'app/models/siteinfo.php';
+require_once 'app/controllers/studip_controller.php';
 
-class SiteinfoController extends Trails_Controller
+class SiteinfoController extends StudipController
 {
     private $si;
     
@@ -24,7 +25,6 @@ class SiteinfoController extends Trails_Controller
     function before_filter (&$action, &$args)
     {
         global $perm, $template_factory, $CURRENT_PAGE;
-        global $_language_path, $_language;
         
         # open session
         page_open(array('sess' => 'Seminar_Session',
@@ -32,12 +32,9 @@ class SiteinfoController extends Trails_Controller
                         'perm' => 'Seminar_Perm',
                         'user' => 'Seminar_User'));
 
-        //we need the language for Buttons and language-dependent markup-processing
-        if (!isset($_language)) {
-            $_language = get_accepted_languages();
-        }
+        // set up user session
+        include 'lib/seminar_open.php';
 
-        $_language_path = init_i18n($_language);
         //Siteinfo-Class is defined in models/siteinfo.php
         $this->si = new Siteinfo();
 

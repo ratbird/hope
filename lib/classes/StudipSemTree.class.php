@@ -252,16 +252,14 @@ class StudipSemTree extends TreeAbstract {
 	
 	function DeleteSemEntries($item_ids = null, $sem_entries = null){
 		$view = new DbView();
-		$not_deletable = array();
 		//Get the sem path for every seminar
 		foreach ($sem_entries as $sem_id) {
 			$sem_paths[] = (array)get_sem_tree_path($sem_id);
 		}
 		if ($item_ids && $sem_entries) {
-			//check for one path only seminars
+			// check for one path only seminars (cannot be deleted)
 			foreach ($sem_paths as $key=>$val) {
 				if(count($val) == 1) {
-					$not_deletable[] = $sem_entries[$key];
 					unset($sem_entries[$key]);
 				}
 			}
@@ -285,13 +283,6 @@ class StudipSemTree extends TreeAbstract {
 					}
 				}
 			}		
-
-			//retrieve information about non deletable seminars
-			if($not_deletable) {
-				foreach ($not_deletable as $semID) {
-					$not_deleted[] = Seminar::getInstance($semID);
-				}
-			}
 		} elseif ($item_ids){
 			$view->params[0] = (is_array($item_ids)) ? $item_ids : array($item_ids);
 			// Logging

@@ -574,15 +574,16 @@ class Course_StudygroupController extends AuthenticatedController {
 						// search for the user
 						$pdo = DBManager::get();
 						$search_for_member = $pdo->quote('%' . $search_for_member . '%');
-						$stmt = $pdo->query("SELECT user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
+						$stmt = $pdo->query("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
 									. "FROM auth_user_md5 "
-									. "LEFT JOIN user_info USING (user_id) "
+									. "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
+									. "LEFT JOIN seminar_user ON (auth_user_md5.user_id = seminar_user.user_id AND seminar_user.Seminar_id = '$id') "
 									. "WHERE perms  NOT IN ('root', 'admin') "
+									. "AND seminar_user.Seminar_id IS NULL "
 									. "AND " . get_vis_query() 
-									. " "
-									. "AND username LIKE $search_for_member OR Vorname LIKE $search_for_member "
+									. " AND username LIKE $search_for_member OR Vorname LIKE $search_for_member "
 									. "OR Nachname LIKE $search_for_member "
-									. " LIMIT 500");
+									. "LIMIT 500");
 						while ($data = $stmt->fetch()) {
 							$results_members[$data['user_id']] = array( 
 								'fullname' => $data['fullname'],

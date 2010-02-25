@@ -1388,8 +1388,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
 	//Einbinden einer Klasse, die Informationen über den ganzen Baum enthält
 	$folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 	$javascriptok = true;
-	print "\n\t<div style=\"position: relative; z-index: 0; top: 0px; left: 0px; margin-top: 0; margin-bottom: 0;\" class=\"draggable\" nowrap" .
-			" id=\"file_".$folder_id."_$countfiles\">";
+	print "\n\t<div class=\"draggable\" id=\"file_".$folder_id."_$countfiles\">";
 	print "<div style=\"display:none\" id=\"getmd5_fi".$folder_id."_$countfiles\">".$datei['dokument_id']."</div>";
 	print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\"><tr>";
 	if (!$all) {

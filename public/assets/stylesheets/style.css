@@ -984,6 +984,7 @@ div.modalshadow {
     max-width: 50%;
     left: 25%;
     top: 40%;
+    z-index: 1;
 }
 
 /* --- Editor Toolbar ------------------------------------------------------- */

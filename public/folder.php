@@ -359,8 +359,7 @@ if ($rechte || $owner || $create_folder_perm) {
 	//wurde Code fuer Loeschen von Ordnern ubermittelt (=id+"_d_"), wird entsprechende Funktion aufgerufen
 	if ($open_cmd == 'd') {
 		if ( ($count = doc_count($open_id)) ){
-			$msg="info§" . sprintf(_("Der ausgewählte Ordner enthält %s Datei(en). Wollen Sie den Ordner wirklich löschen?"), $count) . "<br>";
-			$msg.="<b><a href=\"".URLHelper::getLink("?open=".$open_id."_rd_")."\">" . makeButton("ja2", "img") . "</a>&nbsp;&nbsp; <a href=\"".URLHelper::getLink('')."\">" . makeButton("nein", "img") . "</a>§";
+			echo createQuestion(sprintf(_('Der ausgewählte Ordner enthält %s Datei(en). Wollen Sie den Ordner wirklich löschen?'), $count), array('open' => $open_id.'_rd_'));
 		} else {
 			delete_folder($open_id, true);
 			$open_id = $folder_tree->getParents($open_id); 
@@ -382,11 +381,9 @@ if ($rechte || $owner || $create_folder_perm) {
 		$query = "SELECT filename, ". $_fullname_sql['full'] ." AS fullname, username FROM dokumente LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE dokument_id ='".$open_id."'";
 		$result = $db->query($query)->fetch();
 		if (getLinkPath($open_id)) {
-			$msg="info§" . sprintf(_("Wollen Sie die Verlinkung zu <b>%s</b> von %s wirklich löschen?"), htmlReady($result["filename"]), "<a href=\"".URLHelper::getLink("about.php?username=".$result["username"])."\">".htmlReady($result["fullname"])."</a>") . "<br>";
-			$msg.="<b><a href=\"".URLHelper::getLink("?open=".$open_id."_rl_")."\">" . makeButton("ja2", "img") . "</a>&nbsp;&nbsp; <a href=\"".URLHelper::getLink('')."\">" . makeButton("nein", "img") . "</a>§";
+			echo createQuestion(sprintf(_('Wollen Sie die Verlinkung zu "%s" von %s wirklich löschen?'), $result['filename'], $result['fullname']), array('open' => $open_id.'_rl_'));
 		} else {
-			$msg="info§" . sprintf(_("Wollen Sie die Datei <b>%s</b> von %s wirklich löschen?"), htmlReady($result["filename"]), "<a href=\"".URLHelper::getLink("about.php?username=".$result["username"])."\">".htmlReady($result["fullname"])."</a>") . "<br>";
-			$msg.="<b><a href=\"".URLHelper::getLink("?open=".$open_id."_rm_")."\">" . makeButton("ja2", "img") . "</a>&nbsp;&nbsp; <a href=\"".URLHelper::getLink('')."\">" . makeButton("nein", "img") . "</a>§";
+			echo createQuestion(sprintf(_('Wollen Sie die Datei "%s" von %s wirklich löschen?'), $result['filename'], $result['fullname']), array('open' => $open_id.'_rm_'));
 		}
 	}
 

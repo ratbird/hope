@@ -131,11 +131,11 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
 			if($lockdata['description']) $meldung .= '§info§' . fixLinks($lockdata['description']);
 		} else {
 			if ($current_seminar->admission_type || $current_seminar->admission_prelim == 1) {
-				$meldung = sprintf(_('Wollen Sie das Abonnement der teilnahmebeschränkten Veranstaltung %s wirklich aufheben? Sie verlieren damit die Berechtigung für die Veranstaltung und müssen sich ggf. neu anmelden!'), $current_seminar->getName());
+				$meldung = sprintf(_('Wollen Sie das Abonnement der teilnahmebeschränkten Veranstaltung "%s" wirklich aufheben? Sie verlieren damit die Berechtigung für die Veranstaltung und müssen sich ggf. neu anmelden!'), $current_seminar->getName());
 			} else if ($current_seminar->admission_endtime_sem != -1 && $current_seminar->admission_endtime_sem < time()) {
-				$meldung = sprintf(_('Wollen Sie das Abonnement der Veranstaltung %s wirklich aufheben? Der Anmeldzeitraum ist abgelaufen und Sie können sich nicht wieder anmelden!'), $current_seminar->getName());
+				$meldung = sprintf(_('Wollen Sie das Abonnement der Veranstaltung "%s" wirklich aufheben? Der Anmeldzeitraum ist abgelaufen und Sie können sich nicht wieder anmelden!'), $current_seminar->getName());
 			} else {
-				$meldung = sprintf(_('Wollen Sie das Abonnement der Veranstaltung %s wirklich aufheben?'), $current_seminar->getName());
+				$meldung = sprintf(_('Wollen Sie das Abonnement der Veranstaltung "%s" wirklich aufheben?'), $current_seminar->getName());
 			}
 			echo createQuestion($meldung, array('cmd' => 'kill', 'auswahl' => $current_seminar->getId()));
 		}
@@ -144,9 +144,9 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
 	//Sicherheitsabfrage fuer Wartelisteneintraege
 	if ($cmd=="suppose_to_kill_admission") {
 		if(admission_seminar_user_get_position($user->id, $current_seminar->getId()) == 'na'){
-			$meldung = sprintf(_('Wollen Sie den Eintrag auf der Anmeldeliste der Veranstaltung %s wirklich aufheben?'), $current_seminar->getName());
+			$meldung = sprintf(_('Wollen Sie den Eintrag auf der Anmeldeliste der Veranstaltung "%s" wirklich aufheben?'), $current_seminar->getName());
 		} else {
-			$meldung = sprintf(_('Wollen Sie den Eintrag auf der Warteliste der Veranstaltung %s wirklich aufheben? Sie verlieren damit die bereits erreichte Position und müssen sich ggf. neu anmelden!'), $current_seminar->getName());
+			$meldung = sprintf(_('Wollen Sie den Eintrag auf der Warteliste der Veranstaltung "%s" wirklich aufheben? Sie verlieren damit die bereits erreichte Position und müssen sich ggf. neu anmelden!'), $current_seminar->getName());
 		}
 		echo createQuestion($meldung, array('cmd' => 'kill_admission', 'auswahl' => $current_seminar->getId()));
 	}

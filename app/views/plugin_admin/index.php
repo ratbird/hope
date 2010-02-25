@@ -12,7 +12,7 @@
 
 <? if ($delete_plugin): ?>
     <?= $GLOBALS['template_factory']->render('shared/question',
-        array('question' => sprintf(_('Wollen Sie wirklich %s deinstallieren?'), $delete_plugin['name']),
+        array('question' => sprintf(_('Wollen Sie wirklich "%s" deinstallieren?'), $delete_plugin['name']),
               'approvalLink' => $controller->url_for('plugin_admin/delete', $delete_plugin['id']).'?ticket='.get_ticket(),
               'disapprovalLink' => $controller->url_for('plugin_admin'))) ?>
 <? endif ?>

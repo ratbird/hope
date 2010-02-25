@@ -129,30 +129,26 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
 			$lockdata = $lockRule->getSemLockRule($current_seminar->getId());
 			$meldung = "error§" . sprintf(_("Sie können das Abonnement der Veranstaltung <b>%s</b> nicht aufheben."), htmlReady($current_seminar->getName()));
 			if($lockdata['description']) $meldung .= '§info§' . fixLinks($lockdata['description']);
-		} elseif ($current_seminar->admission_type || $current_seminar->admission_prelim == 1) {
-			$meldung = "info§" . sprintf(_("Wollen Sie das Abonnement der teilnahmebeschr&auml;nkten Veranstaltung <b>%s</b> wirklich aufheben? Sie verlieren damit die Berechtigung f&uuml;r die Veranstaltung und m&uuml;ssen sich ggf. neu anmelden!"), htmlReady($current_seminar->getName())) . "<br>";
-			$meldung.= "<a href=\"" . UrlHelper::getLink('?cmd=kill&auswahl='.$current_seminar->getId()) . "\">" . makeButton("ja2") . "</a>&nbsp; \n";
-			$meldung.= "<a href=\"" . UrlHelper::getLink() . "\">" . makeButton("nein") . "</a>\n";
-		} else if ($current_seminar->admission_endtime_sem != -1 && $current_seminar->admission_endtime_sem < time()) {
-			$meldung = "info§" . sprintf(_("Wollen Sie das Abonnement der Veranstaltung <b>%s</b> wirklich aufheben? Der Anmeldzeitraum ist abgelaufen und Sie k&ouml;nnen sich nicht wieder anmelden!"), htmlReady($current_seminar->getName())) . "<br>";
-			$meldung.= "<a href=\"" . UrlHelper::getLink('?cmd=kill&auswahl='.$current_seminar->getId()) . "\">" . makeButton("ja2") . "</a>&nbsp; \n";
-			$meldung.= "<a href=\"" . UrlHelper::getLink() . "\">" . makeButton("nein") . "</a>\n";
 		} else {
-			$meldung = "info§" . sprintf(_("Wollen Sie das Abonnement der Veranstaltung <b>%s</b> wirklich aufheben?"), htmlReady($current_seminar->getName())) . "<br>";
-			$meldung.= "<a href=\"" . UrlHelper::getLink('?cmd=kill&auswahl='.$current_seminar->getId()) . "\">" . makeButton("ja2") . "</a>&nbsp; \n";
-			$meldung.= "<a href=\"" . UrlHelper::getLink() . "\">" . makeButton("nein") . "</a>\n";
+			if ($current_seminar->admission_type || $current_seminar->admission_prelim == 1) {
+				$meldung = sprintf(_('Wollen Sie das Abonnement der teilnahmebeschränkten Veranstaltung %s wirklich aufheben? Sie verlieren damit die Berechtigung für die Veranstaltung und müssen sich ggf. neu anmelden!'), $current_seminar->getName());
+			} else if ($current_seminar->admission_endtime_sem != -1 && $current_seminar->admission_endtime_sem < time()) {
+				$meldung = sprintf(_('Wollen Sie das Abonnement der Veranstaltung %s wirklich aufheben? Der Anmeldzeitraum ist abgelaufen und Sie können sich nicht wieder anmelden!'), $current_seminar->getName());
+			} else {
+				$meldung = sprintf(_('Wollen Sie das Abonnement der Veranstaltung %s wirklich aufheben?'), $current_seminar->getName());
+			}
+			echo createQuestion($meldung, array('cmd' => 'kill', 'auswahl' => $current_seminar->getId()));
 		}
 	}
 
 	//Sicherheitsabfrage fuer Wartelisteneintraege
 	if ($cmd=="suppose_to_kill_admission") {
 		if(admission_seminar_user_get_position($user->id, $current_seminar->getId()) == 'na'){
-			$meldung = "info§" . sprintf(_("Wollen Sie den Eintrag auf der Anmeldeliste der Veranstaltung <b>%s</b> wirklich aufheben?"), htmlReady($current_seminar->getName())) . "<br>";
+			$meldung = sprintf(_('Wollen Sie den Eintrag auf der Anmeldeliste der Veranstaltung %s wirklich aufheben?'), $current_seminar->getName());
 		} else {
-			$meldung = "info§" . sprintf(_("Wollen Sie den Eintrag auf der Warteliste der Veranstaltung <b>%s</b> wirklich aufheben? Sie verlieren damit die bereits erreichte Position und m&uuml;ssen sich ggf. neu anmelden!"), htmlReady($current_seminar->getName())) . "<br>";
+			$meldung = sprintf(_('Wollen Sie den Eintrag auf der Warteliste der Veranstaltung %s wirklich aufheben? Sie verlieren damit die bereits erreichte Position und müssen sich ggf. neu anmelden!'), $current_seminar->getName());
 		}
-		$meldung.="<a href=\"" . UrlHelper::getLink('?cmd=kill_admission&auswahl='.$current_seminar->getId()) . "\">" . makeButton("ja2") . "</a>&nbsp; \n";
-		$meldung.="<a href=\"" . UrlHelper::getLink() . "\">" . makeButton("nein") . "</a>\n";
+		echo createQuestion($meldung, array('cmd' => 'kill_admission', 'auswahl' => $current_seminar->getId()));
 	}
 
 	//bei Bedarf aus seminar_user austragen

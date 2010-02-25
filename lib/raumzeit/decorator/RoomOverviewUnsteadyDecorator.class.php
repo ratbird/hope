@@ -110,13 +110,18 @@ class RoomOverviewUnsteadyDecorator extends Decorator {
 					}
 					$ret .= '</tr>';
 				} else {
-					if ($commas > 0) $ret .= ',<br>';
+					if ($commas > 0) $ret .= ','. (($this->link) ? '<br>' : '') . "\n";
 					$ret .= getWeekDay($val['day']).'.&nbsp;'.$repeat.'&nbsp;';
 					$ret .= $zeit;
 					if (!$this->hideRooms) {
 						$ret .= '&nbsp;Ort: '.$raum;
 					}
-					$ret .=  '&nbsp;&nbsp;<i>'. $val['desc'] .'</i>';
+					$ret .=  '&nbsp;&nbsp;';
+					if ($this->link) {
+						$ret .= '<i>'. $val['desc'] .'</i>';
+					} else {
+						$ret .= $val['desc'];
+					}
 					$commas++;
 				}
 
@@ -133,7 +138,11 @@ class RoomOverviewUnsteadyDecorator extends Decorator {
 
 		if (!$this->onlyRegular) {
 			if ($data['regular']['turnus_data'] && sizeof($data['regular']['turnus_data']) > 0 && $data['irregular'] && sizeof($data['irregular']) > 0 && $this->hideRooms){
-				$ret .= ',<br>';
+				if ($this->link) {
+					$ret .= ",<br>\n";
+				} else {
+					$ret .= ",\n";
+				}
 			}
 
 			// get irregular dates
@@ -148,7 +157,11 @@ class RoomOverviewUnsteadyDecorator extends Decorator {
 				}
 
 				if ($this->shrinkDates && $this->hideRooms && !$this->xml_export) {
-					$ret .= join('<br>', shrink_dates($c_dates));
+					if ($this->link) {
+						$ret .= join('<br>', shrink_dates($c_dates));
+					} else {
+						$ret .= join("\n", shrink_dates($c_dates));
+					}
 				} else {
 
 					foreach ($sd as $termine) {
@@ -237,11 +250,15 @@ class RoomOverviewUnsteadyDecorator extends Decorator {
 								$ret .= '<td width="60%"><font size="-1">&nbsp;&nbsp;'.(($typ) ? ", <I>$typ</I>":'').'</font></td></tr>';
 							}
 						} else {
-							if ($commas > 0) $ret .= ',<br>';
+							if ($commas > 0) $ret .= ','. (($this->link) ? '<br>' : '') . "\n";
 							$ret .= getWeekDay(date('w', $termine[0]['start_time'])).'. '.date('d.m.Y', $termine[0]['end_time']).'&nbsp;';
 							$ret .= $zeit.'&nbsp;';
 							if (!$this->hideRooms) {
-								$ret .= $raum.(($typ) ? ", <I>$typ</I>":'');
+								if ($this->link) {
+									$ret .= $raum . (($typ) ? ", <i>$typ</i>\n" : '');
+								} else {
+									$ret .= $raum . (($typ) ? ", $typ\n" : '');
+								}
 							}
 							$commas++;
 						}

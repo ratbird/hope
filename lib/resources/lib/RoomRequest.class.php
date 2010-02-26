@@ -437,7 +437,7 @@ class RoomRequest {
 				if (!$props) {
 					$props="--";
 				}
-				log_event("RES_REQUEST_NEW",$this->seminar_id,$this->resource_id,"Termin: $this->termin_id, Properties: $props",$query);
+				log_event("RES_REQUEST_NEW",$this->seminar_id,$this->resource_id,"Termin: $this->termin_id, Properties: $props, Kommentar: $this->comment",$query);
 			} else {
 				$query = sprintf("UPDATE resources_requests SET resource_id='%s', " 
 					."user_id='%s', seminar_id='%s', termin_id = '%s', category_id = '%s', comment='%s', "	

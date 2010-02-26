@@ -261,7 +261,7 @@ class ShowList extends ShowTreeRow{
 
 
 		if ($search_array["properties"]) {
-			$query = sprintf ("SELECT a.resource_id %s FROM resources_objects_properties a LEFT JOIN resources_objects b USING (resource_id) %s ", ($search_array["properties"]) ? ", COUNT(a.resource_id) AS resource_id_count" : "", (($search_array["properties"]) || ($search_array["search_exp"])) ? "WHERE" : "");
+			$query = sprintf ("SELECT a.resource_id %s FROM resources_objects_properties a LEFT JOIN resources_objects b USING (resource_id) LEFT JOIN resources_categories USING (category_id) %s ", ($search_array["properties"]) ? ", COUNT(a.resource_id) AS resource_id_count" : "", (($search_array["properties"]) || ($search_array["search_exp"])) ? "WHERE" : "");
 
 			$i=0;
 			foreach ($search_array["properties"] as $key => $val) {

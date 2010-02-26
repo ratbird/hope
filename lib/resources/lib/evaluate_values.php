@@ -1107,6 +1107,11 @@ if ($time_range) {
 handle commands from the search 'n' browse module
 /*****************************************************************************/
 if ($view == "search") {
+	
+	if(!isset($resources_data['search_only_rooms'])){
+		$resources_data['search_only_rooms'] = 1;
+	}
+	
 	if ($open_level)
 		 $resources_data["browse_open_level"]=$open_level;
 

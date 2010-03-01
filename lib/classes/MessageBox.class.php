@@ -1,5 +1,4 @@
 <?php
-# Lifter007: TEST
 /**
  * MessageBox.class.php
  *
@@ -94,9 +93,7 @@ class MessageBox
 
 
     /**
-     * This method actually renders a message to keep t
-     *
-     * @param  type       <description>
+     * This method actually renders a message
      *
      * @param string $class the type of this message
      * @param string $message
@@ -107,5 +104,19 @@ class MessageBox
     private static function render($class, $message, $details, $close_details)
     {
         return $GLOBALS['template_factory']->render('shared/message_box', compact('class', 'message', 'details', 'close_details'));
+    }
+
+    /**
+     * This function is a special debug-messagebox for developers
+     *
+     * @param mixed $message
+     * @param string $title
+     * @param string $template every developer can customize his own debugbox
+     * @return string html-output of the messagebox
+     * @since Stud.IP version 1.12
+     */
+    public static function debug($message, $title = '', $template = 'debug_standard')
+    {
+        return $GLOBALS['template_factory']->render('shared/'.$template, compact('message', 'title'));
     }
 }

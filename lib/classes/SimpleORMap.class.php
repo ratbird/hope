@@ -272,5 +272,10 @@ class SimpleORMap {
 		$this->setData(array(), true);
 		return TRUE;
 	}
+
+	function exportScheme (){
+		return '$GLOBALS[\'DB_TABLE_SCHEMES\'][\''.$this->db_table.'\'][\'db_fields\']='.var_export($this->db_fields,true) .';'. chr(10)
+				. '$GLOBALS[\'DB_TABLE_SCHEMES\'][\''.$this->db_table.'\'][\'pk\']='.var_export($this->pk,true) .';'. chr(10);
+	}
 }
 ?>

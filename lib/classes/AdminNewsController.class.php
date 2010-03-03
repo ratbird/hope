@@ -290,10 +290,12 @@ class AdminNewsController {
 <script type="text/javascript">
 (function () {
 	var update_news_endtime = function () {
-		  for (var i = 1; i < 13; i++) {
+		var options = $('expire').options;
+		  for (var i = <?=($this->news_query["news_id"] != "new_entry" ? 1 : 0)?>; i < options.length; i++) {
 			// chosenoption (in seconds) to milliseconds + 2 weeks interval * 2 * i
-			date = new Date($F('starttime') * 1000 + 24 * 60 * 60 * 14 * 1000 * i);
-			$('expire').options[i].innerHTML = (i*2 + " " + "<?= _("Wochen") ?>" + " (" + date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() +")");
+			var offset = i + <?=($this->news_query["news_id"] == "new_entry" ? 1 : 0)?>;
+			var date = new Date($F('starttime') * 1000 + 24 * 60 * 60 * 14 * 1000 * offset);
+			options[i].innerHTML = (offset*2 + " " + "<?= _("Wochen") ?>" + " (" + date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() +")");
 		  }
 	}
 	$('starttime').observe('change', update_news_endtime);

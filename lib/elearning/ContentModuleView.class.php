@@ -48,13 +48,11 @@ class ContentModuleView
 
 			$content_module = $connected_cms[$this->cms_type]->content_module[$current_module];
 
-								var_Dump( $content_module);
-								var_dump($connected_cms[$this->cms_type]->soap_client->getLocalRoles($current_module->id));
-
-if ( (! $content_module->isDummy()) AND ($connected_cms[$this->cms_type]->isAuthNecessary() == true) AND ($connected_cms[$this->cms_type]->user->isConnected() == true))
+			if ( (! $content_module->isDummy()) AND ($connected_cms[$this->cms_type]->isAuthNecessary() == true) AND ($connected_cms[$this->cms_type]->user->isConnected() == true))
 			{
 				if (! $content_module->isAllowed(OPERATION_VISIBLE))
 				{
+//					echo "not allowed!";
 					return false;
 				}
 			}

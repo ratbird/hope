@@ -394,7 +394,7 @@ class ELearningUtils
 			$output .=  "<br>&nbsp;<input type=\"IMAGE\"" . makeButton("bestaetigen", "src") . " name=\"next\" value=\"" . _("Best&auml;tigen") . "\"><br>";
 			$output .= "</td></tr>";
 			$output .=  "<tr><td align=\"center\" valign=\"middle\" colspan=\"2\"><br>";
-			$output .= "<input type=\"HIDDEN\" name=\"assign\" value=\"" . true . "\">\n";
+			$output .= "<input type=\"HIDDEN\" name=\"assign_x\" value=\"1\">\n";
 			$output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"" . $new_account_step . "\">\n";
 			$output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
 			$output .= "<input type=\"HIDDEN\" name=\"ref_id\" value=\"" . $ref_id . "\">\n";

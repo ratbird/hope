@@ -189,7 +189,7 @@ class Ilias3ConnectedUser extends ConnectedUser
 
 		if ($this->getLoginData($this->login))
 		{
-			$messages["error"] .= sprintf(_("Es existiert bereits ein Account mit dem Benutzernamen \"%s\"."), $this->login) . "<br>\n";
+			trigger_error('', E_USER_WARNING);$messages["error"] .= sprintf(_("Es existiert bereits ein Account mit dem Benutzernamen \"%s\"."), $this->login) . "<br>\n";
 			return false;			
 		}
 		
@@ -207,6 +207,8 @@ class Ilias3ConnectedUser extends ConnectedUser
 		$user_data["active"] = 1;
 		$user_data["approve_date"] = date('Y-m-d H:i:s');
 		$user_data["accepted_agreement"] = true;
+		$user_data["auth_mode"] = 'ldap';
+		$user_data["ext_account"] = $this->login;
 		
 		if ($connected_cms[$this->cms_type]->user_style != "")
 			$user_data["user_style"] = $connected_cms[$this->cms_type]->user_style;

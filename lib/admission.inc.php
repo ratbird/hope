@@ -325,7 +325,7 @@ function normal_update_admission($seminar_id, $send_message = TRUE) {
 							$message = sprintf (_("Sie haben den Status vorläufig akzeptiert in der Veranstaltung **%s (%s)** erhalten, da für Sie ein Platz freigeworden ist."), $seminar->getName(), $seminar->getFormattedTurnus(true));
 						}
 						restoreLanguage();
-						$messaging->insert_message(addslashes($message), $db3->f("username"), "____%system%____", FALSE, FALSE, "1");
+						$messaging->insert_message(addslashes($message), $db3->f("username"), "____%system%____", FALSE, FALSE, "1", FALSE,sprintf(_("Teilnahme an der Veranstaltung %s"),$seminar->getName()));
 					}
 				}
 			}

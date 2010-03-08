@@ -135,7 +135,7 @@ class HomepageNavigation extends Navigation
 
         // settings
         if ($username == $auth->auth['uname']) {
-            $navigation = new Navigation(_('My Stud.IP'));
+            $navigation = new Navigation(_('Einstellungen'));
             $navigation->addSubNavigation('general', new Navigation(_('Allgemeines'), 'edit_about.php', array('view' => 'allgemein')));
             $navigation->addSubNavigation('forum', new Navigation(_('Forum'), 'edit_about.php', array('view' => 'Forum')));
 

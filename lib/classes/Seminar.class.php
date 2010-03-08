@@ -803,6 +803,16 @@ class Seminar {
 		}
 	}
 
+	function getStartSemName() {
+		foreach ($this->semester->getAllSemesterData() as $val) {
+			if ($val['beginn'] == $this->semester_start_time) {
+				return $val['name'];
+			}
+		}
+
+		return false;
+	}
+
 	function readSingleDatesForCycle($metadate_id){
 		return $this->metadate->readSingleDates($metadate_id, $this->filterStart, $this->filterEnd);
 	}

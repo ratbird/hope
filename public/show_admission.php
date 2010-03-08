@@ -509,7 +509,7 @@ if(is_object($group_obj)){
 		$distinct_members = array();
 		foreach($group_obj->members as $member){
 			$distinct_members += $member->getMembers('autor') + $member->getAdmissionMembers('awaiting') +  $member->getAdmissionMembers('accepted') + $member->getAdmissionMembers('claiming');?>
-			<li><?=htmlReady($member->getName())?></li>
+			<li><?=htmlReady($member->getName() .' - ('. $member->getStartSemName() .')')?></li>
 			<input type="hidden" name="gruppe[]" value="<?=$member->getId();?>">
 		<?}?>
 		</ol>
@@ -802,7 +802,7 @@ if(is_object($group_obj)){
 				$cssSw->getClass(),
 				_("Teilnehmerliste aufrufen"),
 				$seminar_id,
-				htmlready(substr($semdata['Name'], 0, 50)), (strlen($semdata['Name'])>50) ? "..." : "",
+				htmlready('('. $semdata['VeranstaltungsNummer'] . ') ' . substr($semdata['Name'], 0, 50)), (strlen($semdata['Name'])>50) ? "..." : "",
 				$cssSw->getClass(),
 				_("Zugangsbeschränkungen aufrufen"),
 				$seminar_id,

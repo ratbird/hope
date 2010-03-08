@@ -218,7 +218,8 @@ if ($perm->have_perm("autor")) {	// Navigationsleiste ab status "Autor", autors 
 		$links_admin_data["topkat"]="inst";
 	if (!$links_admin_data["topkat"])
 		$links_admin_data["topkat"]="global";
-	$view_mode = $links_admin_data["topkat"];
+	if ($view_mode != 'user')
+		$view_mode = $links_admin_data["topkat"];
 
 	//Wenn nur ein Institut verwaltet werden kann, immer dieses waehlen (Auswahl unterdruecken)
 	if ((!$SessSemName[1]) && ($list) && ($view_mode=="inst")) {

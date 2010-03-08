@@ -158,7 +158,7 @@ class AdminNewsController {
 	}
 
 	function show_news($id){
-		global $auth;
+		global $auth, $view_mode;
 		$cssSw= new cssClassSwitcher();
 		$cssSw->enableHover();
 		$this->get_news_by_range($id);
@@ -171,7 +171,7 @@ class AdminNewsController {
 			return FALSE;
 		}
 		echo "\n<tr><td width=\"100%\" class=\"blank\"><blockquote>";
-		echo "\n<form action=\"".URLHelper::getLink("?cmd=kill")."\" method=\"POST\">";
+		echo "\n<form action=\"".URLHelper::getLink("?cmd=kill&view_mode=$view_mode")."\" method=\"POST\">";
 		echo "<table class=\"blank\" align=\"left\" width=\"".round(0.88*$this->xres)."\" cellspacing=\"0\" cellpadding=\"2\" border=\"0\">";
 		echo "\n<tr><td class=\"blank\" colspan=\"4\" align=\"left\" style=\"vertical-align:middle;\"><font size=-1 >" . _("Vorhandene News im gew&auml;hlten Bereich:") . "<br>";
 		echo "</td><td class=\"blank\" colspan=\"4\" align=\"right\" style=\"vertical-align:middle;\"><font size=-1 >" . _("Markierte News l&ouml;schen");
@@ -187,7 +187,7 @@ class AdminNewsController {
 			echo "\n<td class=\"".$cssSw->getClass()."\" width=\"15%\" align=\"center\"><font size=\"-1\">".htmlReady($details["author"])."</font></td>";
 			echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">".strftime("%d.%m.%y", $details["date"])."</td>";
 			echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">".strftime("%d.%m.%y", ($details["date"]+$details["expire"]))."</td>";
-			echo "\n<td class=\"".$cssSw->getClass()."\" width=\"15%\" align=\"center\"><a href=\"".URLHelper::getLink("?cmd=edit&edit_news=$news_id")."\"><img "
+			echo "\n<td class=\"".$cssSw->getClass()."\" width=\"15%\" align=\"center\"><a href=\"".URLHelper::getLink("?cmd=edit&edit_news=$news_id&view_mode=$view_mode")."\"><img "
 				. makeButton("bearbeiten","src") . tooltip(_("Diese News bearbeiten")) . " border=\"0\"></a></td>";
 			echo "\n<td class=\"".$cssSw->getClass()."\" width=\"10%\" align=\"center\">";
 			if ($this->news_perm[$id]["perm"]==3 OR $auth->auth["perm"]=="root" OR $details["user_id"]==$this->user_id)
@@ -235,6 +235,7 @@ class AdminNewsController {
 			$this->modus="";
 		echo "\n<tr> <td class=\"blank\" align=\"center\"><br>";
 		echo "\n<form action=\"".URLHelper::getLink("?cmd=news_edit")."\" method=\"POST\">";
+		echo "\n<input type=\"HIDDEN\" name=\"view_mode\" value=\"".$GLOBALS['view_mode']."\">";
 		echo "\n<input type=\"HIDDEN\" name=\"news_id\" value=\"".$this->news_query["news_id"]."\">";
 		echo "\n<input type=\"HIDDEN\" name=\"user_id\" value=\"".$this->news_query["user_id"]."\">";
 		echo "\n<input type=\"HIDDEN\" name=\"author\" value=\"".$this->news_query["author"]."\">";

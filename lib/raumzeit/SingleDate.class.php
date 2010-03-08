@@ -164,9 +164,9 @@ class SingleDate {
 		return $TERMIN_TYP[$this->date_typ]['name'];
 	}
 
-    function getAuthorID() {
-        return $this->author_id;
-    }
+	function getAuthorID() {
+		return $this->author_id;
+	}
 
 	function getChDate() {
 		return $this->chdate;
@@ -460,6 +460,53 @@ class SingleDate {
 		}
 	}
 
+	/**
+   * this function returns a human-readable status of a room-request, if any, false otherwise
+   *
+   * the int-values of the states are:
+   *  0 - room-request is open
+   *  1 - room-request has been edited, but no confirmation has been sent
+   *  2 - room-request has been edited and a confirmation has been sent
+   *  3 - room-request has been declined
+   *
+   * they are mapped with:
+   *  0 - open
+   *  1 - pending
+   *  2 - closed
+   *  3 - declined
+   *
+   * @return string the mapped text
+   */
+	function getRoomRequestStatus() {
+		if (getDateRoomRequest($this->termin_id)) {
+			// check if there is any room-request
+			if (!$this->request_id) {
+				$this->request_id = SingleDateDB::getRequestID($this->termin_id);
+
+				// no room request found
+				if (!$this->request_id) return FALSE;
+			}    
+
+			// room-request found, parse int-status and return string-status
+			if (!$this->room_request) {
+				$this->room_request =& new RoomRequest($this->request_id);
+				if (!$this->room_request) {
+					throw new Exception("Room-Request with the id {$this->request_id} does not exists!");
+				}    
+			}    
+	
+			switch ($this->room_request->getClosed()) {
+				case '0'; return 'open'; break;
+				case '1'; return 'pending'; break;
+				case '2'; return 'closed'; break;
+				case '3'; return 'declined'; break;
+			}
+
+		}	
+
+		return FALSE;
+	}
+
 	function getRequestedRoom() {
 		if ($this->hasRoomRequest()) {
 			$rD =& new RoomRequest($this->request_id);
@@ -470,7 +517,8 @@ class SingleDate {
 	}
 
 	function getRoomRequestInfo() {
-		if ($this->hasRoomRequest()) {
+		$room_request = $this->getRoomRequestStatus();
+		if ($room_request) {
 			if (!$this->requestData) {
 				$rD =& new RoomRequest($this->request_id);
 				$resObject =& ResourceObject::Factory($rD->resource_id);
@@ -498,8 +546,14 @@ class SingleDate {
 
 				$this->requestData .= '\nStatus: '.$txt.'\n';
 
-				$this->requestData .= '\nNachricht an den Raumadministrator:\n';
-				$this->requestData .= str_replace("\r", '', str_replace("\n", '\n', $rD->getComment()));
+       // if the room-request has been declined, show the decline-notice placed by the room-administrator
+				if ($room_request == 'declined') {
+					$this->requestData .= '\nNachricht RaumadministratorIn:\n';
+					$this->requestData .= str_replace("\r", '', str_replace("\n", '\n', $rD->getReplyComment()));
+				} else {
+					$this->requestData .= '\nNachricht an den/die RaumadministratorIn:\n';
+					$this->requestData .= str_replace("\r", '', str_replace("\n", '\n', $rD->getComment()));
+				}
 
 			}
 

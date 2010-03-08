@@ -161,6 +161,12 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
 		$tpl['room_request'] = true;
 		$tpl['ausruf']  = _("F&uuml;r diesen Termin existiert eine Raumanfrage:");
 		$tpl['ausruf'] .= '\n\n'.$val->getRoomRequestInfo();
+		$request_status = $val->getRoomRequestStatus();
+		if ($request_status == 'declined') {
+			$tpl['symbol'] = 'ausrufezeichen_rot';
+		} else {
+			$tpl['symbol'] = 'pending.png';
+		}
 	} else {
 		$tpl['room_request'] = false;
 	}

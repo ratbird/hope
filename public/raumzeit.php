@@ -559,9 +559,11 @@ while ($tmp_first_date < $end_date) {
 				<tr>
 					<td class="blank" colspan="9">
 						<?
-						if ($sem->hasRoomRequest()) {
+						$request_status = $sem->getRoomRequestStatus();
+						if ($request_status && ($request_status == 'open' || $request_status == 'pending')) :
 							$req_info = $sem->getRoomRequestInfo();
 						?>
+						<!-- the room-request has not yet been resolved -->
 						<div style="{border:1px solid black;background:#FFFFDD}">
 							&nbsp;<?=_("Für diese Veranstaltung liegt eine noch offene Raumanfrage vor.")?>
 							<a href="javascript:alert('<?=$req_info?>')">
@@ -569,11 +571,24 @@ while ($tmp_first_date < $end_date) {
 							</a>
 						</div>
 						<br />
-						<? } ?>
+
+						<? elseif ($request_status && $request_status == 'declined') :
+							$req_info = $sem->getRoomRequestInfo();
+						?>
+						<!-- the room-request has been declined -->
+						<div style="{border:1px solid black;background:#FFCCCC}">
+							&nbsp;<?=_("Die Raumanfrage für diese Veranstaltung wurde abgelehnt!")?>
+							<a href="javascript:alert('<?=$req_info?>')">
+								<img src="<?=$GLOBALS['ASSETS_URL']?>images/info.gif" alt="<?=$req_info?>" border="0" align="absmiddle">
+							</a>
+						</div>
+						<br />
+						<? endif; ?>
+
 						<font size="-1">
 							&nbsp;Raumanfrage
 							<a href="<?= URLHelper::getLink('admin_room_requests.php?seminar_id='. $id) ?>">
-								<? if ($req_info) {
+								<? if ($request_status && $request_status == 'open') {
 								?>
 									<img <?=makebutton('bearbeiten', 'src')?> align="absmiddle" border="0">
 								<?
@@ -583,7 +598,7 @@ while ($tmp_first_date < $end_date) {
 								<?
 								} ?>
 							</A>
-							<? if ($req_info) { ?>
+							<? if ($request_status && $request_status == 'open') { ?>
 							&nbsp;oder&nbsp;
 							<a href="<?= URLHelper::getLink('?cmd=removeSeminarRequest') ?>">
 								<img <?=makebutton('zurueckziehen', 'src')?> align="absmiddle" border="0">

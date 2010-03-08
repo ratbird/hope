@@ -1231,6 +1231,14 @@ class Seminar {
 			}
 		}
 
+		// are there any dates with declined room-requests?
+		if ($stat['declined'] > 0) {
+			$return .= '\n' . _("Folgende Termine haben eine abgelehnte Raumanfrage:") .'\n\n';
+			foreach ($stat['declined_dates'] as $aSingleDate) {
+				$return .= getWeekday(date('w',$aSingleDate['date'])).', '.date('d.m.Y', $aSingleDate['date']).', '.date('H:i', $aSingleDate['date']).' - '.date('H:i', $aSingleDate['end_time']).'\n';
+			}
+		}
+
 		return $return;
 	}
 
@@ -1343,6 +1351,51 @@ class Seminar {
 		}
 
 		return TRUE;
+	}
+
+	/**
+	 * this function returns a human-readable status of a room-request, if any, false otherwise
+	 *
+	 * the int-values of the states are:
+	 *  0 - room-request is open
+	 *  1 - room-request has been edited, but no confirmation has been sent
+	 *  2 - room-request has been edited and a confirmation has been sent
+	 *  3 - room-request has been declined
+	 *
+	 * they are mapped with:
+	 *  0 - open
+	 *  1 - pending
+	 *  2 - closed
+	 *  3 - declined
+	 *
+	 * @return string the mapped text
+	 */
+	function getRoomRequestStatus()
+	{
+		// check if there is any room-request
+		if (!$this->request_id) {
+			$this->request_id = getSeminarRoomRequest($this->id);
+
+			// no room request found
+			if (!$this->request_id) return FALSE;
+		}
+
+		// room-request found, parse int-status and return string-status
+		if (!$this->room_request) {
+			$this->room_request =& new RoomRequest($this->request_id);
+			if (!$this->room_request) {
+				throw new Exception("Room-Request with the id {$this->request_id} does not exists!");
+			}
+		}
+
+		switch ($this->room_request->getClosed()) {
+			case '0'; return 'open'; break;
+			case '1'; return 'pending'; break;
+			case '2'; return 'closed'; break;
+			case '3'; return 'declined'; break;
+		}
+	
+		return FALSE;
 	}
 
 	function applyTimeFilter($start, $end) {
@@ -1465,6 +1518,15 @@ class Seminar {
 
 	}
 
+	/**
+	 * removes a room-request for a single date. If no cycle_id is given, the single date
+	 * is an irregular date of the seminar, otherwise it is a single date of a regular entry.
+	 *
+	 * @param string $singledate_id the id of the date
+	 * @param string $cycle_id the metadate_id of the regular entry (optional)
+	 *
+	 * @return boolean true on success
+	 */
 	function removeRequest($singledate_id,  $cycle_id = '') {
 		if ($cycle_id == '') {
 			$this->irregularSingleDates[$singledate_id]->removeRequest();
@@ -1633,13 +1695,19 @@ class Seminar {
 		return array('first_event' => $first_event, 'groups' => $groups, 'info' => $info);
 	}
 
+	/**
+   * creates a textual, status-dependent representation of a room-request for a seminar.
+	 *
+	 * @return string conatining room, responsible person, properties, current status and message / decline-message
+	 */
 	function getRoomRequestInfo() {
-		if ($this->hasRoomRequest()) {
+		$room_request = $this->getRoomRequestStatus();
+		if ($room_request) {
 			if (!$this->requestData) {
 				$rD =& new RoomRequest($this->request_id);
 				$resObject =& ResourceObject::Factory($rD->resource_id);
 				$this->requestData .= 'Raum: '.$resObject->getName().'\n';
-				$this->requestData .= 'verantworlich: '.$resObject->getOwnerName().'\n\n';
+				$this->requestData .= 'verantwortlich: '.$resObject->getOwnerName().'\n\n';
 				foreach ($rD->getProperties() as $val) {
 					$this->requestData .= $val['name'].': ';
 					if ($val['type'] == 'bool') {
@@ -1655,15 +1723,21 @@ class Seminar {
 				if  ($rD->getClosed() == 0) {
 					$txt = _("Die Anfrage wurde noch nicht bearbeitet.");
 				} else if ($rD->getClosed() == 3) {
-					$txt = _("Die Anfrage wurde bearbeitet und abgelehnt.");
+					$txt = _("Ihre Anfrage wurde abgelehnt!");
 				} else {
 					$txt = _("Die Anfrage wurde bearbeitet.");
 				}
 
 				$this->requestData .= '\nStatus: '.$txt.'\n';
 
-				$this->requestData .= '\nNachricht an den Raumadministrator:\n';
-				$this->requestData .= str_replace("\r", '', str_replace("\n", '\n', $rD->getComment()));
+				// if the room-request has been declined, show the decline-notice placed by the room-administrator
+				if ($room_request == 'declined') {
+					$this->requestData .= '\nNachricht RaumadministratorIn:\n';
+					$this->requestData .= str_replace("\r", '', str_replace("\n", '\n', $rD->getReplyComment()));
+				} else {
+					$this->requestData .= '\nNachricht an den/die RaumadministratorIn:\n';
+					$this->requestData .= str_replace("\r", '', str_replace("\n", '\n', $rD->getComment()));
+				}
 
 			}
 

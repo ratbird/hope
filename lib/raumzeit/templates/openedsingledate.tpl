@@ -29,7 +29,7 @@
 			    </FONT>
 					<? if ($tpl['ausruf']) { ?>
 					<A href="javascript:;" onClick="alert('<?=$tpl['ausruf']?>')">
-						<IMG src="<?=$GLOBALS['ASSETS_URL']?>images/ausrufezeichen_rot.gif" alt="<?=$tpl['ausruf']?>" border="0" align="absmiddle">
+						<?= Assets::img($tpl['symbol'], array('alt' => $tpl['ausruf'], 'align' => 'absmiddle'))?>
 					</A>
 					<? } ?>
 				</TD>

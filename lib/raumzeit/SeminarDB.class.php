@@ -84,6 +84,21 @@ class SeminarDB {
 			}
 		}
 		$stat['open_rooms'] = $stat2;
+
+
+		// count how many singledates have a declined room-request
+		$stmt = DBManager::get()->query("SELECT * FROM termine
+			LEFT JOIN resources_requests ON (termine.termin_id = resources_requests.termin_id)
+			WHERE range_id = '$seminar_id' AND metadate_id = '$cycle_id' AND closed = 3"
+			. (($filterStart != 0 && $filterEnd != 0) ? " AND date >= $filterStart AND end_time <= $filterEnd " : '') .
+			" ORDER BY date");
+
+		$tmp = array();
+		while ($zw = $stmt->fetch(PDO::FETCH_ASSOC)) {
+			$stat['declined_dates'][] = $zw;
+			$stat['declined']++;
+		}
+
 		return $stat;
 	}
 

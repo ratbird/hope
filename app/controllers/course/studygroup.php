@@ -506,6 +506,7 @@ class Course_StudygroupController extends AuthenticatedController {
 			}
 		}
 		// Everything seems fine, let's go to studygroup
+		$this->flash['success'] = _("Die Änderungen wurden erfolgreich übernommen.");
 		$this->redirect('course/studygroup/edit/' . $id);
 	}
 
@@ -592,6 +593,16 @@ class Course_StudygroupController extends AuthenticatedController {
 							);
 						}
 					}
+					if (isset($results_members)) {
+						$count_members = sizeof($results_members);
+						$msg .= $count_members == 1 ? _("Es wurde 1 NutzerIn gefunden.") : sprintf(_("Es wurden %s NutzerInnen gefunden."), $count_members);
+						if ($count_members == 50){
+							$msg = sprintf(_("Es werden immer nur die ersten %s Treffer angezeigt! Bitte konkretisieren sie gegebenenfalls den Suchbegriff."), $count_members);
+						}
+						$this->flash['success'] = $msg;
+					} else {
+						$this->flash['info'] = sprintf(_("Der Suchbegriff <em>%s</em> ergab keine Treffer."), Request::get('search_for_member'));
+					}
 					$this->flash['results_choose_members'] = $results_members;
 					$this->flash['request'] = Request::getInstance();
 					
@@ -606,6 +617,7 @@ class Course_StudygroupController extends AuthenticatedController {
 							 $u_name, $sem->name, URLHelper::getlink("dispatch.php/course/studygroup/details/" . $id, array('cid' => NULL)));
 					$subject = _("Sie wurden in eine Studiengruppe eingeladen");
 					$msg->insert_message($message, $receiver,'', '', '', '', '', $subject);
+					$this->flash['success'] = sprintf(_("Der Nutzer %s wurde in die Studiengruppe eingeladen."), get_fullname_from_uname($receiver));
 				}
 			}
 			if ($perm->have_studip_perm('dozent', $id)) {

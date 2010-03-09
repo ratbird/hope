@@ -45,7 +45,7 @@ list-style-position:outside;list-style-type:none;">
     <li style="position:relative;width:200px;display:inline-block;overflow:hidden;vertical-align:top;" align="left">
 
         <? if (($GLOBALS['perm']->have_studip_perm('dozent', $sem_id) && $m['status'] != 'dozent') || $GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
-            <div style="float:left;position:relative;cursor:hand;"onMouseOver="$(this).down('.invitation').show();"
+            <div id="usercontainer" style="float:left;position:relative;cursor:hand;"onMouseOver="$(this).down('.invitation').show();"
                onMouseOut ="$(this).down('.invitation').hide();"
                onClick    ="STUDIP.Arbeitsgruppen.toggleOption('<?= $m['user_id'] ?>')"
                title="klicken für weitere Optionen">

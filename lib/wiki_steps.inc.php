@@ -11,7 +11,7 @@
 
 require_once 'lib/forum.inc.php';
 
-wikiMarkup('/\\(:stepform:\\)/e',"wiki_stepform('step')", 'dozent');
+wikiMarkup('/\\(:stepform:\\)/e',"wiki_stepform('step')", 'tutor');
 wikiMarkup('/\\(:steplist\\s*(.*?):\\)/e',"wiki_steplist('step',array('q'=>'$1'))");
 
 $step_templates['step'] = array(

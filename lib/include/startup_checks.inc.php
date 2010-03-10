@@ -8,11 +8,11 @@
 * checks if all requirements to create Veranstaltungen are set up. If evreything is fine, no output will be generated.
 *
 *
-* @author		Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @module		startup_checks.php
-* @modulegroup		admin
-* @package		studip_core
+* @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @module       startup_checks.php
+* @modulegroup      admin
+* @package      studip_core
 */
 
 // +---------------------------------------------------------------------------+
@@ -37,7 +37,7 @@
 
 $perm->check("dozent");
 
-require_once('lib/msg.inc.php');	//Ausgaben
+require_once('lib/msg.inc.php');    //Ausgaben
 require_once('lib/classes/StartupChecks.class.php');
 
 $checks=new StartupChecks;
@@ -46,73 +46,73 @@ $list = $checks->getCheckList();
 $problems_found = 0;
 
 foreach ($list as $key=>$val) {
-	if ($val)
-		$problems_found++;
+    if ($val)
+        $problems_found++;
 }
 
 if ($problems_found) {
-	?>
-	<table width="100%" border=0 cellpadding=0 cellspacing=0>
-	<tr>
-		<td class="topic" colspan=2>&nbsp; <b>
-			Startup Checks
-		</td>
-	</tr>
- 	<tr>
-		<td class="blank" valign="top">
-			<br>
-			<blockquote>
-			<?=_("Das Anlegen einer Veranstaltung ist leider zu diesem Zeitpunkt noch nicht m&ouml;glich, da zun&auml;chst die folgenden Voraussetzungen geschaffen werden m&uuml;ssen.")?> <br><br>
-			<?($problems_found > 1) ? print"<font size=\"-1\">"._("(Beachten Sie bitte die angegebene Reihenfolge!)")."</font><br>" : "" ?>
-			</blockquote>
-		</td>
-		<td class="blank" align="right" valign="top"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="5" /><br>
-			<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/warning.jpg" border="0"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="10" />
-		</td>
-	</tr>
-	<tr>
-	<td class="blank" colspan=2>
-		<table width="99%" border=0 cellpadding=2 cellspacing=0 align="center">
-		<tr <? $cssSw->switchClass() ?>>
-			<td class="<? echo $cssSw->getClass() ?>" align="center" colspan="4">
-				<a href="<?=$PHP_SELF?>"><?=makeButton("aktualisieren")?></a>
-			</td>
-		</tr>
-		<?
-		$i=0;
-		foreach ($list as $key => $val) {
-			if ($val) {
-				if ($problems_found > 1)
-					$i++;
-			?>
-			<tr <? $cssSw->switchClass() ?> rowspan=2>
-				<td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
-					&nbsp;
-				</td>
-				<td class="<? echo $cssSw->getClass() ?>"  width="3%" align="left">
-					<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" alt="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" width="22" height="20" border="0">
-				</td>
-				<td class="<? echo $cssSw->getClass() ?>"  width="2%" align="center" valign="top">
-					<font size="-1"><b><?=($i) ? $i."." : ""?></b></font>
-				</td>
-				<td class="<? echo $cssSw->getClass() ?>" width="91%" valign="top">
-					<font size="-1"><?if (($checks->registered_checks[$key]["msg_fak_admin"]) && ($perm->is_fak_admin())) print $checks->registered_checks[$key]["msg_fak_admin"]; else print $checks->registered_checks[$key]["msg"]; ?></font><br>
-					<font size="-1">Aktion:&nbsp;<?=formatReady("=)")?>&nbsp;
-						<a href="<?=(($checks->registered_checks[$key]["link_fak_admin"]) && ($perm->is_fak_admin())) ? $checks->registered_checks[$key]["link_fak_admin"] : $checks->registered_checks[$key]["link"]?>">
-							<?=(($checks->registered_checks[$key]["link_name_fak_admin"]) && ($perm->is_fak_admin())) ? $checks->registered_checks[$key]["link_name_fak_admin"] : $checks->registered_checks[$key]["link_name"]?>
-						</a>
-					</font><br>
-				</td>
-			</tr>
-			<? }
+    ?>
+    <table width="100%" border=0 cellpadding=0 cellspacing=0>
+    <tr>
+        <td class="topic" colspan=2>&nbsp; <b>
+            Startup Checks
+        </td>
+    </tr>
+    <tr>
+        <td class="blank" valign="top">
+            <br>
+            <blockquote>
+            <?=_("Das Anlegen einer Veranstaltung ist leider zu diesem Zeitpunkt noch nicht m&ouml;glich, da zun&auml;chst die folgenden Voraussetzungen geschaffen werden m&uuml;ssen.")?> <br><br>
+            <?($problems_found > 1) ? print"<font size=\"-1\">"._("(Beachten Sie bitte die angegebene Reihenfolge!)")."</font><br>" : "" ?>
+            </blockquote>
+        </td>
+        <td class="blank" align="right" valign="top"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="5" /><br>
+            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/warning.jpg" border="0"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="10" />
+        </td>
+    </tr>
+    <tr>
+    <td class="blank" colspan=2>
+        <table width="99%" border=0 cellpadding=2 cellspacing=0 align="center">
+        <tr <? $cssSw->switchClass() ?>>
+            <td class="<? echo $cssSw->getClass() ?>" align="center" colspan="4">
+                <a href="<?=$PHP_SELF?>"><?=makeButton("aktualisieren")?></a>
+            </td>
+        </tr>
+        <?
+        $i=0;
+        foreach ($list as $key => $val) {
+            if ($val) {
+                if ($problems_found > 1)
+                    $i++;
+            ?>
+            <tr <? $cssSw->switchClass() ?> rowspan=2>
+                <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
+                    &nbsp;
+                </td>
+                <td class="<? echo $cssSw->getClass() ?>"  width="3%" align="left">
+                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" alt="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" width="22" height="20" border="0">
+                </td>
+                <td class="<? echo $cssSw->getClass() ?>"  width="2%" align="center" valign="top">
+                    <font size="-1"><b><?=($i) ? $i."." : ""?></b></font>
+                </td>
+                <td class="<? echo $cssSw->getClass() ?>" width="91%" valign="top">
+                    <font size="-1"><?if (($checks->registered_checks[$key]["msg_fak_admin"]) && ($perm->is_fak_admin())) print $checks->registered_checks[$key]["msg_fak_admin"]; else print $checks->registered_checks[$key]["msg"]; ?></font><br>
+                    <font size="-1">Aktion:&nbsp;<?=formatReady("=)")?>&nbsp;
+                        <a href="<?=(($checks->registered_checks[$key]["link_fak_admin"]) && ($perm->is_fak_admin())) ? $checks->registered_checks[$key]["link_fak_admin"] : $checks->registered_checks[$key]["link"]?>">
+                            <?=(($checks->registered_checks[$key]["link_name_fak_admin"]) && ($perm->is_fak_admin())) ? $checks->registered_checks[$key]["link_name_fak_admin"] : $checks->registered_checks[$key]["link_name"]?>
+                        </a>
+                    </font><br>
+                </td>
+            </tr>
+            <? }
 
-		}
-		?>
-		<tr>
-			<td class="blank" colspan=3>&nbsp;
-			</td>
-		</tr>
-	</table>
+        }
+        ?>
+        <tr>
+            <td class="blank" colspan=3>&nbsp;
+            </td>
+        </tr>
+    </table>
 </td>
 </tr>
 </table>

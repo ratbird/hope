@@ -31,32 +31,32 @@ require_once $RELATIVE_PATH_ADMIN_MODULES."/IntegrityCheckAbstract.class.php";
 *
 * 
 *
-* @access	public	
-* @author	André Noack <andre.noack@gmx.net>
-* @package	Admin
-* @see		IntegrityCheckAbstract
+* @access   public  
+* @author   André Noack <andre.noack@gmx.net>
+* @package  Admin
+* @see      IntegrityCheckAbstract
 */
 class IntegrityCheckInstitut extends IntegrityCheckAbstract{
-	
-	/**
-	* constructor
-	*
-	* calls the base class constructor and initializes checklist array
-	* @access	public
-	*/
-	function IntegrityCheckInstitut(){
-		$baseclass = strtolower(get_parent_class($this));
-		//parent::$baseclass(); //calling the baseclass constructor 
-		$this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
-		$this->master_table = "Institute";
-		$this->checklist[] = array('detail_table' => 'user_inst',
-									'query' => 'view:INST_USER:');
-		$this->checklist[] = array('detail_table' => 'seminar_inst',
-									'query' => 'view:INST_SEM:');
-		$this->checklist[] = array('detail_table' => 'object_user_visits',
-									'query' => 'view:INST_OBJECT_USER_VISIT:');
-							
-	}
+    
+    /**
+    * constructor
+    *
+    * calls the base class constructor and initializes checklist array
+    * @access   public
+    */
+    function IntegrityCheckInstitut(){
+        $baseclass = strtolower(get_parent_class($this));
+        //parent::$baseclass(); //calling the baseclass constructor 
+        $this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
+        $this->master_table = "Institute";
+        $this->checklist[] = array('detail_table' => 'user_inst',
+                                    'query' => 'view:INST_USER:');
+        $this->checklist[] = array('detail_table' => 'seminar_inst',
+                                    'query' => 'view:INST_SEM:');
+        $this->checklist[] = array('detail_table' => 'object_user_visits',
+                                    'query' => 'view:INST_OBJECT_USER_VISIT:');
+                            
+    }
 
 }
 ?>

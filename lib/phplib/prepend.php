@@ -22,7 +22,7 @@ require($_PHPLIB["libdir"] . "user.inc");      /* Disable this, if you are not u
 
 /* Additional require statements go below this line */
 
-require($_PHPLIB["libdir"] . "email_validation.inc");	/* Required, contains register-check functions. */
+require($_PHPLIB["libdir"] . "email_validation.inc");   /* Required, contains register-check functions. */
 require($_PHPLIB["libdir"] . "smtp.inc");             /* Required, contains email functions */
 
 /* Additional require statements go before this line */

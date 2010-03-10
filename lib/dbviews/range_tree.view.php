@@ -27,34 +27,34 @@ require_once("config.inc.php");
 require_once("lib/classes/SemesterData.class.php");
 
 foreach (SemesterData::GetSemesterArray() as $key => $value){
-	if (isset($value['beginn']) && $value['beginn'])
-	  $sem_start_times[] = $value['beginn'];
+    if (isset($value['beginn']) && $value['beginn'])
+      $sem_start_times[] = $value['beginn'];
 }
 $GLOBALS['_views']['sem_number_sql'] = "INTERVAL(start_time," . join(",",$sem_start_times) .")";
 $GLOBALS['_views']['sem_number_end_sql'] = "IF(duration_time=-1,-1,INTERVAL(start_time+duration_time," . join(",",$sem_start_times) ."))";
 
 $GLOBALS['_views']["TREE_KIDS"] = array("pk"=>"item_id","temp_table_type"=>"HEAP",
-							"query"=>"SELECT item_id FROM range_tree WHERE parent_id=? ORDER BY priority");
+                            "query"=>"SELECT item_id FROM range_tree WHERE parent_id=? ORDER BY priority");
 $GLOBALS['_views']["TREE_GET_DATA"] = array("pk"=>"item_id","temp_table_type"=>"HEAP",
-							"query"=>"SELECT a.*, b.Name AS studip_object_name, b.fakultaets_id FROM range_tree a
-									LEFT JOIN Institute b ON (a.studip_object_id = b.Institut_id) ORDER BY priority");
+                            "query"=>"SELECT a.*, b.Name AS studip_object_name, b.fakultaets_id FROM range_tree a
+                                    LEFT JOIN Institute b ON (a.studip_object_id = b.Institut_id) ORDER BY priority");
 $GLOBALS['_views']["TREE_GET_SEM_ENTRIES"] = array("pk"=>"item_id","temp_table_type"=>"HEAP",
-							"query"=>"SELECT item_id,count(d.Seminar_id) AS entries FROM range_tree a
-									INNER JOIN seminar_inst c ON (a.studip_object_id = c.institut_id)
-									 INNER JOIN seminare d ON(c.seminar_id=d.Seminar_id  §) § GROUP BY a.item_id");
+                            "query"=>"SELECT item_id,count(d.Seminar_id) AS entries FROM range_tree a
+                                    INNER JOIN seminar_inst c ON (a.studip_object_id = c.institut_id)
+                                     INNER JOIN seminare d ON(c.seminar_id=d.Seminar_id  §) § GROUP BY a.item_id");
 
 $GLOBALS['_views']["TREE_OBJECT_NAME"] = array("pk"=>"","temp_table_type"=>"HEAP",
-							"query"=>"SELECT Name FROM § WHERE § LIKE ? ");
+                            "query"=>"SELECT Name FROM § WHERE § LIKE ? ");
 $GLOBALS['_views']["TREE_OBJECT_DETAIL"] = array("pk"=>"","temp_table_type"=>"HEAP",
-							"query"=>"SELECT * FROM § WHERE § LIKE ? ");
+                            "query"=>"SELECT * FROM § WHERE § LIKE ? ");
 $GLOBALS['_views']["TREE_OBJECT_CAT"] = array("pk"=>"kategorie_id","temp_table_type"=>"MyISAM",
-							"query"=>"SELECT * FROM kategorien WHERE range_id LIKE ? ORDER BY priority");
+                            "query"=>"SELECT * FROM kategorien WHERE range_id LIKE ? ORDER BY priority");
 $GLOBALS['_views']["TREE_INST_STATUS"] = array("pk"=>"","temp_table_type"=>"HEAP",
-							"query"=>"SELECT Institut_id FROM user_inst WHERE Institut_id IN(&) AND user_id=? AND inst_perms='admin'");
+                            "query"=>"SELECT Institut_id FROM user_inst WHERE Institut_id IN(&) AND user_id=? AND inst_perms='admin'");
 $GLOBALS['_views']["TREE_FAK_STATUS"] = array("pk"=>"","temp_table_type"=>"HEAP",
-							"query"=>"SELECT b.fakultaets_id,a.Institut_id FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id = b.Institut_id AND b.Institut_id=b.fakultaets_id) WHERE a.Institut_id IN(&) AND NOT ISNULL(b.Institut_id) AND user_id=? AND inst_perms='admin'");
+                            "query"=>"SELECT b.fakultaets_id,a.Institut_id FROM user_inst a LEFT JOIN Institute b ON(a.Institut_id = b.Institut_id AND b.Institut_id=b.fakultaets_id) WHERE a.Institut_id IN(&) AND NOT ISNULL(b.Institut_id) AND user_id=? AND inst_perms='admin'");
 $GLOBALS['_views']["TREE_ITEMS_OBJECT"] = array("pk"=>"item_id","temp_table_type"=>"HEAP",
-							"query"=>"SELECT item_id FROM range_tree WHERE studip_object_id LIKE ?");
+                            "query"=>"SELECT item_id FROM range_tree WHERE studip_object_id LIKE ?");
 
 $GLOBALS['_views']["TREE_UPD_PRIO"] = array("query" => "UPDATE range_tree SET priority=§ WHERE item_id=?");
 $GLOBALS['_views']["TREE_INS_ITEM"] = array("query" => "INSERT INTO range_tree (item_id,parent_id,name,priority,studip_object,studip_object_id) VALUES (?,?,?,§,?,?)");
@@ -65,13 +65,13 @@ $GLOBALS['_views']["TREE_DEL_ITEM"] = array("query" => "DELETE FROM range_tree W
 $GLOBALS['_views']["TREE_SEARCH_INST"] = array("query" => "SELECT Name,Institut_id FROM Institute WHERE fakultaets_id!=Institut_id AND Name LIKE '%§%'");
 $GLOBALS['_views']["TREE_SEARCH_FAK"] = array("query" => "SELECT Name,Institut_id AS Fakultaets_id FROM Institute WHERE fakultaets_id=Institut_id AND Name LIKE '%§%'");
 $GLOBALS['_views']["TREE_SEARCH_ITEM"] = array("pk"=>"item_id","temp_table_type"=>"HEAP",
-							"query"=>"SELECT a.item_id FROM range_tree a LEFT JOIN Institute b ON (a.studip_object_id = b.Institut_id) WHERE a.name LIKE ?");
+                            "query"=>"SELECT a.item_id FROM range_tree a LEFT JOIN Institute b ON (a.studip_object_id = b.Institut_id) WHERE a.name LIKE ?");
 $GLOBALS['_views']["TREE_SEARCH_USER"] = array("pk"=>"item_id","temp_table_type"=>"HEAP",
-							"query"=>"SELECT rt.item_id FROM auth_user_md5 a LEFT JOIN user_inst b ON (a.user_id=b.user_id AND b.inst_perms!='user')
+                            "query"=>"SELECT rt.item_id FROM auth_user_md5 a LEFT JOIN user_inst b ON (a.user_id=b.user_id AND b.inst_perms!='user')
 LEFT JOIN range_tree rt ON (rt.studip_object_id=b.Institut_id ) WHERE NOT ISNULL(rt.item_id) AND CONCAT(a.username,' ',a.Vorname,' ',a.Nachname) LIKE ?");
 $GLOBALS['_views']["TREE_SEARCH_SEM"] = array("pk"=>"item_id","temp_table_type"=>"HEAP",
-							"query"=>"SELECT rt.item_id FROM seminare a LEFT JOIN seminar_inst b USING (Seminar_id)LEFT JOIN range_tree rt ON (rt.studip_object_id=b.institut_id)
-							WHERE NOT ISNULL(rt.item_id) AND a.Name LIKE ?");
+                            "query"=>"SELECT rt.item_id FROM seminare a LEFT JOIN seminar_inst b USING (Seminar_id)LEFT JOIN range_tree rt ON (rt.studip_object_id=b.institut_id)
+                            WHERE NOT ISNULL(rt.item_id) AND a.Name LIKE ?");
 
 
 $GLOBALS['_views']["CAT_UPD_PRIO"] = array("query" => "UPDATE kategorien SET priority=§,chdate=UNIX_TIMESTAMP() WHERE kategorie_id=?");

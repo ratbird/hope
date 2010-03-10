@@ -4,10 +4,10 @@
 *
 * create some constants for semester data
 *
-* @access		public
-* @package		studip_core
-* @modulegroup	config
-* @module		config_tools_semester.inc.php
+* @access       public
+* @package      studip_core
+* @modulegroup  config
+* @module       config_tools_semester.inc.php
 */
 
 // +---------------------------------------------------------------------------+
@@ -52,24 +52,24 @@ require_once("lib/classes/SemesterData.class.php");
 $semester = new SemesterData;
 $all_semester = $semester->getAllSemesterData();
 for ($i=0; $i < sizeof($all_semester); $i++)
-	{
-	if (($all_semester[$i]["beginn"] < time()) && ($all_semester[$i]["ende"] >time()))
-		{
-		$VORLES_BEGINN=$all_semester[$i]["vorles_beginn"];
-		$VORLES_ENDE=$all_semester[$i]["vorles_ende"];
-		$SEM_BEGINN=$all_semester[$i]["beginn"];
-		$SEM_ENDE=$all_semester[$i]["ende"];
-		$SEM_NAME=$all_semester[$i]["name"];
-		$SEM_ID=$i;
-		if ($i<sizeof ($all_semester))
-			{
-			$VORLES_BEGINN_NEXT=$all_semester[$i+1]["vorles_beginn"];
-			$VORLES_ENDE_NEXT=$all_semester[$i+1]["vorles_ende"];
-			$SEM_BEGINN_NEXT=$all_semester[$i+1]["beginn"];
-			$SEM_ENDE_NEXT=$all_semester[$i+1]["ende"];
-			$SEM_NAME_NEXT=$all_semester[$i+1]["name"];
-			$SEM_ID_NEXT=$i+1;
-			}
-		}
-	}
+    {
+    if (($all_semester[$i]["beginn"] < time()) && ($all_semester[$i]["ende"] >time()))
+        {
+        $VORLES_BEGINN=$all_semester[$i]["vorles_beginn"];
+        $VORLES_ENDE=$all_semester[$i]["vorles_ende"];
+        $SEM_BEGINN=$all_semester[$i]["beginn"];
+        $SEM_ENDE=$all_semester[$i]["ende"];
+        $SEM_NAME=$all_semester[$i]["name"];
+        $SEM_ID=$i;
+        if ($i<sizeof ($all_semester))
+            {
+            $VORLES_BEGINN_NEXT=$all_semester[$i+1]["vorles_beginn"];
+            $VORLES_ENDE_NEXT=$all_semester[$i+1]["vorles_ende"];
+            $SEM_BEGINN_NEXT=$all_semester[$i+1]["beginn"];
+            $SEM_ENDE_NEXT=$all_semester[$i+1]["ende"];
+            $SEM_NAME_NEXT=$all_semester[$i+1]["name"];
+            $SEM_ID_NEXT=$i+1;
+            }
+        }
+    }
 ?>

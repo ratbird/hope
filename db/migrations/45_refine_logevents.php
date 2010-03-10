@@ -3,27 +3,27 @@ require_once 'lib/admission.inc.php';
 class RefineLogevents extends Migration
 {
 
-	function description ()
-	{
-		return "Refine OS Logevent  'SEM_CHANGED_ACCESS' Information text into more sensebale and readable text";
-	}
+    function description ()
+    {
+        return "Refine OS Logevent  'SEM_CHANGED_ACCESS' Information text into more sensebale and readable text";
+    }
 
-	function up ()
-	{
+    function up ()
+    {
 
-		// (1) Get action_id for logactions'SEM_CHANGED_ACCESS'
-		$data = DBManager::get()->query("SELECT action_id FROM log_actions WHERE name  = 'SEM_CHANGED_ACCESS'")->fetch();
-		$action_id = $data['action_id'];
-		
-		// (2) Update the format string
-		DBManager::get()->query("UPDATE log_actions 
-			SET info_template = '%user ändert die Zugangsberechtigungen der Veranstaltung %sem(%affected).'
-			WHERE action_id = '$action_id'");
+        // (1) Get action_id for logactions'SEM_CHANGED_ACCESS'
+        $data = DBManager::get()->query("SELECT action_id FROM log_actions WHERE name  = 'SEM_CHANGED_ACCESS'")->fetch();
+        $action_id = $data['action_id'];
+        
+        // (2) Update the format string
+        DBManager::get()->query("UPDATE log_actions 
+            SET info_template = '%user ändert die Zugangsberechtigungen der Veranstaltung %sem(%affected).'
+            WHERE action_id = '$action_id'");
 
-		// (3) Get all corresponding logevents and update the info text
-		$stmt = DBManager::get()->query("SELECT event_id, info FROM log_events WHERE action_id = '$action_id'");
-		while ($data = $stmt->fetch()) {
-		  if($info=unserialize($data['info'])) {
+        // (3) Get all corresponding logevents and update the info text
+        $stmt = DBManager::get()->query("SELECT event_id, info FROM log_events WHERE action_id = '$action_id'");
+        while ($data = $stmt->fetch()) {
+          if($info=unserialize($data['info'])) {
             $anmeldeverfahren=$info["admission_type"]; 
             $startzeit=$info["start_time"]; 
             $endzeit=$info["end_time"]; 
@@ -49,14 +49,14 @@ class RefineLogevents extends Migration
                             " Enable_Quotas ".$enable_quota." geändert."; 
             
             DBManager::get()->query("UPDATE log_events SET info = '$inf_txt' WHERE event_id = '{$data['event_id']}'");
-		  }  
-		  
-		}
-	}
+          }  
+          
+        }
+    }
 
-	function down ()
-	{
+    function down ()
+    {
 
-	}
+    }
 }
 ?>

@@ -12,20 +12,20 @@ require_once ('lib/visual.inc.php');
 if (!$_POST["pass"])
    {
     ?>
-		<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
     <html><head><title><?=_("Autologin Datei erzeugen")?></title>
-		<script type="text/javascript" src="<?= $GLOBALS['ASSETS_URL'] ?>javascripts/md5.js"></script>
+        <script type="text/javascript" src="<?= $GLOBALS['ASSETS_URL'] ?>javascripts/md5.js"></script>
     <script type="text/javascript">
     function doSubmit(){
-	    if (document.forms[0].pass.value!="") document.forms[0].submit();
-	    else document.forms[0].pass.focus();
+        if (document.forms[0].pass.value!="") document.forms[0].submit();
+        else document.forms[0].pass.focus();
     }
     </script></head>
     <body style="background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/steel1.jpg');font-family: Arial, Helvetica, sans-serif;">
     <?
     echo "<div align=\"center\"><form action=\"$PHP_SELF\" method=\"post\" >";
     printf(_("Bitte Passwort eingeben für User: <b>%s</b>"), $auth->auth["uname"]);
-		echo "<br><br>";
+        echo "<br><br>";
     echo "<input type=\"password\" size=\"15\" name=\"pass\"><br><br><a href=\"javascript:doSubmit();\"><img " . makeButton("herunterladen", "src") . " border=\"0\" " . tooltip(_("Die heruntergeladene Datei bitte mit der Endung .html speichern!")) . "></a>";
     echo "&nbsp;&nbsp;<a href=\"javascript:window.close()\"><img " . makeButton("abbrechen", "src") . " border=\"0\" " . tooltip(_("Fenster schließen")) . "></a></form></div>";
     ?><script type="text/javascript">document.forms[0].pass.focus();</script><?php
@@ -40,7 +40,7 @@ $link = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://" . $_SERVER["HTTP_HOST"].
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-	<title><?=_("Autologin")?></title>
+    <title><?=_("Autologin")?></title>
 <script src="<? echo $link;?>get_key.php" type="text/javascript">
 </script>
 <script type="text/javascript">
@@ -58,8 +58,8 @@ function convert(x, n, m, d)
    }
 
 function toHexString(x){
-	return convert(x, 4, 15, "0123456789abcdef");
-	}
+    return convert(x, 4, 15, "0123456789abcdef");
+    }
 
 function one_time_pad(text,key)
 {

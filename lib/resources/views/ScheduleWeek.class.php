@@ -9,11 +9,11 @@
 * or a timetable for a ressource like a room, a device or a building
 * 
 *
-* @author		Cornelis Kater <ckater@gwdg.de>
-* @access		public
-* @package		resources
-* @modulegroup	resources_modules
-* @module		ScheduleWeek.class.php
+* @author       Cornelis Kater <ckater@gwdg.de>
+* @access       public
+* @package      resources
+* @modulegroup  resources_modules
+* @module       ScheduleWeek.class.php
 */
 
 // +---------------------------------------------------------------------------+
@@ -39,32 +39,32 @@
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/views/ScheduleView.class.php";
 
 class ScheduleWeek extends ScheduleView {
-	var $show_dates;			//If setted, the dates of each day will be shown
-	
-	//Kontruktor
-	function ScheduleWeek ($start_hour = '', $end_hour = '', $show_days = '', $start_date = '', $show_dates = false) {
-		
-		parent::ScheduleView($start_hour, $end_hour, $show_days, $start_date);
-		
-		$this->show_dates = $show_dates;
-		
-		if ((!$show_dates) && ($start_date))
-			$this->show_dates=TRUE;	
-	}
+    var $show_dates;            //If setted, the dates of each day will be shown
+    
+    //Kontruktor
+    function ScheduleWeek ($start_hour = '', $end_hour = '', $show_days = '', $start_date = '', $show_dates = false) {
+        
+        parent::ScheduleView($start_hour, $end_hour, $show_days, $start_date);
+        
+        $this->show_dates = $show_dates;
+        
+        if ((!$show_dates) && ($start_date))
+            $this->show_dates=TRUE; 
+    }
 
 
-	function addEvent ($name, $start_time, $end_time, $link='', $add_info='', $category=0) {
-		$week_day=date("w", $start_time);
-		if ($week_day == 0) $week_day = 7;
-		parent::AddEvent($week_day, $name, $start_time, $end_time, $link, $add_info, $category);
-	}
-	
-	function getColumnName($id){
-		$ts = mktime (0,0,0,date("n",$this->start_date), date("j",$this->start_date)+$id-1, date("Y",$this->start_date));
-		$out = strftime("%A", $ts);
-		if ($this->show_dates) $out .= "<br><font size=\"-1\">" . date("d.m.y", $ts) . "</font>\n";;
-		return $out;
-	}
-	
+    function addEvent ($name, $start_time, $end_time, $link='', $add_info='', $category=0) {
+        $week_day=date("w", $start_time);
+        if ($week_day == 0) $week_day = 7;
+        parent::AddEvent($week_day, $name, $start_time, $end_time, $link, $add_info, $category);
+    }
+    
+    function getColumnName($id){
+        $ts = mktime (0,0,0,date("n",$this->start_date), date("j",$this->start_date)+$id-1, date("Y",$this->start_date));
+        $out = strftime("%A", $ts);
+        if ($this->show_dates) $out .= "<br><font size=\"-1\">" . date("d.m.y", $ts) . "</font>\n";;
+        return $out;
+    }
+    
 }
 ?>

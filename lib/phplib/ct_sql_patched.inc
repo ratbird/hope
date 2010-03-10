@@ -50,25 +50,25 @@ class CT_Sql {
    function ac_gc($gc_time, $name) {
     $timeout = time();
     $sqldate = date("YmdHis", $timeout - ($gc_time * 60));
-	$this->db->query(sprintf("SELECT sid FROM %s WHERE changed < '%s' AND name = '%s'",
-    				$this->database_table,
+    $this->db->query(sprintf("SELECT sid FROM %s WHERE changed < '%s' AND name = '%s'",
+                    $this->database_table,
                     $sqldate,
                     addslashes($name)));
-	while($this->db->next_record()){
-		$sessions_to_delete[] = $this->db->f(0);
-	}
-	if (is_array($sessions_to_delete)){
-		$i = 0;
-		$max = count($sessions_to_delete);
-		while($i <= $max){
-			$to_delete = array_slice($sessions_to_delete, $i, 50);
-			$this->db->query(sprintf("DELETE FROM %s WHERE sid IN('%s') AND name = '%s'",
-        		            $this->database_table,
-							join("','" , $to_delete),
-							addslashes($name)));
-			$i += 50;
-		}
-	}
+    while($this->db->next_record()){
+        $sessions_to_delete[] = $this->db->f(0);
+    }
+    if (is_array($sessions_to_delete)){
+        $i = 0;
+        $max = count($sessions_to_delete);
+        while($i <= $max){
+            $to_delete = array_slice($sessions_to_delete, $i, 50);
+            $this->db->query(sprintf("DELETE FROM %s WHERE sid IN('%s') AND name = '%s'",
+                            $this->database_table,
+                            join("','" , $to_delete),
+                            addslashes($name)));
+            $i += 50;
+        }
+    }
   }
 
   function ac_store($id, $name, $str) {
@@ -97,20 +97,20 @@ class CT_Sql {
       $name,
       $str,
       $now);
-	  
-	$uquery = sprintf("update %s set val='%s', changed='%s' where sid='%s' and name='%s'",
+      
+    $uquery = sprintf("update %s set val='%s', changed='%s' where sid='%s' and name='%s'",
       $this->database_table,
       $str,
       $now,
-	  $id,
+      $id,
       $name
       );
-	  
-	  $this->db->query($uquery);
-	  
-	  if (!$this->db->affected_rows() && $this->ac_newid($id,$name)){
-		  $this->db->query($iquery);
-	  }
+      
+      $this->db->query($uquery);
+      
+      if (!$this->db->affected_rows() && $this->ac_newid($id,$name)){
+          $this->db->query($iquery);
+      }
 
     return $ret;
   }
@@ -158,13 +158,13 @@ class CT_Sql {
   }
 
   function ac_newid($str, $name) {
-		$query = "SELECT  sid FROM " . $this->database_table . " WHERE sid = '$str' AND name = '$name'";
-		$this->db->query($query);
-		if (!$this->db->next_record()) {
-			return $str;
-		} else {
-			return FALSE;
-		}
+        $query = "SELECT  sid FROM " . $this->database_table . " WHERE sid = '$str' AND name = '$name'";
+        $this->db->query($query);
+        if (!$this->db->next_record()) {
+            return $str;
+        } else {
+            return FALSE;
+        }
   }
 
   function ac_halt($s) {

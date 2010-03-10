@@ -32,76 +32,76 @@ require_once ("lib/classes/auth_plugins/StudipAuthLdap.class.php");
 * Stud.IP authentication against LDAP Server using read-only account and 
 * following user bind
 *
-* @access	public
-* @author	André Noack <noack@data-quest.de>
-* @package	
+* @access   public
+* @author   André Noack <noack@data-quest.de>
+* @package  
 */
 class StudipAuthLdapReadAndBind extends StudipAuthLdap {
-	
-	/**
-	* indicates whether login form should use md5 challenge response auth
-	*
-	* this should only be true, if password is stored and accessible as md5 hash !
-	*
-	* @access	public
-	* @var	bool
-	*/
-	var $md5_challenge_response = false;
-	var $anonymous_bind = false;
-	
-	var $reader_dn;
-	var $reader_password;
-	
-	/**
-	* Constructor
-	*
-	* 
-	* @access public
-	* 
-	*/
-	function StudipAuthLdapReadAndBind() {
-		//calling the baseclass constructor
-		parent::StudipAuthLdap();
-	}
-	
-				
-	function getUserDn($username){
-		if ($this->send_utf8_credentials){
-			$username = utf8_encode($username);
-			$reader_password = utf8_encode($this->reader_password);
-		}
-		$user_dn = "";
-		if (!($r = @ldap_bind($this->conn, $this->reader_dn, $this->reader_password))){
-			$this->error_msg = sprintf(_("Anmeldung von %s fehlgeschlagen."),$this->reader_dn) . $this->getLdapError();
-			return false;
-		}
-		if (!($result = @ldap_search($this->conn, $this->base_dn, $this->getLdapFilter($username), array('dn')))){
-			$this->error_msg = _("Durchsuchen des LDAP Baumes fehlgeschlagen.") .$this->getLdapError();
-			return false;
-		}
-		if (!ldap_count_entries($this->conn, $result)){
-			$this->error_msg = sprintf(_("%s wurde nicht unterhalb von %s gefunden."), $username, $this->base_dn);
-			return false;
-		}
-		if (!($entry = @ldap_first_entry($this->conn, $result))){
-			$this->error_msg = $this->getLdapError();
-			return false;
-		}
-		if (!($user_dn = @ldap_get_dn($this->conn, $entry))){
-			$this->error_msg = $this->getLdapError();
-			return false;
-		}
-		return $user_dn;
-	}
-	
-	function isUsedUsername($username){
-		if (!$this->doLdapConnect()){
-			return false;
-		}
-		$ret = (bool)$this->getUserDn($username);
-		ldap_unbind($this->conn);
-		return $ret;
-	}
+    
+    /**
+    * indicates whether login form should use md5 challenge response auth
+    *
+    * this should only be true, if password is stored and accessible as md5 hash !
+    *
+    * @access   public
+    * @var  bool
+    */
+    var $md5_challenge_response = false;
+    var $anonymous_bind = false;
+    
+    var $reader_dn;
+    var $reader_password;
+    
+    /**
+    * Constructor
+    *
+    * 
+    * @access public
+    * 
+    */
+    function StudipAuthLdapReadAndBind() {
+        //calling the baseclass constructor
+        parent::StudipAuthLdap();
+    }
+    
+                
+    function getUserDn($username){
+        if ($this->send_utf8_credentials){
+            $username = utf8_encode($username);
+            $reader_password = utf8_encode($this->reader_password);
+        }
+        $user_dn = "";
+        if (!($r = @ldap_bind($this->conn, $this->reader_dn, $this->reader_password))){
+            $this->error_msg = sprintf(_("Anmeldung von %s fehlgeschlagen."),$this->reader_dn) . $this->getLdapError();
+            return false;
+        }
+        if (!($result = @ldap_search($this->conn, $this->base_dn, $this->getLdapFilter($username), array('dn')))){
+            $this->error_msg = _("Durchsuchen des LDAP Baumes fehlgeschlagen.") .$this->getLdapError();
+            return false;
+        }
+        if (!ldap_count_entries($this->conn, $result)){
+            $this->error_msg = sprintf(_("%s wurde nicht unterhalb von %s gefunden."), $username, $this->base_dn);
+            return false;
+        }
+        if (!($entry = @ldap_first_entry($this->conn, $result))){
+            $this->error_msg = $this->getLdapError();
+            return false;
+        }
+        if (!($user_dn = @ldap_get_dn($this->conn, $entry))){
+            $this->error_msg = $this->getLdapError();
+            return false;
+        }
+        return $user_dn;
+    }
+    
+    function isUsedUsername($username){
+        if (!$this->doLdapConnect()){
+            return false;
+        }
+        $ret = (bool)$this->getUserDn($username);
+        ldap_unbind($this->conn);
+        return $ret;
+    }
 }
 
 ?>

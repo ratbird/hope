@@ -100,7 +100,7 @@ class IT_Usage_TestCase extends PHPUnit_TestCase
    /**
     *
     */
-	/*
+    /*
     function testHideBlockIteration()
     {
         if (!$this->_methodExists('hideBlock')) {
@@ -124,6 +124,6 @@ class IT_Usage_TestCase extends PHPUnit_TestCase
         }
         $this->assertEquals('a#b|2#c#d|4#e#', $this->_stripWhitespace($this->tpl->get()));
     }
-	*/
+    */
 }
 ?>

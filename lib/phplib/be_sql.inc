@@ -14,8 +14,8 @@
 ## It's also a good skeleton for writing a new Blob Engine
 ##
 ## The table used by this class must contain three fields:
-##  be_bid	16 chars
-##  be_seq	6 chars
+##  be_bid  16 chars
+##  be_seq  6 chars
 ##  be_data     4096 chars
 
 

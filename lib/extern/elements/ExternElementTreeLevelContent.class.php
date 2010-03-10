@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElementTreeLevelContent
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElementTreeLevelContent
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -40,26 +40,26 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
 
 class ExternElementTreeLevelContent extends ExternElement {
 
-	var $attributes = array("table_bgcolor",
-				"table_cellpadding", "table_cellspacing", "table_class",
-				"table_style", "td_height", "td_align", "td_valign", "td_bgcolor",
-				"td_class", "td_style", "font_face", "font_size", "font_color",
-				"font_class", "font_style");
+    var $attributes = array("table_bgcolor",
+                "table_cellpadding", "table_cellspacing", "table_class",
+                "table_style", "td_height", "td_align", "td_valign", "td_bgcolor",
+                "td_class", "td_style", "font_face", "font_size", "font_color",
+                "font_class", "font_style");
 
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementTreeLevelContent ($config = "") {
-		if ($config)
-			$this->config = $config;
-		
-		$this->name = "TreeLevelContent";
-		$this->real_name = _("Inhalt der Ebene");
-		$this->description = _("Formatierung des Ebeneninhalts in einer Baum-Navigation.");
-	}
-	
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementTreeLevelContent ($config = "") {
+        if ($config)
+            $this->config = $config;
+        
+        $this->name = "TreeLevelContent";
+        $this->real_name = _("Inhalt der Ebene");
+        $this->description = _("Formatierung des Ebeneninhalts in einer Baum-Navigation.");
+    }
+    
 }
 
 ?>

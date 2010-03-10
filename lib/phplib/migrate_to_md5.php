@@ -43,8 +43,8 @@ while($db->next_record()) {
    $newpass = md5($pass);
 
    $db2->query(sprintf("insert into %s (user_id, username, perms, password)" .
-		         "values ('%s', '%s', '%s', '%s')", 
-	                 $to_table, $uid, $user, $perm, $newpass));
+                 "values ('%s', '%s', '%s', '%s')", 
+                     $to_table, $uid, $user, $perm, $newpass));
 
    echo "Converted $user...<br>";
 }

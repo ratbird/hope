@@ -12,7 +12,7 @@ $add_dots = false;
 
 // previous page
 if ($cur_page > 1) {
-	$ret .= '<a href="'. URLHelper::getLink(sprintf($pagelink, $cur_page-1) ) .'">'. _("zurück") .'</a>&nbsp;|&nbsp;';
+    $ret .= '<a href="'. URLHelper::getLink(sprintf($pagelink, $cur_page-1) ) .'">'. _("zurück") .'</a>&nbsp;|&nbsp;';
 }
 
 // show pages
@@ -83,7 +83,7 @@ for ($i = 1; $i <= $pages; $i++) {
 
 // next page
 if ($cur_page < ($i-1)) {
-	$ret .= '&nbsp;|&nbsp;<a href="'. URLHelper::getLink(sprintf($pagelink, $cur_page+1) ) .'">'. _("weiter") .'</a>';
+    $ret .= '&nbsp;|&nbsp;<a href="'. URLHelper::getLink(sprintf($pagelink, $cur_page+1) ) .'">'. _("weiter") .'</a>';
 }
 
 echo $ret;

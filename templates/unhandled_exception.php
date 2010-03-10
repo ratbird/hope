@@ -10,7 +10,7 @@ $current_page = _("Fehler");
 <?= $this->render_partial('header', compact('current_page')) ?>
 
 <div style="background-color: white; width: 70%; padding: 1em; margin: auto;">
-	<?=MessageBox::exception(_("Fehler! Bitte wenden Sie sich an Ihren Systemadministrator."), array(htmlentities($exception->getMessage())))?>
+    <?=MessageBox::exception(_("Fehler! Bitte wenden Sie sich an Ihren Systemadministrator."), array(htmlentities($exception->getMessage())))?>
     <p>
       <?= _("Zurück zur") ?> <a href="<?= URLHelper::getLink('index.php') ?>"><?= _("Startseite") ?></a>
     </p>

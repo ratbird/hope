@@ -7,11 +7,11 @@
 * 
 * The startscript for the resources module
 *
-* @author		Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @package		resources
-* @modulegroup	resources_modules
-* @module		resources.php
+* @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @package      resources
+* @modulegroup  resources_modules
+* @module       resources.php
 */
 
 // +---------------------------------------------------------------------------+
@@ -43,14 +43,14 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 $HELP_KEYWORD="Basis.Ressourcen";// META:in resourcesControl.inc.php verlagern,wenn detaillierter vorhanden
 
 if ($RESOURCES_ENABLE) {
-	//Steuerung der Ressourcenverwaltung einbinden
-	include ("$RELATIVE_PATH_RESOURCES/resourcesControl.inc.php");
+    //Steuerung der Ressourcenverwaltung einbinden
+    include ("$RELATIVE_PATH_RESOURCES/resourcesControl.inc.php");
 } else {
-	// Start of Output
-	include ('lib/include/html_head.inc.php'); // Output of html head
-	include ('lib/include/header.php');   // Output of Stud.IP head
-	require_once ('lib/msg.inc.php');
-	parse_window ("error§" . _("Die Ressurcenverwaltung ist nicht eingebunden. Bitte aktivieren Sie sie in den Systemeinstellungen oder wenden Sie sich an die Systemadministratoren."), "§",
-				_("Ressourcenverwaltung nicht eingebunden"));
+    // Start of Output
+    include ('lib/include/html_head.inc.php'); // Output of html head
+    include ('lib/include/header.php');   // Output of Stud.IP head
+    require_once ('lib/msg.inc.php');
+    parse_window ("error§" . _("Die Ressurcenverwaltung ist nicht eingebunden. Bitte aktivieren Sie sie in den Systemeinstellungen oder wenden Sie sich an die Systemadministratoren."), "§",
+                _("Ressourcenverwaltung nicht eingebunden"));
 }
 ?>

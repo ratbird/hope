@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElementTreeBackLink
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElementTreeBackLink
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -40,61 +40,61 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
 
 class ExternElementTreeBackLink extends ExternElement {
 
-	var $attributes = array("linktext", "image", "table_bgcolor",
-				"table_cellpadding", "table_cellspacing", "table_class",
-				"table_style", "td_height", "td_align", "td_valign", "td_bgcolor",
-				"td_class", "td_style", "font_face", "font_size", "font_color",
-				"font_class", "font_style");
+    var $attributes = array("linktext", "image", "table_bgcolor",
+                "table_cellpadding", "table_cellspacing", "table_class",
+                "table_style", "td_height", "td_align", "td_valign", "td_bgcolor",
+                "td_class", "td_style", "font_face", "font_size", "font_color",
+                "font_class", "font_style");
 
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementTreeBackLink ($config = "") {
-		if ($config)
-			$this->config = $config;
-		
-		$this->name = "TreeBackLink";
-		$this->real_name = _("Link auf &uuml;bergeordnete Ebene");
-		$this->description = _("Formatierung des Link auf die &uuml;bergeordnete Ebene in einer Baum-Navigation.");
-	}
-	
-	function toStringEdit ($post_vars = "", $faulty_values = "",
-			$edit_form = "", $anker = "") {
-		if ($faulty_values == '')
-			$faulty_values = array();	
-		$out = '';
-		$tag_headline = '';
-		$table = '';
-		if ($edit_form == '')
-			$edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
-		
-		$edit_form->setElementName($this->getName());
-		$element_headline = $this->getEditFormHeadline($edit_form);
-		
-		$headline = $edit_form->editHeadline(_("Allgemeine Angaben"));
-		$title = _("Link-Text:");
-		$info = _("Geben Sie den Text ein, der auf die &uuml;bergeordnete Ebene verweist (Link zur&uuml;ck).");
-		$content = $edit_form->editTextfieldGeneric("linktext", $title, $info, 25, 60);
-		
-		$title = _("Link-Bild (URL):");
-		$info = _("Geben Sie die URL eines Bildes ein, das als Link auf die &uuml;bergeordnete Ebene verweist (z.B. Back-Button).");
-		$content .= $edit_form->editTextfieldGeneric("image", $title, $info, 40, 200);
-		
-		$content_table = $edit_form->editContentTable($headline, $content);
-		$content_table .= $edit_form->editBlankContent();
-		
-		$out = $content_table . $edit_form->getEditFormContent($this->attributes);
-		
-		$submit = $edit_form->editSubmit($this->config->getName(),
-				$this->config->getId(), $this->getName());
-		$out = $edit_form->editContent($out, $submit);
-		$out .= $edit_form->editBlank();
-		
-		return  $element_headline . $out;
-	}
-	
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementTreeBackLink ($config = "") {
+        if ($config)
+            $this->config = $config;
+        
+        $this->name = "TreeBackLink";
+        $this->real_name = _("Link auf &uuml;bergeordnete Ebene");
+        $this->description = _("Formatierung des Link auf die &uuml;bergeordnete Ebene in einer Baum-Navigation.");
+    }
+    
+    function toStringEdit ($post_vars = "", $faulty_values = "",
+            $edit_form = "", $anker = "") {
+        if ($faulty_values == '')
+            $faulty_values = array();   
+        $out = '';
+        $tag_headline = '';
+        $table = '';
+        if ($edit_form == '')
+            $edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
+        
+        $edit_form->setElementName($this->getName());
+        $element_headline = $this->getEditFormHeadline($edit_form);
+        
+        $headline = $edit_form->editHeadline(_("Allgemeine Angaben"));
+        $title = _("Link-Text:");
+        $info = _("Geben Sie den Text ein, der auf die &uuml;bergeordnete Ebene verweist (Link zur&uuml;ck).");
+        $content = $edit_form->editTextfieldGeneric("linktext", $title, $info, 25, 60);
+        
+        $title = _("Link-Bild (URL):");
+        $info = _("Geben Sie die URL eines Bildes ein, das als Link auf die &uuml;bergeordnete Ebene verweist (z.B. Back-Button).");
+        $content .= $edit_form->editTextfieldGeneric("image", $title, $info, 40, 200);
+        
+        $content_table = $edit_form->editContentTable($headline, $content);
+        $content_table .= $edit_form->editBlankContent();
+        
+        $out = $content_table . $edit_form->getEditFormContent($this->attributes);
+        
+        $submit = $edit_form->editSubmit($this->config->getName(),
+                $this->config->getId(), $this->getName());
+        $out = $edit_form->editContent($out, $submit);
+        $out .= $edit_form->editBlank();
+        
+        return  $element_headline . $out;
+    }
+    
 }
 
 ?>

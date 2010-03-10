@@ -30,23 +30,23 @@ require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginGvk.class.php
 *
 * 
 *
-* @access	public	
-* @author	André Noack <noack@data-quest.de>
-* @package	
+* @access   public  
+* @author   André Noack <noack@data-quest.de>
+* @package  
 **/
 class StudipLitSearchPluginWisoFak extends StudipLitSearchPluginGvk{
-	
-	
-	function StudipLitSearchPluginWisoFak(){
-		parent::StudipLitSearchPluginGvk();
-		$this->description = "Bibliotheken der Wirtschafts- und Sozialwiss. Fakultäten";
-		$this->z_host = "z3950.gbv.de:20010/2@goopc4.sub.uni-goettingen.de";
-		$this->z_profile = array('1016' => _("Basisindex [ALL]"), '4' => _("Titelstichwörter [TIT]"),
-								'5' => _("Serienstichwörter [SER]"), '21' => _("alle Klassifikationen [SYS]"),
-								'1004' => _("Person, Author [PER]"), '1005' => _("Körperschaften [KOR]"),
-								'1006' => _("Kongresse [KON]"), '1007' => _("alle Nummern [NUM]"),
-								'5040' => _("Schlagwörter [SLW]"),'8062' => _("alle Titelanfänge [TAF]"),
-								'8580' => _("Verlagsort, Verlag [PUB]"), '54' => _("Signatur [SGN]"));
-		}
+    
+    
+    function StudipLitSearchPluginWisoFak(){
+        parent::StudipLitSearchPluginGvk();
+        $this->description = "Bibliotheken der Wirtschafts- und Sozialwiss. Fakultäten";
+        $this->z_host = "z3950.gbv.de:20010/2@goopc4.sub.uni-goettingen.de";
+        $this->z_profile = array('1016' => _("Basisindex [ALL]"), '4' => _("Titelstichwörter [TIT]"),
+                                '5' => _("Serienstichwörter [SER]"), '21' => _("alle Klassifikationen [SYS]"),
+                                '1004' => _("Person, Author [PER]"), '1005' => _("Körperschaften [KOR]"),
+                                '1006' => _("Kongresse [KON]"), '1007' => _("alle Nummern [NUM]"),
+                                '5040' => _("Schlagwörter [SLW]"),'8062' => _("alle Titelanfänge [TAF]"),
+                                '8580' => _("Verlagsort, Verlag [PUB]"), '54' => _("Signatur [SGN]"));
+        }
 }
 ?>

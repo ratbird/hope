@@ -31,29 +31,29 @@ require_once $RELATIVE_PATH_ADMIN_MODULES."/IntegrityCheckAbstract.class.php";
 *
 * 
 *
-* @access	public	
-* @author	André Noack <andre.noack@gmx.net>
-* @package	Admin
-* @see		IntegrityCheckAbstract
+* @access   public  
+* @author   André Noack <andre.noack@gmx.net>
+* @package  Admin
+* @see      IntegrityCheckAbstract
 */
 class IntegrityCheckTermin extends IntegrityCheckAbstract{
-	
-	/**
-	* constructor
-	*
-	* calls the base class constructor and initializes checklist array
-	* @access	public
-	*/
-	function IntegrityCheckTermin(){
-		$baseclass = strtolower(get_parent_class($this));
-		//parent::$baseclass(); //calling the baseclass constructor 
-		$this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
-		$this->master_table = "UNION(auth_user_md5,seminare)";
-		$this->checklist[] = array('detail_table' => 'termine',
-									'query' => "SELECT a.termin_id FROM termine a LEFT JOIN "
-									.DbView::Get_union("view:TERMINE_USER:","view:TERMINE_SEM:")
-									." b USING(range_id) WHERE ISNULL(b.range_id)",
-									'key' => 'termin_id');
-	}
+    
+    /**
+    * constructor
+    *
+    * calls the base class constructor and initializes checklist array
+    * @access   public
+    */
+    function IntegrityCheckTermin(){
+        $baseclass = strtolower(get_parent_class($this));
+        //parent::$baseclass(); //calling the baseclass constructor 
+        $this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
+        $this->master_table = "UNION(auth_user_md5,seminare)";
+        $this->checklist[] = array('detail_table' => 'termine',
+                                    'query' => "SELECT a.termin_id FROM termine a LEFT JOIN "
+                                    .DbView::Get_union("view:TERMINE_USER:","view:TERMINE_SEM:")
+                                    ." b USING(range_id) WHERE ISNULL(b.range_id)",
+                                    'key' => 'termin_id');
+    }
 }
 ?>

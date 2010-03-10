@@ -41,40 +41,40 @@ th {
         <th class="nosort" width="1%"></th>
         <th width="59%" <?= ($sort_type == 'name') ? 'class="sort'. $sort_order .'"' : '' ?>> 
           <a href =<? if($sort == "name_asc") :?>"<?=$sort_url?>name_desc">
-						<? else: ?>"<?=$sort_url?>name_asc">
+                        <? else: ?>"<?=$sort_url?>name_asc">
             <? endif;?><?= _("Name") ?>
-					</a>
-				</th>
+                    </a>
+                </th>
         <th width="10%" <?= ($sort_type == 'founded') ? 'class="sort'. $sort_order .'"' : '' ?>>
-					<a href =<? if($sort == "founded_asc") :?>"<?=$sort_url?>founded_desc">
-          	<? else: ?>"<?=$sort_url?>founded_asc">
-						<? endif;?><?= _("gegründet") ?>
-					</a>
-				</th>
-				<th width="5%" <?= ($sort_type == 'member') ? 'class="sort'. $sort_order .'"' : '' ?>> 
-					<a href =<? if($sort == "member_asc") :?>"<?=$sort_url?>member_desc">
-          	<? else: ?>"<?=$sort_url?>member_asc">
-						<? endif;?><?= _("Mitglieder") ?>
-					</a>
-				</th>
-				<th width="15%" <?= ($sort_type == 'founder') ? 'class="sort'. $sort_order .'"' : '' ?>>
-					<a href =<? if($sort == "founder_asc") :?>"<?=$sort_url?>founder_desc">
-          	<? else: ?>"<?=$sort_url?>founder_asc">
-						<? endif;?><?= _("GründerIn") ?>
-					</a>
-				</th>
-				<th width="5%" <?= ($sort_type == 'ismember') ? 'class="sort'. $sort_order .'"' : '' ?>> 
-					<a href =<? if($sort == "ismember_asc") :?>"<?=$sort_url?>ismember_desc">
-          	<? else: ?>"<?=$sort_url?>ismember_asc">
-						<? endif;?><?= _("Mitglied") ?>
-					</a>
-				</th>
-				<th width="5%" <?= ($sort_type == 'access') ? 'class="sort'. $sort_order .'"' : '' ?>> 
-					<a href =<? if($sort == "access_asc") :?><?=$sort_url?>access_desc>
-          	<? else: ?><?=$sort_url?>access_asc>
-						<? endif; ?><?= _("Zugang") ?>
-					</a>
-				</th>
+                    <a href =<? if($sort == "founded_asc") :?>"<?=$sort_url?>founded_desc">
+            <? else: ?>"<?=$sort_url?>founded_asc">
+                        <? endif;?><?= _("gegründet") ?>
+                    </a>
+                </th>
+                <th width="5%" <?= ($sort_type == 'member') ? 'class="sort'. $sort_order .'"' : '' ?>> 
+                    <a href =<? if($sort == "member_asc") :?>"<?=$sort_url?>member_desc">
+            <? else: ?>"<?=$sort_url?>member_asc">
+                        <? endif;?><?= _("Mitglieder") ?>
+                    </a>
+                </th>
+                <th width="15%" <?= ($sort_type == 'founder') ? 'class="sort'. $sort_order .'"' : '' ?>>
+                    <a href =<? if($sort == "founder_asc") :?>"<?=$sort_url?>founder_desc">
+            <? else: ?>"<?=$sort_url?>founder_asc">
+                        <? endif;?><?= _("GründerIn") ?>
+                    </a>
+                </th>
+                <th width="5%" <?= ($sort_type == 'ismember') ? 'class="sort'. $sort_order .'"' : '' ?>> 
+                    <a href =<? if($sort == "ismember_asc") :?>"<?=$sort_url?>ismember_desc">
+            <? else: ?>"<?=$sort_url?>ismember_asc">
+                        <? endif;?><?= _("Mitglied") ?>
+                    </a>
+                </th>
+                <th width="5%" <?= ($sort_type == 'access') ? 'class="sort'. $sort_order .'"' : '' ?>> 
+                    <a href =<? if($sort == "access_asc") :?><?=$sort_url?>access_desc>
+            <? else: ?><?=$sort_url?>access_asc>
+                        <? endif; ?><?= _("Zugang") ?>
+                    </a>
+                </th>
     </tr>
     <? foreach ($groups as $group) : ?>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">

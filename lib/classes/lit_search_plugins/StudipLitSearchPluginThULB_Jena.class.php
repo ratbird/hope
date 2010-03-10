@@ -30,30 +30,30 @@ require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginGvk.class.php
 *
 * 
 *
-* @access	public	
-* @author	André Noack <noack@data-quest.de>
+* @access   public  
+* @author   André Noack <noack@data-quest.de>
 * @package
 **/
 class StudipLitSearchPluginThULB_Jena extends StudipLitSearchPluginGvk{
 
 
-	function StudipLitSearchPluginThULB_Jena(){
-		parent::StudipLitSearchPluginGvk();
-		$this->description = 'Thüringer Universitäts- und Landesbibliothek Jena';
-		$this->z_host = "z3950.gbv.de:20010/thulb_opc";
-		$this->z_profile = array('1016' => _("Basisindex [ALL]"),
-					'4' => _("Titelstichw&ouml;rter [TIT]"),
-					'5' => _("Serienstichw&ouml;rter [SER]"),
-					'21' => _("alle Klassifikationen [SYS]"),
-					'54' => _("Signatur [SGN]"),
-					'1004' => _("Person, Author [PER]"),
-					'1005' => _("K&ouml;rperschaften [KOR]"),
-					'1006' => _("Kongresse [KON]"),
-					'1007' => _("alle Nummern [NUM]"),
-					'5040' => _("Schlagw&ouml;rter [SLW]"),
-					'8062' => _("alle Titelanf&auml;nge [TAF]"),
-					'8580' => _("Verlagsort, Verlag [PUB]")
-					);
-	}
+    function StudipLitSearchPluginThULB_Jena(){
+        parent::StudipLitSearchPluginGvk();
+        $this->description = 'Thüringer Universitäts- und Landesbibliothek Jena';
+        $this->z_host = "z3950.gbv.de:20010/thulb_opc";
+        $this->z_profile = array('1016' => _("Basisindex [ALL]"),
+                    '4' => _("Titelstichw&ouml;rter [TIT]"),
+                    '5' => _("Serienstichw&ouml;rter [SER]"),
+                    '21' => _("alle Klassifikationen [SYS]"),
+                    '54' => _("Signatur [SGN]"),
+                    '1004' => _("Person, Author [PER]"),
+                    '1005' => _("K&ouml;rperschaften [KOR]"),
+                    '1006' => _("Kongresse [KON]"),
+                    '1007' => _("alle Nummern [NUM]"),
+                    '5040' => _("Schlagw&ouml;rter [SLW]"),
+                    '8062' => _("alle Titelanf&auml;nge [TAF]"),
+                    '8580' => _("Verlagsort, Verlag [PUB]")
+                    );
+    }
 }
 ?>

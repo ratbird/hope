@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElementParagraph
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElementParagraph
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -41,29 +41,29 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
 
 class ExternElementTableParagraph extends ExternElement {
 
-	var $attributes = array("table_width", "table_align", "table_valign", "table_border",
-			"table_bgcolor", "table_bordercolor", "table_cellpadding", "table_cellspacing",
-			"table_class", "table_style");
+    var $attributes = array("table_width", "table_align", "table_valign", "table_border",
+            "table_bgcolor", "table_bordercolor", "table_cellpadding", "table_cellspacing",
+            "table_class", "table_style");
 
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementTableParagraph ($config = "") {
-		if ($config)
-			$this->config = $config;
-		
-		$this->name = "TableParagraph";
-		$this->real_name = _("Allgemeine Angaben zum Absatz");
-		$this->description = _("Der Absatz wird mit Hilfe einer Tabelle aufgebaut.");
-	}
-	
-	function toString ($args) {
-		return "\n" . $this->config->getTag($this->name, "table") . $args["content"]
-				. "</table>";
-	}
-	
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementTableParagraph ($config = "") {
+        if ($config)
+            $this->config = $config;
+        
+        $this->name = "TableParagraph";
+        $this->real_name = _("Allgemeine Angaben zum Absatz");
+        $this->description = _("Der Absatz wird mit Hilfe einer Tabelle aufgebaut.");
+    }
+    
+    function toString ($args) {
+        return "\n" . $this->config->getTag($this->name, "table") . $args["content"]
+                . "</table>";
+    }
+    
 }
 
 ?>

@@ -42,23 +42,23 @@ require_once $RELATIVE_PATH_CALENDAR."/lib/DbCalendarWeek.class.php";
 $aweek =& new DbCalendarWeek($atime, $calendar_user_control_data['type_week']);
 $aweek->bindSeminarEvents($bind_seminare);
 $tab = createWeekTable($aweek, $st, $et, $calendar_user_control_data['step_week'],
-											FALSE, $calendar_user_control_data['link_edit']);
+                                            FALSE, $calendar_user_control_data['link_edit']);
 $rowspan = ceil(3600 / $calendar_user_control_data['step_week']);
 $height = ' height="20"';
 
 if($rowspan > 1){
-	$colspan_1 = ' colspan="2"';
-	$colspan_2 = $tab['max_columns'] + 4;
+    $colspan_1 = ' colspan="2"';
+    $colspan_2 = $tab['max_columns'] + 4;
 }
 else{
-	$colspan_1 = '';
-	$colspan_2 = $tab['max_columns'] + 2;
+    $colspan_1 = '';
+    $colspan_2 = $tab['max_columns'] + 2;
 }
 
 if ($aweek->getType() == 7)
-	$width = '1%';
+    $width = '1%';
 else
-	$width = '3%';
+    $width = '3%';
 
 include('lib/include/html_head.inc.php');
 
@@ -76,7 +76,7 @@ echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_previous
 echo tooltip(_("eine Woche zurück")) . ">&nbsp;</a></td>\n";
 echo "<td width=\"70%\" class=\"calhead\">";
 printf(_("%s. Woche vom %s bis %s"), strftime("%V", $aweek->getStart()),
-		strftime("%x", $aweek->getStart()), strftime("%x", $aweek->getEnd()));
+        strftime("%x", $aweek->getStart()), strftime("%x", $aweek->getEnd()));
 echo "</td>\n";
 echo "<td align=\"center\" width=\"15%\"><a href=\"$PHP_SELF?cmd=showweek&atime=";
 echo $aweek->getEnd() + 259201 . "\">&nbsp;";
@@ -86,23 +86,23 @@ echo "</tr></table>\n</td></tr>\n";
 
 echo "<tr><td nowrap=\"nowrap\" align=\"center\" width=\"$width\"$colspan_1>";
 if ($st > 0) {
-	echo "<a href=\"calendar.php?cmd=showweek&atime=$atime&wtime=" . ($st - 1) . "\">";
-	echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_up.gif\"";
-	echo tooltip(_("zeig davor")) . "></a>";
+    echo "<a href=\"calendar.php?cmd=showweek&atime=$atime&wtime=" . ($st - 1) . "\">";
+    echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_up.gif\"";
+    echo tooltip(_("zeig davor")) . "></a>";
 }
 else
-	echo "&nbsp;&nbsp;&nbsp;";
+    echo "&nbsp;&nbsp;&nbsp;";
 // row with weekdays
 echo "</td>" . $tab["table"][0];
 
 echo "<td nowrap=\"nowrap\" align=\"center\" width=\"$width\"$colspan_1>";
 if ($st > 0) {
-	echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($st - 1) . "\">";
-	echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_up.gif\"";
-	echo tooltip(_("zeig davor")) . "></a>";
+    echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($st - 1) . "\">";
+    echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_up.gif\"";
+    echo tooltip(_("zeig davor")) . "></a>";
 }
 else
-	echo "&nbsp;&nbsp;&nbsp;";
+    echo "&nbsp;&nbsp;&nbsp;";
 echo "</td></tr>\n";
 
 // Zeile mit Tagesterminen ausgeben
@@ -113,53 +113,53 @@ echo "<tr height=\"2\"><td colspan=\"" . (2 * $colspan_1 + $colspan_2) . "\"></t
 
 $j = $st;
 for ($i = 2; $i < sizeof($tab["table"]); $i++) {
-	echo "<tr>";
+    echo "<tr>";
 
-	if ($i % $rowspan == 0) {
-		if ($rowspan == 1)
-			echo "<td class=\"precol1w\"$height>$j</td>";
-		else
-			echo "<td class=\"precol1w\" rowspan=\"$rowspan\">$j</td>";
-	}
-	if ($rowspan > 1) {
-		$minutes = (60 / $rowspan) * ($i % $rowspan);
-		if ($minutes == 0)
-			$minutes = "00";
-		echo "<td class=\"precol2w\"$height>$minutes</td>\n";
-	}
+    if ($i % $rowspan == 0) {
+        if ($rowspan == 1)
+            echo "<td class=\"precol1w\"$height>$j</td>";
+        else
+            echo "<td class=\"precol1w\" rowspan=\"$rowspan\">$j</td>";
+    }
+    if ($rowspan > 1) {
+        $minutes = (60 / $rowspan) * ($i % $rowspan);
+        if ($minutes == 0)
+            $minutes = "00";
+        echo "<td class=\"precol2w\"$height>$minutes</td>\n";
+    }
 
-	echo $tab["table"][$i];
+    echo $tab["table"][$i];
 
-	if ($rowspan > 1)
-		echo "<td class=\"precol2w\">$minutes</td>\n";
-	if ($i % $rowspan == 0) {
-		if($rowspan == 1)
-			echo "<td class=\"precol1w\">$j</td>";
-		else
-			echo "<td class=\"precol1w\" rowspan=\"$rowspan\">$j</td>";
-		$j = $j + ceil($calendar_user_control_data["step_week"] / 3600);
-	}
+    if ($rowspan > 1)
+        echo "<td class=\"precol2w\">$minutes</td>\n";
+    if ($i % $rowspan == 0) {
+        if($rowspan == 1)
+            echo "<td class=\"precol1w\">$j</td>";
+        else
+            echo "<td class=\"precol1w\" rowspan=\"$rowspan\">$j</td>";
+        $j = $j + ceil($calendar_user_control_data["step_week"] / 3600);
+    }
 
-	echo "</tr>\n";
+    echo "</tr>\n";
 }
 
 echo "<tr><td$colspan_1 align=\"center\">";
 if ($et < 23) {
-	echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($et + 1) . "\">";
-	echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_down.gif\"";
-	echo tooltip(_("zeig danach")) . "></a>";
+    echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($et + 1) . "\">";
+    echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_down.gif\"";
+    echo tooltip(_("zeig danach")) . "></a>";
 }
 else
-	echo "&nbsp";
+    echo "&nbsp";
 echo "</td><td colspan=\"{$tab['max_columns']}\">&nbsp;</td>";
 echo "<td$colspan_1 align=\"center\">";
 if ($et < 23) {
-	echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($et + 1) . "\">";
-	echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_down.gif\"";
-	echo tooltip(_("zeig danach")) . "></a>";
+    echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($et + 1) . "\">";
+    echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_down.gif\"";
+    echo tooltip(_("zeig danach")) . "></a>";
 }
 else
-	echo "&nbsp;";
+    echo "&nbsp;";
 echo "</td></tr>\n</table>\n";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n";
 jumpTo($jmp_m, $jmp_d, $jmp_y);

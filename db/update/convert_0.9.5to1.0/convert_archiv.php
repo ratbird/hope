@@ -15,28 +15,28 @@ print "<font size=\"-1\">"._("Durchsuche Archiv-Tabelle auf Veranstalungsnummer"
 $i = 0;
 $db->query("select * from archiv");
 while ($db->next_record()) {
-	$dump = $db->f("dump");
+    $dump = $db->f("dump");
 
-	$start 	= "<tr><td width=\"15%\"><b>"._("Veranstaltungsnummer:")."&nbsp;</b></td><td width=75% align=left>";
-	$end 	= "</td></tr>";
+    $start  = "<tr><td width=\"15%\"><b>"._("Veranstaltungsnummer:")."&nbsp;</b></td><td width=75% align=left>";
+    $end    = "</td></tr>";
 
-	$dump1 = explode($start,$dump);
+    $dump1 = explode($start,$dump);
 
-	print "<i>".$db->f("name")."</i>";
+    print "<i>".$db->f("name")."</i>";
 
-	if($dump1[1] == NULL)
-		$html = "<font color=\"red\">"._(" ... besitzt keine Veranstalungsnummer!")."</font><br>";
-	else{	
-		$dump2 = explode($end,$dump1[1]);
-		$semnumber = $dump2[0];
-		$html = "<font color=\"green\">";
-		$html .= sprintf(_(" ... Veranstalungsnummer (%s) gefunden"),$semnumber);
-		$db2->query("UPDATE archiv set VeranstaltungsNummer = '$semnumber' where seminar_id = '".$db->f("seminar_id")."' ");
-		$db2->execute;
-		$html .=  _(" und in Spalte 'VeranstaltungsNummer' geschrieben.<br>")."</font>";
-	}
-	echo $html;
-	$c++;
+    if($dump1[1] == NULL)
+        $html = "<font color=\"red\">"._(" ... besitzt keine Veranstalungsnummer!")."</font><br>";
+    else{   
+        $dump2 = explode($end,$dump1[1]);
+        $semnumber = $dump2[0];
+        $html = "<font color=\"green\">";
+        $html .= sprintf(_(" ... Veranstalungsnummer (%s) gefunden"),$semnumber);
+        $db2->query("UPDATE archiv set VeranstaltungsNummer = '$semnumber' where seminar_id = '".$db->f("seminar_id")."' ");
+        $db2->execute;
+        $html .=  _(" und in Spalte 'VeranstaltungsNummer' geschrieben.<br>")."</font>";
+    }
+    echo $html;
+    $c++;
 }
 
 echo "</font><font size=\"-1\"><br>Konvertierung abgeschlossen. Alle $c Indianerstämme sind ausgerottet worden!</font>";

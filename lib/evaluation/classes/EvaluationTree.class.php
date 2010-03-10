@@ -73,17 +73,17 @@ class EvaluationTree extends TreeAbstract {
     * @param    array  the eval's ID (optional - if not given, it must be in $_REQUEST).
     */
   function EvaluationTree( $args ) {
-	  
-	  
+      
+      
       if (isset($args['evalID']))
-	  	$this->evalID = $args['evalID'];
+        $this->evalID = $args['evalID'];
       else
-	  	$this->evalID = $_REQUEST["evalID"];
-	  
+        $this->evalID = $_REQUEST["evalID"];
+      
       $this->load_mode = ($args['load_mode'] ? $args['load_mode'] : EVAL_LOAD_NO_CHILDREN);
       if (empty($this->evalID)){
-	  print _("Fehler in EvaluationTree: Es wurde keine evalID übergeben");
-	  exit ();
+      print _("Fehler in EvaluationTree: Es wurde keine evalID übergeben");
+      exit ();
       }
 
       /* ------------------------------------------------------------------- */
@@ -109,12 +109,12 @@ class EvaluationTree extends TreeAbstract {
       parent::init();
 
       foreach( $this->eval->getChildren() as $group ) {
-	  $this->recursiveInit( $group );
+      $this->recursiveInit( $group );
 
-	  $this->tree_data[$group->getObjectID()]["text"] = $group->getText();
-	  $this->tree_data[$group->getObjectID()]["object"] = $group;
-	  $this->storeItem( $group->getObjectID(), "root",
-			    $group->getTitle(), $group->getPosition() );
+      $this->tree_data[$group->getObjectID()]["text"] = $group->getText();
+      $this->tree_data[$group->getObjectID()]["object"] = $group;
+      $this->storeItem( $group->getObjectID(), "root",
+                $group->getTitle(), $group->getPosition() );
       }
       /* <---------------------------------------- */
   }
@@ -129,29 +129,29 @@ class EvaluationTree extends TreeAbstract {
   function recursiveInit( $group ) {
       // only groups are interesting here.
       if( $group->x_instanceof() != INSTANCEOF_EVALGROUP )
-	  return;
+      return;
 
       if( $children = $group->getChildren() ) {
-	  foreach( $children as $child ) {
-	      $this->recursiveInit( $child );
-	  }
+      foreach( $children as $child ) {
+          $this->recursiveInit( $child );
+      }
       }
 
       // store current object itself
       $this->tree_data[$group->getObjectID()]["object"] = $group;
 
       $this->storeItem( $group->getObjectID(), $group->getParentID(),
-			$group->getTitle(), $group->getPosition() );
+            $group->getTitle(), $group->getPosition() );
 
   }
   
   function &getGroupObject($item_id, $renew = false){
-	  if (is_object($this->tree_data[$item_id]['object'])){
-		  if ($renew) $this->recursiveInit(new EvaluationGroup($item_id,null,$this->load_mode));
-		  return $this->tree_data[$item_id]['object'];
-	  } else {
-		  return new EvaluationGroup($item_id,null,$this->load_mode);
-	  }
+      if (is_object($this->tree_data[$item_id]['object'])){
+          if ($renew) $this->recursiveInit(new EvaluationGroup($item_id,null,$this->load_mode));
+          return $this->tree_data[$item_id]['object'];
+      } else {
+          return new EvaluationGroup($item_id,null,$this->load_mode);
+      }
   }
 
 # ===================================================== end: public functions #

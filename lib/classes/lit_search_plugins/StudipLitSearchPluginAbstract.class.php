@@ -28,82 +28,82 @@
 *
 * 
 *
-* @access	public	
-* @author	André Noack <noack@data-quest.de>
-* @package	
+* @access   public  
+* @author   André Noack <noack@data-quest.de>
+* @package  
 **/
 class StudipLitSearchPluginAbstract {
-	
-	var $error_msg = array();
-	var $description;
-	var $search_result = array();
-	var $class_name;
-	var $sess_var_name;
-	
-	function StudipLitSearchPluginAbstract(){
-		global $sess;
-		$this->class_name = strtolower(get_class($this));
-		$this->sess_var_name = "_search_result_" . $this->class_name;
-		if (is_object($sess) && ! $sess->is_registered($this->sess_var_name)){
-			$sess->register($this->sess_var_name);
-		}
-		$this->search_result =& $GLOBALS[$this->sess_var_name];
-	}
-	
-	function doSearch($search_values){
-		return false;
-	}
-	
-	function parseSearchValues(){
-		return false;
-	}
-	
-	function getSearchFields(){
-		return false;
-	}
-	
-	function getSearchResult($num_hit){
-		return false;
-	}
-	
-	function doResetSearch(){
-		$this->search_result = array();
-	}
-	
-	function getNumHits(){
-		return (is_array($this->search_result)) ? count($this->search_result) : false;
-	}
-	
-	function getError($format = "clear"){
-		if ($format == "clear"){
-			return $this->error_msg;
-		} else {
-		for ($i = 0; $i < count($this->error_msg); ++$i){
-			$ret .= $this->error_msg[$i]['type'] . "§" . htmlReady($this->error_msg[$i]['msg']) . "§";
-		}
-		return $ret;
-		}
-	}
-	
-	function getNumError(){
-		return count($this->error_msg);
-	}
-	
-	function addError($type, $msg){
-		$this->error_msg[] = array('type' => $type, 'msg' => $msg);
-		return true;
-	}
-	
-	function getPluginName(){
-		global $_lit_search_plugins;
-		$ret = false;
-		for ($i = 0; $i < count($_lit_search_plugins); ++$i){
-			if (substr(strtolower($this->class_name),21) == strtolower($_lit_search_plugins[$i]['name'])){
-				$ret = $_lit_search_plugins[$i]['name'];
-				break;
-			}
-		}
-		return $ret;
-	}
+    
+    var $error_msg = array();
+    var $description;
+    var $search_result = array();
+    var $class_name;
+    var $sess_var_name;
+    
+    function StudipLitSearchPluginAbstract(){
+        global $sess;
+        $this->class_name = strtolower(get_class($this));
+        $this->sess_var_name = "_search_result_" . $this->class_name;
+        if (is_object($sess) && ! $sess->is_registered($this->sess_var_name)){
+            $sess->register($this->sess_var_name);
+        }
+        $this->search_result =& $GLOBALS[$this->sess_var_name];
+    }
+    
+    function doSearch($search_values){
+        return false;
+    }
+    
+    function parseSearchValues(){
+        return false;
+    }
+    
+    function getSearchFields(){
+        return false;
+    }
+    
+    function getSearchResult($num_hit){
+        return false;
+    }
+    
+    function doResetSearch(){
+        $this->search_result = array();
+    }
+    
+    function getNumHits(){
+        return (is_array($this->search_result)) ? count($this->search_result) : false;
+    }
+    
+    function getError($format = "clear"){
+        if ($format == "clear"){
+            return $this->error_msg;
+        } else {
+        for ($i = 0; $i < count($this->error_msg); ++$i){
+            $ret .= $this->error_msg[$i]['type'] . "§" . htmlReady($this->error_msg[$i]['msg']) . "§";
+        }
+        return $ret;
+        }
+    }
+    
+    function getNumError(){
+        return count($this->error_msg);
+    }
+    
+    function addError($type, $msg){
+        $this->error_msg[] = array('type' => $type, 'msg' => $msg);
+        return true;
+    }
+    
+    function getPluginName(){
+        global $_lit_search_plugins;
+        $ret = false;
+        for ($i = 0; $i < count($_lit_search_plugins); ++$i){
+            if (substr(strtolower($this->class_name),21) == strtolower($_lit_search_plugins[$i]['name'])){
+                $ret = $_lit_search_plugins[$i]['name'];
+                break;
+            }
+        }
+        return $ret;
+    }
 }
 ?>

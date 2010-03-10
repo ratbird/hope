@@ -45,12 +45,12 @@ class User extends Session {
 
   function start($sid = "") {
     $this->get_id($sid);
-	
+    
     if(!isset($this->cookiename)) { $this->cookiename=""; };
-	$this->name = $this->cookiename == "" ? $this->classname : $this->cookiename;
-	$name = $this->that_class;
-	$this->that = new $name;
-	$this->that->ac_start();
+    $this->name = $this->cookiename == "" ? $this->classname : $this->cookiename;
+    $name = $this->that_class;
+    $this->that = new $name;
+    $this->that->ac_start();
  
     $this->thaw();
   }

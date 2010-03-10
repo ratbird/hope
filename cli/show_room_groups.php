@@ -8,8 +8,8 @@
 * use this script to get a sample config_room_groups.inc.php based on existing
 * rooms and resources structure, writes to STDOUT
 *
-* @author		André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
+* @author       André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -38,20 +38,20 @@ require_once "lib/classes/DbSnapshot.class.php";
 $res_obj =& ResourceObject::Factory();
 $snap =& new DbSnapshot(new DB_Seminar("SELECT resource_id, parent_id FROM resources_objects INNER JOIN resources_categories USING(category_id) WHERE is_room = 1"));
 if ($snap->numRows){
-	fwrite(STDOUT, "<?php\n//copy to \$STUDIP_BASE_PATH/config/config_room_groups.inc.php\n//generated ". date('r') ."\n");
-	foreach($snap->getGroupedResult('parent_id') as $parent_id => $rooms){
-		if (is_array($rooms['resource_id'])){
-			$res_obj->restore($parent_id);
-			fwrite(STDOUT, "//--------------------------------------------------------------------\n");
-			fwrite(STDOUT, "\$room_groups[\$c]['name'] = '" . $res_obj->getPathToString(true) . "';\n");
-			foreach (array_keys($rooms['resource_id']) as $room_id){
-				$res_obj->restore($room_id);
-				fwrite(STDOUT, "\$room_groups[\$c]['rooms'][] = '$room_id';  //" . $res_obj->getPathToString(true) . "\n");
-			}		
-		}
-	}
-	fwrite(STDOUT, "?>\n");
+    fwrite(STDOUT, "<?php\n//copy to \$STUDIP_BASE_PATH/config/config_room_groups.inc.php\n//generated ". date('r') ."\n");
+    foreach($snap->getGroupedResult('parent_id') as $parent_id => $rooms){
+        if (is_array($rooms['resource_id'])){
+            $res_obj->restore($parent_id);
+            fwrite(STDOUT, "//--------------------------------------------------------------------\n");
+            fwrite(STDOUT, "\$room_groups[\$c]['name'] = '" . $res_obj->getPathToString(true) . "';\n");
+            foreach (array_keys($rooms['resource_id']) as $room_id){
+                $res_obj->restore($room_id);
+                fwrite(STDOUT, "\$room_groups[\$c]['rooms'][] = '$room_id';  //" . $res_obj->getPathToString(true) . "\n");
+            }       
+        }
+    }
+    fwrite(STDOUT, "?>\n");
 } else {
-	trigger_error('No rooms found in database.', E_USER_ERROR);
+    trigger_error('No rooms found in database.', E_USER_ERROR);
 }
 ?>

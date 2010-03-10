@@ -12,7 +12,7 @@
 
       <tr>
         <td class="blank" width="100%" align="right">
-		  <?= Assets::img($picture) ?>
+          <?= Assets::img($picture) ?>
         </td>
       </tr>
 

@@ -29,35 +29,35 @@
       </tr>
 
       <tr>
-				<td class="infobox" align="center" width="1%" valign="top">
-					<?= Assets::img('link_intern') ?>
-				</td>
-				<td class="infobox" width="99%" align="left">
-					<a href="<?= $help_url=format_help_url("Basis.EinrichtungenVerwaltenGruppen") ?>">
-						<?= _("Bedienungshinweise in der Hilfe") ?>
-					</a>
-				</td>
+                <td class="infobox" align="center" width="1%" valign="top">
+                    <?= Assets::img('link_intern') ?>
+                </td>
+                <td class="infobox" width="99%" align="left">
+                    <a href="<?= $help_url=format_help_url("Basis.EinrichtungenVerwaltenGruppen") ?>">
+                        <?= _("Bedienungshinweise in der Hilfe") ?>
+                    </a>
+                </td>
       </tr>
 
       <tr>
           <td class="infobox" align="center" width="1%" valign="top">
-          	<?= Assets::img('link_intern') ?>
+            <?= Assets::img('link_intern') ?>
           </td>
           <td class="infobox" width="99%" align="left">
             <font size="-1">
-				<a href="<?= URLHelper::getLink('?cmd=newRole&range_id='. $range_id) ?>"><?= _("neue Gruppe anlegen") ?></a>
-			</font>
+                <a href="<?= URLHelper::getLink('?cmd=newRole&range_id='. $range_id) ?>"><?= _("neue Gruppe anlegen") ?></a>
+            </font>
           </td>
       </tr>
 
       <tr>
           <td class="infobox" align="center" width="1%" valign="top">
-          	<?= Assets::img('link_intern') ?>
+            <?= Assets::img('link_intern') ?>
           </td>
           <td class="infobox" width="99%" align="left">
             <font size="-1">
-				<a href="<?= URLHelper::getLink('?view=sort&range_id='. $range_id) ?>"><?= _("Gruppenreihenfolge ändern") ?></a>
-			</font>
+                <a href="<?= URLHelper::getLink('?view=sort&range_id='. $range_id) ?>"><?= _("Gruppenreihenfolge ändern") ?></a>
+            </font>
           </td>
       </tr>
 

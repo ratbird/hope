@@ -61,27 +61,27 @@ include ('lib/include/header.php');    //hier wird der "Kopf" nachgeladen
 
 
 $graphtypes_mchoice = array("bars"=>"Balken",
-		    "points"=>"Punkte",
-		    "thinbarline"=>"Linienbalken"
-		    );
+            "points"=>"Punkte",
+            "thinbarline"=>"Linienbalken"
+            );
 
 $graphtypes_polscale = array("bars"=>"Balken",
-		    "pie"=>"Tortenstücke",
-		    "lines"=>"Linien",
-		    "linepoints"=>"Linienpunkte",
-		    "area"=>"Bereich",
-		    "points"=>"Punkte",
-		    "thinbarline"=>"Linienbalken"
-		    );
+            "pie"=>"Tortenstücke",
+            "lines"=>"Linien",
+            "linepoints"=>"Linienpunkte",
+            "area"=>"Bereich",
+            "points"=>"Punkte",
+            "thinbarline"=>"Linienbalken"
+            );
 
 $graphtypes_likertscale = array("bars"=>"Balken",
-		    "pie"=>"Tortenstücke",
-		    "lines"=>"Linien",
-		    "linepoints"=>"Linienpunkte",
-		    "area"=>"Bereich",
-		    "points"=>"Punkte",
-		    "thinbarline"=>"Linienbalken"
-		    );
+            "pie"=>"Tortenstücke",
+            "lines"=>"Linien",
+            "linepoints"=>"Linienpunkte",
+            "area"=>"Bereich",
+            "points"=>"Punkte",
+            "thinbarline"=>"Linienbalken"
+            );
 
 $db = new DB_Seminar();
 $can_change = FALSE;
@@ -101,33 +101,33 @@ if ($db->next_record()) $can_change = TRUE; // Person darf etwas aendern....
 function createInfoBox ($imgLogo) {
         /* Define infobox text ------------------------------------------------ */
         $info1 =  array ("icon" => "eval-icon.gif",
-        		"text" => _("Auf dieser Seite k&ouml;nnen Sie die Auswertung Ihrer Evaluation konfigurieren.")); 
-	$info2 = array ("icon" => "i.gif",
-			"text" => _("W&auml;hlen Sie Ihre Einstellungen und dr&uuml;cken Sie auf \"Template speichern\". Anschlie&szlig;end kommen Sie mit dem Button unten links zur&uuml;ck zu Ihrer Evaluation."));
-	
-	$infobox = array (array ("kategorie" => _("Information:"),
-			"eintrag"   => array ($info1, $info2)));
-	/* ------------------------------------------------------- end: infobox */
-	return print_infobox ($infobox, $imgLogo, YES);
+                "text" => _("Auf dieser Seite k&ouml;nnen Sie die Auswertung Ihrer Evaluation konfigurieren.")); 
+    $info2 = array ("icon" => "i.gif",
+            "text" => _("W&auml;hlen Sie Ihre Einstellungen und dr&uuml;cken Sie auf \"Template speichern\". Anschlie&szlig;end kommen Sie mit dem Button unten links zur&uuml;ck zu Ihrer Evaluation."));
+    
+    $infobox = array (array ("kategorie" => _("Information:"),
+            "eintrag"   => array ($info1, $info2)));
+    /* ------------------------------------------------------- end: infobox */
+    return print_infobox ($infobox, $imgLogo, YES);
 }
 
 
 
 if (isset($cmd) && $can_change && isset($eval_id)) {
-	if ($cmd=="save") {
-		$db = new DB_Seminar();
-		if (!isset($template_id) || $template_id=="") {
-			// Neues Template einfuegen
-			$template_id=DbView::get_uniqid();
-			$db->query(sprintf("INSERT INTO eval_templates (template_id,user_id,name,show_questions,show_total_stats,show_graphics,show_questionblock_headline,show_group_headline,polscale_gfx_type,likertscale_gfx_type,mchoice_scale_gfx_type) VALUES ('%s','%s','nix',%d,%d,%d,%d,%d,'%s','%s','%s')",$template_id,$auth->auth["uid"],$show_questions,$show_total_stats,$show_graphics,$show_questionblock_headline,$show_group_headline,$polscale_gfx_type,$likertscale_gfx_type,$mchoice_scale_gfx_type));
-			$db->query(sprintf("INSERT INTO eval_templates_eval (eval_id, template_id) VALUES ('%s', '%s')", $eval_id, $template_id));
-			$msg .= "msg§"._("Template wurde neu erzeugt.");
-		} else {
-			// Bestehendes Template updaten
-			$db->query(sprintf("UPDATE eval_templates SET show_questions=%d,show_total_stats=%d,show_graphics=%d,show_questionblock_headline=%d,show_group_headline=%d,polscale_gfx_type='%s',likertscale_gfx_type='%s',mchoice_scale_gfx_type='%s' WHERE template_id='%s'",$show_questions,$show_total_stats,$show_graphics,$show_questionblock_headline,$show_group_headline,$polscale_gfx_type,$likertscale_gfx_type,$mchoice_scale_gfx_type,$template_id));
-			$msg .= "msg§".("Template wurde ver&auml;ndert.");
-		}
-	}
+    if ($cmd=="save") {
+        $db = new DB_Seminar();
+        if (!isset($template_id) || $template_id=="") {
+            // Neues Template einfuegen
+            $template_id=DbView::get_uniqid();
+            $db->query(sprintf("INSERT INTO eval_templates (template_id,user_id,name,show_questions,show_total_stats,show_graphics,show_questionblock_headline,show_group_headline,polscale_gfx_type,likertscale_gfx_type,mchoice_scale_gfx_type) VALUES ('%s','%s','nix',%d,%d,%d,%d,%d,'%s','%s','%s')",$template_id,$auth->auth["uid"],$show_questions,$show_total_stats,$show_graphics,$show_questionblock_headline,$show_group_headline,$polscale_gfx_type,$likertscale_gfx_type,$mchoice_scale_gfx_type));
+            $db->query(sprintf("INSERT INTO eval_templates_eval (eval_id, template_id) VALUES ('%s', '%s')", $eval_id, $template_id));
+            $msg .= "msg§"._("Template wurde neu erzeugt.");
+        } else {
+            // Bestehendes Template updaten
+            $db->query(sprintf("UPDATE eval_templates SET show_questions=%d,show_total_stats=%d,show_graphics=%d,show_questionblock_headline=%d,show_group_headline=%d,polscale_gfx_type='%s',likertscale_gfx_type='%s',mchoice_scale_gfx_type='%s' WHERE template_id='%s'",$show_questions,$show_total_stats,$show_graphics,$show_questionblock_headline,$show_group_headline,$polscale_gfx_type,$likertscale_gfx_type,$mchoice_scale_gfx_type,$template_id));
+            $msg .= "msg§".("Template wurde ver&auml;ndert.");
+        }
+    }
 }
 
 
@@ -135,149 +135,149 @@ $cssSw=new cssClassSwitcher;
 
 if (isset($eval_id) && $can_change) {
 
-	$db_template = new DB_Seminar();
+    $db_template = new DB_Seminar();
 
-	$db_template->query(sprintf("SELECT t.* FROM eval_templates t, eval_templates_eval te WHERE te.eval_id='%s' AND t.template_id=te.template_id",$eval_id));
-	$db_template->next_record();
+    $db_template->query(sprintf("SELECT t.* FROM eval_templates t, eval_templates_eval te WHERE te.eval_id='%s' AND t.template_id=te.template_id",$eval_id));
+    $db_template->next_record();
 
-	echo "<TABLE BORDER=\"0\" WIDTH=\"100%\" CELLSPACING=\"0\" CELLPADDING=\"0\">";
-	echo "<tr><td class=\"topic\" COLSPAN=\"4\" align=\"left\"><IMG SRC=\"{$GLOBALS['ASSETS_URL']}images/eval-icon.gif\" BORDER=\"0\"><FONT SIZE=\"-1\"><B>"._("Auswertungskonfiguration")."</B></FONT></td></tr>\n";
-	echo "  <TR>";
-	echo "    <TD COLSPAN=\"4\" CLASS=\"blank\">&nbsp;</TD>\n";
-	echo "  </TR>";
-	echo "  <TR>";
-	echo "    <TD CLASS=\"blank\" WIDTH=\"1%\">&nbsp;</TD>\n";
-	echo "<FORM NAME=\"temp\" ACTION=\"".$PHP_SELF."\" METHOD=\"POST\">\n";
-	echo "    <TD CLASS=\"blank\">\n";
-	echo "  <INPUT TYPE=\"hidden\" NAME=\"cmd\" VALUE=\"\">\n";
-	echo "  <INPUT TYPE=\"hidden\" NAME=\"template_id\" VALUE=\"".$db_template->f("template_id")."\">\n";
-	echo "  <INPUT TYPE=\"hidden\" NAME=\"eval_id\" VALUE=\"".$eval_id."\">\n";
-	echo "<TABLE WIDTH=\"95%\" ALIGN=\"LEFT\" BORDER=\"0\" CELLSPACING=\"0\" CELLPADDING=\"0\">\n";
-	echo "    <TD CLASS=\"blank\">&nbsp;</TD>\n";
-	parse_msg($msg);
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"steel1\" WIDTH=\"40%\"><FONT COLOR=\"-1\"><B>"._("Optionen")."</B></FONT></TD>\n";
-	echo "    <TD CLASS=\"steel1\" WIDTH=\"10%\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><B>"._("Ja")."</B></FONT></TD>\n";
-	echo "    <TD CLASS=\"steel1\" WIDTH=\"10%\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><B>"._("Nein")."</B></FONT></TD>\n";
-	echo "    <TD CLASS=\"steel1\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"steel1kante\" COLSPAN=\"4\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Zeige Gesamtstatistik an").":</FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_total_stats\" VALUE=\"1\" "; if ($db_template->f("show_total_stats")=="1" || !($has_template)) echo "CHECKED"; print "></FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_total_stats\" VALUE=\"0\" "; if ($db_template->f("show_total_stats")=="0") echo "CHECKED"; print "></FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	
-	$cssSw->switchClass();
+    echo "<TABLE BORDER=\"0\" WIDTH=\"100%\" CELLSPACING=\"0\" CELLPADDING=\"0\">";
+    echo "<tr><td class=\"topic\" COLSPAN=\"4\" align=\"left\"><IMG SRC=\"{$GLOBALS['ASSETS_URL']}images/eval-icon.gif\" BORDER=\"0\"><FONT SIZE=\"-1\"><B>"._("Auswertungskonfiguration")."</B></FONT></td></tr>\n";
+    echo "  <TR>";
+    echo "    <TD COLSPAN=\"4\" CLASS=\"blank\">&nbsp;</TD>\n";
+    echo "  </TR>";
+    echo "  <TR>";
+    echo "    <TD CLASS=\"blank\" WIDTH=\"1%\">&nbsp;</TD>\n";
+    echo "<FORM NAME=\"temp\" ACTION=\"".$PHP_SELF."\" METHOD=\"POST\">\n";
+    echo "    <TD CLASS=\"blank\">\n";
+    echo "  <INPUT TYPE=\"hidden\" NAME=\"cmd\" VALUE=\"\">\n";
+    echo "  <INPUT TYPE=\"hidden\" NAME=\"template_id\" VALUE=\"".$db_template->f("template_id")."\">\n";
+    echo "  <INPUT TYPE=\"hidden\" NAME=\"eval_id\" VALUE=\"".$eval_id."\">\n";
+    echo "<TABLE WIDTH=\"95%\" ALIGN=\"LEFT\" BORDER=\"0\" CELLSPACING=\"0\" CELLPADDING=\"0\">\n";
+    echo "    <TD CLASS=\"blank\">&nbsp;</TD>\n";
+    parse_msg($msg);
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"steel1\" WIDTH=\"40%\"><FONT COLOR=\"-1\"><B>"._("Optionen")."</B></FONT></TD>\n";
+    echo "    <TD CLASS=\"steel1\" WIDTH=\"10%\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><B>"._("Ja")."</B></FONT></TD>\n";
+    echo "    <TD CLASS=\"steel1\" WIDTH=\"10%\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><B>"._("Nein")."</B></FONT></TD>\n";
+    echo "    <TD CLASS=\"steel1\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"steel1kante\" COLSPAN=\"4\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Zeige Gesamtstatistik an").":</FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_total_stats\" VALUE=\"1\" "; if ($db_template->f("show_total_stats")=="1" || !($has_template)) echo "CHECKED"; print "></FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_total_stats\" VALUE=\"0\" "; if ($db_template->f("show_total_stats")=="0") echo "CHECKED"; print "></FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    
+    $cssSw->switchClass();
 
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Zeige Grafiken an").":</FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_graphics\" VALUE=\"1\" "; if ($db_template->f("show_graphics")=="1" || !($has_template)) echo "CHECKED"; print "></FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_graphics\" VALUE=\"0\" "; if ($db_template->f("show_graphics")=="0") echo "CHECKED"; print "></FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	
-	$cssSw->switchClass();
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Zeige Grafiken an").":</FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_graphics\" VALUE=\"1\" "; if ($db_template->f("show_graphics")=="1" || !($has_template)) echo "CHECKED"; print "></FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_graphics\" VALUE=\"0\" "; if ($db_template->f("show_graphics")=="0") echo "CHECKED"; print "></FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    
+    $cssSw->switchClass();
 
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Zeige Fragen an").":</FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_questions\" VALUE=\"1\" "; if ($db_template->f("show_questions")=="1" || !($has_template)) echo "CHECKED"; print "></FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_questions\" VALUE=\"0\" "; if ($db_template->f("show_questions")=="0") echo "CHECKED"; print "></FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	
-	$cssSw->switchClass();
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Zeige Fragen an").":</FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_questions\" VALUE=\"1\" "; if ($db_template->f("show_questions")=="1" || !($has_template)) echo "CHECKED"; print "></FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_questions\" VALUE=\"0\" "; if ($db_template->f("show_questions")=="0") echo "CHECKED"; print "></FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    
+    $cssSw->switchClass();
 
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Zeige Gruppen&uuml;berschriften an").":</FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_group_headline\" VALUE=\"1\" "; if ($db_template->f("show_group_headline")=="1" || !($has_template)) echo "CHECKED"; print "></FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_group_headline\" VALUE=\"0\" "; if ($db_template->f("show_group_headline")=="0") echo "CHECKED"; print "></FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	
-	$cssSw->switchClass();
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Zeige Gruppen&uuml;berschriften an").":</FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_group_headline\" VALUE=\"1\" "; if ($db_template->f("show_group_headline")=="1" || !($has_template)) echo "CHECKED"; print "></FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_group_headline\" VALUE=\"0\" "; if ($db_template->f("show_group_headline")=="0") echo "CHECKED"; print "></FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    
+    $cssSw->switchClass();
 
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Zeige Fragenblock&uuml;berschriften an").":</FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_questionblock_headline\" VALUE=\"1\" "; if ($db_template->f("show_questionblock_headline")=="1" || !($has_template)) echo "CHECKED"; print "></FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_questionblock_headline\" VALUE=\"0\" "; if ($db_template->f("show_questionblock_headline")=="0") echo "CHECKED"; print "></FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	
-	$cssSw->switchClass();
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Zeige Fragenblock&uuml;berschriften an").":</FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_questionblock_headline\" VALUE=\"1\" "; if ($db_template->f("show_questionblock_headline")=="1" || !($has_template)) echo "CHECKED"; print "></FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_questionblock_headline\" VALUE=\"0\" "; if ($db_template->f("show_questionblock_headline")=="0") echo "CHECKED"; print "></FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    
+    $cssSw->switchClass();
 
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Grafiktyp f&uuml;r Polskalen").":</FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\" COLSPAN=\"2\">\n";
-	echo "      <SELECT NAME=\"polscale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
-	foreach ($graphtypes_polscale as $k=>$v) {
-		echo "        <OPTION VALUE=\"".$k."\""; if ($db_template->f("polscale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
-	}
-	echo "      </SELECT>\n";
-	echo "    </TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	
-	$cssSw->switchClass();
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Grafiktyp f&uuml;r Polskalen").":</FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\" COLSPAN=\"2\">\n";
+    echo "      <SELECT NAME=\"polscale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
+    foreach ($graphtypes_polscale as $k=>$v) {
+        echo "        <OPTION VALUE=\"".$k."\""; if ($db_template->f("polscale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
+    }
+    echo "      </SELECT>\n";
+    echo "    </TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    
+    $cssSw->switchClass();
 
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Grafiktyp f&uuml;r Likertskalen").":</FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\" COLSPAN=\"2\">\n";
-	echo "      <SELECT NAME=\"likertscale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
-	foreach ($graphtypes_likertscale as $k=>$v) {
-		echo "        <OPTION VALUE=\"".$k."\""; if ($db_template->f("likertscale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
-	}
-	echo "      </SELECT>\n";
-	echo "    </TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	
-	$cssSw->switchClass();
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Grafiktyp f&uuml;r Likertskalen").":</FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\" COLSPAN=\"2\">\n";
+    echo "      <SELECT NAME=\"likertscale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
+    foreach ($graphtypes_likertscale as $k=>$v) {
+        echo "        <OPTION VALUE=\"".$k."\""; if ($db_template->f("likertscale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
+    }
+    echo "      </SELECT>\n";
+    echo "    </TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    
+    $cssSw->switchClass();
 
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Grafiktyp f&uuml;r Multiplechoice").":</FONT></TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\" COLSPAN=\"2\">\n";
-	echo "      <SELECT NAME=\"mchoice_scale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
-	foreach ($graphtypes_mchoice as $k=>$v) {
-		echo "        <OPTION VALUE=\"".$k."\""; if ($db_template->f("mchoice_scale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
-	}
-	echo "      </SELECT>\n";
-	echo "    </TD>\n";
-	echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	
-	$cssSw->switchClass();
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Grafiktyp f&uuml;r Multiplechoice").":</FONT></TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\" COLSPAN=\"2\">\n";
+    echo "      <SELECT NAME=\"mchoice_scale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
+    foreach ($graphtypes_mchoice as $k=>$v) {
+        echo "        <OPTION VALUE=\"".$k."\""; if ($db_template->f("mchoice_scale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
+    }
+    echo "      </SELECT>\n";
+    echo "    </TD>\n";
+    echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    
+    $cssSw->switchClass();
 
-	echo "<script type=\"text/javascript\" language=\"javascript\">\n";
-	echo "  function save() {\n";
-	echo "    document.temp.cmd.value='save';\n";
-	echo "    document.temp.submit();\n";
-	echo "  }\n";
-	echo "</script>\n";
+    echo "<script type=\"text/javascript\" language=\"javascript\">\n";
+    echo "  function save() {\n";
+    echo "    document.temp.cmd.value='save';\n";
+    echo "    document.temp.submit();\n";
+    echo "  }\n";
+    echo "</script>\n";
 
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"steel1\" COLSPAN=\"4\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"steel1\" COLSPAN=\"2\" ALIGN=\"LEFT\"><A HREF=\"eval_summary.php?eval_id=".$eval_id."\">".makeButton("zurueck", "img")."</A></TD>\n";
-	echo "    <TD CLASS=\"steel1\" COLSPAN=\"2\" ALIGN=\"RIGHT\"><A HREF=\"javascript:save();\">".makeButton("speichern", "img")."</A>&nbsp;<A HREF=\"javascript:document.temp.reset();\">".makeButton("zuruecksetzen", "img")."</A></TD>\n";
-	echo "  </TR>\n";
-	echo "  <TR>\n";
-	echo "    <TD CLASS=\"blank\" COLSPAN=\"4\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	echo "</TABLE>\n";
-	echo "</FORM>\n";
-	echo "    </TD>\n";
-	echo "    <TD CLASS=\"blank\" WIDTH=\"2%\" ALIGN=\"CENTER\" VALIGN=\"TOP\">".createInfoBox("evaluation.jpg")."</TD>";
-	echo "    <TD CLASS=\"blank\" WIDTH=\"1%\">&nbsp;</TD>\n";
-	echo "  </TR>\n";
-	echo "  <TR>";
-	echo "    <TD COLSPAN=\"4\" CLASS=\"blank\">&nbsp;</TD>\n";
-	echo "  </TR>";
-	echo "</TABLE>\n";
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"steel1\" COLSPAN=\"4\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"steel1\" COLSPAN=\"2\" ALIGN=\"LEFT\"><A HREF=\"eval_summary.php?eval_id=".$eval_id."\">".makeButton("zurueck", "img")."</A></TD>\n";
+    echo "    <TD CLASS=\"steel1\" COLSPAN=\"2\" ALIGN=\"RIGHT\"><A HREF=\"javascript:save();\">".makeButton("speichern", "img")."</A>&nbsp;<A HREF=\"javascript:document.temp.reset();\">".makeButton("zuruecksetzen", "img")."</A></TD>\n";
+    echo "  </TR>\n";
+    echo "  <TR>\n";
+    echo "    <TD CLASS=\"blank\" COLSPAN=\"4\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    echo "</TABLE>\n";
+    echo "</FORM>\n";
+    echo "    </TD>\n";
+    echo "    <TD CLASS=\"blank\" WIDTH=\"2%\" ALIGN=\"CENTER\" VALIGN=\"TOP\">".createInfoBox("evaluation.jpg")."</TD>";
+    echo "    <TD CLASS=\"blank\" WIDTH=\"1%\">&nbsp;</TD>\n";
+    echo "  </TR>\n";
+    echo "  <TR>";
+    echo "    <TD COLSPAN=\"4\" CLASS=\"blank\">&nbsp;</TD>\n";
+    echo "  </TR>";
+    echo "</TABLE>\n";
 }
 
 

@@ -49,30 +49,30 @@ $msg = ""; // Message to display
 $_show_scm = Request::option('show_scm', $scms[0]['scm_id']);
 
 if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
-	if ($i_view == 'change') {
-		$_show_scm = scm_change_content($_show_scm, $SessSemName[1], $scm_name, $scm_preset, $content);
-		$msg = "msg§"._("Die Änderungen wurden übernommen.");
-	} else if ($i_view == 'kill') {
-		$scm = new StudipScmEntry($_show_scm);
-		if (!$scm->is_new && $scm->getValue('range_id') == $SessSemName[1]){
-			$scm->delete();
-			$msg = "msg§" . _("Der Eintrag wurde gelöscht.");
-		}
-		$scms = array_values(StudipScmEntry::GetSCMEntriesForRange($SessSemName[1]));
-		$_show_scm = $scms[0]['scm_id'];
-	} else if ($i_view == 'first_position') {
-		$scm = new StudipScmEntry($_show_scm);
-		if (!$scm->is_new && $scm->getValue('range_id') == $SessSemName[1]){
-			$minmkdate = DBManager::get()
-				->query("SELECT MIN(mkdate)-1 FROM scm WHERE range_id='" .  $scm->getValue('range_id') . "'")
-				->fetchColumn();
-			if(DBManager::get()->exec("UPDATE scm SET mkdate='$minmkdate' WHERE scm_id='" . $scm->getId() . "'")){
-				$msg = "msg§" . _("Der Eintrag wurde an die erste Position verschoben.");
-			}
-		}
-		$scms = array_values(StudipScmEntry::GetSCMEntriesForRange($SessSemName[1]));
-		$_show_scm = $scms[0]['scm_id'];
-	}
+    if ($i_view == 'change') {
+        $_show_scm = scm_change_content($_show_scm, $SessSemName[1], $scm_name, $scm_preset, $content);
+        $msg = "msg§"._("Die Änderungen wurden übernommen.");
+    } else if ($i_view == 'kill') {
+        $scm = new StudipScmEntry($_show_scm);
+        if (!$scm->is_new && $scm->getValue('range_id') == $SessSemName[1]){
+            $scm->delete();
+            $msg = "msg§" . _("Der Eintrag wurde gelöscht.");
+        }
+        $scms = array_values(StudipScmEntry::GetSCMEntriesForRange($SessSemName[1]));
+        $_show_scm = $scms[0]['scm_id'];
+    } else if ($i_view == 'first_position') {
+        $scm = new StudipScmEntry($_show_scm);
+        if (!$scm->is_new && $scm->getValue('range_id') == $SessSemName[1]){
+            $minmkdate = DBManager::get()
+                ->query("SELECT MIN(mkdate)-1 FROM scm WHERE range_id='" .  $scm->getValue('range_id') . "'")
+                ->fetchColumn();
+            if(DBManager::get()->exec("UPDATE scm SET mkdate='$minmkdate' WHERE scm_id='" . $scm->getId() . "'")){
+                $msg = "msg§" . _("Der Eintrag wurde an die erste Position verschoben.");
+            }
+        }
+        $scms = array_values(StudipScmEntry::GetSCMEntriesForRange($SessSemName[1]));
+        $_show_scm = $scms[0]['scm_id'];
+    }
 }
 
 $scm = new StudipScmEntry($_show_scm);
@@ -84,204 +84,204 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
 if ($i_view == 'edit') {
-	scm_edit_content($SessSemName[1], $_show_scm);
+    scm_edit_content($SessSemName[1], $_show_scm);
 } else {
-	scm_show_content($SessSemName[1], $msg, $_show_scm);
+    scm_show_content($SessSemName[1], $msg, $_show_scm);
 }
 
 function scm_max_cols()
 {
-	global $auth;
-	//maximale spaltenzahl berechnen
-	if ($auth->auth["jscript"]) {
-		return round($auth->auth["xres"] / 12 );
-	} else {
-		return 64 ; //default für 640x480
-	}
+    global $auth;
+    //maximale spaltenzahl berechnen
+    if ($auth->auth["jscript"]) {
+        return round($auth->auth["xres"] / 12 );
+    } else {
+        return 64 ; //default für 640x480
+    }
 }
 
 function scm_seminar_header($range_id, $site_name)
 {
-	$t=new Table();
-	$t->setTableWidth("100%");
-	echo $t->open();
-	echo $t->openRow();
-	echo $t->blankCell(array("class"=>"blank"));
-	echo $t->openRow();
-	echo $t->openCell(array("class"=>"blank"));
-	return $t; // Cell is left open, content will be printed elsewhere
+    $t=new Table();
+    $t->setTableWidth("100%");
+    echo $t->open();
+    echo $t->openRow();
+    echo $t->blankCell(array("class"=>"blank"));
+    echo $t->openRow();
+    echo $t->openCell(array("class"=>"blank"));
+    return $t; // Cell is left open, content will be printed elsewhere
 }
 
 function scm_seminar_footer($table) {
-	echo $table->close(); // close open cell, row and table
+    echo $table->close(); // close open cell, row and table
 }
 
 function scm_change_header($table, $titel, $user_id, $chdate) {
-	$zusatz = "<font size=-1>";
-	$zusatz .= sprintf(_("Zuletzt ge&auml;ndert von %s am %s"), "</font><a href=\"".URLHelper::getLink("about.php?username=".get_username($user_id))."\"><font size=-1 color=\"#333399\">".get_fullname ($user_id,'full',true)."</font></a><font size=-1>", date("d.m.Y, H:i",$chdate)."<font size=-1>&nbsp;"."</font>");
-	$icon="&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_cont.gif\">";
+    $zusatz = "<font size=-1>";
+    $zusatz .= sprintf(_("Zuletzt ge&auml;ndert von %s am %s"), "</font><a href=\"".URLHelper::getLink("about.php?username=".get_username($user_id))."\"><font size=-1 color=\"#333399\">".get_fullname ($user_id,'full',true)."</font></a><font size=-1>", date("d.m.Y, H:i",$chdate)."<font size=-1>&nbsp;"."</font>");
+    $icon="&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_cont.gif\">";
 
-	echo $table->openRow();
-	echo $table->openCell(array("colspan"=>"2"));
-	$head_table=new Table(array("width"=>"100%"));
-	echo $head_table->openRow();
-	printhead(0, 0, false, "open", FALSE, $icon, $titel, $zusatz);
-	echo $head_table->close();
-	echo $table->closeRow();
+    echo $table->openRow();
+    echo $table->openCell(array("colspan"=>"2"));
+    $head_table=new Table(array("width"=>"100%"));
+    echo $head_table->openRow();
+    printhead(0, 0, false, "open", FALSE, $icon, $titel, $zusatz);
+    echo $head_table->close();
+    echo $table->closeRow();
 }
 
 function scm_show_content($range_id, $msg, $scm_id) {
-	global $rechte, $CURRENT_PAGE, $SessSemName;
+    global $rechte, $CURRENT_PAGE, $SessSemName;
 
-	$scm = new StudipScmEntry($scm_id);
+    $scm = new StudipScmEntry($scm_id);
 
-	$CURRENT_PAGE = ".".$SessSemName["header_line"]. " - " . $scm->getValue("tab_name");
+    $CURRENT_PAGE = ".".$SessSemName["header_line"]. " - " . $scm->getValue("tab_name");
 
-	if ($scm_id == 'new_entry') $scm_id = null;
+    if ($scm_id == 'new_entry') $scm_id = null;
 
-	$header_table = scm_seminar_header($range_id, $scm->getValue("tab_name"));
+    $header_table = scm_seminar_header($range_id, $scm->getValue("tab_name"));
 
-	$frame_table=new Table();
-	$frame_table->setTableWidth("100%");
-	$frame_table->setCellClass("blank");
-	echo $frame_table->openCell();
+    $frame_table=new Table();
+    $frame_table->setTableWidth("100%");
+    $frame_table->setCellClass("blank");
+    echo $frame_table->openCell();
 
-	$content_table=new Table();
-	$content_table->setTableWidth("99%");
-	$content_table->setTableAlign("center");
-	$content_table->setCellClass("printcontent");
-	echo $content_table->open();
-	if ($msg) {
-		parse_msg($msg);
-	}
+    $content_table=new Table();
+    $content_table->setTableWidth("99%");
+    $content_table->setTableAlign("center");
+    $content_table->setCellClass("printcontent");
+    echo $content_table->open();
+    if ($msg) {
+        parse_msg($msg);
+    }
 
-	if (!$scm->is_new) {
-		scm_change_header($content_table, htmlReady($scm->getValue("tab_name")), $scm->getValue("user_id"), $scm->getValue("chdate"));
-		echo $content_table->openRow();
-		echo $content_table->openCell();
-		$printcontent_table=new Table(array("width"=>"100%"));
-		echo $printcontent_table->open();
-		if ($rechte) {
-			if(StudipScmEntry::GetNumSCMEntriesForRange($range_id) > 1){
-				$edit .= "<a href=\"".URLHelper::getLink("?i_view=first_position&show_scm=$scm_id")."\">".makeButton("nachvorne", 'img', _("Diese Seite an die erste Position setzen"))."</a>&nbsp;";
-			}
-			$edit .= "<a href=\"".URLHelper::getLink("?i_view=edit&show_scm=$scm_id")."\">".makeButton("bearbeiten")."</a>";
-			if(StudipScmEntry::GetNumSCMEntriesForRange($range_id) > 1){
-				$edit .= "&nbsp;<a href=\"".URLHelper::getLink("?i_view=kill&show_scm=$scm_id")."\">".makeButton("loeschen")."</a>";
-			}
-		} else {
-			$edit = "&nbsp;";
-		}
-		printcontent(0,0, formatReady($scm->getValue("content")), $edit);
-		echo $printcontent_table->close();
-		echo $content_table->closeRow();
-	} else {
-		parse_msg("info§<font size=-1><b>". _("In diesem Bereich wurden noch keine Inhalte erstellt.") . "</b></font>", "§", "steel1", 2, FALSE);
-	}
-	echo $content_table->close();
-	echo $frame_table->row(array("&nbsp;"));
-	echo $frame_table->close();
-	echo $header_table->close();
+    if (!$scm->is_new) {
+        scm_change_header($content_table, htmlReady($scm->getValue("tab_name")), $scm->getValue("user_id"), $scm->getValue("chdate"));
+        echo $content_table->openRow();
+        echo $content_table->openCell();
+        $printcontent_table=new Table(array("width"=>"100%"));
+        echo $printcontent_table->open();
+        if ($rechte) {
+            if(StudipScmEntry::GetNumSCMEntriesForRange($range_id) > 1){
+                $edit .= "<a href=\"".URLHelper::getLink("?i_view=first_position&show_scm=$scm_id")."\">".makeButton("nachvorne", 'img', _("Diese Seite an die erste Position setzen"))."</a>&nbsp;";
+            }
+            $edit .= "<a href=\"".URLHelper::getLink("?i_view=edit&show_scm=$scm_id")."\">".makeButton("bearbeiten")."</a>";
+            if(StudipScmEntry::GetNumSCMEntriesForRange($range_id) > 1){
+                $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?i_view=kill&show_scm=$scm_id")."\">".makeButton("loeschen")."</a>";
+            }
+        } else {
+            $edit = "&nbsp;";
+        }
+        printcontent(0,0, formatReady($scm->getValue("content")), $edit);
+        echo $printcontent_table->close();
+        echo $content_table->closeRow();
+    } else {
+        parse_msg("info§<font size=-1><b>". _("In diesem Bereich wurden noch keine Inhalte erstellt.") . "</b></font>", "§", "steel1", 2, FALSE);
+    }
+    echo $content_table->close();
+    echo $frame_table->row(array("&nbsp;"));
+    echo $frame_table->close();
+    echo $header_table->close();
 }
 
 function scm_edit_content($range_id, $scm_id) {
-	global $SCM_PRESET;
+    global $SCM_PRESET;
 
-	if ($scm_id == 'new_entry') $scm_id = null;
+    if ($scm_id == 'new_entry') $scm_id = null;
 
-	$scm = new StudipScmEntry($scm_id);
+    $scm = new StudipScmEntry($scm_id);
 
-	if ($scm->is_new){
-		$scm->setValue('user_id', $GLOBALS['user']->id);
-		$scm->setValue('chdate', time());
-		$scm_id = 'new_entry';
-	}
+    if ($scm->is_new){
+        $scm->setValue('user_id', $GLOBALS['user']->id);
+        $scm->setValue('chdate', time());
+        $scm_id = 'new_entry';
+    }
 
-	$max_col = scm_max_cols();
+    $max_col = scm_max_cols();
 
-	$header_table = scm_seminar_header($range_id, $scm->getValue("tab_name"));
+    $header_table = scm_seminar_header($range_id, $scm->getValue("tab_name"));
 
-	print("<form action=\"".URLHelper::getLink('')."\" method=\"POST\">");
+    print("<form action=\"".URLHelper::getLink('')."\" method=\"POST\">");
 
-	$frame_table=new Table();
-	$frame_table->setTableWidth("100%");
-	$frame_table->setCellClass("blank");
-	echo $frame_table->openCell();
+    $frame_table=new Table();
+    $frame_table->setTableWidth("100%");
+    $frame_table->setCellClass("blank");
+    echo $frame_table->openCell();
 
-	print("<blockquote>");
-	print(_("Hier k&ouml;nnen Sie eine Seite mit Zusatzinformationen zu Ihrer Veranstaltung gestalten. Sie können Links normal eingeben, diese werden anschlie&szlig;end automatisch als Hyperlinks dargestellt."));
-	print("</blockquote>");
+    print("<blockquote>");
+    print(_("Hier k&ouml;nnen Sie eine Seite mit Zusatzinformationen zu Ihrer Veranstaltung gestalten. Sie können Links normal eingeben, diese werden anschlie&szlig;end automatisch als Hyperlinks dargestellt."));
+    print("</blockquote>");
 
-	$content_table=new Table();
-	$content_table->setTableWidth("99%");
-	$content_table->setTableAlign("center");
-	$content_table->setCellClass("printcontent");
-	echo $content_table->open();
-	$titel="</b><input style=\"font-size:8 pt;\" type=\"TEXT\" name=\"scm_name\" value=\"".htmlReady($scm->getValue("tab_name"))."\" maxlength=\"20\" size=\"20\" />";
-	$titel.="</font size=\"-1\">&nbsp;"._("oder w&auml;hlen Sie hier einen Namen aus:")."&nbsp;\n";
-	$titel.="<select style=\"font-size:8 pt;\" name=\"scm_preset\">";
-	$titel.="<option value=\"0\">- "._("Vorlagen")." -</option>\n";
-	foreach ($SCM_PRESET as $key=>$val)
-		$titel.=sprintf("<option value=\"%s\">%s</option>\n", $key, htmlReady($val["name"]));
-	$titel.="</select>";
+    $content_table=new Table();
+    $content_table->setTableWidth("99%");
+    $content_table->setTableAlign("center");
+    $content_table->setCellClass("printcontent");
+    echo $content_table->open();
+    $titel="</b><input style=\"font-size:8 pt;\" type=\"TEXT\" name=\"scm_name\" value=\"".htmlReady($scm->getValue("tab_name"))."\" maxlength=\"20\" size=\"20\" />";
+    $titel.="</font size=\"-1\">&nbsp;"._("oder w&auml;hlen Sie hier einen Namen aus:")."&nbsp;\n";
+    $titel.="<select style=\"font-size:8 pt;\" name=\"scm_preset\">";
+    $titel.="<option value=\"0\">- "._("Vorlagen")." -</option>\n";
+    foreach ($SCM_PRESET as $key=>$val)
+        $titel.=sprintf("<option value=\"%s\">%s</option>\n", $key, htmlReady($val["name"]));
+    $titel.="</select>";
 
-	scm_change_header($content_table, $titel, $scm->getValue("user_id"), $scm->getValue("chdate"));
+    scm_change_header($content_table, $titel, $scm->getValue("user_id"), $scm->getValue("chdate"));
 
-	$content = "<textarea name=\"content\" style=\"width: 90%\" cols=$max_col rows=10 wrap=virtual >".htmlReady($scm->getValue("content"))."</textarea>\n";
-	$content.= "<input type=\"HIDDEN\" name=\"show_scm\" value=\"$scm_id\">";
-	$content.= "<input type=\"HIDDEN\" name=\"i_view\" value=\"change\">";
+    $content = "<textarea name=\"content\" style=\"width: 90%\" cols=$max_col rows=10 wrap=virtual >".htmlReady($scm->getValue("content"))."</textarea>\n";
+    $content.= "<input type=\"HIDDEN\" name=\"show_scm\" value=\"$scm_id\">";
+    $content.= "<input type=\"HIDDEN\" name=\"i_view\" value=\"change\">";
 
-	$edit="<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"send_scm\" value=\"&auml;nderungen vornehmen\" border=0 " . makeButton("uebernehmen", "src") . ">";
-	$edit.="&nbsp;<a href=\"".URLHelper::getLink('')."\">". makeButton("abbrechen") . "</a>";
-	$edit .= "<font size=\"-1\">&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\">";
+    $edit="<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"send_scm\" value=\"&auml;nderungen vornehmen\" border=0 " . makeButton("uebernehmen", "src") . ">";
+    $edit.="&nbsp;<a href=\"".URLHelper::getLink('')."\">". makeButton("abbrechen") . "</a>";
+    $edit .= "<font size=\"-1\">&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\">";
 
-	if (get_config("EXTERNAL_HELP")) {
-		$help_url=format_help_url("Basis.VerschiedenesFormat");
-	} else {
-		$help_url="help/index.php?help_page=ix_forum6.htm";
-	}
-	$edit .= "Smileys</a>&nbsp;&nbsp;<a href=\"".$help_url."\" ";
-	$edit .= "target=\"_blank\">Formatierungshilfen</a></font>\n";
+    if (get_config("EXTERNAL_HELP")) {
+        $help_url=format_help_url("Basis.VerschiedenesFormat");
+    } else {
+        $help_url="help/index.php?help_page=ix_forum6.htm";
+    }
+    $edit .= "Smileys</a>&nbsp;&nbsp;<a href=\"".$help_url."\" ";
+    $edit .= "target=\"_blank\">Formatierungshilfen</a></font>\n";
 
-	echo $content_table->openRow();
-	echo $content_table->openCell();
-	$printcontent_table=new Table(array("width"=>"100%"));
-	echo $printcontent_table->open();
-	printcontent(0,0, $content, $edit);
-	echo $printcontent_table->close();
-	echo $content_table->closeRow();
-	echo $content_table->close();
-	echo $frame_table->row(array("&nbsp;"));
-	echo $frame_table->close();
-	echo $header_table->close();
+    echo $content_table->openRow();
+    echo $content_table->openCell();
+    $printcontent_table=new Table(array("width"=>"100%"));
+    echo $printcontent_table->open();
+    printcontent(0,0, $content, $edit);
+    echo $printcontent_table->close();
+    echo $content_table->closeRow();
+    echo $content_table->close();
+    echo $frame_table->row(array("&nbsp;"));
+    echo $frame_table->close();
+    echo $header_table->close();
 
-	print("</form>");
+    print("</form>");
 }
 
 function scm_change_content($scm_id, $range_id, $name, $preset, $content) {
-	global $user, $SCM_PRESET;
+    global $user, $SCM_PRESET;
 
-	if ($scm_id == 'new_entry') $scm_id = null;
+    if ($scm_id == 'new_entry') $scm_id = null;
 
-	$scm = new StudipScmEntry($scm_id);
+    $scm = new StudipScmEntry($scm_id);
 
-	if ($preset)
-		$tab_name = $SCM_PRESET[$preset]["name"];
-	else if (trim($name) != '')
-		$tab_name = stripslashes($name);
-	else
-		$tab_name = _('[kein Titel]');
+    if ($preset)
+        $tab_name = $SCM_PRESET[$preset]["name"];
+    else if (trim($name) != '')
+        $tab_name = stripslashes($name);
+    else
+        $tab_name = _('[kein Titel]');
 
-	$scm->setValue('tab_name', $tab_name);
-	$scm->setValue('content', stripslashes($content));
-	$scm->setValue('user_id', $user->id);
-	$scm->setValue('range_id', $range_id);
+    $scm->setValue('tab_name', $tab_name);
+    $scm->setValue('content', stripslashes($content));
+    $scm->setValue('user_id', $user->id);
+    $scm->setValue('range_id', $range_id);
 
-	if ($scm->store() !== false) {
-		return $scm->getId();
-	} else {
-		return false;
-	}
+    if ($scm->store() !== false) {
+        return $scm->getId();
+    } else {
+        return false;
+    }
 }
 
 echo "</td></tr></table>";

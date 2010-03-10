@@ -26,56 +26,56 @@ require_once $GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/list_assign.inc.php";
 
 
 class MockObjectPerms {
-	function havePerm($foo){
-		return false;
-	}
+    function havePerm($foo){
+        return false;
+    }
 }
 
 function show_tree($rid, $level){
-	$rtree =& TreeAbstract::GetInstance('ResourcesExternTree', $GLOBALS['VIEWABLE_PROPERTY_ID']);
-	if ($rtree->getNumKids($rid)){
-		foreach ($rtree->getKids($rid) as $rrid){
-			echo chr(10).'<div class="tree" style="margin-left:'.($level*20).'px;">';
-			if($rtree->tree_data[$rrid]['viewable']){
-				echo "\n<a href=\"{$GLOBALS['PHP_SELF']}?view=sem_plan&semester_id={$GLOBALS['_semester_id']}&timespan={$GLOBALS['_timespan']}&rid=$rrid\">";
-			}
-			echo htmlReady($rtree->tree_data[$rrid]['name']);
-			if($rtree->tree_data[$rrid]['viewable']) echo '</a>';
-			echo '</div>';
-			show_tree($rrid, $level + 1);
-		}
-	}
+    $rtree =& TreeAbstract::GetInstance('ResourcesExternTree', $GLOBALS['VIEWABLE_PROPERTY_ID']);
+    if ($rtree->getNumKids($rid)){
+        foreach ($rtree->getKids($rid) as $rrid){
+            echo chr(10).'<div class="tree" style="margin-left:'.($level*20).'px;">';
+            if($rtree->tree_data[$rrid]['viewable']){
+                echo "\n<a href=\"{$GLOBALS['PHP_SELF']}?view=sem_plan&semester_id={$GLOBALS['_semester_id']}&timespan={$GLOBALS['_timespan']}&rid=$rrid\">";
+            }
+            echo htmlReady($rtree->tree_data[$rrid]['name']);
+            if($rtree->tree_data[$rrid]['viewable']) echo '</a>';
+            echo '</div>';
+            show_tree($rrid, $level + 1);
+        }
+    }
 }
 
 function show_sem_plan($rid, $semester_id, $timespan = 'sem_time'){
-	$rtree =& TreeAbstract::GetInstance('ResourcesExternTree', $GLOBALS['VIEWABLE_PROPERTY_ID']);
-	if ($rtree->tree_data[$rid]['viewable']){
-		$GLOBALS['ActualObjectPerms'] = new MockObjectPerms();
-		$ViewSchedules =& new ShowSemSchedules($rid, $semester_id, $timespan);
-		$ViewSchedules->showScheduleGraphical(1);
-	}
+    $rtree =& TreeAbstract::GetInstance('ResourcesExternTree', $GLOBALS['VIEWABLE_PROPERTY_ID']);
+    if ($rtree->tree_data[$rid]['viewable']){
+        $GLOBALS['ActualObjectPerms'] = new MockObjectPerms();
+        $ViewSchedules =& new ShowSemSchedules($rid, $semester_id, $timespan);
+        $ViewSchedules->showScheduleGraphical(1);
+    }
 }
 
 function show_sem_chooser($semester_id, $timespan){
-	$semester = SemesterData::GetSemesterArray();
-	unset($semester[0]);
-	echo chr(10) . '<form method="POST" name="schedule_form" action="'.$GLOBALS['PHP_SELF'].'?view='.$GLOBALS['_view'].'&rid='.$_REQUEST['rid'].'">';
-	echo chr(10) . '<div class="sem_chooser">' . _("Semester:");
-	echo chr(10) . '&nbsp;&nbsp;<select name="semester_id" onChange="document.schedule_form.submit()">';
-	foreach($semester as $one_sem){
-		echo "\n<option value=\"{$one_sem['semester_id']}\" "
-			. ($one_sem['semester_id'] == $semester_id ? "selected" : "")
-			. ">" . htmlReady($one_sem['name']) . "</option>";
-	}
-	 echo chr(10) . '</select>&nbsp;&nbsp;<input type="submit" name="jump" value="auswählen">';
-	 echo chr(10) . '<br>';
-	 echo chr(10) . '<input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" '
-	 			  . ($timespan == 'course_time' ? 'checked' : '').' name="timespan" value="course_time">'
-				  . _("Vorlesungszeit")
-				  .	'&nbsp;&nbsp;<input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" '
-				  . ($timespan == 'sem_time' ? 'checked' : '') .' name="timespan" value="sem_time">'
-				  . _("vorlesungsfreie Zeit")
-				  . '</div>';
-	echo chr(10) . '</form>';
+    $semester = SemesterData::GetSemesterArray();
+    unset($semester[0]);
+    echo chr(10) . '<form method="POST" name="schedule_form" action="'.$GLOBALS['PHP_SELF'].'?view='.$GLOBALS['_view'].'&rid='.$_REQUEST['rid'].'">';
+    echo chr(10) . '<div class="sem_chooser">' . _("Semester:");
+    echo chr(10) . '&nbsp;&nbsp;<select name="semester_id" onChange="document.schedule_form.submit()">';
+    foreach($semester as $one_sem){
+        echo "\n<option value=\"{$one_sem['semester_id']}\" "
+            . ($one_sem['semester_id'] == $semester_id ? "selected" : "")
+            . ">" . htmlReady($one_sem['name']) . "</option>";
+    }
+     echo chr(10) . '</select>&nbsp;&nbsp;<input type="submit" name="jump" value="auswählen">';
+     echo chr(10) . '<br>';
+     echo chr(10) . '<input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" '
+                  . ($timespan == 'course_time' ? 'checked' : '').' name="timespan" value="course_time">'
+                  . _("Vorlesungszeit")
+                  . '&nbsp;&nbsp;<input type="radio" onChange="document.schedule_form.submit()" style="vertical-align:bottom" '
+                  . ($timespan == 'sem_time' ? 'checked' : '') .' name="timespan" value="sem_time">'
+                  . _("vorlesungsfreie Zeit")
+                  . '</div>';
+    echo chr(10) . '</form>';
 }
 ?>

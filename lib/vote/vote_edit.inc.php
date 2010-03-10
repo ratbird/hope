@@ -39,9 +39,9 @@ define( "MODE_MODIFY", 1 );
 define( "MODE_RESTRICTED", 2 );
 
 define( "TITLE_HELPTEXT",
-	_("Geben Sie hier einen Titel ein (optional)") );
+    _("Geben Sie hier einen Titel ein (optional)") );
 define( "QUESTION_HELPTEXT",
-	_("Geben Sie hier Ihre Frage ein") );
+    _("Geben Sie hier Ihre Frage ein") );
 /* -------------------------------------------------------- */
 
 
@@ -62,25 +62,25 @@ if (isset($_REQUEST["voteID"])) {
 
 if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) || $auth->auth["uname"] == $rangeID ) ) {
     $reason = ( ! is_object($vote)
-		? _("Es macht wenig Sinn, die Editierseite aufzurufen, ohne den zu editierenden Vote anzugeben...")
-		: ( ! $vote->voteDB->isExistant($voteID)
-		    ? _("Angegebener Vote existiert nicht (mehr?) ...")
-		    : ($vote->x_instanceof() == INSTANCEOF_TEST
-		       ? sprintf(_("Sie haben keine Berechtigung den Test '%s' zu editieren."), $vote->getTitle())
-		       : sprintf(_("Sie haben keine Berechtigung das Voting '%s' zu editieren."), $vote->getTitle())
-		       )
-		    )
-		);
+        ? _("Es macht wenig Sinn, die Editierseite aufzurufen, ohne den zu editierenden Vote anzugeben...")
+        : ( ! $vote->voteDB->isExistant($voteID)
+            ? _("Angegebener Vote existiert nicht (mehr?) ...")
+            : ($vote->x_instanceof() == INSTANCEOF_TEST
+               ? sprintf(_("Sie haben keine Berechtigung den Test '%s' zu editieren."), $vote->getTitle())
+               : sprintf(_("Sie haben keine Berechtigung das Voting '%s' zu editieren."), $vote->getTitle())
+               )
+            )
+        );
 
     echo "<br>";
     parse_window( "error§" .
-		  _("Zugriff verweigert.").
-		  "<br><font size=-1 color=black>".
-		  $reason.
-		  "</font>",
-		  "§", _("Zugriff auf Editierseite verweigert"),
-		  "<br>&nbsp;"
-		  );
+          _("Zugriff verweigert.").
+          "<br><font size=-1 color=black>".
+          $reason.
+          "</font>",
+          "§", _("Zugriff auf Editierseite verweigert"),
+          "<br>&nbsp;"
+          );
 
     page_close ();
     exit;
@@ -99,9 +99,9 @@ if( ! $referer ) {
     $referer = removeArgFromURL( $referer, "voteID" );
     $referer = removeArgFromURL( $referer, "showrangeID" );
     if( $_POST['rangeID'] )
-	$referer .= "&showrangeID=".$_POST['rangeID'];
+    $referer .= "&showrangeID=".$_POST['rangeID'];
     elseif( $_REQUEST["showrangeID"] )
-	$referer .= "&showrangeID=".$showrangeID;
+    $referer .= "&showrangeID=".$showrangeID;
 }
 
 $voteID = $_POST['voteID'];    if( ! $voteID ) $voteID = $_GET['voteID'];
@@ -115,9 +115,9 @@ else               { $vote = &new Vote    ( $voteID ); }
 
 if( $voteID && !$makeACopy ) {
     if( $vote->isInUse( $voteID ) )  // && ! $perm->have_perm ("root") )
-	$pageMode = MODE_RESTRICTED;
+    $pageMode = MODE_RESTRICTED;
     else
-	$pageMode = MODE_MODIFY;
+    $pageMode = MODE_MODIFY;
 } else {
     $pageMode = MODE_CREATE;
 }
@@ -173,19 +173,19 @@ if( !isset($_POST["namesVisibility"]) && isset($_POST["title"]) )
 if( !isset( $answers ) ) {
     $answers = $vote->getAnswers();
     if( $makeACopy ) {
-	for( $i=0; $i<count($answers); $i++ ) {
-	    $answers[$i]['answer_id'] = md5(uniqid(rand()));
-	    $answers[$i]['counter']   = 0;
-	}
+    for( $i=0; $i<count($answers); $i++ ) {
+        $answers[$i]['answer_id'] = md5(uniqid(rand()));
+        $answers[$i]['counter']   = 0;
+    }
     }
 }
 
 if( empty( $answers ) ) {
     if( !isset( $addAnswersButton_x ) && !isset( $saveButton_x ) && !isset( $deleteAnswersButton_x ) ) {
-	for( $i=0; $i<5; $i++ )
-	    $answers[$i] = makeNewAnswer();
+    for( $i=0; $i<5; $i++ )
+        $answers[$i] = makeNewAnswer();
     } else
-	$answers = array();
+    $answers = array();
 }
 
 if( !isset( $title ) )           { $title = $vote->getTitle(); if( $makeACopy ) $title .= _(" (Kopie)"); }
@@ -203,17 +203,17 @@ if( $type == "test" ) {
 }
 if( !isset( $startMode ) ) {
     if( $startDate && $pageMode != MODE_CREATE )
-	$startMode = "timeBased";
+    $startMode = "timeBased";
     elseif( $pageMode != MODE_CREATE )
-	$startMode = "manual";
+    $startMode = "manual";
 }
 if( !isset( $stopMode ) ) {
     if( $stopDate )
-	$stopMode = "timeBased";
+    $stopMode = "timeBased";
     elseif ( $timeSpan )
-	$stopMode = "timeSpanBased";
+    $stopMode = "timeSpanBased";
     else
-	$stopMode = "manual";
+    $stopMode = "manual";
 }
 if( !isset( $voteID ) )   $voteID = $vote->getVoteID();
 if( !isset( $rangeID ) )  $rangeID = $vote->getRangeID();
@@ -225,30 +225,30 @@ if( $pageMode != MODE_RESTRICTED ) {
 
     /**** Command: add Answers ****/
     if( isset( $addAnswersButton_x ) ) {
-	for( $i=0; $i<$newAnswerFields; $i++ )
-	    array_push( $answers, makeNewAnswer() );
+    for( $i=0; $i<$newAnswerFields; $i++ )
+        array_push( $answers, makeNewAnswer() );
     }
 
     /**** Command: move Answers ****/
     elseif( isset( $move_up ) ) {
-	for( $i=0; $i<count($answers); $i++ )
-	    if( isset( $move_up[$i] ) )
-		moveAnswerUp( $answers, $i );
+    for( $i=0; $i<count($answers); $i++ )
+        if( isset( $move_up[$i] ) )
+        moveAnswerUp( $answers, $i );
     }
     elseif( isset( $move_down ) ) {
-	for( $i=0; $i<count($answers); $i++ )
-	    if( isset( $move_down[$i] ) )
-		moveAnswerDown( $answers, $i );
+    for( $i=0; $i<count($answers); $i++ )
+        if( isset( $move_down[$i] ) )
+        moveAnswerDown( $answers, $i );
     }
 
     /**** Command: delete Answers ****/
     elseif( isset( $deleteAnswersButton_x ) ) {
-	for( $i=0; $i<count($answers); $i++ ) {
-	    if( $deleteAnswers[$i] == "on" ) {
-		deleteAnswer( $i, $answers, $deleteAnswers );
-		$i--;
-	    }
-	}
+    for( $i=0; $i<count($answers); $i++ ) {
+        if( $deleteAnswers[$i] == "on" ) {
+        deleteAnswer( $i, $answers, $deleteAnswers );
+        $i--;
+        }
+    }
     }
 }
 
@@ -261,50 +261,50 @@ if( isset( $saveButton_x ) ) {
     // special case: creator wants to modify things in a running vote,
     // but in the meantime the first user has voted...
     if( $pageMode == MODE_RESTRICTED && !empty( $_POST["question"]) )
-	$vote->throwError(666, _("Inzwischen hat jemand abgestimmt! Sie k&ouml;nnen daher die meisten &Auml;nderungen nicht mehr vornehmen."), __LINE__, __FILE__);
+    $vote->throwError(666, _("Inzwischen hat jemand abgestimmt! Sie k&ouml;nnen daher die meisten &Auml;nderungen nicht mehr vornehmen."), __LINE__, __FILE__);
 
     if( $title == NULL )
-	if( $question != NULL )
-	    $title = my_substr( $question, 0, 50 );
+    if( $question != NULL )
+        $title = my_substr( $question, 0, 50 );
 
     $vote->setTitle( $title );
     /* -------------------------------------------------------- */
 
     if( $pageMode != MODE_RESTRICTED ) {
-	/* -------------------------------------------------------- */
-	$vote->setQuestion ( $question );
+    /* -------------------------------------------------------- */
+    $vote->setQuestion ( $question );
 
-	// remove any empty answers
-	for( $i=0; $i<count($answers); $i++ ) {
-	    if( empty( $answers[$i]['text'] ) ) {
-		deleteAnswer( $i, $answers, $deleteAnswers );
-		$i--;
-	    }
-	}
-	/* -------------------------------------------------------- */
-	$vote->setAnswers( $answers );
-	/* -------------------------------------------------------- */
-	switch( $startMode ) {
-	case "manual":
-	    $vote->setStartDate( NULL );
-	    break;
-	case "timeBased":
-	    $vote->setStartDate( $startDate );
-	    break;
-	case "immediate":
-	    $vote->setStartDate( time()-1 );
-	    break;
-	}
-	/* -------------------------------------------------------- */
-	$vote->setMultipleChoice( $multipleChoice );
-	$vote->setAnonymous( $anonymous );
-	if( $type == "test" ) $vote->setCo_Visibility( $co_visibility );
-	/* -------------------------------------------------------- */
-	if( $pageMode == MODE_CREATE ) {
-	    $vote->setRangeID( $rangeID );
-	    $vote->setAuthorID( $auth->auth["uid"] );
-	}
-	/* -------------------------------------------------------- */
+    // remove any empty answers
+    for( $i=0; $i<count($answers); $i++ ) {
+        if( empty( $answers[$i]['text'] ) ) {
+        deleteAnswer( $i, $answers, $deleteAnswers );
+        $i--;
+        }
+    }
+    /* -------------------------------------------------------- */
+    $vote->setAnswers( $answers );
+    /* -------------------------------------------------------- */
+    switch( $startMode ) {
+    case "manual":
+        $vote->setStartDate( NULL );
+        break;
+    case "timeBased":
+        $vote->setStartDate( $startDate );
+        break;
+    case "immediate":
+        $vote->setStartDate( time()-1 );
+        break;
+    }
+    /* -------------------------------------------------------- */
+    $vote->setMultipleChoice( $multipleChoice );
+    $vote->setAnonymous( $anonymous );
+    if( $type == "test" ) $vote->setCo_Visibility( $co_visibility );
+    /* -------------------------------------------------------- */
+    if( $pageMode == MODE_CREATE ) {
+        $vote->setRangeID( $rangeID );
+        $vote->setAuthorID( $auth->auth["uid"] );
+    }
+    /* -------------------------------------------------------- */
 
     }
 
@@ -312,17 +312,17 @@ if( isset( $saveButton_x ) ) {
     /* -------------------------------------------------------- */
     switch( $stopMode  ) {
     case "manual":
-	$vote->setStopDate( NULL );
-	$vote->setTimeSpan( NULL );
-	break;
+    $vote->setStopDate( NULL );
+    $vote->setTimeSpan( NULL );
+    break;
     case "timeBased":
-	$vote->setTimeSpan( NULL );
-	$vote->setStopDate( $stopDate );
-	break;
+    $vote->setTimeSpan( NULL );
+    $vote->setStopDate( $stopDate );
+    break;
     case "timeSpanBased":
-	$vote->setStopDate( NULL );
-	$vote->setTimeSpan( $timeSpan );
-	break;
+    $vote->setStopDate( NULL );
+    $vote->setTimeSpan( $timeSpan );
+    break;
     }
     /* -------------------------------------------------------- */
     $vote->setResultVisibility( $resultVisibility );
@@ -332,41 +332,41 @@ if( isset( $saveButton_x ) ) {
     // now all values are set...
 
     if( $pageMode != MODE_CREATE ) {
-	if( $vote->getAuthorID() != $auth->auth["uid"] ) {
-	    // user's vote has been modified by admin/root
-	    // --> send notification sms
-	    $sms = new messaging();
-			setTempLanguage($vote->getAuthorID());
-	    $smsText = sprintf( _("An Ihrem Vote/Test '%s' wurden von dem/der Administrator/in %s Änderungen vorgenommen."),
-				$vote->getTitle(),
-				$vote->voteDB->getAuthorRealname($auth->auth["uid"]) );
-			$sms->insert_message(mysql_escape_string( $smsText ), $vote->voteDB->getAuthorUsername($vote->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Vote/Test geändert"));
-			restoreLanguage();
-	}
+    if( $vote->getAuthorID() != $auth->auth["uid"] ) {
+        // user's vote has been modified by admin/root
+        // --> send notification sms
+        $sms = new messaging();
+            setTempLanguage($vote->getAuthorID());
+        $smsText = sprintf( _("An Ihrem Vote/Test '%s' wurden von dem/der Administrator/in %s Änderungen vorgenommen."),
+                $vote->getTitle(),
+                $vote->voteDB->getAuthorRealname($auth->auth["uid"]) );
+            $sms->insert_message(mysql_escape_string( $smsText ), $vote->voteDB->getAuthorUsername($vote->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Vote/Test geändert"));
+            restoreLanguage();
+    }
     }
 
     if( ! $vote->isError() ) {
-	// this is now always done (see above)
-	// if ($pageMode == MODE_RESTRICTED)
-	//    $vote->addSlashesToText(); // prevent mysql from crashing...
+    // this is now always done (see above)
+    // if ($pageMode == MODE_RESTRICTED)
+    //    $vote->addSlashesToText(); // prevent mysql from crashing...
 
-	// save vote to database!
-	$vote->executeWrite();
+    // save vote to database!
+    $vote->executeWrite();
 
-	if( ! $vote->isError() ) {
+    if( ! $vote->isError() ) {
 
-	    // clear outbut buffer, as we are leaving the edit page
-	    ob_end_clean();
-	    $referer .= ( ! strpos( $referer, "?" ) ) ? "?" : "&";
-	    $referer .= "voteaction=".($pageMode == MODE_CREATE ? "created" : "saved");
-	    $referer .= "&voteID=".$vote->getVoteID();
-	    header( "Location: ". URLHelper::getUrl($referer) );
-	}
+        // clear outbut buffer, as we are leaving the edit page
+        ob_end_clean();
+        $referer .= ( ! strpos( $referer, "?" ) ) ? "?" : "&";
+        $referer .= "voteaction=".($pageMode == MODE_CREATE ? "created" : "saved");
+        $referer .= "&voteID=".$vote->getVoteID();
+        header( "Location: ". URLHelper::getUrl($referer) );
+    }
     }
     else {
-	// Errors occured!
-	// They will be automatically printed by 'printFormStart'
-	// and the form will be displayed again...
+    // Errors occured!
+    // They will be automatically printed by 'printFormStart'
+    // and the form will be displayed again...
     }
 }
 
@@ -422,10 +422,10 @@ printFormEnd();
 function makeNewAnswer( ) {
 
     return array( 'answer_id' => md5(uniqid(rand())),
-		  'text'      => "",
-		  'counter'   => 0,
-		  'correct'   => NO
-		  );
+          'text'      => "",
+          'counter'   => 0,
+          'correct'   => NO
+          );
 }
 
 /**
@@ -440,21 +440,21 @@ function makeNewAnswer( ) {
 function moveAnswerUp( &$answers, $pos ) {
 
     if( $pos == 0 ) {
-	$temp = $answers[0];
-	unset( $answers[0] );
+    $temp = $answers[0];
+    unset( $answers[0] );
 
-	// move all other answers a field up
-	for( $i=0; $i<count($answers); $i++ ) {
-	    $answers[$i] = $answers[$i+1];
-	    unset( $answers[$i+1] );
-	}
-	$answers[count($answers)] = $temp;
+    // move all other answers a field up
+    for( $i=0; $i<count($answers); $i++ ) {
+        $answers[$i] = $answers[$i+1];
+        unset( $answers[$i+1] );
+    }
+    $answers[count($answers)] = $temp;
     }
 
     else {
-	$temp = $answers[$pos-1];
-	$answers[$pos-1] = $answers[$pos];
-	$answers[$pos] = $temp;
+    $temp = $answers[$pos-1];
+    $answers[$pos-1] = $answers[$pos];
+    $answers[$pos] = $temp;
     }
     return;
 }
@@ -472,21 +472,21 @@ function moveAnswerDown( &$answers, $pos ) {
 
     $last = count($answers)-1;
     if( $pos == $last ) {
-	$temp = $answers[$last];
-	unset( $answers[$last] );
+    $temp = $answers[$last];
+    unset( $answers[$last] );
 
-	// move all other answers a field down
-	for( $i=$last; $i>0; $i-- ) {
-	    $answers[$i] = $answers[$i-1];
-	    unset( $answers[$i-1] );
-	}
-	$answers[0] = $temp;
+    // move all other answers a field down
+    for( $i=$last; $i>0; $i-- ) {
+        $answers[$i] = $answers[$i-1];
+        unset( $answers[$i-1] );
+    }
+    $answers[0] = $temp;
     }
 
     else {
-	$temp = $answers[$pos+1];
-	$answers[$pos+1] = $answers[$pos];
-	$answers[$pos] = $temp;
+    $temp = $answers[$pos+1];
+    $answers[$pos+1] = $answers[$pos];
+    $answers[$pos] = $temp;
     }
     return;
 }
@@ -506,18 +506,18 @@ function deleteAnswer( $pos, &$answers, &$deleteAnswers ) {
 
     unset( $answers[$pos] );
     if( is_array( $deleteAnswers ) )
-	unset( $deleteAnswers[$pos] );
+    unset( $deleteAnswers[$pos] );
 
     for( $i=$pos; $i<count($answers); $i++ ) {
 
-	if( !isset( $answers[$i] ) ) {
-	    $answers[$i] = $answers[$i+1];
-	    unset( $answers[$i+1] );
-	    if( is_array( $deleteAnswers ) ) {
-		$deleteAnswers[$i] = $deleteAnswers[$i+1];
-		unset( $deleteAnswers[$i+1] );
-	    }
-	}
+    if( !isset( $answers[$i] ) ) {
+        $answers[$i] = $answers[$i+1];
+        unset( $answers[$i+1] );
+        if( is_array( $deleteAnswers ) ) {
+        $deleteAnswers[$i] = $deleteAnswers[$i+1];
+        unset( $deleteAnswers[$i+1] );
+        }
+    }
     }
     return;
 }
@@ -537,21 +537,21 @@ function removeArgFromURL( $URL, $arg ) {
     $pos = strpos( $URL, "$arg=" );
 
     if( $pos ) {
-	if( $URL[$pos-1] == "&" ) {
-	    // If pos-1 is pointing to a '&', knock pos back one, so it is removed.
-	    $pos--;
-	}
-	$nMax = strlen( $URL );
-	$nEndPos = strpos( $URL, "&", $pos+1 );
+    if( $URL[$pos-1] == "&" ) {
+        // If pos-1 is pointing to a '&', knock pos back one, so it is removed.
+        $pos--;
+    }
+    $nMax = strlen( $URL );
+    $nEndPos = strpos( $URL, "&", $pos+1 );
 
-	if( $nEndPos === false ) {
-	    // $arg is on the end of the URL
-	    $URL = substr( $URL, 0, $pos );
-	}
-	else {
-	    // $arg is in the URL
-	    $URL = str_replace( substr( $URL, $pos, $nEndPos-$pos ), '', $URL );
-	}
+    if( $nEndPos === false ) {
+        // $arg is on the end of the URL
+        $URL = substr( $URL, 0, $pos );
+    }
+    else {
+        // $arg is in the URL
+        $URL = str_replace( substr( $URL, $pos, $nEndPos-$pos ), '', $URL );
+    }
     }
     return $URL;
 }

@@ -174,7 +174,7 @@ class Evaluation {
 
       /* Load an evaluation or create a new one ---------------------------- */
       if ($evalID) {
-	$this->db->loadEvaluation ($this);
+    $this->db->loadEvaluation ($this);
       }
       /* ------------------------------------------------------------------- */
    }
@@ -190,7 +190,7 @@ class Evaluation {
     */
    function setTitle ($title) {
       if (empty ($title))
-	trigger_error (_("Der Titel darf nicht leer sein."), E_USER_ERROR);
+    trigger_error (_("Der Titel darf nicht leer sein."), E_USER_ERROR);
 
       $this->title = $title;
    }

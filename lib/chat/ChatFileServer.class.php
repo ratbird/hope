@@ -28,16 +28,16 @@ require_once $GLOBALS['RELATIVE_PATH_CHAT']."/FileHandler.class.php";
 *  Chat Server class (file based)
 *
 *
-* @access	public
-* @author	André Noack <andre.noack@gmx.net>
-* @package	Chat
+* @access   public
+* @author   André Noack <andre.noack@gmx.net>
+* @package  Chat
 */
 class ChatFileServer extends ChatServer {
 
-	function ChatFileServer(){
-		$this->that = new FileHandler($file_name = CHAT_FILE_NAME,$file_path = CHAT_FILE_PATH);
-		parent::ChatServer();
-	}
+    function ChatFileServer(){
+        $this->that = new FileHandler($file_name = CHAT_FILE_NAME,$file_path = CHAT_FILE_PATH);
+        parent::ChatServer();
+    }
 
 }
 ?>

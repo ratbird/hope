@@ -165,10 +165,10 @@ class Evaluation extends EvaluationObject {
    function setStartdate ($startdate) {
      if (!empty ($startdate)) {
        if (!empty ($this->stopdate) && $startdate > $this->stopdate)
-	 return $this->throwError 
-	   (1, _("Das Startdatum ist nach dem Stoppdatum."));
+     return $this->throwError 
+       (1, _("Das Startdatum ist nach dem Stoppdatum."));
        if ($startdate <= 0)
-	 return $this->throwError (1, _("Das Startdatum ist leider ungültig."));
+     return $this->throwError (1, _("Das Startdatum ist leider ungültig."));
      }
      $this->startdate = $startdate;
    }

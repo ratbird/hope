@@ -1,7 +1,7 @@
 <?php
 # Lifter005: TODO - form validation
-	$cfg =& Config::GetInstance();
-	$email_restriction = $cfg->getValue('EMAIL_DOMAIN_RESTRICTION');
+    $cfg =& Config::GetInstance();
+    $email_restriction = $cfg->getValue('EMAIL_DOMAIN_RESTRICTION');
 ?>
 <script type="text/javascript" language="javascript" src="<?=$GLOBALS['ASSETS_URL']?>javascripts/md5.js"></script>
 <script type="text/javascript" language="javaScript">
@@ -11,14 +11,14 @@ function checkusername(){
  var checked = true;
  if (document.login.username.value.length<4) {
     alert("<?=_("Der Benutzername ist zu kurz \\n- er sollte mindestens 4 Zeichen lang sein.")?>");
- 		document.login.username.focus();
+        document.login.username.focus();
     checked = false;
     }
  if (re_username.test(document.login.username.value)==false) {
     alert("<?=_("Der Benutzername enthält unzulässige Zeichen \\n- er darf keine Sonderzeichen oder Leerzeichen enthalten.")?>");
- 		document.login.username.focus();
+        document.login.username.focus();
     checked = false;
-		}
+        }
  return checked;
 }
 
@@ -26,7 +26,7 @@ function checkpassword(){
  var checked = true;
  if (document.login.password.value.length<4) {
     alert("<?=_("Das Passwort ist zu kurz \\n- es sollte mindestens 4 Zeichen lang sein.")?>");
- 		document.login.password.focus();
+        document.login.password.focus();
     checked = false;
     }
  return checked;
@@ -36,7 +36,7 @@ function checkpassword2(){
  var checked = true;
 if (document.login.password.value != document.login.password2.value) {
     alert("<?=_("Das Passwort stimmt nicht mit dem Bestätigungspasswort überein!")?>");
-    		document.login.password2.focus();
+            document.login.password2.focus();
     checked = false;
     }
  return checked;
@@ -47,9 +47,9 @@ function checkVorname(){
  var checked = true;
  if (re_vorname.test(document.login.Vorname.value)==false) {
     alert("<?=_("Bitte geben Sie Ihren tatsächlichen Vornamen an.")?>");
- 		document.login.Vorname.focus();
+        document.login.Vorname.focus();
     checked = false;
-		}
+        }
  return checked;
 }
 
@@ -58,25 +58,25 @@ function checkNachname(){
  var checked = true;
  if (re_nachname.test(document.login.Nachname.value)==false) {
     alert("<?=_("Bitte geben Sie Ihren tatsächlichen Nachnamen an.")?>");
- 		document.login.Nachname.focus();
+        document.login.Nachname.focus();
     checked = false;
-		}
+        }
  return checked;
 }
 
 function checkEmail(){
  <? if (trim($email_restriction)) {
-			echo 'var re_email = /' . $validator->email_regular_expression_restricted_part . '/;';
-		} else {
-			echo 'var re_email = /' . $validator->email_regular_expression . '/;';
-		}
+            echo 'var re_email = /' . $validator->email_regular_expression_restricted_part . '/;';
+        } else {
+            echo 'var re_email = /' . $validator->email_regular_expression . '/;';
+        }
 ?>
 
  var Email = document.login.Email.value;
  var checked = true;
  if ((re_email.test(Email))==false || Email.length==0) {
     alert("<?=_("Die E-Mail Adresse ist nicht korrekt!")?>");
- 		document.login.Email.focus();
+        document.login.Email.focus();
     checked = false;
     }
  return checked;
@@ -112,9 +112,9 @@ function checkdata(){
 
 <table class="logintable" width="800" align="center" border="0" cellpadding="0" cellspacing="0">
 <tr>
-	<td class="topic">
-	<b>&nbsp;<?=_("Stud.IP - Registrierung")?></b>
-	</td>
+    <td class="topic">
+    <b>&nbsp;<?=_("Stud.IP - Registrierung")?></b>
+    </td>
 </tr>
 <tr><td class="blank" align="top">
 <div style="margin:20px;">
@@ -122,12 +122,12 @@ function checkdata(){
 <br>
 <?=_("Bitte f&uuml;llen Sie zur Anmeldung das Formular aus:")?>
 <?if ( isset($username) ): ?>
-	<!-- failed login code -->
-	<table>
-		<tr>
-			<? parse_msg ("error§" . _("Bei der Registrierung ist ein Fehler aufgetreten:") . " <b>".$error_msg."</b>" . _("Bitte korrigieren Sie Ihre Eingaben und versuchen Sie es erneut") . "</b>", "§", "blank", 1, FALSE );?>
-		</tr>
-	</table>
+    <!-- failed login code -->
+    <table>
+        <tr>
+            <? parse_msg ("error§" . _("Bei der Registrierung ist ein Fehler aufgetreten:") . " <b>".$error_msg."</b>" . _("Bitte korrigieren Sie Ihre Eingaben und versuchen Sie es erneut") . "</b>", "§", "blank", 1, FALSE );?>
+        </tr>
+    </table>
 <?endif;?>
 <br><br>
 <form name=login action="<?=$_SERVER['REQUEST_URI']?>" onsubmit="return checkdata()">
@@ -153,10 +153,10 @@ function checkdata(){
   <select name="title_chooser_front" onChange="document.login.title_front.value=document.login.title_chooser_front.options[document.login.title_chooser_front.selectedIndex].text;">
   <?
   for($i = 0; $i < count($GLOBALS['TITLE_FRONT_TEMPLATE']); ++$i){
-	  echo "\n<option";
-	  if($GLOBALS['TITLE_FRONT_TEMPLATE'][$i] == $title_front)
-	  	echo " selected ";
-	  echo ">" . $GLOBALS['TITLE_FRONT_TEMPLATE'][$i] . "</option>";
+      echo "\n<option";
+      if($GLOBALS['TITLE_FRONT_TEMPLATE'][$i] == $title_front)
+        echo " selected ";
+      echo ">" . $GLOBALS['TITLE_FRONT_TEMPLATE'][$i] . "</option>";
   }
   ?>
   </select>
@@ -170,10 +170,10 @@ function checkdata(){
   <select name="title_chooser_rear" onChange="document.login.title_rear.value=document.login.title_chooser_rear.options[document.login.title_chooser_rear.selectedIndex].text;">
   <?
   for($i = 0; $i < count($GLOBALS['TITLE_REAR_TEMPLATE']); ++$i){
-	  echo "\n<option";
-	  if($GLOBALS['TITLE_REAR_TEMPLATE'][$i] == $title_rear)
-	  	echo " selected ";
-	echo ">" . $GLOBALS['TITLE_REAR_TEMPLATE'][$i] . "</option>";
+      echo "\n<option";
+      if($GLOBALS['TITLE_REAR_TEMPLATE'][$i] == $title_rear)
+        echo " selected ";
+    echo ">" . $GLOBALS['TITLE_REAR_TEMPLATE'][$i] . "</option>";
   }
   ?>
   </select></td>
@@ -196,26 +196,26 @@ function checkdata(){
 
 <tr valign=top align=left>
   <td colspan="2"><?=_("E-Mail:")?></td>
-	<?
-	echo '<td nowrap="nowrap"><input type="text" name="Email" onchange="checkEmail()"  value="';
-	if (trim($email_restriction)) {
-		echo (isset($Email) ? preg_replace('|@.*|', '', trim($Email)) : '' );
-		echo "\" size=20 maxlength=63>\n";
-		$email_restriction_parts = explode(',', $email_restriction);
-		echo '&nbsp;<select name="emaildomain">';
-		foreach ($email_restriction_parts as $email_restriction_part) {
-			echo '<option value="' . trim($email_restriction_part) . '"';
-			if (trim($email_restriction_part) == $_REQUEST['emaildomain']) {
-				echo ' selected="selected"';
-			}
-			echo '>@' . trim($email_restriction_part) . "</option>\n";
-		}
-		echo '</select>';
-	} else {
-		echo (isset($Email) ? trim($Email) : '' ) ."\" size=32 maxlength=63>\n" ;
-	}
-	?>
-	</td>
+    <?
+    echo '<td nowrap="nowrap"><input type="text" name="Email" onchange="checkEmail()"  value="';
+    if (trim($email_restriction)) {
+        echo (isset($Email) ? preg_replace('|@.*|', '', trim($Email)) : '' );
+        echo "\" size=20 maxlength=63>\n";
+        $email_restriction_parts = explode(',', $email_restriction);
+        echo '&nbsp;<select name="emaildomain">';
+        foreach ($email_restriction_parts as $email_restriction_part) {
+            echo '<option value="' . trim($email_restriction_part) . '"';
+            if (trim($email_restriction_part) == $_REQUEST['emaildomain']) {
+                echo ' selected="selected"';
+            }
+            echo '>@' . trim($email_restriction_part) . "</option>\n";
+        }
+        echo '</select>';
+    } else {
+        echo (isset($Email) ? trim($Email) : '' ) ."\" size=32 maxlength=63>\n" ;
+    }
+    ?>
+    </td>
  </tr>
 
  <tr>

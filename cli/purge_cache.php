@@ -6,8 +6,8 @@
 * 
 * 
 *
-* @author		André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
+* @author       André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP

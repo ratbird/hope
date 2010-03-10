@@ -54,7 +54,7 @@ class of_checkbox extends of_element {
         reset($this->value);
         while (list($k,$v) = each($this->value)) {
           if ($v==$val) {
-	          $x = 1;
+              $x = 1;
             $str .= "<input type='hidden' name='$this->name' value='$v'>\n";
             $t =" bgcolor=#333333";
             break;

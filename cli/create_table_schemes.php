@@ -8,8 +8,8 @@
 * 
 * 
 *
-* @author		André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
+* @author       André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -34,14 +34,14 @@
 require_once dirname(__FILE__) . '/studip_cli_env.inc.php';
 exec("grep -l 'extends SimpleORMap' $STUDIP_BASE_PATH/lib/classes/*.class.php", $output, $ok);
 if(!$ok ){
-	fwrite(STDOUT, "<?php\n//copy to \$STUDIP_BASE_PATH/lib/dbviews/table_schemes.inc.php\n//generated ". date('r') ."\n");
-	foreach($output as $line){
-		require_once $line;
-		list($classname,,) = explode('.',basename($line));
-		$o = new $classname();
-		fwrite(STDOUT, $o->exportScheme());
-	}
-	fwrite(STDOUT, "?>");
+    fwrite(STDOUT, "<?php\n//copy to \$STUDIP_BASE_PATH/lib/dbviews/table_schemes.inc.php\n//generated ". date('r') ."\n");
+    foreach($output as $line){
+        require_once $line;
+        list($classname,,) = explode('.',basename($line));
+        $o = new $classname();
+        fwrite(STDOUT, $o->exportScheme());
+    }
+    fwrite(STDOUT, "?>");
 }
 
 ?>

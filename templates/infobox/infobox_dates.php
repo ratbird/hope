@@ -47,7 +47,7 @@
 
       <!-- Aktionen -->
 
-			<? if ($rechte) : ?>
+            <? if ($rechte) : ?>
       <tr>
         <td class="infobox" width="100%" colspan="2">
           <font size="-1"><b><?=_("Aktionen")?>:</b></font>
@@ -61,8 +61,8 @@
          </td>
          <td class="infobox" width="99%" align="left">
            <font size="-1">
-					   <a href="<?= URLHelper::getLink("raumzeit.php?cmd=createNewSingleDate#newSingleDate")?>"><?= _("Einen neuen Termin anlegen") ?></a>
-					 </font>
+                       <a href="<?= URLHelper::getLink("raumzeit.php?cmd=createNewSingleDate#newSingleDate")?>"><?= _("Einen neuen Termin anlegen") ?></a>
+                     </font>
            <br>
          </td>
       </tr>
@@ -73,8 +73,8 @@
          </td>
          <td class="infobox" width="99%" align="left">
            <font size="-1">
-					   <a href="<?= URLHelper::getLink("raumzeit.php")?>"><?= _("Zur Terminverwaltung") ?></a>
-					 </font>
+                       <a href="<?= URLHelper::getLink("raumzeit.php")?>"><?= _("Zur Terminverwaltung") ?></a>
+                     </font>
            <br>
          </td>
       </tr>
@@ -85,8 +85,8 @@
          </td>
          <td class="infobox" width="99%" align="left">
            <font size="-1">
-					   <a href="<?= URLHelper::getLink("themen.php")?>"><?= _("Zur Ablaufplanverwaltung") ?></a>
-					 </font>
+                       <a href="<?= URLHelper::getLink("themen.php")?>"><?= _("Zur Ablaufplanverwaltung") ?></a>
+                     </font>
            <br>
          </td>
       </tr>
@@ -97,12 +97,12 @@
          </td>
          <td class="infobox" width="99%" align="left">
            <font size="-1">
-					   <a href="<?= URLHelper::getLink("dates.php?export=true")?>"><?= _("Exportieren") ?></a>
-					 </font>
+                       <a href="<?= URLHelper::getLink("dates.php?export=true")?>"><?= _("Exportieren") ?></a>
+                     </font>
            <br>
          </td>
       </tr>
-			<? endif; ?>
+            <? endif; ?>
 
     </table>
     </td>

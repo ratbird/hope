@@ -972,7 +972,7 @@ class EvalOverview {
          return $safeguard;
 
 
-/*	case "export_gfx_request":
+/*  case "export_gfx_request":
             $haveNoPerm = YES;
             $eval       = new Evaluation ($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
             $haveNoPerm = EvaluationObjectDB::getEvalUserRangesWithNoPermission ($eval);

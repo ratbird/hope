@@ -109,7 +109,7 @@ class CT_Sql {
  
     if ( $this->db->affected_rows() == 0
         && $this->db->query($squery)
-	&& $this->db->next_record() && $this->db->f(0) == 0
+    && $this->db->next_record() && $this->db->f(0) == 0
         && !$this->db->query($iquery)) {
 
         $ret = false;

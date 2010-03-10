@@ -17,19 +17,19 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-	/**
-	* Dummy class
-	*
-	* Used in dates_search.php in order to create a dummy user for
-	* DbCalendarEventList and bindSeminarEvents().<br/>
-	* So please do not delete :-)
-	*
-	* @access	public
-	* @author	Florian Hansen <f1701h@gmx.net>
-	* @version	0.1		16.09.2003	14:08:31
-	* @package	WAP
-	*/
-	class Dummy
-	{
-	}
+    /**
+    * Dummy class
+    *
+    * Used in dates_search.php in order to create a dummy user for
+    * DbCalendarEventList and bindSeminarEvents().<br/>
+    * So please do not delete :-)
+    *
+    * @access   public
+    * @author   Florian Hansen <f1701h@gmx.net>
+    * @version  0.1     16.09.2003  14:08:31
+    * @package  WAP
+    */
+    class Dummy
+    {
+    }
 ?>

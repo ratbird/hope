@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElementStudipInfo
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElementStudipInfo
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -41,88 +41,88 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
 
 class ExternElementStudipInfo extends ExternElement {
 
-	var $attributes = array("headline", "homeinst", "involvedinst", "countuser",
-			"countpostings", "countdocuments", "font_face", "font_size", "font_color",
-			"font_class", "font_style");
+    var $attributes = array("headline", "homeinst", "involvedinst", "countuser",
+            "countpostings", "countdocuments", "font_face", "font_size", "font_color",
+            "font_class", "font_style");
 
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementStudipInfo ($config = "") {
-		if ($config)
-			$this->config = $config;
-		
-		$this->name = "StudipInfo";
-		$this->real_name = _("Informationen aus Stud.IP");
-		$this->description = _("Anzeige weiterer Informationen aus Stud.IP im Modul &quot;Veranstaltungsdetails&quot;.");
-	}
-	
-	/**
-	* 
-	*/
-	function getDefaultConfig () {
-		$config = array(
-			"headline" => _("Weitere Informationen aus Stud.IP zu dieser Veranstaltung"),
-			"homeinst" => _("Heimatinstitut:"),
-			"involvedinst" => _("beteiligte Institute:"),
-			"countuser" => _("In Stud.IP angemeldete Teilnehmer:"),
-			"countpostings" => _("Anzahl der Postings im Stud.IP-Forum:"),
-			"countdocuments" => _("Anzahl der Dokumente im Stud.IP-Downloadbereich:")
-		);
-		
-		return $config;
-	}
-	
-	function toStringEdit ($post_vars = "", $faulty_values = "",
-			$edit_form = "", $anker = "") {
-			
-		if ($faulty_values == '')
-			$faulty_values = array();	
-		$out = '';
-		$tag_headline = '';
-		$table = '';
-		if ($edit_form == '')
-			$edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
-		
-		$edit_form->setElementName($this->getName());
-		$element_headline = $this->getEditFormHeadline($edit_form);
-		
-		$headline = $edit_form->editHeadline(_("Textersetzungen"));
-		
-		$info = _("Geben Sie jeweils einen Text ein, der an der entsprechenden Stelle ausgegeben werden soll.");
-		$attributes = array("headline", "homeinst", "involvedinst", "countuser",
-				"countpostings", "countdocuments");
-		$titles = array(_("&Uuml;berschrift:"), _("Heimatinstitut:"), _("beteiligte Institute:"),
-				_("Teilnehmer:"), _("Postings:"), _("Dokumente:"));
-		for ($i = 0; $i < sizeof($attributes); $i++)
-			$table .= $edit_form->editTextfieldGeneric($attributes[$i], $titles[$i], $info, 40, 150);
-		
-		$content_table = $edit_form->editContentTable($headline, $table);
-		$content_table .= $edit_form->editBlankContent();
-		
-		$attributes = array("font_face", "font_size", "font_color",	"font_class", "font_style");
-		$headlines = array("font" => _("Schriftformatierung f&uuml;r Textersetzungen"));
-		$content_table .= $edit_form->getEditFormContent($attributes, $headlines);
-		$content_table .= $edit_form->editBlankContent();
-		
-		$submit = $edit_form->editSubmit($this->config->getName(),
-				$this->config->getId(), $this->getName());
-		$out = $edit_form->editContent($content_table, $submit);
-		$out .= $edit_form->editBlank();
-		
-		return  $element_headline . $out;
-	}
-	
-	function toString ($args) {
-		if ($attributes_font = $this->config->getAttributes($this->name, "font"))
-			return "\n" . $this->config->getTag($this->name, "font") . $args["content"]
-				. "</font>";
-				
-		return $args["content"];
-	}
-	
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementStudipInfo ($config = "") {
+        if ($config)
+            $this->config = $config;
+        
+        $this->name = "StudipInfo";
+        $this->real_name = _("Informationen aus Stud.IP");
+        $this->description = _("Anzeige weiterer Informationen aus Stud.IP im Modul &quot;Veranstaltungsdetails&quot;.");
+    }
+    
+    /**
+    * 
+    */
+    function getDefaultConfig () {
+        $config = array(
+            "headline" => _("Weitere Informationen aus Stud.IP zu dieser Veranstaltung"),
+            "homeinst" => _("Heimatinstitut:"),
+            "involvedinst" => _("beteiligte Institute:"),
+            "countuser" => _("In Stud.IP angemeldete Teilnehmer:"),
+            "countpostings" => _("Anzahl der Postings im Stud.IP-Forum:"),
+            "countdocuments" => _("Anzahl der Dokumente im Stud.IP-Downloadbereich:")
+        );
+        
+        return $config;
+    }
+    
+    function toStringEdit ($post_vars = "", $faulty_values = "",
+            $edit_form = "", $anker = "") {
+            
+        if ($faulty_values == '')
+            $faulty_values = array();   
+        $out = '';
+        $tag_headline = '';
+        $table = '';
+        if ($edit_form == '')
+            $edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
+        
+        $edit_form->setElementName($this->getName());
+        $element_headline = $this->getEditFormHeadline($edit_form);
+        
+        $headline = $edit_form->editHeadline(_("Textersetzungen"));
+        
+        $info = _("Geben Sie jeweils einen Text ein, der an der entsprechenden Stelle ausgegeben werden soll.");
+        $attributes = array("headline", "homeinst", "involvedinst", "countuser",
+                "countpostings", "countdocuments");
+        $titles = array(_("&Uuml;berschrift:"), _("Heimatinstitut:"), _("beteiligte Institute:"),
+                _("Teilnehmer:"), _("Postings:"), _("Dokumente:"));
+        for ($i = 0; $i < sizeof($attributes); $i++)
+            $table .= $edit_form->editTextfieldGeneric($attributes[$i], $titles[$i], $info, 40, 150);
+        
+        $content_table = $edit_form->editContentTable($headline, $table);
+        $content_table .= $edit_form->editBlankContent();
+        
+        $attributes = array("font_face", "font_size", "font_color", "font_class", "font_style");
+        $headlines = array("font" => _("Schriftformatierung f&uuml;r Textersetzungen"));
+        $content_table .= $edit_form->getEditFormContent($attributes, $headlines);
+        $content_table .= $edit_form->editBlankContent();
+        
+        $submit = $edit_form->editSubmit($this->config->getName(),
+                $this->config->getId(), $this->getName());
+        $out = $edit_form->editContent($content_table, $submit);
+        $out .= $edit_form->editBlank();
+        
+        return  $element_headline . $out;
+    }
+    
+    function toString ($args) {
+        if ($attributes_font = $this->config->getAttributes($this->name, "font"))
+            return "\n" . $this->config->getTag($this->name, "font") . $args["content"]
+                . "</font>";
+                
+        return $args["content"];
+    }
+    
 }
 
 ?>

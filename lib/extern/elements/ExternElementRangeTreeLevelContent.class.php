@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElement
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElement
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -40,65 +40,65 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
 
 class ExternElementRangeTreeLevelContent extends ExternElement {
 
-	var $attributes = array("mapping", "aliases", "table_bgcolor",
-				"table_cellpadding", "table_cellspacing", "table_class",
-				"table_style", "td_height", "td_align", "td_valign", "td_bgcolor",
-				"td_class", "td_style", "font_face", "font_size", "font_color",
-				"font_class", "font_style");
+    var $attributes = array("mapping", "aliases", "table_bgcolor",
+                "table_cellpadding", "table_cellspacing", "table_class",
+                "table_style", "td_height", "td_align", "td_valign", "td_bgcolor",
+                "td_class", "td_style", "font_face", "font_size", "font_color",
+                "font_class", "font_style");
 
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementRangeTreeLevelContent ($config = "") {
-		if ($config)
-			$this->config = $config;
-		
-		$this->name = "RangeTreeLevelContent";
-		$this->real_name = _("Inhalt der Ebene");
-		$this->description = _("Formatierung des Ebeneninhalts in einer Baum-Navigation.");
-	}
-	
-	function getDefaultConfig () {
-		$config = parent::getDefaultConfig();
-		$config["mapping"] = "|Strasse|Plz|telefon|fax|email|url";
-		$config["aliases"] = "|"._("Stra&szlig;e:")."|"._("Ort:")."|"._("Telefon:")
-				."|"._("Fax:")."|"._("Email:")."|"._("Homepage:");
-		
-		return $config;
-	}
-	
-	function toStringEdit ($post_vars = "", $faulty_values = "",
-			$edit_form = "", $anker = "") {
-		if ($faulty_values == '')
-			$faulty_values = array();	
-		$out = '';
-		$tag_headline = '';
-		$table = '';
-		if ($edit_form == '')
-			$edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
-		
-		$edit_form->setElementName($this->getName());
-		$element_headline = $this->getEditFormHeadline($edit_form);
-		
-		$headline = $edit_form->editHeadline(_("Bezeichnungen"));
-		$info = _("Geben Sie eine alternative Bezeichnung ein.");
-		$names = array(_("Stra&szlig;e"), _("Ort"), _("Telefon"), _("Fax"), _("Email"), _("Homepage"));
-		$content = $edit_form->editTextfieldGeneric("aliases", $names, $info, 30, 60);
-		
-		$content_table = $edit_form->editContentTable($headline, $content);
-		$content_table .= $edit_form->editBlankContent();
-		
-		$out = $content_table . $edit_form->getEditFormContent($this->attributes);
-		
-		$submit = $edit_form->editSubmit($this->config->getName(),
-				$this->config->getId(), $this->getName());
-		$out = $edit_form->editContent($out, $submit);
-		$out .= $edit_form->editBlank();
-		
-		return  $element_headline . $out;
-	}
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementRangeTreeLevelContent ($config = "") {
+        if ($config)
+            $this->config = $config;
+        
+        $this->name = "RangeTreeLevelContent";
+        $this->real_name = _("Inhalt der Ebene");
+        $this->description = _("Formatierung des Ebeneninhalts in einer Baum-Navigation.");
+    }
+    
+    function getDefaultConfig () {
+        $config = parent::getDefaultConfig();
+        $config["mapping"] = "|Strasse|Plz|telefon|fax|email|url";
+        $config["aliases"] = "|"._("Stra&szlig;e:")."|"._("Ort:")."|"._("Telefon:")
+                ."|"._("Fax:")."|"._("Email:")."|"._("Homepage:");
+        
+        return $config;
+    }
+    
+    function toStringEdit ($post_vars = "", $faulty_values = "",
+            $edit_form = "", $anker = "") {
+        if ($faulty_values == '')
+            $faulty_values = array();   
+        $out = '';
+        $tag_headline = '';
+        $table = '';
+        if ($edit_form == '')
+            $edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
+        
+        $edit_form->setElementName($this->getName());
+        $element_headline = $this->getEditFormHeadline($edit_form);
+        
+        $headline = $edit_form->editHeadline(_("Bezeichnungen"));
+        $info = _("Geben Sie eine alternative Bezeichnung ein.");
+        $names = array(_("Stra&szlig;e"), _("Ort"), _("Telefon"), _("Fax"), _("Email"), _("Homepage"));
+        $content = $edit_form->editTextfieldGeneric("aliases", $names, $info, 30, 60);
+        
+        $content_table = $edit_form->editContentTable($headline, $content);
+        $content_table .= $edit_form->editBlankContent();
+        
+        $out = $content_table . $edit_form->getEditFormContent($this->attributes);
+        
+        $submit = $edit_form->editSubmit($this->config->getName(),
+                $this->config->getId(), $this->getName());
+        $out = $edit_form->editContent($out, $submit);
+        $out .= $edit_form->editBlank();
+        
+        return  $element_headline . $out;
+    }
 }
 
 ?>

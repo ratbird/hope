@@ -32,26 +32,26 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // <META HTTP-EQUIV="REFRESH" CONTENT="<?php print $auth->lifetime*60;?>; URL=logout.php">
 -->
   <title>Stud.IP</title>
-	<link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="style.css" type="text/css">
  </head>
 
 <body>
 
 
 <?php
-	include "seminar_open.php"; //hier werden die sessions initialisiert
+    include "seminar_open.php"; //hier werden die sessions initialisiert
 
 // hier muessen Seiten-Initialisierungen passieren
 
-	include "header.php";   //hier wird der "Kopf" nachgeladen 
-	include "forum.inc.php"; 	
-	
+    include "header.php";   //hier wird der "Kopf" nachgeladen 
+    include "forum.inc.php";    
+    
 ?>
 <body>
 
 <table border=0 bgcolor="#000000" align="center" cellspacing=0 cellpadding=0 width=100%>
 <tr valign=top align=middle>
-	<td class="topic"colspan=2 align="left"><b>&nbsp;Umwandeln der Eintr&auml;ge f&uuml;r R&auml;ume in neues Format</b></td>
+    <td class="topic"colspan=2 align="left"><b>&nbsp;Umwandeln der Eintr&auml;ge f&uuml;r R&auml;ume in neues Format</b></td>
 </tr>
 
 <?
@@ -63,15 +63,15 @@ $level = 0;
 $db->query("select Seminar_id, Ort, metadata_dates from seminare ");
 
 while ($db->next_record()) {
-	$term_data = unserialize ($db->f("metadata_dates"));
-	if ($term_data["art"]==0) {
-		if (is_array($term_data["turnus_data"]))
-			foreach ($term_data["turnus_data"] as $key=>$val) {
-				$term_data["turnus_data"][$key]["room"] = $db->f("Ort");
-			}
-	}
-	$metadata = serialize ($term_data);
-	$db2->query("update seminare set metadata_dates = '$metadata' where Seminar_id = '".$db->f("Seminar_id")."' ");
+    $term_data = unserialize ($db->f("metadata_dates"));
+    if ($term_data["art"]==0) {
+        if (is_array($term_data["turnus_data"]))
+            foreach ($term_data["turnus_data"] as $key=>$val) {
+                $term_data["turnus_data"][$key]["room"] = $db->f("Ort");
+            }
+    }
+    $metadata = serialize ($term_data);
+    $db2->query("update seminare set metadata_dates = '$metadata' where Seminar_id = '".$db->f("Seminar_id")."' ");
 }
 
 ?>

@@ -27,16 +27,16 @@ require_once 'PDOHandler.class.php';
 *  Chat Server class (PDO based)
 *
 *
-* @access	public
-* @author	André Noack <andre.noack@gmx.net>
-* @package	Chat
+* @access   public
+* @author   André Noack <andre.noack@gmx.net>
+* @package  Chat
 */
 class ChatPDOServer extends ChatServer {
 
-	function ChatPDOServer(){
-		$this->that =& new PDOHandler($table_name = CHAT_DB_TABLE_NAME);
-		parent::ChatServer();
-	}
+    function ChatPDOServer(){
+        $this->that =& new PDOHandler($table_name = CHAT_DB_TABLE_NAME);
+        parent::ChatServer();
+    }
 
 }
 ?>

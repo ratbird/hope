@@ -5,7 +5,7 @@
 
 /*
  * contentmodule_webservice.php - Provides webservices for infos about
- * 	contentmodules
+ *  contentmodules
  *
  * Copyright (C) 2006 - Marco Diedrich (mdiedric@uos.de)
  *
@@ -19,8 +19,8 @@ require_once('lib/webservices/api/studip_contentmodule.php');
 
 class ContentmoduleService extends Studip_Ws_Service
 {
-	function ContentmoduleService()
-	{
+    function ContentmoduleService()
+    {
     $this->add_api_method('find_seminars_using_contentmodule',
                           array('string', 'string', 'string'),
                           array('string'),
@@ -31,25 +31,25 @@ class ContentmoduleService extends Studip_Ws_Service
                           array('string'),
                           '');
 
-	}
+    }
 
   function before_filter($name, &$args) 
-	{
+    {
 
     # get api_key
     $api_key = current($args);
     
     if ($api_key != $GLOBALS['STUDIP_API_KEY'])
       return new Studip_Ws_Fault('Could not authenticate client.');
-	}
+    }
 
-	function find_seminars_using_contentmodule_action($api_key, $system_type, $module_id)
-	{
-		return StudipContentmoduleHelper::find_seminars_using_contentmodule($system_type, $module_id);
-	}
+    function find_seminars_using_contentmodule_action($api_key, $system_type, $module_id)
+    {
+        return StudipContentmoduleHelper::find_seminars_using_contentmodule($system_type, $module_id);
+    }
 
-	function find_institutes_using_contentmodule_action($api_key, $system_type, $module_id)
-	{
-		return StudipContentmoduleHelper::find_institutes_using_contentmodule($system_type, $module_id);
-	}
+    function find_institutes_using_contentmodule_action($api_key, $system_type, $module_id)
+    {
+        return StudipContentmoduleHelper::find_institutes_using_contentmodule($system_type, $module_id);
+    }
 }

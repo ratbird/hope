@@ -13,12 +13,12 @@
 </tr>
   <tr>
     <td width="50%" valign="top">Wenn Sie sichtbar sind, dann
-	</td>
+    </td>
     <td width="50%" valign="top">Wenn Sie unsichtbar sind, dann
-	</td>
-	</tr>
-	<tr>
-	<td width="50%" valign="top"><ul>
+    </td>
+    </tr>
+    <tr>
+    <td width="50%" valign="top"><ul>
         <li> k&ouml;nnen Sie alle Kommunikationsm&ouml;glichkeiten wie gewohnt
           nutzen, </li>
         <li>k&ouml;nnen Sie auf Ihrer pers&ouml;nlichen Homepage trotzdem weitestgehend
@@ -27,8 +27,8 @@
         <li>leisten Sie einen Beitrag dazu, Stud.IP weiterhin zu einer aktiven
           und kommunikativen Plattform zu machen.</li>
       </ul></td>
-	<td width="50%" valing="top">
-	<ul>
+    <td width="50%" valing="top">
+    <ul>
         <li>können Sie nicht mehr &uuml;ber die Personensuche gefunden werden,</li>
         <li>können Sie nicht mehr in der "Wer-ist-online"-Liste erscheinen,</li>
         <li>können Sie nicht mehr Ihre Stud.IP-Homepage nutzen,</li>
@@ -47,7 +47,7 @@
   <li>TeilnehmerInnen-Listen von Veranstaltungen sind nur dann für die TeilnehmerInnen zugänglich, wenn alle einverstanden sind
   <li>Sobald Sie im System aktiv werden - d.h. Forumsbeiträge verfassen, sich an nicht-anonymen Votings beteiligen, Mails verschicken etc. - wird Ihr Name dabei angegeben und es lässt sich nicht vermeiden, dass andere Nutzerinnen und Nutzer indirekt erkennen können, ob Sie sichtbar oder unsichtbar sind.
   </ul>
-	</td></tr>
+    </td></tr>
 <tr>
 <td>
 <table style="background:#ddffdd; border:1px solid black;" cellpadding=4>

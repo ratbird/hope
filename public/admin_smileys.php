@@ -25,10 +25,10 @@ page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Auth', 'perm' =>
 $perm->check('root');
 
 if (!$SMILEYADMIN_ENABLE) {
-	print '<p>' . _("Smiley-Modul abgeschaltet."). '</p>';
-	include ('lib/include/html_end.inc.php');
-	page_close();
-	die;
+    print '<p>' . _("Smiley-Modul abgeschaltet."). '</p>';
+    include ('lib/include/html_end.inc.php');
+    page_close();
+    die;
 }
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
@@ -48,18 +48,18 @@ $sm = new smiley(true);
 $cmd = (isset($_REQUEST['cmd']))? $_REQUEST['cmd']:'';
 
 switch ($cmd) {
-	case 'upload':
-		$sm->imaging(); break;
-	case 'updatetable':
-		$sm->update_smiley_table(); break;
-	case 'countsmiley':
-		$sm->search_smileys(); break;
-	case 'update':
-		$sm->process_commands(); break;
-	case 'delete':
-		$sm->delete_smiley(); break;
-	default:
-	;
+    case 'upload':
+        $sm->imaging(); break;
+    case 'updatetable':
+        $sm->update_smiley_table(); break;
+    case 'countsmiley':
+        $sm->search_smileys(); break;
+    case 'update':
+        $sm->process_commands(); break;
+    case 'delete':
+        $sm->delete_smiley(); break;
+    default:
+    ;
 }
 
 //

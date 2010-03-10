@@ -137,7 +137,7 @@ class Table
     $rows = 0;
 
     $this->table_open($class);
-	if ($this->show_table_heading_row_result($db, $class))
+    if ($this->show_table_heading_row_result($db, $class))
       $rows = $this->show_table_rows_result($db, $class);  
     $this->table_close($class);
     
@@ -167,7 +167,7 @@ class Table
     $rows = 0;
     
     $this->table_open($class);
-	if ($this->show_table_heading_row($ary, $class))
+    if ($this->show_table_heading_row($ary, $class))
       $rows = $this->show_table_page_rows($ary, $start, $num, $class="");
     $this->table_close($class);
     
@@ -198,7 +198,7 @@ class Table
 
     $this->table_open($class);
     if ($this->show_table_heading_row_result($db, $class))
-		$rows = $this->show_table_page_rows_result($db, $start, $num, $class);
+        $rows = $this->show_table_page_rows_result($db, $start, $num, $class);
     $this->table_close($class);
     
     return $rows;

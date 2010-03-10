@@ -37,9 +37,9 @@
 
 # PHP-LIB: open session ===================================================== #
 page_open (array ("sess" => "Seminar_Session",
-		  "auth" => "Seminar_Auth",
-		  "perm" => "Seminar_Perm",
-		  "user" => "Seminar_User"));
+          "auth" => "Seminar_Auth",
+          "perm" => "Seminar_Perm",
+          "user" => "Seminar_User"));
 $auth->login_if ($auth->auth["uid"] == "nobody");
 $perm->check ("autor");
 # ============================================================== end: PHP-LIB #
@@ -99,7 +99,7 @@ $form->attr( "action", $PHP_SELF."?evalID=".$evalID );
 $form->attr( "method", "post" );
 
 $titlebar = EvalCommon::createTitle( _("Stud.IP Online-Evaluation"),
-				     PATH_PICTURES."eval-icon.gif" );
+                     PATH_PICTURES."eval-icon.gif" );
 $form->cont( $titlebar );
 
 /* Surrounding Table ------------------------------------------------------- */
@@ -117,22 +117,22 @@ $mandatories = checkMandatoryItems( $eval );
 /* ------------------------------------------------------------------------- */
 if( $votedNow ) {
     if( ! ( is_array($_POST["answers"]) ||
-	    /* clicked no answer */
-	    (is_array($_POST["freetexts"]) && implode("", $_POST["freetexts"]) != "")
-	    /* typed no freetext */
-	    )
-	) {
+        /* clicked no answer */
+        (is_array($_POST["freetexts"]) && implode("", $_POST["freetexts"]) != "")
+        /* typed no freetext */
+        )
+    ) {
 
-	$eval->throwError( 1, _("Sie haben keine Antworten gewählt.") );
-	$votedNow = NO;
+    $eval->throwError( 1, _("Sie haben keine Antworten gewählt.") );
+    $votedNow = NO;
 
     }
 
     /* check if mandatory answers are missing */
     if( count($mandatories) > 0 ) {
-	$eval->throwError( 1, sprintf(_("Sie haben %s erforderliche Fragen nicht beantwortet. Diese wurden gesondert markiert."),
-				      count($mandatories)) );
-	$votedNow = NO;
+    $eval->throwError( 1, sprintf(_("Sie haben %s erforderliche Fragen nicht beantwortet. Diese wurden gesondert markiert."),
+                      count($mandatories)) );
+    $votedNow = NO;
     }
 }
 
@@ -141,32 +141,32 @@ if( $votedNow ) {
 
     /* process the user's selected answers --------------------------------- */
     if( is_array($_POST["answers"]) ) {
-	foreach( $_POST["answers"] as $question_id => $answer ) {
-	    if( is_array($answer) )
-		/* multiple choice question */
-		foreach( $answer as $nr => $answer_id )
-		    voteFor( $answer_id );
-	    else
-		/* answer = answer_id */
-		voteFor( $answer );
-	}
+    foreach( $_POST["answers"] as $question_id => $answer ) {
+        if( is_array($answer) )
+        /* multiple choice question */
+        foreach( $answer as $nr => $answer_id )
+            voteFor( $answer_id );
+        else
+        /* answer = answer_id */
+        voteFor( $answer );
+    }
     }
 
     /* process the user's typed-in answers --------------------------------- */
     if( is_array($_POST["freetexts"]) ) {
-	foreach( $_POST["freetexts"] as $question_id => $text ) {
-	    if( trim($text) != '' ) {
-		$question = new EvaluationQuestion( $question_id );
-		$answer = new EvaluationAnswer();
-		$answer->setText( $text );
-		$answer->setRows( 1 );
-		$answer->vote( $GLOBALS["userID"] );
-		$question->addChild( $answer );
-		$question->save();
-		$debug .= "added answer text <b>".$answer->getText().
-		    "</b> for question <b>".$question->getText()."</b>\n";
-	    }
-	}
+    foreach( $_POST["freetexts"] as $question_id => $text ) {
+        if( trim($text) != '' ) {
+        $question = new EvaluationQuestion( $question_id );
+        $answer = new EvaluationAnswer();
+        $answer->setText( $text );
+        $answer->setRows( 1 );
+        $answer->vote( $GLOBALS["userID"] );
+        $question->addChild( $answer );
+        $question->save();
+        $debug .= "added answer text <b>".$answer->getText().
+            "</b> for question <b>".$question->getText()."</b>\n";
+        }
+    }
     }
 
     /* connect user with eval */
@@ -219,26 +219,26 @@ page_close();
 
      if( $children = $item->getChildren() ) 
      {
-	 	foreach( $children as $child ) 
-	 	{
-	     checkMandatoryItems( $child );
-	 	}
+        foreach( $children as $child ) 
+        {
+         checkMandatoryItems( $child );
+        }
      }
 
      if( $item->x_instanceof() == INSTANCEOF_EVALQUESTION ) 
      {
-	 	$group = $item->getParentObject();
+        $group = $item->getParentObject();
 
-	 	if( $group->isMandatory() &&
-	     ( ! is_array($_POST["answers"]) ||
-	       ( is_array($_POST["answers"]) &&
-		 ! in_array($item->getObjectID(), array_keys($_POST["answers"])) )
-	       ) &&
-	     trim($_POST["freetexts"][$item->getObjectID()]) == ''
-	     )
-	     {
-		     $mandatories[] = $item->getObjectID();
-		 }
+        if( $group->isMandatory() &&
+         ( ! is_array($_POST["answers"]) ||
+           ( is_array($_POST["answers"]) &&
+         ! in_array($item->getObjectID(), array_keys($_POST["answers"])) )
+           ) &&
+         trim($_POST["freetexts"][$item->getObjectID()]) == ''
+         )
+         {
+             $mandatories[] = $item->getObjectID();
+         }
      }
      return $mandatories;
 

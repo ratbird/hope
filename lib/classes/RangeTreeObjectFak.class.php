@@ -30,27 +30,27 @@ require_once("lib/classes/RangeTreeObject.class.php");
 *
 * This class is used for items in the tree which are "Fakultäten"
 *
-* @access	public
-* @author	André Noack <noack@data-quest.de>
-* @package	
+* @access   public
+* @author   André Noack <noack@data-quest.de>
+* @package  
 */
 class RangeTreeObjectFak extends RangeTreeObject {
-	
-	/**
-	* Constructor
-	*
-	* Do not use directly, call factory method in base class instead
-	* @access private
-	* @param	string	$item_id
-	*/
-	function RangeTreeObjectFak($item_id) {
-		parent::RangeTreeObject($item_id); //calling the baseclass constructor 
-		$this->initItemDetail();
-		$this->item_data_mapping = array('Strasse' => _("Straße"), 'Plz' => _("Ort"), 'telefon' => _("Tel."), 'fax' => _("Fax"),
-										'url' => _("Homepage"), 'email' => _("Kontakt"));
-		$this->item_data['type_num'] = $this->item_data['type'];
-		$this->item_data['type'] = ($this->item_data['type']) ? $GLOBALS['INST_TYPE'][$this->item_data['type']]['name'] : $GLOBALS['INST_TYPE'][1]['name'];
-	
-	}
+    
+    /**
+    * Constructor
+    *
+    * Do not use directly, call factory method in base class instead
+    * @access private
+    * @param    string  $item_id
+    */
+    function RangeTreeObjectFak($item_id) {
+        parent::RangeTreeObject($item_id); //calling the baseclass constructor 
+        $this->initItemDetail();
+        $this->item_data_mapping = array('Strasse' => _("Straße"), 'Plz' => _("Ort"), 'telefon' => _("Tel."), 'fax' => _("Fax"),
+                                        'url' => _("Homepage"), 'email' => _("Kontakt"));
+        $this->item_data['type_num'] = $this->item_data['type'];
+        $this->item_data['type'] = ($this->item_data['type']) ? $GLOBALS['INST_TYPE'][$this->item_data['type']]['name'] : $GLOBALS['INST_TYPE'][1]['name'];
+    
+    }
 }
 ?>

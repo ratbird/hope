@@ -233,29 +233,29 @@ CREATE TABLE `stm_instances_text` (
 ) TYPE=MyISAM COMMENT='(mehrsprachige) Texte der instanziierten abstrakten Module';
 ";
 
-	var $sql_down = "DROP TABLE IF EXISTS `his_abschl`, `his_abstgv`, `his_pvers`, `his_stg`, `stm_abstract`, `stm_abstract_assign`, `stm_abstract_elements`, `stm_abstract_text`, `stm_abstract_types`, `stm_element_types`, `stm_instances`, `stm_instances_elements`, `stm_instances_text`;";
-	
-	function description ()
+    var $sql_down = "DROP TABLE IF EXISTS `his_abschl`, `his_abstgv`, `his_pvers`, `his_stg`, `stm_abstract`, `stm_abstract_assign`, `stm_abstract_elements`, `stm_abstract_text`, `stm_abstract_types`, `stm_element_types`, `stm_instances`, `stm_instances_elements`, `stm_instances_text`;";
+    
+    function description ()
     {
         return 'modify db schema StEP00117 Studienmodulstrukturen; ';
     }
-	
+    
     function up ()
     {
         $this->announce(get_class($this) . ": Creating db schema...");
-		$statements = split(";[[:space:]]*\n", $this->sql_up);
-		foreach($statements as $sqlstatement) {
-			$this->db->query($sqlstatement); 	
-		}
+        $statements = split(";[[:space:]]*\n", $this->sql_up);
+        foreach($statements as $sqlstatement) {
+            $this->db->query($sqlstatement);    
+        }
     }
-	
-	function down ()
-	{
-		$this->announce(get_class($this) . ": Deleting db schema...");
-		$statements = split(";[[:space:]]*\n", $this->sql_down);
-		foreach($statements as $sqlstatement) {
-			$this->db->query($sqlstatement); 	
-		}
+    
+    function down ()
+    {
+        $this->announce(get_class($this) . ": Deleting db schema...");
+        $statements = split(";[[:space:]]*\n", $this->sql_down);
+        foreach($statements as $sqlstatement) {
+            $this->db->query($sqlstatement);    
+        }
     }
 
 }

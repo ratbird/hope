@@ -38,40 +38,40 @@ require_once "$ABSOLUTE_PATH_STUDIP/statusgruppe.inc.php";
 $db=new DB_Seminar;
 
 ?>
-				
-<table>				
-	<tr>
-		<td>
-	
+                
+<table>             
+    <tr>
+        <td>
+    
 <?
-	$i = 0;
-	$j = 0;
-	$db->query ("SELECT * FROM user_inst WHERE Funktion != '' AND Funktion != 'Student' AND Funktion != '0' AND Funktion != '1'");
-	while ($db->next_record()) {
-		$name = $INST_FUNKTION[$db->f("Funktion")][name];
-		$statusgruppe_id = CheckStatusgruppe($db->f("Institut_id"),$name);
-		if ($statusgruppe_id == FALSE) {
-			 $statusgruppe_id = AddNewStatusgruppe ($name, $db->f("Institut_id"), 0);
-			 echo "<br>*Statusgruppe ".$name." - ".$statusgruppe_id." f&uuml;r den Bereich ".$db->f("Institut_id")." angelegt."; 
-			 $i++;
-		} else {
-			echo "<br>Statusgruppe ".$statusgruppe_id."exisitiert bereits";
-		}
-		$write = InsertPersonStatusgruppe ($db->f("user_id"), $statusgruppe_id);
-		if ($write == TRUE) {
-			$j++;
-		}
-	}
+    $i = 0;
+    $j = 0;
+    $db->query ("SELECT * FROM user_inst WHERE Funktion != '' AND Funktion != 'Student' AND Funktion != '0' AND Funktion != '1'");
+    while ($db->next_record()) {
+        $name = $INST_FUNKTION[$db->f("Funktion")][name];
+        $statusgruppe_id = CheckStatusgruppe($db->f("Institut_id"),$name);
+        if ($statusgruppe_id == FALSE) {
+             $statusgruppe_id = AddNewStatusgruppe ($name, $db->f("Institut_id"), 0);
+             echo "<br>*Statusgruppe ".$name." - ".$statusgruppe_id." f&uuml;r den Bereich ".$db->f("Institut_id")." angelegt."; 
+             $i++;
+        } else {
+            echo "<br>Statusgruppe ".$statusgruppe_id."exisitiert bereits";
+        }
+        $write = InsertPersonStatusgruppe ($db->f("user_id"), $statusgruppe_id);
+        if ($write == TRUE) {
+            $j++;
+        }
+    }
 
-	echo "<br><br><h1>Es wurden $i neue Gruppen angelegt und $j Personen zugeordnet.</h1>";
+    echo "<br><br><h1>Es wurden $i neue Gruppen angelegt und $j Personen zugeordnet.</h1>";
 ?>
-		</td>
-	</tr>
+        </td>
+    </tr>
 </table>
 </body>
 </html>
 <?php
-	
+    
 // Save data back to database.
 page_close();
  ?>

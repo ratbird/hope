@@ -33,12 +33,12 @@ class Siteinfo {
                 if ($this->rubrics_empty) {
                     return _("Benutzen Sie den Link »neue Rubrik anlegen« in der Infobox, um eine Rubrik anzulegen.");
                 } else {
-        	        return _("Benutzen Sie den Link »neue Seite anlegen« in der Infobox, um eine Seite in dieser Rubrik anzulegen.");
+                    return _("Benutzen Sie den Link »neue Seite anlegen« in der Infobox, um eine Seite in dieser Rubrik anzulegen.");
                 }
             //...while unauthorized users just get informed that there's something missing und who might be the person to fix this
-        	} else {
-    	        return _("Der für diese Stud.IP-Installation verantwortliche Administrator muss hier noch Inhalte einfügen.\n(:rootlist:)");
-        	}
+            } else {
+                return _("Der für diese Stud.IP-Installation verantwortliche Administrator muss hier noch Inhalte einfügen.\n(:rootlist:)");
+            }
         } else {
             $sql = "SELECT content
                     FROM siteinfo_details
@@ -402,7 +402,7 @@ class SiteinfoMarkupEngine {
         }
         if($sql) {
             $result = $this->db->query($sql);
-    	    if  ($result->rowCount() > 0) {
+            if  ($result->rowCount() > 0) {
                 $template->lines = $result->fetchAll(PDO::FETCH_ASSOC);
             } else {
                 return "";

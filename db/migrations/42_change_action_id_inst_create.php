@@ -10,7 +10,7 @@ class ChangeActionIdInstCreate extends Migration
     {
         $db = DBManager::get();
 
-	// fixes #448, cf. http://develop.studip.de/trac/ticket/448
+    // fixes #448, cf. http://develop.studip.de/trac/ticket/448
         $db->exec("UPDATE log_actions SET action_id=MD5('INST_CREATE')
                                     WHERE action_id=MD5('INST_NEW')");
         $db->exec("UPDATE log_events SET action_id=MD5('INST_CREATE')

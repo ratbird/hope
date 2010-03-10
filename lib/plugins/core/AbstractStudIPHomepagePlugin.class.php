@@ -11,91 +11,91 @@
 class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
   implements HomepagePlugin {
 
-	var $requesteduser; // StudIPUser for which user the homepage should be shown
-	var $status_showOverview; // Uebersichtsseite unterdruecken
+    var $requesteduser; // StudIPUser for which user the homepage should be shown
+    var $status_showOverview; // Uebersichtsseite unterdruecken
 
-	function AbstractStudIPHomepagePlugin(){
-		parent::__construct();
+    function AbstractStudIPHomepagePlugin(){
+        parent::__construct();
 
-		// ignore errors about unknown users here
-		try {
-			$this->requesteduser = $this->getRequestedUser();
-		} catch (Exception $ex) {
-		}
+        // ignore errors about unknown users here
+        try {
+            $this->requesteduser = $this->getRequestedUser();
+        } catch (Exception $ex) {
+        }
 
-		$this->status_showOverview = 1;
-	}
+        $this->status_showOverview = 1;
+    }
 
-	/**
-	 * Sets the navigation of this plugin.
-	 *
-	 * @deprecated
-	 */
-	function setNavigation(StudipPluginNavigation $navigation) {
-		parent::setNavigation($navigation);
+    /**
+     * Sets the navigation of this plugin.
+     *
+     * @deprecated
+     */
+    function setNavigation(StudipPluginNavigation $navigation) {
+        parent::setNavigation($navigation);
 
-		// prepend copy of navigation to its sub navigation
-		$item_names = array_keys($navigation->getSubNavigation());
-		$navigation_copy = clone $navigation;
-		$navigation_copy->clearSubmenu();
-		$navigation->insertSubNavigation('self', $item_names[0], $navigation_copy);
-		$navigation->setTitle($this->getDisplayTitle());
+        // prepend copy of navigation to its sub navigation
+        $item_names = array_keys($navigation->getSubNavigation());
+        $navigation_copy = clone $navigation;
+        $navigation_copy->clearSubmenu();
+        $navigation->insertSubNavigation('self', $item_names[0], $navigation_copy);
+        $navigation->setTitle($this->getDisplayTitle());
 
-		if (Navigation::hasItem('/homepage')) {
-			Navigation::addItem('/homepage/' . $this->getPluginclassname(), $navigation);
-		}
-	}
+        if (Navigation::hasItem('/homepage')) {
+            Navigation::addItem('/homepage/' . $this->getPluginclassname(), $navigation);
+        }
+    }
 
-	/**
-	 * Used to show an overview on the homepage of a user.
-	 *
-	 * @deprecated
-	 */
-	function showOverview(){
-		// has to be implemented
-	}
+    /**
+     * Used to show an overview on the homepage of a user.
+     *
+     * @deprecated
+     */
+    function showOverview(){
+        // has to be implemented
+    }
 
-	/**
-	 * true:  overviewpage is enabled
-	 * false: overviewpage is disabled
-	 *
-	 * @deprecated
-	 */
-	function getStatusShowOverviewPage(){
-		return $this->status_showOverview;
-	}
+    /**
+     * true:  overviewpage is enabled
+     * false: overviewpage is disabled
+     *
+     * @deprecated
+     */
+    function getStatusShowOverviewPage(){
+        return $this->status_showOverview;
+    }
 
-	/**
-	 * @deprecated
-	 */
-	function setStatusShowOverviewPage($status){
-		$this->status_showOverview = $status;
-	}
+    /**
+     * @deprecated
+     */
+    function setStatusShowOverviewPage($status){
+        $this->status_showOverview = $status;
+    }
 
 
-	/**
-	 * Does nothing - deprecated, do not use.
-	 *
-	 * @deprecated
-	 */
-	function setRequestedUser($user){
-	}
+    /**
+     * Does nothing - deprecated, do not use.
+     *
+     * @deprecated
+     */
+    function setRequestedUser($user){
+    }
 
-	/**
-	 * Return current user - deprecated, do not use.
-	 *
-	 * @deprecated
-	 */
-	function getRequestedUser(){
-		$username = Request::quoted('username', $GLOBALS['auth']->auth['uname']);
-		$user_id = get_userid($username);
+    /**
+     * Return current user - deprecated, do not use.
+     *
+     * @deprecated
+     */
+    function getRequestedUser(){
+        $username = Request::quoted('username', $GLOBALS['auth']->auth['uname']);
+        $user_id = get_userid($username);
 
-		if ($user_id == '') {
-			throw new Exception(_('Es wurde kein Nutzer unter dem angegebenen Nutzernamen gefunden!'));
-		}
+        if ($user_id == '') {
+            throw new Exception(_('Es wurde kein Nutzer unter dem angegebenen Nutzernamen gefunden!'));
+        }
 
-		return new StudIPUser($user_id);
-	}
+        return new StudIPUser($user_id);
+    }
 
     /**
      * Return a template (an instance of the Flexi_Template class)

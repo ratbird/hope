@@ -8,11 +8,11 @@
 *  
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElementMain
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElementMain
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -42,102 +42,102 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/extern_functions.inc.php");
 
 class ExternElementMain extends ExternElement {
 
-	var $attributes = array();
-	var $edit_function;
-	
-	
-	/**
-	*
-	*/
-	function &GetInstance ($module_name, &$data_fields,	&$field_names, &$config) {
-		if ($module_name != '') {
-			$main_class_name = 'ExternElementMain' . ucfirst($module_name);
-			require_once($GLOBALS['RELATIVE_PATH_EXTERN']
-					. "/elements/main/$main_class_name.class.php");
-			$main_module =& new $main_class_name($module_name, $data_fields, $field_names, $config);
-			
-			return $main_module;
-		}
-		
-		return NULL;
-	}
-	
-	/**
-	* Constructor
-	*
-	*/
-	function ExternElementMain ($module_name, &$data_fields, &$field_names, &$config) {	
-		$this->real_name = _("Grundeinstellungen");
-		$this->description = _("In den Grundeinstellungen k&ouml;nnen Sie allgemeine Daten des Elements ändern.");
-		$this->name = 'Main';
-		$this->edit_function = 'editMainSettings';
-		$this->config =& $config;
-		$this->data_fields =& $data_fields;
-		$this->field_names =& $field_names;
-		if ($GLOBALS['EXTERN_SRI_ENABLE'] && (!$GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT'] ||
-				(sri_is_enabled($this->config->range_id) && $GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT']))) {
-			$this->attributes[] = 'sriurl';
-		}
-	}
-	
-	/**
-	* 
-	*/
-	function getDefaultConfig () {}
-	
-	/**
-	* 
-	*/
-	function toStringEdit ($post_vars = "", $faulty_values = "",
-			$edit_form = "", $anker = "") {
-		
-		$out = '';
-		$table = '';
-		if ($edit_form == '')
-			$edit_form =& new ExternEdit($this->config, $post_vars, $faulty_values, $anker);
-		
-		$edit_form->setElementName($this->getName());
-		$element_headline = $edit_form->editElementHeadline($this->real_name,
-				$this->config->getName(), $this->config->getId(), TRUE);
-		
-		if ($faulty_values == '')
-			$faulty_values = array();
-		
-		$edit_function = $this->edit_function;
-		$table = $edit_form->$edit_function($this->field_names);
+    var $attributes = array();
+    var $edit_function;
+    
+    
+    /**
+    *
+    */
+    function &GetInstance ($module_name, &$data_fields, &$field_names, &$config) {
+        if ($module_name != '') {
+            $main_class_name = 'ExternElementMain' . ucfirst($module_name);
+            require_once($GLOBALS['RELATIVE_PATH_EXTERN']
+                    . "/elements/main/$main_class_name.class.php");
+            $main_module =& new $main_class_name($module_name, $data_fields, $field_names, $config);
+            
+            return $main_module;
+        }
+        
+        return NULL;
+    }
+    
+    /**
+    * Constructor
+    *
+    */
+    function ExternElementMain ($module_name, &$data_fields, &$field_names, &$config) { 
+        $this->real_name = _("Grundeinstellungen");
+        $this->description = _("In den Grundeinstellungen k&ouml;nnen Sie allgemeine Daten des Elements ändern.");
+        $this->name = 'Main';
+        $this->edit_function = 'editMainSettings';
+        $this->config =& $config;
+        $this->data_fields =& $data_fields;
+        $this->field_names =& $field_names;
+        if ($GLOBALS['EXTERN_SRI_ENABLE'] && (!$GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT'] ||
+                (sri_is_enabled($this->config->range_id) && $GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT']))) {
+            $this->attributes[] = 'sriurl';
+        }
+    }
+    
+    /**
+    * 
+    */
+    function getDefaultConfig () {}
+    
+    /**
+    * 
+    */
+    function toStringEdit ($post_vars = "", $faulty_values = "",
+            $edit_form = "", $anker = "") {
+        
+        $out = '';
+        $table = '';
+        if ($edit_form == '')
+            $edit_form =& new ExternEdit($this->config, $post_vars, $faulty_values, $anker);
+        
+        $edit_form->setElementName($this->getName());
+        $element_headline = $edit_form->editElementHeadline($this->real_name,
+                $this->config->getName(), $this->config->getId(), TRUE);
+        
+        if ($faulty_values == '')
+            $faulty_values = array();
+        
+        $edit_function = $this->edit_function;
+        $table = $edit_form->$edit_function($this->field_names);
 
-		$content_table = $edit_form->editContentTable($tag_headline, $table);
-		$submit = $edit_form->editSubmit($this->config->getName(),
-				$this->config->getId(), $this->getName());
-		$out = $edit_form->editContent($content_table, $submit);
-		$out .= $edit_form->editBlank();
-		
-		return $element_headline . $out;
-	}
-	
-	function getSRIFormContent (&$edit_form, $include_url = false) {
-		$content = '';
-		$sri_info = _("Nur bei Benutzung der SRI-Schnittstelle für dieses Modul: Geben Sie hier die vollständige URL der Seite an, in die die Ausgabe des Moduls eingefügt werden soll.");
-		if (!$include_url && $GLOBALS['EXTERN_SRI_ENABLE'] && (!$GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT'] ||
-				(sri_is_enabled($this->config->range_id) && $GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT']))) {
-			$headline = $edit_form->editHeadline(_("URL des SRI-Templates"));
-			$table = $edit_form->editTextfieldGeneric("sriurl", '', $sri_info, 70, 350);
-			$content = $edit_form->editContentTable($headline, $table);
-			$content .= $edit_form->editBlankContent();
-		}
-		if ($include_url) {
-			$table = '';
-			$headline = $edit_form->editHeadline(_("Einbindung des Moduls"));
-			if ($GLOBALS['EXTERN_SRI_ENABLE'] && (!$GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT'] ||(sri_is_enabled($this->config->range_id) && $GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT']))) {
-				$table = $edit_form->editTextfieldGeneric('sriurl', 'SRI-URL', $sri_info, 50, 350);
-			}
-			$table .= $edit_form->editTextfieldGeneric('includeurl', 'include-URL', _("URL der Seite, in der die Ausgabe des Moduls per Include (z.B. durch eine Script-Sprache) eingebunden wird."), 50, 350);
-			$content = $edit_form->editContentTable($headline, $table);
-			$content .= $edit_form->editBlankContent();
-		}
-		return $content;
-	}
-		
+        $content_table = $edit_form->editContentTable($tag_headline, $table);
+        $submit = $edit_form->editSubmit($this->config->getName(),
+                $this->config->getId(), $this->getName());
+        $out = $edit_form->editContent($content_table, $submit);
+        $out .= $edit_form->editBlank();
+        
+        return $element_headline . $out;
+    }
+    
+    function getSRIFormContent (&$edit_form, $include_url = false) {
+        $content = '';
+        $sri_info = _("Nur bei Benutzung der SRI-Schnittstelle für dieses Modul: Geben Sie hier die vollständige URL der Seite an, in die die Ausgabe des Moduls eingefügt werden soll.");
+        if (!$include_url && $GLOBALS['EXTERN_SRI_ENABLE'] && (!$GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT'] ||
+                (sri_is_enabled($this->config->range_id) && $GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT']))) {
+            $headline = $edit_form->editHeadline(_("URL des SRI-Templates"));
+            $table = $edit_form->editTextfieldGeneric("sriurl", '', $sri_info, 70, 350);
+            $content = $edit_form->editContentTable($headline, $table);
+            $content .= $edit_form->editBlankContent();
+        }
+        if ($include_url) {
+            $table = '';
+            $headline = $edit_form->editHeadline(_("Einbindung des Moduls"));
+            if ($GLOBALS['EXTERN_SRI_ENABLE'] && (!$GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT'] ||(sri_is_enabled($this->config->range_id) && $GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT']))) {
+                $table = $edit_form->editTextfieldGeneric('sriurl', 'SRI-URL', $sri_info, 50, 350);
+            }
+            $table .= $edit_form->editTextfieldGeneric('includeurl', 'include-URL', _("URL der Seite, in der die Ausgabe des Moduls per Include (z.B. durch eine Script-Sprache) eingebunden wird."), 50, 350);
+            $content = $edit_form->editContentTable($headline, $table);
+            $content .= $edit_form->editBlankContent();
+        }
+        return $content;
+    }
+        
 }
 
 ?>

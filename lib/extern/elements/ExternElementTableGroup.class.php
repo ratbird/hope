@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElementTableGroup
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElementTableGroup
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -41,47 +41,47 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
 
 class ExternElementTableGroup extends ExternElement {
 
-	var $attributes = array("tr_class", "tr_style", "td_height", "td_align",
-			"td_valign", "td_bgcolor", "td_bgcolor_2", "td_class", "td_style",
-			"font_face", "font_size", "font_color", "font_class", "font_style");
+    var $attributes = array("tr_class", "tr_style", "td_height", "td_align",
+            "td_valign", "td_bgcolor", "td_bgcolor_2", "td_class", "td_style",
+            "font_face", "font_size", "font_color", "font_class", "font_style");
 
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementTableGroup ($config = "") {
-		if ($config)
-			$this->config = $config;
-		
-		$this->name = "TableGroup";
-		$this->real_name = _("Gruppen&uuml;berschriften");
-		$this->description = _("Gruppen&uuml;berschriften sind Tabellenzeilen, die eine neue Gruppe einleiten.");
-	}
-	
-	function toString ($args) {
-		if (!$args["main_module"])
-			$args["main_module"] = "Main";
-		if (isset($args["colspan"]))
-			$visible["1"] = $args["colspan"];
-		else
-			$visible = array_count_values($this->config->getValue($args["main_module"], "visible"));
-		
-		if ($tag = $this->config->getTag($this->name, "font", FALSE, TRUE))
-			$content = $tag . $args["content"] . "</font>";
-		else
-			$content = $args["content"];
-		$out = "<tr" . $this->config->getAttributes($this->name, "tr") . ">";
-		if ($visible["1"] > 1)
-			$out .= "<td colspan=\"{$visible['1']}\" ";
-		else
-			$out .= "<td";
-		$out .= $this->config->getAttributes($this->name, "td") . ">";
-		$out .= "$content</td></tr>\n";
-		
-		return $out;
-	}
-	
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementTableGroup ($config = "") {
+        if ($config)
+            $this->config = $config;
+        
+        $this->name = "TableGroup";
+        $this->real_name = _("Gruppen&uuml;berschriften");
+        $this->description = _("Gruppen&uuml;berschriften sind Tabellenzeilen, die eine neue Gruppe einleiten.");
+    }
+    
+    function toString ($args) {
+        if (!$args["main_module"])
+            $args["main_module"] = "Main";
+        if (isset($args["colspan"]))
+            $visible["1"] = $args["colspan"];
+        else
+            $visible = array_count_values($this->config->getValue($args["main_module"], "visible"));
+        
+        if ($tag = $this->config->getTag($this->name, "font", FALSE, TRUE))
+            $content = $tag . $args["content"] . "</font>";
+        else
+            $content = $args["content"];
+        $out = "<tr" . $this->config->getAttributes($this->name, "tr") . ">";
+        if ($visible["1"] > 1)
+            $out .= "<td colspan=\"{$visible['1']}\" ";
+        else
+            $out .= "<td";
+        $out .= $this->config->getAttributes($this->name, "td") . ">";
+        $out .= "$content</td></tr>\n";
+        
+        return $out;
+    }
+    
 }
 
 ?>

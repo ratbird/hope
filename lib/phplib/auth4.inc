@@ -114,7 +114,7 @@ class Auth {
           $this->auth["uid"] = $uid;
           $this->auth["exp"] = time() + (60 * $this->lifetime);
           $this->auth["refresh"] = time() + (60 * $this->refresh);
-		  $sess->freeze();
+          $sess->freeze();
           return true;
         }
         
@@ -180,7 +180,7 @@ class Auth {
               $this->auth["uid"] = $uid;
               $this->auth["exp"] = time() + (60 * $this->lifetime);
               $this->auth["refresh"] = time() + (60 * $this->refresh);
-	  		  $sess->freeze();
+              $sess->freeze();
               return true;
             } else {
               $this->auth_loginform();

@@ -4,19 +4,19 @@
 *
 * Parameters received via stdin<br/>
 * <code>
-*	$session_id
-*	$first_name
-*	$last_name
-*	$user_id
-*	$directory_search_pc    (page counter)
+*   $session_id
+*   $first_name
+*   $last_name
+*   $user_id
+*   $directory_search_pc    (page counter)
 * </code>
 *
-* @author		Florian Hansen <f1701h@gmx.net>
-* @version		0.11	10.09.2003	21:25:25
-* @access		public
-* @modulegroup	wap_modules
-* @module		show_private.php
-* @package		WAP
+* @author       Florian Hansen <f1701h@gmx.net>
+* @version      0.11    10.09.2003  21:25:25
+* @access       public
+* @modulegroup  wap_modules
+* @module       show_private.php
+* @package      WAP
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -65,41 +65,41 @@ $private_adr = $db-> f("privadr");
 echo "<p align=\"left\">\n";
 
 if ($private_adr)
-	echo wap_txt_encode_to_wml($private_adr) . "<br/>\n";
+    echo wap_txt_encode_to_wml($private_adr) . "<br/>\n";
 
 if ($private_nr)
 {
-	echo wap_txt_encode_to_wml(_("Tel:")) . "&#32;";
-	echo wap_txt_encode_to_wml($private_nr) . "<br/>\n";
+    echo wap_txt_encode_to_wml(_("Tel:")) . "&#32;";
+    echo wap_txt_encode_to_wml($private_nr) . "<br/>\n";
 }
 
 if ($back_to == "show_sms") {
-	$postfields_back_to = "		<postfield name=\"sms_id\" value=\"$sms_id\"/>\n";
-	$postfields_back_to .= "		<postfield name=\"no_search_link\" value=\"1\"/>\n";
-	$postfields_back_to .= "		<postfield name=\"back_to\" value=\"show_sms\"/>\n";
+    $postfields_back_to = "     <postfield name=\"sms_id\" value=\"$sms_id\"/>\n";
+    $postfields_back_to .= "        <postfield name=\"no_search_link\" value=\"1\"/>\n";
+    $postfields_back_to .= "        <postfield name=\"back_to\" value=\"show_sms\"/>\n";
 }
 else
-	$postfields_back_to = "		<postfield name=\"directory_search_pc\" value=\"$directory_search_pc\"/>\n";
+    $postfields_back_to = "     <postfield name=\"directory_search_pc\" value=\"$directory_search_pc\"/>\n";
 
 echo "</p>\n";
 
 echo "<p align=\"right\">\n";
 echo "<anchor>" . wap_buttons_back() . "\n";
-echo "	<go method=\"post\" href=\"show_user.php\">\n";
-echo "		<postfield name=\"session_id\" value=\"$session_id\"/>\n";
-echo "		<postfield name=\"first_name\" value=\"$first_name\"/>\n";
-echo "		<postfield name=\"last_name\" value=\"$last_name\"/>\n";
-echo "		<postfield name=\"user_name\" value=\"$user_name\"/>\n";
+echo "  <go method=\"post\" href=\"show_user.php\">\n";
+echo "      <postfield name=\"session_id\" value=\"$session_id\"/>\n";
+echo "      <postfield name=\"first_name\" value=\"$first_name\"/>\n";
+echo "      <postfield name=\"last_name\" value=\"$last_name\"/>\n";
+echo "      <postfield name=\"user_name\" value=\"$user_name\"/>\n";
 echo $postfields_back_to;
-echo "	</go>\n";
+echo "  </go>\n";
 echo "</anchor><br/>\n";
 
 if (!$no_search_link) {
-	echo "<anchor>" . wap_buttons_new_search() . "\n";
-	echo "	<go method=\"post\" href=\"directory.php\">\n";
-	echo "		<postfield name=\"session_id\" value=\"$session_id\"/>\n";
-	echo "	</go>\n";
-	echo "</anchor><br/>\n";
+    echo "<anchor>" . wap_buttons_new_search() . "\n";
+    echo "  <go method=\"post\" href=\"directory.php\">\n";
+    echo "      <postfield name=\"session_id\" value=\"$session_id\"/>\n";
+    echo "  </go>\n";
+    echo "</anchor><br/>\n";
 }
 
 wap_buttons_menu_link ($session_id);

@@ -36,7 +36,7 @@ class DB_Sql {
       if (!$this->Link_ID) {
         $this->halt("Link-ID == false, pconnect failed");
       }
-	  if(!sybase_select_db($this->Database, $this->Link_ID)) {
+      if(!sybase_select_db($this->Database, $this->Link_ID)) {
         $this->halt("cannot use database ".$this->Database);
       }
     }
@@ -86,32 +86,32 @@ class DB_Sql {
   }
 
   function metadata($table) {
-	  $count = 0;
-	  $id    = 0;
-	  $res   = array();
+      $count = 0;
+      $id    = 0;
+      $res   = array();
 
-	  $this->connect(); 
-	  $result = $this->query("exec sp_columns $table");
-	  if ($result < 0) {
-		  $this->Errno = 1;
-		  $this->Error = "Metadata query failed";
-		  $this->halt("Metadata query failed.");
-	  }
-	  $count = sybase_num_rows($result);
+      $this->connect(); 
+      $result = $this->query("exec sp_columns $table");
+      if ($result < 0) {
+          $this->Errno = 1;
+          $this->Error = "Metadata query failed";
+          $this->halt("Metadata query failed.");
+      }
+      $count = sybase_num_rows($result);
 
-	  for ($i=0; $i<$count; $i++) {
-		  $res[$i]["table"] = $table ;
-		  $res[$i]["name"]  = sybase_result ($result, $i, "COLUMN_NAME");
-		  $res[$i]["type"]  = sybase_result ($result, $i, "TYPE_NAME");
-		  $res[$i]["len"]   = sybase_result ($result, $i, "LENGTH");
-		  $res[$i]["position"] = sybase_result ($result, $i, "ORDINAL_POSITION");
-		  $res[$i]["flags"] = sybase_result ($result, $i, "REMARKS");
+      for ($i=0; $i<$count; $i++) {
+          $res[$i]["table"] = $table ;
+          $res[$i]["name"]  = sybase_result ($result, $i, "COLUMN_NAME");
+          $res[$i]["type"]  = sybase_result ($result, $i, "TYPE_NAME");
+          $res[$i]["len"]   = sybase_result ($result, $i, "LENGTH");
+          $res[$i]["position"] = sybase_result ($result, $i, "ORDINAL_POSITION");
+          $res[$i]["flags"] = sybase_result ($result, $i, "REMARKS");
 
-	  }
+      }
   }
 
   function affected_rows() {
-	return sybase_affected_rows($this->Query_ID);
+    return sybase_affected_rows($this->Query_ID);
   }
 
   function num_rows() {

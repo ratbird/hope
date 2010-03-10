@@ -24,8 +24,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 if (!isset($SessSemName[0]) || $SessSemName[0] == "") {
-	header("Location: index.php");
-	die;
+    header("Location: index.php");
+    die;
 }
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session

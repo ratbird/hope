@@ -4,25 +4,25 @@
 *
 * Parameters received via stdin<br/>
 * <code>
-*	$session_id
-*	$news_id
-*	$event_id
-*	$inst_id
-*	$institutes_flag
-*	$news_pc			(page counter)
-*	$events_pc			(page counter)
-*	$event_news_pc		(page counter)
-*	$institutes_pc		(page counter)
-*	$inst_news_pc		(page counter)
-*	$show_news_pc		(page counter)
+*   $session_id
+*   $news_id
+*   $event_id
+*   $inst_id
+*   $institutes_flag
+*   $news_pc            (page counter)
+*   $events_pc          (page counter)
+*   $event_news_pc      (page counter)
+*   $institutes_pc      (page counter)
+*   $inst_news_pc       (page counter)
+*   $show_news_pc       (page counter)
 * </code>
 *
-* @author		Florian Hansen <f1701h@gmx.net>
-* @version		0.12	11.09.2003	19:14:11
-* @access		public
-* @modulegroup	wap_modules
-* @module		show_news.php
-* @package		WAP
+* @author       Florian Hansen <f1701h@gmx.net>
+* @version      0.12    11.09.2003  19:14:11
+* @access       public
+* @modulegroup  wap_modules
+* @module       show_news.php
+* @package      WAP
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -52,11 +52,11 @@
     */
     define("PHPDOC_DUMMY", TRUE);
 
-	include_once("wap_adm.inc.php");
-	include_once("wap_txt.inc.php");
-	include_once("wap_buttons.inc.php");
+    include_once("wap_adm.inc.php");
+    include_once("wap_txt.inc.php");
+    include_once("wap_buttons.inc.php");
 
-	$session_user_id = wap_adm_start_card($session_id);
+    $session_user_id = wap_adm_start_card($session_id);
     if ($session_user_id)
     {
         if ($show_news_pc)
@@ -86,11 +86,11 @@
 
         if ($page_counter == 0)
         {
-	        echo "<p align=\"center\">";
-	        echo "<b>" . wap_txt_encode_to_wml($short_title) . "</b><br/>\n";
-	        echo wap_txt_encode_to_wml(_("Vom")) . " $news_date\n";
-	        echo "</p>\n";
-    	}
+            echo "<p align=\"center\">";
+            echo "<b>" . wap_txt_encode_to_wml($short_title) . "</b><br/>\n";
+            echo wap_txt_encode_to_wml(_("Vom")) . " $news_date\n";
+            echo "</p>\n";
+        }
 
         echo "<p align=\"left\">\n";
         echo wap_txt_encode_to_wml($news_part) . "\n";
@@ -109,21 +109,21 @@
                 echo "        <postfield name=\"show_news_pc\" value=\"$page_counter_v\"/>\n";
                 if ($event_id)
                 {
-		            echo "        <postfield name=\"event_id\" value=\"$event_id\"/>\n";
-        		    echo "        <postfield name=\"events_pc\" value=\"$events_pc\"/>\n";
-		            echo "        <postfield name=\"event_news_pc\" value=\"$event_news_pc\"/>\n";
+                    echo "        <postfield name=\"event_id\" value=\"$event_id\"/>\n";
+                    echo "        <postfield name=\"events_pc\" value=\"$events_pc\"/>\n";
+                    echo "        <postfield name=\"event_news_pc\" value=\"$event_news_pc\"/>\n";
                 }
                 elseif ($institutes_flag)
                 {
-	                echo "        <postfield name=\"inst_id\" value=\"$inst_id\"/>\n";
-    	            echo "        <postfield name=\"institutes_pc\" value=\"$institutes_pc\"/>\n";
-        	        echo "        <postfield name=\"inst_news_pc\" value=\"$inst_news_pc\"/>\n";
-            	    echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
+                    echo "        <postfield name=\"inst_id\" value=\"$inst_id\"/>\n";
+                    echo "        <postfield name=\"institutes_pc\" value=\"$institutes_pc\"/>\n";
+                    echo "        <postfield name=\"inst_news_pc\" value=\"$inst_news_pc\"/>\n";
+                    echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
                 }
                 else
                 {
-		            echo "        <postfield name=\"news_pc\" value=\"$news_pc\"/>\n";
-		        }
+                    echo "        <postfield name=\"news_pc\" value=\"$news_pc\"/>\n";
+                }
                 echo "    </go>\n";
                 echo "</anchor><br/>\n";
             }
@@ -137,21 +137,21 @@
                 echo "        <postfield name=\"show_news_pc\" value=\"$page_counter_v\"/>\n";
                 if ($event_id)
                 {
-		            echo "        <postfield name=\"event_id\" value=\"$event_id\"/>\n";
-        		    echo "        <postfield name=\"events_pc\" value=\"$events_pc\"/>\n";
-		            echo "        <postfield name=\"event_news_pc\" value=\"$event_news_pc\"/>\n";
+                    echo "        <postfield name=\"event_id\" value=\"$event_id\"/>\n";
+                    echo "        <postfield name=\"events_pc\" value=\"$events_pc\"/>\n";
+                    echo "        <postfield name=\"event_news_pc\" value=\"$event_news_pc\"/>\n";
                 }
                 elseif ($institutes_flag)
                 {
-	                echo "        <postfield name=\"inst_id\" value=\"$inst_id\"/>\n";
-    	            echo "        <postfield name=\"institutes_pc\" value=\"$institutes_pc\"/>\n";
-        	        echo "        <postfield name=\"inst_news_pc\" value=\"$inst_news_pc\"/>\n";
-            	    echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
+                    echo "        <postfield name=\"inst_id\" value=\"$inst_id\"/>\n";
+                    echo "        <postfield name=\"institutes_pc\" value=\"$institutes_pc\"/>\n";
+                    echo "        <postfield name=\"inst_news_pc\" value=\"$inst_news_pc\"/>\n";
+                    echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
                 }
                 else
                 {
-		            echo "        <postfield name=\"news_pc\" value=\"$news_pc\"/>\n";
-		        }
+                    echo "        <postfield name=\"news_pc\" value=\"$news_pc\"/>\n";
+                }
                 echo "    </go>\n";
                 echo "</anchor><br/>\n";
             }
@@ -170,12 +170,12 @@
         {
             echo "<go method=\"post\" href=\"inst_news.php\">\n";
             echo "        <postfield name=\"session_id\" value=\"$session_id\"/>\n";
-			echo "        <postfield name=\"inst_id\" value=\"$inst_id\"/>\n";
-			echo "        <postfield name=\"institutes_pc\" value=\"$institutes_pc\"/>\n";
-			echo "        <postfield name=\"inst_news_pc\" value=\"$inst_news_pc\"/>\n";
-			echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
+            echo "        <postfield name=\"inst_id\" value=\"$inst_id\"/>\n";
+            echo "        <postfield name=\"institutes_pc\" value=\"$institutes_pc\"/>\n";
+            echo "        <postfield name=\"inst_news_pc\" value=\"$inst_news_pc\"/>\n";
+            echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
             echo "</go>\n";
-		}
+        }
         else
         {
             echo "    <go method=\"post\" href=\"news.php\">\n";
@@ -188,5 +188,5 @@
         wap_buttons_menu_link($session_id);
         echo "</p>\n";
     }
-	wap_adm_end_card();
+    wap_adm_end_card();
 ?>

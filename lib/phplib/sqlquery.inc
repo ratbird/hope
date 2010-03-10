@@ -121,8 +121,8 @@ class Sql_Query {
     global $sess;
 
   ##
-	## load the HTML results of this function into $res.
-	##
+    ## load the HTML results of this function into $res.
+    ##
     $res  = "";
     
     ## A hack. We cannot do language dependent initialisation of

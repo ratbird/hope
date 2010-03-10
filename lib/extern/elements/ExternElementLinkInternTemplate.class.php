@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <thienel@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElementLinkInternTemplate
-* @package	studip_extern
+* @author       Peter Thienel <thienel@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElementLinkInternTemplate
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -40,54 +40,54 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/elements/ExternElementLinkIntern
 
 class ExternElementLinkInternTemplate extends ExternElementLinkIntern {
 
-	var $attributes = array('config', 'srilink', 'externlink');
-	var $link_module_type;
+    var $attributes = array('config', 'srilink', 'externlink');
+    var $link_module_type;
 
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementLinkInternTemplate ($config = '') {
-		if ($config) {
-			$this->config = $config;
-		}
-		
-		$this->name = "LinkInternTemplate";
-		$this->real_name = _("Links");
-		$this->description = _("Eigenschaften der Verlinkung zu anderen Modulen.");
-	}
-	
-	/**
-	* 
-	*/
-	function toStringEdit ($post_vars = '', $faulty_values = '',
-			$edit_form = '', $anker = '') {
-		global $EXTERN_MODULE_TYPES;
-		$out = '';
-		$table = '';
-		if ($edit_form == '')
-			$edit_form =& new ExternEditModule($this->config, $post_vars, $faulty_values, $anker);
-		
-		$edit_form->setElementName($this->getName());
-		$element_headline = $edit_form->editElementHeadline($this->real_name,
-				$this->config->getName(), $this->config->getId(), TRUE, $anker);
-		
-		$this->toStringConfigSelector($edit_form, $content_table);
-				
-		$submit = $edit_form->editSubmit($this->config->getName(),
-				$this->config->getId(), $this->getName());
-		$out = $edit_form->editContent($content_table, $submit);
-		$out .= $edit_form->editBlank();
-		
-		return $element_headline . $out;
-	}
-	
-	function toString ($args) {
-		
-		return $this->createUrl($args);
-	}
-	
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementLinkInternTemplate ($config = '') {
+        if ($config) {
+            $this->config = $config;
+        }
+        
+        $this->name = "LinkInternTemplate";
+        $this->real_name = _("Links");
+        $this->description = _("Eigenschaften der Verlinkung zu anderen Modulen.");
+    }
+    
+    /**
+    * 
+    */
+    function toStringEdit ($post_vars = '', $faulty_values = '',
+            $edit_form = '', $anker = '') {
+        global $EXTERN_MODULE_TYPES;
+        $out = '';
+        $table = '';
+        if ($edit_form == '')
+            $edit_form =& new ExternEditModule($this->config, $post_vars, $faulty_values, $anker);
+        
+        $edit_form->setElementName($this->getName());
+        $element_headline = $edit_form->editElementHeadline($this->real_name,
+                $this->config->getName(), $this->config->getId(), TRUE, $anker);
+        
+        $this->toStringConfigSelector($edit_form, $content_table);
+                
+        $submit = $edit_form->editSubmit($this->config->getName(),
+                $this->config->getId(), $this->getName());
+        $out = $edit_form->editContent($content_table, $submit);
+        $out .= $edit_form->editBlank();
+        
+        return $element_headline . $out;
+    }
+    
+    function toString ($args) {
+        
+        return $this->createUrl($args);
+    }
+    
 }
 
 ?>

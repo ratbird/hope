@@ -14,36 +14,36 @@
  */
 
 class Decorator {
-	var $undecoratedData = NULL;
-	
-	function Decorator($data = '') {
-		if ($data != '') {
-			$this->undecoratedData = $data;
-		}
-	}
+    var $undecoratedData = NULL;
+    
+    function Decorator($data = '') {
+        if ($data != '') {
+            $this->undecoratedData = $data;
+        }
+    }
 
-	function toString() {
-		/*
-		Das Array undecoratedData ist folgendermassen aufgebaut:
-		Array
- 		(
-			[regular] => Array
+    function toString() {
+        /*
+        Das Array undecoratedData ist folgendermassen aufgebaut:
+        Array
         (
-						[turnus_data] = Array
-							(
-		            [{metadate_id}] => Array
-    		            (
-		                    [metadate_id] => {metadate_id}
-		                    [idx] => 
-		                    [day] => 
-		                    [start_hour] =>
-		                    [start_minute] =>
-		                    [end_hour] =>
-		                    [end_minute] =>
-		                )
-								]
+            [regular] => Array
+        (
+                        [turnus_data] = Array
+                            (
+                    [{metadate_id}] => Array
+                        (
+                            [metadate_id] => {metadate_id}
+                            [idx] => 
+                            [day] => 
+                            [start_hour] =>
+                            [start_minute] =>
+                            [end_hour] =>
+                            [end_minute] =>
+                        )
+                                ]
 
-						[art] =>
+                        [art] =>
             [start_woche] =>
             [turnus] =>
 
@@ -66,9 +66,9 @@ class Decorator {
                     [resource_id] => 
                     [raum] => 
                 )
-				)
-		)
-		*/
-	}
+                )
+        )
+        */
+    }
 }
 ?>

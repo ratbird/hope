@@ -31,59 +31,59 @@ $perm->check("root");
 // semester_data, semester_holiday are empty
 
 if (semester_insert_into_semester_from_array($SEMESTER)) {
-	echo "Folgende Semester wurden eingef&uuml;gt<br><br>";
-	echo "<table border=1><tr>";
-	echo "<th></th><th>Name</th><th>Beginn</th><th>Ende</th>";
-	echo "</tr>";
-	for ($i=1;$i<count($SEMESTER);$i++) {
-		echo "<tr><td><b>".$i."</b></td><td>".$SEMESTER[$i]["name"]."</td><td>".date("d-m-Y",$SEMESTER[$i]["beginn"])."</td><td>".date("d-m-Y",$SEMESTER[$i]["ende"])."</td></tr>";
-	}
-	echo "</table>";
+    echo "Folgende Semester wurden eingef&uuml;gt<br><br>";
+    echo "<table border=1><tr>";
+    echo "<th></th><th>Name</th><th>Beginn</th><th>Ende</th>";
+    echo "</tr>";
+    for ($i=1;$i<count($SEMESTER);$i++) {
+        echo "<tr><td><b>".$i."</b></td><td>".$SEMESTER[$i]["name"]."</td><td>".date("d-m-Y",$SEMESTER[$i]["beginn"])."</td><td>".date("d-m-Y",$SEMESTER[$i]["ende"])."</td></tr>";
+    }
+    echo "</table>";
 }
 if (holiday_insert_into_semester_from_array($HOLIDAY)) {
-	echo "Folgende Ferien wurden eingef&uuml;gt:<br><br>";
-	echo "<table border=1><tr>";
-	echo "<th></th><th>Name</th><th>Beginn</th><th>Ende</th>";
-	echo "</tr>";
-	for ($i=1;$i<count($HOLIDAY);$i++) {
-		echo "<tr><td><b>".$i."</b></td><td>".$HOLIDAY[$i]["name"]."</td><td>".date("d-m-Y",$HOLIDAY[$i]["beginn"])."</td><td>".date("d-m-Y",$HOLIDAY[$i]["ende"])."</td></tr>";
-	}
-	echo "</table>";
+    echo "Folgende Ferien wurden eingef&uuml;gt:<br><br>";
+    echo "<table border=1><tr>";
+    echo "<th></th><th>Name</th><th>Beginn</th><th>Ende</th>";
+    echo "</tr>";
+    for ($i=1;$i<count($HOLIDAY);$i++) {
+        echo "<tr><td><b>".$i."</b></td><td>".$HOLIDAY[$i]["name"]."</td><td>".date("d-m-Y",$HOLIDAY[$i]["beginn"])."</td><td>".date("d-m-Y",$HOLIDAY[$i]["ende"])."</td></tr>";
+    }
+    echo "</table>";
 }
 
 
 
 function semester_insert_into_semester_from_array ($SEMESTER) {
-	$semester = new SemesterData;
-	$error = 0;
+    $semester = new SemesterData;
+    $error = 0;
     //$db->query("use studip");
     for ($i=1; $i <= sizeof($SEMESTER); $i++) {
         $tmp_id=md5(uniqid("lesukfhsdkuh"));
-		if (!$semester->insertNewSemester($SEMESTER[$i])) {
-			$error++;
-		}	
+        if (!$semester->insertNewSemester($SEMESTER[$i])) {
+            $error++;
+        }   
     }
-	if ($error) {
-		return 0;
-	}
-	return 1;
+    if ($error) {
+        return 0;
+    }
+    return 1;
 }
 
 
 function holiday_insert_into_semester_from_array ($HOLIDAY) {
-	$holiday = new HolidayData;
-	$error = 0;
+    $holiday = new HolidayData;
+    $error = 0;
     //$db->query("use studip");
     for ($i=1; $i <= sizeof($HOLIDAY); $i++) {
         $tmp_id=md5(uniqid("lesukfhsdkuh"));
-		if (!$holiday->insertNewHoliday($HOLIDAY[$i])) {
-			$error++;
-		}	
+        if (!$holiday->insertNewHoliday($HOLIDAY[$i])) {
+            $error++;
+        }   
     }
-	if ($error) {
-		return 0;
-	}
-	return 1;
+    if ($error) {
+        return 0;
+    }
+    return 1;
 }
 
 

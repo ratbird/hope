@@ -9,11 +9,11 @@
 * or a timetable for a ressource like a room, a device or a building
 * 
 *
-* @author		André Noack <noack@data-quest.de>
-* @access		public
-* @package		resources
-* @modulegroup	resources_modules
-* @module		ScheduleWeek.class.php
+* @author       André Noack <noack@data-quest.de>
+* @access       public
+* @package      resources
+* @modulegroup  resources_modules
+* @module       ScheduleWeek.class.php
 */
 
 // +---------------------------------------------------------------------------+
@@ -38,25 +38,25 @@
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/views/ScheduleWeek.class.php";
 
 class SemScheduleWeek  extends ScheduleWeek {
-	
-	//Kontruktor
-	function SemScheduleWeek ($start_hour = '', $end_hour = '', $show_days = '', $start_date = '') {
-		
-		parent::ScheduleWeek($start_hour, $end_hour, $show_days, $start_date, false);
+    
+    //Kontruktor
+    function SemScheduleWeek ($start_hour = '', $end_hour = '', $show_days = '', $start_date = '') {
+        
+        parent::ScheduleWeek($start_hour, $end_hour, $show_days, $start_date, false);
 
-		//the base_date have to be 0:00
-		$first_monday = date("j",$this->start_date)  - (date("w", $this->start_date) - 1);
-		if (date("w", $this->start_date) > 1){
-			$first_monday += 7;
-		}
-		$this->base_date = mktime(0, 0, 0, date("n", $this->start_date), $first_monday ,  date("Y", $this->start_date));
-	}
-	
-	function getColumnName($id){
-		$ts = mktime (0,0,0,date("n",$this->base_date), date("j",$this->base_date)+$id-1, date("Y",$this->base_date));
-		$out = strftime("%A", $ts);
-		return $out;
-	}
-	
+        //the base_date have to be 0:00
+        $first_monday = date("j",$this->start_date)  - (date("w", $this->start_date) - 1);
+        if (date("w", $this->start_date) > 1){
+            $first_monday += 7;
+        }
+        $this->base_date = mktime(0, 0, 0, date("n", $this->start_date), $first_monday ,  date("Y", $this->start_date));
+    }
+    
+    function getColumnName($id){
+        $ts = mktime (0,0,0,date("n",$this->base_date), date("j",$this->base_date)+$id-1, date("Y",$this->base_date));
+        $out = strftime("%A", $ts);
+        return $out;
+    }
+    
 }
 ?>

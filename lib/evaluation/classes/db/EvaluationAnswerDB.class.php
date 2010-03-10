@@ -395,11 +395,11 @@ class EvaluationAnswerDB extends EvaluationObjectDB {
       " evalanswer.*, COUNT(IF(user_id='$userID',1,NULL)) AS has_voted ".
       "FROM".
       " evalanswer LEFT JOIN " .
-	  " evalanswer_user USING(evalanswer_id) ".
+      " evalanswer_user USING(evalanswer_id) ".
       "WHERE".
       " parent_id = '".$question_id."'".
       ($only_user_answered ?  " AND user_id = '".$userID."' " : "") .
-	  " GROUP BY evalanswer.evalanswer_id ORDER BY position";
+      " GROUP BY evalanswer.evalanswer_id ORDER BY position";
     $result = $db->query($sql);
     return $result->fetchAll();
   }

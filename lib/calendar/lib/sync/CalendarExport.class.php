@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	calendar_modules
-* @module		calendar_import
-* @package	Calendar
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  calendar_modules
+* @module       calendar_import
+* @package  Calendar
 */
 
 // +---------------------------------------------------------------------------+
@@ -42,84 +42,84 @@ require_once("$RELATIVE_PATH_CALENDAR/lib/ErrorHandler.class.php");
 require_once("$RELATIVE_PATH_CALENDAR/lib/driver/$CALENDAR_DRIVER/CalendarDriver.class.php");
  
 class CalendarExport {
-	
-	var $_writer;
-	var $export;
-	var $count;
-	
-	function CalendarExport (&$writer) {
-		
-		// initialize error handling
-		init_error_handler('_calendar_error');
-		$this->_writer =& $writer;
-	}
-	
-	function exportFromDatabase ($range_id = '', $start = 0, $end = 2114377200,
-			$event_types = 'CALENDAR_EVENTS', $sem_id, $except = NULL) {
-		global $_calendar_error;
-		
-		$export_driver =& new CalendarDriver();
-		$export_driver->openDatabase('EVENTS', $event_types, $start,
-				$end, $except, $range_id, $sem_id);
-		
-		$this->_export($this->_writer->writeHeader());
-		
-		while ($event = $export_driver->nextObject()) {		
-			$this->_export($this->_writer->write($event));
-		}
-		$this->count = $export_driver->getCount();
-		
-		if ($export_driver->getCount() == 0) {
-			$_calendar_error->throwError(ERROR_MESSAGE,
-					_("Es wurden keine Termine exportiert."));
-		}
-		else {
-			$_calendar_error->throwError(ERROR_MESSAGE,
-					sprintf(_("Es wurden %s Termine exportiert"), $export_driver->getCount()));
-		}
-		
-		$this->_export($this->_writer->writeFooter());
-	}
-	
-	function exportFromObjects (&$events) {
-		global $_calendar_error;
-		
-		$this->_export($this->_writer->writeHeader());
-		
-		$count = 0;
-		foreach ($events as $event) {			
-			$this->_export($this->_writer->write($event));
-			$count++;
-		}
-		$this->count = $count;
-		
-		if (!sizeof($events)) {
-			$_calendar_error->throwError(ERROR_MESSAGE,
-					_("Es wurden keine Termine exportiert."));
-		}
-		else {
-			$_calendar_error->throwError(ERROR_MESSAGE,
-					sprintf(_("Es wurden %s Termine exportiert"), sizeof($events)));
-		}
-		
-		$this->_export($this->_writer->writeFooter());
-	}
-	
-	function getExport () {
-		
-		return $this->export;
-	}
-	
-	function _export ($string) {
-		
-		$this->export .= $string;
-	}
-	
-	function getCount () {
-	
-		return $this->count;
-	}
-	
+    
+    var $_writer;
+    var $export;
+    var $count;
+    
+    function CalendarExport (&$writer) {
+        
+        // initialize error handling
+        init_error_handler('_calendar_error');
+        $this->_writer =& $writer;
+    }
+    
+    function exportFromDatabase ($range_id = '', $start = 0, $end = 2114377200,
+            $event_types = 'CALENDAR_EVENTS', $sem_id, $except = NULL) {
+        global $_calendar_error;
+        
+        $export_driver =& new CalendarDriver();
+        $export_driver->openDatabase('EVENTS', $event_types, $start,
+                $end, $except, $range_id, $sem_id);
+        
+        $this->_export($this->_writer->writeHeader());
+        
+        while ($event = $export_driver->nextObject()) {     
+            $this->_export($this->_writer->write($event));
+        }
+        $this->count = $export_driver->getCount();
+        
+        if ($export_driver->getCount() == 0) {
+            $_calendar_error->throwError(ERROR_MESSAGE,
+                    _("Es wurden keine Termine exportiert."));
+        }
+        else {
+            $_calendar_error->throwError(ERROR_MESSAGE,
+                    sprintf(_("Es wurden %s Termine exportiert"), $export_driver->getCount()));
+        }
+        
+        $this->_export($this->_writer->writeFooter());
+    }
+    
+    function exportFromObjects (&$events) {
+        global $_calendar_error;
+        
+        $this->_export($this->_writer->writeHeader());
+        
+        $count = 0;
+        foreach ($events as $event) {           
+            $this->_export($this->_writer->write($event));
+            $count++;
+        }
+        $this->count = $count;
+        
+        if (!sizeof($events)) {
+            $_calendar_error->throwError(ERROR_MESSAGE,
+                    _("Es wurden keine Termine exportiert."));
+        }
+        else {
+            $_calendar_error->throwError(ERROR_MESSAGE,
+                    sprintf(_("Es wurden %s Termine exportiert"), sizeof($events)));
+        }
+        
+        $this->_export($this->_writer->writeFooter());
+    }
+    
+    function getExport () {
+        
+        return $this->export;
+    }
+    
+    function _export ($string) {
+        
+        $this->export .= $string;
+    }
+    
+    function getCount () {
+    
+        return $this->count;
+    }
+    
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

@@ -52,33 +52,33 @@ include ('lib/include/header.php');   // Output of Stud.IP head
     <tr>
         <td class="blank"><br>
 <?php
-	//user bereits vorhanden
+    //user bereits vorhanden
     if ($perm->have_perm("autor")) {
-	    echo MessageBox::error(sprintf(_("Sie haben schon den Status <b>%s</b> im System.
-	    Eine Aktivierung des Accounts ist nicht mehr n&ouml;tig, um Schreibrechte zu bekommen"), $auth->auth["perm"]),
-	    array("<a href=\"index.php\">&nbsp;" . _("zur&uuml;ck zur Startseite") . "</a>"));
-	}
+        echo MessageBox::error(sprintf(_("Sie haben schon den Status <b>%s</b> im System.
+        Eine Aktivierung des Accounts ist nicht mehr n&ouml;tig, um Schreibrechte zu bekommen"), $auth->auth["perm"]),
+        array("<a href=\"index.php\">&nbsp;" . _("zur&uuml;ck zur Startseite") . "</a>"));
+    }
 
-    //	So, wer bis hier hin gekommen ist gehoert zur Zielgruppe...
+    //  So, wer bis hier hin gekommen ist gehoert zur Zielgruppe...
     // Volltrottel (oder abuse)
-	elseif (!isset($secret) || $secret == "") {
-		echo MessageBox::error(_("Sie müssen den vollst&ändigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren."));
-	}
+    elseif (!isset($secret) || $secret == "") {
+        echo MessageBox::error(_("Sie müssen den vollst&ändigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren."));
+    }
 
-	// abuse (oder Volltrottel)
-	elseif ($secret != $hash) {
-	    echo MessageBox::error(_("Der übergebene <em>Secret-Code</em> ist nicht korrekt."),
-	    array(_("Sie müssen unter dem Benutzernamen eingeloggt sein, für den Sie die Bestätigungsmail erhalten haben."),
-	    _("Und Sie müssen den vollständigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren.")));
+    // abuse (oder Volltrottel)
+    elseif ($secret != $hash) {
+        echo MessageBox::error(_("Der übergebene <em>Secret-Code</em> ist nicht korrekt."),
+        array(_("Sie müssen unter dem Benutzernamen eingeloggt sein, für den Sie die Bestätigungsmail erhalten haben."),
+        _("Und Sie müssen den vollständigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren.")));
 
         // Mail an abuse
-		$REMOTE_ADDR=getenv("REMOTE_ADDR");
-		$Zeit=date("H:i:s, d.m.Y",time());
-		$username = $auth->auth["uname"];
-		StudipMail::sendAbuseMessage("Validation", "Secret falsch\n\nUser: $username\n\nIP: $REMOTE_ADDR\nZeit: $Zeit\n");
-	}
+        $REMOTE_ADDR=getenv("REMOTE_ADDR");
+        $Zeit=date("H:i:s, d.m.Y",time());
+        $username = $auth->auth["uname"];
+        StudipMail::sendAbuseMessage("Validation", "Secret falsch\n\nUser: $username\n\nIP: $REMOTE_ADDR\nZeit: $Zeit\n");
+    }
 
-	// alles paletti, Status ändern
+    // alles paletti, Status ändern
     elseif ($secret == $hash) {
         $db = new DB_Seminar;
         $query = "update auth_user_md5 set perms='autor' where user_id='$user->id'";
@@ -95,7 +95,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
             $UserManagement = new UserManagement($user->id);
             $UserManagement->autoInsertSem('user');
 
-            $auth->logout();	// einen Logout durchführen, um erneuten Login zu erzwingen
+            $auth->logout();    // einen Logout durchführen, um erneuten Login zu erzwingen
             echo MessageBox::info(sprintf(_("Die Statusänderung wird erst nach einem erneuten %sLogin%s wirksam!<br>
             Deshalb wurden Sie jetzt automatisch ausgeloggt."), "<a href=\"index.php?again=yes\"><em>", "</em></a>"));
         }

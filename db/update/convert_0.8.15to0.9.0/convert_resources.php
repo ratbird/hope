@@ -32,27 +32,27 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // <META HTTP-EQUIV="REFRESH" CONTENT="<?php print $auth->lifetime*60;?>; URL=logout.php">
 -->
   <title>Stud.IP</title>
-	<link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="style.css" type="text/css">
  </head>
 
 <body>
 
 
 <?php
-	include "seminar_open.php"; //hier werden die sessions initialisiert
+    include "seminar_open.php"; //hier werden die sessions initialisiert
 
 // hier muessen Seiten-Initialisierungen passieren
 
-	include "header.php";   //hier wird der "Kopf" nachgeladen 
-	include "forum.inc.php"; 	
-	
+    include "header.php";   //hier wird der "Kopf" nachgeladen 
+    include "forum.inc.php";    
+    
 ?>
 <body>
 
 <table border=0 bgcolor="#000000" align="center" cellspacing=0 cellpadding=0 width=100%>
 <tr><td class="blank" colspan=2>&nbsp;</td></tr>
 <tr valign=top align=middle>
-	<td class="topic"colspan=2 align="left"><b>&nbsp;Erzeugen der Leveleintr&auml;ge in Ressourcentree</b></td>
+    <td class="topic"colspan=2 align="left"><b>&nbsp;Erzeugen der Leveleintr&auml;ge in Ressourcentree</b></td>
 </tr>
 <tr><td class="blank" colspan=2>&nbsp;</td></tr>
 
@@ -64,20 +64,20 @@ $level = 0;
 $db->query("select resource_id from resources_objects where  parent_id='0' ");
 
 while ($db->next_record()) {
-	insert_level($db->f("resource_id"), $level);
+    insert_level($db->f("resource_id"), $level);
 }
 
 function insert_level ($parent, $level) {
-	$db=new DB_Seminar;
-	$db2=new DB_Seminar;
-	
-	$db->query("update resources_objects set level='$level' where resource_id = '$parent' ");
-	$db2->query("select resource_id from resources_objects where  parent_id='$parent' ");
-	while ($db2->next_record()) {
-		insert_level($db2->f("resource_id"), $level+1);
-	}
+    $db=new DB_Seminar;
+    $db2=new DB_Seminar;
+    
+    $db->query("update resources_objects set level='$level' where resource_id = '$parent' ");
+    $db2->query("select resource_id from resources_objects where  parent_id='$parent' ");
+    while ($db2->next_record()) {
+        insert_level($db2->f("resource_id"), $level+1);
+    }
 }
-	
+    
 ?>
 </body>
 </html>

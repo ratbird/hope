@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternModuleNews
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternModuleNews
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -42,63 +42,63 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/views/extern_html_templates.inc.
 
 class ExternModuleNews extends ExternModule {
 
-	/**
-	*
-	*/
-	function ExternModuleNews ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
-		$this->registered_elements = array(
-								'Body',
-								'TableHeader',
-								'TableHeadrow',
-								'TableRow',
-								'ContentNews',
-								'LinkInternSimple' => 'LinkIntern',
-								'StudipLink');
-		$this->data_fields = array('date', 'topic');
-		$this->field_names = array
-		(
-				_("Datum/Autor"),
-				_("Nachricht")
-		);
-		parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
-	}
-	
-	function setup () {
-		$this->elements["LinkInternSimple"]->link_module_type = 2;
-		$this->elements["LinkInternSimple"]->real_name = _("Link zum Modul MitarbeiterInnendetails");
-		$this->elements["TableRow"]->real_name = _("Datenzeilen, Schrift von Name und Datum");
-	}
-	
-	function printout ($args) {
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_header($this->config);
-		
-		if (!$language = $this->config->getValue("Main", "language"))
-			$language = "de_DE";
-		init_i18n($language);
-		
-		include($GLOBALS["RELATIVE_PATH_EXTERN"]
-				. "/modules/views/news.inc.php");
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_footer();
-	}
-	
-	function printoutPreview () {
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_header($this->config);
-		
-		if (!$language = $this->config->getValue("Main", "language"))
-			$language = "de_DE";
-		init_i18n($language);
-		
-		include($GLOBALS["RELATIVE_PATH_EXTERN"]
-				. "/modules/views/news_preview.inc.php");
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_footer();
-	}
-	
+    /**
+    *
+    */
+    function ExternModuleNews ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
+        $this->registered_elements = array(
+                                'Body',
+                                'TableHeader',
+                                'TableHeadrow',
+                                'TableRow',
+                                'ContentNews',
+                                'LinkInternSimple' => 'LinkIntern',
+                                'StudipLink');
+        $this->data_fields = array('date', 'topic');
+        $this->field_names = array
+        (
+                _("Datum/Autor"),
+                _("Nachricht")
+        );
+        parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
+    }
+    
+    function setup () {
+        $this->elements["LinkInternSimple"]->link_module_type = 2;
+        $this->elements["LinkInternSimple"]->real_name = _("Link zum Modul MitarbeiterInnendetails");
+        $this->elements["TableRow"]->real_name = _("Datenzeilen, Schrift von Name und Datum");
+    }
+    
+    function printout ($args) {
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_header($this->config);
+        
+        if (!$language = $this->config->getValue("Main", "language"))
+            $language = "de_DE";
+        init_i18n($language);
+        
+        include($GLOBALS["RELATIVE_PATH_EXTERN"]
+                . "/modules/views/news.inc.php");
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_footer();
+    }
+    
+    function printoutPreview () {
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_header($this->config);
+        
+        if (!$language = $this->config->getValue("Main", "language"))
+            $language = "de_DE";
+        init_i18n($language);
+        
+        include($GLOBALS["RELATIVE_PATH_EXTERN"]
+                . "/modules/views/news_preview.inc.php");
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_footer();
+    }
+    
 }
 
 ?>

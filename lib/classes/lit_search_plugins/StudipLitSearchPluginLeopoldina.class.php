@@ -31,38 +31,38 @@ require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginZ3950Abstract
 *
 * 
 *
-* @access	public	
-* @author	André Noack <noack@data-quest.de>
-* @package	
+* @access   public  
+* @author   André Noack <noack@data-quest.de>
+* @package  
 **/
 class StudipLitSearchPluginLeopoldina extends StudipLitSearchPluginZ3950Abstract{
-	
-	
-	function StudipLitSearchPluginLeopoldina(){
-		parent::StudipLitSearchPluginZ3950Abstract();
-		$this->description = "Deutsche Akademie der Naturforscher Leopoldina";
-		$this->z_host = "z3950.gbv.de:20010/leop_opc";
-		$this->z_options = array('user' => '999', 'password' => 'abc');
-		$this->z_syntax = "UNIMARC";
-		$this->convert_umlaute = true;
+    
+    
+    function StudipLitSearchPluginLeopoldina(){
+        parent::StudipLitSearchPluginZ3950Abstract();
+        $this->description = "Deutsche Akademie der Naturforscher Leopoldina";
+        $this->z_host = "z3950.gbv.de:20010/leop_opc";
+        $this->z_options = array('user' => '999', 'password' => 'abc');
+        $this->z_syntax = "UNIMARC";
+        $this->convert_umlaute = true;
 
 
 
-		$this->z_profile = array('1016' => _("Basisindex [ALL]"),
-					 '2' => _("Körperschaftsname [KOS]"),
-					 '3' => _("Kongress [KNS]"),
-					 '4' => _("Titelstichwörter [TIT]"),
-					 '5' => _("Serienstichwörter [SER]"), 
-					 '7' => _("ISBN [ISB]"),
-					 '8' => _("ISSN [ISS]"), 
-					 '12' => _("PICA Prod.-Nr [PPN]"),
-					 '21' => _("alle Klassifikationen [SYS]"), 
-					 '1004' => _("Person, Author [PER]"),
-					 '1005' => _("Körperschaften [KOR]"), 
-					 '1006' => _("Kongresse [KON]"),
-					 '1007' => _("alle Nummern [NUM]"),
-					 '5040' => _("Schlagwoerter [SLW]"),
-					 '8580' => _("Verlagsort, Verlag [PUB]"));
-	}
+        $this->z_profile = array('1016' => _("Basisindex [ALL]"),
+                     '2' => _("Körperschaftsname [KOS]"),
+                     '3' => _("Kongress [KNS]"),
+                     '4' => _("Titelstichwörter [TIT]"),
+                     '5' => _("Serienstichwörter [SER]"), 
+                     '7' => _("ISBN [ISB]"),
+                     '8' => _("ISSN [ISS]"), 
+                     '12' => _("PICA Prod.-Nr [PPN]"),
+                     '21' => _("alle Klassifikationen [SYS]"), 
+                     '1004' => _("Person, Author [PER]"),
+                     '1005' => _("Körperschaften [KOR]"), 
+                     '1006' => _("Kongresse [KON]"),
+                     '1007' => _("alle Nummern [NUM]"),
+                     '5040' => _("Schlagwoerter [SLW]"),
+                     '8580' => _("Verlagsort, Verlag [PUB]"));
+    }
 }
 ?>

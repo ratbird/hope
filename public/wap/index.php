@@ -6,15 +6,15 @@
 * or login in order to access the members area.<br/>
 * Parameters received via stdin<br/>
 * <code>
-*	$session_id
+*   $session_id
 * </code>
 *
-* @author		Florian Hansen <f1701h@gmx.net>
-* @version		0.11	10.09.2003	21:23:48
-* @access		public
-* @modulegroup	wap_modules
-* @module		index.php
-* @package		WAP
+* @author       Florian Hansen <f1701h@gmx.net>
+* @version      0.11    10.09.2003  21:23:48
+* @access       public
+* @modulegroup  wap_modules
+* @module       index.php
+* @package      WAP
 */
 
 // +---------------------------------------------------------------------------+
@@ -45,30 +45,30 @@
     */
     define("PHPDOC_DUMMY", TRUE);
 
-	include_once("wap_adm.inc.php");
-	include_once("wap_txt.inc.php");
+    include_once("wap_adm.inc.php");
+    include_once("wap_txt.inc.php");
 
-	if ($session_id)
-	{
-		wap_adm_remove_session ($session_id);
-	}
+    if ($session_id)
+    {
+        wap_adm_remove_session ($session_id);
+    }
 
-	wap_adm_start_card();
+    wap_adm_start_card();
 
-			echo "<p align=\"center\">";
-			echo "<b>Stud.IP WAP</b>";
-			echo "</p>\n";
+            echo "<p align=\"center\">";
+            echo "<b>Stud.IP WAP</b>";
+            echo "</p>\n";
 
-			echo "<p align=\"center\">\n";
-			echo "<anchor>" . wap_txt_encode_to_wml(_("Verzeichnis")) . "\n";
-			echo "    <go href=\"directory.php\"/>\n";
-			echo "</anchor><br/>\n";
+            echo "<p align=\"center\">\n";
+            echo "<anchor>" . wap_txt_encode_to_wml(_("Verzeichnis")) . "\n";
+            echo "    <go href=\"directory.php\"/>\n";
+            echo "</anchor><br/>\n";
 
 
-			echo "<anchor>" . wap_txt_encode_to_wml(_("Login")) . "\n";
-			echo "    <go href=\"login_form.php\"/>\n";
-			echo "</anchor>\n";
-			echo "</p>\n";
+            echo "<anchor>" . wap_txt_encode_to_wml(_("Login")) . "\n";
+            echo "    <go href=\"login_form.php\"/>\n";
+            echo "</anchor>\n";
+            echo "</p>\n";
 
-	wap_adm_end_card();
+    wap_adm_end_card();
 ?>

@@ -6,7 +6,7 @@
 *             2000 Maxim Derkachev <kot@books.ru>,
 *             2000 Teodor Cimpoesu <teo@digiro.net>
 * @author     André Noack <noack@data-quest.de> Maxim Derkachev <kot@books.ru>,
-*				Teodor Cimpoesu <teo@digiro.net>,Ulf Wendel <uw@netuse.de>
+*               Teodor Cimpoesu <teo@digiro.net>,Ulf Wendel <uw@netuse.de>
 * @package    PHPLib
 * @access     public
 */
@@ -167,10 +167,10 @@ class Session {
   * @see  name()
   */
   function Session() {
-	  if (!$this->classname){
-		  $this->classname = strtolower(get_class($this));
-	  }
-	  $this->name($this->name);
+      if (!$this->classname){
+          $this->classname = strtolower(get_class($this));
+      }
+      $this->name($this->name);
   } // end constructor
 
 
@@ -184,23 +184,23 @@ class Session {
 
     if ( $this->mode=="cookie"
         && $this->fallback_mode=="cookie")  {
-	ini_set ("session.use_trans_sid", "0");
-	ini_set ("session.use_only_cookies", "1");
-	ini_set ("url_rewriter.tags" , "");
+    ini_set ("session.use_trans_sid", "0");
+    ini_set ("session.use_only_cookies", "1");
+    ini_set ("url_rewriter.tags" , "");
     }
 
     $this->set_container();
-	$this->set_tokenname();
+    $this->set_tokenname();
     $this->put_headers();
 
-	//check for illegal cookiename
-	if (isset($_COOKIE[$this->name])){
-		if (strlen($_COOKIE[$this->name]) != 32 || ereg('[^0-9a-f]+', $_COOKIE[$this->name])){
-			session_id(md5(uniqid($this->name,1)));
-		}
-	} else {
-		session_id(md5(uniqid($this->name,1)));
-	}
+    //check for illegal cookiename
+    if (isset($_COOKIE[$this->name])){
+        if (strlen($_COOKIE[$this->name]) != 32 || ereg('[^0-9a-f]+', $_COOKIE[$this->name])){
+            session_id(md5(uniqid($this->name,1)));
+        }
+    } else {
+        session_id(md5(uniqid($this->name,1)));
+    }
 
     $ok = session_start();
     $this->id = session_id();
@@ -209,7 +209,7 @@ class Session {
     if(!(bool) ini_get('register_globals')) {
       if(is_array($_SESSION)) {
         foreach ($_SESSION as $key => $value) {
-	      $GLOBALS[$key] = $value;
+          $GLOBALS[$key] = $value;
         }
       }
     }
@@ -291,7 +291,7 @@ class Session {
   /**
   * Recall the session registration for named variable(s)
   *
-  * @param	  mixed   String with the name of one or more variables seperated by comma
+  * @param    mixed   String with the name of one or more variables seperated by comma
   *                   or a list of variables names: "foo"/"foo,bar,baz"/{"foo","bar","baz"}
   * @access public
   */
@@ -317,9 +317,9 @@ class Session {
   * Delete the cookie holding the session id.
   *
   * RFC: is this really needed? can we prune this function?
-  * 		 the only reason to keep it is if one wants to also
-  *		 unset the cookie when session_destroy()ing,which PHP
-  *		 doesn't seem to do (looking @ the session.c:940)
+  *          the only reason to keep it is if one wants to also
+  *      unset the cookie when session_destroy()ing,which PHP
+  *      doesn't seem to do (looking @ the session.c:940)
   * uw: yes we should keep it to remain the same interface, but deprec.
   *
   * @access public
@@ -534,11 +534,11 @@ class Session {
   } // end func set_container
 
   function url($url){
-	  return $url;
+      return $url;
   }
 
   function self_url(){
-	  return $GLOBALS['PHP_SELF'] . ($_SERVER['QUERY_STRING'] ? '?'.$_SERVER['QUERY_STRING'] : '');
+      return $GLOBALS['PHP_SELF'] . ($_SERVER['QUERY_STRING'] ? '?'.$_SERVER['QUERY_STRING'] : '');
   }
 
   function pself_url() {

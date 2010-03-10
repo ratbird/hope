@@ -15,7 +15,7 @@ require_once 'app/models/studygroup.php';
 if (!defined('ELEMENTS_PER_PAGE')) define("ELEMENTS_PER_PAGE", 20); 
 
 class StudygroupController extends AuthenticatedController {
-	
+    
   function search_action($page,$sort) {
     $this->sort = $sort;
     $this->page = $page;

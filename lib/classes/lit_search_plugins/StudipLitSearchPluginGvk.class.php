@@ -30,45 +30,45 @@ require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginZ3950Abstract
 *
 * 
 *
-* @access	public	
-* @author	André Noack <noack@data-quest.de>
-* @package	
+* @access   public  
+* @author   André Noack <noack@data-quest.de>
+* @package  
 **/
 class StudipLitSearchPluginGvk extends StudipLitSearchPluginZ3950Abstract{
-	
-	
-	function StudipLitSearchPluginGvk(){
-		parent::StudipLitSearchPluginZ3950Abstract();
-		$this->description = "Gemeinsamer Verbundkatalog - GVK
+    
+    
+    function StudipLitSearchPluginGvk(){
+        parent::StudipLitSearchPluginZ3950Abstract();
+        $this->description = "Gemeinsamer Verbundkatalog - GVK
 Der GVK erfasst die Bibliotheksbestände der Bundesländer: Bremen, Hamburg, Niedersachsen, Sachsen-Anhalt, Schleswig-Holstein, Thüringen, Mecklenburg-Vorpommern und der Stiftung Preußischer Kulturbesitz (Berlin).
 Zusätzlich sind die Zeitschriftennachweise aller subito-Lieferbibliotheken aus Deutschland und Österreich sowie weiterer deutscher Universitätsbibliotheken enthalten.";
-		$this->z_host = "z3950.gbv.de:20010/gsogvk";
-		$this->z_options = array('user' => '999', 'password' => 'abc');
-		$this->z_syntax = "USMARC";
-		$this->convert_umlaute = true;
-		$this->z_accession_bib = "12";
-		$this->z_accession_re = '/[0-9]{8}[0-9X]{1}/';
-		$this->z_profile = array('1016' => _("Alle Wörter [ALL]"),
-					 '4' => _("Titelstichwörter [TIT]"),
-					 '21' => _("Schlagwörter [SLW]"),					 					 
-					 '5' => _("Serie, Zeitschrift (Phrase) [GTI]"),
-					 '1004 ' => _("Person, Autor [PER]"),					 					 
-					 '7' => _("ISBN [ISB]"),					 					 
-					 '8' => _("ISSN [ISN]"),					 					 
-					 '1007' => _("alle Nummern (ISBN, ISSN, ...) [NUM]"),					 					 
-					 '2' => _("Körperschaftsname (Phrase) [KOS]"),					 					 
-					 '1005' => _("Körperschaft (Stichwort) [KOR]"),					 					 
-					 '3' => _("Kongress (Phrase) [KNS]"),					 					 
-					 '1006' => _("Kongress (Stichwort) [KON]"),					 					 
-					 '1018' => _("Ort,Verlag (Stichwort) [PUB]"),					 					 
-					 '20' => _("Basisklassifikation [BKL]"),					 					 
-					 '12' => _("PICA Prod.-Nr. [PPN]"),					 					 
-					); /*  '5' => _("Serie, Zeitschrift (Stichwort) [SER]"),
-					       herausgenommen, da #5 standardmäßig auf Phrase gemappt ist und eine Stichwortsuche nicht möglich ist.
-					       Eine Stichwortsuche müsste über das Structure-Attribut (#4=2) kenntlich gemacht werden. Dies wird aber 
-					       von Stud.IP nicht unterstützt.
-					   */
-	}
+        $this->z_host = "z3950.gbv.de:20010/gsogvk";
+        $this->z_options = array('user' => '999', 'password' => 'abc');
+        $this->z_syntax = "USMARC";
+        $this->convert_umlaute = true;
+        $this->z_accession_bib = "12";
+        $this->z_accession_re = '/[0-9]{8}[0-9X]{1}/';
+        $this->z_profile = array('1016' => _("Alle Wörter [ALL]"),
+                     '4' => _("Titelstichwörter [TIT]"),
+                     '21' => _("Schlagwörter [SLW]"),                                        
+                     '5' => _("Serie, Zeitschrift (Phrase) [GTI]"),
+                     '1004 ' => _("Person, Autor [PER]"),                                        
+                     '7' => _("ISBN [ISB]"),                                         
+                     '8' => _("ISSN [ISN]"),                                         
+                     '1007' => _("alle Nummern (ISBN, ISSN, ...) [NUM]"),                                        
+                     '2' => _("Körperschaftsname (Phrase) [KOS]"),                                       
+                     '1005' => _("Körperschaft (Stichwort) [KOR]"),                                      
+                     '3' => _("Kongress (Phrase) [KNS]"),                                        
+                     '1006' => _("Kongress (Stichwort) [KON]"),                                      
+                     '1018' => _("Ort,Verlag (Stichwort) [PUB]"),                                        
+                     '20' => _("Basisklassifikation [BKL]"),                                         
+                     '12' => _("PICA Prod.-Nr. [PPN]"),                                      
+                    ); /*  '5' => _("Serie, Zeitschrift (Stichwort) [SER]"),
+                           herausgenommen, da #5 standardmäßig auf Phrase gemappt ist und eine Stichwortsuche nicht möglich ist.
+                           Eine Stichwortsuche müsste über das Structure-Attribut (#4=2) kenntlich gemacht werden. Dies wird aber 
+                           von Stud.IP nicht unterstützt.
+                       */
+    }
 }
 ?>
 

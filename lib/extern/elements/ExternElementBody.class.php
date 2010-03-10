@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElement
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElement
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -40,30 +40,30 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
 
 class ExternElementBody extends ExternElement {
 
-	var $attributes = array("body_bgcolor", "body_text", "body_link", "body_vlink",
-			"body_alink", "body_background", "body_class", "body_style");
+    var $attributes = array("body_bgcolor", "body_text", "body_link", "body_vlink",
+            "body_alink", "body_background", "body_class", "body_style");
 
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementBody ($config = "") {
-		if ($config)
-			$this->config = $config;
-		
-		$this->name = "Body";
-		$this->real_name = _("Seitenkörper");
-		$this->description = _("Eigenschaften des Seitenkörpers (HTML-Tag &gt;body&lt;).");
-	}
-	
-	function toString ($args) {
-		$out = "\n" . $this->config->getTag($this->name, "body");
-		$out .= $args["content"] . "</body>\n";
-		
-		return $out;
-	}
-	
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementBody ($config = "") {
+        if ($config)
+            $this->config = $config;
+        
+        $this->name = "Body";
+        $this->real_name = _("Seitenkörper");
+        $this->description = _("Eigenschaften des Seitenkörpers (HTML-Tag &gt;body&lt;).");
+    }
+    
+    function toString ($args) {
+        $out = "\n" . $this->config->getTag($this->name, "body");
+        $out .= $args["content"] . "</body>\n";
+        
+        return $out;
+    }
+    
 }
 
 ?>

@@ -398,7 +398,7 @@ class EvaluationObject extends StudipObject {
      while ($childObject = $this->getNextChild ()) {
        $childObject->save ();
        if ($childObject->isError ())
-	 return $this->throwErrorFromClass ($childObject);      
+     return $this->throwErrorFromClass ($childObject);      
      }
      /* ------------------------------------------------- end: save children */
    }
@@ -466,7 +466,7 @@ class EvaluationObject extends StudipObject {
        $this->setObjectID ($objectID);
        $this->load ();
        if ($this->db->isError ())
-	 return $this->throwErrorFromClass ($this->db);
+     return $this->throwErrorFromClass ($this->db);
      }
     /* -------------------------------------------------------------------- */
 

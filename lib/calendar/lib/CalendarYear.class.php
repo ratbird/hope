@@ -29,45 +29,45 @@ require_once("config.inc.php");
 
 class CalendarYear{
 
-	var $year;            // Jahr (int)
-	var $ts;              // "genormter" timestamp (s.o.)
-	
-	// Konstruktor
-	function CalendarYear($tmstamp){
-		$this->year = date("Y", $tmstamp);
-		$this->ts = mktime(12,0,0,1,1,$this->year,0);
-	}
-	
-	// public
-	function getYear(){
-		return $this->year;
-	}
-	
-	function toString(){
-		return (String) $this->year;
-	}
-	
-	// public
-	function getStart(){
-		return mktime(0,0,0,1,1,$this->year);
-	}
-	
-	// public
-	function getEnd(){
-		$end = mktime(0,0,0,1,1,$this->year + 1) - 1;
-		return $end;
-	}
-	
-	// public
-	function getTs(){
-		return $this->ts;
-	}
-	
-	// public
-	function serialisiere(){
-		return serialize($this);
-	}
-	
+    var $year;            // Jahr (int)
+    var $ts;              // "genormter" timestamp (s.o.)
+    
+    // Konstruktor
+    function CalendarYear($tmstamp){
+        $this->year = date("Y", $tmstamp);
+        $this->ts = mktime(12,0,0,1,1,$this->year,0);
+    }
+    
+    // public
+    function getYear(){
+        return $this->year;
+    }
+    
+    function toString(){
+        return (String) $this->year;
+    }
+    
+    // public
+    function getStart(){
+        return mktime(0,0,0,1,1,$this->year);
+    }
+    
+    // public
+    function getEnd(){
+        $end = mktime(0,0,0,1,1,$this->year + 1) - 1;
+        return $end;
+    }
+    
+    // public
+    function getTs(){
+        return $this->ts;
+    }
+    
+    // public
+    function serialisiere(){
+        return serialize($this);
+    }
+    
 } // class CalendarYear
 
 ?>

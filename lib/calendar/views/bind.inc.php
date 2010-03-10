@@ -7,11 +7,11 @@
 *
 *
 *
-* @author		Peter Thienel <pthienel@web.de>
-* @access		public
-* @modulegroup	calendar
-* @module		calendar
-* @package	calendar
+* @author       Peter Thienel <pthienel@web.de>
+* @access       public
+* @modulegroup  calendar
+* @module       calendar
+* @package  calendar
 */
 /**
 * workaround for PHPDoc
@@ -48,20 +48,20 @@ include('lib/include/header.php');
 // alle vom user abonnierten Seminare
 $db =& new DB_Seminar;
 if(!isset($sortby))
-	$sortby = "seminar_user.gruppe, seminare.Name";
+    $sortby = "seminar_user.gruppe, seminare.Name";
 
 if($order == 'ASC')
-	$order = 'DESC';
+    $order = 'DESC';
 else
-	$order = 'ASC';
+    $order = 'ASC';
 $query = "SELECT visitdate, seminare.Name, seminare.Seminar_id, seminar_user.status, seminar_user.gruppe, count(termin_id) as count,
-			sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem
-			FROM seminar_user LEFT JOIN seminare ON seminare.Seminar_id=seminar_user.seminar_id
-			LEFT JOIN object_user_visits  ouv ON ouv.object_id = seminare.Seminar_id AND ouv.user_id = '{$user->id}' AND ouv.type = 'sem'
-			LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende)
-			LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
-			LEFT JOIN termine ON range_id=seminare.Seminar_id WHERE seminar_user.user_id = '"
-			 . $user->id."' GROUP BY Seminar_id ORDER BY $sortby $order";
+            sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem
+            FROM seminar_user LEFT JOIN seminare ON seminare.Seminar_id=seminar_user.seminar_id
+            LEFT JOIN object_user_visits  ouv ON ouv.object_id = seminare.Seminar_id AND ouv.user_id = '{$user->id}' AND ouv.type = 'sem'
+            LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende)
+            LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
+            LEFT JOIN termine ON range_id=seminare.Seminar_id WHERE seminar_user.user_id = '"
+             . $user->id."' GROUP BY Seminar_id ORDER BY $sortby $order";
 $db->query($query);
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
@@ -69,9 +69,9 @@ echo "<tr><td class=\"blank\" width=\"90%\">\n";
 echo "<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"1\" class=\"blank\">\n";
 
 if (!empty($calendar_sess_control_data["view_prv"]))
-	echo "<form action=\"$PHP_SELF?cmd={$calendar_sess_control_data['view_prv']}\" method=\"post\">";
+    echo "<form action=\"$PHP_SELF?cmd={$calendar_sess_control_data['view_prv']}\" method=\"post\">";
 else
-	echo "<form action=\"$PHP_SELF?cmd=showweek\" method=\"post\">";
+    echo "<form action=\"$PHP_SELF?cmd=showweek\" method=\"post\">";
 echo "\n<tr>\n";
 echo "<th width=\"2%\" nowrap colspan=\"2\" align=\"center\">";
 echo "&nbsp;<a href=\"gruppe.php\">";
@@ -93,39 +93,39 @@ $css_switcher->enableHover();
 $css_switcher->switchClass();
 
 while($db->next_record()){
-	$name = $db->f("Name") . " (".$db->f('startsem') . ($db->f('startsem') != $db->f('endsem') ? " - ".$db->f('endsem') : "") . ")";
-	$style = $css_switcher->getFullClass();
-	echo "<tr" . $css_switcher->getHover() . "><td width=\"1%\" class=\"gruppe" . $db->f("gruppe") . "\">";
-	echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" alt=\"Gruppe\" border=\"0\" width=\"7\" height=\"12\"></td>\n";
-	echo "<td$style>&nbsp; </td>";
-	echo "<td$style><font size=\"-1\">";
-	echo "<a href=\"" . $CANONICAL_RELATIVE_PATH_STUDIP;
-	echo "seminar_main.php?auswahl=" . $db->f("Seminar_id") . "\">";
-	echo htmlReady(mila($name));
-	echo "</a></font></td>\n";
-	echo "<td$style align=\"center\"><font size=\"-1\">";
-	echo $db->f("count");
-	echo "</font></td>\n";
-	if ($db->f("visitdate") == 0) {
-		echo "<td$style align=\"center\"><font size=\"-1\">";
-		echo _("nicht besucht") . "</font></td>\n";
-	}
-	else{
-		echo "<td$style align=\"center\"><font size=\"-1\">";
-		echo strftime("%x", $db->f("visitdate"));
-		echo "</font></td>";
-	}
-	echo "<td$style align=\"center\"><font size=\"-1\">";
-	echo $db->f("status");
-	echo "</font></td>\n";
-	if($calendar_user_control_data["bind_seminare"][$db->f("Seminar_id")])
-		$is_checked = " checked";
-	else
-		$is_checked = "";
-	echo "<td$style>";
-	echo "<input type=\"checkbox\" name=\"sem[" . $db->f("Seminar_id")
-		. "]\" value=\"TRUE\"$is_checked></td></tr>\n",
-	$css_switcher->switchClass();
+    $name = $db->f("Name") . " (".$db->f('startsem') . ($db->f('startsem') != $db->f('endsem') ? " - ".$db->f('endsem') : "") . ")";
+    $style = $css_switcher->getFullClass();
+    echo "<tr" . $css_switcher->getHover() . "><td width=\"1%\" class=\"gruppe" . $db->f("gruppe") . "\">";
+    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" alt=\"Gruppe\" border=\"0\" width=\"7\" height=\"12\"></td>\n";
+    echo "<td$style>&nbsp; </td>";
+    echo "<td$style><font size=\"-1\">";
+    echo "<a href=\"" . $CANONICAL_RELATIVE_PATH_STUDIP;
+    echo "seminar_main.php?auswahl=" . $db->f("Seminar_id") . "\">";
+    echo htmlReady(mila($name));
+    echo "</a></font></td>\n";
+    echo "<td$style align=\"center\"><font size=\"-1\">";
+    echo $db->f("count");
+    echo "</font></td>\n";
+    if ($db->f("visitdate") == 0) {
+        echo "<td$style align=\"center\"><font size=\"-1\">";
+        echo _("nicht besucht") . "</font></td>\n";
+    }
+    else{
+        echo "<td$style align=\"center\"><font size=\"-1\">";
+        echo strftime("%x", $db->f("visitdate"));
+        echo "</font></td>";
+    }
+    echo "<td$style align=\"center\"><font size=\"-1\">";
+    echo $db->f("status");
+    echo "</font></td>\n";
+    if($calendar_user_control_data["bind_seminare"][$db->f("Seminar_id")])
+        $is_checked = " checked";
+    else
+        $is_checked = "";
+    echo "<td$style>";
+    echo "<input type=\"checkbox\" name=\"sem[" . $db->f("Seminar_id")
+        . "]\" value=\"TRUE\"$is_checked></td></tr>\n",
+    $css_switcher->switchClass();
 }
 
 echo "<tr><td class=\"blank\">&nbsp;</td></tr>\n";
@@ -140,10 +140,10 @@ echo "</table>";
 echo "\n</td>\n";
 echo "<td class=\"blank\" width=\"10%\" valign=\"top\">\n";
 $info_content = array(array("kategorie" => _("Information:"),
-											"eintrag" => array(
-												array('icon' => "ausruf_small.gif",
-															"text" => _("Termine aus den ausgew&auml;hlten Veranstaltungen werden in Ihren Terminkalender &uuml;bernommen.")
-											))));
+                                            "eintrag" => array(
+                                                array('icon' => "ausruf_small.gif",
+                                                            "text" => _("Termine aus den ausgew&auml;hlten Veranstaltungen werden in Ihren Terminkalender &uuml;bernommen.")
+                                            ))));
 
 print_infobox($info_content, "dates.jpg");
 echo "</td></tr></table>\n";

@@ -7,11 +7,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@data.quest.de>
-* @access		public
-* @modulegroup	extern_modules
-* @module		extern
-* @package		Extern
+* @author       Peter Thienel <pthienel@data.quest.de>
+* @access       public
+* @modulegroup  extern_modules
+* @module       extern
+* @package      Extern
 */
 /**
 * workaround for PHPDoc
@@ -42,9 +42,9 @@ define("PHPDOC_DUMMY",true);
 // +---------------------------------------------------------------------------+
 
 if (!$EXTERN_ENABLE) {
-	echo "<br><br><br><blockquote><b>This page is not available!<br>The module \"extern\"";
-	echo " is not enabled in this Stud.IP-installation.</b></blockquote>";
-	exit;
+    echo "<br><br><br><blockquote><b>This page is not available!<br>The module \"extern\"";
+    echo " is not enabled in this Stud.IP-installation.</b></blockquote>";
+    exit;
 }
 
 include($RELATIVE_PATH_EXTERN . "/extern.inc.php");

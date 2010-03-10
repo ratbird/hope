@@ -7,12 +7,12 @@
 *
 * head line of Stud.IP
 *
-* @author		Stefan Suchi <suchi@data-quest.de>
-* @author		Michael Riehemann <michael.riehemann@uni-oldenburg.de>
-* @access		public
-* @modulegroup	visual
-* @module		header.php
-* @package		studip_core
+* @author       Stefan Suchi <suchi@data-quest.de>
+* @author       Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+* @access       public
+* @modulegroup  visual
+* @module       header.php
+* @package      studip_core
 */
 
 // +---------------------------------------------------------------------------+
@@ -52,32 +52,32 @@ if ($GLOBALS['USER_VISIBILITY_CHECK'])
 
 if ($_NOHEADER == true) //Einige Seiten benötigen keinen Header, sprich Navigation (Evaluation usw.)
 {
-	$header_template = $GLOBALS['template_factory']->open('noheader');
+    $header_template = $GLOBALS['template_factory']->open('noheader');
 }
 else
 {
-	$header_template = $GLOBALS['template_factory']->open('header');
-	$header_template->current_page = $GLOBALS['CURRENT_PAGE'];
-	$header_template->navigation = Navigation::getItem('/')->activeSubNavigation();
-	$header_template->link_params = array_fill_keys(array_keys(URLHelper::getLinkParams()), NULL);
+    $header_template = $GLOBALS['template_factory']->open('header');
+    $header_template->current_page = $GLOBALS['CURRENT_PAGE'];
+    $header_template->navigation = Navigation::getItem('/')->activeSubNavigation();
+    $header_template->link_params = array_fill_keys(array_keys(URLHelper::getLinkParams()), NULL);
 
-	if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') {
-		if ($GLOBALS['user']->cfg->getValue(null, 'ACCESSKEY_ENABLE')){
-			$header_template->accesskey_enabled = true;
-		}
-		// fetch semester for quick search box in the link bar
-		$semester_data = SemesterData::GetSemesterArray();
-		$default_semester = SemesterData::GetSemesterIndexById($_SESSION['_default_sem']);
-		$header_template->search_semester_nr = $default_semester;
-		$header_template->search_semester_name = $semester_data[$default_semester]['name'];
-	}
+    if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') {
+        if ($GLOBALS['user']->cfg->getValue(null, 'ACCESSKEY_ENABLE')){
+            $header_template->accesskey_enabled = true;
+        }
+        // fetch semester for quick search box in the link bar
+        $semester_data = SemesterData::GetSemesterArray();
+        $default_semester = SemesterData::GetSemesterIndexById($_SESSION['_default_sem']);
+        $header_template->search_semester_nr = $default_semester;
+        $header_template->search_semester_name = $semester_data[$default_semester]['name'];
+    }
 }
 echo $header_template->render();
 
 if ($GLOBALS['SHOW_TERMS_ON_FIRST_LOGIN'] && $GLOBALS['auth']->is_authenticated() && $GLOBALS['user']->id != 'nobody')
 {
-	require_once('lib/terms.inc.php');
-	check_terms($GLOBALS['user']->id, $GLOBALS['_language_path']);
+    require_once('lib/terms.inc.php');
+    check_terms($GLOBALS['user']->id, $GLOBALS['_language_path']);
 }
 
 ?>

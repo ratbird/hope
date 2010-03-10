@@ -53,98 +53,98 @@ $contentTable = new ContentTable();
 echo $contentTable->openCell();
 
 if ($action=="new") {
-	echo show_lock_rule_form($lockdata);
+    echo show_lock_rule_form($lockdata);
 }
 
 else if ($action=="insert") {
-	if (strlen($lockdata["name"])==0) {
-		echo $contentTable->closeCell();
-		echo $contentTable->closeRow();
-		parse_msg("error§"._("Bitte geben Sie einen Namen f&uuml;r die Sperrebene an!"), "§", "blank", 1, FALSE );	// parse_msg macht immer ne neue row auf, daher diese eigenartige Benutzung
-		echo $contentTable->openRow();
-		echo $contentTable->openCell();
-		echo show_lock_rule_form($lockdata);
-	} else if (get_lock_rule_by_name($lockdata["name"])) {
-		echo $contentTable->closeCell();
-		echo $contentTable->closeRow();
-		parse_msg("error§"._("Der Name ist schon vergeben!"), "§", "blank", 1, FALSE );
-		echo $contentTable->openRow();
-		echo $contentTable->openCell();
-		echo show_lock_rule_form($lockdata);
-	} else {
-		$insertdata = parse_lockdata($lockdata);		// delete 0-values
-		if (insert_lock_rule(remove_magic_quotes($insertdata))) {
-			echo $contentTable->closeCell();
-			echo $contentTable->closeRow();
-			parse_msg("msg§"._("Einf&uuml;gen erfolgreich"), "§", "blank", 1, FALSE );
-			echo $contentTable->openRow();
-			echo $contentTable->openCell();
-			echo show_content();		//show_content zeigt immer die Startseite an
-		}
-	}
+    if (strlen($lockdata["name"])==0) {
+        echo $contentTable->closeCell();
+        echo $contentTable->closeRow();
+        parse_msg("error§"._("Bitte geben Sie einen Namen f&uuml;r die Sperrebene an!"), "§", "blank", 1, FALSE );  // parse_msg macht immer ne neue row auf, daher diese eigenartige Benutzung
+        echo $contentTable->openRow();
+        echo $contentTable->openCell();
+        echo show_lock_rule_form($lockdata);
+    } else if (get_lock_rule_by_name($lockdata["name"])) {
+        echo $contentTable->closeCell();
+        echo $contentTable->closeRow();
+        parse_msg("error§"._("Der Name ist schon vergeben!"), "§", "blank", 1, FALSE );
+        echo $contentTable->openRow();
+        echo $contentTable->openCell();
+        echo show_lock_rule_form($lockdata);
+    } else {
+        $insertdata = parse_lockdata($lockdata);        // delete 0-values
+        if (insert_lock_rule(remove_magic_quotes($insertdata))) {
+            echo $contentTable->closeCell();
+            echo $contentTable->closeRow();
+            parse_msg("msg§"._("Einf&uuml;gen erfolgreich"), "§", "blank", 1, FALSE );
+            echo $contentTable->openRow();
+            echo $contentTable->openCell();
+            echo show_content();        //show_content zeigt immer die Startseite an
+        }
+    }
 }
-else if ($action=="edit") {								// Zeige Form?
-	$lockdata = get_lock_rule($lock_id);
-	echo show_lock_rule_form($lockdata, 1);
+else if ($action=="edit") {                             // Zeige Form?
+    $lockdata = get_lock_rule($lock_id);
+    echo show_lock_rule_form($lockdata, 1);
 }
-else if ($action=="confirm_edit") {						// UPDATE!!
-	$updatedata = parse_lockdata($lockdata);		// delete 0-values
-	if (!update_existing_rule(remove_magic_quotes($updatedata))) {
-		echo $contentTable->closeCell();
-		echo $contentTable->closeRow();
-		parse_msg("error§"._("Die &Auml;nderung ist fehlgeschlagen"), "§", "blank", 1, FALSE );
-		echo $contentTable->openRow();
-		echo $contentTable->openCell();
-		echo show_content();				//s.o.
-	} else {
-		echo $contentTable->closeCell();
-		echo $contentTable->closeRow();
-		parse_msg("msg§"._("Die &Auml;nderung war erfolgreich!"), "§", "blank", 1, FALSE );
-		echo $contentTable->openRow();
-		echo $contentTable->openCell();
-		echo show_content();
-	}
+else if ($action=="confirm_edit") {                     // UPDATE!!
+    $updatedata = parse_lockdata($lockdata);        // delete 0-values
+    if (!update_existing_rule(remove_magic_quotes($updatedata))) {
+        echo $contentTable->closeCell();
+        echo $contentTable->closeRow();
+        parse_msg("error§"._("Die &Auml;nderung ist fehlgeschlagen"), "§", "blank", 1, FALSE );
+        echo $contentTable->openRow();
+        echo $contentTable->openCell();
+        echo show_content();                //s.o.
+    } else {
+        echo $contentTable->closeCell();
+        echo $contentTable->closeRow();
+        parse_msg("msg§"._("Die &Auml;nderung war erfolgreich!"), "§", "blank", 1, FALSE );
+        echo $contentTable->openRow();
+        echo $contentTable->openCell();
+        echo show_content();
+    }
 }
 else if ($action=="delete") {
-	if (!delete_lock_rule($lock_id)) {
-		echo $contentTable->closeCell();
-		echo $contentTable->closeRow();
-		parse_msg("error§"._("Die Sperrebene konnte nicht gel&ouml;scht werden!"), "§", "blank", 1, FALSE );
-		echo $contentTable->openRow();
-		echo $contentTable->openCell();
-		echo show_content();
-	} else {
-		echo $contentTable->closeCell();
-		echo $contentTable->closeRow();
-		parse_msg("msg§"._("Die Sperrebene wurde gel&ouml;scht!"), "§", "blank", 1, FALSE );
-		echo $contentTable->openRow();
-		echo $contentTable->openCell();
-		echo show_content();
-	}
+    if (!delete_lock_rule($lock_id)) {
+        echo $contentTable->closeCell();
+        echo $contentTable->closeRow();
+        parse_msg("error§"._("Die Sperrebene konnte nicht gel&ouml;scht werden!"), "§", "blank", 1, FALSE );
+        echo $contentTable->openRow();
+        echo $contentTable->openCell();
+        echo show_content();
+    } else {
+        echo $contentTable->closeCell();
+        echo $contentTable->closeRow();
+        parse_msg("msg§"._("Die Sperrebene wurde gel&ouml;scht!"), "§", "blank", 1, FALSE );
+        echo $contentTable->openRow();
+        echo $contentTable->openCell();
+        echo show_content();
+    }
 
 }
 else if ($action=="confirm_delete") {
-	if (!check_empty_lock_rule($lock_id)) {
-		echo $contentTable->closeCell();
-		echo $contentTable->closeRow();
-		parse_msg("info§", "§", "blank", 1, FALSE );
-		echo $contentTable->openRow();
-		echo $contentTable->openCell();
-		echo "<font size=2>"._("Wollen Sie die Sperrebene l&ouml;schen?")."</font>";
-		echo "<br><br>";
-		echo "<a href=\"".URLHelper::getLink("?lock_id=".$lock_id."&action=delete")."\">".makeButton("ja2","img")."</a>&nbsp;&nbsp;<a href=\"".URLHelper::getLink()."\">".makeButton("nein","img")."</a>";
-		echo show_content();
-	} else {
-		echo $contentTable->closeCell();
-		echo $contentTable->closeRow();
-		parse_msg("error§"._("Sperrebenen k&ouml;nnen nur gel&ouml;scht werden, wenn sie nicht benutzt werden!"), "§", "blank", 1, FALSE );
-		echo $contentTable->openRow();
-		echo $contentTable->openCell();
-		echo show_content();
-	}
+    if (!check_empty_lock_rule($lock_id)) {
+        echo $contentTable->closeCell();
+        echo $contentTable->closeRow();
+        parse_msg("info§", "§", "blank", 1, FALSE );
+        echo $contentTable->openRow();
+        echo $contentTable->openCell();
+        echo "<font size=2>"._("Wollen Sie die Sperrebene l&ouml;schen?")."</font>";
+        echo "<br><br>";
+        echo "<a href=\"".URLHelper::getLink("?lock_id=".$lock_id."&action=delete")."\">".makeButton("ja2","img")."</a>&nbsp;&nbsp;<a href=\"".URLHelper::getLink()."\">".makeButton("nein","img")."</a>";
+        echo show_content();
+    } else {
+        echo $contentTable->closeCell();
+        echo $contentTable->closeRow();
+        parse_msg("error§"._("Sperrebenen k&ouml;nnen nur gel&ouml;scht werden, wenn sie nicht benutzt werden!"), "§", "blank", 1, FALSE );
+        echo $contentTable->openRow();
+        echo $contentTable->openCell();
+        echo show_content();
+    }
 }
 else {
-	echo show_content(); // Uebersicht
+    echo show_content(); // Uebersicht
 }
 
 echo $contentTable->close();

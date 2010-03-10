@@ -31,47 +31,47 @@ require_once $RELATIVE_PATH_ADMIN_MODULES."/IntegrityCheckAbstract.class.php";
 *
 * 
 *
-* @access	public	
-* @author	André Noack <andre.noack@gmx.net>
-* @package	Admin
-* @see		IntegrityCheckAbstract
+* @access   public  
+* @author   André Noack <andre.noack@gmx.net>
+* @package  Admin
+* @see      IntegrityCheckAbstract
 */
 class IntegrityCheckUser extends IntegrityCheckAbstract {
-	
-	/**
-	* constructor
-	*
-	* calls the base class constructor and initializes checklist array
-	* @access	public
-	*/
-	function IntegrityCheckUser(){
-		$baseclass = strtolower(get_parent_class($this));
-		//parent::$baseclass(); //calling the baseclass constructor 
-		$this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
-		$this->master_table = "auth_user_md5";
-		$this->checklist[] = array('detail_table' => 'user_info',
-									'query' => 'view:USER_USERINFO:');
-		$this->checklist[] = array('detail_table' => 'seminar_user',
-									'query' => 'view:USER_SEMUSER:');
-		$this->checklist[] = array('detail_table' => 'user_inst',
-									'query' => 'view:USER_INSTUSER:');
-		$this->checklist[] = array('detail_table' => 'user_studiengang',
-									'query' => 'view:USER_STUDUSER:');
-		$this->checklist[] = array('detail_table' => 'archiv_user',
-									'query' => 'view:USER_ARCHIVUSER:');
-		$this->checklist[] = array('detail_table' => 'admission_seminar_user',
-									'query' => 'view:USER_ADMISSIONUSER:');
-		$this->checklist[] = array('detail_table' => PHPLIB_USERDATA_TABLE,
-									'query' => 'view:USER_SESSION:');
-		$this->checklist[] = array('detail_table' => 'contact',
-									'query' => 'view:USER_CONTACT:');
-		$this->checklist[] = array('detail_table' => 'statusgruppe_user',
-									'query' => 'view:USER_STATUSGRUPPEUSER:');
-		$this->checklist[] = array('detail_table' => 'object_user_visits',
-									'query' => 'view:USER_OBJECT_USER_VISIT:');
-									
-		
-	}
+    
+    /**
+    * constructor
+    *
+    * calls the base class constructor and initializes checklist array
+    * @access   public
+    */
+    function IntegrityCheckUser(){
+        $baseclass = strtolower(get_parent_class($this));
+        //parent::$baseclass(); //calling the baseclass constructor 
+        $this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
+        $this->master_table = "auth_user_md5";
+        $this->checklist[] = array('detail_table' => 'user_info',
+                                    'query' => 'view:USER_USERINFO:');
+        $this->checklist[] = array('detail_table' => 'seminar_user',
+                                    'query' => 'view:USER_SEMUSER:');
+        $this->checklist[] = array('detail_table' => 'user_inst',
+                                    'query' => 'view:USER_INSTUSER:');
+        $this->checklist[] = array('detail_table' => 'user_studiengang',
+                                    'query' => 'view:USER_STUDUSER:');
+        $this->checklist[] = array('detail_table' => 'archiv_user',
+                                    'query' => 'view:USER_ARCHIVUSER:');
+        $this->checklist[] = array('detail_table' => 'admission_seminar_user',
+                                    'query' => 'view:USER_ADMISSIONUSER:');
+        $this->checklist[] = array('detail_table' => PHPLIB_USERDATA_TABLE,
+                                    'query' => 'view:USER_SESSION:');
+        $this->checklist[] = array('detail_table' => 'contact',
+                                    'query' => 'view:USER_CONTACT:');
+        $this->checklist[] = array('detail_table' => 'statusgruppe_user',
+                                    'query' => 'view:USER_STATUSGRUPPEUSER:');
+        $this->checklist[] = array('detail_table' => 'object_user_visits',
+                                    'query' => 'view:USER_OBJECT_USER_VISIT:');
+                                    
+        
+    }
 
 }
 ?>

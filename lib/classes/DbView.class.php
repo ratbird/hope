@@ -30,271 +30,271 @@
 * Only tested with MySql, needs MySql >= 3.23
 * Uses DB abstraction layer of PHPLib
 *
-* @access	public	
-* @author	André Noack <andre.noack@gmx.net>
-* @package	DBTools
+* @access   public  
+* @author   André Noack <andre.noack@gmx.net>
+* @package  DBTools
 */
 class DbView {
-	/**
-	* the processed list of queries
-	*
-	* 
-	* @access	private
-	* @var		array	$query_list	
-	*/
-	var $query_list = array();
-	/**
-	* list of parameters
-	*
-	* 
-	* @access	public
-	* @var		array	$params	
-	*/
-	var $params = array();
-	
-	/**
-	* Database Object 
-	*
-	* 
-	* @access	private
-	* @var		object	$db	
-	*/
-	var $db;
-	/**
-	* Database Object Type
-	*
-	* Use your subclass of db_mysql here, or pass existing object to constuctor
-	* @access	private
-	* @var		string	$db_class_name
-	* @see		DbView()
-	*/
-	var $db_class_name = "DB_Seminar";
-	/**
-	* Temp Table Type 
-	*
-	* MyISAM is always safe, HEAP may provide better performance
-	* @access	private
-	* @var		string $temp_table_type	
-	*/
-	var $temp_table_type = "MyISAM";
-	/**
-	* Primary Key used in Temp Table 
-	*
-	* If none is set in your view, an auto_increment row is used
-	* @access	private
-	* @var		string $pk
-	* @see		get_temp_table()
-	*/
-	var $pk = "";
-	/**
-	* delete the params array after each query execution
-	*
-	* 
-	* @access	public
-	* @var		boolean	$auto_free_params
-	*/
-	var $auto_free_params = true;
-	/**
-	* turn on/off debugging
-	*
-	* 
-	* @access	public
-	* @var		boolean	$debug
-	*/
-	var $debug = false;
-	
-	/**
-	* Constructor
-	*
-	* Pass nothing to use a new instance of db_class_name, the classname for a new instance, or existing instance 
-	* @access	public
-	* @param	mixed	$db	classname of used db abstraction or existing db object
-	*/
-	function DbView($db = "") {
-		if(is_object($db)){
-			$this->db = $db;
-		} else if($db != ""){
-			$this->db = new $db;
-			$this->db_class_name = $db;
-		} else {
-			$this->db = new $this->db_class_name;
-		}
-		
-	}
-	
-	/**
-	* print error message and exit script
-	*
-	* @access	private
-	* @param	string	$msg	the message to print
-	*/
-	function halt($msg){
-		echo "<hr>$msg<hr>";
-		if ($this->debug){
-			echo "<pre>";
-			print_r($this);
-			echo "</pre>";
-		}
-		die;
-	}
-	
-	function get_query() {
-		$parsed_query = $this->get_parsed_query(func_get_args());
-		$this->db->cache_query($parsed_query);
-	return $this->db;
-	}
-	
-	function get_parsed_query($query_list) {
-		$parsed_query = "";
-		$this->query_list = array();
-		(is_array($query_list)) ? $this->query_list = $query_list : $this->query_list[] = $query_list;
-		if(count($this->query_list) == 1){
-			$spl = explode(":",$this->query_list[0]);
-			if ($spl[0] == "view"){
-				$this->query_list = $this->get_view(trim($spl[1]));
-			}
-		}
-		$this->parse_query($this->query_list);
-		if(is_array($this->query_list)){
-			$parsed_query = $this->query_list[0];
-		} else {
-			$parsed_query = $this->query_list;
-		}
-	return $parsed_query;
-	}
-	
-	
-	function parse_query(&$query){
-		if (is_array($query)) {
-			for ($i = (count($query)-1); $i > 0 ; --$i){
-				$spl = explode(":",$query[$i]);
-				if ($spl[0] == "view"){
-					$query[$i] = $this->get_view(trim($spl[1]),$spl[2]);
-				}
-				$query[$i] = $this->parse_query($query[$i]);
-				$repl_query = (is_array($query[$i])) ? $query[$i][0] : $query[$i];
-				for ($j = 0; $j < $i; ++$j){
-					$spl = stristr($query[$j],"where");
-					if (!$spl) 
-						$spl = stristr($query[$j],"having");
-					if ($spl) {
-						$pos = strpos($spl,"{".$i."}");
-						if (!$pos === false)
-							$repl_query = $this->get_temp_values($repl_query);
-					}
-					if(!$spl OR $pos === false){
-						$pos = strpos($query[$j],"{".$i."}");
-						if (!$pos === false)
-							$repl_query = $this->get_temp_table($repl_query);
-					}
-					$query[$j] = str_replace("{".$i."}",$repl_query,$query[$j]);
-				}
-			}
-		}
-		return $query;
-	}
-	
-	
-	function get_temp_table($sub_query) {
-		$id = $this->get_uniqid();
-		$pk = ($this->pk)? "PRIMARY KEY($this->pk)" : "auto_".$id." INT NOT NULL AUTO_INCREMENT PRIMARY KEY";
-		$query = "CREATE TEMPORARY TABLE temp_$id ($pk)TYPE=$this->temp_table_type $sub_query";
-		$this->db->query($query);
-		return " temp_".$id." ";
-	}
-	
-	
-	function get_temp_values($sub_query) {
-		$this->db->query($sub_query);
-		if (!$this->db->num_rows())
-			$this->halt("Sub Query: <b>$sub_query</b> returns nothing!");
-		else {
-			while($this->db->next_record()) {
-				$result[] = $this->db->Record[0];
-			}
-			$value_list = $this->get_value_list($result);
-		}
-		return $value_list;
-	}
-	
-	function get_uniqid(){
-		mt_srand((double)microtime()*1000000);
-		return md5(uniqid (mt_rand(),1));
-	}
-	
-	function get_value_list($list){
-		$value_list = false;
-		if (count($list) == 1) 
-			$value_list = "'$list[0]'";
-		else 
-			$value_list = "'".join("','",$list)."'";
-		return $value_list;
-	}
-	
-	function get_view($name){
-		if ($GLOBALS["_views"][$name]["pk"]) 
-			$this->pk = $GLOBALS["_views"][$name]["pk"];
-		if ($GLOBALS["_views"][$name]["temp_table_type"])
-			$this->temp_table_type = $GLOBALS["_views"][$name]["temp_table_type"];
-		if (!$query_list = $GLOBALS["_views"][$name]["query"])
-			$this->halt("View not found: $name");
-		(is_array($query_list)) ? $query = $query_list[0] : $query = $query_list;
-		$tokens = split("[\?§\&]", $query);
-		if (count($tokens) > 1){
-			$types = array();
-			$token = 0;
-			for ($i = 0; $i < strlen($query); $i++) {
-				switch ($query{$i}) {
-					case '?':
-					$types[$token++] = 1;
-					break;
-					case '§':
-					$types[$token++] = 2;
-					break;
-					case '&':
-					$types[$token++] = 3;
-					break;
-				}
-			}
-			if (count($this->params) != count($types)) 
-				$this->halt("Wrong parameter count in view: $name");
-			$query = "";
-			for($i = 0; $i < count($this->params); ++$i){
-				$query .= $tokens[$i];
-				if (is_null($this->params[$i])){
-					$query .= 'NULL';
-				} else {
-				switch ($types[$i]) {
-						case 1:
-						$query .= "'" . $this->params[$i] . "'";
-						break;
-						case 2:
-						$query .= $this->params[$i];
-						break;
-						case 3:
-						$query .= (is_array($this->params[$i])) ? "'".join("','",$this->params[$i])."'" : "'".$this->params[$i]."'";
-						break;
-					}
-				}
-			}
-			$query .= $tokens[$i];
-			if ($this->auto_free_params)
-				$this->params = array();		
-		}
-		(is_array($query_list)) ? $query_list[0] = $query  : $query_list = $query;
-		return $query_list;
-	}
-	
-	function Get_union(){
-	$queries = func_get_args();
-	$view = new DbView();
-	$union_table = $view->get_temp_table($view->get_parsed_query($queries[0]));
-	if($queries[1]){
-		for($i = 1; $i < count($queries); ++$i){
-			$view->db->query("REPLACE INTO $union_table ".$view->get_parsed_query($queries[$i]));
-		}
-	}
-	return $union_table;
-	}
+    /**
+    * the processed list of queries
+    *
+    * 
+    * @access   private
+    * @var      array   $query_list 
+    */
+    var $query_list = array();
+    /**
+    * list of parameters
+    *
+    * 
+    * @access   public
+    * @var      array   $params 
+    */
+    var $params = array();
+    
+    /**
+    * Database Object 
+    *
+    * 
+    * @access   private
+    * @var      object  $db 
+    */
+    var $db;
+    /**
+    * Database Object Type
+    *
+    * Use your subclass of db_mysql here, or pass existing object to constuctor
+    * @access   private
+    * @var      string  $db_class_name
+    * @see      DbView()
+    */
+    var $db_class_name = "DB_Seminar";
+    /**
+    * Temp Table Type 
+    *
+    * MyISAM is always safe, HEAP may provide better performance
+    * @access   private
+    * @var      string $temp_table_type 
+    */
+    var $temp_table_type = "MyISAM";
+    /**
+    * Primary Key used in Temp Table 
+    *
+    * If none is set in your view, an auto_increment row is used
+    * @access   private
+    * @var      string $pk
+    * @see      get_temp_table()
+    */
+    var $pk = "";
+    /**
+    * delete the params array after each query execution
+    *
+    * 
+    * @access   public
+    * @var      boolean $auto_free_params
+    */
+    var $auto_free_params = true;
+    /**
+    * turn on/off debugging
+    *
+    * 
+    * @access   public
+    * @var      boolean $debug
+    */
+    var $debug = false;
+    
+    /**
+    * Constructor
+    *
+    * Pass nothing to use a new instance of db_class_name, the classname for a new instance, or existing instance 
+    * @access   public
+    * @param    mixed   $db classname of used db abstraction or existing db object
+    */
+    function DbView($db = "") {
+        if(is_object($db)){
+            $this->db = $db;
+        } else if($db != ""){
+            $this->db = new $db;
+            $this->db_class_name = $db;
+        } else {
+            $this->db = new $this->db_class_name;
+        }
+        
+    }
+    
+    /**
+    * print error message and exit script
+    *
+    * @access   private
+    * @param    string  $msg    the message to print
+    */
+    function halt($msg){
+        echo "<hr>$msg<hr>";
+        if ($this->debug){
+            echo "<pre>";
+            print_r($this);
+            echo "</pre>";
+        }
+        die;
+    }
+    
+    function get_query() {
+        $parsed_query = $this->get_parsed_query(func_get_args());
+        $this->db->cache_query($parsed_query);
+    return $this->db;
+    }
+    
+    function get_parsed_query($query_list) {
+        $parsed_query = "";
+        $this->query_list = array();
+        (is_array($query_list)) ? $this->query_list = $query_list : $this->query_list[] = $query_list;
+        if(count($this->query_list) == 1){
+            $spl = explode(":",$this->query_list[0]);
+            if ($spl[0] == "view"){
+                $this->query_list = $this->get_view(trim($spl[1]));
+            }
+        }
+        $this->parse_query($this->query_list);
+        if(is_array($this->query_list)){
+            $parsed_query = $this->query_list[0];
+        } else {
+            $parsed_query = $this->query_list;
+        }
+    return $parsed_query;
+    }
+    
+    
+    function parse_query(&$query){
+        if (is_array($query)) {
+            for ($i = (count($query)-1); $i > 0 ; --$i){
+                $spl = explode(":",$query[$i]);
+                if ($spl[0] == "view"){
+                    $query[$i] = $this->get_view(trim($spl[1]),$spl[2]);
+                }
+                $query[$i] = $this->parse_query($query[$i]);
+                $repl_query = (is_array($query[$i])) ? $query[$i][0] : $query[$i];
+                for ($j = 0; $j < $i; ++$j){
+                    $spl = stristr($query[$j],"where");
+                    if (!$spl) 
+                        $spl = stristr($query[$j],"having");
+                    if ($spl) {
+                        $pos = strpos($spl,"{".$i."}");
+                        if (!$pos === false)
+                            $repl_query = $this->get_temp_values($repl_query);
+                    }
+                    if(!$spl OR $pos === false){
+                        $pos = strpos($query[$j],"{".$i."}");
+                        if (!$pos === false)
+                            $repl_query = $this->get_temp_table($repl_query);
+                    }
+                    $query[$j] = str_replace("{".$i."}",$repl_query,$query[$j]);
+                }
+            }
+        }
+        return $query;
+    }
+    
+    
+    function get_temp_table($sub_query) {
+        $id = $this->get_uniqid();
+        $pk = ($this->pk)? "PRIMARY KEY($this->pk)" : "auto_".$id." INT NOT NULL AUTO_INCREMENT PRIMARY KEY";
+        $query = "CREATE TEMPORARY TABLE temp_$id ($pk)TYPE=$this->temp_table_type $sub_query";
+        $this->db->query($query);
+        return " temp_".$id." ";
+    }
+    
+    
+    function get_temp_values($sub_query) {
+        $this->db->query($sub_query);
+        if (!$this->db->num_rows())
+            $this->halt("Sub Query: <b>$sub_query</b> returns nothing!");
+        else {
+            while($this->db->next_record()) {
+                $result[] = $this->db->Record[0];
+            }
+            $value_list = $this->get_value_list($result);
+        }
+        return $value_list;
+    }
+    
+    function get_uniqid(){
+        mt_srand((double)microtime()*1000000);
+        return md5(uniqid (mt_rand(),1));
+    }
+    
+    function get_value_list($list){
+        $value_list = false;
+        if (count($list) == 1) 
+            $value_list = "'$list[0]'";
+        else 
+            $value_list = "'".join("','",$list)."'";
+        return $value_list;
+    }
+    
+    function get_view($name){
+        if ($GLOBALS["_views"][$name]["pk"]) 
+            $this->pk = $GLOBALS["_views"][$name]["pk"];
+        if ($GLOBALS["_views"][$name]["temp_table_type"])
+            $this->temp_table_type = $GLOBALS["_views"][$name]["temp_table_type"];
+        if (!$query_list = $GLOBALS["_views"][$name]["query"])
+            $this->halt("View not found: $name");
+        (is_array($query_list)) ? $query = $query_list[0] : $query = $query_list;
+        $tokens = split("[\?§\&]", $query);
+        if (count($tokens) > 1){
+            $types = array();
+            $token = 0;
+            for ($i = 0; $i < strlen($query); $i++) {
+                switch ($query{$i}) {
+                    case '?':
+                    $types[$token++] = 1;
+                    break;
+                    case '§':
+                    $types[$token++] = 2;
+                    break;
+                    case '&':
+                    $types[$token++] = 3;
+                    break;
+                }
+            }
+            if (count($this->params) != count($types)) 
+                $this->halt("Wrong parameter count in view: $name");
+            $query = "";
+            for($i = 0; $i < count($this->params); ++$i){
+                $query .= $tokens[$i];
+                if (is_null($this->params[$i])){
+                    $query .= 'NULL';
+                } else {
+                switch ($types[$i]) {
+                        case 1:
+                        $query .= "'" . $this->params[$i] . "'";
+                        break;
+                        case 2:
+                        $query .= $this->params[$i];
+                        break;
+                        case 3:
+                        $query .= (is_array($this->params[$i])) ? "'".join("','",$this->params[$i])."'" : "'".$this->params[$i]."'";
+                        break;
+                    }
+                }
+            }
+            $query .= $tokens[$i];
+            if ($this->auto_free_params)
+                $this->params = array();        
+        }
+        (is_array($query_list)) ? $query_list[0] = $query  : $query_list = $query;
+        return $query_list;
+    }
+    
+    function Get_union(){
+    $queries = func_get_args();
+    $view = new DbView();
+    $union_table = $view->get_temp_table($view->get_parsed_query($queries[0]));
+    if($queries[1]){
+        for($i = 1; $i < count($queries); ++$i){
+            $view->db->query("REPLACE INTO $union_table ".$view->get_parsed_query($queries[$i]));
+        }
+    }
+    return $union_table;
+    }
 }
 ?>

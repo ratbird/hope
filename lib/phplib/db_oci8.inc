@@ -240,20 +240,20 @@ class DB_Sql {
 
     if(!@ociexecute($Query_ID))
     {
-	$this->Error=@OCIError($Query_ID);
-	if($this->Error["code"]==2289)
-	{
-	    $Query_ID=ociparse($this->Link_ID,"CREATE SEQUENCE $seqname");
-	    if(!ociexecute($Query_ID))
-	    {
-		$this->Error=OCIError($Query_ID); 
-		$this->halt("<BR> nextid() function - unable to create sequence<br>".$this->Error["message"]);
-	    } else 
-	     {
-		$Query_ID=ociparse($this->Link_ID,"SELECT $seqname.NEXTVAL FROM DUAL");
-		ociexecute($Query_ID);
-	    }
-	}
+    $this->Error=@OCIError($Query_ID);
+    if($this->Error["code"]==2289)
+    {
+        $Query_ID=ociparse($this->Link_ID,"CREATE SEQUENCE $seqname");
+        if(!ociexecute($Query_ID))
+        {
+        $this->Error=OCIError($Query_ID); 
+        $this->halt("<BR> nextid() function - unable to create sequence<br>".$this->Error["message"]);
+        } else 
+         {
+        $Query_ID=ociparse($this->Link_ID,"SELECT $seqname.NEXTVAL FROM DUAL");
+        ociexecute($Query_ID);
+        }
+    }
     }
 
     if (ocifetch($Query_ID))

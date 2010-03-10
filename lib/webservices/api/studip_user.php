@@ -39,8 +39,8 @@ class Studip_User {
   var $first_name;
   var $last_name;
   var $email;
-	var $permission;
-	var $fullname;
+    var $permission;
+    var $fullname;
  
 
   #  Constructor
@@ -49,9 +49,9 @@ class Studip_User {
 
     foreach ($fields as $field)
       if (isset($user[$field]))
-				$this->$field = $user[$field];
-		
-		$this->fullname = get_fullname($this->id);
+                $this->$field = $user[$field];
+        
+        $this->fullname = get_fullname($this->id);
 
   }
   

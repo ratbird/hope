@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElement
-* @package		studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElement
+* @package      studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -41,21 +41,21 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
 
 class ExternElementTableFooter extends ExternElement {
 
-	var $attributes = array();
+    var $attributes = array();
 
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementTableFooter ($config = "") {
-		if ($config)
-			$this->config = $config;
-			
-		$this->name = "TableFooter";
-		$this->real_name = _("Tabellenfuﬂ");
-		$this->description = _("Der Tabellenfuﬂ enth‰lt keine administrierbaren Attribute.");
-	}
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementTableFooter ($config = "") {
+        if ($config)
+            $this->config = $config;
+            
+        $this->name = "TableFooter";
+        $this->real_name = _("Tabellenfuﬂ");
+        $this->description = _("Der Tabellenfuﬂ enth‰lt keine administrierbaren Attribute.");
+    }
 
 }
 

@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	calendar_modules
-* @module		calendar_import
-* @package	Calendar
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  calendar_modules
+* @module       calendar_import
+* @package  Calendar
 */
 
 // +---------------------------------------------------------------------------+
@@ -43,27 +43,27 @@ require_once("$RELATIVE_PATH_CALENDAR/lib/ErrorHandler.class.php");
 define('IGNORE_ERRORS', 1);
 
 class CalendarImport {
-	
-	function CalendarImport () {
-		
-		// initialize error handler
-		init_error_handler('_calendar_error');
-	}
-	
-	function getCount () {
-	
-	}
-	
-	function importIntoDatabase ($ignore = 'IGNORE_ERRORS') {
-	
-	}
-	
-	function importIntoObjects ($ignore = 'IGNORE_ERRORS') {
-	
-	}
-	
-	function getObjects () {
-	
-	}
-	
+    
+    function CalendarImport () {
+        
+        // initialize error handler
+        init_error_handler('_calendar_error');
+    }
+    
+    function getCount () {
+    
+    }
+    
+    function importIntoDatabase ($ignore = 'IGNORE_ERRORS') {
+    
+    }
+    
+    function importIntoObjects ($ignore = 'IGNORE_ERRORS') {
+    
+    }
+    
+    function getObjects () {
+    
+    }
+    
 }

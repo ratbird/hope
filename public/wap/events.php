@@ -4,16 +4,16 @@
 *
 * Parameters received via stdin<br/>
 * <code>
-*	$session_id
-*	$events_pc	(page counter)
+*   $session_id
+*   $events_pc  (page counter)
 * </code>
 *
-* @author		Florian Hansen <f1701h@gmx.net>
-* @version		0.12	10.09.2003	21:23:36
-* @access		public
-* @modulegroup	wap_modules
-* @module		events.php
-* @package		WAP
+* @author       Florian Hansen <f1701h@gmx.net>
+* @version      0.12    10.09.2003  21:23:36
+* @access       public
+* @modulegroup  wap_modules
+* @module       events.php
+* @package      WAP
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -35,18 +35,18 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-	/**
-	* Maximum of events displayed per page
-	* @const EVENTS_PER_PAGE
-	*/
-	define ("EVENTS_PER_PAGE", 5);
+    /**
+    * Maximum of events displayed per page
+    * @const EVENTS_PER_PAGE
+    */
+    define ("EVENTS_PER_PAGE", 5);
 
-	include_once("wap_adm.inc.php");
-	include_once("wap_txt.inc.php");
-	include_once("wap_hlp.inc.php");
-	include_once("wap_buttons.inc.php");
+    include_once("wap_adm.inc.php");
+    include_once("wap_txt.inc.php");
+    include_once("wap_hlp.inc.php");
+    include_once("wap_buttons.inc.php");
 
-	$session_user_id = wap_adm_start_card($session_id);
+    $session_user_id = wap_adm_start_card($session_id);
     if ($session_user_id)
     {
         echo "<p align=\"center\">";
@@ -83,7 +83,7 @@
             $q_string  = "SELECT seminare.Seminar_id, seminare.Name ";
             $q_string .= "FROM seminar_user LEFT JOIN seminare USING (Seminar_id) ";
             $q_string .= "WHERE seminar_user.user_id = '" . $session_user_id . "' ";
-			$q_string .= "ORDER BY seminar_user.gruppe, seminare.Name";
+            $q_string .= "ORDER BY seminar_user.gruppe, seminare.Name";
             $db-> query($q_string);
 
             $event_new_array = array();
@@ -91,42 +91,42 @@
             $new_sign        = "*";
             while ($db-> next_record())
             {
-				$entry_array = array();
+                $entry_array = array();
                 $entry_name  = $db-> f("Name");
                 $entry_id    = $db-> f("Seminar_id");
 
-				$q_string  = "SELECT COUNT(news_range.news_id) AS num_news ";
-    		    $q_string .= "FROM news_range LEFT JOIN news USING (news_id) ";
-        		$q_string .= "WHERE news_range.range_id='" . $entry_id . "' ";
-	        	$q_string .= "AND date < $current_time AND (date + expire) > $current_time ";
-    	    	$q_string .= "AND date > $CurrentLogin";
-    	    	$db_entry-> query($q_string);
-    	    	$db_entry-> next_record();
-    	    	$num_news = $db_entry-> f("num_news");
+                $q_string  = "SELECT COUNT(news_range.news_id) AS num_news ";
+                $q_string .= "FROM news_range LEFT JOIN news USING (news_id) ";
+                $q_string .= "WHERE news_range.range_id='" . $entry_id . "' ";
+                $q_string .= "AND date < $current_time AND (date + expire) > $current_time ";
+                $q_string .= "AND date > $CurrentLogin";
+                $db_entry-> query($q_string);
+                $db_entry-> next_record();
+                $num_news = $db_entry-> f("num_news");
 
-		        $q_string  = "SELECT COUNT(termin_id) AS num_dates FROM termine ";
-		        $q_string .= "WHERE range_id = '" . $entry_id . "' ";
-		        $q_string .= "AND chdate > $CurrentLogin";
-    	    	$db_entry-> query($q_string);
-    	    	$db_entry-> next_record();
-    	    	$num_dates = $db_entry-> f("num_dates");
+                $q_string  = "SELECT COUNT(termin_id) AS num_dates FROM termine ";
+                $q_string .= "WHERE range_id = '" . $entry_id . "' ";
+                $q_string .= "AND chdate > $CurrentLogin";
+                $db_entry-> query($q_string);
+                $db_entry-> next_record();
+                $num_dates = $db_entry-> f("num_dates");
 
-    	    	if ($num_news || $num_dates)
-    	    	{
-    	    		$entry_array[$entry_id] = $new_sign . $entry_name;
-    	    		array_push($event_new_array, $entry_array);
-    	    	}
-    	    	else
-    	    	{
-                	$entry_array[$entry_id] = $entry_name;
-    	    		array_push($event_old_array, $entry_array);
-    	    	}
-    	    }
+                if ($num_news || $num_dates)
+                {
+                    $entry_array[$entry_id] = $new_sign . $entry_name;
+                    array_push($event_new_array, $entry_array);
+                }
+                else
+                {
+                    $entry_array[$entry_id] = $entry_name;
+                    array_push($event_old_array, $entry_array);
+                }
+            }
 
-    	    $event_array    = array_merge((array)$event_new_array, (array)$event_old_array);
-    	    $progress_limit = $progress_counter + EVENTS_PER_PAGE;
-    	    if ($progress_limit > $num_events)
-    	    	$progress_limit = $num_events;
+            $event_array    = array_merge((array)$event_new_array, (array)$event_old_array);
+            $progress_limit = $progress_counter + EVENTS_PER_PAGE;
+            if ($progress_limit > $num_events)
+                $progress_limit = $num_events;
 
             while ($progress_counter < $progress_limit)
             {
@@ -183,5 +183,5 @@
         wap_buttons_menu_link($session_id);
         echo "</p>\n";
     }
-	wap_adm_end_card();
+    wap_adm_end_card();
 ?>

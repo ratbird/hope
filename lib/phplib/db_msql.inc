@@ -43,7 +43,7 @@ class DB_Sql {
     }
 
     // Select current database
-	  if (!msql_select_db($this->Database, $this->Link_ID)) {
+      if (!msql_select_db($this->Database, $this->Link_ID)) {
       $this->halt("cannot use database ".$this->Database);
     }
   }
@@ -120,7 +120,7 @@ class DB_Sql {
   }
 
   function affected_rows() {
-	  return msql_affected_rows($this->Query_ID);
+      return msql_affected_rows($this->Query_ID);
   }
 
   function num_rows() {

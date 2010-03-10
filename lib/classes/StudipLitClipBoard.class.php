@@ -32,155 +32,155 @@ require_once("lib/classes/DbView.class.php");
 *
 * 
 *
-* @access	public	
-* @author	André Noack <noack@data-quest.de>
-* @package	
+* @access   public  
+* @author   André Noack <noack@data-quest.de>
+* @package  
 **/
 class StudipLitClipBoard {
-	
-	var $dbv;
-	var $elements = null;
-	var $form_obj = null;
-	var $form_name = "lit_clipboard_form";
-	var $msg;
-	
-	
-	function &GetInstance(){
-		static $instance;
-		if (!is_object($instance[0])){
-			$instance[0] =& new StudipLitClipBoard();
-		}
-		return $instance[0];
-	}
-	
-	function StudipLitClipBoard(){
-		$this->dbv = new DbView();
-		if (!$GLOBALS['sess']->is_registered("_lit_clipboard_elements")){
-				$GLOBALS['sess']->register("_lit_clipboard_elements");
-			}
-		$this->elements =& $GLOBALS["_lit_clipboard_elements"];
-	}
-	
-	function insertElement($id_to_insert){
-		if (!is_array($id_to_insert)){
-			$id_to_insert = array($id_to_insert);
-		}
-		$inserted = 0;
-		foreach ($id_to_insert as $catalog_id){
-			if (!isset($this->elements[$catalog_id])){
-				$this->elements[$catalog_id] = true;
-				++$inserted;
-			}
-		}
-		if ($inserted == 1){
-			$this->msg .= "msg§" . _("Es wurde ein Literaturverweis in ihre Merkliste aufgenommen.") . "§";
-		} else if ($inserted){
-			$this->msg .= "msg§" . sprintf(_("Es wurden %s Literaturverweise in ihre Merkliste aufgenommen."), $inserted) . "§";
-		}
-		$this->setDefaultValue();
-		return $inserted;
-	}
-	
-	function deleteElement($id_to_delete){
-		if (!is_array($id_to_delete)){
-			$id_to_delete = array($id_to_delete);
-		}
-		$deleted = 0;
-		foreach ($id_to_delete as $catalog_id){
-			if (isset($this->elements[$catalog_id])){
-				unset($this->elements[$catalog_id]);
-				++$deleted;
-			}
-		}
-		if ($deleted == 1){
-			$this->msg .= "msg§" . _("Es wurde ein Literaturverweis aus ihrer Merkliste gel&ouml;scht.") . "§";
-		} else if ($deleted){
-			$this->msg .= "msg§" . sprintf(_("Es wurden %s Literaturverweise aus ihrer Merkliste gel&ouml;scht."), $deleted) . "§";
-		}
-		$this->setDefaultValue();
-		return $deleted;
-	}
-	
-	function getNumElements(){
-		return (is_array($this->elements)) ? count($this->elements) : 0;
-	}
-	
-	function isInClipboard($catalog_id){
-		return isset($this->elements[$catalog_id]);
-	}
-	
-	function getElements(){
-		$returned_elements = null;
-		if (is_array($this->elements)){
-			$this->dbv->params[0] = array_keys($this->elements);
-			$this->elements = null;
-			$rs = $this->dbv->get_query("view:LIT_GET_CLIP_ELEMENTS");
-			while ($rs->next_record()){
-				$returned_elements[$rs->f("catalog_id")] = $rs->f("short_name");
-				$this->elements[$rs->f("catalog_id")] = true;
-			}
-		}
-		return $returned_elements;
-	}
-	
-	function &getFormObject(){
-		if (!is_object($this->form_obj)){
-			$this->setFormObject();
-		}
-		$this->setDefaultValue();
-		return $this->form_obj;
-	}
-	
-	function setDefaultValue(){
-		if ($this->getNumElements() == 1 && is_object($this->form_obj)){
-			reset($this->elements);
-			$this->form_obj->form_fields['clip_content']['default_value'] = key($this->elements);
-			return true;
-		}
-		return false;
-	}
-		
-	function setFormObject(){
-		$form_name = $this->form_name;
-		$form_fields['clip_content'] = array('type' => 'select', 'multiple' => true, 'options_callback' => array($this, "getClipOptions"));
-		$form_fields['clip_cmd'] = array('type' => 'select', 'options' => array(array('name' => _("Aus Merkliste löschen"), 'value' => 'del')));
-		$form_buttons['clip_ok'] = array('type' => 'ok', 'info' => _("Gewählte Aktion starten"));
-		if (!is_object($this->form_obj)){
-			$this->form_obj =& new StudipForm($form_fields, $form_buttons, $form_name, false);
-		} else {
-			$this->form_obj->form_fields = $form_fields;
-		}
-		return true;
-	}
-	
-	function getClipOptions($caller, $name){
-		$options = array();
-		$cols = 40;
-		if ($elements = $this->getElements()){
-			foreach ($elements as $catalog_id => $title){
-				$options[] = array('name' => my_substr($title,0,$cols), 'value' => $catalog_id);
-			}
-		} else {
-			$options[] = array('name' => ("Ihre Merkliste ist leer!"), 'value' => 0);
-			$options[] = array('name' => str_repeat("¯",floor($cols * .8)) , 'value' => 0);
-		}
-		return $options;
-	}
-	
-	function doClipCmd(){
-		$this->getFormObject();
-		switch ($this->form_obj->getFormFieldValue("clip_cmd")){
-			case "del":
-				$selected = $this->form_obj->getFormFieldValue("clip_content");
-				if (is_array($selected)){
-					$this->deleteElement($selected);
-					$this->form_obj->doFormReset();
-				} else {
-					$this->msg .= "info§" . _("Sie haben keinen Eintrag in ihrer Merkliste ausgew&auml;hlt!") . "§";
-				}
-				break;
-		}
-	}
+    
+    var $dbv;
+    var $elements = null;
+    var $form_obj = null;
+    var $form_name = "lit_clipboard_form";
+    var $msg;
+    
+    
+    function &GetInstance(){
+        static $instance;
+        if (!is_object($instance[0])){
+            $instance[0] =& new StudipLitClipBoard();
+        }
+        return $instance[0];
+    }
+    
+    function StudipLitClipBoard(){
+        $this->dbv = new DbView();
+        if (!$GLOBALS['sess']->is_registered("_lit_clipboard_elements")){
+                $GLOBALS['sess']->register("_lit_clipboard_elements");
+            }
+        $this->elements =& $GLOBALS["_lit_clipboard_elements"];
+    }
+    
+    function insertElement($id_to_insert){
+        if (!is_array($id_to_insert)){
+            $id_to_insert = array($id_to_insert);
+        }
+        $inserted = 0;
+        foreach ($id_to_insert as $catalog_id){
+            if (!isset($this->elements[$catalog_id])){
+                $this->elements[$catalog_id] = true;
+                ++$inserted;
+            }
+        }
+        if ($inserted == 1){
+            $this->msg .= "msg§" . _("Es wurde ein Literaturverweis in ihre Merkliste aufgenommen.") . "§";
+        } else if ($inserted){
+            $this->msg .= "msg§" . sprintf(_("Es wurden %s Literaturverweise in ihre Merkliste aufgenommen."), $inserted) . "§";
+        }
+        $this->setDefaultValue();
+        return $inserted;
+    }
+    
+    function deleteElement($id_to_delete){
+        if (!is_array($id_to_delete)){
+            $id_to_delete = array($id_to_delete);
+        }
+        $deleted = 0;
+        foreach ($id_to_delete as $catalog_id){
+            if (isset($this->elements[$catalog_id])){
+                unset($this->elements[$catalog_id]);
+                ++$deleted;
+            }
+        }
+        if ($deleted == 1){
+            $this->msg .= "msg§" . _("Es wurde ein Literaturverweis aus ihrer Merkliste gel&ouml;scht.") . "§";
+        } else if ($deleted){
+            $this->msg .= "msg§" . sprintf(_("Es wurden %s Literaturverweise aus ihrer Merkliste gel&ouml;scht."), $deleted) . "§";
+        }
+        $this->setDefaultValue();
+        return $deleted;
+    }
+    
+    function getNumElements(){
+        return (is_array($this->elements)) ? count($this->elements) : 0;
+    }
+    
+    function isInClipboard($catalog_id){
+        return isset($this->elements[$catalog_id]);
+    }
+    
+    function getElements(){
+        $returned_elements = null;
+        if (is_array($this->elements)){
+            $this->dbv->params[0] = array_keys($this->elements);
+            $this->elements = null;
+            $rs = $this->dbv->get_query("view:LIT_GET_CLIP_ELEMENTS");
+            while ($rs->next_record()){
+                $returned_elements[$rs->f("catalog_id")] = $rs->f("short_name");
+                $this->elements[$rs->f("catalog_id")] = true;
+            }
+        }
+        return $returned_elements;
+    }
+    
+    function &getFormObject(){
+        if (!is_object($this->form_obj)){
+            $this->setFormObject();
+        }
+        $this->setDefaultValue();
+        return $this->form_obj;
+    }
+    
+    function setDefaultValue(){
+        if ($this->getNumElements() == 1 && is_object($this->form_obj)){
+            reset($this->elements);
+            $this->form_obj->form_fields['clip_content']['default_value'] = key($this->elements);
+            return true;
+        }
+        return false;
+    }
+        
+    function setFormObject(){
+        $form_name = $this->form_name;
+        $form_fields['clip_content'] = array('type' => 'select', 'multiple' => true, 'options_callback' => array($this, "getClipOptions"));
+        $form_fields['clip_cmd'] = array('type' => 'select', 'options' => array(array('name' => _("Aus Merkliste löschen"), 'value' => 'del')));
+        $form_buttons['clip_ok'] = array('type' => 'ok', 'info' => _("Gewählte Aktion starten"));
+        if (!is_object($this->form_obj)){
+            $this->form_obj =& new StudipForm($form_fields, $form_buttons, $form_name, false);
+        } else {
+            $this->form_obj->form_fields = $form_fields;
+        }
+        return true;
+    }
+    
+    function getClipOptions($caller, $name){
+        $options = array();
+        $cols = 40;
+        if ($elements = $this->getElements()){
+            foreach ($elements as $catalog_id => $title){
+                $options[] = array('name' => my_substr($title,0,$cols), 'value' => $catalog_id);
+            }
+        } else {
+            $options[] = array('name' => ("Ihre Merkliste ist leer!"), 'value' => 0);
+            $options[] = array('name' => str_repeat("¯",floor($cols * .8)) , 'value' => 0);
+        }
+        return $options;
+    }
+    
+    function doClipCmd(){
+        $this->getFormObject();
+        switch ($this->form_obj->getFormFieldValue("clip_cmd")){
+            case "del":
+                $selected = $this->form_obj->getFormFieldValue("clip_content");
+                if (is_array($selected)){
+                    $this->deleteElement($selected);
+                    $this->form_obj->doFormReset();
+                } else {
+                    $this->msg .= "info§" . _("Sie haben keinen Eintrag in ihrer Merkliste ausgew&auml;hlt!") . "§";
+                }
+                break;
+        }
+    }
 }
 
 //test

@@ -33,66 +33,66 @@ require_once("config.inc.php");
 *
 * This class prints out a html representation of the whole or part of the tree
 *
-* @access	public
-* @author	André Noack <noack@data-quest.de>
-* @package	
+* @access   public
+* @author   André Noack <noack@data-quest.de>
+* @package  
 */
 class StudipRangeTreeView extends TreeView{
 
-	/**
-	* constructor
-	*
-	* @access public
-	*/
-	function StudipRangeTreeView(){
-		$this->root_content = $GLOBALS['UNI_INFO'];
-		parent::TreeView("StudipRangeTree"); //calling the baseclass constructor 
-	}
-	
-	function getItemContent($item_id){
-		$content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt\">";
-		if ($item_id == "root"){
-			$content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
-			$content .= "\n<tr><td class=\"blank\" align=\"left\">" . htmlReady($this->root_content) ." </td></tr>";
-			$content .= "\n</table>";
-			return $content;
-		}
-		$range_object =& RangeTreeObject::GetInstance($item_id);
-		$name = ($range_object->item_data['type']) ? $range_object->item_data['type'] . ": " : "";
-		$name .= $range_object->item_data['name'];
-		$content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($name) ." </td></tr>";
-		if (is_array($range_object->item_data_mapping)){
-			$content .= "\n<tr><td class=\"blank\" align=\"left\">";
-			foreach ($range_object->item_data_mapping as $key => $value){
-				if ($range_object->item_data[$key]){
-					$content .= "<b>" . htmlReady($value) . ":</b>&nbsp;";
-					$content .= fixLinks(htmlReady($range_object->item_data[$key])) . "&nbsp; ";
-				}
-			}
-			$content .= "</td></tr><tr><td class=\"blank\" align=\"left\">" .
-				    "<a href=\"".URLHelper::getLink("institut_main.php?auswahl=".$range_object->item_data['studip_object_id'])."\"" .
-				    tooltip(_("Seite dieser Einrichtung in Stud.IP aufrufen")) . ">" .
-				    htmlReady($range_object->item_data['name']) . "</a>&nbsp;" ._("in Stud.IP") ."</td></tr>";
-			
-		} elseif (!$range_object->item_data['studip_object']){
-			$content .= "\n<tr><td class=\"blank\" align=\"left\">" .
-						_("Dieses Element ist keine Stud.IP-Einrichtung, es hat daher keine Grunddaten.") . "</td></tr>";
-		} else {
-			$content .= "\n<tr><td class=\"blank\" align=\"left\">" . _("Keine Grunddaten vorhanden!") . "</td></tr>";
-		}
-		$content .= "\n<tr><td>&nbsp;</td></tr>";
-		$kategorien =& $range_object->getCategories();
-		if ($kategorien->numRows){
-			while($kategorien->nextRow()){
-				$content .= "\n<tr><td class=\"topic\">" . htmlReady($kategorien->getField("name")) . "</td></tr>";
-				$content .= "\n<tr><td class=\"blank\">" . formatReady($kategorien->getField("content")) . "</td></tr>";
-			}
-		} else {
-			$content .= "\n<tr><td class=\"blank\">" . _("Keine weiteren Daten vorhanden!") . "</td></tr>";
-		}
-		$content .= "</table>";
-		return $content;
-	}
+    /**
+    * constructor
+    *
+    * @access public
+    */
+    function StudipRangeTreeView(){
+        $this->root_content = $GLOBALS['UNI_INFO'];
+        parent::TreeView("StudipRangeTree"); //calling the baseclass constructor 
+    }
+    
+    function getItemContent($item_id){
+        $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt\">";
+        if ($item_id == "root"){
+            $content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
+            $content .= "\n<tr><td class=\"blank\" align=\"left\">" . htmlReady($this->root_content) ." </td></tr>";
+            $content .= "\n</table>";
+            return $content;
+        }
+        $range_object =& RangeTreeObject::GetInstance($item_id);
+        $name = ($range_object->item_data['type']) ? $range_object->item_data['type'] . ": " : "";
+        $name .= $range_object->item_data['name'];
+        $content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($name) ." </td></tr>";
+        if (is_array($range_object->item_data_mapping)){
+            $content .= "\n<tr><td class=\"blank\" align=\"left\">";
+            foreach ($range_object->item_data_mapping as $key => $value){
+                if ($range_object->item_data[$key]){
+                    $content .= "<b>" . htmlReady($value) . ":</b>&nbsp;";
+                    $content .= fixLinks(htmlReady($range_object->item_data[$key])) . "&nbsp; ";
+                }
+            }
+            $content .= "</td></tr><tr><td class=\"blank\" align=\"left\">" .
+                    "<a href=\"".URLHelper::getLink("institut_main.php?auswahl=".$range_object->item_data['studip_object_id'])."\"" .
+                    tooltip(_("Seite dieser Einrichtung in Stud.IP aufrufen")) . ">" .
+                    htmlReady($range_object->item_data['name']) . "</a>&nbsp;" ._("in Stud.IP") ."</td></tr>";
+            
+        } elseif (!$range_object->item_data['studip_object']){
+            $content .= "\n<tr><td class=\"blank\" align=\"left\">" .
+                        _("Dieses Element ist keine Stud.IP-Einrichtung, es hat daher keine Grunddaten.") . "</td></tr>";
+        } else {
+            $content .= "\n<tr><td class=\"blank\" align=\"left\">" . _("Keine Grunddaten vorhanden!") . "</td></tr>";
+        }
+        $content .= "\n<tr><td>&nbsp;</td></tr>";
+        $kategorien =& $range_object->getCategories();
+        if ($kategorien->numRows){
+            while($kategorien->nextRow()){
+                $content .= "\n<tr><td class=\"topic\">" . htmlReady($kategorien->getField("name")) . "</td></tr>";
+                $content .= "\n<tr><td class=\"blank\">" . formatReady($kategorien->getField("content")) . "</td></tr>";
+            }
+        } else {
+            $content .= "\n<tr><td class=\"blank\">" . _("Keine weiteren Daten vorhanden!") . "</td></tr>";
+        }
+        $content .= "</table>";
+        return $content;
+    }
 }
 //test 
 //page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));

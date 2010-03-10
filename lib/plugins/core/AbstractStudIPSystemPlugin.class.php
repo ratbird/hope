@@ -18,53 +18,53 @@ class AbstractStudIPSystemPlugin extends AbstractStudIPLegacyPlugin
 
         protected $display_type;
 
-	function AbstractStudIPSystemPlugin(){
-		parent::__construct();
-		$this->display_type = SYSTEM_PLUGIN_TOOLBAR;
-	}
+    function AbstractStudIPSystemPlugin(){
+        parent::__construct();
+        $this->display_type = SYSTEM_PLUGIN_TOOLBAR;
+    }
 
 
-	/**
-	 * Sets the navigation of this plugin.
-	 *
-	 * @deprecated
-	 */
-	function setNavigation(StudipPluginNavigation $navigation) {
-		parent::setNavigation($navigation);
+    /**
+     * Sets the navigation of this plugin.
+     *
+     * @deprecated
+     */
+    function setNavigation(StudipPluginNavigation $navigation) {
+        parent::setNavigation($navigation);
 
-		$navigation->setImage($this->getPluginiconname(),
-				array('title' => $navigation->getTitle()));
+        $navigation->setImage($this->getPluginiconname(),
+                array('title' => $navigation->getTitle()));
 
-		if ($this->getDisplayType(SYSTEM_PLUGIN_TOOLBAR)) {
-			Navigation::addItem('/' . $this->getPluginclassname(), $navigation);
-		}
-		if ($this->getDisplayType(SYSTEM_PLUGIN_STARTPAGE)) {
-			Navigation::insertItem('/start/' . $this->getPluginclassname(), 'search', $navigation);
-		}
-	}
-
-
-	/**
-	 * A system plugin can do system tasks like logging in the background.
-	 * This function
-	 *
-	 * @deprecated
-	 *
-	 * @return true - plugin should be called for background task
-	 * 		   false - plugin has no background task
-	 */
-	function hasBackgroundTasks(){
-		return false;
-	}
+        if ($this->getDisplayType(SYSTEM_PLUGIN_TOOLBAR)) {
+            Navigation::addItem('/' . $this->getPluginclassname(), $navigation);
+        }
+        if ($this->getDisplayType(SYSTEM_PLUGIN_STARTPAGE)) {
+            Navigation::insertItem('/start/' . $this->getPluginclassname(), 'search', $navigation);
+        }
+    }
 
 
-	/**
-	 * abstract function for doing all background tasks
-	 *
-	 * @deprecated
-	 */
-	function doBackgroundTasks(){
-	}
+    /**
+     * A system plugin can do system tasks like logging in the background.
+     * This function
+     *
+     * @deprecated
+     *
+     * @return true - plugin should be called for background task
+     *         false - plugin has no background task
+     */
+    function hasBackgroundTasks(){
+        return false;
+    }
+
+
+    /**
+     * abstract function for doing all background tasks
+     *
+     * @deprecated
+     */
+    function doBackgroundTasks(){
+    }
 
 
      /**
@@ -73,7 +73,7 @@ class AbstractStudIPSystemPlugin extends AbstractStudIPLegacyPlugin
      * @deprecated
      */
     function getScore(){
-    	return 0;
+        return 0;
     }
 
 

@@ -6,11 +6,11 @@
 * 
 * Shows nothing, only used to send chatlogs
 *
-* @author		André Noack <andre.noack@gmx.net>
-* @access		public
-* @modulegroup	chat_modules
-* @module		chat_dummy
-* @package		Chat
+* @author       André Noack <andre.noack@gmx.net>
+* @access       public
+* @modulegroup  chat_modules
+* @module       chat_dummy
+* @package      Chat
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -42,8 +42,8 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
 $perm->check("user");
 //chat eingeschaltet?
 if (!$CHAT_ENABLE) {
-	page_close();
-	die;
+    page_close();
+    die;
 }
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once $RELATIVE_PATH_CHAT.'/ChatServer.class.php';
@@ -53,19 +53,19 @@ require_once 'lib/chat/chat_func_inc.php';
 $chatServer =& ChatServer::GetInstance($CHAT_SERVER_NAME);
 $chatServer->caching = true;
 if ($user->cfg->getValue($user->id, "CHAT_USE_AJAX_CLIENT") ){
-	$log_id = isset($_GET['log_id']) ? (int)$_GET['log_id'] : count($chat_logs[$chatid])-1;
-	$chat_log = $chat_logs[$chatid][$log_id]['msg'];
-	$end_time = $chat_logs[$chatid][$log_id]['stop'];
-	$start_time = $chat_logs[$chatid][$log_id]['start'];
+    $log_id = isset($_GET['log_id']) ? (int)$_GET['log_id'] : count($chat_logs[$chatid])-1;
+    $chat_log = $chat_logs[$chatid][$log_id]['msg'];
+    $end_time = $chat_logs[$chatid][$log_id]['stop'];
+    $start_time = $chat_logs[$chatid][$log_id]['start'];
 } else {
-	$chat_log = $chatServer->chatDetail[$chatid]['users'][$user->id]['log'];
-	$end_time = array_pop($chat_log);
-	$start_time = array_pop($chat_log);
+    $chat_log = $chatServer->chatDetail[$chatid]['users'][$user->id]['log'];
+    $end_time = array_pop($chat_log);
+    $start_time = array_pop($chat_log);
 }
 if (!is_array($chat_log)){
-	echo "chat-dummy";
-	page_close();
-	die;
+    echo "chat-dummy";
+    page_close();
+    die;
 }
 $log_count = count($chat_log);
 $output = _("Chat: ") . chat_get_name($chatid) . "\r\n";
@@ -74,7 +74,7 @@ if($end_time) $output .= _("Ende der Aufzeichnung: ") . strftime("%%x %X",$end_t
 $output .= _("Aufgezeichnet von: ") . get_fullname() . "\r\n";
 $output .= str_repeat("-",80) . "\r\n";
 for ($i = 0; $i < $log_count; ++$i){
-	$output .= decodeHTML(preg_replace ("'<[\/\!]*?[^<>]*?>'si", "", $chat_log[$i])) . "\r\n";
+    $output .= decodeHTML(preg_replace ("'<[\/\!]*?[^<>]*?>'si", "", $chat_log[$i])) . "\r\n";
 }
 header("Content-type: text/plain");
 header("Content-Disposition: attachment; filename=\"studip_chatlog_".date("d-m-Y_H-i",$start_time).".log\"");
@@ -82,9 +82,9 @@ header("Content-length: ".strlen($output));
 header("Expires: Mon, 12 Dec 2001 08:00:00 GMT");
 header("Last-Modified: " . gmdate ("D, d M Y H:i:s") . " GMT");
 if ($_SERVER['HTTPS'] == "on")
-	header("Pragma: public");
+    header("Pragma: public");
 else
-	header("Pragma: no-cache");
+    header("Pragma: no-cache");
 header("Cache-Control: private");
 echo $output;
 page_close();

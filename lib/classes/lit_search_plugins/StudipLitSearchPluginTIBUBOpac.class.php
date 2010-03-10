@@ -30,30 +30,30 @@ require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginGvk.class.php
 *
 * 
 *
-* @access	public	
-* @author	André Noack <noack@data-quest.de>
-* @package	
+* @access   public  
+* @author   André Noack <noack@data-quest.de>
+* @package  
 **/
 class StudipLitSearchPluginTIBUBOpac extends StudipLitSearchPluginGvk{
-	
-	
-	function StudipLitSearchPluginTIBUBOpac(){
-		parent::StudipLitSearchPluginGvk();
-		$this->description = "Technische Informationsbibliothek / Universitätsbibliothek Hannover";
-		$this->z_host = "z3950.gbv.de:20012/tib_opc";
-		$this->z_record_encoding = 'utf-8';
-		$this->z_profile = array('1016' => _("alle Wörter [ALL]"),
-					 '1004' => _("Person, Autor [PER]"),					 					 
-					 '4' => _("Titelstichwörter [TIT]"),
-					 '5' => _("Stichwörter Serie/Zeitschrift [SER]"),
-					 '1005' => _("Stichwörter Körperschaft [KOR]"),					 					 
-					 '46' => _("Schlagwörter [SWW]"),					 					 
-					 '54' => _("Signatur [SGN]"),					 					 
-					 '1007' => _("alle Nummern (ISBN, ISSN ...) [NUM]")
-		); /* '4' => _("Titelanfänge [TAF]"),
-		   herausgenommen, da keine Unterscheidung anhand von Wort oder Phrase durchgeführt wird. 
-		   */
-	}
+    
+    
+    function StudipLitSearchPluginTIBUBOpac(){
+        parent::StudipLitSearchPluginGvk();
+        $this->description = "Technische Informationsbibliothek / Universitätsbibliothek Hannover";
+        $this->z_host = "z3950.gbv.de:20012/tib_opc";
+        $this->z_record_encoding = 'utf-8';
+        $this->z_profile = array('1016' => _("alle Wörter [ALL]"),
+                     '1004' => _("Person, Autor [PER]"),                                         
+                     '4' => _("Titelstichwörter [TIT]"),
+                     '5' => _("Stichwörter Serie/Zeitschrift [SER]"),
+                     '1005' => _("Stichwörter Körperschaft [KOR]"),                                      
+                     '46' => _("Schlagwörter [SWW]"),                                        
+                     '54' => _("Signatur [SGN]"),                                        
+                     '1007' => _("alle Nummern (ISBN, ISSN ...) [NUM]")
+        ); /* '4' => _("Titelanfänge [TAF]"),
+           herausgenommen, da keine Unterscheidung anhand von Wort oder Phrase durchgeführt wird. 
+           */
+    }
 }
 ?>
 

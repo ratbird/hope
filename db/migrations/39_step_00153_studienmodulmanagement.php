@@ -19,14 +19,14 @@ class Step00153Studienmodulmanagement extends Migration
             VALUES
                 (MD5('$name'), '$name', 'user', 1, 'string', $time, $time, '$description')
         ");
-		$db->exec("ALTER TABLE `sem_tree` ADD `type` TINYINT UNSIGNED NOT NULL");
+        $db->exec("ALTER TABLE `sem_tree` ADD `type` TINYINT UNSIGNED NOT NULL");
     }
 
     function down ()
     {
         $db = DBManager::get();
         $db->exec("DELETE FROM config WHERE field = 'SEM_TREE_SHOW_EMPTY_AREAS_PERM'");
-		$db->exec("ALTER TABLE `sem_tree` DROP `type`");
+        $db->exec("ALTER TABLE `sem_tree` DROP `type`");
     }
 }
 ?>

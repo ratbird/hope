@@ -10,19 +10,19 @@
  *
  * PHP version 5
  *
- * @author 		Elmar Ludwig
- * @author  	Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @copyright 	2009 Stud.IP
- * @license 	http://www.gnu.org/licenses/gpl.html GPL Licence 3
- * @package 	studip_core
- * @access 		public
+ * @author      Elmar Ludwig
+ * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @copyright   2009 Stud.IP
+ * @license     http://www.gnu.org/licenses/gpl.html GPL Licence 3
+ * @package     studip_core
+ * @access      public
  */
 
 page_open(array(
-	'sess' => 'Seminar_Session',
-	'auth' => 'Seminar_Default_Auth',
-	'perm' => 'Seminar_Perm',
-	'user' => 'Seminar_User'
+    'sess' => 'Seminar_Session',
+    'auth' => 'Seminar_Default_Auth',
+    'perm' => 'Seminar_Perm',
+    'user' => 'Seminar_User'
 ));
 
 $_language_path = init_i18n($_language);

@@ -69,33 +69,33 @@ $seminar_counter = 0;
 // loop through all found seminars
 while ($db->next_record()) {
 
-		// get seminar ID
+        // get seminar ID
         $seminar_id = $db->f('Seminar_id');
         
-		echo "(". date("Y-m-d H:i:s T") .") Converting Seminar ID='$seminar_id', Name '".$db->f('Name')."'\n";
-		flush();
-		unset($sem);
-		
+        echo "(". date("Y-m-d H:i:s T") .") Converting Seminar ID='$seminar_id', Name '".$db->f('Name')."'\n";
+        flush();
+        unset($sem);
+        
         // create new seminar object
         $sem = new Seminar( $seminar_id);
 
         // loop through every regular date
-		foreach ($sem->metadate->cycles as $key => $val) {
+        foreach ($sem->metadate->cycles as $key => $val) {
 
-			// assign ressources, if ressources are used
+            // assign ressources, if ressources are used
             if ($val->resource_id) {
-				$veranst_assign = new VeranstaltungResourcesAssign($sem->getId());
-				$veranst_assign->deleteAssignedRooms();
-			}
+                $veranst_assign = new VeranstaltungResourcesAssign($sem->getId());
+                $veranst_assign->deleteAssignedRooms();
+            }
             
             // this method creates corresponding single dates for regular dates, if they are not present 
-			$sem->getSingleDatesForCycle($key);
+            $sem->getSingleDatesForCycle($key);
             
-			$val->resource_id = '';
-		}
+            $val->resource_id = '';
+        }
         
         // update the seminar object (modifies the chdate)
-		$sem->store();
+        $sem->store();
 
         $query = sprintf("UPDATE seminare SET chdate='%s' WHERE Seminar_id='%s' ", time(), $db->f('Seminar_id'));
         $db2->query($query);

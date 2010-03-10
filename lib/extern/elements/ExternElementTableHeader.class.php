@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElementTableHeader
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElementTableHeader
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -41,31 +41,31 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
 
 class ExternElementTableHeader extends ExternElement {
 
-	var $attributes = array("table_width", "table_align", "table_border", "table_bgcolor",
-				"table_bordercolor", "table_cellpadding", "table_cellspacing", "table_class",
-				"table_style");
-	
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementTableHeader ($config = "") {
-		if ($config)
-			$this->config = $config;
-		
-		$this->name = "TableHeader";
-		$this->real_name = _("Tabellenkopf");
-		$this->description = _("Angaben zur Gestaltung der Tabelle.");
-	}
-	
-	function toString ($args) {
-		$out = "\n" . $this->config->getTag($this->name, "table") . "\n";
-		$out .= $args["content"] . "</table>\n";
-		
-		return $out;
-	}
-	
+    var $attributes = array("table_width", "table_align", "table_border", "table_bgcolor",
+                "table_bordercolor", "table_cellpadding", "table_cellspacing", "table_class",
+                "table_style");
+    
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementTableHeader ($config = "") {
+        if ($config)
+            $this->config = $config;
+        
+        $this->name = "TableHeader";
+        $this->real_name = _("Tabellenkopf");
+        $this->description = _("Angaben zur Gestaltung der Tabelle.");
+    }
+    
+    function toString ($args) {
+        $out = "\n" . $this->config->getTag($this->name, "table") . "\n";
+        $out .= $args["content"] . "</table>\n";
+        
+        return $out;
+    }
+    
 }
 
 ?>

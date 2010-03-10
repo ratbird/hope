@@ -30,43 +30,43 @@ require_once ("config.inc.php");
 *
 * This class is used for items which are "Einrichtungen"
 *
-* @access	public
-* @author	André Noack <noack@data-quest.de>
-* @package	
+* @access   public
+* @author   André Noack <noack@data-quest.de>
+* @package  
 */
 class RangeTreeObjectInst extends RangeTreeObject {
-	
-	/**
-	* Constructor
-	*
-	* Do not use directly, call factory method in base class instead
-	* @access private
-	* @param	string	$item_id
-	*/
-	function RangeTreeObjectInst($item_id) {
-		parent::RangeTreeObject($item_id); //calling the baseclass constructor 
-		$this->initItemDetail();
-		$this->item_data_mapping = array('Strasse' => _("Straße"), 'Plz' => _("Ort"), 'telefon' => _("Tel."), 'fax' => _("Fax"),
-										'url' => _("Homepage"), 'email' => _("Kontakt"));
-		$this->item_data['type_num'] = $this->item_data['type'];
-		$this->item_data['type'] = ($this->item_data['type']) ? $GLOBALS['INST_TYPE'][$this->item_data['type']]['name'] : $GLOBALS['INST_TYPE'][1]['name'];
-		
-	}
-	
-	/**
-	* Returns true, if fakultaets_id of the item is found in its parents
-	*
-	* @access	public
-	* @return	bool
-	*/
-	function isInCorrectBranch(){
-		$parents = $this->tree->getParents($this->tree_item_id);
-		if (is_array($parents) && in_array($this->item_data['fakultaets_id'],$parents)){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
+    
+    /**
+    * Constructor
+    *
+    * Do not use directly, call factory method in base class instead
+    * @access private
+    * @param    string  $item_id
+    */
+    function RangeTreeObjectInst($item_id) {
+        parent::RangeTreeObject($item_id); //calling the baseclass constructor 
+        $this->initItemDetail();
+        $this->item_data_mapping = array('Strasse' => _("Straße"), 'Plz' => _("Ort"), 'telefon' => _("Tel."), 'fax' => _("Fax"),
+                                        'url' => _("Homepage"), 'email' => _("Kontakt"));
+        $this->item_data['type_num'] = $this->item_data['type'];
+        $this->item_data['type'] = ($this->item_data['type']) ? $GLOBALS['INST_TYPE'][$this->item_data['type']]['name'] : $GLOBALS['INST_TYPE'][1]['name'];
+        
+    }
+    
+    /**
+    * Returns true, if fakultaets_id of the item is found in its parents
+    *
+    * @access   public
+    * @return   bool
+    */
+    function isInCorrectBranch(){
+        $parents = $this->tree->getParents($this->tree_item_id);
+        if (is_array($parents) && in_array($this->item_data['fakultaets_id'],$parents)){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
 }
 ?>

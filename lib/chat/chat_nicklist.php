@@ -7,11 +7,11 @@
 * 
 * 
 *
-* @author		André Noack <andre.noack@gmx.net>
-* @access		public
-* @modulegroup	chat_modules
-* @module		chat_nicklist
-* @package		Chat
+* @author       André Noack <andre.noack@gmx.net>
+* @access       public
+* @modulegroup  chat_modules
+* @module       chat_nicklist
+* @package      Chat
 */
 /**
 * workaround for PHPDoc
@@ -49,8 +49,8 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
 $perm->check("user");
 //chat eingeschaltet?
 if (!$CHAT_ENABLE) {
-	page_close();
-	die;
+    page_close();
+    die;
 }
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
@@ -68,56 +68,56 @@ $chatServer->caching = true;
 ?>
 <html>
 <head>
-	<title>Chat Nicklist</title>
-	<link rel="stylesheet" href="<?=$GLOBALS['ASSETS_URL']?>stylesheets/style.css" type="text/css">
+    <title>Chat Nicklist</title>
+    <link rel="stylesheet" href="<?=$GLOBALS['ASSETS_URL']?>stylesheets/style.css" type="text/css">
 </head>
 <body style="background-color:#EEEEEE;background-image:url('<?= $GLOBALS['ASSETS_URL'] ?>images/steel1.jpg');">
 <?
 //darf ich überhaupt hier sein ?
 if (!$chatServer->isActiveUser($user->id,$chatid)) {
-	?><table width="100%"><tr><?
-	my_error('<font size="-1">'._("Sie sind nicht in diesem Chat angemeldet!").'</font>','chat',1,false);
-	?></tr></table></body></html><?
-	page_close();
-	die;
+    ?><table width="100%"><tr><?
+    my_error('<font size="-1">'._("Sie sind nicht in diesem Chat angemeldet!").'</font>','chat',1,false);
+    ?></tr></table></body></html><?
+    page_close();
+    die;
 }
 ?>
 <div align="center">
 <table align="center" border="0" bgcolor="#FFFFFF" cellpadding="0" cellspacing="2"  width="95%">
 <tr>
-	<td align="center">
-		<table align="center" border="0" cellpadding="1" cellspacing="1" width="100%">
-			<tr>
-				<td class="topic" align="center"><b>Nicklist</b></td>
-			</tr>
-			<?
-			$is_admin = $chatServer->getPerm($user->id,$chatid);
-			$chat_users = $chatServer->getUsers($chatid);
-			foreach ($chat_users as $chatUserId => $chatUserDetail){
-					if ($chatUserDetail["action"]){
-						echo "\n<tr><td><span style=\"font-size:10pt\">";
-						if ($chatUserDetail["perm"])  echo "<b>";
-						echo "<a href=\"#\" ". tooltip(_("Homepage aufrufen"),false) 
-							. "onClick=\"return parent.coming_home('{$CANONICAL_RELATIVE_PATH_STUDIP}about.php?username=".$chatUserDetail["nick"]."')\">"
-							. htmlReady($chatUserDetail["fullname"])."</a><br>";
-						if ($chatUserId != $user->id){
-							if ($is_admin){
-								echo "\n<a href=\"#\" " . tooltip(_("diesen Nutzer / diese Nutzerin aus dem Chat werfen"),false) 
-							. "onClick=\"parent.frames['frm_input'].document.inputform.chatInput.value='/kick "
-							. $chatUserDetail["nick"] . " ';parent.frames['frm_input'].document.inputform.submit();return false;\">#</a>&nbsp;";
-							}
-							echo "\n<a href=\"#\" " . tooltip(_("diesem Nutzer / dieser Nutzerin eine private Botschaft senden"),false) 
-							. "onClick=\"parent.frames['frm_input'].document.inputform.chatInput.value='/private "
-							. $chatUserDetail["nick"] . " ';return false;\">@</a>&nbsp;";
-						}
-						echo "(".$chatUserDetail["nick"].")";
-						if ($chatUserDetail["perm"])  echo "</b>";
-						echo "</span></td></tr>";
-					}
-			}
-			?>
-		</table>
-	</td>
+    <td align="center">
+        <table align="center" border="0" cellpadding="1" cellspacing="1" width="100%">
+            <tr>
+                <td class="topic" align="center"><b>Nicklist</b></td>
+            </tr>
+            <?
+            $is_admin = $chatServer->getPerm($user->id,$chatid);
+            $chat_users = $chatServer->getUsers($chatid);
+            foreach ($chat_users as $chatUserId => $chatUserDetail){
+                    if ($chatUserDetail["action"]){
+                        echo "\n<tr><td><span style=\"font-size:10pt\">";
+                        if ($chatUserDetail["perm"])  echo "<b>";
+                        echo "<a href=\"#\" ". tooltip(_("Homepage aufrufen"),false) 
+                            . "onClick=\"return parent.coming_home('{$CANONICAL_RELATIVE_PATH_STUDIP}about.php?username=".$chatUserDetail["nick"]."')\">"
+                            . htmlReady($chatUserDetail["fullname"])."</a><br>";
+                        if ($chatUserId != $user->id){
+                            if ($is_admin){
+                                echo "\n<a href=\"#\" " . tooltip(_("diesen Nutzer / diese Nutzerin aus dem Chat werfen"),false) 
+                            . "onClick=\"parent.frames['frm_input'].document.inputform.chatInput.value='/kick "
+                            . $chatUserDetail["nick"] . " ';parent.frames['frm_input'].document.inputform.submit();return false;\">#</a>&nbsp;";
+                            }
+                            echo "\n<a href=\"#\" " . tooltip(_("diesem Nutzer / dieser Nutzerin eine private Botschaft senden"),false) 
+                            . "onClick=\"parent.frames['frm_input'].document.inputform.chatInput.value='/private "
+                            . $chatUserDetail["nick"] . " ';return false;\">@</a>&nbsp;";
+                        }
+                        echo "(".$chatUserDetail["nick"].")";
+                        if ($chatUserDetail["perm"])  echo "</b>";
+                        echo "</span></td></tr>";
+                    }
+            }
+            ?>
+        </table>
+    </td>
 </tr>
 </table>
 </div>

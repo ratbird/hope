@@ -244,15 +244,15 @@ class StudipStudyArea {
    * get the type of this study area.
    */
   function getType(){
-  	return $this->type;
+    return $this->type;
   }
   
   /**
    * set the type of this study area.
    */
   function setType($type){
-  	$this->type = (int) $type;
-  	return $this;
+    $this->type = (int) $type;
+    return $this;
   }
   
   /**
@@ -261,11 +261,11 @@ class StudipStudyArea {
    * @return string
    */
   function getTypeName(){
-  	if(isset($GLOBALS['SEM_TREE_TYPES'][$this->getType()]['name'])){
-  		return $GLOBALS['SEM_TREE_TYPES'][$this->getType()]['name'];
-  	} else {
-  		return '';
-  	}
+    if(isset($GLOBALS['SEM_TREE_TYPES'][$this->getType()]['name'])){
+        return $GLOBALS['SEM_TREE_TYPES'][$this->getType()]['name'];
+    } else {
+        return '';
+    }
   }
   
   /**
@@ -274,11 +274,11 @@ class StudipStudyArea {
    * @return bool
    */
   function isEditable(){
-  	if(isset($GLOBALS['SEM_TREE_TYPES'][$this->getType()]['editable'])){
-  		return (bool)$GLOBALS['SEM_TREE_TYPES'][$this->getType()]['editable'];
-  	} else {
-  		return false;
-  	}
+    if(isset($GLOBALS['SEM_TREE_TYPES'][$this->getType()]['editable'])){
+        return (bool)$GLOBALS['SEM_TREE_TYPES'][$this->getType()]['editable'];
+    } else {
+        return false;
+    }
   }
   
   /**

@@ -19,16 +19,16 @@ Class Template_Table extends Table {
   var $num_rows;
 
   function start($rowform, $header="", $footer="") {
-	$this->header=$header;
-	$this->footer=$footer;
-	$this->rowform=$rowform;
-	$uppercase=0;
+    $this->header=$header;
+    $this->footer=$footer;
+    $this->rowform=$rowform;
+    $uppercase=0;
   }
 
   function show_result_page($db, $start, $num) {
-	$this->first_row=$start;
-	$this->page_rows=$num;
-	$this->num_rows=$db->num_rows();
+    $this->first_row=$start;
+    $this->page_rows=$num;
+    $this->num_rows=$db->num_rows();
     if (($start > $db->num_rows()+0) || ($start < 0)) {
       return;
     }
@@ -71,22 +71,22 @@ Class Template_Table extends Table {
 
     reset($d);
     while(list($key, $val) = each($d)) {
-	  $lvar=$val;
-	  if ($uppercase) $lvar=strtoupper($val);
-	  $$lvar=$data[$val];
-	  //printf($lvar);
+      $lvar=$val;
+      if ($uppercase) $lvar=strtoupper($val);
+      $$lvar=$data[$val];
+      //printf($lvar);
     }
     include "$this->rowform";
   }
 
   function table_open($class = "") {
       if ($this->header!="") 
-	    include $this->header;
+        include $this->header;
   }
 
   function table_close() {
       if ($this->footer!="") 
-	    include $this->footer;
+        include $this->footer;
   }
 
 }

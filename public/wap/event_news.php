@@ -5,18 +5,18 @@
 * New news of the selected event are displayed.<br/>
 * Parameters received via stdin<br/>
 * <code>
-*	$session_id
-*	$event_id
-*	$events_pc		(page counter)
-*	$event_news_pc	(page counter)
+*   $session_id
+*   $event_id
+*   $events_pc      (page counter)
+*   $event_news_pc  (page counter)
 * </code>
 *
-* @author		Florian Hansen <f1701h@gmx.net>
-* @version		0.12	10.09.2003	21:23:09
-* @access		public
-* @modulegroup	wap_modules
-* @module		event_news.php
-* @package		WAP
+* @author       Florian Hansen <f1701h@gmx.net>
+* @version      0.12    10.09.2003  21:23:09
+* @access       public
+* @modulegroup  wap_modules
+* @module       event_news.php
+* @package      WAP
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -38,18 +38,18 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-	/**
-	* Maximum of news displayed per page
-	* @const NEWS_PER_PAGE
-	*/
-	define ("NEWS_PER_PAGE", 5);
+    /**
+    * Maximum of news displayed per page
+    * @const NEWS_PER_PAGE
+    */
+    define ("NEWS_PER_PAGE", 5);
 
-	include_once("wap_adm.inc.php");
-	include_once("wap_txt.inc.php");
-	include_once("wap_hlp.inc.php");
-	include_once("wap_buttons.inc.php");
+    include_once("wap_adm.inc.php");
+    include_once("wap_txt.inc.php");
+    include_once("wap_hlp.inc.php");
+    include_once("wap_buttons.inc.php");
 
-	$session_user_id = wap_adm_start_card($session_id);
+    $session_user_id = wap_adm_start_card($session_id);
     if ($session_user_id)
     {
         echo "<p align=\"center\">";
@@ -167,5 +167,5 @@
         wap_buttons_menu_link($session_id);
         echo "</p>\n";
     }
-	wap_adm_end_card();
+    wap_adm_end_card();
 ?>

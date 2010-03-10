@@ -12,16 +12,16 @@ $c = 0;
 $d = 0;
 $db->query("select * from statusgruppen");
 while ($db->next_record()) {
-	$i = 1;
-	$statusgruppe_id = $db->f("statusgruppe_id");
-	$db2->query("select * from statusgruppe_user WHERE statusgruppe_id = '$statusgruppe_id'");
-	while ($db2->next_record()) {
-		$user_id = $db2->f("user_id");
-		$db3->query("UPDATE statusgruppe_user SET position='$i' WHERE user_id = '$user_id' AND statusgruppe_id = '$statusgruppe_id'");
-		$i++;
-		$c++;
-	}
-	$d++;
+    $i = 1;
+    $statusgruppe_id = $db->f("statusgruppe_id");
+    $db2->query("select * from statusgruppe_user WHERE statusgruppe_id = '$statusgruppe_id'");
+    while ($db2->next_record()) {
+        $user_id = $db2->f("user_id");
+        $db3->query("UPDATE statusgruppe_user SET position='$i' WHERE user_id = '$user_id' AND statusgruppe_id = '$statusgruppe_id'");
+        $i++;
+        $c++;
+    }
+    $d++;
 }
 
 echo "uff, geschafft, es wurden $c Datensätze in $d Gruppen umgewandelt!";

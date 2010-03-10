@@ -31,27 +31,27 @@ require_once $RELATIVE_PATH_ADMIN_MODULES."/IntegrityCheckAbstract.class.php";
 *
 * 
 *
-* @access	public	
-* @author	André Noack <andre.noack@gmx.net>
-* @package	Admin
-* @see		IntegrityCheckAbstract
+* @access   public  
+* @author   André Noack <andre.noack@gmx.net>
+* @package  Admin
+* @see      IntegrityCheckAbstract
 */
 class IntegrityCheckArchiv extends IntegrityCheckAbstract{
 
-	/**
-	* constructor
-	*
-	* calls the base class constructor and initializes checklist array
-	* @access	public
-	*/
-	function IntegrityCheckArchiv(){
-		$baseclass = strtolower(get_parent_class($this));
-		//parent::$baseclass(); //calling the baseclass constructor 
-		$this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
-		$this->master_table = "archiv";
-		$this->checklist[] = array('detail_table' => 'archiv_user',
-									'query' => 'view:ARCHIV_USER:');
-	}
+    /**
+    * constructor
+    *
+    * calls the base class constructor and initializes checklist array
+    * @access   public
+    */
+    function IntegrityCheckArchiv(){
+        $baseclass = strtolower(get_parent_class($this));
+        //parent::$baseclass(); //calling the baseclass constructor 
+        $this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
+        $this->master_table = "archiv";
+        $this->checklist[] = array('detail_table' => 'archiv_user',
+                                    'query' => 'view:ARCHIV_USER:');
+    }
 
 }
 ?>

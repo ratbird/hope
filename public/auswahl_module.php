@@ -35,29 +35,29 @@ include ("lib/include/header.php");   // Output of Stud.IP head
 ?>
 <table width="70%" border=0 cellpadding=0 cellspacing=0 align="center">
 <tr>
-	<td class="topic" colspan="2"><img src="<?=$GLOBALS['ASSETS_URL']?>images/einst.gif" border="0"> <b><?=_("Module in Stud.IP")?></b></td>
+    <td class="topic" colspan="2"><img src="<?=$GLOBALS['ASSETS_URL']?>images/einst.gif" border="0"> <b><?=_("Module in Stud.IP")?></b></td>
 </tr>
 <tr>
-	<td class="blank">
-	<blockquote>
-		<?php if ($perm->have_perm('root') && $GLOBALS['STM_ENABLE'] ) {?>
-		<br><a href="stm_abstract_assi.php"><b><?=_("Allgemeine Module anlegen und bearbeiten")?></b></a><br>
-		<font size=-1><?=_("Hier k&ouml;nnen Sie Allgemeine Module anlegen und bearbeiten.")?></font>
-		<br>
-		<?php } ?>
+    <td class="blank">
+    <blockquote>
+        <?php if ($perm->have_perm('root') && $GLOBALS['STM_ENABLE'] ) {?>
+        <br><a href="stm_abstract_assi.php"><b><?=_("Allgemeine Module anlegen und bearbeiten")?></b></a><br>
+        <font size=-1><?=_("Hier k&ouml;nnen Sie Allgemeine Module anlegen und bearbeiten.")?></font>
+        <br>
+        <?php } ?>
 
-		<?php if ($perm->have_perm('dozent') && $GLOBALS['STM_ENABLE'] ) {?>
-		<br><a href="stm_instance_assi.php"><b><?=_("Konkrete Module anlegen und bearbeiten")?></b></a><br>
-		<font size=-1><?=_("Hier k&ouml;nnen Administratoren Konkrete Module anlegen und Modulverantwortliche Ihre Konkreten Module bearbeiten.")?></font>
-		<br>
-		<?php }?>
-	</blockquote>
-	</td>
-	<td class="blank" align="right" valign="top"><img src="<?=$GLOBALS['ASSETS_URL']?>images/archiv.jpg" border="0"></td>
+        <?php if ($perm->have_perm('dozent') && $GLOBALS['STM_ENABLE'] ) {?>
+        <br><a href="stm_instance_assi.php"><b><?=_("Konkrete Module anlegen und bearbeiten")?></b></a><br>
+        <font size=-1><?=_("Hier k&ouml;nnen Administratoren Konkrete Module anlegen und Modulverantwortliche Ihre Konkreten Module bearbeiten.")?></font>
+        <br>
+        <?php }?>
+    </blockquote>
+    </td>
+    <td class="blank" align="right" valign="top"><img src="<?=$GLOBALS['ASSETS_URL']?>images/archiv.jpg" border="0"></td>
 </tr>
 </table>
 
 <?  // Save data back to database.
-	include ("lib/include/html_end.inc.php");
-	page_close()
+    include ("lib/include/html_end.inc.php");
+    page_close()
  ?>

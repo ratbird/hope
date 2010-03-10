@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElementTreePath
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElementTreePath
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -40,54 +40,54 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
 
 class ExternElementTreePath extends ExternElement {
 
-	var $attributes = array("delimiter", "font_size", "font_face", "font_color", "font_class", "font_style",
-			"a_class", "a_style");
+    var $attributes = array("delimiter", "font_size", "font_face", "font_color", "font_class", "font_style",
+            "a_class", "a_style");
 
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementTreePath ($config = "") {
-		if ($config)
-			$this->config = $config;
-		
-		$this->name = "TreePath";
-		$this->real_name = _("Navigations-Pfad");
-		$this->description = _("Eigenschaften des Navigations-Pfades innerhalb einer Baum-Navigation.");
-	}
-	
-	function toStringEdit ($post_vars = "", $faulty_values = "",
-			$edit_form = "", $anker = "") {
-		if ($faulty_values == '')
-			$faulty_values = array();	
-		$out = '';
-		$tag_headline = '';
-		$table = '';
-		if ($edit_form == '')
-			$edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
-		
-		$edit_form->setElementName($this->getName());
-		$element_headline = $this->getEditFormHeadline($edit_form);
-		
-		$headline = $edit_form->editHeadline(_("Allgemeine Angaben"));
-		$title = _("Pfad-Trennzeichen:");
-		$info = _("Geben Sie ein oder mehrere Zeichen ein, die als Trennzeichen zwischen den Links im Navigations-Pfad erscheinen sollen.");
-		$content = $edit_form->editTextfieldGeneric("delimiter", $title, $info, 25, 50);
-		
-		$content_table = $edit_form->editContentTable($headline, $content);
-		$content_table .= $edit_form->editBlankContent();
-		
-		$out = $content_table . $edit_form->getEditFormContent($this->attributes);
-		
-		$submit = $edit_form->editSubmit($this->config->getName(),
-				$this->config->getId(), $this->getName());
-		$out = $edit_form->editContent($out, $submit);
-		$out .= $edit_form->editBlank();
-		
-		return  $element_headline . $out;
-	}
-	
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementTreePath ($config = "") {
+        if ($config)
+            $this->config = $config;
+        
+        $this->name = "TreePath";
+        $this->real_name = _("Navigations-Pfad");
+        $this->description = _("Eigenschaften des Navigations-Pfades innerhalb einer Baum-Navigation.");
+    }
+    
+    function toStringEdit ($post_vars = "", $faulty_values = "",
+            $edit_form = "", $anker = "") {
+        if ($faulty_values == '')
+            $faulty_values = array();   
+        $out = '';
+        $tag_headline = '';
+        $table = '';
+        if ($edit_form == '')
+            $edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
+        
+        $edit_form->setElementName($this->getName());
+        $element_headline = $this->getEditFormHeadline($edit_form);
+        
+        $headline = $edit_form->editHeadline(_("Allgemeine Angaben"));
+        $title = _("Pfad-Trennzeichen:");
+        $info = _("Geben Sie ein oder mehrere Zeichen ein, die als Trennzeichen zwischen den Links im Navigations-Pfad erscheinen sollen.");
+        $content = $edit_form->editTextfieldGeneric("delimiter", $title, $info, 25, 50);
+        
+        $content_table = $edit_form->editContentTable($headline, $content);
+        $content_table .= $edit_form->editBlankContent();
+        
+        $out = $content_table . $edit_form->getEditFormContent($this->attributes);
+        
+        $submit = $edit_form->editSubmit($this->config->getName(),
+                $this->config->getId(), $this->getName());
+        $out = $edit_form->editContent($out, $submit);
+        $out .= $edit_form->editBlank();
+        
+        return  $element_headline . $out;
+    }
+    
 }
 
 ?>

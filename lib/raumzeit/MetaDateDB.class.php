@@ -35,37 +35,37 @@
  */
 
 class MetaDateDB {
-	function storeMetaData($metadate) {
-		$db = new DB_Seminar();
+    function storeMetaData($metadate) {
+        $db = new DB_Seminar();
 
-		$db->query("UPDATE seminare SET metadata_dates = '".mysql_escape_string($metadate->getSerializedMetaData())."' WHERE Seminar_id = '".$metadate->getSeminarID()."'");
-		return TRUE;
-	}
+        $db->query("UPDATE seminare SET metadata_dates = '".mysql_escape_string($metadate->getSerializedMetaData())."' WHERE Seminar_id = '".$metadate->getSeminarID()."'");
+        return TRUE;
+    }
 
-	function restoreMetaData($seminar_id) {
-		$db = new DB_Seminar();
-		$db->query("SELECT metadata_dates FROM seminare WHERE Seminar_id = '$seminar_id'");
-		if ($db->next_record()) {
-			return $db->f('metadata_dates');
-		} else {
-			return FALSE;
-		}
-	}
+    function restoreMetaData($seminar_id) {
+        $db = new DB_Seminar();
+        $db->query("SELECT metadata_dates FROM seminare WHERE Seminar_id = '$seminar_id'");
+        if ($db->next_record()) {
+            return $db->f('metadata_dates');
+        } else {
+            return FALSE;
+        }
+    }
 
-	function has_dates($metadate_id, $seminar_id, $filterStart = 0, $filterEnd = 0) {
-		$db = new DB_Seminar();
+    function has_dates($metadate_id, $seminar_id, $filterStart = 0, $filterEnd = 0) {
+        $db = new DB_Seminar();
 
-		if ($filterStart == 0) {
-			$query = "SELECT * FROM termine WHERE range_id = '$seminar_id' AND metadate_id = '$metadate_id'";
-		} else {
-			$query = "SELECT * FROM termine WHERE range_id = '$seminar_id' AND metadate_id = '$metadate_id' AND date >= $filterStart AND end_time <= $filterEnd";
-		}
+        if ($filterStart == 0) {
+            $query = "SELECT * FROM termine WHERE range_id = '$seminar_id' AND metadate_id = '$metadate_id'";
+        } else {
+            $query = "SELECT * FROM termine WHERE range_id = '$seminar_id' AND metadate_id = '$metadate_id' AND date >= $filterStart AND end_time <= $filterEnd";
+        }
 
-		$db->query($query);
-		if ($db->next_record()) {
-			return true;
-		}
+        $db->query($query);
+        if ($db->next_record()) {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

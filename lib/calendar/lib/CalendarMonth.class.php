@@ -30,37 +30,37 @@ require_once($RELATIVE_PATH_CALENDAR . "/lib/CalendarYear.class.php");
 
 class CalendarMonth extends CalendarYear{
 
-	var $mon;      // Monat (int)
-	
-	// Konstruktor
-	function CalendarMonth ($tmstamp) {
-		$this->year = date("Y", $tmstamp);
-		$this->mon = date("n", $tmstamp);
-		$this->ts = mktime(12, 0, 0, $this->mon, 1, $this->year, 0);
-	}
-	
-	// public
-	function getValue () {
-		return $this->mon;
-	}
-	
-	// public
-	function toString () {
-		return htmlentities(strftime("%B", $this->ts), ENT_QUOTES);
-	}
-	
-	// public
-	function getStart () {
-		return mktime(0, 0, 0, $this->mon, 1, $this->year);
-	}
-	
-	// public
-	function getEnd () {
-		$next_mon = $this->mon + 1;
-		return mktime(0, 0, 0, $next_mon, 1, $this->year) - 1;
-	}
-	
-	
+    var $mon;      // Monat (int)
+    
+    // Konstruktor
+    function CalendarMonth ($tmstamp) {
+        $this->year = date("Y", $tmstamp);
+        $this->mon = date("n", $tmstamp);
+        $this->ts = mktime(12, 0, 0, $this->mon, 1, $this->year, 0);
+    }
+    
+    // public
+    function getValue () {
+        return $this->mon;
+    }
+    
+    // public
+    function toString () {
+        return htmlentities(strftime("%B", $this->ts), ENT_QUOTES);
+    }
+    
+    // public
+    function getStart () {
+        return mktime(0, 0, 0, $this->mon, 1, $this->year);
+    }
+    
+    // public
+    function getEnd () {
+        $next_mon = $this->mon + 1;
+        return mktime(0, 0, 0, $next_mon, 1, $this->year) - 1;
+    }
+    
+    
 } // class Month
 
 ?>

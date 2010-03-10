@@ -31,27 +31,27 @@ unQuoteAll();
 $sess->register('viewModeFilter');
 
 if ($list) {
-	$sess->unregister('temporary_id');
-	unset($temporary_id);
+    $sess->unregister('temporary_id');
+    unset($temporary_id);
 }
 
 if (isset($_REQUEST['seminar_id'])) {
-	$sess->register('temporary_id');
-	$temporary_id = $_REQUEST['seminar_id'];
+    $sess->register('temporary_id');
+    $temporary_id = $_REQUEST['seminar_id'];
 }
 
 if (isset($temporary_id)) {
-	$id = $temporary_id;
+    $id = $temporary_id;
 } else {
-	$id = $SessSemName[1];
+    $id = $SessSemName[1];
 }
 
 if (!$viewModeFilter) {
-	$viewModeFilter = 'simple';
+    $viewModeFilter = 'simple';
 }
 
 if ($cmd == 'changeViewMode') {
-	$viewModeFilter = $_REQUEST['newFilter'];
+    $viewModeFilter = $_REQUEST['newFilter'];
 }
 
 // expert view enabled ?
@@ -60,14 +60,14 @@ if(!$GLOBALS["RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW"]){
 }
 
 switch ($viewModeFilter) {
-	case 'expert':
+    case 'expert':
         $HELP_KEYWORD="Basis.VeranstaltungenVerwaltenAblaufplanExpertenansicht";        
-		include('lib/raumzeit/themen_expert.php');
-		break;
+        include('lib/raumzeit/themen_expert.php');
+        break;
 
-	default:
+    default:
         $HELP_KEYWORD="Basis.VeranstaltungenVerwaltenAblaufplan";
-		include('lib/raumzeit/themen_ablaufplan.php');
-		break;
-		
+        include('lib/raumzeit/themen_ablaufplan.php');
+        break;
+        
 }

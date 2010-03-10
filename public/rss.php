@@ -4,7 +4,7 @@
 # Lifter003: TODO
 /*
 rss.php - Ausgabe der persšnlcihen News als rss-Feed
-Copyright (C) 2005	Philipp HŸgelmeyer <phuegelm@uni-osnabrueck.de>
+Copyright (C) 2005  Philipp HŸgelmeyer <phuegelm@uni-osnabrueck.de>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -24,13 +24,13 @@ ob_end_clean();
 ob_start();
 require_once('lib/showNews.inc.php');
 if (get_config('NEWS_RSS_EXPORT_ENABLE')){
-	$range = StudipNews::GetRangeFromRssID($_REQUEST['id']);
-	if (is_array($range)){
-		show_rss_news($range['range_id'], $range['range_type']);
-	} else {
-		header("Content-type: text/xml; charset=utf-8");
-		echo "<?xml version=\"1.0\"?>\n<rss version=\"2.0\">\n</rss>\n";
-	}
-}	
+    $range = StudipNews::GetRangeFromRssID($_REQUEST['id']);
+    if (is_array($range)){
+        show_rss_news($range['range_id'], $range['range_type']);
+    } else {
+        header("Content-type: text/xml; charset=utf-8");
+        echo "<?xml version=\"1.0\"?>\n<rss version=\"2.0\">\n</rss>\n";
+    }
+}   
 ob_end_flush();
 ?>

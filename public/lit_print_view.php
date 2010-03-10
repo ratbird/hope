@@ -32,8 +32,8 @@ $_include_stylesheet = "style_print.css"; // use special stylesheet for printing
 include ('lib/include/html_head.inc.php'); // Output of html head
 
 if ($_range_id != $user->id && !$perm->have_studip_perm('user',$_range_id)){
-	page_close();
-	die;
+    page_close();
+    die;
 }
 $_the_tree =& TreeAbstract::GetInstance("StudipLitList", $_range_id);
 ?>
@@ -42,9 +42,9 @@ $_the_tree =& TreeAbstract::GetInstance("StudipLitList", $_range_id);
 </h1>
 <?
 if ( ($list = StudipLitList::GetFormattedListsByRange($_range_id, false, false)) ){
-	echo $list;
+    echo $list;
 } else {
-	echo _("Es wurde noch keine Literatur erfasst");
+    echo _("Es wurde noch keine Literatur erfasst");
 }
 echo "<table width=100% border=0 cellpadding=2 cellspacing=0>";
 echo "<tr><td><i><font size=-1>" . _("Stand:") . " ".date("d.m.y, G:i",time())."</font></i></td><td align=\"right\"><font size=-2><img src=\"".$GLOBALS['ASSETS_URL']."images/logo2b.gif\"><br />&copy; ".date("Y", time())." v.$SOFTWARE_VERSION&nbsp; &nbsp; </font></td></tr>";

@@ -31,41 +31,41 @@ require_once $RELATIVE_PATH_ADMIN_MODULES."/IntegrityCheckAbstract.class.php";
 *
 * 
 *
-* @access	public	
-* @author	André Noack <andre.noack@gmx.net>
-* @package	Admin
-* @see		IntegrityCheckAbstract
+* @access   public  
+* @author   André Noack <andre.noack@gmx.net>
+* @package  Admin
+* @see      IntegrityCheckAbstract
 */
 class IntegrityCheckSeminar extends IntegrityCheckAbstract{
-	
-	/**
-	* constructor
-	*
-	* calls the base class constructor and initializes checklist array
-	* @access	public
-	*/
-	function IntegrityCheckSeminar(){
-		$baseclass = strtolower(get_parent_class($this));
-		//parent::$baseclass(); //calling the baseclass constructor 
-		$this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
-		$this->master_table = "seminare";
-		$this->checklist[] = array('detail_table' => 'seminar_user',
-									'query' => 'view:SEM_SEMUSER:');
-		$this->checklist[] = array('detail_table' => 'admission_seminar_studiengang',
-									'query' => 'view:SEM_ADMISSIONSTUD:');
-		$this->checklist[] = array('detail_table' => 'admission_seminar_user',
-									'query' => 'view:SEM_ADMISSIONUSER:');
-		$this->checklist[] = array('detail_table' => 'seminar_inst',
-									'query' => 'view:SEM_SEMINST:');
-		$this->checklist[] = array('detail_table' => 'termine',
-									'query' => 'view:SEM_TERMINE:');
-		$this->checklist[] = array('detail_table' => 'seminar_sem_tree',
-									'query' => 'view:SEM_SEM_TREE:');
-		$this->checklist[] = array('detail_table' => 'object_user_visits',
-									'query' => 'view:SEM_OBJECT_USER_VISIT:');					
-									
-									
-	}
+    
+    /**
+    * constructor
+    *
+    * calls the base class constructor and initializes checklist array
+    * @access   public
+    */
+    function IntegrityCheckSeminar(){
+        $baseclass = strtolower(get_parent_class($this));
+        //parent::$baseclass(); //calling the baseclass constructor 
+        $this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
+        $this->master_table = "seminare";
+        $this->checklist[] = array('detail_table' => 'seminar_user',
+                                    'query' => 'view:SEM_SEMUSER:');
+        $this->checklist[] = array('detail_table' => 'admission_seminar_studiengang',
+                                    'query' => 'view:SEM_ADMISSIONSTUD:');
+        $this->checklist[] = array('detail_table' => 'admission_seminar_user',
+                                    'query' => 'view:SEM_ADMISSIONUSER:');
+        $this->checklist[] = array('detail_table' => 'seminar_inst',
+                                    'query' => 'view:SEM_SEMINST:');
+        $this->checklist[] = array('detail_table' => 'termine',
+                                    'query' => 'view:SEM_TERMINE:');
+        $this->checklist[] = array('detail_table' => 'seminar_sem_tree',
+                                    'query' => 'view:SEM_SEM_TREE:');
+        $this->checklist[] = array('detail_table' => 'object_user_visits',
+                                    'query' => 'view:SEM_OBJECT_USER_VISIT:');                  
+                                    
+                                    
+    }
 
 }
 ?>

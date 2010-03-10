@@ -8,11 +8,11 @@
 *
 * This script prints a status bar for the chat
 *
-* @author		André Noack <andre.noack@gmx.net>
-* @access		public
-* @modulegroup		chat_modules
-* @module		chat_status
-* @package		Chat
+* @author       André Noack <andre.noack@gmx.net>
+* @access       public
+* @modulegroup      chat_modules
+* @module       chat_status
+* @package      Chat
 */
 
 // +---------------------------------------------------------------------------+
@@ -45,8 +45,8 @@ $perm->check("user");
 
 //chat eingeschaltet?
 if (!$CHAT_ENABLE) {
-	page_close();
-	die;
+    page_close();
+    die;
 }
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once $RELATIVE_PATH_CHAT.'/ChatServer.class.php';
@@ -60,41 +60,41 @@ $chatServer->caching = true;
 ?>
 <html>
 <head>
-	<title>ChatStatus</title>
-	<link rel="stylesheet" href="<?=$GLOBALS['ASSETS_URL']?>stylesheets/style.css" type="text/css">
+    <title>ChatStatus</title>
+    <link rel="stylesheet" href="<?=$GLOBALS['ASSETS_URL']?>stylesheets/style.css" type="text/css">
 <script type="text/javascript">
 /**
 * JavaScript
 */
-	function printhelp(){
-		parent.frames['frm_input'].document.inputform.chatInput.value="/help";
-		parent.frames['frm_input'].document.inputform.submit();
-	}
+    function printhelp(){
+        parent.frames['frm_input'].document.inputform.chatInput.value="/help";
+        parent.frames['frm_input'].document.inputform.submit();
+    }
 
-	function doLock(){
-		parent.frames['frm_input'].document.inputform.chatInput.value="/lock";
-		parent.frames['frm_input'].document.inputform.submit();
-	}
+    function doLock(){
+        parent.frames['frm_input'].document.inputform.chatInput.value="/lock";
+        parent.frames['frm_input'].document.inputform.submit();
+    }
 
-	function doUnlock(){
-		parent.frames['frm_input'].document.inputform.chatInput.value="/unlock";
-		parent.frames['frm_input'].document.inputform.submit();
-	}
+    function doUnlock(){
+        parent.frames['frm_input'].document.inputform.chatInput.value="/unlock";
+        parent.frames['frm_input'].document.inputform.submit();
+    }
 
-	function doLogStart(){
-		parent.frames['frm_input'].document.inputform.chatInput.value="/log start";
-		parent.frames['frm_input'].document.inputform.submit();
-	}
+    function doLogStart(){
+        parent.frames['frm_input'].document.inputform.chatInput.value="/log start";
+        parent.frames['frm_input'].document.inputform.submit();
+    }
 
-	function doLogStop(){
-		parent.frames['frm_input'].document.inputform.chatInput.value="/log stop";
-		parent.frames['frm_input'].document.inputform.submit();
-	}
+    function doLogStop(){
+        parent.frames['frm_input'].document.inputform.chatInput.value="/log stop";
+        parent.frames['frm_input'].document.inputform.submit();
+    }
 
-	function doLogSend(){
-		parent.frames['frm_input'].document.inputform.chatInput.value="/log send";
-		parent.frames['frm_input'].document.inputform.submit();
-	}
+    function doLogSend(){
+        parent.frames['frm_input'].document.inputform.chatInput.value="/log send";
+        parent.frames['frm_input'].document.inputform.submit();
+    }
 
 </script>
 
@@ -103,72 +103,72 @@ $chatServer->caching = true;
 <?
 //darf ich überhaupt hier sein ?
 if (!$chatServer->isActiveUser($user->id,$chatid)) {
-	?><table width="100%"><tr><?
-	my_error('<font size="-1">'._("Sie sind nicht in diesem Chat angemeldet!").'</font>','chat',1,false);
-	?></tr></table></body></html><?
-	page_close();
-	die;
+    ?><table width="100%"><tr><?
+    my_error('<font size="-1">'._("Sie sind nicht in diesem Chat angemeldet!").'</font>','chat',1,false);
+    ?></tr></table></body></html><?
+    page_close();
+    die;
 }
 
 ?>
 <div align="center">
-	<table width="98%" border="0" bgcolor="white" cellspacing="0" cellpadding="0" align="center">
-		<tr>
-			<td width="80%" align="left" class="topic" >
-			<?
-			if ($chatServer->getPerm($user->id,$chatid)){
-				?>
-				<a href="javascript:<?=(($chatServer->chatDetail[$chatid]['password']) ? "doUnlock();" : "doLock();")?>">
-				<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['password']) ? "closelock.gif" : "openlock.gif")?>"
-					border="0" align="absmiddle"
-					<?=tooltip(($chatServer->chatDetail[$chatid]['password']) ? _("Zugangsschutz für diesen Chat aufheben") : _("Diesen Chat absichern"))?>>
-				</a>
-				<?
-			} else {
-				?>
-				<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['password']) ? "closelock.gif" : "openlock.gif")?>"
-					border="0" align="absmiddle"
-					<?=tooltip(($chatServer->chatDetail[$chatid]['password']) ? _("Dieser Chat ist zugangsbeschränkt.") : _("Dieser Chat ist nicht zugangsbeschränkt."))?>>
-				<?
-			}
-			if (count($chatServer->chatDetail[$chatid]['log'])){
-				?>
-				<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/logging.gif" border="0" align="absmiddle"
-					<?=tooltip(_("Dieser Chat wird aufgezeichnet."))?>>
-				<?
-			}
-			?>
-			<b>Chat - <?=htmlReady($chatServer->chatDetail[$chatid]["name"])?></b>
-			</td>
-			<td width="20%" align="right" class="topic" >
-			<?
-			if ($chatServer->getPerm($user->id,$chatid)){
-				if ($chatServer->chatDetail[$chatid]['users'][$user->id]['log']){
-					?>
-					<a href="javascript:doLogSend();">
-					<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/file.gif"
-						border="0" hspace="5" align="absmiddle"
-						<?=tooltip(_("Download des letzten Chatlogs"))?>>
-					</a>
-					<?
-				}
-				?>
-				<a href="javascript:<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? "doLogStop();" : "doLogStart();")?>">
-				<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? "stop_log.gif" : "start_log.gif")?>"
-					border="0" hspace="5" align="absmiddle"
-					<?=tooltip(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? _("Die Aufzeichnung für diesen Chat beenden.") : _("Eine Aufzeichnung für diesen Chat starten."))?>>
-				</a>
-				<?
-			}
-			?>
-			<a href="javascript:printhelp();">
-			<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/hilfe.gif" border=0 hspace="5" align="texttop" <?=tooltip(_("Chat Kommandos einblenden"))?>>
-			</a>
-			<a href="<?=$CANONICAL_RELATIVE_PATH_STUDIP?>show_smiley.php" target="_blank">
-			<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/asmile.gif" hspace="5" border=0 align="absmiddle" <?=tooltip(_("Alle verfügbaren Smileys anzeigen"))?>>
-			</a></td>
-		</tr>
-	</table>
+    <table width="98%" border="0" bgcolor="white" cellspacing="0" cellpadding="0" align="center">
+        <tr>
+            <td width="80%" align="left" class="topic" >
+            <?
+            if ($chatServer->getPerm($user->id,$chatid)){
+                ?>
+                <a href="javascript:<?=(($chatServer->chatDetail[$chatid]['password']) ? "doUnlock();" : "doLock();")?>">
+                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['password']) ? "closelock.gif" : "openlock.gif")?>"
+                    border="0" align="absmiddle"
+                    <?=tooltip(($chatServer->chatDetail[$chatid]['password']) ? _("Zugangsschutz für diesen Chat aufheben") : _("Diesen Chat absichern"))?>>
+                </a>
+                <?
+            } else {
+                ?>
+                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['password']) ? "closelock.gif" : "openlock.gif")?>"
+                    border="0" align="absmiddle"
+                    <?=tooltip(($chatServer->chatDetail[$chatid]['password']) ? _("Dieser Chat ist zugangsbeschränkt.") : _("Dieser Chat ist nicht zugangsbeschränkt."))?>>
+                <?
+            }
+            if (count($chatServer->chatDetail[$chatid]['log'])){
+                ?>
+                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/logging.gif" border="0" align="absmiddle"
+                    <?=tooltip(_("Dieser Chat wird aufgezeichnet."))?>>
+                <?
+            }
+            ?>
+            <b>Chat - <?=htmlReady($chatServer->chatDetail[$chatid]["name"])?></b>
+            </td>
+            <td width="20%" align="right" class="topic" >
+            <?
+            if ($chatServer->getPerm($user->id,$chatid)){
+                if ($chatServer->chatDetail[$chatid]['users'][$user->id]['log']){
+                    ?>
+                    <a href="javascript:doLogSend();">
+                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/file.gif"
+                        border="0" hspace="5" align="absmiddle"
+                        <?=tooltip(_("Download des letzten Chatlogs"))?>>
+                    </a>
+                    <?
+                }
+                ?>
+                <a href="javascript:<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? "doLogStop();" : "doLogStart();")?>">
+                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? "stop_log.gif" : "start_log.gif")?>"
+                    border="0" hspace="5" align="absmiddle"
+                    <?=tooltip(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? _("Die Aufzeichnung für diesen Chat beenden.") : _("Eine Aufzeichnung für diesen Chat starten."))?>>
+                </a>
+                <?
+            }
+            ?>
+            <a href="javascript:printhelp();">
+            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/hilfe.gif" border=0 hspace="5" align="texttop" <?=tooltip(_("Chat Kommandos einblenden"))?>>
+            </a>
+            <a href="<?=$CANONICAL_RELATIVE_PATH_STUDIP?>show_smiley.php" target="_blank">
+            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/asmile.gif" hspace="5" border=0 align="absmiddle" <?=tooltip(_("Alle verfügbaren Smileys anzeigen"))?>>
+            </a></td>
+        </tr>
+    </table>
 </div>
 </body>
 </html>

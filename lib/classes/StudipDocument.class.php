@@ -7,8 +7,8 @@
 *
 *
 *
-* @author	André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
-* @access	public
+* @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
+* @access   public
 */
 
 // +---------------------------------------------------------------------------+
@@ -37,8 +37,8 @@ define('STUDIPDOCUMENT_DB_TABLE', 'dokumente');
 
 class StudipDocument extends SimpleORMap {
 
-	function __construct($id = null){
-		parent::__construct($id);
-	}
+    function __construct($id = null){
+        parent::__construct($id);
+    }
 }
 ?>

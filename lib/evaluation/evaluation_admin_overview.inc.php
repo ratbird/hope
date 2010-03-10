@@ -303,7 +303,7 @@ if (!empty ($evalIDArray)) {
                      "",
                      _("Bearbeiten"),
                      _("Löschen"),
-		     "")));
+             "")));
    foreach ($evalIDArray as $number => $evalID) {
       $eval = new Evaluation ($evalID);
       $open = ($openID == $evalID);
@@ -339,7 +339,7 @@ if (!empty ($evalIDArray)) {
                   "",
                   _("Exportieren"),
                   _("Löschen"),
-		  _("Auswertung"))));
+          _("Auswertung"))));
    foreach ($evalIDArray as $number => $evalID) {
       $eval = new Evaluation ($evalID);
       $open = ($openID == $evalID);
@@ -374,7 +374,7 @@ if (!empty ($evalIDArray)) {
                   "",
                   _("Exportieren"),
                   _("Löschen"),
-		  _("Auswertung"))));
+          _("Auswertung"))));
    foreach ($evalIDArray as $number => $evalID) {
       $eval = new Evaluation ($evalID);
       $open = ($openID == $evalID);

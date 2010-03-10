@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	calendar_modules
-* @module		calendar_import
-* @package	Calendar
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  calendar_modules
+* @module       calendar_import
+* @package  Calendar
 */
 
 // +---------------------------------------------------------------------------+
@@ -45,59 +45,59 @@ require_once("$RELATIVE_PATH_CALENDAR/lib/driver/$CALENDAR_DRIVER/CalendarDriver
 
 class CalendarParser {
 
-	var $events = array();
-	var $components;
-	var $type;
-	var $number_of_events;
-	
-	function CalendarParser () {
-	
-		// initialize error handling
-		init_error_handler('_calendar_error');
-	}
-	
-	function getCount ($data) {
-	
-		return FALSE;
-	}
-	
-	function parseIntoDatabase ($data, $ignore) {
-	
-		$database =& new CalendarDriver();
-		if ($this->parseIntoObjects($data, $ignore)) {
-			$database->writeObjectsIntoDatabase($this->events, 'INSERT_IGNORE');
-			return TRUE;
-		}
-		
-		return FALSE;
-	}
-	
-	function parseIntoObjects ($data, $ignore) {
-		global $_calendar_error;
-		
-		if ($this->parse($data, $ignore)) {
-			foreach ($this->components as $properties)
-				$this->events[] =& new CalendarEvent($properties);
-			
-			return TRUE;
-		}
-		
-		$_calendar_error->throwError(ERROR_FATAL,
-				_("Die Import-Datei konnte nicht verarbeitet werden!"), __FILE__, __LINE__);
-		
-		return FALSE;
-	}
-	
-	function getType () {
-		
-		return $this->type;
-	}
-	
-	function &getObjects () {
-		
-		return $objects =& $this->events;
-	}
-	
+    var $events = array();
+    var $components;
+    var $type;
+    var $number_of_events;
+    
+    function CalendarParser () {
+    
+        // initialize error handling
+        init_error_handler('_calendar_error');
+    }
+    
+    function getCount ($data) {
+    
+        return FALSE;
+    }
+    
+    function parseIntoDatabase ($data, $ignore) {
+    
+        $database =& new CalendarDriver();
+        if ($this->parseIntoObjects($data, $ignore)) {
+            $database->writeObjectsIntoDatabase($this->events, 'INSERT_IGNORE');
+            return TRUE;
+        }
+        
+        return FALSE;
+    }
+    
+    function parseIntoObjects ($data, $ignore) {
+        global $_calendar_error;
+        
+        if ($this->parse($data, $ignore)) {
+            foreach ($this->components as $properties)
+                $this->events[] =& new CalendarEvent($properties);
+            
+            return TRUE;
+        }
+        
+        $_calendar_error->throwError(ERROR_FATAL,
+                _("Die Import-Datei konnte nicht verarbeitet werden!"), __FILE__, __LINE__);
+        
+        return FALSE;
+    }
+    
+    function getType () {
+        
+        return $this->type;
+    }
+    
+    function &getObjects () {
+        
+        return $objects =& $this->events;
+    }
+    
 }
 
 ?>

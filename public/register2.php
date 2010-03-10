@@ -28,20 +28,20 @@ $my_auth = ($GLOBALS['ENABLE_SELF_REGISTRATION'] ? "Seminar_Register_Auth" : "Se
 page_open(array("sess" => "Seminar_Session", "auth" => $my_auth, "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 if (!$GLOBALS['ENABLE_SELF_REGISTRATION']){
-	include ('lib/include/html_head.inc.php'); // Output of html head
-	include ('lib/include/header.php');   // Output of Stud.IP head
-	parse_window ("error§" . _("In dieser Installation ist die M&ouml;glichkeit zur Registrierung ausgeschaltet."), "§",
-				_("Registrierung ausgeschaltet"), 
-				'<div style="margin:10px">'.$UNI_LOGIN_ADD.'</div>'
-				."<a href=\"index.php\"><b>&nbsp;" . sprintf(_("Hier%s geht es zur Startseite."), "</b></a>") . "<br />&nbsp;");
+    include ('lib/include/html_head.inc.php'); // Output of html head
+    include ('lib/include/header.php');   // Output of Stud.IP head
+    parse_window ("error§" . _("In dieser Installation ist die M&ouml;glichkeit zur Registrierung ausgeschaltet."), "§",
+                _("Registrierung ausgeschaltet"), 
+                '<div style="margin:10px">'.$UNI_LOGIN_ADD.'</div>'
+                ."<a href=\"index.php\"><b>&nbsp;" . sprintf(_("Hier%s geht es zur Startseite."), "</b></a>") . "<br />&nbsp;");
 page_close();
 die;
 }
 if ($auth->auth["uid"] == "nobody") {
-	$auth->logout();
-	header("Location: register2.php");
-	page_close();
-	die;
+    $auth->logout();
+    header("Location: register2.php");
+    page_close();
+    die;
 }
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
@@ -57,22 +57,22 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 ?>
 <table width ="100%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td class="topic"><b>&nbsp;<?=_("Herzlich Willkommen")?></b>
-	</td>
+    <td class="topic"><b>&nbsp;<?=_("Herzlich Willkommen")?></b>
+    </td>
 </tr>
 
 <tr>
-	<td class="blank">&nbsp;
-		<blockquote>
-		<?=_("Ihre Registrierung wurde erfolgreich vorgenommen.")?><br><br>
-		<?=_("Das System wird Ihnen zur Best&auml;tigung eine E-Mail zusenden.")?><br>
-		<?=_("Bitte rufen Sie die E-Mail ab und folgen Sie den Anweisungen, um Schreibrechte im System zu bekommen.")?><br>
-		<br>
-		<? printf(_("%sHier%s geht es wieder zur Startseite."), "<a href=\"index.php\">", "</a>");?>
-		<br><br>
-		</blockquote>
-	</td>
-</tr>	
+    <td class="blank">&nbsp;
+        <blockquote>
+        <?=_("Ihre Registrierung wurde erfolgreich vorgenommen.")?><br><br>
+        <?=_("Das System wird Ihnen zur Best&auml;tigung eine E-Mail zusenden.")?><br>
+        <?=_("Bitte rufen Sie die E-Mail ab und folgen Sie den Anweisungen, um Schreibrechte im System zu bekommen.")?><br>
+        <br>
+        <? printf(_("%sHier%s geht es wieder zur Startseite."), "<a href=\"index.php\">", "</a>");?>
+        <br><br>
+        </blockquote>
+    </td>
+</tr>   
 </table>
 
 <?php 

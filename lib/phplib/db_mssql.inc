@@ -4,7 +4,7 @@
  *
  * (C) Copyright 1998 Cameron Taggart (cameront@wolfenet.com)
  *        Modified by Guarneri carmelo (carmelo@melting-soft.com)
- *	  Modified by Cameron Just     (C.Just@its.uq.edu.au)	 
+ *    Modified by Cameron Just     (C.Just@its.uq.edu.au)    
  *
  */ 
 # echo "<BR>This is using the MSSQL class<BR>";
@@ -37,12 +37,12 @@ class DB_Sql {
       if (!$this->Link_ID)
         $this->halt("Link-ID == false, mssql_pconnect failed");
       else
-      	mssql_select_db($this->Database, $this->Link_ID);
+        mssql_select_db($this->Database, $this->Link_ID);
     }
   }
   function free_result(){
-	  mssql_free_result($this->Query_ID);
-  	$this->Query_ID = 0;
+      mssql_free_result($this->Query_ID);
+    $this->Query_ID = 0;
   }
   
   function query($Query_String) 
@@ -56,8 +56,8 @@ class DB_Sql {
        */
       return 0;
 
-  	if (!$this->Link_ID)
-    	$this->connect();
+    if (!$this->Link_ID)
+        $this->connect();
     
 #   printf("<br>Debug: query = %s<br>\n", $Query_String);
     
@@ -72,28 +72,28 @@ class DB_Sql {
   }
   
   function next_record() {
-  	
+    
     if ($this->Record = mssql_fetch_row($this->Query_ID)) {
       // add to Record[<key>]
       $count = mssql_num_fields($this->Query_ID);
       for ($i=0; $i<$count; $i++){
-      	$fieldinfo = mssql_fetch_field($this->Query_ID,$i);
+        $fieldinfo = mssql_fetch_field($this->Query_ID,$i);
         $this->Record[strtolower($fieldinfo->name)] = $this->Record[$i];
       }
       $this->Row += 1;
       $stat = 1;
     } else {
       if ($this->Auto_Free) {
-	    	$this->free_result();
-	  	}
+            $this->free_result();
+        }
       $stat = 0;
     }
     return $stat;
   }
   
   function seek($pos) {
-		mssql_data_seek($this->Query_ID,$pos);
-  	$this->Row = $pos;
+        mssql_data_seek($this->Query_ID,$pos);
+    $this->Row = $pos;
   }
 
   function metadata($table) {
@@ -111,7 +111,7 @@ class DB_Sql {
     $count = mssql_num_fields($id);
     
     for ($i=0; $i<$count; $i++) {
-    	$info = mssql_fetch_field($id, $i);
+        $info = mssql_fetch_field($id, $i);
       $res[$i]["table"] = $table;
       $res[$i]["name"]  = $info["name"];
       $res[$i]["len"]   = $info["max_length"];

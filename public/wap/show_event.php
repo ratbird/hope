@@ -4,17 +4,17 @@
 *
 * Parameters received via stdin<br/>
 * <code>
-*	$session_id
-*	$event_id
-*	$events_pc	(page counter)
+*   $session_id
+*   $event_id
+*   $events_pc  (page counter)
 * </code>
 *
-* @author		Florian Hansen <f1701h@gmx.net>
-* @version		0.11	12.09.2003	00:10:31
-* @access		public
-* @modulegroup	wap_modules
-* @module		show_event.php
-* @package		WAP
+* @author       Florian Hansen <f1701h@gmx.net>
+* @version      0.11    12.09.2003  00:10:31
+* @access       public
+* @modulegroup  wap_modules
+* @module       show_event.php
+* @package      WAP
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -44,13 +44,13 @@
     */
     define("PHPDOC_DUMMY", TRUE);
 
-	include_once("wap_adm.inc.php");
-	include_once("wap_txt.inc.php");
-	include_once("wap_hlp.inc.php");
-	include_once("wap_buttons.inc.php");
-	include_once('lib/dates.inc.php');
+    include_once("wap_adm.inc.php");
+    include_once("wap_txt.inc.php");
+    include_once("wap_hlp.inc.php");
+    include_once("wap_buttons.inc.php");
+    include_once('lib/dates.inc.php');
 
-	$session_user_id = wap_adm_start_card($session_id);
+    $session_user_id = wap_adm_start_card($session_id);
     if ($session_user_id)
     {
         $db = new DB_Seminar();
@@ -132,5 +132,5 @@
         wap_buttons_menu_link($session_id);
         echo "</p>\n";
     }
-	wap_adm_end_card();
+    wap_adm_end_card();
 ?>

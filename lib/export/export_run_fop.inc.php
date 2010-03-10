@@ -7,11 +7,11 @@
 *
 * This file calls the Formatting-Objects-Processor to generate PDF-Files.
 *
-* @author		Arne Schroeder <schroeder@data.quest.de>
-* @access		public
-* @modulegroup		export_modules
-* @module		export_run_fop
-* @package		Export
+* @author       Arne Schroeder <schroeder@data.quest.de>
+* @access       public
+* @modulegroup      export_modules
+* @module       export_run_fop
+* @package      Export
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -38,7 +38,7 @@
 $FOP_ENABLE = true;
 
 if (($o_mode != "direct") AND ($o_mode != "passthrough"))
-	$perm->check("tutor");
+    $perm->check("tutor");
 
 require_once('lib/datei.inc.php');
 
@@ -49,112 +49,112 @@ require_once('lib/datei.inc.php');
 * This function checks the given parameters. If some are missing
 * it returns false and adds a warning to $export_error.
 *
-* @access	public
-* @return		boolean
+* @access   public
+* @return       boolean
 */
 function CheckParamRUN_FOP()
 {
 global $XSLT_ENABLE, $ex_type, $o_mode, $xml_file_id, $page, $format, $output_formats, $choose, $xslt_files, $export_error, $export_error_num, $export_o_modes, $export_ex_types, $result_file;
 
-	if ($result_file == "")
-	{
-		$export_error .= "<b>" . _("Fehlende Parameter!") . "</b><br>";
-		$export_error_num++;
-		return false;
-	}
+    if ($result_file == "")
+    {
+        $export_error .= "<b>" . _("Fehlende Parameter!") . "</b><br>";
+        $export_error_num++;
+        return false;
+    }
 
 
-	return true;
+    return true;
 }
 
 
 if (!CheckParamRUN_FOP())
 {
-	$infobox = array(
-	array ("kategorie"  => _("Information:"),
-		"eintrag" => array	(
-						array (	'icon' => "ausruf_small.gif",
-								"text"  => _("Die Parametern, mit denen diese Seite aufgerufen wurde, sind fehlerhaft.")
-							 )
-						)
-		)
-	);
+    $infobox = array(
+    array ("kategorie"  => _("Information:"),
+        "eintrag" => array  (
+                        array ( 'icon' => "ausruf_small.gif",
+                                "text"  => _("Die Parametern, mit denen diese Seite aufgerufen wurde, sind fehlerhaft.")
+                             )
+                        )
+        )
+    );
 }
 elseif ($FOP_ENABLE != true)
 {
-	$infobox[1]["eintrag"][] = array (	'icon' => "einst.gif",
-								"text"  => sprintf(_("Die Erweiterung zum Erzeugen von PDF-Dateien ist nicht aktiviert, es konnten daher nur Formatting Objects erzeugt werden."))
-							);
+    $infobox[1]["eintrag"][] = array (  'icon' => "einst.gif",
+                                "text"  => sprintf(_("Die Erweiterung zum Erzeugen von PDF-Dateien ist nicht aktiviert, es konnten daher nur Formatting Objects erzeugt werden."))
+                            );
 }
 else
 {
-	$export_pagename = _("Download der PDF-Datei");
+    $export_pagename = _("Download der PDF-Datei");
 
-	// Process the document
-	escapeshellcmd ( $result_file );
-	escapeshellcmd ( $TMP_PATH );
-	$pdf_file = md5(uniqid(rand())) .".pdf";
+    // Process the document
+    escapeshellcmd ( $result_file );
+    escapeshellcmd ( $TMP_PATH );
+    $pdf_file = md5(uniqid(rand())) .".pdf";
 
-	$str = "$FOP_SH_CALL $TMP_PATH/export/$result_file $TMP_PATH/export/$pdf_file ";
+    $str = "$FOP_SH_CALL $TMP_PATH/export/$result_file $TMP_PATH/export/$pdf_file ";
 
-	$out = exec( $str );
-	if ($out == '')
-		$out = $str;
-		if (file_exists($TMP_PATH.'/export/'.$pdf_file))
-		{
-			$link2 = '<a href="'. GetDownloadLink($pdf_file, $xslt_filename . '.pdf', 2).'">';
-			$export_pagecontent = '<table cellspacing="0" cellpadding="0" border="0" width="40%"><tr align="center"><td>';
-			$export_pagecontent .= '<b>' . _("Ausgabe-Datei: ") . '</b>';
-			$export_pagecontent .= '</td><td>' . $link2 . $xslt_filename . '.pdf</a>';
-//			$export_pagecontent .= "</td><td>" . $result_file . "</td></tr><tr><td colspan=\"2\">";
-//			$export_pagecontent .= "&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;" . $link1 . _("Datei &ouml;ffnen") . "</a></td></tr><tr><td colspan=\"2\">";
-//			$export_pagecontent .= "&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;" . $link2 . _("Datei herunterladen") . "</a></td></tr>";
-			$export_pagecontent .= '</td></tr></table><br>';
+    $out = exec( $str );
+    if ($out == '')
+        $out = $str;
+        if (file_exists($TMP_PATH.'/export/'.$pdf_file))
+        {
+            $link2 = '<a href="'. GetDownloadLink($pdf_file, $xslt_filename . '.pdf', 2).'">';
+            $export_pagecontent = '<table cellspacing="0" cellpadding="0" border="0" width="40%"><tr align="center"><td>';
+            $export_pagecontent .= '<b>' . _("Ausgabe-Datei: ") . '</b>';
+            $export_pagecontent .= '</td><td>' . $link2 . $xslt_filename . '.pdf</a>';
+//          $export_pagecontent .= "</td><td>" . $result_file . "</td></tr><tr><td colspan=\"2\">";
+//          $export_pagecontent .= "&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;" . $link1 . _("Datei &ouml;ffnen") . "</a></td></tr><tr><td colspan=\"2\">";
+//          $export_pagecontent .= "&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;" . $link2 . _("Datei herunterladen") . "</a></td></tr>";
+            $export_pagecontent .= '</td></tr></table><br>';
 
-			$result_printimage = '<a href="' . GetDownloadLink($pdf_file, $xslt_filename . '.pdf', 2). '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['pdf'] . '" border=0></a>';
-			$result_printlink = '<a href="'. GetDownloadLink($pdf_file, $xslt_filename . '.pdf', 2).   '" class="tree">' . $xslt_filename . '.pdf</a>';
-			$result_printdesc = _("PDF-Datei");
-			$result_printcontent = _("Dies ist die fertige PDF-Datei.") . '<br>';
-		}
-		else
-		{
-			unset($result_printimage);
-			unset($result_printlink);
-			unset($result_printdesc);
-			unset($result_printcontent);
-			unset($export_info);
-			unset($export_msg);
-			$export_pagecontent = "";
-			$export_error = "<b>" . sprintf(_("Bei der Erzeugung der PDF-Datei ist ein Fehler aufgetreten. <br>Fehlermeldung: %s <br>Datei: %s"), $out, $pdf_file) . "</b><br>";
-			$export_error_num ++;
-		}
+            $result_printimage = '<a href="' . GetDownloadLink($pdf_file, $xslt_filename . '.pdf', 2). '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['pdf'] . '" border=0></a>';
+            $result_printlink = '<a href="'. GetDownloadLink($pdf_file, $xslt_filename . '.pdf', 2).   '" class="tree">' . $xslt_filename . '.pdf</a>';
+            $result_printdesc = _("PDF-Datei");
+            $result_printcontent = _("Dies ist die fertige PDF-Datei.") . '<br>';
+        }
+        else
+        {
+            unset($result_printimage);
+            unset($result_printlink);
+            unset($result_printdesc);
+            unset($result_printcontent);
+            unset($export_info);
+            unset($export_msg);
+            $export_pagecontent = "";
+            $export_error = "<b>" . sprintf(_("Bei der Erzeugung der PDF-Datei ist ein Fehler aufgetreten. <br>Fehlermeldung: %s <br>Datei: %s"), $out, $pdf_file) . "</b><br>";
+            $export_error_num ++;
+        }
 
-		$xml_printimage = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2). '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '" border=0></a>';
-		$xml_printlink = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .  '" class="tree">' . $xml_filename . '</a>';
-		$xml_printdesc = _("XML-Daten");
-		$xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags k&ouml;nnen mit einem XSLT-Script verarbeitet werden.") . "<br>";
+        $xml_printimage = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2). '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '" border=0></a>';
+        $xml_printlink = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .  '" class="tree">' . $xml_filename . '</a>';
+        $xml_printdesc = _("XML-Daten");
+        $xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags k&ouml;nnen mit einem XSLT-Script verarbeitet werden.") . "<br>";
 
-		$xslt_printimage = '<a href="'. GetDownloadLink($result_file,$xslt_filename .'.'. $format,2) . '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon[$format] . '" border=0></a>';
-		$xslt_printlink = '<a href="'. GetDownloadLink($result_file,$xslt_filename .'.'. $format,2) . '" class="tree">' . $xslt_filename .'.'. $format . '</a>';
-		$xslt_printdesc = _("Formatting-Objects-Datei");
-		$xslt_printcontent = _("In dieser Datei sind die Formatting Objects zur Erzeugung der PDF-Datei gespeichert.") . "<br>";
+        $xslt_printimage = '<a href="'. GetDownloadLink($result_file,$xslt_filename .'.'. $format,2) . '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon[$format] . '" border=0></a>';
+        $xslt_printlink = '<a href="'. GetDownloadLink($result_file,$xslt_filename .'.'. $format,2) . '" class="tree">' . $xslt_filename .'.'. $format . '</a>';
+        $xslt_printdesc = _("Formatting-Objects-Datei");
+        $xslt_printcontent = _("In dieser Datei sind die Formatting Objects zur Erzeugung der PDF-Datei gespeichert.") . "<br>";
 
 
-		$infobox = array	(
-		array ("kategorie"  => _("Information:"),
-			"eintrag" => array	(
-							array (	'icon' => "ausruf_small.gif",
-									"text"  => $xslt_info
-								 )
-							)
-			)
-		);
-		{
-			$infobox[1]["kategorie"] = _("Aktionen:");
-				$infobox[1]["eintrag"][] = array (	'icon' => "nachricht1.gif" ,
-											"text"  => sprintf(_("Um die Ausgabe-Datei herunterzuladen, klicken Sie %s hier %s."), $link2, "</a>")
-										);
-		}
+        $infobox = array    (
+        array ("kategorie"  => _("Information:"),
+            "eintrag" => array  (
+                            array ( 'icon' => "ausruf_small.gif",
+                                    "text"  => $xslt_info
+                                 )
+                            )
+            )
+        );
+        {
+            $infobox[1]["kategorie"] = _("Aktionen:");
+                $infobox[1]["eintrag"][] = array (  'icon' => "nachricht1.gif" ,
+                                            "text"  => sprintf(_("Um die Ausgabe-Datei herunterzuladen, klicken Sie %s hier %s."), $link2, "</a>")
+                                        );
+        }
 
 
 }

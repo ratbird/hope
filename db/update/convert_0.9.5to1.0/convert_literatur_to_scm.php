@@ -30,14 +30,14 @@ $modules = new Modules();
 
 echo "<h1>Konvertierung Literatur / Links -> Simple Content Module</h1>";
 $db = new DB_Seminar("SELECT range_id, IF (s.Name IS NULL , CONCAT( 'Einrichtung: ', i.Name ) , CONCAT( 'Veranstaltung: ', s.Name )) AS name
-					FROM literatur LEFT JOIN seminare s ON ( range_id = Seminar_id )  LEFT JOIN Institute i ON ( range_id = i.Institut_id ) ");
+                    FROM literatur LEFT JOIN seminare s ON ( range_id = Seminar_id )  LEFT JOIN Institute i ON ( range_id = i.Institut_id ) ");
 while($db->next_record()){
-	if ($modules->writeStatus("scm", $db->f("range_id"), 1)){
-		$modules->writeStatus("literature", $db->f("range_id"), 0);
-		echo $db->f("name") . " <b>SCM eingeschaltet, Literaturverwaltung ausgeschaltet</b><br>";
-	} else {
-		echo $db->f("name") . " <b>SCM ist schon eingeschaltet</b><br>";
-	}
+    if ($modules->writeStatus("scm", $db->f("range_id"), 1)){
+        $modules->writeStatus("literature", $db->f("range_id"), 0);
+        echo $db->f("name") . " <b>SCM eingeschaltet, Literaturverwaltung ausgeschaltet</b><br>";
+    } else {
+        echo $db->f("name") . " <b>SCM ist schon eingeschaltet</b><br>";
+    }
 }
 
 $db->query("INSERT IGNORE INTO scm (scm_id, range_id, user_id, tab_name, content, mkdate, chdate)

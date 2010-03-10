@@ -64,9 +64,9 @@ class HTML extends HTMLempty {
       $classname = strtolower(get_class($_content));
       $valid_classes = array ('htmlempty', 'html', 'htm', 'htmpty');
       if (in_array ($classname, $valid_classes)) {
-	$this->_content[] = $_content;
+    $this->_content[] = $_content;
       } else {
-	trigger_error('Ungültiges Objekt: "'.$classname.'"', E_USER_ERROR);
+    trigger_error('Ungültiges Objekt: "'.$classname.'"', E_USER_ERROR);
       }
     } elseif (is_scalar ($_content)) {
       $this->_content[] = (string)$_content;
@@ -87,10 +87,10 @@ echo "Fehler in HTML.class.php: Es fehlt ein addHTMLContent-Element für ein Elem
 #     $this->addHTMLContent (htmlspecialchars (((string)$_content)));
     else
       $this->addHTMLContent ("");
-	
+    
 #      trigger_error("Parameter muss ein Scalar sein (Inhalt = ".
-#		    ($_content === NULL ? "NULL": $_content)
-#		    .", Typ = &lt;".$this->_name."&gt;)", E_USER_ERROR);
+#           ($_content === NULL ? "NULL": $_content)
+#           .", Typ = &lt;".$this->_name."&gt;)", E_USER_ERROR);
   }
 
   /**
@@ -133,54 +133,54 @@ echo "Fehler in HTML.class.php: Es fehlt ein addHTMLContent-Element für ein Elem
     $output .= $this->_string;
     $output .= (">\n");
     if (!is_array($_content)) {
-	$attributes = "";
-	foreach ($attribute as $name => $value) {
-	    $attributes .= ($name.'=&gt;"'.$value.'"; ');
-	}
-	print "Fehler in HTML.class.php: Es fehlt ein Content-Element für ein Element des Typs \"&lt;".$this->getName ()."&gt;\" (Attribute: $attributes).";
-	return;	
+    $attributes = "";
+    foreach ($attribute as $name => $value) {
+        $attributes .= ($name.'=&gt;"'.$value.'"; ');
+    }
+    print "Fehler in HTML.class.php: Es fehlt ein Content-Element für ein Element des Typs \"&lt;".$this->getName ()."&gt;\" (Attribute: $attributes).";
+    return; 
     }
     
     foreach ($_content as $content) {
-	if (is_object ($content)) {
-	    // der aktuelle Content ist ein Object
-	    // also ein HTML-Element. Also geben
-	    // wir es aus
-	    $output .= $content->createContent ($indent + 4);
-	    // Rekursion lässt grüßen ...                
-	} else {
-	    // Content ist ein String. Jeden Zeile
-	    // geben wir getrennt aus
-	    $zeilen = explode ("\n", $content);
-	    $echo = "";
-	    
-	    if ($this->has_textarea) {
+    if (is_object ($content)) {
+        // der aktuelle Content ist ein Object
+        // also ein HTML-Element. Also geben
+        // wir es aus
+        $output .= $content->createContent ($indent + 4);
+        // Rekursion lässt grüßen ...                
+    } else {
+        // Content ist ein String. Jeden Zeile
+        // geben wir getrennt aus
+        $zeilen = explode ("\n", $content);
+        $echo = "";
+        
+        if ($this->has_textarea) {
 
-		// look for textarea in content
-		$text_area = false;
-		foreach ($zeilen as $zeile) {
-		
-		    if (strstr($zeile, "<textarea"))
-			$text_area = true;
-		
-		    if ($text_area)
-			$echo .= $zeile."\n";
-		    else
-			$echo .= $str_indent."    ".$zeile."\n";
-		    
-		    if (strstr($zeile, "</textarea"))
-			$text_area = false;
-		}
-	    } else {
+        // look for textarea in content
+        $text_area = false;
+        foreach ($zeilen as $zeile) {
+        
+            if (strstr($zeile, "<textarea"))
+            $text_area = true;
+        
+            if ($text_area)
+            $echo .= $zeile."\n";
+            else
+            $echo .= $str_indent."    ".$zeile."\n";
+            
+            if (strstr($zeile, "</textarea"))
+            $text_area = false;
+        }
+        } else {
 
-		// standard
-		foreach ($zeilen as $zeile) {
-		    $echo .= $str_indent."    ".$zeile."\n";
-		}
-	    }
-#	$output .= (nl2br ($echo)); // Alex: Muss das wirklich sein??
-	    $output .= $echo;
-	}
+        // standard
+        foreach ($zeilen as $zeile) {
+            $echo .= $str_indent."    ".$zeile."\n";
+        }
+        }
+#   $output .= (nl2br ($echo)); // Alex: Muss das wirklich sein??
+        $output .= $echo;
+    }
     }
     $output .= ($str_indent."</".$this->getName ().">\n");
 

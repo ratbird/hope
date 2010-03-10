@@ -45,12 +45,12 @@
           <td class="infobox" width="99%" align="left">
             <font size="-1"><?=sprintf(_("Zeitänderungen, Raumbuchungen und Termine anlegen können Sie unter %sZeiten%s."), '<a href="raumzeit.php">', '</a>')?></font><br>
             <br>
-						<?=$times_info?>
+                        <?=$times_info?>
           </td>
       </tr>
- 			<!-- Ansicht -->
-			<? if ($GLOBALS["RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW"]) : ?>
-	    <tr>
+            <!-- Ansicht -->
+            <? if ($GLOBALS["RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW"]) : ?>
+        <tr>
         <td class="infobox" width="100%" colspan="2">
           <font size="-1"><b><?=_("Ansicht")?>:</b></font>
           <br>
@@ -67,7 +67,7 @@
         </td>
       </tr>
 
-	    <tr>
+        <tr>
         <td class="infobox" align="center" valign="top" width="1%">
           <img src="<?=$GLOBALS['ASSETS_URL']?>images/forumgrau.gif">
         </td>
@@ -77,7 +77,7 @@
         </td>
       </tr>
 
-			<? endif; // globaler Schalter ?>
+            <? endif; // globaler Schalter ?>
 
       <!-- Semesterauswahl -->
 

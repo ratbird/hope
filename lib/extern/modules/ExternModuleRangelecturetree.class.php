@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternModuleRangelecturetree
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternModuleRangelecturetree
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -42,48 +42,48 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/views/extern_html_templates.inc.
 
 class ExternModuleRangeLectureTree extends ExternModule {
 
-	/**
-	*
-	*/
-	function ExternModuleRangeLectureTree ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
-		$this->registered_elements = array(
-				'Body', 'TreePath', 'RangeTreeLevelName', 'RangeTreeLevelContent',
-				'TreeKids', 'TreeBackLink'
-		);
-		$this->args = array('sem', 'start_item_id');
-		parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
-	}
-	
-	function printout ($args) {
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_header($this->config);
-		
-		require_once($GLOBALS["RELATIVE_PATH_EXTERN"]
-				. "/modules/views/ExternRangeLectureTree.class.php");
-		
-		$tree =& new ExternRangeLectureTree($this->config, $args["start_item_id"]);
-		$tree->showSemRangeTree();
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_footer();
-	}
-	
-	function printoutPreview ($args) {
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_header($this->config);
-		
-		require_once($GLOBALS["RELATIVE_PATH_EXTERN"]
-				. "/modules/views/ExternRangeLectureTree.class.php");
-		
-		$tree =& new ExternRangeLectureTree($this->config, $args["start_item_id"]);
-		$tree->showSemRangeTree();
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_footer();
-	}
-	
+    /**
+    *
+    */
+    function ExternModuleRangeLectureTree ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
+        $this->registered_elements = array(
+                'Body', 'TreePath', 'RangeTreeLevelName', 'RangeTreeLevelContent',
+                'TreeKids', 'TreeBackLink'
+        );
+        $this->args = array('sem', 'start_item_id');
+        parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
+    }
+    
+    function printout ($args) {
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_header($this->config);
+        
+        require_once($GLOBALS["RELATIVE_PATH_EXTERN"]
+                . "/modules/views/ExternRangeLectureTree.class.php");
+        
+        $tree =& new ExternRangeLectureTree($this->config, $args["start_item_id"]);
+        $tree->showSemRangeTree();
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_footer();
+    }
+    
+    function printoutPreview ($args) {
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_header($this->config);
+        
+        require_once($GLOBALS["RELATIVE_PATH_EXTERN"]
+                . "/modules/views/ExternRangeLectureTree.class.php");
+        
+        $tree =& new ExternRangeLectureTree($this->config, $args["start_item_id"]);
+        $tree->showSemRangeTree();
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_footer();
+    }
+    
 }
 
 ?>

@@ -5,15 +5,15 @@
 * Lets the user enter the first and last name of the wanted person.<br/>
 * Parameters received via stdin<br/>
 * <code>
-*	$session_id
+*   $session_id
 * </code>
 *
-* @author		Florian Hansen <f1701h@gmx.net>
-* @version		0.11	10.09.2003	21:22:29
-* @access		public
-* @modulegroup	wap_modules
-* @module		directory.php
-* @package		WAP
+* @author       Florian Hansen <f1701h@gmx.net>
+* @version      0.11    10.09.2003  21:22:29
+* @access       public
+* @modulegroup  wap_modules
+* @module       directory.php
+* @package      WAP
 */
 
 // +---------------------------------------------------------------------------+
@@ -44,8 +44,8 @@
     */
     define("PHPDOC_DUMMY", TRUE);
 
-	include_once("wap_adm.inc.php");
-	include_once("wap_buttons.inc.php");
+    include_once("wap_adm.inc.php");
+    include_once("wap_buttons.inc.php");
 
     $session_user_id = wap_adm_start_card($session_id);
     if (!$session_expired)

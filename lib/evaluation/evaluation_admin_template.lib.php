@@ -299,7 +299,7 @@ class EvalTemplateGUI {
         $input->attr( "border", "0" );
         $input->attr( "style", "vertical-align:middle;" );
 #        $input->stri( makeButton( "bearbeiten", "src" ) );
-	$input->stri( tooltip( _("Ausgewählte Vorlage bearbeiten." ), TRUE ) );
+    $input->stri( tooltip( _("Ausgewählte Vorlage bearbeiten." ), TRUE ) );
         $input->attr ("src", EVAL_PIC_EDIT);
         $td->addContent($input);
         $tr->addContent($td);
@@ -328,31 +328,31 @@ class EvalTemplateGUI {
      $tdA->attr( "class", "topic" );
      $tdA->attr ("align","left");
      if( $onthefly ) {
-	$tdA->html( _("<b>Freie Antworten definieren</b>") );
+    $tdA->html( _("<b>Freie Antworten definieren</b>") );
      } else {
-	$isCreate = strstr($this->getPageCommand(), "create");
-	$tdA->html("<b>");
-	switch ($type){
-	  case EVALQUESTION_TYPE_MC:
-	   //$answer = $question->getChild();
-	   //if ($answer->isFreetext ()) {}
-	   //else
-	   $tdA->html( $isCreate
-		       ? _("Multiple Choice erstellen")
-		       : _("Multiple Choice bearbeiten") );
-	   break;
-	  case EVALQUESTION_TYPE_LIKERT:
-	   $tdA->html( $isCreate
-		       ? _("Likertskala erstellen")
-		       : _("Likertskala bearbeiten") );
-	   break;
-	  case EVALQUESTION_TYPE_POL: 
-	   $tdA->html( $isCreate
-		       ? _("Polskala erstellen")
-		       : _("Polskala bearbeiten") );
-	   break;
-	}
-	$tdA->html("</b>");
+    $isCreate = strstr($this->getPageCommand(), "create");
+    $tdA->html("<b>");
+    switch ($type){
+      case EVALQUESTION_TYPE_MC:
+       //$answer = $question->getChild();
+       //if ($answer->isFreetext ()) {}
+       //else
+       $tdA->html( $isCreate
+               ? _("Multiple Choice erstellen")
+               : _("Multiple Choice bearbeiten") );
+       break;
+      case EVALQUESTION_TYPE_LIKERT:
+       $tdA->html( $isCreate
+               ? _("Likertskala erstellen")
+               : _("Likertskala bearbeiten") );
+       break;
+      case EVALQUESTION_TYPE_POL: 
+       $tdA->html( $isCreate
+               ? _("Polskala erstellen")
+               : _("Polskala bearbeiten") );
+       break;
+    }
+    $tdA->html("</b>");
      }
      $trA->cont( $tdA );
      $tableA->cont( $trA );
@@ -428,20 +428,20 @@ class EvalTemplateGUI {
        $img->attr( "align", "middle" );
        $img->attr( "border", 0 );
        $img->stri( tooltip( _("Geben Sie hier einen Namen für Ihre Vorlage ein. Wenn Sie eine systemweite Vorlage bearbeiten, und speichern, wird eine neue Vorlage für Sie persönlich angelegt."),
-			    FALSE, TRUE ) );
+                FALSE, TRUE ) );
        $form->cont( $img );
        $form->cont( $this->BR );
     }
     if($type == EVALQUESTION_TYPE_MC){
     /* multiple - radiobuttons ----------------------- */
        $form->cont( $this->createSubHeadline
-		    ( _("Mehrfachantwort erlaubt").": " ) );
+            ( _("Mehrfachantwort erlaubt").": " ) );
        $radio = new HTMpty( "input" );
        $radio->attr( "type", "radio" );
        $radio->attr( "name", "template_multiple" );
        $radio->attr( "value", YES );
        $question->isMultiplechoice()
-	  ? $radio->attr( "checked" ) : 0;
+      ? $radio->attr( "checked" ) : 0;
        $form->cont( $radio );
        $form->cont( _("ja") );
        
@@ -450,7 +450,7 @@ class EvalTemplateGUI {
        $radio->attr( "name", "template_multiple" );
        $radio->attr( "value", NO );
        $question->isMultiplechoice()
-	  ? 0 : $radio->attr( "checked" );
+      ? 0 : $radio->attr( "checked" );
        $form->cont( $radio );
        $form->cont( _("nein") );
        $form->cont( $this->BR );
@@ -459,26 +459,26 @@ class EvalTemplateGUI {
        /* show multiple choice checkboxes & answers------------------------- */
        $form->cont( $this->createSubHeadline( _("Antworten").": " ) );
        for( $i=0; $answer = $question->getNextChild(); $i++ ) {
-       	  $form->cont( ($i<9?"0":"").($i+1).". " );
-	  $input = new HTMpty( "input" );
-	  $input->attr( "type", "text" );
-	  $input->attr( "name", "template_answers[".$i."][text]" );
-	  $input->attr( "value", $answer->getText(UNQUOTED) );
-	  $input->attr( "size", 23 );
-	  $input->attr( "tabindex", $i+2 );
-	  $form->cont( $input );
-	  $input = new HTMpty( "input" );
-	  $input->attr( "type", "checkbox" );
-	  $input->attr( "name", "template_delete_answers[".$i."]" );
-	  $input->attr( "value", $answer->getObjectID () );
-	  $form->cont( $input );
-	  
-	  $input = new HTMpty( "input" );
-	  $input->attr( "type", "hidden" );
-	  $input->attr( "name", "template_answers[".$i."][answer_id]" );
-	  $input->attr( "value", $answer->getObjectID() );
-	  $form->cont( $input );
-	  $form->cont( $this->BR );
+          $form->cont( ($i<9?"0":"").($i+1).". " );
+      $input = new HTMpty( "input" );
+      $input->attr( "type", "text" );
+      $input->attr( "name", "template_answers[".$i."][text]" );
+      $input->attr( "value", $answer->getText(UNQUOTED) );
+      $input->attr( "size", 23 );
+      $input->attr( "tabindex", $i+2 );
+      $form->cont( $input );
+      $input = new HTMpty( "input" );
+      $input->attr( "type", "checkbox" );
+      $input->attr( "name", "template_delete_answers[".$i."]" );
+      $input->attr( "value", $answer->getObjectID () );
+      $form->cont( $input );
+      
+      $input = new HTMpty( "input" );
+      $input->attr( "type", "hidden" );
+      $input->attr( "name", "template_answers[".$i."][answer_id]" );
+      $input->attr( "value", $answer->getObjectID() );
+      $form->cont( $input );
+      $form->cont( $this->BR );
        }
        /* ------------------------- end: multiple choice checkboxes &answers */
    
@@ -499,10 +499,10 @@ class EvalTemplateGUI {
        $select->attr( "size", "1" );
        $select->attr( "style", "vertical-align:middle;" );
        for( $i = 1 ; $i <= 10 ; $i++ ) {
-	  $option = new HTM( "option" );
-	  $option->attr( "value", $i );
-	  $option->cont( $i );
-	  $select->cont( $option );
+      $option = new HTM( "option" );
+      $option->attr( "value", $i );
+      $option->cont( $i );
+      $select->cont( $option );
        }
        $form->cont( $select );
        
@@ -520,172 +520,172 @@ class EvalTemplateGUI {
     }
     else{
        if($type == EVALQUESTION_TYPE_POL){
-	  $form->cont( $this->createSubHeadline( _("Antworten").": " ) );
-	  /* answers --------------------------------------- */
-	  $isResidual = NO;
-	  for( $i=0; $answer = $question->getNextChild(); $i++ ) {
-	     /*Einbau der Residualkategorie hier komplizierter*/
-	     $residualAnswer = $answer;
-	     if(!$answer->isResidual()){
-		if($i == 0 || $i >= ($question->getNumberChildren()-2)){
-		   if($i==0){
-		      $form->cont( _("Beschriftung erste Antwort") );
-		      $input = new HTMpty( "input" );
-		      $input->attr( "type", "text" );
-		      $input->attr( "name", "template_answers[0][text]" );
-		      $input->attr( "value", $answer->getText(UNQUOTED) );
-		      $input->attr( "size", 29 );
-		      $form->cont( $input );
-		      $input = new HTMpty( "input" );
-		      $input->attr( "type", "hidden" );
-		      $input->attr( "name", "template_answers[0][answer_id]" );
-		      $input->attr( "value", $answer->getObjectID() );
-		      $form->cont( $input );
-		      $form->cont( $this->BR );
-		   }
-		   else{
-		     
-		      if($answer->getText(UNQUOTED) == "" ){
-			 $oldid=$answer->getObjectID();
-			 //continue;
-		      }
-		      else{
-		      $form->cont( _("Beschriftung letzte Antwort") );
-		      $lastone=-1;
-		      $input = new HTMpty( "input" );
-		      $input->attr( "type", "text" );
-		      $input->attr( "name", "template_answers[1][text]" );
-		      $input->attr( "value", $answer->getText(UNQUOTED) );
-		      $input->attr( "size", 29 );
-		      $form->cont( $input );
-		      $input = new HTMpty( "input" );
-		      $input->attr( "type", "hidden" );
-		      $input->attr( "name", "template_answers[1][answer_id]" );
-		      $input->attr( "value", $answer->getObjectID() );
-		      $form->cont( $input );
-		      }
-		     
-		   }
-		
-		}
-	
-	     }
-	     else{
-		$isResidual = YES;
-		
-	     }
-	     if($lastone!=-1 && $i== ($question->getNumberChildren()-1)){
-		$form->cont( _("Beschriftung letzte Antwort") );
-		$lastone=YES;
-		$input = new HTMpty( "input" );
-		$input->attr( "type", "text" );
-		$input->attr( "name", "template_answers[1][text]" );
-		$input->attr( "value", "" );
-		$input->attr( "size", 29 );
-		$form->cont( $input );
-		$input = new HTMpty( "input" );
-		$input->attr( "type", "hidden" );
-		$input->attr( "name", "template_answers[1][answer_id]" );
-		$input->attr( "value", $oldid );
-		$form->cont( $input );
-	     }  
-	  }
-	  $form->cont( $this->BR );
-	  $form->cont( $this->
-		       createSubHeadline(_("Anzahl Abstufungen").": " ) );
-	  /* NUMBER OF ANSWERS------------------------------------------ */
-	  $select = new HTM( "select" );
-	  $select->attr( "name", "template_add_num_answers" );
-	  $select->attr( "size", "1" );
-	  $select->attr( "style", "vertical-align:middle;" );
-	  if($isResidual==YES){
-	     $res=1;
-	  }
-	  for( $i=4; $i<=20; $i++ ) {
-	     $option = new HTM( "option" );
-	     $option->attr( "value", $i );
-	     $option->cont( $i );
-	     if($i == $question->getNumberChildren()-$res)
-		$option->addAttr("selected","selected");
-	     $select->cont( $option );
-	  }
-	  $form->cont( $select );
-	  $form->cont( $this->BR );
-	  
-	  
+      $form->cont( $this->createSubHeadline( _("Antworten").": " ) );
+      /* answers --------------------------------------- */
+      $isResidual = NO;
+      for( $i=0; $answer = $question->getNextChild(); $i++ ) {
+         /*Einbau der Residualkategorie hier komplizierter*/
+         $residualAnswer = $answer;
+         if(!$answer->isResidual()){
+        if($i == 0 || $i >= ($question->getNumberChildren()-2)){
+           if($i==0){
+              $form->cont( _("Beschriftung erste Antwort") );
+              $input = new HTMpty( "input" );
+              $input->attr( "type", "text" );
+              $input->attr( "name", "template_answers[0][text]" );
+              $input->attr( "value", $answer->getText(UNQUOTED) );
+              $input->attr( "size", 29 );
+              $form->cont( $input );
+              $input = new HTMpty( "input" );
+              $input->attr( "type", "hidden" );
+              $input->attr( "name", "template_answers[0][answer_id]" );
+              $input->attr( "value", $answer->getObjectID() );
+              $form->cont( $input );
+              $form->cont( $this->BR );
+           }
+           else{
+             
+              if($answer->getText(UNQUOTED) == "" ){
+             $oldid=$answer->getObjectID();
+             //continue;
+              }
+              else{
+              $form->cont( _("Beschriftung letzte Antwort") );
+              $lastone=-1;
+              $input = new HTMpty( "input" );
+              $input->attr( "type", "text" );
+              $input->attr( "name", "template_answers[1][text]" );
+              $input->attr( "value", $answer->getText(UNQUOTED) );
+              $input->attr( "size", 29 );
+              $form->cont( $input );
+              $input = new HTMpty( "input" );
+              $input->attr( "type", "hidden" );
+              $input->attr( "name", "template_answers[1][answer_id]" );
+              $input->attr( "value", $answer->getObjectID() );
+              $form->cont( $input );
+              }
+             
+           }
+        
+        }
+    
+         }
+         else{
+        $isResidual = YES;
+        
+         }
+         if($lastone!=-1 && $i== ($question->getNumberChildren()-1)){
+        $form->cont( _("Beschriftung letzte Antwort") );
+        $lastone=YES;
+        $input = new HTMpty( "input" );
+        $input->attr( "type", "text" );
+        $input->attr( "name", "template_answers[1][text]" );
+        $input->attr( "value", "" );
+        $input->attr( "size", 29 );
+        $form->cont( $input );
+        $input = new HTMpty( "input" );
+        $input->attr( "type", "hidden" );
+        $input->attr( "name", "template_answers[1][answer_id]" );
+        $input->attr( "value", $oldid );
+        $form->cont( $input );
+         }  
+      }
+      $form->cont( $this->BR );
+      $form->cont( $this->
+               createSubHeadline(_("Anzahl Abstufungen").": " ) );
+      /* NUMBER OF ANSWERS------------------------------------------ */
+      $select = new HTM( "select" );
+      $select->attr( "name", "template_add_num_answers" );
+      $select->attr( "size", "1" );
+      $select->attr( "style", "vertical-align:middle;" );
+      if($isResidual==YES){
+         $res=1;
+      }
+      for( $i=4; $i<=20; $i++ ) {
+         $option = new HTM( "option" );
+         $option->attr( "value", $i );
+         $option->cont( $i );
+         if($i == $question->getNumberChildren()-$res)
+        $option->addAttr("selected","selected");
+         $select->cont( $option );
+      }
+      $form->cont( $select );
+      $form->cont( $this->BR );
+      
+      
        }
        if($type == EVALQUESTION_TYPE_LIKERT){
-	  $form->cont( $this->createSubHeadline( _("Antworten").": " ) );
-	  $residualAnswer = NULL;
-	  $isResidual = NO;
-	  for( $i=0; $answer = $question->getNextChild(); $i++ ) {
-	     if(!$answer->isResidual()){
-		$form->cont( ($i<9?"0":"").($i+1).". " );
-		$input = new HTMpty( "input" );
-		$input->attr( "type", "text" );
-		$input->attr( "name", "template_answers[".$i."][text]" );
-		$input->attr( "value", $answer->getText( UNQUOTED ) );
-		$input->attr( "size", 23 );
-		$input->attr( "tabindex", $i+2 );
-		$form->cont( $input );
-		$input = new HTMpty( "input" );
-		$input->attr( "type", "checkbox" );
-		$input->attr( "name", "template_delete_answers[".$i."]" );
-		$input->attr( "value", $answer->getObjectID () );
-		$form->cont( $input );
-		$input = new HTMpty( "input" );
-		$input->attr( "type", "hidden" );
-		$input->attr( "name", "template_answers[".$i."][answer_id]" );
-		$input->attr( "value", $answer->getObjectID() );
-		$form->cont( $input );
-		$form->cont( $this->BR );
-		if(!$residualAnswer)
-		   $residualAnswer = $answer;
-	     } else {
-		$i--;
-		$isResidual = YES;
-		$residualAnswer = $answer;
-	     }
-	  }
+      $form->cont( $this->createSubHeadline( _("Antworten").": " ) );
+      $residualAnswer = NULL;
+      $isResidual = NO;
+      for( $i=0; $answer = $question->getNextChild(); $i++ ) {
+         if(!$answer->isResidual()){
+        $form->cont( ($i<9?"0":"").($i+1).". " );
+        $input = new HTMpty( "input" );
+        $input->attr( "type", "text" );
+        $input->attr( "name", "template_answers[".$i."][text]" );
+        $input->attr( "value", $answer->getText( UNQUOTED ) );
+        $input->attr( "size", 23 );
+        $input->attr( "tabindex", $i+2 );
+        $form->cont( $input );
+        $input = new HTMpty( "input" );
+        $input->attr( "type", "checkbox" );
+        $input->attr( "name", "template_delete_answers[".$i."]" );
+        $input->attr( "value", $answer->getObjectID () );
+        $form->cont( $input );
+        $input = new HTMpty( "input" );
+        $input->attr( "type", "hidden" );
+        $input->attr( "name", "template_answers[".$i."][answer_id]" );
+        $input->attr( "value", $answer->getObjectID() );
+        $form->cont( $input );
+        $form->cont( $this->BR );
+        if(!$residualAnswer)
+           $residualAnswer = $answer;
+         } else {
+        $i--;
+        $isResidual = YES;
+        $residualAnswer = $answer;
+         }
+      }
 
-	  /* add button ------------------------------------ */
-	  $input = new HTMpty( "input" );
-	  $input->attr( "type", "image" );
-	  $input->attr( "name", "template_add_answers_button" );
+      /* add button ------------------------------------ */
+      $input = new HTMpty( "input" );
+      $input->attr( "type", "image" );
+      $input->attr( "name", "template_add_answers_button" );
 #$input->stri( makeButton( "hinzufuegen", "src" ) );
-	  $input->addAttr ("src", EVAL_PIC_ADD);
+      $input->addAttr ("src", EVAL_PIC_ADD);
 
-	  $input->attr( "border", "0" );
-	  $input->attr( "style", "vertical-align:middle;" );
-	  $form->html("&nbsp;");
-	  $form->cont( $input );
-	  
-	  /* add number of answers - list ------------------ */
-	  $select = new HTM( "select" );
-	  $select->attr( "name", "template_add_num_answers" );
-	  $select->attr( "size", "1" );
-	  $select->attr( "style", "vertical-align:middle;" );
-	  for( $i = 1; $i <= 10 ; $i++ ) {
-	     $option = new HTM( "option" );
-	     $option->attr( "value", $i );
-	     $option->cont( $i );
-	     $select->cont( $option );
-	  }
-	  $form->cont( $select );
-	  
-	  /* delete answers button --------------------------------- */
-	  $input = new HTMpty( "input" );
-	  $input->attr( "type", "image" );
-	  $input->attr( "name", "template_delete_answers_button" );
+      $input->attr( "border", "0" );
+      $input->attr( "style", "vertical-align:middle;" );
+      $form->html("&nbsp;");
+      $form->cont( $input );
+      
+      /* add number of answers - list ------------------ */
+      $select = new HTM( "select" );
+      $select->attr( "name", "template_add_num_answers" );
+      $select->attr( "size", "1" );
+      $select->attr( "style", "vertical-align:middle;" );
+      for( $i = 1; $i <= 10 ; $i++ ) {
+         $option = new HTM( "option" );
+         $option->attr( "value", $i );
+         $option->cont( $i );
+         $select->cont( $option );
+      }
+      $form->cont( $select );
+      
+      /* delete answers button --------------------------------- */
+      $input = new HTMpty( "input" );
+      $input->attr( "type", "image" );
+      $input->attr( "name", "template_delete_answers_button" );
 #       $input->stri( makeButton( "markierteloeschen", "src" ) );
-	  $input->addAttr ("src", EVAL_PIC_REMOVE);       
-	  $input->attr( "border", "0" );
-	  $input->attr( "style", "vertical-align:middle;" );
-	  $form->html("&nbsp;");
-	  $form->cont( $input );
-	  $form->cont( $this->BR );
-	  
-	  
+      $input->addAttr ("src", EVAL_PIC_REMOVE);       
+      $input->attr( "border", "0" );
+      $input->attr( "style", "vertical-align:middle;" );
+      $form->html("&nbsp;");
+      $form->cont( $input );
+      $form->cont( $this->BR );
+      
+      
        }
        
     }
@@ -710,9 +710,9 @@ class EvalTemplateGUI {
        $input->attr( "type", "text" );
        $input->attr( "name", "template_residual_text" );
        if ($isResidual)
-	  $input->attr( "value", $residualAnswer->getText(UNQUOTED) );
+      $input->attr( "value", $residualAnswer->getText(UNQUOTED) );
        else
-	  $input->attr( "value", "" );
+      $input->attr( "value", "" );
        $input->attr( "size", 22 );
        $form->cont( $input );
        /* <------------- residual text field */
@@ -822,8 +822,8 @@ class EvalTemplateGUI {
      $tdA->attr( "class", "topic" );
      $tdA->attr( "align","left" );
      $tdA->html( "<b>" . ( strstr($this->getPageCommand(), "create")
-			   ? _("Freitextvorlage erstellen")
-			   : _("Freitextvorlage bearbeiten") ) . "</b>" );
+               ? _("Freitextvorlage erstellen")
+               : _("Freitextvorlage bearbeiten") ) . "</b>" );
      $trA->cont( $tdA );
      $tableA->cont( $trA );
 
@@ -1029,12 +1029,12 @@ class EvalTemplateGUI {
           $rangeID = get_Username($user->id);
 
       $infoOverviewText = sprintf(_("Zurück zur %s Evaluations-Verwaltung %s"),
-				  "<a href=\"admin_evaluation.php?page=overview".
-				  "&check_abort_creation_button_x=1".
-				  "&evalID=$evalID".
-				  "&rangeID=$rangeID".
-				  "\">",
-				  "</a>");
+                  "<a href=\"admin_evaluation.php?page=overview".
+                  "&check_abort_creation_button_x=1".
+                  "&evalID=$evalID".
+                  "&rangeID=$rangeID".
+                  "\">",
+                  "</a>");
 
       $infoOverview =  array ("icon" => basename(EVAL_PIC_BACK),
                 "text" => $infoOverviewText);

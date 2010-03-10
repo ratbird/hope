@@ -53,8 +53,8 @@ class EvalShow {
       $td2->attr( "valign", "top" );
 
       if( $eval->isError() ) {
-	  $td2->html( EvalCommon::createErrorReport ($eval, _("Fehler")) );
-	  $td2->html( $br );
+      $td2->html( EvalCommon::createErrorReport ($eval, _("Fehler")) );
+      $td2->html( $br );
       }
 
       $span = new HTM( "span" );
@@ -65,12 +65,12 @@ class EvalShow {
 
       $td2->cont( $br );
       if( $votedNow ) {
-	  $td2->cont( EvalCommon::createReportMessage( _("Vielen Dank für Ihre Teilnahme."), EVAL_PIC_SUCCESS, EVAL_CSS_SUCCESS ) );
+      $td2->cont( EvalCommon::createReportMessage( _("Vielen Dank für Ihre Teilnahme."), EVAL_PIC_SUCCESS, EVAL_CSS_SUCCESS ) );
       } elseif( $votedEarlier ) {
-	  $td2->cont( EvalCommon::createReportMessage( _("Sie haben an dieser Evaluation bereits teilgenommen."), EVAL_PIC_INFO, EVAL_CSS_INFO ) );
+      $td2->cont( EvalCommon::createReportMessage( _("Sie haben an dieser Evaluation bereits teilgenommen."), EVAL_PIC_INFO, EVAL_CSS_INFO ) );
       } else {
-	  $td2->html( formatReady($eval->getText()) );
-	  $td2->cont( $br );
+      $td2->html( formatReady($eval->getText()) );
+      $td2->cont( $br );
       }
       $tr2->cont( $td2 );
 
@@ -93,21 +93,21 @@ class EvalShow {
   function createInfoBox( $eval, $voted ) {
 
       $info1 =  array( "icon" => basename(EVAL_PIC_EXCLAIM),
-		       "text" => EvalShow::getAnonymousText( $eval, $voted ) );
+               "text" => EvalShow::getAnonymousText( $eval, $voted ) );
 
       $info2 =  array( "icon" => basename(EVAL_PIC_TIME),
-		       "text" => EvalShow::getStopdateText( $eval, $voted ) );
+               "text" => EvalShow::getStopdateText( $eval, $voted ) );
 
       $info3 = array( "icon" => basename(EVAL_PIC_HELP),
-		      "text" => sprintf(_("Mit %s gekennzeichnete Fragen müssen beantwortet werden."),
-					"<b><span class=\"eval_error\">**</span></b>") );
+              "text" => sprintf(_("Mit %s gekennzeichnete Fragen müssen beantwortet werden."),
+                    "<b><span class=\"eval_error\">**</span></b>") );
 
       $infos = $voted || $GLOBALS["mandatories"] == 0
-	  ? array ($info1, $info2)
-	  : array ($info1, $info2, $info3);
+      ? array ($info1, $info2)
+      : array ($info1, $info2, $info3);
 
       $infobox = array( array( "kategorie" => _("Information:"),
-			       "eintrag"   => $infos ) );
+                   "eintrag"   => $infos ) );
 
       return print_infobox ($infobox, NULL, YES);
   }
@@ -159,10 +159,10 @@ class EvalShow {
 
       /* multiple choice? ----------------------------------------------------- */
 #      if ($eval->isMultipleChoice()) {
-#	  $html .= ($voted || $eval->isStopped())
-#	      ? _("Sie konnten mehrere Antworten ausw&auml;hlen.")
-#	      : _("Sie k&ouml;nnen mehrere Antworten ausw&auml;hlen.");
-#	  $html .= " \n";
+#     $html .= ($voted || $eval->isStopped())
+#         ? _("Sie konnten mehrere Antworten ausw&auml;hlen.")
+#         : _("Sie k&ouml;nnen mehrere Antworten ausw&auml;hlen.");
+#     $html .= " \n";
 #      }
       /* ---------------------------------------------------------------------- */
 
@@ -194,25 +194,25 @@ class EvalShow {
 
       /* Get number of participants ------------------------------------------- */
       if( $stopdate < time() && $stopdate > 0 ) {
-	  if ($number != 1)
-	      $html .= sprintf (_("Es haben insgesamt <b>%s</b> Personen teilgenommen"), $number);
-	  else
-	      $html .= $voted
-		  ? sprintf (_("Sie waren der/die einzige TeilnehmerIn"))
-		  : sprintf (_("Es hat insgesamt <b>eine</b> Person teilgenommen"));
+      if ($number != 1)
+          $html .= sprintf (_("Es haben insgesamt <b>%s</b> Personen teilgenommen"), $number);
+      else
+          $html .= $voted
+          ? sprintf (_("Sie waren der/die einzige TeilnehmerIn"))
+          : sprintf (_("Es hat insgesamt <b>eine</b> Person teilgenommen"));
       }
       else {
-	  if ($number != 1)
-	      $html .= sprintf (_("Es haben bisher <b>%s</b> Personen teilgenommen"), $number);
-	  else
-	      $html .= $voted
-		  ? sprintf (_("Sie waren bisher der/die einzige TeilnehmerIn"))
-		  : sprintf (_("Es hat bisher <b>eine</b> Person teilgenommen"));
+      if ($number != 1)
+          $html .= sprintf (_("Es haben bisher <b>%s</b> Personen teilgenommen"), $number);
+      else
+          $html .= $voted
+          ? sprintf (_("Sie waren bisher der/die einzige TeilnehmerIn"))
+          : sprintf (_("Es hat bisher <b>eine</b> Person teilgenommen"));
       }
       /* ---------------------------------------------------------------------- */
 
       if ($voted && $number > 1)
-	  $html .= _(", Sie ebenfalls");
+      $html .= _(", Sie ebenfalls");
 
       $html .= ".\n";
       return $html;
@@ -224,26 +224,26 @@ class EvalShow {
 
       /* stopdate ------------------------------------------------------------- */
       if (!empty ($stopdate)) {
-	  if( $stopdate < time() ) {
-	      $html .=  sprintf (_("Die Evaluation wurde beendet am <b>%s</b> um <b>%s</b> Uhr."),
-				 date ("d.m.Y", $stopdate),
-				 date ("H:i", $stopdate));
-	  }
-	  else {
-	      if( $voted ) {
-		  $html .= sprintf (_("Die Evaluation wird voraussichtlich beendet am <b>%s</b> um <b>%s</b> Uhr."),
-				    date ("d.m.Y", $stopdate),
-				    date ("H:i", $stopdate));
-	      }
-	      else {
-		  $html .= sprintf (_("Sie k&ouml;nnen teilnehmen bis zum <b>%s</b> um <b>%s</b> Uhr."),
-				    date ("d.m.Y", $stopdate),
-				    date ("H:i", $stopdate));
-	      }
-	  }
+      if( $stopdate < time() ) {
+          $html .=  sprintf (_("Die Evaluation wurde beendet am <b>%s</b> um <b>%s</b> Uhr."),
+                 date ("d.m.Y", $stopdate),
+                 date ("H:i", $stopdate));
       }
       else {
-	  $html .= _("Der Endzeitpunkt dieser Evaluation steht noch nicht fest.");
+          if( $voted ) {
+          $html .= sprintf (_("Die Evaluation wird voraussichtlich beendet am <b>%s</b> um <b>%s</b> Uhr."),
+                    date ("d.m.Y", $stopdate),
+                    date ("H:i", $stopdate));
+          }
+          else {
+          $html .= sprintf (_("Sie k&ouml;nnen teilnehmen bis zum <b>%s</b> um <b>%s</b> Uhr."),
+                    date ("d.m.Y", $stopdate),
+                    date ("H:i", $stopdate));
+          }
+      }
+      }
+      else {
+      $html .= _("Der Endzeitpunkt dieser Evaluation steht noch nicht fest.");
       }
       $html .= " \n";
 
@@ -256,17 +256,17 @@ class EvalShow {
 
       /* Is anonymous --------------------------------------------------------- */
       if( ($stopdate < time() && $stopdate > 0) ||
-	  $voted )
-	  $html .= ($eval->isAnonymous())
-	      ? _("Die Teilnahme war anonym.")
-	      : _("Die Teilnahme war <b>nicht</b> anonym.");
+      $voted )
+      $html .= ($eval->isAnonymous())
+          ? _("Die Teilnahme war anonym.")
+          : _("Die Teilnahme war <b>nicht</b> anonym.");
       else
-	  $html .= ($eval->isAnonymous())
-	      ? _("Die Teilnahme ist anonym.")
-#	      : _("Die Teilnahme ist <b>nicht</b> anonym.");
-	      : ("<span style=\"color:red;\">" .
-		 _("Dies ist eine personalisierte Evaluation. Ihre Angaben werden verknüpft mit Ihrem Namen gespeichert.") .
-		 "</span>");
+      $html .= ($eval->isAnonymous())
+          ? _("Die Teilnahme ist anonym.")
+#         : _("Die Teilnahme ist <b>nicht</b> anonym.");
+          : ("<span style=\"color:red;\">" .
+         _("Dies ist eine personalisierte Evaluation. Ihre Angaben werden verknüpft mit Ihrem Namen gespeichert.") .
+         "</span>");
 
       return $html;
   }
@@ -280,7 +280,7 @@ class EvalShow {
   function createEvaluationFooter( $eval, $voted, $isPreview ) {
       global $auth;
       if( $isPreview )
-	  $voted = YES;
+      $voted = YES;
 
       $br = new HTMpty( "br" );
 
@@ -296,7 +296,7 @@ class EvalShow {
          $button->attr( "type", "image" );
          $button->attr( "name", "voteButton" );
          $button->stri( makeButton( "abschicken", "src" ).
-			tooltip(_("Senden Sie Ihre Antworten hiermit ab.")) );
+            tooltip(_("Senden Sie Ihre Antworten hiermit ab.")) );
          $button->attr( "border", "0" );
          $td->cont( $button );
       }
@@ -326,7 +326,7 @@ class EvalShow {
             tooltip(_("Vorschau aktualisieren.")) );
          $img->attr( "border", "0" );
          $button->cont( $img );
-	 $td->cont( $button );
+     $td->cont( $button );
       }
 
       $td->cont( $br );

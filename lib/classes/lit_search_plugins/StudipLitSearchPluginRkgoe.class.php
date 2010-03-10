@@ -28,16 +28,16 @@ require_once ("lib/classes/lit_search_plugins/StudipLitSearchPluginGvk.class.php
 *
 * 
 *
-* @access	public	
-* @author	André Noack <noack@data-quest.de>
-* @package	
+* @access   public  
+* @author   André Noack <noack@data-quest.de>
+* @package  
 **/
 class StudipLitSearchPluginRkgoe extends StudipLitSearchPluginGvk{
-	
-	
-	function StudipLitSearchPluginRkgoe(){
-		parent::StudipLitSearchPluginGvk();
-		$this->description = "Göttinger Gesamtkatalog (GGK)
+    
+    
+    function StudipLitSearchPluginRkgoe(){
+        parent::StudipLitSearchPluginGvk();
+        $this->description = "Göttinger Gesamtkatalog (GGK)
 Online-Katalog der folgenden Göttinger Bibliotheken:
 - SUB Göttingen mit Bereichsbibliotheken
 - Teilbibliotheken (Institutsbibliotheken) der Georg-August-Universität Göttingen
@@ -49,15 +49,15 @@ Online-Katalog der folgenden Göttinger Bibliotheken:
 - Bibliothek der FH im Deutschen Roten Kreuz in Göttingen
 - Stadtbibliothek Göttingen
 ";
-		$this->z_host = "z3950.gbv.de:20012/rkgoe";
-		$this->z_record_encoding = 'utf-8';
-		$this->z_profile = array('1016' => _("Basisindex [ALL]"), '2' => _("Körperschaftsname [KOS]"),
-								'3' => _("Kongress [KNS]"),'4' => _("Titelstichwörter [TIT]"),
-								'5' => _("Serienstichwörter [SER]"), '7' => _("ISBN [ISB]"),
-								'8' => _("ISSN [ISS]"), '12' => _("PICA Prod.-Nr [PPN]"),
-								'21' => _("alle Klassifikationen [SYS]"), '1004' => _("Person, Author [PER]"),
-								'1005' => _("Körperschaften [KOR]"), '1006' => _("Kongresse [KON]"),
-								'1007' => _("alle Nummern [NUM]"));
-	}
+        $this->z_host = "z3950.gbv.de:20012/rkgoe";
+        $this->z_record_encoding = 'utf-8';
+        $this->z_profile = array('1016' => _("Basisindex [ALL]"), '2' => _("Körperschaftsname [KOS]"),
+                                '3' => _("Kongress [KNS]"),'4' => _("Titelstichwörter [TIT]"),
+                                '5' => _("Serienstichwörter [SER]"), '7' => _("ISBN [ISB]"),
+                                '8' => _("ISSN [ISS]"), '12' => _("PICA Prod.-Nr [PPN]"),
+                                '21' => _("alle Klassifikationen [SYS]"), '1004' => _("Person, Author [PER]"),
+                                '1005' => _("Körperschaften [KOR]"), '1006' => _("Kongresse [KON]"),
+                                '1007' => _("alle Nummern [NUM]"));
+    }
 }
 ?>

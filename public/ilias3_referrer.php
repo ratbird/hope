@@ -35,45 +35,45 @@ require_once ('config.inc.php');
 
 if ($ELEARNING_INTERFACE_ENABLE)
 {
-	require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
-	ELearningUtils::bench("start");
+    require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
+    ELearningUtils::bench("start");
 
 
 
-	if (isset($ELEARNING_INTERFACE_MODULES[$cms_select]["name"]))
-	{
+    if (isset($ELEARNING_INTERFACE_MODULES[$cms_select]["name"]))
+    {
 
-		ELearningUtils::loadClass($cms_select);
-		// init session now
-		$sess_id = $connected_cms[$cms_select]->user->getSessionId();
-		$connected_cms[$cms_select]->terminate();
-		ob_end_clean();
-		if (!$sess_id){
-			include ('lib/include/html_head.inc.php'); // Output of html head
-			include ('lib/include/header.php');   // Output of Stud.IP head
-			parse_window('error§'
-					. sprintf(_("Automatischer Login für das System <b>%s</b> (Nutzername:%s) fehlgeschlagen."), htmlReady($connected_cms[$cms_select]->getName()), $connected_cms[$cms_select]->user->getUsername()),'§'
-					, _("Login nicht m&ouml;glich")
-					, '<div style="margin:10px">'
-					._("Dieser Fehler kann dadurch hervorgerufen werden, dass sie Ihr Passwort geändert haben. In diesem Fall versuchen sie bitte Ihren Account erneut zu verknüpfen.")
-					.  '<br>' . sprintf(_("%sZur&uuml;ck%s zu Meine Lernmodule"), '<a href="my_elearning.php"><b>', '</b></a>') . '</div>');
-			include ('lib/include/html_end.inc.php');
-			page_close();
-			die;
-		}
-		$parameters = "?sess_id=$sess_id";
-		if (isset($client_id))
-			$parameters .= "&client_id=$client_id";
-		if (isset($target))
-			$parameters .= "&target=$target";
-		if (isset($ref_id))
-			$parameters .= "&ref_id=$ref_id";
-		if (isset($type))
-			$parameters .= "&type=$type";
+        ELearningUtils::loadClass($cms_select);
+        // init session now
+        $sess_id = $connected_cms[$cms_select]->user->getSessionId();
+        $connected_cms[$cms_select]->terminate();
+        ob_end_clean();
+        if (!$sess_id){
+            include ('lib/include/html_head.inc.php'); // Output of html head
+            include ('lib/include/header.php');   // Output of Stud.IP head
+            parse_window('error§'
+                    . sprintf(_("Automatischer Login für das System <b>%s</b> (Nutzername:%s) fehlgeschlagen."), htmlReady($connected_cms[$cms_select]->getName()), $connected_cms[$cms_select]->user->getUsername()),'§'
+                    , _("Login nicht m&ouml;glich")
+                    , '<div style="margin:10px">'
+                    ._("Dieser Fehler kann dadurch hervorgerufen werden, dass sie Ihr Passwort geändert haben. In diesem Fall versuchen sie bitte Ihren Account erneut zu verknüpfen.")
+                    .  '<br>' . sprintf(_("%sZur&uuml;ck%s zu Meine Lernmodule"), '<a href="my_elearning.php"><b>', '</b></a>') . '</div>');
+            include ('lib/include/html_end.inc.php');
+            page_close();
+            die;
+        }
+        $parameters = "?sess_id=$sess_id";
+        if (isset($client_id))
+            $parameters .= "&client_id=$client_id";
+        if (isset($target))
+            $parameters .= "&target=$target";
+        if (isset($ref_id))
+            $parameters .= "&ref_id=$ref_id";
+        if (isset($type))
+            $parameters .= "&type=$type";
 
-		// refer to studip_referrer.php
-		header("Location: ".$ELEARNING_INTERFACE_MODULES[$cms_select]["ABSOLUTE_PATH_ELEARNINGMODULES"] . $ELEARNING_INTERFACE_MODULES[$cms_select]["target_file"] . $parameters);
-		exit();
-	}
+        // refer to studip_referrer.php
+        header("Location: ".$ELEARNING_INTERFACE_MODULES[$cms_select]["ABSOLUTE_PATH_ELEARNINGMODULES"] . $ELEARNING_INTERFACE_MODULES[$cms_select]["target_file"] . $parameters);
+        exit();
+    }
 }
 ?>

@@ -28,122 +28,122 @@
 *
 * 
 *
-* @access	public	
-* @author	André Noack <andre.noack@gmx.net>
-* @package	Chat
+* @access   public  
+* @author   André Noack <andre.noack@gmx.net>
+* @package  Chat
 */
 
 class FileHandler {
-	/**
-	* Shared Memory Key
-	*
-	* Key muss eindeutig sein (auf dieser Maschine!)
-	* @access	private
-	* @var		integer	$shmKey		Key muss eindeutig sein (auf dieser Maschine!)
-	*/
-	var $file_path;         //Shared Memory Key
-	
-	/**
-	* Shared Memory Key
-	*
-	* Key muss eindeutig sein (auf dieser Maschine!)
-	* @access	private
-	* @var		integer	$shmKey		Key muss eindeutig sein (auf dieser Maschine!)
-	*/
-	var $file_name;         //Shared Memory Key
-	
-	/**
-	* turn debug mode on/off
-	*
-	* @access	public
-	* @var	boolean
-	*/
-	var $debug = true;
-	
-	/**
-	* constructor
-	*
-	* does nothing special, just acquires handles for a memory segment and a semaphore to it
-	*
-	* @access	public
-	* @param	integer	$key	must be unique on this machine
-	* @param	integer	$size	in bytes
-	*/
-	function FileHandler($file_name = "chat_data" ,$file_path = "@") {
-   		global $TMP_PATH;
- 	      	if($file_path == "@:"){
- 	        	$file_path = $TMP_PATH;
- 	        }  
-		$this->file_name = $file_name;
-		$this->file_path = $file_path;
-	}
+    /**
+    * Shared Memory Key
+    *
+    * Key muss eindeutig sein (auf dieser Maschine!)
+    * @access   private
+    * @var      integer $shmKey     Key muss eindeutig sein (auf dieser Maschine!)
+    */
+    var $file_path;         //Shared Memory Key
+    
+    /**
+    * Shared Memory Key
+    *
+    * Key muss eindeutig sein (auf dieser Maschine!)
+    * @access   private
+    * @var      integer $shmKey     Key muss eindeutig sein (auf dieser Maschine!)
+    */
+    var $file_name;         //Shared Memory Key
+    
+    /**
+    * turn debug mode on/off
+    *
+    * @access   public
+    * @var  boolean
+    */
+    var $debug = true;
+    
+    /**
+    * constructor
+    *
+    * does nothing special, just acquires handles for a memory segment and a semaphore to it
+    *
+    * @access   public
+    * @param    integer $key    must be unique on this machine
+    * @param    integer $size   in bytes
+    */
+    function FileHandler($file_name = "chat_data" ,$file_path = "@") {
+        global $TMP_PATH;
+            if($file_path == "@:"){
+                $file_path = $TMP_PATH;
+            }  
+        $this->file_name = $file_name;
+        $this->file_path = $file_path;
+    }
 
-	
-	/**
-	* stores a variable in shared memory
-	*
-	* @access	public	
-	* @param	mixed	&$what	variable to store (call by reference)
-	* @param	integer	$key	the key under which to store
-	*/
-	function store(&$what,$key) {
-		$file_name = $this->file_path . "/" . $this->file_name . $key;
-		$contents = serialize($what);
-		$handle = fopen ($file_name, "rb+");
-		if ($handle === false) {
-			$handle = fopen($file_name, 'xb');
-		}
-		if (flock($handle, LOCK_EX)){
-			ftruncate($handle, 0);
-			fwrite ($handle, $contents);
-			flock($handle, LOCK_UN);
-			fclose ($handle);
-		} else {
-			fclose ($handle);
-			$this->halt("Fehler beim Schreiben von $key");
-		}
-		return true;
-	}
+    
+    /**
+    * stores a variable in shared memory
+    *
+    * @access   public  
+    * @param    mixed   &$what  variable to store (call by reference)
+    * @param    integer $key    the key under which to store
+    */
+    function store(&$what,$key) {
+        $file_name = $this->file_path . "/" . $this->file_name . $key;
+        $contents = serialize($what);
+        $handle = fopen ($file_name, "rb+");
+        if ($handle === false) {
+            $handle = fopen($file_name, 'xb');
+        }
+        if (flock($handle, LOCK_EX)){
+            ftruncate($handle, 0);
+            fwrite ($handle, $contents);
+            flock($handle, LOCK_UN);
+            fclose ($handle);
+        } else {
+            fclose ($handle);
+            $this->halt("Fehler beim Schreiben von $key");
+        }
+        return true;
+    }
 
-	/**
-	* restores a variable from shared memory
-	*
-	* @access	public	
-	* @param	mixed	&$what	variable to restore (call by reference)
-	* @param	integer	$key	the key from which to store
-	*/
-	function restore(&$what,$key) {
-		$file_name = $this->file_path . "/" . $this->file_name . $key;
-		$handle = fopen ($file_name, "rb");
-		if ($handle){
-			if (flock($handle, LOCK_SH)){
-				while (!feof($handle)) {
-					$contents .= fread($handle, 8192);
-				}
-				flock($handle, LOCK_UN);
-				fclose ($handle);
-			} else {
-				fclose ($handle);
-				$this->halt("Fehler beim Lesen von $key");
-			}
-			if ($contents){
-				$what = unserialize($contents);
-			}
-		}
-		return true;
-	}
+    /**
+    * restores a variable from shared memory
+    *
+    * @access   public  
+    * @param    mixed   &$what  variable to restore (call by reference)
+    * @param    integer $key    the key from which to store
+    */
+    function restore(&$what,$key) {
+        $file_name = $this->file_path . "/" . $this->file_name . $key;
+        $handle = fopen ($file_name, "rb");
+        if ($handle){
+            if (flock($handle, LOCK_SH)){
+                while (!feof($handle)) {
+                    $contents .= fread($handle, 8192);
+                }
+                flock($handle, LOCK_UN);
+                fclose ($handle);
+            } else {
+                fclose ($handle);
+                $this->halt("Fehler beim Lesen von $key");
+            }
+            if ($contents){
+                $what = unserialize($contents);
+            }
+        }
+        return true;
+    }
 
-	
+    
 
-	/**
-	* print error message and exit script
-	*
-	* @access	private
-	* @param	string	$msg	the message to print
-	*/
-	function halt($msg){
-		echo $msg."<br>";
-		die;
-	}
+    /**
+    * print error message and exit script
+    *
+    * @access   private
+    * @param    string  $msg    the message to print
+    */
+    function halt($msg){
+        echo $msg."<br>";
+        die;
+    }
 }
 ?>

@@ -45,7 +45,7 @@ class User {
   * 
   * @var  boolean
   */
-  var $register_globals = true;		
+  var $register_globals = true;     
   
   
   /**
@@ -83,17 +83,17 @@ class User {
   * @param  array
   */
   function register($things) {
-	  if ($this->register_globals){
-		  foreach (explode(',',$things) as $thing) {
-			  $thing = trim($thing);
-			  if (!isset($GLOBALS[$thing])){ 
-				  $GLOBALS[$thing] = null;
-			  }
-			  $this->user_vars[$thing] =& $GLOBALS[$thing];
-		  }
-	  } else {
-		  return false;
-	  }
+      if ($this->register_globals){
+          foreach (explode(',',$things) as $thing) {
+              $thing = trim($thing);
+              if (!isset($GLOBALS[$thing])){ 
+                  $GLOBALS[$thing] = null;
+              }
+              $this->user_vars[$thing] =& $GLOBALS[$thing];
+          }
+      } else {
+          return false;
+      }
   } // end func register
 
 
@@ -114,8 +114,8 @@ class User {
   function unregister($things) {
   
     foreach (explode(',',$things) as $thing) {
-		$thing = trim($thing);
-	    unset($this->user_vars[$thing]);
+        $thing = trim($thing);
+        unset($this->user_vars[$thing]);
     }
     
   } // end func unregister
@@ -150,19 +150,19 @@ class User {
   *
   */
   function freeze() {
-	  if ($this->id == 'nobody'){
-		  return;
-	  }
-	  $vals = $this->serialize();
+      if ($this->id == 'nobody'){
+          return;
+      }
+      $vals = $this->serialize();
 
-	  if($this->checksum != hash('md5', $vals)){
-		  if(!$this->that->ac_store($this->id, $this->name, $vals)){
-		  	$this->that->ac_halt("User: freeze() failed.");
-		  }
-	  } else {
-	  		$this->that->ac_set_changed($this->id, $this->name, time());
-	  }
-	  return true;
+      if($this->checksum != hash('md5', $vals)){
+          if(!$this->that->ac_store($this->id, $this->name, $vals)){
+            $this->that->ac_halt("User: freeze() failed.");
+          }
+      } else {
+            $this->that->ac_set_changed($this->id, $this->name, time());
+      }
+      return true;
   } // end func freeze
     
   
@@ -178,15 +178,15 @@ class User {
     $vars = @unserialize($vals);
     
     if (is_array ($vars)) {
-		if($this->register_globals){
-			foreach($vars as $key => $value){
-				$GLOBALS[$key] = $value;
-				$this->user_vars[$key] =& $GLOBALS[$key];
-			}
-		} else {
-			$this->user_vars = $vars;
-		}
-	}
+        if($this->register_globals){
+            foreach($vars as $key => $value){
+                $GLOBALS[$key] = $value;
+                $this->user_vars[$key] =& $GLOBALS[$key];
+            }
+        } else {
+            $this->user_vars = $vars;
+        }
+    }
   } // end func thaw
 } // end class User
 ?>

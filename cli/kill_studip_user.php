@@ -8,8 +8,8 @@
 * 
 * 
 *
-* @author		André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
+* @author       André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -40,22 +40,22 @@ require_once 'lib/functions.php';
 require_once 'lib/classes/UserManagement.class.php';
 
 if (SEND_MAIL_ON_DELETE && !($MAIL_LOCALHOST && $MAIL_HOST_NAME && $ABSOLUTE_URI_STUDIP)){
-	trigger_error('To use this script you MUST set correct values for $MAIL_LOCALHOST, $MAIL_HOST_NAME and $ABSOLUTE_URI_STUDIP in local.inc!', E_USER_ERROR);
+    trigger_error('To use this script you MUST set correct values for $MAIL_LOCALHOST, $MAIL_HOST_NAME and $ABSOLUTE_URI_STUDIP in local.inc!', E_USER_ERROR);
 }
 
 $argc = $_SERVER['argc'];
 $argv = $_SERVER['argv'];
 
 if (!$argv[1]){
-	fwrite(STDOUT,'Usage: ' . basename(__FILE__) . ' [file][-] (use - to read from STDIN)' .chr(10));
-	exit(0);
+    fwrite(STDOUT,'Usage: ' . basename(__FILE__) . ' [file][-] (use - to read from STDIN)' .chr(10));
+    exit(0);
 }
 if ($argv[1] == '-'){
-	$fo = STDIN;
+    $fo = STDIN;
 } elseif (is_file($argv[1])){
-	$fo = fopen($argv[1],'r');
+    $fo = fopen($argv[1],'r');
 } else {
-	trigger_error("File not found: {$argv[1]}", E_USER_ERROR);
+    trigger_error("File not found: {$argv[1]}", E_USER_ERROR);
 }
 
 $list = '';
@@ -68,32 +68,32 @@ $kill_list = array_map('mysql_escape_string', array_keys(array_flip($kill_list))
 $db = new DB_Seminar();
 $db->query("SELECT * FROM auth_user_md5 WHERE username IN ('".join("','", $kill_list)."')");
 while($db->next_record()){
-	$kill_user[$db->f('username')] = $db->Record;
+    $kill_user[$db->f('username')] = $db->Record;
 }
 if (!is_array($kill_user)) {
-	fwrite(STDOUT, 'No user from list found in database.' . chr(10));
-	exit(0);
+    fwrite(STDOUT, 'No user from list found in database.' . chr(10));
+    exit(0);
 }
 $umanager = new UserManagement();
 foreach($kill_user as $uname => $udetail){
-	if (!KILL_ADMINS && ($udetail['perms'] == 'admin' || $udetail['perms'] == 'root')){
-		fwrite(STDOUT, "user: $uname is '{$udetail['perms']}', NOT deleted". chr(10));
-	} else {
-		$umanager->user_data = array();
-		$umanager->msg = '';
-		$umanager->getFromDatabase($udetail['user_id']);
-		//wenn keine Email gewünscht, Adresse aus den Daten löschen
-		if (!SEND_MAIL_ON_DELETE) $umanager->user_data['auth_user_md5.Email'] = '';
-		if ($umanager->deleteUser()){
-			fwrite(STDOUT, "user: $uname successfully deleted:". chr(10)
-			. parse_msg_to_clean_text($umanager->msg)
-			. chr(10));
-		} else {
-			fwrite(STDOUT, "user: $uname NOT deleted:". chr(10)
-			. parse_msg_to_clean_text($umanager->msg)
-			. chr(10));
-		}
-	}
+    if (!KILL_ADMINS && ($udetail['perms'] == 'admin' || $udetail['perms'] == 'root')){
+        fwrite(STDOUT, "user: $uname is '{$udetail['perms']}', NOT deleted". chr(10));
+    } else {
+        $umanager->user_data = array();
+        $umanager->msg = '';
+        $umanager->getFromDatabase($udetail['user_id']);
+        //wenn keine Email gewünscht, Adresse aus den Daten löschen
+        if (!SEND_MAIL_ON_DELETE) $umanager->user_data['auth_user_md5.Email'] = '';
+        if ($umanager->deleteUser()){
+            fwrite(STDOUT, "user: $uname successfully deleted:". chr(10)
+            . parse_msg_to_clean_text($umanager->msg)
+            . chr(10));
+        } else {
+            fwrite(STDOUT, "user: $uname NOT deleted:". chr(10)
+            . parse_msg_to_clean_text($umanager->msg)
+            . chr(10));
+        }
+    }
 }
 exit(1);
 ?>

@@ -443,15 +443,15 @@ class EvaluationDB extends EvaluationObjectDB {
             "WHERE".
             " evalanswer_id IN ('".join("','", $answerIDs)."')";
        } else {
-	    $sql =
+        $sql =
             "SELECT DISTINCT".
             " user_id ".
             "FROM".
             " evalanswer INNER JOIN evalanswer_user USING(evalanswer_id) ".
             "WHERE".
             " parent_id IN ('".join("','", $questionIDs)."')";
-	   }
-	   
+       }
+       
       $result = $db->query($sql);
        /* ------------------------------------------------ end: asking database */
 

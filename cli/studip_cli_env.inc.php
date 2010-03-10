@@ -7,8 +7,8 @@
 * sets up a faked Stud.IP environment with usable $auth, $user and $perm objects
 * for a faked 'root' user, sets custom error handler wich writes to STDERR
 *
-* @author		André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
+* @author       André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -32,20 +32,20 @@
 // +---------------------------------------------------------------------------+
 
 function CliErrorHandler($errno, $errstr, $errfile, $errline) {
-	if ($errno & ~(E_NOTICE | E_STRICT | E_DEPRECATED | E_WARNING) && error_reporting()){
-		fwrite(STDERR,"$errstr \n$errfile line $errline\n");
-		exit(1);
-	}
-	return true;
+    if ($errno & ~(E_NOTICE | E_STRICT | E_DEPRECATED | E_WARNING) && error_reporting()){
+        fwrite(STDERR,"$errstr \n$errfile line $errline\n");
+        exit(1);
+    }
+    return true;
 }
 
 function parse_msg_to_clean_text($long_msg,$separator="§") {
-	$msg = explode ($separator,$long_msg);
-	$ret = array();
-	for ($i=0; $i < count($msg); $i=$i+2) {
-		if ($msg[$i+1]) $ret[] = trim(decodeHTML(preg_replace ("'<[\/\!]*?[^<>]*?>'si", "", $msg[$i+1])));
-	}
-	return join("\n", $ret);
+    $msg = explode ($separator,$long_msg);
+    $ret = array();
+    for ($i=0; $i < count($msg); $i=$i+2) {
+        if ($msg[$i+1]) $ret[] = trim(decodeHTML(preg_replace ("'<[\/\!]*?[^<>]*?>'si", "", $msg[$i+1])));
+    }
+    return join("\n", $ret);
 }
 
 $STUDIP_BASE_PATH = realpath( dirname(__FILE__) . '/..');
@@ -58,13 +58,13 @@ require_once $STUDIP_BASE_PATH . "/lib/phplib/prepend4.php";
 
 
 
-$PLUGINS_CACHING = FALSE;	//maybe only the www user is allowed to create tmp dirs?
+$PLUGINS_CACHING = FALSE;   //maybe only the www user is allowed to create tmp dirs?
 
 //cli scripts run always as faked (Stud.IP) root
 $auth = new Seminar_Auth();
 $auth->auth = array('uid' => 'cli',
-					'uname' => 'cli',
-					'perm' => 'root');
+                    'uname' => 'cli',
+                    'perm' => 'root');
 
 $user = new Seminar_User();
 $user->fake_user = true;

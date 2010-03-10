@@ -8,11 +8,11 @@
 * The Stud.IP-remote-include interface to extern modules.
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		extern
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       extern
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -37,12 +37,12 @@
 // +---------------------------------------------------------------------------+
 
 if (!$EXTERN_SRI_ENABLE) {
-	echo $EXTERN_ERROR_MESSAGE;
-	exit;
+    echo $EXTERN_ERROR_MESSAGE;
+    exit;
 }
 
 if (!ini_get('allow_url_fopen')){
-	@ini_set('allow_url_fopen','1');
+    @ini_set('allow_url_fopen','1');
 }
 // this script is included in extern.inc.php
 
@@ -50,17 +50,17 @@ $semester = new SemesterData();
 $all_semester = $semester->getAllSemesterData();
 
 if ($sri_file = @file($page_url))
-	$sri_page = implode("", $sri_file);
+    $sri_page = implode("", $sri_file);
 else {
-	echo $EXTERN_ERROR_MESSAGE;
-	exit;
+    echo $EXTERN_ERROR_MESSAGE;
+    exit;
 }
 
 $sri_pattern = "'(.*)(\<studip_remote_include\>.*\<\/studip_remote_include\>)(.*)'is";
 
 if (!preg_match($sri_pattern, $sri_page, $sri_matches)) {
-	echo $EXTERN_ERROR_MESSAGE;
-	exit;
+    echo $EXTERN_ERROR_MESSAGE;
+    exit;
 }
 
 $parser = xml_parser_create();
@@ -71,76 +71,76 @@ xml_parse_into_struct($parser, $sri_matches[2], $xml_values, $xml_tags);
 $allowed_xml_tags = array("module", "range", "config", "sem", "global");
 
 foreach ($allowed_xml_tags as $xml_tag) {
-	if ($xml_tags[$xml_tag]) {
-		$attributes = $xml_values[$xml_tags[$xml_tag][0]]["attributes"];
-		foreach ($attributes as $attribute => $value) {
-			$parameter_name = $xml_tag . "_" . $attribute;
-			$$parameter_name = $value;
-		}
-	}
+    if ($xml_tags[$xml_tag]) {
+        $attributes = $xml_values[$xml_tags[$xml_tag][0]]["attributes"];
+        foreach ($attributes as $attribute => $value) {
+            $parameter_name = $xml_tag . "_" . $attribute;
+            $$parameter_name = $value;
+        }
+    }
 }
 
 // check given data
 // no range_id? sorry...
 if (!$range_id) {
-	echo $EXTERN_ERROR_MESSAGE;
-	exit;
+    echo $EXTERN_ERROR_MESSAGE;
+    exit;
 }
 
 // Is it a valid module name?
 reset($EXTERN_MODULE_TYPES);
 foreach ($EXTERN_MODULE_TYPES as $module_type => $module_data) {
-	if ($module_data["module"] == $module_name) {
-		$type = $module_type;
-		break;
-	}
+    if ($module_data["module"] == $module_name) {
+        $type = $module_type;
+        break;
+    }
 }
 // Wrong module name!
 if (!$type) {
-	echo $EXTERN_ERROR_MESSAGE;
-	exit;
+    echo $EXTERN_ERROR_MESSAGE;
+    exit;
 }
 
 // if there is no config_id or config_name, take the DEFAULT configuration
 if ($config_name) {
-	// check for valid configuration name and convert it into a config_id
-	if (!$config_id = ExternConfig::GetConfigurationByName($range_id, $type, $config_name)) {
-		echo $EXTERN_ERROR_MESSAGE;
-		exit;
-	}
+    // check for valid configuration name and convert it into a config_id
+    if (!$config_id = ExternConfig::GetConfigurationByName($range_id, $type, $config_name)) {
+        echo $EXTERN_ERROR_MESSAGE;
+        exit;
+    }
 }
 elseif (!$config_id) {
-	// check for standard configuration
-	if ($id = ExternConfig::GetStandardConfiguration($range_id, $type)) {
-		$config_id = $id;
-	} else {
-		if ($EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG) {
-			// use default configuraion
-			$default = 'DEFAULT';
-			$config_id = '';
-		} else {
-			echo $EXTERN_ERROR_MESSAGE;
-			exit;
-		}
-	}
+    // check for standard configuration
+    if ($id = ExternConfig::GetStandardConfiguration($range_id, $type)) {
+        $config_id = $id;
+    } else {
+        if ($EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG) {
+            // use default configuraion
+            $default = 'DEFAULT';
+            $config_id = '';
+        } else {
+            echo $EXTERN_ERROR_MESSAGE;
+            exit;
+        }
+    }
 }
 
 // if there is no global_id or global_name, take the DEFAULT global configuration
 if ($global_name) {
-	// check for valid configuration name and convert it into a config_id
-	if (!$global_id = ExternConfig::GetConfigurationByName($range_id, $type, $config_name)) {
-		echo $EXTERN_ERROR_MESSAGE;
-		exit;
-	}
+    // check for valid configuration name and convert it into a config_id
+    if (!$global_id = ExternConfig::GetConfigurationByName($range_id, $type, $config_name)) {
+        echo $EXTERN_ERROR_MESSAGE;
+        exit;
+    }
 }
 elseif (!$global_id) {
-	// check for standard configuration
-	if ($id = ExternConfig::GetGlobalConfiguration($range_id))
-		$global_id = $id;
-	else {
-		// use no global configuration
-		$global_id = NULL;
-	}
+    // check for standard configuration
+    if ($id = ExternConfig::GetGlobalConfiguration($range_id))
+        $global_id = $id;
+    else {
+        // use no global configuration
+        $global_id = NULL;
+    }
 }
 
 // sem == -1: show data from last semester
@@ -148,40 +148,40 @@ elseif (!$global_id) {
 // other values: show data from current semester
 $now = time();
 foreach ($all_semester as $key => $sem_record) {
-	if ($now >= $sem_record["beginn"] && $now <= $sem_record["ende"]) {
-		$current = $key;
-		break;
-	}
+    if ($now >= $sem_record["beginn"] && $now <= $sem_record["ende"]) {
+        $current = $key;
+        break;
+    }
 }
 if ($sem_offset == "-1") {
-	$start = $all_semester[$current - 1]["beginn"];
-	$end = $all_semester[$current - 1]["ende"];
+    $start = $all_semester[$current - 1]["beginn"];
+    $end = $all_semester[$current - 1]["ende"];
 } elseif ($sem_offset == "+1") {
-	$start = $all_semester[$current + 1]["beginn"];
-	$end = $all_semester[$current + 1]["ende"];
+    $start = $all_semester[$current + 1]["beginn"];
+    $end = $all_semester[$current + 1]["ende"];
 } else {
-	$start = $all_semester[$current]["beginn"];
-	$end = $all_semester[$current]["ende"];
+    $start = $all_semester[$current]["beginn"];
+    $end = $all_semester[$current]["ende"];
 }
 
 // all parameters ok, instantiate module and print data
 foreach ($EXTERN_MODULE_TYPES as $type) {
-	if ($type["module"] == $module_name) {
-		$class_name = "ExternModule" . $module_name;
-		require_once($RELATIVE_PATH_EXTERN . "/modules/$class_name.class.php");
-		$module_obj =& ExternModule::GetInstance($range_id, $module_name, $config_id, $default, $global_id);
-	}
+    if ($type["module"] == $module_name) {
+        $class_name = "ExternModule" . $module_name;
+        require_once($RELATIVE_PATH_EXTERN . "/modules/$class_name.class.php");
+        $module_obj =& ExternModule::GetInstance($range_id, $module_name, $config_id, $default, $global_id);
+    }
 }
 
 if ($_REQUEST['page_url'] != $module_obj->config->getValue('Main', 'sriurl')
-		|| !sri_is_enabled($module_obj->config->range_id)) {
-	echo $EXTERN_ERROR_MESSAGE;
-	exit;
+        || !sri_is_enabled($module_obj->config->range_id)) {
+    echo $EXTERN_ERROR_MESSAGE;
+    exit;
 }
 
 $args = $module_obj->getArgs();
 for ($i = 0; $i < sizeof($args); $i++) {
-	$arguments[$args[$i]] = $$args[$i];
+    $arguments[$args[$i]] = $$args[$i];
 }
 
 echo $sri_matches[1];

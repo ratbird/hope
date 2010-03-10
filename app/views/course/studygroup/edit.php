@@ -3,39 +3,39 @@ $infobox = array();
 $infobox['picture'] = StudygroupAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMAL);
 
 $aktionen[] = array(
-	"text" => '<a href="'.$controller->url_for('course/studygroup/new').'">'._('Neue Studiengruppe anlegen').'</a>',
-	"icon" => "icon-cont.gif"
+    "text" => '<a href="'.$controller->url_for('course/studygroup/new').'">'._('Neue Studiengruppe anlegen').'</a>',
+    "icon" => "icon-cont.gif"
 );
 $aktionen[] = array(
-	"text" => '<a href="'.$controller->url_for('course/studygroup/delete/'.$sem_id).'">'._('Diese Studiengruppe löschen').'</a>',
-	"icon" => "trash.gif"
+    "text" => '<a href="'.$controller->url_for('course/studygroup/delete/'.$sem_id).'">'._('Diese Studiengruppe löschen').'</a>',
+    "icon" => "trash.gif"
 );
 
 if ($GLOBALS['perm']->have_studip_perm('tutor', $sem_id)) {
-	$aktionen[] = array(
-		"icon" => "edit_transparent.gif",
-		"text" => '<a href="'.  URLHelper::getLink('dispatch.php/course/avatar/update/' . $sem_id) .'">'. _("Bild ändern") .'</a>'
-	);
-	$aktionen[] = array(
-		"icon" => "trash.gif",
-		"text" => '<a href="'. URLHelper::getLink('dispatch.php/course/avatar/delete/'. $sem_id) .'">'. _("Bild löschen") .'</a>'
-	);
+    $aktionen[] = array(
+        "icon" => "edit_transparent.gif",
+        "text" => '<a href="'.  URLHelper::getLink('dispatch.php/course/avatar/update/' . $sem_id) .'">'. _("Bild ändern") .'</a>'
+    );
+    $aktionen[] = array(
+        "icon" => "trash.gif",
+        "text" => '<a href="'. URLHelper::getLink('dispatch.php/course/avatar/delete/'. $sem_id) .'">'. _("Bild löschen") .'</a>'
+    );
 }
 
 $infobox['content'] = array(
-	array(
-		'kategorie' => _("Information"),
-		'eintrag'   => array(
-			array(
-				"text" => _("Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen gründen."),
-				"icon" => "ausruf_small2.gif"
-			)
-		)
-	),
-	array(
-		'kategorie' => _("Aktionen"),
-		'eintrag'   => $aktionen
-	)
+    array(
+        'kategorie' => _("Information"),
+        'eintrag'   => array(
+            array(
+                "text" => _("Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen gründen."),
+                "icon" => "ausruf_small2.gif"
+            )
+        )
+    ),
+    array(
+        'kategorie' => _("Aktionen"),
+        'eintrag'   => $aktionen
+    )
 );
 
 ?>
@@ -59,25 +59,25 @@ $infobox['content'] = array(
 </tr>
 
 <? if ($GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
-	<?= $this->render_partial("course/studygroup/_choose_founders", array('results_choose_founders' => $flash['results_choose_founders'])) ?>
+    <?= $this->render_partial("course/studygroup/_choose_founders", array('results_choose_founders' => $flash['results_choose_founders'])) ?>
 <? endif; ?>
 
 <tr>
   <td style='text-align:right; vertical-align:top;'>Module:</td>
   <td>
-  	<? foreach($available_modules as $key => $name) : ?>
-	    <? if ($key != 'participants') :?>
-	    <label>	    
-	        <input name="groupmodule[<?= $key ?>]" type="checkbox" <?= ($modules->getStatus($key, $sem_id, 'sem')) ? 'checked="checked"' : '' ?>> <?= $name ?>
-	    </label><br>
-	    <? endif;?>
-	<? endforeach; ?>
+    <? foreach($available_modules as $key => $name) : ?>
+        <? if ($key != 'participants') :?>
+        <label>     
+            <input name="groupmodule[<?= $key ?>]" type="checkbox" <?= ($modules->getStatus($key, $sem_id, 'sem')) ? 'checked="checked"' : '' ?>> <?= $name ?>
+        </label><br>
+        <? endif;?>
+    <? endforeach; ?>
 
-  	<? foreach($available_plugins as $key => $name) : ?>
-		<label>
-		    <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($enabled_plugins[$key]) ? 'checked="checked"' : '' ?>> <?= $name ?>
-		</label><br>
-	<? endforeach; ?>
+    <? foreach($available_plugins as $key => $name) : ?>
+        <label>
+            <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($enabled_plugins[$key]) ? 'checked="checked"' : '' ?>> <?= $name ?>
+        </label><br>
+    <? endforeach; ?>
   </td>
 </tr>
 

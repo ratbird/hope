@@ -100,7 +100,7 @@ class AuthorObject {
     // ((not very usefull in PHP 4))
     // restore_error_handler ();
     // $this->oldErrorhandler = set_error_handler (array (&$this,
-    //							'errorHandler'));
+    //                          'errorHandler'));
     // register_shutdown_function (array (&$this, 'finalize'));
 
     $this->instanceof = INSTANCEOF_AUTHOR_OBJECT;
@@ -208,26 +208,26 @@ class AuthorObject {
    * @param   integer $errtype    Defines wheter the error is critical
    */
   function throwError ($errcode, $errstring, $errline = 0, $errfile = 0,
-		       $errtype = ERROR_NORMAL) {
+               $errtype = ERROR_NORMAL) {
     if (!is_array ($this->errorArray))
       $this->errorArray = array ();
 
     array_push ($this->errorArray,
-		array ("code" => $errcode,
-		       "string" => $errstring,
-		       "file" => $errfile,
-		       "line" => $errline,
-		       "type" => $errtype)
-		);
+        array ("code" => $errcode,
+               "string" => $errstring,
+               "file" => $errfile,
+               "line" => $errline,
+               "type" => $errtype)
+        );
     if ($errtype == ERROR_CRITICAL) {
-	 @mail ($this->getAuthorEmail (),
-		"Critical error in Stud.IP",
-		"Hello ".$this->getAuthorName ()."\n\n".
-		"there is an error in file ".$errfile." ".
-		"in line ".$errline.". \n".
-		"The code is ".$errcode."\n".
-		"Description: ".$errstring.".\n\n\n".
-		"regards, *an AuthorObject*\n\n");
+     @mail ($this->getAuthorEmail (),
+        "Critical error in Stud.IP",
+        "Hello ".$this->getAuthorName ()."\n\n".
+        "there is an error in file ".$errfile." ".
+        "in line ".$errline.". \n".
+        "The code is ".$errcode."\n".
+        "Description: ".$errstring.".\n\n\n".
+        "regards, *an AuthorObject*\n\n");
     }
   }
 

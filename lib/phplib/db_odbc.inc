@@ -4,7 +4,7 @@
  *
  * Copyright (c) 1998-2000 Cameron Taggart (cameront@wolfenet.com)
  *        Modified by Guarneri carmelo (carmelo@melting-soft.com)
- *					 
+ *                   
  */ 
 
 class DB_Sql {
@@ -75,9 +75,9 @@ class DB_Sql {
     $stat      = odbc_fetch_into($this->Query_ID, ++$this->Row, &$this->Record);
     if (!$stat) {
       if ($this->Auto_Free) {
-	    odbc_free_result($this->Query_ID);
+        odbc_free_result($this->Query_ID);
         $this->Query_ID = 0;
-	  };
+      };
     } else {
       // add to Record[<key>]
       $count = odbc_num_fields($this->Query_ID);
@@ -125,7 +125,7 @@ class DB_Sql {
   function num_rows() {
     # Many ODBC drivers don't support odbc_num_rows() on SELECT statements.
     $num_rows = odbc_num_rows($this->Query_ID);
-	//printf ($num_rows."<br>");
+    //printf ($num_rows."<br>");
 
     # This is a workaround. It is intended to be ugly.
     if ($num_rows < 0) {

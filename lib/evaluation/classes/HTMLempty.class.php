@@ -65,7 +65,7 @@ class HTMLempty {
       $this->_name = $name;
     } else {
       trigger_error ("Unerlaubter Name für ein HTML-Element : '".
-		     $name."'", E_USER_ERROR);
+             $name."'", E_USER_ERROR);
     }
   }
 # =========================================== end: constructor and destructor #
@@ -79,52 +79,52 @@ class HTMLempty {
     if (isset ($wert)) {
       $name = (string)$name;
       if (preg_match ('/^[a-zA-Z.:][\w\-_.:]*$/i', $name)) {
-	$this->_attribute[$name] = $wert;
+    $this->_attribute[$name] = $wert;
       } else {
-	trigger_error("Unerlaubter Name für ein HTML-Attribut : '".$name."'",
-		      E_USER_ERROR);
+    trigger_error("Unerlaubter Name für ein HTML-Attribut : '".$name."'",
+              E_USER_ERROR);
       }
     } else {
       if (is_scalar ($name)) {
-	// Dies braucht man, falls man Attribute hinzufügen
-	// will, die keinen Wert haben, wie man es bei
-	// <option selected> kennt
-	if(preg_match('/^[a-zA-Z.:][\w\-_.:]*$/i', $name)) {
-	  $this->_attribute[$name] = $name;
-	  // Da wir gültiges HTML bzw XML schreiben
-	  // muss jedes Attribut auch einen Wert haben
-	  // selected wird dann zu selected="selected"
-	} else {
-	  trigger_error("Unerlaubter Name für ein HTML-Attribut : '".$name."'",
-			E_USER_ERROR);
-	}
+    // Dies braucht man, falls man Attribute hinzufügen
+    // will, die keinen Wert haben, wie man es bei
+    // <option selected> kennt
+    if(preg_match('/^[a-zA-Z.:][\w\-_.:]*$/i', $name)) {
+      $this->_attribute[$name] = $name;
+      // Da wir gültiges HTML bzw XML schreiben
+      // muss jedes Attribut auch einen Wert haben
+      // selected wird dann zu selected="selected"
+    } else {
+      trigger_error("Unerlaubter Name für ein HTML-Attribut : '".$name."'",
+            E_USER_ERROR);
+    }
       } elseif (is_array ($name)) {
-	// Jedes Arrayelement durchgehen
-	foreach($name as $key => $wert) {
-	  if (is_int ($key)) {
-	    // Arrayelement wurde mit $foo[] hinzugefügt
-	    // also ohne Schlüssel. Ich nehme dann an
-	    // das es sich um ein Attribut wie
-	    // 'selected' oder 'readonly' handelt
-	    if(preg_match('/^[a-zA-Z.:][\w\-_.:]*$/i', $wert)) {
-	      $this->_attribute[$wert] = $wert;
-	    } else {
-	      trigger_error("Unerlaubter Name für ein HTML-Attribut : '".
-			    $wert."'", E_USER_ERROR);
-	    }
-	  } else {
-	    $key = (string)$key;
-	    if (preg_match ('/^[a-zA-Z.:][\w\-_.:]*$/i', $key)) {
-	      $this->_attribute[$key] = $wert;
-	    } else {
-	      trigger_error ("Unerlaubter Name für ein HTML-Attribut : '".
-			     $key."'", E_USER_ERROR);
-	    }
-	  }
-	}
+    // Jedes Arrayelement durchgehen
+    foreach($name as $key => $wert) {
+      if (is_int ($key)) {
+        // Arrayelement wurde mit $foo[] hinzugefügt
+        // also ohne Schlüssel. Ich nehme dann an
+        // das es sich um ein Attribut wie
+        // 'selected' oder 'readonly' handelt
+        if(preg_match('/^[a-zA-Z.:][\w\-_.:]*$/i', $wert)) {
+          $this->_attribute[$wert] = $wert;
+        } else {
+          trigger_error("Unerlaubter Name für ein HTML-Attribut : '".
+                $wert."'", E_USER_ERROR);
+        }
       } else {
-	trigger_error("Erster Parameter muss ein Scalar oder ein Array sein",
-		      E_USER_ERROR);
+        $key = (string)$key;
+        if (preg_match ('/^[a-zA-Z.:][\w\-_.:]*$/i', $key)) {
+          $this->_attribute[$key] = $wert;
+        } else {
+          trigger_error ("Unerlaubter Name für ein HTML-Attribut : '".
+                 $key."'", E_USER_ERROR);
+        }
+      }
+    }
+      } else {
+    trigger_error("Erster Parameter muss ein Scalar oder ein Array sein",
+              E_USER_ERROR);
       }
     }
   }

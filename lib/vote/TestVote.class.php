@@ -70,14 +70,14 @@ class TestVote extends Vote {
     */
    function setAnswers ($answerArray) {
       for ($i = 0, $ok = NO; $i < count($answerArray); $i++) {
-	 if ( $answerArray[$i]['correct'] ) {
-	    $ok = YES;
-	    break;
-	 }
+     if ( $answerArray[$i]['correct'] ) {
+        $ok = YES;
+        break;
+     }
       }
 
       if ($ok == NO)
-	 return $this->throwError (1, _("Der Test besitzt keine als richtig deklarierte Antwort."));
+     return $this->throwError (1, _("Der Test besitzt keine als richtig deklarierte Antwort."));
 
       parent::setAnswers ($answerArray);
    }
@@ -115,13 +115,13 @@ class TestVote extends Vote {
       $answers = $this->getAnswers();
 
       for ($i = 0; $i < count($answers); $i++) {
-	 if (is_array ($userData)) {
-	    if ($answers[$i]["correct"] && in_array($i, $userData))
-	       $result++;
-	 } else {
-	    if ($answers[$i]["correct"])
-	       $result++;
-	 }
+     if (is_array ($userData)) {
+        if ($answers[$i]["correct"] && in_array($i, $userData))
+           $result++;
+     } else {
+        if ($answers[$i]["correct"])
+           $result++;
+     }
       }
 
       return $result;
@@ -148,28 +148,28 @@ class TestVote extends Vote {
       if ($this->isError ()) return;
 
       $this->voteDB->writeVote (
-				$this->getVoteID (),
-				$this->getAuthorID (),
-				$this->getRangeID (),
-				$this->getTitle (),
-				$this->getQuestion (),
-				$this->getState (),
-				$this->getStartdate (),
-				$this->getStopdate (),
-				$this->getTimespan (),
-				$this->getCreationdate (),
-				$this->getChangedate (),
-				$this->getResultvisibility (),
-				$this->getNamesvisibility (),
-				$this->isMultiplechoice (),
-				$this->isAnonymous (),
-				$this->getAnswers (),
-				$this->isChangeable (),
-				$this->getCo_Visibility(),
-				$this->x_instanceof ()
-				);
+                $this->getVoteID (),
+                $this->getAuthorID (),
+                $this->getRangeID (),
+                $this->getTitle (),
+                $this->getQuestion (),
+                $this->getState (),
+                $this->getStartdate (),
+                $this->getStopdate (),
+                $this->getTimespan (),
+                $this->getCreationdate (),
+                $this->getChangedate (),
+                $this->getResultvisibility (),
+                $this->getNamesvisibility (),
+                $this->isMultiplechoice (),
+                $this->isAnonymous (),
+                $this->getAnswers (),
+                $this->isChangeable (),
+                $this->getCo_Visibility(),
+                $this->x_instanceof ()
+                );
       if ($this->voteDB->isError ())
-	  $this->throwErrorFromClass ($this->voteDB);
+      $this->throwErrorFromClass ($this->voteDB);
    }
    
    /**
@@ -180,7 +180,7 @@ class TestVote extends Vote {
    function checkConsistency () {
       /* Check the normal variables ---------------------------------------- */
       if ($this->co_visibility === NULL)
-	 $this->throwError (1, _("Test hat keine Ergebnissichtbarkeit"));
+     $this->throwError (1, _("Test hat keine Ergebnissichtbarkeit"));
       /* ------------------------------------------------------------------- */
    }
 }

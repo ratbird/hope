@@ -4,12 +4,12 @@ if ($rechte) {
     $aktionen = array(
         'kategorie' => _("Aktionen"),
         'eintrag'   => array(
-			array(
-				'text' => _("Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglieder der Studiengruppe zu entfernen."),
+            array(
+                'text' => _("Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglieder der Studiengruppe zu entfernen."),
                 'icon' => "icon-cont.gif"
-			)
-		)
-	);
+            )
+        )
+    );
 } else {
     $text = _('Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen anlegen.');
     $aktionen = array();
@@ -34,7 +34,7 @@ $infobox['content'] = array(
 
 <? if ($rechte) : ?>
 <p>
-	<?= _("Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglied der Studiengruppe zu entfernen. ") ?>
+    <?= _("Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglied der Studiengruppe zu entfernen. ") ?>
 </p>
 <? endif; ?>
 <ul style="overflow:hidden;display:block;list-style-type:none;list-style-image:none;
@@ -66,7 +66,7 @@ list-style-position:outside;list-style-type:none;">
                 <div id="user_opt_<?= $m['user_id'] ?>">
                 <div class="blue_gradient" style="text-align: center"><?= _('Optionen') ?></div>
                 <br>
-    			<?= $this->render_partial('course/studygroup/_members_options.php') ?>
+                <?= $this->render_partial('course/studygroup/_members_options.php') ?>
             </div>
         </noscript>
 
@@ -74,7 +74,7 @@ list-style-position:outside;list-style-type:none;">
             <div id="user_opt_<?= $m['user_id'] ?>" style="display: none">
                 <div class="blue_gradient" style="text-align: center"><?= _('Optionen') ?></div>
                 <br>
-    			<?= $this->render_partial('course/studygroup/_members_options.php') ?>
+                <?= $this->render_partial('course/studygroup/_members_options.php') ?>
             </div>
         </div>
         <? endif ?>
@@ -87,8 +87,8 @@ list-style-position:outside;list-style-type:none;">
             <? elseif (isset($tutors[$m['user_id']])) : ?>
               <em><?= _("ModeratorIn") ?></em>
             <? endif ?>
-    				<br>
-    				<br>
+                    <br>
+                    <br>
           </a>
         </div>
     </li>
@@ -97,49 +97,49 @@ list-style-position:outside;list-style-type:none;">
 <? $link = "dispatch.php/course/studygroup/members/$sem_id/%s"; ?>
 <? if($anzahl>20) :?>
 <div style="text-align:right; padding-top: 2px; padding-bottom: 2px; margin-top:-1.5em" class=""><?=
-	$pages = $GLOBALS['template_factory']->open('shared/pagechooser');
- 	$pages->set_attributes(array("perPage" => 20, "num_postings" => $anzahl, "page"=>$page, "pagelink" => $link));
-	echo $this->render_partial($pages);?>
+    $pages = $GLOBALS['template_factory']->open('shared/pagechooser');
+    $pages->set_attributes(array("perPage" => 20, "num_postings" => $anzahl, "page"=>$page, "pagelink" => $link));
+    echo $this->render_partial($pages);?>
 </div>
 <? endif;?>
 </br>
 <? if ($rechte) : ?>
-	<?=$this->render_partial("course/studygroup/_invite_members", array('members' => $flash['members'], 'results_choose_members' => $flash['results_choose_members']));?>
-	<br>
-	<? if (count($accepted) > 0) : ?>
-		<h2 style="clear:left; padding-top: 50px;"><?= _("Offene Mitgliedsanträge") ?></h2>
-		<table cellspacing="0" cellpadding="2" border="0" style="max-width: 100%; min-width: 70%">
-			<tr>
-				<th colspan="2" width="70%">
-					<?= _("Name") ?>
-				</th>
-				<th width="30%">
-					<?= _("Aktionen") ?>
-				</th>
-			</tr>
+    <?=$this->render_partial("course/studygroup/_invite_members", array('members' => $flash['members'], 'results_choose_members' => $flash['results_choose_members']));?>
+    <br>
+    <? if (count($accepted) > 0) : ?>
+        <h2 style="clear:left; padding-top: 50px;"><?= _("Offene Mitgliedsanträge") ?></h2>
+        <table cellspacing="0" cellpadding="2" border="0" style="max-width: 100%; min-width: 70%">
+            <tr>
+                <th colspan="2" width="70%">
+                    <?= _("Name") ?>
+                </th>
+                <th width="30%">
+                    <?= _("Aktionen") ?>
+                </th>
+            </tr>
 
-			<? foreach($accepted as $p) : ?>
-			<tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-				<td>
-					<a href="<?= URLHelper::getLink('about.php?username='.$p['username']) ?>">
-						<?= Avatar::getAvatar($p['user_id'])->getImageTag(Avatar::SMALL) ?>
-					</a>
-				</td>
-				<td>
-					<a href="<?= URLHelper::getLink('about.php?username='.$p['username']) ?>">
-						<?= htmlReady($p['fullname']) ?>
-					</a>
-				</td>
-				<td style='padding-left:1em;'>
-					<a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$p['username'].'/accept') ?>">
-						<?= makebutton('eintragen') ?>
-					</a>
-					<a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$p['username'].'/deny') ?>">
-						<?= makebutton('ablehnen') ?>
-					</a>
-				</td>
-			</tr>
-			<? endforeach ?>
-		</table>
+            <? foreach($accepted as $p) : ?>
+            <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+                <td>
+                    <a href="<?= URLHelper::getLink('about.php?username='.$p['username']) ?>">
+                        <?= Avatar::getAvatar($p['user_id'])->getImageTag(Avatar::SMALL) ?>
+                    </a>
+                </td>
+                <td>
+                    <a href="<?= URLHelper::getLink('about.php?username='.$p['username']) ?>">
+                        <?= htmlReady($p['fullname']) ?>
+                    </a>
+                </td>
+                <td style='padding-left:1em;'>
+                    <a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$p['username'].'/accept') ?>">
+                        <?= makebutton('eintragen') ?>
+                    </a>
+                    <a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$p['username'].'/deny') ?>">
+                        <?= makebutton('ablehnen') ?>
+                    </a>
+                </td>
+            </tr>
+            <? endforeach ?>
+        </table>
     <? endif; ?>
 <? endif; ?>

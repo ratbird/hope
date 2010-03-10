@@ -31,17 +31,17 @@ $infobox['content'] = array(
 </tr>
 
 <? if ($GLOBALS['perm']->have_perm('admin')) : ?>
-	<?= $this->render_partial("course/studygroup/_choose_founders", array('founders' => $flash['founders'], 'results_choose_founders' => $flash['results_choose_founders'])) ?>
+    <?= $this->render_partial("course/studygroup/_choose_founders", array('founders' => $flash['founders'], 'results_choose_founders' => $flash['results_choose_founders'])) ?>
 <? endif; ?>
 <tr>
   <td style='text-align:right; vertical-align:top;'><?= _("Module:") ?></td>
   <td>
     <? foreach($available_modules as $key => $name) : ?>
-	    <? if ($key != 'participants') :?>
-	    <label>
-	        <input name="groupmodule[<?= $key ?>]" type="checkbox" <?= ($this->flash['request']['groupmodule'][$key]) ? 'checked="checked"' : '' ?>> <?= $name ?>
-	    </label><br>
-	    <? endif; ?>
+        <? if ($key != 'participants') :?>
+        <label>
+            <input name="groupmodule[<?= $key ?>]" type="checkbox" <?= ($this->flash['request']['groupmodule'][$key]) ? 'checked="checked"' : '' ?>> <?= $name ?>
+        </label><br>
+        <? endif; ?>
     <? endforeach; ?>
 
     <? foreach($available_plugins as $key => $name) : ?>
@@ -74,11 +74,11 @@ $infobox['content'] = array(
 <tr>
   <td style='text-align:right; vertical-align:top;'><p><?= _("Nutzungsbedingungen:") ?></p></td>
   <td>
-  	<? if ($GLOBALS['perm']->have_perm('admin')) : ?>
+    <? if ($GLOBALS['perm']->have_perm('admin')) : ?>
     <p>
-	  <b><?= _("Ich habe die eingetragenen GründerInnen darüber informiert, dass in Ihrem Namen eine Studiengruppe angelegt wird und versichere, dass Sie mit folgenden Nutzungsbedingungen einverstandenen sind:") ?></b>
-	</p>
-	<? endif; ?>
+      <b><?= _("Ich habe die eingetragenen GründerInnen darüber informiert, dass in Ihrem Namen eine Studiengruppe angelegt wird und versichere, dass Sie mit folgenden Nutzungsbedingungen einverstandenen sind:") ?></b>
+    </p>
+    <? endif; ?>
     <p>
       <em><?= formatReady( $terms ) ?></em>
     </p>

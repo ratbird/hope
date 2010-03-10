@@ -49,12 +49,12 @@ echo "<tr><td>\n";
 echo "<table width=\"100%\" border=\"0\" cellspacing=\"1\" cellpadding=\"1\">\n";
 echo "<tr>\n<td align=\"center\">";
 printf("&nbsp;<a href=\"%s?cmd=showmonth&atime=%s\">",
-	$PHP_SELF, mktime(12, 0, 0, $amonth->getMonth(),
-			date('j', $amonth->getStart()), date('Y', $amonth->getStart()) - 1));
+    $PHP_SELF, mktime(12, 0, 0, $amonth->getMonth(),
+            date('j', $amonth->getStart()), date('Y', $amonth->getStart()) - 1));
 $tooltip = tooltip(_("ein Jahr zurück"));
 echo "<img border=\"0\" src=\"".Assets::url()."images/calendar_previous_double.gif\"$tooltip></a>";
 printf("&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"%s?cmd=showmonth&atime=%s\">",
-	$PHP_SELF, $amonth->getStart() - 1);
+    $PHP_SELF, $amonth->getStart() - 1);
 $tooltip = tooltip(_("einen Monat zurück"));
 echo "<img border=\"0\" src=\"".Assets::url()."images/calendar_previous.gif\"$tooltip></a>&nbsp;</td>\n";
 printf("<td colspan=%s class=\"calhead\">\n", $mod == "nokw" ? "5" : "6");
@@ -62,22 +62,22 @@ echo "<font size=\"+2\">";
 echo htmlentities(strftime("%B ", $amonth->getStart()), ENT_QUOTES) . $amonth->getYear();
 echo "</font></td>\n";
 printf("<td align=\"center\">&nbsp;<a href=\"%s?cmd=showmonth&atime=%s\">",
-	$PHP_SELF, $amonth->getEnd() + 1);
+    $PHP_SELF, $amonth->getEnd() + 1);
 $tooltip = tooltip(_("einen Monat vor"));
 echo "<img border=\"0\" src=\"".Assets::url()."images/calendar_next.gif\"$tooltip></a>";
 printf("&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"%s?cmd=showmonth&atime=%s\">",
-	$PHP_SELF, mktime(12, 0, 0, $amonth->getMonth(),
-			date('j', $amonth->getStart()), date('Y', $amonth->getEnd()) + 1));
+    $PHP_SELF, mktime(12, 0, 0, $amonth->getMonth(),
+            date('j', $amonth->getStart()), date('Y', $amonth->getEnd()) + 1));
 $tooltip = tooltip(_("ein Jahr vor"));
 echo "<img border=\"0\" src=\"".Assets::url()."images/calendar_next_double.gif\"$tooltip></a></td>\n";
 echo "</tr>\n<tr>\n";
 
 $weekdays_german = array("MO", "DI", "MI", "DO", "FR", "SA", "SO");
 foreach ($weekdays_german as $weekday_german)
-	echo "<td class=\"precol1w\" width=\"$width\">" . wday("", "SHORT", $weekday_german) . "</td>";
+    echo "<td class=\"precol1w\" width=\"$width\">" . wday("", "SHORT", $weekday_german) . "</td>";
 
 if($mod != "nokw")
-	echo "<td align=\"center\" class=\"precol1w\" width=\"$width\">" . _("Woche") . "</td>\n";
+    echo "<td align=\"center\" class=\"precol1w\" width=\"$width\">" . _("Woche") . "</td>\n";
 echo "</tr></table>\n</td></tr>\n";
 
 echo "<tr><td class=\"blank\">\n";
@@ -94,90 +94,90 @@ $first_day = $amonth->getStart() - $adow * 86400 + 43200;
 // Ursache ist die Sommer-/Winterzeit-Umstellung
 $cor = 0;
 if ($amonth->getMonth() == 3)
-	$cor = 1;
+    $cor = 1;
 
 $last_day = ((42 - ($adow + date("t",$amonth->getStart()))) % 7 + $cor) * 86400
- 	        + $amonth->getEnd() - 43199;
+            + $amonth->getEnd() - 43199;
 
 for ($i = $first_day, $j = 0; $i <= $last_day; $i += 86400, $j++)
 {
-	$aday = date("j", $i);
-	// Tage des vorangehenden und des nachfolgenden Monats erhalten andere
-	// style-sheets
-	$class_day = '';
-	if (($aday - $j - 1 > 0) || ($j - $aday  > 6)) {
-		$class_cell = 'lightmonth';
-		$class_day = 'light';
-	}
-	// emphesize current day
-	else if (date('Ymd', $i) == date('Ymd'))
-		$class_cell = 'celltoday';
-	else
-		$class_cell = 'month';
+    $aday = date("j", $i);
+    // Tage des vorangehenden und des nachfolgenden Monats erhalten andere
+    // style-sheets
+    $class_day = '';
+    if (($aday - $j - 1 > 0) || ($j - $aday  > 6)) {
+        $class_cell = 'lightmonth';
+        $class_day = 'light';
+    }
+    // emphesize current day
+    else if (date('Ymd', $i) == date('Ymd'))
+        $class_cell = 'celltoday';
+    else
+        $class_cell = 'month';
 
-	// Feiertagsueberpruefung
-	if ($mod != "compact" && $mod != "nokw")
-		$hday = holiday($i);
+    // Feiertagsueberpruefung
+    if ($mod != "compact" && $mod != "nokw")
+        $hday = holiday($i);
 
-	// wenn Feiertag dann nur 4 Termine pro Tag ausgeben, sonst wirds zu eng
-	if ($hday["col"] > 0)
-		$max_apps = 4;
-	else
-		$max_apps = 5;
+    // wenn Feiertag dann nur 4 Termine pro Tag ausgeben, sonst wirds zu eng
+    if ($hday["col"] > 0)
+        $max_apps = 4;
+    else
+        $max_apps = 5;
 
-	// week column
-	if ($j % 7 == 0)
-		echo "<tr>\n";
-	echo "<td class=\"$class_cell\" valign=\"top\" width=\"$width\" height=\"$height\">&nbsp;";
+    // week column
+    if ($j % 7 == 0)
+        echo "<tr>\n";
+    echo "<td class=\"$class_cell\" valign=\"top\" width=\"$width\" height=\"$height\">&nbsp;";
 
-	// sunday column
-	if (($j + 1) % 7 == 0) {
-		echo "<a class=\"{$class_day}sday\" href=\"$PHP_SELF?cmd=showday&atime=$i\">$aday</a>";
-		month_up_down($amonth, $i, $step, $max_apps);
+    // sunday column
+    if (($j + 1) % 7 == 0) {
+        echo "<a class=\"{$class_day}sday\" href=\"$PHP_SELF?cmd=showday&atime=$i\">$aday</a>";
+        month_up_down($amonth, $i, $step, $max_apps);
 
-		if ($hday["name"] != "")
-			echo "<br><font class=\"inday\">{$hday['name']}</font>";
+        if ($hday["name"] != "")
+            echo "<br><font class=\"inday\">{$hday['name']}</font>";
 
-		print_month_events($amonth, $max_apps, $i);
+        print_month_events($amonth, $max_apps, $i);
 
-		echo "</td>\n";
+        echo "</td>\n";
 
-		if ($mod != "nokw") {
-			echo "<td class=\"lightmonth\" align=\"center\" width=\"$width\" height=\"$height\">";
-			printf("<a class=\"calhead\" href=\"%s?cmd=showweek&atime=%s\"><b>%s</b></a></td>\n",
-				$PHP_SELF, $i, strftime("%V", $i));
-		}
-		echo "</tr>\n";
-	}
-	else{
-		// other days columns
-		// unterschiedliche Darstellung je nach Art des Tages (Rang des Feiertages)
-		switch ($hday["col"]) {
-			case 1:
-				echo "<a class=\"{$class_day}day\" href=\"$PHP_SELF?cmd=showday&atime=$i\">$aday</a>";
-				month_up_down($amonth, $i, $step, $max_apps);
-				echo "<br><font class=\"inday\">{$hday['name']}</font>";
-				break;
-			case 2:
-				echo "<a class=\{$class_day}shday\" href=\"$PHP_SELF?cmd=showday&atime=$i\">$aday</a>";
-				month_up_down($amonth, $i, $step, $max_apps);
-				echo "<br><font class=\"inday\">{$hday['name']}</font>";
-				break;
-			case 3:
-				echo "<a class=\"{$class_day}hday\" href=\"$PHP_SELF?cmd=showday&atime=$i\">$aday</a>";
-				month_up_down($amonth, $i, $step, $max_apps);
-				echo "<br><font class=\"inday\">{$hday['name']}</font>";
-				break;
-			default:
-				echo "<a class=\"{$class_day}day\" href=\"$PHP_SELF?cmd=showday&atime=$i\">$aday</a>";
-				month_up_down($amonth, $i, $step, $max_apps);
-		}
+        if ($mod != "nokw") {
+            echo "<td class=\"lightmonth\" align=\"center\" width=\"$width\" height=\"$height\">";
+            printf("<a class=\"calhead\" href=\"%s?cmd=showweek&atime=%s\"><b>%s</b></a></td>\n",
+                $PHP_SELF, $i, strftime("%V", $i));
+        }
+        echo "</tr>\n";
+    }
+    else{
+        // other days columns
+        // unterschiedliche Darstellung je nach Art des Tages (Rang des Feiertages)
+        switch ($hday["col"]) {
+            case 1:
+                echo "<a class=\"{$class_day}day\" href=\"$PHP_SELF?cmd=showday&atime=$i\">$aday</a>";
+                month_up_down($amonth, $i, $step, $max_apps);
+                echo "<br><font class=\"inday\">{$hday['name']}</font>";
+                break;
+            case 2:
+                echo "<a class=\{$class_day}shday\" href=\"$PHP_SELF?cmd=showday&atime=$i\">$aday</a>";
+                month_up_down($amonth, $i, $step, $max_apps);
+                echo "<br><font class=\"inday\">{$hday['name']}</font>";
+                break;
+            case 3:
+                echo "<a class=\"{$class_day}hday\" href=\"$PHP_SELF?cmd=showday&atime=$i\">$aday</a>";
+                month_up_down($amonth, $i, $step, $max_apps);
+                echo "<br><font class=\"inday\">{$hday['name']}</font>";
+                break;
+            default:
+                echo "<a class=\"{$class_day}day\" href=\"$PHP_SELF?cmd=showday&atime=$i\">$aday</a>";
+                month_up_down($amonth, $i, $step, $max_apps);
+        }
 
-		print_month_events($amonth, $max_apps, $i);
+        print_month_events($amonth, $max_apps, $i);
 
-		echo "</td>\n";
+        echo "</td>\n";
 
-	}
+    }
 }
 
 echo "</td></tr></table>\n</td></tr>\n";
@@ -196,29 +196,29 @@ echo "</table>\n";
 */
 function print_month_events ($month_obj, $max_events, $day_timestamp)
 {
-	global $PHP_SELF, $auth, $forum;
+    global $PHP_SELF, $auth, $forum;
 
-	$count = 0;
-	while (($aterm = $month_obj->nextEvent($day_timestamp)) && $count < $max_events) {
-		if (strtolower(get_class($aterm)) == "seminarevent") {
-			$html_title = fit_title($aterm->getSemName(), 1, 1, 15);
-			$jscript_title = JSReady($aterm->getSemName());
-			$ev_type = "&evtype=sem";
-		}
-		else {
-			$html_title = fit_title($aterm->getTitle(), 1, 1, 15);
-			$jscript_title = JSReady($aterm->getTitle());
-			$ev_type = "";
-		}
+    $count = 0;
+    while (($aterm = $month_obj->nextEvent($day_timestamp)) && $count < $max_events) {
+        if (strtolower(get_class($aterm)) == "seminarevent") {
+            $html_title = fit_title($aterm->getSemName(), 1, 1, 15);
+            $jscript_title = JSReady($aterm->getSemName());
+            $ev_type = "&evtype=sem";
+        }
+        else {
+            $html_title = fit_title($aterm->getTitle(), 1, 1, 15);
+            $jscript_title = JSReady($aterm->getTitle());
+            $ev_type = "";
+        }
 
-		printf("<br><a class=\"inday\" href=\"%s?cmd=edit&termin_id=%s&atime=%s%s\"",
-				$PHP_SELF, $aterm->getId(), $day_timestamp, $ev_type);
+        printf("<br><a class=\"inday\" href=\"%s?cmd=edit&termin_id=%s&atime=%s%s\"",
+                $PHP_SELF, $aterm->getId(), $day_timestamp, $ev_type);
 
-		echo js_hover($aterm) . '>';
-		$category_style = $aterm->getCategoryStyle();
-		printf("<font color=\"%s\">%s</font></a>", $category_style['color'], $html_title);
-		$count++;
-	}
+        echo js_hover($aterm) . '>';
+        $category_style = $aterm->getCategoryStyle();
+        printf("<font color=\"%s\">%s</font></a>", $category_style['color'], $html_title);
+        $count++;
+    }
 }
 
 /**
@@ -232,50 +232,50 @@ function print_month_events ($month_obj, $max_events, $day_timestamp)
 */
 function month_up_down (&$month_obj, $day_timestamp, $step, $max_events)
 {
-	//TODO: globals
-	global $PHP_SELF, $atime, $CANONICAL_RELATIVE_PATH_STUDIP;
-	if($atime == $day_timestamp)
-	{
-		$spacer = TRUE;
-		$up = FALSE;
-		$a = $month_obj->numberOfEvents($day_timestamp) - $step - $max_events;
-		$up = ($month_obj->numberOfEvents($day_timestamp) > $max_events && $step >= $max_events);
-		if($a + $max_events > $max_events)
-		{
-			if($up)
-				echo "&nbsp; &nbsp; &nbsp;";
-			else
-				echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
-			$tooltip = sprintf(_("noch %s Termine danach"), $a);
-			$tooltip = tooltip($tooltip);
-			echo "<a href=\"$PHP_SELF?cmd=showmonth&atime=$day_timestamp&step=";
-			echo ($step + $max_events) . "\">";
-			echo "<img src=\"".Assets::url()."images/calendar_down_small.gif\" ";
-			echo $tooltip . " border=\"0\"></a>\n";
-			$spacer = FALSE;
-		}
-		if($up)
-		{
-			if($spacer)
-				echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
-			$tooltip = sprintf(_("noch %s Termine davor"), $step);
-			$tooltip = tooltip($tooltip);
-			echo "<a href=\"$PHP_SELF?cmd=showmonth&atime=$day_timestamp&step=";
-			echo ($step - $max_events) . "\">";
-			echo "<img src=\"".Assets::url()."images/calendar_up_small.gif\" ";
-			echo $tooltip . " border=\"0\"></a>\n";
-			$month_obj->setPointer($atime, $step);
-		}
-	}
-	else if($month_obj->numberOfEvents($day_timestamp) > $max_events)
-	{
-		echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
-		$tooltip = sprintf(_("noch %s Termine danach"),
-				$month_obj->numberOfEvents($day_timestamp) - $max_events);
-		$tooltip = tooltip($tooltip);
-		echo "<a href=\"$PHP_SELF?cmd=showmonth&atime=$day_timestamp&step=";
-		echo ($max_events) . "\"><img src=\"".Assets::url()."images/calendar_down_small.gif\" ";
-		echo $tooltip . " border=\"0\"></a>\n";
-	}
+    //TODO: globals
+    global $PHP_SELF, $atime, $CANONICAL_RELATIVE_PATH_STUDIP;
+    if($atime == $day_timestamp)
+    {
+        $spacer = TRUE;
+        $up = FALSE;
+        $a = $month_obj->numberOfEvents($day_timestamp) - $step - $max_events;
+        $up = ($month_obj->numberOfEvents($day_timestamp) > $max_events && $step >= $max_events);
+        if($a + $max_events > $max_events)
+        {
+            if($up)
+                echo "&nbsp; &nbsp; &nbsp;";
+            else
+                echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
+            $tooltip = sprintf(_("noch %s Termine danach"), $a);
+            $tooltip = tooltip($tooltip);
+            echo "<a href=\"$PHP_SELF?cmd=showmonth&atime=$day_timestamp&step=";
+            echo ($step + $max_events) . "\">";
+            echo "<img src=\"".Assets::url()."images/calendar_down_small.gif\" ";
+            echo $tooltip . " border=\"0\"></a>\n";
+            $spacer = FALSE;
+        }
+        if($up)
+        {
+            if($spacer)
+                echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
+            $tooltip = sprintf(_("noch %s Termine davor"), $step);
+            $tooltip = tooltip($tooltip);
+            echo "<a href=\"$PHP_SELF?cmd=showmonth&atime=$day_timestamp&step=";
+            echo ($step - $max_events) . "\">";
+            echo "<img src=\"".Assets::url()."images/calendar_up_small.gif\" ";
+            echo $tooltip . " border=\"0\"></a>\n";
+            $month_obj->setPointer($atime, $step);
+        }
+    }
+    else if($month_obj->numberOfEvents($day_timestamp) > $max_events)
+    {
+        echo "&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;";
+        $tooltip = sprintf(_("noch %s Termine danach"),
+                $month_obj->numberOfEvents($day_timestamp) - $max_events);
+        $tooltip = tooltip($tooltip);
+        echo "<a href=\"$PHP_SELF?cmd=showmonth&atime=$day_timestamp&step=";
+        echo ($max_events) . "\"><img src=\"".Assets::url()."images/calendar_down_small.gif\" ";
+        echo $tooltip . " border=\"0\"></a>\n";
+    }
 }
 ?>

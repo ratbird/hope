@@ -28,387 +28,387 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  * @author tgloeggl
  */
 class Statusgruppe {
-	var $new;
-	var $messages = array();
+    var $new;
+    var $messages = array();
 
-	var $statusgruppe_id;
-	var $name = '';
-	var $range_id = '';
-	var $position = 0;
-	var $size = 0;
-	var $selfassign = 0;
-	var $mkdate = 0;
-	var $chdate = 0;
+    var $statusgruppe_id;
+    var $name = '';
+    var $range_id = '';
+    var $position = 0;
+    var $size = 0;
+    var $selfassign = 0;
+    var $mkdate = 0;
+    var $chdate = 0;
 
-	private $has_folder;
-	private $is_sem;
+    private $has_folder;
+    private $is_sem;
 
-	function Statusgruppe($statusgruppe_id = '') {
-		if ($statusgruppe_id == '') {
-			$this->new = true;
-			$this->statusgruppe_id = md5(uniqid(rand()));
-		} else {
-			$this->new = false;
-			$this->statusgruppe_id = $statusgruppe_id;
-			$this->restore();
-		}
-	}
+    function Statusgruppe($statusgruppe_id = '') {
+        if ($statusgruppe_id == '') {
+            $this->new = true;
+            $this->statusgruppe_id = md5(uniqid(rand()));
+        } else {
+            $this->new = false;
+            $this->statusgruppe_id = $statusgruppe_id;
+            $this->restore();
+        }
+    }
 
-	/* * * * * * * * * * * * * * * * * * * *
-	 * * G E T T E R   /   S E T T E R * * *
-	 * * * * * * * * * * * * * * * * * * * */
-	public function __call($method, $args)
+    /* * * * * * * * * * * * * * * * * * * *
+     * * G E T T E R   /   S E T T E R * * *
+     * * * * * * * * * * * * * * * * * * * */
+    public function __call($method, $args)
   {
-  	if (substr($method, 0, 3) == 'get') {
-  		$variable = strtolower(substr($method, 3, strlen($method) -3));
-  		if (isset($this->$variable)) {
-  			return $this->$variable;
-  		} else {
-  			throw new Exception(__CLASS__ ."::$method() does not exist!");
-  		}
-  	} else if (substr($method, 0, 3) == 'set') {  		
-  		$variable = strtolower(substr($method, 3, strlen($method) -3));
-  		if (sizeof($args) != 1) {
-  			throw new Exception("wrong parameter count: ".__CLASS__ ."::$method() expects 1 parameter!");
-  		}
-  		$this->$variable = $args[0];
-  	}
-  }	 
+    if (substr($method, 0, 3) == 'get') {
+        $variable = strtolower(substr($method, 3, strlen($method) -3));
+        if (isset($this->$variable)) {
+            return $this->$variable;
+        } else {
+            throw new Exception(__CLASS__ ."::$method() does not exist!");
+        }
+    } else if (substr($method, 0, 3) == 'set') {        
+        $variable = strtolower(substr($method, 3, strlen($method) -3));
+        if (sizeof($args) != 1) {
+            throw new Exception("wrong parameter count: ".__CLASS__ ."::$method() expects 1 parameter!");
+        }
+        $this->$variable = $args[0];
+    }
+  }  
   
-	function getId() {
-		return $this->statusgruppe_id;
-	}
+    function getId() {
+        return $this->statusgruppe_id;
+    }
 
-	function setSelfassign($selfassign) {
-		$this->selfassign = ($selfassign) ? '1' : '0';
-	}
+    function setSelfassign($selfassign) {
+        $this->selfassign = ($selfassign) ? '1' : '0';
+    }
 
-	/* * * * * * * * * * * * * * * * * * * *
-	 * * * * * * D A T A B A S E * * * * * * 
-	 * * * * * * * * * * * * * * * * * * * */
-	function restore() {
-		if (!$this->statusgruppe_id) return;
+    /* * * * * * * * * * * * * * * * * * * *
+     * * * * * * D A T A B A S E * * * * * * 
+     * * * * * * * * * * * * * * * * * * * */
+    function restore() {
+        if (!$this->statusgruppe_id) return;
 
-		try {
-			$stmt = DBManager::get()->prepare("SELECT * FROM statusgruppen WHERE statusgruppe_id = ?");
-			if ($stmt->execute(array($this->statusgruppe_id))) {
-				$statusgruppe = $stmt->fetch();
-				foreach ($statusgruppe as $key => $val) {
-					$this->$key = $val;
-				}
-			} else {
-				throw new Exception(__CLASS__ . '::' . __FUNCTION__ .'() , line ' . __LINE__ . ': Error while querying statusgroup!');  
-			}
-		} catch (PDOException $e) {
-			echo $e->getMessage();
-			die;
-		}
-	}
+        try {
+            $stmt = DBManager::get()->prepare("SELECT * FROM statusgruppen WHERE statusgruppe_id = ?");
+            if ($stmt->execute(array($this->statusgruppe_id))) {
+                $statusgruppe = $stmt->fetch();
+                foreach ($statusgruppe as $key => $val) {
+                    $this->$key = $val;
+                }
+            } else {
+                throw new Exception(__CLASS__ . '::' . __FUNCTION__ .'() , line ' . __LINE__ . ': Error while querying statusgroup!');  
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            die;
+        }
+    }
 
-	function store() {
-		try {
+    function store() {
+        try {
 
-			if ($this->new) {
-				$this->position = 0;
+            if ($this->new) {
+                $this->position = 0;
 
-				// get the last position to insert the new group after
-				$stmt = DBManager::get()->prepare("SELECT position FROM statusgruppen WHERE range_id = ? ORDER BY position DESC");
-				$stmt->execute(array($this->range_id));
-				if ($data = $stmt->fetch()) {
-					$this->position = $data['position'] + 1;
-				}
+                // get the last position to insert the new group after
+                $stmt = DBManager::get()->prepare("SELECT position FROM statusgruppen WHERE range_id = ? ORDER BY position DESC");
+                $stmt->execute(array($this->range_id));
+                if ($data = $stmt->fetch()) {
+                    $this->position = $data['position'] + 1;
+                }
 
-				$query = "INSERT INTO statusgruppen
-					(statusgruppe_id, name, range_id, position, size, selfassign, mkdate, chdate) VALUES
-					(?, ?, ?, ?, ?, ?, ?, ?)";
+                $query = "INSERT INTO statusgruppen
+                    (statusgruppe_id, name, range_id, position, size, selfassign, mkdate, chdate) VALUES
+                    (?, ?, ?, ?, ?, ?, ?, ?)";
 
-					$data = array($this->statusgruppe_id, $this->name, $this->range_id, $this->position, $this->size,
-						$this->selfassign, time(), time());
-			} else {
-				$query = "UPDATE statusgruppen SET
-					name = ?, range_id = ?, position = ?,
-					size = ?, selfassign = ?, chdate = ?
-					WHERE statusgruppe_id = ?";
+                    $data = array($this->statusgruppe_id, $this->name, $this->range_id, $this->position, $this->size,
+                        $this->selfassign, time(), time());
+            } else {
+                $query = "UPDATE statusgruppen SET
+                    name = ?, range_id = ?, position = ?,
+                    size = ?, selfassign = ?, chdate = ?
+                    WHERE statusgruppe_id = ?";
 
-					$data = array($this->name, $this->range_id, $this->position, $this->size,
-						$this->selfassign, time(), $this->statusgruppe_id);
-			}
+                    $data = array($this->name, $this->range_id, $this->position, $this->size,
+                        $this->selfassign, time(), $this->statusgruppe_id);
+            }
 
-			$stmt = DBManager::get()->prepare($query);
-			$result = $stmt->execute($data);
-		} catch (PDOException $e) {
-			echo $e->getMessage();
-			die;
-		}
-	
-	}
+            $stmt = DBManager::get()->prepare($query);
+            $result = $stmt->execute($data);
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            die;
+        }
+    
+    }
 
-	function delete() {
-		DeleteStatusgruppe($this->statusgruppe_id);
-	}
-	
-	/* * * * * * * * * * * * * * * * * * * *
-	 * * H E L P E R   F U N C T I O N S * *
-	 * * * * * * * * * * * * * * * * * * * */
+    function delete() {
+        DeleteStatusgruppe($this->statusgruppe_id);
+    }
+    
+    /* * * * * * * * * * * * * * * * * * * *
+     * * H E L P E R   F U N C T I O N S * *
+     * * * * * * * * * * * * * * * * * * * */
 
-	function hasFolder() {
-		// check, if we have a group-folder
-		if ($this->isSeminar()) {
-			if (!isset($this->has_folder)) {
-				$stmt = DBManager::get()->prepare("SELECT COUNT(*) as c FROM folder WHERE range_id = ?");
-				$stmt->execute(array($this->statusgruppe_id));
+    function hasFolder() {
+        // check, if we have a group-folder
+        if ($this->isSeminar()) {
+            if (!isset($this->has_folder)) {
+                $stmt = DBManager::get()->prepare("SELECT COUNT(*) as c FROM folder WHERE range_id = ?");
+                $stmt->execute(array($this->statusgruppe_id));
 
-				$folder = $stmt->fetch(PDO::FETCH_ASSOC);
-				$this->has_folder = ($folder['c'] == 1) ? true : false;
-			}
-		
-			return $this->has_folder;
-		}
+                $folder = $stmt->fetch(PDO::FETCH_ASSOC);
+                $this->has_folder = ($folder['c'] == 1) ? true : false;
+            }
+        
+            return $this->has_folder;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	function isSeminar() {
-		if (!isset($this->is_sem)) {			
-			$stmt = DBManager::get()->prepare("SELECT * FROM seminare WHERE Seminar_id = ?");
-			$stmt->execute(array($this->range_id));
+    function isSeminar() {
+        if (!isset($this->is_sem)) {            
+            $stmt = DBManager::get()->prepare("SELECT * FROM seminare WHERE Seminar_id = ?");
+            $stmt->execute(array($this->range_id));
 
-			if ($seminar = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				$this->is_sem = true;
-			} else {			
-				$this->is_sem = false;
-			}
-		}
-		
-		return $this->is_sem;
-	}
+            if ($seminar = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $this->is_sem = true;
+            } else {            
+                $this->is_sem = false;
+            }
+        }
+        
+        return $this->is_sem;
+    }
 
-	function getData() {
-		global $invalidEntries;
-	
-		$role = array(
-			'id' => $this->statusgruppe_id,
-			'name' => $this->name,
-			'size' => $this->size,
-			'selfassign' => $this->selfassign,
-			'folder' => $this->hasFolder()
-		);
+    function getData() {
+        global $invalidEntries;
+    
+        $role = array(
+            'id' => $this->statusgruppe_id,
+            'name' => $this->name,
+            'size' => $this->size,
+            'selfassign' => $this->selfassign,
+            'folder' => $this->hasFolder()
+        );
 
-		// we fetch the generic datafields for roles if this is an institute
-		if (!$this->isSeminar()) {
-			$datafields = DataFieldEntry::getDataFieldEntries(array($this->range_id, $this->statusgruppe_id), 'roleinstdata');
-	
-			foreach ($datafields as $id => $field) {
-	
-				if (isset($invalidEntries[$id])) {
-					$invalid = true;
-				} else {
-					$invalid = false;
-				}
-	
-				$df[] = array (
-					'name' =>$field->getName(),
-					'value' => $field->getValue(),
-					'html' => $field->getHTML('datafields'),
-					'datafield_id' => $field->getID(),
-					'datafield_type' => $field->getType(),
-					'invalid' => $invalid
-				);
-			}
-	
-			$role['datafields'] = $df;
-		}
-		
-		return $role;		
-	}
-	
-	function checkData() {
-		global $datafields, $invalidEntries;
+        // we fetch the generic datafields for roles if this is an institute
+        if (!$this->isSeminar()) {
+            $datafields = DataFieldEntry::getDataFieldEntries(array($this->range_id, $this->statusgruppe_id), 'roleinstdata');
+    
+            foreach ($datafields as $id => $field) {
+    
+                if (isset($invalidEntries[$id])) {
+                    $invalid = true;
+                } else {
+                    $invalid = false;
+                }
+    
+                $df[] = array (
+                    'name' =>$field->getName(),
+                    'value' => $field->getValue(),
+                    'html' => $field->getHTML('datafields'),
+                    'datafield_id' => $field->getID(),
+                    'datafield_type' => $field->getType(),
+                    'invalid' => $invalid
+                );
+            }
+    
+            $role['datafields'] = $df;
+        }
+        
+        return $role;       
+    }
+    
+    function checkData() {
+        global $datafields, $invalidEntries;
 
-		// check the standard role data
-		if (!$_REQUEST['new_name'] && $_REQUEST['presetName'] != 'none') {
-			$this->name = remove_magic_quotes($_REQUEST['presetName']);
-		} else {
-			$this->name = remove_magic_quotes($_REQUEST['new_name']);
-		}
-		$this->size = (int)$_REQUEST['new_size'];
+        // check the standard role data
+        if (!$_REQUEST['new_name'] && $_REQUEST['presetName'] != 'none') {
+            $this->name = remove_magic_quotes($_REQUEST['presetName']);
+        } else {
+            $this->name = remove_magic_quotes($_REQUEST['new_name']);
+        }
+        $this->size = (int)$_REQUEST['new_size'];
 
-		// check if we have to remove the self_assign_exclusive-flag
-		
-		$this->selfassign = SetSelfAssign($this->statusgruppe_id, ($_REQUEST['new_selfassign'] ? 1 : 0));
-		
-		/*if ($_REQUEST['new_selfassign']) {
-			if ($this->selfassign == 0) {
-				$this->selfassign = 1;
-			}
-		} else {
-			if ($this->selfassign == 2) {
-				if ($GLOBALS['SessSemName']) {
-					SetSelfAssignExclusive($GLOBALS['SessSemName'][1], false);
-				}
-			}
-			$this->selfassign = 0;
-		}*/
+        // check if we have to remove the self_assign_exclusive-flag
+        
+        $this->selfassign = SetSelfAssign($this->statusgruppe_id, ($_REQUEST['new_selfassign'] ? 1 : 0));
+        
+        /*if ($_REQUEST['new_selfassign']) {
+            if ($this->selfassign == 0) {
+                $this->selfassign = 1;
+            }
+        } else {
+            if ($this->selfassign == 2) {
+                if ($GLOBALS['SessSemName']) {
+                    SetSelfAssignExclusive($GLOBALS['SessSemName'][1], false);
+                }
+            }
+            $this->selfassign = 0;
+        }*/
 
-		if ($_REQUEST['groupfolder']) { 
-			// check if there already exists a folder
-			$stmt = DBManager::get()->prepare("SELECT COUNT(*) as c FROM folder WHERE range_id = ?");
-			$stmt->execute(array($this->statusgruppe_id));
+        if ($_REQUEST['groupfolder']) { 
+            // check if there already exists a folder
+            $stmt = DBManager::get()->prepare("SELECT COUNT(*) as c FROM folder WHERE range_id = ?");
+            $stmt->execute(array($this->statusgruppe_id));
 
-			if ($folder = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				if ($folder['c'] == 0) {
-					// if no folder exists, we create one
-					$title =  _("Dateiordner der Gruppe:") . ' ' . $this->name;
-					$description = _("Ablage für Ordner und Dokumente dieser Gruppe");
-		      $permission = 15;
-					create_folder(addslashes($title), $description, $this->statusgruppe_id, $permission);
-					$this->messages[] = 'msg§Es wurde ein Gruppenordner angelegt.§';
-				}
-			}
+            if ($folder = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if ($folder['c'] == 0) {
+                    // if no folder exists, we create one
+                    $title =  _("Dateiordner der Gruppe:") . ' ' . $this->name;
+                    $description = _("Ablage für Ordner und Dokumente dieser Gruppe");
+              $permission = 15;
+                    create_folder(addslashes($title), $description, $this->statusgruppe_id, $permission);
+                    $this->messages[] = 'msg§Es wurde ein Gruppenordner angelegt.§';
+                }
+            }
 
-		}
+        }
 
-		if (!$this->isSeminar()) {
-			// check the datafields
-			if (!$this->isSeminar() && is_array($datafields)) {
-				foreach ($datafields as $id=>$data) {
-					$struct = new DataFieldStructure(array("datafield_id"=>$id));
-					$struct->load();
-					$entry  = DataFieldEntry::createDataFieldEntry($struct, array($this->range_id, $this->statusgruppe_id));
-					$entry->setValueFromSubmit($data);
-					if ($entry->isValid()) {
-						$entry->store();
-					} else {
-						$invalidEntries[$struct->getID()] = $entry;
-					}
-				}
-				/*// change visibility of role data
-					foreach ($group_id as $groupID)
-					setOptionsOfStGroup($groupID, $u_id, ($visible[$groupID] == '0') ? '0' : '1');*/
-				//$msgs[] = 'error§<b>'. _("Fehlerhafte Eingaben (s.u.)") .'</b>';
-			}
+        if (!$this->isSeminar()) {
+            // check the datafields
+            if (!$this->isSeminar() && is_array($datafields)) {
+                foreach ($datafields as $id=>$data) {
+                    $struct = new DataFieldStructure(array("datafield_id"=>$id));
+                    $struct->load();
+                    $entry  = DataFieldEntry::createDataFieldEntry($struct, array($this->range_id, $this->statusgruppe_id));
+                    $entry->setValueFromSubmit($data);
+                    if ($entry->isValid()) {
+                        $entry->store();
+                    } else {
+                        $invalidEntries[$struct->getID()] = $entry;
+                    }
+                }
+                /*// change visibility of role data
+                    foreach ($group_id as $groupID)
+                    setOptionsOfStGroup($groupID, $u_id, ($visible[$groupID] == '0') ? '0' : '1');*/
+                //$msgs[] = 'error§<b>'. _("Fehlerhafte Eingaben (s.u.)") .'</b>';
+            }
 
-			// a group cannot be its own vather!
-			if ($_REQUEST['vather'] == $this->statusgruppe_id) {
-				$this->messages[] = 'error§' ._("Sie könne diese Gruppe nicht sich selbst unterordnen!");
-			} else
-			
-			// check if the group shall be moved
-			if ($_REQUEST['vather'] != 'nochange') {
-				if ($_REQUEST['vather'] == 'root') {
-					$vather_id = $GLOBALS['range_id'];
-				} else {
-					$vather_id = $_REQUEST['vather'];
-				}
-				if (!isVatherDaughterRelation($this->statusgruppe_id, $vather_id)) {
-					$this->range_id = $vather_id;
-					//$db->query("UPDATE statusgruppen SET range_id = '$vather_id' WHERE statusgruppe_id = '{$this->statusgruppe_id}'");
-				} else {
-					$this->messages[] = 'error§' ._("Sie können diese Gruppe nicht einer ihr untergeordneten Gruppe zuweisen!");
-				}
-			}
-		}
-				
-		if (!$this->isSeminar() && is_array($invalidEntries)) {
-			$this->messages[] = 'error§' . _("Korrigieren Sie die fehlerhaften Eingaben!");
-			return false;
-		}
-		return true;
+            // a group cannot be its own vather!
+            if ($_REQUEST['vather'] == $this->statusgruppe_id) {
+                $this->messages[] = 'error§' ._("Sie könne diese Gruppe nicht sich selbst unterordnen!");
+            } else
+            
+            // check if the group shall be moved
+            if ($_REQUEST['vather'] != 'nochange') {
+                if ($_REQUEST['vather'] == 'root') {
+                    $vather_id = $GLOBALS['range_id'];
+                } else {
+                    $vather_id = $_REQUEST['vather'];
+                }
+                if (!isVatherDaughterRelation($this->statusgruppe_id, $vather_id)) {
+                    $this->range_id = $vather_id;
+                    //$db->query("UPDATE statusgruppen SET range_id = '$vather_id' WHERE statusgruppe_id = '{$this->statusgruppe_id}'");
+                } else {
+                    $this->messages[] = 'error§' ._("Sie können diese Gruppe nicht einer ihr untergeordneten Gruppe zuweisen!");
+                }
+            }
+        }
+                
+        if (!$this->isSeminar() && is_array($invalidEntries)) {
+            $this->messages[] = 'error§' . _("Korrigieren Sie die fehlerhaften Eingaben!");
+            return false;
+        }
+        return true;
 
-	}
-	
-	/* * * * * * * * * * * * * * * * * * * *
-	 * * * S T A T I C   M E T H O D S * * *
-	 * * * * * * * * * * * * * * * * * * * */
+    }
+    
+    /* * * * * * * * * * * * * * * * * * * *
+     * * * S T A T I C   M E T H O D S * * *
+     * * * * * * * * * * * * * * * * * * * */
 
-	static function displayOptionsForRoles($roles, $omit_role = false, $level = 0) {
-		foreach ($roles as $role_id => $role) {
-			if ($omit_role != $role_id) {
-				echo '<option value="'. $role_id .'">';
-				for ($i = 1; $i <= $level; $i++) echo '&nbsp; &nbsp;';
-				echo substr($role['role']->getName(), 0, 70).'</option>';
-			}
-			if ($role['child']) Statusgruppe::displayOptionsForRoles($role['child'], $omit_role, $level+1);
-		}
-	}
-	 
-	static function getFlattenedRoles($roles, $level = 0, $parent_name = false) { 	
-		if (!is_array($roles)) return array();
+    static function displayOptionsForRoles($roles, $omit_role = false, $level = 0) {
+        foreach ($roles as $role_id => $role) {
+            if ($omit_role != $role_id) {
+                echo '<option value="'. $role_id .'">';
+                for ($i = 1; $i <= $level; $i++) echo '&nbsp; &nbsp;';
+                echo substr($role['role']->getName(), 0, 70).'</option>';
+            }
+            if ($role['child']) Statusgruppe::displayOptionsForRoles($role['child'], $omit_role, $level+1);
+        }
+    }
+     
+    static function getFlattenedRoles($roles, $level = 0, $parent_name = false) {   
+        if (!is_array($roles)) return array();
 
-		$ret = array();
-		
-		//var_dump($roles);
-		foreach ($roles as $id => $role) {
-			if (!isset($role['name'])) $role['name'] = $role['role']->getName();
-			$spaces = '';
-			for ($i = 0; $i < $level; $i++) $spaces .= '&nbsp;&nbsp;';
-	
-			// generate an indented version of the role-name
-			$role['name'] = $spaces . $role['name'];
-			
-			// generate a name with all parent-roles in the name
-			if ($parent_name) {
-				$role['name_long'] = $parent_name . ' > ' . $role['role']->getName();
-			} else {
-				$role['name_long'] = $role['role']->getName();
-			} 
-			
-			$ret[$id] = $role;
-									
-			if ($role['child']) {
-				$ret = array_merge($ret, Statusgruppe::getFlattenedRoles($role['child'], $level + 1, $role['name_long']));			
-			}
-			
-		}
-		
-		return $ret;
-	}
-	
-	static function getFromArray($data) {		
-		$statusgruppe = new Statusgruppe();
-		$statusgruppe->new = false;
+        $ret = array();
+        
+        //var_dump($roles);
+        foreach ($roles as $id => $role) {
+            if (!isset($role['name'])) $role['name'] = $role['role']->getName();
+            $spaces = '';
+            for ($i = 0; $i < $level; $i++) $spaces .= '&nbsp;&nbsp;';
+    
+            // generate an indented version of the role-name
+            $role['name'] = $spaces . $role['name'];
+            
+            // generate a name with all parent-roles in the name
+            if ($parent_name) {
+                $role['name_long'] = $parent_name . ' > ' . $role['role']->getName();
+            } else {
+                $role['name_long'] = $role['role']->getName();
+            } 
+            
+            $ret[$id] = $role;
+                                    
+            if ($role['child']) {
+                $ret = array_merge($ret, Statusgruppe::getFlattenedRoles($role['child'], $level + 1, $role['name_long']));          
+            }
+            
+        }
+        
+        return $ret;
+    }
+    
+    static function getFromArray($data) {       
+        $statusgruppe = new Statusgruppe();
+        $statusgruppe->new = false;
 
-		$statusgruppe->statusgruppe_id = $data['statusgruppe_id'];
-		$statusgruppe->name = $data['name'];
-		$statusgruppe->range_id = $data['range_id'];
-		$statusgruppe->position = $data['position'];
-		$statusgruppe->size = $data['size'];
-		$statusgruppe->selfassign = $data['selfassign'];
-		$statusgruppe->mkdate = $data['mkdata'];
-		$statusgruppe->chdate = $data['chdate'];	
-		
-		return $statusgruppe;
-	}
-	
-	static function roleExists($id) {
-		$stmt = DBManager::get()->prepare("SELECT * FROM statusgruppen WHERE statusgruppe_id = ?");
-		$stmt->execute(array($id));
-				
-		if (!$statusgruppe = $stmt->fetch(PDO::FETCH_ASSOC)) {
-			return false;
-		}
-		
-		// if there is a statusgroup with this id, return true
-		if (sizeof($statusgruppe) > 0) return true;
-		
-		return false;
-	}
+        $statusgruppe->statusgruppe_id = $data['statusgruppe_id'];
+        $statusgruppe->name = $data['name'];
+        $statusgruppe->range_id = $data['range_id'];
+        $statusgruppe->position = $data['position'];
+        $statusgruppe->size = $data['size'];
+        $statusgruppe->selfassign = $data['selfassign'];
+        $statusgruppe->mkdate = $data['mkdata'];
+        $statusgruppe->chdate = $data['chdate'];    
+        
+        return $statusgruppe;
+    }
+    
+    static function roleExists($id) {
+        $stmt = DBManager::get()->prepare("SELECT * FROM statusgruppen WHERE statusgruppe_id = ?");
+        $stmt->execute(array($id));
+                
+        if (!$statusgruppe = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            return false;
+        }
+        
+        // if there is a statusgroup with this id, return true
+        if (sizeof($statusgruppe) > 0) return true;
+        
+        return false;
+    }
 
-	/**
-	 * returns the number of statusgroups with the given name and range_id
-	 * 
-	 * @param string $name the name to search for
-	 * @param string $range_id the Seminar_id, Institut_id, ...
-	 * @return integer the number of statusgroups found
-	 */
-	static function countByName($name, $range_id) {
-		$stmt = DBManager::get()->prepare("SELECT COUNT(*) as c FROM statusgruppen WHERE name LIKE ? AND range_id = ?");
-		$stmt->execute(array($name, $range_id));
+    /**
+     * returns the number of statusgroups with the given name and range_id
+     * 
+     * @param string $name the name to search for
+     * @param string $range_id the Seminar_id, Institut_id, ...
+     * @return integer the number of statusgroups found
+     */
+    static function countByName($name, $range_id) {
+        $stmt = DBManager::get()->prepare("SELECT COUNT(*) as c FROM statusgruppen WHERE name LIKE ? AND range_id = ?");
+        $stmt->execute(array($name, $range_id));
 
-		if (!$data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-			return 0;
-		}
+        if (!$data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            return 0;
+        }
 
-		return $data['c'];
-	}
+        return $data['c'];
+    }
 }

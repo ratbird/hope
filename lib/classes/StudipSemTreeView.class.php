@@ -33,193 +33,193 @@ require_once("config.inc.php");
 *
 * This class prints out a html representation of the whole or part of the tree
 *
-* @access	public
-* @author	André Noack <noack@data-quest.de>
+* @access   public
+* @author   André Noack <noack@data-quest.de>
 * @package
 */
 class StudipSemTreeView extends TreeView {
 
-	/**
-	* constructor
-	*
-	* @access public
-	*/
-	function StudipSemTreeView($start_item_id = "root", $sem_number = null){
-		$this->start_item_id = ($start_item_id) ? $start_item_id : "root";
-		$this->root_content = $GLOBALS['UNI_INFO'];
-		$args = null;
-		if ($sem_number){
-			$args = array('sem_number' => $sem_number);
-		}
-		parent::TreeView("StudipSemTree", $args); //calling the baseclass constructor
-	}
+    /**
+    * constructor
+    *
+    * @access public
+    */
+    function StudipSemTreeView($start_item_id = "root", $sem_number = null){
+        $this->start_item_id = ($start_item_id) ? $start_item_id : "root";
+        $this->root_content = $GLOBALS['UNI_INFO'];
+        $args = null;
+        if ($sem_number){
+            $args = array('sem_number' => $sem_number);
+        }
+        parent::TreeView("StudipSemTree", $args); //calling the baseclass constructor
+    }
 
-	/**
-	* manages the session variables used for the open/close thing
-	*
-	* @access	private
-	*/
-	function handleOpenRanges(){
-		global $_REQUEST;
+    /**
+    * manages the session variables used for the open/close thing
+    *
+    * @access   private
+    */
+    function handleOpenRanges(){
+        global $_REQUEST;
 
-		$this->open_ranges[$this->start_item_id] = true;
-		if ($_REQUEST['close_item'] || $_REQUEST['open_item']){
-			$toggle_item = ($_REQUEST['close_item']) ? $_REQUEST['close_item'] : $_REQUEST['open_item'];
-			if (!$this->open_items[$toggle_item]){
-				$this->open_items[$toggle_item] = true;
-			} else {
-				unset($this->open_items[$toggle_item]);
-			}
+        $this->open_ranges[$this->start_item_id] = true;
+        if ($_REQUEST['close_item'] || $_REQUEST['open_item']){
+            $toggle_item = ($_REQUEST['close_item']) ? $_REQUEST['close_item'] : $_REQUEST['open_item'];
+            if (!$this->open_items[$toggle_item]){
+                $this->open_items[$toggle_item] = true;
+            } else {
+                unset($this->open_items[$toggle_item]);
+            }
 
-			if($this->tree->hasKids($_REQUEST['open_item'])){
-				$this->start_item_id = $_REQUEST['open_item'];
-				$this->open_ranges = null;
-				$this->open_items = null;
-				$this->open_items[$_REQUEST['open_item']] = true;
-				$this->open_ranges[$_REQUEST['open_item']] = true;
-			}
+            if($this->tree->hasKids($_REQUEST['open_item'])){
+                $this->start_item_id = $_REQUEST['open_item'];
+                $this->open_ranges = null;
+                $this->open_items = null;
+                $this->open_items[$_REQUEST['open_item']] = true;
+                $this->open_ranges[$_REQUEST['open_item']] = true;
+            }
 
-			$this->anchor = $toggle_item;
-		}
+            $this->anchor = $toggle_item;
+        }
 
-		if ($this->start_item_id == "root"){
-			$this->open_ranges = null;
-			$this->open_ranges[$this->start_item_id] = true;
-		}
-	}
+        if ($this->start_item_id == "root"){
+            $this->open_ranges = null;
+            $this->open_ranges[$this->start_item_id] = true;
+        }
+    }
 
-	function showSemTree(){
-		echo "\n<table width=\"99%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
-		if ($this->start_item_id != 'root'){
-			echo "\n<tr><td class=\"printhead\" align=\"left\" valign=\"top\">" . $this->getSemPath()
-			. "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"  border=\"0\" height=\"20\" width=\"1\"></td></tr>";
-		}
-		echo "\n<tr><td class=\"blank\"  align=\"left\" valign=\"top\">";
-		$this->showTree($this->start_item_id);
-		echo "\n</td></tr></table>";
-	}
+    function showSemTree(){
+        echo "\n<table width=\"99%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
+        if ($this->start_item_id != 'root'){
+            echo "\n<tr><td class=\"printhead\" align=\"left\" valign=\"top\">" . $this->getSemPath()
+            . "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"  border=\"0\" height=\"20\" width=\"1\"></td></tr>";
+        }
+        echo "\n<tr><td class=\"blank\"  align=\"left\" valign=\"top\">";
+        $this->showTree($this->start_item_id);
+        echo "\n</td></tr></table>";
+    }
 
-	function getSemPath(){
-		//$ret = "<a href=\"" . parent::getSelf("start_item_id=root") . "\">" .htmlReady($this->tree->root_name) . "</a>";
-		if ($parents = $this->tree->getParents($this->start_item_id)){
-			for($i = count($parents)-1; $i >= 0; --$i){
-				$ret .= " &gt; <a class=\"tree\" href=\"" . $this->getSelf("start_item_id={$parents[$i]}&open_item={$parents[$i]}",false)
-					. "\">" .htmlReady($this->tree->tree_data[$parents[$i]]["name"]) . "</a>";
-			}
-		}
-		return $ret;
-	}
+    function getSemPath(){
+        //$ret = "<a href=\"" . parent::getSelf("start_item_id=root") . "\">" .htmlReady($this->tree->root_name) . "</a>";
+        if ($parents = $this->tree->getParents($this->start_item_id)){
+            for($i = count($parents)-1; $i >= 0; --$i){
+                $ret .= " &gt; <a class=\"tree\" href=\"" . $this->getSelf("start_item_id={$parents[$i]}&open_item={$parents[$i]}",false)
+                    . "\">" .htmlReady($this->tree->tree_data[$parents[$i]]["name"]) . "</a>";
+            }
+        }
+        return $ret;
+    }
 
-	/**
-	* returns html for the icons in front of the name of the item
-	*
-	* @access	private
-	* @param	string	$item_id
-	* @return	string
-	*/
-	function getItemHeadPics($item_id){
-		$head = "";
-		$head .= "<a href=\"";
-		$head .= ($this->open_items[$item_id])? $this->getSelf("close_item={$item_id}") . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
-											: $this->getSelf("open_item={$item_id}") . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
-		$head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
-		$head .= ($this->open_items[$item_id]) ? "forumrotrunt.gif" : "forumgrau.gif";
-		$head .= "\" border=\"0\" align=\"baseline\" hspace=\"2\">";
-		$head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\" border=\"0\">" : "";
-		$head .= "</a>";
-		if ($this->tree->hasKids($item_id)){
-			$head .= "<img border=\"0\"  src=\"".$GLOBALS['ASSETS_URL']."images/";
-			$head .= ($this->open_ranges[$item_id]) ? "cont_folder3.gif" : "cont_folder.gif";
-			$head .= "\" ";
-			$head .= (!$this->open_ranges[$item_id])? tooltip(_("Alle Unterelement öffnen")) : tooltip(_("Alle Unterelemente schliessen"));
-			$head .= ">";
-		} else {
-			$head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
-			$head .= ($this->open_items[$item_id]) ? "cont_folder4.gif" : "cont_folder2.gif";
-			$head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . "border=\"0\">";
-		}
-	return $head;
-	}
+    /**
+    * returns html for the icons in front of the name of the item
+    *
+    * @access   private
+    * @param    string  $item_id
+    * @return   string
+    */
+    function getItemHeadPics($item_id){
+        $head = "";
+        $head .= "<a href=\"";
+        $head .= ($this->open_items[$item_id])? $this->getSelf("close_item={$item_id}") . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
+                                            : $this->getSelf("open_item={$item_id}") . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
+        $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
+        $head .= ($this->open_items[$item_id]) ? "forumrotrunt.gif" : "forumgrau.gif";
+        $head .= "\" border=\"0\" align=\"baseline\" hspace=\"2\">";
+        $head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\" border=\"0\">" : "";
+        $head .= "</a>";
+        if ($this->tree->hasKids($item_id)){
+            $head .= "<img border=\"0\"  src=\"".$GLOBALS['ASSETS_URL']."images/";
+            $head .= ($this->open_ranges[$item_id]) ? "cont_folder3.gif" : "cont_folder.gif";
+            $head .= "\" ";
+            $head .= (!$this->open_ranges[$item_id])? tooltip(_("Alle Unterelement öffnen")) : tooltip(_("Alle Unterelemente schliessen"));
+            $head .= ">";
+        } else {
+            $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
+            $head .= ($this->open_items[$item_id]) ? "cont_folder4.gif" : "cont_folder2.gif";
+            $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . "border=\"0\">";
+        }
+    return $head;
+    }
 
-	function getItemContent($item_id){
-		$content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"0\" align=\"center\" style=\"font-size:10pt\">";
-		if ($item_id == "root"){
-			$content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
-			$content .= "\n<tr><td class=\"steel1\" align=\"left\">" . htmlReady($this->root_content) ." </td></tr>";
-			$content .= "\n</table>";
-			return $content;
-		}
-		if ($this->tree->tree_data[$item_id]['info']){
-			$content .= "\n<tr><td class=\"steel1\" align=\"left\" colspan=\"2\">";
-			$content .= formatReady($this->tree->tree_data[$item_id]['info']) . "</td></tr>";
-		}
-		$content .= "<tr><td colspan=\"2\" class=\"steel1\">" . sprintf(_("Alle Veranstaltungen innerhalb dieses Bereiches in der %s&Uuml;bersicht%s"),
-				"<a href=\"" . $this->getSelf("cmd=show_sem_range&item_id=$item_id") ."\">","</a>") . "</td></tr>";
-		$content .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
-		if ($this->tree->getNumEntries($item_id) - $this->tree->tree_data[$item_id]['lonely_sem']){
-			$content .= "<tr><td class=\"steel1\" align=\"left\" colspan=\"2\"><b>" . _("Eintr&auml;ge auf dieser Ebene:");
-			$content .= "</b>\n</td></tr>";
-			$entries = $this->tree->getSemData($item_id);
-			$content .= $this->getSemDetails($entries->getGroupedResult("seminar_id"));
-		} else {
-			$content .= "\n<tr><td class=\"steel1\" colspan=\"2\">" . _("Keine Eintr&auml;ge auf dieser Ebene vorhanden!") . "</td></tr>";
-		}
-		if ($this->tree->tree_data[$item_id]['lonely_sem']){
-			$content .= "<tr><td class=\"steel1\" align=\"left\" colspan=\"2\"><b>" . _("Nicht zugeordnete Veranstaltungen auf dieser Ebene:");
-			$content .= "</b>\n</td></tr>";
-			$entries = $this->tree->getLonelySemData($item_id);
-			$content .= $this->getSemDetails($entries->getGroupedResult("seminar_id"));
-		}
-		$content .= "</table>";
-		return $content;
-	}
+    function getItemContent($item_id){
+        $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"0\" align=\"center\" style=\"font-size:10pt\">";
+        if ($item_id == "root"){
+            $content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($this->tree->root_name) ." </td></tr>";
+            $content .= "\n<tr><td class=\"steel1\" align=\"left\">" . htmlReady($this->root_content) ." </td></tr>";
+            $content .= "\n</table>";
+            return $content;
+        }
+        if ($this->tree->tree_data[$item_id]['info']){
+            $content .= "\n<tr><td class=\"steel1\" align=\"left\" colspan=\"2\">";
+            $content .= formatReady($this->tree->tree_data[$item_id]['info']) . "</td></tr>";
+        }
+        $content .= "<tr><td colspan=\"2\" class=\"steel1\">" . sprintf(_("Alle Veranstaltungen innerhalb dieses Bereiches in der %s&Uuml;bersicht%s"),
+                "<a href=\"" . $this->getSelf("cmd=show_sem_range&item_id=$item_id") ."\">","</a>") . "</td></tr>";
+        $content .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
+        if ($this->tree->getNumEntries($item_id) - $this->tree->tree_data[$item_id]['lonely_sem']){
+            $content .= "<tr><td class=\"steel1\" align=\"left\" colspan=\"2\"><b>" . _("Eintr&auml;ge auf dieser Ebene:");
+            $content .= "</b>\n</td></tr>";
+            $entries = $this->tree->getSemData($item_id);
+            $content .= $this->getSemDetails($entries->getGroupedResult("seminar_id"));
+        } else {
+            $content .= "\n<tr><td class=\"steel1\" colspan=\"2\">" . _("Keine Eintr&auml;ge auf dieser Ebene vorhanden!") . "</td></tr>";
+        }
+        if ($this->tree->tree_data[$item_id]['lonely_sem']){
+            $content .= "<tr><td class=\"steel1\" align=\"left\" colspan=\"2\"><b>" . _("Nicht zugeordnete Veranstaltungen auf dieser Ebene:");
+            $content .= "</b>\n</td></tr>";
+            $entries = $this->tree->getLonelySemData($item_id);
+            $content .= $this->getSemDetails($entries->getGroupedResult("seminar_id"));
+        }
+        $content .= "</table>";
+        return $content;
+    }
 
-	function getSemDetails($sem_data){
-		$content = "";
-		$sem_number = -1;
-		foreach($sem_data as $seminar_id => $data){
-			if (key($data['sem_number']) != $sem_number){
-				$sem_number = key($data['sem_number']);
-				$content .= "\n<tr><td class=\"steelkante\" colspan=\"2\">" . $this->tree->sem_dates[$sem_number]['name'] . "</td></tr>";
-			}
-			$sem_name = key($data["Name"]);
-			$sem_number_end = key($data["sem_number_end"]);
-			if ($sem_number != $sem_number_end){
-				$sem_name .= " (" . $this->tree->sem_dates[$sem_number]['name'] . " - ";
-				$sem_name .= (($sem_number_end == -1) ? _("unbegrenzt") : $this->tree->sem_dates[$sem_number_end]['name']) . ")";
-			}
-			$content .= "<tr><td class=\"steel1\"><a href=\"details.php?sem_id=". $seminar_id
-			."&send_from_search=true&send_from_search_page=" . rawurlencode($this->getSelf()) . "\">" . htmlReady($sem_name) . "</a>
-			</td><td class=\"steel1\" align=\"right\">(";
-			for ($i = 0; $i < count($data["doz_name"]); ++$i){
-				$content .= "<a href=\"about.php?username=" . key($data["doz_uname"]) ."\">" . htmlReady(key($data["doz_name"])) . "</a>";
-				if($i != count($data["doz_name"])-1){
-					$content .= ", ";
-				}
-				next($data["doz_name"]);
-				next($data["doz_uname"]);
-			}
-			$content .= ") </td></tr>";
-			}
-			return $content;
-	}
+    function getSemDetails($sem_data){
+        $content = "";
+        $sem_number = -1;
+        foreach($sem_data as $seminar_id => $data){
+            if (key($data['sem_number']) != $sem_number){
+                $sem_number = key($data['sem_number']);
+                $content .= "\n<tr><td class=\"steelkante\" colspan=\"2\">" . $this->tree->sem_dates[$sem_number]['name'] . "</td></tr>";
+            }
+            $sem_name = key($data["Name"]);
+            $sem_number_end = key($data["sem_number_end"]);
+            if ($sem_number != $sem_number_end){
+                $sem_name .= " (" . $this->tree->sem_dates[$sem_number]['name'] . " - ";
+                $sem_name .= (($sem_number_end == -1) ? _("unbegrenzt") : $this->tree->sem_dates[$sem_number_end]['name']) . ")";
+            }
+            $content .= "<tr><td class=\"steel1\"><a href=\"details.php?sem_id=". $seminar_id
+            ."&send_from_search=true&send_from_search_page=" . rawurlencode($this->getSelf()) . "\">" . htmlReady($sem_name) . "</a>
+            </td><td class=\"steel1\" align=\"right\">(";
+            for ($i = 0; $i < count($data["doz_name"]); ++$i){
+                $content .= "<a href=\"about.php?username=" . key($data["doz_uname"]) ."\">" . htmlReady(key($data["doz_name"])) . "</a>";
+                if($i != count($data["doz_name"])-1){
+                    $content .= ", ";
+                }
+                next($data["doz_name"]);
+                next($data["doz_uname"]);
+            }
+            $content .= ") </td></tr>";
+            }
+            return $content;
+    }
 
-	function getItemHead($item_id){
-		$head = "";
-		$head .= parent::getItemHead($item_id);
-		if ($item_id != "root"){
-			$head .= " (" . $this->tree->getNumEntries($item_id,true) . ") " ;
-		}
-		return $head;
-	}
+    function getItemHead($item_id){
+        $head = "";
+        $head .= parent::getItemHead($item_id);
+        if ($item_id != "root"){
+            $head .= " (" . $this->tree->getNumEntries($item_id,true) . ") " ;
+        }
+        return $head;
+    }
 
-	function getSelf($param = "", $with_start_item = true){
-		if ($param)
-			$url = $GLOBALS['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id . "&" : "?") . $param . "#anchor";
-		else
-			$url = $GLOBALS['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id : "") . "#anchor";
-		return $url;
-	}
+    function getSelf($param = "", $with_start_item = true){
+        if ($param)
+            $url = $GLOBALS['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id . "&" : "?") . $param . "#anchor";
+        else
+            $url = $GLOBALS['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id : "") . "#anchor";
+        return $url;
+    }
 }
 //test
 //page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));

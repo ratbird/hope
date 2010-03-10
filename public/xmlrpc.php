@@ -37,9 +37,9 @@ require_once 'lib/webservices/services/lecture_tree_webservice.php';
 require_once 'lib/webservices/services/institute_webservice.php';
 
 if (empty($GLOBALS['STUDIP_API_KEY'])
-		|| ! $GLOBALS['WEBSERVICES_ENABLE'])
+        || ! $GLOBALS['WEBSERVICES_ENABLE'])
 {
-	die("Webservices not available");
+    die("Webservices not available");
 }
 
 # create server

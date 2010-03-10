@@ -38,14 +38,14 @@ Navigation::activateItem('/admin/course/copy');
 
 //get ID from a open Institut
 if ($SessSemName[1])
-	$header_object_id = $SessSemName[1];
+    $header_object_id = $SessSemName[1];
 else
-	$header_object_id = $admin_admission_data["sem_id"];
+    $header_object_id = $admin_admission_data["sem_id"];
 
 //Change header_line if open object
 $header_line = getHeaderLine($header_object_id);
 if ($header_line)
-	$CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
 
 //Output starts here
 
@@ -55,40 +55,40 @@ include 'lib/include/admin_search_form.inc.php';
 
 require_once 'lib/visual.inc.php';
 if ($SessSemName[1]) {
-	if(LockRules::Check($SessSemName[1], 'seminar_copy')) {
-		$lockRule = new LockRules();
-		$lockdata = $lockRule->getSemLockRule($SessSemName[1]);
-		$msg = 'error§' . _("Die Veranstaltung kann nicht kopiert werden.").'§';
-		if ($lockdata['description']){
-			$msg .= "info§" . fixlinks($lockdata['description']).'§';
-		}
-		?>
-		<table border=0 align="center" cellspacing=0 cellpadding=0 width="100%">
-		<tr><td class="blank" colspan=2><br>
-		<?
-		parse_msg($msg);
-		?>
-		</td></tr>
-		</table>
-		<?
-	} else {
-	?>
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">
-		<tr><td class="blank" colspan=2>&nbsp;</td></tr>
-		<tr><td class="blank" colspan=2>
-		<blockquote>
-		<? 
-		printf(_("Die Veranstaltung wurde zum Kopieren ausgewählt."). " ");
-		printf(_("Um die vorgewählte Veranstaltung zu kopieren klicken sie %shier%s."),
-			'<a href="'.URLHelper::getLink('admin_seminare_assi.php?cmd=do_copy&cp_id='.$SessSemName[1].'&start_level=TRUE&class=1').'">',
-			'</a>'); 
-		?>
-		</blockquote>
-		<br />
-		</td></tr>
-		</table>
-	<?php
-	}
+    if(LockRules::Check($SessSemName[1], 'seminar_copy')) {
+        $lockRule = new LockRules();
+        $lockdata = $lockRule->getSemLockRule($SessSemName[1]);
+        $msg = 'error§' . _("Die Veranstaltung kann nicht kopiert werden.").'§';
+        if ($lockdata['description']){
+            $msg .= "info§" . fixlinks($lockdata['description']).'§';
+        }
+        ?>
+        <table border=0 align="center" cellspacing=0 cellpadding=0 width="100%">
+        <tr><td class="blank" colspan=2><br>
+        <?
+        parse_msg($msg);
+        ?>
+        </td></tr>
+        </table>
+        <?
+    } else {
+    ?>
+        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr><td class="blank" colspan=2>&nbsp;</td></tr>
+        <tr><td class="blank" colspan=2>
+        <blockquote>
+        <? 
+        printf(_("Die Veranstaltung wurde zum Kopieren ausgewählt."). " ");
+        printf(_("Um die vorgewählte Veranstaltung zu kopieren klicken sie %shier%s."),
+            '<a href="'.URLHelper::getLink('admin_seminare_assi.php?cmd=do_copy&cp_id='.$SessSemName[1].'&start_level=TRUE&class=1').'">',
+            '</a>'); 
+        ?>
+        </blockquote>
+        <br />
+        </td></tr>
+        </table>
+    <?php
+    }
 }
 include ('lib/include/html_end.inc.php');
 page_close();

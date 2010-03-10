@@ -43,13 +43,13 @@ while($zeile = fgetcsv($fp,4096,";")){
 
   if (!$zeile[3]) $zeile[3] = $presetbutton;
 
-  $button = new button($zeile[0], $zeile[1], $folder_de, $font, $zeile[3], (int)$zeile[4]);	
+  $button = new button($zeile[0], $zeile[1], $folder_de, $font, $zeile[3], (int)$zeile[4]); 
   $button->RenderButton();
   echo "<img src='".$folder_de.$zeile[0]."-button.png'>";
 
-	echo "&nbsp; &nbsp;";
+    echo "&nbsp; &nbsp;";
 
-  $button = new button($zeile[0], $zeile[2], $folder_en, $font, $zeile[3], (int)$zeile[4]);	
+  $button = new button($zeile[0], $zeile[2], $folder_en, $font, $zeile[3], (int)$zeile[4]); 
   $button->RenderButton();
   echo "<img src='".$folder_en.$zeile[0]."-button.png'>";
 

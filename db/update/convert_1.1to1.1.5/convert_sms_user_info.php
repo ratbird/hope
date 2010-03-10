@@ -25,36 +25,36 @@ include ("$ABSOLUTE_PATH_STUDIP/header.php");
 
 // do we use javascript?
 if ($auth->auth["jscript"]) {
-	echo "<script language=\"JavaScript\">var ol_textfont = \"Arial\"</script>";
-	echo "<DIV ID=\"overDiv\" STYLE=\"position:absolute; visibility:hidden; z-index:1000;\"></DIV>";
-	echo "<SCRIPT LANGUAGE=\"JavaScript\" SRC=\"overlib.js\"></SCRIPT>";
+    echo "<script language=\"JavaScript\">var ol_textfont = \"Arial\"</script>";
+    echo "<DIV ID=\"overDiv\" STYLE=\"position:absolute; visibility:hidden; z-index:1000;\"></DIV>";
+    echo "<SCRIPT LANGUAGE=\"JavaScript\" SRC=\"overlib.js\"></SCRIPT>";
 }
 
 if (($change_view) || ($delete_user) || ($view=="Messaging")) {
-	change_messaging_view();
-	echo "</td></tr></table>";
-	page_close();
-	die;
+    change_messaging_view();
+    echo "</td></tr></table>";
+    page_close();
+    die;
 } 
 
 ?>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
-	<tr>
-		<td class="blank">
-			<br><br><center><font style="font-weight: bold">Convert-Script</font> die user_info anzupassen ... hierbei wird bei allen nutzer die email-weiterleitungsoption auf den systemdefault gesetzt (diese wird in der local.inc angepasst)</center><br><hr noshade size="9">
-			<?
-			$db=new DB_Seminar;
-			$count = "0";
-			$db->query("SELECT * FROM user_info");
-			while ($db->next_record()) {
-				$db2->query("UPDATE user_info SET email_forward = '".$MESSAGING_FORWARD_DEFAULT."' WHERE  user_id = '".$db->f("user_id")."'");
-				$count = $count+1; // zaehle
-			}
-			echo $count." Eintr&auml;ge bearbeitet.";
-			?>
-		</td>
-	</tr>
+    <tr>
+        <td class="blank">
+            <br><br><center><font style="font-weight: bold">Convert-Script</font> die user_info anzupassen ... hierbei wird bei allen nutzer die email-weiterleitungsoption auf den systemdefault gesetzt (diese wird in der local.inc angepasst)</center><br><hr noshade size="9">
+            <?
+            $db=new DB_Seminar;
+            $count = "0";
+            $db->query("SELECT * FROM user_info");
+            while ($db->next_record()) {
+                $db2->query("UPDATE user_info SET email_forward = '".$MESSAGING_FORWARD_DEFAULT."' WHERE  user_id = '".$db->f("user_id")."'");
+                $count = $count+1; // zaehle
+            }
+            echo $count." Eintr&auml;ge bearbeitet.";
+            ?>
+        </td>
+    </tr>
 </table>
 
 <?

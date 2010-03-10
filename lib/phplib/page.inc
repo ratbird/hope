@@ -21,11 +21,11 @@ function page_open($feature) {
     if (isset($feature["auth"])) {
       global $auth;
       if (!isset($auth)){
-		  $auth = new $feature['auth'];
-	  } else if ($auth->classname != $feature['auth']) {
+          $auth = new $feature['auth'];
+      } else if ($auth->classname != $feature['auth']) {
         $save_ps = $auth->auth;
-		$auth = new $feature['auth'];
-		$auth->auth = $save_ps;
+        $auth = new $feature['auth'];
+        $auth->auth = $save_ps;
       }
       $auth->start();
   

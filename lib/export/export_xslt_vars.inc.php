@@ -9,11 +9,11 @@
 * To add new designs and file-formats to the export-module, just add a new set of filetype, name, 
 * description and format-name to this file.
 *
-* @author		Arne Schroeder <schroeder@data.quest.de>
-* @access		public
-* @modulegroup		export_modules
-* @module		export_xml_vars
-* @package		Export
+* @author       Arne Schroeder <schroeder@data.quest.de>
+* @access       public
+* @modulegroup      export_modules
+* @module       export_xml_vars
+* @package      Export
 */
 
 $xslt_files["txt-standard"]["name"] = _("Standardmodul");

@@ -69,9 +69,9 @@ function createReportMessage ($text, $imgURL, $color) {
  * @returns Der HTML-Quelltext
  */
 function createBoxHeader ($title, $width, $extraTitle = "",
-			  $imgURL = "", $imgTitle = "",
-			  $adminURL = "", $adminImgURL = "", $adminTitle = "",
-			  $cssClass = "steel1")
+              $imgURL = "", $imgTitle = "",
+              $adminURL = "", $adminImgURL = "", $adminTitle = "",
+              $cssClass = "steel1")
 {
    $html =
       "<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" align=\"center\" width=\"".$width."\">\n";
@@ -82,31 +82,31 @@ function createBoxHeader ($title, $width, $extraTitle = "",
       "  <td class=\"topic\" colspan=\"2\">";
 
       if ($imgURL) {
-	      $html .=
-	      "<img src=\"".$imgURL."\" border=\"0\" alt=\"".$imgTitle."\" ".
-	      " title=\"".$imgTitle."\">";
-	   }
+          $html .=
+          "<img src=\"".$imgURL."\" border=\"0\" alt=\"".$imgTitle."\" ".
+          " title=\"".$imgTitle."\">";
+       }
 
-	   $html .=
-	      " <b>".$title."</b>";
+       $html .=
+          " <b>".$title."</b>";
 
-	   if ($extraTitle) {
-	       $html .= "<font size=\"-1\">".$extraTitle."</font>";
-	   }
+       if ($extraTitle) {
+           $html .= "<font size=\"-1\">".$extraTitle."</font>";
+       }
 
-	   $html .=
-	      "</td>".
-	      "<td align=\"right\" class=\"topic\">";
+       $html .=
+          "</td>".
+          "<td align=\"right\" class=\"topic\">";
 
-	   if ($adminURL) {
-	      $html .=
-		  "<a href=\"".$adminURL."\"><img src=\"".$adminImgURL."\" border=\"0\" ".
-		  " alt=\"".$adminTitle."\" title=\"".$adminTitle."\"></a>";
-	   }
+       if ($adminURL) {
+          $html .=
+          "<a href=\"".$adminURL."\"><img src=\"".$adminImgURL."\" border=\"0\" ".
+          " alt=\"".$adminTitle."\" title=\"".$adminTitle."\"></a>";
+       }
 
-	   $html .=
-	      "  </td>\n".
-	      " </tr>\n";
+       $html .=
+          "  </td>\n".
+          " </tr>\n";
    }
    $html .= " <tr>\n".
       "  <td class=\"".$cssClass."\" colspan=\"3\">\n";
@@ -232,25 +232,25 @@ function createErrorReport (&$object, $errortitle = "") {
    $html = "";
    if (empty ($errortitle)) {
        $errortitle = ( count( $object->getErrors() ) > 1 )
-	   ? _("Es sind Fehler aufgetreten.")
-	   : _("Es ist ein Fehler aufgetreten.");
+       ? _("Es sind Fehler aufgetreten.")
+       : _("Es ist ein Fehler aufgetreten.");
    }
 
    $html .=  createReportMessage ($errortitle, VOTE_ICON_ERROR,
-				  VOTE_COLOR_ERROR);
+                  VOTE_COLOR_ERROR);
 
    $html .= "<ul>\n";
    if(is_object($object)){
-	   foreach ($object->getErrors () as $error) {
-	      $html .= " <li><font size=\"-1\">".$error["string"]."</font>\n";
-	      if ($error["type"] == ERROR_CRITICAL) {
-		 $html .= "<ul>\n";
-		 $html .= "<li>"._("Datei: ")."<b>".$error["file"]."</b></li>\n";
-		 $html .= "<li>"._("Zeile: ")."<b>".$error["line"]."</b></li>\n";
-		 $html .= "</ul>\n";
-	      }
-	      $html .= "</li>\n";
-	   }
+       foreach ($object->getErrors () as $error) {
+          $html .= " <li><font size=\"-1\">".$error["string"]."</font>\n";
+          if ($error["type"] == ERROR_CRITICAL) {
+         $html .= "<ul>\n";
+         $html .= "<li>"._("Datei: ")."<b>".$error["file"]."</b></li>\n";
+         $html .= "<li>"._("Zeile: ")."<b>".$error["line"]."</b></li>\n";
+         $html .= "</ul>\n";
+          }
+          $html .= "</li>\n";
+       }
    }
    $html .= "</ul>\n";
 

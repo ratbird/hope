@@ -4,15 +4,15 @@
 *
 * Parameters received via stdin<br/>
 * <code>
-*	$user_name
+*   $user_name
 * </code>
 *
-* @author		Florian Hansen <f1701h@gmx.net>
-* @version		0.11	10.09.2003	21:23:59
-* @access		public
-* @modulegroup	wap_modules
-* @module		login_form.php
-* @package		WAP
+* @author       Florian Hansen <f1701h@gmx.net>
+* @version      0.11    10.09.2003  21:23:59
+* @access       public
+* @modulegroup  wap_modules
+* @module       login_form.php
+* @package      WAP
 */
 
 // +---------------------------------------------------------------------------+
@@ -43,29 +43,29 @@
     */
     define("PHPDOC_DUMMY", TRUE);
 
-	include_once("wap_buttons.inc.php");
-	include_once("wap_txt.inc.php");
-	include_once("wap_adm.inc.php");
+    include_once("wap_buttons.inc.php");
+    include_once("wap_txt.inc.php");
+    include_once("wap_adm.inc.php");
 
-	wap_adm_start_card();
+    wap_adm_start_card();
 
-		echo "<p align=\"center\">";
-		echo "<b>" . _("Login") . "</b>";
-		echo "</p>\n";
+        echo "<p align=\"center\">";
+        echo "<b>" . _("Login") . "</b>";
+        echo "</p>\n";
 
-		echo "<p align=\"left\">\n";
+        echo "<p align=\"left\">\n";
 
-		echo wap_txt_encode_to_wml(_("Username:")) . "<br/>";
-		echo "<input type=\"text\" name=\"user_name\" ";
-		echo "emptyok=\"false\" value=\"" . stripslashes($user_name);
-		echo "\"/><br/>\n";
+        echo wap_txt_encode_to_wml(_("Username:")) . "<br/>";
+        echo "<input type=\"text\" name=\"user_name\" ";
+        echo "emptyok=\"false\" value=\"" . stripslashes($user_name);
+        echo "\"/><br/>\n";
 
-		echo wap_txt_encode_to_wml(_("Passwort:")) . "<br/>";
-		echo "<input type=\"password\" name=\"user_pass\" ";
-		echo "emptyok=\"false\"/><br/>\n";
-		echo "</p>\n";
+        echo wap_txt_encode_to_wml(_("Passwort:")) . "<br/>";
+        echo "<input type=\"password\" name=\"user_pass\" ";
+        echo "emptyok=\"false\"/><br/>\n";
+        echo "</p>\n";
 
-		echo "<p align=\"right\">\n";
+        echo "<p align=\"right\">\n";
         echo "<anchor>" . wap_buttons_login() . "\n";
         echo "    <go method=\"post\" href=\"login_index.php\">\n";
         echo "        <postfield name=\"user_name\" value=\"\$(user_name)\"/>\n";
@@ -74,7 +74,7 @@
         echo "</anchor><br/>\n";
 
         wap_buttons_menu_link(FALSE);
-		echo "</p>\n";
+        echo "</p>\n";
 
-	wap_adm_end_card();
+    wap_adm_end_card();
 ?>

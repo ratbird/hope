@@ -33,38 +33,38 @@
 require_once ("lib/classes/lit_import_plugins/StudipLitImportPluginAbstract.class.php");
 
 function do_lit_import() {
-	global $_msg, $cmd, $xmlfile, $xmlfile_size, $xmlfile_name, $username, $_range_id, $PHP_SELF, $plugin_name;
-	if ($cmd) {
-		if ($cmd=="import_lit_list" && $xmlfile) {
-			StudipLitImportPluginAbstract::use_lit_import_plugins($xmlfile, $xmlfile_size, $xmlfile_name, $plugin_name, $_range_id);
-			//header("Location: $PHP_SELF?_range_id=$_range_id&username=$username&_msg=".urlencode($_msg));
-			//wozu dieses???
-		}
-	}
+    global $_msg, $cmd, $xmlfile, $xmlfile_size, $xmlfile_name, $username, $_range_id, $PHP_SELF, $plugin_name;
+    if ($cmd) {
+        if ($cmd=="import_lit_list" && $xmlfile) {
+            StudipLitImportPluginAbstract::use_lit_import_plugins($xmlfile, $xmlfile_size, $xmlfile_name, $plugin_name, $_range_id);
+            //header("Location: $PHP_SELF?_range_id=$_range_id&username=$username&_msg=".urlencode($_msg));
+            //wozu dieses???
+        }
+    }
 }
 
 function print_lit_import_dlg() {
-	global $PHP_SELF, $username, $_range_id, $plugin_name, $LIT_IMPORT_PLUGINS;
+    global $PHP_SELF, $username, $_range_id, $plugin_name, $LIT_IMPORT_PLUGINS;
 
-	if (!$plugin_name) $plugin_name = "EndNote";
+    if (!$plugin_name) $plugin_name = "EndNote";
 
-	$plugin = array();
-	
-	if ($plugin_name)
-		foreach ($LIT_IMPORT_PLUGINS as $p) {
-			if ($p["name"] == $plugin_name) {
-				$plugin = $p;
-				break;
-			}
-		}
+    $plugin = array();
+    
+    if ($plugin_name)
+        foreach ($LIT_IMPORT_PLUGINS as $p) {
+            if ($p["name"] == $plugin_name) {
+                $plugin = $p;
+                break;
+            }
+        }
 
-	$template = $GLOBALS['template_factory']->open('literatur/import_lit_list');
+    $template = $GLOBALS['template_factory']->open('literatur/import_lit_list');
 
-	$template->set_attribute('plugin_name', $plugin_name);
-	$template->set_attribute('plugin', $plugin);
-	$template->set_attribute('_range_id', $_range_id);
-	$template->set_attribute('username', $username);
+    $template->set_attribute('plugin_name', $plugin_name);
+    $template->set_attribute('plugin', $plugin);
+    $template->set_attribute('_range_id', $_range_id);
+    $template->set_attribute('username', $username);
 
-	echo $template->render();
+    echo $template->render();
 
 }

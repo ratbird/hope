@@ -87,7 +87,7 @@ class DB_Sql {
           $this->halt("connect() Link-ID == false " .
                  "($this->Link_ID), ora_plogon failed");
         } else {
-			//echo "commit on<p>";
+            //echo "commit on<p>";
           ora_commiton($this->Link_ID);
         }
         if($this->Debug) {
@@ -120,7 +120,7 @@ class DB_Sql {
       $this->lastQuery=$Query_String;
 
       if (!$this->Query_ID) {
-	      $this->Query_ID= ora_open($this->Link_ID);
+          $this->Query_ID= ora_open($this->Link_ID);
       }
       if($this->Debug) {
         printf("Debug: query = %s<br>\n", $Query_String);
@@ -153,7 +153,7 @@ class DB_Sql {
             printf("<br>next_record(): ID: %d,Rows: %d<br>\n",
             $this->Query_ID,$this->num_rows());
           }
-          $this->Row	+=1;
+          $this->Row    +=1;
           
           $errno=ora_errorcode($this->Query_ID);
           if(1403 == $errno) { # 1043 means no more records found
@@ -192,7 +192,7 @@ class DB_Sql {
       if       ($this->Row - 1 == $pos) {
         $this->no_next_fetch=true;
       } elseif ($this->Row == $pos ) {
-	## do nothing
+    ## do nothing
       } else {
         $this->halt("Invalid seek(): Position is cannot be handled by API.<BR>".
               "Difference too big. Wanted: $pos Current pos: $this->Row");
@@ -281,9 +281,9 @@ class DB_Sql {
         $res[$i]["index"] =  $this->Record[index_name];
         $res[$i]["chars"] =  $this->Record[char_col_decl_length];
         if ($full) {
-        	$j=$res[$i]["name"];
-        	$res["meta"][$j] = $i;
-        	$res["meta"][strtoupper($j)] = $i;
+            $j=$res[$i]["name"];
+            $res["meta"][$j] = $i;
+            $res["meta"][strtoupper($j)] = $i;
         }
         if ($full) $res["meta"][$res[$i]["name"]] = $i;
         $i++;

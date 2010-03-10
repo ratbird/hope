@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternModuleLectures
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternModuleLectures
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -44,64 +44,64 @@ require_once('lib/language.inc.php');
 
 class ExternModuleLectures extends ExternModule {
 
-	/**
-	*
-	*/
-	function ExternModuleLectures ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
-		$this->registered_elements = array(
-			'ReplaceTextSemType',
-			'SelectSubjectAreas',
-			'Body',
-			'TableHeader',
-			'InfoCountSem' => 'TableGroup',
-			'Grouping' => 'TableGroup',
-			'LecturesInnerTable',
-			'SemLink' => 'LinkIntern',
-			'LecturerLink' => 'LinkIntern');
-		$this->args = array('group');
-		parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
-	}
-	
-	function setup () {
-		$this->elements["InfoCountSem"]->real_name = _("Anzahl Veranstaltungen/Gruppierung");
-		$this->elements["SemLink"]->link_module_type = 4;
-		$this->elements["SemLink"]->real_name = _("Link zum Modul Veranstaltungsdetails");
-		$this->elements["LecturerLink"]->link_module_type = 2;
-		$this->elements["LecturerLink"]->real_name = _("Link zum Modul MitarbeiterInnendetails");
-	}
-	
-	function printout ($args) {
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_header($this->config);
-		
-		if (!$language = $this->config->getValue("Main", "language"))
-			$language = "de_DE";
-		init_i18n($language);
-		
-		$start_item_id = get_start_item_id($this->config->range_id);
-		$browser =& new ExternSemBrowse($this, $start_item_id);
-		$browser->print_result($args);
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_footer();
-	}
-	
-	function printoutPreview () {
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_header($this->config);
-		
-		if (!$language = $this->config->getValue("Main", "language"))
-			$language = "de_DE";
-		init_i18n($language);
-		
-		include($GLOBALS["RELATIVE_PATH_EXTERN"]
-				. "/modules/views/lectures_preview.inc.php");
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_footer();
-	}
-	
+    /**
+    *
+    */
+    function ExternModuleLectures ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
+        $this->registered_elements = array(
+            'ReplaceTextSemType',
+            'SelectSubjectAreas',
+            'Body',
+            'TableHeader',
+            'InfoCountSem' => 'TableGroup',
+            'Grouping' => 'TableGroup',
+            'LecturesInnerTable',
+            'SemLink' => 'LinkIntern',
+            'LecturerLink' => 'LinkIntern');
+        $this->args = array('group');
+        parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
+    }
+    
+    function setup () {
+        $this->elements["InfoCountSem"]->real_name = _("Anzahl Veranstaltungen/Gruppierung");
+        $this->elements["SemLink"]->link_module_type = 4;
+        $this->elements["SemLink"]->real_name = _("Link zum Modul Veranstaltungsdetails");
+        $this->elements["LecturerLink"]->link_module_type = 2;
+        $this->elements["LecturerLink"]->real_name = _("Link zum Modul MitarbeiterInnendetails");
+    }
+    
+    function printout ($args) {
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_header($this->config);
+        
+        if (!$language = $this->config->getValue("Main", "language"))
+            $language = "de_DE";
+        init_i18n($language);
+        
+        $start_item_id = get_start_item_id($this->config->range_id);
+        $browser =& new ExternSemBrowse($this, $start_item_id);
+        $browser->print_result($args);
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_footer();
+    }
+    
+    function printoutPreview () {
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_header($this->config);
+        
+        if (!$language = $this->config->getValue("Main", "language"))
+            $language = "de_DE";
+        init_i18n($language);
+        
+        include($GLOBALS["RELATIVE_PATH_EXTERN"]
+                . "/modules/views/lectures_preview.inc.php");
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_footer();
+    }
+    
 }
 
 ?>

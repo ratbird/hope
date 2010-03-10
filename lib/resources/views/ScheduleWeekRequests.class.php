@@ -7,11 +7,11 @@
 * or a timetable for a ressource like a room, a device or a building
 * 
 *
-* @author		Cornelis Kater <ckater@gwdg.de>
-* @access		public
-* @package		resources
-* @modulegroup	resources_modules
-* @module		ScheduleWeek.class.php
+* @author       Cornelis Kater <ckater@gwdg.de>
+* @access       public
+* @package      resources
+* @modulegroup  resources_modules
+* @module       ScheduleWeek.class.php
 */
 
 // +---------------------------------------------------------------------------+
@@ -37,28 +37,28 @@
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/views/ScheduleWeek.class.php";
 
 class ScheduleWeekRequests extends ScheduleWeek {
-	
-	//Kontruktor
-	function ScheduleWeekRequests ($start_hour = '', $end_hour = '', $show_days = '', $start_date = '', $show_dates = true) {
-		
-		parent::ScheduleWeek($start_hour, $end_hour, $show_days, $start_date);
-		$this->categories[5] = array(
-								"bg-picture"   => $GLOBALS['ASSETS_URL']."images/calendar/category12_small.jpg",
-			           			"border-color" => "#2C5964");
-		$this->categories[6] = array(
-								"bg-picture"   => $GLOBALS['ASSETS_URL']."images/calendar/category10_small.jpg",
-			           			"border-color" => "#957C29");
+    
+    //Kontruktor
+    function ScheduleWeekRequests ($start_hour = '', $end_hour = '', $show_days = '', $start_date = '', $show_dates = true) {
+        
+        parent::ScheduleWeek($start_hour, $end_hour, $show_days, $start_date);
+        $this->categories[5] = array(
+                                "bg-picture"   => $GLOBALS['ASSETS_URL']."images/calendar/category12_small.jpg",
+                                "border-color" => "#2C5964");
+        $this->categories[6] = array(
+                                "bg-picture"   => $GLOBALS['ASSETS_URL']."images/calendar/category10_small.jpg",
+                                "border-color" => "#957C29");
 
-	}
+    }
 
 
-	
-	function getColumnName($id){
-		$ts = mktime (0,0,0,date("n",$this->start_date), date("j",$this->start_date)+$id-1, date("Y",$this->start_date));
-		$out = strftime("%A", $ts);
-		if ($this->show_dates) $out .= "<br><font size=\"-1\">" . date("d.m.y", $ts) . "</font>\n";;
-		return $out;
-	}
-	
+    
+    function getColumnName($id){
+        $ts = mktime (0,0,0,date("n",$this->start_date), date("j",$this->start_date)+$id-1, date("Y",$this->start_date));
+        $out = strftime("%A", $ts);
+        if ($this->show_dates) $out .= "<br><font size=\"-1\">" . date("d.m.y", $ts) . "</font>\n";;
+        return $out;
+    }
+    
 }
 ?>

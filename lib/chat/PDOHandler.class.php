@@ -27,60 +27,60 @@
 *
 *
 *
-* @access	public
-* @author	André Noack <andre.noack@gmx.net>
-* @package	Chat
+* @access   public
+* @author   André Noack <andre.noack@gmx.net>
+* @package  Chat
 */
 
 class PDOHandler {
-	/**
-	* name of db table
-	*
-	* @access	private
-	* @var		string
-	*/
-	var $table_name;
+    /**
+    * name of db table
+    *
+    * @access   private
+    * @var      string
+    */
+    var $table_name;
 
-	/**
-	* constructor
-	*
-	* @access	public
-	* @param	string	$db_name
-	* @param	string	$table_name
-	*/
-	function PDOHandler($table_name = "chat_data") {
-		$this->table_name = $table_name;
-	}
+    /**
+    * constructor
+    *
+    * @access   public
+    * @param    string  $db_name
+    * @param    string  $table_name
+    */
+    function PDOHandler($table_name = "chat_data") {
+        $this->table_name = $table_name;
+    }
 
-	/**
-	* stores a variable in shared memory
-	*
-	* @access	public
-	* @param	mixed	&$what	variable to store (call by reference)
-	* @param	integer	$key	the key under which to store
-	*/
-	function store(&$what,$key) {
-		$db = DBManager::get();
-		$contents = addslashes(serialize($what));
-		$db->exec("REPLACE INTO {$this->table_name} (id, data) VALUES ($key, '$contents')");
-		return true;
-	}
+    /**
+    * stores a variable in shared memory
+    *
+    * @access   public
+    * @param    mixed   &$what  variable to store (call by reference)
+    * @param    integer $key    the key under which to store
+    */
+    function store(&$what,$key) {
+        $db = DBManager::get();
+        $contents = addslashes(serialize($what));
+        $db->exec("REPLACE INTO {$this->table_name} (id, data) VALUES ($key, '$contents')");
+        return true;
+    }
 
-	/**
-	* restores a variable from shared memory
-	*
-	* @access	public
-	* @param	mixed	&$what	variable to restore (call by reference)
-	* @param	integer	$key	the key from which to store
-	*/
-	function restore(&$what,$key) {
-		$db = DBManager::get();
-		$result = $db->query("SELECT data FROM {$this->table_name} WHERE id=$key");
+    /**
+    * restores a variable from shared memory
+    *
+    * @access   public
+    * @param    mixed   &$what  variable to restore (call by reference)
+    * @param    integer $key    the key from which to store
+    */
+    function restore(&$what,$key) {
+        $db = DBManager::get();
+        $result = $db->query("SELECT data FROM {$this->table_name} WHERE id=$key");
 
-		if (($row = $result->fetch())) {
-			$what = unserialize($row['data']);
-		}
-		return true;
-	}
+        if (($row = $result->fetch())) {
+            $what = unserialize($row['data']);
+        }
+        return true;
+    }
 }
 ?>

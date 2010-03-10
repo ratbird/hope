@@ -7,11 +7,11 @@
 * 
 * This file checks the tmp-directory for old files an deletes them.
 *
-* @author		Arne Schroeder <schroeder@data.quest.de>
-* @access		public
-* @modulegroup	export_modules
-* @module		oscar
-* @package		Export
+* @author       Arne Schroeder <schroeder@data.quest.de>
+* @access       public
+* @modulegroup  export_modules
+* @module       oscar
+* @package      Export
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP

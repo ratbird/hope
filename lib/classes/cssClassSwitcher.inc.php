@@ -26,139 +26,139 @@ define('PHPDOC_DUMMY',false);
 * cssClassSwitcher.inc.php
 *
 * class for handling zebra-tables
-* @author		Andre Noack <noack@data-quest.de>
-* @access		public
-* @package		studip_core
+* @author       Andre Noack <noack@data-quest.de>
+* @access       public
+* @package      studip_core
 */
 class cssClassSwitcher {
-	
-	var $class = array("steelgraulight", "steel1");                 //Klassen
-	var $headerClass = "steel";
-	var $classcnt = 0;                //Counter
-	var $hovercolor = array("#B7C2E2","#CED8F2");
-	var $nohovercolor = array("#E2E2E2","#F2F2F2");
-	var $JSenabled = FALSE;
-	var $hoverenabled = FALSE;
-	/**
-	* cssClassSwitcher constructor
-	* 
-	* class for handling zebra-tables
-	*
-	* @access	public
-	* @param	string
-	* @param	string
-	* @param	string
-	* @param	string
-	*/
-	function cssClassSwitcher($class = "",$headerClass = "",$hovercolor = "",$nohovercolor = ""){
-		if ($GLOBALS["auth"]->auth["jscript"]) $this->JSenabled = TRUE;
-		if (is_array($class)) $this->class = $class;
-		if ($headerClass) $this->headerClass = $headerClass;
-		if (is_array($hovercolor)) $this->hovercolor = $hovercolor;
-		if (is_array($nohovercolor)) $this->nohovercolor = $nohovercolor;
-	}
-	
-	function enableHover($hovercolor = "",$nohovercolor = ""){
-		if (is_array($hovercolor)) $this->hovercolor = $hovercolor;
-		if (is_array($nohovercolor)) $this->nohovercolor = $nohovercolor;	
-		if ($this->JSenabled)
-			$this->hoverenabled = TRUE;
-	}
-	
-	function disableHover(){
-		$this->hoverenabled = FALSE;
-	}
-	
-	function getHover(){
-		if($this->hoverenabled && $this->JSenabled){
-			$ret = $this->getFullClass();
-			$ret .= " onMouseOver='doHover(this,\"".$this->nohovercolor[$this->classcnt]."\",\"".$this->hovercolor[$this->classcnt]."\")'".
-				" onMouseOut='doHover(this,\"".$this->hovercolor[$this->classcnt]."\",\"".$this->nohovercolor[$this->classcnt]."\")' ";
-		}
-		return $ret;
-	}
-	
-	function getFullClass(){
-		$ret = ($this->hoverenabled) ?  " style=\"background-color:".$this->nohovercolor[$this->classcnt]."\" " : " class=\"" . $this->class[$this->classcnt] . "\" ";
-		return $ret;
-	}
-	
-	function getClass() {
-		return ($this->hoverenabled) ? "\"  style=\"background-color:".$this->nohovercolor[$this->classcnt]." " : $this->class[$this->classcnt];
-	}
+    
+    var $class = array("steelgraulight", "steel1");                 //Klassen
+    var $headerClass = "steel";
+    var $classcnt = 0;                //Counter
+    var $hovercolor = array("#B7C2E2","#CED8F2");
+    var $nohovercolor = array("#E2E2E2","#F2F2F2");
+    var $JSenabled = FALSE;
+    var $hoverenabled = FALSE;
+    /**
+    * cssClassSwitcher constructor
+    * 
+    * class for handling zebra-tables
+    *
+    * @access   public
+    * @param    string
+    * @param    string
+    * @param    string
+    * @param    string
+    */
+    function cssClassSwitcher($class = "",$headerClass = "",$hovercolor = "",$nohovercolor = ""){
+        if ($GLOBALS["auth"]->auth["jscript"]) $this->JSenabled = TRUE;
+        if (is_array($class)) $this->class = $class;
+        if ($headerClass) $this->headerClass = $headerClass;
+        if (is_array($hovercolor)) $this->hovercolor = $hovercolor;
+        if (is_array($nohovercolor)) $this->nohovercolor = $nohovercolor;
+    }
+    
+    function enableHover($hovercolor = "",$nohovercolor = ""){
+        if (is_array($hovercolor)) $this->hovercolor = $hovercolor;
+        if (is_array($nohovercolor)) $this->nohovercolor = $nohovercolor;   
+        if ($this->JSenabled)
+            $this->hoverenabled = TRUE;
+    }
+    
+    function disableHover(){
+        $this->hoverenabled = FALSE;
+    }
+    
+    function getHover(){
+        if($this->hoverenabled && $this->JSenabled){
+            $ret = $this->getFullClass();
+            $ret .= " onMouseOver='doHover(this,\"".$this->nohovercolor[$this->classcnt]."\",\"".$this->hovercolor[$this->classcnt]."\")'".
+                " onMouseOut='doHover(this,\"".$this->hovercolor[$this->classcnt]."\",\"".$this->nohovercolor[$this->classcnt]."\")' ";
+        }
+        return $ret;
+    }
+    
+    function getFullClass(){
+        $ret = ($this->hoverenabled) ?  " style=\"background-color:".$this->nohovercolor[$this->classcnt]."\" " : " class=\"" . $this->class[$this->classcnt] . "\" ";
+        return $ret;
+    }
+    
+    function getClass() {
+        return ($this->hoverenabled) ? "\"  style=\"background-color:".$this->nohovercolor[$this->classcnt]." " : $this->class[$this->classcnt];
+    }
 
-	function getHeaderClass() {
-		return $this->headerClass;
-	}
+    function getHeaderClass() {
+        return $this->headerClass;
+    }
 
-	function resetClass() {
-		return $this->classcnt = 0;
-	}
+    function resetClass() {
+        return $this->classcnt = 0;
+    }
 
-	function switchClass() {
-		$this->classcnt++;
-		if ($this->classcnt >= sizeof($this->class))
-			$this->classcnt = 0;
-	}
-	
-	function GetHoverJSFunction(){
-		static $is_called = FALSE;
-		$ret = "";
-		if($GLOBALS["auth"]->auth["jscript"] && !$is_called) {
-			$ret = "<script type=\"text/javascript\">
-					function convert(x, n, m, d){
-						if (x == 0) return '00';
-						var r = '';
-						while (x != 0){
-							r = d.charAt((x & m)) + r;
-							x = x >>> n
-						}
-						return (r.length%2) ? '0' + r : r;
-					}
-					
-					function toHexString(x){
-						return convert(x, 4, 15, '0123456789abcdef');
-					}
-					
-					function rgbToHex(rgb_str){
-						var ret = '#';
-						var rgb_arr = rgb_str.substring(rgb_str.indexOf('(')+1,rgb_str.lastIndexOf(')')).split(',');
-						for(var i = 0; i < rgb_arr.length; ++i){
-							ret += toHexString(rgb_arr[i]);
-						}
-						return ret;
-					}
-					
-					function doHover(theRow, theFromColor, theToColor){
-						if (theFromColor == '' || theToColor == '') {
-							return false;
-						}
-						if (document.getElementsByTagName) {
-							var theCells = theRow.getElementsByTagName('td');
-						}
-						else if (theRow.cells) {
-							var theCells = theRow.cells;
-						} else {
-							return false;
-						}
-						if (theRow.tagName.toLowerCase() != 'tr'){
-							if ((theRow.style.backgroundColor.toLowerCase() == theFromColor.toLowerCase()) || (rgbToHex(theRow.style.backgroundColor) == theFromColor.toLowerCase())) {
-								theRow.style.backgroundColor = theToColor;
-							}
-						} else {
-							var rowCellsCnt  = theCells.length;
-							for (var c = 0; c < rowCellsCnt; c++) {
-								if ((theCells[c].style.backgroundColor == theFromColor.toLowerCase()) || (rgbToHex(theCells[c].style.backgroundColor) == theFromColor.toLowerCase())) {
-									theCells[c].style.backgroundColor = theToColor;
-								}
-							}
-						}
-						return true;
-					}
-					</script>";
-		}
-		$is_called = TRUE;
-		return $ret;
-	}
+    function switchClass() {
+        $this->classcnt++;
+        if ($this->classcnt >= sizeof($this->class))
+            $this->classcnt = 0;
+    }
+    
+    function GetHoverJSFunction(){
+        static $is_called = FALSE;
+        $ret = "";
+        if($GLOBALS["auth"]->auth["jscript"] && !$is_called) {
+            $ret = "<script type=\"text/javascript\">
+                    function convert(x, n, m, d){
+                        if (x == 0) return '00';
+                        var r = '';
+                        while (x != 0){
+                            r = d.charAt((x & m)) + r;
+                            x = x >>> n
+                        }
+                        return (r.length%2) ? '0' + r : r;
+                    }
+                    
+                    function toHexString(x){
+                        return convert(x, 4, 15, '0123456789abcdef');
+                    }
+                    
+                    function rgbToHex(rgb_str){
+                        var ret = '#';
+                        var rgb_arr = rgb_str.substring(rgb_str.indexOf('(')+1,rgb_str.lastIndexOf(')')).split(',');
+                        for(var i = 0; i < rgb_arr.length; ++i){
+                            ret += toHexString(rgb_arr[i]);
+                        }
+                        return ret;
+                    }
+                    
+                    function doHover(theRow, theFromColor, theToColor){
+                        if (theFromColor == '' || theToColor == '') {
+                            return false;
+                        }
+                        if (document.getElementsByTagName) {
+                            var theCells = theRow.getElementsByTagName('td');
+                        }
+                        else if (theRow.cells) {
+                            var theCells = theRow.cells;
+                        } else {
+                            return false;
+                        }
+                        if (theRow.tagName.toLowerCase() != 'tr'){
+                            if ((theRow.style.backgroundColor.toLowerCase() == theFromColor.toLowerCase()) || (rgbToHex(theRow.style.backgroundColor) == theFromColor.toLowerCase())) {
+                                theRow.style.backgroundColor = theToColor;
+                            }
+                        } else {
+                            var rowCellsCnt  = theCells.length;
+                            for (var c = 0; c < rowCellsCnt; c++) {
+                                if ((theCells[c].style.backgroundColor == theFromColor.toLowerCase()) || (rgbToHex(theCells[c].style.backgroundColor) == theFromColor.toLowerCase())) {
+                                    theCells[c].style.backgroundColor = theToColor;
+                                }
+                            }
+                        }
+                        return true;
+                    }
+                    </script>";
+        }
+        $is_called = TRUE;
+        return $ret;
+    }
 }
 ?>

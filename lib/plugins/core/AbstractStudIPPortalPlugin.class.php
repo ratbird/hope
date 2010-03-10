@@ -11,48 +11,48 @@
 class AbstractStudIPPortalPlugin extends AbstractStudIPLegacyPlugin
   implements PortalPlugin {
 
-	function AbstractStudIPPortalPlugin(){
-		parent::__construct();
-	}
+    function AbstractStudIPPortalPlugin(){
+        parent::__construct();
+    }
 
-	/**
-	 * Used to show an overview on the start page or portal page
-	 *
-	 * @deprecated
-	 *
-	 * @param is the user already logged in?
-	 */
-	function showOverview($unauthorizedview=true){
-		// has to be implemented
-	}
+    /**
+     * Used to show an overview on the start page or portal page
+     *
+     * @deprecated
+     *
+     * @param is the user already logged in?
+     */
+    function showOverview($unauthorizedview=true){
+        // has to be implemented
+    }
 
-	/**
-	 * Does this plugin have an administration page, which should be shown?
-	 * This default implementation only shows it for admin or root user.
-	 *
-	 * @deprecated
-	 */
-	function hasAdministration(){
-		return $GLOBALS['perm']->have_perm('admin');
-	}
+    /**
+     * Does this plugin have an administration page, which should be shown?
+     * This default implementation only shows it for admin or root user.
+     *
+     * @deprecated
+     */
+    function hasAdministration(){
+        return $GLOBALS['perm']->have_perm('admin');
+    }
 
-	/**
-	 * Does the plugin have a view for a user not currently logged in?
-	 *
-	 * @deprecated
-	 */
-	function hasUnauthorizedView(){
-		return false;
-	}
+    /**
+     * Does the plugin have a view for a user not currently logged in?
+     *
+     * @deprecated
+     */
+    function hasUnauthorizedView(){
+        return false;
+    }
 
-	/**
-	 * Does the plugin have a view for a currently logged in user?
-	 *
-	 * @deprecated
-	 */
-	function hasAuthorizedView(){
-		return true;
-	}
+    /**
+     * Does the plugin have a view for a currently logged in user?
+     *
+     * @deprecated
+     */
+    function hasAuthorizedView(){
+        return true;
+    }
 
     /**
      * Return a template (an instance of the Flexi_Template class)

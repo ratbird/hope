@@ -93,7 +93,7 @@ if( empty($template_answers) ) {
 if( $onthefly &&($command == "delete" || $command == "add_answers"
        || $command == "delete_answers" || $command == "save2")){
    $question = &new EvaluationQuestion ($template_id,
-					NULL, EVAL_LOAD_ALL_CHILDREN);
+                    NULL, EVAL_LOAD_ALL_CHILDREN);
    $question->setMultiplechoice($template_multiple);
    $question->setText(trim($template_name), YES);
    $question->setType($template_type);
@@ -125,12 +125,12 @@ switch( $command ) {
      $question=  &new EvaluationQuestion ($template_id, NULL,
                  EVAL_LOAD_ALL_CHILDREN);
      if($question->getParentID()!=$myuserid){
-	$question = &new EvaluationQuestion();
-	$question->setParentID($myuserid);
+    $question = &new EvaluationQuestion();
+    $question->setParentID($myuserid);
      }
      else{
-	$question->delete();
-	$question = &new EvaluationQuestion();
+    $question->delete();
+    $question = &new EvaluationQuestion();
      }
   }
   else{
@@ -188,9 +188,9 @@ switch( $command ) {
   if ($question->getType () == EVALQUESTION_TYPE_MC ||
       $question->getType () == EVALQUESTION_TYPE_LIKERT) {
      while ($template_add_num_answers--) {
-	$answer = &new EvaluationAnswer();
-	$answer->setText("");
-	$question->addChild ($answer);
+    $answer = &new EvaluationAnswer();
+    $answer->setText("");
+    $question->addChild ($answer);
      }
      #echo "Nummer: ".$question->getNumberChildren()."<br>";
      break;
@@ -246,44 +246,44 @@ switch( $command ) {
        $question->getType () == EVALQUESTION_TYPE_LIKERT) {
       $nummer=$question->getNumberChildren();
       //while($answer=$question->getChild()){
-	 //if(!$answer->getText()){
-	 //  $question->removeChildID ($answer->getObjectID());
-	 //  $answer->delete ();
-	 //  $nummer--;
-	 //}
+     //if(!$answer->getText()){
+     //  $question->removeChildID ($answer->getObjectID());
+     //  $answer->delete ();
+     //  $nummer--;
+     //}
       //}
      for ( $i=0; $i < count($template_answers); $i++ ) {
-	 $text     = $template_answers[$i]['text'];
-	 if($text==""){
-	    $question->removeChildID ($template_answers[$i]['answer_id']);
-	 $nummer--;
-	 }
+     $text     = $template_answers[$i]['text'];
+     if($text==""){
+        $question->removeChildID ($template_answers[$i]['answer_id']);
+     $nummer--;
+     }
      }
      
       if($nummer==0){
-	 $report = 
-	    EvalCommon::createReportMessage(
-	    _("Dem Template wurden keine Antworten zugewiesen oder keine der Antworten  enthielt einen Text. Fügen Sie Antworten an, oder löschen Sie das Template."),
-					    EVAL_PIC_ERROR,
-					    EVAL_CSS_ERROR);   
-	 $command = "continue_edit";
-	 break;
+     $report = 
+        EvalCommon::createReportMessage(
+        _("Dem Template wurden keine Antworten zugewiesen oder keine der Antworten  enthielt einen Text. Fügen Sie Antworten an, oder löschen Sie das Template."),
+                        EVAL_PIC_ERROR,
+                        EVAL_CSS_ERROR);   
+     $command = "continue_edit";
+     break;
       }
    }
   
    if($question->getType() == EVALQUESTION_TYPE_POL ){ 
   
       for ( $i=0; $i < count($template_answers); $i++ ) {
-	 $text     = $template_answers[$i]['text'];
-	 if($text==""){
-	    $report = 
-	       EvalCommon::createReportMessage(
-	       _("Leere Antworten sind nicht zulässig, löschen Sie betreffende Felder oder geben Sie einen Text ein."),
-					       EVAL_PIC_ERROR,
-					       EVAL_CSS_ERROR);	 
-	    $command = "continue_edit";
-	    break;
-	 }
+     $text     = $template_answers[$i]['text'];
+     if($text==""){
+        $report = 
+           EvalCommon::createReportMessage(
+           _("Leere Antworten sind nicht zulässig, löschen Sie betreffende Felder oder geben Sie einen Text ein."),
+                           EVAL_PIC_ERROR,
+                           EVAL_CSS_ERROR);  
+        $command = "continue_edit";
+        break;
+     }
       }
    
    if($command == "continue_edit")
@@ -294,15 +294,15 @@ switch( $command ) {
    if ($template_residual && empty ($template_residual_text)) {
       $report = EvalCommon::createReportMessage(
       _("Geben Sie eine Ausweichantwort ein oder deaktivieren Sie diese."),
-						EVAL_PIC_ERROR,EVAL_CSS_ERROR);
+                        EVAL_PIC_ERROR,EVAL_CSS_ERROR);
       $command = "continue_edit";
       break;
    }
 
    if (!$onthefly && ! $question->getText()) {
        $report = EvalCommon::createReportMessage(_("Geben Sie einen Namen für die Vorlage ein."),
-						 EVAL_PIC_ERROR,
-						 EVAL_CSS_ERROR);
+                         EVAL_PIC_ERROR,
+                         EVAL_CSS_ERROR);
        $command = "continue_edit";
        break;
    }
@@ -315,8 +315,8 @@ switch( $command ) {
    $question->save();
    if($question->isError())
        $report = EvalCommon::createReportMessage(_("Fehler beim Speichern."),
-						 EVAL_PIC_ERROR,
-						 EVAL_CSS_ERROR);
+                         EVAL_PIC_ERROR,
+                         EVAL_CSS_ERROR);
    /* --------------------------------------------------- end: save template */
    $command = "";
    $template_answers = "";
@@ -383,7 +383,7 @@ if( !$command || $command == "back" ) {
 
     foreach($arrayOfTemplateIDs as $templateID) {
    $questionload = &new EvaluationQuestion ($templateID, 
-					    NULL, EVAL_LOAD_FIRST_CHILDREN);
+                        NULL, EVAL_LOAD_FIRST_CHILDREN);
    $typ=$questionload->getType();
    $text=my_substr ($questionload->getText(), 0, EVAL_MAX_TEMPLATENAMELEN);
    /*Root kennzeichnung hier entfernen!!*/
@@ -478,7 +478,7 @@ if( $command ) {
     switch( $command ) {
       case "editpol_scale":
        $question=  &new EvaluationQuestion ($template_editpol_scale, NULL,
-					    EVAL_LOAD_ALL_CHILDREN);
+                        EVAL_LOAD_ALL_CHILDREN);
        $td->cont( $lib->createTemplateForm( $question ) );
        break;
       case "createpol_scale":
@@ -487,20 +487,20 @@ if( $command ) {
        $question->setType(EVALQUESTION_TYPE_POL);
        $question->setText("");
         for( $i = 0 ; $i < 2 ; $i++ ){
-	   $answer = &new EvaluationAnswer();
-	   $answer->setParentID($question->getObjectID());
-	   if($i==0)
-	      $answer->setText(_("Anfang"));
-	   else
-	      $answer->setText(_("Ende"));
-	   $question->addChild($answer);
-	}
-	//	$td->cont( $lib->createTemplateFormPol( $question ) );
-	$td->cont( $lib->createTemplateForm( $question ) );
-	break;
+       $answer = &new EvaluationAnswer();
+       $answer->setParentID($question->getObjectID());
+       if($i==0)
+          $answer->setText(_("Anfang"));
+       else
+          $answer->setText(_("Ende"));
+       $question->addChild($answer);
+    }
+    //  $td->cont( $lib->createTemplateFormPol( $question ) );
+    $td->cont( $lib->createTemplateForm( $question ) );
+    break;
       case "editlikert_scale":
        $question=  &new EvaluationQuestion ($template_editlikert_scale,
-					    NULL, EVAL_LOAD_ALL_CHILDREN);
+                        NULL, EVAL_LOAD_ALL_CHILDREN);
        //$td->cont( $lib->createTemplateFormLikert( $question ) );
        $td->cont( $lib->createTemplateForm( $question ) );
        break;
@@ -510,17 +510,17 @@ if( $command ) {
        $question->setType(EVALQUESTION_TYPE_LIKERT);
        $question->setText("");
        for( $i = 0 ; $i < 4 ; $i++ ){
-	  $answer = &new EvaluationAnswer();
-	  $answer->setParentID($question->getObjectID());
-	  $answer->setText("");
-	  $answer->setPosition(1);
-	  $question->addChild($answer);
+      $answer = &new EvaluationAnswer();
+      $answer->setParentID($question->getObjectID());
+      $answer->setText("");
+      $answer->setPosition(1);
+      $question->addChild($answer);
        }
        $td->cont( $lib->createTemplateForm( $question ) );
        break;
       case "editnormal_scale":
        $question=  &new EvaluationQuestion ($template_editnormal_scale,
-					    NULL, EVAL_LOAD_ALL_CHILDREN);
+                        NULL, EVAL_LOAD_ALL_CHILDREN);
        $td->cont( $lib->createTemplateForm( $question ) );
        break;
       case "createnormal_scale":
@@ -529,11 +529,11 @@ if( $command ) {
        $question->setType(EVALQUESTION_TYPE_MC);
        $question->setText("");
        for( $i = 0 ; $i < 4 ; $i++ ){ 
-	  $answer = &new EvaluationAnswer();
-	  $answer->setParentID($question->getObjectID());
-	  $answer->setText("");
-	  $answer->setPosition(1);
-	  $question->addChild($answer);
+      $answer = &new EvaluationAnswer();
+      $answer->setParentID($question->getObjectID());
+      $answer->setText("");
+      $answer->setPosition(1);
+      $question->addChild($answer);
        }
        $td->cont( $lib->createTemplateForm( $question ) );
        //$td->cont( $lib->createTemplateFormMul( $question ) );
@@ -542,16 +542,16 @@ if( $command ) {
        /*Im Fall direkt question->answers flag mitübergeben*/
        /*$template_type überprüfen------------------------------------------*/
        switch( $template_type ) {
-	  /* --------------------------------------------------------------- */
-	 case EVALQUESTION_TYPE_POL:
-	  $td->cont( $lib->createTemplateForm( $question ) );
-	  break;
-	 case EVALQUESTION_TYPE_LIKERT:
-	  $td->cont( $lib->createTemplateForm( $question ) );
-	  break;
-	 case EVALQUESTION_TYPE_MC:
-	  $td->cont( $lib->createTemplateForm( $question, $onthefly));
-	  break;
+      /* --------------------------------------------------------------- */
+     case EVALQUESTION_TYPE_POL:
+      $td->cont( $lib->createTemplateForm( $question ) );
+      break;
+     case EVALQUESTION_TYPE_LIKERT:
+      $td->cont( $lib->createTemplateForm( $question ) );
+      break;
+     case EVALQUESTION_TYPE_MC:
+      $td->cont( $lib->createTemplateForm( $question, $onthefly));
+      break;
        }
        break;
        
@@ -559,23 +559,23 @@ if( $command ) {
        $onthefly=1;
        // extract the questionID from the command
        foreach( $_REQUEST as $key => $value ) {
-	  if( preg_match( "/template_(.*)_button_x/", $key, $command ) )
-	     break;
+      if( preg_match( "/template_(.*)_button_x/", $key, $command ) )
+         break;
        }
        if ( preg_match( "/(.*)_#(.*)/", $command[1], $command_parts ) )
-	  $questionID = $command_parts[2];
+      $questionID = $command_parts[2];
        $question=  &new EvaluationQuestion ($questionID,
-					    NULL, EVAL_LOAD_ALL_CHILDREN);
+                        NULL, EVAL_LOAD_ALL_CHILDREN);
        
        if($question->getNumberChildren()==0){
-	  $question->setType(EVALQUESTION_TYPE_MC);
-	  for( $i = 0 ; $i < 4 ; $i++ ){ 
-	     $answer = &new EvaluationAnswer();
-	     $answer->setParentID($question->getObjectID());
-	     $answer->setText((""));
-	     $answer->setPosition(1);
-	     $question->addChild($answer);
-	  }
+      $question->setType(EVALQUESTION_TYPE_MC);
+      for( $i = 0 ; $i < 4 ; $i++ ){ 
+         $answer = &new EvaluationAnswer();
+         $answer->setParentID($question->getObjectID());
+         $answer->setText((""));
+         $answer->setPosition(1);
+         $question->addChild($answer);
+      }
        }
        $td->cont( $lib->createTemplateForm( $question, $onthefly ) );
        break;
@@ -593,7 +593,7 @@ if( $command ) {
        break;
       case "editfree_scale":
        $question=  &new EvaluationQuestion ($template_editfree_scale,
-					    NULL, EVAL_LOAD_ALL_CHILDREN);
+                        NULL, EVAL_LOAD_ALL_CHILDREN);
        $td->cont( $lib->createTemplateFormFree( $question ) );
        break;
        
@@ -629,17 +629,17 @@ function save1($myuserid){
    }
    if( $qdb->exists($template_id) ){
       $question=  &new EvaluationQuestion ($template_id,
-					   NULL, EVAL_LOAD_ALL_CHILDREN);
+                       NULL, EVAL_LOAD_ALL_CHILDREN);
       if($question->getParentID() != $myuserid){
-	 $foreign=TRUE;
-	 $question = &new EvaluationQuestion();
-	 $question->setParentID($myuserid);
+     $foreign=TRUE;
+     $question = &new EvaluationQuestion();
+     $question->setParentID($myuserid);
       }
       else{
-	 $overwrite=1;
-	 //$question->delete();
-	 //$question = &new EvaluationQuestion();
-	 //$template_id=$question->getObjectID();
+     $overwrite=1;
+     //$question->delete();
+     //$question = &new EvaluationQuestion();
+     //$template_id=$question->getObjectID();
       }
    }
    else{
@@ -680,26 +680,26 @@ function save1($myuserid){
      
      /*Anzahl der Antworten bei Polskalen anpassen ------------------------*/
      if ($template_type == EVALQUESTION_TYPE_POL && $i == 0){
-	$answerdiff = $controlnumber - $template_add_num_answers ;
-	if($template_residual){
-	   //echo "Hust<br>";
-	   //$answerdiff;
-	}
-	if($answerdiff > 0){
-	   /*differenz abziehen => answers überspringen*/
-	   $i=$i+$answerdiff;
-	   $ausgleich=$ausgleich-$answerdiff;
-	}
-	while($answerdiff < 0){
-	   $ausgleich = $ausgleich + 1;
-	   $answer = & new EvaluationAnswer();
-	   $answer->setText("");
-	   $answer->setParentID($question->getObjectID());
-	   $answer->setPosition($i+$ausgleich);
-	   $answer->setValue($i+1+$ausgleich);
-	   $question->addChild($answer);
-	   $answerdiff++;
-	}
+    $answerdiff = $controlnumber - $template_add_num_answers ;
+    if($template_residual){
+       //echo "Hust<br>";
+       //$answerdiff;
+    }
+    if($answerdiff > 0){
+       /*differenz abziehen => answers überspringen*/
+       $i=$i+$answerdiff;
+       $ausgleich=$ausgleich-$answerdiff;
+    }
+    while($answerdiff < 0){
+       $ausgleich = $ausgleich + 1;
+       $answer = & new EvaluationAnswer();
+       $answer->setText("");
+       $answer->setParentID($question->getObjectID());
+       $answer->setPosition($i+$ausgleich);
+       $answer->setValue($i+1+$ausgleich);
+       $question->addChild($answer);
+       $answerdiff++;
+    }
      }
      /*end: Polskala antworten angleichen ----------------------------------*/
    }

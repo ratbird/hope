@@ -29,10 +29,10 @@
  * admin_evaluation.php
  *
  *
- * @author	cb
- * @version	10. Juni 2003
- * @access	public
- * @package	evaluation
+ * @author  cb
+ * @version 10. Juni 2003
+ * @access  public
+ * @package evaluation
  */
 
 ob_start(); // start output buffering
@@ -47,19 +47,19 @@ require_once 'lib/functions.php';
 
 $HELP_KEYWORD="Basis.Evaluationen";
 if ($SessSemName[1])
-	$CURRENT_PAGE = getHeaderLine($SessSemName[1])." - ";
+    $CURRENT_PAGE = getHeaderLine($SessSemName[1])." - ";
 $CURRENT_PAGE.= _("Verwaltung von Evaluationen");
 
 require_once ('lib/evaluation/evaluation.config.php');
 
 if ($list || $view) {
-	if ($links_admin_data['topkat'] == 'sem') {
-		Navigation::activateItem('/admin/course/evaluation');
-	} else {
-		Navigation::activateItem('/admin/institute/evaluation');
-	}
+    if ($links_admin_data['topkat'] == 'sem') {
+        Navigation::activateItem('/admin/course/evaluation');
+    } else {
+        Navigation::activateItem('/admin/institute/evaluation');
+    }
 } else {
-	Navigation::activateItem('/homepage/tools/evaluation');
+    Navigation::activateItem('/homepage/tools/evaluation');
 }
 
 include_once('lib/seminar_open.php');
@@ -68,40 +68,40 @@ include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');
 
 if ($list || $view) {
-	include 'lib/include/admin_search_form.inc.php';
+    include 'lib/include/admin_search_form.inc.php';
 }
 
 if (($SessSemName[1]) && (($view == "vote_sem") || ($view == "vote_inst"))) 
-	$the_range = $SessSemName[1];
+    $the_range = $SessSemName[1];
 else
-	$the_range = $_REQUEST['rangeID'];
+    $the_range = $_REQUEST['rangeID'];
 
 if ($the_range){
-	if (get_Username($the_range))
-		$the_range = get_Username($the_range);
-	if (get_Userid($the_range))
-		$isUserrange = 1;
+    if (get_Username($the_range))
+        $the_range = get_Username($the_range);
+    if (get_Userid($the_range))
+        $isUserrange = 1;
 } elseif ($_REQUEST['view']){
-	$the_range = $SessSemName[1];
+    $the_range = $SessSemName[1];
 }
 
 if (empty($the_range)) {
-	$the_range = $user->id;
-	$isUserrange = 1;
+    $the_range = $user->id;
+    $isUserrange = 1;
 }
 
 
 if ($the_range != $auth->auth['uname'] && $the_range != 'studip' && !$isUserrange){
-	$view_mode = get_object_type($the_range);
-	if ($view_mode == "fak"){
-		$view_mode = "inst";
-	}
+    $view_mode = get_object_type($the_range);
+    if ($view_mode == "fak"){
+        $view_mode = "inst";
+    }
 } 
 
 if (array_key_exists ("page", $_REQUEST) && $_REQUEST["page"] == "edit")
-	include (EVAL_PATH.EVAL_FILE_EDIT);
+    include (EVAL_PATH.EVAL_FILE_EDIT);
 else
-	include (EVAL_PATH.EVAL_FILE_OVERVIEW);
+    include (EVAL_PATH.EVAL_FILE_OVERVIEW);
 
 page_close ();
 ?>

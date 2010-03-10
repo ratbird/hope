@@ -7,10 +7,10 @@
 *
 * Calendar-mainfile. Calls the submodules.
 *
-* @author		Peter Thienel <pthienel@data.quest.de>
-* @author 		Michael Riehemann <michael.riehemann@uni-oldenburg.de>
-* @access		public
-* @package 		calendar
+* @author       Peter Thienel <pthienel@data.quest.de>
+* @author       Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+* @access       public
+* @package      calendar
 */
 
 // +---------------------------------------------------------------------------+
@@ -51,17 +51,17 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 // -- here you have to put initialisations for the current page
 if ($CALENDAR_ENABLE)
 {
-	//Kalenderfrontend einbinden
-	include($RELATIVE_PATH_CALENDAR.'/calendar.inc.php');
+    //Kalenderfrontend einbinden
+    include($RELATIVE_PATH_CALENDAR.'/calendar.inc.php');
 }
 else
 {
-	require_once ('lib/msg.inc.php');
-	// Start of Output
-	include ('lib/include/html_head.inc.php'); // Output of html head
-	include ('lib/include/header.php');   // Output of Stud.IP head
-	$message = _("Der Terminkalender ist nicht eingebunden. Der Terminkalender wurde in den Systemeinstellungen nicht freigeschaltet. Wenden Sie sich bitte an die zuständigen Administrator.");
-	parse_window ("error§$message", "§", _("Terminkalender ist nicht eingebunden!"));
-	include ('lib/include/html_end.inc.php');
+    require_once ('lib/msg.inc.php');
+    // Start of Output
+    include ('lib/include/html_head.inc.php'); // Output of html head
+    include ('lib/include/header.php');   // Output of Stud.IP head
+    $message = _("Der Terminkalender ist nicht eingebunden. Der Terminkalender wurde in den Systemeinstellungen nicht freigeschaltet. Wenden Sie sich bitte an die zuständigen Administrator.");
+    parse_window ("error§$message", "§", _("Terminkalender ist nicht eingebunden!"));
+    include ('lib/include/html_end.inc.php');
 }
 ?>

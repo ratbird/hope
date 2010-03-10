@@ -30,7 +30,7 @@ require('lib/phplib/user4.inc');      /* Disable this, if you are not using per-
 
 /* Additional require statements go below this line */
 
-require('lib/phplib/email_validation.inc');	/* Required, contains register-check functions. */
+require('lib/phplib/email_validation.inc'); /* Required, contains register-check functions. */
 
 /* Additional require statements go before this line */
 

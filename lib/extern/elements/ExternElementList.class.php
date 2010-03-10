@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternElementList
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternElementList
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -40,78 +40,78 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternElement.class.php");
 
 class ExternElementList extends ExternElement {
 
-	var $attributes = array("ul_class", "ul_style", "li_class", "li_style", "margin");
+    var $attributes = array("ul_class", "ul_style", "li_class", "li_style", "margin");
 
-	/**
-	* Constructor
-	*
-	* @param array config
-	*/
-	function ExternElementList ($config = "") {
-		if ($config)
-			$this->config = $config;
-		
-		$this->name = "List";
-		$this->real_name = _("Aufz&auml;hlungsliste");
-		$this->description = _("Eigenschaften einer Aufz&auml;hlungsliste.");
-	}
-	
-	function toStringEdit ($post_vars = "", $faulty_values = "",
-			$edit_form = "", $anker = "") {
-			
-		if ($faulty_values == '')
-			$faulty_values = array();	
-		$out = '';
-		$tag_headline = '';
-		$table = '';
-		if ($edit_form == '')
-			$edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
-		
-		$edit_form->setElementName($this->getName());
-		$element_headline = $this->getEditFormHeadline($edit_form);
-		
-		$content_table = $edit_form->getEditFormContent($this->attributes);
-		$content_table .= $edit_form->editBlankContent();
-		
-		$headline = $edit_form->editHeadline(_("Einzug"));
-		$title = _("Linker Einzug:");
-		$info = _("Geben Sie an, wie weit (Pixel) die Aufzählungsliste im Absatz links eingerückt werden soll.");
-		$content = $edit_form->editTextfieldGeneric("margin", $title, $info, 3, 3);
-		
-		$content_table .= $edit_form->editContentTable($headline, $content);
-		$content_table .= $edit_form->editBlankContent();
-				
-		$submit = $edit_form->editSubmit($this->config->getName(),
-				$this->config->getId(), $this->getName());
-		$out = $edit_form->editContent($content_table, $submit);
-		$out .= $edit_form->editBlank();
-		
-		return  $element_headline . $out;
-	}
-	
-	function checkValue ($attribute, $value) {
-		if ($attribute == "margin")
-			return !preg_match("|^\d{0,3}$|", $value);
-	}
-	
-	function toString ($args) {
-		if ($args["level"] == "list") {
-			if ($this->config->getValue($this->name, "margin")) {
-				$out = "\n<div style=\"margin-left:" . $this->config->getValue($this->name, "margin");
-				$out .= "\">" . $this->config->getTag($this->name, "ul") . $args["content"];
-				$out .= "</ul></div>";
-			}
-			else
-				$out = "\n" . $this->config->getTag($this->name, "ul") . $args["content"] . "</ul>";
-		}
-		else if ($args["level"] == "item")
-			$out = "\n" . $this->config->getTag($this->name, "li") . $args["content"] . "</li>";
-		else
-			$out = "";
-		
-		return $out;
-	}
-	
+    /**
+    * Constructor
+    *
+    * @param array config
+    */
+    function ExternElementList ($config = "") {
+        if ($config)
+            $this->config = $config;
+        
+        $this->name = "List";
+        $this->real_name = _("Aufz&auml;hlungsliste");
+        $this->description = _("Eigenschaften einer Aufz&auml;hlungsliste.");
+    }
+    
+    function toStringEdit ($post_vars = "", $faulty_values = "",
+            $edit_form = "", $anker = "") {
+            
+        if ($faulty_values == '')
+            $faulty_values = array();   
+        $out = '';
+        $tag_headline = '';
+        $table = '';
+        if ($edit_form == '')
+            $edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
+        
+        $edit_form->setElementName($this->getName());
+        $element_headline = $this->getEditFormHeadline($edit_form);
+        
+        $content_table = $edit_form->getEditFormContent($this->attributes);
+        $content_table .= $edit_form->editBlankContent();
+        
+        $headline = $edit_form->editHeadline(_("Einzug"));
+        $title = _("Linker Einzug:");
+        $info = _("Geben Sie an, wie weit (Pixel) die Aufzählungsliste im Absatz links eingerückt werden soll.");
+        $content = $edit_form->editTextfieldGeneric("margin", $title, $info, 3, 3);
+        
+        $content_table .= $edit_form->editContentTable($headline, $content);
+        $content_table .= $edit_form->editBlankContent();
+                
+        $submit = $edit_form->editSubmit($this->config->getName(),
+                $this->config->getId(), $this->getName());
+        $out = $edit_form->editContent($content_table, $submit);
+        $out .= $edit_form->editBlank();
+        
+        return  $element_headline . $out;
+    }
+    
+    function checkValue ($attribute, $value) {
+        if ($attribute == "margin")
+            return !preg_match("|^\d{0,3}$|", $value);
+    }
+    
+    function toString ($args) {
+        if ($args["level"] == "list") {
+            if ($this->config->getValue($this->name, "margin")) {
+                $out = "\n<div style=\"margin-left:" . $this->config->getValue($this->name, "margin");
+                $out .= "\">" . $this->config->getTag($this->name, "ul") . $args["content"];
+                $out .= "</ul></div>";
+            }
+            else
+                $out = "\n" . $this->config->getTag($this->name, "ul") . $args["content"] . "</ul>";
+        }
+        else if ($args["level"] == "item")
+            $out = "\n" . $this->config->getTag($this->name, "li") . $args["content"] . "</li>";
+        else
+            $out = "";
+        
+        return $out;
+    }
+    
 }
 
 ?>

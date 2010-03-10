@@ -10,29 +10,29 @@
  */
 
 class AbstractStudIPAdministrationPlugin extends AbstractStudIPLegacyPlugin
-	implements AdministrationPlugin {
+    implements AdministrationPlugin {
 
-	var $topnavigation;
+    var $topnavigation;
 
-	function AbstractStudIPAdministrationPlugin(){
-		parent::__construct();
+    function AbstractStudIPAdministrationPlugin(){
+        parent::__construct();
 
-		// Administration-Plugins only accessible by users with admin rights
-		if (!$GLOBALS['perm']->have_perm('admin')) {
-			throw new Exception(_('Sie verfügen nicht über ausreichend Rechte für diese Aktion.'));
-		}
-	}
+        // Administration-Plugins only accessible by users with admin rights
+        if (!$GLOBALS['perm']->have_perm('admin')) {
+            throw new Exception(_('Sie verfügen nicht über ausreichend Rechte für diese Aktion.'));
+        }
+    }
 
-	/**
-	 * @deprecated
-	 */
-	function setNavigation(StudipPluginNavigation $navigation) {
-		parent::setNavigation($navigation);
+    /**
+     * @deprecated
+     */
+    function setNavigation(StudipPluginNavigation $navigation) {
+        parent::setNavigation($navigation);
 
-		if (Navigation::hasItem('/admin/plugins')) {
-			Navigation::addItem('/admin/plugins/' . $this->getPluginclassname(), $navigation);
-		}
-	}
+        if (Navigation::hasItem('/admin/plugins')) {
+            Navigation::addItem('/admin/plugins/' . $this->getPluginclassname(), $navigation);
+        }
+    }
 
     /**
      * Verfügt dieses Plugin über einen Eintrag auf der Startseite des
@@ -40,11 +40,11 @@ class AbstractStudIPAdministrationPlugin extends AbstractStudIPLegacyPlugin
      *
      * @deprecated
      *
-     * @return  true 	- Hauptmenü vorhanden
-     * 			false	- kein Hauptmenü vorhanden
+     * @return  true    - Hauptmenü vorhanden
+     *          false   - kein Hauptmenü vorhanden
      */
     function hasTopNavigation(){
-    	return $this->topnavigation != NULL;
+        return $this->topnavigation != NULL;
     }
 
     /**
@@ -55,7 +55,7 @@ class AbstractStudIPAdministrationPlugin extends AbstractStudIPLegacyPlugin
      * @return das Menü, oder NULL, wenn kein Menü vorhanden ist
      */
     function getTopNavigation(){
-    	return $this->topnavigation;
+        return $this->topnavigation;
     }
 
     /**

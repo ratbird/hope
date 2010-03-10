@@ -38,11 +38,11 @@ require_once ('lib/raumzeit/themen_ablaufplan.inc.php');
 require_once 'lib/admin_search.inc.php';
 
 if ($RESOURCES_ENABLE) {
-	include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
-	include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoomsList.class.php");
-	include_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
-	include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
-	$resList = new ResourcesUserRoomsList($user->id, TRUE, FALSE, TRUE);
+    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
+    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourcesUserRoomsList.class.php");
+    include_once ($RELATIVE_PATH_RESOURCES."/lib/VeranstaltungResourcesAssign.class.php");
+    include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
+    $resList = new ResourcesUserRoomsList($user->id, TRUE, FALSE, TRUE);
 }
 
 $moduleClass = new Modules();
@@ -54,7 +54,7 @@ Navigation::activateItem('/admin/course/schedule');
 //Change header_line if open object
 $header_line = getHeaderLine($id);
 if ($header_line)
-	$CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
 
 //Output starts here
 
@@ -63,7 +63,7 @@ include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 include 'lib/include/admin_search_form.inc.php';
 
 if (!$perm->have_studip_perm('tutor', $id)) {
-	die;
+    die;
 }
 
 $powerFeatures = true;
@@ -72,36 +72,36 @@ $sem = new Seminar($id);
 $sem->checkFilter();
 $themen =& $sem->getIssues();
 if (isset($_REQUEST['cmd'])) {
-	$cmd = $_REQUEST['cmd'];
+    $cmd = $_REQUEST['cmd'];
 }
 
 // Workaround for multiple submit buttons
 foreach ($_REQUEST as $key => $val) {
-	if ( ($key[strlen($key)-2] == '_') && ($key[strlen($key)-1] == 'x') ) {
-		$cmd = substr($key, 0, (strlen($key) - 2));
-	}
+    if ( ($key[strlen($key)-2] == '_') && ($key[strlen($key)-1] == 'x') ) {
+        $cmd = substr($key, 0, (strlen($key) - 2));
+    }
 }
 
 // if all entries are opened, we parse the submitted results into appropriate arrays
 foreach ($_REQUEST as $key => $val) {
-	if ($_REQUEST['allOpen']) {
-		if (strstr($key, 'theme_title')) {
-			$keys = explode('§', $key);
-			$changeTitle[$keys[1]] = $val;
-		}
-		if (strstr($key, 'theme_description')) {
-			$keys = explode('§', $key);
-			$changeDescription[$keys[1]] = $val;
-		}
-		if (strstr($key, 'forumFolder')) {
-			$keys = explode('§', $key);
-			$changeForum[$keys[1]] = $val;
-		}
-		if (strstr($key, 'fileFolder')) {
-			$keys = explode('§', $key);
-			$changeFile[$keys[1]] = $val;
-		}
-	}
+    if ($_REQUEST['allOpen']) {
+        if (strstr($key, 'theme_title')) {
+            $keys = explode('§', $key);
+            $changeTitle[$keys[1]] = $val;
+        }
+        if (strstr($key, 'theme_description')) {
+            $keys = explode('§', $key);
+            $changeDescription[$keys[1]] = $val;
+        }
+        if (strstr($key, 'forumFolder')) {
+            $keys = explode('§', $key);
+            $changeForum[$keys[1]] = $val;
+        }
+        if (strstr($key, 'fileFolder')) {
+            $keys = explode('§', $key);
+            $changeFile[$keys[1]] = $val;
+        }
+    }
 }
 
 $sem->registerCommand('open', 'themen_open');
@@ -116,12 +116,12 @@ $sem->processCommands();
 
 // add status-message if there are dates which are not covered by the choosable semesters
 if ($sem->hasDatesOutOfDuration()) {
-	$tpl['forceShowAll'] = TRUE;
-	if ($raumzeitFilter != 'all') {
-		$sem->createInfo(_("Es gibt weitere Termine, die au&szlig;erhalb der regul&auml;ren Laufzeit der Veranstaltung liegen.<br> Um diese anzuzeigen w&auml;hlen Sie bitte \"Alle Semester\"!"));
-	}
+    $tpl['forceShowAll'] = TRUE;
+    if ($raumzeitFilter != 'all') {
+        $sem->createInfo(_("Es gibt weitere Termine, die au&szlig;erhalb der regul&auml;ren Laufzeit der Veranstaltung liegen.<br> Um diese anzuzeigen w&auml;hlen Sie bitte \"Alle Semester\"!"));
+    }
 } else {
-	$tpl['forceShowAll'] = FALSE;
+    $tpl['forceShowAll'] = FALSE;
 }
 
 // create infobox with semester-chooser, view-chooser and status-messages
@@ -132,22 +132,22 @@ if ($sem->hasDatesOutOfDuration()) {
 $infobox = array();
 
 if ($sem->metadates->art == 0) {
-	$times_info .= '<B>'._("Typ").':</B> '._("regelm&auml;&szlig;ige Veranstaltung").'<br>';
-	$z = 0;
-	if (is_array($turnus = $sem->getFormattedTurnusDates())) {
-		foreach ($turnus as $val) {
-			if ($z != 0) { $times_info .= '<br>'; } $z = 1;
-			$times_info .= $val;
-		}
-	}
+    $times_info .= '<B>'._("Typ").':</B> '._("regelm&auml;&szlig;ige Veranstaltung").'<br>';
+    $z = 0;
+    if (is_array($turnus = $sem->getFormattedTurnusDates())) {
+        foreach ($turnus as $val) {
+            if ($z != 0) { $times_info .= '<br>'; } $z = 1;
+            $times_info .= $val;
+        }
+    }
 } else {
-	$times_info .= '<B>'._("Typ").':</B> '._("unregelm&auml;&szlig;ige Veranstaltung").'<br>';
+    $times_info .= '<B>'._("Typ").':</B> '._("unregelm&auml;&szlig;ige Veranstaltung").'<br>';
 }
 
 // infobox end
 
 unset($themen);
-$themen =& $sem->getIssues(true);	// read again, so we have the actual sort order and so on
+$themen =& $sem->getIssues(true);   // read again, so we have the actual sort order and so on
 
 $semester = new SemesterData();
 $all_semester = $semester->getAllSemesterData();
@@ -159,24 +159,24 @@ $termine = getAllSortedSingleDates($sem);
 <FORM action="<?= URLHelper::getLink($PHP_SELF) ?>" method="post">
 <TABLE width="100%" border="0" cellpadding="0" cellspacing="0">
   <TR>
-		<TD align="center" class="blank" width="80%" valign="top">
-		<?php 
-			// show messages
-			if ($messages = $sem->getStackedMessages()) :
-				foreach ($messages as $type => $message_data) :
-					echo MessageBox::$type( $message_data['title'], $message_data['details'] );
-				endforeach;
-			endif;
-		?>
-			<TABLE width="99%" cellspacing="0" cellpadding="0" border="0">
-				<? if (is_array($termine) && sizeof($termine) > 0) : ?>
-				<TR>
-					<TD class="steelgraulight" colspan="6" height="24" align="center">
-						<A href="<?= URLHelper::getLink($PHP_SELF."?cmd=".(($openAll) ? 'close' : 'open')."All") ?>">
-							<IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($openAll) ? 'close' : 'open'?>_all.gif" border="0" <?=tooltip(sprintf("Alle Termine %sklappen", ($openAll) ? 'zu' : 'auf'))?>>
-						</A>
-					</TD>
-				</TR>
+        <TD align="center" class="blank" width="80%" valign="top">
+        <?php 
+            // show messages
+            if ($messages = $sem->getStackedMessages()) :
+                foreach ($messages as $type => $message_data) :
+                    echo MessageBox::$type( $message_data['title'], $message_data['details'] );
+                endforeach;
+            endif;
+        ?>
+            <TABLE width="99%" cellspacing="0" cellpadding="0" border="0">
+                <? if (is_array($termine) && sizeof($termine) > 0) : ?>
+                <TR>
+                    <TD class="steelgraulight" colspan="6" height="24" align="center">
+                        <A href="<?= URLHelper::getLink($PHP_SELF."?cmd=".(($openAll) ? 'close' : 'open')."All") ?>">
+                            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($openAll) ? 'close' : 'open'?>_all.gif" border="0" <?=tooltip(sprintf("Alle Termine %sklappen", ($openAll) ? 'zu' : 'auf'))?>>
+                        </A>
+                    </TD>
+                </TR>
                 <? else : ?>
                 <TR>
                     <TD align="center">
@@ -184,146 +184,146 @@ $termine = getAllSortedSingleDates($sem);
                         <?= _("Im ausgewählten Zeitraum sind keine Termine vorhanden."); ?>
                     </TD>
                 </TR>
-				<? endif; ?>
-				<TR>
-					<TD class="blank" colspan="6" height="2"></TD>
-				</TR>
-			<? if ($openAll) { ?>
-				<tr>
-					<td class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
-						<input type="hidden" name="allOpen" value="TRUE">
-						<input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
-						<a href="<?= URLHelper::getLink($PHP_SELF."?cmd=closeAll") ?>">
-							<img <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
-						</a>
-					</td>
-				</tr>
+                <? endif; ?>
+                <TR>
+                    <TD class="blank" colspan="6" height="2"></TD>
+                </TR>
+            <? if ($openAll) { ?>
+                <tr>
+                    <td class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
+                        <input type="hidden" name="allOpen" value="TRUE">
+                        <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
+                        <a href="<?= URLHelper::getLink($PHP_SELF."?cmd=closeAll") ?>">
+                            <img <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
+                        </a>
+                    </td>
+                </tr>
 
-				<tr>
-					<td class="steel1" colspan="4"></td>
-					<td class="steel1" colspan="2" align="left" nowrap="nowrap">
-						<font size="-1">
-							<? if ($modules['forum']) : ?>
-							<input type="checkbox" name="createAllForumFolders"> <?=_("Für alle Termine einen Forumsordner anlegen")?>
-							<br>
-							<? endif;	if ($modules['documents']) : ?>
-							<input type="checkbox" name="createAllFileFolders"> <?=_("Für alle Termine einen Dateiordner anlegen")?>
-							<? endif; ?>
-						</font>
-					</td>
-				</tr>
-			<? } ?>
-				<TR>
-					<TD class="blank" colspan="6" height="2"></TD>
-				</TR>
-				<?
+                <tr>
+                    <td class="steel1" colspan="4"></td>
+                    <td class="steel1" colspan="2" align="left" nowrap="nowrap">
+                        <font size="-1">
+                            <? if ($modules['forum']) : ?>
+                            <input type="checkbox" name="createAllForumFolders"> <?=_("Für alle Termine einen Forumsordner anlegen")?>
+                            <br>
+                            <? endif;   if ($modules['documents']) : ?>
+                            <input type="checkbox" name="createAllFileFolders"> <?=_("Für alle Termine einen Dateiordner anlegen")?>
+                            <? endif; ?>
+                        </font>
+                    </td>
+                </tr>
+            <? } ?>
+                <TR>
+                    <TD class="blank" colspan="6" height="2"></TD>
+                </TR>
+                <?
 
-				foreach ($termine as $singledate_id => $singledate) {
+                foreach ($termine as $singledate_id => $singledate) {
 
-					if ( ($grenze == 0) || ($grenze < $singledate->getStartTime()) ) {
-						foreach ($all_semester as $zwsem) {
-							if ( ($zwsem['beginn'] < $singledate->getStartTime()) && ($zwsem['ende'] > $singledate->getStartTime()) ) {
-								$grenze = $zwsem['ende'];
-								?>
-								<TR>
-									<TD class="steelgraulight" align="center" colspan="9">
-										<FONT size="-1"><B><?=$zwsem['name']?></B></FONT>
-									</TD>
-								</TR>
-								<?
-							}
-						}
-					}
+                    if ( ($grenze == 0) || ($grenze < $singledate->getStartTime()) ) {
+                        foreach ($all_semester as $zwsem) {
+                            if ( ($zwsem['beginn'] < $singledate->getStartTime()) && ($zwsem['ende'] > $singledate->getStartTime()) ) {
+                                $grenze = $zwsem['ende'];
+                                ?>
+                                <TR>
+                                    <TD class="steelgraulight" align="center" colspan="9">
+                                        <FONT size="-1"><B><?=$zwsem['name']?></B></FONT>
+                                    </TD>
+                                </TR>
+                                <?
+                            }
+                        }
+                    }
 
-					// Template fuer einzelnes Datum
-					$showSpecialDays = FALSE;
-					$tpl = getTemplateDataForSingleDate($singledate, $metadate_id);
-					if (!$tpl['deleted']) {
-						$tpl['class'] = 'printhead';
-						$tpl['cycle_id'] = $metadate_id;
-						$tpl['art'] = $TERMIN_TYP[$tpl['type']]['name'];
+                    // Template fuer einzelnes Datum
+                    $showSpecialDays = FALSE;
+                    $tpl = getTemplateDataForSingleDate($singledate, $metadate_id);
+                    if (!$tpl['deleted']) {
+                        $tpl['class'] = 'printhead';
+                        $tpl['cycle_id'] = $metadate_id;
+                        $tpl['art'] = $TERMIN_TYP[$tpl['type']]['name'];
 
-    				// calendar jump
-    				$tpl['calendar'] = "&nbsp;<a href=\"".URLHelper::getLink("calendar.php?cmd=showweek&atime=". $singledate->getStartTime());
-    				$tpl['calendar'] .= "\"><img style=\"vertical-align:bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/popupkalender.gif\" ";
-    				$tpl['calendar'] .= tooltip(sprintf(_("Zum %s in den persönlichen Terminkalender springen"), date("m.d", $singledate->getStartTime())));
-    				$tpl['calendar'] .= ' border="0"></a>';
+                    // calendar jump
+                    $tpl['calendar'] = "&nbsp;<a href=\"".URLHelper::getLink("calendar.php?cmd=showweek&atime=". $singledate->getStartTime());
+                    $tpl['calendar'] .= "\"><img style=\"vertical-align:bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/popupkalender.gif\" ";
+                    $tpl['calendar'] .= tooltip(sprintf(_("Zum %s in den persönlichen Terminkalender springen"), date("m.d", $singledate->getStartTime())));
+                    $tpl['calendar'] .= ' border="0"></a>';
 
-						// activated modules
-						$tpl['modules'] = $modules;
+                        // activated modules
+                        $tpl['modules'] = $modules;
 
-						$issue_id = '';
-						if (is_array($tmp_ids = $singledate->getIssueIDs())) {
-							foreach ($tmp_ids as $val) {
-								$issue_id = $val;
-								break;
-							}
-						}
-						if ($issue_id == '') {
-							$tpl['submit_name'] = 'addIssue';
-						} else {
-							$tpl['submit_name'] = 'editIssue';
-							$tpl['issue_id'] = $issue_id;
-							if ($themen[$issue_id]) {
-								$thema =& $themen[$issue_id];
-								$tpl['theme_title'] = $thema->getTitle();
-								$tpl['theme_description'] = $thema->getDescription();
-								$tpl['forumEntry'] = ($thema->hasForum()) ? SELECTED : NOT_SELECTED;
-								$tpl['fileEntry'] = ($thema->hasFile()) ? SELECTED : NOT_SELECTED;
-							} else {
-								$tpl['theme_title'] = '';
-								$tpl['theme_description'] = '';
-							}
-						}
+                        $issue_id = '';
+                        if (is_array($tmp_ids = $singledate->getIssueIDs())) {
+                            foreach ($tmp_ids as $val) {
+                                $issue_id = $val;
+                                break;
+                            }
+                        }
+                        if ($issue_id == '') {
+                            $tpl['submit_name'] = 'addIssue';
+                        } else {
+                            $tpl['submit_name'] = 'editIssue';
+                            $tpl['issue_id'] = $issue_id;
+                            if ($themen[$issue_id]) {
+                                $thema =& $themen[$issue_id];
+                                $tpl['theme_title'] = $thema->getTitle();
+                                $tpl['theme_description'] = $thema->getDescription();
+                                $tpl['forumEntry'] = ($thema->hasForum()) ? SELECTED : NOT_SELECTED;
+                                $tpl['fileEntry'] = ($thema->hasFile()) ? SELECTED : NOT_SELECTED;
+                            } else {
+                                $tpl['theme_title'] = '';
+                                $tpl['theme_description'] = '';
+                            }
+                        }
 
-						include('lib/raumzeit/templates/singledate_ablaufplan.tpl');
-					}
-				}
+                        include('lib/raumzeit/templates/singledate_ablaufplan.tpl');
+                    }
+                }
 
-			if ($openAll) {
-				?>
-				<TR>
-					<TD class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
-						<INPUT type="hidden" name="allOpen" value="TRUE">
-						<INPUT type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
-						<A href="<?= URLHelper::getLink($PHP_SELF."?cmd=closeAll") ?>">
-							<IMG <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
-						</A>
-					</TD>
-				</TR>
-			<? } ?>
-			</TABLE>
-		</TD>
-		<TD class="blank" valign="top">
-		<?
+            if ($openAll) {
+                ?>
+                <TR>
+                    <TD class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
+                        <INPUT type="hidden" name="allOpen" value="TRUE">
+                        <INPUT type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
+                        <A href="<?= URLHelper::getLink($PHP_SELF."?cmd=closeAll") ?>">
+                            <IMG <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
+                        </A>
+                    </TD>
+                </TR>
+            <? } ?>
+            </TABLE>
+        </TD>
+        <TD class="blank" valign="top">
+        <?
 
-			// print info box:
-			// get template
-			$infobox_template =& $GLOBALS['template_factory']->open('infobox/infobox_topic_admin');
+            // print info box:
+            // get template
+            $infobox_template =& $GLOBALS['template_factory']->open('infobox/infobox_topic_admin');
 
-			// get a list of semesters (as display options)
-			$semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);
+            // get a list of semesters (as display options)
+            $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);
 
-			// fill attributes
-			$infobox_template->set_attribute('picture', 'schedules.jpg');
-			$infobox_template->set_attribute("selectionlist_title", "Semesterauswahl");
-			$infobox_template->set_attribute('selectionlist', $semester_selectionlist);
-			$infobox_template->set_attribute('times_info', $times_info);
+            // fill attributes
+            $infobox_template->set_attribute('picture', 'schedules.jpg');
+            $infobox_template->set_attribute("selectionlist_title", "Semesterauswahl");
+            $infobox_template->set_attribute('selectionlist', $semester_selectionlist);
+            $infobox_template->set_attribute('times_info', $times_info);
 
-			// render template
-			echo $infobox_template->render();
+            // render template
+            echo $infobox_template->render();
 
-		?>
-		</TD>
-	</TR>
-	<TR>
-		<TD class="blank" colspan="5">
-			&nbsp;
-		</TD>
-	</TR>
+        ?>
+        </TD>
+    </TR>
+    <TR>
+        <TD class="blank" colspan="5">
+            &nbsp;
+        </TD>
+    </TR>
 </TABLE>
 </FORM>
 <?
-	$sem->store();
-	include 'lib/include/html_end.inc.php';
-	page_close();
+    $sem->store();
+    include 'lib/include/html_end.inc.php';
+    page_close();

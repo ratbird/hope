@@ -40,8 +40,8 @@ require_once("lib/classes/LockRules.class.php");
 require_once 'lib/admin_search.inc.php';
 
 if (Request::submitted('general_lock')) {
-	$list=TRUE;
-	$message = 'info§' . _("Diese Daten sind noch nicht gespeichert.");
+    $list=TRUE;
+    $message = 'info§' . _("Diese Daten sind noch nicht gespeichert.");
 }
 
 $CURRENT_PAGE = _("Sperren von Veranstaltungen");
@@ -53,13 +53,13 @@ include ("lib/include/header.php"); // Output of Stud.IP head
 include 'lib/include/admin_search_form.inc.php';
 
 if (isset($SessSemName[1]) && (!$make_lock)) {
-	$stmt = DBManager::get()->prepare(
-	  "SELECT lock_rule, Name, Veranstaltungsnummer ".
-	  "FROM seminare WHERE Seminar_id=?");
-	$stmt->execute(array($SessSemName[1]));
-	$seminar_row = $stmt->fetch();
-	$lock_sem[$SessSemName[1]] = $seminar_row["lock_rule"];
-	$selected = 1;
+    $stmt = DBManager::get()->prepare(
+      "SELECT lock_rule, Name, Veranstaltungsnummer ".
+      "FROM seminare WHERE Seminar_id=?");
+    $stmt->execute(array($SessSemName[1]));
+    $seminar_row = $stmt->fetch();
+    $lock_sem[$SessSemName[1]] = $seminar_row["lock_rule"];
+    $selected = 1;
 }
 // # Get a database connection
 $lock_rules = new LockRules();
@@ -81,68 +81,68 @@ echo $zt->closeRow();
 
 // a Seminar is selected!
 if (isset($SessSemName[1]) && isset($selected)) {
-	$rule = $lock_rules->getLockRule($seminar_row["lock_rule"]);
-	if(!$perm->have_perm('root') && ($rule['permission'] == 'admin' || $rule['permission'] == 'root')){
-		$form = htmlReady($rule['name']);
-	} else {
-		$form	 = 	"<form name=\"\" action=\"".$PHP_SELF."\" method=\"post\">";
-		$form	.=	"<input type=\"hidden\" name=\"make_lock\" value=\"1\">";
-		$form 	.=	"<select name=\"lock_sem[{$SessSemName[1]}]\">";
-		for ($i=0;$i<count($all_lock_rules);$i++) {
-			$form .= "<option value=\"".$all_lock_rules[$i]["lock_id"]."\"";
-			if ($all_lock_rules[$i]["lock_id"]==$seminar_row["lock_rule"]) {
-				$form .= " selected ";
-			}
-			$form .= ">".htmlReady($all_lock_rules[$i]["name"])."</option>";
-		}
-		$form	.=	"</select>";
-		$form 	.=	"<input type=\"hidden\" name=\"lock_all\" value=\"-1\">";
-		$form	.=	makeButton("zuweisen", "input");
-		$form 	.=	"</form>";
-	}
-	echo $zt->row(array(htmlReady($seminar_row["Veranstaltungsnummer"]),
-	                    htmlReady($seminar_row["Name"]),
-	                    $form));
+    $rule = $lock_rules->getLockRule($seminar_row["lock_rule"]);
+    if(!$perm->have_perm('root') && ($rule['permission'] == 'admin' || $rule['permission'] == 'root')){
+        $form = htmlReady($rule['name']);
+    } else {
+        $form    =  "<form name=\"\" action=\"".$PHP_SELF."\" method=\"post\">";
+        $form   .=  "<input type=\"hidden\" name=\"make_lock\" value=\"1\">";
+        $form   .=  "<select name=\"lock_sem[{$SessSemName[1]}]\">";
+        for ($i=0;$i<count($all_lock_rules);$i++) {
+            $form .= "<option value=\"".$all_lock_rules[$i]["lock_id"]."\"";
+            if ($all_lock_rules[$i]["lock_id"]==$seminar_row["lock_rule"]) {
+                $form .= " selected ";
+            }
+            $form .= ">".htmlReady($all_lock_rules[$i]["name"])."</option>";
+        }
+        $form   .=  "</select>";
+        $form   .=  "<input type=\"hidden\" name=\"lock_all\" value=\"-1\">";
+        $form   .=  makeButton("zuweisen", "input");
+        $form   .=  "</form>";
+    }
+    echo $zt->row(array(htmlReady($seminar_row["Veranstaltungsnummer"]),
+                        htmlReady($seminar_row["Name"]),
+                        $form));
 
 }
 
 if (!Request::submitted('general_lock') && is_array($lock_sem) && !$selected) {
-	$db = DBManager::get();
+    $db = DBManager::get();
 
-	$stmt = $db->prepare("SELECT Veranstaltungsnummer, Name, lock_rule ".
-	                     "FROM seminare WHERE seminar_id=?");
+    $stmt = $db->prepare("SELECT Veranstaltungsnummer, Name, lock_rule ".
+                         "FROM seminare WHERE seminar_id=?");
 
-	$stmt_lock1 = $db->prepare("UPDATE seminare SET lock_rule=? ".
-	                           "WHERE Seminar_id=?");
+    $stmt_lock1 = $db->prepare("UPDATE seminare SET lock_rule=? ".
+                               "WHERE Seminar_id=?");
 
-	$stmt_lock2 = $db->prepare("UPDATE seminare SET lock_rule=NULL ".
-	                           "WHERE Seminar_id=?");
+    $stmt_lock2 = $db->prepare("UPDATE seminare SET lock_rule=NULL ".
+                               "WHERE Seminar_id=?");
 
-	while (list($key, $val) = each($lock_sem)) {
+    while (list($key, $val) = each($lock_sem)) {
 
-		$stmt->execute(array($key));
-		if ($row = $stmt->fetch()) {
+        $stmt->execute(array($key));
+        if ($row = $stmt->fetch()) {
 
-			$rule = $lock_rules->getLockRule($val);
-			echo $zt->row(array(htmlReady($row["Veranstaltungsnummer"]),
-			                    htmlReady($row["Name"]),
-			                    htmlReady($rule["name"])));
-			if ($make_lock) {
-				if ($val != 'none') {
-					$stmt_lock1->execute(array($val, $key));
-				} else {
-					$stmt_lock2->execute(array($key));
-				}
-			}
-		}
-		else {
-			echo $zt->row(array("&nbsp;",
-			                    htmlReady($row["Name"]),
-			                    "<font color=red>".
-			                    _("Änderung fehlgeschlagen").
-			                    "</font>"));
-		}
-	}
+            $rule = $lock_rules->getLockRule($val);
+            echo $zt->row(array(htmlReady($row["Veranstaltungsnummer"]),
+                                htmlReady($row["Name"]),
+                                htmlReady($rule["name"])));
+            if ($make_lock) {
+                if ($val != 'none') {
+                    $stmt_lock1->execute(array($val, $key));
+                } else {
+                    $stmt_lock2->execute(array($key));
+                }
+            }
+        }
+        else {
+            echo $zt->row(array("&nbsp;",
+                                htmlReady($row["Name"]),
+                                "<font color=red>".
+                                _("Änderung fehlgeschlagen").
+                                "</font>"));
+        }
+    }
 }
 echo $zt->close();
 echo $contentTable->close();

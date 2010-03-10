@@ -28,16 +28,16 @@ require_once $GLOBALS['RELATIVE_PATH_CHAT']."/ShmHandler.class.php";
 *  Chat Server class (shared memory)
 *
 *
-* @access	public
-* @author	André Noack <andre.noack@gmx.net>
-* @package	Chat
+* @access   public
+* @author   André Noack <andre.noack@gmx.net>
+* @package  Chat
 */
 class ChatShmServer extends ChatServer{
 
-	function ChatShmServer(){
-		$this->that = new ShmHandler($key=CHAT_SHM_KEY,$size=CHAT_SHM_SIZE*1024);
-		parent::ChatServer();
-	}
+    function ChatShmServer(){
+        $this->that = new ShmHandler($key=CHAT_SHM_KEY,$size=CHAT_SHM_SIZE*1024);
+        parent::ChatServer();
+    }
 
 }
 ?>

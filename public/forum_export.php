@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 if (!isset($SessSemName[0]) || $SessSemName[0] == "") {
-	header("Location: index.php");
+    header("Location: index.php");
    die;
 }
 
@@ -33,7 +33,7 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
 if (!isset($htmlversion))
-	$_include_stylesheet = "style_print.css"; // use special stylesheet for printing
+    $_include_stylesheet = "style_print.css"; // use special stylesheet for printing
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -44,9 +44,9 @@ require_once('lib/visual.inc.php');
 require_once('lib/archiv.inc.php');
 
 if ($htmlversion)
-	echo "<a href=\"".URLHelper::getLink()."\">" . _("zur Druck-Ansicht") . "</a>";
+    echo "<a href=\"".URLHelper::getLink()."\">" . _("zur Druck-Ansicht") . "</a>";
 else
-	echo "<a href=\"".URLHelper::getLink("?htmlversion=true")."\">" . _("zur HTML-Ansicht") . "</a>";
+    echo "<a href=\"".URLHelper::getLink("?htmlversion=true")."\">" . _("zur HTML-Ansicht") . "</a>";
 
 echo "<h1>" . _("Forum:") . "&nbsp; ".$SessSemName[0]."</h1>";
 echo Export_Topic($SessSemName[1]);

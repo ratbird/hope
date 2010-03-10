@@ -75,11 +75,11 @@ class EvalCommon {
     $tdTitle->addAttr ("valign","middle");
 
     if ($iconURL) {
-	$imgTitle = new HTMLempty ("img");
-	$imgTitle->addAttr ("src", $iconURL);
-	$imgTitle->addAttr ("alt", $title);
-	$imgTitle->addAttr ("align", "bottom");
-	$tdTitle->addContent ($imgTitle);
+    $imgTitle = new HTMLempty ("img");
+    $imgTitle->addAttr ("src", $iconURL);
+    $imgTitle->addAttr ("alt", $title);
+    $imgTitle->addAttr ("align", "bottom");
+    $tdTitle->addContent ($imgTitle);
     }
 
     $bTitle = new HTML ("b");
@@ -103,10 +103,10 @@ class EvalCommon {
     $img->addAttr ("valign", "middle");
     $img->addAttr ("src", $imgURL);
     if (empty($extra)) {
-	$img->addAttr ("alt", $imgALT);
-	$img->addAttr ("title", $imgALT);
+    $img->addAttr ("alt", $imgALT);
+    $img->addAttr ("title", $imgALT);
     } else 
-	$img->addString($extra);
+    $img->addString($extra);
 
     return $img;
   }
@@ -136,13 +136,13 @@ class EvalCommon {
   function createEvalShowJS( $isPreview = NO, $as_object = YES ) {
       $html = "";
       $html .= 
-	  "<script type=\"text/javascript\" language=\"JavaScript\">".
-	  "  function openEval( evalID ) {" .
-	  "    evalwin = window.open('show_evaluation.php?evalID=' + evalID + '&isPreview=".$isPreview."', " .
-	  "                          evalID, 'width=790,height=500,scrollbars=yes,resizable=yes');" .
-	  "    evalwin.focus();".
-	  "  }\n".
-	  "</script>\n";
+      "<script type=\"text/javascript\" language=\"JavaScript\">".
+      "  function openEval( evalID ) {" .
+      "    evalwin = window.open('show_evaluation.php?evalID=' + evalID + '&isPreview=".$isPreview."', " .
+      "                          evalID, 'width=790,height=500,scrollbars=yes,resizable=yes');" .
+      "    evalwin.focus();".
+      "  }\n".
+      "</script>\n";
 
       $div = new HTML ("div");
 #      $div->addAttr( "style", "display:inline;" );
@@ -161,17 +161,17 @@ class EvalCommon {
       $html = "";
       
       $html .=
-	  "<script type=\"text/javascript\" language=\"JavaScript\">".
-	  "document.write('<a href=\"javascript:openEval(\'".$evalID."\');\">" .
-	  (is_object($content) ? str_replace("\n", "", $content->createContent()) : $content) .
-	  "</a>');".
-	  "</script>\n";
+      "<script type=\"text/javascript\" language=\"JavaScript\">".
+      "document.write('<a href=\"javascript:openEval(\'".$evalID."\');\">" .
+      (is_object($content) ? str_replace("\n", "", $content->createContent()) : $content) .
+      "</a>');".
+      "</script>\n";
 
       $html .=
-	  "<noscript>".
-	  "<a href=\"show_evaluation.php?evalID=".$evalID."&isPreview=".$isPreview."\" target=\"".$evalID."\">" .
-	  (is_object($content) ? str_replace("\n", "", $content->createContent()) : $content) .
-	  "</a></noscript>";
+      "<noscript>".
+      "<a href=\"show_evaluation.php?evalID=".$evalID."&isPreview=".$isPreview."\" target=\"".$evalID."\">" .
+      (is_object($content) ? str_replace("\n", "", $content->createContent()) : $content) .
+      "</a></noscript>";
 
       $div = new HTML ("div");
 #      $div->addAttr( "style", "display:inline;" );
@@ -225,38 +225,38 @@ class EvalCommon {
   function showErrorReport (&$object, $errortitle = "") {
     if (empty ($errortitle)) {
       $errortitle = ( count( $object->getErrors() ) > 1 )
-	? _("Es sind Fehler aufgetreten.")
-	: _("Es ist ein Fehler aufgetreten.");
+    ? _("Es sind Fehler aufgetreten.")
+    : _("Es ist ein Fehler aufgetreten.");
     }
 
     $message = new HTML ("div");
 
     if (!$object->isError ()) {
       $table =  EvalCommon::createReportMessage 
-	(_("Es ist kein Fehler aufgetreten"), EVAL_PIC_SUCCESS, 
-	 EVAL_CSS_SUCCESS);
+    (_("Es ist kein Fehler aufgetreten"), EVAL_PIC_SUCCESS, 
+     EVAL_CSS_SUCCESS);
       $message->addContent ($table);
     } else {
       $table =  EvalCommon::createReportMessage ($errortitle, EVAL_PIC_ERROR, 
-						 EVAL_CSS_ERROR);
+                         EVAL_CSS_ERROR);
       $ul = new HTML ("ul");
       foreach ($object->getErrors () as $error) {
 #$li = new HTML ("li");
 #$li->addContent (_("Objekttyp: ".$object->x_instanceof ()));
 #$ul->addContent ($li);
-	$li = new HTML ("li");
-	$li->addContent ($error["string"]);
-	if ($error["type"] == ERROR_CRITICAL) {
-	  $ul2 = new HTML ("ul");
-	  $li2 = new HTML ("li");
-	  $li2->addContent (_("Datei: ").$error["file"]);
-	  $ul2->addContent ($li2);
-	  $li2 = new HTML ("li");
-	  $li2->addContent (_("Zeile: ").$error["line"]);
-	  $ul2->addContent ($li2);
-	  $ul->addContent ($u2);
-	}
-	$ul->addContent ($li);
+    $li = new HTML ("li");
+    $li->addContent ($error["string"]);
+    if ($error["type"] == ERROR_CRITICAL) {
+      $ul2 = new HTML ("ul");
+      $li2 = new HTML ("li");
+      $li2->addContent (_("Datei: ").$error["file"]);
+      $ul2->addContent ($li2);
+      $li2 = new HTML ("li");
+      $li2->addContent (_("Zeile: ").$error["line"]);
+      $ul2->addContent ($li2);
+      $ul->addContent ($u2);
+    }
+    $ul->addContent ($li);
       }
       $message->addContent ($table);
       $message->addContent ($ul);
@@ -299,19 +299,19 @@ class EvalCommon {
    * @return  integer If an error occurs -> -1. Otherwise the UNIX-timestamp
    */
   function date2timestamp ($day, $month, $year, 
-			   $hour = 0, $minute = 0, $second = 0) {
+               $hour = 0, $minute = 0, $second = 0) {
       if (!checkdate ((int)$month, (int)$day, (int)$year) ||
-	  $hour < 0 || $hour > 24 ||
-	  $minute < 0 || $minute > 59 ||
-	  $second < 0 || $second > 59) {
-	  return -1;
+      $hour < 0 || $hour > 24 ||
+      $minute < 0 || $minute > 59 ||
+      $second < 0 || $second > 59) {
+      return -1;
       }
-	  
-	  // windows cant count that mutch
-	  if ( $year < 1971 )
-	    $year = 1971;
-	  elseif ( $year > 2037 )
-	    $year = 2037;
+      
+      // windows cant count that mutch
+      if ( $year < 1971 )
+        $year = 1971;
+      elseif ( $year > 2037 )
+        $year = 2037;
 
       return mktime ($hour, $minute, $second, $month, $day, $year);
    }

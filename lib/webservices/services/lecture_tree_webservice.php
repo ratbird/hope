@@ -5,7 +5,7 @@
 
 /*
  * lecture_tree_webservice.php - Provides webservices for infos about
- * 	lecture tree
+ *  lecture tree
  *
  * Copyright (C) 2006 - Marco Diedrich (mdiedric@uos.de)
  *
@@ -22,53 +22,53 @@ require_once('lib/dates.inc.php');
 
 class LectureTreeService extends Studip_Ws_Service
 {
-	function LectureTreeService()
-	{
-		$this->add_api_method('get_seminars_by_sem_tree_id',
-														array('string', 
-																	'string', 
-																	'string'),
-														array('Studip_Seminar_Info'));
-	}
+    function LectureTreeService()
+    {
+        $this->add_api_method('get_seminars_by_sem_tree_id',
+                                                        array('string', 
+                                                                    'string', 
+                                                                    'string'),
+                                                        array('Studip_Seminar_Info'));
+    }
 
   function before_filter($name, &$args) 
-	{
+    {
 
     # get api_key
     $api_key = current($args);
     
     if ($api_key != $GLOBALS['STUDIP_API_KEY'])
       return new Studip_Ws_Fault('Could not authenticate client.');
-	}
+    }
 
-	function get_seminars_by_sem_tree_id_action($api_key, $sem_tree_id, $term_id)
-	{
-		$seminar_infos = array();
+    function get_seminars_by_sem_tree_id_action($api_key, $sem_tree_id, $term_id)
+    {
+        $seminar_infos = array();
 
-		$seminar_ids = StudipLectureTreeHelper::get_seminars_by_sem_tree_id($sem_tree_id, $term_id);
+        $seminar_ids = StudipLectureTreeHelper::get_seminars_by_sem_tree_id($sem_tree_id, $term_id);
 
-		  foreach($seminar_ids as $seminar_id)
-		{
-			$sem_obj = new Seminar($seminar_id['seminar_id']);
+          foreach($seminar_ids as $seminar_id)
+        {
+            $sem_obj = new Seminar($seminar_id['seminar_id']);
 
-			$lecturers = StudipSeminarHelper::get_participants($seminar_id['seminar_id'], 'dozent');
+            $lecturers = StudipSeminarHelper::get_participants($seminar_id['seminar_id'], 'dozent');
 
-			foreach($lecturers as $lecturer)
-			{
-				$lecturers [] = Studip_User::find_by_user_name($lecturer);
-			}
+            foreach($lecturers as $lecturer)
+            {
+                $lecturers [] = Studip_User::find_by_user_name($lecturer);
+            }
 
-			$seminar_info = new Studip_Seminar_Info();
-			$seminar_info->title = $sem_obj->getName();
-			$seminar_info->lecturers = $lecturers;
-			$seminar_info->turnus = getRoomOverviewUnsteady($seminar_id['seminar_id'], $term_id, false);  // false = info without link 
-			$seminar_info->lecture_number = $sem_obj->seminar_number;
+            $seminar_info = new Studip_Seminar_Info();
+            $seminar_info->title = $sem_obj->getName();
+            $seminar_info->lecturers = $lecturers;
+            $seminar_info->turnus = getRoomOverviewUnsteady($seminar_id['seminar_id'], $term_id, false);  // false = info without link 
+            $seminar_info->lecture_number = $sem_obj->seminar_number;
 
-			$seminar_infos [] = $seminar_info;
-		}
-		return $seminar_infos;
-	}
+            $seminar_infos [] = $seminar_info;
+        }
+        return $seminar_infos;
+    }
 
-	
+    
 
 }

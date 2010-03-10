@@ -79,23 +79,23 @@ class DB_Sql {
         return 0;
       }
     }
-	/* workaround for using different databases with mysql_pconnect() */
-	if (!empty($GLOBALS['ALWAYS_SELECT_DB'])){
-		if (!@mysql_select_db($Database,$this->Link_ID)) {
-			$this->halt("cannot use database ".$Database);
-			return 0;
-		}
-	}
+    /* workaround for using different databases with mysql_pconnect() */
+    if (!empty($GLOBALS['ALWAYS_SELECT_DB'])){
+        if (!@mysql_select_db($Database,$this->Link_ID)) {
+            $this->halt("cannot use database ".$Database);
+            return 0;
+        }
+    }
     
     return $this->Link_ID;
   }
 
   /* public: discard the query result */
   function free() {
-	  if ($this->Query_ID  && $this->Query_ID !== true){
-		  @mysql_free_result($this->Query_ID);
-	      $this->Query_ID = 0;
-	  }
+      if ($this->Query_ID  && $this->Query_ID !== true){
+          @mysql_free_result($this->Query_ID);
+          $this->Query_ID = 0;
+      }
   }
 
   /* public: perform a query */
@@ -210,10 +210,10 @@ class DB_Sql {
 
   /* public: evaluate the result (size, width) */
   function affected_rows() {
-	if ($this->Link_ID)
-		return @mysql_affected_rows($this->Link_ID);
-	else 
-		return false;
+    if ($this->Link_ID)
+        return @mysql_affected_rows($this->Link_ID);
+    else 
+        return false;
   }
 
   function num_rows() {

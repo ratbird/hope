@@ -30,75 +30,75 @@ require_once ("lib/classes/lit_import_plugins/StudipLitImportPluginAbstract.clas
 *
 * 
 *
-* @access	public	
-* @author 	Jan Kulmann <jankul@zmml.uni-bremen.de>	
-* @package	
+* @access   public  
+* @author   Jan Kulmann <jankul@zmml.uni-bremen.de> 
+* @package  
 **/
 class StudipLitImportPluginStudipLitList extends StudipLitImportPluginAbstract {
-	
-	function StudipLitImportPluginStudipLitList(){
-		// immer erst den parent-contructor aufrufen!
-		parent::StudipLitImportPluginAbstract();
-	}
+    
+    function StudipLitImportPluginStudipLitList(){
+        // immer erst den parent-contructor aufrufen!
+        parent::StudipLitImportPluginAbstract();
+    }
 
-	function parse($data){
-		return $data;
-	}
-	
-	function import($data) {
-		global $auth, $_msg, $_lit_search_plugins;
-	        $db = new DB_Seminar();
-      		$msg = &$_msg;
-        	if ($data) {
+    function parse($data){
+        return $data;
+    }
+    
+    function import($data) {
+        global $auth, $_msg, $_lit_search_plugins;
+            $db = new DB_Seminar();
+            $msg = &$_msg;
+            if ($data) {
 
-			$fields_arr = array();
-			$lines = explode("\n",$data);
-			$count = 0;
-			foreach ($lines as $line) {
-				if (strlen($line)>0) {
-					$count++;
-					if ($count<3) continue;
-					$parts = explode("\t",$line);
+            $fields_arr = array();
+            $lines = explode("\n",$data);
+            $count = 0;
+            foreach ($lines as $line) {
+                if (strlen($line)>0) {
+                    $count++;
+                    if ($count<3) continue;
+                    $parts = explode("\t",$line);
 
-                        		$fields = array();
-                        		$fields["catalog_id"] = "new_entry";
-                        		$fields["user_id"] = $auth->auth["uid"];
+                                $fields = array();
+                                $fields["catalog_id"] = "new_entry";
+                                $fields["user_id"] = $auth->auth["uid"];
 
-					$fields["dc_type"]          = $parts[0];
-					$fields["dc_title"]         = $parts[1];
-					$fields["dc_creator"]       = $parts[2];
-					$fields["dc_date"]          = $parts[3]."-01-01";
-					$fields["dc_contributor"]   = $parts[4];
-					$fields["dc_publisher"]     = $parts[5];
-					$fields["dc_identifier"]    = $parts[6];				
-					$fields["dc_source"]        = $parts[7];				
-					$fields["dc_subject"]       = $parts[8];
-					$fields["dc_description"]   = $parts[9];
-					$fields["accession_number"] = $parts[10];
+                    $fields["dc_type"]          = $parts[0];
+                    $fields["dc_title"]         = $parts[1];
+                    $fields["dc_creator"]       = $parts[2];
+                    $fields["dc_date"]          = $parts[3]."-01-01";
+                    $fields["dc_contributor"]   = $parts[4];
+                    $fields["dc_publisher"]     = $parts[5];
+                    $fields["dc_identifier"]    = $parts[6];                
+                    $fields["dc_source"]        = $parts[7];                
+                    $fields["dc_subject"]       = $parts[8];
+                    $fields["dc_description"]   = $parts[9];
+                    $fields["accession_number"] = $parts[10];
 
-					$fields["lit_plugin"]       = "Studip";
-					foreach ($_lit_search_plugins as $p) {
-						if ($p["link"]!="") {
-							$l = str_replace("{accession_number}","",$p["link"]);
-							$pos = strpos ($parts[12], $l);
-							if (!($pos === false)) {
-								$fields["lit_plugin"] = $p["name"];
-								break;
-							}
-						}
-					}
+                    $fields["lit_plugin"]       = "Studip";
+                    foreach ($_lit_search_plugins as $p) {
+                        if ($p["link"]!="") {
+                            $l = str_replace("{accession_number}","",$p["link"]);
+                            $pos = strpos ($parts[12], $l);
+                            if (!($pos === false)) {
+                                $fields["lit_plugin"] = $p["name"];
+                                break;
+                            }
+                        }
+                    }
 
-                        		if (!trim($fields["dc_creator"])) $fields["dc_creator"] = "Unbekannt";
-                        		if (!trim($fields["dc_title"])) $fields["dc_title"] = "";
+                                if (!trim($fields["dc_creator"])) $fields["dc_creator"] = "Unbekannt";
+                                if (!trim($fields["dc_title"])) $fields["dc_title"] = "";
 
-					if ( $fields["dc_title"] != "") array_push($fields_arr, $fields);
-					
-				}
-			}
+                    if ( $fields["dc_title"] != "") array_push($fields_arr, $fields);
+                    
+                }
+            }
 
-			return (count($fields_arr)>0 ? $fields_arr : FALSE);
-        	}
+            return (count($fields_arr)>0 ? $fields_arr : FALSE);
+            }
 
-	}
+    }
 }
 ?>

@@ -12,11 +12,11 @@
 * Copyright 2003 Mike Cochrane <mike@graftonhall.co.nz>
 *
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	calendar_modules
-* @module		calendar_export
-* @package	Calendar
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  calendar_modules
+* @module       calendar_export
+* @package  Calendar
 */
 
 // +---------------------------------------------------------------------------+
@@ -46,27 +46,27 @@ require_once("$RELATIVE_PATH_CALENDAR/lib/ErrorHandler.class.php");
 
 class CalendarWriter {
 
-	var $default_filename_suffix;
-	var $format;
-	
-	function CalendarWriter () {
-		
-		// initialize error handler
-		init_error_handler('_calendar_error');
-	}
-	
-	function write (&$events) {
-	
-	}
-	
-	function getDefaultFilenameSuffix () {
-	
-		return $this->default_filename_suffix;
-	}
-	
-	function getFormat () {
-	
-		return $this->format;
-	}
-	
+    var $default_filename_suffix;
+    var $format;
+    
+    function CalendarWriter () {
+        
+        // initialize error handler
+        init_error_handler('_calendar_error');
+    }
+    
+    function write (&$events) {
+    
+    }
+    
+    function getDefaultFilenameSuffix () {
+    
+        return $this->default_filename_suffix;
+    }
+    
+    function getFormat () {
+    
+        return $this->format;
+    }
+    
 }

@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternError
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternError
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -39,35 +39,35 @@
 
 class ExternError {
 
-	/**
-	*
-	*/
-	function ExternError ($error_location) {
-	}
+    /**
+    *
+    */
+    function ExternError ($error_location) {
+    }
 
-	/**
-	*
-	*/
-	function printMessage ($message) {
-	}
+    /**
+    *
+    */
+    function printMessage ($message) {
+    }
 
-	/**
-	*
-	*/
-	function printStudipMessage ($message) {
-	}
+    /**
+    *
+    */
+    function printStudipMessage ($message) {
+    }
 
-	/**
-	*
-	*/
-	function printError ($description = "") {
-	}
+    /**
+    *
+    */
+    function printError ($description = "") {
+    }
 
-	/**
-	*
-	*/
-	function logError ($description = "") {
-	}
-	
+    /**
+    *
+    */
+    function logError ($description = "") {
+    }
+    
 }
 ?>

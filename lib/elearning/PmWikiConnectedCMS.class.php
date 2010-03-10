@@ -25,60 +25,60 @@ require_once("ConnectedCMS.class.php");
 *
 * This class contains the main methods of the elearning-interface to connect to PmWiki. Extends ConnectedCMS.
 *
-* @author	Marco Diedrich <mdiedric@uos.de>
-* @access	public
-* @modulegroup	elearning_interface_modules
-* @module		PmWikiConnectedCMS
-* @package	ELearning-Interface
+* @author   Marco Diedrich <mdiedric@uos.de>
+* @access   public
+* @modulegroup  elearning_interface_modules
+* @module       PmWikiConnectedCMS
+* @package  ELearning-Interface
 */
 
 class PmWikiConnectedCMS extends ConnectedCMS
 {
-	function PmWikiConnectedCMS($cms)
-	{
-		parent::ConnectedCMS($cms);
-		$this->client = WebserviceClient::instance(	$GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['ABSOLUTE_PATH_SOAP'] .
-																								'?' . $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['URL_PARAMS'],
-																								$GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['WEBSERVICE_CLASS']);
+    function PmWikiConnectedCMS($cms)
+    {
+        parent::ConnectedCMS($cms);
+        $this->client = WebserviceClient::instance( $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['ABSOLUTE_PATH_SOAP'] .
+                                                                                                '?' . $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['URL_PARAMS'],
+                                                                                                $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['WEBSERVICE_CLASS']);
 
-		$this->api_key = $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['soap_data']['api-key'];
-	}
-	
-	function init($cms)
-	{
-		parent::init($cms);
-		$this->field_script = $GLOBALS['ELEARNING_INTERFACE_MODULES'][$cms]["field_script"];
-	}
+        $this->api_key = $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['soap_data']['api-key'];
+    }
+    
+    function init($cms)
+    {
+        parent::init($cms);
+        $this->field_script = $GLOBALS['ELEARNING_INTERFACE_MODULES'][$cms]["field_script"];
+    }
 
-	/**
-	* search for content modules
-	*
-	* returns found content modules
-	* @access public
-	* @param string $key keyword
-	* @return array list of content modules
-	*/
+    /**
+    * search for content modules
+    *
+    * returns found content modules
+    * @access public
+    * @param string $key keyword
+    * @return array list of content modules
+    */
 
-	function searchContentModules($key)
-	{
-		$fields_found = $this->client->call("search_content_modules", $args = array(
-				$GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['soap_data']['api-key'], 
-				$key)); 
+    function searchContentModules($key)
+    {
+        $fields_found = $this->client->call("search_content_modules", $args = array(
+                $GLOBALS['ELEARNING_INTERFACE_MODULES'][$this->cms_type]['soap_data']['api-key'], 
+                $key)); 
 
-		$result = array();
+        $result = array();
 
-		foreach($fields_found as $field)
-		{
+        foreach($fields_found as $field)
+        {
 
-			$result[$field['field_id']] = Array(	'ref_id'			=> $field['field_id'], 
-																						'type' 				=> $field['field_type'],
-																						'obj_id' 			=> $field_id,
-																						'create_date' => $field['create_date'],
-																						'last_update' => $field['change_date'],
-																						'title' 			=> $field['field_title'], 
-																						'description' => $field['field_description']);
-		}
-		return $result;
-	}
+            $result[$field['field_id']] = Array(    'ref_id'            => $field['field_id'], 
+                                                                                        'type'              => $field['field_type'],
+                                                                                        'obj_id'            => $field_id,
+                                                                                        'create_date' => $field['create_date'],
+                                                                                        'last_update' => $field['change_date'],
+                                                                                        'title'             => $field['field_title'], 
+                                                                                        'description' => $field['field_description']);
+        }
+        return $result;
+    }
 
 }

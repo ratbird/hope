@@ -7,11 +7,11 @@
 * 
 * 
 *
-* @author		André Noack <andre.noack@data.quest.de>
-* @access		public
-* @modulegroup	admin_modules
-* @module		admin_range_tree
-* @package		Admin
+* @author       André Noack <andre.noack@data.quest.de>
+* @access       public
+* @modulegroup  admin_modules
+* @module       admin_range_tree
+* @package      Admin
 */
 /**
 * workaround for PHPDoc
@@ -43,7 +43,7 @@ define("PHPDOC_DUMMY",true);
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check($RANGE_TREE_ADMIN_PERM ? $RANGE_TREE_ADMIN_PERM  : 'admin');
-		
+        
 require_once('lib/visual.inc.php');
 require_once('lib/classes/StudipRangeTreeViewAdmin.class.php');
 
@@ -56,10 +56,10 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 
 ?>
 <table class="blank" cellspacing="0" cellpadding="2" border="0" width="100%">
-	<tr><td  align="center" class="blank"><br />
-	<table class="blank" cellspacing="0" cellpadding="0" border="0" width="99%">
-	<tr>
-	<td align="center" class="blank">
+    <tr><td  align="center" class="blank"><br />
+    <table class="blank" cellspacing="0" cellpadding="0" border="0" width="99%">
+    <tr>
+    <td align="center" class="blank">
 <?
 $the_tree = new StudipRangeTreeViewAdmin();
 $the_tree->open_ranges['root'] = true;

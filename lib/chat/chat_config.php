@@ -6,11 +6,11 @@
 * Config file for package: Chat
 * 
 *
-* @author		André Noack <andre.noack@gmx.net>
-* @access		public
-* @modulegroup		chat_modules
-* @module		chat_config
-* @package		Chat
+* @author       André Noack <andre.noack@gmx.net>
+* @access       public
+* @modulegroup      chat_modules
+* @module       chat_config
+* @package      Chat
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -37,9 +37,9 @@
 * @const CHAT_SHM_KEY
 */
 if (function_exists('ftok')){
-	define("CHAT_SHM_KEY", ftok(__FILE__, 'S')); //works with PHP > 4.2.0
+    define("CHAT_SHM_KEY", ftok(__FILE__, 'S')); //works with PHP > 4.2.0
 } else {
-	define("CHAT_SHM_KEY",98374);    //muss eindeutig sein!!!
+    define("CHAT_SHM_KEY",98374);    //muss eindeutig sein!!!
 }
 
 /**
@@ -138,16 +138,16 @@ $chatColors = array("black","blue","green","orange","indigo","darkred","red","da
 * @var array $chatCmd
 */
 $chatCmd = array("quit" => _(" [msg] - Sie verlassen den Chat mit der Botschaft [msg]"),
-			"color" => _(" [colorcode] - Ihre Schriftfarbe wird auf [colorcode] gesetzt"),
-			"me" => _(" [msg] - Ihr Name wird zusammen mit [msg] vom Chatbot ausgegeben"),
-			"private" => _(" [username][msg] - Die Botschaft [msg] wird geheim an [username] übermittelt"),
-			"help" => _(" - Zeigt diesen Hilfetext"),
-			"kick" => _(" [username] - Wirft [username] aus dem Chat wenn sie Chat-Admin sind, mit /kick all werfen sie alle anderen Nutzer aus dem Chat"),
-			"sms" => _(" [username][msg] - Verschickt eine systeminterne SMS [msg] an [username]"),
-			"invite" => _(" [username][msg] - Verschickt eine Chat-Einladung an [username] mit optionaler Nachricht [msg]"),
-			"lock" => _(" - Setzt ein zufälliges Paßwort und wirft alle NutzerInnen aus dem Chat, die nicht Chat-Admins sind."),
-			"unlock" => _(" - Ein eventuell gesetztes Passwort wird gelöscht, der Chat wird damit wieder frei zugänglich."),
-			"password" => _(" [password] - Setzt das Passwort für den Chat, wenn [password] leer ist wird ein eventuell vorhandenes Passwort gelöscht"),
-			"log" => _(" [start | stop | send] - Startet, beendet oder versendet eine Aufzeichnung, wenn sie Chat-Admin sind"));
+            "color" => _(" [colorcode] - Ihre Schriftfarbe wird auf [colorcode] gesetzt"),
+            "me" => _(" [msg] - Ihr Name wird zusammen mit [msg] vom Chatbot ausgegeben"),
+            "private" => _(" [username][msg] - Die Botschaft [msg] wird geheim an [username] übermittelt"),
+            "help" => _(" - Zeigt diesen Hilfetext"),
+            "kick" => _(" [username] - Wirft [username] aus dem Chat wenn sie Chat-Admin sind, mit /kick all werfen sie alle anderen Nutzer aus dem Chat"),
+            "sms" => _(" [username][msg] - Verschickt eine systeminterne SMS [msg] an [username]"),
+            "invite" => _(" [username][msg] - Verschickt eine Chat-Einladung an [username] mit optionaler Nachricht [msg]"),
+            "lock" => _(" - Setzt ein zufälliges Paßwort und wirft alle NutzerInnen aus dem Chat, die nicht Chat-Admins sind."),
+            "unlock" => _(" - Ein eventuell gesetztes Passwort wird gelöscht, der Chat wird damit wieder frei zugänglich."),
+            "password" => _(" [password] - Setzt das Passwort für den Chat, wenn [password] leer ist wird ein eventuell vorhandenes Passwort gelöscht"),
+            "log" => _(" [start | stop | send] - Startet, beendet oder versendet eine Aufzeichnung, wenn sie Chat-Admin sind"));
 
 ?>

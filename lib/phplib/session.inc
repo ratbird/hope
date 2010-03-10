@@ -105,17 +105,17 @@ class Session {
         break;
       }
     }
-	if($id != "") {
-		if ( strlen($id) != 32 || ereg('[^0-9a-f]+', $id) ) {
-			// id ungültig -> neue erzeugen ...
-			$id = "";
-		}
-	} 
+    if($id != "") {
+        if ( strlen($id) != 32 || ereg('[^0-9a-f]+', $id) ) {
+            // id ungültig -> neue erzeugen ...
+            $id = "";
+        }
+    } 
     if ( "" == $id ) {
       $newid=true;
       while (!$id = $this->that->ac_newid(md5(uniqid($this->magic, TRUE)), $this->name)) {
-				; // loop until we have an unused session id 
-			}
+                ; // loop until we have an unused session id 
+            }
     }
  
     switch ($this->mode) {
@@ -389,11 +389,11 @@ class Session {
         $this->mode = $this->fallback_mode;
       } else {
         header("Status: 302 Moved Temporarily");
-	if(!isset($sid)){ 
-	  $sid='';
-	}
+    if(!isset($sid)){ 
+      $sid='';
+    }
         $this->get_id($sid);
-	$this->mode = $this->fallback_mode;
+    $this->mode = $this->fallback_mode;
         if( isset($HTTPS) && $HTTPS == 'on' ){
         ## You will need to fix suexec as well, if you use Apache and CGI PHP
           $PROTOCOL='https';
@@ -447,10 +447,10 @@ class Session {
 
       default:
         header("Expires: Mon, 26 Jul 1997 04:00:00 GMT");    // Datum aus Vergangenheit
-		header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");	// immer geändert
-		header("Cache-Control: no-store, no-cache, must-revalidate");  // HTTP/1.1
-		header("Cache-Control: post-check=0, pre-check=0", false);
-		header("Pragma: no-cache");                          // HTTP/1.0
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");  // immer geändert
+        header("Cache-Control: no-store, no-cache, must-revalidate");  // HTTP/1.1
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");                          // HTTP/1.0
       break;
     }
   }
@@ -473,7 +473,7 @@ class Session {
   ##
 
   function start($sid = "") {
-		
+        
     $this->set_container();
     $this->set_tokenname(); 
     $this->release_token($sid);

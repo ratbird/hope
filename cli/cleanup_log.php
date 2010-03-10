@@ -8,8 +8,8 @@
 * 
 * 
 *
-* @author		Tobias Thelen <tobias.thelen@uni-osnabrueck.de>
-* @access		public
+* @author       Tobias Thelen <tobias.thelen@uni-osnabrueck.de>
+* @access       public
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP

@@ -22,12 +22,12 @@
       <!-- Informationen -->
       <tr>
           <td class="infobox" align="center" width="1%" valign="top">
-          	<?= Assets::img('ausruf_small') ?>
+            <?= Assets::img('ausruf_small') ?>
           </td>
           <td class="infobox" width="99%" align="left">
             <font size="-1">
-							<?= _("Hier können sie ihre Kontaktdaten für die Einrichtungen angeben, an denen Sie tätig sind."); ?>
-						</font>
+                            <?= _("Hier können sie ihre Kontaktdaten für die Einrichtungen angeben, an denen Sie tätig sind."); ?>
+                        </font>
           </td>
       </tr>                             
 

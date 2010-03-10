@@ -7,9 +7,9 @@
 * 
 * This file checks the tmp-directory for old files an deletes them.
 *
-* @author		Arne Schroeder <schroeder@data.quest.de>
-* @access		public
-* @package		Export
+* @author       Arne Schroeder <schroeder@data.quest.de>
+* @access       public
+* @package      Export
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -33,31 +33,31 @@
 // +---------------------------------------------------------------------------+
 
 function export_tmp_gc(){
-	$tmp_export = $GLOBALS['TMP_PATH']. '/export/';
-	if(!is_dir($tmp_export)){
-		if(!mkdir($tmp_export)){
-			trigger_error("tmp directory for export ($tmp_export) could not be created",E_USER_WARNING);
-			return false;
-		} else {
-			chmod($tmp_export, 0700);
-		}
-	}
-	if (mt_rand() % 100 < 10){
-		$dir = @dir($tmp_export);
-		if ($dir){
-			while (false !== ($entry = $dir->read())) {
-				// Skip pointers
-				if ($entry == '.' || $entry == '..') {
-					continue;
-				}
-				$file = $tmp_export . '/' . $entry;
-				$now = time();
-				if (@is_file($file) && (($now - filemtime($file)) > 86400)){
-					@unlink($file);
-				}
-			}
-			$dir->close();
-		}
-	}
+    $tmp_export = $GLOBALS['TMP_PATH']. '/export/';
+    if(!is_dir($tmp_export)){
+        if(!mkdir($tmp_export)){
+            trigger_error("tmp directory for export ($tmp_export) could not be created",E_USER_WARNING);
+            return false;
+        } else {
+            chmod($tmp_export, 0700);
+        }
+    }
+    if (mt_rand() % 100 < 10){
+        $dir = @dir($tmp_export);
+        if ($dir){
+            while (false !== ($entry = $dir->read())) {
+                // Skip pointers
+                if ($entry == '.' || $entry == '..') {
+                    continue;
+                }
+                $file = $tmp_export . '/' . $entry;
+                $now = time();
+                if (@is_file($file) && (($now - filemtime($file)) > 86400)){
+                    @unlink($file);
+                }
+            }
+            $dir->close();
+        }
+    }
 }
 ?>

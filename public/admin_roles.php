@@ -68,9 +68,9 @@ include 'lib/include/admin_search_form.inc.php';
 // Rechtecheck
 $_range_type = get_object_type($range_id);
 if (!$perm->have_studip_perm("admin", $range_id) || ($_range_type != 'inst' && $_range_type != 'fak')) {
-	echo "</tr></td></table>";
-	page_close();
-	die;
+    echo "</tr></td></table>";
+    page_close();
+    die;
 }
 
 
@@ -84,53 +84,53 @@ if (!$perm->have_studip_perm("admin", $range_id) || ($_range_type != 'inst' && $
  * this function has to stay here for the moment, because in other files someone already uses this function name.
  */
 function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgroup_mode=FALSE) {
-	global $perm;
+    global $perm;
 
-	$mkdate = time();
+    $mkdate = time();
 
-	$db=new DB_Seminar;
-	$db2=new DB_Seminar;
+    $db=new DB_Seminar;
+    $db2=new DB_Seminar;
 
-	if ($type == 'direct') {
-		for ($i  = 0; $i < sizeof($persons); $i++) {
-			$user_id = get_userid($persons[$i]);
-			InsertPersonStatusgruppe ($user_id, $role_id);
-		}
-	} else if ($type == 'indirect') {
-		foreach ($persons as $name) {
-			$user_id = get_userid($name);
-			$writedone = InsertPersonStatusgruppe ($user_id, $role_id);
-			if ($writedone) {
-				if ($workgroup_mode == TRUE) {
-					$globalperms = get_global_perm($user_id);
-					if ($globalperms == "tutor" || $globalperms == "dozent") {
-						insert_seminar_user($range_id, $user_id, "tutor", FALSE);
-					} else {
-						insert_seminar_user($range_id, $user_id, "autor", FALSE);
-					}
-				} else {
-					insert_seminar_user($range_id, $user_id, "autor", FALSE);					
-				}
-			}
-			checkExternDefaultForUser($user_id);
-		}
-	} else if ($type == 'search') {
-		if ($persons != "") {
-			for ($i  = 0; $i < sizeof($persons); $i++) {
-				$user_id = get_userid($persons[$i]);
-				$writedone = InsertPersonStatusgruppe ($user_id, $role_id);
-				if ($writedone) {
-					$globalperms = get_global_perm($user_id);
-					if ($perm->get_studip_perm($range_id, $user_id) == FALSE) {
-						$db2->query("INSERT INTO user_inst SET Institut_id = '$range_id', user_id = '$user_id', inst_perms = '$globalperms'");
-					}
-					if ($perm->get_studip_perm($range_id, $user_id) =="user") {
-						$db2->query("UPDATE user_inst SET inst_perms = '$globalperms' WHERE user_id = '$user_id' AND Institut_id = '$range_id'");
-					}
-				}
-			}
-		}
-	}
+    if ($type == 'direct') {
+        for ($i  = 0; $i < sizeof($persons); $i++) {
+            $user_id = get_userid($persons[$i]);
+            InsertPersonStatusgruppe ($user_id, $role_id);
+        }
+    } else if ($type == 'indirect') {
+        foreach ($persons as $name) {
+            $user_id = get_userid($name);
+            $writedone = InsertPersonStatusgruppe ($user_id, $role_id);
+            if ($writedone) {
+                if ($workgroup_mode == TRUE) {
+                    $globalperms = get_global_perm($user_id);
+                    if ($globalperms == "tutor" || $globalperms == "dozent") {
+                        insert_seminar_user($range_id, $user_id, "tutor", FALSE);
+                    } else {
+                        insert_seminar_user($range_id, $user_id, "autor", FALSE);
+                    }
+                } else {
+                    insert_seminar_user($range_id, $user_id, "autor", FALSE);                   
+                }
+            }
+            checkExternDefaultForUser($user_id);
+        }
+    } else if ($type == 'search') {
+        if ($persons != "") {
+            for ($i  = 0; $i < sizeof($persons); $i++) {
+                $user_id = get_userid($persons[$i]);
+                $writedone = InsertPersonStatusgruppe ($user_id, $role_id);
+                if ($writedone) {
+                    $globalperms = get_global_perm($user_id);
+                    if ($perm->get_studip_perm($range_id, $user_id) == FALSE) {
+                        $db2->query("INSERT INTO user_inst SET Institut_id = '$range_id', user_id = '$user_id', inst_perms = '$globalperms'");
+                    }
+                    if ($perm->get_studip_perm($range_id, $user_id) =="user") {
+                        $db2->query("UPDATE user_inst SET inst_perms = '$globalperms' WHERE user_id = '$user_id' AND Institut_id = '$range_id'");
+                    }
+                }
+            }
+        }
+    }
 }
 
 /* * * * * * * * * * * * * * * *
@@ -144,143 +144,143 @@ $open = false;
 
 // a role_id has been submitted, so open that role automatically
 if ($_REQUEST['role_id']) {
-	$open = $_REQUEST['role_id'];
+    $open = $_REQUEST['role_id'];
 }
 
 // move a role up or down
 if ($_REQUEST['cmd'] == 'moveUp') {
-	$role = new Statusgruppe($_REQUEST['role_id']);
-	resortStatusgruppeByRangeId($role->getRange_Id());
-	moveStatusgruppe($_REQUEST['role_id'], 'up');
+    $role = new Statusgruppe($_REQUEST['role_id']);
+    resortStatusgruppeByRangeId($role->getRange_Id());
+    moveStatusgruppe($_REQUEST['role_id'], 'up');
 }
 
 if ($_REQUEST['cmd'] == 'moveDown') {
-	$role = new Statusgruppe($_REQUEST['role_id']);
-	resortStatusgruppeByRangeId($role->getRange_Id());
-	moveStatusgruppe($_REQUEST['role_id'], 'down');
+    $role = new Statusgruppe($_REQUEST['role_id']);
+    resortStatusgruppeByRangeId($role->getRange_Id());
+    moveStatusgruppe($_REQUEST['role_id'], 'down');
 }
 
 
 // change sort-order of a person in a statsgroup
 if ($_REQUEST['cmd'] == 'move_up') {
-	MovePersonPosition ($_REQUEST['username'], $_REQUEST['role_id'], "up");
+    MovePersonPosition ($_REQUEST['username'], $_REQUEST['role_id'], "up");
 }
 
 if ($_REQUEST['cmd'] == 'move_down') {
-	MovePersonPosition ($_REQUEST['username'], $_REQUEST['role_id'], "down");
+    MovePersonPosition ($_REQUEST['username'], $_REQUEST['role_id'], "down");
 }
 
 // a chosen person is sorted in after a second chosen person - allows to sort arbitrary over long distances
 if ($_REQUEST['cmd'] == 'sort_person') {
-	if (!is_array($_REQUEST['sort_person'])) {
-		$msgs[] = 'error§'. _("Bitte wählen Sie die Person aus, die einsortiert werden soll!");
-	} else {
-		if (is_array($_REQUEST['do_person_sort'])) {
-			// do_person_sort is an array and we need the key of the first element
-			foreach ($_REQUEST['do_person_sort'] as $zw_uid => $trash) {
-				// the username of the user after which is inserted
-				$u_insert_after = $zw_uid;
-				break;
-			}
+    if (!is_array($_REQUEST['sort_person'])) {
+        $msgs[] = 'error§'. _("Bitte wählen Sie die Person aus, die einsortiert werden soll!");
+    } else {
+        if (is_array($_REQUEST['do_person_sort'])) {
+            // do_person_sort is an array and we need the key of the first element
+            foreach ($_REQUEST['do_person_sort'] as $zw_uid => $trash) {
+                // the username of the user after which is inserted
+                $u_insert_after = $zw_uid;
+                break;
+            }
 
-			// the username of the user to be inserted
-			$u_insert = array_shift($_REQUEST['sort_person']);
+            // the username of the user to be inserted
+            $u_insert = array_shift($_REQUEST['sort_person']);
 
-			SortPersonInAfter(get_userid($u_insert), get_userid($u_insert_after), $_REQUEST['role_id']);
-		}
-	}
+            SortPersonInAfter(get_userid($u_insert), get_userid($u_insert_after), $_REQUEST['role_id']);
+        }
+    }
 
 }
 
 // sort the persons of a statusgroup by their family name
 if ($_REQUEST['cmd'] == 'sortByName') {
-	sortStatusgruppeByName($_REQUEST['role_id']);
+    sortStatusgruppeByName($_REQUEST['role_id']);
 }
 
 // add a person to a statusgroup
 // the person is participant (if we administrate a seminar), or the person is member (if we administrate an institute)
 if ($_REQUEST['cmd'] == 'addPersonsToRoleDirect' ) {
-	$msgs[] = 'msg§'. _("Die Personen wurden der Gruppe hinzugefügt.");
-	$msgs[] = 'info§'. _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
-	
-	MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'direct', $_REQUEST['persons_to_add'], $workgroup_mode);
+    $msgs[] = 'msg§'. _("Die Personen wurden der Gruppe hinzugefügt.");
+    $msgs[] = 'info§'. _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
+    
+    MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'direct', $_REQUEST['persons_to_add'], $workgroup_mode);
 }
 
 // only for seminars - the person is member of the institute the seminar is in
 if ($_REQUEST['cmd'] == 'addPersonsToRoleIndirect' ) {
-	$msgs[] = 'msg§'. _("Die Personen wurden der Gruppe hinzugefügt.");
-	$msgs[] = 'info§'. _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
-	
-	MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'indirect', $_REQUEST['persons_to_add'], $workgroup_mode);
+    $msgs[] = 'msg§'. _("Die Personen wurden der Gruppe hinzugefügt.");
+    $msgs[] = 'info§'. _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
+    
+    MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'indirect', $_REQUEST['persons_to_add'], $workgroup_mode);
 }
 
 // the person shall be added via the free search
 if ($_REQUEST['cmd'] == 'addPersonsToRoleSearch' ) {
-	$msgs[] = 'msg§'. _("Die Personen wurden der Gruppe hinzugefügt.");
-	$msgs[] = 'info§'. _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
-	
-	MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'search', $_REQUEST['persons_to_add'], $workgroup_mode);
+    $msgs[] = 'msg§'. _("Die Personen wurden der Gruppe hinzugefügt.");
+    $msgs[] = 'info§'. _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
+    
+    MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'search', $_REQUEST['persons_to_add'], $workgroup_mode);
 }
 
 // delete a person from a statusgroup
 if ($_REQUEST['cmd'] == 'removePerson') {
-	$msgs[] = 'msg§'. _("Die Person wurde aus der Gruppe entfernt!");
-	RemovePersonStatusgruppe ($_REQUEST['username'], $_REQUEST['role_id']);	
+    $msgs[] = 'msg§'. _("Die Person wurde aus der Gruppe entfernt!");
+    RemovePersonStatusgruppe ($_REQUEST['username'], $_REQUEST['role_id']); 
 }
 
 // edit the data of a role
 if ($_REQUEST['cmd'] == 'editRole') {
-	$statusgruppe = new Statusgruppe($_REQUEST['role_id']);	
-	$name = htmlReady($statusgruppe->getName());
-	if ($statusgruppe->checkData()) {
-		$msgs[] = 'info§' . sprintf(_("Die Daten der Gruppe %s wurden geändert!"), '<b>'. $name .'</b>');
-	}
-	$statusgruppe->store();
-	$msgs = array_merge($msgs, $statusgruppe->getMessages());
+    $statusgruppe = new Statusgruppe($_REQUEST['role_id']); 
+    $name = htmlReady($statusgruppe->getName());
+    if ($statusgruppe->checkData()) {
+        $msgs[] = 'info§' . sprintf(_("Die Daten der Gruppe %s wurden geändert!"), '<b>'. $name .'</b>');
+    }
+    $statusgruppe->store();
+    $msgs = array_merge($msgs, $statusgruppe->getMessages());
 }
 
 // ask, if the user really intends to delete the role
 if ($_REQUEST['cmd'] == 'deleteRole') {
-	$statusgruppe = new Statusgruppe($_REQUEST['role_id']);	
-	if ($_REQUEST['really']) {
-		$msgs[] = 'msg§' . sprintf(_("Die Gruppe %s wurde gelöscht!"), htmlReady($statusgruppe->getName()));
-		$statusgruppe->delete();
-	} else {
-		echo createQuestion(sprintf(_("Sind Sie sicher, dass Sie die Gruppe **%s** löschen möchten?"), $statusgruppe->getName() ),
-			array('cmd' => 'deleteRole', 'really' => 'true', 'role_id' => $_REQUEST['role_id']),
-			array('role_id' => $_REQUEST['role_id'])
-		);
-	}
+    $statusgruppe = new Statusgruppe($_REQUEST['role_id']); 
+    if ($_REQUEST['really']) {
+        $msgs[] = 'msg§' . sprintf(_("Die Gruppe %s wurde gelöscht!"), htmlReady($statusgruppe->getName()));
+        $statusgruppe->delete();
+    } else {
+        echo createQuestion(sprintf(_("Sind Sie sicher, dass Sie die Gruppe **%s** löschen möchten?"), $statusgruppe->getName() ),
+            array('cmd' => 'deleteRole', 'really' => 'true', 'role_id' => $_REQUEST['role_id']),
+            array('role_id' => $_REQUEST['role_id'])
+        );
+    }
 }
 
 // adding a new role
 $displayNewRole = false;
 
 if ($_REQUEST['cmd'] == 'newRole') {
-	$displayNewRole = true;
-	$new_role = new Statusgruppe();
-	$new_role->setRange_Id($range_id);
+    $displayNewRole = true;
+    $new_role = new Statusgruppe();
+    $new_role->setRange_Id($range_id);
 }
 
 if ($_REQUEST['cmd'] == 'addRole') {
-	// to prevent url-hacking for changing the data of an existing role
-	if (!Statusgruppe::roleExists($_REQUEST['role_id'])) {		
-		$new_role = new Statusgruppe();
-		
-		// this is necessary, because it could be the second try to add after the user has corrected errors 	
-		$new_role->setStatusgruppe_Id($_REQUEST['role_id']);		
-		$new_role->setRange_Id($range_id);		
+    // to prevent url-hacking for changing the data of an existing role
+    if (!Statusgruppe::roleExists($_REQUEST['role_id'])) {      
+        $new_role = new Statusgruppe();
+        
+        // this is necessary, because it could be the second try to add after the user has corrected errors     
+        $new_role->setStatusgruppe_Id($_REQUEST['role_id']);        
+        $new_role->setRange_Id($range_id);      
 
-		if ($new_role->checkData()) {					
-			$new_role->store();
-			$open = $new_role->getId();
-			$msgs[] = 'msg§' . sprintf(_("Die Gruppe %s wurde hinzugefügt!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
-		} else {
-			$displayNewRole = true;
-		}
-		
-		$msgs = array_merge($msgs, $new_role->getMessages());
-	}
+        if ($new_role->checkData()) {                   
+            $new_role->store();
+            $open = $new_role->getId();
+            $msgs[] = 'msg§' . sprintf(_("Die Gruppe %s wurde hinzugefügt!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
+        } else {
+            $displayNewRole = true;
+        }
+        
+        $msgs = array_merge($msgs, $new_role->getMessages());
+    }
 }
 
 
@@ -293,82 +293,82 @@ if ($_REQUEST['cmd'] == 'addRole') {
 $statusgruppen = GetAllStatusgruppen($range_id);
 
 // are we in the newRole-mode?
-if ($displayNewRole) {	
-	// open the template for inserting a new statusgroup
-	$template = $GLOBALS['template_factory']->open('statusgruppen/new_role');
+if ($displayNewRole) {  
+    // open the template for inserting a new statusgroup
+    $template = $GLOBALS['template_factory']->open('statusgruppen/new_role');
 
-	$template->set_attribute('range_id', $range_id);
+    $template->set_attribute('range_id', $range_id);
 
-	// the layout defines where the infobox is located
-	$template->set_layout('statusgruppen/layout.php');
-	
-	// pass the messages to the infobox
-	$template->set_attribute('messages', $msgs);
-	
-	// the role, emtpy and fresh or prefilled with posted data	
-	$template->set_attribute('role_data', $new_role->getData());
-	$template->set_attribute('role', $new_role);	
+    // the layout defines where the infobox is located
+    $template->set_layout('statusgruppen/layout.php');
+    
+    // pass the messages to the infobox
+    $template->set_attribute('messages', $msgs);
+    
+    // the role, emtpy and fresh or prefilled with posted data  
+    $template->set_attribute('role_data', $new_role->getData());
+    $template->set_attribute('role', $new_role);    
 
-	// all statusgroups in a tree-structured array
-	$template->set_attribute('all_roles', $statusgruppen);	
+    // all statusgroups in a tree-structured array
+    $template->set_attribute('all_roles', $statusgruppen);  
 
-	// show the formula for entering a new statusgroup
-	echo $template->render();
-	
-	
+    // show the formula for entering a new statusgroup
+    echo $template->render();
+    
+    
 }
 
 // do we have some roles already?
 else if ($statusgruppen && sizeof($statusgruppen) > 0) {
-	// open the template for tree-view of roles
-	$template = $GLOBALS['template_factory']->open('statusgruppen/roles');
+    // open the template for tree-view of roles
+    $template = $GLOBALS['template_factory']->open('statusgruppen/roles');
 
-	// the layout defines where the infobox is located
-	$template->set_layout('statusgruppen/layout.php');
+    // the layout defines where the infobox is located
+    $template->set_layout('statusgruppen/layout.php');
 
-	// the ids of the currently opened statusgroups
-	$template->set_attribute('open', $open);
-	
-	$template->set_attribute('range_id', $range_id);
-	
-	// the persons of the institute who can be added directly
-	$template->set_attribute('inst_persons', getPersons($range_id));
-	
-	if ($_REQUEST['view'] == 'editRole') {
-		$template->set_attribute('editRole', $_REQUEST['role_id']);
-	}
-	
-	if ($_REQUEST['view'] == 'startMove') {		
-		$template->set_attribute('move', true);		
-		$template->set_attribute('move_id', $_REQUEST['role_id']);
-	}
-	
-	if ($_REQUEST['view'] == 'sort') {
-		$template->set_attribute('sort', true);
-	}
+    // the ids of the currently opened statusgroups
+    $template->set_attribute('open', $open);
+    
+    $template->set_attribute('range_id', $range_id);
+    
+    // the persons of the institute who can be added directly
+    $template->set_attribute('inst_persons', getPersons($range_id));
+    
+    if ($_REQUEST['view'] == 'editRole') {
+        $template->set_attribute('editRole', $_REQUEST['role_id']);
+    }
+    
+    if ($_REQUEST['view'] == 'startMove') {     
+        $template->set_attribute('move', true);     
+        $template->set_attribute('move_id', $_REQUEST['role_id']);
+    }
+    
+    if ($_REQUEST['view'] == 'sort') {
+        $template->set_attribute('sort', true);
+    }
 
-	$template->set_attribute('messages', $msgs);
+    $template->set_attribute('messages', $msgs);
 
-	// all statusgroups in a tree-structured array
-	$template->set_attribute('roles', $statusgruppen);	
+    // all statusgroups in a tree-structured array
+    $template->set_attribute('roles', $statusgruppen);  
 
-	// show the tree-view of the statusgroups
-	echo $template->render();
-	
-	
+    // show the tree-view of the statusgroups
+    echo $template->render();
+    
+    
 }
 
 // there are no roles yet, so we show some informational text
 else {
-	$template = $GLOBALS['template_factory']->open('statusgruppen/no_statusgroups');
+    $template = $GLOBALS['template_factory']->open('statusgruppen/no_statusgroups');
 
-	// the layout defines where the infobox is located
-	$template->set_layout('statusgruppen/layout.php');
-	
-	$template->set_attribute('range_id', $range_id);
-	
-	// no parameters necessary, just display a static page
-	echo $template->render();
+    // the layout defines where the infobox is located
+    $template->set_layout('statusgruppen/layout.php');
+    
+    $template->set_attribute('range_id', $range_id);
+    
+    // no parameters necessary, just display a static page
+    echo $template->render();
 }
 
 // Ende Gruppenuebersicht

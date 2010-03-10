@@ -11,11 +11,11 @@
     <link rel="SHORTCUT ICON" href="<?= $GLOBALS['FAVICON'] ?>">
     <title>
       <? if (isset($GLOBALS['_html_head_title'])): ?>
-	<?= $GLOBALS['_html_head_title'] ?>
+    <?= $GLOBALS['_html_head_title'] ?>
       <? elseif (isset($GLOBALS['CURRENT_PAGE'])): ?>
-	<?= $GLOBALS['HTML_HEAD_TITLE'] ?> - <?= $GLOBALS['CURRENT_PAGE'] ?>
+    <?= $GLOBALS['HTML_HEAD_TITLE'] ?> - <?= $GLOBALS['CURRENT_PAGE'] ?>
       <? else: ?>
-	<?= $GLOBALS['HTML_HEAD_TITLE'] ?>
+    <?= $GLOBALS['HTML_HEAD_TITLE'] ?>
       <? endif ?>
     </title>
 

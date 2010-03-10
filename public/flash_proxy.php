@@ -32,29 +32,29 @@ ob_start();
 $ok = Seminar_Session::is_current_session_authenticated();
 $url = $_GET['url'];
 if($ok){
-	$headers = parse_link($url);
-	if($headers['response_code'] == 200){
-		$f = fopen($url, 'rb');
-		if($f){
-			stream_set_timeout($f, 5);
-			$flv = fread($f, 16);
-			fclose($f);
-		}
-		$ok = (substr($flv,0,3) == 'FLV');
-	} else {
-		$ok = false;
-	}
+    $headers = parse_link($url);
+    if($headers['response_code'] == 200){
+        $f = fopen($url, 'rb');
+        if($f){
+            stream_set_timeout($f, 5);
+            $flv = fread($f, 16);
+            fclose($f);
+        }
+        $ok = (substr($flv,0,3) == 'FLV');
+    } else {
+        $ok = false;
+    }
 }
 if($ok){
-	if ($headers['Content-Length']) {
-		header('Content-Length: ' . $headers['Content-Length']);
-	}
-	header('Content-Disposition: attachment; filename="' . md5($url) . '.flv"');
-	header("Content-Type: video/x-flv");
-	ob_end_flush();
-	readfile($url);
+    if ($headers['Content-Length']) {
+        header('Content-Length: ' . $headers['Content-Length']);
+    }
+    header('Content-Disposition: attachment; filename="' . md5($url) . '.flv"');
+    header("Content-Type: video/x-flv");
+    ob_end_flush();
+    readfile($url);
 } else {
-	ob_end_clean();
-	header(" ", true, 500);
+    ob_end_clean();
+    header(" ", true, 500);
 }
 ?>

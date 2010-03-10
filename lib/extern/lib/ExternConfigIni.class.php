@@ -8,11 +8,11 @@
 * This class stores configurations in INI-files.
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternConfig
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternConfig
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -42,114 +42,114 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternModule.class.php");
 
 class ExternConfigIni extends ExternConfig {
 
-	var $file_name;
-	
-	/**
-	*
-	*/
-	function ExternConfigIni ($range_id, $module_name, $config_id = '') {
-	
-		parent::ExternConfig ($range_id, $module_name, $config_id);
-		if ($this->id) {
-			$this->file_name = $this->id . '.cfg';
-		}
-	}
-	
-	/**
-	*
-	*/
-	function store () {
-		parent::store();
-		if (!$this->file_name) {
-			if ($this->id) {
-				$this->file_name = $this->id . '.cfg';
-			} else {
-				return FALSE;
-			}
-		}
-		$file_content = "; Configuration file for the extern module"
-				. " $this->module_name in Stud.IP\n"
-				. "; (range_id: $this->range_id)\n"
-				. "; DO NOT EDIT !!!\n";
-		
-		foreach ($this->config as $element => $attributes) {
-			$file_content .= "\n[" . $element . "]\n";
-			foreach ($attributes as $attribute => $value) {
-				if (is_array($value)) {
-					$value = '|' . implode('|', $value);
-				}
-				$file_content .= $attribute . " = \"" . $value . "\"\n";
-			}
-		}
+    var $file_name;
+    
+    /**
+    *
+    */
+    function ExternConfigIni ($range_id, $module_name, $config_id = '') {
+    
+        parent::ExternConfig ($range_id, $module_name, $config_id);
+        if ($this->id) {
+            $this->file_name = $this->id . '.cfg';
+        }
+    }
+    
+    /**
+    *
+    */
+    function store () {
+        parent::store();
+        if (!$this->file_name) {
+            if ($this->id) {
+                $this->file_name = $this->id . '.cfg';
+            } else {
+                return FALSE;
+            }
+        }
+        $file_content = "; Configuration file for the extern module"
+                . " $this->module_name in Stud.IP\n"
+                . "; (range_id: $this->range_id)\n"
+                . "; DO NOT EDIT !!!\n";
+        
+        foreach ($this->config as $element => $attributes) {
+            $file_content .= "\n[" . $element . "]\n";
+            foreach ($attributes as $attribute => $value) {
+                if (is_array($value)) {
+                    $value = '|' . implode('|', $value);
+                }
+                $file_content .= $attribute . " = \"" . $value . "\"\n";
+            }
+        }
 
-		if ($file = @fopen($GLOBALS['EXTERN_CONFIG_FILE_PATH'] . $this->file_name, 'w')) {
-			fputs($file, $file_content);
-			fclose($file);
-			return ($this->updateConfiguration());
-		} else {
-			ExternModule::printError();
-			return FALSE;
-		}
-		
-	}
-	
-	/**
-	*
-	*/
-	function parse () {
-		if (!$this->file_name) {
-			if ($this->id) {
-				$this->file_name = $this->id . '.cfg';
-			} else {
-				// error handling
-			}
-		}
-		
-		$file_name = $GLOBALS['EXTERN_CONFIG_FILE_PATH'] . $this->file_name;
-		if (file_exists($file_name)) {
-			$config = @parse_ini_file($file_name, TRUE);
-			foreach ($config as $element => $attributes) {
-				foreach ($attributes as $attribute => $value) {
-					if ($value{0} == '|') {
-						$this->config[$element][$attribute] = explode('|', substr($value, 1));
-					} else {
-						$this->config[$element][$attribute] = $value;
-					}
-				}
-			}
-		} else {
-			// error handling
-		}
-	}
-	
-	function insertConfiguration () {
-		if (!parent::insertConfiguration()) {
-			return false;
-		}
-	
-		$time = time();
-		$query = "INSERT INTO extern_config SET config_id='{$this->id}', range_id='{$this->range_id}', config_type={$this->module_type}, ";
-		$query .= "name='{$this->config_name}', is_standard=0, mkdate=$time, chdate=$time";
-		$db->query($query);
-	
-		if ($db->affected_rows() != 1) {
-			return FALSE;
-		}
-	
-		return TRUE;
-	}
-	
-	function deleteConfiguration () {
-		if (parent::deleteConfiguration()) {
-			if (!@unlink($GLOBALS['EXTERN_CONFIG_FILE_PATH'] . $this->file_name)) {
-				return FALSE;
-			}
-		} else {
-			return FALSE;
-		}
-		return TRUE;
-	}
-	
+        if ($file = @fopen($GLOBALS['EXTERN_CONFIG_FILE_PATH'] . $this->file_name, 'w')) {
+            fputs($file, $file_content);
+            fclose($file);
+            return ($this->updateConfiguration());
+        } else {
+            ExternModule::printError();
+            return FALSE;
+        }
+        
+    }
+    
+    /**
+    *
+    */
+    function parse () {
+        if (!$this->file_name) {
+            if ($this->id) {
+                $this->file_name = $this->id . '.cfg';
+            } else {
+                // error handling
+            }
+        }
+        
+        $file_name = $GLOBALS['EXTERN_CONFIG_FILE_PATH'] . $this->file_name;
+        if (file_exists($file_name)) {
+            $config = @parse_ini_file($file_name, TRUE);
+            foreach ($config as $element => $attributes) {
+                foreach ($attributes as $attribute => $value) {
+                    if ($value{0} == '|') {
+                        $this->config[$element][$attribute] = explode('|', substr($value, 1));
+                    } else {
+                        $this->config[$element][$attribute] = $value;
+                    }
+                }
+            }
+        } else {
+            // error handling
+        }
+    }
+    
+    function insertConfiguration () {
+        if (!parent::insertConfiguration()) {
+            return false;
+        }
+    
+        $time = time();
+        $query = "INSERT INTO extern_config SET config_id='{$this->id}', range_id='{$this->range_id}', config_type={$this->module_type}, ";
+        $query .= "name='{$this->config_name}', is_standard=0, mkdate=$time, chdate=$time";
+        $db->query($query);
+    
+        if ($db->affected_rows() != 1) {
+            return FALSE;
+        }
+    
+        return TRUE;
+    }
+    
+    function deleteConfiguration () {
+        if (parent::deleteConfiguration()) {
+            if (!@unlink($GLOBALS['EXTERN_CONFIG_FILE_PATH'] . $this->file_name)) {
+                return FALSE;
+            }
+        } else {
+            return FALSE;
+        }
+        return TRUE;
+    }
+    
 }
 
 ?>

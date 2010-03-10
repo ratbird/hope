@@ -186,12 +186,12 @@ class IT_api_TestCase extends PHPUnit_TestCase
         $this->tpl->hideBlock('inner_block');
         $this->assertEquals('data#', $this->_stripWhitespace($this->tpl->get()));
     }
-	*/
+    */
    /**
     *
     */
     /*
-	function testSetGlobalVariable()
+    function testSetGlobalVariable()
     {
         if (!$this->_methodExists('setGlobalVariable')) {
             return;
@@ -212,7 +212,7 @@ class IT_api_TestCase extends PHPUnit_TestCase
         } // for
         $this->assertEquals('glob:one#glob:three|glob:1|glob:2|glob:3#', $this->_stripWhitespace($this->tpl->get()));
     }
-	*/
+    */
 }
 
 ?>

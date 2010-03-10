@@ -31,31 +31,31 @@ require_once $RELATIVE_PATH_ADMIN_MODULES."/IntegrityCheckAbstract.class.php";
 *
 * 
 *
-* @access	public	
-* @author	André Noack <andre.noack@gmx.net>
-* @package	Admin
-* @see		IntegrityCheckAbstract
+* @access   public  
+* @author   André Noack <andre.noack@gmx.net>
+* @package  Admin
+* @see      IntegrityCheckAbstract
 */
 class IntegrityCheckStudiengang extends IntegrityCheckAbstract{
-	
-	/**
-	* constructor
-	*
-	* calls the base class constructor and initializes checklist array
-	* @access	public
-	*/
-	function IntegrityCheckStudiengang(){
-		$baseclass = strtolower(get_parent_class($this));
-		//parent::$baseclass(); //calling the baseclass constructor 
-		$this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
-		$this->master_table = "studiengaenge";
-		$this->checklist[] = array('detail_table' => 'admission_seminar_studiengang',
-									'query' => 'view:STUD_ADMISSONSEM:');
-		$this->checklist[] = array('detail_table' => 'admission_seminar_user',
-									'query' => 'view:STUD_ADMISSONUSER:');
-		$this->checklist[] = array('detail_table' => 'user_studiengang',
-									'query' => 'view:STUD_USER:');
-	}
+    
+    /**
+    * constructor
+    *
+    * calls the base class constructor and initializes checklist array
+    * @access   public
+    */
+    function IntegrityCheckStudiengang(){
+        $baseclass = strtolower(get_parent_class($this));
+        //parent::$baseclass(); //calling the baseclass constructor 
+        $this->$baseclass(); //calling the baseclass constructor PHP < 4.1.0
+        $this->master_table = "studiengaenge";
+        $this->checklist[] = array('detail_table' => 'admission_seminar_studiengang',
+                                    'query' => 'view:STUD_ADMISSONSEM:');
+        $this->checklist[] = array('detail_table' => 'admission_seminar_user',
+                                    'query' => 'view:STUD_ADMISSONUSER:');
+        $this->checklist[] = array('detail_table' => 'user_studiengang',
+                                    'query' => 'view:STUD_USER:');
+    }
 
 }
 ?>

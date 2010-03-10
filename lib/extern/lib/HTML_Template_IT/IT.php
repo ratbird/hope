@@ -386,7 +386,7 @@ class HTML_Template_IT
    /*     $this->blockRegExp = '@###BEGIN\s+(' . $this->blocknameRegExp .
                              ')###(.*?)###END\s+\1###@sm';
    */
-	/*			$this->blockRegExp = '@<!--.+?###(' . $this->blocknameRegExp .
+    /*          $this->blockRegExp = '@<!--.+?###(' . $this->blocknameRegExp .
                              ')###.+?-->(.*)<!--.+?\1\.+?-->@sm';
    */
         $this->setRoot($root);
@@ -412,7 +412,7 @@ class HTML_Template_IT
                 $this->errorMessage(IT_UNKNOWN_OPTION) . ": '{$option}'",
                 IT_UNKNOWN_OPTION
             );
-			*/
+            */
     }
 
     /**
@@ -754,7 +754,7 @@ class HTML_Template_IT
             $this->touchedBlocks = array();
             $this->currentBlock = '__global__';
         } else {
-        	//	$this->template = '###BEGIN __global__###' . $template . '###END __global__###';
+            //  $this->template = '###BEGIN __global__###' . $template . '###END __global__###';
             $this->template = '<!-- BEGIN __global__ -->' . $template .
                               '<!-- END __global__ -->';
             $this->init();
@@ -886,7 +886,7 @@ class HTML_Template_IT
                 $inner = $this->findBlocks($blockcontent);
                 foreach ($inner as $k => $name) {
                     $pattern = sprintf(
-                    	//	'@###BEGIN\s+%s###(.*)###END\s+%s###@sm',
+                        //  '@###BEGIN\s+%s###(.*)###END\s+%s###@sm',
                         '@<!--\s+BEGIN\s+%s\s+-->(.*)<!--\s+END\s+%s\s+-->@sm',
                         $name,
                         $name
@@ -930,9 +930,9 @@ class HTML_Template_IT
             return "";
         }
 
-		$fsize = filesize($filename);
+        $fsize = filesize($filename);
         if ($fsize < 1) {
-			fclose($fh);
+            fclose($fh);
             return '';
         }
 

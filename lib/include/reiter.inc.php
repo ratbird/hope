@@ -26,88 +26,88 @@ require_once ('lib/visual.inc.php');
 
 class reiter {
 
-	/**
-	 * Activates that element of the structure that corresponds to the given view
-	 * argument.
-	 *
-	 * @access private
-	 *
-	 * @param  array      the link structure from lib/include/links_*.inc.php
-	 * @param  string     the key of the link to activate
-	 *
-	 * @return void
-	 */
-	function activateStructure(&$structure, $view, $activeBottomkat) {
+    /**
+     * Activates that element of the structure that corresponds to the given view
+     * argument.
+     *
+     * @access private
+     *
+     * @param  array      the link structure from lib/include/links_*.inc.php
+     * @param  string     the key of the link to activate
+     *
+     * @return void
+     */
+    function activateStructure(&$structure, $view, $activeBottomkat) {
 
-		# view is empty, use the first item
-		if (!$view) {
-			reset($structure);
-			$view = key($structure);
-		}
+        # view is empty, use the first item
+        if (!$view) {
+            reset($structure);
+            $view = key($structure);
+        }
 
-		$structure[$view]["active"] = TRUE;
+        $structure[$view]["active"] = TRUE;
 
-		# activate it's topKat
-		if ($structure[$view]["topKat"]) {
-			$structure[$structure[$view]["topKat"]]["active"] = TRUE;
-		}
+        # activate it's topKat
+        if ($structure[$view]["topKat"]) {
+            $structure[$structure[$view]["topKat"]]["active"] = TRUE;
+        }
 
-		# or the topKat itself
-		else if ($activeBottomkat) {
-			foreach ($structure as $key => $value) {
-				if ($structure[$key]["topKat"] == $view) {
-					$structure[$key]["active"] = TRUE;
-					break;
-				}
-			}
-		}
-	}
+        # or the topKat itself
+        else if ($activeBottomkat) {
+            foreach ($structure as $key => $value) {
+                if ($structure[$key]["topKat"] == $view) {
+                    $structure[$key]["active"] = TRUE;
+                    break;
+                }
+            }
+        }
+    }
 
 
-	/**
-	 * Outputs the tabs.
-	 *
-	 * @param  array      an associative array describing the tabs' structure
-	 * @param  string     the key of the single tab to activate
-	 *
-	 * @return void
-	 */
-	function create($structure, $view) {
+    /**
+     * Outputs the tabs.
+     *
+     * @param  array      an associative array describing the tabs' structure
+     * @param  string     the key of the single tab to activate
+     *
+     * @return void
+     */
+    function create($structure, $view) {
 
-		$activeBottomkat = true;
+        $activeBottomkat = true;
 
-		if (preg_match('/^\((.*)\)$/', $view, $matches)) {
-			$activeBottomkat = false;
-			$view = $matches[1];
-		}
+        if (preg_match('/^\((.*)\)$/', $view, $matches)) {
+            $activeBottomkat = false;
+            $view = $matches[1];
+        }
 
-		$this->activateStructure($structure, $view, $activeBottomkat);
+        $this->activateStructure($structure, $view, $activeBottomkat);
 
-		Navigation::addItem('/reiter', new Navigation(''));
+        Navigation::addItem('/reiter', new Navigation(''));
 
-		foreach ($structure as $key => $item) {
-			$navigation = new Navigation($item['name'],
-				html_entity_decode($item['link']));
+        foreach ($structure as $key => $item) {
+            $navigation = new Navigation($item['name'],
+                html_entity_decode($item['link']));
 
-			if ($item['disabled']) {
-				$navigation->setEnabled(false);
-			} else if ($item['active']) {
-				$navigation->setActive(true);
-			}
+            if ($item['disabled']) {
+                $navigation->setEnabled(false);
+            } else if ($item['active']) {
+                $navigation->setActive(true);
+            }
 
-			if ($item['topKat'] && isset($structure[$item['topKat']])) {
-				$path = '/reiter/' . $item['topKat'] . '/' . $key;
-				Navigation::addItem($path, $navigation);
-			} else if ($item['topKat'] == '') {
-				$path = '/reiter/' . $key;
-				Navigation::addItem($path, $navigation);
-			}
-		}
+            if ($item['topKat'] && isset($structure[$item['topKat']])) {
+                $path = '/reiter/' . $item['topKat'] . '/' . $key;
+                Navigation::addItem($path, $navigation);
+            } else if ($item['topKat'] == '') {
+                $path = '/reiter/' . $key;
+                Navigation::addItem($path, $navigation);
+            }
+        }
 
-		$navigation = Navigation::getItem('/')->activeSubNavigation();
+        $navigation = Navigation::getItem('/')->activeSubNavigation();
 
-		if (isset($navigation)) {
-		    echo $GLOBALS['template_factory']->render('tabs', compact('navigation'));
-		}
-	}
+        if (isset($navigation)) {
+            echo $GLOBALS['template_factory']->render('tabs', compact('navigation'));
+        }
+    }
 }

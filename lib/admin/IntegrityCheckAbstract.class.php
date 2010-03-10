@@ -32,98 +32,98 @@ require_once $RELATIVE_PATH_ADMIN_MODULES."/integrity.view.php";
 *
 * This class is meant to be abstract, don't use it directly, derive your plugins from it
 *
-* @access	private	
-* @author	André Noack <noack@data-quest.de>
-* @package	Admin
+* @access   private 
+* @author   André Noack <noack@data-quest.de>
+* @package  Admin
 */
 class IntegrityCheckAbstract{
-	
-	/**
-	* array of Db Checks
-	*
-	* structure: array('detail_table'=>{name of detail table},'query'=>{SQL or view to do the check})
-	* @access	private
-	* @var		array	$checklist
-	*/
-	var $checklist = array();
-	/**
-	* DbView Object used for queries
-	*
-	* 
-	* @access	private
-	* @var		object DbView	$view
-	*/
-	var $view;
-	/**
-	* name of the master table
-	*
-	*
-	* @access	private
-	* @var		string	$master_table
-	*/
-	var $master_table;
-	
-	function IntegrityCheckAbstract(){
-		$this->view = new DbView();
-	}
-	
-	function doCheck($checknumber){
-		if(!$this->checklist[$checknumber])
-			return false;
-		return $this->view->get_query($this->checklist[$checknumber]['query']);
-	}
-	
-	function doCheckDelete($checknumber){
-		if(!$this->checklist[$checknumber])
-			return false;
-		$key = false;
-		if(!$key = $this->checklist[$checknumber]['key']){
-			$spl = explode(":",$this->checklist[$checknumber]['query']);
-			$key = $GLOBALS["_views"][trim($spl[1])]["pk"];
-		}
-		if(!$key)
-			return false;
-		$db = $this->view->get_query("DELETE FROM ".$this->checklist[$checknumber]['detail_table']." WHERE $key IN ({1})",
-									$this->checklist[$checknumber]['query']);
-		$a_rows = $db->affected_rows();
-		$db->query("OPTIMIZE TABLE ".$this->checklist[$checknumber]['detail_table']);
-		return $a_rows;
-	}
-	function getCheckDetailResult($checknumber){
-		if(!$this->checklist[$checknumber])
-			return false;
-		$key = false;
-		if(!$key = $this->checklist[$checknumber]['key']){
-			$spl = explode(":",$this->checklist[$checknumber]['query']);
-			$key = $GLOBALS["_views"][trim($spl[1])]["pk"];
-		}
-		if(!$key)
-			return false;
-		$db = $this->view->get_query("SELECT * FROM ".$this->checklist[$checknumber]['detail_table']." WHERE $key IN ({1})",
-									$this->checklist[$checknumber]['query']);
-		return $db;
-	}
-	
-	function getCheckDetailTable($checknumber){
-		if(!$this->checklist[$checknumber])
-			return false;
-		return $this->checklist[$checknumber]['detail_table'];
-	}
-	
-	function getCheckMasterTable(){
-		return $this->master_table;
-	}
-	
-	function getCheckCount(){
-		return count($this->checklist);
-	}
-	
-	function getCheckDetailList(){
-		$ret = array();
-		for($i=0; $i < count($this->checklist); ++$i){
-			$ret[] = $this->getCheckDetailTable($i);
-		}
-		return $ret;
-	}
+    
+    /**
+    * array of Db Checks
+    *
+    * structure: array('detail_table'=>{name of detail table},'query'=>{SQL or view to do the check})
+    * @access   private
+    * @var      array   $checklist
+    */
+    var $checklist = array();
+    /**
+    * DbView Object used for queries
+    *
+    * 
+    * @access   private
+    * @var      object DbView   $view
+    */
+    var $view;
+    /**
+    * name of the master table
+    *
+    *
+    * @access   private
+    * @var      string  $master_table
+    */
+    var $master_table;
+    
+    function IntegrityCheckAbstract(){
+        $this->view = new DbView();
+    }
+    
+    function doCheck($checknumber){
+        if(!$this->checklist[$checknumber])
+            return false;
+        return $this->view->get_query($this->checklist[$checknumber]['query']);
+    }
+    
+    function doCheckDelete($checknumber){
+        if(!$this->checklist[$checknumber])
+            return false;
+        $key = false;
+        if(!$key = $this->checklist[$checknumber]['key']){
+            $spl = explode(":",$this->checklist[$checknumber]['query']);
+            $key = $GLOBALS["_views"][trim($spl[1])]["pk"];
+        }
+        if(!$key)
+            return false;
+        $db = $this->view->get_query("DELETE FROM ".$this->checklist[$checknumber]['detail_table']." WHERE $key IN ({1})",
+                                    $this->checklist[$checknumber]['query']);
+        $a_rows = $db->affected_rows();
+        $db->query("OPTIMIZE TABLE ".$this->checklist[$checknumber]['detail_table']);
+        return $a_rows;
+    }
+    function getCheckDetailResult($checknumber){
+        if(!$this->checklist[$checknumber])
+            return false;
+        $key = false;
+        if(!$key = $this->checklist[$checknumber]['key']){
+            $spl = explode(":",$this->checklist[$checknumber]['query']);
+            $key = $GLOBALS["_views"][trim($spl[1])]["pk"];
+        }
+        if(!$key)
+            return false;
+        $db = $this->view->get_query("SELECT * FROM ".$this->checklist[$checknumber]['detail_table']." WHERE $key IN ({1})",
+                                    $this->checklist[$checknumber]['query']);
+        return $db;
+    }
+    
+    function getCheckDetailTable($checknumber){
+        if(!$this->checklist[$checknumber])
+            return false;
+        return $this->checklist[$checknumber]['detail_table'];
+    }
+    
+    function getCheckMasterTable(){
+        return $this->master_table;
+    }
+    
+    function getCheckCount(){
+        return count($this->checklist);
+    }
+    
+    function getCheckDetailList(){
+        $ret = array();
+        for($i=0; $i < count($this->checklist); ++$i){
+            $ret[] = $this->getCheckDetailTable($i);
+        }
+        return $ret;
+    }
 }
 ?>

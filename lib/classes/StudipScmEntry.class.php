@@ -7,8 +7,8 @@
 *
 *
 *
-* @author	André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
-* @access	public
+* @author   André Noack <noack@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
+* @access   public
 */
 
 // +---------------------------------------------------------------------------+
@@ -37,42 +37,42 @@ define('STUDIPSCMENTRY_DB_TABLE', 'scm');
 
 class StudipScmEntry extends SimpleORMap {
 
-	public static function GetSCMEntriesForRange($range_id, $as_objects = false){
-		$ret = array();
-		$query = "SELECT " . STUDIPSCMENTRY_DB_TABLE . ".* FROM "
-					. STUDIPSCMENTRY_DB_TABLE . " WHERE range_id='$range_id' ORDER BY mkdate";
-		$rs = DBManager::get()->query($query);
-		while ($row = $rs->fetch(PDO::FETCH_ASSOC)){
-			if (!$as_objects){
-				$ret[$row['scm_id']] = $row;
-			} else {
-				$ret[$row['scm_id']] = new StudipScmEntry();
-				$ret[$row['scm_id']]->setData($row, true);
-				$ret[$row['scm_id']]->is_new = false;
-			}
-		}
-		return $ret;
-	}
-	
-	public static function GetNumSCMEntriesForRange($range_id){
-		$query = "SELECT COUNT(*) FROM "
-					. STUDIPSCMENTRY_DB_TABLE . " WHERE range_id='$range_id'";
-		return DBManager::get()
-				->query($query)
-				->fetchColumn();
-	}
-	
-	public static function DeleteSCMEntriesForRange($range_ids){
-		if (!is_array($range_ids)){
-			$range_ids = array($range_ids);
-		}
-		$query = "DELETE FROM " . STUDIPSCMENTRY_DB_TABLE . " WHERE range_id IN ('" . join("','", $range_ids). "')";
-		return DBManager::get()->exec($query);
-	}
-	
-	function __construct($id = null){
-		parent::__construct($id);
-	}
+    public static function GetSCMEntriesForRange($range_id, $as_objects = false){
+        $ret = array();
+        $query = "SELECT " . STUDIPSCMENTRY_DB_TABLE . ".* FROM "
+                    . STUDIPSCMENTRY_DB_TABLE . " WHERE range_id='$range_id' ORDER BY mkdate";
+        $rs = DBManager::get()->query($query);
+        while ($row = $rs->fetch(PDO::FETCH_ASSOC)){
+            if (!$as_objects){
+                $ret[$row['scm_id']] = $row;
+            } else {
+                $ret[$row['scm_id']] = new StudipScmEntry();
+                $ret[$row['scm_id']]->setData($row, true);
+                $ret[$row['scm_id']]->is_new = false;
+            }
+        }
+        return $ret;
+    }
+    
+    public static function GetNumSCMEntriesForRange($range_id){
+        $query = "SELECT COUNT(*) FROM "
+                    . STUDIPSCMENTRY_DB_TABLE . " WHERE range_id='$range_id'";
+        return DBManager::get()
+                ->query($query)
+                ->fetchColumn();
+    }
+    
+    public static function DeleteSCMEntriesForRange($range_ids){
+        if (!is_array($range_ids)){
+            $range_ids = array($range_ids);
+        }
+        $query = "DELETE FROM " . STUDIPSCMENTRY_DB_TABLE . " WHERE range_id IN ('" . join("','", $range_ids). "')";
+        return DBManager::get()->exec($query);
+    }
+    
+    function __construct($id = null){
+        parent::__construct($id);
+    }
 
 }
 

@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	calendar_modules
-* @module		calendar_sync
-* @package	Calendar
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  calendar_modules
+* @module       calendar_sync
+* @package  Calendar
 */
 
 // +---------------------------------------------------------------------------+
@@ -39,29 +39,29 @@
 
 class MysqlDriver {
 
-	var $db;
-	var $count; 
-	
-	function MysqlDriver () {
-	
-		$this->count = 0;
-	}
-	
-	function initialize ($db_name) {
-	
-		if (!is_object($this->db["$db_name"]))
-			$this->db["$db_name"] =& new DB_Seminar();
-	}
-	
-	function count () {
-	
-		$this->count++;
-	}
-	
-	function getCount () {
-	
-		return $this->count;
-	}
-	
+    var $db;
+    var $count; 
+    
+    function MysqlDriver () {
+    
+        $this->count = 0;
+    }
+    
+    function initialize ($db_name) {
+    
+        if (!is_object($this->db["$db_name"]))
+            $this->db["$db_name"] =& new DB_Seminar();
+    }
+    
+    function count () {
+    
+        $this->count++;
+    }
+    
+    function getCount () {
+    
+        return $this->count;
+    }
+    
 }
-	
+    

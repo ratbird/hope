@@ -7,11 +7,11 @@
 * 
 * Extern-admin-pages-mainfile. Calls the submodules.
 *
-* @author		Peter Thienel <pthienel@data.quest.de>
-* @access		public
-* @modulegroup	extern_modules
-* @module		extern
-* @package		Extern
+* @author       Peter Thienel <pthienel@data.quest.de>
+* @access       public
+* @modulegroup  extern_modules
+* @module       extern
+* @package      Extern
 */
 /**
 * workaround for PHPDoc
@@ -43,7 +43,7 @@ define("PHPDOC_DUMMY",true);
 
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
-		"perm" => "Seminar_Perm", "user" => "Seminar_User"));
+        "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("admin");
 
 require_once 'lib/functions.php';
@@ -52,14 +52,14 @@ $HELP_KEYWORD="Basis.EinrichtungenVerwaltenExterneSeiten";
 $CURRENT_PAGE.= _("Verwaltung externer Seiten"); 
 
 if ($EXTERN_ENABLE) {
-	include($RELATIVE_PATH_EXTERN . "/admin_extern.inc.php");
+    include($RELATIVE_PATH_EXTERN . "/admin_extern.inc.php");
 } else {
-	// Start of Output
-	include ('lib/include/html_head.inc.php'); // Output of html head
-	include ('lib/include/header.php');   // Output of Stud.IP head
-	require_once ('lib/msg.inc.php');
-	parse_window ("error§" . _("Die Verwaltung externer Seiten ist nicht eingebunden. Bitte aktivieren Sie diese in den Systemeinstellungen, oder wenden Sie sich an den oder die SystemadministratorIn."), "§",
-				_("Modul \"externe Seiten\" nicht eingebunden"));
+    // Start of Output
+    include ('lib/include/html_head.inc.php'); // Output of html head
+    include ('lib/include/header.php');   // Output of Stud.IP head
+    require_once ('lib/msg.inc.php');
+    parse_window ("error§" . _("Die Verwaltung externer Seiten ist nicht eingebunden. Bitte aktivieren Sie diese in den Systemeinstellungen, oder wenden Sie sich an den oder die SystemadministratorIn."), "§",
+                _("Modul \"externe Seiten\" nicht eingebunden"));
 }
 page_close();
 ?>

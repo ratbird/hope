@@ -5,19 +5,19 @@
 * New news of the selected institute are displayed.<br/>
 * Parameters received via stdin<br/>
 * <code>
-*	$session_id
-*	$inst_id
-*	$institutes_flag
-*	$institutes_pc		(page counter)
-*	$inst_news_pc		(page counter)
+*   $session_id
+*   $inst_id
+*   $institutes_flag
+*   $institutes_pc      (page counter)
+*   $inst_news_pc       (page counter)
 * </code>
 *
-* @author		Florian Hansen <f1701h@gmx.net>
-* @version		0.1		11.09.2003	19:14:19
-* @access		public
-* @modulegroup	wap_modules
-* @module		inst_news.php
-* @package		WAP
+* @author       Florian Hansen <f1701h@gmx.net>
+* @version      0.1     11.09.2003  19:14:19
+* @access       public
+* @modulegroup  wap_modules
+* @module       inst_news.php
+* @package      WAP
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -39,18 +39,18 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-	/**
-	* Maximum of news displayed per page
-	* @const NEWS_PER_PAGE
-	*/
-	define ("NEWS_PER_PAGE", 5);
+    /**
+    * Maximum of news displayed per page
+    * @const NEWS_PER_PAGE
+    */
+    define ("NEWS_PER_PAGE", 5);
 
-	include_once("wap_adm.inc.php");
-	include_once("wap_txt.inc.php");
-	include_once("wap_hlp.inc.php");
-	include_once("wap_buttons.inc.php");
+    include_once("wap_adm.inc.php");
+    include_once("wap_txt.inc.php");
+    include_once("wap_hlp.inc.php");
+    include_once("wap_buttons.inc.php");
 
-	$session_user_id = wap_adm_start_card($session_id);
+    $session_user_id = wap_adm_start_card($session_id);
     if ($session_user_id)
     {
         echo "<p align=\"center\">";
@@ -73,11 +73,11 @@
 
         wap_hlp_get_global_user_var($session_user_id, "CurrentLogin");
 
-		$q_string  = "SELECT COUNT(news_range.news_id) AS num_news ";
-		$q_string .= "FROM news_range LEFT JOIN news USING (news_id) ";
-		$q_string .= "WHERE news_range.range_id='". $inst_id . "' ";
-		$q_string .= "AND date < $current_time AND (date + expire) > $current_time ";
-		$q_string .= "AND date > $CurrentLogin";
+        $q_string  = "SELECT COUNT(news_range.news_id) AS num_news ";
+        $q_string .= "FROM news_range LEFT JOIN news USING (news_id) ";
+        $q_string .= "WHERE news_range.range_id='". $inst_id . "' ";
+        $q_string .= "AND date < $current_time AND (date + expire) > $current_time ";
+        $q_string .= "AND date > $CurrentLogin";
 
         $db-> query($q_string);
         $db-> next_record();
@@ -127,10 +127,10 @@
                         echo "<anchor>" . wap_buttons_forward_page($page_counter_v, $num_pages) . "\n";
                         echo "    <go method=\"post\" href=\"inst_news.php\">\n";
                         echo "        <postfield name=\"session_id\" value=\"$session_id\"/>\n";
-	    	            echo "        <postfield name=\"inst_id\" value=\"$inst_id\"/>\n";
-    		            echo "        <postfield name=\"institutes_pc\" value=\"$institutes_pc\"/>\n";
-	        	        echo "        <postfield name=\"inst_news_pc\" value=\"$page_counter_v\"/>\n";
-            		    echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
+                        echo "        <postfield name=\"inst_id\" value=\"$inst_id\"/>\n";
+                        echo "        <postfield name=\"institutes_pc\" value=\"$institutes_pc\"/>\n";
+                        echo "        <postfield name=\"inst_news_pc\" value=\"$page_counter_v\"/>\n";
+                        echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
                         echo "    </go>\n";
                         echo "</anchor><br/>\n";
                     }
@@ -140,10 +140,10 @@
                         echo "<anchor>" . wap_buttons_back_page($page_counter_v, $num_pages) . "\n";
                         echo "    <go method=\"post\" href=\"inst_news.php\">\n";
                         echo "        <postfield name=\"session_id\" value=\"$session_id\"/>\n";
-		                echo "        <postfield name=\"inst_id\" value=\"$inst_id\"/>\n";
-    		            echo "        <postfield name=\"institutes_pc\" value=\"$institutes_pc\"/>\n";
-        		        echo "        <postfield name=\"inst_news_pc\" value=\"$page_counter_v\"/>\n";
-            		    echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
+                        echo "        <postfield name=\"inst_id\" value=\"$inst_id\"/>\n";
+                        echo "        <postfield name=\"institutes_pc\" value=\"$institutes_pc\"/>\n";
+                        echo "        <postfield name=\"inst_news_pc\" value=\"$page_counter_v\"/>\n";
+                        echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
                         echo "    </go>\n";
                         echo "</anchor><br/>\n";
                     }
@@ -165,12 +165,12 @@
         echo "        <postfield name=\"session_id\" value=\"$session_id\"/>\n";
         echo "        <postfield name=\"inst_id\" value=\"$inst_id\"/>\n";
         echo "        <postfield name=\"institutes_pc\" value=\"$institutes_pc\"/>\n";
-		echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
+        echo "        <postfield name=\"institutes_flag\" value=\"$institutes_flag\"/>\n";
         echo "    </go>\n";
         echo "</anchor><br/>\n";
 
         wap_buttons_menu_link($session_id);
         echo "</p>\n";
     }
-	wap_adm_end_card();
+    wap_adm_end_card();
 ?>

@@ -26,54 +26,54 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "
 require_once 'lib/messaging.inc.php';
 
 if ($GLOBALS['CHAT_ENABLE']){
-	include_once $RELATIVE_PATH_CHAT."/ChatServer.class.php"; //wird für Nachrichten im chat benötigt
+    include_once $RELATIVE_PATH_CHAT."/ChatServer.class.php"; //wird für Nachrichten im chat benötigt
 }
 
 //nur wenn wir angemeldet sind sollten wir dies tun!
 if ($auth->auth["uid"]!="nobody")
 {
-	$sms = new messaging();
-	//User aus allen Chatraeumen entfernen
-	if ($CHAT_ENABLE) {
-		$chatServer =& ChatServer::GetInstance($CHAT_SERVER_NAME);
-		$chatServer->logoutUser($user->id);
-	}
+    $sms = new messaging();
+    //User aus allen Chatraeumen entfernen
+    if ($CHAT_ENABLE) {
+        $chatServer =& ChatServer::GetInstance($CHAT_SERVER_NAME);
+        $chatServer->logoutUser($user->id);
+    }
 
-	//Wenn Option dafuer gewaehlt, vorliegende Nachrichen loeschen
-	if ($my_messaging_settings["delete_messages_after_logout"]) {
-		$sms->delete_all_messages();
-	}
+    //Wenn Option dafuer gewaehlt, vorliegende Nachrichen loeschen
+    if ($my_messaging_settings["delete_messages_after_logout"]) {
+        $sms->delete_all_messages();
+    }
 
-	//Wenn Option dafuer gewaehlt, alle ungelsesenen Nachrichten als gelesen speichern
-	if ($my_messaging_settings["logout_markreaded"]) {
-		$sms->set_read_all_messages();
-	}
+    //Wenn Option dafuer gewaehlt, alle ungelsesenen Nachrichten als gelesen speichern
+    if ($my_messaging_settings["logout_markreaded"]) {
+        $sms->set_read_all_messages();
+    }
 
-	$logout_user=$user->id;
+    $logout_user=$user->id;
 
-	// TODO this needs to be generalized or removed
-	//erweiterung cas
-	if ($auth->auth["auth_plugin"] == "cas"){
-		$casauth = StudipAuthAbstract::GetInstance('cas');
-		$docaslogout = true;
-	}
-	//Logout aus dem Sessionmanagement
-	$auth->logout();
-	$sess->delete();
+    // TODO this needs to be generalized or removed
+    //erweiterung cas
+    if ($auth->auth["auth_plugin"] == "cas"){
+        $casauth = StudipAuthAbstract::GetInstance('cas');
+        $docaslogout = true;
+    }
+    //Logout aus dem Sessionmanagement
+    $auth->logout();
+    $sess->delete();
 
-	page_close();
+    page_close();
 
-	//Session changed zuruecksetzen
-	$timeout=(time()-(15 * 60));
-	$user->set_last_action($timeout);
+    //Session changed zuruecksetzen
+    $timeout=(time()-(15 * 60));
+    $user->set_last_action($timeout);
 
-	//der logout() Aufruf fuer CAS (dadurch wird das Cookie (Ticket) im Browser zerstoert)
-	if ($docaslogout){
-		$casauth->logout();
-	}
+    //der logout() Aufruf fuer CAS (dadurch wird das Cookie (Ticket) im Browser zerstoert)
+    if ($docaslogout){
+        $casauth->logout();
+    }
 } else {
-	$sess->delete();
-	page_close();
+    $sess->delete();
+    page_close();
 }
 
 header("Location:" . URLHelper::getURL("index.php?logout=true&_language=$_language"));

@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternModulePersondetail
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternModulePersondetail
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -45,93 +45,93 @@ require_once('lib/dates.inc.php');
 
 class ExternModulePersondetails extends ExternModule {
 
-	/**
-	*
-	*/
-	function ExternModulePersondetails ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
-		$this->data_fields = array(
-				'contact' => array(
-					'raum', 'Telefon', 'Fax', 'Email',
-					'Home', 'sprechzeiten'),
-				'content' => array(
-					'head', 'lebenslauf', 'schwerp', 'lehre',
-					'news', 'termine', 'publi', 'kategorien'/*, 'literature' */)
-		);
-		$this->registered_elements = array(
-				'Body', 'TableHeader', 'PersondetailsHeader', 'Contact',
-				'PersondetailsLectures', 'TableParagraph', 'TableParagraphHeadline',
-				'TableParagraphSubHeadline', 'TableParagraphText', 'List',/* 'LitList',*/
-				'LinkIntern', 'StudipLink'
-		);
-		$this->args = array('username', 'seminar_id');
-		$this->field_names = array
-		(
-			"contact" => array
-			(
-				_("Raum"),
-				_("Telefon"),
-				_("Fax"),
-				_("Email"),
-				_("Homepage"),
-				_("Sprechzeiten")
-			),
-			"content" => array
-			(
-				_("Name, Anschrift, Kontakt"),
-				_("Lebenslauf"),
-				_("Schwerpunkte"),
-				_("Lehrveranstaltungen"),
-				_("News"),
-				_("Termine"),
-				_("Publikationen"),
-				_("eigene Kategorien")/*,
-				_("Literaturlisten")*/
-			)
-		);
-		parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
-	}
-	
-	function setup () {
-		// extend $data_fields if generic datafields are set
-		$config_datafields = $this->config->getValue("Main", "genericdatafields");
-		$this->data_fields["content"] = array_merge((array)$this->data_fields['content'], (array)$config_datafields);
-		
-		// setup module properties
-		$this->elements["LinkIntern"]->link_module_type = 4;
-		$this->elements["LinkIntern"]->real_name = _("Link zum Modul Veranstaltungsdetails");
-		$this->elements["TableHeader"]->real_name = _("Umschließende Tabelle");
-	}
-	
-	function printout ($args) {
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_header($this->config);
-		
-		if (!$language = $this->config->getValue("Main", "language"))
-			$language = "de_DE";
-		init_i18n($language);
-		
-		include($GLOBALS["RELATIVE_PATH_EXTERN"]
-				. "/modules/views/persondetails.inc.php");
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_footer();
-	}
-	
-	function printoutPreview () {
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_header($this->config);
-		
-		if (!$language = $this->config->getValue("Main", "language"))
-			$language = "de_DE";
-		init_i18n($language);
-		
-		include($GLOBALS["RELATIVE_PATH_EXTERN"]
-				. "/modules/views/persondetails_preview.inc.php");
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_footer();
-	}
-	
+    /**
+    *
+    */
+    function ExternModulePersondetails ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
+        $this->data_fields = array(
+                'contact' => array(
+                    'raum', 'Telefon', 'Fax', 'Email',
+                    'Home', 'sprechzeiten'),
+                'content' => array(
+                    'head', 'lebenslauf', 'schwerp', 'lehre',
+                    'news', 'termine', 'publi', 'kategorien'/*, 'literature' */)
+        );
+        $this->registered_elements = array(
+                'Body', 'TableHeader', 'PersondetailsHeader', 'Contact',
+                'PersondetailsLectures', 'TableParagraph', 'TableParagraphHeadline',
+                'TableParagraphSubHeadline', 'TableParagraphText', 'List',/* 'LitList',*/
+                'LinkIntern', 'StudipLink'
+        );
+        $this->args = array('username', 'seminar_id');
+        $this->field_names = array
+        (
+            "contact" => array
+            (
+                _("Raum"),
+                _("Telefon"),
+                _("Fax"),
+                _("Email"),
+                _("Homepage"),
+                _("Sprechzeiten")
+            ),
+            "content" => array
+            (
+                _("Name, Anschrift, Kontakt"),
+                _("Lebenslauf"),
+                _("Schwerpunkte"),
+                _("Lehrveranstaltungen"),
+                _("News"),
+                _("Termine"),
+                _("Publikationen"),
+                _("eigene Kategorien")/*,
+                _("Literaturlisten")*/
+            )
+        );
+        parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
+    }
+    
+    function setup () {
+        // extend $data_fields if generic datafields are set
+        $config_datafields = $this->config->getValue("Main", "genericdatafields");
+        $this->data_fields["content"] = array_merge((array)$this->data_fields['content'], (array)$config_datafields);
+        
+        // setup module properties
+        $this->elements["LinkIntern"]->link_module_type = 4;
+        $this->elements["LinkIntern"]->real_name = _("Link zum Modul Veranstaltungsdetails");
+        $this->elements["TableHeader"]->real_name = _("Umschließende Tabelle");
+    }
+    
+    function printout ($args) {
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_header($this->config);
+        
+        if (!$language = $this->config->getValue("Main", "language"))
+            $language = "de_DE";
+        init_i18n($language);
+        
+        include($GLOBALS["RELATIVE_PATH_EXTERN"]
+                . "/modules/views/persondetails.inc.php");
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_footer();
+    }
+    
+    function printoutPreview () {
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_header($this->config);
+        
+        if (!$language = $this->config->getValue("Main", "language"))
+            $language = "de_DE";
+        init_i18n($language);
+        
+        include($GLOBALS["RELATIVE_PATH_EXTERN"]
+                . "/modules/views/persondetails_preview.inc.php");
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_footer();
+    }
+    
 }
 
 ?>

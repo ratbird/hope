@@ -88,17 +88,17 @@ class Sql_Query {
     $res .= sprintf("<select%s name=\"%s\" onChange=\"%s\">\n",
               ($class)?" class=$class":"",
               $name,$js);
-	
+    
         ## Add blank value for all selects. Controlled by $addblank 
 
-	if( $addblank )
-	{	
-      		$res .= sprintf("<option value=\"%s\"%s%s>%s\n",
-                	$this->BLANK,
-               		 ($class)?" class=$class":"",
-                	 ($selected == $this->BLANK)?" selected":"",
-                	 $addblank);
-	}
+    if( $addblank )
+    {   
+            $res .= sprintf("<option value=\"%s\"%s%s>%s\n",
+                    $this->BLANK,
+                     ($class)?" class=$class":"",
+                     ($selected == $this->BLANK)?" selected":"",
+                     $addblank);
+    }
 
     reset($option);
     while(list($k, $v) = each($option)) {
@@ -168,10 +168,10 @@ class Sql_Query {
                $hash = $db->metadata( $v );
                $fields = array();
 
-		for( $i = 0; $i < $hash["num_fields"]; $i++ )
-		{
-			$fields[ucwords($hash[$i]["name"])] = $hash[$i]["name"];
-		}
+        for( $i = 0; $i < $hash["num_fields"]; $i++ )
+        {
+            $fields[ucwords($hash[$i]["name"])] = $hash[$i]["name"];
+        }
 
                $table_fields[$v] = $fields;
                $table_list[$v] = ucwords($v);
@@ -227,21 +227,21 @@ class Sql_Query {
 
       if( $this->use_js )
       {
-	  ## Build table selection
-	  printf("  <td%s>%s</td>\n",
-	    ($class)?" class=$class":"",
-	    $this->selection(
-	      $this->makename($base, "table_sel", $i), 
-	      $table_list, 
-	      $GLOBALS[$base]["table_sel_".$i],
-	      $this->translate, 
-	      $class, "UpdateMenu( this.form, this)", "-" ));
+      ## Build table selection
+      printf("  <td%s>%s</td>\n",
+        ($class)?" class=$class":"",
+        $this->selection(
+          $this->makename($base, "table_sel", $i), 
+          $table_list, 
+          $GLOBALS[$base]["table_sel_".$i],
+          $this->translate, 
+          $class, "UpdateMenu( this.form, this)", "-" ));
 
           ## really, we should only query the metadata for the table that is needed here, but for now
           ## we query all necessary metadata above, so we can assume that $table_list and $table_fields are set
           ## appropriately
           if( ($temp = $GLOBALS[$base]["table_sel_".$i]) && $temp != $this->BLANK )
-	          $option = $table_fields[$temp];
+              $option = $table_fields[$temp];
           else
                   $option = array();
 
@@ -283,25 +283,25 @@ class Sql_Query {
       if( $this->use_js )
       {
 
-	  ## Build table selection, again
-	  printf("  <td%s>%s</td>\n",
-	    ($class)?" class=$class":"",
-	    $this->selection(
-	      $this->makename($base, "table_sel2", $i), 
-	      $table_list, 
-	      $GLOBALS[$base]["table_sel2_".$i], 
-	      $this->translate, 
-	      $class, "UpdateMenu( this.form, this)", '-' ));
+      ## Build table selection, again
+      printf("  <td%s>%s</td>\n",
+        ($class)?" class=$class":"",
+        $this->selection(
+          $this->makename($base, "table_sel2", $i), 
+          $table_list, 
+          $GLOBALS[$base]["table_sel2_".$i], 
+          $this->translate, 
+          $class, "UpdateMenu( this.form, this)", '-' ));
 
-	 ## Build field selection, again
-	  printf("  <td%s>%s</td>\n",
-	    ($class)?" class=$class":"",
-	    $this->selection(
-	      $this->makename($base, "field_sel2", $i), 
-	      $option, 
-	      $GLOBALS[$base]["field_sel2_".$i], 
-	      $this->translate, 
-	      $class, "PutText( this );", '-' )); 
+     ## Build field selection, again
+      printf("  <td%s>%s</td>\n",
+        ($class)?" class=$class":"",
+        $this->selection(
+          $this->makename($base, "field_sel2", $i), 
+          $option, 
+          $GLOBALS[$base]["field_sel2_".$i], 
+          $this->translate, 
+          $class, "PutText( this );", '-' )); 
       }
 
       printf(" </tr>\n");
@@ -413,7 +413,7 @@ class Sql_Query {
     if ($this->conditions < 1)
       $this->conditions = 1;
     
-	return;
+    return;
   }
 
 
@@ -421,46 +421,46 @@ class Sql_Query {
   ##
   ## Same as plain_where(), but also inspects the submit button
   ## used to submit the query. Changes $this->conditions appropriately.
-	function where( $base, $incr = 1 )
-	{
-		$this->generic_submit( "where", $base, $incr );
-		return $this->plain_where( $base );
-	}
+    function where( $base, $incr = 1 )
+    {
+        $this->generic_submit( "where", $base, $incr );
+        return $this->plain_where( $base );
+    }
 
   ## from:
   ##
   ## Only useful if using Sql_Query with $use_js turned on. Returns a string suitable for use in a
   ## query of the form "SELECT x FROM (from) WHERE (query);"
 
-	function from( $base, $incr = 0 )
-	{	
-		$this->generic_submit( "from", $base, $incr );
-		return $this->plain_from( $base );
-	}
+    function from( $base, $incr = 0 )
+    {   
+        $this->generic_submit( "from", $base, $incr );
+        return $this->plain_from( $base );
+    }
 
-	function plain_from( $base )
-	{
-		$ret = array();
-		for($i=1; $i<=$this->conditions; $i++) 
-		{     
-			## Only create conditions for used input fields
-			if ($GLOBALS[$base]["input_".$i] == "" || $GLOBALS[$base]["table_sel_".$i] == -1 
-					     || $GLOBALS[$base]["field_sel_".$i] == -1 )
-      			
-        			continue;
+    function plain_from( $base )
+    {
+        $ret = array();
+        for($i=1; $i<=$this->conditions; $i++) 
+        {     
+            ## Only create conditions for used input fields
+            if ($GLOBALS[$base]["input_".$i] == "" || $GLOBALS[$base]["table_sel_".$i] == -1 
+                         || $GLOBALS[$base]["field_sel_".$i] == -1 )
+                
+                    continue;
 
 
-			$table = $GLOBALS[$base]["table_sel_".$i];
-			$ret[$table] = $table;
+            $table = $GLOBALS[$base]["table_sel_".$i];
+            $ret[$table] = $table;
 
-			$table = $GLOBALS[$base]["table_sel2_".$i];
+            $table = $GLOBALS[$base]["table_sel2_".$i];
 
-			if( $table && $table != -1 )
-				$ret[$table] = $table;
-		}
-		
-		return implode( ",", $ret );
-	}
+            if( $table && $table != -1 )
+                $ret[$table] = $table;
+        }
+        
+        return implode( ",", $ret );
+    }
 
 };
 
@@ -472,20 +472,20 @@ class Sql_Query {
  */
 function getQueryFields( $db, $table )
 {
-	$fields = array();
-	$result = mysql_list_fields( $db, $table );
-	if( $result <= 0 )
-	{
-		print "Error: $db $table<br>";
-		return;
-	}
-	while( $ob = mysql_fetch_field( $result ) )
-	{
-		$fields[$ob->name] = ucwords($ob->name);
-	}
-	
-	return $fields;
-}	
+    $fields = array();
+    $result = mysql_list_fields( $db, $table );
+    if( $result <= 0 )
+    {
+        print "Error: $db $table<br>";
+        return;
+    }
+    while( $ob = mysql_fetch_field( $result ) )
+    {
+        $fields[$ob->name] = ucwords($ob->name);
+    }
+    
+    return $fields;
+}   
 
 
 ?>

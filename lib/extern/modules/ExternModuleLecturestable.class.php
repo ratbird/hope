@@ -8,11 +8,11 @@
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternModuleLecturestable
-* @package	studip_extern
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternModuleLecturestable
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -44,81 +44,81 @@ require_once('lib/language.inc.php');
 
 class ExternModuleLecturestable extends ExternModule {
 
-	/**
-	*
-	*/
-	function ExternModuleLecturestable ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
-		$this->data_fields = array('VeranstaltungsNummer', 'Name', 'Untertitel', 'status', 'Ort',
-			'art', 'zeiten', 'dozent');
-		$this->registered_elements = array(
-			'ReplaceTextSemType',
-			'SelectSubjectAreas',
-			'Body',
-			'TableHeader',
-			'InfoCountSem' => 'TableGroup',
-			'Grouping' => 'TableGroup',
-			'TableHeadrow',
-			'TableRow',
-			'SemLink' => 'LinkIntern',
-			'LecturerLink' => 'LinkIntern');
-		$this->field_names = array(
-				_("Veranstaltungsnummer"),
-				_("Name"),
-				_("Untertitel"),
-				_("Status"),
-				_("Ort"),
-				_("Art"),
-				_("Zeiten"),
-				_("DozentIn")
-		);
-		parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
-	}
-	
-	function setup () {
-		// extend $data_fields if generic datafields are set
-		$config_datafields = $this->config->getValue("Main", "genericdatafields");
-		$this->data_fields = array_merge((array)$this->data_fields, (array)$config_datafields);
-		
-		// setup module properties
-		$this->elements["InfoCountSem"]->real_name = _("Anzahl Veranstaltungen/Gruppierung");
-		$this->elements["SemLink"]->link_module_type = 4;
-		$this->elements["SemLink"]->real_name = _("Link zum Modul Veranstaltungsdetails");
-		$this->elements["LecturerLink"]->link_module_type = 2;
-		$this->elements["LecturerLink"]->real_name = _("Link zum Modul MitarbeiterInnendetails");
-	}
-	
-	function printout ($args) {
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_header($this->config);
-		
-		if (!$language = $this->config->getValue("Main", "language"))
-			$language = "de_DE";
-		init_i18n($language);
-		
-		$start_item_id = get_start_item_id($this->config->range_id);
-		$browser =& new ExternSemBrowseTable($this, $start_item_id);
-		$browser->print_result();
-		
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_footer();
-	}
-	
-	function printoutPreview () {
-		if ($this->config->getValue("Main", "wholesite"))
-			echo html_header($this->config);
-		
-		if (!$language = $this->config->getValue("Main", "language"))
-			$language = "de_DE";
-		init_i18n($language);
-		
-		include($GLOBALS["RELATIVE_PATH_EXTERN"]
-				. "/modules/views/lecturestable_preview.inc.php");
-		
-		if ($this->config->getValue("Main", "wholesite"))	
-			echo html_footer();
-	}
-	
+    /**
+    *
+    */
+    function ExternModuleLecturestable ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
+        $this->data_fields = array('VeranstaltungsNummer', 'Name', 'Untertitel', 'status', 'Ort',
+            'art', 'zeiten', 'dozent');
+        $this->registered_elements = array(
+            'ReplaceTextSemType',
+            'SelectSubjectAreas',
+            'Body',
+            'TableHeader',
+            'InfoCountSem' => 'TableGroup',
+            'Grouping' => 'TableGroup',
+            'TableHeadrow',
+            'TableRow',
+            'SemLink' => 'LinkIntern',
+            'LecturerLink' => 'LinkIntern');
+        $this->field_names = array(
+                _("Veranstaltungsnummer"),
+                _("Name"),
+                _("Untertitel"),
+                _("Status"),
+                _("Ort"),
+                _("Art"),
+                _("Zeiten"),
+                _("DozentIn")
+        );
+        parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
+    }
+    
+    function setup () {
+        // extend $data_fields if generic datafields are set
+        $config_datafields = $this->config->getValue("Main", "genericdatafields");
+        $this->data_fields = array_merge((array)$this->data_fields, (array)$config_datafields);
+        
+        // setup module properties
+        $this->elements["InfoCountSem"]->real_name = _("Anzahl Veranstaltungen/Gruppierung");
+        $this->elements["SemLink"]->link_module_type = 4;
+        $this->elements["SemLink"]->real_name = _("Link zum Modul Veranstaltungsdetails");
+        $this->elements["LecturerLink"]->link_module_type = 2;
+        $this->elements["LecturerLink"]->real_name = _("Link zum Modul MitarbeiterInnendetails");
+    }
+    
+    function printout ($args) {
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_header($this->config);
+        
+        if (!$language = $this->config->getValue("Main", "language"))
+            $language = "de_DE";
+        init_i18n($language);
+        
+        $start_item_id = get_start_item_id($this->config->range_id);
+        $browser =& new ExternSemBrowseTable($this, $start_item_id);
+        $browser->print_result();
+        
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_footer();
+    }
+    
+    function printoutPreview () {
+        if ($this->config->getValue("Main", "wholesite"))
+            echo html_header($this->config);
+        
+        if (!$language = $this->config->getValue("Main", "language"))
+            $language = "de_DE";
+        init_i18n($language);
+        
+        include($GLOBALS["RELATIVE_PATH_EXTERN"]
+                . "/modules/views/lecturestable_preview.inc.php");
+        
+        if ($this->config->getValue("Main", "wholesite"))   
+            echo html_footer();
+    }
+    
 }
 
 ?>

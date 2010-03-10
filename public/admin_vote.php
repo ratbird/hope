@@ -29,15 +29,15 @@
  * admin_vote.php
  *
  *
- * @author	Michael Cohrs <michael@cohrs.de>
- * @version	10. Juni 2003
- * @access	public
- * @package	vote
+ * @author  Michael Cohrs <michael@cohrs.de>
+ * @version 10. Juni 2003
+ * @access  public
+ * @package vote
  */
 ob_start(); // start output buffering
 
 page_open (array ("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
-		  "perm" => "Seminar_Perm", "user" => "Seminar_User"));
+          "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check ("autor");
 
 require_once 'lib/functions.php';
@@ -46,17 +46,17 @@ $HELP_KEYWORD="Basis.Votings";
 $CURRENT_PAGE= _("Verwaltung von Umfragen und Tests"); 
 
 if (!empty($the_range) && $the_range != $auth->auth['uname'] && $the_range != 'studip'){
-	$view_mode = get_object_type($the_range);
-	if ($view_mode == "fak"){
-		$view_mode = "inst";
-	}
-	if ($links_admin_data['topkat'] == 'sem') {
-		Navigation::activateItem('/admin/course/vote');
-	} else {
-		Navigation::activateItem('/admin/institute/vote');
-	}
+    $view_mode = get_object_type($the_range);
+    if ($view_mode == "fak"){
+        $view_mode = "inst";
+    }
+    if ($links_admin_data['topkat'] == 'sem') {
+        Navigation::activateItem('/admin/course/vote');
+    } else {
+        Navigation::activateItem('/admin/institute/vote');
+    }
 } else {
-	Navigation::activateItem('/homepage/tools/vote');
+    Navigation::activateItem('/homepage/tools/vote');
 }
 
 include_once('lib/seminar_open.php');
@@ -65,13 +65,13 @@ include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');
 
 if (!empty($the_range) && $the_range != $auth->auth['uname'] && $the_range != 'studip'){
-	include 'lib/include/admin_search_form.inc.php';
+    include 'lib/include/admin_search_form.inc.php';
 }
 
 if ($page == "edit")
-	include ('lib/vote/vote_edit.inc.php');
+    include ('lib/vote/vote_edit.inc.php');
 else
-	include ('lib/vote/vote_overview.inc.php');
+    include ('lib/vote/vote_overview.inc.php');
 
 include 'lib/include/html_end.inc.php';
 page_close ();

@@ -4,8 +4,8 @@
 you find here the basic system settings. You shouldn't have to touch much of them...
 please note the CONFIG.INC.PHP in the system folder for the indivual settings of your installation!*/
 
-$UNI_NAME_CLEAN = "Entwicklungsserver der Stud.IP Core Group";							//the clean-name of your master-faculty (e.g. University of Göttingen), without html-entities (used for mail-system)
-$AUTH_LIFETIME = 120;									//the length of a session in minutes, zero means unlimited lifetime
+$UNI_NAME_CLEAN = "Entwicklungsserver der Stud.IP Core Group";                          //the clean-name of your master-faculty (e.g. University of Göttingen), without html-entities (used for mail-system)
+$AUTH_LIFETIME = 120;                                   //the length of a session in minutes, zero means unlimited lifetime
 
 
 /*settings for database access
@@ -48,15 +48,15 @@ $ABSOLUTE_URI_STUDIP = "http://develop.studip.de/studip/";
 
 // automagically compute ABSOLUTE_URI_STUDIP if $_SERVER['SERVER_NAME'] is set
 if (isset($_SERVER['SERVER_NAME'])) {
-	$ABSOLUTE_URI_STUDIP = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
-	$ABSOLUTE_URI_STUDIP .= '://'.$_SERVER['SERVER_NAME'];
+    $ABSOLUTE_URI_STUDIP = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+    $ABSOLUTE_URI_STUDIP .= '://'.$_SERVER['SERVER_NAME'];
 
-	if ($_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] != 443 ||
-	    $_SERVER['HTTPS'] != 'on' && $_SERVER['SERVER_PORT'] != 80) {
-		$ABSOLUTE_URI_STUDIP .= ':'.$_SERVER['SERVER_PORT'];
-	}
+    if ($_SERVER['HTTPS'] == 'on' && $_SERVER['SERVER_PORT'] != 443 ||
+        $_SERVER['HTTPS'] != 'on' && $_SERVER['SERVER_PORT'] != 80) {
+        $ABSOLUTE_URI_STUDIP .= ':'.$_SERVER['SERVER_PORT'];
+    }
 
-	$ABSOLUTE_URI_STUDIP .= $CANONICAL_RELATIVE_PATH_STUDIP;
+    $ABSOLUTE_URI_STUDIP .= $CANONICAL_RELATIVE_PATH_STUDIP;
 }
 
 // default ASSETS_URL, customize if required
@@ -65,10 +65,10 @@ $ASSETS_URL = "http://develop.studip.de:8080/studip/assets/";
 
 // construct absolute URL for ASSETS_URL
 if ($ASSETS_URL[0] === '/') {
-	$host = preg_replace('%^([a-z]+:/*[^/]*).*%', '$1', $ABSOLUTE_URI_STUDIP);
-	$ASSETS_URL = $host . $ASSETS_URL;
+    $host = preg_replace('%^([a-z]+:/*[^/]*).*%', '$1', $ABSOLUTE_URI_STUDIP);
+    $ASSETS_URL = $host . $ASSETS_URL;
 } else if (!preg_match('/^[a-z]+:/', $ASSETS_URL)) {
-	$ASSETS_URL = $ABSOLUTE_URI_STUDIP . $ASSETS_URL;
+    $ASSETS_URL = $ABSOLUTE_URI_STUDIP . $ASSETS_URL;
 }
 
 // absolute filesystem path to the plugin packages
@@ -91,12 +91,12 @@ $DYNAMIC_CONTENT_URL  = "http://develop.studip.de:8080/studip/pictures";
 
 
 //path to the temporary folder
-$TMP_PATH ="/tmp/studip";									//the system temp path
+$TMP_PATH ="/tmp/studip";                                   //the system temp path
 
 //paths to the command line tools, used in Stud.IP
-$ZIP_USE_INTERNAL = false;								//set to true, if command-line zip/unzip is not available
-$ZIP_PATH = "/usr/bin/zip";								//zip tool
-$ZIP_OPTIONS = "-K";									//command line options for zip, e.g. when using SuSE try "-K" to correct long filenames for windows
+$ZIP_USE_INTERNAL = false;                              //set to true, if command-line zip/unzip is not available
+$ZIP_PATH = "/usr/bin/zip";                             //zip tool
+$ZIP_OPTIONS = "-K";                                    //command line options for zip, e.g. when using SuSE try "-K" to correct long filenames for windows
 $UNZIP_PATH = "/usr/bin/unzip";
 
 //latexrender settings
@@ -117,18 +117,18 @@ $CONVERT_PATH = "/usr/bin/convert";
 $IDENTIFY_PATH = "/usr/bin/identify";
 
 //path to Stud.IP modules (this folders only have to exist, if the corresponcing module is active)
-$RELATIVE_PATH_RESOURCES = "lib/resources";							//Stud.IP module: resourge management
-$RELATIVE_PATH_CALENDAR = "lib/calendar";							//Stud.IP module: calendar
-$RELATIVE_PATH_CHAT = "lib/chat"; 								//Stud.IP module: chat
-$RELATIVE_PATH_ADMIN_MODULES = "lib/admin";				 			//Stud.IP module: admin tools
-$RELATIVE_PATH_EXTERN = "lib/extern"; 							//Stud.IP module: SRI-System for including Stud.IP data in other websites
-$RELATIVE_PATH_ELEARNING_INTERFACE = "lib/elearning";					//Stud.IP module: Ilias 3 lerningmodules-connection / general E-Learning-interface
+$RELATIVE_PATH_RESOURCES = "lib/resources";                         //Stud.IP module: resourge management
+$RELATIVE_PATH_CALENDAR = "lib/calendar";                           //Stud.IP module: calendar
+$RELATIVE_PATH_CHAT = "lib/chat";                               //Stud.IP module: chat
+$RELATIVE_PATH_ADMIN_MODULES = "lib/admin";                         //Stud.IP module: admin tools
+$RELATIVE_PATH_EXTERN = "lib/extern";                           //Stud.IP module: SRI-System for including Stud.IP data in other websites
+$RELATIVE_PATH_ELEARNING_INTERFACE = "lib/elearning";                   //Stud.IP module: Ilias 3 lerningmodules-connection / general E-Learning-interface
 $RELATIVE_PATH_SOAP = "lib/soap";
 $RELATIVE_PATH_SUPPORT = "lib/support";
 
-$PATH_EXPORT = "lib/export";								//Stud.IP module: export
+$PATH_EXPORT = "lib/export";                                //Stud.IP module: export
 
-$FAVICON = "http://www.studip.de/favicon.ico";						//the place where the favicon is stored.
+$FAVICON = "http://www.studip.de/favicon.ico";                      //the place where the favicon is stored.
 
 //caching
 $CACHING_ENABLE = true;
@@ -138,124 +138,124 @@ $CACHING_FILECACHE_PATH = $TMP_PATH . '/studip_cache';
 ----------------------------------------------------------------
 enable or disable the Stud.IP internal modules, set and basic settings*/
 
-$CALENDAR_ENABLE = TRUE;								//Stud.IP module: calendar
-$CALENDAR_DRIVER = "MySQL"; 								//calendar driver: database to use (MySQL in default installation)*/
+$CALENDAR_ENABLE = TRUE;                                //Stud.IP module: calendar
+$CALENDAR_DRIVER = "MySQL";                                 //calendar driver: database to use (MySQL in default installation)*/
 
-$CHAT_ENABLE = TRUE;									//Stud.IP module: chat
+$CHAT_ENABLE = TRUE;                                    //Stud.IP module: chat
 $CHAT_SERVER_NAME = "ChatShmServer";
 
-$EXPORT_ENABLE = TRUE;									//Stud.IP module: export
+$EXPORT_ENABLE = TRUE;                                  //Stud.IP module: export
 $XSLT_ENABLE = TRUE;
 $FOP_ENABLE = TRUE;
-$FOP_SH_CALL = "export JAVA_HOME=/usr/lib/jvm/jre && /usr/local/bin/fop";    					//path to fop
+$FOP_SH_CALL = "export JAVA_HOME=/usr/lib/jvm/jre && /usr/local/bin/fop";                       //path to fop
 
-$EXTERN_ENABLE = TRUE;									//Stud.IP module: "external pages" and SRI-System
-$EXTERN_SRI_ENABLE = TRUE;								//allow the usage of SRI-interface (Stud.IP Remote Include)
-$EXTERN_SRI_ENABLE_BY_ROOT = FALSE;							//only root allows the usage of SRI-interface for specific institutes
-$EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG = FALSE;						//free access to external pages (without the need of a configuration), independent of SRI settings above
+$EXTERN_ENABLE = TRUE;                                  //Stud.IP module: "external pages" and SRI-System
+$EXTERN_SRI_ENABLE = TRUE;                              //allow the usage of SRI-interface (Stud.IP Remote Include)
+$EXTERN_SRI_ENABLE_BY_ROOT = FALSE;                         //only root allows the usage of SRI-interface for specific institutes
+$EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG = FALSE;                        //free access to external pages (without the need of a configuration), independent of SRI settings above
 
-$VOTE_ENABLE = TRUE;									//Stud.IP module: Votingsystem
+$VOTE_ENABLE = TRUE;                                    //Stud.IP module: Votingsystem
 
-$ELEARNING_INTERFACE_ENABLE = TRUE;							//Stud.IP module: elearning interface
+$ELEARNING_INTERFACE_ENABLE = TRUE;                         //Stud.IP module: elearning interface
 $SOAP_ENABLE = TRUE;
 
 $WEBSERVICES_ENABLE = TRUE;
 
-$WAP_ENABLE = TRUE;							//Stud.IP module: WAP
+$WAP_ENABLE = TRUE;                         //Stud.IP module: WAP
 
 $STM_ENABLE = TRUE;
 
 $SEMINAR_LOCK_ENABLE = TRUE; // locking of fields in seminar administration
 
 $ELEARNING_INTERFACE_MODULES["ilias38x"] = array(
-	"name" => "ILIAS 3.8.X Testserver",
-	"ABSOLUTE_PATH_ELEARNINGMODULES" =>	"http://develop.studip.de/ilias38/",
-	"ABSOLUTE_PATH_SOAP" =>	"http://develop.studip.de/ilias38/webservice/soap/server.php?wsdl",
-	"CLASS_PREFIX" => "Ilias3",
-	"auth_necessary" => true,
-	"USER_PREFIX" => "studilias38x_",
-	"target_file" => "studip_referrer.php",
-	"logo_file" => "assets/images/ilias_logo.png",
-	"soap_data" => array(
-		"username" => "soap_admin",
-		"password" => "soapsucks",
-		"client" => "foobar38"),
-	"types" => 	array(
-		"htlm" => array("name" => "HTML-Lerneinheit", "icon" => "assets/images/icon-lern.gif"),
-		"sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
-		"lm" => array("name" => "ILIAS-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
-		"tst" => array("name" => "ILIAS-Test", "icon" =>  "assets/images/icon-lern.gif")
-	),
-	"global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
-	"roles" =>	array(
-		"autor" => "4",
-		"tutor" => "4",
-		"dozent" => "4",
-		"admin" => "4",
-		"root" => "2"
-		),
-	"crs_roles" =>	array(
-		"autor" => "member",
-		"tutor" => "tutor",
-		"dozent" => "admin",
-		"admin" => "admin",
-		"root" => "admin"
-	)
+    "name" => "ILIAS 3.8.X Testserver",
+    "ABSOLUTE_PATH_ELEARNINGMODULES" => "http://develop.studip.de/ilias38/",
+    "ABSOLUTE_PATH_SOAP" => "http://develop.studip.de/ilias38/webservice/soap/server.php?wsdl",
+    "CLASS_PREFIX" => "Ilias3",
+    "auth_necessary" => true,
+    "USER_PREFIX" => "studilias38x_",
+    "target_file" => "studip_referrer.php",
+    "logo_file" => "assets/images/ilias_logo.png",
+    "soap_data" => array(
+        "username" => "soap_admin",
+        "password" => "soapsucks",
+        "client" => "foobar38"),
+    "types" =>  array(
+        "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "assets/images/icon-lern.gif"),
+        "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
+        "lm" => array("name" => "ILIAS-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
+        "tst" => array("name" => "ILIAS-Test", "icon" =>  "assets/images/icon-lern.gif")
+    ),
+    "global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
+    "roles" =>  array(
+        "autor" => "4",
+        "tutor" => "4",
+        "dozent" => "4",
+        "admin" => "4",
+        "root" => "2"
+        ),
+    "crs_roles" =>  array(
+        "autor" => "member",
+        "tutor" => "tutor",
+        "dozent" => "admin",
+        "admin" => "admin",
+        "root" => "admin"
+    )
 );
 
 $ELEARNING_INTERFACE_MODULES["ilias371"] =
 array(
-	"name" => "ILIAS 3.7.1 Testserver",
-	"ABSOLUTE_PATH_ELEARNINGMODULES" => "http://develop.studip.de/ilias3/",
-	"ABSOLUTE_PATH_SOAP" => "http://develop.studip.de/ilias3/webservice/soap/server.php?wsdl",
-	"CLASS_PREFIX" => "Ilias3",
-	"auth_necessary" => true,
-	"USER_PREFIX" => "studip371_",
-	"target_file" => "studip_referrer.php",
-	"logo_file" =>  "assets/images/ilias_logo.png",
-	"soap_data" => array(
-		"username" => "soap_admin",
-		"password" => "hochgeheim",
-		"client" => "foobar2"),
-	"types" => array(
-		"htlm" => array("name" => "HTML-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
-		"sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
-		"lm" => array("name" => "ILIAS-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
-		"tst" => array("name" => "ILIAS-Test", "icon" =>  "assets/images/icon-lern.gif")),
-	"global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
-	"roles" => array(
-		"autor" => "4",
-		"tutor" => "4",
-		"dozent" => "4",
-		"admin" => "4",
-		"root" => "2"
-		),
-	"crs_roles" =>	array(
-		"autor" => "member",
-		"tutor" => "tutor",
-		"dozent" => "admin",
-		"admin" => "admin",
-		"root" => "admin")
+    "name" => "ILIAS 3.7.1 Testserver",
+    "ABSOLUTE_PATH_ELEARNINGMODULES" => "http://develop.studip.de/ilias3/",
+    "ABSOLUTE_PATH_SOAP" => "http://develop.studip.de/ilias3/webservice/soap/server.php?wsdl",
+    "CLASS_PREFIX" => "Ilias3",
+    "auth_necessary" => true,
+    "USER_PREFIX" => "studip371_",
+    "target_file" => "studip_referrer.php",
+    "logo_file" =>  "assets/images/ilias_logo.png",
+    "soap_data" => array(
+        "username" => "soap_admin",
+        "password" => "hochgeheim",
+        "client" => "foobar2"),
+    "types" => array(
+        "htlm" => array("name" => "HTML-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
+        "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
+        "lm" => array("name" => "ILIAS-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
+        "tst" => array("name" => "ILIAS-Test", "icon" =>  "assets/images/icon-lern.gif")),
+    "global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
+    "roles" => array(
+        "autor" => "4",
+        "tutor" => "4",
+        "dozent" => "4",
+        "admin" => "4",
+        "root" => "2"
+        ),
+    "crs_roles" =>  array(
+        "autor" => "member",
+        "tutor" => "tutor",
+        "dozent" => "admin",
+        "admin" => "admin",
+        "root" => "admin")
 );
 
-$PLUGINS_UPLOAD_ENABLE = TRUE; 					//Upload of Plugins is enabled
-			     								//if disabled for security reasons, uploads have to go into $NEW_PLUGINS_PATH
-$NEW_PLUGINS_PATH = ""; 							//The place from which new plugins should be loaded
+$PLUGINS_UPLOAD_ENABLE = TRUE;                  //Upload of Plugins is enabled
+                                                //if disabled for security reasons, uploads have to go into $NEW_PLUGINS_PATH
+$NEW_PLUGINS_PATH = "";                             //The place from which new plugins should be loaded
 
 $PLUGIN_REPOSITORIES = array(
-	'http://plugins.studip.de/plugin-wiki.php'
+    'http://plugins.studip.de/plugin-wiki.php'
 );
 
 /*system functions
 ----------------------------------------------------------------
 activate or deactivate some basic system-functions here*/
 
-$LATEXRENDER_ENABLE = TRUE;								//enable to use the LaTexrenderer (Please note the further LaTeX template-settings below)
-$WIKI_ENABLE = TRUE;									//enable WikiWiki-Webs
-$SCM_ENABLE = TRUE;									//enable Simple-Content functionality
-$LOG_ENABLE = TRUE;									//enable event logging for some admin actions on courses, users and institutes
-$SMILEYADMIN_ENABLE = TRUE;								//enable Smiley-administration
-$SMILEY_COUNTER = TRUE;								//enable Smiley-counter
+$LATEXRENDER_ENABLE = TRUE;                             //enable to use the LaTexrenderer (Please note the further LaTeX template-settings below)
+$WIKI_ENABLE = TRUE;                                    //enable WikiWiki-Webs
+$SCM_ENABLE = TRUE;                                 //enable Simple-Content functionality
+$LOG_ENABLE = TRUE;                                 //enable event logging for some admin actions on courses, users and institutes
+$SMILEYADMIN_ENABLE = TRUE;                             //enable Smiley-administration
+$SMILEY_COUNTER = TRUE;                             //enable Smiley-counter
 
 
 /*domain name and path translation
@@ -283,23 +283,23 @@ $STUDIP_DOMAINS[4] = "134.76.82.67/studip";
 ----------------------------------------------------------------
 leave blank if localhost is also the mailserver*/
 $MAIL_TRANSPORT = "smtp";
-$MAIL_LOCALHOST = "develop.studip.de";					//name of the mail sending machine (the web server) defaults to SERVER_NAME
-$MAIL_HOST_NAME = "127.0.0.1";									//which mailserver should we use? (must allow mail-relaying from $MAIL_LOCALHOST, defaults to SERVER_NAME)
-$MAIL_CHARSET = "";									//character set of mail body, defaults to ISO-8859-1
-$MAIL_ENV_FROM = "develop-noreply@studip.de";		//sender mail adress, defaults to wwwrun @ $MAIL_LOCAHOST
-$MAIL_FROM = "";									//name of sender, defaults to "Stud.IP"
-$MAIL_ABUSE = "abuse@studip.de";									//mail adress to reply to in case of abuse, defaults to abuse @  $MAIL_LOCAHOST
+$MAIL_LOCALHOST = "develop.studip.de";                  //name of the mail sending machine (the web server) defaults to SERVER_NAME
+$MAIL_HOST_NAME = "127.0.0.1";                                  //which mailserver should we use? (must allow mail-relaying from $MAIL_LOCALHOST, defaults to SERVER_NAME)
+$MAIL_CHARSET = "";                                 //character set of mail body, defaults to ISO-8859-1
+$MAIL_ENV_FROM = "develop-noreply@studip.de";       //sender mail adress, defaults to wwwrun @ $MAIL_LOCAHOST
+$MAIL_FROM = "";                                    //name of sender, defaults to "Stud.IP"
+$MAIL_ABUSE = "abuse@studip.de";                                    //mail adress to reply to in case of abuse, defaults to abuse @  $MAIL_LOCAHOST
 $MAIL_BULK_DELIVERY = true;
 
-$MAIL_VALIDATE_HOST = TRUE;								//check for valid mail host when user enters email adress
-$MAIL_VALIDATE_BOX = FALSE;								//check for valid mail account when user enters email adress; set to false if the webserver got no valid MX record
+$MAIL_VALIDATE_HOST = TRUE;                             //check for valid mail host when user enters email adress
+$MAIL_VALIDATE_BOX = FALSE;                             //check for valid mail account when user enters email adress; set to false if the webserver got no valid MX record
 
-$MESSAGING_FORWARD_AS_EMAIL = TRUE;							//enable to forward every internal message to the user-mail (the user is able to deactivate this function in his personal settings)
-$MESSAGING_FORWARD_DEFAULT = 3;								//the default setting: if 1, the user has to switch it on; if 2, every message will be forwarded; if 3 every message will be forwarded on request of the sender
+$MESSAGING_FORWARD_AS_EMAIL = TRUE;                         //enable to forward every internal message to the user-mail (the user is able to deactivate this function in his personal settings)
+$MESSAGING_FORWARD_DEFAULT = 3;                             //the default setting: if 1, the user has to switch it on; if 2, every message will be forwarded; if 3 every message will be forwarded on request of the sender
 
-$ENABLE_EMAIL_TO_STATUSGROUP = TRUE;								// enable to send messages to whole status groups
+$ENABLE_EMAIL_TO_STATUSGROUP = TRUE;                                // enable to send messages to whole status groups
 
-$ENABLE_EMAIL_ATTACHMENTS = TRUE;								// enable attachment functions for internal and external messages
+$ENABLE_EMAIL_ATTACHMENTS = TRUE;                               // enable attachment functions for internal and external messages
 
 /*advanced system settings
 ----------------------------------------------------------------
@@ -307,26 +307,26 @@ this are some settings to activate some special features, special
 behaviour of some features and other advanced options. Change on your
 own risk :) */
 
-$ALLOW_GROUPING_SEMINARS = TRUE;							//if true, administrators can group seminars - students
-											//will only be able to register for one of the grouped seminars
+$ALLOW_GROUPING_SEMINARS = TRUE;                            //if true, administrators can group seminars - students
+                                            //will only be able to register for one of the grouped seminars
 
-$ALLOW_SELFASSIGN_STUDYCOURSE = TRUE; 							//if true, students are allowed to set or change
-											//their studycourse (studiengang)
+$ALLOW_SELFASSIGN_STUDYCOURSE = TRUE;                           //if true, students are allowed to set or change
+                                            //their studycourse (studiengang)
 
-$SHOW_TERMS_ON_FIRST_LOGIN = FALSE;							//if true, the user has to accept the terms on his first login
-											//(this feature makes only sense, if you use disable $ENABLE_SELF_REGISTRATION).
+$SHOW_TERMS_ON_FIRST_LOGIN = FALSE;                         //if true, the user has to accept the terms on his first login
+                                            //(this feature makes only sense, if you use disable $ENABLE_SELF_REGISTRATION).
 
-$BANNER_ADS_ENABLE = FALSE; 								//enable the Banner ads functions (config as root in "global settings")
-											//you'll need an additional folder in the pictures folder named banner. The Webserver
-											//needs write accees for this folder.
+$BANNER_ADS_ENABLE = FALSE;                                 //enable the Banner ads functions (config as root in "global settings")
+                                            //you'll need an additional folder in the pictures folder named banner. The Webserver
+                                            //needs write accees for this folder.
 
-$CONVERT_IDNA_URL = TRUE;								//if true, urls with german "umlauts" are converted
+$CONVERT_IDNA_URL = TRUE;                               //if true, urls with german "umlauts" are converted
 
 /*language settings
 ----------------------------------------------------------------*/
 
 $INSTALLED_LANGUAGES["de_DE"] = array ("path"=>"de", "picture"=>"lang_de.gif", "name"=>"Deutsch");
-$INSTALLED_LANGUAGES["en_GB"] =	array ("path"=>"en", "picture"=>"lang_en.gif", "name"=>"English");
+$INSTALLED_LANGUAGES["en_GB"] = array ("path"=>"en", "picture"=>"lang_en.gif", "name"=>"English");
 
 $DEFAULT_LANGUAGE = "de_DE";  // which language should we use if we can gather no information from user?
 
@@ -411,14 +411,14 @@ $_lit_search_plugins[] = array('name' => 'UB_Trier', 'display_name' =>'BIB-KAT U
 /*authentication plugins
 ----------------------------------------------------------------
 the following plugins are available:
-Standard 		authentication using the local Stud.IP database
-StandardExtern  	authentication using an alternative Stud.IP database, e.g. another installation
-Ldap  			authentication using an LDAP server, this plugin uses anonymous bind against LDAP to retrieve the user dn,
-			then it uses the submitted password to authenticate with this user dn
-LdapReader		authentication using an LDAP server, this plugin binds to the server using a given dn and a password,
-			this account must have read access to gather the attributes for the user who tries to authenticate.
-			Using this plugin allows to keep the md5 challenge-response mechanism during the login process, provided a md5
-			hash of the user password is available in LDAP
+Standard        authentication using the local Stud.IP database
+StandardExtern      authentication using an alternative Stud.IP database, e.g. another installation
+Ldap            authentication using an LDAP server, this plugin uses anonymous bind against LDAP to retrieve the user dn,
+            then it uses the submitted password to authenticate with this user dn
+LdapReader      authentication using an LDAP server, this plugin binds to the server using a given dn and a password,
+            this account must have read access to gather the attributes for the user who tries to authenticate.
+            Using this plugin allows to keep the md5 challenge-response mechanism during the login process, provided a md5
+            hash of the user password is available in LDAP
 
 If you write your own plugin put it in studip-htdocs/lib/classes/auth_plugins
 and enable it here. The name of the plugin is the classname excluding "StudipAuth".
@@ -451,77 +451,77 @@ $STUDIP_AUTH_CONFIG_SHIB = array(
 // create a config for your own user data mapping class
 $CASAbstractUserDataMapping_CONFIG = array();
 $STUDIP_AUTH_CONFIG_CAS = array("host" => "cas.studip.de",
-										"port" => 8443,
-										"uri"  => "cas",
-										"user_data_mapping_class" => "CASAbstractUserDataMapping",
-										"user_data_mapping" => // map_args are dependent on your own data mapping class
-												array(  "auth_user_md5.username" => array("callback" => "getUserData", "map_args" => "username"),
-						                                "auth_user_md5.Vorname" => array("callback" => "getUserData", "map_args" => "givenname"),
-						                                "auth_user_md5.Nachname" => array("callback" => "getUserData", "map_args" => "surname"),
-						                                "auth_user_md5.Email" => array("callback" => "getUserData", "map_args" => "email"),
-						                                "auth_user_md5.perms" => array("callback" => "getUserData", "map_args" => "status"))
-$STUDIP_AUTH_CONFIG_LDAPREADER = array(		"host" => "localhost",
-										"base_dn" => "dc=studip,dc=de",
-										"protocol_version" => 3,
-										"start_tls" => false,
-										"bad_char_regex" => '/[^0-9_a-zA-Z]/',
-										"username_attribute" => "uid",
-										"user_password_attribute" => "userpassword",
-										"reader_dn" => "uid=reader,dc=studip,dc=de",
-										"reader_password" => "<password>",
-										"error_head" =>	"LDAP reader plugin",
-										"user_data_mapping" =>
-										array(	"auth_user_md5.username" => array("callback" => "dummy", "map_args" => ""),
-												"auth_user_md5.password" => array("callback" => "dummy", "map_args" => ""));
+                                        "port" => 8443,
+                                        "uri"  => "cas",
+                                        "user_data_mapping_class" => "CASAbstractUserDataMapping",
+                                        "user_data_mapping" => // map_args are dependent on your own data mapping class
+                                                array(  "auth_user_md5.username" => array("callback" => "getUserData", "map_args" => "username"),
+                                                        "auth_user_md5.Vorname" => array("callback" => "getUserData", "map_args" => "givenname"),
+                                                        "auth_user_md5.Nachname" => array("callback" => "getUserData", "map_args" => "surname"),
+                                                        "auth_user_md5.Email" => array("callback" => "getUserData", "map_args" => "email"),
+                                                        "auth_user_md5.perms" => array("callback" => "getUserData", "map_args" => "status"))
+$STUDIP_AUTH_CONFIG_LDAPREADER = array(     "host" => "localhost",
+                                        "base_dn" => "dc=studip,dc=de",
+                                        "protocol_version" => 3,
+                                        "start_tls" => false,
+                                        "bad_char_regex" => '/[^0-9_a-zA-Z]/',
+                                        "username_attribute" => "uid",
+                                        "user_password_attribute" => "userpassword",
+                                        "reader_dn" => "uid=reader,dc=studip,dc=de",
+                                        "reader_password" => "<password>",
+                                        "error_head" => "LDAP reader plugin",
+                                        "user_data_mapping" =>
+                                        array(  "auth_user_md5.username" => array("callback" => "dummy", "map_args" => ""),
+                                                "auth_user_md5.password" => array("callback" => "dummy", "map_args" => ""));
 
-$STUDIP_AUTH_CONFIG_LDAP = array(		"host" => "localhost",
-										"base_dn" => "dc=data-quest,dc=de",
-										"protocol_version" => 3,
-										"start_tls" => false,
-										"bad_char_regex" => '/[^0-9_a-zA-Z]/',
-										"username_attribute" => "uid",
-										"anonymous_bind" => true,
-										"error_head" =>	"LDAP plugin",
-										"user_data_mapping" =>
-										array(	"auth_user_md5.username" => array("callback" => "dummy", "map_args" => ""),
-												"auth_user_md5.password" => array("callback" => "dummy", "map_args" => ""));
+$STUDIP_AUTH_CONFIG_LDAP = array(       "host" => "localhost",
+                                        "base_dn" => "dc=data-quest,dc=de",
+                                        "protocol_version" => 3,
+                                        "start_tls" => false,
+                                        "bad_char_regex" => '/[^0-9_a-zA-Z]/',
+                                        "username_attribute" => "uid",
+                                        "anonymous_bind" => true,
+                                        "error_head" => "LDAP plugin",
+                                        "user_data_mapping" =>
+                                        array(  "auth_user_md5.username" => array("callback" => "dummy", "map_args" => ""),
+                                                "auth_user_md5.password" => array("callback" => "dummy", "map_args" => ""));
 
-$STUDIP_AUTH_CONFIG_STANDARDEXTERN = array(	"db_host" => "localhost",
-										"db_username" => "extern",
-										"db_name" => "extern_studip",
-										"db_password" => "<password>",
-										"error_head" =>	"Stud.IP extern plugin",
-										"user_data_mapping" =>
-										array(	"auth_user_md5.username" => array("callback" => "dummy", "map_args" => ""),
-												"auth_user_md5.password" => array("callback" => "dummy", "map_args" => ""),
-												"auth_user_md5.Email" => array("callback" => "doExternMap", "map_args" => "Email"),
-												"auth_user_md5.Nachname" => array("callback" => "doExternMap", "map_args" => "Nachname"),
-												"auth_user_md5.Vorname" => array("callback" => "doExternMap", "map_args" => "Vorname"),
-												"auth_user_md5.perms" => array("callback" => "doExternMapPerms", "map_args" => "perms"),
-												"user_info.privatnr" => array("callback" => "doExternMap", "map_args" => "privatnr"),
-												"user_info.privadr" => array("callback" => "doExternMap", "map_args" => "privadr"),
-												"user_info.geschlecht" => array("callback" => "doExternMap", "map_args" => "geschlecht"),
-												"user_info.hobby" => array("callback" => "doExternMap", "map_args" => "hobby"),
-												"user_info.lebenslauf" => array("callback" => "doExternMap", "map_args" => "lebenslauf"),
-												"user_info.title_front" => array("callback" => "doExternMap", "map_args" => "title_front"),
-												"user_info.title_rear" => array("callback" => "doExternMap", "map_args" => "title_rear"),
-												"user_info.publi" => array("callback" => "doExternMap", "map_args" => "publi"),
-												"user_info.schwerp" => array("callback" => "doExternMap", "map_args" => "schwerp"),
-												"user_info.Home" => array("callback" => "doExternMap", "map_args" => "Home")));
+$STUDIP_AUTH_CONFIG_STANDARDEXTERN = array( "db_host" => "localhost",
+                                        "db_username" => "extern",
+                                        "db_name" => "extern_studip",
+                                        "db_password" => "<password>",
+                                        "error_head" => "Stud.IP extern plugin",
+                                        "user_data_mapping" =>
+                                        array(  "auth_user_md5.username" => array("callback" => "dummy", "map_args" => ""),
+                                                "auth_user_md5.password" => array("callback" => "dummy", "map_args" => ""),
+                                                "auth_user_md5.Email" => array("callback" => "doExternMap", "map_args" => "Email"),
+                                                "auth_user_md5.Nachname" => array("callback" => "doExternMap", "map_args" => "Nachname"),
+                                                "auth_user_md5.Vorname" => array("callback" => "doExternMap", "map_args" => "Vorname"),
+                                                "auth_user_md5.perms" => array("callback" => "doExternMapPerms", "map_args" => "perms"),
+                                                "user_info.privatnr" => array("callback" => "doExternMap", "map_args" => "privatnr"),
+                                                "user_info.privadr" => array("callback" => "doExternMap", "map_args" => "privadr"),
+                                                "user_info.geschlecht" => array("callback" => "doExternMap", "map_args" => "geschlecht"),
+                                                "user_info.hobby" => array("callback" => "doExternMap", "map_args" => "hobby"),
+                                                "user_info.lebenslauf" => array("callback" => "doExternMap", "map_args" => "lebenslauf"),
+                                                "user_info.title_front" => array("callback" => "doExternMap", "map_args" => "title_front"),
+                                                "user_info.title_rear" => array("callback" => "doExternMap", "map_args" => "title_rear"),
+                                                "user_info.publi" => array("callback" => "doExternMap", "map_args" => "publi"),
+                                                "user_info.schwerp" => array("callback" => "doExternMap", "map_args" => "schwerp"),
+                                                "user_info.Home" => array("callback" => "doExternMap", "map_args" => "Home")));
 */
 
 //some additional authification-settings
 //NOTE: you MUST enable Standard authentication-plugin for this settings to take effect!
 
-$ALLOW_CHANGE_USERNAME = TRUE;							//if true, users are allowed to change their username
-$ALLOW_CHANGE_EMAIL = TRUE;							//if true, users are allowed to change their email-address
-$ALLOW_CHANGE_NAME = TRUE;							//if true, users are allowed to change their name
-$ALLOW_CHANGE_TITLE = TRUE;							//if true, users are allowed to change their titles
+$ALLOW_CHANGE_USERNAME = TRUE;                          //if true, users are allowed to change their username
+$ALLOW_CHANGE_EMAIL = TRUE;                         //if true, users are allowed to change their email-address
+$ALLOW_CHANGE_NAME = TRUE;                          //if true, users are allowed to change their name
+$ALLOW_CHANGE_TITLE = TRUE;                         //if true, users are allowed to change their titles
 
-$ENABLE_REQUEST_NEW_PASSWORD_BY_USER = TRUE;			//if true, users are able to request a new password themselves
+$ENABLE_REQUEST_NEW_PASSWORD_BY_USER = TRUE;            //if true, users are able to request a new password themselves
 
-$ENABLE_SELF_REGISTRATION = TRUE;						//should it be possible for an user to register himself
-$ENABLE_FREE_ACCESS = TRUE;							//if true, courses with public access are available
+$ENABLE_SELF_REGISTRATION = TRUE;                       //should it be possible for an user to register himself
+$ENABLE_FREE_ACCESS = TRUE;                         //if true, courses with public access are available
 
 /*IDs of courses, in which users were entered when they are promoted to 'autor'
 -----------------------------------------------------------------*/
@@ -540,24 +540,24 @@ $AUTO_INSERT_SEM[7]="16eab3dfcfd488f713a262e95bb3da43";
 you can define specified templates, e.g. phonetic or arab fonts*/
 
 $LATEX_FORMATS = array(
-	"math" => array("tag" => "tex", "template" => "\documentclass[12pt]{article}\n \usepackage[latin1]{inputenc}\n \usepackage{amsmath}\n \usepackage{amsfonts}\n \usepackage{amssymb}\n \pagestyle{empty}\n \begin{document}\n $%s$\n \end{document}\n"));
+    "math" => array("tag" => "tex", "template" => "\documentclass[12pt]{article}\n \usepackage[latin1]{inputenc}\n \usepackage{amsmath}\n \usepackage{amsfonts}\n \usepackage{amssymb}\n \pagestyle{empty}\n \begin{document}\n $%s$\n \end{document}\n"));
 /*
-	Format of entries:
-	------------------
+    Format of entries:
+    ------------------
 
-	Internal format name => array (
-		Format tag (e.g. "tex" --> [tex]...[/tex])
-		Format template (must contain structure of an entire valid LaTeX-document and must contain exactly one %s placeholder that will be replaced be the code entered between [tag]....[/tag].
-	)
+    Internal format name => array (
+        Format tag (e.g. "tex" --> [tex]...[/tex])
+        Format template (must contain structure of an entire valid LaTeX-document and must contain exactly one %s placeholder that will be replaced be the code entered between [tag]....[/tag].
+    )
 
-  	Examples for additional formats:
-  	--------------------------------
+    Examples for additional formats:
+    --------------------------------
 
-	IPA Phonetic font (needs LaTeX package tipa installed):
-		"ipa" => array("tag" => "ipa", "template" => "\documentclass[12pt]{article}\n \usepackage[latin1]{inputenc}\n \usepackage{tipa}\n \pagestyle{empty}\n \begin{document}\n \\textipa{%s}\n \end{document}\n")
+    IPA Phonetic font (needs LaTeX package tipa installed):
+        "ipa" => array("tag" => "ipa", "template" => "\documentclass[12pt]{article}\n \usepackage[latin1]{inputenc}\n \usepackage{tipa}\n \pagestyle{empty}\n \begin{document}\n \\textipa{%s}\n \end{document}\n")
 
-	Arab font (needs LaTeX package arabtex installed):
-  		"arab" => array("tag" => "arab", "template" => "\documentclass[12pt]{article}\n \usepackage[latin1]{inputenc}\n \usepackage{arabtex,atrans}\n \pagestyle{empty}\n \begin{document}\n \begin{arabtext}%s\end{arabtext}\n \end{document}\n")
+    Arab font (needs LaTeX package arabtex installed):
+        "arab" => array("tag" => "arab", "template" => "\documentclass[12pt]{article}\n \usepackage[latin1]{inputenc}\n \usepackage{arabtex,atrans}\n \pagestyle{empty}\n \begin{document}\n \begin{arabtext}%s\end{arabtext}\n \end{document}\n")
 */
 // WIKI PLUGINS
 // - plugins are loaded from the wiki module
@@ -565,10 +565,10 @@ $LATEX_FORMATS = array(
 // uncomment/change below to activate
 //
 $WIKI_PLUGINS=array(
-	"wiki_lifters.inc.php",  // Lifters Proposal System
-	"wiki_steps.inc.php",  // Stud.IP Enhancement Proposal System
-	"wiki_biests.inc.php"  // Bug and Inconsistency Detection System
-	);
+    "wiki_lifters.inc.php",  // Lifters Proposal System
+    "wiki_steps.inc.php",  // Stud.IP Enhancement Proposal System
+    "wiki_biests.inc.php"  // Bug and Inconsistency Detection System
+    );
 
 //path generation
 

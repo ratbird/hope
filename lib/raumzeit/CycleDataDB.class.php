@@ -36,103 +36,103 @@
 
 class CycleDataDB {
 
-	function getTermine($metadate_id, $start = 0, $end = 0) {
-		$db = new DB_Seminar();
+    function getTermine($metadate_id, $start = 0, $end = 0) {
+        $db = new DB_Seminar();
 
-		if (($start != 0) || ($end != 0)) {
-			$db->query("SELECT termine.*, r.resource_id FROM termine LEFT JOIN resources_assign as r ON (termin_id = assign_user_id)  WHERE metadate_id = '$metadate_id' AND termine.date >= $start AND termine.date <= $end");
-		} else {
-			$db->query("SELECT termine.*, r.resource_id FROM termine LEFT JOIN resources_assign as r ON (termin_id = assign_user_id)  WHERE metadate_id = '$metadate_id'");
-		}
+        if (($start != 0) || ($end != 0)) {
+            $db->query("SELECT termine.*, r.resource_id FROM termine LEFT JOIN resources_assign as r ON (termin_id = assign_user_id)  WHERE metadate_id = '$metadate_id' AND termine.date >= $start AND termine.date <= $end");
+        } else {
+            $db->query("SELECT termine.*, r.resource_id FROM termine LEFT JOIN resources_assign as r ON (termin_id = assign_user_id)  WHERE metadate_id = '$metadate_id'");
+        }
 
-		$ret = array();
+        $ret = array();
 
-		while ($db->next_record()) {
-			$ret[] = $db->Record;
-		}
+        while ($db->next_record()) {
+            $ret[] = $db->Record;
+        }
 
-		if (($start != 0) || ($end != 0)) {
-			$db->query("SELECT * FROM ex_termine WHERE metadate_id = '$metadate_id' AND date >= $start AND date <= $end ORDER BY date ASC");
-		} else {
-			$db->query("SELECT * FROM ex_termine WHERE metadate_id = '$metadate_id' ORDER BY date ASC");
-		}
+        if (($start != 0) || ($end != 0)) {
+            $db->query("SELECT * FROM ex_termine WHERE metadate_id = '$metadate_id' AND date >= $start AND date <= $end ORDER BY date ASC");
+        } else {
+            $db->query("SELECT * FROM ex_termine WHERE metadate_id = '$metadate_id' ORDER BY date ASC");
+        }
 
-		while ($db->next_record()) {
-			$zw = $db->Record;
-			$zw['ex_termin'] = TRUE;
-			$ret[] = $zw;
-		}
+        while ($db->next_record()) {
+            $zw = $db->Record;
+            $zw['ex_termin'] = TRUE;
+            $ret[] = $zw;
+        }
 
-		if ($ret) {
-			usort($ret, array('CycleDataDB', 'sort_dates'));
-			return $ret;
-		}
+        if ($ret) {
+            usort($ret, array('CycleDataDB', 'sort_dates'));
+            return $ret;
+        }
 
-		return FALSE;
-	}
+        return FALSE;
+    }
 
-	function sort_dates($a, $b) {
-		if ($a['date'] == $b['date']) return 0;
-		return ($a['date'] < $b['date']) ? -1 : 1;
-	}
+    function sort_dates($a, $b) {
+        if ($a['date'] == $b['date']) return 0;
+        return ($a['date'] < $b['date']) ? -1 : 1;
+    }
 
-	function deleteNewerSingleDates($metadate_id, $timestamp, $keepIssues = false) {
-		$db = new DB_Seminar();
+    function deleteNewerSingleDates($metadate_id, $timestamp, $keepIssues = false) {
+        $db = new DB_Seminar();
 
-		$c = 0;
-		$db->query("SELECT * FROM termine WHERE metadate_id = '$metadate_id' AND date > $timestamp");
-		while ($db->next_record()) {
-			$termin =& new SingleDate($db->f('termin_id'));
-			$termin->delete($keepIssues);
-			$c++;
-			unset($termin);
-		}
+        $c = 0;
+        $db->query("SELECT * FROM termine WHERE metadate_id = '$metadate_id' AND date > $timestamp");
+        while ($db->next_record()) {
+            $termin =& new SingleDate($db->f('termin_id'));
+            $termin->delete($keepIssues);
+            $c++;
+            unset($termin);
+        }
 
-		$db->query("DELETE FROM termine WHERE metadate_id = '$metadate_id' AND date > $timestamp");
-		$db->query("DELETE FROM ex_termine WHERE metadate_id = '$metadate_id' AND date > $timestamp");
-		return $c;
-	}
+        $db->query("DELETE FROM termine WHERE metadate_id = '$metadate_id' AND date > $timestamp");
+        $db->query("DELETE FROM ex_termine WHERE metadate_id = '$metadate_id' AND date > $timestamp");
+        return $c;
+    }
 
-	function getPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0) {
-		$db = new DB_Seminar();
-		$rooms = array();
+    function getPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0) {
+        $db = new DB_Seminar();
+        $rooms = array();
 
-		if (($filterStart == 0) && ($filterEnd == 0)) {
-			$query = "SELECT COUNT(resource_id) as c, resource_id FROM termine LEFT JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' GROUP BY resource_id ORDER BY c DESC";
-		} else {
-			$query = "SELECT COUNT(resource_id) as c, resource_id FROM termine LEFT JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' AND termine.date >= $filterStart AND termine.end_time <= $filterEnd GROUP BY resource_id ORDER BY c DESC";
-		}
+        if (($filterStart == 0) && ($filterEnd == 0)) {
+            $query = "SELECT COUNT(resource_id) as c, resource_id FROM termine LEFT JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' GROUP BY resource_id ORDER BY c DESC";
+        } else {
+            $query = "SELECT COUNT(resource_id) as c, resource_id FROM termine LEFT JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' AND termine.date >= $filterStart AND termine.end_time <= $filterEnd GROUP BY resource_id ORDER BY c DESC";
+        }
 
-		$db->query($query);
-		if ($db->num_rows() == 0) return FALSE;
+        $db->query($query);
+        if ($db->num_rows() == 0) return FALSE;
 
-		while ($db->next_record()) {
-			if ($db->f('resource_id') != '') {
-				$rooms[] = $db->f('resource_id');
-			}
-		}
+        while ($db->next_record()) {
+            if ($db->f('resource_id') != '') {
+                $rooms[] = $db->f('resource_id');
+            }
+        }
 
-		return $rooms;
-	}
+        return $rooms;
+    }
 
-	function getFreeTextPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0) {
-		$db = new DB_Seminar();
-		$rooms = array();
+    function getFreeTextPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0) {
+        $db = new DB_Seminar();
+        $rooms = array();
 
-		if (($filterStart == 0) && ($filterEnd == 0)) {
-			$query = "SELECT COUNT(raum) as c, raum FROM termine WHERE termine.metadate_id = '$metadate_id' GROUP BY raum ORDER BY c DESC";
-		} else {
-			$query = "SELECT COUNT(raum) as c, raum FROM termine WHERE termine.metadate_id = '$metadate_id' AND termine.date >= $filterStart AND termine.end_time <= $filterEnd GROUP BY raum ORDER BY c DESC";
-		}
+        if (($filterStart == 0) && ($filterEnd == 0)) {
+            $query = "SELECT COUNT(raum) as c, raum FROM termine WHERE termine.metadate_id = '$metadate_id' GROUP BY raum ORDER BY c DESC";
+        } else {
+            $query = "SELECT COUNT(raum) as c, raum FROM termine WHERE termine.metadate_id = '$metadate_id' AND termine.date >= $filterStart AND termine.end_time <= $filterEnd GROUP BY raum ORDER BY c DESC";
+        }
 
-		$db->query($query);
-		if ($db->num_rows() == 0) return FALSE;
+        $db->query($query);
+        if ($db->num_rows() == 0) return FALSE;
 
-		while ($db->next_record()) {
-			if ($db->f('raum') != '') {
-				return $db->f('raum');
-			}
-		}
-	}
+        while ($db->next_record()) {
+            if ($db->f('raum') != '') {
+                return $db->f('raum');
+            }
+        }
+    }
 }
 ?>

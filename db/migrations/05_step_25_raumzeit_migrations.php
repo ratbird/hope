@@ -18,17 +18,17 @@ class Step25RaumzeitMigrations extends DBMigration
         
         $this->db->query("
             CREATE TABLE IF NOT EXISTS `themen` (
-			  `issue_id` varchar(32) NOT NULL default '',
-			  `seminar_id` varchar(32) NOT NULL default '',
-			  `author_id` varchar(32) NOT NULL default '',
-			  `title` varchar(255) NOT NULL default '',
-			  `description` text NOT NULL,
-			  `priority` smallint(5) unsigned NOT NULL default '0',
-			  `mkdate` int(10) unsigned NOT NULL default '0',
-			  `chdate` int(10) unsigned NOT NULL default '0',
-			  PRIMARY KEY  (`issue_id`),
-			  KEY `seminar_id` (`seminar_id`,`priority`)
-			) TYPE=MyISAM;
+              `issue_id` varchar(32) NOT NULL default '',
+              `seminar_id` varchar(32) NOT NULL default '',
+              `author_id` varchar(32) NOT NULL default '',
+              `title` varchar(255) NOT NULL default '',
+              `description` text NOT NULL,
+              `priority` smallint(5) unsigned NOT NULL default '0',
+              `mkdate` int(10) unsigned NOT NULL default '0',
+              `chdate` int(10) unsigned NOT NULL default '0',
+              PRIMARY KEY  (`issue_id`),
+              KEY `seminar_id` (`seminar_id`,`priority`)
+            ) TYPE=MyISAM;
         ");
 
         $this->db->query("
@@ -51,9 +51,9 @@ class Step25RaumzeitMigrations extends DBMigration
               `raum` varchar(255) default NULL,
               `metadate_id` varchar(32) default NULL,
               `resource_id` varchar(32) NOT NULL default '',
-			  PRIMARY KEY  (`termin_id`),
-			  KEY `range_id` (`range_id`,`date`),
-			  KEY `metadate_id` (`metadate_id`,`date`)
+              PRIMARY KEY  (`termin_id`),
+              KEY `range_id` (`range_id`,`date`),
+              KEY `metadate_id` (`metadate_id`,`date`)
             ) TYPE=MyISAM PACK_KEYS=1;
         ");
             
@@ -62,15 +62,15 @@ class Step25RaumzeitMigrations extends DBMigration
               `issue_id` varchar(32) NOT NULL default '',
               `termin_id` varchar(32) NOT NULL default '',
               PRIMARY KEY  (`issue_id`,`termin_id`),
-			    KEY `termin_id` (`termin_id`,`issue_id`)
+                KEY `termin_id` (`termin_id`,`issue_id`)
             ) TYPE=MyISAM;
         ");
         $this->db->query("
-			ALTER TABLE `termine` DROP INDEX `autor_id` 
-		");
-		$this->db->query("
-			ALTER TABLE `termine` DROP INDEX `range_id` 
-		");
+            ALTER TABLE `termine` DROP INDEX `autor_id` 
+        ");
+        $this->db->query("
+            ALTER TABLE `termine` DROP INDEX `range_id` 
+        ");
         $this->db->query("
             ALTER TABLE `termine` ADD `metadate_id` VARCHAR( 32 );
         ");
@@ -87,44 +87,44 @@ class Step25RaumzeitMigrations extends DBMigration
             ALTER TABLE `resources_requests` ADD `reply_comment` TEXT AFTER `comment`;        
         ");
 
-				$this->db->query("
-					INSERT INTO `log_actions` VALUES (MD5('SEM_UNDELETE_SINGLEDATE'), 'SEM_UNDELETE_SINGLEDATE', 'Einzeltermin wiederherstellen', '%user stellt Einzeltermin %singledate(%affected) in %sem(%coaffected) wieder her.', 1, NULL);
+                $this->db->query("
+                    INSERT INTO `log_actions` VALUES (MD5('SEM_UNDELETE_SINGLEDATE'), 'SEM_UNDELETE_SINGLEDATE', 'Einzeltermin wiederherstellen', '%user stellt Einzeltermin %singledate(%affected) in %sem(%coaffected) wieder her.', 1, NULL);
         ");
 
-				$this->db->query("
-					INSERT INTO `log_actions` VALUES (MD5('SEM_DELETE_SINGLEDATE'), 'SEM_DELETE_SINGLEDATE', 'Einzeltermin löschen', '%user löscht Einzeltermin %singledate(%affected) in %sem(%coaffected).', 1, NULL);
+                $this->db->query("
+                    INSERT INTO `log_actions` VALUES (MD5('SEM_DELETE_SINGLEDATE'), 'SEM_DELETE_SINGLEDATE', 'Einzeltermin löschen', '%user löscht Einzeltermin %singledate(%affected) in %sem(%coaffected).', 1, NULL);
         ");
 
-				$this->db->query("
-					INSERT INTO `log_actions` VALUES (MD5('SEM_SET_STARTSEMESTER'), 'SEM_SET_STARTSEMESTER', 'Startsemester ändern', '%user hat in %sem(%affected) das Startsemester auf %semester(%coaffected) geändert.', 1, NULL);
+                $this->db->query("
+                    INSERT INTO `log_actions` VALUES (MD5('SEM_SET_STARTSEMESTER'), 'SEM_SET_STARTSEMESTER', 'Startsemester ändern', '%user hat in %sem(%affected) das Startsemester auf %semester(%coaffected) geändert.', 1, NULL);
         ");
 
-				$this->db->query("
-					INSERT INTO `log_actions` VALUES (MD5('SEM_SET_ENDSEMESTER'), 'SEM_SET_ENDSEMESTER', 'Semesterlaufzeit ändern', '%user hat in %sem(%affected) die Laufzeit auf %semester(%coaffected) geändert', 1, NULL);
+                $this->db->query("
+                    INSERT INTO `log_actions` VALUES (MD5('SEM_SET_ENDSEMESTER'), 'SEM_SET_ENDSEMESTER', 'Semesterlaufzeit ändern', '%user hat in %sem(%affected) die Laufzeit auf %semester(%coaffected) geändert', 1, NULL);
         ");
 
-				$this->db->query("
-					INSERT INTO `log_actions` VALUES (MD5('SEM_ADD_CYCLE'), 'SEM_ADD_CYCLE', 'Regelmäßige Zeit hinzugefügt', '%user hat in %sem(%affected) die regelmäßige Zeit <em>%coaffected</em> hinzugefügt.', 1, NULL);
+                $this->db->query("
+                    INSERT INTO `log_actions` VALUES (MD5('SEM_ADD_CYCLE'), 'SEM_ADD_CYCLE', 'Regelmäßige Zeit hinzugefügt', '%user hat in %sem(%affected) die regelmäßige Zeit <em>%coaffected</em> hinzugefügt.', 1, NULL);
         ");
 
-				$this->db->query("
-					INSERT INTO `log_actions` VALUES (MD5('SEM_DELETE_CYCLE'), 'SEM_DELETE_CYCLE', 'Regelmäßige Zeit gelöscht', '%user hat in %sem(%affected) die regelmäßige Zeit <em>%coaffected</em> gelöscht.', 1, NULL);
+                $this->db->query("
+                    INSERT INTO `log_actions` VALUES (MD5('SEM_DELETE_CYCLE'), 'SEM_DELETE_CYCLE', 'Regelmäßige Zeit gelöscht', '%user hat in %sem(%affected) die regelmäßige Zeit <em>%coaffected</em> gelöscht.', 1, NULL);
         ");
 
-				$this->db->query("
-					INSERT INTO `log_actions` VALUES (MD5('SEM_ADD_SINGLEDATE'), 'SEM_ADD_SINGLEDATE', 'Einzeltermin hinzufügen', '%user hat in %sem(%affected) den Einzeltermin <em>%coaffected</em> hinzugefügt', 1, NULL);
+                $this->db->query("
+                    INSERT INTO `log_actions` VALUES (MD5('SEM_ADD_SINGLEDATE'), 'SEM_ADD_SINGLEDATE', 'Einzeltermin hinzufügen', '%user hat in %sem(%affected) den Einzeltermin <em>%coaffected</em> hinzugefügt', 1, NULL);
         ");
 
-				$this->db->query("
-					INSERT INTO `log_actions` VALUES (MD5('SEM_DELETE_REQUEST'), 'SEM_DELETE_REQUEST', 'Raumanfrage gelöscht', '%user hat in %sem(%affected) die Raumanfrage für die gesamte Veranstaltung gelöscht.', 1, NULL);
+                $this->db->query("
+                    INSERT INTO `log_actions` VALUES (MD5('SEM_DELETE_REQUEST'), 'SEM_DELETE_REQUEST', 'Raumanfrage gelöscht', '%user hat in %sem(%affected) die Raumanfrage für die gesamte Veranstaltung gelöscht.', 1, NULL);
         ");
 
-				$this->db->query("
-					INSERT INTO `log_actions` VALUES (MD5('SEM_DELETE_SINGLEDATE_REQUEST'), 'SEM_DELETE_SINGLEDATE_REQUEST', 'Einzeltermin, Raumanfrage gelöscht', '%user hat in %sem(%affected) die Raumanfrage für den Termin <em>%coaffected</em> gelöscht.', 1, NULL);
+                $this->db->query("
+                    INSERT INTO `log_actions` VALUES (MD5('SEM_DELETE_SINGLEDATE_REQUEST'), 'SEM_DELETE_SINGLEDATE_REQUEST', 'Einzeltermin, Raumanfrage gelöscht', '%user hat in %sem(%affected) die Raumanfrage für den Termin <em>%coaffected</em> gelöscht.', 1, NULL);
         ");
 
-				$this->db->query("
-					INSERT INTO `log_actions` VALUES (MD5('SINGLEDATE_CHANGE_TIME'), 'SINGLEDATE_CHANGE_TIME', 'Einzeltermin bearbeiten', '%user hat in %sem(%affected) den Einzeltermin %coaffected geändert.', 1, NULL);
+                $this->db->query("
+                    INSERT INTO `log_actions` VALUES (MD5('SINGLEDATE_CHANGE_TIME'), 'SINGLEDATE_CHANGE_TIME', 'Einzeltermin bearbeiten', '%user hat in %sem(%affected) den Einzeltermin %coaffected geändert.', 1, NULL);
         ");
 
         // move "RESOURCES_ENABLE" from config_local.inc.php to config table:

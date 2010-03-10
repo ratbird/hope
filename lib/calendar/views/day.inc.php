@@ -53,7 +53,7 @@ echo "<td class=\"calhead\" width=\"80%\" class=\"cal\"><b>\n";
 echo $aday->toString("LONG") . ", " . $aday->getDate();
 // event. Feiertagsnamen ausgeben
 if ($hday = holiday($atime))
-	echo "<br>" . $hday["name"];
+    echo "<br>" . $hday["name"];
 
 echo "</b></td>\n";
 echo "<td align=\"center\" width=\"10%\"><a href=\"$PHP_SELF?cmd=showday&atime=";
@@ -63,10 +63,10 @@ echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_next.gif
 echo "</tr>\n";
 
 if ($st > 0) {
-	echo "<tr><td align=\"center\" colspan=\"3\"><a href=\"$PHP_SELF?cmd=showday&atime=";
-	echo ($atime - ($at - $st + 1) * 3600) . "\">";
-	$tooltip = tooltip(_("zeig davor"));
-	echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_up.gif\"$tooltip></a></td></tr>\n";
+    echo "<tr><td align=\"center\" colspan=\"3\"><a href=\"$PHP_SELF?cmd=showday&atime=";
+    echo ($atime - ($at - $st + 1) * 3600) . "\">";
+    $tooltip = tooltip(_("zeig davor"));
+    echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_up.gif\"$tooltip></a></td></tr>\n";
 }
 echo "</table>\n</td></tr>\n<tr><td class=\"blank\">\n";
 echo "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\">";
@@ -74,14 +74,14 @@ echo "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\"
 echo $tab["table"];
 
 if ($et < 23) {
-	echo "<tr><td align=\"center\" colspan=\"" . $tab["max_columns"] . "\">";
-	echo "<a href=\"$PHP_SELF?cmd=showday&atime=";
-	echo ($atime + ($et - $at + 1) * 3600) . "\">";
-	$tooltip = tooltip(_("zeig danach"));
-	echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_down.gif\"$tooltip></a></td></tr>\n";
+    echo "<tr><td align=\"center\" colspan=\"" . $tab["max_columns"] . "\">";
+    echo "<a href=\"$PHP_SELF?cmd=showday&atime=";
+    echo ($atime + ($et - $at + 1) * 3600) . "\">";
+    $tooltip = tooltip(_("zeig danach"));
+    echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_down.gif\"$tooltip></a></td></tr>\n";
 }
 else
-	echo "<tr><td colspan=\"" . $tab["max_columns"] . "\">&nbsp;</td></tr>\n";
+    echo "<tr><td colspan=\"" . $tab["max_columns"] . "\">&nbsp;</td></tr>\n";
 
 echo "</table>\n</td></tr>\n</table>\n<td width=\"40%\" valign=\"top\" class=\"blank\"><br>\n";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";

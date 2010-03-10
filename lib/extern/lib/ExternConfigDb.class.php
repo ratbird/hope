@@ -8,11 +8,11 @@
 * This class is a wrapper class for configuration files.
 * 
 *
-* @author		Peter Thienel <thienel@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access		public
-* @modulegroup	extern
-* @module		ExternConfig
-* @package	studip_extern
+* @author       Peter Thienel <thienel@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  extern
+* @module       ExternConfig
+* @package  studip_extern
 */
 
 // +---------------------------------------------------------------------------+
@@ -43,68 +43,68 @@ require_once($GLOBALS["RELATIVE_PATH_EXTERN"]."/lib/ExternModule.class.php");
 
 class ExternConfigDb extends ExternConfig {
 
-	var $db;
+    var $db;
 
-	/**
-	*
-	*/
-	function ExternConfigDb ($range_id, $module_name, $config_id = '') {
-		$this->db =& new DB_Seminar();
-		parent::ExternConfig ($range_id, $module_name, $config_id);
-	}
+    /**
+    *
+    */
+    function ExternConfigDb ($range_id, $module_name, $config_id = '') {
+        $this->db =& new DB_Seminar();
+        parent::ExternConfig ($range_id, $module_name, $config_id);
+    }
 
-	/**
-	*
-	*/
-	function store () {
-		parent::store();
-		$serialized_config = serialize($this->config);
+    /**
+    *
+    */
+    function store () {
+        parent::store();
+        $serialized_config = serialize($this->config);
 
-		if (strlen($serialized_config)) {
-			$stmt = DBManager::get()->prepare("UPDATE extern_config 
-				SET config = ?, chdate = UNIX_TIMESTAMP()
-				WHERE config_id = ? AND range_id = ?");
-			$stmt->execute($data = array($serialized_config, $this->id, $this->range_id));
+        if (strlen($serialized_config)) {
+            $stmt = DBManager::get()->prepare("UPDATE extern_config 
+                SET config = ?, chdate = UNIX_TIMESTAMP()
+                WHERE config_id = ? AND range_id = ?");
+            $stmt->execute($data = array($serialized_config, $this->id, $this->range_id));
 
-			return($this->updateConfiguration());
-		} else {
-			ExternModule::printError();
-			return FALSE;
-		}
-		
-	}
-	
-	/**
-	*
-	*/
-	function parse () {
-		$query = "SELECT * FROM extern_config WHERE config_id = '{$this->id}'";
-		if ($this->db->query($query) && $this->db->next_record()) {
-			$this->config = unserialize(stripslashes($this->db->f('config')));
-		} else {
-			ExternModule::printError();
-		}
-	}
-	
-	function insertConfiguration () {
-		if (!parent::insertConfiguration()) {
-			return false;
-		}
-	
-		$serialized_config = serialize($config_obj->config);
-		$time = time();
-		$query = "INSERT INTO extern_config VALUES (";
-		$query .= "'{$this->id}', '{$this->range_id}', {$this->module_type}, ";
-		$query .= "'{$this->config_name}', 0, '$serialized_config', $time, $time)";
-		$this->db->query($query);
-	
-		if ($this->db->affected_rows() != 1) {
-			return FALSE;
-		}
-	
-		return TRUE;
-	}
-	
+            return($this->updateConfiguration());
+        } else {
+            ExternModule::printError();
+            return FALSE;
+        }
+        
+    }
+    
+    /**
+    *
+    */
+    function parse () {
+        $query = "SELECT * FROM extern_config WHERE config_id = '{$this->id}'";
+        if ($this->db->query($query) && $this->db->next_record()) {
+            $this->config = unserialize(stripslashes($this->db->f('config')));
+        } else {
+            ExternModule::printError();
+        }
+    }
+    
+    function insertConfiguration () {
+        if (!parent::insertConfiguration()) {
+            return false;
+        }
+    
+        $serialized_config = serialize($config_obj->config);
+        $time = time();
+        $query = "INSERT INTO extern_config VALUES (";
+        $query .= "'{$this->id}', '{$this->range_id}', {$this->module_type}, ";
+        $query .= "'{$this->config_name}', 0, '$serialized_config', $time, $time)";
+        $this->db->query($query);
+    
+        if ($this->db->affected_rows() != 1) {
+            return FALSE;
+        }
+    
+        return TRUE;
+    }
+    
 }
 
 ?>

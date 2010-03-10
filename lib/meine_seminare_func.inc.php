@@ -219,6 +219,8 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
         if ($my_obj[$object_id]["modules"]["forum"]) {
+            $my_obj[$object_id]["neuepostings"] = $db2->f("neue");
+            $my_obj[$object_id]["postings"] = $db2->f("count");
             if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
@@ -256,6 +258,8 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
         if ($my_obj[$object_id]["modules"]["documents"]) {
+            $my_obj[$object_id]["neuedokumente"] = $db2->f("neue");
+            $my_obj[$object_id]["dokumente"] = $db2->f("count");
             if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
@@ -279,6 +283,8 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
     $db2->query(get_obj_clause('news_range a {ON_CLAUSE} LEFT JOIN news nw ON(a.news_id=nw.news_id AND UNIX_TIMESTAMP() BETWEEN date AND (date+expire))','range_id','nw.news_id',"(chdate > IFNULL(b.visitdate,0) AND nw.user_id !='$user_id')",'news',false,false,'a.news_id'));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
+        $my_obj[$object_id]["neuenews"] = $db2->f("neue");
+        $my_obj[$object_id]["news"] = $db2->f("count");
         if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
             $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
         }
@@ -300,7 +306,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
     $db2->query(get_obj_clause('scm a','range_id',"IF(content !='',1,0)","(chdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", "scm", 'tab_name'));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
-        if ($my_obj[$object_id]["modules"]["scm"]) {    
+        if ($my_obj[$object_id]["modules"]["scm"]) {
+            $my_obj[$object_id]["neuscmcontent"] = $db2->f("neue");
+            $my_obj[$object_id]["scmcontent"] = $db2->f("count");
+            $my_obj[$object_id]["scmtabname"] = $db2->f("tab_name");
             if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
@@ -337,7 +346,9 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
     $db2->query(get_obj_clause('lit_list a','range_id','list_id',"(chdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", 'literature', false, " AND a.visibility=1"));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
-        if ($my_obj[$object_id]["modules"]["literature"]) { 
+        if ($my_obj[$object_id]["modules"]["literature"]) {
+            $my_obj[$object_id]["neuelitlist"] = $db2->f("neue");
+            $my_obj[$object_id]["litlist"] = $db2->f("count");
             if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
@@ -359,7 +370,9 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
     $db2->query(get_obj_clause('termine a','range_id','termin_id',"(chdate > IFNULL(b.visitdate,0) AND autor_id !='$user_id')", 'schedule'));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
-        if ($my_obj[$object_id]["modules"]["schedule"]) {   
+        if ($my_obj[$object_id]["modules"]["schedule"]) {
+            $my_obj[$object_id]["neuetermine"] = $db2->f("neue");
+            $my_obj[$object_id]["termine"] = $db2->f("count");
             if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
@@ -382,7 +395,9 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
         $db2->query(get_obj_clause('wiki a','range_id','keyword',"(chdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", 'wiki', "COUNT(DISTINCT keyword) as count_d"));
         while($db2->next_record()) {
             $object_id = $db2->f('object_id');
-            if ($my_obj[$object_id]["modules"]["wiki"]) {   
+            if ($my_obj[$object_id]["modules"]["wiki"]) {
+                $my_obj[$object_id]["neuewikiseiten"] = $db2->f("neue");
+                $my_obj[$object_id]["wikiseiten"] = $db2->f("count_d");
                 if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                     $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
                 }
@@ -410,7 +425,9 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
 //      $db2->query(get_obj_clause('object_contentmodules a','object_id','module_id',"(chdate > IFNULL(b.visitdate,0))", 'elearning_interface'));
         while($db2->next_record()) {
             $object_id = $db2->f('object_id');
-            if ($my_obj[$object_id]["modules"]["elearning_interface"]) {    
+            if ($my_obj[$object_id]["modules"]["elearning_interface"]) {
+                $my_obj[$object_id]["neuecontentmodule"] = $db2->f("neue");
+                $my_obj[$object_id]["contentmodule"] = $db2->f("count");
                 if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                     $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
                 }

@@ -227,7 +227,7 @@ class ModulesNotification extends Modules {
                 if ($r_data['neuepostings'] > 1) {
                     $text = sprintf(_("%s neue Beiträge im Forum:"), $r_data['neuepostings']);
                 } else if ($r_data['neuepostings'] > 0) {
-                    $text = ("1 neuer Beitrag im Forum:");
+                    $text = _("1 neuer Beitrag im Forum:");
                 }
                 $redirect = '&again=yes&redirect_to=forum.php&view=neue&sort=age';
                 break;

@@ -1,22 +1,12 @@
-<style>
-	select.choose_member option {
-		width:300px;
-		background: url(<?= Avatar::getAvatar($data['user_id'])->getURL(Avatar::SMALL)?>) no-repeat left center;
-		height: 20px;
-		padding-left: 25px;
-		vertical-align:middle;
-	}
-</style>
-
 <h2><?= _("Neue Gruppenmitglieder einladen") ?></h2>
 <form action="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$GLOBALS['user']->id.'/add_invites/') ?>" method=post>
 	<? if(empty($flash['members']) && empty($members)) :?>
 		<div>
 			<? if (is_array($results_choose_members)) : ?>
 				<div style="clear:left">
-					<select name="choose_member" class="choose_member">
+					<select name="choose_member">
 						<? foreach ($results_choose_members as $user_id => $data) : ?>
-							<option value="<?= $data['username'] ?>">
+							<option value="<?= $data['username'] ?>" style="background: url(<?= Avatar::getAvatar($data['user_id'])->getURL(Avatar::SMALL)?>) no-repeat left center;padding-left: 25px;">
 									<?= htmlReady(my_substr($data['fullname'],0,40))." (".$data['username'] ?>)
 							</option>
 						<? endforeach; ?>

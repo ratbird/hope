@@ -234,6 +234,14 @@ function show_news_item($news_item, $cmd_data, $show_admin) {
 
   $id = $news_item['news_id'];
 
+  $tempnew = (($news_item['chdate'] >= object_get_visit($id,'news',false,false))
+             && ($news_item['user_id'] != $auth->auth["uid"]));
+
+  if ($tempnew && $_REQUEST["new_news"])
+  	$news_item["open"] = $tempnew;
+  
+
+
   ob_start();
 
   $tmp_titel=htmlReady(mila($news_item['topic']));
@@ -281,8 +289,6 @@ function show_news_item($news_item, $cmd_data, $show_admin) {
   if ($link)
     $titel = "<a href=\"$link\" class=\"tree\" >".$titel."</a>";
 
-  $tempnew = (($news_item['chdate'] >= object_get_visit($id,'news',false,false))
-             && ($news_item['user_id'] != $auth->auth["uid"]));
   echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\"><tr>";
 
   $icon=" <img src=\"".$GLOBALS['ASSETS_URL']."images/news-icon.gif\" border=0>";

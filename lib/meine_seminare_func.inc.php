@@ -286,6 +286,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
 		$nav = new Navigation('news', '');
 
 		if ($db2->f('neue')) {
+    	$nav->setURL('?new_news=true');
 			$nav->setImage('icon-news2.gif', array('title' =>
 				sprintf(_('%s News, %s neue'), $db2->f('count'), $db2->f('neue'))));
 		} else if ($db2->f('count')) {

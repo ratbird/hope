@@ -5,8 +5,6 @@
 * Copyright (c) 1998-2000 NetUSE AG
 *                    Boris Erdmann, Kristian Koehntopp
 *
-* $Id: db_mysql.inc 190 2006-01-17 15:38:34Z anoack $
-*
 */ 
 
 /*

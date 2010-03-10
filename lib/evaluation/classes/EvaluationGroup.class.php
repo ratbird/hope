@@ -42,8 +42,6 @@ define ("INSTANCEOF_EVALGROUP", "EvaluationGroup");
  * This class provides a group for an evaluation for the Stud.IP-project.
  *
  * @author  Alexander Willner <mail@AlexanderWillner.de>
- * @version $Id: EvaluationGroup.class.php,v 1.15 2004/01/09 00:16:47 awillner
-Exp $ *
  * @copyright   2004 Stud.IP-Project
  * @access      public
  * @package     evaluation

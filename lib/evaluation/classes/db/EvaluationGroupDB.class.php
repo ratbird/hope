@@ -41,8 +41,6 @@ define ("INSTANCEOF_EVALGROUPDB", "EvalGroupDB");
  * Databaseclass for all evaluationgroups
  *
  * @author  Alexander Willner <mail@AlexanderWillner.de>
- * @version $Id: EvaluationGroupDB.class.php,v 1.14 2004/01/02 02:56:17 awillner
-Exp $ *
  * @copyright   2004 Stud.IP-Project
  * @access      public
  * @package     evaluation

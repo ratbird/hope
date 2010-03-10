@@ -6,8 +6,6 @@
 ##
 ## Copyright (c) 1998-2000 Sascha Schumann <sascha@schumann.cx>
 ##
-## $Id: ct_sql_studip_pdo.inc anoack $
-##
 ## PHPLIB Data Storage Container using a SQL database
 ## for use with Stud.IP and PDO only!
 

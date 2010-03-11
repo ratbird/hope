@@ -564,11 +564,7 @@ while ($tmp_first_date < $end_date) {
                             $req_info = $sem->getRoomRequestInfo();
                         ?>
                         <!-- the room-request has not yet been resolved -->
-                        <div style="border:1px solid black;background:#FFFFDD">
-                            &nbsp;<?=_("Für diese Veranstaltung liegt eine noch offene Raumanfrage vor.")?>
-                            <a href="javascript:alert('<?=$req_info?>')">
-                                <img src="<?=$GLOBALS['ASSETS_URL']?>images/info.gif" alt="<?=$req_info?>" border="0" align="absmiddle">
-                            </a>
+                        <?= MessageBox::info(_("Für diese Veranstaltung liegt eine noch offene Raumanfrage vor."), array(nl2br($req_info))) ?>
                         </div>
                         <br />
 
@@ -576,12 +572,7 @@ while ($tmp_first_date < $end_date) {
                             $req_info = $sem->getRoomRequestInfo();
                         ?>
                         <!-- the room-request has been declined -->
-                        <div style="border:1px solid black;background:#FFCCCC">
-                            &nbsp;<?=_("Die Raumanfrage für diese Veranstaltung wurde abgelehnt!")?>
-                            <a href="javascript:alert('<?=$req_info?>')">
-                                <img src="<?=$GLOBALS['ASSETS_URL']?>images/info.gif" alt="<?=$req_info?>" border="0" align="absmiddle">
-                            </a>
-                        </div>
+                        <?= MessageBox::info( _("Die Raumanfrage für diese Veranstaltung wurde abgelehnt!"), array(nl2br($req_info))) ?>
                         <br />
                         <? endif; ?>
 

@@ -1738,18 +1738,18 @@ class Seminar {
             if (!$this->requestData) {
                 $rD =& new RoomRequest($this->request_id);
                 $resObject =& ResourceObject::Factory($rD->resource_id);
-                $this->requestData .= 'Raum: '.$resObject->getName().'\n';
-                $this->requestData .= 'verantwortlich: '.$resObject->getOwnerName().'\n\n';
+                $this->requestData .= 'Raum: '.$resObject->getName() . "\n";
+                $this->requestData .= 'verantwortlich: '.$resObject->getOwnerName() ."\n\n";
                 foreach ($rD->getProperties() as $val) {
                     $this->requestData .= $val['name'].': ';
                     if ($val['type'] == 'bool') {
                         if ($val['state'] == 'on') {
-                            $this->requestData .= 'vorhanden\n';
+                            $this->requestData .= "vorhanden\n";
                         } else {
-                            $this->requestData .= 'nicht vorhanden\n';
+                            $this->requestData .= "nicht vorhanden\n";
                         }
                     } else {
-                        $this->requestData .= $val['state'].'\n';
+                        $this->requestData .= $val['state'] . "\n";
                     }
                 }
                 if  ($rD->getClosed() == 0) {
@@ -1760,15 +1760,19 @@ class Seminar {
                     $txt = _("Die Anfrage wurde bearbeitet.");
                 }
 
-                $this->requestData .= '\nStatus: '.$txt.'\n';
+                $this->requestData .= "\nStatus: $txt\n";
 
                 // if the room-request has been declined, show the decline-notice placed by the room-administrator
                 if ($room_request == 'declined') {
-                    $this->requestData .= '\nNachricht RaumadministratorIn:\n';
-                    $this->requestData .= str_replace("\r", '', str_replace("\n", '\n', $rD->getReplyComment()));
+                    if ($rD->getReplyComment()) {
+                        $this->requestData .= "\nNachricht RaumadministratorIn:\n";
+                        $this->requestData .= $rD->getReplyComment();
+                    }
                 } else {
-                    $this->requestData .= '\nNachricht an den/die RaumadministratorIn:\n';
-                    $this->requestData .= str_replace("\r", '', str_replace("\n", '\n', $rD->getComment()));
+                    if ($rD->getComment()) {
+                        $this->requestData .= "\nNachricht an den/die RaumadministratorIn:\n";
+                        $this->requestData .= $rD->getComment();
+                    }
                 }
 
             }

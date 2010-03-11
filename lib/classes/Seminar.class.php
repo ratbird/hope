@@ -1414,8 +1414,8 @@ class Seminar {
 
         // room-request found, parse int-status and return string-status
         if (!$this->room_request) {
-            $this->room_request =& new RoomRequest($this->request_id);
-            if (!$this->room_request) {
+            $this->room_request = new RoomRequest($this->request_id);
+            if ($this->room_request->isNewObject) {
                 throw new Exception("Room-Request with the id {$this->request_id} does not exists!");
             }
         }

@@ -94,8 +94,8 @@ class SeminarDB {
             " ORDER BY date");
 
         $tmp = array();
-        while ($zw = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $stat['declined_dates'][] = $zw;
+        while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $stat['declined_dates'][] = $data;
             $stat['declined']++;
         }
 

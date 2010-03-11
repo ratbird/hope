@@ -182,6 +182,16 @@ class Seminar {
         return $this->name;
     }
 
+    /**
+     * return the field VeranstaltungsNummer for the seminar
+     *
+     * @return  string  the seminar-number for the current seminar
+     */
+    function getNumber()
+    {
+        return $this->seminar_number;
+    }
+
     function isVisible() {
         return $this->visible;
     }
@@ -802,18 +812,30 @@ class Seminar {
             }
         }
     }
-
-    function getStartSemName() {
-        foreach ($this->semester->getAllSemesterData() as $val) {
-            if ($val['beginn'] == $this->semester_start_time) {
-                return $val['name'];
-            }
+    
+    /**
+     * return the name of the seminars start-semester
+     *
+     * @return  string  the name of the start-semester or false if there is no start-semester
+     */
+    function getStartSemesterName()
+    {
+        if ($data = $this->semester->getSemesterDataByDate($this->semester_start_time)) {
+            return $data['name'];
         }
 
         return false;
     }
 
-    function readSingleDatesForCycle($metadate_id){
+    /**
+     * return an array of singledate-objects for the submitted cycle identified by metadate_id
+     *
+     * @param  string  $metadate_id  the id identifying the cycle
+     *
+     * @return mixed   an array of singledate-objects
+     */
+    function readSingleDatesForCycle($metadate_id)
+    {
         return $this->metadate->readSingleDates($metadate_id, $this->filterStart, $this->filterEnd);
     }
 

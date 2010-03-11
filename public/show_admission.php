@@ -509,7 +509,10 @@ if(is_object($group_obj)){
         $distinct_members = array();
         foreach($group_obj->members as $member){
             $distinct_members += $member->getMembers('autor') + $member->getAdmissionMembers('awaiting') +  $member->getAdmissionMembers('accepted') + $member->getAdmissionMembers('claiming');?>
-            <li><?=htmlReady($member->getName() .' - ('. $member->getStartSemName() .')')?></li>
+            <li>
+                <?= $member->getNumber() ? htmlReady('('. $member->getNumber() .')') : '' ?>
+                <?= htmlReady($member->getName() .' - ('. $member->getStartSemesterName() .')')?>
+            </li>
             <input type="hidden" name="gruppe[]" value="<?=$member->getId();?>">
         <?}?>
         </ol>
@@ -787,7 +790,7 @@ if(is_object($group_obj)){
         }
         printf ("<td class=\"%s\">
         <a title=\"%s\" href=\"".URLHelper::getLink('teilnehmer.php?cid=%s')."\">
-                %s%s
+                %s%s%s
                 </a></td>
                 <td class=\"%s\" align=\"center\">
                 <a title=\"%s\" href=\"".URLHelper::getLink('admin_admission.php?select_sem_id=%s')."\">%s</a></td>
@@ -802,7 +805,8 @@ if(is_object($group_obj)){
                 $cssSw->getClass(),
                 _("Teilnehmerliste aufrufen"),
                 $seminar_id,
-                htmlready('('. $semdata['VeranstaltungsNummer'] . ') ' . substr($semdata['Name'], 0, 50)), (strlen($semdata['Name'])>50) ? "..." : "",
+                $semdata['VeranstaltungsNummer'] ? htmlready('('. $semdata['VeranstaltungsNummer'] . ')') .' ' : '',
+                htmlready(substr($semdata['Name'], 0, 50)), (strlen($semdata['Name'])>50) ? "..." : "",
                 $cssSw->getClass(),
                 _("Zugangsbeschränkungen aufrufen"),
                 $seminar_id,

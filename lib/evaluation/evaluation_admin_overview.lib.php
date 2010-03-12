@@ -1518,7 +1518,7 @@ class EvalOverview {
 
          if( $eval->isTemplate() ) {
             if( empty($_REQUEST["link_range"]) && empty($_REQUEST["copy_range"]) && empty($_REQUEST["remove_range"])) {
-               $update_message = sprintf(_("Es wurden keine Ver&auml;nderungen an der Evaluationsvorlage <b>%s</b> gespeichert."), $evalName);
+               $update_message = MessageBox::info(sprintf(_("Es wurden keine Ver&auml;nderungen an der Evaluationsvorlage <b>%s</b> gespeichert."), $evalName));
             }
          } else {
             // nothing changed

@@ -814,7 +814,7 @@ function searchWiki($searchfor, $searchcurrentversions, $keyword, $localsearch) 
             $msg="error\xa7" . _("Suchbegriff zu kurz. Geben Sie mindestens drei Zeichen ein.");
         } else {
             $tmplt=_("Die Suche nach &raquo;%s&laquo; lieferte keine Treffer.");
-            $msg="error\xa7" . sprintf($tmplt, htmlReady($searchfor));
+            $msg="info\xa7" . sprintf($tmplt, htmlReady($searchfor));
         }
         if ($keyword) {
             return showWikiPage($keyword, NULL, $msg);

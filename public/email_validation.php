@@ -54,7 +54,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 <?php
     //user bereits vorhanden
     if ($perm->have_perm("autor")) {
-        echo MessageBox::error(sprintf(_("Sie haben schon den Status <b>%s</b> im System.
+        echo MessageBox::info(sprintf(_("Sie haben schon den Status <b>%s</b> im System.
         Eine Aktivierung des Accounts ist nicht mehr n&ouml;tig, um Schreibrechte zu bekommen"), $auth->auth["perm"]),
         array("<a href=\"index.php\">&nbsp;" . _("zur&uuml;ck zur Startseite") . "</a>"));
     }
@@ -62,7 +62,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
     //  So, wer bis hier hin gekommen ist gehoert zur Zielgruppe...
     // Volltrottel (oder abuse)
     elseif (!isset($secret) || $secret == "") {
-        echo MessageBox::error(_("Sie müssen den vollst&ändigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren."));
+        echo MessageBox::info(_("Sie müssen den vollst&ändigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren."));
     }
 
     // abuse (oder Volltrottel)

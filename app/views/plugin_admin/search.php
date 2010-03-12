@@ -17,7 +17,7 @@
 </h3>
 
 <? if (empty($search_results)): ?>
-    <?= Messagebox::info(_('Es wurden keine Plugins gefunden.')) ?>
+    <?= MessageBox::info(_('Es wurden keine Plugins gefunden.')) ?>
 <? else: ?>
     <table class="default">
         <tr>

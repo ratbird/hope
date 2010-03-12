@@ -26,7 +26,7 @@ $cssSw = new cssClassSwitcher();
 
 <?= $this->render_partial("course/studygroup/_feedback") ?>
 <? if (!$configured): ?>
-    <?= MessageBox::error(_('Keine Veranstaltungsart für Studiengruppen gefunden'),
+    <?= MessageBox::info(_('Keine Veranstaltungsart für Studiengruppen gefunden'),
         array(sprintf(_('Die Standardkonfiguration für Studiengruppen in der Datei <b>%s</b> fehlt oder ist unvollständig.'),
                 'config.inc.php'))) ?>
 <? endif ?>

@@ -1291,6 +1291,8 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     global $rechte, $user, $SessionSeminar;
     $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     
+    $type = $datei['url'] != '' ? 6 : 0;
+    
     $content='';    
                         
     if ($change == $datei["dokument_id"]) {     //Aenderungsmodus, Formular aufbauen
@@ -1332,7 +1334,6 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     //Editbereich ertstellen
     $edit='';
     if (($change != $datei["dokument_id"]) && ($upload != $datei["dokument_id"]) && $filelink != $datei["dokument_id"]) {
-        $type = ($datei['url'] != '')? 6 : 0;
         if (check_protected_download($datei['dokument_id'])) {
             $edit= '&nbsp;<a href="' . GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'force') .'">' . makeButton('herunterladen', 'img') . '</a>';
         

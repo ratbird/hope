@@ -413,7 +413,7 @@ class PluginManager
             }
         }
 
-        return $false;
+        return false;
     }
 
     /**

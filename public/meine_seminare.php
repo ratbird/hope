@@ -275,11 +275,12 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         $add_fields = ', su1.user_id as dozent_id';
         $add_query = "LEFT JOIN seminar_user as su1 ON (su1.seminar_id=seminare.Seminar_id AND su1.status='dozent')";
     }
-
+    
+    $dbv = new DbView();
 
     $db->query ("SELECT seminare.Name, seminare.Seminar_id, seminare.status as sem_status, seminar_user.status, seminar_user.gruppe,
                 seminare.chdate, seminare.visible, admission_binding,modules,IFNULL(visitdate,0) as visitdate, admission_prelim,
-                {$_views['sem_number_sql']} as sem_number, {$_views['sem_number_end_sql']} as sem_number_end $add_fields
+                {$dbv->sem_number_sql} as sem_number, {$dbv->sem_number_end_sql} as sem_number_end $add_fields
                 FROM seminar_user LEFT JOIN seminare  USING (Seminar_id)
                 LEFT JOIN object_user_visits ouv ON (ouv.object_id=seminar_user.Seminar_id AND ouv.user_id='$user->id' AND ouv.type='sem')
                 $add_query

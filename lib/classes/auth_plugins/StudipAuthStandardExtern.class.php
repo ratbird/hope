@@ -24,7 +24,6 @@
 // +---------------------------------------------------------------------------+
 
 require_once ("lib/classes/auth_plugins/StudipAuthStandard.class.php");
-require_once ("lib/dbviews/core.view.php");
 
 /**
 * Stud.IP authentication, using an external Stud.IP database, e.g. an alternative installation

@@ -223,6 +223,8 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
         
         $db = new DB_Seminar();
         
+        $dbv = new DbView();
+        
         if ($module_params['initiale']) {
             if ($this->config->getValue('Main', 'onlylecturers')) {
                 $current_semester = get_sem_num(time());
@@ -239,13 +241,13 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                 . "AND ui.inst_perms = 'dozent' "
                 . "AND ui.externdefault = 1 ",
                 substr($module_params['initiale'], 0, 1),
-                $GLOBALS['_views']['sem_number_sql'],
+                $dbv->sem_number_sql,
                 $current_semester,
-                $GLOBALS['_views']['sem_number_sql'],
+                $dbv->sem_number_sql,
                 $current_semester,
-                $GLOBALS['_views']['sem_number_end_sql'],
+                $dbv->sem_number_end_sql,
                 $current_semester,
-                $GLOBALS['_views']['sem_number_end_sql'],
+                $dbv->sem_number_end_sql,
                 implode("','", $selected_item_ids));
             } else {
                     // get only users with the given status
@@ -276,13 +278,13 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                     . "AND s.visible = 1 "
                     . "AND ((%s) = %s OR ((%s) <= %s  AND ((%s) >= %s OR (%s) = -1))) ",
                     $module_params['item_id'],
-                    $GLOBALS['_views']['sem_number_sql'],
+                    $dbv->sem_number_sql,
                     $current_semester,
-                    $GLOBALS['_views']['sem_number_sql'],
+                    $dbv->sem_number_sql,
                     $current_semester,
-                    $GLOBALS['_views']['sem_number_end_sql'],
+                    $dbv->sem_number_end_sql,
                     $current_semester,
-                    $GLOBALS['_views']['sem_number_end_sql']);
+                    $dbv->sem_number_end_sql);
             } else {
                 // get only users with the given status
                 $query = sprintf("SELECT ui.Institut_id, ui.user_id "

@@ -314,10 +314,12 @@ class ExternSemBrowseTemplate extends SemBrowse {
             if (!$nameformat = $this->module->config->getValue("Main", "nameformat"))
                 $nameformat = "no_title_short";
             
+            $dbv = new DbView();
+
             $query = "SELECT seminare.* 
                 , Institute.Name AS Institut,Institute.Institut_id,
                 seminar_sem_tree.sem_tree_id AS bereich, " . $GLOBALS['_fullname_sql'][$nameformat] ." AS fullname, auth_user_md5.username, Vorname, Nachname, title_front, title_rear, 
-                " . $GLOBALS['_views']['sem_number_sql'] . " AS sem_number, " . $GLOBALS['_views']['sem_number_end_sql'] . " AS sem_number_end,
+                " . $dbv->sem_number_sql . " AS sem_number, " . $dbv->sem_number_end_sql . " AS sem_number_end,
                 seminar_user.position AS position FROM seminare
                 LEFT JOIN seminar_user ON (seminare.Seminar_id=seminar_user.Seminar_id AND seminar_user.status='dozent') 
                 LEFT JOIN auth_user_md5 USING (user_id) 

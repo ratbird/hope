@@ -722,7 +722,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
     }
 
     function getContentResult () {
-        global $_fullname_sql, $_views, $SEM_TYPE, $SEM_CLASS;
+        global $_fullname_sql, $SEM_TYPE, $SEM_CLASS;
         $content = null;
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result'])) {
             list($group_by_data, $sem_data) = $this->getResult();
@@ -968,7 +968,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
 
 
     function getResult () {
-        global $_fullname_sql,$_views,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;
+        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;
 
         $add_fields = '';
         $add_query = '';
@@ -1035,10 +1035,10 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
         if (!$nameformat = $this->config->getValue('Main', 'nameformat')) {
             $nameformat = 'full_rev';
         }
-
+        $dbv = new DbView();
         $query = ("SELECT seminare.Seminar_id, VeranstaltungsNummer, seminare.status, seminare.status, seminare.Untertitel, seminare.Ort, seminare.art, seminare.Beschreibung, IF(seminare.visible=0,CONCAT(seminare.Name, ' ". _("(versteckt)") ."'), seminare.Name) AS Name, seminare.metadata_dates,
                 $add_fields" . $_fullname_sql[$nameformat] ." AS fullname, auth_user_md5.username, title_front, title_rear, Vorname, Nachname,
-                " . $_views['sem_number_sql'] . " AS sem_number, " . $_views['sem_number_end_sql'] . " AS sem_number_end, seminar_user.position AS position FROM seminare
+                " . $dbv->sem_number_sql . " AS sem_number, " . $dbv->sem_number_end_sql . " AS sem_number_end, seminar_user.position AS position FROM seminare
                 LEFT JOIN seminar_user ON (seminare.Seminar_id=seminar_user.Seminar_id AND seminar_user.status='dozent')
                 LEFT JOIN auth_user_md5 USING (user_id)
                 LEFT JOIN user_info USING (user_id)
@@ -1204,7 +1204,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
         require_once "vendor/write_excel/Worksheet.php";
         require_once "vendor/write_excel/Workbook.php";
 
-        global $_fullname_sql, $_views, $SEM_TYPE, $SEM_CLASS, $TMP_PATH;
+        global $_fullname_sql, $SEM_TYPE, $SEM_CLASS, $TMP_PATH;
 
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result'])) {
             if (!is_object($this->sem_tree)){

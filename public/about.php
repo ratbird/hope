@@ -44,7 +44,6 @@ require_once('lib/statusgruppe.inc.php');
 require_once('lib/showNews.inc.php');
 require_once('lib/show_dates.inc.php');
 require_once('lib/classes/DbView.class.php');
-require_once('lib/dbviews/sem_tree.view.php');
 require_once('lib/classes/DbSnapshot.class.php');
 require_once('lib/classes/DataFieldEntry.class.php');
 require_once('lib/classes/guestbook.class.php');
@@ -55,6 +54,8 @@ require_once('lib/user_visible.inc.php');
 require_once('lib/classes/StudipLitList.class.php');
 require_once('lib/classes/Avatar.class.php');
 require_once('lib/classes/StudipKing.class.php');
+
+DbView::addView('sem_tree');
 
 function print_kings($username) {
 

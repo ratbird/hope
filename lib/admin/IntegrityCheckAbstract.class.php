@@ -25,7 +25,7 @@
 // +---------------------------------------------------------------------------+
 
 require_once "lib/classes/DbView.class.php";
-require_once $RELATIVE_PATH_ADMIN_MODULES."/integrity.view.php";
+DbView::addView('integrity');
 
 /**
 * Abstract base class for integrity check plugins
@@ -79,7 +79,7 @@ class IntegrityCheckAbstract{
         $key = false;
         if(!$key = $this->checklist[$checknumber]['key']){
             $spl = explode(":",$this->checklist[$checknumber]['query']);
-            $key = $GLOBALS["_views"][trim($spl[1])]["pk"];
+            $key = $this->view->{trim($spl[1])}["pk"];
         }
         if(!$key)
             return false;
@@ -95,7 +95,7 @@ class IntegrityCheckAbstract{
         $key = false;
         if(!$key = $this->checklist[$checknumber]['key']){
             $spl = explode(":",$this->checklist[$checknumber]['query']);
-            $key = $GLOBALS["_views"][trim($spl[1])]["pk"];
+            $key = $this->view->{trim($spl[1])}["pk"];
         }
         if(!$key)
             return false;

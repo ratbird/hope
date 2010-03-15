@@ -27,6 +27,7 @@ require_once ("lib/classes/DbView.class.php");
 require_once ("lib/classes/DbSnapshot.class.php");
 require_once ("lib/classes/UserDomain.php");
 
+DbView::addView('core');
 
 /**
 * abstract base class for authentication plugins

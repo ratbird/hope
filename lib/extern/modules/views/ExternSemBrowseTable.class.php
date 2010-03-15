@@ -119,7 +119,7 @@ class ExternSemBrowseTable extends SemBrowse {
     }
     
     function print_result () {
-        global $_fullname_sql,$_views,$PHP_SELF,$SEM_TYPE,$SEM_CLASS,$sem_type_tmp;
+        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS,$sem_type_tmp;
         
         $sem_link = $this->module->getModuleLink("Lecturedetails",
             $this->module->config->getValue("SemLink", "config"),
@@ -176,10 +176,12 @@ class ExternSemBrowseTable extends SemBrowse {
             if (!$nameformat = $this->module->config->getValue("Main", "nameformat"))
                 $nameformat = "no_title_short";
             
+            $dbv = new DbView();
+                
             $query = "SELECT seminare.* 
                 , Institute.Name AS Institut,Institute.Institut_id,
                 seminar_sem_tree.sem_tree_id AS bereich, " . $_fullname_sql[$nameformat] ." AS fullname, auth_user_md5.username,
-                " . $_views['sem_number_sql'] . " AS sem_number, " . $_views['sem_number_end_sql'] . " AS sem_number_end, " . 
+                " . $dbv->sem_number_sql . " AS sem_number, " . $dbv->sem_number_end_sql . " AS sem_number_end, " . 
             " seminar_user.position AS position " . 
             " FROM seminare 
                 LEFT JOIN seminar_user ON (seminare.Seminar_id=seminar_user.Seminar_id AND seminar_user.status='dozent') 

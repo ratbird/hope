@@ -24,9 +24,10 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 require_once("lib/classes/DbSnapshot.class.php");
-require_once("lib/dbviews/range_tree.view.php");
 require_once("lib/classes/TreeAbstract.class.php");
 require_once("lib/classes/SemesterData.class.php");
+
+DbView::addView('range_tree');
 
 /**
 * class to handle the "range tree"
@@ -89,14 +90,13 @@ class StudipRangeTree extends TreeAbstract {
     }
     
     function initEntries(){
-        //$this->view->params[0] = (isset($this->sem_number)) ? " IF(" . $GLOBALS['_views']['sem_number_sql'] . " IN(" . join(",",$this->sem_number) . "),d.Seminar_id,NULL)"  : "d.Seminar_id";
         $this->view->params[0] = (isset($this->sem_status)) ? " AND d.status IN('" . join("','", $this->sem_status) . "')" : " ";
         $this->view->params[0] .= $this->visible_only ? " AND visible=1 " : "";
-        $this->view->params[1] = (isset($this->sem_number)) ? " WHERE ((" . $GLOBALS['_views']['sem_number_sql'] 
-                                . ") IN (" . join(",",$this->sem_number) .") OR ((" . $GLOBALS['_views']['sem_number_sql'] 
+        $this->view->params[1] = (isset($this->sem_number)) ? " WHERE ((" . $this->view->sem_number_sql 
+                                . ") IN (" . join(",",$this->sem_number) .") OR ((" . $this->view->sem_number_sql
                                 .") <= " . $this->sem_number[count($this->sem_number)-1] 
-                                . "  AND ((" . $GLOBALS['_views']['sem_number_end_sql'] . ") >= " . $this->sem_number[count($this->sem_number)-1] 
-                                . " OR (" . $GLOBALS['_views']['sem_number_end_sql'] . ") = -1))) " : "";
+                                . "  AND ((" . $this->view->sem_number_end_sql . ") >= " . $this->sem_number[count($this->sem_number)-1] 
+                                . " OR (" . $this->view->sem_number_end_sql  . ") = -1))) " : "";
 
         $db = $this->view->get_query("view:TREE_GET_SEM_ENTRIES");
         while ($db->next_record()){

@@ -231,7 +231,7 @@ class StmBrowse {
     
     function print_result(){
         ob_start();
-        global $_fullname_sql,$_views,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;
+        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;
         
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result']) && strlen($this->sem_browse_data['search_result'][0]) == 32) {
             $constraint = "1";

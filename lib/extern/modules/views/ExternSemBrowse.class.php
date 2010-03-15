@@ -120,7 +120,7 @@ class ExternSemBrowse extends SemBrowse {
     }
     
     function print_result ($args) {
-        global $_fullname_sql,$_views,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;
+        global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;
         
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result'])) {
             
@@ -163,6 +163,9 @@ class ExternSemBrowse extends SemBrowse {
             if (!$this->config->getValue("Main", "allseminars")) {
                 $sem_inst_query = " AND seminare.Institut_id='{$this->config->range_id}' ";
             }
+            
+            $dbv = new DbView();
+            
             if (!$nameformat = $this->config->getValue("Main", "nameformat"))
                 $nameformat = "no_title_short";
             $query = "SELECT seminare.Seminar_id, seminare.status, seminare.Name, seminare.metadata_dates 
@@ -170,7 +173,7 @@ class ExternSemBrowse extends SemBrowse {
                 seminar_sem_tree.sem_tree_id AS bereich, "
                 . $_fullname_sql[$nameformat]
                 . " AS fullname, auth_user_md5.username,
-                " . $_views['sem_number_sql'] . " AS sem_number, " . $_views['sem_number_end_sql'] . " AS sem_number_end, " . 
+                " . $dbv->sem_number_sql . " AS sem_number, " . $dbv->sem_number_end_sql . " AS sem_number_end, " . 
             " seminar_user.position AS position " . 
             " FROM seminare 
                 LEFT JOIN seminar_user ON (seminare.Seminar_id=seminar_user.Seminar_id AND seminar_user.status='dozent') 

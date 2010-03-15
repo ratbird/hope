@@ -62,7 +62,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
     //  So, wer bis hier hin gekommen ist gehoert zur Zielgruppe...
     // Volltrottel (oder abuse)
     elseif (!isset($secret) || $secret == "") {
-        echo MessageBox::info(_("Sie müssen den vollst&ändigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren."));
+        echo MessageBox::error(_("Sie müssen den vollständigen Link aus der Bestätigungsmail in die Adresszeile Ihres Browsers kopieren."));
     }
 
     // abuse (oder Volltrottel)

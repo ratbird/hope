@@ -1877,8 +1877,8 @@ if (($form == 6) && ($jump_next_x))
                     $plugin_id = $plugin->getPluginId();
                     $plugin_status = in_array($plugin_id, $sem_create_data['enabled_plugins']);
 
-                    if ($plugin_manager->isPluginActivated($plugin_id, $context) != $plugin_status) {
-                        $plugin_manager->setPluginActivated($plugin_id, $context, $plugin_status);
+                    if (PluginManager::getInstance()->isPluginActivated($plugin_id, $context) != $plugin_status) {
+                        PluginManager::getInstance()->setPluginActivated($plugin_id, $context, $plugin_status);
                     }
                 }
             }

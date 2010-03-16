@@ -60,8 +60,8 @@ $infobox['content'] = array(
   <td style='text-align:right;'><?= _("Zugang:") ?></td>
   <td>
       <select size=0 name="groupaccess">
-         <option value="all"><?= _("Offen für alle") ?></option>
-         <option value="invite"><?= _("Auf Anfrage") ?></option>
+         <option <?= ($groupaccess == 'all') ? 'selected="selected"':'' ?> value="all"><?= _("Offen für alle") ?></option>
+         <option <?= ($groupaccess == 'invite') ? 'selected="selected"':'' ?> value="invite"><?= _("Auf Anfrage") ?></option>
       </select>
   </td>
 </tr>

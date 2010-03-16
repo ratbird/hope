@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Erstellungszeit: 11. November 2009 um 14:47
+-- Erstellungszeit: 02. März 2010 um 17:47
 -- Server Version: 5.0.84
--- PHP-Version: 5.2.11-0.dotdeb.0
+-- PHP-Version: 5.2.12-0.dotdeb.0
 
 --
 -- Datenbank: `studip`
@@ -389,6 +389,7 @@ CREATE TABLE `dokumente` (
   `downloads` int(20) NOT NULL default '0',
   `url` varchar(255) NOT NULL default '',
   `protected` tinyint(4) NOT NULL default '0',
+  `priority` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`dokument_id`),
   KEY `range_id` (`range_id`),
   KEY `seminar_id` (`seminar_id`),
@@ -647,6 +648,7 @@ CREATE TABLE `folder` (
   `permission` tinyint(3) unsigned NOT NULL default '7',
   `mkdate` int(20) NOT NULL default '0',
   `chdate` int(20) NOT NULL default '0',
+  `priority` smallint(5) unsigned NOT NULL default '0',
   PRIMARY KEY  (`folder_id`),
   KEY `user_id` (`user_id`),
   KEY `range_id` (`range_id`),
@@ -1139,7 +1141,6 @@ CREATE TABLE `plugins` (
   `pluginclassname` varchar(255) NOT NULL default '',
   `pluginpath` varchar(255) NOT NULL default '',
   `pluginname` varchar(45) NOT NULL default '',
-  `plugindesc` varchar(45) NOT NULL default '',
   `plugintype` text NOT NULL,
   `enabled` enum('yes','no') NOT NULL default 'no',
   `navigationpos` int(10) unsigned NOT NULL default '0',

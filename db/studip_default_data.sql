@@ -160,8 +160,8 @@ INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, 
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('997cf01328d4d9f36b9f50ac9b6ace47', 'SEM_DELETE_SINGLEDATE', 'Einzeltermin löschen', '%user löscht Einzeltermin %singledate(%affected) in %sem(%coaffected).', 1, 0);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('b205bde204b5607e036c10557a6ce149', 'SEM_SET_STARTSEMESTER', 'Startsemester ändern', '%user hat in %sem(%affected) das Startsemester auf %semester(%coaffected) geändert.', 1, 0);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('9d13643a1833c061dc3d10b4fb227f12', 'SEM_SET_ENDSEMESTER', 'Semesterlaufzeit ändern', '%user hat in %sem(%affected) die Laufzeit auf %semester(%coaffected) geändert', 1, 0);
-INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('5f8fda12a4c0bd6eadbb94861de83696', 'SEM_ADD_CYCLE', 'Regelmäßige Zeit hinzugefügt', '%user hat in %sem(%affected) die regelmäßige Zeit <em>%coaffected</em> hinzugefügt.', 1, 0);
-INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('6f4bb66c1caf89879d89f3b1921a93dd', 'SEM_DELETE_CYCLE', 'Regelmäßige Zeit gelöscht', '%user hat in %sem(%affected) die regelmäßige Zeit <em>%coaffected</em> gelöscht.', 1, 0);
+INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('5f8fda12a4c0bd6eadbb94861de83696', 'SEM_ADD_CYCLE', 'Regelmäßige Zeit hinzugefügt', '%user hat in %sem(%affected) die regelmäßige Zeit %info hinzugefügt.', 1, 0);
+INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('6f4bb66c1caf89879d89f3b1921a93dd', 'SEM_DELETE_CYCLE', 'Regelmäßige Zeit gelöscht', '%user hat in %sem(%affected) die regelmäßige Zeit %info gelöscht.', 1, 0);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('3f7dcf6cc85d6fba1281d18c4d9aba6f', 'SEM_ADD_SINGLEDATE', 'Einzeltermin hinzufügen', '%user hat in %sem(%affected) den Einzeltermin <em>%coaffected</em> hinzugefügt', 1, 0);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('c36fa0f804cde78a6dcb1c30c2ee47ba', 'SEM_DELETE_REQUEST', 'Raumanfrage gelöscht', '%user hat in %sem(%affected) die Raumanfrage für die gesamte Veranstaltung gelöscht.', 1, 0);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('370db4eb0e38051dd3c5d7c52717215a', 'SEM_DELETE_SINGLEDATE_REQUEST', 'Einzeltermin, Raumanfrage gelöscht', '%user hat in %sem(%affected) die Raumanfrage für den Termin <em>%coaffected</em> gelöscht.', 1, 0);
@@ -185,20 +185,10 @@ INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, 
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('17f0a527e9db7dec09687a70681559cf', 'RES_ASSIGN_DEL_SINGLE', 'Direktbuchung löschen', '%user löscht Direktbuchung für %res(%affected) (%info).', 0, 0);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('9179d3cf4e0353f9874bcde072d12b30', 'RES_REQUEST_DENY', 'Abgelehnte Raumanfrage', '%user lehnt Raumanfrage für %sem(%coaffected), Raum %sem(%affected) ab.', 0, 0);
 INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('ff806b4b26f8bc8c3e65e29d14176cd9', 'RES_REQUEST_RESOLVE', 'Aufgelöste Raumanfrage', '%user löst Raumanfrage für %sem(%affected), Raum %res(%coaffected) auf.', 0, 0);
-
---
--- Daten für Tabelle `plugins`
---
-
-INSERT INTO `plugins` (`pluginid`, `pluginclassname`, `pluginpath`, `pluginname`, `plugindesc`, `plugintype`, `enabled`, `navigationpos`, `dependentonid`) VALUES(1, 'PluginAdministrationPlugin', 'core', 'Plugin-Administration', 'Administrationsoberfläche für Plugins', 'AdministrationPlugin', 'yes', 0, NULL);
-INSERT INTO `plugins` (`pluginid`, `pluginclassname`, `pluginpath`, `pluginname`, `plugindesc`, `plugintype`, `enabled`, `navigationpos`, `dependentonid`) VALUES(3, 'RoleManagementPlugin', 'core', 'RollenManagement', 'Administration der Rollen', 'AdministrationPlugin', 'yes', 1, 1);
-
---
--- Daten für Tabelle `plugins_activated`
---
-
-INSERT INTO `plugins_activated` (`pluginid`, `poiid`, `state`) VALUES(1, 'admin', 'on');
-INSERT INTO `plugins_activated` (`pluginid`, `poiid`, `state`) VALUES(3, 'admin', 'on');
+INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('248f54105b7102e5cbcc36e9439504fb', 'STUDYAREA_ADD', 'Studienbereich hinzufügen', '%user legt Studienbereich %studyarea(%affected) an.', 0, 0);
+INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('9123d360316ba28ddb32c0ed1a0320f2', 'STUDYAREA_DELETE', 'Studienbereich löschen', '%user entfernt Studienbereich %studyarea(%affected).', 0, 0);
+INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('897207a36c411d736947052219624b72', 'USER_CHANGE_PASSWORD', 'Nutzerpasswort geändert', '%user ändert/setzt das Passwort für %user(%affected)', 0, 0);
+INSERT INTO `log_actions` (`action_id`, `name`, `description`, `info_template`, `active`, `expires`) VALUES('9ed46a3ca3d4f43e17f91e314224dcae', 'SEM_CHANGE_CYCLE', 'Regelmäßige Zeit geändert', '%user hat in %sem(%affected) die regelmäßige Zeit %info geändert', 1, 0);
 
 --
 -- Daten für Tabelle `roles`
@@ -211,23 +201,6 @@ INSERT INTO `roles` (`roleid`, `rolename`, `system`) VALUES(4, 'Lehrende(r)', 'y
 INSERT INTO `roles` (`roleid`, `rolename`, `system`) VALUES(5, 'Studierende(r)', 'y');
 INSERT INTO `roles` (`roleid`, `rolename`, `system`) VALUES(6, 'Tutor(in)', 'y');
 INSERT INTO `roles` (`roleid`, `rolename`, `system`) VALUES(7, 'Nobody', 'y');
-
---
--- Daten für Tabelle `roles_plugins`
---
-
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(1, 1);
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(1, 3);
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(2, 1);
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(2, 3);
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(3, 1);
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(3, 3);
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(4, 1);
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(4, 3);
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(5, 1);
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(5, 3);
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(6, 1);
-INSERT INTO `roles_plugins` (`roleid`, `pluginid`) VALUES(6, 3);
 
 --
 -- Daten für Tabelle `roles_studipperms`
@@ -252,7 +225,7 @@ INSERT INTO `roles_user` (`roleid`, `userid`) VALUES(7, 'nobody');
 -- Daten für Tabelle `schema_version`
 --
 
-INSERT INTO `schema_version` (`domain`, `version`) VALUES('studip', 51);
+INSERT INTO `schema_version` (`domain`, `version`) VALUES('studip', 55);
 
 --
 -- Daten für Tabelle `semester_data`

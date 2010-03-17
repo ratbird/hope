@@ -39,6 +39,7 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
         $item_names = array_keys($navigation->getSubNavigation());
         $navigation_copy = clone $navigation;
         $navigation_copy->clearSubmenu();
+        $navigation_copy->freezeActivation();
         $navigation->insertSubNavigation('self', $item_names[0], $navigation_copy);
         $navigation->setTitle($this->getDisplayTitle());
 

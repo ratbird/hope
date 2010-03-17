@@ -20,6 +20,7 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
         // ignore errors about unknown users here
         try {
             $this->requesteduser = $this->getRequestedUser();
+            $this->setRequestedUser($this->requesteduser);
         } catch (Exception $ex) {
         }
 
@@ -38,6 +39,7 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
         $item_names = array_keys($navigation->getSubNavigation());
         $navigation_copy = clone $navigation;
         $navigation_copy->clearSubmenu();
+        $navigation_copy->freezeActivation();
         $navigation->insertSubNavigation('self', $item_names[0], $navigation_copy);
         $navigation->setTitle($this->getDisplayTitle());
 

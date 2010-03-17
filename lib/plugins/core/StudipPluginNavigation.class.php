@@ -88,6 +88,13 @@ class StudipPluginNavigation extends AutoNavigation {
   /**
    * @deprecated
    */
+  function freezeActivation(){
+    $this->active = (boolean) $this->active;
+  }
+
+  /**
+   * @deprecated
+   */
   function getSubmenu(){
     return $this->getSubNavigation();
   }

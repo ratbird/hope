@@ -1459,7 +1459,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         $type = ($datei['url'] != '')? 6 : 0;
         // LUH Spezerei:
         if (check_protected_download($datei["dokument_id"])) {
-            print "<a href=\"".GetDownloadLink( $datei["dokument_id"], $datei["filename"], $type, "force")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".GetFileIcon(getFileExtension($datei['filename']))."\"></a>";
+            print "<a href=\"".GetDownloadLink( $datei["dokument_id"], $datei["filename"], $type, "normal")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".GetFileIcon(getFileExtension($datei['filename']))."\"></a>";
         } else {
             print "<img src=\"".$GLOBALS['ASSETS_URL']."images/ausruf_small3.gif\">";
         }

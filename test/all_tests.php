@@ -40,12 +40,10 @@ require_once 'varstream.php';
 
 
 # collect all tests
-$all =& new GroupTest('All tests');
-
-$lib =& new GroupTest('lib/classes tests');
-$lib->collect(dirname(__FILE__).'/lib/classes',
-              new SimplePatternCollector('/test.php$/'));
-$all->addTestCase($lib);
+$all = new TestSuite('All tests');
+$collector = new SimplePatternCollector('/test.php$/');
+$all->collect(dirname(__FILE__) . '/lib', $collector);
+$all->collect(dirname(__FILE__) . '/lib/classes', $collector);
 
 # use text reporter if cli
 if (sizeof($_SERVER['argv']))

@@ -517,7 +517,7 @@ if (isset($_GET['details']) || $showform ) {
             <?
             }
             ?>
-            <tr><td colspan="2">&nbsp;</td><td><b><?=_("Folgende nur bei Anlage eines Admins:")?></b></td></tr>
+            <tr><td colspan="2">&nbsp;</td><td><b><?=_("Folgende nur beim Anlegen eines Admins:")?></b></td></tr>
             <tr><td colspan="2">&nbsp;</td><td><input type="checkbox" id="enable_mail_admin" name="enable_mail_admin" value="admin"><label for="enable_mail_admin" ><?=_("Admins der Einrichtung benachrichtigen")?></label></td></tr>
             <tr><td colspan="2">&nbsp;</td><td><input type="checkbox" id="enable_mail_dozent" name="enable_mail_dozent" value="dozent"><label for="enable_mail_dozent" ><?=_("Dozenten der Einrichtung benachrichtigen")?></label></td></tr>
                 <tr>
@@ -698,6 +698,14 @@ if (isset($_GET['details']) || $showform ) {
                     ?>
                     </td>
                 </tr>
+                <? if ($GLOBALS['MAIL_VALIDATE_BOX'] && !StudipAuthAbstract::CheckField("auth_user_md5.Email", $auth_plugin)) { ?>
+                    <tr>
+                        <td class="steel1" colspan="2"></td>
+                        <td class="steel1">&nbsp;<input type="checkbox" id="disable_mail_host_check" name="disable_mail_host_check" value="1">
+                            <label for="disable_mail_host_check"><?= _("Mailboxüberprüfung deaktivieren") ?></label>
+                        </td>
+                    </tr>
+                <? } ?>
                 <tr>
                     <td colspan="2" class="steel1"><b>&nbsp;<?=_("inaktiv seit:")?></b></td>
                     <td class="steel1">&nbsp;<? echo $inactive ?></td>
@@ -777,10 +785,6 @@ if (isset($_GET['details']) || $showform ) {
                         }
                         echo chr(10).'</td></tr>';
                     }
-                }
-
-                if($GLOBALS['MAIL_VALIDATE_BOX'] && !StudipAuthAbstract::CheckField("auth_user_md5.password", $auth_plugin)){
-                    echo chr(10).'<tr><td class="steel1" colspan="3" align="right"><input type="checkbox" id="disable_mail_host_check" name="disable_mail_host_check" value="1"><label for="disable_mail_host_check" >'._("Mailboxüberprüfung deaktivieren").'</label></td></tr>';
                 }
                 ?>
 

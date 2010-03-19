@@ -213,7 +213,7 @@ function show_rss_news($range_id, $type){
     <title>".htmlspecialchars(studip_utf8encode($title))."</title>
     <link>".htmlspecialchars(studip_utf8encode($studip_url))."</link>
     <image>
-    <url>http://www.studip.de/images/studip_logo.gif</url>
+    <url>".Assets::image_path('studipklein.gif')."</url>
     <title>".htmlspecialchars(studip_utf8encode($title))."</title>
     <link>".htmlspecialchars(studip_utf8encode($studip_url))."</link>
     </image>

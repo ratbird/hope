@@ -3,7 +3,6 @@
 # Lifter005: TODO - studipim
 # Lifter007: TODO
 # Lifter003: TODO
-// vim: noexpandtab
 /**
 * html_head.inc.php
 *

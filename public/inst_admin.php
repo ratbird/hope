@@ -3,7 +3,6 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-// vim: noexpandtab
 /*
 inst_admin.php - Instituts-Mitarbeiter-Verwaltung von Stud.IP
 Copyright (C) 2000 Ralf Stockmann <rstockm@gwdg.de>, Stefan Suchi <suchi@gmx.de>

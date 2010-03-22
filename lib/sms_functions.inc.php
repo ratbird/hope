@@ -3,7 +3,6 @@
 # Lifter005: TEST
 # Lifter007: TODO
 # Lifter003: TODO
-// vim: noexpandtab
 /**
 * several functions used for the systeminternal messages
 *

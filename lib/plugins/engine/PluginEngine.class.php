@@ -1,6 +1,5 @@
 <?php
 # Lifter007: TODO
-// vim: noexpandtab
 /**
  * Factory Class for the plugin engine
  * @author Dennis Reil, <dennis.reil@offis.de>

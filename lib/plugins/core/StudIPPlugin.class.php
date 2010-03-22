@@ -1,6 +1,5 @@
 <?php
 # Lifter007: TODO
-// vim: expandtab
 /*
  * StudIPPlugin.class.php - generic plugin base class
  *

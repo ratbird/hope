@@ -4,7 +4,6 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter005: TEST
-// vim: noexpandtab
 /**
 * helper functions for handling the board
 *

@@ -2,7 +2,6 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-// vim: noexpandtab
 /**
 * helper functions for handling contacts
 *

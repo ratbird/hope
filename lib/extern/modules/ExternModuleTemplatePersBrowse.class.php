@@ -383,7 +383,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
             return array();
         }
         $db = new DB_Seminar();
-        
+        $dbv = new DbView();
         if ($this->config->getValue('Main', 'onlylecturers')) {
             $current_semester = get_sem_num(time());
                 $query = sprintf("SELECT COUNT(DISTINCT aum.user_id) as count_user, "
@@ -398,13 +398,13 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                 . "AND ui.Institut_id IN ('%s') "
                 . "AND ui.externdefault = 1 "
                 . "GROUP BY initiale",
-                $GLOBALS['_views']['sem_number_sql'],
+                $dbv->sem_number_sql,
                 $current_semester,
-                $GLOBALS['_views']['sem_number_sql'],
+                $dbv->sem_number_sql,
                 $current_semester,
-                $GLOBALS['_views']['sem_number_end_sql'],
+                $dbv->sem_number_end_sql,
                 $current_semester,
-                $GLOBALS['_views']['sem_number_end_sql'],
+                $dbv->sem_number_end_sql,
                 implode("','", $selected_item_ids));
         } else {
             $query = sprintf("SELECT COUNT(DISTINCT ui.user_id) as count_user, "
@@ -443,7 +443,7 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
         $current_semester = get_sem_num(time());
         $db = new DB_Seminar();
         $db_count = new DB_Seminar();
-        
+        $dbv = new DbView();
         $query = sprintf(
             "SELECT Institut_id, Name "
             . "FROM Institute "
@@ -467,13 +467,13 @@ class ExternModuleTemplatePersBrowse extends ExternModule {
                     . "AND ui.inst_perms = 'dozent' "
                     . "AND ((%s) = %s OR ((%s) <= %s  AND ((%s) >= %s OR (%s) = -1)))",
                     $db->f('Institut_id'),
-                    $GLOBALS['_views']['sem_number_sql'],
+                    $dbv->sem_number_sql,
                     $current_semester,
-                    $GLOBALS['_views']['sem_number_sql'],
+                    $dbv->sem_number_sql,
                     $current_semester,
-                    $GLOBALS['_views']['sem_number_end_sql'],
+                    $dbv->sem_number_end_sql,
                     $current_semester,
-                    $GLOBALS['_views']['sem_number_end_sql']);
+                    $dbv->sem_number_end_sql);
             } else {
                 // get only users with the given status
                 $query = sprintf("SELECT COUNT(DISTINCT(ui.user_id)) AS count_user "

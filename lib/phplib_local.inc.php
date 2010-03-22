@@ -50,8 +50,10 @@ $GLOBALS['template_factory'] =
 // set default exception handler
 function studip_default_exception_handler($exception) {
     if($exception instanceof Studip_AccessDeniedException) {
+        header('HTTP/1.1 403 ' . $exception->getMessage());
         $template = 'access_denied_exception';
     } else {
+        header('HTTP/1.1 500 ' . $exception->getMessage());
         error_log($exception->__toString());
         $template = 'unhandled_exception';
     }

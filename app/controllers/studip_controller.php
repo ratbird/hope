@@ -16,14 +16,9 @@ abstract class StudipController extends Trails_Controller
      * exception.
      *
      * @param  object     the thrown exception
-     *
-     * @return object     a response object
      */
     function rescue($exception)
     {
-        $body = $GLOBALS['template_factory']->
-                    render('unhandled_exception', compact('exception'));
-
-        return new Trails_Response($body, array(), 500, $exception->getMessage());
+        throw $exception;
     }
 }

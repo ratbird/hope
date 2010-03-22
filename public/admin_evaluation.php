@@ -44,6 +44,7 @@ page_open (array ("sess" => "Seminar_Session",
 $perm->check ("autor");
 
 require_once 'lib/functions.php';
+include_once 'lib/seminar_open.php';
 
 $HELP_KEYWORD="Basis.Evaluationen";
 if ($SessSemName[1])
@@ -51,6 +52,7 @@ if ($SessSemName[1])
 $CURRENT_PAGE.= _("Verwaltung von Evaluationen");
 
 require_once ('lib/evaluation/evaluation.config.php');
+require_once 'lib/admin_search.inc.php';
 
 if ($list || $view) {
     if ($links_admin_data['topkat'] == 'sem') {
@@ -62,16 +64,7 @@ if ($list || $view) {
     Navigation::activateItem('/homepage/tools/evaluation');
 }
 
-include_once('lib/seminar_open.php');
-require_once 'lib/admin_search.inc.php';
-include_once('lib/include/html_head.inc.php');
-include_once('lib/include/header.php');
-
-if ($list || $view) {
-    include 'lib/include/admin_search_form.inc.php';
-}
-
-if (($SessSemName[1]) && (($view == "vote_sem") || ($view == "vote_inst"))) 
+if (($SessSemName[1]) && (($view == "eval_sem") || ($view == "eval_inst"))) 
     $the_range = $SessSemName[1];
 else
     $the_range = $_REQUEST['rangeID'];
@@ -98,7 +91,14 @@ if ($the_range != $auth->auth['uname'] && $the_range != 'studip' && !$isUserrang
     }
 } 
 
-if (array_key_exists ("page", $_REQUEST) && $_REQUEST["page"] == "edit")
+include_once('lib/include/html_head.inc.php');
+include_once('lib/include/header.php');
+
+if ($list || $view) {
+    include 'lib/include/admin_search_form.inc.php';
+}
+
+if ($_REQUEST["page"] == "edit")
     include (EVAL_PATH.EVAL_FILE_EDIT);
 else
     include (EVAL_PATH.EVAL_FILE_OVERVIEW);

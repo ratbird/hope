@@ -41,11 +41,14 @@ page_open (array ("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
 $perm->check ("autor");
 
 require_once 'lib/functions.php';
+include_once 'lib/seminar_open.php';
 
 $HELP_KEYWORD="Basis.Votings";
 $CURRENT_PAGE= _("Verwaltung von Umfragen und Tests"); 
 
-if (!empty($the_range) && $the_range != $auth->auth['uname'] && $the_range != 'studip'){
+require_once 'lib/admin_search.inc.php';
+
+if ($list || $view) {
     $view_mode = get_object_type($the_range);
     if ($view_mode == "fak"){
         $view_mode = "inst";
@@ -59,12 +62,10 @@ if (!empty($the_range) && $the_range != $auth->auth['uname'] && $the_range != 's
     Navigation::activateItem('/homepage/tools/vote');
 }
 
-include_once('lib/seminar_open.php');
-require_once 'lib/admin_search.inc.php';
 include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');
 
-if (!empty($the_range) && $the_range != $auth->auth['uname'] && $the_range != 'studip'){
+if ($list || $view) {
     include 'lib/include/admin_search_form.inc.php';
 }
 

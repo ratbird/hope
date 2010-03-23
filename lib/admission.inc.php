@@ -390,7 +390,7 @@ function check_admission ($send_message=TRUE) {
     $messaging=new messaging;
     
     //Daten holen / Abfrage ob ueberhaupt begrenzt
-    $db->query("SELECT Seminar_id FROM seminare WHERE admission_endtime <= '".time()."' AND admission_type IN(1,2) AND (admission_selection_take_place = '0' OR admission_selection_take_place IS NULL) AND visible='1'"); // OK_VISIBLE
+    $db->query("SELECT Seminar_id FROM seminare WHERE admission_endtime != -1 AND admission_endtime <= '".time()."' AND admission_type IN(1,2) AND (admission_selection_take_place = '0' OR admission_selection_take_place IS NULL) AND visible='1'"); // OK_VISIBLE
     if($db->num_rows()){
         ignore_user_abort(true);
         if(!ini_get('safe_mode')) set_time_limit(0);

@@ -83,9 +83,9 @@ class NavigationTest extends UnitTestCase
         $this->assertIdentical($nav2->activeSubNavigation(), $nav4);
 
         $navigation->removeSubNavigation('a3');
-        $navigation->insertSubNavigation('a3', 'a2', $nav3);
+        $navigation->insertSubNavigation('a3', $nav3, 'a2');
         $navigation->removeSubNavigation('a1');
-        $nav2->insertSubNavigation('a1', '', $nav1);
+        $nav2->insertSubNavigation('a1', $nav1, '');
         $this->assertEqual($navigation->getURL(), 'baz.php');
         $this->assertEqual($navigation->getSubNavigation(),
                            array('a3' => $nav3, 'a2' => $nav2));
@@ -119,9 +119,9 @@ class NavigationTest extends UnitTestCase
         $this->assertTrue(Navigation::getItem('/test/a2/b1')->isActive());
 
         Navigation::removeItem('/test/a3');
-        Navigation::insertItem('/test/a3', 'a2', $nav3);
+        Navigation::insertItem('/test/a3', $nav3, 'a2');
         Navigation::removeItem('/test/a1');
-        Navigation::insertItem('/test/a2/a1', '', $nav1);
+        Navigation::insertItem('/test/a2/a1', $nav1, '');
         $this->assertEqual(Navigation::getItem('/test')->getURL(), 'baz.php');
         $this->assertEqual(Navigation::getItem('/test')->getSubNavigation(),
                            array('a3' => $nav3, 'a2' => $nav2));

@@ -40,7 +40,7 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
         $navigation_copy = clone $navigation;
         $navigation_copy->clearSubmenu();
         $navigation_copy->freezeActivation();
-        $navigation->insertSubNavigation('self', $item_names[0], $navigation_copy);
+        $navigation->insertSubNavigation('self', $navigation_copy, $item_names[0]);
         $navigation->setTitle($this->getDisplayTitle());
 
         if (Navigation::hasItem('/homepage')) {

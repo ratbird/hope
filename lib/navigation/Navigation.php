@@ -72,13 +72,13 @@ class Navigation implements IteratorAggregate
      * name given by $where (at the same level in the tree).
      *
      * @param string $path       path of new navigation item
-     * @param string $where      insert it before this item
      * @param object $navigation navigation item to add
+     * @param string $where      insert it before this item
      */
-    public static function insertItem($path, $where, Navigation $navigation)
+    public static function insertItem($path, Navigation $navigation, $where)
     {
         $nav = self::getItem(strtr(dirname($path), '\\', '/'));
-        $nav->insertSubNavigation(basename($path), $where, $navigation);
+        $nav->insertSubNavigation(basename($path), $navigation, $where);
     }
 
     /**
@@ -362,10 +362,10 @@ class Navigation implements IteratorAggregate
      * subnavigation item.
      *
      * @param string $name       name of new navigation item
-     * @param string $where      insert it before this item
      * @param object $navigation navigation item to add
+     * @param string $where      insert it before this item
      */
-    public function insertSubNavigation($name, $where, Navigation $navigation)
+    public function insertSubNavigation($name, Navigation $navigation, $where)
     {
         foreach ($this->getSubNavigation() as $key => $nav) {
             if ($key == $where) {

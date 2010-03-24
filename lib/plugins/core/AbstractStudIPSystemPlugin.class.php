@@ -39,7 +39,7 @@ class AbstractStudIPSystemPlugin extends AbstractStudIPLegacyPlugin
             Navigation::addItem('/' . $this->getPluginclassname(), $navigation);
         }
         if ($this->getDisplayType(SYSTEM_PLUGIN_STARTPAGE)) {
-            Navigation::insertItem('/start/' . $this->getPluginclassname(), 'search', $navigation);
+            Navigation::insertItem('/start/' . $this->getPluginclassname(), $navigation, 'search');
         }
     }
 
@@ -96,7 +96,7 @@ class AbstractStudIPSystemPlugin extends AbstractStudIPLegacyPlugin
             }
             if ($changes & SYSTEM_PLUGIN_STARTPAGE) {
                 if ($this->getDisplayType(SYSTEM_PLUGIN_STARTPAGE)) {
-                    Navigation::insertItem('/start/' . $this->getPluginclassname(), 'search', $this->getNavigation());
+                    Navigation::insertItem('/start/' . $this->getPluginclassname(), $this->getNavigation(), 'search');
                 } else {
                     Navigation::removeItem('/start/' . $this->getPluginclassname());
                 }

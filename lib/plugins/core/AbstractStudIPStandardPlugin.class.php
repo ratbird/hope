@@ -101,6 +101,15 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
     }
 
     /**
+     * Return a template (an instance of the Flexi_Template class)
+     * to be rendered on the course summary page. Return NULL to
+     * render nothing for this plugin.
+     */
+    function getInfoTemplate($course_id) {
+        return NULL;
+    }
+
+    /**
      * Gehen beim Deaktivieren des Plugins Daten verloren?
      *
      * @deprecated

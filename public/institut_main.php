@@ -192,6 +192,19 @@ if ($GLOBALS['VOTE_ENABLE']) {
     show_votes ($auswahl, $auth->auth["uid"], $perm, YES);
 }
 
+// display plugins
+$plugins = PluginEngine::getPlugins('StandardPlugin', $SessSemName[1]);
+$layout = $GLOBALS['template_factory']->open('shared/homepage_box');
+
+foreach ($plugins as $plugin) {
+    $template = $plugin->getInfoTemplate($SessSemName[1]);
+
+    if ($template) {
+        echo $template->render(NULL, $layout);
+        $layout->clear_attributes();
+    }
+}
+
   include ('lib/include/html_end.inc.php');
   // Save data back to database.
   page_close()

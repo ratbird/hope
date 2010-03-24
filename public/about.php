@@ -631,10 +631,9 @@ foreach ($homepageplugins as $homepageplugin){
 
     if ($template) {
         echo $template->render(NULL, $layout);
+        $layout->clear_attributes();
     }
 }
-
-$layout->clear_attributes();
 
 //add the own categories - this ones are self created by the user
 $db2->query("SELECT * FROM kategorien WHERE range_id = '$user_id' ORDER BY priority");

@@ -223,10 +223,9 @@ foreach ($portalplugins as $portalplugin) {
 
     if ($template) {
         echo $template->render(NULL, $layout);
+        $layout->clear_attributes();
     }
 }
-
-$layout->clear_attributes();
 
 page_close();
 

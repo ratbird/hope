@@ -11,8 +11,8 @@
 
 require_once 'lib/forum.inc.php';
 
-wikiMarkup('/\\(:stepform:\\)/e',"wiki_stepform('step')", 'tutor');
-wikiMarkup('/\\(:steplist\\s*(.*?):\\)/e',"wiki_steplist('step',array('q'=>'$1'))");
+wikiMarkup('/\\(:stepform:\\)/e',"wiki_stepform('step')", 'autor');
+wikiMarkup('/\\(:steplist\\s*(.*?):\\)/e',"wiki_steplist('step',array('q'=>'$1'))", 'autor');
 
 $step_templates['step'] = array(
     // common prefix to alle newly created pages

@@ -37,14 +37,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-    /**
-    * workaround for PHPDoc
-    *
-    * Use this if module contains no elements to document!
-    * @const PHPDOC_DUMMY
-    */
-    define("PHPDOC_DUMMY", TRUE);
-
     include_once("wap_adm.inc.php");
     include_once("wap_txt.inc.php");
 

@@ -13,13 +13,7 @@
 * @module       admin_db_integrity
 * @package      Admin
 */
-/**
-* workaround for PHPDoc
-*
-* Use this if module contains no elements to document !
-* @const PHPDOC_DUMMY
-*/
-define("PHPDOC_DUMMY",true);
+
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // admin_db_integrity.php

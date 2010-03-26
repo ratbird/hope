@@ -32,14 +32,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-/**
-* workaround for PHPDoc
-*
-* Use this if module contains no elements to document !
-* @const PHPDOC_DUMMY
-*/
-define("PHPDOC_DUMMY",true);
-
 //Imports
 require_once($RELATIVE_PATH_CALENDAR.'/lib/sync/CalendarImportFile.class.php');
 require_once($RELATIVE_PATH_CALENDAR.'/lib/sync/CalendarParserICalendar.class.php');

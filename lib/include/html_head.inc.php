@@ -21,13 +21,6 @@
 * @modulegroup  library
 * @module       html_head.inc.php
 */
-/**
-* workaround for PHPDoc
-*
-* Use this if module contains no elements to document !
-* @const PHPDOC_DUMMY
-*/
-define('PHPDOC_DUMMY',true);
 
 # necessary if you want to include html_head.inc.php in function/method scope
 global  $AUTH_LIFETIME, $FAVICON, $HTML_HEAD_TITLE, $CURRENT_PAGE;

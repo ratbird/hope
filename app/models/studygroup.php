@@ -155,13 +155,16 @@ class StudygroupModel {
                 return DBManager::get()->query("SELECT COUNT(*) as c FROM seminare WHERE status IN ('". implode("','", $status)."')")->fetchColumn();
         }
 
-    function getAllGroups($sort = '', $lower_bound = 1, $elements_per_page = 20)
+    function getAllGroups($sort = '', $lower_bound = 1, $elements_per_page = 20, $search = null)
     {
+        
         $status = studygroup_sem_types();
         $sql = "SELECT * FROM seminare WHERE status IN('". implode("','", $status)."')";
-        
+        if(isset($search)) {
+            $sql .= " AND seminare.Name LIKE '%{$search}%' ";
+        }
         $sort_order = (substr($sort, strlen($sort) - 3, 3) == 'asc') ? 'asc' : 'desc';
-                
+               
         // add here the sortings
         if($sort == 'name_asc') {
             $sql .= " ORDER BY Name ASC";
@@ -193,7 +196,7 @@ class StudygroupModel {
                 $sql ="SELECT s.*, 
                         ( SELECT su.user_id FROM seminar_user AS su WHERE su.user_id = '".$GLOBALS['user']->id."' AND su.Seminar_id = s.Seminar_id ) 
                         AS ismember FROM seminare AS s  
-                        WHERE s.status IN ('". implode("','", $status)."')    
+                        WHERE s.status IN ('". implode("','", $status)."') 
                         ORDER BY `ismember`". $sort_order;
     
         }
@@ -205,7 +208,6 @@ class StudygroupModel {
         }
 
         $sql .= ', name ASC LIMIT '. $lower_bound .','. $elements_per_page;
-    
         $stmt = DBManager::get()->query($sql);
         $groups = $stmt->fetchAll();
         

@@ -89,7 +89,8 @@ class BrowseNavigation extends Navigation
         // browse study groups
         if (get_config('STUDYGROUPS_ENABLE')) {
             $navigation = new Navigation(_('Studiengruppen'));
-            $navigation->addSubNavigation('all', new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/search/1/founded_asc'));
+            $navigation->addSubNavigation('search', new Navigation(_('Studiengruppen suchen'), 'dispatch.php/studygroup/search/1/founded_asc'));
+            $navigation->addSubNavigation('browse', new Navigation(_('Studiengruppen anzeigen'), 'dispatch.php/studygroup/browse/1/founded_asc'));
             $this->addSubNavigation('studygroups', $navigation);
         }
     }

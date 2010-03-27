@@ -1055,6 +1055,10 @@ div.messagebox_modal {
     margin: -8px 8px 8px -8px;
 }
 
+div.messagebox_modal div {
+    text-align: center;
+}
+
 #index .messagebox {
   margin: 5px 0;
 }

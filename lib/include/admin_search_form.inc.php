@@ -447,7 +447,7 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
                 ?>
                 <tr class="steel2">
                     <td colspan="3">
-                        <font size="-1"><?=_("Sichtbarkeit der angezeigten Veranstaltungen")?></font> <input type="image" <?=makeButton("zuweisen", "src")?> border="0">
+                        <?=_("&Auml;nderungen")?> <input type="image" <?=makeButton("speichern", "src")?> border="0">
                     </td>
                     <td colspan="<?=(Request::get('show_rooms_check')=='on')?'4':'3'; ?>" align="right">
                     <input type="hidden" name="change_visible" value="1">

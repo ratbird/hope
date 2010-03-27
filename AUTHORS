@@ -15,7 +15,6 @@ André Noack		<noack@data-quest.de>
 Frank Ollermann		<frank.ollermann@uni-osnabrueck.de>
 Michael Riehemann 	<michael.riehemann@uni-oldenburg.de>
 Jörg Röpke		<roepke@uni-trier.de>
-Jens Schmelzer		<jens.schmelzer@fh-jena.de>
 Stefan Suchi		<suchi@data-quest.de>
 Tobias Thelen		<tobias.thelen@uos.de>
 Peter Thienel		<thienel@data-quest.de>
@@ -84,8 +83,11 @@ Forum System, Adress Book, Design
 Torsten Heinrich <to.heinrich@fh-osnabrueck.de>
 Administration of times and room information
 
+Jens Schmelzer <jens.schmelzer@fh-jena.de>
+Smiley administration, calendar pop-up, lots of security related bugfixes
+
 ----------------------------------------------------------------------------
 Any others whose names we probably forgot to add (email us and we'll put you
 in here)
 
-- The StudIP Core Group <info@studip.de> 2008
+- The StudIP Core Group <info@studip.de> 2010

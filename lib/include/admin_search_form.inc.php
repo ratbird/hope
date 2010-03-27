@@ -462,13 +462,12 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
         //more Options for lock changing
         if ($i_page == "admin_lock.php") {
             ?>
-            <tr <? $cssSw->switchClass() ?>>
-                <td class="<? echo $cssSw->getClass() ?>" colspan="3">
-                    <font size=-1><?=_("Gewählte Sperrebenen den angezeigten Veranstaltungen ")?></font> <input type="image" <?=makeButton("zuweisen", "src")?> border="0"><br>
+            <tr class="steel2">
+                <td colspan="3">
+                    <?=_("&Auml;nderungen")?> <input type="image" <?=makeButton('speichern', 'src')?> border="0"><br>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan="4" align="right">
+                <td colspan="4" align="right">
                 <?
-                if ($auth->auth["jscript"]) {
                     printf("<select name=\"lock_all\" size=1>");
                     printf("<option value='-1'>"._("Bitte wählen")."</option>");
                     printf("<option value='none' %s>--"._("keine Sperrebene")."--</option>", $lock_all == 'none' ? 'selected=selected' : '' );
@@ -481,9 +480,8 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
                     }
                     // ab hier die verschiedenen Sperrlevel für alle Veranstaltungen
                     printf("</select>");
-                    printf("<font size='-1'> als Vorauswahl </font>");
-                    printf("<input type=\"IMAGE\" ".makeButton("auswaehlen","src")." border=0 align=\"absmiddle\" name=\"general_lock\">");
-                }
+                    echo ' als Vorauswahl ';
+                    printf("<input type=\"IMAGE\" ".makeButton("zuweisen","src")." border=0 align=\"absmiddle\" name=\"general_lock\">");
                 ?>&nbsp;
                 </td>
             </tr>
@@ -493,13 +491,12 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
         //more Options for lock changing
             if ($i_page == "admin_aux.php") {
                 ?>
-                <tr <? $cssSw->switchClass() ?>>
-                    <td class="<? echo $cssSw->getClass() ?>" colspan="3" nowrap>
-                        &nbsp; <font size=-1><?=_("Zusatzangaben-Template den angezeigten Veranstaltungen")?>&nbsp;<input type="IMAGE" <?=makeButton("zuweisen", "src")?> border=0 align="absmiddle" /></font><br>
+                <tr class="steel2">
+                    <td colspan="3" nowrap>
+                        <?=_("&Auml;nderungen")?>&nbsp;<input type="IMAGE" <?=makeButton("speichern", "src")?> border=0 align="absmiddle" /><br>
                     </td>
-                    <td class="<? echo $cssSw->getClass() ?>" colspan="4" align="right">
+                    <td colspan="4" align="right">
                     <?
-                    if ($auth->auth["jscript"]) {
                         echo '<select name="aux_all" size="1">';
                         echo '<option value="-1">'. _("Bitte auswählen"). '</option>';
                         echo '<option value="null" ' . ($aux_all == 'null' ? 'selected=selected' : '') . '>-- '. _("keine Zusatzangaben") .' --</option>';
@@ -511,9 +508,9 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
                             echo '>'.htmlReady($data['name']).'</option>';
                         }
                         // ab hier die verschiedenen Sperrlevel für alle Veranstaltungen
-                        echo '</select>';
-                        echo '<input type="image" '.makeButton("uebernehmen","aux_rule").' border=0 align="absmiddle" name="aux_rule">';
-                    }
+                        echo '</select> ';
+                        echo _("als Vorauswahl");
+                        echo ' <input type="image" '.makeButton('zuweisen', "aux_rule").' border=0 align="absmiddle" name="aux_rule">';
                     ?>&nbsp;
                     </td>
                 </tr>
@@ -658,7 +655,7 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
                         $db5 = new Db_Seminar;
                         $db5->query("SELECT aux_lock_rule from seminare WHERE Seminar_id='$seminar_id'");
                         $db5->next_record();
-                        if ($perm->have_perm("admin")) {
+                        if ($perm->have_perm("dozent")) {
                             ?>
                             <input type="hidden" name="make_aux" value="1">
                             <select name=aux_sem[<? echo $seminar_id ?>]>

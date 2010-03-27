@@ -115,6 +115,7 @@ if (!Request::submitted('aux_rule') && is_array($aux_sem) && (!$selected)) {
         $db->query($sql);
         if ($db->next_record()) {
                 $rule = AuxLockRules::getLockRuleById($val);
+                if (!$rule['name']) $rule['name'] = '-- keine Zusatzangaben --';
                 echo $zt->row(array(htmlReady($db->f("Veranstaltungsnummer")), htmlReady($db->f("Name")), htmlReady($rule["name"])));
                 if ($make_aux) {
                     if ($val == 'null') {

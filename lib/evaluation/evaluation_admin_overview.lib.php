@@ -2046,7 +2046,7 @@ class EvalOverview {
       $cssSw->switchClass();
       // die verknüpften bereiche
       foreach($rangeIDs as $k => $assigned_rangeID){
-         $cssClass = substr($cssSw->getClass(), 3)."\"";
+         $cssClass = substr($cssSw->getClass(), 1)."\"";
 
          $tr_r = new HTML ("tr");
          $tr_r->addString($cssSw->getHover());
@@ -2200,7 +2200,7 @@ class EvalOverview {
                elseif (($counter % 2) == 0)$displayclass = "steel1";
                else                  $displayclass = "steelgraulight";
 
-               $cssClass = substr($cssSw->getClass(), 3)."\"";
+               $cssClass = substr($cssSw->getClass(), 1)."\"";
 
                $tr_s = new HTML ("tr");
                $tr_s->addString($cssSw->getHover());
@@ -2436,7 +2436,7 @@ class EvalOverview {
          elseif (($counter % 2) == 0)   $displayclass = "steel1";
          else            $displayclass = "steelgraulight";
 
-         $cssClass = substr($cssSw->getClass(), 3)."\"";
+         $cssClass = substr($cssSw->getClass(), 1)."\"";
 
          $tr = new HTML ("tr");
          $tr->addString($cssSw->getHover());

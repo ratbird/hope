@@ -1315,12 +1315,16 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
             }
         }
         if ($datei["description"]) {
-            $content .= htmlReady($datei["description"], TRUE, TRUE);
+            $beschreibung .= htmlReady($datei["description"], TRUE, TRUE);
         } else {
-            $content .= _("Keine Beschreibung vorhanden");
+            $beschreibung .= _("Keine Beschreibung vorhanden");
         }
-        $content.=  "<br><br>" . sprintf(_("<b>Dateigr&ouml;&szlig;e:</b> %s kB"), round ($datei["filesize"] / 1024));
-        $content.=  "&nbsp; " . sprintf(_("<b>Dateiname:</b> %s "),htmlReady($datei['filename']));
+        if (in_array (strtolower(getFileExtension($datei['filename'])), words("jpg jpeg gif png"))) {
+            $content = sprintf("<img src=\"sendfile.php?type=%s&file_id=%s\" alt=\"%s\" title=\"\" border=\"0\"><br>", $type, $datei['dokument_id'], $beschreibung);
+        }
+        $content .= $beschreibung;
+        $content .=  "<br><br>" . sprintf(_("<b>Dateigr&ouml;&szlig;e:</b> %s kB"), round ($datei["filesize"] / 1024));
+        $content .=  "&nbsp; " . sprintf(_("<b>Dateiname:</b> %s "),htmlReady($datei['filename']));
     }
     
     if ($move == $datei["dokument_id"])

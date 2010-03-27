@@ -121,6 +121,9 @@ function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgrou
                 $writedone = InsertPersonStatusgruppe ($user_id, $role_id);
                 if ($writedone) {
                     $globalperms = get_global_perm($user_id);
+
+                    log_event('INST_USER_ADD', $range_id ,$user_id, $globalperms);
+
                     if ($perm->get_studip_perm($range_id, $user_id) == FALSE) {
                         $db2->query("INSERT INTO user_inst SET Institut_id = '$range_id', user_id = '$user_id', inst_perms = '$globalperms'");
                     }

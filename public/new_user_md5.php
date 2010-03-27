@@ -98,6 +98,7 @@ if (check_ticket($_REQUEST['studipticket'])){
                     $db->query(sprintf("SELECT Name, Institut_id FROM Institute WHERE Institut_id='%s'", $_REQUEST['select_inst_id']));
                     if($db->next_record()){
                         $inst_name = $db->f('Name');
+                        log_event('INST_USER_ADD', $_REQUEST['select_inst_id'], $UserManagement->user_data['auth_user_md5.user_id'], $UserManagement->user_data['auth_user_md5.perms']);
                         $db->query(sprintf("INSERT INTO user_inst (user_id,Institut_id,inst_perms) VALUES ('%s','%s','%s')",
                         $UserManagement->user_data['auth_user_md5.user_id'], $_REQUEST['select_inst_id'], $UserManagement->user_data['auth_user_md5.perms']));
                         if ($db->affected_rows()){

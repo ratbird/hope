@@ -342,6 +342,7 @@ class about extends messaging {
     function inst_edit($inst_delete,$new_inst) {
         if (is_array($inst_delete)) {
             for ($i=0; $i < count($inst_delete); $i++) {
+                log_event('INST_USER_DEL', $inst_delete[$i], $this->auth_user["user_id"]);
                 $this->db->query("DELETE FROM user_inst WHERE user_id='".$this->auth_user["user_id"]."' AND Institut_id='$inst_delete[$i]'");
                 if (!$this->db->affected_rows())
                     $this->msg = $this->msg . "error§" . sprintf(_("Fehler beim L&ouml;schen in user_inst bei ID=%s"), $inst_delete[$i]) . "§";
@@ -349,6 +350,8 @@ class about extends messaging {
         }
 
         if ($new_inst) {
+             log_event('INST_USER_ADD', $new_inst , $this->auth_user['user_id'], 'user');
+         
             $this->db->query("INSERT IGNORE INTO user_inst (user_id,Institut_id,inst_perms) VALUES ('".$this->auth_user["user_id"]."','$new_inst','user')");
             if (!$this->db->affected_rows())
                 $this->msg = $this->msg . "error§" . sprintf(_("Fehler beim Einf&uuml;gen in user_inst bei ID=%s"), $new_inst) . "§";

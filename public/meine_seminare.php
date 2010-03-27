@@ -195,7 +195,7 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
 }
 //bei Bedarf aus seminar_user austragen
 if ($cmd=="inst_kill" && $GLOBALS['ALLOW_SELFASSIGN_INSTITUTE']) {
-    $db->query("DELETE FROM user_inst WHERE user_id='$user->id' AND Institut_id='$auswahl'");
+    $db->query("DELETE FROM user_inst WHERE user_id='$user->id' AND Institut_id='$auswahl' AND inst_perms='user'");
     if ($db->affected_rows() == 0)
         $meldung="error§" . _("Datenbankfehler!");
     else {

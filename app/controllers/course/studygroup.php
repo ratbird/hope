@@ -418,6 +418,7 @@ class Course_StudygroupController extends AuthenticatedController {
             // remove a founder
             else if ( $admin && (Request::get('remove_founder') || Request::get('remove_founder_x'))) {
                 if (sizeof($founders) == 1) {
+                    $this->flash['edit'] = true;
                     $this->flash['messages'] = array( 
                         'error' => array (
                             'title' => _("Jede Studiengruppe muss mindestens einen Gruppengründer haben!")
@@ -506,8 +507,12 @@ class Course_StudygroupController extends AuthenticatedController {
                 }
             }
         }
-        // Everything seems fine, let's go to studygroup
-        $this->flash['success'] = _("Die Änderungen wurden erfolgreich übernommen.");
+       
+        if(!$this->flash['edit']){
+             // Everything seems fine
+            $this->flash['success'] = _("Die Änderungen wurden erfolgreich übernommen.");
+        }
+        // let's go to the studygroup
         $this->redirect('course/studygroup/edit/' . $id);
     }
 

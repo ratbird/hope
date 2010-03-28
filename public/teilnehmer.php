@@ -202,6 +202,8 @@ if (!isset($open_users)) {
         $open_users = array();
 }
 
+$username = Request::option('username');
+
 if (($cmd == "moreinfos" || $cmd == "lessinfos") && $rechte) {
     // get user_id if somebody wants more infos about a user
     $db->query("SELECT user_id FROM auth_user_md5 WHERE username = '$username'");

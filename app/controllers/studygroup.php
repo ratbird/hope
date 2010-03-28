@@ -64,7 +64,7 @@ class StudygroupController extends AuthenticatedController {
        $this->userid = $GLOBALS['auth']->auth['uid'];
     } 
     // let the user know that there is no studygroup for the searchterm
-    if(empty($groups)) {
+    if(empty($groups) && isset($this->flash['searchterm'])) {
         $this->flash['info'] = _("Es wurden keine Studiengruppen für den Suchbegriff gefunden");
     }
     else {

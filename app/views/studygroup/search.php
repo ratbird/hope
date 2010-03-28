@@ -18,6 +18,8 @@ list($sort_type, $sort_order) = explode('_', $sort);
 
 ?>
 
+<?= $this->render_partial("course/studygroup/_feedback") ?>
+
 <style>
 .sortasc {
   background-image: url(<?=Assets::image_path('dreieck_up.png')?>);

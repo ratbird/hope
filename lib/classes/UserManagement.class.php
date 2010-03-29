@@ -557,7 +557,7 @@ class UserManagement
     private function logInstitutes($user_id, $perm = false, $inverse = false)  {
         $db = DBManager::get()->query("SELECT * FROM user_inst 
             WHERE user_id = '$user_id' ".
-            ($perm) ? 'AND inst_perms '. (($inverse) ? '!=' : '=')  .' \'$perm\'' : '');
+            ($perm) ? 'AND inst_perms '. (($inverse) ? '!=' : '=')  ." '$perm'" : '');
         while ($data = $db->fetch()) {
             log_event('INST_USER_DEL', $data['institut_id'], $user_id);
         }

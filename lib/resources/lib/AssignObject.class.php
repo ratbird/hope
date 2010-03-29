@@ -198,7 +198,7 @@ class AssignObject {
 
     function getUsername($use_free_name=TRUE, $explain=true) {
         if ($this->assign_user_id) 
-            return $this->getOwnerName($explain);
+            return $this->getOwnerName($explain)."\n".$this->getUserFreeName();
         elseif ($use_free_name)
             return $this->getUserFreeName(). ($explain ? " (" . _("direkter Eintrag") . ")" : "");
         else 

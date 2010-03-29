@@ -115,7 +115,7 @@ class StudipSemSearchHelper {
             if ($snap->numRows){
                 $clause = " AND c.seminar_id IN('" . join("','",$snap->getRows("seminar_id")) ."')" . $clause;
             } else {
-                return true;
+                return 0;
             }
             unset($snap);
         }
@@ -130,7 +130,7 @@ class StudipSemSearchHelper {
             if ($snap->numRows){
                 $clause = " AND c.seminar_id IN('" . join("','",$snap->getRows("Seminar_id")) ."')" . $clause;
             } else {
-                return true;
+                return 0;
             }
             unset($snap);
         }

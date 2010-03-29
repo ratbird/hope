@@ -741,7 +741,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     function getItemMessage($item_id,$colspan = 1){
         $content = "";
         if ($this->msg[$item_id]){
-            $msg = split("§",$this->msg[$item_id]);
+            $msg = explode("§",$this->msg[$item_id]);
             $pics = array('error' => 'x.gif', 'info' => 'ausruf.gif', 'msg' => 'ok.gif');
             $content = "\n<tr><td colspan=\"{$colspan}\"><table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" width=\"100%\" style=\"font-size:10pt\">
             <tr><td class=\"blank\" align=\"center\" width=\"25\"><img width=\"16\" height=\"16\" src=\"".$GLOBALS['ASSETS_URL']."images/" . $pics[$msg[0]] . "\" ></td>

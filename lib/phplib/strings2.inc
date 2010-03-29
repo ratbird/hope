@@ -87,7 +87,7 @@ function p_0or1 ($val,$str1,$str2) {
 ## ISO-latin-1 the code 160
 ##
 function o_nonbsp ($val) {
-    return(ereg_replace("[[:blank:]\n\r]","&nbsp;",$val));
+    return(preg_replace("/[[:blank:]\n\r]/","&nbsp;",$val));
 }
 function p_nonbsp ($val) {
     print o_nonbsp($val);

@@ -278,16 +278,16 @@ class RoomRequest {
                 foreach ($this->properties as $key => $val) {
                     if ($val) {
                         //let's create some possible wildcards
-                        if (ereg("<=", $val["state"])) {
+                        if (preg_match("/<=/", $val["state"])) {
                             $val["state"] = trim(substr($val["state"], strpos($val["state"], "<")+2, strlen($val["state"])));
                             $linking = "<=";
-                        } elseif (ereg(">=", $val["state"])) {
+                        } elseif (preg_match("/>=/", $val["state"])) {
                             $val["state"] = trim(substr($val["state"], strpos($val["state"], "<")+2, strlen($val["state"])));
                             $linking = ">=";
-                        } elseif (ereg("<", $val["state"])) {
+                        } elseif (preg_match("/</", $val["state"])) {
                             $val["state"] = trim(substr($val["state"], strpos($val["state"], "<")+1, strlen($val["state"])));
                             $linking = "<";
-                        } elseif (ereg(">", $val["state"])) {
+                        } elseif (preg_match("/>/", $val["state"])) {
                             $val["state"] = trim(substr($val["state"], strpos($val["state"], "<")+1, strlen($val["state"])));
                             $linking = ">";
                         } elseif ($availalable_properties[$key]["system"] == "2") {

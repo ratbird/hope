@@ -635,7 +635,7 @@ class Layout {
         if (''==$path) {
             $path=$SRC;
         }
-        if (ereg("^/",$SRC)) {
+        if (preg_match("/^\\//",$SRC)) {
             ## if unset, assume $DOCUMENT_ROOT to be the path
             if (!$this->layoutpath) {
                 $this->layoutpath=$GLOBALS[DOCUMENT_ROOT];
@@ -679,7 +679,7 @@ class Layout {
         }
 
         if ($showdetails) {
-            $name=ereg_Replace("^.*/","",$SRC);
+            $name=preg_replace("/^.*\\//","",$SRC);
             $out="<SMALL>'<B>$name</B>'&nbsp;".
                  "$WH[0]x$WH[1]&nbsp;Pixel</SMALL>\n$out";
         }
@@ -836,7 +836,7 @@ $js
             $val='';
         }
 
-        if (ereg("^%([^\[]+)\[(.+)\]%$",$val,$regs) ) {
+        if (preg_match("/^%([^\[]+)\[(.+)\]%$/",$val,$regs) ) {
             $val=$this->{$regs[1]}[$regs[2]];
         }
     }

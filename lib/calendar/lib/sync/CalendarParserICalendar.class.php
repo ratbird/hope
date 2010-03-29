@@ -256,7 +256,7 @@ class CalendarParserICalendar extends CalendarParser {
     
                         // Geo fields
                         case 'GEO':
-                            $floats = split(';', $value);
+                            $floats = explode(';', $value);
                             $value['latitude'] = floatval($floats[0]);
                             $value['longitude'] = floatval($floats[1]);
                             $properties[$tag] = $value;
@@ -332,7 +332,7 @@ class CalendarParserICalendar extends CalendarParser {
     * Parse a Time Period field
     */
     function _parsePeriod ($text) {
-        $matches = split('/', $text);
+        $matches = explode('/', $text);
 
         $start = $this->_parseDateTime($matches[0]);
 
@@ -348,7 +348,7 @@ class CalendarParserICalendar extends CalendarParser {
      * Parse a DateTime field
      */
     function _parseDateTime (&$text) {
-        $dateParts = split('T', $text);
+        $dateParts = explode('T', $text);
         if (count($dateParts) != 2 && !empty($text)) {
             // not a date time field but may be just a date field
             if (!$date = $this->_parseDate($text)) {

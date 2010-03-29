@@ -183,7 +183,7 @@ class Menu {
         while(list($k, $v) = each($this->children[$r[$i]])) {
           $this->visible[] = $v;
           if (isset($this->item[$v][pseudo]) &&
-              !ereg("^$v",$this->map))
+              !preg_match("/^$v/",$this->map))
             while (list(,$w) = each($this->item[$v][pseudo])) {
               $this->visible[]=$w;
             }

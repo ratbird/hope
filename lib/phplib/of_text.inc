@@ -93,9 +93,9 @@ class of_text extends of_element {
       if ($this->length_e && (strlen($v) < $this->minlength))
         return $this->length_e;
       if ($this->valid_e && (($this->icase && 
-            !eregi($this->valid_regex,$v)) ||
+            !preg_match('/'.$this->valid_regex.'/i',$v)) ||
            (!$this->icase &&
-            !ereg($this->valid_regex,$v))))
+            !preg_match('/'.$this->valid_regex.'/',$v))))
         return $this->valid_e;
     }
     return false;

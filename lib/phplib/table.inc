@@ -42,7 +42,7 @@ class Table
 
   var $check;                            ## if set, create checkboxes named 
                                          ## to the result of $check[$key]
-  var $filter = "[A-Za-z][A-Za-z0-9_]*"; ## Regexp: Field names to show
+  var $filter = "/[A-Za-z][A-Za-z0-9_]*/"; ## Regexp: Field names to show
   var $fields;                           ## Array of field names to show
   var $heading;                          ## if set, create <th> section
   var $add_extra;                        ## Call extra cell functions
@@ -837,7 +837,7 @@ class Table
       reset($data);
       while(list($key, $val) = each($data)) 
       {
-        if (ereg($this->filter, $key))
+        if (preg_match($this->filter, $key))
           $this->fields[] = $key;
       }
     } 

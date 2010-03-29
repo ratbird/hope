@@ -526,7 +526,7 @@ class StudipLitListViewAdmin extends TreeView{
     function getItemMessage($item_id,$colspan = 1){
         $content = "";
         if ($this->msg[$item_id]){
-            $msg = split("§",$this->msg[$item_id]);
+            $msg = explode("§",$this->msg[$item_id]);
             $pics = array('error' => 'x_small2.gif', 'info' => 'ausruf_small2.gif', 'msg' => 'ok_small2.gif');
             $content = "\n<tr><td colspan=\"{$colspan}\"><table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" width=\"100%\" style=\"font-size:10pt\">
                         <tr><td align=\"center\" width=\"25\"><img width=\"22\" height=\"20\" src=\"".$GLOBALS['ASSETS_URL']."images/" . $pics[$msg[0]] . "\" ></td>

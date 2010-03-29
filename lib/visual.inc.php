@@ -213,7 +213,7 @@ function JSReady ($what = "", $target = "overlib") {
 
     case 'forum' :
         $what = str_replace("\r",'',formatReady($what));
-        if (ereg('\[quote',$what) AND ereg('\[/quote\]',$what))
+        if (preg_match('/\[quote/',$what) AND preg_match('/\[\/quote\]/',$what))
             $what = quotes_decode($what);
         $what = '<p width="100%"class="printcontent">' . $what . '</p>';
         return addslashes(htmlentities($what,ENT_COMPAT));
@@ -306,12 +306,12 @@ function quotes_decode($description)
  */
 function quotes_encode($description,$author)
 {
-    if (ereg("%%\[editiert von",$description)) { // wurde schon mal editiert
+    if (preg_match("/%%\[editiert von/",$description)) { // wurde schon mal editiert
         $postmp = strpos($description,"%%[editiert von");
         $description = substr_replace($description," ",$postmp);
     }
     /* quote reduction deactivated (cf. http://develop.studip.de/trac/ticket/208 )
-    while (ereg("\[quote",$description) AND ereg("\[/quote\]",$description)){ // da wurde schon mal zitiert...
+    while (preg_match("/\[quote/",$description) AND preg_match("/\[\/quote\]/",$description)){ // da wurde schon mal zitiert...
         $pos1 =         strpos($description, "[quote");
         $pos2 =         strpos($description, "[/quote]");
         if ($pos1 < $pos2)

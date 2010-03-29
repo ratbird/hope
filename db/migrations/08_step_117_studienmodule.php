@@ -243,7 +243,7 @@ CREATE TABLE `stm_instances_text` (
     function up ()
     {
         $this->announce(get_class($this) . ": Creating db schema...");
-        $statements = split(";[[:space:]]*\n", $this->sql_up);
+        $statements = preg_split("/;[[:space:]]*\n/", $this->sql_up);
         foreach($statements as $sqlstatement) {
             $this->db->query($sqlstatement);    
         }
@@ -252,7 +252,7 @@ CREATE TABLE `stm_instances_text` (
     function down ()
     {
         $this->announce(get_class($this) . ": Deleting db schema...");
-        $statements = split(";[[:space:]]*\n", $this->sql_down);
+        $statements = preg_split("/;[[:space:]]*\n/", $this->sql_down);
         foreach($statements as $sqlstatement) {
             $this->db->query($sqlstatement);    
         }

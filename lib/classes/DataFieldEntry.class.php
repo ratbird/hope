@@ -732,7 +732,7 @@ class DataFieldDateEntry extends DataFieldEntry
     function getHTML($name)
     {
         $field_name = $name . '[' . $this->structure->getID() . '][]';
-        $parts = split('-', $this->value);
+        $parts = explode('-', $this->value);
         $ret = sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Tag").'">', $field_name, $parts[2]);
         $ret .= ". ";
         //TODO: was ist, wenn studip auf englisch eingestellt ist?!? lieber srfttime oder so benutzen...
@@ -749,7 +749,7 @@ class DataFieldDateEntry extends DataFieldEntry
     {
         if(trim($this->value) == '')
             return true;
-        $parts = split("-", $this->value);
+        $parts = explode("-", $this->value);
         $valid = preg_match('/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/', $this->value);
         return trim($this->value) != '' && $valid && checkdate($parts[1], $parts[2], $parts[0]);
     }
@@ -774,7 +774,7 @@ class DataFieldTimeEntry extends DataFieldEntry
     function getHTML($name)
     {
         $name = $name . '[' . $this->structure->getID() . '][]';
-        $parts = split(':', $this->value);
+        $parts = explode(':', $this->value);
         $ret = sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Stunden").'">:', $name, $parts[0]);
         $ret .= sprintf('<input name="%s" maxlength="2" size="1" value="%s" title="'._("Minuten").'">', $name, $parts[1]);
         return $ret;
@@ -782,7 +782,7 @@ class DataFieldTimeEntry extends DataFieldEntry
 
     function isValid()
     {
-        $parts = split(':', $this->value);
+        $parts = explode(':', $this->value);
         return $parts[0] >= 0 && $parts[0] <= 24 && $parts[1] >= 0 && $parts[1] <= 59;
     }
 }

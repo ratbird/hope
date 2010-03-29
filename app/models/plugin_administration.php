@@ -221,7 +221,7 @@ class PluginAdministration
 
         if (isset($manifest['dbscheme']) && !$update) {
             $schemafile = $plugindir.'/'.$manifest['dbscheme'];
-            $statements = split(";[[:space:]]*\n", file_get_contents($schemafile));
+            $statements = preg_split("/;[[:space:]]*\n/", file_get_contents($schemafile));
             $db = DBManager::get();
             foreach ($statements as $statement) {
                 $db->exec($statement);
@@ -278,7 +278,7 @@ class PluginAdministration
 
         if (isset($manifest['uninstalldbscheme'])) {
             $schemafile = $plugindir.'/'.$manifest['uninstalldbscheme'];
-            $statements = split(";[[:space:]]*\n", file_get_contents($schemafile));
+            $statements = preg_split("/;[[:space:]]*\n/", file_get_contents($schemafile));
             $db = DBManager::get();
             foreach ($statements as $statement) {
                 $db->exec($statement);

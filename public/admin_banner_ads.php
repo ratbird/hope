@@ -148,7 +148,7 @@ function check_data(&$banner_data) {
 
     switch ($banner_data['target_type']) {
         case 'url':
-             if (!eregi('^(https?)|(ftp)://', $banner_data['target'])) $msg .= "error§" . _("Das Verweisziel muss eine gültige URL sein (incl. http://).") . "§";
+             if (!preg_match('/^(https?)|(ftp):\\/\\//i', $banner_data['target'])) $msg .= "error§" . _("Das Verweisziel muss eine gültige URL sein (incl. http://).") . "§";
             break;
         case 'inst':
             $q = "SELECT * FROM Institute WHERE Institut_id='" . $banner_data['target'] . "'";

@@ -269,16 +269,16 @@ class ShowList extends ShowTreeRow{
                 //  $val = 1;
 
                 //let's create some possible wildcards
-                if (ereg("<=", $val)) {
+                if (preg_match("/<=/", $val)) {
                     $val = trim(substr($val, strpos($val, "<")+2, strlen($val)));
                     $linking = "<=";
-                } elseif (ereg(">=", $val)) {
+                } elseif (preg_match("/>=/", $val)) {
                     $val = trim(substr($val, strpos($val, "<")+2, strlen($val)));
                     $linking = ">=";
-                } elseif (ereg("<", $val)) {
+                } elseif (preg_match("/</", $val)) {
                     $val = trim(substr($val, strpos($val, "<")+1, strlen($val)));
                     $linking = "<";
-                } elseif (ereg(">", $val)) {
+                } elseif (preg_match("/>/", $val)) {
                     $val = trim(substr($val, strpos($val, "<")+1, strlen($val)));
                     $linking = ">";
                 } else $linking = "=";

@@ -33,11 +33,11 @@ class CSV_Table extends Table {
   ## Cell creator functions
   ## Need to translate " in $val fields into ""...
   function table_cell($row, $cell, $key, $val, $class) {
-    printf("\"%s\",", ereg_replace("\"", "\"\"", $val));
+    printf("\"%s\",", preg_replace("/\"/", "\"\"", $val));
   }
   
   function table_heading_cell($col, $val, $class) {
-    printf("\"%s\",", ereg_replace("\"", "\"\"", $val));
+    printf("\"%s\",", preg_replace("/\"/", "\"\"", $val));
   }
   
   function table_checkbox_cell($row, $row_key, $data, $class) {

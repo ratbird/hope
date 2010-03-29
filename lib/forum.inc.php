@@ -996,7 +996,7 @@ function ForumCheckShrink($id)  {
 *
 **/
 function forum_check_edit($forumposting) {
-    if (ereg("%%\[edit-",$forumposting)) { // wurde schon mal editiert
+    if (preg_match("/%%\[edit-/",$forumposting)) { // wurde schon mal editiert
         $tmp = "%%["._("editiert von: ");
         $forumposting = str_replace("%%[edit-", $tmp ,$forumposting);
     }

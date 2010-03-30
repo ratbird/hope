@@ -161,8 +161,6 @@ $SOAP_ENABLE = TRUE;
 
 $WEBSERVICES_ENABLE = TRUE;
 
-$WAP_ENABLE = TRUE;                         //Stud.IP module: WAP
-
 $STM_ENABLE = TRUE;
 
 $SEMINAR_LOCK_ENABLE = TRUE; // locking of fields in seminar administration

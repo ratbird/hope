@@ -162,8 +162,6 @@ $WEBSERVICES_ENABLE = FALSE;                            //Stud.IP module: webser
 
 $STUDIP_API_KEY=''; // webservice api key
 
-$WAP_ENABLE = FALSE;                            //Stud.IP module: WAP
-
 $STM_ENABLE = FALSE;            //Studienmodule (experimental)
 
 $SEMINAR_LOCK_ENABLE = FALSE; // locking of fields in seminar administration

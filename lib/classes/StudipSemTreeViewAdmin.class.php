@@ -349,7 +349,7 @@ class StudipSemTreeViewAdmin extends TreeView {
     
     function execCommandMarkSem(){
         $item_id = $_REQUEST['item_id'];
-        $marked_sem = $_REQUEST['marked_sem'];
+        $marked_sem = array_values(array_unique((array)$_REQUEST['marked_sem']));
         $sem_aktion = explode("_",$_REQUEST['sem_aktion']);
         if (($sem_aktion[0] == 'mark' || $sem_aktion[1] == 'mark') && count($marked_sem)){
             $count_mark = 0;
@@ -365,13 +365,28 @@ class StudipSemTreeViewAdmin extends TreeView {
         }
         if ($this->isItemAdmin($item_id)){
             if (($sem_aktion[0] == 'del' || $sem_aktion[1] == 'del') && count($marked_sem)){
-                $count_del = $this->tree->DeleteSemEntries($item_id, $marked_sem);
+                $not_deleted = array();
+                foreach($marked_sem as $key => $seminar_id){
+                    $seminar = new Seminar($seminar_id);
+                    if(count($seminar->getStudyAreas()) == 1){
+                        $not_deleted[] = $seminar->getName();
+                        unset($marked_sem[$key]);
+                    }
+                }
                 if ($this->msg[$item_id]){
                     $this->msg[$item_id] .= "<br>";
                 } else {
                     $this->msg[$item_id] = "msg§";
                 }
-                $this->msg[$item_id] .= sprintf(_("%s Veranstaltungszuordnung(en) wurde(n) aufgehoben."),$count_del);
+                if(count($marked_sem)){
+                    $count_del = $this->tree->DeleteSemEntries($item_id, $marked_sem);
+                    $this->msg[$item_id] .= sprintf(_("%s Veranstaltungszuordnung(en) wurde(n) aufgehoben."),$count_del);
+                }
+                if(count($not_deleted)){
+                    $this->msg[$item_id] .= '<br>' 
+                                         . sprintf(_("Für folgende Veranstaltungen wurde die Zuordnung nicht aufgehoben, da es die einzige ist: %s")
+                                         , '<br>'.htmlready(join(', ', $not_deleted)));
+                }
             }
             $this->anchor = $item_id;
             $this->open_items[$item_id] = true;

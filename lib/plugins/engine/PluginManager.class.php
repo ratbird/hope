@@ -139,7 +139,7 @@ class PluginManager
         $default = $result->rowCount() > 0;
 
         $result = $db->query("SELECT state FROM plugins_activated
-                              WHERE pluginid = '$id' AND poiid = 'sem$context'");
+                              WHERE pluginid = '$id' AND (poiid = 'sem$context' OR poiid = 'inst$context')");
         $state = $result->fetchColumn();
 
         return $default && $state !== 'off' || $state === 'on';

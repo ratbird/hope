@@ -1320,7 +1320,7 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
             $beschreibung .= _("Keine Beschreibung vorhanden");
         }
         if (in_array (strtolower(getFileExtension($datei['filename'])), words("jpg jpeg gif png"))) {
-            $content = sprintf("<img src=\"sendfile.php?type=%s&file_id=%s\" alt=\"%s\" title=\"\" border=\"0\"><br>", $type, $datei['dokument_id'], $beschreibung);
+            $content = sprintf("<img src=\"%s\" alt=\"%s\" title=\"\" border=\"0\"><br>", GetDownloadLink ($datei['dokument_id'], $datei['filename'], $type), $beschreibung);
         }
         $content .= $beschreibung;
         $content .=  "<br><br>" . sprintf(_("<b>Dateigr&ouml;&szlig;e:</b> %s kB"), round ($datei["filesize"] / 1024));

@@ -375,6 +375,10 @@ if(isset($_REQUEST['group_sem_x']) && (count($_REQUEST['gruppe']) > 1 || isset($
                                 $ok = false;
                             }
                         }
+                        if ($admission_times["admission_endtime"] > time() && $group_obj->members[$semid]->admission_selection_take_place == 1){
+                            $msg[] = array('error', sprintf(_("Das Ende Kontingente / Losdatum kann in der Veranstaltung <b>%s</b> nicht geändert werden, da das Losen bereits durchgeführt wurde / die Kontingentierung bereits aufgehoben wurde."), htmlReady($group_obj->members[$semid]->getName())));
+                            $ok = false;
+                        }
                     }
                 }
             }

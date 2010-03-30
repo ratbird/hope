@@ -284,10 +284,14 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
         $admin_admission_data["admission_endtime"] = veranstaltung_beginn($seminar_id, 'int');
         if(!$admin_admission_data["admission_endtime"]) $admin_admission_data["admission_endtime"] = -1;
     }
-    $db->query("SELECT admission_seminar_studiengang.studiengang_id, name, quota FROM admission_seminar_studiengang LEFT JOIN studiengaenge USING (studiengang_id)  WHERE seminar_id = '$seminar_id' ORDER BY (admission_seminar_studiengang.studiengang_id <> 'all'),name");
+    $db->query("SELECT admission_seminar_studiengang.studiengang_id, name, quota, COUNT(admission_seminar_user.user_id) + COUNT(seminar_user.user_id) as count 
+                FROM admission_seminar_studiengang LEFT JOIN studiengaenge USING (studiengang_id)
+                LEFT JOIN admission_seminar_user ON admission_seminar_studiengang.seminar_id=admission_seminar_user.seminar_id AND admission_seminar_user.studiengang_id=admission_seminar_studiengang.studiengang_id
+                LEFT JOIN seminar_user ON admission_seminar_studiengang.seminar_id=seminar_user.seminar_id AND admission_studiengang_id=admission_seminar_studiengang.studiengang_id
+                WHERE admission_seminar_studiengang.seminar_id = '$seminar_id' GROUP BY admission_seminar_studiengang.studiengang_id ORDER BY (admission_seminar_studiengang.studiengang_id <> 'all'),name");
     while ($db->next_record()) {
         $name = $db->f("studiengang_id") == 'all' ? _("Alle Studiengänge") : $db->f("name");
-        $admin_admission_data["studg"][$db->f("studiengang_id")] = array("name"=>$name, "ratio"=>$db->f("quota"));
+        $admin_admission_data["studg"][$db->f("studiengang_id")] = array("name"=>$name, "ratio"=>$db->f("quota"), 'count' => $db->f('count'));
     }
     $admin_admission_data["original"]=get_snapshot();
     if($reset_admission_time_x){
@@ -1150,7 +1154,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                             </td>
                         </tr>
                         <tr>
-                        <?if (!LockRules::Check($seminar_id, 'admission_studiengang') && (!$admin_admission_data["admission_type_org"] || $perm->have_perm("admin"))){
+                        <?if (!LockRules::Check($seminar_id, 'admission_studiengang') && !$admin_admission_data['admission_selection_take_place'] && (!$admin_admission_data["admission_type_org"] || $perm->have_perm("admin"))){
                             ?><td class="<? echo $cssSw->getClass() ?>" colspan="2" >
                             <input style="vertical-align:middle;" type="checkbox" name="admission_enable_quota" <?=($admin_admission_data["admission_enable_quota"] ? 'checked' : '')?> value="1">
                                 <font size=-1><?=_("Prozentuale Kontingentierung aktivieren.")?></font>
@@ -1198,15 +1202,22 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                                 <input type="HIDDEN" name="studg_name[]" value="<? echo $val["name"] ?>">
                                 <?
                                 if($admin_admission_data["admission_enable_quota"]){
-                                    if (LockRules::Check($seminar_id, 'admission_studiengang') || ($admin_admission_data["admission_type_org"] && !$perm->have_perm("admin"))) {
+                                    if (LockRules::Check($seminar_id, 'admission_studiengang') || $val['count'] > 0 || ($admin_admission_data["admission_type_org"] && !$perm->have_perm("admin"))) {
                                         printf ("&nbsp; &nbsp; <font size=-1>%s %% (%s Teilnehmer)</font>", $val["ratio"], $num_stg[$key]);
+                                        if($val['count'] > 0){
+                                            echo '<span style="font-size:70%">'.sprintf(_("(%s Einträge vorhanden)"), $val['count']) . '</span>';
+                                        }
                                     } else {
                                         printf ("<input type=\"HIDDEN\" name=\"studg_ratio_old[]\" value=\"%s\">", $val["ratio"]);
                                         printf ("<input type=\"TEXT\" name=\"studg_ratio[]\" size=5 maxlength=5 value=\"%s\"><font size=-1> %% (%s Teilnehmer)</font>", $val["ratio"], $num_stg[$key]);
                                         echo '<input type="image" name="delete_studg['. $key .']" src="'. Assets::image_path('trash.gif') .'" '. tooltip(_("Den Studiengang aus der Liste löschen")) .'>';
                                     }
                                 } elseif (!LockRules::Check($seminar_id, 'admission_studiengang') && (!($admin_admission_data["admission_type_org"] && !$perm->have_perm("admin")))) {
+                                    if($val['count'] == 0){    
                                         echo '<input type="image" name="delete_studg['. $key .']" src="'. Assets::image_path('trash.gif') .'" '. tooltip(_("Den Studiengang aus der Liste löschen")) .'>';
+                                    } else {
+                                        echo '<span style="font-size:70%">'.sprintf(_("(%s Einträge vorhanden)"), $val['count']) . '</span>';
+                                    }
                                 }
                                 ?>
                                 </td>
@@ -1274,8 +1285,12 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                             <?
                         }
                         ?>
-                        <? if (LockRules::Check($seminar_id, 'admission_endtime') || ($admin_admission_data["admission_type_org"] && !$perm->have_perm("admin"))) {
+                        <? if (LockRules::Check($seminar_id, 'admission_endtime') || $admin_admission_data['admission_selection_take_place'] || ($admin_admission_data["admission_type_org"] && !$perm->have_perm("admin"))) {
                             printf ("<font size=-1>%s um %s Uhr </font>", date("d.m.Y",$admin_admission_data["admission_endtime"]), date("H:i",$admin_admission_data["admission_endtime"]));
+                            if($admin_admission_data['admission_selection_take_place'] && $admin_admission_data["admission_type"] == 1){
+                                echo '<br>';
+                                echo $admin_admission_data["admission_type"] == 1 ? _("Das Losverfahren wurde bereits durchgeführt.") : _("Die Kontingentierung wurde bereits aufgehoben.");
+                            }
                         } else { ?>
                             <font size=-1><input type="text" name="adm_tag" size=2 maxlength=2 value="<? if ($admin_admission_data["admission_endtime"]<>-1) echo date("d",$admin_admission_data["admission_endtime"]); else echo _("tt") ?>">.
                             <input type="text" name="adm_monat" size=2 maxlength=2 value="<? if ($admin_admission_data["admission_endtime"]<>-1) echo date("m",$admin_admission_data["admission_endtime"]); else echo"mm" ?>">.

@@ -356,7 +356,7 @@ class SemBrowse {
 
     function print_level(){
         ob_start();
-        global $PHP_SELF, $_language_path;
+        global $PHP_SELF;
         echo "\n<table border=\"0\" align=\"center\" cellspacing=0 cellpadding=0 width = \"99%\">\n";
         if ($this->sem_browse_data['level'] == "f"){
 
@@ -367,9 +367,9 @@ class SemBrowse {
                     printf(_(" / %sVorlesungsverzeichnis%s"),"<a href=\"$PHP_SELF?level=vv&cmd=qs&sset=0\">","</a>");
                 }
             } else {
-                printf ("<table align=\"center\" cellspacing=\"10\"><tr><td nowrap align=\"center\"><a href=\"%s?level=ev&cmd=qs&sset=0\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/institute.jpg\" %s border=\"0\" /></a></td>", $PHP_SELF, _("Suche in Einrichtungen"), $_language_path, tooltip(_("Suche im Einrichtungsverzeichnis")));
+                printf ("<table align=\"center\" cellspacing=\"10\"><tr><td nowrap align=\"center\"><a href=\"%s?level=ev&cmd=qs&sset=0\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/institute.jpg\" %s border=\"0\" /></a></td>", $PHP_SELF, _("Suche in Einrichtungen"), tooltip(_("Suche im Einrichtungsverzeichnis")));
                 if ($this->show_class()){
-                    printf ("<td nowrap align=\"center\"><a href=\"%s?level=vv&cmd=qs&sset=0\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/kommentar.jpg\" %s border=\"0\" /></a></td>", $PHP_SELF, _("Suche im Vorlesungsverzeichnis"), $_language_path,tooltip(_("Suche im Vorlesungsverzeichnis")));
+                    printf ("<td nowrap align=\"center\"><a href=\"%s?level=vv&cmd=qs&sset=0\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/kommentar.jpg\" %s border=\"0\" /></a></td>", $PHP_SELF, _("Suche im Vorlesungsverzeichnis"), tooltip(_("Suche im Vorlesungsverzeichnis")));
                 }
                 printf ("</tr></table>");
             }

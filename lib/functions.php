@@ -1236,8 +1236,8 @@ function format_help_url($keyword) {
     if ($locationid) {
         $helppage.="&setstudiplocationid=".$locationid;
     }
-    if ($GLOBALS['_language_path']) {
-        $helppage.="&setlang=".$GLOBALS['_language_path'];
+    if ($GLOBALS['_language']) {
+        $helppage.="&setlang=".reset(explode("_", $GLOBALS['_language']));
     }
     // insert into URL-Template from config
     $help_query=sprintf(get_config("EXTERNAL_HELP_URL"),$helppage);

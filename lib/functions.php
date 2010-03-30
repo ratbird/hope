@@ -1224,7 +1224,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
  */
 
 function format_help_url($keyword) {
-    global $auth;
+    global $auth, $_language;
     if (!$keyword) {
         $keyword="Basis.Allgemeines"; //default value
     }
@@ -1236,8 +1236,8 @@ function format_help_url($keyword) {
     if ($locationid) {
         $helppage.="&setstudiplocationid=".$locationid;
     }
-    if ($GLOBALS['_language']) {
-        $helppage.="&setlang=".reset(explode("_", $GLOBALS['_language']));
+    if ($_language) {
+        $helppage.="&setlang=".reset(explode('_', $_language));
     }
     // insert into URL-Template from config
     $help_query=sprintf(get_config("EXTERNAL_HELP_URL"),$helppage);

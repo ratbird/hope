@@ -7,10 +7,6 @@ if ($rechte) {
             array(
                 'text' => _("Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglieder der Studiengruppe zu entfernen."),
                 'icon' => "icon-cont.gif"
-            ),
-            array(
-                'text' => _("<a href=\"".URLHelper::getLink('dispatch.php/course/studygroup/massmsg/'.$sem_id)."\">Versenden Sie eine Nachricht an alle Mitglieder der Studiengruppe.</a>"),
-                'icon' => "cont_nachricht_pfeil.gif"
             )
         )
     );

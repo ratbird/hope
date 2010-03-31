@@ -1,14 +1,14 @@
 <?php
 /*
- * Course_StudygroupController
+ * studygroup.php - contains Course_StudygroupController
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * @author      André Klaßen <aklassen@uos.de>
- * @copyright   2009-2010 Stud.IP Core-Group
+ * @author      André Klaßen <andre.klassen@elan-ev.de>
+ * @copyright   2009-2010 ELAN e.V.
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     studygroup
@@ -824,5 +824,27 @@ class Course_StudygroupController extends AuthenticatedController {
         }
         $this->redirect('course/studygroup/globalmodules');
     }
+    
+    /**
+     * sends a message to all members of a studygroup
+     *
+     * @param string id of a studygroup
+     * 
+     * @return void
+     */
+
+    function message_action($id)
+    {
+        $sem        = new Seminar($id);
+        $source     = 'dispatch.php/course/studygroup/member/' . $id;
+        if (strlen($sem->getName()) > 32) //cut subject if to long
+            $subject = sprintf(_("[Studiengruppe: %s...]"),substr($sem->getName(), 0, 30));
+        else
+            $subject = sprintf(_("[Studiengruppe: %s]"),$sem->getName());
+                
+
+        $this->redirect(URLHelper::getURL('sms_send.php', array('sms_source_page' => $source, 'course_id' => $id, 'emailrequest' => 1, 'subject' => $subject, 'filter' => 'all')));
+    }
+
 
 }

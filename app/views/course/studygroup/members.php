@@ -7,7 +7,12 @@ if ($rechte) {
             array(
                 'text' => _("Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglieder der Studiengruppe zu entfernen."),
                 'icon' => "icon-cont.gif"
+            ),
+             array(
+                'text' => _("Klicken Sie auf den Briefumschlag, um eine Nachticht an alle Gruppenmitlgieder zu verfassen."),
+                'icon' => "nachricht1.gif"
             )
+
         )
     );
 } else {
@@ -35,6 +40,11 @@ $infobox['content'] = array(
 <? if ($rechte) : ?>
 <p>
     <?= _("Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglied der Studiengruppe zu entfernen. ") ?>
+    <div>
+           <a href="<?= $controller->url_for('course/studygroup/message/'.$sem_id) ?>">
+          <?= Assets::img('nachricht1.gif', array("border" => "0","vspace" => "3", "hspace" => "3", "align" => "absmiddle"))?>
+          <?=_("Systemnachricht an alle Gruppenmitglieder verschicken")?></a> 
+    </div> 
 </p>
 <? endif; ?>
 <ul style="overflow:hidden;display:block;list-style-type:none;list-style-image:none;

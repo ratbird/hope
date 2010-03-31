@@ -1,12 +1,17 @@
 <?php
-
 /*
- * Copyright (C) 2009 - André Klaßen <aklassen@uos.de>
+ * studygroup.php - Contains the StudygroupModel class
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ * 
+ * @author     André Klaßen <andre.klassen@elan-ev.de>
+ * @copyright  2009 ELAN e.V. 
+ * @license    http://www.gnu.org/licenses/gpl-2.0.html GPL version 2 
+ * @category   Stud.IP
+ *
  */
 
 
@@ -161,6 +166,7 @@ class StudygroupModel {
         $status = studygroup_sem_types();
         $sql = "SELECT * FROM seminare WHERE status IN('". implode("','", $status)."')";
         if(isset($search)) {
+            $search = mysql_real_escape_string($search);
             $sql .= " AND seminare.Name LIKE '%{$search}%' ";
         }
         $sort_order = (substr($sort, strlen($sort) - 3, 3) == 'asc') ? 'asc' : 'desc';

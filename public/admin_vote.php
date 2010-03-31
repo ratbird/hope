@@ -44,7 +44,7 @@ require_once 'lib/functions.php';
 include_once 'lib/seminar_open.php';
 
 $HELP_KEYWORD="Basis.Votings";
-$CURRENT_PAGE= _("Verwaltung von Umfragen und Tests"); 
+$CURRENT_PAGE= _("Verwaltung von Umfragen und Tests");
 
 require_once 'lib/admin_search.inc.php';
 
@@ -59,7 +59,7 @@ if ($list || $view) {
         Navigation::activateItem('/admin/institute/vote');
     }
 } else {
-    Navigation::activateItem('/homepage/tools/vote');
+    Navigation::activateItem('/tools/vote');
 }
 
 include_once('lib/include/html_head.inc.php');

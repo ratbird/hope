@@ -52,9 +52,9 @@ $HELP_KEYWORD="Basis.InteraktionWhosOnline";
 $CURRENT_PAGE = _("Wer ist online?");
 
 if (Request::get('change_view')) {
-    Navigation::activateItem('/messaging/online/settings');
+    Navigation::activateItem('/account/messaging');
 } else {
-    Navigation::activateItem('/messaging/online/who');
+    Navigation::activateItem('/community/who');
 }
 
 // Start of Output
@@ -66,7 +66,7 @@ ob_start();
 $kompletter_datensatz= get_users_online($my_messaging_settings['active_time'], $user->cfg->getValue($user->id, "ONLINE_NAME_FORMAT"));
 $alle=count($kompletter_datensatz);
 /*
- * Start to filter 
+ * Start to filter
  */
 
 //Only use visible users

@@ -37,7 +37,7 @@
 
 ob_start(); // start output buffering
 
-page_open (array ("sess" => "Seminar_Session", 
+page_open (array ("sess" => "Seminar_Session",
                   "auth" => "Seminar_Auth",
                   "perm" => "Seminar_Perm",
                   "user" => "Seminar_User"));
@@ -61,10 +61,10 @@ if ($list || $view) {
         Navigation::activateItem('/admin/institute/evaluation');
     }
 } else {
-    Navigation::activateItem('/homepage/tools/evaluation');
+    Navigation::activateItem('/tools/evaluation');
 }
 
-if (($SessSemName[1]) && (($view == "eval_sem") || ($view == "eval_inst"))) 
+if (($SessSemName[1]) && (($view == "eval_sem") || ($view == "eval_inst")))
     $the_range = $SessSemName[1];
 else
     $the_range = $_REQUEST['rangeID'];
@@ -89,7 +89,7 @@ if ($the_range != $auth->auth['uname'] && $the_range != 'studip' && !$isUserrang
     if ($view_mode == "fak"){
         $view_mode = "inst";
     }
-} 
+}
 
 include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');

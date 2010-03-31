@@ -2,13 +2,17 @@
 /*
  * AdminNavigation.php - navigation for admin area
  *
- * Copyright (c) 2009  Elmar Ludwig
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
- */
+ *
+ * @author      Elmar Ludwig
+ * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @copyright   2010 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+*/
 
 class AdminNavigation extends Navigation
 {
@@ -58,23 +62,23 @@ class AdminNavigation extends Navigation
         $navigation->addSubNavigation('dates', new Navigation(_('Zeiten / Räume'), 'raumzeit.php?list=TRUE'));
         $navigation->addSubNavigation('schedule', new Navigation(_('Ablaufplan'), 'themen.php?list=TRUE'));
         $navigation->addSubNavigation('news', new Navigation(_('News'), 'admin_news.php?list=TRUE&view=news_sem'));
-        $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php?list=TRUE&view=literatur_sem'));
 
         if (get_config('VOTE_ENABLE')) {
             $navigation->addSubNavigation('vote', new Navigation(_('Votings und Tests'), 'admin_vote.php?view=vote_sem'));
             $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_sem'));
         }
 
+        $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php?list=TRUE&view=literatur_sem'));
         $navigation->addSubNavigation('admission', new Navigation(_('Zugangsberechtigungen'), 'admin_admission.php?list=TRUE'));
         $navigation->addSubNavigation('groups', new Navigation(_('Gruppen / Funktionen'), 'admin_statusgruppe.php?list=TRUE'));
-        $navigation->addSubNavigation('modules', new Navigation(_('Module/Plugins'), 'admin_modules.php?list=TRUE&view=modules_sem'));
+        $navigation->addSubNavigation('modules', new Navigation(_('Module / Plugins'), 'admin_modules.php?list=TRUE&view=modules_sem'));
 
         if ($perm->have_perm($sem_create_perm)) {
             $navigation->addSubNavigation('copy', new Navigation(_('Veranstaltung kopieren'), 'copy_assi.php?list=TRUE&new_session=TRUE'));
-            $navigation->addSubNavigation('create', new Navigation(_('neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
+            $navigation->addSubNavigation('create', new Navigation(_('Neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
 
             if (get_config('ALLOW_DOZENT_ARCHIV') || $perm->have_perm('admin')) {
-                $navigation->addSubNavigation('archive', new Navigation(_('archivieren'), 'archiv_assi.php?list=TRUE&new_session=TRUE'));
+                $navigation->addSubNavigation('archive', new Navigation(_('Archivieren'), 'archiv_assi.php?list=TRUE&new_session=TRUE'));
             }
 
             if (get_config('ALLOW_DOZENT_VISIBILITY') || $perm->have_perm('admin')) {
@@ -91,6 +95,7 @@ class AdminNavigation extends Navigation
 
         // institute administration
         $navigation = new Navigation(_('Einrichtungen'));
+        $navigation->setURL('admin_news.php?list=TRUE&view=news_inst');
 
         if ($perm->have_perm('admin')) {
             $navigation->setURL('admin_institut.php?list=TRUE&quit=1');
@@ -99,30 +104,31 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('groups', new Navigation(_('Gruppen / Funktionen'), 'admin_roles.php?list=TRUE'));
         }
 
-        $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php?list=TRUE&view=literatur_inst'));
         $navigation->addSubNavigation('news', new Navigation(_('News'), 'admin_news.php?list=TRUE&view=news_inst'));
 
         if (get_config('VOTE_ENABLE')) {
-            $navigation->addSubNavigation('vote', new Navigation(_('Votes'), 'admin_vote.php?view=vote_inst'));
+            $navigation->addSubNavigation('vote', new Navigation(_('Votings und Tests'), 'admin_vote.php?view=vote_inst'));
             $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_inst'));
         }
+
+        $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php?list=TRUE&view=literatur_inst'));
 
         if ($perm->have_perm('admin'))
             $navigation->addSubNavigation('modules', new Navigation(_('Module'), 'admin_modules.php?list=TRUE&view=modules_inst'));
 
         if (get_config('EXTERN_ENABLE') && $perm->have_perm('admin')) {
-            $navigation->addSubNavigation('external', new Navigation(_('externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_inst'));
+            $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_inst'));
         }
 
         if ($perm->is_fak_admin()) {
-            $navigation->addSubNavigation('create', new Navigation(_('neue Einrichtung'), 'admin_institut.php?i_view=new'));
+            $navigation->addSubNavigation('create', new Navigation(_('Neue Einrichtung anlegen'), 'admin_institut.php?i_view=new'));
         }
 
         $this->addSubNavigation('institute', $navigation);
 
         // global config / user administration
         if ($perm->have_perm('admin')) {
-            $navigation = new Navigation(_('globale Einstellungen'));
+            $navigation = new Navigation(_('Globale Einstellungen'));
 
             if (!get_config('RESTRICTED_USER_MANAGEMENT') || $perm->have_perm('root')) {
                 $navigation->addSubNavigation('new_user', new Navigation(_('Benutzer'), 'new_user_md5.php'));
@@ -165,7 +171,7 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation('member_view', new Navigation(_('Teilnehmeransicht'), 'admin_teilnehmer_view.php'));
 
                 if (get_config('EXTERN_ENABLE')) {
-                    $navigation->addSubNavigation('external', new Navigation(_('externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_global'));
+                    $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_global'));
                 }
 
                 $navigation->addSubNavigation('studygroup', new Navigation(_('Studiengruppen'), 'dispatch.php/course/studygroup/globalmodules'));
@@ -195,12 +201,8 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('export', new Navigation(_('Export'), 'export.php'));
         }
 
-        if (get_config('RESOURCES_ENABLE')) {
-            $navigation->addSubNavigation('resources', new Navigation(_('Ressourcenverwaltung'), 'resources.php'));
-        }
-
         if ($perm->have_perm('admin')) {
-            $navigation->addSubNavigation('show_admission', new Navigation(_('laufende Anmeldeverfahren'), 'show_admission.php'));
+            $navigation->addSubNavigation('show_admission', new Navigation(_('Laufende Anmeldeverfahren'), 'show_admission.php'));
             $navigation->addSubNavigation('literature', new Navigation(_('Literaturübersicht'), 'admin_literatur_overview.php'));
         }
 
@@ -233,7 +235,7 @@ class AdminNavigation extends Navigation
 
         // admin plugins
         if ($perm->have_perm('admin')) {
-            $navigation = new Navigation(_('Administrations-Plugins'));
+            $navigation = new Navigation(_('Admin-Plugins'));
             $this->addSubNavigation('plugins', $navigation);
         }
     }

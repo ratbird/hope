@@ -1972,7 +1972,7 @@ class EvalOverview {
    if ($globalperm == "root"){
       $results["studip"] = array ("type" => "system", "name" => _("Systemweite Evaluationen"));
    } elseif ($globalperm == "dozent" || $globalperm == "autor" || $globalperm == "admin") {
-      $results[$user->id] = array ("type" => "user", "name" => _("Persönliche Homepage"));
+      $results[$user->id] = array ("type" => "user", "name" => _("Profil"));
    }
 
    if ($globalperm == "dozent" || $globalperm == "autor" || $_REQUEST["search"])
@@ -2339,7 +2339,7 @@ class EvalOverview {
    if ($globalperm == "root") {
        $results["studip"] = array ("type" => "system", "name" => _("Systemweite Evaluationen"));
    } else {
-       $results[$user->id] = array ("type" => "user", "name" => _("Persönliche Homepage"));
+       $results[$user->id] = array ("type" => "user", "name" => _("Profil"));
    }
 
    if ($globalperm == "dozent" || $perm == "autor" || $search)

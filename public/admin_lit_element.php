@@ -32,6 +32,8 @@ require_once ('lib/classes/StudipLitClipBoard.class.php');
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 $CURRENT_PAGE = _("Literatureintrag bearbeiten");
+Navigation::activateItem('/tools/literature');
+
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head

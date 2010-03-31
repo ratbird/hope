@@ -48,7 +48,7 @@ include('lib/seminar_open.php'); // initialise Stud.IP-Session
 // -- here you have to put initialisations for the current page
 $view = 'standard';
 if (($_REQUEST['view'] == 'print') || ($_REQUEST['view'] == 'edit')) {
-    $view = $_REQUEST['view'];  
+    $view = $_REQUEST['view'];
 }
 
 if ($view == 'print') {
@@ -91,7 +91,7 @@ if ($view != 'print') {
     if ($inst_id) //Links if we show in the instiute-object-view
         Navigation::activateItem('/course/main/schedule');
     else if (!$perm->have_perm("admin")) //if not in the adminview, it's the user view!
-        Navigation::activateItem('/messaging/schedule');
+        Navigation::activateItem('/calendar/schedule');
     else
         Navigation::activateItem('/browse/my_courses/schedule');
 
@@ -145,7 +145,7 @@ if ($cmd == "hide") {
     if(!$my_schedule_settings['hidden']) {
         $my_schedule_settings['hidden'] = array();
     }
-    
+
     $my_schedule_settings['hidden'][$sem_id] = True;
 }
 
@@ -159,7 +159,7 @@ if ($cmd == "show") {
 //ein weiterer persoenlicher Eintrag wurde uebermittelt
 if ($cmd=="insert") {
     switch ($tag) {
-        // nicht wundern, wir nehmen hier irgendwelche Tage, von denen wir 
+        // nicht wundern, wir nehmen hier irgendwelche Tage, von denen wir
         // wissen, was das fuer ein Wochentag war, um den Wochentag zu fixieren
         // (dieser Programmteil entstand 03/2001... *G)
         case 1: {
@@ -208,15 +208,15 @@ if ($cmd=="insert") {
 if ($inst_id) {
     // institute-admins are allowed to see hidden seminars
     if ($perm->have_studip_perm('admin', $inst_id)) {
-        $db->query("SELECT seminare.Seminar_id, Name, VeranstaltungsNummer, start_time, duration_time,  metadata_dates 
+        $db->query("SELECT seminare.Seminar_id, Name, VeranstaltungsNummer, start_time, duration_time,  metadata_dates
             FROM seminare WHERE Institut_id = '$inst_id'");
     }
-    
+
     // others are not allowed to see hidden seminars
     else {
-        $db->query("SELECT seminare.Seminar_id, Name, VeranstaltungsNummer, start_time, duration_time,  metadata_dates 
+        $db->query("SELECT seminare.Seminar_id, Name, VeranstaltungsNummer, start_time, duration_time,  metadata_dates
             FROM seminare WHERE Institut_id = '$inst_id' AND visible='1'");
-    }   
+    }
 
 } else {
     $user_id=$user->id;
@@ -310,14 +310,14 @@ for ($seminar_user_schedule = 1; $seminar_user_schedule <= 2; $seminar_user_sche
                 if ($RESOURCES_ENABLE) {
                     $roomIDsArray = CycleDataDB::getPredominantRoomDB($data["metadate_id"]);
                     if( $roomIDsArray) {
-                        $tmp_room = getResourceObjectName($roomIDsArray[0]); 
+                        $tmp_room = getResourceObjectName($roomIDsArray[0]);
                     } else {
                         $tmp_room = _("n. A.");
                     }
                 } else {
                     $roomName = CycleDataDB::getFreeTextPredominantRoomDB($data["metadate_id"]);
                     if( $roomName) {
-                        $tmp_room = $roomName; 
+                        $tmp_room = $roomName;
                     } else {
                         $tmp_room = _("n. A.");
                     }
@@ -357,7 +357,7 @@ for ($seminar_user_schedule = 1; $seminar_user_schedule <= 2; $seminar_user_sche
             if ($my_schedule_settings['hidden'][$db->f("Seminar_id").$i] && $seminar_user_schedule == 2) {
                 unset($my_schedule_settings['hidden'][$db->f("Seminar_id").$i]);
             }
-            
+
             if ($view == 'edit' || !$my_schedule_settings['hidden'][$db->f("Seminar_id").$i]) {
                 $my_sems[$db->f("Seminar_id").$i] = array(
                     "start_time_idx"=>$data["start_stunde"]+$idx_corr_h.(int)(($data["start_minute"]+$idx_corr_m) / 15).$data["day"],
@@ -427,7 +427,7 @@ if (is_array($my_sems)) {
                 else
                     $start_cell=FALSE;
 
-                $cell_sem[$idx_tmp][$ms["seminar_id"]] = $start_cell; 
+                $cell_sem[$idx_tmp][$ms["seminar_id"]] = $start_cell;
 
                 // extract quarter of hour from $idx_tmp and skip to next quarter
                 if (($idx_tmp % 100) - date("w",$ms["start_time"]) == 30) {
@@ -554,116 +554,116 @@ ob_start();
     <? if ($my_schedule_settings["glb_days"]["mo"] || $view == 'edit' || $_REQUEST['inst_id']) {?>
     <td width="<?echo round (90/$glb_colspan)."%"?>" align="center" class="rahmen_steelgraulight" >
         <?php
-        
+
         if($my_schedule_settings["glb_days"]["mo"]) {
             $checked = 'checked';
         } else {
             $checked = '';
-        }   
+        }
         if($view == 'edit') {
             echo '<input type="checkbox" name="mo" value="true" '. $checked .'>&nbsp;';
         }
         echo _("Montag");
-        
+
         ?>
     </td><?}
     if ($my_schedule_settings["glb_days"]["di"] || $view == 'edit' || $_REQUEST['inst_id']) {?>
     <td width="<?echo round (90/$glb_colspan)."%"?>" align="center" class="rahmen_steelgraulight">
         <?php
-        
+
         if($my_schedule_settings["glb_days"]["di"]) {
             $checked = 'checked';
         } else {
             $checked = '';
-        }   
+        }
         if($view == 'edit') {
             echo '<input type="checkbox" name="di" value="true" '. $checked .'>&nbsp;';
         }
-        
+
         echo _("Dienstag");
-        
+
         ?>
     </td><?}
     if ($my_schedule_settings["glb_days"]["mi"] || $view == 'edit' || $_REQUEST['inst_id']) {?>
     <td width="<?echo round (90/$glb_colspan)."%"?>" align="center" class="rahmen_steelgraulight">
         <?php
-        
+
         if($my_schedule_settings["glb_days"]["mi"]) {
             $checked = 'checked';
         } else {
             $checked = '';
-        }   
+        }
         if($view == 'edit') {
             echo '<input type="checkbox" name="mi" value="true" '. $checked .'>&nbsp;';
         }
-        
+
         echo _("Mittwoch");
-        
+
         ?>
     </td><?}
     if ($my_schedule_settings["glb_days"]["do"] || $view == 'edit' || $_REQUEST['inst_id']) {?>
     <td width="<?echo round (90/$glb_colspan)."%"?>" align="center" class="rahmen_steelgraulight">
     <?php
-        
+
         if($my_schedule_settings["glb_days"]["do"]) {
             $checked = 'checked';
         } else {
             $checked = '';
-        }   
+        }
         if($view == 'edit') {
             echo '<input type="checkbox" name="do" value="true" '. $checked .'>&nbsp;';
         }
         echo _("Donnerstag");
-        
+
     ?>
     </td><?}
     if ($my_schedule_settings["glb_days"]["fr"] || $view == 'edit' || $_REQUEST['inst_id']) {?>
     <td width="<?echo round (90/$glb_colspan)."%"?>" align="center" class="rahmen_steelgraulight">
     <?php
-        
+
         if($my_schedule_settings["glb_days"]["fr"] || $view == 'edit') {
             $checked = 'checked';
         } else {
             $checked = '';
-        }   
+        }
         if($view == 'edit') {
             echo '<input type="checkbox" name="fr" value="true" '. $checked .'>&nbsp;';
         }
         echo _("Freitag");
-        
+
         ?>
     </td><?}
     if ($my_schedule_settings["glb_days"]["sa"] || $view == 'edit' || $_REQUEST['inst_id']) {?>
     <td width="<?echo round (90/$glb_colspan)."%"?>" align="center" class="rahmen_steelgraulight">
     <?php
-        
+
         if($my_schedule_settings["glb_days"]["sa"]) {
             $checked = 'checked';
         } else {
             $checked = '';
-        }   
+        }
         if($view == 'edit') {
             echo '<input type="checkbox" name="sa" value="true" '. $checked .'>&nbsp;';
         }
         echo _("Samstag");
-        
+
         ?>
     </td><?}
-    
+
     if ($my_schedule_settings["glb_days"]["so"] || $view == 'edit' || $_REQUEST['inst_id']) {?>
     <td width="<?echo round (90/$glb_colspan)."%"?>" align="center" class="rahmen_steelgraulight">
     <?php
-        
+
         if($my_schedule_settings["glb_days"]["so"]) {
             $checked = 'checked';
         } else {
             $checked = '';
-        }   
+        }
         if($view == 'edit') {
             echo '<input type="checkbox" name="so" value="true" '. $checked .'>&nbsp;';
         }
         echo _("Sonntag");
-        
+
         ?>
     </td><?}?>
 </tr>
@@ -681,13 +681,13 @@ for ($i = $global_start_time; $i < $global_end_time+1; $i++) {
                     echo _("Endzeit:") . '<br/><select name="ende_zeit">';
                     $time = $global_end_time;
                 }
-        
+
                 for ($j=0; $j<=23; $j++) {
                     $selected = '';
                     if ($j == $time) {
                         $selected = 'selected';
                     }
-                    
+
                     echo "<option $selected value=".$j.">";
                     if ($j<10) {
                         echo "0";
@@ -724,14 +724,14 @@ for ($i = $global_start_time; $i < $global_end_time+1; $i++) {
                         $cell_content[] = array("seminar_id"=>$cs[0], "start_cell"=>$cs[1]);
                 }
             }
-            
+
             if ((!$cell_sem[$idx]) || ($cell_content[0]["start_cell"])) echo "<td ";
             $u = 0;
 
             if (($cell_sem[$idx]) && ($cell_content[0]["start_cell"])) {
                 $r = 0;
                 foreach ($cell_content as $cc) {
-                    if($my_schedule_settings['hidden'][$cc['seminar_id']] 
+                    if($my_schedule_settings['hidden'][$cc['seminar_id']]
                       && $view != 'edit'
                       && !$_REQUEST['inst_id']) {
                         if ($r==0) {
@@ -764,10 +764,10 @@ for ($i = $global_start_time; $i < $global_end_time+1; $i++) {
                     if ($view != 'print')
                         echo "color=\"#FFFFFF\"";
                     echo ">";
-                    
+
                     //seminar id auf 32 zeichen kürzen
                     $id = substr($my_sems[$cc["seminar_id"]]["seminar_id"], 0, 32);
-                    
+
                     if ($view == 'edit') {
                         if ($my_sems[$cc["seminar_id"]]["personal_sem"]) {
                             $link_img = 'trash.gif" ';
@@ -791,20 +791,20 @@ for ($i = $global_start_time; $i < $global_end_time+1; $i++) {
                         echo '<a style="float: right;" href="'. URLHelper::getLink('?view=edit&cmd='. $link_cmd .'&sem_id='.$cc["seminar_id"]).'">';
                         echo '<img border=0 src="'. $GLOBALS['ASSETS_URL']. 'images/' .$link_img . $link_tp .'></a>';
                     }
-                    
+
                     if ($_REQUEST['inst_id'] && $view == 'standard' && $my_schedule_settings['hidden'][$cc['seminar_id']]) {
                         echo '<img style="float: right;" src="'.$GLOBALS['ASSETS_URL'].'images/info.gif" '. tooltip(_('Dieser Termin ist in Ihrem Studenplan versteckt.')) .' />';
-                        
+
                     }
 
-                    
+
                     echo date ("H:i",  $my_sems[$cc["seminar_id"]]["start_time"]);
                     if  ($my_sems[$cc["seminar_id"]]["start_time"] <> $my_sems[$cc["seminar_id"]]["end_time"])
                         echo " - ",  date ("H:i",  $my_sems[$cc["seminar_id"]]["end_time"]);
                     if (!$my_sems[$cc['seminar_id']]['virtual']) {
                         if ($my_sems[$cc["seminar_id"]]['desc']) echo ' ('.htmlReady($my_sems[$cc["seminar_id"]]['desc']).')';
                     }
-                    
+
                     if ($my_sems[$cc['seminar_id']]['ort']) echo ", ", htmlReady($my_sems[$cc["seminar_id"]]["ort"]);
                     echo '</font></td></tr><tr><td class="blank">';
                     if ((!$my_sems[$cc["seminar_id"]]["personal_sem"]) && $view != 'print') {
@@ -838,7 +838,7 @@ for ($i = $global_start_time; $i < $global_end_time+1; $i++) {
                         }
                     if ($my_sems[$cc["seminar_id"]]["dozenten"])
                         echo "<br><div align=\"right\"><font size=-1>", $my_sems[$cc["seminar_id"]]["dozenten"], "</font></div>";
-                    
+
                     }
                 echo "</td></tr></table></td>";
                 }
@@ -940,7 +940,7 @@ $i++;
 $infobox_actions = array();
 $i = 0;
 $infobox_actions[$i] = array("icon" => "suche2.gif",
-            "text"  => sprintf(_("Wenn Sie weitere Veranstaltungen aus Stud.IP in ihren Stundenplan aufnehmen m&ouml;chten, nutzen Sie bitte die %sVeranstaltungssuche%s."), 
+            "text"  => sprintf(_("Wenn Sie weitere Veranstaltungen aus Stud.IP in ihren Stundenplan aufnehmen m&ouml;chten, nutzen Sie bitte die %sVeranstaltungssuche%s."),
                                     '<a href = "'. URLHelper::getLink('sem_portal.php') .'">', "</a>"));
 
 

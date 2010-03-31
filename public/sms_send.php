@@ -197,7 +197,6 @@ if ($cmd_insert_x) {
         }
         header ($header_info);
         die;
-
     }
 
     unset($sms_data["p_rec"]);
@@ -286,12 +285,12 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
     $messagesubject = Request::quoted('subject');
     $course_id = Request::option('course_id');
 
-    if ((in_array($_REQUEST['filter'], words('all prelim waiting')) && $course_id) || ($_REQUEST['filter'] == 'send_sms_to_all' && isset($_REQUEST['who'])) && $perm->have_studip_perm('tutor', $course_id)) 
+    if ((in_array($_REQUEST['filter'], words('all prelim waiting')) && $course_id) || ($_REQUEST['filter'] == 'send_sms_to_all' && isset($_REQUEST['who'])) && $perm->have_studip_perm('tutor', $course_id))
     {
         //Datenbank abfragen für die verschiedenen Filter
         switch($filter)
         {
-            case 'send_sms_to_all': 
+            case 'send_sms_to_all':
                 $who = Request::quoted('who');
                 $db->query("SELECT b.username FROM seminar_user a, auth_user_md5 b WHERE a.Seminar_id = '".$course_id."' AND a.user_id = b.user_id AND a.status = '$who' ORDER BY Nachname, Vorname");
                 break;
@@ -305,13 +304,13 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
                 $db->query("SELECT username FROM admission_seminar_user LEFT JOIN auth_user_md5 USING(user_id) WHERE seminar_id = '".$course_id."' AND (status='awaiting' OR status='claiming') ORDER BY Nachname, Vorname");
                 break;
         }
-        
+
         //Ergebnis der Query als Empfänger setzen
-        while ($db->next_record()) 
+        while ($db->next_record())
         {
             $sms_data["p_rec"][] = $db->f("username");
         }
-        
+
         if($_REQUEST['emailrequest'] == 1) $sms_data['tmpemailsnd'] = 1;
     }
     //Nachricht wurde nur an bestimmte User versendet
@@ -403,7 +402,7 @@ if ($del_receiver_button_x && !empty($del_receiver)) {
 
 $HELP_KEYWORD="Basis.InteraktionNachrichten";
 $CURRENT_PAGE = _("Systeminterne Nachrichten");
-Navigation::activateItem('/messaging/message/write');
+Navigation::activateItem('/messaging/write');
 
 // includes
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -434,11 +433,9 @@ $txt['008'] = _("Lesebestätigung");
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
-    <td class="blank" valign="top" align="center"><br> <?
+    <td class="blank" valign="top"><?
     if ($msg) {
-        print ("<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\" width=\"99%\"><tr><td valign=\"top\">");
         parse_msg ($msg);
-        print ("</td></tr></table>");
     }
 
     echo '<form enctype="multipart/form-data" NAME="upload_form" action="'.$PHP_SELF.'" method="post">';

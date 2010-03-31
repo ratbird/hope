@@ -2,18 +2,13 @@
 # Lifter001: TEST
 # Lifter007: TODO
 /**
- * browse.php
- *
- * Personen-Suche in Stud.IP
- *
- * PHP Version 5
+ * browse.php - Personen-Suche in Stud.IP
  *
  * @author      Stefan Suchi <suchi@gmx.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @copyright   2000-2009 Stud.IP
  * @license     http://www.gnu.org/licenses/gpl.html GPL Licence 3
  * @package     studip_core
- * @access      public
  */
 
 page_open(array(
@@ -38,6 +33,7 @@ unregister_globals();
 //Basics
 $HELP_KEYWORD = 'Basis.SuchenPersonen';
 $CURRENT_PAGE = _('Personensuche');
+Navigation::activateItem('/search/persons');
 
 $template = $GLOBALS['template_factory']->open('browse');
 $template->set_layout('layouts/base');

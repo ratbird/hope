@@ -51,7 +51,7 @@ if ($range_id){
 }
 
 $HELP_KEYWORD = "Basis.News";
-$CURRENT_PAGE = _("Verwaltung von News"); 
+$CURRENT_PAGE = _("Verwaltung von News");
 
 if ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' ){
     if ($links_admin_data['topkat'] == 'sem') {
@@ -60,17 +60,17 @@ if ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip'
         Navigation::activateItem('/admin/institute/news');
     }
 } else {
-    Navigation::activateItem('/homepage/tools/news');
+    Navigation::activateItem('/tools/news');
 }
 
 if ($SessSemName[1] && ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' )) {
     $news_range_id = $SessSemName[1];
     $news_range_name = '';
-} 
+}
 
 $news = new AdminNewsController();
 
-$CURRENT_PAGE = ($SessSemName[1] && ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' ) ?  $SessSemName["header_line"] : $news->range_name ) . " - " . _("Verwaltung von News"); 
+$CURRENT_PAGE = ($SessSemName[1] && ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' ) ?  $SessSemName["header_line"] : $news->range_name ) . " - " . _("Verwaltung von News");
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -127,7 +127,7 @@ if ($cmd=="new_entry" &&
             $news->msg .= "info§" . _("Der RSS Export wurde für diesen Bereich ausgeschaltet!") . "§";
         } else {
             StudipNews::SetRssId($news_range_id);
-            $news->msg .= "info§" . _("Der RSS Export wurde für diesen Bereich eingeschaltet!") 
+            $news->msg .= "info§" . _("Der RSS Export wurde für diesen Bereich eingeschaltet!")
                         . '<br>' . _("Bitte beachten Sie, dass damit die News dieses Bereiches auch von Personen die nicht im Stud.IP angemeldet sind abgerufen werden k&ouml;nnen!") . "§";
         }
         $cmd = '';

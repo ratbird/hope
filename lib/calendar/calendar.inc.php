@@ -215,42 +215,42 @@ switch ($cmd)
     case 'showday':
         $calendar_sess_control_data['view_prv'] = $cmd;
         $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Tagesansicht");
-        Navigation::activateItem('/messaging/calendar/day');
+        Navigation::activateItem('/calendar/calendar/day');
         break;
 
     case 'showweek':
         $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Wochenansicht");
-        Navigation::activateItem('/messaging/calendar/week');
+        Navigation::activateItem('/calendar/calendar/week');
         $calendar_sess_control_data['view_prv'] = $cmd;
         break;
 
     case 'showmonth':
         $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Monatsansicht");
-        Navigation::activateItem('/messaging/calendar/month');
+        Navigation::activateItem('/calendar/calendar/month');
         $calendar_sess_control_data['view_prv'] = $cmd;
         break;
 
     case 'showyear':
         $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Jahresansicht");
-        Navigation::activateItem('/messaging/calendar/year');
+        Navigation::activateItem('/calendar/calendar/year');
         $calendar_sess_control_data['view_prv'] = $cmd;
         break;
 
     case 'changeview':
         $HELP_KEYWORD = "Basis.TerminkalenderEinstellungen";
         $CURRENT_PAGE = _("Einstellungen des Terminkalenders bearbeiten");
-        Navigation::activateItem('/messaging/calendar/settings');
+        Navigation::activateItem('/account/calendar');
         break;
 
     case 'export':
         $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Termindaten importieren, exportieren und synchronisieren");
-        Navigation::activateItem('/messaging/calendar/export');
+        Navigation::activateItem('/calendar/calendar/export');
         break;
 
     case 'bind':
         $HELP_KEYWORD = "Basis.TerminkalenderEinbinden";
         $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Veranstaltungstermine einbinden");
-        Navigation::activateItem('/messaging/calendar/course');
+        Navigation::activateItem('/calendar/calendar/course');
         break;
 
     case 'add':
@@ -259,25 +259,25 @@ switch ($cmd)
         {
             case 'showday':
                 $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Tagesansicht");
-                Navigation::activateItem('/messaging/calendar/day');
+                Navigation::activateItem('/calendar/calendar/day');
                 break;
             case 'showweek':
                 $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Wochenansicht");
-                Navigation::activateItem('/messaging/calendar/week');
+                Navigation::activateItem('/calendar/calendar/week');
                 break;
             case 'showmonth':
                 $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Monatsansicht");
-                Navigation::activateItem('/messaging/calendar/month');
+                Navigation::activateItem('/calendar/calendar/month');
                 break;
             case 'showyear':
                 $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Jahresansicht");
-                Navigation::activateItem('/messaging/calendar/year');
+                Navigation::activateItem('/calendar/calendar/year');
         }
         break;
 
     case 'edit':
         $HELP_KEYWORD = "Basis.TerminkalenderBearbeiten";
-        Navigation::activateItem('/messaging/calendar/edit');
+        Navigation::activateItem('/calendar/calendar/edit');
 
         if ($termin_id)
         {

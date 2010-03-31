@@ -1,16 +1,20 @@
 <?php
 /*
- * HomepageNavigation.php - navigation for home page
- *
- * Copyright (c) 2009  Elmar Ludwig
+ * ProfilNavigation.php - navigation for user profile page
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
- */
+ *
+ * @author      Elmar Ludwig
+ * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @copyright   2010 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+*/
 
-class HomepageNavigation extends Navigation
+class ProfileNavigation extends Navigation
 {
     /**
      * Initialize a new Navigation instance.
@@ -19,7 +23,7 @@ class HomepageNavigation extends Navigation
     {
         global $user, $auth, $homepage_cache_own, $LastLogin;
 
-        parent::__construct(_('Homepage'));
+        parent::__construct(_('Profil'));
 
         $db = DBManager::get();
         $time = $homepage_cache_own ? $homepage_cache_own : $LastLogin;
@@ -32,13 +36,13 @@ class HomepageNavigation extends Navigation
         $count = $result->fetchColumn();
 
         if ($count > 0) {
-            $hp_txt = _('Zu Ihrer Einstellungsseite') . ', ' .
+            $hp_txt = _('Zu Ihrer Profilseite') . ', ' .
                 sprintf(ngettext('Sie haben %d neuen Eintrag im Gästebuch.',
                                  'Sie haben %d neue Einträge im Gästebuch.', $count), $count);
             $picture = 'header_einst2';
             $hp_link = 'about.php?guestbook=open#guest';
         } else {
-            $hp_txt = _('Zu Ihrer Einstellungsseite');
+            $hp_txt = _('Zu Ihrer Profilseite');
             $picture = 'header_einst';
             $hp_link = 'about.php';
         }
@@ -84,15 +88,11 @@ class HomepageNavigation extends Navigation
         // this really should not be here
         $username = preg_replace('/[^\w@.-]/', '', $username);
 
-        // homepage
-        $navigation = new Navigation(_('Alle'));
-        $navigation->addSubNavigation('all', new Navigation(_('Persönliche Homepage'), 'about.php'));
-        $this->addSubNavigation('view', $navigation);
+        // main profile
+        $this->addSubNavigation('view', new Navigation(_('Profil'), 'about.php'));
 
         // avatar
-        $navigation = new Navigation(_('Bild'));
-        $navigation->addSubNavigation('upload', new Navigation(_('Hochladen des persönlichen Bildes'), 'edit_about.php', array('view' => 'Bild')));
-        $this->addSubNavigation('avatar', $navigation);
+        $this->addSubNavigation('avatar', new Navigation(_('Bild'), 'edit_about.php', array('view' => 'Bild')));
 
         // profile data
         $navigation = new Navigation(_('Nutzerdaten'));
@@ -112,53 +112,14 @@ class HomepageNavigation extends Navigation
                 $navigation->addSubNavigation('inst_data', new Navigation(_('Einrichtungsdaten'), 'edit_about.php', array('view' => 'Karriere')));
             }
         }
-
         $this->addSubNavigation('edit', $navigation);
 
         // user defined sections
-        $navigation = new Navigation(_('eigene Kategorien'));
-        $navigation->addSubNavigation('edit', new Navigation(_('Eigene Kategorien bearbeiten'), 'edit_about.php', array('view' => 'Sonstiges')));
-        $this->addSubNavigation('sections', $navigation);
+        $this->addSubNavigation('sections', new Navigation(_('Eigene Kategorien'), 'edit_about.php', array('view' => 'Sonstiges')));
 
-        // tools
-        $navigation = new Navigation(_('Tools'));
-        $navigation->addSubNavigation('news', new Navigation(_('News'), 'admin_news.php', array('range_id' => 'self')));
-        $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php', array('_range_id' => 'self')));
-        $navigation->addSubNavigation('vote', new Navigation(_('Votings und Tests'), 'admin_vote.php?page=overview', array('showrangeID' => $username)));
-        $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php', array('rangeID' => $username)));
-
+        // elearning
         if ($perm->have_perm('autor') && get_config('ELEARNING_INTERFACE_ENABLE')) {
             $navigation->addSubNavigation('elearning', new Navigation(_('Meine Lernmodule'), 'my_elearning.php'));
-        }
-
-        $this->addSubNavigation('tools', $navigation);
-
-        // settings
-        if ($username == $auth->auth['uname']) {
-            $navigation = new Navigation(_('Einstellungen'));
-            $navigation->addSubNavigation('general', new Navigation(_('Allgemeines'), 'edit_about.php', array('view' => 'allgemein')));
-            $navigation->addSubNavigation('forum', new Navigation(_('Forum'), 'edit_about.php', array('view' => 'Forum')));
-
-            if (!$perm->have_perm('admin')) {
-                if (get_config('CALENDAR_ENABLE')) {
-                    $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'edit_about.php', array('view' => 'calendar')));
-                }
-
-                $navigation->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'edit_about.php', array('view' => 'Stundenplan')));
-            }
-
-            $navigation->addSubNavigation('messaging', new Navigation(_('Messaging'), 'edit_about.php', array('view' => 'Messaging')));
-            $navigation->addSubNavigation('rss', new Navigation(_('RSS-Feeds'), 'edit_about.php', array('view' => 'rss')));
-
-            if (!$perm->have_perm('admin')) {
-                if (get_config('MAIL_NOTIFICATION_ENABLE')) {
-                    $navigation->addSubNavigation('notification', new Navigation(_('Benachrichtigung'), 'edit_about.php', array('view' => 'notification')));
-                }
-
-                $navigation->addSubNavigation('login', new Navigation(_('Login'), 'edit_about.php', array('view' => 'Login')));
-            }
-
-            $this->addSubNavigation('settings', $navigation);
         }
 
         // activated plugins

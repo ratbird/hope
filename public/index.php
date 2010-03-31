@@ -84,6 +84,7 @@ $CURRENT_PAGE = _("Startseite");
 // Start of Output
 $navigation = Navigation::getItem('/start');
 
+
 include 'lib/include/html_head.inc.php'; // Output of html head
 include 'lib/include/header.php';
 

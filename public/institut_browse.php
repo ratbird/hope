@@ -34,6 +34,7 @@ require_once ('lib/classes/StudipRangeTreeView.class.php');
 
 $HELP_KEYWORD="Basis.SuchenEinrichtungen";
 $CURRENT_PAGE=_("Einrichtungssuche");
+Navigation::activateItem('/search/institutes');
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -74,25 +75,21 @@ if ($_REQUEST['cmd']=="suche"){
     }
 }
 ?>
-<body>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-        <td class="topic" colspan="2">&nbsp;</td>
-    </tr>
-    <tr>
-    <td class="blank" width="100%" align="left" valign="top">
+    <td class="blank" align="left" valign="top">
+    <h1><?= _('Suche nach Einrichtungen') ?></h1>
     <?
 if ($msg)   {
     echo "\n<table width=\"99%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">";
     parse_msg ($msg,"§","blank",1,false);
     echo "\n</table>";
-} else {
-    echo "<br><br>";
 }
 $the_tree->showTree();
     ?>
+    <br>
     </td>
-    <td class="blank" align = right valign=top>
+    <td class="blank" align="right" valign="top" width="270">
     <?
 $infobox = array(array("kategorie"  => _("Information:"),
                         "eintrag" => array(array("icon" => "ausruf_small.gif",

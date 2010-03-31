@@ -32,6 +32,7 @@ require_once 'lib/classes/StudipKing.class.php';
 //Basics
 $HELP_KEYWORD="Basis.VerschiedenesScore"; // external help keyword
 $CURRENT_PAGE=_("Stud.IP-Score");
+Navigation::activateItem('/community/score');
 
 define("ELEMENTS_PER_PAGE", 20);
 

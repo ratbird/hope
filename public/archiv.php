@@ -35,6 +35,8 @@ elseif (($dump_id) || ($forum_dump_id) || ($wiki_dump_id))
     $_include_stylesheet = 'style_dump.css';
 $HELP_KEYWORD = "Basis.Archiv";
 $CURRENT_PAGE = _("Archiv");
+Navigation::activateItem('/search/archiv');
+
 
 // Start of Output
 include('lib/include/html_head.inc.php'); // Output of html head
@@ -89,6 +91,7 @@ $u_id = $user->id;
 
 //Sicherheitsabfrage
 if ($delete_id) {
+    //TODO: modaler dialog verwenden
     $db->query("SELECT name FROM archiv WHERE seminar_id= '$delete_id'");
     $db->next_record();
     $msg="info§" . sprintf(_("Wollen Sie die Veranstaltung <b>%s</b> wirklich l&ouml;schen? S&auml;mtliche Daten und die mit der Veranstaltung archivierte Dateisammlung werden unwiderruflich gel&ouml;scht!"), htmlReady($db->f("name"))) . " <br>";
@@ -210,10 +213,7 @@ $HELP_KEYWORD="Basis.SuchenArchiv";
 
 include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 ?>
-<table width="100%" border="0" cellpadding="0" cellspacing="0" border="0">
-    <tr>
-        <td class="topic" colspan="2">Archiv</td>
-    </tr>
+<table width="100%" border="0" cellpadding="2" cellspacing="0">
     <?
     if ($msg) { ?>
     <tr>
@@ -221,10 +221,8 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
     </tr>
     <? } ?>
     <tr>
-        <td class="blank" width="60%" align="left">
-            <blockquote>
-            <br>
-                <p>
+        <td class="blank" >
+        <h1><?= _('Suche im Archiv') ?></h1>
                 <form  name="search" method="post" action="<?= URLHelper::getLink() ?>" >
                     <table border=0 cellspacing=0 cellpadding=2>
                         <tr <? $cssSw->switchClass() ?>>
@@ -356,9 +354,9 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                     <br>
                     <input type="hidden" name="suche" value="yes">
                 </form>
-            </blockquote>
         </td>
-        <td class="blank" align="right" valign="top"><br><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/archiv.jpg" border="0">
+        <td class="blank" align="right" valign="top" width="270">
+            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/archiv.jpg" border="0">
         </td>
     </tr>
 

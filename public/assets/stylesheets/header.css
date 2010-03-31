@@ -144,6 +144,7 @@ div#barTopMenu li {
 	list-style-type: none;
 	font-size: 9pt;
 	font-weight: bold;
+	padding: 0px 3px;
 }
 
 div#barTopMenu li:hover {

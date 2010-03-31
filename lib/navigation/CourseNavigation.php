@@ -1,13 +1,17 @@
 <?php
 /*
- * CourseNavigation.php - navigation for course / institute area
- *
- * Copyright (c) 2009  Elmar Ludwig
+ * CourseNavigation.php - navigation for course page
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Elmar Ludwig
+ * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @copyright   2010 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
 
 require_once 'lib/functions.php';
@@ -67,7 +71,9 @@ class CourseNavigation extends Navigation
         if ($sem_class == 'sem') {
             $navigation->addSubNavigation('info', new Navigation(_('Kurzinfo'), 'seminar_main.php'));
 
-            if (!$studygroup_mode) {
+            if ($studygroup_mode) {
+                //TODO $navigation->addSubNavigation('details', new Navigation(_('Details'), 'dispatch.php/course/studygroup/details/'.$SessSemName[1]));
+            } else {
                 $navigation->addSubNavigation('details', new Navigation(_('Details'), 'details.php'));
                 $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'print_seminar.php'));
             }
@@ -82,7 +88,7 @@ class CourseNavigation extends Navigation
         } else {
             $navigation->addSubNavigation('info', new Navigation(_('Info'), 'institut_main.php'));
             $navigation->addSubNavigation('courses', new Navigation(_('Veranstaltungen'), 'show_bereich.php?level=s&id='.$SessSemName[1]));
-            $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Timetable'), 'mein_stundenplan.php?inst_id='.$SessSemName[1]));
+            $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'mein_stundenplan.php?inst_id='.$SessSemName[1]));
 
             if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
                 if ($perm->have_perm('admin')) {
@@ -97,9 +103,7 @@ class CourseNavigation extends Navigation
 
         // admin (study group only)
         if ($studygroup_mode && $perm->have_studip_perm('dozent', $SessSemName[1])) {
-            $navigation = new Navigation(_('Admin'));
-            $navigation->addSubNavigation('admin', new Navigation(_('Admin'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]));
-            $this->addSubNavigation('studygroup', $navigation);
+            $this->addSubNavigation('admin', new Navigation(_('Admin'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]));
         }
 
         // forum
@@ -108,19 +112,15 @@ class CourseNavigation extends Navigation
             $navigation->addSubNavigation('view', new Navigation(_('Themenansicht'), 'forum.php?view='.$forum['themeview']));
 
             if ($user->id != 'nobody') {
-                $navigation->addSubNavigation('unread', new Navigation(_('neue Beiträge'), 'forum.php?view=neue&sort=age'));
+                $navigation->addSubNavigation('unread', new Navigation(_('Neue Beiträge'), 'forum.php?view=neue&sort=age'));
             }
 
-            $navigation->addSubNavigation('recent', new Navigation(_('letzte Beiträge'), 'forum.php?view=flat&sort=age'));
+            $navigation->addSubNavigation('recent', new Navigation(_('Letzte Beiträge'), 'forum.php?view=flat&sort=age'));
             $navigation->addSubNavigation('search', new Navigation(_('Suchen'), 'forum.php?view=search&reset=1'));
             $navigation->addSubNavigation('export', new Navigation(_('Druckansicht'), 'forum_export.php'));
 
             if ($perm->have_studip_perm('tutor', $SessSemName[1]) || $SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']]['topic_create_autor']) {
-                $navigation->addSubNavigation('create_topic', new Navigation(_('neues Thema anlegen'), 'forum.php?view='.$forum['themeview'].'&neuesthema=TRUE#anker'));
-            }
-
-            if ($user->id != 'nobody') {
-                $navigation->addSubNavigation('settings', new Navigation(_('Forum anpassen'), 'forum.php?forumsend=anpassen'));
+                $navigation->addSubNavigation('create_topic', new Navigation(_('Neues Thema anlegen'), 'forum.php?view='.$forum['themeview'].'&neuesthema=TRUE#anker'));
             }
 
             $this->addSubNavigation('forum', $navigation);
@@ -132,8 +132,7 @@ class CourseNavigation extends Navigation
                 $navigation = new Navigation(_('TeilnehmerInnen'));
 
                 if ($studygroup_mode) {
-                    $navigation->addSubNavigation('view', new Navigation(_('TeilnehmerInnen'), 'dispatch.php/course/studygroup/members/'.$SessSemName[1]));
-                    $this->addSubNavigation('members', $navigation);
+                    $this->addSubNavigation('members', new Navigation(_('TeilnehmerInnen'), 'dispatch.php/course/studygroup/members/'.$SessSemName[1]));
                 } else if (!is_array($AUTO_INSERT_SEM) || !in_array($SessSemName[1], $AUTO_INSERT_SEM) || $perm->have_studip_perm('tutor', $SessSemName[1])) {
                     $navigation->addSubNavigation('view', new Navigation(_('TeilnehmerInnen'), 'teilnehmer.php'));
 
@@ -172,9 +171,9 @@ class CourseNavigation extends Navigation
         // schedule
         if ($modules['schedule'] && $user->id != 'nobody') {
             $navigation = new Navigation(_('Ablaufplan'));
-            $navigation->addSubNavigation('all', new Navigation(_('alle Termine'), 'dates.php?cmd=setType&type=all'));
+            $navigation->addSubNavigation('all', new Navigation(_('Alle Termine'), 'dates.php?cmd=setType&type=all'));
             $navigation->addSubNavigation('type1', new Navigation(_('Sitzungstermine'), 'dates.php?cmd=setType&type=1'));
-            $navigation->addSubNavigation('other', new Navigation(_('andere Termine'), 'dates.php?cmd=setType&type=other'));
+            $navigation->addSubNavigation('other', new Navigation(_('Andere Termine'), 'dates.php?cmd=setType&type=other'));
 
             if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
                 $navigation->addSubNavigation('topics', new Navigation(_('Ablaufplan bearbeiten'), 'themen.php?seminar_id='.$SessSemName[1]));
@@ -192,7 +191,7 @@ class CourseNavigation extends Navigation
             }
 
             if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
-                $navigation->addSubNavigation('new_entry', new Navigation(_('neuen Eintrag anlegen'), 'scm.php?show_scm=new_entry&i_view=edit'));
+                $navigation->addSubNavigation('new_entry', new Navigation(_('Neuen Eintrag anlegen'), 'scm.php?show_scm=new_entry&i_view=edit'));
             }
 
             $this->addSubNavigation('scm', $navigation);

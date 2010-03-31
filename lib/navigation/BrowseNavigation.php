@@ -2,13 +2,17 @@
 /*
  * BrowseNavigation.php - navigation for my courses / institutes
  *
- * Copyright (c) 2009  Elmar Ludwig
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
- */
+ *
+ * @author      Elmar Ludwig
+ * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @copyright   2010 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+*/
 
 class BrowseNavigation extends Navigation
 {
@@ -19,9 +23,18 @@ class BrowseNavigation extends Navigation
     {
         global $user, $perm;
 
+        // logged in
         if (is_object($user) && $user->id != 'nobody') {
             $coursetext = _('Veranstaltungen');
             $courseinfo = _('Meine Veranstaltungen & Einrichtungen');
+            // as admin or root
+            if ($perm->have_perm('admin')) {
+                $courselink = 'adminarea_start.php';
+            // as user
+            }  else {
+                $courselink = 'meine_seminare.php';
+            }
+        // not logged in
         } else {
             $coursetext = _('Freie');
             $courseinfo = _('Freie Veranstaltungen');
@@ -63,35 +76,6 @@ class BrowseNavigation extends Navigation
             }
 
             $this->addSubNavigation('my_courses', $navigation);
-        }
-
-        // browse courses
-        $navigation = new Navigation(_('Veranstaltungen suchen / hinzufügen'), 'sem_portal.php');
-
-        if ($perm->have_perm('admin')) {
-            $navigation->setTitle(_('Veranstaltungen suchen'));
-        }
-
-        $navigation->addSubNavigation('all', new Navigation(_('Alle'), 'sem_portal.php?reset_all=TRUE', array('view' => 'all')));
-
-        foreach ($GLOBALS['SEM_CLASS'] as $key => $val)  {
-            if (!$val['studygroup_mode']) {
-                $navigation->addSubNavigation($key, new Navigation($val['name'], 'sem_portal.php?reset_all=TRUE&cmd=qs', array('view' => $key)));
-            }
-        }
-
-        if (get_config('STM_ENABLE')) {
-            $navigation->addSubNavigation('mod', new Navigation(_('Studienmodule'), 'sem_portal.php?reset_all=TRUE', array('view' => 'mod')));
-        }
-
-        $this->addSubNavigation('courses', $navigation);
-
-        // browse study groups
-        if (get_config('STUDYGROUPS_ENABLE')) {
-            $navigation = new Navigation(_('Studiengruppen'));
-            $navigation->addSubNavigation('search', new Navigation(_('Studiengruppen suchen'), 'dispatch.php/studygroup/search/1/founded_asc'));
-            $navigation->addSubNavigation('browse', new Navigation(_('Studiengruppen anzeigen'), 'dispatch.php/studygroup/browse/1/founded_asc'));
-            $this->addSubNavigation('studygroups', $navigation);
         }
     }
 }

@@ -93,12 +93,14 @@ if (($showrangeID) && ($voteaction != "search")){
         (get_username($userID) == $showrangeID)){
     }
     else{
-        $safeguard = printSafeguard("ausruf",_("Sie haben kein Berechtigung für diesen Bereich oder der Bereich existiert nicht. Es werden Votings und Tests ihrer persönlichen Homepage angezeigt."));
+        //TODO: MessageBox verwenden
+        $safeguard = printSafeguard("ausruf",_("Sie haben kein Berechtigung für diesen Bereich oder der Bereich existiert nicht. Es werden Votings und Tests ihrer Profilseite angezeigt."));
         $showrangeID = get_username ($userID);
     }
 }
 elseif ($voteaction != "search"){
-    $safeguard = printSafeguard("ausruf",_("Kein Bereich ausgewählt. Es werden Votings und Tests ihrer persönlichen Homepage angezeigt."));
+    //TODO: MessageBox verwenden
+    $safeguard = printSafeguard("ausruf",_("Es werden Votings und Tests ihrer Profilseite angezeigt."));
     $showrangeID = get_username ($userID);
     }
 
@@ -127,7 +129,7 @@ $typen = array("user"=>_("Benutzer"),"sem"=>_("Veranstaltung"),"inst"=>_("Einric
 
 if ($rangemode == "root"){
     $range[] = array("studip",_("Systemweite Votings/Tests"));
-    $range[] = array(get_username($userID),_("persönliche Homepage"));
+    $range[] = array(get_username($userID),_("Profil"));
     if (($showrangeID != "studip") &&
         ($showrangeID != get_username ($userID))
         && ($showrangeID != NULL))
@@ -135,13 +137,13 @@ if ($rangemode == "root"){
 }
 elseif ($rangemode == "admin"){
 //  $range[] = array("studip",_("Fak/InstSystemweite Votings/Tests"));
-    $range[] = array(get_username($userID),_("persönliche Homepage"));
+    $range[] = array(get_username($userID),_("Profil"));
     if (($showrangeID != get_username ($userID))
         && ($showrangeID != NULL))
         $range[] = array($showrangeID,$voteDB->getRangename($showrangeID));
 }
 elseif ($rangemode == "dozent" OR $rangemode == "tutor") {
-    $range[] = array(get_username($userID),_("persönliche Homepage"));
+    $range[] = array(get_username($userID),_("Profil"));
     $rangeARUser = $voteDB->search_range("");
     if(!empty($rangeARUser)){
     foreach ($rangeARUser as $k => $v) {
@@ -155,7 +157,7 @@ elseif ($rangemode == "dozent" OR $rangemode == "tutor") {
     }
 }
 elseif ($rangemode == "autor"){
-    $range[] = array(get_username($userID),_(" auf der persönlichen Homepage"));
+    $range[] = array(get_username($userID),_(" auf der Profilseite"));
 }
 
 
@@ -176,7 +178,7 @@ printSelections($range,$searchRange,$safeguard);
 $voteDB = &new VoteDB();
 $voteDB->startWaitingVotes ();
     if ($voteDB->isError ())
-        printSafeguard("ausruf",_("Fehler beim starten der wartenden Votings und Tests."));
+        printSafeguard("ausruf",_("Fehler beim Starten der wartenden Votings und Tests."));
 
 if ($voteaction != "search"){
     // reads the vote data into arrays
@@ -498,7 +500,7 @@ function createVoteArray($mode){
             $username = $voteDB->getAuthorUsername ($authID);
         }
         else{
-            $rangetitle = _("eigene Homepage");
+            $rangetitle = _("eigenes Profil");
 //          $rangetitle = $voteDB->getRangename($rangeID);
 //          $username = $voteDB->getAuthorUsername ($authID);
 //          if($rangeID == "studip") $rangetitle = _("Systemweite Votings/Tests");

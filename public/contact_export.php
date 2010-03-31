@@ -3,43 +3,22 @@
 # Lifter007: TODO
 # Lifter003: TODO
 /**
-
  * Exports contacts to a vCard file
-
  *
-
  * @author      Christian Bauer <alfredhitchcock@gmx.net>
-
-
  * @copyright   2003 Stud.IP-Project
-
- * @access      public
-
- * @module      contact
-
  */
 
+require_once 'lib/statusgruppe.inc.php';
+require_once 'lib/user_visible.inc.php';
 
-/* ************************************************************************** *
-/*                                                                            *
-/* Define constants                                                           *
-/*                                                                            *
-/* ************************************************************************* */
-/* **END*of*Define*constants************************************************ */
-
-
-/* ************************************************************************** *
-/*                                                                            *
-/* initialise Stud.IP-Session                                                 *
-/*                                                                            *
-/* ************************************************************************* */
+/* initialise Stud.IP-Session */
 page_open (array ("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
     "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check ("autor");
 include ('lib/seminar_open.php');
-require_once ('lib/statusgruppe.inc.php');
-require_once ('lib/user_visible.inc.php');
-/* **END*of*initialise*Stud.IP-Session*********************************** */
+
+
 
 /* ************************************************************************** *
 /*                                                                            *
@@ -52,7 +31,7 @@ if (!( (isset($_POST["export_vcard_x"]))
     || (isset($_GET["username"]))
     || (isset($_GET["groupid"])) )){
     $CURRENT_PAGE = _("Adressbuch exportieren");
-    Navigation::activateItem('/messaging/address_book/export');
+    Navigation::activateItem('/community/address_book/export');
 
     require_once('lib/include/html_head.inc.php');
     require_once('lib/include/header.php');

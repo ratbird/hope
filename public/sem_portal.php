@@ -70,7 +70,7 @@ if (!$sem_portal["bereich"])
     $sem_portal["bereich"] = "all";
 
 $_REQUEST['view'] = $sem_portal['bereich'];
-Navigation::activateItem('/browse/courses/'.$sem_portal['bereich']);
+Navigation::activateItem('/search/courses/'.$sem_portal['bereich']);
 
 if ($choose_toplist)
     $sem_portal["toplist"] = $choose_toplist;
@@ -153,7 +153,7 @@ $init_data = array( "level" => "f",
                     "group_by"=>0,
                     "default_sem"=> ( ($default_sem = SemesterData::GetSemesterIndexById($GLOBALS['_default_sem'])) !== false ? $default_sem : "all"),
                     "sem_status"=>$_sem_status);
-                    
+
 if ($reset_all) $sem_browse_data = null;
 if ($GLOBALS['STM_ENABLE'] &&  $sem_portal["bereich"] == "mod"){
     $sem_browse_obj = new StmBrowse($init_data);
@@ -317,19 +317,19 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
         );
 } else {
     $infotxt = _("Sie können hier nach allen Modulen suchen, sich Informationen anzeigen lassen und Module abonnieren.");
-                     
+
     $infobox[] =
         array  ("kategorie" => _("Aktionen:"),
-            "eintrag" => array        (        
+            "eintrag" => array        (
                 array         (        "icon" => "suchen.gif",
                     "text"  =>        $infotxt
                 )
         )
     );
 
-    $infobox[] = ($sem_portal['bereich'] !="all") ? 
+    $infobox[] = ($sem_portal['bereich'] !="all") ?
                 array  ("kategorie"  => _("Information:"),
-                        "eintrag" => array  (   
+                        "eintrag" => array  (
                                     array ( "icon" => "ausruf_small.gif",
                                             "text"  => sprintf (_("Gew&auml;hlte Kategorie: <b>%s</b>")."<br />"._("%s Studienmodule vorhanden"), _("Studienmodule"), $anzahl_seminare_class)
                                                         . (($anzahl_seminare_class && $anzahl_seminare_class < 30) ? "<br>" . sprintf(_("Alle Studienmodule %sanzeigen%s"),"<a href=\"$PHP_SELF?do_show_class=mod\">","</a>") : ""))

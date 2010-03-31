@@ -83,7 +83,7 @@ function print_chat_info($chatids){
 
 $HELP_KEYWORD = "Basis.InteraktionChat";
 $CURRENT_PAGE = _("Chat-Online");
-Navigation::activateItem('/messaging/chat');
+Navigation::activateItem('/community/chat');
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head

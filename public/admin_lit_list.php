@@ -45,6 +45,7 @@ if (!$sess->is_registered('_lit_range')){
 
 if ($_REQUEST['_range_id'] == "self"){
     $_range_id = $auth->auth['uid'];
+    unset($view_mode);
 } else if (isset($_REQUEST['_range_id'])){
     $_range_id = $_REQUEST['_range_id'];
 } else {
@@ -62,7 +63,7 @@ if ($list  || $view || $view_mode || $_range_id != $auth->auth['uid']){
     }
     $_range_id = ($SessSemName[1]) ? $SessSemName[1] : $_range_id;
 } else {
-    Navigation::activateItem('/homepage/tools/literature');
+    Navigation::activateItem('/tools/literature');
 }
 
 $_lit_range = $_range_id;
@@ -161,7 +162,7 @@ $_the_treeview->showTree();
     <td>
 <?
 // Literaturlisten-Import
-print_lit_import_dlg(); 
+print_lit_import_dlg();
 ?>
     </td>
 </tr>

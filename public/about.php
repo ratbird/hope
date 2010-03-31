@@ -176,13 +176,13 @@ $db->next_record();
 // Help
 $HELP_KEYWORD = "Basis.Homepage";
 if($db->f('user_id') == $user->id && !$db->f('locked')){
-    $CURRENT_PAGE = _("Meine persönliche Homepage");
+    $CURRENT_PAGE = _("Mein Profil");
     $user_id = $db->f("user_id");
 } elseif ($db->f('user_id') && ($perm->have_perm("root") || (!$db->f('locked') && get_visibility_by_id($db->f("user_id"))))) {
-    $CURRENT_PAGE = _("Persönliche Homepage")  . ' - ' . get_fullname($db->f('user_id'));
+    $CURRENT_PAGE = _("Profil")  . ' - ' . get_fullname($db->f('user_id'));
     $user_id = $db->f("user_id");
 } else {
-    $CURRENT_PAGE = _("Persönliche Homepage");
+    $CURRENT_PAGE = _("Profil");
     unset($user_id);
 }
 # and start the output buffering
@@ -252,9 +252,14 @@ $show_tabs = ($user_id == $user->id && $perm->have_perm("autor"))
              || $perm->have_perm("root")
              || $admin_darf;
 
-if ($show_tabs) {
-    Navigation::activateItem('/homepage/view/all');
+if (!$show_tabs) {
+    foreach (Navigation::getItem('/profil') as $key=>$nav) {
+        if ($key != 'view') {
+            Navigation::removeItem('/profil/'.$key);
+        }
+    }
 }
+Navigation::activateItem('/profil/view');
 
 // TODO this can be removed when page output is moved to a template
 URLHelper::addLinkParam('username', $username);
@@ -269,27 +274,11 @@ function open_im() {
 }
 </script>
 
-
-
-<table align="center" width="100%" border="0" cellpadding="1" cellspacing="0" valign="top">
-
-    <? if (!$show_tabs) : ?>
-        <tr>
-            <td class="topic" align="right" colspan="2">&nbsp;</td>
-        </tr>
-    <? endif ?>
-
-    <? if ($msg) : ?>
-        <tr>
-            <td class="steel1" colspan="2">
-                <br>
-                <?= parse_msg ($msg, "§", "steel1") ?>
-            </td>
-        </tr>
-    <? endif ?>
-
+<? if ($msg) : ?>
+    <?= parse_msg($msg) ?>
+<? endif ?>
+<table width="100%" border="0" cellpadding="1" cellspacing="0">
     <tr>
-
         <td class="steel1" valign="top">
             <br>
             <?= Avatar::getAvatar($user_id)->getImageTag(Avatar::NORMAL) ?>
@@ -340,21 +329,10 @@ function open_im() {
         </td>
 
         <td class="steel1" width="99%" valign="top">
-            <br>
             <blockquote>
-
-                <b>
-                    <font size="7">
-                        <?= htmlReady($db->f("fullname")) ?>
-                    </font>
-                </b>
-                <br>
-
+            <h1><?= htmlReady($db->f("fullname")) ?></h1>
                 <? if ($db->f('motto')) : ?>
-                    <b>
-                        <font size="5"><?= htmlReady($db->f('motto')) ?></font>
-                    </b>
-                    <br>
+                    <h3><?= htmlReady($db->f('motto')) ?></h3>
                 <? endif ?>
 
                 <? if (!get_visibility_by_id($user_id)) : ?>

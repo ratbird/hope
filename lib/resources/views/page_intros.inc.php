@@ -1,39 +1,23 @@
 <?
 # Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
 /**
-* page_intros.inc.php
-*
-* library for the messages on the pages, contents of the infoboxes and stuff to display
-*
-*
-* @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access       public
-* @modulegroup      resources
-* @module       page_intros.inc.php
-* @package      resources
+ * page_intros.inc.php
+ *
+ * library for the messages on the pages, contents of the infoboxes and stuff
+ * to display
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Cornelis Kater <ckater@gwdg.de>
+ * @author      Suchi & Berg GmbH <info@data-quest.de>
+ * @copyright   2003-2010 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @package     resources
 */
-
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// page_intros.inc.php
-// Nachrichten, Inhalt der Infokaesten und andere Inhalte der Seiten der Ressourcenverwaltung
-// Copyright (C) 2003 Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
 
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/ResourceObject.class.php");
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/RoomGroups.class.php");
@@ -71,7 +55,8 @@ switch ($view) {
     case "search":
         $page_intro=_("Sie können hier nach Ressourcen suchen. Sie haben die Möglichkeit, über ein Stichwort oder bestimmte Eigenschaften Ressourcen zu suchen oder sich durch die Ebenen zu navigieren.");
         $CURRENT_PAGE=_("Suche nach Ressourcen");
-        Navigation::activateItem('/resources/view/browse');
+        Navigation::activateItem('/resources/view/hierarchy');
+
         $infobox = array(
                     array  ("kategorie" => _("Aktionen:"),
                             "eintrag" => array (
@@ -150,7 +135,7 @@ switch ($view) {
         if ($view_mode == "no_nav")
             $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
                                     "text"  =>"<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
-        
+
         if ($view_mode != "search" && $view_mode != "no_nav") {
             if ($SessSemName["class"] == "sem")
                 $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
@@ -163,7 +148,7 @@ switch ($view) {
         if (get_config('RESOURCES_ENABLE_SEM_SCHEDULE'))
             $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
                                 "text"  => sprintf (_("%sSemesterplan%s anzeigen"), "<a href=\"$PHP_SELF?quick_view=view_sem_schedule&quick_view_mode=".$view_mode."\">", "</a>"));
-        
+
     break;
     case "view_sem_schedule":
         $page_intro=_("Hier können Sie sich die Belegungszeiten der Ressource anzeigen  und auf unterschiedliche Art darstellen lassen.");
@@ -372,21 +357,26 @@ switch ($view) {
         $infobox[0]["kategorie"] = _("Aktionen:");
         $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
                                     "text"  =>  sprintf("<a href=\"javascript:void(null)\" onclick=\"window.open('resources.php?actual_object={$resources_data['resolve_requests_one_res']}&amp;quick_view=view_sem_schedule&amp;quick_view_mode=no_nav','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes');\">%s</a>", _("Semesterplan")));
-        
 
-        
+
+
     break;
     //default
     default:
         $page_intro=_("Sie befinden sich in der Ressourcenverwaltung von Stud.IP. Sie können hier Räume, Gebäude, Geräte und andere Ressourcen verwalten.");
-        $CURRENT_PAGE=_("übersicht der Ressourcen");
+        $CURRENT_PAGE=_("Übersicht der Ressourcen");
+        Navigation::activateItem('/resources/view/hierarchy');
     break;
-    }
+}
 
-    //general naming of resources management pages
-    if (!$SessSemName) {
-        if ($CURRENT_PAGE)
-            $CURRENT_PAGE = ": ".$CURRENT_PAGE;
-            $CURRENT_PAGE = _("Ressourcenverwaltung").$CURRENT_PAGE;
-    }
-?>
+// using the search page not inside the resources
+if (Request::get('view_mode') == 'search' OR Request::get('quick_view_mode') == 'search') {
+        Navigation::activateItem('/search/resources');
+}
+
+//general naming of resources management pages
+if (!$SessSemName) {
+    if ($CURRENT_PAGE)
+        $CURRENT_PAGE = ": ".$CURRENT_PAGE;
+        $CURRENT_PAGE = _("Ressourcenverwaltung").$CURRENT_PAGE;
+}

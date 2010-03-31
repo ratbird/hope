@@ -1,42 +1,23 @@
 <?
 # Lifter002: TODO
+# Lifter003: TODO
 # Lifter005: TODO
 # Lifter007: TODO
-# Lifter003: TODO
 /**
-* resourcesControl.php
-*
-* the controlling body of the resource-management
-*
-*
-* @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access       public
-* @modulegroup      resources
-* @module       resourcesControl.php
-* @package      resources
+ * resourcesControl.php - the controlling body of the resource-management
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Cornelis Kater <ckater@gwdg.de>
+ * @author      Suchi & Berg GmbH <info@data-quest.de>
+ * @copyright   2003-2010 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @package     resources
 */
-
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// resourcesControl.php
-// zentrale Steuerung der Ressourcenverwaltung
-// Copyright (C) 2003 Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
-
-
 
 /*****************************************************************************
 Requires & Registers
@@ -87,11 +68,12 @@ include ("$RELATIVE_PATH_RESOURCES/lib/evaluate_values.php");
 Navigation aufbauen
 /*****************************************************************************/
 
-$resources_nav = new Navigation(_('Ressourcenverwaltung'));
+$resources_nav = new Navigation(_('Ressourcen'));
+$resources_nav->setImage('header_admin', array('title' => _('Zur Ressourcenverwaltung')));
 
 // Reiter "Uebersicht"
 $navigation = new Navigation(_('Übersicht'));
-$navigation->addSubNavigation('browse', new Navigation(_('Suchen'), 'resources.php?reset=TRUE', array('view' => 'search')));
+//$navigation->addSubNavigation('browse', new Navigation(_('Suchen'), 'resources.php?reset=TRUE', array('view' => 'search')));
 $navigation->addSubNavigation('hierarchy', new Navigation(_('Struktur'), 'resources.php#a', array('view' => 'resources')));
 
 if (get_config('RESOURCES_ALLOW_CREATE_TOP_LEVEL') || getGlobalPerms($user->id) == 'admin') {
@@ -211,13 +193,7 @@ function check_opener(obj){
     <?
     if (!isset($_REQUEST['print_view'])){
         if ($infobox) {
-    ?>
-    <tr>
-        <td class="blank">&nbsp;
-        </td>
-    </tr>
-    <?
-        }
+    }
     ?>
     <tr>
         <td class="blank" valign ="top">

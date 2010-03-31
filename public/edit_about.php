@@ -359,27 +359,27 @@ switch($view) {
     case "Bild":
         $HELP_KEYWORD="Basis.HomepageBild";
         $CURRENT_PAGE=_("Hochladen eines persönlichen Bildes");
-        Navigation::activateItem('/homepage/avatar/upload');
+        Navigation::activateItem('/profil/avatar');
         break;
     case "Daten":
         $HELP_KEYWORD="Basis.HomepagePersönlicheDaten";
         $CURRENT_PAGE=_("Benutzerkonto bearbeiten");
-        Navigation::activateItem('/homepage/edit/profile');
+        Navigation::activateItem('/profil/edit/profile');
         break;
     case "Karriere":
         $HELP_KEYWORD="Basis.HomepageUniversitäreDaten";
         $CURRENT_PAGE=_("Einrichtungsdaten bearbeiten");
-        Navigation::activateItem('/homepage/edit/inst_data');
+        Navigation::activateItem('/profil/edit/inst_data');
         break;
     case 'Studium':
         $HELP_KEYWORD="Basis.HomepageUniversitäreDaten";
         $CURRENT_PAGE=_("Studiengang bearbeiten");
-        Navigation::activateItem('/homepage/edit/study_data');
+        Navigation::activateItem('/profil/edit/study_data');
         break;
     case 'userdomains':
         $HELP_KEYWORD="Basis.HomepageNutzerdomänen";
         $CURRENT_PAGE=_("Nutzerdomänen bearbeiten");
-        Navigation::activateItem('/homepage/edit/user_domains');
+        Navigation::activateItem('/profil/edit/user_domains');
         break;
     case "Lebenslauf":
         $HELP_KEYWORD="Basis.HomepageLebenslauf";
@@ -387,27 +387,27 @@ switch($view) {
             $CURRENT_PAGE =  _("Lebenslauf, Arbeitsschwerpunkte und Publikationen bearbeiten");
         else
             $CURRENT_PAGE =  _("Lebenslauf bearbeiten");
-        Navigation::activateItem('/homepage/edit/private');
+        Navigation::activateItem('/profil/edit/private');
         break;
     case "Sonstiges":
         $HELP_KEYWORD="Basis.HomepageSonstiges";
         $CURRENT_PAGE=_("Eigene Kategorien bearbeiten");
-        Navigation::activateItem('/homepage/sections/edit');
+        Navigation::activateItem('/profil/sections');
         break;
     case "Login":
         $HELP_KEYWORD="Basis.MyStudIPAutoLogin";
         $CURRENT_PAGE=_("Auto-Login einrichten");
-        Navigation::activateItem('/homepage/settings/login');
+        Navigation::activateItem('/account/login');
         break;
     case "Forum":
         $HELP_KEYWORD="Basis.MyStudIPForum";
         $CURRENT_PAGE=_("Einstellungen des Forums anpassen");
-        Navigation::activateItem('/homepage/settings/forum');
+        Navigation::activateItem('/account/forum');
         break;
     case "calendar":
         $HELP_KEYWORD="Basis.MyStudIPTerminkalender";
         $CURRENT_PAGE=_("Einstellungen des Terminkalenders anpassen");
-        Navigation::activateItem('/homepage/settings/calendar');
+        Navigation::activateItem('/account/calendar');
         break;
     case "Tools":
         $HELP_KEYWORD="Basis.HomepageTools";
@@ -416,26 +416,26 @@ switch($view) {
     case "Stundenplan":
         $HELP_KEYWORD="Basis.MyStudIPStundenplan";
         $CURRENT_PAGE=_("Einstellungen des Stundenplans anpassen");
-        Navigation::activateItem('/homepage/settings/schedule');
+        Navigation::activateItem('/account/schedule');
         break;
     case "Messaging":
         $HELP_KEYWORD="Basis.MyStudIPMessaging";
         $CURRENT_PAGE=_("Einstellungen des Nachrichtensystems anpassen");
-        Navigation::activateItem('/homepage/settings/messaging');
+        Navigation::activateItem('/account/messaging');
         break;
     case "rss":
         $HELP_KEYWORD="Basis.MyStudIPRSS";
         $CURRENT_PAGE=_("Einstellungen der RSS-Anzeige anpassen");
-        Navigation::activateItem('/homepage/settings/rss');
+        Navigation::activateItem('/account/rss');
         break;
     case "notification":
         $HELP_KEYWORD="Basis.MyStudIP";
         $CURRENT_PAGE=_("Benachrichtigung über neue Inhalte anpassen");
-        Navigation::activateItem('/homepage/settings/notification');
+        Navigation::activateItem('/account/notification');
         break;
     case "allgemein":
         $CURRENT_PAGE=_("Allgemeine Einstellungen anpassen");
-        Navigation::activateItem('/homepage/settings/general');
+        Navigation::activateItem('/account/general');
         break;
     default:
         $HELP_KEYWORD="Basis.MyStudIP";

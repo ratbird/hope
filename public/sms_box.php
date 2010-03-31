@@ -74,10 +74,10 @@ $db7 = new DB_Seminar;
 
 if ($change_view) {
     $HELP_KEYWORD="Basis.MyStudIPMessaging";
-    Navigation::activateItem('/messaging/message/settings');
+    Navigation::activateItem('/account/message');
 } else {
     $HELP_KEYWORD="Basis.InteraktionNachrichten";
-    Navigation::activateItem('/messaging/message/' . $sms_data['view']);
+    Navigation::activateItem('/messaging/' . $sms_data['view']);
 }
 
 $CURRENT_PAGE = _("Systeminterne Nachrichten");

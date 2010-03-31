@@ -3,7 +3,7 @@ $infobox = array();
 $infobox['picture'] = StudygroupAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMAL);
 
 $aktionen[] = array(
-    "text" => '<a href="'.$controller->url_for('course/studygroup/new').'">'._('Neue Studiengruppe anlegen').'</a>',
+    "text" => '<a href="'.$controller->url_for('course/studygroup/new').'">'._('Neue Studiengruppe gründen').'</a>',
     "icon" => "icon-cont.gif"
 );
 $aktionen[] = array(
@@ -67,7 +67,7 @@ $infobox['content'] = array(
   <td>
     <? foreach($available_modules as $key => $name) : ?>
         <? if ($key != 'participants') :?>
-        <label>     
+        <label>
             <input name="groupmodule[<?= $key ?>]" type="checkbox" <?= ($modules->getStatus($key, $sem_id, 'sem')) ? 'checked="checked"' : '' ?>> <?= $name ?>
         </label><br>
         <? endif;?>

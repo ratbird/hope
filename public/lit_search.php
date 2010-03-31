@@ -36,6 +36,7 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 $HELP_KEYWORD = "Basis.Literatursuche";
 $CURRENT_PAGE = _("Literatursuche");
+Navigation::activateItem('/search/literatures');
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -102,17 +103,16 @@ $_msg .= $_the_clipboard->msg;
 $_msg .= $_the_search->search_plugin->getError("msg");
 
 ?>
-<body>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-    <td class="blank" width="99%" align="left" valign="top">
+    <td class="blank" valign="top">
+    <h1>Nach Literatur suchen</h1>
     <?
+    //TODO: Mssagebox
 if ($_msg)  {
     echo "\n<table width=\"99%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">";
     parse_msg ($_msg,"§","blank",1,false);
     echo "\n</table>";
-} else {
-    echo "<br><br>";
 }
 $class_changer = new CssClassSwitcher();
 $_attributes['search_plugin'] = $_attributes['text'];
@@ -123,11 +123,7 @@ $_attributes['search_plugin']['onChange'] = 'document.' . $_the_search->outer_fo
 <table width="99%" border="0" cellpadding="2" cellspacing="0" style="font-size:10pt">
 <tr>
 <?=$_the_search->outer_form->getFormStart();?>
-<td colspan="3" class="steel2" align="center">&nbsp;
-<?=$_the_search->outer_form->getFormButton('search',$_attributes['button']);?>
-&nbsp;
-<?=$_the_search->outer_form->getFormButton('reset',$_attributes['button']);?>
-</td></tr>
+</tr>
 <tr><td <?=$class_changer->getFullClass()?> width="30%">
 <?=$_the_search->outer_form->getFormFieldCaption('search_plugin') ;?>
 </td><td <?=$class_changer->getFullClass()?> width="40%" align="right">
@@ -227,7 +223,7 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
     if ($element){
         echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr>";
         $link=URLHelper::getLink('',array('cmd'=>'add_to_clipboard','catalog_id'=>$element->getValue("catalog_id")));
-        if ($_the_clipboard->isInClipboard($element->getValue("catalog_id"))) { 
+        if ($_the_clipboard->isInClipboard($element->getValue("catalog_id"))) {
             $addon="<img src=\"".$GLOBALS['ASSETS_URL']."images/forum_fav.gif\" hspace=\"4\"  border=\"0\" " .
                 tooltip(_("Dieser Eintrag ist bereits in ihrer Merkliste")) . ">";
         } else {
@@ -295,10 +291,7 @@ if ($_the_search->start_result + 4 < $num_hits) {
 </td></tr>
 </table>
 </td>
-<td class="blank" align="center" valign="top">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-<tr>
-<td class="blank" width="270" align="right" valign="top">
+<td class="blank" align="right" valign="top" width="270">
 <?
 $infobox[0] = array ("kategorie" => _("Information:"),
                     "eintrag" =>    array(
@@ -319,8 +312,7 @@ $infobox[1]["eintrag"][] = array("icon" => "link_intern.gif","text"  => "<a href
 print_infobox ($infobox,"browse.jpg");
 
 ?>
-</td>
-</tr>
+<table width="250" border="0" cellpadding="0" cellspacing="0" align="center">
 <?=$_the_clip_form->getFormStart();?>
 <tr>
     <td class="blank" align="center" valign="top">

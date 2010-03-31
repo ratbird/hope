@@ -166,8 +166,8 @@ class StudygroupModel {
         $status = studygroup_sem_types();
         $sql = "SELECT * FROM seminare WHERE status IN('". implode("','", $status)."')";
         if(isset($search)) {
-            $search = mysql_real_escape_string($search);
-            $sql .= " AND seminare.Name LIKE '%{$search}%' ";
+            $search = DBManager::get()->quote('%'.$search.'%');
+            $sql .= " AND seminare.Name LIKE {$search}";
         }
         $sort_order = (substr($sort, strlen($sort) - 3, 3) == 'asc') ? 'asc' : 'desc';
                

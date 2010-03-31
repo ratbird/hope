@@ -1,8 +1,8 @@
-<? if (in_array($m, $moderators) && $GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
+<? if (array_key_exists($m['user_id'], $moderators) && $GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
     &nbsp;<a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$m['username'].'/promote/tutor') ?>" alt="NutzerIn runterstufen">
         <?= makebutton('runterstufen') ?>
     </a>
-<? elseif (in_array($m, $tutors)) : ?>
+<? elseif (array_key_exists($m['user_id'], $tutors)) : ?>
     <? if ($GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
     &nbsp;<a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$m['username'].'/promote/dozent') ?>" alt="NutzerIn befördern">
         <?= makebutton('hochstufen') ?>

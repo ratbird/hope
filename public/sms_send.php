@@ -63,6 +63,7 @@ $msging=new messaging;
 $db=new DB_Seminar;
 
 check_messaging_default();
+$request = Request::getInstance();
 
 # ACTION
 ###########################################################
@@ -75,6 +76,14 @@ if ($cmd == 'new') {
     unset($cmd);
 
     if ($my_messaging_settings["save_snd"] == "1") $sms_data["tmpsavesnd"] = "1";
+}
+// if send message at single/multiple user coming from teilnehmer.php
+if (isset($_REQUEST["subject"]) && isset($_REQUEST["rec_unames"]) && !isset($_REQUEST["filter"]) && !isset($_REQUEST["cmd"]))
+{
+    $messagesubject = rawurldecode(Request::quoted("subject"));
+    $sms_data["p_rec"] = Request::quotedArray("rec_unames");
+    $sms_data["tmpsavesnd"] = Request::quoted("tmpsavesnd");    
+    $sms_data["sig"] = $my_messaging_settings["addsignature"];
 }
 
 // write a chat-invitation, so predefine the messagesubject

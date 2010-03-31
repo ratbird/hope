@@ -283,6 +283,19 @@ class StudygroupModel {
         return $stmt->fetchAll();
     }
     
+    function getAllMembers($sem_id)
+    {
+        $stmt = DBManager::get()->prepare($query = "SELECT username,user_id ,perms, seminar_user.status, ". $GLOBALS['_fullname_sql']['full_rev'] ." as fullname FROM seminar_user
+            LEFT JOIN auth_user_md5 USING (user_id)
+            LEFT JOIN user_info USING (user_id)
+            WHERE Seminar_id = ? AND username != 'studygroup_dozent'
+            ORDER BY seminar_user.mkdate ASC, seminar_user.status ASC");
+
+        $stmt->execute( array($sem_id) );
+
+        return $stmt->fetchAll();
+    }
+    
     function compare_status($a, $b) { 
         if ($a['status'] == $b['status']) return strnatcmp($a['fullname'], $b['fullname']);
         elseif ($a['status'] == 'dozent'){

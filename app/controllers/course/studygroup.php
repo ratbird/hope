@@ -820,5 +820,31 @@ class Course_StudygroupController extends AuthenticatedController {
         }
         $this->redirect('course/studygroup/globalmodules');
     }
+    /*
+     * sends a mail to all members
+     * 
+     * @param   string  id of a studypgroup
+     */
+    function massmsg_action($sem_id)
+    {
+        $members = StudygroupModel::getAllMembers( $sem_id );
+        $rec_unames = array();
+        foreach ($members as $m)
+        {
+            array_push($rec_unames, $m['username']);
+        }
+        $stmt = DBManager::get()->query("SELECT Name as name FROM seminare WHERE Seminar_id = '".$sem_id."'");
+        $sem_name = $stmt->fetch(); // get group name
+        
+        if (strlen($sem_name['name']) > 32) //cut subject if to long
+            $subject = '[Studiengruppe: '.substr($sem_name['name'], 0, 30).'..]';
+        else
+            $subject = '[Studiengruppe: '.$sem_name['name'].']';
+        
+        $link = URLHelper::getURL('sms_send.php', array('subject' => $subject, 'rec_unames' => $rec_unames));
+        
+        $this->redirect($link);
+        
+    }
 
 }

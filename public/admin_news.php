@@ -32,40 +32,38 @@ require_once 'lib/classes/AdminNewsController.class.php';
 
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-require_once 'lib/admin_search.inc.php';
 
-echo "\n" . cssClassSwitcher::GetHoverJSFunction() . "\n";
+$_include_additional_header .= "\n" . cssClassSwitcher::GetHoverJSFunction() . "\n";
 
-if(!$news_range_id) {
-    URLHelper::bindLinkParam('news_range_id',$news_range_id);
-    URLHelper::bindLinkParam('news_range_name',$news_range_name);
+URLHelper::bindLinkParam('news_range_id',$news_range_id);
+URLHelper::bindLinkParam('news_range_name',$news_range_name);
+
+if ($_REQUEST['range_id'] == "self"){
+    $news_range_id = $auth->auth['uid'];
+} else if (isset($_REQUEST['range_id'])){
+    $news_range_id = $_REQUEST['range_id'];
 }
 
-if ($range_id == 'self') {
-    $range_id = $user->id;
-    $view_mode = 'user';
-}
-
-if ($range_id){
-    $news_range_id = $range_id;
+if (!$news_range_id){
+    $news_range_id = $auth->auth['uid'];
 }
 
 $HELP_KEYWORD = "Basis.News";
 $CURRENT_PAGE = _("Verwaltung von News");
 
-if ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' ){
-    if ($links_admin_data['topkat'] == 'sem') {
+if ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user'){
+    include 'lib/admin_search.inc.php';
+    if ($links_admin_data['topkat'] == 'sem' && !SeminarCategories::getByTypeId($SessSemName['art_num'])->studygroup_mode) {
         Navigation::activateItem('/admin/course/news');
-    } else {
+    } elseif ($links_admin_data['topkat'] == 'inst') {
         Navigation::activateItem('/admin/institute/news');
+    } else {
+        Navigation::activateItem('/tools/news');
     }
-} else {
-    Navigation::activateItem('/tools/news');
-}
-
-if ($SessSemName[1] && ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' )) {
     $news_range_id = $SessSemName[1];
     $news_range_name = '';
+} else {
+    Navigation::activateItem('/tools/news');
 }
 
 $news = new AdminNewsController();
@@ -75,7 +73,9 @@ $CURRENT_PAGE = ($SessSemName[1] && ($list || $view || ($news_range_id != $user-
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-include 'lib/include/admin_search_form.inc.php';
+if($news_range_id == $SessSemName[1]){
+    include 'lib/include/admin_search_form.inc.php';
+}
 
 function callback_cmp_newsarray($a, $b) {
     return strnatcasecmp($a['name'], $b['name']); // Case insensitive string comparisons using a "natural order" algorithm

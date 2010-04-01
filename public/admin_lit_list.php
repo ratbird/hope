@@ -32,7 +32,6 @@ require_once ('lib/classes/StudipLitClipBoard.class.php');
 include_once('lib/lit_import.inc.php');
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-require_once 'lib/admin_search.inc.php';
 
 $_attributes['lit_select'] = array('style' => 'font-size:8pt;width:100%');
 
@@ -45,7 +44,6 @@ if (!$sess->is_registered('_lit_range')){
 
 if ($_REQUEST['_range_id'] == "self"){
     $_range_id = $auth->auth['uid'];
-    unset($view_mode);
 } else if (isset($_REQUEST['_range_id'])){
     $_range_id = $_REQUEST['_range_id'];
 } else {
@@ -56,6 +54,9 @@ if (!$_range_id){
 }
 
 if ($list  || $view || $view_mode || $_range_id != $auth->auth['uid']){
+
+    include 'lib/admin_search.inc.php';
+
     if ($links_admin_data['topkat'] == 'sem') {
         Navigation::activateItem('/admin/course/literature');
     } else {
@@ -76,8 +77,9 @@ $CURRENT_PAGE = $_the_tree->root_name . " - " . $CURRENT_PAGE;
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-include 'lib/include/admin_search_form.inc.php';
-
+if($_range_id == $SessSemName[1]){
+    include 'lib/include/admin_search_form.inc.php';
+}
 //checking rights
 if (($_the_tree->range_type == "sem" && !$perm->have_studip_perm("tutor", $_range_id)) ||
     (($_the_tree->range_type == "inst" || $_the_tree->range_type == "fak") && !$perm->have_studip_perm("autor", $_range_id))){

@@ -40,7 +40,7 @@ require_once ('lib/visual.inc.php');
 $cssSw = new cssClassSwitcher;                                  // Klasse für Zebra-Design
 $cssSw->enableHover();
 $CURRENT_PAGE = _("Mein Adressbuch");
-Navigation::activateItem('/community/address_book/' . Request::get('view'));
+Navigation::activateItem('/community/address_book/' . Request::get('view', 'alpha'));
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head

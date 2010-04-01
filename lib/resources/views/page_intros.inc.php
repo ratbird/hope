@@ -372,6 +372,9 @@ switch ($view) {
 // using the search page not inside the resources
 if (Request::get('view_mode') == 'search' OR Request::get('quick_view_mode') == 'search') {
         Navigation::activateItem('/search/resources');
+        if(!$perm->have_perm('admin')){
+            Navigation::removeItem('/resources');
+        }
 }
 
 //general naming of resources management pages

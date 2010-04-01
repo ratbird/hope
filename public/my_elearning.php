@@ -2,26 +2,20 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// my_elearning.php
-//
-// Copyright (c) 2005 Arne Schroeder <schroeder@data-quest.de>
-// Suchi & Berg GmbH <info@data-quest.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
+/*
+ * my_elearning.php
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Arne Schroeder <schroeder@data-quest.de>
+ * @author      Suchi & Berg GmbH <info@data-quest.de>
+ * @copyright   2005-2010 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+*/
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("autor");
@@ -32,14 +26,13 @@ require_once ('config.inc.php');
 require_once ('lib/visual.inc.php');
 
 $CURRENT_PAGE = _("Meine Lernmodule und Benutzer-Accounts");
-Navigation::activateItem('/homepage/tools/elearning');
+Navigation::activateItem('/profil/elearning');
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
 
-if ($ELEARNING_INTERFACE_ENABLE)
-{
+if (get_config('ELEARNING_INTERFACE_ENABLE')) {
     require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
     ELearningUtils::bench("start");
 
@@ -59,14 +52,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
 
     ?><table cellspacing="0" cellpadding="0" border="0" width="100%">
     <tr>
-        <td class="blank" colspan="3">&nbsp;
-        </td>
-    </tr>
-    <tr valign="top">
-                <td width="1%" class="blank">
-                    &nbsp;
-                </td>
-        <td width="90%" class="blank">
+        <td valign="top" class="blank">
     <?
 
     if ($new_account_cms != "")
@@ -198,16 +184,11 @@ if ($ELEARNING_INTERFACE_ENABLE)
 
 
         ?>
-        <br>
         </td>
-        <td width="270" class="blank" align="center" valign="top">
+        <td width="270" class="blank" align="right" valign="top">
         <?
             print_infobox ($infobox,"lernmodule.jpg");
         ?>
-        </td>
-    </tr>
-    <tr>
-        <td class="blank" colspan="3">&nbsp;
         </td>
     </tr>
     </table>
@@ -222,10 +203,10 @@ if ($ELEARNING_INTERFACE_ENABLE)
 else
 {
     // Start of Output
+    //TODO use messagebox
     parse_window ("error§" . _("Die Schnittstelle für die Integration von Lernmodulen ist nicht aktiviert. Damit Lernmodule verwendet werden können, muss die Verbindung zu einem LCM-System in der Konfigurationsdatei von Stud.IP hergestellt werden. Wenden Sie sich bitte an den/die AdministratorIn."), "§",
                 _("E-Learning-Schnittstelle nicht eingebunden"));
 }
 
 include ('lib/include/html_end.inc.php');
 page_close();
-?>

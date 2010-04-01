@@ -79,7 +79,7 @@ class StudipNavigation extends Navigation
         }
 
         if (is_object($user) && $perm->have_perm('admin') && get_config('RESOURCES_ENABLE')) {
-            //TODO: suboptimal
+            //TODO: suboptimal, es sollte eine ResourcesNavigation geben
             $resources_nav = new Navigation(_('Ressourcen'), 'resources.php');
             $resources_nav->setImage('header_admin', array('title' => _('Zur Ressourcenverwaltung')));
             $this->addSubNavigation('resources', $resources_nav);

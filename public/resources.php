@@ -13,6 +13,7 @@
  * @copyright   2002-2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
+ * @package     resources
 */
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
@@ -23,7 +24,7 @@ $perm->check("autor");
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 $HELP_KEYWORD="Basis.Ressourcen";// META:in resourcesControl.inc.php verlagern,wenn detaillierter vorhanden
 
-if ($RESOURCES_ENABLE) {
+if (get_config('RESOURCES_ENABLE')) {
     //Steuerung der Ressourcenverwaltung einbinden
     include ("$RELATIVE_PATH_RESOURCES/resourcesControl.inc.php");
 } else {

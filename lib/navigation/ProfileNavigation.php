@@ -119,7 +119,7 @@ class ProfileNavigation extends Navigation
 
         // elearning
         if ($perm->have_perm('autor') && get_config('ELEARNING_INTERFACE_ENABLE')) {
-            $navigation->addSubNavigation('elearning', new Navigation(_('Meine Lernmodule'), 'my_elearning.php'));
+            $this->addSubNavigation('elearning', new Navigation(_('Meine Lernmodule'), 'my_elearning.php'));
         }
 
         // activated plugins

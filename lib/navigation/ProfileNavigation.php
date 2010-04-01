@@ -115,11 +115,11 @@ class ProfileNavigation extends Navigation
         $this->addSubNavigation('edit', $navigation);
 
         // user defined sections
-        $this->addSubNavigation('sections', new Navigation(_('Eigene Kategorien'), 'edit_about.php', array('view' => 'Sonstiges')));
+        $this->addSubNavigation('sections', new Navigation(_('Kategorien'), 'edit_about.php', array('view' => 'Sonstiges')));
 
         // elearning
         if ($perm->have_perm('autor') && get_config('ELEARNING_INTERFACE_ENABLE')) {
-            $this->addSubNavigation('elearning', new Navigation(_('Meine Lernmodule'), 'my_elearning.php'));
+            $this->addSubNavigation('elearning', new Navigation(_('Lernmodule'), 'my_elearning.php'));
         }
 
         // activated plugins

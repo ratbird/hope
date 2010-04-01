@@ -314,6 +314,7 @@ function raumzeit_doAddSingleDate() {
         $ende = mktime($_REQUEST['end_stunde'], $_REQUEST['end_minute'], 0, $_REQUEST['month'], $_REQUEST['day'], $_REQUEST['year']);
         $termin->setTime($start, $ende);
         $termin->setDateType($_REQUEST['dateType']);
+	$termin->store();
 
         if ($start < $sem->filterStart || $ende > $sem->filterEnd) {
             $sem->setFilter('all');

@@ -643,7 +643,7 @@ class Query extends DB_Sql {
         if (!$q && $ckeck=='full') {
             echo "WARNING: where_Clause(): WHERE-clause is empty!<BR>";
         }
-        $q=preg_replace("/^ $andor "," WHERE /",$q);
+        $q=preg_replace("/^ $andor /"," WHERE ",$q);
         $this->_QDebug("where_Clause(): $q");
         return($q);
     }

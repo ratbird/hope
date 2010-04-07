@@ -108,7 +108,7 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
                         }
                         ?>
                     </select></font>&nbsp;
-                    <input type="IMAGE" <?=makeButton("auswaehlen", "src")?> border=0 align="absmiddle" value="bearbeiten">
+                    <input type="image" <?=makeButton("auswaehlen", "src")?> border=0 align="absmiddle" value="bearbeiten">
                     </td>
                 </tr>
                 <tr>
@@ -447,7 +447,7 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
                 ?>
                 <tr class="steel2">
                     <td colspan="3">
-                        <?=_("&Auml;nderungen")?> <input type="image" <?=makeButton("speichern", "src")?> border="0">
+                        <?= _("Änderungen") ?> <?= makeButton('speichern', 'input') ?>
                     </td>
                     <td colspan="<?=(Request::get('show_rooms_check')=='on')?'4':'3'; ?>" align="right">
                     <input type="hidden" name="change_visible" value="1">
@@ -464,7 +464,7 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
             ?>
             <tr class="steel2">
                 <td colspan="3">
-                    <?=_("&Auml;nderungen")?> <input type="image" <?=makeButton('speichern', 'src')?> border="0"><br>
+                    <?= _("Änderungen") ?> <?= makeButton('speichern', 'input') ?>
                 </td>
                 <td colspan="4" align="right">
                 <?
@@ -479,21 +479,21 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
                         printf(">".htmlReady($all_lock_rules[$i]["name"])."</option>");
                     }
                     // ab hier die verschiedenen Sperrlevel für alle Veranstaltungen
-                    printf("</select>");
-                    echo ' als Vorauswahl ';
-                    printf("<input type=\"IMAGE\" ".makeButton("zuweisen","src")." border=0 align=\"absmiddle\" name=\"general_lock\">");
+                    echo '</select> ';
+                    echo _("als Vorauswahl");
+                    echo ' '.makeButton('zuweisen', 'input', false, 'general_lock');
                 ?>&nbsp;
                 </td>
             </tr>
             <?
         }
 
-        //more Options for lock changing
+        //more Options for aux data
             if ($i_page == "admin_aux.php") {
                 ?>
                 <tr class="steel2">
                     <td colspan="3" nowrap>
-                        <?=_("&Auml;nderungen")?>&nbsp;<input type="IMAGE" <?=makeButton("speichern", "src")?> border=0 align="absmiddle" /><br>
+                        <?=_("Änderungen")?> <?= makeButton('speichern', 'input') ?>
                     </td>
                     <td colspan="4" align="right">
                     <?
@@ -507,10 +507,10 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
                             }
                             echo '>'.htmlReady($data['name']).'</option>';
                         }
-                        // ab hier die verschiedenen Sperrlevel für alle Veranstaltungen
+                        // ab hier die verschiedenen Zusatzangaben für alle Veranstaltungen
                         echo '</select> ';
                         echo _("als Vorauswahl");
-                        echo ' <input type="image" '.makeButton('zuweisen', "aux_rule").' border=0 align="absmiddle" name="aux_rule">';
+                        echo ' '.makeButton('zuweisen', 'input', false, 'aux_rule');
                     ?>&nbsp;
                     </td>
                 </tr>

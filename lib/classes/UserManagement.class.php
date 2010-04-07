@@ -563,7 +563,7 @@ class UserManagement
         }
 
         foreach ($db->query($sql) as $data) {
-            log_event('INST_USER_DEL', $data['institut_id'], $user_id);
+            log_event('INST_USER_DEL', $data['Institut_id'], $user_id);
         }
     }
     /**

@@ -385,7 +385,7 @@ class ShowToolsRequests {
                         $this->selectSemInstituteNames($semObj->getInstitutId());
 
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Art der Anfrage:")." ".(($reqObj->getTerminId()) ? _("Einzeltermin einer Veranstaltung") : _("alle Termine einer Veranstaltung"))."<br />";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"about.php?username=".get_username($reqObj->getUserId())."\">".htmlReady(get_fullname($reqObj->getUserId(), 'full', true))."</a><br />";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"about.php?username=".get_username($reqObj->getUserId())."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br />";
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Lehrende: ");
                         foreach ($semObj->getMembers('dozent') as $doz) {
                             if ($dozent){

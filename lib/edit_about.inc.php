@@ -350,7 +350,7 @@ class about extends messaging {
         }
 
         if ($new_inst) {
-             log_event('INST_USER_ADD', $new_inst , $this->auth_user['user_id'], 'user');
+            log_event('INST_USER_ADD', $new_inst , $this->auth_user['user_id'], 'user');
          
             $this->db->query("INSERT IGNORE INTO user_inst (user_id,Institut_id,inst_perms) VALUES ('".$this->auth_user["user_id"]."','$new_inst','user')");
             if (!$this->db->affected_rows())

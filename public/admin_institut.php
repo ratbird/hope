@@ -194,9 +194,8 @@ while ( is_array($_POST)
         }
 
         // delete users in user_inst
-        $db_inst = DBManager::get()->query("SELECT * FROM user_inst
-            WHERE institut_id = '$i_id'");
-        while ($data = $db_inst->fetch()) {
+        $result = DBManager::get()->query("SELECT user_id FROM user_inst WHERE institut_id = '$i_id'");
+        while ($data = $result->fetch()) {
             log_event('INST_USER_DEL', $i_id, $data['user_id']);
         }
 

@@ -406,7 +406,7 @@ if (!isset($details) || isset($set)) {
                         my_error("<b>" . _("Globale AdministratorInnen k&ouml;nnen auch an Einrichtung nur den Status \"admin\" haben.") . "</b>");
                     }
                     else { //na, dann muss es wohl sein (grummel)
-                         log_event("INST_USER_STATUS", $ins_id, $u_id, $GLOBALS['user']->id .' -> '. $perms);
+                        log_event("INST_USER_STATUS", $ins_id, $u_id, $perms);
 
                         $query = "UPDATE user_inst SET inst_perms='$perms', raum='$raum', Telefon='$Telefon', Fax='$Fax', sprechzeiten='$sprechzeiten' WHERE Institut_id = '$ins_id' AND user_id = '$u_id'";
                         $db2->query($query);
@@ -519,7 +519,7 @@ if (!isset($details) || isset($set)) {
                     $insert_perms = $db3->f("perms");               
                     //ok, aber nur hochstufen auf Maximal-Status (hat sich selbst schonmal gemeldet als Student an dem Inst)
                     if ($db->f("inst_perms") == "user") {
-                         log_event('INST_USER_ADD', $ins_id ,$u_id, $insert_perms);
+                         log_event('INST_USER_STATUS', $ins_id ,$u_id, $insert_perms);
 
                         $db2->query("UPDATE user_inst SET inst_perms='$insert_perms' WHERE user_id='$u_id' AND Institut_id = '$ins_id' ");
                     // ok, neu aufnehmen als das was er global ist

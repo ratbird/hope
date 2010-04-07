@@ -170,7 +170,6 @@ class EditSettings {
                         ?>
                     </font><br />
                 </td>
-                <input type="HIDDEN" name="change_root_user_id[]" value="<? echo $this->db->f("user_id") ?>" />
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" valign="middle" align="center">
                     <font size=-1>
                         <a href="<? echo $PHP_SELF ?>?delete_root_user_id=<? echo $this->db->f("user_id") ?>">
@@ -184,12 +183,6 @@ class EditSettings {
                 </td>
             </tr>
             <? } ?>
-            <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=5 align="center"><br />&nbsp; <input type="IMAGE" <?=makeButton("uebernehmen", "src") ?> border=0 name="submit" value="<?=_("Zuweisen") ?>"><br />&nbsp;
-                </td>
-            </tr>
         </table>
         <br /><br />
         <?

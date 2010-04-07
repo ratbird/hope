@@ -922,15 +922,10 @@ if (($add_root_user) || ($delete_root_user_id)){
             $search_string_search_root_user=FALSE;
 
         if (($send_search_root_user_x) && ($submit_search_root_user !="FALSE") && (!$reset_search_root_user_x))
-            $db->query("INSERT resources_user_resources SET user_id='$submit_search_root_user', resource_id='all', perms='autor' ");
+            $db->query("INSERT resources_user_resources SET user_id='$submit_search_root_user', resource_id='all', perms='admin' ");
 
         if ($delete_root_user_id)
             $db->query("DELETE FROM resources_user_resources WHERE user_id='$delete_root_user_id' AND resource_id='all' ");
-
-        if (is_array ($change_root_user_id))
-            foreach ($change_root_user_id as $key => $val) {
-                $db->query("UPDATE resources_user_resources SET perms='".$change_root_user_perms[$key]."' WHERE user_id='$val' ");
-            }
     } else {
         $msg->addMsg(25);
     }

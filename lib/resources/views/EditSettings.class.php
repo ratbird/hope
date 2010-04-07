@@ -122,10 +122,7 @@ class EditSettings {
                     <font size=-1><b><?=_("Name")?></b></font>
                 </td>
                 <td class="<? echo $cssSw->getHeaderClass() ?>" width="10%" align="center">
-                    <font size=-1><b><?=_("Berechtigungen")?></b></font>
-                </td>
-                <td class="<? echo $cssSw->getHeaderClass() ?>" width="10%" align="center">
-                    <font size=-1><b><?=_("X")?></b></font>
+                    <font size=-1><b><?=_("Aktionen")?></b></font>
                 </td>
                 <td class="<? echo $cssSw->getHeaderClass() ?>" width="4%">
                     <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width=1 height=20>&nbsp;
@@ -139,8 +136,6 @@ class EditSettings {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="42%">
                     <font size=-1><?=_("Diese NutzerInnen sind als globale Ressourcen-Administratoren mit folgenden Rechten eingetragen:")?></font>
-                </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="10%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%">&nbsp;
                 </td>
@@ -176,15 +171,6 @@ class EditSettings {
                     </font><br />
                 </td>
                 <input type="HIDDEN" name="change_root_user_id[]" value="<? echo $this->db->f("user_id") ?>" />
-                <td class="<? echo $cssSw->getClass() ?>" width="10%" valign="middle" align="center">
-                    <select name="change_root_user_perms[]">
-                        <font size=-1><option <? ($this->db->f("perms")=="admin") ? printf ("selected") : printf (""); ?>>admin</option></font>
-                        <?
-                        /*<font size=-1><option <? ($this->db->f("perms")=="tutor") ? printf ("selected") : printf (""); ?>>tutor</option></font>
-                        <font size=-1><option <? ($this->db->f("perms")=="autor") ? printf ("selected"): printf (""); ?>>autor</option></font>*/
-                        ?>
-                    </select>
-                </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" valign="middle" align="center">
                     <font size=-1>
                         <a href="<? echo $PHP_SELF ?>?delete_root_user_id=<? echo $this->db->f("user_id") ?>">

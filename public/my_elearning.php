@@ -67,7 +67,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
 
     if ($messages["info"] != "")
     {
-        echo MEssageBox::info($messages["info"]);
+        echo MessageBox::info($messages["info"]);
     }
     if ($messages["error"] != "")
     {

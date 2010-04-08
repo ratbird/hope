@@ -323,11 +323,10 @@ class SiteinfoMarkupEngine {
     function coregroup() {
         $cache = StudipCacheFactory::getCache();
         if (!($remotefile = $cache->read('coregroup'))) {
-            $remotefile = file_get_contents('http://www.studip.de/crew.php');
+            $remotefile = file_get_contents('http://develop.studip.de/studip/extern.php?module=Persons&config_id=8d1dafc3afca2bce6125d57d4119b631&range_id=4498a5bc62d7974d0a0ac3e97aca5296');
             $cache->write('coregroup', $remotefile);
         }
-        $out = substr($remotefile, stripos($remotefile, "<table"), strrpos($remotefile, "</table>"));
-        $out = str_replace(array('class="normal"','align="left"'), array("",""), $out);
+        $out = str_replace(array('class="normal"','align="left"'), array("",""), $remotefile);
         return $out;
     }
 

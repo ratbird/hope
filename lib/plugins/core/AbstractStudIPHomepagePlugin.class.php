@@ -1,20 +1,37 @@
 <?php
-# Lifter007: TODO
-
 /**
- * Abstract plugin for plugins shown on the homepage of a user
- * @author Dennis Reil <dennis.reil@offis.de>
- * @package pluginengine
- * @subpackage core
+ * AbstractStudIPHomepagePlugin.clayss.php - Abstract plugin for plugins shown on
+ * the homepage of a user
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Dennis Reil <dennis.reil@offis.de>
+ * @copyright   2010 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @package     pluginengine
  */
 
-class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
-  implements HomepagePlugin {
+/**
+ *
+ * @deprecated  since Stud.IP 1.11
+ * @link        http://hilfe.studip.de/index.php/Entwickler/PluginSchnittstelle#toc9
+ *
+ */
+class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin implements HomepagePlugin
+{
 
     var $requesteduser; // StudIPUser for which user the homepage should be shown
     var $status_showOverview; // Uebersichtsseite unterdruecken
 
-    function AbstractStudIPHomepagePlugin(){
+    /**
+     *
+     */
+    function AbstractStudIPHomepagePlugin()
+    {
         parent::__construct();
 
         // ignore errors about unknown users here
@@ -32,7 +49,8 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
      *
      * @deprecated
      */
-    function setNavigation(StudipPluginNavigation $navigation) {
+    function setNavigation(StudipPluginNavigation $navigation)
+    {
         parent::setNavigation($navigation);
 
         // prepend copy of navigation to its sub navigation
@@ -43,8 +61,8 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
         $navigation->insertSubNavigation('self', $navigation_copy, $item_names[0]);
         $navigation->setTitle($this->getDisplayTitle());
 
-        if (Navigation::hasItem('/homepage')) {
-            Navigation::addItem('/homepage/' . $this->getPluginclassname(), $navigation);
+        if (Navigation::hasItem('/profil')) {
+            Navigation::addItem('/profil/' . $this->getPluginclassname(), $navigation);
         }
     }
 
@@ -53,7 +71,8 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
      *
      * @deprecated
      */
-    function showOverview(){
+    function showOverview()
+    {
         // has to be implemented
     }
 
@@ -63,14 +82,16 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
      *
      * @deprecated
      */
-    function getStatusShowOverviewPage(){
+    function getStatusShowOverviewPage()
+    {
         return $this->status_showOverview;
     }
 
     /**
      * @deprecated
      */
-    function setStatusShowOverviewPage($status){
+    function setStatusShowOverviewPage($status)
+    {
         $this->status_showOverview = $status;
     }
 
@@ -80,7 +101,8 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
      *
      * @deprecated
      */
-    function setRequestedUser($user){
+    function setRequestedUser($user)
+    {
     }
 
     /**
@@ -88,7 +110,8 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
      *
      * @deprecated
      */
-    function getRequestedUser(){
+    function getRequestedUser()
+    {
         $username = Request::quoted('username', $GLOBALS['auth']->auth['uname']);
         $user_id = get_userid($username);
 
@@ -136,4 +159,3 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin
         return $template;
     }
 }
-?>

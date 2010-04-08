@@ -1061,13 +1061,10 @@ class ShowToolsRequests {
     private function getGlobalIconName($resource_id)
     {
         $owner_id = DBManager::get()->query("SELECT owner_id from resources_objects WHERE resource_id='".$resource_id."'")->fetchColumn();
-        if (empty($owner_id)) {
-                return "info.gif";
-        }
-        if ($owner_id !="global") {
-                return "room_booked.png";
-        } else {
+        if ($owner_id == '"global') {
                 return "room_global.png";
+        } else {
+                return "info.gif";
         }
     }
 

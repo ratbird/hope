@@ -1204,8 +1204,8 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                                 if($admin_admission_data["admission_enable_quota"]){
                                     if (LockRules::Check($seminar_id, 'admission_studiengang') || $val['count'] > 0 || ($admin_admission_data["admission_type_org"] && !$perm->have_perm("admin"))) {
                                         printf ("&nbsp; &nbsp; <font size=-1>%s %% (%s Teilnehmer)</font>", $val["ratio"], $num_stg[$key]);
-                                        if($val['count'] > 0){
-                                            echo '<span style="font-size:70%">'.sprintf(_("(%s Einträge vorhanden)"), $val['count']) . '</span>';
+                                        if ($val['count'] > 0) {
+                                            echo ' <font size=-1>'.sprintf(_("(%s Einträge vorhanden)"), $val['count']) . '</font>';
                                         }
                                     } else {
                                         printf ("<input type=\"HIDDEN\" name=\"studg_ratio_old[]\" value=\"%s\">", $val["ratio"]);
@@ -1213,10 +1213,10 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                                         echo '<input type="image" name="delete_studg['. $key .']" src="'. Assets::image_path('trash.gif') .'" '. tooltip(_("Den Studiengang aus der Liste löschen")) .'>';
                                     }
                                 } elseif (!LockRules::Check($seminar_id, 'admission_studiengang') && (!($admin_admission_data["admission_type_org"] && !$perm->have_perm("admin")))) {
-                                    if($val['count'] == 0){    
+                                    if ($val['count'] == 0) {
                                         echo '<input type="image" name="delete_studg['. $key .']" src="'. Assets::image_path('trash.gif') .'" '. tooltip(_("Den Studiengang aus der Liste löschen")) .'>';
                                     } else {
-                                        echo '<span style="font-size:70%">'.sprintf(_("(%s Einträge vorhanden)"), $val['count']) . '</span>';
+                                        echo '<font size=-1>'.sprintf(_("(%s Einträge vorhanden)"), $val['count']) . '</font>';
                                     }
                                 }
                                 ?>
@@ -1287,7 +1287,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                         ?>
                         <? if (LockRules::Check($seminar_id, 'admission_endtime') || $admin_admission_data['admission_selection_take_place'] || ($admin_admission_data["admission_type_org"] && !$perm->have_perm("admin"))) {
                             printf ("<font size=-1>%s um %s Uhr </font>", date("d.m.Y",$admin_admission_data["admission_endtime"]), date("H:i",$admin_admission_data["admission_endtime"]));
-                            if($admin_admission_data['admission_selection_take_place'] && $admin_admission_data["admission_type"] == 1){
+                            if($admin_admission_data['admission_selection_take_place']) {
                                 echo '<br>';
                                 echo $admin_admission_data["admission_type"] == 1 ? _("Das Losverfahren wurde bereits durchgeführt.") : _("Die Kontingentierung wurde bereits aufgehoben.");
                             }

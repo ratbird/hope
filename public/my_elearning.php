@@ -26,7 +26,7 @@ require_once ('config.inc.php');
 require_once ('lib/visual.inc.php');
 
 $CURRENT_PAGE = _("Meine Lernmodule und Benutzer-Accounts");
-Navigation::activateItem('/profil/elearning');
+Navigation::activateItem('/tools/elearning');
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
@@ -67,15 +67,11 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
 
     if ($messages["info"] != "")
     {
-        echo "<table>";
-        my_info($messages["info"]);
-        echo "</table>";
+        echo MEssageBox::info($messages["info"]);
     }
     if ($messages["error"] != "")
     {
-        echo "<table>";
-        my_error($messages["error"]);
-        echo "</table>";
+        echo MessageBox::error($messages["error"]);
     }
 
     ELearningUtils::bench("init");
@@ -161,6 +157,12 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
     if ($debug != "")
         ELearningUtils::showbench();
 
+        $cssSw = new cssClassSwitcher; // Klasse für Zebra-Design
+
+        ?>
+        </td>
+        <td width="270" class="blank" align="right" valign="top">
+        <?
     // Anzeige, wenn noch keine Account-Zuordnung besteht
         $infobox = array    (
         array ("kategorie"  => _("Information:"),
@@ -179,14 +181,6 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
             $infobox[1]["eintrag"][] = array (  "icon" => "icon-lern.gif" ,
                                         "text"  => sprintf(_("Wenn Sie &uuml;ber die entsprechenden Rechte verf&uuml;gen, k&ouml;nnen Sie eigene Lernmodule erstellen."))
                                     );
-
-        $cssSw = new cssClassSwitcher;                                  // Klasse für Zebra-Design
-
-
-        ?>
-        </td>
-        <td width="270" class="blank" align="right" valign="top">
-        <?
             print_infobox ($infobox,"lernmodule.jpg");
         ?>
         </td>

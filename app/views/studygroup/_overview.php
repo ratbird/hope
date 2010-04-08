@@ -1,7 +1,7 @@
 <table class border="0" cellpadding="2" cellspacing="0" width="100%">
     <tr style="background: url(<?=Assets::image_path('steelgraudunkel.gif')?>);cursor: pointer;" title="<?=_("Klicken, um die Sortierung zu ändern")?>">
             <th class="nosort" width="1%"></th>
-            <th width="59%" <?= ($sort_type == 'name') ? 'class="sort'. $sort_order .'"' : '' ?>> 
+            <th width="59%" <?= ($sort_type == 'name') ? 'class="sort'. $sort_order .'"' : '' ?>>
               <a href =<? if($sort == "name_asc") :?>"<?=$sort_url?>name_desc">
                             <? else: ?>"<?=$sort_url?>name_asc">
                 <? endif;?><?= _("Name") ?>
@@ -13,7 +13,7 @@
                             <? endif;?><?= _("gegründet") ?>
                         </a>
                     </th>
-                    <th width="5%" <?= ($sort_type == 'member') ? 'class="sort'. $sort_order .'"' : '' ?>> 
+                    <th width="5%" <?= ($sort_type == 'member') ? 'class="sort'. $sort_order .'"' : '' ?>>
                         <a href =<? if($sort == "member_asc") :?>"<?=$sort_url?>member_desc">
                 <? else: ?>"<?=$sort_url?>member_asc">
                             <? endif;?><?= _("Mitglieder") ?>
@@ -25,13 +25,13 @@
                             <? endif;?><?= _("GründerIn") ?>
                         </a>
                     </th>
-                    <th width="5%" <?= ($sort_type == 'ismember') ? 'class="sort'. $sort_order .'"' : '' ?>> 
+                    <th width="5%" <?= ($sort_type == 'ismember') ? 'class="sort'. $sort_order .'"' : '' ?>>
                         <a href =<? if($sort == "ismember_asc") :?>"<?=$sort_url?>ismember_desc">
                 <? else: ?>"<?=$sort_url?>ismember_asc">
                             <? endif;?><?= _("Mitglied") ?>
                         </a>
                     </th>
-                    <th width="5%" <?= ($sort_type == 'access') ? 'class="sort'. $sort_order .'"' : '' ?>> 
+                    <th width="5%" <?= ($sort_type == 'access') ? 'class="sort'. $sort_order .'"' : '' ?>>
                         <a href =<? if($sort == "access_asc") :?><?=$sort_url?>access_desc>
                 <? else: ?><?=$sort_url?>access_asc>
                             <? endif; ?><?= _("Zugang") ?>
@@ -42,7 +42,7 @@
             <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
                 <td>
                    <img src="<?=StudygroupAvatar::getAvatar($group['Seminar_id'])->getUrl(Avatar::SMALL);?>" style="vertical-align:middle;">
-                </td>    
+                </td>
                 <td style="text-align:left;">
                     <? if (StudygroupModel::isMember($this->userid,$group['Seminar_id'] )): ?>
                         <a href="<?=URLHelper::getlink("seminar_main.php?auswahl=".$group['Seminar_id'])?>">
@@ -79,10 +79,10 @@
 
     </table>
     <? if($anzahl>20) :?>
-    <div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel"><?=
+    <div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel"><?
      $pages = $GLOBALS['template_factory']->open('shared/pagechooser');
      $pages->set_attributes(array("perPage" => 20, "num_postings" => $anzahl, "page"=>$page, "pagelink" => $link));
- 
+
      echo $this->render_partial($pages);
     ?></div>
     <? endif;?>

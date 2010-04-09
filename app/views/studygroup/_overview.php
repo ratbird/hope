@@ -79,10 +79,7 @@
 
     </table>
     <? if($anzahl>20) :?>
-    <div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel"><?
-     $pages = $GLOBALS['template_factory']->open('shared/pagechooser');
-     $pages->set_attributes(array("perPage" => 20, "num_postings" => $anzahl, "page"=>$page, "pagelink" => $link));
-
-     echo $this->render_partial($pages);
-    ?></div>
+    <div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel">
+    <?= $GLOBALS['template_factory']->render('shared/pagechooser', array("perPage" => 20, "num_postings" => $anzahl, "page" => $page, "pagelink" => $link)) ?>
+    </div>
     <? endif;?>

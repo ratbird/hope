@@ -417,7 +417,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
                 StudygroupModel::addFounder($name, $id );
 
-                $this->flash['success'] = sprintf(_("Der Nutzer %s wurde als Gruppengründer hinzugefügt!"), htmlReady( $name ));
+                $this->flash['success'] = sprintf(_("Der Nutzer %s wurde als Gruppengründer hinzugefügt!"), $name);
             }
 
             // remove a founder
@@ -436,7 +436,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
                     StudygroupModel::removeFounder( $name, $id );
 
-                    $this->flash['success'] = sprintf(_("Der Nutzer %s wurde als Gruppengründer entfernt!"), htmlReady( $name ));
+                    $this->flash['success'] = sprintf(_("Der Nutzer %s wurde als Gruppengründer entfernt!"), $name);
                 }
             }
 
@@ -610,7 +610,7 @@ class Course_StudygroupController extends AuthenticatedController {
                         }
                         $this->flash['success'] = $msg;
                     } else {
-                        $this->flash['info'] = sprintf(_("Der Suchbegriff <em>%s</em> ergab keine Treffer."), htmlReady(Request::get('search_for_member')));
+                        $this->flash['info'] = sprintf(_("Der Suchbegriff %s ergab keine Treffer."), Request::get('search_for_member'));
                     }
                     $this->flash['results_choose_members'] = $results_members;
                     $this->flash['request'] = Request::getInstance();
@@ -639,13 +639,12 @@ class Course_StudygroupController extends AuthenticatedController {
                         $this->flash['candidate'] = $user;
                        
                     } elseif ($action == 'remove_approved' && check_ticket($studipticket)) {
-                        
-                            StudygroupModel::remove_user($user,$id);
-                            $this->flash['success'] = sprintf(_("Der Nutzer %s wurde aus der Studiengruppe entfernt."), get_fullname_from_uname($user));
+                        StudygroupModel::remove_user($user,$id);
+                        $this->flash['success'] = sprintf(_("Der Nutzer %s wurde aus der Studiengruppe entfernt."), get_fullname_from_uname($user));
                     }
                 } else {
-                        $this->flash['messages'] = array(
-                            'error' => array (
+                    $this->flash['messages'] = array(
+                        'error' => array (
                             'title' => _("Jede Studiengruppe muss mindestens einen Gruppengründer haben!")
                         )
                     );

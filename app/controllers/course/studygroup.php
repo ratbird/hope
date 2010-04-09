@@ -629,7 +629,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     $this->flash['success'] = sprintf(_("Der Nutzer %s wurde in die Studiengruppe eingeladen."), get_fullname_from_uname($receiver));
                 }
             }
-            if ($perm->have_studip_perm('dozent', $id) && $action != 'add_invites') {
+            elseif ($perm->have_studip_perm('dozent', $id)) {
                 if(!$perm->have_studip_perm('dozent',$id,get_userid($user))) {
                     if ($action == 'promote') {
                         StudygroupModel::promote_user($user,$id,$status);

@@ -73,9 +73,9 @@ $CURRENT_PAGE = ($SessSemName[1] && ($list || $view || ($news_range_id != $user-
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-if($news_range_id == $SessSemName[1]){
-    include 'lib/include/admin_search_form.inc.php';
-}
+
+include 'lib/include/admin_search_form.inc.php';
+
 
 function callback_cmp_newsarray($a, $b) {
     return strnatcasecmp($a['name'], $b['name']); // Case insensitive string comparisons using a "natural order" algorithm

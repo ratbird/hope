@@ -77,7 +77,7 @@ $CURRENT_PAGE = $_the_tree->root_name . " - " . $CURRENT_PAGE;
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-if($_range_id == $SessSemName[1]){
+if (1) {
     include 'lib/include/admin_search_form.inc.php';
 }
 //checking rights

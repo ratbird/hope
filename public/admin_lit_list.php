@@ -77,9 +77,9 @@ $CURRENT_PAGE = $_the_tree->root_name . " - " . $CURRENT_PAGE;
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-if (1) {
-    include 'lib/include/admin_search_form.inc.php';
-}
+
+include 'lib/include/admin_search_form.inc.php';
+
 //checking rights
 if (($_the_tree->range_type == "sem" && !$perm->have_studip_perm("tutor", $_range_id)) ||
     (($_the_tree->range_type == "inst" || $_the_tree->range_type == "fak") && !$perm->have_studip_perm("autor", $_range_id))){

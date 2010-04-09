@@ -173,7 +173,7 @@ class EditSettings {
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" valign="middle" align="center">
                     <font size=-1>
                         <a href="<? echo $PHP_SELF ?>?delete_root_user_id=<? echo $this->db->f("user_id") ?>">
-                            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/trash.gif" border="0" <?=tooltip(_("Berechtigungen l&ouml;schen")) ?> />
+                            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/trash.gif" border="0" <?=tooltip(_("Berechtigungen löschen")) ?> />
                         </a>
                     </font>
                 </td>

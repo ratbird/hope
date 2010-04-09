@@ -56,7 +56,7 @@ class NewsController extends AuthenticatedController {
     # show news
     $this->news->content['open'] = $open;
     $this->show_admin = $show_admin;
-
+    $this->admin_link = Request::get('admin_link');
     $this->render_template('news/open_or_close');
   }
 }

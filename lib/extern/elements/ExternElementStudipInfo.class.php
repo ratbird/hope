@@ -84,7 +84,7 @@ class ExternElementStudipInfo extends ExternElement {
         $tag_headline = '';
         $table = '';
         if ($edit_form == '')
-            $edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
+            $edit_form = new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
         
         $edit_form->setElementName($this->getName());
         $element_headline = $this->getEditFormHeadline($edit_form);

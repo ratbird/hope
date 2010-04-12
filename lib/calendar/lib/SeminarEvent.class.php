@@ -120,7 +120,7 @@ class SeminarEvent extends Event {
             $id = $this->id;
         else
             $this->id = $id;
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT t.*, su.*, s.Seminar_id, s.Name, th.title, th.description "                        
                         . "FROM termine t "
                         . "LEFT JOIN themen_termine tt ON tt.termin_id = t.termin_id "

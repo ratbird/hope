@@ -45,8 +45,8 @@ if (empty($GLOBALS['STUDIP_API_KEY'])
 }
 
 # create server
-$dispatcher =& new Studip_Ws_JsonrpcDispatcher('UserService', 'SessionService', 'SeminarService', 'ContentmoduleService', 'LectureTreeService', 'InstituteService');
-$server =& new jsonrpc_server($dispatcher->get_dispatch_map(), 0);
+$dispatcher = new Studip_Ws_JsonrpcDispatcher('UserService', 'SessionService', 'SeminarService', 'ContentmoduleService', 'LectureTreeService', 'InstituteService');
+$server = new jsonrpc_server($dispatcher->get_dispatch_map(), 0);
 # $server->setDebug(3);
 # $server->compress_response = FALSE;
 

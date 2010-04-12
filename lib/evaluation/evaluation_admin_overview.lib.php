@@ -949,7 +949,7 @@ class EvalOverview {
          return $this->createSafeguard("ausruf", sprintf(_("Sie haben keinen Zugriff auf diesen Bereich.")));
       }
 
-      $evalDB = &new EvaluationDB;
+      $evalDB = new EvaluationDB;
       $evalChanged = NULL;
       $safeguard = " ";
 
@@ -1029,7 +1029,7 @@ class EvalOverview {
       }
       /* ----------------------------------- end: actions without permissions */
 
-      $eval     = &new Evaluation ($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
+      $eval     = new Evaluation ($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
       $evalName = htmlready ($eval->getTitle());
 
       /* Check for errors while loading ------------------------------------- */
@@ -1099,7 +1099,7 @@ class EvalOverview {
             break;
 
          case "copy_public_template":
-            $eval = &new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
+            $eval = new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
             $newEval = $eval->duplicate ();
             $newEval->setAuthorID( $auth->auth["uid"] );
             $newEval->setShared( NO );
@@ -1176,7 +1176,7 @@ class EvalOverview {
           if ($no_permission_msg)
             return $this->createSafeguard("ausruf", $no_permission_msg . "<br>" . _("Die Evaluation wurde nicht zurücksetzen."));
 
-            $eval = &new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
+            $eval = new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
             $eval->resetAnswers ();
 
             $evalDB->removeUser ($eval->getObjectID ());
@@ -1196,7 +1196,7 @@ class EvalOverview {
             break;
 
          case "copy_own_template":
-            $eval = &new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
+            $eval = new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
             $newEval = $eval->duplicate();
             $newEval->setShared( NO );
             $newEval->save();
@@ -1224,7 +1224,7 @@ class EvalOverview {
           if ($no_permission_msg)
             return $this->createSafeguard("ausruf", $no_permission_msg . "<br>" . _("Die Evaluation wurde nicht gelöscht."));
 
-            $eval = &new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
+            $eval = new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
             $eval->delete();
             if ($eval->isError()) {
                $safeguard .= $this->createSafeguard("", EvalCommon::createErrorReport($eval));
@@ -1255,7 +1255,7 @@ class EvalOverview {
           if ($no_permission_msg)
             return $this->createSafeguard("ausruf", $no_permission_msg . "<br>" . _("Die Evaluation wurde nicht ausgehängt und zu den eigenen Evaluationsvorlagen verschoben."));
 
-            $eval = &new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
+            $eval = new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
             $eval->removeRangeIDs();
             $eval->setAuthorID($auth->auth["uid"]);
             $eval->resetAnswers ();
@@ -1278,7 +1278,7 @@ class EvalOverview {
 
       case "save2":
       case "save":
-         $eval = &new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
+         $eval = new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
          $update_message = sprintf(_("Die Evaluation <b>%s</b> wurde mit den Ver&auml;nderungen gespeichert."), $evalName);
 
 
@@ -1595,12 +1595,12 @@ class EvalOverview {
          case "check_abort_creation":
 
           # check if the evaluation is new and not yet edited
-          $eval = &new Evaluation ($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
+          $eval = new Evaluation ($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
           $abort_creation = false;
           if ($eval->getTitle(QUOTED) == _("Neue Evaluation") &&
            $eval->getText(QUOTED) == "" ){
            # the evaluationen may be not edited yet ... so continue checking
-           $eval = &new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
+           $eval = new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
            $number_of_childs = $eval->getNumberChildren();
            $child = $eval->getNextChild();
            if ($number_of_childs == 1 &&
@@ -1617,7 +1617,7 @@ class EvalOverview {
            # continue abort_creation
 
          case "abort_creation":
-          $eval = &new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
+          $eval = new Evaluation ($evalID, NULL, EVAL_LOAD_ALL_CHILDREN);
             $eval->delete();
             // error_ausgabe
             if ($eval->isError()) {
@@ -1955,8 +1955,8 @@ class EvalOverview {
    */
   function createDomainSettings( $eval, $state, $style ) {
       global $user;
-      $db         = &new EvaluationObjectDB ();
-      $evalDB     = &new EvaluationDB ();
+      $db         = new EvaluationObjectDB ();
+      $evalDB     = new EvaluationDB ();
       $evalID     = $eval->getObjectID();
       $globalperm = $db->getGlobalPerm();
 
@@ -2329,8 +2329,8 @@ class EvalOverview {
 
   function createDomainLinks( $search ) {
      global $user;
-   $db  = &new EvaluationObjectDB ();
-   $evalDB  = &new EvaluationDB ();
+   $db  = new EvaluationObjectDB ();
+   $evalDB  = new EvaluationDB ();
    $globalperm = $db->getGlobalPerm();
 
    // search results

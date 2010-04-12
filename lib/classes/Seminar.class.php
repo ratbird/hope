@@ -1376,7 +1376,7 @@ class Seminar {
             $this->request_id = getSeminarRoomRequest($this->id);
             if (!$this->request_id) return FALSE;
 
-            $rD =& new RoomRequest($this->request_id);
+            $rD = new RoomRequest($this->request_id);
             if ($rD->getClosed() != 0) {
                 return FALSE;
             }
@@ -1736,7 +1736,7 @@ class Seminar {
         $room_request = $this->getRoomRequestStatus();
         if ($room_request) {
             if (!$this->requestData) {
-                $rD =& new RoomRequest($this->request_id);
+                $rD = new RoomRequest($this->request_id);
                 $resObject =& ResourceObject::Factory($rD->resource_id);
                 $this->requestData .= 'Raum: '.$resObject->getName() . "\n";
                 $this->requestData .= 'verantwortlich: '.$resObject->getOwnerName() ."\n\n";

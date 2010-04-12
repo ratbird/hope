@@ -47,7 +47,7 @@ $_attributes['text'] = array('style' => 'width:90%');
 $_attributes['radio'] = array('style' => 'font-size:8pt;vertical-align:bottom;');
 $_attributes['button'] = array('style' => 'vertical-align:middle;');
 
-$_the_search =& new StudipLitSearch();
+$_the_search = new StudipLitSearch();
 $_the_clipboard =& StudipLitClipBoard::GetInstance();
 $_the_clip_form =& $_the_clipboard->getFormObject();
 

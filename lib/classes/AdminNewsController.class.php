@@ -123,7 +123,7 @@ class AdminNewsController {
         global $perm,$_fullname_sql;
 
         $this->news_query = null;
-        $news_obj =& new StudipNews($news_id);
+        $news_obj = new StudipNews($news_id);
         if (!$news_obj->is_new) {
             $this->news_query = $news_obj->content;
             $query="SELECT a.range_id,b.user_id, ". $_fullname_sql['full'] ." AS author,".
@@ -359,7 +359,7 @@ class AdminNewsController {
         if ($news_id) {
             if($this->check_news_perm($news_id)) {
                 if ($news_id == "new_entry") {
-                    $news_obj =& new StudipNews();
+                    $news_obj = new StudipNews();
                     $flag = TRUE;
                     $news_obj->setValue('user_id', $this->user_id);
                     $news_obj->setValue('author', $this->full_username);
@@ -377,7 +377,7 @@ class AdminNewsController {
                     OR $this->news_query["date"]!=$date
                     OR $this->news_query["allow_comments"]!=$allow_comments
                     OR $this->news_query["expire"]!=$expire) {
-                        $news_obj =& new StudipNews($news_id);
+                        $news_obj = new StudipNews($news_id);
                         if ($this->news_query['date'] != $date && $this->news_query["expire"] == $expire){
                             $expire = ($this->news_query['date'] + $this->news_query["expire"]) - $date;
                         }
@@ -403,7 +403,7 @@ class AdminNewsController {
                     }
                     if ($add_range) {
                         if (!is_object($news_obj)){
-                            $news_obj =& new StudipNews($news_id);
+                            $news_obj = new StudipNews($news_id);
                         }
                         reset($this->range_detail);
                         while (list ($range,$details)=each($this->range_detail)) {
@@ -471,7 +471,7 @@ class AdminNewsController {
             $kill_count=0;
             for ($i=0;$i<count($kill_news);$i++) {
                 if ($this->check_news_perm($kill_news[$i],3)) {
-                    $news =& new StudipNews($kill_news[$i]);
+                    $news = new StudipNews($kill_news[$i]);
                     if ($this->modus=="admin" AND $this->news_query["user_id"]!=$this->user_id) {
                         setTempLanguage($this->news_query["user_id"]);
                         $this->sms[$this->news_query["user_id"]] .= sprintf(_("Ihre News \"%s\" wurde von einer Administratorin oder einem Administrator gelöscht!")

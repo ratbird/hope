@@ -206,22 +206,22 @@ $debug = 1;
 $evalArray = $db->getEvaluationIDs ($rangeID);
 echo "Es wurde(n) ".count($evalArray)." Evaluation(en) gefunden...</font><br>";
 
-$group1 = &new EvaluationGroup ();
+$group1 = new EvaluationGroup ();
 $group1->setTitle ("Ich bin Gruppe Nummer 1");
 $group1->setText ("Ich bin der Text einer Gruppe1");
 
 
-$group2 = &new EvaluationGroup ();
+$group2 = new EvaluationGroup ();
 $group2->setTitle ("Ich bin Gruppe Nummer 2");
 $group2->setText ("Ich bin der Text einer Gruppe2");
 $group2ID = $group2->getObjectID ();
 
-$group21 = &new EvaluationGroup ();
+$group21 = new EvaluationGroup ();
 $group21->setTitle ("Ich bin Gruppe Nummer 2.1");
 $group21->setText ("Ich bin der Text einer Gruppe2.1");
 $group2->addChild ($group21);
 
-$eval = &new Evaluation ();
+$eval = new Evaluation ();
 $eval->addRangeID ($rangeID);
 $eval->setAuthorID ($user->id);
 $eval->setTitle ("TestTitel");
@@ -233,15 +233,15 @@ $eval->setAnonymous (YES);
 $eval->setVisible (YES);
 
 
-$question1 =  &new EvaluationQuestion ();
+$question1 =  new EvaluationQuestion ();
 $question1->setText("Wie gefaellt Ihnen Frage1?");
 $question1->setRangeID($rangeID);
 
-$answer1= &new EvaluationAnswer();
+$answer1= new EvaluationAnswer();
 $answer1->setText("Antwort1Text");
 $question1->addChild($answer1);
 
-$answer2= &new EvaluationAnswer();
+$answer2= new EvaluationAnswer();
 $answer2->setText("Antwort2Text");
 $question1->addChild($answer2);
 

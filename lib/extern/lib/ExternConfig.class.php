@@ -367,7 +367,7 @@ class ExternConfig {
     function insertConfiguration () {
         $this->permCheck();
         
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT COUNT(config_id) AS count FROM extern_config WHERE ";
         $query .= "range_id='{$this->range_id}' AND config_type={$this->module_type}";
         $db->query($query);
@@ -380,7 +380,7 @@ class ExternConfig {
     }
     
     function deleteConfiguration () {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT config_id FROM extern_config WHERE config_id='{$this->id}' ";
         $query .= "AND range_id='{$this->range_id}'";
         $db->query($query);
@@ -415,7 +415,7 @@ class ExternConfig {
     */
     function GetAllConfigurations ($range_id, $type = NULL) {
         $all_configs = array();
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT * FROM extern_config WHERE range_id='$range_id' ";
     
         if ($type) {
@@ -438,7 +438,7 @@ class ExternConfig {
     }
 
     function GetConfigurationMetaData ($range_id, $config_id) {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT * FROM extern_config WHERE config_id='$config_id' ";
         $query .= "AND range_id='$range_id'";
     
@@ -458,7 +458,7 @@ class ExternConfig {
     }
     
     function ExistConfiguration ($range_id, $config_id) {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT config_id FROM extern_config WHERE config_id='$config_id' ";
         $query .= "AND range_id='$range_id'";
     
@@ -472,7 +472,7 @@ class ExternConfig {
     }
     
     function SetStandardConfiguration ($range_id, $config_id) {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT config_type, is_standard FROM extern_config WHERE config_id='$config_id' ";
         $query .= " AND range_id='$range_id'";
         $db->query($query);
@@ -517,7 +517,7 @@ class ExternConfig {
     }
     
     function DeleteAllConfigurations ($range_id) {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT config_id FROM extern_config WHERE range_id='$range_id'";
         $db->query($query);
         
@@ -534,7 +534,7 @@ class ExternConfig {
 
     
     function GetInfo ($range_id, $config_id) {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT * FROM extern_config WHERE config_id='$config_id' ";
         $query .= " AND range_id='$range_id'";
     
@@ -597,7 +597,7 @@ class ExternConfig {
     }
 
     function GetGlobalConfiguration ($range_id) {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT config_id FROM extern_config WHERE range_id = '$range_id' ";
         $query .= "AND config_type = 0 AND is_standard = 1";
         $db->query($query);
@@ -610,7 +610,7 @@ class ExternConfig {
     }
 
     function ChangeName ($range_id, $module_type, $config_id, $old_name, $new_name) {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT name FROM extern_config WHERE range_id='$range_id' AND ";
         $query .= "config_type=$module_type AND name='$new_name'";
         $db->query($query);
@@ -632,7 +632,7 @@ class ExternConfig {
     }
 
     function GetConfigurationByName ($range_id, $module_type, $name) {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT config_id FROM extern_config WHERE range_id='$range_id' AND ";
         $query .= "config_type=$module_type AND name='$name'";
         $db->query($query);
@@ -645,7 +645,7 @@ class ExternConfig {
     }
     
     function GetStandardConfiguration ($range_id, $type) {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT config_id FROM extern_config WHERE range_id='$range_id' AND ";
         $query .= "config_type=$type AND is_standard=1";
         $db->query($query);
@@ -666,7 +666,7 @@ class ExternConfig {
             }
         }
         
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = sprintf("SELECT i.Institut_id, i.Name, fakultaets_id FROM Institute i LEFT JOIN extern_config ec ON i.Institut_id = ec.range_id WHERE i.Institut_id = ec.range_id AND ec.config_type IN ('%s') ORDER BY Name", implode("','", $c_types));
         $db->query($query);
         while ($db->next_record()) {

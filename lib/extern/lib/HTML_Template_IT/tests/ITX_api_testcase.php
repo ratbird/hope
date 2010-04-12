@@ -32,7 +32,7 @@ class ITX_api_TestCase extends IT_api_TestCase
 
     function setUp()
     {
-        $this->tpl =& new HTML_Template_ITX('./templates');
+        $this->tpl = new HTML_Template_ITX('./templates');
     }
 
     function testPlaceholderExists()

@@ -48,7 +48,7 @@ class AbstractStmControl{
             $form_buttons["info_$id"] = array('type' => 'details', 'info' => "Details des Allgemeines Modul");
         }
         if (!is_object($this->sel_abs_stm_form)){
-            $this->sel_abs_stm_form =& new StudipForm($form_fields, $form_buttons, "sel_stm_form", false);
+            $this->sel_abs_stm_form = new StudipForm($form_fields, $form_buttons, "sel_stm_form", false);
         } else {
             $this->sel_abs_stm_form->form_fields = $form_fields;
             $this->sel_abs_stm_form->form_buttons = $form_buttons;
@@ -67,7 +67,7 @@ class AbstractStmControl{
                             );
 
         if (!is_object($this->delete_form)){
-            $this->delete_form =& new StudipForm($form_fields, $form_buttons, "delete_form", false);
+            $this->delete_form = new StudipForm($form_fields, $form_buttons, "delete_form", false);
         } else {
             $this->delete_form->form_fields = $form_fields;
         }
@@ -84,7 +84,7 @@ class AbstractStmControl{
                             );
 
         if (!is_object($this->info_form)){
-            $this->info_form =& new StudipForm($form_fields, $form_buttons, "info_form", false);
+            $this->info_form = new StudipForm($form_fields, $form_buttons, "info_form", false);
         } else {
             $this->info_form->form_fields = $form_fields;
         }
@@ -120,7 +120,7 @@ class AbstractStmControl{
 
 
         if (!is_object($this->abs_input_form)){
-            $this->abs_input_form =& new StudipForm($form_fields, $form_buttons, "abs_input_form", false);
+            $this->abs_input_form = new StudipForm($form_fields, $form_buttons, "abs_input_form", false);
         } else {
             $this->abs_input_form->form_fields = $form_fields;
         }
@@ -172,7 +172,7 @@ class AbstractStmControl{
         $form_fields['new_element_abbrev'] = array('type' => 'text', 'caption' => 'Kurzform');
 
         if (!is_object($this->elem_input_form)){
-            $this->elem_input_form =& new StudipForm($form_fields, $form_buttons, "elem_input_form", false);
+            $this->elem_input_form = new StudipForm($form_fields, $form_buttons, "elem_input_form", false);
         } else {
             $this->elem_input_form->form_fields = $form_fields;
             $this->elem_input_form->form_buttons = $form_buttons;
@@ -236,7 +236,7 @@ class AbstractStmControl{
             $form_buttons['remove_' . $index] = array('type' => 'trash.gif', 'info' => _("Diese Zeile entfernen"), 'is_picture' => 'true');             
 
         if (!is_object($this->assign_form)){
-            $this->assign_form =& new StudipForm($form_fields, $form_buttons, "assign_form", false);
+            $this->assign_form = new StudipForm($form_fields, $form_buttons, "assign_form", false);
         } else {
             $this->assign_form->form_fields = $form_fields;
             $this->assign_form->form_buttons = $form_buttons;
@@ -255,7 +255,7 @@ class AbstractStmControl{
                             );
 
         if (!is_object($this->summary_form)){
-            $this->summary_form =& new StudipForm($form_fields, $form_buttons, "summary_form", false);
+            $this->summary_form = new StudipForm($form_fields, $form_buttons, "summary_form", false);
         } else {
             $this->summary_form->form_fields = $form_fields;
         }

@@ -86,7 +86,7 @@ class UserService extends Studip_Ws_Service {
    */
   function create_user_action($api_key, $user) {
 
-    $user =& new Studip_User($user);
+    $user = new Studip_User($user);
 
     if (!$user->save())
       return new soap_fault('Server', '', $user->error);
@@ -125,7 +125,7 @@ class UserService extends Studip_Ws_Service {
    */
   function update_user_action($api_key, $user) {
 
-    $user =& new Studip_User($user);
+    $user = new Studip_User($user);
 
     if (!$user->id)
       return new soap_fault('Server', '', 'You have to give the user\'s id.');

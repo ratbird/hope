@@ -218,7 +218,7 @@ class StudipLitCatElement {
                             'delete' => array('type' => 'loeschen', 'info' => _("Eintrag löschen"))
                     );
         if (!is_object($this->form_obj)){
-            $this->form_obj =& new StudipForm($form_fields, $form_buttons, $form_name);
+            $this->form_obj = new StudipForm($form_fields, $form_buttons, $form_name);
         } else {
             $this->form_obj->form_fields = $form_fields;
         }

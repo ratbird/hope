@@ -440,9 +440,9 @@ function printVoteTable($mode, $votes = NULL, $openID = NULL){
         ){
         if ($counter == 0)          $displayclass = "steel1";
         if ($votes[$counter]["type"] == INSTANCEOF_VOTE)
-            $vote = &new Vote($votes[$counter]["voteID"]);
+            $vote = new Vote($votes[$counter]["voteID"]);
         else
-            $vote = &new TestVote($votes[$counter]["voteID"]);
+            $vote = new TestVote($votes[$counter]["voteID"]);
         $html.="    <tr>\n"
            . makeTableDataCell("&nbsp;",$displayclass,"center","10")
            . makeTableDataCell("&nbsp;",$displayclass,"center","18")

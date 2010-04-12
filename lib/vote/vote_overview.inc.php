@@ -123,7 +123,7 @@ if (($referer) && ($referer == "1")){
 /* construct the available ranges                                             *
 /*                                                                            *
 /* ************************************************************************* */
-$voteDB = &new VoteDB();
+$voteDB = new VoteDB();
 
 $typen = array("user"=>_("Benutzer"),"sem"=>_("Veranstaltung"),"inst"=>_("Einrichtung"),"fak"=>_("Fakult&auml;t"));
 
@@ -175,7 +175,7 @@ if ($voteaction && $voteaction != "search") $safeguard .= callSafeguard($voteact
 printSelections($range,$searchRange,$safeguard);
 
 // starting waiting votes
-$voteDB = &new VoteDB();
+$voteDB = new VoteDB();
 $voteDB->startWaitingVotes ();
     if ($voteDB->isError ())
         printSafeguard("ausruf",_("Fehler beim Starten der wartenden Votings und Tests."));
@@ -221,13 +221,13 @@ elseif (($voteaction == "search") && (($rangemode == "root") || ($rangemode == "
  */
 function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search = NULL, $referer = NULL){
     global $perm;
-    $voteDB = &new voteDB;
+    $voteDB = new voteDB;
     $votechanged = NULL;
     $safeguard = "";
     if ($type = $voteDB->getType($voteID) == "vote")
-        $vote = &new Vote($voteID);
+        $vote = new Vote($voteID);
     else
-        $vote = &new TestVote($voteID);
+        $vote = new TestVote($voteID);
 
     // If theres an error ... print it and return
     if ($vote->isError()){
@@ -416,7 +416,7 @@ function createVoteArray($mode){
     global $rangemode,$showrangeID, $userID;
 
     $username = "";
-    $voteDB = &new VoteDB();
+    $voteDB = new VoteDB();
     // request the right data from the db / all ranges
 //  if (($rangemode == "root" ) || ($rangemode == "admin") || ($rangemode == "dozent")){
         switch ($mode){
@@ -479,9 +479,9 @@ function createVoteArray($mode){
         // create an object of the current vote
         if
          ($votearray["type"] == "vote")
-            $vote = &new Vote($voteID);
+            $vote = new Vote($voteID);
         else
-            $vote = &new TestVote($voteID);
+            $vote = new TestVote($voteID);
 
         // If theres an error ... print it and return
         if ($vote->isError()){

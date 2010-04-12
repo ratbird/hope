@@ -177,7 +177,7 @@ class EvaluationGroup extends EvaluationObject {
       }
 
       while ($text = array_pop ($newQuestionTexts)) {
-         $template = &new EvaluationQuestion ($templateID, NULL,
+         $template = new EvaluationQuestion ($templateID, NULL,
           EVAL_LOAD_ALL_CHILDREN);
          $child = &$template->duplicate ();
          $child->setText ($text);

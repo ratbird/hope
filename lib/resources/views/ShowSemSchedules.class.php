@@ -51,7 +51,7 @@ class ShowSemSchedules extends ShowSchedules {
 
     //Konstruktor
     function ShowSemSchedules ($resource_id, $semester_id = null, $timespan = 'sem_time') {
-        $sem =& new SemesterData();
+        $sem = new SemesterData();
         if (!$semester_id){
             $this->semester = $sem->getCurrentSemesterData();
         } else {

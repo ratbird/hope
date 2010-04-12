@@ -65,7 +65,7 @@ class ClipBoard {
     function &GetInstance($name){
         static $instance;
         if (!is_object($instance[$name])){
-            $instance[$name] =& new ClipBoard($name);
+            $instance[$name] = new ClipBoard($name);
         }
         return $instance[$name];
     }
@@ -171,7 +171,7 @@ class ClipBoard {
         $form_fields['clip_cmd'] = array('type' => 'select', 'options' => array(array('name' => _("Aus Merkliste löschen"), 'value' => 'del')));
         $form_buttons['clip_ok'] = array('type' => 'ok', 'info' => _("Gewählte Aktion starten"));
         if (!is_object($this->form_obj)){
-            $this->form_obj =& new StudipForm($form_fields, $form_buttons, $form_name, false);
+            $this->form_obj = new StudipForm($form_fields, $form_buttons, $form_name, false);
         } else {
             $this->form_obj->form_fields = $form_fields;
         }

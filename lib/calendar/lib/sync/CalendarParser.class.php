@@ -63,7 +63,7 @@ class CalendarParser {
     
     function parseIntoDatabase ($data, $ignore) {
     
-        $database =& new CalendarDriver();
+        $database = new CalendarDriver();
         if ($this->parseIntoObjects($data, $ignore)) {
             $database->writeObjectsIntoDatabase($this->events, 'INSERT_IGNORE');
             return TRUE;
@@ -77,7 +77,7 @@ class CalendarParser {
         
         if ($this->parse($data, $ignore)) {
             foreach ($this->components as $properties)
-                $this->events[] =& new CalendarEvent($properties);
+                $this->events[] = new CalendarEvent($properties);
             
             return TRUE;
         }

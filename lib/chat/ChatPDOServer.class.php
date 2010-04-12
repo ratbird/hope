@@ -34,7 +34,7 @@ require_once 'PDOHandler.class.php';
 class ChatPDOServer extends ChatServer {
 
     function ChatPDOServer(){
-        $this->that =& new PDOHandler($table_name = CHAT_DB_TABLE_NAME);
+        $this->that = new PDOHandler($table_name = CHAT_DB_TABLE_NAME);
         parent::ChatServer();
     }
 

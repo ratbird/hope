@@ -450,7 +450,7 @@ class SingleDate {
             if (!$this->request_id) {
                 $this->request_id = SingleDateDB::getRequestID($this->termin_id);
             }
-            $rD =& new RoomRequest($this->request_id);
+            $rD = new RoomRequest($this->request_id);
             if (($rD->getClosed() == 1) || ($rD->getClosed() == 2)) {
                 return FALSE;
             }
@@ -509,7 +509,7 @@ class SingleDate {
 
     function getRequestedRoom() {
         if ($this->hasRoomRequest()) {
-            $rD =& new RoomRequest($this->request_id);
+            $rD = new RoomRequest($this->request_id);
             $resObject =& ResourceObject::Factory($rD->resource_id);
             return $resObject->getName();
         }
@@ -520,7 +520,7 @@ class SingleDate {
         $room_request = $this->getRoomRequestStatus();
         if ($room_request) {
             if (!$this->requestData) {
-                $rD =& new RoomRequest($this->request_id);
+                $rD = new RoomRequest($this->request_id);
                 $resObject =& ResourceObject::Factory($rD->resource_id);
                 $this->requestData .= 'Raum: '.$resObject->getName().'\n';
                 $this->requestData .= 'verantworlich: '.$resObject->getOwnerName().'\n\n';

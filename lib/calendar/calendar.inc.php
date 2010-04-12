@@ -123,7 +123,7 @@ if (isset($calendar_user_control_data['number_of_events']))
     $calendar_user_control_data['delete'] = 6;
 }
 
-$db_check =& new DB_Seminar();
+$db_check = new DB_Seminar();
 
 // updating seminars selected by the user
 $db_check->query("SELECT Seminar_id, mkdate FROM seminar_user WHERE user_id='$user->id' ORDER BY mkdate DESC");
@@ -268,7 +268,7 @@ switch ($cmd)
         {
             if ($evtype == 'sem')
             {
-                $atermin =& new SeminarEvent();
+                $atermin = new SeminarEvent();
                 if (!$atermin->restore($termin_id))
                 {
                     // its something wrong... better to go back to the last view
@@ -281,7 +281,7 @@ switch ($cmd)
             }
             else
             {
-                $atermin =& new DbCalendarEvent($termin_id);
+                $atermin = new DbCalendarEvent($termin_id);
                 if (!$mod)
                     $mod = $atermin->getRepeat('rtype');
                 $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Termin bearbeiten");
@@ -304,7 +304,7 @@ switch ($cmd)
                             'STUDIP_CATEGORY' => 1,
                             'CATEGORIES' => '',
                             'CLASS' => 'PRIVATE');
-                    $atermin =& new CalendarEvent($properties);
+                    $atermin = new CalendarEvent($properties);
                     $atermin->setDayEvent(TRUE);
                 }
                 else
@@ -317,14 +317,14 @@ switch ($cmd)
                             'STUDIP_CATEGORY' => 1,
                             'CATEGORIES' => '',
                             'CLASS' => 'PRIVATE');
-                    $atermin =& new CalendarEvent($properties);
+                    $atermin = new CalendarEvent($properties);
                 }
                 $atermin->setRepeat(array('rtype' => 'SINGLE'));
             }
             else
             {
                 $properties = array();
-                $atermin =& new CalendarEvent($properties);
+                $atermin = new CalendarEvent($properties);
             }
         }
         if (empty($_POST))
@@ -356,7 +356,7 @@ switch ($cmd)
 
 if ($cmd == 'add')
 {
-//  $atermin =& new DbCalendarEvent($termin_id);
+//  $atermin = new DbCalendarEvent($termin_id);
     // Ueberpruefung der Formulareingaben
     $err = check_form_values($calendar_sess_forms_data);
 //  set_event_properties($calendar_sess_forms_data, $atermin, $calendar_sess_forms_data['mod_prv']);
@@ -364,7 +364,7 @@ if ($cmd == 'add')
     // termin_id updaten
     if (empty($err) && $count_events < $CALENDAR_MAX_EVENTS)
     {
-        $atermin =& new DbCalendarEvent($termin_id);
+        $atermin = new DbCalendarEvent($termin_id);
         set_event_properties($calendar_sess_forms_data, $atermin, $calendar_sess_forms_data['mod_prv']);
         $atermin->save();
         $atime = $atermin->getStart();
@@ -404,7 +404,7 @@ if ($cmd == 'add')
 
 if ($cmd == 'del')
 {
-    $atermin =& new DbCalendarEvent($termin_id);
+    $atermin = new DbCalendarEvent($termin_id);
     $atermin->delete();
 
     if($calendar_sess_control_data['source'])
@@ -446,7 +446,7 @@ if ($cmd == 'showday')
     }
 
     include_once($RELATIVE_PATH_CALENDAR . "/lib/DbCalendarDay.class.php");
-    $aday =& new DbCalendarDay($atime);
+    $aday = new DbCalendarDay($atime);
     $aday->bindSeminarEvents($bind_seminare);
     $tab = createDayTable($aday, $st, $et, $calendar_user_control_data['step_day'],
                             TRUE, TRUE, FALSE, 70, 20, 3, 1);
@@ -485,7 +485,7 @@ if ($cmd == 'showmonth')
 {
     include_once($RELATIVE_PATH_CALENDAR . "/lib/DbCalendarMonth.class.php");
 
-    $amonth =& new DbCalendarMonth($atime);
+    $amonth = new DbCalendarMonth($atime);
     $calendar_sess_forms_data['bind_seminare'] = '';
     $amonth->bindSeminarEvents($bind_seminare);
     $amonth->sort();
@@ -509,7 +509,7 @@ if ($cmd == 'showyear')
 {
     include_once($RELATIVE_PATH_CALENDAR . "/lib/DbCalendarYear.class.php");
 
-    $ayear =& new DbCalendarYear($atime);
+    $ayear = new DbCalendarYear($atime);
     $ayear->bindSeminarEvents($bind_seminare);
 
     include($RELATIVE_PATH_CALENDAR . "/views/year.inc.php");

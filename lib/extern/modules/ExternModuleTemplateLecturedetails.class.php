@@ -204,9 +204,9 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
 
     function getContent ($args = NULL, $raw = FALSE) {
         $this->seminar_id = $args["seminar_id"];
-        $seminar =& new Seminar($this->seminar_id);
+        $seminar = new Seminar($this->seminar_id);
 
-        $this->db =& new DB_Seminar();
+        $this->db = new DB_Seminar();
         $query = "SELECT * FROM seminare WHERE Seminar_id='$this->seminar_id'";
         $this->db->query($query);
         $visible = $this->config->getValue("Main", "visible");
@@ -232,7 +232,7 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
             }
 
             $lecturers = array_keys($seminar->getMembers('dozent'));
-            $db_lecturer =& new DB_Seminar();
+            $db_lecturer = new DB_Seminar();
             $l = 0;
             foreach ($lecturers as $lecturer) {
                 $db_lecturer->query("SELECT {$GLOBALS['_fullname_sql'][$name_sql]} AS name, username, Vorname, Nachname, title_rear, title_front FROM auth_user_md5 aum LEFT JOIN user_info ui USING(user_id) WHERE aum.user_id = '$lecturer'");
@@ -249,7 +249,7 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
             }
 
             $tutors = array_keys($seminar->getMembers('tutor'));
-            $db_tutor =& new DB_Seminar();
+            $db_tutor = new DB_Seminar();
             $l = 0;
             foreach ($tutors as $tutor) {
                 $db_tutor->query("SELECT {$GLOBALS['_fullname_sql'][$name_sql]} AS name, username, Vorname, Nachname, title_rear, title_front FROM auth_user_md5 aum LEFT JOIN user_info ui USING(user_id) WHERE aum.user_id = '$tutor'");

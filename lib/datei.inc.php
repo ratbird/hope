@@ -966,7 +966,7 @@ function insert_entry_db($range_id, $sem_id=0, $refresh = FALSE) {
     if (!$name) $name = $the_file_name;
 
     if ($the_file_size > 0) {
-        $doc =& new StudipDocument($dokument_id);
+        $doc = new StudipDocument($dokument_id);
         if (!$refresh) {
             $doc->setValue('range_id' , $range_id);
             $doc->setValue('seminar_id' , $upload_seminar_id);
@@ -2412,7 +2412,7 @@ function upload_zip_file($dir_id, $file) {
 
     global $user, $upload_seminar_id;
 
-    $doc =& new StudipDocument();
+    $doc = new StudipDocument();
 
     // Dokument_id erzeugen
     $dokument_id = $doc->getNewId();

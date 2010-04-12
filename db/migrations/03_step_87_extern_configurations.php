@@ -26,8 +26,8 @@ class Step87ExternConfigurations extends DBMigration {
         while ($this->db->next_record()) {
             
             
-            $old_config =& new ExternConfigIni($this->db->f('range_id'), '', $this->db->f('config_id'));
-            $new_config =& new ExternConfigDb($this->db->f('range_id'), '', $this->db->f('config_id'));
+            $old_config = new ExternConfigIni($this->db->f('range_id'), '', $this->db->f('config_id'));
+            $new_config = new ExternConfigDb($this->db->f('range_id'), '', $this->db->f('config_id'));
             
     
             $new_config->setConfiguration($old_config->getConfiguration());

@@ -154,7 +154,7 @@ class ExternModuleTemplateNews extends ExternModule {
     
     function getContent ($args = NULL, $raw = FALSE) {
         $content = array();
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $error_message = "";
 
         // stimmt die übergebene range_id?

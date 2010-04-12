@@ -50,7 +50,7 @@ class MysqlDriver {
     function initialize ($db_name) {
     
         if (!is_object($this->db["$db_name"]))
-            $this->db["$db_name"] =& new DB_Seminar();
+            $this->db["$db_name"] = new DB_Seminar();
     }
     
     function count () {

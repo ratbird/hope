@@ -157,7 +157,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         echo "</table>";
     }
     
-    $modules =& new ModulesNotification();
+    $modules = new ModulesNotification();
     // Update der Benachrichtigungsfunktion
     if ($_REQUEST['cmd'] == 'set_sem_notification') {
         if (is_array($_REQUEST['m_checked'])) {
@@ -165,7 +165,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         }
     }
     $enabled_modules = $modules->getGlobalEnabledNotificationModules('sem');
-    $css =& new cssClassSwitcher();
+    $css = new cssClassSwitcher();
     $css->enableHover();
     echo $css->GetHoverJSFunction();
     echo "\n<table width=\"75%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n";

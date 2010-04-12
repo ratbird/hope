@@ -22,7 +22,7 @@ require_once 'vendor/soap/nusoap.php';
 
 define('WSDL_URL', "http://pomona/studip/mlunzena/trunk/webservices/soap.php?wsdl");
 
-$client =& new soap_client(WSDL_URL, TRUE);
+$client = new soap_client(WSDL_URL, TRUE);
 $proxy = $client->getProxy();
 
 # studip unstable is quite slow..

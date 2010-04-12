@@ -84,7 +84,7 @@ class ExternElementTemplateGeneric extends ExternElement {
         $tag_headline = '';
         $table = '';
         if ($edit_form == '')
-            $edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
+            $edit_form = new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
         
         $edit_form->setElementName($this->getName());
         $element_headline = $this->getEditFormHeadline($edit_form);
@@ -126,7 +126,7 @@ class ExternElementTemplateGeneric extends ExternElement {
     }
     
     function renderTmpl (&$tmpl, $content, $first_subpart = '', $hide_markers = TRUE) {
-        $tmpl_obj =& new HTML_Template_IT();
+        $tmpl_obj = new HTML_Template_IT();
         $tmpl_obj->clearCacheOnParse = FALSE;
         $tmpl_obj->setTemplate($tmpl, $hide_markers, TRUE);
         

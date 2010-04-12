@@ -73,7 +73,7 @@ class ExternElementLinkInternSimple extends ExternElement {
         $out = "";
         $table = "";
         if ($edit_form == "") {
-            $edit_form =& new ExternEditModule($this->config, $post_vars, $faulty_values, $anker);
+            $edit_form = new ExternEditModule($this->config, $post_vars, $faulty_values, $anker);
         }
         
         $edit_form->setElementName($this->getName());

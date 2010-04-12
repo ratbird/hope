@@ -48,8 +48,8 @@ if (isset($_SERVER["argv"])) {
     }
   }
 
-  $version =& new DBSchemaVersion($domain);
-  $migrator =& new Migrator($path, $version, $verbose);
+  $version = new DBSchemaVersion($domain);
+  $migrator = new Migrator($path, $version, $verbose);
 
   if ($list) {
     $migrations = $migrator->relevant_migrations($target);

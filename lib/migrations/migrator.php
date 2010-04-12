@@ -288,7 +288,7 @@ class Migrator {
       list($file, $class) = $migration_file_and_class;
 
       require_once $file;
-      $migration =& new $class($this->verbose);
+      $migration = new $class($this->verbose);
 
       $result[$version] = $migration;
     }

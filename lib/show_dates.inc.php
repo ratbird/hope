@@ -347,7 +347,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
         $admin_link = sprintf("<a href=\"./calendar.php?cmd=edit&source_page=%s\">", rawurlencode($PHP_SELF));
     }
 
-    $list =& new DbCalendarEventList($range_id, $date_start, $date_end, TRUE);
+    $list = new DbCalendarEventList($range_id, $date_start, $date_end, TRUE);
 
     if ($list->existEvent()) {
 

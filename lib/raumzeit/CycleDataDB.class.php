@@ -82,7 +82,7 @@ class CycleDataDB {
         $c = 0;
         $db->query("SELECT * FROM termine WHERE metadate_id = '$metadate_id' AND date > $timestamp");
         while ($db->next_record()) {
-            $termin =& new SingleDate($db->f('termin_id'));
+            $termin = new SingleDate($db->f('termin_id'));
             $termin->delete($keepIssues);
             $c++;
             unset($termin);

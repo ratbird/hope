@@ -60,7 +60,7 @@ class InstanceStmControl {
             $form_buttons["info_$id"] = array('type' => 'details', 'info' => "Details des Allgemeines Modul");
         }
         if (!is_object($this->sel_stm_form)){
-            $this->sel_stm_form =& new StudipForm($form_fields, $form_buttons, "sel_stm_form", false);
+            $this->sel_stm_form = new StudipForm($form_fields, $form_buttons, "sel_stm_form", false);
         } else {
             $this->sel_stm_form->form_fields = $form_fields;
             $this->sel_stm_form->form_buttons = $form_buttons;
@@ -79,7 +79,7 @@ class InstanceStmControl {
                             );
 
         if (!is_object($this->delete_form)){
-            $this->delete_form =& new StudipForm($form_fields, $form_buttons, "delete_form", false);
+            $this->delete_form = new StudipForm($form_fields, $form_buttons, "delete_form", false);
         } else {
             $this->delete_form->form_fields = $form_fields;
         }
@@ -96,7 +96,7 @@ class InstanceStmControl {
                             );
 
         if (!is_object($this->info_form)){
-            $this->info_form =& new StudipForm($form_fields, $form_buttons, "info_form", false);
+            $this->info_form = new StudipForm($form_fields, $form_buttons, "info_form", false);
         } else {
             $this->info_form->form_fields = $form_fields;
         }
@@ -141,7 +141,7 @@ class InstanceStmControl {
 
 
         if (!is_object($this->abs_input_form)){
-            $this->stg_input_form =& new StudipForm($form_fields, $form_buttons, "abs_input_form", false);
+            $this->stg_input_form = new StudipForm($form_fields, $form_buttons, "abs_input_form", false);
         } else {
             $this->stg_input_form->form_fields = $form_fields;
         }
@@ -158,7 +158,7 @@ class InstanceStmControl {
                             );
 
         if (!is_object($this->abs_summary_form)){
-            $this->abs_summary_form =& new StudipForm($form_fields, $form_buttons, "abs_summary_form", false);
+            $this->abs_summary_form = new StudipForm($form_fields, $form_buttons, "abs_summary_form", false);
         } else {
             $this->abs_summary_form->form_fields = $form_fields;
         }
@@ -216,7 +216,7 @@ class InstanceStmControl {
 
 
         if (!is_object($this->add_info_form)){
-            $this->add_info_form =& new StudipForm($form_fields, $form_buttons, "add_info_form", false);
+            $this->add_info_form = new StudipForm($form_fields, $form_buttons, "add_info_form", false);
         } else {
             $this->add_info_form->form_fields = $form_fields;
         }
@@ -236,7 +236,7 @@ class InstanceStmControl {
         }
         
         if (!is_object($this->sel_elementgroup_form)){
-            $this->sel_elementgroup_form =& new StudipForm($form_fields, $form_buttons, "sel_elementgroup_form", false);
+            $this->sel_elementgroup_form = new StudipForm($form_fields, $form_buttons, "sel_elementgroup_form", false);
         } else {
             $this->sel_elementgroup_form->form_fields = $form_fields;
             $this->sel_elementgroup_form->form_buttons = $form_buttons;
@@ -261,7 +261,7 @@ class InstanceStmControl {
         }
 
         if (!is_object($this->fill_group_form)){
-            $this->fill_group_form =& new StudipForm($form_fields, $form_buttons, "fill_group_form", false);
+            $this->fill_group_form = new StudipForm($form_fields, $form_buttons, "fill_group_form", false);
         } else {
             $this->fill_group_form->form_fields = $form_fields;
             $this->fill_group_form->form_buttons = $form_buttons;
@@ -283,7 +283,7 @@ class InstanceStmControl {
                             );
 
         if (!is_object($this->summary_form)){
-            $this->summary_form =& new StudipForm($form_fields, $form_buttons, "summary_form", false);
+            $this->summary_form = new StudipForm($form_fields, $form_buttons, "summary_form", false);
         } else {
             $this->summary_form->form_fields = $form_fields;
         }

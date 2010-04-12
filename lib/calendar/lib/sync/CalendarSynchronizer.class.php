@@ -79,7 +79,7 @@ class CalendarSynchronizer {
         $this->count = sizeof($events);
         
         // get events from database
-        $db =& new CalendarDriver();
+        $db = new CalendarDriver();
         $db->openDatabase('EVENTS', 'CALENDAR_EVENTS');
         
         $sentinel = '#';

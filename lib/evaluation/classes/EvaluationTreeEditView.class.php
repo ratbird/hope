@@ -865,7 +865,7 @@ function createTreeItemDetails($item_id){
             $par = $this->getInstance ($group->getParentID ());
             
              if ($par == ROOT_BLOCK)
-                $parent =& new Evaluation ($group->getParentID (), NULL, EVAL_LOAD_FIRST_CHILDREN);
+                $parent = new Evaluation ($group->getParentID (), NULL, EVAL_LOAD_FIRST_CHILDREN);
             else
                 $parent =& $this->tree->getGroupObject($group->getParentID ());
             
@@ -882,7 +882,7 @@ function createTreeItemDetails($item_id){
             $group =& $this->tree->getGroupObject($item_id);
             $par = $this->getInstance ($group->getParentID ());
 
-             if ($par == ROOT_BLOCK) $parent = &new Evaluation ($group->getParentID (), NULL, EVAL_LOAD_FIRST_CHILDREN);
+             if ($par == ROOT_BLOCK) $parent = new Evaluation ($group->getParentID (), NULL, EVAL_LOAD_FIRST_CHILDREN);
              else $parent = &$this->tree->getGroupObject($group->getParentID);
             $isLastKid = ($parent->getNumberChildren() 
                 == $group->getPosition () + 1)
@@ -1480,7 +1480,7 @@ function execCommandDeleteItem(){
 function execCommandAddGroup(){
     
 
-    $group = &new EvaluationGroup();
+    $group = new EvaluationGroup();
     $group->setTitle( NEW_ARRANGMENT_BLOCK_TITLE , QUOTED);
     $group->setText("");
 
@@ -1520,7 +1520,7 @@ function execCommandAddGroup(){
 function execCommandAddQGroup(){
     
 
-    $group = &new EvaluationGroup();
+    $group = new EvaluationGroup();
     $group->setTitle( NEW_QUESTION_BLOCK_BLOCK_TITLE , QUOTED);
     $group->setText("");
     $group->setChildType("EvaluationQuestion");
@@ -1530,7 +1530,7 @@ function execCommandAddQGroup(){
 
     // add 3 Questions
 /*  for ($i=0;$i<=3;$i++){
-        $template = &new EvaluationQuestion ($_REQUEST["templateID"]);
+        $template = new EvaluationQuestion ($_REQUEST["templateID"]);
         $newquestion = $template->duplicate ();
         $newquestion->setText(_("Bitte eine Frage eingeben."));
         $newquestion->save ();
@@ -1599,7 +1599,7 @@ function execCommandChangeTemplate(){
     $templateID = $group->getTemplateID();
     if ($templateID){
 
-        $template = &new EvaluationQuestion($templateID);
+        $template = new EvaluationQuestion($templateID);
         $templateTitle = htmlReady ($template->getText());
         
     } else
@@ -1637,7 +1637,7 @@ function execCommandUpdateQuestions ( $no_delete = false ){
     for( $i=0; $i<count($questions); $i++ ) {
 
         if (!isset($deleteQuestions[$i])){
-            $question = &new EvaluationQuestion($questions[$i]['questionID'], NULL,
+            $question = new EvaluationQuestion($questions[$i]['questionID'], NULL,
             EVAL_LOAD_FIRST_CHILDREN);
             
             // remove any empty questions
@@ -1677,7 +1677,7 @@ function execCommandAddQuestions(){
     $templateID = $qgroup->getTemplateID();
     
     for ($i=1;$i<=$addquestions;$i++){
-        $template = &new EvaluationQuestion ($templateID, NULL, EVAL_LOAD_FIRST_CHILDREN);
+        $template = new EvaluationQuestion ($templateID, NULL, EVAL_LOAD_FIRST_CHILDREN);
         $newquestion = $template->duplicate ();
         $newquestion->setText("");
         $qgroup->addChild ($newquestion);
@@ -1713,7 +1713,7 @@ function execCommandDeleteQuestions(){
     $deletecount = 0;
     for( $i=0; $i<count($questions); $i++ ) {
 
-        $question = &new EvaluationQuestion($questions[$i]['questionID'], NULL,
+        $question = new EvaluationQuestion($questions[$i]['questionID'], NULL,
             EVAL_LOAD_ALL_CHILDREN);
 
         // remove any empty questions
@@ -3418,7 +3418,7 @@ function swapPosition ( $parentID,
     }
     if ( ($parentID != ROOT_BLOCK) &&
           $group->getChildType () == "EvaluationQuestion")
-        $object = &new EvaluationQuestion ( $objectID );
+        $object = new EvaluationQuestion ( $objectID );
     else
         $object = &$this->tree->getGroupObject( $objectID );
     $object->setPosition ( $newposition );

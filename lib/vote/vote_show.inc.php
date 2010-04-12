@@ -47,12 +47,12 @@ unset ($_include_extra_stylesheet);
 function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
 
    /* Set variables -------------------------------------------------------- */
-   $voteDB  = &new VoteDB ();
+   $voteDB  = new VoteDB ();
    if ($voteDB->isError ()) {
       echo createErrorReport ($voteDB, _("Vote-Datenbankfehler"));
       return;
    }
-   $evalDB  = &new EvaluationDB ();
+   $evalDB  = new EvaluationDB ();
    if ($evalDB->isError ()) {
       echo createErrorReport ($evalDB, _("Evaluation-Datenbankfehler"));
       return;
@@ -138,7 +138,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
 
   /* Show all active evals ------------------------------------------------ */
    foreach ($activeEvals as $evalID) {
-      $eval = &new Evaluation ($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
+      $eval = new Evaluation ($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
 
       if ($eval->isError ()) {
          echo createErrorReport ($vote, _("Fehler beim Einlesen der Evaluation"));
@@ -373,9 +373,9 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
         $voteID = $tmpVote["voteID"];
 
         if ($tmpVote["type"] == INSTANCEOF_TEST)
-           $vote = &new TestVote ($voteID);
+           $vote = new TestVote ($voteID);
         else
-           $vote = &new Vote ($voteID);
+           $vote = new Vote ($voteID);
 
         echo createBoxContentHeader ();
         echo createStoppedVoteHeader ($vote);

@@ -102,13 +102,13 @@ class ExternElementMainLectures extends ExternElementMain {
         global $SEM_CLASS;
         
         // get semester data
-        $semester =& new SemesterData();
+        $semester = new SemesterData();
         $semester_data = $semester->getAllSemesterData();
         
         $out = "";
         $table = "";
         if ($edit_form == "")
-            $edit_form =& new ExternEditModule($this->config, $post_vars, $faulty_values, $anker);
+            $edit_form = new ExternEditModule($this->config, $post_vars, $faulty_values, $anker);
         
         $edit_form->setElementName($this->getName());
         $element_headline = $edit_form->editElementHeadline($this->real_name,

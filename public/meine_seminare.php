@@ -220,7 +220,7 @@ if ($gruppesent == '1'){
 // Update der Benachrichtigungsfunktion
 if ($cmd == 'set_sem_notification') {
     if (is_array($_REQUEST['m_checked'])) {
-        $m_notification =& new ModulesNotification();
+        $m_notification = new ModulesNotification();
         $m_notification->setModuleNotification($_REQUEST['m_checked'], 'sem');
     }
 }

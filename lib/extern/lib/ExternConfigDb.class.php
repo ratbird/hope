@@ -49,7 +49,7 @@ class ExternConfigDb extends ExternConfig {
     *
     */
     function ExternConfigDb ($range_id, $module_name, $config_id = '') {
-        $this->db =& new DB_Seminar();
+        $this->db = new DB_Seminar();
         parent::ExternConfig ($range_id, $module_name, $config_id);
     }
 

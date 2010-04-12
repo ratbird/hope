@@ -142,7 +142,7 @@ class DbCalendarMonth extends DbCalendarYear {
             $adate = mktime(12, 0, 0, date("n", $db->f("date")), date("j", $db->f("date")),
                     date('Y', $db->f('date')), 0);
             $this->appdays["$adate"]++;
-            $app =& new SeminarEvent($db->f("termin_id"), array(
+            $app = new SeminarEvent($db->f("termin_id"), array(
                     "DTSTART"          => $db->f("date"),
                     "DTEND"            => $db->f("end_time"),
                     "SUMMARY"          => $db->f("content"),

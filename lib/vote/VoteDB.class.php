@@ -69,7 +69,7 @@ class VoteDB extends StudipObject {
     */
    function VoteDB () {
       parent::StudipObject ();
-      $this->db = &new DB_Seminar ();
+      $this->db = new DB_Seminar ();
       // Für eigene Fehlerroutine am Ende auf "no" schalten!...
       $this->db->Halt_On_Error = "yes";
       return;

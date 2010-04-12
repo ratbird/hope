@@ -70,7 +70,7 @@ class ExternModule {
             require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/modules/ExternModule$module_name.class.php");
         
             $class_name = "ExternModule" . $module_name;
-            $module =& new $class_name($range_id, $module_name, $config_id, $set_config, $global_id);
+            $module = new $class_name($range_id, $module_name, $config_id, $set_config, $global_id);
             return $module;
         }
         
@@ -174,7 +174,7 @@ class ExternModule {
     }
     
     function getRangeDefaultConfig ($range_id = 'global') {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         
         $query = "SELECT config_type FROM extern_config WHERE config_id = '" . $this->getName() . "' AND range_id = '$range_id'";
         $db->query($query);
@@ -232,7 +232,7 @@ class ExternModule {
             $faulty_values = "", $anker = "") {
         
         require_once($GLOBALS['RELATIVE_PATH_EXTERN'] . "/views/ExternEditModule.class.php");
-        $edit_form =& new ExternEditModule($this->config, $post_vars, $faulty_values, $anker);
+        $edit_form = new ExternEditModule($this->config, $post_vars, $faulty_values, $anker);
         
         $out = $edit_form->editHeader();
         
@@ -393,7 +393,7 @@ class ExternModule {
             $datafields_config = array();
         }
         /*
-        $datafields_obj =& new DataFields();
+        $datafields_obj = new DataFields();
         $datafields = $datafields_obj->getFields($object_type);
         $i = 1;
         foreach ((array) $datafields_config as $df_id) {

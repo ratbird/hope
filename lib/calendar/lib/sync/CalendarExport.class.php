@@ -58,7 +58,7 @@ class CalendarExport {
             $event_types = 'CALENDAR_EVENTS', $sem_id, $except = NULL) {
         global $_calendar_error;
         
-        $export_driver =& new CalendarDriver();
+        $export_driver = new CalendarDriver();
         $export_driver->openDatabase('EVENTS', $event_types, $start,
                 $end, $except, $range_id, $sem_id);
         

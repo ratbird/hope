@@ -97,7 +97,7 @@ class ExternModuleLecturestable extends ExternModule {
         init_i18n($language);
         
         $start_item_id = get_start_item_id($this->config->range_id);
-        $browser =& new ExternSemBrowseTable($this, $start_item_id);
+        $browser = new ExternSemBrowseTable($this, $start_item_id);
         $browser->print_result();
         
         if ($this->config->getValue("Main", "wholesite"))

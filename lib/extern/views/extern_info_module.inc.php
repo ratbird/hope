@@ -39,7 +39,7 @@
 require_once($GLOBALS['RELATIVE_PATH_EXTERN'].'/lib/ExternConfig.class.php');
 
 $info = ExternConfig::GetInfo($range_id, $config_id);
-$css_switcher =& new CssClassSwitcher("", "");
+$css_switcher = new CssClassSwitcher("", "");
 
 echo "<tr><td class=\"blank\" width=\"100%\">";
 echo "&nbsp;</td></tr>\n";

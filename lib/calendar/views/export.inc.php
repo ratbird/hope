@@ -54,7 +54,7 @@ if (!isset($calendar_sess_export))
 
 // direct "one-button-export(tm)" of an event-object
 if ($expmod == 'exp_direct' && $termin_id) {
-    $export =& new CalendarExportFile(new CalendarWriterICalendar());
+    $export = new CalendarExportFile(new CalendarWriterICalendar());
 
     if ($evtype == 'sem')
         $exp_event = array(new SeminarEvent($termin_id));
@@ -319,7 +319,7 @@ elseif ($expmod == 'exp' && empty($err)) {
 }
 elseif ($expmod == 'imp') {
 
-    $import =& new CalendarImportFile(new CalendarParserICalendar(),
+    $import = new CalendarImportFile(new CalendarParserICalendar(),
             $_FILES['importfile']);
 
     $import_count = $import->getCount();
@@ -353,12 +353,12 @@ elseif ($expmod == 'imp') {
 }
 elseif ($expmod == 'sync') {
 
-    $import =& new CalendarImportFile(new CalendarParserICalendar(),
+    $import = new CalendarImportFile(new CalendarParserICalendar(),
             $_FILES['importfile']);
 
-    $export =& new CalendarExportFile(new CalendarWriterICalendar());
+    $export = new CalendarExportFile(new CalendarWriterICalendar());
 
-    $synchronizer =& new CalendarSynchronizer($import, $export,
+    $synchronizer = new CalendarSynchronizer($import, $export,
             $CALENDAR_MAX_EVENTS - $count_events);
     $synchronizer->synchronize();
 

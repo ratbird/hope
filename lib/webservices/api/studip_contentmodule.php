@@ -18,7 +18,7 @@ class StudipContentmoduleHelper
 {
     function find_seminars_using_contentmodule($system_type, $module_id)
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $db->query("SELECT s.Seminar_id FROM seminare s
                                 LEFT JOIN object_contentmodules oc
                                 ON (s.Seminar_id = oc.object_id)
@@ -36,7 +36,7 @@ class StudipContentmoduleHelper
 
     function find_institutes_using_contentmodule($system_type, $module_id)
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $db->query($query = "SELECT i.Institut_id FROM Institute i
                                 LEFT JOIN object_contentmodules oc
                                 ON (i.Institut_id = oc.object_id)

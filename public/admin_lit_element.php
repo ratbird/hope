@@ -84,7 +84,7 @@ if ($_REQUEST['cmd'] == 'clone_entry'){
 }
 
 if(!is_object($_the_element)){
-    $_the_element =& new StudipLitCatElement($_catalog_id, true);
+    $_the_element = new StudipLitCatElement($_catalog_id, true);
 }
 $_the_form =& $_the_element->getFormObject();
 $_the_clipboard =& StudipLitClipBoard::GetInstance();

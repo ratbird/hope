@@ -44,8 +44,8 @@ if (empty($GLOBALS['STUDIP_API_KEY'])
     die("Webservices not available");
 }
 
-$delegate =& new Studip_Ws_SoapDispatcher('UserService', 'SessionService', 'SeminarService', 'ContentmoduleService', 'LectureTreeService', 'InstituteService');
-$server   =& new DelegatingSoapServer($delegate);
+$delegate = new Studip_Ws_SoapDispatcher('UserService', 'SessionService', 'SeminarService', 'ContentmoduleService', 'LectureTreeService', 'InstituteService');
+$server   = new DelegatingSoapServer($delegate);
 
 # creating WSDL
 $namespace = 'urn:studip_wsd';

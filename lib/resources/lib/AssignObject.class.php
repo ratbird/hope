@@ -72,7 +72,7 @@ class AssignObject {
                 if (is_object($assign_object_pool[$id]) && $assign_object_pool[$id]->getId() == $id){
                     return $assign_object_pool[$id];
                 } else {
-                    $assign_object_pool[$id] =& new AssignObject($id);
+                    $assign_object_pool[$id] = new AssignObject($id);
                     return $assign_object_pool[$id];
                 }
             }

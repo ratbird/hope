@@ -130,12 +130,12 @@ class DbCalendarEventList {
                          . ") OR (end_time BETWEEN " . $this->getStart() . " AND " . $this->getEnd()
                          . "))";
         }
-        $db =& new DB_Seminar();    
+        $db = new DB_Seminar();    
         $db->query($query);
         
         if ($db->num_rows() != 0) {
             while ($db->next_record()) {
-                $event =& new SeminarEvent($db->f('termin_id'), array(
+                $event = new SeminarEvent($db->f('termin_id'), array(
                         'DTSTART'         => $db->f('date'),
                         'DTEND'           => $db->f('end_time'),
                         'SUMMARY'         => $db->f('title') ? $db->f('title') : $db->f('Name'),

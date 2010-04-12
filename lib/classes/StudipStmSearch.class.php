@@ -75,7 +75,7 @@ class StudipStmSearch {
         $this->search_buttons = array(  'do_search' => array('type' => 'suchestarten', 'info' => _("Suche starten")),
                                         'new_search' => array('type' => 'neuesuche', 'info' => _("Neue Suche starten"))
         );
-        $this->form =& new StudipForm($this->search_fields, $this->search_buttons, $form_name, false);
+        $this->form = new StudipForm($this->search_fields, $this->search_buttons, $form_name, false);
         $this->form->field_attributes_default = $this->attributes_default;
         if($this->form->isClicked("do_search") || $this->form->isSended()){
             $this->search_button_clicked = true;

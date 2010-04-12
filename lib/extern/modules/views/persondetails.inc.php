@@ -20,8 +20,8 @@ $instituts_id = $this->config->range_id;
 $username = $args["username"];
 $sem_id = $args["seminar_id"];
 
-$db_inst =& new DB_Seminar();
-$db =& new DB_Seminar();
+$db_inst = new DB_Seminar();
+$db = new DB_Seminar();
 
 if (!$nameformat = $this->config->getValue("Main", "nameformat")) {
     $nameformat = "full";
@@ -102,7 +102,7 @@ if ($this->config->getValue("Main", "studiplink") == "top") {
 
 // generic data fields
 if ($generic_datafields = $this->config->getValue("Main", "genericdatafields")) {
-//  $datafields_obj =& new DataFields($db->f("user_id"));
+//  $datafields_obj = new DataFields($db->f("user_id"));
     $fieldEntries = DataFieldEntry::getDataFieldEntries($db->f("user_id"));
 //  $datafields = $datafields_obj->getLocalFields($db->f("user_id"));
 }

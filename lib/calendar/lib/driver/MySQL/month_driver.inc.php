@@ -321,7 +321,7 @@ function new_event (&$ttthis, &$db, $date) {
     if (in_array($date, explode(',', $db->f('exceptions'))))
         return FALSE;
     
-    $ttthis->events["$date"][] =& new CalendarEvent(array(
+    $ttthis->events["$date"][] = new CalendarEvent(array(
             'DTSTART'         => $db->f('start'),
             'DTEND'           => $db->f('end'),
             'SUMMARY'         => $db->f('summary'),

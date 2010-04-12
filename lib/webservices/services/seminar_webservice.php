@@ -77,13 +77,13 @@ class SeminarService extends Studip_Ws_Service
 
     function validate_seminar_permission_action($api_key, $ticket, $seminar_id, $permission)
     {
-        $seminar =& new StudipSeminarHelper();
+        $seminar = new StudipSeminarHelper();
         return $seminar->validate_seminar_permission($ticket, $seminar_id, $permission);
     }
 
     function get_participants_action($api_key, $seminar_id)
     {
-        $seminar =& new StudipSeminarHelper();
+        $seminar = new StudipSeminarHelper();
         return $seminar->get_participants($seminar_id);
     }
 

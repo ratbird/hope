@@ -158,7 +158,7 @@ class ExternModuleTemplateLectures extends ExternModule {
     function getContent ($args = NULL, $raw = FALSE) {
         
         $start_item_id = get_start_item_id($this->config->range_id);
-        $browser =& new ExternSemBrowseTemplate($this, $start_item_id);
+        $browser = new ExternSemBrowseTemplate($this, $start_item_id);
     
         return $browser->getContent();
     }
@@ -330,8 +330,8 @@ class ExternSemBrowseTemplate extends SemBrowse {
                 WHERE seminare.Seminar_id IN('" . join("','", array_keys($this->sem_browse_data['search_result']))
                  . "') $sem_inst_query $sem_range_query $sem_types_query";
             
-            $db =& new DB_Seminar($query);
-            $snap =& new DbSnapShot($db);
+            $db = new DB_Seminar($query);
+            $snap = new DbSnapShot($db);
             $group_field = $this->group_by_fields[$this->sem_browse_data['group_by']]['group_field'];
             $data_fields[0] = "Seminar_id";
             if ($this->group_by_fields[$this->sem_browse_data['group_by']]['unique_field']){

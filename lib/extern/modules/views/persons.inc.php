@@ -104,7 +104,7 @@ if(!$grouping) {
 
 // generic data fields
 $generic_datafields = $this->config->getValue("Main", "genericdatafields"); 
-//  $datafields_obj =& new DataFields();
+//  $datafields_obj = new DataFields();
 //}
 
 $repeat_headrow = $this->config->getValue("Main", "repeatheadrow");

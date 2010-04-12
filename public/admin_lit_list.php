@@ -69,7 +69,7 @@ if ($list  || $view || $view_mode || $_range_id != $auth->auth['uid']){
 
 $_lit_range = $_range_id;
 
-$_the_treeview =& new StudipLitListViewAdmin($_range_id);
+$_the_treeview = new StudipLitListViewAdmin($_range_id);
 $_the_tree =& $_the_treeview->tree;
 
 $CURRENT_PAGE = $_the_tree->root_name . " - " . $CURRENT_PAGE;

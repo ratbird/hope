@@ -208,7 +208,7 @@ class Vote extends StudipObject {
       /* ------------------------------------------------------------------- */
 
       /* Connect to database ----------------------------------------------- */
-      $this->voteDB = &new VoteDB ();
+      $this->voteDB = new VoteDB ();
       if ($this->voteDB->isError ())
      return $this->throwErrorFromClass ($this->voteDB);
       /* ------------------------------------------------------------------- */

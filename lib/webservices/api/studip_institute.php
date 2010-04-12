@@ -20,7 +20,7 @@ class StudipInstituteHelper
 {
     function get_users_by_status($institute_id, $status)
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
 
         $db->query($query = "SELECT au.username FROM Institute i
                                 INNER JOIN user_inst ui
@@ -41,7 +41,7 @@ class StudipInstituteHelper
 
     function get_user_status($username, $institute_id)
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
 
         $db->query($query = "SELECT au.username, ui.inst_perms as status FROM Institute i
                                 INNER JOIN user_inst ui
@@ -81,7 +81,7 @@ class StudipInstituteHelper
 
     function get_higher_level_institute($institute_id)
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
 
         $db->query("SELECT i2.* FROM Institute i
                                 INNER JOIN Institute i2 

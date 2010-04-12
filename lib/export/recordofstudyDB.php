@@ -48,7 +48,7 @@ function getSemesters(){
     unset($semester_in_db[0]);
     $i = $key + 1;
     // adding the semester from avaible archiv-items
-    $db = &new DB_Seminar ();
+    $db = new DB_Seminar ();
     $db->query ("SELECT archiv.start_time, archiv.semester, archiv.start_time "
         . "FROM archiv_user LEFT "
         . "JOIN archiv  USING (seminar_id) "
@@ -82,7 +82,7 @@ function getSemesters(){
  */
 function getBasicData(){
 global $user;
-    $db = &new DB_Seminar ();
+    $db = new DB_Seminar ();
 
     // get field of study
     $db->query("SELECT user_studiengang.*,studiengaenge.name "
@@ -120,7 +120,7 @@ global $user;
 function getFieldOfStudy(){
     global $user;
     
-    $db = &new DB_Seminar ();
+    $db = new DB_Seminar ();
     
 
     // get field of study
@@ -142,7 +142,7 @@ function getFieldOfStudy(){
 function getStudentname(){
     global $user;
     
-    $db = &new DB_Seminar ();
+    $db = new DB_Seminar ();
     
     //get fullname
     $db->query("SELECT user_info.title_front as tv"
@@ -169,7 +169,7 @@ function getStudentname(){
  function getSeminare($semesterid,$onlyseminars){
      global $user,$semestersAR,$SEM_CLASS,$SEM_TYPE,$_fullname_sql;
      
-     $db = &new DB_Seminar ();
+     $db = new DB_Seminar ();
      $i = 0;
      // if its not an archiv-only-semester, get the current ones
      if(!$semestersAR[$semesterid]["onlyarchiv"]){
@@ -193,7 +193,7 @@ function getStudentname(){
          
          
          // new seminars
-         $db2 = &new DB_Seminar ();
+         $db2 = new DB_Seminar ();
          
          $query = "SELECT b.Seminar_id,b.Name,b.Untertitel,b.VeranstaltungsNummer, "
          . "INTERVAL(start_time," . join(",",$sem_start_times) .") AS sem_number , "

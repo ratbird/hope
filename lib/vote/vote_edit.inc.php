@@ -110,8 +110,8 @@ $type = $_POST['type'];        if( ! $type ) $type = $_GET['type'];
 if( ! $type ) $type = "vote";
 $makeACopy = $_GET['makecopy'];
 
-if ($type=="test") { $vote = &new TestVote( $voteID ); }
-else               { $vote = &new Vote    ( $voteID ); }
+if ($type=="test") { $vote = new TestVote( $voteID ); }
+else               { $vote = new Vote    ( $voteID ); }
 
 if( $voteID && !$makeACopy ) {
     if( $vote->isInUse( $voteID ) )  // && ! $perm->have_perm ("root") )

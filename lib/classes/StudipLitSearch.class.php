@@ -89,7 +89,7 @@ class StudipLitSearch {
                                     'search_add' => array('type' => 'hinzufuegen', 'info' => _("Suchfeld hinzufügen")),
                                     'search_sub' => array('type' => 'entfernen', 'info' => _("Suchfeld entfernen")));
         
-        $this->outer_form =& new StudipForm($outer_form_fields,$outer_form_buttons,"lit_search");
+        $this->outer_form = new StudipForm($outer_form_fields,$outer_form_buttons,"lit_search");
         
         if ($this->outer_form->isClicked("search_add")){
             $this->outer_form->form_values['search_term_count'] = $this->outer_form->getFormFieldValue('search_term_count') + 1;
@@ -110,7 +110,7 @@ class StudipLitSearch {
                 $inner_form_fields[$name . "_" . $i] = $value;
             }
         }
-        $this->inner_form =& new StudipForm($inner_form_fields, null, "lit_search");
+        $this->inner_form = new StudipForm($inner_form_fields, null, "lit_search");
         if ($plugin_name !== false){
             if($this->outer_form->isClicked("reset")) $this->inner_form->doFormReset();
             $this->outer_form->form_values["search_plugin"] = $plugin_name;
@@ -118,7 +118,7 @@ class StudipLitSearch {
         if ( ($init_plugin_name = $this->outer_form->getFormFieldValue("search_plugin")) ){
             $init_plugin_name = "StudipLitSearchPlugin" . $init_plugin_name;
             include_once "lib/classes/lit_search_plugins/" . $init_plugin_name .".class.php";
-            $this->search_plugin =& new $init_plugin_name();
+            $this->search_plugin = new $init_plugin_name();
         }
         if ($plugin_name !== false){
             $this->search_plugin->doResetSearch();
@@ -204,7 +204,7 @@ class StudipLitSearch {
                 if ( $plugin['name'] != 'Studip' && ($one_plugin_name === false || $plugin['name'] == $one_plugin_name) ){
                     $plugin_name = "StudipLitSearchPlugin" . $plugin['name'];
                     include_once("lib/classes/lit_search_plugins/{$plugin_name}.class.php");
-                    $plugin_list[$plugin['name']] =& new $plugin_name();
+                    $plugin_list[$plugin['name']] = new $plugin_name();
                 }
             }
         }
@@ -224,7 +224,7 @@ $_lit_search_plugins = array("Studip", "Gbv");
 page_open(array("sess" => "Seminar_Session"));
 $_language = $DEFAULT_LANGUAGE;
 $_language_path = $INSTALLED_LANGUAGES[$_language]["path"];
-$test =& new StudipLitSearch();
+$test = new StudipLitSearch();
 
 echo "<table width='500' border =1><tr><td>";
 echo $test->outer_form->getFormStart();

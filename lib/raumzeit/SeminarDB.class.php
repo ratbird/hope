@@ -127,7 +127,7 @@ class SeminarDB {
             } 
             $in_list .= "'".$db->f('termin_id')."'"; 
             $i = 1; 
-            $termin =& new SingleDate($db->f('termin_id'));
+            $termin = new SingleDate($db->f('termin_id'));
             $termin->delete();
             unset($termin);
         }

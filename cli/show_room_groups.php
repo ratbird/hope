@@ -36,7 +36,7 @@ require_once dirname(__FILE__) . '/studip_cli_env.inc.php';
 require_once $GLOBALS['RELATIVE_PATH_RESOURCES'] . "/lib/ResourceObject.class.php";
 require_once "lib/classes/DbSnapshot.class.php";
 $res_obj =& ResourceObject::Factory();
-$snap =& new DbSnapshot(new DB_Seminar("SELECT resource_id, parent_id FROM resources_objects INNER JOIN resources_categories USING(category_id) WHERE is_room = 1"));
+$snap = new DbSnapshot(new DB_Seminar("SELECT resource_id, parent_id FROM resources_objects INNER JOIN resources_categories USING(category_id) WHERE is_room = 1"));
 if ($snap->numRows){
     fwrite(STDOUT, "<?php\n//copy to \$STUDIP_BASE_PATH/config/config_room_groups.inc.php\n//generated ". date('r') ."\n");
     foreach($snap->getGroupedResult('parent_id') as $parent_id => $rooms){

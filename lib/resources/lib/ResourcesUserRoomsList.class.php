@@ -58,7 +58,7 @@ class ResourcesUserRoomsList {
             return true;
         }
         if (!isset($resources_list[$user_id])){
-            $resources_list[$user_id] =& new ResourcesUserRoomsList($user_id, false, false, false);
+            $resources_list[$user_id] = new ResourcesUserRoomsList($user_id, false, false, false);
         }
         return $resources_list[$user_id]->checkResource($resource_id);
     }

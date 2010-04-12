@@ -115,7 +115,7 @@ class ErrorHandler {
     
     function throwError ($status, $message, $file = '', $line = '') {
         
-        $this->errors[$status][] =& new Error($status, $message, $file, $line);
+        $this->errors[$status][] = new Error($status, $message, $file, $line);
         $this->status |= $status;
         reset($this->errors[$status]);
     }

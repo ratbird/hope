@@ -43,9 +43,9 @@ if (empty($GLOBALS['STUDIP_API_KEY'])
 }
 
 # create server
-$dispatcher =& new Studip_Ws_XmlrpcDispatcher('UserService', 'SessionService', 'SeminarService', 'ContentmoduleService', 'LectureTreeService', 'InstituteService');
+$dispatcher = new Studip_Ws_XmlrpcDispatcher('UserService', 'SessionService', 'SeminarService', 'ContentmoduleService', 'LectureTreeService', 'InstituteService');
 
-$server =& new documenting_xmlrpc_server($dispatcher->get_dispatch_map(), 0);
+$server = new documenting_xmlrpc_server($dispatcher->get_dispatch_map(), 0);
 $server->debug = false;
 
 # start server

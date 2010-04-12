@@ -18,7 +18,7 @@ foreach ($SEM_CLASS as $key_class => $class) {
 }
 
 // get semester data
-$semester =& new SemesterData();
+$semester = new SemesterData();
 $semester_data = $semester->getAllSemesterData();
 // current semester
 $now = time();

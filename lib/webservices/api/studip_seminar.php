@@ -30,7 +30,7 @@ class StudipSeminarHelper
     }
     function get_title($seminar_id)
     {
-        $seminar =& new Seminar($seminar_id);
+        $seminar = new Seminar($seminar_id);
         return $seminar->getName();
     }
 
@@ -50,7 +50,7 @@ class StudipSeminarHelper
 
     function get_user_status($username, $seminar_id)
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query= "   SELECT su.status, au.username 
                             FROM seminar_user su
                             INNER JOIN auth_user_md5 au
@@ -76,7 +76,7 @@ class StudipSeminarHelper
 
     function &get_participants($seminar_id, $status='all')
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query= "   SELECT su.status, au.username 
                             FROM seminar_user su
                             INNER JOIN auth_user_md5 au
@@ -100,7 +100,7 @@ class StudipSeminarHelper
 
     function &get_main_institute($seminar_id)
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         
         $db->query("SELECT s.Institut_id FROM seminare s
                                 WHERE s.Seminar_id = '$seminar_id'");
@@ -115,7 +115,7 @@ class StudipSeminarHelper
 
     function &get_additional_institutes($seminar_id)
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         
         $db->query("SELECT si.institut_id FROM seminar_inst si
                                 WHERE si.seminar_id = '$seminar_id'");
@@ -138,7 +138,7 @@ class StudipSeminarHelper
 
     function get_admins_for_seminar($seminar_id)
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $all_institutes = StudipSeminarHelper::get_all_institutes($seminar_id);
         $admins = array();
         
@@ -154,7 +154,7 @@ class StudipSeminarHelper
 
     function get_seminar_groups($seminar_id)
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
 
         $db->query("SELECT st.name FROM statusgruppen st
                                 INNER JOIN seminare s 
@@ -172,7 +172,7 @@ class StudipSeminarHelper
 
     function get_seminar_group_members($seminar_id, $group_name)
     {
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
 
         $db->query($query = " SELECT au.username FROM statusgruppen st
                                                     INNER JOIN seminare s 

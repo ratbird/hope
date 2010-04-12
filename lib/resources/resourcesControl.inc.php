@@ -481,7 +481,7 @@ Belegungen ausgeben, views: view_schedule, openobject_schedule
 if ($view == "view_sem_schedule") {
     require_once ($RELATIVE_PATH_RESOURCES."/views/ShowSemSchedules.class.php");
     if ($resources_data["actual_object"]) {
-        $ViewSchedules =& new ShowSemSchedules($resources_data["actual_object"], $resources_data['sem_schedule_semester_id'],$resources_data['sem_schedule_timespan']);
+        $ViewSchedules = new ShowSemSchedules($resources_data["actual_object"], $resources_data['sem_schedule_semester_id'],$resources_data['sem_schedule_timespan']);
         $ViewSchedules->setUsedView($view);
         $ViewSchedules->navigator($_REQUEST['print_view']);
         $suppress_infobox = TRUE;

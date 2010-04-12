@@ -81,7 +81,7 @@ global $user;
 if ($_REQUEST["newButton_x"]){
     $debug .= "neue Eval!<br>"; 
     // create the first group
-    $group = &new EvaluationGroup();
+    $group = new EvaluationGroup();
     $group->setTitle(FIRST_ARRANGMENT_BLOCK_TITLE, QUOTED);
     $group->setText("");
     if ($group->isError ())
@@ -172,7 +172,7 @@ if (isset($_REQUEST["rangeID"])) {
 
 # EVTAU: employees of the vote-team against urlhacking ====================== #
 
-$eval = &new Evaluation($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
+$eval = new Evaluation($evalID, NULL, EVAL_LOAD_NO_CHILDREN);
 
 // someone has voted
 if ($eval->hasVoted()){

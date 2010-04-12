@@ -194,10 +194,10 @@ class CalendarDriver extends MysqlDriver {
         
         if ($properties = $this->nextProperties()) {
             if ($this->_create_sem_object) {
-                $event =& new SeminarEvent($this->db['sem']->f('termin_id'), $properties, $this->db['sem']->f('range_id'));
+                $event = new SeminarEvent($this->db['sem']->f('termin_id'), $properties, $this->db['sem']->f('range_id'));
             }
             else {
-                $event =& new CalendarEvent($properties, $this->db['cal']->f('event_id'));
+                $event = new CalendarEvent($properties, $this->db['cal']->f('event_id'));
                 $event->user_id = $this->db['cal']->f('range_id');
             }
             

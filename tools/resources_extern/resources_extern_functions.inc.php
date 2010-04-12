@@ -51,7 +51,7 @@ function show_sem_plan($rid, $semester_id, $timespan = 'sem_time'){
     $rtree =& TreeAbstract::GetInstance('ResourcesExternTree', $GLOBALS['VIEWABLE_PROPERTY_ID']);
     if ($rtree->tree_data[$rid]['viewable']){
         $GLOBALS['ActualObjectPerms'] = new MockObjectPerms();
-        $ViewSchedules =& new ShowSemSchedules($rid, $semester_id, $timespan);
+        $ViewSchedules = new ShowSemSchedules($rid, $semester_id, $timespan);
         $ViewSchedules->showScheduleGraphical(1);
     }
 }

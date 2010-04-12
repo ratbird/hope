@@ -62,7 +62,7 @@ class ExternModuleRangeLectureTree extends ExternModule {
         require_once($GLOBALS["RELATIVE_PATH_EXTERN"]
                 . "/modules/views/ExternRangeLectureTree.class.php");
         
-        $tree =& new ExternRangeLectureTree($this->config, $args["start_item_id"]);
+        $tree = new ExternRangeLectureTree($this->config, $args["start_item_id"]);
         $tree->showSemRangeTree();
         
         if ($this->config->getValue("Main", "wholesite"))
@@ -77,7 +77,7 @@ class ExternModuleRangeLectureTree extends ExternModule {
         require_once($GLOBALS["RELATIVE_PATH_EXTERN"]
                 . "/modules/views/ExternRangeLectureTree.class.php");
         
-        $tree =& new ExternRangeLectureTree($this->config, $args["start_item_id"]);
+        $tree = new ExternRangeLectureTree($this->config, $args["start_item_id"]);
         $tree->showSemRangeTree();
         
         if ($this->config->getValue("Main", "wholesite"))

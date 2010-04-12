@@ -14,7 +14,7 @@ class ITX_usage_testcase extends IT_usage_testcase
 
     function setUp()
     {
-        $this->tpl =& new HTML_Template_ITX('./templates');
+        $this->tpl = new HTML_Template_ITX('./templates');
     }
 }
 ?>

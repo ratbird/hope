@@ -6,7 +6,7 @@
 require_once('lib/visual.inc.php');
 require_once('lib/classes/StudipNews.class.php');
 
-$db =& new DB_Seminar();
+$db = new DB_Seminar();
 $error_message = "";
 
 // stimmt die übergebene range_id?

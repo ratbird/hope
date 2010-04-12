@@ -114,7 +114,7 @@ class Token
 
 }
 
-# $token = &new Token('38f32d5c0b1d16450408bb11c4089930', 1);
+# $token = new Token('38f32d5c0b1d16450408bb11c4089930', 1);
 # var_dump($token);
 # $token->save();
 # var_dump($token->is_valid($token->get_string()));

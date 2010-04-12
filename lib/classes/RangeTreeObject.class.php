@@ -236,7 +236,7 @@ class RangeTreeObject {
         $view->params[] = $this->tree_item_id;
         $rs = $view->get_query("view:TREE_OBJECT_CAT");
         if (is_object($rs)){
-            $this->item_data['categories'] =& new DbSnapshot($rs);
+            $this->item_data['categories'] = new DbSnapshot($rs);
             return true;
         }
     return false;

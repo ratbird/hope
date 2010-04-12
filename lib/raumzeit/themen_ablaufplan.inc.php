@@ -70,10 +70,10 @@ function themen_saveAll() {
 
         unset($termin);
         if (($changeTitle[$key] != '') || ($changeDescription[$key] != '') || ($changeForum[$key] == 'on') || ($changeFile[$key] == 'on') || $_REQUEST['createAllFileFolders'] == 'on' || $_REQUEST['createAllForumFolders'] == 'on') {
-            $termin =& new SingleDate($key);
+            $termin = new SingleDate($key);
             $issue_ids = $termin->getIssueIDs();
             if (sizeof($issue_ids) == 0) {
-                $issue =& new Issue(array('seminar_id' => $id));
+                $issue = new Issue(array('seminar_id' => $id));
                 $cur_issue_id = $issue->getIssueID();
                 $termin->addIssueID($cur_issue_id);
                 $termin->store();

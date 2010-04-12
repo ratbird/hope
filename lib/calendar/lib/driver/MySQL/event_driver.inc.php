@@ -5,7 +5,7 @@
 
 function event_get_description ($id) {
         
-    $db =& new DB_Seminar;
+    $db = new DB_Seminar;
     $query = sprintf("SELECT event_id, description FROM calendar_events WHERE event_id='%s'"
                 . " AND range_id='%s'", $id, $this->getUserId());
     $db->query($query);
@@ -18,7 +18,7 @@ function event_save (&$ttthis) {
     // Natuerlich nur Speichern, wenn sich was geaendert hat
     // und es sich um einen persoenlichen Termin handelt
     if($ttthis->isModified()){
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         
         $query = "REPLACE calendar_events (event_id,range_id,autor_id,uid,start,end,"
                   . "summary,description,class,categories,category_intern,priority,location,ts,linterval,"
@@ -68,7 +68,7 @@ function event_delete ($event_id, $user_id) {
 }
 
 function event_restore ($id, &$ttthis) {
-    $db =& new DB_Seminar();
+    $db = new DB_Seminar();
 
     $query = sprintf("SELECT * FROM calendar_events "
                                     . "WHERE range_id='%s' AND event_id='%s'"

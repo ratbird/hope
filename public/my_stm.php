@@ -117,7 +117,7 @@ if (count($my_stm)) {
     foreach($my_stm as $stm_id => $sems) {
         $cssSw->resetClass();
         $cssSw->switchClass();
-        $stm =& new StudipStmInstance($stm_id);
+        $stm = new StudipStmInstance($stm_id);
         if ($stm->getValue("responsible") == $user->id) ++$num_my_mod;
         echo "<tr>";
         echo "<td class=\"steelkante\" colspan=\"2\">&nbsp;<b><a href=\"stm_details.php?stm_instance_id=".$stm->getId()."\" class=\"tree\">".$stm->getValue("displayname")."</a></b></td>";

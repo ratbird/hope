@@ -42,7 +42,7 @@ class StmBrowse {
             }
         }
         
-        $this->search_obj =& new StudipStmSearch("search_stm", false);
+        $this->search_obj = new StudipStmSearch("search_stm", false);
         if ($this->search_obj->search_button_clicked){
             $this->sem_browse_data["start_item_id"] = $this->search_obj->form->getFormFieldValue("scope_choose");
         }
@@ -293,7 +293,7 @@ class StmBrowse {
                 ob_start();
                 if (is_array($stm_ids['stm_instance_id'])){
                     while(list($stm_id,) = each($stm_ids['stm_instance_id'])){
-                        $stm_obj =& new StudipStmInstance($stm_id);
+                        $stm_obj = new StudipStmInstance($stm_id);
                         echo "<tr><td colspan=\"2\" class=\"steel1\" width=\"66%\"><font size=-1><a href=\"stm_details.php?stm_instance_id={$stm_id}&send_from_search=1&send_from_search_page="
                         . $PHP_SELF. "?keep_result_set=1\">" . htmlReady($stm_obj->getValue('displayname')). "</a></td></tr>";
                         echo "<tr><td colspan=\"2\" class=\"steel1\" width=\"66%\">";

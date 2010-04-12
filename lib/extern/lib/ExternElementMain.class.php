@@ -54,7 +54,7 @@ class ExternElementMain extends ExternElement {
             $main_class_name = 'ExternElementMain' . ucfirst($module_name);
             require_once($GLOBALS['RELATIVE_PATH_EXTERN']
                     . "/elements/main/$main_class_name.class.php");
-            $main_module =& new $main_class_name($module_name, $data_fields, $field_names, $config);
+            $main_module = new $main_class_name($module_name, $data_fields, $field_names, $config);
             
             return $main_module;
         }
@@ -94,7 +94,7 @@ class ExternElementMain extends ExternElement {
         $out = '';
         $table = '';
         if ($edit_form == '')
-            $edit_form =& new ExternEdit($this->config, $post_vars, $faulty_values, $anker);
+            $edit_form = new ExternEdit($this->config, $post_vars, $faulty_values, $anker);
         
         $edit_form->setElementName($this->getName());
         $element_headline = $edit_form->editElementHeadline($this->real_name,

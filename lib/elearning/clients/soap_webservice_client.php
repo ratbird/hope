@@ -10,7 +10,7 @@ class Soap_WebserviceClient extends WebserviceClient
 {
     function Soap_WebserviceClient($webservice_url)
     {
-        $this->client =& new soap_client($webservice_url);
+        $this->client = new soap_client($webservice_url);
         $this->client->response_timeout = 7600;
     }
 

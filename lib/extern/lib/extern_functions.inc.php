@@ -107,7 +107,7 @@ function mila_extern ($string, $length) {
 }
 
 function get_start_item_id ($object_id) {
-    $db =& new DB_Seminar();
+    $db = new DB_Seminar();
     $query = "SELECT item_id FROM range_tree WHERE studip_object_id='$object_id'";
     
     $db->query($query);
@@ -237,7 +237,7 @@ function get_default_generic_datafields (&$default_config, $object_type) {
 }
 
 function enable_sri ($i_id, $enable) {
-    $db =& new DB_Seminar();
+    $db = new DB_Seminar();
     if ($enable) {
         $query = "UPDATE Institute SET srienabled = 1 WHERE Institut_id = '$i_id'";
         $db->query($query);
@@ -252,7 +252,7 @@ function sri_is_enabled ($i_id) {
         if (!$GLOBALS['EXTERN_SRI_ENABLE_BY_ROOT']) {
             return 1;
         }
-        $db =& new DB_Seminar();
+        $db = new DB_Seminar();
         $query = "SELECT srienabled FROM Institute WHERE Institut_id = '$i_id' AND srienabled = 1";
         $db->query($query);
         if ($db->next_record()) {

@@ -18,7 +18,7 @@ class IT_api_TestCase extends PHPUnit_TestCase
 
     function setUp()
     {
-        $this->tpl =& new HTML_Template_IT('./templates');
+        $this->tpl = new HTML_Template_IT('./templates');
     }
 
     function tearDown()

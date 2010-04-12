@@ -475,7 +475,7 @@ function day_restore (&$ttthis) {
                         date('s', $db->f('end')), $ttthis->mon, $ttthis->dom, $ttthis->year);
                 $start = $end - $db->f('end') + $db->f('start');
         }
-        $termin =& new CalendarEvent(array(
+        $termin = new CalendarEvent(array(
                 'DTSTART'         => $start,
                 'DTEND'           => $end,
                 'SUMMARY'         => $db->f('summary'),

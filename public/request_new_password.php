@@ -110,7 +110,7 @@ $admin_link = sprintf(_("Leider ist ein Fehler aufgetreten. Bitte fordern Sie ge
 */
 if( $_POST['email'] != "" ) {
     $email = trim( stripslashes( $_POST['email'] ) );
-    $validator =& new email_validation_class();
+    $validator = new email_validation_class();
     if( !$validator->ValidateEmailAddress( $email ) ) {
         // E-Mail ungültig
         $msg[] = array( 'error', _("Die E-Mail-Adresse ist ungültig!") . '<br>' );
@@ -171,7 +171,7 @@ if ($_GET['id'] != '') {
         $success = $stmt->execute(array($username));
         if ($success && $stmt->rowCount() === 1 && trim($_GET['id']) == md5($username . $GLOBALS['REQUEST_NEW_PASSWORD_SECRET'])) {
             $row = $stmt->fetch();
-            $user_management =& new UserManagementRequestNewPassword($row['user_id']);
+            $user_management = new UserManagementRequestNewPassword($row['user_id']);
             if ($user_management->setPassword()) {
                 $msg[] = array( 'msg', sprintf(_("Ihnen wird in Kürze eine E-Mail an die Adresse %s mit Ihrem neuen Passwort geschickt. Bitte beachten Sie die Hinweise in dieser E-Mail."), $user_management->user_data['auth_user_md5.Email']));
             } else {

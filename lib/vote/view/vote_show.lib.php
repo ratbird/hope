@@ -935,7 +935,7 @@ define ("VOTE_MESSAGE_EMPTY",
 
 
 function sortBySurname ($a, $b) {
-//     $db = &new VoteDB();
+//     $db = new VoteDB();
 
 //     $surname_a = strstr( $db->getAuthorRealname($a), ' ');
 //     $surname_b = strstr( $db->getAuthorRealname($b), ' ');

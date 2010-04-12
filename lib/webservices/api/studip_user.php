@@ -69,7 +69,7 @@ class Studip_User {
 
     # no id, create
     if (!$this->id) {
-      $user_management =& new UserManagement();
+      $user_management = new UserManagement();
       if (!$user_management->createNewUser($user)) {
         $this->error = $user_management->msg; # TODO
         return FALSE;
@@ -81,7 +81,7 @@ class Studip_User {
     
     # update
     else {
-      $user_management =& new UserManagement($this->id);
+      $user_management = new UserManagement($this->id);
       if (!$user_management->changeUser($user)) {
         $this->error = $user_management->msg; # TODO
         return FALSE;
@@ -98,7 +98,7 @@ class Studip_User {
    * @return type <description>
    */
   function destroy() {
-    $user_management =& new UserManagement($this->id);
+    $user_management = new UserManagement($this->id);
     if (!$user_management->deleteUser()) {
       $this->error = $user_management->msg; # TODO
       return FALSE;
@@ -128,7 +128,7 @@ class Studip_User {
       $user = array();
       foreach (Studip_User::get_fields() as $old => $new)
         $user[$new] = $db->f(array_pop(explode('.', $old)));
-      $result =& new Studip_User($user);
+      $result = new Studip_User($user);
     return $result;
     }
     
@@ -154,7 +154,7 @@ class Studip_User {
       $user = array();
       foreach (Studip_User::get_fields() as $old => $new)
         $user[$new] = $db->f(array_pop(explode('.', $old)));
-      $result =& new Studip_User($user);
+      $result = new Studip_User($user);
     return $result;
     }
     

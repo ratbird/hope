@@ -60,7 +60,7 @@ class ExternElementSelectSubjectAreas extends ExternElement {
         $this->description = _("Sie k&ouml;nnen hier die Studienbereiche ausw&auml;hlen, die auf der externen Seite ausgegeben werden sollen.");
         $this->attributes = array('subjectareasselected', 'selectallsubjectareas', 'reverseselection');
         
-        $this->selector =& new StudipSemTreeSearch('dummy', 'SelectSubjectAreas', FALSE);
+        $this->selector = new StudipSemTreeSearch('dummy', 'SelectSubjectAreas', FALSE);
         if ($this->config->range_id) {
             $this->selector->institut_id = $this->config->range_id;
             foreach ($this->selector->sem_tree_ranges as $range_path) {
@@ -90,7 +90,7 @@ class ExternElementSelectSubjectAreas extends ExternElement {
         $out = '';
         $table = '';
         if ($edit_form == '')
-            $edit_form =& new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
+            $edit_form = new ExternEditHtml($this->config, $post_vars, $faulty_values, $anker);
         
         $edit_form->setElementName($this->getName());
         $element_headline = $this->getEditFormHeadline($edit_form);

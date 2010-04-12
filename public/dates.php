@@ -307,7 +307,7 @@ if ($cmd == 'openAll') $openAll = true;
         <td class="blank" align="right" valign="top" width="270">
         <?
             //Build an infobox
-            $infobox_template =& $GLOBALS['template_factory']->open('infobox/infobox_dates');
+            $infobox_template = $GLOBALS['template_factory']->open('infobox/infobox_dates');
 
             // get a list of semesters (as display options)
             $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);

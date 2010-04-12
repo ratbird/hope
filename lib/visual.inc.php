@@ -1294,7 +1294,7 @@ array  ("kategorie" => "Aktionen:",
 function print_infobox($content, $picture = '', $dont_display_immediatly = FALSE) {
 
     // get template
-    $template =& $GLOBALS['template_factory']->open('infobox/infobox_generic_content');
+    $template = $GLOBALS['template_factory']->open('infobox/infobox_generic_content');
 
     // fill attributes
     $template->set_attribute('picture', $picture);

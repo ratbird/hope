@@ -551,13 +551,13 @@ class Seminar_Auth extends Auth {
         }
 
         if ($_REQUEST['username'] && !$_COOKIE[$GLOBALS['sess']->name]){
-            $login_template =& $GLOBALS['template_factory']->open('nocookies');
+            $login_template = $GLOBALS['template_factory']->open('nocookies');
         } else if (isset($this->need_email_activation)) {
-            $login_template =& $GLOBALS['template_factory']->open('login_emailactivation');
+            $login_template = $GLOBALS['template_factory']->open('login_emailactivation');
             $login_template->set_attribute('uid', $this->need_email_activation);
         } else {
             unset($_SESSION['semi_logged_in']); // used by email activation
-            $login_template =& $GLOBALS['template_factory']->open('loginform');
+            $login_template = $GLOBALS['template_factory']->open('loginform');
             $login_template->set_attribute('loginerror', (isset($this->auth["uname"]) && $this->error_msg));
             $login_template->set_attribute('error_msg', $this->error_msg);
             $login_template->set_attribute('challenge', $_SESSION['challenge']);
@@ -673,9 +673,9 @@ class Seminar_Register_Auth extends Seminar_Auth {
         }
         $_language_path = init_i18n($_language);
         if (!$_COOKIE[$GLOBALS['sess']->name]) {
-            $register_template =& $GLOBALS['template_factory']->open('nocookies');
+            $register_template = $GLOBALS['template_factory']->open('nocookies');
         } else {
-            $register_template =& $GLOBALS['template_factory']->open('registerform');
+            $register_template = $GLOBALS['template_factory']->open('registerform');
             $register_template->set_attribute('validator',  new email_validation_class());
             $register_template->set_attribute('error_msg', $this->error_msg);
             $register_template->set_attribute('username', $_POST['username']);

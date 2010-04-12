@@ -192,7 +192,7 @@ if (!$_POST['step'] && !isset($step)) {
     $step = 1;
 }
 
-$request_template =& $GLOBALS['template_factory']->open('request_password');
+$request_template = $GLOBALS['template_factory']->open('request_password');
 $request_template->set_attribute('step', intval($step));
 $request_template->set_attribute('messages', $msg);
 $request_template->set_attribute('link_startpage', sprintf(_("Zurück zur %sStartseite%s."), '<a href="./index.php?cancel_login=1">', '</a>'));

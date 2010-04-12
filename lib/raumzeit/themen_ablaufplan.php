@@ -299,7 +299,7 @@ $termine = getAllSortedSingleDates($sem);
 
             // print info box:
             // get template
-            $infobox_template =& $GLOBALS['template_factory']->open('infobox/infobox_topic_admin');
+            $infobox_template = $GLOBALS['template_factory']->open('infobox/infobox_topic_admin');
 
             // get a list of semesters (as display options)
             $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);

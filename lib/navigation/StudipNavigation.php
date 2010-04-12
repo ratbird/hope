@@ -26,6 +26,7 @@ require_once 'ToolsNavigation.php';
 require_once 'AdminNavigation.php';
 require_once 'AccountNavigation.php';
 require_once 'LoginNavigation.php';
+require_once 'HelpNavigation.php';
 
 class StudipNavigation extends Navigation
 {
@@ -98,7 +99,7 @@ class StudipNavigation extends Navigation
         $links->addSubNavigation('imprint', new Navigation(_('Impressum'), 'dispatch.php/siteinfo/show'));
 
         if (get_config('EXTERNAL_HELP')) {
-            $links->addSubNavigation('help', new Navigation(_('Hilfe'), format_help_url($GLOBALS['HELP_KEYWORD'])));
+            $links->addSubNavigation('help', new HelpNavigation(_('Hilfe')));
         }
 
         if (is_object($user) && $user->id != 'nobody') {

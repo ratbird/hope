@@ -75,32 +75,6 @@ function checkname(){
  return checked;
 }
 
-function checkdata(command){
- var checked = true;
- if (!checkname())
-    checked = false;
-
- if (checked) {
-   document.details.method = "post";
-   document.details.action = "<?php echo URLHelper::getURL() ?>";
-   document.details.submit();
- }
- return checked;
-}
-
-
-function checkdata_without_bereich(command){
- var checked = true;
- if (!checkname())
-    checked = false;
- if (checked) {
-   document.details.method = "post";
-   document.details.action = "<?php echo URLHelper::getURL() ?>";
-   document.details.submit();
- }
- return checked;
-}
-
 //-->
 </SCRIPT>
 
@@ -903,7 +877,7 @@ if (($s_id) && (auth_check())) {
         <input type="hidden" name="s_id"   value="<?php $db->p("Seminar_id") ?>">
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=3>
-                    <input <? if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["bereiche"]) echo "onClick=\"checkdata('edit'); return false;\" "; ?> type="image" <? echo makeButton ("uebernehmen", "src") ?> border=0 name="s_edit" value=" Ver&auml;ndern ">
+                    <input type="image" <? echo makeButton ("uebernehmen", "src") ?> border=0 name="s_edit" value=" Ver&auml;ndern ">
                 <input type="hidden" name="s_send" value="TRUE">
                 </td>
             </tr>
@@ -917,7 +891,7 @@ if (($s_id) && (auth_check())) {
         <? if (! LockRules::Check($s_id, 'Name')) : ?>
               <input type="text" name="Name" onchange="checkname()" size=58 maxlength=254 value="<?= htmlReady($db->f("Name")) ?>" >
         <? else : ?>
-              <input readonly disabled type="text" name="Name" onchange="checkname()" size=58 maxlength=254 value="<?= htmlReady($db->f("Name")) ?>" >
+              <input readonly disabled type="text" name="Name" size=58 maxlength=254 value="<?= htmlReady($db->f("Name")) ?>" >
         <? endif; ?>
                 </td>
             </tr>
@@ -1138,7 +1112,7 @@ if (($s_id) && (auth_check())) {
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" align="center" colspan=3>
-                    <input <? if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["bereiche"]) echo "onClick=\"checkdata('edit'); return false;\" "; ?> type="image" <? echo makeButton ("uebernehmen", "src") ?> border=0 name="s_edit" value=" Ver&auml;ndern ">
+                    <input type="image" <? echo makeButton ("uebernehmen", "src") ?> border=0 name="s_edit" value=" Ver&auml;ndern ">
                 <input type="hidden" name="s_send" value="TRUE">
                 <?
                 if (($user_added) || ($user_deleted) || ($reset_search_x) || ($search_exp_tut) || ($search_exp_doz) || ($user_moved) )
@@ -1327,14 +1301,9 @@ if (($s_id) && (auth_check())) {
                 ?>
             </tr>
 
-            <?
-            //Bereichsauswahl
-            if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["bereiche"]) {
-            ?>
-
             <tr>
                 <td class="<? $cssSw->switchClass();  echo $cssSw->getClass() ?>" align="center" colspan=3>
-                    <input <? if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["bereiche"]) echo "onClick=\"checkdata('edit'); return false;\" "; ?> type="image" <? echo makeButton ("uebernehmen", "src") ?> border=0 name="s_edit" value=" Ver&auml;ndern ">
+                    <input type="image" <? echo makeButton ("uebernehmen", "src") ?> border=0 name="s_edit" value=" Ver&auml;ndern ">
                 <input type="hidden" name="s_send" value="TRUE">
                 </td>
             </tr>
@@ -1479,12 +1448,10 @@ if (($s_id) && (auth_check())) {
             </tr>
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=3>
-                    <input <? if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["bereiche"]) echo "onClick=\"checkdata('edit'); return false;\" "; ?> type="image" <? echo makeButton ("uebernehmen", "src") ?> border=0 name="s_edit" value=" Ver&auml;ndern ">
+                    <input type="image" <? echo makeButton ("uebernehmen", "src") ?> border=0 name="s_edit" value=" Ver&auml;ndern ">
                 <input type="hidden" name="s_send" value="TRUE">
                 </td>
             </tr>
-
-    <? } ?>
 
         </table>
     </form>

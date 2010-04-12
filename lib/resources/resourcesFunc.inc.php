@@ -259,7 +259,7 @@ function getFormattedResult($result, $mode="bad", $bad_message_text = '', $good_
         $bad_message = "error§"._("Folgende gew&uuml;nschte Raumbelegungen &uuml;berschneiden sich mit bereits vorhandenen Belegungen. Bitte &auml;ndern Sie die R&auml;ume oder Zeiten!");
         //the overlaps (show only the earliest here, plus a message when more)
         foreach ($overlaps as $val) {
-            $resObj =& ResourceObject::Factory($val["resource_id"]);
+            $resObj = ResourceObject::Factory($val["resource_id"]);
             $bad_message.="<br /><font size=\"-1\" color=\"black\">".htmlReady($resObj->getName()).": ";
             //show the first overlap
             list(, $val2) = each($val["overlap_assigns"]);
@@ -287,7 +287,7 @@ function getFormattedResult($result, $mode="bad", $bad_message_text = '', $good_
         $i=0;
         foreach ($rooms_id as $key=>$val) {
             if ($key) {
-                $resObj =& ResourceObject::Factory($key);
+                $resObj = ResourceObject::Factory($key);
                 if ($i)
                     $rooms_booked.=", ";
                 $rooms_booked.= $resObj->getFormattedLink();
@@ -420,7 +420,7 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
 
         if (sizeof($my_res)) {
             foreach ($my_res as $res_id => $dummy){
-                $object_perms =& ResourceObjectPerms::Factory($res_id, $user_id);
+                $object_perms = ResourceObjectPerms::Factory($res_id, $user_id);
                 if (!$object_perms->havePerm('tutor')){
                     unset($my_res[$res_id]);
                 }

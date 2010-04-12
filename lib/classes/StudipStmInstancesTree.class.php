@@ -41,7 +41,7 @@ class StudipStmInstancesTree extends TreeAbstract {
     /**
     * constructor
     *
-    * do not use directly, call &TreeAbstract::GetInstance("StudipRangeTree")
+    * do not use directly, call TreeAbstract::GetInstance("StudipRangeTree")
     * @access private
     */ 
     function StudipStmInstancesTree($args) {
@@ -118,7 +118,7 @@ class StudipStmInstancesTree extends TreeAbstract {
 
 }
 /*
-$test =& TreeAbstract::GetInstance("StudipStmInstancesTree");
+$test = TreeAbstract::GetInstance("StudipStmInstancesTree");
 echo "<pre>";
 echo get_class($test) .  "\n";
 print_r($test->tree_data);

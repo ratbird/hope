@@ -1,6 +1,6 @@
 <?php
 # Lifter005: TODO - form validation
-    $cfg =& Config::GetInstance();
+    $cfg = Config::GetInstance();
     $email_restriction = $cfg->getValue('EMAIL_DOMAIN_RESTRICTION');
 ?>
 <script type="text/javascript" language="javascript" src="<?=$GLOBALS['ASSETS_URL']?>javascripts/md5.js"></script>

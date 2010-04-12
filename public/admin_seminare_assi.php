@@ -601,7 +601,7 @@ if ($form == 4) {
     $sem_create_data["sem_vor_resource_id"]=($vor_resource_id == "FALSE") ? FALSE : $vor_resource_id;
     //if we have a resource_id, we take the room name from resource_id (deprecated at the moment)
     /*if ($RESOURCES_ENABLE && $sem_create_data["sem_vor_resource_id"]) {
-        $resObject =& ResourceObject::Factory($sem_create_data["sem_vor_resource_id"]);
+        $resObject = ResourceObject::Factory($sem_create_data["sem_vor_resource_id"]);
         $sem_create_data["sem_vor_raum"]=$resObject->getName();
     }*/
 
@@ -650,7 +650,7 @@ if ($form == 4) {
 
                 //if we have a resource_id, we take the room name from resource_id (deprecated at the moment)
                 /*if ($RESOURCES_ENABLE && $sem_create_data["metadata_termin"]["turnus_data"][$key]["resource_id"]) {
-                    $resObject =& ResourceObject::Factory($sem_create_data["metadata_termin"]["turnus_data"][$key]["resource_id"]);
+                    $resObject = ResourceObject::Factory($sem_create_data["metadata_termin"]["turnus_data"][$key]["resource_id"]);
                     $sem_create_data["metadata_termin"]["turnus_data"][$key]["room"]=$resObject->getName();
                 }*/
             }
@@ -660,7 +660,7 @@ if ($form == 4) {
             $sem_create_data["term_resource_id"][$i]=($term_resource_id[$i] == "FALSE") ? FALSE : $term_resource_id[$i];
             //if we have a resource_id, we take the room name from resource_id (deprecated at the moment)
             /*if ($RESOURCES_ENABLE && $sem_create_data["term_resource_id"][$i]) {
-                $resObject =& ResourceObject::Factory($sem_create_data["term_resource_id"][$i]);
+                $resObject = ResourceObject::Factory($sem_create_data["term_resource_id"][$i]);
                 $sem_create_data["term_room"][$i]=$resObject->getName();
             }*/
         }
@@ -1420,7 +1420,7 @@ if (($form == 5) && ($jump_next_x))
         $errormsg=$errormsg."error§"._("Folgende gew&uuml;nschte Raumbelegungen &uuml;berschneiden sich mit bereits vorhandenen Belegungen. Bitte &auml;ndern Sie die R&auml;ume oder Zeiten!");
         $i=0;
         foreach ($overlaps_detected as $val) {
-            $resObj =& ResourceObject::Factory($val["resource_id"]);
+            $resObj = ResourceObject::Factory($val["resource_id"]);
             $errormsg.="<br /><font size=\"-1\" color=\"black\">".htmlReady($resObj->getName()).": ";
             //show the first overlap
             list(, $val2) = each($val["overlap_assigns"]);
@@ -3203,7 +3203,7 @@ if ($level == 4) {
                     </tr>
                     <?
                     if ($request_resource_id = $sem_create_data["resRequest"]->getResourceId()) {
-                        $resObject =& ResourceObject::Factory($request_resource_id);
+                        $resObject = ResourceObject::Factory($request_resource_id);
                     ?>
                     <tr>
                         <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
@@ -4161,7 +4161,7 @@ if ($level == 7)
                                     $i=0;
                                     $rooms='';
                                     foreach ($resources_booked as $key=>$val) {
-                                        $resObj =& ResourceObject::Factory($key);
+                                        $resObj = ResourceObject::Factory($key);
                                         if ($i)
                                             $rooms.=", ";
                                         $rooms.= $resObj->getFormattedLink();
@@ -4176,7 +4176,7 @@ if ($level == 7)
                                     $i=0;
                                     $rooms='';
                                     foreach ($resources_failed as $key=>$val) {
-                                        $resObj =& ResourceObject::Factory($key);
+                                        $resObj = ResourceObject::Factory($key);
                                         if ($i)
                                             $rooms.=", ";
                                         $rooms.= $resObj->getFormattedLink();

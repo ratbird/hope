@@ -46,7 +46,7 @@ class StudipLitClipBoard {
     var $msg;
     
     
-    function &GetInstance(){
+    function GetInstance(){
         static $instance;
         if (!is_object($instance[0])){
             $instance[0] = new StudipLitClipBoard();

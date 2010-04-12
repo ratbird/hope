@@ -55,7 +55,7 @@ function get_log_action($action_id) {
 
 function showlog_format_resource($res_id) {
     $ret="";
-    $resObj =& ResourceObject::Factory($res_id);
+    $resObj = ResourceObject::Factory($res_id);
     if ($resObj->getName())
         $ret .= $resObj->getFormattedLink();
     else

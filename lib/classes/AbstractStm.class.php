@@ -25,7 +25,7 @@ class  AbstractStm {
     var $is_new;
     var $msg;
 
-    function &GetInstance($id = false, $refresh_cache = false){
+    function GetInstance($id = false, $refresh_cache = false){
         
         static $abs_stm_object_pool;
         

@@ -400,7 +400,7 @@ class messaging {
             //Benachrichtigung in alle Chaträume schicken
             $snd_name = ($user_id != "____%system%____") ? get_fullname($user_id) . " (" . get_username($user_id). ")" : "Stud.IP-System";
             if ($GLOBALS['CHAT_ENABLE']) {
-                $chatServer =& ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
+                $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
                 setTempLanguage($rec_id[$x]);
                 $chatMsg = sprintf(_("Sie haben eine Nachricht von <b>%s</b> erhalten!"), htmlReady($snd_name));
                 restoreLanguage();
@@ -432,7 +432,7 @@ class messaging {
 
         if ($CHAT_ENABLE){
 
-            $chatServer =& ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
+            $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
             $db=new DB_Seminar;
             $snd = 0;
             if (!is_array($rec_uname)) $rec_uname = array($rec_uname);
@@ -501,7 +501,7 @@ class messaging {
             if (!$user_id)
                 $user_id = $user->id;
 
-            $chatServer =& ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
+            $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
             foreach($chatServer->chatDetail as $chatid => $wert){
                 $active_chats[] = $wert['id'];
             }
@@ -528,7 +528,7 @@ class messaging {
             if (!$user_id)
                 $user_id = $user->id;
 
-            $chatServer =& ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
+            $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
             $chat_uniqid = $chatServer->chatDetail[$chat_id]['id'];
             if (!$chat_uniqid){
                 return false;   //no active chat

@@ -99,7 +99,7 @@ class ResourcesBrowse {
                     <select name="resources_search_range" style="vertical-align:middle">
                     <option value="0" selected><?=htmlReady($GLOBALS['UNI_NAME_CLEAN'])?></option>
                     <?if ($this->open_object){
-                        $res =& ResourceObject::Factory($this->open_object);
+                        $res = ResourceObject::Factory($this->open_object);
                         ?>
                         <option value="<?=$this->open_object?>" selected><?=htmlReady($res->getName())?></option>
                     <?}?>

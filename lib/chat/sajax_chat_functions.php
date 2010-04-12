@@ -59,7 +59,7 @@ if (!is_object($chatServer)){
         die;
     }
 
-    $chatServer =& ChatServer::GetInstance($CHAT_SERVER_NAME);
+    $chatServer = ChatServer::GetInstance($CHAT_SERVER_NAME);
     $chatServer->caching = true;
 } else {
     $sess->register('chat_logs');

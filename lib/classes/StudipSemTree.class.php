@@ -52,7 +52,7 @@ class StudipSemTree extends TreeAbstract {
     /**
     * constructor
     *
-    * do not use directly, call &TreeAbstract::GetInstance("StudipRangeTree")
+    * do not use directly, call TreeAbstract::GetInstance("StudipRangeTree")
     * @access private
     */ 
     function StudipSemTree($args) {
@@ -312,7 +312,7 @@ class StudipSemTree extends TreeAbstract {
         return $ret;
     }
 }
-//$test =& TreeAbstract::GetInstance("StudipSemTree");
+//$test = TreeAbstract::GetInstance("StudipSemTree");
 //echo "<pre>";
 //echo strtolower(get_class($test)) .  "\n";
 //print_r($test->tree_data);

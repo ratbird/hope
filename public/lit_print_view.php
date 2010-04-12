@@ -35,7 +35,7 @@ if ($_range_id != $user->id && !$perm->have_studip_perm('user',$_range_id)){
     page_close();
     die;
 }
-$_the_tree =& TreeAbstract::GetInstance("StudipLitList", $_range_id);
+$_the_tree = TreeAbstract::GetInstance("StudipLitList", $_range_id);
 ?>
 <h1>
 <?=htmlReady(sprintf(_("Literatur %s"), $_the_tree->root_name))?>

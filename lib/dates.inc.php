@@ -357,13 +357,13 @@ function vorbesprechung ($seminar_id, $type = 'standard')
             $ret .= ', '._("Ort:").' ';
             switch ($type) {
                 case 'export':
-                    $resObj =& ResourceObject::Factory($termin->getResourceID());
+                    $resObj = ResourceObject::Factory($termin->getResourceID());
                     $ret .= $resObj->getName();
                     break;
 
                 case 'standard':
                 default:
-                    $resObj =& ResourceObject::Factory($termin->getResourceID());
+                    $resObj = ResourceObject::Factory($termin->getResourceID());
                     $ret .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
                     break;
             }
@@ -623,7 +623,7 @@ function isDatesMultiSem ($sem_id) {
 */
 function getMetadateCorrespondingDates ($sem_id, $presence_dates_only) {
 
-    $sem =& Seminar::GetInstance($sem_id);
+    $sem = Seminar::GetInstance($sem_id);
     $types = getPresenceTypes();
     foreach ($sem->getMetaDates() as $key=>$val) {
         $termine = $sem->getSingleDatesForCycle($key);

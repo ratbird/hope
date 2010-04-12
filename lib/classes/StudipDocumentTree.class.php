@@ -62,7 +62,7 @@ class StudipDocumentTree extends TreeAbstract {
     /**
     * constructor
     *
-    * do not use directly, call &TreeAbstract::GetInstance("StudipDocumentTree")
+    * do not use directly, call TreeAbstract::GetInstance("StudipDocumentTree")
     * @access private
     */ 
     function StudipDocumentTree($args) {
@@ -304,7 +304,7 @@ class StudipDocumentTree extends TreeAbstract {
 }
 //test
 /*
-$f =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => '55c88e42f2cbbda0fa55b6c1af6121fc'));
+$f = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => '55c88e42f2cbbda0fa55b6c1af6121fc'));
 echo "<pre>";
 print_r($f->tree_childs);
 print_r($f->tree_data);

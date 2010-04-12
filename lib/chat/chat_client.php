@@ -411,7 +411,7 @@ function outputLoop($chatid){
 
 //main()
 //globale Variablen
-$chatServer =& ChatServer::GetInstance($CHAT_SERVER_NAME);
+$chatServer = ChatServer::GetInstance($CHAT_SERVER_NAME);
 $userQuit = false;
 $userid = $user->id; //konservieren für shutdown_function
 $chat_log = array();

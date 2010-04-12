@@ -66,7 +66,7 @@ function list_restore_assign(&$assEvtLst, $resource_id, $begin, $end, $user_id='
     
     //handle the assigns und create all the repeated stuff
     while($db->next_record()) {
-        $assign_object =& AssignObject::Factory($db->f("assign_id"));
+        $assign_object = AssignObject::Factory($db->f("assign_id"));
         create_assigns($assign_object, $assEvtLst, $begin, $end, $filter);
     }
 }
@@ -271,11 +271,11 @@ function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name 
             if ($repmode == 'na' && $a_obj->getAssignUserId() 
             && ($seminar_id = isMetadateCorrespondingDate($a_obj->getAssignUserId())) ){
                 $repmode = 'meta';
-                $sem_obj =& Seminar::GetInstance($seminar_id);
+                $sem_obj = Seminar::GetInstance($seminar_id);
             }
             if ($a_obj->getOwnerType() == 'sem'){
                 $seminar_id = $a_obj->getAssignUserId();
-                $sem_obj =& Seminar::GetInstance($seminar_id);
+                $sem_obj = Seminar::GetInstance($seminar_id);
             }
             if ($seminar_id){
                 foreach($sem_obj->getMembers('dozent') as $dozent){

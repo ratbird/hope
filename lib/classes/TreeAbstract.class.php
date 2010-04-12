@@ -86,14 +86,14 @@ class TreeAbstract {
     * static method used to ensure that only one instance exists
     *
     * use this method if you need a reference to the tree object <br>
-    * usage: <pre>$my_tree =& StudipRangeTree::GetInstance("name_of_tree_class")</pre>
+    * usage: <pre>$my_tree = StudipRangeTree::GetInstance("name_of_tree_class")</pre>
     * @access public
     * @static
     * @param    string  $class_name     the name of the used tree_class
     * @param    mixed   $args           argumentlist passed to the constructor in the tree_class (if needed)
     * @return   mixed   always an object, type is one of AbstractTree s childclasses 
     */
-    function &GetInstance($class_name, $args = null, $invalidate_cache = false){
+    function GetInstance($class_name, $args = null, $invalidate_cache = false){
         static $tree_instance;
         
         if ($args){

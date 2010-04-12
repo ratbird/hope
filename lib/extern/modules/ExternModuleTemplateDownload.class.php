@@ -185,7 +185,7 @@ class ExternModuleTemplateDownload extends ExternModule {
         // generic data fields
         $generic_datafields = $this->config->getValue('TemplateGeneric', 'genericdatafields');
         
-        $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $seminar_id));
+        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $seminar_id));
         $allowed_folders = $folder_tree->getReadableFolders('nobody');
         $query = "SELECT dokument_id, name, description, filename, d.mkdate, d.chdate, filesize, ";
         $query .= $GLOBALS['_fullname_sql'][$nameformat];

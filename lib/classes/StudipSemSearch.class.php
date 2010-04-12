@@ -149,7 +149,7 @@ class StudipSemSearch {
                 }
         } elseif ($name == "scope_choose"){
             if(!is_object($this->sem_tree)){
-                $this->sem_tree =& TreeAbstract::GetInstance("StudipSemTree", false);
+                $this->sem_tree = TreeAbstract::GetInstance("StudipSemTree", false);
             }
             $options = array(array('name' => $this->sem_tree->root_name, 'value' => 'root'));
             for($i = 0; $i < count($this->search_scopes); ++$i){
@@ -157,7 +157,7 @@ class StudipSemSearch {
             }
         } elseif ($name == "range_choose"){
             if(!is_object($this->range_tree)){
-                $this->range_tree =& TreeAbstract::GetInstance("StudipRangeTree", false);
+                $this->range_tree = TreeAbstract::GetInstance("StudipRangeTree", false);
             }
             $options = array(array('name' => $this->range_tree->root_name, 'value' => 'root'));
             for($i = 0; $i < count($this->search_ranges); ++$i){

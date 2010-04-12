@@ -62,7 +62,7 @@ class ClipBoard {
 
 
 
-    function &GetInstance($name){
+    function GetInstance($name){
         static $instance;
         if (!is_object($instance[$name])){
             $instance[$name] = new ClipBoard($name);

@@ -44,7 +44,7 @@ class ExternRangeLectureTree {
         }
         $this->param = "range_id={$this->config->range_id}&module=Rangelecturetree&config_id={$this->config->id}&";
         
-        $this->tree =& TreeAbstract::GetInstance("StudipRangeTree",$args);
+        $this->tree = TreeAbstract::GetInstance("StudipRangeTree",$args);
     }
     
     function showSemRangeTree () {
@@ -109,7 +109,7 @@ class ExternRangeLectureTree {
         echo ">\n<tr><td" . $this->config->getAttributes("RangeTreeLevelName", "td") . ">";
         echo "<font" . $this->config->getAttributes("RangeTreeLevelName", "font") . ">";
         $alias_names = $this->config->getValue("RangeTreeLevelName", "aliases");
-        $range_object =& RangeTreeObject::GetInstance($item_id);
+        $range_object = RangeTreeObject::GetInstance($item_id);
         if ($range_object->item_data['type'])
             $name = $alias_names[$range_object->item_data['type_num'] - 1] . " ";
         $name .= $range_object->item_data['name'];

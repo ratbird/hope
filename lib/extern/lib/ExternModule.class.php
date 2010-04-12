@@ -63,7 +63,7 @@ class ExternModule {
     /**
     *
     */
-    function &GetInstance ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
+    function GetInstance ($range_id, $module_name, $config_id = NULL, $set_config = NULL, $global_id = NULL) {
         
         if ($module_name != '') {
             $module_name = ucfirst($module_name);
@@ -101,22 +101,22 @@ class ExternModule {
         $this->name = $module_name;
         
         if ($config_id) {
-            $this->config =& ExternConfig::GetInstance($range_id, $module_name, $config_id);
+            $this->config = ExternConfig::GetInstance($range_id, $module_name, $config_id);
         } else  {
-            $this->config =& ExternConfig::GetInstance($range_id, $module_name);
+            $this->config = ExternConfig::GetInstance($range_id, $module_name);
         }
         
         // the "Main"-element is included in every module and needs information
         // about the data this module handles with
-        $this->elements["Main"] =& ExternElementMain::GetInstance($module_name,
+        $this->elements["Main"] = ExternElementMain::GetInstance($module_name,
                 $this->data_fields, $this->field_names, $this->config);
         
         // instantiate the registered elements
         foreach ($this->registered_elements as $name => $registered_element) {
             if (is_int($name) || !$name) {
-                $this->elements[$registered_element] =& ExternElement::GetInstance($this->config, $registered_element);
+                $this->elements[$registered_element] = ExternElement::GetInstance($this->config, $registered_element);
             } else {
-                $this->elements[$name] =& ExternElement::GetInstance($this->config, $registered_element);
+                $this->elements[$name] = ExternElement::GetInstance($this->config, $registered_element);
                 $this->elements[$name]->name = $name;
             }
         }
@@ -179,7 +179,7 @@ class ExternModule {
         $query = "SELECT config_type FROM extern_config WHERE config_id = '" . $this->getName() . "' AND range_id = '$range_id'";
         $db->query($query);
         if ($db->num_rows() == 1 && $db->next_record()) {
-            $config_obj =& ExternConfig::GetInstance($range_id, $this->getName(), $this->getName());
+            $config_obj = ExternConfig::GetInstance($range_id, $this->getName(), $this->getName());
             $config = $config_obj->getConfiguration();
             return $config;
         }

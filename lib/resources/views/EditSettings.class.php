@@ -109,7 +109,7 @@ class EditSettings {
     function showPermsForms() {
         global $PHP_SELF, $search_string_search_root_user, $search_root_user, $cssSw;
 
-        $resObject =& ResourceObject::Factory();
+        $resObject = ResourceObject::Factory();
 
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">

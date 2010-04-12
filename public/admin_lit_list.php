@@ -99,7 +99,7 @@ $_the_treeview->open_ranges['root'] = true;
 if (!$_the_tree->hasKids('root')){
     $_the_treeview->open_items['root'] = true;
 }
-$_the_clipboard =& StudipLitClipBoard::GetInstance();
+$_the_clipboard = StudipLitClipBoard::GetInstance();
 $_the_clip_form =& $_the_clipboard->getFormObject();
 
 

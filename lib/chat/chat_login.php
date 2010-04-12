@@ -62,7 +62,7 @@ if (!$chatid || !in_array(get_object_type($chatid), array('user','sem','inst','f
     page_close();
     die;
 }
-$chatServer =& ChatServer::GetInstance($CHAT_SERVER_NAME);
+$chatServer = ChatServer::GetInstance($CHAT_SERVER_NAME);
 $chatServer->caching = true;
 $sms = new messaging();
 $chat_entry_level = chat_get_entry_level($chatid);

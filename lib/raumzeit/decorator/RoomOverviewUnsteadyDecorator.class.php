@@ -52,7 +52,7 @@ class RoomOverviewUnsteadyDecorator extends Decorator {
 
                 } else if ($RESOURCES_ENABLE && $zraum = $this->sem->getPredominantRoom($key, TRUE)) {
                     foreach ($zraum as $raum_id) {
-                        $resObj =& ResourceObject::Factory($raum_id);
+                        $resObj = ResourceObject::Factory($raum_id);
                         if ($this->link) {
                             $raum_list[] = $resObj->getFormattedLink(TRUE, TRUE, TRUE);
                         } else {
@@ -173,7 +173,7 @@ class RoomOverviewUnsteadyDecorator extends Decorator {
                         $xml_raum = '';
                         foreach ($termine as $id) {
                             if ($RESOURCES_ENABLE && ($id['resource_id'])) {
-                                $resObj =& ResourceObject::Factory($id['resource_id']);
+                                $resObj = ResourceObject::Factory($id['resource_id']);
                                 if ($this->link) {
                                     $zraum[] = $resObj->getFormattedLink(TRUE, TRUE, TRUE);
                                 } else {

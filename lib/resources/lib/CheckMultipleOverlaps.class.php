@@ -86,7 +86,7 @@ class CheckMultipleOverlaps {
         $this->resource_ids[] = $resource_id;
         $query = sprintf ("DELETE FROM resources_temporary_events WHERE resource_id = '%s'", $resource_id);
         $this->db->query($query);
-        $resObject =& ResourceObject::Factory($resource_id);
+        $resObject = ResourceObject::Factory($resource_id);
         
         //when multiple assigns are allowed, we need no check for other assigns...
         if (!$resObject->getMultipleAssign()) {     

@@ -196,7 +196,7 @@ function createSelectedZip ($file_ids, $perm_check = TRUE, $size_check = false) 
 
     if ( is_array($file_ids) && !($size_check && count($file_ids) > $max_files)){
         if ($perm_check){
-            $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
+            $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
             $allowed_folders = $folder_tree->getReadableFolders($GLOBALS['user']->id);
             if (is_array($allowed_folders)) $folders_cond = " AND range_id IN ('".join("','",$allowed_folders)."')";
             else ($folders_cond = " AND 0 ");
@@ -263,7 +263,7 @@ function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE) {
     global $SessSemName;
     $db = new DB_Seminar();
     if ($perm_check){
-        $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
+        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
         if (!$folder_tree->isDownloadFolder($folder_id, $GLOBALS['user']->id)) return false;
     }
     //copy all documents from this folder to the temporary folder
@@ -308,7 +308,7 @@ function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE) {
 function getFolderChildren($folder_id){
     global $SessionSeminar, $user;
 
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
     if (!$folder_tree->isReadable($folder_id, $user->id)
     || !$folder_tree->isExecutable($folder_id, $user->id)){
@@ -347,7 +347,7 @@ function getFolderId($parent_id, $in_recursion = false){
  */
 function doc_count ($parent_id) {
     global $SessionSeminar, $user;
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     $db=new DB_Seminar;
     $arr = $folder_tree->getReadableKidsKids($parent_id,$user->id);
     if($folder_tree->isReadable($parent_id,$user->id) && $folder_tree->isExecutable($parent_id,$user->id)) $arr[] = $parent_id;
@@ -360,7 +360,7 @@ function doc_count ($parent_id) {
 
 function doc_sum_filesize ($parent_id) {
     global $SessionSeminar, $user;
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     $db=new DB_Seminar;
     $arr = $folder_tree->getReadableKidsKids($parent_id,$user->id);
     if($folder_tree->isReadable($parent_id,$user->id) && $folder_tree->isExecutable($parent_id,$user->id)) $arr[] = $parent_id;
@@ -373,7 +373,7 @@ function doc_sum_filesize ($parent_id) {
 
 function doc_newest ($parent_id) {
     global $SessionSeminar, $user;
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     $db=new DB_Seminar;
     $arr = $folder_tree->getReadableKidsKids($parent_id,$user->id);
     if($folder_tree->isReadable($parent_id,$user->id) && $folder_tree->isExecutable($parent_id,$user->id)) $arr[] = $parent_id;
@@ -389,7 +389,7 @@ function doc_newest ($parent_id) {
 
 function doc_challenge ($parent_id){
     global $SessionSeminar, $user;
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     $db=new DB_Seminar;
     $arr = $folder_tree->getReadableKidsKids($parent_id,$user->id);
     if($folder_tree->isReadable($parent_id,$user->id) && $folder_tree->isExecutable($parent_id,$user->id)) $arr[] = $parent_id;
@@ -412,7 +412,7 @@ function get_user_documents_in_folder($folder_id, $user_id){
 function move_item($item_id, $new_parent, $change_sem_to = false) {
     global $SessionSeminar;
     $db = new DB_Seminar;
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
     if ($change_sem_to && !$folder_tree->isFolder($item_id)){
         $db->query("SELECT folder_id FROM folder WHERE range_id='$change_sem_to'");
@@ -459,7 +459,7 @@ function copy_item($item_id, $new_parent, $change_sem_to = false) {
     global $SessionSeminar;
 
     $db=new DB_Seminar;
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
     if ($change_sem_to && !$folder_tree->isFolder($item_id)){
         $db->query("SELECT folder_id FROM folder WHERE range_id='$change_sem_to'");
@@ -575,7 +575,7 @@ function edit_item ($item_id, $type, $name, $description, $protected=0, $url = "
     global $SessionSeminar;
 
     $db=new DB_Seminar;
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
     if ($url != ""){
         $url_parts = parse_url($url);
@@ -608,7 +608,7 @@ function create_folder ($name, $description, $parent_id, $permission = 7) {
     global $user, $SessionSeminar;
     $db=new DB_Seminar;
     $id=md5(uniqid("salmonellen",1));
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
     $db->query("INSERT INTO folder SET name='$name', folder_id='$id', description='$description', range_id='$parent_id', user_id='".$user->id."',permission='$permission', mkdate='".time()."', chdate='".time()."'");
     if ($db->affected_rows()) {
@@ -1289,7 +1289,7 @@ function link_form ($range_id, $updating=FALSE) {
  */
 function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $all, $refresh=FALSE, $filelink="") {
     global $rechte, $user, $SessionSeminar;
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     
     $type = $datei['url'] != '' ? 6 : 0;
     
@@ -1307,7 +1307,7 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     } else {
         $content = '';
         if (strtolower(getFileExtension($datei['filename'])) == 'flv') {
-            $cfg = &Config::GetInstance();
+            $cfg = Config::GetInstance();
             $DOCUMENTS_EMBEDD_FLASH_MOVIES = $cfg->getValue('DOCUMENTS_EMBEDD_FLASH_MOVIES');
             if (trim($DOCUMENTS_EMBEDD_FLASH_MOVIES) != 'deny') {
                 $flash_player = get_flash_player($datei['dokument_id'], $datei['filename'], $type);
@@ -1391,7 +1391,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     global $_fullname_sql,$SessionSeminar,$SessSemName, $rechte, $anfang,
         $user, $SemSecLevelWrite, $SemUserStatus, $check_all, $countfiles;
     //Einbinden einer Klasse, die Informationen über den ganzen Baum enthält
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     $javascriptok = true;
     print "\n\t<div class=\"draggable\" id=\"file_".$folder_id."_$countfiles\">";
     print "<div style=\"display:none\" id=\"getmd5_fi".$folder_id."_$countfiles\">".$datei['dokument_id']."</div>";
@@ -1530,7 +1530,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
     global $_fullname_sql, $SessionSeminar, $SemUserStatus, $SessSemName, $rechte, $countfolder;
     $db = DBManager::get();
     //Einbinden einer Klasse, die Informationen über den ganzen Baum enthält
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     //Hole alle Informationen, die es über $folder_id gibt
     $query = "SELECT ". $_fullname_sql['full'] ." AS fullname , username, folder_id, a.range_id, a.user_id, name, a.description, a.mkdate, a.chdate FROM folder a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.folder_id = '$folder_id' ORDER BY a.name, a.chdate";
     $result = $db->query($query)->fetch();
@@ -1756,7 +1756,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     $droppable_folder++;
     $javascriptok = true;
     //Einbinden einer Klasse, die Informationen über den ganzen Baum enthält
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     
     //Hole alle Informationen, die es über $folder_id gibt
     $query = "SELECT ". $_fullname_sql['full'] ." AS fullname , username, folder_id, a.range_id, a.user_id, name, a.description, a.mkdate, a.chdate FROM folder a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.folder_id = '$folder_id' ORDER BY a.name, a.chdate";
@@ -2187,7 +2187,7 @@ function delete_all_documents($range_id){
     if (!$range_id){
         return false;
     }
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
     if($folder_tree->getNumKids('root')){
         foreach($folder_tree->getKids('root') as $folder_id){
             $count += recursiv_folder_delete($folder_id);
@@ -2466,7 +2466,7 @@ function get_flash_player ($document_id, $filename, $type) {
     } else {
         $flash_config = $GLOBALS['FLASHPLAYER_DEFAULT_CONFIG_MIN'];
     }
-    $cfg = &Config::GetInstance();
+    $cfg = Config::GetInstance();
     $DOCUMENTS_EMBEDD_FLASH_MOVIES = $cfg->getValue('DOCUMENTS_EMBEDD_FLASH_MOVIES');
     if ($DOCUMENTS_EMBEDD_FLASH_MOVIES == 'autoplay') {
         $flash_config .= '&amp;autoplay=1&amp;autoload=1';

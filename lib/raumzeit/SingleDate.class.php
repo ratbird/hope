@@ -344,13 +344,13 @@ class SingleDate {
     }
 
     function insertAssign($roomID) {
-        $createAssign =& AssignObject::Factory(FALSE, $roomID, $this->termin_id, '',
+        $createAssign = AssignObject::Factory(FALSE, $roomID, $this->termin_id, '',
                 $this->date, $this->end_time, $this->end_time,
                 0, 0, 0, 0, 0, 0);
 
         $overlaps = $createAssign->checkOverlap(TRUE);
         if (is_array($overlaps) && (sizeof($overlaps) > 0)) {
-            $resObj =& ResourceObject::Factory($roomID);
+            $resObj = ResourceObject::Factory($roomID);
             $raum = $resObj->getFormattedLink( $this->date );
             $msg = sprintf(_("Für den Termin %s konnte der Raum %s nicht gebucht werden, da es Überschneidungen mit folgenden Terminen gibt:"), $this->toString(), $raum).'<br>';
             foreach ($overlaps as $tmp_assign_id => $val) {
@@ -364,7 +364,7 @@ class SingleDate {
         }
 
         if ($createAssign->create()) {
-            $resObj =& ResourceObject::Factory($roomID);
+            $resObj = ResourceObject::Factory($roomID);
             $raum = $resObj->getFormattedLink( $this->date );
             $msg = sprintf(_("Für den Termin %s wurde der Raum %s gebucht."), $this->toString(), $raum);
             $this->messages['success'][] = $msg;
@@ -376,7 +376,7 @@ class SingleDate {
 
     function changeAssign($roomID) {
         if ($assign_id = SingleDateDB::getAssignID($this->termin_id)) {
-            $changeAssign =& AssignObject::Factory($assign_id);
+            $changeAssign = AssignObject::Factory($assign_id);
             $changeAssign->setResourceId($roomID);
 
             $changeAssign->chng_flag = TRUE;
@@ -393,7 +393,7 @@ class SingleDate {
 
             $overlaps = $changeAssign->checkOverlap(TRUE);
             if (is_array($overlaps) && (sizeof($overlaps) > 0)) {
-                $resObj =& ResourceObject::Factory($roomID);
+                $resObj = ResourceObject::Factory($roomID);
                 $raum = $resObj->getFormattedLink( $this->date );
                 $msg = sprintf(_("Für den Termin %s konnte der Raum %s nicht gebucht werden, da es Überschneidungen mit folgenden Terminen gibt:"), $this->toString(), $raum).'<br>';
                 foreach ($overlaps as $tmp_assign_id => $val) {
@@ -410,7 +410,7 @@ class SingleDate {
             $changeAssign->store();
             /*if (!$changeAssign->getId())
                 $changeAssign->createId();*/
-            $resObj =& ResourceObject::Factory($roomID);
+            $resObj = ResourceObject::Factory($roomID);
       $raum = $resObj->getFormattedLink( $this->date );
             $msg = sprintf(_("Für den Termin %s wurde der Raum %s gebucht."), $this->toString(), $raum);
             $this->messages['success'][] = $msg;
@@ -422,7 +422,7 @@ class SingleDate {
     function killAssign() {
         $this->resource_id = '';
         if ($assign_id = SingleDateDB::getAssignID($this->termin_id)) {
-            $killAssign =& AssignObject::Factory($assign_id);
+            $killAssign = AssignObject::Factory($assign_id);
             $killAssign->delete();
         }
 
@@ -440,7 +440,7 @@ class SingleDate {
         if (!$this->resource_id) {
             return null;
         } else {
-            $resObj =& ResourceObject::Factory($this->resource_id);
+            $resObj = ResourceObject::Factory($this->resource_id);
             return $resObj->getName();
         }
     }
@@ -510,7 +510,7 @@ class SingleDate {
     function getRequestedRoom() {
         if ($this->hasRoomRequest()) {
             $rD = new RoomRequest($this->request_id);
-            $resObject =& ResourceObject::Factory($rD->resource_id);
+            $resObject = ResourceObject::Factory($rD->resource_id);
             return $resObject->getName();
         }
         return FALSE;
@@ -521,7 +521,7 @@ class SingleDate {
         if ($room_request) {
             if (!$this->requestData) {
                 $rD = new RoomRequest($this->request_id);
-                $resObject =& ResourceObject::Factory($rD->resource_id);
+                $resObject = ResourceObject::Factory($rD->resource_id);
                 $this->requestData .= 'Raum: '.$resObject->getName().'\n';
                 $this->requestData .= 'verantworlich: '.$resObject->getOwnerName().'\n\n';
                 foreach ($rD->getProperties() as $val) {

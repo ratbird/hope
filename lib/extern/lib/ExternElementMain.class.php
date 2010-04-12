@@ -49,7 +49,7 @@ class ExternElementMain extends ExternElement {
     /**
     *
     */
-    function &GetInstance ($module_name, &$data_fields, &$field_names, &$config) {
+    function GetInstance ($module_name, &$data_fields, &$field_names, &$config) {
         if ($module_name != '') {
             $main_class_name = 'ExternElementMain' . ucfirst($module_name);
             require_once($GLOBALS['RELATIVE_PATH_EXTERN']

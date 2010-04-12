@@ -732,7 +732,7 @@ function TrackAccess ($id, $object_type = null) {
 
 
 function get_sem_tree_path($seminar_id, $depth = false, $delimeter = ">"){
-    $the_tree =& TreeAbstract::GetInstance("StudipSemTree");
+    $the_tree = TreeAbstract::GetInstance("StudipSemTree");
     $view = new DbView();
     $ret = null;
     $view->params[0] = $seminar_id;
@@ -744,7 +744,7 @@ function get_sem_tree_path($seminar_id, $depth = false, $delimeter = ">"){
 }
 
 function get_range_tree_path($institut_id, $depth = false, $delimeter = ">"){
-    $the_tree =& TreeAbstract::GetInstance("StudipRangeTree");
+    $the_tree = TreeAbstract::GetInstance("StudipRangeTree");
     $view = new DbView();
     $ret = null;
     $view->params[0] = $institut_id;
@@ -866,7 +866,7 @@ function get_config($key, $default = FALSE) {
     if (isset($GLOBALS[$key]) && !isset($_REQUEST[$key]) && !$default){
         return $GLOBALS[$key];
     } else {
-        $cfg =& Config::GetInstance();
+        $cfg = Config::GetInstance();
         return ($default ? $cfg->getDefault($key) : $cfg->getValue($key));
     }
 }

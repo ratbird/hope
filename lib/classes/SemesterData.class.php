@@ -39,7 +39,7 @@
 class SemesterData {
     var $db;
 
-    function &GetInstance($refresh_cache = false){
+    function GetInstance($refresh_cache = false){
         
         static $semester_object;
         
@@ -57,7 +57,7 @@ class SemesterData {
     function GetSemesterArray(){
         static $all_semester;
         if (is_null($all_semester)){
-            $semester =& SemesterData::GetInstance();
+            $semester = SemesterData::GetInstance();
             $all_semester = $semester->getAllSemesterData();
             array_unshift($all_semester,0);
             $all_semester[0] = array("name" => sprintf(_("vor dem %s"),$all_semester[1]['name']),'past' => true);

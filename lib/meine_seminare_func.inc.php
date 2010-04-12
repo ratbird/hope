@@ -8,7 +8,7 @@ function get_group_names($group_field, $groups){
     global $SEM_TYPE, $SEM_CLASS;
     $groupcount = 1;
     if ($group_field == 'sem_tree_id'){
-        $the_tree =& TreeAbstract::GetInstance("StudipSemTree", array("build_index" => true));
+        $the_tree = TreeAbstract::GetInstance("StudipSemTree", array("build_index" => true));
     }
     if ($group_field == 'sem_number'){
         $all_semester = SemesterData::GetSemesterArray();
@@ -70,7 +70,7 @@ function sort_groups($group_field, &$groups){
         
         case 'sem_tree_id':
             uksort($groups, create_function('$a,$b',
-                '$the_tree =& TreeAbstract::GetInstance("StudipSemTree", array("build_index" => true));
+                '$the_tree = TreeAbstract::GetInstance("StudipSemTree", array("build_index" => true));
                 return (int)($the_tree->tree_data[$a]["index"] - $the_tree->tree_data[$b]["index"]);
                 '));
         break;
@@ -248,7 +248,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
             || ($my_obj[$obj_id]['obj_type'] == 'sem' && StudipDocumentTree::ExistsGroupFolders($obj_id))){
                 $must_have_perm = $my_obj[$obj_id]['obj_type'] == 'sem' ? 'tutor' : 'autor';
                 if ($GLOBALS['perm']->permissions[$my_obj[$obj_id]['status']] < $GLOBALS['perm']->permissions[$must_have_perm]){
-                    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $obj_id,'entity_type' => $my_obj[$obj_id]['obj_type']));
+                    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $obj_id,'entity_type' => $my_obj[$obj_id]['obj_type']));
                     $unreadable_folders = array_merge((array)$unreadable_folders, (array)$folder_tree->getUnReadableFolders($user_id));
                 }
             }

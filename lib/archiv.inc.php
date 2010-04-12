@@ -216,7 +216,7 @@ function dump_sem($sem_id, $print_view = false) {
     if ($Modules["documents"]) {
         //do not show hidden documents
         if (!$GLOBALS['perm']->have_studip_perm('tutor', $sem_id)){
-             $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id,'entity_type' => 'sem'));
+             $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id,'entity_type' => 'sem'));
             $unreadable_folders = $folder_tree->getUnReadableFolders($GLOBALS['user']->id);
         } else {
             $unreadable_folders = array();
@@ -319,7 +319,7 @@ function dump_sem($sem_id, $print_view = false) {
         if($print_view){
             if($Modules['documents_folder_permissions'] || StudipDocumentTree::ExistsGroupFolders($sem_id)){
                 if (!$GLOBALS['perm']->have_studip_perm('tutor', $sem_id)){
-                    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id,'entity_type' => 'sem'));
+                    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $sem_id,'entity_type' => 'sem'));
                     $unreadable_folders = $folder_tree->getUnReadableFolders($GLOBALS['user']->id);
                 }
             }
@@ -627,7 +627,7 @@ function in_archiv ($sem_id) {
         $tmp_full_path = "$TMP_PATH/$archiv_file_id";
         mkdir($tmp_full_path, 0700);
 
-        $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $seminar_id));
+        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $seminar_id));
         if($folder_tree->getNumKids('root')){
             $list = $folder_tree->getKids('root');
         }

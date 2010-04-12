@@ -19,7 +19,7 @@ class RoomDecorator extends Decorator {
         $termin =& $this->termin;
 
         if ($RESOURCES_ENABLE && ($raum = $this->termin->getResourceID())) {
-            $resObj =& ResourceObject::Factory($raum);
+            $resObj = ResourceObject::Factory($raum);
             if ($this->link) {
                 $raum = $resObj->getFormattedLink(TRUE, TRUE, TRUE);
             } else {

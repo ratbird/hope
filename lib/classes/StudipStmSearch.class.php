@@ -97,7 +97,7 @@ class StudipStmSearch {
     function getScopeChooseOptions($caller, $name){
         $options = array();
         if(!is_object($this->stm_tree)){
-            $this->stm_tree =& TreeAbstract::GetInstance("StudipStmInstancesTree");
+            $this->stm_tree = TreeAbstract::GetInstance("StudipStmInstancesTree");
         }
         $options = array(array('name' => my_substr($this->stm_tree->root_name,0,$this->search_fields['scope_choose']['size']), 'value' => 'root'));
         for($i = 0; $i < count($this->search_scopes); ++$i){
@@ -148,7 +148,7 @@ class StudipStmSearch {
         
         if ($this->form->getFormFieldValue("scope_choose") && $this->form->getFormFieldValue("scope_choose") != 'root'){
             if(!is_object($this->stm_tree)){
-                $this->stm_tree =& TreeAbstract::GetInstance("StudipStmInstancesTree");
+                $this->stm_tree = TreeAbstract::GetInstance("StudipStmInstancesTree");
             }
             $stm_ids = $this->stm_tree->getStmIds($this->form->getFormFieldValue("scope_choose"),true);
             if (is_array($stm_ids)){

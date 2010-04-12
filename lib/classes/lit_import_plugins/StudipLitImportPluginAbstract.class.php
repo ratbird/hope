@@ -151,7 +151,7 @@ class StudipLitImportPluginAbstract {
                 }
             }
             if (count($catalog_ids)>0) {
-                $lit_list = &TreeAbstract::GetInstance("StudipLitList", $range_id);
+                $lit_list = TreeAbstract::GetInstance("StudipLitList", $range_id);
                 $lit_list_id = md5(uniqid("sdlfhaldfhuizhsdhg",1));
                 $fields = array();
                 $fields["list_id"]  = $lit_list_id;

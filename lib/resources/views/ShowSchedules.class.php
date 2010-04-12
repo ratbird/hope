@@ -162,7 +162,7 @@ class ShowSchedules {
                 <b>
                 <?
                 if ($print_view){
-                    $room =& ResourceObject::Factory($this->resource_id);
+                    $room = ResourceObject::Factory($this->resource_id);
                     echo htmlReady($room->getName().' - ' .$this->semester['name']);
                 } else {
                     if ($this->semester){
@@ -190,9 +190,9 @@ class ShowSchedules {
                         if (in_array($event->getOwnerType(), array('sem','date'))){
                             $sem_doz_names = array();
                             if ($event->getOwnerType() == 'sem'){
-                                $sem_obj =& Seminar::GetInstance($event->getAssignUserId());
+                                $sem_obj = Seminar::GetInstance($event->getAssignUserId());
                             } else {
-                                $sem_obj =& Seminar::GetInstance(Seminar::GetSemIdByDateId($event->getAssignUserId()));
+                                $sem_obj = Seminar::GetInstance(Seminar::GetSemIdByDateId($event->getAssignUserId()));
                             }
                             foreach($sem_obj->getMembers('dozent') as $dozent){
                                 $sem_doz_names[] = $dozent['Nachname'];
@@ -273,9 +273,9 @@ class ShowSchedules {
             if (in_array($event->getOwnerType(), array('sem','date'))){
                 $sem_doz_names = array();
                 if ($event->getOwnerType() == 'sem'){
-                    $sem_obj =& Seminar::GetInstance($event->getAssignUserId());
+                    $sem_obj = Seminar::GetInstance($event->getAssignUserId());
                 } else {
-                    $sem_obj =& Seminar::GetInstance(Seminar::GetSemIdByDateId($event->getAssignUserId()));
+                    $sem_obj = Seminar::GetInstance(Seminar::GetSemIdByDateId($event->getAssignUserId()));
                 }
                 foreach($sem_obj->getMembers('dozent') as $dozent){
                     $sem_doz_names[] = $dozent['Nachname'];

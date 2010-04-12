@@ -144,10 +144,10 @@ class ExternElementLitList extends ExternElement {
         $content = array();
         $dbv = new DbView();
         if (is_array($args) && isset($args['user_id'])) {
-            $tree =& TreeAbstract::GetInstance("StudipLitList", $args['user_id']);
+            $tree = TreeAbstract::GetInstance("StudipLitList", $args['user_id']);
         } else {
             preg_match(':^([a-z_-]{0,50})$:i', $_REQUEST['username'], $matches);
-            $tree =& TreeAbstract::GetInstance("StudipLitList", get_userid($matches[1]));
+            $tree = TreeAbstract::GetInstance("StudipLitList", get_userid($matches[1]));
         }
         if ($lists = $tree->getVisibleListIds()) {
             for ($i = 0; $i < count($lists); ++$i) {

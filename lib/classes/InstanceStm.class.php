@@ -24,7 +24,7 @@ class  InstanceStm {
     var $msg;
     var $elements;
     
-    function &GetInstance($id = false, $refresh_cache = false){
+    function GetInstance($id = false, $refresh_cache = false){
         
         static $inst_stm_object_pool;
         

@@ -43,7 +43,7 @@ ResourceObject, zentrale Klasse der Ressourcen Objekte
 /*****************************************************************************/
 class ResourceObject {
     
-    function &Factory(){
+    function Factory(){
         static $ressource_object_pool;
         $argn = func_num_args();
         if ($argn == 1){
@@ -624,7 +624,7 @@ class ResourceObject {
         $query = sprintf("SELECT assign_id FROM resources_assign WHERE resource_id = '%s' ", $id);
         $this->db->query($query);
         while ($this->db->next_record()) {
-            $killAssign =& AssignObject::Factory($this->db->f("assign_id"));
+            $killAssign = AssignObject::Factory($this->db->f("assign_id"));
             $killAssign->delete();
         }
     }

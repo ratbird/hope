@@ -50,7 +50,7 @@ class ShowObject {
     function ShowObject($resource_id) {
         $this->db = new DB_Seminar;
         $this->db2 = new DB_Seminar;
-        $this->resObject =& ResourceObject::Factory($resource_id);
+        $this->resObject = ResourceObject::Factory($resource_id);
         $this->cssSw = new cssClassSwitcher;
 
         $this->list = new ShowList;

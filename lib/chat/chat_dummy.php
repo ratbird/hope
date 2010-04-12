@@ -50,7 +50,7 @@ require_once $RELATIVE_PATH_CHAT.'/ChatServer.class.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/chat/chat_func_inc.php';
 
-$chatServer =& ChatServer::GetInstance($CHAT_SERVER_NAME);
+$chatServer = ChatServer::GetInstance($CHAT_SERVER_NAME);
 $chatServer->caching = true;
 if ($user->cfg->getValue($user->id, "CHAT_USE_AJAX_CLIENT") ){
     $log_id = isset($_GET['log_id']) ? (int)$_GET['log_id'] : count($chat_logs[$chatid])-1;

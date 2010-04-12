@@ -32,7 +32,7 @@ class MockObjectPerms {
 }
 
 function show_tree($rid, $level){
-    $rtree =& TreeAbstract::GetInstance('ResourcesExternTree', $GLOBALS['VIEWABLE_PROPERTY_ID']);
+    $rtree = TreeAbstract::GetInstance('ResourcesExternTree', $GLOBALS['VIEWABLE_PROPERTY_ID']);
     if ($rtree->getNumKids($rid)){
         foreach ($rtree->getKids($rid) as $rrid){
             echo chr(10).'<div class="tree" style="margin-left:'.($level*20).'px;">';
@@ -48,7 +48,7 @@ function show_tree($rid, $level){
 }
 
 function show_sem_plan($rid, $semester_id, $timespan = 'sem_time'){
-    $rtree =& TreeAbstract::GetInstance('ResourcesExternTree', $GLOBALS['VIEWABLE_PROPERTY_ID']);
+    $rtree = TreeAbstract::GetInstance('ResourcesExternTree', $GLOBALS['VIEWABLE_PROPERTY_ID']);
     if ($rtree->tree_data[$rid]['viewable']){
         $GLOBALS['ActualObjectPerms'] = new MockObjectPerms();
         $ViewSchedules = new ShowSemSchedules($rid, $semester_id, $timespan);

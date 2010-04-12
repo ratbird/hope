@@ -50,7 +50,7 @@ class StudipLitList extends TreeAbstract {
     /**
     * constructor
     *
-    * do not use directly, call &TreeAbstract::GetInstance("StudipLitList", $range_id)
+    * do not use directly, call TreeAbstract::GetInstance("StudipLitList", $range_id)
     * @access private
     */
     function StudipLitList($range_id) {
@@ -301,7 +301,7 @@ class StudipLitList extends TreeAbstract {
                                 'dc_identifier' => 'ISBN/ISSN', 'dc_source' => 'Original Publication', 'dc_subject' => 'Keywords',
                                 'dc_description' => 'Abstract', 'accession_number' => 'Accession Number', 'note' => 'Notes', 'external_link' => 'URL');
         $dbv = new DbView();
-        $tree =& TreeAbstract::GetInstance("StudipLitList", $range_id);
+        $tree = TreeAbstract::GetInstance("StudipLitList", $range_id);
         $ret = "*Generic\n";
         foreach ($end_note_map as $fields){
             $ret .= $fields . "\t";
@@ -370,7 +370,7 @@ class StudipLitList extends TreeAbstract {
     function GetFormattedListsByRange($range_id, $last_modified_since = false, $copy_link = true){
         $ret = false;
         $dbv = new DbView();
-        $tree =& TreeAbstract::GetInstance("StudipLitList", $range_id);
+        $tree = TreeAbstract::GetInstance("StudipLitList", $range_id);
         if ( ($lists = $tree->getVisibleListIds()) ){
             for ($i = 0; $i < count($lists); ++$i){
                 if ( ($tree->tree_data[$lists[$i]]['user_id'] != $GLOBALS['auth']->auth['uid'])

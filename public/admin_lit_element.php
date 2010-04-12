@@ -87,7 +87,7 @@ if(!is_object($_the_element)){
     $_the_element = new StudipLitCatElement($_catalog_id, true);
 }
 $_the_form =& $_the_element->getFormObject();
-$_the_clipboard =& StudipLitClipBoard::GetInstance();
+$_the_clipboard = StudipLitClipBoard::GetInstance();
 $_the_clip_form =& $_the_clipboard->getFormObject();
 
 if (isset($old_cat_id) && $_the_clipboard->isInClipboard($old_cat_id)){

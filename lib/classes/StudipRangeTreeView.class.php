@@ -57,7 +57,7 @@ class StudipRangeTreeView extends TreeView{
             $content .= "\n</table>";
             return $content;
         }
-        $range_object =& RangeTreeObject::GetInstance($item_id);
+        $range_object = RangeTreeObject::GetInstance($item_id);
         $name = ($range_object->item_data['type']) ? $range_object->item_data['type'] . ": " : "";
         $name .= $range_object->item_data['name'];
         $content .= "\n<tr><td class=\"topic\" align=\"left\">" . htmlReady($name) ." </td></tr>";

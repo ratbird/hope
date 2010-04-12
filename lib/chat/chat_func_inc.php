@@ -41,7 +41,7 @@ require_once 'lib/contact.inc.php';
 function chat_kill_chat($chatid){
     if ($GLOBALS['CHAT_ENABLE']){
         if (chat_get_entry_level($chatid) == "admin"){
-            $chatServer =& ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
+            $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
             $chatServer->caching = false;
             $chatServer->removeChat($chatid);
             $chatServer->caching = true;
@@ -135,7 +135,7 @@ function chat_get_name($chatid){
 function chat_show_info($chatid){
     global $auth;
         if ($GLOBALS['CHAT_ENABLE']){
-            $chatServer =& ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
+            $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
             $sms = new messaging();
             $chatter = $chatServer->isActiveChat($chatid);
             $chatinv = $sms->check_chatinv($chatid);
@@ -231,7 +231,7 @@ function chat_get_online_icon($user_id = false, $username = false, $pref_chat_id
         }
         $pic_path = $GLOBALS['ASSETS_URL']."images/";
         $stud_path = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'];
-        $chatServer =& ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
+        $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
         $admin_chats = $chatServer->getAdminChats($GLOBALS['auth']->auth['uid']);
         if ($tmp_num_chats = $chatServer->chatUser[$user_id]) {
             $ret = "<a href=\"{$stud_path}chat_online.php?search_user={$user_id}\"><img src=\"{$pic_path}chat2.gif\""

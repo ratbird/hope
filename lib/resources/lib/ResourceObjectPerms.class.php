@@ -44,7 +44,7 @@ Verfuegung
 
 class ResourceObjectPerms {
     
-    function &Factory($resource_id, $user_id = false){
+    function Factory($resource_id, $user_id = false){
         
         static $object_pool;
         
@@ -80,7 +80,7 @@ class ResourceObjectPerms {
             return;
         }
         
-        $resObject =& ResourceObject::Factory($this->resource_id);
+        $resObject = ResourceObject::Factory($this->resource_id);
         $is_room = $resObject->isRoom();
         
         if ($is_room)

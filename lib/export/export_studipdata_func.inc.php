@@ -158,7 +158,7 @@ function export_range($range_id)
     if ($db->next_record() || $range_id=='root'){
         if (!$output_startet)  output_data(xml_header(), $o_mode);
         $output_startet = true;
-        $the_tree =& TreeAbstract::GetInstance('StudipSemTree');
+        $the_tree = TreeAbstract::GetInstance('StudipSemTree');
         $sem_ids = $the_tree->getSemIds($range_id, true);
         if(is_array($sem_ids)){
             $db2->query("SELECT DISTINCT Institut_id FROM seminare WHERE Seminar_id IN('".join("','", $sem_ids)."')");

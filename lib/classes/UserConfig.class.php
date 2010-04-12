@@ -91,7 +91,7 @@ class UserConfig {
     function getAll($user_id=NULL) {
         if ($user_id==NULL) $user_id=$this->user_id;
         //first, get all default values from config
-        $cfg =& Config::GetInstance();
+        $cfg = Config::GetInstance();
         $arr = $cfg->getAllDefaults('user');
 
         $sql="SELECT userconfig_id, field, value, comment FROM user_config WHERE user_id='$user_id' ORDER BY field";
@@ -175,7 +175,7 @@ class UserConfig {
      */
     function getDefault($key) {
         if (!isset($this->defaults[$key])) {
-            $cfg =& Config::GetInstance();
+            $cfg = Config::GetInstance();
             $this->defaults[$key] = $cfg->getValue($key);
         }
         return $this->defaults[$key];
@@ -233,7 +233,7 @@ class UserConfig {
     function _retrieveAll() {
         $this->data[$this->user_id] = array();
         $this->defaults = array();
-        $cfg =& Config::GetInstance();
+        $cfg = Config::GetInstance();
         foreach ($cfg->getAllFieldNames('user') as $key) {
             $this->getDefault($key);
         }

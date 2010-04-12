@@ -83,7 +83,7 @@ class AssignObjectPerms {
         if ($this->perm != "admin") {
             $this->db->query("SELECT resource_id FROM resources_assign WHERE assign_id = '$this->assign_id' ");
             if ($this->db->next_record()) {     
-                $ObjectPerms =& ResourceObjectPerms::Factory($this->db->f("resource_id"));
+                $ObjectPerms = ResourceObjectPerms::Factory($this->db->f("resource_id"));
                 if ($ObjectPerms->havePerm("tutor"))
                     $this->perm="admin";
             }

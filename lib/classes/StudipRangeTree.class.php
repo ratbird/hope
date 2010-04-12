@@ -49,7 +49,7 @@ class StudipRangeTree extends TreeAbstract {
     /**
     * constructor
     *
-    * do not use directly, call &TreeAbstract::GetInstance("StudipRangeTree")
+    * do not use directly, call TreeAbstract::GetInstance("StudipRangeTree")
     * @access private
     */ 
     function StudipRangeTree($args) {

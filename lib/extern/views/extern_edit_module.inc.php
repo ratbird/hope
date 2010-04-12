@@ -54,7 +54,7 @@ if ($_REQUEST['com'] == 'new') {
         if ($type['module'] == $_REQUEST['mod']) {
             $configurations = ExternConfig::GetAllConfigurations($range_id, $key);
             if (!isset($configurations[$type['module']]) || sizeof($configurations[$type['module']]) < $GLOBALS['EXTERN_MAX_CONFIGURATIONS']) {
-                $module =& ExternModule::GetInstance($range_id, $type['module'], '', 'NEW');
+                $module = ExternModule::GetInstance($range_id, $type['module'], '', 'NEW');
             }
             else {
                 $message = sprintf(_("Es wurden bereits %s Konfigurationen angelegt. Sie k&ouml;nnen f&uuml;r dieses Module keine weiteren Konfigurationen anlegen.")
@@ -74,7 +74,7 @@ if ($_REQUEST['com'] == 'new') {
 else {
     foreach ($GLOBALS['EXTERN_MODULE_TYPES'] as $type) {
         if ($type["module"] == $mod) {
-            $module =& ExternModule::GetInstance($range_id, $mod, $config_id);
+            $module = ExternModule::GetInstance($range_id, $mod, $config_id);
         }
     }
 }

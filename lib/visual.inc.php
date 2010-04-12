@@ -865,7 +865,7 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
         }
         elseif ($img) {
             if ($params[5] == 'img') {
-                $cfg = &Config::GetInstance();
+                $cfg = Config::GetInstance();
                 $EXTERNAL_IMAGE_EMBEDDING = $cfg->getValue('EXTERNAL_IMAGE_EMBEDDING');
                 // Don't execute scripts internal scripts
                 if ($intern && !in_array($pu['first_target'], array('sendfile.php','download','assets','pictures')))
@@ -917,7 +917,7 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
                         $tbr = "<div align=\"{$params[6]}\">$tbr</div>";
                 }
             } elseif ($params[5] == 'flash') {
-                $cfg = &Config::GetInstance();
+                $cfg = Config::GetInstance();
                 $EXTERNAL_FLASH_MOVIE_EMBEDDING = $cfg->getValue('EXTERNAL_FLASH_MOVIE_EMBEDDING');
                 $width = 200;
                 // Don't execute scripts

@@ -169,7 +169,7 @@ foreach ($EXTERN_MODULE_TYPES as $type) {
     if ($type["module"] == $module_name) {
         $class_name = "ExternModule" . $module_name;
         require_once($RELATIVE_PATH_EXTERN . "/modules/$class_name.class.php");
-        $module_obj =& ExternModule::GetInstance($range_id, $module_name, $config_id, $default, $global_id);
+        $module_obj = ExternModule::GetInstance($range_id, $module_name, $config_id, $default, $global_id);
     }
 }
 

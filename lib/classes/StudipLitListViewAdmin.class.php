@@ -88,7 +88,7 @@ class StudipLitListViewAdmin extends TreeView{
                             . _("link in externes Bibliothekssystem - external_link\n");
 
         parent::TreeView("StudipLitList", $range_id); //calling the baseclass constructor
-        $this->clip_board =& StudipLitClipBoard::GetInstance();
+        $this->clip_board = StudipLitClipBoard::GetInstance();
     }
 
     function parseCommand(){
@@ -244,7 +244,7 @@ class StudipLitListViewAdmin extends TreeView{
         $item_id = $_REQUEST['item_id'];
         $kids = $this->tree->getKids($item_id);
         usort($kids, create_function('$a,$b',
-                '$the_tree =& TreeAbstract::GetInstance("StudipLitList", "'.$this->tree->range_id.'");
+                '$the_tree = TreeAbstract::GetInstance("StudipLitList", "'.$this->tree->range_id.'");
                 return strnatcasecmp(StudipLitSearchPluginZ3950Abstract::ConvertUmlaute($the_tree->getValue($a, "name")),StudipLitSearchPluginZ3950Abstract::ConvertUmlaute($the_tree->getValue($b, "name")));
                 '));
         foreach($kids as $pos => $kid_id){

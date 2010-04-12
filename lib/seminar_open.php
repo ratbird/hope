@@ -117,8 +117,8 @@ function check_calendar_default(){
 function check_semester_default(){
     if ($GLOBALS['perm']->have_perm('user')){
         $GLOBALS['sess']->register("_default_sem");
-        $semester =& SemesterData::GetInstance();
-        $cfg =& Config::GetInstance();
+        $semester = SemesterData::GetInstance();
+        $cfg = Config::GetInstance();
         $actual_sem = $semester->getSemesterDataByDate(time() + $cfg->getValue('SEMESTER_TIME_SWITCH') * 7 * 24 * 60 * 60);
         if (!is_array($actual_sem)) $actual_sem = $semester->getCurrentSemesterData();
         $GLOBALS['_default_sem'] = $actual_sem['semester_id'];

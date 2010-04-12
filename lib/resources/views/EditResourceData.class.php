@@ -60,7 +60,7 @@ class EditResourceData {
     function EditResourceData ($resource_id) {
         $this->db=new DB_Seminar;
         $this->db2=new DB_Seminar;
-        $this->resObject =& ResourceObject::Factory($resource_id);
+        $this->resObject = ResourceObject::Factory($resource_id);
     }
 
     function setUsedView ($value) {
@@ -123,11 +123,11 @@ class EditResourceData {
         if ($new_assign_object)
             $resAssign = unserialize($new_assign_object);
         else
-            $resAssign =& AssignObject::Factory($assign_id);
+            $resAssign = AssignObject::Factory($assign_id);
 
         //workaround anoack: AssignObject::resource_id  must match the actual resource object
         if($resAssign->getResourceId() != $resources_data['actual_object']) {
-            $resAssign =& AssignObject::Factory(false);
+            $resAssign = AssignObject::Factory(false);
         }
         //workaround anoack: new AssignObjects need a resource_id !
         if ($resAssign->isNew()){
@@ -144,7 +144,7 @@ class EditResourceData {
 
         //it is not allowed to edit or kill assigns for rooms here
         if (($owner_type == "sem") || ($owner_type == "date")) {
-            $resObject =& ResourceObject::Factory($resAssign->getResourceId());
+            $resObject = ResourceObject::Factory($resAssign->getResourceId());
             if ($resObject->isRoom()) {
                 $lockedAssign=TRUE;
                 $killButton = FALSE;
@@ -153,12 +153,12 @@ class EditResourceData {
 
 
         //load the object perms
-        $ResourceObjectPerms =& ResourceObjectPerms::Factory($resAssign->getResourceId());
+        $ResourceObjectPerms = ResourceObjectPerms::Factory($resAssign->getResourceId());
 
         //in some case, we load the perms from the assign object, if it has an owner
         if (($ResourceObjectPerms->getUserPerm() != "admin") && (!$resAssign->isNew()) && (!$new_assign_object)) {
             //load the assign-object perms of a saved object
-            $SavedStateAssignObject =& AssignObject::Factory($resAssign->getId());
+            $SavedStateAssignObject = AssignObject::Factory($resAssign->getId());
             if ($SavedStateAssignObject->getAssignUserId()){
                 unset($ObjectPerms);
                 $ObjectPerms = new AssignObjectPerms($resAssign->getId());
@@ -211,7 +211,7 @@ class EditResourceData {
     function showPropertiesForms() {
         global $PHP_SELF, $cssSw, $user;
 
-        $ObjectPerms =& ResourceObjectPerms::Factory($this->resObject->getId());
+        $ObjectPerms = ResourceObjectPerms::Factory($this->resObject->getId());
 
         /* * * * * * * * * * * * * * * *
          * * * * T E M P L A T E * * * *
@@ -229,7 +229,7 @@ class EditResourceData {
         global $PHP_SELF, $search_owner, $search_perm_user, $search_string_search_perm_user, $search_string_search_owner,
             $cssSw, $user;
 
-        $ObjectPerms =& ResourceObjectPerms::Factory($this->resObject->getId());
+        $ObjectPerms = ResourceObjectPerms::Factory($this->resObject->getId());
 
         $owner_perms = checkObjektAdministrablePerms ($this->resObject->getOwnerId());
 

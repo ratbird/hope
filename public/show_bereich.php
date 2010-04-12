@@ -51,7 +51,7 @@ require_once 'lib/classes/SemBrowse.class.php';
     $sem_browse_obj->sem_browse_data['level'] = $level;
     switch ($level) {
         case "sbb":
-            $the_tree =& TreeAbstract::GetInstance("StudipSemTree", array('visible_only' => !$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))));
+            $the_tree = TreeAbstract::GetInstance("StudipSemTree", array('visible_only' => !$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))));
             $bereich_typ = _("Studienbereich");
             $head_text = _("Übersicht aller Veranstaltungen eines Studienbereichs");
             $intro_text = sprintf(_("Alle Veranstaltungen, die dem Studienbereich: <br><b>%s</b><br> zugeordnet wurden."),

@@ -198,7 +198,7 @@ class SemBrowse {
     }
 
     function get_sem_range_tree($item_id, $with_kids){
-        $range_object =& RangeTreeObject::GetInstance($item_id);
+        $range_object = RangeTreeObject::GetInstance($item_id);
         if ($with_kids){
             $inst_ids = $range_object->getAllObjectKids();
         }
@@ -558,7 +558,7 @@ class SemBrowse {
 
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result'])) {
             if (!is_object($this->sem_tree)){
-                $the_tree =& TreeAbstract::GetInstance("StudipSemTree");
+                $the_tree = TreeAbstract::GetInstance("StudipSemTree");
             } else {
                 $the_tree =& $this->sem_tree->tree;
             }
@@ -719,7 +719,7 @@ class SemBrowse {
         global $_fullname_sql,$PHP_SELF,$SEM_TYPE,$SEM_CLASS;;
         if ($this->sem_browse_data['group_by'] == 1){
             if (!is_object($this->sem_tree)){
-                $the_tree =& TreeAbstract::GetInstance("StudipSemTree");
+                $the_tree = TreeAbstract::GetInstance("StudipSemTree");
             } else {
                 $the_tree =& $this->sem_tree->tree;
             }
@@ -814,7 +814,7 @@ class SemBrowse {
 
             case 1:
             uksort($group_by_data, create_function('$a,$b',
-            '$the_tree =& TreeAbstract::GetInstance("StudipSemTree");
+            '$the_tree = TreeAbstract::GetInstance("StudipSemTree");
             $the_tree->buildIndex();
             return (int)($the_tree->tree_data[$a]["index"] - $the_tree->tree_data[$b]["index"]);
             '));

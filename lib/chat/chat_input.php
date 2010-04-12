@@ -55,7 +55,7 @@ require_once $RELATIVE_PATH_CHAT.'/ChatServer.class.php';
 require_once 'lib/msg.inc.php';
 require_once 'lib/visual.inc.php';
 
-$chatServer =& ChatServer::GetInstance($CHAT_SERVER_NAME);
+$chatServer = ChatServer::GetInstance($CHAT_SERVER_NAME);
 $chatServer->caching = true;
 
 ?>

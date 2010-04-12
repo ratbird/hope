@@ -84,7 +84,7 @@ class EvaluationTreeShowUser {
      */
     function EvaluationTreeShowUser( $evalID ) {
 
-    $this->tree =& TreeAbstract::GetInstance( "EvaluationTree", array('evalID' => $evalID,
+    $this->tree = TreeAbstract::GetInstance( "EvaluationTree", array('evalID' => $evalID,
                                                                     'load_mode' => EVAL_LOAD_ALL_CHILDREN));
 
     }

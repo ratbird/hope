@@ -59,7 +59,7 @@ class StudipSemRangeTreeViewSimple {
             $args['sem_status'] =  $sem_status;
         }
         $args['visible_only'] = $visible_only;
-        $this->tree =& TreeAbstract::GetInstance("StudipRangeTree",$args);
+        $this->tree = TreeAbstract::GetInstance("StudipRangeTree",$args);
         if (!$this->tree->tree_data[$this->start_item_id]){
             $this->start_item_id = "root";
         }
@@ -113,7 +113,7 @@ class StudipSemRangeTreeViewSimple {
         if ($item_id == "root"){
             $ret = ($this->root_content) ? $this->root_content : _("Keine weitere Info vorhanden");
         } else {
-            $range_object =& RangeTreeObject::GetInstance($item_id);
+            $range_object = RangeTreeObject::GetInstance($item_id);
             if (is_array($range_object->item_data_mapping)){
                 foreach ($range_object->item_data_mapping as $key => $value){
                     if ($range_object->item_data[$key]){

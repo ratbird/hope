@@ -446,7 +446,7 @@ class ShowToolsRequests {
                                 }
 
                                 printf ("<font color=\"blue\"><i><b>%s</b></i></font>. %s %s%s<br />", $i, $day_name, date("d.m.Y, H:i", $this->db->f("date")), ($this->db->f("date") != $this->db->f("end_time")) ? " - ".date("H:i", $this->db->f("end_time")) : "");
-                                $resObj =& ResourceObject::Factory($this->db->f("resource_id"));
+                                $resObj = ResourceObject::Factory($this->db->f("resource_id"));
                                 if ($link = $resObj->getFormattedLink($this->db->f("date")))
                                     print "&nbsp;&nbsp;&nbsp;&nbsp;$link<br />";
                                 $i++;
@@ -491,7 +491,7 @@ class ShowToolsRequests {
                             <font size="-1">
                             <?
                             if ($request_resource_id = $reqObj->getResourceId()) {
-                                $resObj =& ResourceObject::Factory($request_resource_id);
+                                $resObj = ResourceObject::Factory($request_resource_id);
                                 print "<img src=\"".$GLOBALS['ASSETS_URL']."images/".$this->getGlobalIconName($request_resource_id)."\" ".tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE)." />";
                                 print "&nbsp;".$resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
                             } else
@@ -688,7 +688,7 @@ class ShowToolsRequests {
                         <tr>
                             <td width="70%"><font size="-1">
                                 <?
-                                $resObj =& ResourceObject::Factory($key);
+                                $resObj = ResourceObject::Factory($key);
                                 print "<img src=\"".$GLOBALS['ASSETS_URL']."images/".$this->getGlobalIconName($key)."\" ".tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE)." />";
                                 print "&nbsp;".$resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
                             ?>
@@ -788,7 +788,7 @@ class ShowToolsRequests {
                         <tr>
                             <td width="70%"><font size="-1">
                                 <?
-                                $resObj =& ResourceObject::Factory($key);
+                                $resObj = ResourceObject::Factory($key);
                                 print "<img src=\"".$GLOBALS['ASSETS_URL']."images/".$this->getGlobalIconName($key)."\" ".tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE)." />";
                                 print "&nbsp;".$resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
                             ?>

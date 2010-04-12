@@ -51,7 +51,7 @@ class ExternConfig {
     var $config_name;
     var $range_id;
 
-    function &GetInstance ($range_id, $module_name, $config_id = '') {
+    function GetInstance ($range_id, $module_name, $config_id = '') {
         
     //  require_once($GLOBALS["RELATIVE_PATH_EXTERN"] . '/lib/ExternConfig' . ucfirst(strtolower($GLOBALS['EXTERN_CONFIG_STORAGE_CONTAINER'])) . '.class.php');
         

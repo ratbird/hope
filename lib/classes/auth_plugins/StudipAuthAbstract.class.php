@@ -146,7 +146,7 @@ class StudipAuthAbstract {
     * @return   mixed   either a reference to the plugin with the passed name, or an array with references to all plugins
     */
     
-    function &GetInstance( $plugin_name = false){
+    function GetInstance( $plugin_name = false){
         static $plugin_instance;    //container to hold the plugin objects
         if (!is_array($plugin_instance)){
             foreach($GLOBALS['STUDIP_AUTH_PLUGIN'] as $plugin){
@@ -168,7 +168,7 @@ class StudipAuthAbstract {
     * @return   bool
     */
     function CheckMD5(){
-        $plugins =& StudipAuthAbstract::GetInstance(); //get a reference to the plugin container
+        $plugins = StudipAuthAbstract::GetInstance(); //get a reference to the plugin container
         foreach($plugins as $object){
             if (!$object->md5_challenge_response){
                 return false;
@@ -194,7 +194,7 @@ class StudipAuthAbstract {
 
         $db = new DB_Seminar();
 
-        $plugins =& StudipAuthAbstract::GetInstance();
+        $plugins = StudipAuthAbstract::GetInstance();
         $error = false;
         $uid = false;
         foreach($plugins as $object){
@@ -240,7 +240,7 @@ class StudipAuthAbstract {
     * @return   array   
     */
     function CheckUsername($username){
-        $plugins =& StudipAuthAbstract::GetInstance();
+        $plugins = StudipAuthAbstract::GetInstance();
         $error = false;
         $found = false;
         foreach($plugins as $object){
@@ -268,7 +268,7 @@ class StudipAuthAbstract {
         if (!$plugin_name){
             return false;
         }
-        $plugin =& StudipAuthAbstract::GetInstance($plugin_name);
+        $plugin = StudipAuthAbstract::GetInstance($plugin_name);
         return (is_object($plugin) ? $plugin->isMappedField($field_name) : false);
     }
     

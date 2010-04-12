@@ -77,7 +77,7 @@ if ($_REQUEST['orderby']) {
 //Frage den Dateienkörper ab
 if ($_REQUEST["getfilebody"]) {
     //URLHelper::bindLinkParam('data', $folder_system_data);
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     try {
       $result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = ".$db->quote($_REQUEST["getfilebody"]))->fetch();
       if ($folder_tree->isReadable($result['range_id'] , $user->id)) {
@@ -95,7 +95,7 @@ if ($_REQUEST["getfilebody"]) {
 //Frage den Ordnerkörper ab
 if ($_REQUEST["getfolderbody"]) {
     //URLHelper::bindLinkParam('data', $folder_system_data);
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     ob_start();
     try {
       if ($folder_tree->isExecutable($_REQUEST["getfolderbody"] , $user->id)) {
@@ -114,7 +114,7 @@ if ($_REQUEST["getfolderbody"]) {
 if ($_REQUEST["folder_sort"]) {
     ob_start();
     URLHelper::bindLinkParam('data', $folder_system_data);
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     try {
     if (($rechte) && ($_REQUEST["folder_sort"] == "root")) {
           
@@ -158,7 +158,7 @@ if ($_REQUEST["folder_sort"]) {
 //Datei soll in einen Ordner verschoben werden
 if (($_REQUEST["moveintofolder"]) && ($_REQUEST["movefile"])) {
     URLHelper::bindLinkParam('data', $folder_system_data);
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     $result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = '".$_REQUEST["movefile"]."'")->fetch();
     if (($rechte) || (($folder_tree->isWriteable($result['range_id'] , $user->id)) 
          && ($folder_tree->isWriteable($result['moveintofolder'] , $user->id)))) {
@@ -170,7 +170,7 @@ if (($_REQUEST["moveintofolder"]) && ($_REQUEST["movefile"])) {
 //Datei soll in einen Ordner kopiert werden
 if (($_REQUEST["copyintofolder"]) && ($_REQUEST["copyfile"])) {
     URLHelper::bindLinkParam('data', $folder_system_data);
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     $result = $db->query("SELECT * FROM dokumente WHERE dokument_id = ".$db->quote($_REQUEST["copyfile"]))->fetch();
     if (($rechte) || ($folder_tree->isWriteable($result['moveintofolder'] , $user->id))) {
         $db->query("INSERT INTO dokumente " .
@@ -207,7 +207,7 @@ if ($_REQUEST['folderzip']) {
 
 if ($_REQUEST['zipnewest']) {
     //Abfrage der neuen Dateien
-    $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     $download_ids = $db->query("SELECT * " .
             "FROM dokumente " .
             "WHERE seminar_id = '$SessionSeminar' " .
@@ -275,7 +275,7 @@ checkObjectModule('documents');
 object_set_visit_module('documents');
 
 
-$folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+$folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
 //include ('lib/include/links_openobject.inc.php');
 //Nur bei 1.8 - irgendwie haut das links_openobject .inc.php das $db raus

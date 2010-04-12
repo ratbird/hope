@@ -285,7 +285,7 @@ class StudipLitCatElement {
         $this->getElementData();
         if ($rs->affected_rows()){
             if($default_list_entry && $default_list_entry != '---'){
-                $list =& TreeAbstract::GetInstance("StudipLitList", $GLOBALS['user']->id);
+                $list = TreeAbstract::GetInstance("StudipLitList", $GLOBALS['user']->id);
                 $list->insertElement(array('catalog_id' => $this->getValue('catalog_id'), 'list_id' => $default_list_entry,
                                             'list_element_id' => $list->getNewListElementId(),
                                             'user_id' => $GLOBALS['user']->id,

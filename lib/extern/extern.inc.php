@@ -107,7 +107,7 @@ if (!$global_id && ($global_configuration = ExternConfig::GetGlobalConfiguration
 // all parameters ok, instantiate module and print data
 foreach ($EXTERN_MODULE_TYPES as $type) {
     if ($type["module"] == $module) {
-        $module_obj =& ExternModule::GetInstance($range_id, $module, $config_id, $default, $global_id);
+        $module_obj = ExternModule::GetInstance($range_id, $module, $config_id, $default, $global_id);
     }
 }
 

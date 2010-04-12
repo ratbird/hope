@@ -192,7 +192,7 @@ class ShowSemSchedules extends ShowSchedules {
             $num = 1;
             while ($event = $assign_events->nextEvent()) {
                 if(in_array($event->repeat_mode, array('d','m','y'))){
-                    $assign =& AssignObject::Factory($event->getAssignId());
+                    $assign = AssignObject::Factory($event->getAssignId());
                     switch($event->repeat_mode){
                         case 'd':
                         $add_info = '('.sprintf(_("täglich, %s bis %s"), strftime('%x',$assign->getBegin()), strftime('%x',$assign->getRepeatEnd())).')';
@@ -310,7 +310,7 @@ class ShowSemSchedules extends ShowSchedules {
         </form>
     <?
         } else {
-            $room =& ResourceObject::Factory($this->resource_id);
+            $room = ResourceObject::Factory($this->resource_id);
             ?>
             <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center">
             <tr>

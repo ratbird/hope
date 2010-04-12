@@ -106,7 +106,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
     /* css-Klasse auswählen, sowie Template-Feld für den Raum mit Text füllen */
     if ($GLOBALS['RESOURCES_ENABLE']) {
         if ($val->getResourceID()) {
-            $resObj =& ResourceObject::Factory($val->getResourceID());
+            $resObj = ResourceObject::Factory($val->getResourceID());
             $tpl['room'] = _("Raum: ");
             $tpl['room'] .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
             $tpl['class'] = 'steelgreen';

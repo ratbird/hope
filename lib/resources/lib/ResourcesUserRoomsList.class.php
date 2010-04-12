@@ -107,7 +107,7 @@ class ResourcesUserRoomsList {
     function insertResource($resource_id, $name, $lockable = false){
         if  (!$lockable || ($lockable && !isLockPeriod(time()))) {
             if ($this->return_objects) {
-                $this->resources[$resource_id] =& ResourceObject::Factory($resource_id);
+                $this->resources[$resource_id] = ResourceObject::Factory($resource_id);
             } else {
                 $this->resources[$resource_id] = $name;
             }

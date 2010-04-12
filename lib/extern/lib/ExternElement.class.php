@@ -53,7 +53,7 @@ class ExternElement {
     /**
     *
     */
-    function &GetInstance (&$config, $element_name) {
+    function GetInstance (&$config, $element_name) {
         $class_name = "ExternElement" . $element_name;
         require_once($GLOBALS["RELATIVE_PATH_EXTERN"] . "/elements/$class_name.class.php");
         $element = new $class_name();

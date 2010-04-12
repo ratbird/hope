@@ -185,7 +185,7 @@ function raumzeit_checkboxAction() {
 function raumzeit_bookRoom() {
     global  $sem;
     if (!$_REQUEST['singledate']) return;
-    $resObj =& ResourceObject::Factory($_REQUEST['room']);
+    $resObj = ResourceObject::Factory($_REQUEST['room']);
     $raum = $resObj->getFormattedLink(TRUE, TRUE, TRUE);
     $termin_count = 0;
     $ex_termin_count = 0;

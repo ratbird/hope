@@ -149,7 +149,7 @@ class AdminModules extends ModulesNotification {
         
         $items = $this->db->f("items"); 
                                     
-        $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
+        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
 
         $items += $folder_tree->getNumKidsKids('root') - $folder_tree->getNumKids('root');
         return $items; 
@@ -234,7 +234,7 @@ class AdminModules extends ModulesNotification {
     }
     
     function moduledocuments_folder_permissionsDeactivate($range_id){
-        $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
+        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
         foreach($folder_tree->getKidsKids('root') as $folder_id){
             $folder_tree->setDefaultPermission($folder_id);
         }
@@ -244,7 +244,7 @@ class AdminModules extends ModulesNotification {
     }
     
     function getModuledocuments_folder_permissionsExistingItems($range_id) {
-        $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
+        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
         return count($folder_tree->getUnreadableFolders('xxx'));
     }
     

@@ -24,7 +24,7 @@ require_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/RoomGroups.class.php");
 
 
 if ($resources_data["actual_object"]) {
-    $currentObject =& ResourceObject::Factory($resources_data["actual_object"]);
+    $currentObject = ResourceObject::Factory($resources_data["actual_object"]);
     $currentObjectTitelAdd=": ".(($currentObject->getCategoryName()) ? $currentObject->getCategoryName() : _("Hierachieebene"));
     if ($currentObjectTitelAdd)
         $currentObjectTitelAdd=": ";

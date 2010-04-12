@@ -80,7 +80,7 @@ require_once ('lib/classes/LockRules.class.php');
 
 if ($GLOBALS['CHAT_ENABLE']){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
-    $chatServer =& ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
+    $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
     $chatServer->caching = true;
     $sms = new messaging();
 }
@@ -767,7 +767,7 @@ elseif ($auth->auth["perm"]=="admin") {
             $_default_sem = $_REQUEST['select_sem'];
     }
     if ($_default_sem){
-        $semester =& SemesterData::GetInstance();
+        $semester = SemesterData::GetInstance();
         $one_semester = $semester->getSemesterData($_default_sem);
         $sem_condition = "AND seminare.start_time <=".$one_semester["beginn"]." AND (".$one_semester["beginn"]." <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1) ";
     }

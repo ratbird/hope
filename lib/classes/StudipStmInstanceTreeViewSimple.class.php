@@ -54,7 +54,7 @@ class StudipStmInstanceTreeViewSimple {
         if ($seminar_id !== false){
             $args['seminar_id'] = $seminar_id;
         }
-        $this->tree =& TreeAbstract::GetInstance("StudipStmInstancesTree",$args);
+        $this->tree = TreeAbstract::GetInstance("StudipStmInstancesTree",$args);
         if (!$this->tree->tree_data[$this->start_item_id]){
             $this->start_item_id = "root";
         }

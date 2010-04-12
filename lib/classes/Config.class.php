@@ -43,7 +43,7 @@ class Config {
     var $data = array(); // assoc. array for caching ([$key]=>value ) 
     var $defaults = array(); // assoc. arry for defaults ([$key]=>value)
     
-    function &GetInstance($refresh_cache = false){
+    function GetInstance($refresh_cache = false){
         
         static $config_object;
         

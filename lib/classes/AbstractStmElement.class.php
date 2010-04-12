@@ -47,7 +47,7 @@ class  AbstractStmElement {
 
     }
 */      
-    function &GetInstance($id = false, $refresh_cache = false){
+    function GetInstance($id = false, $refresh_cache = false){
         
         static $abs_elements_object_pool;
         

@@ -494,7 +494,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
     }
 
     function get_sem_range_tree ($item_id, $with_kids) {
-        $range_object =& RangeTreeObject::GetInstance($item_id);
+        $range_object = RangeTreeObject::GetInstance($item_id);
         if ($with_kids) {
             $inst_ids = $range_object->getAllObjectKids();
         }
@@ -594,9 +594,9 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
             $tree_args['sem_number'] = $this->sem_number;
         }
         if ($this->config->getValue('Main', 'mode') == 'show_sem_range') {
-            $tree =& TreeAbstract::GetInstance('StudipSemTree', $tree_args);
+            $tree = TreeAbstract::GetInstance('StudipSemTree', $tree_args);
         } else {
-            $tree =& TreeAbstract::GetInstance('StudipRangeTree', $tree_args);
+            $tree = TreeAbstract::GetInstance('StudipRangeTree', $tree_args);
         }
         $tree->enable_lonely_sem = false;
         $j = 0;
@@ -746,7 +746,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                         break;
                         case 1:
                             if (!is_object($this->sem_tree)) {
-                                $this->sem_tree =& TreeAbstract::GetInstance("StudipSemTree");
+                                $this->sem_tree = TreeAbstract::GetInstance("StudipSemTree");
                             }
                             if ($this->sem_tree->tree_data[$group_field]) {
                                 $content['RESULT']['GROUP'][$j]['GROUP_NAME'] = ExternModule::ExtHtmlReady($this->sem_tree->getShortPath($group_field, $this->config->getValue('Main', 'rangepathlevel')));
@@ -976,7 +976,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
             if ($this->config->getValue('Main', 'mode') == 'show_sem_range') {
                 $allowed_ranges = array();
                 if (!is_object($this->sem_tree)){
-                    $this->sem_tree =& TreeAbstract::GetInstance('StudipSemTree');
+                    $this->sem_tree = TreeAbstract::GetInstance('StudipSemTree');
                 }
                 if ($kids = $this->sem_tree->getKidsKids($this->sem_browse_data['start_item_id'])) {
                     $allowed_ranges = $kids;
@@ -1022,7 +1022,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
         /*
         $sem_inst_query = '';
         if (!$this->config->getValue('Main', 'allseminars')) {
-            $tree =& TreeAbstract::GetInstance('StudipRangeTree');
+            $tree = TreeAbstract::GetInstance('StudipRangeTree');
             $kidskids = $tree->getKidsKids($this->sem_browse_data['start_item_id']);
             $institute_ids = array($tree->tree_data[$this->sem_browse_data['start_item_id']]['studip_object_id']);
             foreach ($kidskids as $kid) {
@@ -1115,7 +1115,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
 
             case 1:
             uksort($group_by_data, create_function('$a,$b',
-            '$the_tree =& TreeAbstract::GetInstance("StudipSemTree");
+            '$the_tree = TreeAbstract::GetInstance("StudipSemTree");
             $the_tree->buildIndex();
             return (int)($the_tree->tree_data[$a]["index"] - $the_tree->tree_data[$b]["index"]);
             '));
@@ -1208,7 +1208,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
 
         if (is_array($this->sem_browse_data['search_result']) && count($this->sem_browse_data['search_result'])) {
             if (!is_object($this->sem_tree)){
-                $the_tree =& TreeAbstract::GetInstance("StudipSemTree");
+                $the_tree = TreeAbstract::GetInstance("StudipSemTree");
             } else {
                 $the_tree =& $this->sem_tree;
             }
@@ -1356,7 +1356,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                 if ($GLOBALS['RESOURCES_ENABLE']) {
                     if ($room_ids = $seminar->metadate->cycles[$cycle_id]->getPredominantRoom($start, $end)) {
                         foreach ($room_ids as $room_id) {
-                            $res_obj =& ResourceObject::Factory($room_id);
+                            $res_obj = ResourceObject::Factory($room_id);
                             $room_names[] = $res_obj->getName();
                         }
                         $date[$i]['room'] = implode(', ', $room_names);
@@ -1375,7 +1375,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                     $date[$i]['date'] = strftime('%x', $irregular_date['start_time']);
                     $date[$i]['dow'] = getWeekDay(date('w', $irregular_date['start_time']));
                     if ($GLOBALS['RESOURCES_ENABLE'] && $irregular_date['resource_id']) {
-                        $res_obj =& ResourceObject::Factory($irregular_date['resource_id']);
+                        $res_obj = ResourceObject::Factory($irregular_date['resource_id']);
                         $date[$i]['room'] = $res_obj->getName();
                     } else {
                         $date[$i]['room'] = trim($irregular_date['raum']);

@@ -74,7 +74,7 @@ class Seminar {
 
     var $user_number = 0;
 
-    function &GetInstance($id = false, $refresh_cache = false){
+    function GetInstance($id = false, $refresh_cache = false){
 
         static $seminar_object_pool;
 
@@ -226,14 +226,14 @@ class Seminar {
             case 'export':
                 if ($termin->getResourceID()) {
                     $ret .= ', '._("Ort:").' ';
-                    $resObj =& ResourceObject::Factory($termin->getResourceID());
+                    $resObj = ResourceObject::Factory($termin->getResourceID());
                     $ret .= $resObj->getName();
                 }
             break;
 
             case 'string':
                 if ($termin->getResourceID()) {
-                    $resObj =& ResourceObject::Factory($termin->getResourceID());
+                    $resObj = ResourceObject::Factory($termin->getResourceID());
                     $ret .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
                 } else if ($termin->getFreeRoomText()) {
                     $ret .= ', ('.htmlReady($termin->getFreeRoomText()).')';
@@ -1509,7 +1509,7 @@ class Seminar {
                 if ($key > 0) {
                     $roominfo .= ', ';
                 }
-                $resObj =& ResourceObject::Factory($val);
+                $resObj = ResourceObject::Factory($val);
                 if ($link) {
                     $roominfo .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
                 } else {
@@ -1673,7 +1673,7 @@ class Seminar {
                             $groups[$i]["termin_ids"][$termin->getSingleDateId()] = TRUE;
                             if (!$first) $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;';
                             $info[$i]['name'] .= $termin->toString();
-                            $resObj =& ResourceObject::Factory($termin->resource_id);
+                            $resObj = ResourceObject::Factory($termin->resource_id);
 
                             if ($link = $resObj->getFormattedLink($termin->getStartTime())) {
                                 $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;'.$link;
@@ -1701,7 +1701,7 @@ class Seminar {
                             }
                             $groups[$i]["termin_ids"][$termin->getSingleDateId()] = TRUE;
                             $info[$i]['name'] = $termin->toString();
-                            $resObj =& ResourceObject::Factory($termin->resource_id);
+                            $resObj = ResourceObject::Factory($termin->resource_id);
 
                             if ($link = $resObj->getFormattedLink($termin->getStartTime())) {
                                 $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;'.$link;
@@ -1737,7 +1737,7 @@ class Seminar {
         if ($room_request) {
             if (!$this->requestData) {
                 $rD = new RoomRequest($this->request_id);
-                $resObject =& ResourceObject::Factory($rD->resource_id);
+                $resObject = ResourceObject::Factory($rD->resource_id);
                 $this->requestData .= 'Raum: '.$resObject->getName() . "\n";
                 $this->requestData .= 'verantwortlich: '.$resObject->getOwnerName() ."\n\n";
                 foreach ($rD->getProperties() as $val) {

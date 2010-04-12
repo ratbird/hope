@@ -35,7 +35,7 @@ if ($auth->auth["uid"]!="nobody")
     $sms = new messaging();
     //User aus allen Chatraeumen entfernen
     if ($CHAT_ENABLE) {
-        $chatServer =& ChatServer::GetInstance($CHAT_SERVER_NAME);
+        $chatServer = ChatServer::GetInstance($CHAT_SERVER_NAME);
         $chatServer->logoutUser($user->id);
     }
 

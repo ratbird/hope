@@ -435,7 +435,7 @@ class Seminar_Auth extends Auth {
 
     function is_authenticated(){
 
-        $cfg =& Config::GetInstance();
+        $cfg = Config::GetInstance();
         //check if the user got kicked meanwhile, or if user is locked out
         if ($this->auth['uid'] && !in_array($this->auth['uid'], array('form','nobody'))){
             $this->db->query(sprintf("select username,perms,locked from %s where user_id = '%s'", $this->database_table, $this->auth['uid']));
@@ -724,7 +724,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
         $Nachname = trim($Nachname);
 
         // accept only registered domains if set
-        $cfg =& Config::GetInstance();
+        $cfg = Config::GetInstance();
         $email_restriction = $cfg->getValue('EMAIL_DOMAIN_RESTRICTION');
         if ($email_restriction) {
             $Email = trim($Email) . '@' . trim($emaildomain);

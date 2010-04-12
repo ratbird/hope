@@ -185,7 +185,7 @@ function EvaluationTreeEditView ( $itemID = ROOT_BLOCK, $evalID = NULL ){
     $this->itemInstance = $this->getInstance ($this->itemID);
     $this->changed = false;
 
-    $this->tree = &TreeAbstract::GetInstance ( "EvaluationTree", array('evalID' => $this->evalID,
+    $this->tree = TreeAbstract::GetInstance ( "EvaluationTree", array('evalID' => $this->evalID,
                                                                         'load_mode' => EVAL_LOAD_ALL_CHILDREN));
 
     # filter out an old session itemID ======================================= #
@@ -3365,7 +3365,7 @@ function getInstance ( $itemID ){
     if ($itemID == ROOT_BLOCK || $itemID == $this->evalID)
         return ROOT_BLOCK;
     else {
-        $tree = &TreeAbstract::GetInstance ( "EvaluationTree", array('evalID' => $this->evalID,
+        $tree = TreeAbstract::GetInstance ( "EvaluationTree", array('evalID' => $this->evalID,
                                                                         'load_mode' => EVAL_LOAD_FIRST_CHILDREN));
         $group = &$tree->getGroupObject($itemID);
         $childtype = $group->getChildType();

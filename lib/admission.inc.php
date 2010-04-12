@@ -72,7 +72,7 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
     }
     if(strlen($consider_contingent) > 1) $studiengang_id = $consider_contingent;
     
-    $sem =& Seminar::GetInstance($seminar_id);
+    $sem = Seminar::GetInstance($seminar_id);
     if($copy_studycourse && $consider_contingent && $sem->isAdmissionEnabled() && !$sem->getFreeAdmissionSeats($studiengang_id)){
         return false;
     } else {

@@ -62,7 +62,7 @@ class AssignObject {
     var $chng_flag;
     var $events;
     
-    function &Factory(){
+    function Factory(){
         static $assign_object_pool;
         
         $argn = func_num_args();
@@ -162,7 +162,7 @@ class AssignObject {
                         return $res["Name"]." ("._("Einrichtung").")";
             break;
             case "sem":
-                $sem_obj =& Seminar::GetInstance($id);
+                $sem_obj = Seminar::GetInstance($id);
                 if (!$sem_obj->is_new){
                     if (!$explain){
                         return $sem_obj->getName();
@@ -316,7 +316,7 @@ class AssignObject {
     function checkLock() {
         global $user;
         
-        $resObject =& ResourceObject::Factory($this->resource_id);
+        $resObject = ResourceObject::Factory($this->resource_id);
         //load the events of the actual assign...
         create_assigns($this, $this);
 
@@ -336,7 +336,7 @@ class AssignObject {
     
     function checkOverlap($check_locks = TRUE) {
         global $user;
-        $resObject =& ResourceObject::Factory($this->resource_id);
+        $resObject = ResourceObject::Factory($this->resource_id);
         //we check overlaps always for a whole day
         $start = mktime (0,0,0, date("n", $this->begin), date("j", $this->begin), date("Y", $this->begin));
         if ($this->repeat_end)
@@ -614,7 +614,7 @@ class AssignObject {
     function syncronizeMetaDates(){
         $changed = false;
         if ($this->getOwnerType() == "sem") {
-            $sem =& Seminar::GetInstance($this->getAssignUserId());
+            $sem = Seminar::GetInstance($this->getAssignUserId());
             if (!$sem->is_new){
                 $key = $sem->getMetaDatesKey($this->begin, $this->end);
                 if (!is_null($key)){

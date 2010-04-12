@@ -60,7 +60,7 @@ class StudipSemTreeViewSimple {
             $args['sem_status'] =  $sem_status;
         }
         $args['visible_only'] = $visible_only;
-        $this->tree =& TreeAbstract::GetInstance("StudipSemTree",$args);
+        $this->tree = TreeAbstract::GetInstance("StudipSemTree",$args);
         $this->tree->enable_lonely_sem = false;
         if (!$this->tree->tree_data[$this->start_item_id]){
             $this->start_item_id = "root";

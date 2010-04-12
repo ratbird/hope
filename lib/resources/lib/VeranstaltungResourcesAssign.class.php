@@ -74,7 +74,7 @@ class VeranstaltungResourcesAssign {
 
         //if no schedule-date exits, we take the metadates (only in this case! else we take only the concrete dates from the termin table!)
         if (!isSchedule($this->seminar_id,true,true)){
-            $seminar =& Seminar::GetInstance($this->seminar_id);
+            $seminar = Seminar::GetInstance($this->seminar_id);
             $result2 = array_merge((array)$result, (array)$this->changeMetaAssigns('', '', '', FALSE, FALSE, $check_locks));
             if (is_array($result2)){
                 $clear_turnus = false;
@@ -107,7 +107,7 @@ class VeranstaltungResourcesAssign {
 
     //kills resource_id in metadata_dates
     function clearTurnusData($keys_to_clear = null){
-        $seminar =& Seminar::GetInstance($this->seminar_id);
+        $seminar = Seminar::GetInstance($this->seminar_id);
         foreach ($seminar->getMetaDates() as $key => $val){
             if (is_null($keys_to_clear) || in_array($key, $keys_to_clear)){
                 $seminar->setMetaDateValue($key,'resource_id','');
@@ -191,7 +191,7 @@ class VeranstaltungResourcesAssign {
                 if ($day_of_week == 0)
                     $day_of_week = 7;
 
-                $AssignObjects[] =& AssignObject::Factory(FALSE, $val["resource_id"], $this->seminar_id, $user_free_name,
+                $AssignObjects[] = AssignObject::Factory(FALSE, $val["resource_id"], $this->seminar_id, $user_free_name,
                                             $start_time, $end_time, $sem_end,
                                             -1, $interval, 0, 0,
                                             0, $day_of_week);
@@ -243,7 +243,7 @@ class VeranstaltungResourcesAssign {
                 $end=$begin;
         }
 
-        $AssignObject =& AssignObject::Factory($assign_id);
+        $AssignObject = AssignObject::Factory($assign_id);
         if ($resource_id)
             $AssignObject->setResourceId($resource_id);
         if (!$AssignObject->getAssignUserId())
@@ -326,7 +326,7 @@ class VeranstaltungResourcesAssign {
         if ((!$assign_id) && (!$check_only)) {
             $result = $this->insertDateAssign($termin_id, $resource_id);
         } else {
-            $changeAssign =& AssignObject::Factory($assign_id);
+            $changeAssign = AssignObject::Factory($assign_id);
             if ($resource_id)
                 $changeAssign->setResourceId($resource_id);
             else
@@ -383,7 +383,7 @@ class VeranstaltungResourcesAssign {
             }
 
             if ($begin) {
-                $createAssign =& AssignObject::Factory(FALSE, $resource_id, $termin_id, '',
+                $createAssign = AssignObject::Factory(FALSE, $resource_id, $termin_id, '',
                                             $begin, $end, $end,
                                             0, 0, 0, 0, 0, 0);
                 //check if there are overlaps (resource isn't free!)
@@ -407,7 +407,7 @@ class VeranstaltungResourcesAssign {
             $query = sprintf ("SELECT assign_id FROM resources_assign LEFT JOIN resources_objects USING (resource_id) LEFT JOIN resources_categories USING (category_id) WHERE assign_user_id = '%s' AND resources_categories.is_room = 1 ", $termin_id);
             $this->db->query($query);
             while ($this->db->next_record()) {
-                $killAssign =& AssignObject::Factory($this->db->f("assign_id"));
+                $killAssign = AssignObject::Factory($this->db->f("assign_id"));
                 $killAssign->delete();
             }
             $query = sprintf("SELECT request_id FROM resources_requests WHERE termin_id = '%s' ", $termin_id);
@@ -424,7 +424,7 @@ class VeranstaltungResourcesAssign {
             $query = sprintf("SELECT assign_id FROM resources_assign LEFT JOIN resources_objects USING (resource_id) LEFT JOIN resources_categories USING (category_id) WHERE resources_assign.assign_user_id = '%s' AND resources_categories.is_room = 1 ", $this->seminar_id);
             $this->db->query($query);
             while ($this->db->next_record()) {
-                $killAssign =& AssignObject::Factory($this->db->f("assign_id"));
+                $killAssign = AssignObject::Factory($this->db->f("assign_id"));
                 $killAssign->delete();
             }
         }

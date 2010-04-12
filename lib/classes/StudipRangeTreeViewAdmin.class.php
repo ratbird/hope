@@ -374,7 +374,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $cat_id = $_REQUEST['cat_id'];
         $items_to_order = array();
         if ($this->isItemAdmin($item_id)){
-            $range_object =& RangeTreeObject::GetInstance($item_id);
+            $range_object = RangeTreeObject::GetInstance($item_id);
             $categories =& $range_object->getCategories();
             while($categories->nextRow()){
                 $items_to_order[] = $categories->getField("kategorie_id");
@@ -404,7 +404,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
     function execCommandNewCat(){
         $item_id = $_REQUEST['item_id'];
         if ($this->isItemAdmin($item_id)){
-            $range_object =& RangeTreeObject::GetInstance($item_id);
+            $range_object = RangeTreeObject::GetInstance($item_id);
             $this->edit_cat_snap =& $range_object->getCategories();
             $this->edit_cat_snap->result[$this->edit_cat_snap->numRows] =
                 array("kategorie_id" => "new_entry", "range_id" => $item_id, "name" => "Neues Datenfeld", "content" => "Neues Datenfeld",
@@ -554,7 +554,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             $content .= "\n</table>";
             return $content;
         }
-        $range_object =& RangeTreeObject::GetInstance($item_id);
+        $range_object = RangeTreeObject::GetInstance($item_id);
         $name = ($range_object->item_data['type']) ? $range_object->item_data['type'] . ": " : "";
         $name .= $range_object->item_data['name'];
         $content .= "\n<tr><td class=\"topic\" align=\"left\" style=\"font-size:10pt\">" . htmlReady($name) ." </td></tr>";

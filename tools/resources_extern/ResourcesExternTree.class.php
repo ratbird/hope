@@ -72,7 +72,7 @@ class ResourcesExternTree extends TreeAbstract {
 }
 /*
 echo "<pre>";
-$test =& TreeAbstract::GetInstance('ResourcesExternTree','539dd9e5bea93208b7e6b5415a01f661' );
+$test = TreeAbstract::GetInstance('ResourcesExternTree','539dd9e5bea93208b7e6b5415a01f661' );
 print_r($test->tree_data);
 */
 ?>

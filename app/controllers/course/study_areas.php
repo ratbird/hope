@@ -53,7 +53,12 @@ class Course_StudyAreasController extends AuthenticatedController {
       $GLOBALS['template_factory']->open('layouts/base_without_infobox');
     $this->set_layout($layout);
 
-    Navigation::activateItem('/admin/course/study_areas');
+    if (Request::get('section') == 'studycourse') {
+        UrlHelper::bindLinkParam('section', $section);
+        Navigation::activateItem('/course/admin/studycourse');
+    } else {
+        Navigation::activateItem('/admin/course/study_areas');
+    }
 
     # w/o a course ID show the admin search form
     if ($course_id === '') {

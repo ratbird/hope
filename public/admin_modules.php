@@ -53,10 +53,15 @@ $sess->register("plugin_toggle");
 
 
 $CURRENT_PAGE = _("Verwaltung verwendeter Module und Plugins");
-if ($links_admin_data['topkat'] == 'sem') {
-    Navigation::activateItem('/admin/course/modules');
+if (Request::get('section') == 'modules') {
+    UrlHelper::bindLinkParam('section', $section);
+    Navigation::activateItem('/course/admin/modules');
 } else {
-    Navigation::activateItem('/admin/institute/modules');
+    if ($links_admin_data['topkat'] == 'sem') {
+        Navigation::activateItem('/admin/course/modules');
+    } else {
+        Navigation::activateItem('/admin/institute/modules');
+    }
 }
 
 //get ID

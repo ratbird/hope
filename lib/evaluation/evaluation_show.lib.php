@@ -320,7 +320,9 @@ class EvalShow {
       if( $isPreview ) {
          $button = new HTM( "a" );
 #         $button->attr( "href", "javascript:location.reload()" );
-         $button->attr( "href", "show_evaluation.php?evalID=".$eval->getObjectID()."&isPreview=1" );
+         $button->attr( "href", UrlHelper::getLink('show_evaluation.php?evalID=' . 
+            $eval->getObjectID() . '&isPreview=1'));
+
          $img = new HTMpty( "img" );
          $img->stri( makeButton( "aktualisieren", "src" ).
             tooltip(_("Vorschau aktualisieren.")) );
@@ -385,7 +387,7 @@ class EvalShow {
 
    function createEditButton ($eval) {
          $button = new HTML ( "a" );
-         $button->addAttr ("href", EVAL_FILE_ADMIN."?page=edit&evalID=".$eval->getObjectID ());
+         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?page=edit&evalID=".$eval->getObjectID ()));
          $img = new HTMpty( "img" );
          $img->stri( makeButton( "bearbeiten", "src" ).tooltip(_("Evaluation bearbeiten.")) );
          $img->addAttr( "border", "0" );
@@ -395,7 +397,7 @@ class EvalShow {
 
    function createOverviewButton ($rangeID, $evalID) {
          $button = new HTML ( "a" );
-         $button->addAttr ("href", EVAL_FILE_ADMIN."?rangeID=".$rangeID."&openID=".$evalID."#open");
+         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?rangeID=".$rangeID."&openID=".$evalID."#open"));
          $img = new HTMpty( "img" );
          $img->stri( makeButton( "bearbeiten", "src" ).tooltip(_("Evaluationsverwaltung.")) );
          $img->addAttr( "border", "0" );
@@ -405,7 +407,7 @@ class EvalShow {
 
    function createDeleteButton ($eval) {
          $button = new HTML ( "a" );
-         $button->addAttr ("href", EVAL_FILE_ADMIN."?evalAction=delete_request&evalID=".$eval->getObjectID ());
+         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=delete_request&evalID=".$eval->getObjectID ()));
          $img = new HTMpty( "img" );
          $img->stri( makeButton( "loeschen", "src" ).tooltip(_("Evaluation löschen.")) );
          $img->addAttr( "border", "0" );
@@ -415,7 +417,7 @@ class EvalShow {
 
    function createStopButton ($eval) {
          $button = new HTML ( "a" );
-         $button->addAttr ("href", EVAL_FILE_ADMIN."?evalAction=stop&evalID=".$eval->getObjectID ());
+         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=stop&evalID=".$eval->getObjectID ()));
          $img = new HTMpty( "img" );
          $img->stri( makeButton( "stop", "src" ).tooltip(_("Evaluation stoppen.")) );
          $img->addAttr( "border", "0" );
@@ -425,7 +427,7 @@ class EvalShow {
 
    function createContinueButton ($eval) {
          $button = new HTML ( "a" );
-         $button->addAttr ("href", EVAL_FILE_ADMIN."?evalAction=continue&evalID=".$eval->getObjectID ());
+         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=continue&evalID=".$eval->getObjectID ()));
          $img = new HTMpty( "img" );
          $img->stri( makeButton( "fortsetzen", "src" ).tooltip(_("Evaluation fortsetzen.")) );
          $img->addAttr( "border", "0" );
@@ -435,7 +437,7 @@ class EvalShow {
 
    function createExportButton ($eval) {
          $button = new HTML ( "a" );
-         $button->addAttr ("href", EVAL_FILE_ADMIN."?evalAction=export_request&evalID=".$eval->getObjectID ());
+         $button->addAttr ("href", UrlHelper::getLink(EVAL_FILE_ADMIN."?evalAction=export_request&evalID=".$eval->getObjectID ()));
          $img = new HTMpty( "img" );
          $img->stri( makeButton( "export", "src" ).tooltip(_("Evaluation exportieren.")) );
          $img->addAttr( "border", "0" );

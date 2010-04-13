@@ -1156,7 +1156,7 @@ function getItemMessage ( $itemID, $colspan = 1 ){
 */
 function getSelf ( $param = "", $with_start_item = true ){
 
-    $url = $GLOBALS['PHP_SELF'] . "?page=edit";//&"
+    $url = "?page=edit";
 
     if ($this->evalID)
         $url .= "&evalID=".$this->evalID;
@@ -1167,12 +1167,10 @@ function getSelf ( $param = "", $with_start_item = true ){
         $url .= (($with_start_item)
             ? "&itemID=" . $this->startItemID . "&"
             : "&") . $param;
-//          . "#anchor";
     } else {
         $url .= (($with_start_item)
             ? "&itemID=" . $this->startItemID
             : "");
-//          . "#anchor";
     }
 
     if ($this->moveItemID)
@@ -1180,7 +1178,7 @@ function getSelf ( $param = "", $with_start_item = true ){
     
     $url .= "#anchor";
     
-    return $url;
+    return UrlHelper::getLink($url);
 }
 
 # ################################################### end: show tree functions #
@@ -2246,12 +2244,8 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
         $child->getText == ""){
     
         $a = new HTML ("a");
-        $a->addAttr (
-            "href",
-            EVAL_FILE_ADMIN
-            . "?evalID="
-            . $this->tree->eval->getObjectID()
-            . "&abort_creation_button_x=1");
+        $a->addAttr("href", UrlHelper::getLink(EVAL_FILE_ADMIN. "?evalID="
+            . $this->tree->eval->getObjectID() . "&abort_creation_button_x=1"));
         
         $img = new HTMLempty ("img");
         $img->addAttr ("border","0");
@@ -2369,12 +2363,8 @@ function createFormNew($show = ARRANGMENT_BLOCK){
         $cancel = $seperator ."&nbsp;";
         
         $a = new HTML ("a");
-        $a->addAttr (
-            "href",
-            EVAL_FILE_ADMIN
-            . "?evalID="
-            . $this->tree->eval->getObjectID()
-            . "&abort_creation_button_x=1");
+        $a->addAttr("href", UrlHelper::getLink(EVAL_FILE_ADMIN . "?evalID="
+            . $this->tree->eval->getObjectID() . "&abort_creation_button_x=1"));
         
         $img = new HTMLempty ("img");
         $img->addAttr ("border","0");

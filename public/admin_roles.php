@@ -44,7 +44,12 @@ require_once 'lib/admin_search.inc.php';
 $HELP_KEYWORD="Basis.Allgemeines"; 
 
 $CURRENT_PAGE = _("Verwaltung von Gruppen und Funktionen");
-Navigation::activateItem('/admin/institute/groups');
+if (Request::get('section') == 'groups') {
+    UrlHelper::bindLinkParam('section', $section);
+    Navigation::activateItem('/course/faculty/edit_groups');
+} else {
+    Navigation::activateItem('/admin/institute/groups');
+}
 
 //get ID, if a object is open
 if ($SessSemName[1])

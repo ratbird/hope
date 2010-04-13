@@ -34,8 +34,7 @@ require_once("lib/visual.inc.php"); //htmlReady
 require_once ("lib/statusgruppe.inc.php");  //Funktionen der Statusgruppen
 require_once ("lib/classes/DataFieldEntry.class.php");
 
-// if we are not in admin_view, we get the proper set variable from institut_members.php
-if (!isset($admin_view)) {
+if ($perm->have_studip_perm('admin', $SessSemName[1])) {
     $admin_view = true;
 }
 
@@ -48,14 +47,15 @@ echo $css_switcher->GetHoverJSFunction();
 
 // this page is used for administration (if the user has the proper rights)
 // or for just displaying the workers and their roles
-if ($admin_view) {
-    $CURRENT_PAGE = _("Verwaltung der MitarbeiterInnen");
-    Navigation::activateItem('/admin/institute/faculty');
-    $perm->check("admin");
-} else {
+if (Request::get('section') == 'personal') {
+    UrlHelper::bindLinkParam('section', $section);
     $CURRENT_PAGE = _("Liste der MitarbeiterInnen");
     Navigation::activateItem('/course/faculty/view');
     $perm->check("autor");
+} else {
+    $CURRENT_PAGE = _("Verwaltung der MitarbeiterInnen");
+    Navigation::activateItem('/admin/institute/faculty');
+    $perm->check("admin");
 }
 
 require_once 'lib/admin_search.inc.php';
@@ -255,7 +255,7 @@ function table_body ($db, $range_id, $structure, $css_switcher) {
 
         if ($structure["nachricht"]) {
             printf("<td%salign=\"left\" width=\"1%%\"".(($admin_view) ? "" : " colspan=\"2\""). " nowrap>\n",$css_switcher->getFullClass());
-            printf("<a href=\"%s\">", URLHelper::getLink("sms_send.php?sms_source_page=" . ($admin_view == true ? "inst_admin.php" : "institut_members.php") . "&rec_uname=".$db->f("username")));
+            printf("<a href=\"%s\">", URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php" . "&rec_uname=".$db->f("username")));
             printf("<img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" alt=\"%s\" ", _("Nachricht an User verschicken"));
             printf("title=\"%s\" border=\"0\" valign=\"baseline\"></a>", _("Nachricht an User verschicken"));
             echo '</td>';
@@ -984,7 +984,7 @@ if ($show == "funktion") {
                         echo "<font size=\"-1\"><b>&nbsp;";
                         echo htmlReady($zw_title);
                         echo "<b></font>"."</td><td class=\"steelkante\" colspan=\"2\" height=\"20\">";
-                        echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=" . ($admin_view == true ? "inst_admin.php" : "institut_members.php") . "&group_id=".$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder der Gruppe %s verschicken"), $zw_title)) . " border=\"0\"></a>&nbsp;";
+                        echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php" . "&group_id=".$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder der Gruppe %s verschicken"), $zw_title)) . " border=\"0\"></a>&nbsp;";
                         echo "</td></tr>\n";
                     }
                     else {

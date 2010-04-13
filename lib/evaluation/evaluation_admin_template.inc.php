@@ -432,7 +432,7 @@ if( !$command || $command == "back" ) {
 
     /* a back button */
     $form = new HTM( "form" );
-    $form->attr( "action", $GLOBALS["PHP_SELF"]."?page=edit" );
+    $form->attr( "action", UrlHelper::getLink("?page=edit"));
     $form->attr( "method", "post" );
     $form->cont( EvalCommon::createSubmitButton( "zurueck2", _("Zurück zur Auswahl"), "template_back_button" ) );
     $td->cont( $form );

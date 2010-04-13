@@ -1,4 +1,5 @@
 <?php
+# Lifter001: TEST
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
@@ -317,7 +318,13 @@ if ($i_view == "new")
 require_once 'lib/admin_search.inc.php';
 
 $CURRENT_PAGE = _("Verwaltung der Grunddaten");
-Navigation::activateItem('/admin/institute/details');
+
+if (Request::get('section') == 'details') {
+    UrlHelper::bindLinkParam('section', $section);
+    Navigation::activateItem('/course/admin/details');
+} else {
+    Navigation::activateItem('/admin/institute/details');
+}
 
 //get ID from a open Institut
 if ($SessSemName[1])
@@ -373,7 +380,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
     ?>
 <tr><td class="blank">
 <table border=0 align="center" width="80%" cellspacing=0 cellpadding=2>
-    <form method="POST" name="edit" action="<? echo $PHP_SELF?>">
+    <form method="POST" name="edit" action="<?= UrlHelper::getLink() ?>">
     <tr <? $cssSw->switchClass() ?>><td width="40%" class="<? echo $cssSw->getClass() ?>" ><?=_("Name:")?> </td><td width="60%" class="<? echo $cssSw->getClass() ?>" ><input style="width:98%" type="text" name="Name" size=50 maxlength=254 value="<?php echo htmlReady($db->f("Name")) ?>"></td></tr>
     <tr <? $cssSw->switchClass() ?>><td class="<? echo $cssSw->getClass() ?>" ><?=_("Fakult&auml;t:")?></td>
         <td class="<? echo $cssSw->getClass() ?>" align=left>

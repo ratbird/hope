@@ -169,7 +169,8 @@ class EvalCommon {
 
       $html .=
       "<noscript>".
-      "<a href=\"show_evaluation.php?evalID=".$evalID."&isPreview=".$isPreview."\" target=\"".$evalID."\">" .
+      "<a href=\"". UrlHelper::getLink('show_evaluation.php?evalID=' .$evalID 
+        .'&isPreview=' . $isPreview) . "\" target=\"".$evalID."\">" .
       (is_object($content) ? str_replace("\n", "", $content->createContent()) : $content) .
       "</a></noscript>";
 

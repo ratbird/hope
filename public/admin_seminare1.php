@@ -44,7 +44,12 @@ require_once 'lib/admin_search.inc.php';
 $HELP_KEYWORD="Basis.VeranstaltungenVerwaltenGrunddaten";
 
 $CURRENT_PAGE.=_("Verwaltung der Grunddaten");
-Navigation::activateItem('/admin/course/details');
+if (Request::get('section') == 'details') {
+    UrlHelper::bindLinkParam('section', $section);
+    Navigation::activateItem('/course/admin/details');
+} else {
+    Navigation::activateItem('/admin/course/details');
+}
 
 //get ID from a open Seminar
 if ($SessSemName[1])

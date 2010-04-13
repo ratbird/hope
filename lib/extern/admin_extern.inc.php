@@ -68,7 +68,12 @@ if ($_REQUEST['com'] == 'download_config') {
 $CURRENT_PAGE = _("Verwaltung externer Seiten");
 
 if ($links_admin_data["topkat"] == "inst") {
-    Navigation::activateItem('/admin/institute/external');
+    if (Request::get('section') == 'extern') {
+        UrlHelper::bindLinkParam('section', $section);
+        Navigation::activateItem('/course/admin/extern');
+    } else {
+        Navigation::activateItem('/admin/institute/external');
+    }
 } else {
     Navigation::activateItem('/admin/config/external');
 }

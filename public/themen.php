@@ -59,6 +59,20 @@ if(!$GLOBALS["RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW"]){
     $viewModeFilter = 'simple';
 }
 
+$CURRENT_PAGE = _("Verwaltung der Themen des Ablaufplans");
+
+if (Request::get('section') == 'topics') {
+    UrlHelper::bindLinkParam('section', $section);
+    Navigation::activateItem('/course/schedule/topics');
+} else {
+    Navigation::activateItem('/admin/course/schedule');
+}
+
+//Change header_line if open object
+$header_line = getHeaderLine($id);
+if ($header_line)
+    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+
 switch ($viewModeFilter) {
     case 'expert':
         $HELP_KEYWORD="Basis.VeranstaltungenVerwaltenAblaufplanExpertenansicht";        

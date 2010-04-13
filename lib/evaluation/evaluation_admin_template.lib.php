@@ -49,7 +49,7 @@ class EvalTemplateGUI {
               $normalTemplates, $freeTemplates, $myuserid) {
 
      $form = new HTM( "form" );
-     $form->attr( "action", $GLOBALS['PHP_SELF']."?page=edit" );
+     $form->attr( "action", UrlHelper::getLink("?page=edit") );
      $form->attr( "method", "post" );
 
      $table = new HTML("table");
@@ -361,7 +361,7 @@ class EvalTemplateGUI {
      $tdA = new HTM( "td" );
 
     $form = new HTM( "form" );
-    $form->attr( "action", $GLOBALS['PHP_SELF']."?page=edit" );
+    $form->attr( "action", UrlHelper::getLink("?page=edit"));
     $form->attr( "method", "post" );
     /* template name --------------------------------- */
     if($onthefly!=1){
@@ -830,7 +830,7 @@ class EvalTemplateGUI {
      $trA = new HTM( "tr" );
      $tdA = new HTM( "td" );
      $form = new HTM( "form" );
-     $form->attr( "action", $GLOBALS['PHP_SELF']."?page=edit" );
+     $form->attr( "action", UrlHelper::getLink("?page=edit") );
      $form->attr( "method", "post" );
 
      $b = new HTM( "b" );
@@ -1029,10 +1029,8 @@ class EvalTemplateGUI {
           $rangeID = get_Username($user->id);
 
       $infoOverviewText = sprintf(_("Zurück zur %s Evaluations-Verwaltung %s"),
-                  "<a href=\"admin_evaluation.php?page=overview".
-                  "&check_abort_creation_button_x=1".
-                  "&evalID=$evalID".
-                  "&rangeID=$rangeID".
+                  "<a href=\"". UrlHelper::getLink('admin_evaluation.php?page=overview'
+                    .'&check_abort_creation_button_x=1&evalID=$evalID&rangeID=$rangeID') .
                   "\">",
                   "</a>");
 

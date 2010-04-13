@@ -60,7 +60,12 @@ if ($RESOURCES_ENABLE) {
 }
 
 $CURRENT_PAGE = _("Verwaltung von Zeiten und Raumangaben");
-Navigation::activateItem('/admin/course/dates');
+if (Request::get('section') == 'dates') {
+    UrlHelper::bindLinkParam('section', $section);
+    Navigation::activateItem('/course/admin/dates');
+} else {
+    Navigation::activateItem('/admin/course/dates');
+}
 
 // bind linkParams for chosen semester and opened dates
 URLHelper::bindLinkParam('raumzeitFilter', $raumzeitFilter);

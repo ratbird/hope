@@ -1,4 +1,4 @@
-<form action="<?= URLHelper::getLink('') ?>">
+<form action="<?= URLHelper::getLink() ?>" method="post">
     <? if (!$edit_role) : ?>
     <?= _("Vorlagen") ?>: <select name="presetName">
         <?

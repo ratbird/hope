@@ -104,6 +104,37 @@ class CourseNavigation extends Navigation
         // admin (study group only)
         if ($studygroup_mode && $perm->have_studip_perm('dozent', $SessSemName[1])) {
             $this->addSubNavigation('admin', new Navigation(_('Admin'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]));
+        } else {
+            $navigation = new Navigation(_('Verwaltung'));
+
+            $navigation->addSubNavigation('main', new Navigation(_("Verwaltung"), 'dispatch.php/course/management'));
+            $navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'admin_seminare1.php?section=details'));
+
+            if ($sem_class == 'sem') {
+                $navigation->addSubNavigation('studycourse', new Navigation(_("Studienbereiche"),
+                    'dispatch.php/course/study_areas/show/' . $_SESSION['SessionSeminar'],
+                    array('list' => 'TRUE', 'section' => 'studycourse')));
+                $navigation->addSubNavigation('dates', new Navigation(_("Zeiten/Räume"), 'raumzeit.php?section=dates'));
+            }
+
+            $navigation->addSubNavigation('news', new Navigation(_("Ankündigungen"), 'admin_news.php?section=news'));
+
+            if (get_config('VOTE_ENABLE')) {
+                $navigation->addSubNavigation('votings', new Navigation(_("Umfragen und Tests"), 'admin_vote.php?section=votings'));
+                $navigation->addSubNavigation('evaluation', new Navigation(_("Evaluationen"), 'admin_evaluation.php?section=evaluation&view=eval_sem'));
+            }
+
+            $navigation->addSubNavigation('modules', new Navigation(_("Module"), 'admin_modules.php?section=modules'));
+
+            if ($sem_class == 'sem') {
+                $navigation->addSubNavigation('admission', new Navigation(_("Zugangsberechtigungen"), 'admin_admission.php?section=admission'));
+            } else {
+                if (get_config('EXTERN_ENABLE') && $perm->have_perm('admin')) {
+                    $navigation->addSubNavigation('extern', new Navigation(_('externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_inst&section=extern'));
+                }
+            }
+
+            $this->addSubNavigation('admin', $navigation); 
         }
 
         // forum
@@ -143,17 +174,17 @@ class CourseNavigation extends Navigation
                     $navigation->addSubNavigation('view_groups', new Navigation(_('Funktionen / Gruppen'), 'statusgruppen.php?view=statusgruppe_sem'));
 
                     if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !LockRules::check($SessSemName[1], 'groups')) {
-                        $navigation->addSubNavigation('edit_groups', new Navigation(_('Funktionen / Gruppen verwalten'), 'admin_statusgruppe.php?new_sem=TRUE&range_id='.$SessSemName[1]));
+                        $navigation->addSubNavigation('edit_groups', new Navigation(_('Funktionen / Gruppen verwalten'), 'admin_statusgruppe.php?new_sem=TRUE&range_id=' .$SessSemName[1] .'&section=groups'));
                     }
 
                     $this->addSubNavigation('members', $navigation);
                 }
             } else if ($modules['personal']) {
                 $navigation = new Navigation(_('Personal'));
-                $navigation->addSubNavigation('view', new Navigation(_('MitarbeiterInnen'), 'institut_members.php'));
+                $navigation->addSubNavigation('view', new Navigation(_('MitarbeiterInnen'), 'inst_admin.php?section=personal'));
 
                 if ($perm->have_studip_perm('tutor', $SessSemName[1]) && $perm->have_perm('admin')) {
-                    $navigation->addSubNavigation('edit_groups', new Navigation(_('Funktionen / Gruppen verwalten'), 'admin_roles.php?new_sem=TRUE&range_id='.$SessSemName[1]));
+                    $navigation->addSubNavigation('edit_groups', new Navigation(_('Funktionen / Gruppen verwalten'), 'admin_roles.php?new_sem=TRUE&range_id='. $SessSemName[1] .'&section=groups'));
                 }
 
                 $this->addSubNavigation('faculty', $navigation);
@@ -176,7 +207,7 @@ class CourseNavigation extends Navigation
             $navigation->addSubNavigation('other', new Navigation(_('Andere Termine'), 'dates.php?cmd=setType&type=other'));
 
             if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
-                $navigation->addSubNavigation('topics', new Navigation(_('Ablaufplan bearbeiten'), 'themen.php?seminar_id='.$SessSemName[1]));
+                $navigation->addSubNavigation('topics', new Navigation(_('Ablaufplan bearbeiten'), 'themen.php?section=topics&seminar_id='.$SessSemName[1]));
             }
 
             $this->addSubNavigation('schedule', $navigation);
@@ -209,7 +240,7 @@ class CourseNavigation extends Navigation
             $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'lit_print_view.php?_range_id=' . $SessSemName[1]));
 
             if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
-                $navigation->addSubNavigation('edit', new Navigation(_('Literatur bearbeiten'), 'admin_lit_list.php?view=literatur_'.$sem_class.'&new_'.$sem_class.'=TRUE&_range_id='.$SessSemName[1]));
+                $navigation->addSubNavigation('edit', new Navigation(_('Literatur bearbeiten'), 'admin_lit_list.php?view=literatur_'.$sem_class.'&new_'.$sem_class.'=TRUE&_range_id='. $SessSemName[1] .'&section=literature'));
             }
 
             $this->addSubNavigation('literature', $navigation);
@@ -261,5 +292,6 @@ class CourseNavigation extends Navigation
 
         // activated plugins
         PluginEngine::getPlugins('StandardPlugin', $SessSemName[1]);
+
     }
 }

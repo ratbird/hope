@@ -51,22 +51,33 @@ if (!$news_range_id){
 $HELP_KEYWORD = "Basis.News";
 $CURRENT_PAGE = _("Verwaltung von News");
 
-if ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user'){
-    include 'lib/admin_search.inc.php';
-    if ($links_admin_data['topkat'] == 'sem' && !SeminarCategories::getByTypeId($SessSemName['art_num'])->studygroup_mode) {
-        Navigation::activateItem('/admin/course/news');
-    } elseif ($links_admin_data['topkat'] == 'inst') {
-        Navigation::activateItem('/admin/institute/news');
-    } else {
-        Navigation::activateItem('/tools/news');
-    }
+if (Request::get('section') == 'news') {
+    UrlHelper::bindLinkParam('section', $section);
+    Navigation::activateItem('/course/admin/news');
+
     if ($SessSemName[1]) {
         $news_range_id = $SessSemName[1];
         $news_range_name = '';
     }
 } else {
-    Navigation::activateItem('/tools/news');
-    closeObject();
+    if ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' ){
+        include 'lib/admin_search.inc.php';
+        if ($links_admin_data['topkat'] == 'sem' && !SeminarCategories::getByTypeId($SessSemName['art_num'])->studygroup_mode) {
+            Navigation::activateItem('/admin/course/news');
+        } elseif ($links_admin_data['topkat'] == 'inst') {
+            Navigation::activateItem('/admin/institute/news');
+        } else {
+            Navigation::activateItem('/tools/news');
+        }
+
+        if ($SessSemName[1]) {
+            $news_range_id = $SessSemName[1];
+            $news_range_name = '';
+        }
+    } else {
+       Navigation::activateItem('/tools/news');
+        closeObject();
+    }
 }
 
 $news = new AdminNewsController();

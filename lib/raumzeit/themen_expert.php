@@ -41,14 +41,6 @@ if ($RESOURCES_ENABLE) {
     $resList = new ResourcesUserRoomsList($user->id, TRUE, FALSE, TRUE);
 }
 
-$CURRENT_PAGE = _("Verwaltung der Themen des Ablaufplans");
-Navigation::activateItem('/admin/course/schedule');
-
-//Change header_line if open object
-$header_line = getHeaderLine($id);
-if ($header_line)
-    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
-
 //Output starts here
 
 include ('lib/include/html_head.inc.php'); // Output of html head

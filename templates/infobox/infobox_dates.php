@@ -73,7 +73,7 @@
          </td>
          <td class="infobox" width="99%" align="left">
            <font size="-1">
-                       <a href="<?= URLHelper::getLink("raumzeit.php")?>"><?= _("Zur Terminverwaltung") ?></a>
+                       <a href="<?= URLHelper::getLink("dispatch.php/course/management/index/dates")?>"><?= _("Zur Terminverwaltung") ?></a>
                      </font>
            <br>
          </td>
@@ -85,7 +85,7 @@
          </td>
          <td class="infobox" width="99%" align="left">
            <font size="-1">
-                       <a href="<?= URLHelper::getLink("themen.php")?>"><?= _("Zur Ablaufplanverwaltung") ?></a>
+                       <a href="<?= URLHelper::getLink("themen.php?section=topics")?>"><?= _("Zur Ablaufplanverwaltung") ?></a>
                      </font>
            <br>
          </td>

@@ -55,7 +55,12 @@ require_once 'lib/admin_search.inc.php';
 
 $HELP_KEYWORD="Basis.VeranstaltungenVerwaltenZugangsberechtigungen";
 $CURRENT_PAGE = _("Verwaltung von Zugangsberechtigungen");
-Navigation::activateItem('/admin/course/admission');
+if (Request::get('section') == 'admission') {
+    UrlHelper::bindLinkParam('section', $section);
+    Navigation::activateItem('/course/admin/admission');
+} else {
+    Navigation::activateItem('/admin/course/admission');
+}
 
 //get ID from a open Seminar
 if ($SessSemName[1])

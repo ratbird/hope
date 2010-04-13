@@ -1158,3 +1158,51 @@ img.plugin_preview {
     height: 60px;
     width: 80px;
 }
+
+/* --- Veranstaltungsverwaltung ------------------------------------------------- */
+.click_me div { 
+    float: left; 
+    margin: 0.5em; 
+    background : url('../images/steel1.jpg'); 
+    width: 19em; 
+    height: 10em; 
+    min-width: 19em; 
+    max-width: 19em; 
+    padding: 1em; 
+    border: 1px solid #D0D0D0; 
+    overflow: hidden; 
+} 
+ 
+.click_me p { 
+     color: #666; 
+} 
+ 
+.click_me div:hover p { 
+     color: #000; 
+} 
+ 
+.click_me div:hover { 
+    float: left; 
+    margin: 0.5em; 
+    padding: 1em; 
+    border: 1px solid #A4A4A4; 
+    background : url(); 
+    background-color: #F2F2F2; 
+} 
+ 
+.click_head { 
+    font-size: 2em; 
+} 
+ 
+.smashbox_kategorie { 
+     width:90%; 
+     margin: 0px; 
+     font-size: 2em; 
+     font-weight: bold; 
+} 
+ 
+.smashbox_stripe { 
+    border-top: 1px solid #D0D0D0; 
+    background-image: url('../images/background_stripes.jpg'); 
+    background-repeat: repeat-x; 
+} 

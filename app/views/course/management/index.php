@@ -3,17 +3,19 @@
  * * * I N F O B O X * * *
  * * * * * * * * * * * * */
 $infobox['picture'] = 'verwalten.jpg';
-$infobox['content'] = array(
-    array(
-        'kategorie' => _("Aktionen"),
-        'eintrag'   => array(
-            array(
-                'text' => _("Diese Veranstaltung <a href=".URLHelper::getLink('copy_assi.php?list=TRUE&new_session=TRUE')."\>kopieren</a> und damit eine neue Veranstaltung mit gleichen Einstellungen erstellen."), 
-                'icon' => 'link_intern.gif'
-            ),
-  	    )
-    )
-);
+if ($GLOBALS['perm']->have_perm('dozent')) {
+    $infobox['content'] = array(
+        array(
+            'kategorie' => _("Aktionen"),
+            'eintrag'   => array(
+                array(
+                    'text' => _("Diese Veranstaltung <a href=".URLHelper::getLink('copy_assi.php?list=TRUE&new_session=TRUE')."\>kopieren</a> und damit eine neue Veranstaltung mit gleichen Einstellungen erstellen."), 
+                    'icon' => 'link_intern.gif'
+                ),
+      	    )
+        )
+    );
+}
 
 if (($GLOBALS['perm']->have_studip_perm('dozent', $GLOBALS['SessSemName'][1])
     && get_config('ALLOW_DOZENT_ARCHIV'))

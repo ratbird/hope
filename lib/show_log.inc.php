@@ -179,14 +179,14 @@ function showlog_search_seminar($needle) {
     $db->query($q);
     $sems=array();
     while ($db->next_record()) {
-        $sems[]=array($db->f("Seminar_id"),$db->f('VeranstaltungsNummer').' '.my_substr($db->f("Name"),0,30).' ('.$db->f('semester').')');
+        $sems[]=array($db->f("Seminar_id"),$db->f('VeranstaltungsNummer').' '.my_substr($db->f("Name"),0,40).' ('.$db->f('semester').')');
     }
     // search deleted seminars
     // SemName and Number is part of info field, old id (still in DB) is in affected column
     $q="SELECT * FROM log_events LEFT JOIN log_actions ON (log_actions.action_id=log_events.action_id) WHERE info LIKE '%$needle%' AND (log_actions.name='SEM_ARCHIVE' OR log_actions.name='SEM_DELETE_FROM_ARCHIVE')";
     $db->query($q);
     while ($db->next_record()) {
-        $sems[]=array($db->f("affected_range_id"),($db->f("info")." ("._("gelöscht").")"));
+        $sems[]=array($db->f("affected_range_id"), my_substr($db->f("info"),0,40)." ("._("gelöscht").")");
     }
 
     return $sems;

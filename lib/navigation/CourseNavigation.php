@@ -78,10 +78,6 @@ class CourseNavigation extends Navigation
                 $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'print_seminar.php'));
             }
 
-            if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$studygroup_mode) {
-                $navigation->addSubNavigation('admin', new Navigation(_('Administration dieser Veranstaltung'), 'admin_seminare1.php?new_sem=TRUE'));
-            }
-
             if (!$admission_binding && !$perm->have_studip_perm('tutor', $SessSemName[1]) && $user->id != 'nobody') {
                 $navigation->addSubNavigation('leave', new Navigation(_('Austragen aus der Veranstaltung'), 'meine_seminare.php?auswahl='.$SessSemName[1].'&cmd=suppose_to_kill'));
             }
@@ -104,7 +100,7 @@ class CourseNavigation extends Navigation
         // admin (study group only)
         if ($studygroup_mode && $perm->have_studip_perm('dozent', $SessSemName[1])) {
             $this->addSubNavigation('admin', new Navigation(_('Admin'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]));
-        } else {
+        } else if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$studygroup_mode) {
             $navigation = new Navigation(_('Verwaltung'));
 
             $navigation->addSubNavigation('main', new Navigation(_("Verwaltung"), 'dispatch.php/course/management'));

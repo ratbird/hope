@@ -65,6 +65,7 @@ if ($list  || $view || $view_mode || $_range_id != $auth->auth['uid']){
     $_range_id = ($SessSemName[1]) ? $SessSemName[1] : $_range_id;
 } else {
     Navigation::activateItem('/tools/literature');
+    closeObject();
 }
 
 $_lit_range = $_range_id;

@@ -124,10 +124,10 @@ class CourseNavigation extends Navigation
                 $navigation->addSubNavigation('evaluation', new Navigation(_("Evaluationen"), 'admin_evaluation.php?section=evaluation&view=eval_sem'));
             }
 
-            $navigation->addSubNavigation('modules', new Navigation(_("Module"), 'admin_modules.php?section=modules'));
+            $navigation->addSubNavigation('modules', new Navigation(_("Inhaltselemente"), 'admin_modules.php?section=modules'));
 
             if ($sem_class == 'sem') {
-                $navigation->addSubNavigation('admission', new Navigation(_("Zugangsberechtigungen"), 'admin_admission.php?section=admission'));
+                $navigation->addSubNavigation('admission', new Navigation(_("Zugangseinstellungen"), 'admin_admission.php?section=admission'));
             } else {
                 if (get_config('EXTERN_ENABLE') && $perm->have_perm('admin')) {
                     $navigation->addSubNavigation('extern', new Navigation(_('externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_inst&section=extern'));

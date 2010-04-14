@@ -73,7 +73,7 @@ $infobox['content'][] = array(
 		  </div>
 		  </a>
 
-			 <a class="click_me" href="<?= $controller->url_for('course/management/index/studycourse') ?>">
+			 <a class="click_me" href="<?= $controller->url_for('course/study_areas/show/'. $GLOBALS['SessSemName'][1] .'?list=TRUE&section=studycourse') ?>">
 		  <div>
 			  <span class="click_head"><?=_("Studienbereiche");?></span>
 			  <p><?=_("Legen Sie hier fest, in welchen Studienbereichen diese Veranstaltung im Verzeichnis aller Veranstaltungen erscheint.");?></p>

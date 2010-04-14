@@ -455,7 +455,7 @@ if ($view == 'Daten') {
 <!--
 
 function checkusername(){
- var re_username = /<?=$validator->username_regular_expression?>/;
+ var re_username = <?=$validator->username_regular_expression?>;
  var checked = true;
  if (document.pers.new_username.value.length<4) {
     alert("<?=_("Der Benutzername ist zu kurz - er sollte mindestens 4 Zeichen lang sein.")?>");
@@ -489,7 +489,7 @@ function checkpassword(){
 }
 
 function checkvorname(){
- var re_vorname = /<?=$validator->name_regular_expression?>/;
+ var re_vorname = <?=$validator->name_regular_expression?>;
  var checked = true;
  if (document.pers.vorname.value!='<?=$my_about->auth_user["Vorname"]?>' && re_vorname.test(document.pers.vorname.value)==false) {
     alert("<?=_("Bitte geben Sie Ihren tatsächlichen Vornamen an.")?>");
@@ -500,7 +500,7 @@ function checkvorname(){
 }
 
 function checknachname(){
- var re_nachname = /<?=$validator->name_regular_expression?>/;
+ var re_nachname = <?=$validator->name_regular_expression?>;
  var checked = true;
  if (document.pers.nachname.value!='<?=$my_about->auth_user["Nachname"]?>' && re_nachname.test(document.pers.nachname.value)==false) {
     alert("<?=_("Bitte geben Sie Ihren tatsächlichen Nachnamen an.")?>");
@@ -511,7 +511,7 @@ function checknachname(){
 }
 
 function checkemail(){
- var re_email = /<?=$validator->email_regular_expression?>/;
+ var re_email = <?=$validator->email_regular_expression?>;
  var email = document.pers.email.value;
  var checked = true;
  if (email!='<?=$my_about->auth_user["Email"]?>' && re_email.test(email)==false || email.length==0) {
@@ -546,7 +546,7 @@ function checkdata(){
 }
 
 function update_pw_fields() {
-    document.getElementById('new_passwd_1').disabled = !document.getElementById('update_pw').checked;
+	document.getElementById('new_passwd_1').disabled = !document.getElementById('update_pw').checked;
     document.getElementById('new_passwd_2').disabled = !document.getElementById('update_pw').checked;
 
     if(document.getElementById('update_pw').checked) {
@@ -722,7 +722,7 @@ if ($view == 'Daten') {
     if (StudipAuthAbstract::CheckField("auth_user_md5.password", $my_about->auth_user['auth_plugin'])) {
         echo "<td class=\"".$cssSw->getClass()."\" colspan=\"2\" align=\"left\">&nbsp; <font size=\"-1\">*****</font>";
     } else {
-        echo '<div style="display:inline;float:right;"> '._("ändern").'? <input type="checkbox" name="update_pw" id="update_pw" onclick="javascript: update_pw_fields();" /></div></td>';
+        echo '<div style="display:inline;float:right;"> '._("ändern").'? <input type="checkbox" name="update_pw" id="update_pw" onclick="update_pw_fields();" /></div></td>';
         echo '<td class="'.$cssSw->getClass().'" nowrap width="20%" align="left">';
         $pw_input = "<font size=-1>&nbsp; %s</font><br>&nbsp;"
                     ."<input type=\"password\" size=\"".round($max_col*0.25)."\" id=\"new_passwd_%s\" name=\"new_passwd_%s\"  %s value=\"*****\">";

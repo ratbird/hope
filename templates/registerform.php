@@ -7,7 +7,7 @@
 <script type="text/javascript" language="javaScript">
 <!--
 function checkusername(){
- var re_username = /<?=$validator->username_regular_expression?>/;
+ var re_username = <?=$validator->username_regular_expression?>;
  var checked = true;
  if (document.login.username.value.length<4) {
     alert("<?=_("Der Benutzername ist zu kurz \\n- er sollte mindestens 4 Zeichen lang sein.")?>");
@@ -43,7 +43,7 @@ if (document.login.password.value != document.login.password2.value) {
 }
 
 function checkVorname(){
- var re_vorname = /<?=$validator->name_regular_expression?>/;
+ var re_vorname = <?=$validator->name_regular_expression?>;
  var checked = true;
  if (re_vorname.test(document.login.Vorname.value)==false) {
     alert("<?=_("Bitte geben Sie Ihren tatsächlichen Vornamen an.")?>");
@@ -54,7 +54,7 @@ function checkVorname(){
 }
 
 function checkNachname(){
- var re_nachname = /<?=$validator->name_regular_expression?>/;
+ var re_nachname = <?=$validator->name_regular_expression?>;
  var checked = true;
  if (re_nachname.test(document.login.Nachname.value)==false) {
     alert("<?=_("Bitte geben Sie Ihren tatsächlichen Nachnamen an.")?>");
@@ -66,9 +66,9 @@ function checkNachname(){
 
 function checkEmail(){
  <? if (trim($email_restriction)) {
-            echo 'var re_email = /' . $validator->email_regular_expression_restricted_part . '/;';
+            echo 'var re_email = ' . $validator->email_regular_expression_restricted_part . ';';
         } else {
-            echo 'var re_email = /' . $validator->email_regular_expression . '/;';
+            echo 'var re_email = ' . $validator->email_regular_expression . ';';
         }
 ?>
 

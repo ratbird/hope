@@ -39,6 +39,8 @@ try {
   $plugin_manager = PluginManager::getInstance();
   $plugin_info = $plugin_manager->getPluginInfo($plugin_class);
 
+  PluginEngine::setCurrentPluginId($plugin_info['id']);
+
   # create an instance of the queried plugin
   $plugin = PluginEngine::getPlugin($plugin_class);
 

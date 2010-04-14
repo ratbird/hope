@@ -925,7 +925,7 @@ div.droppable.hover {
                 "LEFT JOIN termine as t ON (t.termin_id = tt.termin_id) " .
                 "INNER JOIN folder ON (th.issue_id=folder.range_id) " .
               "WHERE th.seminar_id='$range_id' " . 
-              "ORDER BY th.title, t.date, th.priority";
+              "ORDER BY t.date, th.priority";
             $result = $db->query($query)->fetchAll();
             foreach ($result as $row) {
                 if ($folder_tree->isExecutable($row['folder_id'], $user->id) || $rechte) {

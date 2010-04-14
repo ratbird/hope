@@ -66,7 +66,7 @@ function checkNachname(){
 
 function checkEmail(){
  <? if (trim($email_restriction)) {
-            echo 'var re_email = ' . $validator->email_regular_expression_restricted_part . ';';
+            echo 'var re_email = ' . $validator->email_regular_expression_restricted_part . '/;';
         } else {
             echo 'var re_email = ' . $validator->email_regular_expression . ';';
         }

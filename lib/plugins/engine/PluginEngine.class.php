@@ -11,35 +11,15 @@ require_once 'PluginManager.class.php';
 require_once 'PluginNotFound.class.php';
 
 class PluginEngine {
-
-
-    /**
-     * Contains the current plugin's ID
-     *
-     * @var mixed
-     */
-    private static $currentPluginId;
-
-
     /**
      * @deprecated
      *
      * @return int  returns the current plugin's ID
      */
     public static function getCurrentPluginId() {
-        return self::$currentPluginId;
-    }
-
-
-    /**
-     * @deprecated
-     *
-     * @param  int  the current plugin's ID
-     *
-     * @return int  returns the current plugin's ID
-     */
-    public static function setCurrentPluginId($id) {
-        return self::$currentPluginId = $id;
+        list($plugin_class) = self::routeRequest($_SERVER['PATH_INFO']);
+        $info = PluginManager::getInstance()->getPluginInfo($plugin_class);
+        return $info['id'];
     }
 
     /**

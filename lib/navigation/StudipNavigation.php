@@ -120,19 +120,5 @@ class StudipNavigation extends Navigation
 
         // login page
         $this->addSubNavigation('login', new LoginNavigation(_('Login')));
-
-        // admin plugins
-        if (is_object($user) && $perm->have_perm('admin')) {
-            PluginEngine::getPlugins('AdministrationPlugin');
         }
-
-        // system plugins
-        foreach (PluginEngine::getPlugins('SystemPlugin') as $plugin) {
-            if ($plugin instanceof AbstractStudIPSystemPlugin) {
-                if ($plugin->hasBackgroundTasks()) {
-                    $plugin->doBackgroundTasks();
-                }
-            }
-        }
-    }
 }

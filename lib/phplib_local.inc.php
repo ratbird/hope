@@ -541,11 +541,9 @@ class Seminar_Auth extends Auth {
         require_once('lib/visual.inc.php');
         require_once('config.inc.php');
 
-        global $_language, $_language_path, $fail_count;
-        if (!isset($_language)) {
-            $_language = get_accepted_languages();
-        }
-        $_language_path = init_i18n($_language);
+        // set up user session
+        include 'lib/seminar_open.php';
+
         if (StudipAuthAbstract::CheckMD5()){
             $_SESSION['challenge'] = md5(uniqid($this->magic));
         }
@@ -666,12 +664,9 @@ class Seminar_Register_Auth extends Seminar_Auth {
         require_once('lib/visual.inc.php');
         require_once('config.inc.php');
 
-        global $_language, $_language_path;
-        // first of all init I18N because seminar_open is not called here...
-        if (!isset($_language)) {
-            $_language = get_accepted_languages();
-        }
-        $_language_path = init_i18n($_language);
+        // set up user session
+        include 'lib/seminar_open.php';
+
         if (!$_COOKIE[$GLOBALS['sess']->name]) {
             $register_template = $GLOBALS['template_factory']->open('nocookies');
         } else {

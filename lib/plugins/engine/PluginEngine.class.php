@@ -91,7 +91,7 @@ class PluginEngine {
      *
      * @return array      an array containing the return values
      */
-    function sendMessage($type, $method /* ... */) {
+    public static function sendMessage($type, $method /* ... */) {
         $args = func_get_args();
         $args = array_splice($args, 1, 0, array(NULL));
         return call_user_func_array(array($this, 'sendMessageWithContext'), $args);
@@ -108,7 +108,7 @@ class PluginEngine {
      *
      * @return array      an array containing the return values
      */
-    function sendMessageWithContext($type, $context, $method /* ... */) {
+    public static function sendMessageWithContext($type, $context, $method /* ... */) {
         $args = func_get_args();
         $args = array_slice($args, 3);
         $results = array();

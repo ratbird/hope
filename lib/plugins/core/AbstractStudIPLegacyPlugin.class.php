@@ -374,7 +374,6 @@ abstract class AbstractStudIPLegacyPlugin extends StudIPPlugin {
    * displays the results or anything you want to.
    *
    * @param  string  the name of the action to accomplish
-   * @param  string  the unconsumed rest
    *
    * @return void
    */

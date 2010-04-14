@@ -39,6 +39,9 @@
 
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
 
+// set up user session
+include 'lib/seminar_open.php';
+
 if (!($GLOBALS['ENABLE_REQUEST_NEW_PASSWORD_BY_USER'] && in_array('Standard', $GLOBALS['STUDIP_AUTH_PLUGIN']))) {
     require_once ('lib/msg.inc.php');
     // Start of Output
@@ -50,14 +53,9 @@ if (!($GLOBALS['ENABLE_REQUEST_NEW_PASSWORD_BY_USER'] && in_array('Standard', $G
     die();
 }
 
-require_once('lib/language.inc.php');
 require_once('lib/visual.inc.php');
 require_once('config.inc.php');
 
-if (!isset($_language)) {
-    $_language = get_accepted_languages();
-}
-$_language_path = init_i18n($_language);
 require_once('lib/msg.inc.php');
 include('lib/classes/UserManagement.class.php');
 

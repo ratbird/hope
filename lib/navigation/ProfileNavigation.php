@@ -116,8 +116,5 @@ class ProfileNavigation extends Navigation
 
         // user defined sections
         $this->addSubNavigation('sections', new Navigation(_('Kategorien'), 'edit_about.php', array('view' => 'Sonstiges')));
-
-        // activated plugins
-        PluginEngine::getPlugins('HomepagePlugin');
     }
 }

@@ -190,7 +190,7 @@ if ($SessionStart == 0) {
 }
 
 // user init starts here
-if ($auth->is_authenticated() && $user->id != "nobody") {
+if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
     if ($SessionStart > $CurrentLogin) {      // just logged in
         // register all user variables
         $LastLogin=$CurrentLogin;
@@ -240,5 +240,30 @@ URLHelper::bindLinkParam('cid', $SessionSeminar);
 if (isset($SessionSeminar) && $SessionSeminar != '') {
     $course_id = $SessionSeminar;
     selectSem($course_id) || selectInst($course_id);
+    unset($course_id);
 }
+
+// load homepage plugins
+PluginEngine::getPlugins('HomepagePlugin');
+
+// load activated course plugins
+if (isset($SessionSeminar)) {
+    PluginEngine::getPlugins('StandardPlugin', $SessionSeminar);
+}
+
+// load admin plugins
+if (is_object($user) && $perm->have_perm('admin')) {
+    PluginEngine::getPlugins('AdministrationPlugin');
+}
+
+// load system plugins and run background tasks
+foreach (PluginEngine::getPlugins('SystemPlugin') as $plugin) {
+    if ($plugin instanceof AbstractStudIPSystemPlugin) {
+        if ($plugin->hasBackgroundTasks()) {
+            $plugin->doBackgroundTasks();
+        }
+    }
+}
+
+unset($plugin);
 ?>

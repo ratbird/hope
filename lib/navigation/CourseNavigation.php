@@ -286,8 +286,5 @@ class CourseNavigation extends Navigation
             $this->addSubNavigation('elearning', $navigation);
         }
 
-        // activated plugins
-        PluginEngine::getPlugins('StandardPlugin', $SessSemName[1]);
-
     }
 }

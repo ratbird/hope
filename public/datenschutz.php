@@ -1,7 +1,5 @@
 <?php
-# Lifter002: TEST
 # Lifter007: TODO
-# Lifter003: TODO
 
 /**
  * datenschutz.php
@@ -25,7 +23,8 @@ page_open(array(
     'user' => 'Seminar_User'
 ));
 
-$_language_path = init_i18n($_language);
+// set up user session
+include 'lib/seminar_open.php';
 
 $CURRENT_PAGE = _('Erläuterungen zum Datenschutz');
 

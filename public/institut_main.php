@@ -25,8 +25,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($again && ($auth->auth["uid"] == "nobody"));
 
-include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-
 // -- here you have to put initialisations for the current page
 require_once 'lib/dates.inc.php'; //Funktionen zur Anzeige der Terminstruktur
 require_once 'lib/datei.inc.php';
@@ -55,6 +53,8 @@ if (isset($auswahl) && $auswahl!="") {
 } else {
     $auswahl=$SessSemName[1];
 }
+
+include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
     // gibt es eine Anweisung zur Umleitung?
     if(isset($redirect_to) && $redirect_to != "") {

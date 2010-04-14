@@ -42,13 +42,8 @@ function mail_explain() {
 if(!$_REQUEST['uid'])
     header("Location: index.php");
 
-require_once 'lib/language.inc.php';
-require_once 'lib/functions.php';
-
-if (!isset($_SESSION['_language'])) {
-    $_language = get_accepted_languages();
-}
-$_language_path = init_i18n($_language);
+// set up user session
+include 'lib/seminar_open.php';
 
 // display header
 $CURRENT_PAGE = _('E-Mail Aktivierung');

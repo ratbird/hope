@@ -14,6 +14,8 @@
  * @category    Stud.IP
 */
 
+require_once 'lib/edit_about.inc.php';
+
 class ProfileNavigation extends Navigation
 {
     /**
@@ -73,7 +75,7 @@ class ProfileNavigation extends Navigation
     public function initSubNavigation()
     {
         global $auth, $perm;
-        global $my_about, $username;
+        global $username;
 
         parent::initSubNavigation();
 
@@ -87,6 +89,9 @@ class ProfileNavigation extends Navigation
 
         // this really should not be here
         $username = preg_replace('/[^\w@.-]/', '', $username);
+
+        $my_about = new about($username, NULL);
+        $my_about->get_user_details();
 
         // main profile
         $this->addSubNavigation('view', new Navigation(_('Profil'), 'about.php'));

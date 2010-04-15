@@ -28,6 +28,12 @@ require '../lib/bootstrap.php';
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($again && ($auth->auth["uid"] == "nobody"));
 
+if ($_REQUEST['auswahl']) {
+    $_REQUEST['cid'] = $_REQUEST['auswahl'];
+}
+
+include ('lib/seminar_open.php'); // initialise Stud.IP-Session
+
 // -- here you have to put initialisations for the current page
 require_once('lib/dates.inc.php'); //Funktionen zur Anzeige der Terminstruktur
 require_once('config.inc.php');
@@ -52,8 +58,6 @@ if (isset($auswahl) && $auswahl!="") {
 } else {
         $auswahl=$SessSemName[1];
 }
-
-include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 
 // gibt es eine Anweisung zur Umleitung?

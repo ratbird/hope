@@ -14,6 +14,9 @@
  * the License, or (at your option) any later version.
  */
 
+
+require '../lib/bootstrap.php';
+
 require_once 'lib/functions.php';
 
 # define root

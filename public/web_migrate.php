@@ -12,6 +12,9 @@
  * the License, or (at your option) any later version.
  */
 
+
+require '../lib/bootstrap.php';
+
 require_once 'lib/migrations/db_migration.php';
 require_once 'lib/migrations/db_schema_version.php';
 require_once 'lib/migrations/migrator.php';

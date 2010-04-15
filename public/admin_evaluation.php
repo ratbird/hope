@@ -35,6 +35,9 @@
  * @package evaluation
  */
 
+
+require '../lib/bootstrap.php';
+
 ob_start(); // start output buffering
 
 page_open (array ("sess" => "Seminar_Session",

@@ -35,6 +35,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+
+require '../lib/bootstrap.php';
+
 if ($RESOURCES_ENABLE) {
     include_once ($RELATIVE_PATH_RESOURCES."/resourcesFunc.inc.php");
     include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");

@@ -9,6 +9,9 @@
  * @copyright   2003 Stud.IP-Project
  */
 
+
+require '../lib/bootstrap.php';
+
 require_once 'lib/statusgruppe.inc.php';
 require_once 'lib/user_visible.inc.php';
 

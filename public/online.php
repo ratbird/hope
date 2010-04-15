@@ -18,6 +18,9 @@
  * @access      public
  */
 
+
+require '../lib/bootstrap.php';
+
 page_open(array(
     "sess" => "Seminar_Session",
     "auth" => "Seminar_Auth",

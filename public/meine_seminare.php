@@ -21,6 +21,9 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+
+require '../lib/bootstrap.php';
+
 require_once 'lib/classes/CourseAvatar.class.php';
 require_once 'lib/classes/StudygroupAvatar.class.php';
 require_once 'lib/classes/InstituteAvatar.class.php';

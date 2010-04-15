@@ -23,6 +23,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA   02111-1307, USA.
 */
 
 
+
+require '../lib/bootstrap.php';
+
 require_once('lib/functions.php');
 require_once('lib/classes/UserManagement.class.php');
 

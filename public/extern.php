@@ -35,6 +35,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
+
+require '../lib/bootstrap.php';
+
 if (!$EXTERN_ENABLE) {
     echo "<br><br><br><blockquote><b>This page is not available!<br>The module \"extern\"";
     echo " is not enabled in this Stud.IP-installation.</b></blockquote>";

@@ -12,6 +12,9 @@
  * the License, or (at your option) any later version.
  */
 
+
+require '../lib/bootstrap.php';
+
 require_once 'lib/functions.php';
 require_once 'lib/exceptions/access_denied.php';
 require_once 'vendor/trails/trails.php';

@@ -27,6 +27,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 * Close the actual window if PHPLib shows login screen
 * @const CLOSE_ON_LOGIN_SCREEN
 */
+
+require '../lib/bootstrap.php';
+
 define("CLOSE_ON_LOGIN_SCREEN",true);
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 

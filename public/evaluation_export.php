@@ -35,6 +35,9 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +--------------------------------------------------------------------------+
 
+
+require '../lib/bootstrap.php';
+
 if (($o_mode != "direct") AND ($o_mode != "passthrough")) {
   page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
   $perm->check("tutor");

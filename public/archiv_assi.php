@@ -22,6 +22,9 @@
 * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
+
+require '../lib/bootstrap.php';
+
 require_once('lib/dates.inc.php'); // Funktionen zum Loeschen von Terminen
 require_once('lib/datei.inc.php'); // Funktionen zum Loeschen von Dokumenten
 require_once('lib/archiv.inc.php');

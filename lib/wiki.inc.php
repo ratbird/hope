@@ -5,6 +5,15 @@
 # Lifter007: TODO
 # Lifter003: TODO
 
+// wiki regex pattern
+// IMPORTANT: Wiki Keyword has to be in 2nd paranthesed pattern!!
+// Make sure to change routines below if this changes
+//
+global $wiki_keyword_regex, $wiki_link_regex, $wiki_extended_link_regex;
+$wiki_keyword_regex = "(^|\s|\A|\>)(([A-Z]|&[AOU]uml;)([a-z0-9]|&[aou]uml;|&szlig;)+([A-Z]|&[AOU]uml;)([a-zA-Z0-9]|&[aouAOU]uml;|&szlig;)+)";
+$wiki_link_regex = "\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+)\]\]";
+$wiki_extended_link_regex = "\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+)\|([^\]]+)\]\]";
+
 /**
 * Retrieve a WikiPage version from current seminar's WikiWikiWeb.
 *
@@ -312,14 +321,6 @@ function releasePageLocks($keyword) {
     $db->query("DELETE FROM wiki_locks WHERE range_id='$SessSemName[1]' AND keyword='$keyword' AND user_id='$user_id'");
 }
 
-
-// wiki regex pattern
-// IMPORTANT: Wiki Keyword has to be in 2nd paranthesed pattern!!
-// Make sure to change routines below if this changes
-//
-$wiki_keyword_regex="(^|\s|\A|\>)(([A-Z]|&[AOU]uml;)([a-z0-9]|&[aou]uml;|&szlig;)+([A-Z]|&[AOU]uml;)([a-zA-Z0-9]|&[aouAOU]uml;|&szlig;)+)";
-$wiki_link_regex="\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+)\]\]";
-$wiki_extended_link_regex="\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+)\|([^\]]+)\]\]";
 
 /**
 * Register Wiki directive markup

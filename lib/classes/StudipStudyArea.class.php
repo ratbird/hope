@@ -475,9 +475,8 @@ class StudipStudyArea {
    * @return string
    */
   function getModuleDescription($semester_id = ''){
-    if ($this->isModule()) {
-      return PluginEngine::getPlugin('StudienmodulManagement')
-             ->getModuleDescription($this->getID(), $semester_id);
+    if ($this->isModule() && $plugin = PluginEngine::getPlugin('StudienmodulManagement')) {
+      return $plugin->getModuleDescription($this->getID(), $semester_id);
     } else {
       return '';
     }
@@ -492,8 +491,8 @@ class StudipStudyArea {
    */
   function getModuleInfoHTML($semester_id = ''){
     $ret = '';
-    if ($this->isModule()) {
-      $nav = PluginEngine::getPlugin('StudienmodulManagement')->getModuleInfoNavigation($this->getID(), $semester_id);
+    if ($this->isModule() && $plugin = PluginEngine::getPlugin('StudienmodulManagement')) {
+      $nav = $plugin->getModuleInfoNavigation($this->getID(), $semester_id);
       if($icon = $nav->getImage()){
         $ret = '<img ';
         foreach ($icon as $key => $value) $ret .= sprintf('%s="%s" ', $key, htmlReady($value));

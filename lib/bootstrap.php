@@ -34,7 +34,7 @@ require 'lib/phplib/user4.inc';
 
 require 'lib/phplib/email_validation.inc';
 require 'init_config_arrays.inc.php';
-require 'localhost_config_local.inc.php';
+require 'config_local.inc.php';
 
 require 'lib/phplib/page4.inc';
 

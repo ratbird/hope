@@ -87,8 +87,7 @@ if (($close) || ($suche)){
     $archiv_data["open"]=FALSE;
     }
 
-if ($sortby)
-    $archiv_data["sortby"]=$sortby;
+$archiv_data['sortby'] = Request::option('sortby', 'Name');
 
 $u_id = $user->id;
 
@@ -378,8 +377,6 @@ if ($archiv_data["perform_search"]) {
     if ((!$archiv_data["all"]) && (!$archiv_data["name"]) && (!$archiv_data["desc"]) && (!$archiv_data["doz"]) && (!$archiv_data["pers"]) && (!$archiv_data["inst"]) && (!$archiv_data["fak"]))
         $string_too_short = TRUE;
 
-    if (!$archiv_data["sortby"])
-        $archiv_data["sortby"]="Name";
     if ($archiv_data["pers"])
         $query ="SELECT archiv.seminar_id, name, untertitel,  beschreibung, start_time, semester, studienbereiche, heimat_inst_id, institute, dozenten, fakultaet, archiv_file_id, forumdump, wikidump FROM archiv LEFT JOIN archiv_user USING (seminar_id) WHERE user_id = '".$user->id."' AND ";
     else

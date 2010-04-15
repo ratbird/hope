@@ -247,20 +247,6 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     if (isset($_REQUEST['close_my_sem'])) unset($_my_sem_open[$_REQUEST['close_my_sem']]);
 
-    // tic #650
-    if (!isset($sortby)||$sortby==null) {
-        $sortby=$userConfig->getValue($user->id, 'MEINE_SEMINARE_SORT');
-
-        if ($sortby=="" || $sortby==false) {
-            $sortby="Name";
-        }
-    } else {
-        $userConfig->setValue($adminarea_sortby,$user->id, 'MEINE_SEMINARE_SORT');
-    }
-    if ($sortby == "count") {
-        $sortby = "count DESC";
-    }
-
     $groups = array();
 
     $all_semester = SemesterData::GetSemesterArray();
@@ -332,12 +318,10 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             }
         }
 
-    if ($sortby == "count")
-        $sortby = "count DESC";
     $db->query ("SELECT b.Name, b.Institut_id,b.type, user_inst.inst_perms,if(b.Institut_id=b.fakultaets_id,1,0) AS is_fak,
                 modules,IFNULL(visitdate,0) as visitdate FROM user_inst LEFT JOIN Institute b USING (Institut_id)
                 LEFT JOIN object_user_visits ouv ON (ouv.object_id=user_inst.Institut_id AND ouv.user_id='$user->id' AND ouv.type='inst')
-                WHERE user_inst.user_id = '$user->id' GROUP BY Institut_id ORDER BY $sortby");
+                WHERE user_inst.user_id = '$user->id' GROUP BY Institut_id ORDER BY Name");
     $num_my_inst = $db->num_rows();
     while ($db->next_record()) {
         $my_obj[$db->f("Institut_id")]= array("name" => $db->f("Name"),"status" => $db->f("inst_perms"),
@@ -774,6 +758,8 @@ elseif ($auth->auth["perm"]=="admin") {
         $semester = SemesterData::GetInstance();
         $one_semester = $semester->getSemesterData($_default_sem);
         $sem_condition = "AND seminare.start_time <=".$one_semester["beginn"]." AND (".$one_semester["beginn"]." <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1) ";
+    } else {
+        $sem_condition = '';
     }
     $db->query("SELECT a.Institut_id,b.Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak,count(seminar_id) AS num_sem FROM user_inst a LEFT JOIN Institute b USING (Institut_id)
                 LEFT JOIN seminare ON(seminare.Institut_id=b.Institut_id $sem_condition )   WHERE a.user_id='$user->id' AND a.inst_perms='admin' GROUP BY a.Institut_id ORDER BY is_fak,Name,num_sem DESC");
@@ -808,14 +794,14 @@ elseif ($auth->auth["perm"]=="admin") {
         }
 
         //tic #650 sortierung in der userconfig merken
-        if (!isset($sortby)||$sortby==null) {
+        if (isset($sortby) && in_array($sortby, words('Name status teilnehmer'))) {
+            $userConfig->setValue($sortby,$user->id,'MEINE_SEMINARE_SORT');
+        } else {
             $sortby=$userConfig->getValue($user->id,'MEINE_SEMINARE_SORT');
 
             if ($sortby=="" || $sortby==false) {
                 $sortby="VeranstaltungsNummer ASC, Name ASC";
             }
-        } else {
-            $userConfig->setValue($sortby,$user->id,'MEINE_SEMINARE_SORT');
         }
         if ($sortby == "teilnehmer") {
             $sortby = "teilnehmer DESC";

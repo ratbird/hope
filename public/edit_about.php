@@ -57,6 +57,8 @@ if (!isset($ALLOW_CHANGE_NAME)) $ALLOW_CHANGE_NAME = TRUE; //wegen Abwärtskompat
 
 // hier gehts los
 if (!$username) $username = $auth->auth["uname"];
+$username = preg_replace('/[^\w@.-]/', '', $username);
+
 if($edit_about_msg){
     $msg = $edit_about_msg;
     $edit_about_msg = '';

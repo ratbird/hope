@@ -30,18 +30,9 @@ class AccountNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $auth, $perm;
-        global $my_about, $username;
+        global $perm;
 
         parent::initSubNavigation();
-
-        if (Request::get('usr_name')) {
-                $username = Request::get('usr_name');
-        } else if (Request::get('username')) {
-                $username = Request::get('username');
-        } else {
-                $username = $auth->auth['uname'];
-        }
 
         // general
         $this->addSubNavigation('general', new Navigation(_('Allgemeines'), 'edit_about.php', array('view' => 'allgemein')));

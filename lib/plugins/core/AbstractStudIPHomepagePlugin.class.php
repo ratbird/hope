@@ -113,6 +113,7 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin implements
     function getRequestedUser()
     {
         $username = Request::quoted('username', $GLOBALS['auth']->auth['uname']);
+        $username = Request::quoted('usr_name', $username);
         $user_id = get_userid($username);
 
         if ($user_id == '') {

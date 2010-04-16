@@ -74,8 +74,7 @@ class ProfileNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $auth, $perm;
-        global $username;
+        global $auth;
 
         parent::initSubNavigation();
 

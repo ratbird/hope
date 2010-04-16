@@ -35,17 +35,11 @@ class ToolsNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $username;
+        global $auth;
 
         parent::initSubNavigation();
 
-        if (Request::get('usr_name')) {
-                $username = Request::get('usr_name');
-        } else if (Request::get('username')) {
-                $username = Request::get('username');
-        } else {
-                $username = $auth->auth['uname'];
-        }
+        $username = $auth->auth['uname'];
 
         //news
         $this->addSubNavigation('news', new Navigation(_('News'), 'admin_news.php', array('range_id' => 'self')));

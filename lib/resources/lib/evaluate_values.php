@@ -67,6 +67,9 @@ function closeStructure ($resource_id) {
 Initialization
 /*****************************************************************************/
 $GLOBALS['messageForUsers'] = '';
+foreach (words('view view_mode quick_view quick_view_mode') as $parameter_name) {
+    $$parameter_name = Request::option($parameter_name);
+}
 
 //a small helper function to update some data of the tree-structure (after move something)
 function updateStructure ($resource_id, $root_id, $level) {

@@ -104,7 +104,7 @@ class ResourcesBrowse {
                         <option value="<?=$this->open_object?>" selected><?=htmlReady($res->getName())?></option>
                     <?}?>
                     </select>
-                <input name="search_exp"  type="TEXT" style="{vertical-align: middle;}" size=35 maxlength=255 value="<? echo stripslashes($this->searchArray["search_exp"]); ?>" />
+                <input name="search_exp"  type="TEXT" style="{vertical-align: middle;}" size=35 maxlength=255 value="<? echo htmlReady(stripslashes($this->searchArray["search_exp"])); ?>" />
                 <input type="IMAGE" align="absmiddle"  <? echo makeButton ("suchestarten", "src") ?> name="start_search" border=0 value="<?=_("Suche starten")?>">
                 &nbsp;
                 <a href="<?=$PHP_SELF?>?quick_view=search&quick_view_mode=<?=$GLOBALS['view_mode']?>&reset=TRUE"><?=makeButton("neuesuche")?></a>

@@ -117,7 +117,7 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin implements
         $user_id = get_userid($username);
 
         if ($user_id == '') {
-            throw new Exception(_('Es wurde kein Nutzer unter dem angegebenen Nutzernamen gefunden!'));
+            return NULL;
         }
 
         return new StudIPUser($user_id);

@@ -98,7 +98,8 @@ $homepage_elements = $my_about->get_homepage_elements();
                         </td>
                     </tr>
                     <?php 
-                    if (($global_visibility == 'yes' || ($global_visibility == 'unknown' && get_config('USER_VISIBILITY_UNKNOWN')) ||
+                    if (($global_visibility == 'yes' || $global_visibility == 'global' || 
+                        ($global_visibility == 'unknown' && get_config('USER_VISIBILITY_UNKNOWN')) ||
                         ($perm->get_perm() == 'dozent' && get_config('DOZENT_ALWAYS_VISIBLE'))) && 
                         (!$NOT_HIDEABLE_FIELDS[$perm->get_perm()]['online'] || 
                         !$NOT_HIDEABLE_FIELDS[$perm->get_perm()]['chat'] || 

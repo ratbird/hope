@@ -739,6 +739,11 @@ STUDIP.Filesystem.openhoveredfolder = function (md5_id) {
  * wenn Inhalt schon geladen wurde.
  */
 STUDIP.Filesystem.changefolderbody = function (md5_id) {
+  var IE7 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 7;
+  var IE6 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 6;
+  if (IE6 || IE7) {
+    return true;
+  }
   if (!STUDIP.Filesystem.movelock) {
     STUDIP.Filesystem.movelock = true;
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);
@@ -787,7 +792,11 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
  * wenn Inhalt schon geladen wurde.
  */
 STUDIP.Filesystem.changefilebody = function (md5_id) {
-  //alert(Effect.Queue.size);
+  var IE7 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 7;
+  var IE6 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 6;
+  if (IE6 || IE7) {
+    return true;
+  }
   if (!STUDIP.Filesystem.movelock) {
     STUDIP.Filesystem.movelock = true;
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);

@@ -154,6 +154,10 @@ class Config {
                 md5(uniqid("config!")), $key, (!$value) ? '' : $value, time(), time(), $this->db->f('type'),addslashes($this->db->f('description')), $comment, addslashes($this->db->f('message_template')), $this->db->f('range') );
         }
         $this->db->query($sql);
+        // Hack for StEP 00158: Update dozent visibilities if dozent may not be invisible.
+        if ($key == 'DOZENT_ALWAYS_VISIBLE' && $value) {
+            $this->db->query("UPDATE auth_user_md5 SET visible='yes' WHERE perms='dozent'");
+        }
         $this->data[$key] = $value;
         return $value;
     }

@@ -23,10 +23,11 @@
 // +---------------------------------------------------------------------------+
 
 require_once 'visual.inc.php';
+require_once 'user_visible.inc.php';
 
 function print_freie($username) {
     
-    global $view,$PHP_SELF,$auth;
+    global $view,$PHP_SELF,$auth, $user;
     $db=new DB_Seminar;
     $cssSw=new cssClassSwitcher;
 
@@ -47,8 +48,8 @@ function print_freie($username) {
     $count = 0;
     $hidden_count = 0;
     while ($db->next_record() ){
-
-        IF ((($auth->auth["perm"] == "root") OR ($auth->auth["perm"] == "admin")) AND $db->f("hidden") == '1' AND $username != $auth->auth["uname"]) {
+          $visibility = get_homepage_element_visibility($user->id, 'kat_'.$db->f('kategorie_id'));
+        IF ((($auth->auth["perm"] == "root") OR ($auth->auth["perm"] == "admin")) AND $visibility == VISIBILITY_ME AND $username != $auth->auth["uname"]) {
             $hidden_count++;
             }
         ELSE {
@@ -60,7 +61,7 @@ function print_freie($username) {
             echo '<input type="hidden" name="freie_id[]" value="'.$db->f("kategorie_id")."\">\n";
             echo '<blockquote><input type="text" name="freie_name[]" style="width: 50%" value="' . htmlReady($db->f("name")).'" size="40">';
             echo '&nbsp; &nbsp; &nbsp; <input type=checkbox name="freie_secret['.$count.']" value="1"';
-            IF ($db->f("hidden") == '1')
+            IF ($visibility == VISIBILITY_ME)
                 echo " checked";
             echo ">" . _("f&uuml;r andere unsichtbar") . "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
             if ($count){
@@ -149,7 +150,7 @@ function verify_delete_freie($kategorie_id) {
 }
 
 function update_freie() {
-    global $freie_id,$freie_name,$freie_content,$freie_secret;
+    global $user, $freie_id,$freie_name,$freie_content,$freie_secret;
     $db = new DB_Seminar;
     $max = sizeof($freie_id);
     FOR ($i=0; $i < $max; $i++) {
@@ -166,7 +167,12 @@ function update_freie() {
             parse_msg ('info§' . _("Kategorie ohne Inhalt wurde versteckt!"));
         }
         $id = $freie_id[$i];
-        $db->query("UPDATE kategorien SET name='$name', content='$content', hidden='$secret', chdate='$now' WHERE kategorie_id='$id'");
+        $db->query("UPDATE kategorien SET name='$name', content='$content', chdate='$now' WHERE kategorie_id='$id'");
+        if ($secret) {
+            set_homepage_element_visibility($user->id, 'kat_'.$id, VISIBILITY_ME);
+        } else {
+                set_homepage_element_visibility($user->id, 'kat_'.$id, get_default_homepage_visibility());
+        }
     }
     parse_msg ("msg§" . _("Kategorien ge&auml;ndert!"));
 }

@@ -153,7 +153,6 @@ foreach ($visible_groups as $group_id => $group) {
             $out .= $this->elements["TableGroup"]->toString(array("content" => htmlReady($group)));
 
         while ($db->next_record()) {
-
             if ($defaultadr) {
                 $query = "SELECT ui.raum, ui.sprechzeiten, ui.Telefon, inst_perms,  Email, ";
                 $query .= "aum.user_id, username, " . $_fullname_sql[$nameformat];
@@ -175,6 +174,7 @@ foreach ($visible_groups as $group_id => $group) {
                 }
             }
 
+            $email = get_visible_email($db->f('user_id'));
             $data["content"] = array(
                 "Nachname"          => $this->elements["LinkIntern"]->toString(array("content" =>
                                                         htmlReady($$db_out->f("fullname")), "module" => "Persondetails",
@@ -187,8 +187,8 @@ foreach ($visible_groups as $group_id => $group) {
                 "raum"                  => htmlReady($$db_out->f("raum")),
 
                 "Email"                 => $this->elements["Link"]->toString(array("content" =>
-                                                        htmlReady($$db_out->f("Email")),
-                                                        "link" => "mailto:" . htmlReady($$db_out->f("Email"))))
+                                                        htmlReady($email),
+                                                        "link" => "mailto:" . htmlReady($email)))
             );
 
             // generic data fields

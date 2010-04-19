@@ -115,8 +115,8 @@ $template->set_attribute('courses', $courses);
 
 /* --- Results -------------------------------------------------------------- */
 
-$fields = array($_fullname_sql['full_rev'].' AS fullname', 'username', 'perms', 'auth_user_md5.user_id', get_vis_query().' AS visible');
-$tables = array('auth_user_md5', 'LEFT JOIN user_info USING (user_id)');
+$fields = array($_fullname_sql['full_rev'].' AS fullname', 'username', 'perms', 'auth_user_md5.user_id', get_vis_query('auth_user_md5', 'search').' AS visible');
+$tables = array('auth_user_md5', 'LEFT JOIN user_info USING (user_id)', 'LEFT JOIN user_visibility USING (user_id)');
 
 if ($inst_id) {
     $result = $db->query("SELECT Institut_id FROM user_inst WHERE Institut_id = '".$inst_id."' AND user_id = '$user->id'");

@@ -130,6 +130,10 @@ class UserManagement
             if ($this->db->affected_rows() == 0) {
                 return FALSE;
             }
+            $this->db->query("INSERT INTO user_visibility SET user_id = '".$this->user_data['auth_user_md5.user_id']."', mkdate='".time()."'");
+            if ($this->db->affected_rows() == 0) {
+                return FALSE;
+            }
             log_event("USER_CREATE",$this->user_data['auth_user_md5.user_id']);
         }
 
@@ -151,6 +155,11 @@ class UserManagement
                     $this->logInstUserDel($this->user_data['auth_user_md5.user_id'], "inst_perms = 'user'");
                     $sql="DELETE FROM user_inst WHERE user_id='".$this->user_data['auth_user_md5.user_id']."' AND inst_perms='user'";
                     $this->db2->query($sql);
+                    // make user visible globally if dozent may not be invisible (StEP 00158)
+                    if (get_config('DOZENT_ALWAYS_VISIBLE')) {
+                        $sql="UPDATE auth_user_md5 SET visible='yes' WHERE user_id='".$this->user_data['auth_user_md5.user_id']."'";
+                        $this->db2->query($sql);
+                    }
                 }
 
                 // logging
@@ -816,6 +825,8 @@ class UserManagement
         $query = "DELETE FROM kategorien WHERE range_id = '" . $this->user_data['auth_user_md5.user_id'] . "'";
         $this->db->query($query);
         $query = "DELETE FROM user_info WHERE user_id= '" . $this->user_data['auth_user_md5.user_id'] . "'";
+        $this->db->query($query);
+        $query = "DELETE FROM user_visibility WHERE user_id= '" . $this->user_data['auth_user_md5.user_id'] . "'";
         $this->db->query($query);
         $GLOBALS['user']->that->ac_delete($this->user_data['auth_user_md5.user_id'], $GLOBALS['user']->name);
         object_kill_visits($this->user_data['auth_user_md5.user_id']);

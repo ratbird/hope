@@ -70,13 +70,20 @@ function forum_append_edit ($description) {
  * parses content for output with added edit-string
  *
  * @param   string  description
+ * @param   boolean anonymous
  *
  * @return  string  description
  *
  */
-function forum_parse_edit ($description) {
+function forum_parse_edit ($description, $anonymous) {
+    global $perm;
     if (preg_match('/^.*(<admin_msg.*?)$/s',$description, $match)) { // wurde schon mal editiert
         $tmp = explode('"',$match[1]);
+        if (get_config('FORUM_ANONYMOUS_POSTINGS') && ($anonymous && !$perm->have_perm('root'))) {
+            $message = _("Zuletzt editiert:").' ';
+        } else {
+            $message = _("Zuletzt editiert von").' '.$tmp[1].' - ';
+        }
         // use special markup [admin_msg]. (cf. http://develop.studip.de/trac/ticket/335 )
         $append = "\n\n[admin_msg]["._("Zuletzt editiert von"). ' '.$tmp[1]." - ".date ("d.m.y - H:i", $tmp[3])."][/admin_msg]";
         $description = forum_kill_edit($description) . $append;
@@ -144,6 +151,13 @@ function editarea($forumposting) {
     if ($forumposting['new']) {
         $description .= '<input type="hidden" name="root_id" value="'.$forumposting['rootid'].'">';
         $description .= '<input type="hidden" name="parent_id" value="'.$forumposting['parent_id'].'">';
+        if (get_config('FORUM_ANONYMOUS_POSTINGS')) {
+          $description .= '<div align="center"><input type="checkbox" name="anonymous"/>'._('Beitrag anonym verfassen').'</div>';
+        }
+    } else {
+        if (get_config('FORUM_ANONYMOUS_POSTINGS') && $forumposting['anonymous']) {
+            $description .= '<input type="hidden" name="anonymous" value="true"/>';
+        }
     }
     $description .= "<br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"160\" height=\"1\"><input type=image name=create value=\"abschicken\" " . makeButton("abschicken", "src") . " align=\"absmiddle\" border=0>&nbsp;"
         .$zusatz
@@ -462,6 +476,38 @@ function ForumGetRights ($forumposting) {
 }
 
 /**
+ * Checks whether a given posting was posted anonymously and overwrites
+ * the author if necessary.
+ * 
+ * @param mixed $forumposting
+ * 
+ * @return mixed The forum posting with obscured author and user id.
+ */
+function ForumGetAnonymity ($forumposting) {
+    
+    global $perm, $user;
+    
+    // die Anonymität wird immer auf false gesetzt, wenn Root den Beitrag anzeigt
+    if ($perm->have_perm("root")) {
+        $forumposting["anonymous"] = false;
+    }
+    
+    // Falls anonym, den Namen des Posters unkenntlich machen
+    if (get_config('FORUM_ANONYMOUS_POSTINGS') && $forumposting["anonymous"]) {
+        // Falls ich selber der Autor bin, steht mein Name mit Anonymitäts-Hinweis auf der Seite
+        if ($forumposting["userid"]==$user->id) {
+            $forumposting["author"] = $forumposting["author"] . " " . _("(anonym)");
+        }
+        else {
+            $forumposting["author"] = _("anonym");
+            $forumposting["username"] = "";
+        }
+    }
+    
+    return $forumposting;
+}
+
+/**
 * builds the icon for the printhead of a posting
 *
 * @param    array forumposting contains several data of the actual posting
@@ -470,7 +516,11 @@ function ForumGetRights ($forumposting) {
 *
 **/
 function ForumIcon ($forumposting) {
-    global $cmd, $rechte, $topic_id, $forum, $auth;
+    global $cmd, $rechte, $topic_id, $forum, $auth, $perm;
+    $anonymous = false;
+    if (get_config('FORUM_ANONYMOUS_POSTINGS') && ($forumposting["anonymous"] || $perm->have_perm('root'))) {
+        $anonymous = true;
+    }
     if ($forumposting["type"]=="folder") {
         if ($forumposting["lonely"]==FALSE)
             $bild = $GLOBALS['ASSETS_URL']."images/cont_folder.gif";
@@ -518,13 +568,18 @@ function ForumIcon ($forumposting) {
 *
 **/
 function quote($zitat_id)  {
+    global $perm;
 // Hilfsfunktion, die sich den zu quotenden Text holt, encodiert und zurueckgibt.
     $db=new DB_Seminar;
-    $db->query("SELECT description, author FROM px_topics WHERE topic_id='$zitat_id'");
+    $db->query("SELECT description, author, anonymous FROM px_topics WHERE topic_id='$zitat_id'");
         while ($db->next_record()) {
             $description = $db->f("description");
-            $author = $db->f("author");
+            if (get_config('FORUM_ANONYMOUS_POSTINGS') && ($db->f("anonymous") && !$perm->have_perm("root"))) {
+                $author = _("anonym");
+            } else {
+                $author = $db->f("author");
             }
+        }
     $description = forum_kill_edit($description);
     $zitat = quotes_encode($description,$author);
     return $zitat;
@@ -695,11 +750,12 @@ function forum_print_navi ($forum) {
 * @param    string tmpSessionSeminar
 * @param    string user_id of the author
 * @param    boolean writeextern
+* @param    boolean anonymous posting?
 *
 * @return   string topic_id of the new posting
 *
 **/
-function CreateTopic ($name="[no name]", $author="[no author]", $description="", $parent_id="0", $root_id="0", $tmpSessionSeminar=0, $user_id=FALSE, $writeextern=TRUE)
+function CreateTopic ($name="[no name]", $author="[no author]", $description="", $parent_id="0", $root_id="0", $tmpSessionSeminar=0, $user_id=FALSE, $writeextern=TRUE, $anonymous=false)
 {
     static $count;
 
@@ -736,8 +792,8 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
         $root_id = $topic_id;
         }
 
-    $query = 'INSERT INTO px_topics (topic_id,name,description, parent_id, root_id , author, author_host, Seminar_id, user_id, mkdate, chdate) ';
-    $query .= "values ('$topic_id', '$name', '$description', '$parent_id', '$root_id', '".mysql_escape_string($author)."', '".getenv("REMOTE_ADDR")."', '$tmpSessionSeminar', '$user_id', '$mkdate', '$chdate') ";
+    $query = 'INSERT INTO px_topics (topic_id,name,description, parent_id, root_id , author, author_host, Seminar_id, user_id, mkdate, chdate, anonymous) ';
+    $query .= "values ('$topic_id', '$name', '$description', '$parent_id', '$root_id', '".mysql_escape_string($author)."', '".getenv("REMOTE_ADDR")."', '$tmpSessionSeminar', '$user_id', '$mkdate', '$chdate', ".($anonymous ? 1 : 0).") ";
     $db=new DB_Seminar;
 
     if ($user->id == "nobody") {    // darf Nobody hier schreiben?
@@ -765,10 +821,11 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
  * @param   string description the content of the posting
  * @param   string parent_id of the posting (optional)
  * @param   string root_id of the posting (optional)
+ * @param   boolean anonymous posting?
  *
  * @return  string topic_id of the new posting
  */
-function CreateNewTopic ($name, $description, $parent_id="0", $root_id="0")
+function CreateNewTopic ($name, $description, $parent_id="0", $root_id="0", $anonymous=false)
 {
     global $SessionSeminar, $auth, $new_topic;
 
@@ -794,7 +851,8 @@ function CreateNewTopic ($name, $description, $parent_id="0", $root_id="0")
         'mkdate'      => $mkdate,
         'chdate'      => $chdate,
         'parent_id'   => $parent_id,
-        'new'         => true
+        'new'         => true,
+        'anonymous'   => $anonymous
     );
 
     return $topic_id;
@@ -806,17 +864,18 @@ function CreateNewTopic ($name, $description, $parent_id="0", $root_id="0")
 * @param    string  name of the posting
 * @param    string  topic_id of the posting
 * @param    string  description of the posting
+* @param    boolean anonymous
 *
 **/
-function UpdateTopic ($name="[no name]", $topic_id, $description)
+function UpdateTopic ($name="[no name]", $topic_id, $description, $anonymous)
 {   global $user, $nobodysname, $rechte;
     $db=new DB_Seminar;
     $chdate = time();
     if (lonely($topic_id)==FALSE) {
         IF ($user->id == "nobody")  // bei nobodys wird mit Namen geschrieben, ist sonst schon da
-            $query = "UPDATE px_topics SET name = '$name', description = '$description', chdate= '$chdate', author='$nobodysname' WHERE topic_id = '$topic_id'";
+            $query = "UPDATE px_topics SET name = '$name', description = '$description', chdate= '$chdate', author='$nobodysname', anonymous=".($anonymous ? 1 : 0)." WHERE topic_id = '$topic_id'";
         ELSE
-            $query = "UPDATE px_topics SET name = '$name', description = '$description', chdate= '$chdate' WHERE topic_id = '$topic_id'";
+            $query = "UPDATE px_topics SET name = '$name', description = '$description', chdate= '$chdate', anonymous=".($anonymous ? 1 : 0)." WHERE topic_id = '$topic_id'";
         $db->query ($query);
         IF  ($db->affected_rows() == 0) {
             echo '<p>' . _("Aktualisieren des Postings fehlgeschlagen") . "</p>\n";
@@ -1078,7 +1137,7 @@ function print_rating($rate, $id, $username) {
 *
 **/
 function printposting ($forumposting) {
-    global $forum,$view,$davor,$auth,$user, $SessSemName, $sidebar, $indexvars, $open, $openorig, $delete_id,$rechte;
+    global $forum,$view,$davor,$auth,$user, $SessSemName, $sidebar, $indexvars, $open, $openorig, $delete_id,$rechte, $perm;
 
   // Status des Postings holen
     // auf- zugeklappt
@@ -1093,6 +1152,11 @@ function printposting ($forumposting) {
     $forumposting = ForumFolderOrPosting($forumposting);
     $forumposting = forum_lonely($forumposting);
     $forumposting = ForumIcon($forumposting);
+    $forumposting = ForumGetAnonymity($forumposting);
+    $anonymous = false;
+    if ($forumposting["anonymous"]) {
+        $anonymous = true;
+    }
 
  // Kopfzeile zusammenbauen
 
@@ -1141,11 +1205,16 @@ function printposting ($forumposting) {
         if ($forumposting["foldercount"] && $forumposting["type"] == "folder" && $forumposting["openclose"] == "close")
             $forumhead[] = "<b>".($forumposting["foldercount"]-1)."</b> / ";
 
-
-        if ($user->id == "nobody" || $forumposting["author"]=="unbekannt" || $forumposting["username"]=="") // Nobody darf nicht auf die about...
-            $forumhead[] = htmlReady($forumposting["author"]);
-        else
-            $forumhead[] = "<a class=\"printhead\" href=\"".URLHelper::getLink("about.php?username=".$forumposting["username"])."\">". htmlReady($forumposting["author"]) ."&nbsp;</a>";
+        if (!$forumposting["anonymous"] || $perm->have_perm("root")) {
+              if ($user->id == "nobody" || $forumposting["author"]=="unbekannt" || $forumposting["username"]=="") // Nobody darf nicht auf die about...
+                $forumhead[] = htmlReady($forumposting["author"]);
+            else {
+                $authortext = $forumposting["anonymous"] ? htmlReady($forumposting["author"])." ("._("anonym").")" : htmlReady($forumposting["author"]);
+                $forumhead[] = "<a class=\"printhead\" href=\"".URLHelper::getLink("about.php?username=".$forumposting["username"])."\">".$authortext."&nbsp;</a>";
+            }
+        } else {
+            $forumhead[] = _("anonym");
+        }
 
     // Alter ausgeben
 
@@ -1253,7 +1322,7 @@ function printposting ($forumposting) {
                 $description = editarea($forumposting);
             }
         } else {
-            $forumposting["description"] = forum_parse_edit($forumposting["description"]);
+            $forumposting["description"] = forum_parse_edit($forumposting["description"], $anonymous);
             $description = formatReady($forumposting["description"]);
             if ($forumposting["buttons"] == "no" || $forum["update"]) {
                 $edit = "<br>";
@@ -1401,7 +1470,7 @@ if ($db->num_rows() > 0 || isset($new_topic)) {  // Forum ist nicht leer
 // we proudly present: the longest SQl in Stud.IP :) regards to Suchi+Noack for inspirations
 
 $query = "SELECT x.topic_id, x.name , x.author , x.mkdate, x.chdate as age, y.name AS root_name"
-    .", x.description, x.Seminar_id, y.topic_id AS root_id, username, x.user_id"
+    .", x.description, x.Seminar_id, y.topic_id AS root_id, username, x.user_id, x.anonymous"
     .", IFNULL(views,0) as viewcount, nachname, IFNULL(ROUND(AVG(rate),1),99) as rating"
     .", IF(object_user.object_id!='',1,0) as fav"
     .", ((6-(IFNULL(AVG(rate),3))-3)*5)+(IFNULL(views,0)/(((UNIX_TIMESTAMP()-x.mkdate)/604800)+1)) as score "
@@ -1487,6 +1556,7 @@ while($db->next_record()){
     $forumposting["rating"] = $db->f("rating");
     $forumposting["score"] = $db->f("score");
     $forumposting["fav"] = $db->f("fav");
+    $forumposting["anonymous"] = get_config('FORUM_ANONYMOUS_POSTINGS') ? $db->f("anonymous") : false;
 
     $forumposting = printposting($forumposting);
 }
@@ -1629,6 +1699,7 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
             $forumposting["rating"] = $db->f("rating");
             $forumposting["score"] = $db->f("score");
             $forumposting["fav"] = $db->f("fav");
+            $forumposting["anonymous"] = get_config('FORUM_ANONYMOUS_POSTINGS') ? $db->f("anonymous") : false;
 
             $forumposting = printposting($forumposting);
 
@@ -1705,7 +1776,7 @@ function DisplayKids ($forumposting, $level=0) {
         .", px_topics.mkdate, px_topics.chdate, description, root_id, username, px_topics.user_id"
         .", IFNULL(views,0) as viewcount, IFNULL(ROUND(AVG(rate),1),99) as rating"
         .", ((6-(IFNULL(AVG(rate),3))-3)*5)+(IFNULL(views,0)/(((UNIX_TIMESTAMP()-px_topics.mkdate)/604800)+1)) as score "
-        .", IF(object_user.object_id!='',1,0) as fav"
+        .", IF(object_user.object_id!='',1,0) as fav, anonymous"
         ." FROM px_topics LEFT JOIN auth_user_md5 USING(user_id)"
         ." LEFT JOIN object_views ON(object_views.object_id=topic_id) LEFT JOIN object_rate ON(object_rate.object_id=topic_id)"
         ." LEFT OUTER JOIN object_user ON(object_user.object_id=topic_id AND object_user.user_id='$user->id' AND flag='fav')"
@@ -1731,6 +1802,7 @@ function DisplayKids ($forumposting, $level=0) {
         $forumposting["rating"] = $db->f("rating");
         $forumposting["score"] = $db->f("score");
         $forumposting["fav"] = $db->f("fav");
+        $forumposting["anonymous"] = get_config('FORUM_ANONYMOUS_POSTINGS') ? $db->f("anonymous") : false;
 
         indentPosting($forumposting, $level);
 

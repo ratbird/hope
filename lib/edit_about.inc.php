@@ -25,6 +25,13 @@
 
 require_once('lib/messaging.inc.php');
 require_once('lib/log_events.inc.php');
+require_once('lib/classes/StudipNews.class.php');
+require_once('lib/calendar/lib/DbCalendarEventList.class.php');
+require_once('lib/vote/VoteDB.class.php');
+require_once('lib/evaluation/classes/db/EvaluationDB.class.php');
+require_once('lib/classes/StudipLitList.class.php');
+require_once('lib/classes/guestbook.class.php');
+require_once('lib/classes/Avatar.class.php');
 
 function edit_email($uid, $email, $force=False) {
     $msg = '';
@@ -737,6 +744,163 @@ class about extends messaging {
         }
     }
 
+    function change_global_visibility($global, $online, $chat, $search, $email) {
+        $success = false;
+        if ($global != 'no') {
+            $online = $online ? 1 : 0;
+            $chat = $chat ? 1 : 0;
+            $search = $search ? 1 : 0;
+            $email = $email ? 1 : 0;
+        } else {
+            $online = 0;
+            $chat = 0;
+            $search = 0;
+            $email = get_config('DOZENT_ALLOW_HIDE_EMAIL') ? 0 : 1;
+            $success1 = $this->change_all_homepage_visibility(VISIBILITY_ME);
+        }
+        $success2 = DBManager::get()->exec("UPDATE auth_user_md5 SET visible='".$global."' WHERE user_id='".$this->auth_user["user_id"]."'");
+        $success3 = DBManager::get()->exec("UPDATE user_visibility SET online=".$online.", chat=".$chat.", search=".$search.", email=".$email." WHERE user_id='".$this->auth_user["user_id"]."'");
+        if ($success1 && $success2 && $success3) {
+            $success = true;
+        }
+        return $success;
+    }
+    
+    function change_all_homepage_visibility($new_visibility) {
+        $result = array();
+        $new_data = array();
+        $db_result = array();
+        $data = $this->get_homepage_elements();
+        foreach ($data as $key => $entry) {
+            $new_data[$key] = array("name" => $entry["name"], "visibility" => $new_visibility);
+            if ($entry["extern"]) {
+                $new_data[$key]["extern"] = true;
+            }
+            $db_result[$key] = $new_visibility;
+        }
+        $query = "UPDATE user_visibility SET homepage='".serialize($db_result)."' WHERE user_id='".$this->auth_user['user_id']."'";
+        if (DBManager::get()->exec($query)) {
+            $result &= $new_data;
+        }
+        return $result;
+    }
 
+    function change_homepage_visibility($data) {
+        $success = false;
+        $query = "UPDATE `user_visibility` SET homepage='".serialize($data).
+            "' WHERE user_id='".$this->auth_user["user_id"]."'";
+        if (DBManager::get()->exec($query)) {
+            $result = true;
+        }
+        return $success;
+    }
+
+    function get_homepage_elements() {
+        global $NOT_HIDEABLE_FIELDS;
+        $homepage_elements = array();
+        $my_data = DBManager::get()->query("SELECT user_info.*, auth_user_md5.* FROM auth_user_md5 LEFT JOIN user_info USING (user_id) WHERE auth_user_md5.user_id = '".$this->auth_user['user_id']."'");
+        $my_data = $my_data->fetch();
+        
+        $homepage_visibility = get_local_visibility_by_id($this->auth_user['user_id'], 'homepage');
+        if (is_array(unserialize($homepage_visibility))) {
+            $homepage_visibility = unserialize($homepage_visibility);
+        } else {
+            $homepage_visibility = array();
+        }
+        
+        // News
+        $news = StudipNews::GetNewsByRange($this->auth_user['user_id'], true);
+        // Non-private dates.
+        if ($GLOBALS["CALENDAR_ENABLE"]) {
+            $dates = new DbCalendarEventList($this->auth_user['user_id'], time(), -1, TRUE);
+            $dates = $dates->events;
+        }
+        // Votes
+        if ($GLOBALS['VOTE_ENABLE']) {
+            $voteDB = new VoteDB();
+        }
+        $activeVotes  = $voteDB->getActiveVotes($this->auth_user['user_id']);
+        $stoppedVotes = $voteDB->getStoppedVisibleVotes($this->auth_user['user_id']);
+        // Evaluations
+        $evalDB = new EvaluationDB();
+        $activeEvals = $evalDB->getEvaluationIDs($this->auth_user['user_id'], EVAL_STATE_ACTIVE);
+        // Literature
+        $lit_list = StudipLitList::GetFormattedListsByRange($this->auth_user['user_id']);
+        // Free datafields
+        $data_fields = DataFieldEntry::getDataFieldEntries($this->auth_user['user_id']);
+        if ($GLOBALS["PLUGINS_ENABLE"]) { 
+            $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
+        }
+        $guestbook = new Guestbook($this->auth_user['user_id'], true, 1);
+        $guestbook = $guestbook->checkGuestbook();
+        // Homepage plugins
+        $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
+        
+        $user_domains = count(UserDomain::getUserDomains());
+        
+        // Now join all available elements with visibility settings.
+        $homepage_elements = array();
+        if (Avatar::getAvatar($this->auth_user['user_id'])->is_customized() && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['picture']) {
+            $homepage_elements["picture"] = array("name" => _("eigenes Bild"), "visibility" => $homepage_visibility["picture"] ? $homepage_visibility["picture"] : get_default_homepage_visibility(), "extern" => true);
+        }
+        if ($my_data["motto"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['motto'])
+            $homepage_elements["motto"] = array("name" => _("Motto"), "visibility" => $homepage_visibility["motto"] ? $homepage_visibility["motto"] : get_default_homepage_visibility());
+        if ($GLOBALS['ENABLE_SKYPE_INFO']) {
+            if ($GLOBALS['user']->cfg->getValue($user_id, 'SKYPE_NAME') && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['skype_name']) {
+                $homepage_elements["skype_name"] = array("name" => _("Skype Name"), "visibility" => $homepage_visibility["skype_name"] ? $homepage_visibility["skype_name"] : get_default_homepage_visibility());
+                if ($GLOBALS['user']->cfg->getValue($user_id, 'SKYPE_ONLINE_STATUS')) {
+                    $homepage_elements["skype_online_status"] = array("name" => _("Skype Online Status"), "visibility" => $homepage_visibility["skype_online_status"] ? $homepage_visibility["skype_online_status"] : get_default_homepage_visibility());
+                }
+            }
+        }
+        if ($my_data["privatnr"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['private_phone'])
+            $homepage_elements["private_phone"] = array("name" => _("private Telefonnummer"), "visibility" => $homepage_visibility["private_phone"] ? $homepage_visibility["private_phone"] : get_default_homepage_visibility());
+        if ($my_data["privatcell"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['private_cell'])
+            $homepage_elements["private_cell"] = array("name" => _("private Handynummer"), "visibility" => $homepage_visibility["private_cell"] ? $homepage_visibility["private_cell"] : get_default_homepage_visibility());
+        if ($my_data["privadr"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['privadr'])
+            $homepage_elements["privadr"] = array("name" => _("private Adresse"), "visibility" => $homepage_visibility["privadr"] ? $homepage_visibility["privadr"] : get_default_homepage_visibility());
+        if ($my_data["Home"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['homepage'])
+            $homepage_elements["homepage"] = array("name" => _("Homepage-Adresse"), "visibility" => $homepage_visibility["homepage"] ? $homepage_visibility["homepage"] : get_default_homepage_visibility(), "extern" => true);
+        if ($news && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['news'])
+            $homepage_elements["news"] = array("name" => _("News"), "visibility" => $homepage_visibility["news"] ? $homepage_visibility["news"] : get_default_homepage_visibility(), "extern" => true);
+        if ($GLOBALS["CALENDAR_ENABLE"] && $dates && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['dates'])
+            $homepage_elements["termine"] = array("name" => _("Termine"), "visibility" => $homepage_visibility["termine"] ? $homepage_visibility["termine"] : get_default_homepage_visibility(), "extern" => true);
+        if ($GLOBALS['VOTE_ENABLE'] && ($activeVotes || $stoppedVotes || $activeEvals) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['votes'])
+            $homepage_elements["votes"] = array("name" => _("Umfragen"), "visibility" => $homepage_visibility["votes"] ? $homepage_visibility["votes"] : get_default_homepage_visibility());
+        if ($my_data["guestbook"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['guestbook'])
+            $homepage_elements["guestbook"] = array("name" => _("Gästebuch"), "visibility" => $homepage_visibility["guestbook"] ? $homepage_visibility["guestbook"] : get_default_homepage_visibility());
+        $data = DBManager::get()->query("SELECT Institute.* FROM user_inst LEFT JOIN Institute  USING (Institut_id) WHERE user_id = '$user_id' AND inst_perms = 'user'");
+        if ($data->fetch() && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['studying']) {
+            $homepage_elements["studying"] = array("name" => _("Wo ich studiere"), "visibility" => $homepage_visibility["studying"] ? $homepage_visibility["studying"] : get_default_homepage_visibility());
+        }
+        if ($lit_list && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['literature'])
+            $homepage_elements["literature"] = array("name" => _("Literaturlisten"), "visibility" => $homepage_visibility["literature"] ? $homepage_visibility["literature"] : get_default_homepage_visibility());
+        if ($my_data["lebenslauf"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['lebenslauf'])
+            $homepage_elements["lebenslauf"] = array("name" => _("Lebenslauf"), "visibility" => $homepage_visibility["lebenslauf"] ? $homepage_visibility["lebenslauf"] : get_default_homepage_visibility(), "extern" => true);
+        if ($my_data["hobby"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['hobby'])
+            $homepage_elements["hobby"] = array("name" => _("Hobbies"), "visibility" => $homepage_visibility["hobby"] ? $homepage_visibility["hobby"] : get_default_homepage_visibility());
+        if ($my_data["publi"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['publi'])
+            $homepage_elements["publi"] = array("name" => _("Publikationen"), "visibility" => $homepage_visibility["publi"] ? $homepage_visibility["publi"] : get_default_homepage_visibility(), "extern" => true);
+        if ($my_data["schwerp"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['schwerp'])
+            $homepage_elements["schwerp"] = array("name" => _("Arbeitsschwerpunkte"), "visibility" => $homepage_visibility["schwerp"] ? $homepage_visibility["schwerp"] : get_default_homepage_visibility(), "extern" => true);
+        if ($data_fields) {
+            foreach ($data_fields as $key => $field) {
+                if (!$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']][$key]) {
+                    $homepage_elements[$key] = array("name" => _($key), "visibility" => $homepage_visibility[$key] ? $homepage_visibility[$key] : get_default_homepage_visibility(), "extern" => true);
+                }
+            }
+        }
+        $categories = DBManager::get()->query("SELECT * FROM kategorien WHERE range_id = '".$this->auth_user['user_id']."' ORDER BY priority");
+        foreach ($categories as $category) {
+            $homepage_elements["kat_".$category["kategorie_id"]] = array("name" => $category["name"], "visibility" => $homepage_visibility["kat_".$category["kategorie_id"]] ? $homepage_visibility["kat_".$category["kategorie_id"]] : get_default_homepage_visibility(), "extern" => true);
+        }
+        if ($homepageplugins) {
+            foreach ($homepageplugins as $plugin) {
+                $homepage_elements['plugin_'.$plugin->getPluginId()] = array("name" => $plugin->getPluginName(), "visibility" => $homepage_visibility["plugin_".$plugin->getPluginId()] ? $homepage_visibility["plugin_".$plugin->getPluginId()] : get_default_homepage_visibility());
+            }
+        }
+        return $homepage_elements;
+    }
+    
 } // end class definition
 ?>

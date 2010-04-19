@@ -240,6 +240,9 @@ if ($_REQUEST['suchbegriff'] != '' || $_REQUEST['author'] != '') {
     }
 
     $forum['search'] = join(' AND ', $search_items);
+    if (get_config('FORUM_ANONYMOUS_POSTINGS')) {
+        $forum['search'] .= " AND x.anonymous=0";
+    }
 
     URLHelper::addLinkParam('suchbegriff', $forum['searchstring']);
     URLHelper::addLinkParam('author', $forum['searchauthor']);
@@ -352,6 +355,8 @@ if ($delete_id) {
             $forumposting["chdate"] = $db->f("chdate");
             $forumposting["buttons"] = "no";
             $forumposting["rating"] = $db->f("rating");
+            $forumposting["anonymous"] = get_config('FORUM_ANONYMOUS_POSTINGS') ? $db->f("anonymous") : false;
+            $forumposting = ForumGetAnonymity ($forumposting);
             forum_draw_topicline();
             if ($forumposting["id"] == $forumposting["rootid"])
                 $tmp_label = _("das untenstehende Thema");
@@ -359,7 +364,7 @@ if ($delete_id) {
                 $tmp_label = _("das untenstehende Posting");
             echo "\n\n<table class=\"blank\" cellspacing=0 cellpadding=5 border=0 width=\"100%\"><colgroup span=1></colgroup>\n";
             echo "<tr><td class=\"blank\"></td></tr>";
-            $msg="info§" . sprintf(_("Wollen Sie %s %s von %s wirklich löschen?"), $tmp_label, "<b>".htmlReady($db->f("name"))."</b>", "<b>".htmlReady($db->f("author"))."</b>") . "<br>\n";
+            $msg="info§" . sprintf(_("Wollen Sie %s %s von %s wirklich löschen?"), $tmp_label, "<b>".htmlReady($db->f("name"))."</b>", "<b>".($forumposting["anonymous"] ? _("anonym") : htmlReady($db->f("author")))."</b>") . "<br>\n";
             if ($count)
                 $msg.= sprintf(_("Alle %s Antworten auf diesen Beitrag werden ebenfalls gelöscht!"), $count) . "<br>\n<br>\n";
             $msg.="<a href=\"".URLHelper::getLink("?really_kill=$delete_id&view=$view#anker")."\">" . makeButton("ja2", "img") . "</a>&nbsp; \n";
@@ -445,7 +450,7 @@ if ($answer_id) {
             $name = "Re: ".$name; // Re: vor Überschriften bei Antworten
         $author = get_fullname();
         $postinginhalt = _("Dieser Beitrag wird gerade bearbeitet.");
-        $edit_id = CreateNewTopic($name, $postinginhalt, $answer_id, $db->f("root_id"));
+        $edit_id = CreateNewTopic($name, $postinginhalt, $answer_id, $db->f("root_id"), $_REQUEST['anonymous']);
         $open = $edit_id;
         $forum["lostposting"] = $edit_id;
     }
@@ -462,11 +467,11 @@ if ($update) {
         $parent_id = $_REQUEST['parent_id'];
         $root_id = $parent_id != "0" ? $_REQUEST['root_id'] : "0";
         $user_id = $auth->auth['uid'];
-        $update = CreateTopic($titel, $author, $description, $parent_id, $root_id, 0, $user_id);
+        $update = CreateTopic($titel, $author, $description, $parent_id, $root_id, 0, $user_id, true, $_REQUEST['anonymous']);
     } else {
         if (!ForumFreshPosting($update)) // editiert von nur dranhängen wenn nicht frisch erstellt
             $description = forum_append_edit($description);
-        UpdateTopic ($titel, $update, $description);
+        UpdateTopic ($titel, $update, $description, $_REQUEST['anonymous']);
     }
     $open = $update; //gerade bearbeiteten Beitrag aufklappen
     $forum["lostposting"] = "";
@@ -476,10 +481,10 @@ if ($update) {
 // Neues Thema wird angelegt
 //////////////////////////////////////////////////////////////////////////////////
 
-if ($neuesthema==TRUE && ($rechte || $SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["topic_create_autor"])) {          // es wird ein neues Thema angelegt
+if ($neuesthema==TRUE && ($rechte || $SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["topic_create_autor"])) {            // es wird ein neues Thema angelegt
         $name = _("Name des Themas");
         $author = get_fullname();
-        $edit_id = CreateNewTopic($name, "Beschreibung des Themas");
+        $edit_id = CreateNewTopic($name, "Beschreibung des Themas", 0, 0, $_REQUEST['anonymous']);
         $open = $edit_id;
         $forum["lostposting"] = $edit_id;
 }

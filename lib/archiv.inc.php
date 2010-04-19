@@ -36,6 +36,7 @@ require_once ('lib/classes/SemesterData.class.php');
 require_once ('lib/classes/StudipScmEntry.class.php');
 require_once ('lib/classes/StudipDocumentTree.class.php');
 require_once ('lib/user_visible.inc.php');
+require_once ('forum.inc.php');
 
 // Liefert den dump des Seminars
 function dump_sem($sem_id, $print_view = false) {
@@ -424,7 +425,7 @@ function Export_Kids ($topic_id=0, $level=0) {
     if (!isset($anfang))
         $anfang = $topic_id;
     $query = "select topic_id, name, author "
-        .", mkdate, chdate, description, root_id, username from px_topics LEFT JOIN auth_user_md5 USING(user_id) where "
+        .", mkdate, chdate, description, root_id, username, anonymous from px_topics LEFT JOIN auth_user_md5 USING(user_id) where "
         ." parent_id = '$topic_id'"
         ." order by mkdate";
     $db=new DB_Seminar;
@@ -433,10 +434,10 @@ function Export_Kids ($topic_id=0, $level=0) {
     while ($db->next_record()) {
         $r_topic_id = $db->f("topic_id");
         $r_name = $db->f("name");
-        $r_author = $db->f("author");
+        $r_author = (get_config('FORUM_ANONYMOUS_POSTINGS') && $db->f("anonymous")) ? _("anonym") : $db->f("author");
         $r_mkdate = $db->f("mkdate");
         $r_chdate = $db->f("chdate");
-        $r_description = $db->f("description");
+        $r_description = forum_parse_edit($db->f("description"), get_config('FORUM_ANONYMOUS_POSTINGS') ? $db->f("anonymous") : false);
         $root_id = $db->f("root_id");
         $username = $db->f("username");
 
@@ -459,7 +460,7 @@ function Export_Topic ($sem_id) {
     $topic_id=0;
     $fields = array("topic_id", "parent_id", "root_id", "name"
         , "description", "author", "author_host", "mkdate"
-        , "chdate", "user_id");
+        , "chdate", "user_id", "anonymous");
     $query = "select distinct ";
     $comma = "";
     WHILE (list($key,$val)=each($fields)) {
@@ -480,8 +481,8 @@ function Export_Topic ($sem_id) {
             $parent_id = $db->f("parent_id");
             $root_id = $db->f("root_id");
             $name = $db->f("name");
-            $description = $db->f("description");
-            $author = $db->f("author");
+            $description = forum_parse_edit($db->f("description"), $db->f("anonymous"));
+            $author = (get_config('FORUM_ANONYMOUS_POSTINGS') && $db->f("anonymous")) ? _("anonym") : $db->f("author");
             $author_host = $db->f("author_host");
             $mkdate = $db->f("mkdate");
             $chdate = $db->f("chdate");
@@ -627,7 +628,7 @@ function in_archiv ($sem_id) {
         $tmp_full_path = "$TMP_PATH/$archiv_file_id";
         mkdir($tmp_full_path, 0700);
 
-        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $seminar_id));
+        $folder_tree =& TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $seminar_id));
         if($folder_tree->getNumKids('root')){
             $list = $folder_tree->getKids('root');
         }

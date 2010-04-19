@@ -78,12 +78,6 @@ function change_general_view() {
 
     $db = new DB_Seminar;
 
-    // get visibility status
-    $q="SELECT * FROM auth_user_md5 WHERE user_id='$user->id'";
-    $db->query($q);
-    $db->next_record();
-    $visi=$db->f("visible");
-
     $cssSw = new cssClassSwitcher;
     ?>
     <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
@@ -111,36 +105,6 @@ function change_general_view() {
                         <? select_language($_language); ?>
                     </td>
                 </tr>
-
-                <?
-                if ($visi != 'always' && $visi != 'never') {
-                    // only show dialog if global/yes/no/unknown
-                ?>
-                <tr  <? $cssSw->switchClass() ?>>
-                    <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><?print _("Sichtbarkeit");?></font><br>
-                        <br><div align="left"><font size="-1">
-                        <?print _("Sie können wählen, ob Sie für andere NutzerInnen sichtbar sein und alle Kommunikationsfunktionen von Stud.IP nutzen können wollen, oder ob Sie unsichtbar sein möchten und dann nur eingeschränkte Kommunikationsfunktionen nutzen können.");?>
-                        </font></div>
-                    </td>
-                    <td <?=$cssSw->getFullClass()?>>
-                        <select name="change_visibility">
-                        <?
-                            if (count(UserDomain::getUserDomains())) {
-                                printf ("<option %s value=\"global\">"._("sichtbar für alle Nutzer")."</option>", $visi=='global' ? "selected" : "");
-                                $visible_text = _('sichtbar für eigene Nutzerdomäne');
-                            } else {
-                                $visible_text = _('sichtbar');
-                            }
-                            printf ("<option %s value=\"yes\">".$visible_text."</option>", ($visi=='yes' || ($visi=="unknown" && get_config('USER_VISIBILITY_UNKNOWN'))) ? "selected" : "");
-                            printf ("<option %s value=\"no\">"._("unsichtbar")."</option>", ($visi=='no' || ($visi=='unknown' && !get_config('USER_VISIBILITY_UNKNOWN'))) ? "selected" : "");
-                        ?>
-                        </select>
-                    </td>
-                </tr>
-                <?
-                } // end of visibilty check
-                ?>
 
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">

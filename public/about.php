@@ -267,6 +267,8 @@ Navigation::activateItem('/profil/view');
 // TODO this can be removed when page output is moved to a template
 URLHelper::addLinkParam('username', $username);
 
+$visibilities = unserialize(get_local_visibility_by_username($username, 'homepage'));
+
 ?>
 <script language="Javascript">
 function open_im() {
@@ -284,7 +286,8 @@ function open_im() {
     <tr>
         <td class="steel1" valign="top">
             <br>
-            <?= Avatar::getAvatar($user_id)->getImageTag(Avatar::NORMAL) ?>
+            <?php $avatar_user_id = is_element_visible_for_user($user->id, $user_id, $visibilities['picture']) ? $user_id : 'nobody'; ?>
+            <?= Avatar::getAvatar($avatar_user_id)->getImageTag(Avatar::NORMAL) ?>
 
             <br>
             <br>
@@ -332,9 +335,11 @@ function open_im() {
         </td>
 
         <td class="steel1" width="99%" valign="top">
+            <br>
             <blockquote>
             <h1><?= htmlReady($db->f("fullname")) ?></h1>
-                <? if ($db->f('motto')) : ?>
+                <? if ($db->f('motto') && 
+                        is_element_visible_for_user($user->id, $user_id, $visibilities['motto'])) : ?>
                     <h3><?= htmlReady($db->f('motto')) ?></h3>
                 <? endif ?>
 
@@ -353,26 +358,31 @@ function open_im() {
                 <br>
 
                 <b>&nbsp;<?= _("E-mail:") ?></b>
-                <a href="mailto:<?= $db->f('Email') ?>"><?= htmlReady($db->f("Email")) ?></a>
+                <a href="mailto:<?= get_visible_email($user_id) ?>"><?= htmlReady(get_visible_email($user_id)) ?></a>
                 <br>
 
-                <? if ($db->f("privatnr") != "") : ?>
+                <? if ($db->f("privatnr") != "" && 
+                        is_element_visible_for_user($user->id, $user_id, $visibilities['private_phone'])) : ?>
                     <b>&nbsp;<?= _("Telefon (privat):") ?></b>
                     <?= htmlReady($db->f("privatnr")) ?>
                     <br>
                 <? endif ?>
 
-                <? if ($db->f("privatcell") != "") : ?>
+                <? if ($db->f("privatcell") != "" && 
+                        is_element_visible_for_user($user->id, $user_id, $visibilities['private_cell'])) : ?>
                     <b>&nbsp;<?= _("Mobiltelefon:") ?></b>
                     <?= htmlReady($db->f("privatcell")) ?>
                     <br>
                 <? endif ?>
 
                 <? if (get_config("ENABLE_SKYPE_INFO") &&
-                       $skype_name = $user->cfg->getValue($user_id, 'SKYPE_NAME')) : ?>
+                       $user->cfg->getValue($user_id, 'SKYPE_NAME') &&
+                       is_element_visible_for_user($user->id, $user_id, $visibilities['skype_name'])) : ?>
+                    <?php $skype_name = $user->cfg->getValue($user_id, 'SKYPE_NAME') ?>
                     <b>&nbsp;<?= _("Skype:") ?></b>
                     <a href="skype:<?= htmlReady($skype_name) ?>?call">
-                        <? if ($user->cfg->getValue($user_id, 'SKYPE_ONLINE_STATUS')) : ?>
+                        <? if ($user->cfg->getValue($user_id, 'SKYPE_ONLINE_STATUS') &&
+                       is_element_visible_for_user($user->id, $user_id, $visibilities['skype_online_status'])) : ?>
                             <img src="http://mystatus.skype.com/smallicon/<?= htmlReady($skype_name) ?>" style="vertical-align:middle;" width="16" height="16" alt="My status">
                         <? else : ?>
                             <?= Assets::img('icon_small_skype.gif', array('style' => 'vertical-align:middle;')) ?>
@@ -382,13 +392,15 @@ function open_im() {
                     <br>
                 <? endif ?>
 
-                <? if ($db->f("privadr") != "") : ?>
+                <? if ($db->f("privadr") != "" && 
+                        is_element_visible_for_user($user->id, $user_id, $visibilities['privadr'])) : ?>
                     <b>&nbsp;<?= _("Adresse (privat):") ?></b>
                     <?= htmlReady($db->f("privadr")) ?>
                     <br>
                 <? endif ?>
 
-                <? if ($db->f("Home") != "") : ?>
+                <? if ($db->f("Home") != "" &&
+                        is_element_visible_for_user($user->id, $user_id, $visibilities['homepage'])) : ?>
                     <b>&nbsp;<?= _("Homepage:") ?></b>
                     <?= FixLinks(htmlReady($db->f("Home"))) ?>
                     <br>
@@ -407,7 +419,7 @@ function open_im() {
 
                 if($db->f('perms') != 'dozent'){
                 $db3->query("SELECT Institute.* FROM user_inst LEFT JOIN Institute  USING (Institut_id) WHERE user_id = '$user_id' AND inst_perms = 'user'");
-                IF ($db3->num_rows()) {
+                IF ($db3->num_rows() && is_element_visible_for_user($user->id, $user_id, $visibilities['studying'])) {
                     echo "<br><b>&nbsp;" . _("Wo ich studiere:") . "&nbsp;&nbsp;</b><br>";
                     while ($db3->next_record()) {
                         echo "&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"". URLHelper::getLink("institut_main.php?auswahl=".$db3->f("Institut_id")) ."\">".htmlReady($db3->f("Name"))."</a><br>";
@@ -518,8 +530,9 @@ if ($score->IsMyScore() || $score->ReturnPublik()) {
 
 // News zur person anzeigen!!!
 $show_admin = $perm->have_perm("autor") && $auth->auth["uid"] == $user_id;
-if (show_news($user_id, $show_admin, 0, $about_data["nopen"], "100%", 0, $about_data))
-    echo "<br>";
+if (is_element_visible_for_user($user->id, $user_id, $visibilities['news']))
+    if (show_news($user_id, $show_admin, 0, $about_data["nopen"], "100%", 0, $about_data))
+        echo "<br>";
 
 // alle persoenlichen Termine anzeigen, aber keine privaten
 if ($GLOBALS['CALENDAR_ENABLE']) {
@@ -527,8 +540,9 @@ if ($GLOBALS['CALENDAR_ENABLE']) {
     if ($temp_user_perm != "root" && $temp_user_perm != "admin") {
         $start_zeit = time();
         $show_admin = $perm->have_perm("autor") && $auth->auth["uid"] == $user_id;
-        if (show_personal_dates($user_id, $start_zeit, -1, FALSE, $show_admin, $about_data["dopen"]))
-            echo "<br>";
+        if (is_element_visible_for_user($user->id, $user_id, $visibilities['termine']))
+            if (show_personal_dates($user_id, $start_zeit, -1, FALSE, $show_admin, $about_data["dopen"]))
+                echo "<br>";
     }
 }
 
@@ -543,9 +557,10 @@ if ($GLOBALS['FOAF_ENABLE']
 }
 
 // include and show votes and tests
-if ($GLOBALS['VOTE_ENABLE']) {
+if ($GLOBALS['VOTE_ENABLE'] && is_element_visible_for_user($user->id, $user_id, $visibilities['votes'])) {
     show_votes($username, $auth->auth["uid"], $perm, YES);
 }
+
 
 // show Guestbook
 $guestpage = isset($_REQUEST['guestpage']) ? $_REQUEST['guestpage'] : 0;
@@ -554,7 +569,7 @@ $guest = new Guestbook($user_id,$admin_darf,$guestpage);
 if ($_REQUEST['guestbook'] && $perm->have_perm('autor'))
     $guest->actionsGuestbook($_REQUEST['guestbook'],$_REQUEST['post'],$_REQUEST['deletepost'],$_REQUEST['studipticket']);
 
-if ($guest->active == TRUE || $guest->rights == TRUE) {
+if ($guest->active == TRUE || $guest->rights == TRUE && is_element_visible_for_user($user->id, $user_id, $visibilities['guestbook'])) {
     $guest->showGuestbook();
     echo "<br>";
 }
@@ -574,8 +589,10 @@ if ($user_id == $user->id){
     $layout->admin_title = _('Literaturlisten bearbeiten');
 }
 
-echo $layout->render(array('title' => _('Literaturlisten'), 'content_for_layout' => $lit_list));
-$layout->clear_attributes();
+if (is_element_visible_for_user($user->id, $user_id, $visibilities['literature'])) {
+    echo $layout->render(array('title' => _('Literaturlisten'), 'content_for_layout' => $lit_list));
+    $layout->clear_attributes();
+}
 
 // Hier werden Lebenslauf, Hobbys, Publikationen und Arbeitsschwerpunkte ausgegeben:
 $ausgabe_felder = array('lebenslauf' => _("Lebenslauf"),
@@ -585,7 +602,8 @@ $ausgabe_felder = array('lebenslauf' => _("Lebenslauf"),
             );
 
 foreach ($ausgabe_felder as $key => $value) {
-    echo $layout->render(array('title' => $value, 'content_for_layout' => formatReady($db->f($key))));
+    if (is_element_visible_for_user($user->id, $user_id, $visibilities[$key]))
+        echo $layout->render(array('title' => $value, 'content_for_layout' => formatReady($db->f($key))));
 }
 
 $layout->clear_attributes();
@@ -593,12 +611,14 @@ $layout->clear_attributes();
 // add the free administrable datafields (these field are system categories -
 // the user is not allowed to change the categories)
 foreach ($long_datafields as $entry) {
-    $vperms = $entry->structure->getViewPerms();
-    $visible = 'all' == $vperms
-               ? _("sichtbar für alle")
-               : sprintf(_("sichtbar für Sie und alle %s"),
-                         prettyViewPermString($vperms));
-    echo $layout->render(array('title' => $entry->getName() . "($visible)", 'content_for_layout' => $entry->getDisplayValue()));
+    if (is_element_visible_for_user($user->id, $user_id, $visibilities[$entry->getName()])) {
+        $vperms = $entry->structure->getViewPerms();
+        $visible = 'all' == $vperms
+                   ? _("sichtbar für alle")
+                   : sprintf(_("sichtbar für Sie und alle %s"),
+                             prettyViewPermString($vperms));
+        echo $layout->render(array('title' => $entry->getName() . "($visible)", 'content_for_layout' => $entry->getDisplayValue()));
+    }
 }
 
 $layout->clear_attributes();
@@ -612,20 +632,21 @@ foreach ($homepageplugins as $homepageplugin){
 
     if ($template) {
         echo $template->render(NULL, $layout);
-        $layout->clear_attributes();
     }
 }
 
+$layout->clear_attributes();
+
 //add the own categories - this ones are self created by the user
-$db2->query("SELECT * FROM kategorien WHERE range_id = '$user_id' ORDER BY priority");
-while ($db2->next_record())  {
-    $head=$db2->f("name");
-    $body=$db2->f("content");
-    if ($db2->f("hidden") == '1') {
+$categories = DBManager::get()->query("SELECT * FROM kategorien WHERE range_id = '$user_id' ORDER BY priority");
+while ($category = $categories->fetch())  {
+    $head=$category["name"];
+    $body=$category["content"];
+    if ($visibilities['kat_'.$category['kategorie_id']] == VISIBILITY_ME) {
         $head .= ' ('._('für andere unsichtbar').')';
     }
     // oeffentliche Rubrik oder eigene Homepage
-    if ($db2->f("hidden") != '1' || $user_id == $user->id) {
+    if (is_element_visible_for_user($user->id, $user_id, $visibilities['kat_'.$category['kategorie_id']])) {
         echo $layout->render(array('title' => $head, 'content_for_layout' => formatReady($body)));
     }
 }

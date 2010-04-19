@@ -641,3 +641,18 @@ $INST_ADMIN_DATAFIELDS_VIEW = array(
     'default' => array(
     )
 );
+
+/*
+ * Fields that may not be hidden by users in their privacy settings.
+ * Can be configured per permission level.
+ * @see lib/edit_about.inc.php in function get_homepage_elements for 
+ * available fields.
+ */
+$NOT_HIDEABLE_FIELDS = array(
+    'user' => array(),
+    'autor' => array(),
+    'tutor' => array(),
+    'dozent' => array('email'),
+    'admin' => array(),
+    'root' => array()
+);

@@ -20,6 +20,15 @@ $instituts_id = $this->config->range_id;
 $username = $args["username"];
 $sem_id = $args["seminar_id"];
 
+$this->visibilities = get_local_visibility_by_username($username, 'homepage', true);
+if ($this->visibilities) {
+    $this->owner_perm = $this->visibilities['perms'];
+    $this->visibilities = unserialize($this->visibilities['homepage']);
+} else {
+    $this->visibilities = array();
+    $this->owner_perm = 'user';
+}
+
 $db_inst = new DB_Seminar();
 $db = new DB_Seminar();
 
@@ -102,7 +111,7 @@ if ($this->config->getValue("Main", "studiplink") == "top") {
 
 // generic data fields
 if ($generic_datafields = $this->config->getValue("Main", "genericdatafields")) {
-//  $datafields_obj = new DataFields($db->f("user_id"));
+//  $datafields_obj =& new DataFields($db->f("user_id"));
     $fieldEntries = DataFieldEntry::getDataFieldEntries($db->f("user_id"));
 //  $datafields = $datafields_obj->getLocalFields($db->f("user_id"));
 }
@@ -117,7 +126,7 @@ foreach ($order as $position) {
             case "lebenslauf" :
             case "schwerp" :
             case "publi" :
-                if ($db->f($data_field) != "") {
+                if ($db->f($data_field) != "" && is_element_visible_externally($db->f("user_id"), $this->owner_perm, $data_field, $this->visibilities[$data_field])) {
                     echo "<tr><td width=\"100%\">\n";
                     echo "<table" . $this->config->getAttributes("TableParagraph", "table") . ">\n";
                     echo "<tr" . $this->config->getAttributes("TableParagraphHeadline", "tr");
@@ -133,6 +142,10 @@ foreach ($order as $position) {
                 break;
             case "news" :
             case "termine" :
+                if (is_element_visible_externally($db->f("user_id"), $this->owner_perm, $data_field, $this->visibilities[$data_field])) {
+                    $data_field($this, $db, $aliases_content[$position], $text_div, $text_div_end);
+                }
+                break;
             case "kategorien" :
             case "lehre" :
             case "head" :
@@ -174,48 +187,50 @@ if ($this->config->getValue("Main", "studiplink") == "bottom") {
 echo "</table>\n";
 
 function news (&$module, $db, $alias_content, $text_div, $text_div_end) {
-    if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
-        $subheadline_div = "<div style=\"margin-left:$margin;\">";
-        $subheadline_div_end = "</div>";
-    }
-    else {
-        $subheadline_div = "";
-        $subheadline_div_end = "";
-    }
-
-    $db_news = new DB_Seminar();
-    $query = "SELECT * FROM news_range nr LEFT JOIN news n USING(news_id) WHERE "
-                    . "nr.range_id = '" . $db->f("user_id") . "' AND user_id = '" . $db->f("user_id")
-                    . "' AND date <= " . time() . " AND (date + expire) >= " . time();
-    $db_news->query($query);
-    if ($db_news->num_rows()) {
-        echo "<tr><td width=\"100%\">\n";
-        echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
-        echo "<tr" . $module->config->getAttributes("TableParagraphHeadline", "tr") . ">";
-        echo "<td" . $module->config->getAttributes("TableParagraphHeadline", "td") . ">";
-        echo "<font" . $module->config->getAttributes("TableParagraphHeadline", "font") . ">";
-        echo "$alias_content</font></td></tr>\n";
-
-        while ($db_news->next_record()) {
-            echo "<tr" . $module->config->getAttributes("TableParagraphSubHeadline", "tr") . ">";
-            echo "<td" . $module->config->getAttributes("TableParagraphSubHeadline", "td") . ">";
-            echo $subheadline_div;
-            echo "<font" . $module->config->getAttributes("TableParagraphSubHeadline", "font") . ">";
-            echo htmlReady($db_news->f("topic"));
-            echo "</font>$subheadline_div_end</td></tr>\n";
-            echo "<tr" . $module->config->getAttributes("TableParagraphText", "tr") . ">";
-            list ($content, $admin_msg) = explode("<admin_msg>", $db_news->f("body"));
-            echo "<td" . $module->config->getAttributes("TableParagraphText", "td") . ">";
-            echo "$text_div<font" . $module->config->getAttributes("TableParagraphText", "font") . ">";
-            echo formatReady($content, TRUE, TRUE);
-            echo "</font>$text_div_end</td></tr>\n";
+    if (is_element_visible_externally($db->f("user_id"), $module->owner_perm, $data_field, $module->visibilities['news'])) {
+        if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
+            $subheadline_div = "<div style=\"margin-left:$margin;\">";
+            $subheadline_div_end = "</div>";
         }
-        echo "</table>\n</td></tr>\n";
+        else {
+            $subheadline_div = "";
+            $subheadline_div_end = "";
+        }
+
+        $db_news = new DB_Seminar();
+        $query = "SELECT * FROM news_range nr LEFT JOIN news n USING(news_id) WHERE "
+                        . "nr.range_id = '" . $db->f("user_id") . "' AND user_id = '" . $db->f("user_id")
+                        . "' AND date <= " . time() . " AND (date + expire) >= " . time();
+        $db_news->query($query);
+        if ($db_news->num_rows()) {
+            echo "<tr><td width=\"100%\">\n";
+            echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
+            echo "<tr" . $module->config->getAttributes("TableParagraphHeadline", "tr") . ">";
+            echo "<td" . $module->config->getAttributes("TableParagraphHeadline", "td") . ">";
+            echo "<font" . $module->config->getAttributes("TableParagraphHeadline", "font") . ">";
+            echo "$alias_content</font></td></tr>\n";
+
+            while ($db_news->next_record()) {
+                echo "<tr" . $module->config->getAttributes("TableParagraphSubHeadline", "tr") . ">";
+                echo "<td" . $module->config->getAttributes("TableParagraphSubHeadline", "td") . ">";
+                echo $subheadline_div;
+                echo "<font" . $module->config->getAttributes("TableParagraphSubHeadline", "font") . ">";
+                echo htmlReady($db_news->f("topic"));
+                echo "</font>$subheadline_div_end</td></tr>\n";
+                echo "<tr" . $module->config->getAttributes("TableParagraphText", "tr") . ">";
+                list ($content, $admin_msg) = explode("<admin_msg>", $db_news->f("body"));
+                echo "<td" . $module->config->getAttributes("TableParagraphText", "td") . ">";
+                echo "$text_div<font" . $module->config->getAttributes("TableParagraphText", "font") . ">";
+                echo formatReady($content, TRUE, TRUE);
+                echo "</font>$text_div_end</td></tr>\n";
+            }
+            echo "</table>\n</td></tr>\n";
+        }
     }
 }
 
 function termine (&$module, $db, $alias_content, $text_div, $text_div_end) {
-    if ($GLOBALS["CALENDAR_ENABLE"]) {
+    if ($GLOBALS["CALENDAR_ENABLE"] && is_element_visible_externally($db->f("user_id"), $module->owner_perm, $data_field, $module->visibilities['dates'])) {
         if ($margin = $module->config->getValue("TableParagraphSubHeadline", "margin")) {
             $subheadline_div = "<div style=\"margin-left:$margin;\">";
             $subheadline_div_end = "</div>";
@@ -262,23 +277,24 @@ function termine (&$module, $db, $alias_content, $text_div, $text_div_end) {
 function kategorien (&$module, $db, $alias_content, $text_div, $text_div_end) {
     $db_kategorien = new DB_Seminar();
     $query = "SELECT * FROM auth_user_md5 aum LEFT JOIN kategorien k ON (k.range_id=user_id) "
-           ."WHERE username='" . $db->f("username") . "' AND hidden=0";
+           ."WHERE username='" . $db->f("username") . "'";
 
     $db_kategorien->query($query);
     while ($db_kategorien->next_record()) {
-
-        echo "<tr><td width=\"100%\">\n";
-        echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
-        echo "<tr" . $module->config->getAttributes("TableParagraphHeadline", "tr") . ">";
-        echo "<td" . $module->config->getAttributes("TableParagraphHeadline", "td") . ">";
-        echo "<font" . $module->config->getAttributes("TableParagraphHeadline", "font") . ">";
-        echo htmlReady($db_kategorien->f("name"), TRUE);
-        echo "</font></td></tr>\n";
-        echo "<tr" . $module->config->getAttributes("TableParagraphText", "tr") . ">";
-        echo "<td" . $module->config->getAttributes("TableParagraphText", "td") . ">";
-        echo "$text_div<font" . $module->config->getAttributes("TableParagraphText", "font") . ">";
-        echo formatReady($db_kategorien->f("content"), TRUE, TRUE);
-        echo "</font>$text_div_end</td></tr>\n</table>\n</td></tr>\n";
+        if (is_element_visible_externally($db->f("user_id"), $module->owner_perm, 'kat_'.$db->f('kategorie_id'), $module->visibilities['kat_'.$db->f('kategorie_id')])) {
+            echo "<tr><td width=\"100%\">\n";
+            echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
+            echo "<tr" . $module->config->getAttributes("TableParagraphHeadline", "tr") . ">";
+            echo "<td" . $module->config->getAttributes("TableParagraphHeadline", "td") . ">";
+            echo "<font" . $module->config->getAttributes("TableParagraphHeadline", "font") . ">";
+            echo htmlReady($db_kategorien->f("name"), TRUE);
+            echo "</font></td></tr>\n";
+            echo "<tr" . $module->config->getAttributes("TableParagraphText", "tr") . ">";
+            echo "<td" . $module->config->getAttributes("TableParagraphText", "td") . ">";
+            echo "$text_div<font" . $module->config->getAttributes("TableParagraphText", "font") . ">";
+            echo formatReady($db_kategorien->f("content"), TRUE, TRUE);
+            echo "</font>$text_div_end</td></tr>\n</table>\n</td></tr>\n";
+        }
     }
 }
 
@@ -483,11 +499,10 @@ function head (&$module, $db, $a) {
                 echo "<td" . $module->config->getAttributes("PersondetailsHeader", "contacttd") . ">";
                 echo kontakt($module, $db) . "</td>\n";
         }
-
         if ($module->config->getValue("Main", "showimage")) {
             echo "<td" . $module->config->getAttributes("PersondetailsHeader", "picturetd") . ">";
             $avatar = Avatar::getAvatar($db->f("user_id"));
-            if ($avatar->is_customized()) {
+            if ($avatar->is_customized() && is_element_visible_externally($db->f("user_id"), $module->owner_perm, 'picture', $module->visibilities['picture'])) {
                 echo "<img src=\"".$avatar->getURL(Avatar::NORMAL) .
                      "\" alt=\"Foto " . htmlReady(trim($db->f("fullname"))) . "\"";
                 echo $module->config->getAttributes("PersondetailsHeader", "img") . "></td>";
@@ -578,18 +593,20 @@ function kontakt ($module, $db, $separate = FALSE) {
         switch ($data_field) {
             case 'Email' :
                 if ($separate || !$module->config->getValue('Contact', 'separatelinks')) {
+                    $email_address = get_visible_email($db->f("user_id"));
                     $out .= "<tr$attr_tr>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fonttitle>";
                     $out .= $alias_contact[$position] . "</font></td>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fontcontent>";
-                    $mail = trim(htmlReady($db->f("Email")));
+                    $mail = trim(htmlReady($email_address));
                     $out .= "<a href=\"mailto:$mail\">$mail</a>";
                 }
                 break;
             case 'Home' :
-                if ($separate || !$module->config->getValue('Contact', 'separatelinks')) {
+                if (($separate || !$module->config->getValue('Contact', 'separatelinks')) && 
+                        is_element_visible_externally($db->f("user_id"), $module->owner_perm, 'homepage', $module->visibilities['homepage'])) {
                     $out .= "<tr$attr_tr>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fonttitle>";
@@ -600,7 +617,7 @@ function kontakt ($module, $db, $separate = FALSE) {
                 }
                 break;
             default:
-                if (!$separate) {
+                if (!$separate && is_element_visible_externally($db->f("user_id"), $module->owner_perm, $data_field, $module->visibilities[$data_field])) {
                     $out .= "<tr$attr_tr>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fonttitle>";

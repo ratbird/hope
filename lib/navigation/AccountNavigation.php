@@ -37,6 +37,8 @@ class AccountNavigation extends Navigation
         // general
         $this->addSubNavigation('general', new Navigation(_('Allgemeines'), 'edit_about.php', array('view' => 'allgemein')));
 
+        $this->addSubNavigation('privacy', new Navigation(_('Privatsphäre'), 'edit_about.php', array('view' => 'privacy')));
+
         $this->addSubNavigation('messaging', new Navigation(_('Nachrichten'), 'edit_about.php', array('view' => 'Messaging')));
 
         $this->addSubNavigation('forum', new Navigation(_('Forum'), 'edit_about.php', array('view' => 'Forum')));

@@ -24,6 +24,13 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 require_once 'functions.php';
 require_once 'lib/classes/UserDomain.php';
 
+// Define constants for visibility states.
+define("VISIBILITY_ME", 1);
+define("VISIBILITY_BUDDIES", 2);
+define("VISIBILITY_DOMAIN", 3);
+define("VISIBILITY_STUDIP", 4);
+define("VISIBILITY_EXTERN", 5);
+
 /*
  * A function to determine a users visibility
  *
@@ -99,7 +106,7 @@ function get_visibility_by_state ($state, $user_id) {
  * This function returns a query-snip for selecting with current visibility rights
  * @returns string  returns a query string
  */
-function get_vis_query($table_alias = 'auth_user_md5') {
+function get_vis_query($table_alias = 'auth_user_md5', $context='') {
     global $auth, $perm;
 
     if ($perm->have_perm("root")) return "1";
@@ -118,14 +125,19 @@ function get_vis_query($table_alias = 'auth_user_md5') {
                     AND userdomain_id IN ('".implode("','", $my_domain_ids)."')) > 0";
     }
 
-    $query .= " AND ($table_alias.visible = 'always' OR $table_alias.visible = 'yes'";
+    $query .= " AND ($table_alias.visible = 'always'";
+
+    if ($context) {
+        $query .= " OR ($table_alias.visible = 'yes' AND user_visibility.$context = 1)";
+    } else {
+        $query .= " OR $table_alias.visible = 'yes'";
+    }
 
     if (get_config('USER_VISIBILITY_UNKNOWN')) {
         $query .= " OR $table_alias.visible = 'unknown'";
     }
 
     $query .= ")";
-
     return "($query)";
 }
 
@@ -204,4 +216,148 @@ function first_decision($userid) {
     page_close();
     die;
 }
+
+function get_global_visibility_by_id($user_id) {
+    $stmt = DBManager::get()->query("SELECT visible FROM auth_user_md5 WHERE user_id='".$user_id."'");
+    $data = $stmt->fetch();
+    return $data['visible'];
+}
+
+function get_global_visibility_by_username($username) {
+    return get_global_visibility_by_id(get_userid($username));
+}
+
+function get_local_visibility_by_id($user_id, $context, $return_user_perm=false) {
+    global $NOT_HIDEABLE_FIELDS;
+    $stmt = DBManager::get()->query("SELECT a.`perms`, u.`".$context.
+        "` FROM `user_visibility` u JOIN auth_user_md5 a ON ".
+        "(u.`user_id`=a.`user_id`) WHERE a.`user_id`='".$user_id."'");
+    $data = $stmt->fetch();
+    if ($data[$context]) {
+        if ($NOT_HIDEABLE_FIELDS[$data['perms']][$context]) {
+            $result = true;
+        } else {
+            if ($return_user_perm) {
+                $result = array(
+                    'perms' => $data['perms'],
+                    $context => $data[$context]
+                );
+            } else {
+                $result = $data[$context];
+            }
+        }
+    } else {
+        $result = false;
+    }
+    return $result;
+}
+
+function get_local_visibility_by_username($username, $context, $return_user_perm=false) {
+    return get_local_visibility_by_id(get_userid($username), $context, $return_user_perm);
+}
+
+function is_element_visible_for_user($user_id, $owner_id, $element_visibility) {
+    $is_visible = false;
+    if ($user_id == $owner_id) {
+        $is_visible = true;
+    } else {
+        // No element visibility given (user has not configured this element yet)
+        // Set default visibility as element visibility
+        if (!$element_visibility) {
+            $element_visibility = get_default_homepage_visibility();
+        }
+        // Check if the given element is visible according to its visibility.
+        switch ($element_visibility) {
+            case VISIBILITY_EXTERN:
+                $is_visible = true;
+                break;
+            case VISIBILITY_STUDIP:
+                if ($user_id != "nobody") {
+                    $is_visible = true;
+                }
+                break;
+            case VISIBILITY_DOMAIN:
+                $user_domains = UserDomain::getUserDomainsForUser($user_id);
+                $owner_domains = UserDomain::getUserDomainsForUser($owner_id);
+                if (array_intersect($user_domains, $owner_domains)) {
+                    $visible = true;
+                }
+                break;
+            case VISIBILITY_BUDDIES:
+                if (CheckBuddy(get_username($user_id), $owner_id) || $owner_id == $user_id) {
+                    $is_visible = true;
+                }
+                break;
+            case VISIBILITY_ME:
+                if ($owner_id == $user_id) {
+                    $is_visible = true;
+                }
+                break;
+        }
+    }
+    return $is_visible;
+}
+
+function is_element_visible_externally($owner_id, $owner_perm, $field_name, $element_visibility) {
+    global $NOT_HIDEABLE_FIELDS;
+    $is_visible = false;
+    if ($element_visibility == VISIBILITY_EXTERN || $NOT_HIDEABLE_FIELDS[$owner_perm][$field_name])
+        $is_visible = true;
+    return $is_visible;
+}
+
+function get_default_homepage_visibility() {
+    $default_visibility = get_config('HOMEPAGE_VISIBILITY_DEFAULT');
+    $known_visibilities = array(
+            VISIBILITY_ME, 
+            VISIBILITY_BUDDIES, 
+            VISIBILITY_DOMAIN, 
+            VISIBILITY_STUDIP, 
+            VISIBILITY_EXTERN
+        );
+    // Invalid config entry given, so set visibility to Stud.IP-internal...
+    if (!in_array($default_visibility, $known_visibilities))
+        $default_visibility = VISIBILITY_STUDIP;
+    return $default_visibility;
+}
+
+function get_visible_email($user_id) {
+    $result = '';
+    if (get_local_visibility_by_id($user_id, 'email')) {
+        $data = DBManager::get()->query("SELECT Email FROM auth_user_md5 WHERE user_id='".$user_id."'");
+        if ($current = $data->fetch()) {
+            $result = $current['Email'];
+        }
+    } else {
+        $data = DBManager::get()->query("SELECT i.email, u.externdefault 
+            FROM user_inst u JOIN Institute i USING (Institut_id) 
+            WHERE u.user_id='".$user_id."' AND u.inst_perms != 'user' 
+            ORDER BY u.priority");
+        while ($current = $data->fetch()) {
+            if (!$result || $current['externdefault']) {
+                $result = $current['email'];
+            }
+        }
+    }
+    return $result;
+}
+
+function get_homepage_element_visibility($user_id, $element_name) {
+    $visibilities = get_local_visibility_by_id($user_id, 'homepage');
+    $visibilities = unserialize($visibilities);
+    if (isset($visibilities[$element_name])) {
+        return $visibilities[$element_name];
+    } else {
+        return get_default_homepage_visibility();
+    }
+}
+
+function set_homepage_element_visibility($user_id, $element_name, $visibility) {
+    $visibilities = get_local_visibility_by_id($user_id, 'homepage');
+    $visibilities = unserialize($visibilities);
+    $visibilities[$element_name] = $visibility;
+    return DBManager::get()->exec("UPDATE user_visibility SET homepage='".
+        serialize($visibilities)."' WHERE user_id='".$user_id."'");
+}
+
 ?>

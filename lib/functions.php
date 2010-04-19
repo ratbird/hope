@@ -1064,10 +1064,11 @@ function get_users_online($active_time = 5, $name_format = 'full_rev'){
     }
     $now = time(); // nach eingestellter Zeit (default = 5 Minuten ohne Aktion) zaehlt man als offline
     $query = "SELECT a.username," . $_fullname_sql[$name_format] . " AS name,UNIX_TIMESTAMP() - UNIX_TIMESTAMP(changed) AS last_action,
-        a.user_id as userid, contact_id as is_buddy, " . get_vis_query('a') . " AS is_visible
+        a.user_id as userid, contact_id as is_buddy, " . get_vis_query('a', 'online') . " AS is_visible
         FROM " . PHPLIB_USERDATA_TABLE . " 
         LEFT JOIN auth_user_md5 a ON (a.user_id=sid)
         LEFT JOIN user_info USING(user_id)
+        LEFT JOIN user_visibility USING(user_id)
         LEFT JOIN contact ON (owner_id='".$user->id."' AND contact.user_id=a.user_id AND buddy=1)
         WHERE changed > '" . date("YmdHis", ($now - ($active_time * 60)))."'
         AND sid != '".$user->id."' AND sid !='nobody'

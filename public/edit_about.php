@@ -57,8 +57,6 @@ if (!isset($ALLOW_CHANGE_NAME)) $ALLOW_CHANGE_NAME = TRUE; //wegen Abwärtskompat
 
 // hier gehts los
 if (!$username) $username = $auth->auth["uname"];
-$username = preg_replace('/[^\w@.-]/', '', $username);
-
 if($edit_about_msg){
     $msg = $edit_about_msg;
     $edit_about_msg = '';
@@ -304,18 +302,21 @@ if (check_ticket($studipticket)) {
         $my_studip_settings["startpage_redirect"] = $personal_startpage;
         $user->cfg->setValue((int)$_REQUEST['accesskey_enable'], $user->id, "ACCESSKEY_ENABLE");
         $user->cfg->setValue((int)$_REQUEST['showsem_enable'], $user->id, "SHOWSEM_ENABLE");
+    }
 
-        // change visibility
-        $q="SELECT visible FROM auth_user_md5 WHERE user_id='$user->id'";
-        $my_about->db->query($q);
-        $my_about->db->next_record();
-        $visi=$my_about->db->f("visible");
-        if ($visi != 'always' && $visi != 'never' && ($change_visibility=='global' || $change_visibility=='yes' || $change_visibility=='no')) {
-            if ($visi!=$change_visibility) {
-                $my_about->db->query("UPDATE auth_user_md5 SET visible='$change_visibility' WHERE user_id='$user->id'");
-                $my_about->msg .= "ok§" . _("Ihre Sichtbarkeit wurde geändert.") . "§";
-            }
-        }
+    if ($cmd == 'change_global_visibility') {
+        $my_about->change_global_visibility($global_visibility, $online, $chat, $search, $email);
+    }
+
+    if ($cmd == 'change_all_homepage_visibility') {
+        $my_about->change_all_homepage_visibility($all_homepage_visibility);
+    }
+
+    if ($cmd == 'change_homepage_visibility') {
+        $data = $_POST;
+        unset($data["change_homepage_visibility_x"]);
+        unset($data["change_homepage_visibility_y"]);
+        $my_about->change_homepage_visibility($data);
     }
 
     if ($my_about->logout_user)
@@ -441,6 +442,10 @@ switch($view) {
     case "allgemein":
         $CURRENT_PAGE=_("Allgemeine Einstellungen anpassen");
         Navigation::activateItem('/account/general');
+        break;
+    case "privacy":
+        $CURRENT_PAGE=_("Privatsphäre");
+        Navigation::activateItem('/account/privacy');
         break;
     default:
         $HELP_KEYWORD="Basis.MyStudIP";
@@ -1307,6 +1312,10 @@ if ($view == 'Login') {
 
     }
     echo "<br>\n</td></tr>\n";
+}
+
+if ($view == 'privacy') {
+    require_once ('lib/include/privacy.inc.php');
 }
 
     if ($table_open) echo "\n</table>\n";

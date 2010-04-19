@@ -105,9 +105,13 @@ $active_chats = count($chatServer->chatDetail);
 if ($active_chats){
     $chatids = array_keys($chatServer->chatDetail);
     if (count($chatids)){
-        $db = new DB_Seminar("SELECT user_id FROM auth_user_md5 WHERE user_id IN('" . join("','",$chatids) ."') AND user_id !='". $auth->auth['uid'] ."'");
+        $db = new DB_Seminar("SELECT a.user_id, ".get_vis_query('a', 'chat')." AS is_visible FROM auth_user_md5 a LEFT JOIN user_visibility USING (user_id) WHERE a.user_id IN('" . join("','",$chatids) ."') AND a.user_id !='". $auth->auth['uid'] ."'");
         while ($db->next_record()){
-            $active_user_chats[] = $db->f(0);
+            if ($db->f("is_visible")) {
+                $active_user_chats[] = $db->f(0);
+            } else {
+                $hidden_user_chats[] = $db->f(0);
+            }
         }
         $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id IN('" . join("','",$chatids) ."') AND visible='1'"); // OK_VISIBLE
         while ($db->next_record()){
@@ -160,7 +164,7 @@ chat_get_javascript();
                 <tr>
                     <td class="blank">&nbsp;</td>
                 </tr>
-<?if(is_array($active_user_chats)){?>
+<?if(is_array($active_user_chats) || is_array($hidden_user_chats)){?>
                 <tr>
                     <td class="topic" >
                     <font size="-1">
@@ -171,6 +175,15 @@ chat_get_javascript();
                 <tr>
                     <td>
                     <? print_chat_info($active_user_chats);?>
+                    <?php
+                    if (is_array($hidden_user_chats)) {
+                        if (sizeof($hidden_user_chats) == 1) {
+                            echo _("+1 weiterer, unsichtbarer Chatraum.");
+                        } else {
+                            sprintf(_("+%s weitere, unsichtbare Chaträume."), sizeof($invisible_user_chats));
+                        }
+                    }
+                    ?>
                     </td>
                 </tr>
                 <tr>

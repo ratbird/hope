@@ -886,7 +886,7 @@ class about extends messaging {
         if ($data_fields) {
             foreach ($data_fields as $key => $field) {
                 if (!$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']][$key]) {
-                    $homepage_elements[$key] = array("name" => _($key), "visibility" => $homepage_visibility[$key] ? $homepage_visibility[$key] : get_default_homepage_visibility(), "extern" => true);
+                    $homepage_elements[$key] = array("name" => _($field->structure->data['name']), "visibility" => $homepage_visibility[$key] ? $homepage_visibility[$key] : get_default_homepage_visibility(), "extern" => true);
                 }
             }
         }

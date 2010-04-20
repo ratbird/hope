@@ -1,3 +1,10 @@
+__20.04.2010 v 1.11__
+- Dateibasiertes caching als default
+- Event-System für Stud.IP
+- Navigation 2.0
+- Umgestaltung Dateibereich
+- Installation von Plugins aus dem Repository
+
 __16.11.2009 v 1.10__
 - Interfaces für Plugins (Komponenten)
 - Vorlesungsverzeichnis und systemweite Personalübersicht für externe Seiten

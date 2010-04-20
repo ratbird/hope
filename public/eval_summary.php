@@ -1,6 +1,6 @@
 <?php
 # Lifter002: TODO
-# Lifter007: TODO
+# Lifter007: TEST
 # Lifter003: TODO
 /**
  * eval_summary.php - Hauptseite fuer Eval-Auswertungen
@@ -35,20 +35,19 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-
-$eval = new Evaluation(Request::get($eval_id));
-if (!is_object($eval) && EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval) == YES) {
-    // Evaluation existiert nicht...
+// Überprüfen, ob die Evaluation existiert oder der Benutzer genügend Rechte hat
+$eval = new Evaluation($eval_id);
+$eval->check();
+if (EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval) == YES || count($eval->errorArray) > 0) {
     throw new Exception(_("Diese Evaluation ist nicht vorhanden oder Sie haben nicht ausreichend Rechte!"));
 }
 
-// Gehoert die benutzende Person zum Seminar-Stab (Dozenten, Tutoren) oder ist es ein ROOT?
-$staff_member = $perm->have_studip_perm("tutor",$SessSemName[1]);
+$HELP_KEYWORD="Basis.Evaluationen";
+Navigation::activateItem('/tools/evaluation');
+$CURRENT_PAGE.= _("Evaluations-Auswertung");
 
-/*
-    1 = normale HTML-Ansicht in Stud.IP
-    2 = Druckansicht, ohne HTML-Elemente
-*/
+// Gehoert die benutzende Person zum Seminar-Stab (Dozenten, Tutoren) oder ist es ein ROOT?
+$staff_member = $perm->have_studip_perm("tutor", $SessSemName[1]);
 
 // Template vorhanden?
 $has_template = 0;
@@ -58,10 +57,13 @@ $question_type = "";
 $tmp_path_export = $GLOBALS['TMP_PATH']. '/export/';
 export_tmp_gc();
 
-if (!isset($ausgabeformat)) $ausgabeformat = 1;
-
-$HELP_KEYWORD="Basis.Evaluationen";
-Navigation::activateItem('/tools/evaluation');
+/*
+    1 = normale HTML-Ansicht in Stud.IP
+    2 = Druckansicht, ohne HTML-Elemente
+*/
+if (!isset($ausgabeformat)) {
+    $ausgabeformat = 1;
+}
 
 if ($ausgabeformat==1) {
     include ('lib/include/html_head.inc.php'); // Output of html head

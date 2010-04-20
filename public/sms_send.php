@@ -2,36 +2,22 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-
 /**
-* frontend for message-transmission
-*
-* @author       Cornelis Kater <ckater@gwdg.de>, Nils K. Windisch <studip@nkwindisch.de>
-* @access       public
-* @modulegroup  Messaging
-* @module       sms_send.php
-* @package      Stud.IP Core
-*/
-
-/*
-sms_send.php - Verwaltung von systeminternen Kurznachrichten
-Copyright (C) 2002 Cornelis Kater <ckater@gwdg.de>, Nils K. Windisch <info@nkwindisch.de>
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
-
+ * sms_send.php - Verwaltung von systeminternen Kurznachrichten
+ *
+ * frontend for message-transmission
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Cornelis Kater <ckater@gwdg.de>
+ * @author      Nils K. Windisch <studip@nkwindisch.de>
+ * @copyright   2002-2010 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
 
 require '../lib/bootstrap.php';
 
@@ -44,7 +30,7 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once 'lib/functions.php';
 require_once ('lib/msg.inc.php');
 require_once ('lib/visual.inc.php');
-if ($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]){
+if ($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]) {
     require_once ('lib/datei.inc.php');
 }
 require_once ('lib/include/messagingSettings.inc.php');
@@ -52,12 +38,12 @@ require_once ('lib/messaging.inc.php');
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/sms_functions.inc.php');
 require_once ('lib/user_visible.inc.php');
-if ($GLOBALS['CHAT_ENABLE']){
+
+if ($GLOBALS['CHAT_ENABLE']) {
     include_once $RELATIVE_PATH_CHAT.'/chat_func_inc.php';
     $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
     $chatServer->caching = true;
     $admin_chats = $chatServer->getAdminChats($auth->auth['uid']);
-
 }
 
 $sess->register("sms_data");
@@ -433,12 +419,13 @@ $txt['007'] = _("als Email senden");
 $txt['008'] = _("Lesebestätigung");
 
 ?>
-
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<table width="100%" border="0" cellpadding="2" cellspacing="0">
 <tr>
     <td class="blank" valign="top"><?
     if ($msg) {
-        parse_msg ($msg);
+        echo '<table width="100%">';
+        parse_msg($msg);
+        echo '</table>';
     }
 
     echo '<form enctype="multipart/form-data" NAME="upload_form" action="'.$PHP_SELF.'" method="post">';
@@ -639,10 +626,11 @@ $txt['008'] = _("Lesebestätigung");
     $smsinfos .= "&nbsp;"._("Signatur");
 
     $smsinfos = array("kategorie" => _("Übersicht:"),"eintrag" => array(array("icon" => "einst.gif", "text" => sprintf($smsinfos))));
-
-    echo"</form>\n";
-    print "</td><td class=\"blank\" width=\"270\" align=\"right\" valign=\"top\">";
-
+?>
+        </form>
+    </td>
+    <td class="blank" width="270" align="right" valign="top">
+<?
     if (get_config("EXTERNAL_HELP")) {
         $help_url_smil=format_help_url("Basis.VerschiedenesSmileys");
         $help_url_format=format_help_url("Basis.VerschiedenesFormat");
@@ -662,14 +650,8 @@ $txt['008'] = _("Lesebestätigung");
 
     </td>
 </tr>
-<tr>
-    <td class="blank" colspan="2">&nbsp;
-    </td>
-</tr>
 </table>
-<br/>
+
 <?php
-// Save data back to database.
 include ('lib/include/html_end.inc.php');
 page_close();
-?>

@@ -69,18 +69,18 @@ $cssSw = new cssClassSwitcher;
 $Modules = new Modules;
 
 // Check if there was a submission
-while ( is_array($_POST)
-     && list($key, $val) = each($_POST)) {
+while ( is_array($_REQUEST)
+     && list($key, $val) = each($_REQUEST)) {
 
   switch ($key) {
 
     // Create a new Institut
     case "create_x":
-    if (!$perm->is_fak_admin()) {
-        $msg = "error§<b>" . _("Sie haben nicht die Berechtigung, um neue Einrichtungen zu erstellen!") . "</b>";
-        break;
-    }
-    // Do we have all necessary data?
+        if (!$perm->have_perm("root") && !($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') != 'none'))  {
+            $msg = "error§<b>" . _("Sie haben nicht die Berechtigung, um neue Einrichtungen zu erstellen!") . "</b>";
+            break;
+        }
+        // Do we have all necessary data?
         if (empty($Name)) {
             $msg="error§<b>" . _("Bitte geben sie eine Bezeichnung f&uuml;r die Einrichtung ein!") . "</b>";
             $i_view="new";
@@ -177,7 +177,17 @@ while ( is_array($_POST)
 
     // Delete the Institut
     case "i_kill_x":
+        if (!check_ticket($_GET['studipticket']))
+        {
+            $msg="error§<b>" . _("Ihr Ticket ist abgelaufen. Versuchen Sie die letzte Aktion erneut.") . "</b>";
+            break;
+        }
 
+        if (!$perm->have_perm("root") && !($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'))
+        {
+            $msg="error§<b>" . _("Sie haben nicht die Berechtigung Fakult&auml;ten zu l&ouml;schen!") . "</b>";
+            break;
+        }
         // Institut in use?
         $db->query("SELECT * FROM seminare WHERE Institut_id = '$i_id'");
         if ($db->next_record()) {
@@ -307,6 +317,14 @@ while ( is_array($_POST)
 
         // We deleted that intitute, so we have to unset the selection
         closeObject();
+        break;
+    case 'i_trykill_x':
+        $message = "Sind Sie sicher, dass Sie diese Einrichtung löschen wollen?";
+        $post['i_id'] = Request::option('i_id');
+        $post['i_kill_x'] = 1;
+        $post['Name'] = Request::get('Name');
+        $post['studipticket'] = get_ticket();
+        echo createQuestion($message, $post);
         break;
 
     default:
@@ -484,9 +502,9 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
         <input type="hidden" name="i_id"   value="<?php $db->p("Institut_id") ?>">
         <input type="IMAGE" name="i_edit" <?=makeButton("uebernehmen", "src")?> border=0 value=" Ver&auml;ndern ">
         <?
-        if ($db->f("number") < 1 && !$_num_inst) {
+        if ($db->f("number") < 1 && !$_num_inst && ($perm->have_perm("root") || ($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'))) { 
             ?>
-            &nbsp;<input type="IMAGE" name="i_kill" <?=makeButton("loeschen", "src")?> border=0 value=" L&ouml;schen ">
+            &nbsp;<input type="IMAGE" name="i_trykill" <?=makeButton("loeschen", "src")?> border=0 value="L&ouml;schen">
             <?
         }
     } else {

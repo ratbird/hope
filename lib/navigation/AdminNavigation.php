@@ -120,7 +120,7 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_inst'));
         }
 
-        if ($perm->is_fak_admin()) {
+        if ($perm->have_perm("root") || ($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') != 'none')) {
             $navigation->addSubNavigation('create', new Navigation(_('Neue Einrichtung anlegen'), 'admin_institut.php?i_view=new'));
         }
 

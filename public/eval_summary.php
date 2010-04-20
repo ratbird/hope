@@ -3,63 +3,43 @@
 # Lifter007: TODO
 # Lifter003: TODO
 /**
-* eval_summary.php
-*
-* Hauptseite fuer Eval-Auswertungen
-*
-*
-* @author               Jan Kulmann <jankul@zmml.uni-bremen.de>
-*/
-
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// eval_summary.php
-// Copyright (C) 2007 Jan Kulmann <jankul@zmml.uni-bremen.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
+ * eval_summary.php - Hauptseite fuer Eval-Auswertungen
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Jan Kulmann <jankul@zmml.uni-bremen.de>
+ * @copyright   2007-2010 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
 
 
 require '../lib/bootstrap.php';
 
-if (!isset($EVAL_AUSWERTUNG_GRAPH_FORMAT)) $EVAL_AUSWERTUNG_GRAPH_FORMAT = 'png'; //png sieht besser aus, mriehe
+require_once 'lib/visual.inc.php';
+require_once "vendor/phplot/phplot.php";
+require_once 'lib/msg.inc.php';
+require_once 'lib/visual.inc.php';
+require_once 'config.inc.php';
+require_once 'lib/functions.php';
+require_once 'lib/datei.inc.php';
+require_once 'lib/evaluation/evaluation.config.php';
+require_once EVAL_FILE_EVAL;
+require_once EVAL_FILE_OBJECTDB;
+require_once 'lib/export/export_tmp_gc.inc.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
+include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-include ('lib/seminar_open.php');             // initialise Stud.IP-Session
 
-// -- here you have to put initialisations for the current page
-require_once('lib/msg.inc.php');
-require_once('lib/visual.inc.php');
-require_once('config.inc.php');
-require_once 'lib/functions.php';
-require_once('lib/datei.inc.php');
-require_once('lib/evaluation/evaluation.config.php');
-require_once(EVAL_FILE_EVAL);
-require_once(EVAL_FILE_OBJECTDB);
-require_once('lib/export/export_tmp_gc.inc.php');
-
-// Start of Output
-
-$no_permission = YES;
-$eval = new Evaluation($eval_id);
-$no_permissons = EvaluationObjectDB::getEvalUserRangesWithNoPermission ($eval);
-if ($no_permissons == YES) {
-  // Evaluation existiert nicht...
-  echo "&nbsp;"._("Evaluation NICHT vorhanden oder keine Rechte vorhanden!");
-  die();
+$eval = new Evaluation(Request::get($eval_id));
+if (!is_object($eval) && EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval) == YES) {
+    // Evaluation existiert nicht...
+    throw new Exception(_("Diese Evaluation ist nicht vorhanden oder Sie haben nicht ausreichend Rechte!"));
 }
 
 // Gehoert die benutzende Person zum Seminar-Stab (Dozenten, Tutoren) oder ist es ein ROOT?
@@ -81,19 +61,12 @@ export_tmp_gc();
 if (!isset($ausgabeformat)) $ausgabeformat = 1;
 
 $HELP_KEYWORD="Basis.Evaluationen";
-Navigation::activateItem('/homepage/tools/evaluation');
+Navigation::activateItem('/tools/evaluation');
 
 if ($ausgabeformat==1) {
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');    //hier wird der "Kopf" nachgeladen
 }
-require_once('lib/visual.inc.php'); // fuer CSS etc.
-
-
-// Grafikbibliotheken
-require_once("vendor/phplot/phplot.php");
-
-
 
 if (isset($cmd)) {
     if ($cmd=="change_group_type" && isset($evalgroup_id) && isset($group_type)) {
@@ -115,8 +88,10 @@ if (isset($cmd)) {
 }
 
 
-function do_template($column) {
+function do_template($column)
+{
     global $has_template, $db_template;
+
     if ($has_template==0 || ($has_template==1 && $db_template->f($column)))
         return true;
     else
@@ -124,29 +99,48 @@ function do_template($column) {
 }
 
 
-function do_graph_template() {
+/**
+ * returning the type of the graph
+ *
+ * @return string
+ */
+function do_graph_template()
+{
     global $db_template, $has_template, $question_type;
+
     if ($has_template==1) {
-        if ($question_type=="likertskala") return $db_template->f("likertscale_gfx_type");
-        if ($question_type=="multiplechoice") return $db_template->f("mchoice_scale_gfx_type");
-        if ($question_type=="polskala") return $db_template->f("polscale_gfx_type");
+        if ($question_type=="likertskala") {
+            return $db_template->f("likertscale_gfx_type");
+        }
+        if ($question_type=="multiplechoice") {
+            return $db_template->f("mchoice_scale_gfx_type");
+        }
+        if ($question_type=="polskala") {
+            return $db_template->f("polscale_gfx_type");
+        }
     } else {
         return "bars";
     }
-    return "bars";
 }
 
-function do_graph($data, $evalquestion_id) {
+/**
+ * drawing the graph for a evaluation question
+ *
+ * @param array() $data
+ * @param string $evalquestion_id
+ */
+function do_graph($data, $evalquestion_id)
+{
     global $tmp_path_export, $auth, $PATH_EXPORT;
 
     $type = do_graph_template();
 
     //Define the object
-        if ($type == "pie") {
+    if ($type == "pie") {
         // Beim pie muss die Zeichenflaeche etwas groesser gewaehlt werden...
         $graph = new PHPlot(500,300);
     } else {
-            $graph = new PHPlot(300,250);
+        $graph = new PHPlot(300,250);
     }
 
     if ($type == "pie") {
@@ -164,35 +158,45 @@ function do_graph($data, $evalquestion_id) {
         $graph->SetLegend($legend);
     }
 
+    //png sieht besser aus, mriehe
+    if (!isset($GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT'])) {
+        $GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT'] = 'png';
+    }
+
+    //Data Colors
     $graph->SetDataColors(
-    array("blue","green","yellow","red","PeachPuff","orange","pink","lavender","navy","peru","salmon","maroon",
-          "magenta","orchid","ivory"),  //Data Colors
-              array("black")                                                      //Border Colors
+        array("blue", "green", "yellow", "red", "PeachPuff", "orange", "pink", "lavender",
+            "navy", "peru", "salmon", "maroon", "magenta", "orchid", "ivory"),
+        array("black") //Border Colors
     );
 
+    $graph->SetPlotAreaWorld(NULL, 0); // y-achse bei 0 starten
+    $graph->SetPrecisionY(0); //anzahl kommastellen y-achse
+
     $graph->SetPlotBgColor(array(222,222,222));
+    $graph->SetDataType("text-data");
+    $graph->SetFileFormat($GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT']);
+    $graph->SetOutputFile($tmp_path_export."/evalsum".$evalquestion_id.$auth->auth["uid"].".".$GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT']);
+    $graph->SetIsInline(true);
+    $graph->SetDataValues($data);
+    $graph->SetPlotType($type);
+    $graph->SetXLabelAngle(0);
+    //$graph->SetShading(0); // kein 3D
 
-        $graph->SetDataType("text-data");
-        $graph->SetFileFormat($GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT']);
-        $graph->SetOutputFile($tmp_path_export."/evalsum".$evalquestion_id.$auth->auth["uid"].".".$GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT']);
-        $graph->SetIsInline(true);
-        $graph->SetDataValues($data);
-        $graph->SetPlotType($type);
-        $graph->SetXLabelAngle(0);
-
-        $graph->SetLineWidth(1);
-        $graph->SetDrawXDataLabels(true);
-        //Draw it
-        $graph->DrawGraph();
+    $graph->SetLineWidth(1);
+    $graph->SetDrawXDataLabels(true);
+    //Draw it
+    $graph->DrawGraph();
 }
 
-function freetype_answers ($parent_id, $anz_nutzer) {
+function freetype_answers($parent_id, $anz_nutzer)
+{
     global $ausgabeformat;
 
     $db_answers = new DB_Seminar();
-        $db_answers->query(sprintf("SELECT ea.* FROM evalanswer ea, evalanswer_user eau WHERE ea.parent_id='%s' AND ea.text!='' AND eau.evalanswer_id=ea.evalanswer_id ORDER BY ea.position",$parent_id));
+    $db_answers->query(sprintf("SELECT ea.* FROM evalanswer ea, evalanswer_user eau WHERE ea.parent_id='%s' AND ea.text!='' AND eau.evalanswer_id=ea.evalanswer_id ORDER BY ea.position",$parent_id));
     echo "  <TR>\n";
-        echo "    <TD COLSPAN=\"2\">\n";
+    echo "    <TD COLSPAN=\"2\">\n";
     echo "      <TABLE BORDER=\"0\" WIDTH=\"100%\">\n";
     echo "        <TR><TD COLSPAN=\"2\" CLASS=\"blank\"><FONT SIZE=\"-1\"><B>"._("Antworten")."</B></FONT></TD></TR>\n";
     $counter = 1;
@@ -200,29 +204,32 @@ function freetype_answers ($parent_id, $anz_nutzer) {
         echo "      <TR>\n";
         echo "        <TD WIDTH=\"1%\" VALIGN=\"TOP\"><FONT SIZE=\"-1\"><B>".$counter.".</B></FONT></TD><TD><FONT SIZE=\"-1\">".formatReady($db_answers->f("text"))."</FONT></TD>\n";
         echo "      </TR>\n";
-    $counter++;
+        $counter++;
     }
     echo "      </TABLE>\n";
     echo "    </TD>\n";
-        echo "  </TR>\n";
+    echo "  </TR>\n";
     echo "  <TR><TD COLSPAN=\"2\"><FONT SIZE=\"-1\">"._("Anzahl der Teilnehmer").": ".$anz_nutzer."</FONT></TD></TR>\n";
 }
 
-function user_answers_residual ($parent_id) {
+function user_answers_residual($parent_id)
+{
     $db_user_answers = new DB_Seminar();
     $db_user_answers->query(sprintf("SELECT eau.* FROM evalanswer_user eau, evalanswer ea WHERE ea.parent_id='%s' AND ea.residual=1 AND eau.evalanswer_id=ea.evalanswer_id",$parent_id));
     $db_user_answers->next_record();
     return $db_user_answers->num_rows();
 }
 
-function user_answers ($evalanswer_id) {
+function user_answers($evalanswer_id)
+{
     $db_user_answers = new DB_Seminar();
     $db_user_answers->query(sprintf("SELECT * FROM evalanswer_user WHERE evalanswer_id='%s'",$evalanswer_id));
     $db_user_answers->next_record();
     return $db_user_answers->num_rows();
 }
 
-function answers ($parent_id, $anz_nutzer, $question_type) {
+function answers($parent_id, $anz_nutzer, $question_type)
+{
     global $graph_switch, $auth, $ausgabeformat, $has_template;
 
     // Rueckgabearray, damit die Daten noch aufzutrennen sind...
@@ -304,7 +311,7 @@ function answers ($parent_id, $anz_nutzer, $question_type) {
 
     if ($has_residual) $txt .= "        <TR CLASS=\"blank\"><TD COLSPAN=\"3\"><FONT SIZE=\"-1\"><B>*</B>"._("Werte ohne Enthaltungen").".</FONT></TD></TR>";
     $txt .= "      </TABLE>";
-        $txt .= "    </TD>\n";
+    $txt .= "    </TD>\n";
     $txt .= "    <TD WIDTH=\"30%\" VALIGN=\"TOP\" ALIGN=\"RIGHT\">\n";
     if (do_template("show_graphics")) {
         $txt .= '<IMG SRC="' . GetDownloadLink('evalsum'.$parent_id.$auth->auth['uid'].'.'.$GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT'], 'evalsum'.$parent_id.$auth->auth['uid'].'.'.$GLOBALS['EVAL_AUSWERTUNG_GRAPH_FORMAT'], 2) .'">'."\n";
@@ -318,7 +325,8 @@ function answers ($parent_id, $anz_nutzer, $question_type) {
 
 }
 
-function groups ($parent_id) {
+function groups($parent_id)
+{
     global $ausgabeformat, $global_counter, $local_counter, $question_type, $eval_id, $PHP_SELF, $evalgroup_id;
 
     $db_groups = new DB_Seminar();
@@ -336,14 +344,13 @@ function groups ($parent_id) {
 
         if ($db_groups->f("child_type")=="EvaluationGroup") {
             $global_counter += 1;
-                        $local_counter   = 0;
+            $local_counter   = 0;
 
             echo "  <TR><TD CLASS=\"".($ausgabeformat==1 ? "topic" : "blank")."\" ALIGN=\"LEFT\" COLSPAN=\"2\">\n";
             if (do_template("show_group_headline"))
                 echo "    <B>".$global_counter.". ".formatReady($db_groups->f("title"))."</B>&nbsp;\n";
             else echo "&nbsp;";
-        }
-        else {
+        } else {
             $local_counter += 1;
 
             $group_type = "normal";
@@ -354,19 +361,19 @@ function groups ($parent_id) {
 
             echo "  <TR><TD CLASS=\"".($ausgabeformat==1 ? "steelgraulight" : "blank")."\" COLSPAN=\"2\">\n";
             if (do_template("show_questionblock_headline")) {
-                echo "    <BR><TABLE WIDTH=\"100%\" BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\"><TR><TD ALIGN=\"left\"><B>".$global_counter.".".$local_counter.". ".formatReady($db_groups->f("title"))."</B></TD>";
+                echo "<TABLE WIDTH=\"100%\" BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\"><TR><TD ALIGN=\"left\"><B>".$global_counter.".".$local_counter.". ".formatReady($db_groups->f("title"))."</B></TD>";
                 echo "<TD ALIGN=\"RIGHT\">".($ausgabeformat==1 && !($freetype) ? "<A HREF=\"$PHP_SELF?eval_id=$eval_id&evalgroup_id=".$db_groups->f("evalgroup_id")."&group_type=".($group_type=="normal" ? "table" : "normal")."&cmd=change_group_type#anker\"><IMG SRC=\"".$GLOBALS['ASSETS_URL']."images/rewind3.gif\" TITLE=\""._("Zum Darstellungstyp")." ".($group_type=="normal"?_("Tabelle"):_("Normal"))." "._("wechseln").".\" BORDER=\"0\"></A>" : "&nbsp;"). "</TD>";
-                echo "</TR></TABLE><BR><BR>\n";
-            } else echo "&nbsp;";
-            if ($evalgroup_id == $db_groups->f("evalgroup_id")) echo "  <A NAME=\"anker\"></A>\n";
+                echo "</TR></TABLE>\n";
+            }
+            if ($evalgroup_id == $db_groups->f("evalgroup_id")) {
+                echo "  <A NAME=\"anker\"></A>\n";
+            }
         }
+
         echo "  </TD></TR>";
 
-        echo "  <TR><TD  CLASS=\"blank\" COLSPAN=\"2\">\n";
-
         if ($db_groups->f("child_type")=="EvaluationQuestion") {
-
-
+            echo "  <TR><TD CLASS=\"blank\" COLSPAN=\"2\">\n";
             $db_questions = new DB_Seminar();
             $db_questions->query(sprintf("SELECT * FROM evalquestion WHERE parent_id='%s' ORDER BY position",$db_groups->f("evalgroup_id")));
             echo "<TABLE BORDER=\"". ($group_type=="normal" || $ausgabeformat==1 ? "0" : "1") ."\" WIDTH=\"100%\" CELLSPACING=\"0\">\n";
@@ -441,11 +448,10 @@ function groups ($parent_id) {
             }
 
             echo "</TABLE>\n";
+            echo "</TD></TR>\n";
         }
-        echo "  </TD></TR>\n";
         groups($db_groups->f("evalgroup_id"));
     }
-
 }
 
 
@@ -457,7 +463,6 @@ else
     $db->query(sprintf("SELECT * FROM eval WHERE eval_id='%s' AND author_id='%s'",$eval_id,$auth->auth["uid"]));
 
 if ($db->next_record()) {
-
   $db_template->query(sprintf("SELECT t.* FROM eval_templates t, eval_templates_eval te WHERE te.eval_id='%s' AND t.template_id=te.template_id",$eval_id));
   if ($db_template->next_record()) $has_template = 1;
 
@@ -502,14 +507,7 @@ if ($db->next_record()) {
   echo "    </TABLE>\n";
   echo "  </TD></TR>\n";
   echo "</TABLE>\n";
-
-} else {
-  // Evaluation existiert nicht...
-  echo "&nbsp;"._("Evaluation NICHT vorhanden oder keine Rechte vorhanden!");
 }
 
 include ('lib/include/html_end.inc.php');
-  // Save data back to database.
-  page_close();
-
-?>
+page_close();

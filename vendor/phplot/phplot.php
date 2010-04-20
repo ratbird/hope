@@ -1,13 +1,13 @@
 <?php
-/* $Id: phplot.php,v 1.167 2009/12/23 22:37:47 lbayuk Exp $ */
+/* $Id: phplot.php,v 1.175 2010/04/04 22:49:24 lbayuk Exp $ */
 /*
- * PHPLOT Version 5.1.0
+ * PHPLOT Version 5.1.1
  *
  * A PHP class for creating scientific and business charts
  * Visit http://sourceforge.net/projects/phplot/
  * for PHPlot documentation, downloads, and discussions.
  * ---------------------------------------------------------------------
- * Copyright (C) 1998-2009 Afan Ottenheimer
+ * Copyright (C) 1998-2010 Afan Ottenheimer
  *
  * This is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -200,6 +200,9 @@ class PHPlot {
 
     public $draw_plot_area_background = FALSE;
     public $draw_broken_lines = FALSE;          // Tells not to draw lines for missing Y data.
+
+    public $data_colors_alpha = 0;              // Default alpha for data colors. See SetDataColors()
+
 
 //Miscellaneous
     public $callbacks = array(                  // Valid callback reasons (see SetCallBack)
@@ -544,41 +547,90 @@ class PHPlot {
         return TRUE;
     }
 
-    /*!
-     * Returns an array in R, G, B format 0-255
+    /*
+     * Parse a color description and return the color component values.
+     * Arguments:
+     *   $color_asked : The desired color description, in one of these forms:
+     *       Component notatation: array(R, G, B) or array(R, G, B, A) with each
+     *          in the range described below for the return value.
+     *          Examples: (255,255,0)  (204,0,0,30)
+     *       Hex notation: "#RRGGBB" or "#RRGGBBAA" where each pair is a 2 digit hex number.
+     *          Examples: #FF00FF (magenta)   #0000FF40 (Blue with alpha=64/127)
+     *       Named color in the current colormap, with optional suffix ":alpha" for alpha value.
+     *          Examples:  blue   red:60  yellow:20
+     *   $alpha : optional default alpha value. This is applied to the color if it doesn't
+     *       already have an alpha value. If not supplied, colors are opaque (alpha=0) by default.
      *
-     *  \param color_asked array(R,G,B) or string (named color or '#AABBCC')
+     * Returns an array describing a color as (R, G, B, Alpha).
+     * R, G, and B are integers 0-255, and Alpha is 0 (opaque) to 127 (transparent).
+     * The Alpha component is only used with truecolor images (PHPlot_truecolor
+     * objects), and ignored for palette images (PHPlot objects).
+     *
+     * This method implements the function SetRBGColor(). The base class version of
+     * SetRGBColor returns 3 elements (r, g, b) and the truecolor version returns all four.
+     * While we could get away with returning 4 elements even in the base class, it breaks
+     * existing tests (which are looking specifically for a 3 element array), so this safer
+     * approach is used instead.
+     */
+    protected function parse_color($color_asked, $alpha = 0)
+    {
+        if (empty($color_asked)) {
+            $ret_val = array(0, 0, 0);
+
+        } elseif (is_array($color_asked) && (($n = count($color_asked)) == 3 || $n == 4) ) {
+            // Already an array of 3 or 4 elements:
+            $ret_val = $color_asked;
+
+        } elseif (preg_match('/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})?$/i',
+                             $color_asked, $ss)) {
+            // #RRGGBB or #RRGGBBAA notation:
+            $ret_val = array(hexdec($ss[1]), hexdec($ss[2]), hexdec($ss[3]));
+            if (isset($ss[4])) $ret_val[] = hexdec($ss[4]);
+
+        } elseif (isset($this->rgb_array[$color_asked])) {
+            // Color by name:
+            $ret_val = $this->rgb_array[$color_asked];
+
+        } elseif (preg_match('/(.+):([\d]+)$/', $color_asked, $ss)
+                  && isset($this->rgb_array[$ss[1]])) {
+            // Color by name with ":alpha" suffix, alpha is a decimal number:
+            $ret_val = $this->rgb_array[$ss[1]];
+            $ret_val[3] = (int)$ss[2];
+
+        } else {
+            return $this->PrintError("SetRGBColor(): Color '$color_asked' is not valid.");
+        }
+
+        // Append alpha if not already provided for:
+        if (count($ret_val) == 3)
+            $ret_val[] = $alpha;
+        return $ret_val;
+    }
+
+    /*
+     * Parse a color description and return the color component values.
+     * See parse_color() for details. This base class version does not
+     * take or return an $alpha value.
+     * Arguments:
+     *   $color_asked : The desired color description. See parse_color()
+     * Returns an array describing a color as (R, G, B).
      * Note: This method should be 'protected', but is called from test script(s).
      */
     function SetRGBColor($color_asked)
     {
-        if (empty($color_asked)) {
-            $ret_val = array(0, 0, 0);
-        } elseif (count($color_asked) == 3 ) {    // already array of 3 rgb
-            $ret_val = $color_asked;
-        } elseif ($color_asked[0] == '#') {       // Hex RGB notation #RRGGBB
-            $ret_val = array(hexdec(substr($color_asked, 1, 2)),
-                             hexdec(substr($color_asked, 3, 2)),
-                             hexdec(substr($color_asked, 5, 2)));
-
-        } elseif (isset($this->rgb_array[$color_asked])) {  // Color by name
-            $ret_val = $this->rgb_array[$color_asked];
-        } else {
-            return $this->PrintError("SetRGBColor(): Color '$color_asked' is not valid.");
-        }
-        return $ret_val;
+        list ($r, $g, $b) = $this->parse_color($color_asked);
+        return array($r, $g, $b);
     }
 
-
     /*!
-     * Sets the colors for the data.
+     * Sets the colors for the data, with optional default alpha value (for PHPlot_truecolor only)
      * Cases are:
      *    SetDataColors(array(...))  : Use the supplied array as the color map.
      *    SetDataColors(colorname)   : Use an array of just colorname as the color map.
      *    SetDataColors() or SetDataColors(NULL) : Load default color map if no color map is already set.
      *    SetDataColors('') or SetDataColors(False) : Load default color map (even if one is already set).
      */
-    function SetDataColors($which_data = NULL, $which_border = NULL)
+    function SetDataColors($which_data = NULL, $which_border = NULL, $alpha = NULL)
     {
         if (is_array($which_data)) {
             $this->data_colors = $which_data;  // Use supplied array
@@ -588,13 +640,18 @@ class PHPlot {
             $this->data_colors = $this->default_colors;  // Use default color array
         } // Else do nothing: which_data is NULL or missing and a color array is already set.
 
+        // If an alpha value is supplied, use it as the new default. Need to save and restore
+        // this because the color indexes will be regenerated when the arrays are padded.
+        if (!empty($alpha))
+            $this->data_colors_alpha = $alpha;
+
         $i = 0;
         foreach ($this->data_colors as $col) {
-            $ndx = $this->SetIndexColor($col);
+            $ndx = $this->SetIndexColor($col, $this->data_colors_alpha);
             if (!isset($ndx))
                 return FALSE;
             $this->ndx_data_colors[$i] = $ndx;
-            $this->ndx_data_dark_colors[$i] = $this->SetIndexDarkColor($col);
+            $this->ndx_data_dark_colors[$i] = $this->SetIndexDarkColor($col, $this->data_colors_alpha);
             $i++;
         }
 
@@ -1594,14 +1651,14 @@ class PHPlot {
     /*!
      * Sets position for Y labels near data points.
      * For past compatibility we accept plotleft, ...but pass it to SetTickLabelPos
-     * eventually to specify how far up/down or left/right of the data point
      */
-    function SetYDataLabelPos($which_ydlp, $which_distance_from_point=0)
+    function SetYDataLabelPos($which_ydlp)
     {
-        $which_ydlp = $this->CheckOption($which_ydlp, 'plotleft, plotright, both, yaxis, all, plotin, none',
+        $which_ydlp = $this->CheckOption($which_ydlp,
+                                         'plotleft, plotright, both, yaxis, all, plotin, plotstack, none',
                                           __FUNCTION__);
         if (!$which_ydlp) return FALSE;
-        $this->y_data_label_pos = $which_ydlp;
+
         //This bit in SetYDataLabelPos about plotleft is for those who were
         //using this function to set SetYTickLabelPos.
         if ( ($which_ydlp == 'plotleft') || ($which_ydlp == 'plotright') ||
@@ -1610,9 +1667,8 @@ class PHPlot {
             //Call sety_TICK_labelpos instead of sety_DATA_labelpos
             $this->SetYTickLabelPos($which_ydlp);
 
-        } elseif ($which_ydlp != 'none') {
-            //right now its plotin or none
-            $this->y_data_label_pos = 'plotin';
+        } else {
+            $this->y_data_label_pos = $which_ydlp;
         }
 
         return TRUE;
@@ -2027,8 +2083,8 @@ class PHPlot {
 
     function SetPlotType($which_pt)
     {
-        $this->plot_type = $this->CheckOption($which_pt,
-                           'bars, stackedbars, lines, linepoints, area, points, pie, thinbarline, squared',
+        $this->plot_type = $this->CheckOption($which_pt, 'bars, stackedbars, lines, linepoints,'
+                            . ' area, points, pie, thinbarline, squared, stackedarea',
                             __FUNCTION__);
         return (boolean)$this->plot_type;
     }
@@ -2121,6 +2177,8 @@ class PHPlot {
         } else if ($ps > $pt) {
             $this->pad_array($this->point_shapes, $ps);
             $this->point_counts = $ps;
+        } else {
+            $this->point_counts = $ps;
         }
 
         // Note: PHPlot used to check and adjust point_sizes to be an even number here,
@@ -2209,7 +2267,7 @@ class PHPlot {
      * use for (or while) loops, which sometimes are faster. Performance improvements
      * vary from 28% in DrawLines() to 49% in DrawArea() for plot drawing functions.
      */
-    function SetDataValues(&$which_dv)
+    function SetDataValues($which_dv)
     {
         $this->num_data_rows = count($which_dv);
         $this->total_records = 0;               // Perform some useful calculations.
@@ -2375,8 +2433,9 @@ class PHPlot {
      * Data type text-data has: title, Y1, Y2, ... (with X implied)
      * Data type data-data has: title, X, Y1, Y2, ...
      * Data type data-data-error: has title, X, Y1, Y1err+, Y1err-, Y2, Y2err+, Y2err-, ...
-     * Plot type 'stackedbars' is a special case because the bars always start at 0, and the
-     *    Y values in each row accumulate.
+     * Plot types 'stackedbars' and 'stackedarea' are special cases, because the bars or area always
+     *    start at 0 (although they may be clipped below the X axis, if the axis is moved up),
+     *    absolute values are used, and the Y values in each row accumulate.
      * Note: This method should be 'protected', but is called from test script(s).
      */
     function FindDataLimits()
@@ -2384,7 +2443,8 @@ class PHPlot {
         # Determine how to process the data array:
         $process_x = ($this->data_type == 'data-data' || $this->data_type == 'data-data-error');
         $process_err_bars = ($this->data_type == 'data-data-error');
-        $process_stacked_bars = ($this->plot_type == 'stackedbars');
+        $process_stacked = ($this->plot_type == 'stackedbars' || $this->plot_type == 'stackedarea');
+        $abs_val = ($this->plot_type == 'area' || $this->plot_type == 'pie');
 
         # These need to be initialized in case there are multiple plots and
         # missing data points.
@@ -2407,7 +2467,7 @@ class PHPlot {
                 $all_x[] = (double)$this->data[$i][$j++];
             }
 
-            if ($process_stacked_bars) {
+            if ($process_stacked) {
                 $all_y = array(0, 0); # Min (always 0) and max
             } else {
                 $all_y = array();
@@ -2419,8 +2479,10 @@ class PHPlot {
                     if ($process_err_bars) {
                         $all_y[] = $val + (double)$this->data[$i][$j++];
                         $all_y[] = $val - (double)$this->data[$i][$j++];
-                    } elseif ($process_stacked_bars) {
-                        $all_y[1] += $val;
+                    } elseif ($process_stacked) {
+                        $all_y[1] += abs($val);
+                    } elseif ($abs_val) {
+                        $all_y[] = abs($val);
                     } else {
                         $all_y[] = $val;
                     }
@@ -2965,18 +3027,23 @@ class PHPlot {
         else
             $this->y_axis_position = min(max($this->plot_min_x, $this->y_axis_position), $this->plot_max_x);
 
-        // If no user-provided X axis position, default to axis at Y=0 (if in range), or min_y
-        //   if the range does not include 0, or 1 for log plots.
-        // Otherwise, make sure user-provided position is inside the plot area.
-        if ($this->x_axis_position === '') {
-            if ($this->yscale_type == 'log')
-                $this->x_axis_position = 1;
-            elseif ($this->plot_min_y <= 0 && 0 <= $this->plot_max_y)
-                $this->x_axis_position = 0;
-             else
-                $this->x_axis_position = $this->plot_min_y;
-        } else
+        // Validate user-provided X axis position, or auto-calculate if not:
+        if ($this->x_axis_position !== '') {
+            // User-provided X axis position: make sure it is inside the range.
             $this->x_axis_position = min(max($this->plot_min_y, $this->x_axis_position), $this->plot_max_y);
+        } elseif ($this->yscale_type == 'log') {
+            // Always use 1 for X axis position on log scale plots.
+            $this->x_axis_position = 1;
+        } elseif ($this->plot_min_y <= 0 && 0 <= $this->plot_max_y) {
+            // Plot range includes Y=0, so use that for X axis:
+            $this->x_axis_position = 0;
+        } elseif ($this->plot_min_y > 0) {
+            // The entire Y range is > 0, so use the bottom for the X axis:
+            $this->x_axis_position = $this->plot_min_y;
+        } else {
+            // The entire Y range is < 0, so use the top for the X axis:
+            $this->x_axis_position = $this->plot_max_y;
+        }
 
         if ($this->GetCallback('debug_scale')) {
             $this->DoCallback('debug_scale', __FUNCTION__, array(
@@ -4245,9 +4312,10 @@ class PHPlot {
     }
 
 
-    /*!
-     * Supported data formats: data-data-error, text-data-error (doesn't exist yet)
-     * ( data comes in as array("title", x, y, error+, error-, y2, error2+, error2-, ...) )
+    /*
+     * Draw the points and errors bars for an error plot of types points and linepoints
+     * Supports only data-data-error format, with each row of the form
+     *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
      */
     protected function DrawDotsError()
     {
@@ -4298,6 +4366,7 @@ class PHPlot {
 
 
     /*
+     * Draw the points for plots of type points and linepoints
      * Supported data types:
      *  - data-data ("title", x, y1, y2, y3, ...)
      *  - text-data ("title", y1, y2, y3, ...)
@@ -4340,8 +4409,10 @@ class PHPlot {
     } //function DrawDots
 
 
-    /*!
+    /*
+     * Draw a Thin Bar Line plot, also known as an Impulse plot.
      * A clean, fast routine for when you just want charts like stock volume charts
+     * Supports data-data and text-data formats.
      */
     protected function DrawThinBarLines()
     {
@@ -4378,8 +4449,8 @@ class PHPlot {
         return TRUE;
     }  //function DrawThinBarLines
 
-    /*!
-     *
+    /*
+     *  Draw an Error Bar set. Used by DrawDotsError and DrawLinesError
      */
     protected function DrawYErrorBar($x_world, $y_world, $error_height, $error_bar_type, $color)
     {
@@ -4413,7 +4484,7 @@ class PHPlot {
         return TRUE;
     }
 
-    /*!
+    /*
      * Draws a styled dot. Uses world coordinates.
      * The list of supported shapes can also be found in SetPointShapes().
      * All shapes are drawn using a 3x3 grid, centered on the data point.
@@ -4454,7 +4525,7 @@ class PHPlot {
             ImageArc($this->img, $x_mid, $y_mid, $point_size, $point_size, 0, 360, $color);
             break;
         case 'dot':
-            ImageFilledArc($this->img, $x_mid, $y_mid, $point_size, $point_size, 0, 360, $color, IMG_ARC_PIE);
+            ImageFilledEllipse($this->img, $x_mid, $y_mid, $point_size, $point_size, $color);
             break;
         case 'diamond':
             $arrpoints = array( $x1, $y_mid, $x_mid, $y1, $x2, $y_mid, $x_mid, $y2);
@@ -4517,81 +4588,106 @@ class PHPlot {
         return TRUE;
     }
 
-    /*!
-     * Draw an area plot. Supported data types:
-     *      'text-data'
-     *      'data-data'
-     * NOTE: This function used to add first and last data values even on incomplete
-     *       sets. That is not the behavior now. As for missing data in between,
-     *       there are two possibilities: replace the point with one on the X axis (previous
-     *       way), or forget about it and use the preceding and following ones to draw the polygon.
-     *       There is the possibility to use both, we just need to add the method to set
-     *       it. Something like SetMissingDataBehavior(), for example.
+    /*
+     * Draw an 'area' or 'stacked area' plot.
+     * Both of these fill the area between lines, but in the stacked area graph the Y values
+     * are accumulated for each X, same as stacked bars. In the regular area graph, the areas
+     * are filled in order from the X axis up to each Y (so the Y values for each X need to be
+     * in decreasing order in this case).
+     * Data format can be text-data (label, y1, y2, ...) or data-data (label, x, y1, y2, ...)
+     * Notes:
+     *   All Y values must be >= 0. (If any Y<0 the absolute value is used.)
+     *   Missing data points are NOT handled. (They are counted as 0.)
+     *   All rows must have the same number of Y points, or an error image will be produced.
      */
-    protected function DrawArea()
+    protected function DrawArea($do_stacked = False)
     {
-        $incomplete_data_defaults_to_x_axis = FALSE;        // TODO: make this configurable
+        $n = $this->num_data_rows;  // Number of X values
 
-        for ($row = 0, $cnt = 0; $row < $this->num_data_rows; $row++) {
+        // These arrays store the device X and Y coordinates for all lines:
+        $xd = array();
+        $yd = array();
+        if ($this->data_type == 'data-data') { // Explicit X values?
+            $x_supplied = True;
+            $skip_index = 2;
+        } else {
+            $x_supplied = False;
+            $skip_index = 1;
+        }
+        $num_recs = max($this->num_recs);  // Number of 'records' (label + x + y's) for each X.
+        $num_points = $num_recs - $skip_index; // Number of Y values per X, max
+        $min_points = min($this->num_recs) - $skip_index; // To check for uniform number of Y values
+        if ($num_points != $min_points) {
+            return $this->PrintError("DrawArea(): Data array must contain the same number"
+                      . " of Y values for each X ($num_points != $min_points)");
+        }
+
+        // Calculate the Y value for each X, and store the device
+        // coordinates into the xd and yd arrays.
+        // For stacked area plots, the Y values accumulate.
+        for ($row = 0; $row < $n; $row++) {
             $rec = 1;                                       // Skip record #0 (data label)
 
-            if ($this->data_type == 'data-data')            // Do we have a value for X?
-                $x_now = $this->data[$row][$rec++];         // Read it, advance record index
+            if ($x_supplied)
+                $x_now = $this->data[$row][$rec++];
             else
-                $x_now = 0.5 + $cnt++;                      // Place text-data at X = 0.5, 1.5, 2.5, etc...
+                $x_now = 0.5 + $row;
 
-            $x_now_pixels = $this->xtr($x_now);             // Absolute coordinates
-
+            $x_now_pixels = $this->xtr($x_now);
 
             if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
 
-            // Proceed with Y values
-            // Create array of points for imagefilledpolygon()
-            for($idx = 0; $rec < $this->num_recs[$row]; $rec++, $idx++) {
-                if (is_numeric($this->data[$row][$rec])) {              // Allow for missing Y data
-                    $y_now_pixels = $this->ytr($this->data[$row][$rec]);
+            // Store the X value.
+            // There is an artificial Y value at the axis. For 'area' it goes
+            // at the end; for stackedarea it goes before the start.
+            $xd[$row] = $x_now_pixels;
+            $yd[$row] = array();
+            if ($do_stacked)
+                $yd[$row][] = $this->x_axis_y_pixels;
 
-                    $posarr[$idx][] = $x_now_pixels;
-                    $posarr[$idx][] = $y_now_pixels;
-
-                    $num_points[$idx] = isset($num_points[$idx]) ? $num_points[$idx]+1 : 1;
+            // Store the Y values for this X.
+            // All Y values are clipped to the x axis which should be zero but can be moved.
+            $y = 0;
+            while ($rec < $num_recs) {
+                if (is_numeric($this->data[$row][$rec])) {  // Treat missing values as 0.
+                    $y += abs($this->data[$row][$rec]);
                 }
-                // If there's missing data...
-                else {
-                    if (isset ($incomplete_data_defaults_to_x_axis)) {
-                        $posarr[$idx][] = $x_now_pixels;
-                        $posarr[$idx][] = $this->x_axis_y_pixels;
-                        $num_points[$idx] = isset($num_points[$idx]) ? $num_points[$idx]+1 : 1;
-                    }
-                }
+                $yd[$row][] = $this->ytr(max($this->x_axis_position, $y));
+                if (!$do_stacked) $y = 0;
+                $rec++;
             }
-        }   // end for
 
-        $end = count($posarr);
-        for ($i = 0; $i < $end; $i++) {
-            // Prepend initial points. X = first point's X, Y = x_axis_y_pixels
-            $x = $posarr[$i][0];
-            array_unshift($posarr[$i], $x, $this->x_axis_y_pixels);
+            if (!$do_stacked)
+                $yd[$row][] = $this->x_axis_y_pixels;
+        }
 
-            // Append final points. X = last point's X, Y = x_axis_y_pixels
-            $x = $posarr[$i][count($posarr[$i])-2];
-            array_push($posarr[$i], $x, $this->x_axis_y_pixels);
+        // Now draw the filled polygons.
+        $prev_row = 0;
+        for ($row = 1; $row <= $num_points; $row++) { // 1 extra for X axis artificial row
+            $pts = array();
+            // Previous data set forms top (for area) or bottom (for stackedarea):
+            for ($j = 0; $j < $n; $j++) {
+                $pts[] = $xd[$j];
+                $pts[] = $yd[$j][$prev_row];
+            }
+            // Current data set forms bottom (for area) or top (for stackedarea):
+            for ($j = $n- 1; $j >= 0; $j--) {
+                $pts[] = $xd[$j];
+                $pts[] = $yd[$j][$row];
+            }
+            // Draw it:
+            ImageFilledPolygon($this->img, $pts, $n * 2, $this->ndx_data_colors[$prev_row]);
 
-            $num_points[$i] += 2;
-
-            // Draw the polygon
-            ImageFilledPolygon($this->img, $posarr[$i], $num_points[$i], $this->ndx_data_colors[$i]);
+            $prev_row = $row;
         }
         return TRUE;
     } // function DrawArea()
 
 
-    /*!
-     * Draw Lines. Supported data-types:
-     *      'data-data',
-     *      'text-data'
-     * NOTE: Please see the note regarding incomplete data sets on DrawArea()
+    /*
+     * Draw a Line plot
+     * Supported data-types are 'data-data' and 'text-data'.
      */
     protected function DrawLines()
     {
@@ -4654,9 +4750,10 @@ class PHPlot {
     } // function DrawLines()
 
 
-    /*!
-     * Draw lines with error bars - data comes in as
-     *      array("label", x, y, error+, error-, y2, error2+, error2-, ...);
+    /*
+     * Draw lines with error bars for an error plot of types lines and linepoints
+     * Supports only data-data-error format, with each row of the form
+     *   array("title", x, y1, error1+, error1-, y2, error2+, error2-, ...)
      */
     protected function DrawLinesError()
     {
@@ -4731,8 +4828,10 @@ class PHPlot {
 
 
 
-    /*!
-     * This is a mere copy of DrawLines() with one more line drawn for each point
+    /*
+     * Draw a Squared Line plot.
+     * Supported data-types are 'data-data' and 'text-data'.
+     * This is based on DrawLines(), with one more line drawn for each point.
      */
     protected function DrawSquared()
     {
@@ -4797,8 +4896,9 @@ class PHPlot {
     } // function DrawSquared()
 
 
-    /*!
-     * Data comes in as array("title", x, y, y2, y3, ...)
+    /*
+     * Draw a Bar chart
+     * Supports only text-data format, with each row in the form array("title", y1, y2, y3, ...)
      */
     protected function DrawBars()
     {
@@ -4877,9 +4977,10 @@ class PHPlot {
     } //function DrawBars
 
 
-    /*!
-     * Data comes in as array("title", x, y, y2, y3, ...)
-     * \note Original stacked bars idea by Laurent Kruk < lolok at users.sourceforge.net >
+    /*
+     * Draw a Stacked Bar chart
+     * Supports only text-data format, with each row in the form array("title", y1, y2, y3, ...)
+     * Original stacked bars idea by Laurent Kruk < lolok at users.sourceforge.net >
      */
     protected function DrawStackedBars()
     {
@@ -4890,6 +4991,27 @@ class PHPlot {
         // This is the X offset from the bar's label center point to the left side of the bar.
         $x_first_bar = $this->record_bar_width / 2 - $this->bar_adjust_gap;
 
+        // Copy shading value to local variable
+        $shade = $this->shading;
+
+        // Determine if any data labels are on:
+        if ($this->y_data_label_pos == 'plotin') {
+            $data_labels_above = True;
+            $data_labels_within = False;
+        } elseif ($this->y_data_label_pos == 'plotstack') {
+            $data_labels_above = True;
+            $data_labels_within = True;
+            // Get the text label height, plus a little bit, so we can omit labels in
+            // segments that are too short for the label to fit.
+            $data_labels_min_height = $this->fonts['y_label']['height'] + 2;
+        } else {
+            $data_labels_above = False;
+            $data_labels_within = False;
+        }
+        if ($data_labels_above || $data_labels_within) {
+            $data_label_y_offset = -5 - $shade;
+        }
+
         for ($row = 0; $row < $this->num_data_rows; $row++) {
             $record = 1;                                    // Skip record #0 (data label)
 
@@ -4898,44 +5020,79 @@ class PHPlot {
             if ($this->x_data_label_pos != 'none')          // Draw X Data labels?
                 $this->DrawXDataLabel($this->data[$row][0], $x_now_pixels);
 
-            // Lower left and lower right X of the bars in this group:
+            // Lower left and lower right X of the bars in this stack:
             $x1 = $x_now_pixels - $x_first_bar;
             $x2 = $x1 + $this->actual_bar_width;
 
-            // Draw the bars
-            $oldv = 0;
+            // Draw the bar segments in this stack. The first segment is drawn from the X axis to Y1.
+            // Each additional segment is drawn from the top of the previous segment to the new
+            // cumulative Y. Skip over any segment of 0 size or part below the X axis.
+            $wy1 = 0;                       // World coordinates Y1, upper value
+            $wy2 = $this->x_axis_position;  // World coordinates Y2, lower value
+
             for ($idx = 0; $record < $this->num_recs[$row]; $record++, $idx++) {
-                if (is_numeric($this->data[$row][$record])) {       // Allow for missing Y data
 
-                    $y1 = $this->ytr(abs($this->data[$row][$record]) + $oldv);
-                    $y2 = $this->ytr($this->x_axis_position + $oldv);
-                    $oldv += abs($this->data[$row][$record]);
+                // Skip missing Y values, and ignore Y=0 values.
+                if (is_numeric($this->data[$row][$record])
+                    && ($this_y = abs($this->data[$row][$record])) > 0) {
 
-                    // Draw the bar
-                    ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
+                    $wy1 += $this_y;  // Accumulate Y value in world coordinates - top of current segment.
 
-                    if ($this->shading) {                           // Draw the shade?
-                        ImageFilledPolygon($this->img, array($x1, $y1,
-                                                       $x1 + $this->shading, $y1 - $this->shading,
-                                                       $x2 + $this->shading, $y1 - $this->shading,
-                                                       $x2 + $this->shading, $y2 - $this->shading,
-                                                       $x2, $y2,
-                                                       $x2, $y1),
-                                           6, $this->ndx_data_dark_colors[$idx]);
+                    // Draw nothing if top of segment is below X axis.
+                    // Bottom (wy2) will not go below X axis, so we will get a partial
+                    // segment from X axis up if the segment would cross the X axis.
+                    if ($wy1 > $this->x_axis_position) {
+
+                        $y1 = $this->ytr($wy1);
+                        $y2 = $this->ytr($wy2);
+
+                        // Draw the bar
+                        ImageFilledRectangle($this->img, $x1, $y1, $x2, $y2, $this->ndx_data_colors[$idx]);
+
+                        if ($shade > 0) {                           // Draw the shade?
+                            ImageFilledPolygon($this->img,
+                                               array($x1, $y1, $x1 + $shade, $y1 - $shade,
+                                                     $x2 + $shade, $y1 - $shade, $x2 + $shade, $y2 - $shade,
+                                                     $x2, $y2, $x2, $y1),
+                                               6, $this->ndx_data_dark_colors[$idx]);
+                        } else {        // Or draw a border?
+                            ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
+                        }
+
+                        // Draw optional data label for this bar segment just below the line.
+                        // Text value is the current Y, but position is the cumulative Y.
+                        // Skip the label if the segment is too short for the label to fit.
+                        if ($data_labels_within && ($y2 - $y1) >= $data_labels_min_height) {
+                            $this->DrawDataLabel($this->fonts['y_label'], $this->y_data_label_angle,
+                                    $row+0.5, $wy1, $this->ndx_title_color,
+                                    $this_y, 'center', 'top', 0, 3);
+                        }
                     }
-                    // Or draw a border?
-                    else {
-                        ImageRectangle($this->img, $x1, $y1, $x2,$y2, $this->ndx_data_border_colors[$idx]);
-                    }
+                    // Make the top of this segment become the bottom of the next segment, but not if
+                    // it is still below the X axis.
+                    $wy2 = max($this->x_axis_position, $wy1);
                 }
             }   // end for
+
+            // Draw optional data label above the bar with the total value.
+            // Value is wy1, but position is wy2. This only makes a difference when
+            // the stacked bar ends completely below the X axis. Then we see the actual
+            // cumulative value (wy1), positioned above the axis, with no bar at all.
+            if ($data_labels_above) {
+                $this->DrawDataLabel($this->fonts['y_label'], $this->y_data_label_angle,
+                        $row+0.5, $wy2, $this->ndx_title_color,
+                        $wy1, 'center', 'bottom', 0, $data_label_y_offset);
+            }
         }   // end for
         return TRUE;
     } //function DrawStackedBars
 
 
-    /*!
-     *
+    /*
+     * Draw the graph.
+     * This is the function that performs the actual drawing, after all
+     * the parameters and data are set up.
+     * It also outputs the finished image, unless told not to.
      */
     function DrawGraph()
     {
@@ -5041,6 +5198,9 @@ class PHPlot {
         case 'stackedbars':
             $this->CalcBarWidths();
             $this->DrawStackedBars();
+            break;
+        case 'stackedarea':
+            $this->DrawArea(True);
             break;
         case 'bars':
         default:
@@ -5335,3 +5495,92 @@ class PHPlot {
         return TRUE;
     }
 }  // class PHPlot
+
+
+/*
+ * The PHPlot_truecolor class extends PHPlot to use GD truecolor images.
+ */
+
+class PHPlot_truecolor extends PHPlot {
+    /*
+     * PHPlot Truecolor variation constructor: Create a PHPlot_truecolor object and initialize it.
+     * Note this does NOT call the parent (PHPlot) constructor. It duplicates the code here.
+     * Everything is the same as the PHPlot constructor except for imagecreatetruecolor.
+     *
+     * Parameters are the same as PHPlot:
+     * which_width, which_height       Image width and height in pixels.
+     * which_output_file               Optional filename for output.
+     * which_input_file                Optional path to a file to be used as background.
+     *
+     */
+    function __construct($which_width=600, $which_height=400, $which_output_file=NULL, $which_input_file=NULL)
+    {
+        $this->SetRGBArray($this->color_array);
+
+        if ($which_output_file)
+            $this->SetOutputFile($which_output_file);
+
+        if ($which_input_file)
+            $this->SetInputFile($which_input_file);
+        else {
+            $this->image_width = $which_width;
+            $this->image_height = $which_height;
+
+            $this->img = imagecreatetruecolor($this->image_width, $this->image_height);
+            if (! $this->img)
+                return $this->PrintError('PHPlot_truecolor(): Could not create image resource.');
+        }
+
+        $this->SetDefaultStyles();
+        $this->SetDefaultFonts();
+    }
+
+    /*
+     * Parse a color description and return the color component values.
+     * See parse_color() for details. In the truecolor class, this also
+     * takes and returns an $alpha value.
+     * Arguments:
+     *   $color_asked : The desired color description. See parse_color()
+     *   $alpha : optional default alpha value, used if color_asked does not have an alpha value.
+     * Returns an array describing a color as (R, G, B, A).
+     * Note: This method should be 'protected', but is called from test script(s).
+     */
+    function SetRGBColor($color_asked, $alpha = 0)
+    {
+        return $this->parse_color($color_asked, $alpha);
+    }
+
+    /*
+     * Returns a GD color index value to a color specificed as for SetRGBColor().
+     * This extends the base PHPlot function to use the GD function imagecolorresolvealpha.
+     *    $which_color : The color specification. See SetRGBColor for formats.
+     *    $alpha : Optional default Alpha value, if $which_color does not include alpha.
+     * Returns a GD color index, or NULL on error.
+     * Note: For palette images, this is an index into the color map.
+     * For truecolor images, this is a 32 bit value 0xAARRGGBB. But this difference
+     * is internal to GD.
+     */
+    function SetIndexColor($which_color, $alpha = 0)
+    {
+        list ($r, $g, $b, $a) = $this->SetRGBColor($which_color, $alpha);  //Translate to RGBA
+        if (!isset($r)) return NULL;
+        return ImageColorResolveAlpha($this->img, $r, $g, $b, $a);
+    }
+
+    /* 
+     * Returns an index to a slightly darker color than the one requested.
+     * This extends the base PHPlot function to use the GD function imagecolorresolvealpha.
+     *    $which_color : The color specification. See SetRGBColor for formats.
+     *    $alpha : Optional default Alpha value, if $which_color does not include alpha.
+     * Returns a GD color index, or NULL on error.
+     */
+    protected function SetIndexDarkColor($which_color, $alpha = 0)
+    {
+        list ($r, $g, $b, $a) = $this->SetRGBColor($which_color, $alpha);
+        if (!isset($r)) return NULL;
+        $r = max(0, $r - 0x30);
+        $g = max(0, $g - 0x30);
+        $b = max(0, $b - 0x30);
+        return ImageColorResolveAlpha($this->img, $r, $g, $b, $a);
+    }
+}

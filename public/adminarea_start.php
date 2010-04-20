@@ -28,6 +28,10 @@ require '../lib/bootstrap.php';
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("tutor");
 
+if ($_REQUEST['select_sem_id']) {
+    $_REQUEST['cid'] = $_REQUEST['select_sem_id'];
+}
+
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once 'lib/admin_search.inc.php';
 

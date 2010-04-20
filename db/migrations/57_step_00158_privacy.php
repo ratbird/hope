@@ -21,7 +21,7 @@ class Step00158Privacy extends Migration
         ), array(
             'name'        => 'FORUM_ANONYMOUS_POSTINGS',
             'type'        => 'boolean',
-            'value'       => 'false',
+            'value'       => 0,
             'description' => 'Legt fest, ob Forenbeiträge anonym verfasst werden dürfen (Root sieht aber immer den Urheber).'
         )
     );
@@ -45,7 +45,7 @@ class Step00158Privacy extends Migration
         $db->exec("CREATE TABLE `user_visibility` (`user_id` VARCHAR(32) NOT NULL PRIMARY KEY, `online` TINYINT(1) NOT NULL DEFAULT 0, `chat` TINYINT(1) NOT NULL DEFAULT 0, `search` TINYINT(1) NOT NULL DEFAULT 1, `email` TINYINT(1) NOT NULL DEFAULT 1, `homepage` TEXT NOT NULL DEFAULT '', mkdate INT(20) NOT NULL DEFAULT 0)");
 
         // insert entries for all existing users
-        $db->exec("INSERT INTO `user_visibility` (SELECT `user_id`, 0, 0, 1, 1, '', ".time()." FROM `auth_user_md5`)");
+        $db->exec("INSERT INTO `user_visibility` (SELECT `user_id`, 1, 1, 1, 1, '', ".time()." FROM `auth_user_md5`)");
         
         // transfer hidden categories to privacy settings
         $data = $db->query("SELECT * FROM `kategorien` WHERE hidden=1 GROUP BY `range_id`");

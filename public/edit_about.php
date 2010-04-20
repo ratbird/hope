@@ -305,18 +305,37 @@ if (check_ticket($studipticket)) {
     }
 
     if ($cmd == 'change_global_visibility') {
-        $my_about->change_global_visibility($global_visibility, $online, $chat, $search, $email);
+        $success = $my_about->change_global_visibility($global_visibility, $online, $chat, $search, $email);
+        if ($success) {
+            $my_about->msg .= 'msg§'._('Ihre Sichtbarkeitseinstellungen wurden gespeichert.');
+        } else {
+            $my_about->msg .= 'error§'._('Ihre Sichtbarkeitseinstellungen wurden nicht gespeichert!');
+        }
     }
 
     if ($cmd == 'change_all_homepage_visibility') {
-        $my_about->change_all_homepage_visibility($all_homepage_visibility);
+        if ($_REQUEST['all_homepage_visibility']) {
+            $success = $my_about->change_all_homepage_visibility($_REQUEST['all_homepage_visibility']);
+            if ($success) {
+                $my_about->msg .= 'msg§'._('Die Sichtbarkeit der Homepageelemente wurde gespeichert.');
+            } else {
+                $my_about->msg .= 'error§'._('Die Sichtbarkeitseinstellungen der Homepageelemente wurden nicht gespeichert!');
+            }
+        } else {
+            $my_about->msg .= 'error§'._('Bitte wählen Sie eine Sichtbarkeitsstufe für Ihre Homepageelemente!');
+        }
     }
 
     if ($cmd == 'change_homepage_visibility') {
         $data = $_POST;
         unset($data["change_homepage_visibility_x"]);
         unset($data["change_homepage_visibility_y"]);
-        $my_about->change_homepage_visibility($data);
+        $success = $my_about->change_homepage_visibility($data);
+        if ($success) {
+            $my_about->msg .= 'msg§'._('Die Sichtbarkeit der Homepageelemente wurde gespeichert.');
+        } else {
+            $my_about->msg .= 'error§'._('Die Sichtbarkeitseinstellungen der Homepageelemente wurden nicht gespeichert!');
+        }
     }
 
     if ($my_about->logout_user)

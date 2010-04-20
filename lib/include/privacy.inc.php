@@ -45,8 +45,13 @@ $search_visibility = get_local_visibility_by_id($user_id, 'search');
 $email_visibility = get_local_visibility_by_id($user_id, 'email');
 
 // Now get elements of user's homepage.
-$homepage_elements = $my_about->get_homepage_elements();
+$homepage_elements_unsorted = $my_about->get_homepage_elements();
 
+// Group elements by category.
+$homepage_elements = array();
+foreach ($homepage_elements_unsorted as $key => $element) {
+    $homepage_elements[$element['category']][$key] = $element;
+}
 
 ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
@@ -159,6 +164,7 @@ $homepage_elements = $my_about->get_homepage_elements();
             <form method="post" action="<? echo $PHP_SELF ?>?cmd=change_all_homepage_visibility&studipticket=<?=get_ticket()?>">
                     <?php echo _('alle Sichtbarkeiten setzen auf'); ?>
                     <select name="all_homepage_visibility">
+                        <option value="">-- <?php echo _("bitte wählen"); ?> --</option>
                         <option value="<?php echo VISIBILITY_ME; ?>"><?= _("nur mich selbst") ?></option>
                         <option value="<?php echo VISIBILITY_BUDDIES; ?>"><?= _("Buddies") ?></option>
                         <?php if ($user_domains) { ?>
@@ -173,46 +179,50 @@ $homepage_elements = $my_about->get_homepage_elements();
             <form method="post" action="<? echo $PHP_SELF ?>?cmd=change_homepage_visibility&studipticket=<?=get_ticket()?>">
                 <table width="50%" align="center"cellpadding="8" cellspacing="0" border="0">
                     <tr>
-                        <td colspan="<?php echo $user_domains ? 6 : 5; ?>" align="center">
-                        </td>
+                        <th width="'40%'" rowspan="2"><?php echo _('Homepage-Element'); ?></th>
+                        <th colspan="<?php echo $user_domains ? 5 : 4; ?>" align="center"><?php echo _('sichtbar für'); ?></th>
                     </tr>
-                    <tr class="steel2">
-                        <td>&nbsp;</td>
-                        <td colspan="<?php echo $user_domains ? 5 : 4; ?>" align="center"><?php echo _('sichtbar für'); ?></td>
-                    </tr>
-                    <tr class="steel2">
-                        <td width="'40%'"><?php echo _('Homepage-Element'); ?></td>
-                        <td align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><?php echo _('nur mich selbst'); ?></td>
-                        <td align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><?php echo _('Buddies'); ?></td>
-                        <?php if ($user_domains) { ?>
-                        <td align="center" width="12%"><?php echo _('Nutzerdomäne'); ?></td>
-                        <?php } ?>
-                        <td align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><?php echo _('Stud.IP-intern'); ?></td>
-                        <td align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><?php echo _('externe Seiten'); ?></td>
-                    </tr>
-                    <?php foreach ($homepage_elements as $key => $field) { ?>
                     <tr>
-                        <td><?php echo $field['name']; ?>
+                        <th align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><?php echo _('nur mich selbst'); ?></th>
+                        <th align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><?php echo _('Buddies'); ?></th>
+                        <?php if ($user_domains) { ?>
+                        <th align="center" width="12%"><?php echo _('Nutzerdomäne'); ?></th>
+                        <?php } ?>
+                        <th align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><?php echo _('Stud.IP-intern'); ?></th>
+                        <th align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><?php echo _('externe Seiten'); ?></th>
+                    </tr>
+                    <?php foreach ($homepage_elements as $category => $elements) { ?>
+                    <tr class="steel">
+                        <td colspan="<?php echo $user_domains ? 6 : 5; ?>">
+                            <?php echo $category; ?>
+                        </td>
+                    </tr>
+                    <?php foreach ($elements as $key => $element) { ?>
+                    <tr class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>">
+                        <td><?php echo $element['name']; ?>
                         <td align="center">
-                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_ME; ?>"<?php echo ($homepage_elements[$key]['visibility'] == VISIBILITY_ME) ? ' checked="checked"' : ''; ?>/>
+                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_ME; ?>"<?php echo ($element['visibility'] == VISIBILITY_ME) ? ' checked="checked"' : ''; ?>/>
                         </td>
                         <td align="center">
-                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_BUDDIES; ?>"<?php echo ($homepage_elements[$key]['visibility'] == VISIBILITY_BUDDIES) ? ' checked="checked"' : ''; ?>/>
+                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_BUDDIES; ?>"<?php echo ($element['visibility'] == VISIBILITY_BUDDIES) ? ' checked="checked"' : ''; ?>/>
                         </td>
                         <?php if ($user_domains) { ?>
                         <td align="center">
-                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_DOMAIN; ?>"<?php echo ($homepage_elements[$key]['visibility'] == VISIBILITY_DOMAIN) ? ' checked="checked"' : ''; ?>/>
+                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_DOMAIN; ?>"<?php echo ($element['visibility'] == VISIBILITY_DOMAIN) ? ' checked="checked"' : ''; ?>/>
                         </td>
                         <?php } ?>
                         <td align="center">
-                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_STUDIP; ?>"<?php echo ($homepage_elements[$key]['visibility'] == VISIBILITY_STUDIP) ? ' checked="checked"' : ''; ?>/>
+                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_STUDIP; ?>"<?php echo ($element['visibility'] == VISIBILITY_STUDIP) ? ' checked="checked"' : ''; ?>/>
                         </td>
                         <td align="center">
-                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_EXTERN; ?>"<?php echo ($homepage_elements[$key]['visibility'] == VISIBILITY_EXTERN) ? ' checked="checked"' : ''; ?>/>
+                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_EXTERN; ?>"<?php echo ($element['visibility'] == VISIBILITY_EXTERN) ? ' checked="checked"' : ''; ?>/>
                         </td>
                     </tr>
-                    <?php } ?>
-                    <tr <?php $cssSw->switchClass() ?>>
+                    <?php
+                            }
+                        }
+                    ?>
+                    <tr class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>">
                         <td <?php echo $cssSw->getFullClass() ?> align="center" colspan="<?php echo $user_domains ? 6 : 5; ?>">
                             <input type="hidden" name="view" value="privacy"/>
                             <?php echo makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'change_homepage_visibility'); ?>

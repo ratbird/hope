@@ -493,10 +493,12 @@ class StudipStudyArea {
     $ret = '';
     if ($this->isModule() && $plugin = PluginEngine::getPlugin('StudienmodulManagement')) {
       $nav = $plugin->getModuleInfoNavigation($this->getID(), $semester_id);
-      if($icon = $nav->getImage()){
-        $ret = '<img ';
-        foreach ($icon as $key => $value) $ret .= sprintf('%s="%s" ', $key, htmlReady($value));
+      if ($nav->isVisible(true)) {
+        $ret = '<a href="' . URLHelper::getLink($nav->getURL()) . '">';
+        $ret .= '<img ';
+        foreach ($nav->getImage() as $key => $value) $ret .= sprintf('%s="%s" ', $key, htmlReady($value));
         $ret .= '>';
+        $ret .= '</a>';
       }
     }
     return $ret;

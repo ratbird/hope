@@ -125,10 +125,12 @@ class StudipSemTreeViewSimple {
     function getInfoIcon($item_id){
         if(is_object($this->studienmodulmanagement) && $this->tree->isModuleItem($item_id)){
             $nav = $this->studienmodulmanagement->getModuleInfoNavigation($item_id, SemesterData::GetSemesterIdByIndex($this->tree->sem_number[0]));
-            if($icon = $nav->getImage()){
-                $ret = '<img ';
-                foreach ($icon as $key => $value) $ret .= sprintf('%s="%s" ', $key, htmlReady($value));
+            if ($nav->isVisible(true)) {
+                $ret = '<a href="' . URLHelper::getLink($nav->getURL()) . '">';
+                $ret .= '<img ';
+                foreach ($nav->getImage() as $key => $value) $ret .= sprintf('%s="%s" ', $key, htmlReady($value));
                 $ret .= '>';
+                $ret .= '</a>';
             }
         } else {
             if ($item_id == "root"){

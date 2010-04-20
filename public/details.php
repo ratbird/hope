@@ -583,12 +583,8 @@ echo $template_factory->render(
                             foreach ($icon as $key => $value) $icon_html .= sprintf('%s="%s" ', $key, htmlReady($value));
                             $icon_html .= '>';
                         }
-                        $stm_out[$module->getId()] = '<a href="'
-                                                    . UrlHelper::getLink($nav->getUrl())
-                                                    . '">'
-                                                    . htmlReady($nav->getTitle())
-                                                    . '</a> '.
-                                                    $icon_html;
+                        $stm_out[$module->getId()] = sprintf('<a href="%s">%s %s</a>',
+                            URLHelper::getLink($nav->getUrl()), htmlReady($nav->getTitle()), $icon_html);
                     }
                     ?>
             <tr>

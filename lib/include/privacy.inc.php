@@ -128,7 +128,7 @@ $homepage_elements = $my_about->get_homepage_elements();
                             <?php echo _('sichtbar in "Wer ist online"'); ?>
                             <br/>
                             <?php } ?>
-                            <?php if (!$NOT_HIDEABLE_FIELDS[$perm->get_perm()]['chat']) {?>
+                            <?php if (!$NOT_HIDEABLE_FIELDS[$perm->get_perm()]['chat'] && $GLOBALS['CHAT_ENABLE']) {?>
                             <input type="checkbox" name="chat"<?php echo $chat_visibility ? ' checked="checked"' : '' ?>/>
                             <?php echo _('eigener Chatraum sichtbar'); ?>
                             <br/>

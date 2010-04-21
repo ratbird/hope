@@ -647,12 +647,13 @@ $INST_ADMIN_DATAFIELDS_VIEW = array(
  * Can be configured per permission level.
  * @see lib/edit_about.inc.php in function get_homepage_elements for 
  * available fields.
+ * Entries look like "'field_name' => true".
  */
 $NOT_HIDEABLE_FIELDS = array(
     'user' => array(),
     'autor' => array(),
     'tutor' => array(),
-    'dozent' => array('email'),
+    'dozent' => array(),
     'admin' => array(),
     'root' => array()
 );

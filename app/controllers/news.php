@@ -21,28 +21,63 @@ require_once 'app/controllers/authenticated_controller.php';
 
 class NewsController extends AuthenticatedController {
 
+  function get_news_action($id) {
+  	$this->news = new StudipNews($id);
+    if (!$this->has_news_permissions($id)) {
+      return;
+    }
+    $this->news->content['open'] = $open;
+    $this->show_admin = $show_admin;
+    $this->admin_link = Request::get('admin_link');
+    $this->render_template('news/get_news');
+  }
+  
+  /**
+   * deprecated
+   */
   function open_action($id = NULL) {
     $this->open_or_close(TRUE, $id);
   }
 
 
+  /**
+   * deprecated
+   */
   function close_action($id = NULL) {
     $this->open_or_close(FALSE, $id);
   }
 
 
+  /**
+   * deprecated
+   */
   function open_or_close($open, $id) {
-
-    if (is_null($id)) {
+    # get news item
+    $this->news = new StudipNews($id);
+    
+    if (!$this->has_news_permissions($id)) {
+      return;
+    }
+    
+    # show news
+    $this->news->content['open'] = $open;
+    $this->show_admin = $show_admin;
+    $this->admin_link = Request::get('admin_link');
+    $this->render_template('news/open_or_close');
+  }
+  
+  function has_news_permissions($news) {
+    if (is_null($news)) {
       $this->set_status(400);
-      return $this->render_nothing();
+      $this->render_nothing();
+      return false;
     }
 
     # get news item
-    $this->news = new StudipNews($id);
     if ($this->news->is_new) {
       $this->set_status(404);
-      return $this->render_nothing();
+      $this->render_nothing();
+      return false;
     }
 
 
@@ -50,14 +85,10 @@ class NewsController extends AuthenticatedController {
     list($permitted, $show_admin) = ajaxified_news_has_permission($this->news);
     if (!$permitted) {
       $this->set_status(401);
-      return $this->render_nothing();
+      $this->render_nothing();
+      return false;
     }
-
-    # show news
-    $this->news->content['open'] = $open;
-    $this->show_admin = $show_admin;
-    $this->admin_link = Request::get('admin_link');
-    $this->render_template('news/open_or_close');
+    return true;
   }
 }
 

@@ -34,7 +34,7 @@
 
     <?= Assets::stylesheet('header', array('media' => 'screen, print')) ?>
 
-    <?= Assets::script('prototype', 'scriptaculous', 'application') ?>
+    <?= Assets::script('jquery-1.4.2.min.js', 'jquery-ui-1.8.custom.min.js', 'application') ?>
 
     <script type="text/javascript" language="javascript">
     // <![CDATA[

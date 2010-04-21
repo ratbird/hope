@@ -281,6 +281,7 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link) {
   $open_or_close = $news_item['open'] ? 'close' : 'open';
   $ajax = PrototypeHelper::remote_function(
     array('url' => URLHelper::getLink('dispatch.php/news/'.$open_or_close.'/'.$id, array('admin_link' => $admin_link))));
+  $ajax = "STUDIP.News.openclose('".$id."')";
   $link=URLHelper::getLink($link);
   $link .= '" onClick="' . $ajax . ';return false;';
 
@@ -297,8 +298,36 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link) {
     printhead(0, 0, $link, "close", $tempnew, $icon, $titel, $zusatz, $news_item['date']);
 
   echo "</tr></table>   ";
-
+  
+  echo "<div id=\"news_item_".$id."_content\"".($news_item['open'] ? "" : " style=\"display:none\"").">";
   if ($news_item['open']) {
+    show_news_item_content($news_item, $cmd_data, $show_admin);
+  }
+  echo "</div>";
+
+  return ob_get_clean();
+}
+
+function show_news_item_content($news_item, $cmd_data, $show_admin) {
+	global $auth, $_fullname_sql;
+
+	$db2 = new DB_Seminar();
+
+	$id = $news_item['news_id'];
+
+	$tempnew = (($news_item['chdate'] >= object_get_visit($id,'news',false,false))
+	&& ($news_item['user_id'] != $auth->auth["uid"]));
+
+	if ($tempnew && $_REQUEST["new_news"])
+	$news_item["open"] = $tempnew;
+	$db2->query("SELECT username, " . $_fullname_sql['full'] ." AS fullname FROM auth_user_md5 a LEFT JOIN user_info USING (user_id) WHERE a.user_id='".$news_item['user_id']."'");
+    $db2->next_record();
+
+    $link .= "&username=".$db2->f("username") . "#anker";
+    $zusatz="<a href=\"".URLHelper::getLink("about.php?username=".$db2->f("username"))."\"><font size=-1 color=\"#333399\">".htmlReady($db2->f("fullname"))."</font></a><font size=-1> ".date("d.m.Y",$news_item['date'])." | <font color=\"#005500\">".object_return_views($id)."<font color=\"black\"> |</font>";
+
+    $unamelink = '&username='.$db2->f('username');
+    $uname = $db2->f('username');
 
     list($content, $admin_msg) = explode("<admin_msg>", $news_item['body']);
     $content = formatReady($content);
@@ -386,11 +415,9 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link) {
             $content .= $cmdline;
         }
     }
-
+    
     echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\"><tr>";
     printcontent(0,0, $content, $edit);
     echo "</tr></table>";
-  }
-
-  return ob_get_clean();
 }
+

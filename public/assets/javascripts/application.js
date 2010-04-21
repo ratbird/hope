@@ -20,10 +20,11 @@
  * Boston, MA  02110-1301  USA
  */
 
+
 /* ------------------------------------------------------------------------
  * prototypejs helpers
  * ------------------------------------------------------------------------ */
-
+/*
 (function () {
   var methods = {
     defaultValueActsAsHint: function (element) {
@@ -48,7 +49,31 @@
     Element.addMethods(tag, methods);
   });
 }());
+*/
 
+;(function ($) {
+  $.fn.extend({
+    defaultValueActsAsHint: function () {
+      return this.each(function () {
+        if (!$(this).is('input,textarea') || $(this).data('defaultValueActsAsHint'))
+          return;
+
+        $(this).focus(function () {
+          if ($(this).val() == $(this).attr('defaultValue'))
+            $(this).removeClass('hint').val('');
+        }).blur(function () {
+          if ($(this).val().trim().length == 0)
+            $(this).addClass('hint').val($(this).attr('defaultValue'));
+        }).addClass('hint');
+
+        $(this).data('defaultValueActsAsHint', true);
+      });
+    }
+  });
+  $(function () {
+    $('.defaultValueActsAsHint').defaultValueActsAsHint();
+  });
+}(jQuery));
 
 /* ------------------------------------------------------------------------
  * the global STUDIP namespace
@@ -59,7 +84,7 @@ var STUDIP = STUDIP || {};
 /* ------------------------------------------------------------------------
  * study area selection for courses
  * ------------------------------------------------------------------------ */
-
+/*
 STUDIP.study_area_selection = {
 
   url: function (action, args) {
@@ -346,10 +371,11 @@ Object.extend(STUDIP.OverDiv, {
     }
   }
 );
-
+*/
 /* ------------------------------------------------------------------------
  * Markup toolbar
  * ------------------------------------------------------------------------ */
+/*
 (function () {
 
   STUDIP.Markup = {};
@@ -435,168 +461,157 @@ Object.extend(STUDIP.OverDiv, {
   };
 
 }());
-
+*/
 /* ------------------------------------------------------------------------
  * automatic compression of tabs
  * ------------------------------------------------------------------------ */
-
 STUDIP.Tabs = (function () {
 
-  var list, items, list_item_height, viewport_width;
+  var list, items, viewport_width;
 
   // check heights of list and items to check for wrapping
-  var needs_compression = function () {
-    if (!list_item_height) {
-      var li = list.down('li');
-      if (!li) {
-        return false;
-      }
-      list_item_height = li.getHeight();
-    }
-    return list.clientHeight > list_item_height;
+  function needs_compression() {
+    return $(list).height() > $('li:first', list).height();
   };
 
   // returns the largest feasible item
-  var getLargest = function () {
+  function getLargest() {
+    var largest = 5, item, letters;
 
-    var i = items.length,
-        largest = 5, item, letters;
-
-    while (i) {
-      i -= 1;
-      letters = items[i].innerHTML.length;
-      if (letters > largest) {
-        item = items[i];
-        largest = letters;
-      }
-    }
+    items.each(function () {
+    	letters = $(this).html().length;
+    	if (letters > largest) {
+    		item = this;
+    		largest = letters;
+    	}
+    });
     return item;
   };
 
   // truncates an item
-  var truncate = function (item) {
-    var text = item.innerHTML;
-    var len = text.length - 4 > 4 ? text.length - 4 : 4;
-    if (len < text.length) {
-      item.innerHTML = text.substr(0, len) + "\u2026";
+  function truncate(item) {
+    var text = $(item).html(),
+      length = Math.max(text.length - 4, 4);
+    if (length < text.length) {
+      $(item).html(text.substr(0, length) + "\u2026");
     }
   };
 
   return {
-
     // initializes, observes resize events and compresses the tabs
     initialize: function () {
-      list = $("tabs");
-      if (list !== null) {
-        items = list.select("li a");
-        viewport_width = document.viewport.getWidth();
+      list = $('#tabs');
+      if (list.length === 0)
+      	return;
+      items = $('li a', list);
+      $(list).data('old_width', $(window).width());
 
-        // strip contents and set titles
-        items.each(function (item) {
-          item.title = item.innerHTML = item.innerHTML.strip();
-        });
+      // strip contents and set titles
+      items.each(function () {
+      	$(this).html( $(this).html().trim() );
+        $(this).data('title', $(this).html());
+      });
 
-        Event.observe(window, "resize", this.resize.bind(this));
-        this.compress();
-      }
+      $(window).bind('resize', this.resize);
+      this.compress();
     },
 
 
     // try to fit all the tabs into a single line
     compress: function () {
       var item;
-      if (!needs_compression()) {
-        return;
-      }
-      do {
-        item = getLargest();
-        if (!item) {
-          break;
-        }
+      while (needs_compression() && (item = getLargest())) {
         truncate(item);
-      } while (needs_compression());
+      };
     },
 
     // event handler called when resizing the browser
     resize: function () {
-      var new_width = document.viewport.getWidth();
-      if (new_width > viewport_width) {
-        items.each(function (item) {
-          item.innerHTML = item.title;
+      var new_width = $(window).width();
+      if (new_width > $(list).data('old_width')) {
+        items.each(function () {
+          $(this).html( $(this).data('title') );
         });
       }
-      viewport_width = new_width;
-      this.compress();
+      $(list).data('old_width', new_width);
+      STUDIP.Tabs.compress();
     }
   };
 }());
-
 
 /* ------------------------------------------------------------------------
  * Dateibereich
  * ------------------------------------------------------------------------ */
 
-STUDIP.Filesystem = {};
-
 // hier ein paar "globale" Variablen, die nur in Funktionen des Filesystem-Namespace verwendet werden:
-STUDIP.Filesystem.hover_begin = 0;        //erste Zeit, dass eine Datei über den Ordner ...hovered_folder bewegt wurde.
-STUDIP.Filesystem.hovered_folder = '';    //letzter Ordner, über den eine gezogene Datei bewegt wurde.
-STUDIP.Filesystem.movelock = false;       //wenn auf true gesetzt, findet gerade eine Animation statt.
-STUDIP.Filesystem.sendstop = false;       //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lädt sich gerade neu.
-
-STUDIP.Filesystem.getURL = function () {
-  return document.URL.split("#", 1)[0];
-};
-
-/**
- * Funktion, um Fehlermeldungen zu behandeln.
- */
-STUDIP.Filesystem.alertOnError = function (transport) {
-  if (transport.responseText) {
-    alert(transport.responseText);
+STUDIP.Filesystem = {
+  hover_begin    : 0,             //erste Zeit, dass eine Datei über den Ordner ...hovered_folder bewegt wurde.
+  hovered_folder : '',            //letzter Ordner, über den eine gezogene Datei bewegt wurde.
+  movelock       : false,         //wenn auf true gesetzt, findet gerade eine Animation statt.
+  sendstop       : false,         //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lädt sich gerade neu.
+  getURL         : function () {
+    return document.URL.split("#", 1)[0];
+  },
+  /**
+   * Lässt die gelben Pfeile verschwinden und ersetzt sie durch Anfassersymbole.
+   * Wichtig für Javascript-Nichtjavascript Behandlung. Nutzer ohne Javascript
+   * sehen nur die gelben Pfeile zum Sortieren.
+   */
+  unsetarrows     : function () {
+    $("span.move_arrows,span.updown_marker").hide();
+    $("span.anfasser").show()
   }
 };
 
-/**
- * Lässt die gelben Pfeile verschwinden und ersetzt sie durch Anfassersymbole.
- * Wichtig für Javascript-Nichtjavascript Behandlung. Nutzer ohne Javascript
- * sehen nur die gelben Pfeile zum Sortieren.
- */
-STUDIP.Filesystem.unsetarrows = function () {
-  $$("span.move_arrows, span.updown_marker").invoke("hide");
-  $$("span.anfasser").invoke("show");
-};
 
 /**
  * deklariert Ordner und Dateien als ziehbare Elemente bzw. macht sie sortierbar
  */
 STUDIP.Filesystem.setdraggables = function () {
-  $$("div.folder_container").each(function (div) {
-    var id = div.getAttribute('id');
+  $("div.folder_container").each(function() {
+    var id = this.getAttribute('id');
     var md5_id = id.substr(id.lastIndexOf('_') + 1);
     //wenn es einen Anfasser gibt, also wenn Nutzer verschieben darf
-    if ($$('#' + id + ' a.drag').length > 0) {
+    if ($('a.drag', this)) {
       var aufgeklappt = false;
-      Sortable.create(id, {
-        ghosting: false,
-        constraint: false,
-        scroll: window,
-        tag: 'div',
-        starteffect: function (element) {
-          var opacity = element.getOpacity();
-          element.store("opacity", opacity);
-          Draggable._dragging[element] = true;
-          var effect = new Effect.Opacity(element, {
-            duration: 0.2,
-            from: opacity,
-            to: 0.7
+      $(this).sortable({
+        handle: 'a.drag',
+        opacity: 0.6,
+        revert: 300,
+        scroll: true,
+        update: function() {
+          var id = this.getAttribute('id');
+          var sorttype = (id.lastIndexOf('subfolders') !== -1 ? "folder" : "file");
+          md5_id = id.substr(id.lastIndexOf('_') + 1);
+          var order = $(this).sortable('serialize', {key: "order"}).split("&");
+          order = $.map(order, function (component) {
+            return component.substr(component.lastIndexOf('=') + 1);
           });
+          order_ids = $.map(order, function (order_number) {
+            if (sorttype === "folder") {
+              // Unterordner:
+              return $("#getmd5_fo" + md5_id + "_" + order_number).html();
+            } else {
+              // Dateien:
+              return $("#getmd5_fi" + md5_id + "_"  + order_number).html();
+            }
+          });
+          $.ajax({
+            url: STUDIP.Filesystem.getURL(),
+            data: {
+              sorttype: sorttype,
+              folder_sort: md5_id,
+              file_order: order_ids.join(",")
+            }
+          });
+        }/*,
+        start: function () {
+          var id = this.getAttribute('id');
+          var sorttype = (id.lastIndexOf('subfolders') !== -1 ? "folder" : "file");
           //wenn es ein aufgeklappter Ordner ist:
-          var id = element.getAttribute('id');
-          var element_type = id.substr(0, id.indexOf('_'));
-          var md5_id = element.down().innerHTML;
-          if (element_type === "folder") {
-            if ($("folder_" + md5_id + "_body").style.display !== "none") {
+          var md5_id = $("div > div", this).html();
+          if (sorttype === "folder") {
+            if ($("#folder_" + md5_id + "_body").css('display') !== "none") {
               aufgeklappt = true;
               STUDIP.Filesystem.changefolderbody(md5_id);
             } else {
@@ -604,59 +619,17 @@ STUDIP.Filesystem.setdraggables = function () {
             }
           }
         },
-        endeffect: function (element) {
-          var opacity = element.retrieve("opacity");
-          var toOpacity = Object.isNumber(opacity) ? opacity : 1.0;
-          var effect = new Effect.Opacity(element, {
-            duration: 0.2,
-            from: 0.7,
-            to: toOpacity,
-            queue: {
-              scope: '_draggable',
-              position: 'end'
-            },
-            afterFinish: function () {
-              Draggable._dragging[element] = false;
-            }
-          });
-          //wenn es ein Ordner ist, der vorher aufgeklappt war
-          //(User sind ja zum Glück nicht multitaskingfähig):
-          if (aufgeklappt) {
-            var md5_id = element.down().innerHTML;
+        stop: function () {
+          var id = this.getAttribute('id');
+          var sorttype = (id.lastIndexOf('subfolders') !== -1 ? "folder" : "file");
+          //wenn es ein aufgeklappter Ordner ist:
+          var md5_id = $("div > div", this).html();
+          if (aufgeklappt === true) {
             STUDIP.Filesystem.changefolderbody(md5_id);
+            aufgeklappt = false;
           }
-        },
-        onUpdate: function (container) {
-          // wenn nicht schon irgendwas in einen Ordner verschoben wird.
-          if (!STUDIP.Filesystem.sendstop) {
-            var id = container.getAttribute('id');
-            var sorttype = id.substr(0, id.lastIndexOf('_'));
-            md5_id = id.substr(id.lastIndexOf('_') + 1);
-            var order_ids = Sortable.sequence(id).map(function (order_id) {
-              if (sorttype === "folder_subfolders") {
-                // Unterordner:
-                return $("getmd5_fo" + md5_id + "_" + order_id).innerHTML;
-              } else {
-                // Dateien:
-                return $("getmd5_fi" + md5_id + "_"  + order_id).innerHTML;
-              }
-            });
-            var sort_var = md5_id;
-            var adress = STUDIP.Filesystem.getURL();
-            var request = new Ajax.Request(adress, {
-              method: "post",
-              parameters: {
-                folder_sort: sort_var,
-                file_order: order_ids.join(",")
-              },
-              onSuccess: function () {},
-              onFailure: STUDIP.Filesystem.alertOnError
-            }); //of Ajax-Request
-          }
-        },
-        //only drawn by '<a class="drag">'s in folder_id
-        handles: $$('#' + id + ' a.drag')
-      }); //of Sortable.create
+        }*/
+      });
     }
   });
 };
@@ -665,54 +638,47 @@ STUDIP.Filesystem.setdraggables = function () {
  * deklariert Ordner als Objekte, in die Dateien gedropped werden können
  */
 STUDIP.Filesystem.setdroppables = function () {
-  $$("div.droppable").each(function (div) {
-    var id = div.getAttribute('id');
-    var md5_id = id.substr(id.lastIndexOf('_') + 1);
-    Droppables.add(id, {
-      accept: 'draggable',
-      hoverclass: 'hover',
-      onHover: function (datei, folder) {
-        var folder_md5_id = folder.getAttribute('id');
-        folder_md5_id = folder_md5_id.substr(folder_md5_id.lastIndexOf('_') + 1);
-        STUDIP.Filesystem.openhoveredfolder(folder_md5_id);
-      },
-      onDrop: function (datei, folder, event) {
-        var id = datei.getAttribute('id');
-        var file_md5_id = id.substr(id.indexOf('_') + 1);
-        file_md5_id = $("getmd5_fi" + file_md5_id).innerHTML;
-        var folder_md5_id = folder.getAttribute('id');
-        folder_md5_id = folder_md5_id.substr(folder_md5_id.lastIndexOf('_') + 1);
-        //alert("Drop "+file_md5_id+" on "+folder_md5_id);
-        var request;
-        var adress = STUDIP.Filesystem.getURL();
-        if ((event.keyCode === 17)  || (event.ctrlKey)) {
-          request = new Ajax.Request(adress, {
-            method: "post",
-            parameters: {
-              copyintofolder: folder_md5_id,
-              copyfile: file_md5_id
-            },
-            onSuccess: function (transport) {
-              location.href = adress + '&cmd=tree&open=' + folder_md5_id;
-            },
-            onFailure: STUDIP.Filesystem.alertOnError
-          });
-        } else {
-          request = new Ajax.Request(adress, {
-            method: "post",
-            parameters: {
-              moveintofolder: folder_md5_id,
-              movefile: file_md5_id
-            },
-            onSuccess: function (transport) {
-              location.href = adress + '&cmd=tree&open=' + folder_md5_id;
-            },
-            onFailure: STUDIP.Filesystem.alertOnError
-          });
-        }
-        STUDIP.Filesystem.sendstop = true;
+  $("div.droppable").droppable({
+    accept: '.draggable',
+    hoverClass: 'hover',
+    over: function() {
+      var folder_md5_id = this.getAttribute('id');
+      folder_md5_id = folder_md5_id.substr(folder_md5_id.lastIndexOf('_') + 1);
+      STUDIP.Filesystem.openhoveredfolder(folder_md5_id);
+    },
+    drop: function(event, ui) {
+      var id = ui.draggable.attr('id');
+      var file_md5_id = id.substr(id.indexOf('_') + 1);
+      file_md5_id = $("#getmd5_fi" + file_md5_id).html();
+      var folder_md5_id = $(this).attr('id');
+      folder_md5_id = folder_md5_id.substr(folder_md5_id.lastIndexOf('_') + 1);
+      //alert("Drop "+file_md5_id+" on "+folder_md5_id);
+      var adress = STUDIP.Filesystem.getURL();
+      if ((event.keyCode === 17)  || (event.ctrlKey)) {
+        $.ajax({
+          url: adress,
+          data: {
+            copyintofolder: folder_md5_id,
+            copyfile: file_md5_id
+          },
+          success: function() {
+            location.href = adress + '&cmd=tree&open=' + folder_md5_id;
+          }
+        });
+      } else {
+        $.ajax({
+          url: adress,
+          data: {
+            moveintofolder: folder_md5_id,
+            movefile: file_md5_id
+          },
+          success: function() {
+            location.href = adress + '&cmd=tree&open=' + folder_md5_id;
+          }
+        });
       }
-    });
+      STUDIP.Filesystem.sendstop = true;
+    }
   });
 };
 
@@ -723,7 +689,7 @@ STUDIP.Filesystem.openhoveredfolder = function (md5_id) {
   var zeit = new Date();
   if (md5_id === STUDIP.Filesystem.hovered_folder) {
     if (STUDIP.Filesystem.hover_begin < zeit.getTime() - 1000) {
-      if ($("folder_" + md5_id + "_body").style.display === "none") {
+      if ($("#folder_" + md5_id + "_body").css('display') == "none") {
         STUDIP.Filesystem.changefolderbody(md5_id);
         STUDIP.Filesystem.hover_begin = zeit.getTime();
       }
@@ -747,40 +713,38 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
   if (!STUDIP.Filesystem.movelock) {
     STUDIP.Filesystem.movelock = true;
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);
-    if ($("folder_" + md5_id + "_body").style.display !== "none") {
-      Effect.BlindUp("folder_" + md5_id + "_body", { duration: 0.4 });
-      $("folder_" + md5_id + "_header").style.fontWeight = 'normal';
-      $("folder_" + md5_id + "_arrow_img").setAttribute('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
-      $("folder_" + md5_id + "_arrow_td").addClassName('printhead2');
-      $("folder_" + md5_id + "_arrow_td").removeClassName('printhead3');
+    if ($("#folder_" + md5_id + "_body").css('display') !== "none") {
+      $("#folder_" + md5_id + "_header").css('fontWeight', 'normal');
+      $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
+      $("#folder_" + md5_id + "_arrow_td").addClass('printhead2');
+      $("#folder_" + md5_id + "_arrow_td").removeClass('printhead3');
+      $("#folder_" + md5_id + "_body").slideUp(400);
+      URLHelper.removeParam('data[open]['+md5_id+']');
     } else {
-      if ($("folder_" + md5_id + "_body").innerHTML === "") {
+      if ($("#folder_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
-        var request = new Ajax.Request(adress, {
-          method: 'get',
-          parameters: {
-            getfolderbody: md5_id
-          },
-          onSuccess: function (transport) {
-            $("folder_" + md5_id + "_body").innerHTML = transport.responseText;
-            $("folder_" + md5_id + "_header").style.fontWeight = 'bold';
-            $("folder_" + md5_id + "_arrow_img").setAttribute('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
-            $("folder_" + md5_id + "_arrow_td").addClassName('printhead3');
-            $("folder_" + md5_id + "_arrow_td").removeClassName('printhead2');
-            STUDIP.Filesystem.unsetarrows();
-            STUDIP.Filesystem.setdraggables();
-            STUDIP.Filesystem.setdroppables();
-            $("folder_" + md5_id + "_body").style.display = "none";
-            Effect.BlindDown("folder_" + md5_id + "_body", { duration: 0.4 });
-          },
-          onFailure: STUDIP.Filesystem.alertOnError
+        $("#folder_" + md5_id + "_body").load(adress, { getfolderbody: md5_id }, function() {
+          $("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
+          $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
+          $("#folder_" + md5_id + "_arrow_td").addClass('printhead3');
+          $("#folder_" + md5_id + "_arrow_td").removeClass('printhead2');
+          STUDIP.Filesystem.unsetarrows();
+          STUDIP.Filesystem.setdraggables();
+          STUDIP.Filesystem.setdroppables();
+          $("#folder_" + md5_id + "_body").slideDown(400);
+          URLHelper.setParam('data[open]['+md5_id+']', 1);
+          alert("jo");
         });
       } else {
-        Effect.BlindDown("folder_" + md5_id + "_body", { duration: 0.4 });
-        $("folder_" + md5_id + "_header").style.fontWeight = 'bold';
-        $("folder_" + md5_id + "_arrow_img").setAttribute('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
-        $("folder_" + md5_id + "_arrow_td").addClassName('printhead3');
-        $("folder_" + md5_id + "_arrow_td").removeClassName('printhead2');
+        $("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
+        $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
+        $("#folder_" + md5_id + "_arrow_td").addClass('printhead3');
+        $("#folder_" + md5_id + "_arrow_td").removeClass('printhead2');
+        STUDIP.Filesystem.unsetarrows();
+        STUDIP.Filesystem.setdraggables();
+        STUDIP.Filesystem.setdroppables();
+        $("#folder_" + md5_id + "_body").slideDown(400);
+        URLHelper.setParam('data[open]['+md5_id+']', 1);
       }
     }
   }
@@ -791,6 +755,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
  * öffnet/schließt eine Datei entweder per AJAX oder nur per Animation,
  * wenn Inhalt schon geladen wurde.
  */
+
 STUDIP.Filesystem.changefilebody = function (md5_id) {
   var IE7 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 7;
   var IE6 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 6;
@@ -800,41 +765,32 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
   if (!STUDIP.Filesystem.movelock) {
     STUDIP.Filesystem.movelock = true;
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);
-    if ($("file_" + md5_id + "_body_row").style.visibility === "visible") {
-      Effect.BlindUp("file_" + md5_id + "_body", { duration: 0.3 });
-      $("file_" + md5_id + "_header").style.fontWeight = 'normal';
-      $("file_" + md5_id + "_arrow_td").addClassName('printhead2');
-      $("file_" + md5_id + "_arrow_td").removeClassName('printhead3');
-      $("file_" + md5_id + "_arrow_img").setAttribute('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
-      window.setTimeout("$('file_" + md5_id + "_body_row').style.visibility = 'collapse'", 310);
+    //if ($("file_" + md5_id + "_body_row").style.visibility === "visible") {
+
+    if ($("#file_" + md5_id + "_body").css('display') !== "none") {
+      $("#file_" + md5_id + "_body").slideUp(400);
+      $("#file_" + md5_id + "_header").css("fontWeight", 'normal');
+      $("#file_" + md5_id + "_arrow_td").addClass('printhead2');
+      $("#file_" + md5_id + "_arrow_td").removeClass('printhead3');
+      $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
     } else {
-      if ($("file_" + md5_id + "_body").innerHTML === "") {
+      if ($("#file_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
-        var request = new Ajax.Request(adress, {
-          method: 'get',
-          parameters: {
-            getfilebody: md5_id
-          },
-          onSuccess: function (transport) {
-            $("file_" + md5_id + "_header").style.fontWeight = 'bold';
-            $("file_" + md5_id + "_arrow_td").addClassName('printhead3');
-            $("file_" + md5_id + "_arrow_td").removeClassName('printhead2');
-            $("file_" + md5_id + "_arrow_img").setAttribute('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
-            $("file_" + md5_id + "_body").innerHTML = transport.responseText;
-            $("file_" + md5_id + "_body").style.display = "none";
-            $("file_" + md5_id + "_body_row").style.visibility = "visible";
-            Effect.BlindDown("file_" + md5_id + "_body", { duration: 0.3 });
-          },
-          onFailure: STUDIP.Filesystem.alertOnError
+        $("#file_" + md5_id + "_body").load(adress, { getfilebody: md5_id }, function() {
+          $("#file_" + md5_id + "_header").css('fontWeight', 'bold');
+          $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
+          $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
+          $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
+          $("#file_" + md5_id + "_body").slideDown(400);
         });
       } else {
         //Falls der Dateikörper schon geladen ist.
-        $("file_" + md5_id + "_body_row").style.visibility = "visible";
-        $("file_" + md5_id + "_header").style.fontWeight = 'bold';
-        $("file_" + md5_id + "_arrow_td").addClassName('printhead3');
-        $("file_" + md5_id + "_arrow_td").removeClassName('printhead2');
-        $("file_" + md5_id + "_arrow_img").setAttribute('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
-        Effect.BlindDown("file_" + md5_id + "_body", { duration: 0.3 });
+        $("#file_" + md5_id + "_body_row").show();
+        $("#file_" + md5_id + "_header").css('fontWeight', 'bold');
+        $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
+        $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
+        $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
+        $("#file_" + md5_id + "_body").slideDown(400);
       }
     }
   }
@@ -849,43 +805,66 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
 STUDIP.Arbeitsgruppen = {
 
   toggleOption: function (user_id) {
-    if ($('user_opt_' + user_id).visible()) {
-      $('user_opt_' + user_id).fade({ duration: 0.2 });
-      $('user_' + user_id).morph('width:0px;', { queue: 'end', duration: 0.2 });
+    if ($('#user_opt_' + user_id).css('display') === "none") {
+      $('#user_opt_' + user_id).show('slide', {direction: 'left'}, 400, function() {
+        $('#user_opt_' + user_id).css("display", "inline-block");
+      });
     } else {
-      $('user_' + user_id).morph('width:110px;', { duration: 0.2 });
-      $('user_opt_' + user_id).appear({ queue: 'end', duration: 0.2 });
+      $('#user_opt_' + user_id).hide('slide', {direction: 'left'}, 400);
     }
   }
 };
 
 /* ------------------------------------------------------------------------
+ * News
+ * ------------------------------------------------------------------------ */
+
+STUDIP.News = {
+  openclose: function(id) {
+	if ($("#news_item_" + id + "_content").css('display') !== 'none') {
+      STUDIP.News.close(id);
+    } else {
+      STUDIP.News.open(id);
+    }
+  },
+
+  open: function(id) {
+	  //alert(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/news/get_news/' + id);
+    $("#news_item_" + id + "_content").load(
+      STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/news/get_news/' + id,
+      {},
+      function() {
+        $("#news_item_" + id + "_content").slideDown(400);
+        $("#news_item_" + id + " .printhead2 img")
+            .attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
+        $("#news_item_" + id + " .printhead2")
+            .removeClass("printhead2")
+            .addClass("printhead3");
+        $("#news_item_" + id + " .printhead b").css("font-weight", "bold");
+        $("#news_item_" + id + " .printhead a.tree").css("font-weight", "bold");
+	  });
+  },
+
+  close: function(id) {
+    $("#news_item_" + id + "_content").slideUp(400);
+    $("#news_item_" + id + " .printhead3 img")
+        .attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
+    $("#news_item_" + id + " .printhead3")
+        .removeClass("printhead3")
+        .addClass("printhead2");
+    $("#news_item_" + id + " .printhead b").css("font-weight", "normal");
+    $("#news_item_" + id + " .printhead a.tree").css("font-weight", "normal");
+  }
+}
+
+/* ------------------------------------------------------------------------
  * application wide setup
  * ------------------------------------------------------------------------ */
-document.observe('dom:loaded', function () {
 
+//document.observe('dom:loaded', function () {
+$(function () {
   // message highlighting
-  $$(".effect_highlight").invoke('highlight');
-
-  // ajax responder
-  var indicator = $('ajax_notification');
-  if (indicator) {
-    Ajax.Responders.register({
-      onCreate:   function (request) {
-        if (Ajax.activeRequestCount) {
-          request.usability_timer = setTimeout(function () {
-            indicator.show();
-          }, 100);
-        }
-      },
-      onComplete: function (request) {
-        clearTimeout(request.usability_timer);
-        if (!Ajax.activeRequestCount) {
-          indicator.hide();
-        }
-      }
-    });
-  }
+  $(".effect_highlight").effect('highlight', {}, 2000);
 
   // compress tabs
   STUDIP.Tabs.initialize();

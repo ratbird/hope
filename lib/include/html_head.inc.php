@@ -100,7 +100,7 @@ if ($my_messaging_settings['start_messenger_at_startup'] && $auth->auth['jscript
     $_SESSION['messenger_started'] = TRUE;
 }
 ?>
-    <?= Assets::script('prototype', 'scriptaculous.js?load=effects,dragdrop,controls', 'application') ?>
+    <?= Assets::script('jquery-1.4.2.min.js', 'jquery-ui-1.8.custom.min.js', 'application') ?>
     <script type="text/javascript" language="javascript">
     // <![CDATA[
         STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";

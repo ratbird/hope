@@ -76,7 +76,7 @@
           <div id="quicksearch_autocomplete_choices" class="autocomplete"></div>
         </form>
         <script>
-            (function () {
+            /*(function () {
                 var box = $("quicksearch").down(".quicksearchbox");
                 box.value = "<?= _("Veranstaltungen") ?>";
                 box.defaultValueActsAsHint();
@@ -100,7 +100,7 @@
                       seminar_id + "&send_from_search=1&send_from_search_page=<?= urlencode($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) ?>sem_portal.php?keep_result_set=1";
                   }
                 });
-            })();
+            })();*/
         </script>
         </li>
         <? endif ?>

@@ -6,9 +6,9 @@
     <? if ($GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
     &nbsp;<a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$m['username'].'/promote/dozent') ?>" alt="NutzerIn befördern">
         <?= makebutton('hochstufen') ?>
-    </a><br>
-    <br>
-    <? endif; ?>
+    </a>
+    
+  <? endif; ?>
 
     &nbsp;<a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$m['username'].'/promote/autor') ?>" alt="NutzerIn runterstufen">
         <?= makebutton('runterstufen') ?>
@@ -16,8 +16,7 @@
 <? else : ?>
     &nbsp;<a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$m['username'].'/promote/tutor') ?>" alt="NutzerIn befördern">
         <?= makebutton('hochstufen') ?>
-    </a><br>
-    <br>
+    </a>
     &nbsp;<a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$m['username'].'/remove') ?>" alt="NutzerIn runterstufen">
         <?= makebutton('rauswerfen') ?>
     </a>

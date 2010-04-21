@@ -57,8 +57,8 @@ list-style-position:outside;list-style-type:none;">
     <li style="position:relative;width:200px;display:inline-block;overflow:hidden;vertical-align:top;" align="left">
 
         <? if (($GLOBALS['perm']->have_studip_perm('dozent', $sem_id) && $m['status'] != 'dozent') || $GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
-            <div id="usercontainer" style="float:left;position:relative;cursor:hand;"onMouseOver="$(this).down('.invitation').show();"
-               onMouseOut ="$(this).down('.invitation').hide();"
+            <div style="float:left;cursor:hand;" onMouseOver="$('.invitation', this).fadeIn();"
+               onMouseOut ="$('.invitation', this).fadeOut();"
                onClick    ="STUDIP.Arbeitsgruppen.toggleOption('<?= $m['user_id'] ?>')"
                title="klicken für weitere Optionen">
                 <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::MEDIUM, array("title" => _("klicken für weitere Optionen"))) ?>
@@ -77,7 +77,6 @@ list-style-position:outside;list-style-type:none;">
             <div id="user_<?= $m['user_id']?>" style="float:left; margin-right: 10px; width: 110px;" align="left" valign="top">
                 <div id="user_opt_<?= $m['user_id'] ?>">
                 <div class="blue_gradient" style="text-align: center"><?= _('Optionen') ?></div>
-                <br>
                 <?= $this->render_partial('course/studygroup/_members_options.php') ?>
             </div>
         </noscript>
@@ -85,7 +84,6 @@ list-style-position:outside;list-style-type:none;">
         <div id="user_<?= $m['user_id'] ?>" style="float:left; margin-right: 10px; width: 0px;" align="left" valign="top">
             <div id="user_opt_<?= $m['user_id'] ?>" style="display: none">
                 <div class="blue_gradient" style="text-align: center"><?= _('Optionen') ?></div>
-                <br>
                 <?= $this->render_partial('course/studygroup/_members_options.php') ?>
             </div>
         </div>
@@ -93,14 +91,12 @@ list-style-position:outside;list-style-type:none;">
 
         <div style="clear: both; margin-right: 25px;">
         <a href="<?= URLHelper::getLink('about.php?username='.$m['username']) ?>">
-            <?= htmlReady($m['fullname']) ?><br>
+            <?= htmlReady($m['fullname']) ?>
             <?  if (isset($moderators[$m['user_id']])) : ?>
               <em><?= _("GruppengründerIn") ?></em>
             <? elseif (isset($tutors[$m['user_id']])) : ?>
               <em><?= _("ModeratorIn") ?></em>
             <? endif ?>
-                    <br>
-                    <br>
           </a>
         </div>
     </li>
@@ -117,7 +113,6 @@ list-style-position:outside;list-style-type:none;">
 </br>
 <? if ($rechte) : ?>
     <?=$this->render_partial("course/studygroup/_invite_members", array('members' => $flash['members'], 'results_choose_members' => $flash['results_choose_members']));?>
-    <br>
     <? if (count($accepted) > 0) : ?>
         <h2 style="clear:left; padding-top: 50px;"><?= _("Offene Mitgliedsanträge") ?></h2>
         <table cellspacing="0" cellpadding="2" border="0" style="max-width: 100%; min-width: 70%">

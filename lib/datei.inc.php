@@ -1512,12 +1512,12 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     //Ab jetzt kommt der Bereich zum Runterladen und Bearbeiten:
     if (isset($open[$datei["dokument_id"]])) {
         //Dokument-Content ausgeben
-        print "<tr id=\"file_".$datei["dokument_id"]."_body_row\" style=\"visibility: visible\">".(($all) ? "" : "<td></td>")."<td colspan=3><div id=\"file_".$datei["dokument_id"]."_body\">";
+        print "<tr id=\"file_".$datei["dokument_id"]."_body_row\">".(($all) ? "" : "<td></td>")."<td colspan=3><div id=\"file_".$datei["dokument_id"]."_body\">";
         //Der eigentliche Teil ist outsourced in die folgende Funktion, 
         //damit der Körper auch über Ajax abgerufen werden kann.
         display_file_body($datei, $folder_id, $open, $change, $move, $upload, $all, $refresh, $filelink);                   
     } else {
-        print "<tr id=\"file_".$datei["dokument_id"]."_body_row\" style=\"visibility: invisible\">".(($all) ? "" : "<td></td>")."<td colspan=3><div id=\"file_".$datei["dokument_id"]."_body\">";
+        print "<tr id=\"file_".$datei["dokument_id"]."_body_row\">".(($all) ? "" : "<td></td>")."<td colspan=3><div id=\"file_".$datei["dokument_id"]."_body\" style=\"display:none\">";
     }
     print "</div></td></tr></table>\n\t</div>"; 
 }

@@ -705,11 +705,6 @@ STUDIP.Filesystem.openhoveredfolder = function (md5_id) {
  * wenn Inhalt schon geladen wurde.
  */
 STUDIP.Filesystem.changefolderbody = function (md5_id) {
-  var IE7 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 7;
-  var IE6 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 6;
-  if (IE6 || IE7) {
-    return true;
-  }
   if (!STUDIP.Filesystem.movelock) {
     STUDIP.Filesystem.movelock = true;
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);
@@ -719,7 +714,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
       $("#folder_" + md5_id + "_arrow_td").addClass('printhead2');
       $("#folder_" + md5_id + "_arrow_td").removeClass('printhead3');
       $("#folder_" + md5_id + "_body").slideUp(400);
-      URLHelper.removeParam('data[open]['+md5_id+']');
+      //URLHelper.removeParam('data[open]['+md5_id+']');
     } else {
       if ($("#folder_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
@@ -732,8 +727,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
           STUDIP.Filesystem.setdraggables();
           STUDIP.Filesystem.setdroppables();
           $("#folder_" + md5_id + "_body").slideDown(400);
-          URLHelper.setParam('data[open]['+md5_id+']', 1);
-          alert("jo");
+          //URLHelper.setParam('data[open]['+md5_id+']', 1);
         });
       } else {
         $("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
@@ -744,7 +738,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
         STUDIP.Filesystem.setdraggables();
         STUDIP.Filesystem.setdroppables();
         $("#folder_" + md5_id + "_body").slideDown(400);
-        URLHelper.setParam('data[open]['+md5_id+']', 1);
+        //URLHelper.setParam('data[open]['+md5_id+']', 1);
       }
     }
   }
@@ -757,11 +751,6 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
  */
 
 STUDIP.Filesystem.changefilebody = function (md5_id) {
-  var IE7 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 7;
-  var IE6 = Prototype.Browser.IE && parseInt(navigator.userAgent.substring(navigator.userAgent.indexOf("MSIE")+5)) == 6;
-  if (IE6 || IE7) {
-    return true;
-  }
   if (!STUDIP.Filesystem.movelock) {
     STUDIP.Filesystem.movelock = true;
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);

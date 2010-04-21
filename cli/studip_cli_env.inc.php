@@ -3,7 +3,7 @@
 # Lifter003: TODO
 /**
 * studip_cli_env.inc.php
-* 
+*
 * sets up a faked Stud.IP environment with usable $auth, $user and $perm objects
 * for a faked 'root' user, sets custom error handler wich writes to STDERR
 *
@@ -13,7 +13,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // studip_cli_env.inc.php
-// 
+//
 // Copyright (C) 2006 André Noack <noack@data-quest.de>,
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
@@ -54,7 +54,7 @@ $include_path .= PATH_SEPARATOR . $STUDIP_BASE_PATH . DIRECTORY_SEPARATOR . 'pub
 set_include_path($include_path);
 set_error_handler('CliErrorHandler');
 
-require_once $STUDIP_BASE_PATH . "/lib/phplib/prepend4.php";
+require_once $STUDIP_BASE_PATH . "/lib/bootstrap.php";
 
 
 

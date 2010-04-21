@@ -587,7 +587,7 @@ STUDIP.Filesystem.setdraggables = function () {
           order = $.map(order, function (component) {
             return component.substr(component.lastIndexOf('=') + 1);
           });
-          order_ids = $.map(order, function (order_number) {
+          var order_ids = $.map(order, function (order_number) {
             if (sorttype === "folder") {
               // Unterordner:
               return $("#getmd5_fo" + md5_id + "_" + order_number).html();

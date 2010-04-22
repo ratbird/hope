@@ -24,7 +24,7 @@ class SearchNavigation extends Navigation
         parent::__construct(_('Suche'), 'sem_portal.php');
 
         //TODO: anpassen
-        $image = 'header_meinesem';
+        $image = 'header/header_meinesem';
 		$tip = _('Suche');
 
         $this->setImage($image, array('title' => $tip));

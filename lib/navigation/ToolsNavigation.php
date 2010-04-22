@@ -23,7 +23,7 @@ class ToolsNavigation extends Navigation
     {
         parent::__construct(_('Tools'), 'admin_news.php', array('range_id' => 'self'));
 
-        $image = 'header_einst';
+        $image = 'header/header_einst';
         $tip = _('Tools');
 
         $this->setImage($image, array('title' => $tip));

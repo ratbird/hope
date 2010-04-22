@@ -282,7 +282,7 @@ class Navigation implements IteratorAggregate
         if (file_exists($image)) {
             $options['src'] = $image;
         } else {
-            $options['src'] = Assets::image_path('header/'.$image);
+            $options['src'] = Assets::image_path($image);
         }
 
         $this->image = $options;

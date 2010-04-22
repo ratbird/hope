@@ -52,7 +52,7 @@ class StartNavigation extends Navigation
         $homeinfo = _('Zur Startseite');
         $homeinfo .= $news ? ' - ' . sprintf(_('%s neue News'), $news) : '';
         $homeinfo .= $vote ? ' - ' . sprintf(_('%s neue Umfrage(n)'), $vote) : '';
-        $homeimage = $vote + $news ? 'header_home_red' : 'header_home';
+        $homeimage = $vote + $news ? 'header/header_home_red' : 'header/header_home';
 
         $this->setImage($homeimage, array('title' => $homeinfo));
     }

@@ -23,7 +23,7 @@ class AdminNavigation extends Navigation
     {
         parent::__construct(_('Admin'));
 
-        $this->setImage('header_admin', array('title' => _('Zu Ihrer Administrationsseite')));
+        $this->setImage('header/header_admin', array('title' => _('Zu Ihrer Administrationsseite')));
     }
 
     /**

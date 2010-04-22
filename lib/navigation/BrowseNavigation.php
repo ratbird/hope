@@ -43,7 +43,7 @@ class BrowseNavigation extends Navigation
 
         parent::__construct($coursetext, $courselink);
 
-        $this->setImage('header_meinesem', array('title' => $courseinfo));
+        $this->setImage('header/header_meinesem', array('title' => $courseinfo));
     }
 
     /**

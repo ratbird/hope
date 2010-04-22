@@ -32,7 +32,7 @@ class CalendarNavigation extends Navigation
         }
 
         $this->setURL($planerurl);
-        $this->setImage('header_planer', array('title' => $planerinfo));
+        $this->setImage('header/header_planer', array('title' => $planerinfo));
     }
 
     /**

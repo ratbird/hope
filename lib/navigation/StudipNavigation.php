@@ -87,6 +87,7 @@ class StudipNavigation extends Navigation
         }
 
         // quick links
+        //TODO: besser separat oder so?
         $links = new Navigation('Links');
 
         //settings
@@ -94,6 +95,13 @@ class StudipNavigation extends Navigation
             //TODO: suboptimal
             $this->addSubNavigation('account', new AccountNavigation());
             $links->addSubNavigation('account', new Navigation(_('Einstellungen'), 'edit_about.php', array('view' => 'allgemein')));
+        }
+
+        //sitemap
+        if (is_object($user) && $user->id != 'nobody') {
+            //TODO: suboptimal, in die hauptnavi, damit sitemaps eigene reiter bekommt, in die $links, damit es in der 2. zeile angezeigt wird.
+            $this->addSubNavigation('sitemap', new Navigation(_('Sitemap'), 'dispatch.php/sitemap/'));
+            $links->addSubNavigation('sitemap', new Navigation(_('Sitemap'), 'dispatch.php/sitemap/'));
         }
 
         $links->addSubNavigation('imprint', new Navigation(_('Impressum'), 'dispatch.php/siteinfo/show'));

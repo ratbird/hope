@@ -84,16 +84,106 @@ var STUDIP = STUDIP || {};
 /* ------------------------------------------------------------------------
  * study area selection for courses
  * ------------------------------------------------------------------------ */
-/*
 STUDIP.study_area_selection = {
 
-  url: function (action, args) {
-    return STUDIP.ABSOLUTE_URI_STUDIP + "dispatch.php/course/study_areas/" +
-           $A(arguments).join("/");
+  initialize: function () {
+  	// Ein bisschen hässlich im Sinne von "DRY", aber wie sonst?
+    $('input[name^="study_area_selection[add]"]').live('click', function () {
+      var parameters = $(this).metadata();
+      if (!(parameters && parameters.id && parameters.course_id))
+        return;
+      STUDIP.study_area_selection.add( parameters.id, parameters.course_id );
+      return false;
+    });
+    $('input[name^="study_area_selection[remove]"]').live('click', function () {
+      var parameters = $(this).metadata();
+      if (!(parameters && parameters.id && parameters.course_id))
+        return;
+      STUDIP.study_area_selection.remove( parameters.id, parameters.course_id );
+      return false;
+    });
+    $('a.study_area_selection_expand').live('click', function () {
+      var parameters = $(this).metadata();
+      if (!(parameters && parameters.id && parameters.course_id))
+        return;
+   	  STUDIP.study_area_selection.expandSelection( parameters.id, parameters.course_id );
+      return false;
+    });
   },
 
-  swishAndFlick: function (element, target) {
+  url: function (action, args) {
+    return STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/course/study_areas/' +
+           $.makeArray(arguments).join('/');
+  },
 
+  add: function (id, course_id) {
+    // may not be visible at the current
+    $('.study_area_selection_add_' + id).attr('disabled', true).fadeTo('slow', 0);
+
+    $.ajax({
+      type: 'POST',
+      url: STUDIP.study_area_selection.url('add', course_id || ''),
+      data: ({id: id}),
+      dataType: 'html',
+      async: false, // Critical request thus synchronous
+      success: function (data) {
+//      STUDIP.study_area_selection.swishAndFlick(id, 'study_area_selection_selected');
+        $('#study_area_selection_none').fadeOut();
+        $('#study_area_selection_selected').replaceWith(data);
+        STUDIP.study_area_selection.refreshSelection();
+      }
+    });
+  },
+
+  remove: function (id, course_id) {
+    var $selection = $('#study_area_selection_' + id);
+
+    if ($selection.siblings().length === 0) {
+      $('#study_area_selection_at_least_one').fadeIn().delay(5000).fadeOut();
+      $selection.effect('bounce', 'fast');
+      return;
+    }
+
+    $.ajax({
+      type: 'POST',
+      url: STUDIP.study_area_selection.url('remove', course_id || ''),
+      data: ({id: id}),
+      dataType: 'html',
+      async: false, // Critical request thus synchronous
+      success: function (data) {
+        $selection.fadeOut(function() { $(this).remove(); });
+        if ($('#study_area_selection_selected li').length === 0)
+          $('#study_area_selection_none').fadeIn();
+        $('.study_area_selection_add_' + id).css({
+          visibility: 'visible',
+          opacity: 0
+        }).fadeTo('slow', 1, function () {
+          $(this).attr('disabled', false);
+        });
+
+         STUDIP.study_area_selection.refreshSelection();
+      },
+      error: function () {
+        $selection.fadeIn();
+      }
+    });
+  },
+
+  expandSelection: function (id, course_id) {
+    $.post(STUDIP.study_area_selection.url('expand', course_id || '', id), function (data) {
+        $('#study_area_selection_selectables ul').replaceWith(data);
+    }, 'html');
+  },
+
+  refreshSelection: function () {
+    // "even=odd && odd=even ??" - this may seem strange but jQuery and Stud.IP differ in odd/even
+    $('#study_area_selection_selected li:odd').removeClass('odd').addClass('even');
+    $('#study_area_selection_selected li:even').removeClass('even').addClass('odd');
+  },
+
+/*
+  swishAndFlick: function (id, target) {
+    var element = $('.study_area_selection_add_' + id + ':first')
     // clone element
     var clone = element.cloneNode(true);
     element.parentNode.insertBefore(clone, element);
@@ -116,94 +206,11 @@ STUDIP.study_area_selection = {
           clone.remove();
         }
       });
-  },
-
-  add: function (id, course_id) {
-
-    course_id = course_id || "";
-
-    // may not be visible at the current
-    $$(".study_area_selection_add_" + id).each(function (add) {
-        // prevent selecting twice
-        add.disable();
-        var effect = new Effect.Opacity(add, {from: 1, to: 0, duration: 0.25,
-          afterFinish: function () {
-            add.setStyle({visibility: "hidden"}).enable();
-          }
-        });
-      });
-
-    var request = new Ajax.Request(STUDIP.study_area_selection.url("add", course_id), {
-      method: "post",
-      parameters: { "id": id },
-      onSuccess: function (transport) {
-        STUDIP.study_area_selection.swishAndFlick($$(".study_area_selection_add_" + id)[0],
-                                                  "study_area_selection_selected");
-        $("study_area_selection_none").fade();
-        $("study_area_selection_selected").replace(transport.responseText);
-        STUDIP.study_area_selection.refreshSelection();
-      }
-    });
-  },
-
-  remove: function (id, course_id) {
-
-    course_id = course_id || "";
-
-    var selection = $("study_area_selection_" + id);
-
-    if (selection.siblings().size() === 0) {
-      $("study_area_selection_at_least_one").appear();
-      $("study_area_selection_at_least_one").fade({ delay: 5, queue: 'end' });
-      selection.shake();
-      return;
-    }
-
-    var request = new Ajax.Request(STUDIP.study_area_selection.url("remove", course_id), {
-      method: "post",
-      parameters: { "id": id },
-      onSuccess: function (transport) {
-        selection.remove();
-        if (!$$("#study_area_selection_selected li").length) {
-          $("study_area_selection_none").appear();
-        }
-
-        $$(".study_area_selection_add_" + id).each(function (add) {
-          add.setStyle({opacity: 0, visibility: "visible"});
-          var effect = new Effect.Opacity(add, {from: 0, to: 1});
-        });
-
-        STUDIP.study_area_selection.refreshSelection();
-      },
-      onFailure: function () {
-        selection.appear();
-      }
-    });
-  },
-
-  expandSelection: function (id, course_id) {
-
-    course_id = course_id || "";
-
-    var request = new Ajax.Request(STUDIP.study_area_selection.url("expand", course_id, id), {
-      method: 'post',
-      onSuccess: function (transport) {
-        $("study_area_selection_selectables").down("ul").replace(transport.responseText);
-      }
-    });
-  },
-
-  refreshSelection: function () {
-    $$("#study_area_selection_selected li").each(function (element, index) {
-      if (index % 2) {
-        element.removeClassName("odd").addClassName("even");
-      } else {
-        element.removeClassName("even").addClassName("odd");
-      }
-    });
   }
+*/
 };
 
+/*
 STUDIP.OverDiv = Class.create({
   initialize: function (options) {
     this.options = {
@@ -872,4 +879,5 @@ $(function () {
 
   // compress tabs
   STUDIP.Tabs.initialize();
+  STUDIP.study_area_selection.initialize();
 });

@@ -5,8 +5,7 @@ $name = isset($show_path)
         : htmlReady($area->getName());
 $expand_id = $area->hasChildren() ? $id : $area->getParentId();
 ?>
-<input class="study_area_selection_add_<?= $id ?>"
-        onclick="STUDIP.study_area_selection.add('<?= $id ?>','<?= htmlReady($course_id) ?>');return false;"
+<input class="study_area_selection_add_<?= $id ?> {id: '<?= $id ?>', course_id: '<?= htmlReady($course_id) ?>'}"
         type="image"
         name="study_area_selection[add][<?= $id ?>]"
         src="<?= Assets::image_path('move_left.gif') ?>"
@@ -15,7 +14,7 @@ $expand_id = $area->hasChildren() ? $id : $area->getParentId();
         <?= !$area->isAssignable() || $selection->includes($area)
             ? 'style="visibility:hidden;"' : '' ?>>
 <? if (isset($show_link) && $show_link) : ?>
-  <a onClick="STUDIP.study_area_selection.expandSelection('<?= htmlReady($expand_id) ?>','<?= htmlReady($course_id) ?>');return false;"
+  <a class="study_area_selection_expand {id: '<?= htmlReady($expand_id) ?>', course_id: '<?= htmlReady($course_id) ?>'}"
      href="<?= URLHelper::getLink(isset($url) ? $url : '',
                    array('study_area_selection[selected]' => htmlReady($expand_id))) ?>">
     <?= $name ?>

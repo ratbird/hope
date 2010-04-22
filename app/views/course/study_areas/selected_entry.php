@@ -3,12 +3,12 @@ $_id = htmlReady($area->getID());
 ?>
 <li id="study_area_selection_<?= $_id ?>" class="<?= TextHelper::cycle('odd', 'even') ?>">
   <input title="Zuordnung entfernen" alt="Zuordnung entfernen"
-         onclick="STUDIP.study_area_selection.remove('<?= $_id ?>','<?= htmlReady($course_id) ?>');return false;"
+         class="{id: '<?= $_id ?>', course_id: '<?= htmlReady($course_id) ?>'}"
          style="vertical-align: middle;"
          type="image"
          name="study_area_selection[remove][<?= $_id ?>]"
          src="<?= Assets::image_path('trash.gif') ?>">
-  <a onClick="STUDIP.study_area_selection.expandSelection('<?= htmlReady($area->getParentId()) ?>','<?= htmlReady($course_id) ?>');return false;"
+  <a class="study_area_selection_expand {id: '<?= htmlReady($area->getParentId()) ?>', course_id: '<?= htmlReady($course_id) ?>'}"
      href="<?= URLHelper::getLink(isset($url) ? $url : '',
                                   array('study_area_selection[selected]' => $area->getParentId())) ?>">
     <?= htmlReady($area->getPath(' · ')) ?>

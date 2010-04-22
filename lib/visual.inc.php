@@ -1264,35 +1264,38 @@ function printcontent ($breite, $write = FALSE, $inhalt, $edit, $printout = TRUE
         return $print;
 }
 
-
-/*****************************************************************************
-print_infobox, baut einen Info-Kasten aus folgenden Elementen zusammen: Bild (separat uebergeben), Ueberschriften, Icons, Inhalt (in Array).
-Der Aufruf des Bildes ist optional.
-Beispielaufbau f&uuml;r das Array:
-
-$infobox = array    (
-array  ("kategorie"  => "Information:",
-        "eintrag" => array  (
-                        array    (  "icon" => "suchen.gif",
-                                "text"  => "Um weitere Veranstaltungen bitte Blabla"
-                                ),
-                        array    (  "icon" => "admin.gif",
-                                "text"  => "um Verwaltung  Veranstaltungen bitte Blabla"
-                                )
+/**
+ * print_infobox, baut einen Info-Kasten aus folgenden Elementen zusammen:
+ * Bild (separat uebergeben), Ueberschriften, Icons, Inhalt (in Array).
+ * Der Aufruf des Bildes ist optional.
+ *
+ * @example
+    $infobox = array    (
+    array  ("kategorie"  => "Information:",
+            "eintrag" => array  (
+                            array    (  "icon" => "suchen.gif",
+                                    "text"  => "Um weitere Veranstaltungen bitte Blabla"
+                                    ),
+                            array    (  "icon" => "admin.gif",
+                                    "text"  => "um Verwaltung  Veranstaltungen bitte Blabla"
+                                    )
+            )
+        ),
+    array  ("kategorie" => "Aktionen:",
+               "eintrag" => array   (
+                            array ( "icon" => "ausruf_small.gif",
+                                    "text"  => "es sind noch 19 Veranstaltungen vorhanden."
+                                    )
+            )
         )
-    ),
-array  ("kategorie" => "Aktionen:",
-           "eintrag" => array   (
-                        array ( "icon" => "ausruf_small.gif",
-                                "text"  => "es sind noch 19 Veranstaltungen vorhanden."
-                                )
-        )
-    )
-);
-/*****************************************************************************/
-
-function print_infobox($content, $picture = '', $dont_display_immediatly = FALSE) {
-
+    );
+ *
+ * @param   array() $content
+ * @param   string $picture
+ * @param   bool $dont_display_immediatly
+ */
+function print_infobox($content, $picture = '', $dont_display_immediatly = false)
+{
     // get template
     $template = $GLOBALS['template_factory']->open('infobox/infobox_generic_content');
 
@@ -1301,10 +1304,11 @@ function print_infobox($content, $picture = '', $dont_display_immediatly = FALSE
     $template->set_attribute('content', $content);
 
     // render template
-    if ($dont_display_immediatly)
-       return $template->render();
-    else
-       echo $template->render();
+    if ($dont_display_immediatly) {
+        return $template->render();
+    } else {
+        echo $template->render();
+    }
 }
 
 

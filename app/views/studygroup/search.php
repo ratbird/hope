@@ -3,7 +3,7 @@ require_once 'lib/classes/StudygroupAvatar.class.php';
 require_once 'lib/classes/Avatar.class.php';
 
 $infobox = array();
-$infobox['picture'] = 'infoboxbild_studygroup.jpg';
+$infobox['picture'] = 'studygroup.jpg';
 $infobox['content'] = array(
     array(
         'kategorie'=>_("Information"),
@@ -13,7 +13,7 @@ $infobox['content'] = array(
     )
 );
 
-URLHelper::removeLinkParam('cid'); 
+URLHelper::removeLinkParam('cid');
 list($sort_type, $sort_order) = explode('_', $sort);
 
 ?>
@@ -37,10 +37,10 @@ th {
   text-align:center;
 }
 </style>
-<? 
+<?
     $sort_url =$controller->url_for("studygroup/search/{$page}/");
     $link = "dispatch.php/studygroup/search/%s/".$sort;
-        
+
 ?>
 <form action="<?= $controller->url_for('studygroup/search') ?>" method=post>
     <?

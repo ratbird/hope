@@ -174,7 +174,7 @@ while ($tmp_first_date < $end_date) {
         <td class="blank" width="100%" valign="top">
             <table width="99%" border="0" cellpadding="2" cellspacing="0">
 
-            <?php 
+            <?php
                 // show messages
                 if ($messages = $sem->getStackedMessages()) :
             ?>
@@ -268,7 +268,7 @@ while ($tmp_first_date < $end_date) {
                                 case '-1':
                                     echo _("unbegrenzt");
                                     break;
-                                
+
                                 default:
                                     foreach ($all_semester as $val) {
                                         if ($val['beginn'] == $sem->getEndSemester()) {
@@ -413,14 +413,14 @@ while ($tmp_first_date < $end_date) {
                 <TR>
                     <?
                     if (isset($_REQUEST['day'])) {
-                        $tpl['day'] = $_REQUEST['day']; 
+                        $tpl['day'] = $_REQUEST['day'];
                     } else {
                         $tpl['day'] = 1;
                     }
-                    $tpl['start_stunde'] = $_REQUEST['start_stunde'];   
-                    $tpl['start_minute'] = $_REQUEST['start_minute'];   
-                    $tpl['end_stunde'] = $_REQUEST['end_stunde'];   
-                    $tpl['end_minute'] = $_REQUEST['end_minute'];   
+                    $tpl['start_stunde'] = $_REQUEST['start_stunde'];
+                    $tpl['start_minute'] = $_REQUEST['start_minute'];
+                    $tpl['end_stunde'] = $_REQUEST['end_stunde'];
+                    $tpl['end_minute'] = $_REQUEST['end_minute'];
                     include('lib/raumzeit/templates/addcycle.tpl')
                     ?>
                 </TR>
@@ -609,7 +609,7 @@ while ($tmp_first_date < $end_date) {
                 <TR>
                     <TD colspan="9" class="blank">&nbsp;</TD>
                 </tr>
-            <? } ?> 
+            <? } ?>
 
             </table>
         </td>
@@ -623,9 +623,9 @@ while ($tmp_first_date < $end_date) {
                     $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);
 
                     // fill attributes
-                    $infobox_template->set_attribute('picture', 'schedules.jpg');
-                    $infobox_template->set_attribute("selectionlist_title", "Semesterauswahl"); 
-                    $infobox_template->set_attribute('selectionlist', $semester_selectionlist);    
+                    $infobox_template->set_attribute('picture', 'infoboxes/schedules.jpg');
+                    $infobox_template->set_attribute("selectionlist_title", "Semesterauswahl");
+                    $infobox_template->set_attribute('selectionlist', $semester_selectionlist);
 
                     // render template
                     echo $infobox_template->render();

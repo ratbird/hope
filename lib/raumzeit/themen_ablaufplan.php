@@ -151,7 +151,7 @@ $termine = getAllSortedSingleDates($sem);
 <FORM action="<?= URLHelper::getLink($PHP_SELF) ?>" method="post">
 <TABLE width="100%" border="0" cellpadding="0" cellspacing="0">
   <TR>
-        <TD align="center" class="blank" width="80%" valign="top">
+        <TD class="blank" valign="top">
         <?php 
             // show messages
             if ($messages = $sem->getStackedMessages()) :
@@ -286,7 +286,7 @@ $termine = getAllSortedSingleDates($sem);
             <? } ?>
             </TABLE>
         </TD>
-        <TD class="blank" valign="top">
+        <TD width="270" align="right" class="blank" valign="top">
         <?
 
             // print info box:
@@ -297,7 +297,7 @@ $termine = getAllSortedSingleDates($sem);
             $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);
 
             // fill attributes
-            $infobox_template->set_attribute('picture', 'schedules.jpg');
+            $infobox_template->set_attribute('picture', 'infoboxes/schedules.jpg');
             $infobox_template->set_attribute("selectionlist_title", "Semesterauswahl");
             $infobox_template->set_attribute('selectionlist', $semester_selectionlist);
             $infobox_template->set_attribute('times_info', $times_info);

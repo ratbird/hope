@@ -171,7 +171,7 @@ if (Request::get('export') && $rechte) {
         }
 
         echo '</table>';
-    }       
+    }
 } else {
 
 if ($cmd == 'openAll') $openAll = true;
@@ -179,7 +179,7 @@ if ($cmd == 'openAll') $openAll = true;
 
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
-        <TD align="center" class="blank" width="80%" valign="top">
+        <TD class="blank" valign="top">
             <TABLE width="99%" cellspacing="0" cellpadding="0" border="0">
                 <? if (is_array($termine) && sizeof($termine) > 0) : ?>
                 <TR>
@@ -316,7 +316,7 @@ if ($cmd == 'openAll') $openAll = true;
             $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);
 
             // fill attributes
-            $infobox_template->set_attribute('picture', 'schedules.jpg');
+            $infobox_template->set_attribute('picture', 'infoboxes/schedules.jpg');
             $infobox_template->set_attribute("selectionlist_title", "Semesterauswahl");
             $infobox_template->set_attribute('selectionlist', $semester_selectionlist);
             $infobox_template->set_attribute('rechte', $rechte);

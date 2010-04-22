@@ -181,7 +181,7 @@ function printSelections($range,$sarchRange = "",$safeguard = NULL){
     $arraysize = count($range);
 
     $bgimage = "     <td class=\"blank\" width=\"270\" rowspan=\"4\" align=\"center\" valign=\"top\" style=\"vertical-align:top;\">"
-         . "      <img src=\"".VOTE_PATH_PICTURES."/voting.jpg\" alt=\"".$label["sitetitle_title"]."\" align=\"middle\" border=\"0\">\n"
+         . "      <img src=\"".VOTE_PATH_PICTURES."infoboxes/voting.jpg\" alt=\"".$label["sitetitle_title"]."\" align=\"middle\" border=\"0\">\n"
          . "     </td>\n";
 
     $html = "<table border=\"0\" class=\"blank\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"

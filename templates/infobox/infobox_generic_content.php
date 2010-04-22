@@ -1,8 +1,8 @@
 <?
 //
 // Standard Infobox-Layout as of july 2007 used by the method print_infobox() in visual.inc.php
-// WARNING : This type of infobox is deprecated and will be subject to changes! 
-//           It's provided for compatibility reasons only. 
+// WARNING : This type of infobox is deprecated and will be subject to changes!
+//           It's provided for compatibility reasons only.
 //
 ?>
 
@@ -12,7 +12,7 @@
 
       <tr>
         <td class="blank" width="100%" align="right">
-          <?= Assets::img($picture) ?>
+          <?= Assets::img('infoboxes/'.$picture) ?>
         </td>
       </tr>
 

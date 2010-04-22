@@ -22,34 +22,8 @@
 
 
 /* ------------------------------------------------------------------------
- * prototypejs helpers
+ * jQuery plugin "defaultValueActsAsHint"
  * ------------------------------------------------------------------------ */
-/*
-(function () {
-  var methods = {
-    defaultValueActsAsHint: function (element) {
-      element = $(element);
-      element.store("default", element.value);
-
-      return element.observe('focus', function () {
-        if (element.retrieve("default") !== element.value) {
-          return;
-        }
-        element.removeClassName('hint').value = '';
-      }).observe('blur', function () {
-        if (element.value.strip() !== '') {
-          return;
-        }
-        element.addClassName('hint').value = element.retrieve("default");
-      }).addClassName('hint');
-    }
-  };
-
-  $w('input textarea').each(function (tag) {
-    Element.addMethods(tag, methods);
-  });
-}());
-*/
 
 ;(function ($) {
   $.fn.extend({
@@ -80,14 +54,13 @@
  * ------------------------------------------------------------------------ */
 var STUDIP = STUDIP || {};
 
-
 /* ------------------------------------------------------------------------
  * study area selection for courses
  * ------------------------------------------------------------------------ */
 STUDIP.study_area_selection = {
 
   initialize: function () {
-  	// Ein bisschen hässlich im Sinne von "DRY", aber wie sonst?
+    // Ein bisschen hässlich im Sinne von "DRY", aber wie sonst?
     $('input[name^="study_area_selection[add]"]').live('click', function () {
       var parameters = $(this).metadata();
       if (!(parameters && parameters.id && parameters.course_id))
@@ -106,7 +79,7 @@ STUDIP.study_area_selection = {
       var parameters = $(this).metadata();
       if (!(parameters && parameters.id && parameters.course_id))
         return;
-   	  STUDIP.study_area_selection.expandSelection( parameters.id, parameters.course_id );
+       STUDIP.study_area_selection.expandSelection( parameters.id, parameters.course_id );
       return false;
     });
   },
@@ -469,6 +442,7 @@ Object.extend(STUDIP.OverDiv, {
 
 }());
 */
+
 /* ------------------------------------------------------------------------
  * automatic compression of tabs
  * ------------------------------------------------------------------------ */
@@ -477,26 +451,26 @@ STUDIP.Tabs = (function () {
   var list, items, viewport_width;
 
   // check heights of list and items to check for wrapping
-  function needs_compression() {
+  function needs_compression () {
     return $(list).height() > $('li:first', list).height();
   };
 
   // returns the largest feasible item
-  function getLargest() {
+  function getLargest () {
     var largest = 5, item, letters;
 
     items.each(function () {
-    	letters = $(this).html().length;
-    	if (letters > largest) {
-    		item = this;
-    		largest = letters;
-    	}
+      letters = $(this).html().length;
+      if (letters > largest) {
+        item = this;
+        largest = letters;
+      }
     });
     return item;
   };
 
   // truncates an item
-  function truncate(item) {
+  function truncate (item) {
     var text = $(item).html(),
       length = Math.max(text.length - 4, 4);
     if (length < text.length) {
@@ -509,13 +483,13 @@ STUDIP.Tabs = (function () {
     initialize: function () {
       list = $('#tabs');
       if (list.length === 0)
-      	return;
+        return;
       items = $('li a', list);
       $(list).data('old_width', $(window).width());
 
       // strip contents and set titles
       items.each(function () {
-      	$(this).html( $(this).html().trim() );
+        $(this).html( $(this).html().trim() );
         $(this).data('title', $(this).html());
       });
 
@@ -618,7 +592,7 @@ STUDIP.Filesystem.setdraggables = function () {
           //wenn es ein aufgeklappter Ordner ist:
           var md5_id = $("div > div", this).html();
           if (sorttype === "folder") {
-            if ($("#folder_" + md5_id + "_body").css('display') !== "none") {
+            if ($("#folder_" + md5_id + "_body").is(':visible')) {
               aufgeklappt = true;
               STUDIP.Filesystem.changefolderbody(md5_id);
             } else {
@@ -696,7 +670,7 @@ STUDIP.Filesystem.openhoveredfolder = function (md5_id) {
   var zeit = new Date();
   if (md5_id === STUDIP.Filesystem.hovered_folder) {
     if (STUDIP.Filesystem.hover_begin < zeit.getTime() - 1000) {
-      if ($("#folder_" + md5_id + "_body").css('display') == "none") {
+      if ($("#folder_" + md5_id + "_body").is(':hidden')) {
         STUDIP.Filesystem.changefolderbody(md5_id);
         STUDIP.Filesystem.hover_begin = zeit.getTime();
       }
@@ -715,7 +689,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
   if (!STUDIP.Filesystem.movelock) {
     STUDIP.Filesystem.movelock = true;
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);
-    if ($("#folder_" + md5_id + "_body").css('display') !== "none") {
+    if ($("#folder_" + md5_id + "_body").is(':visible')) {
       $("#folder_" + md5_id + "_header").css('fontWeight', 'normal');
       $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
       $("#folder_" + md5_id + "_arrow_td").addClass('printhead2');
@@ -763,7 +737,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);
     //if ($("file_" + md5_id + "_body_row").style.visibility === "visible") {
 
-    if ($("#file_" + md5_id + "_body").css('display') !== "none") {
+    if ($("#file_" + md5_id + "_body").is(':visible')) {
       $("#file_" + md5_id + "_body").slideUp(400);
       $("#file_" + md5_id + "_header").css("fontWeight", 'normal');
       $("#file_" + md5_id + "_arrow_td").addClass('printhead2');
@@ -801,7 +775,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
 STUDIP.Arbeitsgruppen = {
 
   toggleOption: function (user_id) {
-    if ($('#user_opt_' + user_id).css('display') === "none") {
+    if ($('#user_opt_' + user_id).is(':hidden')) {
       $('#user_opt_' + user_id).show('slide', {direction: 'left'}, 400, function() {
         $('#user_opt_' + user_id).css("display", "inline-block");
       });
@@ -817,7 +791,7 @@ STUDIP.Arbeitsgruppen = {
 
 STUDIP.News = {
   openclose: function(id) {
-	if ($("#news_item_" + id + "_content").css('display') !== 'none') {
+    if ($("#news_item_" + id + "_content").is(':visible')) {
       STUDIP.News.close(id);
     } else {
       STUDIP.News.open(id);
@@ -825,7 +799,7 @@ STUDIP.News = {
   },
 
   open: function(id) {
-	  //alert(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/news/get_news/' + id);
+    //alert(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/news/get_news/' + id);
     $("#news_item_" + id + "_content").load(
       STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/news/get_news/' + id,
       {},
@@ -838,7 +812,7 @@ STUDIP.News = {
             .addClass("printhead3");
         $("#news_item_" + id + " .printhead b").css("font-weight", "bold");
         $("#news_item_" + id + " .printhead a.tree").css("font-weight", "bold");
-	  });
+      });
   },
 
   close: function(id) {
@@ -859,9 +833,9 @@ STUDIP.News = {
 
 $('.messagebox .messagebox_buttons a').live('click', function () {
   if ($(this).is('.details')) {
-  	$(this).closest('.messagebox').toggleClass('details_hidden');
+    $(this).closest('.messagebox').toggleClass('details_hidden');
   } else if ($(this).is('.close')) {
-  	$(this).closest('.messagebox').fadeOut(function () { $(this).remove(); });
+    $(this).closest('.messagebox').fadeOut(function () { $(this).remove(); });
   }
   return false;
 }).live('focus', function () {
@@ -872,8 +846,7 @@ $('.messagebox .messagebox_buttons a').live('click', function () {
  * application wide setup
  * ------------------------------------------------------------------------ */
 
-//document.observe('dom:loaded', function () {
-$(function () {
+$(document).ready(function () {
   // message highlighting
   $(".effect_highlight").effect('highlight', {}, 2000);
 

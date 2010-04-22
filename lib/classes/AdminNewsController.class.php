@@ -289,19 +289,14 @@ class AdminNewsController {
         echo "</select></td></tr>";
 ?>
 <script type="text/javascript">
-(function () {
-    var update_news_endtime = function () {
-        var options = $('expire').options;
-          for (var i = <?=($this->news_query["news_id"] != "new_entry" ? 1 : 0)?>; i < options.length; i++) {
-            // chosenoption (in seconds) to milliseconds + 2 weeks interval * 2 * i
-            var offset = i + <?=($this->news_query["news_id"] == "new_entry" ? 1 : 0)?>;
-            var date = new Date($F('starttime') * 1000 + 24 * 60 * 60 * 14 * 1000 * offset);
-            options[i].innerHTML = (offset*2 + " " + "<?= _("Wochen") ?>" + " (" + date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() +")");
-          }
-    }
-    $('starttime').observe('change', update_news_endtime);
-    update_news_endtime();
-})();
+$('#starttime').change(function () {
+  var options = $('#expire option'), i, offset, date;
+  for (i = <?=($this->news_query["news_id"] != "new_entry" ? 1 : 0)?>; i < options.length; i++) {
+    offset = i + <?=($this->news_query["news_id"] == "new_entry" ? 1 : 0)?>;
+    date = new Date( parseInt($(this).val(), 10) * 1000 + 24 * 60 * 60 * 14 * 1000 * offset);
+    $(options.get(i)).html( offset*2 + " <?= _('Wochen') ?> (" + date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + ")");
+  };
+}).change();
 </script>
 <?
         echo "<tr><td class=\"blank\">"._("Kommentare zulassen")."&nbsp;<input name=\"allow_comments\" value=\"1\" type=\"checkbox\" style=\"vertical-align:middle\"";

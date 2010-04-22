@@ -211,7 +211,7 @@ class ShowToolsRequests {
                                 print "<br /><input type=\"RADIO\" name=\"resolve_requests_mode\" value=\"sem\" />&nbsp;"._("nur Anfragen von meinen Veranstaltungen");
                                 print "<br /><input type=\"RADIO\" name=\"resolve_requests_mode\" value=\"res\" />&nbsp;"._("nur Anfragen auf meine R&auml;ume");
                                 print "<br /><input type=\"RADIO\" id=\"resolve_requests_one_res_check\" name=\"resolve_requests_mode\" value=\"one_res\" />&nbsp;"._("nur Anfragen auf einen Raum:");
-                                print "<br><span style=\"padding-left:20px;\"><select onchange=\"$('resolve_requests_one_res_check').checked=true;\"name=\"resolve_requests_one_res\">";
+                                print "<br><span style=\"padding-left:20px;\"><select onchange=\"$('#resolve_requests_one_res_check').attr('checked', true);\"name=\"resolve_requests_one_res\">";
                                 foreach(array_merge(array(array('resource_id' => '', 'name' => _(" -keine Auswahl - "))), $this->getMyRequestedRooms()) as $one){
                                     echo '<option value="'.$one['resource_id'].'">'.htmlready($one['name'] . ($one['anzahl'] ? ' (' . $one['anzahl']. ')' : '')).'</option>';
                                 }

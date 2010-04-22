@@ -168,7 +168,7 @@ function folder_openclose($folder, $x) {
 // print_snd_message
 function print_snd_message($psm) {
     global $n, $LastLogin, $my_messaging_settings, $cmd, $PHP_SELF, $msging, $cmd_show, $sms_data, $_fullname_sql, $user;
-    
+
     $db = DBManager::get();
 
     // open?!
@@ -267,7 +267,8 @@ function print_snd_message($psm) {
     else
         $attachment_icon = "";
 
-    $titel = "<a name=".$psm['message_id']."><a href=\"$link\" onclick=\"new Ajax.Request('dispatch.php/messages/get_msg_body/".$psm['message_id']."/".($open == 'open'? '0' : '1')."/".$psm['count']."', {asynchronous:true, evalScripts:false});return false;\" class=\"tree\" >".htmlready($psm['message_subject']).$attachment_icon."</a></a>";
+// tleilax: Ist der Ajax-Request hier für irgendwas gut? Das Ergebnis wird nirgends verarbeitet...
+    $titel = "<a name=".$psm['message_id']."><a href=\"$link\" onclick=\"$.get('dispatch.php/messages/get_msg_body/".$psm['message_id']."/".($open == 'open'? '0' : '1')."/".$psm['count']."');return false;\" class=\"tree\" >".htmlready($psm['message_subject']).$attachment_icon."</a></a>";
     $message_hovericon['titel'] = $psm['message_subject'];
     // (hover) icon
     $message_hovericon['openclose'] = $open;
@@ -536,25 +537,25 @@ function print_messages() {
 
 function ajax_show_body($mid)   {
     global  $my_messaging_settings, $user, $n, $count, $PHP_SELF, $sms_data, $query_time, $query_movetofolder,$sms_show, $query_time_sort, $_fullname_sql, $srch_result, $no_message_text, $count_timefilter;
-    
-    
+
+
     $db = DBManager::get();
     if ($query_time) $count = $count_timefilter;
     $n = 0;
     $user_id = $user->id;
-    
+
     if ($sms_data['view'] == 'in')
         {
             $query = "SELECT message.*, folder,confirmed_read,answered,message_user.readed,dont_delete,Vorname,Nachname,username,count(dokument_id) as num_attachments FROM message_user
                     LEFT JOIN message USING (message_id) LEFT JOIN auth_user_md5 ON (autor_id=auth_user_md5.user_id)
                     LEFT JOIN dokumente ON range_id=message_user.message_id
                     WHERE message_user.user_id = '".$user_id."' AND message_user.snd_rec = 'rec'
-                    AND message_user.deleted = 0 
+                    AND message_user.deleted = 0
                     AND message.message_id = '".$mid."' GROUP BY message_user.message_id";
             $res = $db->query($query);
             $tmp_move_to_folder = sizeof($sms_data['tmp']['move_to_folder']);
             $row = $res->fetch();
-        
+
             $prm['folder'] = $my_messaging_settings['folder']['active']['in'];
             $prm['answered'] = $row["answered"];
             $prm['vorname'] = $row["Vorname"];
@@ -573,13 +574,13 @@ function ajax_show_body($mid)   {
             $prm['message_subject'] = $row["subject"];
             $prm['mkdate'] = $row["mkdate"];
             $prm['user_id_snd'] = $row["autor_id"];
-    
+
             ob_start();
             print_rec_message($prm, $f_open);
             return ob_get_clean();
-        
+
         }
-        elseif ($sms_data['view'] == "out") 
+        elseif ($sms_data['view'] == "out")
         {
             $query = "SELECT message. * , message_user.folder,message_user.dont_delete , auth_user_md5.user_id AS rec_uid,
                     auth_user_md5.vorname AS rec_vorname, auth_user_md5.nachname AS rec_nachname,
@@ -591,7 +592,7 @@ function ajax_show_body($mid)   {
                     LEFT  JOIN auth_user_md5 ON ( mu.user_id = auth_user_md5.user_id )
                     LEFT JOIN dokumente ON range_id=message_user.message_id
                     WHERE message_user.user_id = '".$user_id."'
-                    AND message_user.snd_rec = 'snd' AND message_user.deleted = 0 
+                    AND message_user.snd_rec = 'snd' AND message_user.deleted = 0
                     AND message.message_id = '".$mid."'
                     GROUP BY (message_user.message_id)";
         $res = $db->query($query);
@@ -612,7 +613,7 @@ function ajax_show_body($mid)   {
         $psm['rec_uname'] = $row["rec_uname"];
         $psm['num_rec'] = $row["num_rec"];
         $psm['num_attachments'] = $row["num_attachments"];
-        
+
         ob_start();
         print_snd_message($psm, $f_open);
         return ob_get_clean();
@@ -1016,7 +1017,7 @@ function show_attachmentform() {
     $print.= '&nbsp;<input type="image" class="button" ' .makeButton('hinzufuegen', 'src'). ' onClick="return upload_start();" name="upload">';
     $print.= "\n<input type=\"hidden\" name=\"attachment_message_id\" value=\"".htmlready($attachment_message_id)."\">";
     $print.= "</div>";
-    
+
     return $print;
 }
 

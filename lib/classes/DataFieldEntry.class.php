@@ -485,7 +485,7 @@ class DataFieldLinkEntry extends DataFieldEntry
         $field_name = $name . '[' . $this->structure->getID() . ']';
         return sprintf('<input name="%s" value="%s" size="30">', $field_name, $this->getValue()==''?'http://':htmlready($this->getValue()));
     }
-    
+
     public function getDisplayValue($entities = true)
     {
         if ($entities) {
@@ -495,7 +495,7 @@ class DataFieldLinkEntry extends DataFieldEntry
             return $this->getValue();
         }
     }
-    
+
     public function setValueFromSubmit($submitted_value)
     {
         if ($submitted_value == 'http://') {
@@ -622,7 +622,7 @@ class DataFieldComboEntry extends DataFieldEntry
         $values = array_map('trim', explode("\n", $this->structure->getTypeParam()));
         $id = $this->structure->getID();
         $ret = sprintf('<input type="radio" value="select" id="combo_%s_select" name="%s"%s>', $id, $field_name . '[combo]', ($select = in_array($this->value, $values)) ? ' checked="checked"' : '');
-        $ret .= sprintf('<select onFocus="$(\'combo_%s_select\').checked = \'checked\';" name="%s">', $id, $field_name . '[select]');
+        $ret .= sprintf('<select onFocus="$(\'#combo_%s_select\').attr(\'checked\', true);" name="%s">', $id, $field_name . '[select]');
         foreach($values as $val)
         {
             $val = trim(htmlentities($val, ENT_QUOTES));
@@ -633,7 +633,7 @@ class DataFieldComboEntry extends DataFieldEntry
         $ret .= sprintf('<input type="radio" value="text" id="combo_%s_text" name="%s"%s>', $id, $field_name . '[combo]', $select ? '' : ' checked="checked"');
         if($this->value && ! $select)
             $valattr = 'value="' . $this->getDisplayValue() . '"';
-        $ret .= sprintf('<input name="%s" onFocus="$(\'combo_%s_text\').checked = \'checked\';" %s>', $field_name . '[text]', $id, $valattr);
+        $ret .= sprintf('<input name="%s" onFocus="$(\'#combo_%s_text\').attr(\'checked\', true);" %s>', $field_name . '[text]', $id, $valattr);
         return $ret;
     }
 }

@@ -852,7 +852,7 @@ STUDIP.News = {
 
 $('.messagebox .messagebox_buttons a').live('click', function () {
   if ($(this).is('.details')) {
-  	$(this).closest('.messagebox').toggleClass('details_hidden', 'slow');
+  	$(this).closest('.messagebox').toggleClass('details_hidden');
   } else if ($(this).is('.close')) {
   	$(this).closest('.messagebox').fadeOut(function () { $(this).remove(); });
   }

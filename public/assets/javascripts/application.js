@@ -847,6 +847,21 @@ STUDIP.News = {
 }
 
 /* ------------------------------------------------------------------------
+ * messages boxes
+ * ------------------------------------------------------------------------ */
+
+$('.messagebox .messagebox_buttons a').live('click', function () {
+  if ($(this).is('.details')) {
+  	$(this).closest('.messagebox').toggleClass('details_hidden', 'slow');
+  } else if ($(this).is('.close')) {
+  	$(this).closest('.messagebox').fadeOut(function () { $(this).remove(); });
+  }
+  return false;
+}).live('focus', function () {
+  $(this).blur(); // Get rid of the ugly "clicked border" due to the text-indent
+});
+
+/* ------------------------------------------------------------------------
  * application wide setup
  * ------------------------------------------------------------------------ */
 

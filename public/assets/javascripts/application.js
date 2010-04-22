@@ -482,7 +482,7 @@ STUDIP.Tabs = (function () {
       // strip contents and set titles
       items.each(function () {
         $(this).html( $(this).html().trim() );
-        $(this).data('title', $(this).html());
+        $(this).attr('title', $(this).html());
       });
 
       $(window).bind('resize', this.resize);
@@ -503,7 +503,7 @@ STUDIP.Tabs = (function () {
       var new_width = $(window).width();
       if (new_width > $(list).data('old_width')) {
         items.each(function () {
-          $(this).html( $(this).data('title') );
+          $(this).html( $(this).attr('title') );
         });
       }
       $(list).data('old_width', new_width);

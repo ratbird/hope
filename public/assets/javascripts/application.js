@@ -50,6 +50,73 @@
 }(jQuery));
 
 /* ------------------------------------------------------------------------
+ * jQuery plugin "addToolbar"
+ * ------------------------------------------------------------------------ */
+(function () {
+
+  var getSelection = function (element)  {
+    if (!!document.selection) {
+      return document.selection.createRange().text;
+    } else if (!!element.setSelectionRange) {
+      return element.value.substring(element.selectionStart, element.selectionEnd);
+    } else {
+      return false;
+    }
+  };
+
+  var replaceSelection = function (element, text) {
+    var scroll_top = element.scrollTop;
+    if (!!document.selection) {
+      element.focus();
+      var range = document.selection.createRange();
+      range.text = text;
+      range.select();
+    } else if (!!element.setSelectionRange) {
+      var selection_start = element.selectionStart;
+      element.value = element.value.substring(0, selection_start) +
+                      text +
+                      element.value.substring(element.selectionEnd);
+      element.setSelectionRange(selection_start + text.length,
+                                selection_start + text.length);
+    }
+    element.focus();
+    element.scrollTop = scroll_top;
+  };
+
+  $.fn.extend({
+    addToolbar: function (button_set) {
+      // Bail out if no button set is defined
+      if (!button_set) {
+        if (window.console) console.log('No button set defined');
+        return this;
+      }
+
+      return this.each(function () {
+        if (!$(this).is('textarea') || $(this).data('toolbar_added'))
+          return;
+
+        var $this = $(this),
+          toolbar = $('<div class="editor_toolbar" />');
+
+        jQuery.each(button_set, function (index, value) {
+          $('<button />')
+            .html( value.label )
+            .addClass( value.name )
+            .appendTo(toolbar)
+            .click(function () {
+              var replacement = value.open + getSelection($this[0]) + value.close;
+              replaceSelection($this[0], replacement);
+              return false;
+            });
+        });
+
+        $this.before(toolbar).data('toolbar_added', true);
+      });
+    }
+  });
+}());
+
+/* ------------------------------------------------------------------------
  * the global STUDIP namespace
  * ------------------------------------------------------------------------ */
 var STUDIP = STUDIP || {};
@@ -352,15 +419,12 @@ Object.extend(STUDIP.OverDiv, {
   }
 );
 */
+
 /* ------------------------------------------------------------------------
  * Markup toolbar
  * ------------------------------------------------------------------------ */
-/*
-(function () {
-
-  STUDIP.Markup = {};
-
-  STUDIP.Markup.buttonSet = [
+STUDIP.Markup = {
+  buttonSet: [
     { "name": "bold",          "label": "<strong>B</strong>", open: "**",     close: "**"},
     { "name": "italic",        "label": "<em>i</em>",         open: "%%",     close: "%%"},
     { "name": "underline",     "label": "<u>u</u>",           open: "__",     close: "__"},
@@ -368,80 +432,8 @@ Object.extend(STUDIP.OverDiv, {
     { "name": "code",          "label": "code",               open: "[code]", close: "[/code]"},
     { "name": "larger",        "label": "A+",                 open: "++",     close: "++"},
     { "name": "smaller",       "label": "A-",                 open: "--",     close: "--"}
-  ];
-
-
-  var getSelection = function (element)  {
-    if (!!document.selection) {
-      return document.selection.createRange().text;
-    } else if (!!element.setSelectionRange) {
-      return element.value.substring(element.selectionStart, element.selectionEnd);
-    } else {
-      return false;
-    }
-  };
-
-  var replaceSelection = function (element, text) {
-    var scroll_top = element.scrollTop;
-    if (!!document.selection) {
-      element.focus();
-      var range = document.selection.createRange();
-      range.text = text;
-      range.select();
-    } else if (!!element.setSelectionRange) {
-      var selection_start = element.selectionStart;
-      element.value = element.value.substring(0, selection_start) +
-                      text +
-                      element.value.substring(element.selectionEnd);
-      element.setSelectionRange(selection_start + text.length,
-                                selection_start + text.length);
-    }
-    element.focus();
-    element.scrollTop = scroll_top;
-  };
-
-  var createToolbarElement = function (editor) {
-    var toolbar = new Element('div', { 'class': 'editor_toolbar' });
-    $(editor).insert({before: toolbar});
-    return toolbar;
-  };
-
-  var createButtonElement = function (editor, options) {
-    var button = new Element('button');
-    button.update(options.get('label'));
-    button.addClassName(options.get('name'));
-    $(editor.toolbar).appendChild(button);
-    button.observe("click", function (event) {
-      event.stop();
-      replaceSelection(editor, options.get("open") +
-                               getSelection(editor) +
-                               options.get("close"));
-    });
-  };
-
-
-  STUDIP.Markup.addToolbar = function (editor, buttonSet) {
-    var toolbar = createToolbarElement(editor);
-    Object.extend(editor, {
-      toolbar: toolbar,
-
-      addButtonSet: function (set) {
-        $A(set).each(function (button) {
-          editor.addButton(button);
-        });
-      },
-
-      addButton: function (options) {
-        options = $H(options);
-        createButtonElement(editor, options);
-      }
-    });
-    buttonSet = buttonSet || STUDIP.Markup.buttonSet;
-    editor.addButtonSet(buttonSet);
-  };
-
-}());
-*/
+  ]
+}
 
 /* ------------------------------------------------------------------------
  * automatic compression of tabs
@@ -849,8 +841,10 @@ $('.messagebox .messagebox_buttons a').live('click', function () {
 $(document).ready(function () {
   // message highlighting
   $(".effect_highlight").effect('highlight', {}, 2000);
+  $('.add_toolbar').addToolbar(STUDIP.Markup.buttonSet);
 
   // compress tabs
   STUDIP.Tabs.initialize();
+
   STUDIP.study_area_selection.initialize();
 });

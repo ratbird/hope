@@ -137,13 +137,13 @@ function editarea($forumposting) {
     }
     if ($user->id == "nobody") {  // nicht angemeldete muessen Namen angeben
         $description =  "<b>" . _("Ihr Name:") . "</b>&nbsp; <input type=text size=50 name=nobodysname onchange=\"STUDIP.Forum.pruefe_name()\" value=\"" . _("unbekannt") . "\"><br><br><input type=hidden name=update value='".$forumposting["id"]."'>"
-                ."<div align=center><textarea name=description style=\"width:70%\" cols=\"". $cols."\" rows=12 wrap=virtual>"
+                ."<div align=center><textarea name=\"description\" class=\"add_toolbar\" style=\"width:70%\" cols=\"". $cols."\" rows=12 wrap=virtual>"
                 .htmlReady($description)
                 .htmlReady($zitat)
                 ."</textarea>";
     } else {
         $description =  "<input type=hidden name=update value='".$forumposting["id"]."'>"
-                ."<div align=center><textarea name=description style=\"width:70%\" cols=\"". $cols."\"  rows=12 wrap=virtual>"
+                ."<div align=center><textarea name=\"description\" class=\"add_toolbar\" style=\"width:70%\" cols=\"". $cols."\"  rows=12 wrap=virtual>"
                 .htmlReady($description)
                 .htmlReady($zitat)
                 ."</textarea>";
@@ -162,13 +162,6 @@ function editarea($forumposting) {
     $description .= "<br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"160\" height=\"1\"><input type=image name=create value=\"abschicken\" " . makeButton("abschicken", "src") . " align=\"absmiddle\" border=0>&nbsp;"
         .$zusatz
         ."</div>";
-    $description .= <<<TOOLBAR
-<script>
-    document.observe("dom:loaded", function () {
-        STUDIP.Markup.addToolbar($$("textarea[name='description']").first());
-    });
-</script>
-TOOLBAR;
     return $description;
 }
 
@@ -478,20 +471,20 @@ function ForumGetRights ($forumposting) {
 /**
  * Checks whether a given posting was posted anonymously and overwrites
  * the author if necessary.
- * 
+ *
  * @param mixed $forumposting
- * 
+ *
  * @return mixed The forum posting with obscured author and user id.
  */
 function ForumGetAnonymity ($forumposting) {
-    
+
     global $perm, $user;
-    
+
     // die Anonymität wird immer auf false gesetzt, wenn Root den Beitrag anzeigt
     if ($perm->have_perm("root")) {
         $forumposting["anonymous"] = false;
     }
-    
+
     // Falls anonym, den Namen des Posters unkenntlich machen
     if (get_config('FORUM_ANONYMOUS_POSTINGS') && $forumposting["anonymous"]) {
         // Falls ich selber der Autor bin, steht mein Name mit Anonymitäts-Hinweis auf der Seite
@@ -503,7 +496,7 @@ function ForumGetAnonymity ($forumposting) {
             $forumposting["username"] = "";
         }
     }
-    
+
     return $forumposting;
 }
 
@@ -1115,12 +1108,12 @@ function print_rating($rate, $id, $username) {
                 id: \''.$id.'_rate\',
                 title: \'\',
                 content: STUDIP.Forum.rate_template.evaluate({id: \''.$id.'\'}),
-                initiator: this, width: 250}, event);" ' 
+                initiator: this, width: 250}, event);" '
                 . tooltip(sprintf(_("Bewertung: %s Zum Abstimmen bitte klicken."),$rate), false) . '>'
                 . $bar
                 . '</span>';
      }
-    
+
 
 //  $bar .= " | ";
     return $bar;

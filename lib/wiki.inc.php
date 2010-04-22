@@ -1014,8 +1014,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     }
 
     $cont .= "<p><form method=\"post\" action=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=edit")."\">";
-    $cont .= "<textarea name=\"body\" cols=\"80\" rows=\"15\">".htmlready($body)."</textarea>\n";
-    $cont .= '<script>STUDIP.Markup.addToolbar($$("textarea[name=body]").first());</script>';
+    $cont .= "<textarea name=\"body\" class=\"add_toolbar\" cols=\"80\" rows=\"15\">".htmlready($body)."</textarea>\n";
     $cont .= "<input type=\"hidden\" name=\"wiki\" value=\"".urlencode($keyword)."\">";
     $cont .= "<input type=\"hidden\" name=\"version\" value=\"$version\">";
     $cont .= "<input type=\"hidden\" name=\"submit\" value=\"true\">";

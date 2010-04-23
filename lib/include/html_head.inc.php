@@ -84,6 +84,7 @@ if ($_include_stylesheet != '')  // if empty, use no stylesheet
 if (isset ($_include_extra_stylesheet))
     echo "\t\t".'<link rel="stylesheet" href="'.$GLOBALS['ASSETS_URL'].'stylesheets/'.$_include_extra_stylesheet.'" type="text/css">'."\n";
 echo "\t\t".'<link rel="stylesheet" href="'.$GLOBALS['ASSETS_URL'].'stylesheets/header.css" type="text/css">'."\n";
+echo "\t\t".'<link rel="stylesheet" href="'.$GLOBALS['ASSETS_URL'].'stylesheets/jquery-ui.1.8.css" type="text/css">'."\n";
 
 unset ($_include_extra_stylesheet);
 unset ($_include_stylesheet);

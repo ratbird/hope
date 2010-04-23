@@ -33,6 +33,7 @@
     <? endif ?>
 
     <?= Assets::stylesheet('header', array('media' => 'screen, print')) ?>
+    <?= Assets::stylesheet('jquery-ui.1.8.css', array('media' => 'screen, print')) ?>
 
     <?= Assets::script('jquery-1.4.2.min.js', 'jquery-ui-1.8.custom.min.js', 'jquery.metadata.js', 'application') ?>
 

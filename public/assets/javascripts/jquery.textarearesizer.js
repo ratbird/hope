@@ -36,7 +36,6 @@
 		      .parent().append($('<div class="handle" />').bind('mousedown', {el: this} , startDrag));
 
 		    var offset = $(this).position();
-		    console.log(offset);
 		    handle = $('div.handle', $(this).parent())
 		      .css('left', Math.floor(offset.left))
 		      .css('top', $(this).height() + 3)

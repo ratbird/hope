@@ -1,6 +1,6 @@
 <?php
 $infobox = array();
-$infobox['picture'] = 'infoboxbild_studygroup.jpg';
+$infobox['picture'] = 'studygroup.jpg';
 $infobox['content'] = array(
     array(
         'kategorie'=>_("Information"),
@@ -8,7 +8,7 @@ $infobox['content'] = array(
             array("text"=>_("Studiengruppen sind eine einfache Möglichkeit, mit KommilitonInnen, KollegInnen und anderen zusammenzuarbeiten. JedeR kann Studiengruppen gründen."),"icon"=>"ausruf_small2.gif"),
             array("text"=>_("Wählen Sie 'Offen für alle', wenn beliebige Nutzer der Gruppe ohne Nachfrage beitreten können sollen. 'Auf Anfrage' erfordert Ihr Eingreifen: Sie müssen jede einzelne Aufnahmeanfrage annehmen oder ablehnen."),"icon"=>"ausruf_small2.gif"),
             array("text"=>_("Alle Einstellungen können auch später noch unter dem Reiter 'Admin' geändert werden."),"icon"=>"ausruf_small2.gif")
-            )    
+            )
     )
 );
 

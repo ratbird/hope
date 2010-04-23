@@ -137,13 +137,13 @@ function editarea($forumposting) {
     }
     if ($user->id == "nobody") {  // nicht angemeldete muessen Namen angeben
         $description =  "<b>" . _("Ihr Name:") . "</b>&nbsp; <input type=text size=50 name=nobodysname onchange=\"STUDIP.Forum.pruefe_name()\" value=\"" . _("unbekannt") . "\"><br><br><input type=hidden name=update value='".$forumposting["id"]."'>"
-                ."<div align=center><textarea name=\"description\" class=\"add_toolbar\" style=\"width:70%\" cols=\"". $cols."\" rows=12 wrap=virtual>"
+                ."<div align=center><textarea name=\"description\" class=\"add_toolbar resizable\" style=\"width:70%\" cols=\"". $cols."\" rows=12 wrap=virtual>"
                 .htmlReady($description)
                 .htmlReady($zitat)
                 ."</textarea>";
     } else {
         $description =  "<input type=hidden name=update value='".$forumposting["id"]."'>"
-                ."<div align=center><textarea name=\"description\" class=\"add_toolbar\" style=\"width:70%\" cols=\"". $cols."\"  rows=12 wrap=virtual>"
+                ."<div align=center><textarea name=\"description\" class=\"add_toolbar resizable\" style=\"width:70%\" cols=\"". $cols."\"  rows=12 wrap=virtual>"
                 .htmlReady($description)
                 .htmlReady($zitat)
                 ."</textarea>";

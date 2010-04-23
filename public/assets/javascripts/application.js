@@ -854,4 +854,5 @@ $(document).ready(function () {
   	  return false;
     }
   });
+  $('textarea.resizable').TextAreaResizer();
 });

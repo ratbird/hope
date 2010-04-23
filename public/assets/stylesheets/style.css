@@ -1234,3 +1234,15 @@ img.plugin_preview {
     background-image: url('../images/background_stripes.jpg');
     background-repeat: repeat-x;
 }
+
+/** textarea resizer **/
+
+.resizable-textarea .handle {
+  background: #eee url(../images/vendor/handle_background.png) no-repeat scroll center 2px;
+  border-color: #ddd;
+  border-style: double;
+  border-width: 0 1px 1px;
+  cursor: ns-resize;
+  height: 9px;
+  overflow: hidden;
+}

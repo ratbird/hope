@@ -120,7 +120,7 @@ function makeButton($name, $mode = "img", $tooltip = false, $inputname = false, 
       break;
 
     default:
-      $tag = sprintf('class="button %s" src="%s"', $url, $additional_classes);
+      $tag = sprintf('class="button %s" src="%s"', $additional_classes, $url);
   }
   return $tag;
 }

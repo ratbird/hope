@@ -67,7 +67,7 @@ function print_kings($username) {
     $result = '';
     foreach ($is_king as $type => $text) {
         $alt =
-        $result .= Assets::img("king_$type", array(
+        $result .= Assets::img("crowns/king_$type", array(
             'style' => 'padding: 0.5em;',
             'alt'   => $text,
             'title' => $text
@@ -338,7 +338,7 @@ function open_im() {
             <br>
             <blockquote>
             <h1><?= htmlReady($db->f("fullname")) ?></h1>
-                <? if ($db->f('motto') && 
+                <? if ($db->f('motto') &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['motto'])) : ?>
                     <h3><?= htmlReady($db->f('motto')) ?></h3>
                 <? endif ?>
@@ -361,14 +361,14 @@ function open_im() {
                 <a href="mailto:<?= get_visible_email($user_id) ?>"><?= htmlReady(get_visible_email($user_id)) ?></a>
                 <br>
 
-                <? if ($db->f("privatnr") != "" && 
+                <? if ($db->f("privatnr") != "" &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['private_phone'])) : ?>
                     <b>&nbsp;<?= _("Telefon (privat):") ?></b>
                     <?= htmlReady($db->f("privatnr")) ?>
                     <br>
                 <? endif ?>
 
-                <? if ($db->f("privatcell") != "" && 
+                <? if ($db->f("privatcell") != "" &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['private_cell'])) : ?>
                     <b>&nbsp;<?= _("Mobiltelefon:") ?></b>
                     <?= htmlReady($db->f("privatcell")) ?>
@@ -392,7 +392,7 @@ function open_im() {
                     <br>
                 <? endif ?>
 
-                <? if ($db->f("privadr") != "" && 
+                <? if ($db->f("privadr") != "" &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['privadr'])) : ?>
                     <b>&nbsp;<?= _("Adresse (privat):") ?></b>
                     <?= htmlReady($db->f("privadr")) ?>

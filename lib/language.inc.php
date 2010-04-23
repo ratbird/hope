@@ -101,32 +101,28 @@ function init_i18n($_language) {
 * @param    string  if mode=input this param defines the name attribut
 * @return   string  html output of the button
 */
-function makeButton($name, $mode = "img", $tooltip = false, $inputname = false) {
+function makeButton($name, $mode = "img", $tooltip = false, $inputname = false, $additional_classes = '') {
 
-    $url = localeButtonUrl($name . '-button.png');
-    $tooltext = ($tooltip ? tooltip($tooltip) : '');
+  $url = localeButtonUrl($name . '-button.png');
+  $tooltext = ($tooltip ? tooltip($tooltip) : '');
 
-    switch ($mode) {
+  switch ($mode) {
 
-        case 'img':
-            $tag = "\n" . sprintf('<img class="button" src="%s" %s >',
-                                  $url, $tooltext);
-            break;
+    case 'img':
+      $tag = "\n" . sprintf('<img class="button %s" src="%s" %s >',
+                              $additional_classes, $url, $tooltext);
+      break;
 
+    case 'input':
+      $tag = "\n" . sprintf('<input class="button %s" type="image" src="%s" %s '.
+                            'name="%s" >',
+                              $additional_classes, $url, $tooltext, $inputname);
+      break;
 
-        case 'input':
-            $tag = "\n" . sprintf('<input class="button" type="image" src="%s" %s '.
-                                  'name="%s" >',
-                                $url, $tooltext, $inputname);
-            break;
-
-
-        default:
-            $tag = sprintf('class="button" src="%s"', $url);
-
-    }
-
-    return $tag;
+    default:
+      $tag = sprintf('class="button %s" src="%s"', $url, $additional_classes);
+  }
+  return $tag;
 }
 
 

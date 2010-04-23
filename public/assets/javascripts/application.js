@@ -847,4 +847,11 @@ $(document).ready(function () {
   STUDIP.Tabs.initialize();
 
   STUDIP.study_area_selection.initialize();
+
+  $('.focus').each(function () {
+  	if (!$(this).is('.if-empty') || $(this).val().length==0) {
+  	  $(this).focus();
+  	  return false;
+    }
+  });
 });

@@ -68,10 +68,21 @@
         <? if (isset($search_semester_nr)) : ?>
         <li>
         <form id="quicksearch" action="<?= URLHelper::getLink('sem_portal.php', array('send' => 'yes', 'group_by' => '0') + $link_params) ?>" method="post">
-          <input type="hidden" name="search_sem_qs_choose" value="title_lecturer_number">
+          <?php
+          require_once ("lib/classes/QuickSearch.class.php");
+          print QuickSearch::get("search_sem_quick_search", "Seminar_id")
+                ->setInputClass("quicksearchbox")
+                ->withAttributes(array("title" => sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name))))
+                ->setInputStyle("width: 130px; color: #ffffff")
+                ->setDescriptionColor("#e5e5e5")
+                ->fireJSFunctionOnSelect("selectSem")
+                ->noSelectbox()
+                ->render();
+          //Komisches Zeugs, das die StmBrowse.class.php braucht:
+          print '<input type="hidden" name="search_sem_1508068a50572e5faff81c27f7b3a72f" value="1">';
+          //Ende des komischen Zeugs.
+          ?>
           <input type="hidden" name="search_sem_sem" value="<?= $search_semester_nr ?>">
-          <input type="hidden" name="search_sem_1508068a50572e5faff81c27f7b3a72f" value="1">
-          <input class="quicksearchbox" type="text" name="search_sem_quick_search" value="" title="<?= sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name))?>">
           <input class="quicksearchbutton" type="image" src="<?= Assets::url('images/quicksearch_button.png ') ?>" name="search_sem_do_search" value="OK" title="<?= sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)) ?>">
           <div id="quicksearch_autocomplete_choices" class="autocomplete"></div>
         </form>

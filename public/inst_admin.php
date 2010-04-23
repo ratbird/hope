@@ -36,6 +36,8 @@ require_once("config/config.inc.php"); //Grunddaten laden
 require_once("lib/visual.inc.php"); //htmlReady
 require_once ("lib/statusgruppe.inc.php");  //Funktionen der Statusgruppen
 require_once ("lib/classes/DataFieldEntry.class.php");
+require_once('lib/classes/searchtypes/SQLSearch.class.php');
+require_once('lib/classes/QuickSearch.class.php');
 
 if ($perm->have_studip_perm('admin', $SessSemName[1])) {
     $admin_view = true;
@@ -596,10 +598,18 @@ if ($inst_id != "" && $inst_id !="0") {
     echo '</td></tr>';
 
     if ($admin_view) {
-        if (isset($search_exp) && strlen($search_exp) > 2) {
+        if ((isset($search_exp) && strlen($search_exp) > 2) || !isset($set)) {
             $search_exp = trim($search_exp);
             // Der Admin will neue Sklaven ins Institut berufen...
             $db->query ("SELECT DISTINCT auth_user_md5.user_id, " . $_fullname_sql['full_rev'] . " AS fullname, username, perms  FROM auth_user_md5 LEFT JOIN user_info USING(user_id)LEFT JOIN user_inst ON user_inst.user_id=auth_user_md5.user_id AND Institut_id = '$inst_id' WHERE perms !='root' AND (user_inst.inst_perms = 'user' OR user_inst.inst_perms IS NULL) AND (Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%' OR username LIKE '%$search_exp%') ORDER BY Nachname ");       
+            $InstituteUser = new SQLSearch("SELECT DISTINCT auth_user_md5.user_id, " . $_fullname_sql['full_rev'] . " AS fullname " . 
+                "FROM auth_user_md5 " . 
+                    "LEFT JOIN user_info USING(user_id) " .
+                    "LEFT JOIN user_inst ON user_inst.user_id=auth_user_md5.user_id AND Institut_id = :ins_id " .
+                "WHERE perms !='root' " .
+                    "AND (user_inst.inst_perms = 'user' OR user_inst.inst_perms IS NULL) " .
+                    "AND (Vorname LIKE :input OR Nachname LIKE :input OR username LIKE :input) " .
+                "ORDER BY Nachname ", _("Nutzer eintragen"), "user_id");
             ?>
             <!-- Suche mit Ergebnissen -->
             <td class="blank" width="50%" valign="top" align="center">
@@ -621,14 +631,12 @@ if ($inst_id != "" && $inst_id !="0") {
                             </td>
                         </tr>
                         <tr>
-                            <td class="steel1"><select name="u_id" size="1">
-                            <?
-                            //Alle User auswaehlen, auf die der Suchausdruck passt und die im Institut nicht schon was sind. Selected werden hierdurch 
-    //                      printf ("<option value=\"0\">-- bitte ausw&auml;hlen --\n");
-                            while ($db->next_record())
-                                printf ("<option value=\"%s\">%s (%s) - %s\n", $db->f("user_id"), $db->f("fullname"), $db->f("username"), $db->f("perms"));
-                                ?>
-                                </select>&nbsp;
+                            <td class="steel1">
+                            <?php
+                            print QuickSearch::get("u_id", $InstituteUser)
+                                    ->render();
+                            ?>
+                            &nbsp;
                             <input type="hidden" name="ins_id" value="<?= $inst_id ?>"><br />
                             <b><?=_("Folgende nur bei Zuordnung eines Admins:")?></b><br>
                             <input type="checkbox" id="enable_mail_admin" name="enable_mail_admin" value="admin"><label for="enable_mail_admin" ><?=_("Admins der Einrichtung benachrichtigen")?></label><br>
@@ -643,36 +651,7 @@ if ($inst_id != "" && $inst_id !="0") {
             </td>
             <? // Ende der Berufung
 
-        } elseif (!isset($set)) { ?>
-            <!-- Suche -->
-            <td class="blank" valign="top" width="50%" align="center">
-                <form action="<?= URLHelper::getLink() ?>" method="POST">
-                    <table width="90%" border="0" cellpadding="2" cellspacing="0">
-                        <tr>
-                            <td class="steelkante">
-                                <font size=-1>
-                                    <b>&nbsp;<?=_("neue Person der Einrichtung zuordnen")?></b>
-                                </font>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="steel1">
-                                <font size=-1>
-                                    <?=_("bitte geben Sie Vornamen, Nachnamen oder den Usernamen ein:")?><br>
-                                </font>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="steel1"><input type="TEXT" size=20 maxlength=255 name="search_exp"><br />
-                                <input type="IMAGE" name="search_user" <?=makeButton("suchestarten", "src")?> border=0 value="<?=_("Suche starten")?>">
-                                &nbsp;<input type="hidden" name="inst_id" value="<?= $inst_id ?>">
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </td>
-            <?
-            }
+        }
             ?>
 
             <!-- Mail an alle MitarbeiterInnen -->

@@ -65,7 +65,9 @@ $sess->register("sem_portal");
 
 //Standard herstellen
 
-
+if (Request::get("search_sem_quick_search_parameter")) {
+    $_REQUEST['search_sem_quick_search'] = Request::get("search_sem_quick_search_parameter");
+}
 if ($_REQUEST['view'])
     $sem_portal["bereich"] = $_REQUEST['view'];
 

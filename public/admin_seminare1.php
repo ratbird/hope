@@ -37,6 +37,8 @@ require_once('lib/dates.inc.php'); // Funktionen zum Loeschen von Terminen
 require_once('lib/datei.inc.php'); // Funktionen zum Loeschen von Dokumenten
 require_once 'lib/functions.php';
 require_once('lib/visual.inc.php');
+require_once('lib/classes/QuickSearch.class.php');
+require_once('lib/classes/searchtypes/SQLSearch.class.php');
 require_once('lib/admission.inc.php');
 require_once('lib/statusgruppe.inc.php');   //Funktionen der Statusgruppen
 require_once('lib/classes/StudipSemTreeSearch.class.php');
@@ -1185,50 +1187,26 @@ if (($s_id) && (auth_check())) {
 
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" align="left" valign="top">
-                    <?
-                    $no_doz_found=TRUE;
-                    if (($search_exp_doz) && ($search_doz_x)) {
-                        $search_exp_doz = trim($search_exp_doz);
-                        if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["only_inst_user"]) {
-                            $query3 = sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id);
-                            $db3->query($query3);
-                            $clause="AND Institut_id IN (";
-                            $i=0;
-                            while ($db3->next_record()) {
-                                if ($i)
-                                    $clause.=", ";
-                                $clause.=" '".$db3->f("institut_id")."' ";
-                                $i++;
-                            }
-                            $clause.=")";
-                            $db4->query ("SELECT DISTINCT username, ". $_fullname_sql['full_rev'] ." AS fullname FROM user_inst LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE inst_perms = 'dozent' $clause AND (username LIKE '%$search_exp_doz%' OR Vorname LIKE '%$search_exp_doz%' OR Nachname LIKE '%$search_exp_doz%') ORDER BY Nachname");
-                        } else
-                            $db4->query ("SELECT username, ". $_fullname_sql['full_rev'] ." AS fullname FROM auth_user_md5 LEFT JOIN user_info USING(user_id)  WHERE perms = 'dozent' AND (username LIKE '%$search_exp_doz%' OR Vorname LIKE '%$search_exp_doz%' OR Nachname LIKE '%$search_exp_doz%') ORDER BY Nachname");
-                        if ($db4->num_rows()) {
-                            $no_doz_found=FALSE;
-                            printf ("<font size=-1>" . _("<b>%s</b> NutzerIn gefunden:") . "<br />", $db4->num_rows());
-                            print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_doz\" />";
-                            print "&nbsp; <select name=\"add_doz\">";
-                            while ($db4->next_record()) {
-                                printf ("<option value=\"%s\">%s </option>", $db4->f("username"), htmlReady(my_substr($db4->f("fullname") ." (" . $db4->f("username"). ")",  0, 30)));
-                            }
-                            print "</select></font>";
-                            print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("Neue Suche starten"))." border=\"0\" name=\"reset_search\" />";
-                        }
+                    <font size=-1> <?= $search_exp_doz ? _("Keinen Nutzenden gefunden.") : sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type)) ?>
+                    </font><br>
+                    <?php
+                    print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_doz\" />";
+                    
+                    if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["only_inst_user"]) {
+                    	$clause="AND Institut_id IN (". sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id) . ") ";
                     }
-                    if ($no_doz_found) {
-                        ?>
-                        <?if (!LockRules::Check($s_id, 'dozent')) { ?>
-                        <font size=-1>
-                        <?= $search_exp_doz ? _("Keinen Nutzenden gefunden.") : sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type)) ?>
-                        </font><br />
-                        <input type="TEXT" size="30" maxlength="255" name="search_exp_doz" />&nbsp;
-                        <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_doz" /><br />
-                        <font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
-                        <?
-                    }
-                    }
+                    $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ". 
+                            $_fullname_sql['full_rev'] ." AS fullname FROM user_inst " .
+                            "LEFT JOIN auth_user_md5 USING (user_id) " .
+                            "LEFT JOIN user_info USING(user_id) " .
+                            "WHERE inst_perms = 'dozent' " .
+                            $clause .
+                            " AND (username LIKE :input OR Vorname LIKE :input OR Nachname LIKE :input) " .
+                            "ORDER BY Nachname LIMIT 10");
+                    print QuickSearch::get("add_doz", $Dozentensuche)
+                                    ->render();
                     ?>
+                    <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
                 </td>
             </tr>
             <tr>
@@ -1251,50 +1229,29 @@ if (($s_id) && (auth_check())) {
 
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" align="left" valign="top">
-                    <?
-                    $no_tut_found=TRUE;
-                    if (!LockRules::Check($s_id, 'tutor')) {
-                    if (($search_exp_tut) && ($search_tut_x)) {
-                        $search_exp_tut = trim($search_exp_tut);
-                        if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["only_inst_user"]) {
-                            $query3 = sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id);
-                            $db3->query($query3);
-                            $clause="AND Institut_id IN (";
-                            $i=0;
-                            while ($db3->next_record()) {
-                                if ($i)
-                                    $clause.=", ";
-                                $clause.="'".$db3->f("institut_id")."'";
-                                $i++;
-                            }
-                            $clause.=")";
-                            $db4->query ("SELECT DISTINCT username, ". $_fullname_sql['full_rev'] ." AS fullname FROM user_inst LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE inst_perms IN ('tutor', 'dozent') $clause AND (username LIKE '%$search_exp_tut%' OR Vorname LIKE '%$search_exp_tut%' OR Nachname LIKE '%$search_exp_tut%') ORDER BY Nachname");
-                        } else
-                            $db4->query ("SELECT username, ". $_fullname_sql['full_rev'] ." AS fullname FROM auth_user_md5 LEFT JOIN user_info USING(user_id) WHERE perms IN ('tutor', 'dozent') AND (username LIKE '%$search_exp_tut%' OR Vorname LIKE '%$search_exp_tut%' OR Nachname LIKE '%$search_exp_tut%') ORDER BY Nachname");
-                        if ($db4->num_rows()) {
-                            $no_tut_found=FALSE;
-                            printf ("<font size=-1>" . _("<b>%s</b> NutzerIn gefunden:") . "<br />", $db4->num_rows());
-                            print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_tut\" />";
-                            print "&nbsp; <select name=\"add_tut\">";
-                            while ($db4->next_record()) {
-                                printf ("<option value=\"%s\">%s </option>", $db4->f("username"), htmlReady(my_substr($db4->f("fullname")." (".$db4->f("username").")", 0, 30)));
-                            }
-                            print "</select></font>";
-                            print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("neue Suche starten"))." border=\"0\" name=\"reset_search\" />";
-                        }
+                    
+                    <font size=-1> <?= $search_exp_tut ? _("Keinen Nutzenden gefunden.") : sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('tutor', 1, $seminar_type)) ?>
+                    </font><br>
+                    <?php
+                    print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_tut\" />";
+                    
+                    if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["only_inst_user"]) {
+                        $clause="AND Institut_id IN (". sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id) . ") ";
                     }
-                    if ($no_tut_found) {
-                        ?>
-                        <font size=-1>
-                        <?= $search_exp_tut ? _("Keinen Nutzenden gefunden.") : sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('tutor', 1, $seminar_type)) ?>
-                        </font><br />
-                        <input type="TEXT" size="30" maxlength="255" name="search_exp_tut" />&nbsp;
-                        <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_tut" /><br />
-                        <font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
-                        <?
-                    }
-          }
-      }
+                    $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ". 
+                            $_fullname_sql['full_rev'] ." AS fullname FROM user_inst " .
+                            "LEFT JOIN auth_user_md5 USING (user_id) " .
+                            "LEFT JOIN user_info USING(user_id) " .
+                            "WHERE perms IN ('tutor', 'dozent') " .
+                            $clause .
+                            " AND (username LIKE :input OR Vorname LIKE :input OR Nachname LIKE :input) " .
+                            "ORDER BY Nachname LIMIT 10");
+                    print QuickSearch::get("add_tut", $Dozentensuche)
+                                    ->render();
+                    ?>
+                    <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
+                    <?php
+            }
                     ?>
                 </td>
                 </td>

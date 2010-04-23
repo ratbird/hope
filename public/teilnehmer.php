@@ -1587,30 +1587,23 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         </td>
     </tr>
     <tr><td class=blank colspan=2>
+    <form action="<?= URLHelper::getLink("", array('cmd' => 'add_user')) ?>" method="POST">
     <table width="99%" border="0" cellpadding="2" cellspacing="0" border=0 align="center">
-    <form action="<?= URLHelper::getLink('#freesearch') ?>" method="POST">
     <tr>
         <td class="steel1" width="40%" align="left">&nbsp; <font size=-1><b><?=_("Nutzer in die Veranstaltung eintragen")?></b></font>
         <br><font size=-1>&nbsp; <? printf(_("Bitte geben Sie den Vornamen, Nachnamen %s oder Usernamen zur Suche ein"), "<br>&nbsp;")?> </font></td>
         <td class="steel1" width="40%" align="left">
-        <input id="search_exp" type="TEXT" name="search_exp" size="40" maxlength="255">
-        <div id="search_exp_choices" class="autocomplete"></div>
-        <script type="text/javascript">
-            Event.observe(window, 'load', function() {
-              new Ajax.Autocompleter('search_exp',
-                                     'search_exp_choices',
-                                     'dispatch.php/autocomplete/person/name',
-                                     {
-                                       minChars: 3,
-                                       paramName: 'value',
-                                       method: 'get'
-                                     });
-            });
-        </script>
+        <input type="hidden" name="studipticket" value="<?=$studipticket?>">
+        <?php
+        print QuickSearch::get("username", "username")
+                ->withoutButton()
+                ->setInputStyle("width: 240px")
+                ->render();
+        ?>
         </td>
         <td class="steel1" width="20%" align="center">
-        <input type="IMAGE" name="start_search" <?=makeButton("suchestarten", "src")?> border=0 value=" <?=_("Suche starten")?> "></td>
-    </tr></form></table></tr>
+        <input type="IMAGE" name="add_user" <?=makeButton("eintragen", "src")?> border=0 value=" <?=_("Eintragen")?> "></td>
+    </tr></table></form></tr>
     <?
 }
 }

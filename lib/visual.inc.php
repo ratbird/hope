@@ -8,6 +8,8 @@ require_once('config.inc.php');
 require_once('lib/classes/cssClassSwitcher.inc.php');
 include_once('vendor/idna_convert/idna_convert.class.php');
 include_once('lib/classes/UserConfig.class.php');
+include_once('lib/classes/QuickSearch.class.php');
+include_once('lib/classes/searchtypes/SQLSearch.class.php');
 
 /*****************************************************************************
 get_ampel_state is a helper function for get_ampel_write and get_ampel_read.

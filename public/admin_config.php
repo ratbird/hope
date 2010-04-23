@@ -48,6 +48,7 @@ require_once 'lib/functions.php';   //whatever ;)
 require_once('lib/visual.inc.php'); //visuals
 require_once('lib/classes/Config.class.php');   //Acces to config-values
 require_once('lib/classes/UserConfig.class.php');   //Acces to userconfig-values
+require_once('lib/classes/QuickSearch.class.php');
 
 $db = new DB_Seminar();
 $cssSw=new cssClassSwitcher;
@@ -130,20 +131,20 @@ include ('lib/include/header.php');   // Output of Stud.IP head
                 $out[] = '&nbsp;<a href="'.$PHP_SELF.'?reset_range=1"><img src="'.$GLOBALS['ASSETS_URL'].'images/rewind.gif" '.tooltip(_("Gewählten Bereich löschen und zurück zu Systemkonfiguration")).' border="0"></a>';
             }
             $out[] = '</font></td>';
-            $out[] = '<td width="50%"style="border: dotted 1px black; background: url(\''.$GLOBALS['ASSETS_URL'].'images/steel1.jpg\')">';
-            $out[] = '<font size="-1">&nbsp;'._("einen anderen Bereich (Nutzer) w&auml;hlen:").'&nbsp;';
+            $out[] = '<td width="50%" style="padding:5px; border: dotted 1px black; background: url(\''.$GLOBALS['ASSETS_URL'].'images/steel1.jpg\')">';
+            $out[] = '<font size="-1">'._("einen anderen Bereich (Nutzer) w&auml;hlen:");
             if (($_REQUEST["search_exp"]) && ($search_user_x)) {
                 $db->query ("SELECT username, ". $_fullname_sql['full_rev'] ." AS fullname FROM auth_user_md5 LEFT JOIN user_info USING(user_id) WHERE (username LIKE '%".$_REQUEST["search_exp"]."%' OR Vorname LIKE '%".$_REQUEST["search_exp"]."%' OR Nachname LIKE '%".$_REQUEST["search_exp"]."%') ORDER BY Nachname");
                 if ($db->num_rows()) {
                     $out[] = '<a name="a"></a>';
                     $out[] = sprintf ('<br>&nbsp;<font size=-1><b>%s</b> '._("NutzerInnen gefunden:").'<br>', $db->num_rows());
-                    $out[] = '&nbsp;<select style="font-size: 8pt" name="select_username">';
+                    $out[] = '<select style="font-size: 8pt" name="select_username">';
                     while ($db->next_record()) {
                         $out[].= sprintf ('<option value="%s">%s </option>', $db->f("username"), htmlReady(my_substr($db->f("fullname").' ('.$db->f("username").')', 0, 30)));
                     }
                     $out[].= '</select></font>';
-                    $out[] = '&nbsp;<input type="IMAGE" src="'.$GLOBALS['ASSETS_URL'].'images/haken_transparent.gif" '.tooltip(_("Den/die BenutzerIn hinzufügen")).' border="0" name="send_user_id">';
-                    $out[] = '&nbsp;<input type="IMAGE" src="'.$GLOBALS['ASSETS_URL'].'images/rewind.gif" '.tooltip(_("neue Suche starten")).' border="0" name="reset_search">';
+                    $out[] = '<input type="IMAGE" src="'.$GLOBALS['ASSETS_URL'].'images/haken_transparent.gif" '.tooltip(_("Den/die BenutzerIn hinzufügen")).' border="0" name="send_user_id">';
+                    $out[] = '<input type="IMAGE" src="'.$GLOBALS['ASSETS_URL'].'images/rewind.gif" '.tooltip(_("neue Suche starten")).' border="0" name="reset_search">';
                 }
             }
             if ((!$_REQUEST["search_exp"]) || (($_REQUEST["search_exp"]) && (!$db->num_rows()))) {
@@ -151,9 +152,12 @@ include ('lib/include/header.php');   // Output of Stud.IP head
                 if (($_REQUEST["search_exp"]) && (!$db->num_rows()))
                     $out[] = _("KeineN NutzerIn gefunden.").'<a name="a"></a>';
                 $out[] = '</font><br>';
-                $out[] = '&nbsp;<input type="TEXT" size="30" maxlength="255" name="search_exp">&nbsp;';
-                $out[] = '<input type="IMAGE" src="'.$GLOBALS['ASSETS_URL'].'images/suchen.gif"'.tooltip(_("Suche starten")).' border="0" name="search_user"><br>';
-                $out[] = '&nbsp;<font size=-1>'._("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.").'</font>';
+                //$out[] = '&nbsp;<input type="TEXT" size="30" maxlength="255" name="search_exp">&nbsp;';
+                $out[] = QuickSearch::get("select_username", "username")
+                                        ->withButton()
+                                        ->render();
+                //$out[] = '&nbsp;<input type="IMAGE" src="'.$GLOBALS['ASSETS_URL'].'images/suchen.gif"'.tooltip(_("Suche starten")).' border="0" name="search_user"><br>';
+                $out[] = '<br><font size=-1>'._("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.").'</font>';
             }
             $out[] = '</td></tr></table>';
             $out[] = '</form>';

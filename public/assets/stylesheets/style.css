@@ -1239,15 +1239,19 @@ img.plugin_preview {
 
 .resizable-textarea {
   position: relative;
+}
+.resizable-textarea textarea {
   padding-bottom: 9px;
+  z-index: 1;
 }
 .resizable-textarea .handle {
   background: #eee url(../images/vendor/handle_background.png) no-repeat scroll center 2px;
   border-color: #ddd;
   border-style: double;
-  border-width: 0 1px 1px;
+  border-width: 1px 0 0 0;
   cursor: ns-resize;
   height: 9px;
   overflow: hidden;
   position: absolute;
+  z-index: 1;
 }

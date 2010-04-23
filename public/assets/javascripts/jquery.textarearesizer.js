@@ -37,9 +37,9 @@
 
 		    var offset = $(this).position();
 		    handle = $('div.handle', $(this).parent())
-		      .css('left', Math.floor(offset.left))
-		      .css('top', $(this).height() + 3)
-		      .width( $(this).width() );
+		      .css('left', Math.floor(offset.left) + 1)
+		      .css('top', $(this).height() + 1)
+		      .width( $(this).innerWidth() );
 		});
 	};
 	/* private functions */
@@ -62,7 +62,7 @@
 		iLastMousePos = iThisMousePos;
 		iMousePos = Math.max(iMin, iMousePos);
 		textarea.height(iMousePos + 'px');
-		handle.css('top', iMousePos + 3);
+		handle.css('top', iMousePos + 1);
 		if (iMousePos < iMin) {
 			endDrag(e);
 		}

@@ -85,7 +85,8 @@ include ('lib/include/html_head.inc.php'); // Output of html head
     <script type="text/javascript" language="javascript">
     <!--
     function doCrypt() {
-        if ($(document.Formular).getInputs('radio', 'read_level').find(function(radio){return radio.checked;}).value == 2 || $(document.Formular).getInputs('radio', 'write_level').find(function(radio){return radio.checked;}).value == 2){
+        var $form = $('form[name=Formular]');
+        if ($(':radio[name=read_level]:checked', $form).val()==2 || $(':radio[name=write_level]:checked', $form).val()==2) {
             if(checkpasswordenabled() && checkpassword() && checkpassword2()){
                 document.Formular.hashpass.value = MD5(document.Formular.sem_passwd.value);
                 document.Formular.hashpass2.value = MD5(document.Formular.sem_passwd2.value);
@@ -258,7 +259,7 @@ if (isset($seminar_id) && $SEMINAR_LOCK_ENABLE) {
 // end new stuff
 
 //wenn wir frisch reinkommen, werden benoetigte Daten eingelesen
-if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm_chrono_x) && (!$add_studg_x) && (!$delete_studg) && (!$adm_gesperrt_x) 
+if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm_chrono_x) && (!$add_studg_x) && (!$delete_studg) && (!$adm_gesperrt_x)
     && !$toggle_admission_quota_x && !$delete_domain && !$add_domain && !$add_domain_x) {
     $db->query("SELECT * FROM seminare WHERE Seminar_id = '$seminar_id' ");
     $db->next_record();
@@ -292,7 +293,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
         $admin_admission_data["admission_endtime"] = veranstaltung_beginn($seminar_id, 'int');
         if(!$admin_admission_data["admission_endtime"]) $admin_admission_data["admission_endtime"] = -1;
     }
-    $db->query("SELECT admission_seminar_studiengang.studiengang_id, name, quota, COUNT(admission_seminar_user.user_id) + COUNT(seminar_user.user_id) as count 
+    $db->query("SELECT admission_seminar_studiengang.studiengang_id, name, quota, COUNT(admission_seminar_user.user_id) + COUNT(seminar_user.user_id) as count
                 FROM admission_seminar_studiengang LEFT JOIN studiengaenge USING (studiengang_id)
                 LEFT JOIN admission_seminar_user ON admission_seminar_studiengang.seminar_id=admission_seminar_user.seminar_id AND admission_seminar_user.studiengang_id=admission_seminar_studiengang.studiengang_id
                 LEFT JOIN seminar_user ON admission_seminar_studiengang.seminar_id=seminar_user.seminar_id AND admission_studiengang_id=admission_seminar_studiengang.studiengang_id
@@ -633,7 +634,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
         $log_message = get_readable_admission_difference( $admin_admission_data_original, $admin_admission_data );
 
         // LOGGING
-        log_event('SEM_CHANGED_ACCESS', $admin_admission_data['sem_id'], NULL, implode("<br/>", $log_message) ); 
+        log_event('SEM_CHANGED_ACCESS', $admin_admission_data['sem_id'], NULL, implode("<br/>", $log_message) );
 
 
         $data_mapping['admission_turnout'] = 'admission_turnout';

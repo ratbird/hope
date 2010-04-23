@@ -16,29 +16,44 @@
 
 require_once 'app/controllers/authenticated_controller.php';
 
-class SitemapController extends AuthenticatedController {
+class SitemapController extends AuthenticatedController
+{
+    const SITEMAP_CACHE_KEY = '/sitemap/';
 
     public function index_action()
     {
+        $userid = $GLOBALS['auth']->auth['uid'];;
+
         $GLOBALS['CURRENT_PAGE'] =  _('Sitemap');
         Navigation::activateItem('/sitemap');
 
-        //change navigation
-        $this->navigation = new StudipNavigation();
-        $this->navigation->removeSubNavigation('course');
-        $this->navigation->removeSubNavigation('links');
-        $this->navigation->removeSubNavigation('login');
-        $this->navigation->removeSubNavigation('account');
-        $this->navigation->removeSubNavigation('start');
-        $this->navigation->removeSubNavigation('sitemap');
-        $this->navigation->insertSubNavigation('account', new Navigation(_('Start'), 'index.php'), 'browse');
+        $cache = StudipCacheFactory::getCache();
+
+        //getting mainnavigation
+        $this->navigation = unserialize($cache->read(self::SITEMAP_CACHE_KEY.'main/'.$userid));
+
+        if (empty($this->navigation)) {
+            $this->navigation = new StudipNavigation('ignore');
+            $this->navigation->removeSubNavigation('course');
+            $this->navigation->removeSubNavigation('links');
+            $this->navigation->removeSubNavigation('login');
+            $this->navigation->removeSubNavigation('account');
+            $this->navigation->removeSubNavigation('start');
+            $this->navigation->removeSubNavigation('sitemap');
+            $this->navigation->insertSubNavigation('account', new Navigation(_('Start'), 'index.php'), 'browse');
+            $cache->write(self::SITEMAP_CACHE_KEY.'main/'.$userid, serialize($this->navigation));
+        }
 
         //getting quicklinks
-        $subnavigation = new StudipNavigation();
-        foreach ($subnavigation as $key => $nav) {
-            if ($key == 'links') {
-                $this->subnavigation = $nav;
+        $this->subnavigation = unserialize($cache->read(self::SITEMAP_CACHE_KEY.'quicklinks/'.$userid));
+        if (empty($this->subnavigation)) {
+            $subnavigation = new StudipNavigation('ignore');
+            foreach ($subnavigation as $key => $nav) {
+                if ($key == 'links') {
+                    $this->subnavigation = $nav;
+                }
             }
+            $cache->write(self::SITEMAP_CACHE_KEY.'quicklinks/'.$userid, serialize($this->subnavigation));
         }
         $this->subnavigation->removeSubNavigation('account');
         $this->subnavigation->insertSubNavigation('account', new AccountNavigation(), 'sitemap');

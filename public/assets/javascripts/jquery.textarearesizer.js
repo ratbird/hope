@@ -21,7 +21,7 @@
 	var textarea, staticOffset;  // added the var declaration for 'staticOffset' thanks to issue logged by dec.
 	var iLastMousePos = 0;
 	var iMin = 32;
-	var grip;
+	var handle;
 	/* TextAreaResizer plugin */
 	$.fn.TextAreaResizer = function() {
 		return this.each(function() {
@@ -32,14 +32,15 @@
 			// 18-01-08 jQuery bind to pass data element rather than direct mousedown - Ryan O'Dell
 		    // When wrapping the text area, work around an IE margin bug.  See:
 		    // http://jaspan.com/ie-inherited-margin-bug-form-elements-and-haslayout
-		    $(this).wrap('<div class="resizable-textarea"></div>')
+		    $(this).wrap('<div class="resizable-textarea" />')
 		      .parent().append($('<div class="handle" />').bind('mousedown', {el: this} , startDrag));
 
-		    var grippie = $('div.handle', $(this).parent()),
-		    	overflow = (grippie.width() - $(this).width()) / 2;
-		    grippie.css('margin-left', Math.floor(overflow));
-		    grippie.css('margin-right', Math.ceil(overflow));
-
+		    var offset = $(this).position();
+		    console.log(offset);
+		    handle = $('div.handle', $(this).parent())
+		      .css('left', Math.floor(offset.left))
+		      .css('top', $(this).height() + 3)
+		      .width( $(this).width() );
 		});
 	};
 	/* private functions */
@@ -62,6 +63,7 @@
 		iLastMousePos = iThisMousePos;
 		iMousePos = Math.max(iMin, iMousePos);
 		textarea.height(iMousePos + 'px');
+		handle.css('top', iMousePos + 3);
 		if (iMousePos < iMin) {
 			endDrag(e);
 		}

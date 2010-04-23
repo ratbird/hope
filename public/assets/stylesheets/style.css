@@ -1237,6 +1237,10 @@ img.plugin_preview {
 
 /** textarea resizer **/
 
+.resizable-textarea {
+  position: relative;
+  padding-bottom: 9px;
+}
 .resizable-textarea .handle {
   background: #eee url(../images/vendor/handle_background.png) no-repeat scroll center 2px;
   border-color: #ddd;
@@ -1245,4 +1249,5 @@ img.plugin_preview {
   cursor: ns-resize;
   height: 9px;
   overflow: hidden;
+  position: absolute;
 }

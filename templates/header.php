@@ -86,33 +86,6 @@
           <input class="quicksearchbutton" type="image" src="<?= Assets::url('images/quicksearch_button.png ') ?>" name="search_sem_do_search" value="OK" title="<?= sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)) ?>">
           <div id="quicksearch_autocomplete_choices" class="autocomplete"></div>
         </form>
-        <script>
-            /*(function () {
-                var box = $("quicksearch").down(".quicksearchbox");
-                box.value = "<?= _("Veranstaltungen") ?>";
-                box.defaultValueActsAsHint();
-                new Ajax.Autocompleter(box,
-                                       'quicksearch_autocomplete_choices',
-                                       STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/autocomplete/course',
-                                       {
-                  minChars: 3,
-                  paramName: 'value',
-                  method: 'get',
-                  callback: function(element, entry) {
-                    return entry + '&' + Object.toQueryString({
-                      'semester': '<?= $search_semester_nr ?>',
-                      'what':  'title_lecturer_number',
-                      'category': 'all'
-                    });
-                  },
-                  afterUpdateElement: function (input, item) {
-                    var seminar_id = encodeURI(item.down('span.seminar_id').firstChild.nodeValue);
-                    document.location = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>details.php?sem_id=" +
-                      seminar_id + "&send_from_search=1&send_from_search_page=<?= urlencode($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) ?>sem_portal.php?keep_result_set=1";
-                  }
-                });
-            })();*/
-        </script>
         </li>
         <? endif ?>
         <? if (Navigation::hasItem('/links')) : ?>

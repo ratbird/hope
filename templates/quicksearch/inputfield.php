@@ -30,6 +30,7 @@ if ($withButton) {
 
 				//<?= str_replace('"', "", $_SERVER['REQUEST_URI']) ?>
 				
+				/*
 				new Ajax.Autocompleter("<?= $name ?>", "<?= $name ?>_choices", "<?= URLHelper::getLink("dispatch.php/quicksearch/response/".$query_id) ?>", { 
 					paramName: "searchkey",
 					afterUpdateElement : function (text, li) {
@@ -54,10 +55,10 @@ if ($withButton) {
 						return querystring;
 					},
 					frequency: 0.2
-				});
+				});*/
 				<?php
 if ($beschriftung && !$defaultID) {
-	print '$("'.$name.'").value = "'.$beschriftung.'";' ."\n\t\t\t\t".
-	'$("'.$name.'").style.color = \''.$descriptionColor."';\n";
+	print '$("#'.$name.'").attr("value", "'.$beschriftung.'");' ."\n\t\t\t\t".
+	'$("#'.$name.'").css("color", "'.$descriptionColor.'");'."\n";
 }
 print "\t\t\t\t</script>";

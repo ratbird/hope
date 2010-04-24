@@ -118,4 +118,7 @@ if ($my_messaging_settings['start_messenger_at_startup'] && $auth->auth['jscript
              (isset($GLOBALS['body_class']) ? ' class="'.htmlReady($GLOBALS['body_class']).'"' : '' ) ?>>
       <?= isset($GLOBALS['_include_additional_html']) ? $GLOBALS['_include_additional_html'] : '' ?>
       <div id="overdiv_container"></div>
-      <div id="ajax_notification" style="display: none;"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ajax_indicator.gif" alt="AJAX indicator" align="middle">&nbsp;Working...</div>
+
+    <div id="ajax_notification">
+      <?= Assets::img('ajax_indicator.gif') ?>&nbsp;Working...
+    </div>

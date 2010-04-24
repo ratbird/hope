@@ -839,6 +839,13 @@ $('.messagebox .messagebox_buttons a').live('click', function () {
  * ------------------------------------------------------------------------ */
 
 $(document).ready(function () {
+  // AJAX Indicator
+  $('#ajax_notification').ajaxStart(function () {
+    $(this).show();
+  }).ajaxStop(function () {
+    $(this).hide();
+  });
+
   // message highlighting
   $(".effect_highlight").effect('highlight', {}, 2000);
   $('.add_toolbar').addToolbar(STUDIP.Markup.buttonSet);

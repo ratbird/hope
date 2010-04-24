@@ -67,8 +67,8 @@
     <?= isset($GLOBALS['_include_additional_html']) ? $GLOBALS['_include_additional_html'] : '' ?>
     <div id="overdiv_container"></div>
 
-    <div id="ajax_notification" style="display: none;">
-      <?= Assets::img('ajax_indicator.gif', array('align' => 'middle')) ?>&nbsp;Working...
+    <div id="ajax_notification">
+      <?= Assets::img('ajax_indicator.gif') ?>&nbsp;Working...
     </div>
 
     <? include 'lib/include/header.php'; ?>

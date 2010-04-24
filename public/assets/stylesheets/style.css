@@ -761,6 +761,7 @@ div.wikitoc ul {
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   height: 16px;
+  margin: 0 2px;
   opacity: 0.7;
   position: absolute;
   width: 16px;

@@ -31,21 +31,29 @@
       return this.each(function () {
         if ($(this).data('ajax_notification_element'))
           return;
-        var notification = $('<div class="ajax_notification" />').hide().appendTo('body'),
-            offset = $(this).animate({paddingLeft: '+=20px'}, 'fast').offset();
-        notification.css(offset).fadeIn('fast');
 
-        $(this).data('ajax_notification_element', notification);
+        var notification = $('<div class="ajax_notification" />').hide().appendTo('body');
+        $(this)
+          .data('ajax_notification_element', notification)
+          .data('ajax_notification_original_margin', $(this).css('margin-left'))
+          .animate({marginLeft: '+=' + notification.outerWidth(true) + 'px'}, 'fast', function () {
+        	var offset = $(this).offset(),
+        	  y_diff = Math.floor(($(this).height() - notification.height())/2);
+            notification.css({left: offset.left - notification.outerWidth(true), top: offset.top + y_diff}).fadeIn('fast');
+          });
       });
     },
     hideAjaxNotification: function () {
       return this.each(function () {
-        var notification = $(this).data('ajax_notification_element');
+        var $this = $(this).stop(),
+          notification = $this.data('ajax_notification_element');
         if (!notification)
           return;
 
-        $(this).stop().animate({paddingLeft: '-=20px'}, 'fast');
-        notification.stop().fadeOut('fast', function () { $(this).remove() });
+        notification.stop().fadeOut('fast', function () {
+          $this.animate({marginLeft: $this.data('ajax_notification_original_margin')}, 'fast');
+          $(this).remove();
+        });
         $(this).data('ajax_notification_element', null);
       });
     }

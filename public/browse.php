@@ -174,7 +174,7 @@ if (count($filter))
                 $userinfo['status'] = is_array($gruppen) ? join(', ', array_values($gruppen)) : _('keiner Funktion zugeordnet');
             }
 
-            if ($GLOBALS['CHAT_ENABLE']) {
+            if (get_config('CHAT_ENABLE')) {
                 $userinfo['chat'] = chat_get_online_icon($row['user_id'], $row['username']);
             }
 

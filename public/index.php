@@ -130,7 +130,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
     }
 
     // Display banner ad
-    if ($GLOBALS['BANNER_ADS_ENABLE']) {
+    if (get_config('BANNER_ADS_ENABLE')) {
         require_once 'lib/banner_show.inc.php';
         banner_show();
     }
@@ -187,7 +187,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
         include 'lib/show_dates.inc.php';
         $start = time();
         $end = $start + 60 * 60 * 24 * 7;
-        if ($GLOBALS['CALENDAR_ENABLE']) {
+        if (get_config('CALENDAR_ENABLE')) {
             show_all_dates($start, $end, TRUE, FALSE, $index_data['dopen']);
         } else {
             show_dates($start, $end, $index_data['dopen']);
@@ -195,7 +195,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
     }
 
     // display votes
-    if ($GLOBALS['VOTE_ENABLE']) {
+    if (get_config('VOTE_ENABLE')) {
         include 'lib/vote/vote_show.inc.php';
         show_votes ('studip', $auth->auth['uid'], $perm);
     }

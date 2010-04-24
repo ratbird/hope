@@ -39,7 +39,7 @@ require_once 'lib/functions.php';
 require_once 'lib/contact.inc.php';
 
 function chat_kill_chat($chatid){
-    if ($GLOBALS['CHAT_ENABLE']){
+    if (get_config('CHAT_ENABLE')){
         if (chat_get_entry_level($chatid) == "admin"){
             $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
             $chatServer->caching = false;
@@ -50,7 +50,7 @@ function chat_kill_chat($chatid){
 }
 
 function chat_get_chat_icon($chatter,$chatinv,$is_active,$as_icon = false){
-    if ($GLOBALS['CHAT_ENABLE']){
+    if (get_config('CHAT_ENABLE')){
             $pic_prefix = ($as_icon) ? "icon-" : "";
             $pic_path = $GLOBALS['ASSETS_URL']."images/";
             $image = "<img border=\"0\" src=\"" . $pic_path . $pic_prefix;
@@ -134,7 +134,7 @@ function chat_get_name($chatid){
 
 function chat_show_info($chatid){
     global $auth;
-        if ($GLOBALS['CHAT_ENABLE']){
+        if (get_config('CHAT_ENABLE')){
             $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
             $sms = new messaging();
             $chatter = $chatServer->isActiveChat($chatid);
@@ -219,7 +219,7 @@ function chat_get_content($chatid,$chatter,$chatinv,$password,$is_active,$chat_u
 
 function chat_get_online_icon($user_id = false, $username = false, $pref_chat_id = false){
     global $i_page;
-    if ($GLOBALS['CHAT_ENABLE']) {
+    if (get_config('CHAT_ENABLE')) {
         if ($user_id && !$username){
             $username = get_username($user_id);
         }

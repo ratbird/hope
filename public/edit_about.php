@@ -1297,7 +1297,7 @@ if ($view == "Stundenplan") {
     change_schedule_view();
 }
 
-if($view == 'calendar' && $GLOBALS['CALENDAR_ENABLE']) {
+if($view == 'calendar' && get_config('CALENDAR_ENABLE')) {
     require_once($GLOBALS['RELATIVE_PATH_CALENDAR'].'/calendar_settings.inc.php');
 }
 

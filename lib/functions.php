@@ -365,7 +365,7 @@ function lastActivity ($sem_id) {
             $timestamp = $db->f("chdate");
 
     //Votes
-    if ($GLOBALS['VOTE_ENABLE']) {
+    if (get_config('VOTE_ENABLE')) {
         $db->query("SELECT chdate FROM vote WHERE range_id = '$sem_id' ORDER BY chdate DESC LIMIT 1");
         $db->next_record();
         if ($db->f("chdate") > $timestamp)
@@ -373,7 +373,7 @@ function lastActivity ($sem_id) {
     }
 
     //Wiki
-    if ($GLOBALS['WIKI_ENABLE']) {
+    if (get_config('WIKI_ENABLE')) {
         $db->query("SELECT chdate FROM wiki WHERE range_id = '$sem_id' ORDER BY chdate DESC LIMIT 1");
         $db->next_record();
         if ($db->f("chdate") > $timestamp)

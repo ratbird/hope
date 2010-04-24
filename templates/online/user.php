@@ -37,7 +37,7 @@
 
     <td width="5%" align="center">
 
-        <? if ($GLOBALS['CHAT_ENABLE']) : ?>
+        <? if (get_config('CHAT_ENABLE')) : ?>
             <?= chat_get_online_icon($tmp_user_id, $tmp_online_uname) ?>
         <? else : ?>
             &nbsp;

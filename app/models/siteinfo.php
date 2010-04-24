@@ -462,19 +462,19 @@ class SiteinfoMarkupEngine {
         $indicator['vote'] = array("query" => "SELECT count(*) FROM vote WHERE type='vote'",
                                    "title" => _("Umfragen"),
                                    "detail" => "",
-                                   "constraint" => $GLOBALS['VOTE_ENABLE']);
+                                   "constraint" => get_config('VOTE_ENABLE'));
         $indicator['test'] = array("query" => "SELECT count(*) FROM vote WHERE type='test'",
                                    "title" => _("Tests"),
                                    "detail" => "",
-                                   "constraint" => $GLOBALS['VOTE_ENABLE']);
+                                   "constraint" => get_config('VOTE_ENABLE'));
         $indicator['evaluation'] = array("query" => "SELECT count(*) FROM eval",
                                          "title" => _("Evaluationen"),
                                          "detail" => "",
-                                         "constraint" => $GLOBALS['VOTE_ENABLE']);
+                                         "constraint" => get_config('VOTE_ENABLE'));
         $indicator['wiki_pages'] = array("query" => "SELECT COUNT(DISTINCT keyword) AS count FROM wiki",
                                          "title" => _("Wiki-Seiten"),
                                          "detail" => "",
-                                         "constraint" => $GLOBALS['WIKI_ENABLE']);
+                                         "constraint" => get_config('WIKI_ENABLE'));
         $indicator['resource'] = array("query" => "SELECT COUNT(*) FROM resources_objects",
                                        "title" => _("Ressourcen-Objekte"),
                                        "detail" => _("von Stud.IP verwaltete Ressourcen wie Räume oder Geräte"),

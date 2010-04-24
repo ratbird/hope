@@ -130,7 +130,7 @@ class CourseNavigation extends Navigation
                 }
             }
 
-            $this->addSubNavigation('admin', $navigation); 
+            $this->addSubNavigation('admin', $navigation);
         }
 
         // forum
@@ -210,7 +210,7 @@ class CourseNavigation extends Navigation
         }
 
         // information page
-        if ($modules['scm']) {
+        if (get_config('SCM_ENABLE') && $modules['scm']) {
             $navigation = new Navigation($scms[0]['tab_name']);
 
             foreach ($scms as $scm) {
@@ -225,7 +225,7 @@ class CourseNavigation extends Navigation
         }
 
         // literature
-        if ($modules['literature']) {
+        if (get_config('LITERATURE_ENABLE') && $modules['literature']) {
             $navigation = new Navigation(_('Literatur'));
             $navigation->addSubNavigation('view', new Navigation(_('Literatur'), 'literatur.php?view=literatur_'.$sem_class));
 
@@ -243,7 +243,7 @@ class CourseNavigation extends Navigation
         }
 
         // wiki
-        if ($modules['wiki']) {
+        if (get_config('WIKI_ENABLE') && $modules['wiki']) {
             $navigation = new Navigation(_('Wiki'));
             $navigation->addSubNavigation('show', new Navigation(_('WikiWikiWeb'), 'wiki.php?view=show'));
             $navigation->addSubNavigation('listnew', new Navigation(_('Neue Seiten'), 'wiki.php?view=listnew'));

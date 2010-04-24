@@ -41,11 +41,11 @@ require_once 'lib/classes/Avatar.class.php'; // remove Avatarture
 if ($GLOBALS['RESOURCES_ENABLE']) {
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/DeleteResourcesUser.class.php");
 }
-if ($GLOBALS['CALENDAR_ENABLE']) {
+if (get_config('CALENDAR_ENABLE')) {
     include_once ($GLOBALS['RELATIVE_PATH_CALENDAR']
     . "/lib/driver/{$GLOBALS['CALENDAR_DRIVER']}/CalendarDriver.class.php");
 }
-if ($GLOBALS['ELEARNING_INTERFACE_ENABLE']){
+if (get_config('ELEARNING_INTERFACE_ENABLE')){
     require_once ($GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . "/ELearningUtils.class.php");
 }
 
@@ -784,7 +784,7 @@ class UserManagement
             $this->msg .= "info§" . sprintf(_("%s Zuordnungen zu Studieng&auml;ngen gel&ouml;scht."), $db_ar) . "§";
 
         // delete all private appointments of this user
-        if ($GLOBALS['CALENDAR_ENABLE']) {
+        if (get_config('CALENDAR_ENABLE')) {
             $calendar = new CalendarDriver();
             if ($appkills = $calendar->deleteFromDatabase('ALL', NULL, 0, 0, $this->user_data['auth_user_md5.user_id']))
                 $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus den Terminen gel&ouml;scht."), $appkills) ."§";
@@ -840,7 +840,7 @@ class UserManagement
         }
 
         //delete connected users
-        if ($GLOBALS['ELEARNING_INTERFACE_ENABLE']){
+        if (get_config('ELEARNING_INTERFACE_ENABLE')){
             if(ElearningUtils::initElearningInterfaces()){
                 foreach($GLOBALS['connected_cms'] as $cms){
                     if(is_object($cms->user)){

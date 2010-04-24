@@ -827,7 +827,7 @@ if (isset($_GET['details']) || $showform ) {
                     <img class="middle" src="'.$GLOBALS['ASSETS_URL'].'images/icon-disc.gif">
                     </a>';
                 echo "</td></tr>\n";
-                if($GLOBALS['LOG_ENABLE']){
+                if(get_config('LOG_ENABLE')){
                     echo "<tr><td class=\"steel2\" colspan=3 align=\"center\">";
                     echo "&nbsp;" . _("Log") . "&nbsp;";
                     echo '<a href="' . URLHelper::getLink('dispatch.php/event_log/show', array('search' => $db->f('username'), 'type' => 'user', 'object_id' => $db->f('user_id'))) .'">

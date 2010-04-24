@@ -51,7 +51,7 @@ require_once ('lib/include/messagingSettings.inc.php');
 require_once ('lib/messaging.inc.php');
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/sms_functions.inc.php');
-if ($GLOBALS['CHAT_ENABLE']){
+if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
     $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
     $chatServer->caching = true;

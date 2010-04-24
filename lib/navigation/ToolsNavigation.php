@@ -46,12 +46,14 @@ class ToolsNavigation extends Navigation
 
         //votes and tests
         if (get_config('VOTE_ENABLE')) {
-            $this->addSubNavigation('vote', new Navigation(_('Votings und Tests'), 'admin_vote.php', array('page' => 'overview', 'showrangeID' => $username)));
+            $this->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php', array('page' => 'overview', 'showrangeID' => $username)));
             $this->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php', array('rangeID' => $username)));
         }
 
         //literature
-        $this->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php', array('_range_id' => 'self')));
+        if (get_config('LITERATURE_ENABLE')) {
+            $this->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php', array('_range_id' => 'self')));
+        }
 
         // elearning
         if (get_config('ELEARNING_INTERFACE_ENABLE')) {

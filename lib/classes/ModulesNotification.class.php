@@ -256,7 +256,7 @@ class ModulesNotification extends Modules {
                 $redirect = '&again=yes&redirect_to=literatur.php';
                 break;
             case 'elearning_interface' :
-                if ($GLOBALS['ELEARNING_INTERFACE_ENABLE']) {
+                if (get_config('ELEARNING_INTERFACE_ENABLE')) {
                     if ($r_data['neuecontentmodule'] > 1) {
                         $text = sprintf(_("%s neue Content-Module angelegt"), $r_data['neuecontentmodule']);
                     } else if ($r_data['neuecontentmodule'] > 0) {
@@ -280,7 +280,7 @@ class ModulesNotification extends Modules {
                 $redirect = '&again=yes&redirect_to=scm.php';
                 break;
             case 'votes' :
-                if ($GLOBALS['VOTE_ENABLE']) {
+                if (get_config('VOTE_ENABLE')) {
                     if ($r_data['neuevotes'] > 1) {
                         $text = sprintf(_("%s neue Umfragen oder Evaluationen wurden angelegt:"), $r_data['neuevotes']);
                     } else if ($r_data['neuevotes'] > 0) {

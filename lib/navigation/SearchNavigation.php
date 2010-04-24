@@ -62,19 +62,20 @@ class SearchNavigation extends Navigation
             $this->addSubNavigation('studygroups', new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/search'));
         }
 
-        // Courses
+        // Personen
         $this->addSubNavigation('persons', new Navigation(_('Personen'), 'browse.php'));
 
         // Institutes
         $this->addSubNavigation('institutes', new Navigation(_('Einrichtungen'), 'institut_browse.php'));
 
+        // Literatur
+        if (get_config('LITERATURE_ENABLE')) {
+            $this->addSubNavigation('literatures', new Navigation(_('Literatur'), 'lit_search.php'));
+        }
+
         // Resources
         if (get_config('RESOURCES_ENABLE')) {
             $this->addSubNavigation('resources', new Navigation(_('Ressourcen'), 'resources.php', array('view' => 'search', 'view_mode' => 'search', 'new_search' => 'true')));
         }
-
-        // Literatur
-        $this->addSubNavigation('literatures', new Navigation(_('Literatur'), 'lit_search.php'));
-
     }
 }

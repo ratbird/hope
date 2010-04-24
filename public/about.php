@@ -122,14 +122,14 @@ if ($_GET['rssusername'] && $_GET['rssusername'] !== '') {
 }
 
 
-if ($GLOBALS['CHAT_ENABLE']){
+if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
     if ($_REQUEST['kill_chat']){
         chat_kill_chat($_REQUEST['kill_chat']);
     }
 }
 
-if ($GLOBALS['VOTE_ENABLE']) {
+if (get_config('VOTE_ENABLE')) {
     include_once ("lib/vote/vote_show.inc.php");
 }
 
@@ -535,7 +535,7 @@ if (is_element_visible_for_user($user->id, $user_id, $visibilities['news']))
         echo "<br>";
 
 // alle persoenlichen Termine anzeigen, aber keine privaten
-if ($GLOBALS['CALENDAR_ENABLE']) {
+if (get_config('CALENDAR_ENABLE')) {
     $temp_user_perm = get_global_perm($user_id);
     if ($temp_user_perm != "root" && $temp_user_perm != "admin") {
         $start_zeit = time();
@@ -557,7 +557,7 @@ if ($GLOBALS['FOAF_ENABLE']
 }
 
 // include and show votes and tests
-if ($GLOBALS['VOTE_ENABLE'] && is_element_visible_for_user($user->id, $user_id, $visibilities['votes'])) {
+if (get_config('VOTE_ENABLE') && is_element_visible_for_user($user->id, $user_id, $visibilities['votes'])) {
     show_votes($username, $auth->auth["uid"], $perm, YES);
 }
 
@@ -575,7 +575,7 @@ if ($guest->active == TRUE || $guest->rights == TRUE && is_element_visible_for_u
 }
 
 // show chat info
-if ($GLOBALS['CHAT_ENABLE']){
+if (get_config('CHAT_ENABLE')){
     if (chat_show_info($user_id))
         echo "<br>";
 }

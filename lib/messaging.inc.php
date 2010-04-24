@@ -38,7 +38,7 @@ require_once ('lib/user_visible.inc.php');
 require_once ('lib/contact.inc.php');
 require_once ('lib/datei.inc.php');
 require_once ('lib/sms_functions.inc.php');
-if ($GLOBALS['CHAT_ENABLE']){
+if (get_config('CHAT_ENABLE')){
     include_once $GLOBALS['RELATIVE_PATH_CHAT']."/ChatServer.class.php"; //wird für Nachrichten im chat benötigt
 }
 
@@ -399,7 +399,7 @@ class messaging {
             }
             //Benachrichtigung in alle Chaträume schicken
             $snd_name = ($user_id != "____%system%____") ? get_fullname($user_id) . " (" . get_username($user_id). ")" : "Stud.IP-System";
-            if ($GLOBALS['CHAT_ENABLE']) {
+            if (get_config('CHAT_ENABLE')) {
                 $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
                 setTempLanguage($rec_id[$x]);
                 $chatMsg = sprintf(_("Sie haben eine Nachricht von <b>%s</b> erhalten!"), htmlReady($snd_name));
@@ -497,7 +497,7 @@ class messaging {
     function delete_chatinv($user_id = false){
         global $user;
 
-        if ($GLOBALS['CHAT_ENABLE']){
+        if (get_config('CHAT_ENABLE')){
             if (!$user_id)
                 $user_id = $user->id;
 
@@ -524,7 +524,7 @@ class messaging {
     function check_chatinv($chat_id, $user_id = false){
         global $user;
 
-        if ($GLOBALS['CHAT_ENABLE']){
+        if (get_config('CHAT_ENABLE')){
             if (!$user_id)
                 $user_id = $user->id;
 
@@ -543,7 +543,7 @@ class messaging {
     function check_list_of_chatinv($chat_uniqids, $user_id = false){
         global $user;
 
-        if ($GLOBALS['CHAT_ENABLE']){
+        if (get_config('CHAT_ENABLE')){
             if (!$user_id)
                 $user_id = $user->id;
 

@@ -44,7 +44,7 @@ require_once ('lib/export/export_studipdata_func.inc.php');
 require_once ('lib/classes/Avatar.class.php');
 require_once ('lib/classes/LockRules.class.php');
 
-if ($GLOBALS['CHAT_ENABLE']){
+if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
 }
 $db = new DB_Seminar;
@@ -1208,7 +1208,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
     
     $username=$db->f("username");
     if ($db->f('visible') == 'yes' || $i_see_everybody) {
-        if ($GLOBALS['CHAT_ENABLE']){
+        if (get_config('CHAT_ENABLE')){
             echo chat_get_online_icon($db->f("user_id"),$db->f("username"),$SessSemName[1]) . "&nbsp;";
         }
 

@@ -134,15 +134,18 @@ class StartNavigation extends Navigation
         // calendar / home page
         if (!$perm->have_perm('admin')) {
             $navigation = new Navigation(_('Mein Planer'));
-            $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'calendar.php'));
+
+            if (get_config('CALENDAR_ENABLE')) {
+                $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'calendar.php'));
+            }
             $navigation->addSubNavigation('address_book', new Navigation(_('Adressbuch'), 'contact.php'));
             $navigation->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'mein_stundenplan.php'));
             $this->addSubNavigation('messaging', $navigation);
 
-            $navigation = new Navigation(_('persönliche Homepage'), 'about.php');
+            $navigation = new Navigation(_('Profil'), 'about.php');
 
             if ($perm->have_perm('autor')) {
-                $navigation->addSubNavigation('settings', new Navigation(_('individuelle Einstellungen'), 'edit_about.php?view=allgemein'));
+                $navigation->addSubNavigation('settings', new Navigation(_('Einstellungen'), 'edit_about.php?view=allgemein'));
             }
 
             $this->addSubNavigation('homepage', $navigation);

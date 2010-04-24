@@ -2127,7 +2127,7 @@ class Seminar {
         $query = "DELETE FROM seminar_user_schedule WHERE range_id = '$s_id'";
         $db->query($query);
 
-        if($GLOBALS['ELEARNING_INTERFACE_ENABLE']){
+        if(get_config('ELEARNING_INTERFACE_ENABLE')){
             $cms_types = ObjectConnections::GetConnectedSystems($s_id);
             if(count($cms_types)){
                 foreach($cms_types as $system){

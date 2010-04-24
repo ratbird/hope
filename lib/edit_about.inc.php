@@ -813,7 +813,7 @@ class about extends messaging {
             $dates = $dates->events;
         }
         // Votes
-        if ($GLOBALS['VOTE_ENABLE']) {
+        if (get_config('VOTE_ENABLE')) {
             $voteDB = new VoteDB();
         }
         $activeVotes  = $voteDB->getActiveVotes($this->auth_user['user_id']);
@@ -862,7 +862,7 @@ class about extends messaging {
             $homepage_elements["news"] = array("name" => _("News"), "visibility" => $homepage_visibility["news"] ? $homepage_visibility["news"] : get_default_homepage_visibility(), "extern" => true, 'category' => 'Allgemeine Daten');
         if ($GLOBALS["CALENDAR_ENABLE"] && $dates && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['dates'])
             $homepage_elements["termine"] = array("name" => _("Termine"), "visibility" => $homepage_visibility["termine"] ? $homepage_visibility["termine"] : get_default_homepage_visibility(), "extern" => true, 'category' => 'Allgemeine Daten');
-        if ($GLOBALS['VOTE_ENABLE'] && ($activeVotes || $stoppedVotes || $activeEvals) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['votes'])
+        if (get_config('VOTE_ENABLE') && ($activeVotes || $stoppedVotes || $activeEvals) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['votes'])
             $homepage_elements["votes"] = array("name" => _("Umfragen"), "visibility" => $homepage_visibility["votes"] ? $homepage_visibility["votes"] : get_default_homepage_visibility(), 'category' => 'Allgemeine Daten');
         if ($my_data["guestbook"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['guestbook'])
             $homepage_elements["guestbook"] = array("name" => _("Gästebuch"), "visibility" => $homepage_visibility["guestbook"] ? $homepage_visibility["guestbook"] : get_default_homepage_visibility(), 'category' => 'Allgemeine Daten');

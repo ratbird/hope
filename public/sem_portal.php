@@ -160,7 +160,7 @@ $init_data = array( "level" => "f",
                     "sem_status"=>$_sem_status);
 
 if ($reset_all) $sem_browse_data = null;
-if ($GLOBALS['STM_ENABLE'] &&  $sem_portal["bereich"] == "mod"){
+if (get_config('STM_ENABLE') &&  $sem_portal["bereich"] == "mod"){
     $sem_browse_obj = new StmBrowse($init_data);
 } else {
     $sem_browse_obj = new SemBrowse($init_data);

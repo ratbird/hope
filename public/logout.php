@@ -28,7 +28,7 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "
 
 require_once 'lib/messaging.inc.php';
 
-if ($GLOBALS['CHAT_ENABLE']){
+if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/ChatServer.class.php"; //wird für Nachrichten im chat benötigt
 }
 

@@ -136,33 +136,24 @@ $CACHING_FILECACHE_PATH = $TMP_PATH . '/studip_cache';
 ----------------------------------------------------------------
 enable or disable the Stud.IP internal modules, set and basic settings*/
 
-$CALENDAR_ENABLE = TRUE;                                //Stud.IP module: calendar
 $CALENDAR_DRIVER = "MySQL";                                 //calendar driver: database to use (MySQL in default installation)*/
 
-$CHAT_ENABLE = TRUE;                                    //Stud.IP module: chat
 $CHAT_SERVER_NAME = "ChatShmServer";
 
-$EXPORT_ENABLE = TRUE;                                  //Stud.IP module: export
 $XSLT_ENABLE = TRUE;
 $FOP_ENABLE = TRUE;
 $FOP_SH_CALL = "/usr/local/fop-0.20.5rc/fop.sh";                        //path to fop
 
-$EXTERN_ENABLE = TRUE;                                  //Stud.IP module: "external pages" and SRI-System
 $EXTERN_SERVER_NAME = "";                               //define name, if you use special setup
 $EXTERN_SRI_ENABLE = TRUE;                              //allow the usage of SRI-interface (Stud.IP Remote Include)
 $EXTERN_SRI_ENABLE_BY_ROOT = FALSE;                         //only root allows the usage of SRI-interface for specific institutes
 $EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG = FALSE;                        //free access to external pages (without the need of a configuration), independent of SRI settings above
 
-$VOTE_ENABLE = TRUE;                                    //Stud.IP module: Votingsystem
-
-$ELEARNING_INTERFACE_ENABLE = FALSE;                        //Stud.IP module: elearning interface
 $SOAP_ENABLE = FALSE;
 
 $WEBSERVICES_ENABLE = FALSE;                            //Stud.IP module: webservices
 
 $STUDIP_API_KEY=''; // webservice api key
-
-$STM_ENABLE = FALSE;            //Studienmodule (experimental)
 
 $SEMINAR_LOCK_ENABLE = FALSE; // locking of fields in seminar administration
 
@@ -241,10 +232,6 @@ $PLUGIN_REPOSITORIES = array(
 activate or deactivate some basic system-functions here*/
 
 $LATEXRENDER_ENABLE = TRUE;     //enable to use the LaTexrenderer (Please note the further LaTeX template-settings below)
-$WIKI_ENABLE = TRUE;            //enable WikiWiki-Webs
-$SCM_ENABLE = TRUE;         //enable Simple-Content functionality
-$LOG_ENABLE = TRUE;         //enable event logging for some admin actions on courses, users and institutes
-$SMILEYADMIN_ENABLE = TRUE;     //enable Smiley-administration
 $SMILEY_COUNTER = FALSE;        //enable Smiley-counter
 
 
@@ -319,10 +306,6 @@ $SHOW_TERMS_ON_FIRST_LOGIN = FALSE;         //if true, the user has to accept th
 
 $USER_VISIBILITY_CHECK = FALSE;             // enable presentation of visibility decision texts for users after first login
                                             // see lib/include/header.php and lib/user_visible.inc.php for further info
-
-$BANNER_ADS_ENABLE = FALSE;                 //enable the Banner ads functions (config as root in "global settings")
-                                            //you'll need an additional folder in the pictures folder named banner. The Webserver
-                                            //needs write accees for this folder.
 
 $CONVERT_IDNA_URL = TRUE;                   //if true, urls with german "umlauts" are converted
 
@@ -601,8 +584,4 @@ $WIKI_PLUGINS = array();
 //create the html-version of $UNI_NAME clean
 $UNI_NAME=htmlentities($UNI_NAME_CLEAN, ENT_QUOTES);
 
-
 require_once 'lib/phplib_local.inc.php';
-
-//$Id: config_local.inc.php 6945 2006-11-12 14:30:12Z anoack $
-?>

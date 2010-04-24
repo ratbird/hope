@@ -43,13 +43,13 @@ include ("lib/include/header.php");   // Output of Stud.IP head
 <tr>
     <td class="blank">
     <blockquote>
-        <?php if ($perm->have_perm('root') && $GLOBALS['STM_ENABLE'] ) {?>
+        <?php if ($perm->have_perm('root') && get_config('STM_ENABLE') ) {?>
         <br><a href="stm_abstract_assi.php"><b><?=_("Allgemeine Module anlegen und bearbeiten")?></b></a><br>
         <font size=-1><?=_("Hier k&ouml;nnen Sie Allgemeine Module anlegen und bearbeiten.")?></font>
         <br>
         <?php } ?>
 
-        <?php if ($perm->have_perm('dozent') && $GLOBALS['STM_ENABLE'] ) {?>
+        <?php if ($perm->have_perm('dozent') && get_config('STM_ENABLE') ) {?>
         <br><a href="stm_instance_assi.php"><b><?=_("Konkrete Module anlegen und bearbeiten")?></b></a><br>
         <font size=-1><?=_("Hier k&ouml;nnen Administratoren Konkrete Module anlegen und Modulverantwortliche Ihre Konkreten Module bearbeiten.")?></font>
         <br>

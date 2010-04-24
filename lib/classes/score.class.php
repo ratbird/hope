@@ -136,7 +136,7 @@ function doRefreshScoreContentCache(){
         while ($db->next_record()){
             $this->score_content_cache[$db->f('user_id')]['litcount'] = $db->f('litcount');
         }
-        if ($GLOBALS['VOTE_ENABLE']){
+        if (get_config('VOTE_ENABLE')){
             $db->query("SELECT count(u.user_id) AS votecount,u.user_id FROM user_info u INNER JOIN vote ON(range_id=u.user_id) WHERE  score > 0 GROUP BY u.user_id ORDER BY NULL");
             while ($db->next_record()){
                 $this->score_content_cache[$db->f('user_id')]['votecount'] = $db->f('votecount');
@@ -300,7 +300,7 @@ function GetMyScore() {
     $age = 2 + log($age);
     if ($age <1 ) $age = 1;
 
-    if ($GLOBALS['VOTE_ENABLE']) {
+    if (get_config('VOTE_ENABLE')) {
         $db->query("SELECT count(*) FROM vote WHERE range_id = '$user_id' AND state IN('active','stopvis')");
         $db->next_record();
         $vote = $db->f(0)*2;
@@ -326,7 +326,7 @@ function GetMyScore() {
         $vote += $db->f(0);
     }
 
-    if ($GLOBALS['WIKI_ENABLE']) {
+    if (get_config('WIKI_ENABLE')) {
         $db->query("SELECT count(*) FROM wiki WHERE user_id = '$user_id'");
         $db->next_record();
         $wiki = $db->f(0);

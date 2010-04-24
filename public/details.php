@@ -547,7 +547,7 @@ echo $template_factory->render(
                 </td>
             </tr>
             <? }
-            if ($GLOBALS['STM_ENABLE']){
+            if (get_config('STM_ENABLE')){
                 $stms = StudipStmInstance::GetStmInstancesBySeminar($sem_id);
                 if (count($stms)){
                     $stm_out = array();

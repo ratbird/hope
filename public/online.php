@@ -41,7 +41,7 @@ require_once 'lib/classes/StudipKing.class.php';
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-if ($GLOBALS['CHAT_ENABLE'])
+if (get_config('CHAT_ENABLE'))
 {
     include_once $RELATIVE_PATH_CHAT.'/chat_func_inc.php';
     $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);

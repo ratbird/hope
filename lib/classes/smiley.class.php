@@ -52,7 +52,7 @@ class smiley {
         $this->smiley_tab = array();
         $this->my_smiley = array();
         $this->user_id = $auth->auth['uid'];
-        if (!$GLOBALS['SMILEYADMIN_ENABLE']) {
+        if (!get_config('SMILEYADMIN_ENABLE')) {
             $this->msg .=  '§error§' . _("Smiley-Modul abgeschaltet.");
             $this->error = true;
         } else {

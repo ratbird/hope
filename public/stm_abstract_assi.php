@@ -694,7 +694,7 @@ Navigation::activateItem('/admin/tools/abstract_modules');
 include ("lib/include/html_head.inc.php"); // Output of html head
 include ("lib/include/header.php");   // Output of Stud.IP head
 
-if($GLOBALS['STM_ENABLE']){
+if(get_config('STM_ENABLE')){
     $stm_class = new AbstractStmControl();
     $stm_class->show();
 }

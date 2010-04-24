@@ -42,13 +42,13 @@ require_once 'lib/functions.php';
 require_once 'lib/classes/CourseAvatar.class.php';
 require_once 'lib/classes/StudygroupAvatar.class.php';
 
-if ($GLOBALS['CHAT_ENABLE']){
+if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
     if ($_REQUEST['kill_chat']){
         chat_kill_chat($_REQUEST['kill_chat']);
     }
 }
-if ($GLOBALS['VOTE_ENABLE']) {
+if (get_config('VOTE_ENABLE')) {
     include_once ("lib/vote/vote_show.inc.php");
 }
 
@@ -268,14 +268,14 @@ if (!$studygroup_mode) {
 }
 
 // show chat info
-if (($GLOBALS['CHAT_ENABLE']) && ($modules["chat"]))
+if ((get_config('CHAT_ENABLE')) && ($modules["chat"]))
 {
     if (chat_show_info($auswahl))
     echo "<br>";
 }
 
 // include and show votes and tests
-if ($GLOBALS['VOTE_ENABLE'])
+if (get_config('VOTE_ENABLE'))
 {
     show_votes ($auswahl, $auth->auth["uid"], $perm, YES);
 }

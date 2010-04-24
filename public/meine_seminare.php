@@ -81,7 +81,7 @@ require_once ('lib/object.inc.php');
 require_once ('lib/meine_seminare_func.inc.php');
 require_once ('lib/classes/LockRules.class.php');
 
-if ($GLOBALS['CHAT_ENABLE']){
+if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
     $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
     $chatServer->caching = true;
@@ -109,7 +109,7 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
 echo "\n" . $cssSw->GetHoverJSFunction() . "\n";
-if ($GLOBALS['CHAT_ENABLE']){
+if (get_config('CHAT_ENABLE')){
     chat_get_javascript();
 }
 
@@ -296,7 +296,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                 "sem_number" => $db->f("sem_number"),
                 "sem_number_end"   => $db->f("sem_number_end")
             );
-            if (($GLOBALS['CHAT_ENABLE']) && ($my_obj[$db->f("Seminar_id")]["modules"]["chat"])) {
+            if ((get_config('CHAT_ENABLE')) && ($my_obj[$db->f("Seminar_id")]["modules"]["chat"])) {
                 $chatter = $chatServer->isActiveChat($db->f("Seminar_id"));
                 $chat_info[$db->f("Seminar_id")] = array("chatter" => $chatter, "chatuniqid" => $chatServer->chatDetail[$db->f("Seminar_id")]["id"],
                                                 "is_active" => $chatServer->isActiveUser($user->id,$db->f("Seminar_id")));
@@ -327,7 +327,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         $my_obj[$db->f("Institut_id")]= array("name" => $db->f("Name"),"status" => $db->f("inst_perms"),
                                             "type" =>($db->f("type")) ? $db->f("type") : 1, "modules" => $Modules->getLocalModules($db->f("Institut_id"),"inst",$db->f("modules"),($db->f("type") ? $db->f("type") : 1)),
                                             "obj_type" => "inst","visitdate" => $db->f("visitdate"));
-        if (($GLOBALS['CHAT_ENABLE']) && ($my_obj[$db->f("Institut_id")]["modules"]["chat"])) {
+        if ((get_config('CHAT_ENABLE')) && ($my_obj[$db->f("Institut_id")]["modules"]["chat"])) {
             $chatter = $chatServer->isActiveChat($db->f("Institut_id"));
             $chat_info[$db->f("Institut_id")] = array("chatter" => $chatter, "chatuniqid" => $chatServer->chatDetail[$db->f("Institut_id")]["id"],
                                             "is_active" => $chatServer->isActiveUser($user->id,$db->f("Institut_id")));
@@ -339,7 +339,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     if (($num_my_sem + $num_my_inst) > 0){
         get_my_obj_values($my_obj, $GLOBALS['user']->id);
     }
-    if ($GLOBALS['CHAT_ENABLE']){
+    if (get_config('CHAT_ENABLE')){
         if (is_array($active_chats)){
             $chat_invs = $sms->check_list_of_chatinv(array_keys($active_chats));
         }
@@ -471,7 +471,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                 // Content-field
                 echo "<td class=\"".$cssSw->getClass()."\" align=\"left\" nowrap>";
                 print_seminar_content($semid, $values);
-                if (($GLOBALS['CHAT_ENABLE']) && ($values["modules"]["chat"])){
+                if ((get_config('CHAT_ENABLE')) && ($values["modules"]["chat"])){
                     echo "<a href=\"".((!$auth->auth["jscript"]) ? "chat_online.php" : "#")."\" onClick=\"return open_chat(" . (($chat_info[$semid]['is_active']) ? "false" : "'$semid'") . ");\">&nbsp;";
                     echo chat_get_chat_icon($chat_info[$semid]['chatter'], $chat_invs[$chat_info[$semid]['chatuniqid']], $chat_info[$semid]['is_active'],true);
                     echo "</a>&nbsp;";
@@ -607,7 +607,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                 // Content-field
                 echo "<td class=\"".$cssSw->getClass()."\"  align=\"left\" nowrap>";
                 print_seminar_content($instid, $values, "institut");
-                if (($GLOBALS['CHAT_ENABLE']) && ($values["modules"]["chat"])) {
+                if ((get_config('CHAT_ENABLE')) && ($values["modules"]["chat"])) {
                     echo "<a href=\"".((!$auth->auth["jscript"]) ? "chat_online.php" : "#")."\" onClick=\"return open_chat(" . (($chat_info[$instid]['is_active']) ? "false" : "'$instid'") . ");\">&nbsp;";
                     echo chat_get_chat_icon($chat_info[$instid]['chatter'], $chat_invs[$chat_info[$instid]['chatuniqid']], $chat_info[$instid]['is_active'],true);
                     echo "</a>&nbsp;";

@@ -854,5 +854,8 @@ $(document).ready(function () {
   	  return false;
     }
   });
-  $('textarea.resizable').TextAreaResizer();
+  $('textarea.resizable').resizable({
+    handles: 's',
+    minHeight: 50
+  });
 });

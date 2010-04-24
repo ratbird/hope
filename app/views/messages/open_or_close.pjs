@@ -1,4 +1,0 @@
-<?
-
-$update_page->replace_html('msg_item_'.$this->id,
-                           studip_utf8encode($this->msg));

@@ -27,34 +27,49 @@
 ;(function ($) {
 
   $.fn.extend({
-    showAjaxNotification: function () {
+    showAjaxNotification: function (position) {
+      position = position || 'left';
       return this.each(function () {
-        if ($(this).data('ajax_notification_element'))
+        if ($(this).data('ajax_notification'))
           return;
 
-        var notification = $('<div class="ajax_notification" />').hide().appendTo('body');
-        $(this)
-          .data('ajax_notification_element', notification)
-          .data('ajax_notification_original_margin', $(this).css('margin-left'))
-          .animate({marginLeft: '+=' + notification.outerWidth(true) + 'px'}, 'fast', function () {
-        	var offset = $(this).offset(),
-        	  y_diff = Math.floor(($(this).height() - notification.height())/2);
-            notification.css({left: offset.left - notification.outerWidth(true), top: offset.top + y_diff}).fadeIn('fast');
-          });
+        $(this).wrap('<span class="ajax_notification" />');
+        var notification = $('<span class="notification" />').hide().insertBefore(this),
+          changes = {marginLeft: 0, marginRight: 0};
+
+        if (position == 'right')
+          changes.marginRight = notification.outerWidth(true) + 'px';
+        else
+          changes.marginLeft = notification.outerWidth(true) + 'px';
+
+        $(this).data({
+          ajax_notification: notification,
+        }).parent().animate(changes, 'fast', function () {
+          var offset = $(this).children(':not(.notification)').position(),
+            styles = {
+              left: offset.left - notification.outerWidth(true),
+              top: offset.top + Math.floor(($(this).height() - notification.outerHeight(true))/2)
+            };
+          if (position == 'right')
+            styles.left += $(this).outerWidth(true);
+          notification.css(styles).fadeIn('fast');
+        });
       });
     },
     hideAjaxNotification: function () {
       return this.each(function () {
         var $this = $(this).stop(),
-          notification = $this.data('ajax_notification_element');
+          notification = $this.data('ajax_notification');
         if (!notification)
           return;
 
         notification.stop().fadeOut('fast', function () {
-          $this.animate({marginLeft: $this.data('ajax_notification_original_margin')}, 'fast');
+          $this.animate({marginLeft: 0, marginRight: 0}, 'fast', function () {
+          	$this.unwrap();
+          });
           $(this).remove();
         });
-        $(this).data('ajax_notification_element', null);
+        $(this).removeData('ajax_notification');
       });
     }
   });
@@ -858,6 +873,30 @@ STUDIP.News = {
     $("#news_item_" + id + " .printhead a.tree").css("font-weight", "normal");
   }
 }
+
+/* ------------------------------------------------------------------------
+ * ajax_loader
+ * ------------------------------------------------------------------------ */
+$('a.load_via_ajax').live('click', function () {
+  var parameters = $(this).metadata(),
+    indicator = parameters.indicator || this,
+    target = parameters.target || $(this).next(),
+    url = parameters.url || $(this).attr('href');
+
+  // Special cases
+  if ($(this).is('.internal_message')) {
+    target = '#msg_item_' + parameters.id;
+    indicator = target + ' a.tree.load_via_ajax.internal_message';
+    url = STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/messages/get_msg_body/' +
+          parameters.id + '/' + parameters.open + '/' + parameters.count;
+  }
+
+  $(indicator).showAjaxNotification('right');
+  $(target).load(url, function () {
+    $(indicator).hideAjaxNotification();
+  });
+  return false;
+});
 
 /* ------------------------------------------------------------------------
  * messages boxes

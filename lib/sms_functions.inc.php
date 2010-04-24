@@ -61,9 +61,9 @@ function MessageIcon($message_hovericon) {
     if ($message_hovericon["content"]!="" && $message_hovericon["openclose"]=="close" &&  $forum["jshover"] == "1") {
         $hovericon = "<img onmouseover=\"return STUDIP.OverDiv.BindInline(
         {position:'middle right', id: '".$message_hovericon["id"]."',
-        content_element_type: 'message', initiator: this}, event);\" src=\"".$GLOBALS['ASSETS_URL']."images/".$message_hovericon["picture"]."\" border=0>";
+        content_element_type: 'message', initiator: this}, event);\" src=\"".$GLOBALS['ASSETS_URL']."images/".$message_hovericon["picture"]."\" />";
     } else {
-        $hovericon = "<a href=\"".$message_hovericon['link']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$message_hovericon["picture"]."\" border=0></a>";
+        $hovericon = "<a href=\"".$message_hovericon['link']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$message_hovericon["picture"]."\" /></a>";
     }
     return $hovericon;
 }
@@ -267,8 +267,10 @@ function print_snd_message($psm) {
     else
         $attachment_icon = "";
 
-// tleilax: Ist der Ajax-Request hier für irgendwas gut? Das Ergebnis wird nirgends verarbeitet...
-    $titel = "<a name=".$psm['message_id']."><a href=\"$link\" onclick=\"$.get('dispatch.php/messages/get_msg_body/".$psm['message_id']."/".($open == 'open'? '0' : '1')."/".$psm['count']."');return false;\" class=\"tree\" >".htmlready($psm['message_subject']).$attachment_icon."</a></a>";
+    $ajax_classes = "load_via_ajax internal_message ".
+        "{id: '{$psm['message_id']}', open: ".($open=='open'?0:1).", count: {$psm['count']}}";
+
+    $titel = "<a name=\"{$psm['message_id']}\" href=\"{$link}\" class=\"tree {$ajax_classes}\">".htmlready($psm['message_subject'])."{$attachment_icon}</a>";
     $message_hovericon['titel'] = $psm['message_subject'];
     // (hover) icon
     $message_hovericon['openclose'] = $open;
@@ -286,7 +288,7 @@ function print_snd_message($psm) {
         $tmp_line2 = "forumstrich.gif";
     }
     echo "<td class=\"blank\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_line1."\"></td>";
-    printhead(0, 0, $link."\" onclick=\"new Ajax.Request('dispatch.php/messages/get_msg_body/".$psm['message_id']."/".($open == 'open'? '0' : '1')."/".$psm['count']."', {asynchronous:true, evalScripts:false});return false;", $open, FALSE, $icon, $titel, $zusatz, $psm['mkdate']);
+    printhead(0, 0, $link.'" class="'.$ajax_classes, $open, FALSE, $icon, $titel, $zusatz, $psm['mkdate']);
     echo "</tr></table> ";
     // print content
     if (($open == "open") || ($psm['sms_data_open'] == $psm['message_id'])) {
@@ -357,7 +359,10 @@ function print_rec_message($prm) {
     else
         $attachment_icon = "";
 
-    $titel = "<a name=".$prm['message_id']."><a href=\"$link\" class=\"tree\" onclick=\"new Ajax.Request('dispatch.php/messages/get_msg_body/".$prm['message_id']."/".($open == 'open'? '0' : '1')."/".$prm['count']."', {asynchronous:true, evalScripts:false});return false;\">".htmlready($prm['message_subject']).$attachment_icon."</a></a>";
+    $ajax_classes = "load_via_ajax internal_message ".
+        "{id: '{$prm['message_id']}', open: ".($open=='open'?0:1).", count: {$prm['count']}}";
+
+    $titel = "<a name=\"{$prm['message_id']}\" href=\"{$link}\" class=\"tree {$ajax_classes}\">".htmlReady($prm['message_subject'])."{$attachment_icon}</a>";
 
     if ($open == 'open'){
         $content = formatReady($prm['message']);
@@ -418,7 +423,7 @@ function print_rec_message($prm) {
     $message_hovericon['openclose'] = $open;
     $message_hovericon['content'] = $prm['message'];
     $message_hovericon['id'] = $prm['message_id'];
-    $message_hovericon['link'] = $link;
+    $message_hovericon['link'] = $link.'" class="'.$ajax_classes;
     $message_hovericon["picture"] = $picture;
     $icon = MessageIcon($message_hovericon);
     // print message_header
@@ -434,9 +439,9 @@ function print_rec_message($prm) {
 
     // if messages with priority are enabled, we pass a steelred css-class
     if ($GLOBALS['MESSAGE_PRIORITY'] && ($prm['priority'] == 'high')) {
-        printhead(0, 0, $link."\" onclick=\"new Ajax.Request('dispatch.php/messages/get_msg_body/".$prm['message_id']."/".($open == 'open'? '0' : '1')."/".$prm['count']."', {asynchronous:true, evalScripts:false});return false;", $open, $red, $icon, $titel, $zusatz, $prm['mkdate'], '', 'age', 'steelred');
+        printhead(0, 0, $link.'" class="'.$ajax_classes, $open, $red, $icon, $titel, $zusatz, $prm['mkdate'], '', 'age', 'steelred');
     } else {
-        printhead(0, 0, $link."\" onclick=\"new Ajax.Request('dispatch.php/messages/get_msg_body/".$prm['message_id']."/".($open == 'open'? '0' : '1')."/".$prm['count']."', {asynchronous:true, evalScripts:false});return false;", $open, $red, $icon, $titel, $zusatz, $prm['mkdate'], TRUE, "");
+        printhead(0, 0, $link.'" class="'.$ajax_classes, $open, $red, $icon, $titel, $zusatz, $prm['mkdate'], TRUE, "");
     }
     echo "</tr></table> ";
     // print message content

@@ -1,0 +1,1 @@
+<? print studip_utf8encode($this->msg); ?>

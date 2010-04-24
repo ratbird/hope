@@ -756,15 +756,22 @@ div.wikitoc ul {
 	vertical-align: middle;
 }
 .ajax_notification {
-  background: #fff url(../images/ajax_indicator_small.gif) center center no-repeat;
-  border-radius: 4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
+  position: relative;
+}
+.ajax_notification .notification {
+  background: rgba(255, 255, 255, 0.5) url(../images/ajax_indicator_small.gif) center center no-repeat;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  display: inline-block;
+  *display: inline;
   height: 16px;
-  margin: 0 2px;
-  opacity: 0.7;
+  margin: 0 3px;
+  opacity: 1;
   position: absolute;
   width: 16px;
+  zoom: 1;
 }
 
 /* --- Autocompleter -------------------------------------------------------- */

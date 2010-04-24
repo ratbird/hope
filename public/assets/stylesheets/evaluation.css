@@ -32,11 +32,6 @@
    font-size: 0.8em;
 }
 
-.topic {
-  font-size: 0.9em;
-  color: #EFFFFF;
-}
-
 .eval_highlight {
   background-image:url('../images/steelgraulight_hover.gif');
 }

@@ -68,7 +68,7 @@
     <div id="overdiv_container"></div>
 
     <div id="ajax_notification">
-      <?= Assets::img('ajax_indicator.gif') ?>&nbsp;Working...
+      <?= Assets::img('ajax_indicator.gif') ?> <?= _('Wird geladen') ?>&hellip;
     </div>
 
     <? include 'lib/include/header.php'; ?>

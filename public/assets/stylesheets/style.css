@@ -755,6 +755,16 @@ div.wikitoc ul {
 #ajax_notification img {
 	vertical-align: middle;
 }
+.ajax_notification {
+  background: #fff url(../images/ajax_indicator_small.gif) center center no-repeat;
+  border-radius: 4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  height: 16px;
+  opacity: 0.7;
+  position: absolute;
+  width: 16px;
+}
 
 /* --- Autocompleter -------------------------------------------------------- */
 div.autocomplete {

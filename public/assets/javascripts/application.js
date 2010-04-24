@@ -20,6 +20,38 @@
  * Boston, MA  02110-1301  USA
  */
 
+/* ------------------------------------------------------------------------
+ * jQuery plugin "elementAjaxNotifications"
+ * ------------------------------------------------------------------------ */
+
+;(function ($) {
+
+  $.fn.extend({
+    showAjaxNotification: function () {
+      return this.each(function () {
+        if ($(this).data('ajax_notification_element'))
+          return;
+        var notification = $('<div class="ajax_notification" />').hide().appendTo('body'),
+            offset = $(this).animate({paddingLeft: '+=20px'}, 'fast').offset();
+        notification.css(offset).fadeIn('fast');
+
+        $(this).data('ajax_notification_element', notification);
+      });
+    },
+    hideAjaxNotification: function () {
+      return this.each(function () {
+        var notification = $(this).data('ajax_notification_element');
+        if (!notification)
+          return;
+
+        $(this).stop().animate({paddingLeft: '-=20px'}, 'fast');
+        notification.stop().fadeOut('fast', function () { $(this).remove() });
+        $(this).data('ajax_notification_element', null);
+      });
+    }
+  });
+
+}(jQuery));
 
 /* ------------------------------------------------------------------------
  * jQuery plugin "defaultValueActsAsHint"

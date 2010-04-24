@@ -120,5 +120,5 @@ if ($my_messaging_settings['start_messenger_at_startup'] && $auth->auth['jscript
       <div id="overdiv_container"></div>
 
     <div id="ajax_notification">
-      <?= Assets::img('ajax_indicator.gif') ?>&nbsp;Working...
+      <?= Assets::img('ajax_indicator.gif') ?> <?= _('Wird geladen') ?>&hellip;
     </div>

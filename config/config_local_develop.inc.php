@@ -173,7 +173,7 @@ $ELEARNING_INTERFACE_MODULES["ilias38x"] = array(
     "auth_necessary" => true,
     "USER_PREFIX" => "studilias38x_",
     "target_file" => "studip_referrer.php",
-    "logo_file" => "assets/images/ilias_logo.png",
+    "logo_file" => "assets/images/logos/ilias_logo.png",
     "soap_data" => array(
         "username" => "soap_admin",
         "password" => "soapsucks",
@@ -210,7 +210,7 @@ array(
     "auth_necessary" => true,
     "USER_PREFIX" => "studip371_",
     "target_file" => "studip_referrer.php",
-    "logo_file" =>  "assets/images/ilias_logo.png",
+    "logo_file" =>  "assets/images/logos/ilias_logo.png",
     "soap_data" => array(
         "username" => "soap_admin",
         "password" => "hochgeheim",

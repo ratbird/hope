@@ -1,7 +1,7 @@
 <!-- Dynamische Links mit Icons -->
 <div id='header'>
     <!--<div id='barTopLogo'>
-        <img src="<?=$GLOBALS['ASSETS_URL']?>images/logoneu.jpg" alt="Logo Uni Göttingen">
+        <img src="<?=$GLOBALS['ASSETS_URL']?>images/logos/logoneu.jpg" alt="Logo Uni Göttingen">
     </div>
      -->
     <div id="barTopFont">
@@ -48,10 +48,10 @@
 <!-- Stud.IP Logo -->
 <div id="barTopStudip">
     <a href="http://www.studip.de/" title="Studip Homepage">
-        <img src="<?=$GLOBALS['ASSETS_URL']?>images/studipmirror.jpg" alt="Stud.IP Homepage">
+        <img src="<?=$GLOBALS['ASSETS_URL']?>images/logos/studipmirror.jpg" alt="Stud.IP Homepage">
     </a>
 </div>
-<div style="position: relative; margin-top: -34px; margin-right: 42px; float: right; z-index: 99;" align="right">
+<div style="position: relative; margin-top: -34px; margin-right: 42px; float: right; z-index: 2;" align="right">
   <img src="<?=$GLOBALS['ASSETS_URL']?>images/studipdot.gif" alt="Stud.IP Homepage">
 </div>
 <!-- Leiste unten -->

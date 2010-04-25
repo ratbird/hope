@@ -166,7 +166,7 @@ $ELEARNING_INTERFACE_MODULES = array(
         "auth_necessary" => true,
         "USER_PREFIX" => "studip_",
         "target_file" => "studip_referrer.php",
-        "logo_file" => "assets/images/ilias_logo.png",
+        "logo_file" => "assets/images/logos/ilias_logo.png",
         "soap_data" => array(
                         "username" => "<username>",     //this credentials are used to communicate with your Ilias 3 installation over SOAP
                         "password" => "<password>",
@@ -211,7 +211,7 @@ $ELEARNING_INTERFACE_MODULES["pmwiki-farm"] =   array(
                         "auth_necessary" => false,
 
                         "field_script" => "field.php",
-                        "logo_file" => $ASSETS_URL."/images/pmwiki-32.gif",
+                        "logo_file" => $ASSETS_URL."/images/logos/pmwiki-32.gif",
 
                         "soap_data" => array(
               "api-key" => "<api-key for wiki webservices>",

@@ -353,7 +353,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
 
         // Ausgabe der Kopfzeile
         $colspan = 1;
-        echo "\n<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\" align=\"center\">";
+        echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
         if ($show_admin) {
             $colspan++;
             echo "\n<tr><td class=\"topic\"> <img src=\"".$GLOBALS['ASSETS_URL']."images/meinetermine.gif\" border=\"0\" " . tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")) . " align='absmiddle'><b>  ";

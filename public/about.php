@@ -540,8 +540,7 @@ if (get_config('CALENDAR_ENABLE')) {
         $start_zeit = time();
         $show_admin = $perm->have_perm("autor") && $auth->auth["uid"] == $user_id;
         if (is_element_visible_for_user($user->id, $user_id, $visibilities['termine']))
-            if (show_personal_dates($user_id, $start_zeit, -1, FALSE, $show_admin, $about_data["dopen"]))
-                echo "<br>";
+            show_personal_dates($user_id, $start_zeit, -1, FALSE, $show_admin, $about_data["dopen"]);
     }
 }
 

@@ -76,7 +76,6 @@ h2.topic, h3.topic {
 	vertical-align: middle; /* for the topic-icons */
 }
 
-
 /* --- Links ---------------------------------------------------------------- */
 /* //TODO: überflüssige klassen entfernen... */
 a, a:link, a:visited {
@@ -660,12 +659,13 @@ dd {
     vertical-align: middle;
 }
 
-/* index.php anpassungen an den boxen zur vereinheitlichung */
+/* --- index.php anpassungen an den boxen zur vereinheitlichung ------------- */
 table.index_box {
     width: 70%;
     margin: auto;
     margin-bottom: 1em;
     border-collapse: collapse;
+	min-width: 750px;
 }
 
 td.index_box_cell {
@@ -1086,17 +1086,16 @@ div.messagebox_modal div {
 }
 
 div.messagebox .messagebox_buttons a {
-  background-color: transparent;
-  background-position: center center;
-  background-repeat: no-repeat;
-  display: inline-block;
-  height: 16px;
-  margin: 1px;
-  text-indent: -10000px;
-  width: 16px;
-
-  zoom: 1; /* IE specific */
-  *display: inline; /* IE star hack */
+    background-color: transparent;
+    background-position: center center;
+    background-repeat: no-repeat;
+    display: inline-block;
+    height: 16px;
+    margin: 1px;
+    text-indent: -10000px;
+    width: 16px;
+    zoom: 1; /* IE specific */
+    *display: inline; /* IE star hack */
 }
 div.messagebox .messagebox_buttons a.close {
   background-image: url("../images/icons/cross_inv.png");
@@ -1141,8 +1140,7 @@ form#quicksearch .autocomplete li {
     display: none;
 }
 
-/* --- Avatars of users, courses and institutes ------------------------------------ */
-
+/* --- Avatars of users, courses and institutes ----------------------------- */
 .avatar-small {
     vertical-align: middle;
     width: 20px;
@@ -1189,7 +1187,7 @@ form#quicksearch .autocomplete li {
     font-weight: bold;
 }
 
-/* --- Plugin Administration ---------------------------------------------------- */
+/* --- Plugin Administration ------------------------------------------------ */
 .plugin_image {
     text-align: center;
     width: 88px;
@@ -1208,7 +1206,7 @@ img.plugin_preview {
     width: 80px;
 }
 
-/* --- Veranstaltungsverwaltung ------------------------------------------------- */
+/* --- Veranstaltungsverwaltung --------------------------------------------- */
 .click_me div {
     float: left;
     margin: 0.5em;
@@ -1256,11 +1254,10 @@ img.plugin_preview {
     background-repeat: repeat-x;
 }
 
-/** textarea resizer **/
-
+/* --- textarea resizer ----------------------------------------------------- */
 .ui-resizable-handle.ui-resizable-s {
-  background: #eee url(../images/vendor/handle_background.png) no-repeat scroll center 4px;
-  bottom: 0;
-  cursor: ns-resize;
-  height: 12px;
+    background: #eee url(../images/vendor/handle_background.png) no-repeat scroll center 4px;
+    bottom: 0;
+    cursor: ns-resize;
+    height: 12px;
 }

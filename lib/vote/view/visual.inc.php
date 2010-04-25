@@ -74,7 +74,7 @@ function createBoxHeader ($title, $width, $extraTitle = "",
               $cssClass = "steel1")
 {
    $html =
-      "<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" align=\"center\" width=\"".$width."\">\n";
+      "<table class=\"index_box\" $width>\n";
 
    if ($title) {
 
@@ -125,8 +125,7 @@ function createBoxFooter () {
    $html =
       "  </td>\n".
       " </tr>\n".
-      "</table>\n".
-      "<br>\n";
+      "</table>\n";
 
    return $html;
 }

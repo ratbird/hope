@@ -109,27 +109,22 @@ function checkdata(){
 }
 // -->
 </SCRIPT>
-
-<table class="logintable" width="800" align="center" border="0" cellpadding="0" cellspacing="0">
-<tr>
-    <td class="topic">
-    <b>&nbsp;<?=_("Stud.IP - Registrierung")?></b>
-    </td>
-</tr>
-<tr><td class="blank" align="top">
-<div style="margin:20px;">
-<b><?=_("Herzlich Willkommen!")?></b>
-<br>
-<?=_("Bitte f&uuml;llen Sie zur Anmeldung das Formular aus:")?>
-<?if ( isset($username) ): ?>
-    <!-- failed login code -->
-    <table>
-        <tr>
-            <? parse_msg ("error§" . _("Bei der Registrierung ist ein Fehler aufgetreten:") . " <b>".$error_msg."</b>" . _("Bitte korrigieren Sie Ihre Eingaben und versuchen Sie es erneut") . "</b>", "§", "blank", 1, FALSE );?>
-        </tr>
-    </table>
+<div style="width: 750px; margin: auto;">
+<?if (isset($username)): ?>
+    <?= MessageBox::error(_("Bei der Registrierung ist ein Fehler aufgetreten!"), array($error_msg, _("Bitte korrigieren Sie Ihre Eingaben und versuchen Sie es erneut"))) ?>
 <?endif;?>
-<br><br>
+</div>
+<table class="logintable" width="750" align="center" border="0" cellpadding="0" cellspacing="0">
+<tr>
+    <td class="topic"> <b><?=_("Stud.IP - Registrierung")?></b> </td>
+</tr>
+<tr>
+    <td class="blank">
+    <blockquote>
+    <b><?=_("Herzlich Willkommen!")?></b>
+    <br>
+    <?=_("Bitte f&uuml;llen Sie zur Anmeldung das Formular aus:")?>
+    <br><br>
 <form name=login action="<?=$_SERVER['REQUEST_URI']?>" onsubmit="return checkdata()">
 <table border=0 bgcolor="#eeeeee" align="center" cellspacing=2 cellpadding=4>
  <tr valign=top align=left>
@@ -232,7 +227,10 @@ function checkdata(){
 <input type="hidden" name="response2"  value="">
 </form>
 
-</td></tr></table>
+        </blockquote>
+        </td>
+    </tr>
+</table>
 
 <script language="JavaScript">
 <!--

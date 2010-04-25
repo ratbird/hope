@@ -131,6 +131,7 @@ div#barTopMenu {
 	top: 48px;
 	left: 0px;
 	text-align: right;
+	z-index: 1;
 }
 
 div#barTopMenu ul {
@@ -167,10 +168,7 @@ div#barTopMenu img {
 
 /*****************************************************************************/
 /* DIFFERENT LOOK FOR PUBLIC COURSES                                         */
-
 /*****************************************************************************/
-
-
 body.public_course div#barBottommiddle {
 	background-color: #c53d3d;
 }

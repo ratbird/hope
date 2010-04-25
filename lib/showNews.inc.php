@@ -118,7 +118,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
 
     if (!count($news)) {
         if ($show_admin) {
-            echo"\n<table  border=\"0\" cellspacing=\"0\" cellpadding=\"2\" align=\"center\" width=\"$width\" >";
+            echo"\n<table class=\"index_box\" style=\"width: $width;\">";
             echo"\n<tr><td class=\"topic\" colspan=\"2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/news2.gif\" border=\"0\"". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "align=\"texttop\"><b> " . _("News") . "</b></td>";
             echo"\n<td align = \"right\" class=\"topic\">";
             echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\"" . tooltip(_("News einstellen")) . "></a> ";
@@ -133,7 +133,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
         $colspan=2;
 
         //Ausgabe der Kopfzeile vor erster auszugebener News
-        echo"\n<table  border=\"0\" cellspacing=\"0\" cellpadding=\"2\" align=\"center\" width=\"$width\" >";
+        echo"\n<table class=\"index_box\" style=\"width: $width;\">";
         echo"\n<tr><td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/news2.gif\" border=\"0\"". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b>" . _("News") . "</b></td>";
         if ($rss_id) {
             $colspan++;
@@ -239,7 +239,7 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link) {
 
   if ($tempnew && $_REQUEST["new_news"])
     $news_item["open"] = $tempnew;
-  
+
   ob_start();
 
   $tmp_titel=htmlReady(mila($news_item['topic']));
@@ -298,7 +298,7 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link) {
     printhead(0, 0, $link, "close", $tempnew, $icon, $titel, $zusatz, $news_item['date']);
 
   echo "</tr></table>   ";
-  
+
   echo "<div id=\"news_item_".$id."_content\"".($news_item['open'] ? "" : " style=\"display:none\"").">";
   if ($news_item['open']) {
     show_news_item_content($news_item, $cmd_data, $show_admin);
@@ -415,7 +415,7 @@ function show_news_item_content($news_item, $cmd_data, $show_admin) {
             $content .= $cmdline;
         }
     }
-    
+
     echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\"><tr>";
     printcontent(0,0, $content, $edit);
     echo "</tr></table>";

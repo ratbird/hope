@@ -626,11 +626,11 @@ function form($refresh = FALSE) {
     $sem_status = $GLOBALS['perm']->get_studip_perm($SessSemName[1]);
 
     //erlaubte Dateigroesse aus Regelliste der Config.inc.php auslesen
-    if ($UPLOAD_TYPES[$SessSemName["art_num"]]) { 
-        $max_filesize=$UPLOAD_TYPES[$SessSemName["art_num"]]["file_sizes"][$sem_status]; 
-    }   else { 
-        $max_filesize=$UPLOAD_TYPES["default"]["file_sizes"][$sem_status]; 
-    } 
+    if ($UPLOAD_TYPES[$SessSemName["art_num"]]) {
+        $max_filesize=$UPLOAD_TYPES[$SessSemName["art_num"]]["file_sizes"][$sem_status];
+    }   else {
+        $max_filesize=$UPLOAD_TYPES["default"]["file_sizes"][$sem_status];
+    }
     $c=1;
 
     if ($folder_system_data['zipupload'])
@@ -767,23 +767,23 @@ function getFileExtension($str) {
 function validate_upload($the_file) {
     global $UPLOAD_TYPES,$the_file_size, $msg, $the_file_name, $SessSemName, $user, $auth, $i_page;
 
-    if ($i_page == "sms_send.php") { 
-        if (!$GLOBALS["ENABLE_EMAIL_ATTACHMENTS"] == true) 
-                $emsg.= "error§" . _("Dateianhänge für Nachrichten sind in dieser Installation nicht erlaubt!") . "§"; 
-        $active_upload_type = "attachments"; 
-        $sem_status = $GLOBALS['perm']->get_perm(); 
-    } else { 
-        $sem_status = $GLOBALS['perm']->get_studip_perm($SessSemName[1]); 
-        $active_upload_type = $SessSemName["art_num"]; 
-    } 
+    if ($i_page == "sms_send.php") {
+        if (!$GLOBALS["ENABLE_EMAIL_ATTACHMENTS"] == true)
+                $emsg.= "error§" . _("Dateianhänge für Nachrichten sind in dieser Installation nicht erlaubt!") . "§";
+        $active_upload_type = "attachments";
+        $sem_status = $GLOBALS['perm']->get_perm();
+    } else {
+        $sem_status = $GLOBALS['perm']->get_studip_perm($SessSemName[1]);
+        $active_upload_type = $SessSemName["art_num"];
+    }
 
     //erlaubte Dateigroesse aus Regelliste der Config.inc.php auslesen
-    if ($UPLOAD_TYPES[$active_upload_type]) { 
-        $max_filesize=$UPLOAD_TYPES[$active_upload_type]["file_sizes"][$sem_status]; 
-    } else { 
-        $max_filesize=$UPLOAD_TYPES["default"]["file_sizes"][$sem_status]; 
-    } 
-    
+    if ($UPLOAD_TYPES[$active_upload_type]) {
+        $max_filesize=$UPLOAD_TYPES[$active_upload_type]["file_sizes"][$sem_status];
+    } else {
+        $max_filesize=$UPLOAD_TYPES["default"]["file_sizes"][$sem_status];
+    }
+
     $error = FALSE;
     if ($the_file == "none") { # haben wir eine Datei?
         $emsg.= "error§" . _("Sie haben keine Datei zum Hochladen ausgew&auml;hlt!") . "§";
@@ -1255,7 +1255,7 @@ function link_form ($range_id, $updating=FALSE) {
         $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dieses Dokument ist frei von Rechten Dritter:") . "&nbsp;";
         $print.= "\n&nbsp;<input type=\"RADIO\" name=\"protect\" value=\"0\"".(!$protect ? "checked" :"") .">"._("Ja");
         $print.= "\n&nbsp;<input type=\"RADIO\" name=\"protect\" value=\"1\"".($protect ? "checked" :"") .">"._("Nein");
-        
+
         $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("3. Geben Sie eine kurze Beschreibung und einen Namen für die Datei ein.") . "</font></td></tr>";
         $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
         $print.= "\n".'&nbsp;<input type="TEXT" name="name" style="width: 70%" size="40" maxlength"255" value="'.$name.'"></td></tr>';
@@ -1285,16 +1285,16 @@ function link_form ($range_id, $updating=FALSE) {
 
 /**
  * Displays the body of a file containing the decription, downloadbuttons and change-forms
- * 
+ *
  */
 function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $all, $refresh=FALSE, $filelink="") {
     global $rechte, $user, $SessionSeminar;
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
-    
+
     $type = $datei['url'] != '' ? 6 : 0;
-    
-    $content='';    
-                        
+
+    $content='';
+
     if ($change == $datei["dokument_id"]) {     //Aenderungsmodus, Formular aufbauen
         if ($datei["protected"]==1)
             $protect = "checked";
@@ -1320,27 +1320,27 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
             $beschreibung .= _("Keine Beschreibung vorhanden");
         }
         if (in_array (strtolower(getFileExtension($datei['filename'])), words("jpg jpeg gif png"))) {
-            $content = sprintf("<img src=\"%s\" alt=\"%s\" title=\"\" border=\"0\" style=\"max-width: 800px; max-height: 500px;\"><br>", GetDownloadLink ($datei['dokument_id'], $datei['filename'], $type), $beschreibung);
+            $content = sprintf("<img src=\"%s\" alt=\"%s\" title=\"\" border=\"0\" style=\"max-width: 750px; max-height: 500px;\"><br>", GetDownloadLink ($datei['dokument_id'], $datei['filename'], $type), $beschreibung);
         }
         $content .= $beschreibung;
         $content .=  "<br><br>" . sprintf(_("<b>Dateigr&ouml;&szlig;e:</b> %s kB"), round ($datei["filesize"] / 1024));
         $content .=  "&nbsp; " . sprintf(_("<b>Dateiname:</b> %s "),htmlReady($datei['filename']));
     }
-    
+
     if ($move == $datei["dokument_id"])
         $content.="<br>" . sprintf(_("Diese Datei wurde zum Verschieben / Kopieren markiert. Bitte w&auml;hlen Sie das Einf&uuml;gen-Symbol %s, um diese Datei in den gew&uuml;nschten Ordner zu verschieben / kopieren. Wenn Sie diese Datei in eine andere Veranstaltung verschieben / kopieren möchten, wählen Sie die gewünschte Veranstaltung oben auf der Seite aus (sofern Sie Dozent oder Tutor in einer anderen Veranstaltung sind)."), "<img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=0 " . tooltip(_("Klicken Sie dieses Symbol, um diese Datei in einen anderen Ordner einzufügen")) . ">");
-    
+
     $content.= "\n";
-    
-    if ($upload == $datei["dokument_id"]) 
+
+    if ($upload == $datei["dokument_id"])
         $content.=upload_item ($upload,FALSE,FALSE,$refresh);
-    
+
     //Editbereich ertstellen
     $edit='';
     if (($change != $datei["dokument_id"]) && ($upload != $datei["dokument_id"]) && $filelink != $datei["dokument_id"]) {
         if (check_protected_download($datei['dokument_id'])) {
             $edit= '&nbsp;<a href="' . GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'force') .'">' . makeButton('herunterladen', 'img') . '</a>';
-        
+
             $fext = getFileExtension(strtolower($datei['filename']));
             if (($type != '6') && ($fext != 'zip') && ($fext != 'tgz') && ($fext != 'gz') && ($fext != 'bz2')) {
                 $edit.= '&nbsp;<a href="'. GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'zip') . '">' . makeButton('alsziparchiv', 'img') . '</a>';
@@ -1351,7 +1351,7 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
               $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_c_#anker")."\">" . makeButton("bearbeiten", "img") . "</a>";
               $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_rfu_#anker")."\">" . makeButton("aktualisieren", "img") . "</a>";
             } else {
-                //wenn Datei ein Link ist: 
+                //wenn Datei ein Link ist:
                 $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_led_#anker")."\">" . makeButton("bearbeiten", "img") . "</a>";
             }
             if (!$all){
@@ -1361,9 +1361,9 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
             $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_fd_")."\">" . makeButton("loeschen", "img") . "</a>";
         }
     }
-                                
+
     //Dokument_Body ausgeben; dies ist auch der Bereich, der über Ajax abgerufen werden wird
-    print "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0>"; 
+    print "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0>";
     if ($datei["protected"]) {
         $content .= "<br><br><hr><table><tr><td><img src=\"".$GLOBALS['ASSETS_URL']."images/ausruf.gif\" valign=\"baseline\"></td><td><font size=\"2\"><b>"
                             ._("Diese Datei ist urheberrechtlich geschützt.");
@@ -1375,7 +1375,7 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
                             }
                             $content .= "</td></tr></table>";
     }
-    if ($filelink == $datei["dokument_id"]) 
+    if ($filelink == $datei["dokument_id"])
         $content .= link_item($datei["dokument_id"],FALSE,FALSE,$datei["dokument_id"]);
     printcontent ("100%",TRUE, $content, $edit);
     print "</table>";
@@ -1384,8 +1384,8 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
 //$countfiles is important, so that each file_line has its own unique id and can be found by javascript.
 $countfiles = 0;
 /**
- * Displays one file/document with all of its information and options. 
- * 
+ * Displays one file/document with all of its information and options.
+ *
  */
 function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, $all, $refresh=FALSE, $filelink="", $anchor_id, $position = "middle") {
     global $_fullname_sql,$SessionSeminar,$SessSemName, $rechte, $anfang,
@@ -1399,7 +1399,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     if (!$all) {
         print "<td width=5px nowrap=\"nowrap\" valign=\"baseline\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/datatree_2.gif\"></td>";
     }
-    
+
     //Farbe des Pfeils bestimmen:
     $chdate = (($datei["chdate"]) ? $datei["chdate"] : $datei["mkdate"]);
     if (object_get_visit($SessSemName[1], "documents") < $chdate)
@@ -1414,7 +1414,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     }
 
     if ($open[$datei["dokument_id"]]) {
-        print "<td id=\"file_".$datei["dokument_id"]."_arrow_td\" nowrap valign=\"top\"" . 
+        print "<td id=\"file_".$datei["dokument_id"]."_arrow_td\" nowrap valign=\"top\"" .
             "align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead3\" valign=\"baseline\">&nbsp<a href=\"";
         print URLHelper::getLink("?close=".$datei["dokument_id"]."#anker");
         print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefilebody('".
@@ -1429,7 +1429,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
             $datei["dokument_id"]."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL'].
             "images/forumgrau2.gif\"".tooltip(_("Objekt aufklappen"))." border=0></a></td>";
     }
-    
+
     // -> Pfeile zum Verschieben (bzw. die Ziehfläche)
     if ((!$all) && ($rechte)) {
         $countfiles++;
@@ -1447,7 +1447,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         $bewegeflaeche_anfasser = "<span class=\"anfasser\" style=\"display:none\"><a href=\"#\" class=\"drag\" onclick=\"return false\" " .
                 "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" border=0 title=\"Datei verschieben\"></a></span>";
     }
-    
+
     print "<td class=\"printhead\" valign=\"baseline\">";
     if ($change == $datei["dokument_id"]) {
         print "<span id=\"file_".$datei["dokument_id"]."_header\" style=\"font-weight: bold\"><a href=\"".URLHelper::getLink("?close=".$datei["dokument_id"]."#anker")."\" class=\"tree\"";
@@ -1455,7 +1455,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         print $bewegeflaeche_anfasser;
         print "<img src=\"".$GLOBALS['ASSETS_URL']."images/".GetFileIcon(getFileExtension($datei['filename']))."\">";
         print "<input style=\"{font-size:8 pt; width: 50%;}\" type=\"text\" size=20 maxlength=255 name=\"change_name\" value=\"".htmlReady($datei["name"])."\"></b>";
-    } else {    
+    } else {
         print $bewegeflaeche_anfasser;
         if (($move == $datei["dokument_id"]) ||  ($upload == $datei["dokument_id"]) || ($anchor_id == $datei["dokument_id"])) {
             print "<a name=\"anker\"></a>";
@@ -1476,29 +1476,29 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
             print "&nbsp;<span id=\"file_".$datei["dokument_id"]."_header\" style=\"font-weight: normal\">";
         }
         print htmlReady($datei['t_name']);
-        
+
         print "</span>";
     }
-    
+
     //add the size
     if (($datei["filesize"] /1024 / 1024) >= 1)
         print "&nbsp;&nbsp;(".round ($datei["filesize"] / 1024 / 1024)." MB";
     else
         print "&nbsp;&nbsp;(".round ($datei["filesize"] / 1024)." kB";
-                        
+
     //add number of downloads
     print " / ".(($datei["downloads"] == 1) ? $datei["downloads"]." "._("Download") : $datei["downloads"]." "._("Downloads")).")";
-  
-    
+
+
     //So und jetzt die rechtsbündigen Sachen:
     print "</a></td><td align=\"right\" class=\"printhead\" valign=\"baseline\">";
     print "<a href=\"".URLHelper::getLink('about.php?username='.$datei['username'])."\">".htmlReady($datei['fullname'])."</a> ";
-    
+
     print $bewegeflaeche." ";
-    
+
     //Workaround for older data from previous versions (chdate is 0)
     print " ".date("d.m.Y - H:i", (($datei["chdate"]) ? $datei["chdate"] : $datei["mkdate"]));
-    
+
     if ($all) {
       if ((!$upload) && ($datei["url"]=="") && check_protected_download($datei["dokument_id"])) {
         $box = sprintf ("<input type=\"CHECKBOX\" %s name=\"download_ids[]\" value=\"%s\">",($check_all) ? "checked" : "" , $datei["dokument_id"]);
@@ -1508,23 +1508,23 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     }
     }
     print "</td></tr>";
-    
+
     //Ab jetzt kommt der Bereich zum Runterladen und Bearbeiten:
     if (isset($open[$datei["dokument_id"]])) {
         //Dokument-Content ausgeben
         print "<tr id=\"file_".$datei["dokument_id"]."_body_row\">".(($all) ? "" : "<td></td>")."<td colspan=3><div id=\"file_".$datei["dokument_id"]."_body\">";
-        //Der eigentliche Teil ist outsourced in die folgende Funktion, 
+        //Der eigentliche Teil ist outsourced in die folgende Funktion,
         //damit der Körper auch über Ajax abgerufen werden kann.
-        display_file_body($datei, $folder_id, $open, $change, $move, $upload, $all, $refresh, $filelink);                   
+        display_file_body($datei, $folder_id, $open, $change, $move, $upload, $all, $refresh, $filelink);
     } else {
         print "<tr id=\"file_".$datei["dokument_id"]."_body_row\">".(($all) ? "" : "<td></td>")."<td colspan=3><div id=\"file_".$datei["dokument_id"]."_body\" style=\"display:none\">";
     }
-    print "</div></td></tr></table>\n\t</div>"; 
+    print "</div></td></tr></table>\n\t</div>";
 }
 
 /**
  * Displays the body of a folder including the description, changeform, subfolder and files
- * 
+ *
  */
 function display_folder_body($folder_id, $open, $change, $move, $upload, $refresh=FALSE, $filelink="", $anchor_id) {
     global $_fullname_sql, $SessionSeminar, $SemUserStatus, $SessSemName, $rechte, $countfolder;
@@ -1541,17 +1541,17 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
         $dates_for_issue = IssueDB::getDatesforIssue($result['range_id']);
     }
     print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\">";
-        
+
     //Ausgabe der Optionen zu dem Ordner mit Beschreibung, Knöpfen und PiPaPo
     print "<tr>";
-    
+
     if ((($document_count > 0) || ($folder_tree->hasKids($folder_id))) && ($folder_tree->isReadable($folder_id)))
         print "<td style=\"background-image: url(".$GLOBALS['ASSETS_URL']."/images/datatree_grau.gif); background-repeat: repeat-y;\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/datatree_grau.gif\"></td>";
     else
         print "<td class=\"printcontent\">&nbsp;</td>";
     print "<td width=100% class=\"printcontent\" style=\"font-align: center\">";
-    
-    $content='';        
+
+    $content='';
     if ($super_folder){
         $content .=  '<img  src="'.$GLOBALS['ASSETS_URL'].'images/lock.gif">&nbsp;'
             . sprintf(_("Dieser Ordner ist nicht zugänglich, da der übergeordnete Ordner \"%s\" nicht lesbar oder nicht sichtbar ist!"), htmlReady($folder_tree->getValue($super_folder,'name')))
@@ -1670,31 +1670,31 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
             $edit .= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_az_#anker")."\"".tooltip("Dateien alphabetisch sortieren").">" . makeButton("sortieren", "img") . "</a>";
         }
     }
-        
+
     if (!$edit) $edit = '&nbsp;';
     print "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0><tr>";
     //Ordner-Content ausgeben
     printcontent ("99%", TRUE, $content, $edit);
     print "</tr></table>";
-    
+
     print "</td></tr>";
-    
+
     //Ein paar Überprüfungen, was eigentlich angezeigt werden soll: Dateien und Unterordner
     $folders_kids = $folder_tree->getKids($folder_id);
     $folders_kids = $db->query("SELECT folder_id " .
             "FROM folder " .
             "WHERE range_id = ".$db->quote($folder_id)." " .
                     "ORDER BY priority ASC, name ASC")->fetchAll();
-    
+
     $hasrealkids = $folder_tree->hasKids($folder_id);
-    if ( ((count($folders_kids)) || ($document_count > 0)) 
+    if ( ((count($folders_kids)) || ($document_count > 0))
             && (($rechte) || ($folder_tree->isExecutable($folder_id, $user->id))) ) {
         print "<tr>";
         //Der Navigationsast nach unten
         print "<td width=5px valign=bottom style=\"background-image: url(".$GLOBALS['ASSETS_URL']."/images/datatree_1.gif); background-repeat: repeat-y;\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/datatree_3.gif\"></td>";
         //Mehrere Zeilen, die wiederum Dateien mit eventuellen Optionen sind.
         print "<td colspan=3>";
-        
+
         print "<div class=\"folder_container\" id=\"folder_subfolders_".$folder_id."\">";
         //Unterordner darstellen:
         is_array($folders_kids) || $folders_kids = array();
@@ -1711,7 +1711,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
             }
         }
         print "</div>";
-        
+
         //Dateien darstellen:
         $countfolder++;
         print "<div class=\"folder_container\" id=\"folder_".$folder_id."\">";
@@ -1729,12 +1729,12 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
             $result2 = $db->query($query)->fetchAll();
             foreach ($result2 as $key => $datei) {
                 $file_pos = ((count($result2) > 1) ? (($key == 0) ? "top" : (($key == count($result2)-1) ? "bottom" : "middle")) : "alone");
-                display_file_line($datei, $folder_id, $open, $change, $move, $upload, FALSE, $refresh, $filelink, $anchor_id, $file_pos);   
+                display_file_line($datei, $folder_id, $open, $change, $move, $upload, FALSE, $refresh, $filelink, $anchor_id, $file_pos);
             }
         }
         print "</div>";
         print "</td></tr>";
-        
+
     }
     print "</table>";   //Ende der zweiten Tabelle
 }
@@ -1744,7 +1744,7 @@ $droppable_folder = 0;
 /**
  * Displays the folder and all of its documents and recursively subfolders.
  * This function is not dependent on the recursive-level so it looks as if it all starts from here.
- * 
+ *
  */
 function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FALSE, $filelink="", $anchor_id, $position="middle", $isissuefolder = false) {
     global $_fullname_sql,$SessionSeminar,$SessSemName, $rechte, $anfang,
@@ -1757,24 +1757,24 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     $javascriptok = true;
     //Einbinden einer Klasse, die Informationen über den ganzen Baum enthält
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
-    
+
     //Hole alle Informationen, die es über $folder_id gibt
     $query = "SELECT ". $_fullname_sql['full'] ." AS fullname , username, folder_id, a.range_id, a.user_id, name, a.description, a.mkdate, a.chdate FROM folder a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.folder_id = '$folder_id' ORDER BY a.name, a.chdate";
     $result = $db->query($query)->fetch();
-    
+
     $depth = $folder_tree->getItemPath($folder_id);
     $depth = count(explode(" / ", $depth));
     print "<div id=\"folder_".(($depth > 3) ? $result['range_id'] : "root")."_".$countfolder."\">";
     print "<div style=\"display:none\" id=\"getmd5_fo".$result['range_id']."_".$countfolder."\">".$folder_id."</div>";
     print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\"><tr>";
-    
-    //Abzweigung, wenn Ordner ein Unterordner ist   
+
+    //Abzweigung, wenn Ordner ein Unterordner ist
     if ($depth > 3) //Warum gerade 3, soll jeder selbst rausfinden
         print "<td width=5px nowrap=\"nowrap\" valign=\"baseline\"><img src=\"".$GLOBALS['ASSETS_URL']."images/datatree_2.gif\"></td>";
     else
         print "<td></td>";
     print "<td valign=\"baseline\">";
-    
+
     //Farbe des Pfeils bestimmen:
     $chdate = (($result["chdate"]) ? $result["chdate"] : $result["mkdate"]);
     if (object_get_visit($SessSemName[1], "documents") < $chdate)
@@ -1792,12 +1792,12 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         $timecolor= "#" . $red . $other . $other;
     }
 
-    //Jetzt fängt eine zweite Tabelle an mit den Zeilen: Titel, Beschreibung und Knöpfe, Unterdateien und Unterordner 
+    //Jetzt fängt eine zweite Tabelle an mit den Zeilen: Titel, Beschreibung und Knöpfe, Unterdateien und Unterordner
     if ($rechte) {
         print "<div class=\"droppable\" id=\"dropfolder_$folder_id\">";
     }
     print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\" id=\"droppable_folder_$droppable_folder\"><tr>";
-    
+
     // -> Pfeile zum Verschieben (bzw. die Ziehfläche)
     if (($rechte) && ($depth > 3)) {
         $bewegeflaeche = "<span class=\"updown_marker\" id=\"pfeile_".$folder_id."\">";
@@ -1814,7 +1814,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         $bewegeflaeche_anfasser = "<span class=\"anfasser\" style=\"display:none\"><a href=\"#\" class=\"drag\" onclick=\"return false\" " .
                 "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" border=0 title=\"Ordner verschieben\"></a></span>";
     }
-    
+
     //Jetzt folgt der Link zum Aufklappen
     if ($open[$folder_id]) {
         //print "<td width=1px class=\"printhead\">&nbsp;</td>";
@@ -1822,7 +1822,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         print "&nbsp;<a href=\"".URLHelper::getLink("?close=".$folder_id."#anker");
         print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><img id=\"folder_".$folder_id."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL']."images/forumgraurunt2.gif\"".tooltip(_("Objekt zuklappen"))." border=0></a>";
         print "</td>";
-        //print ($javascriptok ? "<td class=\"printhead\"><a href=\"Javascript: changefolderbody('".$folder_id."')\" class=\"tree\"><span id=\"folder_".$folder_id."_header\" style=\"font-weight: bold\">" : 
+        //print ($javascriptok ? "<td class=\"printhead\"><a href=\"Javascript: changefolderbody('".$folder_id."')\" class=\"tree\"><span id=\"folder_".$folder_id."_header\" style=\"font-weight: bold\">" :
         print "<td class=\"printhead\" valign=\"baseline\">";
         if ($move && ($move != $folder_id) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
                 print "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=0></a>";
@@ -1847,57 +1847,57 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
                 "onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><span id=\"folder_".$folder_id."_header\" " .
                 "style=\"font-weight: normal\">";
     }
-        
+
     $document_count = doc_count($folder_id);
-    
+
     if ($document_count > 0)
         print "<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder.gif\" border=0>";
     else
         print "<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder2.gif\" border=0>";
-    
+
     // Schloss, wenn Folder gelockt
-    if ($folder_tree->isLockedFolder($folder_id)) 
+    if ($folder_tree->isLockedFolder($folder_id))
         print "<img ".tooltip(_("Dieser Ordner ist gesperrt."))." src=\"".$GLOBALS['ASSETS_URL']."images/closelock.gif\">";
     //Wenn verdeckt durch gesperrten übergeordneten Ordner
-    else if ( ($super_folder = $folder_tree->getNextSuperFolder($folder_id)) ) 
+    else if ( ($super_folder = $folder_tree->getNextSuperFolder($folder_id)) )
         print "<img ".tooltip(_("Dieser Ordner ist nicht zugänglich, da ein übergeordneter Ordner gesperrt ist."))." src=\"".$GLOBALS['ASSETS_URL']."images/lock.gif\">";
     // Wenn es ein Hausaufgabenordner ist
-    if ($folder_tree->isExerciseFolder($folder_id)) 
+    if ($folder_tree->isExerciseFolder($folder_id))
         print "<img ".tooltip(_("Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden."))." src=\"".$GLOBALS['ASSETS_URL']."images/eigene2.gif\" WIDTH=\"18\" HEIGTH=\"18\">";
     //Pfeile, wenn Datei bewegt werden soll
     if ($move && ($folder_id != $move) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
         print "</a><span class=\"move_arrows\"><a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=0></a></span>";
         if ($open[$folder_id])
             print "<a href=\"".URLHelper::getLink("?close=".$folder_id."#anker")."\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\">";
-        else    
+        else
             print "<a href=\"".URLHelper::getLink("?open=".$folder_id."#anker")."\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\">";
     }
-    
+
     //Dateiname, Rechte und Dokumente anzeigen
     $tmp_titel = htmlReady(mila($result['name']));
     if ($isissuefolder) {
-        $issue_id = $db->query("SELECT range_id FROM folder WHERE folder_id = ".$db->quote($folder_id))->fetch(); 
+        $issue_id = $db->query("SELECT range_id FROM folder WHERE folder_id = ".$db->quote($folder_id))->fetch();
         $dates_for_issue = IssueDB::getDatesforIssue($issue_id['range_id']);
     $dates_title = array();
     foreach ($dates_for_issue as $date) {
       $dates_title[] .= date('d.m.y, H:i', $date['date']).' - '.date('H:i', $date['end_time']);
     }
-        $tmp_titel = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title)) . 
+        $tmp_titel = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title)) .
              ", " . ($tmp_titel ? $tmp_titel : _("ohne Titel"));
     }
-    if (($change == $folder_id) 
-            && ((count($folder_tree->getParents($folder_id)) > 1) 
-             || $result['range_id'] == md5($SessSemName[1] . 'top_folder') 
+    if (($change == $folder_id)
+            && ((count($folder_tree->getParents($folder_id)) > 1)
+             || $result['range_id'] == md5($SessSemName[1] . 'top_folder')
              || $folder_tree->isGroupFolder($result['folder_id'])
-             ) 
+             )
             ) { //Aenderungsmodus, Anker + Formular machen, Font tag direkt ausgeben (muss ausserhalb einer td stehen!
         $titel= "</a><input style=\"font-size:8 pt; width: 400px;\" type=\"text\" size=20 maxlength=255 name=\"change_name\" value=\"".htmlReady($result['name'])."\" >";
-        if ($rechte && $folder_tree->permissions_activated) 
+        if ($rechte && $folder_tree->permissions_activated)
             $titel .= '&nbsp;<font color="red">['.$folder_tree->getPermissionString($result["folder_id"]).']</font>';
     }   else {
         //create a link onto the titel, too
-        if ($rechte && $folder_tree->permissions_activated ) { 
-            $tmp_titel .= '&nbsp;'; 
+        if ($rechte && $folder_tree->permissions_activated ) {
+            $tmp_titel .= '&nbsp;';
             $tmp_titel .= '<font color="red">['.$folder_tree->getPermissionString($result["folder_id"]).']</font>';
         }
         if ($document_count > 1)
@@ -1908,7 +1908,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
             $titel= $tmp_titel;
     }
     print $titel;
-    
+
     $is_issue_folder = ((count($folder_tree->getParents($folder_id)) > 1) && IssueDB::isIssue($result["range_id"]));
     if ($is_issue_folder) {
         $dates_for_issue = IssueDB::getDatesforIssue($result['range_id']);
@@ -1919,7 +1919,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
             $dates_title[] .= date('d.m.y, H:i', $date['date']).' - '.date('H:i', $date['end_time']);
         }
         if (sizeof($dates_title) > 0) {
-            $title_name = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title));        
+            $title_name = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title));
             if (!$result['name']) {
                 $title_name .= _(", ohne Titel");
             } else {
@@ -1927,23 +1927,23 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
             }
         }
     }
-    
+
     print "</a></td>";
-    
+
     //So und jetzt die rechtsbündigen Sachen:
     print "</td><td align=right class=\"printhead\" valign=\"baseline\">";
-    
+
     print "<a href=\"".URLHelper::getLink('about.php?username='.$result['username'])."\">".htmlReady($result['fullname'])."</a> ";
-    
+
     print $bewegeflaeche." ";
-    
+
     //Workaround for older data from previous versions (chdate is 0)
     print date("d.m.Y - H:i", (($result["chdate"]) ? $result["chdate"] : $result["mkdate"]));
-    
+
     print "</td></tr></table>"; //Ende des Titels, Beschreibung und Knöpfen
     if ($rechte)
         print "</div>";  //End des Droppable-Divs
-    
+
     if ($open[$folder_id]) {
         print "<div id=\"folder_".$folder_id."_body\">";
         //Der ganze Teil des Unterbaus wurde in die folgende Funktion outsourced:
@@ -2510,7 +2510,7 @@ function get_upload_file_path ($document_id)
 }
 
 /**
- * 
+ *
  * checks if the 'protected' flag of a file is set and if
  * the course access is closed
  *
@@ -2530,11 +2530,11 @@ function check_protected_download($document_id)
                 if( $seminar->read_level > 1 ||
                     $seminar->admission_type == 3
                     || ($seminar->admission_endtime_sem > 0 && $seminar->admission_endtime_sem < time())){
-                    $ok = true; 
+                    $ok = true;
                 }
             }
         }
     }
-    return $ok; 
-} 
+    return $ok;
+}
 ?>

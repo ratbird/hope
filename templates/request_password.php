@@ -1,5 +1,11 @@
-<? # Lifter005: TODO - focus on e-mail field ?>
-<table class="logintable" width="800" align="center" border="0" cellpadding="0" cellspacing="0">
+<?if (sizeof($messages)):?>
+<div style="width: 750px; margin: auto;">
+<table width="100%">
+    <?=parse_msg_array($messages, '', 1, false)?>
+</table>
+</div>
+<?endif;?>
+<table class="logintable" width="750" align="center" border="0" cellpadding="0" cellspacing="0">
 <tr>
     <td class="topic">
     <img src="<?=$GLOBALS['ASSETS_URL']?>images/login.gif" border="0">
@@ -10,15 +16,10 @@
     <td>
     <div style="margin-left:40px;margin-top:15px;">
         <div style="width: 400px; margin-bottom: 1em;">
-            <?if (sizeof($messages)):?>
-            <table>
-                <?=parse_msg_array($messages, '', 1, false)?>
-            </table>
-            <?endif;?>
             <?if ($step == 2 || $step == 4):?>
             <br><br><?=$link_startpage?>
             <?endif;?>
-            <?if ($step == 1):?>
+        <?if ($step == 1):?>
             <?if (!sizeof($messages)):?>
             <?=_("Bitte geben Sie Ihre E-Mail-Adresse an, die Sie in Stud.IP benutzen. An diese Adresse wird ihnen eine E-Mail geschickt, die einen Bestätigungslink enthält, mit dem Sie ein neues Passwort anfordern können.<br>Bitte beachten Sie die Hinweise in dieser E-Mail.")?>
             <br><br>
@@ -49,7 +50,7 @@
         <?endif;?>
     </div>
     </td>
-    </tr>
+</tr>
 </table>
 <?if ($step == 1):?>
 <script type="text/javascript" language="javascript">

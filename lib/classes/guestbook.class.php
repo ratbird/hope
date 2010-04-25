@@ -93,7 +93,7 @@ class Guestbook {
         if ($this->anchor == TRUE)
             echo "<a name=\"guest\">";
 
-        echo "\n<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\" align=\"center\">";
+        echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
         echo "\n<tr valign=\"baseline\"><td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/guestbook.gif\" border=\"0\" align=\"texttop\"><b>&nbsp;&nbsp;";
         echo _("Gästebuch").$active;
                 print("</b></td></tr>");

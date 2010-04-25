@@ -531,8 +531,7 @@ if ($score->IsMyScore() || $score->ReturnPublik()) {
 // News zur person anzeigen!!!
 $show_admin = $perm->have_perm("autor") && $auth->auth["uid"] == $user_id;
 if (is_element_visible_for_user($user->id, $user_id, $visibilities['news']))
-    if (show_news($user_id, $show_admin, 0, $about_data["nopen"], "100%", 0, $about_data))
-        echo "<br>";
+    show_news($user_id, $show_admin, 0, $about_data["nopen"], "100%", 0, $about_data);
 
 // alle persoenlichen Termine anzeigen, aber keine privaten
 if (get_config('CALENDAR_ENABLE')) {
@@ -571,13 +570,11 @@ if ($_REQUEST['guestbook'] && $perm->have_perm('autor'))
 
 if ($guest->active == TRUE || $guest->rights == TRUE && is_element_visible_for_user($user->id, $user_id, $visibilities['guestbook'])) {
     $guest->showGuestbook();
-    echo "<br>";
 }
 
 // show chat info
-if (get_config('CHAT_ENABLE')){
-    if (chat_show_info($user_id))
-        echo "<br>";
+if (get_config('CHAT_ENABLE')) {
+    chat_show_info($user_id);
 }
 
 $layout = $GLOBALS['template_factory']->open('shared/homepage_box');

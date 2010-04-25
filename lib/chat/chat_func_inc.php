@@ -144,7 +144,7 @@ function chat_show_info($chatid){
             if (chat_get_entry_level($chatid) || $is_active || $chatinv){
                 //Ausgabe der Kopfzeile
                 chat_get_javascript();
-                echo "\n<table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" width=\"100%\" >";
+                echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
                 echo "\n<tr><td class=\"topic\" colspan=\"2\">";
                 echo "\n" . chat_get_chat_icon($chatter,$chatinv,$is_active);
                 echo "\n <b>" . _("Chatraum:") . " " . htmlReady($chatname) . "</b></td></tr>";

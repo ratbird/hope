@@ -18,14 +18,13 @@ $(function () {
 </script>
 <? if ($loginerror): ?>
 <!-- failed login code -->
-<div style="width: 800px; margin: auto;">
-  <?= MessageBox::error(_("Bei der Anmeldung trat ein Fehler auf:") . "<br>"
-        . $error_msg . " "
-        . sprintf(_("Bitte wenden Sie sich bei Problemen an: %s"),
-        "<a href=\"mailto:".$GLOBALS['UNI_CONTACT']."\">".$GLOBALS['UNI_CONTACT']."</a>")) ?>
+<div style="width: 750px; margin: auto;">
+  <?= MessageBox::error(_("Bei der Anmeldung trat ein Fehler auf!"), array(
+        $error_msg, sprintf(_("Bitte wenden Sie sich bei Problemen an: %s"),
+        "<a href=\"mailto:".$GLOBALS['UNI_CONTACT']."\">".$GLOBALS['UNI_CONTACT']."</a>"))) ?>
 </div>
 <? endif; ?>
-<table class="logintable" width="800" align="center" border="0" cellpadding="0" cellspacing="0">
+<table class="logintable" width="750" align="center" border="0" cellpadding="0" cellspacing="0">
   <tbody>
     <tr>
       <td class="topic">

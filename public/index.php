@@ -179,8 +179,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
 <?
 
     // display news
-    if (show_news('studip', $perm->have_perm('root'), 0, $index_data['nopen'], "70%", $LastLogin, $index_data))
-        echo "<br>\n";
+    show_news('studip', $perm->have_perm('root'), 0, $index_data['nopen'], "70%", $LastLogin, $index_data);
 
     // display dates
     if (!$perm->have_perm('admin')) { // only dozent, tutor, autor, user

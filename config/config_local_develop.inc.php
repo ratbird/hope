@@ -138,30 +138,21 @@ $CACHING_FILECACHE_PATH = $TMP_PATH . '/studip_cache';
 ----------------------------------------------------------------
 enable or disable the Stud.IP internal modules, set and basic settings*/
 
-$CALENDAR_ENABLE = TRUE;                                //Stud.IP module: calendar
 $CALENDAR_DRIVER = "MySQL";                                 //calendar driver: database to use (MySQL in default installation)*/
 
-$CHAT_ENABLE = TRUE;                                    //Stud.IP module: chat
 $CHAT_SERVER_NAME = "ChatShmServer";
 
-$EXPORT_ENABLE = TRUE;                                  //Stud.IP module: export
 $XSLT_ENABLE = TRUE;
 $FOP_ENABLE = TRUE;
 $FOP_SH_CALL = "export JAVA_HOME=/usr/lib/jvm/jre && /usr/local/bin/fop";                       //path to fop
 
-$EXTERN_ENABLE = TRUE;                                  //Stud.IP module: "external pages" and SRI-System
 $EXTERN_SRI_ENABLE = TRUE;                              //allow the usage of SRI-interface (Stud.IP Remote Include)
 $EXTERN_SRI_ENABLE_BY_ROOT = FALSE;                         //only root allows the usage of SRI-interface for specific institutes
 $EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG = FALSE;                        //free access to external pages (without the need of a configuration), independent of SRI settings above
 
-$VOTE_ENABLE = TRUE;                                    //Stud.IP module: Umfragenystem
-
-$ELEARNING_INTERFACE_ENABLE = TRUE;                         //Stud.IP module: elearning interface
 $SOAP_ENABLE = TRUE;
 
 $WEBSERVICES_ENABLE = TRUE;
-
-$STM_ENABLE = TRUE;
 
 $SEMINAR_LOCK_ENABLE = TRUE; // locking of fields in seminar administration
 
@@ -249,10 +240,6 @@ $PLUGIN_REPOSITORIES = array(
 activate or deactivate some basic system-functions here*/
 
 $LATEXRENDER_ENABLE = TRUE;                             //enable to use the LaTexrenderer (Please note the further LaTeX template-settings below)
-$WIKI_ENABLE = TRUE;                                    //enable WikiWiki-Webs
-$SCM_ENABLE = TRUE;                                 //enable Simple-Content functionality
-$LOG_ENABLE = TRUE;                                 //enable event logging for some admin actions on courses, users and institutes
-$SMILEYADMIN_ENABLE = TRUE;                             //enable Smiley-administration
 $SMILEY_COUNTER = TRUE;                             //enable Smiley-counter
 
 
@@ -313,10 +300,6 @@ $ALLOW_SELFASSIGN_STUDYCOURSE = TRUE;                           //if true, stude
 
 $SHOW_TERMS_ON_FIRST_LOGIN = FALSE;                         //if true, the user has to accept the terms on his first login
                                             //(this feature makes only sense, if you use disable $ENABLE_SELF_REGISTRATION).
-
-$BANNER_ADS_ENABLE = FALSE;                                 //enable the Banner ads functions (config as root in "global settings")
-                                            //you'll need an additional folder in the pictures folder named banner. The Webserver
-                                            //needs write accees for this folder.
 
 $CONVERT_IDNA_URL = TRUE;                               //if true, urls with german "umlauts" are converted
 

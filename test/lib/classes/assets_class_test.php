@@ -81,7 +81,7 @@ class DynamicAssetsTestCase extends UnitTestCase {
     $url2 = Assets::url('prototype.js');
     $pattern = sprintf('@http://www[0-%d].example.com/public/@',
                        Assets::NUMBER_OF_ALIASES - 1);
-    $this->assertWantedPattern($pattern, $url);
+    $this->assertPattern($pattern, $url);
     $this->assertEqual($url, $url2);
   }
 }

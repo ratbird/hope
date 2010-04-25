@@ -79,8 +79,8 @@ class NavigationTest extends UnitTestCase
 
         $nav4->setActive($nav4);
         $this->assertTrue($navigation->isActive());
-        $this->assertIdentical($navigation->activeSubNavigation(), $nav2);
-        $this->assertIdentical($nav2->activeSubNavigation(), $nav4);
+        $this->assertReference($navigation->activeSubNavigation(), $nav2);
+        $this->assertReference($nav2->activeSubNavigation(), $nav4);
 
         $navigation->removeSubNavigation('a3');
         $navigation->insertSubNavigation('a3', $nav3, 'a2');

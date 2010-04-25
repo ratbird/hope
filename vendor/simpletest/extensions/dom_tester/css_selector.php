@@ -1,10 +1,9 @@
 <?php
-
 /**
  *	@package	SimpleTest
  *	@subpackage	DomTestCase
  *  @author     Perrick Penet <perrick@noparking.net>
- *	@version	$Id: css_selector.php 8575 2007-11-13 14:41:00Z mlunzena $
+ *	@version	$Id: css_selector.php 1953 2009-09-20 01:26:25Z jsweat $
  */
 
 /**
@@ -18,8 +17,9 @@
  * derived from sfDomCssSelector Id 3053 (Symfony version 1.0.2) - Fabien Potencier, 2006-12-16
  * http://www.symfony-project.com/api/symfony/util/sfDomCssSelector.html
  *
+ *	@package	SimpleTest
+ *	@subpackage	DomTestCase
  * @param DomDocument $dom
- *
  */
 
 class CssSelector {
@@ -216,7 +216,7 @@ class CssSelector {
           break;
         case '+':
 			$element = $node->nextSibling;
-			if ($element->nodeName == "#text") {
+			if (isset($element->nodeName) and $element->nodeName == "#text") {
 				$element = $element->nextSibling;
 			}
 			if ($element && $tagName == $element->nodeName) {

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <!-- $Id: lastcraft.xslt,v 1.5 2006/11/02 01:21:38 lastcraft Exp $ -->
+    <!-- $Id: lastcraft.xslt 1376 2006-11-02 01:21:38Z lastcraft $ -->
 
     <xsl:output method="html" indent="yes" />
     <xsl:preserve-space elements="*"/>

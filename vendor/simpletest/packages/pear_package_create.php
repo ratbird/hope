@@ -1,11 +1,11 @@
-#!/usr/bin/php -q
+#!/usr/local/bin/php -q
 <?php
 /**
 * Generates a package.xml file for simpletest
 */
 /*---------------------------------------------------------------------------*/
 // Modify this - path the the source code - no trailing slash
-$packagedir = '/home/mlunzena/studip/goe/trunk/vendor/simpletest';
+$packagedir = '/home/username/simpletest';
 /*---------------------------------------------------------------------------*/
 // Modify this - the version / state of the package
 $version = '0.9.4';

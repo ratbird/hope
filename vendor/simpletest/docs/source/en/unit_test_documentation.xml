@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!-- $Id: unit_test_documentation.xml 1946 2009-09-03 14:41:14Z arialdomartini $ -->
 <page title="PHP Unit Test documentation" here="Unit tester">
     <long_title>SimpleTest for PHP regression test documentation</long_title>
     <content>
@@ -20,21 +21,22 @@
             <p>
                 For example...
 <php><![CDATA[
+require_once('simpletest/autorun.php');
 require_once('../classes/writer.php');
 
 class FileTestCase extends UnitTestCase {
     function FileTestCase() {
         $this->UnitTestCase('File test');
     }<strong>
-    
+
     function setUp() {
         @unlink('../temp/test.txt');
     }
-    
+
     function tearDown() {
         @unlink('../temp/test.txt');
     }
-    
+
     function testCreation() {
         $writer = &new FileWriter('../temp/test.txt');
         $writer->write('Hello');
@@ -64,7 +66,7 @@ class FileTestCase extends UnitTestCase {
             <p>
                 You can place some test case set up into the constructor to
                 be run once for all the methods in the test case, but
-                you risk test inteference that way.
+                you risk test interference that way.
                 This way is slightly slower, but it is safer.
                 Note that if you come from a JUnit background this will not
                 be the behaviour you are used to.
@@ -97,7 +99,9 @@ class FileTestCase extends UnitTestCase {
                     <tr><td><code>assertClone($x, $y)</code></td><td>Fail unless $x and $y are identical copies</td></tr>
                     <tr><td><code>assertPattern($p, $x)</code></td><td>Fail unless the regex $p matches $x</td></tr>
                     <tr><td><code>assertNoPattern($p, $x)</code></td><td>Fail if the regex $p matches $x</td></tr>
-                    <tr><td><code>expectError($x)</code></td><td>Swallows any upcoming matching error</td></tr>
+                    <tr><td><code>expectError($x)</code></td><td>Fail if matching error does not occour</td></tr>
+                    <tr><td><code>expectException($x)</code></td><td>Fail if matching exception is not thrown</td></tr>
+                    <tr><td><code>ignoreException($x)</code></td><td>Swallows any upcoming matching exception</td></tr>
                     <tr><td><code>assert($e)</code></td><td>Fail on failed <a local="expectation_documentation">expectation</a> object $e</td></tr>
                 </tbody></table>
                 All assertion methods can take an optional description as a
@@ -176,13 +180,13 @@ trigger_error('Catastrophe');
                 Of course additional test methods can be added to create
                 specific types of test case, so as to extend framework...
 <php><![CDATA[
-require_once('simpletest/unit_tester.php');
+require_once('simpletest/autorun.php');
 <strong>
 class FileTester extends UnitTestCase {
     function FileTester($name = false) {
         $this->UnitTestCase($name);
     }
-    
+
     function assertFileExists($filename, $message = '%s') {
         $this->assertTrue(
                 file_exists($filename),
@@ -199,19 +203,24 @@ class FileTester extends UnitTestCase {
                 advisable to mark it as <code>abstract</code>.
             </p>
             <p>
+                Alternatively you could add a
+                <code>SimpleTestOptions::ignore('FileTester');</code>
+                directive in your code.
+            </p>
+            <p>
                 This new case can be now be inherited just like
                 a normal test case...
 <php><![CDATA[
 class FileTestCase extends <strong>FileTester</strong> {
-    
+
     function setUp() {
         @unlink('../temp/test.txt');
     }
-    
+
     function tearDown() {
         @unlink('../temp/test.txt');
     }
-    
+
     function testCreation() {
         $writer = &new FileWriter('../temp/test.txt');
         $writer->write('Hello');<strong>
@@ -229,30 +238,31 @@ class FileTestCase extends <strong>FileTester</strong> {
                 It is found in <em>simple_test.php</em> rather than
                 <em>unit_tester.php</em>.
                 See <a local="group_test_documentation">later</a> if you
-                want to incorporate other unit tester&apos;s
+                want to incorporate other unit tester's
                 test cases in your test suites.
             </p>
         </section>
         <section name="running_unit" title="Running a single test case">
             <p>
-                You won&apos;t often run single test cases except when bashing
-                away at a module that is having difficulty, and you don&apos;t
+                You won't often run single test cases except when bashing
+                away at a module that is having difficulty, and you don't
                 want to upset the main test suite.
-                Here is the scaffolding needed to run a lone test case...
+                With <em>autorun</em> no particular scaffolding is needed,
+                just launch your particular test file and you're ready to go.
+            </p>
+            <p>
+                You can even decide which reporter (for example,
+                <code>TextReporter</code> or <code>HtmlReporter</code>)
+                you prefer for a specific file when launched on its own...
 <php><![CDATA[
 <?php
-    require_once('simpletest/unit_tester.php');<strong>
-    require_once('simpletest/reporter.php');</strong>
-    require_once('../classes/writer.php');
+require_once('simpletest/autorun.php');<strong>
+SimpleTest :: prefer(new TextReporter());</strong>
+require_once('../classes/writer.php');
 
-    class FileTestCase extends UnitTestCase {
-        function FileTestCase() {
-            $this->UnitTestCase('File test');
-        }
-    }<strong>
-    
-    $test = &new FileTestCase();
-    $test->run(new HtmlReporter());</strong>
+class FileTestCase extends UnitTestCase {
+    ...
+}
 ?>
 ]]></php>
                 This script will run as is, but of course will output zero passes
@@ -281,7 +291,7 @@ class FileTestCase extends <strong>FileTester</strong> {
             SimpleTest download page on <a href="http://www.lastcraft.com/simple_test.php">LastCraft</a>.
         </link>
         <link>
-            <a href="http://simpletest.sourceforge.net/">Full API for SimpleTest</a>
+            <a href="http://simpletest.org/api/">Full API for SimpleTest</a>
             from the PHPDoc.
         </link>
     </external>
@@ -291,7 +301,7 @@ class FileTestCase extends <strong>FileTester</strong> {
             test integration,
             documentation,
             marcus baker,
-            simple test,
+            simpletest,
             simpletest documentation,
             phpunit,
             junit,

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <!-- $Id: bundled_docs.xslt,v 1.7 2006/11/02 01:21:38 lastcraft Exp $ -->
+    <!-- $Id: bundled_docs.xslt 1798 2008-06-28 17:25:32Z pp11 $ -->
 
     <xsl:output method="html" indent="yes" />
     <xsl:preserve-space elements="*"/>
@@ -185,12 +185,12 @@
     </xsl:template>
     
     <xsl:template match="section">
-        <p>
+        <h2>
             <a class="target">
-                <xsl:attribute name="name"><xsl:value-of select="@name"/></xsl:attribute>
-                <h2><xsl:value-of select="@title"/></h2>
-            </a>
-        </p>
+                <xsl:attribute name="name"><xsl:value-of select="@name" /></xsl:attribute>
+             </a>
+             <xsl:value-of select="@title" />
+        </h2>
         <xsl:apply-templates/>
     </xsl:template>
     

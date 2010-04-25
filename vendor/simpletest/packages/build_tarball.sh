@@ -29,7 +29,7 @@ FILES=(simpletest/README \
           simpletest/invoker.php \
           simpletest/mock_objects.php \
           simpletest/page.php \
-          simpletest/parser.php \
+          simpletest/php_parser.php \
           simpletest/reflection_php4.php \
           simpletest/reflection_php5.php \
           simpletest/remote.php \
@@ -41,13 +41,13 @@ FILES=(simpletest/README \
           simpletest/socket.php \
           simpletest/tag.php \
           simpletest/test_case.php \
+          simpletest/tidy_parser.php \
           simpletest/unit_tester.php \
           simpletest/url.php \
           simpletest/user_agent.php \
           simpletest/web_tester.php \
           simpletest/xml.php \
           simpletest/extensions/pear_test_case.php \
-          simpletest/extensions/phpunit_test_case.php \
           simpletest/extensions/testdox.php \
           simpletest/extensions/testdox/test.php \
           simpletest/test/acceptance_test.php \
@@ -71,11 +71,13 @@ FILES=(simpletest/README \
           simpletest/test/frames_test.php \
           simpletest/test/http_test.php \
           simpletest/test/interfaces_test.php \
+          simpletest/test/interfaces_test_php5_1.php \
           simpletest/test/live_test.php \
           simpletest/test/mock_objects_test.php \
           simpletest/test/page_test.php \
           simpletest/test/parse_error_test.php \
-          simpletest/test/parser_test.php \
+          simpletest/test/php_parser_test.php \
+          simpletest/test/parsing_test.php \
           simpletest/test/reflection_php4_test.php \
           simpletest/test/reflection_php5_test.php \
           simpletest/test/remote_test.php \
@@ -87,6 +89,7 @@ FILES=(simpletest/README \
           simpletest/test/test_with_parse_error.php \
           simpletest/test/unit_tests.php \
           simpletest/test/unit_tester_test.php \
+          simpletest/test/autorun_test.php \
           simpletest/test/url_test.php \
           simpletest/test/user_agent_test.php \
           simpletest/test/visual_test.php \
@@ -99,6 +102,10 @@ FILES=(simpletest/README \
           simpletest/test/support/latin1_sample \
           simpletest/test/support/spl_examples.php \
           simpletest/test/support/empty_test_file.php \
+          simpletest/test/support/test1.php \
+          simpletest/test/support/failing_test.php \
+          simpletest/test/support/passing_test.php \
+          simpletest/test/site/file.html \
           simpletest/docs/en/docs.css \
           simpletest/docs/en/index.html \
           simpletest/docs/en/overview.html \
@@ -117,7 +124,6 @@ FILES=(simpletest/README \
           simpletest/docs/fr/overview.html \
           simpletest/docs/fr/unit_test_documentation.html \
           simpletest/docs/fr/group_test_documentation.html \
-          simpletest/docs/fr/server_stubs_documentation.html \
           simpletest/docs/fr/mock_objects_documentation.html \
           simpletest/docs/fr/partial_mocks_documentation.html \
           simpletest/docs/fr/reporter_documentation.html \

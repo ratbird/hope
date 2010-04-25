@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!-- $Id: mock_objects_documentation.xml 1973 2009-12-22 01:16:59Z lastcraft $ -->
 <page title="Mock objects documentation" here="Mock objects">
     <long_title>SimpleTest for PHP mock objects documentation</long_title>
     <content>
@@ -22,9 +23,9 @@
             </p>
             <p>
                 If mock objects only behaved as actors they would simply be
-                known as server stubs.
-                This was originally a pattern named by Robert Binder (Testing
-                object-oriented systems: models, patterns, and tools,
+                known as &quot;server stubs&quot;.
+                This was originally a pattern named by Robert Binder (<a href="">Testing
+                object-oriented systems</a>: models, patterns, and tools,
                 Addison-Wesley) in 1999.
             </p>
             <p>
@@ -54,90 +55,147 @@
         </section>
         <section name="creation" title="Creating mock objects">
             <p>
-                In the same way that we create server stubs, all we need is an
-                existing class, say a database connection that looks like this...
+                All we need is an existing class or interface, say a database connection
+                that looks like this...
 <php><![CDATA[
 <strong>class DatabaseConnection {
-    function DatabaseConnection() {
-    }
-    
-    function query() {
-    }
-    
-    function selectQuery() {
-    }
+    function DatabaseConnection() { }
+    function query($sql) { }
+    function selectQuery($sql) { }
 }</strong>
 ]]></php>
-                The class does not need to have been implemented yet.
-                To create a mock version of the class we need to include the
-                mock object library and run the generator...
+                To create a mock version of the class we need to run a
+                code generator...
 <php><![CDATA[
-<strong>require_once('simpletest/unit_tester.php');
-require_once('simpletest/mock_objects.php');
+require_once('simpletest/autorun.php');
 require_once('database_connection.php');
 
-Mock::generate('DatabaseConnection');</strong>
+<strong>Mock::generate('DatabaseConnection');</strong>
 ]]></php>
-                This generates a clone class called
+                This code generates a clone class called
                 <code>MockDatabaseConnection</code>.
+                This new class appears to be the same, but actually has no behaviour at all.
+            </p>
+            <p>
+                The new class is usually a subclass of <code>DatabaseConnection</code>.
+                Unfortunately, there is no way to create a mock version of a
+                class with a <code>final</code> method without having a living version of
+                that method.
+                We consider that unsafe.
+                If the target is an interface, or if <code>final</code> methods are
+                present in a target class, then a whole new class
+                is created, but one implemeting the same interfaces.
+                If you try to pass this separate class through a type hint that specifies
+                the old concrete class name, it will fail.
+                Code like that insists on type hinting to a class with <code>final</code>
+                methods probably cannot be safely tested with mocks.
+            </p>
+            <p>
+                If you want to see the generated code, then simply <code>print</code>
+                the output of <code>Mock::generate()</code>.
+                Here is the generated code for the <code>DatabaseConnection</code>
+                class rather than the interface version...
+<php><![CDATA[
+class MockDatabaseConnection extends DatabaseConnection {
+    public $mock;
+    protected $mocked_methods = array('databaseconnection', 'query', 'selectquery');
+
+    function MockDatabaseConnection() {
+        $this->mock = new SimpleMock();
+        $this->mock->disableExpectationNameChecks();
+    }
+    ...
+    function DatabaseConnection() {
+        $args = func_get_args();
+        $result = &$this->mock->invoke("DatabaseConnection", $args);
+        return $result;
+    }
+    function query($sql) {
+        $args = func_get_args();
+        $result = &$this->mock->invoke("query", $args);
+        return $result;
+    }
+    function selectQuery($sql) {
+        $args = func_get_args();
+        $result = &$this->mock->invoke("selectQuery", $args);
+        return $result;
+    }
+}
+]]></php>
+                Your output may vary depending on the exact version
+                of SimpleTest you are using.
+            </p>
+            <p>
+                Besides the original methods of the class, you will see some extra
+                methods that help testing.
+                More on these later.
+            </p>
+            <p>
                 We can now create instances of the new class within
                 our test case...
 <php><![CDATA[
-require_once('simpletest/unit_tester.php');
-require_once('simpletest/mock_objects.php');
+require_once('simpletest/autorun.php');
 require_once('database_connection.php');
 
 Mock::generate('DatabaseConnection');
-<strong>
+
 class MyTestCase extends UnitTestCase {
-    
+
     function testSomething() {
-        $connection = &new MockDatabaseConnection();
+        <strong>$connection = new MockDatabaseConnection();</strong>
     }
+}
+]]></php>
+                The mock version now has all the methods of the original.
+                Also, any type hints will be faithfully preserved.
+                Say our query methods expect a <code>Query</code> object...
+<php><![CDATA[
+<strong>class DatabaseConnection {
+    function DatabaseConnection() { }
+    function query(Query $query) { }
+    function selectQuery(Query $query) { }
 }</strong>
 ]]></php>
-                Unlike the generated stubs the mock constructor needs a reference
-                to the test case so that it can dispatch passes and failures while
-                checking its expectations.
-                This means that mock objects can only be used within test cases.
-                Despite this their extra power means that stubs are hardly ever used
-                if mocks are available.
+                If we now pass the wrong type of object, or worse a non-object...
+<php><![CDATA[
+class MyTestCase extends UnitTestCase {
+
+    function testSomething() {
+        $connection = new MockDatabaseConnection();
+        $connection->query('insert into accounts () values ()');
+    }
+}
+]]></php>
+                ...the code will throw a type violation at you just as the
+                original class would.
+            </p>
+            <p>
+                The mock version now has all the methods of the original.
+                Unfortunately, they all return <code>null</code>.
+                As methods that always return <code>null</code> are not that useful,
+                we need to be able to set them to something else...
             </p>
             <p>
                 <a class="target" name="stub"><h2>Mocks as actors</h2></a>
             </p>
             <p>
-                The mock version of a class has all the methods of the original,
-                so that operations like
-                <code><![CDATA[$connection->query()]]></code> are still
-                legal.
-                The return value will be <code>null</code>,
-                but we can change that with...
+                Changing the return value of a method from <code>null</code>
+                to something else is pretty easy...
 <php><![CDATA[
-<strong>$connection->setReturnValue('query', 37)</strong>
+<strong>$connection->returns('query', 37)</strong>
 ]]></php>
                 Now every time we call
                 <code><![CDATA[$connection->query()]]></code> we get
                 the result of 37.
-                We can set the return value to anything, say a hash of
-                imaginary database results or a list of persistent objects.
+                There is nothing special about 37.
+                The return value can be arbitrarily complicated.
+            </p>
+            <p>
                 Parameters are irrelevant here, we always get the same
                 values back each time once they have been set up this way.
                 That may not sound like a convincing replica of a
                 database connection, but for the half a dozen lines of
                 a test method it is usually all you need.
-            </p>
-            <p>
-                We can also add extra methods to the mock when generating it
-                and choose our own class name...
-<php><![CDATA[
-<strong>Mock::generate('DatabaseConnection', 'MyMockDatabaseConnection', array('setOptions'));</strong>
-]]></php>
-                Here the mock will behave as if the <code>setOptions()</code>
-                existed in the original class.
-                This is handy if a class has used the PHP <code>overload()</code>
-                mechanism to add dynamic methods.
-                You can create a special mock to simulate this situation.
             </p>
             <p>
                 Things aren&apos;t always that simple though.
@@ -148,11 +206,8 @@ class MyTestCase extends UnitTestCase {
                 Let&apos;s say we have a simple iterator that looks like this...
 <php><![CDATA[
 class Iterator {
-    function Iterator() {
-    }
-    
-    function next() {
-    }
+    function Iterator() { }
+    function next() { }
 }
 ]]></php>
                 This is about the simplest iterator you could have.
@@ -163,18 +218,18 @@ class Iterator {
 Mock::generate('Iterator');
 
 class IteratorTest extends UnitTestCase() {
-    
+
     function testASequence() {<strong>
-        $iterator = &new MockIterator();
-        $iterator->setReturnValue('next', false);
-        $iterator->setReturnValueAt(0, 'next', 'First string');
-        $iterator->setReturnValueAt(1, 'next', 'Second string');</strong>
+        $iterator = new MockIterator();
+        $iterator->returns('next', false);
+        $iterator->returnsAt(0, 'next', 'First string');
+        $iterator->returnsAt(1, 'next', 'Second string');</strong>
         ...
     }
 }
 ]]></php>
                 When <code>next()</code> is called on the
-                mock iterator it will first return &quot;First string&quot;,
+                <code>MockIterator</code> it will first return &quot;First string&quot;,
                 on the second call &quot;Second string&quot; will be returned
                 and on any other call <code>false</code> will
                 be returned.
@@ -189,36 +244,32 @@ class IteratorTest extends UnitTestCase() {
                 Say we have a configuration class like...
 <php><![CDATA[
 class Configuration {
-    function Configuration() {
-    }
-    
-    function getValue($key) {
-    }
+    function Configuration() { ... }
+    function get($key) { ... }
 }
 ]]></php>
-                This is a classic situation for using mock objects as
-                actual configuration will vary from machine to machine,
-                hardly helping the reliability of our tests if we use it
-                directly.
+                This is a likely situation for using mock objects, as
+                actual configuration will vary from machine to machine and
+                even from test to test.
                 The problem though is that all the data comes through the
-                <code>getValue()</code> method and yet
+                <code>get()</code> method and yet
                 we want different results for different keys.
                 Luckily the mocks have a filter system...
 <php><![CDATA[
 <strong>$config = &new MockConfiguration();
-$config->setReturnValue('getValue', 'primary', array('db_host'));
-$config->setReturnValue('getValue', 'admin', array('db_user'));
-$config->setReturnValue('getValue', 'secret', array('db_password'));</strong>
+$config->returns('get', 'primary', array('db_host'));
+$config->returns('get', 'admin', array('db_user'));
+$config->returns('get', 'secret', array('db_password'));</strong>
 ]]></php>
                 The extra parameter is a list of arguments to attempt
                 to match.
                 In this case we are trying to match only one argument which
                 is the look up key.
                 Now when the mock object has the
-                <code>getValue()</code> method invoked
+                <code>get()</code> method invoked
                 like this...
 <php><![CDATA[
-$config->getValue('db_user')
+$config->get('db_user')
 ]]></php>
                 ...it will return &quot;admin&quot;.
                 It finds this by attempting to match the calling arguments
@@ -228,12 +279,12 @@ $config->getValue('db_user')
             <p>
                 You can set a default argument argument like so...
 <php><![CDATA[<strong>
-$config->setReturnValue('getValue', false, array('*'));</strong>
+$config->returns('get', false, array('*'));</strong>
 ]]></php>
                 This is not the same as setting the return value without
                 any argument requirements like this...
 <php><![CDATA[<strong>
-$config->setReturnValue('getValue', false);</strong>
+$config->returns('get', false);</strong>
 ]]></php>
                 In the first case it will accept any single argument,
                 but exactly one is required.
@@ -248,83 +299,75 @@ $config->setReturnValue('getValue', false);</strong>
                 Declare the most specific matches first if you are not sure.
             </p>
             <p>
-                There are times when you want a specific object to be
-                dished out by the mock rather than a copy.
-                The PHP4 copy semantics force us to use a different method
-                for this.
-                You might be simulating a container for example...
+                There are times when you want a specific reference to be
+                dished out by the mock rather than a copy or object handle.
+                This a rarity to say the least, but you might be simulating
+                a container that can hold primitives such as strings.
+                For example...
 <php><![CDATA[
-class Thing {
-}
-
-class Vector {
-    function Vector() {
-    }
-    
-    function get($index) {
-    }
+class Pad {
+    function Pad() { }
+    function &note($index) { }
 }
 ]]></php>
                 In this case you can set a reference into the mock&apos;s
                 return list...
 <php><![CDATA[
-$thing = &new Thing();<strong>
-$vector = &new MockVector();
-$vector->setReturnReference('get', $thing, array(12));</strong>
+function testTaskReads() {
+    $note = 'Buy books';
+    $pad = new MockPad();
+    $vector-><strong>returnsByReference(</strong>'note', $note, array(3)<strong>)</strong>;
+    $task = new Task($pad);
+    ...
+}
 ]]></php>
                 With this arrangement you know that every time
-                <code><![CDATA[$vector->get(12)]]></code> is
-                called it will return the same
-                <code>$thing</code> each time.
-                This is compatible with PHP5 as well.
+                <code><![CDATA[$pad->note(3)]]></code> is
+                called it will return the same <code>$note</code> each time,
+                even if it get's modified.
             </p>
             <p>
                 These three factors, timing, parameters and whether to copy,
                 can be combined orthogonally.
                 For example...
 <php><![CDATA[
-$complex = &new MockComplexThing();
-$stuff = &new Stuff();<strong>
-$complex->setReturnReferenceAt(3, 'get', $stuff, array('*', 1));</strong>
+$buy_books = 'Buy books';
+$write_code = 'Write code';
+$pad = new MockPad();
+$vector-><strong>returnsByReferenceAt(0, 'note', $buy_books, array('*', 3));
+$vector-><strong>returnsByReferenceAt(1, 'note', $write_code, array('*', 3));
 ]]></php>
-                This will return the <code>$stuff</code> only on the third
-                call and only if two parameters were set the second of
-                which must be the integer 1.
-                That should cover most simple prototyping situations.
+                This will return a reference to <code>$buy_books</code> and
+                then to <code>$write_code</code>, but only if two parameters
+                were set the second of which must be the integer 3.
+                That should cover most situations.
             </p>
             <p>
                 A final tricky case is one object creating another, known
                 as a factory pattern.
                 Suppose that on a successful query to our imaginary
-                database, a result set is returned as an iterator with
-                each call to <code>next()</code> giving
+                database, a result set is returned as an iterator, with
+                each call to the the iterator&apos;s <code>next()</code> giving
                 one row until false.
                 This sounds like a simulation nightmare, but in fact it can all
-                be mocked using the mechanics above.
-            </p>
-            <p>
-                Here&apos;s how...
+                be mocked using the mechanics above...
 <php><![CDATA[
 Mock::generate('DatabaseConnection');
 Mock::generate('ResultIterator');
 
 class DatabaseTest extends UnitTestCase {
-    
-    function testUserFinder() {<strong>
-        $result = &new MockResultIterator();
-        $result->setReturnValue('next', false);
-        $result->setReturnValueAt(0, 'next', array(1, 'tom'));
-        $result->setReturnValueAt(1, 'next', array(3, 'dick'));
-        $result->setReturnValueAt(2, 'next', array(6, 'harry'));
-        
-        $connection = &new MockDatabaseConnection();
-        $connection->setReturnValue('query', false);
-        $connection->setReturnReference(
-                'query',
-                $result,
-                array('select id, name from users'));</strong>
-                
-        $finder = &new UserFinder($connection);
+
+    function testUserFinderReadsResultsFromDatabase() {<strong>
+        $result = new MockResultIterator();
+        $result->returns('next', false);
+        $result->returnsAt(0, 'next', array(1, 'tom'));
+        $result->returnsAt(1, 'next', array(3, 'dick'));
+        $result->returnsAt(2, 'next', array(6, 'harry'));
+
+        $connection = new MockDatabaseConnection();
+        $connection->returns('selectQuery', $result);</strong>
+
+        $finder = new UserFinder(<strong>$connection</strong>);
         $this->assertIdentical(
                 $finder->findNames(),
                 array('tom', 'dick', 'harry'));
@@ -332,8 +375,8 @@ class DatabaseTest extends UnitTestCase {
 }
 ]]></php>
                 Now only if our
-                <code>$connection</code> is called with the correct
-                <code>query()</code> will the
+                <code>$connection</code> is called with the
+                <code>query()</code> method will the
                 <code>$result</code> be returned that is
                 itself exhausted after the third call to <code>next()</code>.
                 This should be enough
@@ -341,6 +384,144 @@ class DatabaseTest extends UnitTestCase {
                 the class actually
                 being tested here, to come up with goods.
                 A very precise test and not a real database in sight.
+            </p>
+            <p>
+                We could refine this test further by insisting that the correct
+                query is sent...
+<php><![CDATA[
+$connection->returns('selectQuery', $result, array(<strong>'select name, id from people'</strong>));
+]]></php>
+                This is actually a bad idea.
+            </p>
+            <p>
+                We have a <code>UserFinder</code> in object land, talking to
+                database tables using a large interface - the whole of SQL.
+                Imagine that we have written a lot of tests that now depend
+                on the exact SQL string passed.
+                These queries could change en masse for all sorts of reasons
+                not related to the specific test.
+                For example the quoting rules could change, a table name could
+                change, a link table added or whatever.
+                This would require the rewriting of every single test any time
+                one of these refactoring is made, yet the intended behaviour has
+                stayed the same.
+                Tests are supposed to help refactoring, not hinder it.
+                I&apos;d certainly like to have a test suite that passes while I change
+                table names.
+            </p>
+            <p>
+                As a rule it is best not to mock a fat interface.
+            </p>
+            <p>
+                By contrast, here is the round trip test...
+<php><![CDATA[
+class DatabaseTest extends UnitTestCase {<strong>
+    function setUp() { ... }
+    function tearDown() { ... }</strong>
+
+    function testUserFinderReadsResultsFromDatabase() {
+        $finder = new UserFinder(<strong>new DatabaseConnection()</strong>);
+        $finder->add('tom');
+        $finder->add('dick');
+        $finder->add('harry');
+        $this->assertIdentical(
+                $finder->findNames(),
+                array('tom', 'dick', 'harry'));
+    }
+}
+]]></php>
+                This test is immune to schema changes.
+                It will only fail if you actually break the functionality, which
+                is what you want a test to do.
+            </p>
+            <p>
+                The catch is those <code>setUp()</code> and <code>tearDown()</code>
+                methods that we&apos;ve rather glossed over.
+                They have to clear out the database tables and ensure that the
+                schema is defined correctly.
+                That can be a chunk of extra work, but you usually have this code
+                lying around anyway for deployment purposes.
+            </p>
+            <p>
+                One place where you definitely need a mock is simulating failures.
+                Say the database goes down while <code>UserFinder</code> is doing
+                it&apos;s work.
+                Does <code>UserFinder</code> behave well...?
+<php><![CDATA[
+class DatabaseTest extends UnitTestCase {
+
+    function testUserFinder() {
+        $connection = new MockDatabaseConnection();<strong>
+        $connection->throwOn('selectQuery', new TimedOut('Ouch!'));</strong>
+        $alert = new MockAlerts();<strong>
+        $alert->expectOnce('notify', 'Database is busy - please retry');</strong>
+        $finder = new UserFinder($connection, $alert);
+        $this->assertIdentical($finder->findNames(), array());
+    }
+}
+]]></php>
+                We've passed the <code>UserFinder</code> an <code>$alert</code>
+                object.
+                This is going to do some kind of pretty notifications in the
+                user interface in the event of an error.
+                We'd rather not sprinkle our code with hard wired <code>print</code>
+                statements if we can avoid it.
+                Wrapping the means of output means we can use this code anywhere.
+                It also makes testing easier.
+            </p>
+            <p>
+                To pass this test, the finder has to write a nice user friendly
+                message to <code>$alert</code>, rather than propogating the exception.
+                So far, so good.
+            </p>
+            <p>
+                How do we get the mock <code>DatabaseConnection</code> to throw an exception?
+                We generate the exception using the <code>throwOn</code> method
+                on the mock.
+            </p>
+            <p>
+                Finally, what if the method you want to simulate does not exist yet?
+                If you set a return value on a method that is not there, SimpleTest
+                will throw an error.
+                What if you are using <code>__call()</code> to simulate dynamic methods?
+            </p>
+            <p>
+                Objects with dynamic interfaces, using <code>__call</code>, can
+                be problematic with the current mock objects implementation.
+                You can mock the <code>__call()</code> method, but this is ugly.
+                Why should a test know anything about such low level implementation details?
+                It just wants to simulate the call.
+            </p>
+            <p>
+                The way round this is to add extra methods to the mock when
+                generating it.
+<php><![CDATA[
+<strong>Mock::generate('DatabaseConnection', 'MockDatabaseConnection', array('setOptions'));</strong>
+]]></php>
+                In a large test suite this could cause trouble, as you probably
+                already have a mock version of the class called
+                <code>MockDatabaseConnection</code> without the extra methods.
+                The code generator will not generate a mock version of the class if
+                one of the same name already exists.
+                You will confusingly fail to see your method if another definition
+                was run first.
+            </p>
+            <p>
+                To cope with this, SimpleTest allows you to choose any name for the
+                new class at the same time as you add the extra methods.
+<php><![CDATA[
+Mock::generate('DatabaseConnection', <strong>'MockDatabaseConnectionWithOptions'</strong>, array('setOptions'));
+]]></php>
+                Here the mock will behave as if the <code>setOptions()</code>
+                existed in the original class.
+            </p>
+            <p>
+                Mock objects can only be used within test cases, as upon expectations
+                they send messages straight to the currently running test case.
+                Creating them outside a test case will cause a run time error
+                when an expectation is triggered and there is no running test case
+                for the message to end up.
+                We cover expectations next.
             </p>
         </section>
         <section name="expectations" title="Mocks as critics">
@@ -351,196 +532,213 @@ class DatabaseTest extends UnitTestCase {
                 messages, but is your new class sending correct ones?
                 Testing this can get messy without a mock objects library.
             </p>
-            <p>
-                By way of example, suppose we have a
-                <code>SessionPool</code> class that we
-                want to add logging to.
-                Rather than grow the original class into something more
-                complicated, we want to add this behaviour with a decorator (GOF).
-                The <code>SessionPool</code> code currently looks
-                like this...
+			<p>
+                By way of example, let's take a simple <code>PageController</code>
+                class to handle a credit card payment form...
 <php><![CDATA[
-<strong>class SessionPool {
-    function SessionPool() {
-        ...
-    }
-    
-    function &findSession($cookie) {
-        ...
-    }
-    ...
+class PaymentForm extends PageController {
+    function __construct($alert, $payment_gateway) { ... }
+    function makePayment($request) { ... }
 }
-
-class Session {
-    ...
-}</strong>
-</php>
-                While our logging code looks like this...
-<php><strong>
-class Log {
-    function Log() {
-        ...
-    }
-    
-    function message() {
-        ...
-    }
-}
-
-class LoggingSessionPool {
-    function LoggingSessionPool(&$session_pool, &$log) {
-        ...
-    }
-    
-    function &findSession(\$cookie) {
-        ...
-    }
-    ...
-}</strong>
 ]]></php>
-                Out of all of this, the only class we want to test here
-                is the <code>LoggingSessionPool</code>.
-                In particular we would like to check that the
-                <code>findSession()</code> method is
-                called with the correct session ID in the cookie and that
-                it sent the message &quot;Starting session $cookie&quot;
-                to the logger.
+                This class takes a <code>PaymentGateway</code> to actually talk
+                to the bank.
+                It also takes an <code>Alert</code> object to handle errors.
+                This class talks to the page or template.
+                It's responsible for painting the error message and highlighting any
+                form fields that are incorrect.
             </p>
             <p>
-                Despite the fact that we are testing only a few lines of
-                production code, here is what we would have to do in a
-                conventional test case:
-                <ol>
-                    <li>Create a log object.</li>
-                    <li>Set a directory to place the log file.</li>
-                    <li>Set the directory permissions so we can write the log.</li>
-                    <li>Create a <code>SessionPool</code> object.</li>
-                    <li>Hand start a session, which probably does lot&apos;s of things.</li>
-                    <li>Invoke <code>findSession()</code>.</li>
-                    <li>Read the new Session ID (hope there is an accessor!).</li>
-                    <li>Raise a test assertion to confirm that the ID matches the cookie.</li>
-                    <li>Read the last line of the log file.</li>
-                    <li>Pattern match out the extra logging timestamps, etc.</li>
-                    <li>Assert that the session message is contained in the text.</li>
-                </ol>
-                It is hardly surprising that developers hate writing tests
-                when they are this much drudgery.
-                To make things worse, every time the logging format changes or
-                the method of creating new sessions changes, we have to rewrite
-                parts of this test even though this test does not officially
-                test those parts of the system.
-                We are creating headaches for the writers of these other classes.
-            </p>
-            <p>
-                Instead, here is the complete test method using mock object magic...
+                It might look something like...
 <php><![CDATA[
-Mock::generate('Session');
-Mock::generate('SessionPool');
-Mock::generate('Log');
-
-class LoggingSessionPoolTest extends UnitTestCase {
-    ...
-    function testFindSessionLogging() {<strong>
-        $session = &new MockSession();
-        $pool = &new MockSessionPool();
-        $pool->setReturnReference('findSession', $session);
-        $pool->expectOnce('findSession', array('abc'));
-        
-        $log = &new MockLog();
-        $log->expectOnce('message', array('Starting session abc'));
-        
-        $logging_pool = &new LoggingSessionPool($pool, $log);
-        $this->assertReference($logging_pool->findSession('abc'), $session);</strong>
+class Alert {
+    function warn($warning, $id) {
+        print '<div class="warning">' . $warning . '</div>';
+        print '<style type="text/css">#' . $id . ' { background-color: red }</style>';
     }
 }
 ]]></php>
-                We start by creating a dummy session.
-                We don&apos;t have to be too fussy about this as the check
-                for which session we want is done elsewhere.
-                We only need to check that it was the same one that came
-                from the session pool.
             </p>
             <p>
-                <code>findSession()</code> is a factory
-                method the simulation of which is described <a href="#stub">above</a>.
-                The point of departure comes with the first
-                <code>expectOnce()</code> call.
-                This line states that whenever
-                <code>findSession()</code> is invoked on the
-                mock, it will test the incoming arguments.
-                If it receives the single argument of a string &quot;abc&quot;
-                then a test pass is sent to the unit tester, otherwise a fail is
-                generated.
-                This was the part where we checked that the right session was asked for.
-                The argument list follows the same format as the one for setting
-                return values.
-                You can have wildcards and sequences and the order of
-                evaluation is the same.
+                Our interest is in the <code>makePayment()</code> method.
+                If we fail to enter a &quot;CVV2&quot; number (the three digit number
+                on the back of the credit card), we want to show an error rather than
+                try to process the payment.
+                In test form...
+<php><![CDATA[
+<?php
+require_once('simpletest/autorun.php');
+require_once('payment_form.php');
+Mock::generate('Alert');
+Mock::generate('PaymentGateway');
+
+class PaymentFormFailuresShouldBeGraceful extends UnitTestCase {
+
+    function testMissingCvv2CausesAlert() {
+        $alert = new MockAlert();
+        <strong>$alert->expectOnce(
+                    'warn',
+                    array('Missing three digit security code', 'cvv2'));</strong>
+        $controller = new PaymentForm(<strong>$alert</strong>, new MockPaymentGateway());
+        $controller->makePayment($this->requestWithMissingCvv2());
+    }
+
+    function requestWithMissingCvv2() { ... }
+}
+?>
+]]></php>
+                The first question you may be asking is, where are the assertions?
             </p>
             <p>
-                We use the same pattern to set up the mock logger.
-                We tell it that it should have
-                <code>message()</code> invoked
-                once only with the argument &quot;Starting session abc&quot;.
-                By testing the calling arguments, rather than the logger output,
-                we insulate the test from any display changes in the logger.
+                The call to <code>expectOnce('warn', array(...))</code> instructs the mock
+                to expect a call to <code>warn()</code> before the test ends.
+                When it gets a call to <code>warn()</code>, it checks the arguments.
+                If the arguments don't match, then a failure is generated.
+                It also fails if the method is never called at all.
             </p>
             <p>
-                We start to run our tests when we create the new
-                <code>LoggingSessionPool</code> and feed
-                it our preset mock objects.
-                Everything is now under our control.
+                The test above not only asserts that <code>warn</code> was called,
+                but that it received the string &quot;Missing three digit security code&quot;
+                and also the tag &quot;cvv2&quot;.
+                The equivalent of <code>assertIdentical()</code> is applied to both
+                fields when the parameters are compared.
             </p>
             <p>
-                This is still quite a bit of test code, but the code is very
-                strict.
-                If it still seems rather daunting there is a lot less of it
-                than if we tried this without mocks and this particular test,
-                interactions rather than output, is always more work to set
-                up.
-                More often you will be testing more complex situations without
-                needing this level or precision.
-                Also some of this can be refactored into a test case
-                <code>setUp()</code> method.
+                If you are not interested in the actual message, and we are not
+                for user interface code that changes often, we can skip that
+                parameter with the &quot;*&quot; operator...
+<php><![CDATA[
+class PaymentFormFailuresShouldBeGraceful extends UnitTestCase {
+
+    function testMissingCvv2CausesAlert() {
+        $alert = new MockAlert();
+        $alert->expectOnce('warn', array(<strong>'*'</strong>, 'cvv2'));
+        $controller = new PaymentForm($alert, new MockPaymentGateway());
+        $controller->makePayment($this->requestWithMissingCvv2());
+    }
+
+    function requestWithMissingCvv2() { ... }
+}
+]]></php>
+                We can weaken the test further by missing
+                out the parameters array...
+<php><![CDATA[
+function testMissingCvv2CausesAlert() {
+    $alert = new MockAlert();
+    <strong>$alert->expectOnce('warn');</strong>
+    $controller = new PaymentForm($alert, new MockPaymentGateway());
+    $controller->makePayment($this->requestWithMissingCvv2());
+}
+]]></php>
+                This will only test that the method is called,
+                which is a bit drastic in this case.
+                Later on, we'll see how we can weaken the expectations more precisely.
+            </p>
+            <p>
+                Tests without assertions can be both compact and very expressive.
+                Because we intercept the call on the way into an object, here of
+                the <code>Alert</code> class, we avoid having to assert its state
+                afterwards.
+                This not only avoids the assertions in the tests, but also having
+                to add extra test only accessors to the original code.
+                If you catch yourself adding such accessors, called &quot;state based testing&quot;,
+                it's probably time to consider using mocks in the tests.
+                This is called &quot;behaviour based testing&quot;, and is normally superior.
+            </p>
+            <p>
+                Let's add another test.
+                Let's make sure that we don't even attempt a payment without a CVV2...
+<php><![CDATA[
+class PaymentFormFailuresShouldBeGraceful extends UnitTestCase {
+
+    function testMissingCvv2CausesAlert() { ... }
+
+    function testNoPaymentAttemptedWithMissingCvv2() {
+        $payment_gateway = new MockPaymentGateway();
+        <strong>$payment_gateway->expectNever('pay');</strong>
+        $controller = new PaymentForm(new MockAlert(), $payment_gateway);
+        $controller->makePayment($this->requestWithMissingCvv2());
+    }
+
+    ...
+}
+]]></php>
+                Asserting a negative can be very hard in tests, but
+                <code>expectNever()</code> makes it easy.
+            </p>
+            <p>
+                <code>expectOnce()</code> and <code>expectNever()</code> are
+                sufficient for most tests, but
+                occasionally you want to test multiple events.
+                Normally for usability purposes we want all missing fields
+                in the form to light up, not just the first one.
+                This means that we should get multiple calls to
+                <code>Alert::warn()</code>, not just one...
+<php><![CDATA[
+function testAllRequiredFieldsHighlightedOnEmptyRequest() {
+    $alert = new MockAlert();<strong>
+    $alert->expectAt(0, 'warn', array('*', 'cc_number'));
+    $alert->expectAt(1, 'warn', array('*', 'expiry'));
+    $alert->expectAt(2, 'warn', array('*', 'cvv2'));
+    $alert->expectAt(3, 'warn', array('*', 'card_holder'));
+    $alert->expectAt(4, 'warn', array('*', 'address'));
+    $alert->expectAt(5, 'warn', array('*', 'postcode'));
+    $alert->expectAt(6, 'warn', array('*', 'country'));
+    $alert->expectCallCount('warn', 7);</strong>
+    $controller = new PaymentForm($alert, new MockPaymentGateway());
+    $controller->makePayment($this->requestWithMissingCvv2());
+}
+]]></php>
+                The counter in <code>expectAt()</code> is the number of times
+                the method has been called already.
+                Here we are asserting that every field will be highlighted.
+            </p>
+            <p>
+                Note that we are forced to assert the order too.
+                SimpleTest does not yet have a way to avoid this, but
+                this will be fixed in future versions.
             </p>
             <p>
                 Here is the full list of expectations you can set on a mock object
-                in <a href="http://www.lastcraft.com/simple_test.php">SimpleTest</a>...
-                <table><thead>
-                    <tr><th>Expectation</th><th>Needs <code>tally()</code></th></tr>
-                    </thead><tbody><tr>
-                        <td><code>expect($method, $args)</code></td>
-                        <td style="text-align: center">No</td>
-                    </tr>
-                    <tr>
-                        <td><code>expectAt($timing, $method, $args)</code></td>
-                        <td style="text-align: center">No</td>
-                    </tr>
-                    <tr>
-                        <td><code>expectCallCount($method, $count)</code></td>
-                        <td style="text-align: center">Yes</td>
-                    </tr>
-                    <tr>
-                        <td><code>expectMaximumCallCount($method, $count)</code></td>
-                        <td style="text-align: center">No</td>
-                    </tr>
-                    <tr>
-                        <td><code>expectMinimumCallCount($method, $count)</code></td>
-                        <td style="text-align: center">Yes</td>
-                    </tr>
-                    <tr>
-                        <td><code>expectNever($method)</code></td>
-                        <td style="text-align: center">No</td>
-                    </tr>
-                    <tr>
-                        <td><code>expectOnce($method, $args)</code></td>
-                        <td style="text-align: center">Yes</td>
-                    </tr>
-                    <tr>
-                        <td><code>expectAtLeastOnce($method, $args)</code></td>
-                        <td style="text-align: center">Yes</td>
-                    </tr>
-                </tbody></table>
+                in <a href="http://simpletest.org/">SimpleTest</a>.
+                As with the assertions, these methods take an optional failure message.
+                <table>
+                    <thead><tr><th>Expectation</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr>
+                            <td><code>expect($method, $args)</code></td>
+                            <td>Arguments must match if called</td>
+                        </tr>
+                        <tr>
+                            <td><code>expectAt($timing, $method, $args)</code></td>
+                            <td>Arguments must match when called on the <code>$timing</code>'th time</td>
+                        </tr>
+                        <tr>
+                            <td><code>expectCallCount($method, $count)</code></td>
+                            <td>The method must be called exactly this many times</td>
+                        </tr>
+                        <tr>
+                            <td><code>expectMaximumCallCount($method, $count)</code></td>
+                            <td>Call this method no more than <code>$count</code> times</td>
+                        </tr>
+                        <tr>
+                            <td><code>expectMinimumCallCount($method, $count)</code></td>
+                            <td>Must be called at least <code>$count</code> times</td>
+                        </tr>
+                        <tr>
+                            <td><code>expectNever($method)</code></td>
+                            <td>Must never be called</td>
+                        </tr>
+                        <tr>
+                            <td><code>expectOnce($method, $args)</code></td>
+                            <td>Must be called once and with the expected arguments if supplied</td>
+                        </tr>
+                        <tr>
+                            <td><code>expectAtLeastOnce($method, $args)</code></td>
+                            <td>Must be called at least once, and always with any expected arguments</td>
+                        </tr>
+                    </tbody>
+                </table>
                 Where the parameters are...
                 <dl>
                     <dt class="new_code">$method</dt>
@@ -555,95 +753,28 @@ class LoggingSessionPoolTest extends UnitTestCase {
                     <dt class="new_code">$timing</dt>
                     <dd>
                         The only point in time to test the condition.
-                        The first call starts at zero.
+                        The first call starts at zero and the count is for
+                        each method independently.
                     </dd>
                     <dt class="new_code">$count</dt>
                     <dd>The number of calls expected.</dd>
                 </dl>
-                The method <code>expectMaximumCallCount()</code>
-                is slightly different in that it will only ever generate a failure.
-                It is silent if the limit is never reached.
+            </p>
+            <p>
+                If you have just one call in your test, make sure you're using
+                <code>expectOnce</code>.<br />
+                Using <code>$mocked->expectAt(0, 'method', 'args);</code>
+                on its own will allow the method to never be called.
+                Checking the arguments and the overall call count
+                are currently independant.
+                Add an <code>expectCallCount()</code> expectation when you
+                are using <code>expectAt()</code> unless zero calls is allowed.
             </p>
             <p>
                 Like the assertions within test cases, all of the expectations
                 can take a message override as an extra parameter.
                 Also the original failure message can be embedded in the output
                 as &quot;%s&quot;.
-            </p>
-        </section>
-        <section name="approaches" title="Other approaches">
-            <p>
-                There are three approaches to creating mocks including the one
-                that SimpleTest employs.
-                Coding them by hand using a base class, generating them to
-                a file and dynamically generating them on the fly.
-            </p>
-            <p>
-                Mock objects generated with <a local="simple_test">SimpleTest</a>
-                are dynamic.
-                They are created at run time in memory, using
-                <code>eval()</code>, rather than written
-                out to a file.
-                This makes the mocks easy to create, a one liner,
-                especially compared with hand
-                crafting them in a parallel class hierarchy.
-                The problem is that the behaviour is usually set up in the tests
-                themselves.
-                If the original objects change the mock versions
-                that the tests rely on can get out of sync.
-                This can happen with the parallel hierarchy approach as well,
-                but is far more quickly detected.
-            </p>
-            <p>
-                The solution, of course, is to add some real integration
-                tests.
-                You don&apos;t need very many and the convenience gained
-                from the mocks more than outweighs the small amount of
-                extra testing.
-                You cannot trust code that was only tested with mocks.
-            </p>
-            <p>
-                If you are still determined to build static libraries of mocks
-                because you want to simulate very specific behaviour, you can
-                achieve the same effect using the SimpleTest class generator.
-                In your library file, say <em>mocks/connection.php</em> for a
-                database connection, create a mock and inherit to override
-                special methods or add presets...
-<php><![CDATA[
-<?php
-    require_once('simpletest/mock_objects.php');
-    require_once('../classes/connection.php');
-<strong>
-    Mock::generate('Connection', 'BasicMockConnection');
-    class MockConnection extends BasicMockConnection {
-        function MockConnection() {
-            $this->BasicMockConnection();
-            $this->setReturn('query', false);
-        }
-    }</strong>
-?>
-]]></php>
-                The generate call tells the class generator to create
-                a class called <code>BasicMockConnection</code>
-                rather than the usual <code>MockConnection</code>.
-                We then inherit from this to get our version of
-                <code>MockConnection</code>.
-                By intercepting in this way we can add behaviour, here setting
-                the default value of <code>query()</code> to be false.
-                By using the default name we make sure that the mock class
-                generator will not recreate a different one when invoked elsewhere in the
-                tests.
-                It never creates a class if it already exists.
-                As long as the above file is included first then all tests
-                that generated <code>MockConnection</code> should
-                now be using our one instead.
-                If we don&apos;t get the order right and the mock library
-                creates one first then the class creation will simply fail.
-            </p>
-            <p>
-                Use this trick if you find you have a lot of common mock behaviour
-                or you are getting frequent integration problems at later
-                stages of testing.
             </p>
         </section>
     </content>
@@ -655,13 +786,7 @@ class LoggingSessionPoolTest extends UnitTestCase {
             <a href="#creation">Creating mock objects</a>.
         </link>
         <link>
-            <a href="#stub">Mocks as actors</a> or stubs.
-        </link>
-        <link>
             <a href="#expectations">Mocks as critics</a> with expectations.
-        </link>
-        <link>
-            <a href="#approaches">Other approaches</a> including mock libraries.
         </link>
     </internal>
     <external>

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
+<!-- $Id: web_tester_documentation.xml 1876 2009-06-12 16:30:24Z pp11 $ -->
 <page title="Web tester documentation" here="Web tester">
-    <long_title>Simple Test for PHP web script testing documentation</long_title>
+    <long_title>SimpleTest for PHP web script testing documentation</long_title>
     <content>
         <section name="fetch" title="Fetching a page">
             <p>
@@ -37,17 +38,21 @@
 }</strong>
 ]]></php>
                 Here we are about to test the
-                <a href="http://www/lastcraft.com/">Last Craft</a> site itself.
+                <a href="http://www.lastcraft.com/">Last Craft</a> site itself.
                 If this test case is in a file called <em>lastcraft_test.php</em>
                 then it can be loaded in a runner script just like unit tests...
 <php><![CDATA[
-<?php<strong>
-    require_once('simpletest/web_tester.php');</strong>
-    require_once('simpletest/reporter.php');
-    
-    $test = &new TestSuite('Web site tests');<strong>
-    $test->addTestFile('lastcraft_test.php');</strong>
-    exit ($test->run(new TextReporter()) ? 0 : 1);
+<?php
+require_once('simpletest/autorun.php');<strong>
+require_once('simpletest/web_tester.php');</strong>
+SimpleTest::prefer(new TextReporter());
+
+class WebTests extends TestSuite {
+    function WebTests() {
+        $this->TestSuite('Web site tests');<strong>
+        $this->addFile('lastcraft_test.php');</strong>
+    }
+}
 ?>
 ]]></php>
                 I am using the text reporter here to more clearly
@@ -184,9 +189,9 @@ class TestOfLastcraft extends WebTestCase {
 <pre class="shell">
 Web site tests
 1) Expecting response in [200] got [302]
-	in testhomepage
-	in testoflastcraft
-	in lastcraft_test.php
+    in testhomepage
+    in testoflastcraft
+    in lastcraft_test.php
 FAILURES!!!
 Test cases run: 1/1, Failures: 1, Exceptions: 0
 </pre>
@@ -350,7 +355,7 @@ class TestOfLastcraft extends WebTestCase {
             SimpleTest download page on <a href="http://www.lastcraft.com/simple_test.php">LastCraft</a>.
         </link>
         <link>
-            The <a href="http://simpletest.sourceforge.net/">developer&apos;s API for SimpleTest</a>
+            The <a href="http://simpletest.org/api/">developer&apos;s API for SimpleTest</a>
             gives full detail on the classes and assertions available.
         </link>
     </external>

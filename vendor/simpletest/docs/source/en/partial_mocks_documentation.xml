@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!-- $Id: partial_mocks_documentation.xml 1977 2009-12-22 15:19:59Z lastcraft $ -->
 <page title="Partial mock objects documentation" here="Partial mocks">
     <long_title>SimpleTest for PHP partial mocks documentation</long_title>
     <content>
@@ -7,7 +8,7 @@
                 A partial mock is simply a pattern to alleviate a specific problem
                 in testing with mock objects,
                 that of getting mock objects into tight corners.
-                It&apos;s quite a limited tool and possibly not even a good idea.
+                It's quite a limited tool and possibly not even a good idea.
                 It is included with SimpleTest because I have found it useful
                 on more than one occasion and has saved a lot of work at that point.
             </p>
@@ -20,7 +21,7 @@
                 creator is the one you want to test.
                 This means that the created object should be mocked, but we can
                 hardly tell our class under test to create a mock instead.
-                The tested class doesn&apos;t even know it is running inside a test
+                The tested class doesn't even know it is running inside a test
                 after all.
             </p>
             <p>
@@ -29,16 +30,16 @@
                 The connection method might look something like...
 <php><![CDATA[
 <strong><?php
-    require_once('socket.php');
-    
-    class Telnet {
+require_once('socket.php');
+
+class Telnet {
+    ...
+    function connect($ip, $port, $username, $password) {
+        $socket = new Socket($ip, $port);
+        $socket->read( ... );
         ...
-        function &connect($ip, $port, $username, $password) {
-            $socket = &new Socket($ip, $port);
-            $socket->read( ... );
-            ...
-        }
     }
+}
 ?></strong>
 ]]></php>
                 We would really like to have a mock object version of the socket
@@ -58,15 +59,15 @@
                 Here this would be...
 <php><![CDATA[
 <?php
-    require_once('socket.php');
-    
-    class Telnet {
+require_once('socket.php');
+
+class Telnet {
+    ...
+    <strong>function connect($socket, $username, $password) {
+        $socket->read( ... );
         ...
-        <strong>function &connect(&$socket, $username, $password) {
-            $socket->read( ... );
-            ...
-        }</strong>
-    }
+    }</strong>
+}
 ?>
 ]]></php>
                 This means that the test code is typical for a test involving
@@ -75,9 +76,9 @@
 class TelnetTest extends UnitTestCase {
     ...
     function testConnection() {<strong>
-        $socket = &new MockSocket($this);
+        $socket = new MockSocket();
         ...
-        $telnet = &new Telnet();
+        $telnet = new Telnet();
         $telnet->connect($socket, 'Me', 'Secret');
         ...</strong>
     }
@@ -87,26 +88,26 @@ class TelnetTest extends UnitTestCase {
                 You would hardly want your top level application creating
                 every low level file, socket and database connection ever
                 needed.
-                It wouldn&apos;t know the constructor parameters anyway.
+                It wouldn't know the constructor parameters anyway.
             </p>
             <p>
                 The next simplest compromise is to have the created object passed
                 in as an optional parameter...
 <php><![CDATA[
 <?php
-    require_once('socket.php');
-    
-    class Telnet {
-        ...<strong>
-        function &connect($ip, $port, $username, $password, $socket = false) {
-            if (!$socket) {
-                $socket = &new Socket($ip, $port);
-            }
-            $socket->read( ... );</strong>
-            ...
-            return $socket;
+require_once('socket.php');
+
+class Telnet {
+    ...<strong>
+    function connect($ip, $port, $username, $password, $socket = false) {
+        if (!$socket) {
+            $socket = new Socket($ip, $port);
         }
+        $socket->read( ... );</strong>
+        ...
+        return $socket;
     }
+}
 ?>
 ]]></php>
                 For a quick solution this is usually good enough.
@@ -116,10 +117,10 @@ class TelnetTest extends UnitTestCase {
 class TelnetTest extends UnitTestCase {
     ...
     function testConnection() {<strong>
-        $socket = &new MockSocket($this);
+        $socket = new MockSocket();
         ...
-        $telnet = &new Telnet();
-        $telnet->connect('127.0.0.1', 21, 'Me', 'Secret', &$socket);
+        $telnet = new Telnet();
+        $telnet->connect('127.0.0.1', 21, 'Me', 'Secret', $socket);
         ...</strong>
     }
 }
@@ -134,20 +135,20 @@ class TelnetTest extends UnitTestCase {
                 The next method is to pass in a factory object to do the creation...
 <php><![CDATA[
 <?php
-    require_once('socket.php');
-    
-    class Telnet {<strong>
-        function Telnet(&$network) {
-            $this->_network = &$network;
-        }</strong>
+require_once('socket.php');
+
+class Telnet {<strong>
+   function Telnet($network) {
+        $this->_network = $network;
+    }</strong>
+    ...
+    function connect($ip, $port, $username, $password) {<strong>
+        $socket = $this->_network->createSocket($ip, $port);
+        $socket->read( ... );</strong>
         ...
-        function &connect($ip, $port, $username, $password) {<strong>
-            $socket = &$this->_network->createSocket($ip, $port);
-            $socket->read( ... );</strong>
-            ...
-            return $socket;
-        }
+        return $socket;
     }
+}
 ?>
 ]]></php>
                 This is probably the most highly factored answer as creation
@@ -158,11 +159,11 @@ class TelnetTest extends UnitTestCase {
 class TelnetTest extends UnitTestCase {
     ...
     function testConnection() {<strong>
-        $socket = &new MockSocket($this);
+        $socket = new MockSocket();
         ...
-        $network = &new MockNetwork($this);
-        $network->setReturnReference('createSocket', $socket);
-        $telnet = &new Telnet($network);
+        $network = new MockNetwork();
+        $network->returnsByReference('createSocket', $socket);
+        $telnet = new Telnet($network);
         $telnet->connect('127.0.0.1', 21, 'Me', 'Secret');
         ...</strong>
     }
@@ -173,6 +174,13 @@ class TelnetTest extends UnitTestCase {
                 Also we are passing a lot of factories around which will
                 make the code a little less intuitive.
                 The most flexible solution, but the most complex.
+            </p>
+            <p>
+                Well techniques like "Dependency Injection" tackle the problem of
+                instantiating a lot of constructor parameters.
+                Unfortunately knowledge of this pattern is not widespread, and if you
+                are trying to get older code to work, rearchitecting the whole
+                application is not really an option.
             </p>
             <p>
                 Is there a middle ground?
@@ -186,38 +194,39 @@ class TelnetTest extends UnitTestCase {
                 Firstly we move the socket creation into its own method...
 <php><![CDATA[
 <?php
-    require_once('socket.php');
-    
-    class Telnet {
+require_once('socket.php');
+
+class Telnet {
+    ...
+    function connect($ip, $port, $username, $password) {
+        <strong>$socket = $this->createSocket($ip, $port);</strong>
+        $socket->read( ... );
         ...
-        function &connect($ip, $port, $username, $password) {<strong>
-            $socket = &$this->_createSocket($ip, $port);</strong>
-            $socket->read( ... );
-            ...
-        }<strong>
-        
-        function &_createSocket($ip, $port) {
-            return new Socket($ip, $port);
-        }</strong>
-    }
+    }<strong>
+
+    protected function createSocket($ip, $port) {
+        return new Socket($ip, $port);
+    }</strong>
+}
 ?>
 ]]></php>
-                This is the only change we make to the application code.
+                This is a pretty safe step even for very tangled legacy code.
+                This is the only change we make to the application.
             </p>
             <p>
                 For the test case we have to create a subclass so that
                 we can intercept the socket creation...
 <php><![CDATA[
 <strong>class TelnetTestVersion extends Telnet {
-    var $_mock;
-    
-    function TelnetTestVersion(&$mock) {
-        $this->_mock = &$mock;
+    var $mock;
+
+    function TelnetTestVersion($mock) {
+        $this->mock = $mock;
         $this->Telnet();
     }
-    
-    function &_createSocket() {
-        return $this->_mock;
+
+    protected function createSocket() {
+        return $this->mock;
     }
 }</strong>
 ]]></php>
@@ -228,7 +237,7 @@ class TelnetTest extends UnitTestCase {
                 This is necessary in case the constructor calls
                 <code>connect()</code>.
                 Otherwise it could get a null value from
-                <code>_createSocket()</code>.
+                <code>createSocket()</code>.
             </p>
             <p>
                 After the completion of all of this extra work the
@@ -238,11 +247,10 @@ class TelnetTest extends UnitTestCase {
 class TelnetTest extends UnitTestCase {
     ...
     function testConnection() {<strong>
-        $socket = &new MockSocket($this);
+        $socket = new MockSocket();
         ...
-        $telnet = &new TelnetTestVersion($socket);
-        $telnet->connect('127.0.0.1', 21, 'Me', 'Secret');
-        ...</strong>
+        $telnet = new TelnetTestVersion($socket);
+        $telnet->connect('127.0.0.1', 21, 'Me', 'Secret');</strong>
     }
 }
 ]]></php>
@@ -268,18 +276,17 @@ class TelnetTest extends UnitTestCase {
 <strong>Mock::generatePartial(
         'Telnet',
         'TelnetTestVersion',
-        array('_createSocket'));</strong>
+        array('createSocket'));</strong>
 
 class TelnetTest extends UnitTestCase {
     ...
     function testConnection() {<strong>
-        $socket = &new MockSocket($this);
+        $socket = new MockSocket();
         ...
-        $telnet = &new TelnetTestVersion($this);
-        $telnet->setReturnReference('_createSocket', $socket);
+        $telnet = new TelnetTestVersion();
+        $telnet->setReturnReference('createSocket', $socket);
         $telnet->Telnet();
-        $telnet->connect('127.0.0.1', 21, 'Me', 'Secret');
-        ...</strong>
+        $telnet->connect('127.0.0.1', 21, 'Me', 'Secret');</strong>
     }
 }
 ]]></php>
@@ -316,23 +323,26 @@ class TelnetTest extends UnitTestCase {
 class TelnetTest extends UnitTestCase {
     ...
     function testConnection() {
-        $socket = &new MockSocket($this);
+        $socket = new MockSocket();
         ...
-        $telnet = &new TelnetTestVersion($this);
-        $telnet->setReturnReference('_createSocket', $socket);<strong>
-        $telnet->expectOnce('_createSocket', array('127.0.0.1', 21));</strong>
+        $telnet = new TelnetTestVersion();
+        $telnet->setReturnReference('createSocket', $socket);
+        <strong>$telnet->expectOnce('createSocket', array('127.0.0.1', 21));</strong>
         $telnet->Telnet();
         $telnet->connect('127.0.0.1', 21, 'Me', 'Secret');
-        ...<strong>
-        $telnet->tally();</strong>
     }
 }
 ]]></php>
+                Partial mocks are not used often.
+                I consider them transitory.
+                Useful while refactoring, but once the application has
+                all of it's dependencies nicely separated then the
+                partial mocks can wither away.
             </p>
         </section>
         <section name="less" title="Testing less than a class">
             <p>
-                The mocked out methods don&apos;t have to be factory methods,
+                The mocked out methods don't have to be factory methods,
                 they could be any sort of method.
                 In this way partial mocks allow us to take control of any part of
                 a class except the constructor.
@@ -340,16 +350,16 @@ class TelnetTest extends UnitTestCase {
                 except one we actually want to test.
             </p>
             <p>
-                This last situation is all rather hypothetical, as I haven&apos;t
+                This last situation is all rather hypothetical, as I've hardly
                 tried it.
-                I am open to the possibility, but a little worried that
+                I am a little worried that
                 forcing object granularity may be better for the code quality.
                 I personally use partial mocks as a way of overriding creation
                 or for occasional testing of the TemplateMethod pattern.
             </p>
             <p>
-                It&apos;s all going to come down to the coding standards of your
-                project to decide which mechanism you use.
+                It's all going to come down to the coding standards of your
+                project to decide if you allow test mechanisms like this.
             </p>
         </section>
     </content>
@@ -372,7 +382,7 @@ class TelnetTest extends UnitTestCase {
             SimpleTest project page on <a href="http://sourceforge.net/projects/simpletest/">SourceForge</a>.
         </link>
         <link>
-            <a href="http://simpletest.sourceforge.net/">Full API for SimpleTest</a>
+            <a href="http://simpletest.org/api/">Full API for SimpleTest</a>
             from the PHPDoc.
         </link>
         <link>

@@ -1,8 +1,23 @@
 <?php
-
+/**
+ *	base include file for SimpleTest
+ *	@package	SimpleTest
+ *	@subpackage	Extensions
+ *	@version	$Id: selenium.php 1953 2009-09-20 01:26:25Z jsweat $
+ */
+/**#@+
+ *  include other SimpleTest class files
+ */
 require_once dirname(__FILE__) . '/../unit_tester.php';
 require_once dirname(__FILE__) . '/selenium/remote-control.php';
+/**#@-*/
 
+/**
+ * Provides test case wrapper to a Selenium remote
+ * control instance.
+ *	@package	SimpleTest
+ *	@subpackage	Extensions
+ */
 class SeleniumTestCase extends UnitTestCase
 {
 	/**#@+
@@ -19,7 +34,7 @@ class SeleniumTestCase extends UnitTestCase
 	protected $newInstanceEachTest = true;
 
 	public function __construct($name = 'Selenium Test Case') {
-		parent::UnitTestCase($name);
+		parent::__construct($name);
 
 		if (empty($this->browser)) {
 			trigger_error('browser property must be set in ' . get_class($this));

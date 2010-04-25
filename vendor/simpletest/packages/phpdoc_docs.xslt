@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-    <!-- $Id: phpdoc_docs.xslt,v 1.9 2005/07/27 18:08:10 jsweat Exp $ -->
+    <!-- $Id: phpdoc_docs.xslt 1047 2005-07-27 18:08:10Z jsweat $ -->
 
     <xsl:output method="xml" indent="yes" cdata-section-elements="program-listing"/>
     <xsl:preserve-space elements="*"/>

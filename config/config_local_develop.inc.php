@@ -154,7 +154,7 @@ $EXTERN_SRI_ENABLE = TRUE;                              //allow the usage of SRI
 $EXTERN_SRI_ENABLE_BY_ROOT = FALSE;                         //only root allows the usage of SRI-interface for specific institutes
 $EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG = FALSE;                        //free access to external pages (without the need of a configuration), independent of SRI settings above
 
-$VOTE_ENABLE = TRUE;                                    //Stud.IP module: Votingsystem
+$VOTE_ENABLE = TRUE;                                    //Stud.IP module: Umfragenystem
 
 $ELEARNING_INTERFACE_ENABLE = TRUE;                         //Stud.IP module: elearning interface
 $SOAP_ENABLE = TRUE;

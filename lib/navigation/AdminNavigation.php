@@ -109,7 +109,7 @@ class AdminNavigation extends Navigation
         $navigation->addSubNavigation('news', new Navigation(_('News'), 'admin_news.php?list=TRUE&view=news_inst'));
 
         if (get_config('VOTE_ENABLE')) {
-            $navigation->addSubNavigation('vote', new Navigation(_('Votings und Tests'), 'admin_vote.php?view=vote_inst'));
+            $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_inst'));
             $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_inst'));
         }
 

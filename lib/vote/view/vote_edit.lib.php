@@ -426,7 +426,7 @@ function printRightRegion ( ) {
 
     $action_text1 = ( $type == "test" )
         ? _("Ver&auml;ndern Sie links die Frage und die Antworten Ihres Tests. ")
-        : _("Ver&auml;ndern Sie links die Frage und die Antworten Ihres Votings. ");
+        : _("Ver&auml;ndern Sie links die Frage und die Antworten Ihrer Umfrage. ");
 
     break;
 
@@ -438,7 +438,7 @@ function printRightRegion ( ) {
 
     $action_text1 = ( $type == "test" )
         ? _("Geben Sie links die Frage und die m&ouml;glichen Antworten Ihres Tests ein. ")
-        : _("Geben Sie links die Frage und die m&ouml;glichen Antworten Ihres Votings ein. ");
+        : _("Geben Sie links die Frage und die m&ouml;glichen Antworten Ihrer Umfrage ein. ");
 
     break;
     }
@@ -748,7 +748,7 @@ function printProperties ( $multipleChoice,
 
     $html .= $line1 . _("immer") . "<br>";
     $html .= $line2 . _("erst nachdem er seine Stimme(n) abgegeben hat") . "<br>";
-    $html .= $line3 . (($type=="test") ? _("erst nach Ablauf des Tests") : _("erst nach Ablauf des Votings")) . "<br>";
+    $html .= $line3 . (($type=="test") ? _("erst nach Ablauf des Tests") : _("erst nach Ablauf der Umfrage")) . "<br>";
     $html .= $line4 . _("nie");
     $html .= "</font></td></tr>";
 
@@ -790,7 +790,7 @@ function printProperties ( $multipleChoice,
     $html .= "<font size=-1>";
     $html .= ($type=="test")
     ? _("Die Auswertung des Tests l&auml;uft:") . "</font>&nbsp;&nbsp;</td><td align=left class=steelgraulight>"
-    : _("Die Auswertung des Votings l&auml;uft:") . "</font>&nbsp;&nbsp;</td><td align=left class=steel1>";
+    : _("Die Auswertung der Umfrage l&auml;uft:") . "</font>&nbsp;&nbsp;</td><td align=left class=steel1>";
     $html .= "<font size=-1>";
 
     if( $pageMode != MODE_RESTRICTED ) {

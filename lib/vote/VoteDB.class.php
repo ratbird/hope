@@ -546,7 +546,7 @@ class VoteDB extends StudipObject {
      $this->db->query ($sql);
      if ($this->db->nf() == 0){
        if ($rangeID == "studip")
-     $rangename = _("Systemweite Votings/Tests");
+     $rangename = _("Systemweite Umfragen und Tests");
        else
      $rangename = getHeaderLine($rangeID);
        return $rangename;

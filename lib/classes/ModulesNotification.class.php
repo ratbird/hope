@@ -49,7 +49,7 @@ class ModulesNotification extends Modules {
                 'mes' => TRUE, 'name' => _("News"));
         $this->registered_notification_modules['votes'] = array(
                 'id' => 26, 'const' => '', 'sem' => TRUE, 'inst' => FALSE,
-                'mes' => TRUE, 'name' => _("Umfragen und Votings"));
+                'mes' => TRUE, 'name' => _("Umfragen und Tests"));
         $this->registered_notification_modules['basic_data'] = array(
                 'id' => 27, 'const' => '', 'sem' => TRUE, 'inst' => FALSE,
                 'mes' => TRUE, 'name' => _("Grunddaten der Veranstaltung"));

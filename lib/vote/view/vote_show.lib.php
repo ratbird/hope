@@ -373,7 +373,7 @@ if($eval) {
       $html.=URLHelper::getLink($arrowlink)."\">\n";
 
       $html .= "    <img src=\"".VOTE_PATH_PICTURES."forumgraurunt.gif\"".
-     tooltip(_("Alle Votings und Tests öffnen!"))." border=\"0\">\n";
+     tooltip(_("Alle Umfragen und Tests öffnen!"))." border=\"0\">\n";
    }
    /* ---------------------------------------------------------------------- */
 
@@ -382,7 +382,7 @@ if($eval) {
       $html .= URLHelper::getLink($arrowlink)."\">\n";
 
       $html .= "    <img src=\"".VOTE_PATH_PICTURES."forumgraurauf.gif\""
-     . tooltip(_("Alle Votings und Tests schließen!"))." border=\"0\">\n";
+     . tooltip(_("Alle Umfragen und Tests schließen!"))." border=\"0\">\n";
    }
    /* ---------------------------------------------------------------------- */
 }
@@ -894,7 +894,7 @@ function createVoteInfo (&$vote, $isAssociated = NO) {
    else {
        $html .= ($vote->x_instanceof() == INSTANCEOF_TEST)
        ? _("Der Endzeitpunkt dieses Tests steht noch nicht fest.")
-       : _("Der Endzeitpunkt dieses Votings steht noch nicht fest.");
+       : _("Der Endzeitpunkt dieser Umfrage steht noch nicht fest.");
    }
    $html .= " \n";
    /* ---------------------------------------------------------------------- */

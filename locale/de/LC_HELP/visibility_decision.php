@@ -45,7 +45,7 @@
   <ul>
   <li>Sie können Stud.IP aktiv nutzen und sich an Veranstaltungen, Foren etc. beteiligen
   <li>TeilnehmerInnen-Listen von Veranstaltungen sind nur dann für die TeilnehmerInnen zugänglich, wenn alle einverstanden sind
-  <li>Sobald Sie im System aktiv werden - d.h. Forumsbeiträge verfassen, sich an nicht-anonymen Votings beteiligen, Mails verschicken etc. - wird Ihr Name dabei angegeben und es lässt sich nicht vermeiden, dass andere Nutzerinnen und Nutzer indirekt erkennen können, ob Sie sichtbar oder unsichtbar sind.
+  <li>Sobald Sie im System aktiv werden - d.h. Forumsbeiträge verfassen, sich an nicht-anonymen Umfragen beteiligen, Mails verschicken etc. - wird Ihr Name dabei angegeben und es lässt sich nicht vermeiden, dass andere Nutzerinnen und Nutzer indirekt erkennen können, ob Sie sichtbar oder unsichtbar sind.
   </ul>
     </td></tr>
 <tr>

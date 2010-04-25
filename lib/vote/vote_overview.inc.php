@@ -94,13 +94,13 @@ if (($showrangeID) && ($voteaction != "search")){
     }
     else{
         //TODO: MessageBox verwenden
-        $safeguard = printSafeguard("ausruf",_("Sie haben kein Berechtigung für diesen Bereich oder der Bereich existiert nicht. Es werden Votings und Tests ihrer Profilseite angezeigt."));
+        $safeguard = printSafeguard("ausruf",_("Sie haben kein Berechtigung für diesen Bereich oder der Bereich existiert nicht. Es werden Umfragen und Tests ihrer Profilseite angezeigt."));
         $showrangeID = get_username ($userID);
     }
 }
 elseif ($voteaction != "search"){
     //TODO: MessageBox verwenden
-    $safeguard = printSafeguard("ausruf",_("Es werden Votings und Tests ihrer Profilseite angezeigt."));
+    $safeguard = printSafeguard("ausruf",_("Es werden Umfragen und Tests ihrer Profilseite angezeigt."));
     $showrangeID = get_username ($userID);
     }
 
@@ -128,7 +128,7 @@ $voteDB = new VoteDB();
 $typen = array("user"=>_("Benutzer"),"sem"=>_("Veranstaltung"),"inst"=>_("Einrichtung"),"fak"=>_("Fakult&auml;t"));
 
 if ($rangemode == "root"){
-    $range[] = array("studip",_("Systemweite Votings/Tests"));
+    $range[] = array("studip",_("Systemweite Umfragen und Tests"));
     $range[] = array(get_username($userID),_("Profil"));
     if (($showrangeID != "studip") &&
         ($showrangeID != get_username ($userID))
@@ -136,7 +136,7 @@ if ($rangemode == "root"){
         $range[] = array($showrangeID,$voteDB->getRangename($showrangeID));
 }
 elseif ($rangemode == "admin"){
-//  $range[] = array("studip",_("Fak/InstSystemweite Votings/Tests"));
+//  $range[] = array("studip",_("Fak/InstSystemweite Umfragen und Tests"));
     $range[] = array(get_username($userID),_("Profil"));
     if (($showrangeID != get_username ($userID))
         && ($showrangeID != NULL))
@@ -178,7 +178,7 @@ printSelections($range,$searchRange,$safeguard);
 $voteDB = new VoteDB();
 $voteDB->startWaitingVotes ();
     if ($voteDB->isError ())
-        printSafeguard("ausruf",_("Fehler beim Starten der wartenden Votings und Tests."));
+        printSafeguard("ausruf",_("Fehler beim Starten der wartenden Umfragen und Tests."));
 
 if ($voteaction != "search"){
     // reads the vote data into arrays
@@ -503,7 +503,7 @@ function createVoteArray($mode){
             $rangetitle = _("eigenes Profil");
 //          $rangetitle = $voteDB->getRangename($rangeID);
 //          $username = $voteDB->getAuthorUsername ($authID);
-//          if($rangeID == "studip") $rangetitle = _("Systemweite Votings/Tests");
+//          if($rangeID == "studip") $rangetitle = _("Systemweite Umfragen und Tests");
         }
         $votemode = $votearray["type"];
 
@@ -575,10 +575,10 @@ function createLabel(){
         "selections_text_middle" => _("in"),
         "selections_button" => "erstellen",
         "selections_tooltip" => _("Voting oder Test erstellen."),
-        "selections_selectrange_text" => _("Votings/Tests aus "),
+        "selections_selectrange_text" => _("Umfragen und Tests aus "),
         "selections_allranges" => _("allen Bereichen"),
         "selections_selectrange_button" => "anzeigen",
-        "selections_selectrange_tooltip" => _("Bereich der angezeigten Votings und Tests ausw&auml;hlen."),
+        "selections_selectrange_tooltip" => _("Bereich der angezeigten Umfragen und Tests ausw&auml;hlen."),
 
         // labels for printSearchResults
         "searchresults_title" => _("Suchergebnisse"),
@@ -597,15 +597,15 @@ function createLabel(){
         "search_tooltip" => _("Hier können Sie nach weiteren Bereichen suchen."),
 
         // labels for printVoteTable
-        "table_title" => _("Votings und Tests aus dem Bereich"),
-        "table_title_new" => _("Noch nicht gestartete Votings/Tests:"),
-        "table_title_active" => _("Laufende Votings/Tests:"),
-        "table_title_stopped" => _("Gestoppte Votings/Tests:"),
+        "table_title" => _("Umfragen und Tests aus dem Bereich"),
+        "table_title_new" => _("Noch nicht gestartete Umfragen und Tests:"),
+        "table_title_active" => _("Laufende Umfragen und Tests:"),
+        "table_title_stopped" => _("Gestoppte Umfragen und Tests:"),
 
         "arrow_openthis" => _("Diesen Eintrag aufklappen."),
         "arrow_closethis" => _("Diesen Eintrag zuklappen."),
-        "arrow_open_all" => _("Alle Votings und Tests &ouml;ffnen!"),
-        "arrow_close_all" => _("Alle Votings und Tests schliessen!"),
+        "arrow_open_all" => _("Alle Umfragen und Tests &ouml;ffnen!"),
+        "arrow_close_all" => _("Alle Umfragen und Tests schliessen!"),
 
 
         "title" => _("Titel"),
@@ -645,9 +645,9 @@ function createLabel(){
         "delete" => _("L&ouml;schen"),
         "delete_button" => "loeschen",
         "delete_tooltip" => _("Diesen Eintrag l&ouml;schen."),
-        "no_votes_message_new" => _("Keine nicht gestarteten Votings oder Tests vorhanden."),
-        "no_votes_message_active" => _("Keine laufenden Votings oder Tests vorhanden."),
-        "no_votes_message_stopped" => _("Keine gestoppten Votings oder Tests vorhanden."),
+        "no_votes_message_new" => _("Keine nicht gestarteten Umfragen oder Tests vorhanden."),
+        "no_votes_message_active" => _("Keine laufenden Umfragen oder Tests vorhanden."),
+        "no_votes_message_stopped" => _("Keine gestoppten Umfragen oder Tests vorhanden."),
     );
     return $label;
 }

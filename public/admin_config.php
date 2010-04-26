@@ -114,7 +114,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
             </blockquote>
         </td>
         <td class="blank" align="right" valign="top"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="5"><br>
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/modules.jpg" border="0"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="10">
+            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/infoboxes/modules.jpg" border="0"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="10">
         </td>
     </tr>
     <tr>

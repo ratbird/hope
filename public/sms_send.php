@@ -240,8 +240,6 @@ global $perm;
 // created by nimuelle, step00194
 if (Request::get('sp_id') && $perm->have_perm("admin")) {
 
-    echo Request::get('sp_id');
-
     // be sure to send it as email
     if(Request::get('emailrequest') == 1) {
         $sms_data['tmpemailsnd'] = 1;

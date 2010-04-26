@@ -53,6 +53,6 @@ class Step00191ModulesEnable extends Migration
         $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('BANNER_ADS_ENABLE')");
 
         //new
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('LITERATURE_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('LITERATURE_ENABLE')");
     }
 }

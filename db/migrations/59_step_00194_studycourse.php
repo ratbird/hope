@@ -25,7 +25,8 @@ class Step00194Studycourse extends Migration
     function down()
     {
         $db = DBManager::get();
-        $db->exec("DROP TABLE `abschluss`");
-        $db->exec("ALTER TABLE `user_studiengang` DROP `semester`,`abschluss_id`");
+        $db->exec("DROP TABLE IF EXISTS `abschluss`");
+        $db->exec("ALTER TABLE `user_studiengang` DROP `semester`");
+        $db->exec("ALTER TABLE `user_studiengang` DROP `abschluss_id`");
     }
 }

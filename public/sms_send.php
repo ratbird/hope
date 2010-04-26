@@ -118,7 +118,6 @@ if($tmp_save_snd_folder) {
 
 }
 
-
 // do we like save the transmitted sms?
 if(!$sms_data["tmpsavesnd"]) {
     $sms_data["tmpsavesnd"] = $my_messaging_settings["save_snd"];
@@ -234,6 +233,96 @@ if ($msgid) {
     $dbv->next_record();
     $rec_uname = $dbv->f("username");
     $sms_data["p_rec"] = "";
+}
+
+global $perm;
+// send message at group of a study profession
+// created by nimuelle, step00194
+if (Request::get('sp_id') && $perm->have_perm("admin")) {
+
+    echo Request::get('sp_id');
+
+    // be sure to send it as email
+    if(Request::get('emailrequest') == 1) {
+        $sms_data['tmpemailsnd'] = 1;
+    }
+
+    // predefine subject
+    if(Request::get('subject')) {
+        $messagesubject = Request::get('subject');
+    }
+
+    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE studiengang_id = '%s' ", Request::get('sp_id'));
+    $add_group_members = $db->query($query)->fetchAll(PDO::FETCH_COLUMN);
+
+    $sms_data["p_rec"] = "";
+    if (is_array($add_group_members)) {
+        $sms_data["p_rec"] = array_add_value($add_group_members, $sms_data["p_rec"]);
+    } else {
+        $msg = "error§"._("Das gewählte Studienfach enthält keine Mitglieder.");
+        unset($sms_data["p_rec"]);
+    }
+
+    // append signature
+    $sms_data["sig"] = $my_messaging_settings["addsignature"];
+}
+
+// if send message at group of a study degree
+// created by nimuelle, step00194
+if (Request::get('sd_id') && $perm->have_perm("admin")) {
+
+    // be sure to send it as email
+    if(Request::get('emailrequest') == 1) {
+        $sms_data['tmpemailsnd'] = 1;
+    }
+
+    // predefine subject
+    if(Request::get('subject')) {
+        $messagesubject = Request::get('subject');
+    }
+
+    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE abschluss_id = '%s' ", Request::get('sd_id'));
+    $add_group_members = $db->query($query)->fetchAll(PDO::FETCH_COLUMN);
+
+    $sms_data["p_rec"] = "";
+    if (is_array($add_group_members)) {
+        $sms_data["p_rec"] = array_add_value($add_group_members, $sms_data["p_rec"]);
+    } else {
+        $msg = "error§"._("Die gewählte Studienabschluss enthält keine Mitglieder.");
+        unset($sms_data["p_rec"]);
+    }
+
+    // append signature
+    $sms_data["sig"] = $my_messaging_settings["addsignature"];
+}
+
+// if send message at group studys with profession and degree
+// created by nimuelle, step00194
+if (Request::get('prof_id') && Request::get('deg_id') && ($perm->have_perm("root") || $perm->have_perm("admin"))) {
+
+    // be sure to send it as email
+    if(Request::get('emailrequest') == 1) {
+        $sms_data['tmpemailsnd'] = 1;
+    }
+
+    // predefine subject
+    if(Request::get('subject')) {
+        $messagesubject = Request::get('subject');
+    }
+
+    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE studiengang_id = '%s' and abschluss_id = '%s'", Request::get('prof_id'), Request::get('deg_id'));
+    $add_group_members = $db->query($query)->fetchAll(PDO::FETCH_COLUMN);
+
+    $sms_data["p_rec"] = "";
+    if (is_array($add_group_members)) {
+        $sms_data["p_rec"] = array_add_value($add_group_members, $sms_data["p_rec"]);
+    } else {
+        $msg = "error§"._("Der gewählte Studiengang enthält keine Mitglieder.");
+        unset($sms_data["p_rec"]);
+    }
+
+    // append signature
+    $sms_data["sig"] = $my_messaging_settings["addsignature"];
 }
 
 // if send message at group (adressbook or groups in courses)

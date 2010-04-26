@@ -195,7 +195,7 @@ class about extends messaging {
     var $auth_user = array();        // assoziatives Array, enthält die Userdaten aus der Tabelle auth_user_md5
     var $user_info = array();        // assoziatives Array, enthält die Userdaten aus der Tabelle user_info
     var $user_inst = array();        // assoziatives Array, enthält die Userdaten aus der Tabelle user_inst
-    var $user_studiengang = array(); // assoziatives Array, enthält die Userdaten aus der Tabelle user_studiengang
+    var $user_fach_abschluss = array(); // assoziatives Array, enthält die Userdaten aus der Tabelle user_studiengang
     var $user_userdomains = array(); // assoziatives Array, enthält die Userdaten aus der Tabelle user_userdomains
     var $check = "";    //Hilfsvariable für den Rechtecheck
     var $special_user = FALSE;  // Hilfsvariable für bes. Institutsfunktionen
@@ -269,11 +269,13 @@ class about extends messaging {
             }
         }
 
-        $this->db->query("SELECT user_studiengang.*,studiengaenge.name FROM user_studiengang LEFT JOIN studiengaenge USING (studiengang_id) WHERE user_id = '".$this->auth_user["user_id"]."' ORDER BY name");
+       $this->db->query("SELECT user_studiengang.*,studiengaenge.name AS fname, abschluss.name AS aname, semester FROM user_studiengang LEFT JOIN studiengaenge USING (studiengang_id) LEFT JOIN abschluss USING (abschluss_id) WHERE user_id = '".$this->auth_user["user_id"]."' ORDER BY fname,aname");
         while ($this->db->next_record()) {
-            $this->user_studiengang[$this->db->f("studiengang_id")] = array("name" => $this->db->f("name"));
+            $this->user_fach_abschluss[$this->db->f("studiengang_id")] = array(
+                                                                     "fname" => $this->db->f("fname"),
+                                                                     "semester" => $this->db->f("semester"),
+                                                                     "aname" => $this->db->f("aname"));
         }
-
 
         $this->user_userdomains = UserDomain::getUserDomainsForUser($this->auth_user['user_id']);
 
@@ -296,22 +298,50 @@ class about extends messaging {
         return;
     }
 
-    function studiengang_edit($studiengang_delete,$new_studiengang) {
-        if (is_array($studiengang_delete)) {
-            for ($i=0; $i < count($studiengang_delete); $i++) {
-                $this->db->query("DELETE FROM user_studiengang WHERE user_id='".$this->auth_user["user_id"]."' AND studiengang_id='$studiengang_delete[$i]'");
+    /**
+     * add, edit, delete courses of study
+     * @param array $fach_abschluss_delete
+     * @param string $new_studiengang
+     * @param string $new_abschluss
+     * @param int $fachsem
+     * @param array $change_fachsem
+     * @param array $course_id
+     */
+function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschluss,$fachsem,$change_fachsem,$course_id) {
+
+        $any_change = true;
+        if (is_array($fach_abschluss_delete)) {
+            $course_delete=true;
+            $any_change = false;
+            for ($i=0; $i < count($fach_abschluss_delete); $i++) {
+                $this->db->query("DELETE FROM user_studiengang WHERE user_id='".$this->auth_user["user_id"]."' AND studiengang_id='$fach_abschluss_delete[$i]'");
                 if (!$this->db->affected_rows())
-                    $this->msg = $this->msg."error§" . sprintf(_("Fehler beim L&ouml;schen in user_studiengang bei ID=%s"), $studiengang_delete[$i]) . "§";
+                    $this->msg = $this->msg."error§" . sprintf(_("Fehler beim L&ouml;schen in user_studiengang bei ID=%s"), $fach_abschluss_delete[$i]) . "§";
             }
         }
 
-        if ($new_studiengang) {
-            $this->db->query("INSERT IGNORE INTO user_studiengang (user_id,studiengang_id) VALUES ('".$this->auth_user["user_id"]."','$new_studiengang')");
-            if (!$this->db->affected_rows())
-                $this->msg = $this->msg."error§" . sprintf(_("Fehler beim Einf&uuml;gen in user_studiengang bei ID=%s"), $new_studiengang) . "§";
-        }
+        if ($any_change) {
+            if ( is_array($change_fachsem)) {
+                for ($i=0; $i < count($change_fachsem); $i++) {
+                    $this->db->query("UPDATE IGNORE user_studiengang SET user_studiengang.semester = '".$change_fachsem[$i]."' WHERE user_studiengang.user_id='".$this->auth_user["user_id"]."' AND user_studiengang.studiengang_id='$course_id[$i]'");
+                    if ($this->db->affected_rows()) {
+                        $edit_fachsem = true;
+                    }
+                }
+            }
 
-        if ( ($studiengang_delete || $new_studiengang) && !$this->msg) {
+            if ($new_studiengang && $new_abschluss && $new_studiengang != '-- Bitte Fach auswählen --' && $new_abschluss != '-- Bitte Abschluss auswählen --') {
+                $this->db->query("INSERT IGNORE INTO user_studiengang (user_id,studiengang_id,abschluss_id,semester) VALUES ('".$this->auth_user["user_id"]."','$new_studiengang','$new_abschluss','$fachsem')");
+                if (!$this->db->affected_rows()) {
+                    $this->msg = $this->msg."error§" . sprintf(_("Fehler beim Einf&uuml;gen in user_studiengang bei ID=%s"), $new_studiengang) . "§";
+                }
+            } else {
+                if (!$edit_fachsem) {
+                    $this->msg = $this->msg."error§". _("Bitte Fach und Abschluss ausfüllen"). "§";
+                }
+            }
+        }
+        if ( ($fach_abschluss_delete || $new_studiengang || $new_abschluss || $change_fachsem) && !$this->msg) {
             $this->msg = "msg§" . _("Die Zuordnung zu Studiengängen wurde ge&auml;ndert.");
             setTempLanguage($this->auth_user["user_id"]);
             $this->priv_msg= _("Die Zuordnung zu Studiengängen wurde geändert!\n");
@@ -320,9 +350,6 @@ class about extends messaging {
 
         return;
     }
-
-
-
     function userdomain_edit ($userdomain_delete, $new_userdomain) {
         if (is_array($userdomain_delete)) {
             for ($i=0; $i < count($userdomain_delete); $i++) {
@@ -344,9 +371,8 @@ class about extends messaging {
         }
     }
 
-
-
-    function inst_edit($inst_delete,$new_inst) {
+    function inst_edit($inst_delete, $new_inst)
+    {
         if (is_array($inst_delete)) {
             for ($i=0; $i < count($inst_delete); $i++) {
                 log_event('INST_USER_DEL', $inst_delete[$i], $this->auth_user["user_id"]);
@@ -358,7 +384,7 @@ class about extends messaging {
 
         if ($new_inst) {
             log_event('INST_USER_ADD', $new_inst , $this->auth_user['user_id'], 'user');
-         
+
             $this->db->query("INSERT IGNORE INTO user_inst (user_id,Institut_id,inst_perms) VALUES ('".$this->auth_user["user_id"]."','$new_inst','user')");
             if (!$this->db->affected_rows())
                 $this->msg = $this->msg . "error§" . sprintf(_("Fehler beim Einf&uuml;gen in user_inst bei ID=%s"), $new_inst) . "§";
@@ -631,19 +657,33 @@ class about extends messaging {
     }
 
 
-    function select_studiengang() {  //Hilfsfunktion, erzeugt eine Auswahlbox mit noch auswählbaren Studiengängen
-
-        echo '<select name="new_studiengang" style="width:30ex;"><option selected></option>'."\n";
+    /**
+     * Hilfsfunktion, erzeugt eine Auswahlbox mit noch auswählbaren Studiengängen
+     */
+    public function select_studiengang()
+    {
+        echo '<select name="new_studiengang"><option selected="selected"> -- Bitte Fach auswählen -- </option>'."\n";
         $this->db->query("SELECT a.studiengang_id,a.name FROM studiengaenge AS a LEFT JOIN user_studiengang AS b ON (b.user_id='".$this->auth_user["user_id"]."' AND a.studiengang_id=b.studiengang_id) WHERE b.studiengang_id IS NULL ORDER BY a.name");
-
         while ($this->db->next_record()) {
             echo "<option value=\"".$this->db->f("studiengang_id")."\">".htmlReady(my_substr($this->db->f("name"),0,50))."</option>\n";
         }
         echo "</select>\n";
-
         return;
     }
 
+    /**
+     * Hilfsfunktion, erzeugt eine Auswahlbox mit noch auswählbaren Abschluesse
+     */
+   public function select_abschluss()
+   {
+        echo '<select name="new_abschluss"><option selected="selected"> -- Bitte Abschluss auswählen -- </option>'."\n";
+        $this->db->query("SELECT a.abschluss_id,a.name FROM abschluss AS a LEFT JOIN user_studiengang AS b ON (b.user_id='".$this->auth_user["user_id"]."' AND a.abschluss_id=b.abschluss_id) WHERE b.abschluss_id IS NULL ORDER BY a.name");
+        while ($this->db->next_record()) {
+            echo "<option value=\"".$this->db->f("abschluss_id")."\">".htmlReady(my_substr($this->db->f("name"),0,50))."</option>\n";
+        }
+        echo "</select>\n";
+        return;
+    }
 
     function select_userdomain() {  //Hilfsfunktion, erzeugt eine Auswahlbox mit noch auswählbaren Nutzerdomänen
 
@@ -657,17 +697,18 @@ class about extends messaging {
         echo "</select>\n";
     }
 
+    /**
+     * Hilfsfunktion, erzeugt eine Auswahlbox mit noch auswählbaren Instituten
+     */
+    function select_inst()
+    {
 
-    function select_inst() {  //Hilfsfunktion, erzeugt eine Auswahlbox mit noch auswählbaren Instituten
-
-        echo '<select name="new_inst" style="width:30ex;"><option selected></option>'."\n";
+        echo '<select name="new_inst"><option selected="selected"></option>'."\n";
         $this->db->query("SELECT a.Institut_id,a.Name FROM Institute AS a LEFT JOIN user_inst AS b ON (b.user_id='".$this->auth_user["user_id"]."' AND a.Institut_id=b.Institut_id) WHERE b.Institut_id IS NULL ORDER BY a.Name");
-
         while ($this->db->next_record()) {
             echo "<option value=\"".$this->db->f("Institut_id")."\">".htmlReady(my_substr($this->db->f("Name"),0,50))."</option>\n";
         }
         echo "</select>\n";
-
         return;
     }
 
@@ -762,7 +803,7 @@ class about extends messaging {
         $success3 = DBManager::get()->exec("UPDATE user_visibility SET online=".$online.", chat=".$chat.", search=".$search.", email=".$email." WHERE user_id='".$this->auth_user["user_id"]."'");
         return true;
     }
-    
+
     function change_all_homepage_visibility($new_visibility) {
         $result = array();
         $new_data = array();
@@ -797,14 +838,14 @@ class about extends messaging {
         $homepage_elements = array();
         $my_data = DBManager::get()->query("SELECT user_info.*, auth_user_md5.* FROM auth_user_md5 LEFT JOIN user_info USING (user_id) WHERE auth_user_md5.user_id = '".$this->auth_user['user_id']."'");
         $my_data = $my_data->fetch();
-        
+
         $homepage_visibility = get_local_visibility_by_id($this->auth_user['user_id'], 'homepage');
         if (is_array(unserialize($homepage_visibility))) {
             $homepage_visibility = unserialize($homepage_visibility);
         } else {
             $homepage_visibility = array();
         }
-        
+
         // News
         $news = StudipNews::GetNewsByRange($this->auth_user['user_id'], true);
         // Non-private dates.
@@ -825,16 +866,16 @@ class about extends messaging {
         $lit_list = StudipLitList::GetFormattedListsByRange($this->auth_user['user_id']);
         // Free datafields
         $data_fields = DataFieldEntry::getDataFieldEntries($this->auth_user['user_id']);
-        if ($GLOBALS["PLUGINS_ENABLE"]) { 
+        if ($GLOBALS["PLUGINS_ENABLE"]) {
             $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
         }
         $guestbook = new Guestbook($this->auth_user['user_id'], true, 1);
         $guestbook = $guestbook->checkGuestbook();
         // Homepage plugins
         $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
-        
+
         $user_domains = count(UserDomain::getUserDomains());
-        
+
         // Now join all available elements with visibility settings.
         $homepage_elements = array();
         if (Avatar::getAvatar($this->auth_user['user_id'])->is_customized() && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['picture']) {
@@ -898,6 +939,6 @@ class about extends messaging {
         }
         return $homepage_elements;
     }
-    
+
 } // end class definition
 ?>

@@ -201,9 +201,10 @@ if (check_ticket($studipticket)) {
     }
 
     //Veränderungen an Studiengängen
-    if ($cmd == "studiengang_edit" && (!StudipAuthAbstract::CheckField("studiengang_id", $my_about->auth_user['auth_plugin'])) && ($ALLOW_SELFASSIGN_STUDYCOURSE || $perm->have_perm('admin')))
+
+    if ($cmd == "fach_abschluss_edit" && (!StudipAuthAbstract::CheckField("studiengang_id", $my_about->auth_user['auth_plugin'])) && ($ALLOW_SELFASSIGN_STUDYCOURSE || $perm->have_perm('admin')))
     {
-        $my_about->studiengang_edit($studiengang_delete,$new_studiengang);
+        $my_about->fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschluss,$fachsem,$change_fachsem,$course_id);
     }
 
     //Veränderungen an Nutzer-Domains
@@ -663,7 +664,7 @@ if ($view != 'Forum'
         ?>
         <tr>
             <td class="blank"></td>
-            <td valign="top" rowspan="10" width="250">
+            <td align="right" valign="top" rowspan="10" width="270">
             <?
                 $template = $GLOBALS['template_factory']->open('infobox/infobox_generic_content');
                 $template->set_attribute('picture', 'groups.jpg');
@@ -872,36 +873,54 @@ if ($view == 'Studium') {
         echo '<tr><td align="left" valign="top" class="blank">'."\n";
     }
 
-    //Studiengänge die ich belegt habe
-    if (($my_about->auth_user['perms'] == 'autor' || $my_about->auth_user['perms'] == 'tutor' || $my_about->auth_user['perms'] == 'dozent')) { // nur für Autoren und Tutoren und Dozenten
+    //my profession degrees
+    if (($my_about->auth_user['perms'] == 'autor' || $my_about->auth_user['perms'] == 'tutor' || $my_about->auth_user['perms'] == 'dozent')) {
+        // nur für Autoren und Tutoren und Dozenten
         $allow_change_sg = (!StudipAuthAbstract::CheckField("studiengang_id", $my_about->auth_user['auth_plugin']) && ($GLOBALS['ALLOW_SELFASSIGN_STUDYCOURSE'] || $perm->have_perm('admin')))? TRUE : FALSE;
 
         $cssSw->resetClass();
         $cssSw->switchClass();
         echo '<tr><td class="blank">';
-        echo '<b>&nbsp; ' . _("Ich bin in folgenden Studieng&auml;ngen eingeschrieben:") . '</b>';
+        echo '<h3>' . _("Ich studiere folgende Fächer und Abschlüsse:") . '</h3>';
         if ($allow_change_sg){
-            echo '<form action="'. $_SERVER['PHP_SELF']. '?cmd=studiengang_edit&username=' . $username . '&view=' . $view . '&studipticket=' . get_ticket() . '#studiengaenge" method="POST">';
+            echo '<form action="'. $_SERVER['PHP_SELF']. '?cmd=fach_abschluss_edit&username=' . $username . '&view=' . $view . '&studipticket=' . get_ticket() . '#studiengaenge" method="POST">';
         }
-        echo '<table width="99%" align="center" border="0" cellpadding="2" cellspacing="0">'."\n";
-        echo '<tr><td width="30%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">';
-        reset ($my_about->user_studiengang);
+        echo '<table class="default">'."\n";
+        echo '<tr><td><table width="100%" border="0" cellspacing="0" cellpadding="2">';
+        reset ($my_about->user_fach_abschluss);
         $flag = FALSE;
 
         $i = 0;
-        while (list ($studiengang_id,$details) = each ($my_about->user_studiengang)) {
+        while (list ($studiengang_id,$details) = each ($my_about->user_fach_abschluss)) {
             if (!$i) {
-                echo '<tr><td class="steelgraudunkel" width="80%">' . _("Studiengang") . '</td><td class="steelgraudunkel" width="30%">' ;
+                echo '<tr><th>' . _("Fach") . '</th>' ;
+                echo '<th>' . _("Abschluss") . '</th>' ;
+                echo '<th width="10%">' . _("Fachsemester") . '</th><th width="10%" align="center">' ;
                 echo (($allow_change_sg)?  _("austragen") : '&nbsp;');
-                echo '</td></tr>';
+                echo '</th></tr>';
             }
             $cssSw->switchClass();
-            echo '<tr><td class="'.$cssSw->getClass().'" width="80%">' . htmlReady($details['name']) . '</td><td class="' . $cssSw->getClass().'" width="20%" align="center">';
-            if ($allow_change_sg){
-                echo '<input type="CHECKBOX" name="studiengang_delete[]" value="'.$studiengang_id.'">';
+            echo '<tr>
+                <td class="'.$cssSw->getClass().'">' . htmlReady($details['fname']). '</td>
+                <td class="'.$cssSw->getClass().'">' . htmlReady($details['aname']). '</td>';
+            if($allow_change_sg){
+                echo '<td class="'.$cssSw->getClass().'">';
+                echo '<input type="hidden" name="course_id[]" value = "'.$studiengang_id.'">';
+                echo '<select name="change_fachsem[]">';
+                for($i = 1; $i < 51; ++$i) {
+                    echo '<option';
+                    if ($i == $details['semester']) {
+                        echo ' selected';
+                    }
+                    echo '>'.$i.'</option>';
+                }
+                echo '</select></td><td class="'. $cssSw->getClass().'" align="center">';
+                echo '<input type="CHECKBOX" name="fach_abschluss_delete[]" value="'.$studiengang_id.'">';
             } else {
-                echo '<img src="'. $GLOBALS['ASSETS_URL'] . 'images/haken_transparent.gif" border="0">';
+                echo '<td class="'.$cssSw->getClass().'">' . htmlReady($details['semester']). '</td><td class="' . $cssSw->getClass().'" align="center">';
+                echo '<img src="'. $GLOBALS['ASSETS_URL'] . 'images/haken_transparent.gif">';
             }
+
             echo "</td><tr>\n";
             $i++;
             $flag = TRUE;
@@ -912,12 +931,20 @@ if ($view == 'Studium') {
         }
         $cssSw->resetClass();
         $cssSw->switchClass();
-        echo '</table></td><td class="'.$cssSw->getClass().'" width="70%" align="left" valign="top"><br>';
+        echo '</table></td></tr><tr><td class="'.$cssSw->getClass().'" width="40%" align="left" valign="top"><br>';
         if($allow_change_sg){
-            echo _("Wählen Sie die Studiengänge in Ihrem Studierendenausweis aus der folgenden Liste aus:") . "<br>\n";
-            echo '<br><div align="center"><a name="studiengaenge">&nbsp;</a>';
+            echo _("Wählen Sie die Fächer, Abschlüsse und Fachsemester in der folgenden Liste aus:") . "<br>\n";
+            echo '<br><div align="left"><a name="studiengaenge">&nbsp;';
             $my_about->select_studiengang();
-            echo '</div><br></b>' . _("Wenn Sie einen Studiengang wieder austragen möchten, markieren Sie die entsprechenden Felder in der linken Tabelle.") . "<br>\n";
+            echo '<a name="abschluss">&nbsp;</a>';
+            $my_about->select_abschluss();
+            echo '<a name="semester">&nbsp;</a>';
+            echo '<select name="fachsem" selected="yes">';
+            for ($s=1; $s < 51; $s++) {
+                echo '<option>'.$s.'</option>';
+            }
+            echo '</select>';
+            echo '</div><br></b>' . _("Wenn Sie einen Studiengang wieder austragen möchten, markieren Sie die entsprechenden Felder in der oberen Tabelle.") . "<br>\n";
             echo _("Mit einem Klick auf <b>&Uuml;bernehmen</b> werden die gewählten Änderungen durchgeführt.") . "<br><br>\n";
             echo '<input type="IMAGE" ' . makeButton('uebernehmen', 'src') . ' value="' . _("Änderungen übernehmen") . '">';
             echo "</form>\n";
@@ -928,7 +955,8 @@ if ($view == 'Studium') {
         if ($allow_change_sg) echo "</form>\n";
     }
 
-    echo "</td></tr>\n";
+    #echo "</td></tr>\n";
+    // end my profession and degrees
 
 
     //Institute, an denen studiert wird
@@ -937,26 +965,28 @@ if ($view == 'Studium') {
         $cssSw->resetClass();
         $cssSw->switchClass();
         echo '<tr><td class="blank">';
-        echo "<br>\n<b>&nbsp; " . _("Ich studiere an folgenden Einrichtungen:") . "</b>";
+        echo "<h3>" . _("Ich studiere an folgenden Einrichtungen:") . "</h3>";
         if ($allow_change_in) echo '<form action="' . $_SERVER['PHP_SELF'] . '?cmd=inst_edit&username='.$username.'&view='.$view.'&studipticket=' . get_ticket() . '#einrichtungen" method="POST">'. "\n";
-        echo '<table width= "99%" align="center" border="0" cellpadding="2" cellspacing="0">'."\n";
-        echo '<tr><td width="30%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">';
+        echo '<table class="default">'."\n";
+        echo '<tr><td><table width="100%" border="0" cellspacing="0" cellpadding="2">';
         reset ($my_about->user_inst);
         $flag=FALSE;
         $i=0;
         while (list ($inst_id,$details) = each ($my_about->user_inst)) {
             if ($details['inst_perms'] == 'user') {
                 if (!$i) {
-                    echo '<tr><td class="steelgraudunkel" width="80%">' . _("Einrichtung") . '</td><td class="steelgraudunkel" width="30%">';
-                    echo  (($allow_change_in)? _("austragen") : '&nbsp;');
+                    echo '<tr><th>' . _("Einrichtung") . '</th><th width="10%" align="center">';
+                    echo  (($allow_change_in)? _("austragen") : '');
                     echo "</td></tr>\n";
                 }
                 $cssSw->switchClass();
-                echo '<tr><td class="' . $cssSw->getClass() . '" width="80%">' . htmlReady($details['Name']) . '</td><td class="' . $cssSw->getClass() . '" width="20%" align="center">';
+                echo '<tr>
+                    <td class="' . $cssSw->getClass() . '">' . htmlReady($details['Name']) . '</td>
+                    <td class="' . $cssSw->getClass() . '" align="center">';
                 if ($allow_change_in) {
                     echo '<input type="CHECKBOX" name="inst_delete[]" value="'.$inst_id.'">';
                 } else {
-                    echo '<img src="'. $GLOBALS['ASSETS_URL'] . 'images/haken_transparent.gif" border="0">';
+                    echo '<img src="'. $GLOBALS['ASSETS_URL'] . 'images/haken_transparent.gif">';
                 }
                 echo "</td></tr>\n";
                 $i++;
@@ -968,10 +998,10 @@ if ($view == 'Studium') {
         }
         $cssSw->resetClass();
         $cssSw->switchClass();
-        echo '</table></td><td class="' . $cssSw->getClass() . '" width="70%" align="left" valign="top"><br>'."\n" ;
+        echo '</table></td></tr><tr><td class="' . $cssSw->getClass() . '"><br>'."\n" ;
         if ($allow_change_in){
             echo _("Um sich als Student einer Einrichtung zuzuordnen, wählen Sie die entsprechende Einrichtung aus der folgenden Liste aus:") . "<br>\n";
-            echo "<br>\n".'<div align="center"><a name="einrichtungen"></a>';
+            echo "<br>\n".'<div align="left"><a name="einrichtungen"></a>';
             $my_about->select_inst();
             echo "</div><br>" . _("Wenn sie aus Einrichtungen wieder ausgetragen werden möchten, markieren Sie die entsprechenden Felder in der linken Tabelle.") . "<br>\n";
             echo _("Mit einem Klick auf <b>&Uuml;bernehmen</b> werden die gewählten Änderungen durchgeführt.") . "<br><br> \n";

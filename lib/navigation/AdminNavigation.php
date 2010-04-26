@@ -155,7 +155,6 @@ class AdminNavigation extends Navigation
             }
 
             if ($perm->have_perm('root')) {
-                $navigation->addSubNavigation('study_programs', new Navigation(_('Studiengänge'), 'admin_studiengang.php'));
                 $navigation->addSubNavigation('user_domains', new Navigation(_('Nutzerdomänen'), 'dispatch.php/domain_admin/show'));
                 $navigation->addSubNavigation('data_fields', new Navigation(_('Datenfelder'), 'admin_datafields.php'));
                 $navigation->addSubNavigation('settings', new Navigation(_('Konfiguration'), 'admin_config.php'));
@@ -181,6 +180,7 @@ class AdminNavigation extends Navigation
                 if (get_config('STUDYGROUPS_ENABLE')) {
                     $navigation->addSubNavigation('studygroup', new Navigation(_('Studiengruppen'), 'dispatch.php/course/studygroup/globalmodules'));
                 }
+                $navigation->addSubNavigation('studycourse', new Navigation(_('Studiengänge'), 'dispatch.php/admin/studycourse/profession'));
             }
 
             $this->addSubNavigation('config', $navigation);

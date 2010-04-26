@@ -972,3 +972,15 @@ $(document).ready(function () {
     minHeight: 50
   });
 });
+
+/* ------------------------------------------------------------------------
+ * application collapsable tablerows
+ * ------------------------------------------------------------------------ */
+jQuery(function ($) {
+
+    $('table.collapsable .toggler').click(function () {
+    	$(this).closest('tbody').toggleClass('collapsed');
+    	return false;
+    }).click();
+
+});

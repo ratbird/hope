@@ -271,6 +271,43 @@ tr.cycle_even:hover {
     background-color: #B7C2E2;
 }
 
+/** table.collapsable **/
+table.collapsable tbody.collapsed tr {
+    display: none;
+}
+
+table.collapsable tbody.collapsed tr:first-child {
+    display: table-row;
+}
+
+table.collapsable tbody.collapsed tr:first-child td, 
+table.collapsable tbody.empty tr:first-child td {
+    border-bottom: 0;
+}
+
+table.collapsable tbody tr td:first-child, 
+table.collapsable tbody tr:first-child td:first-child a, 
+table.collapsable tbody.empty tr:first-child td:first-child {
+    padding-left: 20px;
+}
+
+table.collapsable tbody tr:first-child td:first-child {
+    padding-left: 0;
+}
+
+table.collapsable tbody tr:first-child td:first-child a {
+    background: transparent url(../images/forumrotrunt.gif) 4px -4px no-repeat;
+}
+
+table.collapsable tbody.collapsed tr:first-child td:first-child a {
+    background-image: url(../images/forumrot.gif);
+    background-position: 4px -6px;
+}
+
+table.collapsable tbody.empty tr:first-child td:first-child {
+    background: transparent url(../images/forumgrau.gif) 4px -2px no-repeat;
+}
+
 /* --- Sonstige ------------------------------------------------------------- */
 /** //TODO: aufräumen und optmieren... */
 .gruppe0 {

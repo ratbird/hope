@@ -846,12 +846,11 @@ STUDIP.News = {
   },
 
   open: function(id) {
-    //alert(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/news/get_news/' + id);
     $("#news_item_" + id + "_content").load(
       STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/news/get_news/' + id,
       {},
       function() {
-        $("#news_item_" + id + "_content").slideDown(400);
+    	$("#news_item_" + id + "_content").slideDown(400);
         $("#news_item_" + id + " .printhead2 img")
             .attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
         $("#news_item_" + id + " .printhead2")
@@ -914,13 +913,41 @@ $('.messagebox .messagebox_buttons a').live('click', function () {
 });
 
 /* ------------------------------------------------------------------------
+ * QuickSearch inputs
+ * ------------------------------------------------------------------------ */
+
+STUDIP.QuickSearch = {
+	formToJSON: function( selector ) {
+		selector = $(selector).parents("form");
+     	var form = {};
+     	$(selector).find(':input[name]:enabled').each( function() {
+     		var self = $(this);
+     		var name = self.attr('name');
+     		if (form[name]) {
+     			form[name] = form[name] + ',' + self.val();
+     		}
+     		else {
+     			form[name] = self.val();
+     		}
+     	});
+     	return form;
+	}
+}
+
+
+/* ------------------------------------------------------------------------
  * application wide setup
  * ------------------------------------------------------------------------ */
 
+
+
 $(document).ready(function () {
   // AJAX Indicator
+  STUDIP.ajax_indicator = true;
   $('#ajax_notification').ajaxStart(function () {
-    $(this).show();
+    if (STUDIP.ajax_indicator === true) {
+      $(this).show();
+    }
   }).ajaxStop(function () {
     $(this).hide();
   });

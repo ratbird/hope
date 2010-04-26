@@ -108,6 +108,7 @@ require_once('lib/classes/StudipNews.class.php');
 require_once('lib/classes/StudipCacheFactory.class.php');
 require_once 'lib/classes/SessionDecoder.class.php';
 require_once 'lib/classes/StudipMail.class.php';
+require_once('lib/functions.php');
 
 //Attention: file based chat for windows installations (slow)
 if (strpos( PHP_OS,"WIN") !== false && get_config('CHAT_ENABLE') == true && $CHAT_SERVER_NAME == "ChatShmServer") {

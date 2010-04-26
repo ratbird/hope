@@ -39,18 +39,18 @@ class Step00191ModulesEnable extends Migration
         $db->exec("UPDATE `config` SET `section` =  '', `chdate` = '".time()."' WHERE `config_id` = 'd8c172c03ed7835f357325588d6ad047'");
 
         //moving
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('CHAT_ENABLE')");
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('CALENDAR_ENABLE')");
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('EXPORT_ENABLE')");
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('EXTERN_ENABLE')");
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('VOTE_ENABLE')");
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('ELEARNING_INTERFACE_ENABLE')");
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('STM_ENABLE')");
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('WIKI_ENABLE')");
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('SMILEYADMIN_ENABLE')");
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('LOG_ENABLE')");
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('SCM_ENABLE')");
-        $db->exec("DELETE FROM `config WHERE `config_id = MD5('BANNER_ADS_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('CHAT_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('CALENDAR_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('EXPORT_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('EXTERN_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('VOTE_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('ELEARNING_INTERFACE_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('STM_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('WIKI_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('SMILEYADMIN_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('LOG_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('SCM_ENABLE')");
+        $db->exec("DELETE FROM `config` WHERE `config_id` = MD5('BANNER_ADS_ENABLE')");
 
         //new
         $db->exec("DELETE FROM `config WHERE `config_id = MD5('LITERATURE_ENABLE')");

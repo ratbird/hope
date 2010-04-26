@@ -209,7 +209,9 @@ class AdminNavigation extends Navigation
 
         if ($perm->have_perm('admin')) {
             $navigation->addSubNavigation('show_admission', new Navigation(_('Laufende Anmeldeverfahren'), 'show_admission.php'));
-            $navigation->addSubNavigation('literature', new Navigation(_('Literaturübersicht'), 'admin_literatur_overview.php'));
+            if (get_config('LITERATURE_ENABLE')) {
+                $navigation->addSubNavigation('literature', new Navigation(_('Literaturübersicht'), 'admin_literatur_overview.php'));
+            }
         }
 
         if ($perm->have_perm('dozent') && get_config('STM_ENABLE')) {

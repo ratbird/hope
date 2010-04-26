@@ -1,10 +1,10 @@
 <table align="center" width="250" border="0" cellpadding="0" cellspacing="0">
 
   <!-- Bild -->
-  
+
   <tr>
     <td class="infobox" width="100%" align="right">
-      <?= Assets::img('groups.jpg') ?>
+      <?= Assets::img('infoboxes/groups.jpg') ?>
     </td>
   </tr>
 
@@ -14,13 +14,13 @@
 
       <!-- Statusmeldungen -->
       <? if ($messages) :
-            // render status messages partial  
-            echo $this->render_partial("infobox/infobox_statusmessages_partial.php", array('messages', $message)); 
-         endif; 
+            // render status messages partial
+            echo $this->render_partial("infobox/infobox_statusmessages_partial.php", array('messages', $message));
+         endif;
       ?>
-            
+
       <!-- Aktionen -->
-    
+
       <tr>
         <td class="infobox" width="100%" colspan="2">
           <font size="-1"><b><?=_("Aktionen")?>:</b></font>

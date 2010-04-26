@@ -151,7 +151,7 @@ if ($msg)
         elseif ($SessSemName[0])
             echo "<br><br><a href=\"seminar_main.php\">" . _("Zur&uuml;ck zur ausgew&auml;hlten Veranstaltung") . "</a>";
         ?>
-        <td class="blank" align="right"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/online.jpg" border="0"></td>
+        <td class="blank" align="right"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/infoboxes/online.jpg" border="0"></td>
     </tr>
     <tr>
         <td class="blank" colspan="2">

@@ -4,7 +4,7 @@
 
   <tr>
     <td class="infobox" width="100%" align="right">
-      <img src="<?=$GLOBALS['ASSETS_URL']?>images/<?=$picture?>">
+      <img src="<?=$GLOBALS['ASSETS_URL']?>images/infoboxes/<?=$picture?>">
     </td>
   </tr>
 

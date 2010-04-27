@@ -55,10 +55,12 @@ class SQLSearch extends SearchType {
         $statement = $db->prepare($this->SQL, array(PDO::FETCH_NUM));
         $data = array();
         //var_dump($contextual_data);
-        foreach ($contextual_data as $name => $value) {
-        	if (($name !== "input") && (strpos($this->SQL, ":".$name) !== FALSE)) {
-        	   $data[":".$name] = $value;
-        	}
+        if (is_array($contextual_data)) {
+            foreach ($contextual_data as $name => $value) {
+        	   if (($name !== "input") && (strpos($this->SQL, ":".$name) !== FALSE)) {
+        	      $data[":".$name] = $value;
+        	   }
+            }
         }
         $data[":input"] = "%".$input."%";
         $statement->execute($data);

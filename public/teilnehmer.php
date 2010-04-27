@@ -1595,14 +1595,21 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         <td class="steel1" width="40%" align="left">
         <input type="hidden" name="studipticket" value="<?=$studipticket?>">
         <?php
-        print QuickSearch::get("username", "username")
+        $NutzerSuchen = new SQLSearch("SELECT auth_user_md5.username, CONCAT(auth_user_md5.Nachname, \", \", auth_user_md5.Vorname, \" (\", auth_user_md5.username, \") - \" , auth_user_md5.perms) " .
+            "FROM auth_user_md5 " .
+                "LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
+            "WHERE (CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
+                "OR auth_user_md5.username LIKE :input) " .
+            "ORDER BY user_info.score DESC " .
+            "LIMIT 5", _("Teilnehmer suchen"), "username");
+        print QuickSearch::get("username", $NutzerSuchen)
                 ->withoutButton()
                 ->setInputStyle("width: 240px")
                 ->render();
         ?>
         </td>
         <td class="steel1" width="20%" align="center">
-        <input type="IMAGE" name="add_user" <?=makeButton("eintragen", "src")?> border=0 value=" <?=_("Eintragen")?> "></td>
+        <input type="IMAGE" name="add_user" <?=makeButton("eintragen", "src")?> border=0 value=" <?=_("eintragen")?> "></td>
     </tr></table></form></tr>
     <?
 }

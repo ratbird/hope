@@ -19,7 +19,7 @@ class QuicksearchController extends AuthenticatedController {
     	$this->search = $this->getSearch($query_id);
     	$this->specialSQL = $_SESSION['QuickSearches'][$query_id]['query'];
     	$this->form_data = json_decode(Request::get("form_data"), true);
-    	$this->searchresults = $this->getResults(Request::get('searchkey'));
+    	$this->searchresults = $this->getResults(Request::get('q'));
     	$this->render_template('quicksearch/response.php');
     }
     

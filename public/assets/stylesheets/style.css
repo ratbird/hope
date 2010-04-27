@@ -814,23 +814,27 @@ div.wikitoc ul {
 /* --- Autocompleter -------------------------------------------------------- */
 div.autocomplete {
     position: absolute;
+}
+
+.ac_results {
+    position: absolute;
     background-color: white;
     border: 1px solid #888;
     margin: 0px;
     padding: 0px;
+    
+    z-index: 99999;
 }
 
-div.autocomplete ul {
-    list-style-type: none;
-    margin: 0px;
-    padding: 0px;
+.ac_results ul {
+    width: 100%;
+    list-style-position: outside;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-div.autocomplete ul li.selected {
-    background-color: #ffb;
-}
-
-div.autocomplete ul li {
+.ac_results li {
     list-style-type: none;
     display: block;
     margin: 0;
@@ -841,23 +845,14 @@ div.autocomplete ul li {
     min-height: 2em;
 }
 
-div.autocomplete .informal .number,
-div.autocomplete .informal .semester,
-div.autocomplete .informal .lecturer,
-div.autocomplete .informal .comment,
-div.autocomplete .informal .username,
-div.autocomplete .informal .permission {
-    font-size: 0.75em;
-    color: #777;
+.ac_odd {
+    background-color: #eeeeee;
 }
 
-div.autocomplete .informal .comment {
-    font-style: italic;
+.ac_over {
+    background-color: #ffffbb;
 }
 
-div.autocomplete .informal .seminar_id {
-    display: none;
-}
 
 /* --- Reiternavigation ----------------------------------------------------- */
 #tabs, #tabs2 {
@@ -1298,3 +1293,4 @@ img.plugin_preview {
     cursor: ns-resize;
     height: 12px;
 }
+

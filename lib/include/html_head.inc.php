@@ -102,7 +102,7 @@ if ($my_messaging_settings['start_messenger_at_startup'] && $auth->auth['jscript
 }
 ?>
     <?= Assets::script('jquery-1.4.2.min.js', 'jquery-ui-1.8.custom.min.js',
-                       'jquery.metadata.js', 'application') ?>
+                       'jquery.metadata.js', 'application', 'jquery.autocomplete.js') ?>
     <script type="text/javascript" language="javascript">
     // <![CDATA[
         STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";

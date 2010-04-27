@@ -917,21 +917,65 @@ $('.messagebox .messagebox_buttons a').live('click', function () {
  * ------------------------------------------------------------------------ */
 
 STUDIP.QuickSearch = {
-	formToJSON: function( selector ) {
-		selector = $(selector).parents("form");
-     	var form = {};
-     	$(selector).find(':input[name]:enabled').each( function() {
-     		var self = $(this);
-     		var name = self.attr('name');
-     		if (form[name]) {
-     			form[name] = form[name] + ',' + self.val();
-     		}
-     		else {
-     			form[name] = self.val();
-     		}
-     	});
-     	return form;
-	}
+  /** 
+   * a helper-function to generate a JS-object filled with the variables of a form
+   * like "{ input1_name : input1_value, input2_name: input2_value }"
+   * @param selector string: ID of an input in a form-tag
+   * @return: JSON-object (not as a string)
+   */
+  formToJSON: function (selector) {
+    selector = $(selector).parents("form");
+    var form = {};   //the basic JSON-object that will be returned later
+    $(selector).find(':input[name]:enabled').each( function() {
+      var name = $(this).attr('name');   //name of the input
+      if (form[name]) {
+        //for double-variables (not arrays):
+        form[name] = form[name] + ',' + $(this).val();
+      } else {
+        form[name] = $(this).val();
+      }
+    });
+    return form;
+  },
+  /**
+   * the function to be called from the QuickSearch class template
+   * @param name string: ID of input
+   * @param url string: URL of AJAX-response
+   * @param func string: name of a possible function executed 
+   *        when user has selected something
+   * @return: void
+   */
+  autocomplete: function (name, url, func) {
+    $('#' + name)
+      .autocomplete(url, {
+        extraParams: STUDIP.QuickSearch.formToJSON('#' + name),
+        dataType: "json",
+        //let's overwrite the parse-method, to map our JSON-variables:
+        parse: function(data) {
+        return $.map(data, function(item) {
+          return {
+            data: item,
+            value: item.item_id,     //these lines are the
+            result: item.item_name   //reason for the overwriting
+          };
+        });
+      },
+      //select the string to be displayed:
+      formatItem: function(item, position, length, searchterm) {
+        return item.item_name;
+      },
+      selectFirst: false
+    });
+    //when something is selected by the user:
+    $('#' + name).result(function(event, data, formatted) {
+      //inserts the ID of the selected item in the hidden input:
+      $('#' + name + "_realvalue").attr("value", data.item_id);
+      //and execute a special function defined before by the programmer:
+      if (func) {
+        eval(func + "(data.item_id, data.item_name);");
+      }
+    });
+  }
 }
 
 
@@ -962,9 +1006,9 @@ $(document).ready(function () {
   STUDIP.study_area_selection.initialize();
 
   $('.focus').each(function () {
-  	if (!$(this).is('.if-empty') || $(this).val().length==0) {
-  	  $(this).focus();
-  	  return false;
+    if (!$(this).is('.if-empty') || $(this).val().length==0) {
+      $(this).focus();
+      return false;
     }
   });
   $('textarea.resizable').resizable({

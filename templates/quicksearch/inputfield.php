@@ -1,8 +1,8 @@
-        <? if ($withButton) : ?>
+<? if ($withButton) : ?>
         <div style="width: 233px; background-color: #ffffff; border: 1px #999999 solid;">
-        <? $input_style = " style=\"width: 210px; background-color:#ffffff; border: 0px;\""; ?>
-        <? endif ?>
-        <? if ($inputStyle) {
+<? $input_style = " style=\"width: 210px; background-color:#ffffff; border: 0px;\""; ?>
+<? endif ?>
+<? if ($inputStyle) {
 	       $input_style = " style=\"".$inputStyle."\"";
         }
         if ($beschriftung) {
@@ -13,10 +13,10 @@
             <input<?= $input_style.($inputClass ? " class=\"".$inputClass."\"" : "") 
                 ?> id="<?= $name ?>"<?= ($clear_input ? $clear_input : "") ?> type=text name="<?= 
                     $name ?>_parameter" value="<?= $defaultName ?>">
-            <? if ($withButton) : ?>
+<? if ($withButton) : ?>
             <input style="vertical-align:middle" type="image" src="<?= Assets::image_path("suche2.gif")?>">
         </div>
-        <? endif ?>
+<? endif ?>
         <script type="text/javascript" language="javascript">
             //Die Autovervollständigen-Funktion aktivieren:
             //dispatch.php/quicksearch/response/<?= $query_id ?>?searchkey=test
@@ -24,8 +24,8 @@
             STUDIP.QuickSearch.autocomplete("<?= $name ?>", 
                 "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
                 "<?= JSfunction ? htmlReady($JSfunction) : "" ?>");
-            <? if ($beschriftung && !$defaultID) : ?>
+<? if ($beschriftung && !$defaultID) : ?>
             $("#<?= $name ?>").attr("value", "<?= $beschriftung ?>");
             $("#<?= $name ?>").css("color", "<?= $descriptionColor ?>");
-            <? endif ?>
+<? endif ?>
         </script>

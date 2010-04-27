@@ -20,9 +20,16 @@ class SQLSearch extends SearchType {
 		$this->avatarLike = $avararLike;
 	}
 	
+	/**
+	 * returns an object of type SQLSearch with parameters to constructor
+	 */
     static public function get($query, $title = "", $avatarLike = "", $presets = array()) {
         return new SQLSearch($query, $title, $avatarLike, $presets);
     }
+    /**
+     * returns the title/description of the searchfield
+     * @return string: title/description
+     */
     public function getTitle() {
     	return $this->title;
     }

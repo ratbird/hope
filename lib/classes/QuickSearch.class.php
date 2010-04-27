@@ -39,7 +39,7 @@ require_once('lib/classes/searchtypes/SearchType.class.php');
  *  //code-begin
  *  $sf = new QuickSearch("username");
  *    $sf->withButton();
- *  $sf->specialSearch("SELECT username, CONCAT(Vorname, \" \", Nachname) " .
+ *  $sf->specialSQL("SELECT username, CONCAT(Vorname, \" \", Nachname) " .
  *     "FROM auth_user_md5 " .
  *     "WHERE CONCAT(Vorname, \" \", Nachname) LIKE :input " .
  *        "AND perms = 'dozent'", _("Dozenten suchen"));

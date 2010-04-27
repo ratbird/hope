@@ -27,3 +27,7 @@ td.rahmen_steelgraulight {
 	border:1px solid #000000;
 	background-image: url('../images/steelgraulight.jpg');
 }
+
+#ajax_notification {
+    display: none;
+}

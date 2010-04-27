@@ -90,7 +90,8 @@ class ShowSchedules {
         $this->used_view = $value;
     }
 
-    function navigator () {
+    function navigator($print_view = false)
+    {
         global $cssSw, $view_mode, $PHP_SELF;
 
         //match start_time & end_time for a whole week
@@ -103,6 +104,7 @@ class ShowSchedules {
         $start_time = mktime (0, 0, 0, date("n",$this->start_time), date("j", $this->start_time)+$offset+($this->week_offset*7), date("Y", $this->start_time));
         $end_time = mktime (23, 59, 0, date("n",$start_time), date("j", $start_time)+6, date("Y", $start_time));
 
+        if (!$print_view) {
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
         <form method="POST" action="<?echo $PHP_SELF ?>?navigate=TRUE&quick_view=view_schedule&quick_view_mode=<?=$view_mode?>">
@@ -142,6 +144,7 @@ class ShowSchedules {
             </tr>
         </table>
     <?
+        }
     }
 
     function showScheduleList($print_view = false) {
@@ -354,12 +357,12 @@ class ShowSchedules {
         </form>
     <?
     }
-    
+
     function showSemWeekNumber($start_time){
         $semester = SemesterData::getInstance()->getSemesterDataByDate($start_time);
         echo htmlready($semester['name']) . ' - ';
         if(is_int($semester['sem_week_number'])){
-            printf(_("%s. Vorlesungswoche"), $semester['sem_week_number']); 
+            printf(_("%s. Vorlesungswoche"), $semester['sem_week_number']);
         } else {
             echo _("vorlesungsfreie Zeit");
         }

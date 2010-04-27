@@ -438,15 +438,14 @@ if ($view == "view_schedule" || $view == "openobject_schedule") {
         $ViewSchedules->setLengthUnit($resources_data["schedule_length_unit"]);
         $ViewSchedules->setWeekOffset($resources_data["schedule_week_offset"]);
         $ViewSchedules->setUsedView($view);
-
-        $ViewSchedules->navigator();
+        $ViewSchedules->navigator($_REQUEST['print_view']);
         $suppress_infobox = TRUE;
         ?>                      </td>
                             </tr>
                         </table>
                     </td>
                 <?
-                if ($infobox) {
+                if ($infobox && !isset($_REQUEST['print_view'])) {
                     ?>
                     <td class="blank" width="270" align="right" valign="top">
                         <? print_infobox ($infobox, $infopic);?>

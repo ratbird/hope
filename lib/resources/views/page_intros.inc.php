@@ -149,6 +149,9 @@ switch ($view) {
             $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
                                 "text"  => sprintf (_("%sSemesterplan%s anzeigen"), "<a href=\"$PHP_SELF?quick_view=view_sem_schedule&quick_view_mode=".$view_mode."\">", "</a>"));
 
+        $infobox[0]["eintrag"][] = array (
+            "icon" => "link_intern.gif",
+            "text"  => "<a href=\"$PHP_SELF?view=view_schedule&print_view=1\" target=\"_blank\">" . _("Druckansicht") . "</a>");
     break;
     case "view_sem_schedule":
         $page_intro=_("Hier können Sie sich die Belegungszeiten der Ressource anzeigen  und auf unterschiedliche Art darstellen lassen.");

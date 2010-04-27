@@ -1,42 +1,44 @@
-<ul>
 <?php
 $search; //instance of SearchType ?
 $searchresults; //array
 
-foreach ($searchresults as $result) {
-	print "<li id=\"".$result[0]."\">";
+$output = array();
+foreach ($searchresults as $number => $result) {
+	$res_array = array();
+	$res_array['item_id'] = $result[0];
+	$res_array['item_name'] = "";
 	if ($this->search instanceof SearchType) {
-		print $this->search->getAvatarImageTag($result[0]);
+		$res_array['item_name'] .= $this->search->getAvatarImageTag($result[0]);
 	}
 	if ($this->search == "username") {
-		print Avatar::getAvatar(get_userid($result[0]))->getImageTag(Avatar::SMALL);
+		$res_array['item_name'] .= Avatar::getAvatar(get_userid($result[0]))->getImageTag(Avatar::SMALL);
 	}
 	if ($this->search == "user_id") {
-		print Avatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
+		$res_array['item_name'] .= Avatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
 	}
 	if (($this->search == "Seminar_id") || ($this->search == "Arbeitsgruppe_id")) {
-		print CourseAvatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
+		$res_array['item_name'] .= CourseAvatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
 	}
 	if ($this->search == "Institut_id") {
-		print InstituteAvatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
+		$res_array['item_name'] .= InstituteAvatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
 	}
 	if ($this->search == "special") {
 		switch ($this->avatarLike) {
 			case "username":
-				print Avatar::getAvatar(get_userid($result[0]))->getImageTag(Avatar::SMALL);
+				$res_array['item_name'] .= Avatar::getAvatar(get_userid($result[0]))->getImageTag(Avatar::SMALL);
 				break;
 			case "user_id":
-				print Avatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
+				$res_array['item_name'] .= Avatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
 				break;
 			case "Seminar_id":
-				print CourseAvatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
+				$res_array['item_name'] .= CourseAvatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
 				break;
 			case "Institut_id":
-				print InstituteAvatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
+				$res_array['item_name'] .= InstituteAvatar::getAvatar($result[0])->getImageTag(Avatar::SMALL);
 				break;
 		}
 	}
-	print $result[1]."</li>";
+	$res_array['item_name'] .= $result[1];
+	$output[] = $res_array;
 }
-?>
-</ul>
+print json_encode($output);

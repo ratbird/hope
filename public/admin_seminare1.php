@@ -872,43 +872,36 @@ if (($s_id) && (auth_check())) {
         $msg .= "info§" . fixlinks($lockdata['description']);
     }
     ?>
-    <table border=0 align="center" cellspacing=0 cellpadding=0 width="100%">
-    <tr><td class="blank" colspan=2><br>
-    <?
-    parse_msg($msg);
-    ?>
-    </td></tr><tr><td class="blank">
-    <?
-
-    // ab hier Anzeigeroutinen ///////////////////////////////////////////////
-    echo "<form name=\"details\" method=\"post\" action=\"".URLHelper::getLink("#anker")."\">";
-    ?>
-    <table border=0 align="center" cellspacing=0 cellpadding=2 width="99%">
-        <input type="hidden" name="s_id"   value="<?php $db->p("Seminar_id") ?>">
-            <tr>
-                <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=3>
-                    <input type="image" <? echo makeButton ("uebernehmen", "src") ?> border=0 name="s_edit" value=" Ver&auml;ndern ">
-                <input type="hidden" name="s_send" value="TRUE">
-                </td>
-            </tr>
-            <tr <?$cssSw->switchClass() ?>>
-        <td class="<?= $cssSw->getClass() ?>" align=right><b><?=_("Name der Veranstaltung")?></b>
-        <? if (LockRules::Check($s_id, 'Name')) : ?>
-          <?=  $label_lock_text;?>
-        <? endif; ?>
-      </td>
-                <td class="<?= $cssSw->getClass()?>" align=left colspan=2>&nbsp;
+<table border="0" cellspacing="0" cellpadding="0" width="100%">
+    <? parse_msg($msg); ?>
+<tr>
+    <td class="blank">
+    <form name="details" method="post" action="<?= URLHelper::getLink("#anker") ?>">
+    <input type="hidden" name="s_id" value="<?php $db->p("Seminar_id") ?>">
+    <table class="default" cellpadding="2">
+        <tr>
+            <td class="<? echo $cssSw->getClass() ?>" align="center" colspan="3">
+                <input type="image" <? echo makeButton ("uebernehmen", "src") ?> border=0 name="s_edit" value=" Ver&auml;ndern ">
+            <input type="hidden" name="s_send" value="TRUE">
+            </td>
+        </tr>
+        <tr <?$cssSw->switchClass() ?>>
+            <td class="<?= $cssSw->getClass() ?>" align=right><b><?=_("Name der Veranstaltung")?></b>
+            <? if (LockRules::Check($s_id, 'Name')) : ?>
+              <?=  $label_lock_text;?>
+            <? endif; ?>
+            </td>
+            <td class="<?= $cssSw->getClass()?>" align=left colspan=2>&nbsp;
         <? if (! LockRules::Check($s_id, 'Name')) : ?>
               <input type="text" name="Name" onchange="checkname()" size=58 maxlength=254 value="<?= htmlReady($db->f("Name")) ?>" >
         <? else : ?>
               <input readonly disabled type="text" name="Name" size=58 maxlength=254 value="<?= htmlReady($db->f("Name")) ?>" >
         <? endif; ?>
-                </td>
-            </tr>
-            <tr>
+            </td>
+        </tr>
+        <tr>
         <td class="<?= $cssSw->getClass() ?>" align=right><?=_("Untertitel der Veranstaltung")?>
           <? if (LockRules::Check($s_id, 'Untertitel')) { echo $label_lock_text; }?></td>
-        </td>
         <td class="<?= $cssSw->getClass() ?>" align=left colspan=2>
           &nbsp;
           <?if (! LockRules::Check($s_id, 'Untertitel')) : ?>
@@ -1191,11 +1184,11 @@ if (($s_id) && (auth_check())) {
                     </font><br>
                     <?php
                     print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_doz\" />";
-                    
+
                     if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["only_inst_user"]) {
                     	$clause="AND Institut_id IN (". sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id) . ") ";
                     }
-                    $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ". 
+                    $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ".
                             $_fullname_sql['full_rev'] ." AS fullname FROM user_inst " .
                             "LEFT JOIN auth_user_md5 USING (user_id) " .
                             "LEFT JOIN user_info USING(user_id) " .
@@ -1229,16 +1222,16 @@ if (($s_id) && (auth_check())) {
 
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" align="left" valign="top">
-                    
+
                     <font size=-1> <?= $search_exp_tut ? _("Keinen Nutzenden gefunden.") : sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('tutor', 1, $seminar_type)) ?>
                     </font><br>
                     <?php
                     print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_tut\" />";
-                    
+
                     if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["only_inst_user"]) {
                         $clause="AND Institut_id IN (". sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id) . ") ";
                     }
-                    $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ". 
+                    $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ".
                             $_fullname_sql['full_rev'] ." AS fullname FROM user_inst " .
                             "LEFT JOIN auth_user_md5 USING (user_id) " .
                             "LEFT JOIN user_info USING(user_id) " .
@@ -1405,24 +1398,15 @@ if (($s_id) && (auth_check())) {
                 $chstring=_("unbekannt");
             ?>
             <tr <?$cssSw->switchClass() ?>>
-                <td class="<? echo $cssSw->getClass() ?>" colspan=3 align="right">
-                    <?
-                    printf("<font size=-1><i>" . _("Veranstaltung angelegt am %s, letzte &Auml;nderung der Veranstaltungsdaten am %s") . "</i></font>&nbsp; <br />&nbsp; ", "<b>$mkstring</b>", "<b>$chstring</b>");
-                    ?>
-                </td>
-            </tr>
-            <tr>
-                <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=3>
+                <td class="<? echo $cssSw->getClass() ?>" align="center" colspan="3">
                     <input type="image" <? echo makeButton ("uebernehmen", "src") ?> border=0 name="s_edit" value=" Ver&auml;ndern ">
-                <input type="hidden" name="s_send" value="TRUE">
+                    <input type="hidden" name="s_send" value="TRUE">
                 </td>
             </tr>
-
         </table>
     </form>
     </td>
-
-    <td class="blank" style="width: 250px;vertical-align: top;">
+    <td class="blank" valign="top" align="right" width="270">
             <?
             $aktionen = array();
             $aktionen[] = array(
@@ -1439,7 +1423,20 @@ if (($s_id) && (auth_check())) {
             $infobox = array(
                 array("kategorie" => _("Aktionen:"),
                       "eintrag"   => $aktionen
-            ));
+                ),
+                array("kategorie" => _("Informationen:"),
+                      "eintrag"   => array(
+                            array(
+                                "icon" => 'ausruf_small.gif',
+                                "text" => sprintf(_('Angelegt am %s'), "<b>$mkstring</b>")
+                            ),
+                            array(
+                                "icon" => 'ausruf_small.gif',
+                                "text" => sprintf(_('Letzte Änderung am %s'), "<b>$chstring</b>")
+                            )
+                    )
+                )
+            );
             ?>
             <?= $template_factory->render('infobox/infobox_avatar',
             array('content' => $infobox,
@@ -1447,9 +1444,7 @@ if (($s_id) && (auth_check())) {
             )) ?>
     </td>
     </tr>
-    <tr><td class="blank" colspan=2>&nbsp;</td></tr>
 </table>
 <?php
 include ('lib/include/html_end.inc.php');
 page_close();
-?>

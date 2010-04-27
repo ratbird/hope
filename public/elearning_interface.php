@@ -139,28 +139,15 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
         ELearningUtils::bench("connections");
     }
 
-    ?><table cellspacing="0" cellpadding="0" border="0" width="100%">
+    ?>
+<table cellspacing="0" cellpadding="2" border="0" width="100%">
     <tr>
-        <td class="blank" colspan="3">&nbsp;
-        </td>
-    </tr>
-    <tr valign="top">
-                <td width="1%" class="blank">
-                    &nbsp;
-                </td>
-        <td width="90%" class="blank">
-    <?
-    if ($messages["info"] != "")
-    {
-        echo "<table>";
-        my_info($messages["info"]);
-        echo "</table>";
+        <td class="blank" valign="top">
+    <? if ($messages["info"] != "") {
+        echo MessageBox::info($messages["info"]);
     }
-    if ($messages["error"] != "")
-    {
-        echo "<table>";
-        my_error($messages["error"]);
-        echo "</table>";
+    if ($messages["error"] != "") {
+        echo MessageBox::error($messages["error"]);
     }
 
     echo $page_content;
@@ -212,12 +199,12 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
         echo "<br>\n";
     }
 
-    if (($module_count == 0) AND ($new_account_cms == ""))
-    {
-        if ($SessSemName["class"]=="inst")
-            echo "<b>" . _("Momentan sind dieser Einrichtung keine Lernmodule zugeordnet.") . "</b><br>\n<br>\n<br>\n";
-        else
-            echo "<b>" . _("Momentan sind dieser Veranstaltung keine Lernmodule zugeordnet.") . "</b><br>\n<br>\n<br>\n";
+    if (($module_count == 0) AND ($new_account_cms == "")) {
+        if ($SessSemName["class"]=="inst") {
+            echo MessageBox::info(_("Momentan sind dieser Einrichtung keine Lernmodule zugeordnet."));
+        } else {
+            echo MessageBox::info(_("Momentan sind dieser Veranstaltung keine Lernmodule zugeordnet."));
+        }
     }
 
     $caching_active = false;
@@ -362,18 +349,12 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
         ?>
         <br>
         </td>
-        <td width="270" class="blank" align="center" valign="top">
-        <?
-            print_infobox ($infobox,"lernmodule.jpg");
-        ?>
+        <td width="270" class="blank" align="right" valign="top">
+        <? print_infobox($infobox, "lernmodule.jpg") ?>
         </td>
     </tr>
-    <tr>
-        <td class="blank" colspan="3">&nbsp;
-        </td>
-    </tr>
-    </table>
-    <?php
+</table>
+<?php
 }
 else
 {
@@ -383,4 +364,3 @@ else
 }
 include ('lib/include/html_end.inc.php');
 page_close();
-?>

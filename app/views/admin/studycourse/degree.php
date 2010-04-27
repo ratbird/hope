@@ -16,7 +16,7 @@
 	<? foreach ($studydegrees as $abschluss_id => $studydegree) : ?>
 	<tbody class="<?= count($studydegree['profession'])?'':'empty' ?>">
 	<tr class="steel">
-		<td><? if ($studydegree['count_user'] == 0): ?><?=$abschluss_id+1 ?>. <?= $studydegree['name'] ?> <? else: ?> <a class="toggler" href="#"><?=$abschluss_id+1 ?>. <?= $studydegree['name'] ?> </a><? endif; ?></td>
+		<td><? if (count($studydegree['profession']) < 1): ?><?=$abschluss_id+1 ?>. <?= htmlReady($studydegree['name']) ?> <? else: ?> <a class="toggler" href="#"><?=$abschluss_id+1 ?>. <?= htmlReady($studydegree['name']) ?> </a><? endif; ?></td>
 		<td> <?= $studydegree['count_user'] ?> </td>
 		<td><a href="<?=$controller->url_for('admin/studycourse/edit_degree/'.$studydegree['abschluss_id'])?>"><?= Assets::img('edit_transparent.gif', array('title' => 'Abschluss bearbeiten')) ?></a>
 		<td><? if ($studydegree['count_user'] > 0): ?><a href="<?=URLHelper::getLink("sms_send.php?sms_source_page=sms_box.php&sd_id=".$studydegree['abschluss_id']."&emailrequest=1&subject="._("Informationen zum Studienabschluss:")." ". $studydegree['name']) ?>"><?= Assets::img('mailnachricht.gif', array('title' => 'Nachricht an alle Nutzer schicken')) ?></a><? endif;?>
@@ -26,11 +26,11 @@
 	<tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
     	<td>
     	   <?=$abschluss_id + 1 ?>.<?=$index + 1 ?>
-    	   <?= $studycourse['name'] ?>
+    	   <?= htmlReady($studycourse['name']) ?>
     	</td>
     	<td><?= $studycourse['count_user'] ?></td>
     	<td></td>
-    	<td><a href="<?=URLHelper::getLink("sms_send.php?sms_source_page=sms_box.php&prof_id=".$studycourse['studiengang_id']."&deg_id=".$studydegree['abschluss_id']."&emailrequest=1&subject="._("Informationen zum Studiengang:")." ". $studycourse['name'])." (".$studydegree['name'].")" ?>"><?= Assets::img('mailnachricht.gif', array('title' => 'Nachricht an alle Nutzer schicken')) ?></a> </td>
+    	<td><a href="<?=URLHelper::getLink("sms_send.php?sms_source_page=sms_box.php&prof_id=".$studycourse['studiengang_id']."&deg_id=".$studydegree['abschluss_id']."&emailrequest=1&subject="._("Informationen zum Studiengang:")." ". htmlReady($studycourse['name']))." (".htmlReady($studydegree['name']).")" ?>"><?= Assets::img('mailnachricht.gif', array('title' => _('Eine Nachricht an alle Nutzer schicken'))) ?></a> </td>
     	<td></td>
 	</tr>
 	<? endforeach; TextHelper::reset_cycle(); ?>

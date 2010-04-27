@@ -95,8 +95,8 @@ class Admin_StudycourseController extends AuthenticatedController
                 $prof_name = Request::get('professionname');
                 $prof_desc = Request::get('description');
                 StudycourseModel::saveEditProfession($prof_id, $prof_name, $prof_desc);
-                $this->flash['success'] = sprintf(_('Das Studienfach "%s" wurde erfolgreich aktualisiert!'), $prof_name);
-                $this->flash['success_detail'] = array(_("Beschreibung: ") . $prof_desc);
+                $this->flash['success'] = sprintf(_('Das Studienfach "%s" wurde erfolgreich aktualisiert!'), htmlReady($prof_name));
+                $this->flash['success_detail'] = array(_("Beschreibung: ") . htmlReady($prof_desc));
                 $this->redirect('admin/studycourse/profession');
             } else {
                 $this->flash['error'] = _("Bitte geben Sie mindestens einen Namen für das Fach ein!");
@@ -125,8 +125,8 @@ class Admin_StudycourseController extends AuthenticatedController
                 $deg_name = Request::get('degreename');
                 $deg_desc = Request::get('description');
                 StudycourseModel::saveEditDegree($deg_id, $deg_name, $deg_desc);
-                $this->flash['success'] = sprintf(_('Der Abschluss "%s" wurde erfolgreich aktualisiert!'), $deg_name);
-                $this->flash['success_detail'] = array(_("Beschreibung: ") . $deg_desc);
+                $this->flash['success'] = sprintf(_('Der Abschluss "%s" wurde erfolgreich aktualisiert!'), htmlReady($deg_name));
+                $this->flash['success_detail'] = array(_("Beschreibung: ") . htmlReady($deg_desc));
                 $this->redirect('admin/studycourse/degree');
             } else {
                 $this->flash['error'] = _("Bitte geben Sie mindestens einen Namen für den Abschluss ein!");
@@ -217,10 +217,10 @@ class Admin_StudycourseController extends AuthenticatedController
                 $prof_desc = Request::get('description');
                 if (!StudycourseModel::checkProfession($prof_name)) {
                     StudycourseModel::saveNewProfession($prof_name, $prof_desc);
-                    $this->flash['success'] = sprintf(_('Das Studienfach "%s" wurde erfolgreich angelegt!'), $prof_name);
+                    $this->flash['success'] = sprintf(_('Das Studienfach "%s" wurde erfolgreich angelegt!'), htmlReady($prof_name));
                     $this->redirect('admin/studycourse/profession');
                 } else {
-                    $this->flash['error'] = sprintf(_('Ein Studienfach mit dem Namen "%s" existiert bereits!'), $prof_name);
+                    $this->flash['error'] = sprintf(_('Ein Studienfach mit dem Namen "%s" existiert bereits!'), htmlReady($prof_name));
                 }
             } else {
                 $this->flash['error'] = _("Bitte geben Sie eine mindestens einen Namen für das Fach ein!");
@@ -247,10 +247,10 @@ class Admin_StudycourseController extends AuthenticatedController
                 $deg_desc = Request::get('description');
                 if (!StudycourseModel::checkDegree($deg_name)) {
                     StudycourseModel::saveNewDegree($deg_name, $deg_desc);
-                    $this->flash['success'] = sprintf(_('Der Studienabschluss "%s" wurde erfolgreich angelegt!'), $deg_name);
+                    $this->flash['success'] = sprintf(_('Der Studienabschluss "%s" wurde erfolgreich angelegt!'), htmlReady($deg_name));
                     $this->redirect('admin/studycourse/degree');
                 } else {
-                    $this->flash['error'] = sprintf(_('Ein Studienabschluss mit dem Namen "%s" existiert bereits!'), $deg_name);
+                    $this->flash['error'] = sprintf(_('Ein Studienabschluss mit dem Namen "%s" existiert bereits!'), htmlReady($deg_name));
                 }
             } else {
                 $this->flash['error'] = _("Bitte geben Sie mindestens einen Namen für den Abschluss ein!");

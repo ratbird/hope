@@ -17,7 +17,7 @@
 	<? foreach ($studycourses as $fach_id => $studycourse): ?>
 	<tbody class="<?= count($studycourse['degree'])?'':'empty' ?>">
 	<tr class="steel">
-		<td><? if (count($studycourse['degree']) < 1): ?><?=$fach_id+1 ?>. <?= $studycourse['name'] ?> <? else: ?> <a class="toggler" href="#"><?=$fach_id+1 ?>. <?= $studycourse['name'] ?></a><? endif; ?></td>
+		<td><? if (count($studycourse['degree']) < 1): ?><?=$fach_id+1 ?>. <?= htmlReady($studycourse['name']) ?> <? else: ?> <a class="toggler" href="#"><?=$fach_id+1 ?>. <?= htmlReady($studycourse['name']) ?></a><? endif; ?></td>
 		<td><?= $studycourse['count_sem'] ?> </td>
 		<td><?= $studycourse['count_user'] ?> </td>
 		<td><a href="<?=$controller->url_for('admin/studycourse/edit_profession/'.$studycourse['studiengang_id'])?>"><?= Assets::img('edit_transparent.gif', array('title' => 'Studiengang bearbeiten')) ?></a></td>
@@ -28,7 +28,7 @@
 	<tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
     	<td>
     	   <?= $fach_id + 1 ?>.<?= $index + 1 ?>
-    	   <?= $degree['name'] ?>
+    	   <?= htmlReady($degree['name']) ?>
     	</td>
     	<td></td>
     	<td><?= $degree['count_user'] ?></td>

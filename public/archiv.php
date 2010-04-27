@@ -91,41 +91,38 @@ $archiv_data['sortby'] = Request::option('sortby', 'Name');
 
 $u_id = $user->id;
 
-//Sicherheitsabfrage
-if ($delete_id) {
-    //TODO: modaler dialog verwenden
-    $db->query("SELECT name FROM archiv WHERE seminar_id= '$delete_id'");
-    $db->next_record();
-    $msg="info§" . sprintf(_("Wollen Sie die Veranstaltung <b>%s</b> wirklich l&ouml;schen? S&auml;mtliche Daten und die mit der Veranstaltung archivierte Dateisammlung werden unwiderruflich gel&ouml;scht!"), htmlReady($db->f("name"))) . " <br>";
-    $msg.="<a href=\"". URLHelper::getLink("?delete_really=TRUE&delete_id=$delete_id") ."\">" . makeButton("ja2", "img") . "</a>&nbsp; \n";
-    $msg.="<a href=\"". URLHelper::getLink("?back=TRUE") ."\">" . makeButton("nein", "img") . "</a>\n";
-
-}
-
 //Loeschen aus dem Archiv
-if (($delete_id) && ($delete_really)){
+if (($delete_id) && Request::submitted('delete_really')){
     if (archiv_check_perm($delete_id) == "admin") {
         $db2->query("SELECT name,archiv_file_id FROM archiv WHERE seminar_id='$delete_id'");
         $db2->next_record();
         $db->query("DELETE FROM archiv WHERE seminar_id = '$delete_id'");
-        if ($db->affected_rows()){
-            $msg = sprintf("msg§" . _("Die Veranstaltung %s wurde aus dem Archiv gel&ouml;scht") . "§", htmlReady($db2->f("name")));
-                        log_event("SEM_DELETE_FROM_ARCHIVE",$delete_id,NULL,$db2->f("name")." (".$db2->f("semester").")"); // ...logging...
+        if ($db->affected_rows()) {
+            $success = sprintf(_('Die Veranstaltung "%s" wurde aus dem Archiv gelöscht'), htmlReady($db2->f("name")));
+            log_event("SEM_DELETE_FROM_ARCHIVE",$delete_id,NULL,$db2->f("name")." (".$db2->f("semester").")"); // ...logging...
         }
         if ($db2->f("archiv_file_id")) {
             if (unlink ($ARCHIV_PATH."/".$db2->f("archiv_file_id"))){
-                $msg .= "msg§" . _("Das Zip-Archiv der Veranstaltung wurde aus dem Archiv gel&ouml;scht.") ."§";
+                $details[] = _("Das Zip-Archiv der Veranstaltung wurde aus dem Archiv gelöscht.");
             } else {
-                $msg.="error§" . _("Das Zip-Archiv der Veranstaltung konnte nicht aus dem Archiv gel&ouml;scht werden.") ."§";
+                $details[] = _("Das Zip-Archiv der Veranstaltung konnte nicht aus dem Archiv gelöscht werden.");
             }
         }
         $db->query("DELETE FROM archiv_user WHERE seminar_id='$delete_id'");
-        if ($db->affected_rows()){
-            $msg .= sprintf("msg§" . _("Es wurden %s Zugriffsberechtigungen entfernt.") . "§", $db->affected_rows());
+        if ($db->affected_rows()) {
+            $details[] = sprintf(_("Es wurden %s Zugriffsberechtigungen entfernt."), $db->affected_rows());
         }
     } else {
         $msg="error§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.");
     }
+    unset($delete_id);
+}
+
+//Sicherheitsabfrage
+if ($delete_id) {
+    $name = DBManager::get()->query("SELECT name FROM archiv WHERE seminar_id= '$delete_id'")->fetch(PDO::FETCH_COLUMN);
+    echo createQuestion(sprintf(_('Wollen Sie die Veranstaltung"%s" wirklich löschen? Sämtliche Daten und die mit der Veranstaltung archivierte Dateisammlung werden unwiderruflich gelöscht!'), htmlReady($name)),
+            array('delete_really' => 'true', 'delete_id' => $delete_id), array('back' => 'true'));
 }
 
 //Loeschen von Archiv-Usern
@@ -216,15 +213,10 @@ $HELP_KEYWORD="Basis.SuchenArchiv";
 include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 ?>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
-    <?
-    if ($msg) { ?>
-    <tr>
-        <td class="blank" colspan="2"><? parse_msg($msg); ?></td>
-    </tr>
-    <? } ?>
+    <? if ($msg) { ?><? parse_msg($msg); ?><? } ?>
     <tr>
         <td class="blank" >
-        <h1><?= _('Suche im Archiv') ?></h1>
+        <?= $success? MessageBox::success($success, $details) : '' ?>
                 <form  name="search" method="post" action="<?= URLHelper::getLink() ?>" >
                     <table border=0 cellspacing=0 cellpadding=2>
                         <tr <? $cssSw->switchClass() ?>>
@@ -358,7 +350,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                 </form>
         </td>
         <td class="blank" align="right" valign="top" width="270">
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/archiv.jpg" border="0">
+            <?= print_infobox('', 'archiv.jpg') ?>
         </td>
     </tr>
 

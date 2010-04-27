@@ -15,7 +15,8 @@ class QuicksearchController extends AuthenticatedController {
 	
     public function response_action($query_id) {
     	$this->extraInclude($query_id);
-    	//$this->cleanUp();
+    	$this->cleanUp();
+    	$_SESSION['QuickSearches'][$query_id]['time'] = time();
     	$this->search = $this->getSearch($query_id);
     	$this->specialSQL = $_SESSION['QuickSearches'][$query_id]['query'];
     	$this->form_data = json_decode(Request::get("form_data"), true);
@@ -152,10 +153,13 @@ class QuicksearchController extends AuthenticatedController {
         return $result;
     }
     
+    /**
+     * deletes all older requests, that have not been used since half an hour
+     */
     private function cleanUp() {
     	$count = 0;
     	foreach($_SESSION['QuickSearches'] as $query_id => $query) {
-    		if (time() - $query['time'] > $GLOBALS['AUTH_LIFETIME'] * 60) {
+    		if (time() - $query['time'] > 30 * 60) {
     			unset($_SESSION['QuickSearches'][$query_id]);
     			$count++;
     		}

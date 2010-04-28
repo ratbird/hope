@@ -505,18 +505,12 @@ class SemBrowse {
                         }
                         $doz_uname = array_keys($sem_data[$seminar_id]['username']);
                         $doz_position = array_keys($sem_data[$seminar_id]['position']);
-                        $studygroup_dozent_key = array_search('studygroup_dozent', $doz_uname);
-                        if($studygroup_dozent_key !== false){
-                            unset($doz_name[$studygroup_dozent_key]);
-                            unset($doz_position[$studygroup_dozent_key]);
-                            unset($doz_uname[$studygroup_dozent_key]);
-                        }
                         if (count($doz_name)){
                             if(count($doz_position) != count($doz_uname)) $doz_position = range(1, count($doz_uname));
                             array_multisort($doz_position, $doz_name, $doz_uname);
                             $i = 0;
                             foreach ($doz_name as $index => $value){
-                                if ($value && $doz_uname[$index] != 'studygroup_dozent') {  // hide dozenten with empty username
+                                if ($value) {  // hide dozenten with empty username
                                     if ($i == 4){
                                         echo "... <a href=\"".$this->target_url."?".$this->target_id."=".$seminar_id."&send_from_search=1&send_from_search_page={$PHP_SELF}?keep_result_set=1\">("._("mehr").")</a>";
                                         break;
@@ -695,12 +689,7 @@ class SemBrowse {
                             }
                             --$c;
                         }
-                        $studygroup_dozent_key = array_search('studygroup_dozent', array_keys($sem_data[$seminar_id]['username']));
                         $doz_position = array_keys($sem_data[$seminar_id]['position']);
-                        if($studygroup_dozent_key !== false){
-                            unset($doz_name[$studygroup_dozent_key]);
-                            unset($doz_position[$studygroup_dozent_key]);
-                        }
                         if (is_array($doz_name)){
                             if(count($doz_position) != count($doz_name)) $doz_position = range(1, count($doz_name));
                             array_multisort($doz_position, $doz_name);

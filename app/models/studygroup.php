@@ -193,7 +193,7 @@ class StudygroupModel {
         }
         else if($sort == 'founder_asc' || $sort == 'founder_desc') {
                 $sql = "SELECT s.* FROM seminare as s 
-                        LEFT JOIN seminar_user as su ON s.Seminar_id = su.Seminar_id AND su.status = 'dozent' AND su.user_id <> MD5('studygroup_dozent') 
+                        LEFT JOIN seminar_user as su ON s.Seminar_id = su.Seminar_id AND su.status = 'dozent'
                         LEFT JOIN auth_user_md5 as aum ON su.user_id = aum.user_id 
                         WHERE s.status IN ('". implode("','", $status)."') 
                         ORDER BY aum.Nachname ". $sort_order;
@@ -227,13 +227,12 @@ class StudygroupModel {
       $stmt = DBManager::get()->query($sql);
       $count= $stmt->fetch();
       
-      // always return one member less than the total count since there is dummy_dozent in each group
-      return $count[0]-1;
+      return intval($count[0]);
     }
     
     function getFounder ( $semid )
     {
-        $sql  = "SELECT user_id FROM `seminar_user` WHERE Seminar_id = '{$semid}' AND status = 'dozent' AND user_id != MD5('studygroup_dozent')";
+        $sql  = "SELECT user_id FROM `seminar_user` WHERE Seminar_id = '{$semid}' AND status = 'dozent'";
         $stmt = DBManager::get()->query($sql);
                 while ($user = $stmt->fetch()) {
             $founder[] = array('user_id' => $user['user_id'], 'fullname' => get_fullname($user['user_id']), 'uname' => get_username($user['user_id']));
@@ -270,8 +269,7 @@ class StudygroupModel {
         $stmt = DBManager::get()->prepare($query = "SELECT username, perms, ". $GLOBALS['_fullname_sql']['full_rev'] ." as fullname FROM seminar_user
             LEFT JOIN auth_user_md5 USING (user_id)
             LEFT JOIN user_info USING (user_id)
-            WHERE Seminar_id = ? AND status = 'dozent'
-                AND username != 'studygroup_dozent'");
+            WHERE Seminar_id = ? AND status = 'dozent'");
         $stmt->execute( array($sem_id) );
 
         return $stmt->fetchAll();
@@ -281,7 +279,7 @@ class StudygroupModel {
         $stmt = DBManager::get()->prepare($query = "SELECT username,user_id ,perms, seminar_user.status, ". $GLOBALS['_fullname_sql']['full_rev'] ." as fullname FROM seminar_user
             LEFT JOIN auth_user_md5 USING (user_id)
             LEFT JOIN user_info USING (user_id)
-            WHERE Seminar_id = ? AND username != 'studygroup_dozent'
+            WHERE Seminar_id = ?
             ORDER BY seminar_user.mkdate ASC, seminar_user.status ASC  LIMIT ". $lower_bound .",". $elements_per_page);
 
         $stmt->execute( array($sem_id) );

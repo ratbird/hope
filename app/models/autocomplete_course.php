@@ -64,7 +64,7 @@ function autocomplete_course_get_courses_by_id($ids) {
      'LEFT JOIN seminar_user '.
      'ON (seminare.seminar_id = seminar_user.seminar_id) '.
      'LEFT JOIN auth_user_md5 '.
-     "ON (seminar_user.user_id = auth_user_md5.user_id AND auth_user_md5.user_id <> MD5('studygroup_dozent')) ".
+     "ON (seminar_user.user_id = auth_user_md5.user_id) ".
      "WHERE seminare.seminar_id IN ('".join("','", $ids)."') ".
      "AND seminar_user.status = 'dozent' ".
      'GROUP BY seminare.seminar_id')

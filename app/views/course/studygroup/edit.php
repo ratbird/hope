@@ -46,7 +46,7 @@ $infobox['content'] = array(
 <form action="<?= $controller->url_for('course/studygroup/update/'.$sem_id) ?>" method=post>
 
 
-<table class="blank" width="75%" cellspacing="5" cellpadding="0" border="0" style="margin-left:75px; margin-right:300px;">
+<table class="blank" width="75%" cellspacing="5" cellpadding="0" border="0">
 
 <tr>
   <td style='text-align:right; font-size:150%;'>Name:</td>
@@ -58,8 +58,8 @@ $infobox['content'] = array(
   <td><textarea name='groupdescription' rows=5 cols=50><?= htmlReady($sem->description) ?></textarea></td>
 </tr>
 
-<? if ($GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
-    <?= $this->render_partial("course/studygroup/_choose_founders", array('results_choose_founders' => $flash['results_choose_founders'])) ?>
+<? if ($GLOBALS['perm']->have_studip_perm('dozent', $sem_id) || true) : ?>
+    <?= $this->render_partial("course/studygroup/_replace_founder", array('tutors' => $tutors)) ?>
 <? endif; ?>
 
 <tr>

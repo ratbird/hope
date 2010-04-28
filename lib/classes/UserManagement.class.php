@@ -37,6 +37,7 @@ require_once 'lib/classes/StudipNews.class.php';
 require_once 'lib/object.inc.php';
 require_once 'lib/log_events.inc.php';  // Event logging
 require_once 'lib/classes/Avatar.class.php'; // remove Avatarture
+require_once 'app/models/studygroup.php';
 
 if ($GLOBALS['RESOURCES_ENABLE']) {
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/DeleteResourcesUser.class.php");
@@ -670,12 +671,53 @@ class UserManagement
         }
 
         // active dozent?
-        $this->db->query("SELECT count(*) AS count FROM seminar_user as su LEFT JOIN auth_user_md5 as aum USING (user_id) WHERE user_id = '" .
-                          $this->user_data['auth_user_md5.user_id'] . "' AND su.status = 'dozent' AND aum.perms = 'dozent' GROUP BY user_id");
+        $this->db->query("SELECT count(*) AS count FROM seminar_user as su " 
+            . "LEFT JOIN auth_user_md5 as aum USING (user_id)"
+            . "LEFT JOIN seminare as s USING (Seminar_id)"
+            . "WHERE user_id = '" . $this->user_data['auth_user_md5.user_id'] . "'"
+            . "AND su.status = 'dozent' AND aum.perms = 'dozent' "
+            . "AND s.status NOT IN('". implode("','", studygroup_sem_types())."')"
+            . "GROUP BY user_id");
+
         $this->db->next_record();
         if ($this->db->f("count")) {
             $this->msg .= sprintf("error§" . _("Der Benutzer/die Benutzerin <em>%s</em> ist DozentIn in %s aktiven Veranstaltungen und kann daher nicht gel&ouml;scht werden.") . "§", $this->user_data['auth_user_md5.username'], $this->db->f("count"));
             return FALSE;
+        
+        //founder of studygroup?    
+        } elseif (get_config('STUDYGROUPS_ENABLE')) {
+          $stmt = DBManager::get()->query("SELECT * FROM seminare as s "
+                . "LEFT JOIN seminar_user as su USING (Seminar_id) "
+                . "WHERE su.status = 'dozent' "
+                . "AND su.user_id = '" . $this->user_data['auth_user_md5.user_id'] . "'"
+                . "AND s.status IN('". implode("','", studygroup_sem_types())."')");
+
+          if (is_array($groups = $stmt->fetchAll())) {
+            foreach($groups as $group) {
+                if (StudygroupModel::countMembers($group['Seminar_id']) > 1) {
+                    $sem = new Seminar($group['Seminar_id']);
+                    // check whether there are tutors or even autors that can be promoted
+                    $tutors = $sem->getMembers('tutor');
+                    $autors = $sem->getMembers('autor');
+                    if (count($tutors) > 0) {
+                        $new_founder = current($tutors);
+                        StudygroupModel::promote_user($new_founder['username'], $sem->getId(), 'dozent');
+                        continue;
+                    }
+                    // if not promote an autor
+                    elseif (count($autors) > 0) {
+                        $new_founder = current($autors);
+                        StudygroupModel::promote_user($new_founder['username'], $sem->getId(), 'dozent');
+                        continue;
+                    }
+                    // since no suitable successor was found, we are allowed to remove the studygroup 
+                    else {
+                        $sem->delete();
+                    }
+                    unset($sem);
+                }
+            }
+          }
         }
 
         // store user preferred language for sending mail

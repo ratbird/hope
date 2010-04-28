@@ -230,7 +230,6 @@ $quarter_year = 60 * 60 * 24 * 90;
         echo '<b>'._('Beschreibung:').' </b><br>'. FixLinks(htmlReady($sem->description)) .'<br><br>';
         echo '<b>'._('Moderiert von:') .'</b> ';
         $all_mods = $sem->getMembers('dozent') + $sem->getMembers('tutor');
-        unset($all_mods[md5('studygroup_dozent')]);
         $mods = array();
         foreach($all_mods as $mod) {
             $mods[] = '<a href="'.URLHelper::getLink("about.php?username=".$mod['username']).'">'.htmlready($mod['fullname']).'</a>';

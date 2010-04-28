@@ -566,7 +566,7 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
             $db4->query("SELECT ". $_fullname_sql['full'] ." AS fullname, username, position FROM seminar_user
                 LEFT JOIN auth_user_md5 USING (user_id)
                 LEFT JOIN user_info USING (user_id)
-                WHERE Seminar_id = '$seminar_id' and status = 'dozent' AND seminar_user.user_id <> MD5('studygroup_dozent') ORDER BY position ");
+                WHERE Seminar_id = '$seminar_id' and status = 'dozent' ORDER BY position ");
             $k=0;
             if (!$db4->num_rows())
                 echo "&nbsp; ";

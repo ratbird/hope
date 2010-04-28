@@ -19,7 +19,7 @@ $infobox['content'] = array(
 
 <form action="<?= $controller->url_for('course/studygroup/create') ?>" method=post>
 
-<table class="blank" width="85%" cellspacing="5" cellpadding="0" border="0" style="margin-left:75px; margin-right:150px;">
+<table class="blank" width="85%" cellspacing="5" cellpadding="0" border="0">
 <tr>
   <td style='text-align:right; font-size:150%;'><?= _("Name:") ?></td>
   <td style='font-size:150%;'><input type='text' name='groupname' size='25' value="<?= htmlReady($this->flash['request']['groupname'])?>" style='font-size:100%'></td>

@@ -11,7 +11,6 @@ if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId())) {
 }
 
 $all_mods = $studygroup->getMembers('dozent') + $studygroup->getMembers('tutor');
-unset($all_mods[md5('studygroup_dozent')]);
 
 $mods = array();
 foreach($all_mods as $mod) {

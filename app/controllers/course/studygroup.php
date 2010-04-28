@@ -176,7 +176,7 @@ class Course_StudygroupController extends AuthenticatedController {
         else if ($admin && Request::submitted('remove_founder')) {
             $candidate = Request::getArray('founders');
             if(in_array(current($candidate),$founders)) {
-                unset($founders[current($candidate)]);
+                unset($founders);
             }
             
             $this->flash['founders']  = $founders;
@@ -274,12 +274,6 @@ class Course_StudygroupController extends AuthenticatedController {
                                         . "gruppe     = 8");
                 }
 
-                // now add the studygroup_dozent dozent who's supposed to be invisible
-                DBManager::get()->query("INSERT INTO seminar_user "
-                                    . "SET seminar_id='$sem->id',"
-                                    . " user_id=MD5('studygroup_dozent'), "
-                                    . "status='dozent', visible='no'");
-
                 // de-/activate modules
                 $mods              = new Modules();
                 $bitmask           = 0;
@@ -341,6 +335,7 @@ class Course_StudygroupController extends AuthenticatedController {
             $sem                     = new Seminar($id);
             $this->sem_id            = $id;
             $this->sem               = $sem;
+            $this->tutors            = $sem->getMembers('tutor');
             $this->available_modules = StudygroupModel::getAvailableModules();
             $this->available_plugins = StudygroupModel::getAvailablePlugins();
             $this->enabled_plugins   = StudygroupModel::getEnabledPlugins($id);
@@ -372,58 +367,17 @@ class Course_StudygroupController extends AuthenticatedController {
             $admin    = $perm->have_studip_perm('admin', $id);
             $founders = StudygroupModel::getFounders($id);
 
-            if ($admin && Request::submitted('search_founder'))  {
-                $search_for_founder = Request::get('search_for_founder');
+            if (Request::submitted('replace_founder'))  {
+                
+                // retrieve old founder
+                $old_dozent = current(StudygroupModel::getFounder($id));
+                
+                // remove old founder
+                StudygroupModel::promote_user($old_dozent['uname'],$id,'tutor');
 
-                // do not allow to search with the empty string
-                if ($search_for_founder) {
-
-                    // search for the user
-                    $pdo = DBManager::get();
-                    $search_for_founder = $pdo->quote('%' . $search_for_founder . '%');
-                    $stmt = $pdo->query("SELECT user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms"
-                                . " FROM auth_user_md5"
-                                . " LEFT JOIN user_info USING (user_id)"
-                                . " WHERE username LIKE $search_for_founder"
-                                . " OR Vorname LIKE $search_for_founder"
-                                . " OR Nachname LIKE $search_for_founder"
-                                . " LIMIT 500");
-                    while ($data = $stmt->fetch()) {
-                        $results_founders[$data['user_id']] = array(
-                            'fullname' => $data['fullname'],
-                            'username' => $data['username'],
-                            'perms'    => $data['perms']
-                        );
-                    }
-
-                }
-                $this->flash['create'] = true;
-                $this->flash['results_choose_founders'] = $results_founders;
-                $this->flash['request'] = Request::getInstance();
-            }
-
-            // add a founder
-            else if ($admin && Request::submitted('add_founder')) {
-
-                $name = Request::get('choose_founder');
-                StudygroupModel::addFounder($name, $id );
-
-                $this->flash['success'] = sprintf(_("Der Nutzer %s wurde als Gruppengründer hinzugefügt!"), $name);
-            }
-
-            // remove a founder
-            else if ( $admin && Request::submitted('remove_founder')) {
-                if (sizeof($founders) == 1) {
-                    $this->flash['edit'] = true;
-                    $this->flash['errors'] = array(
-                        _("Jede Studiengruppe muss mindestens einen Gruppengründer haben!")
-                    );
-                } else {
-                    $name = key(Request::getArray('founders'));
-                    StudygroupModel::removeFounder( $name, $id );
-
-                    $this->flash['success'] = sprintf(_("Der Nutzer %s wurde als Gruppengründer entfernt!"), $name);
-                }
+                // add new founder
+                $new_founder = Request::get('choose_founder');
+                StudygroupModel::promote_user(get_username($new_founder), $id,'dozent');
             }
 
             //checks
@@ -534,8 +488,7 @@ class Course_StudygroupController extends AuthenticatedController {
         $this->sem_id           = $id;
         $this->groupdescription = $sem->description;
         $this->moderators       = $sem->getMembers('dozent');
-        unset($this->moderators[md5('studygroup_dozent')]);
-        $this->tutors           =  $sem->getMembers('tutor');
+        $this->tutors           = $sem->getMembers('tutor');
         $this->accepted         = $sem->getAdmissionMembers('accepted');
         $this->rechte           = $GLOBALS['perm']->have_studip_perm("tutor", $id);
     }
@@ -559,10 +512,10 @@ class Course_StudygroupController extends AuthenticatedController {
                 $this->flash['success'] = _("Es wurde keine korrekte Option gewählt.");
             } elseif ($action == 'accept') {
                 StudygroupModel::accept_user($user,$id);
-                $this->flash['success'] = sprintf(_("Der Nutzer %s wurde akzeptiert."), get_fullname_from_uname($user));
+                $this->flash['success'] = sprintf(_("Der Nutzer %s wurde akzeptiert."), get_fullname_from_uname($user, 'full', true));
             } elseif ($action == 'deny') {
                 StudygroupModel::deny_user($user,$id);
-                $this->flash['success'] = sprintf(_("Der Nutzer %s wurde nicht akzeptiert."), get_fullname_from_uname($user));
+                $this->flash['success'] = sprintf(_("Der Nutzer %s wurde nicht akzeptiert."), get_fullname_from_uname($user, 'full', true));
             } elseif ($action == 'add_invites') {
                 if (Request::submitted('search_member')) {
                     $search_for_member = Request::get('search_for_member');
@@ -596,7 +549,7 @@ class Course_StudygroupController extends AuthenticatedController {
                         }
                         $this->flash['success'] = $msg;
                     } else {
-                        $this->flash['info'] = sprintf(_("Der Suchbegriff %s ergab keine Treffer."), Request::get('search_for_member'));
+                        $this->flash['info'] = sprintf(_("Der Suchbegriff %s ergab keine Treffer."), htmlReady(Request::get('search_for_member')));
                     }
                     $this->flash['results_choose_members'] = $results_members;
                     $this->flash['request'] = Request::getInstance();
@@ -606,27 +559,27 @@ class Course_StudygroupController extends AuthenticatedController {
                     $msg = new Messaging();
                     $receiver = Request::get('choose_member');
                     $sem = new Seminar($id);
-                    $u_name = get_fullname_from_uname(get_username($user));
+                    $u_name = get_fullname_from_uname(get_username($user), 'full', true);
                     $message = sprintf(_("%s möchte Sie auf die Studiengruppe %s aufmerksam machen. Klicken Sie auf den untenstehenden Link "
                              . "um direkt zur Studiengruppe zu gelangen.\n\n %s"),
                              $u_name, $sem->name, URLHelper::getlink("dispatch.php/course/studygroup/details/" . $id, array('cid' => NULL)));
                     $subject = _("Sie wurden in eine Studiengruppe eingeladen");
                     $msg->insert_message($message, $receiver,'', '', '', '', '', $subject);
-                    $this->flash['success'] = sprintf(_("Der Nutzer %s wurde in die Studiengruppe eingeladen."), get_fullname_from_uname($receiver));
+                    $this->flash['success'] = sprintf(_("Der Nutzer %s wurde in die Studiengruppe eingeladen."), get_fullname_from_uname($receiver, 'full', true));
                 }
             }
             elseif ($perm->have_studip_perm('dozent', $id)) {
                 if(!$perm->have_studip_perm('dozent',$id,get_userid($user))) {
-                    if ($action == 'promote') {
+                    if ($action == 'promote' && $status != 'dozent') {
                         StudygroupModel::promote_user($user,$id,$status);
-                        $this->flash['success'] = sprintf(_("Der Status des Nutzer %s wurde geändert."), get_fullname_from_uname($user));
+                        $this->flash['success'] = sprintf(_("Der Status des Nutzer %s wurde geändert."), get_fullname_from_uname($user, 'full', true));
                     } elseif ($action == 'remove') {
-                        $this->flash['question'] = sprintf(_("Möchten Sie wirklich den Nutzer %s aus der Studiengruppe entfernen?"), get_fullname_from_uname($user));
+                        $this->flash['question'] = sprintf(_("Möchten Sie wirklich den Nutzer %s aus der Studiengruppe entfernen?"), get_fullname_from_uname($user, 'full', true));
                         $this->flash['candidate'] = $user;
                        
                     } elseif ($action == 'remove_approved' && check_ticket($studipticket)) {
                         StudygroupModel::remove_user($user,$id);
-                        $this->flash['success'] = sprintf(_("Der Nutzer %s wurde aus der Studiengruppe entfernt."), get_fullname_from_uname($user));
+                        $this->flash['success'] = sprintf(_("Der Nutzer %s wurde aus der Studiengruppe entfernt."), get_fullname_from_uname($user, 'full', true));
                     }
                 } else {
                     $this->flash['messages'] = array(

@@ -167,7 +167,7 @@ function printFormStart ( $voteID, $rangeID, $referer ) {
     . ">&nbsp;";
 #####################
 
-    $html = createBoxHeader (FALSE, "100%", $task_string,
+    $html = createBoxHeader (FALSE, ' style="width: 100%;"', $task_string,
                  VOTE_PATH_PICTURES.$type."-icon.gif","","","","",
                  "blank" );
     $html .= "<form action=\"".$GLOBALS['PHP_SELF']."?page=edit&type=".$type."\" name=\"voteform\" method=post>"

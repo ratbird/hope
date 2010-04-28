@@ -112,7 +112,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
    echo "<a name=\"votetop\"></a>";
 
    /* Show the vote box ---------------------------------------------------- */
-   $width = ($isHomepage)? ' style="width: 100%;\"' : "";
+   $width = ($isHomepage)? ' style="width: 100%;"' : "";
 
    if (($perm->have_studip_perm ("tutor", $rangeID) && $perm->have_perm('autor')) OR   // allow creation of evaluations for global autors as well
        get_username($userID) == $rangeID)

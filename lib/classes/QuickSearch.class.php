@@ -272,7 +272,7 @@ class QuickSearch {
 
     	} else {
     		//Abfrage in der Session speichern:
-    		$query_id = md5(uniqid(basename($_SERVER['SCRIPT_NAME']).$this->name));
+    		$query_id = md5(serialize($this->search));
     		if ($this->specialQuery) {
     			$_SESSION['QuickSearches'][$query_id]['query'] = $this->specialQuery;
     		} elseif ($this->search instanceof SearchType) {

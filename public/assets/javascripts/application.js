@@ -947,27 +947,35 @@ STUDIP.QuickSearch = {
    */
   autocomplete: function (name, url, func) {
     $('#' + name).autocomplete({
+      disabled: true,
       source: function (input, add) {
+    	//get the variables that should be sent:
         var send_vars = { 
     	  form_data: STUDIP.QuickSearch.formToJSON('#' + name), 
     	  request: input.term 
     	};
         $.getJSON(url, send_vars, function (data) {
-          var suggestions = [];
+          var stripTags = /<(?:.|\s)*?>/g;
+          var suggestions = [];  //an array of possible selections
           $.each(data, function (i, val) {
-            suggestions.push({label: val.item_name, item_id: val.item_id});
+            //adding a label and a hidden item_id - don't use "value":
+            suggestions.push({
+              label: val.item_name,                       //what is displayed in the drobdown-boc
+              item_id: val.item_id,                       //the hidden ID of the item
+              value: val.item_name.replace(stripTags, "") //what is inserted in the visible input-box
+            });
           });
+          //pass it to the function of UI-widget:
           add(suggestions);
         });
       },
       select: function (event, ui) {
-        //inserts the ID of the selected item in the hidden input:
+    	//inserts the ID of the selected item in the hidden input:
         $('#' + name + "_realvalue").attr("value", ui.item.item_id);
         //and execute a special function defined before by the programmer:
         if (func) {
           eval(func + "(ui.item.item_id, ui.item.label);");
         }
-        return ui.item.label;
       }
     });
   }

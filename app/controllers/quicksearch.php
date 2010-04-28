@@ -10,7 +10,6 @@ require_once("lib/classes/InstituteAvatar.class.php");
 
 class QuicksearchController extends AuthenticatedController {
     
-    private $search;
     private $specialSQL;
     
     public function response_action($query_id) {

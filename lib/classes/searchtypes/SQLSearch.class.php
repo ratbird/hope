@@ -5,6 +5,7 @@ require_once("lib/classes/searchtypes/SearchType.class.php");
 class SQLSearch extends SearchType {
 	
 	private $SQL;
+	private $avatarLike;
 	
 	/**
 	 * 
@@ -17,7 +18,7 @@ class SQLSearch extends SearchType {
 		$this->SQL = $query;
 		$this->presets = $presets;
 		$this->title = $title;
-		$this->avatarLike = $avararLike;
+		$this->avatarLike = $avatarLike;
 	}
 	
 	/**
@@ -46,7 +47,7 @@ class SQLSearch extends SearchType {
     	}
     }
     public function getAvatarImageTag($id, $size = Avatar::SMALL) {
-        switch ($this->avatarLike) {
+    	switch ($this->avatarLike) {
             case "username":
             case "user_id":
                 return Avatar::getAvatar(NULL, $id)->getImageTag($size);

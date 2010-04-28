@@ -318,7 +318,7 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
                     LEFT JOIN auth_user_md5 ON (seminar_user.user_id = auth_user_md5.user_id)
                     LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende)
                     LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
-                    WHERE seminar_user.status = 'dozent' ";
+                    WHERE seminar_user.status = 'dozent' AND seminare.status NOT IN('". implode("','", studygroup_sem_types())."') ";
             $conditions=0;
 
             if ($links_admin_data["srch_sem"]) {
@@ -366,7 +366,7 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
                         LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
                         WHERE seminar_user.status IN ('dozent'"
                         .(($i_page != 'archiv_assi.php' && $i_page != 'admin_visibility.php') ? ",'tutor'" : "")
-                        . ") AND seminar_user.user_id='$user->id' ";
+                        . ") AND seminar_user.user_id='$user->id' AND seminare.status NOT IN('". implode("','", studygroup_sem_types())."')";
 
             // should never be reached
             } else {
@@ -523,7 +523,6 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
         while ($db->next_record()) {
             $seminar_id = $db->f("Seminar_id");
             $sem=new SemesterData;
-            $studygroup_mode = $GLOBALS['SEM_CLASS'][$GLOBALS['SEM_TYPE'][$db->f('status')]["class"]]["studygroup_mode"];
 
             if (!$semdata=$sem->getSemesterData($links_admin_data['srch_sem'])) {
                 $semdata = $sem->getSemesterDataByDate($db->f('start_time'));
@@ -580,134 +579,127 @@ if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", auto
             echo "</font></td>";
             echo "<td class=\"".$cssSw->getClass()."\" align=\"center\"><font size=-1>".$SEM_TYPE[$db->f("status")]["name"]."<br>" . _("Kategorie:") . " <b>".$SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["name"]."</b><font></td>";
             echo "<td class=\"".$cssSw->getClass()."\" nowrap align=\"center\">";
+            
+            //Kommandos fuer die jeweilgen Seiten
+            switch ($i_page) {
+                case "adminarea_start.php":
+                    printf("<font size=-1>" . _("Veranstaltung") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?select_sem_id=' . $seminar_id), makeButton("auswaehlen"));
+                    break;
+                case "themen.php":
+                    printf("<font size=-1>" . _("Ablaufplan") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
+                    break;
+                case "raumzeit.php":
+                    printf("<font size=-1>" . _("Zeiten / Räume") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
+                    break;
+                case "admin_admission.php":
+                    printf("<font size=-1>" . _("Zugangsberechtigungen") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
+                    break;
+                case "admin_room_requests.php":
+                    printf("<font size=-1>" . _("Raumwünsche") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
+                    break;
+                case "admin_lit_list.php":
+                    printf("<font size=-1>" . _("Literatur") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?_range_id=' . $seminar_id), makeButton("bearbeiten"));
+                    break;
+                case "admin_statusgruppe.php":
+                    printf("<font size=-1>" . _("Funktionen / Gruppen") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?ebene=sem&range_id=' . $seminar_id), makeButton("bearbeiten"));
+                    break;
+                case "admin_roles.php":
+                    printf("<font size=-1>" . _("Funktionen / Gruppen") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?ebene=sem&range_id=' . $seminar_id), makeButton("bearbeiten"));
+                    break;
+                case "admin_seminare1.php":
+                    printf("<font size=-1>" . _("Veranstaltung") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?s_command=edit&s_id=' . $seminar_id), makeButton("bearbeiten"));
+                    break;
+                case "admin_modules.php":
+                    printf("<font size=-1>" . _("Module") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?range_id=' . $seminar_id), makeButton("bearbeiten"));
+                    break;
+                case "admin_news.php":
+                    printf("<font size=-1>" . _("News") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?range_id=' . $seminar_id), makeButton("bearbeiten"));
+                    break;
+                case "copy_assi.php":
+                    printf("<font size=-1>" . _("Veranstaltung") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('admin_seminare_assi.php?cmd=do_copy&start_level=TRUE&class=1&cp_id=' . $seminar_id), makeButton("kopieren"));
+                    break;
+                case "admin_lock.php":
+                    $lock_rules = new LockRules();
+                    $rule = $lock_rules->getSemLockRule($seminar_id);
+                    if(!$perm->have_perm('root') && ($rule['permission'] == 'admin' || $rule['permission'] == 'root')){
+                        echo '<div style="margin-bottom:3px;font-weight:bold;text-align:left">'._("zugewiesen") . ': ' . htmlReady($rule['name']).'</div>';
+                    } else {
+                        ?>
+                        <input type="hidden" name="make_lock" value=1>
+                        <select name=lock_sem[<? echo $seminar_id ?>]>
+                        <option value="none">-- <?= _("keine Sperrebene") ?> --</option>
+                        <?
+                            for ($i=0;$i<count($all_lock_rules);$i++) {
+                                echo "<option value=".$all_lock_rules[$i]["lock_id"]."";
+                                if (isset($lock_all) && $lock_all==$all_lock_rules[$i]["lock_id"]) {
+                                    echo " selected ";
+                                } elseif (!isset($lock_all) && ($all_lock_rules[$i]["lock_id"]==$rule["lock_id"])) {
+                                    echo " selected ";
+                                }
+                                echo ">".htmlReady($all_lock_rules[$i]["name"])."</option>";
+                            }
+                        ?>
+                        </select>
 
-            if ($studygroup_mode) {
-                if($i_page != "admin_visibility.php") {
-                    echo _("Studiengruppe") . sprintf("<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('dispatch.php/course/studygroup/edit/' . $seminar_id . "?cid=" . $seminar_id), makeButton("bearbeiten"));
-                }
-                else echo '<input type="CHECKBOX" DISABLED/>';
-            } else {
-                //Kommandos fuer die jeweilgen Seiten
-                switch ($i_page) {
-                    case "adminarea_start.php":
-                        printf("<font size=-1>" . _("Veranstaltung") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?select_sem_id=' . $seminar_id), makeButton("auswaehlen"));
-                        break;
-                    case "themen.php":
-                        printf("<font size=-1>" . _("Ablaufplan") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
-                        break;
-                    case "raumzeit.php":
-                        printf("<font size=-1>" . _("Zeiten / Räume") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
-                        break;
-                    case "admin_admission.php":
-                        printf("<font size=-1>" . _("Zugangsberechtigungen") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
-                        break;
-                    case "admin_room_requests.php":
-                        printf("<font size=-1>" . _("Raumwünsche") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?seminar_id=' . $seminar_id), makeButton("bearbeiten"));
-                        break;
-                    case "admin_lit_list.php":
-                        printf("<font size=-1>" . _("Literatur") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?_range_id=' . $seminar_id), makeButton("bearbeiten"));
-                        break;
-                    case "admin_statusgruppe.php":
-                        printf("<font size=-1>" . _("Funktionen / Gruppen") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?ebene=sem&range_id=' . $seminar_id), makeButton("bearbeiten"));
-                        break;
-                    case "admin_roles.php":
-                        printf("<font size=-1>" . _("Funktionen / Gruppen") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?ebene=sem&range_id=' . $seminar_id), makeButton("bearbeiten"));
-                        break;
-                    case "admin_seminare1.php":
-                        printf("<font size=-1>" . _("Veranstaltung") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?s_command=edit&s_id=' . $seminar_id), makeButton("bearbeiten"));
-                        break;
-                    case "admin_modules.php":
-                        printf("<font size=-1>" . _("Module") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?range_id=' . $seminar_id), makeButton("bearbeiten"));
-                        break;
-                    case "admin_news.php":
-                        printf("<font size=-1>" . _("News") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?range_id=' . $seminar_id), makeButton("bearbeiten"));
-                        break;
-                    case "copy_assi.php":
-                        printf("<font size=-1>" . _("Veranstaltung") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('admin_seminare_assi.php?cmd=do_copy&start_level=TRUE&class=1&cp_id=' . $seminar_id), makeButton("kopieren"));
-                        break;
-                    case "admin_lock.php":
-                        $lock_rules = new LockRules();
-                        $rule = $lock_rules->getSemLockRule($seminar_id);
-                        if(!$perm->have_perm('root') && ($rule['permission'] == 'admin' || $rule['permission'] == 'root')){
-                            echo '<div style="margin-bottom:3px;font-weight:bold;text-align:left">'._("zugewiesen") . ': ' . htmlReady($rule['name']).'</div>';
+                    <?
+                    }
+                break;
+                case "admin_aux.php":
+                    $db5 = new Db_Seminar;
+                    $db5->query("SELECT aux_lock_rule from seminare WHERE Seminar_id='$seminar_id'");
+                    $db5->next_record();
+                    if ($perm->have_perm("dozent")) {
+                        ?>
+                        <input type="hidden" name="make_aux" value="1">
+                        <select name=aux_sem[<? echo $seminar_id ?>]>
+                        <option value="null">-- <?=_("keine Zusatzangaben")?> --</option>
+                        <?
+                            foreach ((array)$all_aux_rules as $lock_id => $data) {
+                                echo '<option value="'.$lock_id.'"';
+                                if (isset($aux_all) && $aux_all==$lock_id) {
+                                    echo ' selected ';
+                                } elseif (!isset($aux_all) && ($lock_id == $db5->f("aux_lock_rule"))) {
+                                    echo ' selected ';
+                                }
+                                echo '>'.htmlReady($data['name']).'</option>';
+                            }
+                        ?>
+                        </select>
+                    <?
+                    }
+                break;
+
+                case "admin_visibility.php":
+                    if ($perm->have_perm("admin") || (get_config('ALLOW_DOZENT_VISIBILITY') && $perm->have_perm('dozent'))) {
+                        if(!LockRules::check($seminar_id, 'seminar_visibility')){
+                            ?>
+                            <input type="HIDDEN" name="all_sem[]" value="<? echo $seminar_id ?>" />
+                            <input type="CHECKBOX" name="visibility_sem[<? echo $seminar_id ?>]" <? if (!$_REQUEST['select_none'] && ($_REQUEST['select_all'] || $db->f("visible"))) echo ' checked'; ?> />
+                            <?
                         } else {
-                            ?>
-                            <input type="hidden" name="make_lock" value=1>
-                            <select name=lock_sem[<? echo $seminar_id ?>]>
-                            <option value="none">-- <?= _("keine Sperrebene") ?> --</option>
-                            <?
-                                for ($i=0;$i<count($all_lock_rules);$i++) {
-                                    echo "<option value=".$all_lock_rules[$i]["lock_id"]."";
-                                    if (isset($lock_all) && $lock_all==$all_lock_rules[$i]["lock_id"]) {
-                                        echo " selected ";
-                                    } elseif (!isset($lock_all) && ($all_lock_rules[$i]["lock_id"]==$rule["lock_id"])) {
-                                        echo " selected ";
-                                    }
-                                    echo ">".htmlReady($all_lock_rules[$i]["name"])."</option>";
-                                }
-                            ?>
-                            </select>
-
-                        <?
+                            echo $db->f('visible') ? _("sichtbar") : _("versteckt");
                         }
+                    }
                     break;
-                    case "admin_aux.php":
-                        $db5 = new Db_Seminar;
-                        $db5->query("SELECT aux_lock_rule from seminare WHERE Seminar_id='$seminar_id'");
-                        $db5->next_record();
-                        if ($perm->have_perm("dozent")) {
+                case "archiv_assi.php":
+                    if ($perm->have_perm("admin") || (get_config('ALLOW_DOZENT_ARCHIV') && $perm->have_perm('dozent'))) {
+                        if(!LockRules::check($seminar_id, 'seminar_visibility')){
                             ?>
-                            <input type="hidden" name="make_aux" value="1">
-                            <select name=aux_sem[<? echo $seminar_id ?>]>
-                            <option value="null">-- <?=_("keine Zusatzangaben")?> --</option>
+                            <input type="HIDDEN" name="archiv_sem[]" value="_id_<? echo $seminar_id ?>" />
+                            <input type="CHECKBOX" name="archiv_sem[]" <? if ($_REQUEST['select_all']) echo ' checked'; ?> />
                             <?
-                                foreach ((array)$all_aux_rules as $lock_id => $data) {
-                                    echo '<option value="'.$lock_id.'"';
-                                    if (isset($aux_all) && $aux_all==$lock_id) {
-                                        echo ' selected ';
-                                    } elseif (!isset($aux_all) && ($lock_id == $db5->f("aux_lock_rule"))) {
-                                        echo ' selected ';
-                                    }
-                                    echo '>'.htmlReady($data['name']).'</option>';
-                                }
-                            ?>
-                            </select>
-                        <?
+                        } else {
+                            echo "&nbsp;";
                         }
+                    }
                     break;
-
-                    case "admin_visibility.php":
-                        if ($perm->have_perm("admin") || (get_config('ALLOW_DOZENT_VISIBILITY') && $perm->have_perm('dozent'))) {
-                            if(!LockRules::check($seminar_id, 'seminar_visibility')){
-                                ?>
-                                <input type="HIDDEN" name="all_sem[]" value="<? echo $seminar_id ?>" />
-                                <input type="CHECKBOX" name="visibility_sem[<? echo $seminar_id ?>]" <? if (!$_REQUEST['select_none'] && ($_REQUEST['select_all'] || $db->f("visible"))) echo ' checked'; ?> />
-                                <?
-                            } else {
-                                echo $db->f('visible') ? _("sichtbar") : _("versteckt");
-                            }
-                        }
-                        break;
-                    case "archiv_assi.php":
-                        if ($perm->have_perm("admin") || (get_config('ALLOW_DOZENT_ARCHIV') && $perm->have_perm('dozent'))) {
-                            if(!LockRules::check($seminar_id, 'seminar_visibility')){
-                                ?>
-                                <input type="HIDDEN" name="archiv_sem[]" value="_id_<? echo $seminar_id ?>" />
-                                <input type="CHECKBOX" name="archiv_sem[]" <? if ($_REQUEST['select_all']) echo ' checked'; ?> />
-                                <?
-                            } else {
-                                echo "&nbsp;";
-                            }
-                        }
-                        break;
-                    case "dispatch.php":
-                        if ($this instanceof Course_StudyAreasController){
-                            printf(_("Studienbereiche") . '<br><a href="%s">%s</a>',
-                                $this->url_for('course/study_areas/show/' . $seminar_id),
-                                makeButton("bearbeiten"));
-                        }
-                        break;
-                }
+                case "dispatch.php":
+                    if ($this instanceof Course_StudyAreasController){
+                        printf(_("Studienbereiche") . '<br><a href="%s">%s</a>',
+                            $this->url_for('course/study_areas/show/' . $seminar_id),
+                            makeButton("bearbeiten"));
+                    }
+                    break;
             }
             echo "</tr>";
         }

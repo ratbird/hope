@@ -1,5 +1,5 @@
 <? if ($withButton) : ?>
-        <div style="width: 233px; background-color: #ffffff; border: 1px #999999 solid;">
+<div style="width: 233px; background-color: #ffffff; border: 1px #999999 solid; display:inline-block">
 <? $input_style = " style=\"width: 210px; background-color:#ffffff; border: 0px;\""; ?>
 <? endif ?>
 <? if ($inputStyle) {

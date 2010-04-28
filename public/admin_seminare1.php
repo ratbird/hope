@@ -1195,8 +1195,12 @@ if (($s_id) && (auth_check())) {
                             "WHERE inst_perms = 'dozent' " .
                             $clause .
                             " AND (username LIKE :input OR Vorname LIKE :input OR Nachname LIKE :input) " .
-                            "ORDER BY Nachname LIMIT 10");
+                            "ORDER BY Nachname LIMIT 10", 
+                        sprintf(_("Name %s"), get_title_for_status('dozent', 1, $seminar_type)), 
+                        "username");
+                    print " ";
                     print QuickSearch::get("add_doz", $Dozentensuche)
+                                    ->withButton()
                                     ->render();
                     ?>
                     <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
@@ -1238,8 +1242,12 @@ if (($s_id) && (auth_check())) {
                             "WHERE perms IN ('tutor', 'dozent') " .
                             $clause .
                             " AND (username LIKE :input OR Vorname LIKE :input OR Nachname LIKE :input) " .
-                            "ORDER BY Nachname LIMIT 10");
+                            "ORDER BY Nachname LIMIT 10", 
+                        sprintf(_("Name %s"), get_title_for_status('tutor', 1, $seminar_type)), 
+                        "username");
+                    print " ";
                     print QuickSearch::get("add_tut", $Dozentensuche)
+                                    ->withButton()
                                     ->render();
                     ?>
                     <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>

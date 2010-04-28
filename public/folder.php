@@ -1046,9 +1046,9 @@ div.droppable.hover {
         if ($folder_system_data['orderby'] == "filename_rev")
             $query .= " ORDER BY t_name DESC, a.chdate ASC";
         if ($folder_system_data['orderby'] == "size") 
-            $query .= " ORDER BY a.filesize DESC";
-        if ($folder_system_data['orderby'] == "size_rev") 
             $query .= " ORDER BY a.filesize ASC";
+        if ($folder_system_data['orderby'] == "size_rev") 
+            $query .= " ORDER BY a.filesize DESC";
         if ($folder_system_data['orderby'] == "downloads") 
             $query .= " ORDER BY a.downloads DESC, t_name ASC, a.chdate DESC";
         if ($folder_system_data['orderby'] == "downloads_rev") 
@@ -1058,9 +1058,9 @@ div.droppable.hover {
         if ($folder_system_data['orderby'] == "autor_rev")
             $query .= " ORDER BY ". $_fullname_sql['no_title_rev'] ." DESC";
         if (($folder_system_data['orderby'] == "date") || (!$folder_system_data['orderby'])) //default-wert
-            $query .= " ORDER BY a.chdate DESC";
-        if ($folder_system_data['orderby'] == "date_rev")
             $query .= " ORDER BY a.chdate ASC";
+        if ($folder_system_data['orderby'] == "date_rev")
+            $query .= " ORDER BY a.chdate DESC";
         $result2 = $db->query($query)->fetchAll();
         foreach ($result2 as $datei) {
             if ($folder_tree->isReadable($datei['range_id'], $user->id)) {

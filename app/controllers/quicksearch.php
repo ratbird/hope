@@ -51,6 +51,14 @@ class QuicksearchController extends AuthenticatedController {
         }
     }
     
+    private function extraResultFormat($results) {
+    	$input = Request::get('request');
+    	foreach ($results as $key => $result) {
+    		$results[$key][1] = preg_replace("/".$input."/i", "<b>".$input."</b>", $result[1]);
+    	}
+    	return $results;
+    }
+    
     /**
      * private method to get a result-array in the way of array(array(item_id, item-name)).
      * @param request:    the request from the searchfield typed by the user.
@@ -64,7 +72,7 @@ class QuicksearchController extends AuthenticatedController {
                 //Der Programmierer will ja seine Fehler sehen:
                 return array(array("", $exception->getMessage()));
             }
-            return $results;
+            return $this->extraResultFormat($results);
         } else {
             $db = DBManager::get();
 
@@ -75,7 +83,7 @@ class QuicksearchController extends AuthenticatedController {
                         "OR auth_user_md5.username LIKE :input ORDER BY user_info.score DESC LIMIT 5", array(PDO::FETCH_NUM));
                 $statement->execute(array(':input' => "%".$request."%"));
                 $result = $statement->fetchAll();
-                return $result;
+                return $this->extraResultFormat($result);
             }
             if ($this->search == "user_id") {
                 $statement = $db->prepare("SELECT DISTINCT auth_user_md5.user_id, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) " .
@@ -84,7 +92,7 @@ class QuicksearchController extends AuthenticatedController {
                         "OR auth_user_md5.username LIKE :input ORDER BY user_info.score DESC LIMIT 5", array(PDO::FETCH_NUM));
                 $statement->execute(array(':input' => "%".$request."%"));
                 $result = $statement->fetchAll();
-                return $result;
+                return $this->extraResultFormat($result);
             }
             if ($this->search == "Institut_id") {
                 $statement = $db->prepare("SELECT DISTINCT Institute.Institut_id, Institute.Name " .
@@ -97,7 +105,7 @@ class QuicksearchController extends AuthenticatedController {
                     "ORDER BY Institute.Name LIMIT 5", array(PDO::FETCH_NUM));
                 $statement->execute(array(':input' => "%".$request."%"));
                 $result = $statement->fetchAll();
-                return $result;
+                return $this->extraResultFormat($result);
             }
             if ($this->search == "Seminar_id") {
                 $statement = $db->prepare("SELECT DISTINCT seminare.Seminar_id, seminare.Name " .
@@ -115,7 +123,7 @@ class QuicksearchController extends AuthenticatedController {
                     "ORDER BY seminare.Name LIMIT 5", array(PDO::FETCH_NUM));
                 $statement->execute(array(':input' => "%".$request."%"));
                 $result = $statement->fetchAll();
-                return $result;
+                return $this->extraResultFormat($result);
             }
             if ($this->search == "Arbeitsgruppe_id") {
                 $statement = $db->prepare("SELECT DISTINCT seminare.Seminar_id, seminare.Name " .
@@ -133,7 +141,7 @@ class QuicksearchController extends AuthenticatedController {
                     "ORDER BY seminare.Name LIMIT 5", array(PDO::FETCH_NUM));
                 $statement->execute(array(':input' => "%".$request."%"));
                 $result = $statement->fetchAll();
-                return $result;
+                return $this->extraResultFormat($result);
             }
             if ($this->search == "special") {
                 $statement = $db->prepare($this->specialSQL, array(PDO::FETCH_NUM));
@@ -143,7 +151,7 @@ class QuicksearchController extends AuthenticatedController {
                 } catch (Exception $exception) {
                     return array(array("", $exception->getMessage()), array("", $this->specialSQL));
                 }
-                return $result;
+                return $this->extraResultFormat($result);
             }
         }
         $result = array(array("", _("Session abgelaufen oder unbekannter Suchtyp")));

@@ -12,6 +12,11 @@ class QuicksearchController extends AuthenticatedController {
     
     private $specialSQL;
     
+    /**
+     * the one action which is called by the QuickSearch-form when typed in 
+     * by user.
+     * @param query_id string: first argument of url -> id of query in session
+     */
     public function response_action($query_id) {
         $this->extraInclude($query_id);
         $this->cleanUp();
@@ -23,6 +28,11 @@ class QuicksearchController extends AuthenticatedController {
         $this->render_template('quicksearch/response.php');
     }
     
+    /**
+     * instantiates the search-object (or string)
+     * @param query_id string: id of the query in session
+     * @return object or string: ready search-object or string 
+     */
     private function getSearch($query_id) {
         if (isset($_SESSION['QuickSearches'][$query_id])) {
             $search_query = $_SESSION['QuickSearches'][$query_id]['query'];
@@ -45,16 +55,27 @@ class QuicksearchController extends AuthenticatedController {
         }
     }
     
+    /**
+     * includes the class of the search-object so we can re-instantiate this object 
+     * later
+     * @param query_id string: id of the query in session
+     * @return void
+     */
     private function extraInclude($query_id) {
         if ($_SESSION['QuickSearches'][$query_id]['includePath']) {
             include_once($_SESSION['QuickSearches'][$query_id]['includePath']);
         }
     }
     
+    /**
+     * formats the results so that the searchword is marked bold
+     * @param results array: array of searchresults
+     * @return array: array of searchresults formatted
+     */
     private function extraResultFormat($results) {
     	$input = Request::get('request');
     	foreach ($results as $key => $result) {
-    		$results[$key][1] = preg_replace("/".$input."/i", "<b>".$input."</b>", $result[1]);
+    		$results[$key][1] = preg_replace("/(".$input.")/i", "<b>$1</b>", $result[1]);
     	}
     	return $results;
     }
@@ -160,6 +181,7 @@ class QuicksearchController extends AuthenticatedController {
     
     /**
      * deletes all older requests, that have not been used since half an hour
+     * @return void
      */
     private function cleanUp() {
         $count = 0;

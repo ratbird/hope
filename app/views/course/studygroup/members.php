@@ -104,7 +104,7 @@ list-style-position:outside;list-style-type:none;">
 </ul>
 <? $link = "dispatch.php/course/studygroup/members/$sem_id/%s"; ?>
 <? if($anzahl>20) :?>
-<div style="text-align:right; padding-top: 2px; padding-bottom: 2px; margin-top:-1.5em" class=""><?=
+<div style="text-align:right; padding-top: 2px; padding-bottom: 2px; margin-top:-1.5em" class=""><?
     $pages = $GLOBALS['template_factory']->open('shared/pagechooser');
     $pages->set_attributes(array("perPage" => 20, "num_postings" => $anzahl, "page"=>$page, "pagelink" => $link));
     echo $this->render_partial($pages);?>

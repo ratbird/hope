@@ -1,5 +1,4 @@
-/*global window, $, $$, $A, $H, $w, Ajax, Class, Draggable, Droppables, Effect, Element, Event, Sortable */
-/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 2, onevar: false */
+/*global window, $, jQuery */
 /* ------------------------------------------------------------------------
  * application.js
  * This file is part of Stud.IP - http://www.studip.de
@@ -24,34 +23,37 @@
  * jQuery plugin "elementAjaxNotifications"
  * ------------------------------------------------------------------------ */
 
-;(function ($) {
+(function ($) {
 
   $.fn.extend({
     showAjaxNotification: function (position) {
       position = position || 'left';
       return this.each(function () {
-        if ($(this).data('ajax_notification'))
+        if ($(this).data('ajax_notification')) {
           return;
+        }
 
         $(this).wrap('<span class="ajax_notification" />');
         var notification = $('<span class="notification" />').hide().insertBefore(this),
           changes = {marginLeft: 0, marginRight: 0};
 
-        if (position == 'right')
+        if (position === 'right') {
           changes.marginRight = notification.outerWidth(true) + 'px';
-        else
+        } else {
           changes.marginLeft = notification.outerWidth(true) + 'px';
+        }
 
         $(this).data({
-          ajax_notification: notification,
+          ajax_notification: notification
         }).parent().animate(changes, 'fast', function () {
           var offset = $(this).children(':not(.notification)').position(),
             styles = {
               left: offset.left - notification.outerWidth(true),
-              top: offset.top + Math.floor(($(this).height() - notification.outerHeight(true))/2)
+              top: offset.top + Math.floor(($(this).height() - notification.outerHeight(true)) / 2)
             };
-          if (position == 'right')
+          if (position === 'right') {
             styles.left += $(this).outerWidth(true);
+          }
           notification.css(styles).fadeIn('fast');
         });
       });
@@ -60,12 +62,13 @@
       return this.each(function () {
         var $this = $(this).stop(),
           notification = $this.data('ajax_notification');
-        if (!notification)
+        if (!notification) {
           return;
+        }
 
         notification.stop().fadeOut('fast', function () {
           $this.animate({marginLeft: 0, marginRight: 0}, 'fast', function () {
-          	$this.unwrap();
+            $this.unwrap();
           });
           $(this).remove();
         });
@@ -80,19 +83,22 @@
  * jQuery plugin "defaultValueActsAsHint"
  * ------------------------------------------------------------------------ */
 
-;(function ($) {
+(function ($) {
   $.fn.extend({
     defaultValueActsAsHint: function () {
       return this.each(function () {
-        if (!$(this).is('input,textarea') || $(this).data('defaultValueActsAsHint'))
+        if (!$(this).is('input,textarea') || $(this).data('defaultValueActsAsHint')) {
           return;
+        }
 
         $(this).focus(function () {
-          if ($(this).val() == $(this).attr('defaultValue'))
+          if ($(this).val() === $(this).attr('defaultValue')) {
             $(this).removeClass('hint').val('');
+          }
         }).blur(function () {
-          if ($(this).val().trim().length == 0)
+          if ($(this).val().trim().length === 0) {
             $(this).addClass('hint').val($(this).attr('defaultValue'));
+          }
         }).addClass('hint');
 
         $(this).data('defaultValueActsAsHint', true);
@@ -142,21 +148,24 @@
     addToolbar: function (button_set) {
       // Bail out if no button set is defined
       if (!button_set) {
-        if (window.console) console.log('No button set defined');
+        if (window.console) {
+          console.log('No button set defined');
+        }
         return this;
       }
 
       return this.each(function () {
-        if (!$(this).is('textarea') || $(this).data('toolbar_added'))
+        if (!$(this).is('textarea') || $(this).data('toolbar_added')) {
           return;
+        }
 
         var $this = $(this),
           toolbar = $('<div class="editor_toolbar" />');
 
         jQuery.each(button_set, function (index, value) {
           $('<button />')
-            .html( value.label )
-            .addClass( value.name )
+            .html(value.label)
+            .addClass(value.name)
             .appendTo(toolbar)
             .click(function () {
               var replacement = value.open + getSelection($this[0]) + value.close;
@@ -185,23 +194,26 @@ STUDIP.study_area_selection = {
     // Ein bisschen hässlich im Sinne von "DRY", aber wie sonst?
     $('input[name^="study_area_selection[add]"]').live('click', function () {
       var parameters = $(this).metadata();
-      if (!(parameters && parameters.id && parameters.course_id))
+      if (!(parameters && parameters.id && parameters.course_id)) {
         return;
-      STUDIP.study_area_selection.add( parameters.id, parameters.course_id );
+      }
+      STUDIP.study_area_selection.add(parameters.id, parameters.course_id);
       return false;
     });
     $('input[name^="study_area_selection[remove]"]').live('click', function () {
       var parameters = $(this).metadata();
-      if (!(parameters && parameters.id && parameters.course_id))
+      if (!(parameters && parameters.id && parameters.course_id)) {
         return;
-      STUDIP.study_area_selection.remove( parameters.id, parameters.course_id );
+      }
+      STUDIP.study_area_selection.remove(parameters.id, parameters.course_id);
       return false;
     });
     $('a.study_area_selection_expand').live('click', function () {
       var parameters = $(this).metadata();
-      if (!(parameters && parameters.id && parameters.course_id))
+      if (!(parameters && parameters.id && parameters.course_id)) {
         return;
-       STUDIP.study_area_selection.expandSelection( parameters.id, parameters.course_id );
+      }
+      STUDIP.study_area_selection.expandSelection(parameters.id, parameters.course_id);
       return false;
     });
   },
@@ -246,9 +258,12 @@ STUDIP.study_area_selection = {
       dataType: 'html',
       async: false, // Critical request thus synchronous
       success: function (data) {
-        $selection.fadeOut(function() { $(this).remove(); });
-        if ($('#study_area_selection_selected li').length === 0)
+        $selection.fadeOut(function () {
+          $(this).remove(); 
+        });
+        if ($('#study_area_selection_selected li').length === 0) {
           $('#study_area_selection_none').fadeIn();
+        }
         $('.study_area_selection_add_' + id).css({
           visibility: 'visible',
           opacity: 0
@@ -256,7 +271,7 @@ STUDIP.study_area_selection = {
           $(this).attr('disabled', false);
         });
 
-         STUDIP.study_area_selection.refreshSelection();
+        STUDIP.study_area_selection.refreshSelection();
       },
       error: function () {
         $selection.fadeIn();
@@ -267,14 +282,14 @@ STUDIP.study_area_selection = {
   expandSelection: function (id, course_id) {
     $.post(STUDIP.study_area_selection.url('expand', course_id || '', id), function (data) {
         $('#study_area_selection_selectables ul').replaceWith(data);
-    }, 'html');
+      }, 'html');
   },
 
   refreshSelection: function () {
     // "even=odd && odd=even ??" - this may seem strange but jQuery and Stud.IP differ in odd/even
     $('#study_area_selection_selected li:odd').removeClass('odd').addClass('even');
     $('#study_area_selection_selected li:even').removeClass('even').addClass('odd');
-  },
+  }
 
 /*
   swishAndFlick: function (id, target) {
@@ -488,7 +503,7 @@ STUDIP.Markup = {
     { "name": "larger",        "label": "A+",                 open: "++",     close: "++"},
     { "name": "smaller",       "label": "A-",                 open: "--",     close: "--"}
   ]
-}
+};
 
 /* ------------------------------------------------------------------------
  * automatic compression of tabs
@@ -498,12 +513,12 @@ STUDIP.Tabs = (function () {
   var list, items, viewport_width;
 
   // check heights of list and items to check for wrapping
-  function needs_compression () {
+  function needs_compression() {
     return $(list).height() > $('li:first', list).height();
-  };
+  }
 
   // returns the largest feasible item
-  function getLargest () {
+  function getLargest() {
     var largest = 5, item, letters;
 
     items.each(function () {
@@ -514,29 +529,30 @@ STUDIP.Tabs = (function () {
       }
     });
     return item;
-  };
+  }
 
   // truncates an item
-  function truncate (item) {
+  function truncate(item) {
     var text = $(item).html(),
       length = Math.max(text.length - 4, 4);
     if (length < text.length) {
       $(item).html(text.substr(0, length) + "\u2026");
     }
-  };
+  }
 
   return {
     // initializes, observes resize events and compresses the tabs
     initialize: function () {
       list = $('#tabs');
-      if (list.length === 0)
+      if (list.length === 0) {
         return;
+      }
       items = $('li a', list);
       $(list).data('old_width', $(window).width());
 
       // strip contents and set titles
       items.each(function () {
-        $(this).html( $(this).html().trim() );
+        $(this).html($(this).html().trim());
         $(this).attr('title', $(this).html());
       });
 
@@ -550,7 +566,7 @@ STUDIP.Tabs = (function () {
       var item;
       while (needs_compression() && (item = getLargest())) {
         truncate(item);
-      };
+      }
     },
 
     // event handler called when resizing the browser
@@ -558,7 +574,7 @@ STUDIP.Tabs = (function () {
       var new_width = $(window).width();
       if (new_width > $(list).data('old_width')) {
         items.each(function () {
-          $(this).html( $(this).attr('title') );
+          $(this).html($(this).attr('title'));
         });
       }
       $(list).data('old_width', new_width);
@@ -587,7 +603,7 @@ STUDIP.Filesystem = {
    */
   unsetarrows     : function () {
     $("span.move_arrows,span.updown_marker").hide();
-    $("span.anfasser").show()
+    $("span.anfasser").show();
   }
 };
 
@@ -596,7 +612,7 @@ STUDIP.Filesystem = {
  * deklariert Ordner und Dateien als ziehbare Elemente bzw. macht sie sortierbar
  */
 STUDIP.Filesystem.setdraggables = function () {
-  $("div.folder_container").each(function() {
+  $("div.folder_container").each(function () {
     var id = this.getAttribute('id');
     var md5_id = id.substr(id.lastIndexOf('_') + 1);
     //wenn es einen Anfasser gibt, also wenn Nutzer verschieben darf
@@ -607,7 +623,7 @@ STUDIP.Filesystem.setdraggables = function () {
         opacity: 0.6,
         revert: 300,
         scroll: true,
-        update: function() {
+        update: function () {
           var id = this.getAttribute('id');
           var sorttype = (id.lastIndexOf('subfolders') !== -1 ? "folder" : "file");
           md5_id = id.substr(id.lastIndexOf('_') + 1);
@@ -669,12 +685,12 @@ STUDIP.Filesystem.setdroppables = function () {
   $("div.droppable").droppable({
     accept: '.draggable',
     hoverClass: 'hover',
-    over: function() {
+    over: function () {
       var folder_md5_id = this.getAttribute('id');
       folder_md5_id = folder_md5_id.substr(folder_md5_id.lastIndexOf('_') + 1);
       STUDIP.Filesystem.openhoveredfolder(folder_md5_id);
     },
-    drop: function(event, ui) {
+    drop: function (event, ui) {
       var id = ui.draggable.attr('id');
       var file_md5_id = id.substr(id.indexOf('_') + 1);
       file_md5_id = $("#getmd5_fi" + file_md5_id).html();
@@ -689,7 +705,7 @@ STUDIP.Filesystem.setdroppables = function () {
             copyintofolder: folder_md5_id,
             copyfile: file_md5_id
           },
-          success: function() {
+          success: function () {
             location.href = adress + '&cmd=tree&open=' + folder_md5_id;
           }
         });
@@ -700,7 +716,7 @@ STUDIP.Filesystem.setdroppables = function () {
             moveintofolder: folder_md5_id,
             movefile: file_md5_id
           },
-          success: function() {
+          success: function () {
             location.href = adress + '&cmd=tree&open=' + folder_md5_id;
           }
         });
@@ -746,7 +762,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
     } else {
       if ($("#folder_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
-        $("#folder_" + md5_id + "_body").load(adress, { getfolderbody: md5_id }, function() {
+        $("#folder_" + md5_id + "_body").load(adress, { getfolderbody: md5_id }, function () {
           $("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
           $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
           $("#folder_" + md5_id + "_arrow_td").addClass('printhead3');
@@ -793,7 +809,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
     } else {
       if ($("#file_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
-        $("#file_" + md5_id + "_body").load(adress, { getfilebody: md5_id }, function() {
+        $("#file_" + md5_id + "_body").load(adress, { getfilebody: md5_id }, function () {
           $("#file_" + md5_id + "_header").css('fontWeight', 'bold');
           $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
           $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
@@ -823,7 +839,7 @@ STUDIP.Arbeitsgruppen = {
 
   toggleOption: function (user_id) {
     if ($('#user_opt_' + user_id).is(':hidden')) {
-      $('#user_opt_' + user_id).show('slide', {direction: 'left'}, 400, function() {
+      $('#user_opt_' + user_id).show('slide', {direction: 'left'}, 400, function () {
         $('#user_opt_' + user_id).css("display", "inline-block");
       });
     } else {
@@ -837,7 +853,7 @@ STUDIP.Arbeitsgruppen = {
  * ------------------------------------------------------------------------ */
 
 STUDIP.News = {
-  openclose: function(id) {
+  openclose: function (id) {
     if ($("#news_item_" + id + "_content").is(':visible')) {
       STUDIP.News.close(id);
     } else {
@@ -845,12 +861,12 @@ STUDIP.News = {
     }
   },
 
-  open: function(id) {
+  open: function (id) {
     $("#news_item_" + id + "_content").load(
       STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/news/get_news/' + id,
       {},
-      function() {
-    	$("#news_item_" + id + "_content").slideDown(400);
+      function () {
+        $("#news_item_" + id + "_content").slideDown(400);
         $("#news_item_" + id + " .printhead2 img")
             .attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
         $("#news_item_" + id + " .printhead2")
@@ -861,7 +877,7 @@ STUDIP.News = {
       });
   },
 
-  close: function(id) {
+  close: function (id) {
     $("#news_item_" + id + "_content").slideUp(400);
     $("#news_item_" + id + " .printhead3 img")
         .attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
@@ -871,7 +887,7 @@ STUDIP.News = {
     $("#news_item_" + id + " .printhead b").css("font-weight", "normal");
     $("#news_item_" + id + " .printhead a.tree").css("font-weight", "normal");
   }
-}
+};
 
 /* ------------------------------------------------------------------------
  * ajax_loader
@@ -905,7 +921,9 @@ $('.messagebox .messagebox_buttons a').live('click', function () {
   if ($(this).is('.details')) {
     $(this).closest('.messagebox').toggleClass('details_hidden');
   } else if ($(this).is('.close')) {
-    $(this).closest('.messagebox').fadeOut(function () { $(this).remove(); });
+    $(this).closest('.messagebox').fadeOut(function () { 
+      $(this).remove(); 
+    });
   }
   return false;
 }).live('focus', function () {
@@ -926,7 +944,7 @@ STUDIP.QuickSearch = {
   formToJSON: function (selector) {
     selector = $(selector).parents("form");
     var form = {};   //the basic JSON-object that will be returned later
-    $(selector).find(':input[name]').each( function() {
+    $(selector).find(':input[name]').each(function () {
       var name = $(this).attr('name');   //name of the input
       if (form[name]) {
         //for double-variables (not arrays):
@@ -949,11 +967,11 @@ STUDIP.QuickSearch = {
     $('#' + name).autocomplete({
       disabled: true,
       source: function (input, add) {
-    	//get the variables that should be sent:
+        //get the variables that should be sent:
         var send_vars = { 
-    	  form_data: STUDIP.QuickSearch.formToJSON('#' + name), 
-    	  request: input.term 
-    	};
+          form_data: STUDIP.QuickSearch.formToJSON('#' + name), 
+          request: input.term 
+        };
         $.getJSON(url, send_vars, function (data) {
           var stripTags = /<(?:.|\s)*?>/g;
           var suggestions = [];  //an array of possible selections
@@ -970,16 +988,17 @@ STUDIP.QuickSearch = {
         });
       },
       select: function (event, ui) {
-    	//inserts the ID of the selected item in the hidden input:
+        //inserts the ID of the selected item in the hidden input:
         $('#' + name + "_realvalue").attr("value", ui.item.item_id);
         //and execute a special function defined before by the programmer:
         if (func) {
+          //evil but neccessary for this purpose:
           eval(func + "(ui.item.item_id, ui.item.label);");
         }
       }
     });
   }
-}
+};
 
 
 /* ------------------------------------------------------------------------
@@ -1009,7 +1028,7 @@ $(document).ready(function () {
   STUDIP.study_area_selection.initialize();
 
   $('.focus').each(function () {
-    if (!$(this).is('.if-empty') || $(this).val().length==0) {
+    if (!$(this).is('.if-empty') || $(this).val().length === 0) {
       $(this).focus();
       return false;
     }
@@ -1026,8 +1045,8 @@ $(document).ready(function () {
 jQuery(function ($) {
 
     $('table.collapsable .toggler').click(function () {
-    	$(this).closest('tbody').toggleClass('collapsed');
-    	return false;
-    }).click();
+        $(this).closest('tbody').toggleClass('collapsed');
+        return false;
+      }).click();
 
-});
+  });

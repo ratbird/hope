@@ -1,4 +1,5 @@
 /*global window, $, jQuery */
+/*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 2, onevar: false */
 /* ------------------------------------------------------------------------
  * application.js
  * This file is part of Stud.IP - http://www.studip.de

@@ -430,8 +430,8 @@ class ExternEditModule extends ExternEditHtml {
     }
     
     function editSelectSubjectAreas ($selector) {
-        $info = _("Wählen Sie die Studienmodule aus, deren Veranstaltungen angezeigt werden sollen.");
-        $info2 = _("Sie können beliebig viele Studienmodule auswählen.");
+        $info = _("Wählen Sie die Studienbereiche aus, deren Veranstaltungen angezeigt werden sollen.");
+        $info2 = _("Sie können beliebig viele Studienbereiche auswählen.");
         $this->css->resetClass();
         $this->css->switchClass();
         $form_name = $this->element_name . "_" . 'subjectareasselected';
@@ -462,7 +462,7 @@ class ExternEditModule extends ExternEditHtml {
         $out .= '<tr><td align="left" style="font-size: smaller;" width="100%" nowrap="nowrap" colspan="2">' . _("Suche") . ': ';
         $out .= $selector->getSearchField(array('size' => 30 ,'style' => 'vertical-align:middle;'));
         $out .= $selector->getSearchButton(array('style' => 'vertical-align:middle;'));
-        $out .= '<br><span style="font-size: 0.9em;"> (' . _("Geben Sie '%%%' ein, um alle Studienmodule zu finden.") . ')</span>';
+        $out .= '<br><span style="font-size: 0.9em;"> (' . _("Geben Sie '%%%' ein, um alle Studienbereiche zu finden.") . ')</span>';
         if ($selector->num_search_result !== false){
             $out .= "<br><span style=\"font-size:smaller;\"><a name=\"anker\">&nbsp;&nbsp;</a>"
                     . sprintf(_("Ihre Suche ergab %s Treffer."),$selector->num_search_result)

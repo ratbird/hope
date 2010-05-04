@@ -9,7 +9,6 @@
  *
  * @author      Nico Müller <nico.mueller@uni-oldenburg.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     studycourses
@@ -18,10 +17,6 @@
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/studycourse.php';
-#require_once 'lib/messaging.inc.php';
-#require_once 'lib/user_visible.inc.php';
-#require_once 'lib/classes/AdminModules.class.php';
-#require_once 'lib/classes/Config.class.php';
 
 /**
  *
@@ -30,16 +25,27 @@ require_once 'app/models/studycourse.php';
 class Admin_StudycourseController extends AuthenticatedController
 {
     /**
+     * Common tasks for all actions.
+     */
+    public function before_filter(&$action, &$args)
+    {
+        global $perm;
+
+        parent::before_filter($action, $args);
+
+        // user must have root permission
+        $perm->check('root');
+
+        // set navigation
+        Navigation::activateItem('/admin/config/studycourse');
+    }
+
+    /**
      * Maintenance view for profession with the degrees
      */
     function profession_action()
     {
-        global $perm;
-        $perm->check("root");
-
-        // set variables for view
         $GLOBALS['CURRENT_PAGE'] = _('Verwaltung der Studiengänge');
-        Navigation::activateItem('/admin/config/studycourse');
 
         $this->studycourses = StudycourseModel::getStudyCourses();
         //sorting
@@ -61,12 +67,8 @@ class Admin_StudycourseController extends AuthenticatedController
      */
     function degree_action()
     {
-        global $perm;
-        $perm->check("root");
-
         // set variables for view
         $GLOBALS['CURRENT_PAGE'] = _('Gruppierung von Studienabschlüssen');
-        Navigation::activateItem('/admin/config/studycourse');
 
         $this->studydegrees = StudycourseModel::getStudyDegrees();
         //sorting
@@ -87,9 +89,6 @@ class Admin_StudycourseController extends AuthenticatedController
      */
     function edit_profession_action($prof_id)
     {
-        global $perm;
-        $perm->check("root");
-
         if (Request::submitted('uebernehmen')) {
             if (Request::get('professionname')) {
                 $prof_name = Request::get('professionname');
@@ -104,7 +103,6 @@ class Admin_StudycourseController extends AuthenticatedController
         }
 
         $GLOBALS['CURRENT_PAGE'] = _("Fächer editieren");
-        Navigation::activateItem('/admin/config/studycourse');
 
         // set variables for view
         $this->edit = StudycourseModel::getStudyCourseInfo($prof_id);
@@ -117,9 +115,6 @@ class Admin_StudycourseController extends AuthenticatedController
      */
     function edit_degree_action($deg_id)
     {
-        global $perm;
-        $perm->check("root");
-
         if (Request::submitted('uebernehmen')) {
             if (Request::get('degreename')) {
                 $deg_name = Request::get('degreename');
@@ -134,7 +129,6 @@ class Admin_StudycourseController extends AuthenticatedController
         }
 
         $GLOBALS['CURRENT_PAGE'] = _("Abschlüsse editieren");
-        Navigation::activateItem('/admin/config/studycourse');
 
         // set variables for view
         $this->edit = StudycourseModel::getStudyDegreeInfo($deg_id);
@@ -148,9 +142,6 @@ class Admin_StudycourseController extends AuthenticatedController
      */
     function delete_profession_action()
     {
-        global $perm;
-        $perm->check("root");
-
         $prof_id = Request::get('prof_id');
         if (Request::submitted('delete')) {
             $profession = StudycourseModel::getStudyCourses($prof_id);
@@ -179,9 +170,6 @@ class Admin_StudycourseController extends AuthenticatedController
      */
     function delete_degree_action()
     {
-        global $perm;
-        $perm->check("root");
-
         $deg_id = Request::get('deg_id');
         if (Request::submitted('delete')) {
             $degree = StudycourseModel::getStudyDegrees($deg_id);
@@ -208,9 +196,6 @@ class Admin_StudycourseController extends AuthenticatedController
      */
     function newprofession_action()
     {
-        global $perm;
-        $perm->check("root");
-
         if (Request::submitted('anlegen')) {
             if (Request::get('professionname')) {
                 $prof_name = Request::get('professionname');
@@ -228,7 +213,6 @@ class Admin_StudycourseController extends AuthenticatedController
         }
 
         $GLOBALS['CURRENT_PAGE'] = _("Anlegen von Studienfächern");
-        Navigation::activateItem('/admin/config/studycourse');
 
         $this->infobox = $this-> getInfobox();
     }
@@ -238,9 +222,6 @@ class Admin_StudycourseController extends AuthenticatedController
      */
     function newdegree_action()
     {
-        global $perm;
-        $perm->check("root");
-
         if (Request::submitted('anlegen')) {
             if (Request::get('degreename')) {
                 $deg_name = Request::get('degreename');
@@ -258,7 +239,6 @@ class Admin_StudycourseController extends AuthenticatedController
         }
 
         $GLOBALS['CURRENT_PAGE'] = _("Anlegen von Studienabschlüssen");
-        Navigation::activateItem('/admin/config/studycourse');
 
         $this->infobox = $this-> getInfobox();
     }

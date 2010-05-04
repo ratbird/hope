@@ -149,9 +149,6 @@
     addToolbar: function (button_set) {
       // Bail out if no button set is defined
       if (!button_set) {
-        if (window.console) {
-          console.log('No button set defined');
-        }
         return this;
       }
 

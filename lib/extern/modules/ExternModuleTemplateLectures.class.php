@@ -445,9 +445,9 @@ class ExternSemBrowseTemplate extends SemBrowse {
                         
                         $sem_number_start = key($sem_data[$seminar_id]['sem_number']);
                         $sem_number_end = key($sem_data[$seminar_id]['sem_number_end']);
+                        $sem_semester = $this->sem_dates[$sem_number_start]['name'];
                         if ($sem_number_start != $sem_number_end){
-                            $sem_semester .= ' (' . $this->sem_dates[$sem_number_start]['name'] . ' - ';
-                            $sem_semester .= (($sem_number_end == -1) ? _("unbegrenzt") : $this->sem_dates[$sem_number_end]['name']) . ')';
+                            $sem_semester .= ' - ' . ($sem_number_end == -1 ? _("unbegrenzt") : $this->sem_dates[$sem_number_end]['name']);
                         }
                         
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SEMESTER'] = $sem_semester;

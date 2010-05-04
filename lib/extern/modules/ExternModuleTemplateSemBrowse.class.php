@@ -1285,7 +1285,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                     if ($the_tree->tree_data[$group_field]) {
                         $headline = $the_tree->getShortPath($group_field);
                     } else {
-                        $headline =  _("keine Studienmodule eingetragen");
+                        $headline =  _("keine Studienbereiche eingetragen");
                     }
                     break;
 

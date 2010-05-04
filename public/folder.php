@@ -250,8 +250,7 @@ if ($download_selected_x) {
 
 if($zip_file_id === false){
     $msg = 'error§'
-    . sprintf(_("Der Zip Download ist fehlgeschlagen. Bitte beachten Sie das Limit " 
-    .   "von maximal %s Dateien und die maximale Größe der zu zippenden Dateien von %s MB."),
+    . sprintf(_("Der Zip Download ist fehlgeschlagen. Bitte beachten Sie das Limit von maximal %s Dateien und die maximale Größe der zu zippenden Dateien von %s MB."),
     (int)Config::GetInstance()->getValue('ZIP_DOWNLOAD_MAX_FILES'),
     (int)Config::GetInstance()->getValue('ZIP_DOWNLOAD_MAX_SIZE') )
     . '§';

@@ -220,7 +220,7 @@ class AbstractStmControl{
         
         // Ja das stimmt so Studiengang (beamtendeutsch) = Abschluss (HIS) und Studienprogramm(beamtendeutsch) = Studiengang (HIS)
         $form_fields = array(   
-            'abschl_list'   =>  array('type' => 'select', 'caption' => 'Studiengang', 'info' => _(""), 'options' => $abschl_arr, 'default_value' => $sel_abschl),
+            'abschl_list'   =>  array('type' => 'select', 'caption' => 'Studiengang', 'info' => "", 'options' => $abschl_arr, 'default_value' => $sel_abschl),
             'stg_list'  => array('type' => 'select', 'caption' => 'Studienprogramm', 'info' => '', 'options' => $stg_arr),
             'type_list' => array('type' => 'select', 'caption' => 'Modulart', 'info' => 'Die verfuegbaren Modultypen', 'options' => $type_arr),
             'pversion'  =>  array('type' => 'select', 'caption' => _("Version der Pr&#252;fungsordnung"), 'info' => '', 'options' => $pvers_arr),
@@ -233,7 +233,7 @@ class AbstractStmControl{
                             'continue' => array('type' => 'weiter', 'info' => _("Dieses Formular abschicken")),
                             'reset' => array('type' => 'zuruecksetzen', 'info' => _("Formularfelder leeren")),
                             'add' => array('type' => 'hinzufuegen', 'info' => _("Kombination hinzufuegen")),
-                            'submit' => array('type' => 'submit', 'info' => _("")));
+                            'submit' => array('type' => 'submit', 'info' => ""));
 
         foreach ($this->assigns as $index => $val)                      
             $form_buttons['remove_' . $index] = array('type' => 'trash.gif', 'info' => _("Diese Zeile entfernen"), 'is_picture' => 'true');             

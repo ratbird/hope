@@ -6,13 +6,13 @@
 #
 
 LOCALE_RELATIVE_PATH="."
-TRANSLATIONFILES_RELAVITVE_PATHS="../public ../lib ../config ../cli ../templates"
+TRANSLATIONFILES_RELAVITVE_PATHS="../public ../lib ../config ../cli ../templates ../app"
 
 for language in en
 do
 	test -f "$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.po" && mv "$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.po" "$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.po.old"
 	> "$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.UTF-8.pot"
-	find $TRANSLATIONFILES_RELAVITVE_PATHS \( -iname "*.php" -o -iname "*.ihtml" \) | xargs xgettext -C --from-code=ISO-8859-1 -j -n --keyword=_ -o "$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.UTF-8.pot"
+	find $TRANSLATIONFILES_RELAVITVE_PATHS \( -iname "*.php" -o -iname "*.ihtml" \) | xargs xgettext --from-code=ISO-8859-1 -j -n --language=PHP -o "$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.UTF-8.pot"
 	msgconv --to-code=iso-8859-1 "$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.UTF-8.pot" -o "$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.pot"
 	test -f "$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.po.old" && msgmerge "$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.po.old" "$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.pot" --output-file="$LOCALE_RELATIVE_PATH/$language/LC_MESSAGES/studip.po"
 done

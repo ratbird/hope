@@ -132,7 +132,7 @@ class InstanceStmControl {
 
         // Ja das stimmt so Studiengang (beamtendeutsch) = Abschluss (HIS) und Studienprogramm(beamtendeutsch) = Studiengang (HIS)
         $form_fields = array(   
-            'abschl_list'   =>  array('type' => 'select', 'caption' => 'Studiengang', 'info' => _(""), 'options' => $abschl_arr, 'default_value' => $sel_abschl),
+            'abschl_list'   =>  array('type' => 'select', 'caption' => 'Studiengang', 'info' => "", 'options' => $abschl_arr, 'default_value' => $sel_abschl),
             'stg_list'  =>  array('type' => 'select', 'caption' => 'Studienprogramm', 'info' => '', 'options' => $stg_arr),
             'abs_stm_list'  =>  array('type' => 'select', 'caption' => 'Allgemeines Modul', 'info' => '', 'options' => $abs_stm_arr)
         );      

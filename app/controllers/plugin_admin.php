@@ -254,6 +254,7 @@ class PluginAdminController extends AuthenticatedController
         header('Content-Type: application/zip');
         header('Content-Disposition: attachment; filename="'.$filename.'"');
         header('Content-Length: '.filesize($filepath));
+        header('Pragma: public');
 
         $this->render_nothing();
 

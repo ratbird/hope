@@ -68,6 +68,11 @@
         <? if (isset($search_semester_nr)) : ?>
         <li>
         <form id="quicksearch" action="<?= URLHelper::getLink('sem_portal.php', array('send' => 'yes', 'group_by' => '0') + $link_params) ?>" method="post">
+          <script>
+            var selectSem = function (seminar_id, name) {
+                document.location = "<?= URLHelper::getURL("details.php", array("send_from_search" => 1, "send_from_search_page" => urlencode($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])."sem_portal.php?keep_result_set=1"))  ?>&sem_id=" + seminar_id;
+            };
+          </script>
           <?php
           require_once ("lib/classes/QuickSearch.class.php");
           print QuickSearch::get("search_sem_quick_search", "Seminar_id")
@@ -85,11 +90,6 @@
           <input type="hidden" name="search_sem_sem" value="<?= $search_semester_nr ?>">
           <input class="quicksearchbutton" type="image" src="<?= Assets::url('images/quicksearch_button.png ') ?>" name="search_sem_do_search" value="OK" title="<?= sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)) ?>">
         </form>
-        <script type="text/javascript" language="javascript">
-        selectSem = function (seminar_id, name) {
-            document.location = "<?= URLHelper::getURL("details.php", array("send_from_search" => 1, "send_from_search_page" => urlencode($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])."sem_portal.php?keep_result_set=1"))  ?>&sem_id=" + seminar_id;
-        }
-        </script>
         </li>
         <? endif ?>
         <? if (Navigation::hasItem('/links')) : ?>

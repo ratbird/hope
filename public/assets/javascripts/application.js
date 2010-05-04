@@ -965,8 +965,7 @@ STUDIP.QuickSearch = {
         $('#' + name + "_realvalue").attr("value", ui.item.item_id);
         //and execute a special function defined before by the programmer:
         if (func) {
-          //evil but neccessary for this purpose:
-          eval(func + "(ui.item.item_id, ui.item.label);");
+          func(ui.item.item_id, ui.item.label);
         }
       }
     });

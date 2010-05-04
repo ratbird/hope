@@ -20,10 +20,10 @@
         <script type="text/javascript" language="javascript">
             //Die Autovervollständigen-Funktion aktivieren:
             //dispatch.php/quicksearch/response/<?= $query_id ?>?searchkey=test
-            
-            STUDIP.QuickSearch.autocomplete("<?= $name ?>", 
+
+            STUDIP.QuickSearch.autocomplete("<?= $name ?>",
                 "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
-                "<?= JSfunction ? htmlReady($JSfunction) : "" ?>");
+                <?= $JSfunction ? htmlReady($JSfunction) : "null" ?>);
 <? if ($beschriftung && !$defaultID) : ?>
             $("#<?= $name ?>").attr("value", "<?= $beschriftung ?>");
             $("#<?= $name ?>").css("color", "<?= $descriptionColor ?>");

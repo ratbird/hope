@@ -954,10 +954,7 @@ function upload($the_file, $refresh = false) {
 function insert_entry_db($range_id, $sem_id=0, $refresh = FALSE) {
     global $the_file_name, $the_file_size, $dokument_id, $description, $name, $user, $upload_seminar_id, $protected;
 
-    $fn1 = strrchr($the_file_name,"/");  // Unix-Pfadtrenner
-    $fn2 = strrchr($the_file_name,"\\"); // Windows-Pfadtrenner
-    if ($fn1) $the_file_name = $fn1;
-    else if ($fn2) $the_file_name = $fn2;
+    $the_file_name = addslashes(basename(stripslashes($the_file_name)));
 
     $range_id = trim($range_id);        // laestige white spaces loswerden
     $description = trim($description);      // laestige white spaces loswerden

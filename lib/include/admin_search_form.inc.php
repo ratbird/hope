@@ -38,7 +38,7 @@ global  $_fullname_sql,
         $view_mode;
 
 
-if ($perm->have_perm("autor")) {    // Navigationsleiste ab status "Autor", autors also need a navigation for studygroups
+if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
     require_once 'config.inc.php';
     require_once 'lib/admin_semester.inc.php';

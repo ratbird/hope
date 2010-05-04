@@ -1595,11 +1595,14 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         <td class="steel1" width="40%" align="left">
         <input type="hidden" name="studipticket" value="<?=$studipticket?>">
         <?php
+        $PDO = DBManager::get();
         $NutzerSuchen = new SQLSearch("SELECT auth_user_md5.username, CONCAT(auth_user_md5.Nachname, \", \", auth_user_md5.Vorname, \" (\", auth_user_md5.username, \") - \" , auth_user_md5.perms) " .
             "FROM auth_user_md5 " .
                 "LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
             "WHERE (CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
                 "OR auth_user_md5.username LIKE :input) " .
+                "AND auth_user_md5.perms IN ('autor', 'tutor', 'dozent') " .
+                "AND auth_user_md5.user_id NOT IN (SELECT user_id FROM seminar_user WHERE Seminar_id = :seminar_id ) " .
             "ORDER BY user_info.score DESC " .
             "LIMIT 5", _("Teilnehmer suchen"), "username");
         print QuickSearch::get("username", $NutzerSuchen)
@@ -1607,6 +1610,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 ->setInputStyle("width: 240px")
                 ->render();
         ?>
+        <input type="hidden" name="seminar_id" value="<?= $SessSemName[1] ?>"/>
         </td>
         <td class="steel1" width="20%" align="center">
         <input type="IMAGE" name="add_user" <?=makeButton("eintragen", "src")?> border=0 value=" <?=_("eintragen")?> "></td>

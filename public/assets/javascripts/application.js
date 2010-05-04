@@ -508,7 +508,7 @@ STUDIP.Markup = {
  * ------------------------------------------------------------------------ */
 STUDIP.Tabs = (function () {
 
-  var list, items, viewport_width;
+  var list, items;
 
   // check heights of list and items to check for wrapping
   function needs_compression() {
@@ -615,7 +615,6 @@ STUDIP.Filesystem.setdraggables = function () {
     var md5_id = id.substr(id.lastIndexOf('_') + 1);
     //wenn es einen Anfasser gibt, also wenn Nutzer verschieben darf
     if ($('a.drag', this)) {
-      var aufgeklappt = false;
       $(this).sortable({
         handle: 'a.drag',
         opacity: 0.6,
@@ -646,31 +645,7 @@ STUDIP.Filesystem.setdraggables = function () {
               file_order: order_ids.join(",")
             }
           });
-        }/*,
-        start: function () {
-          var id = this.getAttribute('id');
-          var sorttype = (id.lastIndexOf('subfolders') !== -1 ? "folder" : "file");
-          //wenn es ein aufgeklappter Ordner ist:
-          var md5_id = $("div > div", this).html();
-          if (sorttype === "folder") {
-            if ($("#folder_" + md5_id + "_body").is(':visible')) {
-              aufgeklappt = true;
-              STUDIP.Filesystem.changefolderbody(md5_id);
-            } else {
-              aufgeklappt = false;
-            }
-          }
-        },
-        stop: function () {
-          var id = this.getAttribute('id');
-          var sorttype = (id.lastIndexOf('subfolders') !== -1 ? "folder" : "file");
-          //wenn es ein aufgeklappter Ordner ist:
-          var md5_id = $("div > div", this).html();
-          if (aufgeklappt === true) {
-            STUDIP.Filesystem.changefolderbody(md5_id);
-            aufgeklappt = false;
-          }
-        }*/
+        }
       });
     }
   });

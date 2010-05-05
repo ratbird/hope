@@ -9,12 +9,10 @@
  * the License, or (at your option) any later version.
  */
 
-
-require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/CourseAvatar.class.php';
 require_once 'lib/classes/StudygroupAvatar.class.php';
 require_once 'lib/classes/Seminar.class.php';
-
+require_once 'lib/trails/AuthenticatedController.php';
 
 /**
  * This controller is used to manipulate the avatar of a course.

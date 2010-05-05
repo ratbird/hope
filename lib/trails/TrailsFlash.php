@@ -16,7 +16,7 @@
  * @version   $Id: trails.php 7001 2008-04-04 11:20:27Z mlunzena $
  */
 
-class Trails_Flash implements ArrayAccess {
+class TrailsFlash implements ArrayAccess {
 
 
   /**
@@ -34,12 +34,12 @@ class Trails_Flash implements ArrayAccess {
   static function instance() {
 
     if (!isset($_SESSION)) {
-      throw new Trails_SessionRequiredException();
+      throw new TrailsSessionRequiredException();
     }
 
 
     if (!isset($_SESSION['trails_flash'])) {
-      $_SESSION['trails_flash'] = new Trails_Flash();
+      $_SESSION['trails_flash'] = new TrailsFlash();
     }
     return $_SESSION['trails_flash'];
   }

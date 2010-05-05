@@ -14,9 +14,8 @@
  * @package     studygroup
  */
 
-
-require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/studygroup.php';
+require_once 'lib/trails/AuthenticatedController.php';
 
 if (!defined('ELEMENTS_PER_PAGE')) define("ELEMENTS_PER_PAGE", 20);
 

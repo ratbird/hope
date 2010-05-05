@@ -10,8 +10,8 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/plugin_administration.php';
+require_once 'lib/trails/AuthenticatedController.php';
 
 class PluginAdminController extends AuthenticatedController
 {

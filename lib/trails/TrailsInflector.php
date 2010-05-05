@@ -10,7 +10,7 @@
  * @version   $Id: trails.php 7001 2008-04-04 11:20:27Z mlunzena $
  */
 
-class Trails_Inflector {
+class TrailsInflector {
 
 
   /**

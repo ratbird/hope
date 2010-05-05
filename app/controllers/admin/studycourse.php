@@ -15,7 +15,7 @@
  * @since       Stud.IP version 1.12
  */
 
-require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/trails/AuthenticatedController.php';
 require_once 'app/models/studycourse.php';
 
 /**

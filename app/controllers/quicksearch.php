@@ -2,18 +2,17 @@
 
 require_once 'lib/classes/searchtypes/SearchType.class.php';
 
-require_once 'app/controllers/authenticated_controller.php';
-require_once("lib/classes/Avatar.class.php");
-require_once("lib/classes/CourseAvatar.class.php");
-require_once("lib/classes/InstituteAvatar.class.php");
-
+require_once "lib/classes/Avatar.class.php";
+require_once "lib/classes/CourseAvatar.class.php";
+require_once "lib/classes/InstituteAvatar.class.php";
+require_once 'lib/trails/AuthenticatedController.php';
 
 class QuicksearchController extends AuthenticatedController {
-    
+
     private $specialSQL;
-    
+
     /**
-     * the one action which is called by the QuickSearch-form when typed in 
+     * the one action which is called by the QuickSearch-form when typed in
      * by user.
      * @param query_id string: first argument of url -> id of query in session
      */
@@ -27,11 +26,11 @@ class QuicksearchController extends AuthenticatedController {
         $this->searchresults = $this->getResults(Request::get('request'));
         $this->render_template('quicksearch/response.php');
     }
-    
+
     /**
      * instantiates the search-object (or string)
      * @param query_id string: id of the query in session
-     * @return object or string: ready search-object or string 
+     * @return object or string: ready search-object or string
      */
     private function getSearch($query_id) {
         if (isset($_SESSION['QuickSearches'][$query_id])) {
@@ -40,8 +39,8 @@ class QuicksearchController extends AuthenticatedController {
             if ($search_object) {
                 //search with an object:
                 return unserialize($search_object);
-            } elseif (!in_array($search_query, 
-                    array("username", "user_id", "Seminar_id", 
+            } elseif (!in_array($search_query,
+                    array("username", "user_id", "Seminar_id",
                          "Institut_id", "Arbeitsgruppe_id"))) {
                 //search with a special SQL-query:
                 $this->specialSQL = $search_query;
@@ -54,9 +53,9 @@ class QuicksearchController extends AuthenticatedController {
             return "";
         }
     }
-    
+
     /**
-     * includes the class of the search-object so we can re-instantiate this object 
+     * includes the class of the search-object so we can re-instantiate this object
      * later
      * @param query_id string: id of the query in session
      * @return void
@@ -66,7 +65,7 @@ class QuicksearchController extends AuthenticatedController {
             include_once($_SESSION['QuickSearches'][$query_id]['includePath']);
         }
     }
-    
+
     /**
      * formats the results so that the searchword is marked bold
      * @param results array: array of searchresults
@@ -79,7 +78,7 @@ class QuicksearchController extends AuthenticatedController {
     	}
     	return $results;
     }
-    
+
     /**
      * private method to get a result-array in the way of array(array(item_id, item-name)).
      * @param request:    the request from the searchfield typed by the user.
@@ -178,7 +177,7 @@ class QuicksearchController extends AuthenticatedController {
         $result = array(array("", _("Session abgelaufen oder unbekannter Suchtyp")));
         return $result;
     }
-    
+
     /**
      * deletes all older requests, that have not been used since half an hour
      * @return void

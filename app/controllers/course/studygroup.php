@@ -12,16 +12,17 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     studygroup
- * @since 1.10
+ * @since       1.10
  */
 
-require_once 'app/controllers/authenticated_controller.php';
+
 require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/classes/Modules.class.php';
 require_once 'lib/classes/StudygroupAvatar.class.php';
 require_once 'app/models/studygroup.php';
 require_once 'lib/messaging.inc.php';
 require_once 'lib/user_visible.inc.php';
+require_once 'lib/trails/AuthenticatedController.php';
 
 // classes required for global-module-settings
 require_once('lib/classes/AdminModules.class.php');
@@ -178,7 +179,7 @@ class Course_StudygroupController extends AuthenticatedController {
             if(in_array(current($candidate),$founders)) {
                 unset($founders);
             }
-            
+
             $this->flash['founders']  = $founders;
             $this->flash['create']    = true;
             $this->flash['request']   = Request::getInstance();
@@ -368,10 +369,10 @@ class Course_StudygroupController extends AuthenticatedController {
             $founders = StudygroupModel::getFounders($id);
 
             if (Request::submitted('replace_founder'))  {
-                
+
                 // retrieve old founder
                 $old_dozent = current(StudygroupModel::getFounder($id));
-                
+
                 // remove old founder
                 StudygroupModel::promote_user($old_dozent['uname'],$id,'tutor');
 
@@ -504,7 +505,7 @@ class Course_StudygroupController extends AuthenticatedController {
      * @return void
      */
     function edit_members_action($id, $user, $action, $status = '', $studipticket = false)
-    {   
+    {
         global $perm;
         if ($perm->have_studip_perm('tutor', $id)) {
 
@@ -576,7 +577,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     } elseif ($action == 'remove') {
                         $this->flash['question'] = sprintf(_("Möchten Sie wirklich den Nutzer %s aus der Studiengruppe entfernen?"), get_fullname_from_uname($user, 'full', true));
                         $this->flash['candidate'] = $user;
-                       
+
                     } elseif ($action == 'remove_approved' && check_ticket($studipticket)) {
                         StudygroupModel::remove_user($user,$id);
                         $this->flash['success'] = sprintf(_("Der Nutzer %s wurde aus der Studiengruppe entfernt."), get_fullname_from_uname($user, 'full', true));
@@ -588,7 +589,7 @@ class Course_StudygroupController extends AuthenticatedController {
                         )
                     );
                 }
-            } 
+            }
             $this->redirect('course/studygroup/members/' . $id);
         }   else {
             $this->redirect(URLHelper::getURL('seminar_main.php?auswahl=' . $id));
@@ -772,12 +773,12 @@ class Course_StudygroupController extends AuthenticatedController {
         }
         $this->redirect('course/studygroup/globalmodules');
     }
-    
+
     /**
      * sends a message to all members of a studygroup
      *
      * @param string id of a studygroup
-     * 
+     *
      * @return void
      */
 
@@ -789,7 +790,7 @@ class Course_StudygroupController extends AuthenticatedController {
             $subject = sprintf(_("[Studiengruppe: %s...]"),substr($sem->getName(), 0, 30));
         else
             $subject = sprintf(_("[Studiengruppe: %s]"),$sem->getName());
-                
+
 
         $this->redirect(URLHelper::getURL('sms_send.php', array('sms_source_page' => $source, 'course_id' => $id, 'emailrequest' => 1, 'subject' => $subject, 'filter' => 'all')));
     }

@@ -10,7 +10,7 @@
  * @version   $Id: trails.php 7001 2008-04-04 11:20:27Z mlunzena $
  */
 
-class Trails_Exception extends Exception {
+class TrailsException extends Exception {
 
   /**
    * <FieldDescription>
@@ -30,7 +30,7 @@ class Trails_Exception extends Exception {
    */
   function __construct($status = 500, $reason = NULL, $headers = array()) {
     if ($reason === NULL) {
-      $reason = Trails_Response::get_reason($status);
+      $reason = TrailsResponse::get_reason($status);
     }
     parent::__construct($reason, $status);
     $this->headers = $headers;
@@ -50,7 +50,7 @@ class Trails_Exception extends Exception {
 }
 
 
-class Trails_DoubleRenderError extends Trails_Exception {
+class TrailsDoubleRenderError extends TrailsException {
 
   function __construct() {
     $message =
@@ -62,14 +62,14 @@ class Trails_DoubleRenderError extends Trails_Exception {
 }
 
 
-class Trails_MissingFile extends Trails_Exception {
+class TrailsMissingFile extends TrailsException {
   function __construct($message) {
     parent::__construct(500, $message);
   }
 }
 
 
-class Trails_RoutingError extends Trails_Exception {
+class TrailsRoutingError extends TrailsException {
 
   function __construct($message) {
     parent::__construct(400, $message);
@@ -77,7 +77,7 @@ class Trails_RoutingError extends Trails_Exception {
 }
 
 
-class Trails_UnknownAction extends Trails_Exception {
+class TrailsUnknownAction extends TrailsException {
 
   function __construct($message) {
     parent::__construct(404, $message);
@@ -85,7 +85,7 @@ class Trails_UnknownAction extends Trails_Exception {
 }
 
 
-class Trails_UnknownController extends Trails_Exception {
+class TrailsUnknownController extends TrailsException {
 
   function __construct($message) {
     parent::__construct(404, $message);
@@ -93,7 +93,7 @@ class Trails_UnknownController extends Trails_Exception {
 }
 
 
-class Trails_SessionRequiredException extends Trails_Exception {
+class TrailsSessionRequiredException extends TrailsException {
   function __construct() {
     $message = "Tried to access a non existing session.";
     parent::__construct(500, $message);

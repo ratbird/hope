@@ -13,7 +13,7 @@
  */
 
 require_once 'app/models/event_log.php';
-require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/trails/AuthenticatedController.php';
 
 class EventLogController extends AuthenticatedController
 {

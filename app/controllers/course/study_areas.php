@@ -18,7 +18,7 @@ require_once 'lib/classes/StudipStudyAreaSelection.class.php';
 require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/webservices/api/studip_lecture_tree.php';
 require_once 'lib/classes/LockRules.class.php';
-require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/trails/AuthenticatedController.php';
 
 class Course_StudyAreasController extends AuthenticatedController {
 

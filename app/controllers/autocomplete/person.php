@@ -13,7 +13,7 @@
 
 require_once 'lib/functions.php';
 require_once 'app/models/autocomplete_person.php';
-require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/trails/AuthenticatedController.php';
 
 class Autocomplete_PersonController extends AuthenticatedController {
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * A Trails_Controller is responsible for matching the unconsumed part of an URI
+ * A TrailsController is responsible for matching the unconsumed part of an URI
  * to an action using the left over words as arguments for that action. The
  * action is then mapped to method of the controller instance which is called
  * with the just mentioned arguments. That method can send the #render_action,
@@ -20,7 +20,7 @@
  * @version   $Id: trails.php 7001 2008-04-04 11:20:27Z mlunzena $
  */
 
-class Trails_Controller {
+class TrailsController {
 
 
   /**
@@ -53,7 +53,7 @@ class Trails_Controller {
    */
   function erase_response() {
     $this->performed = FALSE;
-    $this->response = new Trails_Response();
+    $this->response = new TrailsResponse();
   }
 
 
@@ -179,7 +179,7 @@ class Trails_Controller {
    * @return void
    */
   function does_not_understand($action, $args) {
-    throw new Trails_UnknownAction("No action responded to '$action'.");
+    throw new TrailsUnknownAction("No action responded to '$action'.");
   }
 
 
@@ -193,7 +193,7 @@ class Trails_Controller {
   function redirect($to) {
 
     if ($this->performed) {
-      throw new Trails_DoubleRenderError();
+      throw new TrailsDoubleRenderError();
     }
 
     $this->performed = TRUE;
@@ -217,7 +217,7 @@ class Trails_Controller {
   function render_text($text = ' ') {
 
     if ($this->performed) {
-      throw new Trails_DoubleRenderError();
+      throw new TrailsDoubleRenderError();
     }
 
     $this->performed = TRUE;
@@ -246,7 +246,7 @@ class Trails_Controller {
   function render_action($action) {
     $class = get_class($this);
     $controller_name =
-      Trails_Inflector::underscore(substr($class, 0, -10));
+      TrailsInflector::underscore(substr($class, 0, -10));
 
     $this->render_template($controller_name.'/'.$action, $this->layout);
   }
@@ -391,16 +391,15 @@ class Trails_Controller {
   }
 
 
-  /**
-   * Exception handler called when the performance of an action raises an
-   * exception.
-   *
-   * @param  object     the thrown exception
-   *
-   * @return object     a response object
-   */
-  function rescue($exception) {
-    return $this->dispatcher->trails_error($exception);
-  }
+    /**
+     * Exception handler called when the performance of an action raises an
+     * exception.
+     *
+     * @param  object     the thrown exception
+     */
+    function rescue($exception)
+    {
+        throw $exception;
+    }
 }
 

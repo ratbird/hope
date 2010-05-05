@@ -16,8 +16,7 @@
 require_once 'lib/functions.php';
 require_once 'lib/showNews.inc.php';
 require_once 'lib/user_visible.inc.php';
-require_once 'app/controllers/authenticated_controller.php';
-
+require_once 'lib/trails/AuthenticatedController.php';
 
 class NewsController extends AuthenticatedController {
 
@@ -31,7 +30,7 @@ class NewsController extends AuthenticatedController {
     $this->admin_link = Request::get('admin_link');
     $this->render_template('news/get_news');
   }
-  
+
   /**
    * deprecated
    */
@@ -54,18 +53,18 @@ class NewsController extends AuthenticatedController {
   function open_or_close($open, $id) {
     # get news item
     $this->news = new StudipNews($id);
-    
+
     if (!$this->has_news_permissions($id)) {
       return;
     }
-    
+
     # show news
     $this->news->content['open'] = $open;
     $this->show_admin = $show_admin;
     $this->admin_link = Request::get('admin_link');
     $this->render_template('news/open_or_close');
   }
-  
+
   function has_news_permissions($news) {
     if (is_null($news)) {
       $this->set_status(400);

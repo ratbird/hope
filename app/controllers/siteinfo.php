@@ -13,19 +13,19 @@
  */
 
 require_once 'app/models/siteinfo.php';
-require_once 'app/controllers/studip_controller.php';
+require_once 'lib/trails/AuthenticatedController.php';
 
 class SiteinfoController extends StudipController
 {
     private $si;
-    
+
     /**
      * common tasks for all actions
      */
     function before_filter (&$action, &$args)
     {
         global $perm, $template_factory, $CURRENT_PAGE;
-        
+
         # open session
         page_open(array('sess' => 'Seminar_Session',
                         'auth' => 'Seminar_Default_Auth',
@@ -70,7 +70,7 @@ class SiteinfoController extends StudipController
             $this->currentdetail = $this->si->first_detail_id();
         }
     }
-    
+
     function add_navigation($action)
     {
         Navigation::addItem('/siteinfo', new Navigation(_('Impressum')));
@@ -101,7 +101,7 @@ class SiteinfoController extends StudipController
             }
         }
     }
-    
+
     function infobox_content()
     {
         global $rubrics_empty;
@@ -129,7 +129,7 @@ class SiteinfoController extends StudipController
                      'content' => array(array('kategorie' => _("Administration des Impressums"),
                                               'eintrag' => $infobox_actions))
                     );
-    } 
+    }
 
     /**
      * common tasks for all actions
@@ -153,7 +153,7 @@ class SiteinfoController extends StudipController
             Navigation::addItem('/siteinfo/rubric_new',
                 new AutoNavigation(_('neue Rubrik'), $this->url_for('siteinfo/new')));
             $this->edit_rubric = TRUE;
-        } else {        
+        } else {
             Navigation::addItem('/siteinfo/'.$this->currentrubric.'/detail_new',
                 new AutoNavigation(_('neue Seite'), $this->url_for('siteinfo/new/'.$this->currentrubric)));
             $this->rubrics = $this->si->get_all_rubrics();

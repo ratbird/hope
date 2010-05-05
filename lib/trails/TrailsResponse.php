@@ -2,7 +2,7 @@
 
 /**
  * This class represents a response returned by a controller that was asked to
- * perform for a given request. A Trails_Response contains the body, status and
+ * perform for a given request. A TrailsResponse contains the body, status and
  * additional headers which can be renderer back to the client.
  *
  * @package   trails
@@ -12,7 +12,7 @@
  * @version   $Id: trails.php 7001 2008-04-04 11:20:27Z mlunzena $
  */
 
-class Trails_Response {
+class TrailsResponse {
 
 
   /**

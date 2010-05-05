@@ -3,7 +3,7 @@
 /**
  * The Dispatcher is used to map an incoming HTTP request to a Controller
  * producing a response which is then rendered. To initialize an instance of
- * class Trails_Dispatcher you have to give three configuration settings:
+ * class TrailsDispatcher you have to give three configuration settings:
  *
  *          trails_root - the absolute file path to a directory containing the
  *                        applications controllers, views etc.
@@ -22,7 +22,7 @@
  * @version   $Id: trails.php 7001 2008-04-04 11:20:27Z mlunzena $
  */
 
-class Trails_Dispatcher {
+class TrailsDispatcher {
 
   # TODO (mlunzena) Konfiguration muss anders geschehen
 
@@ -106,7 +106,7 @@ class Trails_Dispatcher {
    * Maps an URI to a response by figuring out first what controller to
    * instantiate, then delegating the unconsumed part of the URI to the
    * controller who returns an appropriate response object or throws a
-   * Trails_Exception.
+   * TrailsException.
    *
    * @param  string  the URI string
    *
@@ -118,7 +118,7 @@ class Trails_Dispatcher {
 
       if ('' === $uri) {
         if (!$this->file_exists($this->default_controller . '.php')) {
-          throw new Trails_MissingFile(
+          throw new TrailsMissingFile(
             "Default controller '{$this->default_controller}' not found'");
         }
         $controller_path = $this->default_controller;
@@ -155,14 +155,14 @@ class Trails_Dispatcher {
                       ? htmlentities($exception->getTraceAsString())
                       : '');
 
-    if ($exception instanceof Trails_Exception) {
-      $response = new Trails_Response($body,
+    if ($exception instanceof TrailsException) {
+      $response = new TrailsResponse($body,
                                       $exception->headers,
                                       $exception->getCode(),
                                       $exception->getMessage());
     }
     else {
-      $response = new Trails_Response($body, array(), 500,
+      $response = new TrailsResponse($body, array(), 500,
                                       $exception->getMessage());
     }
 
@@ -197,7 +197,7 @@ class Trails_Dispatcher {
     list($head, $tail) = $this->split_on_first_slash($unconsumed);
 
     if (!preg_match('/^\w+$/', $head)) {
-      throw new Trails_RoutingError("No route matches '$head'");
+      throw new TrailsRoutingError("No route matches '$head'");
     }
 
     $controller = (isset($controller) ? $controller . '/' : '') . $head;
@@ -209,7 +209,7 @@ class Trails_Dispatcher {
       return $this->parse($tail, $controller);
     }
 
-    throw new Trails_RoutingError("No route matches '$head'");
+    throw new TrailsRoutingError("No route matches '$head'");
   }
 
   function split_on_first_slash($str) {
@@ -232,9 +232,9 @@ class Trails_Dispatcher {
    */
   function load_controller($controller) {
     require_once "{$this->trails_root}/controllers/{$controller}.php";
-    $class = Trails_Inflector::camelize($controller) . 'Controller';
+    $class = TrailsInflector::camelize($controller) . 'Controller';
     if (!class_exists($class)) {
-      throw new Trails_UnknownController("Controller missing: '$class'");
+      throw new TrailsUnknownController("Controller missing: '$class'");
     }
     return new $class($this);
   }
@@ -242,7 +242,7 @@ class Trails_Dispatcher {
 
   /**
    * This method transforms E_USER_* and E_RECOVERABLE_ERROR to
-   * Trails_Exceptions.
+   * TrailsExceptions.
    *
    * @param  integer    the level of the error raised
    * @param  string     the error message
@@ -251,12 +251,12 @@ class Trails_Dispatcher {
    * @param  array      an array of every variable that existed in the scope the
    *                    error was triggered in
    *
-   * @throws Trails_Exception
+   * @throws TrailsException
    *
    * @return void
    */
   function error_handler($errno, $string, $file, $line, $context) {
-    throw new Trails_Exception(500, $string);
+    throw new TrailsException(500, $string);
   }
 }
 

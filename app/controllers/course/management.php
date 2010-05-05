@@ -9,19 +9,19 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/trails/AuthenticatedController.php';
 
 /**
- * This controller realises a redirector for administrative pages 
- * 
+ * This controller realises a redirector for administrative pages
+ *
  * @since 1.10
  * @author tgloeggl
- * @author aklassen 
+ * @author aklassen
  */
 class Course_ManagementController extends AuthenticatedController {
 
     // see Trails_Controller#before_filter
-    function before_filter(&$action, &$args) 
+    function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
 
@@ -46,10 +46,10 @@ class Course_ManagementController extends AuthenticatedController {
     }
 
     function inst_action()
-    { 
+    {
         Navigation::activateItem('course/admin/main');
     }
-    
+
     function visible_action($visible)
     {
         $sem = Seminar::getInstance($GLOBALS['SessSemName'][1]);

@@ -11,9 +11,10 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'studip_controller.php';
+require_once 'TrailsController.php';
 
-abstract class AuthenticatedController extends StudipController {
+abstract class AuthenticatedController extends TrailsController
+{
 
   /**
    * Callback function being called before an action is executed. If this
@@ -27,7 +28,8 @@ abstract class AuthenticatedController extends StudipController {
    *
    * @return bool
    */
-  function before_filter(&$action, &$args) {
+  function before_filter(&$action, &$args)
+  {
     global $auth;
 
     # open session
@@ -37,9 +39,9 @@ abstract class AuthenticatedController extends StudipController {
                     'user' => 'Seminar_User'));
 
     // show login-screen, if authentication is "nobody"
-    $auth->login_if($auth->auth["uid"] == "nobody"); 
+    $auth->login_if($auth->auth["uid"] == "nobody");
 
-    $this->flash = Trails_Flash::instance();
+    $this->flash = TrailsFlash::instance();
 
     // set up user session
     include 'lib/seminar_open.php';
@@ -71,7 +73,8 @@ abstract class AuthenticatedController extends StudipController {
    *
    * @return void
    */
-  function after_filter($action, $args) {
+  function after_filter($action, $args)
+  {
     page_close();
   }
 }

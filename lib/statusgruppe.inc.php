@@ -145,18 +145,14 @@ function SetSelfAssign ($statusgruppe_id, $flag="0") {
             $flag = 1;
         }
     }
-    $prep = $db->prepare("UPDATE statusgruppen " .
+    $db->exec("UPDATE statusgruppen " .
             "SET selfassign = ".$db->quote($flag)." " .
             "WHERE statusgruppe_id = ".$db->quote($statusgruppe_id));
-    $prep->execute();
     return $flag;
 }
 
 function SetSelfAssignAll ($seminar_id, $flag = false) {
-    $db = DBManager::get();
-    $prep = $db->prepare("UPDATE statusgruppen SET selfassign = '".(int)$flag."' WHERE range_id = ".$db->quote($seminar_id));
-    $prep->execute();
-    return $prep->rowCount();
+    return DBManager::get()->exec("UPDATE statusgruppen SET selfassign = '".(int)$flag."' WHERE range_id = ".$db->quote($seminar_id));
 }
 
 function SetSelfAssignExclusive ($seminar_id, $flag = false) {

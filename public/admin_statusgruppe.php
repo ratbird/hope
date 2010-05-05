@@ -39,6 +39,7 @@ require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/datei.inc.php');
 require_once ('lib/classes/Statusgruppe.class.php');
 require_once ('lib/classes/LockRules.class.php');
+require_once ('lib/classes/SeminarCategories.class.php');
 require_once 'lib/admin_search.inc.php';
 
 $HELP_KEYWORD="Basis.VeranstaltungenVerwaltenGruppen";
@@ -97,12 +98,6 @@ if(LockRules::Check($range_id, 'groups')) {
         <?
         page_close();
         die();
-}
-// get class of seminar
-$stmt = DBManager::get()->prepare("SELECT status FROM seminare WHERE Seminar_id = ?");
-$stmt->execute(array($range_id));
-if ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
-    $seminar_class = $data['status'];
 }
 
 // if we add persons to a statusgroup, we receive a role_id as an array-element
@@ -370,7 +365,7 @@ if ($statusgruppen && sizeof($statusgruppen) > 0) {
     $template->set_attribute('self_assign_all', $self_assign_all);
     $template->set_attribute('self_assign_exclusive', $self_assign_exclusive);
 
-    $template->set_attribute('seminar_class', $seminar_class);
+    $template->set_attribute('seminar_class', SeminarCategories::GetBySeminarId($range_id)->id);
 
     if ($_REQUEST['cmd'] == 'editRole') {
         $role = new Statusgruppe($_REQUEST['role_id']);
@@ -394,6 +389,7 @@ else {
     $template->set_layout('statusgruppen/sem_layout.php');
 
     $template->set_attribute('range_id', $range_id);
+    $template->set_attribute('seminar_class', SeminarCategories::GetBySeminarId($range_id)->id);
 
     if (isset($_REQUEST['choosePreset'])) {
         $template->set_attribute('role_data', array('name' => $_REQUEST['presetName']));

@@ -137,7 +137,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
 
 // display menue
 ?>
-        <table class="index_box" cellpadding="2" cellspacing="0">
+        <table class="index_box">
             <tr>
                 <td class="topic" style="font-weight: bold;" colspan="2">
                     <?= Assets::img('home.gif', array('class' => 'middle')) ?>
@@ -179,7 +179,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
 <?
 
     // display news
-    show_news('studip', $perm->have_perm('root'), 0, $index_data['nopen'], "70%", $LastLogin, $index_data);
+    show_news('studip', $perm->have_perm('root'), 0, $index_data['nopen'], "", $LastLogin, $index_data);
 
     // display dates
     if (!$perm->have_perm('admin')) { // only dozent, tutor, autor, user

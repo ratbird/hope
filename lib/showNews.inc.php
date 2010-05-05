@@ -116,9 +116,13 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
         $admin_link = "range_id=studip";
     }
 
+    if (!empty($width)) {
+        $width = ' style="width: ' . $width . ';"';
+    }
+
     if (!count($news)) {
         if ($show_admin) {
-            echo"\n<table class=\"index_box\" style=\"width: $width;\">";
+            echo"\n<table class=\"index_box\"$width>";
             echo"\n<tr><td class=\"topic\" colspan=\"2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/news2.gif\" border=\"0\"". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "align=\"texttop\"><b> " . _("News") . "</b></td>";
             echo"\n<td align = \"right\" class=\"topic\">";
             echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\"" . tooltip(_("News einstellen")) . "></a> ";
@@ -133,7 +137,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
         $colspan=2;
 
         //Ausgabe der Kopfzeile vor erster auszugebener News
-        echo"\n<table class=\"index_box\" style=\"width: $width;\">";
+        echo"\n<table class=\"index_box\"$width>";
         echo"\n<tr><td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/news2.gif\" border=\"0\"". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b>" . _("News") . "</b></td>";
         if ($rss_id) {
             $colspan++;

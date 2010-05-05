@@ -16,8 +16,13 @@
 require '../lib/bootstrap.php';
 
 require_once 'lib/functions.php';
+require_once 'lib/trails/TrailsController.php';
+require_once 'lib/trails/TrailsDispatcher.php';
+require_once 'lib/trails/TrailsFlash.php';
+require_once 'lib/trails/TrailsInflector.php';
+require_once 'lib/trails/TrailsResponse.php';
+require_once 'lib/exceptions/TrailsException.php';
 require_once 'lib/exceptions/access_denied.php';
-require_once 'vendor/trails/trails.php';
 
 # set base url for URLHelper class
 URLHelper::setBaseUrl($CANONICAL_RELATIVE_PATH_STUDIP);

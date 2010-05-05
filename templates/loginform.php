@@ -24,7 +24,7 @@ $(function () {
         "<a href=\"mailto:".$GLOBALS['UNI_CONTACT']."\">".$GLOBALS['UNI_CONTACT']."</a>"))) ?>
 </div>
 <? endif; ?>
-<table class="logintable" width="750" align="center" border="0" cellpadding="0" cellspacing="0">
+<table class="index_box logintable" style="width: 750px;">
   <tbody>
     <tr>
       <td class="topic">

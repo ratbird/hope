@@ -253,8 +253,7 @@ $quarter_year = 60 * 60 * 24 * 90;
 <?php
 
 // Anzeige von News
-if (show_news($auswahl, $rechte, 0, $smain_data["nopen"], "100%", object_get_visit($SessSemName[1], "sem"), $smain_data))
-    echo"<br>";
+show_news($auswahl, $rechte, 0, $smain_data["nopen"], "100%", object_get_visit($SessSemName[1], "sem"), $smain_data);
 
 // Anzeige von Terminen
 $start_zeit=time();
@@ -262,15 +261,13 @@ $end_zeit=$start_zeit+1210000;
 $name = rawurlencode($SessSemName[0]);
 ($rechte) ? $show_admin=URLHelper::getLink("admin_dates.php?range_id=$SessSemName[1]&ebene=sem&new_sem=TRUE") : $show_admin=FALSE;
 if (!$studygroup_mode) {
-    if (show_dates($start_zeit, $end_zeit, $smain_data["dopen"], $auswahl, 0, TRUE, $show_admin))
-        echo"<br>";
+    show_dates($start_zeit, $end_zeit, $smain_data["dopen"], $auswahl, 0, TRUE, $show_admin);
 }
 
 // show chat info
-if ((get_config('CHAT_ENABLE')) && ($modules["chat"]))
+if (get_config('CHAT_ENABLE') && $modules["chat"])
 {
-    if (chat_show_info($auswahl))
-    echo "<br>";
+    chat_show_info($auswahl);
 }
 
 // include and show votes and tests

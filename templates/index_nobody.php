@@ -4,7 +4,7 @@
     <?= MessageBox::success(_("Sie sind nun aus dem System abgemeldet."), array($GLOBALS['UNI_LOGOUT_ADD'])) ?>
 </div>
 <? endif; ?>
-<table class="index_box" cellpadding="0" cellspacing="0" style="width:750px !important;">
+<table class="index_box" style="width: 750px;">
     <tr>
         <td colspan="3" class="topic">
             &nbsp;<b><?=$GLOBALS['UNI_NAME']?></b>

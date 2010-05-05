@@ -702,7 +702,7 @@ table.index_box {
     margin: auto;
     margin-bottom: 1em;
     border-collapse: collapse;
-	min-width: 750px;
+    min-width: 750px;
 }
 
 td.index_box_cell {

@@ -114,13 +114,12 @@ function checkdata(){
     <?= MessageBox::error(_("Bei der Registrierung ist ein Fehler aufgetreten!"), array($error_msg, _("Bitte korrigieren Sie Ihre Eingaben und versuchen Sie es erneut"))) ?>
 <?endif;?>
 </div>
-<table class="logintable" width="750" align="center" border="0" cellpadding="0" cellspacing="0">
+<table class="index_box logintable" style="width: 750px;">
 <tr>
     <td class="topic"> <b><?=_("Stud.IP - Registrierung")?></b> </td>
 </tr>
 <tr>
-    <td class="blank">
-    <blockquote>
+    <td class="blank" style="padding: 1em;">
     <b><?=_("Herzlich Willkommen!")?></b>
     <br>
     <?=_("Bitte f&uuml;llen Sie zur Anmeldung das Formular aus:")?>
@@ -227,7 +226,6 @@ function checkdata(){
 <input type="hidden" name="response2"  value="">
 </form>
 
-        </blockquote>
         </td>
     </tr>
 </table>

@@ -5,7 +5,7 @@
 </table>
 </div>
 <?endif;?>
-<table class="logintable" width="750" align="center" border="0" cellpadding="0" cellspacing="0">
+<table class="index_box logintable" style="width: 750px;">
 <tr>
     <td class="topic">
     <img src="<?=$GLOBALS['ASSETS_URL']?>images/login.gif" border="0">

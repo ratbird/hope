@@ -185,13 +185,11 @@ process_news_commands($institut_main_data);
 
 // Anzeige von News
 ($rechte) ? $show_admin=TRUE : $show_admin=FALSE;
-if (show_news($auswahl,$show_admin, 0, $institut_main_data["nopen"], "100%", object_get_visit($SessSemName[1], "inst"), $institut_main_data))
-    echo"<br>";
+show_news($auswahl,$show_admin, 0, $institut_main_data["nopen"], "100%", object_get_visit($SessSemName[1], "inst"), $institut_main_data);
 
 //show chat info
-if ((get_config('CHAT_ENABLE')) && ($modules["chat"])){
-    if (chat_show_info($auswahl))
-        echo "<br>";
+if (get_config('CHAT_ENABLE') && $modules["chat"]) {
+    chat_show_info($auswahl);
 }
 
 // include and show votes and tests

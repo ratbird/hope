@@ -1,6 +1,6 @@
 <?php
 
-# Copyright (c)  2007 - Marcus Lunzenauer <mlunzena@uos.de>
+# Copyright (c)  2009 - Marcus Lunzenauer <mlunzena@uos.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,36 +20,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require_once 'lib/trails/TrailsInflector.php';
 
-# set error reporting
-error_reporting(E_ALL & ~E_NOTICE);
+class InflectorTestCase extends UnitTestCase {
 
-# set include path
-$inc_path = ini_get('include_path');
-$inc_path .= PATH_SEPARATOR . dirname(__FILE__) . '/..';
-$inc_path .= PATH_SEPARATOR . dirname(__FILE__) . '/../config';
-ini_set('include_path', $inc_path);
+  function inflector_strings() {
+    $strings = array(
+      'hello'               => 'Hello',
+      'hello_world'         => 'HelloWorld',
+      'h_e_l_l_o'           => 'HELLO',
+      'hello123world'       => 'Hello123world',
+      'hello/world'         => 'Hello_World',
+      'hello/another_world' => 'Hello_AnotherWorld',
+      );
+    return $strings;
+  }
 
-# load required files
-require_once 'vendor/simpletest/unit_tester.php';
-require_once 'vendor/simpletest/reporter.php';
-require_once 'vendor/simpletest/collector.php';
+  function test_camelize() {
+    foreach ($this->inflector_strings() as $lower_case => $camelized)
+      $this->assertEqual($camelized, TrailsInflector::camelize($lower_case));
+  }
 
-# load varstream for easier filesystem testing
-require_once 'varstream.php';
+  function test_underscore() {
+    foreach ($this->inflector_strings() as $lower_case => $camelized)
+      $this->assertEqual($lower_case, TrailsInflector::underscore($camelized));
+  }
+}
 
-
-# collect all tests
-$all = new TestSuite('All tests');
-$collector = new SimplePatternCollector('/test.php$/');
-$all->collect(dirname(__FILE__) . '/lib', $collector);
-$all->collect(dirname(__FILE__) . '/lib/classes', $collector);
-$all->collect(dirname(__FILE__) . '/lib/trails', $collector);
-
-# use text reporter if cli
-if (sizeof($_SERVER['argv']))
-  $all->run(new TextReporter());
-
-# use html reporter if cgi
-else
-  $all->run(new HtmlReporter());

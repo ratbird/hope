@@ -1,6 +1,6 @@
 <?php
 
-# Copyright (c)  2007 - Marcus Lunzenauer <mlunzena@uos.de>
+# Copyright (c)  2009 - Marcus Lunzenauer <mlunzena@uos.de>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -20,36 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+Mock::generatePartial('TrailsDispatcher', 'PartialMockDispatcher',
+                      array('load_controller', 'parse', 'trails_error'));
 
-# set error reporting
-error_reporting(E_ALL & ~E_NOTICE);
+Mock::generatePartial('TrailsController', 'RescueController',
+                      array('index_action', 'rescue'));
 
-# set include path
-$inc_path = ini_get('include_path');
-$inc_path .= PATH_SEPARATOR . dirname(__FILE__) . '/..';
-$inc_path .= PATH_SEPARATOR . dirname(__FILE__) . '/../config';
-ini_set('include_path', $inc_path);
+Mock::generatePartial('TrailsController', 'FilteringController',
+                      array('before_filter', 'action_filter'));
 
-# load required files
-require_once 'vendor/simpletest/unit_tester.php';
-require_once 'vendor/simpletest/reporter.php';
-require_once 'vendor/simpletest/collector.php';
+Mock::generatePartial('TrailsResponse', 'PartialMockResponse',
+                      array('send_header'));
 
-# load varstream for easier filesystem testing
-require_once 'varstream.php';
-
-
-# collect all tests
-$all = new TestSuite('All tests');
-$collector = new SimplePatternCollector('/test.php$/');
-$all->collect(dirname(__FILE__) . '/lib', $collector);
-$all->collect(dirname(__FILE__) . '/lib/classes', $collector);
-$all->collect(dirname(__FILE__) . '/lib/trails', $collector);
-
-# use text reporter if cli
-if (sizeof($_SERVER['argv']))
-  $all->run(new TextReporter());
-
-# use html reporter if cgi
-else
-  $all->run(new HtmlReporter());

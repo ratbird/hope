@@ -21,7 +21,7 @@ abstract class AuthenticatedController extends TrailsController
      * Callback function being called before an action is executed. If this
      * function does not return FALSE, the action will be called, otherwise
      * an error will be generated and processing will be aborted. If this function
-     * already #rendered or #redirected, further processing of the action is
+     * already //rendered or //redirected, further processing of the action is
      * withheld.
      *
      * @param string  Name of the action to perform.
@@ -33,7 +33,7 @@ abstract class AuthenticatedController extends TrailsController
     {
         global $auth;
 
-        # open session
+        // open session
         page_open(array(
             'sess' => 'Seminar_Session',
             'auth' => 'Seminar_Auth',
@@ -48,23 +48,23 @@ abstract class AuthenticatedController extends TrailsController
 
         // set up user session
         include 'lib/seminar_open.php';
-        # Set base layout
-        #
-        # If your controller needs another layout, overwrite your controller's
-        # before filter:
-        #
-        #   class YourController extends AuthenticatedController {
-        #     function before_filter(&$action, &$args) {
-        #       parent::before_filter($action, $args);
-        #       $this->setLayout("your_layout");
-        #     }
-        #   }
-        #
-        # or unset layout by sending:
-        #
-        #   $this->set_layout(NULL)
-        #
-        $this->setLayout($GLOBALS['template_factory']->open('layouts/base'));
+        // Set base layout
+        //
+        // If your controller needs another layout, overwrite your controller's
+        // before filter:
+        //
+        //   class YourController extends AuthenticatedController {
+        //     function before_filter(&$action, &$args) {
+        //       parent::before_filter($action, $args);
+        //       $this->setLayout("your_layout");
+        //     }
+        //   }
+        //
+        // or unset layout by sending:
+        //
+        //   $this->set_layout(NULL)
+        //
+        $this->set_layout($GLOBALS['template_factory']->open('layouts/base'));
     }
 
     /**

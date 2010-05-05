@@ -13,9 +13,8 @@
  */
 
 require_once 'app/models/siteinfo.php';
-require_once 'lib/trails/AuthenticatedController.php';
 
-class SiteinfoController extends StudipController
+class SiteinfoController extends TrailsController
 {
     private $si;
 

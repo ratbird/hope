@@ -164,7 +164,8 @@ class TrailsController
      * @return bool
      */
     public function before_filter(&$action, &$args)
-    {}
+    {
+    }
 
     /**
      * Callback function being called after an action is executed.
@@ -175,7 +176,8 @@ class TrailsController
      * @return void
      */
     public function after_filter($action, $args)
-    {}
+    {
+    }
 
     /**
      * <MethodDescription>
@@ -301,7 +303,7 @@ class TrailsController
      *
      * @return void
      */
-    function setLayout($layout)
+    function set_layout($layout)
     {
         $this->layout = $layout;
     }

@@ -152,7 +152,8 @@ function SetSelfAssign ($statusgruppe_id, $flag="0") {
 }
 
 function SetSelfAssignAll ($seminar_id, $flag = false) {
-    return DBManager::get()->exec("UPDATE statusgruppen SET selfassign = '".(int)$flag."' WHERE range_id = ".$db->quote($seminar_id));
+    $db = DBManager::get();
+    return $db->exec("UPDATE statusgruppen SET selfassign = '".(int)$flag."' WHERE range_id = ".$db->quote($seminar_id));
 }
 
 function SetSelfAssignExclusive ($seminar_id, $flag = false) {

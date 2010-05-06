@@ -191,19 +191,19 @@ var STUDIP = STUDIP || {};
 /**
  * This class helps to handle URLs of hyperlinks and change their parameters.
  * For example a javascript-page may open an item and the user expects other links
- * on the same page to "know" that this item is now open. But because we don't use 
+ * on the same page to "know" that this item is now open. But because we don't use
  * PHP session-variables here, this is difficult to use. This class can help. You
  * can overwrite the href-attribute of the link by:
- * 
+ *
  *  [code]
  *  link.href = STUDIP.URLHelper.getURL("adresse.php?hello=world#anchor");
  *  [/code]
- * Returns something like: 
+ * Returns something like:
  * "http://uni-adresse.de/studip/adresse.php?hello=world&mandatory=parameter#anchor"
- * 
+ *
  * That is now extended by a parameter that has earlier been identified as mandatory
  * so that all links returned by the URLHelper extend this adress by the parameter.
- * 
+ *
  * The javascript-code that opens the item can now manipulate these parameters:
  *  [code]
  *  URLHelper.setParam("data[open]", "Item_id"):
@@ -214,10 +214,10 @@ var STUDIP = STUDIP || {};
  *  [/code]
  * returns:
  * "http://uni-adresse.de/studip/adresse.php?hello=world&data[open]=Item_id#anchor"
- * 
+ *
  * For even bigger purposes you may want to change the URLs of ALL links on a page.
  * Then you write:
- *  
+ *
  *  [code]
  *  URLHelper.setParam("data[open]", "Item_id"):
  *  URLHelper.actualizeAllLinks();
@@ -288,7 +288,7 @@ STUDIP.URLHelper = {
     return adress;
   },
   /**
-   * Creates a link-adress with the mandatory parameters 
+   * Creates a link-adress with the mandatory parameters
    *  - like getURL but URI-encoded.
    * @param adress string: any string as an adress
    * @return: URI-encoded adress
@@ -299,10 +299,10 @@ STUDIP.URLHelper = {
     return encodeURI(adress);
   },
   /**
-   * remarks a parameter as mandatory - it will be added to all URLs the 
+   * remarks a parameter as mandatory - it will be added to all URLs the
    * URLHelper returns
    * @param param string: name of the parameter
-   * @param value string: value of the parameter 
+   * @param value string: value of the parameter
    */
   setParam: function (param, value) {
     if (value !== "") {
@@ -349,7 +349,7 @@ STUDIP.URLHelper = {
 STUDIP.study_area_selection = {
 
   initialize: function () {
-    // Ein bisschen hässlich im Sinne von "DRY", aber wie sonst?
+    // Ein bisschen hÃ¤sslich im Sinne von "DRY", aber wie sonst?
     $('input[name^="study_area_selection[add]"]').live('click', function () {
       var parameters = $(this).metadata();
       if (!(parameters && parameters.id && parameters.course_id)) {
@@ -387,7 +387,7 @@ STUDIP.study_area_selection = {
 
     $.ajax({
       type: 'POST',
-      url: STUDIP.study_area_selection.url('add', course_id || ''),
+      url: STUDIP.study_area_selection.url('add', course_id ||Â ''),
       data: ({id: id}),
       dataType: 'html',
       async: false, // Critical request thus synchronous
@@ -411,13 +411,13 @@ STUDIP.study_area_selection = {
 
     $.ajax({
       type: 'POST',
-      url: STUDIP.study_area_selection.url('remove', course_id || ''),
+      url: STUDIP.study_area_selection.url('remove', course_id ||Â ''),
       data: ({id: id}),
       dataType: 'html',
       async: false, // Critical request thus synchronous
       success: function (data) {
         $selection.fadeOut(function () {
-          $(this).remove(); 
+          $(this).remove();
         });
         if ($('#study_area_selection_selected li').length === 0) {
           $('#study_area_selection_none').fadeIn();
@@ -438,7 +438,7 @@ STUDIP.study_area_selection = {
   },
 
   expandSelection: function (id, course_id) {
-    $.post(STUDIP.study_area_selection.url('expand', course_id || '', id), function (data) {
+    $.post(STUDIP.study_area_selection.url('expand', course_id ||Â '', id), function (data) {
         $('#study_area_selection_selectables ul').replaceWith(data);
       }, 'html');
   },
@@ -747,16 +747,16 @@ STUDIP.Tabs = (function () {
 
 // hier ein paar "globale" Variablen, die nur in Funktionen des Filesystem-Namespace verwendet werden:
 STUDIP.Filesystem = {
-  hover_begin    : 0,             //erste Zeit, dass eine Datei über den Ordner ...hovered_folder bewegt wurde.
-  hovered_folder : '',            //letzter Ordner, über den eine gezogene Datei bewegt wurde.
+  hover_begin    : 0,             //erste Zeit, dass eine Datei Ã¼ber den Ordner ...hovered_folder bewegt wurde.
+  hovered_folder : '',            //letzter Ordner, Ã¼ber den eine gezogene Datei bewegt wurde.
   movelock       : false,         //wenn auf true gesetzt, findet gerade eine Animation statt.
-  sendstop       : false,         //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lädt sich gerade neu.
+  sendstop       : false,         //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lÃ¤dt sich gerade neu.
   getURL         : function () {
     return document.URL.split("#", 1)[0];
   },
   /**
-   * Lässt die gelben Pfeile verschwinden und ersetzt sie durch Anfassersymbole.
-   * Wichtig für Javascript-Nichtjavascript Behandlung. Nutzer ohne Javascript
+   * LÃ¤sst die gelben Pfeile verschwinden und ersetzt sie durch Anfassersymbole.
+   * Wichtig fÃ¼r Javascript-Nichtjavascript Behandlung. Nutzer ohne Javascript
    * sehen nur die gelben Pfeile zum Sortieren.
    */
   unsetarrows     : function () {
@@ -812,7 +812,7 @@ STUDIP.Filesystem.setdraggables = function () {
 };
 
 /**
- * deklariert Ordner als Objekte, in die Dateien gedropped werden können
+ * deklariert Ordner als Objekte, in die Dateien gedropped werden kÃ¶nnen
  */
 STUDIP.Filesystem.setdroppables = function () {
   $("div.droppable").droppable({
@@ -860,7 +860,7 @@ STUDIP.Filesystem.setdroppables = function () {
 };
 
 /**
- * Öffnet einen Dateiordner, wenn eine Datei lange genug drüber gehalten wird.
+ * Ã–ffnet einen Dateiordner, wenn eine Datei lange genug drÃ¼ber gehalten wird.
  */
 STUDIP.Filesystem.openhoveredfolder = function (md5_id) {
   var zeit = new Date();
@@ -878,7 +878,7 @@ STUDIP.Filesystem.openhoveredfolder = function (md5_id) {
 };
 
 /**
- * öffnet/schließt einen Dateiordner entweder per AJAX oder nur per Animation,
+ * Ã¶ffnet/schlieÃŸt einen Dateiordner entweder per AJAX oder nur per Animation,
  * wenn Inhalt schon geladen wurde.
  */
 STUDIP.Filesystem.changefolderbody = function (md5_id) {
@@ -891,7 +891,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
       $("#folder_" + md5_id + "_arrow_td").addClass('printhead2');
       $("#folder_" + md5_id + "_arrow_td").removeClass('printhead3');
       $("#folder_" + md5_id + "_body").slideUp(400);
-      STUDIP.URLHelper.removeParam('data[open]['+md5_id+']');
+      STUDIP.URLHelper.removeParam('data[open][' + md5_id + ']');
       STUDIP.URLHelper.actualizeAllLinks();
     } else {
       if ($("#folder_" + md5_id + "_body").html() === "") {
@@ -905,7 +905,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
           STUDIP.Filesystem.setdraggables();
           STUDIP.Filesystem.setdroppables();
           $("#folder_" + md5_id + "_body").slideDown(400);
-          STUDIP.URLHelper.setParam('data[open]['+md5_id+']', 1);
+          STUDIP.URLHelper.setParam('data[open][' + md5_id + ']', 1);
           STUDIP.URLHelper.actualizeAllLinks();
         });
       } else {
@@ -917,7 +917,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
         STUDIP.Filesystem.setdraggables();
         STUDIP.Filesystem.setdroppables();
         $("#folder_" + md5_id + "_body").slideDown(400);
-        STUDIP.URLHelper.setParam('data[open]['+md5_id+']', 1);
+        STUDIP.URLHelper.setParam('data[open][' + md5_id + ']', 1);
         STUDIP.URLHelper.actualizeAllLinks();
       }
     }
@@ -926,7 +926,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
 };
 
 /**
- * öffnet/schließt eine Datei entweder per AJAX oder nur per Animation,
+ * Ã¶ffnet/schlieÃŸt eine Datei entweder per AJAX oder nur per Animation,
  * wenn Inhalt schon geladen wurde.
  */
 
@@ -942,7 +942,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
       $("#file_" + md5_id + "_arrow_td").addClass('printhead2');
       $("#file_" + md5_id + "_arrow_td").removeClass('printhead3');
       $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
-      STUDIP.URLHelper.removeParam('data[open]['+md5_id+']');
+      STUDIP.URLHelper.removeParam('data[open][' + md5_id + ']');
       STUDIP.URLHelper.actualizeAllLinks();
     } else {
       if ($("#file_" + md5_id + "_body").html() === "") {
@@ -953,18 +953,18 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
           $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
           $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
           $("#file_" + md5_id + "_body").slideDown(400);
-          STUDIP.URLHelper.setParam('data[open]['+md5_id+']', 1);
+          STUDIP.URLHelper.setParam('data[open][' + md5_id + ']', 1);
           STUDIP.URLHelper.actualizeAllLinks();
         });
       } else {
-        //Falls der Dateikörper schon geladen ist.
+        //Falls der DateikÃ¶rper schon geladen ist.
         $("#file_" + md5_id + "_body_row").show();
         $("#file_" + md5_id + "_header").css('fontWeight', 'bold');
         $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
         $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
         $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
         $("#file_" + md5_id + "_body").slideDown(400);
-        STUDIP.URLHelper.setParam('data[open]['+md5_id+']', 1);
+        STUDIP.URLHelper.setParam('data[open][' + md5_id + ']', 1);
         STUDIP.URLHelper.actualizeAllLinks();
       }
     }
@@ -1036,9 +1036,9 @@ STUDIP.News = {
  * ------------------------------------------------------------------------ */
 $('a.load_via_ajax').live('click', function () {
   var parameters = $(this).metadata(),
-    indicator = parameters.indicator || this,
-    target = parameters.target || $(this).next(),
-    url = parameters.url || $(this).attr('href');
+    indicator = parameters.indicator ||Â this,
+    target = parameters.target ||Â $(this).next(),
+    url = parameters.url ||Â $(this).attr('href');
 
   // Special cases
   if ($(this).is('.internal_message')) {
@@ -1063,8 +1063,8 @@ $('.messagebox .messagebox_buttons a').live('click', function () {
   if ($(this).is('.details')) {
     $(this).closest('.messagebox').toggleClass('details_hidden');
   } else if ($(this).is('.close')) {
-    $(this).closest('.messagebox').fadeOut(function () { 
-      $(this).remove(); 
+    $(this).closest('.messagebox').fadeOut(function () {
+      $(this).remove();
     });
   }
   return false;
@@ -1077,7 +1077,7 @@ $('.messagebox .messagebox_buttons a').live('click', function () {
  * ------------------------------------------------------------------------ */
 
 STUDIP.QuickSearch = {
-  /** 
+  /**
    * a helper-function to generate a JS-object filled with the variables of a form
    * like "{ input1_name : input1_value, input2_name: input2_value }"
    * @param selector string: ID of an input in a form-tag
@@ -1101,7 +1101,7 @@ STUDIP.QuickSearch = {
    * the function to be called from the QuickSearch class template
    * @param name string: ID of input
    * @param url string: URL of AJAX-response
-   * @param func string: name of a possible function executed 
+   * @param func string: name of a possible function executed
    *        when user has selected something
    * @return: void
    */
@@ -1110,12 +1110,12 @@ STUDIP.QuickSearch = {
       disabled: true,
       source: function (input, add) {
         //get the variables that should be sent:
-        var send_vars = { 
-          form_data: STUDIP.QuickSearch.formToJSON('#' + name), 
-          request: input.term 
+        var send_vars = {
+          form_data: STUDIP.QuickSearch.formToJSON('#' + name),
+          request: input.term
         };
         $.getJSON(url, send_vars, function (data) {
-          var stripTags = /<(?:.|\s)*?>/g;
+          var stripTags = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
           var suggestions = [];  //an array of possible selections
           $.each(data, function (i, val) {
             //adding a label and a hidden item_id - don't use "value":
@@ -1169,7 +1169,7 @@ $(document).ready(function () {
   STUDIP.study_area_selection.initialize();
 
   $('.focus').each(function () {
-    if (!$(this).is('.if-empty') || $(this).val().length === 0) {
+    if (!$(this).is('.if-empty') ||Â $(this).val().length === 0) {
       $(this).focus();
       return false;
     }

@@ -349,7 +349,7 @@ STUDIP.URLHelper = {
 STUDIP.study_area_selection = {
 
   initialize: function () {
-    // Ein bisschen hÃ¤sslich im Sinne von "DRY", aber wie sonst?
+    // Ein bisschen hässlich im Sinne von "DRY", aber wie sonst?
     $('input[name^="study_area_selection[add]"]').live('click', function () {
       var parameters = $(this).metadata();
       if (!(parameters && parameters.id && parameters.course_id)) {
@@ -387,7 +387,7 @@ STUDIP.study_area_selection = {
 
     $.ajax({
       type: 'POST',
-      url: STUDIP.study_area_selection.url('add', course_id ||Â ''),
+      url: STUDIP.study_area_selection.url('add', course_id || ''),
       data: ({id: id}),
       dataType: 'html',
       async: false, // Critical request thus synchronous
@@ -411,7 +411,7 @@ STUDIP.study_area_selection = {
 
     $.ajax({
       type: 'POST',
-      url: STUDIP.study_area_selection.url('remove', course_id ||Â ''),
+      url: STUDIP.study_area_selection.url('remove', course_id || ''),
       data: ({id: id}),
       dataType: 'html',
       async: false, // Critical request thus synchronous
@@ -438,7 +438,7 @@ STUDIP.study_area_selection = {
   },
 
   expandSelection: function (id, course_id) {
-    $.post(STUDIP.study_area_selection.url('expand', course_id ||Â '', id), function (data) {
+    $.post(STUDIP.study_area_selection.url('expand', course_id || '', id), function (data) {
         $('#study_area_selection_selectables ul').replaceWith(data);
       }, 'html');
   },
@@ -549,16 +549,16 @@ STUDIP.Tabs = (function () {
 
 // hier ein paar "globale" Variablen, die nur in Funktionen des Filesystem-Namespace verwendet werden:
 STUDIP.Filesystem = {
-  hover_begin    : 0,             //erste Zeit, dass eine Datei Ã¼ber den Ordner ...hovered_folder bewegt wurde.
-  hovered_folder : '',            //letzter Ordner, Ã¼ber den eine gezogene Datei bewegt wurde.
+  hover_begin    : 0,             //erste Zeit, dass eine Datei über den Ordner ...hovered_folder bewegt wurde.
+  hovered_folder : '',            //letzter Ordner, über den eine gezogene Datei bewegt wurde.
   movelock       : false,         //wenn auf true gesetzt, findet gerade eine Animation statt.
-  sendstop       : false,         //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lÃ¤dt sich gerade neu.
+  sendstop       : false,         //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lädt sich gerade neu.
   getURL         : function () {
     return document.URL.split("#", 1)[0];
   },
   /**
-   * LÃ¤sst die gelben Pfeile verschwinden und ersetzt sie durch Anfassersymbole.
-   * Wichtig fÃ¼r Javascript-Nichtjavascript Behandlung. Nutzer ohne Javascript
+   * Lässt die gelben Pfeile verschwinden und ersetzt sie durch Anfassersymbole.
+   * Wichtig für Javascript-Nichtjavascript Behandlung. Nutzer ohne Javascript
    * sehen nur die gelben Pfeile zum Sortieren.
    */
   unsetarrows     : function () {
@@ -614,7 +614,7 @@ STUDIP.Filesystem.setdraggables = function () {
 };
 
 /**
- * deklariert Ordner als Objekte, in die Dateien gedropped werden kÃ¶nnen
+ * deklariert Ordner als Objekte, in die Dateien gedropped werden können
  */
 STUDIP.Filesystem.setdroppables = function () {
   $("div.droppable").droppable({
@@ -662,7 +662,7 @@ STUDIP.Filesystem.setdroppables = function () {
 };
 
 /**
- * Ã–ffnet einen Dateiordner, wenn eine Datei lange genug drÃ¼ber gehalten wird.
+ * Öffnet einen Dateiordner, wenn eine Datei lange genug drüber gehalten wird.
  */
 STUDIP.Filesystem.openhoveredfolder = function (md5_id) {
   var zeit = new Date();
@@ -680,7 +680,7 @@ STUDIP.Filesystem.openhoveredfolder = function (md5_id) {
 };
 
 /**
- * Ã¶ffnet/schlieÃŸt einen Dateiordner entweder per AJAX oder nur per Animation,
+ * öffnet/schließt einen Dateiordner entweder per AJAX oder nur per Animation,
  * wenn Inhalt schon geladen wurde.
  */
 STUDIP.Filesystem.changefolderbody = function (md5_id) {
@@ -728,7 +728,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
 };
 
 /**
- * Ã¶ffnet/schlieÃŸt eine Datei entweder per AJAX oder nur per Animation,
+ * öffnet/schließt eine Datei entweder per AJAX oder nur per Animation,
  * wenn Inhalt schon geladen wurde.
  */
 
@@ -759,7 +759,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
           STUDIP.URLHelper.actualizeAllLinks();
         });
       } else {
-        //Falls der DateikÃ¶rper schon geladen ist.
+        //Falls der Dateikörper schon geladen ist.
         $("#file_" + md5_id + "_body_row").show();
         $("#file_" + md5_id + "_header").css('fontWeight', 'bold');
         $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
@@ -838,9 +838,9 @@ STUDIP.News = {
  * ------------------------------------------------------------------------ */
 $('a.load_via_ajax').live('click', function () {
   var parameters = $(this).metadata(),
-    indicator = parameters.indicator ||Â this,
-    target = parameters.target ||Â $(this).next(),
-    url = parameters.url ||Â $(this).attr('href');
+    indicator = parameters.indicator || this,
+    target = parameters.target || $(this).next(),
+    url = parameters.url || $(this).attr('href');
 
   // Special cases
   if ($(this).is('.internal_message')) {
@@ -971,7 +971,7 @@ $(document).ready(function () {
   STUDIP.study_area_selection.initialize();
 
   $('.focus').each(function () {
-    if (!$(this).is('.if-empty') ||Â $(this).val().length === 0) {
+    if (!$(this).is('.if-empty') || $(this).val().length === 0) {
       $(this).focus();
       return false;
     }

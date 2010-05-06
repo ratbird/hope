@@ -183,6 +183,166 @@
  * ------------------------------------------------------------------------ */
 var STUDIP = STUDIP || {};
 
+
+/* ------------------------------------------------------------------------
+ * URLHelper
+ * ------------------------------------------------------------------------ */
+
+/**
+ * This class helps to handle URLs of hyperlinks and change their parameters.
+ * For example a javascript-page may open an item and the user expects other links
+ * on the same page to "know" that this item is now open. But because we don't use 
+ * PHP session-variables here, this is difficult to use. This class can help. You
+ * can overwrite the href-attribute of the link by:
+ * 
+ *  [code]
+ *  link.href = STUDIP.URLHelper.getURL("adresse.php?hello=world#anchor");
+ *  [/code]
+ * Returns something like: 
+ * "http://uni-adresse.de/studip/adresse.php?hello=world&mandatory=parameter#anchor"
+ * 
+ * That is now extended by a parameter that has earlier been identified as mandatory
+ * so that all links returned by the URLHelper extend this adress by the parameter.
+ * 
+ * The javascript-code that opens the item can now manipulate these parameters:
+ *  [code]
+ *  URLHelper.setParam("data[open]", "Item_id"):
+ *  [/code]
+ * and
+ *  [code]
+ *  link.href = STUDIP.URLHelper.getURL("adresse.php?hello=world#anchor");
+ *  [/code]
+ * returns:
+ * "http://uni-adresse.de/studip/adresse.php?hello=world&data[open]=Item_id#anchor"
+ * 
+ * For even bigger purposes you may want to change the URLs of ALL links on a page.
+ * Then you write:
+ *  
+ *  [code]
+ *  URLHelper.setParam("data[open]", "Item_id"):
+ *  URLHelper.actualizeAllLinks();
+ *  [/code]
+ */
+STUDIP.URLHelper = {
+  params: {},     //static variable to save and serve variables
+  badParams: {},  //static variable for variables that should not appear in links
+  /**
+   * method to extend short URLs like "about.php" to "http://.../about.php"
+   */
+  extendURL: function (adress) {
+    //adding the absolute URI path of studip:
+    if ((adress.indexOf("http://") === -1) && (adress.substr(0, adress.indexOf("?")) !== "")) {
+      adress = STUDIP.ABSOLUTE_URI_STUDIP + adress;
+    }
+    return adress;
+  },
+  /**
+   * Creates an URL with the mandatory parameters
+   * @param adress string: any adress-string
+   * @return: adress with all necessary parameters - non URI-encoded!
+   */
+  getURL: function (adress) {
+    adress = STUDIP.URLHelper.extendURL(adress);
+    // splitting the adress:
+    adress = adress.split("#");
+    var anchor = (adress.length > 1) ? adress[adress.length - 1] : "";
+    adress = adress[0].split("?");
+    var parameters = (adress.length > 1) ? adress[adress.length - 1].split("&") : [];
+    parameters = $.map(parameters, function (param, index) {
+      return new Array(param.split("="));
+    });
+    adress = adress[0];
+    // add new parameter:
+    $.each(this.params, function (param_key, param_value) {
+      var vorhanden = false;  //a small variable to check if param exists
+      parameters = $.map(parameters, function (oldparam) {
+        if (oldparam[0] === param_key) {
+          vorhanden = true;
+          return [[param_key, param_value]];
+        } else {
+          return new Array(oldparam);
+        }
+      });
+      if (vorhanden === false) {
+        parameters.push([param_key, param_value]);
+      }
+    });
+    // delete unwanted parameters:
+    for (var i = parameters.length - 1; i >= 0; i -= 1) {
+      if (STUDIP.URLHelper.badParams[parameters[i][0]] === true) {
+        parameters.splice(i, 1);
+      }
+    }
+    // glueing together:
+    if (parameters.length > 0) {
+      parameters = $.map(parameters, function (param) {
+        return param[0] + "=" + param[param.length - 1];
+      });
+    }
+    if (parameters.length > 0) {
+      adress += "?" + parameters.join("&");
+    }
+    if (anchor !== "") {
+      adress += "#" + anchor;
+    }
+    return adress;
+  },
+  /**
+   * Creates a link-adress with the mandatory parameters 
+   *  - like getURL but URI-encoded.
+   * @param adress string: any string as an adress
+   * @return: URI-encoded adress
+   */
+  getLink: function (adress) {
+    adress = decodeURI(adress);
+    adress = STUDIP.URLHelper.getURL(adress);
+    return encodeURI(adress);
+  },
+  /**
+   * remarks a parameter as mandatory - it will be added to all URLs the 
+   * URLHelper returns
+   * @param param string: name of the parameter
+   * @param value string: value of the parameter 
+   */
+  setParam: function (param, value) {
+    if (value !== "") {
+      this.params[param] = value;
+      if (this.badParams[param] === true) {
+        delete this.badParams[param];
+      }
+    } else {
+      STUDIP.URLHelper.stronglyRemoveParam(param);
+    }
+  },
+  /**
+   * Removes the parameter from the list of the mandatory params
+   */
+  removeParam: function (param) {
+    delete this.params[param];
+  },
+  /**
+   * Removes the parameter from the list of the mandatory params and adds it to
+   * a list of unallowed parameters. These parameters will be deleted when found
+   * in URLs.
+   */
+  stronglyRemoveParam: function (param) {
+    STUDIP.URLHelper.removeParam(param);
+    if (!this.badParams[param]) {
+      this.badParams[param] = true;
+    }
+  },
+  /**
+   * Actualizes the URL of all link in the document
+   */
+  actualizeAllLinks: function () {
+    $('a:not(.fixed, .extern)').each(function (index, anchor) {
+      var href = $(anchor).attr('href');   //the adress of the link to be modified
+      href = STUDIP.URLHelper.getLink(href);
+      $(anchor).attr('href', href);
+    });
+  }
+};
+
 /* ------------------------------------------------------------------------
  * study area selection for courses
  * ------------------------------------------------------------------------ */
@@ -731,7 +891,8 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
       $("#folder_" + md5_id + "_arrow_td").addClass('printhead2');
       $("#folder_" + md5_id + "_arrow_td").removeClass('printhead3');
       $("#folder_" + md5_id + "_body").slideUp(400);
-      //URLHelper.removeParam('data[open]['+md5_id+']');
+      STUDIP.URLHelper.removeParam('data[open]['+md5_id+']');
+      STUDIP.URLHelper.actualizeAllLinks();
     } else {
       if ($("#folder_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
@@ -744,7 +905,8 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
           STUDIP.Filesystem.setdraggables();
           STUDIP.Filesystem.setdroppables();
           $("#folder_" + md5_id + "_body").slideDown(400);
-          //URLHelper.setParam('data[open]['+md5_id+']', 1);
+          STUDIP.URLHelper.setParam('data[open]['+md5_id+']', 1);
+          STUDIP.URLHelper.actualizeAllLinks();
         });
       } else {
         $("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
@@ -755,7 +917,8 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
         STUDIP.Filesystem.setdraggables();
         STUDIP.Filesystem.setdroppables();
         $("#folder_" + md5_id + "_body").slideDown(400);
-        //URLHelper.setParam('data[open]['+md5_id+']', 1);
+        STUDIP.URLHelper.setParam('data[open]['+md5_id+']', 1);
+        STUDIP.URLHelper.actualizeAllLinks();
       }
     }
   }
@@ -779,6 +942,8 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
       $("#file_" + md5_id + "_arrow_td").addClass('printhead2');
       $("#file_" + md5_id + "_arrow_td").removeClass('printhead3');
       $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
+      STUDIP.URLHelper.removeParam('data[open]['+md5_id+']');
+      STUDIP.URLHelper.actualizeAllLinks();
     } else {
       if ($("#file_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
@@ -788,6 +953,8 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
           $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
           $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
           $("#file_" + md5_id + "_body").slideDown(400);
+          STUDIP.URLHelper.setParam('data[open]['+md5_id+']', 1);
+          STUDIP.URLHelper.actualizeAllLinks();
         });
       } else {
         //Falls der Dateikörper schon geladen ist.
@@ -797,6 +964,8 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
         $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
         $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
         $("#file_" + md5_id + "_body").slideDown(400);
+        STUDIP.URLHelper.setParam('data[open]['+md5_id+']', 1);
+        STUDIP.URLHelper.actualizeAllLinks();
       }
     }
   }

@@ -249,7 +249,7 @@ STUDIP.URLHelper = {
     adress = adress[0].split("?");
     var parameters = (adress.length > 1) ? adress[adress.length - 1].split("&") : [];
     parameters = $.map(parameters, function (param, index) {
-      return new Array(param.split("="));
+      return [param.split("=")];
     });
     adress = adress[0];
     // add new parameter:
@@ -260,7 +260,7 @@ STUDIP.URLHelper = {
           vorhanden = true;
           return [[param_key, param_value]];
         } else {
-          return new Array(oldparam);
+          return [oldparam];
         }
       });
       if (vorhanden === false) {
@@ -448,205 +448,7 @@ STUDIP.study_area_selection = {
     $('#study_area_selection_selected li:odd').removeClass('odd').addClass('even');
     $('#study_area_selection_selected li:even').removeClass('even').addClass('odd');
   }
-
-/*
-  swishAndFlick: function (id, target) {
-    var element = $('.study_area_selection_add_' + id + ':first')
-    // clone element
-    var clone = element.cloneNode(true);
-    element.parentNode.insertBefore(clone, element);
-    clone.absolutize();
-
-    target = $(target);
-    var o = target.cumulativeOffset();
-    o[1] += target.getHeight();
-
-    var effect = new Effect.Parallel(
-      [
-        new Effect.Move(clone, { sync: true, x: o[0], y: o[1], mode: "absolute"}),
-        new Effect.Opacity(clone, { sync: true, from: 1, to: 0})
-      ],
-      {
-        duration:    0.4,
-        delay:       0,
-        transition:  Effect.Transitions.sinoidal,
-        afterFinish: function () {
-          clone.remove();
-        }
-      });
-  }
-*/
 };
-
-/*
-STUDIP.OverDiv = Class.create({
-  initialize: function (options) {
-    this.options = {
-      id: '',
-      title: '',
-      content: '',
-      content_url: '',
-      content_element_type: '',
-      position: 'bottom right',
-      width: 0,
-      is_moveable: true,
-      initiator: null,
-      event_type: 'mouseover'
-    };
-    this.is_drawn = false;
-    this.is_hidden = true;
-    this.is_scaled = false;
-    this.id = '';
-    this.container = null;
-    this.title = null;
-    this.content = null;
-    Object.extend(this.options, options || {});
-    this.id = this.options.id;
-    this.initiator = $(this.options.initiator);
-    if (options.content_element_type) {
-      this.options.content_url = STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/content_element/get_formatted/' + options.content_element_type + '/' + this.id;
-    }
-  },
-
-  draw: function () {
-    if (!this.is_drawn) {
-      var outer = new Element('div', {className: 'overdiv', id: 'overdiv_' + this.id});
-      var inner = new Element('div', {className: 'title'});
-      var title = new Element('h4', {className: 'title'});
-      var closer = new Element('a', {className: 'title', href: '#'});
-      var content = new Element('div', {className: 'content'});
-      if (this.options.is_moveable) {
-        closer.appendChild(new Element('img', {src: STUDIP.ASSETS_URL + 'images/hide.gif'}));
-        Event.observe(closer, 'click', this.hide.bindAsEventListener(this));
-        Event.observe(inner, 'dblclick', this.scale.bindAsEventListener(this));
-        var draggable = new Draggable(outer, {scroll: window, handle: inner});
-      }
-      title.update(this.options.title);
-      content.update(this.options.content);
-      this.title = title;
-      this.content = content;
-      inner.appendChild(title);
-      inner.appendChild(closer);
-      outer.appendChild(inner);
-      outer.appendChild(content);
-      this.container = outer;
-      this.container.absolutize();
-      this.container.setStyle({width: this.getWidth() + 'px'});
-      this.container.hide();
-      $('overdiv_container').appendChild(this.container);
-      this.is_drawn = true;
-      if (this.options.content_url) {
-        var self = this;
-        var request = new Ajax.Request(this.options.content_url, {
-            method: 'get',
-            onSuccess: function (transport) {
-              self.update(transport);
-            }
-          }
-        );
-      }
-    }
-  },
-
-  update: function (transport) {
-    this.title.update(transport.responseJSON.title);
-    this.content.update(transport.responseJSON.content);
-  },
-
-  getOffset: function () {
-    var ho = this.initiator.getWidth() / 2;
-    var vo = this.initiator.getHeight() / 2;
-    var positions = $w(this.options.position);
-    for (var i = 0; i < positions.length; i += 1) {
-      switch (positions[i].toLowerCase()) {
-      case 'left':
-        ho = this.container.getWidth() * -1;
-        break;
-      case 'right':
-        ho = this.initiator.getWidth();
-        break;
-      case 'center':
-        ho = this.initiator.getWidth() / 2;
-        break;
-      case 'top':
-        vo = this.container.getHeight() * -1;
-        break;
-      case 'middle':
-        vo = this.initiator.getHeight() / 2;
-        break;
-      case 'bottom':
-        vo = this.initiator.getHeight();
-        break;
-      default:
-      }
-    }
-    return {left: Math.floor(ho), top: Math.floor(vo) };
-  },
-
-  getWidth: function () {
-    return this.options.width > 0 ? this.options.width : Math.floor(document.viewport.getWidth() / 3);
-  },
-
-  show: function (event) {
-    this.draw();
-    var offset = this.getOffset();
-    this.container.clonePosition(this.initiator, {setWidth: false, setHeight: false, offsetLeft: offset.left, offsetTop: offset.top});
-    this.container.setStyle({width: this.getWidth() + 'px'});
-    this.container.show();
-    this.is_hidden = false;
-    if (this.options.event_type === 'mouseover') {
-      Event.observe(this.initiator, 'mouseout', this.hide.bindAsEventListener(this));
-    }
-    event.stop();
-  },
-
-  hide: function (event) {
-    if (!(this.options.is_moveable && event.relatedTarget && $(event.relatedTarget).descendantOf(this.container))) {
-      this.container.hide();
-      this.is_hidden = true;
-    }
-    if (this.options.event_type === 'mouseover') {
-      Event.stopObserving(this.initiator, 'mouseout', this.hide.bindAsEventListener(this));
-    }
-    event.stop();
-  },
-
-  scale: function (event) {
-    var effect = new Effect.Scale(this.container, this.is_scaled ? 50 : 200, {
-      scaleContent: false,
-      scaleY: false
-    });
-    this.is_scaled = !this.is_scaled;
-  }
-
-});
-
-Object.extend(STUDIP.OverDiv, {
-    overdivs: {},
-    BindInline: function (options, event) {
-      event = Event.extend(event);
-      if (!this.overdivs[options.id]) {
-        options.event_type = event.type;
-        this.overdivs[options.id] = new STUDIP.OverDiv(options);
-      } else {
-        this.overdivs[options.id].initiator = $(options.initiator);
-      }
-      this.overdivs[options.id].show(event);
-      return false;
-    },
-
-    BindToEvent: function (options, event_type) {
-      event_type = event_type || 'mouseover';
-      if (!this.overdivs[options.id]) {
-        options.event_type = event.type;
-        this.overdivs[options.id] = new STUDIP.OverDiv(options);
-        Event.observe($(options.initiator), event_type, this.overdivs[options.id].show.bindAsEventListener(this.overdivs[options.id]));
-      }
-      return this.overdivs[options.id];
-    }
-  }
-);
-*/
 
 /* ------------------------------------------------------------------------
  * Markup toolbar

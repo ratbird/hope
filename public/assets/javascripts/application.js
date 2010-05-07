@@ -226,15 +226,32 @@ var STUDIP = STUDIP || {};
 STUDIP.URLHelper = {
   params: {},     //static variable to save and serve variables
   badParams: {},  //static variable for variables that should not appear in links
+  base_url: null, //the base url for all links
+  /**
+   * base URL for all links generated from relative URLs
+   */
+  setBaseURL: function (url) {
+    this.base_url = url;
+  },
   /**
    * method to extend short URLs like "about.php" to "http://.../about.php"
    */
-  extendURL: function (adress) {
-    //adding the absolute URI path of studip:
-    if ((adress.indexOf("http://") === -1) && (adress.substr(0, adress.indexOf("?")) !== "")) {
-      adress = STUDIP.ABSOLUTE_URI_STUDIP + adress;
+  resolveURL: function (adress) {
+    if (this.base_url === null) {
+      this.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
     }
-    return adress;
+    if (this.base_url === "" 
+        || adress.match(/^[a-z]+:/) !== null 
+        || adress.charAt(0) === "?") {
+      //this method cannot do any more:
+      return adress;
+    }
+    var base_url = this.base_url;
+    if (adress.charAt(0) === "/") {
+      var host = this.base_url.match(/^[a-z]+:\/\/[\w:.-]+/);
+      base_url = host ? host : '';
+    }
+    return base_url + adress;
   },
   /**
    * Creates an URL with the mandatory parameters
@@ -242,7 +259,7 @@ STUDIP.URLHelper = {
    * @return: adress with all necessary parameters - non URI-encoded!
    */
   getURL: function (adress) {
-    adress = STUDIP.URLHelper.extendURL(adress);
+    adress = STUDIP.URLHelper.resolveURL(adress);
     // splitting the adress:
     adress = adress.split("#");
     var anchor = (adress.length > 1) ? adress[adress.length - 1] : "";
@@ -304,20 +321,20 @@ STUDIP.URLHelper = {
    * @param param string: name of the parameter
    * @param value string: value of the parameter
    */
-  setParam: function (param, value) {
+  addLinkParam: function (param, value) {
     if (value !== "") {
       this.params[param] = value;
       if (this.badParams[param] === true) {
         delete this.badParams[param];
       }
     } else {
-      STUDIP.URLHelper.stronglyRemoveParam(param);
+      STUDIP.URLHelper.stronglyRemoveLinkParam(param);
     }
   },
   /**
    * Removes the parameter from the list of the mandatory params
    */
-  removeParam: function (param) {
+  removeLinkParam: function (param) {
     delete this.params[param];
   },
   /**
@@ -325,8 +342,8 @@ STUDIP.URLHelper = {
    * a list of unallowed parameters. These parameters will be deleted when found
    * in URLs.
    */
-  stronglyRemoveParam: function (param) {
-    STUDIP.URLHelper.removeParam(param);
+  stronglyRemoveLinkParam: function (param) {
+    STUDIP.URLHelper.removeLinkParam(param);
     if (!this.badParams[param]) {
       this.badParams[param] = true;
     }
@@ -334,8 +351,11 @@ STUDIP.URLHelper = {
   /**
    * Actualizes the URL of all link in the document
    */
-  actualizeAllLinks: function () {
-    $('a:not(.fixed, .extern)').each(function (index, anchor) {
+  actualizeAllLinks: function (context_selector) {
+    if (context_selector === undefined) { //yes, "==" is correct
+      context_selector = "";
+    }
+    $(context_selector + ' a:not(.fixed, .extern)').each(function (index, anchor) {
       var href = $(anchor).attr('href');   //the adress of the link to be modified
       href = STUDIP.URLHelper.getLink(href);
       $(anchor).attr('href', href);
@@ -693,8 +713,8 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
       $("#folder_" + md5_id + "_arrow_td").addClass('printhead2');
       $("#folder_" + md5_id + "_arrow_td").removeClass('printhead3');
       $("#folder_" + md5_id + "_body").slideUp(400);
-      STUDIP.URLHelper.removeParam('data[open][' + md5_id + ']');
-      STUDIP.URLHelper.actualizeAllLinks();
+      STUDIP.URLHelper.removeLinkParam('data[open][' + md5_id + ']');
+      STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
     } else {
       if ($("#folder_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
@@ -707,8 +727,8 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
           STUDIP.Filesystem.setdraggables();
           STUDIP.Filesystem.setdroppables();
           $("#folder_" + md5_id + "_body").slideDown(400);
-          STUDIP.URLHelper.setParam('data[open][' + md5_id + ']', 1);
-          STUDIP.URLHelper.actualizeAllLinks();
+          STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
+          STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
         });
       } else {
         $("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
@@ -719,8 +739,8 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
         STUDIP.Filesystem.setdraggables();
         STUDIP.Filesystem.setdroppables();
         $("#folder_" + md5_id + "_body").slideDown(400);
-        STUDIP.URLHelper.setParam('data[open][' + md5_id + ']', 1);
-        STUDIP.URLHelper.actualizeAllLinks();
+        STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
+        STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
       }
     }
   }
@@ -744,8 +764,8 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
       $("#file_" + md5_id + "_arrow_td").addClass('printhead2');
       $("#file_" + md5_id + "_arrow_td").removeClass('printhead3');
       $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
-      STUDIP.URLHelper.removeParam('data[open][' + md5_id + ']');
-      STUDIP.URLHelper.actualizeAllLinks();
+      STUDIP.URLHelper.removeLinkParam('data[open][' + md5_id + ']');
+      STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
     } else {
       if ($("#file_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
@@ -755,8 +775,8 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
           $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
           $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
           $("#file_" + md5_id + "_body").slideDown(400);
-          STUDIP.URLHelper.setParam('data[open][' + md5_id + ']', 1);
-          STUDIP.URLHelper.actualizeAllLinks();
+          STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
+          STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
         });
       } else {
         //Falls der Dateikörper schon geladen ist.
@@ -766,8 +786,8 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
         $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
         $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
         $("#file_" + md5_id + "_body").slideDown(400);
-        STUDIP.URLHelper.setParam('data[open][' + md5_id + ']', 1);
-        STUDIP.URLHelper.actualizeAllLinks();
+        STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
+        STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
       }
     }
   }

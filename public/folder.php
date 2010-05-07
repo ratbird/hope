@@ -859,6 +859,7 @@ echo "\n<body onUnLoad=\"upload_end()\">";
         print "</font></blockquote>";
     }
     
+    print "<div id=\"filesystem_area\">";
     //Treeview in Ordnerstruktur
     if ($folder_system_data["cmd"]=="tree") {
         
@@ -896,7 +897,6 @@ div.droppable.hover {
                         false);
             }
         }
-        //display_folder_system($range_id, 0, $folder_system_data["open"], '', $change, $folder_system_data["move"], $folder_system_data["upload"], $folder_system_data["refresh"], $folder_system_data["link"]);
         
         
         //Weitere Ordner:
@@ -1083,7 +1083,8 @@ div.droppable.hover {
         
         print '</td><td width=1px class="blank">&nbsp;</td></tr>';
     }
-
+    print "<div>";
+    
     //und Form wieder schliessen
     if ($change)
         echo "\n</form>";

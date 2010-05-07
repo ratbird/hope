@@ -240,15 +240,15 @@ STUDIP.URLHelper = {
     if (this.base_url === null) {
       this.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
     }
-    if (this.base_url === "" 
-        || adress.match(/^[a-z]+:/) !== null 
-        || adress.charAt(0) === "?") {
+    if (this.base_url === "" ||
+        adress.match(/^[a-z]+:/) !== null ||
+        adress.charAt(0) === "?") {
       //this method cannot do any more:
       return adress;
     }
     var base_url = this.base_url;
     if (adress.charAt(0) === "/") {
-      var host = this.base_url.match(/^[a-z]+:\/\/[\w:.-]+/);
+      var host = this.base_url.match(/^[a-z]+:\/\/[\w:.\-]+/);
       base_url = host ? host : '';
     }
     return base_url + adress;

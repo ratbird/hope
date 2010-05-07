@@ -220,7 +220,7 @@ var STUDIP = STUDIP || {};
  *
  *  [code]
  *  URLHelper.setParam("data[open]", "Item_id"):
- *  URLHelper.actualizeAllLinks();
+ *  URLHelper.updateAllLinks();
  *  [/code]
  */
 STUDIP.URLHelper = {
@@ -351,7 +351,7 @@ STUDIP.URLHelper = {
   /**
    * Actualizes the URL of all link in the document
    */
-  actualizeAllLinks: function (context_selector) {
+  updateAllLinks: function (context_selector) {
     if (context_selector === undefined) {
       context_selector = "";
     }
@@ -714,7 +714,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
       $("#folder_" + md5_id + "_arrow_td").removeClass('printhead3');
       $("#folder_" + md5_id + "_body").slideUp(400);
       STUDIP.URLHelper.removeLinkParam('data[open][' + md5_id + ']');
-      STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
+      STUDIP.URLHelper.updateAllLinks("#filesystem_area");
     } else {
       if ($("#folder_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
@@ -728,7 +728,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
           STUDIP.Filesystem.setdroppables();
           $("#folder_" + md5_id + "_body").slideDown(400);
           STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
-          STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
+          STUDIP.URLHelper.updateAllLinks("#filesystem_area");
         });
       } else {
         $("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
@@ -740,7 +740,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
         STUDIP.Filesystem.setdroppables();
         $("#folder_" + md5_id + "_body").slideDown(400);
         STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
-        STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
+        STUDIP.URLHelper.updateAllLinks("#filesystem_area");
       }
     }
   }
@@ -765,7 +765,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
       $("#file_" + md5_id + "_arrow_td").removeClass('printhead3');
       $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
       STUDIP.URLHelper.removeLinkParam('data[open][' + md5_id + ']');
-      STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
+      STUDIP.URLHelper.updateAllLinks("#filesystem_area");
     } else {
       if ($("#file_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
@@ -776,7 +776,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
           $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
           $("#file_" + md5_id + "_body").slideDown(400);
           STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
-          STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
+          STUDIP.URLHelper.updateAllLinks("#filesystem_area");
         });
       } else {
         //Falls der Dateikörper schon geladen ist.
@@ -787,7 +787,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
         $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
         $("#file_" + md5_id + "_body").slideDown(400);
         STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
-        STUDIP.URLHelper.actualizeAllLinks("#filesystem_area");
+        STUDIP.URLHelper.updateAllLinks("#filesystem_area");
       }
     }
   }

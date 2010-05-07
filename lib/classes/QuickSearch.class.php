@@ -124,9 +124,7 @@ class QuickSearch {
         $this->name = $name;
         $this->withButton = false;
         $this->avatarLike = "";
-        if (in_array($search, array("username", "user_id", "Institut_id", "Seminar_id", "Arbeitsgruppe_id"))) {
-            $this->search = $search;
-        } elseif ($search instanceof SearchType) {
+        if ($search instanceof SearchType) {
             $this->search = $search;
         } else {
             $this->search = NULL;
@@ -164,23 +162,6 @@ class QuickSearch {
     public function defaultValue($valueID, $valueName) {
         $this->defaultID = $valueID;
         $this->defaultName = $valueName;
-        return $this;
-    }
-    
-    /**
-     * allows to search for special items, defined by the given query
-     * @param query:    an sql-query like "SELECT user_id, Nachname FROM auth_user_md5 WHERE LOCATE(:input, Nachname) > 0 AND perms = 'dozent'"
-     * The ":input" will be replaced by the search-text
-     * @param beschriftung:    text to describe what the search is for; only displayed when JavaScript is on.
-     * @param avatarLike:    if set to user_id, username, Seminar_id or Institute_id,
-     * in the Javascript-selectfield will be displayed a small avatar for that person, course or institute.
-     * @return self
-     */
-    public function specialSQL($query, $beschriftung = "", $avatarLike = "") {
-        $this->specialQuery = $query;
-        $this->specialBeschriftung = $beschriftung;
-        $this->search = "special";
-        $this->avatarLike = $avatarLike;
         return $this;
     }
     
@@ -323,88 +304,9 @@ class QuickSearch {
             }
             return $results;
         } else {
-            $db = DBManager::get();
-
-            if ($this->search == "username") {
-                $statement = $db->prepare("SELECT DISTINCT auth_user_md5.username, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) " .
-                    "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
-                    "WHERE CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
-                        "OR auth_user_md5.username LIKE :input ORDER BY user_info.score DESC LIMIT 5", array(PDO::FETCH_NUM));
-                $statement->execute(array(':input' => "%".$request."%"));
-                $result = $statement->fetchAll();
-                return $result;
-            }
-            if ($this->search == "user_id") {
-                $statement = $db->prepare("SELECT DISTINCT auth_user_md5.user_id, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) " .
-                    "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
-                    "WHERE CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname)) LIKE :input " .
-                        "OR auth_user_md5.username LIKE :input ORDER BY user_info.score DESC LIMIT 5", array(PDO::FETCH_NUM));
-                $statement->execute(array(':input' => "%".$request."%"));
-                $result = $statement->fetchAll();
-                return $result;
-            }
-            if ($this->search == "Institut_id") {
-                $statement = $db->prepare("SELECT DISTINCT Institute.Institut_id, Institute.Name " .
-                    "FROM Institute " .
-                        "LEFT JOIN range_tree ON (range_tree.item_id = Institute.Institut_id) " .
-                    "WHERE Institute.Name LIKE :input " .
-                        "OR Institute.Strasse LIKE :input " .
-                        "OR Institute.email LIKE :input " .
-                        "OR range_tree.name LIKE :input " .
-                    "ORDER BY Institute.Name LIMIT 5", array(PDO::FETCH_NUM));
-                $statement->execute(array(':input' => "%".$request."%"));
-                $result = $statement->fetchAll();
-                return $result;
-            }
-            if ($this->search == "Seminar_id") {
-                $statement = $db->prepare("SELECT DISTINCT seminare.Seminar_id, seminare.Name " .
-                    "FROM seminare " .
-                        "LEFT JOIN seminar_user ON (seminare.Seminar_id = seminar_user.Seminar_id AND seminar_user.status = 'dozent') " .
-                        "LEFT JOIN auth_user_md5 ON (seminar_user.user_id = auth_user_md5.user_id) " .
-                    "WHERE (seminare.Name LIKE :input " .
-                            "OR seminare.Untertitel LIKE :input " .
-                            "OR seminare.Ort LIKE :input " .
-                            "OR seminare.Sonstiges LIKE :input " .
-                            "OR seminare.Beschreibung LIKE :input) " .
-                        "AND seminare.visible = 1 " .
-                        "AND seminare.status != '99' " .
-                //Suche nach Dozent hat noch nicht funktioniert
-                    "ORDER BY seminare.Name LIMIT 5", array(PDO::FETCH_NUM));
-                $statement->execute(array(':input' => "%".$request."%"));
-                $result = $statement->fetchAll();
-                return $result;
-            }
-            if ($this->search == "Arbeitsgruppe_id") {
-                $statement = $db->prepare("SELECT DISTINCT seminare.Seminar_id, seminare.Name " .
-                    "FROM seminare " .
-                        "LEFT JOIN seminar_user ON (seminare.Seminar_id = seminar_user.Seminar_id AND seminar_user.status = 'dozent') " .
-                        "LEFT JOIN auth_user_md5 ON (seminar_user.user_id = auth_user_md5.user_id) " .
-                    "WHERE (seminare.Name LIKE :input " .
-                            "OR seminare.Untertitel LIKE :input " .
-                            "OR seminare.Ort LIKE :input " .
-                            "OR seminare.Sonstiges LIKE :input " .
-                            "OR seminare.Beschreibung LIKE :input) " .
-                        "AND seminare.visible = 1 " .
-                        "AND seminare.status IN ('".implode("', '", studygroup_sem_types())."') " .
-                    //Suche nach Dozent hat noch nicht funktioniert
-                    "ORDER BY seminare.Name LIMIT 5", array(PDO::FETCH_NUM));
-                $statement->execute(array(':input' => "%".$request."%"));
-                $result = $statement->fetchAll();
-                return $result;
-            }
-            if ($this->search == "special") {
-                $statement = $db->prepare($this->specialQuery, array(PDO::FETCH_NUM));
-                try {
-                    $statement->execute(array(':input' => "%".$request."%"));
-                    $result = $statement->fetchAll();
-                } catch (Exception $exception) {
-                    return array(array("", $exception->getMessage()));
-                }
-                return $result;
-            }
+            $result = array(array("", _("Kein korrektes Suchobjekt angegeben.")));
+            return $result;
         }
-        $result = array(array("", ""));
-        return $result;
     }
     
     /**
@@ -416,20 +318,7 @@ class QuickSearch {
         if ($this->search instanceof SearchType) {
         	return $this->search->getTitle();
         } else {
-            switch ($this->search) {
-                case "username":
-                    return _("Nutzer suchen");
-                case "user_id":
-                    return _("Nutzer suchen");
-                case "Institut_id":
-                    return _("Einrichtung suchen");
-                case "Seminar_id":
-                    return _("Veranstaltungen suchen");
-                case "Arbeitsgruppe_id":
-                    return _("Arbeitsgruppe suchen");
-                case "special":
-                    return $this->specialBeschriftung;
-            }
+            return "";
         }
     }
 }

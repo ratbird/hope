@@ -153,7 +153,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
                     $out[] = _("KeineN NutzerIn gefunden.").'<a name="a"></a>';
                 $out[] = '</font><br>';
                 //$out[] = '&nbsp;<input type="TEXT" size="30" maxlength="255" name="search_exp">&nbsp;';
-                $out[] = QuickSearch::get("select_username", "username")
+                $out[] = QuickSearch::get("select_username", new StandardSearch("username"))
                                         ->withButton()
                                         ->render();
                 //$out[] = '&nbsp;<input type="IMAGE" src="'.$GLOBALS['ASSETS_URL'].'images/suchen.gif"'.tooltip(_("Suche starten")).' border="0" name="search_user"><br>';

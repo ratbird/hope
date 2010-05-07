@@ -75,7 +75,7 @@
           </script>
           <?php
           require_once ("lib/classes/QuickSearch.class.php");
-          print QuickSearch::get("search_sem_quick_search", "Seminar_id")
+          print QuickSearch::get("search_sem_quick_search", new StandardSearch("Seminar_id"))
                 ->setInputClass("quicksearchbox")
                 ->withAttributes(array("title" => sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name))))
                 ->setInputStyle("width: 130px; color: #ffffff")

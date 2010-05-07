@@ -352,7 +352,7 @@ STUDIP.URLHelper = {
    * Actualizes the URL of all link in the document
    */
   actualizeAllLinks: function (context_selector) {
-    if (context_selector === undefined) { //yes, "==" is correct
+    if (context_selector === undefined) {
       context_selector = "";
     }
     $(context_selector + ' a:not(.fixed, .extern)').each(function (index, anchor) {
@@ -944,7 +944,7 @@ STUDIP.QuickSearch = {
             suggestions.push({
               label: val.item_name,                       //what is displayed in the drobdown-boc
               item_id: val.item_id,                       //the hidden ID of the item
-              value: val.item_name.replace(stripTags, "") //what is inserted in the visible input-box
+              value: val.item_name !== null ? val.item_name.replace(stripTags, "") : "" //what is inserted in the visible input-box
             });
           });
           //pass it to the function of UI-widget:

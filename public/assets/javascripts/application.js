@@ -256,48 +256,42 @@ STUDIP.URLHelper = {
   /**
    * Creates an URL with the mandatory parameters
    * @param adress string: any adress-string
+   * @param param_object map: associative object for extra values
    * @return: adress with all necessary parameters - non URI-encoded!
    */
-  getURL: function (adress) {
+  getURL: function (adress, param_object) {
+    if (param_object === undefined) {
+      param_object = {};
+    }
     adress = STUDIP.URLHelper.resolveURL(adress);
     // splitting the adress:
     adress = adress.split("#");
     var anchor = (adress.length > 1) ? adress[adress.length - 1] : "";
     adress = adress[0].split("?");
-    var parameters = (adress.length > 1) ? adress[adress.length - 1].split("&") : [];
-    parameters = $.map(parameters, function (param, index) {
-      return [param.split("=")];
+    var url_parameters = (adress.length > 1) ? adress[adress.length - 1].split("&") : [];
+    var parameters = {};
+    $.each(url_parameters, function (index, value) {
+      var assoc = value.split("=");
+      parameters[assoc[0]] = assoc[1];
     });
     adress = adress[0];
     // add new parameter:
-    $.each(this.params, function (param_key, param_value) {
-      var vorhanden = false;  //a small variable to check if param exists
-      parameters = $.map(parameters, function (oldparam) {
-        if (oldparam[0] === param_key) {
-          vorhanden = true;
-          return [[param_key, param_value]];
-        } else {
-          return [oldparam];
-        }
-      });
-      if (vorhanden === false) {
-        parameters.push([param_key, param_value]);
+    parameters = $.extend(parameters, this.params);
+    // delete unwanted parameters:
+    $.each(this.badParams, function (badParam) {
+      if (parameters[badParam] !== undefined) {
+        delete parameters[badParam];
       }
     });
-    // delete unwanted parameters:
-    for (var i = parameters.length - 1; i >= 0; i -= 1) {
-      if (STUDIP.URLHelper.badParams[parameters[i][0]] === true) {
-        parameters.splice(i, 1);
-      }
-    }
+    //merging in the param_object - as you see this has got priority:
+    parameters = $.extend(parameters, param_object);
     // glueing together:
-    if (parameters.length > 0) {
-      parameters = $.map(parameters, function (param) {
-        return param[0] + "=" + param[param.length - 1];
-      });
-    }
-    if (parameters.length > 0) {
-      adress += "?" + parameters.join("&");
+    param_strings = [];
+    $.each(parameters, function (param, value) {
+      param_strings.push(param + "=" + value);
+    });
+    if (param_strings.length > 0) {
+      adress += "?" + param_strings.join("&");
     }
     if (anchor !== "") {
       adress += "#" + anchor;
@@ -308,11 +302,15 @@ STUDIP.URLHelper = {
    * Creates a link-adress with the mandatory parameters
    *  - like getURL but URI-encoded.
    * @param adress string: any string as an adress
+   * @param param_object map: associative object for extra values
    * @return: URI-encoded adress
    */
-  getLink: function (adress) {
+  getLink: function (adress, param_object) {
+    if (param_object === undefined) {
+      param_object = {};
+    }
     adress = decodeURI(adress);
-    adress = STUDIP.URLHelper.getURL(adress);
+    adress = STUDIP.URLHelper.getURL(adress, param_object);
     return encodeURI(adress);
   },
   /**

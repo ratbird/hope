@@ -138,8 +138,9 @@ class Course_StudygroupController extends AuthenticatedController {
                 $stmt = $pdo->query("SELECT user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms"
                             . " FROM auth_user_md5"
                             . " LEFT JOIN user_info USING (user_id)"
-                            . " WHERE username LIKE $search_for_founder OR Vorname LIKE $search_for_founder"
-                            . " OR Nachname LIKE $search_for_founder"
+                            . " WHERE perms NOT IN('root', 'admin')" 
+                            . " AND (username LIKE $search_for_founder OR Vorname LIKE $search_for_founder"
+                            . " OR Nachname LIKE $search_for_founder)"
                             . " LIMIT 500");
 
                 while ($data = $stmt->fetch()) {

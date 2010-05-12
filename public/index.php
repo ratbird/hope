@@ -99,34 +99,13 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
         $ueberschrift = _("Startseite für AdministratorInnen bei Stud.IP");
     } elseif ($perm->have_perm('dozent')) { // dozent
         $ueberschrift = _("Startseite für DozentInnen bei Stud.IP");
-    } elseif ($perm->have_perm('autor')) { // autor, tutor
+    } else { // user, autor, tutor
         $ueberschrift = _("Ihre persönliche Startseite bei Stud.IP");
-    } else { // user
-        $ueberschrift = _("Ihre persönliche Startseite bei Stud.IP");
-        // Warning for Users
-    ?>
-        <div align="center">
-        <table width="70%" border=0 cellpadding=0 cellspacing=0 >
-        <tr><td class="topicwrite" colspan=3><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/nachricht1.gif" align="texttop"><b>&nbsp;<?=_("Bestätigungsgsmail beachten!")?></b></td></tr>
-        <tr>
-            <td width="5%" class="blank" valign="middle">&nbsp;</td>
-            <td width="90%" class="blank" valign="top">
-                <table cellpadding="2">
-                    <tr><td class="blank" colspan="2">
-                    <?
-                        if (get_config("EXTERNAL_HELP")) {
-                            $help_url=format_help_url("Basis.AnmeldungMail");
-                        }
-                        echo MessageBox::info(sprintf(_("Sie haben noch nicht auf Ihre %s Bestätigungsmail %s geantwortet.<br>Bitte holen Sie dies nach, um Stud.IP Funktionen wie das Belegen von Veranstaltungen nutzen zu können.<br>Bei Problemen wenden Sie Sich an: %s"),'<a href="'.$help_url.'" target="_blank">','</a>', '<a href="mailto:'.$GLOBALS['UNI_CONTACT'].'">'.$GLOBALS['UNI_CONTACT'].'</a>')); ?>
-                    </td></tr>
-                </table>
-            </td>
-            <td class="blank" align="right" valign="top" background="<?= $GLOBALS['ASSETS_URL'] ?>images/sms3.jpg"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width="235" height="1"></td>
-        </tr>
-        </table>
-        </div>
-        <br><br>
-    <?
+    }
+
+    // Warning for Users
+    if (get_config("EXTERNAL_HELP")) {
+        $help_url = format_help_url("Basis.AnmeldungMail");
     }
 
     // Display banner ad
@@ -144,6 +123,13 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
                     <?= htmlReady($ueberschrift) ?>
                 </td>
             </tr>
+            <? if ($perm->get_perm() == 'user') : ?>
+            <tr>
+                <td class="blank" style="padding: 1em 1em 0em 1em;" colspan="2">
+                    <?= MessageBox::info(sprintf(_("Sie haben noch nicht auf Ihre %s Bestätigungsmail %s geantwortet.<br>Bitte holen Sie dies nach, um Stud.IP Funktionen wie das Belegen von Veranstaltungen nutzen zu können.<br>Bei Problemen wenden Sie Sich an: %s"),'<a href="'.$help_url.'" target="_blank">','</a>', '<a href="mailto:'.$GLOBALS['UNI_CONTACT'].'">'.$GLOBALS['UNI_CONTACT'].'</a>')) ?>
+                </td>
+            </tr>
+            <? endif ?>
             <tr>
                 <td class="blank" valign="top" style="padding-left:25px; width:80%;">
                 <? foreach ($navigation as $nav) : ?>

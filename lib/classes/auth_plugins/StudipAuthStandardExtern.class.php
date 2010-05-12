@@ -36,16 +36,6 @@ require_once ("lib/classes/auth_plugins/StudipAuthStandard.class.php");
 */
 class StudipAuthStandardExtern extends StudipAuthStandard {
     
-    /**
-    * indicates whether login form should use md5 challenge response auth
-    *
-    * this should only be true, if password is stored and accessible as md5 hash !
-    *
-    * @access   public
-    * @var      bool
-    */
-    var $md5_challenge_response = true;
-    
     var $bad_char_regex = false;
 
     var $db_host;

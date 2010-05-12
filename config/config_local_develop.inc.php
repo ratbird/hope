@@ -398,8 +398,6 @@ Ldap            authentication using an LDAP server, this plugin uses anonymous 
             then it uses the submitted password to authenticate with this user dn
 LdapReader      authentication using an LDAP server, this plugin binds to the server using a given dn and a password,
             this account must have read access to gather the attributes for the user who tries to authenticate.
-            Using this plugin allows to keep the md5 challenge-response mechanism during the login process, provided a md5
-            hash of the user password is available in LDAP
 
 If you write your own plugin put it in studip-htdocs/lib/classes/auth_plugins
 and enable it here. The name of the plugin is the classname excluding "StudipAuth".

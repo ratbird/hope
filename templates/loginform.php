@@ -1,16 +1,7 @@
-<? # Lifter005: TODO - challenge response ?>
-<script type="text/javascript" language="javascript" src="<?=$GLOBALS['ASSETS_URL']?>javascripts/md5.js"></script>
 <script type="text/javascript" language="javascript">
 //<![CDATA[
 $(function () {
   $('form[name=login]').submit(function () {
-  <? if ($challenge): ?>
-    var str = $(':text', this).val() + ':' +
-      MD5( $(':password', this).val() ) + ':' +
-      $('input[name=challenge]', this).val();
-    $('input[name=response]', this).val( MD5(str) );
-    $(':password', this).val('');
-  <? endif; ?>
     $('input[name=resolution]', this).val( screen.width + 'x' + screen.height );
   });
 });
@@ -37,10 +28,7 @@ $(function () {
         <p><?=_("Bitte identifizieren Sie sich mit Benutzername und Passwort:")?></p>
 
         <form name="login" method="post" action="<?=$_SERVER['REQUEST_URI']?>">
-          <!-- Set up the form with the challenge value and an empty reply value -->
-          <input type="hidden" name="challenge" value="<?=$challenge?>" />
           <input type="hidden" name="login_ticket" value="<?=Seminar_Session::get_ticket();?>" />
-          <input type="hidden" name="response"  value="" />
           <input type="hidden" name="resolution"  value="" />
           <table border="0" cellspacing="0" cellpadding="4">
             <tr valign=top align=left>

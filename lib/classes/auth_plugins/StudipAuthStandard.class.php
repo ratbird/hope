@@ -36,16 +36,6 @@ require_once ("lib/classes/auth_plugins/StudipAuthAbstract.class.php");
 */
 class StudipAuthStandard extends StudipAuthAbstract {
     
-    /**
-    * indicates whether login form should use md5 challenge response auth
-    *
-    * this should only be true, if password is stored and accessible as md5 hash !
-    *
-    * @access   public
-    * @var      bool
-    */
-    var $md5_challenge_response = true;
-    
     var $dbv_auth;
     
     var $bad_char_regex =  false;
@@ -86,25 +76,12 @@ class StudipAuthStandard extends StudipAuthAbstract {
             $uid   = $db->f("user_id");
             $pass  = $db->f("password");   // Password is stored as a md5 hash
         }
-        $expected_response = md5("$username:$pass:" . $this->challenge);
-        // JS is disabled
-        if (!$jscript || !$this->challenge) {
-            if (md5($password) != $pass) {       // md5 hash for non-JavaScript browsers
-                $this->error_msg= _("Das Passwort ist falsch!") ;
-                return false;
-            } else {
-                return true;
-            }
-        } elseif ($this->challenge) {
-            if ($expected_response != $password) {
-                $this->error_msg= _("Das Passwort ist falsch!") ;
-                return false;
-            } else {
-                return true;
-            }
+        if (md5($password) != $pass) {
+            $this->error_msg= _("Das Passwort ist falsch!");
+            return false;
+        } else {
+            return true;
         }
-        $this->error_msg = _("Unbekannter Fehler!");
-        return false;
     }
     
     function isUsedUsername($username){

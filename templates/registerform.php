@@ -3,7 +3,6 @@
     $cfg = Config::GetInstance();
     $email_restriction = $cfg->getValue('EMAIL_DOMAIN_RESTRICTION');
 ?>
-<script type="text/javascript" language="javascript" src="<?=$GLOBALS['ASSETS_URL']?>javascripts/md5.js"></script>
 <script type="text/javascript" language="javaScript">
 <!--
 function checkusername(){
@@ -97,14 +96,6 @@ function checkdata(){
   checked = false;
  if (!checkEmail())
   checked = false;
- if (checked) {
-   document.login.method = "post";
-   document.login.action = "<?=$_SERVER['REQUEST_URI']?>";
-   document.login.response.value = MD5(document.login.password.value);
-   document.login.response2.value = MD5(document.login.password2.value);
-   document.login.password.value = "";
-   document.login.password2.value = "";
- }
  return checked;
 }
 // -->
@@ -124,7 +115,7 @@ function checkdata(){
     <br>
     <?=_("Bitte f&uuml;llen Sie zur Anmeldung das Formular aus:")?>
     <br><br>
-<form name=login action="<?=$_SERVER['REQUEST_URI']?>" onsubmit="return checkdata()">
+<form name=login action="<?=$_SERVER['REQUEST_URI']?>" method="post" onsubmit="return checkdata()">
 <table border=0 bgcolor="#eeeeee" align="center" cellspacing=2 cellpadding=4>
  <tr valign=top align=left>
   <td colspan="2"><?=_("Benutzername:")?></td>
@@ -222,8 +213,6 @@ function checkdata(){
 <br><br>
 
 <input type="hidden" name="login_ticket" value="<?=Seminar_Session::get_ticket();?>">
-<input type="hidden" name="response"  value="">
-<input type="hidden" name="response2"  value="">
 </form>
 
         </td>

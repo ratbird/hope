@@ -410,8 +410,6 @@ Ldap            authentication using an LDAP server, this plugin uses anonymous 
             then it uses the submitted password to authenticate with this user dn
 LdapReader      authentication using an LDAP server, this plugin binds to the server using a given dn and a password,
             this account must have read access to gather the attributes for the user who tries to authenticate.
-            Using this plugin allows to keep the md5 challenge-response mechanism during the login process, provided a md5
-            hash of the user password is available in LDAP
 CAS         authentication using a central authentication server (CAS)
 Shib            authentication using a Shibboleth identity provider (IdP)
 

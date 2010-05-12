@@ -38,15 +38,6 @@ require_once ("lib/classes/auth_plugins/StudipAuthLdap.class.php");
 */
 class StudipAuthLdapReadAndBind extends StudipAuthLdap {
     
-    /**
-    * indicates whether login form should use md5 challenge response auth
-    *
-    * this should only be true, if password is stored and accessible as md5 hash !
-    *
-    * @access   public
-    * @var  bool
-    */
-    var $md5_challenge_response = false;
     var $anonymous_bind = false;
     
     var $reader_dn;

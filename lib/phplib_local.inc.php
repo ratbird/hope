@@ -553,10 +553,6 @@ class Seminar_Auth extends Auth {
         // load the default set of plugins
         PluginEngine::loadPlugins();
 
-        if (StudipAuthAbstract::CheckMD5()){
-            $_SESSION['challenge'] = md5(uniqid($this->magic));
-        }
-
         if ($_REQUEST['username'] && !$_COOKIE[$GLOBALS['sess']->name]){
             $login_template = $GLOBALS['template_factory']->open('nocookies');
         } else if (isset($this->need_email_activation)) {
@@ -567,7 +563,6 @@ class Seminar_Auth extends Auth {
             $login_template = $GLOBALS['template_factory']->open('loginform');
             $login_template->set_attribute('loginerror', (isset($this->auth["uname"]) && $this->error_msg));
             $login_template->set_attribute('error_msg', $this->error_msg);
-            $login_template->set_attribute('challenge', $_SESSION['challenge']);
             $login_template->set_attribute('uname', (isset($this->auth["uname"]) ? $this->auth["uname"] : $_REQUEST['shortcut']));
             $login_template->set_attribute('self_registration_activated', $GLOBALS['ENABLE_SELF_REGISTRATION']);
         }
@@ -584,7 +579,7 @@ class Seminar_Auth extends Auth {
     }
 
     function auth_validatelogin() {
-        global $username, $password, $challenge, $response, $resolution;
+        global $username, $password, $resolution;
         global $_language, $_language_path, $login_ticket;
 
         //prevent replay attack
@@ -602,13 +597,8 @@ class Seminar_Auth extends Auth {
 
         $this->auth["uname"] = $username;   // This provides access for "loginform.ihtml"
         $this->auth["jscript"] = ($resolution != "");
-        if ($this->auth['jscript'] && $challenge){
-            $password = $response;
-        }
 
         $check_auth = StudipAuthAbstract::CheckAuthentication(stripslashes($username),stripslashes($password),$this->auth['jscript']);
-
-        $GLOBALS['sess']->unregister('challenge');
 
         if ($check_auth['uid']) {
             $uid = $check_auth['uid'];
@@ -701,7 +691,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
     }
 
     function auth_doregister() {
-        global $username, $password, $challenge, $response, $Vorname, $Nachname, $geschlecht,$emaildomain,$Email,$title_front,$title_front_chooser,$title_rear,$title_rear_chooser, $CANONICAL_RELATIVE_PATH_STUDIP, $UNI_NAME_CLEAN, $DEFAULT_LANGUAGE;
+        global $username, $password, $Vorname, $Nachname, $geschlecht,$emaildomain,$Email,$title_front,$title_front_chooser,$title_rear,$title_rear_chooser, $CANONICAL_RELATIVE_PATH_STUDIP, $UNI_NAME_CLEAN, $DEFAULT_LANGUAGE;
 
         global $_language, $_language_path;
 
@@ -743,12 +733,10 @@ class Seminar_Register_Auth extends Seminar_Auth {
         }                                                       // username syntaktisch falsch oder zu kurz
         // auf doppelte Vergabe wird weiter unten getestet.
 
-        if (!isset($response) || $response=="") {   // wir haben kein verschluesseltes Passwort
-            if (!$validator->ValidatePassword($password))
-            {
-                $this->error_msg=$this->error_msg. _("Das Passwort ist zu kurz!") . "<br>";
-                return false;
-            }                                                   // also können wir das unverschluesselte Passwort testen
+        if (!$validator->ValidatePassword($password))
+        {
+            $this->error_msg=$this->error_msg. _("Das Passwort ist zu kurz!") . "<br>";
+            return false;
         }
 
         if (!$validator->ValidateName($Vorname))
@@ -803,14 +791,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
         }
 
         // alle Checks ok, Benutzer registrieren...
-        // True when JS is disabled
-        if ($response == "") {
-            $newpass = md5($password);
-        }
-        // Response is set, JS is enabled
-        else {
-            $newpass = $response;
-        }
+        $newpass = md5($password);
         $uid = md5(uniqid($this->magic));
         $perm = "user";
         $this->db->query(sprintf("insert into %s (user_id, username, perms, password, Vorname, Nachname, Email) ".

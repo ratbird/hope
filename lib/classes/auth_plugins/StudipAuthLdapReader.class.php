@@ -36,15 +36,6 @@ require_once ("lib/classes/auth_plugins/StudipAuthLdap.class.php");
 */
 class StudipAuthLdapReader extends StudipAuthLdap {
     
-    /**
-    * indicates whether login form should use md5 challenge response auth
-    *
-    * this should only be true, if password is stored and accessible as md5 hash !
-    *
-    * @access   public
-    * @var      bool
-    */
-    var $md5_challenge_response = true;
     var $anonymous_bind = false;
     
     var $user_password_attribute;
@@ -111,30 +102,14 @@ class StudipAuthLdapReader extends StudipAuthLdap {
         }
         //userPassword in LDAP is base64 encoded, PHP md5() gives base16 !
         $pass = bin2hex(base64_decode(substr(trim($this->user_data[$this->user_password_attribute][0]),strlen("{MD5}"))));
-        $expected_response = md5("$username:$pass:" . $this->challenge);
-        // JS is disabled
-        if (!$jscript || !$this->challenge) {
-            if (md5($password) != $pass) {       // md5 hash for non-JavaScript browsers
-                $this->error_msg= _("Das Passwort ist falsch!");
-                ldap_unbind($this->conn);
-                return false;
-            } else {
-                ldap_unbind($this->conn);
-                return true;
-            }
-        } elseif ($this->challenge) {
-            if ($expected_response != $password) {
-                $this->error_msg= _("Das Passwort ist falsch!");
-                ldap_unbind($this->conn);
-                return false;
-            } else {
-                ldap_unbind($this->conn);
-                return true;
-            }
+        if (md5($password) != $pass) {
+            $this->error_msg= _("Das Passwort ist falsch!");
+            ldap_unbind($this->conn);
+            return false;
+        } else {
+            ldap_unbind($this->conn);
+            return true;
         }
-        $this->error_msg = _("Unbekannter Fehler!");
-        ldap_unbind($this->conn);
-        return false;
     }
     
     

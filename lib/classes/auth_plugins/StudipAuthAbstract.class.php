@@ -47,28 +47,6 @@ DbView::addView('core');
 class StudipAuthAbstract {
     
     /**
-    * indicates whether login form should use md5 challenge response auth
-    *
-    * this should only be true, if password is stored and accessible as md5 hash !
-    * should be set in local.inc
-    *
-    * @access   public
-    * @var      bool
-    */
-    var $md5_challenge_response = false;
-    
-    /**
-    *  md5 challenge sent by crcloginform
-    *
-    * 
-    *
-    * @access   private
-    * @var      string
-    */
-    var $challenge;
-    
-    
-    /**
     * contains error message, if authentication fails
     *
     * 
@@ -156,25 +134,6 @@ class StudipAuthAbstract {
             }
         }
         return ($plugin_name) ? $plugin_instance[strtoupper("StudipAuth" . $plugin_name)] : $plugin_instance;
-    }
-    
-    /**
-    * static method to check in all plugins, if md5 challenge/response is allowed
-    *
-    * if md5 challenge/response is disabled in one plugin, false is returned
-    *
-    * @access public
-    * @static
-    * @return   bool
-    */
-    function CheckMD5(){
-        $plugins = StudipAuthAbstract::GetInstance(); //get a reference to the plugin container
-        foreach($plugins as $object){
-            if (!$object->md5_challenge_response){
-                return false;
-            }
-        }
-        return true;
     }
     
     /**
@@ -295,8 +254,6 @@ class StudipAuthAbstract {
             }
         }
         $this->dbv = new DbView();
-        //$challenge is a global set by PhpLib, contains a random md5 hash which is sent to the client and used as seed
-        $this->challenge = $GLOBALS['challenge'];
     }
     
     /**

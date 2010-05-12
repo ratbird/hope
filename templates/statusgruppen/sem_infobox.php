@@ -23,11 +23,18 @@
     
       <tr>
         <td class="infobox" width="100%" colspan="2">
-          <font size="-1"><b><?=_("Aktionen")?>:</b></font>
+          <font size="-1"><b><?=_("Information")?>:</b></font>
           <br>
         </td>
       </tr>
-
+      <tr>
+        <td class="infobox" align="center" width="1%" valign="top">
+            <?= Assets::img('ausruf_small2') ?>
+        </td>
+        <td class="infobox" width="99%" align="left">
+            <?= _("Wenn in einer Gruppe der Selbsteintrag aktivert ist, können sich Teilnehmer selbst in diese Gruppen eintragen.")?>
+        </td>
+      </tr>
       <tr>
                 <td class="infobox" align="center" width="1%" valign="top">
                     <?= Assets::img('link_intern') ?>
@@ -45,6 +52,13 @@
                     </a>
                 </td>
       </tr>
+      <tr>
+        <td class="infobox" width="100%" colspan="2">
+          <font size="-1"><b><?=_("Aktionen")?>:</b></font>
+          <br>
+        </td>
+      </tr>
+
 
       <tr>
                 <td class="infobox" align="center" width="1%" valign="top">

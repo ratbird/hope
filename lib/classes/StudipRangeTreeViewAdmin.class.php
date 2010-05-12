@@ -634,7 +634,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $content .=  $this->getItemMessage($this->edit_item_id,2);
         $content .= "\n<tr><td colspan=\"2\" class=\"steelgraudunkel\" ><b>". _("Element bearbeiten") . "</b></td></tr>";
         $content .= "\n<tr><td class=\"steel1\" width=\"60%\">". _("Name des Elements:") . "&nbsp;"
-                . "<input type=\"TEXT\" name=\"edit_name\" size=\"50\" value=\"" . $this->tree->tree_data[$this->edit_item_id]['name']
+                . "<input type=\"TEXT\" name=\"edit_name\" size=\"50\" value=\"" . htmlReady($this->tree->tree_data[$this->edit_item_id]['name'])
                 . "\"></td><td class=\"steel1\" align=\"left\"><input type=\"image\" "
                 . makeButton("absenden","src") . tooltip("Einstellungen übernehmen") . " border=\"0\">"
                 . "&nbsp;<a href=\"" . $this->getSelf("cmd=Cancel&item_id="
@@ -650,7 +650,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         if ($this->tree->tree_data[$this->edit_item_id]['studip_object']){
             $content .= "\n<option selected value=\"". $this->tree->tree_data[$this->edit_item_id]['studip_object_id'] . ":"
                     . $this->tree->tree_data[$this->edit_item_id]['studip_object'] ."\">"
-                    . $this->tree->tree_data[$this->edit_item_id]['name'] ."</option>";
+                    . htmlReady($this->tree->tree_data[$this->edit_item_id]['name']) ."</option>";
         }
         if (count($this->search_result)){
             foreach ($this->search_result as $key => $value){

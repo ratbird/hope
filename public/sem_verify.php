@@ -169,6 +169,8 @@ $db4=new DB_Seminar;
 $db5=new DB_Seminar;
 $db6=new DB_Seminar;
 
+$current_seminar = Seminar::getInstance($id);
+
 ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
     <tr><td class="topic" colspan=2>&nbsp;<b><?=_("Veranstaltungsfreischaltung")?> - <?=getHeaderLine($id)?></b></td></tr>
@@ -194,8 +196,7 @@ $db6=new DB_Seminar;
 
     $same_domain = true;
     $user_domains = UserDomain::getUserDomainsForUser($user->id);
-
-    if (count($user_domains) > 0 && !StudygroupModel::isStudygroup($id)) {
+    if (count($user_domains) > 0 && !in_array($current_seminar->getStatus(), studygroup_sem_types())) {
         $seminar_domains = UserDomain::getUserDomainsForSeminar($id);
         $same_domain = count(array_intersect($seminar_domains, $user_domains)) > 0;
     }
@@ -212,7 +213,6 @@ $db6=new DB_Seminar;
         die;
     }
 
-    $current_seminar = Seminar::getInstance($id);
 
     if ($current_seminar->admission_type == 3)
     {

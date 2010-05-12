@@ -678,7 +678,7 @@ echo $template_factory->render(
         $db3->query("SELECT * FROM admission_seminar_user WHERE user_id='$user->id' AND seminar_id='$sem_id'");
         if ($db3->next_record()) {
             echo "<table width=\"100%\">";
-            printf ("<tr><td width=\"%s\">&nbsp;</td><td><font size=-1>%s</font><br></tr></td></table>", "2%", formatReady($db2->f("admission_prelim_txt")));
+            printf ("<tr><td width=\"%s\">&nbsp;</td><td><font size=-1>%s</font><br></td></tr></table>", "2%", formatReady($db2->f("admission_prelim_txt")));
         } else {
             if (!$perm->have_perm("admin")) {
                 print("<p>"._("Wenn Sie an der Veranstaltung teilnehmen wollen, klicken Sie auf \"Tragen Sie sich hier ein\". Sie erhalten dann nähere Hinweise und können sich immer noch gegen eine Teilnahme entscheiden.")."</p>");

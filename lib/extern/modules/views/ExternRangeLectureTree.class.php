@@ -115,7 +115,7 @@ class ExternRangeLectureTree {
         $name .= $range_object->item_data['name'];
         echo htmlReady($name) ."</font></td></tr>\n</table>\n";
         if (is_array($range_object->item_data_mapping)) {
-            echo "</td></tr><td><tr>\n";
+            echo "</td></tr><tr><td>\n";
             echo "<table" . $this->config->getAttributes("RangeTreeLevelContent", "table");
             echo ">\n<tr><td" . $this->config->getAttributes("RangeTreeLevelContent", "td") . ">";
             $alias_mapping = $this->config->getValue("RangeTreeLevelContent", "mapping");

@@ -75,7 +75,7 @@ include 'lib/include/admin_search_form.inc.php';
 // Rechtecheck
 $_range_type = get_object_type($range_id);
 if ($_range_type != 'sem' || !$perm->have_studip_perm('tutor', $range_id)) {
-    echo "</tr></td></table>";
+    echo "</td></tr></table>";
     page_close();
     die;
 }

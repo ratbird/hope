@@ -178,7 +178,7 @@ function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 
                 print "<a href=\"".URLHelper::getLink("?dclose=1")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/close_all.gif\" ".tooltip(_("Alle schließen"))." border=\"0\"></a>";
             else
                 print "<a href=\"".URLHelper::getLink("?dopen=all")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/open_all.gif\" ".tooltip(_("Alle öffnen"))."border=\"0\"></a>";
-            print "\n</tr></td>\n<tr><td class=\"blank\" colspan=\"2\">";
+            print "\n</td></tr>\n<tr><td class=\"blank\" colspan=\"2\">";
         }
 
         if ($username)

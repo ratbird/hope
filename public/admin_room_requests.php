@@ -141,7 +141,7 @@ if ((($seminar_id) || ($termin_id)) && (!$uebernehmen_x) && (!$search_room_x) &&
 } else {
     //Sicherheitscheck ob ueberhaupt was zum Bearbeiten gewaehlt ist.
     if (!$admin_rooms_data["sem_id"]) {
-        echo "</tr></td></table>";
+        echo "</td></tr></table>";
         die;
     }
 

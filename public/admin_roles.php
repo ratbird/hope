@@ -76,7 +76,7 @@ include 'lib/include/admin_search_form.inc.php';
 // Rechtecheck
 $_range_type = get_object_type($range_id);
 if (!$perm->have_studip_perm("admin", $range_id) || ($_range_type != 'inst' && $_range_type != 'fak')) {
-    echo "</tr></td></table>";
+    echo "</td></tr></table>";
     page_close();
     die;
 }

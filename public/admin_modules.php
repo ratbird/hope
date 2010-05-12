@@ -229,7 +229,7 @@ if (($range_id) && (!$uebernehmen_x) && (!$delete_forum) && (!$delete_documents)
 } else {
     //Sicherheitscheck ob ueberhaupt was zum Bearbeiten gewaehlt ist.
     if (!$admin_modules_data["range_id"]) {
-        echo "</tr></td></table>";
+        echo "</td></tr></table>";
         die;
     }
 }

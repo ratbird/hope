@@ -529,13 +529,13 @@ class EvaluationObject extends StudipObject {
      echo "Text: ".$this->getText ()."<br>";
      echo "Position: ".$this->getPosition ()."<br>";
      echo "Untergruppen: ".$this->getNumberChildren ()."<br>";
-     echo "</tr></td>";
+     echo "</td></tr>";
      while ($child = $this->getNextChild ()) {
        echo "<tr><td>";
        $i++;
        echo "<b>Kind $i</b>"."<br>";
        $child->toString ();
-       echo "</tr></td>";
+       echo "</td></tr>";
      }
      echo "</table>";
    }

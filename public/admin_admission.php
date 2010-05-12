@@ -310,7 +310,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
 } else {
     //Sicherheitscheck ob ueberhaupt was zum Bearbeiten gewaehlt ist.
     if (!$admin_admission_data["sem_id"]) {
-        echo "</tr></td></table>";
+        echo "</td></tr></table>";
         die;
     }
 

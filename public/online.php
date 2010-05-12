@@ -122,7 +122,7 @@ if ($sms_msg) {
 if (($change_view) || ($delete_user) || ($view=="Messaging")) {
     include 'lib/include/messagingSettings.inc.php';
     change_messaging_view();
-    echo "</tr></td></table>";
+    echo "</td></tr></table>";
     page_close();
     die;
 }

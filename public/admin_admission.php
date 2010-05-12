@@ -81,17 +81,12 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 
 // -- here you have to put initialisations for the current page
 ?>
-    <script type="text/javascript" language="javascript" src="<?= $GLOBALS['ASSETS_URL'] ?>javascripts/md5.js"></script>
     <script type="text/javascript" language="javascript">
     <!--
     function doCrypt() {
         var $form = $('form[name=Formular]');
         if ($(':radio[name=read_level]:checked', $form).val()==2 || $(':radio[name=write_level]:checked', $form).val()==2) {
             if(checkpasswordenabled() && checkpassword() && checkpassword2()){
-                document.Formular.hashpass.value = MD5(document.Formular.sem_passwd.value);
-                document.Formular.hashpass2.value = MD5(document.Formular.sem_passwd2.value);
-                document.Formular.sem_passwd.value = "";
-                document.Formular.sem_passwd2.value = "";
                 return true;
             } else {
                 return false;
@@ -447,18 +442,13 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
             $errormsg=$errormsg."error§"._("Es macht keinen Sinn, die Sicherheitsstufe f&uuml;r den Lesezugriff h&ouml;her zu setzen als f&uuml;r den Schreibzugriff!")."§";
 
         if (($admin_admission_data["read_level"] == 2 || $admin_admission_data["write_level"] == 2) && !(LockRules::Check($seminar_id, 'Passwort')) ) {
-                //Password bei Bedarf dann doch noch verschlusseln
-            if (empty($hashpass)) { // javascript disabled
-                if (!$sem_passwd)
-                        $admin_admission_data["passwort"] = "";
-                elseif($sem_passwd != "*******") {
-                    $admin_admission_data["passwort"] = md5($sem_passwd);
-                            if($sem_passwd2 != "*******")
-                                $check_pw = md5($sem_passwd2);
-                    }
-                } elseif ($hashpass != md5("*******")) { // javascript enabled
-                $admin_admission_data["passwort"]= $hashpass;
-                $check_pw = $hashpass2;
+            //Password bei Bedarf dann doch noch verschlusseln
+            if (!$sem_passwd)
+                $admin_admission_data["passwort"] = "";
+            elseif($sem_passwd != "*******") {
+                $admin_admission_data["passwort"] = md5($sem_passwd);
+                if($sem_passwd2 != "*******")
+                    $check_pw = md5($sem_passwd2);
             }
 
             if ($admin_admission_data["passwort"]=="")
@@ -1113,9 +1103,6 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                         echo "onchange=\"checkpassword()\" size=12 maxlength=31> &nbsp; "._("Passwort-Wiederholung:")."&nbsp; <input type=\"password\" name=\"sem_passwd2\" ";
                         echo "onchange=\"checkpassword2()\" size=12 maxlength=31></font>";
             } ?>
-
-                    <input type="HIDDEN" name="hashpass" value="">
-                    <input type="HIDDEN" name="hashpass2" value="">
           <? else: ?>
             <? if ($admin_admission_data["passwort"]!="") : ?>
               <font size=-1>

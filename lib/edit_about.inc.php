@@ -545,7 +545,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
     }
 
 
-    function edit_pers($password, $response, $new_username, $vorname, $nachname, $email, $geschlecht, $title_front, $title_front_chooser, $title_rear, $title_rear_chooser, $view) {
+    function edit_pers($password, $new_username, $vorname, $nachname, $email, $geschlecht, $title_front, $title_front_chooser, $title_rear, $title_rear_chooser, $view) {
         global $UNI_NAME_CLEAN, $_language_path, $auth, $perm;
         global $ALLOW_CHANGE_USERNAME, $ALLOW_CHANGE_EMAIL, $ALLOW_CHANGE_NAME, $ALLOW_CHANGE_TITLE;
 
@@ -586,19 +586,14 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $validator=new email_validation_class; ## Klasse zum Ueberpruefen der Eingaben
             $validator->timeout=10;
 
-            if (!StudipAuthAbstract::CheckField("auth_user_md5.password", $this->auth_user['auth_plugin'])
-              && (($response && $response!=md5("*****")) || $password!="*****")) {      //Passwort verändert ?
+            if (!StudipAuthAbstract::CheckField("auth_user_md5.password", $this->auth_user['auth_plugin']) && $password!="*****") {      //Passwort verändert ?
 
                 // auf doppelte Vergabe wird weiter unten getestet.
-                if (!isset($response) || $response=="") { // wir haben kein verschluesseltes Passwort
-                    if (!$validator->ValidatePassword($password)) {
-                        $this->msg=$this->msg . "error§" . _("Das Passwort ist zu kurz - es sollte mindestens 4 Zeichen lang sein.") . "§";
-                        return false;
-                    }
-                    $newpass = md5($password);             // also können wir das unverschluesselte Passwort testen
-                } else {
-                    $newpass = $response;
+                if (!$validator->ValidatePassword($password)) {
+                    $this->msg=$this->msg . "error§" . _("Das Passwort ist zu kurz - es sollte mindestens 4 Zeichen lang sein.") . "§";
+                    return false;
                 }
+                $newpass = md5($password);
 
                 $this->db->query("UPDATE auth_user_md5 SET password='$newpass' WHERE user_id='".$this->auth_user["user_id"]."'");
                 $this->msg=$this->msg . "msg§" . _("Ihr Passwort wurde ge&auml;ndert!") . "§";

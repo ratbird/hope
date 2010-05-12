@@ -155,7 +155,6 @@ if ($user->cfg->getValue($user->id, "CHAT_USE_AJAX_CLIENT") ){
 <head>
     <title>Chat(<?=$auth->auth["uname"]?>) -
     <?=htmlReady($chatServer->chatDetail[$chatid]["name"])?></title>
-    <script type="text/javascript" language="javascript" src="<?= $GLOBALS['ASSETS_URL'] ?>javascripts/md5.js"></script>
 <script type="text/javascript">
     //
     // JavaScript

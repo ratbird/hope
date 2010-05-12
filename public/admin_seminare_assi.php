@@ -1335,22 +1335,13 @@ if (($form == 5) && ($jump_next_x))
     if (($sem_create_data["sem_sec_lese"] ==2) ||  ($sem_create_data["sem_sec_schreib"] ==2))
         {
             //Password bei Bedarf dann doch noch verschlusseln
-        if (empty($hashpass)) // javascript disabled
-            {
-                if (!$sem_passwd)
-                    $sem_create_data["sem_pw"] = "";
-                elseif($sem_passwd != "*******")
-                    {
-                    $sem_create_data["sem_pw"] = md5($sem_passwd);
-                    if($sem_passwd2 != "*******")
-                        $check_pw = md5($sem_passwd2);
-                    }
-                }
-        elseif ($hashpass != md5("*******")) // javascript enabled
-                {
-                $sem_create_data["sem_pw"]= $hashpass;
-                $check_pw = $hashpass2;
-                }
+            if (!$sem_passwd)
+                $sem_create_data["sem_pw"] = "";
+            elseif($sem_passwd != "*******") {
+                $sem_create_data["sem_pw"] = md5($sem_passwd);
+                if($sem_passwd2 != "*******")
+                    $check_pw = md5($sem_passwd2);
+            }
 
         if (($sem_create_data["sem_pw"]=="") || ($sem_create_data["sem_pw"] == md5("")))
                 {
@@ -2005,22 +1996,6 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 if (!$sem_create_data["sem_class"])
     include ('lib/include/startup_checks.inc.php');
 
-?>
-    <script type="text/javascript" language="javascript" src="<?= $GLOBALS['ASSETS_URL'] ?>javascripts/md5.js"></script>
-
-    <script type="text/javascript" language="javascript">
-    <!--
-        function doCrypt() {
-            document.form_5.hashpass.value = MD5(document.form_5.sem_passwd.value);
-            document.form_5.hashpass2.value = MD5(document.form_5.sem_passwd2.value);
-            document.form_5.sem_passwd.value = "";
-            document.form_5.sem_passwd2.value = "";
-            return true;
-            }
-
-    // -->
-    </script>
-<?
 //Before we start, let's decide the category (class) of the Veranstaltung
 if ((!$sem_create_data["sem_class"]) && (!$level)){
     ?>
@@ -3571,12 +3546,8 @@ if ($level == 5)
         </tr>
         <tr>
             <td class="blank" colspan=2>
-            <form method="POST" name="form_5" action="<? echo URLHelper::getLink() ?>"
-                   <? if (($sem_create_data["sem_sec_lese"] ==2) ||  ($sem_create_data["sem_sec_schreib"] ==2)) echo " onSubmit=\"return doCrypt();\" "; ?>
-                    >
+            <form method="POST" name="form_5" action="<? echo URLHelper::getLink() ?>">
             <input type="HIDDEN" name="form" value=5>
-            <input type="HIDDEN" name="hashpass" value="">
-            <input type="HIDDEN" name="hashpass2" value="">
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
                     <tr <? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%">

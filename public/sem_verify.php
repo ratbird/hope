@@ -57,7 +57,7 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
  * @param   $user_id        User-Id
  */
 function temporaly_accepted($sem_name, $user_id, $sem_id, $ask = "TRUE", $studiengang_id, $url) {
-    global $pass, $hashpass;
+    global $pass;
     $db = new DB_Seminar;
 
     if ($ask == "TRUE") {
@@ -78,7 +78,6 @@ function temporaly_accepted($sem_name, $user_id, $sem_id, $ask = "TRUE", $studie
 
         printf("<form action=\"%s\" method=\"post\">\n",$url);
         printf("<input type=\"hidden\" name=\"pass\" value=\"$pass\">");
-        printf("<input type=\"hidden\" name=\"hashpass\" value=\"$hashpass\">");
         if (get_config('ADMISSION_PRELIM_COMMENT_ENABLE')){
             echo _("Bemerkungen zu Teilnahmevoraussetzungen:");
             echo '<br><textarea name="comment" cols="50" rows="5"></textarea><br><br>';
@@ -141,18 +140,6 @@ $CURRENT_PAGE = _("Veranstaltungsfreischaltung");
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 require_once ('lib/dates.inc.php');
-?>
-<script type="text/javascript" language="javascript" src="<?= $GLOBALS['ASSETS_URL'] ?>javascripts/md5.js"></script>
-<script type="text/javascript" language="javascript">
-  <!--
-  function verifySeminar() {
-      document.details.hashpass.value = MD5(document.details.pass.value);
-      document.details.pass.value = "";
-  }
-  // -->
-</script>
-
-<?php
 require_once 'lib/msg.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/admission.inc.php';
@@ -474,7 +461,7 @@ $current_seminar = Seminar::getInstance($id);
         $SemUserStatus=$db->f("status");
 
         //Ueberpruefung auf korrektes Passwort
-        if ((isset($pass) && $pass!="" && (md5($pass)==$SemSecPass))  ||  (isset($hashpass) && $hashpass!="" && $hashpass==$SemSecPass)) {
+        if (isset($pass) && $pass!="" && md5($pass)==$SemSecPass) {
             if (($SemUserStatus=="user") && ($perm->have_perm("autor")))
             {
                 // LOGGING
@@ -509,9 +496,9 @@ $current_seminar = Seminar::getInstance($id);
                 die;
             }
         }
- elseif ((isset($pass) && $pass!="") || (isset($hashpass) && $hashpass!="")) {
+        elseif (isset($pass) && $pass!="") {
             parse_msg ("error§Ung&uuml;ltiges Passwort eingegeben, bitte nocheinmal versuchen !");
-    }
+        }
 
     //Die eigentliche Ueberpruefung verschiedener Rechtesachen
     //User schon in der Seminar_user vorhanden? Und was macht er da eigentlich?
@@ -523,10 +510,9 @@ $current_seminar = Seminar::getInstance($id);
                         ?>
                         </td></tr>
                         <tr><td class="blank" colspan=2>
-                        <form name="details" action="<? echo $sess->pself_url(); ?>" method="POST" onSubmit="verifySeminar();return true;">
+                        <form name="details" action="<? echo $sess->pself_url(); ?>" method="POST">
                         &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
                         <input type="HIDDEN" name="id" value="<? echo $id;?>">
-                        <input type="HIDDEN" name="hashpass" value="">
                         <input type="IMAGE" <?=makeButton("abschicken", "src")?> border="0" value="<?=_("abschicken") ?>">
                         </form>
                         </td></tr>
@@ -797,10 +783,9 @@ $current_seminar = Seminar::getInstance($id);
                     ?>
                     </td></tr>
                     <tr><td class="blank" colspan=2>
-                    <form name="details" action="<? echo $sess->pself_url(); ?>" method="POST" onSubmit="verifySeminar();return true;">
+                    <form name="details" action="<? echo $sess->pself_url(); ?>" method="POST">
                     &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
                     <input type="HIDDEN" name="id" value="<? echo $id;?>">
-                    <input type="HIDDEN" name="hashpass" value="">
                     <input type="IMAGE" <?=makeButton("abschicken", "src")?> border="0" value="<?=_("abschicken") ?>">
                     </form>
                     </td></tr>
@@ -817,7 +802,7 @@ $current_seminar = Seminar::getInstance($id);
                     die;
                 }
                 elseif ($SemSecLevelWrite==2) {//nur passwort fuer Schreiben, User koennte ohne Passwort als 'User' in das Seminar
-                    print "<form name=\"details\" action=\"".$sess->self_url()."\" method=\"POST\" onSubmit=\"verifySeminar();return true;\">";
+                    print "<form name=\"details\" action=\"".$sess->self_url()."\" method=\"POST\">";
                     print "<tr><td class=\"blank\" colspan=\"2\">";
                     print "<table width=\"97%\" align=\"center\" border=\"0\" cellapdding=\"2\" cellspacing=\"0\">";
                     print "<tr><td width=\"48%\" class=\"blank\">";
@@ -837,7 +822,6 @@ $current_seminar = Seminar::getInstance($id);
                     <font size="-1"><?=_("Bitte geben Sie hier das Passwort ein:")?></font><br />
                     <input type="PASSWORD" name="pass" size="20">
                     <input type="HIDDEN" name="id" value="<? echo $id;?>">
-                    <input type="HIDDEN" name="hashpass" value="">
                     </td>
                     <td class="blank">&nbsp;</td>
                     <td class="blank" valign="top">

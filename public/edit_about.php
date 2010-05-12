@@ -261,7 +261,7 @@ if (check_ticket($studipticket)) {
 
         if($_REQUEST['password'] != $my_about->auth_user["username"])
             $my_about->edit_pers($new_password,
-                         $_REQUEST['response'], $_REQUEST['new_username'],
+                         $_REQUEST['new_username'],
                          $_REQUEST['vorname'], $_REQUEST['nachname'],
                          $_REQUEST['email'], $_REQUEST['geschlecht'],
                          $_REQUEST['title_front'],
@@ -479,8 +479,6 @@ if ($auth->auth["jscript"]) { // nur wenn JS aktiv
 if ($view == 'Daten') {
     $validator=new email_validation_class;
 ?>
-<script type="text/javascript" language="javascript" src="<?= $GLOBALS['ASSETS_URL'] ?>javascripts/md5.js"></script>
-
 <script type="text/javascript" language="javascript">
 <!--
 
@@ -565,13 +563,6 @@ function checkdata(){
     checked = false;
  if (document.pers.email && !checkemail())
     checked = false;
- if (checked) {
-     document.pers.method = "post";
-     document.pers.action = "<?php print ("$PHP_SELF?cmd=edit_pers&username=$username&view=$view&studipticket=".get_ticket()) ?>";
-     document.pers.response.value = MD5(document.pers.new_passwd_1.value);
-     document.pers.new_passwd_1.value = "*****";
-     document.pers.new_passwd_2.value = "*****";
- }
  return checked;
 }
 
@@ -766,7 +757,7 @@ if ($view == 'Daten') {
         // if javascript is disabled dont disable the input fields
         printf('<noscript>'.$pw_input.'</noscript>', _("Passwort Wiederholung:"), '2', '2','');
     }
-    echo "<input type=\"HIDDEN\" name=\"response\" value=\"\"></td></tr>\n";
+    echo "</td></tr>\n";
 
     $cssSw->switchClass();
     echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\"><b>" . _("Name:") . " </b></td><td class=\"".$cssSw->getClass()."\" nowrap align=\"left\"><font size=-1>&nbsp; " . _("Vorname:") . "</font><br>";

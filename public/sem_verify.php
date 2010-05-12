@@ -159,6 +159,7 @@ require_once 'lib/admission.inc.php';
 require_once 'lib/classes/StudipAdmissionGroup.class.php';
 require_once 'lib/classes/UserDomain.php';
 require_once 'lib/classes/LockRules.class.php';
+require_once 'app/models/studygroup.php';
 
 
 $db=new DB_Seminar;
@@ -194,7 +195,7 @@ $db6=new DB_Seminar;
     $same_domain = true;
     $user_domains = UserDomain::getUserDomainsForUser($user->id);
 
-    if (count($user_domains) > 0) {
+    if (count($user_domains) > 0 && !StudygroupModel::isStudygroup($id)) {
         $seminar_domains = UserDomain::getUserDomainsForSeminar($id);
         $same_domain = count(array_intersect($seminar_domains, $user_domains)) > 0;
     }

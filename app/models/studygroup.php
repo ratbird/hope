@@ -301,5 +301,10 @@ class StudygroupModel {
             if ($b['status'] == 'tutor') return +1;
             else if ($b['status'] == 'dozent') return +1;
         }
-    } 
+    }
+
+    function isStudygroup($sem_id) {
+        $stmt = DBManager::get()->query("SELECT * FROM seminare WHERE Seminar_id = '$sem_id' AND status IN ('". implode("','", studygroup_sem_types())."')"); 
+        return $stmt->fetch();
+    }
 }

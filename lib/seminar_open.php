@@ -243,27 +243,5 @@ if (isset($SessionSeminar) && $SessionSeminar != '') {
     unset($course_id);
 }
 
-// load homepage plugins
-PluginEngine::getPlugins('HomepagePlugin');
-
-// load activated course plugins
-if (isset($SessionSeminar)) {
-    PluginEngine::getPlugins('StandardPlugin', $SessionSeminar);
-}
-
-// load admin plugins
-if (is_object($user) && $perm->have_perm('admin')) {
-    PluginEngine::getPlugins('AdministrationPlugin');
-}
-
-// load system plugins and run background tasks
-foreach (PluginEngine::getPlugins('SystemPlugin') as $plugin) {
-    if ($plugin instanceof AbstractStudIPSystemPlugin) {
-        if ($plugin->hasBackgroundTasks()) {
-            $plugin->doBackgroundTasks();
-        }
-    }
-}
-
-unset($plugin);
-?>
+// load the default set of plugins
+PluginEngine::loadPlugins();

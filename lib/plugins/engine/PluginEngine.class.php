@@ -45,6 +45,38 @@ class PluginEngine {
     }
 
     /**
+     * Load the default set of plugins. This currently loads plugins of
+     * type Homepage, Standard (if a course is selected), Administration
+     * (if user has admin status) and System. The exact type of plugins
+     * loaded here may change in the future.
+     */
+    public static function loadPlugins() {
+        global $SessionSeminar, $user, $perm;
+
+        // load homepage plugins
+        self::getPlugins('HomepagePlugin');
+
+        // load activated course plugins
+        if (isset($SessionSeminar)) {
+            self::getPlugins('StandardPlugin', $SessionSeminar);
+        }
+
+        // load admin plugins
+        if (is_object($user) && $perm->have_perm('admin')) {
+            self::getPlugins('AdministrationPlugin');
+        }
+
+        // load system plugins and run background tasks
+        foreach (self::getPlugins('SystemPlugin') as $plugin) {
+            if ($plugin instanceof AbstractStudIPSystemPlugin) {
+                if ($plugin->hasBackgroundTasks()) {
+                    $plugin->doBackgroundTasks();
+                }
+            }
+        }
+    }
+
+    /**
      * Get instance of the plugin specified by plugin class name.
      *
      * @param $class   class name of plugin

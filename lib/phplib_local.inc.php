@@ -539,8 +539,19 @@ class Seminar_Auth extends Auth {
         require_once('lib/visual.inc.php');
         require_once('config.inc.php');
 
-        // set up user session
-        include 'lib/seminar_open.php';
+        global $_language, $_language_path;
+
+        if (!isset($_language)) {
+            $_language = get_accepted_languages();
+        }
+        if (!$_language) {
+            $_language = $GLOBALS['DEFAULT_LANGUAGE'];
+        }
+        // init of output via I18N
+        $_language_path = init_i18n($_language);
+
+        // load the default set of plugins
+        PluginEngine::loadPlugins();
 
         if (StudipAuthAbstract::CheckMD5()){
             $_SESSION['challenge'] = md5(uniqid($this->magic));

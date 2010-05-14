@@ -118,47 +118,47 @@ if ($_REQUEST["getfolderbody"]) {
 
 //Dateien eines Ordners sollen sortiert werden nach einem Array
 if ($_REQUEST["folder_sort"]) {
-	ob_start();
-	URLHelper::bindLinkParam('data', $folder_system_data);
-	$folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
-	try {
-		if (($rechte) && ($_REQUEST["folder_sort"] == "root")) {
+    ob_start();
+    URLHelper::bindLinkParam('data', $folder_system_data);
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    try {
+        if (($rechte) && ($_REQUEST["folder_sort"] == "root")) {
 
-		} else {
-			if (($rechte) || ($folder_tree->isWriteable($_REQUEST["folder_sort"] , $user->id))) {
-				$file_order = explode(",", $file_order);
-				$sorttype = "";
-				if ($file_order) {
-					$result = $db->query("SELECT 1 FROM dokumente WHERE dokument_id = ".$db->quote($file_order[0]))->fetch();
-					if ($result) {
-						$sorttype = "file";
-					} else {
-						$result = $db->query("SELECT 1 FROM folder WHERE folder_id = ".$db->quote($file_order[0]))->fetch();
-						if ($result) {
-							$sorttype = "folder";
-						}
-					}
-				}
-				if ($sorttype == "file") {
-					//Dateien werden sortiert:
-					for ($i=0; $i < count($file_order); $i++) {
-						$db->query("UPDATE dokumente SET priority = ".($i+1)." WHERE dokument_id = ".$db->quote($file_order[$i]));
-					}
-				} elseif ($sorttype == "folder") {
-					//Ordner werden sortiert:
-					for ($i=0; $i < count($file_order); $i++) {
-						$db->query("UPDATE folder SET priority = ".($i+1)." WHERE folder_id = ".$db->quote($file_order[$i]));
-					}
-				}
-			}
-		}
-	} catch(Exception $e) {
-		header("HTTP/1.0 500 Internal Server Error");
-		print _("Fehler tauchte auf:")."\n\n".$e->getMessage();
-	}
-	$output = ob_get_clean();
-	print studip_utf8encode($output);
-	die();
+        } else {
+            if (($rechte) || ($folder_tree->isWriteable($_REQUEST["folder_sort"] , $user->id))) {
+                $file_order = explode(",", $file_order);
+                $sorttype = "";
+                if ($file_order) {
+                    $result = $db->query("SELECT 1 FROM dokumente WHERE dokument_id = ".$db->quote($file_order[0]))->fetch();
+                    if ($result) {
+                        $sorttype = "file";
+                    } else {
+                        $result = $db->query("SELECT 1 FROM folder WHERE folder_id = ".$db->quote($file_order[0]))->fetch();
+                        if ($result) {
+                            $sorttype = "folder";
+                        }
+                    }
+                }
+                if ($sorttype == "file") {
+                    //Dateien werden sortiert:
+                    for ($i=0; $i < count($file_order); $i++) {
+                        $db->query("UPDATE dokumente SET priority = ".($i+1)." WHERE dokument_id = ".$db->quote($file_order[$i]));
+                    }
+                } elseif ($sorttype == "folder") {
+                    //Ordner werden sortiert:
+                    for ($i=0; $i < count($file_order); $i++) {
+                        $db->query("UPDATE folder SET priority = ".($i+1)." WHERE folder_id = ".$db->quote($file_order[$i]));
+                    }
+                }
+            }
+        }
+    } catch(Exception $e) {
+        header("HTTP/1.0 500 Internal Server Error");
+        print _("Fehler tauchte auf:")."\n\n".$e->getMessage();
+    }
+    $output = ob_get_clean();
+    print studip_utf8encode($output);
+    die();
 }
 
 //Datei soll in einen Ordner verschoben werden

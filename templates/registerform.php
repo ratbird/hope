@@ -104,7 +104,6 @@ function checkdata(){
 <?if (isset($username)): ?>
     <?= MessageBox::error(_("Bei der Registrierung ist ein Fehler aufgetreten!"), array($error_msg, _("Bitte korrigieren Sie Ihre Eingaben und versuchen Sie es erneut"))) ?>
 <?endif;?>
-</div>
 <table class="index_box logintable">
 <tr>
     <td class="topic"> <b><?=_("Stud.IP - Registrierung")?></b> </td>

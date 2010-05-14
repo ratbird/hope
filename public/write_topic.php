@@ -12,6 +12,8 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
 
+checkObject();
+
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 
@@ -43,8 +45,6 @@ function pruefe_name(){
     require_once('lib/visual.inc.php');
     require_once 'lib/functions.php';
     require_once('lib/msg.inc.php');
-
-    checkObject();
 
 ?>
 

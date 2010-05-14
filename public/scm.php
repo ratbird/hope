@@ -39,11 +39,11 @@ require_once('lib/msg.inc.php');
 require_once('lib/visual.inc.php');
 require_once('lib/classes/Table.class.php');
 
-mark_public_course();
-
 checkObject(); // do we have an open object?
 checkObjectModule("scm");
 object_set_visit_module("scm");
+
+mark_public_course();
 
 $scms = array_values(StudipScmEntry::GetSCMEntriesForRange($SessSemName[1]));
 

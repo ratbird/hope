@@ -35,6 +35,9 @@ require_once ('lib/visual.inc.php');
 require_once ('lib/statusgruppe.inc.php');
 require_once 'lib/functions.php';
 
+checkObject();
+checkObjectModule("participants");
+
 mark_public_course();
 
 $HELP_KEYWORD="Basis.InVeranstaltungGruppen";
@@ -44,9 +47,6 @@ Navigation::activateItem('/course/members/view_groups');
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-
-checkObject();
-checkObjectModule("participants");
 
 $cssSw=new cssClassSwitcher;
 

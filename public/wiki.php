@@ -64,6 +64,10 @@ if ($view=="wikiprint") {
     die();
 }
 
+checkObject(); // do we have an open object?
+checkObjectModule("wiki"); //are we allowed to use this module here?
+object_set_visit_module("wiki");
+
 mark_public_course();
 
 $HELP_KEYWORD="Basis.Wiki"; // Hilfeseite im Hilfewiki
@@ -78,9 +82,6 @@ if (in_array(Request::get('view'), words('listnew listall export'))) {
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-checkObject(); // do we have an open object?
-checkObjectModule("wiki"); //are we allowed to use this module here?
-object_set_visit_module("wiki");
 
 if ($wiki_comments=="all") {         // show all comments
     $show_wiki_comments="all";

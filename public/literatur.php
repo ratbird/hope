@@ -33,6 +33,10 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once('lib/classes/StudipLitList.class.php');
 // -- here you have to put initialisations for the current page
 
+checkObject(); // do we have an open object?
+checkObjectModule("literature");
+object_set_visit_module("literature");
+
 mark_public_course();
 
 $HELP_KEYWORD="Basis.Literatur";
@@ -42,10 +46,6 @@ Navigation::activateItem('/course/literature/view');
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-
-checkObject(); // do we have an open object?
-checkObjectModule("literature");
-object_set_visit_module("literature");
 
 ?>
 <body>

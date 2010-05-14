@@ -35,6 +35,10 @@ $flatviewstartposting = (int)$flatviewstartposting;
 (isset($view) && preg_match('/^[a-z]*$/', $view)) or $view = '';
 (isset($open) && preg_match('/^[a-z0-9]{1,32}$/', $open)) or $open = '';
 
+checkObject();
+checkObjectModule("forum");
+object_set_visit_module("forum");
+
 mark_public_course();
 
 if ($forumsend && $forumsend!="bla") {
@@ -118,10 +122,6 @@ require_once ('lib/forum.inc.php');
 require_once ('lib/object.inc.php');
 require_once ('lib/msg.inc.php');
 require_once ('lib/dates.inc.php');
-
-checkObject();
-checkObjectModule("forum");
-object_set_visit_module("forum");
 
 //////////////////////////////////////////////////////////////////////////////////
 // Debug Funktion zur Zeitmessung

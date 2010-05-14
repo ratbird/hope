@@ -85,6 +85,9 @@ if ($cmd == "make_me_invisible" && !$perm->have_studip_perm('tutor',$SessSemName
     }
 }
 
+checkObject();
+checkObjectModule("participants");
+
 mark_public_course();
 
 if ($rechte) {
@@ -114,9 +117,6 @@ if (isset($_REQUEST['do_send_msg_x']) && isset($_REQUEST['send_msg']) && Seminar
     // Start  of Output
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
-
-    checkObject();
-    checkObjectModule("participants");
 
     // participants shall not see participant list in AUTO_INSERT_SEM seminars
     if (is_array($GLOBALS['AUTO_INSERT_SEM']) && in_array($SessSemName[1], $GLOBALS['AUTO_INSERT_SEM']) && !$rechte) {

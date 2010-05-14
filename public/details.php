@@ -44,6 +44,11 @@ require_once "lib/classes/CourseAvatar.class.php";
 
 include 'lib/seminar_open.php'; // initialise Stud.IP-Session
 
+//wenn kein Seminar gesetzt und auch kein externer Aufruf raus....
+if (!isset($sem_id)) {
+    checkObject();
+}
+
 $HELP_KEYWORD="Basis.InVeranstaltungDetails";
 if ($SessSemName[1] && !isset($sem_id)) $header_object_id = $SessSemName[1];
 else $header_object_id = $sem_id;
@@ -67,11 +72,6 @@ $db4=new DB_Seminar;
 $info_msg = $abo_msg = $delete_msg = $back_msg = '';
 $send_from_search = (int)isset($send_from_search);
 if (!preg_match('/^('.preg_quote($CANONICAL_RELATIVE_PATH_STUDIP,'/').')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', $send_from_search_page)) $send_from_search_page = '';
-
-//wenn kein Seminar gesetzt und auch kein externer Aufruf raus....
-if (!isset($sem_id)) {
-    checkObject();
-}
 
 //wenn Seminar gesetzt und kein externer Aufruf uebernahme der SessionVariable
 if (($SessSemName[1] != "") && (!isset($sem_id) || $SessSemName[1] == $sem_id)) {

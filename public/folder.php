@@ -256,6 +256,10 @@ if($zip_file_id === false){
     . '§';
 }
 
+checkObject();
+checkObjectModule('documents');
+object_set_visit_module('documents');
+
 //mark_public_course();
 
 // Start of Output
@@ -271,10 +275,6 @@ if ($folder_system_data['cmd'] == 'all') {
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-
-checkObject();
-checkObjectModule('documents');
-object_set_visit_module('documents');
 
 
 $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));

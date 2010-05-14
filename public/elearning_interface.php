@@ -34,6 +34,10 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once ('config.inc.php');
 require_once ('lib/visual.inc.php');
 
+checkObject();
+checkObjectModule("elearning_interface");
+object_set_visit_module("elearning_interface");
+
 mark_public_course();
 
 $HELP_KEYWORD="Basis.Ilias";
@@ -46,10 +50,6 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
 {
     $caching_active = false;
-
-    checkObject();
-    checkObjectModule("elearning_interface");
-    object_set_visit_module("elearning_interface");
 
     require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
     require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ObjectConnections.class.php");

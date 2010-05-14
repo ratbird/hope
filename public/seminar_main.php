@@ -96,6 +96,8 @@ if (get_config('NEWS_RSS_EXPORT_ENABLE') && $SessSemName[1]){
     }
 }
 
+checkObject();
+
 mark_public_course($sem);
 
 $HELP_KEYWORD="Basis.InVeranstaltungKurzinfo";
@@ -105,8 +107,6 @@ Navigation::activateItem('/course/main/info');
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
-
-checkObject();
 
 include 'lib/showNews.inc.php';
 include 'lib/show_dates.inc.php';

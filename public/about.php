@@ -576,7 +576,7 @@ if (get_config('CHAT_ENABLE')) {
     chat_show_info($user_id);
 }
 
-$layout = $GLOBALS['template_factory']->open('shared/homepage_box');
+$layout = $GLOBALS['template_factory']->open('shared/index_box');
 
 // Ausgabe von Literaturlisten
 $lit_list = StudipLitList::GetFormattedListsByRange($user_id);
@@ -628,10 +628,9 @@ foreach ($homepageplugins as $homepageplugin){
 
     if ($template) {
         echo $template->render(NULL, $layout);
+        $layout->clear_attributes();
     }
 }
-
-$layout->clear_attributes();
 
 //add the own categories - this ones are self created by the user
 $categories = DBManager::get()->query("SELECT * FROM kategorien WHERE range_id = '$user_id' ORDER BY priority");

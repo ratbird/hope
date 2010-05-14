@@ -1,17 +1,15 @@
 <!-- Startseite (nicht eingeloggt) -->
 <? if ($logout) : ?>
-<div style="width: 750px; margin: auto;">
     <?= MessageBox::success(_("Sie sind nun aus dem System abgemeldet."), array($GLOBALS['UNI_LOGOUT_ADD'])) ?>
-</div>
 <? endif; ?>
-<table class="index_box" style="width: 750px;">
+<table class="index_box">
     <tr>
-        <td colspan="3" class="topic">
+        <td colspan="2" class="topic">
             &nbsp;<b><?=$GLOBALS['UNI_NAME']?></b>
         </td>
     </tr>
     <tr>
-        <td class="blank" height="270" valign="top" colspan="3" style="background:url(<?=$GLOBALS['ASSETS_URL']?>images/startseite.jpg) no-repeat left top; background-color:#FFFFFF; padding-top:30px;">
+        <td class="blank" height="270" valign="top" colspan="2" style="background:url(<?=$GLOBALS['ASSETS_URL']?>images/startseite.jpg) no-repeat left top; background-color:#FFFFFF; padding-top:30px;">
             <? foreach (Navigation::getItem('/login') as $key => $nav) : ?>
                 <? if ($nav->isVisible()) : ?>
                     <? list($name, $title) = explode(' - ', $nav->getTitle()) ?>
@@ -31,7 +29,7 @@
     </tr>
     <? if($GLOBALS['UNI_LOGIN_ADD']) : ?>
     <tr>
-        <td colspan="3" bgcolor="#FFFFFF">
+        <td colspan="2" bgcolor="#FFFFFF">
             <blockquote>
             <font size="-1">
             &nbsp;<br>

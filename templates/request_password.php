@@ -1,11 +1,10 @@
+<div class="index_container" style="width: 750px;">
 <?if (sizeof($messages)):?>
-<div style="width: 750px; margin: auto;">
 <table width="100%">
     <?=parse_msg_array($messages, '', 1, false)?>
 </table>
-</div>
 <?endif;?>
-<table class="index_box logintable" style="width: 750px;">
+<table class="index_box logintable">
 <tr>
     <td class="topic">
     <img src="<?=$GLOBALS['ASSETS_URL']?>images/login.gif" border="0">
@@ -52,6 +51,7 @@
     </td>
 </tr>
 </table>
+</div>
 <?if ($step == 1):?>
 <script type="text/javascript" language="javascript">
 <!--

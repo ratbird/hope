@@ -198,7 +198,7 @@ if (get_config('VOTE_ENABLE')) {
 
 // display plugins
 $plugins = PluginEngine::getPlugins('StandardPlugin', $SessSemName[1]);
-$layout = $GLOBALS['template_factory']->open('shared/homepage_box');
+$layout = $GLOBALS['template_factory']->open('shared/index_box');
 
 foreach ($plugins as $plugin) {
     $template = $plugin->getInfoTemplate($SessSemName[1]);

@@ -100,12 +100,12 @@ function checkdata(){
 }
 // -->
 </SCRIPT>
-<div style="width: 750px; margin: auto;">
+<div class="index_container" style="width: 750px;">
 <?if (isset($username)): ?>
     <?= MessageBox::error(_("Bei der Registrierung ist ein Fehler aufgetreten!"), array($error_msg, _("Bitte korrigieren Sie Ihre Eingaben und versuchen Sie es erneut"))) ?>
 <?endif;?>
 </div>
-<table class="index_box logintable" style="width: 750px;">
+<table class="index_box logintable">
 <tr>
     <td class="topic"> <b><?=_("Stud.IP - Registrierung")?></b> </td>
 </tr>
@@ -218,6 +218,7 @@ function checkdata(){
         </td>
     </tr>
 </table>
+</div>
 
 <script language="JavaScript">
 <!--

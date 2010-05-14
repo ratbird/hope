@@ -116,6 +116,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
 
 // display menue
 ?>
+    <div class="index_container">
         <table class="index_box">
             <tr>
                 <td class="topic" style="font-weight: bold;" colspan="2">
@@ -201,6 +202,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
         $index_nobody_template->set_attribute('logout', true);
     }
 
+    echo '<div class="index_container" style="width: 750px;">';
     echo $index_nobody_template->render();
 }
 
@@ -237,5 +239,7 @@ if (is_object($user) && $user->id != 'nobody') {
         }
     }
 }
+
+echo '</div>';
 
 include 'lib/include/html_end.inc.php';

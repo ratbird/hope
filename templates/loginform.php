@@ -7,15 +7,14 @@ $(function () {
 });
 // -->
 </script>
+<div class="index_container" style="width: 750px;">
 <? if ($loginerror): ?>
 <!-- failed login code -->
-<div style="width: 750px; margin: auto;">
   <?= MessageBox::error(_("Bei der Anmeldung trat ein Fehler auf!"), array(
         $error_msg, sprintf(_("Bitte wenden Sie sich bei Problemen an: %s"),
         "<a href=\"mailto:".$GLOBALS['UNI_CONTACT']."\">".$GLOBALS['UNI_CONTACT']."</a>"))) ?>
-</div>
 <? endif; ?>
-<table class="index_box logintable" style="width: 750px;">
+<table class="index_box logintable">
   <tbody>
     <tr>
       <td class="topic">
@@ -72,3 +71,4 @@ $(function () {
     </tr>
   </tbody>
 </table>
+</div>

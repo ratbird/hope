@@ -94,7 +94,7 @@ if ($_REQUEST["getfilebody"]) {
         print _("Fehler tauchte auf:")."\n\n".$e->getMessage();
     }
     $output = ob_get_clean();
-    print utf8_encode($output);
+    print studip_utf8encode($output);
     die();
 }
 
@@ -112,7 +112,7 @@ if ($_REQUEST["getfolderbody"]) {
     print _("Fehler tauchte auf:")."\n\n".$e->getMessage();
     }
     $output = ob_get_clean();
-    print utf8_encode($output);
+    print studip_utf8encode($output);
     die();
 }
 

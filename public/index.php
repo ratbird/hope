@@ -126,7 +126,9 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
             <? if ($perm->get_perm() == 'user') : ?>
             <tr>
                 <td class="blank" style="padding: 1em 1em 0em 1em;" colspan="2">
-                    <?= MessageBox::info(sprintf(_("Sie haben noch nicht auf Ihre %s Bestätigungsmail %s geantwortet.<br>Bitte holen Sie dies nach, um Stud.IP Funktionen wie das Belegen von Veranstaltungen nutzen zu können.<br>Bei Problemen wenden Sie Sich an: %s"),'<a href="'.$help_url.'" target="_blank">','</a>', '<a href="mailto:'.$GLOBALS['UNI_CONTACT'].'">'.$GLOBALS['UNI_CONTACT'].'</a>')) ?>
+                    <?= MessageBox::info(sprintf(_('Sie haben noch nicht auf Ihre %s Bestätigungsmail %s geantwortet.'), '<a href="'.$help_url.'" target="_blank">', '</a>'),
+                            array(_('Bitte holen Sie dies nach, um Stud.IP Funktionen wie das Belegen von Veranstaltungen nutzen zu können.'),
+                                sprintf(_('Bei Problemen wenden Sie sich an: %s'), '<a href="mailto:'.$GLOBALS['UNI_CONTACT'].'">'.$GLOBALS['UNI_CONTACT'].'</a>'))) ?>
                 </td>
             </tr>
             <? endif ?>

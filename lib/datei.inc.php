@@ -1336,11 +1336,11 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     $edit='';
     if (($change != $datei["dokument_id"]) && ($upload != $datei["dokument_id"]) && $filelink != $datei["dokument_id"]) {
         if (check_protected_download($datei['dokument_id'])) {
-            $edit= '&nbsp;<a href="' . GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'force') .'">' . makeButton('herunterladen', 'img') . '</a>';
+            $edit= '&nbsp;<a href="' . GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'force') .'" class="extern">' . makeButton('herunterladen', 'img') . '</a>';
 
             $fext = getFileExtension(strtolower($datei['filename']));
             if (($type != '6') && ($fext != 'zip') && ($fext != 'tgz') && ($fext != 'gz') && ($fext != 'bz2')) {
-                $edit.= '&nbsp;<a href="'. GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'zip') . '">' . makeButton('alsziparchiv', 'img') . '</a>';
+                $edit.= '&nbsp;<a href="'. GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'zip') . '" class="extern">' . makeButton('alsziparchiv', 'img') . '</a>';
             }
         }
         if (($rechte) || ($datei["user_id"] == $user->id && $folder_tree->isWritable($datei["range_id"], $user->id))) {
@@ -1460,7 +1460,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         $type = ($datei['url'] != '')? 6 : 0;
         // LUH Spezerei:
         if (check_protected_download($datei["dokument_id"])) {
-            print "<a href=\"".GetDownloadLink( $datei["dokument_id"], $datei["filename"], $type, "normal")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".GetFileIcon(getFileExtension($datei['filename']))."\"></a>";
+            print "<a href=\"".GetDownloadLink( $datei["dokument_id"], $datei["filename"], $type, "normal")."\" class=\"extern\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".GetFileIcon(getFileExtension($datei['filename']))."\"></a>";
         } else {
             print "<img src=\"".$GLOBALS['ASSETS_URL']."images/ausruf_small3.gif\">";
         }

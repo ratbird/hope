@@ -175,7 +175,7 @@ function printFormStart ( $voteID, $rangeID, $referer ) {
     . "<input type=hidden name=\"rangeID\" value=\"".$rangeID."\">"
     . "<input type=hidden name=\"referer\" value=\"".$referer."\">"
     . "<table width=\"100%\" cellpadding=5 cellspacing=3 border=0>\n"
-    . "<tr><td class=steel1 width=\"80%\" valign=top>\n";
+    . "<tr><td valign=\"top\">\n";
 
     if( $vote->isError() )
     $html .= createErrorReport( $vote );
@@ -475,8 +475,8 @@ function printRightRegion ( ) {
                  )
               );
 
-    echo "<td class=blank width=250 align=center valign=top>\n";
-    print_infobox( $infobox, "voting.jpg" );
+    echo "<td width=\"270\" align=\"center\" valign=\"top\">\n";
+    print_infobox($infobox, "infoboxes/voting.jpg");
 
     echo "<br><input type=image style=\"vertical-align:middle;\" name=\"saveButton\""
 //  . " onClick=\"finishInputs();\" "

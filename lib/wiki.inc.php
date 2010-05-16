@@ -1171,7 +1171,7 @@ function showPageFrameStart() {
 function showPageFrameEnd($infobox) {
     // start of infobox area
     echo "<td class=\"blank\" width=\"270\" align=\"right\" valign=\"top\">";
-    print_infobox ($infobox, "wiki.jpg");
+    print_infobox ($infobox, "infoboxes/wiki.jpg");
     echo "</td></tr><tr><td colspan=3 class=\"blank\">&nbsp;</td></tr>";
     echo "</table>"; // end infoframe (content+box)
     echo "</td></tr></table>"; // end page box

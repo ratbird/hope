@@ -48,8 +48,8 @@ if ($send_from_search) $back_msg =_("Zur&uuml;ck zur letzten Auswahl");
 
 $stm_obj = new StudipStmInstance($_REQUEST['stm_instance_id']);
 if (!$stm_obj->is_new){
-    if ($_REQUEST['cmd'] == 'do_enter' 
-    && $stm_obj->isAllowedToEnter($GLOBALS['user']->id) 
+    if ($_REQUEST['cmd'] == 'do_enter'
+    && $stm_obj->isAllowedToEnter($GLOBALS['user']->id)
     && !$stm_obj->isParticipant($GLOBALS['user']->id)
     && isset($_REQUEST['ok_x'])){
         if (isset($_REQUEST['elgroup']) && is_array($stm_obj->el_struct[$_REQUEST['elgroup']])){
@@ -58,7 +58,7 @@ if (!$stm_obj->is_new){
         if ($added) $msg[] = array('msg', _("Ihre gewünschte Belegung wurde eingetragen."));
         else $msg[] = array('error', _("Ihre gewünschte Belegung konnte nicht eingetragen werden."));
     }
-    
+
 // Start of Output
     $CURRENT_PAGE = _("Studienmodul:") . ' ' . $stm_obj->getValue('title') . " - " . _("Details");
     include ("lib/include/header.php");  // Output of Stud.IP head
@@ -128,13 +128,13 @@ if (!$stm_obj->is_new){
                 printf ("<font size=-1>%s</font>",htmlReady($stm_obj->getValue('sub_title')));
                 ?>
             </td>
-            <td class="steel1" width="26%" rowspan=7    valign="top">
+            <td class="steel1" width="26%" rowspan="7" valign="top">
 
             <? // Infobox
 
-            
+
     $picture_tmp = "ausruf_small.gif";
-    
+
     $enter = false;
     /*if (!$perm->have_perm('dozent')){
         if ($stm_obj->isParticipant($GLOBALS['user']->id)){
@@ -148,11 +148,11 @@ if (!$stm_obj->is_new){
             $status_text =  _("Sie können dieses Modul nicht belegen.")
                         . '<br>' . _("Sie erfüllen die Voraussetzungen nicht.");
         }
-        
+
     } else {
         $status_text = _("Sie können dieses Modul nicht belegen.");
     }
-    
+
     $infobox = array    (
         array   ("kategorie"    => _("Pers&ouml;nlicher Status:"),
             "eintrag" => array  (
@@ -163,8 +163,8 @@ if (!$stm_obj->is_new){
         ),
     );
     */
-    
-    
+
+
 if (1 || $back_msg || $info_msg || $enter) {
     $infobox[0]["kategorie"] = _("Aktionen:");
     if ($enter) {
@@ -199,7 +199,7 @@ if (!$stm_obj->getValue('complete')) {
 
 // print the info_box
 
-print_infobox ($infobox,"contract.jpg");
+print_infobox ($infobox, "infoboxes/contract.jpg");
 
 // ende Infobox
 
@@ -260,7 +260,7 @@ print_infobox ($infobox,"contract.jpg");
                  printf ("<font size=-1><b>" . _("Lernziele:") . "</b></font><br /><font size=-1>%s</font>", ($stm_obj->getValue('aims') ? formatReady($stm_obj->getValue('aims')) : _("n.a.")));
                 ?>
                 </td>
-                
+
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;

@@ -561,7 +561,7 @@ $query_time = $query_time_sort;
                 array("icon" => "link_intern.gif", "text" => sprintf("<a href=\"%s?cmd_show=openall\">"._("Alle Nachrichten aufklappen")."</a><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" height=\"2\"><br><a href=\"%s?cmd=mark_allsmsreaded\">"._("Alle als gelesen speichern")."</a><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" height=\"2\"><br>    <a href=\"%s?cmd=admin_folder&cmd_2=new\">"._("Neuen Ordner erstellen")."</a>", $PHP_SELF, $PHP_SELF, $PHP_SELF, $PHP_SELF))))
         );
         // display infobox
-        print_infobox($infobox, "sms3.jpg"); ?>
+        print_infobox($infobox, "infoboxes/sms3.jpg"); ?>
     </td>
 </tr>
 <tr>

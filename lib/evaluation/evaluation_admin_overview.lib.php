@@ -621,7 +621,7 @@ class EvalOverview {
               "eintrag"   => array ($info1, $info2)));
     /* ------------------------------------------------------- end: infobox */
 
-    return print_infobox ($infobox, $imgLogo, YES);
+    return print_infobox ($infobox, 'infoboxes/'.$imgLogo, YES);
   }
 
 
@@ -1687,8 +1687,8 @@ class EvalOverview {
      if ($referer) UrlHelper::bindLinkParam('referer', $referer);
 
       if ($request) {
-     $html .="<a href=\"" . UrlHelper::getLink('admin_evaluation.php?evalAction=' . $value1 
-        .'&evalID=' . $evalID . '&rangeID=' . $showrangeID); 
+     $html .="<a href=\"" . UrlHelper::getLink('admin_evaluation.php?evalAction=' . $value1
+        .'&evalID=' . $evalID . '&rangeID=' . $showrangeID);
 
      $html .="\" title=\"".$label["yes"]."\"><img src=\"".localeButtonUrl('ja2-button.png')."\" width=\"93\" alt=\"".$label["yes"]."\" title=\"".$label["yes"]."\" border=\"0\" align=\"middle\"></a>\n";
      $html .="<a href=\"". UrlHelper::getLink('admin_evaluation.php?evalAction=' . $value2
@@ -1702,7 +1702,7 @@ class EvalOverview {
      $value2 = "unlink_delete_aborted";
      $value3 = "unlink_and_move";
 
-     $html .="<a href=\"". UrlHelper::getLink('admin_evaluation.php?evalAction=' . $value1 
+     $html .="<a href=\"". UrlHelper::getLink('admin_evaluation.php?evalAction=' . $value1
         .'&evalID=' . $evalID . '&rangeID=' . $showrangeID);
 
      $html .="\" title=\"".$label["delete"]."\"><img ".makeButton("loeschen", "src")." alt=\"".$label["delete"]."\" title=\"".$label["delete"]."\" border=\"0\" align=\"middle\"></a>\n";

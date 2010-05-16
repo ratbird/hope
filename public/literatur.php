@@ -48,10 +48,9 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
 ?>
-<body>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-    <td class="blank" width="99%" align="left" valign="top">
+    <td class="blank" align="left" valign="top">
     <table width="100%" border="0" cellpadding="20" cellspacing="0">
         <tr><td align="left" class="blank">
 <?
@@ -64,9 +63,6 @@ if ( ($list = StudipLitList::GetFormattedListsByRange($SessSemName[1], object_ge
         </td></tr>
     </table>
 </td>
-<td class="blank" align="center" valign="top">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-<tr>
 <td class="blank" width="270" align="right" valign="top">
 <?
 $infobox[0] = array ("kategorie" => _("Information:"),
@@ -77,11 +73,8 @@ $infobox[0] = array ("kategorie" => _("Information:"),
 $infobox[1] = array ("kategorie" => _("Aktionen:"));
 $infobox[1]["eintrag"][] = array("icon" => "blank.gif","text"  =>  _("Sie k&ouml;nnen jede dieser Listen in ihren pers&ouml;nlichen Literaturbereich kopieren, um erweiterte Informationen über die Eintr&auml;ge zu erhalten.") );
 
-print_infobox ($infobox,"literaturelist.jpg");
+print_infobox ($infobox, "infoboxes/literaturelist.jpg");
 ?>
-</td>
-</tr>
-</table>
 </td>
 </tr>
 <tr><td class="blank" colspan="2">&nbsp;</td></tr>

@@ -86,7 +86,7 @@ function printSelectSemester($infobox,$semestersAR){
           . "  </td>\n"
           . "     <td align=\"right\" width=\"270\" valign=\"top\">\n";
     echo $html;
-    print_infobox($infobox, "folders.jpg");
+    print_infobox($infobox, "infoboxes/folders.jpg");
     $html = "     <br></td>\n"
           . " </tr>\n"
           . "</table>\n";

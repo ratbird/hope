@@ -64,7 +64,7 @@ if ($_REQUEST['com'] == 'download_config') {
         exit;
     }
 }
- 
+
 $CURRENT_PAGE = _("Verwaltung externer Seiten");
 
 if ($links_admin_data["topkat"] == "inst") {
@@ -96,7 +96,7 @@ if ($_REQUEST['com'] == "do_upload_config") {
     $file_content_wo_tabs = preg_replace("/\t/", "  ", $file_content);
 
     $jsonconfig = json_decode($file_content_wo_tabs, true);
-    
+
     if (!check_config($jsonconfig, $_REQUEST['check_module'])) {
         $msg ="error§". _("Die Konfigurationsdatei hat den falschen Modultyp!"). "§";
     } else if (!store_config($range_id, $_REQUEST['config_id'], $jsonconfig)) {
@@ -273,7 +273,7 @@ if ($choose_module_form != '') {
         echo "&nbsp; <input type=\"image\" " . makeButton("neuanlegen", "src") . " border=\"0\" align=\"absmiddle\">";
         echo "</font></blockquote>\n";
         echo "</form>\n";
-        
+
         $conf_institutes = ExternConfig::GetInstitutesWithConfigurations(($GLOBALS['perm']->have_perm('root') && $_REQUEST['view'] == 'extern_global') ? 'global' : array('inst', 'fak'));
         if (sizeof($conf_institutes)) {
             echo '<form method="post" action="' . URLHelper::getLink('?com=copychoose') . '">';
@@ -305,7 +305,7 @@ if ($choose_module_form != '') {
                     }
                 }
             }
-            
+
             echo '<form method="post" action="' . URLHelper::getLink('?com=copyconfig') . '">';
             echo "<blockquote><font size=\"2\">";
             printf(_("Konfiguration %s aus Einrichtung kopieren."), $choose_module_select . '</select>');
@@ -314,7 +314,7 @@ if ($choose_module_form != '') {
             echo "</font></blockquote>\n";
             echo "<input type=\"hidden\" name=\"copyinstid\" value=\"" . htmlReady($_REQUEST['copychooseinst']) . "\" />\n";
             echo "</form>\n";
-            
+
         }
     }
 }
@@ -344,7 +344,7 @@ if (!$have_config) {
     echo "<td" . $css_switcher->getFullClass() . ">\n";
 
     $css_switcher_2 = new CssClassSwitcher("", "topic");
-    
+
     foreach ($module_types_ordered as $order) {
         $module_type = $GLOBALS['EXTERN_MODULE_TYPES'][$order];
     //foreach ($EXTERN_MODULE_TYPES as $module_type) {
@@ -369,7 +369,7 @@ if (!$have_config) {
                 $css_switcher_2->switchClass();
                 echo "<tr><td" . $css_switcher_2->getFullClass() . " width=\"65%\"><font size=\"2\">";
                 echo "&nbsp;" . $configuration["name"] . "</font></td>\n";
-                
+
                 ?>
                 <td <?= $css_switcher_2->getFullClass() ?> width="5%">
                     <a href="<?= URLHelper::getLink('?com=download_config&config_id='. $configuration['id'] .'&module='. $module_type["module"]) ?>">
@@ -485,5 +485,5 @@ if (sizeof($configurations)) {
                                     )));
 }
 
-print_infobox($info_content, "einrichtungen.jpg");
+print_infobox($info_content, "infoboxes/einrichtungen.jpg");
 print_footer();

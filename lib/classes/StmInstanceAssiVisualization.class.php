@@ -8,21 +8,21 @@ require_once("lib/wiki.inc.php");
 class StmInstanceAssiVisualization{
 
     function showSelStmForm($form) {
-        
+
         $styles = array(    'width'     => '100%',
 //                          'border'        => '1',
                             'align'     => 'center'
         );
-        
+
         $table = new Table($styles);
-        
+
         echo $table->open(array('class' => 'steelgraulight'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
             "<b>" . _("Wahl eines Konkreten Moduls") . "</b><br>
             " . _("Bitte w&auml;hlen sie die entsprechende Aktion f&uuml;r ein vorhandenes Konkretes Modul aus. Sie k&ouml;nnen alternativ auch ein neues Modul instanziieren.")
-            , array('align' => 'center', 'class' => 'blank'));      
+            , array('align' => 'center', 'class' => 'blank'));
             echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/archiv.jpg" border="0">');
         echo $table->close();
 
@@ -48,33 +48,33 @@ class StmInstanceAssiVisualization{
         echo $table->blankRow();
         echo $table->close();
         echo $table->open(array('class' => 'steelgraulight'));
-        
+
         echo $form->getFormEnd();
         echo $table->close();
     }
-    
+
     function showStgInputForm($form) {
-        
+
         $stgs = AbstractStm::GetStg();
         $abschluesse = AbstractStm::GetAbschluesse();
         $types = AbstractStm::GetAbsStmTypes();
-        
+
         $styles = array(    'width'     => '100%',
 //                          'border'        => '2',
                             'align'     => 'center'
-                            
+
         );
-        
+
         $table = new Table($styles);
-        
+
         echo $table->open(array('class' => 'steelgraulight'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
             "<b>" . _("Wahl des Allgemeinen Moduls") . "</b><br><br>
             " . _("Zuerst sollte man ein Allgemeines Modul ausw&auml;hlen, welches man instanziieren m&ouml;chte. Dazu muss eine Vorauswahl &uuml;ber den Studiengang getroffen werden.")
-            , array('align' => 'center', 'class' => 'blank'));      
-            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands01_04.jpg" border="0" align=right">', array('align' => 'right','class' => 'blank'));     
+            , array('align' => 'center', 'class' => 'blank'));
+            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands01_04.jpg" border="0" align=right">', array('align' => 'right','class' => 'blank'));
         echo $table->close();
 
         echo $table->open(array('class' => 'steelgraulight'));
@@ -101,7 +101,7 @@ class StmInstanceAssiVisualization{
         echo $table->blankRow();
         echo $table->blankRow(array('class' => 'steel1'));
         echo $table->openRow(array('class' => 'steel1'));
-        $table->setCellAlign('center'); 
+        $table->setCellAlign('center');
         echo $table->openCell();
             echo $form->getFormButton('back') ;
             echo $form->getFormButton('continue') . "<br><br>";
@@ -113,48 +113,48 @@ class StmInstanceAssiVisualization{
     }
 
     function showAddInfoForm($form) {
-        
+
         $styles = array(    'width'     => '100%',
                             //'border'      => '1',
                             'align'     => 'center'
-                            
+
         );
-        
+
         $table = new Table($styles);
-        
+
         $star = "";
-        
+
         echo $table->open(array('class' => 'steelgraulight'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
             "<b>" . _("Zus&auml;tzliche Daten des Moduls bearbeiten") . "</b><br><br>
             " . _("Hier werden die Daten eingetragen, die spezifisch f&uuml;r diese Instanz sind. Zur &Uuml;bersicht werden die entsprechenden Daten des Allgemeinen Moduls eingeblendet.")
-            , array('align' => 'center', 'width' => '50%', 'class' => 'blank'));        
-            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands02_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));        
+            , array('align' => 'center', 'width' => '50%', 'class' => 'blank'));
+            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands02_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $table->openRow();
         echo $table->cell('<font size=-1></font>', array('align => right', 'colspan' => '2', 'class'=>'steel1'));
         echo $table->closeRow();
         echo $table->close();
-        
+
         echo $table->open(array('class' => 'steelgraulight'));
         echo $form->getFormStart();
         $infobox = array ();
-        $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array("icon"=>"ausruf_small.gif", 
-        "text"=> sprintf(_("Die Textfelder <b>Inhalte</b> und <b>Hinweise</b> m&uuml;ssen nach den Konventionen 
-        des StudIPWiki formatiert werden. Beachten Sie dabei die %sFormatierungsm&ouml;glichkeiten%s. <br> 
+        $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array("icon"=>"ausruf_small.gif",
+        "text"=> sprintf(_("Die Textfelder <b>Inhalte</b> und <b>Hinweise</b> m&uuml;ssen nach den Konventionen
+        des StudIPWiki formatiert werden. Beachten Sie dabei die %sFormatierungsm&ouml;glichkeiten%s. <br>
         Der Button <b>Vorschau</b> zeigt das Ergebnis unter dem jeweiligen Textfeld an.")
         ,'<a href="help/index.php?help_page=ix_forum6.htm" target="_blank">','</a>'))));
 
         echo $table->openRow();
-        echo $table->cell('<b>' . $form->getFormFieldCaption('title') .'</b>' . $form->getFormFieldRequired('title') . "<br>" . $form->form_fields['title']['info'] 
+        echo $table->cell('<b>' . $form->getFormFieldCaption('title') .'</b>' . $form->getFormFieldRequired('title') . "<br>" . $form->form_fields['title']['info']
         , array( 'align' => 'center', 'style' => 'width:40%'));
         echo $table->cell($form->getFormField('title', array('style' => 'width:95%')) .'<br><br>', array( 'align' => 'center', 'style' => 'width: 100%; vertical-align: middle'));
         echo $table->closeRow();
         echo $table->blankRow();
 
         echo $table->openRow();
-        echo $table->cell('<b>' . $form->getFormFieldCaption('subtitle') .'</b>' . $form->getFormFieldRequired('subtitle') . "<br>" . $form->form_fields['subtitle']['info'] 
+        echo $table->cell('<b>' . $form->getFormFieldCaption('subtitle') .'</b>' . $form->getFormFieldRequired('subtitle') . "<br>" . $form->form_fields['subtitle']['info']
         , array( 'align' => 'center'));
         echo $table->cell($form->getFormField('subtitle', array('style' => 'width:95%')) .'<br><br>', array( 'align' => 'center', 'style' => 'width: 100%; vertical-align: middle'));
         echo $table->closeRow();
@@ -165,7 +165,7 @@ class StmInstanceAssiVisualization{
         , array( 'align' => 'center'));
         echo $table->cell($form->getFormField('topics', array('rows' => '25', 'style' => 'width: 95%; ')) , array( 'style' => 'width:100%; vertical-align:middle', 'align' => 'center'));
         echo $table->openCell(array('align' => 'center'));
-        print_infobox ($infobox,"wiki.jpg");
+        print_infobox ($infobox, "infoboxes/wiki.jpg");
         echo '<br>Vorschau&nbsp;' . $form->getFormButton('preview');
         echo $table->closeCell();
         echo $table->closeRow();
@@ -201,23 +201,23 @@ class StmInstanceAssiVisualization{
         }
         else
             echo $table->blankRow();
-                    
+
         echo $table->openRow();
-        echo $table->cell('<b>' . $form->getFormFieldCaption('semester_id') .'</b>' . $form->getFormFieldRequired('semester_id') . "<br>" . $form->form_fields['semester_id']['info'] 
+        echo $table->cell('<b>' . $form->getFormFieldCaption('semester_id') .'</b>' . $form->getFormFieldRequired('semester_id') . "<br>" . $form->form_fields['semester_id']['info']
         , array( 'align' => 'center'));
         echo $table->cell($form->getFormField('semester_id', array('style' => 'width:95%')) .'<br><br>', array( 'align' => 'center', 'style' => 'width: 100%; vertical-align: middle'));
         echo $table->closeRow();
         echo $table->blankRow();
 
         echo $table->openRow();
-        echo $table->cell('<b>' . $form->getFormFieldCaption('homeinst') .'</b>' . $form->getFormFieldRequired('homeinst') . "<br>" . $form->form_fields['homeinst']['info'] 
+        echo $table->cell('<b>' . $form->getFormFieldCaption('homeinst') .'</b>' . $form->getFormFieldRequired('homeinst') . "<br>" . $form->form_fields['homeinst']['info']
         , array( 'align' => 'center'));
         echo $table->cell($form->getFormField('homeinst', array('style' => 'width:95%')) .'<br><br>', array( 'align' => 'center', 'style' => 'width: 100%; vertical-align: middle'));
         echo $table->closeRow();
         echo $table->blankRow();
-        
+
         echo $table->openRow();
-        echo $table->cell('<b>' . $form->getFormFieldCaption('search_user') .'</b>' . $form->getFormFieldRequired('search_user') . "<br>" . $form->form_fields['search_user']['info'] 
+        echo $table->cell('<b>' . $form->getFormFieldCaption('search_user') .'</b>' . $form->getFormFieldRequired('search_user') . "<br>" . $form->form_fields['search_user']['info']
         , array( 'align' => 'center'));
         echo $table->cell($form->getFormField('search_user', array('style' => 'width: 50%')) .'&nbsp;' . $form->getFormButton('search') . "<br><br>" . $form->getFormField('responsible', array('style' => 'width: 80%; vertical-align: middle')), array( 'align' => 'center'));
         echo $table->closeRow();
@@ -225,7 +225,7 @@ class StmInstanceAssiVisualization{
         echo $table->blankRow();
         echo $table->openRow();
         $table->setCellColspan(3);
-        $table->setCellAlign('center'); 
+        $table->setCellAlign('center');
         echo $table->openCell();
         foreach($form->form_buttons as $name => $value)
         {
@@ -234,22 +234,22 @@ class StmInstanceAssiVisualization{
         }
         echo $table->openCell();
         echo $table->closeRow();
-    
+
         echo $form->getFormEnd();
         echo $table->close();
     }
-        
+
     function showSelElementgroupForm($form, $abs_stm, $inst_stm) {
-        
+
         $styles = array(    'width'     => '100%',
 //                          'border'        => '1',
                             'align'     => 'center'
         );
-        
+
         $elem_types = AbstractStmElement::GetStmElementTypes();
 
         $table = new Table($styles);
-        
+
         $star = "";
 
         echo $table->open(array('class' => 'steelgraulight'));
@@ -258,8 +258,8 @@ class StmInstanceAssiVisualization{
             echo $table->cell(
             "<b>" . _("Modulauspr&auml;gung ausw&auml;hlen") . "</b><br><br>
             " . _("Hier wird die Kombination allgemeiner Veranstaltungen ausgew&auml;hlt, der jetzt konkrete Veranstaltungen zugewiesen werden sollen.")
-            , array('align' => 'center', 'width' => '50%', 'class' => 'blank'));        
-            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands03_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));        
+            , array('align' => 'center', 'width' => '50%', 'class' => 'blank'));
+            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands03_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $table->openRow();
         echo $table->cell('<font size=-1></font>', array('align => right', 'colspan' => '2', 'class'=>'steel1'));
         echo $table->closeRow();
@@ -277,7 +277,7 @@ class StmInstanceAssiVisualization{
         echo $table->cell("Semester" , array('style' =>  'font-weight: bold'));
         echo $table->cell("zugewiesen (mind. 1)" , array('style' =>  'font-weight: bold'));
         foreach($abs_stm->elements as $i => $elem_list) {
-            foreach($elem_list as $j => $elem) {            
+            foreach($elem_list as $j => $elem) {
                 echo $table->openRow(array('style' => 'text-align: center'));
                 echo $table->cell($elem_types[$elem->getElementTypeId()]['name']);
                 echo $table->cell($elem->getSws());
@@ -285,7 +285,7 @@ class StmInstanceAssiVisualization{
                 echo $table->cell(($elem->getSemester()==0?"kein":($elem->getSemester()==1?"Sommersemester":"Wintersemester")));
                 if ($inst_stm->isFilled($i,$j))
                     echo $table->cell('<img border="0" src="' .$GLOBALS['ASSETS_URL'] . 'images/haken_transparent.gif">');
-                else 
+                else
                     echo $table->cell('<img border="0" src="' .$GLOBALS['ASSETS_URL'] . 'images/x_transparent.gif">');
 
             }
@@ -294,42 +294,42 @@ class StmInstanceAssiVisualization{
             echo $table->cell($form->getFormButton("sel_$i"));
             echo $table->blankRow();
             $table->setCellColspan(1);
-        }           
+        }
         echo $table->blankRow();
         echo $table->openRow();
         $table->setCellColspan(5);
-        $table->setCellAlign('center'); 
+        $table->setCellAlign('center');
         echo $table->openCell();
         echo $form->getFormButton("back");
         echo $form->getFormButton("continue");
         echo $table->openCell();
         echo $table->closeRow();
-    
+
         echo $form->getFormEnd();
         echo $table->close();
     }
 
     function showFillGroupForm($form, $group, $sem_browse_obj, $inst_stm, $group_pos, $cur_sem=null) {
-        
+
         $styles = array(    'width'     => '100%',
 //                          'border'        => '1',
                             'align'     => 'center'
         );
-        
+
         $elem_types = AbstractStmElement::GetStmElementTypes();
 
         $table = new Table($styles);
-        
+
         $star = "";
-        
+
         echo $table->open(array('class' => 'steelgraulight'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
             "<b>" . _("Kombination instanziieren") . "</b><br><br>
             " . _("Hier werden den Elementen der gew&auml;hlten Kombination konkrete Veranstaltungen zugewiesen. Es m&uuml;ssen nicht alle Felder belegt werden, allerdings gilt dieses Modul dann als unvollst&auml;ndig und muss zu einem sp&auml;teren Zeitpunkt vervollst&auml;ndigt werden. Es k&ouml;nnen einem Feld auch mehrere Veranstaltungen zugewiesen werden. Es sind dann alle Permutationen der einzelnen Felder erlaubt.")
-            , array('align' => 'center', 'width' => '75%', 'class' => 'blank'));        
-            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands03_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));        
+            , array('align' => 'center', 'width' => '75%', 'class' => 'blank'));
+            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands03_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $table->openRow();
         echo $table->cell('<font size=-1></font>', array('align => right', 'colspan' => '2', 'class'=>'steel1'));
         echo $table->closeRow();
@@ -347,7 +347,7 @@ class StmInstanceAssiVisualization{
         echo $table->cell("Semester" , array('style' =>  'font-weight: bold'));
         echo $table->cell("Zugewiesene Veranstaltungen" , array('style' =>  'font-weight: bold'));
         echo $table->blankCell();
-        foreach($group as $j=> $elem) {         
+        foreach($group as $j=> $elem) {
             echo $table->openRow(array('style' => 'text-align: center; vertical-align: top'));
             echo $table->cell($elem_types[$elem->getElementTypeId()]['name']);
             echo $table->cell($elem->getSws());
@@ -359,13 +359,13 @@ class StmInstanceAssiVisualization{
                     $temp_sem = Seminar::GetInstance($element["sem_id"]);
                     echo htmlReady($temp_sem->getName()) . $form->getFormButton("remove_" . $j . "_" .$k) . "<br>";
                 }
-            } 
-            else 
+            }
+            else
                 echo $table->cell("keine");
-                
+
             if ($cur_sem)
                 echo $table->cell($form->getFormButton("fill_$j"));
-            echo $table->blankRow();    
+            echo $table->blankRow();
         }
         echo $table->blankRow();
 
@@ -392,13 +392,13 @@ class StmInstanceAssiVisualization{
             $sem_browse_obj->print_result();
         echo $form->getFormStart();
         echo $table->openRow();
-        $table->setCellAlign('center'); 
+        $table->setCellAlign('center');
         echo $table->blankRow();
         echo $table->openCell();
         echo $form->getFormButton("continue");
         echo $table->openCell();
         echo $table->closeRow();
-    
+
         echo $form->getFormEnd();
         echo $table->close();
     }
@@ -410,15 +410,15 @@ class StmInstanceAssiVisualization{
         $stgs = AbstractStm::GetStg();
         $abschluesse = AbstractStm::GetAbschluesse();
         $is_new = is_string($form->getFormField('complete'));
-        
+
         $styles = array(    'width'     => '100%',
                             //'border'  => '2',
                             'align'     => 'center'
-                            
+
         );
-        
+
         $table = new Table($styles);
-        
+
         echo $table->open(array('class' => 'blank'));
         $table->setCellColspan(1);
         echo $table->openRow();
@@ -428,10 +428,10 @@ class StmInstanceAssiVisualization{
             ( ($is_new)?
               _("Wenn sie ein konkretes Modul als vollst&auml;ndig deklarieren, kann es danach nicht mehr bearbeitet oder gel&ouml;scht werden! Bitte &uuml;berpr&uuml;fen sie noch einmal Ihre Angaben und speichern dann das Modul ab.")
              : "" )
-            , array('align' => 'center', 'class' => 'blank'));      
+            , array('align' => 'center', 'class' => 'blank'));
             if ($is_new)
-                echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands04_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));        
-            else 
+                echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands04_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
+            else
                 echo $table->blankCell(array('class' => 'blank'));
         echo $form->getFormStart();
         echo $table->setCellColspan(2);
@@ -446,43 +446,43 @@ class StmInstanceAssiVisualization{
             }
         echo $table->blankRow();
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Titel </b>&nbsp;", array('align' => 'left'));        
-            echo $table->cell($stm->getTitle(), array('style' => 'width:80%'));     
+            echo $table->cell("&nbsp;&nbsp;<b> Titel </b>&nbsp;", array('align' => 'left'));
+            echo $table->cell($stm->getTitle(), array('style' => 'width:80%'));
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Untertitel </b>&nbsp;", array('align' => 'left'));       
-            echo $table->cell($stm->getSubtitle(), array('style' => 'width:80%'));      
+            echo $table->cell("&nbsp;&nbsp;<b> Untertitel </b>&nbsp;", array('align' => 'left'));
+            echo $table->cell($stm->getSubtitle(), array('style' => 'width:80%'));
         echo $table->closeRow();
         echo $table->row(array($table->cell("<hr>", array('colspan' => '2'))));
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Inhalte </b>&nbsp;", array('align' => 'left'));      
-            echo $table->cell(wikiReady($stm->getTopics()), array('style' => 'width:50%'));     
+            echo $table->cell("&nbsp;&nbsp;<b> Inhalte </b>&nbsp;", array('align' => 'left'));
+            echo $table->cell(wikiReady($stm->getTopics()), array('style' => 'width:50%'));
         echo $table->closeRow();
         echo $table->row(array($table->cell("<hr>", array('colspan' => '2'))));
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Ziele </b>&nbsp;", array('align' => 'left'));        
-            echo $table->cell(wikiReady($abs_stm->getAims()), array('style' => 'width:50%'));       
+            echo $table->cell("&nbsp;&nbsp;<b> Ziele </b>&nbsp;", array('align' => 'left'));
+            echo $table->cell(wikiReady($abs_stm->getAims()), array('style' => 'width:50%'));
         echo $table->closeRow();
         echo $table->row(array($table->cell("<hr>", array('colspan' => '2'))));
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Hinweise </b>&nbsp;", array('align' => 'left'));     
-            echo $table->cell(wikiReady($stm->getHints()), array('style' => 'width:50%'));      
+            echo $table->cell("&nbsp;&nbsp;<b> Hinweise </b>&nbsp;", array('align' => 'left'));
+            echo $table->cell(wikiReady($stm->getHints()), array('style' => 'width:50%'));
         echo $table->closeRow();
         echo $table->row(array($table->cell("<hr>", array('colspan' => '2'))));
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Semester </b>&nbsp;", array('align' => 'left'));     
-            echo $table->cell($stm->getSemesterName(), array('style' => 'width:80%'));      
+            echo $table->cell("&nbsp;&nbsp;<b> Semester </b>&nbsp;", array('align' => 'left'));
+            echo $table->cell($stm->getSemesterName(), array('style' => 'width:80%'));
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Heimat-Einrichtung </b>&nbsp;", array('align' => 'left'));       
-            echo $table->cell($stm->getHomeinstName(), array('style' => 'width:80%'));      
+            echo $table->cell("&nbsp;&nbsp;<b> Heimat-Einrichtung </b>&nbsp;", array('align' => 'left'));
+            echo $table->cell($stm->getHomeinstName(), array('style' => 'width:80%'));
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Modulverantwortliche(r) </b>&nbsp;", array('align' => 'left'));      
-            echo $table->cell($stm->getResponsibleName(), array('style' => 'width:80%'));       
+            echo $table->cell("&nbsp;&nbsp;<b> Modulverantwortliche(r) </b>&nbsp;", array('align' => 'left'));
+            echo $table->cell($stm->getResponsibleName(), array('style' => 'width:80%'));
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Moduladministrator(in) </b>&nbsp;", array('align' => 'left'));       
-            echo $table->cell($stm->getCreatorName(), array('style' => 'width:80%'));       
+            echo $table->cell("&nbsp;&nbsp;<b> Moduladministrator(in) </b>&nbsp;", array('align' => 'left'));
+            echo $table->cell($stm->getCreatorName(), array('style' => 'width:80%'));
         echo $table->blankRow();
         echo $table->close();
-        
+
         echo $table->open(array('class' => 'steelgraulight'));
         echo $table->openRow(array('align' => 'center',  'class' => 'steelgraudunkel'));
         echo $table->cell("Lehr- und Lernformen" , array('style' =>  'font-weight: bold'));
@@ -491,7 +491,7 @@ class StmInstanceAssiVisualization{
         echo $table->cell("Semester" , array('style' =>  'font-weight: bold'));
         echo $table->cell("Zugewiesene Veranstaltungen" , array('style' =>  'font-weight: bold'));
         foreach ($abs_stm->elements as $group_pos => $group) {
-            foreach($group as $j=> $elem) {         
+            foreach($group as $j=> $elem) {
                 echo $table->openRow(array('style' => 'text-align: center; vertical-align: top'));
                 echo $table->cell($elem_types[$elem->getElementTypeId()]['name']);
                 echo $table->cell($elem->getSws());
@@ -503,8 +503,8 @@ class StmInstanceAssiVisualization{
                         $temp_sem = Seminar::GetInstance($element["sem_id"]);
                         echo $temp_sem->getName() . "<br>";
                     }
-                } 
-                else 
+                }
+                else
                     echo $table->cell("keine");
             }
             echo $table->closeRow();
@@ -514,17 +514,17 @@ class StmInstanceAssiVisualization{
         echo $table->open(array('class' => 'steel1'));
         echo $table->blankRow();
         echo $table->openRow();
-        $table->setCellAlign('center'); 
+        $table->setCellAlign('center');
         echo $table->openCell();
             echo $form->getFormButton('back');
             if($form->form_buttons['continue']) echo $form->getFormButton('continue');
         echo $table->openCell();
         echo $table->closeRow();
-    
+
         echo $form->getFormEnd();
         echo $table->close();
     }
-        
+
     function showAbsSummaryForm($form, $stm) {
 
         $elem_types = AbstractStmElement::GetStmElementTypes();
@@ -535,19 +535,19 @@ class StmInstanceAssiVisualization{
         $styles = array(    'width'     => '100%',
                             //'border'  => '2',
                             'align'     => 'center'
-                            
+
         );
-        
+
         $table = new Table($styles);
-        
+
         echo $table->open(array('class' => 'blank'));
         $table->setCellColspan(1);
         echo $table->openRow();
             echo $table->cell(
             "<b>" . _("Zusammenfassung") . "</b><br><br>
             " . _("Hier werden noch einmal alle Daten des Allgemeinen Moduls dargestellt. Bitte &uuml;berpr&uuml;fen Sie, ob sie das richtige Modul gew&auml;hlt haben.")
-            , array('align' => 'center', 'class' => 'blank'));      
-            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands01_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));        
+            , array('align' => 'center', 'class' => 'blank'));
+            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands01_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $form->getFormStart();
         echo $table->setCellColspan(2);
         echo $table->openRow(array('class' => 'steel1'));
@@ -557,26 +557,26 @@ class StmInstanceAssiVisualization{
         echo $table->open(array('class' => 'steelgraulight'));
         echo $table->blankRow();
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Titel </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));        
-            echo $table->cell($stm->getTitle(), array('style' => 'width:35%'));     
+            echo $table->cell("&nbsp;&nbsp;<b> Titel </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));
+            echo $table->cell($stm->getTitle(), array('style' => 'width:35%'));
             echo $table->blankCell(array('style' => 'width:2%'));
-            echo $table->cell("&nbsp;&nbsp;<b> Kreditpunkte </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));     
-            echo $table->cell($stm->getCredits(), array('style' => 'width:35%'));       
+            echo $table->cell("&nbsp;&nbsp;<b> Kreditpunkte </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));
+            echo $table->cell($stm->getCredits(), array('style' => 'width:35%'));
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Untertitel </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));       
-            echo $table->cell($stm->getSubtitle(), array('style' => 'width:35%'));      
+            echo $table->cell("&nbsp;&nbsp;<b> Untertitel </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));
+            echo $table->cell($stm->getSubtitle(), array('style' => 'width:35%'));
             echo $table->blankCell(array('style' => 'width:2%'));
-            echo $table->cell("&nbsp;&nbsp;<b> Arbeitsaufwand </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));       
-            echo $table->cell($stm->getWorkload(), array('style' => 'width:35%'));      
+            echo $table->cell("&nbsp;&nbsp;<b> Arbeitsaufwand </b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));
+            echo $table->cell($stm->getWorkload(), array('style' => 'width:35%'));
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b>alphanumerische ID</b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));     
-            echo $table->cell($stm->getIdNumber(), array('style' => 'width:35%'));      
+            echo $table->cell("&nbsp;&nbsp;<b>alphanumerische ID</b>&nbsp;", array('align' => 'left', 'style' => 'width:12%'));
+            echo $table->cell($stm->getIdNumber(), array('style' => 'width:35%'));
             echo $table->blankCell(array('style' => 'width:2%'));
-            echo $table->cell("&nbsp;&nbsp;<b> Turnus </b>&nbsp;", array('align' => 'left', 'style' => 'width:15%'));       
-            echo $table->cell(($stm->getTurnus()==0?"kein":($stm->getTurnus()==1?"Sommersemester":"Wintersemester")), array('style' => 'width:40%'));       
+            echo $table->cell("&nbsp;&nbsp;<b> Turnus </b>&nbsp;", array('align' => 'left', 'style' => 'width:15%'));
+            echo $table->cell(($stm->getTurnus()==0?"kein":($stm->getTurnus()==1?"Sommersemester":"Wintersemester")), array('style' => 'width:40%'));
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Dauer </b>&nbsp;", array('align' => 'left', 'style' => 'width:15%'));        
-            echo $table->cell($stm->getDuration(), array('style' => 'width:35%'));      
+            echo $table->cell("&nbsp;&nbsp;<b> Dauer </b>&nbsp;", array('align' => 'left', 'style' => 'width:15%'));
+            echo $table->cell($stm->getDuration(), array('style' => 'width:35%'));
         echo $table->blankRow();
         echo $table->openRow();
             echo $table->blankCell();
@@ -584,11 +584,11 @@ class StmInstanceAssiVisualization{
             echo $table->cell("<hr>");
             $table->setCellColspan(2);
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b> Inhalte </b>&nbsp;", array('align' => 'left', 'style' => 'width:15%'));      
-            echo $table->cell(wikiReady($stm->getTopics()), array('style' => 'width:35%'));     
+            echo $table->cell("&nbsp;&nbsp;<b> Inhalte </b>&nbsp;", array('align' => 'left', 'style' => 'width:15%'));
+            echo $table->cell(wikiReady($stm->getTopics()), array('style' => 'width:35%'));
             echo $table->blankCell(array('style' => 'width:2%'));
-            echo $table->cell("&nbsp;&nbsp;<b> Lernziele </b>&nbsp;", array('align' => 'left', 'style' => 'width:15%'));        
-            echo $table->cell(wikiReady($stm->getAims()), array('style' => 'width:35%'));       
+            echo $table->cell("&nbsp;&nbsp;<b> Lernziele </b>&nbsp;", array('align' => 'left', 'style' => 'width:15%'));
+            echo $table->cell(wikiReady($stm->getAims()), array('style' => 'width:35%'));
         echo $table->blankRow();
         echo $table->openRow();
             echo $table->blankCell();
@@ -596,8 +596,8 @@ class StmInstanceAssiVisualization{
             echo $table->cell("<hr>");
             $table->setCellColspan(2);
         echo $table->openRow();
-            echo $table->cell("&nbsp;&nbsp;<b>Allgemeine Hinweise</b>&nbsp;", array('align' => 'left', 'style' => 'width:15%'));        
-            echo $table->cell(wikiReady($stm->getHints()), array('style' => 'width:35%'));      
+            echo $table->cell("&nbsp;&nbsp;<b>Allgemeine Hinweise</b>&nbsp;", array('align' => 'left', 'style' => 'width:15%'));
+            echo $table->cell(wikiReady($stm->getHints()), array('style' => 'width:35%'));
         echo $table->blankRow();
         echo $table->close();
 
@@ -609,7 +609,7 @@ class StmInstanceAssiVisualization{
             echo $table->cell("Studentische Arbeitszeit" , array('style' =>  'font-weight: bold'));
             echo $table->cell("Semester" , array('style' =>  'font-weight: bold'));
         foreach($stm->elements as $i => $elem_list) {
-            foreach($elem_list as $j => $elem) {            
+            foreach($elem_list as $j => $elem) {
                 echo $table->openRow(array('style' => 'text-align: center'));
                 echo $table->cell($elem_types[$elem->getElementTypeId()]['name']);
                 echo $table->cell($elem->getSws());
@@ -647,17 +647,17 @@ class StmInstanceAssiVisualization{
         echo $table->open(array('class' => 'steel1'));
         echo $table->blankRow();
         echo $table->openRow();
-        $table->setCellAlign('center'); 
+        $table->setCellAlign('center');
         echo $table->openCell();
             echo $form->getFormButton('back');
             echo $form->getFormButton('continue');
         echo $table->openCell();
         echo $table->closeRow();
-    
+
         echo $form->getFormEnd();
         echo $table->close();
     }
-    
+
     function showError($err_msg) {
 
         if (count($err_msg)){
@@ -667,7 +667,7 @@ class StmInstanceAssiVisualization{
         }
 
     }
-    
-    
+
+
 }
 ?>

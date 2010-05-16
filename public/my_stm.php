@@ -4,9 +4,9 @@
 # Lifter003: TODO
 /**
 * my_stm.php
-* 
+*
 * overview for Studienmodule
-* 
+*
 *
 * @author       André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -18,7 +18,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // my_stm.php
-// Anzeigeseite fuer 
+// Anzeigeseite fuer
 // Copyright (C) 2006 André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -81,7 +81,7 @@ $db->query("SELECT seminar_user.seminar_id, IF(seminare.visible=0,CONCAT(seminar
             LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
             WHERE seminar_user.user_id = '$user->id' AND seminar_user.status = 'dozent'
             ");
-            
+
 while($db->next_record()){
     $my_stm[$db->f('stm_instance_id')][] = $db->Record;
 }
@@ -151,11 +151,11 @@ if (count($my_stm)) {
     echo "</table><br><br>";
 
 } else {  // es sind keine Veranstaltungen abboniert
- 
+
  ?>
  <tr>
  <tr>
-    <td class="blank" colspan="2">&nbsp; 
+    <td class="blank" colspan="2">&nbsp;
     </td>
  </tr>
      <td valign="top" class="blank">
@@ -165,7 +165,7 @@ if (count($my_stm)) {
         parse_msg($meldung);
     }?>
         </table>
-<?          
+<?
 }
 
 //Info-field on the right side
@@ -180,9 +180,9 @@ if (count($my_stm)) {
 
 
 // View for Teachers
-$infobox = array    (   
+$infobox = array    (
     array  ("kategorie"  => _("Information:"),
-        "eintrag" => array  (   
+        "eintrag" => array  (
             array ( "icon" => "ausruf_small.gif",
                             "text"  => sprintf(_("Es sind zur Zeit %s Veranstaltungen zu Studienmodulen zugewiesen."), count($all_sems))
             ),
@@ -195,7 +195,7 @@ $infobox = array    (
         )
     ),
     array  ("kategorie" => _("Aktionen:"),
-        "eintrag" => array  (   
+        "eintrag" => array  (
             array    (  "icon" => "suchen.gif",
                                 "text"  => sprintf(_("Um Informationen &uuml;ber alle Studienmodule anzuzeigen nutzen Sie die <br> %sSuche nach Studienmodulen%s"), '<a href="sem_portal.php?view=mod&reset_all=TRUE">', '</a>')
             )
@@ -205,14 +205,14 @@ $infobox = array    (
 
 // print the info_box
 
-print_infobox ($infobox,"hoersaal.jpg");
+print_infobox ($infobox, "infoboxes/hoersaal.jpg");
 
 ?>
 
         </td>
     </tr>
     <tr>
-        <td class="blank" colspan="2">&nbsp; 
+        <td class="blank" colspan="2">&nbsp;
         </td>
     </tr>
 </table>

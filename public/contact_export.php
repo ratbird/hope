@@ -163,7 +163,7 @@ function printSelectGroup($infobox, $groups)
         . "   </font></td>\n"
         . "   <td align=\"right\" width=\"270\" valign=\"top\">\n";
     echo $html;
-    print_infobox($infobox,"export.jpg");
+    print_infobox($infobox, "infoboxes/export.jpg");
     $html = "     </td>\n"
         . "  </tr>\n"
         . " </table>\n"

@@ -278,7 +278,7 @@ $infobox = array    (
 
 // print the info_box
 
-print_infobox ($infobox,"seminare.jpg");
+print_infobox ($infobox, "infoboxes/seminare.jpg");
 
 ?>
 

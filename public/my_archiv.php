@@ -184,7 +184,7 @@ $infobox = array    (
 
 // print the info_box
 
-print_infobox ($infobox, "archiv.jpg");
+print_infobox($infobox, "infoboxes/archiv.jpg");
 
 ?>
 

@@ -157,7 +157,7 @@ if (($EXPORT_ENABLE) AND ($level == "sbb") AND ($perm->have_perm("tutor")))
                                                         )
                     );
 }
-print_infobox ($infobox,"browse.jpg");
+print_infobox($infobox, "infoboxes/browse.jpg");
 ?>
 </tr>
 <tr>

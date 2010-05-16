@@ -295,7 +295,7 @@ $infobox[1] = array ("kategorie" => _("Aktionen:"));
 $infobox[1]["eintrag"][] = array("icon" => "link_intern.gif","text"  => "<a href=\"admin_lit_list.php\">" . _("Literaturlisten bearbeiten") . "</a>" );
 $infobox[1]["eintrag"][] = array("icon" => "link_intern.gif","text"  => "<a href=\"lit_search.php\">" . _("Literatur suchen") . "</a>" );
 
-print_infobox ($infobox, "literaturelist.jpg");
+print_infobox($infobox, "infoboxes/literaturelist.jpg");
 
 ?>
 </td>

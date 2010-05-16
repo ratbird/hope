@@ -120,7 +120,7 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
         </td>
         <td width="270" class="blank" align="center" valign="top">
             <?
-            print_infobox ($infobox, "export.jpg");
+            print_infobox ($infobox, "infoboxes/export.jpg");
             ?>
         </td>
     </tr>

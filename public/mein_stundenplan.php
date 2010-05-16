@@ -957,7 +957,7 @@ $infobox = array(
             );
 
 
-print_infobox ($infobox,"schedules.jpg");
+print_infobox($infobox, "infoboxes/schedules.jpg");
 }
 
 echo '</td></tr></table>';

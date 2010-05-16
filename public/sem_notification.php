@@ -127,31 +127,31 @@ if (isset($_REQUEST['close_my_sem']))
 
 if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("admin")) {
     $db = new DB_Seminar();
-    
+
     if (isset($_my_sem_group_field)) {
         $group_field = $_my_sem_group_field;
     } else {
         $group_field = 'not_grouped';
     }
-    
+
     if($group_field == 'sem_tree_id'){
         $add_fields = ',sem_tree_id';
         $add_query = "LEFT JOIN seminar_sem_tree sst ON (sst.seminar_id=seminar_user.seminar_id)";
     }
-    
+
     if($group_field == 'dozent_id'){
         $add_fields = ', su1.user_id as dozent_id';
         $add_query = "LEFT JOIN seminar_user as su1 ON (su1.seminar_id=seminare.Seminar_id AND su1.status='dozent')";
     }
-    
+
     $dbv = new DbView();
-    
+
     $db->query ("SELECT seminare.Name, seminare.Seminar_id, seminare.status as sem_status, seminar_user.gruppe, seminare.visible,
                 {$dbv->sem_number_sql} as sem_number, {$dbv->sem_number_end_sql} as sem_number_end $add_fields
                 FROM seminar_user LEFT JOIN seminare  USING (Seminar_id)
                 $add_query
                 WHERE seminar_user.user_id = '$user->id'");
-    
+
     if (!$db->num_rows()) {
         echo "<table class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
         echo "<tr><td class=\"blank\">&nbsp;</td></tr>";
@@ -159,7 +159,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                 '§', 'blank', 0);
         echo "</table>";
     }
-    
+
     $modules = new ModulesNotification();
     // Update der Benachrichtigungsfunktion
     if ($_REQUEST['cmd'] == 'set_sem_notification') {
@@ -415,7 +415,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
 if ($_REQUEST['view'] != 'notification') {
     echo "</td></tr></table>\n";
-    
+
     include ('lib/include/html_end.inc.php');
   // Save data back to database.
   page_close();

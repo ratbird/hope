@@ -89,7 +89,7 @@ $graphtypes_likertscale = array("bars"=>"Balken",
 $db = new DB_Seminar();
 $can_change = FALSE;
 // Pruefen, ob die Person wirklich berechtigt ist, hier etwas zu aendern...
-if ($staff_member) 
+if ($staff_member)
         $db->query(sprintf("SELECT * FROM eval WHERE eval_id='%s'",$eval_id));
 else
         $db->query(sprintf("SELECT * FROM eval WHERE eval_id='%s' AND author_id='%s'",$eval_id,$auth->auth["uid"]));
@@ -104,14 +104,14 @@ if ($db->next_record()) $can_change = TRUE; // Person darf etwas aendern....
 function createInfoBox ($imgLogo) {
         /* Define infobox text ------------------------------------------------ */
         $info1 =  array ("icon" => "eval-icon.gif",
-                "text" => _("Auf dieser Seite k&ouml;nnen Sie die Auswertung Ihrer Evaluation konfigurieren.")); 
+                "text" => _("Auf dieser Seite k&ouml;nnen Sie die Auswertung Ihrer Evaluation konfigurieren."));
     $info2 = array ("icon" => "i.gif",
             "text" => _("W&auml;hlen Sie Ihre Einstellungen und dr&uuml;cken Sie auf \"Template speichern\". Anschlie&szlig;end kommen Sie mit dem Button unten links zur&uuml;ck zu Ihrer Evaluation."));
-    
+
     $infobox = array (array ("kategorie" => _("Information:"),
             "eintrag"   => array ($info1, $info2)));
     /* ------------------------------------------------------- end: infobox */
-    return print_infobox ($infobox, $imgLogo, YES);
+    return print_infobox ($infobox, 'infoboxes/'.$imgLogo, YES);
 }
 
 
@@ -173,7 +173,7 @@ if (isset($eval_id) && $can_change) {
     echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_total_stats\" VALUE=\"0\" "; if ($db_template->f("show_total_stats")=="0") echo "CHECKED"; print "></FONT></TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
     echo "  </TR>\n";
-    
+
     $cssSw->switchClass();
 
     echo "  <TR>\n";
@@ -182,7 +182,7 @@ if (isset($eval_id) && $can_change) {
     echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_graphics\" VALUE=\"0\" "; if ($db_template->f("show_graphics")=="0") echo "CHECKED"; print "></FONT></TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
     echo "  </TR>\n";
-    
+
     $cssSw->switchClass();
 
     echo "  <TR>\n";
@@ -191,7 +191,7 @@ if (isset($eval_id) && $can_change) {
     echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_questions\" VALUE=\"0\" "; if ($db_template->f("show_questions")=="0") echo "CHECKED"; print "></FONT></TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
     echo "  </TR>\n";
-    
+
     $cssSw->switchClass();
 
     echo "  <TR>\n";
@@ -200,7 +200,7 @@ if (isset($eval_id) && $can_change) {
     echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_group_headline\" VALUE=\"0\" "; if ($db_template->f("show_group_headline")=="0") echo "CHECKED"; print "></FONT></TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
     echo "  </TR>\n";
-    
+
     $cssSw->switchClass();
 
     echo "  <TR>\n";
@@ -209,7 +209,7 @@ if (isset($eval_id) && $can_change) {
     echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\"><FONT COLOR=\"-1\"><INPUT TYPE=\"radio\" NAME=\"show_questionblock_headline\" VALUE=\"0\" "; if ($db_template->f("show_questionblock_headline")=="0") echo "CHECKED"; print "></FONT></TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
     echo "  </TR>\n";
-    
+
     $cssSw->switchClass();
 
     echo "  <TR>\n";
@@ -223,7 +223,7 @@ if (isset($eval_id) && $can_change) {
     echo "    </TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
     echo "  </TR>\n";
-    
+
     $cssSw->switchClass();
 
     echo "  <TR>\n";
@@ -237,7 +237,7 @@ if (isset($eval_id) && $can_change) {
     echo "    </TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
     echo "  </TR>\n";
-    
+
     $cssSw->switchClass();
 
     echo "  <TR>\n";
@@ -251,7 +251,7 @@ if (isset($eval_id) && $can_change) {
     echo "    </TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
     echo "  </TR>\n";
-    
+
     $cssSw->switchClass();
 
     echo "<script type=\"text/javascript\" language=\"javascript\">\n";

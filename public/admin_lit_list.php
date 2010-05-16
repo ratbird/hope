@@ -215,7 +215,7 @@ $infobox[1] = array ("kategorie" => _("Aktionen:"));
 $infobox[1]["eintrag"][] = array('icon' => "link_intern.gif","text"  => "<a href=\"lit_search.php\">" . _("Literatur suchen") . "</a>" );
 $infobox[1]["eintrag"][] = array('icon' => "link_intern.gif","text"  => "<a href=\"admin_lit_element.php?_range_id=new_entry\">" . _("Neue Literatur anlegen") . "</a>" );
 
-print_infobox ($infobox, "literaturelist.jpg");
+print_infobox ($infobox, "infoboxes/literaturelist.jpg");
 ?>
 <table width="250" align="center">
 <?=$_the_clip_form->getFormStart($_the_treeview->getSelf());?>

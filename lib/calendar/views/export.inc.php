@@ -154,8 +154,8 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         print_cell($params);
         echo "</table\n</td>\n";
 
-        echo "<td class=\"blank\" align=\"right\" valign=\"top\" width=\"1%\" valign=\"top\">\n";
-        print_infobox($info['all'], "dates.jpg");
+        echo "<td class=\"blank\" align=\"right\" valign=\"top\" width=\"270\">\n";
+        print_infobox($info['all'], "infoboxes/dates.jpg");
     }
     else {
 

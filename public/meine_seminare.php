@@ -157,24 +157,24 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
     if ($cmd=="kill"
         && !LockRules::Check($current_seminar->getId(), 'participants')
         && $ticket_check) {
-    
+
         if ($current_seminar->admission_binding) {
             $meldung = "info§" . sprintf(_("Die Veranstaltung <b>%s</b> ist als <b>bindend</b> angelegt. Wenn Sie sich austragen wollen, m&uuml;ssen Sie sich an die Dozentin oder den Dozenten der Veranstaltung wenden."), htmlReady($current_seminar->getName())) . "<br>";
         } elseif (!$perm->have_studip_perm('tutor', $current_seminar->getId())) {
-            
+
             // LOGGING
             log_event('SEM_USER_DEL', $current_seminar->getId(), $user->id, 'Hat sich selbst ausgetragen');
-            
+
             $db->query("DELETE FROM seminar_user WHERE user_id='$user->id' AND Seminar_id='".$current_seminar->getId()."'");
             if ($db->affected_rows() == 0)
                 $meldung="error§" . _("Datenbankfehler!");
             else {
                 // Löschen aus Statusgruppen
                 RemovePersonStatusgruppeComplete (get_username(), $current_seminar->getId());
-                
+
                 //Pruefen, ob es Nachruecker gibt
                 update_admission($current_seminar->getId());
-                
+
                 $meldung = "msg§" . sprintf(_("Das Abonnement der Veranstaltung <b>%s</b> wurde aufgehoben. Sie sind nun nicht mehr als TeilnehmerIn dieser Veranstaltung im System registriert."), htmlReady($current_seminar->getName()));
             }
         }
@@ -185,13 +185,13 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
 
         // LOGGING
         log_event('SEM_USER_DEL', $current_seminar->getId(), $user->id, 'Hat sich selbst aus der Wartliste ausgetragen');
-        
+
         $db->query("DELETE FROM admission_seminar_user WHERE user_id='$user->id' AND seminar_id='".$current_seminar->getId()."'");
         if ($db->affected_rows() == 0)  $meldung="error§" . _("Datenbankfehler!");
         else {
             //Warteliste neu sortieren
             renumber_admission($current_seminar->getId());
-            
+
             $meldung="msg§" . sprintf(_("Der Eintrag in der Anmelde- bzw. Warteliste der Veranstaltung <b>%s</b> wurde aufgehoben. Wenn Sie an der Veranstaltung teilnehmen wollen, m&uuml;ssen Sie sich erneut bewerben."), htmlReady($current_seminar->getName()));
         }
     }
@@ -263,7 +263,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         $add_fields = ', su1.user_id as dozent_id';
         $add_query = "LEFT JOIN seminar_user as su1 ON (su1.seminar_id=seminare.Seminar_id AND su1.status='dozent')";
     }
-    
+
     $dbv = new DbView();
 
     $db->query ("SELECT seminare.Name, seminare.Seminar_id, seminare.status as sem_status, seminar_user.status, seminar_user.gruppe,
@@ -549,7 +549,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                 else
                     $chance_color = dechex(255-($db->f("position")*6)); // da gibts vielleicht noch Hoffnung, also grün
             }
-            
+
             $seminar_name = $db->f("Name");
             if(SeminarCategories::GetByTypeId($db->f('sem_status'))->studygroup_mode){
                 $seminar_name .= ' ('. _("Studiengruppe");
@@ -731,7 +731,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
 // print the info_box
 
-    print_infobox ($infobox,"seminare.jpg");
+    print_infobox ($infobox, "infoboxes/seminare.jpg");
 
 ?>
 

@@ -12,7 +12,7 @@
 
       <tr>
         <td class="blank">
-          <?= Assets::img('infoboxes/'.$picture) ?>
+          <?= Assets::img($picture) ?>
         </td>
       </tr>
 

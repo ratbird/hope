@@ -365,7 +365,7 @@ if ($view == "edit_object_assign" || $view == "openobject_assign") {
                 if ($infobox) {
                     ?>
                     <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
+                        <? print_infobox ($infobox, 'infoboxes/'.$infopic);?>
                     </td>
                     <?
                 }
@@ -448,7 +448,7 @@ if ($view == "view_schedule" || $view == "openobject_schedule") {
                 if ($infobox && !isset($_REQUEST['print_view'])) {
                     ?>
                     <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
+                        <? print_infobox ($infobox, 'infoboxes/'.$infopic);?>
                     </td>
                     <?
                 }
@@ -492,7 +492,7 @@ if ($view == "view_sem_schedule") {
                 if ($infobox && !isset($_REQUEST['print_view'])) {
                     ?>
                     <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
+                        <? print_infobox ($infobox, 'infoboxes/'.$infopic);?>
                     </td>
                     <?
                 }
@@ -542,7 +542,7 @@ if ($view == "view_group_schedule" || $view == "view_group_schedule_daily") {
                 if ($infobox && !isset($_REQUEST['print_view'])) {
                     ?>
                     <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
+                        <? print_infobox ($infobox, 'infoboxes/'.$infopic);?>
                     </td>
                     <?
                 }
@@ -588,7 +588,7 @@ if ($view == "openobject_group_schedule") {
                 if ($infobox && !isset($_REQUEST['print_view'])) {
                     ?>
                     <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
+                        <? print_infobox ($infobox, 'infoboxes/'.$infopic);?>
                     </td>
                     <?
                 }
@@ -683,7 +683,7 @@ if ($view == "view_requests_schedule") {
                 if ($infobox) {
                     ?>
                     <td class="blank" width="270" align="right" valign="top">
-                        <? print_infobox ($infobox, $infopic);?>
+                        <? print_infobox ($infobox, 'infoboxes/'.$infopic);?>
                     </td>
                     <?
                 }
@@ -726,7 +726,7 @@ if (!$suppress_infobox) {
                     ?>
                     <td class="blank" width="270" align="center" valign="top">
                         <?
-                        print_infobox ($infobox, $infopic);
+                        print_infobox ($infobox, 'infoboxes/'.$infopic);
                         if (is_object($clipObj))
                             $clipObj->showClip();
                         ?>

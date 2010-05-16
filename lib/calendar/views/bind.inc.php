@@ -131,14 +131,14 @@ echo "<input type=\"hidden\" name=\"atime\" value=\"$atime\">";
 echo "\n</form>\n";
 echo "</table>";
 echo "\n</td>\n";
-echo "<td class=\"blank\" width=\"10%\" valign=\"top\">\n";
+echo "<td class=\"blank\" width=\"270\" valign=\"top\" align=\"right\">\n";
 $info_content = array(array("kategorie" => _("Information:"),
                                             "eintrag" => array(
                                                 array('icon' => "ausruf_small.gif",
                                                             "text" => _("Termine aus den ausgew&auml;hlten Veranstaltungen werden in Ihren Terminkalender &uuml;bernommen.")
                                             ))));
 
-print_infobox($info_content, "dates.jpg");
+print_infobox($info_content, "infoboxes/dates.jpg");
 echo "</td></tr></table>\n";
 
 echo "</tr><tr><td class=\"blank\">&nbsp;";

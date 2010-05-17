@@ -17,7 +17,11 @@
 
 class StudygroupModel
 {
-    
+    /**
+     * retrieves all installed plugins
+     *
+     * @return array modules a set of all plugins
+     */
     function getInstalledPlugins()
     {
         $modules = array();
@@ -26,13 +30,18 @@ class StudygroupModel
         $plugin_manager = PluginManager::getInstance();
         $plugins = $plugin_manager->getPluginInfos('StandardPlugin');     // get all globally enabled plugins
         foreach ($plugins as $plugin) {
-            if($plugin['enabled']){
+            if ($plugin['enabled']) {
                 $modules[$plugin['class']] = $plugin['name'];
             }
         }
         return $modules;
     }
-
+    
+    /**
+     * retrieves all modules
+     *
+     * @return array modules
+     */
     function getInstalledModules()
     {
         $modules = array();
@@ -47,6 +56,13 @@ class StudygroupModel
         return $modules;
     }
 
+    /**
+     * gets the availability for a set of given modules
+     *
+     * @param array modules
+     *
+     * @return array enabled modules
+     */
     function getAvailability($modules)
     {
         $enabled = array();
@@ -69,12 +85,15 @@ class StudygroupModel
         return $enabled;
     }
 
-
-
+    /**
+     * gets all available modules
+     *
+     * @return array avialable modules
+     */
     function getAvailableModules()
     {
         $modules = StudygroupModel::getInstalledModules();
-        $enabled = StudygroupModel::getAvailability( $modules );
+        $enabled = StudygroupModel::getAvailability($modules);
 
         $ret = array();
 
@@ -85,10 +104,15 @@ class StudygroupModel
         return $ret;
     }   
 
+    /**
+     * gets all available plugins
+     *
+     * @return array avialable plugins
+     */
     function getAvailablePlugins()
     {
         $modules = StudygroupModel::getInstalledPlugins();
-        $enabled = StudygroupModel::getAvailability( $modules );
+        $enabled = StudygroupModel::getAvailability($modules);
 
         $ret = array();
 
@@ -99,6 +123,13 @@ class StudygroupModel
         return $ret;
     }   
 
+    /**
+     * gets enabled plugins for a given studygroup
+     *
+     * @param string id of a studygroup
+     *
+     * @return array enabled plugins
+     */
     function getEnabledPlugins($id)
     {
         $enabled = array();
@@ -110,23 +141,29 @@ class StudygroupModel
         }
         return $enabled;
     }   
-
+    
+    /**
+     * retrieves all institues suitbable for an admin wrt global studygroup settings
+     *
+     * @return array institutes
+     */
     function getInstitutes()
     {
         $institues = array();
 
         // get faculties
-        $stmt = DBManager::get()->query("SELECT Name, Institut_id, 1 AS is_fak,'admin' AS inst_perms
-                FROM Institute WHERE Institut_id = fakultaets_id ORDER BY Name");
+        $stmt = DBManager::get()->query("SELECT Name, Institut_id, 1 AS is_fak,'admin' AS inst_perms "
+              . "FROM Institute WHERE Institut_id = fakultaets_id ORDER BY Name");
         while ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $institutes[$data['Institut_id']] = array (
                     'name' => $data['Name'],
                     'childs' => array()
                     );
             // institutes for faculties
-            $stmt2 = DBManager::get()->query("SELECT a.Institut_id, a.Name FROM Institute a
-                    WHERE fakultaets_id='". $data['Institut_id'] ."' 
-                    AND a.Institut_id !='". $data['Institut_id'] . "' ORDER BY Name");
+            $stmt2 = DBManager::get()->query("SELECT a.Institut_id, a.Name FROM Institute a "
+                   . "WHERE fakultaets_id='". $data['Institut_id']
+                   . "' AND a.Institut_id !='". $data['Institut_id'] . "' ORDER BY Name");
+
             while ($data2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                 $institutes[$data['Institut_id']]['childs'][$data2['Institut_id']] = $data2['Name'];
             }
@@ -134,12 +171,20 @@ class StudygroupModel
 
         return $institutes;
     }
-
+    
+    /**
+     * allows an user to access a "closed" studygroup
+     *
+     * @param string username
+     * @param string id of a studygroup
+     *
+     * @return void
+     */
     function accept_user($username, $sem_id)
     {
-        $stmt = DBManager::get()->query("SELECT asu.user_id FROM admission_seminar_user asu 
-                LEFT JOIN auth_user_md5 au ON (au.user_id=asu.user_id) 
-                WHERE au.username='$username' AND asu.seminar_id='". $sem_id ."'");
+        $stmt = DBManager::get()->query("SELECT asu.user_id FROM admission_seminar_user asu " 
+              . "LEFT JOIN auth_user_md5 au ON (au.user_id=asu.user_id) "
+              . "WHERE au.username='$username' AND asu.seminar_id='". $sem_id ."'");
         if ($data = $stmt->fetch()) {
             $accept_user_id = $data['user_id'];
 
@@ -150,88 +195,136 @@ class StudygroupModel
         }
     }
 
+    /**
+     * denies access to a "closed" studygroup for an user
+     *
+     * @param string username
+     * @param string id of a studygroup
+     *
+     * @return void
+     */
     function deny_user($username, $sem_id)
     {
         DBManager::get()->query("DELETE FROM admission_seminar_user WHERE user_id='". get_userid($username) ."' AND seminar_id='".$sem_id."'");
     }
 
+    /**
+     * promotes an user in a studygroup wrt to a given perm
+     *
+     * @param string username
+     * @param string id of a studygroup
+     * @param string perm
+     *
+     * @return void
+     */
     function promote_user($username, $sem_id, $perm) 
     {
         DBManager::get()->query( "UPDATE seminar_user SET status = '$perm' WHERE Seminar_id = '$sem_id' AND user_id = '". get_userid($username) ."'");
     }
 
-    function remove_user($username, $sem_id, $perm) 
+    /**
+     * removes a user of a studygroup
+     * 
+     * @param string username
+     * @param string id of a studygroup
+     *
+     * @return void
+     */
+    function remove_user($username, $sem_id) 
     {
-        DBManager::get()->query("DELETE FROM seminar_user WHERE Seminar_id = '$sem_id' AND user_id = '". get_userid($username) ."'");
+        DBManager::get()->query("DELETE FROM seminar_user WHERE Seminar_id = '$sem_id' AND user_id = '" . get_userid($username) . "'");
     }
-
+    
+    /**
+     * retrieves the count of all studygroups
+     *
+     * @return string count
+     */
     function countGroups()
     {
         $status = studygroup_sem_types();
 
-        return DBManager::get()->query("SELECT COUNT(*) as c FROM seminare WHERE status IN ('". implode("','", $status)."')")->fetchColumn();
+        return DBManager::get()->query("SELECT COUNT(*) as c FROM seminare WHERE status IN ('" . implode("','", $status) . "')")->fetchColumn();
     }
 
+    /**
+     * get all studygroups in a paged manner wrt a stort criteria and a search term
+     *
+     * @param string sort criteria
+     * @param int lower bound of the resultset
+     * @param int elements per page / resultset
+     * @param string search term
+     *
+     * @return array studygroups
+     */
     function getAllGroups($sort = '', $lower_bound = 1, $elements_per_page = 20, $search = null)
     {
 
         $status = studygroup_sem_types();
-        $sql = "SELECT * FROM seminare WHERE status IN('". implode("','", $status)."')";
-        if(isset($search)) {
-            $search = DBManager::get()->quote('%'.$search.'%');
+        $sql = "SELECT * FROM seminare WHERE status IN('" . implode("','", $status) . "')";
+        if (isset($search)) {
+            $search = DBManager::get()->quote('%' . $search . '%');
             $sql .= " AND seminare.Name LIKE {$search}";
         }
         $sort_order = (substr($sort, strlen($sort) - 3, 3) == 'asc') ? 'asc' : 'desc';
 
         // add here the sortings
-        if($sort == 'name_asc') {
+        if ($sort == 'name_asc') {
             $sql .= " ORDER BY Name ASC";
         }
-        else if($sort == 'name_desc') {
+        elseif ($sort == 'name_desc') {
             $sql .= " ORDER BY Name DESC";
         }
-        else if($sort == 'founded_asc') {
+        elseif ($sort == 'founded_asc') {
             $sql .= " ORDER BY mkdate ASC";
         }
-        else if($sort == 'founded_desc') {
+        elseif ($sort == 'founded_desc') {
             $sql .= " ORDER BY mkdate DESC";
         }
-        else if($sort == 'member_asc' || $sort == 'member_desc') {
-            $sql = "SELECT s.*, (SELECT COUNT(*) FROM seminar_user as su 
-                WHERE s.Seminar_id = su.Seminar_id) as countsems
-                FROM seminare as s
-                WHERE s.status IN ('". implode("','", $status)."')
-                ORDER BY countsems $sort_order";
+        elseif ($sort == 'member_asc' || $sort == 'member_desc') {
+            $sql = "SELECT s.*, (SELECT COUNT(*) FROM seminar_user as su " 
+                 . "WHERE s.Seminar_id = su.Seminar_id) as countsems "
+                 . "FROM seminare as s "
+                 . "WHERE s.status IN ('". implode("','", $status)."') "
+                 . "ORDER BY countsems $sort_order";
         }
-        else if($sort == 'founder_asc' || $sort == 'founder_desc') {
-            $sql = "SELECT s.* FROM seminare as s 
-                LEFT JOIN seminar_user as su ON s.Seminar_id = su.Seminar_id AND su.status = 'dozent'
-                LEFT JOIN auth_user_md5 as aum ON su.user_id = aum.user_id 
-                WHERE s.status IN ('". implode("','", $status)."') 
-                ORDER BY aum.Nachname ". $sort_order;
+        elseif ($sort == 'founder_asc' || $sort == 'founder_desc') {
+            $sql = "SELECT s.* FROM seminare as s "
+                 . "LEFT JOIN seminar_user as su ON s.Seminar_id = su.Seminar_id AND su.status = 'dozent' "
+                 . "LEFT JOIN auth_user_md5 as aum ON su.user_id = aum.user_id "
+                 . "WHERE s.status IN ('". implode("','", $status)."') "
+                 . "ORDER BY aum.Nachname ". $sort_order;
         }
-        else if($sort == 'ismember_asc' || $sort == 'ismember_desc') {
-            $sql ="SELECT s.*, 
-                ( SELECT su.user_id FROM seminar_user AS su WHERE su.user_id = '".$GLOBALS['user']->id."' AND su.Seminar_id = s.Seminar_id ) 
-                AS ismember FROM seminare AS s  
-                WHERE s.status IN ('". implode("','", $status)."') 
-                ORDER BY `ismember`". $sort_order;
+        elseif ($sort == 'ismember_asc' || $sort == 'ismember_desc') {
+            $sql = "SELECT s.*, "
+                 . "( SELECT su.user_id FROM seminar_user AS su WHERE su.user_id = '".$GLOBALS['user']->id."' AND su.Seminar_id = s.Seminar_id ) "
+                 . "AS ismember FROM seminare AS s  "
+                 . "WHERE s.status IN ('". implode("','", $status)."') "
+                 . "ORDER BY `ismember`". $sort_order;
 
         }
-        else if($sort == 'access_asc') {
+        elseif ($sort == 'access_asc') {
             $sql .= " ORDER BY admission_prelim ASC";
         }
-        else if($sort == 'access_desc') {
+        elseif ($sort == 'access_desc') {
             $sql .= " ORDER BY admission_prelim DESC";
         }
 
         $sql .= ', name ASC LIMIT '. $lower_bound .','. $elements_per_page;
+      
         $stmt = DBManager::get()->query($sql);
         $groups = $stmt->fetchAll();
 
         return $groups;
     }
 
+    /**
+     * returns the count of members for a given studygroup
+     *
+     * @param string id of a studygroup
+     *
+     * @return int count
+     */
     function countMembers($semid)
     {
         $sql = "SELECT COUNT(user_id) FROM `seminar_user` WHERE Seminar_id = '{$semid}'";  
@@ -241,7 +334,15 @@ class StudygroupModel
 
         return intval($count[0]);
     }
-
+    
+    /**
+     * get founder for a given studgroup
+     *
+     * @param string id of a studygroup
+     *
+     * @return array founder
+     *
+     */
     function getFounder($semid)
     {
         $sql  = "SELECT user_id FROM `seminar_user` WHERE Seminar_id = '{$semid}' AND status = 'dozent'";
@@ -356,17 +457,17 @@ class StudygroupModel
     function compare_status($a, $b)
     { 
         if ($a['status'] == $b['status']) return strnatcmp($a['fullname'], $b['fullname']);
-        elseif ($a['status'] == 'dozent'){
+        elseif ($a['status'] == 'dozent') {
             if ($b['status'] == 'tutor') return -1;
             elseif ($b['status'] == 'autor') return -1;
         }
-        elseif ($a['status'] == 'tutor'){
+        elseif ($a['status'] == 'tutor') {
             if ($b['status'] == 'dozent') return +1;
-            else if ($b['status'] == 'autor') return -1;
+            elseif ($b['status'] == 'autor') return -1;
         }
-        elseif ($a['status'] == 'autor'){
+        elseif ($a['status'] == 'autor') {
             if ($b['status'] == 'tutor') return +1;
-            else if ($b['status'] == 'dozent') return +1;
+            elseif ($b['status'] == 'dozent') return +1;
         }
     }
 

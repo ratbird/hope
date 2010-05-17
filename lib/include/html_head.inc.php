@@ -64,8 +64,7 @@ global  $_html_head_title,
 
 <?
 
-if (isset($FAVICON))
-        echo "\t\t".'<link rel="SHORTCUT ICON" href="'. $FAVICON.'">'."\n";
+        echo "\t\t".'<link rel="SHORTCUT ICON" href="'. Assets::url('images/favicon.ico') .'">'."\n";
 
 if (isset($_html_head_title))
     $title = $_html_head_title;

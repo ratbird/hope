@@ -202,7 +202,7 @@ function GetScoreContent($user_id) {
 * Retrieves the titel for a given studip score
 *
 * @param        integer a score value
-* @param        integer gender (0: male; 1:female)
+* @param        integer gender (0: unknown, 1: male; 2: female)
 * @return       string  the titel
 *
 */
@@ -238,7 +238,7 @@ function gettitel($score, $gender=0) {
     $titel[19] =    array(0 => _("Halbgott"), 1 => _("Halbg&ouml;ttin"));
     $titel[20] =    array(0 => _("Gott"), 1 => _("G&ouml;ttin"));
 
-    return $titel[$logscore][$gender];
+    return $titel[$logscore][$gender == 2 ? 1 : 0];
 }
 
 /**

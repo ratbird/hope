@@ -133,7 +133,7 @@ class ConnectedUser
             $this->email = $db->f("Email");
             $this->phone_home = $db->f("privatnr");
             $this->street = $db->f("privadr");
-            if ($db->f("geschlecht") == '1')
+            if ($db->f("geschlecht") == '2')
                 $this->gender = 'f';
             else
                 $this->gender = 'm';

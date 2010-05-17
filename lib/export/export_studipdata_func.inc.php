@@ -810,10 +810,12 @@ function export_datafields($range_id, $childgroup_tag, $childobject_tag){
                          
                          switch ($val["field"]) {
                          case "geschlecht":
-                             if ($content == "0")
+                             if ($content == "1")
                                  $content = _("männlich");
-                             else
+                             else if ($content == "2")
                                  $content = _("weiblich");
+                             else
+                                 $content = _("unbekannt");
                              
                              $user_data = array("name" => $val["name"], "content" => $content);
                              break;

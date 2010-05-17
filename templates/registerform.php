@@ -175,7 +175,7 @@ function checkdata(){
 
 <tr valign=top align=left>
   <td colspan="2"><?=_("Geschlecht:")?></td>
-  <td><input type="RADIO" <? if (!$geschlecht) echo "checked" ?> name="geschlecht" value="0"><?=_("m&auml;nnlich")?>&nbsp; <input type="RADIO" name="geschlecht" <? if ($geschlecht) echo "checked" ?> value="1"><?=_("weiblich")?></td>
+  <td><input type="RADIO" <? if (!$geschlecht) echo "checked" ?> name="geschlecht" value="0"><?=_("unbekannt")?>&nbsp; <input type="RADIO" <? if ($geschlecht == 1) echo "checked" ?> name="geschlecht" value="1"><?=_("männlich")?>&nbsp; <input type="RADIO" name="geschlecht" <? if ($geschlecht == 2) echo "checked" ?> value="2"><?=_("weiblich")?></td>
  </tr>
 
 <tr valign=top align=left>

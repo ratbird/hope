@@ -456,8 +456,9 @@ if (isset($_GET['details']) || $showform ) {
                 </tr>
                 <tr>
                 <td colspan="2"><b>&nbsp;<?=_("Geschlecht:")?></b></td>
-                <td>&nbsp;<input type="RADIO" checked name="geschlecht" value="0"><?=_("m&auml;nnlich")?>&nbsp;
-                <input type="RADIO" name="geschlecht" value="1" <?=($_POST['geschlecht'] == 1 ? 'checked' : '')?>><?=_("weiblich")?></td>
+                <td>&nbsp;<input type="RADIO" <?=(!$_POST['geschlecht'] ? 'checked' : '')?> name="geschlecht" value="0"><?=_("unbekannt")?>&nbsp;
+                <input type="RADIO" name="geschlecht" value="1" <?=($_POST['geschlecht'] == 1 ? 'checked' : '')?>><?=_("männlich")?>&nbsp;
+                <input type="RADIO" name="geschlecht" value="2" <?=($_POST['geschlecht'] == 2 ? 'checked' : '')?>><?=_("weiblich")?></td>
                 </tr>
                 <tr>
                     <td colspan="2"><b>&nbsp;<?=_("E-Mail:")?></b></td>
@@ -679,11 +680,12 @@ if (isset($_GET['details']) || $showform ) {
                 <td class="steel1">&nbsp;
                 <?
                 if (StudipAuthAbstract::CheckField("user_info.geschlecht", $auth_plugin)) {
-                    echo "&nbsp;" . (!$db->f("geschlecht") ? _("m&auml;nnlich") : _("weiblich"));
+                    echo "&nbsp;" . ($db->f("geschlecht") == 1 ? _("männlich") : ($db->f("geschlecht") == 2 ? _("weiblich") : _("unbekannt")));
                 } else {
                 ?>
-                <input type="RADIO" <? if (!$db->f("geschlecht")) echo "checked";?> name="geschlecht" value="0"><?=_("m&auml;nnlich")?>&nbsp;
-                <input type="RADIO" <? if ($db->f("geschlecht")) echo "checked";?> name="geschlecht" value="1"><?=_("weiblich")?>
+                <input type="RADIO" <? if (!$db->f("geschlecht")) echo "checked";?> name="geschlecht" value="0"><?=_("unbekannt")?>&nbsp;
+                <input type="RADIO" <? if ($db->f("geschlecht") == 1) echo "checked";?> name="geschlecht" value="1"><?=_("männlich")?>&nbsp;
+                <input type="RADIO" <? if ($db->f("geschlecht") == 2) echo "checked";?> name="geschlecht" value="2"><?=_("weiblich")?>
                 <?
                 }
                 ?>

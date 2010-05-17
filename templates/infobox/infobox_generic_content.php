@@ -23,14 +23,13 @@
         <table cellpadding="4" cellspacing="0">
 
           <? foreach ($content as $category) : ?>
-            <? if ($category) : ?>
+            <tr>
+              <td class="infobox" colspan="2">
+                <font size="-1"><b><?= $category["kategorie"] ?></b></font>
+              </td>
+            </tr>
 
-              <tr>
-                <td class="infobox" colspan="2">
-                  <font size="-1"><b><?= $category["kategorie"] ?></b></font>
-                </td>
-              </tr>
-
+            <? if (isset($category['eintrag'])) : ?>
               <? foreach ($category['eintrag'] as $item) : ?>
 
                 <tr>

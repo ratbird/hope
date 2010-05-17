@@ -42,7 +42,7 @@ else
     $action = '<a href="'. URLHelper::getLink('score.php?cmd=write') .'">'._("Diesen Wert auf der Liste veröffentlichen").'</a>';
 }
 $infobox = array(
-    'picture' => 'board2.jpg',
+    'picture' => 'infoboxes/board2.jpg',
     'content' => array(
         array("kategorie" => _("Ihr Score: ").$score->ReturnMyScore()),
         array("kategorie" => _("Ihr Titel: ").$score->ReturnMyTitle()),

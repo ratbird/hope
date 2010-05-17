@@ -146,7 +146,6 @@ require_once 'lib/admission.inc.php';
 require_once 'lib/classes/StudipAdmissionGroup.class.php';
 require_once 'lib/classes/UserDomain.php';
 require_once 'lib/classes/LockRules.class.php';
-require_once 'app/models/studygroup.php';
 
 
 $db=new DB_Seminar;
@@ -155,8 +154,6 @@ $db3=new DB_Seminar;
 $db4=new DB_Seminar;
 $db5=new DB_Seminar;
 $db6=new DB_Seminar;
-
-$current_seminar = Seminar::getInstance($id);
 
 ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
@@ -183,12 +180,15 @@ $current_seminar = Seminar::getInstance($id);
 
     $same_domain = true;
     $user_domains = UserDomain::getUserDomainsForUser($user->id);
-    if (count($user_domains) > 0 && !in_array($current_seminar->getStatus(), studygroup_sem_types())) {
+
+    if (count($user_domains) > 0) {
         $seminar_domains = UserDomain::getUserDomainsForSeminar($id);
         $same_domain = count(array_intersect($seminar_domains, $user_domains)) > 0;
     }
 
-    if (!$same_domain)
+    $current_seminar = Seminar::getInstance($id);
+
+    if (!$same_domain && !SeminarCategories::GetByTypeId($current_seminar->status)->studygroup_mode)
     {
         parse_msg ("info§"._("Sie sind nicht in einer zugelassenenen Nutzerdomäne, Sie k&ouml;nnen sich nicht eintragen!"));
         echo"<tr><td class=\"blank\" colspan=2><a href=\"index.php\">&nbsp;&nbsp; "._("Zur&uuml;ck zur Startseite")."</a>";
@@ -199,7 +199,6 @@ $current_seminar = Seminar::getInstance($id);
         page_close();
         die;
     }
-
 
     if ($current_seminar->admission_type == 3)
     {

@@ -837,19 +837,21 @@ if ($view == 'Daten') {
     if (StudipAuthAbstract::CheckField("user_info.geschlecht", $my_about->auth_user['auth_plugin'])) {
         echo "&nbsp;" . ($my_about->user_info["geschlecht"] == 1 ? _("m&auml;nnlich") : ($my_about->user_info["geschlecht"] == 2 ? _("weiblich") : _("unbekannt")));
     } else {
-        echo "&nbsp; " . _("unbekannt") . "&nbsp; <input type=\"RADIO\" name=\"geschlecht\" value=\"0\" ";
+        echo "&nbsp; <input type=\"radio\" name=\"geschlecht\" value=\"0\" ";
         if (!$my_about->user_info["geschlecht"]) {
             echo "checked";
         }
-        echo ">&nbsp; " . _("männlich") . "&nbsp; <input type=\"RADIO\" name=\"geschlecht\" value=\"1\" ";
+        echo "> " . _("unbekannt");
+        echo "&nbsp; <input type=\"radio\" name=\"geschlecht\" value=\"1\" ";
         if ($my_about->user_info["geschlecht"] == 1) {
             echo "checked";
         }
-        echo ">&nbsp; " . _("weiblich") . "&nbsp; <input type=\"RADIO\" name=\"geschlecht\" value=\"2\" ";
+        echo "> " . _("männlich");
+        echo "&nbsp; <input type=\"radio\" name=\"geschlecht\" value=\"2\" ";
         if ($my_about->user_info["geschlecht"] == 2) {
             echo "checked";
         }
-        echo ">";
+        echo "> " . _("weiblich");
     }
     echo "</font></td></tr>";
     $cssSw->switchClass();

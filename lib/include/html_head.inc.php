@@ -61,7 +61,7 @@ global  $_html_head_title,
         <? if (basename($_SERVER['SCRIPT_NAME']) !== 'logout.php' && $AUTH_LIFETIME > 0 && $auth->auth["uid"]!="" && $auth->auth["uid"] != "nobody" && $auth->auth["uid"] != "form") : ?>
             <meta http-equiv="REFRESH" CONTENT="<?= $AUTH_LIFETIME * 60 ?>; URL=<?= $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] ?>logout.php">
         <? endif ?>
-        <link rel="SHORTCUT ICON" href="<?Assets::url('images/favicon.ico')?>">
+        <link rel="shortcut icon" href="<?= Assets::url('images/favicon.ico') ?>">
 <?
 
 if (isset($_html_head_title))

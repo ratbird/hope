@@ -20,12 +20,12 @@
 
         <!-- Infobox -->
         <td rowspan="8" valign="top" style="padding-left: 20px" align="right">
-            <? 
+            <?
                 $content[] = array('kategorie' => _("Informationen:"),
                     'eintrag' => array(
                         array(
                             'icon' => 'ausruf_small.gif',
-                            'text' => _("Hier können Sie Berechtigungen für den Zugriff auf die Ressource vergeben.") ."<br>". 
+                            'text' => _("Hier können Sie Berechtigungen für den Zugriff auf die Ressource vergeben.") ."<br>".
                                 _("<b>Achtung:</b> Alle hier erteilten Berechtigungen gelten ebenfalls für die Ressourcen, die der gewählten Ressource untergeordnet sind!")
                         )
                     )
@@ -33,7 +33,7 @@
 
                 $infobox = $GLOBALS['template_factory']->open('infobox/infobox_generic_content.php');
 
-                $infobox->set_attribute('picture', 'schedules.jpg' );
+                $infobox->set_attribute('picture', 'infoboxes/schedules.jpg' );
                 $infobox->set_attribute('content', $content );
 
                 echo $infobox->render();
@@ -149,6 +149,6 @@
         <td class="<? echo $cssSw->getClass() ?>" colspan=3 align="center">
             <br><input type="image" <?=makeButton("uebernehmen", "src")?> border=0 name="submit" value="<?=_("Zuweisen")?>"><br>&nbsp;
         </td>
-    </tr>   
+    </tr>
 </table>
 </form>

@@ -31,7 +31,7 @@
             <? "<br><img src=\"".$GLOBALS['ASSETS_URL']."images/ausruf_small2.gif\" align=\"absmiddle\" />&nbsp;"._("Sie erstellen eine neue Belegung"); ?>
         <? elseif (!$lockedAssign) : ?>
             &nbsp;
-        <? endif; 
+        <? endif;
 
         if ($lockedAssign) : ?>
             <br>
@@ -44,7 +44,7 @@
                 ?>
                 <? if ($perm->have_studip_perm("tutor", $seminarID)) : ?>
                     <br>
-                    <?= sprintf( _("Um die Belegung zu ver&auml;ndern, &auml;ndern Sie diese auf der Seite %sZeiten / R&auml;ume%s der Veranstaltung"), 
+                    <?= sprintf( _("Um die Belegung zu ver&auml;ndern, &auml;ndern Sie diese auf der Seite %sZeiten / R&auml;ume%s der Veranstaltung"),
                         "<img src=\"".$GLOBALS['ASSETS_URL']."images/link_intern.gif\" border=\"0\"/>&nbsp;<a href=\"raumzeit.php?seminar_id=". $seminarID ."\" onClick=\"return check_opener(this)\">",
                         "</a>");
                     ?>
@@ -57,8 +57,8 @@
                     ?>
                 <? if ($perm->have_studip_perm("tutor", $seminarID)) : ?>
                     <br>
-                    <?= sprintf (_("Um die Belegung zu ver&auml;ndern, &auml;ndern Sie bitte den Termin auf der Seite %sZeiten / R&auml;ume%s der Veranstaltung"), 
-                        "<img src=\"".$GLOBALS['ASSETS_URL']."images/link_intern.gif\" border=\"0\"/>&nbsp;<a href=\"raumzeit.php?seminar_id=". 
+                    <?= sprintf (_("Um die Belegung zu ver&auml;ndern, &auml;ndern Sie bitte den Termin auf der Seite %sZeiten / R&auml;ume%s der Veranstaltung"),
+                        "<img src=\"".$GLOBALS['ASSETS_URL']."images/link_intern.gif\" border=\"0\"/>&nbsp;<a href=\"raumzeit.php?seminar_id=".
                             $seminarID . "#irregular_dates\" onClick=\"return check_opener(this)\">", "</a>");
                     ?>
                 <? endif ?>
@@ -70,7 +70,7 @@
 
         <!-- Infobox -->
         <td rowspan="5" valign="top" style="padding-left: 20px" align="right">
-            <? 
+            <?
                 $content[] = array('kategorie' => _("Informationen:"),
                     'eintrag' => array(
                         array(
@@ -82,14 +82,14 @@
 
                 $infobox = $GLOBALS['template_factory']->open('infobox/infobox_generic_content.php');
 
-                $infobox->set_attribute('picture', 'schedules.jpg' );
+                $infobox->set_attribute('picture', 'infoboxes/schedules.jpg' );
                 $infobox->set_attribute('content', $content );
 
                 echo $infobox->render();
             ?>
         </td>
     </tr>
-    
+
     <? $cssSw->switchClass(); ?>
     <tr>
         <td class="<? echo $cssSw->getClass() ?>" valign="top">
@@ -286,7 +286,7 @@
     <? if (($ResourceObjectPerms->havePerm("tutor")) && (!$resAssign->isNew())) : ?>
     <tr>
         <td class="blank" colspan="3" width="100%">&nbsp;
-        <?if(isset($search_room_x)) echo '<a name="anker"> </a>';?> 
+        <?if(isset($search_room_x)) echo '<a name="anker"> </a>';?>
         </td>
     </tr>
 

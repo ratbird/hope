@@ -658,7 +658,7 @@ if ($view != 'Forum'
             <td align="right" valign="top" rowspan="10" width="270">
             <?
                 $template = $GLOBALS['template_factory']->open('infobox/infobox_generic_content');
-                $template->set_attribute('picture', 'groups.jpg');
+                $template->set_attribute('picture', 'infoboxes/groups.jpg');
                 $content[] = array (
                     'kategorie' => _("Informationen:"),
                     'eintrag' => array(

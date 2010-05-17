@@ -35,7 +35,7 @@
 
         <!-- Infobox -->
         <td rowspan="5" valign="top" style="padding-left: 20px" align="right">
-            <? 
+            <?
                 $content[] = array('kategorie' => _("Informationen:"),
                     'eintrag' => array(
                         array(
@@ -47,7 +47,7 @@
 
                 $infobox = $GLOBALS['template_factory']->open('infobox/infobox_generic_content.php');
 
-                $infobox->set_attribute('picture', 'schedules.jpg' );
+                $infobox->set_attribute('picture', 'infoboxes/schedules.jpg' );
                 $infobox->set_attribute('content', $content );
 
                 echo $infobox->render();

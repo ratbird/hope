@@ -124,7 +124,7 @@ class SiteinfoController extends TrailsController
             $infobox_actions[] = array('icon' => 'trash.gif',
                                        'text' => '<a href="'.$this->url_for('siteinfo/delete/'.$this->currentrubric).'">'._('Rubrik löschen').'</a>');
         }
-        return array('picture' => 'impressum.jpg',
+        return array('picture' => 'infoboxes/impressum.jpg',
                      'content' => array(array('kategorie' => _("Administration des Impressums"),
                                               'eintrag' => $infobox_actions))
                     );

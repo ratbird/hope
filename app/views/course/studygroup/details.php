@@ -20,10 +20,10 @@ foreach($all_mods as $mod) {
 /* * * * * * * * * * * * *
  * * * I N F O B O X * * *
  * * * * * * * * * * * * */
-$infobox['picture'] = 'groups.jpg';
+$infobox['picture'] = 'infoboxes/groups.jpg';
 $infobox['content'] = array(
     array(
-        'kategorie' => _("Information"), 
+        'kategorie' => _("Information"),
         'eintrag'   => array(
             array(
                 'text' => _("Hier sehen Sie weitere Informationen zur Studiengruppe. Außerdem können sie ihr beitreten/eine Mitgliedschaft beantragen."),
@@ -35,7 +35,7 @@ $infobox['content'] = array(
         'kategorie' => _("Aktionen"),
         'eintrag'   => array(
             array(
-                'text' => $participate, 
+                'text' => $participate,
                 'icon' => 'link_intern.gif'
             ),
         )
@@ -52,7 +52,7 @@ if ($send_from_search_page) {
 }
 
 /* * * * * * * * * * * *
- * * * O U T P U T * * * 
+ * * * O U T P U T * * *
  * * * * * * * * * * * */
 ?>
 <h1><?= $studygroup->getName() ?></h1>

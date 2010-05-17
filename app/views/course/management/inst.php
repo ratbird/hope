@@ -2,12 +2,12 @@
 /* * * * * * * * * * * * *
  * * * I N F O B O X * * *
  * * * * * * * * * * * * */
-$infobox['picture'] = 'verwalten.jpg';
+$infobox['picture'] = 'infoboxes/verwalten.jpg';
 $infobox['content'][] = array(
-	'kategorie' => _("Information"), 
+	'kategorie' => _("Information"),
     'eintrag'   => array(
         array(
-            'text' => _("Als Mitarbeiter Ihrer Einrichtung können Sie für diese Inhalte in mehreren Kategorien bereitstellen. Inhalte in Ihrer Einrichtung können von allen Stud.IP-Nutzern abgerufen werden."), 
+            'text' => _("Als Mitarbeiter Ihrer Einrichtung können Sie für diese Inhalte in mehreren Kategorien bereitstellen. Inhalte in Ihrer Einrichtung können von allen Stud.IP-Nutzern abgerufen werden."),
             'icon' => 'ausruf_small.gif'
          )
      )
@@ -16,28 +16,28 @@ $infobox['content'][] = array(
 ?>
 
 <div style="padding-left:0.5em; background-color: white; width: 100%">
-    <h2 class="smashbox_kategorie"><?=_("Grundeinstellungen");?></h2> 
- 
+    <h2 class="smashbox_kategorie"><?=_("Grundeinstellungen");?></h2>
+
   <div class="smashbox_stripe">
     <div style="margin-left: 1.5em;">
-     <a class="click_me" href="<?= UrlHelper::getLink('admin_institut.php?section=details') ?>"> 
-      <div> 
-          <span class="click_head"><?=_("Grunddaten");?></span> 
-          <p><?=_("Prüfen und Bearbeiten Sie in diesem Verwaltungsbereich die Grundeinstellungen dieser Veranstaltung.");?></p> 
-      </div> 
-      </a> 
- 
-    <a class="click_me" href="<?= UrlHelper::getLink('admin_modules.php?section=modules') ?>"> 
-    <div> 
-      <span class="click_head"><?=_("Inhaltselemente");?></span> 
-      <p><?=_("Sie können mit dieser Funktionen bestimmte Inhalte wie etwa Forum, Dateibereich oder Wiki ein- oder ausschalten und weitere Inhalte aktivieren.");?></p> 
-      </div> 
-     </a> 
+     <a class="click_me" href="<?= UrlHelper::getLink('admin_institut.php?section=details') ?>">
+      <div>
+          <span class="click_head"><?=_("Grunddaten");?></span>
+          <p><?=_("Prüfen und Bearbeiten Sie in diesem Verwaltungsbereich die Grundeinstellungen dieser Veranstaltung.");?></p>
+      </div>
+      </a>
+
+    <a class="click_me" href="<?= UrlHelper::getLink('admin_modules.php?section=modules') ?>">
+    <div>
+      <span class="click_head"><?=_("Inhaltselemente");?></span>
+      <p><?=_("Sie können mit dieser Funktionen bestimmte Inhalte wie etwa Forum, Dateibereich oder Wiki ein- oder ausschalten und weitere Inhalte aktivieren.");?></p>
+      </div>
+     </a>
     </div>
 
-    <br style="clear: both;"/> 
- 
-    <h2 class="smashbox_kategorie"><?=_("Weitere Inhaltselemente");?></h2> 
+    <br style="clear: both;"/>
+
+    <h2 class="smashbox_kategorie"><?=_("Weitere Inhaltselemente");?></h2>
 
   <div class="smashbox_stripe">
 	  <div style="margin-left: 1.5em;">

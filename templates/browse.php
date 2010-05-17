@@ -139,7 +139,7 @@
 endif;
 
 $infobox = array(
-    'picture' => 'board2.jpg',
+    'picture' => 'infoboxes/board2.jpg',
     'content' => array(
         array("kategorie" => _("Information:"),
             "eintrag" => array(

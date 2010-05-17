@@ -248,7 +248,7 @@ class Admin_StudycourseController extends AuthenticatedController
      */
     private function getInfobox()
     {
-        $infobox = array('picture' => 'browse.jpg');
+        $infobox = array('picture' => 'infoboxes/browse.jpg');
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/studycourse/profession').'">'._('Gruppierung nach Fächer').'</a>',
             "icon" => "icon-cont.gif"

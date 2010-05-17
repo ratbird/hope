@@ -23,7 +23,7 @@
 */
 
 # necessary if you want to include html_head.inc.php in function/method scope
-global  $AUTH_LIFETIME, $FAVICON, $HTML_HEAD_TITLE, $CURRENT_PAGE;
+global  $AUTH_LIFETIME, $HTML_HEAD_TITLE, $CURRENT_PAGE;
 
 global  $auth, $user;
 
@@ -61,10 +61,8 @@ global  $_html_head_title,
         <? if (basename($_SERVER['SCRIPT_NAME']) !== 'logout.php' && $AUTH_LIFETIME > 0 && $auth->auth["uid"]!="" && $auth->auth["uid"] != "nobody" && $auth->auth["uid"] != "form") : ?>
             <meta http-equiv="REFRESH" CONTENT="<?= $AUTH_LIFETIME * 60 ?>; URL=<?= $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] ?>logout.php">
         <? endif ?>
-
+        <link rel="SHORTCUT ICON" href="<?Assets::url('images/favicon.ico')?>">
 <?
-
-        echo "\t\t".'<link rel="SHORTCUT ICON" href="'. Assets::url('images/favicon.ico') .'">'."\n";
 
 if (isset($_html_head_title))
     $title = $_html_head_title;

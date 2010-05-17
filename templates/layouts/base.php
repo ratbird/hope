@@ -8,7 +8,7 @@
            $GLOBALS['AUTH_LIFETIME'] > 0) : ?>
       <meta http-equiv="REFRESH" CONTENT="<?= $GLOBALS['AUTH_LIFETIME'] * 60 ?>; URL=<?= $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] ?>logout.php">
     <? endif ?>
-    <link rel="SHORTCUT ICON" href="<?= $GLOBALS['FAVICON'] ?>">
+    <link rel="SHORTCUT ICON" href="<?= Assets::url('images/favicon.ico') ?>">
     <title>
       <? if (isset($GLOBALS['_html_head_title'])): ?>
     <?= $GLOBALS['_html_head_title'] ?>

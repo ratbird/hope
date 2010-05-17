@@ -128,8 +128,6 @@ $RELATIVE_PATH_SUPPORT = "lib/support";
 
 $PATH_EXPORT = "lib/export";                                //Stud.IP module: export
 
-$FAVICON = "http://www.studip.de/favicon.ico";                      //the place where the favicon is stored.
-
 //caching
 $CACHING_ENABLE = true;
 $CACHING_FILECACHE_PATH = $TMP_PATH . '/studip_cache';

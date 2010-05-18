@@ -99,6 +99,8 @@ class QuickSearch {
     private $withButton;        //if true, the field will be displayed with a looking-glass-button to click on
     private $specialBeschriftung;
     private $selectBox = true;
+    private $box_width = "233"; //width of the box withButton
+    private $box_align = "right";//align of the lookingglass in the withButton-box
     
     /**
      * returns an instance of QuickSearch so you can use it as singleton
@@ -135,11 +137,15 @@ class QuickSearch {
      * if set to true, the searchfield will be a nice-looking grey searchfield with
      * a magnifier-symbol as a submit-button. Set this to false to create your own
      * submit-button and style of the form.
-     * @param withbutton:    true or false.
+     * @param design:    associative array of params.
      * @return self
      */
-    public function withButton($withbutton = true) {
-        $this->withButton = ($withbutton ? true : false);
+    public function withButton($design = array()) {
+        $this->withButton = true;
+        if (isset($design['width'])) {
+            $this->box_width = $design['width'];
+        }
+        $this->box_align = $design['align'] ? $design['align'] : "right";
         return $this;
     }
     
@@ -148,7 +154,8 @@ class QuickSearch {
      * @return self
      */
     public function withoutButton() {
-        return $this->withButton(false);
+        $this->withButton = false;
+        return $this;
     }
     
     /**
@@ -245,6 +252,8 @@ class QuickSearch {
 
     		$template = $GLOBALS['template_factory']->open('quicksearch/selectbox.php');
     		$template->set_attribute('withButton', $this->withButton);
+            $template->set_attribute('box_align', $this->box_align);
+            $template->set_attribute('box_width', $this->box_width);
             $template->set_attribute('withAttributes', $this->withAttributes);
             $template->set_attribute('searchresults', $searchresults);
     		$template->set_attribute('name', $this->name);
@@ -270,7 +279,9 @@ class QuickSearch {
     		//Ausgabe:
     		$template = $GLOBALS['template_factory']->open('quicksearch/inputfield.php');
     		$template->set_attribute('withButton', $this->withButton);
-    		$template->set_attribute('inputStyle', $this->inputStyle ? $this->inputStyle : "");
+            $template->set_attribute('box_align', $this->box_align);
+            $template->set_attribute('box_width', $this->box_width);
+            $template->set_attribute('inputStyle', $this->inputStyle ? $this->inputStyle : "");
     		$template->set_attribute('beschriftung', $this->beschriftung());
     		$template->set_attribute('name', $this->name);
     		$template->set_attribute('defaultID', $this->defaultID);

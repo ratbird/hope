@@ -1,4 +1,14 @@
 <?php
+/*
+ * quicksearch.php
+ *
+ * Copyright (c) 2010  Rasmus Fuhse
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ */
 
 require_once 'lib/classes/searchtypes/SearchType.class.php';
 
@@ -7,6 +17,10 @@ require_once "lib/classes/CourseAvatar.class.php";
 require_once "lib/classes/InstituteAvatar.class.php";
 require_once 'lib/trails/AuthenticatedController.php';
 
+/**
+ * Controller for the ajax-response of the QuickSearch class found in 
+ * lib/classes/QuickSearch.class.php 
+ */
 class QuicksearchController extends AuthenticatedController {
 
     private $specialSQL;
@@ -93,86 +107,6 @@ class QuicksearchController extends AuthenticatedController {
                 return array(array("", $exception->getMessage()));
             }
             return $this->extraResultFormat($results);
-        } else {
-            $db = DBManager::get();
-
-            if ($this->search == "username") {
-                $statement = $db->prepare("SELECT DISTINCT auth_user_md5.username, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) " .
-                    "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
-                    "WHERE CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
-                        "OR auth_user_md5.username LIKE :input ORDER BY user_info.score DESC LIMIT 5", array(PDO::FETCH_NUM));
-                $statement->execute(array(':input' => "%".$request."%"));
-                $result = $statement->fetchAll();
-                return $this->extraResultFormat($result);
-            }
-            if ($this->search == "user_id") {
-                $statement = $db->prepare("SELECT DISTINCT auth_user_md5.user_id, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) " .
-                    "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
-                    "WHERE CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname)) LIKE :input " .
-                        "OR auth_user_md5.username LIKE :input ORDER BY user_info.score DESC LIMIT 5", array(PDO::FETCH_NUM));
-                $statement->execute(array(':input' => "%".$request."%"));
-                $result = $statement->fetchAll();
-                return $this->extraResultFormat($result);
-            }
-            if ($this->search == "Institut_id") {
-                $statement = $db->prepare("SELECT DISTINCT Institute.Institut_id, Institute.Name " .
-                    "FROM Institute " .
-                        "LEFT JOIN range_tree ON (range_tree.item_id = Institute.Institut_id) " .
-                    "WHERE Institute.Name LIKE :input " .
-                        "OR Institute.Strasse LIKE :input " .
-                        "OR Institute.email LIKE :input " .
-                        "OR range_tree.name LIKE :input " .
-                    "ORDER BY Institute.Name LIMIT 5", array(PDO::FETCH_NUM));
-                $statement->execute(array(':input' => "%".$request."%"));
-                $result = $statement->fetchAll();
-                return $this->extraResultFormat($result);
-            }
-            if ($this->search == "Seminar_id") {
-                $statement = $db->prepare("SELECT DISTINCT seminare.Seminar_id, seminare.Name " .
-                    "FROM seminare " .
-                        "LEFT JOIN seminar_user ON (seminare.Seminar_id = seminar_user.Seminar_id AND seminar_user.status = 'dozent') " .
-                        "LEFT JOIN auth_user_md5 ON (seminar_user.user_id = auth_user_md5.user_id) " .
-                    "WHERE (seminare.Name LIKE :input " .
-                            "OR seminare.Untertitel LIKE :input " .
-                            "OR seminare.Ort LIKE :input " .
-                            "OR seminare.Sonstiges LIKE :input " .
-                            "OR seminare.Beschreibung LIKE :input) " .
-                        "AND seminare.visible = 1 " .
-                        "AND seminare.status != '99' " .
-                //Suche nach Dozent hat noch nicht funktioniert
-                    "ORDER BY seminare.Name LIMIT 5", array(PDO::FETCH_NUM));
-                $statement->execute(array(':input' => "%".$request."%"));
-                $result = $statement->fetchAll();
-                return $this->extraResultFormat($result);
-            }
-            if ($this->search == "Arbeitsgruppe_id") {
-                $statement = $db->prepare("SELECT DISTINCT seminare.Seminar_id, seminare.Name " .
-                    "FROM seminare " .
-                        "LEFT JOIN seminar_user ON (seminare.Seminar_id = seminar_user.Seminar_id AND seminar_user.status = 'dozent') " .
-                        "LEFT JOIN auth_user_md5 ON (seminar_user.user_id = auth_user_md5.user_id) " .
-                    "WHERE (seminare.Name LIKE :input " .
-                            "OR seminare.Untertitel LIKE :input " .
-                            "OR seminare.Ort LIKE :input " .
-                            "OR seminare.Sonstiges LIKE :input " .
-                            "OR seminare.Beschreibung LIKE :input) " .
-                        "AND seminare.visible = 1 " .
-                        "AND seminare.status = '99' " .
-                    //Suche nach Dozent hat noch nicht funktioniert
-                    "ORDER BY seminare.Name LIMIT 5", array(PDO::FETCH_NUM));
-                $statement->execute(array(':input' => "%".$request."%"));
-                $result = $statement->fetchAll();
-                return $this->extraResultFormat($result);
-            }
-            if ($this->search == "special") {
-                $statement = $db->prepare($this->specialSQL, array(PDO::FETCH_NUM));
-                try {
-                    $statement->execute(array(':input' => "%".$request."%"));
-                    $result = $statement->fetchAll();
-                } catch (Exception $exception) {
-                    return array(array("", $exception->getMessage()), array("", $this->specialSQL));
-                }
-                return $this->extraResultFormat($result);
-            }
         }
         $result = array(array("", _("Session abgelaufen oder unbekannter Suchtyp")));
         return $result;
@@ -193,7 +127,10 @@ class QuicksearchController extends AuthenticatedController {
     	}
     	return $count;
     }
-
+    
+    /**
+     * method to recursively convert an array from uft8 to iso-1 
+     */
     private function utf8_array_decode($input) {
     	$return = array();
     	foreach ($input as $key => $val) {

@@ -477,8 +477,9 @@ class UserManagement
 
         // Store changed values in internal array if allowed
         $old_perms = $this->user_data['auth_user_md5.perms'];
+        $auth_plugin = $this->user_data['auth_user_md5.auth_plugin'];
         foreach ($newuser as $key => $value) {
-            if (!StudipAuthAbstract::CheckField($key, $this->user_data['auth_user_md5.auth_plugin'])) {
+            if (!StudipAuthAbstract::CheckField($key, $auth_plugin)) {
                 $this->user_data[$key] = $value;
             } else {
                 $this->msg .= "error§" .  sprintf(_("Das Feld <em>%s</em> können Sie nicht ändern!"), $key) . "§";

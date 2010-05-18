@@ -29,7 +29,7 @@
     <input id="role_size" type="text" name="new_size" size="3" value="<?= ($role_data['size']) ? $role_data['size'] : '' ?>">
 
     <label for="self_assign">
-        <?= _("Selbsteintrag erlauben") ?>
+        <?= _("Selbsteintrag") ?>
     </label>
     <input id="self_assign" type="checkbox" name="new_selfassign" <?= ($role_data['selfassign']) ? 'checked="checked"' : '' ?> style="vertical-align: middle;">
 

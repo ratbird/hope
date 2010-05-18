@@ -32,7 +32,7 @@
             <?= Assets::img('ausruf_small2') ?>
         </td>
         <td class="infobox" width="99%" align="left">
-            <?= _("Wenn in einer Gruppe der Selbsteintrag aktivert ist, können sich Teilnehmer selbst in diese Gruppen eintragen.")?>
+            <?= _("Wenn bei einer Gruppe der Selbsteintrag aktivert ist, können sich Teilnehmer selbst eintragen und austragen.")?>
         </td>
       </tr>
       <tr>
@@ -62,7 +62,7 @@
 
       <tr>
                 <td class="infobox" align="center" width="1%" valign="top">
-                    <?= Assets::img('link_intern') ?>
+                    <?= Assets::img('einst') ?>
                 </td>
                 <td class="infobox" width="99%" align="left">
                     <? if ($self_assign_all) : ?>
@@ -77,7 +77,7 @@
 
       <tr>
                 <td class="infobox" align="center" width="1%" valign="top">
-                    <?= Assets::img('link_intern') ?>
+                    <?= Assets::img('einst') ?>
                 </td>
                 <td class="infobox" width="99%" align="left">
                     <? if ($self_assign_exclusive) : ?>

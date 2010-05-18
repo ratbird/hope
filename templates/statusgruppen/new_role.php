@@ -68,7 +68,7 @@
             <tr>
                 <td class="<?= $cssSw->getClass() ?>" width="30%" nowrap>
                     <font size="-1">
-                        <?=_("Selbsteintrag erlauben") ?>:
+                        <?=_("Selbsteintrag") ?>:
                     </font>
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="70%" nowrap>

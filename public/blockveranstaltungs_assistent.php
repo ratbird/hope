@@ -39,7 +39,7 @@ $perm->check("tutor");
 require_once("lib/seminar_open.php"); // initialise Stud.IP-Session
 require_once("lib/blockveranstaltungs_assistent.inc.php");
 require_once("lib/functions.php");
-require_once("lib/exceptions/access_denied.php");
+require_once("lib/exceptions/AccessDeniedException.php");
 
 $_NOHEADER = true; //keinen Header anzeigen
 /* Ausgabe erzeugen---------------------------------------------------------- */
@@ -54,7 +54,7 @@ if (isset($_REQUEST['seminar_id'])) {
 }
 
 if (!$perm->have_studip_perm('tutor', $seminar_id)) {
-    throw new Studip_AccessDeniedException();
+    throw new AccessDeniedException();
 }
 
 //Content

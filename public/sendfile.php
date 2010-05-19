@@ -105,7 +105,7 @@ if ($type == 5){
 }
 //download message attachment
 if ($type == 7){
-    $st = $db->prepare("SELECT dokument_id FROM dokumente 
+    $st = $db->prepare("SELECT dokument_id FROM dokumente
         INNER JOIN message_user ON message_id=range_id AND message_user.user_id = ?
         WHERE dokument_id = ?");
     $st->execute(array($user->id, $file_id));
@@ -118,7 +118,7 @@ if(in_array($type, array(2,3,4))){
 
 //if download not allowed throw exception to terminate script
 if ($no_access) {
-    throw new Studip_AccessDeniedException(_("Sie haben keine Zugriffsberechtigung für diesen Download!"));
+    throw new AccessDeniedException(_("Sie haben keine Zugriffsberechtigung für diesen Download!"));
 }
 
 switch ($type) {

@@ -44,7 +44,7 @@ require_once ('lib/classes/HolidayData.class.php');
 require_once ('lib/visual.inc.php');
 require_once ('lib/object.inc.php');
 require_once ('lib/user_visible.inc.php');
-require_once ('lib/exceptions/access_denied.php');
+require_once ('lib/exceptions/AccessDeniedException.php');
 require_once ('lib/exceptions/CheckObjectException.php');
 
 /**
@@ -140,7 +140,7 @@ function selectSem ($sem_id) {
         if( !($SemUserStatus = $perm->get_studip_perm($row["Seminar_id"])) ){
             $SemUserStatus = "nobody";
             if ($SemSecLevelRead > 0){
-                throw new Studip_AccessDeniedException(_("Keine Berechtigung."));
+                throw new AccessDeniedException(_("Keine Berechtigung."));
             }
         }
         $SessionSeminar = $row["Seminar_id"];
@@ -1054,7 +1054,7 @@ function get_users_online($active_time = 5, $name_format = 'full_rev'){
     $now = time(); // nach eingestellter Zeit (default = 5 Minuten ohne Aktion) zaehlt man als offline
     $query = "SELECT a.username," . $_fullname_sql[$name_format] . " AS name,UNIX_TIMESTAMP() - UNIX_TIMESTAMP(changed) AS last_action,
         a.user_id as userid, contact_id as is_buddy, " . get_vis_query('a', 'online') . " AS is_visible
-        FROM " . PHPLIB_USERDATA_TABLE . " 
+        FROM " . PHPLIB_USERDATA_TABLE . "
         LEFT JOIN auth_user_md5 a ON (a.user_id=sid)
         LEFT JOIN user_info USING(user_id)
         LEFT JOIN user_visibility USING(user_id)
@@ -1473,9 +1473,9 @@ function get_title_for_status($type, $count, $sem_type = NULL) {
  * Stud.IP encoding aware version of good ol' substr(), treats numeric HTML-ENTITIES as one character
  * use only if really necessary
  *
- * @param  string       
- * @param  integer      
- * @param  integer      
+ * @param  string
+ * @param  integer
+ * @param  integer
  * @return string       the part of the string
  */
 function studip_substr($string, $offset, $length = false){
@@ -1494,7 +1494,7 @@ function studip_substr($string, $offset, $length = false){
  * Stud.IP encoding aware version of good ol' strlen(), treats numeric HTML-ENTITIES as one character
  * use only if really necessary
  *
- * @param  string       
+ * @param  string
  * @return integer      the number of characters in string
  */
 function studip_strlen($string){
@@ -1550,7 +1550,7 @@ function studygroup_sem_types()
  * @param mixed   $parent   leave this entry as is
  *
  * @return string the inputs of type hidden as html
- * 
+ *
  */
 function addHiddenFields($variable, $data, $parent = array())
 {

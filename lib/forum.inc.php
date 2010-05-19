@@ -792,7 +792,7 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
     if ($user->id == "nobody") {    // darf Nobody hier schreiben?
         $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='$SessionSeminar' AND Schreibzugriff=0");
         if (!$db->num_rows()) {
-            throw new Studip_AccessDeniedException(_("Ihnen fehlen die Rechte, in dieser Veranstaltung zu Schreiben."));
+            throw new AccessDeniedException(_("Ihnen fehlen die Rechte, in dieser Veranstaltung zu Schreiben."));
         }
         else
             $db->query ($query);
@@ -873,7 +873,7 @@ function UpdateTopic ($name="[no name]", $topic_id, $description, $anonymous)
             throw new Exception(_("Aktualisieren des Postings fehlgeschlagen."));
         }
     } else {
-        throw new Studip_AccessDeniedException(_("Ihnen fehlen die Rechte, diesen Beitrag zu bearbeiten."));
+        throw new AccessDeniedException(_("Ihnen fehlen die Rechte, diesen Beitrag zu bearbeiten."));
     }
 }
 

@@ -49,7 +49,7 @@ $GLOBALS['template_factory'] =
 
 // set default exception handler
 function studip_default_exception_handler($exception) {
-    if ($exception instanceof Studip_AccessDeniedException) {
+    if ($exception instanceof AccessDeniedException) {
         header('HTTP/1.1 403 ' . $exception->getMessage());
         $template = 'access_denied_exception';
     } else if ($exception instanceof CheckObjectException) {

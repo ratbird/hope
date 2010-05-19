@@ -22,7 +22,7 @@ require_once 'lib/trails/TrailsFlash.php';
 require_once 'lib/trails/TrailsInflector.php';
 require_once 'lib/trails/TrailsResponse.php';
 require_once 'lib/exceptions/TrailsException.php';
-require_once 'lib/exceptions/access_denied.php';
+require_once 'lib/exceptions/AccessDeniedException.php';
 
 # set base url for URLHelper class
 URLHelper::setBaseUrl($CANONICAL_RELATIVE_PATH_STUDIP);
@@ -53,7 +53,7 @@ try {
   # user is not permitted, show login screen
   if (is_null($plugin)) {
     # TODO (mlunzena) should not getPlugin throw this exception?
-    throw new Studip_AccessDeniedException(_('Sie besitzen keine Rechte zum Aufruf dieses Plugins.'));
+    throw new AccessDeniedException(_('Sie besitzen keine Rechte zum Aufruf dieses Plugins.'));
   }
 
   if (is_callable(array($plugin, 'initialize'))) {
@@ -63,7 +63,7 @@ try {
   # let the show begin
   $plugin->perform($unconsumed);
 
-} catch (Studip_AccessDeniedException $ade) {
+} catch (AccessDeniedException $ade) {
 
   global $auth;
 

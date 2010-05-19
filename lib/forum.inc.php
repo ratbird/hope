@@ -792,8 +792,7 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
     if ($user->id == "nobody") {    // darf Nobody hier schreiben?
         $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='$SessionSeminar' AND Schreibzugriff=0");
         if (!$db->num_rows()) {
-            echo parse_msg("error§" . _("Ihnen fehlen die Rechte in dieser Veranstaltung zu Schreiben."));
-            die;
+            throw new Studip_AccessDeniedException(_("Ihnen fehlen die Rechte, in dieser Veranstaltung zu Schreiben."));
         }
         else
             $db->query ($query);
@@ -802,8 +801,8 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
     if ($perm->have_perm("autor"))
         $db->query ($query);
     if  ($db->affected_rows() == 0) {
-        print "<p>"._("Fehler beim Anlegen eines Postings.")."</p>\n";
-        }
+        throw new Exception(_("Fehler beim Anlegen eines Postings."));
+    }
     return $topic_id;
 }
 
@@ -871,10 +870,10 @@ function UpdateTopic ($name="[no name]", $topic_id, $description, $anonymous)
             $query = "UPDATE px_topics SET name = '$name', description = '$description', chdate= '$chdate', anonymous=".($anonymous ? 1 : 0)." WHERE topic_id = '$topic_id'";
         $db->query ($query);
         IF  ($db->affected_rows() == 0) {
-            echo '<p>' . _("Aktualisieren des Postings fehlgeschlagen") . "</p>\n";
+            throw new Exception(_("Aktualisieren des Postings fehlgeschlagen."));
         }
     } else {
-        echo parse_msg("error§" . _("Ihnen fehlen die Rechte diesen Beitrag zu bearbeiten"));
+        throw new Studip_AccessDeniedException(_("Ihnen fehlen die Rechte, diesen Beitrag zu bearbeiten."));
     }
 }
 

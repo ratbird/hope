@@ -113,8 +113,10 @@ STUDIP.Forum.rate_template = new Template(
 $_include_additional_header .= ob_get_clean();
 
 // Start of Output
+if (!$update) {
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
+}
             
 require_once 'lib/functions.php';
 require_once ('lib/visual.inc.php');
@@ -475,6 +477,11 @@ if ($update) {
     }
     $open = $update; //gerade bearbeiteten Beitrag aufklappen
     $forum["lostposting"] = "";
+
+    // redirect to normal view to avoid duplicate postings on reload or back/forward
+    header('Location: ' . URLHelper::getURL("?open=$update&flatviewstartposting=$flatviewstartposting#anker"));
+    page_close();
+    die;
 }
 
 //////////////////////////////////////////////////////////////////////////////////

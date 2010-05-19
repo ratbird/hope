@@ -44,7 +44,7 @@ $all = new TestSuite('All tests');
 $collector = new SimplePatternCollector('/test.php$/');
 $all->collect(dirname(__FILE__) . '/lib', $collector);
 $all->collect(dirname(__FILE__) . '/lib/classes', $collector);
-$all->collect(dirname(__FILE__) . '/lib/trails', $collector);
+//$all->collect(dirname(__FILE__) . '/lib/trails', $collector);
 
 # use text reporter if cli
 if (sizeof($_SERVER['argv']))

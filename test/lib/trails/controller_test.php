@@ -75,7 +75,7 @@ class ControllerTestCase extends UnitTestCase {
     $exception = new Exception(__LINE__);
     $controller->throwOn('index_action', $exception);
     $controller->expectOnce('rescue', array($exception));
-    $controller->setReturnValue('rescue', new Trails_Response());
+    $controller->setReturnValue('rescue', new TrailsResponse());
 
 
     $this->dispatcher->dispatch('/foo/index');

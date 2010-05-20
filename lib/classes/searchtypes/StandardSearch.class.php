@@ -13,35 +13,35 @@ require_once "lib/classes/searchtypes/SQLSearch.class.php";
 require_once "lib/functions.php";
 
 /**
- * Class of type SearchType used for searches with QuickSearch 
- * (lib/classes/QuickSearch.class.php). You can search with a sql-syntax in the 
- * database. You just need to give in a query like for a PDB-prepare statement 
- * and at least the variable ":input" in the query (the :input will be replaced 
+ * Class of type SearchType used for searches with QuickSearch
+ * (lib/classes/QuickSearch.class.php). You can search with a sql-syntax in the
+ * database. You just need to give in a query like for a PDB-prepare statement
+ * and at least the variable ":input" in the query (the :input will be replaced
  * with the input of the QuickSearch userinput.
  *  [code]
  *  $search = new SQLSearch("username");
- *  [/code]  
- * 
+ *  [/code]
+ *
  * @author Rasmus Fuhse
  *
  */
 
 class StandardSearch extends SQLSearch {
-	
+
 	private $search;
 	private $avatarLike;
-	
+
 	/**
-	 * 
-	 * @param string $query: SQL with at least ":input" as parameter 
-	 * @param array $presets: variables from the same form that should be used 
+	 *
+	 * @param string $query: SQL with at least ":input" as parameter
+	 * @param array $presets: variables from the same form that should be used
 	 * in this search. array("input_name" => "placeholder_in_sql_query")
      * @return void
 	 */
 	public function __construct($search) {
 		$this->avatarLike = $this->search = $search;
 	}
-	
+
 	/**
 	 * returns an object of type SQLSearch with parameters to constructor
 	 */
@@ -90,7 +90,7 @@ class StandardSearch extends SQLSearch {
         $results = $statement->fetchAll();
         return $results;
     }
-    
+
     private function getSQL() {
         switch ($this->search) {
             case "username":
@@ -101,7 +101,7 @@ class StandardSearch extends SQLSearch {
                         "ORDER BY user_info.score DESC " .
                         "LIMIT 5";
             case "user_id":
-                return "SELECT DISTINCT auth_user_md5.user_id, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) " .
+                return "SELECT DISTINCT auth_user_md5.user_id, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname, \" <em>(\", auth_user_md5.username,\")</em>\") " .
                         "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
                         "WHERE CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input " .
@@ -149,7 +149,7 @@ class StandardSearch extends SQLSearch {
                         "LIMIT 5";
         }
     }
-    
+
     /**
      * A very simple overwrite of the same method from SearchType class.
      * returns the absolute path to this class for autoincluding this class.

@@ -6,10 +6,10 @@
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
- * 
+ *
  * @author     André Klaßen <andre.klassen@elan-ev.de>
- * @copyright  2009 ELAN e.V. 
- * @license    http://www.gnu.org/licenses/gpl-2.0.html GPL version 2 
+ * @copyright  2009 ELAN e.V.
+ * @license    http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category   Stud.IP
  *
  */
@@ -36,7 +36,7 @@ class StudygroupModel
         }
         return $modules;
     }
-    
+
     /**
      * retrieves all modules
      *
@@ -69,7 +69,7 @@ class StudygroupModel
 
         // get current activation-settings
         $data = Config::GetInstance()->getValue('STUDYGROUP_SETTINGS');
-        $data2 = explode('|', $data);
+        $data2 = explode(" ",$data);
 
         foreach ($data2 as $element) {
             list($key, $value) = explode(':', $element);
@@ -102,7 +102,7 @@ class StudygroupModel
         }
 
         return $ret;
-    }   
+    }
 
     /**
      * gets all available plugins
@@ -121,7 +121,7 @@ class StudygroupModel
         }
 
         return $ret;
-    }   
+    }
 
     /**
      * gets enabled plugins for a given studygroup
@@ -136,12 +136,12 @@ class StudygroupModel
 
         $plugin_manager = PluginManager::getInstance();
         $plugins = $plugin_manager->getPluginInfos('StandardPlugin');     // get all globally enabled plugins
-        foreach ($plugins as $plugin ) { 
+        foreach ($plugins as $plugin ) {
             $enabled[$plugin['class']] = $plugin_manager->isPluginActivated($plugin['id'], $id);
         }
         return $enabled;
-    }   
-    
+    }
+
     /**
      * retrieves all institues suitbable for an admin wrt global studygroup settings
      *
@@ -167,11 +167,11 @@ class StudygroupModel
             while ($data2 = $stmt2->fetch(PDO::FETCH_ASSOC)) {
                 $institutes[$data['Institut_id']]['childs'][$data2['Institut_id']] = $data2['Name'];
             }
-        }   
+        }
 
         return $institutes;
     }
-    
+
     /**
      * allows an user to access a "closed" studygroup
      *
@@ -182,7 +182,7 @@ class StudygroupModel
      */
     function accept_user($username, $sem_id)
     {
-        $stmt = DBManager::get()->query("SELECT asu.user_id FROM admission_seminar_user asu " 
+        $stmt = DBManager::get()->query("SELECT asu.user_id FROM admission_seminar_user asu "
               . "LEFT JOIN auth_user_md5 au ON (au.user_id=asu.user_id) "
               . "WHERE au.username='$username' AND asu.seminar_id='". $sem_id ."'");
         if ($data = $stmt->fetch()) {
@@ -217,24 +217,24 @@ class StudygroupModel
      *
      * @return void
      */
-    function promote_user($username, $sem_id, $perm) 
+    function promote_user($username, $sem_id, $perm)
     {
         DBManager::get()->query( "UPDATE seminar_user SET status = '$perm' WHERE Seminar_id = '$sem_id' AND user_id = '". get_userid($username) ."'");
     }
 
     /**
      * removes a user of a studygroup
-     * 
+     *
      * @param string username
      * @param string id of a studygroup
      *
      * @return void
      */
-    function remove_user($username, $sem_id) 
+    function remove_user($username, $sem_id)
     {
         DBManager::get()->query("DELETE FROM seminar_user WHERE Seminar_id = '$sem_id' AND user_id = '" . get_userid($username) . "'");
     }
-    
+
     /**
      * retrieves the count of all studygroups
      *
@@ -282,7 +282,7 @@ class StudygroupModel
             $sql .= " ORDER BY mkdate DESC";
         }
         elseif ($sort == 'member_asc' || $sort == 'member_desc') {
-            $sql = "SELECT s.*, (SELECT COUNT(*) FROM seminar_user as su " 
+            $sql = "SELECT s.*, (SELECT COUNT(*) FROM seminar_user as su "
                  . "WHERE s.Seminar_id = su.Seminar_id) as countsems "
                  . "FROM seminare as s "
                  . "WHERE s.status IN ('". implode("','", $status)."') "
@@ -311,7 +311,7 @@ class StudygroupModel
         }
 
         $sql .= ', name ASC LIMIT '. $lower_bound .','. $elements_per_page;
-      
+
         $stmt = DBManager::get()->query($sql);
         $groups = $stmt->fetchAll();
 
@@ -327,14 +327,14 @@ class StudygroupModel
      */
     function countMembers($semid)
     {
-        $sql = "SELECT COUNT(user_id) FROM `seminar_user` WHERE Seminar_id = '{$semid}'";  
+        $sql = "SELECT COUNT(user_id) FROM `seminar_user` WHERE Seminar_id = '{$semid}'";
 
         $stmt = DBManager::get()->query($sql);
         $count= $stmt->fetch();
 
         return intval($count[0]);
     }
-    
+
     /**
      * get founder for a given studgroup
      *
@@ -351,7 +351,7 @@ class StudygroupModel
             $founder[] = array('user_id' => $user['user_id'], 'fullname' => get_fullname($user['user_id']), 'uname' => get_username($user['user_id']));
         }
 
-        return $founder; 
+        return $founder;
     }
 
     /**
@@ -364,7 +364,7 @@ class StudygroupModel
      */
     function isMember($userid, $semid)
     {
-        $sql  = "SELECT * FROM `seminar_user` WHERE Seminar_id = '{$semid}' AND user_id = '{$userid}'";  
+        $sql  = "SELECT * FROM `seminar_user` WHERE Seminar_id = '{$semid}' AND user_id = '{$userid}'";
 
         $stmt = DBManager::get()->query($sql);
         $res  = $stmt->fetch();
@@ -392,7 +392,7 @@ class StudygroupModel
      *
      * @param string username
      * @param string id of a studygroup
-     * 
+     *
      * @return void
      */
     function removeFounder($username, $sem_id)
@@ -421,7 +421,7 @@ class StudygroupModel
 
         return $stmt->fetchAll();
     }
-    
+
     /**
      * retrieves all members of a given studygroup in a paged manner
      *
@@ -433,13 +433,13 @@ class StudygroupModel
      */
     function getMembers($sem_id, $lower_bound = 1, $elements_per_page = 20)
     {
-        $query = "SELECT username,user_id ,perms, seminar_user.status, ". $GLOBALS['_fullname_sql']['full_rev'] 
+        $query = "SELECT username,user_id ,perms, seminar_user.status, ". $GLOBALS['_fullname_sql']['full_rev']
                . " as fullname FROM seminar_user "
                . "LEFT JOIN auth_user_md5 USING (user_id) "
                . "LEFT JOIN user_info USING (user_id) "
                . "WHERE Seminar_id = ? "
                . "ORDER BY seminar_user.mkdate ASC, seminar_user.status ASC  LIMIT ". $lower_bound .",". $elements_per_page;
-        
+
         $stmt = DBManager::get()->prepare($query);
         $stmt->execute( array($sem_id) );
 
@@ -455,7 +455,7 @@ class StudygroupModel
      * return int ordering
      */
     function compare_status($a, $b)
-    { 
+    {
         if ($a['status'] == $b['status']) return strnatcmp($a['fullname'], $b['fullname']);
         elseif ($a['status'] == 'dozent') {
             if ($b['status'] == 'tutor') return -1;
@@ -472,7 +472,7 @@ class StudygroupModel
     }
 
     /**
-     * Checks for a given seminar_id whether a course is a studygroup 
+     * Checks for a given seminar_id whether a course is a studygroup
      *
      * @param   string id of a seminar
      *
@@ -480,7 +480,7 @@ class StudygroupModel
      */
     function isStudygroup($sem_id)
     {
-        $stmt = DBManager::get()->query("SELECT * FROM seminare WHERE Seminar_id = '$sem_id' AND status IN ('". implode("','", studygroup_sem_types())."')"); 
+        $stmt = DBManager::get()->query("SELECT * FROM seminare WHERE Seminar_id = '$sem_id' AND status IN ('". implode("','", studygroup_sem_types())."')");
         return $stmt->fetch();
     }
 }

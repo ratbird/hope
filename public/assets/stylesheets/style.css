@@ -44,7 +44,8 @@ h1.content, h2.content, h3.content {
 }
 
 h1.topic {
-    color: #FFFFFF;
+    color: #FFFFFF;        $('h2', response).remove();
+    
     font-weight: bold;
     font-size: 1.6em;
     margin-bottom: 0.1em;
@@ -292,20 +293,40 @@ table.collapsable tbody.empty tr:first-child td:first-child {
 }
 
 table.collapsable tbody tr:first-child td:first-child {
+	color: #000;
+    font-weight: bold;
     padding-left: 0;
 }
 
 table.collapsable tbody tr:first-child td:first-child a {
-    background: transparent url(../images/forumrotrunt.gif) 4px -4px no-repeat;
+    background: transparent url(../images/forumgraurunt.gif) 2px no-repeat;
+	color: #000;
 }
 
 table.collapsable tbody.collapsed tr:first-child td:first-child a {
-    background-image: url(../images/forumrot.gif);
+    background-image: url(../images/forumgrau.gif);
     background-position: 4px -6px;
+	color: #000;
+	font-weight: normal
 }
 
 table.collapsable tbody.empty tr:first-child td:first-child {
     background: transparent url(../images/forumgrau.gif) 4px -2px no-repeat;
+}
+
+/* Table details */
+table tr.loaded-details > td {
+    padding: 0 20px 5px 20px;
+}
+table tr.loaded-details td table {
+	border: 1px solid #888;
+	border-top: 0;
+}
+table tr.loaded-details td:first-child tr:first-child td:first-child {
+	font-weight: normal;
+}
+table.collapsable tr.loaded-details td:first-child tr:first-child td:first-child {
+    padding-left: 20px;
 }
 
 /* --- Sonstige ------------------------------------------------------------- */

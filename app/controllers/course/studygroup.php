@@ -138,7 +138,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 $stmt = $pdo->query("SELECT user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms"
                             . " FROM auth_user_md5"
                             . " LEFT JOIN user_info USING (user_id)"
-                            . " WHERE perms NOT IN('root', 'admin')" 
+                            . " WHERE perms NOT IN('root', 'admin')"
                             . " AND (username LIKE $search_for_founder OR Vorname LIKE $search_for_founder"
                             . " OR Nachname LIKE $search_for_founder)"
                             . " LIMIT 500");
@@ -739,7 +739,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 $config_string[] = 'participants:1';
                 $config_string[] = 'schedule:0';
 
-                Config::GetInstance()->setValue(implode('|', $config_string), 'STUDYGROUP_SETTINGS');
+                Config::GetInstance()->setValue(implode(' ', $config_string), 'STUDYGROUP_SETTINGS');
                 Config::GetInstance()->setValue( Request::quoted('institute'), 'STUDYGROUP_DEFAULT_INST');
                 Config::GetInstance()->setValue( Request::quoted('terms'), 'STUDYGROUP_TERMS');
                 $this->flash['success'] = _("Die Einstellungen wurden gespeichert!");

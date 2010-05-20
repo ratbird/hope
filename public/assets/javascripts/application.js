@@ -966,8 +966,6 @@ STUDIP.QuickSearch = {
  * application wide setup
  * ------------------------------------------------------------------------ */
 
-
-
 $(document).ready(function () {
   // AJAX Indicator
   STUDIP.ajax_indicator = true;
@@ -1006,8 +1004,30 @@ $(document).ready(function () {
 jQuery(function ($) {
 
     $('table.collapsable .toggler').click(function () {
-        $(this).closest('tbody').toggleClass('collapsed');
-        return false;
-      }).click();
 
-  });
+    	$(this).closest('tbody').toggleClass('collapsed');
+    	return false;
+    }).closest('.collapsable').find('tbody').filter(':not(.open)').find('.toggler').click();
+});
+
+$('a.load-in-new-row').live('click', function () {
+    if ($(this).closest('tr').next().hasClass('loaded-details')) {
+        $(this).closest('tr').next().remove();
+        return false;
+    }
+
+    var row = $('<tr />').addClass('loaded-details'),
+        cell = $('<td />').html('Lade &hellip;').attr('colspan', $(this).closest('td').siblings().length + 1).appendTo(row);
+    $(this).closest('tr').after(row);
+    $.get($(this).attr('href'), function (response) {
+        cell.html(response);
+    });
+
+	return false;
+});
+
+$('.loaded-details a.cancel').live('click', function () {
+	$(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
+	return false;
+});
+

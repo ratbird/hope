@@ -487,15 +487,15 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                     if ($SEM_CLASS[$SEM_TYPE[$values['sem_status']]["class"]]["studygroup_mode"]) {
                         echo "<td class=\"".$cssSw->getClass()."\"  align=center><a href=\"".
                             UrlHelper::getUrl('dispatch.php/course/studygroup/edit/'. $semid .'?cid='. $semid)
-                            . "\"><img width=\"15\" height=\"17\" src=\"".$GLOBALS['ASSETS_URL']."images/minikey.gif\" ".tooltip(_("Veranstaltung administrieren"))." border=\"0\" /></a>&nbsp;</td>";
+                            . "\"><img width=\"15\" height=\"17\" src=\"".$GLOBALS['ASSETS_URL']."images/minikey.gif\" ".tooltip(_("Veranstaltung administrieren"))." border=\"0\"></a></td>";
                     } else {
                         echo "<td class=\"".$cssSw->getClass()."\"  align=center><a href=\""
-                            . UrlHelper::getLink('dispatch.php/course/management?cid='. $semid) ."\"><img width=\"15\" height=\"17\" src=\"".$GLOBALS['ASSETS_URL']."images/minikey.gif\" ".tooltip(_("Veranstaltung administrieren"))." border=\"0\" /></a>&nbsp;</td>";
+                            . UrlHelper::getLink('dispatch.php/course/management?cid='. $semid) ."\"><img width=\"15\" height=\"17\" src=\"".$GLOBALS['ASSETS_URL']."images/minikey.gif\" ".tooltip(_("Veranstaltung administrieren"))." border=\"0\"></a></td>";
                     }
                 } elseif ($values["binding"]) //anderer Link und andere Tonne wenn Veranstaltungszuordnung bindend ist.
-                    printf("<td class=\"".$cssSw->getClass()."\"  align=center nowrap><a href=\"$PHP_SELF?auswahl=%s&cmd=no_kill\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logout_seminare_no.gif\" ".tooltip(_("Das Abonnement ist bindend. Bitte wenden Sie sich an die Dozentin oder den Dozenten."))." border=\"0\"></a>&nbsp; </td>", $semid);
+                    printf("<td class=\"".$cssSw->getClass()."\"  align=center nowrap><a href=\"$PHP_SELF?auswahl=%s&cmd=no_kill\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logout_seminare_no.gif\" ".tooltip(_("Das Abonnement ist bindend. Bitte wenden Sie sich an die Dozentin oder den Dozenten."))." border=\"0\"></a></td>", $semid);
                 else
-                    printf("<td class=\"".$cssSw->getClass()."\"  align=center nowrap><a href=\"$PHP_SELF?auswahl=%s&cmd=suppose_to_kill\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logout_seminare.gif\" ".tooltip(_("aus der Veranstaltung abmelden"))." border=\"0\"></a>&nbsp;</td>", $semid);
+                    printf("<td class=\"".$cssSw->getClass()."\"  align=center nowrap><a href=\"$PHP_SELF?auswahl=%s&cmd=suppose_to_kill\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logout_seminare.gif\" ".tooltip(_("aus der Veranstaltung abmelden"))." border=\"0\"></a></td>", $semid);
                 echo "</tr>\n";
             }
         }
@@ -560,11 +560,11 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             printf ("<tr".$cssSw->getHover()."><td width=\"1%%\" bgcolor=\"#44%s44\"><img src='".$GLOBALS['ASSETS_URL']."images/blank.gif' " . tooltip(_("Position oder Wahrscheinlichkeit")) . " border=0 width=7 height=12></td>",$chance_color);
             printf ("<td width=\"1%%\" class=\"%s\">&nbsp;</td>",$cssSw->getClass());
             printf ("<td width=\"55%%\" class=\"%s\"  align=\"left\">",$cssSw->getClass());
-            print "<a href=details.php?sem_id=".$db->f("seminar_id")."&send_from_search_page=meine_seminare.php&send_from_search=TRUE><font size=-1>".htmlReady($seminar_name)."</font></a></td>";
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><font size=-1>%s</font></td>", $cssSw->getClass(), ($db->f("status") == "claiming") ? date("d.m.", $db->f("admission_endtime")) : "-");
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><font size=-1>%s %s</font></td>",$cssSw->getClass(), ($db->f("status") == "claiming") ? $admission_chance : $db->f("position"), ($db->f("status") == "claiming") ? "%" : "");
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><font size=-1>%s</font></td>", $cssSw->getClass(),  ($db->f("status") == "claiming") ? _("Los") : (($db->f("status") == "accepted") ? _("Vorl.") :_("Wartel.")));
-            printf("<td width=\"3%%\" class=\"%s\" align=\"center\"><a href=\"$PHP_SELF?auswahl=%s&cmd=suppose_to_kill_admission\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logout_seminare.gif\" ".tooltip(_("aus der Veranstaltung abmelden"))." border=\"0\"></a>&nbsp;</td></tr>", $cssSw->getClass(), $db->f("seminar_id"));
+            print "<a href=details.php?sem_id=".$db->f("seminar_id")."&send_from_search_page=meine_seminare.php&send_from_search=TRUE>".htmlReady($seminar_name)."</a></td>";
+            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">%s</td>", $cssSw->getClass(), ($db->f("status") == "claiming") ? date("d.m.", $db->f("admission_endtime")) : "-");
+            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">%s %s</td>",$cssSw->getClass(), ($db->f("status") == "claiming") ? $admission_chance : $db->f("position"), ($db->f("status") == "claiming") ? "%" : "");
+            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">%s</td>", $cssSw->getClass(),  ($db->f("status") == "claiming") ? _("Los") : (($db->f("status") == "accepted") ? _("Vorl.") :_("Wartel.")));
+            printf("<td width=\"3%%\" class=\"%s\" align=\"center\"><a href=\"$PHP_SELF?auswahl=%s&cmd=suppose_to_kill_admission\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logout_seminare.gif\" ".tooltip(_("aus der Veranstaltung abmelden"))." border=\"0\"></a></td></tr>", $cssSw->getClass(), $db->f("seminar_id"));
         }
         print "</table>";
         ?>
@@ -602,7 +602,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                 echo "</td>";
                 // Name-field
                 echo "<td align=\"left\" class=\"".$cssSw->getClass()."\"><a href=\"institut_main.php?auswahl=$instid\">";
-                echo "<font size=-1>".htmlReady($INST_TYPE[$values["type"]]["name"] . ": " . $values["name"])."</font>";
+                echo htmlReady($INST_TYPE[$values["type"]]["name"] . ": " . $values["name"]);
                 print ("</a></td>");
                 // Content-field
                 echo "<td class=\"".$cssSw->getClass()."\"  align=\"left\" nowrap>";
@@ -618,9 +618,9 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
                 // delete Entry from List:
                 if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] && ($values['status'] == 'user')) {
-                    printf('<td class="'.$cssSw->getClass().'" align=center align=center><a href="' .$_SERVER['PHP_SELF'] .'?auswahl=%s&cmd=inst_kill"><img src="'. $GLOBALS['ASSETS_URL']. 'images/logout_seminare.gif" '. tooltip(_("aus der Einrichtung austragen")). ' border="0">&nbsp;</a></td>', $instid);
+                    printf('<td class="'.$cssSw->getClass().'" align=center><a href="' .$_SERVER['PHP_SELF'] .'?auswahl=%s&cmd=inst_kill"><img src="'. $GLOBALS['ASSETS_URL']. 'images/logout_seminare.gif" '. tooltip(_("aus der Einrichtung austragen")). ' border="0"></a></td>', $instid);
                 } else {
-                    echo '<td class="'.$cssSw->getClass().'" align=center><img width="19" height="17" src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif" />&nbsp;</td>';
+                    echo '<td class="'.$cssSw->getClass().'" align=center><img width="19" height="17" src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif"></td>';
                 }
                 echo "</tr>\n";
             }
@@ -883,12 +883,13 @@ elseif ($auth->auth["perm"]=="admin") {
             <td class="blank" >
                 <table border="0" cellpadding="0" cellspacing="0" width="99%" align="center" class="blank">
                     <tr align="center">
-                        <th width="50%" colspan=2><a href="<? echo $PHP_SELF ?>?sortby=Name"><?=_("Name")?></a></th>
-                        <th width="10%"><a href="<? echo $PHP_SELF ?>?sortby=status"><?=_("Status")?></a></th>
-                        <th width="15%"><b><?=_("DozentIn")?></b></th>
+                        <th width="2%"></th>
+                        <th width="50%" align="left"><a href="<? echo $PHP_SELF ?>?sortby=Name"><?=_("Name")?></a></th>
+                        <th width="10%" align="left"><a href="<? echo $PHP_SELF ?>?sortby=status"><?=_("Veranstaltungstyp")?></a></th>
+                        <th width="15%" align="left"><b><?=_("DozentIn")?></b></th>
                         <th width="10%"><b><?=_("Inhalt")?></b></th>
                         <th width="10%"><a href="<? echo $PHP_SELF ?>?sortby=teilnehmer"><?=_("TeilnehmerInnen")?></a></th>
-                        <th width="5%"><b>&nbsp; </b></th>
+                        <th width="3%"></th>
                     </tr>
         <?
 
@@ -942,7 +943,7 @@ elseif ($auth->auth["perm"]=="admin") {
                 }
             echo "</td>";
 
-            echo "<td class=\"$class\" align=\"center\"><font size=\"-1\">&nbsp;" . $SEM_TYPE[$values["status"]]["name"] . "&nbsp;</font></td>";
+            echo "<td class=\"$class\">" . $SEM_TYPE[$values["status"]]["name"] . "</td>";
             // Dozenten
             $db2->query ("SELECT position, Nachname, username FROM  seminar_user LEFT JOIN auth_user_md5  USING (user_id) WHERE Seminar_id='$semid' AND status='dozent' ORDER BY position, Nachname ASC");
             $temp = "";
@@ -950,15 +951,15 @@ elseif ($auth->auth["perm"]=="admin") {
                 $temp .= "<a href=\"about.php?username=" . $db2->f("username") . "\">" . htmlReady($db2->f("Nachname")) . "</a>, ";
             }
             $temp = substr($temp, 0, -2);
-            print ("<td class=\"$class\" align=\"center\"><font size=\"-1\">&nbsp;$temp</font></td>");
+            print ("<td class=\"$class\">$temp</td>");
 
             // Inhalt
-            echo "<td class=\"$class\" align=\"left\" nowrap>";
+            echo "<td class=\"$class\" nowrap>";
             print_seminar_content($semid, $values);
             echo "</td>";
 
-            echo "<td class=\"$class\" align=\"center\" nowrap>". $values["teilnehmer"]."&nbsp;</td>";
-            printf("<td class=\"$class\" align=center align=center><a href=\"seminar_main.php?auswahl=$semid&redirect_to=adminarea_start.php&new_sem=TRUE\"><img src=\"".$GLOBALS['ASSETS_URL']."images/admin.gif\" ".tooltip(_("Veranstaltungsdaten bearbeiten"))." border=\"0\"></a></td>", $semid);
+            echo "<td class=\"$class\" align=\"right\" nowrap>". $values["teilnehmer"]."&nbsp;</td>";
+            printf("<td class=\"$class\" align=center><a href=\"seminar_main.php?auswahl=$semid&redirect_to=adminarea_start.php&new_sem=TRUE\"><img src=\"".$GLOBALS['ASSETS_URL']."images/admin.gif\" ".tooltip(_("Veranstaltungsdaten bearbeiten"))." border=\"0\"></a></td>", $semid);
              echo "</tr>\n";
             }
         echo "      </table>

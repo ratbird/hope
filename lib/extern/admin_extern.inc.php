@@ -485,5 +485,5 @@ if (sizeof($configurations)) {
                                     )));
 }
 
-print_infobox($info_content, "infoboxes/einrichtungen.jpg");
+print_infobox($info_content, "infoboxes/institutes.jpg");
 print_footer();

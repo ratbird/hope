@@ -113,7 +113,7 @@ $infobox[1]["kategorie"] = _("Suchen:");
 $infobox[1]["eintrag"][] = array (  "icon" => "suchen.gif" ,
                                     "text" => $such_form
                                 );
-print_infobox($infobox, "infoboxes/einrichtungen.jpg");
+print_infobox($infobox, "infoboxes/institutes.jpg");
 ?>
 </td></tr>
 </table>

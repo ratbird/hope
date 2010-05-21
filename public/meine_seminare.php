@@ -731,7 +731,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
 // print the info_box
 
-    print_infobox ($infobox, "infoboxes/seminare.jpg");
+    print_infobox ($infobox, "infoboxes/seminars.jpg");
 
 ?>
 

@@ -2,7 +2,7 @@
 /* * * * * * * * * * * * *
  * * * I N F O B O X * * *
  * * * * * * * * * * * * */
-$infobox['picture'] = 'infoboxes/verwalten.jpg';
+$infobox['picture'] = 'infoboxes/administration.jpg';
 $infobox['content'][] = array(
 	'kategorie' => _("Information"),
     'eintrag'   => array(

@@ -70,6 +70,6 @@ class SitemapController extends AuthenticatedController
                 )
             )
         );
-        $this->infobox = array('picture' => 'infoboxes/verwalten.jpg', 'content' => $infobox_content);
+        $this->infobox = array('picture' => 'infoboxes/administration.jpg', 'content' => $infobox_content);
     }
 }

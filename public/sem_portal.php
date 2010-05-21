@@ -342,7 +342,7 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
                         ) : FALSE;
 }
 
-print_infobox ($infobox, "infoboxes/browse.jpg");
+print_infobox ($infobox, "infoboxes/board1.jpg");
 
 ?>
 

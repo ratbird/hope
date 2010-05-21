@@ -2,7 +2,7 @@
 /* * * * * * * * * * * * *
  * * * I N F O B O X * * *
  * * * * * * * * * * * * */
-$infobox['picture'] = 'infoboxes/verwalten.jpg';
+$infobox['picture'] = 'infoboxes/administration.jpg';
 if ($GLOBALS['perm']->have_perm('dozent')) {
     $infobox['content'] = array(
         array(

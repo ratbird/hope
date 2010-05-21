@@ -132,7 +132,7 @@ class DomainAdminController extends AuthenticatedController
             )
         );
 
-        return array('picture' => 'infoboxes/browse.jpg', 'content' => $infobox_content);
+        return array('picture' => 'infoboxes/board1.jpg', 'content' => $infobox_content);
     }
 }
 ?>

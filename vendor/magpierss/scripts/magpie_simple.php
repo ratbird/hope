@@ -19,7 +19,7 @@ if ( $url ) {
 ?>
 
 <form>
-	RSS URL: <input type="text" size="30" name="url" value="<?php echo $url ?>"><br>
+	RSS URL: <input type="text" size="30" name="url" value="<?php echo $url ?>"><br />
 	<input type="submit" value="Parse RSS">
 </form>
   

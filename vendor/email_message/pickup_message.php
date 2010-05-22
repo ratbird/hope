@@ -40,10 +40,10 @@
 			class for composing and sending messages. Just create a new object of
 			this class as follows and set only the necessary variables to
 			configure details of the message pickup.<paragraphbreak />
-			<tt>require('email_message.php');<br>
-			require('pickup_message.php');<br>
-			<br>
-			$message_object = new pickup_message_class;<br></tt><paragraphbreak />
+			<tt>require('email_message.php');<br />
+			require('pickup_message.php');<br />
+			<br />
+			$message_object = new pickup_message_class;<br /></tt><paragraphbreak />
 			<b>- Requirements</b><paragraphbreak />
 			You need to use at least Windows 2000 with IIS mail server or
 			Exchange 2000 or later.<paragraphbreak />

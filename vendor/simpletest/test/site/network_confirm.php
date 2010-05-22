@@ -28,7 +28,7 @@
         <?php
             if (count($_COOKIE) > 0) {
                 foreach ($_COOKIE as $key => $value) {
-                    print htmlentities($key) . "=[" . htmlentities($value) . "]<br>\n";
+                    print htmlentities($key) . "=[" . htmlentities($value) . "]<br />\n";
                 }
             }
         ?>
@@ -44,7 +44,7 @@
                     if (is_array($value)) {
                         $value = implode(', ', $value);
                     }
-                    print htmlentities($key) . "=[" . htmlentities($value) . "]<br>\n";
+                    print htmlentities($key) . "=[" . htmlentities($value) . "]<br />\n";
                 }
             }
         ?>
@@ -77,7 +77,7 @@
             }
 
             if (count($_POST) > 0) {
-                echo show_array_value($_POST)."<br>\n";
+                echo show_array_value($_POST)."<br />\n";
             }
         ?>
     </body>

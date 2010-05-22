@@ -113,7 +113,7 @@ class HtmlReporter extends SimpleReporter {
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
         print implode(" -&gt; ", $breadcrumb);
-        print " -&gt; " . $this->htmlEntities($message) . "<br>\n";
+        print " -&gt; " . $this->htmlEntities($message) . "<br />\n";
     }
 
     /**
@@ -127,7 +127,7 @@ class HtmlReporter extends SimpleReporter {
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
         print implode(" -&gt; ", $breadcrumb);
-        print " -&gt; <strong>" . $this->htmlEntities($message) . "</strong><br>\n";
+        print " -&gt; <strong>" . $this->htmlEntities($message) . "</strong><br />\n";
     }
 
     /**
@@ -145,7 +145,7 @@ class HtmlReporter extends SimpleReporter {
                 '] with message ['. $exception->getMessage() .
                 '] in ['. $exception->getFile() .
                 ' line ' . $exception->getLine() . ']';
-        print " -&gt; <strong>" . $this->htmlEntities($message) . "</strong><br>\n";
+        print " -&gt; <strong>" . $this->htmlEntities($message) . "</strong><br />\n";
     }
     
     /**
@@ -159,7 +159,7 @@ class HtmlReporter extends SimpleReporter {
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
         print implode(" -&gt; ", $breadcrumb);
-        print " -&gt; " . $this->htmlEntities($message) . "<br>\n";
+        print " -&gt; " . $this->htmlEntities($message) . "<br />\n";
     }
 
     /**

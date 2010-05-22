@@ -31,10 +31,10 @@
 			class for composing and sending messages. Just create a new object of
 			this class as follows and set only the necessary variables to
 			configure details of delivery using Qmail.<paragraphbreak />
-			<tt>require('email_message.php');<br>
-			require('qmail_message.php');<br>
-			<br>
-			$message_object = new qmail_message_class;<br></tt><paragraphbreak />
+			<tt>require('email_message.php');<br />
+			require('qmail_message.php');<br />
+			<br />
+			$message_object = new qmail_message_class;<br /></tt><paragraphbreak />
 		</usage>
 	</documentation>
 

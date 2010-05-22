@@ -39,9 +39,9 @@
 		<usage>To used this class just create a new object as follows, set any
 			variables to configure its behavior and call the functions you need
 			to compose and send your messages.<paragraphbreak />
-			<tt>require('email_message.php');<br>
-			<br>
-			$message_object = new email_message_class;<br></tt><paragraphbreak />
+			<tt>require('email_message.php');<br />
+			<br />
+			$message_object = new email_message_class;<br /></tt><paragraphbreak />
 			<b>- Set the sender and recipients</b><paragraphbreak />
 			You can set the message sender and one or more recipient addresses
 			using the <functionlink>SetHeader</functionlink> or the

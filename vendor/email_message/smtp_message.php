@@ -29,11 +29,11 @@
 			class for composing and sending messages. Just create a new object of
 			this class as follows and set only the necessary variables to
 			configure details of the SMTP delivery.<paragraphbreak />
-			<tt>require('email_message.php');<br>
-			require('smtp.php');<br>
-			require('smtp_message.php');<br>
-			<br>
-			$message_object = new smtp_message_class;<br></tt><paragraphbreak />
+			<tt>require('email_message.php');<br />
+			require('smtp.php');<br />
+			require('smtp_message.php');<br />
+			<br />
+			$message_object = new smtp_message_class;<br /></tt><paragraphbreak />
 			<b>- Requirements</b><paragraphbreak />
 			You need the <link>
 				<data>SMTP E-mail sending class</data>

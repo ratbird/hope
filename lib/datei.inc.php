@@ -705,7 +705,7 @@ function form($refresh = FALSE) {
     $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("1. Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuw&auml;hlen.") . " </font></td></tr>";
     $print.= "\n<tr>";
     $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
-    $print.= "&nbsp;<input name=\"the_file\" type=\"file\"  style=\"width: 70%\" SIZE=\"30\">&nbsp;</td></td>";
+    $print.= "&nbsp;<input name=\"the_file\" type=\"file\"  style=\"width: 70%\" size=\"30\">&nbsp;</td></td>";
     $print.= "\n</tr>";
     if (!$refresh && !$folder_system_data['zipupload']) {
         $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("2. Schutz gem&auml;&szlig; Urhebberecht.") . "</font></td></tr>";
@@ -1242,9 +1242,9 @@ function link_form ($range_id, $updating=FALSE) {
     $print.= "\n<tr>";
     $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
     if ($hiddenurl)
-        $print.= "&nbsp;<input name=\"the_link\" type=\"text\"  style=\"width: 70%\" SIZE=\"30\" value=\"***\">&nbsp;</td></td>";
+        $print.= "&nbsp;<input name=\"the_link\" type=\"text\"  style=\"width: 70%\" size=\"30\" value=\"***\">&nbsp;</td></td>";
     else
-        $print.= '&nbsp;<input name="the_link" type="text"  style="width: 70%" SIZE="30" value="'.$the_link.'">&nbsp;</td></td>';
+        $print.= '&nbsp;<input name="the_link" type="text"  style="width: 70%" size="30" value="'.$the_link.'">&nbsp;</td></td>';
     $print.= "\n</tr>";
     if (!$refresh) {
 

@@ -45,7 +45,7 @@ function print_rss($username) {
     echo "<tr><td align=\"left\" valign=\"top\" class=\"blank\"><blockquote><br>";
     echo _("Hier können Sie beliebige eigene RSS-Feeds einbinden. Diese RSS-Feeds erscheinen auf Ihrer pers&ouml;nlichen Startseite. Mit den Pfeilsymbolen k&ouml;nnen sie die Reihenfolge, in der die RSS-Feeds angezeigt werden, ver&auml;ndern.");
     echo "<br>\n";
-    echo _("<B>Achtung:</B> Je mehr RSS-Feeds Sie definieren, desto l&auml;nger ist die Ladezeit der Startseite f&uuml;r Sie!");
+    echo _("<b>Achtung:</b> Je mehr RSS-Feeds Sie definieren, desto l&auml;nger ist die Ladezeit der Startseite f&uuml;r Sie!");
     echo "<br>\n";
 
     echo "\n<br></blockquote></td></tr>\n<tr><td class=blank><table width=100% class=blank border=0 cellpadding=0 cellspacing=0>";

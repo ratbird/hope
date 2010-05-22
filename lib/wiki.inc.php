@@ -1685,10 +1685,10 @@ function create_color($index) {
 /*
 line_diff
 
-S. Wu, <A HREF="http://www.cs.arizona.edu/people/gene/vita.html">
-E. Myers,</A> U. Manber, and W. Miller,
-<A HREF="http://www.cs.arizona.edu/people/gene/PAPERS/np_diff.ps">
-"An O(NP) Sequence Comparison Algorithm,"</A>
+S. Wu, <a href="http://www.cs.arizona.edu/people/gene/vita.html">
+E. Myers,</a> U. Manber, and W. Miller,
+<a href="http://www.cs.arizona.edu/people/gene/PAPERS/np_diff.ps">
+"An O(NP) Sequence Comparison Algorithm,"</a>
 Information Processing Letters 35, 6 (1990), 317-323.
 */
 

@@ -191,7 +191,7 @@ while ($tmp_first_date < $end_date) {
 
             <tr>
                 <td colspan="9" class="blue_gradient">
-                    &nbsp;<B><?=_("Regelmäßige Zeiten")?></B>
+                    &nbsp;<b><?=_("Regelmäßige Zeiten")?></b>
                 </td>
             </tr>
             <tr>
@@ -199,7 +199,7 @@ while ($tmp_first_date < $end_date) {
                     <? if (!$_LOCKED) { ?>
                         <form action="<?= URLHelper::getLink() ?>" method="post">
                         <? } ?>
-                        <FONT size="-1">
+                        <font size="-1">
                         &nbsp;<?=_("Startsemester")?>:&nbsp;
                         <?
                             if ($perm->have_perm('tutor') && !$_LOCKED) {
@@ -303,7 +303,7 @@ while ($tmp_first_date < $end_date) {
                             endforeach;
                         ?>
                         </select>
-                        </FONT>
+                        </font>
                         &nbsp;&nbsp;
                         <input type="image" <?=makebutton('uebernehmen', 'src')?> align="absmiddle">
                         <input type="hidden" name="cmd" value="selectSemester">
@@ -368,7 +368,7 @@ while ($tmp_first_date < $end_date) {
                                             ?>
                                             <tr>
                                                 <td class="steelgraulight" align="center" colspan="9">
-                                                    <B><?=$zwsem['name']?></B>
+                                                    <b><?=$zwsem['name']?></b>
                                                 </td>
                                             </tr>
                                             <?
@@ -447,7 +447,7 @@ while ($tmp_first_date < $end_date) {
                 <tr>
                     <td colspan="9" class="blue_gradient">
                         <a name="irregular_dates"></a>
-                        &nbsp;<B><?=_("Unregelm&auml;&szlig;ige Termine/Blocktermine")?></B>
+                        &nbsp;<b><?=_("Unregelm&auml;&szlig;ige Termine/Blocktermine")?></b>
                     </td>
                 </tr>
                 <? if ($termine =& $sem->getSingleDates(true, true)) { ?>
@@ -470,7 +470,7 @@ while ($tmp_first_date < $end_date) {
                                             ?>
                                             <tr>
                                                 <td class="steelgraulight" align="center" colspan="9">
-                                                    <B><?=$zwsem['name']?></B>
+                                                    <b><?=$zwsem['name']?></b>
                                                 </td>
                                             </tr>
                                             <?
@@ -513,9 +513,9 @@ while ($tmp_first_date < $end_date) {
                         f1.focus();
                     }
                     </SCRIPT>
-                        <FONT size="-1">
+                        <font size="-1">
                             &nbsp;<?=_("Blockveranstaltungstermine")?>
-                        </FONT>
+                        </font>
                          <a href="javascript:window.block_fenster()"><?=makebutton("anlegen")?></a>
                     </td>
                 </tr>
@@ -530,12 +530,12 @@ while ($tmp_first_date < $end_date) {
                 } else { ?>
                 <tr>
                     <td colspan="9" class="blank">
-                        <FONT size="-1">
+                        <font size="-1">
                             &nbsp;einen neuen Termin
                             <a href="<?= URLHelper::getLink('?cmd=createNewSingleDate#newSingleDate') ?>">
                                 <IMG <?=makebutton('erstellen', 'src')?> align="absmiddle" border="0">
-                            </A>
-                        </FONT>
+                            </a>
+                        </font>
                     </td>
                 </tr>
                 <? } ?>
@@ -596,13 +596,13 @@ while ($tmp_first_date < $end_date) {
                                     <img <?=makebutton('erstellen', 'src')?> align="absmiddle" border="0">
                                 <?
                                 } ?>
-                            </A>
+                            </a>
                             <? if ($request_status && $request_status == 'open') { ?>
                             &nbsp;oder&nbsp;
                             <a href="<?= URLHelper::getLink('?cmd=removeSeminarRequest') ?>">
                                 <img <?=makebutton('zurueckziehen', 'src')?> align="absmiddle" border="0">
-                            </A>
-                        </FONT>
+                            </a>
+                        </font>
                         <? } ?>
                     </td>
                 </tr>

@@ -92,7 +92,7 @@ function show_lock_rule_form($lockdata="",$edit=0) {
     $form .= $zt->cell("<b>".""."</b>",array("width"=>"14%","align"=>"left"));
     $form .= $zt->cell("<b>".""."</b>",array("width"=>"13%","align"=>"left"));
     $form .= $zt->closeRow();
-    $form .= $zt->headerRow(array("&nbsp;<B>"._("Grunddaten")."</B>", "<B>"._("gesperrt")."</B>", "<B>"._("nicht gesperrt")."</B>"));
+    $form .= $zt->headerRow(array("&nbsp;<b>"._("Grunddaten")."</b>", "<b>"._("gesperrt")."</b>", "<b>"._("nicht gesperrt")."</b>"));
     $form .= $zt->closeRow();
     $form .= $zt->openRow();
     if ($lockdata["attributes"]["VeranstaltungsNummer"]) {
@@ -157,7 +157,7 @@ function show_lock_rule_form($lockdata="",$edit=0) {
         $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("anlegen", "src").">",array("colspan"=>"3","align"=>"center"));
     }
     $form .= $zt->closeRow();
-    $form .= $zt->headerRow(array("&nbsp;<B>"._("Personen und Einordnung")."</B>", "<B>"._("gesperrt")."</B>", "<B>"._("nicht gesperrt")."</B>"));
+    $form .= $zt->headerRow(array("&nbsp;<b>"._("Personen und Einordnung")."</b>", "<b>"._("gesperrt")."</b>", "<b>"._("nicht gesperrt")."</b>"));
     $form .= $zt->closeRow();
     $form .= $zt->openRow();
     if ($lockdata["attributes"]["dozent"]) {
@@ -202,7 +202,7 @@ function show_lock_rule_form($lockdata="",$edit=0) {
         $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("anlegen", "src").">",array("colspan"=>"3","align"=>"center"));
     }
     $form .= $zt->closeRow();
-    $form .= $zt->headerRow(array("&nbsp;<B>"._("weitere Daten")."</B>", "<B>"._("gesperrt")."</B>", "<B>"._("nicht gesperrt")."</B>"));
+    $form .= $zt->headerRow(array("&nbsp;<b>"._("weitere Daten")."</b>", "<b>"._("gesperrt")."</b>", "<b>"._("nicht gesperrt")."</b>"));
     $form .= $zt->closeRow();
     $form .= $zt->openRow();
     if ($lockdata["attributes"]["Sonstiges"]) {
@@ -254,7 +254,7 @@ function show_lock_rule_form($lockdata="",$edit=0) {
     }
     $form .= $zt->closeRow();
     
-    $form .= $zt->headerRow(array("&nbsp;<B>"._("Zeiten/Räume")."</B>", "<B>"._("gesperrt")."</B>", "<B>"._("nicht gesperrt")."</B>"));
+    $form .= $zt->headerRow(array("&nbsp;<b>"._("Zeiten/Räume")."</b>", "<b>"._("gesperrt")."</b>", "<b>"._("nicht gesperrt")."</b>"));
     $form .= $zt->closeRow();
     $form .= $zt->openRow();
     if ($lockdata["attributes"]["room_time"]) {
@@ -274,7 +274,7 @@ function show_lock_rule_form($lockdata="",$edit=0) {
         $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("anlegen", "src").">",array("colspan"=>"3","align"=>"center"));
     }
     $form .= $zt->closeRow();
-    $form .= $zt->headerRow(array("&nbsp;<B>"._("Zugangsberechtigungen")."</B>", "<B>"._("gesperrt")."</B>", "<B>"._("nicht gesperrt")."</B>"));
+    $form .= $zt->headerRow(array("&nbsp;<b>"._("Zugangsberechtigungen")."</b>", "<b>"._("gesperrt")."</b>", "<b>"._("nicht gesperrt")."</b>"));
     $form .= $zt->closeRow();
     $form .= $zt->openRow();
     if ($lockdata["attributes"]["admission_endtime"]) {
@@ -354,7 +354,7 @@ function show_lock_rule_form($lockdata="",$edit=0) {
         $form .= $zt->cell("<input type=\"IMAGE\" ".makeButton("anlegen", "src").">",array("colspan"=>"3","align"=>"center"));
     }
     $form .= $zt->closeRow();
-    $form .= $zt->headerRow(array("&nbsp;<B>"._("Spezielle Aktionen")."</B>", "<B>"._("gesperrt")."</B>", "<B>"._("nicht gesperrt")."</B>"));
+    $form .= $zt->headerRow(array("&nbsp;<b>"._("Spezielle Aktionen")."</b>", "<b>"._("gesperrt")."</b>", "<b>"._("nicht gesperrt")."</b>"));
     $form .= $zt->closeRow();
     $form .= $zt->openRow();
     if ($lockdata["attributes"]["seminar_copy"]) {

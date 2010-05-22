@@ -78,7 +78,7 @@ include("locale/$_language_path/LC_HELP/pages/nutzung.html");
 
 <a href="register2.php"><b><?=_("Ich erkenne die Nutzungsbedingungen an")?></b></a><br>
 <br>
-<A href="index.php"><?=_("Abbruch")?></a><br>
+<a href="index.php"><?=_("Abbruch")?></a><br>
 </blockquote>
 </td></tr>
 <tr><td class="blank">&nbsp;</td></tr>

@@ -778,11 +778,11 @@ if (isset($_GET['details']) || $showform ) {
                                     echo "  </td>\n";
                                     echo "  <td class=\"steel1\">\n";
                                     echo "    &nbsp;"._("Kommentar:")."&nbsp;\n";
-                                    echo "    <input type=\"text\" name=\"lock_comment\" value=\"".htmlReady($db->f("lock_comment"))."\" SIZE=\"24\" MAXLENGTH=\"255\">\n";
+                                    echo "    <input type=\"text\" name=\"lock_comment\" value=\"".htmlReady($db->f("lock_comment"))."\" size=\"24\" MAXLENGTH=\"255\">\n";
                                     echo "  </td>\n";
                                     echo "</tr>\n";
                     if ($db->f("locked")==1)
-                                            echo "<tr><td class=\"steel1\" colspan=\"3\" align=\"center\"><FONT SIZE=\"-2\">"._("Gesperrt von:")." ".htmlReady(get_fullname($db->f("locked_by")))." (<A HREF=\"about.php?username=".get_username($db->f("locked_by"))."\">".get_username($db->f("locked_by"))."</A>)</FONT></td></tr>\n";
+                                            echo "<tr><td class=\"steel1\" colspan=\"3\" align=\"center\"><font size=\"-2\">"._("Gesperrt von:")." ".htmlReady(get_fullname($db->f("locked_by")))." (<a href=\"about.php?username=".get_username($db->f("locked_by"))."\">".get_username($db->f("locked_by"))."</a>)</font></td></tr>\n";
                 }
                 $userEntries = DataFieldEntry::getDataFieldEntries($db->f('user_id'));
                 foreach ($userEntries as $entry) {

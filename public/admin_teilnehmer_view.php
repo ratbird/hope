@@ -99,7 +99,7 @@ while ($db->next_record()) {
 }
 echo "<form action=\"". URLHelper::getLink() ."\" method=\"post\">";
 foreach ($SEM_CLASS as $key => $val) {
-    echo $tbl2->headerRow(array("&nbsp;<B>". $val["name"]."</B>", "<B>Status</B>", "<B>Anzeige</B>"));
+    echo $tbl2->headerRow(array("&nbsp;<b>". $val["name"]."</b>", "<b>Status</b>", "<b>Anzeige</b>"));
     echo $tbl2->closeRow();
     foreach ($TEILNEHMER_VIEW as $data) {
         echo $tbl2->openRow();

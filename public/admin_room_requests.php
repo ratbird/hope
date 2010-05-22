@@ -224,7 +224,7 @@ if ($perm->have_perm("admin"))
             else
                 print _("Diese Anfragen werden von den zust&auml;ndigen Raumadministratoren bearbeitet. Ihnen wird ein passender Raum f&uuml;r ihre Veranstaltung zugewiesen."); ?>
       <br><br>
-      <A href="raumzeit.php?seminar_id=<?=$seminar_id?>"><img src="<?=$GLOBALS['ASSETS_URL']?>images/link_intern.gif" border="0">&nbsp;<?=_("Zurück zur Seite Zeiten / Räume");?></A><br>
+      <a href="raumzeit.php?seminar_id=<?=$seminar_id?>"><img src="<?=$GLOBALS['ASSETS_URL']?>images/link_intern.gif" border="0">&nbsp;<?=_("Zurück zur Seite Zeiten / Räume");?></a><br>
             <br>
             </blockquote>
         </td>

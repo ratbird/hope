@@ -1071,7 +1071,7 @@ if (($s_id) && (auth_check())) {
         </td>
         <td class="<? echo $cssSw->getClass() ?>" align=left colspan=2>&nbsp;
           <? if (! LockRules::Check($s_id, 'seminar_inst')) : ?>
-            <select  name="b_institute[]" MULTIPLE SIZE=8 >
+            <select  name="b_institute[]" MULTIPLE size=8 >
                     <?php
                     $db3->query("SELECT Name,a.Institut_id,b.Institut_id as beteiligt FROM Institute a LEFT JOIN seminar_inst b ON(a.Institut_id=b.Institut_id AND Seminar_id='$s_id') WHERE a.Institut_id=a.fakultaets_id ORDER BY Name");
                     while ($db3->next_record()) {

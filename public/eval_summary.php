@@ -200,18 +200,18 @@ function freetype_answers($parent_id, $anz_nutzer)
     echo "  <tr>\n";
     echo "    <td colspan=\"2\">\n";
     echo "      <table border=\"0\" width=\"100%\">\n";
-    echo "        <tr><td colspan=\"2\" class=\"blank\"><FONT SIZE=\"-1\"><B>"._("Antworten")."</B></FONT></td></tr>\n";
+    echo "        <tr><td colspan=\"2\" class=\"blank\"><font size=\"-1\"><b>"._("Antworten")."</b></font></td></tr>\n";
     $counter = 1;
     while ($db_answers->next_record()) {
         echo "      <tr>\n";
-        echo "        <td width=\"1%\" valign=\"TOP\"><FONT SIZE=\"-1\"><B>".$counter.".</B></FONT></td><td><FONT SIZE=\"-1\">".formatReady($db_answers->f("text"))."</FONT></td>\n";
+        echo "        <td width=\"1%\" valign=\"TOP\"><font size=\"-1\"><b>".$counter.".</b></font></td><td><font size=\"-1\">".formatReady($db_answers->f("text"))."</font></td>\n";
         echo "      </tr>\n";
         $counter++;
     }
     echo "      </table>\n";
     echo "    </td>\n";
     echo "  </tr>\n";
-    echo "  <tr><td colspan=\"2\"><FONT SIZE=\"-1\">"._("Anzahl der Teilnehmer").": ".$anz_nutzer."</FONT></td></tr>\n";
+    echo "  <tr><td colspan=\"2\"><font size=\"-1\">"._("Anzahl der Teilnehmer").": ".$anz_nutzer."</font></td></tr>\n";
 }
 
 function user_answers_residual($parent_id)
@@ -265,7 +265,7 @@ function answers($parent_id, $anz_nutzer, $question_type)
     $antwort_durchschnitt = 0;
     $has_residual = user_answers_residual($parent_id);
     $i = 1;
-    $edit .= "<tr class=\"steel1\"><td width=\"1%\">&nbsp;</td><td width=\"70%\"><FONT SIZE=\"-1\"><B>"._("Antworten")."</B></FONT></td><td width=\"29%\"><FONT SIZE=\"-1\"><B>"._("Auswertung")."</B></FONT></td></tr>\n";
+    $edit .= "<tr class=\"steel1\"><td width=\"1%\">&nbsp;</td><td width=\"70%\"><font size=\"-1\"><b>"._("Antworten")."</b></font></td><td width=\"29%\"><font size=\"-1\"><b>"._("Auswertung")."</b></font></td></tr>\n";
     while ($db_answers->next_record()) {
         $css->switchClass();
         $antwort_nummer++;
@@ -278,9 +278,9 @@ function answers($parent_id, $anz_nutzer, $question_type)
         if ($has_residual && ($db_answers_sum->f("anz")-$has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($db_answers_sum->f("anz")-$has_residual));
         $prozente = 0;
         if ($db_answers_sum->f("anz")>0) $prozente = ROUND($answer_counter*100/$db_answers_sum->f("anz"));
-        $edit .= "<tr class=\"".($i==1?"steel1kante":$css->getClass())."\"><td width=\"1%\"><FONT SIZE=\"-1\"><B>".$antwort_nummer.".&nbsp;</B></FONT></td><td width=\"70%\"><FONT SIZE=\"-1\">".($db_answers->f("text")!="" ? formatReady($db_answers->f("text")) : $db_answers->f("value"))."</FONT></td>";
-        if ($has_residual) $edit .= "<td width=\"29%\"><FONT SIZE=\"-1\">".$answer_counter." (".$prozente."%) ".($db_answers->f("residual")==0 ? "(".$prozente_wo_residual."%)<B>*</B>" : "" )."</FONT></td></tr>\n";
-        else $edit .= "<td width=\"29%\"><FONT SIZE=\"-1\">".$answer_counter." (".$prozente."%)</FONT></td></tr>\n";
+        $edit .= "<tr class=\"".($i==1?"steel1kante":$css->getClass())."\"><td width=\"1%\"><font size=\"-1\"><b>".$antwort_nummer.".&nbsp;</b></font></td><td width=\"70%\"><font size=\"-1\">".($db_answers->f("text")!="" ? formatReady($db_answers->f("text")) : $db_answers->f("value"))."</font></td>";
+        if ($has_residual) $edit .= "<td width=\"29%\"><font size=\"-1\">".$answer_counter." (".$prozente."%) ".($db_answers->f("residual")==0 ? "(".$prozente_wo_residual."%)<b>*</b>" : "" )."</font></td></tr>\n";
+        else $edit .= "<td width=\"29%\"><font size=\"-1\">".$answer_counter." (".$prozente."%)</font></td></tr>\n";
         array_push($summary, array($antwort_nummer."(".$prozente."%)",$answer_counter));
 
         array_push($ret_array["antwort_texte"], ($db_answers->f("text")!="" ? formatReady($db_answers->f("text")) : $db_answers->f("value")));
@@ -300,18 +300,18 @@ function answers($parent_id, $anz_nutzer, $question_type)
     $txt .= "    <td width=\"70%\" valign=\"TOP\">\n";
     $txt .= "      <table width=\"98%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">";
     $txt .= $edit."\n";
-    $txt .= "        <tr class=\"blank\"><td colspan=\"3\"><FONT SIZE=\"-1\">&nbsp;</FONT></td></tr>";
-    $txt .= "        <tr class=\"blank\"><td colspan=\"3\"><FONT SIZE=\"-1\"><B>&#x2211;</B>=".$gesamte_antworten." "._("Antworten")."</FONT></td></tr>";
+    $txt .= "        <tr class=\"blank\"><td colspan=\"3\"><font size=\"-1\">&nbsp;</font></td></tr>";
+    $txt .= "        <tr class=\"blank\"><td colspan=\"3\"><font size=\"-1\"><b>&#x2211;</b>=".$gesamte_antworten." "._("Antworten")."</font></td></tr>";
 
     $txt .= "        <tr class=\"blank\">";
     if ($question_type=="multiplechoice") {
         $txt .= "        <td colspan=\"3\">";
     } else {
-        $txt .= "<td colspan=\"2\"><FONT SIZE=\"-1\"><B>&#x2205;</B>-"._("Antwort").": ".$antwort_durchschnitt.($has_residual==0 ? "" : "<B>*</B>")."</FONT></td><td>";
+        $txt .= "<td colspan=\"2\"><font size=\"-1\"><b>&#x2205;</b>-"._("Antwort").": ".$antwort_durchschnitt.($has_residual==0 ? "" : "<b>*</b>")."</font></td><td>";
     }
-    $txt .= "          <FONT SIZE=\"-1\">"._("Anzahl der Teilnehmer").": ".$anz_nutzer."</FONT></td></tr>";
+    $txt .= "          <font size=\"-1\">"._("Anzahl der Teilnehmer").": ".$anz_nutzer."</font></td></tr>";
 
-    if ($has_residual) $txt .= "        <tr class=\"blank\"><td colspan=\"3\"><FONT SIZE=\"-1\"><B>*</B>"._("Werte ohne Enthaltungen").".</FONT></td></tr>";
+    if ($has_residual) $txt .= "        <tr class=\"blank\"><td colspan=\"3\"><font size=\"-1\"><b>*</b>"._("Werte ohne Enthaltungen").".</font></td></tr>";
     $txt .= "      </table>";
     $txt .= "    </td>\n";
     $txt .= "    <td width=\"30%\" valign=\"TOP\" align=\"RIGHT\">\n";
@@ -350,7 +350,7 @@ function groups($parent_id)
 
             echo "  <tr><td class=\"".($ausgabeformat==1 ? "topic" : "blank")."\" align=\"LEFT\" colspan=\"2\">\n";
             if (do_template("show_group_headline"))
-                echo "    <B>".$global_counter.". ".formatReady($db_groups->f("title"))."</B>&nbsp;\n";
+                echo "    <b>".$global_counter.". ".formatReady($db_groups->f("title"))."</b>&nbsp;\n";
             else echo "&nbsp;";
         } else {
             $local_counter += 1;
@@ -363,12 +363,12 @@ function groups($parent_id)
 
             echo "  <tr><td class=\"".($ausgabeformat==1 ? "steelgraulight" : "blank")."\" colspan=\"2\">\n";
             if (do_template("show_questionblock_headline")) {
-                echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td align=\"left\"><B>".$global_counter.".".$local_counter.". ".formatReady($db_groups->f("title"))."</B></td>";
-                echo "<td align=\"RIGHT\">".($ausgabeformat==1 && !($freetype) ? "<A HREF=\"$PHP_SELF?eval_id=$eval_id&evalgroup_id=".$db_groups->f("evalgroup_id")."&group_type=".($group_type=="normal" ? "table" : "normal")."&cmd=change_group_type#anker\"><IMG SRC=\"".$GLOBALS['ASSETS_URL']."images/rewind3.gif\" TITLE=\""._("Zum Darstellungstyp")." ".($group_type=="normal"?_("Tabelle"):_("Normal"))." "._("wechseln").".\" border=\"0\"></A>" : "&nbsp;"). "</td>";
+                echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td align=\"left\"><b>".$global_counter.".".$local_counter.". ".formatReady($db_groups->f("title"))."</b></td>";
+                echo "<td align=\"RIGHT\">".($ausgabeformat==1 && !($freetype) ? "<a href=\"$PHP_SELF?eval_id=$eval_id&evalgroup_id=".$db_groups->f("evalgroup_id")."&group_type=".($group_type=="normal" ? "table" : "normal")."&cmd=change_group_type#anker\"><IMG SRC=\"".$GLOBALS['ASSETS_URL']."images/rewind3.gif\" TITLE=\""._("Zum Darstellungstyp")." ".($group_type=="normal"?_("Tabelle"):_("Normal"))." "._("wechseln").".\" border=\"0\"></a>" : "&nbsp;"). "</td>";
                 echo "</tr></table>\n";
             }
             if ($evalgroup_id == $db_groups->f("evalgroup_id")) {
-                echo "  <A name=\"anker\"></A>\n";
+                echo "  <a name=\"anker\"></a>\n";
             }
         }
 
@@ -393,7 +393,7 @@ function groups($parent_id)
 
                 if (do_template("show_questions") && $group_type=="normal") {
                     echo "    <tr><td class=\"blank\" colspan=\"2\">\n";
-                    echo "      <B>".$global_counter.".".$local_counter.".".$local_question_counter.". ".formatReady($db_questions->f("text"))."</B></FONT>\n";
+                    echo "      <b>".$global_counter.".".$local_counter.".".$local_question_counter.". ".formatReady($db_questions->f("text"))."</b></font>\n";
                     echo "    </td></tr>\n";
                 }
 
@@ -421,32 +421,32 @@ function groups($parent_id)
 
                     if (!($antworten_angezeigt)) {
                         $i = 1;
-                                            echo "  <tr class=\"steel1\"><td><FONT SIZE=\"-1\">&nbsp;</FONT></td>";
+                                            echo "  <tr class=\"steel1\"><td><font size=\"-1\">&nbsp;</font></td>";
                                             foreach ($questions["antwort_texte"] as $k2=>$v2) { // 1. Unterebene, hier sind die Antworttexte abgelegt
-                                                echo "<td><FONT SIZE=\"-1\">".$v2."</FONT></td>";
+                                                echo "<td><font size=\"-1\">".$v2."</font></td>";
                                             }
-                        echo "<td align=\"center\"><FONT SIZE=\"-1\"><B>&#x2211;</B></FONT></td><td align=\"center\"><FONT SIZE=\"-1\"><B>&#x2205;</B></FONT></td><td align=\"center\"><FONT SIZE=\"-1\">"._("Teilnehmer")."</FONT></td>";
+                        echo "<td align=\"center\"><font size=\"-1\"><b>&#x2211;</b></font></td><td align=\"center\"><font size=\"-1\"><b>&#x2205;</b></font></td><td align=\"center\"><font size=\"-1\">"._("Teilnehmer")."</font></td>";
                                             echo "</tr>";
                                             $antworten_angezeigt = TRUE;
                                         }
 
                     echo "<tr class=\"". ($i==1?"steel1kante":$css->getClass())."\">";
-                    echo "  <td><FONT SIZE=\"-1\">".$questions["frage"]."</FONT></td>";
+                    echo "  <td><font size=\"-1\">".$questions["frage"]."</font></td>";
                     foreach ($questions["auswertung"] as $k3=>$v3) {
-                        echo "<td width=\"10%\" valign=\"TOP\" ".($i!=1?"CLASS=\"".$css->getClass()."\"":"")."><FONT SIZE=\"-1\">";
+                        echo "<td width=\"10%\" valign=\"TOP\" ".($i!=1?"CLASS=\"".$css->getClass()."\"":"")."><font size=\"-1\">";
                         echo $v3[0]." (".$v3[1]."%)"; // 2. Unterebene, hier sind die Zahlen abgelegt
-                        if ($v3[2]) echo " (".$v3[2]."%)<B>*</B>";
-                        echo "</FONT></td>";
+                        if ($v3[2]) echo " (".$v3[2]."%)<b>*</b>";
+                        echo "</font></td>";
                     }
 
                     $i=0;
                     if ($questions["has_residual"]) $has_residual = 1;
 
-                    echo "<td align=\"center\" width=\"3%\" valign=\"TOP\"><FONT SIZE=\"-1\">".$questions["summe_antworten"]."</FONT></td><td align=\"center\" width=\"3%\" valign=\"TOP\"><FONT SIZE=\"-1\">".$questions["antwort_durchschnitt"].($questions["has_residual"]?"<B>*</B>":"")."</FONT></td><td align=\"center\" width=\"6%\" valign=\"TOP\"><FONT SIZE=\"-1\">".$questions["anzahl_teilnehmer"]."</FONT></td>";
+                    echo "<td align=\"center\" width=\"3%\" valign=\"TOP\"><font size=\"-1\">".$questions["summe_antworten"]."</font></td><td align=\"center\" width=\"3%\" valign=\"TOP\"><font size=\"-1\">".$questions["antwort_durchschnitt"].($questions["has_residual"]?"<b>*</b>":"")."</font></td><td align=\"center\" width=\"6%\" valign=\"TOP\"><font size=\"-1\">".$questions["anzahl_teilnehmer"]."</font></td>";
 
                     echo "</tr>";
                 }
-                if ($has_residual) echo "<tr><td><FONT SIZE=\"-1\"><B>*</B>"._("Werte ohne Enthaltungen").".</FONT></td></tr>";
+                if ($has_residual) echo "<tr><td><font size=\"-1\"><b>*</b>"._("Werte ohne Enthaltungen").".</font></td></tr>";
             }
 
             echo "</table>\n";
@@ -481,23 +481,23 @@ if ($db->next_record()) {
 
   // Evaluation existiert auch...
   echo "<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">\n";
-  echo "<tr><td class=\"topic\" align=\"left\"><FONT COLOR=\"".($ausgabeformat==1 ? "white" : "black")."\">".($ausgabeformat==1 ? "<IMG SRC=\"".$GLOBALS['ASSETS_URL']."images/eval-icon.gif\" border=\"0\">&nbsp;" : "" )."<B>"._("Evaluations-Auswertung")."</B></FONT></td>\n";
-  echo "<td class=\"".($ausgabeformat==1 ? "topic" : "blank" )."\" align=\"RIGHT\">".($ausgabeformat==1 ? "<A HREF=\"eval_summary_export.php?eval_id=".$eval_id."\" TARGET=\"_blank\"><FONT COLOR=\"WHITE\">"._("PDF-Export")."</FONT></A><B>&nbsp;|&nbsp;</B><A HREF=\"".$PHP_SELF."?eval_id=".$eval_id."&ausgabeformat=2\" TARGET=\"_blank\"><FONT COLOR=\"WHITE\">"._("Druckansicht")."</FONT></A>&nbsp;&nbsp;<A HREF=\"eval_config.php?eval_id=".$eval_id."\"><IMG SRC=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\" ALT=\""._("Auswertung konfigurieren")."\" TITLE=\""._("Auswertung konfigurieren")."\"></A>" : "" ) ."&nbsp;</td>\n";
+  echo "<tr><td class=\"topic\" align=\"left\"><font color=\"".($ausgabeformat==1 ? "white" : "black")."\">".($ausgabeformat==1 ? "<IMG SRC=\"".$GLOBALS['ASSETS_URL']."images/eval-icon.gif\" border=\"0\">&nbsp;" : "" )."<b>"._("Evaluations-Auswertung")."</b></font></td>\n";
+  echo "<td class=\"".($ausgabeformat==1 ? "topic" : "blank" )."\" align=\"RIGHT\">".($ausgabeformat==1 ? "<a href=\"eval_summary_export.php?eval_id=".$eval_id."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("PDF-Export")."</font></a><b>&nbsp;|&nbsp;</b><a href=\"".$PHP_SELF."?eval_id=".$eval_id."&ausgabeformat=2\" TARGET=\"_blank\"><font color=\"WHITE\">"._("Druckansicht")."</font></a>&nbsp;&nbsp;<a href=\"eval_config.php?eval_id=".$eval_id."\"><IMG SRC=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\" ALT=\""._("Auswertung konfigurieren")."\" TITLE=\""._("Auswertung konfigurieren")."\"></a>" : "" ) ."&nbsp;</td>\n";
   echo "</tr>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;</td></tr>\n";
-  echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\"><FONT SIZE=\"+1\"><B>&nbsp;&nbsp;".formatReady($db->f("title"))."</B></FONT></td>\n";
+  echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\"><font size=\"+1\"><b>&nbsp;&nbsp;".formatReady($db->f("title"))."</b></font></td>\n";
   echo "</tr>\n";
 
-  echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;</FONT></td></tr>\n";
+  echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;</font></td></tr>\n";
 
   // Gesamtstatistik
   if (do_template("show_total_stats")) {
     echo "  <tr>\n";
-    echo "    <td colspan=\"2\" class=\"blank\"><FONT SIZE=\"-1\">\n";
+    echo "    <td colspan=\"2\" class=\"blank\"><font size=\"-1\">\n";
     echo "      &nbsp;&nbsp;".$db_number_of_votes->f("anz")." "._("Teilnehmer insgesamt").".&nbsp;";
     echo "      "._("Die Teilnahme war")." ". ($db->f("anonymous")==0 ? _("nicht") : "") . " "._("anonym").".";
     echo "      "._("Eigent&uuml;mer").": ".$db_owner->f("fullname").". ".("Erzeugt am").": ".date('d.m.Y H:i:s');
-    echo "    </FONT></td>\n";
+    echo "    </font></td>\n";
     echo "  </tr>\n";
   }
 

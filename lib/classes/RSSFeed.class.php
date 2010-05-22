@@ -65,14 +65,14 @@ class RSSFeed {
     function get_feed_anzeige() {
         global $PHP_SELF, $more;
         $i = 1;
-        if ($more == $this->class_id) echo "<A name=\"news_anchor\"></A>\n";
+        if ($more == $this->class_id) echo "<a name=\"news_anchor\"></a>\n";
         echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
         foreach ($this->ausgabe->items as $v) {
             if (strlen(trim($v["title"]))>0) {
                 $desc = strip_tags(studip_utf8decode($v["description"] ? $v["description"] : $v['summary']));
                 if (strlen($desc) > 150) $desc = substr($desc, 0, 150) . "...";
                 if ($i > $this->max_items && $more != $this->class_id) {
-                    echo "<tr><td align=\"left\" valign=\"TOP\" colspan=\"2\"><A HREF=\"$PHP_SELF?more=".$this->class_id."#news_anchor\"><FONT SIZE=\"-1\"><I>mehr...</I></FONT></A></td></tr>\n";
+                    echo "<tr><td align=\"left\" valign=\"TOP\" colspan=\"2\"><a href=\"$PHP_SELF?more=".$this->class_id."#news_anchor\"><font size=\"-1\"><I>mehr...</I></font></a></td></tr>\n";
                     break;
                 }
                 echo "<tr>
@@ -80,17 +80,17 @@ class RSSFeed {
                 <IMG SRC=\"". $GLOBALS['ASSETS_URL'] . "images/".(!$this->internal_feed ? 'link_extern.gif' : 'link_intern.gif" hspace="2')."\">
                 </td>
                 <td align=\"left\" valign=\"TOP\">
-                <A HREF=\"".TransformInternalLinks($v["link"])."\" ".(!$this->internal_feed  ? "TARGET=\"_blank\"" : "") . " TITLE=\"".htmlReady($desc)."\">
-                <FONT SIZE=\"-1\">".htmlReady(studip_utf8decode($v["title"]))."</FONT>
-                </A></td></tr>\n";
+                <a href=\"".TransformInternalLinks($v["link"])."\" ".(!$this->internal_feed  ? "TARGET=\"_blank\"" : "") . " TITLE=\"".htmlReady($desc)."\">
+                <font size=\"-1\">".htmlReady(studip_utf8decode($v["title"]))."</font>
+                </a></td></tr>\n";
                 if ($v['enclosure_url']) {
                     echo "<tr><td width=\"1\" align=\"left\" valign=\"TOP\">&nbsp;</td>
                     <td align=\"left\" valign=\"TOP\"><a href=\"{$v['enclosure_url']}\" TARGET=\"_blank\"><img src=\"". $GLOBALS['ASSETS_URL'] . "images/podcast_icon.gif\" border=\"0\" align=\"absmiddle\"></a>
-                    <FONT SIZE=\"-2\">".htmlReady('('.$v['enclosure_type'] . ' - ' . floor($v['enclosure_length']/1024) . ' kb)')."</FONT>
+                    <font size=\"-2\">".htmlReady('('.$v['enclosure_type'] . ' - ' . floor($v['enclosure_length']/1024) . ' kb)')."</font>
                     </td></tr>\n";
                 }
                 if ($desc ) {
-                    echo "<tr><td width=\"1\" align=\"left\" valign=\"TOP\">&nbsp;</td><td align=\"left\" valign=\"TOP\"><FONT SIZE=\"-2\">".htmlReady($desc)."</FONT></td></tr>\n";
+                    echo "<tr><td width=\"1\" align=\"left\" valign=\"TOP\">&nbsp;</td><td align=\"left\" valign=\"TOP\"><font size=\"-2\">".htmlReady($desc)."</font></td></tr>\n";
                 }
                 $i++;
             }
@@ -105,9 +105,9 @@ class RSSFeed {
                     echo _("Timeout beim laden von ").$this->domain."...";
             } else {
                     $this->get_feed_anzeige();
-                    echo "<FONT SIZE=\"-1\"><BR>Copyright &copy; ".$this->domain
+                    echo "<font size=\"-1\"><BR>Copyright &copy; ".$this->domain
                     . ($this->ausgabe->channel['link'] ? '<br>'.formatReady($this->ausgabe->channel['link'],1,1) : '')
-                    . "</FONT>";
+                    . "</font>";
             }
     }
 

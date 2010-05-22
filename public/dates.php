@@ -184,9 +184,9 @@ if ($cmd == 'openAll') $openAll = true;
                 <? if (is_array($termine) && sizeof($termine) > 0) : ?>
                 <tr>
                     <td class="steelgraulight" colspan="10" height="24" align="center">
-                        <A href="<?=URLHelper::getLink('?cmd='.(($openAll) ? 'close' : 'open'))?>All">
+                        <a href="<?=URLHelper::getLink('?cmd='.(($openAll) ? 'close' : 'open'))?>All">
                             <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($openAll) ? 'close' : 'open'?>_all.gif" border="0" <?=tooltip(sprintf("Alle Termine %sklappen", ($openAll) ? 'zu' : 'auf'))?>>
-                        </A>
+                        </a>
                     </td>
                 </tr>
                 <? endif; ?>
@@ -210,7 +210,7 @@ if ($cmd == 'openAll') $openAll = true;
                                     ?>
                                     <tr>
                                         <td class="steelgraulight" align="center" colspan="9">
-                                            <FONT size="-1"><B><?=$zwsem['name']?></B></FONT>
+                                            <font size="-1"><b><?=$zwsem['name']?></b></font>
                                         </td>
                                     </tr>
                                     <?

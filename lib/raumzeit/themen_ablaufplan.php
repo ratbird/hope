@@ -124,7 +124,7 @@ if ($sem->hasDatesOutOfDuration()) {
 $infobox = array();
 
 if ($sem->metadates->art == 0) {
-    $times_info .= '<B>'._("Typ").':</B> '._("regelm&auml;&szlig;ige Veranstaltung").'<br>';
+    $times_info .= '<b>'._("Typ").':</b> '._("regelm&auml;&szlig;ige Veranstaltung").'<br>';
     $z = 0;
     if (is_array($turnus = $sem->getFormattedTurnusDates())) {
         foreach ($turnus as $val) {
@@ -133,7 +133,7 @@ if ($sem->metadates->art == 0) {
         }
     }
 } else {
-    $times_info .= '<B>'._("Typ").':</B> '._("unregelm&auml;&szlig;ige Veranstaltung").'<br>';
+    $times_info .= '<b>'._("Typ").':</b> '._("unregelm&auml;&szlig;ige Veranstaltung").'<br>';
 }
 
 // infobox end
@@ -164,9 +164,9 @@ $termine = getAllSortedSingleDates($sem);
                 <? if (is_array($termine) && sizeof($termine) > 0) : ?>
                 <tr>
                     <td class="steelgraulight" colspan="6" height="24" align="center">
-                        <A href="<?= URLHelper::getLink($PHP_SELF."?cmd=".(($openAll) ? 'close' : 'open')."All") ?>">
+                        <a href="<?= URLHelper::getLink($PHP_SELF."?cmd=".(($openAll) ? 'close' : 'open')."All") ?>">
                             <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($openAll) ? 'close' : 'open'?>_all.gif" border="0" <?=tooltip(sprintf("Alle Termine %sklappen", ($openAll) ? 'zu' : 'auf'))?>>
-                        </A>
+                        </a>
                     </td>
                 </tr>
                 <? else : ?>
@@ -219,7 +219,7 @@ $termine = getAllSortedSingleDates($sem);
                                 ?>
                                 <tr>
                                     <td class="steelgraulight" align="center" colspan="9">
-                                        <FONT size="-1"><B><?=$zwsem['name']?></B></FONT>
+                                        <font size="-1"><b><?=$zwsem['name']?></b></font>
                                     </td>
                                 </tr>
                                 <?
@@ -278,9 +278,9 @@ $termine = getAllSortedSingleDates($sem);
                     <td class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
                         <input type="hidden" name="allOpen" value="TRUE">
                         <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
-                        <A href="<?= URLHelper::getLink($PHP_SELF."?cmd=closeAll") ?>">
+                        <a href="<?= URLHelper::getLink($PHP_SELF."?cmd=closeAll") ?>">
                             <IMG <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
-                        </A>
+                        </a>
                     </td>
                 </tr>
             <? } ?>

@@ -2368,7 +2368,7 @@ elseif ((!$level) || ($level == 1))
                             <?=_("beteiligte Einrichtungen:"); ?>
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
-                            &nbsp; <select  name="sem_bet_inst[]" MULTIPLE SIZE=7>
+                            &nbsp; <select  name="sem_bet_inst[]" MULTIPLE size=7>
                             <?
                                 $db->query("SELECT Institut_id,Name FROM Institute WHERE Institut_id = fakultaets_id ORDER BY Name");
                                 while ($db->next_record()) {
@@ -2679,7 +2679,7 @@ if ($level == 2)
                                     <?
                                 } else {
                                     ?>
-                                    <font color=#BBBBBB>&nbsp; &nbsp; &nbsp;  <?=_("freier Zugriff")?> &nbsp;</font>
+                                    <font color=#BBBBBb>&nbsp; &nbsp; &nbsp;  <?=_("freier Zugriff")?> &nbsp;</font>
                                     <?
                                 }
                                 ?>
@@ -2710,7 +2710,7 @@ if ($level == 2)
                                     }
                                 else {
                                     ?>
-                                <font color=#BBBBBB>&nbsp; &nbsp; &nbsp;  <?=_("freier Zugriff")?> &nbsp;</font>
+                                <font color=#BBBBBb>&nbsp; &nbsp; &nbsp;  <?=_("freier Zugriff")?> &nbsp;</font>
                                     <?
                                     }
                             ?>

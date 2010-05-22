@@ -426,7 +426,7 @@ if ($archiv_data["perform_search"]) {
         echo "</font></b></blockquote>";
 
 
-        echo "<br><br><TABLE class=\"blank\"  WIDTH=99% align=center cellspacing=0 border=0>\n";
+        echo "<br><br><table class=\"blank\"  WIDTH=99% align=center cellspacing=0 border=0>\n";
     echo "<tr height=28><td  width=\"1%\" class=\"steel\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20>&nbsp; </td>\n";
         echo "<td  width=\"29%\" class=\"steel\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=Name") ."\">" . _("Name") . "</a></b></td>\n";
         echo "<td  width=\"20%\" class=\"steel\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=dozenten") ."\">" . _("DozentIn") . "</a></b></td>\n";

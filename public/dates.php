@@ -179,21 +179,21 @@ if ($cmd == 'openAll') $openAll = true;
 
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
-        <TD class="blank" valign="top">
-            <TABLE width="99%" cellspacing="0" cellpadding="0" border="0">
+        <td class="blank" valign="top">
+            <table width="99%" cellspacing="0" cellpadding="0" border="0">
                 <? if (is_array($termine) && sizeof($termine) > 0) : ?>
-                <TR>
-                    <TD class="steelgraulight" colspan="10" height="24" align="center">
+                <tr>
+                    <td class="steelgraulight" colspan="10" height="24" align="center">
                         <A href="<?=URLHelper::getLink('?cmd='.(($openAll) ? 'close' : 'open'))?>All">
                             <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($openAll) ? 'close' : 'open'?>_all.gif" border="0" <?=tooltip(sprintf("Alle Termine %sklappen", ($openAll) ? 'zu' : 'auf'))?>>
                         </A>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <? endif; ?>
-                <TR>
-                    <TD colspan="10" height="3">
-                    </TD>
-                </TR>
+                <tr>
+                    <td colspan="10" height="3">
+                    </td>
+                </tr>
                 <?
 
                 $semester = new SemesterData();
@@ -208,11 +208,11 @@ if ($cmd == 'openAll') $openAll = true;
                                 if ( ($zwsem['beginn'] < $singledate->getStartTime()) && ($zwsem['ende'] > $singledate->getStartTime()) ) {
                                     $grenze = $zwsem['ende'];
                                     ?>
-                                    <TR>
-                                        <TD class="steelgraulight" align="center" colspan="9">
+                                    <tr>
+                                        <td class="steelgraulight" align="center" colspan="9">
                                             <FONT size="-1"><B><?=$zwsem['name']?></B></FONT>
-                                        </TD>
-                                    </TR>
+                                        </td>
+                                    </tr>
                                     <?
                                 }
                             }
@@ -296,17 +296,17 @@ if ($cmd == 'openAll') $openAll = true;
            }
                 } else {
                 ?>
-                    <TR>
-                        <TD align="center">
+                    <tr>
+                        <td align="center">
                             <br>
                             <?= _("Im ausgewählten Zeitraum sind keine Termine vorhanden."); ?>
-                        </TD>
-                    </TR>
+                        </td>
+                    </tr>
                 <?
                 }
                 ?>
-            </TABLE>
-        </TD>
+            </table>
+        </td>
         <td class="blank" align="right" valign="top" width="270">
         <?
             //Build an infobox

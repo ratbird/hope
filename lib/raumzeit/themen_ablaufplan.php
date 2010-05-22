@@ -149,9 +149,9 @@ $termine = getAllSortedSingleDates($sem);
 
 ?>
 <form action="<?= URLHelper::getLink($PHP_SELF) ?>" method="post">
-<TABLE width="100%" border="0" cellpadding="0" cellspacing="0">
-  <TR>
-        <TD class="blank" valign="top">
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+        <td class="blank" valign="top">
         <?php 
             // show messages
             if ($messages = $sem->getStackedMessages()) :
@@ -160,26 +160,26 @@ $termine = getAllSortedSingleDates($sem);
                 endforeach;
             endif;
         ?>
-            <TABLE width="99%" cellspacing="0" cellpadding="0" border="0">
+            <table width="99%" cellspacing="0" cellpadding="0" border="0">
                 <? if (is_array($termine) && sizeof($termine) > 0) : ?>
-                <TR>
-                    <TD class="steelgraulight" colspan="6" height="24" align="center">
+                <tr>
+                    <td class="steelgraulight" colspan="6" height="24" align="center">
                         <A href="<?= URLHelper::getLink($PHP_SELF."?cmd=".(($openAll) ? 'close' : 'open')."All") ?>">
                             <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($openAll) ? 'close' : 'open'?>_all.gif" border="0" <?=tooltip(sprintf("Alle Termine %sklappen", ($openAll) ? 'zu' : 'auf'))?>>
                         </A>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <? else : ?>
-                <TR>
-                    <TD align="center">
+                <tr>
+                    <td align="center">
                         <br>
                         <?= _("Im ausgewählten Zeitraum sind keine Termine vorhanden."); ?>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <? endif; ?>
-                <TR>
-                    <TD class="blank" colspan="6" height="2"></TD>
-                </TR>
+                <tr>
+                    <td class="blank" colspan="6" height="2"></td>
+                </tr>
             <? if ($openAll) { ?>
                 <tr>
                     <td class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
@@ -205,9 +205,9 @@ $termine = getAllSortedSingleDates($sem);
                     </td>
                 </tr>
             <? } ?>
-                <TR>
-                    <TD class="blank" colspan="6" height="2"></TD>
-                </TR>
+                <tr>
+                    <td class="blank" colspan="6" height="2"></td>
+                </tr>
                 <?
 
                 foreach ($termine as $singledate_id => $singledate) {
@@ -217,11 +217,11 @@ $termine = getAllSortedSingleDates($sem);
                             if ( ($zwsem['beginn'] < $singledate->getStartTime()) && ($zwsem['ende'] > $singledate->getStartTime()) ) {
                                 $grenze = $zwsem['ende'];
                                 ?>
-                                <TR>
-                                    <TD class="steelgraulight" align="center" colspan="9">
+                                <tr>
+                                    <td class="steelgraulight" align="center" colspan="9">
                                         <FONT size="-1"><B><?=$zwsem['name']?></B></FONT>
-                                    </TD>
-                                </TR>
+                                    </td>
+                                </tr>
                                 <?
                             }
                         }
@@ -274,19 +274,19 @@ $termine = getAllSortedSingleDates($sem);
 
             if ($openAll) {
                 ?>
-                <TR>
-                    <TD class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
+                <tr>
+                    <td class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
                         <input type="hidden" name="allOpen" value="TRUE">
                         <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
                         <A href="<?= URLHelper::getLink($PHP_SELF."?cmd=closeAll") ?>">
                             <IMG <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
                         </A>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
             <? } ?>
-            </TABLE>
-        </TD>
-        <TD width="270" align="right" class="blank" valign="top">
+            </table>
+        </td>
+        <td width="270" align="right" class="blank" valign="top">
         <?
 
             // print info box:
@@ -306,14 +306,14 @@ $termine = getAllSortedSingleDates($sem);
             echo $infobox_template->render();
 
         ?>
-        </TD>
-    </TR>
-    <TR>
-        <TD class="blank" colspan="5">
+        </td>
+    </tr>
+    <tr>
+        <td class="blank" colspan="5">
             &nbsp;
-        </TD>
-    </TR>
-</TABLE>
+        </td>
+    </tr>
+</table>
 </form>
 <?
     $sem->store();

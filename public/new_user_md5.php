@@ -782,7 +782,7 @@ if (isset($_GET['details']) || $showform ) {
                                     echo "  </td>\n";
                                     echo "</tr>\n";
                     if ($db->f("locked")==1)
-                                            echo "<TR><TD CLASS=\"steel1\" COLSPAN=\"3\" ALIGN=\"center\"><FONT SIZE=\"-2\">"._("Gesperrt von:")." ".htmlReady(get_fullname($db->f("locked_by")))." (<A HREF=\"about.php?username=".get_username($db->f("locked_by"))."\">".get_username($db->f("locked_by"))."</A>)</FONT></TD></TR>\n";
+                                            echo "<tr><td class=\"steel1\" COLSPAN=\"3\" ALIGN=\"center\"><FONT SIZE=\"-2\">"._("Gesperrt von:")." ".htmlReady(get_fullname($db->f("locked_by")))." (<A HREF=\"about.php?username=".get_username($db->f("locked_by"))."\">".get_username($db->f("locked_by"))."</A>)</FONT></td></tr>\n";
                 }
                 $userEntries = DataFieldEntry::getDataFieldEntries($db->f('user_id'));
                 foreach ($userEntries as $entry) {
@@ -1025,7 +1025,7 @@ if (isset($_GET['details']) || $showform ) {
                     } else {
                         echo '<span style="font-size:smaller;color:#888;">('.$db->f('visible').')</span>';
                     }
-                    ?></TD>
+                    ?></td>
                     <td class="<? echo $cssSw->getClass() ?>"><?=$db->f("perms") ?></td>
                     <td class="<? echo $cssSw->getClass() ?>"><?=htmlReady($db->f("Vorname")) ?>&nbsp;</td>
                     <td class="<? echo $cssSw->getClass() ?>"><?=htmlReady($db->f("Nachname")) ?>&nbsp;</td>

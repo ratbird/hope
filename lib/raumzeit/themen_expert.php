@@ -167,12 +167,12 @@ unset($themen);
 $themen =& $sem->getIssues(true);   // read again, so we have the actual sort order and so on
 ?>
 <form action="<?= URLHelper::getLink($PHP_SELF) ?>" method="post">
-<TABLE width="100%" border="0" cellpadding="2" cellspacing="0">
-    <TR>
-        <TD class="blank" colspan="2">
-            <TABLE border="0" cellspacing="0" cellpadding="2" width="100%">
-                <TR>
-                    <TD class="blank">
+<table width="100%" border="0" cellpadding="2" cellspacing="0">
+    <tr>
+        <td class="blank" colspan="2">
+            <table border="0" cellspacing="0" cellpadding="2" width="100%">
+                <tr>
+                    <td class="blank">
                         <A name="filter">
                         <?
                             $all_semester = $semester->getAllSemesterData();
@@ -191,47 +191,47 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                             $tpl['semester']['all'] = _("Alle Semester");
                             include('lib/raumzeit/templates/choose_filter.tpl');
                         ?>
-                     </TD>
-                     <TD class="blank" align="right">
+                     </td>
+                     <td class="blank" align="right">
                         <?
                             $tpl['view']['simple'] = 'Standard';
                             $tpl['view']['expert'] = 'Erweitert';
                             $tpl['selected'] = $viewModeFilter;
                             include('lib/raumzeit/templates/choose_view.tpl');
                         ?>
-                    </TD>
-                </TR>
-            </TABLE>
-        </TD>
-  </TR>
+                    </td>
+                </tr>
+            </table>
+        </td>
+  </tr>
     <? while ($msg = $sem->getNextMessage()) { ?>
-    <TR>
-        <TD class="blank" colspan=2><br>
+    <tr>
+        <td class="blank" colspan=2><br>
             <?parse_msg($msg);?>
-        </TD>
-    </TR>
+        </td>
+    </tr>
     <? } ?>
-    <TR>
-        <TD class="blank" width="50%" height="15"></TD>
-        <TD class="blank" width="50%" height="15"></TD>
-    </TR>
-  <TR>
-        <TD align="center" class="blank" width="50%" valign="top">
-            <TABLE width="90%" cellspacing="0" cellpadding="2" border="0">
-                <TR>
-                    <TD colspan="3" height="28">
+    <tr>
+        <td class="blank" width="50%" height="15"></td>
+        <td class="blank" width="50%" height="15"></td>
+    </tr>
+  <tr>
+        <td align="center" class="blank" width="50%" valign="top">
+            <table width="90%" cellspacing="0" cellpadding="2" border="0">
+                <tr>
+                    <td colspan="3" height="28">
                         <FONT size="-1">&nbsp;</FONT>
-                    </TD>
-                </TR>
-                <TR>
-                <TD class="printhead" colspan="3">
+                    </td>
+                </tr>
+                <tr>
+                <td class="printhead" colspan="3">
                     <FONT size="-1">
                         &nbsp;<B><?=_("Sitzungsthemen")?></B>
                     </FONT>
-                </TD>
-                </TR>
-                <TR>
-                    <TD class="blank" colspan="3">
+                </td>
+                </tr>
+                <tr>
+                    <td class="blank" colspan="3">
                         <FONT size="-1">
                             <select name="numIssues">
                                 <? for ($i = 1; $i <= 15; $i++) { ?>
@@ -241,20 +241,20 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                             <?=("neue Themen")?>
                         </FONT>
                         <input type="image" <?=makebutton('anlegen', 'src')?> align="absmiddle" name="addIssue">
-                    </TD>
-                </TR>
-                <TR>
-                    <TD class="blank" colspan="3">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="blank" colspan="3">
                         &nbsp;
-                    </TD>
-                </TR>
-                <TR>
-                    <TD class="steelgraulight" colspan="3" align="center">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="steelgraulight" colspan="3" align="center">
                         <A href="<?= URLHelper::getLink($PHP_SELF."?cmd=openAll") ?>">
                             <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/forumgraurunt.gif" title="<?=_("Alle Themen aufklappen")?>" border="0">
                         </A>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <?
                 if ( isset($cmd) && ($cmd == 'addIssue') && ($numIssues == 1)) {
                     $tpl['submit_name'] = 'doAddIssue';
@@ -317,86 +317,86 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                 }
                 if ($openAll) {
                 ?>
-                <TR>
-                    <TD class="blank" colspan="3" align="center">
+                <tr>
+                    <td class="blank" colspan="3" align="center">
                         <input type="hidden" name="allOpen" value="1">
                         <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="saveAll">&nbsp;
                         <A href="<?= URLHelper::getLink($PHP_SELF) ?>">
                             <IMG <?=makebutton('abbrechen', 'src')?> border="0">
                         </A>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <?
                 } else {
                 ?>
-                <TR>
-                    <TD class="blank" colspan="3" align="left">
+                <tr>
+                    <td class="blank" colspan="3" align="left">
                     <?
                         include('lib/raumzeit/templates/actions_thema.tpl');
                     ?>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <?
                 }
                 ?>
-            </TABLE>
-        </TD>
-        <TD align="center" class="blank" width="50%" valign="top">
-            <TABLE width="90%" cellspacing="0" cellpadding="2" border="0">
-                <TR>
-                    <TD colspan="3" align="right" height="28">
-                        <TABLE width="100%" cellspacing="0" cellpadding="0" border="0">
+            </table>
+        </td>
+        <td align="center" class="blank" width="50%" valign="top">
+            <table width="90%" cellspacing="0" cellpadding="2" border="0">
+                <tr>
+                    <td colspan="3" align="right" height="28">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
                         <? if ($chronoGroupedFilter == 'grouped') { ?>
-                            <TD background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
+                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
                                 <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/reiter1.jpg" align="middle">
-                            </TD>
-                            <TD background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
+                            </td>
+                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
                                 <FONT size="-1">
                                     &nbsp;&nbsp;<?=_("gruppiert")?>&nbsp;&nbsp;
                                 </FONT>
-                            </TD>
-                            <TD background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
+                            </td>
+                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
                                 <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/reiter1.jpg" align="middle">
-                            </TD>
-                            <TD background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel2.jpg">
+                            </td>
+                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel2.jpg">
                                 <FONT size="-1">
                                     <A href="<?= URLHelper::getLink($PHP_SELF."?cmd=changeChronoGroupedFilter&newFilter=chrono") ?>">
                                         &nbsp;&nbsp;<?=_("chronologisch")?>&nbsp;&nbsp;
                                     </A>
                                 </FONT>
-                            </TD>
+                            </td>
                         <? } else { ?>
-                            <TD background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel2.jpg">
+                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel2.jpg">
                                 <FONT size="-1">
                                     <A href="<?= URLHelper::getLink($PHP_SELF."?cmd=changeChronoGroupedFilter&newFilter=grouped") ?>">
                                         &nbsp;&nbsp;<?=_("gruppiert")?>&nbsp;&nbsp;
                                     </A>
                                 </FONT>
-                            </TD>
-                            <TD background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
+                            </td>
+                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
                                 <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/reiter1.jpg" align="middle">
-                            </TD>
-                            <TD background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
+                            </td>
+                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
                                 <FONT size="-1">
                                     &nbsp;&nbsp;<?=_("chronologisch")?>&nbsp;&nbsp;
                                 </FONT>
-                            </TD>
-                            <TD background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
+                            </td>
+                            <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel1info.jpg">
                                 <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/reiter1.jpg" align="middle">
-                            </TD>
+                            </td>
                             <? } ?>
                         </FONT>
-                        </TABLE>
-                    </TD>
-                </TR>
+                        </table>
+                    </td>
+                </tr>
                 <? if ($chronoGroupedFilter == 'grouped') { ?>
-                    <TR>
-                        <TD class="printhead" colspan="3">
+                    <tr>
+                        <td class="printhead" colspan="3">
                             <FONT size="-1">
                                 &nbsp;<B><?=_("Allgemeine Zeiten")?></B>
                             </FONT>
-                        </TD>
-                    </TR>
+                        </td>
+                    </tr>
                     <?
                     $turnus = $sem->getFormattedTurnusDates();
 
@@ -417,11 +417,11 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                                         if ( ($zwsem['beginn'] < $singledate->getStartTime()) && ($zwsem['ende'] > $singledate->getStartTime()) ) {
                                             $grenze = $zwsem['ende'];
                                             ?>
-                                                <TR>
-                                                <TD class="steelgraulight" align="center" colspan="9">
+                                                <tr>
+                                                <td class="steelgraulight" align="center" colspan="9">
                                                 <FONT size="-1"><B><?=$zwsem['name']?></B></FONT>
-                                                </TD>
-                                                </TR>
+                                                </td>
+                                                </tr>
                                                 <?
                                         }
                                     }
@@ -462,24 +462,24 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                             }
                         }
                         ?>
-                        <TR>
-                            <TD class="blank" height="4" colspan="3"></TD>
-                        </TR>
+                        <tr>
+                            <td class="blank" height="4" colspan="3"></td>
+                        </tr>
                             <?
                     }
                     ?>
-                    <TR>
-                        <TD class="blank" colspan="3">
+                    <tr>
+                        <td class="blank" colspan="3">
                             &nbsp;
-                        </TD>
-                    </TR>
-                    <TR>
-                        <TD class="printhead" colspan="3">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="printhead" colspan="3">
                             <FONT size="-1">
                                 &nbsp;<B><?=_("unregelm&auml;&szlig;ige Termine / Blocktermine")?></B>
                             </FONT>
-                        </TD>
-                    </TR>
+                        </td>
+                    </tr>
                     <?
                     $termine =& $sem->getSingleDates(true);
                     foreach ($termine as $singledate_id => $singledate) {
@@ -504,20 +504,20 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                      *   C H R O N O L O G I S C H E   A N S I C H T   *
                      * * * * * * * * * * * * * * * * * * * * * * * * * */
                     ?>
-                    <TR>
-                        <TD class="printhead" colspan="3">
+                    <tr>
+                        <td class="printhead" colspan="3">
                             <FONT size="-1">
                                 &nbsp;<B><?=_("Zeiten")?></B>
                             </FONT>
-                        </TD>
-                    </TR>
-                    <TR>
-                        <TD class="steel1" colspan="3">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="steel1" colspan="3">
                             &nbsp;
                             <FONT size="-1"><?=_("ausgewählte Themen freien Terminen")?></FONT>&nbsp;
                             <input type="image" <?=makebutton('zuordnen', 'src')?> align="absMiddle" border="0" name="chronoAutoAssign">
-                        </TD>
-                    </TR>
+                        </td>
+                    </tr>
                     <?
 
                     $termine = getAllSortedSingleDates($sem);
@@ -533,11 +533,11 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                                 if ( ($zwsem['beginn'] < $singledate->getStartTime()) && ($zwsem['ende'] > $singledate->getStartTime()) ) {
                                     $grenze = $zwsem['ende'];
                                     ?>
-                                        <TR>
-                                            <TD class="steelgraulight" align="center" colspan="9">
+                                        <tr>
+                                            <td class="steelgraulight" align="center" colspan="9">
                                                 <FONT size="-1"><B><?=$zwsem['name']?></B></FONT>
-                                            </TD>
-                                        </TR>
+                                            </td>
+                                        </tr>
                                         <?
                                 }
                             }
@@ -570,17 +570,17 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                     } // foreach termine
                 }
                 ?>
-            </TABLE>
-        </TD>
-  </TR>
-    <TR>
-        <TD class="blank" width="50%">
+            </table>
+        </td>
+  </tr>
+    <tr>
+        <td class="blank" width="50%">
             &nbsp;
-        </TD>
-        <TD class="blank" width="50%">
+        </td>
+        <td class="blank" width="50%">
             &nbsp;
-    </TR>
-</TABLE>
+    </tr>
+</table>
 </form>
 <?
     $sem->store();

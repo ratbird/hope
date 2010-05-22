@@ -311,8 +311,8 @@ while ($tmp_first_date < $end_date) {
                         <? } else {
                             echo ($sem->getStartWeek() + 1) .'. '. _("Semesterwoche");
                         } ?>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <?
                 $turnus = $sem->getFormattedTurnusDates();      // string representation of all CycleData-objects is retrieved as an associative array: key: CycleDataID, val: string
                     //TODO: string representation should not be collected by a big array, but with the toString method of the CycleData-object
@@ -346,9 +346,9 @@ while ($tmp_first_date < $end_date) {
                             ?>
                             <form action="<?= URLHelper::getLink() ?>" method="post" name="Formular">
                             <input type="hidden" name="cycle_id" value="<?=$metadate_id?>">
-                <TR>
-                    <TD align="center" colspan="9" class="steel1">
-                        <TABLE cellpadding="1" cellspacing="0" border="0" width="90%">
+                <tr>
+                    <td align="center" colspan="9" class="steel1">
+                        <table cellpadding="1" cellspacing="0" border="0" width="90%">
                             <?
                             $every2nd = 1;
                             $all_semester = $semester->getAllSemesterData();
@@ -366,11 +366,11 @@ while ($tmp_first_date < $end_date) {
                                         if ( ($zwsem['beginn'] < $val->getStartTime()) && ($zwsem['ende'] > $val->getStartTime()) ) {
                                             $grenze = $zwsem['ende'];
                                             ?>
-                                            <TR>
-                                                <TD class="steelgraulight" align="center" colspan="9">
+                                            <tr>
+                                                <td class="steelgraulight" align="center" colspan="9">
                                                     <B><?=$zwsem['name']?></B>
-                                                </TD>
-                                            </TR>
+                                                </td>
+                                            </tr>
                                             <?
                                         }
                                     }
@@ -389,19 +389,19 @@ while ($tmp_first_date < $end_date) {
                                 // Ende Template einzelnes Datum
                             }
                             ?>
-                        </TABLE>
-                    </TD>
-                </TR>
+                        </table>
+                    </td>
+                </tr>
                 <? if (sizeof($termine) > 0) : ?>
-                <TR>
-                    <TD class="steel1" colspan="9" align="center">
+                <tr>
+                    <td class="steel1" colspan="9" align="center">
                         <?
                             $tpl['width'] = '90%';
                             $tpl['cycle_id'] = $metadate_id;
                             include('lib/raumzeit/templates/actions.tpl');
                         ?>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <?
                 endif;
                         }
@@ -410,7 +410,7 @@ while ($tmp_first_date < $end_date) {
 
                 if ($newCycle) {
             ?>
-                <TR>
+                <tr>
                     <?
                     if (isset($_REQUEST['day'])) {
                         $tpl['day'] = $_REQUEST['day'];
@@ -423,13 +423,13 @@ while ($tmp_first_date < $end_date) {
                     $tpl['end_minute'] = $_REQUEST['end_minute'];
                     include('lib/raumzeit/templates/addcycle.tpl')
                     ?>
-                </TR>
+                </tr>
             <?
                 }
             ?>
                 <? if (!$_LOCKED) { ?>
-                <TR>
-                    <TD class="blank" colspan="9">
+                <tr>
+                    <td class="blank" colspan="9">
                         <br>
                         <font size="-1">
                             &nbsp;&nbsp;
@@ -438,23 +438,23 @@ while ($tmp_first_date < $end_date) {
                                 <img <?=makebutton('hinzufuegen', 'src')?> border="0" align="absmiddle">
                             </a>
                         </font>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <? } ?>
-                <TR>
-                    <TD colspan="9" class="blank">&nbsp;</TD>
-                </TR>
-                <TR>
-                    <TD colspan="9" class="blue_gradient">
+                <tr>
+                    <td colspan="9" class="blank">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td colspan="9" class="blue_gradient">
                         <a name="irregular_dates"></a>
                         &nbsp;<B><?=_("Unregelm&auml;&szlig;ige Termine/Blocktermine")?></B>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <? if ($termine =& $sem->getSingleDates(true, true)) { ?>
-                <TR>
-                    <TD align="left" colspan="9" class="steel1">
+                <tr>
+                    <td align="left" colspan="9" class="steel1">
                         <form action="<?= URLHelper::getLink() ?>" method="post" name="Formular">
-                        <TABLE cellpadding="1" cellspacing="0" border="0" width="100%">
+                        <table cellpadding="1" cellspacing="0" border="0" width="100%">
                             <?
                             $count = 0;
                             $every2nd = 1;
@@ -468,11 +468,11 @@ while ($tmp_first_date < $end_date) {
                                         if ( ($zwsem['beginn'] < $val->getStartTime()) && ($zwsem['ende'] > $val->getStartTime()) ) {
                                             $grenze = $zwsem['ende'];
                                             ?>
-                                            <TR>
-                                                <TD class="steelgraulight" align="center" colspan="9">
+                                            <tr>
+                                                <td class="steelgraulight" align="center" colspan="9">
                                                     <B><?=$zwsem['name']?></B>
-                                                </TD>
-                                            </TR>
+                                                </td>
+                                            </tr>
                                             <?
                                         }
                                     }
@@ -487,7 +487,7 @@ while ($tmp_first_date < $end_date) {
                                 $count++;
                             }
                             ?>
-                        </TABLE>
+                        </table>
                 <? } ?>
                 <? if ($count) { ?>
                         <?
@@ -495,8 +495,8 @@ while ($tmp_first_date < $end_date) {
                             include('lib/raumzeit/templates/actions.tpl');
                         ?>
                         </form>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <? } ?>
 
 
@@ -505,8 +505,8 @@ while ($tmp_first_date < $end_date) {
                 </tr>
 
                 <? if (!$_LOCKED) { ?>
-                <TR>
-                    <TD>
+                <tr>
+                    <td>
                     <SCRIPT type ="text/javascript">
                     function block_fenster () {
                         f1 = window.open("blockveranstaltungs_assistent.php?seminar_id=<?=$id?>", "Zweitfenster", "width=550,height=600,toolbar=no, menubar=no, scrollbars=yes");
@@ -517,8 +517,8 @@ while ($tmp_first_date < $end_date) {
                             &nbsp;<?=_("Blockveranstaltungstermine")?>
                         </FONT>
                          <a href="javascript:window.block_fenster()"><?=makebutton("anlegen")?></a>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <? if (isset($cmd) && ($cmd == 'createNewSingleDate')) {
                     if ($GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COLORING']) {
                         $tpl['class'] = 'steelred';
@@ -528,16 +528,16 @@ while ($tmp_first_date < $end_date) {
 
                     include('lib/raumzeit/templates/addsingledate.tpl');
                 } else { ?>
-                <TR>
-                    <TD colspan="9" class="blank">
+                <tr>
+                    <td colspan="9" class="blank">
                         <FONT size="-1">
                             &nbsp;einen neuen Termin
                             <a href="<?= URLHelper::getLink('?cmd=createNewSingleDate#newSingleDate') ?>">
                                 <IMG <?=makebutton('erstellen', 'src')?> align="absmiddle" border="0">
                             </A>
                         </FONT>
-                    </TD>
-                </TR>
+                    </td>
+                </tr>
                 <? } ?>
                 <tr>
                     <td class="blank" colspan="9">&nbsp;</td>
@@ -604,10 +604,10 @@ while ($tmp_first_date < $end_date) {
                             </A>
                         </FONT>
                         <? } ?>
-                    </TD>
-                </TR>
-                <TR>
-                    <TD colspan="9" class="blank">&nbsp;</TD>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="9" class="blank">&nbsp;</td>
                 </tr>
             <? } ?>
 

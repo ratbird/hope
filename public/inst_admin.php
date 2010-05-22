@@ -641,9 +641,9 @@ if ($inst_id != "" && $inst_id !="0") {
                             <b><?=_("Folgende nur bei Zuordnung eines Admins:")?></b><br>
                             <input type="checkbox" id="enable_mail_admin" name="enable_mail_admin" value="admin"><label for="enable_mail_admin" ><?=_("Admins der Einrichtung benachrichtigen")?></label><br>
                             <input type="checkbox" id="enable_mail_dozent" name="enable_mail_dozent" value="dozent"><label for="enable_mail_dozent" ><?=_("Dozenten der Einrichtung benachrichtigen")?></label><br>
-                            <input type="IMAGE" name="berufen" <?=makeButton("hinzufuegen", "src")?> border=0 value="<?=_("berufen")?>">
+                            <input type="image" name="berufen" <?=makeButton("hinzufuegen", "src")?> border=0 value="<?=_("berufen")?>">
                         <? } ?>
-                            <input type="IMAGE" name="reset" <?=makeButton("neuesuche", "src")?> border=0 value="<?=_("Neue Suche")?>">
+                            <input type="image" name="reset" <?=makeButton("neuesuche", "src")?> border=0 value="<?=_("Neue Suche")?>">
                             </td>
                         </tr>
                     </table>

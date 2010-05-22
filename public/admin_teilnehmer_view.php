@@ -97,7 +97,7 @@ $active = array();
 while ($db->next_record()) {
     $active[$db->f("seminar_id")][$db->f("datafield_id")] = TRUE;
 }
-echo "<FORM action=\"". URLHelper::getLink() ."\" method=\"post\">";
+echo "<form action=\"". URLHelper::getLink() ."\" method=\"post\">";
 foreach ($SEM_CLASS as $key => $val) {
     echo $tbl2->headerRow(array("&nbsp;<B>". $val["name"]."</B>", "<B>Status</B>", "<B>Anzeige</B>"));
     echo $tbl2->closeRow();
@@ -105,17 +105,17 @@ foreach ($SEM_CLASS as $key => $val) {
         echo $tbl2->openRow();
         echo $tbl2->cell($data["name"], array("width" => "50%"));
         echo $tbl2->cell(($active[$key][$data["field"]] ? "<font color=\"green\">". _("Anzeigen erlaubt"). "</font>" : "<font color=\"red\">". _("Anzeigen nicht erlaubt"). "</font>"), array("width" => "25%"));
-        echo $tbl2->cell(sprintf("<INPUT type=\"radio\" name=\"#".$data["field"]."##".$key."\" value=\"1\" %s>". _("erlaubt")."<INPUT type=\"radio\" name=\"#".$data["field"]."##".$key."\" value=\"0\" %s>". _("nicht erlaubt"), ($active[$key][$data["field"]]) ? "checked" : "",($active[$key][$data["field"]]) ? "" : "checked"));
+        echo $tbl2->cell(sprintf("<input type=\"radio\" name=\"#".$data["field"]."##".$key."\" value=\"1\" %s>". _("erlaubt")."<input type=\"radio\" name=\"#".$data["field"]."##".$key."\" value=\"0\" %s>". _("nicht erlaubt"), ($active[$key][$data["field"]]) ? "checked" : "",($active[$key][$data["field"]]) ? "" : "checked"));
         echo $tbl2->closeRow();
     }
-    echo "<INPUT type=\"hidden\" name=\"cmd\" value=\"change\">";
+    echo "<input type=\"hidden\" name=\"cmd\" value=\"change\">";
     echo $table->openRow();
     echo $table->cell("&nbsp;",array("colspan" => "2"));
-    echo $table->cell("<INPUT type=\"image\" ".makeButton("zuweisen", "src").">");
+    echo $table->cell("<input type=\"image\" ".makeButton("zuweisen", "src").">");
     echo $table->closeRow();
     echo $table->blankRow(array("colspan" => "3"));
 }
-echo "</FORM>";
+echo "</form>";
 echo $tbl2->close();
 
 // Abschluss für unten (Leere Zeile)

@@ -228,16 +228,16 @@ if ($auth->auth["uid"] != "nobody"){
             echo "\n<tr><td class='blank' colspan='2' valign='middle'><font size=-1>";
             echo    sprintf(_("Ihre Nachricht an <b>%s:</b>"),get_fullname_from_uname($msg_rec,'full',true)) . "</font>";
             echo "</td></tr>";
-            echo "\n<FORM  name='eingabe' action='$PHP_SELF?cmd=send_msg' method='POST'>";
-            echo "<INPUT TYPE='HIDDEN'  name='msg_rec' value='".$msg_rec."'>";
-            echo "<INPUT TYPE='HIDDEN'  name='msg_subject' value='".HtmlReady($msg_subject)."'>";
+            echo "\n<form  name='eingabe' action='$PHP_SELF?cmd=send_msg' method='POST'>";
+            echo "<input type='HIDDEN'  name='msg_rec' value='".$msg_rec."'>";
+            echo "<input type='HIDDEN'  name='msg_subject' value='".HtmlReady($msg_subject)."'>";
             echo "\n<tr><td class='blank' colspan='2' valign='middle'>";
-            echo "<TEXTAREA  style=\"width: 100%\" name='nu_msg' rows='4' cols='44' wrap='virtual'>".htmlready($msg_text)."</TEXTAREA></font><br>";
+            echo "<textarea  style=\"width: 100%\" name='nu_msg' rows='4' cols='44' wrap='virtual'>".htmlready($msg_text)."</textarea></font><br>";
             echo "<font size=-1><a target=\"_blank\" href=\"show_smiley.php\">" . _("Smileys</a> k&ouml;nnen verwendet werden") . " </font>\n</td></tr>";
             echo "\n<tr><td class='blank' colspan='2' valign='middle' align='center'><font size=-1>&nbsp;";
-            echo "<INPUT TYPE='IMAGE' name='none' "
+            echo "<input type='IMAGE' name='none' "
                 . makeButton("absenden","src") . tooltip(_("Nachricht versenden")) . " border=0 value='senden'>&nbsp;<a href=\"$PHP_SELF?cmd=cancel\"><img "
-                . makeButton("abbrechen","src") . tooltip(_("Vorgang abbrechen")) . " border=0></a></FORM></font></td></tr>";
+                . makeButton("abbrechen","src") . tooltip(_("Vorgang abbrechen")) . " border=0></a></form></font></td></tr>";
         
             echo "\n<script language=\"JavaScript\">\n<!--\ndocument.eingabe.nu_msg.focus();\n//-->\n</script>";
         }

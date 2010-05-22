@@ -701,11 +701,11 @@ function form($refresh = FALSE) {
             . sprintf(_("<b>%d</b> Dateien und <b>%d</b> Ordner"),get_config('ZIP_UPLOAD_MAX_FILES'), get_config('ZIP_UPLOAD_MAX_DIRS'))
             . "</font></td></tr>";
     }
-    $print.= "\n<form enctype=\"multipart/form-data\" NAME=\"upload_form\" action=\"" . URLHelper::getLink('#anker') . "\" method=\"post\">";
+    $print.= "\n<form enctype=\"multipart/form-data\" name=\"upload_form\" action=\"" . URLHelper::getLink('#anker') . "\" method=\"post\">";
     $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("1. Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuw&auml;hlen.") . " </font></td></tr>";
     $print.= "\n<tr>";
     $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
-    $print.= "&nbsp;<INPUT NAME=\"the_file\" TYPE=\"file\"  style=\"width: 70%\" SIZE=\"30\">&nbsp;</td></td>";
+    $print.= "&nbsp;<input name=\"the_file\" type=\"file\"  style=\"width: 70%\" SIZE=\"30\">&nbsp;</td></td>";
     $print.= "\n</tr>";
     if (!$refresh && !$folder_system_data['zipupload']) {
         $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("2. Schutz gem&auml;&szlig; Urhebberecht.") . "</font></td></tr>";
@@ -718,7 +718,7 @@ function form($refresh = FALSE) {
         $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
         $print.= "\n&nbsp;<input type=\"TEXT\" name=\"name\" style=\"width: 70%\" size=\"40\" maxlength\"255\"></td></tr>";
         $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
-        $print.= "\n&nbsp;<TEXTAREA NAME=\"description\" style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL></TEXTAREA>&nbsp;</td></tr>";
+        $print.= "\n&nbsp;<textarea name=\"description\" style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL></textarea>&nbsp;</td></tr>";
         $print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen") . "</font></td></tr>";
     } else if ($folder_system_data['zipupload']) {
         $print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um das Ziparchiv hochzuladen und in diesem Ordner zu entpacken.") . "</font></td></tr>";
@@ -1237,14 +1237,14 @@ function link_form ($range_id, $updating=FALSE) {
     $print.="\n<br><br>" . _("Sie haben diesen Ordner zum Upload ausgewählt:") . "<br><br><center><table width=\"90%\" style=\"{border-style: solid; border-color: #000000;  border-width: 1px;}\" border=0 cellpadding=2 cellspacing=3>";
 
     $print.="</font></td></tr>";
-    $print.= "\n<form enctype=\"multipart/form-data\" NAME=\"link_form\" action=\"" . URLHelper::getLink('#anker') . "\" method=\"post\">";
+    $print.= "\n<form enctype=\"multipart/form-data\" name=\"link_form\" action=\"" . URLHelper::getLink('#anker') . "\" method=\"post\">";
     $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("1. Geben Sie hier den <b>vollständigen Pfad</b> zu der Datei an die sie verlinken wollen.") . " </font></td></tr>";
     $print.= "\n<tr>";
     $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
     if ($hiddenurl)
-        $print.= "&nbsp;<INPUT NAME=\"the_link\" TYPE=\"text\"  style=\"width: 70%\" SIZE=\"30\" value=\"***\">&nbsp;</td></td>";
+        $print.= "&nbsp;<input name=\"the_link\" type=\"text\"  style=\"width: 70%\" SIZE=\"30\" value=\"***\">&nbsp;</td></td>";
     else
-        $print.= '&nbsp;<INPUT NAME="the_link" TYPE="text"  style="width: 70%" SIZE="30" value="'.$the_link.'">&nbsp;</td></td>';
+        $print.= '&nbsp;<input name="the_link" type="text"  style="width: 70%" SIZE="30" value="'.$the_link.'">&nbsp;</td></td>';
     $print.= "\n</tr>";
     if (!$refresh) {
 
@@ -1255,10 +1255,10 @@ function link_form ($range_id, $updating=FALSE) {
 
         $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("3. Geben Sie eine kurze Beschreibung und einen Namen für die Datei ein.") . "</font></td></tr>";
         $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
-        $print.= "\n".'&nbsp;<input type="TEXT" name="name" style="width: 70%" size="40" maxlength"255" value="'.$name.'"></td></tr>';
+        $print.= "\n".'&nbsp;<input type="text" name="name" style="width: 70%" size="40" maxlength"255" value="'.$name.'"></td></tr>';
 
         $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
-        $print.= "\n&nbsp;<TEXTAREA NAME=\"description\"  style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL>$description</TEXTAREA>&nbsp;</td></tr>";
+        $print.= "\n&nbsp;<textarea name=\"description\"  style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL>$description</textarea>&nbsp;</td></tr>";
         $print.= "\n<tr><td class=\"steelgraudunkel\"colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei zu verlinken") . "</font></td></tr>";
     } else
         $print.= "\n<tr><td class=\"steelgraudunkel\"colspan=2 ><font size=-1>" . _("2. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
@@ -1585,15 +1585,15 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
         $content .= chr(10) . '</td><td><font size="-1">';
         if($rechte){
             if ($folder_tree->permissions_activated){
-                $content.= "\n<INPUT style=\"vertical-align:middle\" TYPE=\"checkbox\" VALUE=\"1\" ".($folder_tree->isReadable($folder_id) ? "CHECKED" : "" ) . " NAME=\"perm_read\">&nbsp;";
+                $content.= "\n<input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isReadable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_read\">&nbsp;";
                 $content.= "<b>r</b> - " . _("Lesen (Dateien k&ouml;nnen heruntergeladen werden)");
-                $content.= "\n<br><INPUT style=\"vertical-align:middle\" TYPE=\"checkbox\" VALUE=\"1\" ".($folder_tree->isWritable($folder_id) ? "CHECKED" : "" ) . " NAME=\"perm_write\">&nbsp;";
+                $content.= "\n<br><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isWritable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_write\">&nbsp;";
                 $content.= "<b>w</b> - " . _("Schreiben (Dateien k&ouml;nnen heraufgeladen werden)");
-                $content.= "\n<br><INPUT style=\"vertical-align:middle\" TYPE=\"checkbox\" VALUE=\"1\" ".($folder_tree->isExecutable($folder_id) ? "CHECKED" : "" ) . " NAME=\"perm_exec\">&nbsp;";
+                $content.= "\n<br><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isExecutable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_exec\">&nbsp;";
                 $content.= "<b>x</b> - " . _("Sichtbarkeit (Ordner wird angezeigt)");
             }
             if($level == 0 && $folder_tree->entity_type == 'sem'){
-                $content .= "\n<br><INPUT style=\"vertical-align:middle\" TYPE=\"checkbox\" VALUE=\"1\" ".($folder_tree->checkCreateFolder($folder_id) ? "CHECKED" : "" ) . " NAME=\"perm_folder\">&nbsp;";
+                $content .= "\n<br><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->checkCreateFolder($folder_id) ? "CHECKED" : "" ) . " name=\"perm_folder\">&nbsp;";
                 $content .= "<b>f</b> - " . _("Ordner erstellen (Alle Nutzer können Ordner erstellen)");
             } else {
                 $content .= '&nbsp;';

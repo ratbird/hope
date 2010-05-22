@@ -266,7 +266,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                     ?>
                 </select>
                 </font>&nbsp;
-                <input type="IMAGE" <?=makeButton("auswaehlen", "src")?> border=0 align="absmiddle" value="bearbeiten">
+                <input type="image" <?=makeButton("auswaehlen", "src")?> border=0 align="absmiddle" value="bearbeiten">
                 </td>
             </tr>
             <tr>

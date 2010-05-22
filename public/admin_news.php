@@ -202,7 +202,7 @@ if (!$cmd OR $cmd=="show") {
             echo "<form action=\"". URLHelper::getLink("?cmd=search") ."\" method=\"POST\">";
             echo "<tr><td class=\"steel1\">";
             echo "&nbsp; <font size=-1>" . _("Geben Sie einen Suchbegriff ein, um weitere Bereiche zu finden!") . "</font><br><br>";
-            echo "&nbsp; <INPUT TYPE=\"TEXT\" style=\"vertical-align:middle;\" name=\"search\" size=\"20\">&nbsp;&nbsp;";
+            echo "&nbsp; <input type=\"TEXT\" style=\"vertical-align:middle;\" name=\"search\" size=\"20\">&nbsp;&nbsp;";
             echo "<input type=\"IMAGE\" style=\"vertical-align:middle;\" name=\"submit\" " . makeButton("suchestarten","src") . tooltip( _("Suche starten")) ." border=\"0\">";
             echo "</td></tr></form></table>\n";
             echo "</blockquote>";

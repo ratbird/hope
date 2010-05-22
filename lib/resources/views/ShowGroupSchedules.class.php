@@ -71,7 +71,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
                 <font size="-1">
                 <?=SemesterData::GetSemesterSelector(array('name' => 'sem_schedule_choose', 'onChange' => 'document.schedule_form.submit()'), $this->semester['semester_id'],'semester_id',false)?>
-                <input type="IMAGE" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
+                <input type="image" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="top">
@@ -107,7 +107,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="middle"><font size="-1">
-                    <input type="IMAGE" name="group_schedule_start" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0 ><br>
+                    <input type="image" name="group_schedule_start" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0 ><br>
                 </font>
                 </td>
             </tr>

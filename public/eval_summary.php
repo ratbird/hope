@@ -368,7 +368,7 @@ function groups($parent_id)
                 echo "</TR></TABLE>\n";
             }
             if ($evalgroup_id == $db_groups->f("evalgroup_id")) {
-                echo "  <A NAME=\"anker\"></A>\n";
+                echo "  <A name=\"anker\"></A>\n";
             }
         }
 

@@ -176,7 +176,7 @@ if ($chatInput) {
                         </select>
                     </td>
                     <td align="center" valign="middle">
-                        <input type="IMAGE" name="Submit"
+                        <input type="image" name="Submit"
                             <?=makeButton("absenden","src") . tooltip(_("Nachricht senden"))?> border="0" value="senden">
                     </td>
                     <td align="right" valign="middle">

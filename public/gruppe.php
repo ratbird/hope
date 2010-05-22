@@ -56,7 +56,7 @@ IF ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     <tr>
         <td class="topic">&nbsp;&nbsp;<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/gruppe.gif" alt="Gruppe &auml;ndern" border=0>&nbsp;&nbsp;<b><?=_("Gruppenzuordnung")?></></td>
     </tr>
-    <FORM method=post action="meine_seminare.php">
+    <form method=post action="meine_seminare.php">
     <tr><td class="blank">
     <p style="margin:20px;">
     <?=_("Hier k&ouml;nnen Sie Ihre Veranstaltungen in Farbgruppen einordnen und eine Gliederung nach Kategorien festlegen. <br>Die Darstellung unter <b>meine Veranstaltungen</b> wird entsprechend den Gruppen sortiert bzw. entsprechend der gew&auml;hlten Kategorie gegliedert.")?>
@@ -65,7 +65,7 @@ IF ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     </td>
     </tr>
     <tr><td class="blank">
-    <FORM method=post action="meine_seminare.php">
+    <form method=post action="meine_seminare.php">
     <table border="0" cellpadding="0" cellspacing="0" width="90%" align="center">
     <tr><td class="blank" align="right">
     <?=_("Kategorie zur Gliederung:")?>
@@ -79,7 +79,7 @@ IF ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         <option value="dozent_id" <?=($_my_sem_group_field == 'dozent_id' ? 'selected' : '')?>><?=_("Dozenten")?></option>
     </select>
     </td><td class="blank" align="center" colspan="8">
-    <INPUT type="IMAGE" <?=makeButton("absenden", "src") ?> border="0" value="absenden">
+    <input type="image" <?=makeButton("absenden", "src") ?> border="0" value="absenden">
     </td></tr>
     <tr><td class="blank" align="right" colspan="9">
     &nbsp;
@@ -166,7 +166,7 @@ FOR ($i=0; $i<9; $i++)
                 (!$values["visible"] ? "&nbsp;" . _("(versteckt)")  : ""));
                 FOR ($i=0; $i<9; $i++)
                 {
-                    ECHO "<td class=\"gruppe".$i."\"><INPUT type=radio name=gruppe[".$member['seminar_id']."] value=".$i;
+                    ECHO "<td class=\"gruppe".$i."\"><input type=radio name=gruppe[".$member['seminar_id']."] value=".$i;
                     IF ($values["gruppe"]==$i) ECHO " checked";
                     ECHO "></td>";
                 }
@@ -175,7 +175,7 @@ FOR ($i=0; $i<9; $i++)
             }
         }
     }
-    ECHO "<tr><td class=\"blank\">&nbsp; </td><td class=\"blank\" align=center colspan=8><br><INPUT type=\"IMAGE\" " . makeButton("absenden", "src") . " border=0 value=absenden><INPUT type=hidden name=gruppesent value=1><br>&nbsp; </td></tr></form>";
+    ECHO "<tr><td class=\"blank\">&nbsp; </td><td class=\"blank\" align=center colspan=8><br><input type=\"IMAGE\" " . makeButton("absenden", "src") . " border=0 value=absenden><input type=hidden name=gruppesent value=1><br>&nbsp; </td></tr></form>";
     echo "</table></td></tr>";
 }
 

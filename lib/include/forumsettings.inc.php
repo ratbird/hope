@@ -167,9 +167,9 @@ if ($forumsend=="bla"){
                 </td>
             </tr>
             <tr <? $cssSw->switchClass() ?>>
-                <input type="HIDDEN" name="forumsend" value="bla">
+                <input type="hidden" name="forumsend" value="bla">
                 <td  <?=$cssSw->getFullClass()?> colspan=2 align="middle">
-                    <font size=-1><input type="IMAGE" <?=makeButton("uebernehmen", "src") ?> border=0 value="<?_("Änderungen übernehmen")?>"></font>&nbsp;
+                    <font size=-1><input type="image" <?=makeButton("uebernehmen", "src") ?> border=0 value="<?_("Änderungen übernehmen")?>"></font>&nbsp;
                 </td>
             </tr>
             </form>

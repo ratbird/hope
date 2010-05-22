@@ -2080,14 +2080,14 @@ elseif ((!$level) || ($level == 1))
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" action="<? echo URLHelper::getLink() ?>">
-            <input type="HIDDEN" name="form" value=1>
+            <input type="hidden" name="form" value=1>
                 <table cellspacing=0 cellpadding=2 border=0 width="99%" align="center">
                     <tr <? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%">
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="IMAGE" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                         </td>
                     </tr>
                     <tr <? $cssSw->switchClass() ?>>
@@ -2182,11 +2182,11 @@ elseif ((!$level) || ($level == 1))
                             <?=_("Teilnahme- beschr&auml;nkung:"); ?>
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" nowrap width="30%" colspan=1>
-                            &nbsp; <input type="RADIO" name="sem_admission" value=0 <? if (!$sem_create_data["sem_admission"]) echo 'checked'?>>
+                            &nbsp; <input type="radio" name="sem_admission" value=0 <? if (!$sem_create_data["sem_admission"]) echo 'checked'?>>
                             <?=_("keine"); ?> &nbsp; <br>
-                            &nbsp; <input type="RADIO" name="sem_admission" value=2 <? if ($sem_create_data["sem_admission"]=="2") echo 'checked'?>>
+                            &nbsp; <input type="radio" name="sem_admission" value=2 <? if ($sem_create_data["sem_admission"]=="2") echo 'checked'?>>
                             <?=_("nach Anmeldereihenfolge"); ?> <br>
-                            &nbsp; <input type="RADIO" name="sem_admission" value=1 <? if ($sem_create_data["sem_admission"]=="1") echo 'checked'?>>
+                            &nbsp; <input type="radio" name="sem_admission" value=1 <? if ($sem_create_data["sem_admission"]=="1") echo 'checked'?>>
                             <?=_("per Losverfahren"); ?>&nbsp;
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                 <? echo tooltip(_("Sie können die Anzahl der Teilnehmenden beschränken. Möglich ist die Zulassung von Interessierten über das Losverfahren oder über die Reihenfolge der Anmeldung. Sie können später Angaben über zugelassene Teilnehmer machen."), TRUE, TRUE) ?>
@@ -2207,12 +2207,12 @@ elseif ((!$level) || ($level == 1))
                             <?=_("Anmeldemodus:"); ?>
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" nowrap width="90%" colspan=3>
-                            &nbsp; <input type="RADIO" name="sem_payment" value=0 <? if ($sem_create_data["sem_payment"]=="0") echo 'checked'?>>
+                            &nbsp; <input type="radio" name="sem_payment" value=0 <? if ($sem_create_data["sem_payment"]=="0") echo 'checked'?>>
                             <?=_("direkter Eintrag"); ?>&nbsp;
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                 <? echo tooltip(_("Neue Teilnehmer werden direkt in die Veranstaltung eingetragen."), TRUE, TRUE) ?>
                             >
-                            &nbsp; <input type="RADIO" name="sem_payment" value=1 <? if ($sem_create_data["sem_payment"]=="1") echo 'checked'?>>
+                            &nbsp; <input type="radio" name="sem_payment" value=1 <? if ($sem_create_data["sem_payment"]=="1") echo 'checked'?>>
                             <?=_("vorl&auml;ufiger Eintrag"); ?>&nbsp;
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                 <? echo tooltip(_("Neue Teilnehmer bekommen den Status \"vorläufig aktzeptiert\". Sie können von Hand die zugelassenen Teilnehmer auswählen. Vorläufig akzeptierte Teilnehmer haben keinen Zugriff auf die Veranstaltung."), TRUE, TRUE) ?>
@@ -2401,7 +2401,7 @@ elseif ((!$level) || ($level == 1))
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="IMAGE" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                         </td>
                     </tr>
                 </table>
@@ -2443,15 +2443,15 @@ if ($level == 2)
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" action="<? echo URLHelper::getLink() ?>#anker">
-            <input type="HIDDEN" name="form" value=2>
-            <input type="HIDDEN" name="level" value=2>
+            <input type="hidden" name="form" value=2>
+            <input type="hidden" name="level" value=2>
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
                     <tr <? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%">
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="IMAGE" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="IMAGE" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                         </td>
                     </tr>
                     <tr <? $cssSw->switchClass() ?>>
@@ -2801,7 +2801,7 @@ if ($level == 2)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="IMAGE" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="IMAGE"  <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image"  <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                         </td>
                     </tr>
                 </table>
@@ -2844,14 +2844,14 @@ if ($level == 3) {
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" name="Formular" action="<? echo URLHelper::getLink() ?>">
-            <input type="HIDDEN" name="form" value=3>
+            <input type="hidden" name="form" value=3>
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
                     <tr <? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%">
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="IMAGE" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="IMAGE" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                         </td>
                     </tr>
                     <?
@@ -2968,7 +2968,7 @@ if ($level == 3) {
 
                                     }
                                     ?>
-                                    <br>&nbsp; <input type="IMAGE" name="add_turnus_field" <?=makeButton("feldhinzufuegen", "src"); ?> border=0 value="Feld hinzuf&uuml;gen">&nbsp;
+                                    <br>&nbsp; <input type="image" name="add_turnus_field" <?=makeButton("feldhinzufuegen", "src"); ?> border=0 value="Feld hinzuf&uuml;gen">&nbsp;
                                     <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                         <? echo tooltip(_("Wenn es sich um eine regelmäßige Veranstaltung handelt, so können Sie hier genau angeben, an welchen Tagen, zu welchen Zeiten und in welchem Raum die Veranstaltung stattfindet. Wenn Sie noch keine Zeiten wissen, dann klicken Sie auf »keine Zeiten speichern«."), TRUE, TRUE) ?>
                                     >
@@ -3030,7 +3030,7 @@ if ($level == 3) {
                                         echo  Termin_Eingabe_javascript (5, $i, 0, $ss, $sm, $es, $em);
                                         }
                                         ?>
-                                        <br>&nbsp; <input type="IMAGE" name="add_term_field" <?=makeButton("feldhinzufuegen", "src"); ?> border=0 value="Feld hinzuf&uuml;gen">&nbsp;
+                                        <br>&nbsp; <input type="image" name="add_term_field" <?=makeButton("feldhinzufuegen", "src"); ?> border=0 value="Feld hinzuf&uuml;gen">&nbsp;
                                         <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                             <? echo tooltip(_("In diesem Feldern können Sie alle Veranstaltungstermine eingeben. Wenn die Termine noch nicht feststehen, lassen Sie die Felder einfach frei."), TRUE, TRUE) ?>
                                         >
@@ -3074,7 +3074,7 @@ if ($level == 3) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="IMAGE" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="IMAGE" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                         </td>
                     </tr>
                 </table>
@@ -3122,14 +3122,14 @@ if ($level == 4) {
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" name="form_4" action="<? echo URLHelper::getLink() ?>#anker">
-            <input type="HIDDEN" name="form" value=4>
+            <input type="hidden" name="form" value=4>
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
                     <tr <? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="4%">
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" align="center" colspan=3>
-                            &nbsp; <input type="IMAGE" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="IMAGE" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                         </td>
                     </tr>
                     <?
@@ -3306,8 +3306,8 @@ if ($level == 4) {
                                             <? print ((($search_exp_room) || ($search_properties_x)) && (!$result)) ? _("<b>Keinen</b> Raum gefunden.") : "";?>
                                             </font><br>
                                             <font size=-1><?=_("Geben Sie zur Suche den Raumnamen ganz oder teilweise ein:"); ?></font>
-                                            <input type="TEXT" size="30" maxlength="255" name="search_exp_room">&nbsp;
-                                            <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_room"><br>
+                                            <input type="text" size="30" maxlength="255" name="search_exp_room">&nbsp;
+                                            <input type="image" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_room"><br>
                                             <?
                                         }
                                         ?>
@@ -3320,7 +3320,7 @@ if ($level == 4) {
                                 <tr>
                                     <td colspan="2" align="right">
                                         <font size="-1"><?=("passende R&auml;ume suchen")?></font>
-                                        <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" <? echo tooltip(_("passende Räume suchen")) ?> border="0" name="search_properties">
+                                        <input type="image" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" <? echo tooltip(_("passende Räume suchen")) ?> border="0" name="search_properties">
                                     </td>
                                     <td>
                                         &nbsp;
@@ -3507,7 +3507,7 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" align="center" colspan=3>
-                            &nbsp; <input type="IMAGE" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="IMAGE" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                         </td>
                     </tr>
                 </table>
@@ -3547,14 +3547,14 @@ if ($level == 5)
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" name="form_5" action="<? echo URLHelper::getLink() ?>">
-            <input type="HIDDEN" name="form" value=5>
+            <input type="hidden" name="form" value=5>
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
                     <tr <? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%">
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="IMAGE" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="IMAGE" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                         </td>
                     </tr>
                     <tr <? $cssSw->switchClass() ?>>
@@ -3721,8 +3721,8 @@ if ($level == 5)
                                         </font>
                                         </td>
                                         <td class="<? echo $cssSw->getClass() ?>" nowrap width="5%">
-                                        <input type="HIDDEN" name="sem_studg_id[]" value="<? echo $key ?>">
-                                        <input type="HIDDEN" name="sem_studg_name[]" value="<? echo $val["name"] ?>">
+                                        <input type="hidden" name="sem_studg_id[]" value="<? echo $key ?>">
+                                        <input type="hidden" name="sem_studg_name[]" value="<? echo $val["name"] ?>">
                                         <?
                                         if($sem_create_data["admission_enable_quota"]){
                                             printf ("<input type=\"HIDDEN\" name=\"sem_studg_ratio_old[]\" value=\"%s\">", $val["ratio"]);
@@ -3764,11 +3764,11 @@ if ($level == 5)
                                         </td>
                                         <td class="<? echo $cssSw->getClass() ?>" nowrap width="5%">
                                         <?if($sem_create_data["admission_enable_quota"]){?>
-                                            <input type="TEXT" name="sem_add_ratio" size=5 maxlength=5><font size=-1> %</font>
+                                            <input type="text" name="sem_add_ratio" size=5 maxlength=5><font size=-1> %</font>
                                         <?} else echo '&nbsp;';?>
                                         </td>
                                         <td class="<? echo $cssSw->getClass() ?>" width="25%">
-                                            <input type="IMAGE" <?=makeButton("hinzufuegen", "src"); ?> name="add_studg" border=0>&nbsp;
+                                            <input type="image" <?=makeButton("hinzufuegen", "src"); ?> name="add_studg" border=0>&nbsp;
                                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                                 <? echo tooltip(_("Bitte geben Sie hier ein, für welche Studiengänge die Veranstaltung mit welchen Kontingenten beschränkt sein soll und bis wann eine Anmeldung über das Stud.IP Anmeldeverfahren möglich ist."), TRUE, TRUE) ?>
                                             >
@@ -3925,7 +3925,7 @@ if ($level == 5)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            &nbsp; <input type="IMAGE" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="IMAGE" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                         </td>
                     </tr>
                 </table>
@@ -3954,8 +3954,8 @@ if ($level == 6)
                 <b><?=_("Schritt 6: Bereit zum Anlegen der Veranstaltung"); ?></b><br><br>
                 <?=_("Sie haben nun alle n&ouml;tigen Daten zum Anlegen der Veranstaltung eingegeben. Wenn Sie auf &raquo;anlegen&laquo; klicken, wird die Veranstaltung in Stud.IP &uuml;bernommen. Wenn Sie sich nicht sicher sind, ob alle Daten korrekt sind, &uuml;berpr&uuml;fen Sie noch einmal Ihre Eingaben auf den vorhergehenden Seiten."); ?><br><br>
                 <form method="POST" action="<? echo URLHelper::getLink() ?>">
-                    <input type="HIDDEN" name="form" value=6>
-                    <input type="IMAGE" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?> >>" name="jump_back">&nbsp;<input type="IMAGE" <?=makeButton("anlegen", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                    <input type="hidden" name="form" value=6>
+                    <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?> >>" name="jump_back">&nbsp;<input type="image" <?=makeButton("anlegen", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                 </form>
                 </blockquote>
             </td>
@@ -3988,8 +3988,8 @@ if ($level == 7)
                     <b><?=_("Die Veranstaltung konnte nicht angelegt werden."); ?></b><br><br>
                     <?=_("Bitte korrigieren Sie die Daten."); ?>
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
-                        <input type="HIDDEN" name="form" value=7>
-                        <input type="IMAGE" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">
+                        <input type="hidden" name="form" value=7>
+                        <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">
                     </form>
                     </blockquote>
                 </td>
@@ -4017,12 +4017,12 @@ if ($level == 7)
                     ?>
                     <br><br>
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
-                        <input type="HIDDEN" name="form" value=7>
-                        <input type="IMAGE" <?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
+                        <input type="hidden" name="form" value=7>
+                        <input type="image" <?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
                         <?
                         if (($sem_create_data["modules_list"]["schedule"]) || ($sem_create_data["modules_list"]["scm"])) {
                             ?>
-                            &nbsp;<input type="IMAGE" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            &nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                             <?
                         }
                         ?>
@@ -4055,12 +4055,12 @@ if ($level == 7)
                     }
                     ?><br><br>
                     <form method="POST" action="<?= URLHelper::getLink() ?>">
-                        <input type="HIDDEN" name="form" value=7>
+                        <input type="hidden" name="form" value=7>
                         <?
                         if (($sem_create_data["modules_list"]["schedule"]) || ($sem_create_data["modules_list"]["scm"])) {
                             ?>
-                            <input type="IMAGE" <?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
-                            &nbsp;<input type="IMAGE" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                            <input type="image" <?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
+                            &nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                             <?
                         }
                         ?>
@@ -4187,22 +4187,22 @@ if ($level == 8)
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" name="form_8" action="<? echo URLHelper::getLink() ?>">
-            <input type="HIDDEN" name="form" value=8>
+            <input type="hidden" name="form" value=8>
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
                     <tr<? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%">
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            <input type="IMAGE"<?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
+                            <input type="image"<?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
                             <?
                             if ($sem_create_data["modules_list"]["schedule"]) {
                                 ?>
-                                &nbsp;<input type="IMAGE"<?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                                &nbsp;<input type="image"<?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                                 <?
                             } else {
                                 ?>
-                                &nbsp;<input type="IMAGE"<?=makeButton("uebernehmen", "src"); ?> border=0 value="<?=_("uebernehmen");?>" name="jump_next">
+                                &nbsp;<input type="image"<?=makeButton("uebernehmen", "src"); ?> border=0 value="<?=_("uebernehmen");?>" name="jump_next">
                                 <?
                             }
                             ?>
@@ -4219,7 +4219,7 @@ if ($level == 8)
                                     printf ("<option value=\"%s\" %s>%s</option>\n", $key, ($sem_create_data["sem_scm_preset"] == $key) ? "selected": "", $val["name"]);
                                 ?>
                             </select>&nbsp; <?=_("oder geben Sie einen beliebigen Titel ein:") ?>
-                            <input type="TEXT" name="sem_scm_name" value="<?=$sem_create_data["sem_scm_name"]?>" maxlength="20" size="20">
+                            <input type="text" name="sem_scm_name" value="<?=$sem_create_data["sem_scm_name"]?>" maxlength="20" size="20">
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                 <? echo tooltip(_("Sie können entweder einen vordefinierten Titel für die freie Kursseite auswählen oder einen eigenen Titel frei wählen. Diese Titel erscheint im Reitersystem der Veranstaltung als Bezeichnug des der freien Informationsseite"), TRUE, TRUE) ?>
                             >
@@ -4256,15 +4256,15 @@ if ($level == 8)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" align="center" colspan=3>
-                            <input type="IMAGE"<?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
+                            <input type="image"<?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
                             <?
                             if ($sem_create_data["modules_list"]["schedule"]) {
                                 ?>
-                                &nbsp;<input type="IMAGE"<?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
+                                &nbsp;<input type="image"<?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                                 <?
                             } else {
                                 ?>
-                                &nbsp;<input type="IMAGE"<?=makeButton("uebernehmen", "src"); ?> border=0 value="<?=_("uebernehmen");?>" name="jump_next">
+                                &nbsp;<input type="image"<?=makeButton("uebernehmen", "src"); ?> border=0 value="<?=_("uebernehmen");?>" name="jump_next">
                                 <?
                             }
                             ?>

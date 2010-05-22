@@ -244,8 +244,8 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         ?>&nbsp;
                         </td>
                         <td class="steel1">
-                            <font size=-1><?=_("freie Suche:")?></font><br><input type="TEXT" name="srch_exp" maxlength=255 size=20 value="<? echo $links_admin_data["srch_exp"] ?>">
-                            <input type="HIDDEN" name="srch_send" value="TRUE">
+                            <font size=-1><?=_("freie Suche:")?></font><br><input type="text" name="srch_exp" maxlength=255 size=20 value="<? echo $links_admin_data["srch_exp"] ?>">
+                            <input type="hidden" name="srch_send" value="TRUE">
                         </td>
                         <td class="steel1" valign="bottom" width="20%" nowrap="nowrap">
                             <?
@@ -254,7 +254,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                                 echo '&nbsp;' . makeButton('zuruecksetzen','input', _("zurücksetzen"),'links_admin_reset_search');
                             }
                             ?>
-                            <input type="HIDDEN" name="view" value="<? echo $links_admin_data["view"]?>">
+                            <input type="hidden" name="view" value="<? echo $links_admin_data["view"]?>">
                         </td>
                     </tr>
                 <tr>
@@ -279,8 +279,8 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         <?
                     } else {
                         ?>
-                        <input type="HIDDEN" name="select_old" value="<? if ($links_admin_data["select_old"]) echo "TRUE" ?> ">
-                        <input type="HIDDEN" name="select_inactive" value="<? if ($links_admin_data["select_inactive"]) echo "TRUE" ?>">
+                        <input type="hidden" name="select_old" value="<? if ($links_admin_data["select_old"]) echo "TRUE" ?> ">
+                        <input type="hidden" name="select_inactive" value="<? if ($links_admin_data["select_inactive"]) echo "TRUE" ?>">
                         <?
                     }
                     ?>
@@ -673,7 +673,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     if ($perm->have_perm("admin") || (get_config('ALLOW_DOZENT_VISIBILITY') && $perm->have_perm('dozent'))) {
                         if(!LockRules::check($seminar_id, 'seminar_visibility')){
                             ?>
-                            <input type="HIDDEN" name="all_sem[]" value="<? echo $seminar_id ?>">
+                            <input type="hidden" name="all_sem[]" value="<? echo $seminar_id ?>">
                             <input type="CHECKBOX" name="visibility_sem[<? echo $seminar_id ?>]" <? if (!$_REQUEST['select_none'] && ($_REQUEST['select_all'] || $db->f("visible"))) echo ' checked'; ?>>
                             <?
                         } else {
@@ -685,7 +685,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     if ($perm->have_perm("admin") || (get_config('ALLOW_DOZENT_ARCHIV') && $perm->have_perm('dozent'))) {
                         if(!LockRules::check($seminar_id, 'seminar_visibility')){
                             ?>
-                            <input type="HIDDEN" name="archiv_sem[]" value="_id_<? echo $seminar_id ?>">
+                            <input type="hidden" name="archiv_sem[]" value="_id_<? echo $seminar_id ?>">
                             <input type="CHECKBOX" name="archiv_sem[]" <? if ($_REQUEST['select_all']) echo ' checked'; ?>>
                             <?
                         } else {

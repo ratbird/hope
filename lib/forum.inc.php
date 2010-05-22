@@ -1956,9 +1956,9 @@ function forum_move_navi ($topic_id) {
                             }
                         }
             ?>  </select>
-                    <input type="HIDDEN" name="target" value="Seminar">
-                    <input type="HIDDEN" name="topic_id" value="<?echo $topic_id;?>">
-                    <input type="HIDDEN" name="view" value="<?echo $view;?>">
+                    <input type="hidden" name="target" value="Seminar">
+                    <input type="hidden" name="topic_id" value="<?echo $topic_id;?>">
+                    <input type="hidden" name="view" value="<?echo $view;?>">
                 </form>
                 </td>
             </tr>
@@ -1980,9 +1980,9 @@ function forum_move_navi ($topic_id) {
                             }
                         }
             ?>  </select>
-                    <input type="HIDDEN" name="target" value="Institut">
-                    <input type="HIDDEN" name="topic_id" value="<?echo $topic_id;?>">
-                    <input type="HIDDEN" name="view" value="<?echo $view;?>">
+                    <input type="hidden" name="target" value="Institut">
+                    <input type="hidden" name="topic_id" value="<?echo $topic_id;?>">
+                    <input type="hidden" name="view" value="<?echo $view;?>">
                 </form>
                 </td>
             </tr>

@@ -151,7 +151,7 @@ class ShowToolsRequests {
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
         <form method="POST" name="tools_requests_form" action="<?echo $PHP_SELF ?>?tools_requests_start=1">
-            <input type="HIDDEN" name="view" value="edit_request">
+            <input type="hidden" name="view" value="edit_request">
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
@@ -371,7 +371,7 @@ class ShowToolsRequests {
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
         <form method="POST" action="<?echo $PHP_SELF ?>?working_on_request=<?=$request_id?>">
-            <input type="HIDDEN" name="view" value="edit_request">
+            <input type="hidden" name="view" value="edit_request">
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
@@ -586,7 +586,7 @@ class ShowToolsRequests {
                         </font>
                         </td>
                         <td colspan="2"><font size="-1">
-                        <input type="IMAGE" name="request_tool_group" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0 ><br>
+                        <input type="image" name="request_tool_group" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0 ><br>
                         </font>
                         </td>
                         </tr>
@@ -758,15 +758,15 @@ class ShowToolsRequests {
                                 <font size="-1">
                                     <?=_("zeige R&auml;ume")?>
                                     <a href="<?=$PHP_SELF?>?dec_limit_low=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/-.gif" border="0" <?=tooltip(_("-10"))?>/></a>
-                                    <input type="TEXT" name="search_rooms_limit_low" maxlength="2" size="1" style="font-size:8pt" value="<?=($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] + 1)?>">
+                                    <input type="text" name="search_rooms_limit_low" maxlength="2" size="1" style="font-size:8pt" value="<?=($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] + 1)?>">
                                     <a href="<?=$PHP_SELF?>?inc_limit_low=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/+.gif" border="0" <?=tooltip(_("+10"))?>/></a>
 
                                     bis
                                     <a href="<?=$PHP_SELF?>?dec_limit_high=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/-.gif" border="0" <?=tooltip(_("-10"))?>/></a>
-                                    <input type="TEXT" name="search_rooms_limit_high" maxlength="2" size="1" style="font-size:8pt" value="<?=$resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"]?>">
+                                    <input type="text" name="search_rooms_limit_high" maxlength="2" size="1" style="font-size:8pt" value="<?=$resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"]?>">
                                     <a href="<?=$PHP_SELF?>?inc_limit_high=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/+.gif" border="0" <?=tooltip(_("+10"))?>/></a>
 
-                                    <input type="IMAGE" name="matching_rooms_limit_submit" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" border="0" <?=tooltip(_("ausgewählten Bereich anzeigen"))?>/>
+                                    <input type="image" name="matching_rooms_limit_submit" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" border="0" <?=tooltip(_("ausgewählten Bereich anzeigen"))?>/>
                                 </font>
                             </td>
                         </tr>

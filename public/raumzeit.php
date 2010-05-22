@@ -344,8 +344,8 @@ while ($tmp_first_date < $end_date) {
                         if ($sd_open[$metadate_id]) {
                             $termine =& $sem->getSingleDatesForCycle($metadate_id);
                             ?>
-                            <FORM action="<?= URLHelper::getLink() ?>" method="post" name="Formular">
-                            <INPUT type="hidden" name="cycle_id" value="<?=$metadate_id?>">
+                            <form action="<?= URLHelper::getLink() ?>" method="post" name="Formular">
+                            <input type="hidden" name="cycle_id" value="<?=$metadate_id?>">
                 <TR>
                     <TD align="center" colspan="9" class="steel1">
                         <TABLE cellpadding="1" cellspacing="0" border="0" width="90%">

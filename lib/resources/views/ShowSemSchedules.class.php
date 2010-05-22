@@ -89,7 +89,7 @@ class ShowSemSchedules extends ShowSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
                 <font size="-1">
                 <?=SemesterData::GetSemesterSelector(array('name' => 'sem_schedule_choose', 'onChange' => 'document.schedule_form.submit()'), $this->semester['semester_id'],'semester_id',false)?>
-                <input type="IMAGE" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
+                <input type="image" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="30%" valign="top">
@@ -98,7 +98,7 @@ class ShowSemSchedules extends ShowSchedules {
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"><font size="-1">
-                    &nbsp; <input type="IMAGE" name="sem_schedule_start_list" align="absbottom" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>
+                    &nbsp; <input type="image" name="sem_schedule_start_list" align="absbottom" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>
                 </font>
                 </td>
             </tr>
@@ -116,7 +116,7 @@ class ShowSemSchedules extends ShowSchedules {
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"><font size="-1">
-                    &nbsp; <input type="IMAGE" name="sem_schedule_start_graphical" align="absbottom" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>
+                    &nbsp; <input type="image" name="sem_schedule_start_graphical" align="absbottom" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>
                 </font>
                 </td>
             </tr>

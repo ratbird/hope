@@ -468,9 +468,9 @@ if (isset($_GET['details']) || $showform ) {
                 </tr>
                 <tr>
                 <td colspan="2"><b>&nbsp;<?=_("Geschlecht:")?></b></td>
-                <td>&nbsp;<input type="RADIO" <?=(!$_POST['geschlecht'] ? 'checked' : '')?> name="geschlecht" value="0"><?=_("unbekannt")?>&nbsp;
-                <input type="RADIO" name="geschlecht" value="1" <?=($_POST['geschlecht'] == 1 ? 'checked' : '')?>><?=_("männlich")?>&nbsp;
-                <input type="RADIO" name="geschlecht" value="2" <?=($_POST['geschlecht'] == 2 ? 'checked' : '')?>><?=_("weiblich")?></td>
+                <td>&nbsp;<input type="radio" <?=(!$_POST['geschlecht'] ? 'checked' : '')?> name="geschlecht" value="0"><?=_("unbekannt")?>&nbsp;
+                <input type="radio" name="geschlecht" value="1" <?=($_POST['geschlecht'] == 1 ? 'checked' : '')?>><?=_("männlich")?>&nbsp;
+                <input type="radio" name="geschlecht" value="2" <?=($_POST['geschlecht'] == 2 ? 'checked' : '')?>><?=_("weiblich")?></td>
                 </tr>
                 <tr>
                     <td colspan="2"><b>&nbsp;<?=_("E-Mail:")?></b></td>
@@ -695,9 +695,9 @@ if (isset($_GET['details']) || $showform ) {
                     echo "&nbsp;" . ($db->f("geschlecht") == 1 ? _("männlich") : ($db->f("geschlecht") == 2 ? _("weiblich") : _("unbekannt")));
                 } else {
                 ?>
-                <input type="RADIO" <? if (!$db->f("geschlecht")) echo "checked";?> name="geschlecht" value="0"><?=_("unbekannt")?>&nbsp;
-                <input type="RADIO" <? if ($db->f("geschlecht") == 1) echo "checked";?> name="geschlecht" value="1"><?=_("männlich")?>&nbsp;
-                <input type="RADIO" <? if ($db->f("geschlecht") == 2) echo "checked";?> name="geschlecht" value="2"><?=_("weiblich")?>
+                <input type="radio" <? if (!$db->f("geschlecht")) echo "checked";?> name="geschlecht" value="0"><?=_("unbekannt")?>&nbsp;
+                <input type="radio" <? if ($db->f("geschlecht") == 1) echo "checked";?> name="geschlecht" value="1"><?=_("männlich")?>&nbsp;
+                <input type="radio" <? if ($db->f("geschlecht") == 2) echo "checked";?> name="geschlecht" value="2"><?=_("weiblich")?>
                 <?
                 }
                 ?>
@@ -774,11 +774,11 @@ if (isset($_GET['details']) || $showform ) {
                     echo "<tr>\n";
                                     echo "  <td class=\"steel1\"><b>&nbsp;"._("Benutzer sperren:")."</b></td>\n";
                                     echo "  <td class=\"steel1\">\n";
-                                    echo "    <INPUT TYPE=\"checkbox\" NAME=\"locked\" VALUE=\"1\" ".($db->f("locked")==1 ? "CHECKED" : "").">"._("sperren")."\n";
+                                    echo "    <input type=\"checkbox\" name=\"locked\" value=\"1\" ".($db->f("locked")==1 ? "CHECKED" : "").">"._("sperren")."\n";
                                     echo "  </td>\n";
                                     echo "  <td class=\"steel1\">\n";
                                     echo "    &nbsp;"._("Kommentar:")."&nbsp;\n";
-                                    echo "    <INPUT TYPE=\"text\" NAME=\"lock_comment\" VALUE=\"".htmlReady($db->f("lock_comment"))."\" SIZE=\"24\" MAXLENGTH=\"255\">\n";
+                                    echo "    <input type=\"text\" name=\"lock_comment\" value=\"".htmlReady($db->f("lock_comment"))."\" SIZE=\"24\" MAXLENGTH=\"255\">\n";
                                     echo "  </td>\n";
                                     echo "</tr>\n";
                     if ($db->f("locked")==1)
@@ -811,19 +811,19 @@ if (isset($_GET['details']) || $showform ) {
                 <?
                 if ($perm->have_perm('root') || ($db->f('perms') != 'admin' && $db->f('perms') != 'root') || $admin_ok) {
                     ?>
-                    <input type="IMAGE" name="u_edit" <?=makeButton("uebernehmen", "src")?> value=" <?=_("Ver&auml;ndern")?> ">&nbsp;
+                    <input type="image" name="u_edit" <?=makeButton("uebernehmen", "src")?> value=" <?=_("Ver&auml;ndern")?> ">&nbsp;
                     <?
                     if (!StudipAuthAbstract::CheckField("auth_user_md5.password", $auth_plugin)) {
                         ?>
-                        <input type="IMAGE" name="u_pass" <?=makeButton("neuespasswort", "src")?> value=" <?=_("Passwort neu setzen")?> ">&nbsp;
+                        <input type="image" name="u_pass" <?=makeButton("neuespasswort", "src")?> value=" <?=_("Passwort neu setzen")?> ">&nbsp;
                         <?
                     }
                     ?>
-                    <input type="IMAGE" name="u_kill" <?=makeButton("loeschen", "src")?> value=" <?=_("L&ouml;schen")?> ">&nbsp;
+                    <input type="image" name="u_kill" <?=makeButton("loeschen", "src")?> value=" <?=_("L&ouml;schen")?> ">&nbsp;
                     <?
                 }
                 ?>
-                <input type="IMAGE" name="nothing" <?=makeButton("abbrechen", "src")?> value=" <?=_("Abbrechen")?> ">
+                <input type="image" name="nothing" <?=makeButton("abbrechen", "src")?> value=" <?=_("Abbrechen")?> ">
                 &nbsp;</td></tr>
             </form>
 

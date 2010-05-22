@@ -504,11 +504,11 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
     if ($i_view != "new") {
         ?>
         <input type="hidden" name="i_id"   value="<?php $db->p("Institut_id") ?>">
-        <input type="IMAGE" name="i_edit" <?=makeButton("uebernehmen", "src")?> border=0 value=" Ver&auml;ndern ">
+        <input type="image" name="i_edit" <?=makeButton("uebernehmen", "src")?> border=0 value=" Ver&auml;ndern ">
         <?
         if ($db->f("number") < 1 && !$_num_inst && ($perm->have_perm("root") || ($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') == 'all'))) {
             ?>
-            &nbsp;<input type="IMAGE" name="i_trykill" <?=makeButton("loeschen", "src")?> border=0 value="L&ouml;schen">
+            &nbsp;<input type="image" name="i_trykill" <?=makeButton("loeschen", "src")?> border=0 value="L&ouml;schen">
             <?
         }
     } else {

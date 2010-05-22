@@ -515,7 +515,7 @@ $txt['008'] = _("Lesebestätigung");
         echo '</table>';
     }
 
-    echo '<form enctype="multipart/form-data" NAME="upload_form" action="'.$PHP_SELF.'" method="post">';
+    echo '<form enctype="multipart/form-data" name="upload_form" action="'.$PHP_SELF.'" method="post">';
     if($_REQUEST['answer_to']) {
          echo '<input type="hidden" name="answer_to" value="'. htmlReady($_REQUEST['answer_to']). '">';
     }

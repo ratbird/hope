@@ -218,8 +218,8 @@ class EditSettings {
                     <font size=-1><?=_("neuer Typ:")?></font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 align="left">
-                    <font size=-1><input type="TEXT" name="add_type" size=50 maxlength=255 value="<<?=_("bitte geben Sie hier den Namen ein")?>>"></font>
-                    &nbsp; <font size=-1><input type="IMAGE" name="_add_type" <?=makeButton("anlegen", "src")?> border=0>
+                    <font size=-1><input type="text" name="add_type" size=50 maxlength=255 value="<<?=_("bitte geben Sie hier den Namen ein")?>>"></font>
+                    &nbsp; <font size=-1><input type="image" name="_add_type" <?=makeButton("anlegen", "src")?> border=0>
                     <br><input type="CHECKBOX" name="resource_is_room">&nbsp;Ressourcen-Typ wird als Raum behandelt</font>
 
 
@@ -238,7 +238,7 @@ class EditSettings {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
-                    <font size=-1><input type="TEXT" name="change_category_name[<?=$this->db->f("category_id")?>]" value="<? echo $this->db->f("name") ?>" size="20" maxlength="255"></font><br>
+                    <font size=-1><input type="text" name="change_category_name[<?=$this->db->f("category_id")?>]" value="<? echo $this->db->f("name") ?>" size="20" maxlength="255"></font><br>
 
                     <?
                     foreach ($availableIcons as $key => $val) {
@@ -250,7 +250,7 @@ class EditSettings {
                     <font size=-1><? ($this->db->f("system")) ? print( _("(systemobjekt)")."<br>") :print("") ?></font>
 
 
-                    <input type="HIDDEN" name="change_properties_id[]" value="<?=$this->db->f("category_id")?>">
+                    <input type="hidden" name="change_properties_id[]" value="<?=$this->db->f("category_id")?>">
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="65%" valign="top">
                     <table border=0 celpadding=2 cellspacing=0 width="100%" align="center">
@@ -303,8 +303,8 @@ class EditSettings {
                                 <?
                                 if ($this->db->f("is_room")) {
                                     ?>
-                                    <input type="HIDDEN" name="requestable[]" value="_id1_<?=($this->db->f("category_id"))?>">
-                                    <input type="HIDDEN" name="requestable[]" value="_id2_<?=($this->db2->f("property_id"))?>">
+                                    <input type="hidden" name="requestable[]" value="_id1_<?=($this->db->f("category_id"))?>">
+                                    <input type="hidden" name="requestable[]" value="_id2_<?=($this->db2->f("property_id"))?>">
                                     <input type="CHECKBOX" name="requestable[]" <?=($this->db2->f("requestable")) ? "checked" : "" ?>>
                                     <font size="-1"><?=_("w&uuml;nschbar")?></font>
                                     <?
@@ -344,14 +344,14 @@ class EditSettings {
                                 </select>
                             </td>
                                 <td class="<? echo $cssSw->getClass() ?>" width="67%" colspan=2>
-                                    <input type="IMAGE" <?=makeButton("zuweisen", "src") ?> name="change_category_add_property<?=$this->db->f("category_id")?>" border=0>&nbsp;
-                                    <input type="IMAGE" name="change_types" <?=makeButton("uebernehmen", "src")?> border="0"><br>
+                                    <input type="image" <?=makeButton("zuweisen", "src") ?> name="change_category_add_property<?=$this->db->f("category_id")?>" border=0>&nbsp;
+                                    <input type="image" name="change_types" <?=makeButton("uebernehmen", "src")?> border="0"><br>
                             </td>
                             <?
                             } else {
                             ?>
                             <td class="<? echo $cssSw->getClass() ?>" width="100%" colspan=3>
-                                    <input type="IMAGE" <?=makeButton("zuweisen", "src") ?> name="change_category_add_property<?=$this->db->f("category_id")?>" border=0>&nbsp;
+                                    <input type="image" <?=makeButton("zuweisen", "src") ?> name="change_category_add_property<?=$this->db->f("category_id")?>" border=0>&nbsp;
                             </td>
                             <?
                             }
@@ -407,14 +407,14 @@ class EditSettings {
                     <font size=-1><?=_("neue Eigenschaft:")?></font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 align="left" valign="bottom">
-                    <font size=-1><input type="TEXT" name="add_property" size=50 maxlength=255 value="<bitte geben Sie hier den Namen ein>"></font>
+                    <font size=-1><input type="text" name="add_property" size=50 maxlength=255 value="<bitte geben Sie hier den Namen ein>"></font>
                     <select name="add_property_type">
                         <font size=-1><option value="bool"><?=_("Zustand")?></option></font>
                         <font size=-1><option value="num"><?=_("einzeiligesTextfeld")?></option></font>
                         <font size=-1><option value="text"><?=_("mehrzeiligesTextfeld")?></option></font>
                         <font size=-1><option value="select"><?=_("Auswahlfeld")?></option></font>
                     </select>
-                    &nbsp;<font size=-1><input type="IMAGE" name="_add_property" <?=makeButton("anlegen", "src")?> border=0></font>
+                    &nbsp;<font size=-1><input type="image" name="_add_property" <?=makeButton("anlegen", "src")?> border=0></font>
                 </td>
             </tr>
             </form>
@@ -428,7 +428,7 @@ class EditSettings {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
-                    <font size=-1><input type="TEXT" name="change_property_name[<?=$this->db2->f("property_id")?>]" value="<? echo htmlReady($this->db2->f("name")) ?>" size="20" maxlength="255"></font><br>
+                    <font size=-1><input type="text" name="change_property_name[<?=$this->db2->f("property_id")?>]" value="<? echo htmlReady($this->db2->f("name")) ?>" size="20" maxlength="255"></font><br>
                     <font size=-1>wird von <b><? echo  $depTyp ?></b> Typen verwendet</font><br>
                     <font size=-1><? ($this->db2->f("system")) ? print( _("(systemobjekt)")) :print("") ?></font><br>
                 </td>
@@ -480,7 +480,7 @@ class EditSettings {
                             ?>
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="50%" valign="bottom">&nbsp;
-                            <input type="IMAGE" name="_send_property_type" <?=makeButton("uebernehmen", "src") ?> border=0>
+                            <input type="image" name="_send_property_type" <?=makeButton("uebernehmen", "src") ?> border=0>
                         </td>
                     </tr>
                     </table>
@@ -690,8 +690,8 @@ class EditSettings {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
                     <font size=-1><b><?=_("Optionen beim Bearbeiten von Anfragen")?></b><br><br>
-                    &nbsp;&nbsp;&nbsp;Anzahl der Belegungen, ab der R&auml;ume dennoch mit Einzelterminen passend belegt werden k&ouml;nnen: <input type="TEXT" size="5" maxlength="10" name="allow_single_assign_percentage" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE"]);?>">%<br>
-                    &nbsp;&nbsp;&nbsp;Anzahl ab der Einzeltermine gruppiert bearbeitet werden sollen: <input type="TEXT" size="3" maxlength="5" name="allow_single_date_grouping" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_DATE_GROUPING"]);?>"><br>
+                    &nbsp;&nbsp;&nbsp;Anzahl der Belegungen, ab der R&auml;ume dennoch mit Einzelterminen passend belegt werden k&ouml;nnen: <input type="text" size="5" maxlength="10" name="allow_single_assign_percentage" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE"]);?>">%<br>
+                    &nbsp;&nbsp;&nbsp;Anzahl ab der Einzeltermine gruppiert bearbeitet werden sollen: <input type="text" size="3" maxlength="5" name="allow_single_date_grouping" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_DATE_GROUPING"]);?>"><br>
                     <br>
                 </td>
             </tr>
@@ -727,9 +727,9 @@ class EditSettings {
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
                     <font size=-1><b><?=_("Vererbte Berechtigungen von Veranstaltungen und Einrichtungen f&uuml;r Ressourcen")?></b><br><br>
                     <?=_("Mitglieder von Veranstaltungen oder Einrichtungen erhalten folgende Rechte in Ressourcen, die diesen Veranstaltungen oder Einrichtungen geh&ouml;ren:")?><br><br>
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance_rooms" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "1") ? "checked" : "" ?>/><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br>
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance_rooms" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "2") ? "checked" : "" ?>/><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br>
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance_rooms" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "3") ? "checked" : "" ?>/><?=_("keine Rechte")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance_rooms" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "1") ? "checked" : "" ?>/><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance_rooms" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "2") ? "checked" : "" ?>/><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance_rooms" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "3") ? "checked" : "" ?>/><?=_("keine Rechte")?><br>
                     </select>
                     <br>
                 </td>
@@ -740,16 +740,16 @@ class EditSettings {
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
                     <font size=-1><b><?=_("Vererbte Berechtigungen von Veranstaltungen und Einrichtungen f&uuml;r <i>R&auml;ume</i>")?></b><br><br>
                     <?=_("Mitglieder von Veranstaltungen oder Einrichtungen erhalten folgende Rechte in <i>R&auml;umen</i>, die diesen Veranstaltungen oder Einrichtungen geh&ouml;ren:")?><br><br>
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "1") ? "checked" : "" ?>/><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br>
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "2") ? "checked" : "" ?>/><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br>
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "3") ? "checked" : "" ?>/><?=_("keine Rechte")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "1") ? "checked" : "" ?>/><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "2") ? "checked" : "" ?>/><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "3") ? "checked" : "" ?>/><?=_("keine Rechte")?><br>
                     </select>
                     <br>
                 </td>
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" colspan="2" align="middle">&nbsp;
-                    <input type="IMAGE" name="_send_settings" <?=makeButton("uebernehmen", "src") ?> border=0>
+                    <input type="image" name="_send_settings" <?=makeButton("uebernehmen", "src") ?> border=0>
                 </td>
             </tr>
         </form>

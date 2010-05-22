@@ -189,8 +189,8 @@ function change_general_view() {
                 </tr>
                 <tr <? $cssSw->switchClass() ?>>
                     <td  <?=$cssSw->getFullClass()?> colspan=2 align="middle">
-                        <font size=-1><input type="IMAGE" <?=makeButton("uebernehmen", "src") ?> border=0 value="<?_("&Auml;nderungen &uuml;bernehmen")?>"></font>&nbsp;
-                        <input type="HIDDEN" name="view" value="allgemein">
+                        <font size=-1><input type="image" <?=makeButton("uebernehmen", "src") ?> border=0 value="<?_("&Auml;nderungen &uuml;bernehmen")?>"></font>&nbsp;
+                        <input type="hidden" name="view" value="allgemein">
                     </td>
                 </tr>
                 </form>

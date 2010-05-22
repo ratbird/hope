@@ -148,7 +148,7 @@ $grenze = 0;
 $termine = getAllSortedSingleDates($sem);
 
 ?>
-<FORM action="<?= URLHelper::getLink($PHP_SELF) ?>" method="post">
+<form action="<?= URLHelper::getLink($PHP_SELF) ?>" method="post">
 <TABLE width="100%" border="0" cellpadding="0" cellspacing="0">
   <TR>
         <TD class="blank" valign="top">
@@ -276,8 +276,8 @@ $termine = getAllSortedSingleDates($sem);
                 ?>
                 <TR>
                     <TD class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
-                        <INPUT type="hidden" name="allOpen" value="TRUE">
-                        <INPUT type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
+                        <input type="hidden" name="allOpen" value="TRUE">
+                        <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
                         <A href="<?= URLHelper::getLink($PHP_SELF."?cmd=closeAll") ?>">
                             <IMG <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
                         </A>
@@ -314,7 +314,7 @@ $termine = getAllSortedSingleDates($sem);
         </TD>
     </TR>
 </TABLE>
-</FORM>
+</form>
 <?
     $sem->store();
     include 'lib/include/html_end.inc.php';

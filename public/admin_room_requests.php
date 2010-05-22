@@ -238,7 +238,7 @@ if ($perm->have_perm("admin"))
         <table width="99%" border=0 cellpadding=2 cellspacing=0 align="center">
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=4>
-                <input type="IMAGE" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> border=0 value="uebernehmen">
+                <input type="image" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> border=0 value="uebernehmen">
                 <? if ($admin_rooms_data["original"] != get_snapshot()) {
                     ?> <br><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" align="absmiddle">&nbsp;<font size=-1><?=_("Diese Daten sind noch nicht gespeichert.")?></font><br> <?
                     }
@@ -441,8 +441,8 @@ if ($perm->have_perm("admin"))
                                 <? print ((($search_exp_room) || ($search_properties_x)) && (!$result)) ? "<br>"._("<b>Keinen</b> Raum gefunden.")."<br>" : "";?>
                                 </font><br>
                                 <font size=-1><?=_("Geben Sie zur Suche den Raumnamen ganz oder teilweise ein:"); ?></font>
-                                <input type="TEXT" size="30" maxlength="255" name="search_exp_room">&nbsp;
-                                <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_room"><br>
+                                <input type="text" size="30" maxlength="255" name="search_exp_room">&nbsp;
+                                <input type="image" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_room"><br>
                                 <?
                             }
                             ?>
@@ -455,7 +455,7 @@ if ($perm->have_perm("admin"))
                     <tr>
                         <td colspan="2" align="right">
                             <font size="-1"><?=("passende R&auml;ume suchen")?></font>
-                            <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" <? echo tooltip(_("passende Räume suchen")) ?> border="0" name="search_properties">
+                            <input type="image" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" <? echo tooltip(_("passende Räume suchen")) ?> border="0" name="search_properties">
                         </td>
                         <td>
                             &nbsp;
@@ -482,7 +482,7 @@ if ($perm->have_perm("admin"))
         </tr>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=4>
-                <input type="IMAGE" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> border=0 value="uebernehmen">
+                <input type="image" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> border=0 value="uebernehmen">
             </td>
         </tr>
         <tr>

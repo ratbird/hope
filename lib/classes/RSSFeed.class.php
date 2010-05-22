@@ -65,7 +65,7 @@ class RSSFeed {
     function get_feed_anzeige() {
         global $PHP_SELF, $more;
         $i = 1;
-        if ($more == $this->class_id) echo "<A NAME=\"news_anchor\"></A>\n";
+        if ($more == $this->class_id) echo "<A name=\"news_anchor\"></A>\n";
         echo "<TABLE WIDTH=\"100%\" BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\">\n";
         foreach ($this->ausgabe->items as $v) {
             if (strlen(trim($v["title"]))>0) {

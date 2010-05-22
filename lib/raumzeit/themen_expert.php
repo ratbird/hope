@@ -166,7 +166,7 @@ $sem->processCommands();
 unset($themen);
 $themen =& $sem->getIssues(true);   // read again, so we have the actual sort order and so on
 ?>
-<FORM action="<?= URLHelper::getLink($PHP_SELF) ?>" method="post">
+<form action="<?= URLHelper::getLink($PHP_SELF) ?>" method="post">
 <TABLE width="100%" border="0" cellpadding="2" cellspacing="0">
     <TR>
         <TD class="blank" colspan="2">
@@ -240,7 +240,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                             </SELECT>
                             <?=("neue Themen")?>
                         </FONT>
-                        <INPUT type="image" <?=makebutton('anlegen', 'src')?> align="absmiddle" name="addIssue">
+                        <input type="image" <?=makebutton('anlegen', 'src')?> align="absmiddle" name="addIssue">
                     </TD>
                 </TR>
                 <TR>
@@ -319,8 +319,8 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                 ?>
                 <TR>
                     <TD class="blank" colspan="3" align="center">
-                        <INPUT type="hidden" name="allOpen" value="1">
-                        <INPUT type="image" <?=makebutton('allesuebernehmen', 'src')?> name="saveAll">&nbsp;
+                        <input type="hidden" name="allOpen" value="1">
+                        <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="saveAll">&nbsp;
                         <A href="<?= URLHelper::getLink($PHP_SELF) ?>">
                             <IMG <?=makebutton('abbrechen', 'src')?> border="0">
                         </A>
@@ -515,7 +515,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                         <TD class="steel1" colspan="3">
                             &nbsp;
                             <FONT size="-1"><?=_("ausgewählte Themen freien Terminen")?></FONT>&nbsp;
-                            <INPUT type="image" <?=makebutton('zuordnen', 'src')?> align="absMiddle" border="0" name="chronoAutoAssign">
+                            <input type="image" <?=makebutton('zuordnen', 'src')?> align="absMiddle" border="0" name="chronoAutoAssign">
                         </TD>
                     </TR>
                     <?
@@ -581,7 +581,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
             &nbsp;
     </TR>
 </TABLE>
-</FORM>
+</form>
 <?
     $sem->store();
     include 'lib/include/html_end.inc.php';

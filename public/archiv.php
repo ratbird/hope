@@ -340,7 +340,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                             </td>
                             <td class="<? echo $cssSw->getClass() ?>" width="90%">
                                 <center>
-                                    <input type="IMAGE" border=0 <?=makeButton("suchestarten", "src")?> value="<?=_("Suche starten")?>">
+                                    <input type="image" border=0 <?=makeButton("suchestarten", "src")?> value="<?=_("Suche starten")?>">
                                 </center>
                             </td>
                         </tr>

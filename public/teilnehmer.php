@@ -1504,7 +1504,7 @@ if (!LockRules::Check($id, 'participants') && $rechte
 
     <table width="99%" border="0" cellpadding="2" cellspacing="0" border="0" align="center">
     <form action="<?= URLHelper::getLink() ?>" method="POST">
-    <INPUT type="hidden" name="studipticket" value="<?=$studipticket?>">
+    <input type="hidden" name="studipticket" value="<?=$studipticket?>">
     <tr>
         <td class="steel1" width="40%" align="left">&nbsp; <font size="-1"><b><?=_("MitarbeiterInnen der Einrichtung(en)")?></b></font></td>
         <td class="steel1" width="40%" align="left"><select name="u_id" size="1">
@@ -1515,7 +1515,7 @@ if (!LockRules::Check($id, 'participants') && $rechte
         ?>
         </select></td>
         <td class="steel1" width="20%" align="center"><font size=-1><?= sprintf(_("als %s"), get_title_for_status('tutor', 1)) ?></font><br>
-        <input type="IMAGE" name="add_tutor" <?=makeButton("eintragen", "src")?> border="0" value="<?= sprintf(_("als %s berufen"), get_title_for_status('tutor', 1)) ?>"></td>
+        <input type="image" name="add_tutor" <?=makeButton("eintragen", "src")?> border="0" value="<?= sprintf(_("als %s berufen"), get_title_for_status('tutor', 1)) ?>"></td>
     </tr></form></table>
 <?
 
@@ -1612,7 +1612,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         <input type="hidden" name="seminar_id" value="<?= $SessSemName[1] ?>">
         </td>
         <td class="steel1" width="20%" align="center">
-        <input type="IMAGE" name="add_user" <?=makeButton("eintragen", "src")?> border=0 value=" <?=_("eintragen")?> "></td>
+        <input type="image" name="add_user" <?=makeButton("eintragen", "src")?> border=0 value=" <?=_("eintragen")?> "></td>
     </tr></table></form></tr>
     <?
 }

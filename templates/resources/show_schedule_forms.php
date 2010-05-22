@@ -120,12 +120,12 @@
             endif;
             ?>
         <? else : ?>
-            <input type="IMAGE" name="change_schedule_repeat_none" <?=makeButton("keine".(($resAssign->getRepeatMode()=="na") ? "2" :""), "src") ?> border=0>&nbsp;&nbsp;
-            &nbsp;<input type="IMAGE" name="change_schedule_repeat_day" <?=makeButton("taeglich".(($resAssign->getRepeatMode()=="d") ? "2" :""), "src") ?> border=0>
-            &nbsp;<input type="IMAGE" name="change_schedule_repeat_week" <?=makeButton("woechentlich".(($resAssign->getRepeatMode()=="w") ? "2" :""), "src") ?> border=0><br>
-            <input type="IMAGE" name="change_schedule_repeat_severaldays" <?=makeButton("mehrtaegig".(($resAssign->getRepeatMode()=="sd") ? "2" :""), "src") ?> border=0>&nbsp;&nbsp;
-            &nbsp;<input type="IMAGE" name="change_schedule_repeat_month" <?=makeButton("monatlich".(($resAssign->getRepeatMode()=="m") ? "2" :""), "src") ?> border=0>
-            &nbsp;<input type="IMAGE" name="change_schedule_repeat_year" <?=makeButton("jaehrlich".(($resAssign->getRepeatMode()=="y") ? "2" :""), "src") ?> border=0>
+            <input type="image" name="change_schedule_repeat_none" <?=makeButton("keine".(($resAssign->getRepeatMode()=="na") ? "2" :""), "src") ?> border=0>&nbsp;&nbsp;
+            &nbsp;<input type="image" name="change_schedule_repeat_day" <?=makeButton("taeglich".(($resAssign->getRepeatMode()=="d") ? "2" :""), "src") ?> border=0>
+            &nbsp;<input type="image" name="change_schedule_repeat_week" <?=makeButton("woechentlich".(($resAssign->getRepeatMode()=="w") ? "2" :""), "src") ?> border=0><br>
+            <input type="image" name="change_schedule_repeat_severaldays" <?=makeButton("mehrtaegig".(($resAssign->getRepeatMode()=="sd") ? "2" :""), "src") ?> border=0>&nbsp;&nbsp;
+            &nbsp;<input type="image" name="change_schedule_repeat_month" <?=makeButton("monatlich".(($resAssign->getRepeatMode()=="m") ? "2" :""), "src") ?> border=0>
+            &nbsp;<input type="image" name="change_schedule_repeat_year" <?=makeButton("jaehrlich".(($resAssign->getRepeatMode()=="y") ? "2" :""), "src") ?> border=0>
         <? endif; ?>
         </td>
     </tr>
@@ -272,11 +272,11 @@
     ?>
     <tr>
         <td class="<? echo $cssSw->getClass() ?>" colspan="3" align="center"><br>&nbsp;
-            <input type="IMAGE" align="absmiddle" <?=makeButton("uebernehmen", "src") ?> border=0 name="submit" value="<?=_("Übernehmen")?>">
+            <input type="image" align="absmiddle" <?=makeButton("uebernehmen", "src") ?> border=0 name="submit" value="<?=_("Übernehmen")?>">
             &nbsp;<a href="<?=$PHP_SELF."?cancel_edit_assign=1&quick_view_mode=".$view_mode?>"><?=makeButton("abbrechen", "img") ?></a>
         <?
         if ($killButton) : ?>
-            &nbsp;<input type="IMAGE" align="absmiddle" <?=makeButton("loeschen", "src") ?> border=0 name="kill_assign" value="<?=_("l&ouml;schen")?>">
+            &nbsp;<input type="image" align="absmiddle" <?=makeButton("loeschen", "src") ?> border=0 name="kill_assign" value="<?=_("l&ouml;schen")?>">
         <? endif; ?>
         <br>&nbsp;
         </td>
@@ -372,7 +372,7 @@
             <br>
             <?=_("Geben Sie zur Suche den Namen der Ressource ganz oder teilweise ein:"); ?>
             <br>
-            <input type="TEXT" size="30" maxlength="255" name="search_exp_room">&nbsp;
+            <input type="text" size="30" maxlength="255" name="search_exp_room">&nbsp;
             <?=makeButton('suchen', 'input', _("Suche starten"), 'search_room') ?>
             <br>
             <?
@@ -385,7 +385,7 @@
             ?>
             <b><?=_("Regelm&auml;&szlig;ige Belegung in Einzeltermine umwandeln:")?></b><br><br>
             <?=_("Nutzen Sie diese Funktion, um eine Terminserie in Einzeltermine umzuwandeln. Diese Einzeltermine k&ouml;nnen dann getrennt bearbeitet werden.");?>
-            <br><br><input type="IMAGE" align="absmiddle" <?=makeButton("umwandeln", "src") ?> border=0 name="change_meta_to_single_assigns" value="<?=_("umwandeln")?>">
+            <br><br><input type="image" align="absmiddle" <?=makeButton("umwandeln", "src") ?> border=0 name="change_meta_to_single_assigns" value="<?=_("umwandeln")?>">
         <?
         endif;
         ?>

@@ -274,8 +274,8 @@ function change_schedule_view() {
                     ?>
                 <tr <? $cssSw->switchClass() ?>>
                     <td  <?=$cssSw->getFullClass()?> colspan=2 align="middle">
-                    <input type="IMAGE" <?=makeButton("uebernehmen", "src") ?> border=0 value="<?=_("&Auml;nderungen &uuml;bernehmen")?>"></font>&nbsp;
-                    <input type="HIDDEN" name="view" value="Stundenplan">
+                    <input type="image" <?=makeButton("uebernehmen", "src") ?> border=0 value="<?=_("&Auml;nderungen &uuml;bernehmen")?>"></font>&nbsp;
+                    <input type="hidden" name="view" value="Stundenplan">
                     </td>
                 </tr>
                 </form>

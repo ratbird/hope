@@ -504,8 +504,8 @@ if ($_REQUEST['inst_id'] && $view != 'print') { ?>
         }
     ?>
     </select>&nbsp;
-    <input type="IMAGE" value="change_instview_sem" <? echo makeButton("uebernehmen", "src") ?> border=0 align="middle" value="<?=_("&uuml;bernehmen")?>">&nbsp;
-    <input type="HIDDEN" name="inst_id" value="<? echo $inst_id ?>"></form><br>
+    <input type="image" value="change_instview_sem" <? echo makeButton("uebernehmen", "src") ?> border=0 align="middle" value="<?=_("&uuml;bernehmen")?>">&nbsp;
+    <input type="hidden" name="inst_id" value="<? echo $inst_id ?>"></form><br>
 
  <br><font size=-1><a target="_blank" href="<?= URLHelper::getLink("?view=print&inst_id=$inst_id&instview_sem=$instview_sem") ?>">
 <?= _("Druckansicht dieser Seite (wird in einem neuen Browserfenster ge&ouml;ffnet).") ?></a></font>
@@ -862,7 +862,7 @@ echo "</table>";
 
 
 if($view == 'edit') {
-    echo '<input style="float: right;" type="IMAGE" '. makeButton("uebernehmen", "src") .' border=0 value="'. _("&Auml;nderungen &uuml;bernehmen") .'"></form><br><br>';
+    echo '<input style="float: right;" type="image" '. makeButton("uebernehmen", "src") .' border=0 value="'. _("&Auml;nderungen &uuml;bernehmen") .'"></form><br><br>';
 }
 
 // Info-Box
@@ -1022,7 +1022,7 @@ if($view == 'edit') {
                 <input name="room" type="text" size=20 maxlength=255>&nbsp; &nbsp;
                 <?=_("DozentIn:")?>
                 <input name="dozent" type="text" size=20 maxlength=255><br>&nbsp;
-                <input name="send" type="IMAGE" <?=makeButton("eintragen", "src")?> value="<?=("Eintragen")?>">
+                <input name="send" type="image" <?=makeButton("eintragen", "src")?> value="<?=("Eintragen")?>">
                 </form>
 </div></div>
 

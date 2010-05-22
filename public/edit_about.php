@@ -695,7 +695,7 @@ if ($view == 'Bild') {
         ?>
         <form name="bild_loeschen" method="POST" action="<?= $GLOBALS['PHP_SELF'] ?>?studipticket=<?= get_ticket() ?>">
             <input type="hidden" name="user_id" value="<?= $my_about->auth_user["user_id"] ?>">
-            <input type="hidden" name="username" VALUE="<?= $username ?>">
+            <input type="hidden" name="username" value="<?= $username ?>">
             <input type="hidden" name="view" value="Bild">
             <input type="hidden" name="cmd" value="bild_loeschen">
             <font size="-1"><b><?= _("Aktuelles Bild") ?></b></font><br><input type="image" <?= makeButton("loeschen", "src") ?> border="0">
@@ -708,7 +708,7 @@ if ($view == 'Bild') {
     echo "<br>\n" . _("Hochladen eines Bildes:") . "<br><br>\n" . _("1. Wählen sie mit <b>Durchsuchen</b> eine Bilddatei von ihrer Festplatte aus.") . "<br><br>\n";
     echo '&nbsp;&nbsp;<input name="imgfile" type="file" style="width: 80%" cols="'.round($max_col*0.7*0.8)."\"><br><br>\n";
     echo _("2. Klicken sie auf <b>absenden</b>, um das Bild hochzuladen.") . "<br><br>\n";
-    echo '&nbsp;&nbsp;<input type="IMAGE" ' . makeButton('absenden', 'src') . ' border="0" value="' . _("absenden") . "\"><br><br>\n";
+    echo '&nbsp;&nbsp;<input type="image" ' . makeButton('absenden', 'src') . ' border="0" value="' . _("absenden") . "\"><br><br>\n";
     echo '<b>'. _("ACHTUNG!"). '</b><br>';
     printf (_("Die Bilddatei darf max. %d KB groß sein, es sind nur Dateien mit den Endungen %s, %s oder %s erlaubt!"), Avatar::MAX_FILE_SIZE / 1024, '<b>.jpg</b>', '<b>.png</b>', '<b>.gif</b>');
     echo '</form></td></tr>'."\n";
@@ -943,7 +943,7 @@ if ($view == 'Studium') {
             echo '</select>';
             echo '</div><br></b>' . _("Wenn Sie einen Studiengang wieder austragen möchten, markieren Sie die entsprechenden Felder in der oberen Tabelle.") . "<br>\n";
             echo _("Mit einem Klick auf <b>&Uuml;bernehmen</b> werden die gewählten Änderungen durchgeführt.") . "<br><br>\n";
-            echo '<input type="IMAGE" ' . makeButton('uebernehmen', 'src') . ' value="' . _("Änderungen übernehmen") . '">';
+            echo '<input type="image" ' . makeButton('uebernehmen', 'src') . ' value="' . _("Änderungen übernehmen") . '">';
             echo "</form>\n";
         } else {
             echo _("Die Informationen zu Ihrem Studiengang werden vom System verwaltet, und k&ouml;nnen daher von Ihnen nicht ge&auml;ndert werden.");
@@ -1002,7 +1002,7 @@ if ($view == 'Studium') {
             $my_about->select_inst();
             echo "</div><br>" . _("Wenn sie aus Einrichtungen wieder ausgetragen werden möchten, markieren Sie die entsprechenden Felder in der linken Tabelle.") . "<br>\n";
             echo _("Mit einem Klick auf <b>&Uuml;bernehmen</b> werden die gewählten Änderungen durchgeführt.") . "<br><br> \n";
-            echo '<input type="IMAGE" ' . makeButton('uebernehmen', 'src') . ' value="' . _("Änderungen übernehmen") . '">';
+            echo '<input type="image" ' . makeButton('uebernehmen', 'src') . ' value="' . _("Änderungen übernehmen") . '">';
         } else {
             echo _("Die Informationen zu Ihrer Einrichtung werden vom System verwaltet, und k&ouml;nnen daher von Ihnen nicht ge&auml;ndert werden.");
         }
@@ -1066,7 +1066,7 @@ if ($view == 'userdomains') {
         $my_about->select_userdomain();
         echo '</div><br></b>' . _("Wenn Sie Nutzerdomänen wieder entfernen möchten, markieren Sie die entsprechenden Felder in der linken Tabelle.") . "<br>\n";
         echo _("Mit einem Klick auf <b>&Uuml;bernehmen</b> werden die gewählten Änderungen durchgeführt.") . "<br><br>\n";
-        echo '<input type="IMAGE" ' . makeButton('uebernehmen', 'src') . ' value="' . _("Änderungen übernehmen") . '">';
+        echo '<input type="image" ' . makeButton('uebernehmen', 'src') . ' value="' . _("Änderungen übernehmen") . '">';
         echo "</form>\n";
     } else {
         echo _("Die Informationen zu Ihren Nutzerdomänen werden vom System verwaltet und k&ouml;nnen daher von Ihnen nicht ge&auml;ndert werden.");
@@ -1286,7 +1286,7 @@ if ($view == 'Lebenslauf') {
     }
 
     $cssSw->switchClass();
-    echo '<tr><td class="'.$cssSw->getClass().'" colspan="3" align="center"><br><input type="IMAGE" ' . makeButton('uebernehmen', 'src') . ' border="0" value="' . _("Änderungen übernehmen") . "\"><br></td></tr>\n</table>\n</form>\n</td></tr>";
+    echo '<tr><td class="'.$cssSw->getClass().'" colspan="3" align="center"><br><input type="image" ' . makeButton('uebernehmen', 'src') . ' border="0" value="' . _("Änderungen übernehmen") . "\"><br></td></tr>\n</table>\n</form>\n</td></tr>";
 }
 
 if ($view == "Sonstiges") {

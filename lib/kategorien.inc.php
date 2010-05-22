@@ -78,7 +78,7 @@ function print_freie($username) {
             // Breite für textarea
             $cols = ($auth->auth["jscript"])? ceil($auth->auth["xres"]/13):50;
             echo '<tr><td class="'.$cssSw->getClass(). '"><blockquote><textarea  name="freie_content[]" style="width: 90%" cols="' . $cols . '" rows="7" wrap="virtual">' . htmlReady($db->f('content')) . '</textarea>';
-            echo '<br><br><input type="IMAGE" name="update" border="0" align="absmiddle" ' . makeButton("uebernehmen", "src") . ' value="' . _("ver&auml;ndern") . '">';
+            echo '<br><br><input type="image" name="update" border="0" align="absmiddle" ' . makeButton("uebernehmen", "src") . ' value="' . _("ver&auml;ndern") . '">';
             echo '&nbsp;<a href="'.URLHelper::getLink('?freie=verify_delete_freie&freie_id='.$id.'&view='.$view.'&username='.$username).'">';
             echo makeButton("loeschen") . "</a><br>\n&nbsp; </blockquote></td></tr>\n";
             $count++;

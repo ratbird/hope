@@ -122,7 +122,7 @@ class ShowSchedules {
                     <input type="text" name="schedule_begin_day" size=2 maxlength=2 value="<? if (!$start_time) echo date("d",time()); else echo date("d",$start_time); ?>">.
                     <input type="text" name="schedule_begin_month" size=2 maxlength=2 value="<? if (!$start_time) echo date("m",time()); else echo date("m",$start_time); ?>">.
                     <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<? if (!$start_time) echo date("Y",time()); else echo date("Y",$start_time); ?>"><br>
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; <input type="IMAGE" name="jump" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; <input type="image" name="jump" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="66%" valign="top"><font size=-1>
                     <input type="text" name="schedule_length_factor" size=2 maxlength=2 / value="<? if (!$this->length_factor) echo "1"; else echo $this->length_factor; ?>">
@@ -133,13 +133,13 @@ class ShowSchedules {
                         <option <? if ($this->length_unit  == "y") echo "selected" ?> value="y"><?=_("Jahre(e)")?></option>
                     </select>
                     &nbsp;<?=_("als Liste ausgeben")?>
-                    &nbsp; <input type="IMAGE" name="start_list" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>
+                    &nbsp; <input type="image" name="start_list" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>
                 </td>
             </tr>
             <tr>
                     <td class="<? echo $cssSw->getClass() ?>" width="66%" valign="top"><font size=-1>
                     <?=_("<i>oder</i> eine Woche grafisch ausgeben")?>
-                    &nbsp; <input type="IMAGE" name="start_graphical" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>&nbsp;
+                    &nbsp; <input type="image" name="start_graphical" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>&nbsp;
                 </td>
             </tr>
         </table>

@@ -71,7 +71,7 @@ function show_lock_rule_form($lockdata="",$edit=0) {
         $form = "<h3>"._("Neue Sperrebene eingeben")."</h3>";
     }
     $zt2 = new ZebraTable(array("width"=>"100%","padding"=>"5"));
-    $form .= "<form action=\"".URLHelper::getLink()."\" METHOD=\"POST\">";
+    $form .= "<form action=\"".URLHelper::getLink()."\" method=\"POST\">";
     $form .= "<input type=\"hidden\" name=\"lockdata[lock_id]\" value=\"".$lockdata["lock_id"]."\">";
     $form .= $zt2->openRow();
     $form .= $zt2->cell(_("Name"),array("width"=>"30%"));

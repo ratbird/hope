@@ -511,8 +511,8 @@ $db6=new DB_Seminar;
                         <tr><td class="blank" colspan=2>
                         <form name="details" action="<? echo $sess->pself_url(); ?>" method="POST">
                         &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
-                        <input type="HIDDEN" name="id" value="<? echo $id;?>">
-                        <input type="IMAGE" <?=makeButton("abschicken", "src")?> border="0" value="<?=_("abschicken") ?>">
+                        <input type="hidden" name="id" value="<? echo $id;?>">
+                        <input type="image" <?=makeButton("abschicken", "src")?> border="0" value="<?=_("abschicken") ?>">
                         </form>
                         </td></tr>
                         <?
@@ -636,7 +636,7 @@ $db6=new DB_Seminar;
                             ?>
                             <tr><td class="blank" colspan=2>
                             <form action="<? echo $sess->pself_url(); ?>" method="POST" >
-                                <input type="HIDDEN" name="sem_verify_selection_send" value="TRUE">
+                                <input type="hidden" name="sem_verify_selection_send" value="TRUE">
                                    <?
                                 foreach($current_seminar->admission_studiengang as $studiengang_id => $studiengang) {
                                     if (isset($user_studiengang[$studiengang_id]))
@@ -645,7 +645,7 @@ $db6=new DB_Seminar;
                                         printf ("&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<font size=-1 color=\"#888888\">"._("Kontingent f&uuml;r %s (%s Pl&auml;tze insgesamt / %s belegt)")."</font><br>", htmlReady($studiengang['name']), $studiengang['num_total'], $studiengang['num_occupied']);
                                     }
                                    ?>
-                            <br>&nbsp; &nbsp; <input type="IMAGE" <?=makeButton("ok", "src")?> border=0 value="abschicken">
+                            <br>&nbsp; &nbsp; <input type="image" <?=makeButton("ok", "src")?> border=0 value="abschicken">
                             </form>
                             </td></tr>
                             <?
@@ -784,8 +784,8 @@ $db6=new DB_Seminar;
                     <tr><td class="blank" colspan=2>
                     <form name="details" action="<? echo $sess->pself_url(); ?>" method="POST">
                     &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
-                    <input type="HIDDEN" name="id" value="<? echo $id;?>">
-                    <input type="IMAGE" <?=makeButton("abschicken", "src")?> border="0" value="<?=_("abschicken") ?>">
+                    <input type="hidden" name="id" value="<? echo $id;?>">
+                    <input type="image" <?=makeButton("abschicken", "src")?> border="0" value="<?=_("abschicken") ?>">
                     </form>
                     </td></tr>
                     <?
@@ -820,7 +820,7 @@ $db6=new DB_Seminar;
                     <tr><td class="blank">
                     <font size="-1"><?=_("Bitte geben Sie hier das Passwort ein:")?></font><br>
                     <input type="PASSWORD" name="pass" size="20">
-                    <input type="HIDDEN" name="id" value="<? echo $id;?>">
+                    <input type="hidden" name="id" value="<? echo $id;?>">
                     </td>
                     <td class="blank">&nbsp;</td>
                     <td class="blank" valign="top">
@@ -830,7 +830,7 @@ $db6=new DB_Seminar;
                         </td>
                     </tr>
                     <tr><td class="blank" colspan="3" align="center">
-                    <input type="IMAGE" <?=makeButton("ok", "src")?> border="0" value="<?=_("abschicken") ?>"><br>&nbsp;
+                    <input type="image" <?=makeButton("ok", "src")?> border="0" value="<?=_("abschicken") ?>"><br>&nbsp;
                     </td></tr></table>
                     </form>
                     <?

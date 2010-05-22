@@ -251,7 +251,7 @@ class AdminNewsController {
         echo "\n<td class=\"steelgraulight\" width=\"30%\">" . _("Geben Sie hier die &Uuml;berschrift und den Inhalt Ihrer News ein.")
             . "<br><br>" . _("Im unteren Bereich k&ouml;nnen Sie ausw&auml;hlen, in welchen Bereichen Ihre News angezeigt wird.");
         echo "\n<br><br>" . _("Klicken Sie danach hier, um die &Auml;nderungen zu &uuml;bernehmen.") . "<br><br><center>"
-            . "<INPUT TYPE=\"IMAGE\" name=\"news_submit\" " . makeButton("uebernehmen","src") . tooltip(_("Änderungen übernehmen")) ."  border=\"0\" ></center></td></tr>";
+            . "<input type=\"IMAGE\" name=\"news_submit\" " . makeButton("uebernehmen","src") . tooltip(_("Änderungen übernehmen")) ."  border=\"0\" ></center></td></tr>";
 
         $news_date = $this->news_query['date'];
         if ($news_date != $aktuell) {
@@ -564,7 +564,7 @@ $('#starttime').change(function () {
                     echo ' checked ';
                 echo '>';
             } elseif (isset($this->range_detail[$range])) {
-                echo _("Ja") . '<input type="HIDDEN" name="add_range[]" value="' . $range . '">';
+                echo _("Ja") . '<input type="hidden" name="add_range[]" value="' . $range . '">';
             }
             echo '</td></tr>';
         }

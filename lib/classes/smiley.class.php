@@ -323,7 +323,7 @@ class smiley {
         echo $table->headerRow(array('<b>' . _("Neues Smiley hochladen") . '</b>',''));
         echo $table->row(array(_("existierende Datei überschreiben:"),' <input type="checkbox" name="replace" value="1">'));
         echo $table->row(array(_("1. Bilddatei auswählen:"),' <input name="imgfile" type="file" cols=45>'));
-        echo $table->row(array(_("2. Bilddatei hochladen:"),' <input type="IMAGE" ' . makeButton('absenden', 'src') . ' border=0 value="absenden">'));
+        echo $table->row(array(_("2. Bilddatei hochladen:"),' <input type="image" ' . makeButton('absenden', 'src') . ' border=0 value="absenden">'));
         echo $table->close(), '&nbsp;<br>';
         echo '</form>';
 

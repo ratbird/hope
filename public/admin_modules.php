@@ -264,8 +264,8 @@ if ($admin_modules_data["range_id"])
         <table width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr><? $cssSw->switchClass() ?>
             <td class="<?= $cssSw->getClass() ?>" align="center" colspan="3">
-                <input type="IMAGE" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> border=0 value="uebernehmen">
-                &nbsp;<input type="IMAGE" name="default" <?=makeButton("zuruecksetzen", "src")?> border=0 value="uebernehmen">
+                <input type="image" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> border=0 value="uebernehmen">
+                &nbsp;<input type="image" name="default" <?=makeButton("zuruecksetzen", "src")?> border=0 value="uebernehmen">
                 <? if ($admin_modules_data["orig_bin"] != $admin_modules_data["changed_bin"]) {
                     ?> <br><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" align="absmiddle">&nbsp;<font size=-1><?=_("Diese Daten sind noch nicht gespeichert.")?></font><br> <?
                     }
@@ -289,9 +289,9 @@ if ($admin_modules_data["range_id"])
                     <font size=-1><b><?=$val["name"]?></b><br></font>
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="15%">
-                    <input type="RADIO" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="TRUE" <?=($amodules->isBit($admin_modules_data["changed_bin"], $val["id"])) ? "checked" : "" ?>>
+                    <input type="radio" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="TRUE" <?=($amodules->isBit($admin_modules_data["changed_bin"], $val["id"])) ? "checked" : "" ?>>
                     <font size=-1><?=_("an")?></font>
-                    <input type="RADIO" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="FALSE" <?=($amodules->isBit($admin_modules_data["changed_bin"], $val["id"])) ? "" : "checked" ?>>
+                    <input type="radio" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="FALSE" <?=($amodules->isBit($admin_modules_data["changed_bin"], $val["id"])) ? "" : "checked" ?>>
                     <font size=-1><?=_("aus")?><br></font>
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="70%">
@@ -321,9 +321,9 @@ if ($admin_modules_data["range_id"])
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="15%">
                     <!-- mark old state -->
-                    <input type="RADIO" name="plugin_<?=$plugin->getPluginId()?>" value="TRUE" <?= $plugin_activated ? "checked" : "" ?>>
+                    <input type="radio" name="plugin_<?=$plugin->getPluginId()?>" value="TRUE" <?= $plugin_activated ? "checked" : "" ?>>
                     <font size=-1><?=_("an")?></font>
-                    <input type="RADIO" name="plugin_<?=$plugin->getPluginId()?>" value="FALSE" <?= $plugin_activated ? "" : "checked" ?>>
+                    <input type="radio" name="plugin_<?=$plugin->getPluginId()?>" value="FALSE" <?= $plugin_activated ? "" : "checked" ?>>
                     <font size=-1><?=_("aus")?><br></font>
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="70%">

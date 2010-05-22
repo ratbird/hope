@@ -203,16 +203,16 @@ while ($tmp_first_date < $end_date) {
                         &nbsp;<?=_("Startsemester")?>:&nbsp;
                         <?
                             if ($perm->have_perm('tutor') && !$_LOCKED) {
-                                echo "<SELECT name=\"startSemester\">\n";
+                                echo "<select name=\"startSemester\">\n";
                                 $all_semester = $semester->getAllSemesterData();
                                 foreach ($all_semester as $val) {
-                                    echo '<OPTION value="'.$val['beginn'].'"';
+                                    echo '<option value="'.$val['beginn'].'"';
                                     if ($sem->getStartSemester() == $val['beginn']) {
                                         echo ' selected';
                                     }
-                                    echo '>'.$val['name']."</OPTION>\n";
+                                    echo '>'.$val['name']."</option>\n";
                                 }
-                                echo "</SELECT>\n";
+                                echo "</select>\n";
                             } else {
                                 $all_semester = $semester->getAllSemesterData();
                                 foreach ($all_semester as $val) {
@@ -224,41 +224,41 @@ while ($tmp_first_date < $end_date) {
                         ?>
                         , <?=_("Dauer")?>:
                         <? if (!$_LOCKED) { ?>
-                        <SELECT name="endSemester">
-                            <OPTION value="0"<?=($sem->getEndSemester() == 0) ? ' selected' : ''?>>1 <?=_("Semester")?></OPTION>
+                        <select name="endSemester">
+                            <option value="0"<?=($sem->getEndSemester() == 0) ? ' selected' : ''?>>1 <?=_("Semester")?></option>
                             <?
                             //if ($perm->have_perm("admin")) {      // admins or higher may do everything
                                 foreach ($all_semester as $val) {
                                     if ($val['beginn'] > $sem->getStartSemester()) {        // can be removed, if we always need all Semesters
-                                        echo '<OPTION value="'.$val['beginn'].'"';
+                                        echo '<option value="'.$val['beginn'].'"';
                                         if ($sem->getEndSemester() == $val['beginn']) {
                                             echo ' selected';
                                         }
-                                        echo '>'.$val['name'].'</OPTION>';
+                                        echo '>'.$val['name'].'</option>';
                                     }
                                 }
                                 ?>
-                                <OPTION value="-1"<?=($sem->getEndSemester() == -1) ? 'selected' : ''?>><?=_("unbegrenzt")?></OPTION>
+                                <option value="-1"<?=($sem->getEndSemester() == -1) ? 'selected' : ''?>><?=_("unbegrenzt")?></option>
                                 <?
                             /*} else {      // dozent or tutor may only selecte a duration of one or two semesters or what admin has choosen
                                 $sem2 = '';
                                 foreach ($all_semester as $val) {
                                     if (($sem2 == '') && ($val['beginn'] > $sem->getStartSemester())) {
-                                        echo '<OPTION value="'.$val['beginn'].'"'.(($sem->getEndSemester() == $val['beginn']) ? ' selected' : '').'>2 '._("Semester").'</OPTION>';
+                                        echo '<option value="'.$val['beginn'].'"'.(($sem->getEndSemester() == $val['beginn']) ? ' selected' : '').'>2 '._("Semester").'</option>';
                                         $sem2 = $val['beginn'];
                                     }
                                     if ( ($val['beginn'] == $sem->getEndSemester() && ($sem2 != $val['beginn']))) {
-                                        echo '<OPTION value="'.$val['beginn'].'"'.(($sem->getEndSemester() == $val['beginn']) ? ' selected' : '').'>'.$val['name'].'</OPTION>';
+                                        echo '<option value="'.$val['beginn'].'"'.(($sem->getEndSemester() == $val['beginn']) ? ' selected' : '').'>'.$val['name'].'</option>';
                                     }
                                 }
                                 if ($sem->getEndSemester() == -1) {
                                     ?>
-                                    <OPTION value="-1" selected>unbegrenzt</OPTION>
+                                    <option value="-1" selected>unbegrenzt</option>
                                     <?
                                 }
                             }*/
                             ?>
-                        </SELECT>
+                        </select>
                         <? } else {
                             switch ($sem->getEndSemester()) {
                                 case '0':
@@ -282,10 +282,10 @@ while ($tmp_first_date < $end_date) {
                         <br>
                         <?=_("Turnus")?>:
                         <? if (!$_LOCKED) { ?>
-                        <SELECT name="turnus">
-                            <OPTION value="0"<?=$sem->getTurnus() ? '' : 'selected'?>><?=_("w&ouml;chentlich");?></OPTION>
-                            <OPTION value="1"<?=$sem->getTurnus() ? 'selected' : ''?>><?=_("zweiw&ouml;chentlich")?></OPTION>
-                        </SELECT>
+                        <select name="turnus">
+                            <option value="0"<?=$sem->getTurnus() ? '' : 'selected'?>><?=_("w&ouml;chentlich");?></option>
+                            <option value="1"<?=$sem->getTurnus() ? 'selected' : ''?>><?=_("zweiw&ouml;chentlich")?></option>
+                        </select>
                         <? } else {
                             echo (!$sem->getTurnus()) ? _("w&ouml;chentlich") : _("zweiw&ouml;chentlich");
                         } ?>
@@ -302,7 +302,7 @@ while ($tmp_first_date < $end_date) {
 
                             endforeach;
                         ?>
-                        </SELECT>
+                        </select>
                         </FONT>
                         &nbsp;&nbsp;
                         <input type="image" <?=makebutton('uebernehmen', 'src')?> align="absmiddle">

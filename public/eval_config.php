@@ -215,11 +215,11 @@ if (isset($eval_id) && $can_change) {
     echo "  <TR>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Grafiktyp f&uuml;r Polskalen").":</FONT></TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\" COLSPAN=\"2\">\n";
-    echo "      <SELECT name=\"polscale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
+    echo "      <select name=\"polscale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
     foreach ($graphtypes_polscale as $k=>$v) {
-        echo "        <OPTION value=\"".$k."\""; if ($db_template->f("polscale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
+        echo "        <option value=\"".$k."\""; if ($db_template->f("polscale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
     }
-    echo "      </SELECT>\n";
+    echo "      </select>\n";
     echo "    </TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
     echo "  </TR>\n";
@@ -229,11 +229,11 @@ if (isset($eval_id) && $can_change) {
     echo "  <TR>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Grafiktyp f&uuml;r Likertskalen").":</FONT></TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\" COLSPAN=\"2\">\n";
-    echo "      <SELECT name=\"likertscale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
+    echo "      <select name=\"likertscale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
     foreach ($graphtypes_likertscale as $k=>$v) {
-        echo "        <OPTION value=\"".$k."\""; if ($db_template->f("likertscale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
+        echo "        <option value=\"".$k."\""; if ($db_template->f("likertscale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
     }
-    echo "      </SELECT>\n";
+    echo "      </select>\n";
     echo "    </TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
     echo "  </TR>\n";
@@ -243,11 +243,11 @@ if (isset($eval_id) && $can_change) {
     echo "  <TR>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\"><FONT COLOR=\"-1\">"._("Grafiktyp f&uuml;r Multiplechoice").":</FONT></TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\" ALIGN=\"CENTER\" COLSPAN=\"2\">\n";
-    echo "      <SELECT name=\"mchoice_scale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
+    echo "      <select name=\"mchoice_scale_gfx_type\" SIZE=\"1\" STYLE=\"width:120px\">\n";
     foreach ($graphtypes_mchoice as $k=>$v) {
-        echo "        <OPTION value=\"".$k."\""; if ($db_template->f("mchoice_scale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
+        echo "        <option value=\"".$k."\""; if ($db_template->f("mchoice_scale_gfx_type")==$k) print " SELECTED"; print ">".$v."\n";
     }
-    echo "      </SELECT>\n";
+    echo "      </select>\n";
     echo "    </TD>\n";
     echo "    <TD CLASS=\"".$cssSw->getClass()."\">&nbsp;</TD>\n";
     echo "  </TR>\n";

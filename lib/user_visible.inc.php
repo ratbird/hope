@@ -160,14 +160,14 @@ function get_ext_vis_query($table_alias = 'aum') {
 function vis_chooser($vis, $new = false) {
     if ($vis == '') $vis = 'unknown';
     $txt = array();
-    $txt[] = '<SELECT name="visible">';
-    if (!$new) $txt[] = '<OPTION value="'.$vis.'">'._("keine &Auml;nderung").'</OPTION>';
-    $txt[] = '<OPTION value="always">'._("immer").'</OPTION>';
-    /* $txt[] = '<OPTION value="yes">'._("ja").'</OPTION>'; */
-    $txt[] = '<OPTION value="unknown"'.(($new)? ' selected="selected"':'').'>'._("unbekannt").'</OPTION>';
-    /* $txt[] = '<OPTION value="no">'._("nein").'</OPTION>'; */
-    $txt[] = '<OPTION value="never">'._("niemals").'</OPTION>';
-    $txt[] = '</SELECT>';
+    $txt[] = '<select name="visible">';
+    if (!$new) $txt[] = '<option value="'.$vis.'">'._("keine &Auml;nderung").'</option>';
+    $txt[] = '<option value="always">'._("immer").'</option>';
+    /* $txt[] = '<option value="yes">'._("ja").'</option>'; */
+    $txt[] = '<option value="unknown"'.(($new)? ' selected="selected"':'').'>'._("unbekannt").'</option>';
+    /* $txt[] = '<option value="no">'._("nein").'</option>'; */
+    $txt[] = '<option value="never">'._("niemals").'</option>';
+    $txt[] = '</select>';
     return implode("\n", $txt);
 }
 

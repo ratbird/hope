@@ -233,11 +233,11 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                 <TR>
                     <TD class="blank" colspan="3">
                         <FONT size="-1">
-                            <SELECT name="numIssues">
+                            <select name="numIssues">
                                 <? for ($i = 1; $i <= 15; $i++) { ?>
-                                <OPTION value="<?=$i?>"><?=$i?></OPTION>
+                                <option value="<?=$i?>"><?=$i?></option>
                                 <? } ?>
-                            </SELECT>
+                            </select>
                             <?=("neue Themen")?>
                         </FONT>
                         <input type="image" <?=makebutton('anlegen', 'src')?> align="absmiddle" name="addIssue">

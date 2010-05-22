@@ -265,7 +265,7 @@ if (!$cmd OR $cmd=="show") {
     if (get_config('NEWS_RSS_EXPORT_ENABLE') && $news->get_news_range_perm($news_range_id) > 1){
         echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/rss.gif" border="0" align="absmiddle">&nbsp;';
         echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Die News des gew&auml;hlten Bereiches als RSS-feed zur Verf&uuml;gung stellen") . '</font>&nbsp;';
-        vprintf("\n".'<input type="image" src="'.$GLOBALS['ASSETS_URL'].'images/%s" %s border="0" name="change_rss" align="absmiddle"/>',
+        vprintf("\n".'<input type="image" src="'.$GLOBALS['ASSETS_URL'].'images/%s" %s border="0" name="change_rss" align="absmiddle">',
                 (StudipNews::GetRssIdFromRangeId($news_range_id) ? array('haken.gif',tooltip(_("RSS Export ist eingeschaltet"))) : array('x2.gif',tooltip(_("RSS Export ist ausgeschaltet")))));
         echo "\n<br><br>";
     }

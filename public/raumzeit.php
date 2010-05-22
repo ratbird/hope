@@ -548,7 +548,7 @@ while ($tmp_first_date < $end_date) {
                 if (!$_LOCKED && $RESOURCES_ENABLE && $RESOURCES_ALLOW_ROOM_REQUESTS) { ?>
                 <tr>
                     <td colspan="9" class="blue_gradient">
-                        <a name="irregular_dates"/></a>
+                        <a name="irregular_dates"></a>
                         &nbsp;<b><?=_("Raum anfordern")?></b>
                     </td>
                 </tr>

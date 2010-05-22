@@ -96,7 +96,7 @@ $infobox['content'][] = array(
 
 
   	</div>
-		 <br style="clear: both;"/>
+		 <br style="clear: both;">
   </div>
 
   <h2 class="smashbox_kategorie"><?=_("Weitere Inhaltselemente");?></h2>
@@ -129,6 +129,6 @@ $infobox['content'][] = array(
 
 
 		</div>
-		<br style="clear: both;"/>
+		<br style="clear: both;">
 	</div>
 </div>

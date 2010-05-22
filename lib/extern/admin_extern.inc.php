@@ -226,7 +226,7 @@ if ($EXTERN_SRI_ENABLE_BY_ROOT && $perm->have_perm('root')) {
     if (sri_is_enabled($range_id)) {
         echo ' checked="checked"';
     }
-    echo '/> &nbsp;<input type="image" border="0" align="absmiddle" ';
+    echo '> &nbsp;<input type="image" border="0" align="absmiddle" ';
     echo makeButton('uebernehmen', 'src');
     echo "></font></blockquote></form>\n</td></tr>\n";
 } else {

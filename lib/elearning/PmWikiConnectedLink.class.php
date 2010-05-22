@@ -107,23 +107,23 @@ class PmWikiConnectedLink extends ConnectedLink
 
         ob_start(); ?>
 
-        <form method="post" action="<?= $GLOBALS["PHP_SELF"] ?>"/>
-            <input type="hidden"    name="view"                             value="<?= $view ?>"/>
-            <input type="hidden"    name="search_key"               value="<?= $search_key ?>"/>
-            <input type="hidden"    name="cms_select"               value="<?= $cms_select ?>"/>
+        <form method="post" action="<?= $GLOBALS["PHP_SELF"] ?>">
+            <input type="hidden"    name="view"                             value="<?= $view ?>">
+            <input type="hidden"    name="search_key"               value="<?= $search_key ?>">
+            <input type="hidden"    name="cms_select"               value="<?= $cms_select ?>">
             <input type="hidden"    name="module_type"              value="wiki">
             <input type="hidden"    name="module_id"                    value="<?= $current_module ?>">
-            <input type="hidden"    name="module_system_type" value="<?= $this->cms_type ?>"/>
+            <input type="hidden"    name="module_system_type" value="<?= $this->cms_type ?>">
 
             <?php if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected()) : ?>
 
                 &nbsp;<input type="image" <?= makeButton("entfernen", "src") ?> border=0
-                                    value="<?= _("Entfernen") ?>" name="remove"/>
+                                    value="<?= _("Entfernen") ?>" name="remove">
 
             <?php else :?>
 
                 &nbsp;<input type="image" <?= makeButton("hinzufuegen", "src") ?> border=0
-                                    value="<?= _("Hinzuf&uuml;gen") ?>" name="add"/><br>
+                                    value="<?= _("Hinzuf&uuml;gen") ?>" name="add"><br>
 
             <?php endif ; ?>
 

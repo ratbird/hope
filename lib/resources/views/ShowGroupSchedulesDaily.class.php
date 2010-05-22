@@ -208,7 +208,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">
-                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="35" border="0"/>
+                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="35" border="0">
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"  width="10%" align="left">&nbsp;
                     <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&previous_day=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/calendar_previous.gif" <? echo tooltip (_("Vorherigen Tag anzeigen")) ?>border="0"></a>

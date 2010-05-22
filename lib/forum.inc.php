@@ -152,11 +152,11 @@ function editarea($forumposting) {
         $description .= '<input type="hidden" name="root_id" value="'.$forumposting['rootid'].'">';
         $description .= '<input type="hidden" name="parent_id" value="'.$forumposting['parent_id'].'">';
         if (get_config('FORUM_ANONYMOUS_POSTINGS')) {
-          $description .= '<div align="center"><input type="checkbox" name="anonymous"/>'._('Beitrag anonym verfassen').'</div>';
+          $description .= '<div align="center"><input type="checkbox" name="anonymous">'._('Beitrag anonym verfassen').'</div>';
         }
     } else {
         if (get_config('FORUM_ANONYMOUS_POSTINGS') && $forumposting['anonymous']) {
-            $description .= '<input type="hidden" name="anonymous" value="true"/>';
+            $description .= '<input type="hidden" name="anonymous" value="true">';
         }
     }
     $description .= "<br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"160\" height=\"1\"><input type=image name=create value=\"abschicken\" " . makeButton("abschicken", "src") . " align=\"absmiddle\" border=0>&nbsp;"

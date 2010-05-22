@@ -512,7 +512,7 @@ class ShowToolsRequests {
                                         } else {
                                             $overlap_status = $this->showGroupOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$request_resource_id], $val["events_count"], $val["overlap_events_count"][$request_resource_id], $val["termin_ids"]);
                                             print $overlap_status["html"];
-                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s/>",
+                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s>",
                                             $i, $request_resource_id,
                                             ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][$i] == $request_resource_id) ? "checked" : "",
                                             ($overlap_status["status"] == 2 || !ResourcesUserRoomsList::CheckUserResource($request_resource_id)) ? "disabled" : "");
@@ -531,7 +531,7 @@ class ShowToolsRequests {
                                         } else {
                                             $overlap_status = $this->showOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$request_resource_id][$key], $val["events_count"], $val["overlap_events_count"][$request_resource_id]);
                                             print $overlap_status["html"];
-                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s/>",
+                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s>",
                                             ($semObj->getMetaDateType() == 1) ? $val["termin_id"] : $i, $request_resource_id,
                                             ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][($semObj->getMetaDateType() == 1) ? $val2["termin_id"] : $i] == $request_resource_id) ? "checked" : "",
                                             ($overlap_status["status"] == 2 || !ResourcesUserRoomsList::CheckUserResource($request_resource_id)) ? "disabled" : "");
@@ -613,7 +613,7 @@ class ShowToolsRequests {
                                         } else {
                                             $overlap_status = $this->showGroupOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
                                             print $overlap_status["html"];
-                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s/>", $i, $key,
+                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s>", $i, $key,
                                             ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][$i] == $key) ? "checked" : "",
                                             ($overlap_status["status"] == 2 || !ResourcesUserRoomsList::CheckUserResource($key)) ? "disabled" : "");
                                         }
@@ -630,7 +630,7 @@ class ShowToolsRequests {
                                         } else {
                                             $overlap_status = $this->showOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key][$key2], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()]);
                                             print $overlap_status["html"];
-                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s/>",
+                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s>",
                                             ($semObj->getMetaDateType() == 1) ? $val2["termin_id"] : $i,
                                             $key,
                                             ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][($semObj->getMetaDateType() == 1) ? $val2["termin_id"] : $i] == $key) ? "checked" : "",
@@ -704,7 +704,7 @@ class ShowToolsRequests {
                                         } else {
                                             $overlap_status = $this->showGroupOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
                                             print $overlap_status["html"];
-                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s/>",
+                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s>",
                                             $i, $key, ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][$i] == $key) ? "checked" : "",
                                             ($overlap_status["status"] == 2 || !ResourcesUserRoomsList::CheckUserResource($key)) ? "disabled" : "");
                                         }
@@ -721,7 +721,7 @@ class ShowToolsRequests {
                                         } else {
                                             $overlap_status = $this->showOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key][$key2], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()]);
                                             print $overlap_status["html"];
-                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s/>",
+                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s>",
                                             $i, $key,
                                             ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][($semObj->getMetaDateType() == 1) ? $val2["termin_id"] : $i] == $key) ? "checked" : "",
                                             ($overlap_status["status"] == 2 || !ResourcesUserRoomsList::CheckUserResource($key)) ? "disabled" : "");
@@ -757,16 +757,16 @@ class ShowToolsRequests {
                             <td colspan="<?=$cols+2?>" align="center">
                                 <font size="-1">
                                     <?=_("zeige R&auml;ume")?>
-                                    <a href="<?=$PHP_SELF?>?dec_limit_low=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/-.gif" border="0" <?=tooltip(_("-10"))?>/></a>
+                                    <a href="<?=$PHP_SELF?>?dec_limit_low=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/-.gif" border="0" <?=tooltip(_("-10"))?>></a>
                                     <input type="text" name="search_rooms_limit_low" maxlength="2" size="1" style="font-size:8pt" value="<?=($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] + 1)?>">
-                                    <a href="<?=$PHP_SELF?>?inc_limit_low=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/+.gif" border="0" <?=tooltip(_("+10"))?>/></a>
+                                    <a href="<?=$PHP_SELF?>?inc_limit_low=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/+.gif" border="0" <?=tooltip(_("+10"))?>></a>
 
                                     bis
-                                    <a href="<?=$PHP_SELF?>?dec_limit_high=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/-.gif" border="0" <?=tooltip(_("-10"))?>/></a>
+                                    <a href="<?=$PHP_SELF?>?dec_limit_high=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/-.gif" border="0" <?=tooltip(_("-10"))?>></a>
                                     <input type="text" name="search_rooms_limit_high" maxlength="2" size="1" style="font-size:8pt" value="<?=$resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"]?>">
-                                    <a href="<?=$PHP_SELF?>?inc_limit_high=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/+.gif" border="0" <?=tooltip(_("+10"))?>/></a>
+                                    <a href="<?=$PHP_SELF?>?inc_limit_high=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/+.gif" border="0" <?=tooltip(_("+10"))?>></a>
 
-                                    <input type="image" name="matching_rooms_limit_submit" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" border="0" <?=tooltip(_("ausgewählten Bereich anzeigen"))?>/>
+                                    <input type="image" name="matching_rooms_limit_submit" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" border="0" <?=tooltip(_("ausgewählten Bereich anzeigen"))?>>
                                 </font>
                             </td>
                         </tr>
@@ -804,7 +804,7 @@ class ShowToolsRequests {
                                         } else {
                                             $overlap_status = $this->showGroupOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
                                             print $overlap_status["html"];
-                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s/>",
+                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s>",
                                             $i, $key,
                                             ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][$i] == $key) ? "checked" : "",
                                             ($overlap_status["status"] == 2 || !ResourcesUserRoomsList::CheckUserResource($key)) ? "disabled" : "");
@@ -822,7 +822,7 @@ class ShowToolsRequests {
                                         } else {
                                             $overlap_status = $this->showOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key][$key2], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()]);
                                             print $overlap_status["html"];
-                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s/>",
+                                            printf ("<input type=\"radio\" name=\"selected_resource_id[%s]\" value=\"%s\" %s %s>",
                                             ($semObj->getMetaDateType() == 1) ? $val2["termin_id"] : $i,
                                             $key,
                                             ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["selected_resources"][($semObj->getMetaDateType() == 1) ? $val2["termin_id"] : $i] == $key) ? "checked" : "",
@@ -1008,7 +1008,7 @@ class ShowToolsRequests {
                 $status = 1;
             }
         } else {
-            $html = "<img src=\"".$GLOBALS['ASSETS_URL']."images/ampel_gruen.gif\" ".tooltip(_("Es existieren keine Überschneidungen"), TRUE, TRUE)."/>";
+            $html = "<img src=\"".$GLOBALS['ASSETS_URL']."images/ampel_gruen.gif\" ".tooltip(_("Es existieren keine Überschneidungen"), TRUE, TRUE).">";
             $status = 0;
         }
         return array("html"=>$html, "status"=>$status);
@@ -1046,7 +1046,7 @@ class ShowToolsRequests {
                 $status = 1;
             }
         } else {
-            $html = "<img src=\"".$GLOBALS['ASSETS_URL']."images/ampel_gruen.gif\" ".tooltip(_("Es existieren keine Überschneidungen"), TRUE, TRUE)."/>";
+            $html = "<img src=\"".$GLOBALS['ASSETS_URL']."images/ampel_gruen.gif\" ".tooltip(_("Es existieren keine Überschneidungen"), TRUE, TRUE).">";
             $status = 0;
         }
         return array("html"=>$html, "status"=>$status);

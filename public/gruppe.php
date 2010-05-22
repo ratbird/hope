@@ -50,13 +50,12 @@ if (isset($_REQUEST['close_my_sem'])) unset($_my_sem_open[$_REQUEST['close_my_se
 
 //es wird eine Tabelle aufgebaut, in der die Gruppenzugehoerigkeit festgelegt wird.
 
-IF ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("admin")){
-     ?>
-    <table width="75%" border=0 cellpadding=0 cellspacing=0 align=center>
+if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("admin")) {
+?>
+<table width="75%" border=0 cellpadding=0 cellspacing=0 align=center>
     <tr>
-        <td class="topic">&nbsp;&nbsp;<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/gruppe.gif" alt="Gruppe &auml;ndern" border=0>&nbsp;&nbsp;<b><?=_("Gruppenzuordnung")?></></td>
+        <td class="topic">&nbsp;&nbsp;<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/gruppe.gif" alt="Gruppe &auml;ndern" border=0>&nbsp;&nbsp;<b><?=_("Gruppenzuordnung")?></b></td>
     </tr>
-    <form method=post action="meine_seminare.php">
     <tr><td class="blank">
     <p style="margin:20px;">
     <?=_("Hier k&ouml;nnen Sie Ihre Veranstaltungen in Farbgruppen einordnen und eine Gliederung nach Kategorien festlegen. <br>Die Darstellung unter <b>meine Veranstaltungen</b> wird entsprechend den Gruppen sortiert bzw. entsprechend der gew&auml;hlten Kategorie gegliedert.")?>
@@ -84,7 +83,7 @@ IF ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     <tr><td class="blank" align="right" colspan="9">
     &nbsp;
     </td></tr>
-    <tr valign"top" align="center">
+    <tr valign="top" align="center">
     <th width="90%"><?=_("Veranstaltung")?></th>
 
 <?
@@ -95,19 +94,19 @@ FOR ($i=0; $i<9; $i++)
     $groups = array();
     $add_fields = '';
     $add_query = '';
-    
+
     if($group_field == 'sem_tree_id'){
         $add_fields = ',sem_tree_id';
         $add_query = "LEFT JOIN seminar_sem_tree sst ON (sst.seminar_id=seminar_user.seminar_id)";
     }
-    
+
     if($group_field == 'dozent_id'){
         $add_fields = ', su1.user_id as dozent_id';
         $add_query = "LEFT JOIN seminar_user as su1 ON (su1.seminar_id=seminare.Seminar_id AND su1.status='dozent')";
     }
-    
+
     $dbv = new DbView();
-    
+
     $db->query ("SELECT seminare.Name, seminare.Seminar_id, seminare.status as sem_status, seminar_user.gruppe, seminare.visible,
                 {$dbv->sem_number_sql} as sem_number, {$dbv->sem_number_end_sql} as sem_number_end $add_fields
                 FROM seminar_user LEFT JOIN seminare  USING (Seminar_id)
@@ -175,14 +174,9 @@ FOR ($i=0; $i<9; $i++)
             }
         }
     }
-    ECHO "<tr><td class=\"blank\">&nbsp; </td><td class=\"blank\" align=center colspan=8><br><input type=\"IMAGE\" " . makeButton("absenden", "src") . " border=0 value=absenden><input type=hidden name=gruppesent value=1><br>&nbsp; </td></tr></form>";
-    echo "</table></td></tr>";
+    ECHO "<tr><td class=\"blank\">&nbsp; </td><td class=\"blank\" align=center colspan=8><br><input type=\"IMAGE\" " . makeButton("absenden", "src") . " border=0 value=absenden><input type=hidden name=gruppesent value=1><br>&nbsp; </td></tr>";
+    echo "</table></form></td></tr></table>";
 }
 
-?>
-</table>
-<?php
-include ('lib/include/html_end.inc.php');
-  // Save data back to database.
-  page_close();
-?>
+include 'lib/include/html_end.inc.php';
+page_close();

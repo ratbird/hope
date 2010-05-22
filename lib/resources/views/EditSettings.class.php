@@ -583,13 +583,13 @@ class EditSettings {
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
                                 print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\">";
                                 print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
-                                print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."/></a>";
+                                print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."></a>";
                                 print "</td></tr>";
                             } else {
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_begin")));
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_end")));
-                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag bearbeiten"))."/>&nbsp;&nbsp;</a>";
-                                print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."/></a></td>";
+                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag bearbeiten")).">&nbsp;&nbsp;</a>";
+                                print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."></a></td>";
                             }
                         }
                         print "</tr>";
@@ -665,13 +665,13 @@ class EditSettings {
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
                                 print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\">";
                                 print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
-                                print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."/></a>";
+                                print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."></a>";
                                 print "</td></tr>";
                             } else {
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_begin")));
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_end")));
-                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag bearbeiten"))."/>&nbsp;&nbsp;</a>";
-                                print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."/></a></td>";
+                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag bearbeiten")).">&nbsp;&nbsp;</a>";
+                                print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."></a></td>";
                             }
                         }
                         print "</tr>";
@@ -727,9 +727,9 @@ class EditSettings {
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
                     <font size=-1><b><?=_("Vererbte Berechtigungen von Veranstaltungen und Einrichtungen f&uuml;r Ressourcen")?></b><br><br>
                     <?=_("Mitglieder von Veranstaltungen oder Einrichtungen erhalten folgende Rechte in Ressourcen, die diesen Veranstaltungen oder Einrichtungen geh&ouml;ren:")?><br><br>
-                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance_rooms" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "1") ? "checked" : "" ?>/><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br>
-                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance_rooms" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "2") ? "checked" : "" ?>/><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br>
-                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance_rooms" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "3") ? "checked" : "" ?>/><?=_("keine Rechte")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance_rooms" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "1") ? "checked" : "" ?>><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance_rooms" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "2") ? "checked" : "" ?>><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance_rooms" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "3") ? "checked" : "" ?>><?=_("keine Rechte")?><br>
                     </select>
                     <br>
                 </td>
@@ -740,9 +740,9 @@ class EditSettings {
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
                     <font size=-1><b><?=_("Vererbte Berechtigungen von Veranstaltungen und Einrichtungen f&uuml;r <i>R&auml;ume</i>")?></b><br><br>
                     <?=_("Mitglieder von Veranstaltungen oder Einrichtungen erhalten folgende Rechte in <i>R&auml;umen</i>, die diesen Veranstaltungen oder Einrichtungen geh&ouml;ren:")?><br><br>
-                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "1") ? "checked" : "" ?>/><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br>
-                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "2") ? "checked" : "" ?>/><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br>
-                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "3") ? "checked" : "" ?>/><?=_("keine Rechte")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "1") ? "checked" : "" ?>><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "2") ? "checked" : "" ?>><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="inheritance" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "3") ? "checked" : "" ?>><?=_("keine Rechte")?><br>
                     </select>
                     <br>
                 </td>

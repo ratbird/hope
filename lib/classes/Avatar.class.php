@@ -227,7 +227,7 @@ class Avatar {
       $result .= sprintf('%s="%s" ', $key, $value);
     }
 
-    return '<img ' . $result . '/>';
+    return '<img ' . $result . '>';
   }
 
 

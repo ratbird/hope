@@ -66,31 +66,31 @@ class RSSFeed {
         global $PHP_SELF, $more;
         $i = 1;
         if ($more == $this->class_id) echo "<A name=\"news_anchor\"></A>\n";
-        echo "<table WIDTH=\"100%\" BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\">\n";
+        echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
         foreach ($this->ausgabe->items as $v) {
             if (strlen(trim($v["title"]))>0) {
                 $desc = strip_tags(studip_utf8decode($v["description"] ? $v["description"] : $v['summary']));
                 if (strlen($desc) > 150) $desc = substr($desc, 0, 150) . "...";
                 if ($i > $this->max_items && $more != $this->class_id) {
-                    echo "<tr><td ALIGN=\"left\" VALIGN=\"TOP\" COLSPAN=\"2\"><A HREF=\"$PHP_SELF?more=".$this->class_id."#news_anchor\"><FONT SIZE=\"-1\"><I>mehr...</I></FONT></A></td></tr>\n";
+                    echo "<tr><td align=\"left\" valign=\"TOP\" colspan=\"2\"><A HREF=\"$PHP_SELF?more=".$this->class_id."#news_anchor\"><FONT SIZE=\"-1\"><I>mehr...</I></FONT></A></td></tr>\n";
                     break;
                 }
                 echo "<tr>
-                <td WIDTH=\"1\" ALIGN=\"left\">
+                <td width=\"1\" align=\"left\">
                 <IMG SRC=\"". $GLOBALS['ASSETS_URL'] . "images/".(!$this->internal_feed ? 'link_extern.gif' : 'link_intern.gif" hspace="2')."\">
                 </td>
-                <td ALIGN=\"left\" VALIGN=\"TOP\">
+                <td align=\"left\" valign=\"TOP\">
                 <A HREF=\"".TransformInternalLinks($v["link"])."\" ".(!$this->internal_feed  ? "TARGET=\"_blank\"" : "") . " TITLE=\"".htmlReady($desc)."\">
                 <FONT SIZE=\"-1\">".htmlReady(studip_utf8decode($v["title"]))."</FONT>
                 </A></td></tr>\n";
                 if ($v['enclosure_url']) {
-                    echo "<tr><td WIDTH=\"1\" ALIGN=\"left\" VALIGN=\"TOP\">&nbsp;</td>
-                    <td ALIGN=\"left\" VALIGN=\"TOP\"><a href=\"{$v['enclosure_url']}\" TARGET=\"_blank\"><img src=\"". $GLOBALS['ASSETS_URL'] . "images/podcast_icon.gif\" border=\"0\" align=\"absmiddle\"></a>
+                    echo "<tr><td width=\"1\" align=\"left\" valign=\"TOP\">&nbsp;</td>
+                    <td align=\"left\" valign=\"TOP\"><a href=\"{$v['enclosure_url']}\" TARGET=\"_blank\"><img src=\"". $GLOBALS['ASSETS_URL'] . "images/podcast_icon.gif\" border=\"0\" align=\"absmiddle\"></a>
                     <FONT SIZE=\"-2\">".htmlReady('('.$v['enclosure_type'] . ' - ' . floor($v['enclosure_length']/1024) . ' kb)')."</FONT>
                     </td></tr>\n";
                 }
                 if ($desc ) {
-                    echo "<tr><td WIDTH=\"1\" ALIGN=\"left\" VALIGN=\"TOP\">&nbsp;</td><td ALIGN=\"left\" VALIGN=\"TOP\"><FONT SIZE=\"-2\">".htmlReady($desc)."</FONT></td></tr>\n";
+                    echo "<tr><td width=\"1\" align=\"left\" valign=\"TOP\">&nbsp;</td><td align=\"left\" valign=\"TOP\"><FONT SIZE=\"-2\">".htmlReady($desc)."</FONT></td></tr>\n";
                 }
                 $i++;
             }

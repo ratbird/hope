@@ -1860,7 +1860,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         print "<img ".tooltip(_("Dieser Ordner ist nicht zugänglich, da ein übergeordneter Ordner gesperrt ist."))." src=\"".$GLOBALS['ASSETS_URL']."images/lock.gif\">";
     // Wenn es ein Hausaufgabenordner ist
     if ($folder_tree->isExerciseFolder($folder_id))
-        print "<img ".tooltip(_("Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden."))." src=\"".$GLOBALS['ASSETS_URL']."images/eigene2.gif\" WIDTH=\"18\" HEIGTH=\"18\">";
+        print "<img ".tooltip(_("Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden."))." src=\"".$GLOBALS['ASSETS_URL']."images/eigene2.gif\" width=\"18\" HEIGTH=\"18\">";
     //Pfeile, wenn Datei bewegt werden soll
     if ($move && ($folder_id != $move) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
         print "</a><span class=\"move_arrows\"><a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=0></a></span>";

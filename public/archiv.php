@@ -426,7 +426,7 @@ if ($archiv_data["perform_search"]) {
         echo "</font></b></blockquote>";
 
 
-        echo "<br><br><table class=\"blank\"  WIDTH=99% align=center cellspacing=0 border=0>\n";
+        echo "<br><br><table class=\"blank\"  width=99% align=center cellspacing=0 border=0>\n";
     echo "<tr height=28><td  width=\"1%\" class=\"steel\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20>&nbsp; </td>\n";
         echo "<td  width=\"29%\" class=\"steel\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=Name") ."\">" . _("Name") . "</a></b></td>\n";
         echo "<td  width=\"20%\" class=\"steel\" align=center valign=bottom><b><a href=\"". URLHelper::getLink("?sortby=dozenten") ."\">" . _("DozentIn") . "</a></b></td>\n";
@@ -451,7 +451,7 @@ if ($archiv_data["perform_search"]) {
                 $c++;
             }
 
-            echo "<tr><td class=\"$class\" WIDTH=\"1%\" nowrap>&nbsp;";
+            echo "<tr><td class=\"$class\" width=\"1%\" nowrap>&nbsp;";
 
             // schon aufgeklappt?
             if ($archiv_data["open"]==$db->f('seminar_id')) {

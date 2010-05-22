@@ -782,7 +782,7 @@ if (isset($_GET['details']) || $showform ) {
                                     echo "  </td>\n";
                                     echo "</tr>\n";
                     if ($db->f("locked")==1)
-                                            echo "<tr><td class=\"steel1\" COLSPAN=\"3\" ALIGN=\"center\"><FONT SIZE=\"-2\">"._("Gesperrt von:")." ".htmlReady(get_fullname($db->f("locked_by")))." (<A HREF=\"about.php?username=".get_username($db->f("locked_by"))."\">".get_username($db->f("locked_by"))."</A>)</FONT></td></tr>\n";
+                                            echo "<tr><td class=\"steel1\" colspan=\"3\" align=\"center\"><FONT SIZE=\"-2\">"._("Gesperrt von:")." ".htmlReady(get_fullname($db->f("locked_by")))." (<A HREF=\"about.php?username=".get_username($db->f("locked_by"))."\">".get_username($db->f("locked_by"))."</A>)</FONT></td></tr>\n";
                 }
                 $userEntries = DataFieldEntry::getDataFieldEntries($db->f('user_id'));
                 foreach ($userEntries as $entry) {

@@ -110,7 +110,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 <body>
 <table width="100%" border=0 cellpadding=2 cellspacing=0>
 <tr>
-    <td class="blank" valign="top"><br />&nbsp;<font size="-1"><? echo $intro_text ?></font><br /><br />
+    <td class="blank" valign="top"><br>&nbsp;<font size="-1"><? echo $intro_text ?></font><br><br>
 <?
 $sem_browse_obj->print_result();
 ?>

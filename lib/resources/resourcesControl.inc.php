@@ -211,10 +211,10 @@ function check_opener(obj){
                         if ($page_intro) {
                         ?>
                         <tr>
-                            <td class="blank"><? (!$infobox) ? print "<br />":"" ?>
+                            <td class="blank"><? (!$infobox) ? print "<br>":"" ?>
                                 <table width="99%" align="center" border="0" cellpadding="2" cellspacing ="0">
                                     <tr><td>
-                                        <font size="-1"><? echo $page_intro ?></font><br />&nbsp;
+                                        <font size="-1"><? echo $page_intro ?></font><br>&nbsp;
                                     </td></tr>
                                 </table>
                             </td>
@@ -250,7 +250,7 @@ if ($view == "resources"){
         foreach ($roots as $a) {
             $thread->showThreadLevel($a);
         }
-        echo "<br />&nbsp;";
+        echo "<br>&nbsp;";
     } else {
         echo "</td></tr>";
         $msg->displayMsg(12);

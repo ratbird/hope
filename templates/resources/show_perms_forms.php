@@ -136,7 +136,7 @@
         <td class="<? echo $cssSw->getClass() ?>" colspan="3">
             <?=_("Blockierung:")?><br>
             <?=_("Diesen Raum bei globaler Blockierung gegen eine Bearbeitung durch lokale Administratoren und andere Personen sperren:")?>
-            <input type="CHECKBOX" name="change_lockable" <?=($resObject->isLockable()) ? "checked" : "" ?> /> <br />
+            <input type="CHECKBOX" name="change_lockable" <?=($resObject->isLockable()) ? "checked" : "" ?> /> <br>
             <?print _("<b>aktueller Zustand</b>:")." "; print ($resObject->isLockable()) ? _("Raum <u>kann</u> blockiert werden") : _("Raum kann <u>nicht</u> blockiert werden") ?>
         </td>
     </tr>

@@ -87,7 +87,7 @@ if ($SessSemName[1]) {
             '</a>'); 
         ?>
         </blockquote>
-        <br />
+        <br>
         </td></tr>
         </table>
     <?php

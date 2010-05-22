@@ -287,7 +287,7 @@ function aux_enter_data() {
         }
     }
 
-    my_info( _("Bitte füllen Sie die unten aufgeführten Felder - soweit möglich und zutreffend - aus.").'<br/>'
+    my_info( _("Bitte füllen Sie die unten aufgeführten Felder - soweit möglich und zutreffend - aus.").'<br>'
         ._("Sie können Ihre Daten noch nachträglich ändern, bis die Liste geschlossen wird."), 'blank', '3', true);
     echo $ct->closeCell();
     echo $ct->closeRow();
@@ -318,7 +318,7 @@ function aux_enter_data() {
     }
 
     echo $zt->openRow();
-    echo $zt->cell('<br/><input type="image" '.makebutton('uebernehmen', 'src').'><br/><br/>', array('colspan' => '20', 'align' => 'center'));
+    echo $zt->cell('<br><input type="image" '.makebutton('uebernehmen', 'src').'><br><br>', array('colspan' => '20', 'align' => 'center'));
     echo $zt->close();
 }
 
@@ -339,7 +339,7 @@ switch ($_REQUEST['display_type']) {
     default:
 
         echo $ct->openRow(array('class' => 'blank'));
-        echo $ct->cell('<br/>', array('colspan' => '20'));
+        echo $ct->cell('<br>', array('colspan' => '20'));
         echo $ct->closeRow();
 
         echo $ct->openRow();
@@ -355,7 +355,7 @@ switch ($_REQUEST['display_type']) {
         echo $ct->closeRow();
 
         echo $ct->openRow(array('class' => 'blank'));
-        echo $ct->cell('<br/>', array('colspan' => '20'));
+        echo $ct->cell('<br>', array('colspan' => '20'));
         echo $ct->closeRow();
 
         echo $ct->close();

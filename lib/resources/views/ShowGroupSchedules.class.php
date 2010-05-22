@@ -71,7 +71,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
                 <font size="-1">
                 <?=SemesterData::GetSemesterSelector(array('name' => 'sem_schedule_choose', 'onChange' => 'document.schedule_form.submit()'), $this->semester['semester_id'],'semester_id',false)?>
-                <input type="IMAGE" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?> /><br />
+                <input type="IMAGE" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?> /><br>
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="top">
@@ -107,7 +107,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="middle"><font size="-1">
-                    <input type="IMAGE" name="group_schedule_start" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0  /><br />
+                    <input type="IMAGE" name="group_schedule_start" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0  /><br>
                 </font>
                 </td>
             </tr>
@@ -236,7 +236,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 echo '<br>' . htmlReady($this->semester['name']) . ' - ' . date ("d.m.Y", $start_time), " - ", date ("d.m.Y", $end_time);
                 ?>
                 </b>
-                <br />
+                <br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
                     <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&next_day=1"><img  valign="middle"  src="<?= $GLOBALS['ASSETS_URL'] ?>images/calendar_next.gif" <? echo tooltip (_("Nächsten Tag anzeigen")) ?>border="0" /></a>
@@ -304,7 +304,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 $num = 1;
                 foreach($single_assigns as $event) {
                     echo "<a href=\"$PHP_SELF?show_object=".$event->getResourceId()."&quick_view=".$view."&quick_view_mode=".$quick_view_mode."&edit_assign_object=".$event->getAssignId()."\">".makeButton("eigenschaften")."</a>";
-                    printf ("&nbsp; <font size=-1>"._("%s ist von <b>%s</b> bis <b>%s</b>, belegt von <b>%s</b>")."</font><br />",'EB'.$num++.': ' . htmlReady(getResourceObjectName($event->getResourceId())), strftime("%A, %d.%m.%Y %H:%M", $event->getBegin()), strftime("%A, %d.%m.%Y %H:%M", $event->getEnd()), $event->getName());
+                    printf ("&nbsp; <font size=-1>"._("%s ist von <b>%s</b> bis <b>%s</b>, belegt von <b>%s</b>")."</font><br>",'EB'.$num++.': ' . htmlReady(getResourceObjectName($event->getResourceId())), strftime("%A, %d.%m.%Y %H:%M", $event->getBegin()), strftime("%A, %d.%m.%Y %H:%M", $event->getEnd()), $event->getName());
                 }
                 ?>
                 </tr>
@@ -350,7 +350,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <?
                 $num = 1;
                 foreach($single_assigns as $event) {
-                    printf ("<font size=-1>"._("%s ist von <b>%s</b> bis <b>%s</b>, belegt von <b>%s</b>")."</font><br />",'EB'.$num++.': ' . htmlReady(getResourceObjectName($event->getResourceId())), strftime("%A, %d.%m.%Y %H:%M", $event->getBegin()), strftime("%A, %d.%m.%Y %H:%M", $event->getEnd()), $event->getName());
+                    printf ("<font size=-1>"._("%s ist von <b>%s</b> bis <b>%s</b>, belegt von <b>%s</b>")."</font><br>",'EB'.$num++.': ' . htmlReady(getResourceObjectName($event->getResourceId())), strftime("%A, %d.%m.%Y %H:%M", $event->getBegin()), strftime("%A, %d.%m.%Y %H:%M", $event->getEnd()), $event->getName());
                 }
                 ?>
                 </td>

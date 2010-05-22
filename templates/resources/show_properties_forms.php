@@ -173,7 +173,7 @@
         <td class="<?= $cssSw->getClass() ?>">
             <b><?=_("gleichzeitige Belegung")?></b><br>
             <br>
-            <?=_("Die Ressource darf mehrfach zur gleichen Zeit belegt werden - <br />&Uuml;berschneidungschecks finden <u>nicht</u> statt!")?>
+            <?=_("Die Ressource darf mehrfach zur gleichen Zeit belegt werden - <br>&Uuml;berschneidungschecks finden <u>nicht</u> statt!")?>
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="40%">
             <input type="CHECKBOX" name="change_multiple_assign" <?=($resObject->getMultipleAssign()) ? "checked" : "" ?>><br>

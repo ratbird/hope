@@ -167,7 +167,7 @@ class ResourcesBrowse {
         <tr>
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> >
                 <font size="-1"><?=_("gefundene Ressourcen sollen zu folgender Zeit <u>nicht</u> belegt sein:")?></font>
-            <br />
+            <br>
             </td>
         </tr>
         <tr>
@@ -280,7 +280,7 @@ class ResourcesBrowse {
         <tr>
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> >
                 <font size="-1"><?=_("folgende Eigenschaften soll die Ressource besitzen (leer bedeutet egal):")?></font>
-            <br />
+            <br>
             </td>
         </tr>
         <tr>
@@ -302,7 +302,7 @@ class ResourcesBrowse {
                             print "<tr>\n";
                             print "<td colspan=\"2\"> \n";
                             if ($k)
-                                print "<hr /><br />";
+                                print "<hr /><br>";
                             printf ("<font size=-1><b>%s:</b></font>", htmlReady($this->db->f("name")));
                             print "</td>\n";
                             print "</tr> \n";
@@ -413,7 +413,7 @@ class ResourcesBrowse {
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> align="left" colspan="2">
                 <?
                 if ((!$this->db->num_rows()) || (!$sublevels)) {
-                    echo "<br /><font size=-1><img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/ausruf_small2.gif\" />&nbsp; <b>"._("Auf dieser Ebene existieren keine weiteren Unterebenen")."</b><br />&nbsp; </font>";
+                    echo "<br><font size=-1><img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/ausruf_small2.gif\" />&nbsp; <b>"._("Auf dieser Ebene existieren keine weiteren Unterebenen")."</b><br>&nbsp; </font>";
                 } else {
                 ?>
                 <table width="90%" cellpadding=5 cellspacing=0 border=0 align="center">
@@ -428,7 +428,7 @@ class ResourcesBrowse {
                             print "</td><td width=\"40%\" valign=\"top\">";
                             $switched = TRUE;
                         }
-                        printf ("<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=%s&open_level=%s\"><font size=\"-1\"><b>%s</b></font></a><br />", $view_mode, $this->db->f("resource_id"), htmlReady($this->db->f("name")));
+                        printf ("<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=%s&open_level=%s\"><font size=\"-1\"><b>%s</b></font></a><br>", $view_mode, $this->db->f("resource_id"), htmlReady($this->db->f("name")));
                         $i++;
                     }
                     print "</table>";
@@ -497,7 +497,7 @@ class ResourcesBrowse {
                 ?>
             </table>
         </form>
-            <br />
+            <br>
         <?
     }
 }

@@ -42,14 +42,14 @@ if (!$GLOBALS['ENABLE_SELF_REGISTRATION']){
     parse_window ("error§" . _("In dieser Installation ist die M&ouml;glichkeit zur Registrierung ausgeschaltet."), "§",
                 _("Registrierung ausgeschaltet"),
                 '<div style="margin:10px">'.$UNI_LOGIN_ADD . '</div>'
-                ."<a href=\"index.php\"><b>&nbsp;" . sprintf(_("Hier%s geht es zur Startseite."), "</b></a>") . "<br />&nbsp;");
+                ."<a href=\"index.php\"><b>&nbsp;" . sprintf(_("Hier%s geht es zur Startseite."), "</b></a>") . "<br>&nbsp;");
 page_close();
 die;
 }
 if ($auth->is_authenticated() && $user->id != "nobody") {
     parse_window ("error§" . _("Sie sind schon als BenutzerIn am System angemeldet!"), "§",
                 _("Bereits angemeldet"),
-                "<a href=\"index.php\"><b>&nbsp;" . sprintf(_("Hier%s geht es zur Startseite."), "</b></a>") . "<br />&nbsp;");
+                "<a href=\"index.php\"><b>&nbsp;" . sprintf(_("Hier%s geht es zur Startseite."), "</b></a>") . "<br>&nbsp;");
 } else {
     $auth->logout();
 ?>

@@ -39,14 +39,14 @@ define('SIMPLETEST_WEBUNIT_HEAD', <<<EOS
 <body>
 <div id="wait">
 	<h1>&nbsp;Running %s&nbsp;</h1>
-	Please wait...<br />
-	<img src="%swait.gif" border="0"><br />&nbsp;
+	Please wait...<br>
+	<img src="%swait.gif" border="0"><br>&nbsp;
 </div>
 <script type="text/javascript">
 wait_start();
 </script>
 <div id="webunit">
-	<div id="run"></div><br />
+	<div id="run"></div><br>
 	<div id="tabs">
 		<div id="visible_tab">visible tab content</div>
 		&nbsp;&nbsp;<span id="failtab" class="activetab">&nbsp;&nbsp;<a href="javascript:activate_tab('fail');">Fail</a>&nbsp;&nbsp;</span>
@@ -233,7 +233,7 @@ define('SIMPLETEST_WEBUNIT_CSS', '/* this space reseved for future use */');
              $breadcrumb = $this->getTestList();
              array_shift($breadcrumb);
              $msg .= implode("-&gt;", $breadcrumb);
-             $msg .= "-&gt;" . htmlentities($message) . "<br />";
+             $msg .= "-&gt;" . htmlentities($message) . "<br>";
              echo "add_fail('$msg');\n";
          }
 
@@ -249,7 +249,7 @@ define('SIMPLETEST_WEBUNIT_CSS', '/* this space reseved for future use */');
             $breadcrumb = $this->getTestList();
             array_shift($breadcrumb);
             $msg .= implode("-&gt;", $breadcrumb);
-            $msg .= "-&gt;<strong>" . htmlentities($message) . "</strong><br />";
+            $msg .= "-&gt;<strong>" . htmlentities($message) . "</strong><br>";
             echo "add_fail('$msg');\n";
         }
  

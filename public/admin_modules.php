@@ -159,7 +159,7 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
                     ($admin_modules_data["conflicts"][$key])) {
 
                     $msg.="info§".$amodules->registered_modules[$key]["msg_warning"];
-                    $msg.="<br /><a href=\"". URLHelper::getLink("?delete_$key=TRUE&retry=TRUE") ."\">" . makeButton("ja2", "img") . "</a>&nbsp; \n";
+                    $msg.="<br><a href=\"". URLHelper::getLink("?delete_$key=TRUE&retry=TRUE") ."\">" . makeButton("ja2", "img") . "</a>&nbsp; \n";
                     $msg.="<a href=\"". URLHelper::getLink("?cancel_$key=TRUE&retry=TRUE") ."\">" . makeButton("nein", "img") . "</a>\n§";
                 } else
                     unset($admin_modules_data["conflicts"][$key]);
@@ -247,14 +247,14 @@ if ($admin_modules_data["range_id"])
                 <?parse_msg($msg);?>
                 </table>
             <? } ?>
-            <br />
+            <br>
             <blockquote>
-            <b><?=_("Module konfigurieren") ?></b><br /><br />
-            <?=_("Sie k&ouml;nnen hier einzelne Module nachtr&auml;glich aktivieren oder deaktivieren.")?> <br />
-            <?=_("Mit &raquo;zur&uuml;cksetzten&laquo; k&ouml;nnen Sie die Ausgangs-Modulkonfiguration wieder herstellen.")?> <br /><br />
+            <b><?=_("Module konfigurieren") ?></b><br><br>
+            <?=_("Sie k&ouml;nnen hier einzelne Module nachtr&auml;glich aktivieren oder deaktivieren.")?> <br>
+            <?=_("Mit &raquo;zur&uuml;cksetzten&laquo; k&ouml;nnen Sie die Ausgangs-Modulkonfiguration wieder herstellen.")?> <br><br>
             </blockquote>
         </td>
-        <td class="blank" align="right" valign="top"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="5" /><br />
+        <td class="blank" align="right" valign="top"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="5" /><br>
             <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/infoboxes/modules.jpg" border="0"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="10" />
         </td>
     </tr>
@@ -267,7 +267,7 @@ if ($admin_modules_data["range_id"])
                 <input type="IMAGE" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> border=0 value="uebernehmen">
                 &nbsp;<input type="IMAGE" name="default" <?=makeButton("zuruecksetzen", "src")?> border=0 value="uebernehmen">
                 <? if ($admin_modules_data["orig_bin"] != $admin_modules_data["changed_bin"]) {
-                    ?> <br /><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" align="absmiddle" />&nbsp;<font size=-1><?=_("Diese Daten sind noch nicht gespeichert.")?></font><br /> <?
+                    ?> <br><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" align="absmiddle" />&nbsp;<font size=-1><?=_("Diese Daten sind noch nicht gespeichert.")?></font><br> <?
                     }
                 ?>
             </td>
@@ -286,13 +286,13 @@ if ($admin_modules_data["range_id"])
                 ?>
             <tr><? $cssSw->switchClass() ?>
                 <td class="<?= $cssSw->getClass() ?>"  width="15%" align="left">
-                    <font size=-1><b><?=$val["name"]?></b><br /></font>
+                    <font size=-1><b><?=$val["name"]?></b><br></font>
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="15%">
                     <input type="RADIO" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="TRUE" <?=($amodules->isBit($admin_modules_data["changed_bin"], $val["id"])) ? "checked" : "" ?>>
                     <font size=-1><?=_("an")?></font>
                     <input type="RADIO" <?=($pre_check ? 'disabled' : '')?> name="<?=$key?>_value" value="FALSE" <?=($amodules->isBit($admin_modules_data["changed_bin"], $val["id"])) ? "" : "checked" ?>>
-                    <font size=-1><?=_("aus")?><br /></font>
+                    <font size=-1><?=_("aus")?><br></font>
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="70%">
                     <font size=-1><?
@@ -317,14 +317,14 @@ if ($admin_modules_data["range_id"])
             ?>
             <tr><? $cssSw->switchClass() ?>
                 <td class="<?= $cssSw->getClass() ?>"  width="15%" align="left">
-                    <font size=-1><b><?=$plugin->getPluginname()?></b><br /></font>
+                    <font size=-1><b><?=$plugin->getPluginname()?></b><br></font>
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="15%">
                     <!-- mark old state -->
                     <input type="RADIO" name="plugin_<?=$plugin->getPluginId()?>" value="TRUE" <?= $plugin_activated ? "checked" : "" ?>>
                     <font size=-1><?=_("an")?></font>
                     <input type="RADIO" name="plugin_<?=$plugin->getPluginId()?>" value="FALSE" <?= $plugin_activated ? "" : "checked" ?>>
-                    <font size=-1><?=_("aus")?><br /></font>
+                    <font size=-1><?=_("aus")?><br></font>
                 </td>
                 <td class="<?= $cssSw->getClass() ?>" width="70%">
                     <font size="-1">

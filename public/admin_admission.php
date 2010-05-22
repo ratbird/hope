@@ -624,7 +624,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
         $log_message = get_readable_admission_difference( $admin_admission_data_original, $admin_admission_data );
 
         // LOGGING
-        log_event('SEM_CHANGED_ACCESS', $admin_admission_data['sem_id'], NULL, implode("<br/>", $log_message) );
+        log_event('SEM_CHANGED_ACCESS', $admin_admission_data['sem_id'], NULL, implode("<br>", $log_message) );
 
 
         $data_mapping['admission_turnout'] = 'admission_turnout';

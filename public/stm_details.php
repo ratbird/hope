@@ -117,14 +117,14 @@ if (!$stm_obj->is_new){
     }
     ?>
     <tr><td class="blank">
-        &nbsp; <br />
+        &nbsp; <br>
         <table align="center" width="99%" border="0" cellpadding="2" cellspacing="0">
         <tr>
             <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp; <img src="<?=$GLOBALS['ASSETS_URL']?>images/blank.gif" width="25" height="10" border="0">
             </td>
             <td class="<? echo $cssSw->getClass() ?>" valign="top" colspan=2 valign="top" width="70%">
                 <?
-                printf ("<b>%s</b><br /> ",( $stm_obj->getValue('id_number') ? htmlReady($stm_obj->getValue('id_number')).': ' : '' ) .htmlReady($stm_obj->getValue('title')));
+                printf ("<b>%s</b><br> ",( $stm_obj->getValue('id_number') ? htmlReady($stm_obj->getValue('id_number')).': ' : '' ) .htmlReady($stm_obj->getValue('title')));
                 printf ("<font size=-1>%s</font>",htmlReady($stm_obj->getValue('sub_title')));
                 ?>
             </td>
@@ -211,12 +211,12 @@ print_infobox ($infobox, "infoboxes/contract.jpg");
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" width="45%">
                 <?
-                 printf ("<font size=-1><b>" . _("Modulverantwortlicher:") . "</b></font><br /><font size=-1><a href=\"about.php?username=%s\">%s</a></font>",get_username($stm_obj->getValue('responsible')), htmlReady(get_fullname($stm_obj->getValue('responsible'))));
+                 printf ("<font size=-1><b>" . _("Modulverantwortlicher:") . "</b></font><br><font size=-1><a href=\"about.php?username=%s\">%s</a></font>",get_username($stm_obj->getValue('responsible')), htmlReady(get_fullname($stm_obj->getValue('responsible'))));
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" width="25%">
                 <?
-                printf ("<font size=-1><b>" . _("Semester:") . "</b></font><br /><font size=-1>%s</font>",htmlReady($stm_obj->getValue('sem_name')));
+                printf ("<font size=-1><b>" . _("Semester:") . "</b></font><br><font size=-1>%s</font>",htmlReady($stm_obj->getValue('sem_name')));
                 ?>
                 </td>
             </tr>
@@ -225,12 +225,12 @@ print_infobox ($infobox, "infoboxes/contract.jpg");
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" width="45%">
                 <?
-                printf ("<font size=-1><b>" . _("Leistungspunkte:") . "</b></font><br /><font size=-1>%s</font>",htmlReady($stm_obj->getValue('credits')));
+                printf ("<font size=-1><b>" . _("Leistungspunkte:") . "</b></font><br><font size=-1>%s</font>",htmlReady($stm_obj->getValue('credits')));
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" width="25%">
                 <?
-                printf ("<font size=-1><b>" . _("Stud. Arbeitsaufwand:") . "</b></font><br /><font size=-1>%s</font>", htmlReady($stm_obj->getValue('workload')));
+                printf ("<font size=-1><b>" . _("Stud. Arbeitsaufwand:") . "</b></font><br><font size=-1>%s</font>", htmlReady($stm_obj->getValue('workload')));
                 ?>
                 </td>
             </tr>
@@ -243,12 +243,12 @@ print_infobox ($infobox, "infoboxes/contract.jpg");
                 if(is_array($homes)){
                     $home = join("\n", $homes);
                 } else $home = $stm_obj->getValue('homeinst_name');
-                printf ("<font size=-1><b>" . _("Anbietende Einrichtung:") . "</b></font><br /><font size=-1><a href=\"institut_main.php?auswahl=%s\">%s</a></font>",$stm_obj->getValue("homeinst"), htmlReady($home,1,1));
+                printf ("<font size=-1><b>" . _("Anbietende Einrichtung:") . "</b></font><br><font size=-1><a href=\"institut_main.php?auswahl=%s\">%s</a></font>",$stm_obj->getValue("homeinst"), htmlReady($home,1,1));
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top" width="25%">
                 <?
-                printf ("<font size=-1><b>" . _("Dauer:") . "</b></font><br /><font size=-1>%s</font>", htmlReady($stm_obj->getValue('duration')));
+                printf ("<font size=-1><b>" . _("Dauer:") . "</b></font><br><font size=-1>%s</font>", htmlReady($stm_obj->getValue('duration')));
                 ?>
                 </td>
             </tr>
@@ -257,7 +257,7 @@ print_infobox ($infobox, "infoboxes/contract.jpg");
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan="2" valign="top">
                 <?
-                 printf ("<font size=-1><b>" . _("Lernziele:") . "</b></font><br /><font size=-1>%s</font>", ($stm_obj->getValue('aims') ? formatReady($stm_obj->getValue('aims')) : _("n.a.")));
+                 printf ("<font size=-1><b>" . _("Lernziele:") . "</b></font><br><font size=-1>%s</font>", ($stm_obj->getValue('aims') ? formatReady($stm_obj->getValue('aims')) : _("n.a.")));
                 ?>
                 </td>
 
@@ -267,7 +267,7 @@ print_infobox ($infobox, "infoboxes/contract.jpg");
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan="2" valign="top">
                 <?
-                 printf ("<font size=-1><b>" . _("Inhalte:") . "</b></font><br /><font size=-1>%s</font>", ($stm_obj->getValue('topics') ? formatReady($stm_obj->getValue('topics')) : _("n.a.")));
+                 printf ("<font size=-1><b>" . _("Inhalte:") . "</b></font><br><font size=-1>%s</font>", ($stm_obj->getValue('topics') ? formatReady($stm_obj->getValue('topics')) : _("n.a.")));
                 ?>
                 </td>
             </tr>
@@ -277,7 +277,7 @@ print_infobox ($infobox, "infoboxes/contract.jpg");
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp; <img src="<?=$GLOBALS['ASSETS_URL']?>images/blank.gif" width="25" height="10" border="0">
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2  valign="top">
-                <br/>
+                <br>
                 <table width="100%" border=0 cellpadding=2 cellspacing=2>
                 <tr>
                 <th><font size=-1><?=_("Studiengang")?></font></th>
@@ -303,7 +303,7 @@ print_infobox ($infobox, "infoboxes/contract.jpg");
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp; <img src="<?=$GLOBALS['ASSETS_URL']?>images/blank.gif" width="25" height="10" border="0">
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2  valign="top">
-                <br/>
+                <br>
                 <table  width="100%" border=0 cellpadding=2 cellspacing=2>
                 <tr>
                 <th colspan="2"><font size=-1><?=_("Lehr- und Lernform")?></font></th>
@@ -360,7 +360,7 @@ print_infobox ($infobox, "infoboxes/contract.jpg");
                 </td>
         </tr>
     </table>
-    <br />&nbsp;
+    <br>&nbsp;
 </td>
 </tr>
 </table>

@@ -44,7 +44,7 @@ require_once('lib/archiv.inc.php');
 print (dump_sem($SessSemName[1], true));
 
 echo "<table width=100% border=0 cellpadding=2 cellspacing=0>";
-echo "<tr><td><i><font size=-1>" . _("Stand:") . " ".date("d.m.y",time()).", ".date("G:i", time())." Uhr.</font></i></td><td align=\"right\"><font size=-2><img src=\"".$GLOBALS['ASSETS_URL']."images/logo2b.gif\"><br />&copy; ".date("Y", time())." v.$SOFTWARE_VERSION&nbsp; &nbsp; </font></td></tr>";
+echo "<tr><td><i><font size=-1>" . _("Stand:") . " ".date("d.m.y",time()).", ".date("G:i", time())." Uhr.</font></i></td><td align=\"right\"><font size=-2><img src=\"".$GLOBALS['ASSETS_URL']."images/logo2b.gif\"><br>&copy; ".date("Y", time())." v.$SOFTWARE_VERSION&nbsp; &nbsp; </font></td></tr>";
 echo "</table>\n";
 
 include ('lib/include/html_end.inc.php');

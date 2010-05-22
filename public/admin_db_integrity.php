@@ -73,7 +73,7 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
         $result = $plugin_obj->doCheck($_REQUEST['checkid']);
         $anzahl = $result->num_rows();
         $msg = "info§" . sprintf(_("Sie beabsichtigen %s Datens&auml;tze der Tabelle <b>%s</b> zu l&ouml;schen."), $anzahl, $plugin_obj->getCheckDetailTable($_REQUEST['checkid'])) . "<br>"
-        ._("Dieser Schritt kann <u>nicht</u> r&uuml;ckg&auml;ngig gemacht werden! Sind sie sicher?") . " <br />\n"
+        ._("Dieser Schritt kann <u>nicht</u> r&uuml;ckg&auml;ngig gemacht werden! Sind sie sicher?") . " <br>\n"
         ."<br><a href=\"$PHP_SELF?plugin={$_REQUEST['plugin']}&cmd=delete&checkid={$_REQUEST['checkid']}\">" . makeButton("ja2", "img") . "</a>&nbsp;"
         ."<a href=\"$PHP_SELF\">" . makeButton("nein", "img") . "</a>\n";
         ?><table border="0" width="80%" cellpadding="2" cellspacing="0" class="steel1">
@@ -172,7 +172,7 @@ if(!$_REQUEST['plugin']) {
     }
     ?>
     <tr><td class="blank" colspan="4">&nbsp; </td></tr>
-    <tr><td class="blank" colspan="4"><b><?=_("Folgende Bereiche der Datenbank k&ouml;nnen gepr&uuml;ft werden:")?></b><br />&nbsp; </td></tr>
+    <tr><td class="blank" colspan="4"><b><?=_("Folgende Bereiche der Datenbank k&ouml;nnen gepr&uuml;ft werden:")?></b><br>&nbsp; </td></tr>
     <tr><th width="20%"><?=_("Bereich")?></th><th width="60%"><?=_("Beschreibung")?></th><th width="10%"><?=_("Anzahl")?></th><th width="10%"><?=_("Aktion")?></th></tr>
     <?
     for($i=0; $i < count($_integrity_plugins); ++$i) {

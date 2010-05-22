@@ -179,7 +179,7 @@ process_news_commands($institut_main_data);
         </td>
         </tr>
     </table>
-<br />
+<br>
 <?php
 
 // Anzeige von News

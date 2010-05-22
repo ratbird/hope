@@ -129,7 +129,7 @@ if ($new_msgs[0] OR $cmd)  print ("self.focus();\n");
 <tr>
     <td class="topic" colspan=2><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/nutzer.gif" border="0" align="texttop"><b>&nbsp;Stud.IP-Messenger (<?=$auth->auth["uname"]?>)</b></td>
 </tr>
-<tr><td class="blank" width="50%" valign="top"><br /><table width="100%" border=0 cellpadding=1 cellspacing=0 valign="top">
+<tr><td class="blank" width="50%" valign="top"><br><table width="100%" border=0 cellpadding=1 cellspacing=0 valign="top">
 <?php
 if ($auth->auth["uid"] != "nobody"){
     $c=0;
@@ -169,9 +169,9 @@ if ($auth->auth["uid"] != "nobody"){
         print (_("Keine alten Nachrichten") . "<br>");
     
     if ($new_msg) {
-        printf ("<br /><b>"._("%s neue Nachrichten:") . "</b><br />", $new_msg);
+        printf ("<br><b>"._("%s neue Nachrichten:") . "</b><br>", $new_msg);
         foreach ($new_msgs as $val)
-                print "<br />".$val;
+                print "<br>".$val;
     }
     
     ?>

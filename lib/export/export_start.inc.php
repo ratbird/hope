@@ -51,7 +51,7 @@ $export_pagename = _("Datenexport - Startseite");
 
     $export_pagecontent .= "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
 
-    $export_pagecontent .="<br><b><font size=\"-1\">". _("Bitte w&auml;hlen Sie eine Einrichtung: ") .  "</font></b><br /><select name=\"range_id\">";
+    $export_pagecontent .="<br><b><font size=\"-1\">". _("Bitte w&auml;hlen Sie eine Einrichtung: ") .  "</font></b><br><select name=\"range_id\">";
 
 /*  if ($auth->auth['perm'] == "root")
     {
@@ -104,7 +104,7 @@ $export_pagename = _("Datenexport - Startseite");
         $export_pagecontent .= "<option style=\"font-weight:bold;\" value=\"root\">Alle Einrichtungen";
     $export_pagecontent .= "</select><br><br>";
 
-    $export_pagecontent .= "<b><font size=\"-1\">"._("Art der auszugebenden Daten: ") .  "</font></b><br /><select name=\"ex_type\">";
+    $export_pagecontent .= "<b><font size=\"-1\">"._("Art der auszugebenden Daten: ") .  "</font></b><br><select name=\"ex_type\">";
 
     $export_pagecontent .= "<option";
     if ($ex_type=="veranstaltung")
@@ -123,7 +123,7 @@ $export_pagename = _("Datenexport - Startseite");
 
     $export_pagecontent .= "</select><br><br><br><br>";
 
-    $export_pagecontent .="<b><font size=\"-1\">". _("Aus welchem Semester sollen die Daten exportiert werden (f&uuml;r Veranstaltungsexport): ") .  "</font></b><br /><select name=\"ex_sem\">";
+    $export_pagecontent .="<b><font size=\"-1\">". _("Aus welchem Semester sollen die Daten exportiert werden (f&uuml;r Veranstaltungsexport): ") .  "</font></b><br><select name=\"ex_sem\">";
     $export_pagecontent .= "<option value=\"all\">" . _("Alle Semester") . "</option>";
     $all_semester = $semester->getAllSemesterData();
     reset($all_semester);
@@ -137,7 +137,7 @@ $export_pagename = _("Datenexport - Startseite");
     }
     $export_pagecontent .= "</select><br><br>";
 
-    $export_pagecontent .="<b><font size=\"-1\">". _("Welche Arten von Veranstaltungen sollen exportiert werden? ") .  "</font></b><br />";
+    $export_pagecontent .="<b><font size=\"-1\">". _("Welche Arten von Veranstaltungen sollen exportiert werden? ") .  "</font></b><br>";
 
     if(!count($ex_sem_class)){
         $ex_sem_class[1] = 1;

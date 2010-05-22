@@ -52,7 +52,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 
 ?>
 <table class="blank" cellspacing="0" cellpadding="2" border="0" width="100%">
-    <tr><td  align="center" class="blank"><br />
+    <tr><td  align="center" class="blank"><br>
     <table class="blank" cellspacing="0" cellpadding="0" border="0" width="99%">
     <tr>
     <td align="center" class="blank">
@@ -62,7 +62,7 @@ $the_tree->open_ranges['root'] = true;
 
 $the_tree->showTree();
 
-echo '</td></tr></table><br /></td></tr></table>';
+echo '</td></tr></table><br></td></tr></table>';
 include ('lib/include/html_end.inc.php');
 page_close();
 

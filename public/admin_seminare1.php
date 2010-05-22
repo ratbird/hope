@@ -232,7 +232,7 @@ function get_dozent_data($s_id, $_fullname_sql, $locked = false, $lock_text = ''
 
     if ($locked)
     {
-      $out[] = "{$lock_text}<br/>";
+      $out[] = "{$lock_text}<br>";
     }
 
     }
@@ -331,7 +331,7 @@ function get_tutor_data($s_id, $_fullname_sql, $locked = false, $lock_text = '')
 
     if ($locked)
     {
-      $out[] = "{$lock_text}<br/>";
+      $out[] = "{$lock_text}<br>";
     }
 
     }
@@ -919,7 +919,7 @@ if (($s_id) && (auth_check())) {
           <input type="hidden" name="Status" value="<?= $db->f("status"); ?>">
           <?= $SEM_TYPE[$db->f("status")]["name"]; ?>
           <?= "&nbsp;" . _("in der Kategorie") . " <b>".htmlReady($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["name"])."</b>" ?>
-          <br/><?= $lock_text ?>
+          <br><?= $lock_text ?>
 
         <? else : ?>
           <select name="Status">
@@ -1341,7 +1341,7 @@ if (($s_id) && (auth_check())) {
           <? else: ?>
                         <textarea disabled readonly name="room" cols=58 rows=3 ><?= htmlReady($db->f("Ort")) ?></textarea>
                     <? endif; ?>
-                <br />&nbsp; <font size="-1"><b><?=_("Achtung:")."&nbsp;</b>"._("Diese Ortsangabe wird nur angezeigt, wenn keine Angaben aus Zeiten oder Sitzungsterminen gemacht werden k&ouml;nnen.");?></font>
+                <br>&nbsp; <font size="-1"><b><?=_("Achtung:")."&nbsp;</b>"._("Diese Ortsangabe wird nur angezeigt, wenn keine Angaben aus Zeiten oder Sitzungsterminen gemacht werden k&ouml;nnen.");?></font>
                 </td>
             </tr>
             <?
@@ -1371,7 +1371,7 @@ if (($s_id) && (auth_check())) {
                             }
                             else {
                                 ?>
-                                <?=$entry->getDisplayValue()?><br />
+                                <?=$entry->getDisplayValue()?><br>
                                 <font size="-1>">&nbsp; <?="<i>"._("(Das Feld ist f&uuml;r die Bearbeitung gesperrt und kann nur durch einen Administrator ver&auml;ndert werden.)")."</i>"?></font>
                                 <?
                             }

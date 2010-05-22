@@ -71,8 +71,8 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                 <font size="-1">
                 <input type="text" name="schedule_begin_day" size=2 maxlength=2 value="<?echo date("d",$start_time); ?>">.
                 <input type="text" name="schedule_begin_month" size=2 maxlength=2 value="<?echo date("m",$start_time); ?>">.
-                <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<?echo date("Y",$start_time); ?>"><br />
-                <input type="IMAGE" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?> /><br />
+                <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<?echo date("Y",$start_time); ?>"><br>
+                <input type="IMAGE" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?> /><br>
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="60%" valign="top">
@@ -98,7 +98,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="middle"><font size="-1">
-                    <input type="IMAGE" name="group_schedule_start" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0  /><br />
+                    <input type="IMAGE" name="group_schedule_start" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0  /><br>
                 </font>
                 </td>
             </tr>
@@ -235,7 +235,7 @@ class ShowGroupSchedulesDaily extends ShowSemSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" colspan="2">
                     <?
 
-                    echo "&nbsp;<font size=-1>"._("Anzahl der Belegungen in diesem Zeitraum:")." ".$assign_events->numberOfEvents()."</font><br/>";
+                    echo "&nbsp;<font size=-1>"._("Anzahl der Belegungen in diesem Zeitraum:")." ".$assign_events->numberOfEvents()."</font><br>";
                     ?>
                     &nbsp;
                 </td>

@@ -494,9 +494,9 @@ for ($i = 1; $i<7; $i++) {
 
 
 if ($_REQUEST['inst_id'] && $view != 'print') { ?>
-<?=_("Im Veranstaltungs-Timetable sehen Sie alle Veranstaltungen eines Semesters an der gew&auml;hlten Einrichtung.")?><br />
+<?=_("Im Veranstaltungs-Timetable sehen Sie alle Veranstaltungen eines Semesters an der gew&auml;hlten Einrichtung.")?><br>
 <form action="<? echo URLHelper::getLink(''); ?>" method="POST">
-<br /><font size=-1><?=_("Angezeigtes Semester:")?>&nbsp;
+<br><font size=-1><?=_("Angezeigtes Semester:")?>&nbsp;
     <select name="instview_sem" style="vertical-align:middle">
     <?
         foreach ($all_semester as $key=>$val) {
@@ -678,10 +678,10 @@ for ($i = $global_start_time; $i < $global_end_time+1; $i++) {
             echo "<tr><td align=\"center\" class=\"rahmen_steelgraulight\" rowspan=4>";
             if(($i == $global_start_time  || $i == $global_end_time )&& $view == 'edit') {
                 if($i == $global_start_time ) {
-                    echo _("Anfangszeit:") . '<br/><select name="beginn_zeit">';
+                    echo _("Anfangszeit:") . '<br><select name="beginn_zeit">';
                     $time = $global_start_time;
                 } else {
-                    echo _("Endzeit:") . '<br/><select name="ende_zeit">';
+                    echo _("Endzeit:") . '<br><select name="ende_zeit">';
                     $time = $global_end_time;
                 }
 
@@ -853,7 +853,7 @@ for ($i = $global_start_time; $i < $global_end_time+1; $i++) {
     }
 
     if ($view == 'print') {
-        printf  ("<tr><td colspan=%s><i><font size=-1>&nbsp; "._("Erstellt am %s um %s  Uhr.")."</font></i></td><td align=\"right\"><font size=-2><img src=\"".$GLOBALS['ASSETS_URL']."images/logo2b.gif\"><br />&copy; %s v.%s&nbsp; &nbsp; </font></td></tr></tr>", $glb_colspan, date("d.m.y", time()), date("G:i", time()), date("Y", time()), $SOFTWARE_VERSION);
+        printf  ("<tr><td colspan=%s><i><font size=-1>&nbsp; "._("Erstellt am %s um %s  Uhr.")."</font></i></td><td align=\"right\"><font size=-2><img src=\"".$GLOBALS['ASSETS_URL']."images/logo2b.gif\"><br>&copy; %s v.%s&nbsp; &nbsp; </font></td></tr></tr>", $glb_colspan, date("d.m.y", time()), date("G:i", time()), date("Y", time()), $SOFTWARE_VERSION);
         }
     else {
         }
@@ -934,7 +934,7 @@ $icon = 'eigene2.gif';
 if($view == 'edit')
     $icon = 'forumrot_indikator.gif';
 $infobox_view[$i] = array("icon" => $icon,
-                             "text" => sprintf(_('%sStundenplan anpassen%s<br /> Hier k&ouml;nnen Sie unter anderem eigene Termine nachtragen, Termine ausblenden oder den Zeitraum, den der Stundenplan umfasst, &auml;ndern.'),
+                             "text" => sprintf(_('%sStundenplan anpassen%s<br> Hier k&ouml;nnen Sie unter anderem eigene Termine nachtragen, Termine ausblenden oder den Zeitraum, den der Stundenplan umfasst, &auml;ndern.'),
                                                     '<a href="'.  URLHelper::getLink('?view=edit') .'">', '</a>'));
 $i++;
 
@@ -1015,13 +1015,13 @@ if($view == 'edit') {
                     else echo "<option value=".$i.">".$i."</option>";
                 }
                 echo"</select> "._("Uhr");
-                echo "<br />&nbsp; "._("Beschreibung:");
+                echo "<br>&nbsp; "._("Beschreibung:");
                 ?>
                 <input name="beschreibung" type="text" size=40 maxlength=255>&nbsp; &nbsp;
                 <?=_("Raum:")?>
                 <input name="room" type="text" size=20 maxlength=255>&nbsp; &nbsp;
                 <?=_("DozentIn:")?>
-                <input name="dozent" type="text" size=20 maxlength=255><br />&nbsp;
+                <input name="dozent" type="text" size=20 maxlength=255><br>&nbsp;
                 <input name="send" type="IMAGE" <?=makeButton("eintragen", "src")?> value="<?=("Eintragen")?>">
                 </form>
 </div></div>

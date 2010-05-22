@@ -409,7 +409,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
     echo '<img ' . makeButton('zuruecksetzen', 'src') . ' border="0"';
     echo tooltip(_("zurücksetzen"));
-    echo '><input type="hidden" name="cmd" value="set_sem_notification"><br />&nbsp; </td></tr></form>';
+    echo '><input type="hidden" name="cmd" value="set_sem_notification"><br>&nbsp; </td></tr></form>';
     echo "</table>\n";
 }
 

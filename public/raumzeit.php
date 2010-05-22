@@ -279,7 +279,7 @@ while ($tmp_first_date < $end_date) {
                             }
                         } ?>
                         &nbsp;&nbsp;
-                        <br />
+                        <br>
                         <?=_("Turnus")?>:
                         <? if (!$_LOCKED) { ?>
                         <SELECT name="turnus">
@@ -430,7 +430,7 @@ while ($tmp_first_date < $end_date) {
                 <? if (!$_LOCKED) { ?>
                 <TR>
                     <TD class="blank" colspan="9">
-                        <br />
+                        <br>
                         <font size="-1">
                             &nbsp;&nbsp;
                             <?=_("Regelmäßigen Zeiteintrag")?>
@@ -574,14 +574,14 @@ while ($tmp_first_date < $end_date) {
                         <!-- the room-request has not yet been resolved -->
                         <?= MessageBox::info(_("Für diese Veranstaltung liegt eine noch offene Raumanfrage vor."), array(nl2br($req_info))) ?>
                         </div>
-                        <br />
+                        <br>
 
                         <? elseif ($request_status && $request_status == 'declined') :
                             $req_info = $sem->getRoomRequestInfo();
                         ?>
                         <!-- the room-request has been declined -->
                         <?= MessageBox::info( _("Die Raumanfrage für diese Veranstaltung wurde abgelehnt!"), array(nl2br($req_info))) ?>
-                        <br />
+                        <br>
                         <? endif; ?>
 
                         <font size="-1">

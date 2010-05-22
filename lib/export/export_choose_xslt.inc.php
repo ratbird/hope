@@ -124,7 +124,7 @@ elseif (!isset($page) or ($page == 0)) // Seite 1 : Auswahl des Dateiformats
     $export_pagecontent .= "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
 
     $export_pagecontent .= "";
-    $export_pagecontent .= "<b><font size=\"-1\">"._("Ausgabeformat:") .  "</font></b><br /><select name=\"format\">";
+    $export_pagecontent .= "<b><font size=\"-1\">"._("Ausgabeformat:") .  "</font></b><br><select name=\"format\">";
 
     while (list($key, $val) = each($output_formats))
     {
@@ -133,7 +133,7 @@ elseif (!isset($page) or ($page == 0)) // Seite 1 : Auswahl des Dateiformats
         $export_pagecontent .= ">" . $val;
     }
     $export_pagecontent .= "</select><br>   <br><br>";
-    $export_pagecontent .= "<b><font size=\"-1\">"._("Name der Datei (z.B. &raquo;Test&laquo;):")."</font></b><br />";
+    $export_pagecontent .= "<b><font size=\"-1\">"._("Name der Datei (z.B. &raquo;Test&laquo;):")."</font></b><br>";
     $export_pagecontent .= "<input type=\"text\" name=\"xslt_filename\" value=\"" . htmlReady($xslt_filename) . "\">";
     $export_pagecontent .= "<input type=\"hidden\" name=\"page\" value=\"1\"><br><br><br>";
     $export_pagecontent .= "<input type=\"hidden\" name=\"o_mode\" value=\"" . $o_mode . "\">";
@@ -146,7 +146,7 @@ elseif (!isset($page) or ($page == 0)) // Seite 1 : Auswahl des Dateiformats
     $export_pagecontent .= "<input type=\"hidden\" name=\"choose\" value=\"" . $choose . "\">";
     $export_pagecontent .= "<input type=\"hidden\" name=\"xml_file_id\" value=\"" . $xml_file_id . "\">";
 
-    $export_weiter_button = "<br /><center><input type=\"IMAGE\" " . makeButton("zurueck", "src") . " value=\"" . _("Zur&uuml;ck") . "\" name=\"back\">&nbsp;";
+    $export_weiter_button = "<br><center><input type=\"IMAGE\" " . makeButton("zurueck", "src") . " value=\"" . _("Zur&uuml;ck") . "\" name=\"back\">&nbsp;";
     $export_weiter_button .= "<input type=\"IMAGE\" " . makeButton("weiter", "src") . " name=\"next\">";
 
     $export_weiter_button .= "</center></form>";

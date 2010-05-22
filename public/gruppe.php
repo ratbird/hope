@@ -175,7 +175,7 @@ FOR ($i=0; $i<9; $i++)
             }
         }
     }
-    ECHO "<tr><td class=\"blank\">&nbsp; </td><td class=\"blank\" align=center colspan=8><br><INPUT type=\"IMAGE\" " . makeButton("absenden", "src") . " border=0 value=absenden><INPUT type=hidden name=gruppesent value=1><br />&nbsp; </td></tr></form>";
+    ECHO "<tr><td class=\"blank\">&nbsp; </td><td class=\"blank\" align=center colspan=8><br><INPUT type=\"IMAGE\" " . makeButton("absenden", "src") . " border=0 value=absenden><INPUT type=hidden name=gruppesent value=1><br>&nbsp; </td></tr></form>";
     echo "</table></td></tr>";
 }
 

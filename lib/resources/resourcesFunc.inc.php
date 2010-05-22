@@ -260,7 +260,7 @@ function getFormattedResult($result, $mode="bad", $bad_message_text = '', $good_
         //the overlaps (show only the earliest here, plus a message when more)
         foreach ($overlaps as $val) {
             $resObj = ResourceObject::Factory($val["resource_id"]);
-            $bad_message.="<br /><font size=\"-1\" color=\"black\">".htmlReady($resObj->getName()).": ";
+            $bad_message.="<br><font size=\"-1\" color=\"black\">".htmlReady($resObj->getName()).": ";
             //show the first overlap
             list(, $val2) = each($val["overlap_assigns"]);
             $bad_message.=date("d.m, H:i",$val2["begin"])." - ".date("H:i",$val2["end"]);

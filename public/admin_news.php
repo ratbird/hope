@@ -151,7 +151,7 @@ if ($cmd=="new_entry" &&
 }
 
 if ($news->msg) {
-    echo "<tr><td class=\"blank\"><br />";
+    echo "<tr><td class=\"blank\"><br>";
     parse_msg($news->msg,"§","blank","1");
     echo "</td></tr>";
 }
@@ -162,7 +162,7 @@ if ($cmd=="edit") {
         $news->search_range($search);
 
         if (!count($news->search_result)) {
-            echo "<tr><td class=\"blank\"><br />";
+            echo "<tr><td class=\"blank\"><br>";
             parse_msg("info§" . _("Die Suche ergab keine Treffer!") . "§","§","blank","1",FALSE);
             echo "</td></tr>";
         }
@@ -179,7 +179,7 @@ if ($cmd=="kill") {
 }
 
 if ($news->msg) {
-    echo "<tr><td class=\"blank\"><br />";
+    echo "<tr><td class=\"blank\"><br>";
     parse_msg($news->msg,"§","blank","1");
     echo "</td></tr>";
 }
@@ -196,12 +196,12 @@ if (!$cmd OR $cmd=="show") {
         $news->send_sms();
     if ($perm->have_perm("autor")) {    // allow autors, needed for studygroups
         if ($perm->have_perm("admin")) {
-            echo"\n<tr><td class=\"blank\"><blockquote><br /><b>" . _("Bereichsauswahl") . "</b><br />&nbsp; </blockquote></td></tr>\n";
+            echo"\n<tr><td class=\"blank\"><blockquote><br><b>" . _("Bereichsauswahl") . "</b><br>&nbsp; </blockquote></td></tr>\n";
             echo "<tr><td class=\"blank\"><blockquote>";
             echo "<table width=\"50%\" cellspacing=0 cellpadding=2 border=0>";
             echo "<form action=\"". URLHelper::getLink("?cmd=search") ."\" method=\"POST\">";
             echo "<tr><td class=\"steel1\">";
-            echo "&nbsp; <font size=-1>" . _("Geben Sie einen Suchbegriff ein, um weitere Bereiche zu finden!") . "</font><br /><br />";
+            echo "&nbsp; <font size=-1>" . _("Geben Sie einen Suchbegriff ein, um weitere Bereiche zu finden!") . "</font><br><br>";
             echo "&nbsp; <INPUT TYPE=\"TEXT\" style=\"vertical-align:middle;\" name=\"search\" size=\"20\">&nbsp;&nbsp;";
             echo "<input type=\"IMAGE\" style=\"vertical-align:middle;\" name=\"submit\" " . makeButton("suchestarten","src") . tooltip( _("Suche starten")) ." border=\"0\">";
             echo "</td></tr></form></table>\n";
@@ -212,7 +212,7 @@ if (!$cmd OR $cmd=="show") {
         echo "\n<tr><td class=\"blank\"><blockquote>";
         if ($perm->have_perm("admin"))
         echo "<hr>";
-        echo "<br /><b>" . _("verf&uuml;gbare Bereiche");
+        echo "<br><b>" . _("verf&uuml;gbare Bereiche");
         echo "</b></blockquote></td></tr>\n ";
         $typen = array( "user"=> array('name' => _("Benutzer"), 'view_mode' => 'user', 'id_param' => 'range_id'),
                         "sem"=>  array('name' => _("Veranstaltung"), 'view_mode' => 'sem', 'id_param' => 'select_sem_id'),
@@ -259,9 +259,9 @@ if (!$cmd OR $cmd=="show") {
             echo "\n</table></blockquote></td></tr>";
         }
     }
-    echo "\n<tr><td class=\"blank\"><br /><blockquote>";
+    echo "\n<tr><td class=\"blank\"><br><blockquote>";
     echo "<form action=\"". URLHelper::getLink("?cmd=new_entry&range_id=$news_range_id&view_mode=$view_mode")."\" method=\"POST\">";
-    echo "<hr width=\"100%\"><br /><b>" . _("gew&auml;hlter Bereich:") . " </b>".htmlReady($news_range_name). "<br /><br />";
+    echo "<hr width=\"100%\"><br><b>" . _("gew&auml;hlter Bereich:") . " </b>".htmlReady($news_range_name). "<br><br>";
     if (get_config('NEWS_RSS_EXPORT_ENABLE') && $news->get_news_range_perm($news_range_id) > 1){
         echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/rss.gif" border="0" align="absmiddle">&nbsp;';
         echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Die News des gew&auml;hlten Bereiches als RSS-feed zur Verf&uuml;gung stellen") . '</font>&nbsp;';

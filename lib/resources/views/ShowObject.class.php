@@ -78,10 +78,10 @@ class ShowObject {
             <tr>
                 <td class="<? echo $this->cssSw->getClass() ?>" width="4%">&nbsp; 
                 </td>
-                <td class="<? echo $this->cssSw->getClass() ?>"><font size=-1><b><?=_("Name:")?></b></font><br />
+                <td class="<? echo $this->cssSw->getClass() ?>"><font size=-1><b><?=_("Name:")?></b></font><br>
                 <font size=-1><? echo $this->resObject->getName()." (".(($this->resObject->getCategoryName()) ? $this->resObject->getCategoryName() : _("Hierachieebene")).")" ?>
                 </td>
-                <td class="<? echo $this->cssSw->getClass() ?>" width="60%" valign="top"><font size=-1><b><?=_("verantwortlich:")?></b></font><br />
+                <td class="<? echo $this->cssSw->getClass() ?>" width="60%" valign="top"><font size=-1><b><?=_("verantwortlich:")?></b></font><br>
                 <font size=-1>
                 <? 
                 if ($view_mode == "no_nav")
@@ -95,7 +95,7 @@ class ShowObject {
             <tr>
                 <td class="<? $this->cssSw->switchClass(); echo $this->cssSw->getClass() ?>" width="4%">&nbsp; 
                 </td>
-                <td class="<? echo $this->cssSw->getClass() ?>" valign="top" colspan=2><font size=-1><b><?=_("Beschreibung:")?></b></font><br />
+                <td class="<? echo $this->cssSw->getClass() ?>" valign="top" colspan=2><font size=-1><b><?=_("Beschreibung:")?></b></font><br>
                 <font size=-1><? echo $this->resObject->getDescription() ?></font>
             </tr>
             <?
@@ -105,13 +105,13 @@ class ShowObject {
             <tr>
                 <td class="<? $this->cssSw->switchClass(); echo $this->cssSw->getClass() ?>" width="4%">&nbsp; 
                 </td>
-                <td class="<? echo $this->cssSw->getClass() ?>" valign="top" <?=($childs) ? "" : "colspan=\"2\"" ?>><font size=-1><b><?=_("Einordnung:")?></b></font><br />
+                <td class="<? echo $this->cssSw->getClass() ?>" valign="top" <?=($childs) ? "" : "colspan=\"2\"" ?>><font size=-1><b><?=_("Einordnung:")?></b></font><br>
                 <font size=-1><? echo ResourcesBrowse::getHistory($this->resObject->getId(), TRUE) ?></font>
                 </td>
                 <?
                 if ($childs) {
                 ?>
-                <td class="<? echo $this->cssSw->getClass() ?>" valign="top" ><font size=-1><b><?=_("Untergeordnete Objekte:")?></b></font><br />
+                <td class="<? echo $this->cssSw->getClass() ?>" valign="top" ><font size=-1><b><?=_("Untergeordnete Objekte:")?></b></font><br>
                 <font size=-1><? $this->list->showListObjects($this->resObject->getId()) ?></font>
                 <?
                 }

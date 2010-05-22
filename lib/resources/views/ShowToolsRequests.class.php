@@ -167,7 +167,7 @@ class ShowToolsRequests {
                 <br>
                     <?
                     if ($open_requests){
-                        printf (_("Es liegen insgesamt <b>%s</b> nicht aufgel&ouml;ste Anfragen vor - <br />davon <b>%s</b> von Veranstaltungen und <b>%s</b> auf Ressourcen, auf die Sie Zugriff haben."), $open_requests, (int)$this->getMyOpenSemRequests(), (int)$this->getMyOpenResRequests());
+                        printf (_("Es liegen insgesamt <b>%s</b> nicht aufgel&ouml;ste Anfragen vor - <br>davon <b>%s</b> von Veranstaltungen und <b>%s</b> auf Ressourcen, auf die Sie Zugriff haben."), $open_requests, (int)$this->getMyOpenSemRequests(), (int)$this->getMyOpenResRequests());
                     } else {
                         printf (_("Es liegen im Augenblick keine unaufgel&ouml;sten Anfragen vor."));
                     }
@@ -196,21 +196,21 @@ class ShowToolsRequests {
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>"><font size=-1><b><?=_("Optionen beim Aufl&ouml;sen")?></b><br />
+                <td class="<? echo $cssSw->getClass() ?>"><font size=-1><b><?=_("Optionen beim Aufl&ouml;sen")?></b><br>
                     <?
                     print _("Sie k&ouml;nnen die vorliegenden Anfragen mit folgenden Optionen aufl&ouml;sen:");
                     ?>
-                    <br /><br /></font>
+                    <br><br></font>
                     <table border="0" cellpadding="2" cellspacing="0">
                         <tr>
                             <td width="48%" valign="top">
                                 <font size="-1">
                                 <?
                                 print _("Art der Anfragen:");
-                                print "<br /><br /><input type=\"RADIO\" name=\"resolve_requests_mode\" value=\"all\" checked />&nbsp;"._("alle Anfragen");
-                                print "<br /><input type=\"RADIO\" name=\"resolve_requests_mode\" value=\"sem\" />&nbsp;"._("nur Anfragen von meinen Veranstaltungen");
-                                print "<br /><input type=\"RADIO\" name=\"resolve_requests_mode\" value=\"res\" />&nbsp;"._("nur Anfragen auf meine R&auml;ume");
-                                print "<br /><input type=\"RADIO\" id=\"resolve_requests_one_res_check\" name=\"resolve_requests_mode\" value=\"one_res\" />&nbsp;"._("nur Anfragen auf einen Raum:");
+                                print "<br><br><input type=\"RADIO\" name=\"resolve_requests_mode\" value=\"all\" checked />&nbsp;"._("alle Anfragen");
+                                print "<br><input type=\"RADIO\" name=\"resolve_requests_mode\" value=\"sem\" />&nbsp;"._("nur Anfragen von meinen Veranstaltungen");
+                                print "<br><input type=\"RADIO\" name=\"resolve_requests_mode\" value=\"res\" />&nbsp;"._("nur Anfragen auf meine R&auml;ume");
+                                print "<br><input type=\"RADIO\" id=\"resolve_requests_one_res_check\" name=\"resolve_requests_mode\" value=\"one_res\" />&nbsp;"._("nur Anfragen auf einen Raum:");
                                 print "<br><span style=\"padding-left:20px;\"><select onchange=\"$('#resolve_requests_one_res_check').attr('checked', true);\"name=\"resolve_requests_one_res\">";
                                 foreach(array_merge(array(array('resource_id' => '', 'name' => _(" -keine Auswahl - "))), $this->getMyRequestedRooms()) as $one){
                                     echo '<option value="'.$one['resource_id'].'">'.htmlready($one['name'] . ($one['anzahl'] ? ' (' . $one['anzahl']. ')' : '')).'</option>';
@@ -227,10 +227,10 @@ class ShowToolsRequests {
                                 <font size="-1">
                                 <?
                                 print _("Sortierung der Anfragen:");
-                                print "<br /><br /><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"complex\" checked />&nbsp;"._("komplexere zuerst (Raumgr&ouml;&szlig;e und  gew&uuml;nschte Eigenschaften)");
-                                print "<br /><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"oldest\" />&nbsp;"._("&auml;ltere zuerst");
-                                print "<br /><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"newest\" />&nbsp;"._("neue zuerst");
-                                print "<br /><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"urgent\" />&nbsp;"._("dringendere zuerst");
+                                print "<br><br><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"complex\" checked />&nbsp;"._("komplexere zuerst (Raumgr&ouml;&szlig;e und  gew&uuml;nschte Eigenschaften)");
+                                print "<br><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"oldest\" />&nbsp;"._("&auml;ltere zuerst");
+                                print "<br><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"newest\" />&nbsp;"._("neue zuerst");
+                                print "<br><input type=\"RADIO\" name=\"resolve_requests_order\" value=\"urgent\" />&nbsp;"._("dringendere zuerst");
                                 ?>
                                 </font>
                             </td>
@@ -254,7 +254,7 @@ class ShowToolsRequests {
             ?>
             </form>
         </table>
-        <br /><br />
+        <br><br>
         <?
     }
 
@@ -380,12 +380,12 @@ class ShowToolsRequests {
                         <b><?= $semObj->seminar_number ? htmlReady($semObj->seminar_number).':' : '' ?><?=htmlReady($semObj->getName())?></b>
                     </a>
                     <font size="-1">
-                        <br />
+                        <br>
                         <?
                         $this->selectSemInstituteNames($semObj->getInstitutId());
 
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Art der Anfrage:")." ".(($reqObj->getTerminId()) ? _("Einzeltermin einer Veranstaltung") : _("alle Termine einer Veranstaltung"))."<br />";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"about.php?username=".get_username($reqObj->getUserId())."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br />";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Art der Anfrage:")." ".(($reqObj->getTerminId()) ? _("Einzeltermin einer Veranstaltung") : _("alle Termine einer Veranstaltung"))."<br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Erstellt von:")." <a href=\"about.php?username=".get_username($reqObj->getUserId())."\">".htmlReady(get_fullname($reqObj->getUserId()))."</a><br>";
                         print "&nbsp;&nbsp;&nbsp;&nbsp;"._("Lehrende: ");
                         foreach ($semObj->getMembers('dozent') as $doz) {
                             if ($dozent){
@@ -394,10 +394,10 @@ class ShowToolsRequests {
                             echo '<a href ="'. URLHelper::getLink('about.php?username='.$doz['username']). '">'.HtmlReady($doz['fullname'])."</a>";
                             $dozent = true;
                         }
-                        print "<br/>";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Einrichtung:")." ".htmlReady($this->db->f("inst_name"))."<br />";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Fakult&auml;t:")." ".htmlReady($this->db->f("fak_name"))."<br />";
-                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("aktuelle Teilnehmerzahl:")." ".$semObj->getNumberOfParticipants('total').'<br />';
+                        print "<br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Einrichtung:")." ".htmlReady($this->db->f("inst_name"))."<br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("verantwortliche Fakult&auml;t:")." ".htmlReady($this->db->f("fak_name"))."<br>";
+                        print "&nbsp;&nbsp;&nbsp;&nbsp;"._("aktuelle Teilnehmerzahl:")." ".$semObj->getNumberOfParticipants('total').'<br>';
                         ?>
                     </font>
                 </td>
@@ -406,7 +406,7 @@ class ShowToolsRequests {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="35%" valign="top">
-                    <font size="-1"><b><?=_("angeforderte Belegungszeiten:")?></b><br /><br />
+                    <font size="-1"><b><?=_("angeforderte Belegungszeiten:")?></b><br><br>
                     <?
                     if (!$reqObj->getTerminId()) {
                         $this->selectDates($reqObj->getSeminarId());
@@ -417,14 +417,14 @@ class ShowToolsRequests {
                             foreach ($dates['info'] as $info) {
                                 $name = $info['name'];
                                 if ($info['weekend']) $name = '<span style="color:red">'. $info['name'] . '</span>';
-                                printf ("<font color=\"blue\"><i><b>%s</b></i></font>. %s<br />", $i, $name);
+                                printf ("<font color=\"blue\"><i><b>%s</b></i></font>. %s<br>", $i, $name);
                                 $i++;
                             }
 
                             if ($semObj->getTurnus() == 0) {
-                                print "<br />"._("w&ouml;chentlich");
+                                print "<br>"._("w&ouml;chentlich");
                             } elseif ($semObj->getTurnus() == 1) {
-                                print "<br />"._("zweiw&ouml;chentlich");
+                                print "<br>"._("zweiw&ouml;chentlich");
                             }
 
                             print ", "._("ab:")." ".date("d.m.Y", $semObj->getFirstDate('int'));
@@ -445,10 +445,10 @@ class ShowToolsRequests {
                                     $day_name = getWeekDay($zw_day).'.';
                                 }
 
-                                printf ("<font color=\"blue\"><i><b>%s</b></i></font>. %s %s%s<br />", $i, $day_name, date("d.m.Y, H:i", $this->db->f("date")), ($this->db->f("date") != $this->db->f("end_time")) ? " - ".date("H:i", $this->db->f("end_time")) : "");
+                                printf ("<font color=\"blue\"><i><b>%s</b></i></font>. %s %s%s<br>", $i, $day_name, date("d.m.Y, H:i", $this->db->f("date")), ($this->db->f("date") != $this->db->f("end_time")) ? " - ".date("H:i", $this->db->f("end_time")) : "");
                                 $resObj = ResourceObject::Factory($this->db->f("resource_id"));
                                 if ($link = $resObj->getFormattedLink($this->db->f("date")))
-                                    print "&nbsp;&nbsp;&nbsp;&nbsp;$link<br />";
+                                    print "&nbsp;&nbsp;&nbsp;&nbsp;$link<br>";
                                 $i++;
                             }
                         } else {
@@ -586,7 +586,7 @@ class ShowToolsRequests {
                         </font>
                         </td>
                         <td colspan="2"><font size="-1">
-                        <input type="IMAGE" name="request_tool_group" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0  /><br />
+                        <input type="IMAGE" name="request_tool_group" align="middle" <?=makeButton("auswaehlen", "src") ?> border=0  /><br>
                         </font>
                         </td>
                         </tr>
@@ -863,7 +863,7 @@ class ShowToolsRequests {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="35%" valign="top">
-                    <font size="-1"><b><?=_("gew&uuml;nschte Raumeigenschaften:")?></b><br /><br />
+                    <font size="-1"><b><?=_("gew&uuml;nschte Raumeigenschaften:")?></b><br><br>
                     <?
                     $properties = $reqObj->getProperties();
                     if (sizeof($properties)) {
@@ -913,7 +913,7 @@ class ShowToolsRequests {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="35%" valign="top">
-                    <font size="-1"><b><?=_("Kommentar des Anfragenden:")?></b><br /><br />
+                    <font size="-1"><b><?=_("Kommentar des Anfragenden:")?></b><br><br>
                     <?
                     if ($comment = $reqObj->getComment())
                         print $comment;
@@ -964,14 +964,14 @@ class ShowToolsRequests {
                     print("&nbsp;<input type=\"IMAGE\" name=\"inc_request\" ".makeButton("weiter", "src")." border=\"0\" />");
                 }
                 if (sizeof($resources_data["requests_open"]) > 1)
-                    printf ("<br /><font size=\"-1\">" . _("<b>%s</b> von <b>%s</b> Anfragen in der Bearbeitung wurden noch nicht aufgel&ouml;st.") . "</font>", sizeof($resources_data["requests_open"]), sizeof($resources_data["requests_working_on"]));
-                    printf ("<br /><font size=\"-1\">" . _("Aktueller Request: ")."<b>%s</b></font>", $resources_data["requests_working_pos"]+1);
+                    printf ("<br><font size=\"-1\">" . _("<b>%s</b> von <b>%s</b> Anfragen in der Bearbeitung wurden noch nicht aufgel&ouml;st.") . "</font>", sizeof($resources_data["requests_open"]), sizeof($resources_data["requests_working_on"]));
+                    printf ("<br><font size=\"-1\">" . _("Aktueller Request: ")."<b>%s</b></font>", $resources_data["requests_working_pos"]+1);
                 ?>
                 </td>
             </tr>
         </form>
         </table>
-        <br /><br />
+        <br><br>
         <?
     }
 

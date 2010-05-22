@@ -117,7 +117,7 @@ if ($EXPORT_ENABLE)
             msg_window=window.open("","messagewindow","height=250,width=200,left=20,top=20,scrollbars=no,resizable=no,toolbar=no");
             msg_window.document.write("<html><head><title><? echo _("Daten-Export");?></title></head>");
             msg_window.document.write("<body bgcolor='#ffffff'><center><p><img src='pictures/alienupload.gif' width='165' height='125'></p>");
-            msg_window.document.write("<p><font face='arial, helvetica, sans-serif'><b>&nbsp;<? printf(_("Die Daten werden exportiert. %sBitte haben sie etwas Geduld!"),"<br>&nbsp;");?><br /></font></p></body></html>");
+            msg_window.document.write("<p><font face='arial, helvetica, sans-serif'><b>&nbsp;<? printf(_("Die Daten werden exportiert. %sBitte haben sie etwas Geduld!"),"<br>&nbsp;");?><br></font></p></body></html>");
             exportproc=true;
             return true;
         }

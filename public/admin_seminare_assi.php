@@ -1415,7 +1415,7 @@ if (($form == 5) && ($jump_next_x))
         $i=0;
         foreach ($overlaps_detected as $val) {
             $resObj = ResourceObject::Factory($val["resource_id"]);
-            $errormsg.="<br /><font size=\"-1\" color=\"black\">".htmlReady($resObj->getName()).": ";
+            $errormsg.="<br><font size=\"-1\" color=\"black\">".htmlReady($resObj->getName()).": ";
             //show the first overlap
             list(, $val2) = each($val["overlap_assigns"]);
             $errormsg.=date("d.m, H:i",$val2["begin"])." - ".date("H:i",$val2["end"]);
@@ -2005,7 +2005,7 @@ if ((!$sem_create_data["sem_class"]) && (!$level)){
         ?>
         <tr>
             <td class="blank" valign="top">
-                <blockquote><br />
+                <blockquote><br>
                 <?=_("Willkommen beim Veranstaltungs-Assistenten. Der Veranstaltungs-Assistent wird Sie Schritt f&uuml;r Schritt durch die notwendigen Schritte zum Anlegen einer neuen Veranstaltung in Stud.IP leiten."); ?><br><br>
                 <?=_("Bitte geben Sie zun&auml;chst an, welche Art von Veranstaltung Sie neu anlegen m&ouml;chten:"); ?>
                 </blockquote>
@@ -2036,7 +2036,7 @@ if ((!$sem_create_data["sem_class"]) && (!$level)){
         <tr>
             <td class="blank">
             <blockquote>
-            <br />
+            <br>
             <?=_("Sie können auch Studiengruppen anlegen, die funktional deutlich eingeschränkt sind und vor allem Formen selbstorganisierten Lernens unterstützen sollen:")?>
             &nbsp;<a href="<?=URLHelper::getLink('dispatch.php/course/studygroup/new')?>"><?=_("Studiengruppen anlegen")?></a>.
             </blockquote>
@@ -2069,7 +2069,7 @@ elseif ((!$level) || ($level == 1))
                     echo _("Die Daten der zu kopierenden Veranstaltung werden &uuml;bernommen. Bitte &auml;ndern Sie die Informationen, die sich f&uuml;r die kopierte Veranstaltung ergeben.");
                 }
                 ?><br><br>
-                <b><?=_("Schritt 1: Grunddaten der Veranstaltung angeben"); ?></b><br><br />
+                <b><?=_("Schritt 1: Grunddaten der Veranstaltung angeben"); ?></b><br><br>
                 <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
                 </blockquote>
             </td>
@@ -2130,7 +2130,7 @@ elseif ((!$level) || ($level == 1))
                                                $sem_type["name"]);
                                 }
                             ?>
-                            </select> <br />
+                            </select> <br>
                             &nbsp; <font size="-1"> <?=_("in der Kategorie"); ?> <b><? echo $SEM_CLASS[$sem_create_data["sem_class"]]["name"] ?></b></font>
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                 <? echo tooltip(_("Über den Typ der Veranstaltung werden die Veranstaltungen innerhalb von Listen gruppiert."), TRUE, TRUE) ?>
@@ -2183,9 +2183,9 @@ elseif ((!$level) || ($level == 1))
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" nowrap width="30%" colspan=1>
                             &nbsp; <input type="RADIO" name="sem_admission" value=0 <? if (!$sem_create_data["sem_admission"]) echo 'checked'?>>
-                            <?=_("keine"); ?> &nbsp; <br />
+                            <?=_("keine"); ?> &nbsp; <br>
                             &nbsp; <input type="RADIO" name="sem_admission" value=2 <? if ($sem_create_data["sem_admission"]=="2") echo 'checked'?>>
-                            <?=_("nach Anmeldereihenfolge"); ?> <br />
+                            <?=_("nach Anmeldereihenfolge"); ?> <br>
                             &nbsp; <input type="RADIO" name="sem_admission" value=1 <? if ($sem_create_data["sem_admission"]=="1") echo 'checked'?>>
                             <?=_("per Losverfahren"); ?>&nbsp;
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
@@ -2509,7 +2509,7 @@ if ($level == 2)
                            $i++;
                         }
                            echo "</table>";
-                     //     printf ("&nbsp; <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\"></a> &nbsp; <font size=\"-1\"><b>%s (%s)&nbsp; &nbsp; <br />", URLHelper::getLink($PHP_SELF."?delete_doz=".get_username($key)), get_fullname($key,"full_rev",true), get_username($key));
+                     //     printf ("&nbsp; <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\"></a> &nbsp; <font size=\"-1\"><b>%s (%s)&nbsp; &nbsp; <br>", URLHelper::getLink($PHP_SELF."?delete_doz=".get_username($key)), get_fullname($key,"full_rev",true), get_username($key));
                          } else {
                                 printf ("<font size=\"-1\">&nbsp;  ". sprintf(_("Keine %s gew&auml;hlt."), get_title_for_status('dozent', 2, $sem_create_data["sem_status"]))."</font><br >");
                             }
@@ -2731,7 +2731,7 @@ if ($level == 2)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
-                            <font size=-1><b><?=_("zugelassenene Nutzerdomänen:")?> </b></font><br />
+                            <font size=-1><b><?=_("zugelassenene Nutzerdomänen:")?> </b></font><br>
                             <table border=0 cellpadding=2 cellspacing=0>
                                 <tr>
                                     <td class="<? echo $cssSw->getClass() ?>" colspan=3 >
@@ -2968,7 +2968,7 @@ if ($level == 3) {
 
                                     }
                                     ?>
-                                    <br />&nbsp; <input type="IMAGE" name="add_turnus_field" <?=makeButton("feldhinzufuegen", "src"); ?> border=0 value="Feld hinzuf&uuml;gen">&nbsp;
+                                    <br>&nbsp; <input type="IMAGE" name="add_turnus_field" <?=makeButton("feldhinzufuegen", "src"); ?> border=0 value="Feld hinzuf&uuml;gen">&nbsp;
                                     <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                         <? echo tooltip(_("Wenn es sich um eine regelmäßige Veranstaltung handelt, so können Sie hier genau angeben, an welchen Tagen, zu welchen Zeiten und in welchem Raum die Veranstaltung stattfindet. Wenn Sie noch keine Zeiten wissen, dann klicken Sie auf »keine Zeiten speichern«."), TRUE, TRUE) ?>
                                     >
@@ -3030,7 +3030,7 @@ if ($level == 3) {
                                         echo  Termin_Eingabe_javascript (5, $i, 0, $ss, $sm, $es, $em);
                                         }
                                         ?>
-                                        <br />&nbsp; <input type="IMAGE" name="add_term_field" <?=makeButton("feldhinzufuegen", "src"); ?> border=0 value="Feld hinzuf&uuml;gen">&nbsp;
+                                        <br>&nbsp; <input type="IMAGE" name="add_term_field" <?=makeButton("feldhinzufuegen", "src"); ?> border=0 value="Feld hinzuf&uuml;gen">&nbsp;
                                         <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                             <? echo tooltip(_("In diesem Feldern können Sie alle Veranstaltungstermine eingeben. Wenn die Termine noch nicht feststehen, lassen Sie die Felder einfach frei."), TRUE, TRUE) ?>
                                         >
@@ -3141,7 +3141,7 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%">
-                            <font size="-1"><b><?=_("Raumw&uuml;nsche"); ?></b><br /><br />
+                            <font size="-1"><b><?=_("Raumw&uuml;nsche"); ?></b><br><br>
                             <?
                             if (get_config('RESOURCES_ALLOW_SEMASSI_SKIP_REQUEST')){
                                 echo _("Es wird <u>kein</u> Raum ben&ouml;tigt") . "&nbsp;&nbsp;";
@@ -3150,7 +3150,7 @@ if ($level == 4) {
                                 echo "><br><br>";
                             }
                             print _("Sie haben die M&ouml;glichkeit, sich Raumeigenschaften sowie einen konkreten Raum zu w&uuml;nschen. Diese Raumw&uuml;nsche werden von der zentralen Raumverwaltung bearbeitet.");
-                            print "<br />"._("<b>Achtung:</b> Um sp&auml;ter einen passenden Raum f&uuml;r Ihre Veranstaltung zu bekommen, geben Sie bitte <u>immer</u> die gew&uuml;nschten Eigenschaften mit an!");
+                            print "<br>"._("<b>Achtung:</b> Um sp&auml;ter einen passenden Raum f&uuml;r Ihre Veranstaltung zu bekommen, geben Sie bitte <u>immer</u> die gew&uuml;nschten Eigenschaften mit an!");
                             ?>
                         <td>
                     </tr>
@@ -3163,7 +3163,7 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%">
-                            <br /><font size="-1"><b><?=("gew&uuml;nschter Raum:")?></b><br /><br />
+                            <br><font size="-1"><b><?=("gew&uuml;nschter Raum:")?></b><br><br>
                             <?
                             print "<b>".htmlReady($resObject->getName())."</b>,&nbsp;"._("verantwortlich:")."&nbsp;<a href=\"".URLHelper::getLink($resObject->getOwnerLink())."\">".$resObject->getOwnerName()."</a>";  //getOwnerLink() does not contain the output of an URLHelper
                             print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("den ausgewählten Raum löschen"))." border=\"0\" name=\"reset_resource_id\" />";
@@ -3185,7 +3185,7 @@ if ($level == 4) {
                                         <font size="-1">
                                         <?
                                         //$sem_create_data["room_request_type"] = FALSE;
-                                        print "<b>"._("Raumeigenschaften angeben:")."</b><br /><br />";
+                                        print "<b>"._("Raumeigenschaften angeben:")."</b><br><br>";
                                         if (!$dont_anchor)
                                             print "<a name=\"anker\"></a>";
                                         $query = "SELECT * FROM resources_categories  WHERE is_room = '1' ORDER BY name";
@@ -3214,10 +3214,10 @@ if ($level == 4) {
                                                         }
                                                         print "</select>";
                                                         print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Raumtyp auswählen"))." />";
-                                                        print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("alle Angaben zurücksetzen"))." border=\"0\" name=\"reset_room_type\" /><br /><br />";
+                                                        print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("alle Angaben zurücksetzen"))." border=\"0\" name=\"reset_room_type\" /><br><br>";
                                                     }
 
-                                                    print _("Folgende Eigenschaften sind w&uuml;nschbar:")."<br /><br />";
+                                                    print _("Folgende Eigenschaften sind w&uuml;nschbar:")."<br><br>";
                                                     print "<table border=\"0\" width=\"100%\" cellspaceing=\"2\" cellpadding=\"0\">";
                                                 }
                                                 ?>
@@ -3236,7 +3236,7 @@ if ($level == 4) {
                                                                 printf ("<input type=\"TEXT\" name=\"request_property_val[%s]\" value=\"%s\" size=5 maxlength=10 />", $db2->f("property_id"), htmlReady($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id"))));
                                                                 if ($sem_create_data["sem_turnout"]) {
                                                                     print "<font size=\"-1\">"._("max. Teilnehmeranzahl &uuml;bernehmen")."</font>";
-                                                                    printf ("<br /><input type=\"CHECKBOX\" name=\"seats_are_admission_turnout\" %s />&nbsp;",  (($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id")) == $sem_create_data["sem_turnout"]) && ($sem_create_data["sem_turnout"])>0) ? "checked" :"");
+                                                                    printf ("<br><input type=\"CHECKBOX\" name=\"seats_are_admission_turnout\" %s />&nbsp;",  (($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id")) == $sem_create_data["sem_turnout"]) && ($sem_create_data["sem_turnout"])>0) ? "checked" :"");
                                                                 }
 
                                                             } else {
@@ -3267,7 +3267,7 @@ if ($level == 4) {
                                             }
 
                                         } elseif ($db->nf() > 0) {
-                                            print _("Bitte geben Sie zun&auml;chst einen Raumtyp an, der f&uuml;r Sie am besten geeignet ist:")."<br /><br />";
+                                            print _("Bitte geben Sie zun&auml;chst einen Raumtyp an, der f&uuml;r Sie am besten geeignet ist:")."<br><br>";
                                             print "<select name=\"select_room_type\">";
                                                 while ($db->next_record()) {
                                                     printf ("<option value=\"%s\">%s </option>", $db->f("category_id"), htmlReady(my_substr($db->f("name"), 0, 30)));
@@ -3284,11 +3284,11 @@ if ($level == 4) {
                                     <td width="50%" valign="top">
                                         <font size="-1">
                                         <?
-                                        print "<b>"._("Raum suchen:")."</b><br />";
+                                        print "<b>"._("Raum suchen:")."</b><br>";
                                         if ((($search_exp_room) && ($search_room_x)) || ($search_properties_x)) {
                                             $result = $sem_create_data["resRequest"]->searchRoomsToRequest(remove_magic_quotes($search_exp_room), ($search_properties_x) ? TRUE : FALSE);
                                             if ($result) {
-                                                printf ("<br /><font size=-1><b>%s</b> ".((!$search_properties_x) ? _("R&auml;ume gefunden:") : _("passende R&auml;ume gefunden"))."<br /><br />", sizeof($result));
+                                                printf ("<br><font size=-1><b>%s</b> ".((!$search_properties_x) ? _("R&auml;ume gefunden:") : _("passende R&auml;ume gefunden"))."<br><br>", sizeof($result));
                                                 print "<select name=\"select_room\">";
                                                 foreach ($result as $key => $val) {
                                                     printf ("<option value=\"%s\">%s </option>", $key, htmlReady(my_substr($val, 0, 30)));
@@ -3297,17 +3297,17 @@ if ($level == 4) {
                                                 print "&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Den Raum als Wunschraum auswählen"))." border=\"0\" name=\"send_room\" />";
                                                 print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("neue Suche starten"))." border=\"0\" name=\"reset_room_search\" />";
                                                 if ($search_properties_x)
-                                                    print "<br /><br />"._("(Diese R&auml;ume erf&uuml;llen die Wunschkriterien, die Sie links angegeben haben.)");
+                                                    print "<br><br>"._("(Diese R&auml;ume erf&uuml;llen die Wunschkriterien, die Sie links angegeben haben.)");
                                             }
                                         }
                                         if (((!$search_exp_room) && (!$search_properties_x)) || (($search_exp_room) && (!$result)) || (($search_properties_x) && (!$result))) {
                                             ?>
                                             <font size=-1>
                                             <? print ((($search_exp_room) || ($search_properties_x)) && (!$result)) ? _("<b>Keinen</b> Raum gefunden.") : "";?>
-                                            </font><br />
+                                            </font><br>
                                             <font size=-1><?=_("Geben Sie zur Suche den Raumnamen ganz oder teilweise ein:"); ?></font>
                                             <input type="TEXT" size="30" maxlength="255" name="search_exp_room" />&nbsp;
-                                            <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_room" /><br />
+                                            <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_room" /><br>
                                             <?
                                         }
                                         ?>
@@ -3339,8 +3339,8 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%">
-                            <font size="-1"><b><?=("Nachricht an den Raumadministrator:")?></b><br /><br />
-                                <?=_("Sie k&ouml;nnen hier eine Nachricht an den Raumadministrator verfassen, um weitere W&uuml;nsche oder Bermerkungen zur gew&uuml;nschten Raumbelegung anzugeben.")?> <br /><br />
+                            <font size="-1"><b><?=("Nachricht an den Raumadministrator:")?></b><br><br>
+                                <?=_("Sie k&ouml;nnen hier eine Nachricht an den Raumadministrator verfassen, um weitere W&uuml;nsche oder Bermerkungen zur gew&uuml;nschten Raumbelegung anzugeben.")?> <br><br>
                                 <textarea name="sem_room_comment" cols=58 rows=4><?=htmlReady($sem_create_data["resRequest"]->getComment()); ?></textarea>
                             </font>
                         </td>
@@ -3357,10 +3357,10 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=3>
-                            <font size="-1"><b><?=_("Raumbuchungen"); ?></b></font><br /><br />
+                            <font size="-1"><b><?=_("Raumbuchungen"); ?></b></font><br><br>
                             <table border="0" width="100%" cellspaceing="2" cellpadding="0">
                             <?
-                                print "<font size=\"-1\">"._("Sie k&ouml;nnen zu jedem Termin einen Raum eintragen. Diese Eintragung wird beim Speichern der Veranstaltung in der Raumverwaltung gebucht.")."</font><br />";
+                                print "<font size=\"-1\">"._("Sie k&ouml;nnen zu jedem Termin einen Raum eintragen. Diese Eintragung wird beim Speichern der Veranstaltung in der Raumverwaltung gebucht.")."</font><br>";
                                 if ($sem_create_data["term_art"] == 0) {
                                     if (is_array($sem_create_data["metadata_termin"]["turnus_data"])) {
                                         foreach ($sem_create_data["metadata_termin"]["turnus_data"] as $val) {
@@ -3382,7 +3382,7 @@ if ($level == 4) {
                                                 printf ("<option %s value=\"FALSE\">["._("bitte ausw&auml;hlen")."]</option>", (!$val["resource_id"]) ? "selected" : "");
                                                 while ($res = $resList->next()) {
                                                     printf ("<option %s value=\"%s\">%s</option>", ($val["resource_id"] == $res["resource_id"]) ? "selected" :"", $res["resource_id"], htmlReady($res["name"]));                                                }
-                                                print "</select><br />";
+                                                print "</select><br>";
                                             }
                                             print "</font></td></tr>\n";
                                         }
@@ -3400,7 +3400,7 @@ if ($level == 4) {
                                                 while ($res = $resList->next()) {
                                                     printf ("<option %s value=\"%s\">%s</option>", ($sem_create_data["term_resource_id"][$i] == $res["resource_id"]) ? "selected" :"", $res["resource_id"], htmlReady($res["name"]));
                                                 }
-                                                print "</select><br />";
+                                                print "</select><br>";
                                             }
                                             print "</font></td></tr>\n";
                                         }
@@ -3417,7 +3417,7 @@ if ($level == 4) {
                                         while ($res = $resList->next()) {
                                             printf ("<option %s value=\"%s\">%s</option>", ($sem_create_data["sem_vor_resource_id"] == $res["resource_id"]) ? "selected" :"", $res["resource_id"], htmlReady($res["name"]));
                                         }
-                                        print "</select><br />";
+                                        print "</select><br>";
                                     }
                                     print "</font></td></tr>\n";
                                 }
@@ -3436,10 +3436,10 @@ if ($level == 4) {
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=3>
-                            <font size="-1"><b><?=_("freie Angaben zu R&auml;umen"); ?></b></font><br /><br />
+                            <font size="-1"><b><?=_("freie Angaben zu R&auml;umen"); ?></b></font><br><br>
                             <table border="0" width="100%" cellspaceing="2" cellpadding="0">
                                 <?
-                                printf ("<font size=\"-1\">"._("%sSie k&ouml;nnen zu jedem Termin freie Angaben zu Raum bzw. Ort machen:")."</font><br />", (($RESOURCES_ENABLE && $resList->roomsExist()) ? "<i><u>"._("oder:")."</u></i>&nbsp;" : ""));
+                                printf ("<font size=\"-1\">"._("%sSie k&ouml;nnen zu jedem Termin freie Angaben zu Raum bzw. Ort machen:")."</font><br>", (($RESOURCES_ENABLE && $resList->roomsExist()) ? "<i><u>"._("oder:")."</u></i>&nbsp;" : ""));
                                 if ($sem_create_data["term_art"] == 0) {
                                     if (is_array($sem_create_data["metadata_termin"]["turnus_data"])) {
                                         foreach ($sem_create_data["metadata_termin"]["turnus_data"] as $val) {
@@ -3455,7 +3455,7 @@ if ($level == 4) {
                                             }
                                             printf (" "._("von %02d:%02d Uhr bis %02d:%02d Uhr"), $val["start_stunde"], $val["start_minute"],  $val["end_stunde"], $val["end_minute"]);
                                             print "</font></td><td width=\"50%\"><font size=\"-1\">";
-                                            printf ("&nbsp;<input type=\"text\" name=\"term_turnus_room[]\" size=\"30\" maxlength=\"255\" value=\"%s\" /><br />", htmlReady(stripslashes($val["room"])));
+                                            printf ("&nbsp;<input type=\"text\" name=\"term_turnus_room[]\" size=\"30\" maxlength=\"255\" value=\"%s\" /><br>", htmlReady(stripslashes($val["room"])));
                                             print "</font></td></tr>\n";
                                         }
                                     }
@@ -3475,7 +3475,7 @@ if ($level == 4) {
                                     print "<tr><td width=\"50%\"><font size=\"-1\">";
                                     printf (" "._("Vorbesprechung am %s von %s Uhr bis %s Uhr"), date("d.m.Y", $sem_create_data["sem_vor_termin"]), date("H:i", $sem_create_data["sem_vor_termin"]), date("H:i", $sem_create_data["sem_vor_end_termin"]));
                                     print "</font></td><td width=\"50%\"><font size=\"-1\">";
-                                    printf ("&nbsp;<input type=\"text\" name=\"vor_raum\" size=\"30\" maxlength=\"255\" value=\"%s\" /><br />", htmlReady(stripslashes($sem_create_data["sem_vor_raum"])));
+                                    printf ("&nbsp;<input type=\"text\" name=\"vor_raum\" size=\"30\" maxlength=\"255\" value=\"%s\" /><br>", htmlReady(stripslashes($sem_create_data["sem_vor_raum"])));
                                     print "</font></td></tr>\n";
                                 }
                                 ?>
@@ -3491,12 +3491,12 @@ if ($level == 4) {
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%"  colspan=3>
                             <font size="-1">
-                            <?=_("Sie k&ouml;nnen hier eine unspezifische Ortsangabe machen:")?><br />
+                            <?=_("Sie k&ouml;nnen hier eine unspezifische Ortsangabe machen:")?><br>
                             <textarea name="sem_room" cols=58 rows="4"><? echo  htmlReady(stripslashes($sem_create_data["sem_room"])) ?></textarea>
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                 <? echo tooltip(_("Sie können hier einen Ort eingeben, der nur angezeigt wird, wenn keine genaueren Angaben aus Zeiten oder Sitzungsterminen gemacht werden können oder Sitzungstermine bereits abgelaufen sind und aus diesem Grund nicht mehr angezeigt werden."), TRUE, TRUE) ?>
                             >
-                            <br /><?=_("<b>Achtung:</b> Diese Ortsangabe wird nur angezeigt, wenn keine genaueren Angaben aus Zeiten oder Sitzungsterminen gemacht werden k&ouml;nnen.");?>
+                            <br><?=_("<b>Achtung:</b> Diese Ortsangabe wird nur angezeigt, wenn keine genaueren Angaben aus Zeiten oder Sitzungsterminen gemacht werden k&ouml;nnen.");?>
                         </td>
                     </tr>
                     <?
@@ -3564,11 +3564,11 @@ if ($level == 5)
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
                             <font size=-1>&nbsp;
                                 <? print _("Bitte geben Sie hier ein Datum an, ab wann und bis wann sich Teilnehmer für die Veranstaltung eintragen d&uuml;rfen."); ?>
-                                <br />&nbsp;
+                                <br>&nbsp;
                                 <? print _("Wenn sich die Teilnehmer sofort nach erstellen dieser Veranstaltung eintragen d&uuml;rfen, lassen Sie das Datum einfach unver&auml;ndert."); ?>
-                                <br/>&nbsp;
+                                <br>&nbsp;
                                 <? print _("Wenn es kein Ende der Anmeldefrist geben soll, lassen Sie das Enddatum unver&auml;ndert."); ?>
-                                <br /><br />
+                                <br><br>
                             </font>
                             <table align="right" width="98%" border="0" cellpadding="2" cellspacing="0">
                                 <tr>
@@ -3578,7 +3578,7 @@ if ($level == 5)
                                     <td class="<? echo $cssSw->getClass() ?>" valign="top" width="40%">
                                         <font size=-1>&nbsp; <input type="text" name="adm_s_tag" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_start_date"]<>-1) echo date("d",$sem_create_data["sem_admission_start_date"]); else echo _("tt") ?>">.
                                         <input type="text" name="adm_s_monat" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_start_date"]<>-1) echo date("m",$sem_create_data["sem_admission_start_date"]); else echo _("mm") ?>">.
-                                        <input type="text" name="adm_s_jahr" size=4 maxlength=4 value="<? if ($sem_create_data["sem_admission_start_date"]<>-1) echo date("Y",$sem_create_data["sem_admission_start_date"]); else echo _("jjjj") ?>"><?=_("um");?>&nbsp;</font><br />
+                                        <input type="text" name="adm_s_jahr" size=4 maxlength=4 value="<? if ($sem_create_data["sem_admission_start_date"]<>-1) echo date("Y",$sem_create_data["sem_admission_start_date"]); else echo _("jjjj") ?>"><?=_("um");?>&nbsp;</font><br>
                                         <font size=-1>&nbsp; <input type="text" name="adm_s_stunde" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_start_date"]<>-1) echo date("H",$sem_create_data["sem_admission_start_date"]); else echo _("hh") ?>">:
                                         <input type="text" name="adm_s_minute" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_start_date"]<>-1) echo date("i",$sem_create_data["sem_admission_start_date"]); else echo _("mm") ?>">&nbsp;<?=_("Uhr");?></font>&nbsp;
                                         <?=Termin_Eingabe_javascript(20,0,($sem_create_data["sem_admission_start_date"] != -1 ? $sem_create_data["sem_admission_start_date"] : 0),'','','','','&form_name=form_5');?>
@@ -3593,7 +3593,7 @@ if ($level == 5)
                                     <td class="<? echo $cssSw->getClass() ?>" valign="top" width="40%">
                                         <font size=-1>&nbsp; <input type="text" name="adm_e_tag" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_end_date"]<>-1) echo date("d",$sem_create_data["sem_admission_end_date"]); else echo _("tt") ?>">.
                                         <input type="text" name="adm_e_monat" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_end_date"]<>-1) echo date("m",$sem_create_data["sem_admission_end_date"]); else echo _("mm") ?>">.
-                                        <input type="text" name="adm_e_jahr" size=4 maxlength=4 value="<? if ($sem_create_data["sem_admission_end_date"]<>-1) echo date("Y",$sem_create_data["sem_admission_end_date"]); else echo _("jjjj") ?>"><?=_("um");?>&nbsp;</font><br />
+                                        <input type="text" name="adm_e_jahr" size=4 maxlength=4 value="<? if ($sem_create_data["sem_admission_end_date"]<>-1) echo date("Y",$sem_create_data["sem_admission_end_date"]); else echo _("jjjj") ?>"><?=_("um");?>&nbsp;</font><br>
                                         <font size=-1>&nbsp; <input type="text" name="adm_e_stunde" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_end_date"]<>-1) echo date("H",$sem_create_data["sem_admission_end_date"]); else echo "23" ?>">:
                                         <input type="text" name="adm_e_minute" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_end_date"]<>-1) echo date("i",$sem_create_data["sem_admission_end_date"]); else echo "59" ?>">&nbsp;<?=_("Uhr");?></font>&nbsp;
                                         <?=Termin_Eingabe_javascript(21,0,($sem_create_data["sem_admission_end_date"] != -1 ? $sem_create_data["sem_admission_end_date"] : 0),'','','','','&form_name=form_5');?>
@@ -3653,7 +3653,7 @@ if ($level == 5)
                                 print _("Sie haben vorher das Stud.IP Anmeldeverfahren nach dem Losverfahren aktiviert.");
                             else
                                 print _("Sie haben vorher das Stud.IP Anmeldeverfahren nach der Reihenfolge der Anmeldungen aktiviert.");
-                            ?><br />
+                            ?><br>
                             &nbsp;<?
                             if ($sem_create_data["sem_admission"] == 1)
                                 print _("Bitte geben Sie hier an, welche Studieng&auml;nge mit welchen Kontingenten zugelassen sind und wann das Losdatum ist:");
@@ -3661,7 +3661,7 @@ if ($level == 5)
                                 print _("Bitte geben Sie hier an, welche Studieng&auml;nge zugelassen sind:");
                             else
                                 print _("Bitte geben Sie hier an, welche Studieng&auml;nge mit welchen Kontingenten zugelassen sind und wann das Enddatum der Kontingentierung ist:");
-                            ?><br /><br />
+                            ?><br><br>
                                 <table border="0" cellpadding="2" cellspacing="0">
                                     <tr>
                                     <td class="<? echo $cssSw->getClass() ?>" colspan="4" >
@@ -3686,7 +3686,7 @@ if ($level == 5)
                                         <?if($sem_create_data["sem_admission"] == 1 || $sem_create_data["admission_enable_quota"]){?>
                                             <font size=-1>&nbsp; <input type="text" name="adm_tag" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_date"]<>-1) echo date("d",$sem_create_data["sem_admission_date"]); else echo _("tt") ?>">.
                                             <input type="text" name="adm_monat" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_date"]<>-1) echo date("m",$sem_create_data["sem_admission_date"]); else echo _("mm") ?>">.
-                                            <input type="text" name="adm_jahr" size=4 maxlength=4 value="<? if ($sem_create_data["sem_admission_date"]<>-1) echo date("Y",$sem_create_data["sem_admission_date"]); else echo _("jjjj") ?>"><?=_("um");?>&nbsp;</font><br />
+                                            <input type="text" name="adm_jahr" size=4 maxlength=4 value="<? if ($sem_create_data["sem_admission_date"]<>-1) echo date("Y",$sem_create_data["sem_admission_date"]); else echo _("jjjj") ?>"><?=_("um");?>&nbsp;</font><br>
                                             <font size=-1>&nbsp; <input type="text" name="adm_stunde" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_date"]<>-1) echo date("H",$sem_create_data["sem_admission_date"]); else echo"23" ?>">:
                                             <input type="text" name="adm_minute" size=2 maxlength=2 value="<? if ($sem_create_data["sem_admission_date"]<>-1) echo date("i",$sem_create_data["sem_admission_date"]); else echo"59" ?>">&nbsp;<?=_("Uhr");?></font>&nbsp;
                                             <?=Termin_Eingabe_javascript(22,0,($sem_create_data["sem_admission_date"] != -1 ? $sem_create_data["sem_admission_date"] : 0),'','','','','&form_name=form_5');?>
@@ -3788,7 +3788,7 @@ if ($level == 5)
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%"  colspan=3>
                             <?
-                            printf (_("%sAchtung: %sWenn Sie ein Anmeldeverfahren starten, so kann dieser Schritt sp&auml;ter nicht r&uuml;ckg&auml;ngig gemacht werden.")." <br />&nbsp; "._("Sie k&ouml;nnen jedoch die Anzahl der Teilnehmer jederzeit unter <i>Grunddaten</i> anpassen.")."</font> ", "<font size=-1 color=\"red\">&nbsp; ", "</font><font size=-1>");
+                            printf (_("%sAchtung: %sWenn Sie ein Anmeldeverfahren starten, so kann dieser Schritt sp&auml;ter nicht r&uuml;ckg&auml;ngig gemacht werden.")." <br>&nbsp; "._("Sie k&ouml;nnen jedoch die Anzahl der Teilnehmer jederzeit unter <i>Grunddaten</i> anpassen.")."</font> ", "<font size=-1 color=\"red\">&nbsp; ", "</font><font size=-1>");
                             ?>
                         </td>
                     </tr>
@@ -4015,7 +4015,7 @@ if ($level == 7)
                         print "<br><br><font size=-1>"._("Sie haben jederzeit die M&ouml;glichkeit, die bereits erfassten Daten zu &auml;ndern und diese Schritte sp&auml;ter nachzuholen.")."</font>";
                     }
                     ?>
-                    <br /><br />
+                    <br><br>
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
                         <input type="HIDDEN" name="form" value=7>
                         <input type="IMAGE" <?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
@@ -4117,9 +4117,9 @@ if ($level == 7)
                                         $i++;
                                     }
                                     if (sizeof($resources_booked) == 1)
-                                        printf ("<li>"._("Die Belegung des Raums %s wurde in die Ressourcenverwaltung eingetragen.")."<br /><br />", $rooms);
+                                        printf ("<li>"._("Die Belegung des Raums %s wurde in die Ressourcenverwaltung eingetragen.")."<br><br>", $rooms);
                                     else
-                                        printf ("<li>"._("Die Belegung der R&auml;ume %s wurde in die Ressourcenverwaltung eingetragen."). "<br /><br />", $rooms);
+                                        printf ("<li>"._("Die Belegung der R&auml;ume %s wurde in die Ressourcenverwaltung eingetragen."). "<br><br>", $rooms);
                                 }
                                 if ($resources_failed) {
                                     $i=0;
@@ -4132,10 +4132,10 @@ if ($level == 7)
                                         $i++;
                                     }
                                     if (sizeof($resources_failed) == 1)
-                                        printf ("<li><font color=\"red\">"._("Eine oder mehrere Belegungen des Raumes %s konnte wegen &Uuml;berschneidungen nicht in die Ressourcenverwaltung eingetragen werden!")."<br />", $rooms);
+                                        printf ("<li><font color=\"red\">"._("Eine oder mehrere Belegungen des Raumes %s konnte wegen &Uuml;berschneidungen nicht in die Ressourcenverwaltung eingetragen werden!")."<br>", $rooms);
                                     else
-                                        printf ("<li><font color=\"red\">"._("Eine oder mehrere Belegungen der R&auml;ume %s konnten wegen &Uuml;berschneidungen nicht in die Ressourcenverwaltung eingetragen werden!")."<br />", $rooms);
-                                    print _("Bitte &uuml;berpr&uuml;fen Sie manuell die Belegungen!")."</font><br /><br />";
+                                        printf ("<li><font color=\"red\">"._("Eine oder mehrere Belegungen der R&auml;ume %s konnten wegen &Uuml;berschneidungen nicht in die Ressourcenverwaltung eingetragen werden!")."<br>", $rooms);
+                                    print _("Bitte &uuml;berpr&uuml;fen Sie manuell die Belegungen!")."</font><br><br>";
                                 }
                             }
 
@@ -4173,9 +4173,9 @@ if ($level == 8)
                 <blockquote>
                 <b><?=_("Schritt 7: Erstellen einer Informationsseite"); ?></b><br><br>
                 <? printf (_("Sie k&ouml;nnen nun eine frei gestaltbare Infomationsseite f&uuml;r die eben angelegte Veranstaltung <b>%s</b> eingeben."), $sem_create_data["sem_name"]);
-                print "<br />"._("Sie k&ouml;nnen die Bezeichnug dieser Seite frei bestimmten. Nutzen sie Sie etwa, um ungeordnete Literaturlisten oder weitere Informationen anzugeben.");
+                print "<br>"._("Sie k&ouml;nnen die Bezeichnug dieser Seite frei bestimmten. Nutzen sie Sie etwa, um ungeordnete Literaturlisten oder weitere Informationen anzugeben.");
                 if ($sem_create_data["modules_list"]["schedule"])
-                    print "<br /> "._("Wenn Sie auf &raquo;weiter&laquo; klicken, haben Sie die M&ouml;glichkeit, mit dem Termin-Assistenten einen Ablaufplan f&uuml;r die Veranstaltung anzulegen.")
+                    print "<br> "._("Wenn Sie auf &raquo;weiter&laquo; klicken, haben Sie die M&ouml;glichkeit, mit dem Termin-Assistenten einen Ablaufplan f&uuml;r die Veranstaltung anzulegen.")
                 ?>
                 <br><br>
                 </blockquote>
@@ -4242,10 +4242,10 @@ if ($level == 8)
                             } else {
                                 $help_url="help/index.php?help_page=ix_forum6.htm";
                             }
-                            print "<br /><br /><a target=\"_blank\" href=\"".$help_url."\">"._("Hilfe zur Formatierung von Texten")."</a>";
-                            print "<br /><br />"._("Um eine geordnete Literaturliste zu erstellen, benutzen Sie bitte die Literaturverwaltung.")."</a></font>";
+                            print "<br><br><a target=\"_blank\" href=\"".$help_url."\">"._("Hilfe zur Formatierung von Texten")."</a>";
+                            print "<br><br>"._("Um eine geordnete Literaturliste zu erstellen, benutzen Sie bitte die Literaturverwaltung.")."</a></font>";
                             ?>
-                            <br />
+                            <br>
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                 <? echo tooltip(_("In dieses Feld können Sie beliebigen Text zur Anzeige auf der Informationsseite eingeben."), TRUE, TRUE) ?>
                             >

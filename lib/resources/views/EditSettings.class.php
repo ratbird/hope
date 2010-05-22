@@ -141,7 +141,7 @@ class EditSettings {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="30%" valign="top"><font size=-1><?=_("NutzerInnen hinzuf&uuml;gen")?></font><br />
+                <td class="<? echo $cssSw->getClass() ?>" width="30%" valign="top"><font size=-1><?=_("NutzerInnen hinzuf&uuml;gen")?></font><br>
                 <? showSearchForm("search_root_user", $search_string_search_root_user, TRUE, FALSE, TRUE) ?>
                 </td>
             </tr>
@@ -168,7 +168,7 @@ class EditSettings {
                             break;
                         }
                         ?>
-                    </font><br />
+                    </font><br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" valign="middle" align="center">
                     <font size=-1>
@@ -184,7 +184,7 @@ class EditSettings {
             </tr>
             <? } ?>
         </table>
-        <br /><br />
+        <br><br>
         <?
     }
 
@@ -220,7 +220,7 @@ class EditSettings {
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 align="left">
                     <font size=-1><input type="TEXT" name="add_type" size=50 maxlength=255 value="<<?=_("bitte geben Sie hier den Namen ein")?>>" /></font>
                     &nbsp; <font size=-1><input type="IMAGE" name="_add_type" <?=makeButton("anlegen", "src")?> border=0 />
-                    <br /><input type="CHECKBOX" name="resource_is_room">&nbsp;Ressourcen-Typ wird als Raum behandelt</font>
+                    <br><input type="CHECKBOX" name="resource_is_room">&nbsp;Ressourcen-Typ wird als Raum behandelt</font>
 
 
                 </td>
@@ -238,16 +238,16 @@ class EditSettings {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
-                    <font size=-1><input type="TEXT" name="change_category_name[<?=$this->db->f("category_id")?>]" value="<? echo $this->db->f("name") ?>" size="20" maxlength="255" /></font><br />
+                    <font size=-1><input type="TEXT" name="change_category_name[<?=$this->db->f("category_id")?>]" value="<? echo $this->db->f("name") ?>" size="20" maxlength="255" /></font><br>
 
                     <?
                     foreach ($availableIcons as $key => $val) {
                         printf ("<input type=\"RADIO\" name=\"change_category_iconnr[%s]\" %s value=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/%s\" />&nbsp; ", $this->db->f("category_id"), ($this->db->f("iconnr") == $key) ? "checked" : "", $key, $val);
                     }
                     ?>
-                    <font size=-1><? ($this->db->f("is_room")) ? print "<br />"._("wird als <i>Raum</i> behandelt"):print("");?></font>
-                    <font size=-1><? printf("<br />"._("wird von <b>%s</b> Objekten verwendet")."</font><br />", $depRes); ?>
-                    <font size=-1><? ($this->db->f("system")) ? print( _("(systemobjekt)")."<br />") :print("") ?></font>
+                    <font size=-1><? ($this->db->f("is_room")) ? print "<br>"._("wird als <i>Raum</i> behandelt"):print("");?></font>
+                    <font size=-1><? printf("<br>"._("wird von <b>%s</b> Objekten verwendet")."</font><br>", $depRes); ?>
+                    <font size=-1><? ($this->db->f("system")) ? print( _("(systemobjekt)")."<br>") :print("") ?></font>
 
 
                     <input type="HIDDEN" name="change_properties_id[]" value="<?=$this->db->f("category_id")?>" />
@@ -263,7 +263,7 @@ class EditSettings {
                         ?>
                         <tr>
                             <td class="<? echo $cssSw->getClass() ?>" width="33%">
-                                <font size=-1><? echo $this->db2->f("name") ?></font><br />
+                                <font size=-1><? echo $this->db2->f("name") ?></font><br>
                             </td>
                             <td class="<? echo $cssSw->getClass() ?>" width="33%" nowrap>
                                 <font size=-1><?
@@ -282,7 +282,7 @@ class EditSettings {
                                         break;
                                     }
                                     ?>
-                                </font><br />
+                                </font><br>
                             </td>
                             <td class="<? echo $cssSw->getClass() ?>" width="3%">
                                 <?
@@ -345,7 +345,7 @@ class EditSettings {
                             </td>
                                 <td class="<? echo $cssSw->getClass() ?>" width="67%" colspan=2>
                                     <input type="IMAGE" <?=makeButton("zuweisen", "src") ?> name="change_category_add_property<?=$this->db->f("category_id")?>" border=0 />&nbsp;
-                                    <input type="IMAGE" name="change_types" <?=makeButton("uebernehmen", "src")?> border="0" /><br />
+                                    <input type="IMAGE" name="change_types" <?=makeButton("uebernehmen", "src")?> border="0" /><br>
                             </td>
                             <?
                             } else {
@@ -361,7 +361,7 @@ class EditSettings {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" valign="bottom"align="center">
                     <font size=-1>
-                        diesen Typ<br />
+                        diesen Typ<br>
                         <?
                         if (($depRes==0) && (!$this->db->f("system"))) {
                         ?>
@@ -370,13 +370,13 @@ class EditSettings {
                         } else {
                             print "<img ".makeButton ("n_loeschen", "src")." border=\"0\" ".tooltip(_("Dieser Typ kann nicht gelöscht werden, da er von Ressourcen verwendet wird!"))." />";
                         } ?>
-                    </font><br />
+                    </font><br>
                 </td>
             </tr>
             <? } ?>
             </form>
         </table>
-        <br /><br />
+        <br><br>
         <?
     }
 
@@ -428,31 +428,31 @@ class EditSettings {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
-                    <font size=-1><input type="TEXT" name="change_property_name[<?=$this->db2->f("property_id")?>]" value="<? echo htmlReady($this->db2->f("name")) ?>" size="20" maxlength="255" /></font><br />
-                    <font size=-1>wird von <b><? echo  $depTyp ?></b> Typen verwendet</font><br />
-                    <font size=-1><? ($this->db2->f("system")) ? print( _("(systemobjekt)")) :print("") ?></font><br />
+                    <font size=-1><input type="TEXT" name="change_property_name[<?=$this->db2->f("property_id")?>]" value="<? echo htmlReady($this->db2->f("name")) ?>" size="20" maxlength="255" /></font><br>
+                    <font size=-1>wird von <b><? echo  $depTyp ?></b> Typen verwendet</font><br>
+                    <font size=-1><? ($this->db2->f("system")) ? print( _("(systemobjekt)")) :print("") ?></font><br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="65%" valign="top">
                     <table border=0 celpadding=2 cellspacing=0 width="100%" align="center">
                     <tr>
                         <td class="<? echo $cssSw->getClass() ?>" width="50%">
                             <font size=-1><?=_("Art:")?></font>
-                            <br />
+                            <br>
                             <select name="send_property_type[<?=$this->db2->f("property_id")?>]">
                                 <font size=-1><option <? ($this->db2->f("type") == "bool") ? print "selected" : print "" ?> value="bool"><?=_("Zustand")?></option></font>
                                 <font size=-1><option <? ($this->db2->f("type") == "num") ? print "selected" : print "" ?> value="num"><?=_("einzeiliges Textfeld")?></option></font>
                                 <font size=-1><option <? ($this->db2->f("type") == "text") ? print "selected" : print "" ?> value="text"><?=_("mehrzeiliges Textfeld")?></option></font>
                                 <font size=-1><option <? ($this->db2->f("type") == "select") ? print "selected" : print "" ?> value="select"><?=_("Auswahlfeld")?></option></font>
                             </select>
-                            <br />
+                            <br>
                             <?
                             if ($this->db2->f("type") == "bool") {
-                                printf ("<font size=-1>"._("Bezeichnung:")."</font><br />");
-                                printf ("<font size=-1><input type=\"TEXT\" name=\"send_property_bool_desc[%s]\" value=\"%s\" size=30 maxlength=255 /></font><br />", $this->db2->f("property_id"), htmlReady($this->db2->f("options")));
+                                printf ("<font size=-1>"._("Bezeichnung:")."</font><br>");
+                                printf ("<font size=-1><input type=\"TEXT\" name=\"send_property_bool_desc[%s]\" value=\"%s\" size=30 maxlength=255 /></font><br>", $this->db2->f("property_id"), htmlReady($this->db2->f("options")));
                             }
                             if ($this->db2->f("type") == "select") {
-                                printf ("<font size=-1>"._("Optionen:")."</font><br />");
-                                printf ("<font size=-1><input type=\"TEXT\" name=\"send_property_select_opt[%s]\" value=\"%s\" size=30 maxlength=255 /></font><br />", $this->db2->f("property_id"), htmlReady($this->db2->f("options")));
+                                printf ("<font size=-1>"._("Optionen:")."</font><br>");
+                                printf ("<font size=-1><input type=\"TEXT\" name=\"send_property_select_opt[%s]\" value=\"%s\" size=30 maxlength=255 /></font><br>", $this->db2->f("property_id"), htmlReady($this->db2->f("options")));
                             }
                             ?>
                             <font size=-1>Vorschau:</font>
@@ -487,7 +487,7 @@ class EditSettings {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" valign="bottom"align="center">
                     <font size=-1>
-                        <?=_("diese Eigenschaft")?><br />
+                        <?=_("diese Eigenschaft")?><br>
                         <?
                         if (($depTyp==0) && (!$this->db->f("system"))) {
                         ?>
@@ -496,13 +496,13 @@ class EditSettings {
                         } else {
                             print makeButton("n_loeschen", "img");
                         } ?>
-                    </font><br />
+                    </font><br>
                 </td>
             </tr>
             <? } ?>
         </form>
         </table>
-        <br /><br />
+        <br><br>
         <?
     }
 
@@ -516,19 +516,19 @@ class EditSettings {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
-                    <font size=-1><b><?=_("Zulassen von <i>Raum</i>anfragen")?></b><br /><br />
-                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="allow_requests" <? print($GLOBALS["RESOURCES_ALLOW_ROOM_REQUESTS"]) ? "checked" : ""; print ">&nbsp;"._("NutzerInnen k&ouml;nnen im Rahmen der Veranstaltungsverwaltung Raumeigenschaften und konkrete R&auml;ume w&uuml;nschen.")?><br />
-                    <br />
+                    <font size=-1><b><?=_("Zulassen von <i>Raum</i>anfragen")?></b><br><br>
+                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="allow_requests" <? print($GLOBALS["RESOURCES_ALLOW_ROOM_REQUESTS"]) ? "checked" : ""; print ">&nbsp;"._("NutzerInnen k&ouml;nnen im Rahmen der Veranstaltungsverwaltung Raumeigenschaften und konkrete R&auml;ume w&uuml;nschen.")?><br>
+                    <br>
                 </td>
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
-                    <font size=-1><b><?=_("Sperrzeiten f&uuml;r die Bearbeitung von <i>Raum</i>belegungen")?></b><br /><br />
-                    <?=_("Die <b>Bearbeitung</b> von Belegungen soll f&uuml;r alle lokalen Ressourcen-Administratoren zu folgenden Bearbeitungszeiten geblockt werden:")?><br /><br />
-                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="locking_active" <? print($GLOBALS['RESOURCES_LOCKING_ACTIVE']) ? "checked" : ""; print ">&nbsp;"._("Blockierung ist zu den angegebenen Sperrzeiten aktiv:")?><br />
-                    <br />
+                    <font size=-1><b><?=_("Sperrzeiten f&uuml;r die Bearbeitung von <i>Raum</i>belegungen")?></b><br><br>
+                    <?=_("Die <b>Bearbeitung</b> von Belegungen soll f&uuml;r alle lokalen Ressourcen-Administratoren zu folgenden Bearbeitungszeiten geblockt werden:")?><br><br>
+                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="locking_active" <? print($GLOBALS['RESOURCES_LOCKING_ACTIVE']) ? "checked" : ""; print ">&nbsp;"._("Blockierung ist zu den angegebenen Sperrzeiten aktiv:")?><br>
+                    <br>
                     <table border="0" cellspacing="0" cellpadding="0" width="50%" align="left">
                     <?
                     $this->selectLocks("edit");
@@ -567,7 +567,7 @@ class EditSettings {
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_begin")) ? date("m", $this->db->f("lock_begin")) : _("mm"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\" />&nbsp;", ($this->db->f("lock_begin")) ? date("Y", $this->db->f("lock_begin")) : _("jjjj"));
-                                printf ("<br /><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
+                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />", ($this->db->f("lock_begin")) ? date("i", $this->db->f("lock_begin")) : _("mm"));
                                 print "</font></td>";
 
@@ -576,12 +576,12 @@ class EditSettings {
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_end")) ? date("d", $this->db->f("lock_end")) : _("tt"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_end")) ? date("m", $this->db->f("lock_end")) : _("mm"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\" />&nbsp;", ($this->db->f("lock_end")) ? date("Y", $this->db->f("lock_end")) : _("jjjj"));
-                                printf ("<br /><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
+                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />", ($this->db->f("lock_end")) ? date("i", $this->db->f("lock_end")) : _("mm"));
                                 print "</font></td>";
 
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
-                                print "<br /><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\" />";
+                                print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\" />";
                                 print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern"))." />";
                                 print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."/></a>";
                                 print "</td></tr>";
@@ -607,10 +607,10 @@ class EditSettings {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
-                    <font size=-1><b><?=_("Sperrzeiten f&uuml;r f&uuml;r <i>Raum</i>belegungen")?></b><br /><br />
-                    <?=_("Die <b>Belegung</b> soll f&uuml;r alle lokalen Ressourcen-Administratoren zu folgenden Belegungszeitenzeiten geblockt werden:")?><br /><br />
-                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="assign_locking_active" <? print($GLOBALS['RESOURCES_ASSIGN_LOCKING_ACTIVE']) ? "checked" : ""; print ">&nbsp;"._("Blockierung ist zu den angegebenen Sperrzeiten aktiv:")?><br />
-                    <br />
+                    <font size=-1><b><?=_("Sperrzeiten f&uuml;r f&uuml;r <i>Raum</i>belegungen")?></b><br><br>
+                    <?=_("Die <b>Belegung</b> soll f&uuml;r alle lokalen Ressourcen-Administratoren zu folgenden Belegungszeitenzeiten geblockt werden:")?><br><br>
+                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="assign_locking_active" <? print($GLOBALS['RESOURCES_ASSIGN_LOCKING_ACTIVE']) ? "checked" : ""; print ">&nbsp;"._("Blockierung ist zu den angegebenen Sperrzeiten aktiv:")?><br>
+                    <br>
                     <table border="0" cellspacing="0" cellpadding="0" width="50%" align="left">
                     <?
                     $this->selectLocks("assign");
@@ -649,7 +649,7 @@ class EditSettings {
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_begin")) ? date("m", $this->db->f("lock_begin")) : _("mm"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\" />&nbsp;", ($this->db->f("lock_begin")) ? date("Y", $this->db->f("lock_begin")) : _("jjjj"));
-                                printf ("<br /><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
+                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />", ($this->db->f("lock_begin")) ? date("i", $this->db->f("lock_begin")) : _("mm"));
                                 print "</font></td>";
 
@@ -658,12 +658,12 @@ class EditSettings {
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_end")) ? date("d", $this->db->f("lock_end")) : _("tt"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_end")) ? date("m", $this->db->f("lock_end")) : _("mm"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\" />&nbsp;", ($this->db->f("lock_end")) ? date("Y", $this->db->f("lock_end")) : _("jjjj"));
-                                printf ("<br /><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
+                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
                                 printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />", ($this->db->f("lock_end")) ? date("i", $this->db->f("lock_end")) : _("mm"));
                                 print "</font></td>";
 
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
-                                print "<br /><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\" />";
+                                print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\" />";
                                 print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern"))." />";
                                 print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."/></a>";
                                 print "</td></tr>";
@@ -689,62 +689,62 @@ class EditSettings {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
-                    <font size=-1><b><?=_("Optionen beim Bearbeiten von Anfragen")?></b><br /><br />
-                    &nbsp;&nbsp;&nbsp;Anzahl der Belegungen, ab der R&auml;ume dennoch mit Einzelterminen passend belegt werden k&ouml;nnen: <input type="TEXT" size="5" maxlength="10" name="allow_single_assign_percentage" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE"]);?>" />%<br />
-                    &nbsp;&nbsp;&nbsp;Anzahl ab der Einzeltermine gruppiert bearbeitet werden sollen: <input type="TEXT" size="3" maxlength="5" name="allow_single_date_grouping" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_DATE_GROUPING"]);?>" /><br />
-                    <br />
+                    <font size=-1><b><?=_("Optionen beim Bearbeiten von Anfragen")?></b><br><br>
+                    &nbsp;&nbsp;&nbsp;Anzahl der Belegungen, ab der R&auml;ume dennoch mit Einzelterminen passend belegt werden k&ouml;nnen: <input type="TEXT" size="5" maxlength="10" name="allow_single_assign_percentage" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE"]);?>" />%<br>
+                    &nbsp;&nbsp;&nbsp;Anzahl ab der Einzeltermine gruppiert bearbeitet werden sollen: <input type="TEXT" size="3" maxlength="5" name="allow_single_date_grouping" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_DATE_GROUPING"]);?>" /><br>
+                    <br>
                 </td>
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
-                    <font size=-1><b><?=_("Einordnung von <i>R&auml;umen</i> in Orga-Struktur")?></b><br /><br />
-                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="enable_orga_classify" <? print($GLOBALS["RESOURCES_ENABLE_ORGA_CLASSIFY"]) ? "checked" : ""; print ">&nbsp;"._("<i>R&auml;ume</i> k&ouml;nnen Fakult&auml;ten und Einrichtungen unabh&auml;ngig von Besitzerrechten zugeordnet werden.")?><br />
+                    <font size=-1><b><?=_("Einordnung von <i>R&auml;umen</i> in Orga-Struktur")?></b><br><br>
+                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="enable_orga_classify" <? print($GLOBALS["RESOURCES_ENABLE_ORGA_CLASSIFY"]) ? "checked" : ""; print ">&nbsp;"._("<i>R&auml;ume</i> k&ouml;nnen Fakult&auml;ten und Einrichtungen unabh&auml;ngig von Besitzerrechten zugeordnet werden.")?><br>
                     <?
-                    /*&nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="enable_orga_admin_notice" <? print($GLOBALS["RESOURCES_ENABLE_ORGA_ADMIN_NOTICE"]) ? "checked" : ""; print ">&nbsp;"._("Bei <i>Raum</i>w&uuml;nschen von DozentInnen auf <i>R&auml;ume</i> fremder Einrichtungen und Fakult&auml;ten die Administratoren benachrichtigen. ")?><br />*/
+                    /*&nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="enable_orga_admin_notice" <? print($GLOBALS["RESOURCES_ENABLE_ORGA_ADMIN_NOTICE"]) ? "checked" : ""; print ">&nbsp;"._("Bei <i>Raum</i>w&uuml;nschen von DozentInnen auf <i>R&auml;ume</i> fremder Einrichtungen und Fakult&auml;ten die Administratoren benachrichtigen. ")?><br>*/
                     ?>
-                    <br />
+                    <br>
                 </td>
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
-                    <font size=-1><b><?=_("Anlegen von <i>R&auml;umen</i>")?></b><br /><br />
-                    <?=_("Das Anlegen von <i>R&auml;umen</i> kann nur durch folgende Personenkreise vorgenommen werden:")?><br /><br />
+                    <font size=-1><b><?=_("Anlegen von <i>R&auml;umen</i>")?></b><br><br>
+                    <?=_("Das Anlegen von <i>R&auml;umen</i> kann nur durch folgende Personenkreise vorgenommen werden:")?><br><br>
                     &nbsp;&nbsp;&nbsp;<select name="allow_create_resources">
                         <option value="1" <? print($GLOBALS["RESOURCES_ALLOW_CREATE_ROOMS"] == "1") ? "selected" : ""; print ">"._("NutzerInnen ab globalem Status Tutor")?></option>
                         <option value="2" <? print($GLOBALS["RESOURCES_ALLOW_CREATE_ROOMS"] == "2") ? "selected" : ""; print ">"._("NutzerInnen ab globalem Status Admin")?></option>
                         <option value="3" <? print($GLOBALS["RESOURCES_ALLOW_CREATE_ROOMS"] == "3") ? "selected" : ""; print ">"._("nur globale Ressourcenadministratoren")?></option>
                     </select>
-                    <br />&nbsp;
+                    <br>&nbsp;
                 </td>
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
-                    <font size=-1><b><?=_("Vererbte Berechtigungen von Veranstaltungen und Einrichtungen f&uuml;r Ressourcen")?></b><br /><br />
-                    <?=_("Mitglieder von Veranstaltungen oder Einrichtungen erhalten folgende Rechte in Ressourcen, die diesen Veranstaltungen oder Einrichtungen geh&ouml;ren:")?><br /><br />
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance_rooms" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "1") ? "checked" : "" ?>/><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br />
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance_rooms" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "2") ? "checked" : "" ?>/><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br />
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance_rooms" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "3") ? "checked" : "" ?>/><?=_("keine Rechte")?><br />
+                    <font size=-1><b><?=_("Vererbte Berechtigungen von Veranstaltungen und Einrichtungen f&uuml;r Ressourcen")?></b><br><br>
+                    <?=_("Mitglieder von Veranstaltungen oder Einrichtungen erhalten folgende Rechte in Ressourcen, die diesen Veranstaltungen oder Einrichtungen geh&ouml;ren:")?><br><br>
+                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance_rooms" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "1") ? "checked" : "" ?>/><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance_rooms" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "2") ? "checked" : "" ?>/><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance_rooms" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS_ROOMS"] == "3") ? "checked" : "" ?>/><?=_("keine Rechte")?><br>
                     </select>
-                    <br />
+                    <br>
                 </td>
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
-                    <font size=-1><b><?=_("Vererbte Berechtigungen von Veranstaltungen und Einrichtungen f&uuml;r <i>R&auml;ume</i>")?></b><br /><br />
-                    <?=_("Mitglieder von Veranstaltungen oder Einrichtungen erhalten folgende Rechte in <i>R&auml;umen</i>, die diesen Veranstaltungen oder Einrichtungen geh&ouml;ren:")?><br /><br />
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "1") ? "checked" : "" ?>/><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br />
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "2") ? "checked" : "" ?>/><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br />
-                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "3") ? "checked" : "" ?>/><?=_("keine Rechte")?><br />
+                    <font size=-1><b><?=_("Vererbte Berechtigungen von Veranstaltungen und Einrichtungen f&uuml;r <i>R&auml;ume</i>")?></b><br><br>
+                    <?=_("Mitglieder von Veranstaltungen oder Einrichtungen erhalten folgende Rechte in <i>R&auml;umen</i>, die diesen Veranstaltungen oder Einrichtungen geh&ouml;ren:")?><br><br>
+                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance" value="1" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "1") ? "checked" : "" ?>/><?=_("die lokalen Rechte der Einrichtung oder Veranstaltung werden &uuml;bertragen")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance" value="2" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "2") ? "checked" : "" ?>/><?=_("nur Autorenrechte (eigene Belegungen anlegen und bearbeiten)")?><br>
+                        &nbsp;&nbsp;&nbsp;<input type="RADIO" name="inheritance" value="3" <? print ($GLOBALS["RESOURCES_INHERITANCE_PERMS"] == "3") ? "checked" : "" ?>/><?=_("keine Rechte")?><br>
                     </select>
-                    <br />
+                    <br>
                 </td>
             </tr>
             <tr>
@@ -754,7 +754,7 @@ class EditSettings {
             </tr>
         </form>
         </table>
-        <br /><br />
+        <br><br>
         <?
     }
     function showPesonalSettingsForms() {
@@ -764,7 +764,7 @@ class EditSettings {
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
         <form method="POST" action="<?echo $PHP_SELF ?>">
         </table>
-        <br /><br />
+        <br><br>
         <?
     }
 }

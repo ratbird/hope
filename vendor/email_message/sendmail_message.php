@@ -42,10 +42,10 @@
 			class for composing and sending messages. Just create a new object of
 			this class as follows and set only the necessary variables to
 			configure details of delivery using Sendmail.<paragraphbreak />
-			<tt>require('email_message.php');<br />
-			require('sendmail_message.php');<br />
-			<br />
-			$message_object = new sendmail_message_class;<br /></tt><paragraphbreak />
+			<tt>require('email_message.php');<br>
+			require('sendmail_message.php');<br>
+			<br>
+			$message_object = new sendmail_message_class;<br></tt><paragraphbreak />
 			<b>- Tuning the delivery mode for mass mailing</b><paragraphbreak />
 			Sendmail supports several message delivery modes. In many
 			installations the default is to attempt to deliver the message right

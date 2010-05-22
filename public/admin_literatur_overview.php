@@ -187,7 +187,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
 <table width="100%" cellspacing=0 cellpadding=0 border=0>
     <?
     if ($msg) {
-        echo "<tr> <td class=\"blank\" colspan=2><br />";
+        echo "<tr> <td class=\"blank\" colspan=2><br>";
         parse_msg ($msg);
         echo "</td></tr>";
     }
@@ -198,7 +198,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
             <table cellpadding="0" cellspacing="0" border="0" width="99%" align="center">
                 <tr>
                     <td class="steel1">
-                        <font size=-1><br /><b><?=_("Bitte w&auml;hlen Sie die Einrichtung und das Semester aus, f&uuml;r die Sie die Literaturliste anschauen wollen:")?></b><br/>&nbsp; </font>
+                        <font size=-1><br><b><?=_("Bitte w&auml;hlen Sie die Einrichtung und das Semester aus, f&uuml;r die Sie die Literaturliste anschauen wollen:")?></b><br>&nbsp; </font>
                     </td>
                 </tr>
                 <tr>

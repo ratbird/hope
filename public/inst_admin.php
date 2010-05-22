@@ -577,8 +577,8 @@ if ($inst_id != "" && $inst_id !="0") {
     /*
     if ($admin_view) {
         printf("<blockquote>" . _("Auf dieser Seite k&ouml;nnen Sie Personen der Einrichtung %s zuordnen."), "<b>" . htmlReady($inst_name) . "</b>");
-        echo "<br />" . _("Um weitere Personen als Mitarbeiter hinzuzuf&uuml;gen, benutzen Sie die Suche.");
-        echo "<br /><br /></blockquote>";
+        echo "<br>" . _("Um weitere Personen als Mitarbeiter hinzuzuf&uuml;gen, benutzen Sie die Suche.");
+        echo "<br><br></blockquote>";
         echo '<table width="100%" border="0" cellpadding="2" cellspacing="0">';
         echo '<tr>';
     } else {
@@ -586,7 +586,7 @@ if ($inst_id != "" && $inst_id !="0") {
             printf("<blockquote>%s <b>%s</b></blockquote>", _("Alle MitarbeiterInnen der Einrichtung"), $SessSemName[0]);
         } else {
             printf(_("Der Einrichtung <b>%s</b> wurden noch keine MitarbeiterInnen zugeordnet!"), $SessSemName[0]);
-            echo "\n<br /><br /></blockquote>\n";
+            echo "\n<br><br></blockquote>\n";
             echo "</td></tr></table\n";
             echo "</body></html>";
             page_close();
@@ -637,7 +637,7 @@ if ($inst_id != "" && $inst_id !="0") {
                                     ->render();
                             ?>
                             &nbsp;
-                            <input type="hidden" name="ins_id" value="<?= $inst_id ?>"><br />
+                            <input type="hidden" name="ins_id" value="<?= $inst_id ?>"><br>
                             <b><?=_("Folgende nur bei Zuordnung eines Admins:")?></b><br>
                             <input type="checkbox" id="enable_mail_admin" name="enable_mail_admin" value="admin"><label for="enable_mail_admin" ><?=_("Admins der Einrichtung benachrichtigen")?></label><br>
                             <input type="checkbox" id="enable_mail_dozent" name="enable_mail_dozent" value="dozent"><label for="enable_mail_dozent" ><?=_("Dozenten der Einrichtung benachrichtigen")?></label><br>
@@ -666,7 +666,7 @@ if ($inst_id != "" && $inst_id !="0") {
                     <tr>
                         <td class="steel1">
                             <font size="-1">
-                                <br/>
+                                <br>
                                 <?=sprintf(_("Klicken Sie auf %s%s Rundmail an alle MitarbeiterInnen%s, um eine E-Mail an alle MitarbeiterInnen zu verschicken."), "<a href=\"mailto:" . join(",",$mail_list) . "?subject=" . urlencode(_("MitarbeiterInnen-Rundmail")) .  "\">",  '<img src="'.$GLOBALS['ASSETS_URL'].'/images/link_intern.gif" border="0">', "</a>");?>
                             </font>
                         </td>
@@ -675,7 +675,7 @@ if ($inst_id != "" && $inst_id !="0") {
                     <tr>
                         <td class="steel1">
                             <font size="-1">
-                                <br/>
+                                <br>
                                 <?=sprintf(_("Klicken Sie auf %s%s Stud.IP Nachricht an alle MitarbeiterInnen%s, um eine interne Nachricht an alle MitarbeiterInnen zu verschicken."),
                                     "<a href=\"".URLHelper::getLink("sms_send.php?inst_id=$inst_id&subject=" . urlencode(_("MitarbeiterInnen-Rundmail - ". $SessSemName[0])))."\">", 
                                     '<img src="'.$GLOBALS['ASSETS_URL'].'/images/link_intern.gif" border="0">',

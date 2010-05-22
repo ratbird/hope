@@ -167,7 +167,7 @@ if ($_msg)  {
 <?
 $_the_treeview->showTree();
 ?>
-    <br/>
+    <br>
     </td>
 </tr>
 <tr>

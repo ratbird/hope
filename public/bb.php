@@ -62,8 +62,8 @@ include ('lib/include/header.php');   // Output of Stud.IP head
         $db->query("SELECT username FROM auth_user_md5 WHERE user_id='$usid'");
         $db->next_record();
         $usame = $db->f('username');
-        echo '<td class="angemeldet" width="25%" align="center" valign="center"><a href="about.php?username='. $usame. '"><img border="0" src="'.$GLOBALS['DYNAMIC_CONTENT_URL'] . '/user/' . $file[$i-5]['file'].'"></a><br />';
-        echo '<font size="-1">'.get_fullname($usid,'full',true).'<br/>'.date('d.m.Y', $file [$i-5]['time']).'</font></td>'."\n";
+        echo '<td class="angemeldet" width="25%" align="center" valign="center"><a href="about.php?username='. $usame. '"><img border="0" src="'.$GLOBALS['DYNAMIC_CONTENT_URL'] . '/user/' . $file[$i-5]['file'].'"></a><br>';
+        echo '<font size="-1">'.get_fullname($usid,'full',true).'<br>'.date('d.m.Y', $file [$i-5]['time']).'</font></td>'."\n";
         if ((($i % 4) ==0)  && (!$i==0))  echo "</tr><tr>\n";
         }
     echo '</tr></table>';

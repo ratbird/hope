@@ -80,19 +80,19 @@ $this->msg[11] = array (
         "msg"=> _("Die Belegung konnte nicht gespeichert werden, da Sie sich mit einer anderen Belegung &uuml;berschneidet!"));
 $this->msg[12] = array (
         "mode" => "info",
-        "msg"=> _("Es existieren keine Ressourcen oder Ebenen, auf die Sie Zugriff haben.")."<br />"._("Um Ressourcen anzulegen, erzeugen Sie zun&auml;chst eine neue Ebene, indem sie &raquo;Neue Hierarchie erzeugen&laquo; anw&auml;hlen.")." <br />"._("Anschließend k&ouml;nnen auf dieser Ebene Ressourcen anlegen"));
+        "msg"=> _("Es existieren keine Ressourcen oder Ebenen, auf die Sie Zugriff haben.")."<br>"._("Um Ressourcen anzulegen, erzeugen Sie zun&auml;chst eine neue Ebene, indem sie &raquo;Neue Hierarchie erzeugen&laquo; anw&auml;hlen.")." <br>"._("Anschließend k&ouml;nnen auf dieser Ebene Ressourcen anlegen"));
 $this->msg[13] = array (
         "mode" => "info",
         "msg"=> _("Es existieren keine Ressourcen, die Sie im Rahmen dieser Veranstaltung belegen d&uuml;rfen."));
 $this->msg[14] = array (
         "mode" => "info",
-        "msg"=> _("Sie haben keine Ebene ausgew&auml;hlt. Daher kann keine Liste erzeugt werden.")." <br />"._("Benutzen Sie die Suchfunktion oder w&auml;hlen Sie unter &raquo;&Uuml;bersicht&laquo; einen Ebene bzw. Ressource in der Hierarchie aus."));
+        "msg"=> _("Sie haben keine Ebene ausgew&auml;hlt. Daher kann keine Liste erzeugt werden.")." <br>"._("Benutzen Sie die Suchfunktion oder w&auml;hlen Sie unter &raquo;&Uuml;bersicht&laquo; einen Ebene bzw. Ressource in der Hierarchie aus."));
 $this->msg[15] = array (
         "mode" => "info",
-        "msg"=> _("Sie haben keine Objekt zum Bearbeiten ausgew&auml;hlt.")." <br />"._("Bitte w&auml;hlen Sie zun&auml;chst ein Objekt aus."));
+        "msg"=> _("Sie haben keine Objekt zum Bearbeiten ausgew&auml;hlt.")." <br>"._("Bitte w&auml;hlen Sie zun&auml;chst ein Objekt aus."));
 $this->msg[16] = array (
         "mode" => "info",
-        "msg"=> _("Sie haben keine Objekt zum Anzeigen ausgew&auml;hlt.")." <br />"._("Bitte w&auml;hlen Sie zun&auml;chst ein Objekt aus."));
+        "msg"=> _("Sie haben keine Objekt zum Anzeigen ausgew&auml;hlt.")." <br>"._("Bitte w&auml;hlen Sie zun&auml;chst ein Objekt aus."));
 $this->msg[17] = array (
         "mode" => "error",
         "msg"=> _("Bitte geben Sie g&uuml;ltige Werte f&uuml;r Datum, Beginn und Ende der Belegung an!"));
@@ -133,17 +133,17 @@ $this->msg[28] = array (
 $this->msg[29] = array (
         "mode" => "info",
         "msg"=> _("Sie haben den Raum als <u>blockierbar</u> markiert. Wollen Sie auch alle untergeordneten R&auml;ume ebenfalls als <u>blockierbar</u> markieren?")
-            ."<br /><a href=\"%s?set_lockable_recursiv=1&lock_resource_id=%s\">".makeButton("ja2")."</a>"
+            ."<br><a href=\"%s?set_lockable_recursiv=1&lock_resource_id=%s\">".makeButton("ja2")."</a>"
             ."&nbsp;<a href=\"%s\">".makeButton("nein")."</a>");
 $this->msg[30] = array (
         "mode" => "info",
         "msg"=> _("Sie haben den Raum als <u>nicht</u> mehr blockierbar markiert. Wollen Sie auch alle untergeordneten R&auml;ume ebenfalls als <u>nicht</u> blockierbar markieren?")
-            ."<br /><a href=\"%s?unset_lockable_recursiv=1&lock_resource_id=%s\">".makeButton("ja2")."</a>"
+            ."<br><a href=\"%s?unset_lockable_recursiv=1&lock_resource_id=%s\">".makeButton("ja2")."</a>"
             ."&nbsp;<a href=\"%s\">".makeButton("nein")."</a>");
 $this->msg[31] = array (
         "mode" => "info",
-        "msg"=> "<font size=\"-1\">"._("<b>Ressourcenblockierung vom %s bis zum %s.</b>")."</font><br />".
-            _("Sie versuchen, ein Objekt zu bearbeiten, das zur Zeit f&uuml;r eine Bearbeitung gesperrt ist. Nur der globale Ressourcenadministrator hat Zugriff auf dieses Objekt! <br />(Wenn Sie normalerweise Zugriff auf dieses Objekt haben, wird Ihnen der Zugriff nach Aufhebung der Blockierung wieder gew&auml;hrt.)"));
+        "msg"=> "<font size=\"-1\">"._("<b>Ressourcenblockierung vom %s bis zum %s.</b>")."</font><br>".
+            _("Sie versuchen, ein Objekt zu bearbeiten, das zur Zeit f&uuml;r eine Bearbeitung gesperrt ist. Nur der globale Ressourcenadministrator hat Zugriff auf dieses Objekt! <br>(Wenn Sie normalerweise Zugriff auf dieses Objekt haben, wird Ihnen der Zugriff nach Aufhebung der Blockierung wieder gew&auml;hrt.)"));
 $this->msg[32] = array (
         "mode" => 'success',
         "msg"=> _("Die ausgew&auml;hlten Eintr&auml;ge wurden in die aktuelle Anfrage &uuml;bernommen."));
@@ -155,11 +155,11 @@ $this->msg[34] = array (
         "msg"=> _("Folgende R&auml;ume konnten wegen &Uuml;berschneidungen nicht gebucht werden: <font size=\"-1\" color=\"black\">%s</font>"));
 $this->msg[35] = array (
         "mode" => "error",
-        "msg"=> _("Die folgende R&auml;ume konnten wegen &Uuml;berschneidungen nicht gebucht werden:")."<br />"._("Eine neue Anfrage, die einzeln bearbeitet werden mu&szlig;, wurde f&uuml;r jede Belegungszeit erstellt.  <font size=\"-1\" color=\"black\">%s</font>"));
+        "msg"=> _("Die folgende R&auml;ume konnten wegen &Uuml;berschneidungen nicht gebucht werden:")."<br>"._("Eine neue Anfrage, die einzeln bearbeitet werden mu&szlig;, wurde f&uuml;r jede Belegungszeit erstellt.  <font size=\"-1\" color=\"black\">%s</font>"));
 $this->msg[36] = array (
         "mode" => "info",
         "msg"=> _("Sie haben alle Anfragen, die Sie ausgew&auml;hlt haben, bearbeitet. Wollen Sie jetzt Nachrichten zu allen aufgel&ouml;sten Anfragen versenden?")
-            ."<br /><a href=\"%s?snd_closed_request_sms=1&reset_set=1\">".makeButton("ja2")."</a>"
+            ."<br><a href=\"%s?snd_closed_request_sms=1&reset_set=1\">".makeButton("ja2")."</a>"
             ."&nbsp;<a href=\"%s?reset_set=1\">".makeButton("nein")."</a>");
 $this->msg[37] = array (
         "mode" => 'success',
@@ -184,7 +184,7 @@ $this->msg[43] = array (
         "mode" => "info",
         "msg"=> "<form action=\"%s\" method=\"post\"><table border=\"0\" cellspacing=\"5\" cellpadding=\"0\"><tr><td valign=\"top\">"
             . _("Wollen Sie die Anfrage wirklich ablehnen?")
-            ."<br /><input type=\"image\" ".makeButton('ja2', 'src')." align=\"middle\"></a>"
+            ."<br><input type=\"image\" ".makeButton('ja2', 'src')." align=\"middle\"></a>"
             ."&nbsp;<a href=\"%s?decline_request=0\">".makeButton("nein")."</a><br>"
             .'<input type="hidden" name="decline_request" value="1"></td><td valign=\"top\">'
             .'<font size="-1">'._("Grund der Ablehnung:").'</font><br>'

@@ -156,8 +156,8 @@ if ($cmd_insert_x) {
     if ($count) {
 
         $msg = "msg§";
-        if ($count == "1") $msg .= sprintf(_("Ihre Nachricht an %s wurde verschickt!"), get_fullname_from_uname($sms_data["p_rec"][0],'full',true))."<br />";
-        if ($count >= "2") $msg .= sprintf(_("Ihre Nachricht wurde an %s Empf&auml;nger verschickt!"), $count)."<br />";
+        if ($count == "1") $msg .= sprintf(_("Ihre Nachricht an %s wurde verschickt!"), get_fullname_from_uname($sms_data["p_rec"][0],'full',true))."<br>";
+        if ($count >= "2") $msg .= sprintf(_("Ihre Nachricht wurde an %s Empf&auml;nger verschickt!"), $count)."<br>";
         unset($signature);
         unset($message);
         $sms_data["sig"] = $my_messaging_settings["addsignature"];

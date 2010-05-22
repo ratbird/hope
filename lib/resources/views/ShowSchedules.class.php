@@ -121,8 +121,8 @@ class ShowSchedules {
                     <font size=-1>Beginn:&nbsp;
                     <input type="text" name="schedule_begin_day" size=2 maxlength=2 value="<? if (!$start_time) echo date("d",time()); else echo date("d",$start_time); ?>">.
                     <input type="text" name="schedule_begin_month" size=2 maxlength=2 value="<? if (!$start_time) echo date("m",time()); else echo date("m",$start_time); ?>">.
-                    <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<? if (!$start_time) echo date("Y",time()); else echo date("Y",$start_time); ?>"><br />
-                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; <input type="IMAGE" name="jump" border="0"<? echo makeButton("auswaehlen", "src") ?> /><br />
+                    <input type="text" name="schedule_begin_year" size=4 maxlength=4 value="<? if (!$start_time) echo date("Y",time()); else echo date("Y",$start_time); ?>"><br>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; <input type="IMAGE" name="jump" border="0"<? echo makeButton("auswaehlen", "src") ?> /><br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="66%" valign="top"><font size=-1>
                     <input type="text" name="schedule_length_factor" size=2 maxlength=2 / value="<? if (!$this->length_factor) echo "1"; else echo $this->length_factor; ?>">
@@ -133,13 +133,13 @@ class ShowSchedules {
                         <option <? if ($this->length_unit  == "y") echo "selected" ?> value="y"><?=_("Jahre(e)")?></option>
                     </select>
                     &nbsp;<?=_("als Liste ausgeben")?>
-                    &nbsp; <input type="IMAGE" name="start_list" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>" /><br />
+                    &nbsp; <input type="IMAGE" name="start_list" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>" /><br>
                 </td>
             </tr>
             <tr>
                     <td class="<? echo $cssSw->getClass() ?>" width="66%" valign="top"><font size=-1>
                     <?=_("<i>oder</i> eine Woche grafisch ausgeben")?>
-                    &nbsp; <input type="IMAGE" name="start_graphical" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>" /><br />&nbsp;
+                    &nbsp; <input type="IMAGE" name="start_graphical" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>" /><br>&nbsp;
                 </td>
             </tr>
         </table>
@@ -185,8 +185,8 @@ class ShowSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="96%">
                     <?
                     $assign_events=new AssignEventList ($this->start_time, $this->end_time, $this->resource_id, '', '', TRUE);
-                    echo "<br /><font size=-1>"._("Anzahl der Belegungen in diesem Zeitraum:")." ", $assign_events->numberOfEvents()."</font>";
-                    echo "<br /><br />";
+                    echo "<br><font size=-1>"._("Anzahl der Belegungen in diesem Zeitraum:")." ", $assign_events->numberOfEvents()."</font>";
+                    echo "<br><br>";
                     $num = 1;
                     while ($event = $assign_events->nextEvent()) {
                         $add_info = '';
@@ -210,7 +210,7 @@ class ShowSchedules {
                         }
                         printf ("&nbsp;"
                                 ._("Belegung ist von <b>%s</b> bis <b>%s</b>, belegt von <b>%s</b>")
-                                ."</font><br />", strftime("%A, %d.%m.%Y %H:%M", $event->getBegin())
+                                ."</font><br>", strftime("%A, %d.%m.%Y %H:%M", $event->getBegin())
                                 , strftime("%A, %d.%m.%Y %H:%M", $event->getEnd())
                                 , $event->getName(get_config('RESOURCES_SCHEDULE_EXPLAIN_USER_NAME')) . $add_info);
                     }
@@ -219,7 +219,7 @@ class ShowSchedules {
             </tr>
         </table>
         </form>
-        <br /><br />
+        <br><br>
     <?
     }
 
@@ -318,7 +318,7 @@ class ShowSchedules {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" colspan="2">
                     <?
-                    echo "&nbsp;<font size=-1>"._("Anzahl der Belegungen in diesem Zeitraum:")." ", $assign_events->numberOfEvents()."</font><br />&nbsp;";
+                    echo "&nbsp;<font size=-1>"._("Anzahl der Belegungen in diesem Zeitraum:")." ", $assign_events->numberOfEvents()."</font><br>&nbsp;";
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="20%" nowrap>

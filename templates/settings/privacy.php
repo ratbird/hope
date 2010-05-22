@@ -64,7 +64,7 @@
                             <?php echo _("Stellen Sie hier ein, in welchen Bereichen des Systems Sie erscheinen wollen."); ?>
                             <?php
                             if (!$NOT_HIDEABLE_FIELDS[$my_perm]['email']) {
-                                echo '<br/>';
+                                echo '<br>';
                                 echo _("Wenn Sie hier Ihre E-Mailadresse verstecken, wird stattdessen die E-Mailadresse Ihrer (Standard-)Einrichtung angezeigt.");
                             }
                             ?>
@@ -75,22 +75,22 @@
                             <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['online']) {?>
                             <input type="checkbox" name="online"<?php echo $online_visibility ? ' checked="checked"' : '' ?>/>
                             <?php echo _('sichtbar in "Wer ist online"'); ?>
-                            <br/>
+                            <br>
                             <?php } ?>
                             <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['chat'] && get_config('CHAT_ENABLE')) {?>
                             <input type="checkbox" name="chat"<?php echo $chat_visibility ? ' checked="checked"' : '' ?>/>
                             <?php echo _('eigener Chatraum sichtbar'); ?>
-                            <br/>
+                            <br>
                             <?php } ?>
                             <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['search']) {?>
                             <input type="checkbox" name="search"<?php echo $search_visibility ? ' checked="checked"' : '' ?>/>
                             <?php echo _('auffindbar über die Personensuche'); ?>
-                            <br/>
+                            <br>
                             <?php } ?>
                             <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['email']) {?>
                             <input type="checkbox" name="email"<?php echo $email_visibility ? ' checked="checked"' : '' ?>/>
                             <?php echo _('eigene Emailadresse sichtbar'); ?>
-                            <br/>
+                            <br>
                             <?php } ?>
                         </td>
                     </tr>
@@ -103,7 +103,7 @@
                     </tr>
                 </table>
             </form>
-            <br/>
+            <br>
             <h2><?php echo _('eigene Homepage'); ?></h2>
             <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_all_homepage_visibility', 'studipticket' => get_ticket())); ?>">
                     <?php echo _('alle Sichtbarkeiten setzen auf'); ?>
@@ -174,7 +174,7 @@
                     </tr>
                 </table>
             </form>
-            <br/><br/>
+            <br><br>
         </td>
     </tr>
 </table>

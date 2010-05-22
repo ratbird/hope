@@ -57,10 +57,10 @@ if ($SessSemName[1]) {
     <?
     if ($links_admin_data["referred_from"] == "sem") {
         printf(_("Hier k&ouml;nnen Sie die Daten der Veranstaltung <b>%s</b> direkt bearbeiten.") . "<br>", htmlReady($SessSemName[0]));
-        print(_("Wenn Sie eine andere Veranstaltung bearbeiten wollen, klicken Sie bitte auf <b>Veranstaltungen</b> um zum Auswahlmenü zurückzukehren.") . "<br />&nbsp;");
+        print(_("Wenn Sie eine andere Veranstaltung bearbeiten wollen, klicken Sie bitte auf <b>Veranstaltungen</b> um zum Auswahlmenü zurückzukehren.") . "<br>&nbsp;");
     } else {
         printf(_("Sie haben die Veranstaltung <b>%s</b> vorgew&auml;hlt. Sie k&ouml;nnen nun direkt die einzelnen Bereiche dieser Veranstaltung bearbeiten, indem Sie die entsprechenden Men&uuml;punkte w&auml;hlen.") . "<br>", htmlReady($SessSemName[0]));
-        print(_("Wenn Sie eine andere Veranstaltung bearbeiten wollen, klicken Sie bitte auf <b>Veranstaltungen</b> um zum Auswahlmenü zurückzukehren.") . "<br />&nbsp;");
+        print(_("Wenn Sie eine andere Veranstaltung bearbeiten wollen, klicken Sie bitte auf <b>Veranstaltungen</b> um zum Auswahlmenü zurückzukehren.") . "<br>&nbsp;");
     }
     ?>
     </blockquote>

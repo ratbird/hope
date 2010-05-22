@@ -609,7 +609,7 @@ function get_readable_admission_difference ($aado, $aad) {
                 break;
                 
             case 'admission_prelim_txt':
-                $message[] = 'Hinweistext Anmeldemodus: '. $aado[$field] ."<br/> -> ". $aad[$field];
+                $message[] = 'Hinweistext Anmeldemodus: '. $aado[$field] ."<br> -> ". $aad[$field];
                 break;
     
             case 'admission_disable_waitlist':

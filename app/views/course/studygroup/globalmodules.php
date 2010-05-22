@@ -42,7 +42,7 @@ $cssSw = new cssClassSwitcher();
     <? else: ?>
         <?= MessageBox::info(_("Sie können die Studiengruppen nicht deaktivieren, solange noch welche in Stud.IP vorhanden sind!")) ?>
     <? endif; ?>
-    <br />
+    <br>
 <?php endif;?>
 <form action="<?= $controller->url_for('course/studygroup/savemodules') ?>" method="post">
     <!-- Title -->
@@ -76,7 +76,7 @@ $cssSw = new cssClassSwitcher();
 
 <? endforeach; ?>
 </table>
-    <br />
+    <br>
     <? $cssSw->resetClass(); ?>
     <!-- Title -->
 <table class="default">
@@ -109,7 +109,7 @@ $cssSw = new cssClassSwitcher();
     </tr>
 </table>
 
-<br />
+<br>
 
 <? $cssSw->resetClass(); ?>
 <!-- Title -->
@@ -125,9 +125,9 @@ $cssSw = new cssClassSwitcher();
     <? $cssSw->switchClass(); ?>
     <tr>
         <td colspan="2" <?= $cssSw->getFullClass() ?>>
-        <br />
+        <br>
         <textarea name="terms" style="width: 90%" rows="10" style='align:middle;'><?= $terms ?></textarea>
-        <br />
+        <br>
         </td>
     </tr>
 </table>

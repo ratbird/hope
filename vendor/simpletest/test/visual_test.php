@@ -412,7 +412,7 @@ class PassesAsWellReporter extends HtmlReporter {
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
         print implode(" -&gt; ", $breadcrumb);
-        print " -&gt; " . htmlentities($message) . "<br />\n";
+        print " -&gt; " . htmlentities($message) . "<br>\n";
     }
 
     function paintSignal($type, &$payload) {
@@ -420,7 +420,7 @@ class PassesAsWellReporter extends HtmlReporter {
         $breadcrumb = $this->getTestList();
         array_shift($breadcrumb);
         print implode(" -&gt; ", $breadcrumb);
-        print " -&gt; " . htmlentities(serialize($payload)) . "<br />\n";
+        print " -&gt; " . htmlentities(serialize($payload)) . "<br>\n";
     }
 }
 

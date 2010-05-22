@@ -127,16 +127,16 @@
         <td class="<? echo $cssSw->getClass() ?>" width="40%">
         <?
             $db2->query("SELECT * FROM resources_objects_properties WHERE resource_id = '".$resObject->getId()."' AND property_id = '".$db->f("property_id")."' "); $db2->next_record();
-            printf ("<input type=\"HIDDEN\" name=\"change_property_val[]\" value=\"%s\" />", "_id_".$db->f("property_id"));
+            printf ("<input type=\"HIDDEN\" name=\"change_property_val[]\" value=\"%s\">", "_id_".$db->f("property_id"));
             switch ($db->f("type")) :
                 case "bool":
-                    printf ("<input type=\"CHECKBOX\" name=\"change_property_val[]\" %s />&nbsp;%s", ($db2->f("state")) ? "checked":"", htmlReady($db->f("options")));
+                    printf ("<input type=\"CHECKBOX\" name=\"change_property_val[]\" %s>&nbsp;%s", ($db2->f("state")) ? "checked":"", htmlReady($db->f("options")));
                 break;
                 case "num":
                     if ($db->f("system") == 2)
-                        printf ("<input type=\"TEXT\" name=\"change_property_val[]\" value=\"%s\" size=5 maxlength=10 />", htmlReady($db2->f("state")));
+                        printf ("<input type=\"TEXT\" name=\"change_property_val[]\" value=\"%s\" size=5 maxlength=10>", htmlReady($db2->f("state")));
                     else
-                        printf ("<input type=\"TEXT\" name=\"change_property_val[]\" value=\"%s\" size=30 maxlength=255 />", htmlReady($db2->f("state")));
+                        printf ("<input type=\"TEXT\" name=\"change_property_val[]\" value=\"%s\" size=30 maxlength=255>", htmlReady($db2->f("state")));
                 break;
                 case "text":
                     printf ("<textarea name=\"change_property_val[]\" cols=30 rows=2 >%s</textarea>", htmlReady($db2->f("state")));

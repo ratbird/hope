@@ -854,8 +854,8 @@ function showSearchForm($name, $search_string='', $user_only=FALSE, $administrab
             $my_objects=search_objects($search_string, FALSE, $sem);
 
         ?>
-        <input type="HIDDEN" name="<? echo "search_string_".$name ?>" value="<? echo $search_string ?>" />
-        <font size=-1><input type="IMAGE" align="absmiddle"  name="<? echo "send_".$name ?>" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_<?=$img_dir.".gif\" ".tooltip (_("diesen Eintrag übernehmen")) ?> border="0" value="<?=_("&uuml;bernehmen")?>"  /></font>
+        <input type="HIDDEN" name="<? echo "search_string_".$name ?>" value="<? echo $search_string ?>">
+        <font size=-1><input type="IMAGE" align="absmiddle"  name="<? echo "send_".$name ?>" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_<?=$img_dir.".gif\" ".tooltip (_("diesen Eintrag übernehmen")) ?> border="0" value="<?=_("&uuml;bernehmen")?>" ></font>
         <select align="absmiddle" name="<? echo "submit_".$name ?>">
         <?
         if ($allow_all)
@@ -875,12 +875,12 @@ function showSearchForm($name, $search_string='', $user_only=FALSE, $administrab
             $old_art=$val["art"];
         }
         ?></select>
-        <font size=-1><input type="IMAGE" align="absmiddle" name="<? echo "reset_".$name ?>" src="<?= $GLOBALS['ASSETS_URL'] ?>images/rewind.gif" <?=tooltip (_("Suche zurücksetzen")) ?> border="0" value="<?=_("neue Suche")?>" /></font>
+        <font size=-1><input type="IMAGE" align="absmiddle" name="<? echo "reset_".$name ?>" src="<?= $GLOBALS['ASSETS_URL'] ?>images/rewind.gif" <?=tooltip (_("Suche zurücksetzen")) ?> border="0" value="<?=_("neue Suche")?>"></font>
         <?
     } else {
         ?>
-        <font size=-1><input type="TEXT" align="absmiddle" name=" <? echo "search_string_".$name ?>" size=30 maxlength=255 /></font>
-        <font size=-1><input type="IMAGE" align="absmiddle" name=" <? echo "do_".$name ?>" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <?=tooltip (_("Starten Sie hier Ihre Suche")) ?> border=0 value="<?=_("suchen")?>" /></font>
+        <font size=-1><input type="TEXT" align="absmiddle" name=" <? echo "search_string_".$name ?>" size=30 maxlength=255></font>
+        <font size=-1><input type="IMAGE" align="absmiddle" name=" <? echo "do_".$name ?>" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <?=tooltip (_("Starten Sie hier Ihre Suche")) ?> border=0 value="<?=_("suchen")?>"></font>
         <?
     }
 }

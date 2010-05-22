@@ -2021,7 +2021,7 @@ if ((!$sem_create_data["sem_class"]) && (!$level)){
                     <?
                     foreach (SeminarCategories::GetAll() as $category) {
                         if(!$category->course_creation_forbidden){
-                            echo "<tr><td width=\"3%\" class=\"blank\"><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=0 /></a><td>";
+                            echo "<tr><td width=\"3%\" class=\"blank\"><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=0></a><td>";
                             echo "<td width=\"97%\" class=\"blank\"><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\">".$category->name."</a><td></tr>";
                         echo "<tr><td width=\"3%\" class=\"blank\">&nbsp; <td>";
                             echo "<td width=\"97%\" class=\"blank\"><font size=-1>".$category->create_description."</font><td></tr>";
@@ -2524,7 +2524,7 @@ if ($level == 2)
 				<td <? echo $cssSw->getFullClass() ?> width="50%" colspan="2">
 				<?php
 				print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type));
-				print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\" />";
+				print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\">";
 
 				$clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
                 foreach($sem_create_data["sem_bet_inst"] as $val) {
@@ -2617,7 +2617,7 @@ if ($level == 2)
                         <td class="<? echo $cssSw->getClass() ?>" width="50%" colspan="2">
                         <?php
                         print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('tutor', 1, $seminar_type));
-                        print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_tut\" />";
+                        print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_tut\">";
 
                         $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
                         foreach($sem_create_data["sem_bet_inst"] as $val) {
@@ -2755,7 +2755,7 @@ if ($level == 2)
                                                 </td>
                                                 <td class="<?= $cssSw->getClass() ?>" nowrap colspan=2 >
                                                 <a href="<?= URLHelper::getLink('?delete_domain='.$domain_id) ?>">
-                                                <img src="<?= $GLOBALS['ASSETS_URL'].'images/trash.gif'.'" '.tooltip(_('Nutzerdomäne aus der Liste löschen')) ?> />
+                                                <img src="<?= $GLOBALS['ASSETS_URL'].'images/trash.gif'.'" '.tooltip(_('Nutzerdomäne aus der Liste löschen')) ?>>
                                                 </a>
                                                 </td>
                                             </tr>
@@ -3166,7 +3166,7 @@ if ($level == 4) {
                             <br><font size="-1"><b><?=("gew&uuml;nschter Raum:")?></b><br><br>
                             <?
                             print "<b>".htmlReady($resObject->getName())."</b>,&nbsp;"._("verantwortlich:")."&nbsp;<a href=\"".URLHelper::getLink($resObject->getOwnerLink())."\">".$resObject->getOwnerName()."</a>";  //getOwnerLink() does not contain the output of an URLHelper
-                            print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("den ausgewählten Raum löschen"))." border=\"0\" name=\"reset_resource_id\" />";
+                            print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("den ausgewählten Raum löschen"))." border=\"0\" name=\"reset_resource_id\">";
                             ?>
                             </font>
                         </td>
@@ -3213,8 +3213,8 @@ if ($level == 4) {
                                                             printf ("<option value=\"%s\" %s>%s </option>", $db->f("category_id"), ($category_id == $db->f("category_id")) ? "selected" : "", htmlReady(my_substr($db->f("name"), 0, 30)));
                                                         }
                                                         print "</select>";
-                                                        print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Raumtyp auswählen"))." />";
-                                                        print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("alle Angaben zurücksetzen"))." border=\"0\" name=\"reset_room_type\" /><br><br>";
+                                                        print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Raumtyp auswählen")).">";
+                                                        print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("alle Angaben zurücksetzen"))." border=\"0\" name=\"reset_room_type\"><br><br>";
                                                     }
 
                                                     print _("Folgende Eigenschaften sind w&uuml;nschbar:")."<br><br>";
@@ -3229,18 +3229,18 @@ if ($level == 4) {
                                                     <?
                                                     switch ($db2->f("type")) {
                                                         case "bool":
-                                                            printf ("<input type=\"CHECKBOX\" name=\"request_property_val[%s]\" %s /><font size=-1>&nbsp;%s</font>", $db2->f("property_id"), ($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id"))) ? "checked": "", htmlReady($db2->f("options")));
+                                                            printf ("<input type=\"CHECKBOX\" name=\"request_property_val[%s]\" %s><font size=-1>&nbsp;%s</font>", $db2->f("property_id"), ($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id"))) ? "checked": "", htmlReady($db2->f("options")));
                                                         break;
                                                         case "num":
                                                             if ($db2->f("system") == 2) {
-                                                                printf ("<input type=\"TEXT\" name=\"request_property_val[%s]\" value=\"%s\" size=5 maxlength=10 />", $db2->f("property_id"), htmlReady($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id"))));
+                                                                printf ("<input type=\"TEXT\" name=\"request_property_val[%s]\" value=\"%s\" size=5 maxlength=10>", $db2->f("property_id"), htmlReady($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id"))));
                                                                 if ($sem_create_data["sem_turnout"]) {
                                                                     print "<font size=\"-1\">"._("max. Teilnehmeranzahl &uuml;bernehmen")."</font>";
-                                                                    printf ("<br><input type=\"CHECKBOX\" name=\"seats_are_admission_turnout\" %s />&nbsp;",  (($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id")) == $sem_create_data["sem_turnout"]) && ($sem_create_data["sem_turnout"])>0) ? "checked" :"");
+                                                                    printf ("<br><input type=\"CHECKBOX\" name=\"seats_are_admission_turnout\" %s>&nbsp;",  (($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id")) == $sem_create_data["sem_turnout"]) && ($sem_create_data["sem_turnout"])>0) ? "checked" :"");
                                                                 }
 
                                                             } else {
-                                                                printf ("<input type=\"TEXT\" name=\"request_property_val[%s]\" value=\"%s\" size=30 maxlength=255 />", $db2->f("property_id"), htmlReady($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id"))));
+                                                                printf ("<input type=\"TEXT\" name=\"request_property_val[%s]\" value=\"%s\" size=30 maxlength=255>", $db2->f("property_id"), htmlReady($sem_create_data["resRequest"]->getPropertyState($db2->f("property_id"))));
                                                             }
                                                         break;
                                                         case "text":
@@ -3273,7 +3273,7 @@ if ($level == 4) {
                                                     printf ("<option value=\"%s\">%s </option>", $db->f("category_id"), htmlReady(my_substr($db->f("name"), 0, 30)));
                                                 }
                                             print "</select></font>";
-                                            print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Raumtyp auswählen"))." />";
+                                            print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Raumtyp auswählen")).">";
                                         }
                                         ?>
                                         </font>
@@ -3294,8 +3294,8 @@ if ($level == 4) {
                                                     printf ("<option value=\"%s\">%s </option>", $key, htmlReady(my_substr($val, 0, 30)));
                                                 }
                                                 print "</select></font>";
-                                                print "&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Den Raum als Wunschraum auswählen"))." border=\"0\" name=\"send_room\" />";
-                                                print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("neue Suche starten"))." border=\"0\" name=\"reset_room_search\" />";
+                                                print "&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Den Raum als Wunschraum auswählen"))." border=\"0\" name=\"send_room\">";
+                                                print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("neue Suche starten"))." border=\"0\" name=\"reset_room_search\">";
                                                 if ($search_properties_x)
                                                     print "<br><br>"._("(Diese R&auml;ume erf&uuml;llen die Wunschkriterien, die Sie links angegeben haben.)");
                                             }
@@ -3306,8 +3306,8 @@ if ($level == 4) {
                                             <? print ((($search_exp_room) || ($search_properties_x)) && (!$result)) ? _("<b>Keinen</b> Raum gefunden.") : "";?>
                                             </font><br>
                                             <font size=-1><?=_("Geben Sie zur Suche den Raumnamen ganz oder teilweise ein:"); ?></font>
-                                            <input type="TEXT" size="30" maxlength="255" name="search_exp_room" />&nbsp;
-                                            <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_room" /><br>
+                                            <input type="TEXT" size="30" maxlength="255" name="search_exp_room">&nbsp;
+                                            <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_room"><br>
                                             <?
                                         }
                                         ?>
@@ -3320,7 +3320,7 @@ if ($level == 4) {
                                 <tr>
                                     <td colspan="2" align="right">
                                         <font size="-1"><?=("passende R&auml;ume suchen")?></font>
-                                        <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" <? echo tooltip(_("passende Räume suchen")) ?> border="0" name="search_properties" />
+                                        <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" <? echo tooltip(_("passende Räume suchen")) ?> border="0" name="search_properties">
                                     </td>
                                     <td>
                                         &nbsp;
@@ -3455,7 +3455,7 @@ if ($level == 4) {
                                             }
                                             printf (" "._("von %02d:%02d Uhr bis %02d:%02d Uhr"), $val["start_stunde"], $val["start_minute"],  $val["end_stunde"], $val["end_minute"]);
                                             print "</font></td><td width=\"50%\"><font size=\"-1\">";
-                                            printf ("&nbsp;<input type=\"text\" name=\"term_turnus_room[]\" size=\"30\" maxlength=\"255\" value=\"%s\" /><br>", htmlReady(stripslashes($val["room"])));
+                                            printf ("&nbsp;<input type=\"text\" name=\"term_turnus_room[]\" size=\"30\" maxlength=\"255\" value=\"%s\"><br>", htmlReady(stripslashes($val["room"])));
                                             print "</font></td></tr>\n";
                                         }
                                     }
@@ -3465,7 +3465,7 @@ if ($level == 4) {
                                             print "<tr><td width=\"50%\"><font size=\"-1\">";
                                             printf (_("am %02d.%02d.%s von %02d:%02d Uhr bis %02d:%02d Uhr"), $sem_create_data["term_tag"][$i], $sem_create_data["term_monat"][$i], $sem_create_data["term_jahr"][$i], $sem_create_data["term_start_stunde"][$i], $sem_create_data["term_start_minute"][$i], $sem_create_data["term_end_stunde"][$i], $sem_create_data["term_end_minute"][$i]);
                                             print "</font></td><td width=\"50%\"><font size=\"-1\">";
-                                            printf ("&nbsp;<input type=\"text\" name=\"term_room[%s]\" size=\"30\" maxlength=\"255\" value=\"%s\" />", $i, htmlReady(stripslashes($sem_create_data["term_room"][$i])));
+                                            printf ("&nbsp;<input type=\"text\" name=\"term_room[%s]\" size=\"30\" maxlength=\"255\" value=\"%s\">", $i, htmlReady(stripslashes($sem_create_data["term_room"][$i])));
                                             print "</font></td></tr>\n";
                                         }
                                     }
@@ -3475,7 +3475,7 @@ if ($level == 4) {
                                     print "<tr><td width=\"50%\"><font size=\"-1\">";
                                     printf (" "._("Vorbesprechung am %s von %s Uhr bis %s Uhr"), date("d.m.Y", $sem_create_data["sem_vor_termin"]), date("H:i", $sem_create_data["sem_vor_termin"]), date("H:i", $sem_create_data["sem_vor_end_termin"]));
                                     print "</font></td><td width=\"50%\"><font size=\"-1\">";
-                                    printf ("&nbsp;<input type=\"text\" name=\"vor_raum\" size=\"30\" maxlength=\"255\" value=\"%s\" /><br>", htmlReady(stripslashes($sem_create_data["sem_vor_raum"])));
+                                    printf ("&nbsp;<input type=\"text\" name=\"vor_raum\" size=\"30\" maxlength=\"255\" value=\"%s\"><br>", htmlReady(stripslashes($sem_create_data["sem_vor_raum"])));
                                     print "</font></td></tr>\n";
                                 }
                                 ?>
@@ -3721,15 +3721,15 @@ if ($level == 5)
                                         </font>
                                         </td>
                                         <td class="<? echo $cssSw->getClass() ?>" nowrap width="5%">
-                                        <input type="HIDDEN" name="sem_studg_id[]" value="<? echo $key ?>" />
-                                        <input type="HIDDEN" name="sem_studg_name[]" value="<? echo $val["name"] ?>" />
+                                        <input type="HIDDEN" name="sem_studg_id[]" value="<? echo $key ?>">
+                                        <input type="HIDDEN" name="sem_studg_name[]" value="<? echo $val["name"] ?>">
                                         <?
                                         if($sem_create_data["admission_enable_quota"]){
-                                            printf ("<input type=\"HIDDEN\" name=\"sem_studg_ratio_old[]\" value=\"%s\" />", $val["ratio"]);
-                                            printf ("<input type=\"TEXT\" name=\"sem_studg_ratio[]\" size=5 maxlength=5 value=\"%s\" /><font size=-1> %% (%s Teilnehmer)</font>", $val["ratio"], $num_stg[$key]);
-                                            printf ("&nbsp; <a href=\"%s\"><img border=0 src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" ".tooltip(_("Den Studiengang aus der Liste löschen"))." />", URLHelper::getLink("?sem_delete_studg=".$key));
+                                            printf ("<input type=\"HIDDEN\" name=\"sem_studg_ratio_old[]\" value=\"%s\">", $val["ratio"]);
+                                            printf ("<input type=\"TEXT\" name=\"sem_studg_ratio[]\" size=5 maxlength=5 value=\"%s\"><font size=-1> %% (%s Teilnehmer)</font>", $val["ratio"], $num_stg[$key]);
+                                            printf ("&nbsp; <a href=\"%s\"><img border=0 src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" ".tooltip(_("Den Studiengang aus der Liste löschen")).">", URLHelper::getLink("?sem_delete_studg=".$key));
                                         } else {
-                                            printf ("&nbsp; <a href=\"%s\"><img border=0 src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" ".tooltip(_("Den Studiengang aus der Liste löschen"))." />", URLHelper::getLink("?sem_delete_studg=".$key));
+                                            printf ("&nbsp; <a href=\"%s\"><img border=0 src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" ".tooltip(_("Den Studiengang aus der Liste löschen")).">", URLHelper::getLink("?sem_delete_studg=".$key));
                                         }
                                         ?>
                                         </td>
@@ -3764,11 +3764,11 @@ if ($level == 5)
                                         </td>
                                         <td class="<? echo $cssSw->getClass() ?>" nowrap width="5%">
                                         <?if($sem_create_data["admission_enable_quota"]){?>
-                                            <input type="TEXT" name="sem_add_ratio" size=5 maxlength=5 /><font size=-1> %</font>
+                                            <input type="TEXT" name="sem_add_ratio" size=5 maxlength=5><font size=-1> %</font>
                                         <?} else echo '&nbsp;';?>
                                         </td>
                                         <td class="<? echo $cssSw->getClass() ?>" width="25%">
-                                            <input type="IMAGE" <?=makeButton("hinzufuegen", "src"); ?> name="add_studg" border=0 />&nbsp;
+                                            <input type="IMAGE" <?=makeButton("hinzufuegen", "src"); ?> name="add_studg" border=0>&nbsp;
                                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                                 <? echo tooltip(_("Bitte geben Sie hier ein, für welche Studiengänge die Veranstaltung mit welchen Kontingenten beschränkt sein soll und bis wann eine Anmeldung über das Stud.IP Anmeldeverfahren möglich ist."), TRUE, TRUE) ?>
                                             >
@@ -4219,7 +4219,7 @@ if ($level == 8)
                                     printf ("<option value=\"%s\" %s>%s</option>\n", $key, ($sem_create_data["sem_scm_preset"] == $key) ? "selected": "", $val["name"]);
                                 ?>
                             </select>&nbsp; <?=_("oder geben Sie einen beliebigen Titel ein:") ?>
-                            <input type="TEXT" name="sem_scm_name" value="<?=$sem_create_data["sem_scm_name"]?>" maxlength="20" size="20" />
+                            <input type="TEXT" name="sem_scm_name" value="<?=$sem_create_data["sem_scm_name"]?>" maxlength="20" size="20">
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                 <? echo tooltip(_("Sie können entweder einen vordefinierten Titel für die freie Kursseite auswählen oder einen eigenen Titel frei wählen. Diese Titel erscheint im Reitersystem der Veranstaltung als Bezeichnug des der freien Informationsseite"), TRUE, TRUE) ?>
                             >

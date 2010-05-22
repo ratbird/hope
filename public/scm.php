@@ -220,7 +220,7 @@ function scm_edit_content($range_id, $scm_id) {
     $content_table->setTableAlign("center");
     $content_table->setCellClass("printcontent");
     echo $content_table->open();
-    $titel="</b><input style=\"font-size:8 pt;\" type=\"TEXT\" name=\"scm_name\" value=\"".htmlReady($scm->getValue("tab_name"))."\" maxlength=\"20\" size=\"20\" />";
+    $titel="</b><input style=\"font-size:8 pt;\" type=\"TEXT\" name=\"scm_name\" value=\"".htmlReady($scm->getValue("tab_name"))."\" maxlength=\"20\" size=\"20\">";
     $titel.="</font size=\"-1\">&nbsp;"._("oder w&auml;hlen Sie hier einen Namen aus:")."&nbsp;\n";
     $titel.="<select style=\"font-size:8 pt;\" name=\"scm_preset\">";
     $titel.="<option value=\"0\">- "._("Vorlagen")." -</option>\n";

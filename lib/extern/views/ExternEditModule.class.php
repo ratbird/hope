@@ -184,11 +184,11 @@ class ExternEditModule extends ExternEditHtml {
             $out .= "<td colspan=\"$colspan\"><input type=\"radio\" name=\"{$this->element_name}_widthpp\" value=\"%\"";
             if (substr($widths[0], -1) == "%")
                 $out .= " checked=\"checked\"";
-            $out .= " /><font size=\"2\">" . _("Prozent") . "&nbsp; &nbsp;</font><input type=\"radio\" name=\"";
+            $out .= "><font size=\"2\">" . _("Prozent") . "&nbsp; &nbsp;</font><input type=\"radio\" name=\"";
             $out .= "{$this->element_name}_widthpp\" value=\"\"";
             if (substr($widths[0], -1) != "%")
                 $out .= " checked=\"checked\"";
-            $out .= " /><font size=\"2\">" . _("Pixel") . "&nbsp; &nbsp;</font>\n";
+            $out .= "><font size=\"2\">" . _("Pixel") . "&nbsp; &nbsp;</font>\n";
             $out .= "<img src=\"{$GLOBALS['ASSETS_URL']}images/info.gif\"";
             $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n";
         }

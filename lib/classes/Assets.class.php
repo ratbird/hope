@@ -218,14 +218,14 @@ class Assets {
    * Examples:
    *
    *   Assets::stylesheet('style') =>
-   *     <link href="/stylesheets/style.css" media="screen" rel="stylesheet" type="text/css" />
+   *     <link href="/stylesheets/style.css" media="screen" rel="stylesheet" type="text/css">
    *
    *   Assets::stylesheet('style', array('media' => 'all'))  =>
-   *     <link href="/stylesheets/style.css" media="all" rel="stylesheet" type="text/css" />
+   *     <link href="/stylesheets/style.css" media="all" rel="stylesheet" type="text/css">
    *
    *   Assets::stylesheet('random.styles', '/css/stylish') =>
-   *     <link href="/stylesheets/random.styles" media="screen" rel="stylesheet" type="text/css" />
-   *     <link href="/css/stylish.css" media="screen" rel="stylesheet" type="text/css" />
+   *     <link href="/stylesheets/random.styles" media="screen" rel="stylesheet" type="text/css">
+   *     <link href="/css/stylish.css" media="screen" rel="stylesheet" type="text/css">
    */
   static function stylesheet($atLeastOneArgument) {
     $sources = func_get_args();
@@ -304,7 +304,7 @@ class Assets {
     if (!$name)
       return '';
     ksort($options);
-    return '<' . $name . Assets::tag_options($options) . ($open ? '>' :' />');
+    return '<' . $name . Assets::tag_options($options) . ($open ? '>' :'>');
   }
 
 

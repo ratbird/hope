@@ -101,8 +101,8 @@ $cssSw = new cssClassSwitcher();
         endif; ?>
     <tr>
         <td class="blank" colspan="2">
-                <input type="hidden" name="seminar_id" value="<?=htmlReady($seminar_id)?>" />
-                <input type="hidden" name="command" value="create" />
+                <input type="hidden" name="seminar_id" value="<?=htmlReady($seminar_id)?>">
+                <input type="hidden" name="command" value="create">
                 <table border="0" cellspacing="0" cellpadding="3" width="100%">
                     <tr>
                         <td class="<?=$cssSw->getClass()?>" colspan="2" align="left">
@@ -114,9 +114,9 @@ $cssSw = new cssClassSwitcher();
                             &nbsp;&nbsp;<?=_("Startdatum")?>:
                         </td>
                         <td class="<?=$cssSw->getClass()?>">
-                            <input type="text" size="2" maxlength="2" name="start_day" value="<?=$_POST['start_day']?>" />.
-                            <input type="text" size="2" maxlength="2" name="start_month" value="<?=$_POST['start_month']?>" />.
-                            <input type="text" size="4" maxlength="4" name="start_year" value="<?=$_POST['start_year']?>" />
+                            <input type="text" size="2" maxlength="2" name="start_day" value="<?=$_POST['start_day']?>">.
+                            <input type="text" size="2" maxlength="2" name="start_month" value="<?=$_POST['start_month']?>">.
+                            <input type="text" size="4" maxlength="4" name="start_year" value="<?=$_POST['start_year']?>">
                         </td>
                     </tr>
                     <tr>
@@ -124,9 +124,9 @@ $cssSw = new cssClassSwitcher();
                             &nbsp;&nbsp;<?=_("Enddatum")?>:
                         </td>
                         <td class="<?=$cssSw->getClass()?>">
-                            <input type="text" size="2" maxlength="2" name="end_day" value="<?=$_POST['end_day']?>" />.
-                            <input type="text" size="2" maxlength="2" name="end_month" value="<?=$_POST['end_month']?>" />.
-                            <input type="text" size="4" maxlength="4" name="end_year" value="<?=$_POST['end_year']?>" />
+                            <input type="text" size="2" maxlength="2" name="end_day" value="<?=$_POST['end_day']?>">.
+                            <input type="text" size="2" maxlength="2" name="end_month" value="<?=$_POST['end_month']?>">.
+                            <input type="text" size="4" maxlength="4" name="end_year" value="<?=$_POST['end_year']?>">
                         </td>
                     </tr>
                     <?$cssSw->switchClass()?>
@@ -140,8 +140,8 @@ $cssSw = new cssClassSwitcher();
                             &nbsp;&nbsp;<?=_("Start:")?>
                         </td>
                         <td class="<?=$cssSw->getClass()?>">
-                            <input type="text" size="2" maxlength="2" name="start_hour" value="<?=$_POST['start_hour']?>" />:
-                            <input type="text" size="2" maxlength="2" name="start_minute" value="<?=$_POST['start_minute']?>" />
+                            <input type="text" size="2" maxlength="2" name="start_hour" value="<?=$_POST['start_hour']?>">:
+                            <input type="text" size="2" maxlength="2" name="start_minute" value="<?=$_POST['start_minute']?>">
                         </td>
                     </tr>
                     <tr>
@@ -149,8 +149,8 @@ $cssSw = new cssClassSwitcher();
                             &nbsp;&nbsp;<?=_("Ende:")?>
                         </td>
                         <td class="<?=$cssSw->getClass()?>">
-                            <input type="text" size="2" maxlength="2" name="end_hour" value="<?=$_POST['end_hour']?>" />:
-                            <input type="text" size="2" maxlength="2" name="end_minute" value="<?=$_POST['end_minute']?>" />
+                            <input type="text" size="2" maxlength="2" name="end_hour" value="<?=$_POST['end_hour']?>">:
+                            <input type="text" size="2" maxlength="2" name="end_minute" value="<?=$_POST['end_minute']?>">
                         </td>
                     </tr>
                     <tr>
@@ -170,15 +170,15 @@ $cssSw = new cssClassSwitcher();
                         <td class="<?=$cssSw->getClass()?>" colspan="2">
                             <b><?=_("Die Veranstaltung findet an folgenden Tagen statt")?>:</b>
                             <br><br>
-                            <input type="checkbox" name="every_day" value="1" <?=($_POST["every_day"]=='1'?"checked=checked":"")?> />&nbsp;Jeden Tag<br>
+                            <input type="checkbox" name="every_day" value="1" <?=($_POST["every_day"]=='1'?"checked=checked":"")?>>&nbsp;Jeden Tag<br>
                                 <br>
-                            <input type="checkbox" name="days[]" value="Monday"<?=day_checked('Monday')?> />&nbsp;Montag<br>
-                            <input type="checkbox" name="days[]" value="Tuesday"<?=day_checked('Tuesday')?> />&nbsp;Dienstag<br>
-                            <input type="checkbox" name="days[]" value="Wednesday"<?=day_checked('Wednesday')?> />&nbsp;Mittwoch<br>
-                            <input type="checkbox" name="days[]" value="Thursday"<?=day_checked('Thursday')?> />&nbsp;Donnerstag<br>
-                            <input type="checkbox" name="days[]" value="Friday"<?=day_checked('Friday')?> />&nbsp;Freitag<br>
-                            <input type="checkbox" name="days[]" value="Saturday"<?=day_checked('Saturday')?> />&nbsp;Samstag<br>
-                            <input type="checkbox" name="days[]" value="Sunday"<?=day_checked('Sunday')?> />&nbsp;Sonntag<br>
+                            <input type="checkbox" name="days[]" value="Monday"<?=day_checked('Monday')?>>&nbsp;Montag<br>
+                            <input type="checkbox" name="days[]" value="Tuesday"<?=day_checked('Tuesday')?>>&nbsp;Dienstag<br>
+                            <input type="checkbox" name="days[]" value="Wednesday"<?=day_checked('Wednesday')?>>&nbsp;Mittwoch<br>
+                            <input type="checkbox" name="days[]" value="Thursday"<?=day_checked('Thursday')?>>&nbsp;Donnerstag<br>
+                            <input type="checkbox" name="days[]" value="Friday"<?=day_checked('Friday')?>>&nbsp;Freitag<br>
+                            <input type="checkbox" name="days[]" value="Saturday"<?=day_checked('Saturday')?>>&nbsp;Samstag<br>
+                            <input type="checkbox" name="days[]" value="Sunday"<?=day_checked('Sunday')?>>&nbsp;Sonntag<br>
                             <br>
                         </td>
                     </tr>

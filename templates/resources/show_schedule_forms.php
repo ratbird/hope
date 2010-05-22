@@ -1,14 +1,14 @@
 <form name="Formular" method="post" action="<?= URLHelper::getLink('?change_object_schedules='. (!$resAssign->isNew() ?  $resAssign->getId() : 'NEW')); ?>#anker">
 <table border="0" cellpadding="2" cellspacing="0" width="99%" align="center">
-    <input type="hidden" name="quick_view" value="<?=$used_view ?>" />
-    <input type="hidden" name="quick_view_mode" value="<?=$view_mode ?>" />
-    <input type="hidden" name="change_schedule_resource_id" value="<? printf ("%s", (!$resAssign->isNew()) ? $resAssign->getResourceId() : $resources_data["actual_object"]); ?>" />
-    <input type="hidden" name="change_schedule_repeat_month_of_year" value="<? echo $resAssign->getRepeatMonthOfYear() ?>" />
-    <input type="hidden" name="change_schedule_repeat_day_of_month" value="<? echo $resAssign->getRepeatDayOfMonth() ?>" />
-    <input type="hidden" name="change_schedule_repeat_week_of_month" value="<? echo $resAssign->getRepeatWeekOfMonth() ?>" />
-    <input type="hidden" name="change_schedule_repeat_day_of_week" value="<? echo $resAssign->getRepeatDayOfWeek() ?>" />
-    <input type="hidden" name="change_schedule_repeat_interval" value="<? echo $resAssign->getRepeatInterval() ?>" />
-    <input type="hidden" name="change_schedule_repeat_quantity" value="<? echo $resAssign->getRepeatQuantity() ?>" />
+    <input type="hidden" name="quick_view" value="<?=$used_view ?>">
+    <input type="hidden" name="quick_view_mode" value="<?=$view_mode ?>">
+    <input type="hidden" name="change_schedule_resource_id" value="<? printf ("%s", (!$resAssign->isNew()) ? $resAssign->getResourceId() : $resources_data["actual_object"]); ?>">
+    <input type="hidden" name="change_schedule_repeat_month_of_year" value="<? echo $resAssign->getRepeatMonthOfYear() ?>">
+    <input type="hidden" name="change_schedule_repeat_day_of_month" value="<? echo $resAssign->getRepeatDayOfMonth() ?>">
+    <input type="hidden" name="change_schedule_repeat_week_of_month" value="<? echo $resAssign->getRepeatWeekOfMonth() ?>">
+    <input type="hidden" name="change_schedule_repeat_day_of_week" value="<? echo $resAssign->getRepeatDayOfWeek() ?>">
+    <input type="hidden" name="change_schedule_repeat_interval" value="<? echo $resAssign->getRepeatInterval() ?>">
+    <input type="hidden" name="change_schedule_repeat_quantity" value="<? echo $resAssign->getRepeatQuantity() ?>">
     <? $cssSw->switchClass() ?>
     <tr>
         <td class="<? echo $cssSw->getClass() ?>" colspan="3" align="center">
@@ -28,7 +28,7 @@
         <? if  ($resAssign->isNew()) : ?>
             <?= Assets::img('ausruf_small2', array('align' => 'absmiddle')); ?>
             <?= _("Sie erstellen eine neue Belegung") ?>
-            <? "<br><img src=\"".$GLOBALS['ASSETS_URL']."images/ausruf_small2.gif\" align=\"absmiddle\" />&nbsp;"._("Sie erstellen eine neue Belegung"); ?>
+            <? "<br><img src=\"".$GLOBALS['ASSETS_URL']."images/ausruf_small2.gif\" align=\"absmiddle\">&nbsp;"._("Sie erstellen eine neue Belegung"); ?>
         <? elseif (!$lockedAssign) : ?>
             &nbsp;
         <? endif;
@@ -97,9 +97,9 @@
         <? if ($lockedAssign) : ?>
             <b><?= date("d.m.Y",$resAssign->getBegin()) ?></b>
         <? else : ?>
-            <input name="change_schedule_day" value="<? echo date("d",$resAssign->getBegin()); ?>" size=2 maxlength="2" />
-            .<input name="change_schedule_month" value="<? echo date("m",$resAssign->getBegin()); ?>" size=2 maxlength="2" />
-            .<input name="change_schedule_year" value="<? echo date("Y",$resAssign->getBegin()); ?>" size=4 maxlength="4" />
+            <input name="change_schedule_day" value="<? echo date("d",$resAssign->getBegin()); ?>" size=2 maxlength="2">
+            .<input name="change_schedule_month" value="<? echo date("m",$resAssign->getBegin()); ?>" size=2 maxlength="2">
+            .<input name="change_schedule_year" value="<? echo date("Y",$resAssign->getBegin()); ?>" size=4 maxlength="4">
         <?= Termin_Eingabe_javascript(8,0,$resAssign->getBegin());?>
         <? endif; ?>
         </td>
@@ -120,12 +120,12 @@
             endif;
             ?>
         <? else : ?>
-            <input type="IMAGE" name="change_schedule_repeat_none" <?=makeButton("keine".(($resAssign->getRepeatMode()=="na") ? "2" :""), "src") ?> border=0 />&nbsp;&nbsp;
-            &nbsp;<input type="IMAGE" name="change_schedule_repeat_day" <?=makeButton("taeglich".(($resAssign->getRepeatMode()=="d") ? "2" :""), "src") ?> border=0 />
-            &nbsp;<input type="IMAGE" name="change_schedule_repeat_week" <?=makeButton("woechentlich".(($resAssign->getRepeatMode()=="w") ? "2" :""), "src") ?> border=0 /><br>
-            <input type="IMAGE" name="change_schedule_repeat_severaldays" <?=makeButton("mehrtaegig".(($resAssign->getRepeatMode()=="sd") ? "2" :""), "src") ?> border=0 />&nbsp;&nbsp;
-            &nbsp;<input type="IMAGE" name="change_schedule_repeat_month" <?=makeButton("monatlich".(($resAssign->getRepeatMode()=="m") ? "2" :""), "src") ?> border=0 />
-            &nbsp;<input type="IMAGE" name="change_schedule_repeat_year" <?=makeButton("jaehrlich".(($resAssign->getRepeatMode()=="y") ? "2" :""), "src") ?> border=0 />
+            <input type="IMAGE" name="change_schedule_repeat_none" <?=makeButton("keine".(($resAssign->getRepeatMode()=="na") ? "2" :""), "src") ?> border=0>&nbsp;&nbsp;
+            &nbsp;<input type="IMAGE" name="change_schedule_repeat_day" <?=makeButton("taeglich".(($resAssign->getRepeatMode()=="d") ? "2" :""), "src") ?> border=0>
+            &nbsp;<input type="IMAGE" name="change_schedule_repeat_week" <?=makeButton("woechentlich".(($resAssign->getRepeatMode()=="w") ? "2" :""), "src") ?> border=0><br>
+            <input type="IMAGE" name="change_schedule_repeat_severaldays" <?=makeButton("mehrtaegig".(($resAssign->getRepeatMode()=="sd") ? "2" :""), "src") ?> border=0>&nbsp;&nbsp;
+            &nbsp;<input type="IMAGE" name="change_schedule_repeat_month" <?=makeButton("monatlich".(($resAssign->getRepeatMode()=="m") ? "2" :""), "src") ?> border=0>
+            &nbsp;<input type="IMAGE" name="change_schedule_repeat_year" <?=makeButton("jaehrlich".(($resAssign->getRepeatMode()=="y") ? "2" :""), "src") ?> border=0>
         <? endif; ?>
         </td>
     </tr>
@@ -138,10 +138,10 @@
         if ($lockedAssign) :
             echo "<b>".date("G:i",$resAssign->getBegin())." - ".date("G:i",$resAssign->getEnd())." </b>";
         else : ?>
-            <input name="change_schedule_start_hour" value="<? echo date("G",$resAssign->getBegin()); ?>" size=2 maxlength="2" />
-            :<input name="change_schedule_start_minute" value="<? echo date("i",$resAssign->getBegin()); ?>" size=2 maxlength="2" /><?=_("Uhr")?>
-            &nbsp; &nbsp; <input name="change_schedule_end_hour"  value="<? echo date("G",$resAssign->getEnd()); ?>" size=2 maxlength="2" />
-            :<input name="change_schedule_end_minute" value="<? echo date("i",$resAssign->getEnd()); ?>" size=2 maxlength="2" /><?=_("Uhr")?>
+            <input name="change_schedule_start_hour" value="<? echo date("G",$resAssign->getBegin()); ?>" size=2 maxlength="2">
+            :<input name="change_schedule_start_minute" value="<? echo date("i",$resAssign->getBegin()); ?>" size=2 maxlength="2"><?=_("Uhr")?>
+            &nbsp; &nbsp; <input name="change_schedule_end_hour"  value="<? echo date("G",$resAssign->getEnd()); ?>" size=2 maxlength="2">
+            :<input name="change_schedule_end_minute" value="<? echo date("i",$resAssign->getEnd()); ?>" size=2 maxlength="2"><?=_("Uhr")?>
         <? endif; ?>
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
@@ -152,11 +152,11 @@
             echo "<b>".date("d.m.Y",$resAssign->getRepeatEnd())."</b>";
         else :
         ?>
-            <input name="change_schedule_repeat_end_day" value="<? echo date("d",$resAssign->getRepeatEnd()); ?>" size=2 maxlength="2" />
-            .<input name="change_schedule_repeat_end_month" value="<? echo date("m",$resAssign->getRepeatEnd()); ?>" size=2 maxlength="2" />
-            .<input name="change_schedule_repeat_end_year" value="<? echo date("Y",$resAssign->getRepeatEnd()); ?>" size=4 maxlength="4" />
+            <input name="change_schedule_repeat_end_day" value="<? echo date("d",$resAssign->getRepeatEnd()); ?>" size=2 maxlength="2">
+            .<input name="change_schedule_repeat_end_month" value="<? echo date("m",$resAssign->getRepeatEnd()); ?>" size=2 maxlength="2">
+            .<input name="change_schedule_repeat_end_year" value="<? echo date("Y",$resAssign->getRepeatEnd()); ?>" size=4 maxlength="4">
             <? if (($resAssign->getRepeatMode() != "y") && ($resAssign->getRepeatMode() != "sd")) : ?>
-                <input type="CHECKBOX" <? printf ("%s", ($resAssign->isRepeatEndSemEnd()) ? "checked" : "") ?> name="change_schedule_repeat_sem_end" /> <?=_("Ende der Vorlesungszeit")?>
+                <input type="CHECKBOX" <? printf ("%s", ($resAssign->isRepeatEndSemEnd()) ? "checked" : "") ?> name="change_schedule_repeat_sem_end"> <?=_("Ende der Vorlesungszeit")?>
             <? endif;
         endif;
         ?>
@@ -184,10 +184,10 @@
                 <br>
                 <? showSearchForm("search_user", $search_string_search_user, FALSE, TRUE, FALSE, FALSE, FALSE, "up") ?> <br>
                 <?=_("freie Eingabe zur Belegung:")?><br>
-                <input name="change_schedule_user_free_name" value="<?= htmlReady($resAssign->getUserFreeName()); ?>" size=40 maxlength="255" />
+                <input name="change_schedule_user_free_name" value="<?= htmlReady($resAssign->getUserFreeName()); ?>" size=40 maxlength="255">
                 <br><?=_("<b>Beachten Sie:</b> Wenn Sie einen NutzerIn oder eine Einrichtung eintragen, kann diese NutzerIn oder berechtigte Personen die Belegung selbstst&auml;ndig aufheben. Sie k&ouml;nnen die Belegung aber auch frei eingeben.")?>
-                <input type ="hidden" name="change_schedule_assign_user_id" value="<? echo $resAssign->getAssignUserId(); ?>" />
-                <input type ="hidden" name="change_schedule_repeat_mode" value="<? echo $resAssign->getRepeatMode(); ?>" />
+                <input type ="hidden" name="change_schedule_assign_user_id" value="<? echo $resAssign->getAssignUserId(); ?>">
+                <input type ="hidden" name="change_schedule_repeat_mode" value="<? echo $resAssign->getRepeatMode(); ?>">
             <? endif; ?>
         </td>
         <td class="<? echo $cssSw->getClass() ?>" valign="top">
@@ -252,9 +252,9 @@
             <?=_("begrenzte Anzahl der Wiederholungen:")?><br>
             <?
             if (!$lockedAssign) :
-                printf (_("max. %s Mal wiederholen"), "&nbsp;<input name=\"change_schedule_repeat_quantity\" value=\"".(($resAssign->getRepeatQuantity() != -1) ? $resAssign->getRepeatQuantity() : "")."\" size=\"2\" maxlength=\"2\" />&nbsp;");
+                printf (_("max. %s Mal wiederholen"), "&nbsp;<input name=\"change_schedule_repeat_quantity\" value=\"".(($resAssign->getRepeatQuantity() != -1) ? $resAssign->getRepeatQuantity() : "")."\" size=\"2\" maxlength=\"2\">&nbsp;");
                 if ($resAssign->getRepeatQuantity() == -1): ?>
-                    <input type="hidden" name="change_schedule_repeat_quantity_infinity" value="TRUE" />
+                    <input type="hidden" name="change_schedule_repeat_quantity_infinity" value="TRUE">
                 <? endif; ?>
             <? elseif ($resAssign->getRepeatQuantity() != -1) :
                 printf ("<b>"._("max. %s Mal wiederholen")." </b>",$resAssign->getRepeatQuantity());
@@ -350,7 +350,7 @@
                     printf ("<option value=\"%s\">%s  </option>", $key, htmlReady(my_substr($val, 0, 40)));
                 }
                 print "</select>";
-                print "&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("neue Suche starten"))." name=\"reset_room_search\" />";
+                print "&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("neue Suche starten"))." name=\"reset_room_search\">";
                 print "&nbsp;&nbsp;".makeButton('verschieben', 'input', _("Die Belegung in den ausgewählten Raum verschieben"),'send_change_resource');
             } else {
                 ?>
@@ -360,7 +360,7 @@
                 <?}?>
                 </select>
                 </font>
-                &nbsp;<input type="image" src="<?=$GLOBALS['ASSETS_URL']?>images/rewind.gif" <?=tooltip(_("neue Suche starten"))?> name="reset_room_search" />
+                &nbsp;<input type="image" src="<?=$GLOBALS['ASSETS_URL']?>images/rewind.gif" <?=tooltip(_("neue Suche starten"))?> name="reset_room_search">
                 &nbsp;&nbsp;
                 <?=makeButton('kopieren', 'input', _("Die Belegung in die ausgewählten Räume kopieren"),'send_change_resource')?>
                 <?
@@ -372,7 +372,7 @@
             <br>
             <?=_("Geben Sie zur Suche den Namen der Ressource ganz oder teilweise ein:"); ?>
             <br>
-            <input type="TEXT" size="30" maxlength="255" name="search_exp_room" />&nbsp;
+            <input type="TEXT" size="30" maxlength="255" name="search_exp_room">&nbsp;
             <?=makeButton('suchen', 'input', _("Suche starten"), 'search_room') ?>
             <br>
             <?

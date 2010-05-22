@@ -254,8 +254,8 @@ if ($admin_modules_data["range_id"])
             <?=_("Mit &raquo;zur&uuml;cksetzten&laquo; k&ouml;nnen Sie die Ausgangs-Modulkonfiguration wieder herstellen.")?> <br><br>
             </blockquote>
         </td>
-        <td class="blank" align="right" valign="top"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="5" /><br>
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/infoboxes/modules.jpg" border="0"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="10" />
+        <td class="blank" align="right" valign="top"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="5"><br>
+            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/infoboxes/modules.jpg" border="0"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="10">
         </td>
     </tr>
     <tr>
@@ -267,7 +267,7 @@ if ($admin_modules_data["range_id"])
                 <input type="IMAGE" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> border=0 value="uebernehmen">
                 &nbsp;<input type="IMAGE" name="default" <?=makeButton("zuruecksetzen", "src")?> border=0 value="uebernehmen">
                 <? if ($admin_modules_data["orig_bin"] != $admin_modules_data["changed_bin"]) {
-                    ?> <br><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" align="absmiddle" />&nbsp;<font size=-1><?=_("Diese Daten sind noch nicht gespeichert.")?></font><br> <?
+                    ?> <br><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" align="absmiddle">&nbsp;<font size=-1><?=_("Diese Daten sind noch nicht gespeichert.")?></font><br> <?
                     }
                 ?>
             </td>

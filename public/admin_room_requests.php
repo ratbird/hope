@@ -220,11 +220,11 @@ if ($perm->have_perm("admin"))
             <?=_("Sie k&ouml;nnen hier Angaben &uuml;ber einen gew&uuml;nschten Raum und gew&uuml;nschte Raumeigenschaften machen.")?> <br>
             <?
             if ($my_requests[$admin_rooms_data["resRequest"]->getId()])
-                printf (_("Sie k&ouml;nnen diese Anfrage auch selbst %saufl&ouml;sen%s."), "<a href=\"resources.php?view=edit_request&single_request=".$admin_rooms_data["resRequest"]->getId()."\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/link_intern.gif\" border=\"0\" />&nbsp;", "</a>");
+                printf (_("Sie k&ouml;nnen diese Anfrage auch selbst %saufl&ouml;sen%s."), "<a href=\"resources.php?view=edit_request&single_request=".$admin_rooms_data["resRequest"]->getId()."\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/link_intern.gif\" border=\"0\">&nbsp;", "</a>");
             else
                 print _("Diese Anfragen werden von den zust&auml;ndigen Raumadministratoren bearbeitet. Ihnen wird ein passender Raum f&uuml;r ihre Veranstaltung zugewiesen."); ?>
       <br><br>
-      <A href="raumzeit.php?seminar_id=<?=$seminar_id?>"><img src="<?=$GLOBALS['ASSETS_URL']?>images/link_intern.gif" border="0" />&nbsp;<?=_("Zurück zur Seite Zeiten / Räume");?></A><br>
+      <A href="raumzeit.php?seminar_id=<?=$seminar_id?>"><img src="<?=$GLOBALS['ASSETS_URL']?>images/link_intern.gif" border="0">&nbsp;<?=_("Zurück zur Seite Zeiten / Räume");?></A><br>
             <br>
             </blockquote>
         </td>
@@ -240,7 +240,7 @@ if ($perm->have_perm("admin"))
             <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=4>
                 <input type="IMAGE" name="uebernehmen" <?=makeButton("uebernehmen", "src")?> border=0 value="uebernehmen">
                 <? if ($admin_rooms_data["original"] != get_snapshot()) {
-                    ?> <br><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" align="absmiddle" />&nbsp;<font size=-1><?=_("Diese Daten sind noch nicht gespeichert.")?></font><br> <?
+                    ?> <br><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" align="absmiddle">&nbsp;<font size=-1><?=_("Diese Daten sind noch nicht gespeichert.")?></font><br> <?
                     }
                 ?>
             </td>
@@ -298,7 +298,7 @@ if ($perm->have_perm("admin"))
                 <font size="-1"><b><?=("gew&uuml;nschter Raum:")?></b><br><br>
                     <?
                     print "<b>".htmlReady($resObject->getName())."</b>,&nbsp;"._("verantwortlich:")."&nbsp;<a href=\"".$resObject->getOwnerLink()."\">".$resObject->getOwnerName()."</a>";
-                    print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("den ausgewählten Raum löschen"))." border=\"0\" name=\"reset_resource_id\" />";
+                    print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("den ausgewählten Raum löschen"))." border=\"0\" name=\"reset_resource_id\">";
 
                     ?>
                 </font>
@@ -349,8 +349,8 @@ if ($perm->have_perm("admin"))
                                                 printf ("<option value=\"%s\" %s>%s </option>", $db->f("category_id"), ($category_id == $db->f("category_id")) ? "selected" : "", htmlReady(my_substr($db->f("name"), 0, 30)));
                                             }
                                             print "</select>";
-                                            print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Raumtyp auswählen"))." />";
-                                            print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("alle Angaben zurücksetzen"))." border=\"0\" name=\"reset_room_type\" /><br><br>";
+                                            print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Raumtyp auswählen")).">";
+                                            print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("alle Angaben zurücksetzen"))." border=\"0\" name=\"reset_room_type\"><br><br>";
                                         }
 
                                         print _("Folgende Eigenschaften sind w&uuml;nschbar:")."<br><br>";
@@ -366,17 +366,17 @@ if ($perm->have_perm("admin"))
                                         <?
                                         switch ($db2->f("type")) {
                                             case "bool":
-                                                printf ("<input type=\"CHECKBOX\" name=\"request_property_val[%s]\" %s /><font size=-1>&nbsp;%s</font>", $db2->f("property_id"), ($admin_rooms_data["resRequest"]->getPropertyState($db2->f("property_id"))) ? "checked": "", htmlReady($db2->f("options")));
+                                                printf ("<input type=\"CHECKBOX\" name=\"request_property_val[%s]\" %s><font size=-1>&nbsp;%s</font>", $db2->f("property_id"), ($admin_rooms_data["resRequest"]->getPropertyState($db2->f("property_id"))) ? "checked": "", htmlReady($db2->f("options")));
                                             break;
                                             case "num":
                                                 if ($db2->f("system") == 2) {
-                                                    printf ("<input type=\"TEXT\" name=\"request_property_val[%s]\" value=\"%s\" size=5 maxlength=10 />", $db2->f("property_id"), htmlReady($admin_rooms_data["resRequest"]->getPropertyState($db2->f("property_id"))));
+                                                    printf ("<input type=\"TEXT\" name=\"request_property_val[%s]\" value=\"%s\" size=5 maxlength=10>", $db2->f("property_id"), htmlReady($admin_rooms_data["resRequest"]->getPropertyState($db2->f("property_id"))));
                                                     if ($admin_rooms_data["admission_turnout"]) {
-                                                        printf ("<br><input type=\"CHECKBOX\" name=\"seats_are_admission_turnout\" %s />&nbsp;",  (($admin_rooms_data["resRequest"]->getPropertyState($db2->f("property_id")) == $admin_rooms_data["admission_turnout"]) && ($admin_rooms_data["admission_turnout"])>0) ? "checked" :"");
+                                                        printf ("<br><input type=\"CHECKBOX\" name=\"seats_are_admission_turnout\" %s>&nbsp;",  (($admin_rooms_data["resRequest"]->getPropertyState($db2->f("property_id")) == $admin_rooms_data["admission_turnout"]) && ($admin_rooms_data["admission_turnout"])>0) ? "checked" :"");
                                                         print "<font size=\"-1\">"._("max. Teilnehmeranzahl &uuml;bernehmen")."</font>";
                                                     }
                                                 } else
-                                                    printf ("<input type=\"TEXT\" name=\"request_property_val[%s]\" value=\"%s\" size=30 maxlength=255 />", $db2->f("property_id"), htmlReady($admin_rooms_data["resRequest"]->getPropertyState($db2->f("property_id"))));
+                                                    printf ("<input type=\"TEXT\" name=\"request_property_val[%s]\" value=\"%s\" size=30 maxlength=255>", $db2->f("property_id"), htmlReady($admin_rooms_data["resRequest"]->getPropertyState($db2->f("property_id"))));
                                             break;
                                             case "text";
                                                 printf ("<textarea name=\"request_property_val[%s]\" cols=30 rows=2 >%s</textarea>", $db2->f("property_id"), htmlReady($admin_rooms_data["resRequest"]->getPropertyState($db2->f("property_id"))));
@@ -408,7 +408,7 @@ if ($perm->have_perm("admin"))
                                         printf ("<option value=\"%s\">%s </option>", $db->f("category_id"), htmlReady(my_substr($db->f("name"), 0, 30)));
                                     }
                                 print "</select></font>";
-                                print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Raumtyp auswählen"))." />";
+                                print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Raumtyp auswählen")).">";
                             }
                             ?>
                             </font>
@@ -429,8 +429,8 @@ if ($perm->have_perm("admin"))
                                         printf ("<option value=\"%s\">%s </option>", $key, htmlReady(my_substr($val, 0, 30)));
                                     }
                                     print "</select></font>";
-                                    print "&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Den Raum als Wunschraum auswählen"))." border=\"0\" name=\"send_room\" />";
-                                    print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("neue Suche starten"))." border=\"0\" name=\"reset_room_search\" />";
+                                    print "&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Den Raum als Wunschraum auswählen"))." border=\"0\" name=\"send_room\">";
+                                    print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("neue Suche starten"))." border=\"0\" name=\"reset_room_search\">";
                                     if ($search_properties_x)
                                         print "<br><br>"._("(Diese R&auml;ume erf&uuml;llen die Wunschkriterien, die Sie links angegeben haben.)");
                                 }
@@ -441,8 +441,8 @@ if ($perm->have_perm("admin"))
                                 <? print ((($search_exp_room) || ($search_properties_x)) && (!$result)) ? "<br>"._("<b>Keinen</b> Raum gefunden.")."<br>" : "";?>
                                 </font><br>
                                 <font size=-1><?=_("Geben Sie zur Suche den Raumnamen ganz oder teilweise ein:"); ?></font>
-                                <input type="TEXT" size="30" maxlength="255" name="search_exp_room" />&nbsp;
-                                <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_room" /><br>
+                                <input type="TEXT" size="30" maxlength="255" name="search_exp_room">&nbsp;
+                                <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_room"><br>
                                 <?
                             }
                             ?>
@@ -455,7 +455,7 @@ if ($perm->have_perm("admin"))
                     <tr>
                         <td colspan="2" align="right">
                             <font size="-1"><?=("passende R&auml;ume suchen")?></font>
-                            <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" <? echo tooltip(_("passende Räume suchen")) ?> border="0" name="search_properties" />
+                            <input type="IMAGE" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" <? echo tooltip(_("passende Räume suchen")) ?> border="0" name="search_properties">
                         </td>
                         <td>
                             &nbsp;

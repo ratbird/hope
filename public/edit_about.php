@@ -743,7 +743,7 @@ if ($view == 'Daten') {
     if (StudipAuthAbstract::CheckField("auth_user_md5.password", $my_about->auth_user['auth_plugin'])) {
         echo "<td class=\"".$cssSw->getClass()."\" colspan=\"2\" align=\"left\">&nbsp; <font size=\"-1\">*****</font>";
     } else {
-        echo '<div style="display:inline;float:right;"> '._("ändern").'? <input type="checkbox" name="update_pw" id="update_pw" onclick="update_pw_fields();" /></div></td>';
+        echo '<div style="display:inline;float:right;"> '._("ändern").'? <input type="checkbox" name="update_pw" id="update_pw" onclick="update_pw_fields();"></div></td>';
         echo '<td class="'.$cssSw->getClass().'" nowrap width="20%" align="left">';
         $pw_input = "<font size=-1>&nbsp; %s</font><br>&nbsp;"
                     ."<input type=\"password\" size=\"".round($max_col*0.25)."\" id=\"new_passwd_%s\" name=\"new_passwd_%s\"  %s value=\"*****\">";

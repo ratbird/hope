@@ -143,7 +143,7 @@ class EvaluationTreeShowUser {
         /* a little space to indent subgroups */
         $level_output .=
         "<td valign=\"top\" width=\"".INDENT_PIXELS."\" height=\"1\" nowrap>".
-        "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"".INDENT_PIXELS."\" height=\"1\" border=\"0\" alt=\"\" />".
+        "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"".INDENT_PIXELS."\" height=\"1\" border=\"0\" alt=\"\">".
         "</td>";
     }
 
@@ -445,7 +445,7 @@ class EvaluationTreeShowUser {
             $html .= "  <td align=\"center\" style=\"border-left: $answerBorder; $extraStyle;\" ".
             "width=\"".$cellWidth."%\">";
             $html .= "<input type=\"".$type."\" name=\"answers[".$question->getObjectID()."]".$number."\" ".
-            "value=\"".$answer->getObjectID()."\" ".$checked." />";
+            "value=\"".$answer->getObjectID()."\" ".$checked.">";
             $html .= "</td>\n";
         }
         }
@@ -505,7 +505,7 @@ class EvaluationTreeShowUser {
                     "<td width=\"2%\">".
                     "<input type=\"".$type."\"".
                     " name=\"answers[".$question->getObjectID()."]".$number."\"".
-                    " value=\"".$answer->getObjectID()."\" />".
+                    " value=\"".$answer->getObjectID()."\">".
                     "</td>\n";
 
                 /* one row input field */
@@ -514,7 +514,7 @@ class EvaluationTreeShowUser {
                     "<td colspan=\"2\">".
                     "<input type=\"text\"".
                     " name=\"freetexts[".$question->getObjectID()."]\"".
-                    " value=\"".htmlspecialchars($_POST["freetexts"][$question->getObjectID()])."\" size=\"60\" />".
+                    " value=\"".htmlspecialchars($_POST["freetexts"][$question->getObjectID()])."\" size=\"60\">".
                     "</td>\n";
 
                 /* multiple row input field (textarea) */
@@ -548,7 +548,7 @@ class EvaluationTreeShowUser {
                 "<td width=\"2%\">".
                 "<input type=\"".$type."\"".
                 " name=\"answers[".$question->getObjectID()."]".$number."\"".
-                " value=\"".$answer->getObjectID()."\" ".$checked." />".
+                " value=\"".$answer->getObjectID()."\" ".$checked.">".
                 "</td>\n";
                 $html .=
                 "<td align=\"left\" width=\"98%\">".

@@ -124,7 +124,7 @@ class ExternEditGeneric extends ExternEdit {
                 $out .= "<tr" . $this->css->getFullClass() . "><td$width_1 nowrap=\"nowrap\"><font size=\"2\">";
                 $out .= "{$title[$i]}</font></td>\n";
                 $out .= "<td$width_2 nowrap=\"nowrap\"><input type=\"text\" name=\"{$form_name}[]\" size=\"$size\"";
-                $out .= " maxlength=\"$maxlength\" value=\"{$value[$i]}\" />&nbsp; \n";
+                $out .= " maxlength=\"$maxlength\" value=\"{$value[$i]}\">&nbsp; \n";
                 $out .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\"";
                 if (is_array($info))
                     $out .= tooltip($info[$i], TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
@@ -144,7 +144,7 @@ class ExternEditGeneric extends ExternEdit {
         $out .= "<tr" . $this->css->getFullClass() . "><td$width_1 nowrap=\"nowrap\"><font size=\"2\">";
         $out .= "$title</font></td>\n";
         $out .= "<td$width_2 nowrap=\"nowrap\"><input type=\"text\" name=\"$form_name\" size=\"$size\"";
-        $out .= " maxlength=\"$maxlength\" value=\"$value\" />&nbsp; \n";
+        $out .= " maxlength=\"$maxlength\" value=\"$value\">&nbsp; \n";
         $out .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\"";
         $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
@@ -328,7 +328,7 @@ class ExternEditGeneric extends ExternEdit {
             $out .= "<input type=\"radio\" name=\"$form_name\" value=\"{$radio_values[$i]}\"";
             if ($value == $radio_values[$i])
                 $out .= " checked";
-            $out .= " /><font size=\"2\">{$radio_names[$i]}&nbsp; &nbsp;</font>\n";
+            $out .= "><font size=\"2\">{$radio_names[$i]}&nbsp; &nbsp;</font>\n";
         }
 
         $out .= "<img src=\" ".$GLOBALS['ASSETS_URL']."images/info.gif\"";
@@ -390,7 +390,7 @@ class ExternEditGeneric extends ExternEdit {
                     $out .= " selected";
                 }
             }
-            $out .= " />{$option_names[$i]}</option>\n";
+            $out .= ">{$option_names[$i]}</option>\n";
         }
 
         $out .= "</select>\n";

@@ -889,7 +889,7 @@ if ($perm->have_perm("admin")) {
     printf("<option %svalue=\"liste\">%s</option>\n",
         ($show == "liste" ? "selected " : ""), _("keine"));
     echo "</select>\n";
-    echo "<input type=\"image\" border=\"0\" " . makeButton("uebernehmen", "src") . "style=vertical-align:middle />";
+    echo "<input type=\"image\" border=\"0\" " . makeButton("uebernehmen", "src") . "style=vertical-align:middle>";
 }
 else {
     if ($show == "funktion") {

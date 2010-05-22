@@ -237,7 +237,7 @@ if ($auth->auth["uid"] != "nobody"){
             echo "\n<tr><td class='blank' colspan='2' valign='middle' align='center'><font size=-1>&nbsp;";
             echo "<INPUT TYPE='IMAGE' name='none' "
                 . makeButton("absenden","src") . tooltip(_("Nachricht versenden")) . " border=0 value='senden'>&nbsp;<a href=\"$PHP_SELF?cmd=cancel\"><img "
-                . makeButton("abbrechen","src") . tooltip(_("Vorgang abbrechen")) . " border=0 /></a></FORM></font></td></tr>";
+                . makeButton("abbrechen","src") . tooltip(_("Vorgang abbrechen")) . " border=0></a></FORM></font></td></tr>";
         
             echo "\n<script language=\"JavaScript\">\n<!--\ndocument.eingabe.nu_msg.focus();\n//-->\n</script>";
         }

@@ -533,9 +533,9 @@ if ($archiv_data["perform_search"]) {
                                 echo "<option value=\"".$db2->f("user_id")."\">".htmlReady($db2->f("fullname")). " (".$db2->f("username").") </option>";
                             }
                             echo "</select></font>";
-                            echo "<br><font size=\"-1\"><input type=\"SUBMIT\"  name=\"do_add_user\" value=\"" . _("Diese Person hinzuf&uuml;gen") . "\" /></font>";
-                            echo "&nbsp;<font size=\"-1\"><input type=\"SUBMIT\"  name=\"new_search\" value=\"" . _("Neue Suche") . "\" /></font>";
-                            echo "<input type=\"HIDDEN\"  name=\"a_sem_id\" value=\"",$db->f("seminar_id"), "\" />";
+                            echo "<br><font size=\"-1\"><input type=\"SUBMIT\"  name=\"do_add_user\" value=\"" . _("Diese Person hinzuf&uuml;gen") . "\"></font>";
+                            echo "&nbsp;<font size=\"-1\"><input type=\"SUBMIT\"  name=\"new_search\" value=\"" . _("Neue Suche") . "\"></font>";
+                            echo "<input type=\"HIDDEN\"  name=\"a_sem_id\" value=\"",$db->f("seminar_id"), "\">";
                             echo "</form>";
                         }
                     }
@@ -545,8 +545,8 @@ if ($archiv_data["perform_search"]) {
                         if (($add_user) && (!$db2->affected_rows())  && (!$new_search))
                             echo "<br><b><font size=\"-1\">" . _("Es wurde keine Person zu dem eingegebenem Suchbegriff gefunden!") . "</font></b><br>";
                         echo "<font size=\"-1\">" . _("Bitte Namen, Vornamen oder Usernamen eingeben:") . "</font>&nbsp; ";
-                        echo "<br><input type=\"TEXT\" size=20 maxlength=255 name=\"search_exp\" />";
-                        echo "&nbsp;<font size=\"-1\"><br><input type=\"SUBMIT\"  name=\"add_user\" value=\"" . _("Suche starten") . "\" /></font>";
+                        echo "<br><input type=\"TEXT\" size=20 maxlength=255 name=\"search_exp\">";
+                        echo "&nbsp;<font size=\"-1\"><br><input type=\"SUBMIT\"  name=\"add_user\" value=\"" . _("Suche starten") . "\"></font>";
                         echo "</form>";
                     }
                 }

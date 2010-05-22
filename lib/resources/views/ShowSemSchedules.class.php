@@ -89,7 +89,7 @@ class ShowSemSchedules extends ShowSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="40%" valign="top">
                 <font size="-1">
                 <?=SemesterData::GetSemesterSelector(array('name' => 'sem_schedule_choose', 'onChange' => 'document.schedule_form.submit()'), $this->semester['semester_id'],'semester_id',false)?>
-                <input type="IMAGE" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?> /><br>
+                <input type="IMAGE" name="jump" align="absbottom" border="0"<? echo makeButton("auswaehlen", "src") ?>><br>
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="30%" valign="top">
@@ -98,7 +98,7 @@ class ShowSemSchedules extends ShowSchedules {
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"><font size="-1">
-                    &nbsp; <input type="IMAGE" name="sem_schedule_start_list" align="absbottom" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>" /><br>
+                    &nbsp; <input type="IMAGE" name="sem_schedule_start_list" align="absbottom" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>
                 </font>
                 </td>
             </tr>
@@ -116,7 +116,7 @@ class ShowSemSchedules extends ShowSchedules {
                 </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"><font size="-1">
-                    &nbsp; <input type="IMAGE" name="sem_schedule_start_graphical" align="absbottom" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>" /><br>
+                    &nbsp; <input type="IMAGE" name="sem_schedule_start_graphical" align="absbottom" <?=makeButton("ausgeben", "src") ?> border=0 vallue="<?=_("ausgeben")?>"><br>
                 </font>
                 </td>
             </tr>
@@ -222,7 +222,7 @@ class ShowSemSchedules extends ShowSchedules {
                     <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="35" border="0"/>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"  width="10%" align="left">&nbsp;
-                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&previous_sem=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/calendar_previous.gif" <? echo tooltip (_("Vorheriges Semester anzeigen")) ?>border="0" /></a>
+                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&previous_sem=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/calendar_previous.gif" <? echo tooltip (_("Vorheriges Semester anzeigen")) ?>border="0"></a>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" align="center">
                 <b>
@@ -234,14 +234,14 @@ class ShowSemSchedules extends ShowSchedules {
                 <br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
-                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&next_sem=1"><img  valign="middle"  src="<?= $GLOBALS['ASSETS_URL'] ?>images/calendar_next.gif" <? echo tooltip (_("Nächstes Semester anzeigen")) ?>border="0" /></a>
+                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&next_sem=1"><img  valign="middle"  src="<?= $GLOBALS['ASSETS_URL'] ?>images/calendar_next.gif" <? echo tooltip (_("Nächstes Semester anzeigen")) ?>border="0"></a>
                 </td>
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
                     <?
                     if ((!$resources_data["schedule_time_range"]) || ($resources_data["schedule_time_range"] == 1))
-                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/calendar_up.gif\" %sborder=\"0\" /></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : -1, tooltip (_("Frühere Belegungen anzeigen")));
+                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/calendar_up.gif\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : -1, tooltip (_("Frühere Belegungen anzeigen")));
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" colspan="2">
@@ -262,7 +262,7 @@ class ShowSemSchedules extends ShowSchedules {
                     printf ("<option %s style=\"font-size:10px;\" value=\"single\">"._("nur Einzeltermine")."</option>", ($resources_data["show_repeat_mode"] == "single") ? "selected" : "");
                     printf ("<option %s style=\"font-size:10px;\" value=\"repeated\">"._("nur Wiederholungstermine")."</option>", ($resources_data["show_repeat_mode"] == "repeated") ? "selected" : "");
                     print "</select>";
-                    print "&nbsp;<input type=\"IMAGE\" name=\"send_schedule_repeat_mode\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Ansicht umschalten"))." />";
+                    print "&nbsp;<input type=\"IMAGE\" name=\"send_schedule_repeat_mode\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Ansicht umschalten")).">";
                     ?>
                 </td>
             </tr>
@@ -279,7 +279,7 @@ class ShowSemSchedules extends ShowSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
                     <?
                     if ((!$resources_data["schedule_time_range"]) || ($resources_data["schedule_time_range"] == -1))
-                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/calendar_down.gif\" %sborder=\"0\" /></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : 1, tooltip (_("Spätere Belegungen anzeigen")));
+                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/calendar_down.gif\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : 1, tooltip (_("Spätere Belegungen anzeigen")));
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="20%" nowrap colspan="3">

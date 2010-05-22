@@ -636,7 +636,7 @@ $db6=new DB_Seminar;
                             ?>
                             <tr><td class="blank" colspan=2>
                             <form action="<? echo $sess->pself_url(); ?>" method="POST" >
-                                <input type="HIDDEN" name="sem_verify_selection_send" value="TRUE" />
+                                <input type="HIDDEN" name="sem_verify_selection_send" value="TRUE">
                                    <?
                                 foreach($current_seminar->admission_studiengang as $studiengang_id => $studiengang) {
                                     if (isset($user_studiengang[$studiengang_id]))

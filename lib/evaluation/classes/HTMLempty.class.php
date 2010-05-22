@@ -168,7 +168,7 @@ class HTMLempty {
       $str .= ' '.$name.'="'.htmlspecialchars($value).'"';
     }
     $str .= $this->_string;
-    $str .= " />\n";
+    $str .= ">\n";
     return ($str);
   }
 # ===================================================== end: public functions #

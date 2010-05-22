@@ -69,7 +69,7 @@ class ExternEditHtml extends ExternEditGeneric {
         $out .= _("Zeilenhöhe:");
         $out .= "</font></td>\n";
         $out .= "<td{$this->width_2} nowrap=\"nowrap\"><input type=\"text\" name=\"$form_name\" size=\"3\"";
-        $out .= " maxlength=\"3\" value=\"$value\" /><font size=\"2\">&nbsp;Pixel&nbsp; \n";
+        $out .= " maxlength=\"3\" value=\"$value\"><font size=\"2\">&nbsp;Pixel&nbsp; \n";
         $out .= "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\"";
         $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
@@ -100,7 +100,7 @@ class ExternEditHtml extends ExternEditGeneric {
         $out .= _("Rahmendicke:");
         $out .= "</font></td>\n";
         $out .= "<td{$this->width_2} nowrap=\"nowrap\"><input type=\"text\" name=\"$form_name\" size=\"2\"";
-        $out .= " maxlength=\"2\" value=\"$value\" /><font size=\"2\">&nbsp;Pixel&nbsp; \n";
+        $out .= " maxlength=\"2\" value=\"$value\"><font size=\"2\">&nbsp;Pixel&nbsp; \n";
         $out .= "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\"";
         $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
@@ -304,7 +304,7 @@ class ExternEditHtml extends ExternEditGeneric {
         $out .= "<font size=\"2\">$title</font></td>\n";
         $out .= "<td{$this->width_2} nowrap=\"nowrap\">\n";
         $out .= "<input type=\"text\" name=\"$form_name\" size=\"20\"";
-        $out .= " maxlength=\"20\" value=\"$value\" />&nbsp; &nbsp;\n";
+        $out .= " maxlength=\"20\" value=\"$value\">&nbsp; &nbsp;\n";
 
         $out .= "<select name=\"_{$form_name}\" ";
         $out .= "onChange=\"document.edit_form.{$form_name}.value=document.edit_form._{$form_name}.";
@@ -350,7 +350,7 @@ class ExternEditHtml extends ExternEditGeneric {
         $out .= _("Cellpadding:");
         $out .= "</font></td>\n";
         $out .= "<td{$this->width_2} nowrap=\"nowrap\"><input type=\"text\" name=\"$form_name\" size=\"2\"";
-        $out .= " maxlength=\"2\" value=\"$value\" /><font size=\"2\">&nbsp;Pixel&nbsp; \n";
+        $out .= " maxlength=\"2\" value=\"$value\"><font size=\"2\">&nbsp;Pixel&nbsp; \n";
         $out .= "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\"";
         $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
@@ -381,7 +381,7 @@ class ExternEditHtml extends ExternEditGeneric {
         $out .= _("Cellspacing:");
         $out .= "</font></td>\n";
         $out .= "<td{$this->width_2} nowrap=\"nowrap\"><input type=\"text\" name=\"$form_name\" size=\"2\"";
-        $out .= " maxlength=\"2\" value=\"$value\" /><font size=\"2\">&nbsp;Pixel&nbsp; \n";
+        $out .= " maxlength=\"2\" value=\"$value\"><font size=\"2\">&nbsp;Pixel&nbsp; \n";
         $out .= "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\"";
         $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n</table>\n</td></tr>\n";
         $this->css->switchClass();
@@ -417,18 +417,18 @@ class ExternEditHtml extends ExternEditGeneric {
         $out .= _("Breite:");
         $out .= "</font></td>\n";
         $out .= "<td{$this->width_2} nowrap=\"nowrap\"><input type=\"text\" name=\"$form_name\" size=\"3\"";
-        $out .= " maxlength=\"3\" value=\"$value\" />&nbsp; &nbsp;\n";
+        $out .= " maxlength=\"3\" value=\"$value\">&nbsp; &nbsp;\n";
 
         $out .= "<input type=\"radio\" name=\"{$form_name}pp\" value=\"%\"";
         if ($value_pp == "%")
             $out .= " checked=\"checked\"";
-        $out .= " /><font size=\"2\">";
+        $out .= "><font size=\"2\">";
         $out .= _("Prozent");
         $out .= "&nbsp; &nbsp;</font><input type=\"radio\" name=\"";
         $out .= $form_name . "pp\" value=\"\"";
         if ($value_pp == "")
             $out .= " checked=\"checked\"";
-        $out .= " /><font size=\"2\">";
+        $out .= "><font size=\"2\">";
         $out .= _("Pixel");
         $out .= "&nbsp; &nbsp;</font>\n";
         $out .= "<img src=\" ".$GLOBALS['ASSETS_URL']."images/info.gif\"";

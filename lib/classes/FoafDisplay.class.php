@@ -172,7 +172,7 @@ class FoafDisplay {
         // es da nicht ein Step, dass anstelle von Globals eine Assets-Klasse benutzt werden soll?
 
         // kopfzeile
-        echo '<a name="foaf" />';
+        echo '<a name="foaf">';
         echo "\n<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\" align=\"center\">";
         echo "\n<tr>\n<td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/guestbook.gif\" border=\"0\" align=\"texttop\"><b>";
         echo sprintf(_("Verbindung zu %s"),htmlReady(get_fullname($this->target_id)));
@@ -181,7 +181,7 @@ class FoafDisplay {
         // inhaltbox
         echo "\n<tr>\n<td class=\"blank\">";
         echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\">\n<tr>";
-        printhead("100%","0",$link,$open,0,"<img src=\"".$GLOBALS['ASSETS_URL']."images/icon-guest.gif\" />",$titel,"");
+        printhead("100%","0",$link,$open,0,"<img src=\"".$GLOBALS['ASSETS_URL']."images/icon-guest.gif\">",$titel,"");
         if ($open=="open") {
             echo "</tr>\n<tr>\n<td colspan=\"4\" align=\"center\">";
             echo $msg;

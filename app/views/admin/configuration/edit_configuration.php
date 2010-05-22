@@ -57,7 +57,7 @@
                   </option>
                 <? endforeach; ?>
                 </select>
-                <input type="text" name="section_new" id="section" />
+                <input type="text" name="section_new" id="section">
                 <?= _('(<em>Bitte die neue Kategorie eingeben</em>)')?>
            </td>
         </tr>

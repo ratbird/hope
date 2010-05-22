@@ -982,7 +982,7 @@ div.droppable.hover {
         print "<tr>" .
                 "<td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">" .
                     "<a href=\"".URLHelper::getLink("?check_all=TRUE")."\">".makeButton("alleauswaehlen")."</a>" .
-                    "&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src")." />&nbsp;</div>" .
+                    "&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src").">&nbsp;</div>" .
                 "</td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
         $dreieck_runter = "dreieck_down.png";
         $dreieck_hoch = "dreieck_up.png";
@@ -1118,7 +1118,7 @@ STUDIP.Filesystem.setdroppables();
             print " &nbsp;</td></tr></table>";
             print "</td><td class=\"blank\">&nbsp;</td></tr>";
             
-            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br><a href=\"".URLHelper::getLink("?check_all=TRUE")."\">".makeButton("alleauswaehlen")."</a>&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src")." />&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
+            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br><a href=\"".URLHelper::getLink("?check_all=TRUE")."\">".makeButton("alleauswaehlen")."</a>&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src").">&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
     }
     print "</table></form>";
     

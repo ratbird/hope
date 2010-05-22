@@ -27,17 +27,17 @@ $(function () {
         <p><?=_("Bitte identifizieren Sie sich mit Benutzername und Passwort:")?></p>
 
         <form name="login" method="post" action="<?=$_SERVER['REQUEST_URI']?>">
-          <input type="hidden" name="login_ticket" value="<?=Seminar_Session::get_ticket();?>" />
-          <input type="hidden" name="resolution"  value="" />
+          <input type="hidden" name="login_ticket" value="<?=Seminar_Session::get_ticket();?>">
+          <input type="hidden" name="resolution"  value="">
           <table border="0" cellspacing="0" cellpadding="4">
             <tr valign=top align=left>
               <td><label for="username"><?=_("Benutzername:")?></label></td>
-              <td><input type="text" class="focus if-empty" id="username" name="username" value="<?=htmlReady($uname)?>" size="20" maxlength="63" /></td>
+              <td><input type="text" class="focus if-empty" id="username" name="username" value="<?=htmlReady($uname)?>" size="20" maxlength="63"></td>
             </tr>
 
             <tr valign=top align=left>
               <td><label for="password"><?=_("Passwort:")?></label></td>
-              <td><input type="password" class="focus if-empty" id="password" name="password" size="20" /></td>
+              <td><input type="password" class="focus if-empty" id="password" name="password" size="20"></td>
             </tr>
 
             <tr>

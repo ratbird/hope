@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="de">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <title>Stud.IP-Konfigurationsfehler</title>
     <script>
       document.createElement("mark");

@@ -1215,7 +1215,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
         printf ("<a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" %s border=\"0\"></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => "teilnehmer.php", "subject" => $subject, "rec_uname" => $db->f("username"))), tooltip(_("Nachricht an User verschicken")));
     
     if (isset($multiaction[$key]['send'][0]) && $rechte)
-    printf("<input type=\"checkbox\" name=\"send_msg[%s]\" value=\"1\" /></td>", $username);
+    printf("<input type=\"checkbox\" name=\"send_msg[%s]\" value=\"1\"></td>", $username);
     }
 
     echo "</td>";

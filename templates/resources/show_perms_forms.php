@@ -62,30 +62,30 @@
             &nbsp;
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="20%">
-            <input type="hidden" name="change_user_id[]" value="<?= $db->f("user_id")?>" />
+            <input type="hidden" name="change_user_id[]" value="<?= $db->f("user_id")?>">
             <a href="<?= $resObject->getOwnerLink($db->f("user_id"))?>"><?= $resObject->getOwnerName(TRUE, $db->f("user_id")) ?></a>
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="*" nowrap style="padding-right: 20px">
             &nbsp;
             <!-- admin-perms -->
             <? if (($resObject->getOwnerType($db->f("user_id")) == "user") && ($owner_perms)) :
-                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"admin\" %s />admin", $i, ($db->f("perms") == "admin") ? "checked" : "");
+                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"admin\" %s>admin", $i, ($db->f("perms") == "admin") ? "checked" : "");
             else :
-                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s /><span color=\"#888888\">admin</span>", ($db->f("perms") == "admin") ? "checked" : "");
+                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">admin</span>", ($db->f("perms") == "admin") ? "checked" : "");
             endif; ?>
 
             <!-- tutor-perms -->
             <? if (($resObject->getOwnerType($db->f("user_id")) == "user") && ($admin_perms) && ((($db->f("perms") == "tutor") || ($owner_perms)))) :
-                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"tutor\" %s />tutor", $i, ($db->f("perms") == "tutor") ? "checked" : "");
+                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"tutor\" %s>tutor", $i, ($db->f("perms") == "tutor") ? "checked" : "");
             else :
-                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s /><span color=\"#888888\">tutor</span>", ($db->f("perms") == "tutor") ? "checked" : "");
+                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">tutor</span>", ($db->f("perms") == "tutor") ? "checked" : "");
             endif; ?>
 
             <!-- autor-perms -->
             <? if (($admin_perms) && ((($db->f("perms") == "autor") || ($owner_perms)))) :
-                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"autor\" %s />autor", $i, ($db->f("perms") == "autor") ? "checked" : "");
+                printf ("<input type=\"RADIO\" name=\"change_user_perms[%s]\" value=\"autor\" %s>autor", $i, ($db->f("perms") == "autor") ? "checked" : "");
             else :
-                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s /><span color=\"#888888\">autor</span>", ($db->f("perms") == "autor") ? "checked" : "");
+                printf ("<input type=\"RADIO\" disabled name=\"FALSE\" %s><span color=\"#888888\">autor</span>", ($db->f("perms") == "autor") ? "checked" : "");
             endif; ?>
 
             &nbsp;
@@ -136,7 +136,7 @@
         <td class="<? echo $cssSw->getClass() ?>" colspan="3">
             <?=_("Blockierung:")?><br>
             <?=_("Diesen Raum bei globaler Blockierung gegen eine Bearbeitung durch lokale Administratoren und andere Personen sperren:")?>
-            <input type="CHECKBOX" name="change_lockable" <?=($resObject->isLockable()) ? "checked" : "" ?> /> <br>
+            <input type="CHECKBOX" name="change_lockable" <?=($resObject->isLockable()) ? "checked" : "" ?>> <br>
             <?print _("<b>aktueller Zustand</b>:")." "; print ($resObject->isLockable()) ? _("Raum <u>kann</u> blockiert werden") : _("Raum kann <u>nicht</u> blockiert werden") ?>
         </td>
     </tr>

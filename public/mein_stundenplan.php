@@ -504,8 +504,8 @@ if ($_REQUEST['inst_id'] && $view != 'print') { ?>
         }
     ?>
     </select>&nbsp;
-    <input type="IMAGE" value="change_instview_sem" <? echo makeButton("uebernehmen", "src") ?> border=0 align="middle" value="<?=_("&uuml;bernehmen")?>" />&nbsp;
-    <input type="HIDDEN" name="inst_id" value="<? echo $inst_id ?>" /></form><br>
+    <input type="IMAGE" value="change_instview_sem" <? echo makeButton("uebernehmen", "src") ?> border=0 align="middle" value="<?=_("&uuml;bernehmen")?>">&nbsp;
+    <input type="HIDDEN" name="inst_id" value="<? echo $inst_id ?>"></form><br>
 
  <br><font size=-1><a target="_blank" href="<?= URLHelper::getLink("?view=print&inst_id=$inst_id&instview_sem=$instview_sem") ?>">
 <?= _("Druckansicht dieser Seite (wird in einem neuen Browserfenster ge&ouml;ffnet).") ?></a></font>
@@ -796,7 +796,7 @@ for ($i = $global_start_time; $i < $global_end_time+1; $i++) {
                     }
 
                     if ($_REQUEST['inst_id'] && $view == 'standard' && $my_schedule_settings['hidden'][$cc['seminar_id']]) {
-                        echo '<img style="float: right;" src="'.$GLOBALS['ASSETS_URL'].'images/info.gif" '. tooltip(_('Dieser Termin ist in Ihrem Studenplan versteckt.')) .' />';
+                        echo '<img style="float: right;" src="'.$GLOBALS['ASSETS_URL'].'images/info.gif" '. tooltip(_('Dieser Termin ist in Ihrem Studenplan versteckt.')) .'>';
 
                     }
 

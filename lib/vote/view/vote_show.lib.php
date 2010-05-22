@@ -306,7 +306,7 @@ function createVoteForm (&$vote, $userID) {
       "type=\"".$type."\" ".
       "name=\"answer[".$i."]\" ".
       "id=\"{$id}\" ".
-      "value=\"".$key."\" />\n";
+      "value=\"".$key."\">\n";
        $html .= "  </td>\n";
        $html .= "  <td>\n";
        $html .= "   <label for=\"{$id}\">\n";

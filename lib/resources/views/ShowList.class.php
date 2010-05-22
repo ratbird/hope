@@ -104,9 +104,9 @@ class ShowList extends ShowTreeRow{
         } else {
             //Daten vorbereiten
             if (!$resObject->getCategoryIconnr())
-                $icon="<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder2.gif\" />";
+                $icon="<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder2.gif\">";
             else
-                $icon="<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_res".$resObject->getCategoryIconnr().".gif\" />";
+                $icon="<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_res".$resObject->getCategoryIconnr().".gif\">";
 
             if ($resources_data["structure_opens"][$resObject->id]) {
                 $link=$PHP_SELF."?structure_close=".$resObject->id.$link_add."#a";
@@ -123,7 +123,7 @@ class ShowList extends ShowTreeRow{
                 $titel=$resObject->getCategoryName().": ";
             if ($edit_structure_object == $resObject->id) {
                 echo "<a name=\"a\"></a>";
-                $titel.="<input style=\"{font-size:8 pt; width: 100%;}\" type=\"text\" size=20 maxlength=255 name=\"change_name\" value=\"".htmlReady($resObject->getName())."\" />";
+                $titel.="<input style=\"{font-size:8 pt; width: 100%;}\" type=\"text\" size=20 maxlength=255 name=\"change_name\" value=\"".htmlReady($resObject->getName())."\">";
             } else {
                 $titel.=htmlReady($resObject->getName());
             }
@@ -148,9 +148,9 @@ class ShowList extends ShowTreeRow{
             //clipboard in/out
             if ((is_object($clipObj)) && $simple_perms && $resObject->getCategoryId())
                 if ($clipObj->isInClipboard($resObject->getId()))
-                    $zusatz .= "<a href=\"".$PHP_SELF."?clip_out=".$resObject->getId().$link_add."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forum_fav.gif\" border=\"0\" ".tooltip(_("Aus der Merkliste entfernen"))." /></a>";
+                    $zusatz .= "<a href=\"".$PHP_SELF."?clip_out=".$resObject->getId().$link_add."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forum_fav.gif\" border=\"0\" ".tooltip(_("Aus der Merkliste entfernen"))."></a>";
                 else
-                    $zusatz .= "<a href=\"".$PHP_SELF."?clip_in=".$resObject->getId().$link_add."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forum_fav2.gif\" border=\"0\" ".tooltip(_("In Merkliste aufnehmen"))." /></a>";
+                    $zusatz .= "<a href=\"".$PHP_SELF."?clip_in=".$resObject->getId().$link_add."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forum_fav2.gif\" border=\"0\" ".tooltip(_("In Merkliste aufnehmen"))."></a>";
 
             $new=TRUE;
             if ($open=="open") {
@@ -165,9 +165,9 @@ class ShowList extends ShowTreeRow{
                 */
                 if ($edit_structure_object==$resObject->id) {
                     $content= "<br><textarea name=\"change_description\" rows=3 cols=40>".htmlReady($resObject->getDescription())."</textarea><br>";
-                    $content.= "<input type=\"image\" name=\"send\" align=\"absmiddle\" ".makeButton("uebernehmen", "src")." border=0 value=\""._("&Auml;nderungen speichern")."\" />";
+                    $content.= "<input type=\"image\" name=\"send\" align=\"absmiddle\" ".makeButton("uebernehmen", "src")." border=0 value=\""._("&Auml;nderungen speichern")."\">";
                     $content.= "&nbsp;<a href=\"$PHP_SELF?cancel_edit=$resObject->id\">".makeButton("abbrechen", "img")."</a>";
-                    $content.= "<input type=\"hidden\" name=\"change_structure_object\" value=\"".$resObject->getId()."\" />";
+                    $content.= "<input type=\"hidden\" name=\"change_structure_object\" value=\"".$resObject->getId()."\">";
                     $open="open";
                 } else {
                     $content=htmlReady($resObject->getDescription());

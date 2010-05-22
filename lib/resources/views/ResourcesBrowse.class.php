@@ -104,7 +104,7 @@ class ResourcesBrowse {
                         <option value="<?=$this->open_object?>" selected><?=htmlReady($res->getName())?></option>
                     <?}?>
                     </select>
-                <input name="search_exp"  type="TEXT" style="{vertical-align: middle;}" size=35 maxlength=255 value="<? echo htmlReady(stripslashes($this->searchArray["search_exp"])); ?>" />
+                <input name="search_exp"  type="TEXT" style="{vertical-align: middle;}" size=35 maxlength=255 value="<? echo htmlReady(stripslashes($this->searchArray["search_exp"])); ?>">
                 <input type="IMAGE" align="absmiddle"  <? echo makeButton ("suchestarten", "src") ?> name="start_search" border=0 value="<?=_("Suche starten")?>">
                 &nbsp;
                 <a href="<?=$PHP_SELF?>?quick_view=search&quick_view_mode=<?=$GLOBALS['view_mode']?>&reset=TRUE"><?=makeButton("neuesuche")?></a>
@@ -183,17 +183,17 @@ class ResourcesBrowse {
                         <td>
                             <font size="-1">
                             <?=_("Beginn")?>:
-                            &nbsp;<input type="TEXT" style="{font-size:8pt;}" name="search_begin_hour" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("H", $this->searchArray["search_assign_begin"]) : _("ss")?>" />
-                            <input type="TEXT" style="{font-size:8pt;}" name="search_begin_minute" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("i", $this->searchArray["search_assign_begin"]) : _("mm")?>" />&nbsp;<?=_("Uhr")?>
+                            &nbsp;<input type="TEXT" style="{font-size:8pt;}" name="search_begin_hour" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("H", $this->searchArray["search_assign_begin"]) : _("ss")?>">
+                            <input type="TEXT" style="{font-size:8pt;}" name="search_begin_minute" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("i", $this->searchArray["search_assign_begin"]) : _("mm")?>">&nbsp;<?=_("Uhr")?>
                             &nbsp;&nbsp;<?=_("Ende")?>:
-                            &nbsp;<input type="TEXT" style="{font-size:8pt;}" name="search_end_hour" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_end"]) ? date("H", $this->searchArray["search_assign_end"]) : _("ss")?>" />
-                            <input type="TEXT" style="{font-size:8pt;}" name="search_end_minute" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_end"]) ? date("i", $this->searchArray["search_assign_end"]) : _("mm")?>" />&nbsp;<?=_("Uhr")?>
+                            &nbsp;<input type="TEXT" style="{font-size:8pt;}" name="search_end_hour" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_end"]) ? date("H", $this->searchArray["search_assign_end"]) : _("ss")?>">
+                            <input type="TEXT" style="{font-size:8pt;}" name="search_end_minute" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_end"]) ? date("i", $this->searchArray["search_assign_end"]) : _("mm")?>">&nbsp;<?=_("Uhr")?>
                 <br>
                             <?=_("Datum")?>: &nbsp;
-                            <input type="TEXT" style="{font-size:8pt;}" name="search_day" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("d", $this->searchArray["search_assign_begin"]) : _("tt")?>" />
-                            .<input type="TEXT" style="{font-size:8pt;}" name="search_month" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("m", $this->searchArray["search_assign_begin"]) : _("mm")?>" />
-                            .<input type="TEXT" style="{font-size:8pt;}" name="search_year" size="4" maxlength="4" value="<?=($this->searchArray["search_assign_begin"]) ? date("Y", $this->searchArray["search_assign_begin"]) : _("jjjj")?>" />
-                            &nbsp;&nbsp;&nbsp;&nbsp;    <input type="checkbox" style="{font-size:8pt;}" name="search_repeating" value="1" <?=($this->searchArray["search_repeating"]==1) ? "checked=checked" : ""?> /> für restliches Semester prüfen &nbsp; <br>
+                            <input type="TEXT" style="{font-size:8pt;}" name="search_day" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("d", $this->searchArray["search_assign_begin"]) : _("tt")?>">
+                            .<input type="TEXT" style="{font-size:8pt;}" name="search_month" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("m", $this->searchArray["search_assign_begin"]) : _("mm")?>">
+                            .<input type="TEXT" style="{font-size:8pt;}" name="search_year" size="4" maxlength="4" value="<?=($this->searchArray["search_assign_begin"]) ? date("Y", $this->searchArray["search_assign_begin"]) : _("jjjj")?>">
+                            &nbsp;&nbsp;&nbsp;&nbsp;    <input type="checkbox" style="{font-size:8pt;}" name="search_repeating" value="1" <?=($this->searchArray["search_repeating"]==1) ? "checked=checked" : ""?>> für restliches Semester prüfen &nbsp; <br>
                             <br>
                             </font>
                         </td>
@@ -214,11 +214,11 @@ class ResourcesBrowse {
                 <font size="-1">
                     <br>
                 <?=_("Beginn")?>:
-                    &nbsp;<input type="TEXT" style="{font-size:8pt;}" name="search_begin_hour_2" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("H", $this->searchArray["search_assign_begin"]) : _("ss")?>" />
-                    <input type="TEXT" style="{font-size:8pt;}" name="search_begin_minute_2" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("i", $this->searchArray["search_assign_begin"]) : _("mm")?>" />&nbsp;<?=_("Uhr")?>
+                    &nbsp;<input type="TEXT" style="{font-size:8pt;}" name="search_begin_hour_2" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("H", $this->searchArray["search_assign_begin"]) : _("ss")?>">
+                    <input type="TEXT" style="{font-size:8pt;}" name="search_begin_minute_2" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("i", $this->searchArray["search_assign_begin"]) : _("mm")?>">&nbsp;<?=_("Uhr")?>
                 &nbsp;&nbsp;<?=_("Ende")?>:
-                    &nbsp;<input type="TEXT" style="{font-size:8pt;}" name="search_end_hour_2" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_end"]) ? date("H", $this->searchArray["search_assign_end"]) : _("ss")?>" />
-                    <input type="TEXT" style="{font-size:8pt;}" name="search_end_minute_2" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_end"]) ? date("i", $this->searchArray["search_assign_end"]) : _("mm")?>" />&nbsp;<?=_("Uhr")?>
+                    &nbsp;<input type="TEXT" style="{font-size:8pt;}" name="search_end_hour_2" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_end"]) ? date("H", $this->searchArray["search_assign_end"]) : _("ss")?>">
+                    <input type="TEXT" style="{font-size:8pt;}" name="search_end_minute_2" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_end"]) ? date("i", $this->searchArray["search_assign_end"]) : _("mm")?>">&nbsp;<?=_("Uhr")?>
                 <br>
                 <?=_("Tag der Woche")?>:
                 <select name = 'search_day_of_week'>
@@ -302,7 +302,7 @@ class ResourcesBrowse {
                             print "<tr>\n";
                             print "<td colspan=\"2\"> \n";
                             if ($k)
-                                print "<hr /><br>";
+                                print "<hr><br>";
                             printf ("<font size=-1><b>%s:</b></font>", htmlReady($this->db->f("name")));
                             print "</td>\n";
                             print "</tr> \n";
@@ -321,13 +321,13 @@ class ResourcesBrowse {
                                 print "<table width=\"100%\" border=\"0\"><tr>";
                                 printf ("<td width=\"50%%\">%s</td>", htmlReady($this->db2->f("name")));
                                 print "<td width=\"50%\">";
-                                printf ("<input type=\"HIDDEN\" name=\"search_property_val[]\" value=\"%s\" />", "_id_".$this->db2->f("property_id"));
+                                printf ("<input type=\"HIDDEN\" name=\"search_property_val[]\" value=\"%s\">", "_id_".$this->db2->f("property_id"));
                                 switch ($this->db2->f("type")) {
                                     case "bool":
-                                        printf ("<input type=\"CHECKBOX\" name=\"search_property_val[]\" %s /><font size=-1>&nbsp;%s</font>", ($value) ? "checked":"", htmlReady($this->db2->f("options")));
+                                        printf ("<input type=\"CHECKBOX\" name=\"search_property_val[]\" %s><font size=-1>&nbsp;%s</font>", ($value) ? "checked":"", htmlReady($this->db2->f("options")));
                                     break;
                                     case "num":
-                                        printf ("<input type=\"TEXT\" name=\"search_property_val[]\" value=\"%s\" size=20 maxlength=255 />", htmlReady($value));
+                                        printf ("<input type=\"TEXT\" name=\"search_property_val[]\" value=\"%s\" size=20 maxlength=255>", htmlReady($value));
                                     break;
                                     case "text";
                                         printf ("<textarea name=\"search_property_val[]\" cols=20 rows=2 >%s</textarea>", htmlReady($value));
@@ -404,7 +404,7 @@ class ResourcesBrowse {
                 <?
                 if ($way_back>=0) {
                     printf ("<a href = \"%s?quick_view=search&quick_view_mode=%s&%s\">", $PHP_SELF, $view_mode, (!$way_back) ? "reset=TRUE" : "open_level=$way_back");
-                    print ("<img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" border=\"0\" />&nbsp; <font size=\"-1\">"._("eine Ebene zur&uuml;ck")."</font></a>");
+                    print ("<img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" border=\"0\">&nbsp; <font size=\"-1\">"._("eine Ebene zur&uuml;ck")."</font></a>");
                 }
                 ?>
             </td>
@@ -413,7 +413,7 @@ class ResourcesBrowse {
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> align="left" colspan="2">
                 <?
                 if ((!$this->db->num_rows()) || (!$sublevels)) {
-                    echo "<br><font size=-1><img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/ausruf_small2.gif\" />&nbsp; <b>"._("Auf dieser Ebene existieren keine weiteren Unterebenen")."</b><br>&nbsp; </font>";
+                    echo "<br><font size=-1><img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/ausruf_small2.gif\">&nbsp; <b>"._("Auf dieser Ebene existieren keine weiteren Unterebenen")."</b><br>&nbsp; </font>";
                 } else {
                 ?>
                 <table width="90%" cellpadding=5 cellspacing=0 border=0 align="center">

@@ -237,7 +237,7 @@ if (!$set_recur_x) {
             echo "<option value=\"$key\"";
             if ($via == $key)
                 echo " selected";
-            echo " />$via_name\n";
+            echo ">$via_name\n";
         }
         echo "</select>&nbsp;&nbsp;&nbsp;";
         echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\"";
@@ -254,7 +254,7 @@ if (!$set_recur_x) {
             echo "<option value=\"$i\"";
             if ($priority == $i)
                 echo " selected";
-            echo " />{$priority_names[$i]}\n";
+            echo ">{$priority_names[$i]}\n";
         }
         echo "</select></font></td>\n</tr>\n";
 

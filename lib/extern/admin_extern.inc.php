@@ -312,7 +312,7 @@ if ($choose_module_form != '') {
             echo "&nbsp; <input type=\"image\" " . makeButton('kopieren', 'src') . " border=\"0\" align=\"absmiddle\">&nbsp; &nbsp";
             echo '<a href="' . URLHelper::getLink('?list=TRUE&view=extern_inst') . '">' . makeButton('zurueck', 'img') . '</a>';
             echo "</font></blockquote>\n";
-            echo "<input type=\"hidden\" name=\"copyinstid\" value=\"" . htmlReady($_REQUEST['copychooseinst']) . "\" />\n";
+            echo "<input type=\"hidden\" name=\"copyinstid\" value=\"" . htmlReady($_REQUEST['copychooseinst']) . "\">\n";
             echo "</form>\n";
 
         }

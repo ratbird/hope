@@ -61,9 +61,9 @@ function MessageIcon($message_hovericon) {
     if ($message_hovericon["content"]!="" && $message_hovericon["openclose"]=="close" &&  $forum["jshover"] == "1") {
         $hovericon = "<img onmouseover=\"return STUDIP.OverDiv.BindInline(
         {position:'middle right', id: '".$message_hovericon["id"]."',
-        content_element_type: 'message', initiator: this}, event);\" src=\"".$GLOBALS['ASSETS_URL']."images/".$message_hovericon["picture"]."\" />";
+        content_element_type: 'message', initiator: this}, event);\" src=\"".$GLOBALS['ASSETS_URL']."images/".$message_hovericon["picture"]."\">";
     } else {
-        $hovericon = "<a href=\"".$message_hovericon['link']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$message_hovericon["picture"]."\" /></a>";
+        $hovericon = "<a href=\"".$message_hovericon['link']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$message_hovericon["picture"]."\"></a>";
     }
     return $hovericon;
 }
@@ -1017,7 +1017,7 @@ function show_attachmentform() {
     $print.="\n" . _("Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuw&auml;hlen.");
     $print.= "\n</div>";
     $print.="\n<div>";
-    $print.="\n<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$max_filesize\" />";
+    $print.="\n<input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"$max_filesize\">";
     $print.= "<INPUT NAME=\"the_file\" TYPE=\"file\" SIZE=\"40\">";
     $print.= '&nbsp;<input type="image" class="button" ' .makeButton('hinzufuegen', 'src'). ' onClick="return upload_start();" name="upload">';
     $print.= "\n<input type=\"hidden\" name=\"attachment_message_id\" value=\"".htmlready($attachment_message_id)."\">";

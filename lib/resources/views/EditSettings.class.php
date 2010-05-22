@@ -173,7 +173,7 @@ class EditSettings {
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" valign="middle" align="center">
                     <font size=-1>
                         <a href="<? echo $PHP_SELF ?>?delete_root_user_id=<? echo $this->db->f("user_id") ?>">
-                            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/trash.gif" border="0" <?=tooltip(_("Berechtigungen löschen")) ?> />
+                            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/trash.gif" border="0" <?=tooltip(_("Berechtigungen löschen")) ?>>
                         </a>
                     </font>
                 </td>
@@ -218,8 +218,8 @@ class EditSettings {
                     <font size=-1><?=_("neuer Typ:")?></font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 align="left">
-                    <font size=-1><input type="TEXT" name="add_type" size=50 maxlength=255 value="<<?=_("bitte geben Sie hier den Namen ein")?>>" /></font>
-                    &nbsp; <font size=-1><input type="IMAGE" name="_add_type" <?=makeButton("anlegen", "src")?> border=0 />
+                    <font size=-1><input type="TEXT" name="add_type" size=50 maxlength=255 value="<<?=_("bitte geben Sie hier den Namen ein")?>>"></font>
+                    &nbsp; <font size=-1><input type="IMAGE" name="_add_type" <?=makeButton("anlegen", "src")?> border=0>
                     <br><input type="CHECKBOX" name="resource_is_room">&nbsp;Ressourcen-Typ wird als Raum behandelt</font>
 
 
@@ -238,11 +238,11 @@ class EditSettings {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
-                    <font size=-1><input type="TEXT" name="change_category_name[<?=$this->db->f("category_id")?>]" value="<? echo $this->db->f("name") ?>" size="20" maxlength="255" /></font><br>
+                    <font size=-1><input type="TEXT" name="change_category_name[<?=$this->db->f("category_id")?>]" value="<? echo $this->db->f("name") ?>" size="20" maxlength="255"></font><br>
 
                     <?
                     foreach ($availableIcons as $key => $val) {
-                        printf ("<input type=\"RADIO\" name=\"change_category_iconnr[%s]\" %s value=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/%s\" />&nbsp; ", $this->db->f("category_id"), ($this->db->f("iconnr") == $key) ? "checked" : "", $key, $val);
+                        printf ("<input type=\"RADIO\" name=\"change_category_iconnr[%s]\" %s value=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/%s\">&nbsp; ", $this->db->f("category_id"), ($this->db->f("iconnr") == $key) ? "checked" : "", $key, $val);
                     }
                     ?>
                     <font size=-1><? ($this->db->f("is_room")) ? print "<br>"._("wird als <i>Raum</i> behandelt"):print("");?></font>
@@ -250,7 +250,7 @@ class EditSettings {
                     <font size=-1><? ($this->db->f("system")) ? print( _("(systemobjekt)")."<br>") :print("") ?></font>
 
 
-                    <input type="HIDDEN" name="change_properties_id[]" value="<?=$this->db->f("category_id")?>" />
+                    <input type="HIDDEN" name="change_properties_id[]" value="<?=$this->db->f("category_id")?>">
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="65%" valign="top">
                     <table border=0 celpadding=2 cellspacing=0 width="100%" align="center">
@@ -303,9 +303,9 @@ class EditSettings {
                                 <?
                                 if ($this->db->f("is_room")) {
                                     ?>
-                                    <input type="HIDDEN" name="requestable[]" value="_id1_<?=($this->db->f("category_id"))?>" />
-                                    <input type="HIDDEN" name="requestable[]" value="_id2_<?=($this->db2->f("property_id"))?>" />
-                                    <input type="CHECKBOX" name="requestable[]" <?=($this->db2->f("requestable")) ? "checked" : "" ?> />
+                                    <input type="HIDDEN" name="requestable[]" value="_id1_<?=($this->db->f("category_id"))?>">
+                                    <input type="HIDDEN" name="requestable[]" value="_id2_<?=($this->db2->f("property_id"))?>">
+                                    <input type="CHECKBOX" name="requestable[]" <?=($this->db2->f("requestable")) ? "checked" : "" ?>>
                                     <font size="-1"><?=_("w&uuml;nschbar")?></font>
                                     <?
                                 } else {
@@ -344,14 +344,14 @@ class EditSettings {
                                 </select>
                             </td>
                                 <td class="<? echo $cssSw->getClass() ?>" width="67%" colspan=2>
-                                    <input type="IMAGE" <?=makeButton("zuweisen", "src") ?> name="change_category_add_property<?=$this->db->f("category_id")?>" border=0 />&nbsp;
-                                    <input type="IMAGE" name="change_types" <?=makeButton("uebernehmen", "src")?> border="0" /><br>
+                                    <input type="IMAGE" <?=makeButton("zuweisen", "src") ?> name="change_category_add_property<?=$this->db->f("category_id")?>" border=0>&nbsp;
+                                    <input type="IMAGE" name="change_types" <?=makeButton("uebernehmen", "src")?> border="0"><br>
                             </td>
                             <?
                             } else {
                             ?>
                             <td class="<? echo $cssSw->getClass() ?>" width="100%" colspan=3>
-                                    <input type="IMAGE" <?=makeButton("zuweisen", "src") ?> name="change_category_add_property<?=$this->db->f("category_id")?>" border=0 />&nbsp;
+                                    <input type="IMAGE" <?=makeButton("zuweisen", "src") ?> name="change_category_add_property<?=$this->db->f("category_id")?>" border=0>&nbsp;
                             </td>
                             <?
                             }
@@ -368,7 +368,7 @@ class EditSettings {
                         <a href="<? echo $PHP_SELF ?>?delete_type=<? echo $this->db->f("category_id") ?>">
                         <?=makeButton ("loeschen", "img");
                         } else {
-                            print "<img ".makeButton ("n_loeschen", "src")." border=\"0\" ".tooltip(_("Dieser Typ kann nicht gelöscht werden, da er von Ressourcen verwendet wird!"))." />";
+                            print "<img ".makeButton ("n_loeschen", "src")." border=\"0\" ".tooltip(_("Dieser Typ kann nicht gelöscht werden, da er von Ressourcen verwendet wird!")).">";
                         } ?>
                     </font><br>
                 </td>
@@ -407,14 +407,14 @@ class EditSettings {
                     <font size=-1><?=_("neue Eigenschaft:")?></font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 align="left" valign="bottom">
-                    <font size=-1><input type="TEXT" name="add_property" size=50 maxlength=255 value="<bitte geben Sie hier den Namen ein>" /></font>
+                    <font size=-1><input type="TEXT" name="add_property" size=50 maxlength=255 value="<bitte geben Sie hier den Namen ein>"></font>
                     <select name="add_property_type">
                         <font size=-1><option value="bool"><?=_("Zustand")?></option></font>
                         <font size=-1><option value="num"><?=_("einzeiligesTextfeld")?></option></font>
                         <font size=-1><option value="text"><?=_("mehrzeiligesTextfeld")?></option></font>
                         <font size=-1><option value="select"><?=_("Auswahlfeld")?></option></font>
                     </select>
-                    &nbsp;<font size=-1><input type="IMAGE" name="_add_property" <?=makeButton("anlegen", "src")?> border=0 /></font>
+                    &nbsp;<font size=-1><input type="IMAGE" name="_add_property" <?=makeButton("anlegen", "src")?> border=0></font>
                 </td>
             </tr>
             </form>
@@ -428,7 +428,7 @@ class EditSettings {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">
-                    <font size=-1><input type="TEXT" name="change_property_name[<?=$this->db2->f("property_id")?>]" value="<? echo htmlReady($this->db2->f("name")) ?>" size="20" maxlength="255" /></font><br>
+                    <font size=-1><input type="TEXT" name="change_property_name[<?=$this->db2->f("property_id")?>]" value="<? echo htmlReady($this->db2->f("name")) ?>" size="20" maxlength="255"></font><br>
                     <font size=-1>wird von <b><? echo  $depTyp ?></b> Typen verwendet</font><br>
                     <font size=-1><? ($this->db2->f("system")) ? print( _("(systemobjekt)")) :print("") ?></font><br>
                 </td>
@@ -448,11 +448,11 @@ class EditSettings {
                             <?
                             if ($this->db2->f("type") == "bool") {
                                 printf ("<font size=-1>"._("Bezeichnung:")."</font><br>");
-                                printf ("<font size=-1><input type=\"TEXT\" name=\"send_property_bool_desc[%s]\" value=\"%s\" size=30 maxlength=255 /></font><br>", $this->db2->f("property_id"), htmlReady($this->db2->f("options")));
+                                printf ("<font size=-1><input type=\"TEXT\" name=\"send_property_bool_desc[%s]\" value=\"%s\" size=30 maxlength=255></font><br>", $this->db2->f("property_id"), htmlReady($this->db2->f("options")));
                             }
                             if ($this->db2->f("type") == "select") {
                                 printf ("<font size=-1>"._("Optionen:")."</font><br>");
-                                printf ("<font size=-1><input type=\"TEXT\" name=\"send_property_select_opt[%s]\" value=\"%s\" size=30 maxlength=255 /></font><br>", $this->db2->f("property_id"), htmlReady($this->db2->f("options")));
+                                printf ("<font size=-1><input type=\"TEXT\" name=\"send_property_select_opt[%s]\" value=\"%s\" size=30 maxlength=255></font><br>", $this->db2->f("property_id"), htmlReady($this->db2->f("options")));
                             }
                             ?>
                             <font size=-1>Vorschau:</font>
@@ -460,10 +460,10 @@ class EditSettings {
                             <?
                             switch ($this->db2->f("type")) {
                                 case "bool":
-                                    printf ("<input type=\"CHECKBOX\" name=\"dummy\" checked />&nbsp; <font size=-1>%s</font>", htmlReady($this->db2->f("options")));
+                                    printf ("<input type=\"CHECKBOX\" name=\"dummy\" checked>&nbsp; <font size=-1>%s</font>", htmlReady($this->db2->f("options")));
                                 break;
                                 case "num":
-                                    printf ("<input type=\"TEXT\" name=\"dummy\" size=30 maxlength=255 />");
+                                    printf ("<input type=\"TEXT\" name=\"dummy\" size=30 maxlength=255>");
                                 break;
                                 case "text";
                                     printf ("<textarea name=\"dummy\" cols=30 rows=2 ></textarea>");
@@ -480,7 +480,7 @@ class EditSettings {
                             ?>
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="50%" valign="bottom">&nbsp;
-                            <input type="IMAGE" name="_send_property_type" <?=makeButton("uebernehmen", "src") ?> border=0 />
+                            <input type="IMAGE" name="_send_property_type" <?=makeButton("uebernehmen", "src") ?> border=0>
                         </td>
                     </tr>
                     </table>
@@ -551,10 +551,10 @@ class EditSettings {
                             if ($rows <= $this->db->nf()) {
                                 ?>
                         <tr>
-                            <td colspan="3" style="{background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/line.gif')}"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="1" /></td>
+                            <td colspan="3" style="{background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/line.gif')}"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="1"></td>
                         </tr>
                         <tr>
-                            <td colspan="3"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="3" /></td>
+                            <td colspan="3"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="3"></td>
                         </tr>
                                 <?
                             }
@@ -564,25 +564,25 @@ class EditSettings {
                             if ($resources_data["lock_edits"][$this->db->f("lock_id")]) {
                                 //edit lock start time
                                 print"<td width=\"40%%\"><font size=\"-1\">";
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_begin")) ? date("m", $this->db->f("lock_begin")) : _("mm"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\" />&nbsp;", ($this->db->f("lock_begin")) ? date("Y", $this->db->f("lock_begin")) : _("jjjj"));
-                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />", ($this->db->f("lock_begin")) ? date("i", $this->db->f("lock_begin")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("m", $this->db->f("lock_begin")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_begin")) ? date("Y", $this->db->f("lock_begin")) : _("jjjj"));
+                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_begin")) ? date("i", $this->db->f("lock_begin")) : _("mm"));
                                 print "</font></td>";
 
                                 //edit lock end time
                                 print "<td width=\"40%%\"><font size=\"-1\">";
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_end")) ? date("d", $this->db->f("lock_end")) : _("tt"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_end")) ? date("m", $this->db->f("lock_end")) : _("mm"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\" />&nbsp;", ($this->db->f("lock_end")) ? date("Y", $this->db->f("lock_end")) : _("jjjj"));
-                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />", ($this->db->f("lock_end")) ? date("i", $this->db->f("lock_end")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("d", $this->db->f("lock_end")) : _("tt"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("m", $this->db->f("lock_end")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_end")) ? date("Y", $this->db->f("lock_end")) : _("jjjj"));
+                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_end")) ? date("i", $this->db->f("lock_end")) : _("mm"));
                                 print "</font></td>";
 
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
-                                print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\" />";
-                                print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern"))." />";
+                                print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\">";
+                                print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
                                 print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."/></a>";
                                 print "</td></tr>";
                             } else {
@@ -597,7 +597,7 @@ class EditSettings {
                     ?>
                         <tr>
                             <td colspan="3">
-                                <a href="<?=$PHP_SELF?>?create_lock=edit"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0" /></a>
+                                <a href="<?=$PHP_SELF?>?create_lock=edit"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0"></a>
                             </td>
                         </tr>
                     </table>
@@ -633,10 +633,10 @@ class EditSettings {
                             if ($rows <= $this->db->nf()) {
                                 ?>
                         <tr>
-                            <td colspan="3" style="{background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/line.gif')}"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="1" /></td>
+                            <td colspan="3" style="{background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/line.gif')}"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="1"></td>
                         </tr>
                         <tr>
-                            <td colspan="3"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="3" /></td>
+                            <td colspan="3"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="3"></td>
                         </tr>
                                 <?
                             }
@@ -646,25 +646,25 @@ class EditSettings {
                             if ($resources_data["lock_edits"][$this->db->f("lock_id")]) {
                                 //edit lock start time
                                 print"<td width=\"40%%\"><font size=\"-1\">";
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_begin")) ? date("m", $this->db->f("lock_begin")) : _("mm"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\" />&nbsp;", ($this->db->f("lock_begin")) ? date("Y", $this->db->f("lock_begin")) : _("jjjj"));
-                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />", ($this->db->f("lock_begin")) ? date("i", $this->db->f("lock_begin")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("m", $this->db->f("lock_begin")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_begin")) ? date("Y", $this->db->f("lock_begin")) : _("jjjj"));
+                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_begin")) ? date("i", $this->db->f("lock_begin")) : _("mm"));
                                 print "</font></td>";
 
                                 //edit lock end time
                                 print "<td width=\"40%%\"><font size=\"-1\">";
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_end")) ? date("d", $this->db->f("lock_end")) : _("tt"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />.", ($this->db->f("lock_end")) ? date("m", $this->db->f("lock_end")) : _("mm"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\" />&nbsp;", ($this->db->f("lock_end")) ? date("Y", $this->db->f("lock_end")) : _("jjjj"));
-                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\" />", ($this->db->f("lock_end")) ? date("i", $this->db->f("lock_end")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("d", $this->db->f("lock_end")) : _("tt"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("m", $this->db->f("lock_end")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_end")) ? date("Y", $this->db->f("lock_end")) : _("jjjj"));
+                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
+                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_end")) ? date("i", $this->db->f("lock_end")) : _("mm"));
                                 print "</font></td>";
 
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
-                                print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\" />";
-                                print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern"))." />";
+                                print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\">";
+                                print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
                                 print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."/></a>";
                                 print "</td></tr>";
                             } else {
@@ -679,7 +679,7 @@ class EditSettings {
                     ?>
                         <tr>
                             <td colspan="3">
-                                <a href="<?=$PHP_SELF?>?create_lock=assign"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0" /></a>
+                                <a href="<?=$PHP_SELF?>?create_lock=assign"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0"></a>
                             </td>
                         </tr>
                     </table>
@@ -690,8 +690,8 @@ class EditSettings {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
                     <font size=-1><b><?=_("Optionen beim Bearbeiten von Anfragen")?></b><br><br>
-                    &nbsp;&nbsp;&nbsp;Anzahl der Belegungen, ab der R&auml;ume dennoch mit Einzelterminen passend belegt werden k&ouml;nnen: <input type="TEXT" size="5" maxlength="10" name="allow_single_assign_percentage" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE"]);?>" />%<br>
-                    &nbsp;&nbsp;&nbsp;Anzahl ab der Einzeltermine gruppiert bearbeitet werden sollen: <input type="TEXT" size="3" maxlength="5" name="allow_single_date_grouping" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_DATE_GROUPING"]);?>" /><br>
+                    &nbsp;&nbsp;&nbsp;Anzahl der Belegungen, ab der R&auml;ume dennoch mit Einzelterminen passend belegt werden k&ouml;nnen: <input type="TEXT" size="5" maxlength="10" name="allow_single_assign_percentage" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE"]);?>">%<br>
+                    &nbsp;&nbsp;&nbsp;Anzahl ab der Einzeltermine gruppiert bearbeitet werden sollen: <input type="TEXT" size="3" maxlength="5" name="allow_single_date_grouping" value="<? print($GLOBALS["RESOURCES_ALLOW_SINGLE_DATE_GROUPING"]);?>"><br>
                     <br>
                 </td>
             </tr>
@@ -749,7 +749,7 @@ class EditSettings {
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" colspan="2" align="middle">&nbsp;
-                    <input type="IMAGE" name="_send_settings" <?=makeButton("uebernehmen", "src") ?> border=0 />
+                    <input type="IMAGE" name="_send_settings" <?=makeButton("uebernehmen", "src") ?> border=0>
                 </td>
             </tr>
         </form>

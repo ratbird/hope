@@ -215,7 +215,7 @@ class StmBrowse {
                         <a href=\"%s?level=ev&cmd=qs&sset=0\">
                         <b>%s</b>
                         <br><br>
-                        <img src=\"{$GLOBALS['ASSETS_URL']}images/institute.jpg\" %s border=\"0\" />
+                        <img src=\"{$GLOBALS['ASSETS_URL']}images/institute.jpg\" %s border=\"0\">
                         </a></td>", $PHP_SELF, _("Suche im Modulverzeichnis"), $_language_path, tooltip(_("Suche im Einrichtungsverzeichnis")));
                 printf ("</tr></table>");
             }

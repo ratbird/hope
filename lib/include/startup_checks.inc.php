@@ -66,8 +66,8 @@ if ($problems_found) {
             <?($problems_found > 1) ? print"<font size=\"-1\">"._("(Beachten Sie bitte die angegebene Reihenfolge!)")."</font><br>" : "" ?>
             </blockquote>
         </td>
-        <td class="blank" align="right" valign="top"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="5" /><br>
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/warning.jpg" border="0"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="10" />
+        <td class="blank" align="right" valign="top"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="5"><br>
+            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/warning.jpg" border="0"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="10" width="10">
         </td>
     </tr>
     <tr>

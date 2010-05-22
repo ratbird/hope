@@ -47,7 +47,7 @@ class PluginRepository
      *           version="2.0"
      *           url="http://plugins.example.com/dummy-2.0.zip"
      *           studipMinVersion="1.4"
-     *           studipMaxVersion="1.9" />
+     *           studipMaxVersion="1.9">
      *   </plugin>
      *   [...]
      * </plugins>

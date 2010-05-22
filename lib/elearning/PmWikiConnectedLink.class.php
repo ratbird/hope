@@ -76,13 +76,13 @@ class PmWikiConnectedLink extends ConnectedLink
         <form method='post' target='_blank'
                     action='<?=$connected_cms[$this->cms_type]->content_module[$current_module]->link?>' >
 
-            <input type='hidden'    name='authid'           value='<?= $GLOBALS['auth']->auth['uname'] ?>' />
-            <input type='hidden'    name='authpw'           value='<?= $token->get_string() ?>' />
-            <input type='hidden'    name='_permission'  value='<?= $status ?>' />
-            <input type='hidden'    name='_range_id'        value='<?= $range_id ?>' />
-            <input type='hidden'    name='_server'          value='<?= $GLOBALS['STUDIP_INSTALLATION_ID'] ?>' />
-            <input type='hidden'    name='_context'         value='<?= $context ?>' />
-            <input type='image'     alt='starten'                        <?= makeButton("starten", "src")?> />
+            <input type='hidden'    name='authid'           value='<?= $GLOBALS['auth']->auth['uname'] ?>'>
+            <input type='hidden'    name='authpw'           value='<?= $token->get_string() ?>'>
+            <input type='hidden'    name='_permission'  value='<?= $status ?>'>
+            <input type='hidden'    name='_range_id'        value='<?= $range_id ?>'>
+            <input type='hidden'    name='_server'          value='<?= $GLOBALS['STUDIP_INSTALLATION_ID'] ?>'>
+            <input type='hidden'    name='_context'         value='<?= $context ?>'>
+            <input type='image'     alt='starten'                        <?= makeButton("starten", "src")?>>
 
         </form>
 
@@ -111,8 +111,8 @@ class PmWikiConnectedLink extends ConnectedLink
             <input type="hidden"    name="view"                             value="<?= $view ?>"/>
             <input type="hidden"    name="search_key"               value="<?= $search_key ?>"/>
             <input type="hidden"    name="cms_select"               value="<?= $cms_select ?>"/>
-            <input type="hidden"    name="module_type"              value="wiki" />
-            <input type="hidden"    name="module_id"                    value="<?= $current_module ?>" />
+            <input type="hidden"    name="module_type"              value="wiki">
+            <input type="hidden"    name="module_id"                    value="<?= $current_module ?>">
             <input type="hidden"    name="module_system_type" value="<?= $this->cms_type ?>"/>
 
             <?php if ($connected_cms[$this->cms_type]->content_module[$current_module]->isConnected()) : ?>

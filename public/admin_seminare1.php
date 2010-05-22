@@ -1056,7 +1056,7 @@ if (($s_id) && (auth_check())) {
             if (LockRules::Check($s_id, 'Institut_id')) { echo $label_lock_text;}
                         echo "</td>";
                         echo "<td class=\"".$cssSw->getClass()."\" align=left colspan=2>&nbsp; ";
-                        echo "<input type=\"HIDDEN\" name=\"Institut\" value=\"".$db->f("Institut_id")."\" />";
+                        echo "<input type=\"HIDDEN\" name=\"Institut\" value=\"".$db->f("Institut_id")."\">";
                         echo "<b>".htmlReady($db->f("Institut"))."</b>";
                     }
 
@@ -1183,7 +1183,7 @@ if (($s_id) && (auth_check())) {
                     <font size=-1> <?= $search_exp_doz ? _("Keinen Nutzenden gefunden.") : sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type)) ?>
                     </font><br>
                     <?php
-                    print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_doz\" />";
+                    print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_doz\">";
 
                     if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["only_inst_user"]) {
                     	$clause="AND Institut_id IN (". sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id) . ") ";
@@ -1230,7 +1230,7 @@ if (($s_id) && (auth_check())) {
                     <font size=-1> <?= $search_exp_tut ? _("Keinen Nutzenden gefunden.") : sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('tutor', 1, $seminar_type)) ?>
                     </font><br>
                     <?php
-                    print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_tut\" />";
+                    print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_tut\">";
 
                     if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["only_inst_user"]) {
                         $clause="AND Institut_id IN (". sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id) . ") ";

@@ -62,4 +62,3 @@ $template->set_attribute('migrations', $migrations);
 echo $template->render();
 
 include 'lib/include/html_end.inc.php';
-?>

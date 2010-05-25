@@ -97,5 +97,3 @@ class Step00158Privacy extends Migration
     }
 }
 ?>
-
-?>

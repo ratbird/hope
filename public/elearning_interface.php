@@ -247,7 +247,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
 			echo "<br>\n"; }
 			// Man kann suchen nur wenn man einen eLearning account erstellt hat
 			elseif(!$connected_cms[$cms_select]->user->isConnected())
-				echo MessageBox::info(_("Sie können im ".$connected_cms[$cms_select]->getName()." System nicht suchen, da Sie bisher keinen Benutzer-Account angelegt haben."), array(_("Klicken Sie <a href='my_elearning.php'>hier </a> um einen Account zu erstellen.")));
+				echo MessageBox::info(sprintf(_("Sie können im %s System nicht suchen, da Sie bisher keinen Benutzer-Account angelegt haben."), $connected_cms[$cms_select]->getName()), array(sprintf(_("Klicken Sie %shier%s um einen Account zu erstellen."), "<a href='my_elearning.php'>","</a>")));
 
             if (! ($searchresult_content_modules == false))
             {

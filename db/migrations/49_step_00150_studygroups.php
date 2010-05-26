@@ -61,8 +61,12 @@ Ich erkläre mich damit einverstanden, dass AdministratorInnen die Inhalte der Gr
     {
         // (1) Remove studygroup_dozent
         DBManager::get()->query("DELETE FROM auth_user_md5 WHERE user_id = MD5('studygroup_dozent')"); 
-        DBManager::get()->query("DELETE FROM user_info WHERE user_id =MD5('studygroup_dozent')");  
-
+        DBManager::get()->query("DELETE FROM user_info WHERE user_id = MD5('studygroup_dozent')");  
+        // (2) remove config entries
+        DBManager::get()->query("DELETE FROM config WHERE config_id = MD5('STUDYGROUPS_ENABLE')");  
+        DBManager::get()->query("DELETE FROM config WHERE config_id = MD5('STUDYGROUP_DEFAULT_INST')");  
+        DBManager::get()->query("DELETE FROM config WHERE config_id = MD5('STUDYGROUP_SETTINGS')");
+        DBManager::get()->query("DELETE FROM config WHERE config_id = MD5('STUDYGROUP_TERMS')");  
     }
 }
 ?>

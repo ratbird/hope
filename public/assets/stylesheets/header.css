@@ -13,15 +13,20 @@ div#barBottom {
 	left: 0px;
 	background-color: #7387ac;
 }
+div#barBottomContainer {
+    display: table-row;
+    width: 100%;
+    background-color: #7387ac;
+}
 div#barBottomLeft {
 	background-color: #5d74a0;
-	padding-left: 15px;
-	padding-right: 15px;
+	padding:0  15px;
 	height: 1.4em;
 	text-align: right;
-	vertical-align: middle;
-	float: left;
-	color: #a1b9c0;
+	vertical-align: top;
+    white-space: nowrap;
+    color: #a1b9c0;
+    display: table-cell;
 }
 
 div#barBottommiddle {
@@ -29,18 +34,21 @@ div#barBottommiddle {
 	text-align: left;
 	vertical-align: middle;
 	height: 1.4em;
-	float: left;
-	margin-right: -3px;
-	padding: 0px;
+	width: 100%;
+    padding: 0 0 0 1ex;
 	color: #ffffff;
 	font-weight: bold;
+    display: table-cell;
 }
 
 div#barBottomright {
 	background-color: #7387ac;
 	text-align: right;
-	vertical-align: middle;
-	height: 1.4em;
+	vertical-align: top;
+    height: 1.4em;
+    float: right;
+    white-space: nowrap;
+    display: table-cell;
 }
 
 div#barBottomright ul {

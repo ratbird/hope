@@ -55,61 +55,62 @@
   <img src="<?=$GLOBALS['ASSETS_URL']?>images/studipdot.gif" alt="Stud.IP Homepage">
 </div>
 <!-- Leiste unten -->
-<div id="barBottomLeft">
-    <?=($current_page != "" ? _("Aktuelle Seite:") : "")?>
-</div>
-<div id="barBottommiddle">&nbsp;
-    <?=($current_page != "" ? htmlReady($current_page) : "")?>
-    &nbsp;
-</div>
-<!-- Dynamische Links ohne Icons -->
-<div id="barBottomright">
-    <ul>
-        <? if (isset($search_semester_nr)) : ?>
-        <li>
-        <form id="quicksearch" action="<?= URLHelper::getLink('sem_portal.php', array('send' => 'yes', 'group_by' => '0') + $link_params) ?>" method="post">
-          <script>
-            var selectSem = function (seminar_id, name) {
-                document.location = "<?= URLHelper::getURL("details.php", array("send_from_search" => 1, "send_from_search_page" => urlencode($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])."sem_portal.php?keep_result_set=1"))  ?>&sem_id=" + seminar_id;
-            };
-          </script>
-          <?php
-          require_once ("lib/classes/QuickSearch.class.php");
-          print QuickSearch::get("search_sem_quick_search", new StandardSearch("Seminar_id"))
-                ->setInputClass("quicksearchbox")
-                ->withAttributes(array("title" => sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name))))
-                ->setInputStyle("width: 130px; color: #ffffff")
-                ->setDescriptionColor("#e5e5e5")
-                ->fireJSFunctionOnSelect("selectSem")
-                ->noSelectbox()
-                ->render();
-          //Komisches Zeugs, das die StmBrowse.class.php braucht:
-          print '<input type="hidden" name="search_sem_1508068a50572e5faff81c27f7b3a72f" value="1">';
-          //Ende des komischen Zeugs.
-          ?>
-          <input type="hidden" name="search_sem_sem" value="<?= $search_semester_nr ?>">
-          <input class="quicksearchbutton" type="image" src="<?= Assets::url('images/quicksearch_button.png ') ?>" name="search_sem_do_search" value="OK" title="<?= sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)) ?>">
-        </form>
-        </li>
-        <? endif ?>
-        <? if (Navigation::hasItem('/links')) : ?>
-        <? foreach (Navigation::getItem('/links') as $nav) : ?>
-            <? if ($nav->isVisible()) : ?>
-                <li>
-                <a
-                <? if (is_internal_url($url = $nav->getURL())) : ?>
-                    href="<?= URLHelper::getLink($url, $link_params) ?>"
-                <? else : ?>
-                    href="<?= htmlspecialchars($url) ?>" target="_blank"
-                <? endif ?>
-                >
-                <?= htmlReady($nav->getTitle()) ?>
-                </a>
-                </li>
+<div id="barBottomContainer">
+    <div id="barBottomLeft">
+        <?=($current_page != "" ? _("Aktuelle Seite:") : "")?>
+    </div>
+    <div id="barBottommiddle">
+        <?=($current_page != "" ? htmlReady($current_page) : "")?>
+    </div>
+    <!-- Dynamische Links ohne Icons -->
+    <div id="barBottomright">
+        <ul>
+            <? if (isset($search_semester_nr)) : ?>
+            <li>
+            <form id="quicksearch" action="<?= URLHelper::getLink('sem_portal.php', array('send' => 'yes', 'group_by' => '0') + $link_params) ?>" method="post">
+              <script>
+                var selectSem = function (seminar_id, name) {
+                    document.location = "<?= URLHelper::getURL("details.php", array("send_from_search" => 1, "send_from_search_page" => urlencode($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])."sem_portal.php?keep_result_set=1"))  ?>&sem_id=" + seminar_id;
+                };
+              </script>
+              <?php
+              require_once ("lib/classes/QuickSearch.class.php");
+              print QuickSearch::get("search_sem_quick_search", new StandardSearch("Seminar_id"))
+                    ->setInputClass("quicksearchbox")
+                    ->withAttributes(array("title" => sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name))))
+                    ->setInputStyle("width: 130px; color: #ffffff")
+                    ->setDescriptionColor("#e5e5e5")
+                    ->fireJSFunctionOnSelect("selectSem")
+                    ->noSelectbox()
+                    ->render();
+              //Komisches Zeugs, das die StmBrowse.class.php braucht:
+              print '<input type="hidden" name="search_sem_1508068a50572e5faff81c27f7b3a72f" value="1">';
+              //Ende des komischen Zeugs.
+              ?>
+              <input type="hidden" name="search_sem_sem" value="<?= $search_semester_nr ?>">
+              <input class="quicksearchbutton" type="image" src="<?= Assets::url('images/quicksearch_button.png ') ?>" name="search_sem_do_search" value="OK" title="<?= sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)) ?>">
+            </form>
+            </li>
             <? endif ?>
-        <? endforeach ?>
-        <? endif ?>
-    </ul>
+            <? if (Navigation::hasItem('/links')) : ?>
+            <? foreach (Navigation::getItem('/links') as $nav) : ?>
+                <? if ($nav->isVisible()) : ?>
+                    <li>
+                    <a
+                    <? if (is_internal_url($url = $nav->getURL())) : ?>
+                        href="<?= URLHelper::getLink($url, $link_params) ?>"
+                    <? else : ?>
+                        href="<?= htmlspecialchars($url) ?>" target="_blank"
+                    <? endif ?>
+                    >
+                    <?= htmlReady($nav->getTitle()) ?>
+                    </a>
+                    </li>
+                <? endif ?>
+            <? endforeach ?>
+            <? endif ?>
+        </ul>
+    </div>
 </div>
 <div id="barBottomshadow">
 </div>

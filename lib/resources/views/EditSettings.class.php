@@ -153,7 +153,7 @@ class EditSettings {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="42%" valign="top">
-                    <font size=-1><a href="<? echo $resObject->getOwnerLink($this->db->f("user_id"))."\">".$resObject->getOwnerName(TRUE, $this->db->f("user_id")) ?></a>
+                    <font size=-1><a href="<?= $resObject->getOwnerLink($this->db->f("user_id")) ?>"><?= $resObject->getOwnerName(TRUE, $this->db->f("user_id")) ?></a>
                     (<? echo get_username($this->db->f("user_id")); ?>)<br>
                         <?
                         switch ($this->db->f("perms")) {
@@ -246,7 +246,7 @@ class EditSettings {
                     }
                     ?>
                     <font size=-1><? ($this->db->f("is_room")) ? print "<br>"._("wird als <i>Raum</i> behandelt"):print("");?></font>
-                    <font size=-1><? printf("<br>"._("wird von <b>%s</b> Objekten verwendet")."</font><br>", $depRes); ?>
+                    <font size=-1><? printf("<br>"._("wird von <b>%s</b> Objekten verwendet")."</font><br>", $depRes); ?></font>
                     <font size=-1><? ($this->db->f("system")) ? print( _("(systemobjekt)")."<br>") :print("") ?></font>
 
 
@@ -289,12 +289,12 @@ class EditSettings {
                                 if (!$this->db2->f("system")) {
                                     ?>
                                     <a href="<? echo $PHP_SELF ?>?delete_type_property_id=<? echo $this->db2->f("property_id") ?>&delete_type_category_id=<? echo $this->db2->f("category_id") ?>">
-                                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/trash.gif" border="0" <?=tooltip(_("Eigenschaft löschen"))?>
+                                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/trash.gif" border="0" <?=tooltip(_("Eigenschaft löschen"))?>>
                                     </a>
                                     <?
                                 } else {
                                     ?>
-                                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/lighttrash.gif" border="0" <?=tooltip(_("Löschen der Eigenschaft nicht möglich, Systemobjekt!"))?>
+                                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/lighttrash.gif" border="0" <?=tooltip(_("Löschen der Eigenschaft nicht möglich, Systemobjekt!"))?>>
                                     <?
                                 }
                                 ?>
@@ -517,7 +517,7 @@ class EditSettings {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
                     <font size=-1><b><?=_("Zulassen von <i>Raum</i>anfragen")?></b><br><br>
-                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="allow_requests" <? print($GLOBALS["RESOURCES_ALLOW_ROOM_REQUESTS"]) ? "checked" : ""; print ">&nbsp;"._("NutzerInnen k&ouml;nnen im Rahmen der Veranstaltungsverwaltung Raumeigenschaften und konkrete R&auml;ume w&uuml;nschen.")?><br>
+                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="allow_requests" <? print($GLOBALS["RESOURCES_ALLOW_ROOM_REQUESTS"]) ? "checked" : ""; ?>> <?= _("NutzerInnen k&ouml;nnen im Rahmen der Veranstaltungsverwaltung Raumeigenschaften und konkrete R&auml;ume w&uuml;nschen.") ?><br>
                     <br>
                 </td>
             </tr>
@@ -527,7 +527,7 @@ class EditSettings {
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
                     <font size=-1><b><?=_("Sperrzeiten f&uuml;r die Bearbeitung von <i>Raum</i>belegungen")?></b><br><br>
                     <?=_("Die <b>Bearbeitung</b> von Belegungen soll f&uuml;r alle lokalen Ressourcen-Administratoren zu folgenden Bearbeitungszeiten geblockt werden:")?><br><br>
-                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="locking_active" <? print($GLOBALS['RESOURCES_LOCKING_ACTIVE']) ? "checked" : ""; print ">&nbsp;"._("Blockierung ist zu den angegebenen Sperrzeiten aktiv:")?><br>
+                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="locking_active" <? print($GLOBALS['RESOURCES_LOCKING_ACTIVE']) ? "checked" : ""; ?>> <?= _("Blockierung ist zu den angegebenen Sperrzeiten aktiv:")?><br>
                     <br>
                     <table border="0" cellspacing="0" cellpadding="0" width="50%" align="left">
                     <?
@@ -551,7 +551,7 @@ class EditSettings {
                             if ($rows <= $this->db->nf()) {
                                 ?>
                         <tr>
-                            <td colspan="3" style="{background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/line.gif')}"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="1"></td>
+                            <td colspan="3" style="background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/line.gif');"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="1"></td>
                         </tr>
                         <tr>
                             <td colspan="3"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="3"></td>
@@ -564,20 +564,20 @@ class EditSettings {
                             if ($resources_data["lock_edits"][$this->db->f("lock_id")]) {
                                 //edit lock start time
                                 print"<td width=\"40%%\"><font size=\"-1\">";
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("m", $this->db->f("lock_begin")) : _("mm"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_begin")) ? date("Y", $this->db->f("lock_begin")) : _("jjjj"));
-                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_begin")) ? date("i", $this->db->f("lock_begin")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("m", $this->db->f("lock_begin")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_begin")) ? date("Y", $this->db->f("lock_begin")) : _("jjjj"));
+                                printf ("<br><input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_begin")) ? date("i", $this->db->f("lock_begin")) : _("mm"));
                                 print "</font></td>";
 
                                 //edit lock end time
                                 print "<td width=\"40%%\"><font size=\"-1\">";
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("d", $this->db->f("lock_end")) : _("tt"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("m", $this->db->f("lock_end")) : _("mm"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_end")) ? date("Y", $this->db->f("lock_end")) : _("jjjj"));
-                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_end")) ? date("i", $this->db->f("lock_end")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_end_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("d", $this->db->f("lock_end")) : _("tt"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_end_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("m", $this->db->f("lock_end")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_end_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_end")) ? date("Y", $this->db->f("lock_end")) : _("jjjj"));
+                                printf ("<br><input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_end_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_end")) ? date("i", $this->db->f("lock_end")) : _("mm"));
                                 print "</font></td>";
 
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
@@ -609,7 +609,7 @@ class EditSettings {
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
                     <font size=-1><b><?=_("Sperrzeiten f&uuml;r f&uuml;r <i>Raum</i>belegungen")?></b><br><br>
                     <?=_("Die <b>Belegung</b> soll f&uuml;r alle lokalen Ressourcen-Administratoren zu folgenden Belegungszeitenzeiten geblockt werden:")?><br><br>
-                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="assign_locking_active" <? print($GLOBALS['RESOURCES_ASSIGN_LOCKING_ACTIVE']) ? "checked" : ""; print ">&nbsp;"._("Blockierung ist zu den angegebenen Sperrzeiten aktiv:")?><br>
+                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="assign_locking_active" <? print($GLOBALS['RESOURCES_ASSIGN_LOCKING_ACTIVE']) ? "checked" : ""; ?>> <?= _("Blockierung ist zu den angegebenen Sperrzeiten aktiv:")?><br>
                     <br>
                     <table border="0" cellspacing="0" cellpadding="0" width="50%" align="left">
                     <?
@@ -633,7 +633,7 @@ class EditSettings {
                             if ($rows <= $this->db->nf()) {
                                 ?>
                         <tr>
-                            <td colspan="3" style="{background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/line.gif')}"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="1"></td>
+                            <td colspan="3" style="background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/line.gif');"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="1"></td>
                         </tr>
                         <tr>
                             <td colspan="3"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width ="10" height="3"></td>
@@ -646,20 +646,20 @@ class EditSettings {
                             if ($resources_data["lock_edits"][$this->db->f("lock_id")]) {
                                 //edit lock start time
                                 print"<td width=\"40%%\"><font size=\"-1\">";
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("m", $this->db->f("lock_begin")) : _("mm"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_begin")) ? date("Y", $this->db->f("lock_begin")) : _("jjjj"));
-                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_begin_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_begin")) ? date("i", $this->db->f("lock_begin")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("d", $this->db->f("lock_begin")) : _("tt"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_begin")) ? date("m", $this->db->f("lock_begin")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_begin")) ? date("Y", $this->db->f("lock_begin")) : _("jjjj"));
+                                printf ("<br><input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_begin")) ? date("H", $this->db->f("lock_begin")) : _("ss"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_begin_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_begin")) ? date("i", $this->db->f("lock_begin")) : _("mm"));
                                 print "</font></td>";
 
                                 //edit lock end time
                                 print "<td width=\"40%%\"><font size=\"-1\">";
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("d", $this->db->f("lock_end")) : _("tt"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("m", $this->db->f("lock_end")) : _("mm"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_end")) ? date("Y", $this->db->f("lock_end")) : _("jjjj"));
-                                printf ("<br><input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
-                                printf ("<input type=\"TEXT\" style=\"{font-size:8pt;}\" name=\"lock_end_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_end")) ? date("i", $this->db->f("lock_end")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_end_day[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("d", $this->db->f("lock_end")) : _("tt"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_end_month[]\" size=\"2\" maxlength=\"2\" value=\"%s\">.", ($this->db->f("lock_end")) ? date("m", $this->db->f("lock_end")) : _("mm"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_end_year[]\" size=\"4\" maxlength=\"4\" value=\"%s\">&nbsp;", ($this->db->f("lock_end")) ? date("Y", $this->db->f("lock_end")) : _("jjjj"));
+                                printf ("<br><input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_end_hour[]\" size=\"2\" maxlength=\"2\" value=\"%s\">:", ($this->db->f("lock_end")) ? date("H", $this->db->f("lock_end")) : _("ss"));
+                                printf ("<input type=\"TEXT\" style=\"font-size:8pt;\" name=\"lock_end_min[]\" size=\"2\" maxlength=\"2\" value=\"%s\">", ($this->db->f("lock_end")) ? date("i", $this->db->f("lock_end")) : _("mm"));
                                 print "</font></td>";
 
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
@@ -700,7 +700,7 @@ class EditSettings {
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" align="left">
                     <font size=-1><b><?=_("Einordnung von <i>R&auml;umen</i> in Orga-Struktur")?></b><br><br>
-                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="enable_orga_classify" <? print($GLOBALS["RESOURCES_ENABLE_ORGA_CLASSIFY"]) ? "checked" : ""; print ">&nbsp;"._("<i>R&auml;ume</i> k&ouml;nnen Fakult&auml;ten und Einrichtungen unabh&auml;ngig von Besitzerrechten zugeordnet werden.")?><br>
+                    &nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="enable_orga_classify" <? print($GLOBALS["RESOURCES_ENABLE_ORGA_CLASSIFY"]) ? "checked" : ""; ?>> <?= _("<i>R&auml;ume</i> k&ouml;nnen Fakult&auml;ten und Einrichtungen unabh&auml;ngig von Besitzerrechten zugeordnet werden.")?><br>
                     <?
                     /*&nbsp;&nbsp;&nbsp;<input type="CHECKBOX" name="enable_orga_admin_notice" <? print($GLOBALS["RESOURCES_ENABLE_ORGA_ADMIN_NOTICE"]) ? "checked" : ""; print ">&nbsp;"._("Bei <i>Raum</i>w&uuml;nschen von DozentInnen auf <i>R&auml;ume</i> fremder Einrichtungen und Fakult&auml;ten die Administratoren benachrichtigen. ")?><br>*/
                     ?>
@@ -714,9 +714,9 @@ class EditSettings {
                     <font size=-1><b><?=_("Anlegen von <i>R&auml;umen</i>")?></b><br><br>
                     <?=_("Das Anlegen von <i>R&auml;umen</i> kann nur durch folgende Personenkreise vorgenommen werden:")?><br><br>
                     &nbsp;&nbsp;&nbsp;<select name="allow_create_resources">
-                        <option value="1" <? print($GLOBALS["RESOURCES_ALLOW_CREATE_ROOMS"] == "1") ? "selected" : ""; print ">"._("NutzerInnen ab globalem Status Tutor")?></option>
-                        <option value="2" <? print($GLOBALS["RESOURCES_ALLOW_CREATE_ROOMS"] == "2") ? "selected" : ""; print ">"._("NutzerInnen ab globalem Status Admin")?></option>
-                        <option value="3" <? print($GLOBALS["RESOURCES_ALLOW_CREATE_ROOMS"] == "3") ? "selected" : ""; print ">"._("nur globale Ressourcenadministratoren")?></option>
+                        <option value="1" <? print($GLOBALS["RESOURCES_ALLOW_CREATE_ROOMS"] == "1") ? "selected" : ""; ?>><?= _("NutzerInnen ab globalem Status Tutor")?></option>
+                        <option value="2" <? print($GLOBALS["RESOURCES_ALLOW_CREATE_ROOMS"] == "2") ? "selected" : ""; ?>><?= _("NutzerInnen ab globalem Status Admin")?></option>
+                        <option value="3" <? print($GLOBALS["RESOURCES_ALLOW_CREATE_ROOMS"] == "3") ? "selected" : ""; ?>><?= _("nur globale Ressourcenadministratoren")?></option>
                     </select>
                     <br>&nbsp;
                 </td>

@@ -291,7 +291,7 @@ class Seminar {
 
         if ($termine['ex_termin']) {
             $ex_termin = new SingleDate($termine['ex_termin']);
-            $missing_date  = '<div style="{border:1px solid black;background:#FFFFDD}">';
+            $missing_date  = '<div style="border:1px solid black; background:#FFFFDD;">';
             $missing_date .= sprintf(_("Der Termin am %s findet nicht statt."), $this->formatDate($return_mode, $ex_termin));
             $missing_date .= '<br>Kommentar: '.$ex_termin->getComment();
             $missing_date .= '</div>';
@@ -812,7 +812,7 @@ class Seminar {
             }
         }
     }
-    
+
     /**
      * return the name of the seminars start-semester
      *
@@ -998,7 +998,7 @@ class Seminar {
                             'details' => array()
                         );
                     break;
-                    
+
                     case 'success':
                         $ret['success'] = array(
                             'title'   => _("Ihre Änderungen wurden gespeichert!"),
@@ -1426,7 +1426,7 @@ class Seminar {
             case '2'; return 'closed'; break;
             case '3'; return 'declined'; break;
         }
-    
+
         return FALSE;
     }
 
@@ -1994,7 +1994,7 @@ class Seminar {
     function isPublic() {
         return $this->read_level == 0 && $this->visible == 1;
     }
-    
+
     /**
      * @return boolean  returns TRUE if this course is a studygroup,
      *                  FALSE otherwise
@@ -2003,10 +2003,10 @@ class Seminar {
         global $SEM_CLASS, $SEM_TYPE;
         return $SEM_CLASS[$SEM_TYPE[$this->status]["class"]]["studygroup_mode"];
     }
-    
+
     /**
      * @return int      returns default colour group for new members (shown in meine_seminare.php)
-     * 
+     *
      **/
     function getDefaultGroup() {
         if ($this->isStudygroup()) {
@@ -2015,15 +2015,15 @@ class Seminar {
             return select_group ($this->semester_start_time);
         }
     }
-    
-    
+
+
     /**
      *  Deletes the current seminar
-     * 
+     *
      * @return void       returns success-message if seminar could be deleted
      *                    otherwise an  error-message
      */
-    
+
     function delete() {
        $s_id = $this->id;
 
@@ -2137,7 +2137,7 @@ class Seminar {
                 $this->createMessage(sprintf(_("%s Verknüpfungen zu externen Systemen gel&ouml;scht."), $del_cms ));
             }
         }
-    
+
         //kill the object_user_vists for this seminar
         object_kill_visits(null, $s_id);
 
@@ -2159,6 +2159,6 @@ class Seminar {
             throw new Exception(_("Fehler beim Löschen der Veranstaltung"));
         }
         return true;
-        
+
     }
 }

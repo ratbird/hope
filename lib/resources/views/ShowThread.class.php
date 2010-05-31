@@ -95,7 +95,7 @@ class ShowThread extends ShowTreeRow {
                 $titel=$resObject->getCategoryName().": ";
             if ($edit_structure_object==$resObject->id) {
                 echo "<a name=\"a\"></a>";
-                $titel.="<input style=\"{font-size:8 pt; width: 100%;}\" type=\"text\" size=20 maxlength=255 name=\"change_name\" value=\"".htmlReady($resObject->getName())."\">";
+                $titel.="<input style=\"font-size: 8pt; width: 100%;\" type=\"text\" size=20 maxlength=255 name=\"change_name\" value=\"".htmlReady($resObject->getName())."\">";
             } else {
                 $titel.=htmlReady($resObject->getName());
             }

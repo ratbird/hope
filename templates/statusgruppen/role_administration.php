@@ -49,7 +49,7 @@
             </div>
             <br>
 
-            <form action="<?= URLHelper::getLink('') ?>" method="post" style="display: inline">
+            <form action="<?= URLHelper::getLink('') ?>" method="post" style="display: inline;">
                 <input type="hidden" name="cmd" value="sort_person">
                 <input type="hidden" name="role_id" value="<?= $role_id ?>">
                 <table cellspacing="0" cellpadding="0" border="0" width="95%" style="margin: auto;">
@@ -83,7 +83,7 @@
                                 name="do_person_sort[<?= $person['username'] ?>]" type="image">
                         </td>
 
-                        <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap style="padding-left: 6px">
+                        <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap style="padding-left: 6px;">
                             <? if ($pos < sizeof($persons)) : ?>
                             <a href="<?= URLHelper::getLink('?cmd=move_down&role_id='. $role_id .'&username='. $person['username']) ?>">
                                 <?= Assets::img('move_down') ?>
@@ -91,7 +91,7 @@
                             <? endif; ?>
                         </td>
 
-                        <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap style="padding-left: 4px">
+                        <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap style="padding-left: 4px;">
                             <? if ($pos > 1) : ?>
                             <a href="<?= URLHelper::getLink('?cmd=move_up&role_id='. $role_id .'&username='. $person['username']) ?>">
                                 <?= Assets::img('move_up') ?>
@@ -136,17 +136,17 @@
                 </tr>
                 <tr>
                     <? if ($seminar_persons) : ?>
-                    <td width="<?= $width ?>" style="padding-left: 10px; padding-right: 10px" valign="top" align="center">
+                    <td width="<?= $width ?>" style="padding-left: 10px; padding-right: 10px;" valign="top" align="center">
                         <?= $this->render_partial('statusgruppen/role_administration_members', array('indirect' => false, 'inst_persons' => $seminar_persons)) ?>
                     </td>
                     <td>&nbsp;&nbsp;</td>
                     <? endif; ?>
 
-                    <td width="<?= $width ?>" style="padding-left: 10px; padding-right: 10px" valign="top" align="center">
+                    <td width="<?= $width ?>" style="padding-left: 10px; padding-right: 10px;" valign="top" align="center">
                         <?= $this->render_partial('statusgruppen/role_administration_members', array('indirect' => $indirect)) ?>
                     </td>
                     <td>&nbsp;&nbsp;</td>
-                    <td width="<?= $width ?>" style="padding-left: 10px; padding-right: 10px" valign="top" align="center">
+                    <td width="<?= $width ?>" style="padding-left: 10px; padding-right: 10px;" valign="top" align="center">
                     <?= $this->render_partial('statusgruppen/role_administration_search', array('anker'=>$role_id)) ?>
                 </td>
             </tr>

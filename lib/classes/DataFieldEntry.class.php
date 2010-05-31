@@ -691,9 +691,9 @@ class DataFieldPhoneEntry extends DataFieldEntry
             $ret .= sprintf('%s<input name="%s" maxlength="%d" size="%d" value="%s" title="%s">', $prefix[$i], $name, $size[$i], $size[$i] - 1, htmlentities($part, ENT_QUOTES), $title[$i]);
         }
         $ret .= '<font size="-1">';
-        $ret .= ' ' . _('z.B.:') . ' +<span style="{border-style:inset; border-width:2px;}"> 49 </span>';
-        $ret .= ' (0)<span style="{border-style:inset; border-width:2px;}"> 541 </span>';
-        $ret .= ' / <span style="{border-style:inset; border-width:2px;}"> 969-0000 </span>';
+        $ret .= ' ' . _('z.B.:') . ' +<span style="border-style:inset; border-width:2px;"> 49 </span>';
+        $ret .= ' (0)<span style="border-style:inset; border-width:2px;"> 541 </span>';
+        $ret .= ' / <span style="border-style:inset; border-width:2px;"> 969-0000 </span>';
         $ret .= '</font>';
         return $ret;
     }

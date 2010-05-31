@@ -5,9 +5,9 @@
     <tr>
         <td valign="top" align="center">
 
-            <select size="10" name="seminarPersons[]" multiple="multiple" style="width:100%">
+            <select size="10" name="seminarPersons[]" multiple="multiple" style="width:100%;">
             <? if (is_array($seminar_persons)) foreach ($seminar_persons as $key => $val) : ?>
-                <option <?=($val['hasgroup'])?'style="{color: #777777}"':''?> value="<?=$val['username']?>">
+                <option <?=($val['hasgroup'])?'style="color: #777777;"':''?> value="<?=$val['username']?>">
                 <?=htmlReady(my_substr($val['fullname'], 0, 20))?> (<?=$val['username']?>) - <?=$val['perms']?>
                 </option>
             <? endforeach; ?>
@@ -22,9 +22,9 @@
     <tr>
         <td valign="top" align="center">
 
-            <select size="5" name="institutePersons[]" multiple="multiple" style="width:100%">
+            <select size="5" name="institutePersons[]" multiple="multiple" style="width:100%;">
             <? if (is_array($inst_persons)) foreach ($inst_persons as $key => $val) : ?>
-                <option <?=($val['hasgroup'])?'style="{color: #777777}"':''?> value="<?=$val['username']?>">
+                <option <?=($val['hasgroup'])?'style="color: #777777;"':''?> value="<?=$val['username']?>">
                 <?=htmlReady(my_substr($val['fullname'], 0, 20))?> (<?=$val['username']?>) - <?=$val['perms']?>
                 </option>
             <? endforeach; ?>
@@ -59,7 +59,7 @@
             <input type="image" valign="bottom" name="search" src="<?= Assets::image_path('rewind.gif') ?>" border="0" value="<?=_("Personen suchen")?>" <?= tooltip(_("neue Suche")) ?>>&nbsp;
                 <? endif; // users there? ?>
             <? else : ?>
-                <input type="text" name="search_exp" value="" style="width: 90%">
+                <input type="text" name="search_exp" value="" style="width: 90%;">
                 <input type="image" name="search" src="<?= Assets::image_path('suchen.gif') ?>" border="0" value="Personen suchen" <?= tooltip(_("Person suchen")) ?>>&nbsp;
                 <br><br>
             <? endif;   ?>

@@ -13,6 +13,10 @@ class Tic1207Config extends Migration
 
         $db->exec("UPDATE config SET section = 'resources' WHERE field LIKE '%resources%'");
         $db->exec("UPDATE config SET section = 'studygroups' WHERE field LIKE '%studygroup%'");
+        $db->exec("UPDATE config SET section = 'workload_plugin' WHERE field LIKE '%workload_plugin%'");
+        $db->exec("UPDATE config SET section = 'vips' WHERE field LIKE '%vips%'");
+        $db->exec("UPDATE config SET section = 'trac' WHERE field LIKE '%trac%'");
+        $db->exec("UPDATE config SET section = 'elearning_interface' WHERE field LIKE '%elearning_interface%'");
         $db->exec("UPDATE config SET section = 'modules' WHERE field IN ('BANNER_ADS_ENABLE','CALENDAR_ENABLE','CHAT_ENABLE','ELEARNING_INTERFACE_ENABLE','EXPORT_ENABLE','EXTERN_ENABLE','FOAF_ENABLE','LITERATURE_ENABLE','LOG_ENABLE','SCM_ENABLE','SEMESTER_ADMINISTRATION_ENABLE','SMILEYADMIN_ENABLE','STM_ENABLE','VOTE_ENABLE','WIKI_ENABLE', 'STUDYGROUPS_ENABLE')");
         $db->exec("UPDATE config SET section = 'allow_views' WHERE field IN ('ALLOW_ADMIN_USERACCESS','ALLOW_DOZENT_ARCHIV','ALLOW_DOZENT_VISIBILITY','ALLOW_SELFASSIGN_INSTITUTE','AUX_RULE_ADMIN_PERM','LOCK_RULE_ADMIN_PERM','INST_FAK_ADMIN_PERMS','RANGE_TREE_ADMIN_PERM','RESTRICTED_USER_MANAGEMENT','SEM_CREATE_PERM','SEM_TREE_ADMIN_PERM','SEM_TREE_SHOW_EMPTY_AREAS_PERM','SEM_VISIBILITY_PERM')");
         $db->exec("UPDATE config SET section = 'privacy' WHERE field IN ('ACCESSKEY_ENABLE','DOZENT_ALWAYS_VISIBLE','CHAT_USE_AJAX_CLIENT','ENABLE_SKYPE_INFO','FOAF_SHOW_IDENTITY','FORUM_ANONYMOUS_POSTINGS','HOMEPAGE_VISIBILITY_DEFAULT','MESSAGE_PRIORITY','SHOWSEM_ENABLE','USER_VISIBILITY_UNKNOWN')");
@@ -35,6 +39,10 @@ class Tic1207Config extends Migration
 
         $db->exec("UPDATE config SET section = '' WHERE field LIKE '%resources%'");
         $db->exec("UPDATE config SET section = '' WHERE field LIKE '%studygroup%'");
+        $db->exec("UPDATE config SET section = '' WHERE field LIKE '%workload_plugin%'");
+        $db->exec("UPDATE config SET section = '' WHERE field LIKE '%vips%'");
+        $db->exec("UPDATE config SET section = '' WHERE field LIKE '%trac%'");
+        $db->exec("UPDATE config SET section = '' WHERE field LIKE '%elearning_interface%'");
         $db->exec("UPDATE config SET section = '' WHERE field IN ('BANNER_ADS_ENABLE','CALENDAR_ENABLE','CHAT_ENABLE','ELEARNING_INTERFACE_ENABLE','EXPORT_ENABLE','EXTERN_ENABLE','FOAF_ENABLE','LITERATURE_ENABLE','LOG_ENABLE','SCM_ENABLE','SEMESTER_ADMINISTRATION_ENABLE','SMILEYADMIN_ENABLE','STM_ENABLE','VOTE_ENABLE','WIKI_ENABLE')");
         $db->exec("UPDATE config SET section = '' WHERE field IN ('ALLOW_ADMIN_USERACCESS','ALLOW_DOZENT_ARCHIV','ALLOW_DOZENT_VISIBILITY','ALLOW_SELFASSIGN_INSTITUTE','AUX_RULE_ADMIN_PERM','LOCK_RULE_ADMIN_PERM','INST_FAK_ADMIN_PERMS','RANGE_TREE_ADMIN_PERM','RESTRICTED_USER_MANAGEMENT','SEM_CREATE_PERM','SEM_TREE_ADMIN_PERM','SEM_TREE_SHOW_EMPTY_AREAS_PERM','SEM_VISIBILITY_PERM')");
         $db->exec("UPDATE config SET section = '' WHERE field IN ('ACCESSKEY_ENABLE','DOZENT_ALWAYS_VISIBLE','CHAT_USE_AJAX_CLIENT','ENABLE_SKYPE_INFO','FOAF_SHOW_IDENTITY','FORUM_ANONYMOUS_POSTINGS','HOMEPAGE_VISIBILITY_DEFAULT','MESSAGE_PRIORITY','SHOWSEM_ENABLE','USER_VISIBILITY_UNKNOWN')");

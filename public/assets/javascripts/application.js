@@ -1031,3 +1031,12 @@ $('.loaded-details a.cancel').live('click', function () {
 	return false;
 });
 
+/* ------------------------------------------------------------------------
+ * only numbers in the input field
+ * ------------------------------------------------------------------------ */
+$('input.allow-only-numbers').live('keyup', function () {
+    $(this).val( $(this).val().replace(/\D/, ''));
+});
+
+
+

@@ -96,9 +96,14 @@ class Admin_ConfigurationController extends AuthenticatedController
                     $conf_sec = $conf_sec_new;
                 }
 
-                ConfigurationModel::saveEditConfiguration($config_id, $conf_value,$conf_sec, $conf_comment);
-                $this->flash['success'] = sprintf(_("Der Konfigurationseintrag %s wurde erfolgreich übernommen!"), Request::get('field'));
-                $this->redirect('admin/configuration/configuration/'.$conf_sec);
+                $config  = ConfigurationModel::getConfigInfo($config_id);
+                if($config['type'] == 'integer' && !is_numeric($conf_value)) {
+                    $this->flash['error'] = _("Bitte geben Sie bei Parametern vom Typ 'integer' nur Zahlen ein!");
+                } else {
+                    ConfigurationModel::saveEditConfiguration($config_id, $conf_value,$conf_sec, $conf_comment);
+                    $this->flash['success'] = sprintf(_("Der Konfigurationseintrag %s wurde erfolgreich übernommen!"), Request::get('field'));
+                    $this->redirect('admin/configuration/configuration/'.$conf_sec);
+                }
             } else {
                 $this->flash['error'] = _("Im value-Feld wurde nichts eingetragen!");
             }

@@ -11,7 +11,20 @@
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td><?=_("Inhalt")?> (<em>value</em>): </td>
-            <td><textarea cols="55" rows="4" name="value"><?= htmlReady($edit['value'])?></textarea></td>
+            <td>
+                <? if ($edit['type'] == 'string'): ''?><textarea cols="55" rows="4" name="value"><?= htmlReady($edit['value'])?></textarea>
+                <? elseif ($edit['type'] == 'integer'): ''?> <input class="allow-only-numbers" name="value" type="text" value="<?= htmlReady($edit['value'])?>" />
+                <? elseif ($edit['type'] == 'boolean'): ''?>
+                <select name="value">
+                    <option value = "1" <?= $edit['value'] ? 'selected="selected"' : '' ?> style="background: url(<?= Assets::image_path('haken_transparent.gif') ?>) right center no-repeat">
+                        TRUE
+                    </option>
+                    <option value = "0" <?= $edit['value'] ? '' : 'selected="selected"' ?> style="background: url(<?= Assets::image_path('x_transparent.gif') ?>) right center no-repeat">
+                        FALSE
+                    </option>
+                </select>
+                <? endif; ?>
+            </td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td><?=_("Beschreibung")?> (<em>description</em>): </td>

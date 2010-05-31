@@ -922,13 +922,13 @@ if (isset($_GET['details']) || $showform ) {
 	foreach($datafields_list as $datafield){
 		if(DataFieldStructure::permMask($GLOBALS["auth"]->auth["perm"]) < DataFieldStructure::permMask($datafield->getViewPerms())) continue;
 		if($i%2==0) echo "<tr class=\"pers_browse_datafields\" ".(($datafields_empty)?"style=\"display:none\"":"").">";
-		echo "<td class=steel1 align=\"right\" width=\"15%\">".$datafield->getName()."</td>";
+		echo "<td class=steel1 align=\"right\" width=\"15%\">".htmlReady($datafield->getName())."</td>";
 		echo "<td ".(($i%2!=0)?"colspan=\"2\"":"")." class=steel1 align=\"left\" width=\"35%\"><input name=\"pers_browse_datafields_".$datafield->getID()."\" type=\"text\" value=\"".htmlReady($_SESSION['pers_browse_old']['datafields'][$datafield->getID()])."\" size=30 maxlength=255></td>";
 		if($i%2!=0) echo "</tr>";
 		$i++;
 	}
 	if($i%2!=0) echo "<td class=steel1>&nbsp;</td><td class=steel1 colspan=\"2\">&nbsp;</td>";
-	echo "<tr><td class=steel1 align=\"right\" colspan=\"5\"><a href=\"#\" onClick=\"\$('.pers_browse_datafields').each(function(index){if(\$(this).css('display')=='none') $(this).css('display',''); else $(this).css('display','none');});this.innerHTML=(this.innerHTML=='Zuklappen')?'Erweiterte Suche':'Zuklappen';\">Erweiterte Suche</a></td></tr>";
+	echo "<tr><td class=steel1 align=\"right\" colspan=\"5\"><a href=\"#\" onClick=\"\$('.pers_browse_datafields').each(function(index){if(\$(this).css('display')=='none') $(this).css('display',''); else $(this).css('display','none');});this.innerHTML=(this.innerHTML=='Zuklappen')?'"._("Erweiterte Suche")."':'"._("Zuklappen")."';\">".(($datafields_empty)?_("Erweiterte Suche"):_("Zuklappen"))."</a></td></tr>";
 	//Datenfelder:Ende
     
     

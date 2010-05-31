@@ -300,7 +300,7 @@ if (check_ticket($_REQUEST['studipticket'])){
 			$datafields_list = DataFieldStructure::getDataFieldStructures("user");
 			foreach($datafields_list as $datafield){
 				if(DataFieldStructure::permMask($GLOBALS["auth"]->auth["perm"]) < DataFieldStructure::permMask($datafield->getViewPerms())) continue;
-				$_SESSION['pers_browse_old']['datafields'][$datafield->getID()] = remove_magic_quotes($_POST['pers_browse_datafields_'.$datafield->getID()]);
+				$_SESSION['pers_browse_old']['datafields'][$datafield->getID()] = Request::get('pers_browse_datafields_'.$datafield->getID());
 				if($_SESSION['pers_browse_old']['datafields'][$datafield->getID()]){
 					$_SESSION['pers_browse_search_string'] .= "auth_user_md5.user_id IN(SELECT range_id FROM datafields_entries WHERE datafield_id = '".$datafield->getID()."' AND content LIKE '".mysql_escape_string($_SESSION['pers_browse_old']['datafields'][$datafield->getID()])."') AND ";
 				}
@@ -928,7 +928,7 @@ if (isset($_GET['details']) || $showform ) {
 		$i++;
 	}
 	if($i%2!=0) echo "<td class=steel1>&nbsp;</td><td class=steel1 colspan=\"2\">&nbsp;</td>";
-	echo "<tr><td class=steel1 align=\"right\" colspan=\"5\"><a href=\"#\" onClick=\"\$('.pers_browse_datafields').each(function(index){if(\$(this).css('display')=='none') $(this).fadeIn('slow'); else $(this).fadeOut('slow');});\">Erweiterte Suche</a></td></tr>";
+	echo "<tr><td class=steel1 align=\"right\" colspan=\"5\"><a href=\"#\" onClick=\"\$('.pers_browse_datafields').each(function(index){if(\$(this).css('display')=='none') $(this).css('display',''); else $(this).css('display','none');});this.innerHTML=(this.innerHTML=='Zuklappen')?'Erweiterte Suche':'Zuklappen';\">Erweiterte Suche</a></td></tr>";
 	//Datenfelder:Ende
     
     

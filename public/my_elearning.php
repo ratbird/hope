@@ -66,6 +66,8 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
             ELearningUtils::loadClass($cms);
             ELearningUtils::bench("load cms $cms");
             $new_module_form[$cms] = ELearningUtils::getNewModuleForm($cms);
+        } else {
+            $messages['error'] = _("Die Lernmodulschnittstelle ist momentan nicht erreichbar.");
         }
 
     if ($messages["info"] != "")

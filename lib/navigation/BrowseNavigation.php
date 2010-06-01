@@ -28,7 +28,7 @@ class BrowseNavigation extends Navigation
             $coursetext = _('Veranstaltungen');
             $courseinfo = _('Meine Veranstaltungen & Einrichtungen');
             // as admin or root
-            if ($perm->have_perm('admin')) {
+            if ($perm->have_perm('root')) {
                 $courselink = 'adminarea_start.php';
             // as user
             }  else {
@@ -62,13 +62,18 @@ class BrowseNavigation extends Navigation
             $navigation->addSubNavigation('list', new Navigation(_('Übersicht'), 'meine_seminare.php'));
 
             if ($perm->have_perm('admin')) {
-                $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Timetable'), 'mein_stundenplan.php'));
-            } else {
-                if (get_config('STM_ENABLE') && $perm->have_perm('dozent')) {
-                    $navigation->addSubNavigation('modules', new Navigation(_('meine Studienmodule'), 'my_stm.php'));
+                if(Request::get('institut_id')) {
+                    $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'mein_stundenplan.php?cid='.Request::get('institut_id').'&inst_id='.Request::get('institut_id')));
+                } else {
+                    $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'mein_stundenplan.php'));
                 }
 
-                $navigation->addSubNavigation('archive', new Navigation(_('meine archivierten Veranstaltungen'), 'my_archiv.php'));
+            } else {
+                if (get_config('STM_ENABLE') && $perm->have_perm('dozent')) {
+                    $navigation->addSubNavigation('modules', new Navigation(_('Meine Studienmodule'), 'my_stm.php'));
+                }
+
+                $navigation->addSubNavigation('archive', new Navigation(_('Meine archivierten Veranstaltungen'), 'my_archiv.php'));
 
                 if (get_config('EXPORT_ENABLE')) {
                     $navigation->addSubNavigation('record_of_study', new Navigation(_('Druckansicht'), 'recordofstudy.php'));

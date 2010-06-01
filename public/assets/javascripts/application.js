@@ -969,13 +969,6 @@ STUDIP.QuickSearch = {
 $(document).ready(function () {
   // AJAX Indicator
   STUDIP.ajax_indicator = true;
-  $('#ajax_notification').ajaxStart(function () {
-    if (STUDIP.ajax_indicator === true) {
-      $(this).show();
-    }
-  }).ajaxStop(function () {
-    $(this).hide();
-  });
 
   // message highlighting
   $(".effect_highlight").effect('highlight', {}, 2000);
@@ -1016,11 +1009,15 @@ $('a.load-in-new-row').live('click', function () {
         return false;
     }
 
+    var that = this;
+    $(that).showAjaxNotification();
+
     var row = $('<tr />').addClass('loaded-details'),
-        cell = $('<td />').html('Lade &hellip;').attr('colspan', $(this).closest('td').siblings().length + 1).appendTo(row);
+        cell = $('<td />').attr('colspan', $(this).closest('td').siblings().length + 1).appendTo(row);
     $(this).closest('tr').after(row);
     $.get($(this).attr('href'), function (response) {
         cell.html(response);
+        $(that).hideAjaxNotification();
     });
 
 	return false;
@@ -1037,6 +1034,4 @@ $('.loaded-details a.cancel').live('click', function () {
 $('input.allow-only-numbers').live('keyup', function () {
     $(this).val( $(this).val().replace(/\D/, ''));
 });
-
-
 

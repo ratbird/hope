@@ -10,4 +10,3 @@ String.toLocaleString({
   "<?= strtr($language, "_", "-") ?>": <?= json_encode($translations) ?>
 
 });
-console.log(<?= json_encode($translations) ?>, "<?= $language ?>");

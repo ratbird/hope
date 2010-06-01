@@ -91,25 +91,30 @@ unset ($_html_head_title);
 if ($my_messaging_settings['start_messenger_at_startup'] && $auth->auth['jscript'] && !$_SESSION['messenger_started'] && !$seminar_open_redirected) {
 
     ?>
-    <script language="Javascript">
-        {fenster=window.open("studipim.php","im_<?=$user->id?>","scrollbars=yes,width=400,height=300","resizable=no");}
+    <script>
+        fenster=window.open("studipim.php","im_<?=$user->id?>","scrollbars=yes,width=400,height=300","resizable=no");
     </script>
     <?
     $_SESSION['messenger_started'] = TRUE;
 }
 ?>
+
     <?= Assets::script('jquery-1.4.2.min.js', 'jquery-ui-1.8.custom.min.js',
-                       'jquery.metadata.js', 'application') ?>
-    <script type="text/javascript" language="javascript">
-    // <![CDATA[
+                       'jquery.metadata.js', 'l10n.js', 'application') ?>
+
+    <script src="<?= URLHelper::getLink('dispatch.php/localizations/' . $GLOBALS['_language']) ?>"></script>
+
+    <script>
         STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";
         STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";
-    // ]]>
+        String.locale = "<?= strtr($GLOBALS['_language'], '_', '-') ?>";
     </script>
     <? if (isset ($_include_additional_header)) : ?>
         <?= $_include_additional_header ?>
     <? endif ?>
     <? unset($_include_additional_header) ?>
+
+
     </head>
     <body<?= (isset($GLOBALS['body_id']) ? ' id="'.htmlReady($GLOBALS['body_id']).'"' : '') .
              (isset($GLOBALS['body_class']) ? ' class="'.htmlReady($GLOBALS['body_class']).'"' : '' ) ?>>

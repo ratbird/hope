@@ -36,20 +36,21 @@
     <?= Assets::stylesheet('jquery-ui.1.8.css', array('media' => 'screen, print')) ?>
 
     <?= Assets::script('jquery-1.4.2.min.js', 'jquery-ui-1.8.custom.min.js',
-                       'jquery.metadata.js', 'application') ?>
+                       'jquery.metadata.js', 'l10n.js', 'application') ?>
 
-    <script type="text/javascript" language="javascript">
-    // <![CDATA[
+    <script src="<?= URLHelper::getLink('dispatch.php/localizations/' . $GLOBALS['_language']) ?>"></script>
+
+    <script>
       STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";
       STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";
-      // ]]>
+      String.locale = "<?= strtr($GLOBALS['_language'], '_', '-') ?>";
     </script>
 
     <? if ($GLOBALS['my_messaging_settings']['start_messenger_at_startup'] &&
            $GLOBALS['auth']->auth['jscript'] &&
            !$_SESSION['messenger_started'] &&
            !$GLOBALS['seminar_open_redirected']) : ?>
-      <script language="Javascript">
+      <script>
         fenster = window.open("studipim.php", "im_<?= $GLOBALS['user']->id ?>",
                               "scrollbars=yes,width=400,height=300",
                               "resizable=no");

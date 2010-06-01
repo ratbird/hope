@@ -286,7 +286,7 @@ STUDIP.URLHelper = {
     //merging in the param_object - as you see this has got priority:
     parameters = $.extend(parameters, param_object);
     // glueing together:
-    param_strings = [];
+    var param_strings = [];
     $.each(parameters, function (param, value) {
       param_strings.push(param + "=" + value);
     });
@@ -996,31 +996,31 @@ $(document).ready(function () {
  * ------------------------------------------------------------------------ */
 jQuery(function ($) {
 
-    $('table.collapsable .toggler').click(function () {
+  $('table.collapsable .toggler').click(function () {
 
-    	$(this).closest('tbody').toggleClass('collapsed');
-    	return false;
-    }).closest('.collapsable').find('tbody').filter(':not(.open)').find('.toggler').click();
+    $(this).closest('tbody').toggleClass('collapsed');
+    return false;
+  }).closest('.collapsable').find('tbody').filter(':not(.open)').find('.toggler').click();
 });
 
 $('a.load-in-new-row').live('click', function () {
-    if ($(this).closest('tr').next().hasClass('loaded-details')) {
-        $(this).closest('tr').next().remove();
-        return false;
-    }
+  if ($(this).closest('tr').next().hasClass('loaded-details')) {
+    $(this).closest('tr').next().remove();
+    return false;
+  }
 
-    var that = this;
-    $(that).showAjaxNotification();
+  var that = this;
+  $(that).showAjaxNotification();
 
-    var row = $('<tr />').addClass('loaded-details'),
-        cell = $('<td />').attr('colspan', $(this).closest('td').siblings().length + 1).appendTo(row);
-    $(this).closest('tr').after(row);
-    $.get($(this).attr('href'), function (response) {
-        cell.html(response);
-        $(that).hideAjaxNotification();
-    });
+  var row = $('<tr />').addClass('loaded-details'),
+      cell = $('<td />').attr('colspan', $(this).closest('td').siblings().length + 1).appendTo(row);
+  $(this).closest('tr').after(row);
+  $.get($(this).attr('href'), function (response) {
+    cell.html(response);
+    $(that).hideAjaxNotification();
+  });
 
-	return false;
+  return false;
 });
 
 $('.loaded-details a.cancel').live('click', function () {
@@ -1032,6 +1032,6 @@ $('.loaded-details a.cancel').live('click', function () {
  * only numbers in the input field
  * ------------------------------------------------------------------------ */
 $('input.allow-only-numbers').live('keyup', function () {
-    $(this).val( $(this).val().replace(/\D/, ''));
+  $(this).val($(this).val().replace(/\D/, ''));
 });
 

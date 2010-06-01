@@ -794,7 +794,7 @@ elseif ($auth->auth["perm"]=="admin") {
         }
 
         //tic #650 sortierung in der userconfig merken
-        if (isset($sortby) && in_array($sortby, words('Name status teilnehmer'))) {
+        if (isset($sortby) && in_array($sortby, words('vnummer Name status teilnehmer'))) {
             $userConfig->setValue($sortby,$user->id,'MEINE_SEMINARE_SORT');
         } else {
             $sortby=$userConfig->getValue($user->id,'MEINE_SEMINARE_SORT');
@@ -805,9 +805,13 @@ elseif ($auth->auth["perm"]=="admin") {
         }
         if ($sortby == "teilnehmer") {
             $sortby = "teilnehmer DESC";
+        } elseif ($sortby == "vnummer") {
+            $sortby = "VeranstaltungsNummer ASC";
+        } elseif ($sortby == "status") {
+            $sortby = "status ASC, VeranstaltungsNummer ASC";
         }
 
-        $db->query("SELECT Institute.Name AS Institut, seminare.Seminar_id,seminare.Name,seminare.status,seminare.chdate,
+        $db->query("SELECT Institute.Name AS Institut, seminare.VeranstaltungsNummer, seminare.Seminar_id,seminare.Name,seminare.status,seminare.chdate,
                     seminare.start_time,seminare.admission_binding,seminare.visible, seminare.modules,
                     COUNT(seminar_user.user_id) AS teilnehmer,IFNULL(visitdate,0) as visitdate,
                     sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem
@@ -820,77 +824,70 @@ elseif ($auth->auth["perm"]=="admin") {
         $num_my_sem=$db->num_rows();
         if (!$num_my_sem)
             $meldung = "msg§"
-                    . sprintf(_("An der Einrichtung: <b>%s</b> sind zur Zeit keine Veranstaltungen angelegt."), htmlReady($_my_inst[$_my_admin_inst_id]['name']))
+                    . sprintf(_("An der Einrichtung <i>%s</i> sind zur Zeit keine Veranstaltungen angelegt."), htmlReady($_my_inst[$_my_admin_inst_id]['name']))
                     . "§"
                     . $meldung;
     }
     ?>
-        <table width="100%" border=0 cellpadding=0 cellspacing=0>
-        <tr>
-            <td class="topic" ><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/meinesem.gif" border="0" align="texttop">
-            &nbsp;<b><?=_("Veranstaltungen an meinen Einrichtungen") .($_my_admin_inst_id ? " - ".htmlReady($_my_inst[$_my_admin_inst_id]['name']) : "")?></b></td>
-        </tr>
-
-    <tr>
-        <td class="blank" width="100%">
-            <?
-            if ($meldung) parse_msg($meldung);
-            ?>
-        </td>
-    </tr>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+    <?if ($meldung) parse_msg($meldung); ?>
     <?
     if (is_array($_my_inst)) {
     ?>
-        <tr>
-            <td class="blank" width="100%" >
-            <form action="<?=$PHP_SELF?>" method="post">
-                <div style="font-weight:bold;font-size:10pt;margin-left:10px;">
-                <?=_("Bitte w&auml;hlen Sie eine Einrichtung aus:")?>
-                </div>
-                <div style="margin-left:10px;">
-                <select name="institut_id" style="vertical-align:middle;">
-                    <?
-                    reset($_my_inst);
-                    while (list($key,$value) = each($_my_inst)){
-                        printf ("<option %s value=\"%s\" style=\"%s\">%s (%s)</option>\n",
-                                ($key == $_my_admin_inst_id) ? "selected" : "" , $key,($value["is_fak"] ? "font-weight:bold;" : ""),
+    <tr>
+        <td class="blank">
+        <form action="<?=$PHP_SELF?>" method="post">
+            <div style="font-weight:bold;font-size:10pt;margin-left:10px;">
+            <?=_("Bitte w&auml;hlen Sie eine Einrichtung aus:")?>
+            </div>
+            <div style="margin-left:10px;">
+            <select name="institut_id" style="vertical-align:middle;">
+                <?
+                reset($_my_inst);
+                while (list($key,$value) = each($_my_inst)){
+                    printf ("<option %s value=\"%s\" style=\"%s\">%s (%s)</option>\n",
+                            ($key == $_my_admin_inst_id) ? "selected" : "" , $key,($value["is_fak"] ? "font-weight:bold;" : ""),
+                            htmlReady($value["name"]), $value["num_sem"]);
+                    if ($value["is_fak"]){
+                        $num_inst = $value["num_inst"];
+                        for ($i = 0; $i < $num_inst; ++$i){
+                            list($key,$value) = each($_my_inst);
+                            printf("<option %s value=\"%s\">&nbsp;&nbsp;&nbsp;&nbsp;%s (%s)</option>\n",
+                                ($key == $_my_admin_inst_id) ? "selected" : "", $key,
                                 htmlReady($value["name"]), $value["num_sem"]);
-                        if ($value["is_fak"]){
-                            $num_inst = $value["num_inst"];
-                            for ($i = 0; $i < $num_inst; ++$i){
-                                list($key,$value) = each($_my_inst);
-                                printf("<option %s value=\"%s\">&nbsp;&nbsp;&nbsp;&nbsp;%s (%s)</option>\n",
-                                    ($key == $_my_admin_inst_id) ? "selected" : "", $key,
-                                    htmlReady($value["name"]), $value["num_sem"]);
-                            }
                         }
                     }
-                    ?>
-                    </select>&nbsp;
-                    <?=SemesterData::GetSemesterSelector(array('name'=>'select_sem', 'style'=>'vertical-align:middle;'), $_default_sem)?>
-                    <input <?=makeButton("auswaehlen","src")?> <?=tooltip(_("Einrichtung auswählen"))?> type="image" border="0" style="vertical-align:middle;">
-                    <br>&nbsp;
-                </div>
-            </form>
-            </td>
-        </tr>
-
-
-         <?
-         if ($num_my_sem) {
-         ?>
-        <tr>
-            <td class="blank" >
-                <table border="0" cellpadding="0" cellspacing="0" width="99%" align="center" class="blank">
-                    <tr align="center">
-                        <th width="2%"></th>
-                        <th width="50%" align="left"><a href="<? echo $PHP_SELF ?>?sortby=Name"><?=_("Name")?></a></th>
-                        <th width="10%" align="left"><a href="<? echo $PHP_SELF ?>?sortby=status"><?=_("Veranstaltungstyp")?></a></th>
-                        <th width="15%" align="left"><b><?=_("DozentIn")?></b></th>
-                        <th width="10%"><b><?=_("Inhalt")?></b></th>
-                        <th width="10%"><a href="<? echo $PHP_SELF ?>?sortby=teilnehmer"><?=_("TeilnehmerInnen")?></a></th>
-                        <th width="3%"></th>
-                    </tr>
+                }
+                ?>
+                </select>&nbsp;
+                <?=SemesterData::GetSemesterSelector(array('name'=>'select_sem', 'style'=>'vertical-align:middle;'), $_default_sem)?>
+                <input <?=makeButton("auswaehlen","src")?> <?=tooltip(_("Einrichtung auswählen"))?> type="image" border="0" style="vertical-align:middle;">
+                <br>&nbsp;
+            </div>
+        </form>
+        </td>
+    </tr>
+     <?
+     if ($num_my_sem) {
+     ?>
+    <tr>
+        <td class="blank">
+            <table border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
+                <tr>
+                    <td class="topic" colspan="8">
+                        <b><?=_("Veranstaltungen an meinen Einrichtungen") .($_my_admin_inst_id ? " - ".htmlReady($_my_inst[$_my_admin_inst_id]['name']) : "")?></b>
+                    </td>
+                </tr>
+                <tr>
+                    <th width="2%"></th>
+                    <th width="6%" align="left"><a href="<? echo $PHP_SELF ?>?sortby=vnummer"><?=_("VNummer")?></a></th>
+                    <th width="50%" align="left"><a href="<? echo $PHP_SELF ?>?sortby=Name"><?=_("Name")?></a></th>
+                    <th width="10%" align="left"><a href="<? echo $PHP_SELF ?>?sortby=status"><?=_("Veranstaltungstyp")?></a></th>
+                    <th width="15%" align="left"><b><?=_("DozentIn")?></b></th>
+                    <th width="10%"><b><?=_("Inhalt")?></b></th>
+                    <th width="5%"><a href="<? echo $PHP_SELF ?>?sortby=teilnehmer"><?=_("TeilnehmerInnen")?></a></th>
+                    <th width="2%"></th>
+                </tr>
         <?
 
         while ($db->next_record()){
@@ -898,6 +895,7 @@ elseif ($auth->auth["perm"]=="admin") {
                     'visitdate' => $db->f('visitdate'),
                     'institut' => $db->f("Institut"),
                     'teilnehmer' => $db->f("teilnehmer"),
+                    'vn' => $db->f("VeranstaltungsNummer"),
                     'name' => $db->f("Name"),
                     'status' => $db->f("status"),
                     'chdate' => $db->f("chdate"),
@@ -924,6 +922,8 @@ elseif ($auth->auth["perm"]=="admin") {
             echo "<td class=\"$class\">";
             echo CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL);
             echo "</td>";
+            echo "<td class=\"$class\"><a href=\"seminar_main.php?auswahl=$semid\">".$values["vn"];
+            echo "</a></td>";
             echo "<td class=\"$class\"><a href=\"seminar_main.php?auswahl=$semid\">";
             if ($lastVisit <= $values["chdate"])
                 print ("<font color=\"red\">");
@@ -939,7 +939,7 @@ elseif ($auth->auth["perm"]=="admin") {
                 echo "</font>";
             }
             if ($values["visible"] == 0) {
-                    echo "<font size=-1>&nbsp;"._("(versteckt)")."</font>";
+                    echo "<font size=-1> "._("(versteckt)")."</font>";
                 }
             echo "</td>";
 
@@ -959,51 +959,18 @@ elseif ($auth->auth["perm"]=="admin") {
             echo "</td>";
 
             echo "<td class=\"$class\" align=\"right\" nowrap>". $values["teilnehmer"]."&nbsp;</td>";
-            printf("<td class=\"$class\" align=center><a href=\"seminar_main.php?auswahl=$semid&redirect_to=adminarea_start.php&new_sem=TRUE\"><img src=\"".$GLOBALS['ASSETS_URL']."images/admin.gif\" ".tooltip(_("Veranstaltungsdaten bearbeiten"))." border=\"0\"></a></td>", $semid);
+            printf("<td class=\"$class\" align=\"right\"><a href=\"seminar_main.php?auswahl=$semid&redirect_to=adminarea_start.php&new_sem=TRUE\"><img src=\"".$GLOBALS['ASSETS_URL']."images/admin.gif\" ".tooltip(_("Veranstaltungsdaten bearbeiten"))." border=\"0\"></a></td>", $semid);
              echo "</tr>\n";
-            }
-        echo "      </table>
-                </td>
-            </tr>";
-
-         }
+        } ?>
+        </table>
+        <br>
+        </td>
+    </tr>
+<?     }
     }
-
 ?>
-    </table>
+</table>
 <?
-}
-//Anzeigemodul fuer alle Seminare für root
-elseif($perm->have_perm("root"))
-{
-    ?>
-    <div class="topic">
-        <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/meinesem.gif" border="0" >
-        <b><?=_("&Uuml;bersicht &uuml;ber Veranstaltungen")?></b>
-    </div>
-    <table width="100%" border=0 cellpadding=0 cellspacing=0>
-        <tr>
-            <td class="blank" align = left colspan=2><br><blockquote>
-                <?=_("Um eine Veranstaltung zu bearbeiten, w&auml;hlen Sie sie &uuml;ber die Suchfunktion aus.")?>
-            </blockquote>
-            </td>
-        </tr>
-        <tr>
-            <td class="blank" colspan=2>&nbsp;
-            </td>
-        </tr>
-        <tr>
-            <td class="blank" align="center" colspan=2>
-            <b>Sie sind 'root', sie sollten eigentlich nicht hier sein!</b>
-            </td>
-        </tr>
-        <tr>
-            <td class="blank" colspan=2>
-                &nbsp;
-            </td>
-        </tr>
-    </table>
-<?php
 }
     include ('lib/include/html_end.inc.php');
     ob_end_flush(); //Outputbuffering beenden

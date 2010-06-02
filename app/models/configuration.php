@@ -27,7 +27,7 @@ class ConfigurationModel
     public static function getConfig()
     {
         $query = "SELECT section, config_id, parent_id, field, value, is_default, "
-               . "type, range, position, description "
+               . "type, `range`, position, description "
                . "FROM config "
                . "ORDER BY section ASC, field ASC";
         $temp = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
@@ -57,7 +57,7 @@ class ConfigurationModel
     {
         if (!is_null($search_key)) {
             $query = "SELECT section, config_id, field, value, is_default, "
-                   . "type, range, position, description "
+                   . "type, `range`, position, description "
                    . "FROM config "
                    . "WHERE field LIKE ? "
                    . "ORDER BY field ASC, value ASC";
@@ -87,7 +87,7 @@ class ConfigurationModel
 
     /**
      * Search the user configuration from the user_config or give all parameter
-     * with range=user
+     * with `range`=user
      *
      * @param   string $user_id
      * @param   string $give_all
@@ -110,7 +110,7 @@ class ConfigurationModel
         if ($give_all) {
             $query = "SELECT config_id, field, value, description, type, section "
                    . "FROM config "
-                   . "WHERE range = 'user' "
+                   . "WHERE `range` = 'user' "
                    //. "AND is_default = '1' "
                    . "ORDER BY field";
             $stmt = DBManager::get()->query($query);

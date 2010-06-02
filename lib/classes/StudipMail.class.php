@@ -285,7 +285,7 @@ class StudipMail
      */
     function addStudipAttachment($dokument_id){
         $doc = new StudipDocument($dokument_id);
-        if(!$doc->is_new){
+        if(!$doc->isNew()){
             $this->addFileAttachment(get_upload_file_path($doc->getId()), $doc->getValue('filename'));
         }
         return $this;

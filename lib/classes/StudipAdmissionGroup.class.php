@@ -63,7 +63,7 @@ class StudipAdmissionGroup extends SimpleORMap {
 
     function restoreMembers(){
         $this->members = array();
-        if (!$this->is_new){
+        if (!$this->isNew()){
             $where_query = $this->getWhereQuery();
             $rs = DBManager::get()->query(sprintf("SELECT Seminar_id FROM seminare WHERE admission_group='%s' ORDER BY Name", $this->getId()));
             while($seminar_id = $rs->fetchColumn()){
@@ -107,7 +107,7 @@ class StudipAdmissionGroup extends SimpleORMap {
     }
 
     function addMember($seminar_id){
-        if($this->is_new && !$this->getId()) $this->setId($this->getNewId());
+        if($this->isNew() && !$this->getId()) $this->setId($this->getNewId());
         if (!$this->isMember($seminar_id)){
             $this->members[$seminar_id] = Seminar::GetInstance($seminar_id);
             if(!$this->members[$seminar_id]->is_new){

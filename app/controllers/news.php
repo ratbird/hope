@@ -25,7 +25,8 @@ class NewsController extends AuthenticatedController {
     if (!$this->has_news_permissions($id)) {
       return;
     }
-    $this->news->content['open'] = $open;
+    $this->newscontent = $this->news->toArray();
+    $this->newscontent['open'] = $open;
     $this->show_admin = $show_admin;
     $this->admin_link = Request::get('admin_link');
     $this->render_template('news/get_news');
@@ -59,7 +60,8 @@ class NewsController extends AuthenticatedController {
     }
 
     # show news
-    $this->news->content['open'] = $open;
+    $this->newscontent = $this->news->toArray();
+    $this->newscontent['open'] = $open;
     $this->show_admin = $show_admin;
     $this->admin_link = Request::get('admin_link');
     $this->render_template('news/open_or_close');
@@ -73,7 +75,7 @@ class NewsController extends AuthenticatedController {
     }
 
     # get news item
-    if ($this->news->is_new) {
+    if ($this->news->isNew()) {
       $this->set_status(404);
       $this->render_nothing();
       return false;

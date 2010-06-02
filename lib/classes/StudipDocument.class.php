@@ -37,6 +37,22 @@ define('STUDIPDOCUMENT_DB_TABLE', 'dokumente');
 
 class StudipDocument extends SimpleORMap {
 
+    static function find($id) {
+        return SimpleORMap::find(__CLASS__,$id);
+    }
+    
+    static function findBySql($where) {
+        return SimpleORMap::findBySql(__CLASS__,$where);
+    }
+    
+    static function findByCourseId($cid) {
+        return self::findBySql("seminar_id = " . DBManager::get()->quote($cid));
+    }
+    
+    static function findByFolderId($folder_id) {
+         return self::findBySql("folder_id = " . DBManager::get()->quote($folder_id));
+    }
+    
     function __construct($id = null){
         parent::__construct($id);
     }

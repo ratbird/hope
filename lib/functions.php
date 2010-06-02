@@ -846,18 +846,12 @@ function write_config ($key='', $val='', $arr='') {
  * gets an entry from the studip configuration table
  *
  * @param   string  the key for the config entry
- * @param   boolean if set, the default value will we returned
  *
  * @return  string  the value
  *
  **/
-function get_config($key, $default = FALSE) {
-    if (isset($GLOBALS[$key]) && !isset($_REQUEST[$key]) && !$default){
-        return $GLOBALS[$key];
-    } else {
-        $cfg = Config::GetInstance();
-        return ($default ? $cfg->getDefault($key) : $cfg->getValue($key));
-    }
+function get_config($key) {
+    return Config::get()->$key;
 }
 
 // folgende Funktion ist nur notwendig, wenn die zu kopierende Veranstaltung nicht vom Dozenten selbst,

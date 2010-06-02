@@ -26,22 +26,14 @@ class ConfigurationModel
      */
     public static function getConfig()
     {
-        $query = "SELECT section, config_id, parent_id, field, value, is_default, "
-               . "type, `range`, position, description "
-               . "FROM config "
-               . "ORDER BY section ASC, field ASC";
-        $temp = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
-
+        $config = Config::get();
         $allconfigs = array();
-        foreach ($temp as $row)
-        {
-            if (!isset($allconfigs[$row['section']])) {
-                $allconfigs[$row['section']] = array(
-                    'section' => $row['section'],
-                    'data' => array(),
-                );
-            }
-            array_push($allconfigs[ $row['section'] ]['data'], $row);
+        foreach($config->getFields() as $field) {
+            $metadata = $config->getMetadata($field);
+            $metadata['value'] = $config->$field;
+            $metadata['config_id'] = $field;
+            $allconfigs[$metadata['section']]['section'] = $metadata['section'];
+            $allconfigs[$metadata['section']]['data'][] = $metadata;
         }
         return $allconfigs;
     }
@@ -55,39 +47,20 @@ class ConfigurationModel
      */
     public static function searchConfig($search_key)
     {
-        if (!is_null($search_key)) {
-            $query = "SELECT section, config_id, field, value, is_default, "
-                   . "type, `range`, position, description "
-                   . "FROM config "
-                   . "WHERE field LIKE ? "
-                   . "ORDER BY field ASC, value ASC";
-            $stmt = DBManager::get()->prepare($query);
-            $stmt->execute(array('%'.$search_key.'%'));
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $config = Config::get();
+        foreach($config->getFields(null, null, trim($search_key)) as $field) {
+            $metadata = $config->getMetadata($field);
+            $metadata['value'] = $config->$field;
+            $metadata['config_id'] = $field;
+            $result[] = $metadata;
         }
-        return NULL;
+        return $result;
     }
 
-    /**
-     * Save the modified configuration data
-     *
-     * @param   string $config_id
-     * @param   string $conf_value
-     * @param   string $conf_sec
-     * @param   string $conf_comment
-     */
-    public static function saveEditConfiguration($config_id, $conf_value, $conf_sec, $conf_comment)
-    {
-        $query = "UPDATE config "
-               . "SET value = ?, section = ?, mkdate = ?, chdate = ?, comment = ? "
-               . "WHERE config_id = ?";
-        $stmt = DBManager::get()->prepare($query);
-        $stmt->execute(array($conf_value, $conf_sec, time(), time(), $conf_comment, $config_id ));
-    }
 
     /**
      * Search the user configuration from the user_config or give all parameter
-     * with `range`=user
+     * with range=user
      *
      * @param   string $user_id
      * @param   string $give_all
@@ -96,27 +69,32 @@ class ConfigurationModel
      */
     public static function searchUserConfiguration($user_id = NULL, $give_all = false)
     {
+        $config = Config::get();
+        $allconfigs = array();
         if (!is_null($user_id)) {
-            $query = "SELECT DISTINCT uc.field,uc.value,c.type, c.description, CONCAT_WS(' ', au.Vorname, au.Nachname) as fullname "
-                   . "FROM user_config uc "
-                   . "LEFT JOIN config c USING(field) "
-                   . "LEFT JOIN auth_user_md5 au USING (user_id) "
-                   . "WHERE user_id = ? ";
-            $stmt = DBManager::get()->prepare($query);
-            $stmt->execute(array($user_id ));
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $uconfig = UserConfig::get($user_id);
+            foreach($uconfig as $field => $value) {
+                $data = $config->getMetadata($field);
+                if(!count($data)) {
+                    $data['field'] = $field;
+                    $data['type'] = 'string';
+                    $data['description'] = 'missing in table `config`';
+                }
+                $data['value'] = $value;
+                $data['fullname'] = get_fullname($user_id);
+                $allconfigs[] = $data;
+            }
         }
 
         if ($give_all) {
-            $query = "SELECT config_id, field, value, description, type, section "
-                   . "FROM config "
-                   . "WHERE `range` = 'user' "
-                   //. "AND is_default = '1' "
-                   . "ORDER BY field";
-            $stmt = DBManager::get()->query($query);
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach($config->getFields('user') as $field) {
+                $metadata = $config->getMetadata($field);
+                $metadata['value'] = $config->$field;
+                $metadata['config_id'] = $field;
+                $allconfigs[] = $metadata;
+            }
         }
-        return NULL;
+        return $allconfigs;
     }
 
     /**
@@ -129,33 +107,19 @@ class ConfigurationModel
      */
     public static function showUserConfiguration($user_id, $field)
     {
-        $query = "SELECT uc.field,uc.value,c.type, c.description, CONCAT_WS(' ', au.Vorname, au.Nachname) as fullname, uc.user_id "
-               . "FROM user_config uc "
-               . "LEFT JOIN config c USING(field) "
-               . "LEFT JOIN auth_user_md5 au USING (user_id) "
-               . "WHERE uc.user_id = ? AND uc.field = ?";
-        $stmt = DBManager::get()->prepare($query);
-        $stmt->execute(array($user_id, $field));
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $uconfig = UserConfig::get($user_id);
+        $config = Config::get();
+        $data = $config->getMetadata($field);
+        if(!count($data)) {
+            $data['field'] = $field;
+            $data['type'] = 'string';
+            $data['description'] = 'missing in table `config`';
+        }
+        $data['value'] = $uconfig->$field;
+        $data['fullname'] = get_fullname($user_id);
+        return $data;
     }
 
-    /**
-     * Updating the user configuration (value)
-     *
-     * @param   string $user_id
-     * @param   string $value
-     * @param   string $field
-     */
-    public static function updateUserConfiguration($user_id,$value,$field)
-    {
-        if (!is_null($user_id)) {
-            $query = "UPDATE user_config "
-                   . "SET value = ?, chdate = ? "
-                   . "WHERE user_id = ? AND field = ?";
-            $stmt = DBManager::get()->prepare($query);
-            $stmt->execute(array($value, time(), $user_id, $field));
-        }
-    }
 
     /**
      * Show all information for one configuration parameter
@@ -165,8 +129,11 @@ class ConfigurationModel
     public static function getConfigInfo($config_id = NULL)
     {
         if (!is_null($config_id)) {
-            $query = "SELECT * FROM config WHERE config_id = '{$config_id}'";
-            return DBManager::get()->query($query)->fetch(PDO::FETCH_ASSOC);
+            $config = Config::get();
+            $metadata = $config->getMetadata($config_id);
+            $metadata['value'] = $config->$config_id;
+            $metadata['config_id'] = $metadata['field'];
+            return $metadata;
         }
         return NULL;
     }

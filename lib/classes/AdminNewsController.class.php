@@ -124,8 +124,8 @@ class AdminNewsController {
 
         $this->news_query = null;
         $news_obj = new StudipNews($news_id);
-        if (!$news_obj->is_new) {
-            $this->news_query = $news_obj->content;
+        if (!$news_obj->isNew()) {
+            $this->news_query = $news_obj->toArray();
             $query="SELECT a.range_id,b.user_id, ". $_fullname_sql['full'] ." AS author,".
                     " c.Seminar_id, c.Name AS seminar_name, c.start_time ,d.Institut_id,d.Name AS institut_name,".
                     " IF(d.Institut_id=d.fakultaets_id,'fak','inst') AS inst_type, sd.name AS startsem, ".

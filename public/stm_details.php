@@ -47,7 +47,7 @@ if (!preg_match('/^('.preg_quote($CANONICAL_RELATIVE_PATH_STUDIP,'/').')?([a-zA-
 if ($send_from_search) $back_msg =_("Zur&uuml;ck zur letzten Auswahl");
 
 $stm_obj = new StudipStmInstance($_REQUEST['stm_instance_id']);
-if (!$stm_obj->is_new){
+if (!$stm_obj->isNew()){
     if ($_REQUEST['cmd'] == 'do_enter'
     && $stm_obj->isAllowedToEnter($GLOBALS['user']->id)
     && !$stm_obj->isParticipant($GLOBALS['user']->id)

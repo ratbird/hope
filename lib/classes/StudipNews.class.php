@@ -81,7 +81,7 @@ class StudipNews extends SimpleORMap {
             foreach($news_result as $id => $result){
                 $objects[$id] = new StudipNews();
                 $objects[$id]->setData($result, true);
-                $objects[$id]->is_new = false;
+                $objects[$id]->setNew(false);
             }
         }
         return $objects;
@@ -164,7 +164,7 @@ class StudipNews extends SimpleORMap {
         $ret = false;
         if(!$touch_stamp) $touch_stamp = time();
         $news = new StudipNews($news_id);
-        if(!$news->is_new){
+        if(!$news->isNew()){
             $news->setValue('date', mktime(0,0,0,strftime("%m",$touch_stamp),strftime("%d",$touch_stamp),strftime("%y",$touch_stamp)));
             $ret = $news->store();
             $news->triggerChdate();
@@ -198,7 +198,7 @@ class StudipNews extends SimpleORMap {
 
     function restoreRanges(){
         $this->ranges = array();
-        if (!$this->is_new){
+        if (!$this->isNew()){
             $ranges = DBManager::get()
                     ->query("SELECT range_id FROM {$this->db_table}_range WHERE news_id='".$this->getId()."'")
                     ->fetchAll(PDO::FETCH_COLUMN, 0);
@@ -215,7 +215,7 @@ class StudipNews extends SimpleORMap {
 
     function storeRanges(){
         $db = DBManager::get();
-        if (!$this->is_new){
+        if (!$this->isNew()){
             $where_query = $this->getWhereQuery();
             if ($where_query){
                 $db->exec("DELETE FROM {$this->db_table}_range WHERE  news_id='".$this->getId()."'");

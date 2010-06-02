@@ -2,13 +2,13 @@
 <? if (empty($via_ajax)): ?>
 <h2><?=_("Bearbeiten von Konfigurationsparameter für den Nutzer: ")?><?=$search_user['fullname']?></h2>
 <? endif; ?>
-<form action="<?= $controller->url_for('admin/configuration/user_configuration/'.'update') ?>" method=post>
+<form action="<?= $controller->url_for('admin/configuration/user_configuration/update') ?>" method=post>
     <table class="default">
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td><?=_("Name:")?>(<em>field</em>) </td>
             <td>
                 <input type="hidden" name = "field" value = "<?= htmlReady($search_user['field'])?>">
-                <input type="hidden" name = "user_id" value = "<?= htmlReady($search_user['user_id'])?>">
+                <input type="hidden" name = "user_id" value = "<?= htmlReady($user_id)?>">
                 <?= htmlReady($search_user['field']) ?>
             </td>
         </tr>

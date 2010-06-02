@@ -48,7 +48,7 @@ class StudipScmEntry extends SimpleORMap {
             } else {
                 $ret[$row['scm_id']] = new StudipScmEntry();
                 $ret[$row['scm_id']]->setData($row, true);
-                $ret[$row['scm_id']]->is_new = false;
+                $ret[$row['scm_id']]->setNew(false);
             }
         }
         return $ret;

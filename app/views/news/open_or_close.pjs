@@ -1,4 +1,4 @@
 <?
 //deprecated file:
 $update_page->replace_html('news_item_'.$news->getId(),
-                           studip_utf8encode(show_news_item($news->content, array(), $show_admin, $admin_link)));
+                           studip_utf8encode(show_news_item($newscontent, array(), $show_admin, $admin_link)));

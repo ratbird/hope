@@ -85,7 +85,7 @@ class StudipStmInstanceElement extends SimpleORMap {
     
     function __construct ($element_id = null, $stm_instance_id = null, $sem_id = null) {
         parent::__construct(array($stm_instance_id, $element_id, $sem_id));
-        if ($this->is_new) {
+        if ($this->isNew()) {
             $this->setValue('stm_instance_id', $stm_instance_id);
             $this->setValue('element_id', $element_id);
             $this->setValue('sem_id', $sem_id);
@@ -103,7 +103,7 @@ class StudipStmInstanceElement extends SimpleORMap {
             $rs = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
             if (isset($rs[0])) {
                 $this->content = $rs[0];
-                $this->is_new = false;
+                $this->setNew(false);
                 return true;
             }
         } else if($this->getValue('stm_instance_id') && $this->getValue('element_id')){
@@ -116,7 +116,7 @@ class StudipStmInstanceElement extends SimpleORMap {
                 $this->content = $rs[0];
             }
         }
-        $this->is_new = true;
+        $this->setNew(true);
         return FALSE;
     }
     

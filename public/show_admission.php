@@ -656,7 +656,7 @@ if(is_object($group_obj)){
         </div>
         </div>
         <input type="hidden" name="group_sem_x" value="1">
-        <?=(!$group_obj->is_new ? '<input type="hidden" name="group_id" value="'.$group_obj->getId().'">' : '');?>
+        <?=(!$group_obj->isNew() ? '<input type="hidden" name="group_id" value="'.$group_obj->getId().'">' : '');?>
         </form>
         <script type="text/javascript">
         // <![CDATA[

@@ -57,7 +57,7 @@ if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
         $msg = "msg§"._("Die Änderungen wurden übernommen.");
     } else if ($i_view == 'kill') {
         $scm = new StudipScmEntry($_show_scm);
-        if (!$scm->is_new && $scm->getValue('range_id') == $SessSemName[1]){
+        if (!$scm->isNew() && $scm->getValue('range_id') == $SessSemName[1]){
             $scm->delete();
             $msg = "msg§" . _("Der Eintrag wurde gelöscht.");
         }
@@ -65,7 +65,7 @@ if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
         $_show_scm = $scms[0]['scm_id'];
     } else if ($i_view == 'first_position') {
         $scm = new StudipScmEntry($_show_scm);
-        if (!$scm->is_new && $scm->getValue('range_id') == $SessSemName[1]){
+        if (!$scm->isNew() && $scm->getValue('range_id') == $SessSemName[1]){
             $minmkdate = DBManager::get()
                 ->query("SELECT MIN(mkdate)-1 FROM scm WHERE range_id='" .  $scm->getValue('range_id') . "'")
                 ->fetchColumn();
@@ -158,7 +158,7 @@ function scm_show_content($range_id, $msg, $scm_id) {
         parse_msg($msg);
     }
 
-    if (!$scm->is_new) {
+    if (!$scm->isNew()) {
         scm_change_header($content_table, htmlReady($scm->getValue("tab_name")), $scm->getValue("user_id"), $scm->getValue("chdate"));
         echo $content_table->openRow();
         echo $content_table->openCell();
@@ -194,7 +194,7 @@ function scm_edit_content($range_id, $scm_id) {
 
     $scm = new StudipScmEntry($scm_id);
 
-    if ($scm->is_new){
+    if ($scm->isNew()){
         $scm->setValue('user_id', $GLOBALS['user']->id);
         $scm->setValue('chdate', time());
         $scm_id = 'new_entry';

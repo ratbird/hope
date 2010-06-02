@@ -97,7 +97,7 @@ class StudipStmInstance extends SimpleORMap {
     
     function __construct ($id = NULL, $stm_abstr_id = null) {
         parent::__construct($id);
-        if ($this->is_new) {
+        if ($this->isNew()) {
             $this->setValue('stm_abstr_id', $stm_abstr_id);
             $this->setValue('lang_id', LANGUAGE_ID);
         }
@@ -239,19 +239,19 @@ class StudipStmInstance extends SimpleORMap {
             $rs = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
             if (isset($rs[0])) {
                 $this->content = $rs[0];
-                $this->is_new = false;
+                $this->setNew(false);
             }
         } else {
-            $this->is_new = true;
+            $this->setNew(true);
         }
-        if (!$this->is_new){
+        if (!$this->isNew()){
             $this->restoreElements();
             $this->restoreAssigns();
         } else {
             $this->elements = array();
             $this->assigns = array();
         }
-        return !$this->is_new;
+        return !$this->isNew();
     }
     
     function store () {

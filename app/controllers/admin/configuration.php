@@ -22,7 +22,6 @@ require_once 'lib/messaging.inc.php';
 require_once 'lib/user_visible.inc.php';
 
 // classes required for global-module-settings
-require_once('lib/classes/AdminModules.class.php');
 require_once('lib/classes/Config.class.php');
 
 class Admin_ConfigurationController extends AuthenticatedController
@@ -67,13 +66,11 @@ class Admin_ConfigurationController extends AuthenticatedController
      */
     function results_configuration_action()
     {
-        if (Request::submitted('search_config')) {
-            if (Request::get('')) {
-                $this->search_filter = ConfigurationModel::searchConfig(Request::get('search_config'));
-            } else {
-                $this->flash['error'] = _("Bitte geben Sie einen Suchparameter ein.");
-                $this->redirect('admin/configuration/configuration');
-            }
+        if (Request::get('search_config')) {
+            $this->search_filter = ConfigurationModel::searchConfig(Request::get('search_config'));
+        } else {
+            $this->flash['error'] = _("Bitte geben Sie einen Suchparameter ein.");
+            $this->redirect('admin/configuration/configuration');
         }
         $GLOBALS['CURRENT_PAGE'] = _('Verwaltung von Systemkonfigurationen');
     }
@@ -100,7 +97,11 @@ class Admin_ConfigurationController extends AuthenticatedController
                 if($config['type'] == 'integer' && !is_numeric($conf_value)) {
                     $this->flash['error'] = _("Bitte geben Sie bei Parametern vom Typ 'integer' nur Zahlen ein!");
                 } else {
-                    ConfigurationModel::saveEditConfiguration($config_id, $conf_value,$conf_sec, $conf_comment);
+                    Config::get()->store($config_id, array(
+                    									   'value'   => $conf_value,
+                                                           'section' => $conf_sec,
+                                                           'comment' => $conf_comment
+                                                           ));
                     $this->flash['success'] = sprintf(_("Der Konfigurationseintrag %s wurde erfolgreich übernommen!"), Request::get('field'));
                     $this->redirect('admin/configuration/configuration/'.$conf_sec);
                 }
@@ -129,6 +130,12 @@ class Admin_ConfigurationController extends AuthenticatedController
      */
     function user_configuration_action($give_all = NULL)
     {
+        
+        if ($give_all == 'update') {
+            UserConfig::get(Request::get('user_id'))->store(Request::get('field'), Request::get('value'));
+            $this->flash['success'] = sprintf(_("Der Konfigurationseintrag: %s wurde erfolgreich geändert!"), Request::get('field'));
+        }
+        
         if (Request::submitted('user_id')) {
             $this->user_id = Request::get('user_id');
             if ($this->user_id) {
@@ -142,10 +149,7 @@ class Admin_ConfigurationController extends AuthenticatedController
             $this->give_alls = ConfigurationModel::searchUserConfiguration($this->user_id, true);
         }
 
-        if ($give_all == 'update') {
-            ConfigurationModel::updateUserConfiguration(Request::get('user_id'), Request::get('value'), Request::get('field'));
-            $this->flash['success'] = sprintf(_("Der Konfigurationseintrag: %s wurde erfolgreich geändert!"), Request::get('field'));
-        }
+        
 
         $GLOBALS['CURRENT_PAGE'] = _("Verwalten von Nutzerkonfigurationen");
     }
@@ -160,6 +164,7 @@ class Admin_ConfigurationController extends AuthenticatedController
     {
         if ($field && $user_id) {
             $this->search_user = ConfigurationModel::showUserConfiguration($user_id, $field);
+            $this->user_id = $user_id;
         } else {
             false;
         }

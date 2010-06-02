@@ -74,12 +74,12 @@ function delete_comment($comment_id) {
     global $auth, $perm;
     $ok = 0;
     $comment = new StudipComments($comment_id);
-    if (!$comment->is_new) {
+    if (!$comment->isNew()) {
         if ($perm->have_perm("root")) {
             $ok = 1;
         } else {
             $news = new StudipNews($comment->getValue("object_id"));
-            if (!$news->is_new && $news->getValue("user_id") == $auth->auth["uid"]) {
+            if (!$news->isNew() && $news->getValue("user_id") == $auth->auth["uid"]) {
                 $ok = 1;
             }
         }
@@ -414,6 +414,7 @@ function show_news_item_content($news_item, $cmd_data, $show_admin) {
             $formular.="</div></form><p> </p>";
             $content.=$formular;
         } else {
+            $numcomments = StudipComments::NumCommentsForObject($id);
             $cmdline = "<p align=center><font size=-1><a href=\"".URLHelper::getLink("?foo=".rand()."&comopen=".$id.$unamelink."#anker")."\">"
                         .sprintf(_("Kommentare lesen (%s) / Kommentar schreiben"), $numcomments)."</a></font></p>";
             $content .= $cmdline;

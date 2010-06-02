@@ -1024,8 +1024,8 @@ $('a.load-in-new-row').live('click', function () {
 });
 
 $('.loaded-details a.cancel').live('click', function () {
-	$(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
-	return false;
+  $(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
+  return false;
 });
 
 /* ------------------------------------------------------------------------

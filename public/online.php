@@ -66,7 +66,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 
 ob_start();
 
-$kompletter_datensatz= get_users_online($my_messaging_settings['active_time'], $user->cfg->getValue($user->id, "ONLINE_NAME_FORMAT"));
+$kompletter_datensatz= get_users_online($my_messaging_settings['active_time'], $user->cfg->getValue("ONLINE_NAME_FORMAT"));
 $alle=count($kompletter_datensatz);
 /*
  * Start to filter

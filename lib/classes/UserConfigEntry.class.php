@@ -35,4 +35,15 @@ class UserConfigEntry extends SimpleORMap
         $found = self::findBySql("field=" . DbManager::get()->quote($field) . " AND user_id=" . DbManager::get()->quote($user_id));
         return isset($found[0]) ? $found[0] : null;
     }
+    
+    static function deleteBySql($where)
+    {
+        return SimpleORMap::deleteBySql(__CLASS__, $where);
+    }
+    
+    static function deleteByUser($user_id)
+    {
+        $where = " user_id = " . DBManager::get()->quote($user_id);
+        return self::deleteBySQL($where); 
+    }
 }

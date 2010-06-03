@@ -879,9 +879,9 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         if ($my_data["motto"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['motto'])
             $homepage_elements["motto"] = array("name" => _("Motto"), "visibility" => $homepage_visibility["motto"] ? $homepage_visibility["motto"] : get_default_homepage_visibility(), 'category' => 'Private Daten');
         if ($GLOBALS['ENABLE_SKYPE_INFO']) {
-            if ($GLOBALS['user']->cfg->getValue($user_id, 'SKYPE_NAME') && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['skype_name']) {
+            if ($GLOBALS['user']->cfg->getValue('SKYPE_NAME') && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['skype_name']) {
                 $homepage_elements["skype_name"] = array("name" => _("Skype Name"), "visibility" => $homepage_visibility["skype_name"] ? $homepage_visibility["skype_name"] : get_default_homepage_visibility(), 'category' => 'Private Daten');
-                if ($GLOBALS['user']->cfg->getValue($user_id, 'SKYPE_ONLINE_STATUS')) {
+                if ($GLOBALS['user']->cfg->getValue('SKYPE_ONLINE_STATUS')) {
                     $homepage_elements["skype_online_status"] = array("name" => _("Skype Online Status"), "visibility" => $homepage_visibility["skype_online_status"] ? $homepage_visibility["skype_online_status"] : get_default_homepage_visibility(), 'category' => 'Private Daten');
                 }
             }

@@ -353,7 +353,6 @@ class Seminar_User extends User {
     var $cfg = null; //UserConfig object
 
     function Seminar_User($uid = null){
-        $this->cfg = new UserConfig();
         if ($uid){
             if (!is_object($GLOBALS['auth']) ||
             (is_object($GLOBALS['auth']) && $uid != $GLOBALS['auth']->auth['uid'])){
@@ -366,7 +365,7 @@ class Seminar_User extends User {
 
     function start($uid){
         parent::start($uid);
-        $this->cfg->setUserId($uid);
+        $this->cfg = UserConfig::get($uid);
     }
 
     function freeze(){

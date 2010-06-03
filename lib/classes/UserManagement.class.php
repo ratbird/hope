@@ -857,8 +857,7 @@ class UserManagement
         // delete the datafields
         $localEntries = DataFieldEntry::removeAll($this->user_data['auth_user_md5.user_id']);
 
-        $user_cfg = new UserConfig();
-        $user_cfg->unsetAll($this->user_data['auth_user_md5.user_id']);
+        UserConfigEntry::deleteByUser($this->user_data['auth_user_md5.user_id']);
 
         // delete all remaining user data
         $query = "DELETE FROM seminar_user_schedule WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";

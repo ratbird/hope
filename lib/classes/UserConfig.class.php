@@ -63,7 +63,7 @@ class UserConfig extends Config
                         $value = (bool)$row['value'];
                         break;
                     default:
-                        $value = trim($row['value']);
+                        $value = $row['value'];
                 }
                 $this->data[$row['field']] = $row['value'];
             }
@@ -81,21 +81,66 @@ class UserConfig extends Config
         return $this->user_id;
     }
     
-    function store($field, $value)
+    function getValue($field)
     {
-        if (array_key_exists($field, $this->data)) {
-            $entry = UserConfigEntry::findByFieldAndUser($field, $this->user_id);
-            if($entry === null) {
-                $entry = new UserConfigEntry();
-                $entry->user_id = $this->user_id;
-                $entry->field = $field;
+        $args = func_get_args();
+        if(count($args) > 1) {
+            list($user_id, $key) = $args;
+            if($user_id !== null && $key !== null) {
+                $ret = UserConfig::get($user_id)->$key;
             }
-            $entry->value = $value;
-            $ret = $entry->store();
-            if ($ret) {
-                $this->fetchData();
+            if($user_id === null) {
+                $ret = parent::getValue($key);
             }
+            trigger_error('deprecated use of ' . __METHOD__, E_USER_NOTICE);
             return $ret;
         }
+        return parent::getValue($field);
     }
+    
+    function setValue($field, $value)
+    {
+        $args = func_get_args();
+        if(count($args) > 2) {
+            list($value, $user_id, $key) = $args;
+            if($user_id !== null && $key !== null) {
+                $ret = UserConfig::get($user_id)->store($key, $value);
+            }
+            if($user_id === null && $key !== null) {
+                $ret = $this->store($key, $value);
+            }
+            trigger_error('deprecated use of ' . __METHOD__, E_USER_NOTICE);
+            return $ret;
+        }
+        return parent::setValue($field, $value);
+    }
+    
+    function store($field, $value)
+    {
+
+        $entry = UserConfigEntry::findByFieldAndUser($field, $this->user_id);
+        if($entry === null) {
+            $entry = new UserConfigEntry();
+            $entry->user_id = $this->user_id;
+            $entry->field = $field;
+        }
+        $entry->value = $value;
+        $ret = $entry->store();
+        if ($ret) {
+            $this->fetchData();
+        }
+        return $ret;
+
+    }
+    
+    function delete($field)
+    {
+        $entry = UserConfigEntry::findByFieldAndUser($field, $this->user_id);
+        if($entry !== null) {
+            return $entry->delete();
+        } else {
+            return null;
+        }
+    }
+   
 }

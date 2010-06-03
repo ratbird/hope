@@ -79,6 +79,14 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         return $ret;
     }
     
+    public static function deleteBySQL($class, $where)
+    {
+        $record = new $class();
+        $db = DBManager::get();
+        $sql = "DELETE FROM `" .  $record->db_table . "` WHERE " . $where;
+        return $db->exec($sql);
+    }
+    
     function __construct($id = null)
     {
         if (!$this->db_table){

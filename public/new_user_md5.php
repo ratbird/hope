@@ -54,9 +54,6 @@ include ('lib/include/header.php');  //hier wird der "Kopf" nachgeladen
 $db = new DB_Seminar;
 $db2 = new DB_Seminar;
 
-// User_config for expiration_date
-$uc = new UserConfig();
-
 // Check if there was a submission
 if (check_ticket($_REQUEST['studipticket'])){
     if ($_REQUEST['disable_mail_host_check']) $GLOBALS['MAIL_VALIDATE_BOX'] = false;
@@ -92,8 +89,9 @@ if (check_ticket($_REQUEST['studipticket'])){
                     if(!($timestamp = @mktime(0,0,0,$a[1],$a[0],$a[2]))){
                         $UserManagement->msg .= "error§" . _("Das Ablaufdatum wurde in einem falschen Format angegeben.") . "§";
                         break;
-                    }else
-                        $uc->setValue($timestamp,$UserManagement->user_data['auth_user_md5.user_id'],"EXPIRATION_DATE");
+                    } else {
+                        UserConfig::get($UserManagement->user_data['auth_user_md5.user_id'])->store("EXPIRATION_DATE", $timestamp);
+                    }
                 }
 
                 if ($_REQUEST['select_inst_id'] && $perm->have_studip_perm('admin', $_REQUEST['select_inst_id'])){
@@ -206,11 +204,11 @@ if (check_ticket($_REQUEST['studipticket'])){
             $UserManagement->changeUser($newuser);
 
             if($expiration_del == "1")
-                $uc->unsetValue($UserManagement->user_data['auth_user_md5.user_id'],"EXPIRATION_DATE");
+                UserConfig::get($UserManagement->user_data['auth_user_md5.user_id'])->delete("EXPIRATION_DATE");
             else if(isset($expiration_date) && $expiration_date != ''){
                 $a = explode(".",stripslashes(trim($expiration_date)));
                 if($timestamp = @mktime(0,0,0,$a[1],$a[0],$a[2])){
-                    $uc->setValue($timestamp,$UserManagement->user_data['auth_user_md5.user_id'],"EXPIRATION_DATE");
+                    UserConfig::get($UserManagement->user_data['auth_user_md5.user_id'])->store("EXPIRATION_DATE", $timestamp);
                 }else{
                     $UserManagement->msg .= "error§" . _("Das Ablaufdatum wurde in einem falschen Format angegeben.") . "§";
                     break;
@@ -753,8 +751,8 @@ if (isset($_GET['details']) || $showform ) {
                     <td class="steel1"><b>&nbsp;<?=_("Ablaufdatum:")?></b></td>
                     <td class="steel1"><input type="checkbox" name="expiration_del" value="1">L&ouml;schen</td>
                     <td class="steel1">
-                    <?$expiration = ($uc->getValue($db->f('user_id'),"EXPIRATION_DATE") > 0)?date("d.m.Y",$uc->getValue($db->f('user_id'),"EXPIRATION_DATE")):'';?>
-                    <input type="text" name="expiration_date" size=20 maxlength=63 value="<?=$expiration?>"> (TT.MM.JJJJ z.B. 31.01.2009)
+                    <?$expiration = UserConfig::get($db->f('user_id'))->EXPIRATION_DATE;?>
+                    <input type="text" name="expiration_date" size=20 maxlength=63 value="<?=($expiration > 0 ? date("d.m.Y", $expiration) : '')?>"> (TT.MM.JJJJ z.B. 31.01.2009)
                     </td>
                 </tr>
 

@@ -7,7 +7,6 @@
 require_once('config.inc.php');
 require_once('lib/classes/cssClassSwitcher.inc.php');
 include_once('vendor/idna_convert/idna_convert.class.php');
-include_once('lib/classes/UserConfig.class.php');
 include_once('lib/classes/QuickSearch.class.php');
 include_once('lib/classes/searchtypes/SQLSearch.class.php');
 include_once('lib/classes/searchtypes/StandardSearch.class.php');

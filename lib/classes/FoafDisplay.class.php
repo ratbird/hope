@@ -22,7 +22,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once('lib/classes/UserConfig.class.php');
 require_once('lib/visual.inc.php');
 require_once('lib/classes/Avatar.class.php');
 
@@ -44,7 +43,6 @@ class FoafDisplay {
     var $target_username; // used for open/close link on target user's hp
     var $depth = 4; //max number of hops, 5 is max
     var $dont_show_anonymous = true;
-    var $ucfg; //UserConfig object
 
     /**
     * Initialise FoafDisplay object and calculate list.
@@ -59,7 +57,6 @@ class FoafDisplay {
         $this->target_id=$target_id;
         $this->target_username=$target_username;
         $this->foaf_list=array();
-        $this->ucfg=new UserConfig($this->user_id, "FOAF_SHOW_IDENTITY");
         $this->calculate();
     }
 
@@ -201,7 +198,7 @@ class FoafDisplay {
     function user_info($user_id, $ignore_ok) {
         global $_fullname_sql;
         $ret="";
-        if ($ignore_ok || $this->ucfg->getValue($user_id)) {
+        if ($ignore_ok || UserConfig::get($user_id)->FOAF_SHOW_IDENTITY) {
             $sql="SELECT username, $_fullname_sql[full] AS fullname FROM auth_user_md5 LEFT JOIN user_info USING (user_id) WHERE auth_user_md5.user_id='$user_id'";
             $this->db->query($sql);
             $this->db->next_record();
@@ -225,7 +222,7 @@ class FoafDisplay {
     *
     */
     function info_text() {
-        $vis=$this->ucfg->getValue();
+        $vis=UserConfig::get($this->user_id)->FOAF_SHOW_IDENTITY;
         $msg="<table width=\"95%\" align=\"center\">\n<tr>\n<td>";
         $msg.="<font size=\"-1\">";
         $msg.=sprintf(_("Die Verbindungskette (Friend-of-a-Friend-Liste) wertet Buddy-Listen-Einträge aus, um festzustellen, über wieviele Stufen (maximal %s) sich zwei BenutzerInnen direkt oder indirekt \"kennen\"."), $this->depth);

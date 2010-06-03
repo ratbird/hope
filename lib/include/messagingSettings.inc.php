@@ -39,10 +39,9 @@ require_once ('lib/visual.inc.php');
 require_once ('lib/user_visible.inc.php');
 require_once ('lib/messaging.inc.php');
 require_once ('lib/contact.inc.php');
-require_once ('lib/classes/UserConfig.class.php');
 
 // access to user's config setting
-$user_cfg=new UserConfig();
+$user_cfg = UserConfig::get($GLOBALS['user']->id);
 
 check_messaging_default();
 $db2=new DB_Seminar;
@@ -90,9 +89,9 @@ if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && $newmsgset_x)
         $email_forward = $send_as_email;
 
     // write to user config table
-    $user_cfg->setValue((int)isset($foaf_show_identity), $user->id, "FOAF_SHOW_IDENTITY");
-    $user_cfg->setValue($_REQUEST['online_format'], $user->id, "ONLINE_NAME_FORMAT");
-    $user_cfg->setValue((int)($_REQUEST['chat_client_version'] == 'ajax'),$user->id, "CHAT_USE_AJAX_CLIENT");
+    $user_cfg->store("FOAF_SHOW_IDENTITY", (int)isset($foaf_show_identity));
+    $user_cfg->store("ONLINE_NAME_FORMAT", $_REQUEST['online_format']);
+    $user_cfg->store("CHAT_USE_AJAX_CLIENT", (int)($_REQUEST['chat_client_version'] == 'ajax'));
 
 
     $my_messaging_settings["changed"] = TRUE;
@@ -372,10 +371,10 @@ function change_messaging_view() {
                         <font size=-1><?=_("Version des Stud.IP-Chatfensters")?></font>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
-                        <input style="vertical-align:middle" type="radio" name="chat_client_version" value="stream" <? if (!$user_cfg->getValue($user->id,"CHAT_USE_AJAX_CLIENT")) echo " checked"; ?> >
+                        <input style="vertical-align:middle" type="radio" name="chat_client_version" value="stream" <? if (!$user_cfg->getValue("CHAT_USE_AJAX_CLIENT")) echo " checked"; ?> >
                         &nbsp;<font size=-1><?=_("Version für ältere Browser (Netscape 4, Internet Explorer 5)")?></font>
                         <br>
-                        <input style="vertical-align:middle" type="radio" name="chat_client_version" value="ajax" <? if ($user_cfg->getValue($user->id,"CHAT_USE_AJAX_CLIENT")) echo " checked"; ?> >
+                        <input style="vertical-align:middle" type="radio" name="chat_client_version" value="ajax" <? if ($user_cfg->getValue("CHAT_USE_AJAX_CLIENT")) echo " checked"; ?> >
                         &nbsp;<font size=-1><?=_("Version für neuere Browser (Firefox, Safari, Opera 9)")?></font>
                     </td>
                 </tr>
@@ -398,7 +397,7 @@ function change_messaging_view() {
                         <font size=-1><?=_("Eigene Identität in Verbindungsketten zwischen Nutzern (\"Friend of a friend\"-Liste) offenlegen")?></font>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
-                        <input type="checkbox" name="foaf_show_identity"<? if ($user_cfg->getValue($user->id,"FOAF_SHOW_IDENTITY")) echo " checked"; ?> >
+                        <input type="checkbox" name="foaf_show_identity"<? if ($user_cfg->getValue("FOAF_SHOW_IDENTITY")) echo " checked"; ?> >
                     </td>
                 </tr>
                 <? } ?>
@@ -429,7 +428,7 @@ function change_messaging_view() {
                         <?
                         foreach($GLOBALS['NAME_FORMAT_DESC'] as $key => $value){
                             echo "\n<option value=\"$key\"";
-                            if($user_cfg->getValue($user->id, "ONLINE_NAME_FORMAT") == $key) echo " selected ";
+                            if($user_cfg->getValue("ONLINE_NAME_FORMAT") == $key) echo " selected ";
                             echo ">$value</option>";
                         }
                         ?>

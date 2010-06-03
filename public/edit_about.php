@@ -43,7 +43,6 @@ require_once 'lib/functions.php';
 require_once('lib/statusgruppe.inc.php');
 require_once('lib/language.inc.php');
 require_once('lib/classes/DataFieldEntry.class.php');
-require_once('lib/classes/UserConfig.class.php');
 require_once('lib/log_events.inc.php');
 require_once('lib/classes/Avatar.class.php');
 require_once('lib/edit_about.inc.php');

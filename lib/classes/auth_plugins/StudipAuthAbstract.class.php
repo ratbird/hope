@@ -167,8 +167,7 @@ class StudipAuthAbstract {
                     $locked = $db->f('locked');
                     $key = $db->f('validation_key');
 
-                    $uc = new UserConfig();
-                    $exp_d = $uc->getValue($db->f('user_id'),"EXPIRATION_DATE");
+                    $exp_d = UserConfig::get($db->f('user_id'))->EXPIRATION_DATE;
 
                     if($exp_d > 0 && $exp_d < time()){
                         $error .= _("Dieses Benutzerkonto ist abgelaufen.<br> Wenden Sie sich bitte an die Administration.")."<BR>";

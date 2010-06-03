@@ -51,7 +51,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     $sess->register("sem_create_data");
     $sess->register("admin_dates_data");
 
-    $userConfig=new UserConfig(); // tic #650
+    $userConfig = UserConfig::get($GLOBALS['user']->id); // tic #650
 
     /**
     * We use this helper-function, to reset all the data in the adminarea
@@ -119,22 +119,22 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         $list=TRUE;
     }
     if (!isset($links_admin_data["sortby"])) {
-        $links_admin_data["sortby"]=$userConfig->getValue($user->id,'LINKS_ADMIN');
+        $links_admin_data["sortby"]=$userConfig->getValue('LINKS_ADMIN');
 
         if ($links_admin_data["sortby"]=="" || $links_admin_data["sortby"]==false) {
             $links_admin_data["sortby"]="VeranstaltungsNummer";
         }
     } else {
-        $userConfig->setValue($links_admin_data["sortby"],$user->id,'LINKS_ADMIN');
+        $userConfig->store('LINKS_ADMIN', $links_admin_data["sortby"]);
     }
 
     if (!$_REQUEST['srch_send']) {
-        $_REQUEST['show_rooms_check']=$userConfig->getValue($user->id,'LINKS_ADMIN_SHOW_ROOMS');
+        $_REQUEST['show_rooms_check']=$userConfig->getValue('LINKS_ADMIN_SHOW_ROOMS');
     } else {
         if (!isset($_REQUEST['show_rooms_check'])) {
             $_REQUEST['show_rooms_check']="off";
         }
-        $userConfig->setValue($_REQUEST['show_rooms_check'],$user->id,'LINKS_ADMIN_SHOW_ROOMS');
+        $userConfig->store('LINKS_ADMIN_SHOW_ROOMS', $_REQUEST['show_rooms_check']);
     }
     // end tic #650
 

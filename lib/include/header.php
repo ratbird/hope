@@ -62,7 +62,7 @@ else
     $header_template->link_params = array_fill_keys(array_keys(URLHelper::getLinkParams()), NULL);
 
     if (is_object($GLOBALS['user']) && $GLOBALS['user']->id != 'nobody') {
-        if ($GLOBALS['user']->cfg->getValue(null, 'ACCESSKEY_ENABLE')){
+        if ($GLOBALS['user']->cfg->getValue('ACCESSKEY_ENABLE')){
             $header_template->accesskey_enabled = true;
         }
         // fetch semester for quick search box in the link bar

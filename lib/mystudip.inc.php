@@ -161,7 +161,7 @@ function change_general_view() {
                     <td <?=$cssSw->getFullClass()?>>
                         <?
                         echo "<input type=\"CHECKBOX\" name=\"accesskey_enable\" value=\"1\"";
-                        IF ($user->cfg->getValue($user->id, "ACCESSKEY_ENABLE")) {
+                        IF ($user->cfg->getValue("ACCESSKEY_ENABLE")) {
                             echo " checked";
                         }
                         echo ">";
@@ -179,7 +179,7 @@ function change_general_view() {
                     <td <?=$cssSw->getFullClass()?>>
                         <?
                         echo "<input type=\"CHECKBOX\" name=\"showsem_enable\" value=\"1\"";
-                        IF ($user->cfg->getValue($user->id, "SHOWSEM_ENABLE")) {
+                        IF ($user->cfg->getValue("SHOWSEM_ENABLE")) {
                             echo " checked";
                         }
                         echo ">";

@@ -92,7 +92,7 @@ $cssSw = new cssClassSwitcher();                                    // Klasse fü
 $cssSw->enableHover();
 $db = new DB_Seminar();
 $Modules = new Modules();
-$userConfig = new UserConfig();
+$userConfig = UserConfig::get($GLOBALS['user']->id);
 
 // we are defintely not in an lexture or institute
 closeObject();
@@ -795,9 +795,9 @@ elseif ($auth->auth["perm"]=="admin") {
 
         //tic #650 sortierung in der userconfig merken
         if (isset($sortby) && in_array($sortby, words('vnummer Name status teilnehmer'))) {
-            $userConfig->setValue($sortby,$user->id,'MEINE_SEMINARE_SORT');
+            $userConfig->store('MEINE_SEMINARE_SORT', $sortby);
         } else {
-            $sortby=$userConfig->getValue($user->id,'MEINE_SEMINARE_SORT');
+            $sortby=$userConfig->getValue('MEINE_SEMINARE_SORT');
 
             if ($sortby=="" || $sortby==false) {
                 $sortby="VeranstaltungsNummer ASC, Name ASC";

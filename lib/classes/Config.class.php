@@ -86,7 +86,7 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
             return $this->data[$field];
         }
         if (isset($GLOBALS[$field]) && !isset($_REQUEST[$field])) {
-            return $GLOBALS[$key];
+            return $GLOBALS[$field];
         }
     }
     

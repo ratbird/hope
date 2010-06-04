@@ -227,7 +227,7 @@ class ModulesNotification extends Modules {
         $template = $factory->open('mail_notification_html');
         $template->set_attribute('lang', getUserLanguagePath($user_id));
         $template->set_attribute('news', $news);
-        $template->set_attribute('cssSw', &$cssSw);
+        $template->set_attribute('cssSw', $cssSw);
 
         return array('text'=>$text, 'html'=>$template->render());;
     }

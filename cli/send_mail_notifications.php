@@ -54,8 +54,18 @@ while($db->next_record()){
     $to = $db->f("Email");
     $title = "[" . $GLOBALS['UNI_NAME_CLEAN'] . "] " . _("Tägliche Benachrichtigung");
     $mailmessage = $notification->getAllNotifications($db->f('user_id'));
-    if ($mailmessage){
-        $ok = StudipMail::sendMessage($to, $title, $mailmessage);
+    if (strlen(trim($mailmessage['text'])) > 0){
+	$user_cfg = UserConfig::get($db->f("user_id"));
+	if ($user_cfg->getValue('MAIL_AS_HTML') == 'yes') {
+                        $smail = new StudipMail();
+                        $ok = $smail->setSubject("[" . $GLOBALS['UNI_NAME_CLEAN'] . "] " . _("Tägliche Benachrichtigung"))
+                                ->addRecipient($to)
+                                ->setBodyHtml($mailmessage['html'])
+                                ->setBodyText($mailmessage['text'])
+                                ->send();
+        } else {
+  	      $ok = StudipMail::sendMessage($to, $title, $mailmessage['text']);
+	}
         fwrite(STDOUT, date('r') . " " . $db->f('username') . ": " . (int)$ok . "\n");
     }
 }

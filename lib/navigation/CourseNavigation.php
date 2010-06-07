@@ -286,5 +286,10 @@ class CourseNavigation extends Navigation
             $this->addSubNavigation('elearning', $navigation);
         }
 
+        // quick add modules
+        if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$studygroup_mode) {
+            $addModules = new Navigation(_('+'), 'admin_modules.php?list=TRUE&view=modules_sem');
+            $this->addSubNavigation('modules', $addModules);
+        }
     }
 }

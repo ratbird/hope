@@ -58,7 +58,7 @@ $sess->register("plugin_toggle");
 $CURRENT_PAGE = _("Verwaltung verwendeter Module und Plugins");
 if (Request::get('section') == 'modules') {
     UrlHelper::bindLinkParam('section', $section);
-    Navigation::activateItem('/course/admin/modules');
+    Navigation::activateItem('/course/modules');
 } else {
     if ($links_admin_data['topkat'] == 'sem') {
         Navigation::activateItem('/admin/course/modules');

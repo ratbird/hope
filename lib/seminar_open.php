@@ -245,3 +245,12 @@ if (isset($SessionSeminar) && $SessionSeminar != '') {
 
 // load the default set of plugins
 PluginEngine::loadPlugins();
+
+// add navigation item: add modules
+if (Navigation::hasItem('/course')
+    && $perm->have_studip_perm('tutor', $SessSemName[1])
+    && !$SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']]['studygroup_mode']) {
+    Navigation::addItem('/course/modules',
+        new Navigation(_('+'), 'admin_modules.php?section=modules'));
+}
+

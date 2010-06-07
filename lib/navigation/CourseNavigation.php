@@ -120,8 +120,6 @@ class CourseNavigation extends Navigation
                 $navigation->addSubNavigation('evaluation', new Navigation(_("Evaluationen"), 'admin_evaluation.php?section=evaluation&view=eval_sem'));
             }
 
-            $navigation->addSubNavigation('modules', new Navigation(_("Inhaltselemente"), 'admin_modules.php?section=modules'));
-
             if ($sem_class == 'sem') {
                 $navigation->addSubNavigation('admission', new Navigation(_("Zugangseinstellungen"), 'admin_admission.php?section=admission'));
             } else {
@@ -284,12 +282,6 @@ class CourseNavigation extends Navigation
             }
 
             $this->addSubNavigation('elearning', $navigation);
-        }
-
-        // quick add modules
-        if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$studygroup_mode) {
-            $addModules = new Navigation(_('+'), 'admin_modules.php?list=TRUE&view=modules_sem');
-            $this->addSubNavigation('modules', $addModules);
         }
     }
 }

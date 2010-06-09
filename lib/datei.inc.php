@@ -1627,22 +1627,22 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
     $content.= "\n";
     $edit='';
     //Editbereich erstellen
-	if (($change != $folder_id) && ($upload != $folder_id) && ($filelink != $folder_id)) {
-		if (($rechte) || ($SemUserStatus == "user" || $SemUserStatus == "autor") ) {
-			if ($SemUserStatus != 'user' && ($folder_tree->isWritable($folder_id, $user->id)) || ($rechte))
-				$edit= "<a href=\"".URLHelper::getLink("?open=".$folder_id."_u_&rand=".rand()."#anker")."\">" . makeButton("dateihochladen", "img") . "</a>";
-			if ($rechte)
-				$edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_l_&rand=".rand()."#anker")."\">" . makeButton("link", "img") . "</a>";
-			if ($document_count && ($folder_tree->isReadable($folder_id, $user->id) || $rechte))
-				$edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?folderzip=".$folder_id)."\">" . makeButton("ordneralszip", "img") . "</a>";
-			if (($SemUserStatus != 'user') && ($rechte || ($folder_tree->checkCreateFolder($folder_id, $user->id))) ) {
-				if($rechte || ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id))) {
-					$edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_n_#anker")."\">" . makeButton("neuerordner", "img") . "</a>";
-					if($rechte && get_config('ZIP_UPLOAD_ENABLE')) {
-						$edit .= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_z_&rand="
-							. rand()."#anker")."\">" . makeButton("ziphochladen", "img") . "</a>";
-						}
-					}
+    if (($change != $folder_id) && ($upload != $folder_id) && ($filelink != $folder_id)) {
+        if (($rechte) || ($SemUserStatus == "user" || $SemUserStatus == "autor") ) {
+            if ($SemUserStatus != 'user' && ($folder_tree->isWritable($folder_id, $user->id)) || ($rechte))
+                $edit= "<a href=\"".URLHelper::getLink("?open=".$folder_id."_u_&rand=".rand()."#anker")."\">" . makeButton("dateihochladen", "img") . "</a>";
+            if ($rechte)
+                $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_l_&rand=".rand()."#anker")."\">" . makeButton("link", "img") . "</a>";
+            if ($document_count && ($folder_tree->isReadable($folder_id, $user->id) || $rechte))
+                $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?folderzip=".$folder_id)."\">" . makeButton("ordneralszip", "img") . "</a>";
+            if (($SemUserStatus != 'user') && ($rechte || ($folder_tree->checkCreateFolder($folder_id, $user->id))) ) {
+                if($rechte || ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id))) {
+                    $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_n_#anker")."\">" . makeButton("neuerordner", "img") . "</a>";
+                    if($rechte && get_config('ZIP_UPLOAD_ENABLE')) {
+                        $edit .= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_z_&rand="
+                            . rand()."#anker")."\">" . makeButton("ziphochladen", "img") . "</a>";
+                        }
+                    }
                 if($rechte ||
                     (!$document_count && $level !=0 &&
                         ($folder_tree->isWritable($folder_id, $user->id) &&

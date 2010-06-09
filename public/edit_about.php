@@ -278,8 +278,8 @@ if (check_ticket($studipticket)) {
 
     if ($cmd=="edit_leben")  {
         if (get_config("ENABLE_SKYPE_INFO")) {
-            $user->cfg->setValue(preg_replace('/[^a-zA-Z0-9.,_-]/', '', $_REQUEST['skype_name']), $my_about->auth_user['user_id'], 'SKYPE_NAME');
-            $user->cfg->setValue((int)$_REQUEST['skype_online_status'], $my_about->auth_user['user_id'], 'SKYPE_ONLINE_STATUS');
+            UserConfig::get($my_about->auth_user['user_id'])->store('SKYPE_NAME', preg_replace('/[^a-zA-Z0-9.,_-]/', '', $_REQUEST['skype_name']));
+            UserConfig::get($my_about->auth_user['user_id'])->store('SKYPE_ONLINE_STATUS', (int)$_REQUEST['skype_online_status']);
         }
 
         $my_about->edit_private(
@@ -1206,9 +1206,9 @@ if ($view == 'Lebenslauf') {
         $cssSw->switchClass();
         echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\"><b>" . _("Skype:") . " </b></td>";
         echo "<td class=\"".$cssSw->getClass()."\" align=\"left\">";
-        echo "<font size=\"-1\">&nbsp; " . _("Skype Name:") . "</font><br>&nbsp; <input type=\"text\" size=\"".round($max_col*0.25)."\" name=\"skype_name\" value=\"".htmlReady($user->cfg->getValue($my_about->auth_user['user_id'], 'SKYPE_NAME'))."\"></td>";
+        echo "<font size=\"-1\">&nbsp; " . _("Skype Name:") . "</font><br>&nbsp; <input type=\"text\" size=\"".round($max_col*0.25)."\" name=\"skype_name\" value=\"".htmlReady(UserConfig::get($my_about->auth_user['user_id'])->SKYPE_NAME)."\"></td>";
         echo "<td class=\"".$cssSw->getClass()."\" align=\"left\">";
-        echo "<font size=\"-1\">&nbsp; "  . _("Skype Online Status anzeigen:") . "</font><br>&nbsp;<input type=\"checkbox\" name=\"skype_online_status\" value=\"1\" ". ($user->cfg->getValue($my_about->auth_user['user_id'], 'SKYPE_ONLINE_STATUS') ? 'checked' : '') . "></td>";
+        echo "<font size=\"-1\">&nbsp; "  . _("Skype Online Status anzeigen:") . "</font><br>&nbsp;<input type=\"checkbox\" name=\"skype_online_status\" value=\"1\" ". (UserConfig::get($my_about->auth_user['user_id'])->SKYPE_ONLINE_STATUS ? 'checked' : '') . "></td>";
         echo "</tr>\n";
     }
     $cssSw->switchClass();

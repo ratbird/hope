@@ -376,12 +376,12 @@ function open_im() {
                 <? endif ?>
 
                 <? if (get_config("ENABLE_SKYPE_INFO") &&
-                       $user->cfg->getValue($user_id, 'SKYPE_NAME') &&
+                       UserConfig::get($user_id)->SKYPE_NAME &&
                        is_element_visible_for_user($user->id, $user_id, $visibilities['skype_name'])) : ?>
-                    <?php $skype_name = $user->cfg->getValue($user_id, 'SKYPE_NAME') ?>
+                    <?php $skype_name = UserConfig::get($user_id)->SKYPE_NAME ?>
                     <b>&nbsp;<?= _("Skype:") ?></b>
                     <a href="skype:<?= htmlReady($skype_name) ?>?call">
-                        <? if ($user->cfg->getValue($user_id, 'SKYPE_ONLINE_STATUS') &&
+                        <? if (UserConfig::get($user_id)->SKYPE_ONLINE_STATUS &&
                        is_element_visible_for_user($user->id, $user_id, $visibilities['skype_online_status'])) : ?>
                             <img src="http://mystatus.skype.com/smallicon/<?= htmlReady($skype_name) ?>" style="vertical-align:middle;" width="16" height="16" alt="My status">
                         <? else : ?>
@@ -548,7 +548,7 @@ if (get_config('CALENDAR_ENABLE')) {
 // (direct/indirect connection via buddy list)
 if ($GLOBALS['FOAF_ENABLE']
     && ($auth->auth['uid']!=$user_id)
-    && $user->cfg->getValue($user_id, 'FOAF_SHOW_IDENTITY')) {
+    && UserConfig::get($user_id)->FOAF_SHOW_IDENTITY) {
         include("lib/classes/FoafDisplay.class.php");
         $foaf=new FoafDisplay($auth->auth['uid'], $user_id, $username);
         $foaf->show($_REQUEST['foaf_open']);

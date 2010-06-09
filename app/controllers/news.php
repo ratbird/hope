@@ -5,7 +5,7 @@
 /*
  * news.php - News controller
  *
- * Copyright (C) 2007 - Marcus Lunzenauer <mlunzena@uos.de>
+ * Copyright (C) 2007 - Marcus Lunzenauer <mlunzena@uos.de>, Rasmus Fuhse <fuhse@data-quest.de>
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -21,6 +21,7 @@ require_once 'lib/trails/AuthenticatedController.php';
 class NewsController extends AuthenticatedController {
 
   function get_news_action($id) {
+  	global $user;
   	$this->news = new StudipNews($id);
     if (!$this->has_news_permissions($id)) {
       return;
@@ -29,42 +30,8 @@ class NewsController extends AuthenticatedController {
     $this->newscontent['open'] = $open;
     $this->show_admin = $show_admin;
     $this->admin_link = Request::get('admin_link');
+    object_set_visit($id, "news", $user->id);
     $this->render_template('news/get_news');
-  }
-
-  /**
-   * deprecated
-   */
-  function open_action($id = NULL) {
-    $this->open_or_close(TRUE, $id);
-  }
-
-
-  /**
-   * deprecated
-   */
-  function close_action($id = NULL) {
-    $this->open_or_close(FALSE, $id);
-  }
-
-
-  /**
-   * deprecated
-   */
-  function open_or_close($open, $id) {
-    # get news item
-    $this->news = new StudipNews($id);
-
-    if (!$this->has_news_permissions($id)) {
-      return;
-    }
-
-    # show news
-    $this->newscontent = $this->news->toArray();
-    $this->newscontent['open'] = $open;
-    $this->show_admin = $show_admin;
-    $this->admin_link = Request::get('admin_link');
-    $this->render_template('news/open_or_close');
   }
 
   function has_news_permissions($news) {

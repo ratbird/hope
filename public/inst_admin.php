@@ -1024,8 +1024,23 @@ elseif ($show == "status") {
                                             ORDER BY %s %s", $auswahl, $key, $sortby, $direction);
         $db_institut_members->query($query);
         if ($db_institut_members->num_rows() > 0) {
-            echo "<tr><td class=\"steelkante\" colspan=\"$colspan\" height=\"20\">";
-            echo "<font size=\"-1\"><b>&nbsp;$permission<b></font></td></tr>\n";
+            if ($GLOBALS['ENABLE_EMAIL_TO_STATUSGROUP'] == true) {
+                $group_colspan = $colspan - 2;
+                echo "<tr><td class=\"steelkante\" colspan=\"$group_colspan\" height=\"20\">";
+                echo "<font size=\"-1\"><b>&nbsp;";
+                echo $permission;
+                echo "<b></font>"."</td><td class=\"steelkante\" colspan=\"2\" height=\"20\">";
+                echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php&filter=inst_status&who=".$key . "&group_id=" . 
+                     $role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"".$GLOBALS['ASSETS_URL'] . 
+                     "images/nachricht1.gif\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder mit dem Status %s verschicken"), $permission)) .
+                     " border=\"0\"></a>&nbsp;";
+                echo "</td></tr>\n";
+
+            }
+            else {
+                echo "<tr><td class=\"steelkante\" colspan=\"$colspan\" height=\"20\">";
+                echo "<font size=\"-1\"><b>&nbsp;$permission<b></font></td></tr>\n";
+            }
             table_body($db_institut_members, $auswahl, $table_structure, $css_switcher);
         }
     }

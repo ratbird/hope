@@ -345,306 +345,22 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         }
     }
 
-    ?>
-    <table width="100%" border="0" cellpadding="0" cellspacing="0">
-    <?
+    // Anzeige der Wartelisten
 
-    if ($num_my_sem) {
-    ?>
-        <tr valign="top">
-            <td valign="top" class="blank" align="center">
-            <br>
-                <table border="0" cellpadding="1" cellspacing="0" width="98%" valign="top">
-                    <? if ($meldung) {
-                        parse_msg($meldung, "§", "blank",5);
-                        }?>
-                    <tr align="center" valign="top">
-                            <th width="2%" colspan=2 nowrap="nowrap" align="center"><a href="gruppe.php"><img src="<?=$GLOBALS['ASSETS_URL'] ?>images/gruppe.gif" <? echo tooltip(_("Gruppe ändern")) ?> border="0"></a></th>
-                            <th width="85%" align="left"><? echo(_("Name")) ?></th>
-                            <th width="10%"><b><? echo(_("Inhalt")) ?></b></th>
-                            <th width="3%"></th>
-                    </tr>
-        <?
-        ob_end_flush(); //Buffer leeren, damit der Header zu sehen ist
+    $stmt = DBManager::get()->prepare(
+        "SELECT admission_seminar_user.*, seminare.status as sem_status, ".
+        "seminare.Name, seminare.admission_endtime, ".
+        "seminare.admission_turnout, quota ".
+        "FROM admission_seminar_user ".
+        "LEFT JOIN seminare USING(seminar_id) ".
+        "LEFT JOIN admission_seminar_studiengang ".
+        "ON (admission_seminar_user.studiengang_id = admission_seminar_studiengang.studiengang_id ".
+        "AND seminare.seminar_id = admission_seminar_studiengang.seminar_id) ".
+        "WHERE user_id = ? ".
+        "ORDER BY admission_type, name");
+    $stmt->execute(array($user->id));
 
-        ob_start();
-
-        sort_groups($group_field, $groups);
-        $group_names = get_group_names($group_field, $groups);
-        foreach ($groups as $group_id => $group_members){
-            if ($group_field != 'not_grouped'){
-                $last_modified = check_group_new($group_members, $my_obj);
-                echo '<tr><td class="blank" colspan="' . ($view == 'ext' ? 7 : 5) . '"><img src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif" width="1px" height="5px"></td></tr>';
-                echo '<tr><td class="blue_gradient" valign="top" nowrap height="20" colspan="2"><img src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif" style="vertical-align: middle;" width="1px" height="20px">';
-                if (isset($_my_sem_open[$group_id])){
-                    echo '<a class="tree" style="font-weight:bold"  name="' . $group_id . '" href="' . $PHP_SELF . '?view=' . $view . '&close_my_sem=' . $group_id . '#' .$group_id . '" ' . tooltip(_("Gruppierung schließen"), true) . '>';
-                    if ($last_modified){
-                        echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/forumrotrunt.gif" border="0">';
-                    } else {
-                        echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/forumgraurunt.gif" border="0">';
-                    }
-                } else {
-                    echo '<a class="tree"  name="' . $group_id . '" href="' . $PHP_SELF . '?view=' . $view . '&open_my_sem=' . $group_id . '#' .$group_id . '" ' . tooltip(_("Gruppierung öffnen"), true) . '>';
-                    if ($last_modified){
-                        echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/forumrot.gif"  hspace="3" border="0">';
-                    } else {
-                        echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/forumgrau.gif"  hspace="3" border="0">';
-                    }
-                }
-
-                if (is_array($group_names[$group_id])){
-                    if ($group_names[$group_id][1]) {
-                        $group_name = $group_names[$group_id][1] . " > " . $group_names[$group_id][0];
-                    } else {
-                        $group_name =  $group_names[$group_id][0];
-                    }
-                } else {
-                    $group_name = $group_names[$group_id];
-                }
-
-                echo '</td><td class="blue_gradient" align="left" valign="middle" colspan="' . ($view == 'ext' ? 3 : 1) . '">';
-                echo '<a class="tree" '.(($_my_sem_open[$group_id]) ? 'style="font-weight:bold"' : '' ).' name="' . $group_id . '" href="' . $PHP_SELF . '?view=' . $view . '&'.(($_my_sem_open[$group_id]) ? 'close' : 'open' ).'_my_sem=' . $group_id . '#' .$group_id . '" ' . tooltip(_("Gruppierung öffnen"), true) . '>';
-                echo htmlReady(($group_field == "sem_tree_id") ? $group_names[$group_id][0] : $group_names[$group_id]);
-                echo '</a>';
-                if ($group_field == "sem_tree_id")
-                    echo "<br><span style=\"font-size:0.8em\"><sup>(".htmlReady($group_name).")</sup></span>";
-
-                echo '</td><td class="blue_gradient" align= "right" valign="top" colspan="4" nowrap>';
-
-                if ($last_modified){
-                    echo '&nbsp;<span style="font-size:0.8em"><sup>' . _("letzte Änderung:") . '&nbsp;</sup></span><span style="color:red;font-size:0.8em"><sup>' . strftime("%x, %H:%M",$last_modified) . '</sup></span>';
-                }
-                echo '</a></td></tr>';
-            } else {
-                $_my_sem_open['not_grouped'] = true;
-            }
-
-        if (isset($_my_sem_open[$group_id])){
-            $cssSw->resetClass();
-            foreach ($group_members as $member){
-                $semid = $member['seminar_id'];
-                $values = $my_obj[$semid];
-                $studygroup_mode = $SEM_CLASS[$SEM_TYPE[$my_obj[$semid]['sem_status']]["class"]]["studygroup_mode"];
-
-                  if ($values['obj_type'] == "sem"){
-                $cssSw->switchClass();
-                $lastVisit = $values['visitdate'];
-                echo "<tr ".$cssSw->getHover()."><td class=gruppe";
-                echo $values["gruppe"];
-                echo "><a href='gruppe.php'><img src='".$GLOBALS['ASSETS_URL']."images/blank.gif' ".tooltip(_("Gruppe ändern"))." border=0 width=7 height=12></a></td>";
-
-                echo "<td class=\"".$cssSw->getClass()."\">";
-                // for studygroups display a special avatar
-                if ($studygroup_mode) {
-                    echo StudygroupAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL);
-                } else {
-                    echo CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL);
-                }
-                echo "</td>";
-
-                // Name-field
-                echo "<td align=\"left\" class=\"".$cssSw->getClass()."\" ><a href=\"seminar_main.php?auswahl=$semid\">";
-                if ($lastVisit <= $values["chdate"])
-                    echo '<span style="color:red">';    // red color for new metadates
-                if ($studygroup_mode) {
-                    echo htmlReady($values['semname']);
-                    echo ' ('. _("Studiengruppe");
-                    if ($values['prelim']) echo ', '. _("geschlossen");
-                    echo ')';
-                } else {
-                    echo htmlReady($values['name']);
-                }
-                if ($lastVisit <= $values["chdate"])
-                    echo '</span>';
-
-                print ("</a>");
-                if ($values["visible"]==0) {
-                    $infotext=_("Versteckte Veranstaltungen können über die Suchfunktionen nicht gefunden werden.");
-                    if (get_config('ALLOW_DOZENT_VISIBILITY')) {
-                        $infotext.=" "._("Um die Veranstaltung sichtbar zu machen, wählen Sie den Punkt \"Sichtbarkeit\" im Administrationsbereich der Veranstaltung.");
-                    } else {
-                        $infotext.=" "._("Um die Veranstaltung sichtbar zu machen, wenden Sie sich an eineN der zuständigen AdministratorInnen.");
-                    }
-                    echo "<font size=-1>&nbsp;"._("(versteckt)")."<img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\" ".tooltip($infotext,TRUE,TRUE)." border=0></font>";
-                }
-                print "</td>";
-                // Content-field
-                echo "<td class=\"".$cssSw->getClass()."\" align=\"left\" nowrap>";
-                print_seminar_content($semid, $values);
-                if ((get_config('CHAT_ENABLE')) && ($values["modules"]["chat"])){
-                    echo "<a href=\"".((!$auth->auth["jscript"]) ? "chat_online.php" : "#")."\" onClick=\"return open_chat(" . (($chat_info[$semid]['is_active']) ? "false" : "'$semid'") . ");\">&nbsp;";
-                    echo chat_get_chat_icon($chat_info[$semid]['chatter'], $chat_invs[$chat_info[$semid]['chatuniqid']], $chat_info[$semid]['is_active'],true);
-                    echo "</a>&nbsp;";
-                } else
-                    echo "&nbsp; <img src='".$GLOBALS['ASSETS_URL']."images/icon-leer.gif' width=\"15\" height=\"17\" border=0>";
-
-                echo "</td>";
-
-
-                // delete Entry from List:
-
-                if (($values["status"]=="dozent") || ($values["status"]=="tutor")) {
-                    if ($SEM_CLASS[$SEM_TYPE[$values['sem_status']]["class"]]["studygroup_mode"]) {
-                        echo "<td class=\"".$cssSw->getClass()."\"  align=center><a href=\"".
-                            UrlHelper::getUrl('dispatch.php/course/studygroup/edit/'. $semid .'?cid='. $semid)
-                            . "\"><img width=\"15\" height=\"17\" src=\"".$GLOBALS['ASSETS_URL']."images/minikey.gif\" ".tooltip(_("Veranstaltung administrieren"))." border=\"0\"></a></td>";
-                    } else {
-                        echo "<td class=\"".$cssSw->getClass()."\"  align=center><a href=\""
-                            . UrlHelper::getLink('dispatch.php/course/management?cid='. $semid) ."\"><img width=\"15\" height=\"17\" src=\"".$GLOBALS['ASSETS_URL']."images/minikey.gif\" ".tooltip(_("Veranstaltung administrieren"))." border=\"0\"></a></td>";
-                    }
-                } elseif ($values["binding"]) //anderer Link und andere Tonne wenn Veranstaltungszuordnung bindend ist.
-                    printf("<td class=\"".$cssSw->getClass()."\"  align=center nowrap><a href=\"$PHP_SELF?auswahl=%s&cmd=no_kill\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logout_seminare_no.gif\" ".tooltip(_("Das Abonnement ist bindend. Bitte wenden Sie sich an die Dozentin oder den Dozenten."))." border=\"0\"></a></td>", $semid);
-                else
-                    printf("<td class=\"".$cssSw->getClass()."\"  align=center nowrap><a href=\"$PHP_SELF?auswahl=%s&cmd=suppose_to_kill\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logout_seminare.gif\" ".tooltip(_("aus der Veranstaltung abmelden"))." border=\"0\"></a></td>", $semid);
-                echo "</tr>\n";
-            }
-        }
-    }
-}
-    echo "</table><br><br>";
-
-
-    } else {  // es sind keine Veranstaltungen abboniert
-
-     ?>
-     <tr>
-        <td class="blank" colspan="2"> </td>
-     </tr>
-     <tr>
-         <td valign="top" class="blank">
-            <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center" class="blank">
-            <?
-            if ($meldung)   {
-                parse_msg($meldung);
-            }?>
-            </table>
-<?
-    }
-
-// Anzeige der Wartelisten
-  $db->query("SELECT admission_seminar_user.*, seminare.status as sem_status, seminare.Name, seminare.admission_endtime, seminare.admission_turnout, quota FROM admission_seminar_user LEFT JOIN seminare USING(seminar_id) LEFT JOIN admission_seminar_studiengang ON (admission_seminar_user.studiengang_id = admission_seminar_studiengang.studiengang_id AND seminare.seminar_id = admission_seminar_studiengang.seminar_id) WHERE user_id = '$user->id' ORDER BY admission_type, name");
-  if ($db->num_rows())
-  {
-
-        // echo "<b><div align=\"left\">&nbsp;" . _("Anmelde- und Wartelisteneintr&auml;ge:") . "</div>&nbsp;";
-
-        echo "<table border=\"0\" cellpadding=\"2\" cellspacing=\"0\" width=\"98%\" align=\"center\" class=\"blank\">";
-        echo "<tr>";
-        echo "<th width=\"67%\" align=\"left\" colspan=3>&nbsp;" . _("Anmelde- und Wartelisteneintr&auml;ge") . "</th>";
-        echo "<th width=\"10%\"><b>" . _("Datum") . "</b></th>";
-        echo "<th width=\"10%\" nowrap><b>" . _("Position/Chance") . "</b></th>";
-        echo "<th width=\"10%\"><b>" . _("Art") . "</b></th>";
-        echo "<th width=\"3%\"> </th></tr>";
-
-        $cssSw->resetClass();
-
-        while ($db->next_record())
-        {
-            if ($db->f("status") == "claiming") { // wir sind in einer Anmeldeliste und brauchen Prozentangaben
-                $admission_chance = Seminar::GetInstance($db->f("seminar_id"))->getAdmissionChance($db->f("studiengang_id"));
-                $chance_color = dechex(255-(200-($admission_chance*2)));  // Gruen der Farbe nimmt mit Wahrscheinlichkeit ab
-            } else {  // wir sind in einer Warteliste
-                if ($db->f("position") >= 30)
-                    $chance_color = 44; // das wird wohl nix mehr mit nachrücken
-                else
-                    $chance_color = dechex(255-($db->f("position")*6)); // da gibts vielleicht noch Hoffnung, also grün
-            }
-
-            $seminar_name = $db->f("Name");
-            if(SeminarCategories::GetByTypeId($db->f('sem_status'))->studygroup_mode){
-                $seminar_name .= ' ('. _("Studiengruppe");
-                $seminar_name .= ', '. _("geschlossen");
-                $seminar_name .= ')';
-            }
-            $cssSw->switchClass();
-            printf ("<tr".$cssSw->getHover()."><td width=\"1%%\" bgcolor=\"#44%s44\"><img src='".$GLOBALS['ASSETS_URL']."images/blank.gif' " . tooltip(_("Position oder Wahrscheinlichkeit")) . " border=0 width=7 height=12></td>",$chance_color);
-            printf ("<td width=\"1%%\" class=\"%s\">&nbsp;</td>",$cssSw->getClass());
-            printf ("<td width=\"55%%\" class=\"%s\"  align=\"left\">",$cssSw->getClass());
-            print "<a href=details.php?sem_id=".$db->f("seminar_id")."&send_from_search_page=meine_seminare.php&send_from_search=TRUE>".htmlReady($seminar_name)."</a></td>";
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">%s</td>", $cssSw->getClass(), ($db->f("status") == "claiming") ? date("d.m.", $db->f("admission_endtime")) : "-");
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">%s %s</td>",$cssSw->getClass(), ($db->f("status") == "claiming") ? $admission_chance : $db->f("position"), ($db->f("status") == "claiming") ? "%" : "");
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">%s</td>", $cssSw->getClass(),  ($db->f("status") == "claiming") ? _("Los") : (($db->f("status") == "accepted") ? _("Vorl.") :_("Wartel.")));
-            printf("<td width=\"3%%\" class=\"%s\" align=\"center\"><a href=\"$PHP_SELF?auswahl=%s&cmd=suppose_to_kill_admission\"><img src=\"".$GLOBALS['ASSETS_URL']."images/logout_seminare.gif\" ".tooltip(_("aus der Veranstaltung abmelden"))." border=\"0\"></a></td></tr>", $cssSw->getClass(), $db->f("seminar_id"));
-        }
-        print "</table>";
-        ?>
-        <br><br>
-        <?
-    }    // Ende Wartelisten
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    if (!$num_my_inst)
-        if (!$GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $perm->have_perm("dozent"))
-            $meldung = "info§" . sprintf(_("Sie wurden noch keinen Einrichtungen zugeordnet. Bitte wenden Sie sich an einen der zust&auml;ndigen %sAdministratoren%s."), "<a href=\"dispatch.php/siteinfo/show\">", "</a>") . "§";
-        else
-            $meldung = "info§" . sprintf(_("Sie haben sich noch keinen Einrichtungen zugeordnet. Um sich Einrichtungen zuzuordnen, nutzen Sie bitte die entsprechende %sOption%s unter \"Nutzerdaten - Studiendaten\" auf Ihrer pers&ouml;nlichen Einstellungsseite."), "<a href=\"edit_about.php?view=Studium#einrichtungen\">", "</a>") . "§";
-
-    if ($num_my_inst) {
-     ?>
-
-                            <table border="0" cellpadding="1" cellspacing="0" width="98%" align="center" class="blank">
-                                <tr valign="top" align="center">
-                                    <th width="1%">&nbsp; </th>
-                                    <th width="86%" align="left"><?=_("Meine Einrichtungen")?></th>
-                                    <th width="10%"><b><?=_("Inhalt")?></b></th>
-                                    <th width="3%"><b>&nbsp;&nbsp;</b></th>
-                                </tr>
-        <?
-
-        foreach ($my_obj as $instid=>$values) {
-            if ($values['obj_type'] == "inst"){
-                $cssSw->switchClass();
-                $lastVisit = $values['visitdate'];
-                echo "<tr ".$cssSw->getHover().">";
-                echo "<td class=\"".$cssSw->getClass()."\">";
-                echo InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL);
-                echo "</td>";
-                // Name-field
-                echo "<td align=\"left\" class=\"".$cssSw->getClass()."\"><a href=\"institut_main.php?auswahl=$instid\">";
-                echo htmlReady($INST_TYPE[$values["type"]]["name"] . ": " . $values["name"]);
-                print ("</a></td>");
-                // Content-field
-                echo "<td class=\"".$cssSw->getClass()."\"  align=\"left\" nowrap>";
-                print_seminar_content($instid, $values, "institut");
-                if ((get_config('CHAT_ENABLE')) && ($values["modules"]["chat"])) {
-                    echo "<a href=\"".((!$auth->auth["jscript"]) ? "chat_online.php" : "#")."\" onClick=\"return open_chat(" . (($chat_info[$instid]['is_active']) ? "false" : "'$instid'") . ");\">&nbsp;";
-                    echo chat_get_chat_icon($chat_info[$instid]['chatter'], $chat_invs[$chat_info[$instid]['chatuniqid']], $chat_info[$instid]['is_active'],true);
-                    echo "</a>&nbsp;";
-                } else
-                echo "&nbsp; <img src='".$GLOBALS['ASSETS_URL']."images/icon-leer.gif' width=\"15\" height=\"17\" border=0>";
-
-                echo "</td>";
-
-                // delete Entry from List:
-                if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] && ($values['status'] == 'user')) {
-                    printf('<td class="'.$cssSw->getClass().'" align=center><a href="' .$_SERVER['PHP_SELF'] .'?auswahl=%s&cmd=inst_kill"><img src="'. $GLOBALS['ASSETS_URL']. 'images/logout_seminare.gif" '. tooltip(_("aus der Einrichtung austragen")). ' border="0"></a></td>', $instid);
-                } else {
-                    echo '<td class="'.$cssSw->getClass().'" align=center><img width="19" height="17" src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif"></td>';
-                }
-                echo "</tr>\n";
-            }
-        }
-        echo "</table>\n";
-    } else {
-    ?>
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center" class="blank">
-        <?
-        if ($meldung)   {
-            parse_msg($meldung);
-        }
-        ?>
-        </table>
-        <?
-    }
-
-////////////////////
-
-//Info-field on the right side
-    ?>
-    </td>
-    <td class="blank" width="270" align="right" valign="top">
-    <?
+    $waitlists = $stmt->fetchAll();
 
     // Berechnung der uebrigen Seminare und Einrichtungen
 
@@ -729,21 +445,9 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
 
 
-// print the info_box
+    $template = $GLOBALS["template_factory"]->open("meine_seminare/index_autor");
 
-    print_infobox ($infobox, "infoboxes/seminars.jpg");
-
-?>
-
-        </td>
-    </tr>
-    <tr>
-        <td class="blank" colspan=2>
-            &nbsp;
-        </td>
-    </tr>
-    </table>
-<?
+    echo $template->render(compact(words("num_my_sem meldung group_field groups my_obj view _my_sem_open cssSw meldung chat_info chat_invs waitlists num_my_inst infobox")));
 }
 
 
@@ -822,157 +526,53 @@ elseif ($auth->auth["perm"]=="admin") {
                     LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
                     WHERE Institute.Institut_id='$_my_admin_inst_id' GROUP BY seminare.Seminar_id ORDER BY $sortby");
         $num_my_sem=$db->num_rows();
-        if (!$num_my_sem)
+        if (!$num_my_sem) {
             $meldung = "msg§"
                     . sprintf(_("An der Einrichtung <i>%s</i> sind zur Zeit keine Veranstaltungen angelegt."), htmlReady($_my_inst[$_my_admin_inst_id]['name']))
                     . "§"
                     . $meldung;
-    }
-    ?>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-    <?if ($meldung) parse_msg($meldung); ?>
-    <?
-    if (is_array($_my_inst)) {
-    ?>
-    <tr>
-        <td class="blank">
-        <form action="<?=$PHP_SELF?>" method="post">
-            <div style="font-weight:bold;font-size:10pt;margin-left:10px;">
-            <?=_("Bitte w&auml;hlen Sie eine Einrichtung aus:")?>
-            </div>
-            <div style="margin-left:10px;">
-            <select name="institut_id" style="vertical-align:middle;">
-                <?
-                reset($_my_inst);
-                while (list($key,$value) = each($_my_inst)){
-                    printf ("<option %s value=\"%s\" style=\"%s\">%s (%s)</option>\n",
-                            ($key == $_my_admin_inst_id) ? "selected" : "" , $key,($value["is_fak"] ? "font-weight:bold;" : ""),
-                            htmlReady($value["name"]), $value["num_sem"]);
-                    if ($value["is_fak"]){
-                        $num_inst = $value["num_inst"];
-                        for ($i = 0; $i < $num_inst; ++$i){
-                            list($key,$value) = each($_my_inst);
-                            printf("<option %s value=\"%s\">&nbsp;&nbsp;&nbsp;&nbsp;%s (%s)</option>\n",
-                                ($key == $_my_admin_inst_id) ? "selected" : "", $key,
-                                htmlReady($value["name"]), $value["num_sem"]);
-                        }
-                    }
-                }
-                ?>
-                </select>&nbsp;
-                <?=SemesterData::GetSemesterSelector(array('name'=>'select_sem', 'style'=>'vertical-align:middle;'), $_default_sem)?>
-                <input <?=makeButton("auswaehlen","src")?> <?=tooltip(_("Einrichtung auswählen"))?> type="image" border="0" style="vertical-align:middle;">
-                <br>&nbsp;
-            </div>
-        </form>
-        </td>
-    </tr>
-     <?
-     if ($num_my_sem) {
-     ?>
-    <tr>
-        <td class="blank">
-            <table border="0" cellpadding="0" cellspacing="0" width="99%" align="center">
-                <tr>
-                    <td class="topic" colspan="8">
-                        <b><?=_("Veranstaltungen an meinen Einrichtungen") .($_my_admin_inst_id ? " - ".htmlReady($_my_inst[$_my_admin_inst_id]['name']) : "")?></b>
-                    </td>
-                </tr>
-                <tr>
-                    <th width="2%"></th>
-                    <th width="6%" align="left"><a href="<? echo $PHP_SELF ?>?sortby=vnummer"><?=_("VNummer")?></a></th>
-                    <th width="50%" align="left"><a href="<? echo $PHP_SELF ?>?sortby=Name"><?=_("Name")?></a></th>
-                    <th width="10%" align="left"><a href="<? echo $PHP_SELF ?>?sortby=status"><?=_("Veranstaltungstyp")?></a></th>
-                    <th width="15%" align="left"><b><?=_("DozentIn")?></b></th>
-                    <th width="10%"><b><?=_("Inhalt")?></b></th>
-                    <th width="5%"><a href="<? echo $PHP_SELF ?>?sortby=teilnehmer"><?=_("TeilnehmerInnen")?></a></th>
-                    <th width="2%"></th>
-                </tr>
-        <?
+        } else {
+            while ($db->next_record()) {
 
-        while ($db->next_record()){
-            $my_sem[$db->f("Seminar_id")] = array(
-                    'visitdate' => $db->f('visitdate'),
-                    'institut' => $db->f("Institut"),
-                    'teilnehmer' => $db->f("teilnehmer"),
-                    'vn' => $db->f("VeranstaltungsNummer"),
-                    'name' => $db->f("Name"),
-                    'status' => $db->f("status"),
-                    'chdate' => $db->f("chdate"),
-                    'start_time' => $db->f("start_time"),
-                    'startsem' => $db->f('startsem'),
-                    'endsem' => $db->f('endsem'),
-                    'binding' => $db->f("admission_binding"),
-                    'visible' => $db->f('visible'),
-                    'modules' => $Modules->getLocalModules($db->f("Seminar_id"),
-                                "sem",
-                                $db->f("modules"),
-                                $db->f("status"))
-                    );
+                $db2->query("SELECT position, Nachname, username FROM  seminar_user ".
+                            "LEFT JOIN auth_user_md5  USING (user_id) ".
+                            "WHERE Seminar_id='".$db->f("Seminar_id")."' AND status='dozent' ".
+                            "ORDER BY position, Nachname ASC");
+                $dozenten = array();
+                while ($db2->next_record()) {
+                    $dozenten[] = array('username' => $db2->f("username"),
+                                        'Nachname' => $db2->f("Nachname"));
+                }
+
+                $my_sem[$db->f("Seminar_id")] = array(
+                        'visitdate' => $db->f('visitdate'),
+                        'institut' => $db->f("Institut"),
+                        'teilnehmer' => $db->f("teilnehmer"),
+                        'vn' => $db->f("VeranstaltungsNummer"),
+                        'name' => $db->f("Name"),
+                        'status' => $db->f("status"),
+                        'chdate' => $db->f("chdate"),
+                        'start_time' => $db->f("start_time"),
+                        'startsem' => $db->f('startsem'),
+                        'endsem' => $db->f('endsem'),
+                        'binding' => $db->f("admission_binding"),
+                        'visible' => $db->f('visible'),
+                        'modules' => $Modules->getLocalModules($db->f("Seminar_id"),
+                                    "sem",
+                                    $db->f("modules"),
+                                    $db->f("status")),
+                        'dozenten' => $dozenten
+                        );
+            }
+            get_my_obj_values($my_sem, $GLOBALS['user']->id);
         }
-        get_my_obj_values($my_sem, $GLOBALS['user']->id);
-        $cssSw->enableHover();
-        foreach ($my_sem as $semid=>$values){
-            $cssSw->switchClass();
-            $class = $cssSw->getClass();
-
-            $lastVisit = $values['visitdate'];
-
-            echo "<tr ".$cssSw->getHover().">";
-            echo "<td class=\"$class\">";
-            echo CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL);
-            echo "</td>";
-            echo "<td class=\"$class\"><a href=\"seminar_main.php?auswahl=$semid\">".$values["vn"];
-            echo "</a></td>";
-            echo "<td class=\"$class\"><a href=\"seminar_main.php?auswahl=$semid\">";
-            if ($lastVisit <= $values["chdate"])
-                print ("<font color=\"red\">");
-            echo htmlReady($values["name"]);
-            if ($lastVisit <= $values["chdate"])
-                echo "</font>";
-            echo "</a>";
-            if (!$_default_sem || $values['startsem'] != $values['endsem']){
-                echo "<font size=-1>&nbsp;";
-                echo htmlReady(" (".$values['startsem']
-                    . ($values['startsem'] != $values['endsem'] ? " - ".$values['endsem'] : "")
-                    . ")");
-                echo "</font>";
-            }
-            if ($values["visible"] == 0) {
-                    echo "<font size=-1> "._("(versteckt)")."</font>";
-                }
-            echo "</td>";
-
-            echo "<td class=\"$class\">" . $SEM_TYPE[$values["status"]]["name"] . "</td>";
-            // Dozenten
-            $db2->query ("SELECT position, Nachname, username FROM  seminar_user LEFT JOIN auth_user_md5  USING (user_id) WHERE Seminar_id='$semid' AND status='dozent' ORDER BY position, Nachname ASC");
-            $temp = "";
-            while ($db2->next_record()) {
-                $temp .= "<a href=\"about.php?username=" . $db2->f("username") . "\">" . htmlReady($db2->f("Nachname")) . "</a>, ";
-            }
-            $temp = substr($temp, 0, -2);
-            print ("<td class=\"$class\">$temp</td>");
-
-            // Inhalt
-            echo "<td class=\"$class\" nowrap>";
-            print_seminar_content($semid, $values);
-            echo "</td>";
-
-            echo "<td class=\"$class\" align=\"right\" nowrap>". $values["teilnehmer"]."&nbsp;</td>";
-            printf("<td class=\"$class\" align=\"right\"><a href=\"seminar_main.php?auswahl=$semid&redirect_to=adminarea_start.php&new_sem=TRUE\"><img src=\"".$GLOBALS['ASSETS_URL']."images/admin.gif\" ".tooltip(_("Veranstaltungsdaten bearbeiten"))." border=\"0\"></a></td>", $semid);
-             echo "</tr>\n";
-        } ?>
-        </table>
-        <br>
-        </td>
-    </tr>
-<?     }
     }
-?>
-</table>
-<?
+
+
+
+    $template = $GLOBALS["template_factory"]->open("meine_seminare/index_admin");
+    echo $template->render(compact(words("meldung _my_inst _my_admin_inst_id _default_sem num_my_sem Modules cssSw my_sem")));
 }
     include ('lib/include/html_end.inc.php');
     ob_end_flush(); //Outputbuffering beenden
     page_close();
-?>

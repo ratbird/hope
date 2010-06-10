@@ -245,7 +245,7 @@ class AdminModules extends ModulesNotification {
     
     function getModuledocuments_folder_permissionsExistingItems($range_id) {
         $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
-        return count($folder_tree->getUnreadableFolders('xxx'));
+        return count($folder_tree->getUnreadableFolders('xxx', true));
     }
     
     function moduledocuments_folder_permissionsPreconditions($range_id, $args){

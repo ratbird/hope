@@ -264,12 +264,20 @@ class StudipDocumentTree extends TreeAbstract {
         }
     }
     
-    function getUnreadableFolders($user_id){
+    function getUnreadableFolders($user_id, $ignore_groups = false){
         if(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_studip_perm($this->must_have_perm, $this->range_id, $user_id)){
-            return array();
+            $ret = array();
         } else {
-            return array_diff($this->getKidsKids('root'), $this->getReadableKidsKids('root', $user_id));
+            if($ignore_groups) {
+                $group_folders = $this->group_folders;
+                $this->group_folders = array();
+            }
+            $ret = array_diff($this->getKidsKids('root'), $this->getReadableKidsKids('root', $user_id));
+            if($ignore_groups) {
+                $this->group_folders = $group_folders;
+            }
         }
+        return $ret;
     }
     
     function getReadableKidsKids($item_id, $user_id, $in_recursion = false){
@@ -300,7 +308,12 @@ class StudipDocumentTree extends TreeAbstract {
     
     function isFolder($item_id){
         return ($item_id != 'root' && isset($this->tree_data[$item_id]));
-    }   
+    }
+    
+    function getGroupFolders(){
+        return array_keys($this->group_folders);
+    }
+    
 }
 //test
 /*

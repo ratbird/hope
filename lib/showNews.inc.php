@@ -283,9 +283,7 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link) {
   }
 
   $open_or_close = $news_item['open'] ? 'close' : 'open';
-  $ajax = PrototypeHelper::remote_function(
-    array('url' => URLHelper::getLink('dispatch.php/news/'.$open_or_close.'/'.$id, array('admin_link' => $admin_link))));
-  $ajax = "STUDIP.News.openclose('".$id."')";
+  $ajax = "STUDIP.News.openclose('$id', '$admin_link')";
   $link=URLHelper::getLink($link);
   $link .= '" onClick="' . $ajax . ';return false;';
 
@@ -305,14 +303,14 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link) {
 
   echo "<div id=\"news_item_".$id."_content\"".($news_item['open'] ? "" : " style=\"display:none\"").">";
   if ($news_item['open']) {
-    show_news_item_content($news_item, $cmd_data, $show_admin);
+    return show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link);
   }
   echo "</div>";
 
   return ob_get_clean();
 }
 
-function show_news_item_content($news_item, $cmd_data, $show_admin) {
+function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link) {
 	global $auth, $_fullname_sql;
 
 	$db2 = new DB_Seminar();
@@ -420,9 +418,10 @@ function show_news_item_content($news_item, $cmd_data, $show_admin) {
             $content .= $cmdline;
         }
     }
-
+    ob_start();
     echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\"><tr>";
     printcontent(0,0, $content, $edit);
     echo "</tr></table>";
+    return ob_get_clean();
 }
 

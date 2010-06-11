@@ -815,18 +815,18 @@ STUDIP.Arbeitsgruppen = {
  * ------------------------------------------------------------------------ */
 
 STUDIP.News = {
-  openclose: function (id) {
+  openclose: function (id, admin_link) {
     if ($("#news_item_" + id + "_content").is(':visible')) {
       STUDIP.News.close(id);
     } else {
-      STUDIP.News.open(id);
+      STUDIP.News.open(id, admin_link);
     }
   },
 
-  open: function (id) {
+  open: function (id, admin_link) {
     $("#news_item_" + id + "_content").load(
       STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/news/get_news/' + id,
-      {},
+      {admin_link: admin_link},
       function () {
         $("#news_item_" + id + "_content").slideDown(400);
         $("#news_item_" + id + " .printhead2 img")

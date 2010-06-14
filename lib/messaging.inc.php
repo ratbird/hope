@@ -331,7 +331,7 @@ class messaging {
         if ($user_id != "____%system%____")  { // real-user message
 
             $snd_user_id = $user_id;
-            if ($sms_data["tmpsavesnd"] != "1") { // don't save save sms in outbox
+            if ($sms_data["tmpsavesnd"] != "1") { // don't save sms in outbox
                 $set_deleted = "1";
             }
 

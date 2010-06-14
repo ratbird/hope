@@ -386,7 +386,7 @@ class Evaluation extends EvaluationObject {
    }
 
    /**
-    * Gets the the next rangeID
+    * Gets the next rangeID
     * @access  public
     * @return  string   The rangeID
     */

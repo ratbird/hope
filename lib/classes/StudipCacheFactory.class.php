@@ -83,7 +83,7 @@ class StudipCacheFactory {
 
 
     /**
-     * Configure the file, class and arguments used for instantiation of the the
+     * Configure the file, class and arguments used for instantiation of the
      * StudipCache instance. After sending this method, the previously used cache
      * instance is voided and a new instance will be created on demand.
      *

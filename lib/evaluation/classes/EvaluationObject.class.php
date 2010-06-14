@@ -347,7 +347,7 @@ class EvaluationObject extends StudipObject {
    }
 
    /**
-    * Gets the the next child
+    * Gets the next child
     * @access  public
     * @return  object   The next object, otherwise NULL
     */

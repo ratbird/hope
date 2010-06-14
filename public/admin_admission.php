@@ -972,7 +972,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                     } else { ?>
                         <b><?=_("Anmeldemodus:")?></b><br>
             <? if (!LockRules::Check($seminar_id, 'admission_prelim')) : ?>
-                        <? echo _("Bitte wählen Sie sie hier einen Anmeldemodus aus:"); ?><br>
+                        <? echo _("Bitte wählen Sie hier einen Anmeldemodus aus:"); ?><br>
               <input type="radio"  name="admission_prelim" <?if (LockRules::Check($seminar_id, 'admission_prelim')) {echo " disabled ";} ?>value="0" <? if ($admin_admission_data["admission_prelim"] == 0) echo "checked"; ?>><?=_("Direkter Eintrag")?>&nbsp;
               <input type="radio"  name="admission_prelim" <?if (LockRules::Check($seminar_id, 'admission_prelim')) {echo " disabled ";} ?>value="1" <? if ($admin_admission_data["admission_prelim"] == 1) echo "checked"; ?>><?=_("Vorl&auml;ufiger Eintrag")?>
             <? else: ?>

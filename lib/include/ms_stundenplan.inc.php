@@ -141,7 +141,7 @@ function change_schedule_view() {
 
             <td class="blank" width="100%" colspan="2" align="center">
             <blockquote>
-                <font size="-1"><b><?print _("Hier k&ouml;nnen Sie sie Ansicht ihres pers&ouml;nlichen Stundenplans nach Ihren Vorstellungen anpassen.")."<br>"._("Sie k&ouml;nnen den Zeitraum, den der Stundenplan umfasst, und die Tage, die der Stundenplan anzeigt, bestimmen.");?>
+                <font size="-1"><b><?print _("Hier k&ouml;nnen Sie die Ansicht ihres pers&ouml;nlichen Stundenplans nach Ihren Vorstellungen anpassen.")."<br>"._("Sie k&ouml;nnen den Zeitraum, den der Stundenplan umfasst, und die Tage, die der Stundenplan anzeigt, bestimmen.");?>
             </blockquote>
             <form method="POST" action="<? echo $PHP_SELF ?>?schedule_cmd=change_view_insert">
             <table width="70%" align="center" cellpadding=8 cellspacing=0 border=0>

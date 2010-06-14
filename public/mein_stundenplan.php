@@ -262,7 +262,7 @@ if (!$tmp_sem_nr) {
     $tmp_sem_ende=$all_semester[$tmp_sem_nr]["ende"];
 }
 
-// Set the view (begin hour and and hour)
+// Set the view (begin hour and end hour)
 if ($_REQUEST['inst_id']) {
     $global_start_time=8;
     $global_end_time=20;
@@ -884,7 +884,7 @@ if($view == 'standard') {
     }
 } else { // view == edit
     $infobox_info[$i] = array ("icon" => 'info.gif',
-                               "text"  => _("Hier k&ouml;nnen Sie sie Ansicht ihres pers&ouml;nlichen Stundenplans nach Ihren Vorstellungen anpassen."));
+                               "text"  => _("Hier k&ouml;nnen Sie die Ansicht ihres pers&ouml;nlichen Stundenplans nach Ihren Vorstellungen anpassen."));
     $i++;
 }
 

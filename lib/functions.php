@@ -433,7 +433,7 @@ function get_object_type($id) {
 * The function calculate one of the group colors unique for the Semester of the Veranstaltung
 *
 * It calculate a unique color number to create the initial entry for a new user in a Veranstaltung.
-* It will create a unique number for every Semester and will start over, if the the max. numer
+* It will create a unique number for every Semester and will start over, if the max. number
 * (7) is reached.
 *
 * @param        integer the timestamp of the start time from the Semester
@@ -704,7 +704,7 @@ function get_userid($username="") {
 * This function tracks user acces to several Data (only dokuments by now, to be extended)
 *
 *
-* @param        string  the id of of the object to track
+* @param        string  the id of the object to track
 *
 */
 function TrackAccess ($id, $object_type = null) {

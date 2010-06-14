@@ -227,7 +227,7 @@ class EvaluationAnswer extends EvaluationObject {
   }
 
   /**
-   * Gets the the next user
+   * Gets the next user
    * @access  public
    * @return  string  The next user id, otherwise NULL
    */

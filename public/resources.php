@@ -36,6 +36,6 @@ if (get_config('RESOURCES_ENABLE')) {
     include ('lib/include/header.php');   // Output of Stud.IP head
     require_once ('lib/msg.inc.php');
     //TODO use Messagebox or Exception
-    parse_window ("error§" . _("Die Ressurcenverwaltung ist nicht eingebunden. Bitte aktivieren Sie sie in den Systemeinstellungen oder wenden Sie sich an die Systemadministratoren."), "§",
+    parse_window ("error§" . _("Die Ressourcenverwaltung ist nicht eingebunden. Bitte aktivieren Sie sie in den Systemeinstellungen, oder wenden Sie sich an die Systemadministratoren."), "§",
                 _("Ressourcenverwaltung nicht eingebunden"));
 }

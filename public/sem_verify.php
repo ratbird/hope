@@ -595,7 +595,7 @@ $db6=new DB_Seminar;
                         }
                     //Wurden wir evtl. schon in die Veranstaltung als Wartender eingetragen?
                     if (admission_seminar_user_get_position($user->id, $id)) { //Es gibt einen Eintrag, da darf ich also nicht mehr rein
-                        parse_msg ('info§' . sprintf(_("Sie stehen schon auf der Anmelde- bzw. Warteliste der Veranstaltung %s. <br>Wenn Sie sich neu oder f&uuml;r ein anderes Kontingent eintragen wollen, dann l&ouml;schen Sie bitte vorher die Zuordnug auf der der &Uuml;bersicht ihrer Veranstaltungen."), '<b>'.$SeminarName.'</b>'));
+                        parse_msg ('info§' . sprintf(_("Sie stehen schon auf der Anmelde- bzw. Warteliste der Veranstaltung %s. <br>Wenn Sie sich neu oder f&uuml;r ein anderes Kontingent eintragen wollen, dann l&ouml;schen Sie bitte vorher die Zuordnug auf der &Uuml;bersicht ihrer Veranstaltungen."), '<b>'.$SeminarName.'</b>'));
                         echo "<tr><td class=\"blank\" colspan=2><a href=\"index.php\">&nbsp;&nbsp; "._("Zur&uuml;ck zur Startseite")."</a>";
                         if ($send_from_search)
                             echo "&nbsp; |&nbsp;<a href=\"$send_from_search_page\">"._("Zur&uuml;ck zur letzten Auswahl")."</a>";

@@ -82,12 +82,13 @@ class StudipSemSearchHelper {
         $and_clause = "";
         $this->search_result = new DbSnapshot();
         $combination = $this->params['combination'];
-        $view = new DBView();
-        
-        if (isset($this->params['sem']) && $this->params['sem'] != 'all'){
+        $view = new DBView(); 
+
+        if ($this->params['sem'] && $this->params['sem'] != 'all'){
             $sem_number = $this->params['sem'];
             $clause = " HAVING (sem_number <= $sem_number AND (sem_number_end >= $sem_number OR sem_number_end = -1)) ";
         }
+
         if (isset($this->params['category']) && $this->params['category'] != 'all'){
             foreach($GLOBALS['SEM_TYPE'] as $type_key => $type_value){
                 if($type_value['class'] == $this->params['category'])

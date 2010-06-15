@@ -841,7 +841,7 @@ if (($form == 1) && ($jump_next_x))
         $level=1;
         $errormsg=$errormsg.sprintf ("error§"._("Da Ihr Account keiner Einrichtung zugeordnet ist, k&ouml;nnen Sie leider noch keine Veranstaltung anlegen. Bitte wenden Sie sich an den/die zust&auml;ndigeN AdministratorIn der Einrichtung oder einen der %sAdministratoren%s des Systems!")."§", "<a href=\"".URLHelper::getLink("dispatch.php/siteinfo/show")."\">", "</a>");
         }
-    if (($sem_create_data["sem_turnout"] < 1) && ($sem_create_data["sem_admission"]))
+    if (($sem_create_data["sem_turnout"] < 1) && ($sem_create_data["sem_admission"]) && ($sem_create_data["sem_admission"] != 3))
         {
         $level=1;
         $errormsg=$errormsg."error§"._("Wenn Sie die Teilnahmebeschr&auml;nkung benutzen wollen, m&uuml;ssen Sie wenigstens einen Teilnehmer zulassen.")."§";
@@ -1290,7 +1290,7 @@ if ($sem_delete_studg) {
 
 //Prozentangabe checken/berechnen wenn neuer Studiengang, einer geloescht oder Seite abgeschickt
 if ((($form == 5) && ($jump_next_x)) || ($add_studg_x) || ($sem_delete_studg) || $toggle_admission_quota_x) {
-    if ($sem_create_data["sem_admission"] && $sem_create_data["admission_enable_quota"]) {
+    if ($sem_create_data["sem_admission"] && $sem_create_data["sem_admission"] != 3 && $sem_create_data["admission_enable_quota"]) {
         if (!$sem_create_data["sem_admission_ratios_changed"] && (($add_studg_x && !$sem_add_ratio && $sem_add_studg) || $sem_delete_studg || $toggle_admission_quota_x)) {//User hat nichts veraendert und neuen Studiengang ohne Wert geschickt oder studiengang gelöscht, wir versuchen automatisch zu rechnen
             if (is_array($sem_create_data["sem_studg"])){
                 $ratio = round(100 / (sizeof ($sem_create_data["sem_studg"]) ));
@@ -1357,7 +1357,7 @@ if (($form == 5) && ($jump_next_x))
     }
 
     //Ende der Anmeldung checken
-    if ($sem_create_data["sem_admission"]) {
+    if ($sem_create_data["sem_admission"] && $sem_create_data["sem_admission"] != 3) {
         if ($sem_create_data["sem_admission_date"] == -1)
             if ($sem_create_data["sem_admission"] == 1)
                 $errormsg.= "error§"._("Bitte geben Sie einen Termin f&uuml;r das Losdatum an!")."§";
@@ -1518,7 +1518,7 @@ if (($form == 6) && ($jump_next_x))
         $serialized_metadata = mysql_escape_string(serialize($sem_create_data['metadata_termin']));
 
         //for admission it have to always 3
-        if ($sem_create_data["sem_admission"]) {
+        if ($sem_create_data["sem_admission"] && $sem_create_data["sem_admission"] != 3) {
             $sem_create_data["sem_sec_lese"]=3;
             $sem_create_data["sem_sec_schreib"]=3;
         }
@@ -1744,7 +1744,7 @@ if (($form == 6) && ($jump_next_x))
                 }
 
             //Eintrag der zugelassen Studiengänge
-            if ($sem_create_data["sem_admission"]) {
+            if ($sem_create_data["sem_admission"] && $sem_create_data["sem_admission"] != 3) {
                 if (is_array($sem_create_data["sem_studg"])){
                     foreach($sem_create_data["sem_studg"] as $key=>$val){
                         $query = "INSERT INTO admission_seminar_studiengang VALUES('".$sem_create_data["sem_id"]."', '$key', '".$val["ratio"]."' )";
@@ -2190,7 +2190,9 @@ elseif ((!$level) || ($level == 1))
                             <?=_("per Losverfahren"); ?>&nbsp;
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
                                 <? echo tooltip(_("Sie können die Anzahl der Teilnehmenden beschränken. Möglich ist die Zulassung von Interessierten über das Losverfahren oder über die Reihenfolge der Anmeldung. Sie können später Angaben über zugelassene Teilnehmer machen."), TRUE, TRUE) ?>
-                            >
+                            > <br>
+							&nbsp; <input type="radio" name="sem_admission" value=3 <? if ($sem_create_data["sem_admission"]=="3") echo 'checked'?>>
+							<?=_("gesperrt"); ?>&nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
                             <?=_("maximale Teilnehmeranzahl:"); ?>
@@ -3557,6 +3559,7 @@ if ($level == 5)
                             &nbsp; <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">&nbsp;<input type="image" <?=makeButton("weiter", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                         </td>
                     </tr>
+					<? if($sem_create_data["sem_admission"] != 3) { ?>
                     <tr <? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
                             <?= _("Anmeldezeitraum:"); ?>
@@ -3630,7 +3633,7 @@ if ($level == 5)
                         </tr>
                         <?
                     }
-                    if ($sem_create_data["sem_admission"]) {
+                    if ($sem_create_data["sem_admission"] && $sem_create_data["sem_admission" != 3]) {
                         $num_all = $sem_create_data["sem_turnout"];
                         if (is_array($sem_create_data["sem_studg"]) && $sem_create_data["sem_turnout"]){
                             foreach ($sem_create_data["sem_studg"] as $key => $val){
@@ -3807,10 +3810,10 @@ if ($level == 5)
                             >
                         </td>
                     </tr>
-
+					
                     <?
-                    }
-
+                    	}
+					}
                     if (!$SEM_CLASS[$sem_create_data["sem_class"]]["compact_mode"]) {
                     ?>
                     <tr <? $cssSw->switchClass() ?>>

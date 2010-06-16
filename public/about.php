@@ -136,7 +136,7 @@ if (get_config('VOTE_ENABLE')) {
 if (get_config('NEWS_RSS_EXPORT_ENABLE')){
     $news_author_id = StudipNews::GetRssIdFromUserId(get_userid($_REQUEST['username']));
     if($news_author_id){
-        $_include_additional_header = '<link rel="alternate" type="application/rss+xml" '
+        $_include_additional_header .= '<link rel="alternate" type="application/rss+xml" '
                                     .'title="RSS" href="' . $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'rss.php?id='.$news_author_id.'">';
     }
 }

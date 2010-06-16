@@ -95,7 +95,7 @@ if (isset($auswahl) && $auswahl!="") {
 if (get_config('NEWS_RSS_EXPORT_ENABLE') && $SessSemName[1]){
     $rss_id = StudipNews::GetRssIdFromRangeId($SessSemName[1]);
     if($rss_id){
-        $_include_additional_header = '<link rel="alternate" type="application/rss+xml" '
+        $_include_additional_header .= '<link rel="alternate" type="application/rss+xml" '
                                     .'title="RSS" href="rss.php?id='.$rss_id.'">';
     }
 }

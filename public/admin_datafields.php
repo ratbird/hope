@@ -243,7 +243,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
                         print "<a name=\"a\"></a>";
-                        printf ("<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size: 8pt; width: 90%;\" value=\"%s\" name=\"datafield_name\">", $val->getName());
+                        printf ("<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size: 8pt; width: 90%%;\" value=\"%s\" name=\"datafield_name\">", $val->getName());
                     }
                     else
                         print $val->getName();
@@ -548,7 +548,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <font size="-1">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size: 8pt; width: 30%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
+                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size: 8pt; width: 30%%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
                     } else
                         print $val->getPriority()
                     ?>
@@ -712,7 +712,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
                         print "<a name=\"a\"></a>";
-                        printf ("<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size: 8pt; width: 90%;\" value=\"%s\" name=\"datafield_name\">", $val->getName());
+                        printf ("<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size: 8pt; width: 90%%;\" value=\"%s\" name=\"datafield_name\">", $val->getName());
                     } else
                         print $val->getName()
                     ?>
@@ -786,7 +786,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <font size="-1">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size: 8pt; width: 30%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
+                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size: 8pt; width: 30%%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
                     } else
                         print $val->getPriority()
                     ?>
@@ -951,7 +951,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
                         print "<a name=\"a\"></a>";
-                        printf ("<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size: 8pt; width: 90%;\" value=\"%s\" name=\"datafield_name\">", $val->getName());
+                        printf ("<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size: 8pt; width: 90%%;\" value=\"%s\" name=\"datafield_name\">", $val->getName());
                     } else
                         print $val->getName()
                     ?>
@@ -1023,7 +1023,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <font size="-1">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size: 8pt; width: 30%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
+                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size: 8pt; width: 30%%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
                     } else
                         print $val->getPriority()
                     ?>
@@ -1195,7 +1195,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
                         print "<a name=\"a\"></a>";
-                        printf ("<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size: 8pt; width: 90%;\" value=\"%s\" name=\"datafield_name\">", $val->getName());
+                        printf ("<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size: 8pt; width: 90%%;\" value=\"%s\" name=\"datafield_name\">", $val->getName());
                     } else
                         print $val->getName()
                     ?>
@@ -1267,7 +1267,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <font size="-1">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size: 8pt; width: 30%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
+                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size: 8pt; width: 30%%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
                     } else
                         print $val->getPriority()
                     ?>
@@ -1437,7 +1437,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
                         print "<a name=\"a\"></a>";
-                        printf ("<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size: 8pt; width: 90%;\" value=\"%s\" name=\"datafield_name\">", $val->getName());
+                        printf ("<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size: 8pt; width: 90%%;\" value=\"%s\" name=\"datafield_name\">", $val->getName());
                     } else
                         print $val->getName()
                     ?>
@@ -1509,7 +1509,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <font size="-1">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size: 8pt; width: 30%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
+                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size: 8pt; width: 30%%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
                     } else
                         print $val->getPriority()
                     ?>

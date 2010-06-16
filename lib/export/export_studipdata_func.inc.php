@@ -720,7 +720,7 @@ function export_datafields($range_id, $childgroup_tag, $childobject_tag){
     $localEntries = DataFieldEntry::getDataFieldEntries($range_id);
     if(is_array($localEntries )){
         foreach ($localEntries as $entry){
-            if ($entry->structure->accessAllowed($GLOBALS['perm'], $GLOBALS['user']->id, $range_id) && $entry->getValue()) {
+            if ($entry->structure->accessAllowed($GLOBALS['perm'], $GLOBALS['user']->id) && $entry->getDisplayValue()) {
                 if (!$d_fields) $ret .= xml_open_tag( $childgroup_tag );
                 $ret .= xml_open_tag($childobject_tag , $entry->getName());
                 $ret .= htmlspecialchars($entry->getDisplayValue(false));
@@ -771,11 +771,10 @@ function export_datafields($range_id, $childgroup_tag, $childobject_tag){
                  
                  switch ($val["table"]) {
                  case "datafields":
-                     $query = "SELECT content FROM datafields_entries, datafields WHERE datafields.name = '".$val["field"]."' AND datafields.datafield_id = datafields_entries.datafield_id AND datafields_entries.range_id = '$user_id'";
-                     $db->query($query);
-                     $db->next_record();
-                     if ($db->f("content") != "") {
-                         $user_data = array("name" => $val["name"], "content" => $db->f("content"));
+                     foreach (DataFieldEntry::getDataFieldEntries($user_id, 'user') as $entry) {
+                         if ($entry->getName() == $val["field"] && $entry->getDisplayValue()) {
+                             $user_data = array("name" => $val["name"], "content" => $entry->getDisplayValue(false));
+                         }
                      }
                      break;
                      

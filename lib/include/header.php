@@ -67,9 +67,13 @@ else
         }
         // fetch semester for quick search box in the link bar
         $semester_data = SemesterData::GetSemesterArray();
-        $default_semester = SemesterData::GetSemesterIndexById($_SESSION['_default_sem']);
+        $default_semester = $_SESSION['_default_sem'] ?
+                            SemesterData::GetSemesterIndexById($_SESSION['_default_sem']) :
+                            'all';
         $header_template->search_semester_nr = $default_semester;
-        $header_template->search_semester_name = $semester_data[$default_semester]['name'];
+        $header_template->search_semester_name = $default_semester != 'all' ?
+                                                 $semester_data[$default_semester]['name'] :
+                                                 _("alle Semester");
     }
 }
 echo $header_template->render();

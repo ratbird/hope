@@ -67,6 +67,8 @@ Ich erkläre mich damit einverstanden, dass AdministratorInnen die Inhalte der Gr
         DBManager::get()->query("DELETE FROM config WHERE config_id = MD5('STUDYGROUP_DEFAULT_INST')");  
         DBManager::get()->query("DELETE FROM config WHERE config_id = MD5('STUDYGROUP_SETTINGS')");
         DBManager::get()->query("DELETE FROM config WHERE config_id = MD5('STUDYGROUP_TERMS')");  
+        // (3) restore config-table schema
+        DBManager::get()->query("ALTER TABLE config CHANGE value value varchar(255) NOT NULL");
     }
 }
 ?>

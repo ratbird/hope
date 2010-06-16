@@ -259,7 +259,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <font size="-1">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        print "<select name=\"datafield_class\" style=\"font-size:8 pt;\">";
+                        print "<select name=\"datafield_class\" style=\"font-size: 8pt;\">";
                         echo "<option value=\"FALSE\">". _("alle") ."</option>";
                         foreach ($SEM_CLASS as $key2=>$val2)
                             printf ("<option %s value=\"%s\">%s</option>", ($val->getObjectClass() == $key2) ? "selected" : "", $key2, $val2["name"]);
@@ -274,7 +274,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <font size="-1">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        print "<select name=\"datafield_edit_perms\" style=\"font-size:8 pt;\">";
+                        print "<select name=\"datafield_edit_perms\" style=\"font-size: 8pt;\">";
                         printf ("<option %s value=\"user\">user</option>", ($val->getEditPerms() == "user") ? "selected" : "");
                         printf ("<option %s value=\"autor\">autor</option>", ($val->getEditPerms() == "autor") ? "selected" : "");
                         printf ("<option %s value=\"tutor\">tutor</option>", ($val->getEditPerms() == "tutor") ? "selected" : "");
@@ -291,7 +291,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <font size="-1">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        print "<select name=\"datafield_view_perms\" style=\"font-size:8 pt;\">";
+                        print "<select name=\"datafield_view_perms\" style=\"font-size: 8pt;\">";
                         printf ("<option %s value=\"all\">%s</option>", ($val->getViewPerms() == "all") ? "selected" : "", _("alle"));
                         printf ("<option %s value=\"user\">user</option>", ($val->getViewPerms() == "user") ? "selected" : "");
                         printf ("<option %s value=\"autor\">autor</option>", ($val->getViewPerms() == "autor") ? "selected" : "");
@@ -312,7 +312,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <font size="-1">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID())
-                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size:8 pt; width: 30%%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
+                        printf ("<input type=\"TEXT\" maxlength=\"10\" size=\"5\" style=\"font-size: 8pt; width: 30%%; text-align: center;\" value=\"%s\" name=\"datafield_priority\">", $val->getPriority());
                     else
                         print $val->getPriority()
                     ?>
@@ -347,7 +347,7 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="left">
                     <a name="a"></a>
                     <font size="-1">
-                        <input type="text" maxlength="255" size="25" style="{font-size:8 pt; width: 90%;}" name="datafield_name">
+                        <input type="text" maxlength="255" size="25" style="font-size: 8pt; width: 90%;" name="datafield_name">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
@@ -357,7 +357,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class" style="{font-size:8 pt;}">";
+                        <select name="datafield_class" style="font-size: 8pt;">";
                         <option value="FALSE"><?=_("alle")?></option>
                         <?
                         foreach ($SEM_CLASS as $key=>$val)
@@ -368,7 +368,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_edit_perms" style="{font-size:8 pt;}">
+                        <select name="datafield_edit_perms" style="font-size: 8pt;">
                         <option value="user">user</option>
                         <option value="autor">autor</option>
                         <option value="tutor">tutor</option>
@@ -381,7 +381,7 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="center">
                 <? //New possibility: Set rights for visibility ?>
                     <font size="-1">
-                        <select name="datafield_view_perms" style="{font-size:8 pt;}">
+                        <select name="datafield_view_perms" style="font-size: 8pt;">
                         <option value="all"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -394,7 +394,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <input type="text" maxlength="10" size="5" style="{font-size:8 pt; width: 30%; text-align: center;}" name="datafield_priority">
+                        <input type="text" maxlength="10" size="5" style="font-size: 8pt; width: 30%; text-align: center;" name="datafield_priority">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
@@ -476,7 +476,7 @@ if ($kill_datafield) { // contains a datafield_id
                     <?
                           if ($admin_datafields_data["change_datafield"] == $val->getID()) {
                         print "<a name=\"a\"></a>";
-                              print "<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size:8 pt; width: 90%;\" ";
+                              print "<input type=\"TEXT\" maxlength=\"255\" size=\"25\" style=\"font-size: 8pt; width: 90%;\" ";
                                print "value=\"".$val->getName()."\" name=\"datafield_name\">";
                           }
                           else
@@ -583,7 +583,7 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="left">
                     <a name="a"></a>
                     <font size="-1">
-                        <input type="text" maxlength="255" size="25" style="{font-size:8 pt; width: 90%}" name="datafield_name">
+                        <input type="text" maxlength="255" size="25" style="font-size: 8pt; width: 90%" name="datafield_name">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
@@ -593,7 +593,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class" style="{font-size:8 pt;}">";
+                        <select name="datafield_class" style="font-size: 8pt;">";
                         <option value="FALSE"><?=_("alle")?></option>
                         <?
                         foreach ($INST_TYPE as $key=>$val) {
@@ -605,7 +605,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_edit_perms" style="{font-size:8 pt;}">";
+                        <select name="datafield_edit_perms" style="font-size: 8pt;">";
                         <option value="user">user</option>
                         <option value="autor">autor</option>
                         <option value="tutor">tutor</option>
@@ -617,7 +617,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_view_perms" style="{font-size:8 pt;}">";
+                        <select name="datafield_view_perms" style="font-size: 8pt;">";
                         <option value="all"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -630,7 +630,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <input type="text" maxlength="10" size="5" style="{font-size:8 pt; width: 30%; text-align: center;}" name="datafield_priority">
+                        <input type="text" maxlength="10" size="5" style="font-size: 8pt; width: 30%; text-align: center;" name="datafield_priority">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
@@ -821,7 +821,7 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="left">
                     <a name="a"></a>
                     <font size="-1">
-                        <input type="text" maxlength="255" size="25" style="{font-size:8 pt; width: 90%;}" name="datafield_name">
+                        <input type="text" maxlength="255" size="25" style="font-size: 8pt; width: 90%;" name="datafield_name">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
@@ -831,7 +831,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class[]"  multiple size="7" style="{font-size:8 pt;}">";
+                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">";
                         <option value="FALSE"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -844,7 +844,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_edit_perms" style="{font-size:8 pt;}">";
+                        <select name="datafield_edit_perms" style="font-size: 8pt;">";
                         <option value="user">user</option>
                         <option value="autor">autor</option>
                         <option value="tutor">tutor</option>
@@ -856,7 +856,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_view_perms" style="{font-size:8 pt;}">";
+                        <select name="datafield_view_perms" style="font-size: 8pt;">";
                         <option value="all"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -869,7 +869,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <input type="text" maxlength="10" size="5" style="{font-size:8 pt; width: 30%; text-align: center;}" name="datafield_priority">
+                        <input type="text" maxlength="10" size="5" style="font-size: 8pt; width: 30%; text-align: center;" name="datafield_priority">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
@@ -1058,7 +1058,7 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="left">
                     <a name="a"></a>
                     <font size="-1">
-                        <input type="text" maxlength="255" size="25" style="{font-size:8 pt; width: 90%;}" name="datafield_name">
+                        <input type="text" maxlength="255" size="25" style="font-size: 8pt; width: 90%;" name="datafield_name">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
@@ -1068,7 +1068,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class[]"  multiple size="7" style="{font-size:8 pt;}">";
+                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">";
                         <option value="FALSE"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1081,7 +1081,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_edit_perms" style="{font-size:8 pt;}">";
+                        <select name="datafield_edit_perms" style="font-size: 8pt;">";
                         <option value="user">user</option>
                         <option value="autor">autor</option>
                         <option value="tutor">tutor</option>
@@ -1093,7 +1093,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_view_perms" style="{font-size:8 pt;}">";
+                        <select name="datafield_view_perms" style="font-size: 8pt;">";
                         <option value="all"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1106,7 +1106,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <input type="text" maxlength="10" size="5" style="{font-size:8 pt; width: 30%; text-align: center;}" name="datafield_priority">
+                        <input type="text" maxlength="10" size="5" style="font-size: 8pt; width: 30%; text-align: center;" name="datafield_priority">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
@@ -1302,7 +1302,7 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="left">
                     <a name="a"></a>
                     <font size="-1">
-                        <input type="text" maxlength="255" size="25" style="{font-size:8 pt; width: 90%;}" name="datafield_name">
+                        <input type="text" maxlength="255" size="25" style="font-size: 8pt; width: 90%;" name="datafield_name">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
@@ -1312,7 +1312,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class[]"  multiple size="7" style="{font-size:8 pt;}">";
+                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">";
                         <option value="FALSE"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1325,7 +1325,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_edit_perms" style="{font-size:8 pt;}">";
+                        <select name="datafield_edit_perms" style="font-size: 8pt;">";
                         <option value="user">user</option>
                         <option value="autor">autor</option>
                         <option value="tutor">tutor</option>
@@ -1337,7 +1337,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_view_perms" style="{font-size:8 pt;}">";
+                        <select name="datafield_view_perms" style="font-size: 8pt;">";
                         <option value="all"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1350,7 +1350,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <input type="text" maxlength="10" size="5" style="{font-size:8 pt; width: 30%; text-align: center;}" name="datafield_priority">
+                        <input type="text" maxlength="10" size="5" style="font-size: 8pt; width: 30%; text-align: center;" name="datafield_priority">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
@@ -1544,7 +1544,7 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="left">
                     <a name="a"></a>
                     <font size="-1">
-                        <input type="text" maxlength="255" size="25" style="{font-size:8 pt; width: 90%;}" name="datafield_name">
+                        <input type="text" maxlength="255" size="25" style="font-size: 8pt; width: 90%;" name="datafield_name">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
@@ -1554,7 +1554,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class[]"  multiple size="7" style="{font-size:8 pt;}">";
+                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">";
                         <option value="FALSE"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1567,7 +1567,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_edit_perms" style="{font-size:8 pt;}">";
+                        <select name="datafield_edit_perms" style="font-size: 8pt;">";
                         <option value="user">user</option>
                         <option value="autor">autor</option>
                         <option value="tutor">tutor</option>
@@ -1579,7 +1579,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_view_perms" style="{font-size:8 pt;}">";
+                        <select name="datafield_view_perms" style="font-size: 8pt;">";
                         <option value="all"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1592,7 +1592,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <input type="text" maxlength="10" size="5" style="{font-size:8 pt; width: 30%; text-align: center;}" name="datafield_priority">
+                        <input type="text" maxlength="10" size="5" style="font-size: 8pt; width: 30%; text-align: center;" name="datafield_priority">
                     </font>
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">

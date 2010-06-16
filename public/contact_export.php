@@ -392,6 +392,7 @@ function exportVCard($contacts){
 
     header("Content-type: text/x-vCard"); //application/octet-stream MIME
     header("Content-disposition: attachment; filename=".$filename.".vcf");
+    header("Pragma: private");
 
     $br = "=0D=0A";
 

@@ -145,7 +145,7 @@ if (!$chat_entry_check){
 }
 //evtl Chateinladungen löschen
 $sms->delete_chatinv();
-if ($user->cfg->getValue($user->id, "CHAT_USE_AJAX_CLIENT") ){
+if (UserConfig::get($user->id)->CHAT_USE_AJAX_CLIENT ){
     include "chat_client_ajax.php";
 } else {
 

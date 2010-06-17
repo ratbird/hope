@@ -300,8 +300,8 @@ if (check_ticket($studipticket)) {
         $_language = $forced_language;
         $forum["jshover"]=$jshover;
         $my_studip_settings["startpage_redirect"] = $personal_startpage;
-        $user->cfg->setValue((int)$_REQUEST['accesskey_enable'], $user->id, "ACCESSKEY_ENABLE");
-        $user->cfg->setValue((int)$_REQUEST['showsem_enable'], $user->id, "SHOWSEM_ENABLE");
+        UserConfig::get($user->id)->store('ACCESSKEY_ENABLE', (int)$_REQUEST['accesskey_enable']);
+        UserConfig::get($user->id)->store('SHOWSEM_ENABLE', (int)$_REQUEST['showsem_enable']);
     }
 
     if ($cmd == 'change_global_visibility') {

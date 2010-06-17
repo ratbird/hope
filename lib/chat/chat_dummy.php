@@ -52,7 +52,7 @@ require_once 'lib/chat/chat_func_inc.php';
 
 $chatServer = ChatServer::GetInstance($CHAT_SERVER_NAME);
 $chatServer->caching = true;
-if ($user->cfg->getValue($user->id, "CHAT_USE_AJAX_CLIENT") ){
+if (UserConfig::get($user->id)->CHAT_USE_AJAX_CLIENT){
     $log_id = isset($_GET['log_id']) ? (int)$_GET['log_id'] : count($chat_logs[$chatid])-1;
     $chat_log = $chat_logs[$chatid][$log_id]['msg'];
     $end_time = $chat_logs[$chatid][$log_id]['stop'];

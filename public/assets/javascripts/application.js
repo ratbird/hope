@@ -405,7 +405,7 @@ STUDIP.study_area_selection = {
 
     $.ajax({
       type: 'POST',
-      url: STUDIP.study_area_selection.url('add', course_id || ''),
+      url: STUDIP.study_area_selection.url('add', course_id || ''),
       data: ({id: id}),
       dataType: 'html',
       async: false, // Critical request thus synchronous
@@ -429,7 +429,7 @@ STUDIP.study_area_selection = {
 
     $.ajax({
       type: 'POST',
-      url: STUDIP.study_area_selection.url('remove', course_id || ''),
+      url: STUDIP.study_area_selection.url('remove', course_id || ''),
       data: ({id: id}),
       dataType: 'html',
       async: false, // Critical request thus synchronous
@@ -456,7 +456,7 @@ STUDIP.study_area_selection = {
   },
 
   expandSelection: function (id, course_id) {
-    $.post(STUDIP.study_area_selection.url('expand', course_id || '', id), function (data) {
+    $.post(STUDIP.study_area_selection.url('expand', course_id || '', id), function (data) {
         $('#study_area_selection_selectables ul').replaceWith(data);
       }, 'html');
   },
@@ -856,9 +856,9 @@ STUDIP.News = {
  * ------------------------------------------------------------------------ */
 $('a.load_via_ajax').live('click', function () {
   var parameters = $(this).metadata(),
-    indicator = parameters.indicator || this,
-    target = parameters.target || $(this).next(),
-    url = parameters.url || $(this).attr('href');
+    indicator = parameters.indicator || this,
+    target = parameters.target || $(this).next(),
+    url = parameters.url || $(this).attr('href');
 
   // Special cases
   if ($(this).is('.internal_message')) {
@@ -980,7 +980,7 @@ $(document).ready(function () {
   STUDIP.study_area_selection.initialize();
 
   $('.focus').each(function () {
-    if (!$(this).is('.if-empty') || $(this).val().length === 0) {
+    if (!$(this).is('.if-empty') || $(this).val().length === 0) {
       $(this).focus();
       return false;
     }

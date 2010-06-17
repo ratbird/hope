@@ -1524,7 +1524,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
  *
  */
 function display_folder_body($folder_id, $open, $change, $move, $upload, $refresh=FALSE, $filelink="", $anchor_id) {
-    global $_fullname_sql, $SessionSeminar, $SemUserStatus, $SessSemName, $rechte, $countfolder;
+    global $_fullname_sql, $SessionSeminar, $SemUserStatus, $SessSemName, $user, $perm, $rechte, $countfolder;
     $db = DBManager::get();
     //Einbinden einer Klasse, die Informationen über den ganzen Baum enthält
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
@@ -1628,42 +1628,41 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
     $edit='';
     //Editbereich erstellen
     if (($change != $folder_id) && ($upload != $folder_id) && ($filelink != $folder_id)) {
-        if (($rechte) || ($SemUserStatus == "user" || $SemUserStatus == "autor") ) {
-            if ($SemUserStatus != 'user' && ($folder_tree->isWritable($folder_id, $user->id)) || ($rechte))
-                $edit= "<a href=\"".URLHelper::getLink("?open=".$folder_id."_u_&rand=".rand()."#anker")."\">" . makeButton("dateihochladen", "img") . "</a>";
-            if ($rechte)
-                $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_l_&rand=".rand()."#anker")."\">" . makeButton("link", "img") . "</a>";
-            if ($document_count && ($folder_tree->isReadable($folder_id, $user->id) || $rechte))
-                $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?folderzip=".$folder_id)."\">" . makeButton("ordneralszip", "img") . "</a>";
-            if (($SemUserStatus != 'user') && ($rechte || ($folder_tree->checkCreateFolder($folder_id, $user->id))) ) {
-                if($rechte || ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id))) {
-                    $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_n_#anker")."\">" . makeButton("neuerordner", "img") . "</a>";
-                    if($rechte && get_config('ZIP_UPLOAD_ENABLE')) {
-                        $edit .= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_z_&rand="
-                            . rand()."#anker")."\">" . makeButton("ziphochladen", "img") . "</a>";
-                        }
-                    }
-                if($rechte ||
-                    (!$document_count && $level !=0 &&
-                        ($folder_tree->isWritable($folder_id, $user->id) &&
-                        $folder_tree->isWritable($folder_tree->getValue($folder_id, 'parent_id'), $user->id) &&
-                            !$folder_tree->isExerciseFolder($folder_id, $user->id))
-                    )
-                        ) $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_d_")."\">" . makeButton("loeschen", "img") . "</a>";
-                if($rechte || ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id))) $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_c_#anker")."\">" . makeButton("bearbeiten", "img") . "</a>";
-                if(($rechte && $result['range_id'] != $SessSemName[1]) ||
-                    ($level !=0 &&
-                        ($folder_tree->isWritable($folder_id, $user->id) &&
-                        $folder_tree->isWritable($folder_tree->getValue($folder_id, 'parent_id'), $user->id) &&
-                        !$folder_tree->isExerciseFolder($folder_id, $user->id))
-                        )
-                    ) $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_m_#anker")."\">" . makeButton("verschieben", "img") . "</a>";
-                if($rechte || ($level !=0 && !$folder_tree->isExerciseFolder($folder_id, $user->id))) {
-                    $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_co_#anker")."\">" . makeButton("kopieren", "img") . "</a>";
+        if ($perm->have_studip_perm('autor', $SessionSeminar) && $folder_tree->isWritable($folder_id, $user->id))
+            $edit= "<a href=\"".URLHelper::getLink("?open=".$folder_id."_u_&rand=".rand()."#anker")."\">" . makeButton("dateihochladen", "img") . "</a>";
+        if ($rechte)
+            $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_l_&rand=".rand()."#anker")."\">" . makeButton("link", "img") . "</a>";
+        if ($document_count && $folder_tree->isReadable($folder_id, $user->id))
+            $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?folderzip=".$folder_id)."\">" . makeButton("ordneralszip", "img") . "</a>";
+        if ($perm->have_studip_perm('autor', $SessionSeminar) && $folder_tree->checkCreateFolder($folder_id, $user->id)) {
+            if ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)) {
+                $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_n_#anker")."\">" . makeButton("neuerordner", "img") . "</a>";
+            if ($rechte && get_config('ZIP_UPLOAD_ENABLE')) {
+                $edit .= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_z_&rand="
+                    . rand()."#anker")."\">" . makeButton("ziphochladen", "img") . "</a>";
                 }
             }
+            if ($rechte ||
+                (!$document_count && $level !=0 &&
+                    ($folder_tree->isWritable($folder_id, $user->id) &&
+                    $folder_tree->isWritable($folder_tree->getValue($folder_id, 'parent_id'), $user->id) &&
+                        !$folder_tree->isExerciseFolder($folder_id, $user->id))
+                )
+                    ) $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_d_")."\">" . makeButton("loeschen", "img") . "</a>";
+            if ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id))
+                $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_c_#anker")."\">" . makeButton("bearbeiten", "img") . "</a>";
+            if (($rechte && $result['range_id'] != $SessSemName[1]) ||
+                ($level !=0 &&
+                    ($folder_tree->isWritable($folder_id, $user->id) &&
+                    $folder_tree->isWritable($folder_tree->getValue($folder_id, 'parent_id'), $user->id) &&
+                    !$folder_tree->isExerciseFolder($folder_id, $user->id))
+                    )
+                ) $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_m_#anker")."\">" . makeButton("verschieben", "img") . "</a>";
+            if ($rechte || ($level !=0 && !$folder_tree->isExerciseFolder($folder_id, $user->id))) {
+                $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_co_#anker")."\">" . makeButton("kopieren", "img") . "</a>";
+            }
         }
-        if (($rechte)) {
+        if ($rechte) {
             $edit .= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_az_#anker")."\"".tooltip("Dateien alphabetisch sortieren").">" . makeButton("sortieren", "img") . "</a>";
         }
     }

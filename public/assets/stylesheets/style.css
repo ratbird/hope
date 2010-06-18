@@ -45,7 +45,7 @@ h1.content, h2.content, h3.content {
 
 h1.topic {
     color: #FFFFFF;        $('h2', response).remove();
-    
+
     font-weight: bold;
     font-size: 1.6em;
     margin-bottom: 0.1em;
@@ -251,6 +251,11 @@ td.infobox {
     text-align: left;
 }
 
+// prevent line box gap, see https://developer.mozilla.org/en/Images%2c_Tables%2c_and_Mysterious_Gaps
+td.infobox img, td.infobox-avatar img {
+    display: block;
+}
+
 td.infoboxrahmen {
     border:1px solid #CCCCCC;
     background-color: #dee2e8;
@@ -281,13 +286,13 @@ table.collapsable tbody.collapsed tr:first-child {
     display: table-row;
 }
 
-table.collapsable tbody.collapsed tr:first-child td, 
+table.collapsable tbody.collapsed tr:first-child td,
 table.collapsable tbody.empty tr:first-child td {
     border-bottom: 0;
 }
 
-table.collapsable tbody tr td:first-child, 
-table.collapsable tbody tr:first-child td:first-child a, 
+table.collapsable tbody tr td:first-child,
+table.collapsable tbody tr:first-child td:first-child a,
 table.collapsable tbody.empty tr:first-child td:first-child {
     padding-left: 20px;
 }
@@ -847,7 +852,7 @@ div.autocomplete {
     border: 1px solid #888;
     margin: 0px;
     padding: 0px;
-    
+
     z-index: 99999;
 }
 

@@ -251,7 +251,7 @@ td.infobox {
     text-align: left;
 }
 
-// prevent line box gap, see https://developer.mozilla.org/en/Images%2c_Tables%2c_and_Mysterious_Gaps
+/* prevent line box gap, see https://developer.mozilla.org/en/Images%2c_Tables%2c_and_Mysterious_Gaps */
 td.infobox img, td.infobox-avatar img {
     display: block;
 }

@@ -150,7 +150,7 @@ if (UserConfig::get($user->id)->CHAT_USE_AJAX_CLIENT ){
 } else {
 
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<!DOCTYPE html>
 <html>
 <head>
     <title>Chat(<?=$auth->auth["uname"]?>) -

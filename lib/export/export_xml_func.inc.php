@@ -51,8 +51,6 @@ global $UNI_NAME_CLEAN, $SEM_ID, $SOFTWARE_VERSION, $ex_type, $ex_sem, $range_na
     $semester = new SemesterData;
     $all_semester = $semester->getAllSemesterData();
     $xml_tag_string = "<" . "?xml version=\"1.0\"?>\n";
-    //encoding=\"ISO-8859-1\" encoding=\"UTF-8\";
-//  $xml_tag_string .= "<!DOCTYPE StudIP SYSTEM \"http://goettingen.studip.de/studip.dtd\">\n";
     $xml_tag_string .= "<studip version=\"" . htmlspecialchars ($SOFTWARE_VERSION) . "\" logo=\"". htmlspecialchars ($GLOBALS['ASSETS_URL']."images/logo2b.gif") . "\"";
     if ($range_id == "root") $xml_tag_string .= " range=\"" . _("Alle Einrichtungen") . "\"";
     elseif ($range_name != "") $xml_tag_string .= " range=\"" . htmlspecialchars ($range_name) . "\"";
@@ -103,11 +101,11 @@ function xml_close_tag($tag_name)
 /**
 * create xml-tag
 *
-* This function creates a xml-tag. 
+* This function creates a xml-tag.
 * The tag-name is defined by the given parameter $tag_name.
 * The given parameter tag_content is put between open tag and close tag.
 *
-* @access   public        
+* @access   public
 * @param        string  tag name
 * @param        string  content for xml-tag
 * @param        array   array of tag attributes
@@ -120,7 +118,7 @@ function xml_tag($tag_name, $tag_content, $tag_attributes = null)
             $xml_tag_string .= " $key=\"".htmlspecialchars($value)."\" ";
         }
     }
-    $xml_tag_string = "<" . $tag_name . $xml_tag_string .  ">" 
+    $xml_tag_string = "<" . $tag_name . $xml_tag_string .  ">"
         . htmlspecialchars ( $tag_content )
         . "</" . $tag_name .  ">\n";
     return $xml_tag_string;

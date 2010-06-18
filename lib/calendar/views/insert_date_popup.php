@@ -92,7 +92,7 @@ if (strlen($element_switch) > 2 && $form_name != '') {
     $zeiten = FALSE;
     $studipform = TRUE;
 }
-else { 
+else {
     if(!$form_name) $form_name = 'Formular';
 switch ($element_switch){  // Auswahl der Zielparameter
     case 1: // raumzeit.php Einzeltermin bearbeiten, neuer Einzeltermin
@@ -244,7 +244,7 @@ if (intval($submit) == 1) {
 }
 if ($preset_error != '') $zeiten = false;
 echo <<<EOT
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html><head>
 <title>$title</title>
 <link rel="stylesheet" type="text/css" href="{$GLOBALS['ASSETS_URL']}stylesheets/style.css">

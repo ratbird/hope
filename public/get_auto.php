@@ -15,7 +15,7 @@ require_once ('lib/visual.inc.php');
 if (!$_POST["pass"])
    {
     ?>
-        <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+        <!DOCTYPE html>
     <html><head><title><?=_("Autologin Datei erzeugen")?></title>
         <script type="text/javascript" src="<?= $GLOBALS['ASSETS_URL'] ?>javascripts/md5.js"></script>
     <script type="text/javascript">
@@ -40,7 +40,7 @@ if (!$_POST["pass"])
 ob_start();
 $link = "http" . ($_SERVER['HTTPS'] ? 's' : '') . "://" . $_SERVER["HTTP_HOST"].$CANONICAL_RELATIVE_PATH_STUDIP;
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
 <head>
     <title><?=_("Autologin")?></title>

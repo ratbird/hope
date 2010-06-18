@@ -4,9 +4,9 @@
 # Lifter003: TODO
 /**
 * extern_functions_templates.inc.php
-* 
-* 
-* 
+*
+*
+*
 *
 * @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -18,7 +18,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // extern_functions_templates.inc.php
-// 
+//
 // Copyright (C) 2003 Peter Thienel <pthienel@web.de>,
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
@@ -43,7 +43,7 @@
 */
 function table_header ($element) {
     $out = "<table" . $element->getAttributes("table") . ">\n";
-    
+
     return $out;
 }
 
@@ -53,7 +53,7 @@ function table_header ($element) {
 */
 function table_headrow ($element, $fields) {
     $font_attributes = $element->getAttributes("font");
-        
+
     $out = "<tr" . $element->getAttributes("tr") . ">\n";
     foreach ($fields as $field) {
         if ($font_attributes)
@@ -61,7 +61,7 @@ function table_headrow ($element, $fields) {
         $out .= "<td" . $element->getAttributes("td") . ">" . $field . "</td>\n";
     }
     $out .= "<tr>\n";
-    
+
     return $out;
 }
 
@@ -71,7 +71,7 @@ function table_headrow ($element, $fields) {
 */
 function table_row ($element, $fields) {
     $font_attributes = $element->getAttributes("font");
-        
+
     $out = "<tr" . $element->getAttributes("tr") . ">\n";
     foreach ($fields as $field) {
         if ($font_attributes)
@@ -79,7 +79,7 @@ function table_row ($element, $fields) {
         $out .= "<td" . $element->getAttributes("td") . ">" . $field . "</td>\n";
     }
     $out .= "</tr>\n";
-    
+
     return $out;
 }
 
@@ -90,15 +90,15 @@ function table_row ($element, $fields) {
 function table_group ($element, $group_name) {
     $colspan = " colspan=\"";
     $colspan .= sizeof($element->config->getValue("main", "order")) . "\"";
-    
+
     if ($font_attributes = $element->getAttributes("font"))
         $group_name = "<font$font_attributes>$group_name</font>";
-    
+
     $out = "<tr" . $element->getAttributes("tr") . ">\n";
     $out .= "<td" . $element->getAttributes("td") . $colspan . ">";
     $out .= $group_name;
     $out .= "</td>\n</tr>\n";
-    
+
     return $out;
 }
 
@@ -108,7 +108,7 @@ function table_group ($element, $group_name) {
 */
 function table_footer () {
     $out = "</table>";
-    
+
     return $out;
 }
 
@@ -117,7 +117,7 @@ function table_footer () {
 *
 */
 function html_header (&$config) {
-    $out = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n";
+    $out = "<!DOCTYPE html>\n";
     $out .= "<html>\n<head>\n";
     $out .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\">\n";
     if ($copyright = $config->getValue('Main', 'copyright'))
@@ -128,7 +128,7 @@ function html_header (&$config) {
     if ($urlcss = $config->getValue('Main', 'urlcss'))
         $out .= "<link rel=\"stylesheet\" type=\"text/css\" href=\"$urlcss\">\n";
     $out .= "</head>\n" . $config->getTag('Body', 'body') . "\n";
-    
+
     return $out;
 }
 

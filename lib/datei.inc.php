@@ -30,30 +30,24 @@ require_once('lib/classes/StudipDocumentTree.class.php');
 require_once('lib/raumzeit/IssueDB.class.php');
 
 
-if ($GLOBALS['ZIP_USE_INTERNAL']) include_once('vendor/pclzip/pclzip.lib.php');
-function readfile_chunked($filename,$retbytes=true) {
-   $chunksize = 1*(1024*1024); // how many bytes per chunk
-   $buffer = '';
-   $cnt =0;
-   // $handle = fopen($filename, 'rb');
+if ($GLOBALS['ZIP_USE_INTERNAL']) {
+    include_once('vendor/pclzip/pclzip.lib.php');
+}
+
+function readfile_chunked($filename) {
+   $chunksize = 1024 * 1024; // how many bytes per chunk
+   $bytes = 0;
    $handle = fopen($filename, 'rb');
    if ($handle === false) {
        return false;
    }
    while (!feof($handle)) {
        $buffer = fread($handle, $chunksize);
+       $bytes += strlen($buffer);
        echo $buffer;
-       ob_flush();
-       flush();
-       if ($retbytes) {
-           $cnt += strlen($buffer);
-       }
    }
-       $status = fclose($handle);
-   if ($retbytes && $status) {
-       return $cnt; // return num. bytes delivered like readfile() does.
-   }
-   return $status;
+   fclose($handle);
+   return $bytes; // return num. bytes delivered like readfile() does.
 }
 
 function parse_header($header){

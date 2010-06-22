@@ -123,7 +123,7 @@ function seminar_preliminary($seminar_id,$user_id=NULL) {
         if ($user_id) {
             if (admission_seminar_user_get_position($user_id, $seminar_id)) {
                 echo "<tr><td class=\"blank\" colspan=2>";
-                parse_msg (sprintf("msg§"._("Sie sind für die Veranstaltung **%s** bereits vorläufig eingetragen!"),htmlReady($db->f("Name"))));
+                parse_msg (sprintf("msg§"._("Sie sind für die Veranstaltung \"%s\" bereits vorläufig eingetragen!"),htmlReady($db->f("Name"))));
                 echo "</td></tr>";
                 page_close();
                 die;
@@ -429,12 +429,13 @@ $db6=new DB_Seminar;
                     $db->query("INSERT INTO seminar_user SET Seminar_id = '$id', user_id = '$user->id', status = 'user', gruppe = '$group', mkdate = '".time()."'");
                     parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>Leser</b> in die Veranstaltung %s eingetragen."), '<b>'.htmlReady($db->f("Name")).'</b>'));
                     echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
+                    if ($send_from_search)
+                            echo "&nbsp; |&nbsp;<a href=\"$send_from_search_page\">"._("Zur&uuml;ck zur letzten Auswahl")."</a>";
+                    echo "<br><br></td></tr>";
                 } else {
-                    parse_msg (sprintf("msg§"._("Die Veranstaltung **%s** ist teilnahmebeschränkt. Sie können sich nicht als Leser eintragen lassen."),htmlReady($db->f("Name"))));
+                    parse_msg (sprintf("error§"._("Die Veranstaltung \"%s\" ist teilnahmebeschränkt. Sie können sich nicht als Leser eintragen lassen."),htmlReady($db->f("Name"))));
                 }
-                if ($send_from_search)
-                        echo "&nbsp; |&nbsp;<a href=\"$send_from_search_page\">"._("Zur&uuml;ck zur letzten Auswahl")."</a>";
-                echo "<br><br></td></tr></table>";
+                echo "</table>";
             }
             include ('lib/include/html_end.inc.php');
             page_close();

@@ -287,29 +287,6 @@ class Seminar_Session extends Session {
             StudipNews::DoGarbageCollect();
         }
         if (($zufall % 1000) < $this->gc_probability){
-            //unsichtbare forenbeiträge die älter als 2 Stunden sind löschen
-            $db = new DB_Seminar();
-            $db->query("SELECT a.topic_id, count( b.topic_id ) AS kinder FROM px_topics a
-                        LEFT JOIN px_topics b ON ( a.topic_id = b.parent_id )
-                        WHERE a.chdate < UNIX_TIMESTAMP(DATE_ADD(NOW(),INTERVAL -2 HOUR))  AND a.chdate = a.mkdate - 1
-                        GROUP BY a.topic_id");
-            while ($db->next_record()){
-                if ($db->f("kinder") != 0){
-                    $result['with_kids'][] = $db->f("topic_id");
-                } else {
-                    $result['no_kids'][] = $db->f("topic_id");
-                }
-            }
-            //Beiträge ohne Antworten löschen
-            if (is_array($result['no_kids'])){
-                $db->query("DELETE FROM px_topics WHERE topic_id IN('" . join("','",$result['no_kids']) . "')");
-            }
-            //Beiträge mit Antworten sichtbar machen
-            if (is_array($result['with_kids'])){
-                $db->query("UPDATE px_topics SET chdate=mkdate WHERE topic_id IN('" . join("','",$result['with_kids']) . "')");
-            }
-            unset($result);
-
             //messages aufräumen
             $db->query("SELECT message_id, count( message_id ) AS gesamt, count(IF (deleted =0, NULL , 1) ) AS geloescht
                         FROM message_user GROUP BY message_id HAVING gesamt = geloescht");

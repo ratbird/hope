@@ -860,16 +860,13 @@ function CreateNewTopic ($name, $description, $parent_id="0", $root_id="0", $ano
 *
 **/
 function UpdateTopic ($name="[no name]", $topic_id, $description, $anonymous)
-{   global $user, $nobodysname, $rechte;
+{
     $db=new DB_Seminar;
     $chdate = time();
     if (lonely($topic_id)==FALSE) {
-        IF ($user->id == "nobody")  // bei nobodys wird mit Namen geschrieben, ist sonst schon da
-            $query = "UPDATE px_topics SET name = '$name', description = '$description', chdate= '$chdate', author='$nobodysname', anonymous=".($anonymous ? 1 : 0)." WHERE topic_id = '$topic_id'";
-        ELSE
-            $query = "UPDATE px_topics SET name = '$name', description = '$description', chdate= '$chdate', anonymous=".($anonymous ? 1 : 0)." WHERE topic_id = '$topic_id'";
+        $query = "UPDATE px_topics SET name = '$name', description = '$description', chdate= '$chdate', anonymous=".($anonymous ? 1 : 0)." WHERE topic_id = '$topic_id'";
         $db->query ($query);
-        IF  ($db->affected_rows() == 0) {
+        if ($db->affected_rows() == 0) {
             throw new Exception(_("Aktualisieren des Postings fehlgeschlagen."));
         }
     } else {

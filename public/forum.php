@@ -465,10 +465,10 @@ if ($answer_id) {
 if ($update) {
     // check whether we should create a new posting or update an existing one
     if (isset($_REQUEST['parent_id'])) {
-        $author = get_fullname();
         $parent_id = $_REQUEST['parent_id'];
         $root_id = $parent_id != "0" ? $_REQUEST['root_id'] : "0";
         $user_id = $auth->auth['uid'];
+        $author = $user_id == 'nobody' ? $_REQUEST['nobodysname'] : get_fullname();
         $update = CreateTopic($titel, $author, $description, $parent_id, $root_id, 0, $user_id, true, $_REQUEST['anonymous']);
     } else {
         if (!ForumFreshPosting($update)) // editiert von nur dranhängen wenn nicht frisch erstellt
@@ -551,9 +551,9 @@ if ($forumsend!="anpassen") {
 if (($forum["view"] != "search" || $forum["search"] != "") && $user->id != "nobody" && $cmd != "move")   // wenn Suchformular aufgerufen wird keine toolbar
     echo forum_print_toolbar($edit_id);
 elseif ($user->id == "nobody" || $cmd=="move") {
-    echo "\n<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td class=\"blank\"><br></td></tr>";
+    echo "\n<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td class=\"blank\"><br></td></tr></table>";
     if ($edit_id)
-        echo "<form name=forumwrite onsubmit=\"return pruefe_name()\" method=post action=\"".URLHelper::getLink("#anker")."\">";
+        echo "<form name=\"forumwrite\" onsubmit=\"return STUDIP.Forum.pruefe_name()\" method=\"post\" action=\"".URLHelper::getLink("#anker")."\">";
 }
 //////////////////////////////////////////////////////////////////////////////////
 // Verzweigung zu den Anzeigemodi

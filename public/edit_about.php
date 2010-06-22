@@ -453,11 +453,6 @@ switch($view) {
         $CURRENT_PAGE=_("Einstellungen der RSS-Anzeige anpassen");
         Navigation::activateItem('/account/rss');
         break;
-    case "notification":
-        $HELP_KEYWORD="Basis.MyStudIP";
-        $CURRENT_PAGE=_("Benachrichtigung über neue Inhalte anpassen");
-        Navigation::activateItem('/account/notification');
-        break;
     case "allgemein":
         $CURRENT_PAGE=_("Allgemeine Einstellungen anpassen");
         Navigation::activateItem('/account/general');
@@ -625,8 +620,7 @@ if ($view != 'Forum'
         && $view != 'calendar'
         && $view != 'Stundenplan'
         && $view != 'Messaging'
-        && $view != 'allgemein'
-        && $view != 'notification') {
+        && $view != 'allgemein') {
     echo '<table class="blank" cellspacing=0 cellpadding=0 border=0 width="100%">'."\n";
 
 //  echo '<tr><td class="'.(($username != $auth->auth["uname"])? 'topicwrite':'topic').'" colspan=2><img src="'. $GLOBALS['ASSETS_URL'] . 'images/einst.gif" border="0" align="texttop"><b>&nbsp;';
@@ -1331,13 +1325,6 @@ if ($view == "Messaging") {
     require_once('lib/include/messagingSettings.inc.php');
     check_messaging_default();
     change_messaging_view();
-}
-
-if ($view == 'notification') {
-    echo '<table class="blank" cellspacing="0" cellpadding="2" border="0" width="100%">';
-    echo "<tr><td class=\"blank\" width=\"100%\">\n";
-    require_once('sem_notification.php');
-    echo "</td></tr></table>\n";
 }
 
 if ($view == 'Login') {

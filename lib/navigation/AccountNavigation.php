@@ -56,7 +56,7 @@ class AccountNavigation extends Navigation
 
         if (!$perm->have_perm('admin')) {
             if (get_config('MAIL_NOTIFICATION_ENABLE')) {
-                $this->addSubNavigation('notification', new Navigation(_('Benachrichtigung'), 'edit_about.php', array('view' => 'notification')));
+                $this->addSubNavigation('notification', new Navigation(_('Benachrichtigung'), 'sem_notification.php'));
             }
 
             $this->addSubNavigation('login', new Navigation(_('Login'), 'edit_about.php', array('view' => 'Login')));

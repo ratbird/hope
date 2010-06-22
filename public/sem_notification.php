@@ -40,41 +40,29 @@
 
 require '../lib/bootstrap.php';
 
-if (!$MAIL_NOTIFICATION_ENABLE) {
-    if ($_REQUEST['view'] != 'notification') {
-        page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-        $auth->login_if($auth->auth["uid"] == "nobody");
-        include('lib/include/html_head.inc.php'); // Output of html head
-        include('lib/include/header.php');   // Output of Stud.IP head
-    } else {
-        echo '<br><br>';
-    }
-    require_once ('lib/msg.inc.php');
-    $message = _("Die Benachrichtigungsfunktion ist nicht eingebunden. Die Benachrichtigungsfunktion wurde in den Systemeinstellungen nicht freigeschaltet. Wenden Sie sich bitte an die zust&auml;ndigen Administrierenden.");
-    parse_window ("error§$message", "§", _("Benachrichtigungsfunktion ist nicht eingebunden!"));
-    include ('lib/include/html_end.inc.php');
-    exit;
-}
+page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
+$auth->login_if($auth->auth["uid"] == "nobody");
 
-if ($_REQUEST['view'] != 'notification') {
-    page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-    $auth->login_if($auth->auth["uid"] == "nobody");
-    include('lib/seminar_open.php'); // initialise Stud.IP-Session
-    // Start of Output
-    include('lib/include/html_head.inc.php'); // Output of html head
-    include('lib/include/header.php');   // Output of Stud.IP head
-    $link_param = '';
-} else {
-    $link_param = '&view=notification';
-}
-
-// -- here you have to put initialisations for the current page
 require_once 'lib/functions.php';
 require_once('lib/visual.inc.php');
 require_once('lib/classes/cssClassSwitcher.inc.php');
 require_once('lib/meine_seminare_func.inc.php');
 require_once('lib/classes/ModulesNotification.class.php');
+require_once('lib/msg.inc.php');
 
+if (!$MAIL_NOTIFICATION_ENABLE) {
+    $message = _("Die Benachrichtigungsfunktion wurde in den Systemeinstellungen nicht freigeschaltet.");
+    throw new Exception($message);
+}
+
+include ('lib/seminar_open.php'); // initialise Stud.IP-Session
+
+$HELP_KEYWORD="Basis.MyStudIPBenachrichtigung";
+$CURRENT_PAGE=_("Benachrichtigung über neue Inhalte anpassen");
+Navigation::activateItem('/account/notification');
+
+include('lib/include/html_head.inc.php'); // Output of html head
+include('lib/include/header.php');   // Output of Stud.IP head
 
 function print_module_icons ($m_enabled) {
     foreach ($m_enabled as $m_name => $m_data) {
@@ -171,16 +159,10 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     $css = new cssClassSwitcher();
     $css->enableHover();
     echo $css->GetHoverJSFunction();
+    echo '<table class="blank" cellspacing="0" cellpadding="2" border="0" width="100%">';
+    echo "<tr><td class=\"blank\" width=\"100%\">\n";
     echo "\n<table width=\"75%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n";
-    if ($_REQUEST['view'] != 'notification') {
-        echo '<tr><td class="topic" width=\"100%\">&nbsp;&nbsp;<img src="'.$GLOBALS['ASSETS_URL'].'images/gruppe.gif" alt="Gruppe &auml;ndern" border="0">';
-        echo '&nbsp;&nbsp;<b>' . _("Benachrichtigung") . "</td></tr>\n";
-        echo "<tr><td class=\"blank\" width=\"100%\" align=\"center\">\n";
-        echo "<table width=\"90%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-        echo "<form method=\"post\" name=\"notification\" action=\"meine_seminare.php\">\n";
-    } else {
-        echo "<form method=\"post\" action=\"edit_about.php?view=notification\">\n";
-    }
+    echo "<form method=\"post\" action=\"".URLHelper::getLink()."\">\n";
     echo '<tr><td class="blank" colspan="' . (sizeof($enabled_modules) + 3);
     echo "\">&nbsp;</td></tr>\n";
     echo '<tr><td class="blank" align="center" colspan="' . (sizeof($enabled_modules) + 3) . '">';
@@ -236,12 +218,12 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
             $out .= (sizeof($enabled_modules) + 3) . '">';
             if (isset($_my_sem_open[$group_id])){
                 $out .= '<a class="tree" style="font-weight:bold" name="' . $group_id;
-                $out .= '" href="' . $PHP_SELF . '?close_my_sem=' . $group_id . $link_param;
+                $out .= '" href="' . $PHP_SELF . '?close_my_sem=' . $group_id;
                 $out .= '#' .$group_id . '" ' . tooltip(_("Gruppierung schließen"), true) . '>';
                 $out .= '<img src="'.$GLOBALS['ASSETS_URL'].'images/forumgraurunt.gif"   hspace="3" border="0">';
             } else {
                 $out .= '<a class="tree"  name="' . $group_id . '" href="' . $PHP_SELF;
-                $out .= '?open_my_sem=' . $group_id . $link_param . '#' .$group_id;
+                $out .= '?open_my_sem=' . $group_id . '#' .$group_id;
                 $out .= '" ' . tooltip(_("Gruppierung öffnen"), true) . '>';
                 $out .= '<img src="'.$GLOBALS['ASSETS_URL'].'images/forumgrau.gif"  hspace="3" border="0">';
             }
@@ -401,24 +383,13 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
     echo '<tr><td class="blank" align="center" colspan="';
     echo (sizeof($enabled_modules) + 3) . '"><br>';
-    echo "<input type=\"image\" " . makeButton("uebernehmen", "src");
-    if ($_REQUEST['view'] != 'notification') {
-        echo " border=\"0\" value=\"absenden\">&nbsp; <a href=\"$PHP_SELF\">";
-    } else {
-        echo " border=\"0\" value=\"absenden\">&nbsp; <a href=\"$PHP_SELF?view=notification\">";
-    }
-    echo '<img ' . makeButton('zuruecksetzen', 'src') . ' border="0"';
-    echo tooltip(_("zurücksetzen"));
-    echo '><input type="hidden" name="cmd" value="set_sem_notification"><br>&nbsp; </td></tr></form>';
+    echo makeButton('uebernehmen', 'input') . ' ';
+    echo '<a href="'.URLHelper::getLink().'">'.makeButton('zuruecksetzen', 'img').'</a>';
+    echo '<input type="hidden" name="cmd" value="set_sem_notification"><br>&nbsp; </td></tr></form>';
     echo "</table>\n";
 }
 
-if ($_REQUEST['view'] != 'notification') {
-    echo "</td></tr></table>\n";
-
-    include ('lib/include/html_end.inc.php');
-  // Save data back to database.
-  page_close();
-}
-
-?>
+echo "</td></tr></table>\n";
+include ('lib/include/html_end.inc.php');
+// Save data back to database.
+page_close();

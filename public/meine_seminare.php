@@ -220,14 +220,6 @@ if ($gruppesent == '1'){
     }
 }
 
-// Update der Benachrichtigungsfunktion
-if ($cmd == 'set_sem_notification') {
-    if (is_array($_REQUEST['m_checked'])) {
-        $m_notification = new ModulesNotification();
-        $m_notification->setModuleNotification($_REQUEST['m_checked'], 'sem');
-    }
-}
-
 //Anzeigemodul fuer eigene Seminare (nur wenn man angemeldet und nicht root oder admin ist!)
 if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("admin")) {
 

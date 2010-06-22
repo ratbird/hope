@@ -423,11 +423,11 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                 if ($inc_possible) {
                     printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink($PHP_SELF."?dec=TRUE"), makeButton("vorherige", "img"));
                 }
+                printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink($PHP_SELF."?archive_kill=TRUE"), makeButton("archivieren", "img"));
                 if (!$links_admin_data["sem_id"]) {
                     echo '&nbsp;<a href="' .
                      URLHelper::getLink((($SessSemName[1]) ? 'admin_seminare1.php?list=TRUE' : $_SERVER['PHP_SELF'].'?list=TRUE&new_session=TRUE')). '">' . makeButton('abbrechen', 'img') . '</a>';
                 }
-                printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink($PHP_SELF."?archive_kill=TRUE"), makeButton("archivieren", "img"));
                 // can we inc?
                 if ($archiv_assi_data["pos"] < sizeof($archiv_assi_data["sems"])-1) {
                     $i = 1;

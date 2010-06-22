@@ -11,7 +11,7 @@
     <? if ($picture) : ?>
 
       <tr>
-        <td class="infobox" width="100%" align="right">
+        <td class="infobox">
           <?= Assets::img($picture) ?>
         </td>
       </tr>

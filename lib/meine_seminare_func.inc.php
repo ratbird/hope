@@ -487,4 +487,21 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
     $db2->query("DROP TABLE IF EXISTS myobj_" . $user_id);
     return;
 }
+
+/**
+ * This function returns all valid fields that may be used for course 
+ * grouping in "My Courses".
+ * 
+ * @return array All fields that may be specified for course grouping
+ */
+function getValidGroupingFields() {
+	return array(
+            'not_grouped',
+            'sem_number',
+            'sem_tree_id',
+            'sem_status',
+            'gruppe',
+            'dozent_id'
+        );
+}
 ?>

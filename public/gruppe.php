@@ -47,6 +47,8 @@ if (isset($_REQUEST['open_my_sem'])) $_my_sem_open[$_REQUEST['open_my_sem']] = t
 
 if (isset($_REQUEST['close_my_sem'])) unset($_my_sem_open[$_REQUEST['close_my_sem']]);
 
+$forced_grouping = get_config('MY_COURSES_FORCE_GROUPING');
+$no_grouping_allowed = ($forced_grouping == 'not_grouped' || !in_array($forced_grouping, getValidGroupingFields()));
 
 //es wird eine Tabelle aufgebaut, in der die Gruppenzugehoerigkeit festgelegt wird.
 
@@ -70,7 +72,9 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     <?=_("Kategorie zur Gliederung:")?>
     &nbsp;
     <select name="select_group_field">
+        <?php if ($no_grouping_allowed) { ?>
         <option value="not_grouped" <?=($_my_sem_group_field == 'not_grouped' ? 'selected' : '')?>><?=_("keine Gliederung")?></option>
+        <?php } ?>
         <option value="sem_number" <?=($_my_sem_group_field == 'sem_number' ? 'selected' : '')?>><?=_("Semester")?></option>
         <option value="sem_tree_id" <?=($_my_sem_group_field == 'sem_tree_id' ? 'selected' : '')?>><?=_("Studienbereich")?></option>
         <option value="sem_status" <?=($_my_sem_group_field == 'sem_status' ? 'selected' : '')?>><?=_("Typ")?></option>

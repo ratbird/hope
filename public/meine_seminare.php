@@ -228,10 +228,22 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     if (!$user->is_registered('_my_sem_open')){
         $user->register('_my_sem_open');
     }
+    /* 
+     * Get and check the global configuration for forced grouping.
+     * If the global configuration specifies an unknown field, don't 
+     * force grouping.
+     */
+    $forced_grouping = in_array(get_config('MY_COURSES_FORCE_GROUPING'), getValidGroupingFields()) ? 
+        get_config('MY_COURSES_FORCE_GROUPING') : 
+        'not_grouped';
     if (!$user->is_registered('_my_sem_group_field')){
         $user->register('_my_sem_group_field');
-        $_my_sem_group_field = "not_grouped";
-        $_my_sem_open['not_grouped'] = true;
+        $_my_sem_group_field = $forced_grouping;
+        $_my_sem_open[$forced_grouping] = true;
+    }
+    if ($_my_sem_group_field == 'not_grouped' && $forced_grouping != 'not_grouped') {
+        $_my_sem_group_field = $forced_grouping;
+        $_my_sem_open[$forced_grouping] = true;
     }
     $group_field = $_my_sem_group_field;
 

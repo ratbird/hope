@@ -580,7 +580,7 @@ class smtp_message_class extends email_message_class
 	Function SendMessageHeaders($headers)
 	{
 		$header_data="";
-		$date=date("D, d M Y H:i:s T");
+		$date=date("r");
 		if($this->smtp_direct_delivery
 		&& strlen($this->localhost))
 		{

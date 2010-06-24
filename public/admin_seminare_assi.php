@@ -2523,31 +2523,31 @@ if ($level == 2)
                             >
                             <font color="red" size=+2>*</font>
                         </td>
-				<td <? echo $cssSw->getFullClass() ?> width="50%" colspan="2">
-				<?php
-				print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type));
-				print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\">";
+                <td <? echo $cssSw->getFullClass() ?> width="50%" colspan="2">
+                <?php
+                print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type));
+                print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\">";
 
-				$clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
+                $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
                 foreach($sem_create_data["sem_bet_inst"] as $val) {
                     $clause.=",'$val'";
                 }
                 $clause.=") ";
-				$Dozentensuche = new SQLSearch("SELECT DISTINCT username, ". 
-				        $_fullname_sql['full_rev'] ." AS fullname " .
-				        "FROM user_inst " .
-				            "LEFT JOIN auth_user_md5 USING (user_id) " .
-				            "LEFT JOIN user_info USING(user_id) " .
-				        "WHERE inst_perms = 'dozent' " .
-				            $clause .
-				            "AND (username LIKE :input OR Vorname LIKE :input OR Nachname LIKE :input) " .
-				        "ORDER BY Nachname");
-				print QuickSearch::get("add_doz", $Dozentensuche)
-				            ->render();
-				?> 
-				<br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
-				</td>
-			</tr>
+                $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ". 
+                        $_fullname_sql['full_rev'] ." AS fullname " .
+                        "FROM user_inst " .
+                            "LEFT JOIN auth_user_md5 USING (user_id) " .
+                            "LEFT JOIN user_info USING(user_id) " .
+                        "WHERE inst_perms = 'dozent' " .
+                            $clause .
+                            "AND (username LIKE :input OR Vorname LIKE :input OR Nachname LIKE :input) " .
+                        "ORDER BY Nachname");
+                print QuickSearch::get("add_doz", $Dozentensuche)
+                            ->render();
+                ?> 
+                <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
+                </td>
+            </tr>
                     <tr <? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
                         <?

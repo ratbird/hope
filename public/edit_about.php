@@ -561,7 +561,7 @@ function checkdata(){
 }
 
 function update_pw_fields() {
-	document.getElementById('new_passwd_1').disabled = !document.getElementById('update_pw').checked;
+    document.getElementById('new_passwd_1').disabled = !document.getElementById('update_pw').checked;
     document.getElementById('new_passwd_2').disabled = !document.getElementById('update_pw').checked;
 
     if(document.getElementById('update_pw').checked) {

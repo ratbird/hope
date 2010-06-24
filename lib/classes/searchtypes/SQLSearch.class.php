@@ -29,27 +29,27 @@ require_once "lib/functions.php";
  */
 
 class SQLSearch extends SearchType {
-	
-	private $SQL;
-	private $avatarLike;
-	
-	/**
-	 * 
-	 * @param string $query: SQL with at least ":input" as parameter 
-	 * @param array $presets: variables from the same form that should be used 
-	 * in this search. array("input_name" => "placeholder_in_sql_query")
+    
+    private $SQL;
+    private $avatarLike;
+    
+    /**
+     * 
+     * @param string $query: SQL with at least ":input" as parameter 
+     * @param array $presets: variables from the same form that should be used 
+     * in this search. array("input_name" => "placeholder_in_sql_query")
      * @return void
-	 */
-	public function __construct($query, $title = "", $avatarLike = "", $presets = array()) {
-		$this->SQL = $query;
-		$this->presets = $presets;
-		$this->title = $title;
-		$this->avatarLike = $avatarLike;
-	}
-	
-	/**
-	 * returns an object of type SQLSearch with parameters to constructor
-	 */
+     */
+    public function __construct($query, $title = "", $avatarLike = "", $presets = array()) {
+        $this->SQL = $query;
+        $this->presets = $presets;
+        $this->title = $title;
+        $this->avatarLike = $avatarLike;
+    }
+    
+    /**
+     * returns an object of type SQLSearch with parameters to constructor
+     */
     static public function get($query, $title = "", $avatarLike = "", $presets = array()) {
         return new SQLSearch($query, $title, $avatarLike, $presets);
     }
@@ -58,7 +58,7 @@ class SQLSearch extends SearchType {
      * @return string: title/description
      */
     public function getTitle() {
-    	return $this->title;
+        return $this->title;
     }
     /**
      * returns an adress of the avatar of the searched item (if avatar enabled)
@@ -67,8 +67,8 @@ class SQLSearch extends SearchType {
      * @return string: adress of an image
      */
     public function getAvatar($id) {
-    	switch ($this->avatarLike) {
-    	    case "username":
+        switch ($this->avatarLike) {
+            case "username":
                 return Avatar::getAvatar(NULL, get_userid($id))->getURL(Avatar::SMALL);
             case "user_id":
                 return Avatar::getAvatar(NULL, $id)->getURL(Avatar::SMALL);
@@ -77,7 +77,7 @@ class SQLSearch extends SearchType {
                 return CourseAvatar::getAvatar(NULL, $id)->getURL(Avatar::SMALL);
             case "Institut_id":
                 return InstituteAvatar::getAvatar(NULL, $id)->getURL(Avatar::SMALL);
-    	}
+        }
     }
     /**
      * returns an html tag of the image of the searched item (if avatar enabled)
@@ -86,11 +86,11 @@ class SQLSearch extends SearchType {
      * @return string: like "<img src="...avatar.jpg" ... >"
      */
     public function getAvatarImageTag($id, $size = Avatar::SMALL) {
-    	switch ($this->avatarLike) {
+        switch ($this->avatarLike) {
             case "username":
-            	return Avatar::getAvatar(get_userid($id))->getImageTag($size);
+                return Avatar::getAvatar(get_userid($id))->getImageTag($size);
             case "user_id":
-            	return Avatar::getAvatar($id)->getImageTag($size);
+                return Avatar::getAvatar($id)->getImageTag($size);
             case "Seminar_id":
             case "Arbeitsgruppe_id":
                 return CourseAvatar::getAvatar(NULL, $id)->getImageTag($size);
@@ -113,9 +113,9 @@ class SQLSearch extends SearchType {
         $data = array();
         if (is_array($contextual_data)) {
             foreach ($contextual_data as $name => $value) {
-        	   if (($name !== "input") && (strpos($this->SQL, ":".$name) !== FALSE)) {
-        	      $data[":".$name] = $value;
-        	   }
+               if (($name !== "input") && (strpos($this->SQL, ":".$name) !== FALSE)) {
+                  $data[":".$name] = $value;
+               }
             }
         }
         $data[":input"] = "%".$input."%";
@@ -129,6 +129,6 @@ class SQLSearch extends SearchType {
      * @return: path to this class
      */
     public function includePath() {
-    	return __file__;
+        return __file__;
     }
 }

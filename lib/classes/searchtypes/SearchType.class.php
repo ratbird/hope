@@ -35,7 +35,7 @@ class SearchType {
      * @return string
      */
     public function getTitle() {
-    	return "";
+        return "";
     }
     
     /**
@@ -45,7 +45,7 @@ class SearchType {
      * @return: string URL to a picture
      */
     public function getAvatar($id) {
-    	return "";
+        return "";
     }
     
     /**
@@ -55,7 +55,7 @@ class SearchType {
      * @return: string HTML of a picture
      */
     public function getAvatarImageTag($id) {
-    	return "";
+        return "";
     }
     
     /**
@@ -73,7 +73,7 @@ class SearchType {
      * @return array
      */
     public function getResults($keyword, $contextual_data = array()) {
-    	return array(array("", _("Die Suchklasse, die Sie verwenden, enthält keine Methode getResults.")));
+        return array(array("", _("Die Suchklasse, die Sie verwenden, enthält keine Methode getResults.")));
     }
     
     /**
@@ -83,7 +83,7 @@ class SearchType {
      * @return string   path to this file
      */
     public function includePath() {
-    	return __file__;
+        return __file__;
     }
 }
 

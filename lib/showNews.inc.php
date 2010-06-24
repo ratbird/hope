@@ -311,18 +311,18 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link) {
 }
 
 function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link) {
-	global $auth, $_fullname_sql;
+    global $auth, $_fullname_sql;
 
-	$db2 = new DB_Seminar();
+    $db2 = new DB_Seminar();
 
-	$id = $news_item['news_id'];
+    $id = $news_item['news_id'];
 
-	$tempnew = (($news_item['chdate'] >= object_get_visit($id,'news',false,false))
-	&& ($news_item['user_id'] != $auth->auth["uid"]));
+    $tempnew = (($news_item['chdate'] >= object_get_visit($id,'news',false,false))
+    && ($news_item['user_id'] != $auth->auth["uid"]));
 
-	if ($tempnew && $_REQUEST["new_news"])
-	$news_item["open"] = $tempnew;
-	$db2->query("SELECT username, " . $_fullname_sql['full'] ." AS fullname FROM auth_user_md5 a LEFT JOIN user_info USING (user_id) WHERE a.user_id='".$news_item['user_id']."'");
+    if ($tempnew && $_REQUEST["new_news"])
+    $news_item["open"] = $tempnew;
+    $db2->query("SELECT username, " . $_fullname_sql['full'] ." AS fullname FROM auth_user_md5 a LEFT JOIN user_info USING (user_id) WHERE a.user_id='".$news_item['user_id']."'");
     $db2->next_record();
 
     $link .= "&username=".$db2->f("username") . "#anker";

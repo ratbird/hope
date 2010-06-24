@@ -86,11 +86,11 @@ class QuicksearchController extends AuthenticatedController {
      * @return array: array of searchresults formatted
      */
     private function extraResultFormat($results) {
-    	$input = utf8_decode(Request::get('request'));
-    	foreach ($results as $key => $result) {
-    		$results[$key][1] = preg_replace("/(".$input.")/i", "<b>$1</b>", $result[1]);
-    	}
-    	return $results;
+        $input = utf8_decode(Request::get('request'));
+        foreach ($results as $key => $result) {
+            $results[$key][1] = preg_replace("/(".$input.")/i", "<b>$1</b>", $result[1]);
+        }
+        return $results;
     }
 
     /**
@@ -117,29 +117,29 @@ class QuicksearchController extends AuthenticatedController {
      * @return void
      */
     private function cleanUp() {
-    	$count = 0;
-    	$lifetime = $GLOBALS['AUTH_LIFETIME'] ? $GLOBALS['AUTH_LIFETIME'] : 30;
-    	foreach($_SESSION['QuickSearches'] as $query_id => $query) {
-    		if (time() - $query['time'] > $lifetime * 60) {
-    			unset($_SESSION['QuickSearches'][$query_id]);
-    			$count++;
-    		}
-    	}
-    	return $count;
+        $count = 0;
+        $lifetime = $GLOBALS['AUTH_LIFETIME'] ? $GLOBALS['AUTH_LIFETIME'] : 30;
+        foreach($_SESSION['QuickSearches'] as $query_id => $query) {
+            if (time() - $query['time'] > $lifetime * 60) {
+                unset($_SESSION['QuickSearches'][$query_id]);
+                $count++;
+            }
+        }
+        return $count;
     }
     
     /**
      * method to recursively convert an array from uft8 to iso-1 
      */
     private function utf8_array_decode($input) {
-    	$return = array();
-    	foreach ($input as $key => $val) {
-    		if( is_array($val) ) {
-    			$return[$key] = $this->utf8_array_decode($val);
-    		} else {
-    			$return[$key] = utf8_decode($val);
-    		}
-    	}
-    	return $return;
+        $return = array();
+        foreach ($input as $key => $val) {
+            if( is_array($val) ) {
+                $return[$key] = $this->utf8_array_decode($val);
+            } else {
+                $return[$key] = utf8_decode($val);
+            }
+        }
+        return $return;
     }
 }

@@ -28,23 +28,23 @@ require_once "lib/functions.php";
 
 class StandardSearch extends SQLSearch {
 
-	private $search;
-	private $avatarLike;
+    private $search;
+    private $avatarLike;
 
-	/**
-	 *
-	 * @param string $query: SQL with at least ":input" as parameter
-	 * @param array $presets: variables from the same form that should be used
-	 * in this search. array("input_name" => "placeholder_in_sql_query")
+    /**
+     *
+     * @param string $query: SQL with at least ":input" as parameter
+     * @param array $presets: variables from the same form that should be used
+     * in this search. array("input_name" => "placeholder_in_sql_query")
      * @return void
-	 */
-	public function __construct($search) {
-		$this->avatarLike = $this->search = $search;
-	}
+     */
+    public function __construct($search) {
+        $this->avatarLike = $this->search = $search;
+    }
 
-	/**
-	 * returns an object of type SQLSearch with parameters to constructor
-	 */
+    /**
+     * returns an object of type SQLSearch with parameters to constructor
+     */
     static public function get($search) {
         return new SQLSearch($search);
     }
@@ -53,17 +53,17 @@ class StandardSearch extends SQLSearch {
      * @return string: title/description
      */
     public function getTitle() {
-    	switch ($this->search) {
-    		case "username":
-    		case "user_id":
-    			return _("Nutzer suchen");
-    		case "Seminar_id":
-    			return _("Veranstaltung suchen");
-    		case "Arbeitsgruppe_id":
-    			return _("Arbeitsgruppe suchen");
-    		case "Institut_id":
-    			return _("Einrichtung suchen");
-    	}
+        switch ($this->search) {
+            case "username":
+            case "user_id":
+                return _("Nutzer suchen");
+            case "Seminar_id":
+                return _("Veranstaltung suchen");
+            case "Arbeitsgruppe_id":
+                return _("Arbeitsgruppe suchen");
+            case "Institut_id":
+                return _("Einrichtung suchen");
+        }
     }
     /**
      * returns the results of a search
@@ -80,9 +80,9 @@ class StandardSearch extends SQLSearch {
         $data = array();
         if (is_array($contextual_data)) {
             foreach ($contextual_data as $name => $value) {
-        	   if (($name !== "input") && (strpos($this->SQL, ":".$name) !== FALSE)) {
-        	      $data[":".$name] = $value;
-        	   }
+               if (($name !== "input") && (strpos($this->SQL, ":".$name) !== FALSE)) {
+                  $data[":".$name] = $value;
+               }
             }
         }
         $data[":input"] = "%".$input."%";
@@ -156,6 +156,6 @@ class StandardSearch extends SQLSearch {
      * @return: path to this class
      */
     public function includePath() {
-    	return __file__;
+        return __file__;
     }
 }

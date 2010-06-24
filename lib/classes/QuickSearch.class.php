@@ -107,7 +107,7 @@ class QuickSearch {
      * @return object of type QuickSearch
      */
     public static function get($name, $search = NULL) {
-    	return new QuickSearch($name, $search);
+        return new QuickSearch($name, $search);
     }
     
     
@@ -221,8 +221,8 @@ class QuickSearch {
      * @return self
      */
     public function fireJSFunctionOnSelect($function_name) {
-    	$this->JSfunction = $function_name;
-    	return $this;
+        $this->JSfunction = $function_name;
+        return $this;
     }
     
     /**
@@ -231,10 +231,10 @@ class QuickSearch {
      * @return self
      */
     public function withAttributes($attr_array) {
-    	if (is_array($attr_array)) {
-    		$this->withAttributes = $attr_array;
-    	}
-    	return $this;
+        if (is_array($attr_array)) {
+            $this->withAttributes = $attr_array;
+        }
+        return $this;
     }
     
     /**
@@ -243,57 +243,57 @@ class QuickSearch {
      * but that does not need to concern you.
      */
     public function render() {
-    	if (trim(Request::get($this->name.'_parameter')) 
-    	       && (Request::get($this->name.'_parameter') != $this->beschriftung()) 
-    	       && !Request::get($this->name)
-    	       && $this->selectBox) {
+        if (trim(Request::get($this->name.'_parameter')) 
+               && (Request::get($this->name.'_parameter') != $this->beschriftung()) 
+               && !Request::get($this->name)
+               && $this->selectBox) {
             //No Javascript activated and having searched:
             $searchresults = $this->searchresults(Request::get($this->name.'_parameter'));
 
-    		$template = $GLOBALS['template_factory']->open('quicksearch/selectbox.php');
-    		$template->set_attribute('withButton', $this->withButton);
+            $template = $GLOBALS['template_factory']->open('quicksearch/selectbox.php');
+            $template->set_attribute('withButton', $this->withButton);
             $template->set_attribute('box_align', $this->box_align);
             $template->set_attribute('box_width', $this->box_width);
             $template->set_attribute('withAttributes', $this->withAttributes);
             $template->set_attribute('searchresults', $searchresults);
-    		$template->set_attribute('name', $this->name);
-    		$template->set_attribute('inputClass', $this->inputClass);
-    		return $template->render();
+            $template->set_attribute('name', $this->name);
+            $template->set_attribute('inputClass', $this->inputClass);
+            return $template->render();
 
-    	} else {
-    		//Abfrage in der Session speichern:
-    		$query_id = md5(serialize($this->search));
-    		if ($this->specialQuery) {
-    			$_SESSION['QuickSearches'][$query_id]['query'] = $this->specialQuery;
-    		} elseif ($this->search instanceof SearchType) {
-    			$_SESSION['QuickSearches'][$query_id]['object'] = serialize($this->search);
-    			if ($this->search instanceof SearchType) {
-    				$_SESSION['QuickSearches'][$query_id]['includePath'] = $this->search->includePath();
-    			}
-    			$_SESSION['QuickSearches'][$query_id]['time'] = time();
-    		} else {
-    			$_SESSION['QuickSearches'][$query_id]['query'] = $this->search;
-    		}
-    		$_SESSION['QuickSearches'][$query_id]['time'] = time();
-    		//var_dump($_SESSION['QuickSearches'][$query_id]);
-    		//Ausgabe:
-    		$template = $GLOBALS['template_factory']->open('quicksearch/inputfield.php');
-    		$template->set_attribute('withButton', $this->withButton);
+        } else {
+            //Abfrage in der Session speichern:
+            $query_id = md5(serialize($this->search));
+            if ($this->specialQuery) {
+                $_SESSION['QuickSearches'][$query_id]['query'] = $this->specialQuery;
+            } elseif ($this->search instanceof SearchType) {
+                $_SESSION['QuickSearches'][$query_id]['object'] = serialize($this->search);
+                if ($this->search instanceof SearchType) {
+                    $_SESSION['QuickSearches'][$query_id]['includePath'] = $this->search->includePath();
+                }
+                $_SESSION['QuickSearches'][$query_id]['time'] = time();
+            } else {
+                $_SESSION['QuickSearches'][$query_id]['query'] = $this->search;
+            }
+            $_SESSION['QuickSearches'][$query_id]['time'] = time();
+            //var_dump($_SESSION['QuickSearches'][$query_id]);
+            //Ausgabe:
+            $template = $GLOBALS['template_factory']->open('quicksearch/inputfield.php');
+            $template->set_attribute('withButton', $this->withButton);
             $template->set_attribute('box_align', $this->box_align);
             $template->set_attribute('box_width', $this->box_width);
             $template->set_attribute('inputStyle', $this->inputStyle ? $this->inputStyle : "");
-    		$template->set_attribute('beschriftung', $this->beschriftung());
-    		$template->set_attribute('name', $this->name);
-    		$template->set_attribute('defaultID', $this->defaultID);
-    		$template->set_attribute('defaultName', $this->defaultName);
-    		$template->set_attribute('inputClass', $this->inputClass);
+            $template->set_attribute('beschriftung', $this->beschriftung());
+            $template->set_attribute('name', $this->name);
+            $template->set_attribute('defaultID', $this->defaultID);
+            $template->set_attribute('defaultName', $this->defaultName);
+            $template->set_attribute('inputClass', $this->inputClass);
             $template->set_attribute('withAttributes', $this->withAttributes ? $this->withAttributes : array());
             $template->set_attribute('descriptionColor', $this->descriptionColor ? $this->descriptionColor : "#888888");
             $template->set_attribute('JSfunction', $this->JSfunction);
-    		$template->set_attribute('count_QS', $this->count_QS);
-    		$template->set_attribute('query_id', $query_id);
-    		return $template->render();
-    	}
+            $template->set_attribute('count_QS', $this->count_QS);
+            $template->set_attribute('query_id', $query_id);
+            return $template->render();
+        }
     }
     
     //////////////////////////////////////////////////////////////////////////////
@@ -327,7 +327,7 @@ class QuickSearch {
      */
     private function beschriftung() {
         if ($this->search instanceof SearchType) {
-        	return $this->search->getTitle();
+            return $this->search->getTitle();
         } else {
             return "";
         }

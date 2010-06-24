@@ -6,7 +6,7 @@
     <? endif ?>
 <? endif ?>
 <? if ($inputStyle) {
-	       $input_style = " style=\"".$inputStyle."\"";
+           $input_style = " style=\"".$inputStyle."\"";
         }
         if ($beschriftung) {
             $clear_input = " onFocus=\"if (this.value == '$beschriftung'){this.value = ''; $(this).css('color', '');}\" " .

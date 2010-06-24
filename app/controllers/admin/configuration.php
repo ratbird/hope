@@ -98,7 +98,7 @@ class Admin_ConfigurationController extends AuthenticatedController
                     $this->flash['error'] = _("Bitte geben Sie bei Parametern vom Typ 'integer' nur Zahlen ein!");
                 } else {
                     Config::get()->store($config_id, array(
-                    									   'value'   => $conf_value,
+                                                           'value'   => $conf_value,
                                                            'section' => $conf_sec,
                                                            'comment' => $conf_comment
                                                            ));

@@ -1,7 +1,7 @@
 <?php
 /**
  * Config.class.php
- * provides access to global configuration 
+ * provides access to global configuration
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,12 +19,12 @@ require_once 'ConfigEntry.class.php';
 
 class Config implements ArrayAccess, Countable, IteratorAggregate
 {
-    
+
     private static $instance = null;
-    
+
     protected $data = array();
     protected $metadata = array();
-    
+
     public static function get()
     {
         if (self::$instance === null) {
@@ -33,22 +33,22 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         }
         return self::$instance;
     }
-    
+
     public static function getInstance()
     {
         return self::get();
     }
-    
+
     public static function set($my_instance)
     {
         self::$instance = $my_instance;
     }
-    
+
     function __construct($data = null)
     {
         $this->fetchData($data);
     }
-    
+
     function extractAllGlobal() {
         foreach ($this->getFields('global') as $key) {
             $GLOBALS[$key] = $this->getValue($key);
@@ -75,12 +75,12 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         }
         return $ret;
     }
-    
-	function getMetadata($field)
-	{
-		return $this->metadata[$field];
-	}
-	
+
+    function getMetadata($field)
+    {
+        return $this->metadata[$field];
+    }
+
     function getValue ($field) {
         if (array_key_exists($field, $this->data)) {
             return $this->data[$field];
@@ -89,29 +89,29 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
             return $GLOBALS[$field];
         }
     }
-    
+
     function setValue ($field, $value) {
         if (array_key_exists($field, $this->data)) {
             return $this->data[$field] = $value;
         }
     }
-    
- 	/**
+
+    /**
      * IteratorAggregate
      */
     public function getIterator()
     {
         return new ArrayIterator($this->data);
     }
-    
+
     function __get($field) {
         return $this->getValue($field);
     }
-    
+
     function __set($field, $value) {
          return $this->setValue($field, $value);
     }
-    
+
     function __isset($field) {
         return isset($this->data[$field]);
     }
@@ -138,17 +138,17 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
     {
         $this->$offset = $value;
     }
-	
+
     public function offsetUnset ($offset)
     {
-    	
+
     }
-    
+
     public function count ()
     {
-    	return count($this->data);
+        return count($this->data);
     }
-    
+
     protected function fetchData($data = null)
     {
         if ($data !== null) {
@@ -171,11 +171,11 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
                 }
                 $this->data[$row['field']] = $row['value'];
                 $this->metadata[$row['field']] = array_intersect_key($row, array_flip(words('type section range description is_default comment')));
-				$this->metadata[$row['field']]['field'] = $row['field'];
+                $this->metadata[$row['field']]['field'] = $row['field'];
             }
         }
     }
-    
+
     function store($field, $values)
     {
         if (!is_array($values)) {
@@ -214,7 +214,7 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
             throw new InvalidArgumentException($field . " not found in config table");
         }
     }
-    
+
     function create($field, $data = array())
     {
         if (!$field) {

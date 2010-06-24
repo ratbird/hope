@@ -34,12 +34,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         if (!isset(self::$schemes[$db_table])) {
             $db = DBManager::get()->query("SHOW COLUMNS FROM $db_table");
             while($rs = $db->fetch(PDO::FETCH_ASSOC)){
-                $db_fields[strtolower($rs['Field'])] = array
-                (
-                									   'name' => $rs['Field'],
-									             	   'type' => $rs['Type'],
-									                   'key'  => $rs['Key']
-                );
+                $db_fields[strtolower($rs['Field'])] = array(
+                                                            'name' => $rs['Field'],
+                                                            'type' => $rs['Type'],
+                                                            'key'  => $rs['Key']
+                                                            );
                 if ($rs['Key'] == 'PRI'){
                     $pk[] = strtolower($rs['Field']);
                 }
@@ -261,7 +260,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         if (is_array($data)){
             foreach($data as $key => $value){
-            	$key = strtolower($key);
+                $key = strtolower($key);
                 if(isset($this->db_fields[$key])){
                     $this->content[$key] = $value;
                     ++$count;

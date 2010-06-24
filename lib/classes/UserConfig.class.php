@@ -1,7 +1,7 @@
 <?php
 /**
  * UserConfig.class.php
- * provides access to user preferences 
+ * provides access to user preferences
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -21,7 +21,7 @@ class UserConfig extends Config
 {
     private static $instances;
     private $user_id;
-    
+
     public static function get($user_id)
     {
         if (self::$instances[$user_id] === null) {
@@ -30,19 +30,19 @@ class UserConfig extends Config
         }
         return self::$instances[$user_id];
     }
-    
+
     public static function set($user_id, $my_instance)
     {
         self::$instances[$user_id] = $my_instance;
     }
-    
+
     function __construct($user_id = null, $data = null)
     {
         if($user_id !== null) {
             $this->setUserId($user_id ? $user_id : $GLOBALS['user']->id, $data);
         }
     }
-    
+
     function fetchData($data = null)
     {
         if ($data !== null) {
@@ -69,18 +69,18 @@ class UserConfig extends Config
             }
         }
     }
-    
+
     function setUserId($user_id)
     {
         $this->user_id = $user_id;
-        $this->fetchData($data);
+        $this->fetchData();
     }
-    
+
     function getUserId()
     {
         return $this->user_id;
     }
-    
+
     function getValue($field)
     {
         $args = func_get_args();
@@ -97,7 +97,7 @@ class UserConfig extends Config
         }
         return parent::getValue($field);
     }
-    
+
     function setValue($field, $value)
     {
         $args = func_get_args();
@@ -114,7 +114,7 @@ class UserConfig extends Config
         }
         return parent::setValue($field, $value);
     }
-    
+
     function store($field, $value)
     {
 
@@ -132,7 +132,7 @@ class UserConfig extends Config
         return $ret;
 
     }
-    
+
     function delete($field)
     {
         $entry = UserConfigEntry::findByFieldAndUser($field, $this->user_id);
@@ -142,5 +142,5 @@ class UserConfig extends Config
             return null;
         }
     }
-   
+
 }

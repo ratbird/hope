@@ -46,11 +46,11 @@ class NewsController extends AuthenticatedController
         $newscontent = $news->toArray();
         $newscontent['open'] = $open;
         object_set_visit($id, "news", $GLOBALS['user']->id);
-		$content = show_news_item_content($newscontent,
-									      array(),
-									      $show_admin,
-									      Request::get('admin_link')
-									     );
+        $content = show_news_item_content($newscontent,
+                                          array(),
+                                          $show_admin,
+                                          Request::get('admin_link')
+                                          );
         $this->render_text(studip_utf8encode($content));
     }
 

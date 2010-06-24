@@ -242,7 +242,7 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
 
     if (!($perm->have_studip_perm("tutor",$vote->getRangeID())) &&
         (get_username($userID) != $vote->getRangeID())){
-        $safeguard .= printSafeguard("ausruf", sprintf(_("Das Voting \"%s\" ist einem Bereich zugeordnet für den Sie keine Veränderungsrechte besitzen. Die Aktion wurde nicht ausgeführt."),$votename));
+        $safeguard .= printSafeguard("ausruf", sprintf(_("Die Umfrage \"%s\" ist einem Bereich zugeordnet für den Sie keine Veränderungsrechte besitzen. Die Aktion wurde nicht ausgeführt."),$votename));
         $voteaction = "nothing";
     }
 
@@ -252,7 +252,7 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
                 if($vote->isVisible()){
                     $vote->executeSetVisible(NO);
                     $type
-                    ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde für die Teilnehmer unsichtbar gemacht."),$votename))
+                    ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde für die Teilnehmer unsichtbar gemacht."),$votename))
                     : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde für die Teilnehmer unsichtbar gemacht."),$votename));
                 }
                 else{
@@ -263,14 +263,14 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
                             return $safeguard;
                         }
                     $type
-                    ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde für die Teilnehmer sichtbar gemacht."),$votename))
+                    ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde für die Teilnehmer sichtbar gemacht."),$votename))
                     : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde für die Teilnehmer sichtbar gemacht."),$votename));
                 }
                 $votechanged = 1;
             }
             else{
                 $type
-                ? $safeguard .= printSafeguard("ausruf", sprintf(_("Das Voting \"%s\" wurde beim Erstellen auf \"Der Teilnehmer sieht die (Zwischen-)Ergebnisse: Nie\" eingestellt.<br> Sollen die Endergebnisse jetzt trotzdem f&uuml;r die Teilnehmer sichtbar gemacht werden? (Wenn dieser Eintrag fortgesetzt werden sollte, werden die Ergebnisse nach Ablauf ohne weitere Nachfrage für die Teilnehmer sichtbar gemacht!)"),$votename),"NeverResultvisibility",$voteID, $showrangeID)
+                ? $safeguard .= printSafeguard("ausruf", sprintf(_("Die Umfrage \"%s\" wurde beim Erstellen auf \"Der Teilnehmer sieht die (Zwischen-)Ergebnisse: Nie\" eingestellt.<br> Sollen die Endergebnisse jetzt trotzdem f&uuml;r die Teilnehmer sichtbar gemacht werden? (Wenn dieser Eintrag fortgesetzt werden sollte, werden die Ergebnisse nach Ablauf ohne weitere Nachfrage für die Teilnehmer sichtbar gemacht!)"),$votename),"NeverResultvisibility",$voteID, $showrangeID)
                 : $safeguard .= printSafeguard("ausruf", sprintf(_("Der Test \"%s\" wurde beim Erstellen auf \"Der Teilnehmer sieht die (Zwischen-)Ergebnisse: Nie\" eingestellt.<br> Sollen die Endergebnisse jetzt trotzdem f&uuml;r die Teilnehmer sichtbar gemacht werden? (Wenn dieser Eintrag fortgesetzt werden sollte, werden die Ergebnisse nach Ablauf ohne weitere Nachfrage für die Teilnehmer sichtbar gemacht!)"),$votename),"NeverResultvisibility",$voteID, $showrangeID);
             }
             break;
@@ -290,13 +290,13 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
                 return $safeguard;
             }
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde jetzt f&uuml;r die Teilnehmer sichtbar gemacht."),$votename))
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde jetzt f&uuml;r die Teilnehmer sichtbar gemacht."),$votename))
             : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde jetzt f&uuml;r die Teilnehmer sichtbar gemacht."),$votename));
             $votechanged = 1;
             break;
         case "setResultvisibility_aborted":
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde f&uuml;r die Teilnehmer nicht sichtbar gemacht."),$votename))
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde f&uuml;r die Teilnehmer nicht sichtbar gemacht."),$votename))
             : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde f&uuml;r die Teilnehmer nicht sichtbar gemacht."),$votename));
             break;
         case "start":
@@ -308,7 +308,7 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
                 return $safeguard;
             }
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde gestartet."),$votename))
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde gestartet."),$votename))
             : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde gestartet."),$votename));
             $votechanged = 1;
             break;
@@ -321,7 +321,7 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
                 return $safeguard;
             }
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde gestoppt."),$votename),"","","",$referer)
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde gestoppt."),$votename),"","","",$referer)
             : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde gestoppt."),$votename),"","","",$referer);
             $votechanged = 1;
             break;
@@ -334,7 +334,7 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
                 return $safeguard;
             }
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde fortgesetzt."),$votename))
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde fortgesetzt."),$votename))
             : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde fortgesetzt."),$votename));
             $votechanged = 1;
             break;
@@ -347,13 +347,13 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
                 return $safeguard;
             }
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde zur&uuml;ckgesetzt."),$votename))
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde zur&uuml;ckgesetzt."),$votename))
             : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde zur&uuml;ckgesetzt."),$votename));
             $votechanged = 1;
             break;
         case "delete_request":
             $type
-            ? $safeguard .= printSafeguard("ausruf", sprintf(_("Das Voting \"%s\" wirklich l&ouml;schen?"),$votename),"delete_request",$voteID, $showrangeID, $referer)
+            ? $safeguard .= printSafeguard("ausruf", sprintf(_("Die Umfrage \"%s\" wirklich l&ouml;schen?"),$votename),"delete_request",$voteID, $showrangeID, $referer)
             : $safeguard .= printSafeguard("ausruf", sprintf(_("Den Test \"%s\" wirklich l&ouml;schen?"),$votename),"delete_request",$voteID, $showrangeID, $referer);
             break;
         case "delete_confirmed":
@@ -365,23 +365,23 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
                 return $safeguard;
             }
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde gel&ouml;scht."),$votename),"","","",$referer)
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde gel&ouml;scht."),$votename),"","","",$referer)
             : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde gel&ouml;scht."),$votename),"","","",$referer);
             $votechanged = 1;
             break;
         case "delete_aborted":
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde nicht gel&ouml;scht."),$votename),"","","",$referer)
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde nicht gel&ouml;scht."),$votename),"","","",$referer)
             : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde nicht gel&ouml;scht."),$votename),"","","",$referer);
             break;
         case "created":
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde angelegt."),$votename))
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde angelegt."),$votename))
             : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde angelegt."),$votename));
             break;
         case "saved":
             $type
-            ? $safeguard .= printSafeguard("ok", sprintf(_("Das Voting \"%s\" wurde mit den Ver&auml;nderungen gespeichert."),$votename))
+            ? $safeguard .= printSafeguard("ok", sprintf(_("Die Umfrage \"%s\" wurde mit den Ver&auml;nderungen gespeichert."),$votename))
             : $safeguard .= printSafeguard("ok", sprintf(_("Der Test \"%s\" wurde mit den Ver&auml;nderungen gespeichert."),$votename));
             break;
         case "nothing":
@@ -396,8 +396,8 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
         // --> send notification sms
         $sms = new messaging();
             setTempLanguage($vote->getAuthorID());
-            $sms->insert_message(   mysql_escape_string( sprintf( _("An Ihrem %s \"%s\" wurden von dem Administrator oder der Administratorin %s Änderungen vorgenommen."), ($vote->x_instanceof() == INSTANCEOF_TEST
-                    ? _("Test") : _("Voting")), $vote->getTitle(),
+            $sms->insert_message(   mysql_escape_string( sprintf( _("An %s \"%s\" wurden von dem Administrator oder der Administratorin %s Änderungen vorgenommen."), ($vote->x_instanceof() == INSTANCEOF_TEST
+                    ? _("Ihrem Test") : _("Ihrer Umfrage")), $vote->getTitle(),
                     $vote->voteDB->getAuthorRealname($auth->auth["uid"]) ) ),
                     $vote->voteDB->getAuthorUsername($vote->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Vote/Test geändert"));
             restoreLanguage();
@@ -564,17 +564,17 @@ function createVoteArray($mode){
 function createLabel(){
     $label = array(
         // labels for printSiteTitle
-        "sitetitle_title" => _("Voting-Verwaltung"),
+        "sitetitle_title" => _("Umfragen-Verwaltung"),
 
         // labels for printSafeguard
         "referer" => _("Zum vorherigen Bereich zur&uuml;ckkehren."),
 
         // labels for printSelections
-        "selections_text_vote" => _("Ein neues Voting"),
+        "selections_text_vote" => _("Eine neue Umfrage"),
         "selections_text_test" => _("Einen neuen Test"),
         "selections_text_middle" => _("in"),
         "selections_button" => "erstellen",
-        "selections_tooltip" => _("Voting oder Test erstellen."),
+        "selections_tooltip" => _("Umfrage oder Test erstellen."),
         "selections_selectrange_text" => _("Umfragen und Tests aus "),
         "selections_allranges" => _("allen Bereichen"),
         "selections_selectrange_button" => "anzeigen",

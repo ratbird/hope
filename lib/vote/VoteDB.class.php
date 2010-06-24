@@ -863,7 +863,7 @@ class VoteDB extends StudipObject {
 
       $this->db->query ($sql);
       if ($this->db->nf ()) 
-     return $this->throwError (1, _("Sie haben mehrmals auf 'Speichern' gedr&uuml;ckt. Das Voting bzw. der Test wurde bereits in die Datenbank geschrieben."));
+     return $this->throwError (1, _("Sie haben mehrmals auf 'Speichern' gedr&uuml;ckt. Die Umfrage bzw. der Test wurde bereits in die Datenbank geschrieben."));
       /* ------------------------------------------------------------------- */
       
        $this->db->query ("SELECT title from vote WHERE ".
@@ -1158,7 +1158,7 @@ class VoteDB extends StudipObject {
 
       $this->db->query ($sql);
       if ($this->db->nf ()) 
-     return $this->throwError (1, _("Sie haben mehrmals auf 'Speichern' gedr&uuml;ckt. Das Voting bzw. der Test wurde bereits in die Datenbank geschrieben."));
+     return $this->throwError (1, _("Sie haben mehrmals auf 'Speichern' gedr&uuml;ckt. Die Umfrage bzw. der Test wurde bereits in die Datenbank geschrieben."));
       /* ------------------------------------------------------------------- */
       
       /* If vote does not exists in DB create it --------------------------- */

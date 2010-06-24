@@ -67,7 +67,7 @@ if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) || $auth->auth["uname"] ==
             ? _("Angegebener Vote existiert nicht (mehr?) ...")
             : ($vote->x_instanceof() == INSTANCEOF_TEST
                ? sprintf(_("Sie haben keine Berechtigung den Test '%s' zu editieren."), $vote->getTitle())
-               : sprintf(_("Sie haben keine Berechtigung das Voting '%s' zu editieren."), $vote->getTitle())
+               : sprintf(_("Sie haben keine Berechtigung die Umfrage '%s' zu editieren."), $vote->getTitle())
                )
             )
         );

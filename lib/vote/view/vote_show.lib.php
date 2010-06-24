@@ -240,7 +240,7 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
         makeButton ("bearbeiten", "src").
         tooltip( $vote->x_instanceof() == INSTANCEOF_TEST
              ? _("Diesen Test bearbeiten.")
-             : _("Dieses Voting bearbeiten.") ).
+             : _("Diese Umfrage bearbeiten.") ).
         " border=\"0\"></a>";
       if (!$vote->isStopped())
       $html .=
@@ -252,7 +252,7 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
      makeButton ("stop", "src").
      tooltip( $vote->x_instanceof() == INSTANCEOF_TEST
           ? _("Diesen Test stoppen.")
-          : _("Dieses Voting stoppen.") ).
+          : _("Diese Umfrage stoppen.") ).
      " border=\"0\"></a>";
 
       $html .=
@@ -264,7 +264,7 @@ function createFormFooter (&$vote, $userID, $perm, $rangeID) {
      makeButton ("loeschen", "src").
      tooltip( $vote->x_instanceof() == INSTANCEOF_TEST
           ? _("Diesen Test löschen.")
-          : _("Dieses Voting löschen.") ).
+          : _("Diese Umfrage löschen.") ).
      " border=\"0\"></a>";
 
       $html .= "<br>";
@@ -566,7 +566,7 @@ function createSuccessReport (&$vote, $firstTime = YES, $changed = NO) {
       } else {
      $html .= ($vote->x_instanceof() == INSTANCEOF_TEST)
         ? _("Die Ergebnisse werden Ihnen angezeigt, sobald der Test vom Ersteller beendet worden ist.")
-        : _("Die Ergebnisse werden Ihnen angezeigt, sobald das Voting vom Ersteller beendet worden ist.");
+        : _("Die Ergebnisse werden Ihnen angezeigt, sobald die Umfrage vom Ersteller beendet worden ist.");
      $html .= "<br><br>\n";
       }
       $html .= "</font>";
@@ -696,7 +696,7 @@ function createVoteResult ($vote, $preview = NO) {
       return createReportMessage
       ( ( $vote->x_instanceof() == INSTANCEOF_TEST
           ? _("An diesem Test hat noch niemand teilgenommen.")
-          : _("Bei diesem Voting hat noch niemand abgestimmt.") ),
+          : _("Bei dieser Umfrage hat noch niemand abgestimmt.") ),
         VOTE_ICON_INFO, VOTE_COLOR_INFO).
       "<br>\n";
    /* ---------------------------------------------------------------------- */
@@ -863,7 +863,7 @@ function createVoteInfo (&$vote, $isAssociated = NO) {
            ? sprintf (_("Der Test wurde beendet am <b>%s</b> um <b>%s</b> Uhr."),
               date ("d.m.Y", $stopdate),
               date ("H:i", $stopdate))
-           : sprintf (_("Das Voting wurde beendet am <b>%s</b> um <b>%s</b> Uhr."),
+           : sprintf (_("Die Umfrage wurde beendet am <b>%s</b> um <b>%s</b> Uhr."),
               date ("d.m.Y", $stopdate),
               date ("H:i", $stopdate));
        }
@@ -879,7 +879,7 @@ function createVoteInfo (&$vote, $isAssociated = NO) {
                ? sprintf (_("Der Test wird voraussichtlich beendet am <b>%s</b> um <b>%s</b> Uhr."),
                   date ("d.m.Y", $stopdate),
                   date ("H:i", $stopdate))
-               : sprintf (_("Das Voting wird voraussichtlich beendet am <b>%s</b> um <b>%s</b> Uhr."),
+               : sprintf (_("Die Umfrage wird voraussichtlich beendet am <b>%s</b> um <b>%s</b> Uhr."),
                   date ("d.m.Y", $stopdate),
                   date ("H:i", $stopdate));
            }

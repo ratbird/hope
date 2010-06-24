@@ -145,8 +145,8 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
                 else                            $displayclass = "steelgraulight";
                 $html .="   <tr ".$cssSw->getHover().">"
                       . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\">".htmlReady($range["name"])."</td>"
-                      . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=edit&rangeID=".$range["id"]."&type=vote&showrangeID=".$range["id"])."\" alt=\"Voting erstellen.\">Voting erstellen</a></font></td>"
-                      . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=edit&rangeID=".$range["id"]."&type=test&showrangeID=".$range["id"])."\" alt=\"Voting erstellen.\">Test erstellen</a></font></td>"
+                      . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=edit&rangeID=".$range["id"]."&type=vote&showrangeID=".$range["id"])."\" alt=\"Umfrage erstellen.\">Umfrage erstellen</a></font></td>"
+                      . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=edit&rangeID=".$range["id"]."&type=test&showrangeID=".$range["id"])."\" alt=\"Test erstellen.\">Test erstellen</a></font></td>"
                       . "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=overview&showrangeID=".$range["id"])."\" alt=\"Diesen Bereich anzeigen.\">Bereich Anzeigen</a></font></td>"
                       . "   </tr>\n";
             $counter++;

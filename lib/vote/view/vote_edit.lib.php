@@ -152,12 +152,12 @@ function printFormStart ( $voteID, $rangeID, $referer ) {
     if( $pageMode != MODE_CREATE ) {
     $task_string = ($type=="test")
         ? _("Gespeicherten Test bearbeiten")
-        : _("Gespeichertes Voting bearbeiten");
+        : _("Gespeicherte Umfrage bearbeiten");
     }
     else {
     $task_string = ($type=="test")
         ? _("Neuen Test erstellen")
-        : _("Neues Voting erstellen");
+        : _("Neue Umfrage erstellen");
     $voteID = "";
     }
 
@@ -410,7 +410,7 @@ function printRightRegion ( ) {
     /* -------------------------------------------------------- */
     $info_text = ( $type == "test" )
         ? _("Es hat bereits jemand an diesem Test teilgenommen!")
-        : _("Es hat bereits jemand an diesem Voting teilgenommen!");
+        : _("Es hat bereits jemand an dieser Umfrage teilgenommen!");
 
     $action_text1 = ($vote->isAnonymous())
         ? _("Sie k&ouml;nnen daher nur noch den Titel, den Endzeitpunkt und die Ergebnissichtbarkeit ver&auml;ndern.")
@@ -422,7 +422,7 @@ function printRightRegion ( ) {
     /* -------------------------------------------------------- */
     $info_text = ( $type == "test" )
         ? _("Sie k&ouml;nnen diesen Test noch ver&auml;ndern, solange niemand abstimmt.")
-        : _("Sie k&ouml;nnen dieses Voting noch ver&auml;ndern, solange niemand abstimmt.");
+        : _("Sie k&ouml;nnen diese Umfrage noch ver&auml;ndern, solange niemand abstimmt.");
 
     $action_text1 = ( $type == "test" )
         ? _("Ver&auml;ndern Sie links die Frage und die Antworten Ihres Tests. ")
@@ -434,7 +434,7 @@ function printRightRegion ( ) {
     /* -------------------------------------------------------- */
     $info_text = ( $type == "test" )
         ? _("Auf dieser Seite k&ouml;nnen Sie einen neuen Test anlegen.")
-        : _("Auf dieser Seite k&ouml;nnen Sie ein neues Voting anlegen.");
+        : _("Auf dieser Seite k&ouml;nnen Sie eine neue Umfrage anlegen.");
 
     $action_text1 = ( $type == "test" )
         ? _("Geben Sie links die Frage und die m&ouml;glichen Antworten Ihres Tests ein. ")
@@ -561,7 +561,7 @@ function printRuntimeSettings ( $startMode = "manual",
     $html .= "&nbsp;<img src=\"".VOTE_PATH_PICTURES."info.gif\" align=middle "
     . tooltip( ($type=="test"
             ? _("Legen Sie hier fest, von wann bis wann der Test in Stud.IP öffentlich sichtbar sein soll.")
-            : _("Legen Sie hier fest, von wann bis wann das Voting in Stud.IP öffentlich sichtbar sein soll.")),
+            : _("Legen Sie hier fest, von wann bis wann die Umfrage in Stud.IP öffentlich sichtbar sein soll.")),
            FALSE, TRUE )
     . " border=0>";
     $html .= "</td></tr>";

@@ -153,6 +153,10 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     if ($_REQUEST['cmd'] == 'set_sem_notification') {
         if (is_array($_REQUEST['m_checked'])) {
             $modules->setModuleNotification($_REQUEST['m_checked'], 'sem');
+
+            echo '<table class="default"><tr><td class="blank">';
+            echo MessageBox::success(_('Die Einstellungen wurden gespeichert.'));
+            echo '</td></tr></table>';
         }
     }
     $enabled_modules = $modules->getGlobalEnabledNotificationModules('sem');

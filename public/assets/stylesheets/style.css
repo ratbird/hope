@@ -133,6 +133,12 @@ a.printhead {
     width: 250px;
 }
 
+/* --- image preview -------------------------------------------------------- */
+
+img.preview {
+    max-height: 500px;
+    max-width: 750px;
+}
 
 /* --- Tabellen ------------------------------------------------------------- */
 /* //TODO: optimieren und aufräumen */

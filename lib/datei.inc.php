@@ -1305,15 +1305,14 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
                 $content = "<div style=\"margin-bottom: 10px; height: {$flash_player['height']}; width: {$flash_player['width']};\">" . $flash_player['player'] . '</div>';
             }
         }
+        if (in_array(strtolower(getFileExtension($datei['filename'])), words('jpg jpeg gif png'))) {
+            $content = sprintf('<img class="preview" src="%s" alt=""><br>', GetDownloadLink($datei['dokument_id'], $datei['filename'], $type));
+        }
         if ($datei["description"]) {
-            $beschreibung .= htmlReady($datei["description"], TRUE, TRUE);
+            $content .= htmlReady($datei["description"], TRUE, TRUE);
         } else {
-            $beschreibung .= _("Keine Beschreibung vorhanden");
+            $content .= _("Keine Beschreibung vorhanden");
         }
-        if (in_array (strtolower(getFileExtension($datei['filename'])), words("jpg jpeg gif png"))) {
-            $content = sprintf("<img src=\"%s\" alt=\"%s\" title=\"\" border=\"0\" style=\"max-width: 750px; max-height: 500px;\"><br>", GetDownloadLink ($datei['dokument_id'], $datei['filename'], $type), $beschreibung);
-        }
-        $content .= $beschreibung;
         $content .=  "<br><br>" . sprintf(_("<b>Dateigr&ouml;&szlig;e:</b> %s kB"), round ($datei["filesize"] / 1024));
         $content .=  "&nbsp; " . sprintf(_("<b>Dateiname:</b> %s "),htmlReady($datei['filename']));
     }

@@ -57,11 +57,6 @@ $width_namecolumn = 50;
 <div style="min-width: 600px">
 
 <form name="details" method="post" action="<?= $controller->url_for('course/basicdata/set?cid='.$course_id) ?>">
-<div style="text-align:center; padding: 15px">
-  <? echo makeButton("uebernehmen", "input") ?>
-  <input type="hidden" name="section" value="<?= $section ?>">
-  <input id="open_variable" type="hidden" name="open" value="<?= $flash['open'] ?>">
-</div>
 <div style="text-align:center" id="settings" class="steel1">
   
   <h2 id="bd_basicsettings" class="steelgraulight"><?= _("Grundeinstellungen") ?></h2>
@@ -217,6 +212,11 @@ $width_namecolumn = 50;
   ?>
   </table></div>
   
+</div>
+<div style="text-align:center; padding: 15px">
+  <? echo makeButton("uebernehmen", "input") ?>
+  <input type="hidden" name="section" value="<?= $section ?>">
+  <input id="open_variable" type="hidden" name="open" value="<?= $flash['open'] ?>">
 </div>
 </form>
 <script>

@@ -104,7 +104,9 @@ class CourseNavigation extends Navigation
             $navigation = new Navigation(_('Verwaltung'));
 
             $navigation->addSubNavigation('main', new Navigation(_("Verwaltung"), 'dispatch.php/course/management'));
-            $navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'admin_seminare1.php?section=details'));
+            //$navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'admin_seminare1.php?section=details'));
+            $navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'dispatch.php/course/basicdata/view?section=details'));
+            
 
             if ($sem_class == 'sem') {
                 $navigation->addSubNavigation('studycourse', new Navigation(_("Studienbereiche"),

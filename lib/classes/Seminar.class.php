@@ -2161,4 +2161,201 @@ class Seminar {
         return true;
 
     }
+    
+    /**
+     * returns an asscociative array with the attributes of the seminar depending 
+     * on the field-names in the database
+     * @return array
+     */
+    function getData() {
+        $data = array();
+        $data['seminar_number'] = $this->seminar_number;
+        $data['institut_id'] = $this->institut_id;
+        $data['name'] = $this->name;
+        $data['subtitle'] = $this->subtitle;
+        $data['status'] = $this->status;
+        $data['description'] = $this->description;
+        $data['location'] = $this->location;
+        $data['misc'] = $this->misc;
+        $data['read_level'] = $this->read_level;
+        $data['write_level'] = $this->write_level;
+        $data['semester_start_time'] = $this->semester_start_time;
+        $data['semester_duration_time'] = $this->semester_duration_time;
+        $data['form'] = $this->form;
+        $data['participants'] = $this->participants;
+        $data['requirements'] = $this->requirements;
+        $data['orga'] = $this->orga;
+        $data['leistungsnachweis'] = $this->leistungsnachweis;
+
+        $data['mkdate'] = $this->mkdate;
+        $data['chdate'] = $this->chdate;
+        $data['ects'] = $this->ects;
+        $data['admission_endtime'] = $this->admission_endtime;
+        $data['admission_turnout'] = $this->admission_turnout;
+        $data['admission_binding'] = $this->admission_binding;
+        $data['admission_type'] = $this->admission_type;
+        $data['admission_selection_take_place'] = $this->admission_selection_take_place;
+        $data['admission_group'] = $this->admission_group;
+        $data['admission_prelim'] = $this->admission_prelim;
+        $data['admission_prelim_txt'] = $this->admission_prelim_txt;
+        $data['admission_starttime'] = $this->admission_starttime;
+        $data['admission_endtime_sem'] = $this->admission_endtime_sem;
+        $data['admission_disable_waitlist'] = $this->admission_disable_waitlist;
+        $data['admission_enable_quota'] = $this->admission_enable_quota;
+        $data['visible'] = $this->visible;
+        $data['showscore'] = $this->showscore;
+        return $data;
+    }
+    
+    /**
+     * returns an array with all IDs of Institutes this seminar is related to
+     * @param sem_id string:    optional ID of a seminar, when null, this ID will be used
+     * @return: array of IDs (not associative)
+     */
+    public function getInstitutes($sem_id = null) {
+        if (!$sem_id && $this) {
+            $sem_id = $this->id;
+        }
+        $db = DBManager::get();
+        return $db->query("SELECT seminar_inst.institut_id as Institut_id " .
+               "FROM seminar_inst " .
+               "WHERE seminar_inst.seminar_id = ".$db->quote($sem_id)." " .
+               "UNION DISTINCT SELECT seminare.Institut_id " .
+               "FROM seminare " .
+               "WHERE seminare.Seminar_id = ".$db->quote($sem_id)." " .
+               "")
+            ->fetchAll(PDO::FETCH_COLUMN, 0);
+    }
+    
+    /**
+     * set the entries for seminar_inst table in database
+     * seminare.institut_id will always be added
+     * @param institutes array: array of Institut_id's
+     * @return bool:  if something changed
+     */
+    public function setInstitutes($institutes = array()) {
+        if (is_array($institutes)) {
+            $db = DBManager::get();
+            $institutes[] = $this->institut_id;
+            $institutes = array_unique($institutes);
+            $old_inst = $db->query("SELECT institut_id " .
+                    "FROM seminar_inst " .
+                    "WHERE seminar_id = ".$db->quote($this->id)." " .
+                    "")
+            ->fetchAll(PDO::FETCH_COLUMN, 0);
+            $todelete = array_diff($old_inst, $institutes);
+            foreach($todelete as $inst) {
+                $db->exec("DELETE FROM seminar_inst " .
+                    "WHERE seminar_id = ".$db->quote($this->id)." " .
+                        "AND institut_id = ".$db->quote($inst));
+            }
+            $toinsert = array_diff($institutes, $old_inst);
+            foreach($toinsert as $inst) {
+                $db->exec("INSERT INTO seminar_inst " .
+                    "SET seminar_id = ".$db->quote($this->id).", " .
+                        "institut_id = ".$db->quote($inst));
+            }
+            return $todelete || $toinsert;
+        } else {
+            $this->createError(_("Ungültige Eingabe der Institute. Es muss " .
+                "mindestens ein Institut angegeben werden."));
+            return false;
+        }
+    }
+    
+    /**
+     * adds a user to the seminar with the given status
+     * @param user_id string: ID of the user
+     * @param status string: status of the user for the seminar "user", "autor", "tutor", "dozent"
+     * @param force bool: if false (default) the user will only be upgraded and not degraded in his/her status
+     */
+    public function addMember($user_id, $status = 'autor', $force = false) {
+        $db = DBManager::get();
+        $rangordnung = array_flip(array('user', 'autor', 'tutor', 'dozent'));
+        if (!$force) {
+            $old_status = $db->query("SELECT status " .
+                    "FROM seminar_user " .
+                    "WHERE user_id = ".$db->quote($user_id)." " .
+                        "AND Seminar_id = ".$db->quote($this->id))->fetch(PDO::FETCH_COLUMN, 0);
+        }
+        $new_position = $db->query("SELECT MAX(position)+1 " .
+                "FROM seminar_user " .
+                "WHERE status = ".$db->quote($status)." " .
+                    "AND Seminar_id = ".$db->quote($this->id)."")->fetch(PDO::FETCH_COLUMN, 0);
+        if (!$old_status) {
+            $db->exec("INSERT INTO seminar_user " .
+                   "SET status = ".$db->quote($status).", " .
+                       "Seminar_id = ".$db->quote($this->id).", " .
+                       "user_id = ".$db->quote($user_id).", " .
+                       "position = ".$db->quote($new_position)." " .
+                       "");
+            return $this;
+        } elseif (!$force || $angordnung[$old_status] < $rangordnung[$status]) {
+            $db->exec("UPDATE seminar_user " .
+                   "SET status = ".$db->quote($status).", " .
+                       "position = ".$db->quote($new_position)." " .
+                   "WHERE Seminar_id = ".$db->quote($this->id)." " .
+                       "AND user_id = ".$db->quote($user_id)." " .
+                       "");
+            return $this;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * deletes a user from the seminar by respecting the rule that at least one 
+     * user with status "dozent" must stay there
+     * @param user_id string:   user_id of the user to delete
+     * @param return:   false or $this for chaining
+     */
+    public function deleteMember($user_id) {
+        $db = DBManager::get();
+        $stillleft = $db->query("SELECT count(*) " .
+                    "FROM seminar_user " .
+                    "WHERE user_id != ".$db->quote($status)." " .
+                        "AND status = 'dozent' ".
+                        "AND Seminar_id = ".$db->quote($this->id))->fetch(PDO::FETCH_COLUMN, 0);
+        $allowed = ($stillleft > 1);
+        if (!$allowed) {
+            $old_status = $db->query("SELECT status " .
+                    "FROM seminar_user " .
+                    "WHERE user_id = ".$db->quote($user_id)." " .
+                        "AND Seminar_id = ".$db->quote($this->id))->fetch(PDO::FETCH_COLUMN, 0);
+            $allowed = ($old_status !== "dozent");
+        }
+        if ($allowed) {
+            $db->exec("DELETE FROM seminar_user " .
+                   "WHERE Seminar_id = ".$db->quote($this->id)." " .
+                       "AND user_id = ".$db->quote($user_id));
+            $this->createMessage(sprintf(_("Nutzer %s wurde aus Veranstaltung entfernt."), 
+                    "<i>".get_fullname($user_id)."</i>"));
+            return $this;
+        } else {
+            $this->createError(sprintf(_("Die Veranstaltung muss wenigstens " .
+                    "<b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben! " .
+                    "Tragen Sie zun&auml;chst einen anderen ein, um diesen zu l&ouml;schen."), 
+                    get_title_for_status('dozent', 1, $this->status)));
+            return false;
+        }
+    }
+    
+    /**
+     * sets the almost never used column position in the table seminar_user
+     * @param members array: array of user_id's - wrong IDs will be ignored
+     * @param status string: status of the users
+     * @return $this
+     */
+    public function setMemberPriority($members, $status = "dozent") {
+        $db = DBManager::get();
+        $num = 0;
+        foreach($members as $member) {
+            $num++;
+            $db->exec("UPDATE IGNORE seminar_user " .
+                    "SET position = ".$db->quote($num)." " .
+                    "WHERE Seminar_id = ".$db->quote($this->id)." " .
+                        "AND user_id = ".$db->quote($member));
+        }
+        return $this;
+    }
 }

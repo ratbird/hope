@@ -1330,3 +1330,12 @@ img.plugin_preview {
     height: 12px;
 }
 
+/* --- general style classes ------------------------------------------------ */
+.arrow_right {
+    background: transparent url('../images/arrow_right.png') top left no-repeat !important;
+    background-position: 3px 0 !important;
+}
+.arrow_down {
+    background: transparent url('../images/arrow_down.png') top left no-repeat !important;
+    background-position: 0 3px !important;
+}

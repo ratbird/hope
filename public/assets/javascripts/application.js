@@ -1035,3 +1035,11 @@ $('input.allow-only-numbers').live('keyup', function () {
   $(this).val($(this).val().replace(/\D/, ''));
 });
 
+/* ------------------------------------------------------------------------
+ * additional jQuery (UI) settings for Stud.IP
+ * ------------------------------------------------------------------------ */
+
+$.ui.accordion.prototype.options.icons = {
+  header: 'arrow_right',
+  headerSelected: 'arrow_down'
+}

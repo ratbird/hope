@@ -56,7 +56,8 @@ class AdminNavigation extends Navigation
 
         // course administration
         $navigation = new Navigation(_('Veranstaltungen'), 'adminarea_start.php?list=TRUE');
-        $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'admin_seminare1.php?list=TRUE'));
+        //$navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'admin_seminare1.php?list=TRUE'));
+        $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'dispatch.php/course/basicdata/view?list=TRUE'));
         $navigation->addSubNavigation('study_areas', new Navigation(_('Studienbereiche'),
                                       'dispatch.php/course/study_areas/show/' . $_SESSION['SessionSeminar'], array('list' => 'TRUE')));
         $navigation->addSubNavigation('dates', new Navigation(_('Zeiten / Räume'), 'raumzeit.php?list=TRUE'));

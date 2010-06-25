@@ -59,7 +59,7 @@ $infobox['content'][] = array(
   <div class="smashbox_stripe">
       <div style="margin-left: 1.5em;">
 
-        <a class="click_me" href="<?= UrlHelper::getLink('admin_seminare1.php?section=details') ?>">
+        <a class="click_me" href="<?= $controller->url_for('course/basicdata/view?cid='.$GLOBALS['SessSemName'][1].'&section=details') ?>">
           <div>
               <span class="click_head"><?=_("Grunddaten");?></span>
               <p><?=_("Prüfen und Bearbeiten Sie in diesem Verwaltungsbereich die Grundeinstellungen dieser Veranstaltung.");?></p>

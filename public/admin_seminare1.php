@@ -1186,7 +1186,7 @@ if (($s_id) && (auth_check())) {
                     print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_doz\">";
 
                     if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["only_inst_user"]) {
-                    	$clause="AND Institut_id IN (". sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id) . ") ";
+                        $clause="AND Institut_id IN (". sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id) . ") ";
                     }
                     $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ".
                             $_fullname_sql['full_rev'] ." AS fullname FROM user_inst " .

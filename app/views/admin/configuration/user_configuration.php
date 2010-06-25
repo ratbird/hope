@@ -60,7 +60,7 @@
     </tr>
     <? foreach ($give_alls as $give_all): ?>
     <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-    	<td>
+        <td>
             <?= htmlReady($give_all['field'])?>
         </td>
         <td>

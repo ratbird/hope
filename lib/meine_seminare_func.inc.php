@@ -495,7 +495,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
  * @return array All fields that may be specified for course grouping
  */
 function getValidGroupingFields() {
-	return array(
+    return array(
             'not_grouped',
             'sem_number',
             'sem_tree_id',

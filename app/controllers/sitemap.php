@@ -11,7 +11,7 @@
  * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * @since		Stud.IP version 1.12
+ * @since       Stud.IP version 1.12
  */
 
 require_once 'lib/trails/AuthenticatedController.php';

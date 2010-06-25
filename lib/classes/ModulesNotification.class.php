@@ -190,22 +190,22 @@ class ModulesNotification extends Modules {
 
         get_my_obj_values($my_sem, $user_id);
         
-	$news = array();
-	$cssSw = new cssClassSwitcher;
+    $news = array();
+    $cssSw = new cssClassSwitcher;
         $text = '';
         foreach ($my_sem as $seminar_id => $s_data) {
             $m_notification = ($s_data['modulesInt'] + $m_extended)
                     & $m_all_notifications[$seminar_id];
             $m_text = '';
-	    $n_data = array();
+        $n_data = array();
             foreach ($m_enabled_modules as $m_name => $m_data) {
                 if ($this->isBit($m_notification, $m_data['id'])) {
-		    $data = $this->getModuleText($m_name, $seminar_id, $s_data, 'sem', 'html');
-		    if ($data) $n_data[] = $data;
+            $data = $this->getModuleText($m_name, $seminar_id, $s_data, 'sem', 'html');
+            if ($data) $n_data[] = $data;
                     $m_text .= $this->getModuleText($m_name, $seminar_id, $s_data, 'sem');
                 }
             }
-	    if (count($n_data)) $news[$s_data['name']] = $n_data;
+        if (count($n_data)) $news[$s_data['name']] = $n_data;
             if ($m_text) {
                 $text .= "\n\n";
                 $text .= sprintf(_("In der Veranstaltung \"%s\" gibt es folgende Neuigkeiten:"),
@@ -222,7 +222,7 @@ class ModulesNotification extends Modules {
                         . "\n\n--\n"
                         . _("Diese Nachricht wurde automatisch vom Stud.IP-System generiert. Sie können darauf nicht antworten.");
         }
-	$template_path = dirname(__FILE__) . '/../../templates/';
+    $template_path = dirname(__FILE__) . '/../../templates/';
         $factory = new Flexi_TemplateFactory($template_path);
         $template = $factory->open('mail_notification_html');
         $template->set_attribute('lang', getUserLanguagePath($user_id));
@@ -243,7 +243,7 @@ class ModulesNotification extends Modules {
                     $text = _("1 neuer Beitrag im Forum:");
                 }
                 $redirect = '&again=yes&redirect_to=forum.php&view=neue&sort=age';
-		$icon = "icon-posting.gif";
+        $icon = "icon-posting.gif";
                 break;
             case 'documents' :
                 if ($r_data['neuedokumente'] > 1) {
@@ -252,7 +252,7 @@ class ModulesNotification extends Modules {
                     $text = _("1 neues Dokument hochgeladen:");
                 }
                 $redirect = '&again=yes&redirect_to=folder.php&cmd=all';
-		$icon = "icon-disc.gif";
+        $icon = "icon-disc.gif";
                 break;
             case 'schedule' :
                 if ($r_data['neuetermine'] > 1) {
@@ -261,7 +261,7 @@ class ModulesNotification extends Modules {
                     $text = _("1 neuer Termin angelegt:");
                 }
                 $redirect = '&again=yes&redirect_to=dates.php#a';
-		$icon = "icon-uhr.gif";
+        $icon = "icon-uhr.gif";
                 break;
             case 'literature' :
                 if ($r_data['neuelitlist'] > 1) {
@@ -270,7 +270,7 @@ class ModulesNotification extends Modules {
                     $text = _("1 neue Literaturliste angelegt");
                 }
                 $redirect = '&again=yes&redirect_to=literatur.php';
-		$icon = "icon-lit.gif";
+        $icon = "icon-lit.gif";
                 break;
             case 'elearning_interface' :
                 if (get_config('ELEARNING_INTERFACE_ENABLE')) {
@@ -280,7 +280,7 @@ class ModulesNotification extends Modules {
                         $text = _("1 neues Content-Modul angelegt");
                     }   
                     $redirect = "&again=yes&redirect_to=elearning_interface.php&seminar_id=$range_id&view=show";
-		    $icon = "icon-lern.gif";
+            $icon = "icon-lern.gif";
                 }
                 break;
             case 'wiki' :
@@ -290,14 +290,14 @@ class ModulesNotification extends Modules {
                     $text = _("1 Wikiseite wurde angelegt oder bearbeitet:");
                 }
                 $redirect = '&again=yes&redirect_to=wiki.php&view=listnew';
-		$icon = "icon-wiki.gif";
+        $icon = "icon-wiki.gif";
                 break;
             case 'scm' :
                 if ($r_data['neuscmcontent']) {
                     $text = sprintf(_("Die Seite \"%s\" wurde neu angelegt oder bearbeitet:"), $r_data['scmtabname']);
                 }
                 $redirect = '&again=yes&redirect_to=scm.php';
-		$icon = "icon-cont.gif";
+        $icon = "icon-cont.gif";
                 break;
             case 'votes' :
                 if (get_config('VOTE_ENABLE')) {
@@ -308,7 +308,7 @@ class ModulesNotification extends Modules {
                     }
                 }
                 $redirect = '&again=yes#votes';
-		$icon = "icon-vote.gif";
+        $icon = "icon-vote.gif";
                 break;
             case 'news' :
                 if ($r_data['neuenews'] > 1) {
@@ -317,26 +317,26 @@ class ModulesNotification extends Modules {
                     $text = _("1 neue News wurde angelegt:");
                 }
                 $redirect = '&again=yes';
-		$icon = "icon-news.gif";
+        $icon = "icon-news.gif";
                 break;
             case 'basic_data' :
                 if ($r_data['chdate'] > $r_data['visitdate']) {
                     $text = _("Die Grunddaten wurden geändert:");
                 }
                 $redirect = '&again=yes&redirect_to=details.php';
-		$icon = "home.gif";
+        $icon = "home.gif";
                 break;
             default :
                 $redirect = '';
         }
         if ($range == 'sem' && $text != '') {
-		if ($output == 'text') {
-	            $text .= "\n{$GLOBALS['ABSOLUTE_URI_STUDIP']}seminar_main.php?";
-        	    $text .= "auswahl=$range_id$redirect\n";
-		} else {
-		    if (substr($text, -1) == ':') $text = substr($text, 0, -1);
-        	    return array('txt'=>$text, 'url'=>$GLOBALS['ABSOLUTE_URI_STUDIP']."seminar_main.php?auswahl=$range_id$redirect", 'icon'=>$icon, 'range_id'=>$range_id);
-		}
+        if ($output == 'text') {
+                $text .= "\n{$GLOBALS['ABSOLUTE_URI_STUDIP']}seminar_main.php?";
+                $text .= "auswahl=$range_id$redirect\n";
+        } else {
+            if (substr($text, -1) == ':') $text = substr($text, 0, -1);
+                return array('txt'=>$text, 'url'=>$GLOBALS['ABSOLUTE_URI_STUDIP']."seminar_main.php?auswahl=$range_id$redirect", 'icon'=>$icon, 'range_id'=>$range_id);
+        }
         } 
         return $text;
     }

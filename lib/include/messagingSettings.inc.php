@@ -241,7 +241,7 @@ function change_messaging_view() {
                         </font>
                     </td>
                 </tr>
-		<tr  <? $cssSw->switchClass() ?>>
+        <tr  <? $cssSw->switchClass() ?>>
                   <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                     <font size="-1"><?print _("Email in folgendem Format versenden");?></font>
                   </td>

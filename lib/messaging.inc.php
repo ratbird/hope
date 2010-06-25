@@ -238,12 +238,12 @@ class messaging {
             ->addRecipient($to, $rec_fullname)
             ->setReplyToEmail($reply_to)
             ->setReplyToName($snd_fullname)
-	    ->setSenderName($snd_fullname)
+        ->setSenderName($snd_fullname)
             ->setBodyText($mailmessage);
-	if ($snd_user_id != "____%system%____")
+    if ($snd_user_id != "____%system%____")
                         $mail->setSenderEmail($reply_to);
-	$user_cfg = UserConfig::get($rec_user_id);
-	if ($user_cfg->getValue('MAIL_AS_HTML') == 'yes') {
+    $user_cfg = UserConfig::get($rec_user_id);
+    if ($user_cfg->getValue('MAIL_AS_HTML') == 'yes') {
                         $template_path = dirname(__FILE__) . '/../templates/';
                         $factory = new Flexi_TemplateFactory($template_path);
                         $template = $factory->open('mail_html');
@@ -349,11 +349,11 @@ class messaging {
             // system-signatur
             $snd_user_id = "____%system%____";
             setTempLanguage();
-	    $user_cfg = UserConfig::get(get_userid($rec_uname));
-	    if ($user_cfg->getValue('MAIL_AS_HTML') != 'yes')
-	       	    $message .= $this->sig_string . _("Diese Nachricht wurde automatisch vom Stud.IP-System generiert. Sie können darauf nicht antworten.");
-	    else
-	       	    $message .=  _("Diese Nachricht wurde automatisch vom Stud.IP-System generiert. Sie können darauf nicht antworten.");
+        $user_cfg = UserConfig::get(get_userid($rec_uname));
+        if ($user_cfg->getValue('MAIL_AS_HTML') != 'yes')
+                $message .= $this->sig_string . _("Diese Nachricht wurde automatisch vom Stud.IP-System generiert. Sie können darauf nicht antworten.");
+        else
+                $message .=  _("Diese Nachricht wurde automatisch vom Stud.IP-System generiert. Sie können darauf nicht antworten.");
 
             restoreLanguage();
 

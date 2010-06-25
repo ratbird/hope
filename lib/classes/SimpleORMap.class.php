@@ -174,13 +174,13 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     
     function getValue($field)
     {
-    	$field = strtolower($field);
+        $field = strtolower($field);
         return (array_key_exists($field, $this->content) ? $this->content[$field] : null);
     }
     
     function setValue($field, $value)
     {
-    	$field = strtolower($field);
+        $field = strtolower($field);
         $ret = false;
         if($this->db_fields[$field]){
             if (is_float($value)) $value = str_replace(',','.',$value);
@@ -201,7 +201,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     
     function __isset($field)
     {
-    	$field = strtolower($field);
+        $field = strtolower($field);
         return isset($this->content[$field]);
     }
     /**
@@ -227,10 +227,10 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     {
         $this->$offset = $value;
     }
-	
+    
     public function offsetUnset($offset)
     {
-    	
+        
     }
     
      /**
@@ -243,12 +243,12 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     
     public function count()
     {
-    	return count($this->content);
+        return count($this->content);
     }
     
     function isField($field)
     {
-    	$field = strtolower($field);
+        $field = strtolower($field);
         return isset($this->db_fields[$field]);
     }
     

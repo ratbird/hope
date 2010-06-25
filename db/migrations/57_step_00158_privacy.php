@@ -4,9 +4,9 @@ require_once(realpath(dirname(__FILE__).'/../../lib/user_visible.inc.php'));
 
 class Step00158Privacy extends Migration
 {
-	
+    
     static $config_entries = array(
-    	// Do users with status "dozent" always have to be visible?
+        // Do users with status "dozent" always have to be visible?
         array(
             'name'        => 'DOZENT_ALWAYS_VISIBLE',
             'type'        => 'boolean',
@@ -52,11 +52,11 @@ class Step00158Privacy extends Migration
         $categories = array();
         // aggregate all categories by their owner...
         while ($category = $data->fetch()) {
-        	$categories[$category['range_id']]['kat_'.$category['kategorie_id']] = VISIBILITY_ME;
+            $categories[$category['range_id']]['kat_'.$category['kategorie_id']] = VISIBILITY_ME;
         }
         // ... and write settings to user privacy table
         foreach ($categories as $owner_id => $settings) {
-        	$db->exec("UPDATE `user_visibility` SET `homepage`='".serialize($settings)."' WHERE `user_id`='".$owner_id."'");
+            $db->exec("UPDATE `user_visibility` SET `homepage`='".serialize($settings)."' WHERE `user_id`='".$owner_id."'");
         }
         
         // remove hidden attribute of custom categories (is configured in privacy settings now)
@@ -78,16 +78,16 @@ class Step00158Privacy extends Migration
         // add "hidden" field to user categories...
         $db->exec("ALTER TABLE `kategorien` ADD `hidden` TINYINT(4) NOT NULL DEFAULT 0 AFTER `content`");
         // ... and set it there according to privacy settings
-		$db->query("SELECT `user_id`, `homepage` FROM `user_visibility` WHERE `homepage` LIKE '%kat_%'");
-		while ($current = $db->fetch()) {
-			$data = unserialize($current['homepage']);
-			foreach ($data as $key => $visibility) {
-				if (substr($key, 0, 4) == 'kat_' && $visibility == VISIBILITY_ME) {
-					$category_id = substr($key, 4);
-					DBManager::get()->exec("UPDATE `kategorien` SET `hidden`=1 WHERE `user_id`='".$current['user_id']."'");
-				}
-			}
-		}
+        $db->query("SELECT `user_id`, `homepage` FROM `user_visibility` WHERE `homepage` LIKE '%kat_%'");
+        while ($current = $db->fetch()) {
+            $data = unserialize($current['homepage']);
+            foreach ($data as $key => $visibility) {
+                if (substr($key, 0, 4) == 'kat_' && $visibility == VISIBILITY_ME) {
+                    $category_id = substr($key, 4);
+                    DBManager::get()->exec("UPDATE `kategorien` SET `hidden`=1 WHERE `user_id`='".$current['user_id']."'");
+                }
+            }
+        }
 
         // delete privacy settings from database
         $db->exec("DROP TABLE `user_visibility`");

@@ -25,7 +25,7 @@ class SearchNavigation extends Navigation
 
         //TODO: anpassen
         $image = 'header/header_meinesem';
-		$tip = _('Suche');
+        $tip = _('Suche');
 
         $this->setImage($image, array('title' => $tip));
     }

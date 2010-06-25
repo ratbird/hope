@@ -66,14 +66,14 @@ class Course_BasicdataController extends AuthenticatedController {
             'name' => "course_name",
             'bold' => true,
             'type' => 'text',
-            'value' => $data['name'],
+            'value' => htmlReady($data['name']),
             'locked' => LockRules::Check($this->course_id, 'Name')
         );
         $this->attributes[] = array(
             'title' => _("Untertitel der Veranstaltung"),
             'name' => "course_subtitle",
             'type' => 'text',
-            'value' => $data['subtitle'],
+            'value' => htmlReady($data['subtitle']),
             'locked' => LockRules::Check($this->course_id, 'Untertitel')
         );
         $sem_types = array();
@@ -85,7 +85,7 @@ class Course_BasicdataController extends AuthenticatedController {
             'name' => "course_status",
             'bold' => true,
             'type' => 'select',
-            'value' => $data['status'],
+            'value' => htmlReady($data['status']),
             'locked' => LockRules::Check($this->course_id, 'status'),
             'choices' => $sem_types
         );
@@ -93,7 +93,7 @@ class Course_BasicdataController extends AuthenticatedController {
             'title' => _("Art der Veranstaltung"),
             'name' => "course_form",
             'type' => 'text',
-            'value' => $data['form'],
+            'value' => htmlReady($data['form']),
             'locked' => LockRules::Check($this->course_id, 'art')
         );
         $this->attributes[] = array(
@@ -101,7 +101,7 @@ class Course_BasicdataController extends AuthenticatedController {
             'name' => "course_seminar_number",
             'bold' => false,
             'type' => 'text',
-            'value' => $data['seminar_number'],
+            'value' => htmlReady($data['seminar_number']),
             'locked' => LockRules::Check($this->course_id, 'VeranstaltungsNummer')
         );
         $this->attributes[] = array(
@@ -109,7 +109,7 @@ class Course_BasicdataController extends AuthenticatedController {
             'name' => "course_ects",
             'bold' => false,
             'type' => 'text',
-            'value' => $data['ects'],
+            'value' => htmlReady($data['ects']),
             'locked' => LockRules::Check($this->course_id, 'ects')
         );
         $this->attributes[] = array(
@@ -117,14 +117,14 @@ class Course_BasicdataController extends AuthenticatedController {
             'name' => "course_admission_turnout",
             'bold' => true,
             'type' => 'text',
-            'value' => $data['admission_turnout'],
+            'value' => htmlReady($data['admission_turnout']),
             'locked' => LockRules::Check($this->course_id, 'admission_turnout')
         );
         $this->attributes[] = array(
             'title' => _("Beschreibung"),
             'name' => "course_description",
             'type' => 'textarea',
-            'value' => $data['description'], 
+            'value' => htmlReady($data['description']), 
             'locked' => LockRules::Check($this->course_id, 'Beschreibung')
         );
         
@@ -136,7 +136,7 @@ class Course_BasicdataController extends AuthenticatedController {
             //$choices[$inst['Institut_id']] = $inst['Name'];
             $choices[$inst['Institut_id']] = 
                 ($inst['is_fak'] ? "<span style=\"font-weight: bold\">" : "&nbsp;&nbsp;&nbsp;&nbsp;") .
-                $inst['Name'] .
+                htmlReady($inst['Name']) .
                 ($inst['is_fak'] ? "</span>" : "");
         }
         $this->institutional[] = array(
@@ -153,7 +153,7 @@ class Course_BasicdataController extends AuthenticatedController {
         foreach ($institute as $inst) {
             $choices[$inst['Institut_id']] = 
                 ($inst['is_fak'] ? "<span style=\"font-weight: bold\">" : "&nbsp;&nbsp;&nbsp;&nbsp;") .
-                $inst['Name'] .
+                htmlReady($inst['Name']) .
                 ($inst['is_fak'] ? "</span>" : "");
         }
         $inst = array_flip($sem->getInstitutes());

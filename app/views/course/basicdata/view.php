@@ -124,7 +124,7 @@ $width_namecolumn = 50;
                 <a href="<?= $controller->url_for('course/basicdata/deletedozent', $dozent["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
                 <?= Assets::img("trash.gif") ?></a>
             </div>
-            <div style="float:left; margin: 3px; vertical-align: middle">
+            <div style="float:left; margin: 3px; vertical-align: middle; width: 40px; ">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $dozent["user_id"], "dozent") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
                 <?= Assets::img("move_up") ?></a>

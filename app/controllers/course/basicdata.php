@@ -23,12 +23,6 @@ class Course_BasicdataController extends AuthenticatedController {
         Request::set('new_doz_parameter', $this->flash['new_doz_parameter']);
         Request::set('new_tut_parameter', $this->flash['new_tut_parameter']);
         
-        //Berechtigungscheck:
-        if (!$perm->have_studip_perm("tutor",$SessSemName[1])) {
-            throw new AccessDeniedException(_("Sie haben keine Berechtigung diese " .
-                    "Veranstaltung zu verändern."));
-        }
-        
         $this->course_id = $SessSemName[1];
         
         if ((Request::get('section') === 'details') || ($this->flash['section'] === 'details')) {
@@ -49,6 +43,12 @@ class Course_BasicdataController extends AuthenticatedController {
             include 'lib/include/html_head.inc.php';
             include 'lib/include/header.php';
             include 'lib/include/admin_search_form.inc.php';  // will not return
+        }
+        
+        //Berechtigungscheck:
+        if (!$perm->have_studip_perm("tutor",$SessSemName[1])) {
+            throw new AccessDeniedException(_("Sie haben keine Berechtigung diese " .
+                    "Veranstaltung zu verändern."));
         }
         
         $HELP_KEYWORD = "Basis.VeranstaltungenVerwaltenGrunddaten";

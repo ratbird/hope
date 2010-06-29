@@ -2260,6 +2260,24 @@ CREATE TABLE `user_userdomains` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `user_visibility`
+--
+
+DROP TABLE IF EXISTS `user_visibility`;
+CREATE TABLE IF NOT EXISTS `user_visibility` (
+  `user_id` varchar(32) NOT NULL,
+  `online` tinyint(1) NOT NULL DEFAULT '0',
+  `chat` tinyint(1) NOT NULL DEFAULT '0',
+  `search` tinyint(1) NOT NULL DEFAULT '1',
+  `email` tinyint(1) NOT NULL DEFAULT '1',
+  `homepage` text NOT NULL DEFAULT '',
+  `mkdate` int(20) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`user_id`)
+) TYPE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `vote`
 --
 

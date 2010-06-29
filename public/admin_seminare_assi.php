@@ -46,6 +46,7 @@ require_once ('lib/classes/SeminarCategories.class.php');
 require_once ('lib/classes/LockRules.class.php');
 require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/classes/StudipStudyAreaSelection.class.php';
+require_once ('lib/deputies_functions.inc.php');
 
 $sem_create_perm = (in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent');
 
@@ -105,6 +106,9 @@ if (isset($study_areas['areas'])) {
 
 $user_id = $auth->auth["uid"];
 $errormsg='';
+
+$deputies_enabled = get_config('DEPUTIES_ENABLE');
+$default_deputies_enabled = get_config('DEPUTIES_DEFAULTENTRY_ENABLE');
 
 //initialisations for room-requests
 if ($RESOURCES_ENABLE && $RESOURCES_ALLOW_ROOM_REQUESTS && $form <7) {
@@ -273,6 +277,11 @@ if (isset($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_id
 
         // Dozenten und Tutoren eintragen
         $sem_create_data["sem_doz"] = get_seminar_dozent($cp_id);
+        if ($deputies_enabled) {
+	        if (!$sem_create_data["sem_dep"] = getDeputies($cp_id)) {
+	        	unset($sem_create_data["sem_dep"]);
+	        }
+        }
         if (!$sem_create_data["sem_tut"] = get_seminar_tutor($cp_id)) {
             unset($sem_create_data["sem_tut"]);
         }
@@ -346,8 +355,13 @@ if ($start_level) { //create defaults
     if ($SEM_CLASS[$class]['default_write_level'] && !array_key_exists('sem_sec_schreib', $sem_create_data))
         $sem_create_data['sem_sec_schreib'] = $SEM_CLASS[$class]['default_write_level'];
 
-    if ($auth->auth['perm'] == 'dozent')
+    if ($auth->auth['perm'] == 'dozent') {
         $sem_create_data['sem_doz'][$user->id] = 1;
+        if ($deputies_enabled && $default_deputies_enabled) {
+            // Add my own deputies.
+            $sem_create_data['sem_dep'] = getDeputies($user->id);
+        }
+    }
 }
 
 if ($form == 1)
@@ -792,8 +806,10 @@ if ($jump_back_x) {
 if (!$jump_back_x
     && !$jump_next_x
     && !$add_doz
+    && !$add_dep
     && !$add_tut
     && !$delete_doz
+    && !$delete_dep
     && !$delete_tut
     && !$add_turnus_field_x
     && !$delete_turnus_field_x
@@ -804,6 +820,7 @@ if (!$jump_back_x
     && !$add_studg_x
     && !$delete_studg_x
     && !$search_doz
+    && !$search_dep
     && !$search_tut
     && !$search_room_x
     && !$reset_room_search_x
@@ -933,6 +950,13 @@ if ($delete_doz) {
   $level=2;
 }
 
+if ($deputies_enabled && $delete_dep) {
+  $dep_id = get_userid($delete_dep);
+  unset($sem_create_data["sem_dep"][$dep_id]);
+
+  $level=2;
+}
+
 if ($delete_tut) {
   $position = $sem_create_data["sem_tut"][get_userid($delete_tut)];
   unset($sem_create_data["sem_tut"][get_userid($delete_tut)]);
@@ -947,14 +971,47 @@ if ($delete_tut) {
 }
 
 if (($send_doz_x) && (!$reset_search_x)) {
-   $next_position = sizeof($sem_create_data["sem_doz"]) + 1;
-    $sem_create_data["sem_doz"][get_userid($add_doz)]= $next_position;
+	$next_position = sizeof($sem_create_data["sem_doz"]) + 1;
+   	$doz_id = get_userid($add_doz);
+    $sem_create_data["sem_doz"][$doz_id]= $next_position;
+    if ($deputies_enabled) {
+        // Unset person as deputy.
+    	if ($sem_create_data['sem_dep'][$doz_id]) {
+    		unset($sem_create_data['sem_dep'][$doz_id]);
+    	}
+    	if (get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) {
+        	$deputies = getDeputies($doz_id);
+        	// Add the new lecturer's deputies if necessary.
+        	foreach ($deputies as $deputy) {
+        	    if (!isset($sem_create_data['sem_doz'][$deputy['user_id']]) && 
+        	           !isset($sem_create_data['sem_dep'][$deputy['user_id']])) {
+                    $sem_create_data['sem_dep'][$deputy['user_id']] = $deputy;
+                }
+        	}
+    	}
+    }
+    $level=2;
+}
+
+if ($deputies_enabled && $send_dep_x && !$reset_search_x) {
+	$dep_id = get_userid($add_dep);
+    $sem_create_data["sem_dep"][$dep_id] = array(
+            'user_id' => $dep_id,
+            'username' => get_username($dep_id),
+            'fullname' => get_fullname($dep_id, 'full_rev'),
+            'perms' => $perm->get_perm($dep_id)
+        );
+    // Remove as lecturer if necessary.
+    if (isset($sem_create_data['sem_doz'][$dep_id])) {
+    	unset($sem_create_data['sem_doz'][$dep_id]);
+    }
     $level=2;
 }
 
 if (($send_tut_x) && (!$reset_search_x)) {
-   $next_position = sizeof($sem_create_data["sem_tut"]) + 1;
-    $sem_create_data["sem_tut"][get_userid($add_tut)]= $next_position;
+    $next_position = sizeof($sem_create_data["sem_tut"]) + 1;
+    $tut_id = get_userid($add_tut);
+    $sem_create_data["sem_tut"][$tut_id]= $next_position;
     $level=2;
 }
 
@@ -964,7 +1021,7 @@ if (isset($_REQUEST['delete_domain'])) {
     unset($sem_create_data["sem_domain"][$index]);
 }
 
-if ($search_doz_x || $search_tut_x || $reset_search_x ||
+if ($search_doz_x || $search_dep_x ||$search_tut_x || $reset_search_x ||
     $sem_bereich_do_search_x ||
         isset($_REQUEST['add_domain_x']) || isset($_REQUEST['delete_domain']) ||
     $study_areas['add'] || $study_areas['remove'] ||
@@ -1697,7 +1754,7 @@ if (($form == 6) && ($jump_next_x))
                 }
             }
 
-            if (!$perm->have_perm("admin") && !$self_included) // wenn nicht admin, aktuellen Dozenten eintragen
+            if (!$perm->have_perm("admin") && !$self_included && (!$deputies_enabled || $sem_create_data['sem_dep'][$user_id])) // wenn nicht admin, aktuellen Dozenten eintragen
             {
                 $group=select_group($sem_create_data["sem_start_time"]);
 
@@ -1710,6 +1767,30 @@ if (($form == 6) && ($jump_next_x))
                 if ($db3->affected_rows() >=1)
                     $count_doz++;
             }
+
+            if (is_array($sem_create_data["sem_dep"]))  // alle ausgewählten Vertretungen durchlaufen
+            {
+                $count_dep=0;
+                foreach ($sem_create_data["sem_dep"] as $key=>$val)
+                {
+                    $group=select_group($sem_create_data["sem_start_time"]);
+
+                    $query = "SELECT user_id FROM seminar_user WHERE Seminar_id = '".
+                        $sem_create_data["sem_id"]."' AND user_id ='$key'";
+                    $db4->query($query);
+                    if ($db4->next_record())    // User schon da, kann beim Anlegen nur als Dozent sein, also ignorieren
+                        ;
+                    else // User noch nicht da
+                        {
+                        $query = "insert into deputies SET range_id = '".
+                            $sem_create_data["sem_id"]."', user_id = '".
+                            $key."', gruppe = '$group'";
+                        $db3->query($query);                 // Vertretung eintragen
+                            if ($db3->affected_rows() >= 1)
+                                $count_dep++;
+                        }
+                    }
+                }
 
             if (is_array($sem_create_data["sem_tut"]))  // alle ausgewählten Tutoren durchlaufen
             {
@@ -2529,9 +2610,11 @@ if ($level == 2)
                 print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\">";
 
                 $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
-                foreach($sem_create_data["sem_bet_inst"] as $val) {
-                    $clause.=",'$val'";
-                }
+				if (is_array($sem_create_data["sem_bet_inst"])) {
+                    foreach($sem_create_data["sem_bet_inst"] as $val) {
+                        $clause.=",'$val'";
+                    }
+				}
                 $clause.=") ";
                 $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ". 
                         $_fullname_sql['full_rev'] ." AS fullname " .
@@ -2548,6 +2631,63 @@ if ($level == 2)
                 <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
                 </td>
             </tr>
+			     <?php if ($deputies_enabled) { ?>
+                    <tr <? $cssSw->switchClass() ?>>
+                        <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
+                        <?
+                        echo get_title_for_status('deputy', 2, $sem_create_data["sem_status"]);
+                        ?>
+                        </td>
+                        <td class="<? echo $cssSw->getClass() ?>" width="40%">
+                            <?
+                            if (sizeof($sem_create_data["sem_dep"]) >0) {
+                        asort($sem_create_data["sem_dep"]);
+                        echo "<table>";
+                        $i = 0;
+                                foreach($sem_create_data["sem_dep"] as $key=>$val) {
+                                                            echo "<tr>";
+                                                            echo "<td>";
+
+                                                            $href = "?delete_dep=".get_username($key)."#anker";
+                                                            $img_src = "images/trash.gif";
+
+                                                            echo "<a href='".URLHelper::getLink($href)."'>";
+                                                            echo "<img src='{$GLOBALS['ASSETS_URL']}{$img_src}' border='0'>";
+                                                            echo "</a>";
+                                                            echo "</td>";
+                              echo "<td>";
+                              echo "<font size=\"-1\">&nbsp;<b>".$val['fullname'].
+                           " (". $val['username'] . ", "._("Status").": ".$val['perms'].")</b></font>";
+
+                              echo "</td>";
+
+                                   echo "</tr>";// end of row
+                           $i++;
+                        }
+                        echo "</table>";
+                            } else {
+                                printf ("<font size=\"-1\">&nbsp;  ". sprintf(_("Keine %s gew&auml;hlt."), get_title_for_status('deputy', 2, $sem_create_data["sem_status"]))."</font><br >");
+                            }
+                            ?>
+                            &nbsp; <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
+                                <?
+                                echo tooltip(sprintf(_("Personen, die Sie hier eintragen, haben dieselben Rechte wie %s, erscheinen aber nicht nach außen. Nutzen Sie die Suchfunktion (Lupensymbol), um weitere Eintragungen vorzunehmen, oder das Mülltonnensymbol, um Einträge zu löschen."), get_title_for_status('dozent', 2, $sem_create_data["sem_status"])), TRUE, TRUE);
+                                ?>
+                            >
+                        </td>
+                        <td class="<? echo $cssSw->getClass() ?>" width="50%" colspan="2">
+                        <?php
+                        print _("Vertretung hinzuf&uuml;gen");
+                        print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_dep\">";
+
+                        $deputysearch = new PermissionSearch('username', '', '', array('permission' => getValidDeputyPerms()));
+                        print QuickSearch::get("add_dep", $deputysearch)
+                                ->render();
+                        ?> 
+                        <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
+                        </td>
+                    </tr>
+                    <?php } ?>
                     <tr <? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
                         <?
@@ -4088,6 +4228,9 @@ if ($level == 7)
                             elseif ($count_bet_inst>1)
                                 printf ("<li>"._("Veranstaltung f&uuml;r <b>%s</b> beteiligte Einrichtungen angelegt.")."<br><br>", $count_bet_inst);
                             printf("<li>"._("<b>%d</b> %s f&uuml;r die Veranstaltung eingetragen.")."<br><br>", $count_doz, get_title_for_status('dozent', $count_doz, $sem_create_data["sem_status"]));
+                            if ($deputies_enabled && $count_dep > 0) {
+                                printf("<li>"._("<b>%d</b> %s f&uuml;r die Veranstaltung eingetragen.")."<br><br>", $count_dep, get_title_for_status('deputy', $count_dep, $sem_create_data["sem_status"]));
+                            }
                             printf("<li>"._("<b>%d</b> %s f&uuml;r die Veranstaltung eingetragen.")."<br><br>", $count_tut, get_title_for_status('tutor', $count_tut, $sem_create_data["sem_status"]));
                             if ($count_doms==1)
                                 print "<li>"._("<b>1</b> Nutzerdom&auml;ne f&uuml;r die Veranstaltung eingetragen.")."<br><br>";

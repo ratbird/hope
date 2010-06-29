@@ -46,6 +46,7 @@ require_once('lib/classes/DataFieldEntry.class.php');
 require_once('lib/classes/SeminarCategories.class.php');
 require_once 'lib/classes/CourseAvatar.class.php';
 require_once 'lib/admin_search.inc.php';
+require_once('lib/deputies_functions.inc.php');
 $HELP_KEYWORD="Basis.VeranstaltungenVerwaltenGrunddaten";
 
 $CURRENT_PAGE.=_("Verwaltung der Grunddaten");
@@ -64,6 +65,8 @@ if ($SessSemName[1])
 $header_line = getHeaderLine($s_id);
 if ($header_line)
     $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+
+$deputies_enabled = get_config('DEPUTIES_ENABLE');
 
 //Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -518,6 +521,24 @@ if ($delete_doz) {
         $msg .= "error§" . _("Sie haben keine Berechtigung diese Veranstaltung zu ver&auml;ndern.") . "§";
 }
 
+// remove deputy
+if ($delete_dep) {
+    if ($perm->have_studip_perm("dozent",$s_id)) {
+        if ($delete_dep == get_username($user_id)) {
+            $msg .= "error§" . _("Sie d&uuml;rfen sich nicht selbst aus der Veranstaltung austragen.") . "§";
+        } else {
+            if (deleteDeputy(get_userid($delete_dep), $s_id)) {
+                $msg .= "msg§" . sprintf(_("Der Nutzer <b>%s</b> wurde als %s aus der Veranstaltung gel&ouml;scht."), get_fullname_from_uname($delete_dep,'full',true), get_title_for_status('deputy', 1, $seminar_type)) . "§";
+                $user_deleted=TRUE;
+            } else {
+            	$msg .= "error§" . sprintf(_("Fehler beim Entfernen von <b>%s</b> als %s!"), get_fullname_from_uname($delete_dep,'full',true), get_title_for_status('deputy', 1, $seminar_type)) . "§";
+            }
+        }
+    } else {
+        $msg .= "error§" . _("Sie haben keine Berechtigung, diese Veranstaltung zu ver&auml;ndern.") . "§";
+    }
+}
+
 if ($delete_tut) {
     if ($perm->have_studip_perm("dozent",$s_id)) {
 
@@ -754,6 +775,56 @@ if ($s_send) {
             if($query){
                 $db3->query($query);                    //Dozent eintragen
                 $user_added = TRUE;
+                // Only applicable when globally enabled and user deputies enabled too
+                if ($deputies_enabled) {
+                	// Check whether chosen person is set as deputy
+                	// -> delete deputy entry.
+                	if (isDeputy($add_doz_id, $s_id)) {
+                		deleteDeputy($add_doz_id, $s_id);
+                	}
+                	// Add default deputies of the chosen lecturer...
+                	if (get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) {
+	                	$lecturers = get_seminar_dozent($s_id);
+	                	$deputies = getDeputies($add_doz_id);
+	                	foreach ($deputies as $deputy) {
+	                		// ..but only if not already set as lecturer or deputy.
+	                		if (!isset($lecturers[$deputy['user_id']]) && !isDeputy($deputy['user_id'], $s_id)) {
+	                    		addDeputy($deputy['user_id'], $s_id);
+	                		}
+	                	}
+                	}
+                }
+            }
+        }
+
+        // a deputy was added
+        if ($add_dep_x
+                && $perm->have_studip_perm("dozent",$s_id)
+                && !LockRules::Check($s_id, 'dozent')) {
+            $add_dep_id = get_userid($add_dep);
+            if (!isDeputy($add_dep_id, $s_id)) { //User schon da
+            	$dozent_ids = get_seminar_dozent($s_id);
+            	if (!isset($dozent_ids[$add_dep_id])) {
+                    addDeputy($add_dep_id, $s_id);
+                    $user_added = TRUE;
+            	} else {
+            		if (sizeof($dozent_ids) > 1) {
+            			addDeputy($add_dep_id, $s_id);
+                        $user_added = TRUE;
+                    } else {
+            			$msg .= "error§".sprintf(
+                            _("Um <b>%s</b> als %s statt als %s einzutragen, müssen Sie erst weitere %s hinzufügen!"), 
+                                get_fullname($add_dep_id, 'full', true), 
+                                get_title_for_status('deputy', 1, $seminar_type), 
+                                get_title_for_status('dozent', 1, $seminar_type), 
+                                get_title_for_status('dozent', 2, $seminar_type))."§";
+            		}
+            	}
+            } else {
+            	$msg .= "error§".sprintf(
+                    _("<b>%s</b> ist bereits als %s eingetragen!"), 
+                        get_fullname($add_dep_id, 'full', true), 
+                        get_title_for_status('deputy', 1, $seminar_type))."§";
             }
         }
 
@@ -1047,7 +1118,7 @@ if (($s_id) && (auth_check())) {
                                 }
                             }
                         }
-                        if ($perm->get_perm() == 'dozent' && !$found_home_inst){
+                        if (($perm->get_perm() == 'dozent' || isDeputy($user->id, $s_id)) && !$found_home_inst){
                             printf("<option selected value=\"%s\"> %s</option>", $db->f("Institut_id") , htmlReady(my_substr($db->f("Institut"),0,60)));
                         }
                         echo "</select>";
@@ -1186,7 +1257,7 @@ if (($s_id) && (auth_check())) {
                     print "<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"add_doz\">";
 
                     if ($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["only_inst_user"]) {
-                        $clause="AND Institut_id IN (". sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id) . ") ";
+                    	$clause="AND Institut_id IN (". sprintf("SELECT institut_id FROM seminar_inst WHERE seminar_id = '%s'", $s_id) . ") ";
                     }
                     $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ".
                             $_fullname_sql['full_rev'] ." AS fullname FROM user_inst " .
@@ -1212,6 +1283,70 @@ if (($s_id) && (auth_check())) {
                     <hr width="99%" align="right">
                 <td>
             </tr>
+            <?php
+            if ($deputies_enabled) {
+                $persons = getDeputies($s_id);
+            ?>
+			<tr>
+			    <td class="<? echo $cssSw->getClass() ?>" align="right">
+			    <? echo get_title_for_status('deputy', 2, $seminar_type); ?>
+			    <? if (LockRules::Check($s_id, 'dozent')) echo $lock_text; ?>
+			    </td>
+			    <td class="<? echo $cssSw->getClass() ?>" align="left">
+			       &nbsp;
+			        <?php
+			        if (sizeof($persons) > 0) {
+			            $i = 0;
+			        ?>
+			        <table>
+			        <?php
+			            foreach ($persons as $id => $person) {
+			        ?>
+			            <tr>
+			                <td>
+			                    <a href="<?php echo URLHelper::getLink('?delete_dep='.$person['username'].($current_id ? '&cid='.$current_id : '')); ?>">
+			                        <img src="<?php echo $GLOBALS['ASSETS_URL'].'images/trash.gif'; ?>"/>
+			                    </a>
+			                </td>
+			                <td>
+			                    <b><?php echo $person['fullname']." (".$person['username'].")"; ?></b>
+			                </td>
+			            </tr>
+			            <?php
+			            $i++;
+			            }
+			        ?>
+			        </table>
+			        <?php
+			        } else {
+			            printf(_('Keine %s gewählt.'), get_title_for_status('deputy', 2, $seminar_type));
+			        }
+			        ?>
+			    </td>
+			    <td class="<?php echo $cssSw->getClass(); ?>" align="left">
+			        <?php printf(_('%s hinzufügen'), get_title_for_status('deputy', 1, $seminar_type)); ?>
+			        <br/>
+			        <input type="IMAGE" src="<?php echo $GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen")); ?>" border="0" name="add_dep">
+			        <?php
+			            print QuickSearch::get('add_dep', new PermissionSearch(
+                                "username", 
+                                sprintf(_("Name %s"), get_title_for_status('deputy', 1, $seminar_type)),
+                                "user_id", 
+                                array('permission' => getValidDeputyPerms())))
+			                ->withButton()
+			                ->render();
+			        ?>
+			        <br/>
+			        <?php echo _('Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.'); ?>
+			    </td>
+			</tr>
+			<tr>
+			    <td class="<? echo $cssSw->getClass() ?>" >&nbsp;</td>
+			    <td class="<? echo $cssSw->getClass() ?>" align=left colspan="2">
+			        <hr width="99%" align="right">
+			    </td>
+			</tr>
+            <?php } ?>
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" align="right">
                 <?= get_title_for_status('tutor', 2, $seminar_type) ?>

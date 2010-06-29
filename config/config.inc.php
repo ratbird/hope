@@ -88,6 +88,7 @@ $UNI_INFO = "Kontakt:\nStud.IP Crew c/o data-quest Suchi & Berg GmbH\nFriedlände
 // define default names for status groups
 $DEFAULT_TITLE_FOR_STATUS = array(
     'dozent'   => array(_('DozentIn'), _('DozentInnen')),
+    'deputy'   => array(_('Vertretung'), _('Vertretungen')),
     'tutor'    => array(_('TutorIn'), _('TutorInnen')),
     'autor'    => array(_('AutorIn'), _('AutorInnen')),
     'user'     => array(_('LeserIn'), _('LeserInnen')),

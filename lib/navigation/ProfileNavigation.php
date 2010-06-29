@@ -120,5 +120,8 @@ class ProfileNavigation extends Navigation
 
         // user defined sections
         $this->addSubNavigation('sections', new Navigation(_('Kategorien'), 'edit_about.php', array('view' => 'Sonstiges')));
+        // shortcut for privacy settings
+        // (relevant mainly for personal comfort and deputies
+        $this->addSubNavigation('privacy', new Navigation(_('Privatsphäre'), 'edit_about.php', array('view' => 'privacy')));
     }
 }

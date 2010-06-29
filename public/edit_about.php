@@ -47,6 +47,7 @@ require_once('lib/log_events.inc.php');
 require_once('lib/classes/Avatar.class.php');
 require_once('lib/edit_about.inc.php');
 require_once('lib/classes/UserDomain.php');
+require_once('lib/deputies_functions.inc.php');
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
@@ -338,6 +339,51 @@ if (check_ticket($studipticket)) {
         }
     }
 
+    if ($add_deputy_x) {
+    	if (!isDeputy($_REQUEST['deputy_id'], $my_about->auth_user["user_id"])) {
+	    	if ($_REQUEST['deputy_id'] != $my_about->auth_user["user_id"]) {
+		    	$success = addDeputy($_REQUEST['deputy_id'], $my_about->auth_user["user_id"]);
+		        if ($success) {
+		            $my_about->msg .= 'msg§'.sprintf(_('%s wurde als Vertretung eingetragen.'), get_fullname($_REQUEST['deputy_id'], 'full'));
+		        } else {
+		            $my_about->msg .= 'error§'._('Fehler beim Eintragen der Vertretung!');
+		        }
+	    	} else {
+	    		$my_about->msg .= 'error§'._('Sie können sich nicht als Ihre eigene Vertretung eintragen!');
+	    	}
+    	} else {
+    		$my_about->msg .= 'error§'.sprintf(_('%s ist bereits als Vertretung eingetragen.'), get_fullname($_REQUEST['deputy_id'], 'full'));
+    	}
+    }
+    
+    if ($cmd == 'change_deputies') {
+         if (isset($_REQUEST['delete_deputy'])) {
+            $deleted = deleteDeputy($_REQUEST['delete_deputy'], $my_about->auth_user["user_id"]);
+            foreach ($_REQUEST['delete_deputy'] as $deputy) {
+            	unset($_REQUEST['edit_about_'.$deputy]);
+            }
+	        if ($deleted) {
+	            $my_about->msg .= ($deleted == 1) ? 'msg§'._('Die Vertretung wurde entfernt.').'§' : 'msg§'.sprintf(_('Es wurden %s Vertretungen entfernt.'), $deleted).'§';
+	        } else {
+	            $my_about->msg .= 'error§'._('Fehler beim Entfernen der Vertretung(en).').'§';
+	        }
+        }
+        $success = false;
+        $changed_deputies = array();
+        for ($i=0 ; $i<sizeof($_REQUEST['deputy_ids']) ; $i++) {
+    		if (isset($_REQUEST['edit_about_'.$_REQUEST['deputy_ids'][$i]]) &&
+                    $_REQUEST['edit_about_'.$_REQUEST['deputy_ids'][$i]] != $_REQUEST['deputy_saved_edit_about'][$i]) {
+    			$success = setDeputyHomepageRights($_REQUEST['deputy_ids'][$i], $my_about->auth_user["user_id"], intval($_REQUEST['edit_about_'.$_REQUEST['deputy_ids'][$i]]));
+    			$changed_deputies[] = $_REQUEST['deputy_ids'][$i];
+    		}
+       	}
+        if ($success && $changed_deputies) {
+            $my_about->msg .= 'msg§'._('Die Einstellungen wurden gespeichert.');
+        } else if ($changed_deputies) {
+            $my_about->msg .= 'error§'._('Fehler beim Speichern der Einstellungen.');
+        }
+    }
+
     if ($my_about->logout_user)
      {
         $sess->delete();  // User logout vorbereiten
@@ -459,7 +505,15 @@ switch($view) {
         break;
     case "privacy":
         $CURRENT_PAGE=_("Privatsphäre");
-        Navigation::activateItem('/account/privacy');
+        if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE') && $my_about->auth_user["user_id"] != $user->id) {
+            Navigation::activateItem('/profil/privacy');
+        } else {
+            Navigation::activateItem('/account/privacy');
+        }
+        break;
+    case "deputies":
+        $CURRENT_PAGE=_("Standardvertretung");
+        Navigation::activateItem('/account/deputies');
         break;
     default:
         $HELP_KEYWORD="Basis.MyStudIP";
@@ -620,7 +674,8 @@ if ($view != 'Forum'
         && $view != 'calendar'
         && $view != 'Stundenplan'
         && $view != 'Messaging'
-        && $view != 'allgemein') {
+        && $view != 'allgemein'
+        && $view != 'notification') {
     echo '<table class="blank" cellspacing=0 cellpadding=0 border=0 width="100%">'."\n";
 
 //  echo '<tr><td class="'.(($username != $auth->auth["uname"])? 'topicwrite':'topic').'" colspan=2><img src="'. $GLOBALS['ASSETS_URL'] . 'images/einst.gif" border="0" align="texttop"><b>&nbsp;';
@@ -1327,6 +1382,13 @@ if ($view == "Messaging") {
     change_messaging_view();
 }
 
+if ($view == 'notification') {
+    echo '<table class="blank" cellspacing="0" cellpadding="2" border="0" width="100%">';
+    echo "<tr><td class=\"blank\" width=\"100%\">\n";
+    require_once('sem_notification.php');
+    echo "</td></tr></table>\n";
+}
+
 if ($view == 'Login') {
     echo '<tr><td colspan="2" class="blank">'."<br><br>\n" ;
     if ($my_about->check == 'user' && !$perm->have_perm('admin')) {
@@ -1348,6 +1410,10 @@ if ($view == 'Login') {
 
 if ($view == 'privacy') {
     require_once ('lib/include/privacy.inc.php');
+}
+
+if ($view == 'deputies') {
+	require_once('lib/include/deputies.inc.php');
 }
 
     if ($table_open) echo "\n</table>\n";

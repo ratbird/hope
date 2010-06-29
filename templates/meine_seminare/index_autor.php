@@ -116,6 +116,9 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                 <br>
             <? } ?>
 
+            <? if (sizeof($my_bosses)) {
+            	echo $this->render_partial('meine_seminare/_deputy_bosses');
+            }?>
 
 
             <? if (!$num_my_inst) { ?>

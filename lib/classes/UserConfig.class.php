@@ -115,6 +115,23 @@ class UserConfig extends Config
         return parent::setValue($field, $value);
     }
 
+    function unsetValue($field)
+    {
+        $args = func_get_args();
+        if(count($args) > 1) {
+            list($user_id, $key) = $args;
+            if($user_id !== null && $key !== null) {
+                $ret = UserConfig::get($user_id)->delete($key);
+            }
+            if($user_id === null) {
+                $ret = $this->delete($key);
+            }
+            trigger_error('deprecated use of ' . __METHOD__, E_USER_NOTICE);
+            return $ret;
+        }
+        return $this->delete($field);
+    }
+
     function store($field, $value)
     {
 
@@ -137,7 +154,10 @@ class UserConfig extends Config
     {
         $entry = UserConfigEntry::findByFieldAndUser($field, $this->user_id);
         if($entry !== null) {
-            return $entry->delete();
+            if($ret = $entry->delete()) {
+                unset($this->data[$field]);
+            }
+            return $ret;
         } else {
             return null;
         }

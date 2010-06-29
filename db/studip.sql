@@ -370,6 +370,22 @@ CREATE TABLE `datafields_entries` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `deputies`
+--
+
+DROP TABLE IF EXISTS `deputies`;
+CREATE TABLE IF NOT EXISTS `deputies` (
+  `range_id` varchar(32) NOT NULL,
+  `user_id` varchar(32) TE latin1_german1_ci NOT NULL,
+  `gruppe` tinyint(4) NOT NULL DEFAULT '0',
+  `notification` int(10) NOT NULL DEFAULT '0',
+  `edit_about` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`range_id`,`user_id`)
+) TYPE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `dokumente`
 --
 

@@ -370,26 +370,26 @@ STUDIP.study_area_selection = {
     // Ein bisschen hässlich im Sinne von "DRY", aber wie sonst?
     $('input[name^="study_area_selection[add]"]').live('click', function () {
       var parameters = $(this).metadata();
-      if (!(parameters && parameters.id && parameters.course_id)) {
+      if (!(parameters && parameters.id)) {
         return;
       }
-      STUDIP.study_area_selection.add(parameters.id, parameters.course_id);
+      STUDIP.study_area_selection.add(parameters.id, parameters.course_id || '');
       return false;
     });
     $('input[name^="study_area_selection[remove]"]').live('click', function () {
       var parameters = $(this).metadata();
-      if (!(parameters && parameters.id && parameters.course_id)) {
+      if (!(parameters && parameters.id)) {
         return;
       }
-      STUDIP.study_area_selection.remove(parameters.id, parameters.course_id);
+      STUDIP.study_area_selection.remove(parameters.id, parameters.course_id || '');
       return false;
     });
     $('a.study_area_selection_expand').live('click', function () {
       var parameters = $(this).metadata();
-      if (!(parameters && parameters.id && parameters.course_id)) {
+      if (!(parameters && parameters.id)) {
         return;
       }
-      STUDIP.study_area_selection.expandSelection(parameters.id, parameters.course_id);
+      STUDIP.study_area_selection.expandSelection(parameters.id, parameters.course_id || '');
       return false;
     });
   },

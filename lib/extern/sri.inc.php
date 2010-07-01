@@ -179,16 +179,16 @@ $page_url = preg_replace('/\?.*/', '', $_REQUEST['page_url']);
 $sri_url = $module_obj->config->getValue('Main', 'sriurl');
 
 if (isset($sri_url)) {
-	$sri_array = preg_split('/[\s,]+/', $sri_url);
+    $sri_array = preg_split('/[\s,]+/', $sri_url);
 
-	for ($i = 0; $i < count($sri_array); $i++) {
-		// drop URL parameters from sri_url
-		$current_sri = preg_replace('/\?.*/', '', $sri_array[$i]);
-		if ($current_sri == $page_url) {
-			$match = true;
-			break;
-		}
-	}
+    for ($i = 0; $i < count($sri_array); $i++) {
+        // drop URL parameters from sri_url
+        $current_sri = preg_replace('/\?.*/', '', $sri_array[$i]);
+        if ($current_sri == $page_url) {
+            $match = true;
+            break;
+        }
+    }
 }
 
 if (!$match || !sri_is_enabled($module_obj->config->range_id)) {

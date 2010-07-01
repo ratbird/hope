@@ -38,7 +38,7 @@ class Institute {
     var $id;
     
     static function getInstitutes() {
-    	$db = DBManager::get();
+        $db = DBManager::get();
         $result = $db->query("SELECT Institute.Institut_id, Institute.Name, IF(Institute.Institut_id=Institute.fakultaets_id,1,0) AS is_fak " .
                 "FROM Institute " .
                     "LEFT JOIN Institute as fakultaet ON (Institute.fakultaets_id = fakultaet.Institut_id) " .
@@ -47,10 +47,10 @@ class Institute {
     }
     
     static function getMyInstitutes($user_id = NULL) {
-    	global $perm, $user;
-    	if (!$user_id) {
-    		$user_id = $user->id;
-    	}
+        global $perm, $user;
+        if (!$user_id) {
+            $user_id = $user->id;
+        }
         $db = DBManager::get();
         if (!$perm->have_perm("admin")) {
             $result = $db->query("SELECT user_inst.Institut_id, Institute.Name, IF(user_inst.Institut_id=Institute.fakultaets_id,1,0) AS is_fak, user_inst.inst_perms " .
@@ -76,9 +76,9 @@ class Institute {
         return $result;
     }
     
-	public function __construct($id) {
-		$db = DBManager::get();
-		$db->query();
-		$this->id = $id;
-	}
+    public function __construct($id) {
+        $db = DBManager::get();
+        $db->query();
+        $this->id = $id;
+    }
 }

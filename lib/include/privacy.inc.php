@@ -36,6 +36,8 @@ $template = $GLOBALS['template_factory']->open('settings/privacy');
 
 if ($perm->have_perm("root"))
     $user_id = get_userid($username);
+else if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE') && isDeputy($auth->auth['uid'], get_userid($username), true))
+    $user_id = get_userid($username);
 else
     $user_id = $auth->auth["uid"];
 
@@ -57,7 +59,7 @@ foreach ($homepage_elements_unsorted as $key => $element) {
 
 $args['user_id'] = $user_id;
 $args['NOT_HIDEABLE_FIELDS'] = $NOT_HIDEABLE_FIELDS;
-$args['my_perm'] = $perm->get_perm();
+$args['user_perm'] = $perm->get_perm($user_id);
 $args['user_domains'] = UserDomain::getUserDomains();
 
 $template->clear_attributes();

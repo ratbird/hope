@@ -615,6 +615,16 @@ function in_archiv ($sem_id) {
         $db2->query("INSERT INTO archiv_user SET seminar_id='$seminar_id', user_id='$user_id', status='$status' ");
         }
 
+    // Eventuelle Vertretungen in der Veranstaltung haben weiterhin Zugriff mit Dozentenrechten
+    if (get_config('DEPUTIES_ENABLE')) {
+        $deputies = getDeputies($seminar_id);
+        // Eintragen ins Archiv mit Zugriffsberechtigung "dozent"
+        $query = DBManager::get()->prepare("INSERT INTO archiv_user SET seminar_id=?, user_id=?, status='dozent'");
+        foreach ($deputies as $deputy) {
+            $query->execute(array($seminar_id, $deputy['user_id']));
+        }
+    }
+
     //OK, letzter Schritt: ZIPpen der Dateien des Seminars und Verschieben in eigenes Verzeichnis
 
     $query = sprintf ("SELECT count(dokument_id) FROM dokumente WHERE seminar_id = '%s' AND url = ''", $seminar_id);

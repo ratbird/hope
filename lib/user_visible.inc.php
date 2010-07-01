@@ -260,6 +260,8 @@ function is_element_visible_for_user($user_id, $owner_id, $element_visibility) {
     $is_visible = false;
     if ($user_id == $owner_id) {
         $is_visible = true;
+    } else if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE') && isDeputy($user_id, $owner_id, true)) {
+        $is_visible = true;
     } else {
         // No element visibility given (user has not configured this element yet)
         // Set default visibility as element visibility

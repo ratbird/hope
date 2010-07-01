@@ -41,6 +41,7 @@ require_once 'lib/classes/StudipAdmissionGroup.class.php';
 require_once 'lib/classes/StudipStudyArea.class.php';
 require_once 'lib/classes/UserDomain.php';
 require_once "lib/classes/CourseAvatar.class.php";
+require_once ('lib/deputies_functions.inc.php');
 
 include 'lib/seminar_open.php'; // initialise Stud.IP-Session
 
@@ -80,6 +81,8 @@ if (($SessSemName[1] != "") && (!isset($sem_id) || $SessSemName[1] == $sem_id)) 
 
 $sem = new Seminar($sem_id);
 #$DataFields = new DataFields($sem_id);
+
+$deputies_enabled = get_config('DEPUTIES_ENABLE');
 
 // redirect, if sem is a studygroup
 if ( $SEM_CLASS[$SEM_TYPE[$sem->status]["class"]]["studygroup_mode"] ) {
@@ -121,7 +124,7 @@ if ($sem_id) {
         } elseif ($db2->f("admission_type") == 3) {
                         $info_msg = _("Eintragen nicht m&ouml;glich, diese Veranstaltung ist gesperrt.");
         } else {
-            if (!$db->num_rows()) {
+            if (!$db->num_rows() && (!$deputies_enabled || !isDeputy($user->id, $sem_id))) {
                 $db->query("SELECT status FROM admission_seminar_user WHERE user_id ='$user->id' AND seminar_id = '$sem_id'");
                 if (!$db->num_rows()) $abo_msg = _("Tragen Sie sich hier f&uuml;r die Veranstaltung ein");
             } else {
@@ -201,6 +204,8 @@ else
             $db3->query("SELECT status FROM seminar_user WHERE Seminar_id = '$sem_id' AND user_id = '$user_id'");
             if ($db3->next_record() ){
                 $mein_status = $db3->f("status");
+            } else if ($deputies_enabled && isDeputy($user_id, $sem_id)) {
+                $mein_status = 'dozent';
             } else {
                 unset ($mein_status);
             }

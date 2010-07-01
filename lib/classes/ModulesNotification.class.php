@@ -36,6 +36,7 @@
 
 require_once 'lib/classes/Modules.class.php';
 require_once 'lib/meine_seminare_func.inc.php';
+require_once 'lib/deputies_functions.inc.php';
 
 class ModulesNotification extends Modules {
 
@@ -115,8 +116,12 @@ class ModulesNotification extends Modules {
                 return FALSE;
             }
             if ($range == 'sem') {
-                $this->db->query("UPDATE seminar_user SET notification = $sum
+                $updated = $this->db->query("UPDATE seminar_user SET notification = $sum
                         WHERE Seminar_id = '$range_id' AND user_id = '$user_id'");
+                if (get_config('DEPUTIES_ENABLE') && !$updated) {
+                    $this->db->query("UPDATE deputies SET notification = $sum
+                        WHERE range_id = '$range_id' AND user_id = '$user_id'");
+                }
             } else {
                 return FALSE;
             //  $this->db->query("UPDATE user_inst SET mod_message = $sum
@@ -139,6 +144,14 @@ class ModulesNotification extends Modules {
         $settings = array();
         while ($this->db->next_record()) {
             $settings[$this->db->f('Seminar_id')] = $this->db->f('notification');
+        }
+        if ($range == 'sem' && get_config('DEPUTIES_ENABLE')) {
+            $this->db->query("SELECT d.range_id, d.notification 
+                FROM deputies d JOIN seminare s ON (d.range_id=s.Seminar_id)
+                WHERE d.user_id = '$user_id'");
+            while ($this->db->next_record()) {
+                $settings[$this->db->f('range_id')] = $this->db->f('notification');
+            }
         }
         return $settings;
     }

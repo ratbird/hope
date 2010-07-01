@@ -897,6 +897,13 @@ class UserManagement
                 }
             }
         }
+        
+        // delete deputy entries if necessary
+        $query = "DELETE FROM deputies WHERE user_id='".$this->user_data['auth_user_md5.user_id']."' OR range_id='".$this->user_data['auth_user_md5.user_id']."'";
+        $deputyEntries = DBManager::get()->exec($query);
+        if ($deputyEntries) {
+            $this->msg .= "info§".sprintf(_("%s Einträge in den Vertretungseinstellungen gelöscht."), $deputyEntries)."§";
+        }
 
         // delete Stud.IP account
         $query = "DELETE FROM auth_user_md5 WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";

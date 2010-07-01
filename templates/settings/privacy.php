@@ -5,7 +5,7 @@
                 <font size="-1"><b><?php echo _("Hier können Sie Ihre Sichtbarkeit im System einstellen."); ?></b></font>
             </blockquote>
             <h2><?php echo _('globale Einstellungen'); ?></h2>
-            <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_global_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
+            <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_global_visibility', 'studipticket' => get_ticket())); ?>">
                 <table width="50%" align="center"cellpadding="8" cellspacing="0" border="0">
                     <tr>
                         <td align="right" class="blank" style="border-bottom:1px dotted black;" width="66%">
@@ -15,9 +15,9 @@
                             </font></div>
                         </td>
                         <td class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>" width="34%">
-                            <?php
+                            <?php 
                             if ($global_visibility != 'always' && $global_visibility != 'never' && 
-                                ($user_perm != 'dozent' || !get_config('DOZENT_ALWAYS_VISIBLE'))) {
+                                ($my_perm != 'dozent' || !get_config('DOZENT_ALWAYS_VISIBLE'))) {
                                 // only show selection if visibility can be changed
                                 ?>
                             <select name="global_visibility">
@@ -105,7 +105,7 @@
             </form>
             <br>
             <h2><?php echo _('eigene Homepage'); ?></h2>
-            <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_all_homepage_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
+            <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_all_homepage_visibility', 'studipticket' => get_ticket())); ?>">
                     <?php echo _('alle Sichtbarkeiten setzen auf'); ?>
                     <select name="all_homepage_visibility">
                         <option value="">-- <?php echo _("bitte wählen"); ?> --</option>
@@ -120,7 +120,7 @@
                     <input type="hidden" name="view" value="privacy">
                     <?php echo makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_all_homepage_visibility'); ?>
             </form>
-            <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_homepage_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
+            <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_homepage_visibility', 'studipticket' => get_ticket())); ?>">
                 <table width="50%" align="center"cellpadding="8" cellspacing="0" border="0">
                     <tr>
                         <th width="'40%'" rowspan="2"><?php echo _('Homepage-Element'); ?></th>

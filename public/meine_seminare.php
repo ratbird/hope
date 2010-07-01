@@ -88,8 +88,6 @@ if (get_config('CHAT_ENABLE')){
     $sms = new messaging();
 }
 
-$deputies_enabled = get_config('DEPUTIES_ENABLE');
-$default_deputies_enabled = get_config('DEPUTIES_DEFAULTENTRY_ENABLE');
 $cssSw = new cssClassSwitcher();                                    // Klasse für Zebra-Design
 $cssSw->enableHover();
 $db = new DB_Seminar();
@@ -217,10 +215,7 @@ if ($gruppesent == '1'){
     $_my_sem_group_field = $_REQUEST['select_group_field'];
     if (is_array($_REQUEST['gruppe'])){
         foreach($_REQUEST['gruppe'] as $key => $value){
-            $updated = $db->query ("UPDATE seminar_user SET gruppe = '$value' WHERE Seminar_id = '$key' AND user_id = '$user->id'");
-            if ($deputies_enabled && !$updated) {
-            	$db->query ("UPDATE deputies SET gruppe = '$value' WHERE range_id = '$key' AND user_id = '$user->id'");
-            }
+            $db->query ("UPDATE seminar_user SET gruppe = '$value' WHERE Seminar_id = '$key' AND user_id = '$user->id'");
         }
     }
 }
@@ -275,18 +270,13 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     $dbv = new DbView();
 
-    $query = "SELECT seminare.VeranstaltungsNummer AS sem_nr, seminare.Name, seminare.Seminar_id, seminare.status as sem_status, seminar_user.status, seminar_user.gruppe,
+    $db->query ("SELECT seminare.Name, seminare.Seminar_id, seminare.status as sem_status, seminar_user.status, seminar_user.gruppe,
                 seminare.chdate, seminare.visible, admission_binding,modules,IFNULL(visitdate,0) as visitdate, admission_prelim,
                 {$dbv->sem_number_sql} as sem_number, {$dbv->sem_number_end_sql} as sem_number_end $add_fields
                 FROM seminar_user LEFT JOIN seminare  USING (Seminar_id)
                 LEFT JOIN object_user_visits ouv ON (ouv.object_id=seminar_user.Seminar_id AND ouv.user_id='$user->id' AND ouv.type='sem')
                 $add_query
-                WHERE seminar_user.user_id = '$user->id'";
-    if ($deputies_enabled) {
-        $query .= " UNION ".getMyDeputySeminarsQuery('meine_sem', $dbv->sem_number_sql, $dbv->sem_number_end_sql, $add_fields, $add_query);
-    }
-    $query .= " ORDER BY sem_nr ASC";
-    $db->query($query);
+                WHERE seminar_user.user_id = '$user->id' ORDER BY seminare.VeranstaltungsNummer ASC");
     $num_my_sem = $db->num_rows();
 
     if (!$num_my_sem)
@@ -460,10 +450,8 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
 
     $template = $GLOBALS["template_factory"]->open("meine_seminare/index_autor");
-    
-    $my_bosses = $default_deputies_enabled ? getDeputyBosses($user->id) : array();
 
-    echo $template->render(compact(words("num_my_sem meldung group_field groups my_obj view _my_sem_open cssSw meldung chat_info chat_invs waitlists ".($deputies_enabled && $default_deputies_enabled && $perm->have_perm(getValidDeputyPerms(true)) ? "my_bosses " : "")."num_my_inst infobox")));
+    echo $template->render(compact(words("num_my_sem meldung group_field groups my_obj view _my_sem_open cssSw meldung chat_info chat_invs waitlists num_my_inst infobox")));
 }
 
 

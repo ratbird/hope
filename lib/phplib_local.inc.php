@@ -26,8 +26,6 @@
 
 
 //
-require_once('lib/deputies_functions.inc.php');
-
 $_never_globalize_request_params = array('msg','_msg','errormsg','meldung','sms_msg','_html_head_title','_include_stylesheet',
                                     '_include_extra_stylesheet','_include_additional_header','_include_additional_html'
                                     );
@@ -913,18 +911,14 @@ class Seminar_Perm extends Perm {
             return $status;
         }
 
-        if (get_config('DEPUTIES_ENABLE') && isDeputy($user_id, $range_id)) {
-        	$status = 'dozent';
+        $db->query("SELECT status FROM seminar_user WHERE user_id='$user_id' AND Seminar_id='$range_id'");
+        if ($db->next_record()){
+            $status=$db->f("status");
         } else {
-	        $db->query("SELECT status FROM seminar_user WHERE user_id='$user_id' AND Seminar_id='$range_id'");
-	        if ($db->next_record()){
-	            $status=$db->f("status");
-	        } else {
-	            $db->query("SELECT inst_perms FROM user_inst WHERE user_id='$user_id' AND Institut_id='$range_id'");
-	            if ($db->next_record()){
-	                $status=$db->f("inst_perms");
-	            }
-	        }
+            $db->query("SELECT inst_perms FROM user_inst WHERE user_id='$user_id' AND Institut_id='$range_id'");
+            if ($db->next_record()){
+                $status=$db->f("inst_perms");
+            }
         }
         return $status;
     }

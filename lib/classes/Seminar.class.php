@@ -2152,9 +2152,6 @@ class Seminar {
                 log_event("SEM_ARCHIVE",$s_id,NULL,$semlogname);
                 // ...logged
 
-        // delete deputies if necessary
-        deleteAllDeputies($s_id);
-
         // und das Seminar loeschen.
         $query = "DELETE FROM seminare where Seminar_id= '$s_id'";
         $db->query($query);

@@ -134,16 +134,11 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     $dbv = new DbView();
 
-    $query = "SELECT seminare.VeranstaltungsNummer AS sem_nr, seminare.Name, seminare.Seminar_id, seminare.status as sem_status, seminar_user.gruppe, seminare.visible,
+    $db->query ("SELECT seminare.Name, seminare.Seminar_id, seminare.status as sem_status, seminar_user.gruppe, seminare.visible,
                 {$dbv->sem_number_sql} as sem_number, {$dbv->sem_number_end_sql} as sem_number_end $add_fields
                 FROM seminar_user LEFT JOIN seminare  USING (Seminar_id)
                 $add_query
-                WHERE seminar_user.user_id = '$user->id'";
-    if (get_config('DEPUTIES_ENABLE')) {
-        $query .= " UNION ".getMyDeputySeminarsQuery('notification', $dbv->sem_number_sql, $dbv->sem_number_end_sql, $add_fields, $add_query);
-    }
-    $query .= " ORDER BY sem_nr ASC";
-    $db->query($query);
+                WHERE seminar_user.user_id = '$user->id'");
 
     if (!$db->num_rows()) {
         echo "<table class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
@@ -392,24 +387,13 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
     echo '<tr><td class="blank" align="center" colspan="';
     echo (sizeof($enabled_modules) + 3) . '"><br>';
-    echo "<input type=\"image\" " . makeButton("uebernehmen", "src");
-    if ($_REQUEST['view'] != 'notification') {
-        echo " border=\"0\" value=\"absenden\">&nbsp; <a href=\"$PHP_SELF\">";
-    } else {
-        echo " border=\"0\" value=\"absenden\">&nbsp; <a href=\"$PHP_SELF?view=notification\">";
-    }
-    echo '<img ' . makeButton('zuruecksetzen', 'src') . ' border="0"';
-    echo tooltip(_("zurücksetzen"));
-    echo '><input type="hidden" name="cmd" value="set_sem_notification"><br>&nbsp; </td></tr></form>';
+    echo makeButton('uebernehmen', 'input') . ' ';
+    echo '<a href="'.URLHelper::getLink().'">'.makeButton('zuruecksetzen', 'img').'</a>';
+    echo '<input type="hidden" name="cmd" value="set_sem_notification"><br>&nbsp; </td></tr></form>';
     echo "</table>\n";
 }
 
-if ($_REQUEST['view'] != 'notification') {
-    echo "</td></tr></table>\n";
-
-    include ('lib/include/html_end.inc.php');
-  // Save data back to database.
-  page_close();
-}
-
-?>
+echo "</td></tr></table>\n";
+include ('lib/include/html_end.inc.php');
+// Save data back to database.
+page_close();

@@ -111,16 +111,11 @@ FOR ($i=0; $i<9; $i++)
 
     $dbv = new DbView();
 
-    $query = "SELECT seminare.VeranstaltungsNummer AS sem_nr, seminare.Name, seminare.Seminar_id, seminare.status as sem_status, seminar_user.gruppe, seminare.visible,
+    $db->query ("SELECT seminare.Name, seminare.Seminar_id, seminare.status as sem_status, seminar_user.gruppe, seminare.visible,
                 {$dbv->sem_number_sql} as sem_number, {$dbv->sem_number_end_sql} as sem_number_end $add_fields
-                FROM seminar_user LEFT JOIN seminare USING (Seminar_id)
+                FROM seminar_user LEFT JOIN seminare  USING (Seminar_id)
                 $add_query
-                WHERE seminar_user.user_id = '$user->id'";
-    if (get_config('DEPUTIES_ENABLE')) {
-        $query .= " UNION ".getMyDeputySeminarsQuery('gruppe', $dbv->sem_number_sql, $dbv->sem_number_end_sql, $add_fields, $add_query);
-    }
-    $query .= " ORDER BY sem_nr ASC";
-    $db->query($query);
+                WHERE seminar_user.user_id = '$user->id'");
     while ($db->next_record()){
         $my_sem[$db->f("Seminar_id")] = array("obj_type" => "sem", "name" => $db->f("Name"), "visible" => $db->f("visible"), "gruppe" => $db->f("gruppe"),
         "sem_status" => $db->f("sem_status"),"sem_number" => $db->f("sem_number"),"sem_number_end" => $db->f("sem_number_end") );

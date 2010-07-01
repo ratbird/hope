@@ -61,9 +61,5 @@ class AccountNavigation extends Navigation
 
             $this->addSubNavigation('login', new Navigation(_('Login'), 'edit_about.php', array('view' => 'Login')));
         }
-
-        if ((get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) && $perm->get_perm() == 'dozent') {
-            $this->addSubNavigation('deputies', new Navigation(_('Standardvertretung'), 'edit_about.php', array('view' => 'deputies')));
-        }
     }
 }

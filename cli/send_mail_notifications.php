@@ -47,12 +47,7 @@ set_time_limit(60*60*2);
 $db = new DB_Seminar();
 $notification = new ModulesNotification();
 
-$query = "SELECT aum.user_id,aum.username,{$GLOBALS['_fullname_sql']['full']} as fullname,Email FROM seminar_user su INNER JOIN auth_user_md5 aum USING(user_id) LEFT JOIN user_info ui USING(user_id) WHERE notification != 0";
-if (get_config('DEPUTIES_ENABLE')) {
-	$query .= " UNION ".getMyDeputySeminarsQuery('notification_cli', '', '', '', '');
-}
-$query .= " GROUP BY su.user_id";
-$db->query($query);
+$db->query("SELECT aum.user_id,aum.username,{$GLOBALS['_fullname_sql']['full']} as fullname,Email FROM seminar_user su INNER JOIN auth_user_md5 aum USING(user_id) LEFT JOIN user_info ui USING(user_id) WHERE notification != 0 GROUP BY su.user_id");
 while($db->next_record()){
     $user->start($db->f("user_id"));
     setTempLanguage($db->f("user_id"));

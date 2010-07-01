@@ -216,9 +216,6 @@ class about extends messaging {
         // der user selbst natürlich auch
         if ($auth->auth["uname"] == $username AND $perm->have_perm("autor"))
             $this->check="user";
-        // Vertretungen dürfen auch, wenn das freigegeben ist
-        else if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE') && isDeputy($user->id, get_userid($username), true))
-            $this->check='user';
         //bei admins schauen wir mal
         elseif ($auth->auth["perm"]=="admin") {
             $this->db->query("SELECT a.user_id FROM user_inst AS a LEFT JOIN user_inst AS b USING (Institut_id) WHERE (b.inst_perms='admin' AND b.user_id='$user->id') AND (a.user_id='".$this->auth_user["user_id"]."' AND a.inst_perms IN ('dozent','tutor','autor'))");

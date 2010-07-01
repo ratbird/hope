@@ -145,36 +145,6 @@ $width_namecolumn = 50;
     <? endif; ?>
     </tr></table><hr style="clear:both"></td>
   </tr>
-  <? if ($deputies_enabled) { ?>
-  <tr>
-    <td style="width: <?= $width_column1 ?>%"><?= _("Vertretung") ?></td>
-    <td style="width: <?= 100-$width_column1 ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%">
-    <? foreach($deputies as $deputy) : ?>
-        <div style="clear:both">
-            <? if ($perm_dozent) : ?>
-            <div style="float:left; vertical-align: middle">
-                <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $deputy["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("trash.gif") ?></a>
-            </div>
-            <? endif; ?>
-            <div style="float:left; margin: 3px; vertical-align: middle; width: 40px; ">
-            </div>
-            <div style="float:left; font-weight:bold; vertical-align: middle; padding-left: 3px">
-                <?= get_fullname($deputy["user_id"], 'full_rev')."<br>(".$deputy["username"].", "._("Status").": ".$deputy['perms'].")" ?>
-            </div>
-        </div>
-    <? endforeach; ?></td>
-    <? if ($perm_dozent) : ?>
-    <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
-        <?= _("Vertretung hinzufügen") ?>
-        <br><input type="image" src="<?= Assets::image_path("move_left") ?>" name="add_deputy">
-            <?= $deputysearch ?>
-        <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
-    </td>
-    <? endif; ?>
-    </tr></table><hr style="clear:both"></td>
-  </tr>
-  <? } ?>
   <tr>
     <td style="width: <?= $width_column1 ?>%"><?= _("Tutor/-innen") ?></td>
     <td style="width: <?= 100-$width_column1 ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left"><? $num = 0; 

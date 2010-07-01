@@ -252,8 +252,6 @@ foreach (DataFieldEntry::getDataFieldEntries($user_id) as $entry) {
 
 
 $show_tabs = ($user_id == $user->id && $perm->have_perm("autor"))
-             || ((get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE'))
-                && isDeputy($user->id, $user_id, true))
              || $perm->have_perm("root")
              || $admin_darf;
 

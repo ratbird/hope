@@ -299,7 +299,7 @@ class Course_BasicdataController extends AuthenticatedController {
         //Seminar-Daten:
         if ($perm->have_studip_perm("tutor",$SessSemName[1])) {
             $changemade = false;
-            foreach ($_POST as $req_name => $req_value) {
+            foreach (Request::getInstance() as $req_name => $req_value) {
                 if (substr($req_name, 0, 7) === "course_") {
                     $varname = substr($req_name, 7);
                     if ($sem->{$varname} != $req_value) {
@@ -321,7 +321,7 @@ class Course_BasicdataController extends AuthenticatedController {
             }
             //Datenfelder:
             $all_fields_types = DataFieldEntry::getDataFieldEntries($sem->id, 'sem', $sem->status);
-            foreach ($_POST['datafields'] as $datafield_id => $datafield_value) {
+            foreach (Request::getArray('datafields') as $datafield_id => $datafield_value) {
                 $datafield = $all_fields_types[$datafield_id];
                 $valueBefore = $datafield->getValue();
                 //noch klären, dass nicht nutzlose Datenfelder angelegt werden:

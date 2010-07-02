@@ -241,10 +241,19 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
 
             if ($anker_target == "search")
                 echo "<a name='anker'></a>";
-            echo ELearningUtils::getHeader(_("Suche"));
-            echo ELearningUtils::getSearchfield(sprintf(_("Um im System %s nach Lernmodulen zu suchen, geben Sie einen Suchbegriff ein:"), $connected_cms[$cms_select]->getName()));
-            echo "<br>\n";
-
+            if (!$connected_cms[$cms_select]->isAuthNecessary()
+                || $connected_cms[$cms_select]->user->isConnected()) {
+                echo ELearningUtils::getHeader(_("Suche"));
+                echo ELearningUtils::getSearchfield(
+                    sprintf(_("Um im System %s nach Lernmodulen zu suchen, geben Sie einen Suchbegriff ein:"), 
+                    $connected_cms[$cms_select]->getName()));
+                echo "<br>\n";
+            } else 
+                echo MessageBox::info(sprintf(_("Sie können im %s System nicht suchen, da Sie bisher keinen Benutzer-Account angelegt haben."), 
+				                                  $connected_cms[$cms_select]->getName()),
+										array(sprintf(_("Jetzt einen %sAccount%s erstellen."),
+				                        "<a href='".URLHelper::getLink('my_elearning.php')."'>","</a>")));
+            
             if (! ($searchresult_content_modules == false))
             {
                 echo ELearningUtils::getHeader( sprintf( _("Gefundene Lernmodule zum Suchbegriff \"%s\""), $search_key ) );

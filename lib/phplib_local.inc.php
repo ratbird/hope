@@ -822,9 +822,12 @@ class Seminar_Perm extends Perm {
     var $fak_admins = array();
 
     function perm_invalid($does_have, $must_have) {
-        global $perm, $auth, $sess;
-        global $RELATIVE_PATH_CHAT;
-        include('lib/include/perminvalid.ihtml');
+        if ($GLOBALS['user']->id == 'nobody') {
+            $message = _('Sie sind nicht im System angemeldet und können daher nicht auf diesen Teil des Systems zugreifen. Um den vollen Funktionsumfang des Systems benutzen zu können, müssen sie sich mit ihrem Nutzernamen und Passwort anmelden.');
+        } else {
+            $message = _('Sie haben keine ausreichende Berechtigung, um auf diesen Teil des Systems zuzugreifen.');
+        }
+        throw new AccessDeniedException($message);
     }
 
     function get_perm($user_id = false){

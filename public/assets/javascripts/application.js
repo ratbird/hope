@@ -1042,4 +1042,4 @@ $('input.allow-only-numbers').live('keyup', function () {
 $.ui.accordion.prototype.options.icons = {
   header: 'arrow_right',
   headerSelected: 'arrow_down'
-}
+};

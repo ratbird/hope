@@ -32,8 +32,8 @@ $lifters_templates['lifters'] = array(
 <td><input size=60 name="lifters_zustaendig"></td></tr>
 <tr><td>Release in Version:</td>
 <td><select size=0 name="lifters_version">
-<option value="1.12">1.12 (Sep. 2010)</option>
-<option value="1.13">1.13 (März 2011)</option>
+<option value="2.1">2.1 (März 2011)</option>
+<option value="2.2">2.2 (Sept. 2011)</option>
 <option>langfristig</option></td></tr>
 <tr><td>Komplexität:</td>
 <td><select name="lifters_komplexitaet">

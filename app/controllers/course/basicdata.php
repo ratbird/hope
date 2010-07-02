@@ -79,8 +79,19 @@ class Course_BasicdataController extends AuthenticatedController {
             'locked' => LockRules::Check($this->course_id, 'Untertitel')
         );
         $sem_types = array();
-        foreach ($GLOBALS['SEM_TYPE'] as $key => $type) {
-            $sem_types[$key] = $type['name'];
+        if ($perm->have_perm("admin")) {
+            foreach (SeminarCategories::getAll() as $sc) {
+                foreach ($sc->getTypes() as $key => $value) {
+                    if (!$sc->course_creation_forbidden || $key == $data['status']) {
+                        $sem_types[$key] = $value . ' (' . $sc->name . ')';
+                    }
+                }
+            }
+        } else {
+            $sc = SeminarCategories::getByTypeId($data['status']);
+            foreach($sc->getTypes() as $key => $value) {
+                $sem_types[$key] = $value . ' (' . $sc->name . ')';
+            }
         }
         $this->attributes[] = array(
             'title' => _("Typ der Veranstaltung"),

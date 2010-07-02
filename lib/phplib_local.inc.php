@@ -424,8 +424,8 @@ class Seminar_Auth extends Auth {
             } else {
                 $actual_perms = $this->db->f('perms');
             }
-        } elseif ($cfg->getValue('MAINTENANCE_MODE_ENABLE') && isset($_REQUEST['username'])) {
-            $this->db->query(sprintf("select username,perms from %s where username = '%s' AND perms='root'", $this->database_table, $_REQUEST['username']));
+        } elseif ($cfg->getValue('MAINTENANCE_MODE_ENABLE') && isset($_REQUEST['loginname'])) {
+            $this->db->query(sprintf("select username,perms from %s where username = '%s' AND perms='root'", $this->database_table, $_REQUEST['loginname']));
             $this->db->next_record();
             $this->auth["uname"] = $this->db->f('username');
             $actual_perms = $this->db->f('perms');
@@ -534,7 +534,7 @@ class Seminar_Auth extends Auth {
         // load the default set of plugins
         PluginEngine::loadPlugins();
 
-        if ($_REQUEST['username'] && !$_COOKIE[$GLOBALS['sess']->name]){
+        if ($_REQUEST['loginname'] && !$_COOKIE[$GLOBALS['sess']->name]){
             $login_template = $GLOBALS['template_factory']->open('nocookies');
         } else if (isset($this->need_email_activation)) {
             $login_template = $GLOBALS['template_factory']->open('login_emailactivation');
@@ -560,11 +560,10 @@ class Seminar_Auth extends Auth {
     }
 
     function auth_validatelogin() {
-        global $username, $password, $resolution;
-        global $_language, $_language_path, $login_ticket;
+        global $_language, $_language_path;
 
         //prevent replay attack
-        if (!Seminar_Session::check_ticket($login_ticket)){
+        if (!Seminar_Session::check_ticket($_REQUEST['login_ticket'])){
             return false;
         }
 
@@ -576,10 +575,10 @@ class Seminar_Auth extends Auth {
         $_language_path = init_i18n($_language);
 
 
-        $this->auth["uname"] = $username;   // This provides access for "loginform.ihtml"
-        $this->auth["jscript"] = ($resolution != "");
+        $this->auth["uname"] = $_REQUEST['loginname'];   // This provides access for "loginform.ihtml"
+        $this->auth["jscript"] = $_REQUEST['resolution'] != "";
 
-        $check_auth = StudipAuthAbstract::CheckAuthentication(stripslashes($username),stripslashes($password),$this->auth['jscript']);
+        $check_auth = StudipAuthAbstract::CheckAuthentication(Request::get('loginname'),Request::get('password'),$this->auth['jscript']);
 
         if ($check_auth['uid']) {
             $uid = $check_auth['uid'];

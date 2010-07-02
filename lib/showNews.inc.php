@@ -172,7 +172,7 @@ function show_rss_news($range_id, $type){
     $last_changed = 0;
     switch ($type){
         case 'user':
-            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . "about.php?again=yes&rssusername=" . get_username($range_id);
+            $studip_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . "about.php?again=yes&username=" . get_username($range_id);
             $title = get_fullname($range_id) . ' (Stud.IP - ' . $GLOBALS['UNI_NAME_CLEAN'] . ')';
             $RssChannelDesc = _("Persönliche Neuigkeiten") . ' ' . $title;
         break;

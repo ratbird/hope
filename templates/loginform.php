@@ -31,8 +31,8 @@ $(function () {
           <input type="hidden" name="resolution"  value="">
           <table border="0" cellspacing="0" cellpadding="4">
             <tr valign=top align=left>
-              <td><label for="username"><?=_("Benutzername:")?></label></td>
-              <td><input type="text" class="focus if-empty" id="username" name="username" value="<?=htmlReady($uname)?>" size="20" maxlength="63"></td>
+              <td><label for="loginname"><?=_("Benutzername:")?></label></td>
+              <td><input type="text" class="focus if-empty" id="loginname" name="loginname" value="<?=htmlReady($uname)?>" size="20" maxlength="63"></td>
             </tr>
 
             <tr valign=top align=left>

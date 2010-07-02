@@ -407,7 +407,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
 
         $this->user_id = $row['user_id'];
 
-        $content['__GLOBAL__']['STUDIP-EDIT-HREF'] = "{$GLOBALS['ABSOLUTE_URI_STUDIP']}edit_about.php?login=yes&view=Daten&usr_name=$username";
+        $content['__GLOBAL__']['STUDIP-EDIT-HREF'] = "{$GLOBALS['ABSOLUTE_URI_STUDIP']}edit_about.php?login=yes&view=Daten&username=$username";
 
         $content['PERSONDETAILS']['FULLNAME'] = ExternModule::ExtHtmlReady($row['fullname']);
         $content['PERSONDETAILS']['LASTNAME'] = ExternModule::ExtHtmlReady($row['Nachname']);

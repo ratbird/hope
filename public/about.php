@@ -116,11 +116,6 @@ if (isset($_REQUEST['username']) && $_REQUEST['username'] !== '') {
     $username = $_REQUEST['username'];
 }
 
-// link param from lib/showNews.inc.php
-if ($_GET['rssusername'] && $_GET['rssusername'] !== '') {
-    $username = $_GET['rssusername'];
-}
-
 
 if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";

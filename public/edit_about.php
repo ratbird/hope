@@ -31,8 +31,6 @@ require '../lib/bootstrap.php';
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if(!$logout && ($auth->auth["uid"] == "nobody"));
 
-if ($usr_name)  $username=$usr_name; //wenn wir von den externen Seiten kommen, nehmen wir den Usernamen aus usr_name, falls dieser gesetzt ist, um die Anmeldeprozedur nicht zu verwirren....
-
 require_once('config.inc.php');
 require_once('lib/my_rss_feed.inc.php');
 require_once('lib/kategorien.inc.php');

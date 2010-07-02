@@ -62,7 +62,7 @@ class ProfileNavigation extends Navigation
         $active = parent::isActive();
 
         if ($active) {
-            URLHelper::addLinkParam('username', $GLOBALS['username']);
+            URLHelper::addLinkParam('username', Request::get('username'));
         }
 
         return $active;
@@ -78,13 +78,7 @@ class ProfileNavigation extends Navigation
 
         parent::initSubNavigation();
 
-        if (Request::get('usr_name')) {
-                $username = Request::get('usr_name');
-        } else if (Request::get('username')) {
-                $username = Request::get('username');
-        } else {
-                $username = $auth->auth['uname'];
-        }
+        $username = Request::get('username', $auth->auth['uname']);
 
         // this really should not be here
         $username = preg_replace('/[^\w@.-]/', '', $username);

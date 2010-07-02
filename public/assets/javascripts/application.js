@@ -934,19 +934,25 @@ STUDIP.QuickSearch = {
           form_data: STUDIP.QuickSearch.formToJSON('#' + name),
           request: input.term
         };
-        $.getJSON(url, send_vars, function (data) {
-          var stripTags = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
-          var suggestions = [];  //an array of possible selections
-          $.each(data, function (i, val) {
-            //adding a label and a hidden item_id - don't use "value":
-            suggestions.push({
-              label: val.item_name,                       //what is displayed in the drobdown-boc
-              item_id: val.item_id,                       //the hidden ID of the item
-              value: val.item_name !== null ? val.item_name.replace(stripTags, "") : "" //what is inserted in the visible input-box
+        $.ajax({
+          url: url,
+          type: "post",
+          dataType: "json",
+          data: send_vars,
+          success: function (data) {
+            var stripTags = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
+            var suggestions = [];  //an array of possible selections
+            $.each(data, function (i, val) {
+              //adding a label and a hidden item_id - don't use "value":
+              suggestions.push({
+                label: val.item_name,                       //what is displayed in the drobdown-boc
+                item_id: val.item_id,                       //the hidden ID of the item
+                value: val.item_name !== null ? val.item_name.replace(stripTags, "") : "" //what is inserted in the visible input-box
+              });
             });
-          });
-          //pass it to the function of UI-widget:
-          add(suggestions);
+            //pass it to the function of UI-widget:
+            add(suggestions);
+          }
         });
       },
       select: function (event, ui) {

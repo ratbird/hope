@@ -29,7 +29,7 @@
  * @author Rasmus Fuhse
  * 
  */
-class SearchType {
+abstract class SearchType {
     /**
      * title of the search like "search for courses" or just "courses"
      * @return string
@@ -79,11 +79,10 @@ class SearchType {
     /**
      * Returns the path to this file, so that this class can be autoloaded and is 
      * always available when necessary.
+     * Should be: "return __file__;"
      * 
      * @return string   path to this file
      */
-    public function includePath() {
-        return __file__;
-    }
+    abstract public function includePath();
 }
 

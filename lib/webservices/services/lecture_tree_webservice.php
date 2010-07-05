@@ -61,7 +61,7 @@ class LectureTreeService extends Studip_Ws_Service
             $seminar_info = new Studip_Seminar_Info();
             $seminar_info->title = $sem_obj->getName();
             $seminar_info->lecturers = $lecturers;
-            $seminar_info->turnus = getRoomOverviewUnsteady($seminar_id['seminar_id'], $term_id, false);  // false = info without link 
+            $seminar_info->turnus = $sem_obj->getDatesTemplate('dates/seminar_export', array('semester_id' => $term_id));
             $seminar_info->lecture_number = $sem_obj->seminar_number;
 
             $seminar_infos [] = $seminar_info;

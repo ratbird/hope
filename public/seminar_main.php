@@ -149,18 +149,10 @@ $quarter_year = 60 * 60 * 24 * 90;
 
     if (!$studygroup_mode) {
         echo '<b>'. _("Zeit") .':</b><br>';
+        $show_link = ($perm->have_studip_perm('autor', $SessSemName[1]) && $modules['schedule']);
+        echo $sem->getDatesHTML(array('link_to_dates' => $show_link));
 
-        $data = getRegularOverview($SessSemName[1], true);      // second parameter set option to "shrink" dates
-        if ($data) {
-            echo $data . '<br>';
-            if ($perm->have_studip_perm('autor', $SessSemName[1]) && $modules['schedule']) {
-                echo '<br>';
-                echo sprintf(_("Details zu allen Terminen im %sAblaufplan%s"), '<a href="'.URLHelper::getLink('?auswahl='.$SessSemName[1].'&redirect_to=dates.php').'">', '</a>');
-                echo '<br>';
-            }
-        } else {
-            echo _("Die Zeiten der Veranstaltung stehen nicht fest."). '<br>';
-        }
+        echo '<br>';
 
         $next_date = $sem->getNextDate();
         if ($next_date) {

@@ -80,6 +80,7 @@ if (($SessSemName[1] != "") && (!isset($sem_id) || $SessSemName[1] == $sem_id)) 
 }
 
 $sem = new Seminar($sem_id);
+$modules = new Modules();
 #$DataFields = new DataFields($sem_id);
 
 $deputies_enabled = get_config('DEPUTIES_ENABLE');
@@ -328,14 +329,11 @@ echo $template_factory->render(
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">
-                <?
-                 printf ("<font size=-1><b>" . _("Zeit:") . "</b></font><br><font size=-1>%s</font>",htmlReady(view_turnus($sem_id, FALSE, FALSE, (time() - $quarter_year))));
-                    if (($mein_status || $perm->have_studip_perm("admin",$sem_id)) && $modules['schedule']) {
-                        echo '<br><font size="-1"><br>';
-                        echo sprintf(_("Details zu allen Terminen im %sAblaufplan%s"), '<a href="'.URLHelper::getLink('seminar_main.php?auswahl='.$sem_id.'&redirect_to=dates.php').'">', '</a>');
-                        echo '</font><br>';
-                    }
-                ?>
+                    <b><?= _("Zeit:") ?></b><br>
+                    <? if (($mein_status || $perm->have_studip_perm("admin", $sem_id)) && $modules->getStatus('schedule', $sem_id)) :
+                        $show_link = true;
+                    endif ?>
+                    <?= $sem->getDatesHTML(array('link_to_dates' => $show_link, 'show_room' => true)) ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">
                 <?
@@ -373,16 +371,9 @@ echo $template_factory->render(
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">
-                <?
-                    $room = getRoom($sem_id, true, (time() - $quarter_year));
-                    if (!$room) {
-                        if (!($room = $db2->f('Ort'))) {
-                            $room = _("nicht angegeben");
-                        }
-                    }
-
-                    echo '<font size="-1"><b>' . _("Veranstaltungsort:") . '</b><br>' . $room . '</font>';
-                ?>
+                    <b><?= _("Veranstaltungsort:") ?></b>
+                    <br>
+                    <?= $sem->getDatesTemplate('dates/seminar_html_location') ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">
                 <?

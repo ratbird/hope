@@ -32,158 +32,6 @@ require_once "lib/raumzeit/CycleDataDB.class.php";          // Turnus-Daten
 require_once "lib/raumzeit/SingleDate.class.php";           // Einzeltermin
 require_once "lib/raumzeit/raumzeit_functions.inc.php"; // Helper-Funktionen
 
-/**
-* This function creates the assigned room name for range_id
-*
-* @param        string  the id of the Veranstaltung or date
-* @return       string  the name of the room
-*
-*/
-
-function getRoom ($range_id, $link=TRUE, $start_time = 0, $range_typ = false, $showRoomList = false) {
-    $data = SemesterData::GetInstance()->getCurrentSemesterData();
-    return getRoomOverviewUnsteady ($range_id, $data['semester_id'], $link, $start_time, $range_typ, $showRoomList);
-}
-
-function getRegularOverview($range_id, $shrink_dates = false) {
-    $data = SemesterData::GetInstance()->getCurrentSemesterData();
-    
-    $params = array();
-    $params[] = 'hideRooms';
-
-    if ($shrink_dates) {
-        $params[] = 'shrinkDates';
-    }
-    
-    return getRoomOverviewUnsteady ($range_id, $data['semester_id'], false, false, false, false, $params);
-}
-
-/* Diese Funktion gibt eine Übersicht über alle Termine und die zugeordneten Räume (soweit vorhanden) für entweder
- * ein ganzes Seminar oder für einen einzelnen Termin als HTML-String zurück.
- *
- * range_id string  Ist eine termin_id oder eine seminar_id
- * semester_id  string  Ist die ID eines Semesters. Es werden nur Zeiten zurückgegeben, die innerhalb dieses Semesters liegen
- * link boolean Wenn gesetzt, werden die Raumangaben als Link zum Belegungsplan zurückgegeben, ansonsten als einfacher String
- * start_time   string  wird nicht mehr verwendet!
- * range_typ    string  gibt die Art der übergebenen range_id an. Entweder 'sem' oder 'date'. Wenn nichts angegeben wird, wird die typ selbstständig ermittelt
- * showRoomList boolean Wenn gesetzt, wird eine Liste der am häufigsten verwendeten Räume für ein Metadate ausgegeben (falls vorhanden)
- * additionalParameters array Im Array können folgende Paramter gesetzt werden: xml_export.
- */
-function getRoomOverviewUnsteady ($range_id, $semester_id, $link=TRUE, $start_time = 0, $range_typ = false, $showRoomList = false, $additionalParameters = false) {
-
-    global $RESOURCES_ENABLE, $RELATIVE_PATH_RESOURCES, $TERMIN_TYP, $srch_sem,$perm;
-
-    // steuert, ob die Raumanzeige als XML-Export oder als Tabelle zurückgeliefert wird
-    if ($additionalParameters['xml_export']) {
-        $xml_export = true;
-        $link = FALSE;
-    }
-
-    if ($additionalParameters) {
-        foreach ($additionalParameters as $trash => $name) {
-            $$name = true;
-        }
-    }
-
-    if ($RESOURCES_ENABLE) {
-        include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
-        include_once ($RELATIVE_PATH_RESOURCES."/resourcesFunc.inc.php");
-    }
-     
-    $not_booked_hint = get_config('RESOURCES_SHOW_ROOM_NOT_BOOKED_HINT');
-
-    if (!$range_typ){
-        $range_typ = get_object_type($range_id);
-    }
-    
-    switch ($range_typ) {
-        /* * * * * * * * * * * * * * * * *
-         *   S E M I N A R   D A T E S   *
-         * * * * * * * * * * * * * * * * */
-        case 'sem':
-            require_once('lib/classes/Seminar.class.php');
-            require_once('lib/raumzeit/decorator/RoomOverviewUnsteadyDecorator.class.php');
-
-            $filter = getFilterForSemester($semester_id);
-
-            $sem = new Seminar($range_id);
-
-            // only filter if lecture's duration is longer than 1 term
-            if ($sem->metadate->seminarDurationTime != 0)
-            {
-                $semester_data_handler = SemesterData::GetInstance();
-
-                $semester_data = $semester_data_handler->getSemesterData($semester_id);
-
-                // if lecture starts after the given term, use start term of seminar to filter
-                if ($sem->semester_start_time > $semester_data['beginn'])
-                {
-                    $semester_data = $semester_data_handler->getSemesterDataByDate($sem->semester_start_time);
-                    $semester_id = $semester_data['semester_id'];
-                }
-                
-                // generate filter data
-                $filter = getFilterForSemester($semester_id);
-
-                // apply filter
-                $sem->applyTimeFilter($filter['filterStart'], $filter['filterEnd']);
-            }
-
-
-            $decorator = new RoomOverviewUnsteadyDecorator($sem->getUndecoratedData());
-
-            $decorator->sem =& $sem;
-            $decorator->xml_export = $xml_export;
-            $decorator->link = $link;
-            $decorator->showRoomList = $showRoomList;
-            $decorator->hideRooms = $hideRooms;
-            $decorator->shrinkDates = $shrinkDates;
-            $decorator->onlyRegular = $onlyRegular;
-            if (isset($perm) && $perm->have_perm('admin')) {
-                $decorator->admin_view = true;
-            }
-
-            return $decorator->toString(); 
-        break;
-
-        /* * * * * * * * * * * * * * *
-         *   S I N G L E   D A T E   *
-         * * * * * * * * * * * * * * */
-        case 'date':
-            require_once('lib/raumzeit/SingleDate.class.php');
-            require_once('lib/raumzeit/decorator/SingleDateDecorator.class.php');
-
-            $termin = new SingleDate($range_id);
-
-            $decorator = new SingleDateDecorator('');
-            $decorator->termin =& $termin;
-            $decorator->xml_export = $xml_export;
-            $decorator->link = $link;
-
-            return $decorator->toString();
-        break;
-
-        /* * * * * * * * * * * * * * *
-         *     R O O M   O N L Y     *
-         * * * * * * * * * * * * * * */
-        case 'room':
-            require_once('lib/raumzeit/SingleDate.class.php');
-            require_once('lib/raumzeit/decorator/RoomDecorator.class.php');
-
-            $termin = new SingleDate($range_id);
-
-            $decorator = new RoomDecorator('');
-            $decorator->termin =& $termin;
-            $decorator->xml_export = $xml_export;
-            $decorator->link = $link;
-
-            return $decorator->toString();
-        break;
-
-    }
-}
-
-
 /*
  * getWeekday liefert einen String mit einem Tagesnamen.
  *
@@ -749,4 +597,18 @@ function Termin_Eingabe_javascript ($t = 0, $n = 0, $atime=0, $ss = '', $sm = ''
 
     return  $txt;
 }                                                                                               
-?>
+
+function getFormattedRooms($rooms, $link = false) {
+    $room_list = array();
+
+    foreach ($rooms as $room_id => $count) {
+        $resObj =& ResourceObject::Factory($room_id);
+        if ($link) {
+            $room_list[] = $resObj->getFormattedLink(TRUE, TRUE, TRUE);
+        } else {
+            $room_list[] = $resObj->getName();
+        }
+    }
+
+    return $room_list;
+}

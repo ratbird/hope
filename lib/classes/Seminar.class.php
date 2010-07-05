@@ -326,35 +326,43 @@ class Seminar {
         return $first_date;
     }
 
+    /**
+     * This function returns an associative array of the dates owned by this seminar
+     *
+     * @returns  mixed  a multidimensional array of seminar-dates
+     */
     function getUndecoratedData() {
         $cycles = $this->metadate->getCycleData();
         $dates = $this->getSingleDates();
+
         // besser wieder mit direktem Query statt Objekten
         if (is_array($cycles) && (sizeof($cycles) == 0)) {
             $cycles = FALSE;
         }
 
         $ret['regular']['turnus_data'] = $cycles;
-        $ret['regular']['art'] = $this->metadate->art;
+        $ret['regular']['art']         = $this->metadate->art;
         $ret['regular']['start_woche'] = $this->metadate->start_woche;
-        $ret['regular']['turnus'] = $this->metadate->turnus;
+        $ret['regular']['turnus']      = $this->metadate->turnus;
 
+        // the irregular single-dates
         foreach ($dates as $val) {
             $zw = array(
                     'metadate_id' => $val->getMetaDateID(),
-                    'termin_id' => $val->getTerminID(),
-                    'date_typ' => $val->getDateType(),
-                    'start_time' => $val->getStartTime(),
-                    'end_time' => $val->getEndTime(),
-                    'mkdate' => $val->getMkDate(),
-                    'chdate' => $val-> getMkDate(),
-                    'ex_termin' => $val->isExTermin(),
-                    'orig_ex' => $val->isExTermin(),
-                    'range_id' => $val->getRangeID(),
-                    'author_id' => $val->getAuthorID(),
+                    'termin_id'   => $val->getTerminID(),
+                    'date_typ'    => $val->getDateType(),
+                    'start_time'  => $val->getStartTime(),
+                    'end_time'    => $val->getEndTime(),
+                    'mkdate'      => $val->getMkDate(),
+                    'chdate'      => $val->getMkDate(),
+                    'ex_termin'   => $val->isExTermin(),
+                    'orig_ex'     => $val->isExTermin(),
+                    'range_id'    => $val->getRangeID(),
+                    'author_id'   => $val->getAuthorID(),
                     'resource_id' => $val->getResourceID(),
-                    'raum' => $val->getFreeRoomText(),
-                    'typ' => $val->getDateType()
+                    'raum'        => $val->getFreeRoomText(),
+                    'typ'         => $val->getDateType(),
+                    'tostring'    => $val->toString()
                 );
 
             $ret['irregular'][$val->getTerminID()] = $zw;
@@ -369,51 +377,11 @@ class Seminar {
          * if (! $return_string = $cache->read($cache_key))
          * {
          */
-        $turnus = $this->metadate->cycles;
-        $irregular = $this->getSingleDates();
-        // TODO: use one query instead of objectS
+        return $this->getDatesHTML(array('short' => $short, 'shrink' => true));
 
-        if (is_array($turnus) && (sizeof($turnus) == 0)) {
-            $turnus = FALSE;
-        }
-
-        if (!$turnus && !$irregular) {
-            return _("Die Zeiten der Veranstaltung stehen nicht fest.");
-        }
-
-        if ($turnus) {
-            $first = TRUE;
-            foreach ($turnus as $val) {
-                $return_string .= (($first) ? '' : ', ') . $val->toString($short);
-                $first = FALSE;
-            }
-            if ($this->getTurnus() == 1) {
-                $return_string.= " " . _("(zweiwöchentlich)");
-            }
-        }
-
-        if ($irregular) {
-            foreach ($irregular as $sid => $termin) {
-                foreach (getPresenceTypes() as $tp) {
-                    if ($termin->getDateType() == $tp) {
-                        $dates[] = array('start_time' => $termin->getStartTime(), 'end_time' => $termin->getEndTime(), 'conjuncted' => FALSE, 'time_match' => FALSE);
-                    }
-                }
-            }
-
-            if (sizeof($dates) > 0) {
-                if ($turnus) {
-                    $return_string .= ', ';
-                }
-                $return_string .= _("Termine am"). " ";
-            }
-
-            $return_string .= join('', shrink_dates($dates));
-        }
         // activate this with StEP 00077
         // $cache->write($cache_key, $return_string, 60*60);
         // }
-        return $return_string;
     }
 
     function getFormattedTurnusDates($short = FALSE) {
@@ -1636,7 +1604,7 @@ class Seminar {
                         $info[$i]['name'] = $cycle->toString().' ('.$semester['name'].')';
                         $info[$i]['weekend'] = ($cycle->getDay() == 6 || $cycle->getDay() == 0);
                         $this->applyTimeFilter($semester['beginn'], $semester['ende']);
-                        $raum = $this->getFormattedPredominantRooms($metadate_id);
+                        $raum = $this->getDatesTemplate('dates/seminar_predominant', array('cycle_id' => $metadate_id));
                         if ($raum) {
                             $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;'.$raum;
                             $room_stat = $this->getStatOfNotBookedRooms($cycle->getMetadateId());
@@ -2163,6 +2131,76 @@ class Seminar {
         }
         return true;
 
+    }
+    
+    /**
+     * returns a html representation of the seminar-dates
+     *
+     * @param  array  optional variables which are passed to the template
+     * @return  string  the html-representation of the dates
+     *
+     * @author Till Glöggler <tgloeggl@uos.de>
+     */
+    function getDatesHTML($params = array()) {
+        $template = $GLOBALS['template_factory']->open('dates/seminar_html.php');
+        $template->set_attributes($params);
+
+        return $this->getDatesTemplate($template);
+    }
+
+    /**
+     * returns a representation without html of the seminar-dates
+     *
+     * @param  array  optional variables which are passed to the template
+     * @return  string  the representation of the dates without html
+     *
+     * @author Till Glöggler <tgloeggl@uos.de>
+     */
+    function getDatesExport($params = array()) {
+        $template = $GLOBALS['template_factory']->open('dates/seminar_export.php');
+        $template->set_attributes($params);
+        return $this->getDatesTemplate($template);
+    }
+
+    /**
+     * returns a xml-representation of the seminar-dates
+     *
+     * @param  array  optional variables which are passed to the template
+     * @return  string  the xml-representation of the dates
+     *
+     * @author Till Glöggler <tgloeggl@uos.de>
+     */
+    function getDatesXML($params = array()) {
+        $template = $GLOBALS['template_factory']->open('dates/seminar_xml.php');
+        $template->set_attributes($params);
+        return $this->getDatesTemplate($template);
+    }
+
+    /**
+     * returns a representation of the seminar-dates with a specifiable template
+     *
+     * @param  mixed  this can be a template-object or a string pointing to a template in path_to_studip/templates
+     * @return  string  the template output of the dates
+     *
+     * @author Till Glöggler <tgloeggl@uos.de>
+     */
+    function getDatesTemplate($template, $params = array()) {
+        if (!$template instanceof Flexi_Template && is_string($template)) {
+            $template = $GLOBALS['template_factory']->open($template);
+        }
+
+        if ($params['semester_id']) {
+            // generate filter data
+            $filter = getFilterForSemester($params['semester_id']);
+
+            // apply filter
+            $this->applyTimeFilter($filter['filterStart'], $filter['filterEnd']);
+        }
+
+
+        $template->set_attribute('dates', $this->getUndecoratedData());
+        $template->set_attributes($params);
+        return trim($template->render());
     }
     
     /**

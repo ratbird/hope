@@ -199,17 +199,17 @@ class ExternModuleLecturedetails extends ExternModule {
                 $data["description"] = FixLinks(htmlReady($this->db->f("Beschreibung")), TRUE, TRUE, FALSE, TRUE);
             
             if ($visible[++$j])
-                $data["location"] = getRoom($this->seminar_id, FALSE);
+                $data["location"] = Seminar::getInstance($this->seminar_id)->getDatesTemplate('dates/seminar_export_location'); 
             
             if ($visible[++$j])
                 $data["semester"] = get_semester($this->seminar_id);
             
             if ($visible[++$j]) {
-                $data["time"] = htmlReady(view_turnus($this->seminar_id, FALSE, FALSE));
-                if ($first_app = vorbesprechung($this->seminar_id)) {
+                $data["time"] = Seminar::getInstance($this->seminar_id)->getDatesExport();
+                if ($first_app = vorbesprechung($this->seminar_id, 'export')) {
                     $data["time"] .= "<br>" . $this->config->getValue("Main", "aliaspredisc") . $first_app;
                 }
-                if ($begin = veranstaltung_beginn($this->seminar_id)) {
+                if ($begin = Seminar::getInstance($this->seminar_id)->getFirstDate('export')) {
                     $data["time"] .= "<br>" . $this->config->getValue("Main", "aliasfirstmeeting") . $begin;
                 }
             }

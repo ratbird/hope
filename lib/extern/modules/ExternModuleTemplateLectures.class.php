@@ -452,9 +452,10 @@ class ExternSemBrowseTemplate extends SemBrowse {
                         
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SEMESTER'] = $sem_semester;
                         
-                        //create Turnus field
-                        $sem_turnus = view_turnus($seminar_id, TRUE ,key($sem_data[$seminar_id]["metadata_dates"]));
-                        //Shorten, if string too long
+                        // create turnus field
+                        $sem_turnus = Seminar::getInstance($seminar_id)->getDatesExport();
+
+                        // shorten, if string too long
                         if (strlen($sem_turnus) > 70) {
                             $sem_turnus = substr($sem_turnus, 0,
                                     strpos(substr($sem_turnus, 70, strlen($sem_turnus)), ",") +71);
@@ -469,6 +470,7 @@ class ExternSemBrowseTemplate extends SemBrowse {
                         $doz_titlerear = array_keys($sem_data[$seminar_id]['title_rear']);
                         $doz_uname = array_keys($sem_data[$seminar_id]['username']);
                         $doz_position = array_keys($sem_data[$seminar_id]['position']);
+                        if (sizeof($doz_position) < $doz_name) $doz_position = array_fill(0, sizeof($doz_name), 0);
                         if (is_array($doz_name)){
                             array_multisort($doz_position, $doz_name, $doz_uname);
                             $k = 0;
@@ -492,7 +494,7 @@ class ExternSemBrowseTemplate extends SemBrowse {
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SEMTYPE-SUBSTITUTE'] = $aliases_sem_type[$this->sem_types_position[key($sem_data[$seminar_id]['status'])] - 1];
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SEMTYPE'] = ExternModule::ExtHtmlReady($SEM_TYPE[key($sem_data[$seminar_id]['status'])]['name']
                                     .' ('. $SEM_CLASS[$SEM_TYPE[key($sem_data[$seminar_id]['status'])]['class']]['name'] . ')');
-                        $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['ROOM'] = getRoom($seminar_id, FALSE, 0, 'sem');
+                        $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['ROOM'] = nl2br(Seminar::getInstance($seminar_id)->getDatesTemplate('dates/seminar_export_location'));
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['FORM'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['art']));
                         
                         // generic data fields

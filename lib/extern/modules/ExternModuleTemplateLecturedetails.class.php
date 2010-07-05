@@ -283,9 +283,9 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
                 $content['LECTUREDETAILS']['SEMTYPE-SUBSTITUTE'] = ExternModule::ExtHtmlReady($GLOBALS["SEM_TYPE"][$seminar->status]["name"]);
             }
             $content['LECTUREDETAILS']['SEMTYPE'] = ExternModule::ExtHtmlReady($GLOBALS["SEM_TYPE"][$seminar->status]["name"]);
-            $content['LECTUREDETAILS']['ROOM'] = getRoom($this->seminar_id, FALSE);
+            $content['LECTUREDETAILS']['ROOM'] = Seminar::getInstance($this->seminar_id)->getDatesTemplate('dates/seminar_export_location');
             $content['LECTUREDETAILS']['SEMESTER'] = get_semester($this->seminar_id);
-            $content['LECTUREDETAILS']['CYCLE'] = ExternModule::ExtHtmlReady(view_turnus($this->seminar_id, FALSE, FALSE));
+            $content['LECTUREDETAILS']['CYCLE'] = ExternModule::ExtHtmlReady(Seminar::getInstance($this->seminar_id)->getDatesExport());
             $content['LECTUREDETAILS']['PRELIM-DISCUSSION'] = vorbesprechung($this->seminar_id);
             $content['LECTUREDETAILS']['FIRST-MEETING'] = veranstaltung_beginn($this->seminar_id);
 

@@ -348,10 +348,12 @@ function export_sem($inst_id, $ex_sem_id = "all")
                 if ($val == "") $val = $key;
                 if ($key == "status")
                     $data_object .= xml_tag($val, $SEM_TYPE[$db->f($key)]["name"]);
-                elseif ($key == "ort")
-                    $data_object .= xml_tag($val, decodeHTML( getRoom($db->f("seminar_id"), false) ) );
-                elseif (($key == "bereich") AND (($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["bereiche"])))
-                {
+
+                elseif ($key == "ort") {
+                    $sem_obj = Seminar::getInstance($db->f("seminar_id"));
+                    $data_object .= xml_tag($val, $sem_obj->getDatesTemplate('dates/seminar_export_location'));
+
+                } elseif (($key == "bereich") AND (($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["bereiche"]))) {
                     $data_object .= xml_open_tag($xml_groupnames_lecture["childgroup3"]);
                     $pathes = get_sem_tree_path($db->f("seminar_id"));
                     if (is_array($pathes)){
@@ -374,13 +376,13 @@ function export_sem($inst_id, $ex_sem_id = "all")
                 }
                 elseif ($key == "metadata_dates")
                 {
-                    $sem_obj = new Seminar($db->f("seminar_id"));
+                    $sem_obj = Seminar::getInstance($db->f("seminar_id"));
                     $data_object .= xml_open_tag( $xml_groupnames_lecture["childgroup1"] );
                     $vorb = vorbesprechung($db->f("seminar_id"), 'export');
                     if ($vorb != false)
                         $data_object .= xml_tag($val[0], $vorb);
                     $data_object .= xml_tag($val[1], $sem_obj->getFirstDate('export'));
-                    $data_object .= xml_tag($val[2], $sem_obj->getFormattedTurnus());
+                    $data_object .= xml_tag($val[2], $sem_obj->getDatesExport());
                     $data_object .= xml_close_tag( $xml_groupnames_lecture["childgroup1"] );
                 }
                 elseif ($key == "Institut_id")

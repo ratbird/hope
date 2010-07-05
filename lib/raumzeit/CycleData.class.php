@@ -237,7 +237,7 @@ class CycleData {
     }
 
     function toString($short = FALSE) {
-        return getWeekDay($this->day, $short).($short ? '. ' : ' ').leadingZero($this->start_stunde).':'.leadingZero($this->start_minute).' bis '.leadingZero($this->end_stunde).':'.leadingZero($this->end_minute);
+        return getWeekDay($this->day, $short).($short ? '. ' : ' ').leadingZero($this->start_stunde).':'.leadingZero($this->start_minute).' - '.leadingZero($this->end_stunde).':'.leadingZero($this->end_minute);
     }
 
 

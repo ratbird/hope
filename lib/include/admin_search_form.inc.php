@@ -522,20 +522,21 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
         while ($db->next_record()) {
             $seminar_id = $db->f("Seminar_id");
-            $sem=new SemesterData;
+            $sem = Seminar::getInstance($db->f('Seminar_id'));
+            $semester = new SemesterData();
 
-            if (!$semdata=$sem->getSemesterData($links_admin_data['srch_sem'])) {
-                $semdata = $sem->getSemesterDataByDate($db->f('start_time'));
+            if (!$semdata = $semester->getSemesterData($links_admin_data['srch_sem'])) {
+                $semdata = $semester->getSemesterDataByDate($db->f('start_time'));
             }
 
             // if "show room-data" is enabled
             if (!$show_rooms_check_url) {
                 $_room = "&nbsp;";
             } else {
-                $_room = getRoomOverviewUnsteady($seminar_id,$semdata["semester_id"],TRUE);
+                $_room = $sem->getDatesHTML();
                 if (!$_room) {
-                    $semdata = $sem->getSemesterDataByDate($db->f('start_time'));
-                    $_room = getRoomOverviewUnsteady($seminar_id, $semdata['semester_id'], TRUE);
+                    $semdata = $semester->getSemesterDataByDate($db->f('start_time'));
+                    $_room = $sem->getDatesHTML(array('semester_id' => $semdata['semester_id']));
                 }
                 $_room = $_room ? $_room : "nicht angegeben";
             }

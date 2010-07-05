@@ -337,7 +337,7 @@ class ExternSemBrowseTable extends SemBrowse {
                         }
                         
                         //create Turnus field
-                        $data["content"]["zeiten"] = view_turnus($seminar_id, TRUE ,key($sem_data[$seminar_id]["metadata_dates"]));
+                        $data["content"]["zeiten"] = Seminar::GetInstance($seminar_id)->getDatesExport();
                         //Shorten, if string too long
                         if (strlen($data["content"]["zeiten"]) >70) {
                             $data["content"]["zeiten"] = substr($data["content"]["zeiten"], 0,
@@ -390,7 +390,7 @@ class ExternSemBrowseTable extends SemBrowse {
                                     ." (". $SEM_CLASS[$SEM_TYPE[key($sem_data[$seminar_id]["status"])]["class"]]["name"].")");
                         }
                         
-                        $data["content"]["Ort"] = getRoom($seminar_id, FALSE, 0, "sem");
+                        $data["content"]["Ort"] = Seminar::getInstance($seminar_id)->getDatesTemplate('dates/seminar_export_location');
                         if ($sem_data[$seminar_id]["art"])
                             $data["content"]["art"] = htmlReady(key($sem_data[$seminar_id]["art"]));
                         else

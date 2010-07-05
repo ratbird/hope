@@ -53,6 +53,8 @@ function dump_sem($sem_id, $print_view = false) {
     $db2->next_record();
     $sem_type = $db2->f('status');
 
+    $sem = Seminar::getInstance($sem_id);
+
     $dump.="\n<table width=100% border=1 cellpadding=2 cellspacing=0>";
     $dump .= " <tr><td colspan=2 align=left class=\"topic\">";
     $dump .= "<H1 class=\"topic\">&nbsp;".htmlReady($db2->f('Name'),1,1)."</H1>";
@@ -63,8 +65,8 @@ function dump_sem($sem_id, $print_view = false) {
     if ($db2->f('Untertitel')!="")
         $dump.="<tr><td width=\"15%\"><b>" . _("Untertitel:") . " </b></td><td>".htmlReady($db2->f('Untertitel'),1,1)."</td></tr>\n";
 
-    if (view_turnus($sem_id, FALSE))
-        $dump.="<tr><td width=\"15%\"><b>" . _("Zeit:") . " </b></td><td>".htmlReady(view_turnus($sem_id, FALSE))."</td></tr>\n";
+    if ($data = $sem->getDatesExport())
+        $dump.="<tr><td width=\"15%\"><b>" . _("Zeit:") . " </b></td><td>" . nl2br($data) . "</td></tr>\n";
 
     if (get_semester($sem_id))
         $dump.="<tr><td width=\"15%\"><b>" . _("Semester:") . " </b></td><td>".get_semester($sem_id)."</td></tr>\n";
@@ -75,8 +77,8 @@ function dump_sem($sem_id, $print_view = false) {
     if (vorbesprechung($sem_id, 'export'))
         $dump.="<tr><td width=\"15%\"><b>" . _("Vorbesprechung:") . " </b></td><td>".htmlReady(vorbesprechung($sem_id, 'export'))."</td></tr>\n";
 
-    if (getRoom($sem_id, FALSE))
-        $dump.="<tr><td width=\"15%\"><b>" . _("Ort:") . " </b></td><td>".getRoom($sem_id, FALSE)."</td></tr>\n";
+    if ($data = $sem->getDatesTemplate('dates/seminar_export_location'))
+        $dump .= "<tr><td width=\"15%\"><b>" . _("Ort:") . " </b></td><td>" . nl2br($data) . "</td></tr>\n";
 
     //wer macht den Dozenten?
     $db->query ("SELECT seminar_user.user_id, " . $_fullname_sql['full'] . " AS fullname, username, status FROM seminar_user LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_user.Seminar_id = '$sem_id' AND status = 'dozent' ORDER BY position, Nachname");

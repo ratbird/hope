@@ -327,18 +327,20 @@ class MetaDate {
         $ret = array();
         foreach ($this->cycles as $val) {
             $ret[$val->getMetaDateID()] = array(
-                'metadate_id' => $val->metadate_id, 
-                'idx' => $val->idx, 
-                'day' => $val->day, 
-                'start_hour' => $val->start_stunde, 
-                'start_minute' => $val->start_minute, 
-                'end_hour' => $val->end_stunde, 
-                'end_minute' => $val->end_minute, 
-                'desc' => $val->description, 
-                'room' => $val->room, 
-                'resource_id' => $val->resource_id,
+                'metadate_id'    => $val->metadate_id, 
+                'idx'            => $val->idx, 
+                'day'            => $val->day, 
+                'start_hour'     => $val->start_stunde, 
+                'start_minute'   => $val->start_minute, 
+                'end_hour'       => $val->end_stunde, 
+                'end_minute'     => $val->end_minute, 
+                'desc'           => $val->description, 
+                'room'           => $val->room, 
+                'resource_id'    => $val->resource_id,
                 'assigned_rooms' => $val->getPredominantRoom(),
-                'freetext_rooms' => $val->getFreetextPredominantRoom()
+                'freetext_rooms' => $val->getFreetextPredominantRoom(),
+                'tostring'       => $val->toString(),
+                'tostring_short' => $val->toString(true)
             );
         }
         uasort($ret,array('MetaDate','sortCycleData'));

@@ -317,7 +317,7 @@ while ($tmp_first_date < $end_date) {
                 $turnus = $sem->getFormattedTurnusDates();      // string representation of all CycleData-objects is retrieved as an associative array: key: CycleDataID, val: string
                     //TODO: string representation should not be collected by a big array, but with the toString method of the CycleData-object
                     foreach ($sem->metadate->getCycleData() as $metadate_id => $cycle_element) {        // cycle trough all CycleData objects
-                        if (!$tpl['room'] = $sem->getFormattedPredominantRooms($metadate_id)) {     // getPredominantRoom returns the predominant booked room
+                        if (!$tpl['room'] = $sem->getDatesTemplate('dates/seminar_predominant', array('cycle_id' => $metadate_id))) {
                             $tpl['room'] = _("keiner");
                         }
 

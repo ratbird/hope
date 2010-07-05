@@ -108,7 +108,7 @@ class CycleDataDB {
 
         while ($db->next_record()) {
             if ($db->f('resource_id') != '') {
-                $rooms[] = $db->f('resource_id');
+                $rooms[$db->f('resource_id')] = $db->f('c');
             }
         }
 
@@ -116,23 +116,19 @@ class CycleDataDB {
     }
 
     function getFreeTextPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0) {
-        $db = new DB_Seminar();
-        $rooms = array();
-
         if (($filterStart == 0) && ($filterEnd == 0)) {
             $query = "SELECT COUNT(raum) as c, raum FROM termine WHERE termine.metadate_id = '$metadate_id' GROUP BY raum ORDER BY c DESC";
         } else {
             $query = "SELECT COUNT(raum) as c, raum FROM termine WHERE termine.metadate_id = '$metadate_id' AND termine.date >= $filterStart AND termine.end_time <= $filterEnd GROUP BY raum ORDER BY c DESC";
         }
 
-        $db->query($query);
-        if ($db->num_rows() == 0) return FALSE;
+        $db = DBManager::get()->query($query);
+        if (!$data = $db->fetchAll(PDO::FETCH_ASSOC)) return false;
 
-        while ($db->next_record()) {
-            if ($db->f('raum') != '') {
-                return $db->f('raum');
-            }
+        foreach ($data as $room) {
+            $ret[$room['raum']] = $room['c'];
         }
+
+        return $ret;
     }
 }
-?>

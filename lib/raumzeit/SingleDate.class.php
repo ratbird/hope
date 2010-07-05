@@ -63,6 +63,25 @@ class SingleDate {
 
     //var $check_array = array()        // This array is used to check if the singledate has been changed and needs to be stored
 
+    function getInstance($singledate_id) {
+        static $singledate_object_pool;
+
+        if ($id){
+            if ($refresh_cache){
+                $singledate_object_pool[$id] = null;
+            }
+            if (is_object($singledate_object_pool[$id]) && $singledate_object_pool[$id]->getTerminId() == $id){
+                return $singledate_object_pool[$id];
+            } else {
+                $seminar_object_pool[$id] = new SingleDate($id);
+                return $singledate_object_pool[$id];
+            }
+        } else {
+            return new SingleDate();
+        }
+
+    }
+
     function SingleDate ($data = '') {
         global $user, $id;
         if (is_array($data)) {
@@ -336,6 +355,7 @@ class SingleDate {
     function bookRoom($roomID) {
         if ($this->ex_termin) return FALSE;
         $this->raum = '';
+        $this->store();
         if ($this->resource_id != '') {
             return $this->changeAssign($roomID);
         } else {
@@ -619,4 +639,68 @@ class SingleDate {
         }
         return TRUE;
     }
+
+
+    /**
+     * returns a html representation of the date
+     *
+     * @param  array  optional variables which are passed to the template
+     * @return  string  the html-representation of the date
+     *
+     * @author Till Glöggler <tgloeggl@uos.de>
+     */
+    function getDatesHTML($params = array()) {
+        $template = $GLOBALS['template_factory']->open('dates/date_html.php');
+        $template->set_attributes($params);
+
+        return $this->getDatesTemplate($template);
+    }
+
+    /**
+     * returns a representation without html of the date
+     *
+     * @param  array  optional variables which are passed to the template
+     * @return  string  the representation of the date without html
+     *
+     * @author Till Glöggler <tgloeggl@uos.de>
+     */
+    function getDatesExport($params = array()) {
+        $template = $GLOBALS['template_factory']->open('dates/date_html.php');
+        $params['link'] = false;
+        $template->set_attributes($params);
+
+        return $this->getDatesTemplate($template);
+    }
+
+    /**
+     * returns a xml-representation of the date
+     *
+     * @param  array  optional variables which are passed to the template
+     * @return  string  the xml-representation of the date
+     *
+     * @author Till Glöggler <tgloeggl@uos.de>
+     */
+    function getDatesXML($params = array()) {
+        $template = $GLOBALS['template_factory']->open('dates/date_xml.php');
+        $template->set_attributes($params);
+        return $this->getDatesTemplate($template);
+    }
+
+    /**
+     * returns a representation of the date with a specifiable template
+     *
+     * @param  mixed  this can be a template-object or a string pointing to a template in path_to_studip/templates
+     * @return  string  the template output of the date
+     *
+     * @author Till Glöggler <tgloeggl@uos.de>
+     */
+    function getDatesTemplate($template) {
+        if (!$template instanceof Flexi_Template && is_string($template)) {
+            $template = $GLOBALS['template_factory']->open($template);
+        }
+
+        $template->set_attribute('date', $this);
+        return $template->render();
+    }
+
 }

@@ -60,8 +60,8 @@ class PluginAdministration
         $max_version = $manifest['studipMaxVersion'];
 
         // check for compatible version
-        if (isset($min_version) && version_compare($min_version, $SOFTWARE_VERSION) > 0 ||
-            isset($max_version) && version_compare($max_version, $SOFTWARE_VERSION) < 0) {
+        if (!isset($min_version) || version_compare($min_version, $SOFTWARE_VERSION) > 0 ||
+            !isset($max_version) || version_compare($max_version, $SOFTWARE_VERSION) < 0) {
             rmdirr($packagedir);
             throw new PluginInstallationException(_('Das Plugin ist mit dieser Stud.IP-Version nicht kompatibel.'));
         }

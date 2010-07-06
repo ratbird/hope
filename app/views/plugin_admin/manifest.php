@@ -24,6 +24,14 @@
         <td><?= htmlspecialchars($manifest['version']) ?></td>
     </tr>
     <tr>
+        <td>minimale Stud.IP-Version:</td>
+        <td><?= htmlspecialchars($manifest['studipMinVersion']) ?></td>
+    </tr>
+    <tr>
+        <td>maixmale Stud.IP-Version:</td>
+        <td><?= htmlspecialchars($manifest['studipMaxVersion']) ?></td>
+    </tr>
+    <tr>
         <td>Beschreibung:</td>
         <td><?= htmlspecialchars($manifest['description']) ?></td>
     </tr>

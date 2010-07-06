@@ -377,7 +377,7 @@ class Seminar {
          * if (! $return_string = $cache->read($cache_key))
          * {
          */
-        return $this->getDatesHTML(array('short' => $short, 'shrink' => true));
+        return $this->getDatesExport(array('short' => $short, 'shrink' => true));
 
         // activate this with StEP 00077
         // $cache->write($cache_key, $return_string, 60*60);

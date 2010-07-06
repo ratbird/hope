@@ -34,12 +34,18 @@
         if (in_array($date['typ'], $presence_types) !== false) :
             $irregular[] = $date; $irregular_strings[] = $date['tostring']; $irregular_rooms[$date['resource_id']]++;
         endif;
-    endforeach ?>
-    <?= _("Termine am") ?> <?= implode('', shrink_dates($irregular));
-    if (is_array($irregular_rooms) && sizeof($irregular_rooms) > 0) :
-        $irregular_rooms = array_slice($irregular_rooms, sizeof($irregular_rooms) - 3, sizeof($irregular_rooms));
-        ?><?= _(", Ort:") ?>
-        <?= implode(', ', getFormattedRooms($irregular_rooms, $link)); ?>
+    endforeach;
+    unset($irregular_rooms['']); ?>
+
+    <? if (is_array($irregular) && sizeof($irregular)) : ?>
+        <?= _("Termine am") ?> <?= implode('', shrink_dates($irregular));
+        if (is_array($irregular_rooms) && sizeof($irregular_rooms) > 0) :
+            if (sizeof($irregular_rooms) > 3) :
+                $irregular_rooms = array_slice($irregular_rooms, sizeof($irregular_rooms) - 3, sizeof($irregular_rooms));
+            endif;
+            ?><?= _(", Ort:") ?>
+            <?= implode(', ', getFormattedRooms($irregular_rooms, $link)); ?>
+        <? endif ?>
     <? endif ?>
   <? endif ?>
 

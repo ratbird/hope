@@ -783,13 +783,25 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         }
     }
 
+    /**
+     * Changes visibility settings for the current user.
+     * 
+     * @param string $global global visibility of the account in Stud.IP
+     * @param string $online visiblity in "Who is online" list
+     * @param string $chat visibility of the private chatroom in active chats list
+     * @param string $search visiblity in user search
+     * @param string $email visibility of the email address
+     * @return boolean All settings saved?
+     */
     function change_global_visibility($global, $online, $chat, $search, $email) {
         $success = false;
+        // Globally visible or unknown -> set local visibilities accordingly.
         if ($global != 'no') {
             $online = $online ? 1 : 0;
             $chat = $chat ? 1 : 0;
             $search = $search ? 1 : 0;
             $email = $email ? 1 : 0;
+        // Globally invisible -> set all local fields to invisible.
         } else {
             $online = 0;
             $chat = 0;
@@ -802,11 +814,21 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         return true;
     }
 
+    /**
+     * Changes the visibility of all homepage elements to the given value.
+     * 
+     * @param int $new_visibility new visiblity of homepage elements, one of 
+     * the visibility constants defined in lib/user_visible.inc.php.
+     * @return array All of the user's hoempage elements with new visibility 
+     * set.
+     */
     function change_all_homepage_visibility($new_visibility) {
         $result = array();
         $new_data = array();
         $db_result = array();
+        // Retrieve homepage elements.
         $data = $this->get_homepage_elements();
+        // Iterate through data and set new visibility.
         foreach ($data as $key => $entry) {
             $new_data[$key] = array("name" => $entry["name"], "visibility" => $new_visibility);
             if ($entry["extern"]) {
@@ -815,6 +837,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $new_data[$key]['category'] = $entry['category'];
             $db_result[$key] = $new_visibility;
         }
+        // Write serialized data back to database.
         $query = "UPDATE user_visibility SET homepage='".serialize($db_result)."' WHERE user_id='".$this->auth_user['user_id']."'";
         $success = DBManager::get()->exec($query);
         if ($success) {
@@ -823,6 +846,13 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         return $result;
     }
 
+    /**
+     * Saves user specified visibility settings for homepage elements.
+     * 
+     * @param array $data all homepage elements with their visiblities in 
+     * the form $name => $visibility
+     * @return int Number of affected database rows (hopefully 1).
+     */
     function change_homepage_visibility($data) {
         $success = false;
         $query = "UPDATE `user_visibility` SET homepage='".serialize($data).
@@ -831,6 +861,17 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         return $success;
     }
 
+    /**
+     * Builds an array containing all available elements that are part of a 
+     * user's homepage together with their visibility. It isn't sufficient to 
+     * just load the visibility settings from database, because if the user 
+     * has added some data (e.g. CV) but not yet assigned a special visibility
+     * to that field, it wouldn't show up.
+     * 
+     * @return array An array containing all available homepage elements 
+     * together with their visibility settings in the form 
+     * $name => $visibility.
+     */
     function get_homepage_elements() {
         global $NOT_HIDEABLE_FIELDS;
         $homepage_elements = array();

@@ -399,17 +399,13 @@ function is_element_visible_externally($owner_id, $owner_perm, $field_name, $ele
  * @return int Default visibility level.
  */
 function get_default_homepage_visibility() {
-    $default_visibility = ${get_config('HOMEPAGE_VISIBILITY_DEFAULT')};
-    $known_visibilities = array(
-            VISIBILITY_ME, 
-            VISIBILITY_BUDDIES, 
-            VISIBILITY_DOMAIN, 
-            VISIBILITY_STUDIP, 
-            VISIBILITY_EXTERN
-        );
-    // Invalid config entry given, so set visibility to Stud.IP-internal...
-    if (!in_array($$default_visibility, $known_visibilities))
-        $default_visibility = VISIBILITY_STUDIP;
+    $default_visibility = get_config('HOMEPAGE_VISIBILITY_DEFAULT');
+    // Set to configured value or Stud.IP internal if configured value is 
+    // invalid.
+    if (defined($default_visibility))
+        $default_visibility = constant($default_visibility);
+    else
+        $default_visibility = constant("VISIBILITY_STUDIP");
     return $default_visibility;
 }
 

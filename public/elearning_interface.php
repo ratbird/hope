@@ -250,9 +250,9 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 echo "<br>\n";
             } else 
                 echo MessageBox::info(sprintf(_("Sie können im %s System nicht suchen, da Sie bisher keinen Benutzer-Account angelegt haben."), 
-				                                  $connected_cms[$cms_select]->getName()),
-										array(sprintf(_("Jetzt einen %sAccount%s erstellen."),
-				                        "<a href='".URLHelper::getLink('my_elearning.php')."'>","</a>")));
+                                                  $connected_cms[$cms_select]->getName()),
+                                        array(sprintf(_("Jetzt einen %sAccount%s erstellen."),
+                                        "<a href='".URLHelper::getLink('my_elearning.php')."'>","</a>")));
             
             if (! ($searchresult_content_modules == false))
             {

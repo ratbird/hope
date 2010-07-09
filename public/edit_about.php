@@ -502,6 +502,7 @@ switch($view) {
         Navigation::activateItem('/account/general');
         break;
     case "privacy":
+        $HELP_KEYWORD="Basis.MyStudIPPrivacy";
         $CURRENT_PAGE=_("Privatsphäre");
         if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE') && $my_about->auth_user["user_id"] != $user->id) {
             Navigation::activateItem('/profil/privacy');
@@ -510,6 +511,7 @@ switch($view) {
         }
         break;
     case "deputies":
+        $HELP_KEYWORD="Basis.MyStudIPDeputies";
         $CURRENT_PAGE=_("Standardvertretung");
         Navigation::activateItem('/account/deputies');
         break;

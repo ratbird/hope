@@ -119,7 +119,7 @@ $width_namecolumn = 50;
                 <a href="<?= $controller->url_for('course/basicdata/deletedozent', $dozent["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
                 <?= Assets::img("trash.gif") ?></a>
             </div>
-            <div style="float:left; margin: 3px; vertical-align: middle; width: 40px; ">
+            <div style="float:left; margin: 3px; vertical-align: middle; width: 40px">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $dozent["user_id"], "dozent") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
                 <?= Assets::img("move_up") ?></a>
@@ -129,7 +129,7 @@ $width_namecolumn = 50;
                 <? endif; ?>
             </div>
             <? endif; ?>
-            <div style="float:left; font-weight:bold; vertical-align: middle; padding-left: 3px">
+            <div style="float:left; font-weight:bold; vertical-align: middle; padding-left: 3px; text-align: left">
                 <?= get_fullname($dozent["user_id"], 'full_rev')."<br>(".$dozent["username"].")" ?>
             </div>
             
@@ -159,7 +159,7 @@ $width_namecolumn = 50;
             <? endif; ?>
             <div style="float:left; margin: 3px; vertical-align: middle; width: 40px; ">
             </div>
-            <div style="float:left; font-weight:bold; vertical-align: middle; padding-left: 3px">
+            <div style="float:left; font-weight:bold; vertical-align: middle; padding-left: 3px; text-align: left">
                 <?= get_fullname($deputy["user_id"], 'full_rev')."<br>(".$deputy["username"].", "._("Status").": ".$deputy['perms'].")" ?>
             </div>
         </div>
@@ -195,7 +195,7 @@ $width_namecolumn = 50;
                 <? endif; ?>
             </div>
             <? endif; ?>
-            <div style="float:left; font-weight:bold; vertical-align: middle; padding-left: 3px">
+            <div style="float:left; font-weight:bold; vertical-align: middle; padding-left: 3px; text-align: left">
                 <?= get_fullname($tutor["user_id"], 'full_rev')."<br>(".$tutor["username"].")" ?>
             </div>
             

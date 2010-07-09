@@ -16,26 +16,36 @@ require_once 'lib/classes/Institute.class.php';
 class Course_BasicdataController extends AuthenticatedController {
     public $msg = array();
     
+    /**
+     * Zeigt die Grunddaten an. Man beachte, dass eventuell zuvor eine andere
+     * Action wie Set ausgeführt wurde, von der hierher weitergeleitet worden ist.
+     * Wichtige Daten dazu wurden dann über $this->flash übertragen.
+     */
     public function view_action() {
         global $SessSemName, $user, $perm, $HELP_KEYWORD, $CURRENT_PAGE, $_fullname_sql,
         $SEM_CLASS, $SEM_TYPE;
         
+        //damit QuickSearch funktioniert:
         Request::set('new_doz_parameter', $this->flash['new_doz_parameter']);
-        if (get_config('DEPUTIES_ENABLE'))
+        if (get_config('DEPUTIES_ENABLE')) {
             Request::set('new_dep_parameter', $this->flash['new_dep_parameter']);
+        }
         Request::set('new_tut_parameter', $this->flash['new_tut_parameter']);
         
         $this->course_id = $SessSemName[1];
         
         if ((Request::get('section') === 'details') || ($this->flash['section'] === 'details')) {
+        	//Navigation im Admin-Bereich:
             $this->section = 'details';
             UrlHelper::bindLinkParam('section', $section);
             Navigation::activateItem('/course/admin/details');
         } else {
-            Navigation::activateItem('/admin/course/details');
+            //Navigation in der Veranstaltung:
+        	Navigation::activateItem('/admin/course/details');
             $this->section = 'admin';
         }
         
+        //Auswähler für Admin-Bereich:
         if (!$this->course_id) {
             $GLOBALS['CURRENT_PAGE'] = _('Studienbereichsauswahl');
             $GLOBALS['view_mode'] = "sem";
@@ -48,20 +58,23 @@ class Course_BasicdataController extends AuthenticatedController {
         }
         
         //Berechtigungscheck:
-        if (!$perm->have_studip_perm("tutor",$SessSemName[1])) {
+        if (!$perm->have_studip_perm("tutor",$this->course_id)) {
             throw new AccessDeniedException(_("Sie haben keine Berechtigung diese " .
                     "Veranstaltung zu verändern."));
         }
         
+        //Kopf initialisieren:
         $HELP_KEYWORD = "Basis.VeranstaltungenVerwaltenGrunddaten";
         $GLOBALS['CURRENT_PAGE'] .= _("Verwaltung der Grunddaten");
         if (getHeaderLine($this->course_id)) {
             $GLOBALS['CURRENT_PAGE'] = getHeaderLine($this->course_id)." - ".$CURRENT_PAGE;
         }
-        $sem = new Seminar($this->course_id);
         
+        //Daten sammeln:
+        $sem = new Seminar($this->course_id);
         $data = $sem->getData();
         
+        //Erster Reiter des Akkordions: Grundeinstellungen
         $this->attributes = array();
         $this->attributes[] = array(
             'title' => _("Name der Veranstaltung"),
@@ -142,6 +155,7 @@ class Course_BasicdataController extends AuthenticatedController {
         );
         
         
+        //Zweiter Reiter: Institute 
         $this->institutional = array();
         $institute = Institute::getMyInstitutes();
         $choices = array();
@@ -182,6 +196,7 @@ class Course_BasicdataController extends AuthenticatedController {
         );
         
         
+        //Dritter Reiter: Personal
         if ($SEM_CLASS[$SEM_TYPE[$sem->status]["class"]]["only_inst_user"]) {
             $clause="AND user_inst.Institut_id IN (". 
                     "SELECT institut_id FROM seminar_inst " .
@@ -228,7 +243,8 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->tutorensuche = QuickSearch::get("new_tut", $Tutorensuche)
                                     ->withButton()
                                     ->render();
-                                
+        
+        //Vierter Reiter: Beschreibungen (darunter Datenfelder)
         $this->descriptions[] = array(
             'title' => _("Teilnehmer/-innen"),
             'name' => "course_participants",
@@ -294,14 +310,15 @@ class Course_BasicdataController extends AuthenticatedController {
             'locked' => LockRules::Check($this->course_id, 'Sonstiges')
         );
         
-        $this->perm_dozent = $perm->have_studip_perm("dozent",$SessSemName[1]);
+        $this->perm_dozent = $perm->have_studip_perm("dozent", $this->course_id);
         $this->mkstring = $data['mkdate'] ? date("d.m.Y, G:i", $data['mkdate']) : _("unbekannt");
         $this->chstring = $data['chdate'] ? date("d.m.Y, G:i", $data['chdate']) : _("unbekannt");
-        $this->flash->discard();
+        $this->flash->discard(); //schmeißt ab jetzt unnötige Variablen aus der Session. 
     }
     
     /**
-     * 
+     * Ändert alle Grunddaten der Veranstaltung (bis auf Personal) und leitet
+     * danach weiter auf View.
      */
     public function set_action() {
         global $SessSemName, $user, $perm;
@@ -426,6 +443,10 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
     
+    /**
+     * Löscht einen Dozenten (bis auf den letzten Dozenten)
+     * Leitet danach weiter auf View und öffnet den Reiter Personal.
+     */
     public function deletedozent_action($dozent) {
         global $SessSemName, $user, $perm;
         $this->msg = array();
@@ -452,6 +473,10 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
     
+    /**
+     * Löscht einen Stellvertreter.
+     * Leitet danach weiter auf View und öffnet den Reiter Personal.
+     */
     public function deletedeputy_action($deputy) {
         global $SessSemName, $user, $perm;
         $this->msg = array();
@@ -478,6 +503,10 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
     
+    /**
+     * Löscht einen Tutor
+     * Leitet danach weiter auf View und öffnet den Reiter Personal.
+     */
     public function deletetutor_action($tutor) {
         global $SessSemName, $user, $perm;
         $this->msg = array();
@@ -500,6 +529,10 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
     
+    /**
+     * Falls eine Person in der >>Reihenfolge<< hochgestuft werden soll.
+     * Leitet danach weiter auf View und öffnet den Reiter Personal.
+     */
     public function priorityupfor_action($user_id, $status = "dozent") {
         global $SessSemName, $user, $perm;
         $this->msg = array();
@@ -528,6 +561,10 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
     
+    /**
+     * Falls eine Person in der >>Reihenfolge<< runtergestuft werden soll.
+     * Leitet danach weiter auf View und öffnet den Reiter Personal.
+     */
     public function prioritydownfor_action($user_id, $status = "dozent") {
         global $SessSemName, $user, $perm;
         $this->msg = array();

@@ -234,4 +234,13 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         }
         return $entry->store() ? $entry : null;
     }
+    
+    function delete($field)
+    {
+        if (!$field) {
+            throw new InvalidArgumentException("config fieldname is mandatory");
+        }
+        $deleted = ConfigEntry::deleteBySql("field=" . DbManager::get()->quote($field));
+        return $deleted;
+    }
 }

@@ -34,4 +34,9 @@ class ConfigEntry extends SimpleORMap
     {
         return self::findBySql("field=" . DbManager::get()->quote($field));
     }
+    
+    static function deleteBySql($where)
+    {
+        return SimpleORMap::deleteBySql(__CLASS__, $where);
+    }
 }

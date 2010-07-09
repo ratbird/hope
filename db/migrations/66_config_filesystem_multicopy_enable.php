@@ -1,6 +1,6 @@
 <?php
 
-class ConfigFilesytemMulticopyEnable extends Migration {
+class ConfigFilesystemMulticopyEnable extends Migration {
     
     function description() {
         return 'Inserts a new config-variable to enable or disable multicopy for teachers.';

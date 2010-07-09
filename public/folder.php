@@ -276,6 +276,29 @@ if ($folder_system_data['cmd'] == 'all') {
     Navigation::activateItem('/course/files/tree');
 }
 
+$config = Config::get();
+if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
+    $_include_additional_header .= "\t\t".'<link rel="stylesheet" href="'.$GLOBALS['ASSETS_URL'].'stylesheets/ui.multiselect.css" type="text/css">'."\n";
+    $_include_additional_header .= Assets::script('ui.multiselect.js');
+    $_include_additional_header .= "<script>
+STUDIP.CURRENTPAGE = {};
+STUDIP.CURRENTPAGE.createMultiSelect = function (id, itemName) {
+    if (!$(id).attr('multiple')) {
+        $(id).attr('multiple', 'multiple');
+        $(id).css('height', '120px');
+    }
+    $(id).multiselect({sortable: false, itemName: itemName});
+}
+$.extend($.ui.multiselect, {
+    locale: {
+        addAll:'Alle hinzufügen',
+        removeAll:'Alle entfernen',
+        itemsCount:'ausgewählt'
+    }
+});
+</script>";
+}
+
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
@@ -584,26 +607,28 @@ if (($SemUserStatus == "autor") || ($rechte)) {
     //verschieben / kopieren in andere Veranstaltung
     if ($rechte && ($_POST['move_to_sem_x'] || $_POST['move_to_inst_x'] || $_POST['move_to_top_folder_x'])){
         if(!$_POST['move_to_top_folder_x']){
-            $new_sem_id = ($_POST['move_to_sem_x'] ? $_POST['sem_move_id'] : $_POST['inst_move_id']);
+            $new_sem_id = $_POST['move_to_sem_x'] ? Request::getArray('sem_move_id') : Request::getArray('inst_move_id');
         } else {
-            $new_sem_id = false;
+            $new_sem_id = array($SessSemName[1]);
         }
-        if($new_sem_id) $new_range_id = md5($new_sem_id . 'top_folder');
-        else $new_range_id = md5($SessSemName[1] . 'top_folder');
-        if ($new_range_id){
-            if ($folder_system_data["mode"] == 'move'){
-                $done = move_item($folder_system_data["move"], $new_range_id, $new_sem_id);
-                if (!$done){
-                    $msg .= "error§" . _("Verschiebung konnte nicht durchgeführt werden. Eventuell wurde im Ziel der Allgemeine Dateiordner nicht angelegt.") . "§";
+        if ($new_sem_id) {
+            foreach($new_sem_id as $sid) {
+                $new_range_id = md5($sid . 'top_folder');
+                if ($folder_system_data["mode"] == 'move'){
+                    $done = move_item($folder_system_data["move"], $new_range_id, $sid);
+                    if (!$done){
+                        $msg .= "error§" . _("Verschiebung konnte nicht durchgeführt werden. Eventuell wurde im Ziel der Allgemeine Dateiordner nicht angelegt.") . "§";
+                    } else {
+                        $msg .= "msg§" . sprintf(_("%s Ordner, %s Datei(en) wurden verschoben."), $done[0], $done[1]) . '§';
+                    }
                 } else {
-                    $msg .= "msg§" . sprintf(_("%s Ordner, %s Datei(en) wurden verschoben."), $done[0], $done[1]) . '§';
-                }
-            } else {
-                $done = copy_item($folder_system_data["move"], $new_range_id, $new_sem_id);
-                if (!$done){
-                    $msg .= "error§" . _("Kopieren konnte nicht durchgeführt werden. Eventuell wurde im Ziel der Allgemeine Dateiordner nicht angelegt.") . "§";
-                } else {
-                    $msg .= "msg§" . sprintf(_("%s Ordner, %s Datei(en) wurden kopiert."), $done[0], $done[1]) . '§';
+                    $done = copy_item($folder_system_data["move"], $new_range_id, $sid);
+                    if (!$done){
+                        $msg .= "error§" . _("Kopieren konnte nicht durchgeführt werden. Eventuell wurde im Ziel der Allgemeine Dateiordner nicht angelegt.") . "§";
+                    } else {
+                        $s_name = get_object_name($sid, $_POST['move_to_sem_x'] ? "sem" : "inst");
+                        $msg .= "msg§" . $s_name['name'] . ": " . sprintf(_("%s Ordner, %s Datei(en) wurden kopiert."), $done[0], $done[1]) . '§';
+                    }
                 }
             }
         }
@@ -729,12 +754,15 @@ echo "\n<body onUnLoad=\"upload_end()\">";
             echo "\n" . '<div style="margin-left:25px;">';
             echo _("Veranstaltung") .':';
             echo '</div></td><td class="blank" width="60%">';
-            echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/move.gif" name="move_to_sem" ' . tooltip(_("In diese Veranstaltung verschieben / kopieren")) . '>';
-            echo "\n" . '<select name="sem_move_id" style="width:90%">';
+            echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/move.gif" name="move_to_sem" id="move_to_sem_arrow" ' . tooltip(_("In diese Veranstaltung verschieben / kopieren")) . '>';
+            echo "\n" . '<select id="sem_move_id" name="sem_move_id[]" style="width:60%">';
             foreach ($my_sem as $id => $name){
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
             }
             echo "\n" . '</select>';
+            if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
+                echo "\n<a href=\"\" onClick=\"STUDIP.CURRENTPAGE.createMultiSelect('#sem_move_id', 'Veranstaltungen'); $(this).hide(); return false\">".Assets::img("rewind", array('title' => _("Mehrere Veranstaltungen auswählen")))."</a>";
+            }
             echo "\n</td>";
             echo "\n" . '<td class="blank"><input type="image" border="0" vspace="2"' . makeButton($button_name,'src') . ' name="move_to_sem" ' . tooltip(_("In diese Veranstaltung verschieben / kopieren")) . '>';
 
@@ -743,12 +771,15 @@ echo "\n<body onUnLoad=\"upload_end()\">";
             echo "\n" . '<div style="margin-left:25px;">';
             echo _("Einrichtung").':';
             echo '</div></td><td class="blank" width="60%">';
-            echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/move.gif" name="move_to_inst" ' . tooltip(_("In diese Einrichtung verschieben / kopieren")) . '>';
-            echo "\n" . '<select name="inst_move_id" style="width:90%">';
+            echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/move.gif" id="move_to_inst_arrow" name="move_to_inst" ' . tooltip(_("In diese Einrichtung verschieben / kopieren")) . '>';
+            echo "\n" . '<select id="inst_move_id" name="inst_move_id[]" style="width:60%">';
             foreach ($my_inst as $id => $name){
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
             }
             echo "\n" . '</select>';
+            if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
+                echo "\n<a href=\"\" onClick=\"STUDIP.CURRENTPAGE.createMultiSelect('#inst_move_id', 'Institute'); $(this).hide(); return false\">".Assets::img("rewind", array('title' => _("Mehrere Einrichtungen auswählen")))."</a>";
+            }
             echo "\n</td>";
             echo "\n" . '<td class="blank"><input type="image" border="0" vspace="2" ' . makeButton($button_name,'src') . ' name="move_to_inst" ' . tooltip(_("In diese Einrichtung verschieben / kopieren")) . '>';
 

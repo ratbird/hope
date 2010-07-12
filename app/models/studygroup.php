@@ -68,7 +68,7 @@ class StudygroupModel
         $enabled = array();
 
         // get current activation-settings
-        $data = Config::GetInstance()->getValue('STUDYGROUP_SETTINGS');
+        $data = Config::Get()->STUDYGROUP_SETTINGS;
         $data2 = explode(" ",$data);
 
         foreach ($data2 as $element) {

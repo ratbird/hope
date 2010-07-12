@@ -176,10 +176,12 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         }
     }
 
-    function store($field, $values)
+    function store($field, $data)
     {
-        if (!is_array($values)) {
-            $values['value'] = $values;
+        if (!is_array($data)) {
+            $values['value'] = $data;
+        } else {
+            $values = $data;
         }
         $entries = ConfigEntry::findByField($field);
         if (count($entries)) {

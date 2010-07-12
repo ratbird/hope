@@ -26,7 +26,6 @@ require_once 'lib/trails/AuthenticatedController.php';
 
 // classes required for global-module-settings
 require_once('lib/classes/AdminModules.class.php');
-require_once('lib/classes/Config.class.php');
 
 if (!defined('ELEMENTS_PER_PAGE')) define("ELEMENTS_PER_PAGE", 20);
 
@@ -41,7 +40,7 @@ class Course_StudygroupController extends AuthenticatedController {
     {
         parent::before_filter($action, $args);
 
-        if (Config::GetInstance()->getValue('STUDYGROUPS_ENABLE')
+        if (Config::Get()->STUDYGROUPS_ENABLE
             || in_array($action, words('globalmodules savemodules deactivate'))) {
 
         // args at position zero is always the studygroup-id
@@ -102,7 +101,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
         $GLOBALS['CURRENT_PAGE'] = _("Studiengruppe anlegen");
         Navigation::activateItem('/community/studygroups/new');
-        $this->terms             = Config::GetInstance()->getValue('STUDYGROUP_TERMS');
+        $this->terms             = Config::Get()->STUDYGROUP_TERMS;
         $this->available_modules = StudygroupModel::getAvailableModules();
         $this->available_plugins = StudygroupModel::getAvailablePlugins();
         $this->modules           = new Modules();
@@ -233,7 +232,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 $sem->status         = $sem_types[0];
                 $sem->read_level     = 1;
                 $sem->write_level    = 1;
-                $sem->institut_id    = Config::GetInstance()->getValue('STUDYGROUP_DEFAULT_INST');
+                $sem->institut_id    = Config::Get()->STUDYGROUP_DEFAULT_INST;
                 $mods                = new Modules();
                 $bitmask             = 0;
                 $sem->admission_type = 0;
@@ -657,10 +656,10 @@ class Course_StudygroupController extends AuthenticatedController {
 
         // get institutes
         $institutes = StudygroupModel::getInstitutes();
-        $default_inst = Config::GetInstance()->getValue('STUDYGROUP_DEFAULT_INST');
+        $default_inst = Config::Get()->STUDYGROUP_DEFAULT_INST;
 
         // Nutzungsbedingungen
-        $terms = Config::GetInstance()->getValue('STUDYGROUP_TERMS');
+        $terms = Config::Get()->STUDYGROUP_TERMS;
 
         if ($this->flash['institute']) {
             $default_inst = $this->flash['institute'];
@@ -724,9 +723,9 @@ class Course_StudygroupController extends AuthenticatedController {
         }
 
         if (!$errors) {
-            $cfg=new Config("STUDYGROUPS_ENABLE");
-            if ($cfg->getValue()==FALSE && count(studygroup_sem_types()) > 0) {
-                $cfg->setValue(TRUE,"STUDYGROUPS_ENABLE","Studiengruppen");
+            $cfg = Config::get();
+            if ($cfg->STUDYGROUPS_ENABLE == FALSE && count(studygroup_sem_types()) > 0) {
+                $cfg->store("STUDYGROUPS_ENABLE", true);
                 $this->flash['success'] = _("Die Studiengruppen wurden aktiviert.");
             }
 
@@ -738,10 +737,9 @@ class Course_StudygroupController extends AuthenticatedController {
                 }
                 $config_string[] = 'participants:1';
                 $config_string[] = 'schedule:0';
-
-                Config::GetInstance()->setValue(implode(' ', $config_string), 'STUDYGROUP_SETTINGS');
-                Config::GetInstance()->setValue( Request::quoted('institute'), 'STUDYGROUP_DEFAULT_INST');
-                Config::GetInstance()->setValue( Request::quoted('terms'), 'STUDYGROUP_TERMS');
+                $cfg->store('STUDYGROUP_SETTINGS', implode(' ', $config_string));
+                $cfg->store('STUDYGROUP_DEFAULT_INST', Request::quoted('institute'));
+                $cfg->store('STUDYGROUP_TERMS', Request::quoted('terms'));
                 $this->flash['success'] = _("Die Einstellungen wurden gespeichert!");
             } else {
                 $this->flash['error'] = _("Fehler beim Speichern der Einstellung!");
@@ -768,8 +766,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 'title' => sprintf(_("Sie können die Studiengruppen nicht deaktivieren, da noch %s Studiengruppen vorhanden sind!"), $count)
             ));
         } else {
-            $cfg = new Config();
-            $cfg->setValue(FALSE, "STUDYGROUPS_ENABLE","Studiengruppen");
+            Config::get()->store("STUDYGROUPS_ENABLE", false);
             $this->flash['success'] = _("Die Studiengruppen wurden deaktiviert.");
         }
         $this->redirect('course/studygroup/globalmodules');

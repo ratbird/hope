@@ -78,7 +78,7 @@ class StudygroupController extends AuthenticatedController {
             $this->flash->keep('searchterm');
             $this->anzahl = count($groups);
             // lets calculate borders
-           if($this->page < 1 || $this->page > ceil($anzahl/ELEMENTS_PER_PAGE)) $this->page = 1;
+           if($this->page < 1 || $this->page > ceil($this->anzahl/ELEMENTS_PER_PAGE)) $this->page = 1;
 
            $this->groups = $groups;
            $this->userid = $GLOBALS['auth']->auth['uid'];

@@ -178,9 +178,7 @@ class AdminNavigation extends Navigation
                     $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_global'));
                 }
 
-                if (get_config('STUDYGROUPS_ENABLE')) {
-                    $navigation->addSubNavigation('studygroup', new Navigation(_('Studiengruppen'), 'dispatch.php/course/studygroup/globalmodules'));
-                }
+                $navigation->addSubNavigation('studygroup', new Navigation(_('Studiengruppen'), 'dispatch.php/course/studygroup/globalmodules'));
 
                 $navigation->addSubNavigation('studycourse', new Navigation(_('Studiengänge'), 'dispatch.php/admin/studycourse/profession'));
             }

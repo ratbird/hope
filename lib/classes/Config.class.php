@@ -186,8 +186,8 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         $entries = ConfigEntry::findByField($field);
         if (count($entries)) {
             if (isset($values['value'])) {
-                if(count($entries) == 1) {
-                    $entries[1] = $entries[0];
+                if(count($entries) == 1 &&  $entries[0]->is_default == 1) {
+                    $entries[1] = clone $entries[0];
                     $entries[1]->setId($entries[1]->getNewId());
                     $entries[1]->setNew(true);
                     $entries[1]->is_default = 0;

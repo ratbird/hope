@@ -6,12 +6,12 @@
 //
 ?>
 
-<table align="center" width="250" cellpadding="0" cellspacing="0">
+<table class="infobox" align="center" width="250" cellpadding="0" cellspacing="0">
 
     <? if ($picture) : ?>
 
       <tr>
-        <td class="infobox">
+        <td class="infobox-img">
           <?= Assets::img($picture) ?>
         </td>
       </tr>
@@ -24,8 +24,8 @@
 
           <? foreach ($content as $category) : ?>
             <tr>
-              <td class="infobox" colspan="2">
-                <font size="-1"><b><?= $category["kategorie"] ?></b></font>
+              <td colspan="2">
+                <b><?= $category["kategorie"] ?></b>
               </td>
             </tr>
 
@@ -33,10 +33,10 @@
               <? foreach ($category['eintrag'] as $item) : ?>
 
                 <tr>
-                  <td class="infobox" width="1%" align="center" valign="top">
+                  <td width="1%" align="center" valign="top">
                     <?= Assets::img($item['icon']) ?>
                   </td>
-                  <td class="infobox" width="99%">
+                  <td width="99%">
                     <?= $item["text"] ?>
                   </td>
                 </tr>

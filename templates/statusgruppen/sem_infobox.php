@@ -1,45 +1,45 @@
-<table align="center" width="250" border="0" cellpadding="0" cellspacing="0">
+<table class="infobox" align="center" width="250" border="0" cellpadding="0" cellspacing="0">
 
   <!-- Bild -->
-  
+
   <tr>
-    <td class="infobox" width="100%" align="right">
+    <td class="infobox-img">
       <?= Assets::img('infoboxes/groups.jpg') ?>
     </td>
   </tr>
 
   <tr>
     <td class="infoboxrahmen" width="100%">
-    <table background="<?=Assets::url('images/white.gif')?>" align="center" width="99%" border="0" cellpadding="4" cellspacing="0">
+    <table align="center" width="99%" border="0" cellpadding="4" cellspacing="0">
 
       <!-- Statusmeldungen -->
       <? if ($messages) :
-            // render status messages partial  
-            echo $this->render_partial("infobox/infobox_statusmessages_partial.php", array('messages', $message)); 
-         endif; 
+            // render status messages partial
+            echo $this->render_partial("infobox/infobox_statusmessages_partial.php", array('messages', $message));
+         endif;
       ?>
-            
+
       <!-- Informationen -->
-    
+
       <tr>
-        <td class="infobox" width="100%" colspan="2">
-          <font size="-1"><b><?=_("Information")?>:</b></font>
+        <td width="100%" colspan="2">
+          <b><?=_("Information")?>:</b>
           <br>
         </td>
       </tr>
       <tr>
-        <td class="infobox" align="center" width="1%" valign="top">
+        <td align="center" width="1%" valign="top">
             <?= Assets::img('ausruf_small2') ?>
         </td>
-        <td class="infobox" width="99%" align="left">
+        <td width="99%" align="left">
             <?= _("Wenn bei einer Gruppe der Selbsteintrag aktivert ist, können sich Teilnehmer selbst eintragen und austragen.")?>
         </td>
       </tr>
       <tr>
-                <td class="infobox" align="center" width="1%" valign="top">
+                <td align="center" width="1%" valign="top">
                     <?= Assets::img('link_intern') ?>
                 </td>
-                <td class="infobox" width="99%" align="left">
+                <td width="99%" align="left">
                     <?
                     if (get_config("EXTERNAL_HELP")) {
                         $help_url=format_help_url("Basis.VeranstaltungenVerwaltenGruppen");
@@ -53,18 +53,18 @@
                 </td>
       </tr>
       <tr>
-        <td class="infobox" width="100%" colspan="2">
-          <font size="-1"><b><?=_("Aktionen")?>:</b></font>
+        <td width="100%" colspan="2">
+          <b><?=_("Aktionen")?>:</b>
           <br>
         </td>
       </tr>
 
 
       <tr>
-                <td class="infobox" align="center" width="1%" valign="top">
+                <td align="center" width="1%" valign="top">
                     <?= Assets::img('einst') ?>
                 </td>
-                <td class="infobox" width="99%" align="left">
+                <td width="99%" align="left">
                     <? if ($self_assign_all) : ?>
                     <?= sprintf(_("Selbsteintrag in allen Gruppen ist %seingeschaltet%s."), '<b>', '</b>'); ?>
                     <a href="<?= URLHelper::getLink('?cmd=deactivateSelfAssignAll'); ?>"><?= _("Ausschalten") ?></a>
@@ -76,10 +76,10 @@
       </tr>
 
       <tr>
-                <td class="infobox" align="center" width="1%" valign="top">
+                <td align="center" width="1%" valign="top">
                     <?= Assets::img('einst') ?>
                 </td>
-                <td class="infobox" width="99%" align="left">
+                <td width="99%" align="left">
                     <? if ($self_assign_exclusive) : ?>
                     <?= sprintf(_("Selbsteintrag in nur einer Gruppe erlauben ist %seingeschaltet%s."), '<b>', '</b>'); ?>
                     <a href="<?= URLHelper::getLink('?cmd=deactivateSelfAssignExclusive'); ?>"><?= _("Ausschalten") ?></a>

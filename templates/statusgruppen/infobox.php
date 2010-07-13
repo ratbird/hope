@@ -1,16 +1,16 @@
-<table align="center" width="250" border="0" cellpadding="0" cellspacing="0">
+<table class="infobox" align="center" width="250" border="0" cellpadding="0" cellspacing="0">
 
   <!-- Bild -->
 
   <tr>
-    <td class="infobox" width="100%" align="right">
+    <td class="infobox-img">
       <?= Assets::img('infoboxes/groups.jpg') ?>
     </td>
   </tr>
 
   <tr>
     <td class="infoboxrahmen" width="100%">
-    <table background="<?=Assets::url('images/white.gif')?>" align="center" width="99%" border="0" cellpadding="4" cellspacing="0">
+    <table align="center" width="99%" border="0" cellpadding="4" cellspacing="0">
 
       <!-- Statusmeldungen -->
       <? if ($messages) :
@@ -22,17 +22,17 @@
       <!-- Aktionen -->
 
       <tr>
-        <td class="infobox" width="100%" colspan="2">
-          <font size="-1"><b><?=_("Aktionen")?>:</b></font>
+        <td width="100%" colspan="2">
+          <b><?=_("Aktionen")?>:</b>
           <br>
         </td>
       </tr>
 
       <tr>
-                <td class="infobox" align="center" width="1%" valign="top">
+                <td align="center" width="1%" valign="top">
                     <?= Assets::img('link_intern') ?>
                 </td>
-                <td class="infobox" width="99%" align="left">
+                <td width="99%" align="left">
                     <a href="<?= $help_url=format_help_url("Basis.EinrichtungenVerwaltenGruppen") ?>">
                         <?= _("Bedienungshinweise in der Hilfe") ?>
                     </a>
@@ -40,24 +40,24 @@
       </tr>
 
       <tr>
-          <td class="infobox" align="center" width="1%" valign="top">
+          <td align="center" width="1%" valign="top">
             <?= Assets::img('link_intern') ?>
           </td>
-          <td class="infobox" width="99%" align="left">
-            <font size="-1">
+          <td width="99%" align="left">
+
                 <a href="<?= URLHelper::getLink('?cmd=newRole&range_id='. $range_id) ?>"><?= _("neue Gruppe anlegen") ?></a>
-            </font>
+
           </td>
       </tr>
 
       <tr>
-          <td class="infobox" align="center" width="1%" valign="top">
+          <td align="center" width="1%" valign="top">
             <?= Assets::img('link_intern') ?>
           </td>
-          <td class="infobox" width="99%" align="left">
-            <font size="-1">
+          <td width="99%" align="left">
+
                 <a href="<?= URLHelper::getLink('?view=sort&range_id='. $range_id) ?>"><?= _("Gruppenreihenfolge ändern") ?></a>
-            </font>
+
           </td>
       </tr>
 

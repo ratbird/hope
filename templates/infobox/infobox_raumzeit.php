@@ -1,7 +1,7 @@
-<table align="center" width="250" border="0" cellpadding="0" cellspacing="0">
+<table class="infobox" align="center" width="250" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td class="infobox" width="100%" align="right">
-      <img src="<?=$GLOBALS['ASSETS_URL']?>images/infoboxes/<?=$picture?>">
+    <td class="infobox-img">
+      <img src="<?=$GLOBALS['ASSETS_URL']?>images/<?=$picture?>">
     </td>
   </tr>
 
@@ -19,18 +19,18 @@
       <!-- Informationen -->
 
       <tr>
-        <td class="infobox" width="100%" colspan="2">
-          <font size="-1"><b><?=_("Informationen")?>:</b></font>
+        <td width="100%" colspan="2">
+          <b><?=_("Informationen")?>:</b>
           <br>
         </td>
       </tr>
 
       <tr>
-          <td class="infobox" align="center" valign="top" width="1%">
+          <td align="center" valign="top" width="1%">
             <img src="<?=$GLOBALS['ASSETS_URL']?>images/ausruf_small.gif">
           </td>
-          <td class="infobox" width="99%" align="left">
-            <font size="-1"><?=_("Hier können Sie alle Termine der Veranstaltung verwalten.")?></font>
+          <td width="99%" align="left">
+            <?=_("Hier können Sie alle Termine der Veranstaltung verwalten.")?>
             <br>
           </td>
       </tr>
@@ -48,19 +48,19 @@
       <!-- Legende -->
 
       <tr>
-        <td class="infobox" width="100%" colspan="2">
-          <font size="-1"><b>Legende:</b></font>
+        <td width="100%" colspan="2">
+          <b>Legende:</b>
           <br>
         </td>
       </tr>
 
 
         <tr>
-          <td class="infobox" width="1%" align="center" valign="top">
+          <td width="1%" align="center" valign="top">
             <img src="<?=$GLOBALS['ASSETS_URL']?>/images/plastic_red_small.jpg" height="20" width="25" alt="">
           </td>
-          <td class="infobox" width="99%" align="left">
-            <font size="-1"><?=_("Kein Termin hat eine Raumbuchung!")?></font>
+          <td width="99%" align="left">
+            <?=_("Kein Termin hat eine Raumbuchung!")?>
             <br>
           </td>
 
@@ -68,11 +68,11 @@
 
 
         <tr>
-          <td class="infobox" width="1%" align="center" valign="top">
+          <td width="1%" align="center" valign="top">
             <img src="<?=$GLOBALS['ASSETS_URL']?>/images/plastic_yellow_small.jpg" height="20" width="25" alt="">
           </td>
-          <td class="infobox" width="99%" align="left">
-            <font size="-1"><?=_("Mindestens ein Termin hat keine Raumbuchung!")?></font>
+          <td width="99%" align="left">
+            <?=_("Mindestens ein Termin hat keine Raumbuchung!")?>
             <br>
 
           </td>
@@ -80,11 +80,11 @@
 
 
         <tr>
-          <td class="infobox" width="1%" align="center" valign="top">
+          <td width="1%" align="center" valign="top">
             <img src="<?=$GLOBALS['ASSETS_URL']?>/images/plastic_green_small.jpg" height="20" width="25" alt="">
           </td>
-          <td class="infobox" width="99%" align="left">
-            <font size="-1"><?=_("Alle Termine haben eine Raumbuchung.")?></font>
+          <td width="99%" align="left">
+            <?=_("Alle Termine haben eine Raumbuchung.")?>
 
             <br>
           </td>

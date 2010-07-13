@@ -133,6 +133,33 @@ a.printhead {
     width: 250px;
 }
 
+table.infobox td {
+    background-color: #dee2e8;
+    font-size: 11px;
+    line-height: 16px;
+    text-align: left;
+}
+
+/* prevent line box gap, see https://developer.mozilla.org/en/Images%2c_Tables%2c_and_Mysterious_Gaps */
+td.infobox-img img {
+	display: block;
+}
+
+td.infobox-avatar {
+    width: 250px;
+    height: 125px;
+    background-color: red;
+    text-align: center;
+    -moz-border-radius-topleft: 15px; /* FF1+ */
+    -webkit-border-top-left-radius: 15px; /* Saf3+, Chrome */
+    border-top-left-radius: 15px; /* Opera 10.5, IE 9 */
+}
+
+td.infoboxrahmen {
+    border:1px solid #CCCCCC;
+    background-color: #dee2e8;
+}
+
 /* --- image preview -------------------------------------------------------- */
 
 img.preview {
@@ -248,23 +275,6 @@ td.suche {
 
 table.blank, td.blank, td.onlineinfo, td.blanksmall {
     background-color: #FFFFFF;
-}
-
-td.infobox {
-    background-color: #dee2e8;
-    font-size: 11px;
-    line-height: 16px;
-    text-align: left;
-}
-
-/* prevent line box gap, see https://developer.mozilla.org/en/Images%2c_Tables%2c_and_Mysterious_Gaps */
-td.infobox img, td.infobox-avatar img {
-    display: block;
-}
-
-td.infoboxrahmen {
-    border:1px solid #CCCCCC;
-    background-color: #dee2e8;
 }
 
 tr.cycle_odd {
@@ -1239,15 +1249,6 @@ form#quicksearch .autocomplete li {
 .course-avatar-normal {
     width: 250px;
     height: 125px;
-}
-
-.infobox-avatar {
-    width: 250px;
-    height: 125px;
-    background-color: #DEE2E8;
-    text-align: center;
-    -moz-border-radius-topleft: 15px;
-    -webkit-border-top-left-radius: 15px;
 }
 
 #custom_avatar label {

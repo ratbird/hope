@@ -331,7 +331,9 @@ class Course_BasicdataController extends AuthenticatedController {
             foreach (Request::getInstance() as $req_name => $req_value) {
                 if (substr($req_name, 0, 7) === "course_") {
                     $varname = substr($req_name, 7);
-                    if ($sem->{$varname} != $req_value) {
+                    if ($varname === "name" && !$req_value) {
+                    	$this->msg[] = array("error", _("Name der Veranstaltung darf nicht leer sein."));
+                    } elseif ($sem->{$varname} != $req_value) {
                         $sem->{$varname} = $req_value;
                         $changemade = true;
                         if (in_array($varname, array("participants", 

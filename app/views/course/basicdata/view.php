@@ -54,7 +54,7 @@ $infobox = array('content' => $infobox,
 parse_msg_array($flash['msg'], $class = "blank", $colspan = 2, $add_row='', $small='');
 
 $width_column1 = 20;
-$width_namecolumn = 50;
+$width_namecolumn = 60;
 
 ?>
 
@@ -116,8 +116,8 @@ $width_namecolumn = 50;
   <h2 id="bd_personal" class="steelgraulight"><?= _("Personal") ?></h2>
   <div><table style="width: 100%">
   <tr>
-    <td style="width: <?= $width_column1 ?>%; font-weight: bold; vertical-align: top;"><?= $dozenten_title ?></td>
-    <td style="width: <?= 100-$width_column1 ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
+    <td style="width: <?= $width_column1/2 ?>%; font-weight: bold; vertical-align: top;"><?= $dozenten_title ?></td>
+    <td style="width: <?= 100-$width_column1-($width_column1/2) ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
         <ul style="list-style-type: none; text-indent: -25px;">
         <? $num = 0; 
         foreach($dozenten as $dozent) : ?>
@@ -159,8 +159,8 @@ $width_namecolumn = 50;
   </tr>
   <? if ($deputies_enabled) { ?>
   <tr>
-    <td style="width: <?= $width_column1 ?>%; font-weight: bold; vertical-align: top;"><?= $deputy_title ?></td>
-    <td style="width: <?= 100-$width_column1 ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%">
+    <td style="width: <?= $width_column1/2 ?>%; font-weight: bold; vertical-align: top;"><?= $deputy_title ?></td>
+    <td style="width: <?= 100-$width_column1-($width_column1/2) ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%">
     <ul style="list-style-type: none; text-indent: -25px;">
     <? foreach($deputies as $deputy) : ?>
         <li>
@@ -193,8 +193,8 @@ $width_namecolumn = 50;
   </tr>
   <? } ?>
   <tr>
-    <td style="width: <?= $width_column1 ?>%;  font-weight: bold; vertical-align: top;"><?= $tutor_title ?></td>
-    <td style="width: <?= 100-$width_column1 ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
+    <td style="width: <?= $width_column1/2 ?>%;  font-weight: bold; vertical-align: top;"><?= $tutor_title ?></td>
+    <td style="width: <?= 100-$width_column1-($width_column1/2) ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
     <ul style="list-style-type: none; text-indent: -25px;">
     <? $num = 0; 
         foreach($tutoren as $tutor) : ?>

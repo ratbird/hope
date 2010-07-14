@@ -337,10 +337,16 @@ if (check_ticket($studipticket)) {
         }
     }
 
+    // Needed for QuickSearch to function without JavaScript.
+    if (Request::get('deputy_id_parameter')) {
+        $sess->register('deputy_id_parameter');
+        $deputy_id_parameter = Request::get('deputy_id_parameter');
+    }
+
     if ($add_deputy_x) {
-        if (!isDeputy($_REQUEST['deputy_id'], $my_about->auth_user["user_id"])) {
-            if ($_REQUEST['deputy_id'] != $my_about->auth_user["user_id"]) {
-                $success = addDeputy($_REQUEST['deputy_id'], $my_about->auth_user["user_id"]);
+        if (!isDeputy(Request::get('deputy_id'), $my_about->auth_user["user_id"])) {
+            if (Request::get('deputy_id') != $my_about->auth_user["user_id"]) {
+                $success = addDeputy(Request::get('deputy_id'), $my_about->auth_user["user_id"]);
                 if ($success) {
                     $my_about->msg .= 'msg§'.sprintf(_('%s wurde als Vertretung eingetragen.'), get_fullname($_REQUEST['deputy_id'], 'full'));
                 } else {

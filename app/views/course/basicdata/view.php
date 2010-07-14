@@ -74,8 +74,8 @@ $width_namecolumn = 50;
       foreach ($attributes as $attribute) : ?>
           <tr>
              <td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;">
-                 <?= $attribute['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
                  <?= $attribute['title'] ?>
+                 <?= $attribute['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
              </td>
              <td style="text-align: left" width="<?= 100-$width_column1 ?>%"><?=
              $attribute['locked'] 
@@ -99,8 +99,8 @@ $width_namecolumn = 50;
       foreach ($institutional as $inst) : ?>
           <tr>
              <td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;">
-                <?= $inst['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
                 <?= $inst['title'] ?>
+                <?= $inst['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
              </td>
              <td style="text-align: left" width="<?= 100-$width_column1 ?>%"><?=
              $inst['locked'] 
@@ -251,8 +251,8 @@ $width_namecolumn = 50;
       foreach ($descriptions as $description) : ?>
           <tr>
              <td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;">
+                <?= $description['title'] ?>
                 <?= $description['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
-                <?= $description['title'] ?> 
              </td>
              <td style="text-align: left; width: <?= 100-$width_column1 ?>%"><?=
              $description['locked'] 

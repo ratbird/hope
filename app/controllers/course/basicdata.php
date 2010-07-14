@@ -79,7 +79,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->attributes[] = array(
             'title' => _("Name der Veranstaltung"),
             'name' => "course_name",
-            'bold' => true,
+            'must' => true,
             'type' => 'text',
             'value' => htmlReady($data['name']),
             'locked' => LockRules::Check($this->course_id, 'Name')
@@ -109,7 +109,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->attributes[] = array(
             'title' => _("Typ der Veranstaltung"),
             'name' => "course_status",
-            'bold' => true,
+            'must' => true,
             'type' => 'select',
             'value' => htmlReady($data['status']),
             'locked' => LockRules::Check($this->course_id, 'status'),
@@ -125,7 +125,6 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->attributes[] = array(
             'title' => _("Veranstaltungs-Nummer"),
             'name' => "course_seminar_number",
-            'bold' => false,
             'type' => 'text',
             'value' => htmlReady($data['seminar_number']),
             'locked' => LockRules::Check($this->course_id, 'VeranstaltungsNummer')
@@ -133,7 +132,6 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->attributes[] = array(
             'title' => _("ECTS-Punkte"),
             'name' => "course_ects",
-            'bold' => false,
             'type' => 'text',
             'value' => htmlReady($data['ects']),
             'locked' => LockRules::Check($this->course_id, 'ects')
@@ -141,7 +139,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->attributes[] = array(
             'title' => _("max. Teilnehmerzahl"),
             'name' => "course_admission_turnout",
-            'bold' => true,
+            'must' => true,
             'type' => 'text',
             'value' => htmlReady($data['admission_turnout']),
             'locked' => LockRules::Check($this->course_id, 'admission_turnout')
@@ -169,7 +167,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->institutional[] = array(
             'title' => _("Heimat-Einrichtung"),
             'name' => "course_institut_id",
-            'bold' => true,
+            'must' => true,
             'type' => 'select',
             'value' => $data['institut_id'],
             'choices' => $choices,
@@ -222,6 +220,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->dozentensuche = QuickSearch::get("new_doz", $Dozentensuche)
                                     ->withButton()
                                     ->render();
+        $this->dozenten_title = get_title_for_status('dozent', 1, $seminar_type);
         $this->deputies_enabled = get_config('DEPUTIES_ENABLE');
         if ($this->deputies_enabled) {
             $this->deputies = getDeputies($this->course_id);
@@ -234,6 +233,7 @@ class Course_BasicdataController extends AuthenticatedController {
             $this->deputysearch = QuickSearch::get('new_dep', $deputysearch)
                                     ->withButton()
                                     ->render();
+            $this->deputy_title = get_title_for_status('deputy', 1, $seminar_type);
         }
         $this->tutoren = $sem->getMembers('tutor');
         $Tutorensuche = new SQLSearch(
@@ -243,6 +243,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->tutorensuche = QuickSearch::get("new_tut", $Tutorensuche)
                                     ->withButton()
                                     ->render();
+        $this->tutor_title = get_title_for_status('tutor', 1, $seminar_type);
         
         //Vierter Reiter: Beschreibungen (darunter Datenfelder)
         $this->descriptions[] = array(

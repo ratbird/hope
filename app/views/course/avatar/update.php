@@ -33,7 +33,7 @@
             <? if ($this->studygroup_mode) : ?>
                 <a href="<?= URLHelper::getLink('dispatch.php/course/studygroup/edit/' . $course_id) ?>">
             <? else : ?>
-                <a href="<?= URLHelper::getLink('admin_seminare1.php?s_id=' . $course_id) ?>">
+                <a href="<?= URLHelper::getLink('dispatch.php/course/basicdata/view') ?>">
             <? endif ?>
             <?= makeButton('abbrechen') ?>
             </a>

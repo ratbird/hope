@@ -69,9 +69,10 @@ $width_namecolumn = 50;
   } else {
       foreach ($attributes as $attribute) : ?>
           <tr>
-             <td style="text-align: right" width="<?= $width_column1 ?>%"><?= ($attribute['bold'] ? "<b>" : "") . 
-                 $attribute['title'] . 
-                 ($attribute['bold'] ? "</b>" : "") ?></td>
+             <td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;">
+                 <?= $attribute['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
+                 <?= $attribute['title'] ?>
+             </td>
              <td style="text-align: left" width="<?= 100-$width_column1 ?>%"><?=
              $attribute['locked'] 
                  ? formatReady($attribute['title'])
@@ -83,7 +84,7 @@ $width_namecolumn = 50;
   ?>
   </table></div>
   
-  <h2 id="bd_inst" class="steelgraulight"><?= _("Institute") ?></h2>
+  <h2 id="bd_inst" class="steelgraulight"><?= _("Einrichtungen") ?></h2>
   <div><table width="100%">
   <?php
   if (!$institutional) {
@@ -93,9 +94,10 @@ $width_namecolumn = 50;
   } else {
       foreach ($institutional as $inst) : ?>
           <tr>
-             <td style="text-align: right" width="<?= $width_column1 ?>%"><?= ($inst['bold'] ? "<b>" : "") . 
-                 $inst['title'] . 
-                 ($inst['bold'] ? "</b>" : "") ?></td>
+             <td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;">
+                <?= $inst['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
+                <?= $inst['title'] ?>
+             </td>
              <td style="text-align: left" width="<?= 100-$width_column1 ?>%"><?=
              $inst['locked'] 
                  ? formatReady($inst['title'])
@@ -110,16 +112,18 @@ $width_namecolumn = 50;
   <h2 id="bd_personal" class="steelgraulight"><?= _("Personal") ?></h2>
   <div><table style="width: 100%">
   <tr>
-    <td style="width: <?= $width_column1 ?>%"><?= _("Dozent/-innen") ?></td>
-    <td style="width: <?= 100-$width_column1 ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%"><? $num = 0; 
+    <td style="width: <?= $width_column1 ?>%; font-weight: bold; vertical-align: top;"><?= $dozenten_title ?></td>
+    <td style="width: <?= 100-$width_column1 ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
+        <ul style="list-style-type: none; text-indent: -25px;">
+        <? $num = 0; 
         foreach($dozenten as $dozent) : ?>
-        <div style="clear:both">
+        <li>
+            <span style="vertical-align: middle; text-align: left;">
+                <?= Avatar::getAvatar(null, $dozent["username"])->getImageTag(Avatar::SMALL) ?>
+                <?= get_fullname($dozent["user_id"], 'full_rev')." (".$dozent["username"].")" ?>
+            </span>
             <? if ($perm_dozent) : ?>
-            <div style="float:left; vertical-align: middle">
-                <a href="<?= $controller->url_for('course/basicdata/deletedozent', $dozent["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("trash.gif") ?></a>
-            </div>
-            <div style="float:left; margin: 3px; vertical-align: middle; width: 40px">
+            <span style="argin: 3px; vertical-align: middle; width: 40px">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $dozent["user_id"], "dozent") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
                 <?= Assets::img("move_up") ?></a>
@@ -127,17 +131,21 @@ $width_namecolumn = 50;
                 <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $dozent["user_id"], "dozent") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
                 <?= Assets::img("move_down") ?></a>
                 <? endif; ?>
-            </div>
+            </span>
+            <span style="vertical-align: middle">
+                <a href="<?= $controller->url_for('course/basicdata/deletedozent', $dozent["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
+                <?= Assets::img("trash.gif") ?>
+                </a>
+            </span>
             <? endif; ?>
-            <div style="float:left; font-weight:bold; vertical-align: middle; padding-left: 3px; text-align: left">
-                <?= get_fullname($dozent["user_id"], 'full_rev')."<br>(".$dozent["username"].")" ?>
-            </div>
             
-        </div>
-    <? $num++; endforeach; ?></td>
+        </li>
+    <? $num++; endforeach; ?>
+        </ul>
+    </td>
     <? if ($perm_dozent) : ?>
     <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
-        <?= _("Dozent/-in hinzufügen") ?>
+        <?= sprintf(_("%s hinzufügen"), $dozenten_title) ?>
         <br><input type="image" src="<?= Assets::image_path("move_left") ?>" name="add_dozent">
             <?= $dozentensuche ?>
         <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
@@ -147,26 +155,31 @@ $width_namecolumn = 50;
   </tr>
   <? if ($deputies_enabled) { ?>
   <tr>
-    <td style="width: <?= $width_column1 ?>%"><?= _("Vertretung") ?></td>
+    <td style="width: <?= $width_column1 ?>%; font-weight: bold; vertical-align: top;"><?= $deputy_title ?></td>
     <td style="width: <?= 100-$width_column1 ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%">
+    <ul style="list-style-type: none; text-indent: -25px;">
     <? foreach($deputies as $deputy) : ?>
-        <div style="clear:both">
+        <li>
+            <span style="vertical-align: middle; text-align: left">
+                <?= Avatar::getAvatar(null, $deputy["username"])->getImageTag(Avatar::SMALL) ?>
+                <?= get_fullname($deputy["user_id"], 'full_rev')." (".$deputy["username"].", "._("Status").": ".$deputy['perms'].")" ?>
+            </span>
             <? if ($perm_dozent) : ?>
-            <div style="float:left; vertical-align: middle">
+            <span style="margin: 3px; vertical-align: middle; width: 40px; ">
+            </span>
+            <span style="vertical-align: middle">
                 <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $deputy["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
                 <?= Assets::img("trash.gif") ?></a>
-            </div>
+            </span>
             <? endif; ?>
-            <div style="float:left; margin: 3px; vertical-align: middle; width: 40px; ">
-            </div>
-            <div style="float:left; font-weight:bold; vertical-align: middle; padding-left: 3px; text-align: left">
-                <?= get_fullname($deputy["user_id"], 'full_rev')."<br>(".$deputy["username"].", "._("Status").": ".$deputy['perms'].")" ?>
-            </div>
-        </div>
-    <? endforeach; ?></td>
+            
+        </li>
+    <? endforeach; ?>
+    </ul>
+    </td>
     <? if ($perm_dozent) : ?>
     <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
-        <?= _("Vertretung hinzufügen") ?>
+        <?= sprintf(_("%s hinzufügen"), $deputy_title) ?>
         <br><input type="image" src="<?= Assets::image_path("move_left") ?>" name="add_deputy">
             <?= $deputysearch ?>
         <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
@@ -176,16 +189,18 @@ $width_namecolumn = 50;
   </tr>
   <? } ?>
   <tr>
-    <td style="width: <?= $width_column1 ?>%"><?= _("Tutor/-innen") ?></td>
-    <td style="width: <?= 100-$width_column1 ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left"><? $num = 0; 
+    <td style="width: <?= $width_column1 ?>%;  font-weight: bold; vertical-align: top;"><?= $tutor_title ?></td>
+    <td style="width: <?= 100-$width_column1 ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
+    <ul style="list-style-type: none; text-indent: -25px;">
+    <? $num = 0; 
         foreach($tutoren as $tutor) : ?>
-        <div style="clear:both">
+        <li>
+            <span style="vertical-align: middle; text-align: left">
+                <?= Avatar::getAvatar(null, $tutor["username"])->getImageTag(Avatar::SMALL) ?>
+                <?= get_fullname($tutor["user_id"], 'full_rev')."<br>(".$tutor["username"].")" ?>
+            </span>
             <? if ($perm_dozent) : ?>
-            <div style="float:left; margin: 3px; vertical-align: middle">
-                <a href="<?= $controller->url_for('course/basicdata/deletetutor', $tutor["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("trash.gif") ?></a>
-            </div>
-            <div style="float:left; margin: 3px; vertical-align: middle">
+            <span style="margin: 3px; vertical-align: middle">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $tutor["user_id"], "tutor") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
                 <?= Assets::img("move_up") ?></a>
@@ -193,17 +208,20 @@ $width_namecolumn = 50;
                 <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $tutor["user_id"], "tutor") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
                 <?= Assets::img("move_down") ?></a>
                 <? endif; ?>
-            </div>
+            </span>
+            <span style="margin: 3px; vertical-align: middle">
+                <a href="<?= $controller->url_for('course/basicdata/deletetutor', $tutor["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
+                <?= Assets::img("trash.gif") ?></a>
+            </span>
             <? endif; ?>
-            <div style="float:left; font-weight:bold; vertical-align: middle; padding-left: 3px; text-align: left">
-                <?= get_fullname($tutor["user_id"], 'full_rev')."<br>(".$tutor["username"].")" ?>
-            </div>
             
-        </div>
-    <? $num++; endforeach; ?></td>
+        </li>
+    <? $num++; endforeach; ?>
+    </ul>
+    </td>
     <? if ($perm_dozent) : ?>
     <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
-        <?= _("Tutor/-in hinzufügen") ?>
+        <?= sprintf(_("%s hinzufügen"), $tutor_title) ?>
         <br><input type="image" src="<?= Assets::image_path("move_left") ?>" name="add_tutor">
             <?= $tutorensuche ?>
         <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
@@ -228,9 +246,10 @@ $width_namecolumn = 50;
   } else {
       foreach ($descriptions as $description) : ?>
           <tr>
-             <td style="text-align: right; width: <?= $width_column1 ?>%"><?= ($description['bold'] ? "<b>" : "") . 
-                 $description['title'] . 
-                 ($description['bold'] ? "</b>" : "") ?></td>
+             <td style="text-align: right; width: <?= $width_column1 ?>%; vertical-align: top;">
+                <?= $description['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
+                <?= $description['title'] ?> 
+             </td>
              <td style="text-align: left; width: <?= 100-$width_column1 ?>%"><?=
              $description['locked'] 
                  ? formatReady($description['title'])

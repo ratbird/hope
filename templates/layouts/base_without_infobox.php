@@ -33,9 +33,9 @@
     <? endif ?>
 
     <?= Assets::stylesheet('header', array('media' => 'screen, print')) ?>
-    <?= Assets::stylesheet('jquery-ui.1.8.css', array('media' => 'screen, print')) ?>
+    <?= Assets::stylesheet('jquery-ui-1.8.2.custom.css', array('media' => 'screen, print')) ?>
 
-    <?= Assets::script('jquery-1.4.2.min.js', 'jquery-ui-1.8.custom.min.js',
+    <?= Assets::script('jquery-1.4.2.min.js', 'jquery-ui-1.8.2.custom.min.js',
                        'jquery.metadata.js', 'l10n.js', 'application') ?>
 
     <script src="<?= URLHelper::getLink('dispatch.php/localizations/' . $GLOBALS['_language']) ?>"></script>

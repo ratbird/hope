@@ -81,7 +81,7 @@ if ($_include_stylesheet != '')  // if empty, use no stylesheet
 if (isset ($_include_extra_stylesheet))
     echo "\t\t".'<link rel="stylesheet" href="'.$GLOBALS['ASSETS_URL'].'stylesheets/'.$_include_extra_stylesheet.'" type="text/css">'."\n";
 echo "\t\t".'<link rel="stylesheet" href="'.$GLOBALS['ASSETS_URL'].'stylesheets/header.css" type="text/css">'."\n";
-echo "\t\t".'<link rel="stylesheet" href="'.$GLOBALS['ASSETS_URL'].'stylesheets/jquery-ui.1.8.css" type="text/css">'."\n";
+echo "\t\t".'<link rel="stylesheet" href="'.$GLOBALS['ASSETS_URL'].'stylesheets/jquery-ui-1.8.2.custom.css" type="text/css">'."\n";
 
 unset ($_include_extra_stylesheet);
 unset ($_include_stylesheet);
@@ -99,7 +99,7 @@ if ($my_messaging_settings['start_messenger_at_startup'] && $auth->auth['jscript
 }
 ?>
 
-    <?= Assets::script('jquery-1.4.2.min.js', 'jquery-ui-1.8.custom.min.js',
+    <?= Assets::script('jquery-1.4.2.min.js', 'jquery-ui-1.8.2.custom.min.js',
                        'jquery.metadata.js', 'l10n.js', 'application') ?>
 
     <script src="<?= URLHelper::getLink('dispatch.php/localizations/' . $GLOBALS['_language']) ?>"></script>

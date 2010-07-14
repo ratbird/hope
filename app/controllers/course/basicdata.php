@@ -25,9 +25,11 @@ class Course_BasicdataController extends AuthenticatedController {
         global $SessSemName, $user, $perm, $HELP_KEYWORD, $CURRENT_PAGE, $_fullname_sql,
         $SEM_CLASS, $SEM_TYPE;
         
+        $deputies_enabled = get_config('DEPUTIES_ENABLE');
+        
         //damit QuickSearch funktioniert:
         Request::set('new_doz_parameter', $this->flash['new_doz_parameter']);
-        if (get_config('DEPUTIES_ENABLE')) {
+        if ($deputies_enabled) {
             Request::set('new_dep_parameter', $this->flash['new_dep_parameter']);
         }
         Request::set('new_tut_parameter', $this->flash['new_tut_parameter']);
@@ -221,13 +223,13 @@ class Course_BasicdataController extends AuthenticatedController {
                                     ->withButton()
                                     ->render();
         $this->dozenten_title = get_title_for_status('dozent', 1, $seminar_type);
-        $this->deputies_enabled = get_config('DEPUTIES_ENABLE');
+        $this->deputies_enabled = $deputies_enabled;
         if ($this->deputies_enabled) {
             $this->deputies = getDeputies($this->course_id);
             $deputysearch = new PermissionSearch(
                     "username", 
                     sprintf(_("Name %s"), get_title_for_status('deputy', 1, $seminar_type)),
-                    "user_id",
+                    "username",
                     array('permission' => getValidDeputyPerms())
                 );
             $this->deputysearch = QuickSearch::get('new_dep', $deputysearch)
@@ -323,6 +325,7 @@ class Course_BasicdataController extends AuthenticatedController {
      */
     public function set_action() {
         global $SessSemName, $user, $perm;
+        $deputies_enabled = get_config('DEPUTIES_ENABLE');
         $sem = new Seminar($SessSemName[1]);
         $this->msg = array();
         //Seminar-Daten:
@@ -380,7 +383,7 @@ class Course_BasicdataController extends AuthenticatedController {
                    && $perm->have_studip_perm("dozent",$SessSemName[1])) {
                 if ($sem->addMember($_POST['new_doz'], "dozent")) {
                     // Only applicable when globally enabled and user deputies enabled too
-                    if (get_config('DEPUTIES_ENABLE')) {
+                    if ($deputies_enabled) {
                         // Check whether chosen person is set as deputy
                         // -> delete deputy entry.
                         if (isDeputy($_POST['new_doz'], $SessSemName[1])) {
@@ -403,7 +406,7 @@ class Course_BasicdataController extends AuthenticatedController {
                 }
             }
             //Vertretung hinzufügen:
-            if (get_config('DEPUTIES_ENABLE') && $_POST['new_dep'] && $_POST['add_deputy_x']
+            if ($deputies_enabled && $_POST['new_dep'] && $_POST['add_deputy_x']
                    && $perm->have_studip_perm("dozent",$SessSemName[1])) {
                 if (addDeputy($_POST['new_dep'], $SessSemName[1])) {
                     $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."),
@@ -432,6 +435,9 @@ class Course_BasicdataController extends AuthenticatedController {
         if (($_POST["new_doz_parameter"]
                 && !$_POST["add_dozent_x"]
                 && $_POST["new_doz_parameter"] !== sprintf(_("Name %s"), get_title_for_status('dozent', 1, $sem->status)))
+            || ($deputies_enabled && $_POST["new_dep_parameter"]
+                && !$_POST["add_deputy_x"]
+                && $_POST["new_dep_parameter"] !== sprintf(_("Name %s"), get_title_for_status('deputy', 1, $sem->status)))
             || ($_POST["new_tut_parameter"]
                 && !$_POST["add_tutor_x"]
                 && $_POST["new_tut_parameter"] !== sprintf(_("Name %s"), get_title_for_status('tutor', 1, $sem->status)))) {
@@ -440,6 +446,9 @@ class Course_BasicdataController extends AuthenticatedController {
             }
         }
         $this->flash['new_doz_parameter'] = $_POST['new_doz'] ? null : Request::get('new_doz_parameter');
+        if ($deputies_enabled) {
+            $this->flash['new_dep_parameter'] = $_POST['new_dep'] ? null : Request::get('new_dep_parameter');
+        }
         $this->flash['new_tut_parameter'] = $_POST['new_tut'] ? null : Request::get('new_tut_parameter');
         $this->flash['open'] = Request::get("open");
         $this->flash['section'] = Request::get("section");

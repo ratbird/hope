@@ -115,11 +115,11 @@
             <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_homepage_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
                 <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0">
                     <tr>
-                        <td colspan="<?php echo $userdomains ? 6 : 5; ?>" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">
+                        <td colspan="<?php echo $user_domains ? 6 : 5; ?>" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">
                             <b><?php echo _('eigene Homepage'); ?></b>
                         </td>
                     </tr>
-                        <td class="steel1" colspan="<?php echo $userdomains ? 6 : 5; ?>">
+                        <td class="steel1" colspan="<?php echo $user_domains ? 6 : 5; ?>">
                             <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_all_homepage_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
                                     <?php echo _('alle Sichtbarkeiten setzen auf'); ?>
                                     <select name="all_homepage_visibility">

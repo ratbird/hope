@@ -36,6 +36,10 @@ $infobox = array(
             array(
                   "icon" => 'ausruf_small.gif',
                   "text" => sprintf(_('Letzte Änderung am %s'), "<b>$chstring</b>")
+            ),
+            array(
+                  "icon" => 'ausruf_small.gif',
+                  "text" => _("Mit roten Sternchen markierte Felder sind Pflichtfelder.")
             )
         )
     )
@@ -123,7 +127,7 @@ $width_namecolumn = 50;
                 <?= get_fullname($dozent["user_id"], 'full_rev')." (".$dozent["username"].")" ?>
             </span>
             <? if ($perm_dozent) : ?>
-            <span style="argin: 3px; vertical-align: middle; width: 40px">
+            <span style="argin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $dozent["user_id"], "dozent") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
                 <?= Assets::img("move_up") ?></a>
@@ -165,7 +169,7 @@ $width_namecolumn = 50;
                 <?= get_fullname($deputy["user_id"], 'full_rev')." (".$deputy["username"].", "._("Status").": ".$deputy['perms'].")" ?>
             </span>
             <? if ($perm_dozent) : ?>
-            <span style="margin: 3px; vertical-align: middle; width: 40px; ">
+            <span style="margin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
             </span>
             <span style="vertical-align: middle">
                 <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $deputy["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
@@ -200,7 +204,7 @@ $width_namecolumn = 50;
                 <?= get_fullname($tutor["user_id"], 'full_rev')."<br>(".$tutor["username"].")" ?>
             </span>
             <? if ($perm_dozent) : ?>
-            <span style="margin: 3px; vertical-align: middle">
+            <span style="margin: 3px; vertical-align: middle; white-space: nowrap;">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $tutor["user_id"], "tutor") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
                 <?= Assets::img("move_up") ?></a>

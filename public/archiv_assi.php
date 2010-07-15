@@ -29,7 +29,6 @@ require_once('lib/dates.inc.php'); // Funktionen zum Loeschen von Terminen
 require_once('lib/datei.inc.php'); // Funktionen zum Loeschen von Dokumenten
 require_once('lib/archiv.inc.php');
 require_once 'lib/functions.php';
-require_once('config_tools_semester.inc.php');
 require_once('lib/visual.inc.php');
 require_once('lib/statusgruppe.inc.php'); //Enthaelt Funktionen fuer Statusgruppen
 require_once('lib/log_events.inc.php'); // Logging
@@ -293,8 +292,8 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">
                 <?
-                $sem = Seminare::getInstance($archiv_assi_data['sems'][$archiv_assi_data['pos']]['id']);
-                printf ("<font size=-1><b>" . _("Veranstaltungsort:") . "</b></font><br><font size=-1>%s</font>", getDatesTemplate('dates/seminar_export_location'));
+                $sem = Seminar::getInstance($archiv_assi_data['sems'][$archiv_assi_data['pos']]['id']);
+                printf ("<font size=-1><b>" . _("Veranstaltungsort:") . "</b></font><br><font size=-1>%s</font>", $sem->getDatesTemplate('dates/seminar_export_location'));
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="48%" valign="top">

@@ -62,7 +62,6 @@ if ($view == 'print') {
 include ('lib/include/html_head.inc.php'); // Output of html head
 
 require_once 'config.inc.php'; //Daten laden
-require_once 'config_tools_semester.inc.php';
 require_once 'lib/include/ms_stundenplan.inc.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/classes/SemesterData.class.php';

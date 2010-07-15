@@ -39,7 +39,6 @@
 //$user->register("my_schedule_settings");
 
 require_once ('config.inc.php');
-require_once ('config_tools_semester.inc.php');
 require_once 'lib/functions.php';
 require_once ('lib/language.inc.php');
 

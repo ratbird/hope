@@ -38,7 +38,6 @@
 
 require_once ("config.inc.php");   // Stud.IP - Konfigurationsdatei
 require_once ("$PATH_EXPORT/export_xslt_vars.inc.php");   // XSLT-Variablen
-require_once ("config_tools_semester.inc.php");   // Checken des aktuellen Semesters
 require_once ("lib/classes/SemesterData.class.php");   // Checken des aktuellen Semesters
 
     $db=new DB_Seminar;
@@ -123,19 +122,9 @@ $export_pagename = _("Datenexport - Startseite");
 
     $export_pagecontent .= "</select><br><br><br><br>";
 
-    $export_pagecontent .="<b><font size=\"-1\">". _("Aus welchem Semester sollen die Daten exportiert werden (f&uuml;r Veranstaltungsexport): ") .  "</font></b><br><select name=\"ex_sem\">";
-    $export_pagecontent .= "<option value=\"all\">" . _("Alle Semester") . "</option>";
-    $all_semester = $semester->getAllSemesterData();
-    reset($all_semester);
-    while (list($key, $val) = each($all_semester))
-    {
-        $export_pagecontent .= "<option";
-        if (($ex_sem == $key) OR
-            (($ex_sem == "") AND ($key == $SEM_ID)))
-            $export_pagecontent .= " selected";
-        $export_pagecontent .= " value=\"" . $key . "\">" . $val["name"] . "</option>";
-    }
-    $export_pagecontent .= "</select><br><br>";
+    $export_pagecontent .="<b><font size=\"-1\">". _("Aus welchem Semester sollen die Daten exportiert werden (f&uuml;r Veranstaltungsexport): ") .  "</font></b><br>";
+    $export_pagecontent .= SemesterData::GetSemesterSelector(array('name' => 'ex_sem'), Semester::findCurrent()->getId(), 'semester_id', true);
+    $export_pagecontent .= "<br><br>";
 
     $export_pagecontent .="<b><font size=\"-1\">". _("Welche Arten von Veranstaltungen sollen exportiert werden? ") .  "</font></b><br>";
 

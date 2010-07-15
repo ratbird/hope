@@ -359,10 +359,11 @@ class ShowSchedules {
     }
 
     function showSemWeekNumber($start_time){
-        $semester = SemesterData::getInstance()->getSemesterDataByDate($start_time);
+        $semester = Semester::FindByTimestamp($start_time);
         echo htmlready($semester['name']) . ' - ';
-        if(is_int($semester['sem_week_number'])){
-            printf(_("%s. Vorlesungswoche"), $semester['sem_week_number']);
+        $sem_week_number = $semester->getSemWeekNumber($start_time);
+        if(is_int($sem_week_number)){
+            printf(_("%s. Vorlesungswoche"), $sem_week_number);
         } else {
             echo _("vorlesungsfreie Zeit");
         }

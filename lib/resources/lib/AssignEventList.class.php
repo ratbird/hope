@@ -55,16 +55,15 @@ class AssignEventList{
     // Konstruktor
     // if activated without timestamps, we take the current semester
     function AssignEventList($begin = 0, $end = 0, $resource_id='', $range_id='', $user_id='', $sort = TRUE, $filter = FALSE, $day_of_week = false){
-        global $RELATIVE_PATH_RESOURCES, $SEM_ID, $user;
+        global $RELATIVE_PATH_RESOURCES, $user;
         
         
-        $semester = new SemesterData;
-        $all_semester = $semester->getAllSemesterData();
+        $semester = Semester::findCurrent();
         
         if (!$begin)
-            $begin = $all_semester[$SEM_ID]["beginn"];
+            $begin = $semester->beginn;
         if (!$end )
-            $end = $all_semester[$SEM_ID]["ende"];
+            $end = $semester->ende;
         
         $this->dow = $day_of_week;
         $this->begin = $begin;

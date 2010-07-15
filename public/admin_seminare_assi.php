@@ -32,7 +32,6 @@ page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Auth', 'perm' =>
 
 require_once ('lib/msg.inc.php');       //Funktionen fuer Nachrichtenmeldungen
 require_once ('config.inc.php');        //wir brauchen die Seminar-Typen
-require_once ('config_tools_semester.inc.php');  //Bereitstellung weiterer Daten
 require_once 'lib/functions.php';       //noch mehr Stuff
 require_once ('lib/forum.inc.php');     //damit wir Themen anlegen koennen
 require_once ('lib/visual.inc.php');        //Aufbereitungsfunktionen
@@ -2358,7 +2357,7 @@ elseif ((!$level) || ($level == 1))
                                 else
                                     echo "<option value=0>"._("1 Semester")."</option>";
                                 for ($i=0; $i<sizeof($all_semester); $i++)
-                                    if ((!$all_semester[$i]["past"]) && ($all_semester[$i]["name"] != $SEM_NAME) && (($all_semester[$i]["vorles_ende"] > time())))
+                                    if ((!$all_semester[$i]["past"]) && ($all_semester[$i]["semester_id"] != Semester::findCurrent()->getId()) && (($all_semester[$i]["vorles_ende"] > time())))
                                         {
                                         if (($sem_create_data["sem_start_time"] + $sem_create_data["sem_duration_time"]) == $all_semester[$i]["beginn"])
                                             {

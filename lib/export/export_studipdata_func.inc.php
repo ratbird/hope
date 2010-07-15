@@ -260,8 +260,6 @@ function export_sem($inst_id, $ex_sem_id = "all")
     $db2=new DB_Seminar;
     $db3=new DB_Seminar;
 
-    $all_semester = SemesterData::GetInstance()->getAllSemesterData();
-
     switch ($filter)
     {
         case "seminar":
@@ -283,8 +281,9 @@ function export_sem($inst_id, $ex_sem_id = "all")
             $do_group = true;
     }
 
-    if (isset($all_semester[ $ex_sem]["beginn"] ) )
-        $addquery = " AND seminare.start_time <=".$all_semester[$ex_sem]["beginn"]." AND (".$all_semester[$ex_sem]["beginn"]." <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1) ";
+    if (isset($ex_sem) && $semester = Semester::find($ex_sem)){
+        $addquery = " AND seminare.start_time <=".$semester->beginn." AND (".$semester->beginn." <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1) ";
+    }
 
     if ($ex_sem_id != "all"){
         if (!is_array($ex_sem_id)) $ex_sem_id = array($ex_sem_id);

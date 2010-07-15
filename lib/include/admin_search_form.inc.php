@@ -23,8 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 
 # necessary if you want to include admin_search_form.inc.php in function/method scope
-global  $SEM_BEGINN_NEXT,
-        $SEM_CLASS,
+global  $SEM_CLASS,
         $SEM_TYPE;
 
 global  $auth, $perm, $user;
@@ -351,8 +350,8 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             }
 
             //Extension to the query, if we want to show lectures which are archiveable
-            if (($i_page== "archiv_assi.php") && ($links_admin_data["select_old"]) && ($SEM_BEGINN_NEXT)) {
-                $query.="AND ((seminare.start_time + seminare.duration_time < ".$SEM_BEGINN_NEXT.") AND seminare.duration_time != '-1') ";
+            if (($i_page== "archiv_assi.php") && ($links_admin_data["select_old"]) && ($next_semester = Semester::findNext())) {
+                $query.="AND ((seminare.start_time + seminare.duration_time < ".$next_semester->beginn.") AND seminare.duration_time != '-1') ";
                 $conditions++;
             }
 
@@ -607,9 +606,6 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 case "admin_roles.php":
                     printf("<font size=-1>" . _("Funktionen / Gruppen") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?ebene=sem&range_id=' . $seminar_id), makeButton("bearbeiten"));
                     break;
-                case "admin_seminare1.php":
-                    printf("<font size=-1>" . _("Veranstaltung") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?s_command=edit&s_id=' . $seminar_id), makeButton("bearbeiten"));
-                    break;
                 case "admin_modules.php":
                     printf("<font size=-1>" . _("Module") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?range_id=' . $seminar_id), makeButton("bearbeiten"));
                     break;
@@ -698,6 +694,10 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     if ($this instanceof Course_StudyAreasController){
                         printf(_("Studienbereiche") . '<br><a href="%s">%s</a>',
                             $this->url_for('course/study_areas/show/' . $seminar_id),
+                            makeButton("bearbeiten"));
+                    } elseif ($this instanceof Course_BasicdataController){
+                        printf(_("Veranstaltung") . '<br><a href="%s">%s</a>',
+                            $this->url_for('course/basicdata/view/' . $seminar_id),
                             makeButton("bearbeiten"));
                     }
                     break;

@@ -16,8 +16,8 @@
 
 class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 {
-    private $content = array();
-    private $is_new = true;
+    protected $content = array();
+    protected $is_new = true;
     
     protected $db_table = '';
     protected $db_fields = null;
@@ -25,7 +25,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     
     protected static $schemes;
     
-    public static function TableScheme ($db_table)
+    public static function TableScheme($db_table)
     {
         if (self::$schemes === null) {
             $cache = StudipCacheFactory::getCache();
@@ -49,6 +49,12 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             $cache->write('DB_TABLE_SCHEMES', serialize(self::$schemes));
         }
         return isset(self::$schemes[$db_table]);
+    }
+    
+    public static function expireTableScheme()
+    {
+        StudipCacheFactory::getCache()->expire('DB_TABLE_SCHEMES');
+        self::$schemes = null;
     }
     
     public static function find($class, $id)

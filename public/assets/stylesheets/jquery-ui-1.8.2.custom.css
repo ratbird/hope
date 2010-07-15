@@ -52,7 +52,7 @@
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: Arial, Helvetica, sans-serif; font-size: 1em; }
 .ui-widget-content { border: 1px solid #; background: #f4f4f4 url(../images/steel1.jpg) 50% 50% repeat; color: #222222; }
 .ui-widget-content a { color: #222222; }
-.ui-widget-header { border: 1px solid #aaaaaa; background: #5a5ab8 url(../images/vendor/jquery-ui/ui-bg_highlight-hard_75_5a5ab8_1x100.png) 50% 50% repeat-x; color: #222222; font-weight: bold; }
+.ui-widget-header { border: 1px solid #aaaaaa; background: #5a5ab8 url('../images/blue_gradient.jpg') repeat-x; color: #222222; font-weight: bold; }
 .ui-widget-header a { color: #222222; }
 
 /* Interaction states

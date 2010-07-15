@@ -94,7 +94,16 @@ class Semester extends SimpleORMap
         }
         return $this->haveData();
     }
-    
+
+    function toArray()
+    {
+        $ret = parent::toArray();
+        foreach(array('past', 'first_sem_week', 'last_sem_week') as $additional) {
+            $ret[$additional] = $this->$additional;
+        }
+        return $ret;
+    }
+
     function getSemWeekNumber($timestamp)
     {
         $current_sem_week = (int)strftime('%W', $timestamp);

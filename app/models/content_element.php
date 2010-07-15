@@ -77,7 +77,9 @@ class StudipContentElementForum extends StudipContentElement {
     
     function getAbstractHtml(){
         include_once 'lib/forum.inc.php';
-        return formatready(forum_parse_edit($this->getAbstract(), true));
+        $this->data['id'] = $this->id;
+        return formatready(forum_parse_edit($this->getAbstract(), true)).
+            "<div>".forum_get_buttons($this->data)."</div>";
     }
 }
 

@@ -587,6 +587,7 @@ STUDIP.Dialogbox = {
         hide: 'slide', 
         title: title, 
         position: coord, 
+        width: 460,
         close: function (event, ui) {
           STUDIP.Dialogbox.closeBox(id, true);
         },

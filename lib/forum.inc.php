@@ -536,9 +536,9 @@ function ForumIcon ($forumposting) {
             $txt = "";
         }
         $forumposting["icon"] = $hoverlink
-        ."onmouseover=\"return STUDIP.OverDiv.BindInline(
-        {position:'middle right', id: '".$forumposting["id"]."',
-        content_element_type: 'forum', initiator: this}, event);\"><img src=\"".$bild."\" border=0></a>";
+        ."onmouseover=\"STUDIP.Dialogbox.openForumPosting('".
+            $forumposting["id"]."', this);".
+            " return false;\"><img src=\"".$bild."\" border=0></a>";
     } else {
         if ($forum["view"]=="tree" && $forumposting["type"]=="folder")
             $forumposting["icon"] = "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]."&folderopen=".$forumposting["id"]."&openall=TRUE#anker")."\"><img src=\"".$bild."\" border=0 " . tooltip(_("Alle Postings im Thema öffnen")) . "></a>";

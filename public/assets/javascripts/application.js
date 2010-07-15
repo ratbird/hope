@@ -347,7 +347,7 @@ STUDIP.URLHelper = {
     }
   },
   /**
-   * Actualizes the URL of all link in the document
+   * updates the URL of all links in the document
    */
   updateAllLinks: function (context_selector) {
     if (context_selector === undefined) {
@@ -560,6 +560,73 @@ STUDIP.Tabs = (function () {
     }
   };
 }());
+
+/* ------------------------------------------------------------------------
+ * Dialogbox
+ * ------------------------------------------------------------------------ */
+
+/**
+ * The dialogbox is an element from jQuery UI that presents content like in 
+ * a window that is draggable and resizable. All you need is a title and a 
+ * content for that window. You can also define an id to identify that window
+ * later on. Only one window with the same id will be shown at a time.
+ * Also you can define a scope, so only one window of one scope will be shown
+ * at the same time.
+ */
+STUDIP.Dialogbox = {
+  currentScopes: {},
+  currentBoxes: {},
+  
+  openBox: function (id, title, content, coord, scope) {
+    if (scope && this.currentBoxes[this.currentScopes[scope]] && (id !== this.currentBoxes[this.currentScopes[scope]])) {
+      this.closeScope(scope);
+    }
+    if (!this.currentBoxes[id]) {
+      $('<div id="Dialogbox_' + id + '">' + content + '</div>').dialog({ 
+        show: 'slide', 
+        hide: 'slide', 
+        title: title, 
+        position: coord, 
+        close: function (event, ui) {
+          STUDIP.Dialogbox.closeBox(id, true);
+        },
+        drag: function (event, ui) {
+          STUDIP.Dialogbox.closeBox(id, false);
+        }
+      });
+      
+      this.currentScopes[scope] = id;
+      this.currentBoxes[id] = true;
+    }
+  },
+  
+  closeScope: function (scope) {
+    $("#Dialogbox_" + this.currentScopes[scope]).dialog('close');
+    delete this.currentScopes[scope];
+  },
+  
+  closeBox: function (id, kill) {
+    delete this.currentBoxes[id];
+    if (kill) {
+      $("#Dialogbox_" + id).remove();
+    } else {
+      $("#Dialogbox_" + id).attr("id", "#Dialogbox_" + id + "_dragged");
+    }
+  },
+  
+  openForumPosting: function (id, element) {
+    var coord; //coordinates to give to dialogbox - "center" means center of window
+    if (element) {
+      coord = $(element).position();
+      coord = [coord.left + 15, coord.top];
+    } else {
+      coord = 'center';
+    }
+    $.getJSON("dispatch.php/content_element/get_formatted/forum/" + id, function (data) {
+      STUDIP.Dialogbox.openBox(id, data.title, data.content, coord, "forum");
+    });
+  }
+};
 
 /* ------------------------------------------------------------------------
  * Dateibereich

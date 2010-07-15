@@ -4,7 +4,7 @@
 
 require_once 'lib/functions.php';
 require_once 'app/models/content_element.php';
-require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/trails/AuthenticatedController.php';
 
 class ContentElementController extends AuthenticatedController {
 
@@ -45,7 +45,7 @@ class ContentElementController extends AuthenticatedController {
   }
   
   function render_json($data){
-      $this->set_content_type('application/json;charset=utf-8');
+      $this->setContentType('application/json;charset=utf-8');
       return $this->render_text(json_encode($data));
   }
 }

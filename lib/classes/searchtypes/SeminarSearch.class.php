@@ -62,7 +62,7 @@ class SeminarSearch extends SearchType
          }
          
          $db = DBManager::get();
-         return $db->query("SELECT Seminar_id, Name FROM seminare WHERE Seminar_id IN ('".join("','", $result)."')")->fetchAll(PDO::FETCH_NUM);
+         return $db->query("SELECT Seminar_id, Name FROM seminare WHERE Seminar_id IN ('".join("','", array_slice($result, 0, 10))."')")->fetchAll(PDO::FETCH_NUM);
      }
 
     

@@ -74,8 +74,7 @@
                 };
               </script>
               <?php
-              require_once ("lib/classes/QuickSearch.class.php");
-              print QuickSearch::get("search_sem_quick_search", new StandardSearch("Seminar_id"))
+              print QuickSearch::get("search_sem_quick_search", new SeminarSearch())
                     ->setInputClass("quicksearchbox")
                     ->withAttributes(array("title" => sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name))))
                     ->setInputStyle("width: 130px; color: #ffffff")
@@ -88,6 +87,7 @@
               //Ende des komischen Zeugs.
               ?>
               <input type="hidden" name="search_sem_sem" value="<?= $search_semester_nr ?>">
+              <input type="hidden" name="search_sem_qs_choose" value="title_lecturer_number">
               <input class="quicksearchbutton" type="image" src="<?= Assets::url('images/quicksearch_button.png ') ?>" name="search_sem_do_search" value="OK" title="<?= sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)) ?>">
             </form>
             </li>

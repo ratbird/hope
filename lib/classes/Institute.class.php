@@ -1,43 +1,47 @@
 <?php
-
 /**
-* Seminar.class.php
-*
-* the seminar main-class
-*
-*
-* @author       Rasmus Fuhse <fuhse@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
-* @access       public
-* @modulegroup      core
-* @module       Institute.class.php
-* @package      raumzeit
+ * Institute.class.php
+ * model class for table Institute
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Rasmus Fuhse <fuhse@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
+ * @copyright   2010 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
 */
 
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// Institute.class.php
-// Copyright (C) 2010 Rasmus Fuhse <fuhse@data-quest>, data-quest GmbH <info@data-quest.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
+require_once 'SimpleORMap.class.php';
 
-require_once 'lib/functions.php';
+class Institute extends SimpleORMap
+{
+    protected $db_table = 'Institute';
 
-class Institute {
-    var $id;
-    
-    static function getInstitutes() {
+    static function find($id)
+    {
+        return SimpleORMap::find(__CLASS__, $id);
+    }
+
+    static function findBySql($where)
+    {
+        return SimpleORMap::findBySql(__CLASS__, $where);
+    }
+
+    static function findByFaculty($fakultaets_id)
+    {
+        return self::findBySql("fakultaets_id=" . DbManager::get()->quote($fakultaets_id) . " ORDER BY Name ASC");
+    }
+
+    static function deleteBySql($where)
+    {
+        return SimpleORMap::deleteBySql(__CLASS__, $where);
+    }
+
+    static function getInstitutes()
+    {
         $db = DBManager::get();
         $result = $db->query("SELECT Institute.Institut_id, Institute.Name, IF(Institute.Institut_id=Institute.fakultaets_id,1,0) AS is_fak " .
                 "FROM Institute " .
@@ -46,7 +50,8 @@ class Institute {
         return $result;
     }
     
-    static function getMyInstitutes($user_id = NULL) {
+    static function getMyInstitutes($user_id = NULL)
+    {
         global $perm, $user;
         if (!$user_id) {
             $user_id = $user->id;
@@ -75,10 +80,13 @@ class Institute {
         }
         return $result;
     }
-    
-    public function __construct($id) {
-        $db = DBManager::get();
-        $db->query();
-        $this->id = $id;
+
+    function getValue($field)
+    {
+        if ($field == 'is_fak') {
+            return $this->fakultaets_id == $this->institut_id;
+        }
+        return parent::getValue($field);
     }
+
 }

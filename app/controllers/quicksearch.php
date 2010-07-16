@@ -37,7 +37,7 @@ class QuicksearchController extends AuthenticatedController {
         $this->search = $this->getSearch($query_id);
         $this->specialSQL = $_SESSION['QuickSearches'][$query_id]['query'];
         $this->form_data = $this->utf8_array_decode(Request::getArray("form_data"));
-        $this->searchresults = $this->getResults(utf8_decode(Request::get('request')));
+        $this->searchresults = $this->getResults(studip_utf8decode(Request::get('request')));
         $this->render_template('quicksearch/response.php');
     }
 
@@ -86,7 +86,7 @@ class QuicksearchController extends AuthenticatedController {
      * @return array: array of searchresults formatted
      */
     private function extraResultFormat($results) {
-        $input = utf8_decode(Request::get('request'));
+        $input = studip_utf8decode(Request::get('request'));
         foreach ($results as $key => $result) {
             $results[$key][1] = preg_replace("/(".$input.")/i", "<b>$1</b>", $result[1]);
         }
@@ -137,7 +137,7 @@ class QuicksearchController extends AuthenticatedController {
             if( is_array($val) ) {
                 $return[$key] = $this->utf8_array_decode($val);
             } else {
-                $return[$key] = utf8_decode($val);
+                $return[$key] = studip_utf8decode($val);
             }
         }
         return $return;

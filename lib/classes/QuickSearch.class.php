@@ -122,7 +122,7 @@ class QuickSearch {
      * you don't need to call the specialSearch-method.
      */
     public function QuickSearch($name, $search = NULL) {
-        $this->count_QS++;
+        self::$count_QS++;
         $this->name = $name;
         $this->withButton = false;
         $this->avatarLike = "";
@@ -290,10 +290,21 @@ class QuickSearch {
             $template->set_attribute('withAttributes', $this->withAttributes ? $this->withAttributes : array());
             $template->set_attribute('descriptionColor', $this->descriptionColor ? $this->descriptionColor : "#888888");
             $template->set_attribute('JSfunction', $this->JSfunction);
-            $template->set_attribute('count_QS', $this->count_QS);
+            $template->set_attribute('count_QS', self::$count_QS);
+            $template->set_attribute('id', $this->getId());
             $template->set_attribute('query_id', $query_id);
             return $template->render();
         }
+    }
+    
+    /**
+     * returns the id string used for the input field
+     * 
+     * @return string
+     */
+    public function getId()
+    {
+        return $this->name . '_' . (int)self::$count_QS;
     }
     
     //////////////////////////////////////////////////////////////////////////////

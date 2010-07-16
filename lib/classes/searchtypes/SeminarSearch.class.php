@@ -19,6 +19,18 @@ require_once 'lib/classes/searchtypes/SearchType.class.php';
 
 class SeminarSearch extends SearchType
 {
+    private $styles = array(
+    				'name' => 'Name',
+                    'number-name' => "TRIM(CONCAT_WS(' ', VeranstaltungsNummer, Name))",
+                    'number-name-lecturer' => "CONCAT_WS(' ', TRIM(CONCAT_WS(' ', VeranstaltungsNummer, Name)), CONCAT('(', GROUP_CONCAT(Nachname ORDER BY Nachname SEPARATOR ', '),')'))"
+                    );
+    private $resultstyle;
+    
+    function __construct($resultstyle = 'name')
+    {
+        $this->resultstyle = $resultstyle;
+    }
+    
     /**
      * title of the search like "search for courses" or just "courses"
      * @return string
@@ -48,9 +60,9 @@ class SeminarSearch extends SearchType
                  'quick_search' => $keyword,
                  'qs_choose' => $contextual_data['search_sem_qs_choose'] ? $contextual_data['search_sem_qs_choose'] : 'all',
                  'sem' => isset($contextual_data['search_sem_sem']) ? $contextual_data['search_sem_sem'] : 'all',
-                 'category' => $options['search_sem_category'],
-                 'scope_choose' => $options['search_sem_scope_choose'],
-                 'range_choose' => $options['search_sem_range_choose']),
+                 'category' => $contextual_data['search_sem_category'],
+                 'scope_choose' => $contextual_data['search_sem_scope_choose'],
+                 'range_choose' => $contextual_data['search_sem_range_choose']),
              !(is_object($GLOBALS['perm'])
                  && $GLOBALS['perm']->have_perm(
                      Config::Get()->SEM_VISIBILITY_PERM)));
@@ -60,9 +72,13 @@ class SeminarSearch extends SearchType
          if (empty($result)) {
              return array();
          }
-         
          $db = DBManager::get();
-         return $db->query("SELECT Seminar_id, Name FROM seminare WHERE Seminar_id IN ('".join("','", array_slice($result, 0, 10))."')")->fetchAll(PDO::FETCH_NUM);
+         $style = isset($this->styles[$this->resultstyle]) ?  $this->styles[$this->resultstyle] : $this->styles['name'];
+         return $db->query("SELECT s.Seminar_id, $style FROM seminare s 
+         					LEFT JOIN seminar_user su ON su.Seminar_id=s.Seminar_id AND su.status='dozent' 
+         					LEFT JOIN auth_user_md5 USING (user_id)
+         					WHERE s.Seminar_id IN ('".join("','", array_slice($result, 0, 10))."') GROUP BY s.Seminar_id"
+                           )->fetchAll(PDO::FETCH_NUM);
      }
 
     

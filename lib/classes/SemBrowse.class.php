@@ -220,7 +220,7 @@ class SemBrowse {
     function print_qs(){
         global $PHP_SELF;
         //Quicksort Formular... fuer die eiligen oder die DAUs....
-        echo $this->search_obj->getFormStart("$PHP_SELF?send=yes");
+        echo $this->search_obj->getFormStart(UrlHelper::getLink());
         echo "<table border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
         echo "<tr><td class=\"steel1\" align=\"center\" valign=\"middle\"><font size=\"-1\">";
         echo _("Schnellsuche:") . "&nbsp;";
@@ -246,51 +246,17 @@ class SemBrowse {
         echo "&nbsp;";
         echo $this->search_obj->getSemChangeButton(array('style' => 'vertical-align:middle'));
         echo "</font></td></tr><tr><td class=\"steel1\" align=\"center\" valign=\"middle\">";
-        echo $this->search_obj->getSearchField("quick_search",
-            array('style' => 'vertical-align:middle;font-size:9pt;',
-                  'size' => 45,
-                  'id' => "autocomplete"));
-        ?>
-        <div id="autocomplete_choices" class="autocomplete"></div>
-        <?
+        $quicksearch = QuickSearch::get($this->search_obj->form_name . "_quick_search", new SeminarSearch('number-name-lecturer'))
+                    ->setInputStyle("vertical-align:middle;font-size:9pt;width:50%;")
+                    ->fireJSFunctionOnSelect("selectSem")
+                    ->noSelectbox();
+        echo $quicksearch->render();
         echo "&nbsp;";
-        echo $this->search_obj->getSearchButton(array('style' => 'vertical-align:middle'));
+        echo $this->search_obj->getSearchButton(array('style' => 'vertical-align:middle', 'class' => "quicksearchbutton"));
         echo "</td></tr>";
         echo $this->search_obj->getFormEnd();
         echo "</table>\n";
-
-        echo '<script type="text/javascript">document.'.$this->search_obj->form_name.'.'.$this->search_obj->form_name.'_quick_search.focus();</script>' . chr(10);
-        ?>
-        <script type="text/javascript">
-            Event.observe(window, 'load', function() {
-                new Ajax.Autocompleter('autocomplete',
-                                       'autocomplete_choices',
-                                       'dispatch.php/autocomplete/course',
-                                       {
-                  minChars: 3,
-                  paramName: 'value',
-                  method: 'get',
-                  callback: function(element, entry) {
-                    var category = $$('input[name="<?= $this->search_obj->form_name ?>_category"]');
-                    var scope = $$('select[name="<?= $this->search_obj->form_name ?>_scope_choose"]');
-                    var range = $$('select[name="<?= $this->search_obj->form_name ?>_range_choose"]');
-                    return entry + '&' + Object.toQueryString({
-                      'semester': $F($$('select[name="<?= $this->search_obj->form_name ?>_sem"]')[0]),
-                      'what':     $F($$('select[name="<?= $this->search_obj->form_name ?>_qs_choose"]')[0]),
-                      'category': category.size() === 0 ? 'all' : $F(category.first()),
-                      'scope': scope.size() === 0 ? null : $F(scope.first()),
-                      'range': range.size() === 0 ? null : $F(range.first())
-                    });
-                  },
-                  afterUpdateElement: function (input, item) {
-                    var seminar_id = encodeURI(item.down('span.seminar_id').firstChild.nodeValue);
-                    document.location = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>details.php?sem_id=" +
-                      seminar_id + "&send_from_search=1&send_from_search_page=<?= urlencode($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) ?>sem_portal.php?keep_result_set=1";
-                  }
-                });
-            });
-        </script>
-        <?
+        echo '<script type="text/javascript">$("#' . $quicksearch->getId() . '").focus();</script>' . chr(10);
     }
 
     function print_xts(){

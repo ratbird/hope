@@ -70,7 +70,7 @@
             <form id="quicksearch" action="<?= URLHelper::getLink('sem_portal.php', array('send' => 'yes', 'group_by' => '0') + $link_params) ?>" method="post">
               <script>
                 var selectSem = function (seminar_id, name) {
-                    document.location = "<?= URLHelper::getURL("details.php", array("send_from_search" => 1, "send_from_search_page" => urlencode($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'])."sem_portal.php?keep_result_set=1"))  ?>&sem_id=" + seminar_id;
+                    document.location = "<?= URLHelper::getURL("details.php", array("send_from_search" => 1, "send_from_search_page" => URLHelper::getURL("sem_portal.php?keep_result_set=1")))  ?>&sem_id=" + seminar_id;
                 };
               </script>
               <?php

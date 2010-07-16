@@ -12,9 +12,9 @@
             $clear_input = " onFocus=\"if (this.value == '$beschriftung'){this.value = ''; $(this).css('color', '');}\" " .
                 "onBlur=\"if (this.value == ''){this.value = '$beschriftung';$(this).css('color', '".$descriptionColor."');}\"";
         } ?>
-            <input type=hidden id="<?= $name ?>_realvalue" name="<?= $name ?>" value="<?= $defaultID ?>">
+            <input type=hidden id="<?= $id ?>_realvalue" name="<?= $name ?>" value="<?= $defaultID ?>">
             <input<?= $input_style.($inputClass ? " class=\"".$inputClass."\"" : "") 
-                ?> id="<?= $name ?>"<?= ($clear_input ? $clear_input : "") ?> type=text name="<?= 
+                ?> id="<?= $id ?>"<?= ($clear_input ? $clear_input : "") ?> type=text name="<?= 
                     $name ?>_parameter" value="<?= $defaultName ?>">
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>
@@ -26,11 +26,11 @@
             //Die Autovervollständigen-Funktion aktivieren:
             //dispatch.php/quicksearch/response/<?= $query_id ?>?searchkey=test
 
-            STUDIP.QuickSearch.autocomplete("<?= $name ?>",
+            STUDIP.QuickSearch.autocomplete("<?= $id ?>",
                 "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
                 <?= $JSfunction ? htmlReady($JSfunction) : "null" ?>);
 <? if ($beschriftung && !$defaultID) : ?>
-            $("#<?= $name ?>").attr("value", "<?= $beschriftung ?>");
-            $("#<?= $name ?>").css("color", "<?= $descriptionColor ?>");
+            $("#<?= $id ?>").attr("value", "<?= $beschriftung ?>");
+            $("#<?= $id ?>").css("color", "<?= $descriptionColor ?>");
 <? endif ?>
         </script>

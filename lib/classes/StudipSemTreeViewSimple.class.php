@@ -126,10 +126,11 @@ class StudipSemTreeViewSimple {
         if(is_object($this->studienmodulmanagement) && $this->tree->isModuleItem($item_id)){
             $nav = $this->studienmodulmanagement->getModuleInfoNavigation($item_id, SemesterData::GetSemesterIdByIndex($this->tree->sem_number[0]));
             if ($nav->isVisible(true)) {
-                $ret = '<a href="' . URLHelper::getLink($nav->getURL()) . '">';
+                $ret = '<a class="module-info" href="' . URLHelper::getLink($nav->getURL()) . '">';
                 $ret .= '<img ';
                 foreach ($nav->getImage() as $key => $value) $ret .= sprintf('%s="%s" ', $key, htmlReady($value));
                 $ret .= '>';
+                $ret .= '<span>' .htmlready($nav->getTitle()) . '</span>';
                 $ret .= '</a>';
             }
         } else {

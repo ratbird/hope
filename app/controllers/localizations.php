@@ -48,12 +48,10 @@ class LocalizationsController extends TrailsController {
     {
         $this->setContentType('application/javascript');
 
-
-#        $this->response->addHeader('Cache-Control', 'max-age=3600');
-#        $this->response->addHeader('Expires', date("r", time() + 86400));
-        $this->response->addHeader('Last-Modified', "Tue, 01 Jun 2010 07:09:00 GMT");
-        $this->response->addHeader('Etag', "5ea444-9060-487f2a5c79b01");
-#        $this->response->addHeader('Pragma', "cache");
+        $expires = time() + 30 * 60 * 60 * 24;
+        $this->response->addHeader('Expires', gmdate(DATE_RFC1123, $expires));
+        $this->response->addHeader('Cache-Control', 'public');
+        $this->response->addHeader('Pragma', 'public');
 
         $this->language = $language;
         setLocaleEnv($language, "studip");

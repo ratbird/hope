@@ -488,6 +488,10 @@ table.collapsable tr.loaded-details td:first-child tr:first-child td:first-child
     background-image: url('../images/plastic_red.jpg');
 }
 
+.indent {
+    padding: 10px;
+    margin: 0px;
+}
 
 /* --- Styles fuer printhead und printcontent ------------------------------- */
 td.printhead {

@@ -842,7 +842,7 @@ echo "\n<body onUnLoad=\"upload_end()\">";
                 ?>
                 <tr>
                 <td class="blank" colspan="3" width="100%">
-                <blockquote>
+                <div class="indent">
                 <form action="<? echo URLHelper::getLink('#anker') ?>" method="POST">
                     <select name="open" style="vertical-align:middle">
                         <? echo $select ?>
@@ -850,7 +850,7 @@ echo "\n<body onUnLoad=\"upload_end()\">";
                     <input type="text" name="top_folder_name" size="50">
                     <input type="image" name="anlegen" value="<?=_("Neuer Ordner")?>" <?=makeButton("neuerordner", "src")?> border="0">
                 </form>
-                </blockquote>
+                </div>
                 <?
                 }
             }
@@ -871,9 +871,9 @@ echo "\n<body onUnLoad=\"upload_end()\">";
 
 
     if ($folder_system_data["cmd"]=="all") {
-        print "<blockquote><font size='-1'>";
+        print "<div class=\"indent\"><font size='-1'>";
         printf (_("Hier sehen Sie alle Dateien, die zu dieser %s eingestellt wurden. Wenn Sie eine neue Datei einstellen m&ouml;chten, w&auml;hlen Sie bitte die Ordneransicht und &ouml;ffnen den Ordner, in den Sie die Datei einstellen wollen."), $SessSemName["art_generic"]); 
-        print "</font></blockquote>";
+        print "</font></div>";
     }
     
     $lastvisit = object_get_visit($SessSemName[1], "documents");
@@ -885,12 +885,12 @@ echo "\n<body onUnLoad=\"upload_end()\">";
                     "OR mkdate > '".(($lastvisit) ? $lastvisit : time())."')";
     $result = $db->query($query)->fetchAll();
     if (count($result)>0) {
-        print "<blockquote><font size='-1'>";
+        print "<div class=\"indent\"><font size='-1'>";
         print _("Es gibt ");
         print "<b>".(count($result)>1 ? count($result) : _("eine"))."</b>";
         print _(" neue/geänderte Dateie(n). Jetzt ");
         print " <a href=\"".URLHelper::getLink("?zipnewest=".$lastvisit)."\">" . makeButton("herunterladen", "img") . "</a>";
-        print "</font></blockquote>";
+        print "</font></div>";
     }
     
     print "<div id=\"filesystem_area\">";

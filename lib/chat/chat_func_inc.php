@@ -158,7 +158,7 @@ function chat_show_info($chatid){
 
 function chat_get_content($chatid,$chatter,$chatinv,$password,$is_active,$chat_user){
     $pic_path = $GLOBALS['ASSETS_URL']."images/";
-    $ret = "\n<tr><td class=\"steel1\" width=\"50%\" valign=\"center\"><blockquote><font size=\"-1\">";
+    $ret = "\n<tr><td class=\"steel1\" width=\"50%\" valign=\"center\"><div class=\"indent\"><font size=\"-1\">";
     if (($entry_level = chat_get_entry_level($chatid)) || $chatinv){
         if (!$is_active){
             $ret .= "<a href=\"#\" onClick=\"javascript:return open_chat('$chatid');\">";
@@ -197,7 +197,7 @@ function chat_get_content($chatid,$chatter,$chatinv,$password,$is_active,$chat_u
         $ret .= "<img border=\"0\" align=\"absmiddle\" src=\"$pic_path/nochat.gif\" >&nbsp;&nbsp;";
         $ret .= _("Um diesen Chatraum zu betreten, brauchen sie eine g&uuml;ltige Einladung.");
     }
-    $ret .= "\n</font></blockquote></td><td class=\"steel1\" width=\"50%\" valign=\"center\"><blockquote><font size=\"-1\">";
+    $ret .= "\n</font></div></td><td class=\"steel1\" width=\"50%\" valign=\"center\"><div class=\"indent\"><font size=\"-1\">";
     if (!$chatter){
         $ret .= _("Dieser Chatraum ist leer.");
     } else {
@@ -213,7 +213,7 @@ function chat_get_content($chatid,$chatter,$chatinv,$password,$is_active,$chat_u
         }
         $ret .= ")";
     }
-    $ret .= "</font></blockquote></td></tr>";
+    $ret .= "</font></div></td></tr>";
     return $ret;
 }
 

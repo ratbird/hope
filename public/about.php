@@ -333,7 +333,7 @@ function open_im() {
 
         <td class="steel1" width="99%" valign="top">
             <br>
-            <blockquote>
+            <div class="indent">
             <h1><?= htmlReady($db->f("fullname")) ?></h1>
                 <? if ($db->f('motto') &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['motto'])) : ?>
@@ -516,7 +516,7 @@ if ($score->IsMyScore() || $score->ReturnPublik()) {
                 <? endforeach ?>
 
                 <br>
-            </blockquote>
+            </div>
         </td>
 </tr>
 </table>

@@ -574,31 +574,9 @@ function jumpTo ($month, $day, $year, $colsp = 1) {
     $currentDate = ($month < 10 ? "0".$month : $month)."/".($day < 10 ? "0".$day : $day)."/".$year;
     echo "<input type=\"text\" style=\"visibility:hidden; width: 0px\" name=\"realdate\" id=\"realdate\" value=\"".$currentDate."\">";
     echo "<b>" . _("Gehe zu:") . "</b>&nbsp;&nbsp;";
-    echo "<input onFocus=\"$('#realdate').datepicker('show');\" id=\"pickday\" type=\"text\" name=\"jmp_d\" size=\"2\" maxlength=\"2\" value=\"$day\">";
-    echo "&nbsp;.&nbsp;<input onFocus=\"$('#realdate').datepicker('show');\" id=\"pickmonth\" type=\"text\" name=\"jmp_m\" size=\"2\" maxlength=\"2\" value=\"$month\">";
-    echo "&nbsp;.&nbsp;<input onFocus=\"$('#realdate').datepicker('show');\" id=\"pickyear\" type=\"text\" name=\"jmp_y\" size=\"4\" maxlength=\"4\" value=\"$year\">";
-   ?>
-    <script>
-    $("#realdate").datepicker({
-        onSelect: function (dateText, inst) {
-            var highlight_duration = 2000;
-            $("#pickday").val(inst.selectedDay).effect("highlight", {}, highlight_duration);
-            $("#pickmonth").val(inst.selectedMonth+1).effect("highlight", {}, highlight_duration);
-            $("#pickyear").val(inst.selectedYear).effect("highlight", {}, highlight_duration);
-        },
-        dayNamesMin: ['<?= _("So") ?>', '<?= _("Mo") ?>', '<?= _("Di") ?>', 
-                      '<?= _("Mi") ?>', '<?= _("Do") ?>', '<?= _("Fr") ?>', '<?= _("Sa") ?>'],
-        monthNames: ['<?= _("Januar") ?>', '<?= _("Februar") ?>', '<?= _("März") ?>', 
-                     '<?= _("April") ?>', '<?= _("Mai") ?>', '<?= _("Juni") ?>', 
-                     '<?= _("Juli") ?>', '<?= _("August") ?>', '<?= _("September") ?>', 
-                     '<?= _("Oktober") ?>', '<?= _("November") ?>', '<?= _("Dezember") ?>'],
-        nextText: '<?= _("vorwärts") ?>',
-        prevText: '<?= _("zurück") ?>',
-        firstDay: 1
-    });
-    </script>
-    <?
-    
+    echo "<input type=\"text\" name=\"jmp_d\" size=\"2\" maxlength=\"2\" value=\"$day\">";
+    echo "&nbsp;.&nbsp;<input type=\"text\" name=\"jmp_m\" size=\"2\" maxlength=\"2\" value=\"$month\">";
+    echo "&nbsp;.&nbsp;<input type=\"text\" name=\"jmp_y\" size=\"4\" maxlength=\"4\" value=\"$year\">";
     echo "&nbsp;<input type=\"image\" " . makeButton("absenden", "src") . " border=\"0\" align=\"absmiddle\">\n";
     echo "<input type=\"hidden\" name=\"atime\" value=\"$atime\">\n";
     echo "</form>\n</div>\n</td></tr>\n";

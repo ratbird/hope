@@ -17,7 +17,7 @@ require_once "lib/classes/SimpleORMap.class.php";
 
 class Semester extends SimpleORMap
 {
-   
+
     /**
      * cache
      */
@@ -25,34 +25,34 @@ class Semester extends SimpleORMap
     private static $current_semester;
 
     protected $db_table = 'semester_data';
-    
+
     static function find($id)
     {
         $semester_cache = self::getAll();
         return isset($semester_cache[$id]) ? $semester_cache[$id] : null;
     }
-    
+
     static function findBySql($where)
     {
         return SimpleORMap::findBySql(__CLASS__, $where);
     }
-    
+
     static function deleteBySQL($where)
     {
         return SimpleORMap::deleteBySQL(__CLASS__, $where);
     }
-    
+
     static function findByTimestamp($timestamp)
     {
-       	foreach(self::getAll() as $semester) {
-       	    if ($timestamp >= $semester->beginn && $timestamp <= $semester->ende) {
-       	        $found = $semester;
-       	        break;
-       	    }
-       	}
-    	return $found;
+        foreach(self::getAll() as $semester) {
+            if ($timestamp >= $semester->beginn && $timestamp <= $semester->ende) {
+                $found = $semester;
+                break;
+            }
+        }
+        return $found;
     }
-    
+
     static function findNext($timestamp = null)
     {
         $timestamp = $timestamp OR $timestamp = time();
@@ -63,13 +63,13 @@ class Semester extends SimpleORMap
             return null;
         }
     }
-    
+
     static function findCurrent()
     {
-    	self::getAll();
+        self::getAll();
         return self::$current_semester;
     }
-    
+
     static function getAll($force_reload = false)
     {
         if (!is_array(self::$semester_cache) || $force_reload) {
@@ -83,7 +83,7 @@ class Semester extends SimpleORMap
         }
         return self::$semester_cache;
     }
-    
+
     function setData($data, $reset = false)
     {
         parent::setData($data, $reset);
@@ -116,7 +116,7 @@ class Semester extends SimpleORMap
             $last_sem_week = $this->last_sem_week;
         }
         if($current_sem_week >= $this->first_sem_week && $current_sem_week <= $last_sem_week){
-            return $current_sem_week - $this->first_sem_week + 1; 
+            return $current_sem_week - $this->first_sem_week + 1;
         } else {
             return false;
         }

@@ -20,17 +20,17 @@ require_once 'lib/classes/searchtypes/SearchType.class.php';
 class SeminarSearch extends SearchType
 {
     private $styles = array(
-    				'name' => 'Name',
+                    'name' => 'Name',
                     'number-name' => "TRIM(CONCAT_WS(' ', VeranstaltungsNummer, Name))",
                     'number-name-lecturer' => "CONCAT_WS(' ', TRIM(CONCAT_WS(' ', VeranstaltungsNummer, Name)), CONCAT('(', GROUP_CONCAT(Nachname ORDER BY Nachname SEPARATOR ', '),')'))"
                     );
     private $resultstyle;
-    
+
     function __construct($resultstyle = 'name')
     {
         $this->resultstyle = $resultstyle;
     }
-    
+
     /**
      * title of the search like "search for courses" or just "courses"
      * @return string
@@ -38,7 +38,7 @@ class SeminarSearch extends SearchType
     public function getTitle() {
         return _("Veranstaltungen suchen");
     }
-    
+
     /**
      * Returns the results to a given keyword. To get the results is the
      * job of this routine and it does not even need to come from a database.
@@ -68,29 +68,29 @@ class SeminarSearch extends SearchType
                      Config::Get()->SEM_VISIBILITY_PERM)));
          $search_helper->doSearch();
          $result = $search_helper->getSearchResultAsArray();
-         
+
          if (empty($result)) {
              return array();
          }
          $db = DBManager::get();
          $style = isset($this->styles[$this->resultstyle]) ?  $this->styles[$this->resultstyle] : $this->styles['name'];
-         return $db->query("SELECT s.Seminar_id, $style FROM seminare s 
-         					LEFT JOIN seminar_user su ON su.Seminar_id=s.Seminar_id AND su.status='dozent' 
-         					LEFT JOIN auth_user_md5 USING (user_id)
-         					WHERE s.Seminar_id IN ('".join("','", array_slice($result, 0, 10))."') GROUP BY s.Seminar_id"
-                           )->fetchAll(PDO::FETCH_NUM);
+         return $db->query("SELECT s.Seminar_id, $style FROM seminare s
+                            LEFT JOIN seminar_user su ON su.Seminar_id=s.Seminar_id AND su.status='dozent'
+                            LEFT JOIN auth_user_md5 USING (user_id)
+                            WHERE s.Seminar_id IN ('".join("','", array_slice($result, 0, 10))."') GROUP BY s.Seminar_id"
+                          )->fetchAll(PDO::FETCH_NUM);
      }
 
-    
+
     /**
-     * Returns the path to this file, so that this class can be autoloaded and is 
+     * Returns the path to this file, so that this class can be autoloaded and is
      * always available when necessary.
      * Should be: "return __file__;"
-     * 
+     *
      * @return string   path to this file
      */
     public function includePath()
     {
-        return __FILE__;    
+        return __FILE__;
     }
 }

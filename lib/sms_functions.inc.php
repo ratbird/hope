@@ -267,10 +267,18 @@ function print_snd_message($psm) {
     else
         $attachment_icon = "";
 
-    $ajax_classes = "load_via_ajax internal_message ".
-        "{id: '{$psm['message_id']}', open: ".($open=='open'?0:1).", count: {$psm['count']}}";
+    $ajax_classes = "load_via_ajax internal_message";
+    $custom_data = "data-id=\"'{$psm['message_id']}'\" "
+                 . "data-open=\"" . ($open == 'open' ? 0 : 1) . "\" "
+                 . "data-count=\"{$psm['count']}\"";
 
-    $titel = "<a name=\"{$psm['message_id']}\" href=\"{$link}\" class=\"tree {$ajax_classes}\">".htmlready($psm['message_subject'])."{$attachment_icon}</a>";
+    $titel = "<a name=\"{$psm['message_id']}\" "
+           . "href=\"{$link}\" "
+           . "class=\"tree {$ajax_classes}\" "
+           . $custom_data
+           . ">"
+           . htmlready($psm['message_subject'])
+           . "{$attachment_icon}</a>";
     $message_hovericon['titel'] = $psm['message_subject'];
     // (hover) icon
     $message_hovericon['openclose'] = $open;
@@ -288,7 +296,7 @@ function print_snd_message($psm) {
         $tmp_line2 = "forumstrich.gif";
     }
     echo "<td class=\"blank\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_line1."\"></td>";
-    printhead(0, 0, $link.'" class="'.$ajax_classes, $open, FALSE, $icon, $titel, $zusatz, $psm['mkdate']);
+    printhead(0, 0, $link.'" class="'.$ajax_classes.'" '.$custom_data.'"', $open, FALSE, $icon, $titel, $zusatz, $psm['mkdate']);
     echo "</tr></table> ";
     // print content
     if (($open == "open") || ($psm['sms_data_open'] == $psm['message_id'])) {
@@ -359,10 +367,17 @@ function print_rec_message($prm) {
     else
         $attachment_icon = "";
 
-    $ajax_classes = "load_via_ajax internal_message ".
-        "{id: '{$prm['message_id']}', open: ".($open=='open'?0:1).", count: {$prm['count']}}";
+    $ajax_classes = "load_via_ajax internal_message";
+    $custom_data = "data-id=\"'{$prm['message_id']}'\" "
+                 . "data-open=\"" . ($open == 'open' ? 0 : 1) . "\" "
+                 . "data-count=\"{$prm['count']}";
 
-    $titel = "<a name=\"{$prm['message_id']}\" href=\"{$link}\" class=\"tree {$ajax_classes}\">".htmlReady($prm['message_subject'])."{$attachment_icon}</a>";
+
+    $titel = "<a name=\"{$prm['message_id']}\" "
+           . "href=\"{$link}\" "
+           . "class=\"tree {$ajax_classes}\" "
+           . $custom_data . '">'
+           . htmlReady($prm['message_subject'])."{$attachment_icon}</a>";
 
     if ($open == 'open'){
         $content = formatReady($prm['message']);
@@ -423,7 +438,7 @@ function print_rec_message($prm) {
     $message_hovericon['openclose'] = $open;
     $message_hovericon['content'] = $prm['message'];
     $message_hovericon['id'] = $prm['message_id'];
-    $message_hovericon['link'] = $link.'" class="'.$ajax_classes;
+    $message_hovericon['link'] = $link.'" class="'.$ajax_classes.'" '.$custom_data;
     $message_hovericon["picture"] = $picture;
     $icon = MessageIcon($message_hovericon);
     // print message_header
@@ -439,9 +454,9 @@ function print_rec_message($prm) {
 
     // if messages with priority are enabled, we pass a steelred css-class
     if ($GLOBALS['MESSAGE_PRIORITY'] && ($prm['priority'] == 'high')) {
-        printhead(0, 0, $link.'" class="'.$ajax_classes, $open, $red, $icon, $titel, $zusatz, $prm['mkdate'], '', 'age', 'steelred');
+        printhead(0, 0, $link.'" class="'.$ajax_classes.'" '.$custom_data, $open, $red, $icon, $titel, $zusatz, $prm['mkdate'], '', 'age', 'steelred');
     } else {
-        printhead(0, 0, $link.'" class="'.$ajax_classes, $open, $red, $icon, $titel, $zusatz, $prm['mkdate'], TRUE, "");
+        printhead(0, 0, $link.'" class="'.$ajax_classes.'" '.$custom_data, $open, $red, $icon, $titel, $zusatz, $prm['mkdate'], TRUE, "");
     }
     echo "</tr></table> ";
     // print message content

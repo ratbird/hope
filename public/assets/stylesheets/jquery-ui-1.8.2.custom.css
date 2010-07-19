@@ -65,6 +65,9 @@
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { color: #212121; text-decoration: none; }
 .ui-widget :active { outline: none; }
 
+/* Stud.IP special design for buttons */ 
+.ui-state-default.ui-element, .ui-button, .ui-menu-item .ui-state-hover, .ui-dialog-titlebar-close.ui-state-hover, .ui-state-hover.ui-datepicker-prev-hover, .ui-state-hover.ui-datepicker-next-hover, .ui-datepicker-calendar .ui-state-default { background: url(../images/steel_with_steel1_bg.jpg) 0px -3px repeat-x; border: thin solid #aaaaaa; border-top: none; border-left-color: #cccccc; }
+
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight  {border: 1px solid #fbe560; background: #ffffaa url(../images/vendor/jquery-ui/ui-bg_flat_55_ffffaa_40x100.png) 50% 50% repeat-x; color: #363636; }

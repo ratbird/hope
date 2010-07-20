@@ -331,9 +331,7 @@ function open_im() {
             <br>
         </td>
 
-        <td class="steel1" width="99%" valign="top">
-            <br>
-            <div class="indent">
+        <td class="steel1" width="99%" valign="top" style="padding: 10px;">
             <h1><?= htmlReady($db->f("fullname")) ?></h1>
                 <? if ($db->f('motto') &&
                         is_element_visible_for_user($user->id, $user_id, $visibilities['motto'])) : ?>
@@ -489,10 +487,11 @@ function open_im() {
                     echo ' * Diese Felder sind nur für Sie und AdministratorInnen sichtbar.<br>';
                     echo '</font>';
                 }
-if ($score->IsMyScore() || $score->ReturnPublik()) {
-    echo "<p>";
-    print_kings($username);
-}
+
+                if ($score->IsMyScore() || $score->ReturnPublik()) {
+                    echo "<p>";
+                    print_kings($username);
+                }
 
                 ?>
 
@@ -514,9 +513,6 @@ if ($score->IsMyScore() || $score->ReturnPublik()) {
                     <span class="minor">(<?= $visible ?>)</span>
                     <br>
                 <? endforeach ?>
-
-                <br>
-            </div>
         </td>
 </tr>
 </table>

@@ -302,9 +302,16 @@ function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 
         print("\n<table class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">");
         printf("\n<tr><td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/meinetermine.gif\" border=\"0\" align=\"texttop\"><b>  %s</b></td>",_("Termine"));
         printf("\n<td align =\"right\" class=\"topic\"> %s<img src=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\" %s></a> </td></tr>", $admin_link, tooltip(_("Termine einstellen")));
-        print("\n<tr><td class=\"steel1\" colspan=\"2\"><div class=\"indent\"><font size=-1>");
-        print(_("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie auf die Doppelpfeile."));
-        print("</font></div>\n</td></tr></table>\n");
+        ?>
+        <tr>
+            <td class="steel1" colspan="2">
+                <p class="info">
+                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie auf die Doppelpfeile.") ?>
+                </p>
+            </td>
+        </tr>
+        </table>
+        <?
         return TRUE;
     }
 
@@ -455,8 +462,17 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
         echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
         echo "\n<tr><td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/meinetermine.gif\" border=\"0\" align=\"texttop\"><b>  " . _("Termine") . "</b></td>";
         echo "\n<td align =\"right\" class=\"topic\"> $admin_link<img src=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\" " . tooltip(_("Termine einstellen")) . "></a> </td></tr>";
-        echo "\n<tr><td class=\"steel1\" colspan=\"2\"><div class=\"indent\"><font size=-1>" . _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie auf die Doppelpfeile.") . "</font></div>";
-        echo "\n</td></tr></table>";
+        ?>
+
+        <tr>
+            <td class="steel1" colspan="2">
+                <p class="info">
+                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie auf die Doppelpfeile.") ?>
+                </p>
+            </td>
+        </tr>
+        </table>
+        <?
         return TRUE;
     }
 
@@ -651,10 +667,16 @@ function show_all_dates ($date_start, $date_end, $show_docs=FALSE, $show_admin=T
         echo "\n<table class=\"index_box\">";
         echo "\n<tr><td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/meinetermine.gif\" border=\"0\" align=\"texttop\"><b>  " . _("Termine") . "</b></td>";
         echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\" " . tooltip(_("Termine einstellen")) . "></a> </td></tr>";
-        echo "\n<tr><td class=\"steel1\" colspan=\"2\"><div class=\"indent\"><font size=-1>";
-        echo _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie auf die Doppelpfeile.");
-        echo "</font></div>";
-        echo "\n</td></tr></table>";
+        ?>
+        <tr>
+            <td class="steel1" colspan="2">
+                <p class="info">
+                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie auf die Doppelpfeile.") ?>
+                </p>
+            </td>
+        </tr>
+        </table>
+        <?
         return TRUE;
     }
 

@@ -69,9 +69,9 @@ $css_switcher->switchClass();
 <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
     <tr>
         <td class="blank" width="100%" colspan="2" align="center"><br>
-            <div class="indent">
-                <font size="-1"><b><? echo _("Hier k&ouml;nnen Sie die Ansicht Ihres pers&ouml;nlichen Terminkalenders anpassen."); ?></b></font>
-            </div>
+            <p class="info">
+                <b><?= _("Hier k&ouml;nnen Sie die Ansicht Ihres pers&ouml;nlichen Terminkalenders anpassen."); ?></b>
+            </p>
             <form method="post" action="<? echo $PHP_SELF ?>?cmd_cal=chng_cal_settings">
             <table width ="70%" align="center" cellspacing="0" cellpadding="8" border="0">
                 <tr>

@@ -569,7 +569,7 @@ function jumpTo ($month, $day, $year, $colsp = 1) {
     echo "<tr><td width=\"100%\" align=\"center\"";
     if ($colsp > 1)
         echo " colspan=\"$colsp\"";
-    echo ">\n<div class=\"indent\">\n";
+    echo ">\n\n";
     echo "<form action=\"$PHP_SELF?cmd=$cmd\" method=\"post\">\n";
     $currentDate = ($month < 10 ? "0".$month : $month)."/".($day < 10 ? "0".$day : $day)."/".$year;
     echo "<input type=\"text\" style=\"visibility:hidden; width: 0px\" name=\"realdate\" id=\"realdate\" value=\"".$currentDate."\">";
@@ -579,7 +579,7 @@ function jumpTo ($month, $day, $year, $colsp = 1) {
     echo "&nbsp;.&nbsp;<input type=\"text\" name=\"jmp_y\" size=\"4\" maxlength=\"4\" value=\"$year\">";
     echo "&nbsp;<input type=\"image\" " . makeButton("absenden", "src") . " border=\"0\" align=\"absmiddle\">\n";
     echo "<input type=\"hidden\" name=\"atime\" value=\"$atime\">\n";
-    echo "</form>\n</div>\n</td></tr>\n";
+    echo "</form>\n\n</td></tr>\n";
     echo "<tr><td";
     if ($colsp > 1)
         echo " colspan=\"$colsp\"";
@@ -589,7 +589,7 @@ function jumpTo ($month, $day, $year, $colsp = 1) {
 function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
     global $RELATIVE_PATH_CALENDAR, $CANONICAL_RELATIVE_PATH_STUDIP;
     require_once($RELATIVE_PATH_CALENDAR . "/lib/CalendarMonth.class.php");
-    
+
 
     //$js_include = " " . $js_include;
 

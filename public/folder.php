@@ -29,7 +29,7 @@ require '../lib/bootstrap.php';
 
 ob_start();
 page_open(array("sess" => "Seminar_Session",
-    "auth" => "Seminar_Auth", 
+    "auth" => "Seminar_Auth",
     "perm" => "Seminar_Perm", "" .
     "user" => "Seminar_User"));
 
@@ -166,7 +166,7 @@ if (($_REQUEST["moveintofolder"]) && ($_REQUEST["movefile"])) {
     URLHelper::bindLinkParam('data', $folder_system_data);
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     $result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = '".$_REQUEST["movefile"]."'")->fetch();
-    if (($rechte) || (($folder_tree->isWriteable($result['range_id'] , $user->id)) 
+    if (($rechte) || (($folder_tree->isWriteable($result['range_id'] , $user->id))
          && ($folder_tree->isWriteable($result['moveintofolder'] , $user->id)))) {
         $db->query("UPDATE dokumente SET range_id = '".$_REQUEST["moveintofolder"]."', priority = 0 WHERE dokument_id = '".$_REQUEST["movefile"]."'");
     }
@@ -221,7 +221,7 @@ if ($_REQUEST['zipnewest']) {
             "AND ( chdate > '".(($_REQUEST['zipnewest']) ? $_REQUEST['zipnewest'] : time())."' " .
                     "OR mkdate > '".(($_REQUEST['zipnewest']) ? $_REQUEST['zipnewest'] : time())."')")->fetchAll();
     foreach($download_ids as $key => $dl_id) {
-        if ($folder_tree->isReadable($dl_id['range_id'], $user->id) 
+        if ($folder_tree->isReadable($dl_id['range_id'], $user->id)
             && check_protected_download($dl_id['dokument_id']) && $dl_id['url'] == "") {
             $download_ids[$key] = $dl_id['dokument_id'];
         } else {
@@ -319,8 +319,8 @@ if (strpos($open, "_") !== false){
 if ((!$rechte) && $open_cmd) {
     $query = "SELECT user_id,range_id FROM dokumente WHERE dokument_id = ".$db->quote($open_id)."";
     $result = $db->query($query)->fetch();
-    if (($result["user_id"] == $user->id) 
-         && ($result["user_id"] != "nobody") 
+    if (($result["user_id"] == $user->id)
+         && ($result["user_id"] != "nobody")
          && $folder_tree->isWritable($result['range_id'], $user->id))
         $owner=TRUE;
     else
@@ -346,7 +346,7 @@ if ($rechte || $owner || $create_folder_perm) {
         //$open_cmd = null;
         }
 
-    //wurde Code fuer Anlegen von Ordnern der obersten Ebene ubermittelt (=id+"_a_"), 
+    //wurde Code fuer Anlegen von Ordnern der obersten Ebene ubermittelt (=id+"_a_"),
     //wird entsprechende Funktion aufgerufen
     if ($open_cmd == 'a') {
         $permission = 7;
@@ -390,8 +390,8 @@ if ($rechte || $owner || $create_folder_perm) {
             echo createQuestion(sprintf(_('Der ausgewählte Ordner enthält %s Datei(en). Wollen Sie den Ordner wirklich löschen?'), $count), array('open' => $open_id.'_rd_'));
         } else {
             delete_folder($open_id, true);
-            $open_id = $folder_tree->getParents($open_id); 
-            $open_id = $open_id[0]; 
+            $open_id = $folder_tree->getParents($open_id);
+            $open_id = $open_id[0];
             $folder_tree->init();
         }
     }
@@ -399,8 +399,8 @@ if ($rechte || $owner || $create_folder_perm) {
     //Loeschen von Ordnern im wirklich-ernst Mode
     if ($open_cmd == 'rd') {
         delete_folder($open_id, true);
-        $open_id = $folder_tree->getParents($open_id); 
-        $open_id = $open_id[0]; 
+        $open_id = $folder_tree->getParents($open_id);
+        $open_id = $open_id[0];
         $folder_tree->init();
     }
 
@@ -478,7 +478,7 @@ if ($rechte || $owner || $create_folder_perm) {
         }
         unset($open_id);
     }
-    
+
     //wurde Code fuer Hoch-Schieben eines Ordners (=id+"_mfou_") in der Darstellungsreihenfolge ausgewählt?
     if (($open_cmd == 'mfou') && (!$cancel_x)) {
         $result = $db->query("SELECT range_id FROM folder WHERE folder_id = ".$db->quote($open_id))->fetch();
@@ -510,7 +510,7 @@ if ($rechte || $owner || $create_folder_perm) {
         }
         unset($open_id);
     }
-    
+
     //wurde Code für alphabetisches Sortieren (=id+"_az_") fuer Ordner id ausgewählt?
     if (($open_cmd == 'az') && (!$cancel_x)) {
         $result = $db->query("SELECT dokument_id FROM dokumente WHERE range_id = ".$db->quote($open_id)." ORDER BY name ASC, chdate DESC")->fetchAll();
@@ -522,7 +522,7 @@ if ($rechte || $owner || $create_folder_perm) {
             $db->query("UPDATE folder SET priority = ".($i+1)." WHERE folder_id = '".$result[$i]['folder_id']."'");
         }
     }
-    
+
     //wurde Code fuer Kopieren-Vorwaehlen uebermittelt (=id+"_co_"), wird entsprechende Funktion aufgerufen
     if ($open_cmd == 'co' && (!$cancel_x)) {
         $folder_system_data["move"]=$open_id;
@@ -685,7 +685,7 @@ if (isset($open)) {
         $path = $folder_tree->getParents($path);
     }
     for ($i=0; $i < count($path); $i++) {
-        if ($path[$i] != "root") 
+        if ($path[$i] != "root")
             $folder_system_data["open"][$path[$i]] = true;
     }
 }
@@ -796,7 +796,7 @@ echo "\n<body onUnLoad=\"upload_end()\">";
             if ($result2[0] == 0)
                 $select.="\n<option value=\"".$range_id."_a_\">" . _("Allgemeiner Dateiordner") . "</option>";
 
-            
+
             if($SessSemName['class'] == 'sem'){
                 $query = "SELECT statusgruppen.name, statusgruppe_id FROM statusgruppen LEFT JOIN folder ON (statusgruppe_id = folder.range_id) WHERE statusgruppen.range_id='$range_id' AND folder_id IS NULL ORDER BY position";
                 $result2 = $db2->query($query)->fetchAll();
@@ -805,11 +805,11 @@ echo "\n<body onUnLoad=\"upload_end()\">";
                 }
 
                 $query = "SELECT themen_termine.issue_id, termine.date, folder.name, termine.termin_id, date_typ FROM termine LEFT JOIN themen_termine USING (termin_id) LEFT JOIN folder ON (themen_termine.issue_id = folder.range_id) WHERE termine.range_id='$range_id' AND folder.folder_id IS NULL ORDER BY termine.date, name";
-                
+
                 $issues = array();
                 $shown_dates = array();
                 $result2 = $db2->query($query)->fetchAll();
-                
+
                 foreach ($result2 as $row2) {
                     if (!$row2["name"]) {
                         $issue_name = false;
@@ -841,8 +841,7 @@ echo "\n<body onUnLoad=\"upload_end()\">";
             if ($select) {
                 ?>
                 <tr>
-                <td class="blank" colspan="3" width="100%">
-                <div class="indent">
+                <td class="blank" colspan="3" width="100%" style="padding-left:10px;">
                 <form action="<? echo URLHelper::getLink('#anker') ?>" method="POST">
                     <select name="open" style="vertical-align:middle">
                         <? echo $select ?>
@@ -850,7 +849,6 @@ echo "\n<body onUnLoad=\"upload_end()\">";
                     <input type="text" name="top_folder_name" size="50">
                     <input type="image" name="anlegen" value="<?=_("Neuer Ordner")?>" <?=makeButton("neuerordner", "src")?> border="0">
                 </form>
-                </div>
                 <?
                 }
             }
@@ -871,11 +869,11 @@ echo "\n<body onUnLoad=\"upload_end()\">";
 
 
     if ($folder_system_data["cmd"]=="all") {
-        print "<div class=\"indent\"><font size='-1'>";
-        printf (_("Hier sehen Sie alle Dateien, die zu dieser %s eingestellt wurden. Wenn Sie eine neue Datei einstellen m&ouml;chten, w&auml;hlen Sie bitte die Ordneransicht und &ouml;ffnen den Ordner, in den Sie die Datei einstellen wollen."), $SessSemName["art_generic"]); 
-        print "</font></div>";
+        print "<p class=\"info\">";
+        printf (_("Hier sehen Sie alle Dateien, die zu dieser %s eingestellt wurden. Wenn Sie eine neue Datei einstellen m&ouml;chten, w&auml;hlen Sie bitte die Ordneransicht und &ouml;ffnen den Ordner, in den Sie die Datei einstellen wollen."), $SessSemName["art_generic"]);
+        print "</p>";
     }
-    
+
     $lastvisit = object_get_visit($SessSemName[1], "documents");
     $query = "SELECT * " .
             "FROM dokumente " .
@@ -885,18 +883,18 @@ echo "\n<body onUnLoad=\"upload_end()\">";
                     "OR mkdate > '".(($lastvisit) ? $lastvisit : time())."')";
     $result = $db->query($query)->fetchAll();
     if (count($result)>0) {
-        print "<div class=\"indent\"><font size='-1'>";
+        print "<p class=\"info\">";
         print _("Es gibt ");
         print "<b>".(count($result)>1 ? count($result) : _("eine"))."</b>";
         print _(" neue/geänderte Dateie(n). Jetzt ");
         print " <a href=\"".URLHelper::getLink("?zipnewest=".$lastvisit)."\">" . makeButton("herunterladen", "img") . "</a>";
-        print "</font></div>";
+        print "</p>";
     }
-    
+
     print "<div id=\"filesystem_area\">";
     //Treeview in Ordnerstruktur
     if ($folder_system_data["cmd"]=="tree") {
-        
+
         print "<style>
 div.droppable {
     border: 1pt solid white;
@@ -909,7 +907,7 @@ div.droppable.hover {
     margin-bottom: 0;
 }
 </style>";
-        
+
         print '<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr>';
         print "<td class=\"blank\" valign=\"top\" heigth=21 nowrap width=1px>&nbsp;</td>";
         print "<td>";
@@ -919,20 +917,20 @@ div.droppable.hover {
         $folders = $db->query("SELECT folder_id FROM folder WHERE range_id = '$range_id' ORDER BY name")->fetchAll();
         foreach($folders as $general_folder) {
             if ($folder_tree->isExecutable($general_folder["folder_id"], $user->id) || $rechte) {
-                display_folder($general_folder["folder_id"], 
-                        $folder_system_data["open"], 
-                        $change, 
-                        $folder_system_data["move"], 
-                        $folder_system_data["upload"], 
-                        $folder_system_data["refresh"], 
+                display_folder($general_folder["folder_id"],
+                        $folder_system_data["open"],
+                        $change,
+                        $folder_system_data["move"],
+                        $folder_system_data["upload"],
+                        $folder_system_data["refresh"],
                         $folder_system_data["link"],
                         $open_id,
                         NULL,
                         false);
             }
         }
-        
-        
+
+
         //Weitere Ordner:
         $folders = $db->query("SELECT folder_id " .
                 "FROM folder " .
@@ -940,44 +938,44 @@ div.droppable.hover {
                 "ORDER BY name")->fetchAll();
         foreach($folders as $general_folder) {
             if ($folder_tree->isExecutable($general_folder['folder_id'], $user->id) || $rechte) {
-                display_folder($general_folder["folder_id"], 
-                        $folder_system_data["open"], 
-                        $change, 
-                        $folder_system_data["move"], 
-                        $folder_system_data["upload"], 
-                        $folder_system_data["refresh"], 
+                display_folder($general_folder["folder_id"],
+                        $folder_system_data["open"],
+                        $change,
+                        $folder_system_data["move"],
+                        $folder_system_data["upload"],
+                        $folder_system_data["refresh"],
                         $folder_system_data["link"],
                         $open_id,
                         NULL,
                         false);
             }
         }
-        
+
         // Themenordner zu Terminen:
         if($SessSemName['class'] == 'sem') {
             $query = "SELECT DISTINCT folder_id " .
-                "FROM themen as th " . 
+                "FROM themen as th " .
                 "LEFT JOIN themen_termine as tt ON(th.issue_id = tt.issue_id) " .
                 "LEFT JOIN termine as t ON (t.termin_id = tt.termin_id) " .
                 "INNER JOIN folder ON (th.issue_id=folder.range_id) " .
-              "WHERE th.seminar_id='$range_id' " . 
+              "WHERE th.seminar_id='$range_id' " .
               "ORDER BY t.date, th.priority";
             $result = $db->query($query)->fetchAll();
             foreach ($result as $row) {
                 if ($folder_tree->isExecutable($row['folder_id'], $user->id) || $rechte) {
-                  display_folder($row['folder_id'], 
-                      $folder_system_data["open"], 
-                      $change, 
-                      $folder_system_data["move"], 
-                      $folder_system_data["upload"], 
-                      $folder_system_data["refresh"], 
-                      $folder_system_data["link"], 
-                      $open_id, 
-                      NULL, 
+                  display_folder($row['folder_id'],
+                      $folder_system_data["open"],
+                      $change,
+                      $folder_system_data["move"],
+                      $folder_system_data["upload"],
+                      $folder_system_data["refresh"],
+                      $folder_system_data["link"],
+                      $open_id,
+                      NULL,
                       true);
                 }
             }
-            
+
             //Gruppenordner:
             $query = "SELECT sg.statusgruppe_id FROM statusgruppen sg "
                     . (!$rechte ? "INNER JOIN statusgruppe_user sgu ON sgu.statusgruppe_id=sg.statusgruppe_id AND sgu.user_id='$user->id'" : "")
@@ -987,13 +985,13 @@ div.droppable.hover {
                 $folders = $db->query("SELECT folder_id FROM folder WHERE range_id = '".$row2["statusgruppe_id"]."'")->fetchAll();
                 foreach ($folders as $folder) {
                     if ($folder_tree->isExecutable($folder["folder_id"], $user->id) || $rechte) {
-                        display_folder($folder["folder_id"], 
-                            $folder_system_data["open"], 
-                            $change, 
-                            $folder_system_data["move"], 
-                            $folder_system_data["upload"], 
-                            FALSE, 
-                            $folder_system_data["refresh"], 
+                        display_folder($folder["folder_id"],
+                            $folder_system_data["open"],
+                            $change,
+                            $folder_system_data["move"],
+                            $folder_system_data["upload"],
+                            FALSE,
+                            $folder_system_data["refresh"],
                             $folder_system_data["link"],
                             $open_id,
                             NULL,
@@ -1020,57 +1018,57 @@ div.droppable.hover {
         print "<tr><td></td><td><table border=0 cellpadding=0 cellspacing=0 width=\"100%\">" .
                 "<tr>" .
                 "<td class=\"steelgraudunkel\">&nbsp;&nbsp;&nbsp;";
-                
+
         print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "type") ? "?orderby=type" : "?orderby=type_rev"))."\">";
         print "<b>"._("Typ")."</b>".
-            ($folder_system_data['orderby'] == "type" 
-                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">" 
+            ($folder_system_data['orderby'] == "type"
+                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
                 : ($folder_system_data['orderby'] == "type_rev" ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
             "</a>&nbsp;&nbsp; ";
-        
-        
+
+
         print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "filename") ? "?orderby=filename" : "?orderby=filename_rev"))."\">";
         print "<b>"._("Name")."</b>".
-            ($folder_system_data['orderby'] == "filename" 
-                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">" 
+            ($folder_system_data['orderby'] == "filename"
+                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
                 : ($folder_system_data['orderby'] == "filename_rev" ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
             "</a>&nbsp;&nbsp; ";
-        
+
         print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "size_rev") ? "?orderby=size_rev" : "?orderby=size"))."\">";
         print "<b>"._("Größe")."</b>".
-            ($folder_system_data['orderby'] == "size" 
-                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">" 
+            ($folder_system_data['orderby'] == "size"
+                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
                 : ($folder_system_data['orderby'] == "size_rev" ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
             "</a>&nbsp;&nbsp; ";
-        
+
         print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "downloads_rev") ? "?orderby=downloads_rev" : "?orderby=downloads"))."\">";
         print "<b>"._("Downloads")."</b>".
-            ($folder_system_data['orderby'] == "downloads" 
-                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">" 
+            ($folder_system_data['orderby'] == "downloads"
+                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
                 : ($folder_system_data['orderby'] == "downloads_rev" ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
             "</a>&nbsp;&nbsp; ";
-        
+
         print "</td><td class=\"steelgraudunkel\" align=right>";
-        
+
         print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "autor") ? "?orderby=autor" : "?orderby=autor_rev"))."\">";
         print "<b>"._("Autor")."</b>".
-            ($folder_system_data['orderby'] == "autor" 
-                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">" 
+            ($folder_system_data['orderby'] == "autor"
+                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
                 : ($folder_system_data['orderby'] == "autor_rev" ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
             "</a>&nbsp;&nbsp; ";
-        
+
         print "<a href=\"".URLHelper::getLink((($folder_system_data['orderby'] != "date_rev") ? "?orderby=date_rev" : "?orderby=date"))."\">";
         print "<b>"._("Datum")."</b>".
             (($folder_system_data['orderby'] == "date")
-                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">" 
+                ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_hoch\">"
                 : (($folder_system_data['orderby'] == "date_rev") ? "<img style=\"vertical-align:middle\" border=0 src=\"".$GLOBALS['ASSETS_URL']."images/$dreieck_runter\">" : "")).
             "</a>&nbsp;&nbsp; ";
-        
+
         print "</td</tr></table></td><td>";
         print '<tr>';
         print "<td class=\"blank\" valign=\"top\" heigth=21 nowrap width=1px>&nbsp;</td>";
         print "<td id=\"folder_1\">";
-        
+
         //Ordnen nach: Typ, Name, Größe, Downloads, Autor, Alter
         $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, a.user_id, a.*, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name, a.range_id FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_id = '$range_id'";
         if ($folder_system_data['orderby'] == "type")
@@ -1081,44 +1079,44 @@ div.droppable.hover {
             $query .= " ORDER BY t_name ASC, a.chdate DESC";
         if ($folder_system_data['orderby'] == "filename_rev")
             $query .= " ORDER BY t_name DESC, a.chdate ASC";
-        if ($folder_system_data['orderby'] == "size") 
+        if ($folder_system_data['orderby'] == "size")
             $query .= " ORDER BY a.filesize ASC";
-        if ($folder_system_data['orderby'] == "size_rev") 
+        if ($folder_system_data['orderby'] == "size_rev")
             $query .= " ORDER BY a.filesize DESC";
-        if ($folder_system_data['orderby'] == "downloads") 
+        if ($folder_system_data['orderby'] == "downloads")
             $query .= " ORDER BY a.downloads ASC, t_name DESC, a.chdate ASC";
-        if ($folder_system_data['orderby'] == "downloads_rev") 
+        if ($folder_system_data['orderby'] == "downloads_rev")
             $query .= " ORDER BY a.downloads DESC, t_name ASC, a.chdate DESC";
         if ($folder_system_data['orderby'] == "autor")
             $query .= " ORDER BY ". $_fullname_sql['no_title_rev'] ." ASC";
         if ($folder_system_data['orderby'] == "autor_rev")
             $query .= " ORDER BY ". $_fullname_sql['no_title_rev'] ." DESC";
-        if ($folder_system_data['orderby'] == "date") 
+        if ($folder_system_data['orderby'] == "date")
             $query .= " ORDER BY a.chdate ASC";
         if ($folder_system_data['orderby'] == "date_rev")
             $query .= " ORDER BY a.chdate DESC";
         $result2 = $db->query($query)->fetchAll();
         foreach ($result2 as $datei) {
             if ($folder_tree->isReadable($datei['range_id'], $user->id)) {
-                display_file_line($datei, 
-                        $range_id, 
-                        $folder_system_data["open"], 
-                        $change, 
-                        $folder_system_data["move"], 
-                        $folder_system_data["upload"], 
-                        TRUE, 
-                        $folder_system_data["refresh"], 
-                        $folder_system_data["link"], 
+                display_file_line($datei,
+                        $range_id,
+                        $folder_system_data["open"],
+                        $change,
+                        $folder_system_data["move"],
+                        $folder_system_data["upload"],
+                        TRUE,
+                        $folder_system_data["refresh"],
+                        $folder_system_data["link"],
                         $open_id);
             }
         }
-        
+
         //display_folder_system($range_id, 0,$folder_system_data["open"], '', $change, $folder_system_data["move"], $folder_system_data["upload"], TRUE, $folder_system_data["refresh"], $folder_system_data["link"]);
-        
+
         print '</td><td width=1px class="blank">&nbsp;</td></tr>';
     }
     print "<div>";
-    
+
     //und Form wieder schliessen
     if ($change)
         echo "\n</form>";
@@ -1131,7 +1129,7 @@ div.droppable.hover {
         </td>
     </tr>
 </table>
-<script type="text/javascript">  
+<script type="text/javascript">
 //Initialisierung der Ordner und Dateien und verschwinden lassen der gelben Pfeile durch Anfasser:
 STUDIP.Filesystem.unsetarrows();
 STUDIP.Filesystem.setdraggables();
@@ -1143,16 +1141,16 @@ STUDIP.Filesystem.setdroppables();
         if (!$folder_system_data["upload"] && !$folder_system_data["link"])
             print "<tr><td class=\"blank\">&nbsp;</td><td>";
             print " <table border=0 cellpadding=0 cellspacing=0 width=\"100%\">";
-            print " <tr><td class=\"blank\"></td><td class=\"blank\" style=\"font-size: 4px;\">&nbsp;</td><td class=\"blank\"></td></tr>"; 
+            print " <tr><td class=\"blank\"></td><td class=\"blank\" style=\"font-size: 4px;\">&nbsp;</td><td class=\"blank\"></td></tr>";
             print " <tr><td class=\"steelgraudunkel\">&nbsp;";
             print " </td><td class=\"steelgraudunkel\" align=right>";
             print " &nbsp;</td></tr></table>";
             print "</td><td class=\"blank\">&nbsp;</td></tr>";
-            
+
             print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br><a href=\"".URLHelper::getLink("?check_all=TRUE")."\">".makeButton("alleauswaehlen")."</a>&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src").">&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
     }
     print "</table></form>";
-    
+
     print "     <br>
         </td>
     </tr>

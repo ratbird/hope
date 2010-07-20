@@ -11,7 +11,7 @@ foreach ($groups as $group_id => $group_members) {
         ?>
         <tr>
             <td class="blank" colspan="<?= $view == 'ext' ? 7 : 5 ?>">
-                <?= Assets::img("blank.gif", array("size" => "1@5")) ?>
+                <?= Assets::img("blank.gif", array("size" => "1@5", "style" => "display: block;")) ?>
             </td>
         </tr>
         <tr>

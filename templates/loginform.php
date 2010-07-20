@@ -32,17 +32,17 @@ $(function () {
           <table border="0" cellspacing="0" cellpadding="4">
             <tr valign=top align=left>
               <td><label for="loginname"><?=_("Benutzername:")?></label></td>
-              <td><input type="text" class="focus if-empty" id="loginname" name="loginname" value="<?=htmlReady($uname)?>" size="20" maxlength="63"></td>
+              <td><input type="text" <?= strlen($uname) ? '' : 'autofocus' ?> id="loginname" name="loginname" value="<?=htmlReady($uname)?>" size="20" maxlength="63"></td>
             </tr>
 
             <tr valign=top align=left>
               <td><label for="password"><?=_("Passwort:")?></label></td>
-              <td><input type="password" class="focus if-empty" id="password" name="password" size="20"></td>
+              <td><input type="password" <?= strlen($uname) ? 'autofocus' : '' ?> id="password" name="password" size="20"></td>
             </tr>
 
             <tr>
               <td align="center" colspan="2">
-                <?= makeButton("login", "input", _("Login"), "login", "focus")?>
+                <?= makeButton("login", "input", _("Login"), "login")?>
                 &nbsp;
                 <a href="<?=UrlHelper::getLink('index.php?cancel_login=1')?>">
                   <?=makeButton("abbrechen", "img", _("Abbrechen"))?>

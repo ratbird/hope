@@ -1027,12 +1027,12 @@ $(document).ready(function () {
 
   STUDIP.study_area_selection.initialize();
 
-  $('.focus').each(function () {
-    if (!$(this).is('.if-empty') || $(this).val().length === 0) {
-      $(this).focus();
-      return false;
-    }
-  });
+  // autofocus for all browsers
+  var autofocus = $('[autofocus]');
+  if (autofocus[0].autofocus !== true) {
+    autofocus.focus();
+  }
+
   $('textarea.resizable').resizable({
     handles: 's',
     minHeight: 50

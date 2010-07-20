@@ -177,7 +177,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     echo '<tr><td class="blank" align="center" colspan="' . (sizeof($enabled_modules) + 3) . '">';
     ?>
     <p class="info">
-        <?= _("Stud.IP kann Sie bei Änderungen in den einzelnen Inhaltsbereichen Ihrer Veranstaltungen automatisch per Email informieren.<br>Geben Sie hier an, über welche Änderungen Sie informiert werden wollen.") ?>
+        <b><?= _("Stud.IP kann Sie bei Änderungen in den einzelnen Inhaltsbereichen Ihrer Veranstaltungen automatisch per Email informieren.<br>Geben Sie hier an, über welche Änderungen Sie informiert werden wollen.") ?></b>
     </p>
     </td>
     </tr>

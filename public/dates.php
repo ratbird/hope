@@ -320,9 +320,6 @@ if ($cmd == 'openAll') $openAll = true;
             $infobox_template->set_attribute("selectionlist_title", "Semesterauswahl");
             $infobox_template->set_attribute('selectionlist', $semester_selectionlist);
             $infobox_template->set_attribute('rechte', $rechte);
-            if (sizeof($messages) > 0) {
-                $infobox_template->set_attribute('messages', $messages);
-            }
 
             // render template
             echo $infobox_template->render();

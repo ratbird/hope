@@ -1,6 +1,7 @@
 <table cellspacing="0" cellpadding="0" border="0" width="99%">
     <tr>
         <td class="blank" style="padding-left: 8px;" valign="top" width="80%">
+            <?= $this->render_partial('shared/message_list', array('messages' => $messages)); ?>
             <?= $content_for_layout ?>
         </td>
         <td class="blank">&nbsp;</td>

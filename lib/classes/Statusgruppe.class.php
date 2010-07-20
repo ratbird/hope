@@ -322,7 +322,7 @@ class Statusgruppe {
      * * * * * * * * * * * * * * * * * * * */
 
     static function displayOptionsForRoles($roles, $omit_role = false, $level = 0) {
-        foreach ($roles as $role_id => $role) {
+        if (is_array($roles)) foreach ($roles as $role_id => $role) {
             if ($omit_role != $role_id) {
                 echo '<option value="'. $role_id .'">';
                 for ($i = 1; $i <= $level; $i++) echo '&nbsp; &nbsp;';

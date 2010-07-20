@@ -12,11 +12,6 @@
     <td class="infoboxrahmen" width="100%">
     <table align="center" width="99%" border="0" cellpadding="4" cellspacing="0">
 
-      <!-- Statusmeldungen -->
-      <? if ($messages) : ?>
-        <?= $this->render_partial("infobox/infobox_statusmessages_partial.php") ?>
-      <? endif ?>
-
       <!-- Informationen -->
 
       <tr>

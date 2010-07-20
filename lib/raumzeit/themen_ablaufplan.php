@@ -116,12 +116,10 @@ if ($sem->hasDatesOutOfDuration()) {
     $tpl['forceShowAll'] = FALSE;
 }
 
-// create infobox with semester-chooser, view-chooser and status-messages
+// fill values for infobox
 /* * * * * * * * * * * * * * *
  *       I N F O B O X       *
  * * * * * * * * * * * * * * */
-
-$infobox = array();
 
 if ($sem->metadates->art == 0) {
     $times_info .= '<b>'._("Typ").':</b> '._("regelm&auml;&szlig;ige Veranstaltung").'<br>';

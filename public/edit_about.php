@@ -1203,7 +1203,6 @@ if ($view == 'Karriere') {
     $template = $GLOBALS['template_factory']->open('statusgruppen/roles_edit_about');
     $template->set_layout('statusgruppen/layout_edit_about');
     $template->set_attribute('open', $edit_about_data['open']); // the ids of the currently opened statusgroups
-    $template->set_attribute('messages', $msgs);
     $template->set_attribute('institutes', $institutes);
 
     $template->set_attribute('view', $view);

@@ -88,37 +88,6 @@ if ("metadata" in $) {
 }(jQuery));
 
 /* ------------------------------------------------------------------------
- * jQuery plugin "defaultValueActsAsHint"
- * ------------------------------------------------------------------------ */
-
-(function ($) {
-  $.fn.extend({
-    defaultValueActsAsHint: function () {
-      return this.each(function () {
-        if (!$(this).is('input,textarea') || $(this).data('defaultValueActsAsHint')) {
-          return;
-        }
-
-        $(this).focus(function () {
-          if ($(this).val() === $(this).attr('defaultValue')) {
-            $(this).removeClass('hint').val('');
-          }
-        }).blur(function () {
-          if ($(this).val().trim().length === 0) {
-            $(this).addClass('hint').val($(this).attr('defaultValue'));
-          }
-        }).addClass('hint');
-
-        $(this).data('defaultValueActsAsHint', true);
-      });
-    }
-  });
-  $(function () {
-    $('.defaultValueActsAsHint').defaultValueActsAsHint();
-  });
-}(jQuery));
-
-/* ------------------------------------------------------------------------
  * jQuery plugin "addToolbar"
  * ------------------------------------------------------------------------ */
 (function () {
@@ -573,8 +542,8 @@ STUDIP.Tabs = (function () {
  * ------------------------------------------------------------------------ */
 
 /**
- * The dialogbox is an element from jQuery UI that presents content like in 
- * a window that is draggable and resizable. All you need is a title and a 
+ * The dialogbox is an element from jQuery UI that presents content like in
+ * a window that is draggable and resizable. All you need is a title and a
  * content for that window. You can also define an id to identify that window
  * later on. Only one window with the same id will be shown at a time.
  * Also you can define a scope, so only one window of one scope will be shown
@@ -583,17 +552,17 @@ STUDIP.Tabs = (function () {
 STUDIP.Dialogbox = {
   currentScopes: {},
   currentBoxes: {},
-  
+
   openBox: function (id, title, content, coord, scope) {
     if (scope && this.currentBoxes[this.currentScopes[scope]] && (id !== this.currentBoxes[this.currentScopes[scope]])) {
       this.closeScope(scope);
     }
     if (!this.currentBoxes[id]) {
-      $('<div id="Dialogbox_' + id + '">' + content + '</div>').dialog({ 
-        show: 'slide', 
-        hide: 'slide', 
-        title: title, 
-        position: coord, 
+      $('<div id="Dialogbox_' + id + '">' + content + '</div>').dialog({
+        show: 'slide',
+        hide: 'slide',
+        title: title,
+        position: coord,
         width: 460,
         close: function (event, ui) {
           STUDIP.Dialogbox.closeBox(id, true);
@@ -602,17 +571,17 @@ STUDIP.Dialogbox = {
           STUDIP.Dialogbox.closeBox(id, false);
         }
       });
-      
+
       this.currentScopes[scope] = id;
       this.currentBoxes[id] = true;
     }
   },
-  
+
   closeScope: function (scope) {
     $("#Dialogbox_" + this.currentScopes[scope]).dialog('close');
     delete this.currentScopes[scope];
   },
-  
+
   closeBox: function (id, kill) {
     delete this.currentBoxes[id];
     if (kill) {
@@ -621,7 +590,7 @@ STUDIP.Dialogbox = {
       $("#Dialogbox_" + id).attr("id", "#Dialogbox_" + id + "_dragged");
     }
   },
-  
+
   openForumPosting: function (id, element) {
     var coord; //coordinates to give to dialogbox - "center" means center of window
     if (element) {

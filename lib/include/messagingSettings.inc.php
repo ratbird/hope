@@ -162,7 +162,7 @@ function change_messaging_view() {
 
             <td class="blank" width="100%" colspan="2" align="center">
             <p class="info">
-                <b><?print _("Auf dieser Seite k&ouml;nnen Sie die Eigenschaften des Stud.IP-Messagingsystems an Ihre Bed&uuml;rfnisse anpassen.");?>
+                <b><?= _("Auf dieser Seite k&ouml;nnen Sie die Eigenschaften des Stud.IP-Messagingsystems an Ihre Bed&uuml;rfnisse anpassen.") ?></b>
             </p>
             <form action="<?=$PHP_SELF?>?messaging_cmd=change_view_insert" method="post">
             <? if ($reset_txt) {

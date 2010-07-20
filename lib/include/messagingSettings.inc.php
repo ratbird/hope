@@ -161,9 +161,9 @@ function change_messaging_view() {
         <tr>
 
             <td class="blank" width="100%" colspan="2" align="center">
-            <div class="indent">
-                <font size="-1"><b><?print _("Auf dieser Seite k&ouml;nnen Sie die Eigenschaften des Stud.IP-Messagingsystems an Ihre Bed&uuml;rfnisse anpassen.");?>
-            </div>
+            <p class="info">
+                <b><?print _("Auf dieser Seite k&ouml;nnen Sie die Eigenschaften des Stud.IP-Messagingsystems an Ihre Bed&uuml;rfnisse anpassen.");?>
+            </p>
             <form action="<?=$PHP_SELF?>?messaging_cmd=change_view_insert" method="post">
             <? if ($reset_txt) {
                 ?><table width="70%" align="center" cellpadding=8 cellspacing=0 border=0><tr><td align="left" class="steel1"><?

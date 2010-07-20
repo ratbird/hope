@@ -1,9 +1,9 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
     <tr>
         <td class="blank" width="100%" colspan="2" align="center">
-            <div class="indent">
-                <font size="-1"><b><?php echo _("Hier können Sie Ihre Sichtbarkeit im System einstellen."); ?></b></font>
-            </div>
+            <p class="info">
+                <b><?php echo _("Hier können Sie Ihre Sichtbarkeit im System einstellen."); ?></b>
+            </p>
             <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_global_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
                 <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0">
                     <tr>

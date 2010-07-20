@@ -42,17 +42,17 @@ function print_rss($username) {
     $cssSw->switchClass();
 
     $db->query(sprintf("SELECT * FROM auth_user_md5 a, rss_feeds r WHERE a.username='%s' AND a.user_id=r.user_id ORDER BY r.priority",$username));
-    echo "<tr><td align=\"left\" valign=\"top\" class=\"blank\"><div class=\"indent\"><br>";
+    echo "<tr><td align=\"left\" valign=\"top\" class=\"blank\"><p class=\"info\"><br>";
     echo _("Hier können Sie beliebige eigene RSS-Feeds einbinden. Diese RSS-Feeds erscheinen auf Ihrer pers&ouml;nlichen Startseite. Mit den Pfeilsymbolen k&ouml;nnen sie die Reihenfolge, in der die RSS-Feeds angezeigt werden, ver&auml;ndern.");
     echo "<br>\n";
     echo _("<b>Achtung:</b> Je mehr RSS-Feeds Sie definieren, desto l&auml;nger ist die Ladezeit der Startseite f&uuml;r Sie!");
     echo "<br>\n";
 
-    echo "\n<br></div></td></tr>\n<tr><td class=blank><table width=100% class=blank border=0 cellpadding=0 cellspacing=0>";
+    echo "\n<br></p></td></tr>\n<tr><td class=blank><table width=100% class=blank border=0 cellpadding=0 cellspacing=0>";
     echo "<form action=\"$PHP_SELF?rss=update_rss&username=$username&view=$view&show_rss_bsp=$show_rss_bsp\" method=\"POST\" name=\"edit_rss\">";
     if (!$db->num_rows())
-        echo "<tr><td class=\"".$cssSw->getClass()."\"><font size=-1><b><div class=\"indent\">" . _("Es existieren zur Zeit keine eigenen RSS-Feeds.") . "</div></b></font></div></td></tr>\n";
-    echo "<tr><td class=\"".$cssSw->getClass()."\"><div class=\"indent\">" . _("RSS-Feed") . "&nbsp; <a href='$PHP_SELF?rss=create_rss&view=$view&username=$username&show_rss_bsp=$show_rss_bsp'>" . makeButton("neuanlegen") . "</a></div></td></tr>";
+        echo "<tr><td class=\"".$cssSw->getClass()."\"><b><p class=\"info\">" . _("Es existieren zur Zeit keine eigenen RSS-Feeds.") . "</p></b></td></tr>\n";
+    echo "<tr><td class=\"".$cssSw->getClass()."\"><p class=\"info\">" . _("RSS-Feed") . "&nbsp; <a href='$PHP_SELF?rss=create_rss&view=$view&username=$username&show_rss_bsp=$show_rss_bsp'>" . makeButton("neuanlegen") . "</a></p></td></tr>";
     $count = 0;
     while ($db->next_record() ){
 
@@ -62,7 +62,7 @@ function print_rss($username) {
             if ($count)
                 echo "<br>";
             echo "<input type=\"hidden\" name=\"rss_id[]\" value=\"".$db->f("feed_id")."\">\n";
-            echo "<div class=\"indent\">Name:<BR><input type='text' name='rss_name[]' style=\"width: 50%\" value='".htmlReady($db->f("name"))."' size=40>";
+            echo "<div style=\"padding: 10px; margin: 0px;\">Name:<BR><input type='text' name='rss_name[]' style=\"width: 50%\" value='".htmlReady($db->f("name"))."' size=40>";
             echo "&nbsp; &nbsp; &nbsp; <input type=checkbox name='rss_fetch_title[$count]' value='1'";
             IF ($db->f("fetch_title")=='1') echo " checked";
             echo ">" . _("Name des Feeds holen") . "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
@@ -76,14 +76,14 @@ function print_rss($username) {
                 . "&show_rss_bsp=$show_rss_bsp\"><img src=\"". $GLOBALS['ASSETS_URL'] . "images/move_down.gif\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" "
                 . tooltip(_("RSS-Feed nach unten verschieben")) ."></a>";
             }
-            echo "<br>&nbsp;</td></tr>";
-            echo "<tr><td class=\"".$cssSw->getClass()."\"><div class=\"indent\">URL:<BR><input type='text' name='rss_url[]' style=\"width: 50%\" value='".htmlReady($db->f("url"))."' size=40>";
+            echo "<br>&nbsp;</div></td></tr>";
+            echo "<tr><td class=\"".$cssSw->getClass()."\"><div style=\"padding: 10px; margin: 0px;\">URL:<BR><input type='text' name='rss_url[]' style=\"width: 50%\" value='".htmlReady($db->f("url"))."' size=40>";
             echo "&nbsp; &nbsp; &nbsp; <input type=checkbox name='rss_secret[$count]' value='1'";
             IF ($db->f("hidden")=='1') echo " checked";
             echo ">" . _("unsichtbar") . "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
             echo "<br><br><input type='IMAGE' name='update' border=0 align=\"absmiddle\"" . makeButton("uebernehmen", "src") . " value='" . _("ver&auml;ndern") . "'>";
             echo "&nbsp;<a href='$PHP_SELF?rss=delete_rss&rss_id=$id&view=$view&username=$username&show_rss_bsp=$show_rss_bsp'>";
-            echo makeButton("loeschen") . "</a><br>&nbsp; </td></tr>";
+            echo makeButton("loeschen") . "</a><br>&nbsp; </div></td></tr>";
             $count++;
     }
     echo "</form></td></tr></table></td></tr>";

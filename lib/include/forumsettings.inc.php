@@ -48,9 +48,10 @@ if ($forumsend=="bla"){
     </tr>
     <tr>
         <td class="blank" width="100%" colspan="2" align="center">
-        <div class="indent">
-            <font size="-1"><b><?print _("Auf dieser Seite k&ouml;nnen Sie die Bedienung des Stud.IP-Forensystems an Ihre Bed&uuml;rfnisse anpassen.");?>
-        </div>
+        <p class="info">
+            <b><?print _("Auf dieser Seite k&ouml;nnen Sie die Bedienung des Stud.IP-Forensystems an Ihre Bed&uuml;rfnisse anpassen.");?>
+        </p>
+        
 
         <?
         echo "<form action=\"$PHP_SELF?view=$view\" method=\"POST\">";

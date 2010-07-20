@@ -17,10 +17,7 @@
 
   <? elseif ($areas_not_allowed) : ?>
 
-    <div class="effect_highlight" style="padding:1em;">
-      <?= Assets::img('ausruf.gif') ?>
-      <?= _("Für diesen Veranstaltungstyp ist die Zuordnung zu Studienbereichen nicht vorgesehen.") ?>
-    </div>
+    <?= MessageBox::info(_("Für diesen Veranstaltungstyp ist die Zuordnung zu Studienbereichen nicht vorgesehen.")) ?>
 
   <? else : ?>
 

@@ -1,6 +1,6 @@
 <div class="white" style="padding: 1ex;">
     <? if (!$execute): ?>
-        <div class="effect_highlight" style="text-align: center;padding: 10px;">
+        <div style="text-align: center;padding: 10px;">
         <? if ($detail) :?>
             <p><?= _("Wollen Sie die Seite wirklich löschen?") ?></p>
         <? else : ?>

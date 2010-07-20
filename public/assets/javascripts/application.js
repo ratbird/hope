@@ -1020,8 +1020,6 @@ $(document).ready(function () {
   // AJAX Indicator
   STUDIP.ajax_indicator = true;
 
-  // message highlighting
-  $(".effect_highlight").effect('highlight', {}, 2000);
   $('.add_toolbar').addToolbar(STUDIP.Markup.buttonSet);
 
   // compress tabs

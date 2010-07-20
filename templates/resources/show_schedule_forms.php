@@ -343,7 +343,7 @@
             $result = $resReq->searchRooms($_POST['search_exp_room'], FALSE, 0, 10, FALSE, (is_object($resList)) ? array_keys($resList->getRooms()) : FALSE);
         }
         if ($result) {
-            printf ("<span class=\"effect_highlight\"><b>%s</b> ". _("Ressourcen gefunden:")."</span><br>", sizeof($result));
+            echo MessageBox::info(sizeof($result) . " " . _("Ressourcen gefunden:"));
             if($change_schedule_move_or_copy != 'copy'){
                 print "<select name=\"select_change_resource\">";
                 foreach ($result as $key => $val) {
@@ -368,8 +368,9 @@
             echo "<br><br>";
         } else {
             ?>
-            <? if($result !== null) echo '<span class="effect_highlight">'._("<b>Keine</b> Ressource gefunden.").'</span>';?>
-            <br>
+            <? if(isset($result)) : ?>
+                <?= MessageBox::info(_("<b>Keine</b> Ressource gefunden.")) ?>
+            <? endif ?>
             <?=_("Geben Sie zur Suche den Namen der Ressource ganz oder teilweise ein:"); ?>
             <br>
             <input type="text" size="30" maxlength="255" name="search_exp_room">&nbsp;

@@ -127,7 +127,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
             echo"\n<td align = \"right\" class=\"topic\">";
             echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\"" . tooltip(_("News einstellen")) . "></a> ";
             echo"</td></tr>";
-            echo "\n<tr><td class=\"steel1\" colspan=\"3\"><blockquote><font size=\"-1\">" . _("Es sind keine aktuellen News vorhanden. Um neue News zu erstellen, klicken Sie auf die Doppelpfeile.") . "</font></blockquote>";
+            echo "\n<tr><td class=\"steel1\" colspan=\"3\"><p class=\"info\">" . _("Es sind keine aktuellen News vorhanden. Um neue News zu erstellen, klicken Sie auf die Doppelpfeile.") . "</p>";
             echo "\n</td></tr></table>";
             return TRUE;
         } else {

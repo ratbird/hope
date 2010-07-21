@@ -37,15 +37,16 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=WINDOWS-1252">
-        <title><?= $GLOBALS['HTML_HEAD_TITLE'] ?> - <?= htmlReady(PageLayout::getTitle()) ?></title>
+        <title>
+            <?= $GLOBALS['HTML_HEAD_TITLE'] ?> - <?= htmlReady(PageLayout::getTitle()) ?>
+        </title>
+        <?= PageLayout::getHeadElements() ?>
 
         <script>
             STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";
             STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";
             String.locale = "<?= strtr($GLOBALS['_language'], '_', '-') ?>";
         </script>
-
-        <?= PageLayout::getHeadElements() ?>
     </head>
     <body id="<?= PageLayout::getBodyElementId() ?>">
       <?= PageLayout::getBodyElements() ?>

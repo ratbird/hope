@@ -5,14 +5,13 @@
     <title>
       <?= $GLOBALS['HTML_HEAD_TITLE'] ?> - <?= htmlReady(PageLayout::getTitle()) ?>
     </title>
+    <?= PageLayout::getHeadElements() ?>
 
     <script>
       STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";
       STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";
       String.locale = "<?= strtr($GLOBALS['_language'], '_', '-') ?>";
     </script>
-
-    <?= PageLayout::getHeadElements() ?>
   </head>
 
   <body id="<?= $body_id ? $body_id : PageLayout::getBodyElementId() ?>">

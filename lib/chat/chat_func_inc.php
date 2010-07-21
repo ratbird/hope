@@ -197,7 +197,7 @@ function chat_get_content($chatid,$chatter,$chatinv,$password,$is_active,$chat_u
         $ret .= "<img border=\"0\" align=\"absmiddle\" src=\"$pic_path/nochat.gif\" >&nbsp;&nbsp;";
         $ret .= _("Um diesen Chatraum zu betreten, brauchen sie eine g&uuml;ltige Einladung.");
     }
-    $ret .= "\n</font></div></td><td class=\"steel1\" width=\"50%\" valign=\"center\"><div class=\"indent\"><font size=\"-1\">";
+    $ret .= "\n</font></div></td><td class=\"steel1\" width=\"50%\" valign=\"center\"><p class=\"info\">";
     if (!$chatter){
         $ret .= _("Dieser Chatraum ist leer.");
     } else {

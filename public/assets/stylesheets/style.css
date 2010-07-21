@@ -490,7 +490,6 @@ table.collapsable tr.loaded-details td:first-child tr:first-child td:first-child
 
 /* descriptional texts */
 p.info {
-    font-size: 0.8em;
     padding: 10px;
     margin: 0px;
 }

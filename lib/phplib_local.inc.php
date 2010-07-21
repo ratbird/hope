@@ -68,6 +68,7 @@ function studip_default_exception_handler($exception) {
     try {
         echo $GLOBALS['template_factory']->render($template,
                                               compact('exception'));
+        page_close();
     } catch (Exception $e) {
         echo 'Error: ' . htmlspecialchars($e->getMessage());
     }

@@ -33,27 +33,37 @@
 
 require_once 'lib/classes/SimpleORMap.class.php';
 
-define('STUDIPDOCUMENT_DB_TABLE', 'dokumente');
-
 class StudipDocument extends SimpleORMap {
 
-    static function find($id) {
+    protected $db_table = 'dokumente';
+    
+    static function find($id)
+    {
         return SimpleORMap::find(__CLASS__,$id);
     }
     
-    static function findBySql($where) {
+    static function findBySql($where)
+    {
         return SimpleORMap::findBySql(__CLASS__,$where);
     }
     
-    static function findByCourseId($cid) {
+    static function findByCourseId($cid)
+    {
         return self::findBySql("seminar_id = " . DBManager::get()->quote($cid));
     }
     
-    static function findByFolderId($folder_id) {
+    static function findByFolderId($folder_id)
+    {
          return self::findBySql("folder_id = " . DBManager::get()->quote($folder_id));
     }
     
-    function __construct($id = null){
+    static function deleteBySql($where)
+    {
+        return SimpleORMap::deleteBySql(__CLASS__, $where);
+    }
+    
+    function __construct($id = null)
+    {
         parent::__construct($id);
     }
 }

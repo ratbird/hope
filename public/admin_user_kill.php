@@ -1,8 +1,6 @@
 <?php
 # Lifter002: TODO
-# Lifter005: TODO
 # Lifter007: TODO
-# Lifter003: TODO
 /*
 admin_user_kill.php
 Copyright (C) 2005 André Noack <noack@data-quest.de>
@@ -26,55 +24,62 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA   02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
-require_once('lib/functions.php');
-require_once('lib/classes/UserManagement.class.php');
+require_once 'lib/classes/UserManagement.class.php';
+require_once 'vendor/email_message/blackhole_message.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("root");
+unregister_globals();
 
-$sess->register('_kill_user');
-$db = new DB_Seminar();
+$_kill_user =& $_SESSION['_kill_user'];
+
+$db = DBManager::get();
 
 include ('lib/seminar_open.php');       // initialise Stud.IP-Session
 
 //-- hier muessen Seiten-Initialisierungen passieren --
-if (isset($_REQUEST['cancel_x'])){
+if (Request::submitted('cancel')){
     $_kill_user = array();
 }
 
-if (isset($_REQUEST['transfer_search']) && strlen($pers_browse_search_string)){
-    $db->query("SELECT auth_user_md5.*, changed, mkdate FROM auth_user_md5 LEFT JOIN ".$GLOBALS['user']->that->database_table." ON auth_user_md5.user_id = sid LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) $pers_browse_search_string");
+if (Request::int('transfer_search') && strlen($_SESSION['pers_browse_search_string'])) {
+    $rs = $db->query("SELECT auth_user_md5.*, changed, mkdate FROM auth_user_md5 LEFT JOIN ".$GLOBALS['user']->that->database_table." ON auth_user_md5.user_id = sid LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) " . $_SESSION['pers_browse_search_string']);
     $_kill_user = array();
-    while($db->next_record()){
-        $_kill_user[$db->f('username')] = $db->Record;
-        $_kill_user[$db->f('username')]['selected'] = true;
+    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+        $_kill_user[$row['username']] = $row;
+        $_kill_user[$row['username']]['selected'] = true;
     }
     $_kill_user = array_filter($_kill_user, 'is_array');
     $msg[] = MessageBox::info(sprintf(_("%s Benutzer gefunden"), count($_kill_user)));
 }
 
-elseif (isset($_REQUEST['userlist_submit_x']) && trim($_REQUEST['kill_user_list'])){
-    $_kill_user = preg_split("/[\s,;]+/", $_REQUEST['kill_user_list'], -1, PREG_SPLIT_NO_EMPTY);
+elseif (Request::submitted('userlist_submit') && !Request::submitted('cancel') && trim(Request::get('kill_user_list'))) {
+    $_kill_user = preg_split("/[\s,;]+/", Request::get('kill_user_list'), -1, PREG_SPLIT_NO_EMPTY);
     $_kill_user = array_flip($_kill_user);
-    $db->query("SELECT * FROM auth_user_md5 WHERE username IN ('".join("','", array_keys($_kill_user))."')");
-    while($db->next_record()){
-        $_kill_user[$db->f('username')] = $db->Record;
-        $_kill_user[$db->f('username')]['selected'] = true;
+    $rs = $db->query("SELECT * FROM auth_user_md5 WHERE username IN (".join(",", array_map(array($db, 'quote'), array_keys($_kill_user))).")");
+    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
+        $_kill_user[$row['username']] = $row;
+        $_kill_user[$row['username']]['selected'] = true;
     }
     $_kill_user = array_filter($_kill_user, 'is_array');
     $msg[] = MessageBox::info(sprintf(_("%s Benutzer gefunden"), count($_kill_user)));
 }
 
-elseif (isset($_REQUEST['kill_accounts_x']) && check_ticket($_POST['ticket'])){
+elseif (Request::submitted('kill_accounts') && check_ticket(Request::option('studipticket'))) {
     $umanager = new UserManagement();
-    foreach($_kill_user as $uname => $udetail){
-        if (isset($_REQUEST['selected_user'][$uname])){
+    $selected_user = Request::getArray('selected_user');
+    $dev_null = new blackhole_message_class();
+    $default_mailer = StudipMail::getDefaultTransporter();
+    if (!Request::int('send_email')) {
+        StudipMail::setDefaultTransporter($dev_null);
+    }
+    foreach($_kill_user as $uname => $udetail) {
+        if (isset($selected_user[$uname])) {
             $umanager->user_data = array();
             $umanager->msg = '';
             $umanager->getFromDatabase($udetail['user_id']);
-            //wenn keine Email gewünscht, Adresse aus den Daten löschen
-            if (!$_REQUEST['send_email']) $umanager->user_data['auth_user_md5.Email'] = '';
-            if ($umanager->deleteUser()) {
+            
+            if ($umanager->deleteUser(Request::int('delete_documents'))) {
                 $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
                 $msg[] = MessageBox::success(sprintf(_("Der Benutzer <em>%s</em> wurde gelöscht."), $uname), $details);
                 unset($_kill_user[$uname]);
@@ -86,95 +91,82 @@ elseif (isset($_REQUEST['kill_accounts_x']) && check_ticket($_POST['ticket'])){
             $_kill_user[$uname]['selected'] = false;
         }
     }
+    StudipMail::setDefaultTransporter($default_mailer);
 }
+
+ob_start();
 
 PageLayout::setTitle(_("Löschen von Benutzer-Accounts"));
 Navigation::activateItem('/admin/config/new_user');
 
-// Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');  //hier wird der "Kopf" nachgeladen
-
-echo "\n" . cssClassSwitcher::GetHoverJSFunction() . "\n";
-
+if (count($msg) > 0) {
+    foreach ($msg as $message) {
+        echo $message;
+    }
+}
 ?>
-<script type="text/javascript">
-            function invert_selection(){
-                my_elements = document.forms['admin_user_kill'].elements;
-                if(my_elements.length){
-                    for(i = 0; i < my_elements.length; ++i){
-                        if(my_elements[i].name.substring(0,13) == 'selected_user'){
-                            if(my_elements[i].checked) my_elements[i].checked = false;
-                            else my_elements[i].checked = true;
-                        }
-                    }
-                }
-            }
-</script>
-<table border="0" bgcolor="#000000" cellspacing="0" cellpadding="2" width="100%">
-    <tr>
-        <td class="blank">
-        <? if (count($msg) > 0) {
-           foreach ($msg as $message) {
-               echo $message;
-           }
-        } ?>
-       </td>
-    </tr>
-    <tr>
-       <td class="blank">
-        <div style="margin:10px;font-size:10pt;">
-        <form action="<?=$PHP_SELF?>?userlist_submit=1" method="POST">
-        <?=_("Geben sie eine Liste von Nutzernamen (username) ein, die zum Löschen vorgesehen sind. Die Namen können mit Komma, Semikolon, oder whitespaces getrennt sein.")?>
-        <br><br>
-        <textarea name="kill_user_list" rows="10" cols="80" wrap="virtual"><?=(is_array($_kill_user) ? join("\n", array_keys($_kill_user)): '')?></textarea>
-        <br><br><br>
-        <?=MakeButton('absenden', $mode = "input", $tooltip = _("Namen überprüfen"), 'userlist_submit')?>
-        &nbsp;
-        <?=MakeButton('zuruecksetzen', $mode = "input", $tooltip = _("Zurücksetzen"), 'cancel')?>
-        <br>
-        </div>
-        </form>
-        </td>
-    </tr>
-    <?
-    if (count($_kill_user)) {
-        $cssSw = new cssClassSwitcher();
-        $cssSw->enableHover();
-        echo '<tr><td class="blank">';
-        echo '<div style="margin:10px;font-size:10pt;">';
-        echo '<form name="admin_user_kill" method="POST" action="'.$PHP_SELF.'?kill=1">';
-        echo '<input type="hidden" name="ticket" value="'.get_ticket().'">';
-        echo '<table cellpadding="2" cellspacing="0" bgcolor="#eeeeee"  width="100%">';
-        echo chr(10).'<tr><td colspan="5" align="right" class="blank"><img '.makeButton('auswahlumkehr','src').' '.tooltip(_("Auswahl umkehren")) .' border="0" onClick="invert_selection();return false;"></td></tr>';
-        foreach($_kill_user as $username => $userdetail){
-            echo chr(10).'<tr  ' . $cssSw->getHover().'><td ' . $cssSw->getFullClass() . '><b>'
-                . '<a href="new_user_md5.php?details='.$username.'">'.$username . '</a></b></td>';
-            echo chr(10).'<td ' . $cssSw->getFullClass() . '>' . htmlReady(
-                        $userdetail['Vorname'] . ' ' . $userdetail['Nachname'] . ' ('.$userdetail['perms'].')').'</td>';
-            echo chr(10).'<td ' . $cssSw->getFullClass() . '>' . htmlReady($userdetail['Email']) . '</td>';
-            echo chr(10).'<td ' . $cssSw->getFullClass() . '>' . htmlReady(is_null($userdetail['auth_plugin']) ? 'standard' : $userdetail['auth_plugin']) . '</td>';
-            echo chr(10).'<td ' . $cssSw->getFullClass() . ' align="right"><input type="checkbox" value="1" name="selected_user['.$username.']" '
-                .($userdetail['selected'] ? ' checked ' : '') .'></td>';
-            echo chr(10).'</tr>';
-            $cssSw->switchClass();
-        }
-        ?>
-        <tr class="steel2">
-        <td colspan="3" align="right">
-        <?=_("Benachrichtigung per Email verschicken:")?>
-        &nbsp;
-        <input type="checkbox" name="send_email" value="1">
-        </td>
-        <td colspan="2" align="right">
-        <?=makeButton('loeschen', $mode = "input", $tooltip = _("Ausgewählte Nutzeraccounts löschen"), 'kill_accounts')?>
-        </td>
-        </tr>
-        <?
-        echo '</table></div></form></td></tr>';
+<div style="padding-left: 1em;padding-right:1em;">
+<form action="<?=UrlHelper::getLink('?userlist_submit=1')?>" method="POST">
+<?=_("Geben sie eine Liste von Nutzernamen (username) ein, die zum Löschen vorgesehen sind. Die Namen können mit Komma, Semikolon, oder whitespaces getrennt sein.")?>
+<br>
+<br>
+<textarea name="kill_user_list" rows="10" cols="80" wrap="virtual"><?=(is_array($_kill_user) ? join("\n", array_keys($_kill_user)): '')?></textarea>
+<br>
+<br>
+<?=MakeButton('absenden', "input", _("Namen überprüfen"), 'userlist_submit')?>
+&nbsp;<?=MakeButton('zuruecksetzen', "input", _("Zurücksetzen"), 'cancel')?>
+</form>
+</div>
+<?
+if (count($_kill_user)) {
+    echo chr(10).'<div style="padding-left: 1em;padding-right:1em;;">';
+    echo chr(10).'<form name="admin_user_kill" method="POST" action="'.UrlHelper::getLink('', array('kill' => 1)).'">';
+    echo chr(10).'<input type="hidden" name="studipticket" value="'.get_ticket().'">';
+    echo chr(10).'<div style="text-align:right">';
+    echo chr(10).'<img '.makeButton('auswahlumkehr','src').' '.tooltip(_("Auswahl umkehren")) .' onClick="$(\'input[name^=selected_user]\').each(function(i){this.checked = !this.checked;});return false;">';
+    echo chr(10).'</div>';
+    echo chr(10).'<table cellpadding="2" cellspacing="0" width="100%">';
+    echo chr(10).'<tr>';
+    echo '<th align="left">' . _("Benutzername") . '</th>';
+    echo '<th align="left">' . _("Name (status)") . '</th>';
+    echo '<th align="left">' . _("Email") . '</th>';
+    echo '<th align="left">' . _("Authentifizierung") . '</th>';
+    echo '<th width="10">' . _("Löschen?") . '</th>';
+    echo '</tr>';
+    foreach($_kill_user as $username => $userdetail){
+        echo chr(10).'<tr  class="'.TextHelper::cycle('cycle_odd', 'cycle_even') .'">
+        <td style="font-weight:bold"><a href="'.UrlHelper::getLink('new_user_md5.php?details='.$username).'">'.$username . '</a></td>';
+        echo chr(10).'<td>' . htmlReady(
+        $userdetail['Vorname'] . ' ' . $userdetail['Nachname'] . ' ('.$userdetail['perms'].')').'</td>';
+        echo chr(10).'<td>' . htmlReady($userdetail['Email']) . '</td>';
+        echo chr(10).'<td>' . htmlReady(is_null($userdetail['auth_plugin']) ? 'standard' : $userdetail['auth_plugin']) . '</td>';
+        echo chr(10).'<td align="center"><input type="checkbox" value="1" name="selected_user['.$username.']" '
+        .($userdetail['selected'] ? ' checked ' : '') .'></td>';
+        echo chr(10).'</tr>';
     }
     ?>
-</table>
-<?php
-    include ('lib/include/html_end.inc.php');
-    page_close();
+<tr class="steel2">
+	<td colspan="5" align="right">
+	<div>
+	<label for="delete_documents"><?=_("Dokumente der Nutzer löschen:")?></label>
+    <input style="vertical-align:middle" type="checkbox" checked name="delete_documents" id="delete_documents" value="1">
+	</div>
+	<div>
+	<label for="send_email"><?=_("Benachrichtigung per Email verschicken:")?></label>
+	<input style="vertical-align:middle" type="checkbox" checked name="send_email" id="send_email" value="1">
+	</div>
+	<div>
+	<?=makeButton('loeschen', "input",  _("Ausgewählte Nutzeraccounts löschen"), 'kill_accounts')?>
+	</div>
+	</td>
+</tr>
+    <?
+    echo '</table></div></form>';
+}
+
+$layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
+
+$layout->content_for_layout = ob_get_clean();
+
+echo $layout->render();
+page_close();

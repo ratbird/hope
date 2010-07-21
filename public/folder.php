@@ -1070,7 +1070,7 @@ div.droppable.hover {
         print "<td id=\"folder_1\">";
 
         //Ordnen nach: Typ, Name, Größe, Downloads, Autor, Alter
-        $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, a.user_id, a.*, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name, a.range_id FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_id = '$range_id'";
+        $query = "SELECT a.*, ". $_fullname_sql['full'] ." AS fullname,username, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE seminar_id = '$range_id'";
         if ($folder_system_data['orderby'] == "type")
             $query .= " ORDER BY SUBSTRING_INDEX(a.filename, '.', -1) ASC";
         if ($folder_system_data['orderby'] == "type_rev")

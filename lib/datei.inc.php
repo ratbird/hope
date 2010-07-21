@@ -509,14 +509,14 @@ function copy_doc($doc_id, $new_range, $new_sem = false){
         }
         $db->query("INSERT INTO dokumente (seminar_id, range_id,dokument_id,
                     user_id, name, description, filename, mkdate, chdate,
-                    filesize, autor_host, downloads, url, protected) VALUES ( "
+                    filesize, autor_host, downloads, url, protected, author_name) VALUES ( "
                     . ($new_sem ? "'$new_sem'," : "'" . $db->f('seminar_id')."',")
                     . "'$new_range','$new_id', '" . $db->f('user_id')
                     ."','".mysql_escape_string($db->f('name'))."','"
                     .mysql_escape_string($db->f('description'))."', '"
                     .mysql_escape_string($db->f('filename'))."', ".$db->f('mkdate')
                     .",". time().",".$db->f('filesize').", '".$db->f('autor_host')
-                    ."', 0,'".mysql_escape_string($db->f('url'))."',". $db->f('protected').")");
+                    ."', 0,'".mysql_escape_string($db->f('url'))."',". $db->f('protected').",'".mysql_escape_string($db->f('author_name'))."' )");
         return $db->affected_rows();
     } else {
         return false;
@@ -973,6 +973,7 @@ function insert_entry_db($range_id, $sem_id=0, $refresh = FALSE) {
         $doc->setValue('filesize' , $the_file_size);
         $doc->setValue('autor_host' , $_SERVER['REMOTE_ADDR']);
         $doc->setValue('user_id' , $user->id);
+        $doc->setValue('author_name', get_fullname());
         return $doc->store();
     } else {
         return false;
@@ -1128,36 +1129,36 @@ function insert_link_db($range_id, $the_file_size, $refresh = FALSE) {
     $range_id = trim($range_id);        // laestige white spaces loswerden
     $description = trim($description);      // laestige white spaces loswerden
     $name = trim($name);            // laestige white spaces loswerden
-    $dokument_id=md5(uniqid(rand()));
-
-    // $the_file_name = substr(strrchr($the_link,"/"), 1);
-
+    
     $url_parts = parse_url($the_link);
     $the_file_name = basename($url_parts['path']);
 
-    if ($protect=="on")
-        $protect = 1;
+    if ($protect=="on") $protect = 1;
 
-    if (!$name)
-        $name = $the_file_name;
-
-    $db=new DB_Seminar;
-
-        if (!$refresh)
-            $query   = sprintf ("INSERT INTO dokumente SET dokument_id='%s', description='%s', mkdate='%s', chdate='%s', range_id='%s', filename='%s', name='%s', "
-                    . "user_id='%s', seminar_id='%s', filesize='%s', autor_host='%s', url='%s', protected='$protect'",
-                    $dokument_id, $description, $date, $date, $range_id, $the_file_name, $name,
-                    $user_id, $upload_seminar_id, $the_file_size, getenv("REMOTE_ADDR"), $the_link);
-        else
-            $query   = sprintf ("UPDATE dokumente SET dokument_id='%s', chdate='%s', filename='%s', "
-                    . "user_id='%s', filesize='%s', autor_host='%s' WHERE dokument_id = '%s' ",
-                    $dokument_id, $date, $the_file_name, $user_id, $the_file_size, getenv("REMOTE_ADDR"), $refresh);
-
-        $db->query($query);
-        if ($db->affected_rows())
-            return TRUE;
-        else
-            return FALSE;
+    if (!$name) $name = $the_file_name;
+    if (!$refresh) {
+        $doc = new StudipDocument();
+        $doc->description = remove_magic_quotes($description);
+        $doc->name = remove_magic_quotes($name);
+        $doc->range_id = $range_id;
+        $doc->user_id = $user_id;
+        $doc->filename = $the_file_name;
+        $doc->seminar_id = $upload_seminar_id;
+        $doc->filesize = $the_file_size;
+        $doc->url = remove_magic_quotes($the_link);
+        $doc->protected = $protect;
+        $doc->autor_host = $_SERVER['REMOTE_ADDR'];
+        $doc->author_name = get_fullname($user_id);
+        
+    } else {
+        $doc = StudipDocument::find($refresh);
+        $doc->user_id = $user_id;
+        $doc->filename = $the_file_name;
+        $doc->filesize = $the_file_size;
+        $doc->autor_host = $_SERVER['REMOTE_ADDR'];
+        $doc->author_name = get_fullname($user_id);
+    }
+    return $doc->store();
 }
 
 
@@ -1482,8 +1483,11 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
 
     //So und jetzt die rechtsbündigen Sachen:
     print "</a></td><td align=\"right\" class=\"printhead\" valign=\"baseline\">";
-    print "<a href=\"".URLHelper::getLink('about.php?username='.$datei['username'])."\">".htmlReady($datei['fullname'])."</a> ";
-
+    if ($datei['username']) {
+        print "<a href=\"".URLHelper::getLink('about.php?username='.$datei['username'])."\">".htmlReady($datei['fullname'])."</a> ";
+    } else {
+        print htmlReady($datei['author_name']);
+    }
     print $bewegeflaeche." ";
 
     //Workaround for older data from previous versions (chdate is 0)
@@ -1705,10 +1709,8 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
         $countfolder++;
         print "<div class=\"folder_container\" id=\"folder_".$folder_id."\">";
         if (($rechte) || ($folder_tree->isReadable($folder_id, $user->id))) {
-            $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, " .
+            $query = "SELECT a.*,". $_fullname_sql['full'] ." AS fullname, " .
                             "username, " .
-                            "a.user_id, " .
-                            "a.*, " .
                             "IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name " .
                     "FROM dokumente a " .
                             "LEFT JOIN auth_user_md5 USING (user_id) " .
@@ -2422,6 +2424,7 @@ function upload_zip_file($dir_id, $file) {
             $doc->setValue('user_id' , $user->id);
             $doc->setValue('range_id' , $dir_id);
             $doc->setValue('seminar_id' , $upload_seminar_id);
+            $doc->setValue('author_name', get_fullname());
             return $doc->store();
         }
     }

@@ -36,6 +36,7 @@ require_once 'lib/visual.inc.php';
 require_once 'lib/user_visible.inc.php';
 require_once 'lib/classes/UserManagement.class.php';
 require_once('lib/messaging.inc.php');
+require_once 'vendor/email_message/blackhole_message.php';
 
 
 $cssSw = new cssClassSwitcher;
@@ -273,8 +274,18 @@ if (check_ticket($_REQUEST['studipticket'])){
 
             $username = get_username($u_id);
             $question = sprintf(_('Möchten Sie wirklich den User **%s** löschen ?'), $username);
-            echo createQuestion( $question, array("studipticket" => get_ticket(), 'u_kill_id' => $u_id), array('details' => $username));
-
+            echo $GLOBALS['template_factory']->
+                 render('shared/question_form.php',
+                        array('action' => UrlHelper::getLink('',array("studipticket" => get_ticket(), 'u_kill_id' => $u_id)),
+                              'question' => $question,
+                              'elements' => array('<label style="padding-left:0.5em" for="u_kill_documents">'._("Dokumente löschen?").'</label>
+                                                   <input id="u_kill_documents" name="u_kill_documents" value="1" checked type="checkbox">',
+                                                  '<label style="padding-left:0.5em" for="u_kill_send_mail">'._("Emailbenachrichtigung verschicken?").'</label>
+                                                   <input id="u_kill_send_mail" name="u_kill_send_mail" value="1" checked type="checkbox">'
+                                                 ),
+                              'approvalbutton' => makebutton('ja','input', _("Diesen Nutzer löschen."),'u_kill_approved'),
+                              'disapprovalbutton' => makebutton('nein', 'input', _("Löschen abbrechen"),''))
+                             );
             break;
 
         case 'pers_browse_search_x':
@@ -342,10 +353,17 @@ if (check_ticket($_REQUEST['studipticket'])){
         }
     }
 
-    if ($_REQUEST['u_kill_id']) {
-
-        $UserManagement = new UserManagement($_REQUEST['u_kill_id']);
-        $UserManagement->deleteUser();
+    if (Request::option('u_kill_id') && Request::submitted('u_kill_approved')) {
+        $UserManagement = new UserManagement(Request::option('u_kill_id'));
+        if (!Request::int('u_kill_send_mail')) {
+            $dev_null = new blackhole_message_class();
+            $default_mailer = StudipMail::getDefaultTransporter();
+            StudipMail::setDefaultTransporter($dev_null);
+        }
+        $UserManagement->deleteUser(Request::int('u_kill_documents'));
+        if (!Request::int('u_kill_send_mail')) {
+            StudipMail::setDefaultTransporter($default_mailer);
+        }
     }
 
 }

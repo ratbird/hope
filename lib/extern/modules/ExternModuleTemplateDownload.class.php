@@ -189,7 +189,7 @@ class ExternModuleTemplateDownload extends ExternModule {
         $allowed_folders = $folder_tree->getReadableFolders('nobody');
         $query = "SELECT dokument_id, name, description, filename, d.mkdate, d.chdate, filesize, ";
         $query .= $GLOBALS['_fullname_sql'][$nameformat];
-        $query .= "AS fullname, Vorname, Nachname, title_front, title_rear, username, aum.user_id FROM dokumente d LEFT JOIN user_info USING (user_id) ";
+        $query .= "AS fullname, Vorname, Nachname, title_front, title_rear, username, aum.user_id, author_name FROM dokumente d LEFT JOIN user_info USING (user_id) ";
         $query .= "LEFT JOIN auth_user_md5 aum USING (user_id) WHERE ";
         $query .= "seminar_id='$seminar_id' AND range_id IN ('";
         $query .= implode("','", $allowed_folders) . "')$query_order";
@@ -256,7 +256,7 @@ class ExternModuleTemplateDownload extends ExternModule {
                 $content['FILES']['FILE'][$i]['FILE_SIZE'] = $db->f('filesize') > 1048576 ? round($db->f('filesize') / 1048576, 1) . " MB" : round($db->f("filesize") / 1024, 1) . " kB";
                 
                 $content['FILES']['FILE'][$i]['USERNAME'] = $db->f('username');
-                $content['FILES']['FILE'][$i]['FULLNAME'] = ExternModule::ExtHtmlReady($db->f('fullname'));
+                $content['FILES']['FILE'][$i]['FULLNAME'] = ExternModule::ExtHtmlReady($db->f('fullname') ? $db->f('fullname') : $db->f('author_name'));
                 $content['FILES']['FILE'][$i]['FIRSTNAME'] = ExternModule::ExtHtmlReady($db->f('Vorname'));
                 $content['FILES']['FILE'][$i]['LASTNAME'] = ExternModule::ExtHtmlReady($db->f('Nachname'));
                 $content['FILES']['FILE'][$i]['TITLEFRONT'] = ExternModule::ExtHtmlReady($db->f('title_front'));
@@ -267,8 +267,7 @@ class ExternModuleTemplateDownload extends ExternModule {
                 $link_persondetail = '';
                 if (GetRoleNames(GetAllStatusgruppen($this->config->range_id, $db->f('user_id')))) {
                     $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_PERSONDETAIL-HREF'] = $this->elements['LinkInternTemplate']->createUrl('Persondetails', array('link_args' => 'username=' . $db->f('username')));
-                    $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_FULLNAME'] = ExternModule::ExtHtmlReady($db->f('fullname'));
-                    $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_FIRSTNAME'] = ExternModule::ExtHtmlReady($db->f('Vorname'));
+                    $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_FULLNAME'] = ExternModule::ExtHtmlReady($db->f('fullname') ? $db->f('fullname') : $db->f('author_name'));                    $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_FIRSTNAME'] = ExternModule::ExtHtmlReady($db->f('Vorname'));
                     $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_LASTNAME'] = ExternModule::ExtHtmlReady($db->f('Nachname'));
                     $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_TITLEFRONT'] = ExternModule::ExtHtmlReady($db->f('title_front'));
                     $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_TITLEREAR'] = ExternModule::ExtHtmlReady($db->f('title_rear'));

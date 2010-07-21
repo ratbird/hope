@@ -143,7 +143,7 @@ class ExternModuleDownload extends ExternModule {
         $allowed_folders = $folder_tree->getReadableFolders('nobody');
         $query = "SELECT dokument_id, description, filename, d.mkdate, d.chdate, filesize, ";
         $query .= $GLOBALS["_fullname_sql"][$nameformat];
-        $query .= "AS fullname, username, aum.user_id FROM dokumente d LEFT JOIN user_info USING (user_id) ";
+        $query .= "AS fullname, username, aum.user_id, author_name FROM dokumente d LEFT JOIN user_info USING (user_id) ";
         $query .= "LEFT JOIN auth_user_md5 aum USING (user_id) WHERE ";
         $query .= "seminar_id='$seminar_id' AND range_id IN ('";
         $query .= implode("','", $allowed_folders) . "')$query_order";
@@ -239,7 +239,7 @@ class ExternModuleDownload extends ExternModule {
                             htmlReady($db->f('fullname')), 'module' => 'Persondetails',
                             'link_args' => 'username=' . $db->f('username')));
                 } else {
-                    $table_row_data['content']['fullname'] = htmlReady($db->f('fullname'));
+                    $table_row_data['content']['fullname'] = htmlReady($db->f('fullname') ? $db->f('fullname') : $db->f('author_name'));
                 }
                 $out .= $this->elements["TableRow"]->toString($table_row_data);
             }

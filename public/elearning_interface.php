@@ -40,8 +40,8 @@ object_set_visit_module("elearning_interface");
 
 mark_public_course();
 
-$HELP_KEYWORD="Basis.Ilias";
-$CURRENT_PAGE = $SessSemName["header_line"]. " - " . _("Lernmodule");
+PageLayout::setHelpKeyword("Basis.Ilias");
+PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Lernmodule"));
 Navigation::activateItem('/course/elearning/' . Request::get('view'));
 
 include ('lib/include/html_head.inc.php'); // Output of html head

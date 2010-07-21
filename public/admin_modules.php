@@ -55,7 +55,7 @@ $sess->register("admin_modules_data");
 $sess->register("plugin_toggle");
 
 
-$CURRENT_PAGE = _("Verwaltung verwendeter Module und Plugins");
+PageLayout::setTitle(_("Verwaltung verwendeter Module und Plugins"));
 if (Request::get('section') == 'modules') {
     UrlHelper::bindLinkParam('section', $section);
     Navigation::activateItem('/course/modules');
@@ -74,7 +74,7 @@ if ($SessSemName[1])
 //Change header_line if open object
 $header_line = getHeaderLine($range_id);
 if ($header_line)
-    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 //Output starts here
 

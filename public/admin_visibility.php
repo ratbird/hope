@@ -43,7 +43,7 @@ $perm->check($needed_perm);
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once 'lib/admin_search.inc.php';
 
-$CURRENT_PAGE = _("Verwaltung der Sichtbarkeit von Veranstaltungen");
+PageLayout::setTitle(_("Verwaltung der Sichtbarkeit von Veranstaltungen"));
 Navigation::activateItem('/admin/course/visibility');
 
 //get ID from a open Seminar
@@ -55,7 +55,7 @@ else
 //Change header_line if open object
 $header_line = getHeaderLine($header_object_id);
 if ($header_object_id)
-    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 //Output starts here
 

@@ -24,7 +24,7 @@ class DomainAdminController extends AuthenticatedController
      */
     function before_filter (&$action, &$args)
     {
-        global $perm, $template_factory, $CURRENT_PAGE, $HELP_KEYWORD;
+        global $perm, $template_factory;
 
         parent::before_filter($action, $args);
 
@@ -36,8 +36,8 @@ class DomainAdminController extends AuthenticatedController
         $layout->infobox = $this->infobox_content();
         $this->set_layout($layout);
 
-        $CURRENT_PAGE = _('Nutzerdomänen');
-        $HELP_KEYWORD = 'Admins.Nutzerdomaenen';
+        PageLayout::setTitle(_('Nutzerdomänen'));
+        PageLayout::setHelpKeyword('Admins.Nutzerdomaenen');
         Navigation::activateItem('/admin/config/user_domains');
 
         # fetch user domain

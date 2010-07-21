@@ -41,7 +41,8 @@ require_once("lib/blockveranstaltungs_assistent.inc.php");
 require_once("lib/functions.php");
 require_once("lib/exceptions/AccessDeniedException.php");
 
-$_NOHEADER = true; //keinen Header anzeigen
+PageLayout::disableHeader();
+
 /* Ausgabe erzeugen---------------------------------------------------------- */
 //Header
 include ('lib/include/html_head.inc.php');

@@ -57,8 +57,8 @@ $db = new DB_Seminar;
 // we are defintely not in an lecture or institute
 closeObject();
 $links_admin_data='';    //Auch im Adminbereich gesetzte Veranstaltungen muessen geloescht werden.
-$HELP_KEYWORD="Basis.MeinArchiv";
-$CURRENT_PAGE=_("Meine archivierten Veranstaltungen");
+PageLayout::setHelpKeyword("Basis.MeinArchiv");
+PageLayout::setTitle(_("Meine archivierten Veranstaltungen"));
 
 if (!$perm->have_perm('root')) {
     Navigation::activateItem('/browse/my_courses/archive');

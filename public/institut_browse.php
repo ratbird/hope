@@ -35,8 +35,8 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once ('lib/visual.inc.php');
 require_once ('lib/classes/StudipRangeTreeView.class.php');
 
-$HELP_KEYWORD="Basis.SuchenEinrichtungen";
-$CURRENT_PAGE=_("Einrichtungssuche");
+PageLayout::setHelpKeyword("Basis.SuchenEinrichtungen");
+PageLayout::setTitle(_("Einrichtungssuche"));
 Navigation::activateItem('/search/institutes');
 
 // Start of Output

@@ -40,8 +40,8 @@ checkObjectModule("participants");
 
 mark_public_course();
 
-$HELP_KEYWORD="Basis.InVeranstaltungGruppen";
-$CURRENT_PAGE = $SessSemName["header_line"]. " - " . _("Funktionen / Gruppen");
+PageLayout::setHelpKeyword("Basis.InVeranstaltungGruppen");
+PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Funktionen / Gruppen"));
 Navigation::activateItem('/course/members/view_groups');
 
 // Start of Output

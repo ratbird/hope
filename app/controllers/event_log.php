@@ -36,10 +36,10 @@ class EventLogController extends AuthenticatedController
         $this->set_layout($layout);
 
         if ($action === 'show') {
-            $GLOBALS['CURRENT_PAGE'] = _('Anzeige der Log-Events');
+            PageLayout::setTitle(_('Anzeige der Log-Events'));
             Navigation::activateItem('/admin/log/show');
         } else {
-            $GLOBALS['CURRENT_PAGE'] = _('Konfiguration der Logging-Funktionen');
+            PageLayout::setTitle(_('Konfiguration der Logging-Funktionen'));
             Navigation::activateItem('/admin/log/admin');
         }
 

@@ -36,7 +36,7 @@ require_once 'lib/admin_search.inc.php';
 
 // -- here you have to put initialisations for the current page
 
-$CURRENT_PAGE = _("Kopieren der Veranstaltung");
+PageLayout::setTitle(_("Kopieren der Veranstaltung"));
 Navigation::activateItem('/admin/course/copy');
 
 //get ID from a open Institut
@@ -48,7 +48,7 @@ else
 //Change header_line if open object
 $header_line = getHeaderLine($header_object_id);
 if ($header_line)
-    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 //Output starts here
 

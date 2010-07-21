@@ -199,7 +199,7 @@ $request_template->set_attribute('messages', $msg);
 $request_template->set_attribute('link_startpage', sprintf(_("Zurück zur %sStartseite%s."), '<a href="./index.php?cancel_login=1">', '</a>'));
 $request_template->set_attribute('email', $email);
 
-$GLOBALS['HELP_KEYWORD'] = 'Basis.AnmeldungPasswortAnfrage';
+PageLayout::setHelpKeyword('Basis.AnmeldungPasswortAnfrage');
 $header_template = $GLOBALS['template_factory']->open('header');
 $header_template->current_page = _('Passwort anfordern');
 

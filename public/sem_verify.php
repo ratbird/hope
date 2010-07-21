@@ -136,7 +136,7 @@ function seminar_preliminary($seminar_id,$user_id=NULL) {
 }
 
 // Start of Output
-$CURRENT_PAGE = _("Veranstaltungsfreischaltung");
+PageLayout::setTitle(_("Veranstaltungsfreischaltung"));
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 require_once ('lib/dates.inc.php');

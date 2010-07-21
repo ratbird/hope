@@ -37,8 +37,8 @@ require_once ('config.inc.php');
 require_once ('lib/elearning/ELearningUtils.class.php');
 require_once ('lib/elearning/ConnectedCMS.class.php');
 
-$HELP_KEYWORD="Basis.Ilias";
-$CURRENT_PAGE=_("Verwaltung der Lernmodul-Schnittstelle");
+PageLayout::setHelpKeyword("Basis.Ilias");
+PageLayout::setTitle(_("Verwaltung der Lernmodul-Schnittstelle"));
 Navigation::activateItem('/admin/tools/elearning');
 
 include ('lib/include/html_head.inc.php'); // Output of html head

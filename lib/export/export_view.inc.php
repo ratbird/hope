@@ -19,7 +19,7 @@
 if (($o_mode != "direct") AND ($o_mode != "passthrough"))
 {
 // Start of Output
-    $CURRENT_PAGE = $export_pagename;
+    PageLayout::setTitle($export_pagename);
     Navigation::activateItem('/admin/tools/export');
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head

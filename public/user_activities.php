@@ -222,7 +222,7 @@ $queries[$c]['details'] = "details=files";
 ++$c;
 include ('lib/seminar_open.php');       // initialise Stud.IP-Session
 
-$CURRENT_PAGE = _('Informationen zu einem Nutzer');
+PageLayout::setTitle(_('Informationen zu einem Nutzer'));
 Navigation::activateItem('/admin/config/new_user');
 
 // Start of Output

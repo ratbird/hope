@@ -49,10 +49,10 @@ $perm->check ("autor");
 require_once 'lib/functions.php';
 include_once 'lib/seminar_open.php';
 
-$HELP_KEYWORD="Basis.Evaluationen";
+PageLayout::setHelpKeyword("Basis.Evaluationen");
 if ($SessSemName[1])
-    $CURRENT_PAGE = getHeaderLine($SessSemName[1])." - ";
-$CURRENT_PAGE.= _("Verwaltung von Evaluationen");
+    PageLayout::setTitle(getHeaderLine($SessSemName[1])." - ");
+PageLayout::setTitle(_("Verwaltung von Evaluationen"));
 
 require_once ('lib/evaluation/evaluation.config.php');
 require_once 'lib/admin_search.inc.php';

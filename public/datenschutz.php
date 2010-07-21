@@ -29,7 +29,7 @@ page_open(array(
 // set up user session
 include 'lib/seminar_open.php';
 
-$CURRENT_PAGE = _('Erläuterungen zum Datenschutz');
+PageLayout::setTitle(_('Erläuterungen zum Datenschutz'));
 
 $template = $template_factory->open('privacy');
 $template->set_layout('layouts/base_without_infobox');

@@ -70,8 +70,8 @@ object_set_visit_module("wiki");
 
 mark_public_course();
 
-$HELP_KEYWORD="Basis.Wiki"; // Hilfeseite im Hilfewiki
-$CURRENT_PAGE = $SessSemName["header_line"]. " - " . _("Wiki");
+PageLayout::setHelpKeyword("Basis.Wiki"); // Hilfeseite im Hilfewiki
+PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Wiki"));
 
 if (in_array(Request::get('view'), words('listnew listall export'))) {
     Navigation::activateItem('/course/wiki/' . Request::get('view'));

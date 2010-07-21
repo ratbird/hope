@@ -25,7 +25,7 @@ $auth->login_if($auth->auth['uid'] == 'nobody');
 $perm->check("autor");
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-$HELP_KEYWORD="Basis.Ressourcen";// META:in resourcesControl.inc.php verlagern,wenn detaillierter vorhanden
+PageLayout::setHelpKeyword("Basis.Ressourcen");// META:in resourcesControl.inc.php verlagern,wenn detaillierter vorhanden
 
 if (get_config('RESOURCES_ENABLE')) {
     //Steuerung der Ressourcenverwaltung einbinden

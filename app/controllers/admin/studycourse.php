@@ -45,7 +45,7 @@ class Admin_StudycourseController extends AuthenticatedController
      */
     function profession_action()
     {
-        $GLOBALS['CURRENT_PAGE'] = _('Verwaltung der Studiengänge');
+        PageLayout::setTitle(_('Verwaltung der Studiengänge'));
 
         $this->studycourses = StudycourseModel::getStudyCourses();
         //sorting
@@ -68,7 +68,7 @@ class Admin_StudycourseController extends AuthenticatedController
     function degree_action()
     {
         // set variables for view
-        $GLOBALS['CURRENT_PAGE'] = _('Gruppierung von Studienabschlüssen');
+        PageLayout::setTitle(_('Gruppierung von Studienabschlüssen'));
 
         $this->studydegrees = StudycourseModel::getStudyDegrees();
         //sorting
@@ -102,7 +102,7 @@ class Admin_StudycourseController extends AuthenticatedController
             }
         }
 
-        $GLOBALS['CURRENT_PAGE'] = _("Fächer editieren");
+        PageLayout::setTitle(_("Fächer editieren"));
 
         // set variables for view
         $this->edit = StudycourseModel::getStudyCourseInfo($prof_id);
@@ -128,7 +128,7 @@ class Admin_StudycourseController extends AuthenticatedController
             }
         }
 
-        $GLOBALS['CURRENT_PAGE'] = _("Abschlüsse editieren");
+        PageLayout::setTitle(_("Abschlüsse editieren"));
 
         // set variables for view
         $this->edit = StudycourseModel::getStudyDegreeInfo($deg_id);
@@ -212,7 +212,7 @@ class Admin_StudycourseController extends AuthenticatedController
             }
         }
 
-        $GLOBALS['CURRENT_PAGE'] = _("Anlegen von Studienfächern");
+        PageLayout::setTitle(_("Anlegen von Studienfächern"));
 
         $this->infobox = $this-> getInfobox();
     }
@@ -238,7 +238,7 @@ class Admin_StudycourseController extends AuthenticatedController
             }
         }
 
-        $GLOBALS['CURRENT_PAGE'] = _("Anlegen von Studienabschlüssen");
+        PageLayout::setTitle(_("Anlegen von Studienabschlüssen"));
 
         $this->infobox = $this-> getInfobox();
     }

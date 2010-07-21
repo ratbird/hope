@@ -1209,9 +1209,7 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
 
 function format_help_url($keyword) {
     global $auth, $_language;
-    if (!$keyword) {
-        $keyword="Basis.Allgemeines"; //default value
-    }
+
     $helppage=$keyword;
     // encode current user's global perms for help wiki
     $helppage.="?setstudipview=".$auth->auth["perm"];
@@ -1406,11 +1404,9 @@ function mark_public_course($course = NULL) {
 
     // need to handle institutes separately (always visible)
     if ($GLOBALS['SessSemName']['class'] == 'inst') {
-        $GLOBALS["body_class"] = isset($GLOBALS["body_class"])
-                                 ? $GLOBALS["body_class"] . " public_course"
-                                 : "public_course";
         $GLOBALS["SessSemName"]["header_line"] .=
             " (" . _("öffentliche Einrichtung") . ")";
+        PageLayout::addStyle('div#barBottommiddle { background-color: #c53d3d; }');
         return;
     }
 
@@ -1422,14 +1418,12 @@ function mark_public_course($course = NULL) {
     // change class attribute of the body tag and headline if this course is
     // publicly visible
     if ($course->isPublic()) {
-        $GLOBALS["body_class"] = isset($GLOBALS["body_class"])
-                                 ? $GLOBALS["body_class"] . " public_course"
-                                 : "public_course";
         $name = $course->getName();
         $type = $GLOBALS["SessSemName"]["art"];
         $GLOBALS["SessSemName"]["header_line"] =
             getHeaderLine($course->getId(), compact('name', 'type')) .
             " (" . _("öffentliche Veranstaltung") . ")";
+        PageLayout::addStyle('div#barBottommiddle { background-color: #c53d3d; }');
     }
 }
 

@@ -30,7 +30,7 @@ include ("lib/seminar_open.php"); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
 
-$CURRENT_PAGE = _("Studienmodule bearbeiten");
+PageLayout::setTitle(_("Studienmodule bearbeiten"));
 // Start of Output
 include ("lib/include/html_head.inc.php"); // Output of html head
 include ("lib/include/header.php");   // Output of Stud.IP head

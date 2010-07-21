@@ -50,10 +50,10 @@ if (!isset($sem_id)) {
     checkObject();
 }
 
-$HELP_KEYWORD="Basis.InVeranstaltungDetails";
+PageLayout::setHelpKeyword("Basis.InVeranstaltungDetails");
 if ($SessSemName[1] && !isset($sem_id)) $header_object_id = $SessSemName[1];
 else $header_object_id = $sem_id;
-$CURRENT_PAGE = getHeaderLine($header_object_id). " - " . _("Details");
+PageLayout::setTitle(getHeaderLine($header_object_id). " - " . _("Details"));
 
 if (($SessSemName[1] != "") && (!isset($sem_id) || $SessSemName[1] == $sem_id)) {
     Navigation::activateItem('/course/main/details');

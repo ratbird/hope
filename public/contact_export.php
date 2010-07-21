@@ -33,7 +33,7 @@ if (!( (isset($_POST["export_vcard_x"]))
     || (isset($_GET["contactid"]))
     || (isset($_GET["username"]))
     || (isset($_GET["groupid"])) )){
-    $CURRENT_PAGE = _("Adressbuch exportieren");
+    PageLayout::setTitle(_("Adressbuch exportieren"));
     Navigation::activateItem('/community/address_book/export');
 
     require_once('lib/include/html_head.inc.php');

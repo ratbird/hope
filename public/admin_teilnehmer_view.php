@@ -39,7 +39,7 @@ require_once ("config/config.inc.php");     //We need the config for some parame
 require_once ("lib/classes/Table.class.php");
 require_once ("lib/classes/ZebraTable.class.php");
 
-$CURRENT_PAGE = _("Teilnehmeransicht konfigurieren"); 
+PageLayout::setTitle(_("Teilnehmeransicht konfigurieren"));
 Navigation::activateItem('/admin/config/member_view');
 
 // Start  of Output

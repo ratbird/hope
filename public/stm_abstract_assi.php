@@ -689,7 +689,7 @@ class AbstractStmControl{
 
 $perm->check("root"); 
 // Start of Output
-$CURRENT_PAGE = _("Allgemeine Studienmodule bearbeiten");
+PageLayout::setTitle(_("Allgemeine Studienmodule bearbeiten"));
 Navigation::activateItem('/admin/tools/abstract_modules');
 include ("lib/include/html_head.inc.php"); // Output of html head
 include ("lib/include/header.php");   // Output of Stud.IP head

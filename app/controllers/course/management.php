@@ -28,8 +28,8 @@ class Course_ManagementController extends AuthenticatedController {
         if (SeminarCategories::GetBySeminarId($SessSemName[1])->studygroup_mode == true) {
             throw new Exception(_('Dies ist eine Studiengruppe und kein Seminar!'));
         }
-        $GLOBALS['CURRENT_PAGE'] =  _("Veranstaltung verwalten");
-        $GLOBALS['HELP_KEYWORD'] = 'Basis.Veranstaltungsverwaltung';
+        PageLayout::setTitle(_("Veranstaltung verwalten"));
+        PageLayout::setHelpKeyword('Basis.Veranstaltungsverwaltung');
     }
 
     function index_action($section = '')

@@ -105,15 +105,13 @@ if ($mode == "new"){
     $semestersAR = getSemesters();
 }
 elseif ($mode == "edit"){
-    global $UNI_NAME;
-
     // get the basic data
     if ($_POST['template']){
         $template = $_POST['template'];
     };
 
     $university = htmlReady(stripslashes($_POST['university']));
-    if (empty($university)) $university = $UNI_NAME;
+    if (empty($university)) $university = htmlentities($GLOBALS['UNI_NAME_CLEAN']);
     $fieldofstudy = htmlReady(stripslashes($_POST['fieldofstudy']));
     if (empty($fieldofstudy)) $fieldofstudy = getFieldOfStudy();
     $studentname = htmlReady(stripslashes($_POST['studentname']));
@@ -231,8 +229,8 @@ elseif($mode == 'create_pdf'){
 /* displays the site                                                          *
 /*                                                                            *
 /* ************************************************************************* */
-$CURRENT_PAGE = _("Veranstaltungsübersicht erstellen");
-$HELP_KEYWORD="Basis.Allgemeines";
+PageLayout::setTitle(_("Veranstaltungsübersicht erstellen"));
+PageLayout::setHelpKeyword("Basis.Allgemeines");
 Navigation::activateItem('/browse/my_courses/record_of_study');
 
 ob_start();
@@ -240,7 +238,7 @@ if ($mode == "new"){
     printSelectSemester($infobox,$semestersAR);
 }
 elseif ($mode == "edit"){
-    $CURRENT_PAGE .= ': ' . $basicdata["semester"];
+    PageLayout::setTitle(PageLayout::getTitle() . ': ' . $basicdata["semester"]);
 
     // display a notice for the user?
     if (sizeof($seminareAR) > 10)
@@ -251,7 +249,7 @@ elseif ($mode == "edit"){
     printRecordOfStudies($infobox, $basicdata, $seminareAR, $notice);
 }
 elseif ($mode == "pdf_assortment"){
-    $CURRENT_PAGE .= ': ' . $seminars["semester"];
+    PageLayout::setTitle(PageLayout::getTitle() . ': ' . $seminars["semester"]);
     printPdfAssortment($infobox, $seminars);
 }
 elseif ($mode == "create_pdf"){

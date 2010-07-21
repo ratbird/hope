@@ -88,7 +88,7 @@ elseif (isset($_REQUEST['kill_accounts_x']) && check_ticket($_POST['ticket'])){
     }
 }
 
-$CURRENT_PAGE = _("Löschen von Benutzer-Accounts");
+PageLayout::setTitle(_("Löschen von Benutzer-Accounts"));
 Navigation::activateItem('/admin/config/new_user');
 
 // Start of Output

@@ -37,8 +37,8 @@ require_once 'lib/admin_search.inc.php';
 
 // -- here you have to put initialisations for the current page
 
-$HELP_KEYWORD="Basis.VeranstaltungenVerwalten";
-$CURRENT_PAGE = _('Verwaltung von Veranstaltungen');
+PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwalten");
+PageLayout::setTitle(_('Verwaltung von Veranstaltungen'));
 Navigation::activateItem('/admin/course');
 
 // Start of Output

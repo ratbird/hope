@@ -36,7 +36,7 @@ require_once('lib/classes/DataFieldEntry.class.php');
 //Output starts here
 
 include ('lib/include/html_head.inc.php'); // Output of html head
-$CURRENT_PAGE = _("Verwaltung der Regeln für Zusatzangaben");
+PageLayout::setTitle(_("Verwaltung der Regeln für Zusatzangaben"));
 Navigation::activateItem('/admin/config/aux_data');
 
 //get ID from a open Seminar
@@ -46,7 +46,7 @@ if ($SessSemName[1])
 //Change header_line if open object
 $header_line = getHeaderLine($header_object_id);
 if ($header_object_id)
-    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 

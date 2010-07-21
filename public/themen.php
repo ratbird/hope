@@ -62,7 +62,7 @@ if(!$GLOBALS["RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW"]){
     $viewModeFilter = 'simple';
 }
 
-$CURRENT_PAGE = _("Verwaltung der Themen des Ablaufplans");
+PageLayout::setTitle(_("Verwaltung der Themen des Ablaufplans"));
 
 if (Request::get('section') == 'topics') {
     UrlHelper::bindLinkParam('section', $section);
@@ -74,16 +74,16 @@ if (Request::get('section') == 'topics') {
 //Change header_line if open object
 $header_line = getHeaderLine($id);
 if ($header_line)
-    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 switch ($viewModeFilter) {
     case 'expert':
-        $HELP_KEYWORD="Basis.VeranstaltungenVerwaltenAblaufplanExpertenansicht";        
+        PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAblaufplanExpertenansicht");        
         include('lib/raumzeit/themen_expert.php');
         break;
 
     default:
-        $HELP_KEYWORD="Basis.VeranstaltungenVerwaltenAblaufplan";
+        PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAblaufplan");
         include('lib/raumzeit/themen_ablaufplan.php');
         break;
         

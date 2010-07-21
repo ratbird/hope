@@ -30,7 +30,7 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-$HELP_KEYWORD="Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen";
+PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen");
 
 // -- here you have to put initialisations for the current page
 
@@ -62,7 +62,7 @@ if ($RESOURCES_ENABLE) {
     $resList = new ResourcesUserRoomsList($user->id, TRUE, FALSE, TRUE);
 }
 
-$CURRENT_PAGE = _("Verwaltung von Zeiten und Raumangaben");
+PageLayout::setTitle(_("Verwaltung von Zeiten und Raumangaben"));
 if (Request::get('section') == 'dates') {
     UrlHelper::bindLinkParam('section', $section);
     Navigation::activateItem('/course/admin/dates');
@@ -77,7 +77,7 @@ URLHelper::bindLinkParam('sd_open', $sd_open);
 //Change header_line if open object
 $header_line = getHeaderLine($id);
 if ($header_line)
-    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 //Output starts here
 

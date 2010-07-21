@@ -36,7 +36,7 @@ require_once ('config.inc.php');
 include_once ('lib/visual.inc.php');
 require_once ('lib/messaging.inc.php');
 
-$CURRENT_PAGE = _("Lernmodulsuche");
+PageLayout::setTitle(_("Lernmodulsuche"));
 
 if (isset($do_open))
     $print_open_search[$do_open] = true;

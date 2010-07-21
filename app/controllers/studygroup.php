@@ -42,7 +42,7 @@ class StudygroupController extends AuthenticatedController {
         $groups = StudygroupModel::getAllGroups($this->sort, $this->lower_bound, ELEMENTS_PER_PAGE);
 
 
-        $GLOBALS['CURRENT_PAGE'] =  _('Studiengruppen anzeigen');
+        PageLayout::setTitle(_('Studiengruppen anzeigen'));
         Navigation::activateItem('/community/studygroups/all');
         $this->groups = $groups;
         $this->anzahl = $anzahl;
@@ -57,7 +57,7 @@ class StudygroupController extends AuthenticatedController {
     function search_action($page = 1, $sort = "founded_asc")
     {
         //TODO: alle anzeigen vs. suchseite -> navi anpassen
-        $GLOBALS['CURRENT_PAGE'] =  _('Studiengruppen suchen');
+        PageLayout::setTitle(_('Studiengruppen suchen'));
         Navigation::activateItem('/search/studygroups');
         $this->sort = $sort;
         $this->page = $page;

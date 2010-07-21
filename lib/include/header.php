@@ -50,14 +50,10 @@ if ($GLOBALS['USER_VISIBILITY_CHECK'])
    first_decision($GLOBALS['user']->id);
 }
 
-if ($_NOHEADER == true) //Einige Seiten benötigen keinen Header, sprich Navigation (Evaluation usw.)
-{
-    $header_template = $GLOBALS['template_factory']->open('noheader');
-}
-else
+if (PageLayout::isHeaderEnabled()) //Einige Seiten benötigen keinen Header, sprich Navigation (Evaluation usw.)
 {
     $header_template = $GLOBALS['template_factory']->open('header');
-    $header_template->current_page = $GLOBALS['CURRENT_PAGE'];
+    $header_template->current_page = PageLayout::getTitle();
     $header_template->navigation = Navigation::getItem('/')->activeSubNavigation();
     $header_template->link_params = array_fill_keys(array_keys(URLHelper::getLinkParams()), NULL);
 
@@ -76,6 +72,11 @@ else
                                                  _("alle Semester");
     }
 }
+else
+{
+    $header_template = $GLOBALS['template_factory']->open('noheader');
+}
+
 echo $header_template->render();
 
 if ($GLOBALS['SHOW_TERMS_ON_FIRST_LOGIN'] && $GLOBALS['auth']->is_authenticated() && $GLOBALS['user']->id != 'nobody')

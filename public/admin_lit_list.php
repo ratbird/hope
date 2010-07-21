@@ -38,8 +38,8 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 $_attributes['lit_select'] = array('style' => 'font-size:8pt;width:100%');
 
-$HELP_KEYWORD = "Basis.LiteraturListen";
-$CURRENT_PAGE = _("Verwaltung von Literaturlisten");
+PageLayout::setHelpKeyword("Basis.LiteraturListen");
+PageLayout::setTitle(_("Verwaltung von Literaturlisten"));
 
 if (!$sess->is_registered('_lit_range')){
     $sess->register('_lit_range');
@@ -82,7 +82,7 @@ $_lit_range = $_range_id;
 $_the_treeview = new StudipLitListViewAdmin($_range_id);
 $_the_tree =& $_the_treeview->tree;
 
-$CURRENT_PAGE = $_the_tree->root_name . " - " . $CURRENT_PAGE;
+PageLayout::setTitle($_the_tree->root_name . " - " . PageLayout::getTitle());
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head

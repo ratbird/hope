@@ -49,7 +49,7 @@ if(!$_REQUEST['uid'])
 include 'lib/seminar_open.php';
 
 // display header
-$CURRENT_PAGE = _('E-Mail Aktivierung');
+PageLayout::setTitle(_('E-Mail Aktivierung'));
 include 'lib/include/html_head.inc.php'; // Output of html head
 include 'lib/include/header.php';
 
@@ -61,12 +61,12 @@ if(isset($_REQUEST['key'])) {
     if($_REQUEST['key'] == $key) {
         $db->query(sprintf("UPDATE auth_user_md5 SET validation_key='' WHERE user_id='%s'", $uid));
         unset($_SESSION['half_logged_in']);
-        head($CURRENT_PAGE);
+        head(PageLayout::getTitle());
         echo _('Ihre E-Mail Adresse wurde erfolgreich geändert.');
         printf(' <a href="index.php">%s</a>', _('Zum Login'));
         footer();
     } else if ($key == '') {
-        head($CURRENT_PAGE);
+        head(PageLayout::getTitle());
         echo _('Ihre E-Mail Adresse ist bereits geändert.');
         printf(' <a href="index.php">%s</a>', _('Zum Login'));
         footer();
@@ -75,7 +75,7 @@ if(isset($_REQUEST['key'])) {
         echo _("Falcher Bestätigungscode.");
         footer();
 
-        head($CURRENT_PAGE);
+        head(PageLayout::getTitle());
         mail_explain();
         if($_SESSION['semi_logged_in'] == $_REQUEST['uid']) {
             reenter_mail();
@@ -96,7 +96,7 @@ if(isset($_REQUEST['key'])) {
 
         if($send[0]) {
             $_SESSION['semi_logged_in'] = False;
-            head($CURRENT_PAGE);
+            head(PageLayout::getTitle());
             printf(_('An %s wurde ein Aktivierungslink geschickt.'), $_REQUEST['email1']);
             footer();
         } else {
@@ -104,19 +104,19 @@ if(isset($_REQUEST['key'])) {
             echo parse_msg($send[1]);
             footer();
 
-            head($CURRENT_PAGE);
+            head(PageLayout::getTitle());
             reenter_mail();
             footer();
         }
     } else {
-        head($CURRENT_PAGE);
+        head(PageLayout::getTitle());
         printf('<b>%s</b>', _('Die eingegebenen E-Mail Adressen stimmen nicht überein. Bitte überprüfen Sie Ihre Eingabe.'));
         reenter_mail();
         footer();
     }
 } else {
     // this never happens unless someone manipulates urls (or the presented link within the mail is broken)
-    head($CURRENT_PAGE);
+    head(PageLayout::getTitle());
     echo _('Der Aktivierungsschlüssel, der übergeben wurde, ist nicht korrekt.');
     mail_explain();
     footer();

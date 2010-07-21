@@ -113,7 +113,9 @@ require_once('lib/classes/StudipNews.class.php');
 require_once('lib/classes/StudipCacheFactory.class.php');
 require_once 'lib/classes/SessionDecoder.class.php';
 require_once 'lib/classes/StudipMail.class.php';
+require_once 'lib/classes/PageLayout.php';
 
+PageLayout::initialize();
 
 //Besser hier globale Variablen definieren...
 $GLOBALS['_fullname_sql'] = array();
@@ -432,10 +434,7 @@ class Seminar_Auth extends Auth {
         }
         if ($cfg->getValue('MAINTENANCE_MODE_ENABLE') && $actual_perms != 'root'){
             $this->unauth();
-            include_once 'lib/include/html_head.inc.php';
-            parse_window('error§' . _("Das System befindet sich im Wartungsmodus. Zur Zeit ist kein Zugriff möglich."), '§', $GLOBALS['UNI_NAME'] . ' ' . _("Wartungsmodus"), '&nbsp;');
-            include_once 'lib/include/html_end.inc.php';
-            die;
+            throw new AccessDeniedException(_("Das System befindet sich im Wartungsmodus. Zur Zeit ist kein Zugriff möglich."));
         }
         return parent::is_authenticated();
     }
@@ -547,7 +546,7 @@ class Seminar_Auth extends Auth {
             $login_template->set_attribute('uname', (isset($this->auth["uname"]) ? $this->auth["uname"] : $_REQUEST['shortcut']));
             $login_template->set_attribute('self_registration_activated', $GLOBALS['ENABLE_SELF_REGISTRATION']);
         }
-        $GLOBALS['HELP_KEYWORD'] = 'Basis.AnmeldungLogin';
+        PageLayout::setHelpKeyword('Basis.AnmeldungLogin');
         $header_template = $GLOBALS['template_factory']->open('header');
         $header_template->current_page = _('Login');
         $header_template->link_params = array('cancel_login' => 1);
@@ -660,7 +659,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
             $register_template->set_attribute('title_rear', $_POST['title_rear']);
             $register_template->set_attribute('geschlecht', $_POST['geschlecht']);
         }
-        $GLOBALS['HELP_KEYWORD'] = 'Basis.AnmeldungRegistrierung';
+        PageLayout::setHelpKeyword('Basis.AnmeldungRegistrierung');
         $header_template = $GLOBALS['template_factory']->open('header');
         $header_template->current_page = _('Registrierung');
 
@@ -671,7 +670,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
     }
 
     function auth_doregister() {
-        global $username, $password, $Vorname, $Nachname, $geschlecht,$emaildomain,$Email,$title_front,$title_front_chooser,$title_rear,$title_rear_chooser, $CANONICAL_RELATIVE_PATH_STUDIP, $UNI_NAME_CLEAN, $DEFAULT_LANGUAGE;
+        global $username, $password, $Vorname, $Nachname, $geschlecht,$emaildomain,$Email,$title_front,$title_front_chooser,$title_rear,$title_rear_chooser, $DEFAULT_LANGUAGE;
 
         global $_language, $_language_path;
 

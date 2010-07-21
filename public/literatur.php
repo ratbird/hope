@@ -39,8 +39,8 @@ object_set_visit_module("literature");
 
 mark_public_course();
 
-$HELP_KEYWORD="Basis.Literatur";
-$CURRENT_PAGE = $SessSemName["header_line"]. " - " . _("Literatur");
+PageLayout::setHelpKeyword("Basis.Literatur");
+PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Literatur"));
 Navigation::activateItem('/course/literature/view');
 
 // Start of Output

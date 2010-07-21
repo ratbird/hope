@@ -100,8 +100,8 @@ $userConfig = UserConfig::get($GLOBALS['user']->id);
 closeObject();
 $links_admin_data='';    //Auch im Adminbereich gesetzte Veranstaltungen muessen geloescht werden.
 
-$HELP_KEYWORD="Basis.MeineVeranstaltungen";
-$CURRENT_PAGE=_("Meine Veranstaltungen und Einrichtungen");
+PageLayout::setHelpKeyword("Basis.MeineVeranstaltungen");
+PageLayout::setTitle(_("Meine Veranstaltungen und Einrichtungen"));
 if (!$perm->have_perm("root")) {
     Navigation::activateItem('/browse/my_courses/list');
 }

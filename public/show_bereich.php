@@ -97,8 +97,8 @@ if (isset($_REQUEST['send_excel'])){
 }
 ob_end_flush();
 // Start of Output
-$HELP_KEYWORD="Basis.Informationsseite";
-$CURRENT_PAGE = ($level == "s" ? $SessSemName["header_line"]." - " : "").$head_text;
+PageLayout::setHelpKeyword("Basis.Informationsseite");
+PageLayout::setTitle(($level == "s" ? $SessSemName["header_line"]." - " : "").$head_text);
 if (($SessSemName[1]) && ($SessSemName["class"] == "inst")) {
     Navigation::activateItem('/course/main/courses');
 }

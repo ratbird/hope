@@ -29,7 +29,7 @@ class RoleAdminController extends AuthenticatedController
         $perm->check('root');
 
         // set page title and navigation
-        $GLOBALS['CURRENT_PAGE'] = _('Verwaltung von Rollen');
+        PageLayout::setTitle(_('Verwaltung von Rollen'));
         Navigation::activateItem('/admin/tools/roles');
     }
 

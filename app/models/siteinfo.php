@@ -225,11 +225,11 @@ class SiteinfoMarkupEngine {
     }
 
     function version() {
-        return $GLOBALS['SOFTWARE_VERSION'];
+        return htmlentities($GLOBALS['SOFTWARE_VERSION']);
     }
 
     function uniName() {
-        return $GLOBALS['UNI_NAME'];
+        return htmlentities($GLOBALS['UNI_NAME_CLEAN']);
     }
 
     function uniContact() {

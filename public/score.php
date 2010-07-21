@@ -33,8 +33,8 @@ require_once 'lib/classes/Avatar.class.php';
 require_once 'lib/classes/StudipKing.class.php';
 
 //Basics
-$HELP_KEYWORD="Basis.VerschiedenesScore"; // external help keyword
-$CURRENT_PAGE=_("Stud.IP-Score");
+PageLayout::setHelpKeyword("Basis.VerschiedenesScore"); // external help keyword
+PageLayout::setTitle(_("Stud.IP-Score"));
 Navigation::activateItem('/community/score');
 
 define("ELEMENTS_PER_PAGE", 20);

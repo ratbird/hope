@@ -55,7 +55,7 @@ class Admin_ConfigurationController extends AuthenticatedController
         }
         $this->config_filter = $config_filter;
         // set variables for view
-        $GLOBALS['CURRENT_PAGE'] = _('Verwaltung von Systemkonfigurationen');
+        PageLayout::setTitle(_('Verwaltung von Systemkonfigurationen'));
 
         $this->allconfigs = ConfigurationModel::getConfig();
         $this->current_section = $section;
@@ -72,7 +72,7 @@ class Admin_ConfigurationController extends AuthenticatedController
             $this->flash['error'] = _("Bitte geben Sie einen Suchparameter ein.");
             $this->redirect('admin/configuration/configuration');
         }
-        $GLOBALS['CURRENT_PAGE'] = _('Verwaltung von Systemkonfigurationen');
+        PageLayout::setTitle(_('Verwaltung von Systemkonfigurationen'));
     }
 
     /**
@@ -113,7 +113,7 @@ class Admin_ConfigurationController extends AuthenticatedController
         // set variables for view
         $this->edit = ConfigurationModel::getConfigInfo($config_id);
         $this->allconfigs = ConfigurationModel::getConfig();
-        $GLOBALS['CURRENT_PAGE'] = _("Konfigurationsparameter editieren");
+        PageLayout::setTitle(_("Konfigurationsparameter editieren"));
         $this->infobox = $this-> getInfobox();
 
         //ajax
@@ -151,7 +151,7 @@ class Admin_ConfigurationController extends AuthenticatedController
 
         
 
-        $GLOBALS['CURRENT_PAGE'] = _("Verwalten von Nutzerkonfigurationen");
+        PageLayout::setTitle(_("Verwalten von Nutzerkonfigurationen"));
     }
 
     /**
@@ -169,7 +169,7 @@ class Admin_ConfigurationController extends AuthenticatedController
             false;
         }
 
-        $GLOBALS['CURRENT_PAGE'] = _("Konfigurationsparameter editieren");
+        PageLayout::setTitle(_("Konfigurationsparameter editieren"));
         $this->infobox = $this->getInfobox();
 
         //ajax

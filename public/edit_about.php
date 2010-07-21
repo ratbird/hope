@@ -432,84 +432,84 @@ if (check_ticket($studipticket)) {
 
 switch($view) {
     case "Bild":
-        $HELP_KEYWORD="Basis.HomepageBild";
-        $CURRENT_PAGE=_("Hochladen eines persönlichen Bildes");
+        PageLayout::setHelpKeyword("Basis.HomepageBild");
+        PageLayout::setTitle(_("Hochladen eines persönlichen Bildes"));
         Navigation::activateItem('/profil/avatar');
         break;
     case "Daten":
-        $HELP_KEYWORD="Basis.HomepagePersönlicheDaten";
-        $CURRENT_PAGE=_("Benutzerkonto bearbeiten");
+        PageLayout::setHelpKeyword("Basis.HomepagePersönlicheDaten");
+        PageLayout::setTitle(_("Benutzerkonto bearbeiten"));
         Navigation::activateItem('/profil/edit/profile');
         break;
     case "Karriere":
-        $HELP_KEYWORD="Basis.HomepageUniversitäreDaten";
-        $CURRENT_PAGE=_("Einrichtungsdaten bearbeiten");
+        PageLayout::setHelpKeyword("Basis.HomepageUniversitäreDaten");
+        PageLayout::setTitle(_("Einrichtungsdaten bearbeiten"));
         Navigation::activateItem('/profil/edit/inst_data');
         break;
     case 'Studium':
-        $HELP_KEYWORD="Basis.HomepageUniversitäreDaten";
-        $CURRENT_PAGE=_("Studiengang bearbeiten");
+        PageLayout::setHelpKeyword("Basis.HomepageUniversitäreDaten");
+        PageLayout::setTitle(_("Studiengang bearbeiten"));
         Navigation::activateItem('/profil/edit/study_data');
         break;
     case 'userdomains':
-        $HELP_KEYWORD="Basis.HomepageNutzerdomänen";
-        $CURRENT_PAGE=_("Nutzerdomänen bearbeiten");
+        PageLayout::setHelpKeyword("Basis.HomepageNutzerdomänen");
+        PageLayout::setTitle(_("Nutzerdomänen bearbeiten"));
         Navigation::activateItem('/profil/edit/user_domains');
         break;
     case "Lebenslauf":
-        $HELP_KEYWORD="Basis.HomepageLebenslauf";
+        PageLayout::setHelpKeyword("Basis.HomepageLebenslauf");
         if ($auth->auth['perm'] == "dozent")
-            $CURRENT_PAGE =  _("Lebenslauf, Arbeitsschwerpunkte und Publikationen bearbeiten");
+            PageLayout::setTitle(_("Lebenslauf, Arbeitsschwerpunkte und Publikationen bearbeiten"));
         else
-            $CURRENT_PAGE =  _("Lebenslauf bearbeiten");
+            PageLayout::setTitle(_("Lebenslauf bearbeiten"));
         Navigation::activateItem('/profil/edit/private');
         break;
     case "Sonstiges":
-        $HELP_KEYWORD="Basis.HomepageSonstiges";
-        $CURRENT_PAGE=_("Eigene Kategorien bearbeiten");
+        PageLayout::setHelpKeyword("Basis.HomepageSonstiges");
+        PageLayout::setTitle(_("Eigene Kategorien bearbeiten"));
         Navigation::activateItem('/profil/sections');
         break;
     case "Login":
-        $HELP_KEYWORD="Basis.MyStudIPAutoLogin";
-        $CURRENT_PAGE=_("Auto-Login einrichten");
+        PageLayout::setHelpKeyword("Basis.MyStudIPAutoLogin");
+        PageLayout::setTitle(_("Auto-Login einrichten"));
         Navigation::activateItem('/account/login');
         break;
     case "Forum":
-        $HELP_KEYWORD="Basis.MyStudIPForum";
-        $CURRENT_PAGE=_("Einstellungen des Forums anpassen");
+        PageLayout::setHelpKeyword("Basis.MyStudIPForum");
+        PageLayout::setTitle(_("Einstellungen des Forums anpassen"));
         Navigation::activateItem('/account/forum');
         break;
     case "calendar":
-        $HELP_KEYWORD="Basis.MyStudIPTerminkalender";
-        $CURRENT_PAGE=_("Einstellungen des Terminkalenders anpassen");
+        PageLayout::setHelpKeyword("Basis.MyStudIPTerminkalender");
+        PageLayout::setTitle(_("Einstellungen des Terminkalenders anpassen"));
         Navigation::activateItem('/account/calendar');
         break;
     case "Tools":
-        $HELP_KEYWORD="Basis.HomepageTools";
-        $CURRENT_PAGE=_("Benutzer-Tools");
+        PageLayout::setHelpKeyword("Basis.HomepageTools");
+        PageLayout::setTitle(_("Benutzer-Tools"));
         break;
     case "Stundenplan":
-        $HELP_KEYWORD="Basis.MyStudIPStundenplan";
-        $CURRENT_PAGE=_("Einstellungen des Stundenplans anpassen");
+        PageLayout::setHelpKeyword("Basis.MyStudIPStundenplan");
+        PageLayout::setTitle(_("Einstellungen des Stundenplans anpassen"));
         Navigation::activateItem('/account/schedule');
         break;
     case "Messaging":
-        $HELP_KEYWORD="Basis.MyStudIPMessaging";
-        $CURRENT_PAGE=_("Einstellungen des Nachrichtensystems anpassen");
+        PageLayout::setHelpKeyword("Basis.MyStudIPMessaging");
+        PageLayout::setTitle(_("Einstellungen des Nachrichtensystems anpassen"));
         Navigation::activateItem('/account/messaging');
         break;
     case "rss":
-        $HELP_KEYWORD="Basis.MyStudIPRSS";
-        $CURRENT_PAGE=_("Einstellungen der RSS-Anzeige anpassen");
+        PageLayout::setHelpKeyword("Basis.MyStudIPRSS");
+        PageLayout::setTitle(_("Einstellungen der RSS-Anzeige anpassen"));
         Navigation::activateItem('/account/rss');
         break;
     case "allgemein":
-        $CURRENT_PAGE=_("Allgemeine Einstellungen anpassen");
+        PageLayout::setTitle(_("Allgemeine Einstellungen anpassen"));
         Navigation::activateItem('/account/general');
         break;
     case "privacy":
-        $HELP_KEYWORD="Basis.MyStudIPPrivacy";
-        $CURRENT_PAGE=_("Privatsphäre");
+        PageLayout::setHelpKeyword("Basis.MyStudIPPrivacy");
+        PageLayout::setTitle(_("Privatsphäre"));
         if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE') && $my_about->auth_user["user_id"] != $user->id) {
             Navigation::activateItem('/profil/privacy');
         } else {
@@ -517,12 +517,12 @@ switch($view) {
         }
         break;
     case "deputies":
-        $HELP_KEYWORD="Basis.MyStudIPDeputies";
-        $CURRENT_PAGE=_("Standardvertretung");
+        PageLayout::setHelpKeyword("Basis.MyStudIPDeputies");
+        PageLayout::setTitle(_("Standardvertretung"));
         Navigation::activateItem('/account/deputies');
         break;
     default:
-        $HELP_KEYWORD="Basis.MyStudIP";
+        PageLayout::setHelpKeyword("Basis.MyStudIP");
         break;
 }
 

@@ -155,8 +155,8 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
 
-$HELP_KEYWORD="Basis.SymboleFreieVeranstaltungen";
-$CURRENT_PAGE = _("Öffentliche Veranstaltungen");
+PageLayout::setHelpKeyword("Basis.SymboleFreieVeranstaltungen");
+PageLayout::setTitle(_("Öffentliche Veranstaltungen"));
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head

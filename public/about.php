@@ -130,9 +130,11 @@ if (get_config('VOTE_ENABLE')) {
 
 if (get_config('NEWS_RSS_EXPORT_ENABLE')){
     $news_author_id = StudipNews::GetRssIdFromUserId(get_userid($_REQUEST['username']));
-    if($news_author_id){
-        $_include_additional_header .= '<link rel="alternate" type="application/rss+xml" '
-                                    .'title="RSS" href="' . $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'rss.php?id='.$news_author_id.'">';
+    if ($news_author_id) {
+        PageLayout::addHeadElement('link', array('rel'   => 'alternate',
+                                                 'type'  => 'application/rss+xml',
+                                                 'title' => 'RSS',
+                                                 'href'  => 'rss.php?id='.$news_author_id));
     }
 }
 
@@ -172,15 +174,15 @@ $db->query("SELECT * FROM auth_user_md5  WHERE username ='$username'");
 $db->next_record();
 
 // Help
-$HELP_KEYWORD = "Basis.Homepage";
+PageLayout::setHelpKeyword("Basis.Homepage");
 if($db->f('user_id') == $user->id && !$db->f('locked')){
-    $CURRENT_PAGE = _("Mein Profil");
+    PageLayout::setTitle(_("Mein Profil"));
     $user_id = $db->f("user_id");
 } elseif ($db->f('user_id') && ($perm->have_perm("root") || (!$db->f('locked') && get_visibility_by_id($db->f("user_id"))))) {
-    $CURRENT_PAGE = _("Profil")  . ' - ' . get_fullname($db->f('user_id'));
+    PageLayout::setTitle(_("Profil")  . ' - ' . get_fullname($db->f('user_id')));
     $user_id = $db->f("user_id");
 } else {
-    $CURRENT_PAGE = _("Profil");
+    PageLayout::setTitle(_("Profil"));
     unset($user_id);
 }
 # and start the output buffering

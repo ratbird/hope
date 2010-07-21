@@ -42,11 +42,11 @@ require_once 'lib/admin_search.inc.php';
 
 /* 
  * no admin help yet (cf. http://develop.studip.de/trac/ticket/475 )
- * $HELP_KEYWORD="Basis.EinrichtungenVerwaltenGruppen"; 
+ * PageLayout::setHelpKeyword("Basis.EinrichtungenVerwaltenGruppen"); 
  */
-$HELP_KEYWORD="Basis.Allgemeines"; 
+PageLayout::setHelpKeyword("Basis.Allgemeines"); 
 
-$CURRENT_PAGE = _("Verwaltung von Gruppen und Funktionen");
+PageLayout::setTitle(_("Verwaltung von Gruppen und Funktionen"));
 if (Request::get('section') == 'groups') {
     UrlHelper::bindLinkParam('section', $section);
     Navigation::activateItem('/course/faculty/edit_groups');
@@ -65,7 +65,7 @@ URLHelper::bindLinkParam('range_id', $range_id);
 //Change header_line if open object
 $header_line = getHeaderLine($range_id);
 if ($header_line)
-  $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+  PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 //Output starts here
 

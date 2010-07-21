@@ -45,8 +45,8 @@ $perm->check("admin");
 
 require_once 'lib/functions.php';
 
-$HELP_KEYWORD="Basis.EinrichtungenVerwaltenExterneSeiten";
-$CURRENT_PAGE.= _("Verwaltung externer Seiten"); 
+PageLayout::setHelpKeyword("Basis.EinrichtungenVerwaltenExterneSeiten");
+PageLayout::setTitle(_("Verwaltung externer Seiten"));
 
 if ($EXTERN_ENABLE) {
     include($RELATIVE_PATH_EXTERN . "/admin_extern.inc.php");

@@ -42,9 +42,9 @@ require_once ('lib/classes/LockRules.class.php');
 require_once ('lib/classes/SeminarCategories.class.php');
 require_once 'lib/admin_search.inc.php';
 
-$HELP_KEYWORD="Basis.VeranstaltungenVerwaltenGruppen";
+PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenGruppen");
 
-$CURRENT_PAGE = _("Verwaltung von Gruppen und Funktionen");
+PageLayout::setTitle(_("Verwaltung von Gruppen und Funktionen"));
 
 if (Request::get('section') == 'groups') {
     UrlHelper::bindLinkParam('section', $section);
@@ -64,7 +64,7 @@ URLHelper::bindLinkParam('range_id', $range_id);
 //Change header_line if open object
 $header_line = getHeaderLine($range_id);
 if ($header_line)
-  $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+  PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 //Output starts here
 

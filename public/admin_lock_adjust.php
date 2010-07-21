@@ -42,7 +42,7 @@ require_once("lib/classes/Table.class.php");
 require_once("lib/classes/ZebraTable.class.php");
 
 
-$CURRENT_PAGE = _("Sperrebenen von Veranstaltungen anpassen");
+PageLayout::setTitle(_("Sperrebenen von Veranstaltungen anpassen"));
 Navigation::activateItem('/admin/config/lock_rules');
 
 // Start of Output

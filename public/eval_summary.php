@@ -42,9 +42,9 @@ if (EvaluationObjectDB::getEvalUserRangesWithNoPermission($eval) == YES || count
     throw new Exception(_("Diese Evaluation ist nicht vorhanden oder Sie haben nicht ausreichend Rechte!"));
 }
 
-$HELP_KEYWORD="Basis.Evaluationen";
+PageLayout::setHelpKeyword("Basis.Evaluationen");
 Navigation::activateItem('/tools/evaluation');
-$CURRENT_PAGE.= _("Evaluations-Auswertung");
+PageLayout::setTitle(_("Evaluations-Auswertung"));
 
 // Gehoert die benutzende Person zum Seminar-Stab (Dozenten, Tutoren) oder ist es ein ROOT?
 $staff_member = $perm->have_studip_perm("tutor", $SessSemName[1]);

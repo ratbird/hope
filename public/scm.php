@@ -29,7 +29,7 @@ require '../lib/bootstrap.php';
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if($again && ($auth->auth["uid"] == "nobody"));
 
-$HELP_KEYWORD="Basis.Informationsseite";
+PageLayout::setHelpKeyword("Basis.Informationsseite");
 
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
@@ -80,7 +80,7 @@ if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
 
 $scm = new StudipScmEntry($_show_scm);
 
-$CURRENT_PAGE = $SessSemName["header_line"]. " - " . $scm->getValue('tab_name');
+PageLayout::setTitle($SessSemName["header_line"]. " - " . $scm->getValue('tab_name'));
 Navigation::activateItem('/course/scm/' . $_show_scm);
 
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -134,11 +134,9 @@ function scm_change_header($table, $titel, $user_id, $chdate) {
 }
 
 function scm_show_content($range_id, $msg, $scm_id) {
-    global $rechte, $CURRENT_PAGE, $SessSemName;
+    global $rechte, $SessSemName;
 
     $scm = new StudipScmEntry($scm_id);
-
-    $CURRENT_PAGE = ".".$SessSemName["header_line"]. " - " . $scm->getValue("tab_name");
 
     if ($scm_id == 'new_entry') $scm_id = null;
 

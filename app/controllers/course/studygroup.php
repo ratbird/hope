@@ -49,8 +49,8 @@ class Course_StudygroupController extends AuthenticatedController {
                 throw new Exception(_('Dieses Seminar ist keine Studiengruppe!'));
             }
         }
-        $GLOBALS['CURRENT_PAGE'] =  _("Studiengruppe bearbeiten");
-        $GLOBALS['HELP_KEYWORD'] = 'Basis.Studiengruppen';
+        PageLayout::setTitle(_("Studiengruppe bearbeiten"));
+        PageLayout::setHelpKeyword('Basis.Studiengruppen');
         } else {
             throw new Exception(_("Die von Ihnen gewählte Option ist im System nicht aktiviert."));
         }
@@ -66,7 +66,7 @@ class Course_StudygroupController extends AuthenticatedController {
     {
         global $perm;
 
-        $GLOBALS['CURRENT_PAGE'] = getHeaderLine($id) . ' - ' . _('Studiengruppendetails');
+        PageLayout::setTitle(getHeaderLine($id) . ' - ' . _('Studiengruppendetails'));
         //TODO Navigation::activateItem('/course/main/details');
 
         $stmt = DBManager::get()->prepare("SELECT * FROM admission_seminar_user"
@@ -99,7 +99,7 @@ class Course_StudygroupController extends AuthenticatedController {
     {
         closeObject();
 
-        $GLOBALS['CURRENT_PAGE'] = _("Studiengruppe anlegen");
+        PageLayout::setTitle(_("Studiengruppe anlegen"));
         Navigation::activateItem('/community/studygroups/new');
         $this->terms             = Config::Get()->STUDYGROUP_TERMS;
         $this->available_modules = StudygroupModel::getAvailableModules();
@@ -330,7 +330,7 @@ class Course_StudygroupController extends AuthenticatedController {
         // if we are permitted to edit the studygroup get some data...
         if ($perm->have_studip_perm('dozent', $id)) {
 
-            $GLOBALS['CURRENT_PAGE'] = getHeaderLine($id) . ' - ' . _('Studiengruppe bearbeiten');
+            PageLayout::setTitle(getHeaderLine($id) . ' - ' . _('Studiengruppe bearbeiten'));
             Navigation::activateItem('/course/admin');
 
             $sem                     = new Seminar($id);
@@ -473,7 +473,7 @@ class Course_StudygroupController extends AuthenticatedController {
      */
     function members_action($id, $page = 1)
     {
-        $GLOBALS['CURRENT_PAGE'] = getHeaderLine($id) . ' - ' . _("TeilnehmerInnen");
+        PageLayout::setTitle(getHeaderLine($id) . ' - ' . _("TeilnehmerInnen"));
         Navigation::activateItem('/course/members');
 
         $sem          = new Seminar($id);
@@ -648,7 +648,7 @@ class Course_StudygroupController extends AuthenticatedController {
     {
         global $perm;
         $perm->check("root");
-        $GLOBALS['HELP_KEYWORD'] = 'Admin.Studiengruppen';
+        PageLayout::setHelpKeyword('Admin.Studiengruppen');
 
         // get available modules
         $modules = StudygroupModel::getInstalledModules() + StudygroupModel::getInstalledPlugins();
@@ -671,7 +671,7 @@ class Course_StudygroupController extends AuthenticatedController {
         }
         if ($this->flash['terms']) $terms = $this->flash['terms'];
 
-        $GLOBALS['CURRENT_PAGE'] = _('Verwaltung studentischer Arbeitsgruppen');
+        PageLayout::setTitle(_('Verwaltung studentischer Arbeitsgruppen'));
         Navigation::activateItem('/admin/config/studygroup');
 
         $db = DBManager::get()->query("SELECT COUNT(*) as c FROM seminare"
@@ -698,7 +698,7 @@ class Course_StudygroupController extends AuthenticatedController {
     {
         global $perm;
         $perm->check("root");
-        $GLOBALS['HELP_KEYWORD'] = 'Admin.Studiengruppen';
+        PageLayout::setHelpKeyword('Admin.Studiengruppen');
 
         foreach (Request::getArray('modules') as $key => $value) {
             if ($value=='invalid') {
@@ -757,7 +757,7 @@ class Course_StudygroupController extends AuthenticatedController {
     {
         global $perm;
         $perm->check("root");
-        $GLOBALS['HELP_KEYWORD'] = 'Admin.Studiengruppen';
+        PageLayout::setHelpKeyword('Admin.Studiengruppen');
 
         $db = DBManager::get()->query("SELECT COUNT(*) as c FROM seminare"
                 . " WHERE status IN ('" . implode("', '", studygroup_sem_types()) . "')");

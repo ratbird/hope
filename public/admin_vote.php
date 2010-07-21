@@ -46,8 +46,8 @@ $perm->check ("autor");
 require_once 'lib/functions.php';
 include_once 'lib/seminar_open.php';
 
-$HELP_KEYWORD="Basis.Votings";
-$CURRENT_PAGE= _("Verwaltung von Umfragen und Tests");
+PageLayout::setHelpKeyword("Basis.Votings");
+PageLayout::setTitle(_("Verwaltung von Umfragen und Tests"));
 
 require_once 'lib/admin_search.inc.php';
 

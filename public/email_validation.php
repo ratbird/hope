@@ -42,8 +42,8 @@ $magic     = "dsdfjhgretha";  // Challenge seed.
 $hash = md5("$user->id:$magic");
 // hier wird noch mal berechnet, welches secret in der Bestaetigungsmail uebergeben wurde
 
-$HELP_KEYWORD="Basis.AnmeldungMail";
-$CURRENT_PAGE= _("Aktivierung");
+PageLayout::setHelpKeyword("Basis.AnmeldungMail");
+PageLayout::setTitle(_("Aktivierung"));
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head

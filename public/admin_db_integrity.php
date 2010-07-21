@@ -45,7 +45,7 @@ $perm->check("root");
 require_once 'lib/msg.inc.php'; 
 require_once 'lib/visual.inc.php';
 
-$CURRENT_PAGE = _("Überprüfen der Datenbank-Integrität");
+PageLayout::setTitle(_("Überprüfen der Datenbank-Integrität"));
 Navigation::activateItem('/admin/tools/db_integrity');
 
 include 'lib/seminar_open.php'; //hier werden die sessions initialisiert

@@ -88,7 +88,7 @@ if ($auth->auth["uid"] != "nobody"){
 
 
 // Start of Output
-$_html_head_title = "Stud.IP IM (" . $auth->auth["uname"] . ")";
+PageLayout::setTitle(sprintf(_('Messenger (%s)'), $auth->auth['uname']));
 $_SESSION['messenger_started'] = true; //html_head should NOT try to open us again!
 include ('lib/include/html_head.inc.php'); // Output of html head
 ?>

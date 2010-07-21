@@ -56,7 +56,7 @@ $cssSw->enableHover();
 closeObject();
 $links_admin_data='';    //Auch im Adminbereich gesetzte Veranstaltungen muessen geloescht werden.
 
-$CURRENT_PAGE = _("Meine Studienmodule");
+PageLayout::setTitle(_("Meine Studienmodule"));
 if (!$perm->have_perm('root')) {
     Navigation::activateItem('/browse/my_courses/modules');
 }

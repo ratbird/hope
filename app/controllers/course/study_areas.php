@@ -62,7 +62,7 @@ class Course_StudyAreasController extends AuthenticatedController {
 
     # w/o a course ID show the admin search form
     if ($course_id === '') {
-      $GLOBALS['CURRENT_PAGE'] = _('Studienbereichsauswahl');
+      PageLayout::setTitle(_('Studienbereichsauswahl'));
 
       require_once 'lib/admin_search.inc.php';
 
@@ -73,9 +73,9 @@ class Course_StudyAreasController extends AuthenticatedController {
 
     $this->set_course($course_id);
 
-    $GLOBALS['CURRENT_PAGE'] = sprintf('%s - %s',
-                                       (getHeaderLine($course_id)),
-                                       _('Studienbereichsauswahl'));
+    PageLayout::setTitle(sprintf('%s - %s',
+                                 getHeaderLine($course_id),
+                                 _('Studienbereichsauswahl')));
 
     # is locked?
     # TODO (mlunzena) shouldn't this be done in the before filter?

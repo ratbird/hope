@@ -23,7 +23,7 @@ class SiteinfoController extends TrailsController
      */
     function before_filter (&$action, &$args)
     {
-        global $perm, $template_factory, $CURRENT_PAGE;
+        global $perm, $template_factory;
 
         # open session
         page_open(array('sess' => 'Seminar_Session',
@@ -49,7 +49,7 @@ class SiteinfoController extends TrailsController
             $this->layout = $template_factory->open('layouts/base_without_infobox');
         }
         $this->set_layout($this->layout);
-        $CURRENT_PAGE = _('Impressum');
+        PageLayout::setTitle(_('Impressum'));
     }
 
     function populate_ids($args)

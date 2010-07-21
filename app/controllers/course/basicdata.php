@@ -22,8 +22,7 @@ class Course_BasicdataController extends AuthenticatedController {
      * Wichtige Daten dazu wurden dann über $this->flash übertragen.
      */
     public function view_action() {
-        global $SessSemName, $user, $perm, $HELP_KEYWORD, $CURRENT_PAGE, $_fullname_sql,
-        $SEM_CLASS, $SEM_TYPE;
+        global $SessSemName, $user, $perm, $_fullname_sql, $SEM_CLASS, $SEM_TYPE;
         
         $deputies_enabled = get_config('DEPUTIES_ENABLE');
         
@@ -49,7 +48,7 @@ class Course_BasicdataController extends AuthenticatedController {
         
         //Auswähler für Admin-Bereich:
         if (!$this->course_id) {
-            $GLOBALS['CURRENT_PAGE'] = _('Studienbereichsauswahl');
+            PageLayout::setTitle(_('Studienbereichsauswahl'));
             $GLOBALS['view_mode'] = "sem";
 
             require_once 'lib/admin_search.inc.php';
@@ -66,10 +65,10 @@ class Course_BasicdataController extends AuthenticatedController {
         }
         
         //Kopf initialisieren:
-        $HELP_KEYWORD = "Basis.VeranstaltungenVerwaltenGrunddaten";
-        $GLOBALS['CURRENT_PAGE'] .= _("Verwaltung der Grunddaten");
+        PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenGrunddaten");
+        PageLayout::setTitle(_("Verwaltung der Grunddaten"));
         if (getHeaderLine($this->course_id)) {
-            $GLOBALS['CURRENT_PAGE'] = getHeaderLine($this->course_id)." - ".$CURRENT_PAGE;
+            PageLayout::setTitle(getHeaderLine($this->course_id)." - ".PageLayout::getTitle());
         }
         
         //Daten sammeln:

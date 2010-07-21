@@ -57,8 +57,8 @@ if (!$MAIL_NOTIFICATION_ENABLE) {
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-$HELP_KEYWORD="Basis.MyStudIPBenachrichtigung";
-$CURRENT_PAGE=_("Benachrichtigung über neue Inhalte anpassen");
+PageLayout::setHelpKeyword("Basis.MyStudIPBenachrichtigung");
+PageLayout::setTitle(_("Benachrichtigung über neue Inhalte anpassen"));
 Navigation::activateItem('/account/notification');
 
 include('lib/include/html_head.inc.php'); // Output of html head

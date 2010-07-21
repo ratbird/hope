@@ -46,7 +46,7 @@ if (Request::submitted('general_lock')) {
     $message = 'info§' . _("Diese Daten sind noch nicht gespeichert.");
 }
 
-$CURRENT_PAGE = _("Sperren von Veranstaltungen");
+PageLayout::setTitle(_("Sperren von Veranstaltungen"));
 Navigation::activateItem('/admin/course/lock_rules');
 
 // Start of Output

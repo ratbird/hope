@@ -54,11 +54,11 @@ echo $css_switcher->GetHoverJSFunction();
 // or for just displaying the workers and their roles
 if (Request::get('section') == 'personal') {
     UrlHelper::bindLinkParam('section', $section);
-    $CURRENT_PAGE = _("Liste der MitarbeiterInnen");
+    PageLayout::setTitle(_("Liste der MitarbeiterInnen"));
     Navigation::activateItem('/course/faculty/view');
     $perm->check("autor");
 } else {
-    $CURRENT_PAGE = _("Verwaltung der MitarbeiterInnen");
+    PageLayout::setTitle(_("Verwaltung der MitarbeiterInnen"));
     Navigation::activateItem('/admin/institute/faculty');
     $perm->check("admin");
 }
@@ -81,7 +81,7 @@ if (!$admin_view) {
 //Change header_line if open object
 $header_line = getHeaderLine($inst_id);
 if ($header_line)
-  $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+  PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 // Start of Output
 include ("lib/include/html_head.inc.php"); // Output of html head

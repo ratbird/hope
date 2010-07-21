@@ -37,8 +37,8 @@ $perm->check("autor");
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-$HELP_KEYWORD = "Basis.Literatursuche";
-$CURRENT_PAGE = _("Literatursuche");
+PageLayout::setHelpKeyword("Basis.Literatursuche");
+PageLayout::setTitle(_("Literatursuche"));
 Navigation::activateItem('/search/literatures');
 
 // Start of Output

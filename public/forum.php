@@ -42,37 +42,35 @@ object_set_visit_module("forum");
 mark_public_course();
 
 if ($forumsend && $forumsend!="bla") {
-    $HELP_KEYWORD="Basis.ForumEinstellungen";
-    $CURRENT_PAGE = _("Einstellungen des Forums anpassen");
+    PageLayout::setHelpKeyword("Basis.ForumEinstellungen");
+    PageLayout::setTitle(_("Einstellungen des Forums anpassen"));
     Navigation::activateItem('/course/forum/settings');
 } elseif(isset($neuesthema)) {
-    $HELP_KEYWORD="Basis.ForumBeteiligen";
-    $CURRENT_PAGE = $SessSemName["header_line"]. " - " . _("Forum");
+    PageLayout::setHelpKeyword("Basis.ForumBeteiligen");
+    PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Forum"));
     Navigation::activateItem('/course/forum/view');
 } else {
     switch($view) {
         case "neue":
-            $HELP_KEYWORD="Basis.ForumNeu";
+            PageLayout::setHelpKeyword("Basis.ForumNeu");
             Navigation::activateItem('/course/forum/unread');
             break;
         case "flat":
-            $HELP_KEYWORD="Basis.Forumlast4";
+            PageLayout::setHelpKeyword("Basis.Forumlast4");
             Navigation::activateItem('/course/forum/recent');
             break;
         case "search":
-            $HELP_KEYWORD="Basis.ForumSuche";
+            PageLayout::setHelpKeyword("Basis.ForumSuche");
             Navigation::activateItem('/course/forum/search');
             break;
         default:
-            $HELP_KEYWORD="Basis.Forum";
+            PageLayout::setHelpKeyword("Basis.Forum");
             Navigation::activateItem('/course/forum/view');
     }
-    $CURRENT_PAGE = $SessSemName["header_line"]. " - " . _("Forum");
+    PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Forum"));
 }
 ob_start();
 ?>
-<script type="text/javascript">
-
 STUDIP.Forum = {};
 
 STUDIP.Forum.pruefe_name = function(){
@@ -108,9 +106,8 @@ STUDIP.Forum.rate_template = new Template(
 </form>\
 </div>\
 ');
-</script>
 <?php 
-$_include_additional_header .= ob_get_clean();
+PageLayout::addHeadElement('script', array('type' => 'text/javascript'), ob_get_clean());
 
 // Start of Output
 if (!$update) {

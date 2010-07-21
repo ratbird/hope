@@ -45,7 +45,7 @@ if ($RESOURCES_ENABLE) {
 }
 
 // temporary link to this help page untill a separate page is available 
-$HELP_KEYWORD="Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen";
+PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen");
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
@@ -94,7 +94,7 @@ if ($SessSemName[1]) {
     $seminar_id = $_REQUEST['seminar_id'];
 }
 
-$CURRENT_PAGE = getHeaderLine($seminar_id)." -  "._("Raumanfrage");
+PageLayout::setTitle(getHeaderLine($seminar_id)." -  "._("Raumanfrage"));
 Navigation::activateItem('/admin/course/dates');
 
 // Start of Output

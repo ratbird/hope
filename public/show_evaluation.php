@@ -195,7 +195,8 @@ $table->cont( $lib->createEvaluationFooter( $eval, $votedNow || $votedEarlier, $
 
 $form->cont( $table );
 
-$_NOHEADER = true; //keinen Header anzeigen
+PageLayout::disableHeader();
+
 /* Ausgabe erzeugen---------------------------------------------------------- */
 //Header
 include ('lib/include/html_head.inc.php');

@@ -33,9 +33,8 @@ class Institute_AvatarController extends AuthenticatedController
             return FALSE;
         }
 
-        $GLOBALS['body_id'] = 'custom_avatar';
-        $GLOBALS['CURRENT_PAGE'] = getHeaderLine($this->institute_id) . ' - ' .
-                           _('Bild ändern');
+        $this->body_id = 'custom_avatar';
+        PageLayout::setTitle(getHeaderLine($this->institute_id) . ' - ' . _('Bild ändern'));
 
         Navigation::activateItem('/admin/institute/details');
 

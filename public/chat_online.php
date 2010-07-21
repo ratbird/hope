@@ -84,8 +84,8 @@ function print_chat_info($chatids){
     }
 }
 
-$HELP_KEYWORD = "Basis.InteraktionChat";
-$CURRENT_PAGE = _("Chat-Online");
+PageLayout::setHelpKeyword("Basis.InteraktionChat");
+PageLayout::setTitle(_("Chat-Online"));
 Navigation::activateItem('/community/chat');
 
 // Start of Output

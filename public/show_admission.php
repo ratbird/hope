@@ -37,7 +37,7 @@ $msg = array();
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
-$CURRENT_PAGE = _("Übersicht laufender Anmeldeverfahren / Grupppierung von Veranstaltungen");
+PageLayout::setTitle(_("Übersicht laufender Anmeldeverfahren / Grupppierung von Veranstaltungen"));
 Navigation::activateItem('/admin/tools/show_admission');
 
 require_once('config.inc.php'); //Grunddaten laden

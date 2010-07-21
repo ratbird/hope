@@ -193,48 +193,48 @@ if ($source_page && ($cmd == 'edit' || $cmd == 'add' || $cmd == 'delete'))
 }
 
 // Seitensteuerung
-$HELP_KEYWORD="Basis.Terminkalender";
+PageLayout::setHelpKeyword("Basis.Terminkalender");
 
 switch ($cmd)
 {
     case 'showday':
         $calendar_sess_control_data['view_prv'] = $cmd;
-        $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Tagesansicht");
+        PageLayout::setTitle(_("Mein persönlicher Terminkalender - Tagesansicht"));
         Navigation::activateItem('/calendar/calendar/day');
         break;
 
     case 'showweek':
-        $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Wochenansicht");
+        PageLayout::setTitle(_("Mein persönlicher Terminkalender - Wochenansicht"));
         Navigation::activateItem('/calendar/calendar/week');
         $calendar_sess_control_data['view_prv'] = $cmd;
         break;
 
     case 'showmonth':
-        $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Monatsansicht");
+        PageLayout::setTitle(_("Mein persönlicher Terminkalender - Monatsansicht"));
         Navigation::activateItem('/calendar/calendar/month');
         $calendar_sess_control_data['view_prv'] = $cmd;
         break;
 
     case 'showyear':
-        $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Jahresansicht");
+        PageLayout::setTitle(_("Mein persönlicher Terminkalender - Jahresansicht"));
         Navigation::activateItem('/calendar/calendar/year');
         $calendar_sess_control_data['view_prv'] = $cmd;
         break;
 
     case 'changeview':
-        $HELP_KEYWORD = "Basis.TerminkalenderEinstellungen";
-        $CURRENT_PAGE = _("Einstellungen des Terminkalenders bearbeiten");
+        PageLayout::setHelpKeyword("Basis.TerminkalenderEinstellungen");
+        PageLayout::setTitle(_("Einstellungen des Terminkalenders bearbeiten"));
         Navigation::activateItem('/account/calendar');
         break;
 
     case 'export':
-        $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Termindaten importieren, exportieren und synchronisieren");
+        PageLayout::setTitle(_("Mein persönlicher Terminkalender - Termindaten importieren, exportieren und synchronisieren"));
         Navigation::activateItem('/calendar/calendar/export');
         break;
 
     case 'bind':
-        $HELP_KEYWORD = "Basis.TerminkalenderEinbinden";
-        $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Veranstaltungstermine einbinden");
+        PageLayout::setHelpKeyword("Basis.TerminkalenderEinbinden");
+        PageLayout::setTitle(_("Mein persönlicher Terminkalender - Veranstaltungstermine einbinden"));
         Navigation::activateItem('/calendar/calendar/course');
         break;
 
@@ -243,25 +243,25 @@ switch ($cmd)
         switch($calendar_sess_control_data['view_prv'])
         {
             case 'showday':
-                $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Tagesansicht");
+                PageLayout::setTitle(_("Mein persönlicher Terminkalender - Tagesansicht"));
                 Navigation::activateItem('/calendar/calendar/day');
                 break;
             case 'showweek':
-                $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Wochenansicht");
+                PageLayout::setTitle(_("Mein persönlicher Terminkalender - Wochenansicht"));
                 Navigation::activateItem('/calendar/calendar/week');
                 break;
             case 'showmonth':
-                $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Monatsansicht");
+                PageLayout::setTitle(_("Mein persönlicher Terminkalender - Monatsansicht"));
                 Navigation::activateItem('/calendar/calendar/month');
                 break;
             case 'showyear':
-                $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Jahresansicht");
+                PageLayout::setTitle(_("Mein persönlicher Terminkalender - Jahresansicht"));
                 Navigation::activateItem('/calendar/calendar/year');
         }
         break;
 
     case 'edit':
-        $HELP_KEYWORD = "Basis.TerminkalenderBearbeiten";
+        PageLayout::setHelpKeyword("Basis.TerminkalenderBearbeiten");
         Navigation::activateItem('/calendar/calendar/edit');
 
         if ($termin_id)
@@ -277,19 +277,19 @@ switch ($cmd)
                             . $calendar_sess_control_data['view_prv'] . "&atime=$atime");
                     exit;
                 }
-                $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Veranstaltungstermin");
+                PageLayout::setTitle(_("Mein persönlicher Terminkalender - Veranstaltungstermin"));
             }
             else
             {
                 $atermin = new DbCalendarEvent($termin_id);
                 if (!$mod)
                     $mod = $atermin->getRepeat('rtype');
-                $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Termin bearbeiten");
+                PageLayout::setTitle(_("Mein persönlicher Terminkalender - Termin bearbeiten"));
             }
         }
         else
         {
-            $CURRENT_PAGE = _("Mein persönlicher Terminkalender - Termin anlegen/bearbeiten");
+            PageLayout::setTitle(_("Mein persönlicher Terminkalender - Termin anlegen/bearbeiten"));
             // call from dayview for new event -> set default values
             if ($atime && empty($_POST))
             {

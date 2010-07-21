@@ -70,7 +70,7 @@ object_set_visit_module("schedule");
 
 mark_public_course($sem);
 
-$CURRENT_PAGE = $SessSemName["header_line"].' - '._("Ablaufplan");
+PageLayout::setTitle($SessSemName["header_line"].' - '._("Ablaufplan"));
 
 if ($type == '1') {
     Navigation::activateItem('/course/schedule/type1');

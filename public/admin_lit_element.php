@@ -34,7 +34,7 @@ require_once ('lib/classes/StudipLitCatElement.class.php');
 require_once ('lib/classes/StudipLitClipBoard.class.php');
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-$CURRENT_PAGE = _("Literatureintrag bearbeiten");
+PageLayout::setTitle(_("Literatureintrag bearbeiten"));
 Navigation::activateItem('/tools/literature');
 
 // Start of Output

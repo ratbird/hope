@@ -91,11 +91,11 @@ checkObjectModule("participants");
 mark_public_course();
 
 if ($rechte) {
-    $HELP_KEYWORD="Basis.VeranstaltungenVerwaltenTeilnehmer";
+    PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenTeilnehmer");
 } else {
-    $HELP_KEYWORD="Basis.InVeranstaltungTeilnehmer";
+    PageLayout::setHelpKeyword("Basis.InVeranstaltungTeilnehmer");
 }
-$CURRENT_PAGE = $SessSemName["header_line"]. " - " . _("TeilnehmerInnen");
+PageLayout::setTitle($SessSemName["header_line"]. " - " . _("TeilnehmerInnen"));
 Navigation::activateItem('/course/members/view');
 
 //Subject for sms

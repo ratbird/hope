@@ -32,12 +32,15 @@ include('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
 
-if ($druck)
-    $_include_stylesheet = 'style_print.css';
-elseif (($dump_id) || ($forum_dump_id) || ($wiki_dump_id))
-    $_include_stylesheet = 'style_dump.css';
-$HELP_KEYWORD = "Basis.Archiv";
-$CURRENT_PAGE = _("Archiv");
+if ($druck) {
+    self::removeStylesheet('style.css');
+    self::addStylesheet('style_print.css');
+} elseif (($dump_id) || ($forum_dump_id) || ($wiki_dump_id)) {
+    self::removeStylesheet('style.css');
+    self::addStylesheet('style_dump.css');
+}
+PageLayout::setHelpKeyword("Basis.Archiv");
+PageLayout::setTitle(_("Archiv"));
 Navigation::activateItem('/search/archiv');
 
 
@@ -206,7 +209,7 @@ elseif (!empty($wiki_dump_id)) {
 
 else {
 
-$HELP_KEYWORD="Basis.SuchenArchiv";
+PageLayout::setHelpKeyword("Basis.SuchenArchiv");
 
 // dann eben den Rest...
 

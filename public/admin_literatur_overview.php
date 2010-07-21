@@ -18,7 +18,7 @@ require_once ('config.inc.php');
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-$CURRENT_PAGE = _("Übersicht verwendeter Literatur");
+PageLayout::setTitle(_("Übersicht verwendeter Literatur"));
 Navigation::activateItem('/admin/tools/literature');
 
 include ('lib/include/html_head.inc.php'); // Output of html head

@@ -38,7 +38,7 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 require_once('lib/classes/smiley.class.php');
 
-$CURRENT_PAGE = _("Verwaltung der Smileys");
+PageLayout::setTitle(_("Verwaltung der Smileys"));
 Navigation::activateItem('/admin/config/smileys');
 
 // Start of Output

@@ -24,7 +24,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
-$GLOBALS['body_id'] = 'index'; //needs to be at the beginning
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
 
 $auth->login_if($again && ($auth->auth['uid'] == 'nobody'));
@@ -76,14 +75,16 @@ if ($dclose)
 
 if (get_config('NEWS_RSS_EXPORT_ENABLE') && ($auth->is_authenticated() && $user->id != 'nobody')){
     $rss_id = StudipNews::GetRssIdFromRangeId('studip');
-    if($rss_id){
-        $_include_additional_header .= '<link rel="alternate" type="application/rss+xml" '
-                                    .'title="RSS" href="rss.php?id='.$rss_id.'">';
+    if ($rss_id) {
+        PageLayout::addHeadElement('link', array('rel'   => 'alternate',
+                                                 'type'  => 'application/rss+xml',
+                                                 'title' => 'RSS',
+                                                 'href'  => 'rss.php?id='.$rss_id));
     }
 }
 
-$HELP_KEYWORD="Basis.Startseite"; // set keyword for new help
-$CURRENT_PAGE = _("Startseite");
+PageLayout::setHelpKeyword("Basis.Startseite"); // set keyword for new help
+PageLayout::setTitle(_("Startseite"));
 // Start of Output
 $navigation = Navigation::getItem('/start');
 

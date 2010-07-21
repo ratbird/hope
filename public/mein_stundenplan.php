@@ -55,7 +55,8 @@ if (($_REQUEST['view'] == 'print') || ($_REQUEST['view'] == 'edit')) {
 }
 
 if ($view == 'print') {
-    $_include_stylesheet = "style_print.css"; // use special stylesheet for printing
+    self::removeStylesheet('style.css');
+    self::addStylesheet('style_print.css'); // use special stylesheet for printing
 }
 
 // Start of Output
@@ -82,11 +83,11 @@ $DAY_I2S = array(1 => 'mo',
 check_schedule_settings();
 
 if (!$inst_id) {
-    $HELP_KEYWORD="Basis.MyStudIPStundenplan";
-    $CURRENT_PAGE = _("Mein Stundenplan");
+    PageLayout::setHelpKeyword("Basis.MyStudIPStundenplan");
+    PageLayout::setTitle(_("Mein Stundenplan"));
 } else {
-    $HELP_KEYWORD="Basis.TerminkalenderStundenplan";
-    $CURRENT_PAGE = $SessSemName["header_line"]." - "._("Veranstaltungs-Timetable");
+    PageLayout::setHelpKeyword("Basis.TerminkalenderStundenplan");
+    PageLayout::setTitle($SessSemName["header_line"]." - "._("Veranstaltungs-Timetable"));
 }
 
 if ($view != 'print') {

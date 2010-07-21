@@ -35,7 +35,7 @@ require_once 'lib/functions.php';
 require_once('lib/visual.inc.php');
 require_once ('lib/meine_seminare_func.inc.php');
 
-$HELP_KEYWORD="Basis.VeranstaltungenOrdnen";
+PageLayout::setHelpKeyword("Basis.VeranstaltungenOrdnen");
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head

@@ -39,7 +39,7 @@ checkObjectModule("participants");
 
 mark_public_course();
 
-$GLOBALS['CURRENT_PAGE'] = $SessSemName["header_line"]. " - " . _("Zusatzangaben");
+PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Zusatzangaben"));
 Navigation::activateItem('/course/members/aux_data');
 
 if (!$_REQUEST['display_type']) {

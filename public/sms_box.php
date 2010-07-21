@@ -76,14 +76,14 @@ $db6 = new DB_Seminar;
 $db7 = new DB_Seminar;
 
 if ($change_view) {
-    $HELP_KEYWORD="Basis.MyStudIPMessaging";
+    PageLayout::setHelpKeyword("Basis.MyStudIPMessaging");
     Navigation::activateItem('/account/message');
 } else {
-    $HELP_KEYWORD="Basis.InteraktionNachrichten";
+    PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
     Navigation::activateItem('/messaging/' . $sms_data['view']);
 }
 
-$CURRENT_PAGE = _("Systeminterne Nachrichten");
+PageLayout::setTitle(_("Systeminterne Nachrichten"));
 
 // Output of html head and Stud.IP head
 include ('lib/include/html_head.inc.php');

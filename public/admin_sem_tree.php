@@ -36,7 +36,7 @@ if (!$perm->is_fak_admin()){
     die;
 }
 
-$CURRENT_PAGE = $UNI_NAME_CLEAN . " - " . _("Veranstaltungshierachie bearbeiten");
+PageLayout::setTitle($UNI_NAME_CLEAN . " - " . _("Veranstaltungshierachie bearbeiten"));
 Navigation::activateItem('/admin/config/sem_tree');
 
 require_once ('lib/visual.inc.php');

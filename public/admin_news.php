@@ -36,8 +36,6 @@ require_once 'lib/classes/AdminNewsController.class.php';
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
-$_include_additional_header .= "\n" . cssClassSwitcher::GetHoverJSFunction() . "\n";
-
 URLHelper::bindLinkParam('news_range_id',$news_range_id);
 URLHelper::bindLinkParam('news_range_name',$news_range_name);
 
@@ -51,8 +49,8 @@ if (!$news_range_id){
     $news_range_id = $auth->auth['uid'];
 }
 
-$HELP_KEYWORD = "Basis.News";
-$CURRENT_PAGE = _("Verwaltung von News");
+PageLayout::setHelpKeyword("Basis.News");
+PageLayout::setTitle(_("Verwaltung von News"));
 
 if (Request::get('section') == 'news') {
     UrlHelper::bindLinkParam('section', $section);
@@ -85,13 +83,15 @@ if (Request::get('section') == 'news') {
 
 $news = new AdminNewsController();
 
-$CURRENT_PAGE = ($SessSemName[1] && ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' ) ?  $SessSemName["header_line"] : $news->range_name ) . " - " . _("Verwaltung von News");
+PageLayout::setTitle(($SessSemName[1] && ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' ) ?  $SessSemName["header_line"] : $news->range_name ) . " - " . _("Verwaltung von News"));
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
 include 'lib/include/admin_search_form.inc.php';
+
+echo cssClassSwitcher::GetHoverJSFunction() . "\n";
 
 
 function callback_cmp_newsarray($a, $b) {

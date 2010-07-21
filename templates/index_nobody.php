@@ -5,7 +5,7 @@
 <table class="index_box">
     <tr>
         <td colspan="2" class="topic">
-            &nbsp;<b><?=$GLOBALS['UNI_NAME']?></b>
+            &nbsp;<b><?= htmlentities($GLOBALS['UNI_NAME_CLEAN']) ?></b>
         </td>
     </tr>
     <tr>

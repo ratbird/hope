@@ -30,7 +30,7 @@ class PluginAdminController extends AuthenticatedController
         $perm->check('root');
 
         // set page title and navigation
-        $GLOBALS['CURRENT_PAGE'] = _('Verwaltung von Plugins');
+        PageLayout::setTitle(_('Verwaltung von Plugins'));
         Navigation::activateItem('/admin/tools/plugins');
 
         $this->plugin_admin = new PluginAdministration();

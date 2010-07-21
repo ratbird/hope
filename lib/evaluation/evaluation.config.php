@@ -151,7 +151,8 @@ define ("EVAL_PIC_NOTSHARED",  PATH_PICTURES."off_small_blank_transparent.gif");
 define ("EVAL_CSS_SUCCESS", "eval_success");
 define ("EVAL_CSS_ERROR",   "eval_error");
 define ("EVAL_CSS_INFO",    "eval_info");
-$_include_extra_stylesheet = EVAL_FILE_CSS;
+// FIXME this causes bug #1138
+PageLayout::addStylesheet(EVAL_FILE_CSS);
 /* ------------------------------------------------------ end: css constants */
 
 # ===================================================== end: define constants #

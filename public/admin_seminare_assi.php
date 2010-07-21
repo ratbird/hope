@@ -2022,49 +2022,46 @@ $sem_create_data["level"]=$level;
 // Help-Keywords
 switch ($level) {
     case '1':
-        $HELP_KEYWORD="Basis.VeranstaltungsAssistentGrunddaten";
-        $CURRENT_PAGE=_("Veranstaltungs-Assistent - Schritt 1: Grunddaten");
+        PageLayout::setHelpKeyword("Basis.VeranstaltungsAssistentGrunddaten");
+        PageLayout::setTitle(_("Veranstaltungs-Assistent - Schritt 1: Grunddaten"));
         break;
     case '2':
-        $HELP_KEYWORD="Basis.VeranstaltungsAssistentPersonendatenTypUndSicherheit";
+        PageLayout::setHelpKeyword("Basis.VeranstaltungsAssistentPersonendatenTypUndSicherheit");
         if ($SEM_CLASS[$sem_create_data["sem_class"]]["bereiche"])
-            $CURRENT_PAGE = _("Veranstaltungs-Assistent - Schritt 2: Personendaten, Typ, Sicherheit und Bereiche");
+            PageLayout::setTitle(_("Veranstaltungs-Assistent - Schritt 2: Personendaten, Typ, Sicherheit und Bereiche"));
         else
-            $CURRENT_PAGE = _("Veranstaltungs-Assistent - Schritt 2: Personendaten, Typ und Sicherheit");
+            PageLayout::setTitle(_("Veranstaltungs-Assistent - Schritt 2: Personendaten, Typ und Sicherheit"));
         break;
     case '3':
-        $HELP_KEYWORD="Basis.VeranstaltungsAssistentTermindaten";
-        $CURRENT_PAGE=_("Veranstaltungs-Assistent - Schritt 3: Zeiten und Termine");
+        PageLayout::setHelpKeyword("Basis.VeranstaltungsAssistentTermindaten");
+        PageLayout::setTitle(_("Veranstaltungs-Assistent - Schritt 3: Zeiten und Termine"));
         break;
     case '4':
-        $HELP_KEYWORD="Basis.VeranstaltungsAssistentSonstiges";
-        $CURRENT_PAGE=_("Veranstaltungs-Assistent - Schritt 4: Orts- und Raumangaben");
+        PageLayout::setHelpKeyword("Basis.VeranstaltungsAssistentSonstiges");
+        PageLayout::setTitle(_("Veranstaltungs-Assistent - Schritt 4: Orts- und Raumangaben"));
         break;
     case '5':
-        $HELP_KEYWORD="Basis.VeranstaltungsAssistentBereitZumAnlegen";
-        $CURRENT_PAGE=_("Veranstaltungs-Assistent - Schritt 5: Sonstige Daten");
+        PageLayout::setHelpKeyword("Basis.VeranstaltungsAssistentBereitZumAnlegen");
+        PageLayout::setTitle(_("Veranstaltungs-Assistent - Schritt 5: Sonstige Daten"));
         break;
     case '6':
-        $HELP_KEYWORD="Basis.VeranstaltungsAssistentVeranstaltungAngelegt";
-        $CURRENT_PAGE=_("Veranstaltungs-Assistent - Schritt 6: Anlegen der Veranstaltung");
+        PageLayout::setHelpKeyword("Basis.VeranstaltungsAssistentVeranstaltungAngelegt");
+        PageLayout::setTitle(_("Veranstaltungs-Assistent - Schritt 6: Anlegen der Veranstaltung"));
         break;
     case '7':
-        $HELP_KEYWORD="Basis.VeranstaltungsAssistent";
-        $CURRENT_PAGE=_("Veranstaltungs-Assistent");
+        PageLayout::setHelpKeyword("Basis.VeranstaltungsAssistent");
+        PageLayout::setTitle(_("Veranstaltungs-Assistent"));
         break;
     case '8':
-        //This Help-Page won't help.... $HELP_KEYWORD="Basis.VeranstaltungsAssistentLiteratur-UndLinkliste";
-        $HELP_KEYWORD="Basis.VeranstaltungsAssistent";
-        $CURRENT_PAGE=_("Veranstaltungs-Assistent - Schritt 7: Freie Informationsseite");
+        //This Help-Page won't help.... PageLayout::setHelpKeyword("Basis.VeranstaltungsAssistentLiteratur-UndLinkliste");
+        PageLayout::setHelpKeyword("Basis.VeranstaltungsAssistent");
+        PageLayout::setTitle(_("Veranstaltungs-Assistent - Schritt 7: Freie Informationsseite"));
         break;
     default:
-        $HELP_KEYWORD="Basis.VeranstaltungsAssistent";
-        $CURRENT_PAGE=_("Veranstaltungs-Assistent");
+        PageLayout::setHelpKeyword("Basis.VeranstaltungsAssistent");
+        PageLayout::setTitle(_("Veranstaltungs-Assistent"));
         break;
 }
-
-# change <body>'s id attribute
-$GLOBALS['body_id'] = 'admin_seminare_assi';
 
 Navigation::activateItem('/admin/course/create');
 

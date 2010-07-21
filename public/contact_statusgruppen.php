@@ -40,7 +40,7 @@ require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/user_visible.inc.php');
 #include ("calendar/calendar_links.inc.php");
 
-$CURRENT_PAGE = _("Kontaktgruppen");
+PageLayout::setTitle(_("Kontaktgruppen"));
 Navigation::activateItem('/community/address_book/admin_groups');
 
 include ('lib/include/html_head.inc.php'); // Output of html head

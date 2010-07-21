@@ -51,8 +51,8 @@ if (get_config('CHAT_ENABLE'))
 $msging=new messaging;
 $cssSw=new cssClassSwitcher;
 
-$HELP_KEYWORD="Basis.InteraktionWhosOnline";
-$CURRENT_PAGE = _("Wer ist online?");
+PageLayout::setHelpKeyword("Basis.InteraktionWhosOnline");
+PageLayout::setTitle(_("Wer ist online?"));
 
 if (Request::get('change_view')) {
     Navigation::activateItem('/account/messaging');

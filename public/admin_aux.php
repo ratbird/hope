@@ -45,7 +45,7 @@ if (Request::submitted('aux_rule')) {
     $message = 'info§' . _("Diese Daten sind noch nicht gespeichert.");
 }
 
-$CURRENT_PAGE = _("Verwaltung der Zusatzangaben von Veranstaltungen");
+PageLayout::setTitle(_("Verwaltung der Zusatzangaben von Veranstaltungen"));
 Navigation::activateItem('/admin/course/aux_data');
 
 //get ID from a open Seminar
@@ -55,7 +55,7 @@ if ($SessSemName[1])
 //Change header_line if open object
 $header_line = getHeaderLine($header_object_id);
 if ($header_object_id)
-    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 //Output starts here
 

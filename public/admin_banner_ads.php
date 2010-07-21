@@ -312,7 +312,7 @@ function edit_banner_data($banner_data) {
     $table->close();
 }
 
-$CURRENT_PAGE = _("Verwaltung der Werbebanner");
+PageLayout::setTitle(_("Verwaltung der Werbebanner"));
 Navigation::activateItem('/admin/config/banner_ads');
 
 // Start of Output

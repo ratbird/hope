@@ -267,8 +267,8 @@ object_set_visit_module('documents');
 
 // Start of Output
 
-$HELP_KEYWORD="Basis.Dateien";
-$CURRENT_PAGE = $SessSemName["header_line"]. " - " . _("Dateien");
+PageLayout::setHelpKeyword("Basis.Dateien");
+PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Dateien"));
 
 if ($folder_system_data['cmd'] == 'all') {
     Navigation::activateItem('/course/files/all');
@@ -278,9 +278,9 @@ if ($folder_system_data['cmd'] == 'all') {
 
 $config = Config::get();
 if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
-    $_include_additional_header .= "\t\t".'<link rel="stylesheet" href="'.$GLOBALS['ASSETS_URL'].'stylesheets/ui.multiselect.css" type="text/css">'."\n";
-    $_include_additional_header .= Assets::script('ui.multiselect.js');
-    $_include_additional_header .= "<script>
+    PageLayout::addStylesheet('ui.multiselect.css');
+    PageLayout::addScript('ui.multiselect.js');
+    PageLayout::addHeadElement('script', array('type' => 'text/javascript'), "
 STUDIP.CURRENTPAGE = {};
 STUDIP.CURRENTPAGE.createMultiSelect = function (id, itemName) {
     if (!$(id).attr('multiple')) {
@@ -296,7 +296,7 @@ $.extend($.ui.multiselect, {
         itemsCount:'ausgewählt'
     }
 });
-</script>";
+    ");
 }
 
 include ('lib/include/html_head.inc.php'); // Output of html head

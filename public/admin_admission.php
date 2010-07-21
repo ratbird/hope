@@ -56,8 +56,8 @@ require_once('lib/classes/UserDomain.php'); // Nutzerdomänen
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once 'lib/admin_search.inc.php';
 
-$HELP_KEYWORD="Basis.VeranstaltungenVerwaltenZugangsberechtigungen";
-$CURRENT_PAGE = _("Verwaltung von Zugangsberechtigungen");
+PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenZugangsberechtigungen");
+PageLayout::setTitle(_("Verwaltung von Zugangsberechtigungen"));
 if (Request::get('section') == 'admission') {
     UrlHelper::bindLinkParam('section', $section);
     Navigation::activateItem('/course/admin/admission');
@@ -74,7 +74,7 @@ else
 //Change header_line if open object
 $header_line = getHeaderLine($header_object_id);
 if ($header_line)
-    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 //Output starts here
 include ('lib/include/html_head.inc.php'); // Output of html head

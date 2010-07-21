@@ -344,7 +344,7 @@ if ($i_view == "new")
 
 require_once 'lib/admin_search.inc.php';
 
-$CURRENT_PAGE = _("Verwaltung der Grunddaten");
+PageLayout::setTitle(_("Verwaltung der Grunddaten"));
 
 if (Request::get('section') == 'details') {
     UrlHelper::bindLinkParam('section', $section);
@@ -359,7 +359,7 @@ if ($SessSemName[1])
 
 $header_line = getHeaderLine($i_view);
 if ($header_line)
-    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen

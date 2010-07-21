@@ -59,7 +59,7 @@ require_once ('lib/classes/DataFieldEntry.class.php');
 
 require_once ('config.inc.php');
 
-$HELP_KEYWORD="Basis.Export";
+PageLayout::setHelpKeyword("Basis.Export");
 
 if ($EXPORT_ENABLE)
 {

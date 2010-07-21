@@ -157,7 +157,7 @@ global $i_page, $i_query,
        $CurrentLogin, $LastLogin, $forum, $writemode,
        $my_messaging_settings, $my_schedule_settings,
        $my_personal_sems, $my_studip_settings, $homepage_cache_own,
-       $CALENDAR_ENABLE, $seminar_open_redirected, $_language_path;
+       $CALENDAR_ENABLE, $AUTH_LIFETIME, $_language_path;
 
 //get the name of the current page in $i_page
 $i_page = basename($_SERVER['PHP_SELF']);
@@ -221,6 +221,20 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
             $seminar_open_redirected = TRUE;
             startpage_redirect($my_studip_settings["startpage_redirect"]);
         }
+    }
+
+    // log out user if AUTH_LIFETIME is reached
+    if ($i_page !== 'logout.php' && $AUTH_LIFETIME > 0) {
+        PageLayout::addHeadElement('meta', array('http-equiv' => 'refresh',
+                                                 'content'    => sprintf('%d; url=%s', $AUTH_LIFETIME * 60, URLHelper::getURL('logout.php'))));
+    }
+
+    // lauch stud.ip messenger after login
+    if ($my_messaging_settings['start_messenger_at_startup'] && $auth->auth['jscript'] &&
+        !$seminar_open_redirected && !$_SESSION['messenger_started']) {
+        PageLayout::addHeadElement('script', array('type' => 'text/javascript'),
+                'fenster = window.open("studipim.php", "im_'.$user->id.'", "scrollbars=yes,width=400,height=300", "resizable=no");');
+        $_SESSION['messenger_started'] = true;
     }
 }
 

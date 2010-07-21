@@ -34,8 +34,8 @@ require_once $RELATIVE_PATH_CHAT.'/chat_func_inc.php';
 unregister_globals();
 
 //Basics
-$HELP_KEYWORD = 'Basis.SuchenPersonen';
-$CURRENT_PAGE = _('Personensuche');
+PageLayout::setHelpKeyword('Basis.SuchenPersonen');
+PageLayout::setTitle(_('Personensuche'));
 Navigation::activateItem('/search/persons');
 
 $template = $GLOBALS['template_factory']->open('browse');

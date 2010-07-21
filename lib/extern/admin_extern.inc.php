@@ -65,7 +65,7 @@ if ($_REQUEST['com'] == 'download_config') {
     }
 }
 
-$CURRENT_PAGE = _("Verwaltung externer Seiten");
+PageLayout::setTitle(_("Verwaltung externer Seiten"));
 
 if ($links_admin_data["topkat"] == "inst") {
     if (Request::get('section') == 'extern') {
@@ -81,10 +81,10 @@ if ($links_admin_data["topkat"] == "inst") {
 //Change header_line if open object
 $header_line = getHeaderLine($range_id);
 if ($header_line) {
-    $CURRENT_PAGE = $header_line." - ".$CURRENT_PAGE;
+    PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
     foreach ($EXTERN_MODULE_TYPES as $key => $type) {
         if ($type["module"] == $mod) {
-            $CURRENT_PAGE = $CURRENT_PAGE . " ({$EXTERN_MODULE_TYPES[$key]['name']})";
+            PageLayout::setTitle(PageLayout::getTitle() . " ({$EXTERN_MODULE_TYPES[$key]['name']})");
             break;
         }
     }

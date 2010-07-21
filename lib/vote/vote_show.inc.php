@@ -30,9 +30,6 @@ require_once (EVAL_FILE_EVAL);
 require_once (EVAL_LIB_SHOW);
 # ====================================================== end: including files #
 
-// don't use evaluation.css here
-unset ($_include_extra_stylesheet);
-
 # Define public functions =================================================== #
 
 /**

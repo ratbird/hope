@@ -24,7 +24,7 @@ class SitemapController extends AuthenticatedController
     {
         $userid = $GLOBALS['auth']->auth['uid'];;
 
-        $GLOBALS['CURRENT_PAGE'] =  _('Sitemap');
+        PageLayout::setTitle(_('Sitemap'));
         Navigation::activateItem('/sitemap');
 
         $cache = StudipCacheFactory::getCache();

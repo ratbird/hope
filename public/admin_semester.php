@@ -40,7 +40,7 @@ require_once('lib/classes/HolidayData.class.php');
 // If is set 'cancel', we leave the adminstration form...
  if (isset($cancel_x)) unset ($i_view);
 
-$CURRENT_PAGE = _("Verwaltung von Semester- und Ferienzeiten");
+PageLayout::setTitle(_("Verwaltung von Semester- und Ferienzeiten"));
 Navigation::activateItem('/admin/config/semester');
 
 // Start of Output

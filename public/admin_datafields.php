@@ -98,7 +98,7 @@ function printDataFieldType ($targetID, $currStruct)
     echo '</font>';
 }
 
-$CURRENT_PAGE = _("Verwaltung generischer Datenfelder");
+PageLayout::setTitle(_("Verwaltung generischer Datenfelder"));
 Navigation::activateItem('/admin/config/data_fields');
 
 // Start of Output

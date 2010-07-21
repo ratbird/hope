@@ -28,7 +28,7 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once ('config.inc.php');
 require_once ('lib/visual.inc.php');
 
-$CURRENT_PAGE = _("Meine Lernmodule und Benutzer-Accounts");
+PageLayout::setTitle(_("Meine Lernmodule und Benutzer-Accounts"));
 Navigation::activateItem('/tools/elearning');
 
 include ('lib/include/html_head.inc.php'); // Output of html head

@@ -20,6 +20,6 @@ class HelpNavigation extends Navigation
      */
     public function getURL()
     {
-        return format_help_url($GLOBALS['HELP_KEYWORD']);
+        return format_help_url(PageLayout::getHelpKeyword());
     }
 }

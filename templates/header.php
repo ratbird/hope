@@ -5,7 +5,7 @@
     </div>
      -->
     <div id="barTopFont">
-    <?=$GLOBALS['UNI_NAME']?>
+    <?= htmlentities($GLOBALS['UNI_NAME_CLEAN']) ?>
     </div>
     <div id="barTopMenu">
         <ul>

@@ -481,8 +481,8 @@ if ($del_receiver_button_x && !empty($del_receiver)) {
 # OUTPUT
 ###########################################################
 
-$HELP_KEYWORD="Basis.InteraktionNachrichten";
-$CURRENT_PAGE = _("Systeminterne Nachrichten");
+PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
+PageLayout::setTitle(_("Systeminterne Nachrichten"));
 Navigation::activateItem('/messaging/write');
 
 // includes

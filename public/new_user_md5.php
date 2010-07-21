@@ -40,7 +40,7 @@ require_once('lib/messaging.inc.php');
 
 $cssSw = new cssClassSwitcher;
 
-$CURRENT_PAGE = _("Benutzerverwaltung");
+PageLayout::setTitle(_("Benutzerverwaltung"));
 Navigation::activateItem('/admin/config/new_user');
 
 //-- hier muessen Seiten-Initialisierungen passieren --

@@ -1029,7 +1029,7 @@ $(document).ready(function () {
 
   // autofocus for all browsers
   var autofocus = $('[autofocus]');
-  if (autofocus[0].autofocus !== true) {
+  if (autofocus.length && autofocus[0].autofocus !== true) {
     autofocus.focus();
   }
 

@@ -16,7 +16,7 @@
 require_once 'lib/functions.php';
 require_once 'lib/showNews.inc.php';
 require_once 'lib/user_visible.inc.php';
-require_once 'lib/trails/AuthenticatedController.php';
+require_once 'app/controllers/authenticated_controller.php';
 
 class NewsController extends AuthenticatedController
 {
@@ -30,7 +30,7 @@ class NewsController extends AuthenticatedController
         }
 
         $news = new StudipNews($id);
-        
+
         if ($news->isNew()) {
             $this->set_status(404);
             return $this->render_nothing();

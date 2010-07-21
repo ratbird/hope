@@ -14,7 +14,7 @@
 require_once 'lib/functions.php';
 require_once 'lib/classes/SemesterData.class.php';
 require_once 'app/models/autocomplete_course.php';
-require_once 'lib/trails/AuthenticatedController.php';
+require_once 'app/controllers/authenticated_controller.php';
 
 class Autocomplete_CourseController extends AuthenticatedController {
 

@@ -12,14 +12,14 @@
 
 require_once 'lib/classes/searchtypes/SearchType.class.php';
 
+require_once 'app/controllers/authenticated_controller.php';
 require_once "lib/classes/Avatar.class.php";
 require_once "lib/classes/CourseAvatar.class.php";
 require_once "lib/classes/InstituteAvatar.class.php";
-require_once 'lib/trails/AuthenticatedController.php';
 
 /**
- * Controller for the ajax-response of the QuickSearch class found in 
- * lib/classes/QuickSearch.class.php 
+ * Controller for the ajax-response of the QuickSearch class found in
+ * lib/classes/QuickSearch.class.php
  */
 class QuicksearchController extends AuthenticatedController {
 
@@ -127,9 +127,9 @@ class QuicksearchController extends AuthenticatedController {
         }
         return $count;
     }
-    
+
     /**
-     * method to recursively convert an array from uft8 to iso-1 
+     * method to recursively convert an array from uft8 to iso-1
      */
     private function utf8_array_decode($input) {
         $return = array();

@@ -21,34 +21,35 @@
 # SOFTWARE.
 
 
-# set error reporting
-error_reporting(E_ALL & ~E_NOTICE);
+class Tramp_Controller extends Trails_Controller {
 
-# set include path
-$inc_path = ini_get('include_path');
-$inc_path .= PATH_SEPARATOR . dirname(__FILE__) . '/..';
-$inc_path .= PATH_SEPARATOR . dirname(__FILE__) . '/../config';
-ini_set('include_path', $inc_path);
-
-# load required files
-require_once 'vendor/simpletest/unit_tester.php';
-require_once 'vendor/simpletest/reporter.php';
-require_once 'vendor/simpletest/collector.php';
-
-# load varstream for easier filesystem testing
-require_once 'varstream.php';
+  /**
+   * Extracts action and args from a string.
+   *
+   * @param  string       the processed string
+   *
+   * @return arraye       an array with two elements - a string containing the
+   *                      action and an array of strings representing the args
+   */
+  protected function extract_action_and_args($string) {
+    return array($this->get_verb(), explode('/', $string));
+  }
 
 
-# collect all tests
-$all = new TestSuite('All tests');
-$collector = new SimplePatternCollector('/test.php$/');
-$all->collect(dirname(__FILE__) . '/lib', $collector);
-$all->collect(dirname(__FILE__) . '/lib/classes', $collector);
+  protected function map_action($action) {
+    return strtolower($action);
+  }
 
-# use text reporter if cli
-if (sizeof($_SERVER['argv']))
-  $all->run(new TextReporter());
 
-# use html reporter if cgi
-else
-  $all->run(new HtmlReporter());
+  protected function get_verb() {
+
+    $verb = strtoupper(isset($_REQUEST['_method'])
+      ? $_REQUEST['_method'] : @$_SERVER['REQUEST_METHOD']);
+
+    if (!preg_match('/^DELETE|GET|POST|PUT|HEAD|OPTIONS$/', $verb)) {
+      throw new Trails_Exception(405);
+    }
+
+    return $verb;
+  }
+}

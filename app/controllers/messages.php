@@ -9,7 +9,7 @@
  */
 
 require_once 'lib/sms_functions.inc.php';
-require_once 'lib/trails/AuthenticatedController.php';
+require_once 'app/controllers/authenticated_controller.php';
 
 class MessagesController extends AuthenticatedController {
 

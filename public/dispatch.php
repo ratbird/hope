@@ -18,17 +18,21 @@
 require '../lib/bootstrap.php';
 
 require_once 'lib/functions.php';
+
+# define root
+$trails_root = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'app';
+
+$trails_uri = rtrim($ABSOLUTE_URI_STUDIP, '/') . '/dispatch.php';
+
+# load trails
+require_once 'vendor/trails/trails.php';
+
 require_once 'lib/trails/TrailsController.php';
 require_once 'lib/trails/TrailsDispatcher.php';
 require_once 'lib/trails/TrailsFlash.php';
 require_once 'lib/trails/TrailsInflector.php';
 require_once 'lib/trails/TrailsResponse.php';
 require_once 'lib/exceptions/TrailsException.php';
-
-# define root
-$trails_root = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'app';
-
-$trails_uri = rtrim($ABSOLUTE_URI_STUDIP, '/') . '/dispatch.php';
 
 # set base url for URLHelper class
 URLHelper::setBaseUrl($ABSOLUTE_URI_STUDIP);
@@ -43,5 +47,6 @@ $request_uri = $_SERVER['REQUEST_URI'] === $_SERVER['PHP_SELF']
 
 $default_controller = 'default';
 
-$dispatcher = new TrailsDispatcher($trails_root, $trails_uri, $default_controller);
+$dispatcher = new Trails_Dispatcher($trails_root, $trails_uri,
+                                    $default_controller);
 $dispatcher->dispatch($request_uri);

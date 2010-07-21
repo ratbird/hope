@@ -1,4 +1,4 @@
-<?php
+<?
 
 # Copyright (c)  2007 - Marcus Lunzenauer <mlunzena@uos.de>
 #
@@ -21,34 +21,8 @@
 # SOFTWARE.
 
 
-# set error reporting
-error_reporting(E_ALL & ~E_NOTICE);
+/**
+ * The version of the trails library.
+ */
+define('TRAILS_VERSION', '0.6.5');
 
-# set include path
-$inc_path = ini_get('include_path');
-$inc_path .= PATH_SEPARATOR . dirname(__FILE__) . '/..';
-$inc_path .= PATH_SEPARATOR . dirname(__FILE__) . '/../config';
-ini_set('include_path', $inc_path);
-
-# load required files
-require_once 'vendor/simpletest/unit_tester.php';
-require_once 'vendor/simpletest/reporter.php';
-require_once 'vendor/simpletest/collector.php';
-
-# load varstream for easier filesystem testing
-require_once 'varstream.php';
-
-
-# collect all tests
-$all = new TestSuite('All tests');
-$collector = new SimplePatternCollector('/test.php$/');
-$all->collect(dirname(__FILE__) . '/lib', $collector);
-$all->collect(dirname(__FILE__) . '/lib/classes', $collector);
-
-# use text reporter if cli
-if (sizeof($_SERVER['argv']))
-  $all->run(new TextReporter());
-
-# use html reporter if cgi
-else
-  $all->run(new HtmlReporter());

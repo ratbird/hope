@@ -924,11 +924,11 @@ function createVoteInfo (&$vote, $isAssociated = NO) {
 
 /* ------------------------------------------------------------------------- */
 define ("VOTE_MESSAGE_EMPTY",
-    "<blockquote>\n".
+    "<p class=\"info\">\n".
     " <font size=\"-1\">\n".
     "   "._("Es sind keine aktuellen Votes vorhanden. Um neue Votes zu erstellen, klicken Sie auf die Doppelpfeile.")."\n".
     " </font>\n".
-    "</blockquote>\n");
+    "</p>\n");
 /* ------------------------------------------------------------------------- */
 
 

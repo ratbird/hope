@@ -1,20 +1,4 @@
 <!-- SEARCHBOX -->
-<script type="text/javascript">
-    Event.observe(window, 'load', function() {
-        new Ajax.Autocompleter('vorname',
-                               'vorname_choices',
-                               'dispatch.php/autocomplete/person/given',
-                               { minChars: 3, paramName: 'value', method: 'get' });
-        new Ajax.Autocompleter('nachname',
-                               'nachname_choices',
-                               'dispatch.php/autocomplete/person/family',
-                               { minChars: 3, paramName: 'value', method: 'get',
-                                 afterUpdateElement: function (input, item) {
-                                   var username = encodeURI(item.down('span.username').firstChild.nodeValue);
-                                   document.location = STUDIP.ABSOLUTE_URI_STUDIP + "about.php?username=" + username;
-                                 }});
-    });
-</script>
 <form action="<?= URLHelper::getLink() ?>" method="post">
 <div class="topic"><b><?=_("Suche nach Personen")?></b></div>
 
@@ -24,6 +8,14 @@
 
 <!-- form zur wahl der institute -->
 <div style="width: 100%;">
+<script>
+if (!STUDIP.CURRENTPAGE) {
+	STUDIP.CURRENTPAGE = {};
+}
+STUDIP.CURRENTPAGE.selectUser = function (username, name) {
+    location.href = STUDIP.URLHelper.getURL("about.php", {"username": username});
+};
+</script>
 <table width="100%" cellpadding="2" cellspacing="0">
     <? if (count($institutes)): ?>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
@@ -31,7 +23,7 @@
             <b><?=_("in Einrichtungen:")?></b>
         </td>
         <td width="90%">
-        <select name="inst_id" style="min-width: 200px;">
+        <select name="inst_id" style="width: 99%">
             <option value="0">- - -</option>
             <? foreach ($institutes as $institute): ?>
             <option value="<?=$institute['id']?>" <?= $institute['id'] == $inst_id ? 'selected="selected"' : '' ?>><?= htmlReady($institute['name']) ?></option>
@@ -47,7 +39,7 @@
             <b><?=_("in Veranstaltungen:")?></b>
         </td>
         <td width="90%">
-        <select name="sem_id" style="min-width: 200px;">
+        <select name="sem_id" style="width: 99%">
             <option value="0">- - -</option>
             <? foreach ($courses as $course): ?>
             <option value="<?=$course['id']?>" <?= $course['id'] == $sem_id ? 'selected="selected"' : '' ?>><?= htmlReady($course['name']) ?></option>
@@ -59,20 +51,16 @@
     <!-- form zur freien Suche -->
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
         <td>
-            <b><?=_("Vorname:")?></b>
+            <b><?=_("Name:")?></b>
         </td>
         <td width="90%">
-            <input id="vorname" type="text" style="width: 200px" size="20" name="vorname" value="<?= htmlReady($vorname) ?>">
-            <div id="vorname_choices" class="autocomplete"></div>
-        </td>
-    </tr>
-    <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-        <td>
-            <b><?=_("Nachname:")?></b>
-        </td>
-        <td width="90%">
-            <input id="nachname" type="text" style="width: 200px" size="20" name="nachname" value="<?= htmlReady($nachname) ?>">
-            <div id="nachname_choices" class="autocomplete"></div>
+            <?= QuickSearch::get("name", $search_object)
+                    ->setInputStyle("width: 99%;")
+                    ->withoutButton()
+                    ->noSelectbox()
+                    ->defaultValue("", $name)
+                    ->fireJSFunctionOnSelect("STUDIP.CURRENTPAGE.selectUser")
+                    ->render() ?>
         </td>
     </tr>
     <tr class="steel2">
@@ -94,15 +82,15 @@
 <table width="100%" cellpadding="2" cellspacing="0">
     <tr>
         <th align="left">
-            <a href="<?= URLHelper::getLink('', compact('vorname', 'nachname', 'sem_id', 'inst_id')) ?>"><?=_("Name")?></a>
+            <a href="<?= URLHelper::getLink('', compact('name', 'sem_id', 'inst_id')) ?>"><?=_("Name")?></a>
         </th>
         <th align="left">
             <? if ($inst_id): ?>
             <?= _("Funktion an der Einrichtung") ?>
             <? elseif ($sem_id): ?>
-            <a href="<?= URLHelper::getLink('', compact('vorname', 'nachname', 'sem_id') + array('sortby' => 'status')) ?>"><?= _("Status in der Veranstaltung") ?></a>
+            <a href="<?= URLHelper::getLink('', compact('name', 'sem_id') + array('sortby' => 'status')) ?>"><?= _("Status in der Veranstaltung") ?></a>
             <? else: ?>
-            <a href="<?= URLHelper::getLink('', compact('vorname', 'nachname') + array('sortby' => 'perms')) ?>"><?= _("globaler Status") ?></a>
+            <a href="<?= URLHelper::getLink('', compact('name') + array('sortby' => 'perms')) ?>"><?= _("globaler Status") ?></a>
             <? endif; ?>
         </th>
         <th align="right">
@@ -130,9 +118,9 @@
     <? endforeach; ?>
 </table>
 </div>
-<? elseif ($vorname != '' || $nachname != ''): ?>
+<? elseif ($name != ''): ?>
     <?= MessageBox::info(_('Es wurde niemand gefunden.')) ?>
-<? elseif (isset($vorname) || isset($nachname)): ?>
+<? elseif (isset($name)): ?>
     <?= MessageBox::error(_('Bitte einen Vor- oder Nachnamen eingeben.')) ?>
 <? endif; ?>
 

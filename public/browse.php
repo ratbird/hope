@@ -44,17 +44,15 @@ $template->set_layout('layouts/base');
 /* --- Actions -------------------------------------------------------------- */
 
 if (!Request::submitted('reset')) {
-    $vorname = Request::get('vorname');
-    $nachname = Request::get('nachname');
+    $name = Request::get('name_parameter');
     $inst_id = Request::option('inst_id');
     $sem_id = Request::option('sem_id');
 }
 
 //Eine Suche wurde abgeschickt
-if (isset($vorname) || isset($nachname))
+if (isset($name))
 {
-    $template->set_attribute('vorname', $vorname);
-    $template->set_attribute('nachname', $nachname);
+    $template->set_attribute('name', $name);
     $template->set_attribute('inst_id', $inst_id);
     $template->set_attribute('sem_id', $sem_id);
 }
@@ -115,49 +113,43 @@ $template->set_attribute('courses', $courses);
 
 /* --- Results -------------------------------------------------------------- */
 
-$fields = array($_fullname_sql['full_rev'].' AS fullname', 'username', 'perms', 'auth_user_md5.user_id', get_vis_query('auth_user_md5', 'search').' AS visible');
+$fields = array('username', $_fullname_sql['full_rev'].' AS fullname', 'perms', 'auth_user_md5.user_id', get_vis_query('auth_user_md5', 'search').' AS visible');
 $tables = array('auth_user_md5', 'LEFT JOIN user_info USING (user_id)', 'LEFT JOIN user_visibility USING (user_id)');
+$arguments = array();
 
-if ($inst_id) {
-    $result = $db->query("SELECT Institut_id FROM user_inst WHERE Institut_id = '".$inst_id."' AND user_id = '$user->id'");
+//Admin-Abfrage
+$fields[] = 'user_inst.inst_perms';
+$tables[] = 'JOIN user_inst USING (user_id)';
+$filter[] = "IF(:inst_id != '0', user_inst.Institut_id = :inst_id, TRUE)";
+$filter[] = "user_inst.inst_perms != 'user'";
+$arguments[":inst_id"] = $inst_id;
 
-    // entweder wir gehoeren auch zum Institut oder sind global admin
-    if ($result->rowCount() > 0 || $perm->have_perm('admin')) {
-        $fields[] = 'user_inst.inst_perms';
-        $tables[] = 'JOIN user_inst USING (user_id)';
-        $filter[] = "user_inst.Institut_id = '".$inst_id."'";
-        $filter[] = "user_inst.inst_perms != 'user'";
-    }
-}
 
-if ($sem_id) {
-    $result = $db->query("SELECT Seminar_id FROM seminar_user WHERE Seminar_id = '".$sem_id."' AND user_id = '$user->id' $exclude_sem");
-
-    // wir gehoeren auch zum Seminar
-    if ($result->rowCount() > 0) {
-        $fields[] = 'seminar_user.status';
-        $tables[] = 'JOIN seminar_user USING (user_id)';
-        $filter[] = "seminar_user.Seminar_id = '".$sem_id."'";
-    }
-}
+//Admin-Abfrage
+$fields[] = 'seminar_user.status';
+$tables[] = 'JOIN seminar_user USING (user_id)';
+$filter[] = "IF(:sem_id != '0', seminar_user.Seminar_id = :sem_id, TRUE)";
+$arguments[":sem_id"] = $sem_id;
 
 // freie Suche
-if (strlen($vorname) > 2) {
-    $vorname = str_replace('%', '\%', $vorname);
-    $vorname = str_replace('_', '\_', $vorname);
-    $filter[] = "Vorname LIKE '%".addslashes($vorname)."%'";
-}
+$name = str_replace('%', '\%', $name);
+$name = str_replace('_', '\_', $name);
+$filter[] = "IF(:input != '', CONCAT(Vorname, ' ', Nachname, ', ', Vorname, ',', Nachname, ',', Vorname) LIKE :input, TRUE)";
+$arguments[":input"] = "%".addslashes($name)."%";
 
-if (strlen($nachname) > 2) {
-    $nachname = str_replace('%', '\%', $nachname);
-    $nachname = str_replace('_', '\_', $nachname);
-    $filter[] = "Nachname LIKE '%".addslashes($nachname)."%'";
-}
+$query = 'SELECT '.join(',', $fields).' ' .
+        'FROM '.join(' ', $tables).' ' .
+        'WHERE '.join(' AND ', $filter).' ' .
+        'GROUP BY user_id ' .
+        'ORDER BY '.$sortby;
+$search_object = new SQLSearch($query, "", "username");
+$template->set_attribute('search_object', $search_object);
 
-if (count($filter))
+if ($name || $inst_id || $sem_id) 
 {
-    $query = 'SELECT '.join(',', $fields).' FROM '.join(' ', $tables).' WHERE '.join(' AND ', $filter).' ORDER BY '.$sortby;
-    $result = $db->query($query);
+    $statement = $db->prepare($query);
+    $statement->execute($arguments);
+    $result = $statement->fetchAll();
 
     foreach ($result as $row)
     {
@@ -189,4 +181,4 @@ if (count($filter))
 
 echo $template->render();
 page_close();
-?>
+

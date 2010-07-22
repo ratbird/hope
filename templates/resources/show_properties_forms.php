@@ -47,7 +47,7 @@
 
                 $infobox = $GLOBALS['template_factory']->open('infobox/infobox_generic_content.php');
 
-                $infobox->set_attribute('picture', 'infoboxes/schedules.jpg' );
+                $infobox->set_attribute('picture', 'infobox/schedules.jpg' );
                 $infobox->set_attribute('content', $content );
 
                 echo $infobox->render();

@@ -73,7 +73,7 @@ $infobox[0] = array ("kategorie" => _("Information:"),
 $infobox[1] = array ("kategorie" => _("Aktionen:"));
 $infobox[1]["eintrag"][] = array("icon" => "blank.gif","text"  =>  _("Sie k&ouml;nnen jede dieser Listen in ihren pers&ouml;nlichen Literaturbereich kopieren, um erweiterte Informationen über die Eintr&auml;ge zu erhalten.") );
 
-print_infobox ($infobox, "infoboxes/literaturelist.jpg");
+print_infobox ($infobox, "infobox/literaturelist.jpg");
 ?>
 </td>
 </tr>

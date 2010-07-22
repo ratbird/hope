@@ -199,6 +199,6 @@ else {
                                     )));
 }
 
-print_infobox($info_content, "infoboxes/institutes.jpg");
+print_infobox($info_content, "infobox/institutes.jpg");
 
 ?>

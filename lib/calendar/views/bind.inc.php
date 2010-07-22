@@ -138,7 +138,7 @@ $info_content = array(array("kategorie" => _("Information:"),
                                                             "text" => _("Termine aus den ausgew&auml;hlten Veranstaltungen werden in Ihren Terminkalender &uuml;bernommen.")
                                             ))));
 
-print_infobox($info_content, "infoboxes/dates.jpg");
+print_infobox($info_content, "infobox/dates.jpg");
 echo "</td></tr></table>\n";
 
 echo "</tr><tr><td class=\"blank\">&nbsp;";

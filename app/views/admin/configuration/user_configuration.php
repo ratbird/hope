@@ -130,5 +130,5 @@ $infobox_content = array(
     )
 );
 
-$infobox = array('picture' => 'infoboxes/config.jpg', 'content' => $infobox_content);
+$infobox = array('picture' => 'infobox/config.jpg', 'content' => $infobox_content);
 ?>

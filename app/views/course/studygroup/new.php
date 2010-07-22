@@ -1,6 +1,6 @@
 <?php
 $infobox = array();
-$infobox['picture'] = 'infoboxes/studygroup.jpg';
+$infobox['picture'] = 'infobox/studygroup.jpg';
 $infobox['content'] = array(
     array(
         'kategorie'=>_("Information"),

@@ -101,7 +101,7 @@ class StmAbstractAssiVisualization {
             echo $table->cell($form->getFormField($name, array('rows' => '18', 'style' => 'width: 90%; vertical-align: middle')) .'<br><br>', array( 'align' => 'left'));
             if ($name == 'topics') {
                 echo $table->openCell(array('align' => 'center'));
-                print_infobox ($infobox, "infoboxes/wiki.jpg");
+                print_infobox ($infobox, "infobox/wiki.jpg");
                 echo '<br>Vorschau&nbsp;' . $form->getFormButton('preview');
                 echo $table->closeCell();
             }

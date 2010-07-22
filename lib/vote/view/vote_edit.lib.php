@@ -476,7 +476,7 @@ function printRightRegion ( ) {
               );
 
     echo "<td width=\"270\" align=\"center\" valign=\"top\">\n";
-    print_infobox($infobox, "infoboxes/voting.jpg");
+    print_infobox($infobox, "infobox/voting.jpg");
 
     echo "<br><input type=image style=\"vertical-align:middle;\" name=\"saveButton\""
 //  . " onClick=\"finishInputs();\" "

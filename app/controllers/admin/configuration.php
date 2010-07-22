@@ -185,7 +185,7 @@ class Admin_ConfigurationController extends AuthenticatedController
      */
     private function getInfobox()
     {
-        $infobox = array('picture' => 'infoboxes/config.jpg');
+        $infobox = array('picture' => 'infobox/config.jpg');
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/configuration/configuration').'">'._('Konfiguration').'</a>',
             "icon" => "icon-cont.gif"

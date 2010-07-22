@@ -138,7 +138,7 @@
 
 <?
 $infobox = array(
-    'picture' => 'infoboxes/board2.jpg',
+    'picture' => 'infobox/board2.jpg',
     'content' => array(
         array("kategorie" => _("Information:"),
             "eintrag" => array(

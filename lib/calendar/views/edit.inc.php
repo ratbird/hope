@@ -689,7 +689,7 @@ else {
 
 echo "</td></tr></table></form>\n</td>\n";
 echo "<td class=\"blank\" align=\"right\" valign=\"top\" width=\"270\">\n";
-print_infobox($info_box['all'], "infoboxes/dates.jpg");
+print_infobox($info_box['all'], "infobox/dates.jpg");
 echo "</td></tr>\n";
 echo "</table></td></tr></table><br>\n";
 echo "</td></tr></table>\n";

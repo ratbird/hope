@@ -199,7 +199,7 @@ if (!$stm_obj->getValue('complete')) {
 
 // print the info_box
 
-print_infobox ($infobox, "infoboxes/contract.jpg");
+print_infobox ($infobox, "infobox/contract.jpg");
 
 // ende Infobox
 

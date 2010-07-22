@@ -621,7 +621,7 @@ class EvalOverview {
               "eintrag"   => array ($info1, $info2)));
     /* ------------------------------------------------------- end: infobox */
 
-    return print_infobox ($infobox, 'infoboxes/'.$imgLogo, YES);
+    return print_infobox ($infobox, 'infobox/'.$imgLogo, YES);
   }
 
 

@@ -3,7 +3,7 @@
 /* * * * * * * * * * * * *
  * * * I N F O B O X * * *
   * * * * * * * * * * * * */
-$infobox['picture'] = 'infoboxes/groups.jpg';
+$infobox['picture'] = 'infobox/groups.jpg';
 $infobox['content'] = array(
     array(
         'kategorie' => _("Information"),

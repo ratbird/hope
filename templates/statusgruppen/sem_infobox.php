@@ -4,7 +4,7 @@
 
   <tr>
     <td class="infobox-img">
-      <?= Assets::img('infoboxes/groups.jpg') ?>
+      <?= Assets::img('infobox/groups.jpg') ?>
     </td>
   </tr>
 

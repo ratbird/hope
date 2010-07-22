@@ -28,7 +28,7 @@
       <div id="layout_infobox">
         <? $infobox = isset($infobox)
                       ? $infobox
-                      : array('picture' => 'infoboxes/warning.jpg',
+                      : array('picture' => 'infobox/warning.jpg',
                               'content' => array(
                                              array('kategorie' => _("Infobox fehlt."))
                                            )) ?>

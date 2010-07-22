@@ -738,7 +738,7 @@ $txt['008'] = _("Lesebestätigung");
         ))
     );
 
-    print_infobox($infobox, "infoboxes/messages.jpg"); ?>
+    print_infobox($infobox, "infobox/messages.jpg"); ?>
 
     </td>
 </tr>

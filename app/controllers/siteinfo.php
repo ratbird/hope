@@ -125,7 +125,7 @@ class SiteinfoController extends StudipController
             $infobox_actions[] = array('icon' => 'trash.gif',
                                        'text' => '<a href="'.$this->url_for('siteinfo/delete/'.$this->currentrubric).'">'._('Rubrik löschen').'</a>');
         }
-        return array('picture' => 'infoboxes/impressum.jpg',
+        return array('picture' => 'infobox/impressum.jpg',
                      'content' => array(array('kategorie' => _("Administration des Impressums"),
                                               'eintrag' => $infobox_actions))
                     );

@@ -365,7 +365,7 @@ if ($delete_id)
         }
     }
 
-    print_infobox($infobox, "infoboxes/groups.jpg");
+    print_infobox($infobox, "infobox/groups.jpg");
 
     ?>
     </td>

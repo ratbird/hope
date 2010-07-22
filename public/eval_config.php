@@ -111,7 +111,7 @@ function createInfoBox ($imgLogo) {
     $infobox = array (array ("kategorie" => _("Information:"),
             "eintrag"   => array ($info1, $info2)));
     /* ------------------------------------------------------- end: infobox */
-    return print_infobox ($infobox, 'infoboxes/'.$imgLogo, YES);
+    return print_infobox ($infobox, 'infobox/'.$imgLogo, YES);
 }
 
 

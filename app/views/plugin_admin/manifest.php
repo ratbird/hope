@@ -64,5 +64,5 @@ $infobox_content = array(
     )
 );
 
-$infobox = array('picture' => 'infoboxes/modules.jpg', 'content' => $infobox_content);
+$infobox = array('picture' => 'infobox/modules.jpg', 'content' => $infobox_content);
 ?>

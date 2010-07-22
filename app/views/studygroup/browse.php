@@ -3,7 +3,7 @@ require_once 'lib/classes/StudygroupAvatar.class.php';
 require_once 'lib/classes/Avatar.class.php';
 
 $infobox = array();
-$infobox['picture'] = 'infoboxes/studygroup.jpg';
+$infobox['picture'] = 'infobox/studygroup.jpg';
 $infobox['content'] = array(
     array(
         'kategorie'=>_("Information"),

@@ -1028,9 +1028,8 @@ $(document).ready(function () {
   STUDIP.study_area_selection.initialize();
 
   // autofocus for all browsers
-  var autofocus = $('[autofocus]');
-  if (autofocus.length && autofocus[0].autofocus !== true) {
-    autofocus.focus();
+  if (!("autofocus" in document.createElement("input"))) {
+    $('[autofocus]').first().focus();
   }
 
   $('textarea.resizable').resizable({

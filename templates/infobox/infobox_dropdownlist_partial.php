@@ -9,7 +9,7 @@
             <table border="0" cellspacing="0" cellpadding="0">
                 <tbody><tr>
                     <td valign="center">
-                        <select name="newFilter" size="1">
+                        <select name="newFilter" size="1" title="<?= _("Semester auswählen") ?>">
                         <? for ($i = 0; $i < count($selectionlist); $i++) : ?>
                             <? if ( $selectionlist[$i]['is_selected'] ) : ?>
                             <option value="<?=$selectionlist[$i]['value']?>" selected><?=$selectionlist[$i]['linktext']?></option>
@@ -21,7 +21,7 @@
                     </td>
                     <td valign="center">
                         &nbsp;
-                        <input type="image" style="width: 22px; height: 23px;" src="<?=$GLOBALS['ASSETS_URL']?>images/GruenerHakenButton.png" name="semester" title="<?= _("Semester auswählen") ?>" border="0">
+                        <input type="image" style="width: 22px; height: 23px;" src="<?=$GLOBALS['ASSETS_URL']?>images/GruenerHakenButton.png" name="semester" border="0">
                         <input type="hidden" name="cmd" value="applyFilter">
                     </td>
                 </tr></tbody>

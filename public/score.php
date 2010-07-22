@@ -34,7 +34,7 @@ require_once 'lib/classes/StudipKing.class.php';
 
 //Basics
 PageLayout::setHelpKeyword("Basis.VerschiedenesScore"); // external help keyword
-PageLayout::setTitle(_("Stud.IP-Score"));
+PageLayout::setTitle(_("Rangliste"));
 Navigation::activateItem('/community/score');
 
 define("ELEMENTS_PER_PAGE", 20);

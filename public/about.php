@@ -295,20 +295,20 @@ function open_im() {
             <br>
 
             <?
-            // Die Anzeige der Stud.Ip-Score
+            // Die Anzeige der Stud.Ip-Punkte
             $score = new Score(get_userid($username));
 
 
             if ($score->IsMyScore()) {
-                echo "&nbsp;<a href=\"". URLhelper::getLink("score.php") ."\" " . tooltip(_("Zur Highscoreliste")) . "><font size=\"-1\">"
-                     . _("Ihr Stud.IP-Score:") . " ".$score->ReturnMyScore()."<br>&nbsp;"
+                echo "&nbsp;<a href=\"". URLhelper::getLink("score.php") ."\" " . tooltip(_("Zur Rangliste")) . "><font size=\"-1\">"
+                     . _("Ihr Stud.IP-Punkte:") . " ".$score->ReturnMyScore()."<br>&nbsp;"
                      . _("Ihr Rang:") . " ".$score->ReturnMyTitle()."</a></font><br>";
             }
             elseif ($score->ReturnPublik()) {
                 $scoretmp = $score->GetScore(get_userid($username));
                 $title = $score->gettitel($scoretmp, $score->GetGender(get_userid($username)));
                 echo "&nbsp;<a href=\"". URLhelper::getLink("score.php") ."\"><font size=\"-1\">"
-                     . _("Stud.IP-Score:") . " ".$scoretmp."<br>&nbsp;"
+                     . _("Stud.IP-Punkte:") . " ".$scoretmp."<br>&nbsp;"
                      . _("Rang:") . " ".$title."</a></font><br>";
             }
 

@@ -32,7 +32,7 @@
         <li>können Sie nicht mehr &uuml;ber die Personensuche gefunden werden,</li>
         <li>können Sie nicht mehr in der "Wer-ist-online"-Liste erscheinen,</li>
         <li>können Sie nicht mehr Ihre Stud.IP-Homepage nutzen,</li>
-        <li>können Sie nicht mehr Ihre E-Mail-Adresse, Ihr G&auml;stebuch, Ihre Stud.IP-Score etc. anderen zugänglich machen,</li>
+        <li>können Sie nicht mehr Ihre E-Mail-Adresse, Ihr G&auml;stebuch, Ihre Stud.IP-Punkte etc. anderen zugänglich machen,</li>
         <li>k&ouml;nnen Sie nicht mehr im Adressbuch anderer NutzerInnen stehen. </li>
       </ul></td>
   </tr>

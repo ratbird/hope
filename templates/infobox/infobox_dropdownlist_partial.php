@@ -21,7 +21,7 @@
                     </td>
                     <td valign="center">
                         &nbsp;
-                        <input type="image" style="width: 22px; height: 23px;" src="<?=$GLOBALS['ASSETS_URL']?>images/GruenerHakenButton.png" name="<?= _("Semester auswählen") ?>" border="0">
+                        <input type="image" style="width: 22px; height: 23px;" src="<?=$GLOBALS['ASSETS_URL']?>images/GruenerHakenButton.png" name="semester" title="<?= _("Semester auswählen") ?>" border="0">
                         <input type="hidden" name="cmd" value="applyFilter">
                     </td>
                 </tr></tbody>

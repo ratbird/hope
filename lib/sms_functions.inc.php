@@ -267,16 +267,18 @@ function print_snd_message($psm) {
     else
         $attachment_icon = "";
 
-    $ajax_classes = "load_via_ajax internal_message";
-    $custom_data = "data-id=\"'{$psm['message_id']}'\" "
-                 . "data-open=\"" . ($open == 'open' ? 0 : 1) . "\" "
-                 . "data-count=\"{$psm['count']}\"";
+    $ajax_link = URLHelper::getLink('dispatch.php/messages/get_msg_body'
+               . '/'.$psm['message_id']
+               . '/'.(int)($open != 'open')
+               . '/'.$psm['count']);
+    $custom_data = "data-behaviour=\"'ajaxContent'\" "
+                 . "data-target=\"'#msg_item_{$psm['message_id']}'\" "
+                 . "data-url=\"'{$ajax_link}'\"";
 
     $titel = "<a name=\"{$psm['message_id']}\" "
            . "href=\"{$link}\" "
-           . "class=\"tree {$ajax_classes}\" "
-           . $custom_data
-           . ">"
+           . "class=\"tree\" "
+           . $custom_data . ">"
            . htmlready($psm['message_subject'])
            . "{$attachment_icon}</a>";
     $message_hovericon['titel'] = $psm['message_subject'];
@@ -367,15 +369,17 @@ function print_rec_message($prm) {
     else
         $attachment_icon = "";
 
-    $ajax_classes = "load_via_ajax internal_message";
-    $custom_data = "data-id=\"'{$prm['message_id']}'\" "
-                 . "data-open=\"" . ($open == 'open' ? 0 : 1) . "\" "
-                 . "data-count=\"{$prm['count']}";
-
+    $ajax_link = URLHelper::getLink('dispatch.php/messages/get_msg_body'
+               . '/'.$prm['message_id']
+               . '/'.(int)($open != 'open')
+               . '/'.$prm['count']);
+    $custom_data = "data-behaviour=\"'ajaxContent'\" "
+                 . "data-target=\"'#msg_item_{$prm['message_id']}'\" "
+                 . "data-url=\"'{$ajax_link}'\"";
 
     $titel = "<a name=\"{$prm['message_id']}\" "
            . "href=\"{$link}\" "
-           . "class=\"tree {$ajax_classes}\" "
+           . "class=\"tree\" "
            . $custom_data . '">'
            . htmlReady($prm['message_subject'])."{$attachment_icon}</a>";
 

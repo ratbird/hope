@@ -898,19 +898,11 @@ STUDIP.News = {
 /* ------------------------------------------------------------------------
  * ajax_loader
  * ------------------------------------------------------------------------ */
-$('a.load_via_ajax').live('click', function () {
+$('[data-behaviour="\'ajaxContent\'"]').live('click', function () {
   var parameters = $(this).metadata(),
-    indicator = parameters.indicator || this,
-    target = parameters.target || $(this).next(),
-    url = parameters.url || $(this).attr('href');
-
-  // Special cases
-  if ($(this).is('.internal_message')) {
-    target = '#msg_item_' + parameters.id;
-    indicator = target + ' a.tree.load_via_ajax.internal_message';
-    url = STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/messages/get_msg_body/' +
-          parameters.id + '/' + parameters.open + '/' + parameters.count;
-  }
+    indicator = ("indicator" in parameters) ? parameters.indicator : this,
+    target    = ("target" in parameters) ? parameters.target : $(this).next(),
+    url       = ("url" in parameters) ? parameters.url : $(this).attr('href');
 
   $(indicator).showAjaxNotification('right');
   $(target).load(url, function () {

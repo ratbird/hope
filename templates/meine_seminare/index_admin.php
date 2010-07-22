@@ -65,7 +65,7 @@ global $SEM_TYPE;
                             </th>
 
                             <th width="6%" align="left">
-                                <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('sortby' => 'vnummer')) ?>"><?=_("VNummer")?></a>
+                                <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('sortby' => 'VeranstaltungsNummer')) ?>"><?=_("Nr.")?></a>
                             </th>
 
                             <th width="50%" align="left">
@@ -109,7 +109,7 @@ global $SEM_TYPE;
 
                                 <td class="<?= $class ?>">
                                     <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid)) ?>">
-                                        <?= $values["vn"] ?>
+                                        <?= $values["VeranstaltungsNummer"] ?>
                                     </a>
                                 </td>
 

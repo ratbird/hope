@@ -233,13 +233,13 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     if (!$user->is_registered('_my_sem_open')){
         $user->register('_my_sem_open');
     }
-    /* 
+    /*
      * Get and check the global configuration for forced grouping.
-     * If the global configuration specifies an unknown field, don't 
+     * If the global configuration specifies an unknown field, don't
      * force grouping.
      */
-    $forced_grouping = in_array(get_config('MY_COURSES_FORCE_GROUPING'), getValidGroupingFields()) ? 
-        get_config('MY_COURSES_FORCE_GROUPING') : 
+    $forced_grouping = in_array(get_config('MY_COURSES_FORCE_GROUPING'), getValidGroupingFields()) ?
+        get_config('MY_COURSES_FORCE_GROUPING') :
         'not_grouped';
     if (!$user->is_registered('_my_sem_group_field')){
         $user->register('_my_sem_group_field');
@@ -460,7 +460,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
 
     $template = $GLOBALS["template_factory"]->open("meine_seminare/index_autor");
-    
+
     $my_bosses = $default_deputies_enabled ? getDeputyBosses($user->id) : array();
 
     echo $template->render(compact(words("num_my_sem meldung group_field groups my_obj view _my_sem_open cssSw meldung chat_info chat_invs waitlists ".($deputies_enabled && $default_deputies_enabled && $perm->have_perm(getValidDeputyPerms(true)) ? "my_bosses " : "")."num_my_inst infobox")));
@@ -514,21 +514,19 @@ elseif ($auth->auth["perm"]=="admin") {
         }
 
         //tic #650 sortierung in der userconfig merken
-        if (isset($sortby) && in_array($sortby, words('vnummer Name status teilnehmer'))) {
+        if (isset($sortby) && in_array($sortby, words('VeranstaltungsNummer Name status teilnehmer'))) {
             $userConfig->store('MEINE_SEMINARE_SORT', $sortby);
         } else {
-            $sortby=$userConfig->getValue('MEINE_SEMINARE_SORT');
+            $sortby = $userConfig->getValue('MEINE_SEMINARE_SORT');
 
             if ($sortby=="" || $sortby==false) {
-                $sortby="VeranstaltungsNummer ASC, Name ASC";
+                $sortby = "VeranstaltungsNummer ASC, Name ASC";
             }
         }
         if ($sortby == "teilnehmer") {
             $sortby = "teilnehmer DESC";
-        } elseif ($sortby == "vnummer") {
-            $sortby = "VeranstaltungsNummer ASC";
         } elseif ($sortby == "status") {
-            $sortby = "status ASC, VeranstaltungsNummer ASC";
+            $sortby = "status ASC, VeranstaltungsNummer ASC, Name ASC";
         }
 
         $db->query("SELECT Institute.Name AS Institut, seminare.VeranstaltungsNummer, seminare.Seminar_id,seminare.Name,seminare.status,seminare.chdate,
@@ -544,7 +542,7 @@ elseif ($auth->auth["perm"]=="admin") {
         $num_my_sem=$db->num_rows();
         if (!$num_my_sem) {
             $meldung = "msg§"
-                    . sprintf(_("An der Einrichtung <i>%s</i> sind zur Zeit keine Veranstaltungen angelegt."), htmlReady($_my_inst[$_my_admin_inst_id]['name']))
+                    . sprintf(_("An der Einrichtung \"%s\" sind zur Zeit keine Veranstaltungen angelegt."), htmlReady($_my_inst[$_my_admin_inst_id]['name']))
                     . "§"
                     . $meldung;
         } else {
@@ -564,7 +562,7 @@ elseif ($auth->auth["perm"]=="admin") {
                         'visitdate' => $db->f('visitdate'),
                         'institut' => $db->f("Institut"),
                         'teilnehmer' => $db->f("teilnehmer"),
-                        'vn' => $db->f("VeranstaltungsNummer"),
+                        'VeranstaltungsNummer' => $db->f("VeranstaltungsNummer"),
                         'name' => $db->f("Name"),
                         'status' => $db->f("status"),
                         'chdate' => $db->f("chdate"),

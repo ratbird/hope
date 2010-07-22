@@ -1189,7 +1189,7 @@ function getSearchbox($preselection, $keyword) {
     $search_text.="<input type='hidden' name='view' value='search'>";
     $search_text.="<input type='hidden' name='keyword' value='".htmlReady($keyword)."'>";
     $search_text.="<input type='text' size='10' name='searchfor' value='".htmlReady($preselection)."'>";
-    $search_text.="&nbsp;<input type='image' ".makeButton("suchen","src")." align='top' border='0'>";
+    $search_text.="&nbsp;".makeButton("suchen","input");
     $search_text.="<br>";
     $search_text.="<input type='checkbox' name='searchcurrentversions' checked>&nbsp;"._("Nur in aktuellen Versionen");
     $search_text.="</form>";

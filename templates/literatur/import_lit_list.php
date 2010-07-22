@@ -29,7 +29,7 @@
                 <br>
                 <?= _("2. Klicken Sie auf <b>absenden</b>, um die Datei hochzuladen.") ?><br>
                 <br>
-        <input type="image" <?= makeButton("absenden", "src") ?>  border="0" value="<?= _("absenden") ?>">
+        <?= makeButton("absenden", "input") ?>
             <? endif; ?>
                 <br>
                 <br>

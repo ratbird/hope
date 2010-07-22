@@ -535,10 +535,13 @@ function ForumIcon ($forumposting) {
             $hoverlink = "<a href=\"javascript:void(0);\" ";
             $txt = "";
         }
-        $forumposting["icon"] = $hoverlink
-        ."onmouseover=\"STUDIP.Dialogbox.openForumPosting('".
-            $forumposting["id"]."', this);".
-            " return false;\"><img src=\"".$bild."\" border=0></a>";
+        $forumposting["icon"] = $hoverlink .
+            "><img src=\"".$bild."\" border=0 onmouseover=\"$(this).hoverIntent({over: STUDIP.Dialogbox.openForumPosting('".
+                $forumposting["id"]."', '#forum_posting_".$forumposting["id"]."_icon'), ".
+                "sensitivity: 1, " .
+                "interval: 1000, " .
+                "out: STUDIP.Dialogbox.closeBox('".$forumposting["id"]."')" .
+            "});\" id=\"forum_posting_".$forumposting["id"]."_icon\"></a>";
     } else {
         if ($forum["view"]=="tree" && $forumposting["type"]=="folder")
             $forumposting["icon"] = "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]."&folderopen=".$forumposting["id"]."&openall=TRUE#anker")."\"><img src=\"".$bild."\" border=0 " . tooltip(_("Alle Postings im Thema öffnen")) . "></a>";
@@ -1099,12 +1102,7 @@ function print_rating($rate, $id, $username) {
     if (object_check_user($id, "rate") == TRUE || get_username($user->id) == $username) { // already rated / my own posting
         $bar = '<span ' . tooltip(sprintf(_("Bewertung: %s"),$rate), false) . '>' . $bar. '</span>';
     } else {
-            $bar = '<span onClick="return STUDIP.OverDiv.BindInline(
-                {position:\'top left\',
-                id: \''.$id.'_rate\',
-                title: \'\',
-                content: STUDIP.Forum.rate_template.evaluate({id: \''.$id.'\'}),
-                initiator: this, width: 250}, event);" '
+            $bar = '<span onClick="" '
                 . tooltip(sprintf(_("Bewertung: %s Zum Abstimmen bitte klicken."),$rate), false) . '>'
                 . $bar
                 . '</span>';
@@ -1875,7 +1873,7 @@ $searchfield = "
         <tr>
             <td class=\"steelgraulight\" colspan=\"2\" align=\"center\">
                 <input type=\"hidden\" name=\"view\" value=\"search\">
-                <br><input type=\"IMAGE\" ".makeButton("suchestarten", "src")."border=\"0\" value=\""._("Suche starten")."\"><br><br>
+                <br>".makeButton("suchestarten", "input")."<br><br>
             </td>
         </tr>
     </form>

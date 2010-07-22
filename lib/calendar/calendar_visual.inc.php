@@ -577,7 +577,7 @@ function jumpTo ($month, $day, $year, $colsp = 1) {
     echo "<input type=\"text\" name=\"jmp_d\" size=\"2\" maxlength=\"2\" value=\"$day\">";
     echo "&nbsp;.&nbsp;<input type=\"text\" name=\"jmp_m\" size=\"2\" maxlength=\"2\" value=\"$month\">";
     echo "&nbsp;.&nbsp;<input type=\"text\" name=\"jmp_y\" size=\"4\" maxlength=\"4\" value=\"$year\">";
-    echo "&nbsp;<input type=\"image\" " . makeButton("absenden", "src") . " border=\"0\" align=\"absmiddle\">\n";
+    echo "&nbsp;" . makeButton("absenden", "input") . "\n";
     echo "<input type=\"hidden\" name=\"atime\" value=\"$atime\">\n";
     echo "</form>\n\n</td></tr>\n";
     echo "<tr><td";

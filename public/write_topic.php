@@ -132,7 +132,7 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
             echo "\n";
         }
         echo "</textarea><br><br>";
-        echo "<input type=\"IMAGE\" " . makeButton("abschicken", "src") . " border=\"0\" align=\"middle\">";
+        echo makeButton("abschicken", "input");
         if (get_config("EXTERNAL_HELP")) {
             $help_url=format_help_url("Basis.VerschiedenesFormat");
         } else {

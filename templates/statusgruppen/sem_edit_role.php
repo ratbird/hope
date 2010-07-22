@@ -44,9 +44,9 @@
 
     <input type="hidden" name="cmd" value="<?= ($edit_role) ? 'doEditRole' : 'addRole' ?>">
     <? if ($edit_role) :?>
-    <input type="image" <?= makebutton('speichern', 'src') ?> style="vertical-align: middle;">
+    <?= makebutton('speichern', 'input') ?>
     <? else: ?>
-    <input type="image" <?= makebutton('eintragen', 'src') ?> style="vertical-align: middle;">
+    <?= makebutton('eintragen', 'input') ?>
     <? endif; ?>
 
     <input type="hidden" name="role_id" value="<?= $role_data['id'] ?>">

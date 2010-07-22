@@ -2064,7 +2064,7 @@ class Seminar {
 
         // Alle News-Verweise auf dieses Seminar löschen
         if ( ($db_ar = StudipNews::DeleteNewsRanges($s_id)) ) {
-            $this->createMessage(sprintf(_("%s News gel&ouml;scht."), $db_ar));
+            $this->createMessage(sprintf(_("%s Ankündigungen gel&ouml;scht."), $db_ar));
         }
         //delete entry in news_rss_range
         StudipNews::UnsetRssId($s_id);
@@ -2132,7 +2132,7 @@ class Seminar {
         return true;
 
     }
-    
+
     /**
      * returns a html representation of the seminar-dates
      *
@@ -2202,9 +2202,9 @@ class Seminar {
         $template->set_attributes($params);
         return trim($template->render());
     }
-    
+
     /**
-     * returns an asscociative array with the attributes of the seminar depending 
+     * returns an asscociative array with the attributes of the seminar depending
      * on the field-names in the database
      * @return array
      */
@@ -2247,7 +2247,7 @@ class Seminar {
         $data['showscore'] = $this->showscore;
         return $data;
     }
-    
+
     /**
      * returns an array with all IDs of Institutes this seminar is related to
      * @param sem_id string:    optional ID of a seminar, when null, this ID will be used
@@ -2267,7 +2267,7 @@ class Seminar {
                "")
             ->fetchAll(PDO::FETCH_COLUMN, 0);
     }
-    
+
     /**
      * set the entries for seminar_inst table in database
      * seminare.institut_id will always be added
@@ -2303,7 +2303,7 @@ class Seminar {
             return false;
         }
     }
-    
+
     /**
      * adds a user to the seminar with the given status
      * @param user_id string: ID of the user
@@ -2343,9 +2343,9 @@ class Seminar {
             return false;
         }
     }
-    
+
     /**
-     * deletes a user from the seminar by respecting the rule that at least one 
+     * deletes a user from the seminar by respecting the rule that at least one
      * user with status "dozent" must stay there
      * @param user_id string:   user_id of the user to delete
      * @param return:   false or $this for chaining
@@ -2369,18 +2369,18 @@ class Seminar {
             $db->exec("DELETE FROM seminar_user " .
                    "WHERE Seminar_id = ".$db->quote($this->id)." " .
                        "AND user_id = ".$db->quote($user_id));
-            $this->createMessage(sprintf(_("Nutzer %s wurde aus Veranstaltung entfernt."), 
+            $this->createMessage(sprintf(_("Nutzer %s wurde aus Veranstaltung entfernt."),
                     "<i>".get_fullname($user_id)."</i>"));
             return $this;
         } else {
             $this->createError(sprintf(_("Die Veranstaltung muss wenigstens " .
                     "<b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben! " .
-                    "Tragen Sie zun&auml;chst einen anderen ein, um diesen zu l&ouml;schen."), 
+                    "Tragen Sie zun&auml;chst einen anderen ein, um diesen zu l&ouml;schen."),
                     get_title_for_status('dozent', 1, $this->status)));
             return false;
         }
     }
-    
+
     /**
      * sets the almost never used column position in the table seminar_user
      * @param members array: array of user_id's - wrong IDs will be ignored

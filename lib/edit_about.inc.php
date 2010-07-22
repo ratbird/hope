@@ -785,7 +785,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
     /**
      * Changes visibility settings for the current user.
-     * 
+     *
      * @param string $global global visibility of the account in Stud.IP
      * @param string $online visiblity in "Who is online" list
      * @param string $chat visibility of the private chatroom in active chats list
@@ -816,10 +816,10 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
     /**
      * Changes the visibility of all homepage elements to the given value.
-     * 
-     * @param int $new_visibility new visiblity of homepage elements, one of 
+     *
+     * @param int $new_visibility new visiblity of homepage elements, one of
      * the visibility constants defined in lib/user_visible.inc.php.
-     * @return array All of the user's hoempage elements with new visibility 
+     * @return array All of the user's hoempage elements with new visibility
      * set.
      */
     function change_all_homepage_visibility($new_visibility) {
@@ -848,8 +848,8 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
     /**
      * Saves user specified visibility settings for homepage elements.
-     * 
-     * @param array $data all homepage elements with their visiblities in 
+     *
+     * @param array $data all homepage elements with their visiblities in
      * the form $name => $visibility
      * @return int Number of affected database rows (hopefully 1).
      */
@@ -862,14 +862,14 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
     }
 
     /**
-     * Builds an array containing all available elements that are part of a 
-     * user's homepage together with their visibility. It isn't sufficient to 
-     * just load the visibility settings from database, because if the user 
+     * Builds an array containing all available elements that are part of a
+     * user's homepage together with their visibility. It isn't sufficient to
+     * just load the visibility settings from database, because if the user
      * has added some data (e.g. CV) but not yet assigned a special visibility
      * to that field, it wouldn't show up.
-     * 
-     * @return array An array containing all available homepage elements 
-     * together with their visibility settings in the form 
+     *
+     * @return array An array containing all available homepage elements
+     * together with their visibility settings in the form
      * $name => $visibility.
      */
     function get_homepage_elements() {
@@ -939,7 +939,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         if ($my_data["Home"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['homepage'])
             $homepage_elements["homepage"] = array("name" => _("Homepage-Adresse"), "visibility" => $homepage_visibility["homepage"] ? $homepage_visibility["homepage"] : get_default_homepage_visibility(), "extern" => true, 'category' => 'Private Daten');
         if ($news && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['news'])
-            $homepage_elements["news"] = array("name" => _("News"), "visibility" => $homepage_visibility["news"] ? $homepage_visibility["news"] : get_default_homepage_visibility(), "extern" => true, 'category' => 'Allgemeine Daten');
+            $homepage_elements["news"] = array("name" => _("Ankündigungen"), "visibility" => $homepage_visibility["news"] ? $homepage_visibility["news"] : get_default_homepage_visibility(), "extern" => true, 'category' => 'Allgemeine Daten');
         if ($GLOBALS["CALENDAR_ENABLE"] && $dates && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['dates'])
             $homepage_elements["termine"] = array("name" => _("Termine"), "visibility" => $homepage_visibility["termine"] ? $homepage_visibility["termine"] : get_default_homepage_visibility(), "extern" => true, 'category' => 'Allgemeine Daten');
         if (get_config('VOTE_ENABLE') && ($activeVotes || $stoppedVotes || $activeEvals) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['votes'])

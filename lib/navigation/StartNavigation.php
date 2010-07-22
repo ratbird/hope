@@ -49,7 +49,7 @@ class StartNavigation extends Navigation
         }
 
         $homeinfo = _('Zur Startseite');
-        $homeinfo .= $news ? ' - ' . sprintf(_('%s neue News'), $news) : '';
+        $homeinfo .= $news ? ' - ' . sprintf(_('%s neue Ankündigungen'), $news) : '';
         $homeinfo .= $vote ? ' - ' . sprintf(_('%s neue Umfrage(n)'), $vote) : '';
         $homeimage = $vote + $news ? 'header/header_home_red' : 'header/header_home';
 

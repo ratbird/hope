@@ -107,7 +107,7 @@ $infobox['content'][] = array(
           <a class="click_me" href="<?= UrlHelper::getLink('admin_news.php?section=news') ?>">
           <div>
               <span class="click_head"><?=_("Ankündigungen");?></span>
-              <p><?=_("Erstellen Sie Ankündigungen (News) für Ihre Veranstaltung und bearbeiten Sie laufende Ankündigungen.");?></p>
+              <p><?=_("Erstellen Sie Ankündigungen für Ihre Veranstaltung und bearbeiten Sie laufende Ankündigungen.");?></p>
               </div>
           </a>
 

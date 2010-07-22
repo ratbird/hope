@@ -123,11 +123,11 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
     if (!count($news)) {
         if ($show_admin) {
             echo"\n<table class=\"index_box\"$width>";
-            echo"\n<tr><td class=\"topic\" colspan=\"2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/news2.gif\" border=\"0\"". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "align=\"texttop\"><b> " . _("News") . "</b></td>";
+            echo"\n<tr><td class=\"topic\" colspan=\"2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/news2.gif\" border=\"0\"". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue Ankündigungen in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "align=\"texttop\"><b> " . _("Ankündigungen") . "</b></td>";
             echo"\n<td align = \"right\" class=\"topic\">";
-            echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\"" . tooltip(_("News einstellen")) . "></a> ";
+            echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\"" . tooltip(_("Ankündigungen einstellen")) . "></a> ";
             echo"</td></tr>";
-            echo "\n<tr><td class=\"steel1\" colspan=\"3\"><p class=\"info\">" . _("Es sind keine aktuellen News vorhanden. Um neue News zu erstellen, klicken Sie auf die Doppelpfeile.") . "</p>";
+            echo "\n<tr><td class=\"steel1\" colspan=\"3\"><p class=\"info\">" . _("Es sind keine aktuellen Ankündigungen vorhanden. Um neue Ankündigungen zu erstellen, klicken Sie auf die Doppelpfeile.") . "</p>";
             echo "\n</td></tr></table>";
             return TRUE;
         } else {
@@ -136,9 +136,9 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
     } else {
         $colspan=2;
 
-        //Ausgabe der Kopfzeile vor erster auszugebener News
+        //Ausgabe der Kopfzeile vor erster auszugebener Ankündigungen
         echo"\n<table class=\"index_box\"$width>";
-        echo"\n<tr><td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/news2.gif\" border=\"0\"". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b>" . _("News") . "</b></td>";
+        echo"\n<tr><td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/news2.gif\" border=\"0\"". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue Ankündigungen in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b>" . _("Ankündigungen") . "</b></td>";
         if ($rss_id) {
             $colspan++;
             echo "\n<td align=\"right\" class=\"topic\">";
@@ -148,7 +148,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
         if ($show_admin) {
             $colspan++;
             echo "\n<td align=\"right\" class=\"topic\" width=\"1%\">";
-            echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&modus=admin&cmd=show")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\"" . tooltip(_("News bearbeiten")) . "></a> ";
+            echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&modus=admin&cmd=show")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/pfeillink.gif\" border=\"0\"" . tooltip(_("Ankündigungen bearbeiten")) . "></a> ";
             echo "\n</td>";
         }
         echo "\n</tr>\n<tr><td class=\"blank\" colspan=\"$colspan\">";

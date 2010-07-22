@@ -194,7 +194,7 @@ $queries[$c]['details'] = "details=guestbook";
 $queries[$c]['desc'] = _("Anzahl der Forenpostings");
 $queries[$c]['query'] = "SELECT COUNT(*) FROM px_topics WHERE user_id='$user_id' GROUP BY user_id";
 ++$c;
-$queries[$c]['desc'] = _("Anzahl der News");
+$queries[$c]['desc'] = _("Anzahl der Ankündigungen");
 $queries[$c]['query'] = "SELECT COUNT(*) FROM news WHERE user_id='$user_id' GROUP BY user_id";
 ++$c;
 $queries[$c]['desc'] = _("Anzahl der Wikiseiten");

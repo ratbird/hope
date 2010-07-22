@@ -149,7 +149,7 @@ class StudipKing {
             'guestbook_entry'  => "%d bekommene Gästebucheinträge",
             'voter'            => "%d abgegebene Stimmen",
             'votes'            => "%d bekommene Stimmen",
-            'news'             => "%d eingestellte News"
+            'news'             => "%d eingestellte Ankündigungen"
         );
         return sprintf(_($alt_text[$type]), $amount);
     }

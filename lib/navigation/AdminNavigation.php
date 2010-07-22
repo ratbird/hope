@@ -61,7 +61,7 @@ class AdminNavigation extends Navigation
                                       'dispatch.php/course/study_areas/show/' . $_SESSION['SessionSeminar'], array('list' => 'TRUE')));
         $navigation->addSubNavigation('dates', new Navigation(_('Zeiten / Räume'), 'raumzeit.php?list=TRUE'));
         $navigation->addSubNavigation('schedule', new Navigation(_('Ablaufplan'), 'themen.php?list=TRUE'));
-        $navigation->addSubNavigation('news', new Navigation(_('News'), 'admin_news.php?list=TRUE&view=news_sem'));
+        $navigation->addSubNavigation('news', new Navigation(_('Ankündigungen'), 'admin_news.php?list=TRUE&view=news_sem'));
 
         if (get_config('VOTE_ENABLE')) {
             $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_sem'));
@@ -106,7 +106,7 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('groups', new Navigation(_('Gruppen / Funktionen'), 'admin_roles.php?list=TRUE'));
         }
 
-        $navigation->addSubNavigation('news', new Navigation(_('News'), 'admin_news.php?list=TRUE&view=news_inst'));
+        $navigation->addSubNavigation('news', new Navigation(_('Ankündigungen'), 'admin_news.php?list=TRUE&view=news_inst'));
 
         if (get_config('VOTE_ENABLE')) {
             $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_inst'));

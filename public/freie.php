@@ -63,12 +63,12 @@ function get_my_sem_values(&$my_sem) {
             $my_sem[$db2->f('seminar_id')]['files'] = $nav;
         }
     }
-//News
+//Ankündigungen
     $db2->query ("SELECT range_id,count(*) as count FROM news_range LEFT JOIN news USING(news_id) WHERE range_id IN ".$my_semids." GROUP BY range_id");
     while($db2->next_record()) {
         if ($db2->f('count')) {
             $nav = new Navigation('news', '');
-            $nav->setImage('icon-news.gif', array('title' => sprintf(_('%s News'), $db2->f('count'))));
+            $nav->setImage('icon-news.gif', array('title' => sprintf(_('%s Ankündigungen'), $db2->f('count'))));
             $my_sem[$db2->f('range_id')]['news'] = $nav;
         }
     }

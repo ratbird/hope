@@ -177,7 +177,7 @@
         </tr>
 
         <tr>
-          <td style="background-color: #aaaaaa"><?= _('Welche Dateien, Beiträge,<br>News,... habe ich gelesen?') ?></td>
+          <td style="background-color: #aaaaaa"><?= _('Welche Dateien, Beiträge,<br>Ankündigungen,... habe ich gelesen?') ?></td>
           <td style="background-color: red">&nbsp;</td>
           <td style="background-color: red">&nbsp;</td>
           <td style="background-color: red">&nbsp;</td>

@@ -579,7 +579,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             echo "</font></td>";
             echo "<td class=\"".$cssSw->getClass()."\" align=\"center\"><font size=-1>".$SEM_TYPE[$db->f("status")]["name"]."<br>" . _("Kategorie:") . " <b>".$SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["name"]."</b><font></td>";
             echo "<td class=\"".$cssSw->getClass()."\" nowrap align=\"center\">";
-            
+
             //Kommandos fuer die jeweilgen Seiten
             switch ($i_page) {
                 case "adminarea_start.php":
@@ -610,7 +610,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     printf("<font size=-1>" . _("Module") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?range_id=' . $seminar_id), makeButton("bearbeiten"));
                     break;
                 case "admin_news.php":
-                    printf("<font size=-1>" . _("News") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?range_id=' . $seminar_id), makeButton("bearbeiten"));
+                    printf("<font size=-1>" . _("Ankündigungen") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?range_id=' . $seminar_id), makeButton("bearbeiten"));
                     break;
                 case "copy_assi.php":
                     printf("<font size=-1>" . _("Veranstaltung") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('admin_seminare_assi.php?cmd=do_copy&start_level=TRUE&class=1&cp_id=' . $seminar_id), makeButton("kopieren"));

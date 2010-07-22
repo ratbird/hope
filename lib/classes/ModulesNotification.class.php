@@ -4,9 +4,9 @@
 # Lifter003: TODO
 /**
 * ModulesNotification.class.php
-* 
+*
 * check for modules (global and local for institutes and Veranstaltungen), read and write
-* 
+*
 *
 * @author       Peter Thienel <thienel@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -42,12 +42,12 @@ class ModulesNotification extends Modules {
 
     var $registered_notification_modules = array();
     var $subject;
-    
+
     function ModulesNotification () {
         parent::Modules();
         $this->registered_notification_modules['news'] = array(
                 'id' => 25, 'const' => '', 'sem' => TRUE, 'inst' => TRUE,
-                'mes' => TRUE, 'name' => _("News"));
+                'mes' => TRUE, 'name' => _("Ankündigungen"));
         $this->registered_notification_modules['votes'] = array(
                 'id' => 26, 'const' => '', 'sem' => TRUE, 'inst' => FALSE,
                 'mes' => TRUE, 'name' => _("Umfragen und Tests"));
@@ -69,7 +69,7 @@ class ModulesNotification extends Modules {
         $this->registered_modules = array_merge_recursive($this->registered_modules,
                 $extend_modules);
     }
-    
+
     function getGlobalEnabledNotificationModules ($range) {
         $enabled_modules = array();
         foreach ($this->registered_modules as $name => $data) {
@@ -84,11 +84,11 @@ class ModulesNotification extends Modules {
         }
         return sizeof($enabled_modules) ? $enabled_modules : FALSE;
     }
-    
+
     function getAllModules () {
         return $this->registered_modules + $this->registered_notification_modules;
     }
-    
+
     function getAllNotificationModules () {
         $modules = array();
         foreach ($this->registered_modules as $name => $data) {
@@ -98,7 +98,7 @@ class ModulesNotification extends Modules {
         }
         return $modules + $this->registered_notification_modules;
     }
-    
+
     function setModuleNotification ($m_array, $range = NULL, $user_id = NULL) {
         if (!is_array($m_array)) {
             return FALSE;
@@ -130,7 +130,7 @@ class ModulesNotification extends Modules {
         }
         return TRUE;
     }
-    
+
     function getModuleNotification ($range = 'sem', $user_id = NULL) {
         if (is_null($user_id)) {
             $user_id = $GLOBALS['user']->id;
@@ -146,7 +146,7 @@ class ModulesNotification extends Modules {
             $settings[$this->db->f('Seminar_id')] = $this->db->f('notification');
         }
         if ($range == 'sem' && get_config('DEPUTIES_ENABLE')) {
-            $this->db->query("SELECT d.range_id, d.notification 
+            $this->db->query("SELECT d.range_id, d.notification
                 FROM deputies d JOIN seminare s ON (d.range_id=s.Seminar_id)
                 WHERE d.user_id = '$user_id'");
             while ($this->db->next_record()) {
@@ -155,14 +155,14 @@ class ModulesNotification extends Modules {
         }
         return $settings;
     }
-    
+
     // only range = 'sem' is implemented
     function getAllNotifications ($user_id = NULL) {
-        
+
         if (is_null($user_id)) {
             $user_id = $GLOBALS['user']->id;
         }
-        
+
         $this->db->query("SELECT s.Seminar_id, s.Name, s.chdate,
                 s.start_time, s.modules, IFNULL(visitdate, 0) as visitdate
                 FROM seminar_user su LEFT JOIN seminare s USING (Seminar_id)
@@ -170,7 +170,7 @@ class ModulesNotification extends Modules {
                 ON (ouv.object_id = su.Seminar_id AND ouv.user_id = '$user_id'
                 AND ouv.type='sem')
                 WHERE su.user_id = '$user_id' AND su.status != 'user'");
-        
+
         $my_sem = array();
         while ($this->db->next_record()){
             $seminar_id = $this->db->f('Seminar_id');
@@ -193,7 +193,7 @@ class ModulesNotification extends Modules {
             unset( $modules );
             unset( $modulesInt );
         }
-        
+
         $m_enabled_modules = $this->getGlobalEnabledNotificationModules('sem');
         $m_all_notifications = $this->getModuleNotification('sem', $user_id);
         $m_extended = 0;
@@ -202,7 +202,7 @@ class ModulesNotification extends Modules {
         }
 
         get_my_obj_values($my_sem, $user_id);
-        
+
     $news = array();
     $cssSw = new cssClassSwitcher;
         $text = '';
@@ -244,7 +244,7 @@ class ModulesNotification extends Modules {
 
         return array('text'=>$text, 'html'=>$template->render());;
     }
-    
+
     // only range = 'sem' is implemented
     function getModuleText ($m_name, $range_id, $r_data, $range, $output='text') {
         $text = '';
@@ -291,7 +291,7 @@ class ModulesNotification extends Modules {
                         $text = sprintf(_("%s neue Content-Module angelegt"), $r_data['neuecontentmodule']);
                     } else if ($r_data['neuecontentmodule'] > 0) {
                         $text = _("1 neues Content-Modul angelegt");
-                    }   
+                    }
                     $redirect = "&again=yes&redirect_to=elearning_interface.php&seminar_id=$range_id&view=show";
             $icon = "icon-lern.gif";
                 }
@@ -325,9 +325,9 @@ class ModulesNotification extends Modules {
                 break;
             case 'news' :
                 if ($r_data['neuenews'] > 1) {
-                    $text = sprintf(_("%s neu News wurden angelegt:"), $r_data['neuenews']);
+                    $text = sprintf(_("%s neue Ankündigungen wurden angelegt:"), $r_data['neuenews']);
                 } else if ($r_data['neuenews']) {
-                    $text = _("1 neue News wurde angelegt:");
+                    $text = _("Eine neue Ankündigung wurde angelegt:");
                 }
                 $redirect = '&again=yes';
         $icon = "icon-news.gif";
@@ -350,18 +350,18 @@ class ModulesNotification extends Modules {
             if (substr($text, -1) == ':') $text = substr($text, 0, -1);
                 return array('txt'=>$text, 'url'=>$GLOBALS['ABSOLUTE_URI_STUDIP']."seminar_main.php?auswahl=$range_id$redirect", 'icon'=>$icon, 'range_id'=>$range_id);
         }
-        } 
+        }
         return $text;
     }
-    
+
     function generateModulesArrayFromModulesInteger( $bitmaskint ){
         $array = array();
         $bitmask = str_split( strrev( decbin( $bitmaskint ) ) );
         foreach( $this->registered_modules as $name => $module ){
             $array[ $name ] = ( $bitmask[ $module[ "id" ] ] == "1" );
-        }                   
+        }
         return $array;
-    }   
-    
+    }
+
 }
 ?>

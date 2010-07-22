@@ -62,7 +62,7 @@ class UserManagement
     var $db2;           // database connection2
     var $validator;     // object used for checking input
     var $hash_secret = "jdfiuwenxclka";  // set this to something, just something different...
-    
+
     /**
     * Constructor
     *
@@ -371,7 +371,7 @@ class UserManagement
 
         // send mail
         StudipMail::sendMessage($this->user_data['auth_user_md5.Email'],$subject, $mailbody);
-        
+
         return TRUE;
     }
 
@@ -423,14 +423,14 @@ class UserManagement
 
         // active dozent? (ignore the studygroup guys)
         $status = studygroup_sem_types();
-        
-        $this->db->query("SELECT count(*) AS count FROM seminar_user as su LEFT JOIN seminare as s USING (Seminar_id) 
+
+        $this->db->query("SELECT count(*) AS count FROM seminar_user as su LEFT JOIN seminare as s USING (Seminar_id)
                           WHERE su.user_id = '" . $this->user_data['auth_user_md5.user_id'] . "'
                           AND s.status NOT IN ('". implode("','", $status)."')
                           AND su.status = 'dozent' GROUP BY user_id");
-        
+
         $this->db->next_record();
-        
+
         if ($this->db->f("count") &&  isset($newuser['auth_user_md5.perms']) && $newuser['auth_user_md5.perms'] != "dozent") {
             $this->msg .= sprintf("error§" . _("Der Benutzer <em>%s</em> ist Dozent in %s aktiven Veranstaltungen und kann daher nicht in einen anderen Status versetzt werden!") . "§", $this->user_data['auth_user_md5.username'], $this->db->f("count"));
             return FALSE;
@@ -502,7 +502,7 @@ class UserManagement
 
         // send mail
         StudipMail::sendMessage($this->user_data['auth_user_md5.Email'],$subject, $mailbody);
-        
+
         // Upgrade to admin or root?
         if ($newuser['auth_user_md5.perms'] == "admin" || $newuser['auth_user_md5.perms'] == "root") {
 
@@ -553,7 +553,7 @@ class UserManagement
         }
         if ($newuser['auth_user_md5.perms'] == "root") {
             $this->logInstUserDel($this->user_data['auth_user_md5.user_id']);
- 
+
             $query = "DELETE FROM user_inst WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
             $this->db->query($query);
             if (($db_ar = $this->db->affected_rows()) > 0) {
@@ -673,7 +673,7 @@ class UserManagement
         }
 
         // active dozent?
-        $this->db->query("SELECT count(*) AS count FROM seminar_user as su " 
+        $this->db->query("SELECT count(*) AS count FROM seminar_user as su "
             . "LEFT JOIN auth_user_md5 as aum USING (user_id)"
             . "LEFT JOIN seminare as s USING (Seminar_id)"
             . "WHERE user_id = '" . $this->user_data['auth_user_md5.user_id'] . "'"
@@ -685,8 +685,8 @@ class UserManagement
         if ($this->db->f("count")) {
             $this->msg .= sprintf("error§" . _("Der Benutzer/die Benutzerin <em>%s</em> ist DozentIn in %s aktiven Veranstaltungen und kann daher nicht gel&ouml;scht werden.") . "§", $this->user_data['auth_user_md5.username'], $this->db->f("count"));
             return FALSE;
-        
-        //founder of studygroup?    
+
+        //founder of studygroup?
         } elseif (get_config('STUDYGROUPS_ENABLE')) {
           $stmt = DBManager::get()->query("SELECT * FROM seminare as s "
                 . "LEFT JOIN seminar_user as su USING (Seminar_id) "
@@ -712,7 +712,7 @@ class UserManagement
                         StudygroupModel::promote_user($new_founder['username'], $sem->getId(), 'dozent');
                         continue;
                     }
-                    // since no suitable successor was found, we are allowed to remove the studygroup 
+                    // since no suitable successor was found, we are allowed to remove the studygroup
                     else {
                         $sem->delete();
                     }
@@ -737,7 +737,7 @@ class UserManagement
 	        if ($temp_count) {
 	            $this->msg .= "info§" . sprintf(_("%s Dokumente gel&ouml;scht."), $temp_count) . "§";
 	        }
-	
+
 	        // delete empty folders of this user
 	        $temp_count = 0;
 	        $query = "SELECT folder_id FROM folder WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "' ORDER BY mkdate DESC";
@@ -755,7 +755,7 @@ class UserManagement
 	        if ($temp_count) {
 	            $this->msg .= "info§" . sprintf(_("%s leere Ordner gel&ouml;scht."), $temp_count) . "§";
 	        }
-	
+
 	        // folder left?
 	        $query = "SELECT count(*) AS count FROM folder WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
 	        $this->db->query($query);
@@ -813,10 +813,10 @@ class UserManagement
 
         // delete all personal news from this user
         if (($db_ar = StudipNews::DeleteNewsByAuthor($this->user_data['auth_user_md5.user_id']))) {
-            $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus den News gel&ouml;scht."), $db_ar) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Eintr&auml;ge aus den Ankündigungen gel&ouml;scht."), $db_ar) . "§";
         }
         if (($db_ar = StudipNews::DeleteNewsRanges($this->user_data['auth_user_md5.user_id']))) {
-            $this->msg .= "info§" . sprintf(_("%s Verweise auf News gel&ouml;scht."), $db_ar) . "§";
+            $this->msg .= "info§" . sprintf(_("%s Verweise auf Ankündigungen gel&ouml;scht."), $db_ar) . "§";
         }
 
         //delete entry in news_rss_range
@@ -899,7 +899,7 @@ class UserManagement
                 }
             }
         }
-        
+
         // delete deputy entries if necessary
         $query = "DELETE FROM deputies WHERE user_id='".$this->user_data['auth_user_md5.user_id']."' OR range_id='".$this->user_data['auth_user_md5.user_id']."'";
         $deputyEntries = DBManager::get()->exec($query);
@@ -972,7 +972,7 @@ class UserManagement
 
         // send mail
         StudipMail::sendMessage($this->user_data['auth_user_md5.Email'],$subject, $mailbody);
-        
+
 
         return TRUE;
 

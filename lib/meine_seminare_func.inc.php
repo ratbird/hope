@@ -18,7 +18,7 @@ function get_group_names($group_field, $groups){
                     case 'sem_number':
                     $ret[$key] = $all_semester[$key]['name'];
                     break;
-                    
+
                     case 'sem_tree_id':
                     if ($the_tree->tree_data[$key]) {
                         //$ret[$key] = $the_tree->getShortPath($key);
@@ -30,24 +30,24 @@ function get_group_names($group_field, $groups){
                         $ret[$key][1] = '';
                     }
                     break;
-                    
+
                     case 'sem_status':
                     $ret[$key] = $SEM_TYPE[$key]["name"]." (". $SEM_CLASS[$SEM_TYPE[$key]["class"]]["name"].")";
                     break;
-                    
+
                     case 'not_grouped':
                     $ret[$key] = _("keine Gruppierung");
                     break;
-                    
+
                     case 'gruppe':
                     $ret[$key] = _("Gruppe")." ".$groupcount;
                     $groupcount++;
                     break;
-                    
+
                     case 'dozent_id':
                     $ret[$key] = get_fullname($key, 'no_title_short');
                     break;
-                    
+
                     default:
                     $ret[$key] = 'unknown';
                     break;
@@ -57,42 +57,42 @@ function get_group_names($group_field, $groups){
 }
 
 function sort_groups($group_field, &$groups){
-    
+
     switch ($group_field){
-        
+
         case 'sem_number':
             krsort($groups, SORT_NUMERIC);
         break;
-        
+
         case 'gruppe':
             ksort($groups, SORT_NUMERIC);
         break;
-        
+
         case 'sem_tree_id':
             uksort($groups, create_function('$a,$b',
                 '$the_tree = TreeAbstract::GetInstance("StudipSemTree", array("build_index" => true));
                 return (int)($the_tree->tree_data[$a]["index"] - $the_tree->tree_data[$b]["index"]);
                 '));
         break;
-        
+
         case 'sem_status':
         uksort($groups, create_function('$a,$b',
                 'global $SEM_CLASS,$SEM_TYPE;
                 return strnatcasecmp($SEM_TYPE[$a]["name"]." (". $SEM_CLASS[$SEM_TYPE[$a]["class"]]["name"].")",
                                     $SEM_TYPE[$b]["name"]." (". $SEM_CLASS[$SEM_TYPE[$b]["class"]]["name"].")");'));
         break;
-        
+
         case 'dozent_id':
         uksort($groups, create_function('$a,$b',
                 'return strnatcasecmp(str_replace(array("ä","ö","ü"), array("ae","oe","ue"), strtolower(get_fullname($a, "no_title_short"))),
                                     str_replace(array("ä","ö","ü"), array("ae","oe","ue"), strtolower(get_fullname($b, "no_title_short"))));'));
         break;
-        
+
         default:
     }
-    
+
     foreach ($groups as $key => $value){
-        usort($value, create_function('$a,$b', 
+        usort($value, create_function('$a,$b',
         'if ($a["gruppe"] != $b["gruppe"]){
             return (int)($a["gruppe"] - $b["gruppe"]);
         } else {
@@ -125,7 +125,7 @@ function correct_group_sem_number(&$groups, &$my_obj){
         //end($sem_data);
         //$max_sem = key($sem_data);
         foreach ($sem_data as $sem_key => $one_sem){
-            $current_sem = $sem_key;            
+            $current_sem = $sem_key;
             if (!$one_sem['past']) break;
         }
         if (isset($sem_data[$current_sem + 1])){
@@ -189,11 +189,11 @@ function fill_groups(&$groups, $group_key, $group_entry){
 function get_obj_clause ($table_name, $range_field, $count_field, $if_clause,
         $type = false, $add_fields = false, $add_on = false, $object_field = false,
         $user_id = NULL) {
-    
+
     if (is_null($user_id)) {
         $user_id = $GLOBALS['user']->id;
     }
-    
+
     $type_sql = ($type) ? "='$type'" : "IN('sem','inst')";
     $object_field = ($object_field) ? $object_field : "my.object_id";
     $on_clause = " ON(my.object_id=a.{$range_field} $add_on) ";
@@ -210,7 +210,7 @@ function get_obj_clause ($table_name, $range_field, $count_field, $if_clause,
 
 
 function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
-    
+
     $db2 = new DB_seminar;
     $db2->query("CREATE TEMPORARY TABLE IF NOT EXISTS myobj_".$user_id." ( object_id char(32) NOT NULL, PRIMARY KEY (object_id)) type=HEAP");
     $db2->query("REPLACE INTO  myobj_" . $user_id . " (object_id) VALUES ('" . join("'),('", array_keys($my_obj)) . "')");
@@ -224,7 +224,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
             if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
-    
+
             $nav = new Navigation('forum');
 
             if ($db2->f('neue')) {
@@ -244,7 +244,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
     $unreadable_folders = array();
     if (!$GLOBALS['perm']->have_perm('admin')){
         foreach (array_keys($my_obj) as $obj_id){
-            if($my_obj[$obj_id]['modules']['documents_folder_permissions'] 
+            if($my_obj[$obj_id]['modules']['documents_folder_permissions']
             || ($my_obj[$obj_id]['obj_type'] == 'sem' && StudipDocumentTree::ExistsGroupFolders($obj_id))){
                 $must_have_perm = $my_obj[$obj_id]['obj_type'] == 'sem' ? 'tutor' : 'autor';
                 if ($GLOBALS['perm']->permissions[$my_obj[$obj_id]['status']] < $GLOBALS['perm']->permissions[$must_have_perm]){
@@ -263,7 +263,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
             if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
-    
+
             $nav = new Navigation('files');
 
             if ($db2->f('neue')) {
@@ -279,7 +279,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
         }
     }
 
-    //News
+    //Ankündigungen
     $db2->query(get_obj_clause('news_range a {ON_CLAUSE} LEFT JOIN news nw ON(a.news_id=nw.news_id AND UNIX_TIMESTAMP() BETWEEN date AND (date+expire))','range_id','nw.news_id',"(chdate > IFNULL(b.visitdate,0) AND nw.user_id !='$user_id')",'news',false,false,'a.news_id'));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
@@ -288,15 +288,15 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
         if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
             $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
         }
-    
+
         $nav = new Navigation('news', '');
 
         if ($db2->f('neue')) {
             $nav->setURL('?new_news=true');
             $nav->setImage('icon-news2.gif', array('title' =>
-                sprintf(_('%s News, %s neue'), $db2->f('count'), $db2->f('neue'))));
+                sprintf(_('%s Ankündigungen, %s neue'), $db2->f('count'), $db2->f('neue'))));
         } else if ($db2->f('count')) {
-            $nav->setImage('icon-news.gif', array('title' => sprintf(_('%s News'), $db2->f('count'))));
+            $nav->setImage('icon-news.gif', array('title' => sprintf(_('%s Ankündigungen'), $db2->f('count'))));
         }
 
         $my_obj[$object_id]['news'] = $nav;
@@ -313,7 +313,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
             if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
-    
+
             $nav = new Navigation('scm', 'scm.php');
 
             if ($db2->f('count')) {
@@ -352,7 +352,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
             if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
-    
+
             $nav = new Navigation('literature', 'literatur.php');
 
             if ($db2->f('neue')) {
@@ -376,7 +376,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
             if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
-    
+
             $nav = new Navigation('schedule', 'dates.php');
 
             if ($db2->f('neue')) {
@@ -401,7 +401,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
                 if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                     $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
                 }
-    
+
                 $nav = new Navigation('wiki');
 
                 if ($db2->f('neue')) {
@@ -431,7 +431,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
                 if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
                     $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
                 }
-    
+
                 $nav = new Navigation('elearning', 'elearning_interface.php?view=show');
 
                 if ($db2->f('neue')) {
@@ -458,7 +458,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
         }
-        
+
         $db2->query(get_obj_clause('eval_range a {ON_CLAUSE} INNER JOIN eval d ON ( a.eval_id = d.eval_id AND d.startdate < UNIX_TIMESTAMP( ) AND (d.stopdate > UNIX_TIMESTAMP( ) OR d.startdate + d.timespan > UNIX_TIMESTAMP( ) OR (d.stopdate IS NULL AND d.timespan IS NULL)))',
                                     'range_id','a.eval_id',"(chdate > IFNULL(b.visitdate,0) AND d.author_id !='$user_id' )",'eval',false,false,'a.eval_id'));
         while($db2->next_record()) {
@@ -469,7 +469,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
                 $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
             }
         }
-    
+
         foreach (array_keys($my_obj) as $object_id) {
             $nav = new Navigation('vote', '#vote');
 
@@ -489,9 +489,9 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
 }
 
 /**
- * This function returns all valid fields that may be used for course 
+ * This function returns all valid fields that may be used for course
  * grouping in "My Courses".
- * 
+ *
  * @return array All fields that may be specified for course grouping
  */
 function getValidGroupingFields() {

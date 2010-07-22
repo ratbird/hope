@@ -454,7 +454,7 @@ class SiteinfoMarkupEngine {
                                      "title" => _("Termine"),
                                      "detail" => "");
         $indicator['news'] = array("query" => "SELECT count(*) FROM news",
-                                   "title" => _("News"),
+                                   "title" => _("Ankündigungen"),
                                    "detail" => "");
         $indicator['guestbook'] = array("query" => "SELECT count(*) FROM user_info WHERE guestbook='1'",
                                         "title" => _("Gästebücher"),

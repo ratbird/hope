@@ -162,7 +162,7 @@ function GetScoreContent($user_id) {
     }
 
     if ( ($news = $this->score_content_cache[$user_id]['newscount']) ) {
-        $content .= "<a href=\"about.php?username=$username\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icon-news.gif\" border=\"0\"".tooltip(sprintf(_("%s persönliche News"), $news))."></a>&nbsp;";
+        $content .= "<a href=\"about.php?username=$username\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icon-news.gif\" border=\"0\"".tooltip(sprintf(_("%s persönliche Ankündigungen"), $news))."></a>&nbsp;";
     } else {
         $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"17\">";
     }

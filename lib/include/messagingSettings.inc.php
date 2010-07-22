@@ -359,11 +359,11 @@ function change_messaging_view() {
                 if (get_config('NEWS_RSS_EXPORT_ENABLE')){
                 ?>
                 <tr <? $cssSw->resetClass() ?>>
-                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;"><font size="-1"><b><?=_("Stud.IP-News")?></b></font></td>
+                    <td colspan="2" align="center" class="steelgraulight" style="border-bottom:1px dotted black;border-top:1px dotted black;"><font size="-1"><b><?=_("Stud.IP-Ankündigungen")?></b></font></td>
                 </tr>
                 <tr <? $cssSw->switchClass() ?>>
                     <td align="right" class="blank">
-                        <font size=-1><?=_("Stud.IP-News per RSS-Feed exportieren")?></font>
+                        <font size=-1><?=_("Stud.IP-Ankündigungen per RSS-Feed exportieren")?></font>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <input type="checkbox" name="export_news_as_rss" <? if (StudipNews::GetRssIdFromUserId($user->id)) echo " checked"; ?> >

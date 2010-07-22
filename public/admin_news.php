@@ -50,7 +50,7 @@ if (!$news_range_id){
 }
 
 PageLayout::setHelpKeyword("Basis.News");
-PageLayout::setTitle(_("Verwaltung von News"));
+PageLayout::setTitle(_("Verwaltung von Ankündigungen"));
 
 if (Request::get('section') == 'news') {
     UrlHelper::bindLinkParam('section', $section);
@@ -83,7 +83,7 @@ if (Request::get('section') == 'news') {
 
 $news = new AdminNewsController();
 
-PageLayout::setTitle(($SessSemName[1] && ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' ) ?  $SessSemName["header_line"] : $news->range_name ) . " - " . _("Verwaltung von News"));
+PageLayout::setTitle(($SessSemName[1] && ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' ) ?  $SessSemName["header_line"] : $news->range_name ) . " - " . _("Verwaltung von Ankündigungen"));
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -132,7 +132,7 @@ if ($cmd=="news_submit") {
         else $cmd = "";
     } else {
         $cmd = "edit";
-        $news->msg .= "error§"._("Leere News k&ouml;nnen nicht gespeichert werden! Geben Sie immer &Uuml;berschrift oder Inhalt an!")."§";
+        $news->msg .= "error§"._("Leere Ankündigungen k&ouml;nnen nicht gespeichert werden! Geben Sie immer &Uuml;berschrift oder Inhalt an!")."§";
     }
 }
 if ($cmd=="new_entry" &&
@@ -145,7 +145,7 @@ if ($cmd=="new_entry" &&
         } else {
             StudipNews::SetRssId($news_range_id);
             $news->msg .= "info§" . _("Der RSS Export wurde für diesen Bereich eingeschaltet!")
-                        . '<br>' . _("Bitte beachten Sie, dass damit die News dieses Bereiches auch von Personen die nicht im Stud.IP angemeldet sind abgerufen werden k&ouml;nnen!") . "§";
+                        . '<br>' . _("Bitte beachten Sie, dass damit die Ankündigungen dieses Bereiches auch von Personen die nicht im Stud.IP angemeldet sind abgerufen werden k&ouml;nnen!") . "§";
         }
         $cmd = '';
 }
@@ -221,13 +221,13 @@ if (!$cmd OR $cmd=="show") {
         $my_cols=3;
         if ($perm->have_perm("autor")) {   // allow autors, needed for studygroups
             echo "\n<tr><td class=\"blank\"><blockquote>";
-            echo "<font size=\"-1\" style=\"vertical-align:middle;\">" . _("Sie k&ouml;nnen&nbsp; <b>Pers&ouml;nliche News</b> bearbeiten") . "</font>&nbsp;";
-            echo "<a href=\"". URLHelper::getLink("?range_id=self") ."\">&nbsp; <img style=\"vertical-align:middle;\" " . makeButton("bearbeiten","src") . tooltip(_("Persönliche News bearbeiten")) ." border=\"0\"></a>";
+            echo "<font size=\"-1\" style=\"vertical-align:middle;\">" . _("Sie k&ouml;nnen&nbsp; <b>Pers&ouml;nliche Ankündigungen</b> bearbeiten") . "</font>&nbsp;";
+            echo "<a href=\"". URLHelper::getLink("?range_id=self") ."\">&nbsp; <img style=\"vertical-align:middle;\" " . makeButton("bearbeiten","src") . tooltip(_("Persönliche Ankündigungen bearbeiten")) ." border=\"0\"></a>";
         }
         if ($perm->have_perm("root")) {
             $my_cols=4;
-            echo "<font size=\"-1\" style=\"vertical-align:middle;\">&nbsp; " . _("<i>oder</i> <b>Systemweite News</b> bearbeiten") . "</font>&nbsp;";
-            echo "<a href=\"". URLHelper::getLink("?range_id=studip") ."\">&nbsp;<img style=\"vertical-align:middle;\" " . makeButton("bearbeiten","src") . tooltip(_("Systemweite News bearbeiten")) ." border=\"0\"></a>";
+            echo "<font size=\"-1\" style=\"vertical-align:middle;\">&nbsp; " . _("<i>oder</i> <b>Systemweite Ankündigungen</b> bearbeiten") . "</font>&nbsp;";
+            echo "<a href=\"". URLHelper::getLink("?range_id=studip") ."\">&nbsp;<img style=\"vertical-align:middle;\" " . makeButton("bearbeiten","src") . tooltip(_("Systemweite Ankündigungen bearbeiten")) ." border=\"0\"></a>";
         }
         if ($news->search_result)
             echo "<br><br><font size=\"-1\" style=\"vertical-align:middle;\">" . _("<i>oder</i> <b>hier</b> einen der gefundenen Bereiche ausw&auml;hlen:") . "&nbsp;</font>";
@@ -264,17 +264,17 @@ if (!$cmd OR $cmd=="show") {
     echo "<hr width=\"100%\"><br><b>" . _("gew&auml;hlter Bereich:") . " </b>".htmlReady($news_range_name). "<br><br>";
     if (get_config('NEWS_RSS_EXPORT_ENABLE') && $news->get_news_range_perm($news_range_id) > 1){
         echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/rss.gif" border="0" align="absmiddle">&nbsp;';
-        echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Die News des gew&auml;hlten Bereiches als RSS-feed zur Verf&uuml;gung stellen") . '</font>&nbsp;';
+        echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Die Ankündigungen des gew&auml;hlten Bereiches als RSS-feed zur Verf&uuml;gung stellen") . '</font>&nbsp;';
         vprintf("\n".'<input type="image" src="'.$GLOBALS['ASSETS_URL'].'images/%s" %s border="0" name="change_rss" align="absmiddle">',
                 (StudipNews::GetRssIdFromRangeId($news_range_id) ? array('haken.gif',tooltip(_("RSS Export ist eingeschaltet"))) : array('x2.gif',tooltip(_("RSS Export ist ausgeschaltet")))));
         echo "\n<br><br>";
     }
-    echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Eine neue News im gew&auml;hlten Bereich erstellen") . '</font>&nbsp;';
-    echo makeButton('erstellen', 'input', _("Eine neue News erstellen"), 'new_entry');
+    echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Eine neue Ankündigung im gew&auml;hlten Bereich erstellen") . '</font>&nbsp;';
+    echo makeButton('erstellen', 'input', _("Eine neue Ankündigung erstellen"), 'new_entry');
     echo "</b>\n</blockquote>\n</form>\n</td>\n</tr>\n ";
     if (!$news->show_news($news_range_id)) {
         echo "\n".'<tr><td class="blank"><blockquote>';
-        echo '<font size="-1" style="vertical-align:middle;">' . _("Im gew&auml;hlten Bereich sind keine News vorhanden!") . '<br><br>';
+        echo '<font size="-1" style="vertical-align:middle;">' . _("Im gew&auml;hlten Bereich sind keine Ankündigungen vorhanden!") . '<br><br>';
         echo '</blockquote></td></tr>';
     }
 }

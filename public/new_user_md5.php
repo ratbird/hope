@@ -95,7 +95,9 @@ if (check_ticket($_REQUEST['studipticket'])){
                     }
                 }
 
-                if ($_REQUEST['select_inst_id'] && $perm->have_studip_perm('admin', $_REQUEST['select_inst_id'])){
+                if ($_REQUEST['select_inst_id']
+                    && $perm->have_studip_perm('admin', $_REQUEST['select_inst_id'])
+                    && $UserManagement->user_data['auth_user_md5.perms'] != 'root') {
                     $db = new DB_Seminar();
                     $db->query(sprintf("SELECT Name, Institut_id FROM Institute WHERE Institut_id='%s'", $_REQUEST['select_inst_id']));
                     if($db->next_record()){
@@ -120,7 +122,7 @@ if (check_ticket($_REQUEST['studipticket'])){
                                 $instname = htmlReady($inst_name);
                                 $vorname = $UserManagement->user_data['auth_user_md5.Vorname'];
                                 $nachname = $UserManagement->user_data['auth_user_md5.Nachname'];
-                                
+
                                 $db->query(sprintf("SELECT a.user_id,b.Vorname,b.Nachname,b.Email FROM user_inst a INNER JOIN auth_user_md5 b ON a.user_id = b.user_id WHERE a.Institut_id = '%s' AND a.inst_perms IN (%s) AND a.user_id != '%s' ",$_REQUEST['select_inst_id'],$in,$UserManagement->user_data['auth_user_md5.user_id']));
                                 while($db->next_record()){
                                     $user_language = getUserLanguagePath($db->f('user_id'));
@@ -304,7 +306,7 @@ if (check_ticket($_REQUEST['studipticket'])){
                     $_SESSION['pers_browse_search_string'] .= "$field LIKE '%" . mysql_escape_string($_SESSION['pers_browse_old'][$field]) . "%' AND ";
                 }
             }
-            
+
             //Datenfelder
             $datafields_list = DataFieldStructure::getDataFieldStructures("user");
             foreach($datafields_list as $datafield){
@@ -315,7 +317,7 @@ if (check_ticket($_REQUEST['studipticket'])){
                 }
             }
             //Datenfelder:Ende
-            
+
             if ($_SESSION['pers_browse_old']['locked'])
                 $_SESSION['pers_browse_search_string'] .= "locked = 1 AND ";
             if ($_SESSION['pers_browse_old']['perms'] && $_SESSION['pers_browse_old']['perms'] != _("alle"))
@@ -536,8 +538,8 @@ if (isset($_GET['details']) || $showform ) {
                         if( $perm->have_perm('root') ){
                             ?>
                                 <option value=""><?= _("-- bitte Nutzerdomäne auswählen (optional) --") ?></option>
-                            <?php 
-                        } 
+                            <?php
+                        }
                         foreach( $domains as $domain ){
                             ?>
                                 <option value="<?= $domain->getID() ?>"><?= $domain->getName() ?></option>
@@ -927,12 +929,12 @@ if (isset($_GET['details']) || $showform ) {
     print "\n<td class=steel1 align=\"left\" width=\"35%\"><input name=\"pers_browse_Email\" type=\"text\" value=\"".htmlReady($_SESSION['pers_browse_old']['Email'])."\" size=30 maxlength=255></td>\n";
     print "\n<td class=steel1 align=\"right\" width=\"15%\">" . _("Nachname:") . " </td>";
     print "\n<td class=steel1 colspan=2 align=\"left\" width=\"35%\"><input name=\"pers_browse_Nachname\" type=\"text\" value=\"".htmlReady($_SESSION['pers_browse_old']['Nachname'])."\" size=30 maxlength=255></td></tr>\n";
-    
+
     //Datenfelder
     $datafields_empty = true;
     if(isset($_SESSION['pers_browse_old']['datafields']))
         foreach($_SESSION['pers_browse_old']['datafields'] as $df){if($df != ""){$datafields_empty = false; break;}}
-    
+
     $i=0;
     $datafields_list = DataFieldStructure::getDataFieldStructures("user");
     foreach($datafields_list as $datafield){
@@ -946,8 +948,8 @@ if (isset($_GET['details']) || $showform ) {
     if($i%2!=0) echo "<td class=steel1>&nbsp;</td><td class=steel1 colspan=\"2\">&nbsp;</td>";
     echo "<tr><td class=steel1 align=\"right\" colspan=\"5\"><a href=\"#\" onClick=\"\$('.pers_browse_datafields').each(function(index){if(\$(this).css('display')=='none') $(this).css('display',''); else $(this).css('display','none');});this.innerHTML=(this.innerHTML=='Zuklappen')?'"._("Erweiterte Suche")."':'"._("Zuklappen")."';\">".(($datafields_empty)?_("Erweiterte Suche"):_("Zuklappen"))."</a></td></tr>";
     //Datenfelder:Ende
-    
-    
+
+
     print "\n<tr><td class=steel1 align=\"right\" width=\"15%\">" . _("Status:") . " </td>";
     print "\n<td class=steel1 align=\"left\" width=\"35%\">";
     echo '<select name="pers_browse_perms">';

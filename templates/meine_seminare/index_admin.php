@@ -40,9 +40,9 @@ global $SEM_TYPE;
 
                         <input <?= makeButton("auswaehlen", "src")?> <?= tooltip(_("Einrichtung auswählen")) ?>
                                type="image" border="0" style="vertical-align:middle;">
-                        <br>
                     </div>
                 </form>
+                <br>
             </td>
         </tr>
 

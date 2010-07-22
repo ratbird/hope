@@ -71,7 +71,7 @@ class StudipNavigation extends Navigation
             $this->addSubNavigation('search', new SearchNavigation());
         }
 
-        if (is_object($user) && $user->id != 'nobody') {
+        if (is_object($user) && $perm->have_perm('autor')) {
             $this->addSubNavigation('tools', new ToolsNavigation());
         }
 

@@ -8,7 +8,6 @@
  * the License, or (at your option) any later version.
  *
  * @author      Elmar Ludwig
- * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */

@@ -9,7 +9,6 @@
  *
  * @author      Elmar Ludwig
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
 */

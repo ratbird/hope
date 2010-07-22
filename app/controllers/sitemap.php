@@ -17,8 +17,8 @@ require_once 'app/controllers/authenticated_controller.php';
 
 /**
  * The sitemap is only visible for logged in users, because the sitemap depends
- * on the permissions of the user. It creates two new StudipNavigation Object to
- * display the main navigation (toolbar) and the quick links (subnavigation)
+ * on the permissions of the user. It creates two new StudipNavigation Objects
+ * to display the main navigation (toolbar) and the quick-links (subnavigation)
  *
  */
 class SitemapController extends AuthenticatedController
@@ -41,7 +41,7 @@ class SitemapController extends AuthenticatedController
         //getting the cache
         $cache = StudipCacheFactory::getCache();
 
-        //getting main-navigation from the cache
+        //getting the main-navigation from the cache
         $this->navigation = unserialize($cache->read(self::SITEMAP_CACHE_KEY.'main/'.$userid));
 
         //load the navigation, if the cache is empty
@@ -60,15 +60,17 @@ class SitemapController extends AuthenticatedController
             $cache->write(self::SITEMAP_CACHE_KEY.'main/'.$userid, serialize($this->navigation));
         }
 
-        //getting quicklinks (either from the cache or from a new object)
+        //getting quick-links (either from the cache or from a new object)
         $this->subnavigation = unserialize($cache->read(self::SITEMAP_CACHE_KEY.'quicklinks/'.$userid));
         if (empty($this->subnavigation)) {
             $subnavigation = new StudipNavigation('ignore');
             foreach ($subnavigation as $key => $nav) {
+                //only the quick-links
                 if ($key == 'links') {
                     $this->subnavigation = $nav;
                 }
             }
+            //storing this navigation into the cache
             $cache->write(self::SITEMAP_CACHE_KEY.'quicklinks/'.$userid, serialize($this->subnavigation));
         }
         $this->subnavigation->removeSubNavigation('account');

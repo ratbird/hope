@@ -9,7 +9,6 @@
  *
  * @author      Elmar Ludwig
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
@@ -106,7 +105,7 @@ class CourseNavigation extends Navigation
             $navigation->addSubNavigation('main', new Navigation(_("Verwaltung"), 'dispatch.php/course/management'));
             //$navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'admin_seminare1.php?section=details'));
             $navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'dispatch.php/course/basicdata/view?section=details'));
-            
+
 
             if ($sem_class == 'sem') {
                 $navigation->addSubNavigation('studycourse', new Navigation(_("Studienbereiche"),

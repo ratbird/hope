@@ -105,9 +105,9 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."
                         <? endif; ?>
                         &nbsp;<img src="<?=$GLOBALS['ASSETS_URL']?>/images/info.gif" <?=tooltip($info, TRUE, TRUE)?>>
                     </td>
-                    <? $info = _("Die Angaben zu dieser Einrichtung werden nicht auf Ihrer Homepage und in Adressbüchern ausgegeben."); ?>
+                    <? $info = _("Die Angaben zu dieser Einrichtung werden nicht auf Ihrer Profilseite und in Adressbüchern ausgegeben."); ?>
                     <td class="<?=$cssSw->getClass()?>">
-                        &nbsp;<?= _("Einrichtung nicht auf Stud.IP Homepage:"); ?>
+                        &nbsp;<?= _("Einrichtung nicht auf der Profilseite:"); ?>
                         <input type="checkbox" name="visible[<?=$inst_id?>]" value="1" <?=($data['visible'] == '1' ? '' : ' checked="checked"')?>>&nbsp;
                         <img src="<?=$GLOBALS['ASSETS_URL']?>images/info.gif" <?=tooltip($info, TRUE, TRUE)?>>
                     </td>

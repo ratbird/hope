@@ -66,7 +66,7 @@ if ($auth->is_authenticated() && $user->id != "nobody") {
 <?=_("Das hat viele Vorz&uuml;ge:")?><br>
 <blockquote><li><?=_("Zugriff auf Ihre Daten von jedem internetf&auml;higen Rechner weltweit,")?>
 <li><?=_("Anzeige neuer Mitteilungen oder Dateien seit Ihrem letzten Besuch,")?>
-<li><?=_("Eine eigene Homepage im System,")?>
+<li><?=_("Eine eigenes Profil im System,")?>
 <li><?=_("die M&ouml;glichkeit anderen TeilnehmerInnen Nachrichten zu schicken oder mit ihnen zu chatten,")?>
 <li><?=_("und vieles mehr.")?></li></blockquote><br>
 
@@ -87,8 +87,8 @@ include("locale/$_language_path/LC_HELP/pages/nutzung.html");
 }
 ?>
 
-<?php 
+<?php
 include ('lib/include/html_end.inc.php');
-page_close() 
+page_close()
 
 ?>

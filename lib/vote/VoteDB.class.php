@@ -553,7 +553,7 @@ class VoteDB extends StudipObject {
      }
      else{
        $this->db->next_record ();
-       $username = "Homepage: ".$this->db->f ("username")."";
+       $username = "Profil: ".$this->db->f ("username")."";
        return $username;
      }
    }

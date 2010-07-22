@@ -24,7 +24,7 @@
                         </td>
                         <td width="50%" class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>" width="34%">
                             <?php
-                            if ($global_visibility != 'always' && $global_visibility != 'never' && 
+                            if ($global_visibility != 'always' && $global_visibility != 'never' &&
                                 ($user_perm != 'dozent' || !get_config('DOZENT_ALWAYS_VISIBLE'))) {
                                 // only show selection if visibility can be changed
                                 ?>
@@ -54,14 +54,14 @@
                             ?>
                         </td>
                     </tr>
-                    <?php 
-                    if (($global_visibility == 'yes' || $global_visibility == 'global' || 
+                    <?php
+                    if (($global_visibility == 'yes' || $global_visibility == 'global' ||
                         ($global_visibility == 'unknown' && get_config('USER_VISIBILITY_UNKNOWN')) ||
-                        ($my_perm == 'dozent' && get_config('DOZENT_ALWAYS_VISIBLE'))) && 
-                        (!$NOT_HIDEABLE_FIELDS[$my_perm]['online'] || 
-                        !$NOT_HIDEABLE_FIELDS[$my_perm]['chat'] || 
-                        !$NOT_HIDEABLE_FIELDS[$my_perm]['search'] || 
-                        !$NOT_HIDEABLE_FIELDS[$my_perm]['email'])) { 
+                        ($my_perm == 'dozent' && get_config('DOZENT_ALWAYS_VISIBLE'))) &&
+                        (!$NOT_HIDEABLE_FIELDS[$my_perm]['online'] ||
+                        !$NOT_HIDEABLE_FIELDS[$my_perm]['chat'] ||
+                        !$NOT_HIDEABLE_FIELDS[$my_perm]['search'] ||
+                        !$NOT_HIDEABLE_FIELDS[$my_perm]['email'])) {
                     ?>
                     <tr>
                         <td align="right" class="blank" style="border-bottom:1px dotted black;">
@@ -116,7 +116,7 @@
                 <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0">
                     <tr>
                         <td colspan="<?php echo $user_domains ? 6 : 5; ?>" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">
-                            <b><?php echo _('eigene Homepage'); ?></b>
+                            <b><?php echo _('eigenes Profil'); ?></b>
                         </td>
                     </tr>
                         <td class="steel1" colspan="<?php echo $user_domains ? 6 : 5; ?>">
@@ -137,7 +137,7 @@
                             </form>
                         </td>
                     <tr>
-                        <th width="'40%'"><?php echo _('Homepage-Element'); ?></th>
+                        <th width="'40%'"><?php echo _('Profil-Element'); ?></th>
                         <th colspan="<?php echo $user_domains ? 5 : 4; ?>" align="center"><?php echo _('sichtbar für'); ?></th>
                     </tr>
                     <tr class="steelgraulight">

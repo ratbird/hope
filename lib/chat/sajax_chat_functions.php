@@ -6,7 +6,7 @@
 /**
 * chat server functions for AJAX communication
 *
-* 
+*
 *
 * @author       André Noack <andre.noack@gmx.net>
 * @access       public
@@ -18,7 +18,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // sajax_chat_functions.php
-// 
+//
 // Copyright (c) 2006 André Noack <andre.noack@gmx.net>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -158,16 +158,16 @@ function get_chat_nicklist($chatid){
                         if ($chatUserDetail["action"]){
                             echo "\n<tr><td><span style=\"font-size:10pt\">";
                             if ($chatUserDetail["perm"])  echo "<b>";
-                            echo "<a href=\"#\" ". tooltip(_("Homepage aufrufen"),false) 
+                            echo "<a href=\"#\" ". tooltip(_("Profil aufrufen"),false)
                                 . "onClick=\"return coming_home('{$CANONICAL_RELATIVE_PATH_STUDIP}about.php?username=".$chatUserDetail["nick"]."')\">"
                                 . htmlReady($chatUserDetail["fullname"])."</a><br>";
                             if ($chatUserId != $user->id){
                                 if ($is_admin){
-                                    echo "\n<a href=\"#\" " . tooltip(_("diesen Nutzer / diese Nutzerin aus dem Chat werfen"),false) 
+                                    echo "\n<a href=\"#\" " . tooltip(_("diesen Nutzer / diese Nutzerin aus dem Chat werfen"),false)
                                 . "onClick=\"document.inputform.chatInput.value='/kick "
                                 . $chatUserDetail["nick"] . " ';doSubmit();return false;\">#</a>&nbsp;";
                                 }
-                                echo "\n<a href=\"#\" " . tooltip(_("diesem Nutzer / dieser Nutzerin eine private Botschaft senden"),false) 
+                                echo "\n<a href=\"#\" " . tooltip(_("diesem Nutzer / dieser Nutzerin eine private Botschaft senden"),false)
                                 . "onClick=\"document.inputform.chatInput.value='/private "
                                 . $chatUserDetail["nick"] . " ';document.inputform.chatInput.focus();return false;\">@</a>&nbsp;";
                             }
@@ -199,7 +199,7 @@ function get_chat_color_chooser($chatid){
         print ">$c</option>\n";
     }
     if (!$selected) {
-        print "<option style=\"color:" . $chatServer->chatDetail[$chatid]["users"][$user->id]["color"].";\" 
+        print "<option style=\"color:" . $chatServer->chatDetail[$chatid]["users"][$user->id]["color"].";\"
         value=\"".$chatServer->chatDetail[$chatid]["users"][$user->id]["color"] . "\" selected>user</option>\n";
     }
     echo '</select>';
@@ -230,7 +230,7 @@ function insert_message($chatid, $msg){
 
 function check_and_get_messages($chatid){
     global $user,$chatServer,$last_msg_times, $chat_logs, $userQuit;
-    
+
     $lastMsgTime =& $last_msg_times[$chatid];
     if ($chatServer->chatDetail[$chatid]['log'][$user->id]){
         $chat_log =& $chat_logs[$chatid][count($chat_logs[$chatid])-1]['msg'];
@@ -269,7 +269,7 @@ function check_and_get_messages($chatid){
         }
         $lastMsgTime = $msg[2];
     }
-    
+
     $chatServer->setHeartbeat($user->id, $chatid);
 
     //wurden wir zwischenzeitlich gekickt?
@@ -331,7 +331,7 @@ function chatCommand_quit($msgStr, $chatid){
     echo '<!--<logout>-->' . _("Sie haben den Chat verlassen!") . "<br>";
     if (is_array($chat_logs[$chatid])){
         echo _("Ihre Aufzeichnungen k&ouml;nnen Sie weiterhin in der Chat&uuml;bersicht downloaden.") . '<br>';
-    } 
+    }
         echo '<!--<close>-->' . _("Das Chatfenster wird in 3 Sekunden geschlossen!") . "<br>";
     $chatServer->removeUser($user->id,$chatid);
     $userQuit = true;
@@ -467,7 +467,7 @@ function chatCommand_password($msgStr, $chatid){
     } else {
         $chatServer->addMsg("system:$user->id",$chatid,_("Sie d&uuml;rfen hier kein Passwort setzen!"));
     }
-    
+
 }
 
 function chatCommand_lock($msgStr, $chatid){

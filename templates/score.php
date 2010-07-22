@@ -54,7 +54,7 @@ $infobox = array(
                 ),
                 array(
                     "icon" => 'ausruf_small.gif',
-                    "text" => _("Sie erhalten auf den Homepages von MitarbeiternInnen an Einrichtungen auch weiterführende Informationen, wie Sprechstunden und Raumangaben.")
+                    "text" => _("Sie erhalten auf der Profilseite von MitarbeiternInnen an Einrichtungen auch weiterführende Informationen, wie Sprechstunden und Raumangaben.")
                 )
             )
         ),

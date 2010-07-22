@@ -107,12 +107,12 @@ class EvaluationObjectDB extends DatabaseObject {
       }
     } else {
        if ($row['user_id'] != $user->id){
-          $rangename = _("Homepage: ")
+          $rangename = _("Profil: ")
             . get_fullname($row['user_id'],'full',1)
              . " (".$row['username'].")";
 
        } else
-           $rangename = _("Persönliche Homepage");
+           $rangename = _("Profil");
     }
 
     return $rangename;
@@ -198,7 +198,7 @@ class EvaluationObjectDB extends DatabaseObject {
     $username = get_username ($userObj->id);
 
     $range_ids += array ($username => array ("name" =>
-                 _("Persönliche Homepage")));
+                 _("Profil")));
 
     /* is root ------------------------------------------------------------ */
     if ($permObj->have_perm ("root")) {
@@ -341,7 +341,7 @@ class EvaluationObjectDB extends DatabaseObject {
    $state != EVAL_STATE_ACTIVE &&
    $state != EVAL_STATE_STOPPED)
       return $this->throwError (2, _("Übergebener Status ist ungültig."));
-  
+
     if ( get_userid($rangeID) != NULL && $rangeID != NULL)
       $rangeID = get_userid($rangeID);
 

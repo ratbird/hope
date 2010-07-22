@@ -4,8 +4,8 @@
 # Lifter003: TODO
 /**
 * Ausgabe der Nicklist
-* 
-* 
+*
+*
 *
 * @author       André Noack <andre.noack@gmx.net>
 * @access       public
@@ -91,16 +91,16 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
                     if ($chatUserDetail["action"]){
                         echo "\n<tr><td><span style=\"font-size:10pt\">";
                         if ($chatUserDetail["perm"])  echo "<b>";
-                        echo "<a href=\"#\" ". tooltip(_("Homepage aufrufen"),false) 
+                        echo "<a href=\"#\" ". tooltip(_("Profil aufrufen"),false)
                             . "onClick=\"return parent.coming_home('{$CANONICAL_RELATIVE_PATH_STUDIP}about.php?username=".$chatUserDetail["nick"]."')\">"
                             . htmlReady($chatUserDetail["fullname"])."</a><br>";
                         if ($chatUserId != $user->id){
                             if ($is_admin){
-                                echo "\n<a href=\"#\" " . tooltip(_("diesen Nutzer / diese Nutzerin aus dem Chat werfen"),false) 
+                                echo "\n<a href=\"#\" " . tooltip(_("diesen Nutzer / diese Nutzerin aus dem Chat werfen"),false)
                             . "onClick=\"parent.frames['frm_input'].document.inputform.chatInput.value='/kick "
                             . $chatUserDetail["nick"] . " ';parent.frames['frm_input'].document.inputform.submit();return false;\">#</a>&nbsp;";
                             }
-                            echo "\n<a href=\"#\" " . tooltip(_("diesem Nutzer / dieser Nutzerin eine private Botschaft senden"),false) 
+                            echo "\n<a href=\"#\" " . tooltip(_("diesem Nutzer / dieser Nutzerin eine private Botschaft senden"),false)
                             . "onClick=\"parent.frames['frm_input'].document.inputform.chatInput.value='/private "
                             . $chatUserDetail["nick"] . " ';return false;\">@</a>&nbsp;";
                         }

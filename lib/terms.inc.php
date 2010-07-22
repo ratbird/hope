@@ -60,7 +60,7 @@ function check_terms($userid, $_language_path) {
         <ul>
             <li><?=_("Zugriff auf Ihre Daten von jedem internetf&auml;higen Rechner weltweit,")?></li>
             <li><?=_("Anzeige neuer Mitteilungen oder Dateien seit Ihrem letzten Besuch,")?></li>
-            <li><?=_("Eine eigene Homepage im System,")?></li>
+            <li><?=_("Ein eigenes Profil im System,")?></li>
             <li><?=_("die M&ouml;glichkeit anderen TeilnehmerInnen Nachrichten zu schicken oder mit ihnen zu chatten,")?></li>
             <li><?=_("und vieles mehr.")?></li>
         </ul>

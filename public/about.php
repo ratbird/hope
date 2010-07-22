@@ -291,7 +291,7 @@ function open_im() {
             <br>
             <br>
 
-            <font size="-1">&nbsp;<?= _("Besucher dieser Homepage:") ?>&nbsp;<?= object_return_views($user_id) ?></font>
+            <font size="-1">&nbsp;<?= _("Besucher dieses Profils:") ?>&nbsp;<?= object_return_views($user_id) ?></font>
             <br>
 
             <?
@@ -672,7 +672,7 @@ if ($perm->get_perm($user_id) == 'dozent'){
     echo $layout->render(array('title' => _('Veranstaltungen'), 'content_for_layout' => $output));
 }
 } else {
-    echo MessageBox::error(_("Diese Homepage ist nicht verfügbar."),array(_("Der Benutzer hat sich unsichtbar geschaltet oder ist im System nicht vorhanden.")));
+    echo MessageBox::error(_("Dieses Profil ist nicht verfügbar."), array(_("Der Benutzer hat sich unsichtbar geschaltet oder ist im System nicht vorhanden.")));
 }
 
 # get the layout template

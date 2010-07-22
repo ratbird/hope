@@ -21,7 +21,7 @@
     <td width="50%" valign="top"><ul>
         <li> k&ouml;nnen Sie alle Kommunikationsm&ouml;glichkeiten wie gewohnt
           nutzen, </li>
-        <li>k&ouml;nnen Sie auf Ihrer pers&ouml;nlichen Homepage trotzdem weitestgehend
+        <li>k&ouml;nnen Sie in Ihrem Profil trotzdem weitestgehend
           entscheiden, was andere &uuml;ber Sie erfahren k&ouml;nnen,</li>
         <li>k&ouml;nnen Sie von anderen gefunden und kontaktiert werden,</li>
         <li>leisten Sie einen Beitrag dazu, Stud.IP weiterhin zu einer aktiven
@@ -31,7 +31,7 @@
     <ul>
         <li>können Sie nicht mehr &uuml;ber die Personensuche gefunden werden,</li>
         <li>können Sie nicht mehr in der "Wer-ist-online"-Liste erscheinen,</li>
-        <li>können Sie nicht mehr Ihre Stud.IP-Homepage nutzen,</li>
+        <li>können Sie nicht mehr Ihr Profil nutzen,</li>
         <li>können Sie nicht mehr Ihre E-Mail-Adresse, Ihr G&auml;stebuch, Ihre Stud.IP-Punkte etc. anderen zugänglich machen,</li>
         <li>k&ouml;nnen Sie nicht mehr im Adressbuch anderer NutzerInnen stehen. </li>
       </ul></td>

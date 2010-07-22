@@ -225,7 +225,7 @@ if (!$set_recur_x) {
     if (strtolower(get_class($atermin)) != "seminarevent") {
         $css_switcher->switchClass();
         echo "<tr><td class=\"" . $css_switcher->getClass() . "\">\n";
-        $info = _("Private und vertrauliche Termine sind nur für Sie sichtbar. Öffentliche Termine werden auf ihrer internen Homepage auch anderen Nutzern bekanntgegeben.");
+        $info = _("Private und vertrauliche Termine sind nur für Sie sichtbar. Öffentliche Termine werden auf Ihrer Profilseite auch anderen Nutzern bekanntgegeben.");
         echo "<font size=\"-1\">";
         echo _("Zugriff:") . "&nbsp;&nbsp;\n";
         echo "<select name=\"via\" size=\"1\">\n";

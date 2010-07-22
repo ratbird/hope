@@ -849,7 +849,7 @@ if (isset($_GET['details']) || $showform ) {
 
             <? // links to everywhere
             echo "<tr><td class=\"steelgraulight\" colspan=3 align=\"center\">";
-            echo _("pers&ouml;nliche Homepage") . " <a href=\"".URLHelper::getLink('about.php?username=' . $db->f("username")) . "\"><img class=\"middle\" src=\"".$GLOBALS['ASSETS_URL']."images/einst.gif\" ".tooltip(_("Zur persönlichen Homepage des Benutzers"))."></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            echo _("Profil") . " <a href=\"".URLHelper::getLink('about.php?username=' . $db->f("username")) . "\"><img class=\"middle\" src=\"".$GLOBALS['ASSETS_URL']."images/einst.gif\" ".tooltip(_("Zum Profil des Benutzers"))."></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
             echo _("Nachricht an BenutzerIn") . " <a href=\"".URLHelper::getLink('sms_send.php?rec_uname=' . $db->f("username")) . "\"><img class=\"middle\" src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" ".tooltip(_("Nachricht an den Benutzer verschicken")) . "></a>";
             echo "</td></tr>";
             if ($perm->have_perm('root')){

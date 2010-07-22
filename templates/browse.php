@@ -132,11 +132,11 @@ $infobox = array(
             "eintrag" => array(
                 array(
                     "icon" => 'ausruf_small.gif',
-                    "text" => _("Hier können Sie die Homepages aller NutzerInnen abrufen, die im System registriert sind.")
+                    "text" => _("Hier können Sie die Profile aller NutzerInnen abrufen, die im System registriert sind.")
                 ),
                 array(
                     "icon" => 'ausruf_small.gif',
-                    "text" => _("Sie erhalten auf den Homepages von MitarbeiternInnen an Einrichtungen auch weiterf&uuml;hrende Informationen, wie Sprechstunden und Raumangaben.")
+                    "text" => _("Sie erhalten auf der Profilseite von MitarbeiternInnen an Einrichtungen auch weiterf&uuml;hrende Informationen, wie Sprechstunden und Raumangaben.")
                 ),
                 array(
                     "icon" => 'ausruf_small.gif',

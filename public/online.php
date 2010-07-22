@@ -144,7 +144,7 @@ if ($msg)
         <?
         print(_("Hier k&ouml;nnen Sie sehen, wer au&szlig;er Ihnen im Moment online ist.") . "<p>");
         printf(_("Sie k&ouml;nnen diesen Usern eine Nachricht schicken %s oder sie zum Chatten %s einladen."), sprintf("<img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" width=\"24\" height=\"21\" %s border=\"0\"><br>", tooltip(_("Nachricht an User verschicken"))), sprintf("<img src=\"".$GLOBALS['ASSETS_URL']."images/chat1.gif\" width=\"24\" height=\"21\" %s border=\"0\">", tooltip(_("zum Chatten einladen"))));
-        print("\n<br>" . _("Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Users."));
+        print("\n<br>" . _("Wenn Sie auf den Namen klicken, kommen Sie zum Profil des Users."));
 
         if ($SessSemName[0] && $SessSemName["class"] == "inst")
             echo "<br><br><a href=\"institut_main.php\">" . _("Zur&uuml;ck zur ausgew&auml;hlten Einrichtung") . "</a>";

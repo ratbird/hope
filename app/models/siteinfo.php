@@ -385,7 +385,7 @@ class SiteinfoMarkupEngine {
                 $template->type = "seminar";
                 break;
             case "mostvisitedhomepages":
-                $template->heading = _("die beliebtesten Homepages (Besucher)");
+                $template->heading = _("die beliebtesten Profile (Besucher)");
                 $sql = "SELECT auth_user_md5.user_id,
                                username,
                                views AS count,

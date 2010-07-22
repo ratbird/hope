@@ -26,7 +26,7 @@ require_once 'visual.inc.php';
 require_once 'user_visible.inc.php';
 
 function print_freie($username) {
-    
+
     global $view,$PHP_SELF,$auth, $user;
     $db=new DB_Seminar;
     $cssSw=new cssClassSwitcher;
@@ -36,9 +36,9 @@ function print_freie($username) {
     $db->query("SELECT * FROM auth_user_md5 LEFT JOIN kategorien ON(range_id=user_id) WHERE username='$username' AND NOT ISNULL(range_id) ORDER BY priority ");
 
     echo '<tr><td align="left" valign="top" class="blank"><blockquote><br>'. "\n";
-    echo _("Hier können Sie beliebige eigene Kategorien anlegen. Diese Kategorien erscheinen auf Ihrer pers&ouml;nlichen Homepage. Mit den Pfeilsymbolen k&ouml;nnen sie die Reihenfolge, in der die Kategorien angezeigt werden, ver&auml;ndern.");
+    echo _("Hier können Sie beliebige eigene Kategorien anlegen. Diese Kategorien erscheinen auf Ihrer Profilseite. Mit den Pfeilsymbolen k&ouml;nnen sie die Reihenfolge, in der die Kategorien angezeigt werden, ver&auml;ndern.");
     echo "<br>\n";
-    echo _("Verwenden Sie die Option \"f&uuml;r andere unsichtbar\", um Memos anzulegen, die nur f&uuml;r Sie selbst auf der Homepage sichtbar werden - andere Nutzer k&ouml;nnen diese Daten nicht einsehen.");
+    echo _("Verwenden Sie die Option \"f&uuml;r andere unsichtbar\", um Memos anzulegen, die nur f&uuml;r Sie selbst auf der Profilseite sichtbar werden - andere Nutzer k&ouml;nnen diese Daten nicht einsehen.");
     echo "\n<br><br></blockquote></td></tr>\n".'<tr><td class="blank">';
     echo '<form action="'. URLHelper::getLink('?freie=update_freie&username='.$username.'&view='.$view) .'" method="POST" name="edit_freie">';
     echo '<table width="100%" class="blank" border="0" cellpadding="0" cellspacing="0">';
@@ -115,7 +115,7 @@ function create_freie() {
 }
 
 function delete_freie($kategorie_id) {
-    
+
     global $username;
 
     $db=new DB_Seminar;
@@ -127,9 +127,9 @@ function delete_freie($kategorie_id) {
 }
 
 function verify_delete_freie($kategorie_id) {
-    
+
     global $username;
-   
+
 
     $db=new DB_Seminar;
 
@@ -138,15 +138,15 @@ function verify_delete_freie($kategorie_id) {
         parse_msg ("info§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion."));
         die;
     } else {
-        $db->query("SELECT name FROM kategorien WHERE kategorie_id='$kategorie_id'"); 
-        while($db->next_record()) { 
-            $name = $db->f("name"); 
+        $db->query("SELECT name FROM kategorien WHERE kategorie_id='$kategorie_id'");
+        while($db->next_record()) {
+            $name = $db->f("name");
         }
         $msg = _('Möchten Sie wirklich die Kategorie **'.$name.'** löschen?');
         echo createQuestion($msg,array('freie' => 'delete_freie', "freie_id" => $kategorie_id,'username'=> $username, 'view' => 'Sonstiges'),array('username'=> $username, 'view' => 'Sonstiges'));
     }
-    
-    
+
+
 }
 
 function update_freie() {

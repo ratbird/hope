@@ -316,12 +316,12 @@ if (check_ticket($studipticket)) {
         if ($_REQUEST['all_homepage_visibility']) {
             $success = $my_about->change_all_homepage_visibility($_REQUEST['all_homepage_visibility']);
             if ($success) {
-                $my_about->msg .= 'msg§'._('Die Sichtbarkeit der Homepageelemente wurde gespeichert.');
+                $my_about->msg .= 'msg§'._('Die Sichtbarkeit der Profilelemente wurde gespeichert.');
             } else {
-                $my_about->msg .= 'error§'._('Die Sichtbarkeitseinstellungen der Homepageelemente wurden nicht gespeichert!');
+                $my_about->msg .= 'error§'._('Die Sichtbarkeitseinstellungen der Profilelemente wurden nicht gespeichert!');
             }
         } else {
-            $my_about->msg .= 'error§'._('Bitte wählen Sie eine Sichtbarkeitsstufe für Ihre Homepageelemente!');
+            $my_about->msg .= 'error§'._('Bitte wählen Sie eine Sichtbarkeitsstufe für Ihre Profilelemente!');
         }
     }
 
@@ -331,9 +331,9 @@ if (check_ticket($studipticket)) {
         unset($data["change_homepage_visibility_y"]);
         $success = $my_about->change_homepage_visibility($data);
         if ($success) {
-            $my_about->msg .= 'msg§'._('Die Sichtbarkeit der Homepageelemente wurde gespeichert.');
+            $my_about->msg .= 'msg§'._('Die Sichtbarkeit der Profilelemente wurde gespeichert.');
         } else {
-            $my_about->msg .= 'error§'._('Die Sichtbarkeitseinstellungen der Homepageelemente wurden nicht gespeichert!');
+            $my_about->msg .= 'error§'._('Die Sichtbarkeitseinstellungen der Profilelemente wurden nicht gespeichert!');
         }
     }
 
@@ -359,7 +359,7 @@ if (check_ticket($studipticket)) {
             $my_about->msg .= 'error§'.sprintf(_('%s ist bereits als Vertretung eingetragen.'), get_fullname($_REQUEST['deputy_id'], 'full'));
         }
     }
-    
+
     if ($cmd == 'change_deputies') {
          if (isset($_REQUEST['delete_deputy'])) {
             $deleted = deleteDeputy($_REQUEST['delete_deputy'], $my_about->auth_user["user_id"]);
@@ -413,7 +413,7 @@ if (check_ticket($studipticket)) {
             setTempLanguage($my_about->auth_user["user_id"]);
             $priv_msg = _("Ihre persönliche Seite wurde von einer Administratorin oder einem Administrator verändert.\n Folgende Veränderungen wurden vorgenommen:\n \n").$my_about->priv_msg;
             restoreLanguage();
-            $my_about->insert_message($priv_msg, $my_about->auth_user["username"], "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("persönliche Homepage verändert"));
+            $my_about->insert_message($priv_msg, $my_about->auth_user["username"], "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Profil verändert"));
         }
         $sess->register('edit_about_msg');
         $edit_about_msg = $my_about->msg;
@@ -740,7 +740,7 @@ if ($my_about->msg) {
 if ($view == 'Bild') {
     // hier wird das Bild ausgegeben
     $cssSw->switchClass();
-    echo '<tr><td colspan=2 class="blank" style="padding-left:20px;">' . _("Auf dieser Seite k&ouml;nnen Sie ein pers&ouml;nliches Bild f&uuml;r Ihre Homepage hochladen.") . "<br><br><br></td></tr>\n";
+    echo '<tr><td colspan=2 class="blank" style="padding-left:20px;">' . _("Auf dieser Seite können Sie ein Profilbild hochladen.") . "<br><br><br></td></tr>\n";
     echo '<tr><td width="30%" class="'.$cssSw->getClass().'" align="center">';
     echo '<font size="-1"><b>' . _("Aktuell angezeigtes Bild:") . '<br><br></b></font>';
 
@@ -1045,7 +1045,7 @@ if ($view == 'Studium') {
             }
         }
         if (!$flag && $allow_change_in) {
-            echo '<tr><td class="'.$cssSw->getClass().'" colspan="2"><br><font size="-1"><b>' . _("Sie haben sich noch keinen Einrichtungen zugeordnet.") . "</b><br><br>\n" . _("Wenn Sie auf ihrer Homepage die Einrichtungen, an denen Sie studieren, auflisten wollen, k&ouml;nnen Sie diese Einrichtungen hier entragen.") . "</font></td></tr>";
+            echo '<tr><td class="'.$cssSw->getClass().'" colspan="2"><br><font size="-1"><b>' . _("Sie haben sich noch keinen Einrichtungen zugeordnet.") . "</b><br><br>\n" . _("Wenn Sie auf Ihrem Profil die Einrichtungen, an denen Sie studieren, auflisten wollen, k&ouml;nnen Sie diese Einrichtungen hier entragen.") . "</font></td></tr>";
         }
         $cssSw->resetClass();
         $cssSw->switchClass();

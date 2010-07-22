@@ -16,6 +16,11 @@
 
 require_once 'lib/edit_about.inc.php';
 
+/**
+ * This is the new profile page instead of the old homepage
+ * It includes all informations and functions for a user
+ *
+ */
 class ProfileNavigation extends Navigation
 {
     /**

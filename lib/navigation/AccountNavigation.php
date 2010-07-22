@@ -14,6 +14,12 @@
  * @category    Stud.IP
 */
 
+/**
+ * This navigation includes all elements of the user account, like privacy,
+ * messaging, and other elements depending on the permission and activated
+ * elements. It's located in the second main navigation (quick links)
+ *
+ */
 class AccountNavigation extends Navigation
 {
     /**

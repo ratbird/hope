@@ -14,6 +14,10 @@
  * @category    Stud.IP
  */
 
+/**
+ * This navigation includes all search pages depending on the activated modules
+ *
+ */
 class SearchNavigation extends Navigation
 {
     /**
@@ -49,6 +53,8 @@ class SearchNavigation extends Navigation
                 $navigation->addSubNavigation($key, new Navigation($val['name'], 'sem_portal.php?reset_all=TRUE&cmd=qs', array('view' => $key)));
             }
         }
+
+        //Studienmodule
         if (get_config('STM_ENABLE')) {
             $navigation->addSubNavigation('mod', new Navigation(_('Studienmodule'), 'sem_portal.php?reset_all=TRUE', array('view' => 'mod')));
         }

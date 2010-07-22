@@ -14,6 +14,10 @@
  * @category    Stud.IP
 */
 
+/**
+ * This navigation includes all tools for a user depending on the activated modules
+ *
+ */
 class ToolsNavigation extends Navigation
 {
     /**

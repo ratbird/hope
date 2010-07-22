@@ -14,6 +14,11 @@
  * @category    Stud.IP
  */
 
+/**
+ * This is the new community page for interacting between the users. it includes
+ * the contacts, studygroups, chat and highscores.
+ *
+ */
 class CommunityNavigation extends Navigation
 {
     public function __construct()

@@ -301,7 +301,7 @@ function open_im() {
 
             if ($score->IsMyScore()) {
                 echo "&nbsp;<a href=\"". URLhelper::getLink("score.php") ."\" " . tooltip(_("Zur Rangliste")) . "><font size=\"-1\">"
-                     . _("Ihr Stud.IP-Punkte:") . " ".$score->ReturnMyScore()."<br>&nbsp;"
+                     . _("Ihre Stud.IP-Punkte:") . " ".$score->ReturnMyScore()."<br>&nbsp;"
                      . _("Ihr Rang:") . " ".$score->ReturnMyTitle()."</a></font><br>";
             }
             elseif ($score->ReturnPublik()) {

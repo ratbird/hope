@@ -44,13 +44,13 @@ else
 $infobox = array(
     'picture' => 'infobox/board2.jpg',
     'content' => array(
-        array("kategorie" => _("Ihr Punkte: ").$score->ReturnMyScore()),
+        array("kategorie" => _("Ihre Punkte: ").$score->ReturnMyScore()),
         array("kategorie" => _("Ihr Titel: ").$score->ReturnMyTitle()),
         array("kategorie" => _("Information:"),
             "eintrag" => array(
                 array(
                     "icon" => 'ausruf_small.gif',
-                    "text" => _("Auf dieser Seite können Sie abrufen, wie weit Sie im Stud.IP-Punkte aufgestiegen sind. Je aktiver Sie sich im System verhalten, desto höher klettern Sie!")
+                    "text" => _("Auf dieser Seite können Sie abrufen, wie weit Sie in der Stud.IP-Rangliste aufgestiegen sind. Je aktiver Sie sich im System verhalten, desto höher klettern Sie!")
                 ),
                 array(
                     "icon" => 'ausruf_small.gif',

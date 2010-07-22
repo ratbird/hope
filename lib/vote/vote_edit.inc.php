@@ -62,9 +62,9 @@ if (isset($_REQUEST["voteID"])) {
 
 if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) || $auth->auth["uname"] == $rangeID ) ) {
     $reason = ( ! is_object($vote)
-        ? _("Es macht wenig Sinn, die Editierseite aufzurufen, ohne den zu editierenden Vote anzugeben...")
+        ? _("Es macht wenig Sinn, die Editierseite aufzurufen, ohne die zu editierende Umfrage anzugeben...")
         : ( ! $vote->voteDB->isExistant($voteID)
-            ? _("Angegebener Vote existiert nicht (mehr?) ...")
+            ? _("Angegebene Umfrage existiert nicht (mehr?) ...")
             : ($vote->x_instanceof() == INSTANCEOF_TEST
                ? sprintf(_("Sie haben keine Berechtigung den Test '%s' zu editieren."), $vote->getTitle())
                : sprintf(_("Sie haben keine Berechtigung die Umfrage '%s' zu editieren."), $vote->getTitle())
@@ -337,10 +337,10 @@ if( isset( $saveButton_x ) ) {
         // --> send notification sms
         $sms = new messaging();
             setTempLanguage($vote->getAuthorID());
-        $smsText = sprintf( _("An Ihrem Vote/Test '%s' wurden von dem/der Administrator/in %s Änderungen vorgenommen."),
+        $smsText = sprintf( _("An Ihrer Umfrage '%s' wurden von dem/der Administrator/in %s Änderungen vorgenommen."),
                 $vote->getTitle(),
                 $vote->voteDB->getAuthorRealname($auth->auth["uid"]) );
-            $sms->insert_message(mysql_escape_string( $smsText ), $vote->voteDB->getAuthorUsername($vote->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Vote/Test geändert"));
+            $sms->insert_message(mysql_escape_string( $smsText ), $vote->voteDB->getAuthorUsername($vote->getAuthorID()), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("Umfrage/Test geändert"));
             restoreLanguage();
     }
     }

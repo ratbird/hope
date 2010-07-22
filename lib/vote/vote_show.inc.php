@@ -46,7 +46,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
    /* Set variables -------------------------------------------------------- */
    $voteDB  = new VoteDB ();
    if ($voteDB->isError ()) {
-      echo createErrorReport ($voteDB, _("Vote-Datenbankfehler"));
+      echo createErrorReport ($voteDB, _("Umfrage-Datenbankfehler"));
       return;
    }
    $evalDB  = new EvaluationDB ();
@@ -67,7 +67,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
    $voteDB->startWaitingVotes ();
    if ($voteDB->isError ()) {
       echo createErrorReport ($voteDB,
-                  _("Datenbankfehler bei Voteaktivierung"));
+                  _("Datenbankfehler bei Umfrageaktivierung"));
    }
    /* ---------------------------------------------------------------------- */
 
@@ -242,7 +242,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
          $vote = new Vote ($voteID);
 
       if ($vote->isError ()) {
-     echo createErrorReport ($vote, _("Fehler beim Einlesen des Votes"));
+     echo createErrorReport ($vote, _("Fehler beim Einlesen der Umfrage"));
       }
 
       $haveFullPerm = $perm->have_studip_perm ("tutor", $vote->getRangeID()) ||

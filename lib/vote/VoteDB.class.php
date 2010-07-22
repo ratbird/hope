@@ -54,7 +54,7 @@ class VoteDB extends StudipObject {
    * @access   public
    */
    var $db;
-   
+
    /**
     * Holds an instance of a vote
     * @access private
@@ -87,11 +87,11 @@ class VoteDB extends StudipObject {
     * @returns array    All active voteID's
     */
    function getNewVotes ($rangeID) {
-    
+
     // convert username to userID
     if ($id = get_userID($rangeID))
         $rangeID = $id;
-   
+
       $result = array ();
       $query = "SELECT * FROM vote WHERE range_id='".$rangeID."' AND ".
     "state = 'new' ORDER BY chdate DESC";
@@ -99,18 +99,18 @@ class VoteDB extends StudipObject {
       $this->db->query ($query);
 
       if ($this->db->nf() == 0) {
-    $this->throwError (1, _("Es wurden keine aktiven Votes in der Datenbank gefunden."),
-               __LINE__, __FILE__); 
+    $this->throwError (1, _("Es wurden keine aktiven Umfragen in der Datenbank gefunden."),
+               __LINE__, __FILE__);
       }
 
       while ($this->db->next_record ()) {
-      array_push ($result, array( "type" => $this->db->f("type"), 
+      array_push ($result, array( "type" => $this->db->f("type"),
                       "voteID" => $this->db->f("vote_id")));
       }
       //array mit type und VoteID zurückgeben...
       return $result;
    }
-  
+
    /**
     * Gets the active votes in the specified rangeID
     *
@@ -119,11 +119,11 @@ class VoteDB extends StudipObject {
     * @returns array    All active voteID's
     */
    function getActiveVotes ($rangeID) {
-    
+
     // convert username to userID
     if ($id = get_userID($rangeID))
         $rangeID = $id;
-        
+
       $result = array ();
       $query = "SELECT * FROM vote WHERE range_id='".$rangeID."' AND ".
     "state = 'active' ORDER BY chdate DESC";
@@ -131,12 +131,12 @@ class VoteDB extends StudipObject {
       $this->db->query ($query);
 
       if ($this->db->nf() == 0) {
-    $this->throwError (1, _("Es wurden keine aktiven Votes in der Datenbank gefunden."),
-               __LINE__, __FILE__); 
+    $this->throwError (1, _("Es wurden keine aktiven Umfragen in der Datenbank gefunden."),
+               __LINE__, __FILE__);
       }
 
       while ($this->db->next_record ()) {
-      array_push ($result, array( "type" => $this->db->f("type"), 
+      array_push ($result, array( "type" => $this->db->f("type"),
                       "voteID" => $this->db->f("vote_id")));
       }
       //array mit type und VoteID zurückgeben...
@@ -152,23 +152,23 @@ class VoteDB extends StudipObject {
     * @returns array    All active voteID's
     */
    function getStoppedVisibleVotes ($rangeID) {
-    
+
     // convert username to userID
     if ($id = get_userID($rangeID))
         $rangeID = $id;
-        
+
       $result = array ();
 
       $query = "SELECT * FROM vote WHERE range_id='".$rangeID."' AND ".
     "state = 'stopvis' ORDER BY chdate DESC";
       $this->db->query ($query);
       if ($this->db->nf() == 0) {
-    $this->throwError (1, _("Es wurden keine gestoppten sichtbaren Votes in der Datenbank gefunden."),
-               __LINE__, __FILE__); 
+    $this->throwError (1, _("Es wurden keine gestoppten sichtbaren Umfragen in der Datenbank gefunden."),
+               __LINE__, __FILE__);
       }
       while ($this->db->next_record ()) {
 #     if ($this->db->f("resultvisibility") != VOTE_RESULTS_NEVER)
-      array_push ($result, array("type" => $this->db->f("type"), 
+      array_push ($result, array("type" => $this->db->f("type"),
                      "voteID" => $this->db->f("vote_id")));
       }
       return $result;
@@ -176,33 +176,33 @@ class VoteDB extends StudipObject {
 
 
   /**
-    * Gets stopped votes in the specified rangeID 
+    * Gets stopped votes in the specified rangeID
     *
     * @access  public
     * @param   string   $rangeID   The specified rangeID
     * @returns array    All voteID's of stopped votes
     */
    function getStoppedVotes ($rangeID) {
-    
+
     // convert username to userID
     if ($id = get_userID($rangeID))
         $rangeID = $id;
-        
+
      $result = array ();
      $query = "SELECT * FROM vote WHERE range_id='".$rangeID."' AND ".
        "(state = 'stopvis' OR state = 'stopinvis') ORDER BY chdate DESC";
      $this->db->query ($query);
      if ($this->db->nf() == 0) {
-       $this->throwError (1, _("Es wurden keine gestoppten Votes in der Datenbank gefunden."),
-              __LINE__, __FILE__); 
+       $this->throwError (1, _("Es wurden keine gestoppten Umfragen in der Datenbank gefunden."),
+              __LINE__, __FILE__);
      }
      while ($this->db->next_record ()) {
-       array_push ($result, array( "type" => $this->db->f("type"), 
+       array_push ($result, array( "type" => $this->db->f("type"),
                    "voteID" => $this->db->f("vote_id")));
      }
      return $result;
    }
-   
+
 
    /**
     * Gets new votes from a specified user
@@ -210,13 +210,13 @@ class VoteDB extends StudipObject {
     * @access  public
     * @param   string   $userID    The ID of the demanding user
     * @returns array    All active voteID's
-    */ 
+    */
    function getNewUserVotes ($authorID, $rangeID = NULL) {
-    
+
     // convert username to userID
     if ($id = get_userID($rangeID))
         $rangeID = $id;
-        
+
       $result = array ();
       if($rangeID != NULL)
     $query = "SELECT * FROM vote WHERE author_id='".$authorID."' AND ".
@@ -228,11 +228,11 @@ class VoteDB extends StudipObject {
 
       if ($this->db->nf() == 0) {
 
-    $this->throwError (1, _("Es wurden keine passenden Votes in der Datenbank gefunden."),
-               __LINE__, __FILE__); 
+    $this->throwError (1, _("Es wurden keine passenden Umfragen in der Datenbank gefunden."),
+               __LINE__, __FILE__);
       }
       while ($this->db->next_record ()) {
-    array_push ($result, array( "type" => $this->db->f("type"), 
+    array_push ($result, array( "type" => $this->db->f("type"),
                    "voteID" => $this->db->f("vote_id")));
       }
       return $result;
@@ -247,11 +247,11 @@ class VoteDB extends StudipObject {
     * @returns array    All active voteID's
     */
    function getActiveUserVotes ($authorID, $rangeID = NULL) {
-    
+
     // convert username to userID
     if ($id = get_userID($rangeID))
         $rangeID = $id;
-        
+
       $result = array ();
       if($rangeID == NULL)
     $query = "SELECT * FROM vote WHERE author_id='".$authorID."' AND ".
@@ -261,11 +261,11 @@ class VoteDB extends StudipObject {
       "state = 'active' AND range_id = '".$rangeID."' ORDER BY chdate DESC";
       $this->db->query ($query);
       if ($this->db->nf() == 0) {
-    $this->throwError (1, _("Es wurden keine passenden Votes in der Datenbank gefunden."),
-               __LINE__, __FILE__); 
+    $this->throwError (1, _("Es wurden keine passenden Umfragen in der Datenbank gefunden."),
+               __LINE__, __FILE__);
       }
       while ($this->db->next_record ()) {
-    array_push ($result, array( "type" => $this->db->f("type"), 
+    array_push ($result, array( "type" => $this->db->f("type"),
                    "voteID" => $this->db->f("vote_id")));
 
       }
@@ -274,18 +274,18 @@ class VoteDB extends StudipObject {
 
 
    /**
-    * Gets stopped  votes from a specified user 
+    * Gets stopped  votes from a specified user
     *
     * @access  public
     * @param   string   $userID    The ID of the demanding user
     * @returns array    All active voteID's
     */
    function getStoppedUserVotes ($authorID, $rangeID = NULL) {
-    
+
     // convert username to userID
     if ($id = get_userID($rangeID))
         $rangeID = $id;
-        
+
       $result = array ();
       if($rangeID == NULL)
       $query = "SELECT * FROM vote WHERE author_id='".$authorID."' AND ".
@@ -296,11 +296,11 @@ class VoteDB extends StudipObject {
         "range_id ='".$rangeID."' ORDER BY chdate DESC";
       $this->db->query ($query);
       if ($this->db->nf() == 0) {
-    $this->throwError (1, _("Es wurden keine passenden Votes in der Datenbank gefunden."),
-               __LINE__, __FILE__); 
+    $this->throwError (1, _("Es wurden keine passenden Umfragen in der Datenbank gefunden."),
+               __LINE__, __FILE__);
       }
       while ($this->db->next_record ()) {
-    array_push ($result, array( "type" => $this->db->f("type"), 
+    array_push ($result, array( "type" => $this->db->f("type"),
                    "voteID" => $this->db->f("vote_id")));
       }
       return $result;
@@ -320,7 +320,7 @@ class VoteDB extends StudipObject {
       while ($this->db->next_record ()) {
 #    array_push ($result, $this->db->f("vote_id"));
      array_push ($result, $this->db->f("answer_id"));
-      } 
+      }
       foreach ($result as $answerID){
          $query="DELETE FROM voteanswers_user WHERE ".
                 "answer_id='".$answerID."'";
@@ -336,7 +336,7 @@ class VoteDB extends StudipObject {
 
 
    /**
-    * Reads a specified vote from the DB and returns an array of it's params. 
+    * Reads a specified vote from the DB and returns an array of it's params.
     *
     * @access  public
     *
@@ -347,14 +347,14 @@ class VoteDB extends StudipObject {
      // auf anonymous eingehen....
       $this->db->query ("SELECT * FROM vote WHERE vote_id='".$voteID."'");
       if ($this->db->nf() == 0) {
-     $this->throwError (1, _("Es wurden keine Votes mit der angegebenen ID gefunden."),
-                __LINE__, __FILE__);  
+     $this->throwError (1, _("Es wurden keine Umfragen mit der angegebenen ID gefunden."),
+                __LINE__, __FILE__);
       } else {
      $this->db->next_record();
      $votearray=array('vote_id'       => $this->db->f("vote_id"),
               'author_id'     => $this->db->f("author_id"),
               'range_id'      => $this->db->f("range_id"),
-              'type'          => $this->db->f("type"), 
+              'type'          => $this->db->f("type"),
               'title'         => $this->db->f("title"),
               'question'      => $this->db->f("question"),
               'state'         => $this->db->f("state"),
@@ -365,27 +365,27 @@ class VoteDB extends StudipObject {
               'chdate'        => $this->db->f("chdate"),
               'resultvisibility'=>$this->db->f("resultvisibility"),
               'namesvisibility'=>$this->db->f("namesvisibility"),
-              'multiplechoice'=> $this->db->f("multiplechoice"), 
-              'anonymous'     => $this->db->f("anonymous"), 
-              'changeable'    => $this->db->f("changeable"), 
-              'co_visibility' => $this->db->f("co_visibility"), 
+              'multiplechoice'=> $this->db->f("multiplechoice"),
+              'anonymous'     => $this->db->f("anonymous"),
+              'changeable'    => $this->db->f("changeable"),
+              'co_visibility' => $this->db->f("co_visibility"),
               'answerArray'   => array (),
               'isAssociated'  => $this->hasanyoneparticipated($voteID,$this->db->f("anonymous")));
 
     // convert userID to username
     if ($name = get_username($votearray['range_id']))
        $votearray['range_id'] = $name;
-                                       
-#Entsprechende Antworten aus der DB laden und in einem abgefahrenen 
+
+#Entsprechende Antworten aus der DB laden und in einem abgefahrenen
 #3d Array speichern!
 
      $this->db->query ("SELECT * FROM voteanswers WHERE ".
                "vote_id='".$voteID."' ORDER BY position");
-       for ($count = 0; $this->db->next_record (); $count ++) { 
-       if($votearray["anonymous"])  
-         $votearray['answerArray'][$count] =    
-           array (    
-              'answer_id' => $this->db->f("answer_id"),  
+       for ($count = 0; $this->db->next_record (); $count ++) {
+       if($votearray["anonymous"])
+         $votearray['answerArray'][$count] =
+           array (
+              'answer_id' => $this->db->f("answer_id"),
               'text' => $this->db->f("answer"),
               'counter'=> $this->db->f("counter"),
               'correct'   => $this->db->f("correct")
@@ -393,9 +393,9 @@ class VoteDB extends StudipObject {
        else
          // kacke ich kann hier ja $this->db->query"";
          // nich einfach ein query einfügen
-         $votearray['answerArray'][$count] = 
-        array (    
-            'answer_id' => $this->db->f("answer_id"),  
+         $votearray['answerArray'][$count] =
+        array (
+            'answer_id' => $this->db->f("answer_id"),
             'text' => $this->db->f("answer"),
             'counter'=> $this->db->f("counter"),
             'correct'   => $this->db->f("correct")
@@ -418,8 +418,8 @@ class VoteDB extends StudipObject {
      return FALSE;
       else
      return TRUE;
-   }   
-   
+   }
+
 
    /**
     * Checks whether a user has participated in a specified vote
@@ -443,7 +443,7 @@ class VoteDB extends StudipObject {
         return TRUE;
      }
       } else {
-     $sql = 
+     $sql =
         "SELECT".
         " a.answer_id, b.answer_id ".
         "FROM".
@@ -460,7 +460,7 @@ class VoteDB extends StudipObject {
      else
         return TRUE;
       }
-   }   
+   }
 
 
    /**
@@ -482,7 +482,7 @@ class VoteDB extends StudipObject {
       }
       /* If vote is not anonymous ------------------------------------------ */
       else {
-     $sql = 
+     $sql =
         "SELECT".
         " b.vote_id ".
         " FROM ".
@@ -504,7 +504,7 @@ class VoteDB extends StudipObject {
    function getNumberUserVoted () {
       /* If vote is anonymous ---------------------------------------------- */
       if ($this->vote->isAnonymous ()) {
-     $sql = 
+     $sql =
         "SELECT".
         " count(DISTINCT user_id) ".
         "AS".
@@ -516,7 +516,7 @@ class VoteDB extends StudipObject {
       }
       /* If vote is not anonymous ------------------------------------------ */
       else {
-     $sql = 
+     $sql =
         "SELECT".
         " count(DISTINCT a.user_id) ".
         "AS".
@@ -557,7 +557,7 @@ class VoteDB extends StudipObject {
        return $username;
      }
    }
-   
+
    /**
     * Gets the username from the owner of the vote
     * @access  public
@@ -622,7 +622,7 @@ class VoteDB extends StudipObject {
       $this->db->query ($sql);
 
       if (!$this->db->affected_rows())
-     $this->throwError (1, _("Vote konnte nicht gestartet werden"), 
+     $this->throwError (1, _("Die Umfrage konnte nicht gestartet werden"),
                 __LINE__, __FILE__);
    }
 
@@ -635,7 +635,7 @@ class VoteDB extends StudipObject {
     * @param   $stopdate  New date, when the vote stops
     */
    function stopVote ($voteID, $state, $stopdate) {
-      $sql = 
+      $sql =
      "UPDATE".
      " vote ".
      "SET".
@@ -648,7 +648,7 @@ class VoteDB extends StudipObject {
      " vote_id = '".$voteID."'";
       $this->db->query ($sql);
       if (!$this->db->affected_rows())
-    $this->throwError (1, _("Vote konnte nicht gestartet werden"), 
+    $this->throwError (1, _("Vote konnte nicht gestartet werden"),
                __LINE__, __FILE__);
    }
 
@@ -663,8 +663,8 @@ class VoteDB extends StudipObject {
    function continueVote ($voteID, $startdate, $stopdate) {
       if ($startdate == NULL) $startdate = "NULL";
       if ($stopdate == NULL) $stopdate = "NULL";
-     
-      $sql = 
+
+      $sql =
      "UPDATE".
      " vote ".
      "SET".
@@ -677,7 +677,7 @@ class VoteDB extends StudipObject {
 
       $this->db->query ($sql);
       if (!$this->db->affected_rows())
-     $this->throwError (1, _("Vote konnte nicht fortgesetzt werden"), 
+     $this->throwError (1, _("Die Umfrage konnte nicht fortgesetzt werden"),
                 __LINE__, __FILE__);
    }
 
@@ -693,16 +693,16 @@ class VoteDB extends StudipObject {
    function restartVote ($voteID, $startdate, $stopdate, $anonymous) {
      if ($startdate == NULL) $startdate = "NULL";
      if ($stopdate == NULL) $stopdate = "NULL";
-     
+
      $sql= "UPDATE vote SET state = '".VOTE_STATE_NEW."', ".
        "startdate=NULL, stopdate=NULL WHERE vote_id='".$voteID."'";
-     
+
      $this->db->query($sql);
      if (!$this->db->affected_rows())
-     $this->throwError (1, _("Vote konnte nicht neu gestartet werden"), 
+     $this->throwError (1, _("Die Umfrage konnte nicht neu gestartet werden"),
                 __LINE__, __FILE__);
      if(!$anonymous){
-     $answers = array(); 
+     $answers = array();
      $sql="SELECT answer_id from voteanswers WHERE ".
          "vote_id='".$voteID."'";
      $this->db->query($sql);
@@ -722,17 +722,17 @@ class VoteDB extends StudipObject {
      /*
      if (!$this->db->affected_rows())
          $this->throwError (1, _("Antwortverknuepfungen (anonym) konnten nicht ".
-                     "geloescht werden."), 
-                __LINE__, __FILE__); 
+                     "geloescht werden."),
+                __LINE__, __FILE__);
      */
      }
 
      $sql="UPDATE voteanswers SET ".
        "counter = 0 WHERE vote_id='".$voteID."'";
      $this->db->query($sql);
-     
+
    }
-   
+
 
    /**
     * Sets the visibility of a vote to the new state
@@ -741,15 +741,15 @@ class VoteDB extends StudipObject {
     * @param   $state     New state
     */
    function setVisible ($voteID, $state) {
-      $sql = 
+      $sql =
     "UPDATE vote SET ".
     "state = '".$state."' WHERE vote_id = '".$voteID."'";
       $this->db->query ($sql);
       if (!$this->db->affected_rows())
-    $this->throwError (1, _("DB: Vote nicht gefunden oder ist bereits sichtbar"));
+    $this->throwError (1, _("Die Umfrage wurde nicht gefunden oder ist bereits sichtbar"));
    }
 
-  
+
 
 
    /**
@@ -782,7 +782,7 @@ class VoteDB extends StudipObject {
               "WHERE".
               " state = '".VOTE_STATE_ACTIVE."' AND".
               " stopdate < '".time()."'");
-     
+
      $this->db->query("UPDATE".
               " vote ".
               "SET".
@@ -801,7 +801,7 @@ class VoteDB extends StudipObject {
               " resultvisibility = '".VOTE_RESULTS_NEVER."'");
    }
 
-   
+
    /**
     * Writes a new vote into the Database
     *
@@ -810,11 +810,11 @@ class VoteDB extends StudipObject {
     * @param   string   $voteID         specified voteID
     * @param   string   $autorID        ID of the author
     * @param   string   $rangeID        specified rangeID
-    * @param   string   $title          Title of the vote   
+    * @param   string   $title          Title of the vote
     * @param   string   $question       Question of the vote
     * @param   int      $state          state of the vote
     * @param   int      $starttime      Starttime of the vote
-    * @param   int      $endtime        Endtime of the vote 
+    * @param   int      $endtime        Endtime of the vote
     * @param   int      $timeslice
     * @param   int      $creationTime   Creation time of thevote
     * @param   int      $changeTime     Time of last modifications
@@ -824,7 +824,7 @@ class VoteDB extends StudipObject {
     * @param   string   $anonymous      Democratic or totalitarian vote
     * @param   array    $answerArray    The answers
     * @param   string   $co_visibility  correct answers visibility
-    * @param   string   $type           
+    * @param   string   $type
     *
     * @param   boolean  TRUE/FALSE      Success of Insertion
     */
@@ -833,16 +833,16 @@ class VoteDB extends StudipObject {
                $chdate, $resultvisibility, $namesvisibility, $multiplechoice,
                $anonymous, $answerarray, $changeable,
                $co_visibility = NULL, $type) {
-    
+
       // convert username to userID
       if ($id = get_userID($rangeID))
         $rangeID = $id;
-          
+
       if ($startTime == NULL) $startTime="NULL";
       if ($endTime == NULL) $endTime="NULL";
       if ($timespan == NULL) $timespan="NULL";
-      if ($co_visibility === NULL) $co_visibility = "NULL";       
-      
+      if ($co_visibility === NULL) $co_visibility = "NULL";
+
       // escape strings for storing in the DB
       $title = addslashes($title);
       $question = addslashes($question);
@@ -851,7 +851,7 @@ class VoteDB extends StudipObject {
       }
 
       /* Doubleclick on save? ---------------------------------------------- */
-      $sql = 
+      $sql =
      "SELECT".
      " 1 ".
      "FROM".
@@ -862,14 +862,14 @@ class VoteDB extends StudipObject {
      " vote_id != '".$voteID."'";
 
       $this->db->query ($sql);
-      if ($this->db->nf ()) 
+      if ($this->db->nf ())
      return $this->throwError (1, _("Sie haben mehrmals auf 'Speichern' gedr&uuml;ckt. Die Umfrage bzw. der Test wurde bereits in die Datenbank geschrieben."));
       /* ------------------------------------------------------------------- */
-      
+
        $this->db->query ("SELECT title from vote WHERE ".
              "vote_id='".$voteID."'");
        if ($this->db->nf() == 0) {
-     
+
        $query = "INSERT INTO vote (".
          "vote_id, author_id, range_id,type , title, question, state, ".
          "startdate, stopdate, timespan, mkdate, chdate, ".
@@ -884,18 +884,18 @@ class VoteDB extends StudipObject {
          "'".$changeable."', ".$co_visibility.")";
 
        if (!$this->db->query ($query)) {
-           $this->throwError (mysql_errno (), mysql_error (), 
+           $this->throwError (mysql_errno (), mysql_error (),
                   __LINE__, __FILE__, ERROR_CRITICAL);
            return false;
        }
        // Antworten speichern
 
        for($index = 0 ; $index < count($answerarray); $index++){
-           $correct = ($answerarray[$index]["correct"]) ? TRUE : FALSE; 
+           $correct = ($answerarray[$index]["correct"]) ? TRUE : FALSE;
            $this->db->query("SELECT * from voteanswers ".
                 "WHERE vote_id='".$voteID."'");
-           if ($this->db->nf() == 0 + $index) { 
-           // +index ... keine ahnung ob das so bleiben kann, 
+           if ($this->db->nf() == 0 + $index) {
+           // +index ... keine ahnung ob das so bleiben kann,
            // aber es geht erstmal ;)  (michael)
            $query = "INSERT INTO voteanswers ".
              "(answer_id, vote_id, answer, position, ".
@@ -906,7 +906,7 @@ class VoteDB extends StudipObject {
              "'".$index."', ".
              "'".$answerarray[$index]["counter"]."', ".
              "'".$correct."')";
-           //  echo("voteanswers Query:".$query."<br>\n");   
+           //  echo("voteanswers Query:".$query."<br>\n");
            }
            $this->db->query ($query);
        }
@@ -931,13 +931,13 @@ class VoteDB extends StudipObject {
        $this->db->query($query);
        $query="DELETE FROM voteanswers WHERE ".
          "vote_id='".$voteID."'";
-       
+
        $this->db->query($query);
        for($index = 0 ; $index < count($answerarray); $index++){
-         $correct = ($answerarray[$index]["correct"]) ? TRUE : FALSE; 
+         $correct = ($answerarray[$index]["correct"]) ? TRUE : FALSE;
          $this->db->query("SELECT * from voteanswers ".
                   "WHERE vote_id='".$voteID."'");
-         if ($this->db->nf() == 0 + $index) { 
+         if ($this->db->nf() == 0 + $index) {
            $query = "INSERT INTO voteanswers ".
          "(answer_id, vote_id, answer, position, ".
          "counter, correct) VALUES ".
@@ -950,7 +950,7 @@ class VoteDB extends StudipObject {
          }
          $this->db->query ($query);
        }
-       
+
 
        }
         return true;
@@ -959,7 +959,7 @@ class VoteDB extends StudipObject {
 
 
 
-   function participate ($voteID, $userID, $answerArray, 
+   function participate ($voteID, $userID, $answerArray,
              $isAnonymous, $changeable=NULL) {
      $update = 0;
      $sql="SELECT changeable FROM vote WHERE ".
@@ -967,29 +967,29 @@ class VoteDB extends StudipObject {
      $this->db->query ($sql);
      $this->db->next_record ();
      $changeable=$this->db->f("changeable");
-   
+
      //Antwort aendern...
      if($changeable!=0){
        $oldanswers = array();
        $temp =array();
        $update=1;
-       
+
        //lösche alte antworten!!!
        $sql="SELECT answer_id from voteanswers WHERE ".
      "vote_id ='".$voteID."'";
 
-       $this->db->query($sql); 
+       $this->db->query($sql);
        while ($this->db->next_record ()) {
-     array_push ($temp, $this->db->f("answer_id")); 
+     array_push ($temp, $this->db->f("answer_id"));
        }
        foreach($temp as $a_id){
      $sql="SELECT answer_id from voteanswers_user WHERE ".
        "user_id ='".$userID."' AND ".
        "answer_id ='".$a_id."'";
 
-     $this->db->query($sql); 
+     $this->db->query($sql);
      while ($this->db->next_record ()) {
-       array_push ($oldanswers, $this->db->f("answer_id")); 
+       array_push ($oldanswers, $this->db->f("answer_id"));
      }
        }
        foreach ($oldanswers as $yeoldeanswer){
@@ -1004,7 +1004,7 @@ class VoteDB extends StudipObject {
      $this->db->query ($sql);
        }
      }
-     
+
      //normales Abstimmen
      if ($isAnonymous) {
        $sql_user = "INSERT INTO ".
@@ -1020,7 +1020,7 @@ class VoteDB extends StudipObject {
        "vote_id = '".$voteID."' AND position = '".$answer."'";
      $this->db->query ($sql_answer);
      if (!$this->db->num_rows ()) {
-       $this->throwError (1, _("DB: Keine gültige Antwort gewählt"), 
+       $this->throwError (1, _("DB: Keine gültige Antwort gewählt"),
                   __LINE__, __FILE__);
        return;
      }
@@ -1031,9 +1031,9 @@ class VoteDB extends StudipObject {
          "('".$this->db->f ("answer_id")."', '".$userID."', ".
          "'".time ()."')";
        $this->db->query ($sql_user);
-#(m)     }       
+#(m)     }
        }
-     }     
+     }
      // update counter for anonymous votes
      //    if ($isAnonymous) {
      foreach ($answerArray as $answer) {
@@ -1045,7 +1045,7 @@ class VoteDB extends StudipObject {
 
        // }
    }
-   
+
    /**
     * Returns the users having voted with a specific answer
     * @access  public
@@ -1053,7 +1053,7 @@ class VoteDB extends StudipObject {
     */
    function  getAssociatedUsers($answer_id ){
      $users = array();
-     $sql="SELECT user_id from  voteanswers_user ".  
+     $sql="SELECT user_id from  voteanswers_user ".
        "WHERE answer_id = '".$answer_id."'";
      $this->db->query ($sql);
      while($this->db->next_record()){
@@ -1069,7 +1069,7 @@ class VoteDB extends StudipObject {
      $this->db->next_record ();
      return $this->db->f ("type");
    }
-   
+
    function search_range($search_str) {
       return search_range($search_str, true);
    }
@@ -1102,7 +1102,7 @@ class VoteDB extends StudipObject {
     */
    function isAssociated2 ($userID = NULL) {
       if ($this->vote->isAnonymous ()) {
-     $sql = 
+     $sql =
         "SELECT".
         " 1 ".
         "FROM".
@@ -1114,7 +1114,7 @@ class VoteDB extends StudipObject {
      $this->db->query ($sql);
      return ($this->db->nf()) ? YES : NO;
       } else {
-     $sql = 
+     $sql =
         "SELECT".
         " 1 ".
         "FROM".
@@ -1144,9 +1144,9 @@ class VoteDB extends StudipObject {
       if ($startdate === NULL) $startdate = "NULL";
       if ($stopdate  === NULL) $stopdate  = "NULL";
       if ($timespan  === NULL) $timespan  = "NULL";
-      
+
       /* Doubleclick on save? ---------------------------------------------- */
-      $sql = 
+      $sql =
      "SELECT".
      " 1 ".
      "FROM".
@@ -1157,10 +1157,10 @@ class VoteDB extends StudipObject {
      " vote_id != '".$voteID."'";
 
       $this->db->query ($sql);
-      if ($this->db->nf ()) 
+      if ($this->db->nf ())
      return $this->throwError (1, _("Sie haben mehrmals auf 'Speichern' gedr&uuml;ckt. Die Umfrage bzw. der Test wurde bereits in die Datenbank geschrieben."));
       /* ------------------------------------------------------------------- */
-      
+
       /* If vote does not exists in DB create it --------------------------- */
       if (!$this->isExistant2 ()) {
      $sql =
@@ -1202,12 +1202,12 @@ class VoteDB extends StudipObject {
         " '".$this->vote->isChangeable ()."'".
         ")";
      if (!$this->db->query ($sql))
-        return $this->throwError (mysql_errno (), mysql_error (), 
+        return $this->throwError (mysql_errno (), mysql_error (),
                       __LINE__, __FILE__, ERROR_CRITICAL);
-     
+
      /* Save answers --------------------------------------------------- */
      for ($index = 0 ; $index < count($answerarray); $index++) {
-        $sql = 
+        $sql =
            "INSERT INTO".
            " voteanswers (".
            "  answer_id,".
@@ -1222,13 +1222,13 @@ class VoteDB extends StudipObject {
            " '".$answerarray[$index]["text"]."', ".
            " '".$index."',".
            " '".$answerarray[$index]["counter"]."'".
-           " )";      
+           " )";
      }
      /* ---------------------------------------------- end: save answers */
       }
       /* ------------------------------------------------- end: insert in DB */
 
-      
+
       /* If vote already exists in DB update it ---------------------------- */
       else {
      $sql =
@@ -1252,14 +1252,14 @@ class VoteDB extends StudipObject {
         " changeable       = '".$this->vote->isChangeable ()."' ".
         "WHERE".
         " vote_id          = '".$this->vote->getVoteID ()."'";
-      
+
      if (!$this->db->query ($sql))
-        return $this->throwError (mysql_errno (), mysql_error (), 
+        return $this->throwError (mysql_errno (), mysql_error (),
                       __LINE__, __FILE__, ERROR_CRITICAL);
 
      /* Update old answers --------------------------------------------- */
      for ($index = 0 ; $index < count($answerarray); $index++) {
-        $sql = 
+        $sql =
            "UPDATE".
            " voteanswers ".
            "SET".
@@ -1269,9 +1269,9 @@ class VoteDB extends StudipObject {
            "  counter   = '".$answerarray[$index]["counter"]."'".
            "WHERE".
            "  answer_id = '".$answerarray[$index]["answer_id"]."'";
-        
+
         if (!$this->db->query ($sql))
-           return $this->throwError (mysql_errno (), mysql_error (), 
+           return $this->throwError (mysql_errno (), mysql_error (),
                      __LINE__, __FILE__, ERROR_CRITICAL);
      }
      /* -------------------------------------------- end: update answers */

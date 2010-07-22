@@ -1082,13 +1082,13 @@ class Vote extends StudipObject {
 
       /* Running Vote without stardate? ------------------------------------ */
       if ($this->state == VOTE_ACTIVE && empty($this->startdate))
-     $this->throwError (16, _("Laufender Vote hat kein Startdatum!"));
+     $this->throwError (16, _("Laufende Umfrage hat kein Startdatum!"));
       /* ------------------------------------------------------------------- */
 
 
       /* Stop before start? ------------------------------------------------ */
       if (!empty ($this->stopdate) && ($this->stopdate < $this->startdate))
-     $this->throwError (17, _("Startdatum des Votes ist vor Enddatum!"));
+     $this->throwError (17, _("Startdatum der Umfrage ist vor dem Enddatum!"));
       /* ------------------------------------------------------------------- */
 
 

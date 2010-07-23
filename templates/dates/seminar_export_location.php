@@ -2,7 +2,7 @@
 // condense regular dates by room
 if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
   if (is_array($cycle['assigned_rooms'])) foreach ($cycle['assigned_rooms'] as $room_id => $count) : 
-    $resObj =& ResourceObject::Factory($room_id);
+    $resObj = ResourceObject::Factory($room_id);
     $output[$resObj->getName()][] = $cycle['tostring_short'] .' ('. $count .'x)';
   endforeach;
 

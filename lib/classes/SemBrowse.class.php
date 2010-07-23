@@ -696,7 +696,7 @@ class SemBrowse {
         
         $dbv = new DbView();
         
-        $query = ("SELECT seminare.Seminar_id,VeranstaltungsNummer, seminare.status, IF(seminare.visible=0,CONCAT(seminare.Name, ' ". _("(versteckt)") ."'), seminare.Name) AS Name, seminare.metadata_dates,
+        $query = ("SELECT seminare.Seminar_id,VeranstaltungsNummer, seminare.status, IF(seminare.visible=0,CONCAT(seminare.Name, ' ". _("(versteckt)") ."'), seminare.Name) AS Name,
                 $add_fields" . $_fullname_sql['full'] ." AS fullname, auth_user_md5.username,
                 " . $dbv->sem_number_sql . " AS sem_number, " . $dbv->sem_number_end_sql . " AS sem_number_end, seminar_user.position AS position FROM seminare
                 LEFT JOIN seminar_user ON (seminare.Seminar_id=seminar_user.Seminar_id AND seminar_user.status='dozent')

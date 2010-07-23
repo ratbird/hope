@@ -204,7 +204,7 @@ function getAllSortedSingleDates(&$sem) {
 
     $turnus = $sem->getFormattedTurnusDates();
 
-  $termine = array();
+    $termine = array();
     foreach ($sem->metadate->cycles as $metadate_id => $val) {
         $termine = array_merge($termine, $sem->getSingleDatesForCycle($metadate_id));
     }

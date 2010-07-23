@@ -167,12 +167,11 @@ if (isset($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_id
         $sem_create_data["sem_bet_inst"] = $sem_bet_inst;
 
         // Termine
-        $serialized_metadata = $db->f("metadata_dates");
-        $data = unserialize($serialized_metadata);
-        $term_turnus = $data["turnus_data"];
-        $sem_create_data["term_turnus"] = $data["turnus"];
-        $sem_create_data["term_start_woche"] = $data["start_woche"];
-        $sem_create_data["sem_start_termin"] = $data["start_termin"];
+        $term_turnus = array();
+        foreach(SeminarCycleDate::findBySeminar($cp_id) as $cycle) {
+            $term_turnus[] = $cycle->toArray();
+        }
+        $sem_create_data["term_turnus"] = $term_turnus;
         $sem_create_data["turnus_count"] = count($term_turnus);
         $sem_create_data["term_art"] = count($term_turnus) > 0 ? 0 : 1;
 
@@ -216,14 +215,15 @@ if (isset($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_id
         }
 
         for ($i=0;$i<$sem_create_data["turnus_count"];$i++) {
-            $sem_create_data["term_turnus_start_stunde"][$i] = $term_turnus[$i]["start_stunde"];
+            $sem_create_data["term_turnus_start_stunde"][$i] = $term_turnus[$i]["start_hour"];
             $sem_create_data["term_turnus_start_minute"][$i] = $term_turnus[$i]["start_minute"];
-            $sem_create_data["term_turnus_end_stunde"][$i] = $term_turnus[$i]["end_stunde"];
+            $sem_create_data["term_turnus_end_stunde"][$i] = $term_turnus[$i]["end_hour"];
             $sem_create_data["term_turnus_end_minute"][$i] = $term_turnus[$i]["end_minute"];
-            $sem_create_data["term_turnus_resource_id"][$i] = $term_turnus[$i]["resource_id"];
-            $sem_create_data["term_turnus_room"][$i] = $term_turnus[$i]["room"];
-            $sem_create_data["term_turnus_date"][$i] = $term_turnus[$i]["day"];
-            $sem_create_data["term_turnus_desc"][$i] = $term_turnus[$i]["desc"];
+            $sem_create_data["term_turnus_date"][$i] = $term_turnus[$i]["weekday"];
+            $sem_create_data["term_turnus_desc"][$i] = $term_turnus[$i]["description"];
+            $sem_create_data["term_turnus_week_offset"][$i] = $term_turnus[$i]["week_offset"];
+            $sem_create_data["term_turnus_cycle"][$i] = $term_turnus[$i]["cycle"];
+            $sem_create_data["term_turnus_sws"][$i] = $term_turnus[$i]["sws"];
         }
 
         // Sonstiges
@@ -480,9 +480,6 @@ if ($form == 2) {
 
 if ($form == 3)
     {
-    $sem_create_data["term_start_woche"]=$term_start_woche;
-    $sem_create_data["term_turnus"]=$term_turnus;
-
     if ($sem_create_data["term_art"] == 0)
         {
         //Arrays fuer Turnus loeschen
@@ -492,6 +489,9 @@ if ($form == 3)
         $sem_create_data["term_turnus_end_stunde"]='';
         $sem_create_data["term_turnus_end_minute"]='';
         $sem_create_data["term_turnus_desc"]='';
+        $sem_create_data["term_turnus_week_offset"]='';
+        $sem_create_data["term_turnus_cycle"]='';
+        $sem_create_data["term_turnus_sws"]='';
 
         //Alle eingegebenen Turnus-Daten in Sessionvariable uebernehmen
         for ($i=0; $i<$sem_create_data["turnus_count"]; $i++) {
@@ -501,13 +501,13 @@ if ($form == 3)
             $sem_create_data["term_turnus_end_stunde"][$i] = (strlen($term_turnus_end_stunde[$i]))? intval($term_turnus_end_stunde[$i]) : '';
             $sem_create_data["term_turnus_end_minute"][$i] = (strlen($term_turnus_end_minute[$i]))? intval($term_turnus_end_minute[$i]) : '';
             $sem_create_data["term_turnus_desc"][$i]=($term_turnus_desc[$i] ? $term_turnus_desc[$i] : $term_turnus_desc_chooser[$i]);
+            $sem_create_data["term_turnus_week_offset"][$i] = (int)$_REQUEST['term_turnus_week_offset'][$i];
+            $sem_create_data["term_turnus_cycle"][$i] = (int)$_REQUEST['term_turnus_cycle'][$i];
+            $sem_create_data["term_turnus_sws"][$i] = round(str_replace(',','.',$_REQUEST['term_turnus_sws'][$i]),1);
         }
 
         //Turnus-Metadaten-Array erzeugen
         $sem_create_data["metadata_termin"]='';
-        $sem_create_data["metadata_termin"]["start_termin"]=$sem_create_data["sem_start_termin"];
-        $sem_create_data["metadata_termin"]["start_woche"]=$sem_create_data["term_start_woche"];
-        $sem_create_data["metadata_termin"]["turnus"]=$sem_create_data["term_turnus"];
 
         //indizierte (=sortierbares Temporaeres Array erzeugen)
         if ($sem_create_data["term_art"] == 0)
@@ -531,7 +531,10 @@ if ($form == 3)
                                                                 // they are not needed anymore, but who knows...
                                                                 "room"=>$sem_create_data["term_turnus_room"][$i],
                                                                 //"resource_id"=>$sem_create_data["term_turnus_resource_id"][$i],
-                                                                "desc"=>$sem_create_data["term_turnus_desc"][$i]
+                                                                "desc"=>$sem_create_data["term_turnus_desc"][$i],
+                                                                "week_offset"=>$sem_create_data["term_turnus_week_offset"][$i],
+                                                                "cycle"=>$sem_create_data["term_turnus_cycle"][$i],
+                                                                "sws"=>$sem_create_data["term_turnus_sws"][$i]
                                                                 );
                 }
 
@@ -847,11 +850,11 @@ if (($form == 1) && ($jump_next_x))
         $level=1; //wir bleiben auf der ersten Seite
         $errormsg=$errormsg."error§"._("Bitte geben Sie einen g&uuml;ltigen Namen f&uuml;r die Veranstaltung ein!")."§";
         }
-     if ($sem_create_data["sem_start_time"] <0) 
-        { 
-        $level=1; //wir bleiben auf der ersten Seite 
-        $errormsg=$errormsg."error§"._("Bitte geben Sie ein gültiges Semester für die Veranstaltung ein!")."§"; 
-        }   
+     if ($sem_create_data["sem_start_time"] <0)
+        {
+        $level=1; //wir bleiben auf der ersten Seite
+        $errormsg=$errormsg."error§"._("Bitte geben Sie ein gültiges Semester für die Veranstaltung ein!")."§";
+        }
     if (!$sem_create_data["sem_inst_id"])
         {
         $level=1;
@@ -982,7 +985,7 @@ if (($send_doz_x) && (!$reset_search_x)) {
             $deputies = getDeputies($doz_id);
             // Add the new lecturer's deputies if necessary.
             foreach ($deputies as $deputy) {
-                if (!isset($sem_create_data['sem_doz'][$deputy['user_id']]) && 
+                if (!isset($sem_create_data['sem_doz'][$deputy['user_id']]) &&
                        !isset($sem_create_data['sem_dep'][$deputy['user_id']])) {
                     $sem_create_data['sem_dep'][$deputy['user_id']] = $deputy;
                 }
@@ -1571,7 +1574,6 @@ if (($form == 6) && ($jump_next_x))
             $sem_create_data["sem_start_termin"] = '';
             $sem_create_data["turnus_count"] = 0;
         }
-        $serialized_metadata = mysql_escape_string(serialize($sem_create_data['metadata_termin']));
 
         //for admission it have to always 3
         if ($sem_create_data["sem_admission"]) {
@@ -1591,26 +1593,25 @@ if (($form == 6) && ($jump_next_x))
             $visible = FALSE;
 
         $sem = new Seminar();
-
-        // MetaDate erstellen
-        $sem->metadate = new MetaDate();
         if ($sem_create_data['metadata_termin']['art'] == 0)  {
             if(is_array($sem_create_data["metadata_termin"]["turnus_data"])){
                 foreach ($sem_create_data["metadata_termin"]["turnus_data"] as $key=>$val) {
                     $sem_create_data["metadata_termin"]["turnus_data"][$key]["room"] = stripslashes($sem_create_data["metadata_termin"]["turnus_data"][$key]["room"]);
                     $sem_create_data["metadata_termin"]["turnus_data"][$key]["desc"] = stripslashes($sem_create_data["metadata_termin"]["turnus_data"][$key]["desc"]);
+                    $metadate_id = $sem->metadate->addCycle($sem_create_data["metadata_termin"]["turnus_data"][$key]);
+                    $temp_rooms[$metadate_id] = $sem_create_data["metadata_termin"]["turnus_data"][$key]["room"];
+                    $temp_resources[$metadate_id] = $sem_create_data["metadata_termin"]["turnus_data"][$key]["resource_id"];
                 }
             }
-            $sem->metadate->createMetaDateFromArray($sem_create_data['metadata_termin']);
         }   else {
             if ($sem_create_data['term_count'] > 0)
             for ($i = 0; $i < $sem_create_data['term_count']; $i++) {
                 $termin = new SingleDate(array('seminar_id' => $sem->getId()));
                 $new_date = array('start' => 0, 'end' => 0);
-                if (check_and_set_date($sem_create_data['term_tag'][$i], $sem_create_data['term_monat'][$i], $sem_create_data['term_jahr'][$i], 
-                    $sem_create_data['term_start_stunde'][$i], $sem_create_data['term_start_minute'][$i], $new_date, 'start') && 
-                    check_and_set_date($sem_create_data['term_tag'][$i], $sem_create_data['term_monat'][$i], $sem_create_data['term_jahr'][$i], 
-                    $sem_create_data['term_end_stunde'][$i], $sem_create_data['term_end_minute'][$i], $new_date, 'end')) 
+                if (check_and_set_date($sem_create_data['term_tag'][$i], $sem_create_data['term_monat'][$i], $sem_create_data['term_jahr'][$i],
+                    $sem_create_data['term_start_stunde'][$i], $sem_create_data['term_start_minute'][$i], $new_date, 'start') &&
+                    check_and_set_date($sem_create_data['term_tag'][$i], $sem_create_data['term_monat'][$i], $sem_create_data['term_jahr'][$i],
+                    $sem_create_data['term_end_stunde'][$i], $sem_create_data['term_end_minute'][$i], $new_date, 'end'))
                 {
                     $termin->setTime($new_date['start'], $new_date['end']);
 
@@ -1680,20 +1681,19 @@ if (($form == 6) && ($jump_next_x))
 
         // create singledates for the regular entrys
         if (!$sem_create_data["sem_entry"]) {
-            foreach ($sem->getMetaDates() as $key => $val) {
+            foreach ($sem->getCycles() as $key => $val) {
                 $sem->metadate->createSingleDates($key);
-
                 // Raum buchen, wenn eine Angabe gemacht wurde, oder Freitextangabe, falls vorhanden
-                if (($val['resource_id'] != '') || ($val['room'] != '')) {
+                if (($temp_resources[$key] != '') || ($temp_rooms[$key] != '')) {
                     $singleDates =& $sem->getSingleDatesForCycle($key);
                     foreach ($singleDates as $sd_key => $sd_val) {
-                        if ($RESOURCES_ENABLE && $val['resource_id'] != '') {
-                            $singleDates[$sd_key]->bookRoom($val['resource_id']);
+                        if ($RESOURCES_ENABLE && $temp_resources[$key]  != '') {
+                            $singleDates[$sd_key]->bookRoom($temp_resources[$key]);
                             if ($msg = $singleDates[$sd_key]->getMessages()) {
                                 $errormsg .= $msg;
                             }
                         } else {
-                            $singleDates[$sd_key]->setFreeRoomText($val['room']);
+                            $singleDates[$sd_key]->setFreeRoomText($temp_rooms[$key]);
                             $singleDates[$sd_key]->store();
                         }
                     }
@@ -1947,7 +1947,7 @@ if (($form == 6) && ($jump_next_x))
                 $enabled_plugins = PluginEngine::getPlugins('StandardPlugin');
                 $context = $sem->getId();
 
-                foreach ($enabled_plugins as $plugin) { 
+                foreach ($enabled_plugins as $plugin) {
                     $plugin_id = $plugin->getPluginId();
                     $plugin_status = in_array($plugin_id, $sem_create_data['enabled_plugins']);
 
@@ -2612,7 +2612,7 @@ if ($level == 2)
                     }
                 }
                 $clause.=") ";
-                $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ". 
+                $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ".
                         $_fullname_sql['full_rev'] ." AS fullname " .
                         "FROM user_inst " .
                             "LEFT JOIN auth_user_md5 USING (user_id) " .
@@ -2623,7 +2623,7 @@ if ($level == 2)
                         "ORDER BY Nachname");
                 print QuickSearch::get("add_doz", $Dozentensuche)
                             ->render();
-                ?> 
+                ?>
                 <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
                 </td>
             </tr>
@@ -2679,7 +2679,7 @@ if ($level == 2)
                         $deputysearch = new PermissionSearch('username', '', '', array('permission' => getValidDeputyPerms()));
                         print QuickSearch::get("add_dep", $deputysearch)
                                 ->render();
-                        ?> 
+                        ?>
                         <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
                         </td>
                     </tr>
@@ -2762,7 +2762,7 @@ if ($level == 2)
                             $clause.=",'$val'";
                         }
                         $clause.=") ";
-                        $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ". 
+                        $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ".
                             $_fullname_sql['full_rev'] ." AS fullname " .
                             "FROM user_inst " .
                                 "LEFT JOIN auth_user_md5 USING (user_id) " .
@@ -2773,7 +2773,7 @@ if ($level == 2)
                             "ORDER BY Nachname");
                         print QuickSearch::get("add_tut", $Dozentensuche)
                                 ->render();
-                        ?> 
+                        ?>
                         <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
                         </td>
                     </tr>
@@ -2785,7 +2785,7 @@ if ($level == 2)
                                 <?= _("Studienbereiche:") ?>
                                 <img src="<?= Assets::image_path('info') ?>"
                                     <?= tooltip( _("Sie müssen mindestens einen Studienbereich auswählen! Der Studienbereich legt z.B. fest, wo die Veranstaltung im Vorlesungsverzeichnis auftaucht."), TRUE, TRUE ) ?>
-                                >   
+                                >
                                 <font color="red" size=+2>*</font>
 
                                 <?
@@ -3003,44 +3003,13 @@ if ($level == 3) {
                                 <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
                                     &nbsp; <b><font size=-1><?=_("Regelm&auml;&szlig;ige Veranstaltung"); ?></font></b><br><br>
                                     &nbsp;  <font size=-1><?=_("Wenn Sie den Typ der Veranstaltung &auml;ndern m&ouml;chten, gehen Sie bitte auf die erste Seite zur&uuml;ck."); ?></font><br><br>
-                                    &nbsp;  <font size=-1><?=_("Turnus:"); ?> </font>&nbsp;
-                                    <select name="term_turnus">
-                                    <?
-                                    if ($sem_create_data["term_turnus"]==0)
-                                        echo "<option selected value=0>"._("w&ouml;chentlich")."</option>";
-                                    else
-                                        echo "<option value=0>"._("w&ouml;chentlich")."</option>";
-                                    if ($sem_create_data["term_turnus"]==1)
-                                        echo "<option selected value=1>"._("zweiw&ouml;chentlich")."</option>";
-                                    else
-                                        echo "<option value=1>"._("zweiw&ouml;chentlich")."</option>";
-                                    ?>
-                                    </select>&nbsp;  <font size=-1><?=_("erster Termin in der"); ?></font>
-                                    <select name="term_start_woche">
-                                    <?
-                                    $semester_index = get_sem_num($sem_create_data["sem_start_time"]);
-                                    $tmp_first_date = getCorrectedSemesterVorlesBegin($semester_index);
-                                    $end_date = $all_semester[$semester_index]['vorles_ende'];
 
-                                    $i = 0;
-                                    while ($tmp_first_date < $end_date) {
-                                        echo '<option';
-                                        if ($sem_create_data["term_start_woche"] == $i) {
-                                            echo ' selected="selected"';
-                                        }
-                                        echo ' value="'.$i.'">';
-                                        echo ($i+1).'. '._("Semesterwoche")." ("._("ab")." ".date("d.m.Y",$tmp_first_date).")</option>";
-                                        $i++;
-                                        $tmp_first_date = $tmp_first_date + (7 * 24 * 60 * 60);
-                                    }
-                                    ?>
-                                    </select>
                                     <br><br>&nbsp; <font size=-1><?=_("Die Veranstaltung findet immer zu diesen Zeiten statt:"); ?></font><br><br>
                                     <?
                                     if (empty($sem_create_data["turnus_count"]))
                                         $sem_create_data["turnus_count"]=1;
                                     for ($i=0; $i<$sem_create_data["turnus_count"]; $i++) {
-                                        if ($i>0) echo "<br>\n";
+                                        if ($i>0) echo "<hr>\n";
                                         echo '&nbsp; <font size=-1><select name="term_turnus_date[', $i, ']">';
                                         $ttd = (empty($sem_create_data["term_turnus_date"][$i]))? 1 : $sem_create_data["term_turnus_date"][$i];
                                         for($kk = 0; $kk <= 6; $kk++ ){
@@ -3103,6 +3072,30 @@ if ($level == 3) {
                                         echo "\n</select>";
                                         echo "&nbsp;";
                                         echo "\n<input type=\"text\" name=\"term_turnus_desc[$i]\" size=\"30\" value=\"".stripslashes(htmlReady($sem_create_data['term_turnus_desc'][$i]))."\">";
+                                        echo "\n<br>&nbsp;  " . _("Turnus:") . '&nbsp;';
+                                        echo '<select name="term_turnus_cycle['.$i.']">';
+                                        foreach(array(_("wöchentlich"), _("zweiwöchentlich"), _("dreiwöchentlich")) as $v => $c){
+                                            echo '<option value="'.$v.'" '.($sem_create_data["term_turnus_cycle"][$i]==$v ? 'selected' : '').'>'.$c."</option>";
+                                        }
+                                        echo '</select>&nbsp;'._("erster Termin in der");
+                                        echo '<select name="term_turnus_week_offset['.$i.']">';
+                                        $semester_index = get_sem_num($sem_create_data["sem_start_time"]);
+                                        $tmp_first_date = getCorrectedSemesterVorlesBegin($semester_index);
+                                        $end_date = $all_semester[$semester_index]['vorles_ende'];
+                                        $sem_week = 0;
+                                        while ($tmp_first_date < $end_date) {
+                                            echo '<option';
+                                            if ($sem_create_data["term_turnus_week_offset"][$i] == $sem_week) {
+                                                echo ' selected="selected"';
+                                            }
+                                            echo ' value="'.$sem_week.'">';
+                                            echo ($sem_week+1).'. '._("Semesterwoche")." ("._("ab")." ".date("d.m.Y",$tmp_first_date).")</option>";
+                                            $sem_week++;
+                                            $tmp_first_date = $tmp_first_date + (7 * 24 * 60 * 60);
+                                        }
+                                        echo '</select>';
+                                        echo "&nbsp;" ._("SWS Dozent:");
+                                        echo "\n&nbsp;<input type=\"text\" name=\"term_turnus_sws[$i]\" size=\"1\" maxlength=\"3\" value=\"".stripslashes(htmlReady($sem_create_data['term_turnus_sws'][$i]))."\">";
 
                                     }
                                     ?>

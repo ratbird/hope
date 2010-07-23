@@ -111,7 +111,7 @@ class Seminar {
         if (!$this->id) {
             $this->id = $this->createId();
             $this->is_new = TRUE;
-            $this->metadate = new MetaDate();
+            $this->metadate = new MetaDate($this->id);
         }
 
     }
@@ -206,14 +206,6 @@ class Seminar {
 
     function getSemesterDurationTime() {
         return $this->semester_duration_time;
-    }
-
-    function getMetaDateType () {
-        return $this->metadate->getArt();
-    }
-
-    function getSerializedMetadata() {
-        return $this->metadate->getSerializedMetaData();
     }
 
     function formatRoom($return_mode = 'string', $termin) {
@@ -341,10 +333,7 @@ class Seminar {
         }
 
         $ret['regular']['turnus_data'] = $cycles;
-        $ret['regular']['art']         = $this->metadate->art;
-        $ret['regular']['start_woche'] = $this->metadate->start_woche;
-        $ret['regular']['turnus']      = $this->metadate->turnus;
-
+        
         // the irregular single-dates
         foreach ($dates as $val) {
             $zw = array(
@@ -385,76 +374,23 @@ class Seminar {
     }
 
     function getFormattedTurnusDates($short = FALSE) {
-        if ($cycles = $this->metadate->getCycleData()) {
-            foreach ($cycles as $key=>$val) {
-                if ($short)
-                    switch ($val["day"]) {
-                        case "0": $return_string[$key]= _("So."); break;
-                        case "1": $return_string[$key]= _("Mo."); break;
-                        case "2": $return_string[$key]= _("Di."); break;
-                        case "3": $return_string[$key]= _("Mi."); break;
-                        case "4": $return_string[$key]= _("Do."); break;
-                        case "5": $return_string[$key]= _("Fr."); break;
-                        case "6": $return_string[$key]= _("Sa."); break;
-                    }
-                else
-                    switch ($val["day"]) {
-                        case "0": $return_string[$key]= _("Sonntag"); break;
-                        case "1": $return_string[$key]= _("Montag"); break;
-                        case "2": $return_string[$key]= _("Dienstag"); break;
-                        case "3": $return_string[$key]= _("Mittwoch"); break;
-                        case "4": $return_string[$key]= _("Donnerstag"); break;
-                        case "5": $return_string[$key]= _("Freitag"); break;
-                        case "6": $return_string[$key]= _("Samstag"); break;
-                    }
-                $return_string[$key].=", ".$val["start_hour"].":";
 
-                $return_string[$key] .= leadingZero($val['start_minute']);
-
-                if (!(($val["end_hour"] == $val["start_hour"]) && ($val["end_minute"] == $val["start_minute"]))) {
-                    $return_string[$key].=" - ".$val["end_hour"].":";
-
-                    $return_string[$key] .= leadingZero($val['end_minute']);
-                }
-                if ($val['desc']){
-                    $return_string[$key].= ' ('. htmlReady($val['desc']) .')';
+        if ($cycles = $this->metadate->getCycles()) {
+            $return_string = array();
+            foreach ($cycles as $id => $c) {
+                $return_string[$id] = $c->toString($short);
+                //hmm tja...
+                if ($c->description){
+                    $return_string[$id] .= ' ('. htmlReady($c->description) .')';
                 }
             }
             return $return_string;
         } else
-            return FALSE;
+        return FALSE;
     }
 
     function getMetaDateCount() {
         return sizeof($this->metadate->cycles);
-    }
-
-    /* depreceated */
-    function getMetaDates() {
-        if ($this->metadate) {
-            return $this->metadate->getCycleData();
-        } else {
-            return FALSE;
-        }
-    }
-
-    function getMetaDatesKey($begin, $end){
-        $ret = null;
-        $day_of_week = date("w", $begin);
-        $day_of_week = ($day_of_week == 0 ? 7 : $day_of_week);
-        if (is_array($meta_dates = $this->getMetaDates())){
-            foreach($meta_dates as $key => $value){
-                if (($value['day'] == $day_of_week)
-                && ($value['start_hour'] == date('G', $begin))
-                && ($value['start_minute'] == date('i', $begin))
-                && ($value['end_hour'] == date('G', $end))
-                && ($value['end_minute'] == date('i', $end))){
-                    $ret = $key;
-                    break;
-                }
-            }
-        }
-        return $ret;
     }
 
     function getMetaDateValue($key, $value_name) {
@@ -504,11 +440,9 @@ class Seminar {
             $this->orga = $this->db->f("lernorga");
             $this->leistungsnachweis = $this->db->f("leistungsnachweis");
 
-            $this->metadate = new MetaDate();
-            $this->metadate->createMetaDateFromArray(unserialize($this->db->f('metadata_dates')));
+            $this->metadate = new MetaDate($this->id);
             $this->metadate->setSeminarStartTime($this->db->f('start_time'));
             $this->metadate->setSeminarDurationTime($this->db->f('duration_time'));
-            $this->metadate->seminar_id = $this->id;
 
             $this->mkdate = $this->db->f("mkdate");
             $this->chdate = $this->db->f("chdate");
@@ -581,7 +515,6 @@ class Seminar {
                 vorrausetzungen = '".           mysql_escape_string($this->requirements)."',
                 lernorga = '".              mysql_escape_string($this->orga)."',
                 leistungsnachweis = '".         mysql_escape_string($this->leistungsnachweis)."',
-                metadata_dates= '".         mysql_escape_string($this->getSerializedMetaData())."',
                 mkdate = '".                time()."',
                 chdate = '".                time()."',
                 ects = '".              mysql_escape_string($this->ects)."',
@@ -620,7 +553,6 @@ class Seminar {
                 vorrausetzungen = '".           mysql_escape_string($this->requirements)."',
                 lernorga = '".              mysql_escape_string($this->orga)."',
                 leistungsnachweis = '".         mysql_escape_string($this->leistungsnachweis)."',
-                metadata_dates= '".         mysql_escape_string($this->getSerializedMetadata())."',
                 ects = '".              mysql_escape_string($this->ects)."',
                 admission_endtime = '".         $this->admission_endtime."',
                 admission_turnout = '".         $this->admission_turnout."',
@@ -640,8 +572,8 @@ class Seminar {
                 WHERE Seminar_id = '".          $this->id."'";
         }
         $this->db->query($query);
-
-        if ($this->db->affected_rows() && $trigger_chdate) {
+        $metadate_changed = $this->metadate->store();
+        if (($this->db->affected_rows() || $metadate_changed) && $trigger_chdate) {
             $query = sprintf("UPDATE seminare SET chdate='%s' WHERE Seminar_id='%s' ", time(), $this->id);
             $this->db->query($query);
             return TRUE;
@@ -844,8 +776,8 @@ class Seminar {
         return $this->irregularSingleDates;
     }
 
-    function &getCycles() {
-        return $this->metadate->cycles;
+    function getCycles() {
+        return $this->metadate->getCycles();
     }
 
     function &getSingleDatesForCycle($metadate_id) {
@@ -1046,6 +978,10 @@ class Seminar {
 
     function addCycle($data = array()) {
         $new_id = $this->metadate->addCycle($data);
+        if($new_id){
+            $this->setStartWeek($data['startWeek'], $new_id);
+            $this->setTurnus($data['turnus'], $new_id);
+        }
         // logging >>>>>>
         if($new_id){
             $cycle_info = $this->metadate->cycles[$new_id]->toString();
@@ -1062,8 +998,8 @@ class Seminar {
         $old_start = mktime($cycle->getStartStunde(),$cycle->getStartMinute());
         $old_end = mktime($cycle->getEndStunde(), $cycle->getEndMinute());
         $do_changes = false;
-
-        if (($new_start < $old_start) || ($new_end > $old_end) || ($data['day'] != $this->metadate->cycles[$data['cycle_id']]->day) ) {
+        
+        if (($new_start < $old_start) || ($new_end > $old_end) || ($data['day'] != $cycle->day) ) {
             $has_bookings = false;
 
             foreach($cycle->getSingleDates() as $singleDate) {
@@ -1110,7 +1046,23 @@ class Seminar {
         if ($old_start == $new_start && $old_end == $new_end) {
             $same_time = true;
         }
-
+        if ($data['startWeek'] != $cycle->week_offset) {
+            $this->setStartWeek($data['startWeek'], $cycle->metadate_id);
+            $message = true;
+            $do_changes = true;
+        }
+        if ($data['turnus'] != $cycle->cycle) {
+            $this->setTurnus($data['turnus'], $cycle->metadate_id);
+            $message = true;
+            $do_changes = true;
+        }
+        if (round(str_replace(',','.', $data['sws']),1) != $cycle->sws) {
+            $cycle->sws = $data['sws'];
+            $this->createMessage(_("Die Semesterwochenstunden für Dozenten des regelmäßigen Eintrags wurden geändert."));
+            $message = true;
+            $do_changes = true;
+        }
+        
         if ($do_changes) {
             $change_from = $cycle->toString();
             if ($this->metadate->editCycle($data)) {
@@ -1128,7 +1080,7 @@ class Seminar {
                 }
             }
         }
-
+        
         if (!$message) {
             $this->createInfo("Sie haben keine Änderungen vorgenommen!");
         }
@@ -1143,20 +1095,19 @@ class Seminar {
         return $this->metadate->deleteCycle($cycle_id);
     }
 
-    function setTurnus($turnus) {
-        if ($this->metadate->getTurnus() != $turnus) {
-            $this->metadate->setTurnus($turnus);
-            foreach ($this->metadate->cycles as $key => $val) {
-                $this->metadate->createSingleDates($key);
-                $this->metadate->cycles[$key]->termine = null;
-            }
-            $this->createMessage(_("Der Turnus wurde geändert."));
+    function setTurnus($turnus, $metadate_id = false) {
+        if ($this->metadate->getTurnus($metadate_id) != $turnus) {
+            $this->metadate->setTurnus($turnus, $metadate_id);
+            $key = $metadate_id ? $metadate_id : $this->metadate->getFirstMetadate()->metadate_id;
+            $this->createMessage(sprintf(_("Der Turnus für den Termin %s wurde geändert."), $this->metadate->cycles[$key]->toString()));
+            $this->metadate->createSingleDates($key);
+            $this->metadate->cycles[$key]->termine = null;
         }
         return TRUE;
     }
 
-    function getTurnus() {
-        return $this->metadate->getTurnus();
+    function getTurnus($metadate_id = false) {
+        return $this->metadate->getTurnus($metadate_id);
     }
 
     function bookRoomForSingleDate($singleDateID, $roomID, $cycle_id = '', $append_messages = true) {
@@ -1544,20 +1495,19 @@ class Seminar {
         return $this->hasDatesOutOfDuration;
     }
 
-    function getStartWeek() {
-        return $this->metadate->getStartWoche();
+    function getStartWeek($metadate_id = false) {
+        return $this->metadate->getStartWoche($metadate_id);
     }
 
-    function setStartWeek($week) {
-        if ($this->metadate->getStartWoche() == $week) {
+    function setStartWeek($week, $metadate_id = false) {
+        if ($this->metadate->getStartWoche($metadate_id) == $week) {
             return FALSE;
         } else {
-            $this->metadate->setStartWoche($week);
-            $this->createMessage(_("Die Startwoche wurde ge&auml;ndert."));
-            foreach ($this->metadate->cycles as $key => $val) {
-                $this->metadate->createSingleDates($key);
-                $this->metadate->cycles[$key]->termine = null;
-            }
+            $this->metadate->setStartWoche($week, $metadate_id);
+            $key = $metadate_id ? $metadate_id : $this->metadate->getFirstMetadate()->metadate_id;
+            $this->createMessage(sprintf(_("Die Startwoche für den Termin %s wurde geändert."), $this->metadate->cycles[$key]->toString()));
+            $this->metadate->createSingleDates($key);
+            $this->metadate->cycles[$key]->termine = null;
         }
     }
 

@@ -37,105 +37,107 @@
 require_once('lib/raumzeit/CycleDataDB.class.php');
 require_once('lib/raumzeit/SingleDate.class.php');
 require_once('lib/raumzeit/IssueDB.class.php');
+require_once 'lib/classes/SeminarCycleDate.class.php';
 
 class CycleData {
-    var $metadate_id = '';
-    var $description = NULL;
-    var $idx = 0;
-    var $start_stunde = 0;
-    var $start_minute = 0;
-    var $end_stunde = 0;
-    var $end_minute = 0;
-    var $day = 0;
-    var $semester = 0;
-    var $resource_id = NULL;
-    var $room = NULL;
-    var $termine = NULL; // Array
+    
+    private $alias = array( 'start_stunde' => 'start_hour',
+                            'end_stunde' => 'end_hour',
+                            'day' => 'weekday',
+                            'desc' => 'description');
+    
+    public $termine = NULL; // Array
 
+    private $cycle_date = null;
+    
     function CycleData($cycle_data = FALSE) {
-        if ($cycle_data) {
+        if ($cycle_data instanceof SeminarCycleDate) {
+            $this->cycle_date = $cycle_data;
+        } else {
             if ($cycle_data['metadate_id']) {
-                $this->metadate_id = $cycle_data['metadate_id'];
+                $metadate_id = $cycle_data['metadate_id'];
             } else {
-                $this->metadate_id = md5(uniqid('metadate_id'));
+                $metadate_id = md5(uniqid('metadate_id'));
             }
-            $this->setIdx($cycle_data['idx']);
+            $this->cycle_date = new SeminarCycleDate($metadate_id);
             $this->setStart($cycle_data['start_stunde'], $cycle_data['start_minute']);
             $this->setEnd($cycle_data['end_stunde'], $cycle_data['end_minute']);
             $this->setDay($cycle_data['day']);
             $this->setDescription($cycle_data['desc']);
-            $this->resource_id = $cycle_data['resource_id'];
-            $this->room = $cycle_data['room'];
-        } else {
-            $sems = new SemesterData();
-            $semester = $sems->getCurrentSemesterData();
-            $this->semester = $semester['beginn'];
-            $this->metadate_id = md5(uniqid('MetaDate'));
         }
     }
 
     function getDescription() {
-        return $this->description;
+        return $this->cycle_date->description;
     }
 
     function setDescription($description) {
-        $this->description = $description;
+        $this->cycle_date->description = $description;
     }
 
     function setStart($start_stunde, $start_minute) {
-        $this->start_stunde = (int)$start_stunde;
-        $this->start_minute = (int)$start_minute;
+        $this->cycle_date->start_hour = (int)$start_stunde;
+        $this->cycle_date->start_minute = (int)$start_minute;
     }
 
     function setEnd($end_stunde, $end_minute) {
-        $this->end_stunde = (int)$end_stunde;
-        $this->end_minute = (int)$end_minute;
+        $this->cycle_date->end_hour = (int)$end_stunde;
+        $this->cycle_date->end_minute = (int)$end_minute;
     }
 
     function getStartStunde () {
-        return $this->start_stunde;
+        return $this->cycle_date->start_hour;
     }
 
     function getStartMinute () {
-        return $this->start_minute;
+        return $this->cycle_date->start_minute;
     }
 
     function getEndStunde () {
-        return $this->end_stunde;
+        return $this->cycle_date->end_hour;
     }
 
     function getEndMinute () {
-        return $this->end_minute;
+        return $this->cycle_date->end_minute;
     }
 
     function getMetaDateID() {
-        return $this->metadate_id;
-    }
-
-    function getIdx() {
-        return $this->idx;
-    }
-
-    function setIdx($idx) {
-        $this->idx = $idx;
+        return $this->cycle_date->getId();
     }
 
     function getDay() {
-        return $this->day;
+        return $this->cycle_date->weekday;
     }
 
     function setDay($day) {
-        $this->day = $day;
+        $this->cycle_date->weekday = $day;
     }
-
-    function setSemester($semester) {
-        $this->semester = $semester;
+    
+    function __get($field) {
+        if(isset($this->alias[$field])) {
+            $field = $this->alias[$field];
+        }
+        return $this->cycle_date->$field;
     }
-
-    function getSemester() {
-        return $this->semester;
+    
+    function __set($field, $value) {
+        if(isset($this->alias[$field])) {
+            $field = $this->alias[$field];
+        }
+        return $this->cycle_date->$field = $value;
     }
-
+    
+    function __isset($field) {
+        if(isset($this->alias[$field])) {
+            $field = $this->alias[$field];
+        }
+        return isset($this->cycle_date->$field);
+    }
+    
+    function storeCycleDate(){
+        return $this->cycle_date->store();
+    }
+    
     function store() {
         foreach ($this->termine as $val) {
             $val->store();
@@ -172,7 +174,7 @@ class CycleData {
                 $termin->delete();
             }
         }
-        return TRUE;
+        return $this->cycle_date->delete();
     }
 
     function deleteSingleDate($date_id, $filterStart, $filterEnd) {
@@ -207,7 +209,7 @@ class CycleData {
                 $termin = new SingleDate();
                 $termin->fillValuesFromArray($val);
                 $termin->setExTermin($val['ex_termin']);
-                $this->termine[$val['termin_id']] =& $termin;
+                $this->termine[$val['termin_id']] = $termin;
             }
             return TRUE;
         }
@@ -236,10 +238,27 @@ class CycleData {
         return FALSE;
     }
 
-    function toString($short = FALSE) {
-        return getWeekDay($this->day, $short).($short ? '. ' : ' ').leadingZero($this->start_stunde).':'.leadingZero($this->start_minute).' - '.leadingZero($this->end_stunde).':'.leadingZero($this->end_minute);
+    function toString($short = false) {
+        if($short === false) {
+            return $this->cycle_date->toString('long');
+        } else if ($short === true) {
+            return $this->cycle_date->toString('short');
+        } else {
+            return $this->cycle_date->toString($short);
+        }
     }
-
+    
+    function toArray(){
+        $ret = $this->cycle_date->toArray();
+        foreach($this->alias as $a => $o) {
+            $ret[$a] = $this->cycle_date->$o;
+        }
+        $ret['assigned_rooms'] = $this->getPredominantRoom();
+        $ret['freetext_rooms'] = $this->getFreetextPredominantRoom();
+        $ret['tostring']       = $this->toString();
+        $ret['tostring_short'] = $this->toString(true);
+        return $ret;
+    }
 
     function autoAssignIssues($themen, $filterStart, $filterEnd) {
         $this->readSingleDates($filterStart, $filterEnd);

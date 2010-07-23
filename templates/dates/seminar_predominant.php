@@ -12,7 +12,7 @@ if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turn
         else :
             if ($pos > 0) $roominfo .= ', ';
 
-            $resObj =& ResourceObject::Factory($resource_id);
+            $resObj = ResourceObject::Factory($resource_id);
             if ($link) :
                 $roominfo .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
             else :

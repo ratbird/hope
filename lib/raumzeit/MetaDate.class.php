@@ -41,10 +41,6 @@ class MetaDate {
     var $seminar_id = '';
     var $seminarStartTime = 0;
     var $seminarDurationTime = 0;
-    var $art = 1;
-    var $start_woche = 0;
-    var $start_termin = 0;
-    var $turnus = 0;
     var $cycles = Array();
 
     function MetaDate($seminar_id = '') {
@@ -56,38 +52,48 @@ class MetaDate {
     }
 
     function getArt() {
-        return $this->art;
+        return 1;
     }
 
-    function setArt($art) {
-        $this->art = $art;
-    }
-
-    function getStartWoche() {
-        return $this->start_woche;
-    }
-
-    function setStartWoche($start_woche) {
-        $this->start_woche = $start_woche;
-    }
-
-    function getStartTermin() {
-        return $this->start_termin;
-    }
-
-    function setStartTermin($start_termin) {
-        $this->start_termin = $start_termin;
-    }
-
-    function getTurnus() {
-        return $this->turnus;
-    }
-
-    function setTurnus($turnus) {
-        if ($turnus != $this->turnus) {
-            $this->turnus = $turnus;
+    function getStartWoche($metadate_id = null) {
+        if ($metadate_id) {
+            return $this->cycles[$metadate_id]->week_offset;
+        } else {
+            $first_metadate = $this->getFirstMetadate();
+            return $first_metadate ? $first_metadate ->week_offset : null;
         }
-        return TRUE;
+    }
+
+    function setStartWoche($start_woche, $metadate_id = null) {
+        if ($metadate_id) {
+            return $this->cycles[$metadate_id]->week_offset = $start_woche;
+        } else {
+            $first_metadate = $this->getFirstMetadate();
+            return $first_metadate  ? $first_metadate->week_offset = $start_woche : null;
+        }
+    }
+    
+    function getFirstMetadate() {
+        $first_metadate_id = array_shift(array_keys($this->cycles));
+        return $first_metadate_id ? $this->cycles[$first_metadate_id] : null;
+    }
+
+    function getTurnus($metadate_id = null) {
+        if ($metadate_id) {
+            return $this->cycles[$metadate_id]->cycle;
+        } else {
+            $first_metadate = $this->getFirstMetadate();
+            return $first_metadate ? $first_metadate ->cycle : null;
+        }
+    }
+
+    function setTurnus($turnus, $metadate_id = null) {
+        if ($metadate_id) {
+            return $this->cycles[$metadate_id]->cycle = $turnus;
+        } else {
+            $first_metadate = $this->getFirstMetadate();
+            return $first_metadate  ? $first_metadate->cycle = $turnus : null;
+        }
     }
 
     function setSeminarStartTime($start) {
@@ -103,10 +109,14 @@ class MetaDate {
     }
 
     function setCycleData($data = array(), &$cycle) {
+        $cycle->seminar_id = $this->getSeminarId();
         if ($cycle->getDescription() != $data['description']) {
             $cycle->setDescription($data['description']);
         }
-
+        if(isset($data['weekday'])) $cycle->weekday = (int)$data['weekday'];
+        if(isset($data['week_offset'])) $cycle->week_offset = (int)$data['week_offset'];
+        if(isset($data['sws'])) $cycle->sws = $data['sws'];
+        
         if (isset($data['day']) && isset($data['start_stunde']) && isset($data['start_minute']) && isset($data['end_stunde']) && isset($data['end_minute'])) {
 
             if (
@@ -141,7 +151,7 @@ class MetaDate {
 
         $cycle = new CycleData();
         if ($this->setCycleData($data, $cycle)) {
-            $this->cycles[$cycle->getMetadateID()] =& $cycle;
+            $this->cycles[$cycle->getMetadateID()] = $cycle;
             $this->createSingleDates($cycle->getMetadateID());
             return $cycle->getMetadateID();
         }
@@ -149,7 +159,7 @@ class MetaDate {
     }
 
     function editCycle($data = array()) {
-        $cycle =& $this->cycles[$data['cycle_id']];
+        $cycle = $this->cycles[$data['cycle_id']];
         $new_start = mktime((int)$data['start_stunde'], (int)$data['start_minute']);
         $new_end = mktime((int)$data['end_stunde'], (int)$data['end_minute']);
         $old_start = mktime($cycle->getStartStunde(),$cycle->getStartMinute());
@@ -255,64 +265,32 @@ class MetaDate {
     }
 
     function store() {
-        return MetaDateDB::storeMetaData($this);
-    }
-
-    function createMetaDateFromArray($data) {
-        // art == 0: regelmaessige Veranstaltung
-        // art == 1: unregelmaessige Veranstaltung
-        //$this->setArt($data['art']);
-        // All seminars need to be irregular due to the new handling of regular dates
-        $this->setArt(1);
-        $this->setStartWoche($data['start_woche']);
-        $this->setStartTermin($data['start_termin']);
-        $this->setTurnus($data['turnus']);
-        if (is_array($data['turnus_data'])) {
-            foreach ($data['turnus_data'] as $val) {
-                unset($cycle);
-                $cycle = new CycleData($val);
-                $this->cycles[$cycle->getMetaDateID()] =& $cycle;
-            }
+        $old_cycle_dates = array();
+        foreach(SeminarCycleDate::findBySeminar($this->seminar_id) as $c){
+            $old_cycle_dates[$c->getId()] = $c;
         }
-        return TRUE;
+        $removed = array_diff(array_keys($old_cycle_dates), array_keys($this->cycles));
+        foreach($removed as $one) {
+             $changed += $old_cycle_dates[$one]->delete();
+        }
+        foreach($this->cycles as $one) {
+            $changed += $one->storeCycleDate();
+        }
+        return $changed;
     }
+    
 
     function restore() {
-        $data = MetaDateDB::restoreMetaData($this->seminar_id);
-        $data = unserialize($data);
-        return $this->createMetaDateFromArray($data);
+       $this->cycles = array();
+       foreach (SeminarCycleDate::findBySeminar($this->seminar_id) as $c) {
+           $this->cycles[$c->getId()] = new CycleData($c);
+       }
     }
 
     function delete ($removeSingleDates = TRUE) {
         //TODO: Löschen eines MetaDate-Eintrages (CycleData);
     }
 
-    function getSerializedMetaData() {
-        $data = Array();
-        $data['art'] = $this->getArt();
-        $data['start_termin'] = $this->getStartTermin();
-        $data['start_woche'] = $this->getStartWoche();
-        $data['turnus'] = $this->getTurnus();
-
-        $cycle_data = Array();
-
-        foreach ($this->cycles as $val) {
-            $cycle_data[] = Array('idx' => $val->getIdx(),
-                                                        'day' => $val->getDay(),
-                                                        'start_stunde' => leadingZero($val->getStartStunde()),
-                                                        'start_minute' => leadingZero($val->getStartMinute()),
-                                                        'end_stunde'   => leadingZero($val->getEndStunde()),
-                                                        'end_minute'   => leadingZero($val->getEndMinute()),
-                                                        'desc'  => $val->getDescription(),
-                                                        'room'  => $val->room,
-                                                        'metadate_id'  => $val->getMetaDateID());
-        }
-
-        $data['turnus_data'] =& $cycle_data;
-
-        return serialize($data);
-    }
-    
     function sortCycleData($a, $b) {
         if ($a['day'] == $b['day']) {
             if ($a['start_hour'] == $b['start_hour']) {
@@ -326,26 +304,13 @@ class MetaDate {
     function getCycleData() {
         $ret = array();
         foreach ($this->cycles as $val) {
-            $ret[$val->getMetaDateID()] = array(
-                'metadate_id'    => $val->metadate_id, 
-                'idx'            => $val->idx, 
-                'day'            => $val->day, 
-                'start_hour'     => $val->start_stunde, 
-                'start_minute'   => $val->start_minute, 
-                'end_hour'       => $val->end_stunde, 
-                'end_minute'     => $val->end_minute, 
-                'desc'           => $val->description, 
-                'room'           => $val->room, 
-                'resource_id'    => $val->resource_id,
-                'assigned_rooms' => $val->getPredominantRoom(),
-                'freetext_rooms' => $val->getFreetextPredominantRoom(),
-                'tostring'       => $val->toString(),
-                'tostring_short' => $val->toString(true)
-            );
+            $ret[$val->getMetaDateID()] = $val->toArray();
         }
-        uasort($ret,array('MetaDate','sortCycleData'));
-
         return $ret;
+    }
+    
+    function getCycles() {
+        return $this->cycles;
     }
 
     function getMetaDataAsArray() {
@@ -444,23 +409,26 @@ class MetaDate {
     }
 
     function createSingleDatesForSemester($metadate_id, $sem_begin, $sem_end, $startAfterTimeStamp, $corr, &$irregularSingleDates) {
-        global $CONVERT_SINGLE_DATES;
+        //global $CONVERT_SINGLE_DATES;
 
         // loads the singledates of the by metadate_id denoted regular time-entry into the object
         $this->readSingleDates($metadate_id);
 
         // The currently existing singledates for the by metadate_id denoted  regular time-entry
         $existingSingleDates =& $this->cycles[$metadate_id]->getSingleDates();
-
+        
+        $start_woche = $this->cycles[$metadate_id]->week_offset;
+        $turnus = $this->cycles[$metadate_id]->cycle;
+        
         // HolidayData is used to decide wether a date is during a holiday an should be created as an ex_termin.
         // Additionally, it is used to show which type of holiday we've got.
         $holiday = new HolidayData();
 
         // This variable is used to check if a given singledate shall be created in a bi-weekly seminar.
-        if ($this->start_woche == -1) $this->start_woche = 0;
-        $odd_or_even = 1 - ($this->start_woche % 2);
+        if ($start_woche == -1) $start_woche = 0;
+        $odd_or_even = 1 - ($start_woche % 2);
 
-        if ($CONVERT_SINGLE_DATES) {
+        /*if ($CONVERT_SINGLE_DATES) {
             // calculate the number of matching single dates for this metadate (regular date):
             $single_date_count = 0;
 
@@ -500,6 +468,7 @@ class MetaDate {
             }
 
         }
+        */
 
         $week = 0;
 
@@ -513,22 +482,19 @@ class MetaDate {
 
 
             // do not create singledates, if they are earlier then the chosen start-week
-            if ($this->start_woche > $week) $dateExists = true;
+            if ($start_woche > $week) $dateExists = true;
 
             // bi-weekly check
-            if ($this->turnus > 0) {
-                if (($week % 2) == $odd_or_even) {
-                    $dateExists = true;
-                }
+            if ($turnus > 0 && ($week - $start_woche) > 0 && (($week - $start_woche) % ($turnus + 1)) ) {
+                $dateExists = true;
             }
-
             //create timestamps for the new singledate
             $start_time = mktime ((int)$this->cycles[$metadate_id]->start_stunde, (int)$this->cycles[$metadate_id]->start_minute, 0, date("n", $sem_begin), (date("j", $sem_begin)+$corr) + ($this->cycles[$metadate_id]->day -1) + ($week * 7), date("Y", $sem_begin));
 
             $end_time = mktime ((int)$this->cycles[$metadate_id]->end_stunde, (int)$this->cycles[$metadate_id]->end_minute, 0, date("n", $sem_begin), (date("j", $sem_begin)+$corr) + ($this->cycles[$metadate_id]->day -1) + ($week * 7), date("Y", $sem_begin));
 
             // convert the start_time to start_woche, stepwise
-            if ($CONVERT_SINGLE_DATES) {
+            /*if ($CONVERT_SINGLE_DATES) {
                 if ($this->start_termin != -1) {
                     if ($this->start_termin > $start_time) {
                         $this->start_woche++;
@@ -536,7 +502,8 @@ class MetaDate {
                     }
                 }
             }
-
+            */
+            
             /*
              * We only create dates, which do not already exist, so we do not overwrite existing dates.
              *
@@ -547,14 +514,12 @@ class MetaDate {
                 if (($val->date == $start_time) && ($val->end_time == $end_time)) {
 
                     // bi-weekly check
-                    if ($this->turnus > 0) {
-                        if (($week % 2) == $odd_or_even) {
-                            $val->delete();
-                        }
+                    if ($turnus > 0 && ($week - $start_woche) > 0 && (($week - $start_woche) % ($turnus + 1)) ) {
+                        $val->delete();
                     }
 
                     // delete singledates if they are earlier than the chosen start-week
-                    if ($this->start_woche > $week) {
+                    if ($start_woche > $week) {
                         $val->delete();
                     }
                     $dateExists = true;
@@ -564,7 +529,7 @@ class MetaDate {
             /*
              * for converting existing dates, which belong to specific metadates
              */
-            if ($CONVERT_SINGLE_DATES) {
+            /*if ($CONVERT_SINGLE_DATES) {
                 foreach ($irregularSingleDates as $key => $val) {
                     if (($val->date == $start_time) && ($val->end_time == $end_time)) {
                         $irregularSingleDates[$key]->setMetaDateID($metadate_id);
@@ -578,7 +543,7 @@ class MetaDate {
                     }
                 }
             }
-
+            */
             // conversion end
 
             if (!($end_time < $sem_end)) {
@@ -600,11 +565,11 @@ class MetaDate {
                 $termin = new SingleDate(array('seminar_id' => $this->seminar_id));
 
                 // check, if this metadate has been marked
-                if($GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"] != NULL && $GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"][$metadate_id] != NULL) {
+                /*if($GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"] != NULL && $GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"][$metadate_id] != NULL) {
                     if ($GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"][$metadate_id] == TRUE) {
                         $termin->setExTermin(true);
                     }
-                }
+                }*/
 
                 $all_holiday = $holiday->getAllHolidays(); // fetch all Holidays
                 foreach ($all_holiday as $val2) {
@@ -625,7 +590,7 @@ class MetaDate {
                 $termin->setMetaDateID($metadate_id);
                 $termin->setTime($start_time, $end_time);
                 $termin->setDateType($date_typ);
-                if ($CONVERT_SINGLE_DATES && !$termin->isExTermin()) {
+                /*if ($CONVERT_SINGLE_DATES && !$termin->isExTermin()) {
                     if ($this->cycles[$metadate_id]->resource_id) {
                         $termin->bookRoom($this->cycles[$metadate_id]->resource_id);
                     } else {
@@ -636,8 +601,8 @@ class MetaDate {
                     /*if (sizeof($irregularSingleDates) > 0) {
                         $termin->setExTermin(true);
                         }*/
-                }
-
+                //}
+                
                 // store the singleDate to database
                 $termin->store();
             }

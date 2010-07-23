@@ -18,25 +18,39 @@ if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COL
                 <TD width="98%" nowrap class="<?=$class?>" colspan="8">
                     <FONT size="-1">
                         <SELECT name="day">
-                            <OPTION value="1" <?=$tpl['day']==1?SELECTED:''?>><?=_("Montag")?></OPTION>
-                            <OPTION value="2" <?=$tpl['day']==2?SELECTED:''?>><?=_("Dienstag")?></OPTION>
-                            <OPTION value="3" <?=$tpl['day']==3?SELECTED:''?>><?=_("Mittwoch")?></OPTION>
-                            <OPTION value="4" <?=$tpl['day']==4?SELECTED:''?>><?=_("Donnerstag")?></OPTION>
-                            <OPTION value="5" <?=$tpl['day']==5?SELECTED:''?>><?=_("Freitag")?></OPTION>
-                            <OPTION value="6" <?=$tpl['day']==6?SELECTED:''?>><?=_("Samstag")?></OPTION>
-                            <OPTION value="0" <?=$tpl['day']==0?SELECTED:''?>><?=_("Sonntag")?></OPTION>
-                        </SELECT>
-                        <!--<SELECT name="turnus">
-                            <OPTION value="0"><?=_("w&ouml;chentlich")?></OPTION>
-                            <OPTION value="1"><?=_("14-t&auml;glich")?></OPTION>
-                        </SELECT>-->
+                            <? foreach(range(1,6) + array(0) as $d) : ?>
+                                <OPTION value="1"<?=($tpl['mdDayNumber']==$d) ? 'selected="selected"' : ''?>><?=getWeekday($d, false)?></OPTION>
+                            <? endforeach; ?>
+                            </SELECT>
                         <INPUT type="text" id="start_stunde" name="start_stunde" maxlength="2" size="2" value="<?=$tpl['start_stunde']?>">:
                         <INPUT type="text" id="start_minute" name="start_minute" maxlength="2" size="2" value="<?=$tpl['start_minute']?>">&nbsp;<?=_("bis")?>&nbsp;
                         <INPUT type="text" id="end_stunde" name="end_stunde" maxlength="2" size="2" value="<?=$tpl['end_stunde']?>">:
                         <INPUT type="text" id="end_minute" name="end_minute" maxlength="2" size="2" value="<?=$tpl['end_minute']?>">&nbsp;<?=_("Uhr")?>
                         <?=Termin_Eingabe_javascript(3);?>
-                        &nbsp;&nbsp;Beschreibung:&nbsp;<INPUT type="text" name="description" value="<?=$tpl['mdDescription']?>">
+                        &nbsp;&nbsp;<?=_("Beschreibung:")?>&nbsp;<INPUT type="text" name="description" value="<?=$tpl['mdDescription']?>">
                     </FONT>
+                    <br>
+                        <?=_("Turnus")?>:
+                        <select name="turnus">
+                        <option value="0"<?=$tpl['cycle'] == 0 ? 'selected' : ''?>><?=_("wöchentlich");?></option>
+                        <option value="1"<?=$tpl['cycle'] == 1 ? 'selected' : ''?>><?=_("zweiwöchentlich")?></option>
+                        <option value="2"<?=$tpl['cycle'] == 2 ? 'selected' : ''?>><?=_("dreiwöchentlich")?></option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <?=_("beginnt in der")?>:
+                        <select name="startWeek">
+                        <?
+                            foreach ($start_weeks as $value => $data) :
+                                echo '<option value="'.$value.'"';
+                                if ($tpl['week_offset'] == $value) echo ' selected="selected"';
+                                echo '>'.$data['text'].'</option>', "\n";
+                            endforeach;
+                        ?>
+                        </select>
+                        &nbsp;&nbsp;
+                        <?=_("SWS Dozent:")?>
+                        &nbsp;
+                        <INPUT type="text" name="sws" maxlength="3" size="1" value="<?=$tpl['sws']?>">
                 </TD>
             </TR>
             <TR>

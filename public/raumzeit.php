@@ -259,6 +259,9 @@ while ($tmp_first_date < $end_date) {
                             }*/
                             ?>
                         </select>
+                        &nbsp;&nbsp;
+                        <input type="image" <?=makebutton('uebernehmen', 'src')?> align="absmiddle">
+                        <input type="hidden" name="cmd" value="selectSemester">
                         <? } else {
                             switch ($sem->getEndSemester()) {
                                 case '0':
@@ -277,46 +280,15 @@ while ($tmp_first_date < $end_date) {
                                     }
                                     break;
                             }
-                        } ?>
-                        &nbsp;&nbsp;
-                        <br>
-                        <?=_("Turnus")?>:
-                        <? if (!$_LOCKED) { ?>
-                        <select name="turnus">
-                            <option value="0"<?=$sem->getTurnus() ? '' : 'selected'?>><?=_("w&ouml;chentlich");?></option>
-                            <option value="1"<?=$sem->getTurnus() ? 'selected' : ''?>><?=_("zweiw&ouml;chentlich")?></option>
-                        </select>
-                        <? } else {
-                            echo (!$sem->getTurnus()) ? _("w&ouml;chentlich") : _("zweiw&ouml;chentlich");
-                        } ?>
-                        &nbsp;&nbsp;
-                        <?=_("beginnt in der")?>:
-                        <? if (!$_LOCKED) { ?>
-                        <select name="startWeek">
-                        <?
-                            foreach ($start_weeks as $value => $data) :
-
-                                echo '<option value="'.$value.'"';
-                                if ($data['selected']) echo ' selected="selected"';
-                                echo '>'.$data['text'].'</option>', "\n";
-
-                            endforeach;
-                        ?>
-                        </select>
-                        </font>
-                        &nbsp;&nbsp;
-                        <input type="image" <?=makebutton('uebernehmen', 'src')?> align="absmiddle">
-                        <input type="hidden" name="cmd" value="selectSemester">
+                        }
+                       ?>
                         </form>
-                        <? } else {
-                            echo ($sem->getStartWeek() + 1) .'. '. _("Semesterwoche");
-                        } ?>
                     </td>
                 </tr>
                 <?
-                $turnus = $sem->getFormattedTurnusDates();      // string representation of all CycleData-objects is retrieved as an associative array: key: CycleDataID, val: string
                     //TODO: string representation should not be collected by a big array, but with the toString method of the CycleData-object
-                    foreach ($sem->metadate->getCycleData() as $metadate_id => $cycle_element) {        // cycle trough all CycleData objects
+                    foreach ($sem->metadate->getCycles() as $metadate_id => $cycle) {        // cycle trough all CycleData objects
+                        $tpl = $cycle_element = $cycle->toArray();
                         if (!$tpl['room'] = $sem->getDatesTemplate('dates/seminar_predominant', array('cycle_id' => $metadate_id))) {
                             $tpl['room'] = _("keiner");
                         }
@@ -331,7 +303,8 @@ while ($tmp_first_date < $end_date) {
                         $tpl['class'] = $sem->getCycleColorClass($metadate_id);
 
                         $tpl['md_id'] = $metadate_id;
-                        $tpl['date'] = $turnus[$metadate_id];
+                        $tpl['date'] = $cycle->toString('long');
+                        $tpl['date_tooltip'] = $cycle->toString('full');
                         $tpl['mdDayNumber'] = $cycle_element['day'];
                         $tpl['mdStartHour'] = $cycle_element['start_hour'];
                         $tpl['mdEndHour'] = $cycle_element['end_hour'];
@@ -635,9 +608,7 @@ while ($tmp_first_date < $end_date) {
         </tr>
 </table>
 <?
-if ($_REQUEST['open_close_id']) {
-    echo "\n", '<script language="javascript">new Effect.Highlight(\''.$_REQUEST['open_close_id'].'\', {duration:3})</script>', "\n";
-}
+
 $sem->store();
 include 'lib/include/html_end.inc.php';
 page_close();

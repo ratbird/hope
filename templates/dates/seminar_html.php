@@ -8,8 +8,10 @@
   $output = array();
 
   if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
-    if ($dates['regular']['turnus'] == 1) : 
+    if ($cycle['cycle'] == 1) : 
       $cycle_output = $cycle['tostring'] . ' ' . _("(zweiwöchentlich)");
+    elseif ($cycle['cycle'] == 2) : 
+      $cycle_output = $cycle['tostring'] . ' ' . _("(dreiwöchentlich)");
     else : 
       $cycle_output = $cycle['tostring'];
     endif;

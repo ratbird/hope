@@ -16,8 +16,8 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                     <? } else { ?>
                     <A class="tree" href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['md_id'] .'#'. $tpl['md_id']) ?>">
                     <? } ?>
-                        <FONT size="-1">
-                            <?=$tpl['date']?>
+                        <FONT size="-1" <?=tooltip($tpl['date_tooltip'], false)?>>
+                            <?=htmlready($tpl['date'])?>
                         </FONT>
                     </A>
                 </TD>
@@ -71,29 +71,48 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                     <FORM action="<?= URLHelper::getLink() ?>" method="post" name="EditCycle" style="display: inline">
                         <FONT size="-1"><B>
                             <SELECT name="day">
-                                <OPTION value="1"<?=($tpl['mdDayNumber']=='1') ? 'selected="selected"' : ''?>>Montag</OPTION>
-                                <OPTION value="2"<?=($tpl['mdDayNumber']=='2') ? 'selected="selected"' : ''?>>Dienstag</OPTION>
-                                <OPTION value="3"<?=($tpl['mdDayNumber']=='3') ? 'selected="selected"' : ''?>>Mittwoch</OPTION>
-                                <OPTION value="4"<?=($tpl['mdDayNumber']=='4') ? 'selected="selected"' : ''?>>Donnerstag</OPTION>
-                                <OPTION value="5"<?=($tpl['mdDayNumber']=='5') ? 'selected="selected"' : ''?>>Freitag</OPTION>
-                                <OPTION value="6"<?=($tpl['mdDayNumber']=='6') ? 'selected="selected"' : ''?>>Samstag</OPTION>
-                                <OPTION value="0"<?=($tpl['mdDayNumber']=='0') ? 'selected="selected"' : ''?>>Sonntag</OPTION>
+                            <? foreach(range(1,6) + array(0) as $d) : ?>
+                                <OPTION value="1"<?=($tpl['mdDayNumber']==$d) ? 'selected="selected"' : ''?>><?=getWeekday($d, false)?></OPTION>
+                            <? endforeach; ?>
                             </SELECT>,
                             <INPUT type="text" name="start_stunde" maxlength="2" size="2" value="<?=leadingZero($tpl['mdStartHour'])?>"> :
                             <INPUT type="text" name="start_minute" maxlength="2" size="2" value="<?=leadingZero($tpl['mdStartMinute'])?>">
-                            bis
+                            <?=_("bis")?>
                             <INPUT type="text" name="end_stunde" maxlength="2" size="2" value="<?=leadingZero($tpl['mdEndHour'])?>"> :
                             <INPUT type="text" name="end_minute" maxlength="2" size="2" value="<?=leadingZero($tpl['mdEndMinute'])?>"> Uhr
                             <?=Termin_Eingabe_javascript(2,0,0,$tpl['mdStartHour'],$tpl['mdStartMinute'],$tpl['mdEndHour'],$tpl['mdEndMinute']);?>
-                            &nbsp;&nbsp;Beschreibung: <INPUT type="text" name="description" value="<?=$tpl['mdDescription']?>">
+                            &nbsp;&nbsp;<?=_("Beschreibung:")?> <INPUT type="text" name="description" value="<?=$tpl['mdDescription']?>">
                             &nbsp;&nbsp;<INPUT type="image" name="editCycle" align="absmiddle" <?=makebutton('uebernehmen', 'src')?>>
                             <INPUT type="hidden" name="cycle_id" value="<?=$tpl['md_id']?>">
                         </B></FONT>
+                         <br>
+                        <?=_("Turnus")?>:
+                        <select name="turnus">
+                        <option value="0"<?=$tpl['cycle'] == 0 ? 'selected' : ''?>><?=_("wöchentlich");?></option>
+                        <option value="1"<?=$tpl['cycle'] == 1 ? 'selected' : ''?>><?=_("zweiwöchentlich")?></option>
+                        <option value="2"<?=$tpl['cycle'] == 2 ? 'selected' : ''?>><?=_("dreiwöchentlich")?></option>
+                        </select>
+                        &nbsp;&nbsp;
+                        <?=_("beginnt in der")?>:
+                        <select name="startWeek">
+                        <?
+                            foreach ($start_weeks as $value => $data) :
+                                echo '<option value="'.$value.'"';
+                                if ($tpl['week_offset'] == $value) echo ' selected="selected"';
+                                echo '>'.$data['text'].'</option>', "\n";
+                            endforeach;
+                        ?>
+                        </select>
+                        &nbsp;&nbsp;
+                        <?=_("SWS Dozent:")?>
+                        &nbsp;
+                        <INPUT type="text" name="sws" maxlength="3" size="1" value="<?=$tpl['sws']?>">
                     </FORM></TD>
                 <TD width="5%" nowrap="nowrap" class="<?=$tpl['class']?>" align="right">
                     <A href="<?= URLHelper::getLink('?cmd=deleteCycle&cycle_id='. $tpl['md_id']) ?>">
                         <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/trash.gif" border="0" valign="absmiddle"  <?=tooltip(_("Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!"))?>>
                     </A>
+
                 </TD>
             </TR>
         </TABLE>

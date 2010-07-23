@@ -4,9 +4,11 @@ if (!isset($show_room)) $show_room = true;
 if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
   $output = array();
   if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
-    if ($dates['regular']['turnus'] == 1) : 
-      $cycle_output = $cycle['tostring_short'] . ' ' . _("(zweiwöchentlich)");
-    else : 
+    if ($cycle['cycle'] == 1) :
+        $cycle_output = $cycle['tostring_short'] . ' ' . _("(zweiwöchentlich)");
+    elseif ($cycle['cycle'] == 2) :
+        $cycle_output = $cycle['tostring_short'] . ' ' . _("(dreiwöchentlich)");
+    else :
       $cycle_output = $cycle['tostring_short'] . ' ' . _("(wöchentlich)");
     endif;
     if ($cycle['desc']) 

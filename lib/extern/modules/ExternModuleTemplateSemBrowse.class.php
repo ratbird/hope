@@ -1036,7 +1036,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
             $nameformat = 'full_rev';
         }
         $dbv = new DbView();
-        $query = ("SELECT seminare.Seminar_id, VeranstaltungsNummer, seminare.status, seminare.status, seminare.Untertitel, seminare.Ort, seminare.art, seminare.Beschreibung, IF(seminare.visible=0,CONCAT(seminare.Name, ' ". _("(versteckt)") ."'), seminare.Name) AS Name, seminare.metadata_dates,
+        $query = ("SELECT seminare.Seminar_id, VeranstaltungsNummer, seminare.status, seminare.status, seminare.Untertitel, seminare.Ort, seminare.art, seminare.Beschreibung, IF(seminare.visible=0,CONCAT(seminare.Name, ' ". _("(versteckt)") ."'), seminare.Name) AS Name, 
                 $add_fields" . $_fullname_sql[$nameformat] ." AS fullname, auth_user_md5.username, title_front, title_rear, Vorname, Nachname,
                 " . $dbv->sem_number_sql . " AS sem_number, " . $dbv->sem_number_end_sql . " AS sem_number_end, seminar_user.position AS position FROM seminare
                 LEFT JOIN seminar_user ON (seminare.Seminar_id=seminar_user.Seminar_id AND seminar_user.status='dozent')
@@ -1319,7 +1319,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                         }
                         $worksheet1->write_string($row, 0, $sem_name, $data_format);
                         //create Turnus field
-                        $temp_turnus_string = view_turnus($seminar_id, true, key($sem_data[$seminar_id]["metadata_dates"]));
+                        $temp_turnus_string = Seminar::GetInstance($seminar_id)->getFormattedTurnus(true);
                         //Shorten, if string too long (add link for details.php)
                         if (strlen($temp_turnus_string) > 245) {
                             $temp_turnus_string = substr($temp_turnus_string, 0, strpos(substr($temp_turnus_string, 245, strlen($temp_turnus_string)), ",") + 246);

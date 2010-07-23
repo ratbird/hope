@@ -259,7 +259,6 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
     $db->query("SELECT * FROM seminare WHERE Seminar_id = '$seminar_id' ");
     $db->next_record();
     $admin_admission_data='';
-    $admin_admission_data["metadata_dates"]=unserialize($db->f("metadata_dates"));
     $admin_admission_data["admission_turnout"]=$db->f("admission_turnout");
     $admin_admission_data["admission_turnout_org"]=$db->f("admission_turnout");
     $admin_admission_data["admission_type"]=$db->f("admission_type");

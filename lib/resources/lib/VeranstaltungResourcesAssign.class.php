@@ -73,7 +73,7 @@ class VeranstaltungResourcesAssign {
         $this->deleteAssignedRooms();
 
         //if no schedule-date exits, we take the metadates (only in this case! else we take only the concrete dates from the termin table!)
-        if (!isSchedule($this->seminar_id,true,true)){
+        /*if (!isSchedule($this->seminar_id,true,true)){
             $seminar = Seminar::GetInstance($this->seminar_id);
             $result2 = array_merge((array)$result, (array)$this->changeMetaAssigns('', '', '', FALSE, FALSE, $check_locks));
             if (is_array($result2)){
@@ -93,8 +93,10 @@ class VeranstaltungResourcesAssign {
                     $this->clearTurnusData(array_unique($keys_to_clear)); //die, dreaded resource_id, die!!!
                 }
             }
+            
             $result = array_merge((array)$result, (array)$result2);
         }
+        */
         //Raumanfrage als bearbeitet markieren, wenn vorhanden
         if(get_config('RESOURCES_ALLOW_ROOM_REQUESTS')){
             $request = new RoomRequest(getSeminarRoomRequest($this->seminar_id));
@@ -106,7 +108,7 @@ class VeranstaltungResourcesAssign {
     }
 
     //kills resource_id in metadata_dates
-    function clearTurnusData($keys_to_clear = null){
+   /* function clearTurnusData($keys_to_clear = null){
         $seminar = Seminar::GetInstance($this->seminar_id);
         foreach ($seminar->getMetaDates() as $key => $val){
             if (is_null($keys_to_clear) || in_array($key, $keys_to_clear)){
@@ -118,7 +120,7 @@ class VeranstaltungResourcesAssign {
         $seminar->restore();
         $this->turnus_cleared = true;
     }
-
+*/
     //this method creates all assign-objects based on the seminar-metadata
     function &getMetaAssignObjects ($term_data='', $veranstaltung_start_time='', $veranstaltung_duration_time='') {
         $semester = new SemesterData;

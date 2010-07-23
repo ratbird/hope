@@ -168,7 +168,7 @@ class ExternSemBrowse extends SemBrowse {
             
             if (!$nameformat = $this->config->getValue("Main", "nameformat"))
                 $nameformat = "no_title_short";
-            $query = "SELECT seminare.Seminar_id, seminare.status, seminare.Name, seminare.metadata_dates 
+            $query = "SELECT seminare.Seminar_id, seminare.status, seminare.Name  
                 , seminare.Institut_id, Institute.Name AS Institut,Institute.Institut_id,
                 seminar_sem_tree.sem_tree_id AS bereich, "
                 . $_fullname_sql[$nameformat]
@@ -395,7 +395,7 @@ class ExternSemBrowse extends SemBrowse {
                             $this->module->elements["SemLink"]->printout($sem_link);
                             echo "</font></td></tr>\n";
                             //create Turnus field
-                            $temp_turnus_string = view_turnus($seminar_id, TRUE ,key($sem_data[$seminar_id]["metadata_dates"]));
+                            $temp_turnus_string = Seminar::GetInstance($seminar_id)->getFormattedTurnus(TRUE);
                             //Shorten, if string too long (add link for details.php)
                             if (strlen($temp_turnus_string) >70) {
                                 $temp_turnus_string = substr($temp_turnus_string, 0, strpos(substr($temp_turnus_string, 70, strlen($temp_turnus_string)), ',') +71);

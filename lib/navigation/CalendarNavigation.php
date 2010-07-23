@@ -26,7 +26,7 @@ class CalendarNavigation extends Navigation
             $planerurl  = 'calendar.php';
             $planerinfo = _('Termine und Kontakte');
         } else {
-            $planerurl  = 'mein_stundenplan.php';
+            $planerurl  = 'dispatch.php/calendar/schedule';
             $planerinfo = _('Stundenplan und Kontakte');
         }
 
@@ -59,7 +59,7 @@ class CalendarNavigation extends Navigation
 
         // schedule
         if (!$perm->have_perm('admin')) {
-            $this->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'mein_stundenplan.php'));
+            $this->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule'));
         }
     }
 }

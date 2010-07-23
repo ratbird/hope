@@ -133,14 +133,14 @@ if ($sem_id) {
             }
         }
 
-        $db->query("SELECT * FROM seminar_user_schedule WHERE range_id = '$sem_id' AND user_id = '".$auth->auth['uid']."'");
-        $sem_user_schedule = $db->num_rows();
+        $sem_user_schedule = DBManager::get()->query("SELECT COUNT(*) FROM schedule_seminare
+            WHERE seminar_id = '$sem_id' AND user_id = '". $GLOBALS['user']->id ."'")->fetchColumn();
 
         $db->query("SELECT * FROM seminar_user WHERE Seminar_id = '$sem_id' AND user_id = '".$auth->auth['uid']."'");
         $sem_user = $db->num_rows();
 
         if (!$sem_user && !$sem_user_schedule) {
-            $plan_msg = "<a href=\"".URLHelper::getLink("mein_stundenplan.php?cmd=add_entry&semid=$sem_id")."\">"._("Nur im Stundenplan vormerken")."</a>";
+            $plan_msg = "<a href=\"".URLHelper::getLink("dispatch.php/calendar/schedule/addvirtual/$sem_id")."\">"._("Nur im Stundenplan vormerken")."</a>";
         }
 
     }

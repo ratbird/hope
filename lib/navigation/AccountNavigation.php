@@ -53,10 +53,6 @@ class AccountNavigation extends Navigation
             $this->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'edit_about.php', array('view' => 'calendar')));
         }
 
-        if (!$perm->have_perm('admin')) {
-            $this->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'edit_about.php', array('view' => 'Stundenplan')));
-        }
-
 
         $this->addSubNavigation('rss', new Navigation(_('RSS-Feeds'), 'edit_about.php', array('view' => 'rss')));
 

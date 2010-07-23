@@ -488,11 +488,6 @@ switch($view) {
         PageLayout::setHelpKeyword("Basis.HomepageTools");
         PageLayout::setTitle(_("Benutzer-Tools"));
         break;
-    case "Stundenplan":
-        PageLayout::setHelpKeyword("Basis.MyStudIPStundenplan");
-        PageLayout::setTitle(_("Einstellungen des Stundenplans anpassen"));
-        Navigation::activateItem('/account/schedule');
-        break;
     case "Messaging":
         PageLayout::setHelpKeyword("Basis.MyStudIPMessaging");
         PageLayout::setTitle(_("Einstellungen des Nachrichtensystems anpassen"));
@@ -1369,12 +1364,6 @@ if($view == "allgemein") {
 
 if($view == "Forum") {
     require_once('lib/include/forumsettings.inc.php');
-}
-
-if ($view == "Stundenplan") {
-    require_once('lib/include/ms_stundenplan.inc.php');
-    check_schedule_default();
-    change_schedule_view();
 }
 
 if($view == 'calendar' && get_config('CALENDAR_ENABLE')) {

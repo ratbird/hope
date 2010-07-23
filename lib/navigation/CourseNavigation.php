@@ -83,7 +83,7 @@ class CourseNavigation extends Navigation
         } else {
             $navigation->addSubNavigation('info', new Navigation(_('Info'), 'institut_main.php'));
             $navigation->addSubNavigation('courses', new Navigation(_('Veranstaltungen'), 'show_bereich.php?level=s&id='.$SessSemName[1]));
-            $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'mein_stundenplan.php?inst_id='.$SessSemName[1]));
+            $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/instschedule?institute_id='.$SessSemName[1]));
 
             if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
                 if ($perm->have_perm('admin')) {

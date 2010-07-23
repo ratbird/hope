@@ -31,3 +31,130 @@ td.rahmen_steelgraulight {
 #ajax_notification {
     display: none;
 }
+
+/* --- print-style for calendar api------------------------------------------ */
+
+#schedule {
+	width: 100%;
+	height: 100%;
+}
+
+#schedule_headings {
+	margin-left: 41px;
+	background-color: none;
+}
+
+table.schedule_headings td {
+	background-color: none;
+}
+
+
+div.schedule_entry {
+	position: absolute;
+	margin: 0;
+	padding: 0;
+	overflow: hidden; 
+	padding-bottom: 2px;
+}
+
+div.schedule_entry dl {
+	color: white;
+	height: 100%; 
+	margin: 0px;
+	-moz-border-radius: 3px;
+}
+
+div.schedule_entry dl.hover:hover  {
+	opacity: 0.7;
+}
+
+div.schedule_entry dl dt {
+	-moz-border-radius-topleft: 3px;
+	-moz-border-radius-topright: 3px;
+}
+
+div.schedule_entry dl dd {
+	margin: 0px 0px 0px 0px;
+	overflow: hidden;
+	word-wrap: break-word;
+}
+
+div.schedule_entry dl a {
+	color: white;
+}
+
+div.schedule_entry dl a:hover {
+	text-decoration: underline;
+}
+
+div.snatch {
+	position: absolute;
+	bottom: 4px;
+	text-align: center;
+	width: 100%;
+	cursor: ns-resize;
+	padding-bottom: 2px;
+}
+
+div.snatch div {
+	border-top: 3px double white;
+	margin-left: auto;
+	margin-right: auto;
+	cursor: ns-resize;
+	height: 0px; 
+	width: 10px;
+}
+
+#new_entry {
+	position: absolute;
+	border: 2px solid #E0E0F0;
+	width: 400px;
+	height: 230px;
+	background-color: #E8EEF7;
+	-moz-border-radius: 10px;
+	font-size: 12pt;
+}
+
+div.new_entry {
+	position: absolute;
+
+	left: 50%;
+	top: 180px;
+	margin-left: -25%;
+	height: 320px;
+	width: 50%;
+
+	font-size: 12pt;
+	background-color: #E8EEF7;
+	border: 2px solid #E0E0F0;
+	-moz-border-radius: 10px;
+}
+
+div.window_heading {
+	font-size: 16pt;
+	font-weight: bold;
+	text-align: center;
+	background-color: #153065;
+	-moz-border-radius-topleft: 10px;
+	-moz-border-radius-topright: 10px;
+	color: white;
+}
+
+#layout_content {
+	margin-right: 0px;
+}
+
+#header, #barTopFont, #barTopMenu, #barTopTools,
+#barTopStudip, #barBottomLeft, #barBottommiddle,
+#barBottomright, #barBottomshadow, #tabs, #tabs2,
+#layout_infobox, #schedule_icons {
+	display: none !important;
+}
+
+a, a:link, a:visited {
+	color: black;
+}
+
+body, input, textarea, td, th, blockquote, p, form, ul {
+	font-size: 10pt;
+}

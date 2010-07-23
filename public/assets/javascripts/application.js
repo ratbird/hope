@@ -1082,3 +1082,310 @@ $.ui.accordion.prototype.options.icons = {
   header: 'arrow_right',
   headerSelected: 'arrow_down'
 };
+
+/* ------------------------------------------------------------------------
+ * calendar gui
+ * ------------------------------------------------------------------------ */
+STUDIP.Calendar = {
+  cell_height: 20,
+  the_entry_content: null,
+  noNewEntry: false,
+
+  day_names: [
+    "Sonntag",
+    "Montag",
+    "Dienstag",
+    "Mittwoch",
+    "Donnerstag",
+    "Freitag",
+    "Samstag"
+  ],
+
+  /**
+   * calculate the hour the user has clicked
+   *
+   * @param event e: the onClick-event
+   * @param string day: the day, that has benn clicked (0-6)
+   *
+   * @return: int
+   */
+  clickedHour: function (e, day) {
+    return Math.floor(((e.pageY - Math.ceil($('#day_' + day).offset().top)) - 2) / this.cell_height) + STUDIP.Calendar.start_hour;
+  },
+
+  newEntry: function (e, day) {
+    this.cancelNewEntry();
+
+    if (STUDIP.Calendar.noNewEntry) {
+      STUDIP.Calendar.noNewEntry = false;
+      return;
+    }
+    
+    // calculate clicked hour
+    var hour = STUDIP.Calendar.clickedHour(e, day); 
+     
+    // fill values of overlay
+    $('#entry_hour_start').text(hour);
+    $('#entry_hour_end').text(hour + 1);
+    $('#entry_day').text(STUDIP.Calendar.day_names[day].toLocaleString());
+
+    // the entry in the schedule
+    var the_entry = $('<div/>')
+      .addClass('schedule_entry')
+      .attr('id', 'schedule_empty_entry')
+      .css({
+        height: STUDIP.Calendar.cell_height,
+        width: '100%',
+        display: 'none'
+      })
+      .html(STUDIP.Calendar.the_entry_content);
+
+    $('#day_' + day).append(the_entry);
+    $('#schedule_empty_entry').css('top', ((hour - STUDIP.Calendar.start_hour) * STUDIP.Calendar.cell_height) + 'px');
+
+    // the formula to fill in the data
+    $('#empty_entry_start').text(hour);
+    $('#empty_entry_end').text(hour + 1);
+
+    // $('new_entry_form').action = '<?= $controller->url_for('calendar/schedule/addEntry') ?>/'+ hour +'/'+ day;
+    $('#new_entry_hour').val(hour);
+    $('#new_entry_day').val(day);
+
+    // show the entry in data-view of the timetable
+    $('#schedule_empty_entry').fadeIn('fast');
+    
+    
+    // show the overlay
+    $('#schedule_new_entry').show();
+
+    // set the position of the overlay
+    $('#schedule_new_entry').css({
+      top: Math.floor(the_entry.offset().top - $('#schedule_new_entry').height() - 20),
+      left: Math.floor(the_entry.offset().left)
+    }); 
+   
+    if ($('#schedule_new_entry').offset().top < 0) {
+      $('#schedule_new_entry').css({
+        top:  Math.floor(the_entry.offset().top + the_entry.height() + 20)
+      });
+    } 
+  },
+
+  /**
+   * cancel adding of a new entry and fade out/remove all faded in/added boxes
+   *
+   * @param bool fade: if fade is true, fade out all boxes, otherwise just hide them
+   *
+   * @return: void
+   */
+  cancelNewEntry: function (fade) {
+    if ($('#schedule_new_entry').is(':visible') || $('#edit_entry').is(':visible') 
+      || $('#edit_sem_entry').is(':visible') || $('#edit_inst_entry').is(':visible')
+    ) {
+      if (fade) {
+        $('#edit_sem_entry').fadeOut('fast');
+        $('#edit_inst_entry').fadeOut('fast');
+        $('#schedule_empty_entry').fadeOut('fast');
+        $('#schedule_new_entry').fadeOut('fast');
+        $('#edit_entry').fadeOut('fast');
+      } else {      
+        $('#edit_sem_entry').hide();
+        $('#edit_inst_entry').hide();
+        $('#schedule_new_entry').hide();
+        $('#edit_entry').hide();
+      }
+    
+      $('#schedule_empty_entry').remove();
+    }
+  },
+  
+  /**
+   * check, that the submited input-field cotains of a valid hour
+   *
+   * @param  object  the input-element to check
+   */
+  validateHour: function(element) {
+    var hour = $(element).val();
+  
+    if (parseInt(hour) != hour) hour = 0;
+    if (hour > 23) hour = 23;
+    if (hour < 0) hour = 0;
+
+    $(element).val(hour);
+  },
+
+  /**
+   * check, that the submited input-field cotains of a valid minute
+   *
+   * @param  object  the input-element to check
+   */
+  validateMinute: function(element) {
+    var minute = $(element).val();
+
+    if (parseInt(minute) != minute) hour = 0;
+    if (minute > 59) minute = 59;
+    if (minute < 0) minute = 0;
+
+    $(element).val(minute);
+  },
+
+  /**
+   * check, that the submitted input-fields contain a valid time-range
+   *
+   * @param  object  the input-element to check (start-hour)
+   * @param  object  the input-element to check (start-minute)
+   * @param  object  the input-element to check (end-hour)
+   * @param  object  the input-element to check (end-minute)
+   *
+   * @return: bool true if valid time-range, false otherwise
+   */
+  checkTimeslot: function(start_hour, start_minute, end_hour, end_minute) {
+     if ($(start_hour).val() + ($(start_minute).val() * 100)
+       >= $(end_hour).val() + ($(end_minute).val() * 100)) {
+        return false;
+      }
+
+      return true;
+  }
+};
+
+STUDIP.Schedule = {
+
+  inst_changed : false,
+
+  /**
+   * this function morphs from the quick-add box for adding a new entry to the schedule
+   * to the larger box with more details to edit
+   *
+   * @return: void
+   */
+  showDetails: function () {
+
+    // set the values for detailed view
+    $('select[name=entry_day]').val($('#new_entry_day').val());
+    $('input[name=entry_start_hour]').val($('#new_entry_hour').val());
+    $('input[name=entry_start_minute]').val('00');
+    $('input[name=entry_end_hour]').val(parseInt($('#new_entry_hour').val(), 10) + 1);
+    $('input[name=entry_end_minute]').val('00');
+
+    $('input[name=entry_title]').val($('#entry_title').val());
+    $('textarea[name=entry_content]').val($('#entry_content').val());
+
+    $('#edit_entry_drag').html($('#new_entry_drag').html());
+
+    // morph to the detailed view
+    $('#schedule_new_entry').animate({
+      left: Math.floor($(window).width() / 4),  // for safari
+      width: '50%',
+      top: '180px'
+    }, 500, function () {
+      $('#edit_entry').fadeIn(400, function () {
+        // reset the box
+        $('#schedule_new_entry').css({
+          display: 'none',
+          left: 0,
+          width: '400px',
+          top: 0,
+          height: '230px',
+          'margin-left': 0
+        });
+      });
+    });
+  },
+
+  showSeminarDetails: function (seminar_id, cycle_id) {
+    STUDIP.Calendar.noNewEntry = true;
+    $('#edit_sem_entry').fadeOut('fast');
+    $.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/entryajax/' + seminar_id + '/' + cycle_id, function (data) {
+      $('#edit_sem_entry').remove();
+      $('body').append(data);
+    });
+  },
+
+  showScheduleDetails: function (id) {
+    STUDIP.Calendar.noNewEntry = true;
+    $('#edit_entry').fadeOut('fast');
+    $.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/entryajax/' + id, function (data) {
+      $('#edit_entry').remove();
+      $('body').append(data);
+    });
+
+  },
+
+  showInstituteDetails: function(link) {
+    STUDIP.Calendar.noNewEntry = true;
+    $('#edit_inst_entry').fadeOut('fast');
+    $.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/groupedentry/' + $(link).attr('data') + '/true', function (data) {
+      $('#edit_inst_entry').remove();
+      $('body').append(data);
+    });
+
+    return false;
+  },
+
+  instSemUnbind : function(seminar_id, cycle_id) {
+    STUDIP.Schedule.inst_changed = true;
+    $.ajax({
+      type: 'GET',
+      url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/adminbind/' + seminar_id + '/' + cycle_id + '/0/true'
+    });
+
+    $('#' + seminar_id + '_' + cycle_id + '_hide').fadeOut('fast', function() {
+      $('#' + seminar_id + '_' + cycle_id + '_show').fadeIn('fast');
+    });
+  },
+
+  instSemBind : function(seminar_id, cycle_id) {
+    STUDIP.Schedule.inst_changed = true;
+    $.ajax({
+      type: 'GET',
+      url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/adminbind/' + seminar_id + '/' + cycle_id + '/1/true'
+    });
+
+    $('#' + seminar_id + '_' + cycle_id + '_show').fadeOut('fast', function() {
+      $('#' + seminar_id + '_' + cycle_id + '_hide').fadeIn('fast');
+    });
+  },
+
+  hideInstOverlay: function(element) {
+    if (STUDIP.Schedule.inst_changed) return true;
+    $(element).fadeOut('fast');
+    return false;
+  },
+
+  hideEntry: function (element, seminar_id, cycle_id) {
+    STUDIP.Calendar.noNewEntry = true;
+    $.ajax({
+      type: 'GET',
+      url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/unbind/' + seminar_id + '/' + cycle_id
+    });
+    $(element).parents('.schedule_entry').fadeOut('fast');
+  },
+
+  checkFormFields: function() {
+    if (!STUDIP.Calendar.checkTimeslot($('#schedule_entry_hours > input[name=entry_start_hour]'),
+      $('#schedule_entry_hours > input[name=entry_start_minute]'),
+      $('#schedule_entry_hours > input[name=entry_end_hour]'), 
+      $('#schedule_entry_hours > input[name=entry_end_minute]'))) {
+
+      $('#schedule_entry_hours').addClass('invalid');
+      $('#schedule_entry_hours > span[class=invalid_message]').show();
+      return false;  
+    }
+
+    return true;  
+  }
+};
+
+STUDIP.Instschedule = {
+  showInstituteDetails: function(link) {
+    STUDIP.Calendar.noNewEntry = true;
+    $('#edit_inst_entry').fadeOut('fast');
+    $.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/instschedule/groupedentry/' + $(link).attr('data') + '/true', function (data) {
+      $('#edit_inst_entry').remove();
+      $('body').append(data);
+    });
+
+    return false;
+  },
+};

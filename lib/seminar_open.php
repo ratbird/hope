@@ -132,7 +132,7 @@ function startpage_redirect($page_code) {
             $jump_page = "meine_seminare.php";
         break;
         case 3:
-            $jump_page = "mein_stundenplan.php";
+            $jump_page = "dispatch.php/calendar/schedule";
         break;
         case 4:
             $jump_page = "contact.php";

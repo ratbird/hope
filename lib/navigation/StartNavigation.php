@@ -138,7 +138,7 @@ class StartNavigation extends Navigation
                 $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'calendar.php'));
             }
             $navigation->addSubNavigation('address_book', new Navigation(_('Adressbuch'), 'contact.php'));
-            $navigation->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'mein_stundenplan.php'));
+            $navigation->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule'));
             $this->addSubNavigation('messaging', $navigation);
 
             $navigation = new Navigation(_('Profil'), 'about.php');

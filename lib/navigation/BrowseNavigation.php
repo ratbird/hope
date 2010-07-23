@@ -61,12 +61,7 @@ class BrowseNavigation extends Navigation
             $navigation->addSubNavigation('list', new Navigation(_('Übersicht'), 'meine_seminare.php'));
 
             if ($perm->have_perm('admin')) {
-                if(Request::get('institut_id')) {
-                    $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'mein_stundenplan.php?cid='.Request::get('institut_id').'&inst_id='.Request::get('institut_id')));
-                } else {
-                    $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'mein_stundenplan.php'));
-                }
-
+                $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/schedule'));
             } else {
                 if (get_config('STM_ENABLE') && $perm->have_perm('dozent')) {
                     $navigation->addSubNavigation('modules', new Navigation(_('Meine Studienmodule'), 'my_stm.php'));

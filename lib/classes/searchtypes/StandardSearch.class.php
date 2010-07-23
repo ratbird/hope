@@ -94,7 +94,7 @@ class StandardSearch extends SQLSearch {
     private function getSQL() {
         switch ($this->search) {
             case "username":
-                return "SELECT DISTINCT auth_user_md5.user_id, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) " .
+                return "SELECT DISTINCT auth_user_md5.username, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) " .
                         "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
                         "WHERE CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input " .

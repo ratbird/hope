@@ -463,7 +463,9 @@ if ($add_allreceiver_button_x) {
 
 
 // add receiver from freesearch
-if ($add_freesearch_x && !empty($freesearch)) { $sms_data["p_rec"] = array_add_value($freesearch, $sms_data["p_rec"]); }
+if ($add_freesearch_x && Request::get("adressee")) { 
+    $sms_data["p_rec"] = array_add_value(array(Request::get("adressee")), $sms_data["p_rec"]); 
+}
 
 
 // remove all from receiverlist

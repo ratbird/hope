@@ -767,73 +767,53 @@ function show_addrform() {
 
     // free search
     $tmp .= "<br><br><font size=\"-1\"><b>"._("Freie Suche:")."</b></font><br>";
-    if ($search_exp != "" && strlen($search_exp) >= "3") {
-        $search_exp = str_replace("%", "\%", $search_exp);
-        $search_exp = str_replace("_", "\_", $search_exp);
-        $query = "SELECT username, ".$_fullname_sql['full_rev']." AS fullname, perms FROM auth_user_md5 LEFT JOIN user_info USING(user_id) WHERE (username LIKE '%$search_exp%' OR Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%') ORDER BY Nachname ASC";
-        $db->query($query); //
-        if (!$db->num_rows()) {
-            $tmp .= "&nbsp;<input type=\"image\" name=\"reset_freesearch\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" border=\"0\" value=\""._("Suche zur&uuml;cksetzen")."\" ".tooltip(_("setzt die Suche zurück")).">";
-            $tmp .= "&nbsp;<font size=\"-1\">"._("keine Treffer")."</font>";
-        } else {
-            $c = 0;
-            $tmp2 .= "<input type=\"image\" name=\"add_freesearch\" ".tooltip(_("zu Empfängerliste hinzufügen"))." value=\""._("zu Empf&auml;ngerliste hinzuf&uuml;gen")."\" src=\"".$GLOBALS['ASSETS_URL']."images/".$picture."\" border=\"0\">&nbsp;";
-            $tmp2 .= "<select size=\"1\" width=\"80\" name=\"freesearch[]\">";
-            while ($db->next_record()) {
-                if (get_visibility_by_username($db->f("username"))) {
-                    $c++;
-                    if (empty($sms_data["p_rec"])) {
-                        $tmp2 .= "<option value=\"".$db->f("username")."\">".htmlReady(my_substr($db->f("fullname"),0,35))." (".$db->f("username").") - ".$db->f("perms")."</option>";
-                    } else {
-                        if (!in_array($db->f("username"), $sms_data["p_rec"])) {
-                            $tmp2 .= "<option value=\"".$db->f("username")."\">".htmlReady(my_substr($db->f("fullname"),0,35))." (".$db->f("username").") - ".$db->f("perms")."</option>";
-                        }
-                    }
-                }
-            }
-            $tmp2 .= "</select>";
-            $tmp2 .= "<input type=\"image\" name=\"reset_freesearch\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" border=\"0\" value=\""._("Suche zur&uuml;cksetzen")."\" ".tooltip(_("setzt die Suche zurück")).">";
-            if ($c > 0) {
-                $tmp .= $tmp2;
-            } else {
-                $tmp .= "&nbsp;<input type=\"image\" name=\"reset_freesearch\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" border=\"0\" value=\""._("Suche zur&uuml;cksetzen")."\" ".tooltip(_("setzt die Suche zurück")).">";
-                $tmp .= "&nbsp;<font size=\"-1\">"._("keine Treffer")."</font>";
-            }
-        }
-    } else {
-        ob_start();
-        ?>
-        <input id="addressee" type="text" name="search_exp" size="30">
-        <div id="addressee_choices" class="autocomplete"></div>
-
-        <input type="image" name="" src="<?= Assets::url('images/suchen.gif') ?>" border="0">
-
-        <script type="text/javascript">
-            Event.observe(window, 'load', function() {
-              new Ajax.Autocompleter('addressee',
-                                     'addressee_choices',
-                                     'dispatch.php/autocomplete/person/name',
-                                     {
-                                       minChars: 3,
-                                       paramName: 'value',
-                                       method: 'get',
-                                       parameters: Object.toQueryString({
-                                                     "exclude[]": $$("select[name='del_receiver[]'] option").pluck("value")
-                                                   }),
-                                       afterUpdateElement: function (input, item) {
-                                         var username = item.down('span.username').firstChild.nodeValue;
-                                         var form = $$("form[name='upload_form']")[0];
-                                         form.appendChild(new Element('input', {type:'hidden', name:'freesearch[]', value: username}));
-                                         form.appendChild(new Element('input', {type:'hidden', name:'add_freesearch_x', value: '1'}));
-                                         $("addressee").value = '';
-                                         form.submit();
-                                       }
-                                     });
-            });
-        </script>
-        <?
-        $tmp .= ob_get_clean();
+    
+    ob_start();
+        
+    ?>
+    <script type="text/javascript">
+       if (typeof STUDIP.CURRENTPAGE === 'undefined') {
+           STUDIP.CURRENTPAGE = {};
+       }
+       STUDIP.CURRENTPAGE.setToAdressees = function (username, name) {
+           if (!$("select[name=del_receiver[]]").length) {
+               $("form[name=upload_form]")
+                   .attr("action", STUDIP.URLHelper.getURL("?", { 
+                           "add_receiver[]": username, 
+                           "add_receiver_button_x": true 
+                       }))
+                   .submit();
+               return;
+           }
+           if (!$("select[name=del_receiver[]] #" + username).length) {
+               $("select[name=del_receiver[]]")
+                   .append($('<option id="' + username + '">' + name + '</option>'))
+                   .attr("size", $(this).attr("size") + 1);
+               window.setTimeout("$('input[name=adressee_parameter]').val('');", 10);
+           }
+       };
+    </script>
+    <?php
+        
+    if (Request::get("adressee_parameter") && !Request::get("adressee")) {
+        print "<input type=\"image\" name=\"add_freesearch\" ".
+            tooltip(_("zu Empfängerliste hinzufügen")).
+            " value=\""._("zu Empf&auml;ngerliste hinzuf&uuml;gen").
+            "\" src=\"".$GLOBALS['ASSETS_URL']."images/".$picture."\" border=\"0\">&nbsp;";
     }
+        
+    print QuickSearch::get("adressee", new StandardSearch("username"))
+        ->setInputStyle("width: 211px;")
+        ->withoutButton()
+        ->fireJSFunctionOnSelect("STUDIP.CURRENTPAGE.setToAdressees")
+        ->render();
+    ?>
+
+    <input type="image" name="search_person" src="<?= Assets::url('images/suchen.gif') ?>" border="0">
+
+    <?
+    $tmp .= ob_get_clean();
+    
     return $tmp;
 }
 

@@ -1102,7 +1102,7 @@ function print_rating($rate, $id, $username) {
     if (object_check_user($id, "rate") == TRUE || get_username($user->id) == $username) { // already rated / my own posting
         $bar = '<span ' . tooltip(sprintf(_("Bewertung: %s"),$rate), false) . '>' . $bar. '</span>';
     } else {
-            $bar = '<span onClick="" '
+            $bar = '<span onClick="STUDIP.Forum.rate_template(\''.$id.'\')" '
                 . tooltip(sprintf(_("Bewertung: %s Zum Abstimmen bitte klicken."),$rate), false) . '>'
                 . $bar
                 . '</span>';

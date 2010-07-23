@@ -89,23 +89,23 @@ STUDIP.Forum.pruefe_name = function(){
  return checked;
 }
 
-STUDIP.Forum.rate_template = new Template(
+STUDIP.Forum.rate_template = function (id) {
+  STUDIP.Dialogbox.openBox("Rating_for_<?= $open ?>", "<?= _("Bewertung des Beitrags") ?>",
 '<form method="post" action="<?=URLHelper::getLink("?view=$view&open=$open&flatviewstartposting=$flatviewstartposting#anker")?>">\
 <div style="text-align:center">\
-<?=_("Bewertung des Beitrags")?>\
-<br>\
 <?=_("Schulnote")?>\
 <br>\
 <span style="color:#009900;font-weight:bold;">1</span>\
 <?php foreach(range(1,5) as $r) :?>
-<input type="radio" name="rate[#{id}]" value="<?=$r?>">\
+<input type="radio" name="rate[' + id + ']" value="<?=$r?>">\
 <?php endforeach?>
 <span style="color:#990000;font-weight:bold;">5</span>\
 <br>\
 \<?=makebutton('bewerten','input',_("Bewertung abgeben"),'sidebar')?>\
 </form>\
 </div>\
-');
+', "center");
+}
 <?php 
 PageLayout::addHeadElement('script', array('type' => 'text/javascript'), ob_get_clean());
 

@@ -15,7 +15,7 @@ endforeach;
     <!-- for safari5 we need to set the height for the dl as well -->
 	<dl class="hover" style="height: <?= $height - 2 ?>px; 
         border: 1px solid <?= $entry['color'] ?>;
-        background-image: url('<?= Assets::url('images/calendar/category'. $cat) ?>')">
+        background-image: url('<?= Assets::url('images/calendar/category'. $cat .'.jpg') ?>')">
 		<dt style="background-color: <?= $entry['color'] ?>;">
 			<?= $entry['start_formatted'] ?> - <?= $entry['end_formatted'] ?><?= ($entry['title']) ? ', <b>'. $entry['title'] .'</b>' : '' ?>
 		</dt>

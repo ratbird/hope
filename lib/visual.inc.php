@@ -815,7 +815,7 @@ function FixLinks ($data = "", $fix_nl = TRUE, $nl_to_br = TRUE, $img = FALSE, $
     $fixed_text = TransformInternalLinks($fixed_text);
 
     $pattern = array(
-        '#((\[(img|flash)(\=([^\n\f:]+?))?(:(\d{1,3}%?))?(:(center|right))?(:([^\]]+))?\]|\[(?!img|flash)([^\n\f\[]+)\])?(((https?://|ftp://)(['.$chars.':]+@)?)['.$chars.']+(\.['.$chars.':]+)*/?([^<\s]*[^\.\s\]<])*))#ie',
+        '#((\[(img|flash|audio|video)(\=([^\n\f:]+?))?(:(\d{1,3}%?))?(:(center|right))?(:([^\]]+))?\]|\[(?!img|flash|audio|video)([^\n\f\[]+)\])?(((https?://|ftp://)(['.$chars.':]+@)?)['.$chars.']+(\.['.$chars.':]+)*/?([^<\s]*[^\.\s\]<])*))#ie',
                     '#(?<=\s|^|\>)(\[([^\n\f]+?)\])?(['.$chars.']+(\.['.$chars.']+)*@(['.$chars.']+(\.['.$chars.']+)+))#ie'
                     );
     $replace = array(
@@ -860,119 +860,81 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
     }
 
     if ($mod == 'LINK') {
-        if ($params[5] != 'img' && $params[5] != 'flash') {
+        if (!in_array($params[5], words('img flash audio video'))) {
             if ($params[3] == '')
                 $params[3] = $params[4];
             else $params[3] = format($params[3]);
             $tbr = '<a href="'.idna_link($params[4]).'"'.($intern ? '' : ' target="_blank"').">$link_pic{$params[3]}</a>";
         }
         elseif ($img) {
-            if ($params[5] == 'img') {
-                $cfg = Config::GetInstance();
-                $EXTERNAL_IMAGE_EMBEDDING = $cfg->getValue('EXTERNAL_IMAGE_EMBEDDING');
-                // Don't execute scripts internal scripts
-                if ($intern && !in_array($pu['first_target'], array('sendfile.php','download','assets','pictures')))
-                    return $params[0];
-                else if ((!$EXTERNAL_IMAGE_EMBEDDING || $EXTERNAL_IMAGE_EMBEDDING == 'deny') && !$intern)
-                    return $params[0];
-                else if (!preg_match(':.+(\.jpg|\.jpeg|\.png|\.gif)$:i', $params[0]))
-                    return $params[0];
-                else {
-                    if ($params[2]) {
-                        $width = '';
-                        // width in percent
-                        if (substr($params[2], -1) == '%') {
-                            $width = (int) substr($params[2], 0, -1) < 100 ? " width=\"{$params[2]}\"" : ' width="100%"';
-                        }
-                        else {
-                            // width of image in pixels
-                            if (is_object($auth) && $auth->auth['xres'])
-                                // 80% of x-resolution maximal
-                                $max_width = floor($auth->auth['xres'] * 0.8);
-                            else
-                                $max_width = 800;
-                            $width = ($params[2] < $max_width) ? " width=\"{$params[2]}\"" : " width=\"$max_width\"";
-                        }
-                    }
-                    if(!$intern && substr($EXTERNAL_IMAGE_EMBEDDING,0,5) == 'proxy' ) {
-                        if (Seminar_Session::is_current_session_authenticated()) {
-                            $proxyurl = strstr($EXTERNAL_IMAGE_EMBEDDING,':');
-                            if($proxyurl) $proxyurl = substr($proxyurl,1);
-                            else $proxyurl = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] . 'image_proxy.php?url=';
-                            $image_url = $proxyurl . urlencode(idna_link($params[4]));
-                        } else {
-                            $image_url = idna_link($params[4]);
-                        }
-                    } else {
-                        $image_url = idna_link($params[4]);
-                    }
-                    $tbr = '<img src="'.$image_url."\" $width border=\"0\" alt=\"{$params[1]}\" title=\"{$params[1]}\">";
-                    if (preg_match('#(((https?://|ftp://)(['.$chars.':]+@)?)['.$chars.']+(\.['.$chars.':]+)*/?([^<\s]*[^\.\s\]<])*)#i', $params[7])) {
-                        $pum = @parse_url($params[7]);
-                        if (($pum['scheme'] == 'http' || $pum['scheme'] == 'https')
-                        && ($pum['host'] == $_SERVER['HTTP_HOST'] || $pum['host'].':'.$pum['port'] == $_SERVER['HTTP_HOST'])
-                        && strpos($pum['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0){
-                            $imgintern = true;
-                        }
-                        $tbr = '<a href="'.idna_link($params[7]).'"'.($imgintern ? '' : ' target="_blank"').'>'.$tbr.'</a>';
-                    }
-                    if ($params[6])
-                        $tbr = "<div align=\"{$params[6]}\">$tbr</div>";
+            $cfg = Config::GetInstance();
+            $LOAD_EXTERNAL_MEDIA = $cfg->getValue('LOAD_EXTERNAL_MEDIA');
+
+            // Don't execute internal scripts
+            if ($intern && !in_array($pu['first_target'], array('sendfile.php','download','assets','pictures'))) {
+                return $params[0];
+            } else if ((!$LOAD_EXTERNAL_MEDIA || $LOAD_EXTERNAL_MEDIA == 'deny') && !$intern) {
+                return $params[0];
+            }
+
+            $media_url = idna_link($params[4]);
+
+            if (!$intern && $LOAD_EXTERNAL_MEDIA == 'proxy') {
+                if (Seminar_Session::is_current_session_authenticated()) {
+                    $media_url = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode($media_url);
                 }
-            } elseif ($params[5] == 'flash') {
-                $cfg = Config::GetInstance();
-                $EXTERNAL_FLASH_MOVIE_EMBEDDING = $cfg->getValue('EXTERNAL_FLASH_MOVIE_EMBEDDING');
-                $width = 200;
-                // Don't execute scripts
-                if ((basename($pu['path']) != 'sendfile.php') && $intern && $pu['query']) {
-                    return $params[0];
-                } else if ((!$EXTERNAL_FLASH_MOVIE_EMBEDDING || $EXTERNAL_FLASH_MOVIE_EMBEDDING == 'deny') && !$intern) {
-                    return $params[0];
+            }
+
+            if ($params[2]) {
+                // width in percent
+                if (substr($params[2], -1) == '%') {
+                    $width = (int) substr($params[2], 0, -1) < 100 ? $params[2] : '100%';
                 } else {
-                    if ($params[2]) {
-                        // width of image in pixels
-                        if (is_object($auth) && $auth->auth['xres'])
-                            // 80% of x-resolution maximal
-                            $max_width = floor($auth->auth['xres'] * 0.8);
-                        else
-                            $max_width = 800;
-                        $width = ($params[2] < $max_width) ? $params[2] : $max_width;
-                    }
-                    if ($width > 200) {
-                        $flash_config  = $GLOBALS['FLASHPLAYER_DEFAULT_CONFIG_MAX'];
+                    // width of image in pixels
+                    if (is_object($auth) && $auth->auth['xres']) {
+                        // 80% of x-resolution maximal
+                        $max_width = floor($auth->auth['xres'] * 0.8);
                     } else {
-                        $flash_config = $GLOBALS['FLASHPLAYER_DEFAULT_CONFIG_MIN'];
+                        $max_width = 800;
                     }
-                    if(!$intern && substr($EXTERNAL_FLASH_MOVIE_EMBEDDING, 0, 5) == 'proxy' ) {
-                        if (Seminar_Session::is_current_session_authenticated()) {
-                            $proxyurl = strstr($EXTERNAL_FLASH_MOVIE_EMBEDDING, ':');
-                            if ($proxyurl) {
-                                $proxyurl = substr($proxyurl,1);
-                            } else {
-                                $proxyurl = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'flash_proxy.php?url=';
-                            }
-                            $flash_url = $proxyurl . urlencode(idna_link($params[4]));
-                        } else {
-                            $flash_url = urlencode(idna_link($params[4]));
-                        }
-                    } else {
-                        $flash_url = urlencode(idna_link($params[4]));
-                    }
-                    $height = round($width * 0.75);
-                    $flash_object  = "<object type=\"application/x-shockwave-flash\" id=\"FlashPlayer\" data=\"".Assets::url()."flash/player_flv.swf\" width=\"$width\" height=\"$height\">"; // height=\"323\" width=\"404\"
-                    $flash_object .= "<param name=\"movie\" value=\"".Assets::url()."flash/player_flv.swf\">";
-                    $flash_object .= "<param name=\"FlashVars\" value=\"flv=$flash_url&amp;startimage={$params[7]}{$flash_config}\">";
-                    $flash_object .= "<embed src=\"".Assets::url()."flash/player_flv.swf\" movie=\"$flash_url\" type=\"application/x-shockwave-flash\" FlashVars=\"flv=$flash_url&amp;startimage={$params[7]}{$flash_config}\">";
-                    $flash_object .= "</object>";
-
-                    $tbr = $flash_object;
-                    if ($params[6]) {
-                        $tbr = "<div align=\"{$params[6]}\">$tbr</div>";
-                    }
+                    $width = min($params[2], $max_width);
                 }
+            }
 
+            if ($params[5] == 'img') {
+                $width = isset($width) ? "width=\"$width\"" : '';
+                $tbr = '<img src="'.$media_url."\" $width alt=\"{$params[1]}\" title=\"{$params[1]}\">";
+                if (preg_match('#(((https?://|ftp://)(['.$chars.':]+@)?)['.$chars.']+(\.['.$chars.':]+)*/?([^<\s]*[^\.\s\]<])*)#i', $params[7])) {
+                    $pum = @parse_url($params[7]);
+                    if (($pum['scheme'] == 'http' || $pum['scheme'] == 'https')
+                    && ($pum['host'] == $_SERVER['HTTP_HOST'] || $pum['host'].':'.$pum['port'] == $_SERVER['HTTP_HOST'])
+                    && strpos($pum['path'], $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']) === 0){
+                        $imgintern = true;
+                    }
+                    $tbr = '<a href="'.idna_link($params[7]).'"'.($imgintern ? '' : ' target="_blank"').'>'.$tbr.'</a>';
+                }
+            } else if ($params[5] == 'audio') {
+                $width = isset($width) ? "width=\"$width\"" : '';
+                $tbr = '<audio src="'.$media_url."\" $width controls title=\"{$params[1]}\"></audio>";
+            } else if ($params[5] == 'video') {
+                $width = isset($width) ? "width=\"$width\"" : '';
+                $tbr = '<video src="'.$media_url."\" $width controls title=\"{$params[1]}\"></video>";
+            } elseif ($params[5] == 'flash') {
+                $width = isset($width) ? $width : 200;
+                $height = round($width * 0.75);
+                $flash_config = $width > 200 ? $GLOBALS['FLASHPLAYER_DEFAULT_CONFIG_MAX'] : $GLOBALS['FLASHPLAYER_DEFAULT_CONFIG_MIN'];
+                $flash_object  = "<object type=\"application/x-shockwave-flash\" id=\"FlashPlayer\" data=\"".Assets::url()."flash/player_flv.swf\" width=\"$width\" height=\"$height\">"; // height=\"323\" width=\"404\"
+                $flash_object .= "<param name=\"movie\" value=\"".Assets::url()."flash/player_flv.swf\">";
+                $flash_object .= "<param name=\"FlashVars\" value=\"flv=$media_url&amp;startimage={$params[7]}{$flash_config}\">";
+                $flash_object .= "<embed src=\"".Assets::url()."flash/player_flv.swf\" movie=\"$media_url\" type=\"application/x-shockwave-flash\" FlashVars=\"flv=$media_url&amp;startimage={$params[7]}{$flash_config}\">";
+                $flash_object .= "</object>";
+                $tbr = $flash_object;
             } else {
                 return $params[0];
+            }
+
+            if ($params[6]) {
+                $tbr = "<div align=\"{$params[6]}\">$tbr</div>";
             }
         } else {
             return $params[0];

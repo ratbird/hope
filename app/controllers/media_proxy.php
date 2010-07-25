@@ -1,0 +1,48 @@
+<?php
+/**
+ * media_proxy.php - media proxy controller
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Elmar Ludwig
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
+
+require_once 'app/controllers/studip_controller.php';
+require_once 'app/models/media_proxy.php';
+
+class MediaProxyController extends StudipController
+{
+    /**
+     * default action of this controller: proxy media data
+     */
+    public function index_action()
+    {
+        $url = Request::get('url');
+        $media_proxy = new MediaProxy();
+        $config = Config::GetInstance();
+        $modified_since = NULL;
+
+        if (!Seminar_Session::is_current_session_authenticated() ||
+            $config->getValue('LOAD_EXTERNAL_MEDIA') != 'proxy') {
+            throw new AccessDeniedException();
+        }
+
+        if (isset($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
+            $modified_since = strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']);
+        }
+
+        ini_set('default_socket_timeout', 5);
+        $this->render_nothing();
+
+        try {
+            $media_proxy->readURL($url, $modified_since);
+        } catch (MediaProxyException $ex) {
+            header($ex->getMessage());
+        }
+    }
+}

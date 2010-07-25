@@ -217,7 +217,7 @@ if (Request::int('force_download')) {
         break;
         case "qt":
         case "mov":
-            $content_type ="video/quicktime";
+            $content_type = "video/quicktime";
         break;
         case "avi":
             $content_type = "video/x-msvideo";
@@ -252,6 +252,27 @@ if (Request::int('force_download')) {
         break;
         case "csv":
             $content_type = "text/csv";
+        break;
+        case "ogg":
+            $content_type = "application/ogg";
+        break;
+        case "ogv":
+            $content_type = "video/ogg";
+        break;
+        case "mp4":
+            $content_type = "video/mp4";
+        break;
+        case "webm":
+            $content_type = "video/webm";
+        break;
+        case "oga":
+            $content_type = "audio/ogg";
+        break;
+        case "mp3":
+            $content_type = "audio/mp3";
+        break;
+        case "wav":
+            $content_type = "audio/wave";
         break;
         default:
             $content_type = "application/octet-stream";

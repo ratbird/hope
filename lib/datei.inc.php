@@ -1298,6 +1298,7 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
         $content.= "<input type=\"hidden\" name=\"type\" value=\"0\">";
     } else {
         $content = '';
+        $media_url = GetDownloadLink($datei['dokument_id'], $datei['filename'], $type);
         if (strtolower(getFileExtension($datei['filename'])) == 'flv') {
             $cfg = Config::GetInstance();
             $DOCUMENTS_EMBEDD_FLASH_MOVIES = $cfg->getValue('DOCUMENTS_EMBEDD_FLASH_MOVIES');
@@ -1305,9 +1306,12 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
                 $flash_player = get_flash_player($datei['dokument_id'], $datei['filename'], $type);
                 $content = "<div style=\"margin-bottom: 10px; height: {$flash_player['height']}; width: {$flash_player['width']};\">" . $flash_player['player'] . '</div>';
             }
-        }
-        if (in_array(strtolower(getFileExtension($datei['filename'])), words('jpg jpeg gif png'))) {
-            $content = sprintf('<img class="preview" src="%s" alt=""><br>', GetDownloadLink($datei['dokument_id'], $datei['filename'], $type));
+        } else if (in_array(strtolower(getFileExtension($datei['filename'])), words('ogg ogv mp4 webm'))) {
+            $content = sprintf('<video class="preview" src="%s" controls></video><br>', htmlspecialchars($media_url));
+        } else if (in_array(strtolower(getFileExtension($datei['filename'])), words('oga mp3 wav'))) {
+            $content = sprintf('<audio class="preview" src="%s" controls></audio><br>', htmlspecialchars($media_url));
+        } else if (in_array(strtolower(getFileExtension($datei['filename'])), words('jpg jpeg gif png'))) {
+            $content = sprintf('<img class="preview" src="%s" alt=""><br>', htmlspecialchars($media_url));
         }
         if ($datei["description"]) {
             $content .= htmlReady($datei["description"], TRUE, TRUE);
@@ -2442,8 +2446,6 @@ function pclzip_convert_filename_cb($p_event, &$p_header) {
 
 function get_flash_player ($document_id, $filename, $type) {
     global $auth;
-    $width = 200;
-    // Don't execute scripts
     // width of image in pixels
     if (is_object($auth) && $auth->auth['xres']) {
         // 50% of x-resolution maximal

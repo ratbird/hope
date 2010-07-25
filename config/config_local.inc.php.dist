@@ -103,13 +103,11 @@ $UNZIP_PATH = "/usr/bin/unzip";
 $LATEX_PATH = "/usr/bin/latex";
 $DVIPS_PATH = "/usr/bin/dvips";
 
-// image proxy settings
-$IMAGE_PROXY_PATH = $STUDIP_BASE_PATH . '/data/image_proxy_cache/';
-$IMAGE_PROXY_MAX_CONTENT_LENGTH = 1000000;
-$IMAGE_PROXY_CACHE_LIFETIME = 86400;
-$IMAGE_PROXY_MAX_FILES_IN_CACHE = 3000;
-$IMAGE_PROXY_GC_PROBABILITY = 1;
-$IMAGE_PROXY_MAX_IMAGE_SIZE = 3000; // x or y
+// media proxy settings
+$MEDIA_CACHE_PATH = $STUDIP_BASE_PATH . '/data/media_cache';
+$MEDIA_CACHE_MAX_LENGTH = 1000000;
+$MEDIA_CACHE_LIFETIME = 86400;
+$MEDIA_CACHE_MAX_FILES = 3000;
 
 //ImageMagick, used by latexrender modul
 $CONVERT_PATH = "/usr/bin/convert";

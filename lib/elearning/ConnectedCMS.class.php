@@ -25,6 +25,7 @@ class ConnectedCMS
     var $RELATIVE_PATH_DB_CLASSES;
     var $CLASS_PREFIX;
     var $auth_necessary;
+    var $USER_AUTO_CREATE;
     var $USER_PREFIX;
     var $target_file;
     var $logo_file;
@@ -48,13 +49,13 @@ class ConnectedCMS
     * constructor
     *
     * init class. don't call directly but by extending class ("new Ilias3ConnectedCMS($cms)" for example), except for basic administration
-    * @access 
+    * @access
     * @param string $cms system-type
-    */ 
+    */
     function ConnectedCMS($cms = "")
     {
         global $RELATIVE_PATH_ELEARNING_INTERFACE;
-        
+
         $this->cms_type = $cms;
         if ($GLOBALS["ELEARNING_INTERFACE_" . $this->cms . "_ACTIVE"] == "1")
             $this->is_active = true;
@@ -88,6 +89,7 @@ class ConnectedCMS
                 $this->RELATIVE_PATH_DB_CLASSES = false;
             $this->CLASS_PREFIX = $ELEARNING_INTERFACE_MODULES[$cms]["CLASS_PREFIX"];
             $this->auth_necessary = $ELEARNING_INTERFACE_MODULES[$cms]["auth_necessary"];
+            $this->USER_AUTO_CREATE = $ELEARNING_INTERFACE_MODULES[$cms]["USER_AUTO_CREATE"];
             $this->USER_PREFIX = $ELEARNING_INTERFACE_MODULES[$cms]["USER_PREFIX"];
             $this->target_file = $ELEARNING_INTERFACE_MODULES[$cms]["target_file"];
             $this->logo_file = $ELEARNING_INTERFACE_MODULES[$cms]["logo_file"];
@@ -101,7 +103,7 @@ class ConnectedCMS
             $this->types = $ELEARNING_INTERFACE_MODULES[$cms]["types"];
             $this->roles = $ELEARNING_INTERFACE_MODULES[$cms]["roles"];
     }
-    
+
     /**
     * init subclasses
     *
@@ -111,9 +113,9 @@ class ConnectedCMS
     function initSubclasses()
     {
         if ($this->auth_necessary)
-        {   
+        {
             require_once($this->CLASS_PREFIX . "ConnectedUser.class.php");
-            $classname = $this->CLASS_PREFIX . "ConnectedUser"; 
+            $classname = $this->CLASS_PREFIX . "ConnectedUser";
             $this->user = new $classname($this->cms_type);
             require_once($this->CLASS_PREFIX  . "ConnectedPermissions.class.php");
             $classname = $this->CLASS_PREFIX  . "ConnectedPermissions";
@@ -123,7 +125,7 @@ class ConnectedCMS
         $classname = $this->CLASS_PREFIX . "ConnectedLink";
         $this->link = new $classname($this->cms_type);
     }
-    
+
     /**
     * get connection status
     *
@@ -150,7 +152,7 @@ class ConnectedCMS
         else
         {
             fclose($file);
-            $msg["path"]["info"] = sprintf(_("Die %s-Installation wurde gefunden."), $this->name);  
+            $msg["path"]["info"] = sprintf(_("Die %s-Installation wurde gefunden."), $this->name);
 
             // check if target-file exists
             $file = fopen($this->ABSOLUTE_PATH_ELEARNINGMODULES.$this->target_file, "r");
@@ -176,7 +178,7 @@ class ConnectedCMS
                 $msg["soap"]["error"] = sprintf(_("Die SOAP-Verbindungsdaten sind f&uuml;r dieses System nicht gesetzt. Erg&auml;nzen sie die Einstellungen f&uuml;r dieses Systems um den Eintrag \"soap_data\" in der Konfigurationsdatei \"local.inc\"."));
             else
             {
-                require_once($RELATIVE_PATH_SOAP."/StudipSoapClient" . ($GLOBALS['SOAP_USE_PHP5'] && $this->CLASS_PREFIX == 'Ilias3' ? "_PHP5" : "") .".class.php");
+                require_once($RELATIVE_PATH_SOAP."/StudipSoapClient" . ($GLOBALS['SOAP_USE_PHP5'] && in_array($this->CLASS_PREFIX, words('Ilias3 Ilias4')) ? "_PHP5" : "") .".class.php");
                 $this->soap_client = new StudipSoapClient($this->ABSOLUTE_PATH_SOAP);
                 $msg["soap"]["info"] = sprintf(_("Das SOAP-Modul ist aktiv."));
             }
@@ -208,12 +210,12 @@ class ConnectedCMS
             $msg["class_content"]["error"] .= sprintf(_("Die Datei \"%s\" existiert nicht."), $el_path."/" . $this->CLASS_PREFIX . "ContentModule.class.php");
         if (!file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedCMS.class.php"))
             $msg["class_cms"]["error"] .= sprintf(_("Die Datei \"%s\" existiert nicht."), $el_path."/" . $this->CLASS_PREFIX . "ConnectedCMS.class.php");
-        if (file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedCMS.class.php") AND 
+        if (file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedCMS.class.php") AND
             (file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedUser.class.php") OR (!$this->auth_necessary)) AND
             (file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedPermissions.class.php") OR (!$this->auth_necessary)) AND
             file_exists($el_path."/" . $this->CLASS_PREFIX . "ConnectedLink.class.php") AND
             file_exists($el_path."/" . $this->CLASS_PREFIX . "ContentModule.class.php"))
-        {   
+        {
             require_once ($el_path."/" . $this->CLASS_PREFIX . "ConnectedCMS.class.php");
             $msg["classes"]["info"] .= sprintf(_("Die Klassen der Schnittstelle zum System \"%s\" wurden geladen."), $this->name);
         }
@@ -226,7 +228,7 @@ class ConnectedCMS
         $messages["error"] = $error_msg;
         return $msg;
     }
-    
+
     /**
     * get preferences
     *
@@ -236,7 +238,7 @@ class ConnectedCMS
     function getPreferences()
     {
         global $connected_cms;
-    
+
         if ($this->types != "")
         {
             echo "<b>" . _("Angebundene Lernmodul-Typen: ") . "</b>";
@@ -245,7 +247,7 @@ class ConnectedCMS
                 echo "<img src=\"" . $type["icon"] . "\"> " . $type["name"] . " ($key)<br>\n";
             echo "<br>\n";
         }
-        
+
         if ($this->db_classes != "")
         {
             echo "<b>" . _("Verwendete DB-Zugriffs-Klassen: ") . "</b>";
@@ -255,7 +257,7 @@ class ConnectedCMS
             echo "<br>\n";
         }
     }
-    
+
     /**
     * create new instance of subclass content-module with given values
     *
@@ -268,10 +270,10 @@ class ConnectedCMS
     {
         global $current_module;
         $current_module = $data["ref_id"];
-        
+
         require_once($this->CLASS_PREFIX . "ContentModule.class.php");
         $classname = $this->CLASS_PREFIX  . "ContentModule";
-        
+
         $this->content_module[$current_module] = new  $classname("", $data["type"], $this->cms_type);
         $this->content_module[$current_module]->setId($data["ref_id"]);
         $this->content_module[$current_module]->setTitle($data["title"]);
@@ -293,11 +295,11 @@ class ConnectedCMS
     {
         global $current_module;
         $current_module = $module_id;
-        
+
         require_once($this->CLASS_PREFIX . "ContentModule.class.php");
         $classname = $this->CLASS_PREFIX  . "ContentModule";
-        
-        if ($is_connected == false) 
+
+        if ($is_connected == false)
         {
             $this->content_module[$module_id] = new  $classname("", $module_type, $this->cms_type);
             $this->content_module[$module_id]->setId($module_id);
@@ -309,7 +311,7 @@ class ConnectedCMS
 
         $this->content_module[$module_id]->setConnectionType($is_connected);
     }
-    
+
     /**
     * get name of cms
     *
@@ -345,7 +347,7 @@ class ConnectedCMS
     {
         return $this->ABSOLUTE_PATH_ELEARNINGMODULES;
     }
-    
+
     /**
     * get target file of cms
     *
@@ -381,7 +383,7 @@ class ConnectedCMS
     {
         return $this->auth_necessary;
     }
-    
+
     /**
     * get active-setting
     *
@@ -393,7 +395,7 @@ class ConnectedCMS
         return $this->is_active;
     }
     */
-    
+
     /**
     * get user prefix
     *
@@ -417,7 +419,7 @@ class ConnectedCMS
     {
         return "<img src=\"" . $this->logo_file . "\">";
     }
-    
+
     /**
     * get user modules
     *
@@ -453,7 +455,7 @@ class ConnectedCMS
     {
         return false;
     }
-    
+
     function deleteConnectedModules($object_id){
         return ObjectConnections::DeleteAllConnections($object_id, $this->cms_type);
     }

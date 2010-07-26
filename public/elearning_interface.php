@@ -60,7 +60,6 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
     if ((! $rechte) AND ($view == "edit"))
         $view = "show";
 
-//  echo "wp: " . $write_permission . "<br>";
     $seminar_id = $SessSemName[1];
     if ($seminar_id != $elearning_open_close["id"])
     {
@@ -87,6 +86,28 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
     }
     $sess->register("elearning_open_close");
 
+    // ggf. neuen Ilias4-Kurs anlegen
+    if (isset($_REQUEST["create_course_x"]) AND $rechte) {
+        ELearningUtils::loadClass($_REQUEST["cms_select"]);
+        if ((method_exists($connected_cms[$_REQUEST["cms_select"]], "createCourse")))
+            if ($connected_cms[$_REQUEST["cms_select"]]->createCourse($SessSemName[1]))
+                $messages["info"] .= "Kurs wurde angelegt.<br>";
+    }
+
+// ggf. bestehenden Ilias4-Kurs zuordnen
+    if (isset($_REQUEST["connect_course_sem_id"])) {
+        if ((ObjectConnections::getConnectionModuleId($_REQUEST["connect_course_sem_id"], "crs", $_REQUEST["cms_select"])) AND ($perm->have_studip_perm("dozent", $_REQUEST["connect_course_sem_id"]))) {
+            ObjectConnections::setConnection($SessSemName[1], ObjectConnections::getConnectionModuleId($_REQUEST["connect_course_sem_id"], "crs", $_REQUEST["cms_select"]), "crs", $_REQUEST["cms_select"]);
+            $messages["info"] .= "Zuordnung wurde gespeichert.<br>";
+            ELearningUtils::loadClass($_REQUEST["cms_select"]);
+            if ((method_exists($connected_cms[$_REQUEST["cms_select"]], "updateConnections")))
+                $connected_cms[$_REQUEST["cms_select"]]->updateConnections( ObjectConnections::getConnectionModuleId($_REQUEST["connect_course_sem_id"], "crs", $_REQUEST["cms_select"]) );
+        }
+    }
+
+    // Zugeordnete Ilias-Kurse ermitteln und ggf. aktualisieren
+    $course_output = ELearningUtils::getIliasCourses($SessSemName[1]);
+
     ELearningUtils::bench("init");
 
     if (($view=="show") AND (isset($new_account_cms)))
@@ -107,14 +128,14 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 $user_crs_role = $connected_cms[$module_system_type]->crs_roles[$auth->auth["perm"]];
                 ELearningUtils::loadClass($module_system_type);
             }
-            if (isset($_REQUEST['remove_x']) AND $rechte AND ($user_crs_role != "admin"))
+            if ($_REQUEST['remove_x'] AND $rechte)
             {
                 $connected_cms[$module_system_type]->newContentModule($module_id, $module_type, true);
                 if ($connected_cms[$module_system_type]->content_module[$module_id]->unsetConnection($seminar_id, $module_id, $module_type, $module_system_type))
                     $messages["info"] .= _("Die Zuordnung wurde entfernt.");
                 unset($connected_cms[$module_system_type]->content_module[$module_id]);
             }
-            elseif (isset($_REQUEST['add_x']) AND $rechte AND ($user_crs_role != "admin"))
+            elseif ($_REQUEST['add_x'] AND $rechte)
             {
                 $connected_cms[$module_system_type]->newContentModule($module_id, $module_type, true);
                 if ($connected_cms[$module_system_type]->content_module[$module_id]->setConnection($seminar_id))
@@ -150,6 +171,10 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
         echo MessageBox::error($messages["error"]);
     }
 
+    // Wenn Kurs(e) zugeordnet, Einsprungm&ouml;glichkeit(en) hier anzeigen
+    if ($course_output["courses"])
+        echo $course_output["courses"];
+
     echo $page_content;
 
     $module_count = 0;
@@ -177,8 +202,11 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
         {
             $current_module = $connection["id"]; //Arrrghhhh
 
-            if ($module_count == 0) echo ELearningUtils::getModuleHeader(_("Angebundene Lernmodule"));
-                $module_count++;
+            if ($module_count == 0)
+                echo ELearningUtils::getModuleHeader(_("Angebundene Lernmodule"));
+            $module_count++;
+            $module_system_count[$connection["cms"]]++;
+
                 if ($open_all != "")
                     $elearning_open_close[$connected_cms[$connection["cms"]]->content_module[$connection["id"]]->getReferenceString()] = true;
                 elseif ($close_all != "")
@@ -245,15 +273,15 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 || $connected_cms[$cms_select]->user->isConnected()) {
                 echo ELearningUtils::getHeader(_("Suche"));
                 echo ELearningUtils::getSearchfield(
-                    sprintf(_("Um im System %s nach Lernmodulen zu suchen, geben Sie einen Suchbegriff ein:"), 
+                    sprintf(_("Um im System %s nach Lernmodulen zu suchen, geben Sie einen Suchbegriff ein:"),
                     $connected_cms[$cms_select]->getName()));
                 echo "<br>\n";
-            } else 
-                echo MessageBox::info(sprintf(_("Sie können im %s System nicht suchen, da Sie bisher keinen Benutzer-Account angelegt haben."), 
+            } else
+                echo MessageBox::info(sprintf(_("Sie können im %s System nicht suchen, da Sie bisher keinen Benutzer-Account angelegt haben."),
                                                   $connected_cms[$cms_select]->getName()),
                                         array(sprintf(_("Jetzt einen %sAccount%s erstellen."),
                                         "<a href='".URLHelper::getLink('my_elearning.php')."'>","</a>")));
-            
+
             if (! ($searchresult_content_modules == false))
             {
                 echo ELearningUtils::getHeader( sprintf( _("Gefundene Lernmodule zum Suchbegriff \"%s\""), $search_key ) );
@@ -267,9 +295,58 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                 }
                 echo "<br>\n";
             }
-            if ( ( strlen( trim($search_key) ) > 2 ) AND ($searchresult_content_modules == false))
+            if ( ( strlen( trim($search_key) ) > 2 ) AND ($searchresult_content_modules == false)) {
             echo "<br>\n<b><font size=\"-1\">&nbsp;" . sprintf( _("Es gibt im System %s zu diesem Suchbegriff keine Lernmodule."),  $connected_cms[$cms_select]->getName()) . "</font></b>";
             echo "<br>\n";
+            }
+
+            // ILIAS 4: Leeren Kurs anlegen oder Kurse von anderen Veranstaltungen zuordnen
+            if ((method_exists($connected_cms[$cms_select], "updateConnections")) AND ! ($module_system_count[$cms_select]) AND ! (ObjectConnections::getConnectionModuleId($SessSemName[1], "crs", $cms_select)))
+            {
+                $db = New DB_Seminar;
+
+                if ($perm->have_perm("root"))
+                $db->query("SELECT DISTINCT object_id, module_id, Name FROM object_contentmodules LEFT JOIN seminare ON (object_id = Seminar_id) WHERE module_type = 'crs' AND system_type = '$cms_select'");
+                else
+                    $db->query("SELECT DISTINCT object_id, module_id, Name FROM object_contentmodules LEFT JOIN seminare ON (object_id = Seminar_id) LEFT JOIN seminar_user USING (Seminar_id) WHERE module_type = 'crs' AND system_type = '$cms_select' AND seminar_user.status = 'dozent'");
+                while ($db->next_record())
+                    if ($perm->have_studip_perm("dozent", $db->f("object_id")))
+                        $options .= "<option value=\"".$db->f("object_id")."\">".htmlReady(my_substr($db->f("Name"),0,60))." ".sprintf(_("(Kurs-ID %s)"), $db->f("module_id"))."</option>";
+
+                echo  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+                echo ELearningUtils::getHeader(_("Leeren Kurs anlegen"));
+                echo "<div align=\"center\">";
+                echo "<br>\n";
+                echo _("Hier k&ouml;nnen Sie einen leeren Ilias-Kurs f&uuml;r diese Veranstaltung anlegen. Die Teilnehmenden der Veranstaltung k&ouml;nnten dann den Kurs betreten, auch wenn noch keine Lernmodule zugeordnet sind. Solange der Kurs leer ist, erscheint auf der Seite \"Meine Veranstaltungen und Einrichtungen\" kein Lernmodulsymbol f&uuml;r diese Veranstaltung. <b>Dieser Schritt kann nicht r&uuml;ckg&auml;ngig gemacht werden.</b>") . "<br><br>";
+                echo "<input type=\"HIDDEN\" name=\"anker_target\" value=\"search\">\n";
+                echo "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
+                echo "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
+                echo  "<input type=\"IMAGE\"" . makeButton("anlegen", "src") . " name=\"create_course\" style=\"vertical-align:middle\">\n";
+                echo "<br><br>\n";
+                echo "</div>";
+                echo "</form>";
+
+                if ($options) {
+                    echo  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+                    echo ELearningUtils::getHeader(_("Verkn&uuml;pfung mit einem bestehenden Kurs"));
+                    echo "<div align=\"center\">";
+                    echo "<br>\n";
+                    echo _("Wenn Sie die Veranstaltung mit einem bestehenden Ilias-Kurs verbinden wollen, w&auml;hlen Sie hier die Stud.IP-Veranstaltung, mit der der bestehende Kurs verkn&uuml;pft ist. Beide Stud.IP-Veranstaltungen sind dann mit dem selben Ilias-Kurs verkn&uuml;pft. <b>Dieser Schritt kann nicht r&uuml;ckg&auml;ngig gemacht werden.</b> ") . "<br><br>";
+                    echo "<select name=\"connect_course_sem_id\" size=\"1\">";
+                    echo "<option value=\"\">" . _("Bitte ausw&auml;hlen") . "</option>\n";
+                    echo $options;
+                    echo "</select>&nbsp;";
+                    echo "<input type=\"HIDDEN\" name=\"anker_target\" value=\"search\">\n";
+                    echo "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
+                    echo "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
+                    echo  "<input type=\"IMAGE\"" . makeButton("auswaehlen", "src") . " name=\"connect_course\" style=\"vertical-align:middle\">\n";
+                    echo "<br>\n";
+                    echo "</div>";
+                    echo "</form>";
+                    echo "<br>\n";
+                }
+            }
+
             echo ELearningUtils::getCMSFooter($connected_cms[$cms_select]->getLogo());
         }
 
@@ -282,7 +359,6 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
             echo ELearningUtils::getCMSSelectbox(_("Um Lernmodule hinzuzuf&uuml;gen, w&auml;hlen Sie ein angebundenes System aus:"));
         ELearningUtils::bench("search");
     }
-
 
 // Cachen der SOAP-Daten
     if (is_array($connected_cms))
@@ -328,6 +404,13 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
             $infobox[1]["eintrag"][] = array (  "icon" => "icon-lern.gif" ,
                                         "text"  => sprintf(_("Um neue Lernmodule zu erstellen, wechseln Sie auf die Seite %s, auf der sie Ihre Lernmodule und externen Nutzer-Accounts verwalten k&ouml;nnen."), "<a href=\"my_elearning.php\">\"" . _("Meine Lernmodule") . "\"</a>")
                                     );
+
+        if ($course_output["courses"]) {
+            $infobox[2]["kategorie"] = _("Verkn&uuml;pfungen:");
+                $infobox[2]["eintrag"][] = array (	"icon" => "forumgrau.gif" ,
+                                            "text"  => $course_output["update"]
+                                        );
+        }
 
         $cssSw = new cssClassSwitcher;                                  // Klasse für Zebra-Design
     }

@@ -809,6 +809,7 @@ function check_and_set_date($tag, $monat, $jahr, $stunde, $minute, &$arr, $field
  *
  * writes an entry into the studip configuration table
  *
+ * @deprecated
  * @param   string  the key for the config entry
  * @param   string  the value that should be set
  * @param   array   an array with key=>value to write into config
@@ -816,28 +817,23 @@ function check_and_set_date($tag, $monat, $jahr, $stunde, $minute, &$arr, $field
  * @return  bool    true if date was valid, else false
  *
  **/
-function write_config ($key='', $val='', $arr='') {
-    $db = new DB_Seminar;
+function write_config ($key, $val, $arr = null) {
 
-    if (func_num_args() == 2) {
+    if (is_null($arr)) {
         $arr[$key] = $val;
     }
+    $config = Config::get();
     if (is_array($arr)) {
-        foreach ($arr as $key=>$val) {
-            $GLOBALS[$key] = $val;
-            $query = sprintf ("SELECT * FROM config WHERE `field` = '%s' AND `is_default` != '1' ", $key);
-            $db->query($query);
-
-            if ($db->nf()) {
-                $query = sprintf ("UPDATE config SET `field` = '%s', value = '%s', chdate = '%s' WHERE `field` = '%s' AND `is_default` != '1' ", $key, $val, time(), $key);
+        foreach ($arr as $key => $val) {
+            if (isset($config->$key)) {
+                $config->store($key, $val);
             } else {
-                $query = sprintf ("INSERT INTO config SET config_id = '%s', `field` = '%s', value = '%s', chdate = '%s'", md5(uniqid("configID")), $key, $val, time());
+                $config->create($key, array('value' => $val, 'type' => 'string'));
             }
-            $db->query($query);
+            $GLOBALS[$key] = $config->$key;
         }
-        return TRUE;
-    } else
-        return FALSE;
+    }
+
 }
 
 /**

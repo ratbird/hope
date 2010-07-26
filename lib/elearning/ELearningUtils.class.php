@@ -24,7 +24,7 @@ class ELearningUtils
     */
     function loadClass($cms)
     {
-        global $connected_cms, $RELATIVE_PATH_ELEARNING_INTERFACE, $ELEARNING_INTERFACE_MODULES;
+        global $connected_cms, $RELATIVE_PATH_ELEARNING_INTERFACE, $ELEARNING_INTERFACE_MODULES, $SessSemName, $object_connections;
 
         if (! is_object($connected_cms[$cms]))
         {
@@ -46,7 +46,7 @@ class ELearningUtils
         }
         return is_array($connected_cms) ? count($connected_cms) : false;
     }
-    
+
     /**
     * get config-value
     *
@@ -59,7 +59,7 @@ class ELearningUtils
     function getConfigValue($name, $cms)
     {
         if ($cms != "")
-            return $GLOBALS["ELEARNING_INTERFACE_" . $cms . "_" . $name];
+            return Config::get()->getValue("ELEARNING_INTERFACE_" . $cms . "_" . $name);
         else
             return false;
     }
@@ -113,6 +113,7 @@ class ELearningUtils
         $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
         $output .= "<table border=\"0\" cellspacing=0 cellpadding=0 width = \"99%\">";
         $output .= "<tr><td class=\"steel1\" align=\"center\" valign=\"middle\" ><font size=\"-1\">";
+        $output .=  ELearningUtils::getHeader(_("Angebundenes System"));
         $output .= "<br>\n";
         $output .= $message;
         $output .= "<br>\n";
@@ -632,13 +633,169 @@ class ELearningUtils
     function showbench()
     {
         global $timearray;
-        echo "Zeit (".$timearray[0]["name"].")<br>";
+        echo "<table><tr><td>Zeit (".$timearray[0]["name"].")</td><td align=\"right\"></td></tr>";
         for ($i=1;$i<sizeof($timearray);$i++)
         {
-            echo "Zeit (".$timearray[$i]["name"]."): " . ($timearray[$i]["zeit"]-$timearray[$i-1]["zeit"]) . "<br>";
+            echo "<tr><td>".$timearray[$i]["name"].": </td><td align=\"right\">" . number_format(($timearray[$i]["zeit"]-$timearray[$i-1]["zeit"])*1000,2) . " msek</td></tr>";
         }
-        echo "Gesamtzeit: " . ($timearray[$i-1]["zeit"]-$timearray[0]["zeit"]);
+        echo "<tr><td>Gesamtzeit: </td><td align=\"right\">" . number_format(($timearray[$i-1]["zeit"]-$timearray[0]["zeit"])*1000,2)." msek</td></tr></table>";
+    }
+
+    /**
+    * delete cms-data
+    *
+    * deletes all data belonging to the specified cms from stud.ip database
+    * @access public
+    * @return boolean successful
+    */
+    function deleteCMSData($cms_type) {
+        $db = DBManager::get();
+        $db->exec("DELETE FROM auth_extern WHERE external_user_system_type = " . $db->quote($cms_type));
+        $db->exec("DELETE FROM object_contentmodules WHERE system_type =  " . $db->quote($cms_type));
+        $config = Config::get();
+        foreach ($config->getFields('global' ,null , 'ELEARNING_INTERFACE_' . $cms_type) as $key) {
+            $config->delete($key);
+        }
+    }
+
+    /**
+    * get ilias courses
+    *
+    * creates output of ilias courses linked to the chosen seminar. also updates object-connections.
+    * @access public
+    * @return boolean successful
+    */
+    function getIliasCourses($sem_id) {
+        global  $connected_cms, $messages, $view, $cms_select;
+        $db = DBManager::get();
+
+        $rs = $db->query("SELECT DISTINCT system_type, module_id
+                          FROM object_contentmodules
+                          WHERE module_type = 'crs' AND object_id = " . $db->quote($sem_id))
+                        ->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
+        $courses = array_map('array_shift', $rs);
+
+        if (is_array($courses))
+            foreach($courses as $system_type => $crs_id)
+                if (ELearningUtils::isCMSActive($system_type)) {
+                    ELearningUtils::loadClass($system_type);
+                    $course_output[] = "<a href=\"" . $connected_cms[$system_type]->link->cms_link . "?" . "client_id=" . $connected_cms[$system_type]->getClientId() . "&cms_select=" . $system_type . "&ref_id=" . $crs_id . "&type=crs&target=start\" target=\"_blank\">".sprintf(_("Kurs in %s"), $connected_cms[$system_type]->getName())."</a>";
+                    // gegebenenfalls zugeordnete Module aktualisieren
+                    if ($_REQUEST["update_x"]) {
+                        if ((method_exists($connected_cms[$system_type], "updateConnections"))) {
+                            $connected_cms[$system_type]->updateConnections( $crs_id );
+                }
+                    }
+                }
+
+        if ($course_output) {
+            if (sizeof($course_output) > 1)
+                $output["courses"] = _("Diese Veranstaltung ist mit folgenden Ilias-Kursen verkn&uuml;pft. Hier gelangen Sie direkt in den jeweiligen Kurs: ") . "<br>".implode($course_output, "<br>")."<br><br>";
+            else
+                $output["courses"] = _("Diese Veranstaltung ist mit einem Ilias-Kurs verkn&uuml;pft. Hier gelangen Sie direkt in den Kurs: ") . "<br>".implode($course_output, "<br>")."<br><br>";
+            $output["update"] .=  "<font style=\"font-size: -1\">" . _("Hier k&ouml;nnen Sie die Zuordnungen zu den verkn&uuml;pften Kursen aktualisieren."). "<br></font>";
+            $output["update"] .=  "<form method=\"POST\" action=\"" . UrlHelper::getLink() . "#anker\">\n";
+            $output["update"] .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
+            $output["update"] .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
+            $output["update"] .= "<input type=\"IMAGE\" " . makeButton("aktualisieren", "src") . " border=0 value=\"1\" name=\"update\">";
+            $output["update"] .= "</form>";
+        }
+
+        return $output;
+    }
+
+    /**
+    * check db-integrity
+    *
+    * checks if there are broken links in the database
+    * @access public
+    * @return boolean successful
+    */
+    function checkIntegrity() {
+        global $ELEARNING_INTERFACE_MODULES, $messages;
+        $db = DBManager::get();
+
+        foreach ($ELEARNING_INTERFACE_MODULES as $cms_type =>$data) $cmsystems[$cms_type] = array();
+
+        $config = Config::get();
+        foreach ($config->getFields('global' ,null , 'ELEARNING_INTERFACE_') as $key) {
+            $parts = explode("_", $key);
+            $cmsystems[$parts[2]]["config"]++;
+        }
+
+        $rs = $db->query("SELECT external_user_system_type, COUNT(*) as c FROM auth_extern GROUP BY external_user_system_type");
+        while ($row = $rs->fetch())
+            $cmsystems[$row["external_user_system_type"]]["accounts"] = $row['c'];
+        $rs = $db->query("SELECT system_type, COUNT(*) FROM object_contentmodules GROUP BY system_type");
+        while ($row = $rs->fetch())
+            $cmsystems[$row["system_type"]]["modules"] = $row['c'];
+
+        if (isset($_REQUEST['delete_x'])) {
+            $messages["info"] .= "<form method=\"POST\" action=\"" . UrlHelper::getLink() . "\">";
+            $messages["info"] .= "<table>";
+            $messages["info"] .= "<tr><td>&nbsp;</td></tr>";
+            $messages["info"] .= "<tr><td>" . sprintf(_("Durch das L&ouml;schen der Daten zum System mit dem Index \"%s\" werden %s Konfigurationseintr&auml;ge und Verkn&uuml;pfungen von Stud.IP-Veranstaltungen und -User-Accounts unwiederbringlich aus der Stud.IP_Datenbank entfernt. Wollen Sie diese Daten jetzt l&ouml;schen?"), $_REQUEST['delete_cms'], $cmsystems[$_REQUEST['delete_cms']]["accounts"]+$cmsystems[$_REQUEST['delete_cms']]["modules"]+$cmsystems[$_REQUEST['delete_cms']]["config"] ) . "</td></tr>";
+            $messages["info"] .= "<tr><td align=\"center\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$_REQUEST['delete_cms']."\"><input type=\"IMAGE\" " . makeButton("alleloeschen", "src") . " border=0 value=\"" . _("alle l&ouml;schen") . "\" name=\"confirm_delete\">&nbsp;<input type=\"IMAGE\" " . makeButton("abbrechen", "src") . " border=0 value=\"" . _("abbrechen") . "\" name=\"abbruch\"></td></tr>";
+            $messages["info"] .= "<tr><td align=\"center\"></td></tr>";
+            $messages["info"] .= "</table>";
+            $messages["info"] .= "</form>";
+        }
+
+        if (isset($_REQUEST['confirm_delete_x'])) {
+            unset($cmsystems[$_REQUEST['delete_cms']]);
+//          deleteCMSData($_REQUEST['delete_cms']);
+            $messages["info"] .= _("Daten wurden gel&ouml;scht.");
+        }
+
+        foreach ($cmsystems as $cms_type =>$data) {
+            if ($ELEARNING_INTERFACE_MODULES[$cms_type]) {
+                $output .= ELearningUtils::getCMSHeader($ELEARNING_INTERFACE_MODULES[$cms_type]["name"]);
+                $output .= "<table>";
+                $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
+                if (ELearningUtils::getConfigValue("ACTIVE", $cms_type)) {
+                    $output .= "<tr><td><img src=\"assets/images/on_small.gif\" border=\"0\"></td><td><b>". sprintf(_("Die Schnittstelle zum System %s ist aktiv."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</b></td></tr>";
+                    $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
+                }
+                elseif ($data["config"] < 1)
+                    $output .= "<tr><td><img src=\"assets/images/off_small_blank.gif\" border=\"0\"></td><td><i>". sprintf(_("Die Schnittstelle f&uuml;r das System %s wurde noch nicht eingerichtet."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
+                elseif ($data["config"] < 1)
+                    $output .= "<tr><td><img src=\"assets/images/off_small.gif\" border=\"0\"></td><td><i>". sprintf(_("Die Schnittstelle wurde noch nicht aktiviert."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
+
+                if ($data["accounts"])
+                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Stud.IP-User-Accounts sind mit Accounts im System %s verkn&uuml;pft."), $data["accounts"], $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</td></tr>";
+                if ($data["modules"])
+                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Objekte sind Stud.IP-Veranstaltungen oder -Einrichtungen zugeordnet."), $data["modules"]) . "</td></tr>";
+                if ($data["config"])
+                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Eintr&auml;ge in der config-Tabelle der Stud.IP-Datenbank."), $data["config"]) . "</td></tr>";
+                $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
+                $output .= "</table>";
+                $output .= ELearningUtils::getCMSFooter(($ELEARNING_INTERFACE_MODULES[$cms_type]["logo_file"] ? "<img src=\"".$ELEARNING_INTERFACE_MODULES[$cms_type]["logo_file"]."\" border=\"0\">" : $cms_type));
+            }
+            else {
+                $output .= ELearningUtils::getCMSHeader("<font color=FF0000> Unbekanntes System: " . $cms_type . "</font>");
+                $output .= "<form method=\"POST\" action=\"" . UrlHelper::getLink() . "\">";
+                $output .= "<table>";
+                $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
+                $output .= "<tr><td><img src=\"assets/images/x_transparent.gif\" border=\"0\"></td><td><i>".sprintf(_("F&uuml;r das System mit dem Index \"%s\" existieren keine Voreinstellungen in den Konfigurationsdateien mehr."), $cms_type) . "</i></td></tr>";
+                $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
+                $output .= "<tr><td colspan=\"2\"><b>". _("In der Stud.IP-Datenbank sind noch folgende Informationen zu diesem System gespeichert:") . "</b></td></tr>";
+                if ($data["accounts"])
+                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Stud.IP-User-Accounts sind mit externen Accounts mit dem Index \"%s\" verkn&uuml;pft."), $data["accounts"], $cms_type) . "</td></tr>";
+                if ($data["modules"])
+                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Objekte sind Stud.IP-Veranstaltungen oder -Einrichtungen zugeordnet."), $data["modules"]) . "</td></tr>";
+                if ($data["config"])
+                    $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Eintr&auml;ge in der config-Tabelle der Stud.IP-Datenbank."), $data["config"]) . "</td></tr>";
+                $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
+                $output .= "<tr><td align=\"center\" colspan=\"2\"><input type=\"hidden\" name=\"delete_cms\" value=\"".$cms_type."\"><input type=\"IMAGE\" " . makeButton("loeschen", "src") . " border=0 value=\"" . $cms_type . "\" name=\"delete\"></td></tr>";
+                $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
+                $output .= "</table>";
+                $output .= "</form>";
+                $output .= ELearningUtils::getCMSFooter("<br><img src=\"assets/images/ausruf.gif\" border=\"0\">");
+            }
+            $output .= "<br>";
+        }
+
+        return $output;
     }
 }
-
 ?>

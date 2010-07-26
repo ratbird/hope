@@ -69,7 +69,6 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
         } else {
             $messages['error'] = _("Die Lernmodulschnittstelle ist momentan nicht erreichbar.");
         }
-
     if ($messages["info"] != "")
     {
         echo MessageBox::info($messages["info"]);

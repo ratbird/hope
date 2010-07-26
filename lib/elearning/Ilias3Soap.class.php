@@ -23,14 +23,14 @@ class Ilias3Soap extends StudipSoapClient
     var $user_sid;
     var $user_type;
     var $soap_cache;
-    
+
     /**
     * constructor
     *
     * init class.
-    * @access 
+    * @access
     * @param string $cms system-type
-    */ 
+    */
     function Ilias3Soap($cms)
     {
         global $ELEARNING_INTERFACE_MODULES, $connected_cms;
@@ -42,9 +42,9 @@ class Ilias3Soap extends StudipSoapClient
         $this->loadCacheData($cms);
         $this->caching_active = false;
     }
-    
-    
-    
+
+
+
     /**
     * set usertype
     *
@@ -67,7 +67,7 @@ class Ilias3Soap extends StudipSoapClient
     function getSID()
     {
         if ($this->user_type == "admin")
-        {   
+        {
             if ($this->admin_sid == false)
                 $this->login();
 //          echo "a";
@@ -80,9 +80,9 @@ class Ilias3Soap extends StudipSoapClient
             echo "u";
             return $this->user_sid;
         }
-        return false;   
+        return false;
     }
-    
+
     /**
     * call soap-function
     *
@@ -106,7 +106,7 @@ class Ilias3Soap extends StudipSoapClient
             $result = $this->soap_cache[$index];
         }
         else
-        {   
+        {
             $result = parent::call($method, $params);
             // if Session is expired, re-login and try again
             if (($method != "login") AND $this->soap_client->fault AND ($this->faultstring == "Session not valid"))
@@ -147,7 +147,7 @@ class Ilias3Soap extends StudipSoapClient
     {
         return $this->caching_active;
     }
-    
+
     /**
     * set caching status
     *
@@ -160,7 +160,7 @@ class Ilias3Soap extends StudipSoapClient
         $this->caching_active = $bool_value;
 //      echo "SET:".$this->caching_active."<br>";
     }
-    
+
     /**
     * clear cache
     *
@@ -170,7 +170,7 @@ class Ilias3Soap extends StudipSoapClient
     function clearCache()
     {
         global $sess;
-        
+
         $this->soap_cache = "";
         $GLOBALS["cache_data"][$this->cms_type] = "";
         $sess->register("cache_data");
@@ -185,7 +185,7 @@ class Ilias3Soap extends StudipSoapClient
     function saveCacheData()
     {
         global $sess;
-        
+
         $GLOBALS["cache_data"][$this->cms_type] = $this->soap_cache;
         $sess->register("cache_data");
     }
@@ -200,17 +200,17 @@ class Ilias3Soap extends StudipSoapClient
     */
     function ParseXML($data)
     {
-        $xml_parser = new Ilias3ObjectXMLParser( utf8_encode($data) );
+        $xml_parser = new Ilias3ObjectXMLParser( studip_utf8encode($data) );
         $xml_parser->startParsing();
         return $this->utf8_decode_array_values($xml_parser->getObjectData());
     }
-    
+
     function utf8_decode_array_values($ar){
         if (is_array($ar)){
             $decoded = array();
             foreach($ar as $key => $value){
                 if (!is_array($value)){
-                    $decoded[$key] = utf8_decode($value);
+                    $decoded[$key] = studip_utf8decode($value);
                 } else {
                     $decoded[$key] = $this->utf8_decode_array_values($value);
                 }
@@ -220,7 +220,7 @@ class Ilias3Soap extends StudipSoapClient
             return null;
         }
     }
-    
+
     /**
     * login
     *
@@ -266,7 +266,7 @@ class Ilias3Soap extends StudipSoapClient
             );
         return $this->call('logout', $param);
     }
-    
+
 
 ///////////////////////////
 // OBJECT-FUNCTIONS //
@@ -302,7 +302,7 @@ class Ilias3Soap extends StudipSoapClient
                 if (is_array($object_data["references"]))
                 {
                     foreach($object_data["references"] as $ref_data)
-                        if ($ref_data["accessInfo"] == "granted" 
+                        if ($ref_data["accessInfo"] == "granted"
                         && (count($all_objects[$object_data["obj_id"]]["operations"]) < count($ref_data["operations"])))
                         {
                             $all_objects[$object_data["obj_id"]] = $object_data;
@@ -323,7 +323,7 @@ class Ilias3Soap extends StudipSoapClient
         return false;
 
     }
-    
+
     /**
     * get object by reference
     *
@@ -344,7 +344,7 @@ class Ilias3Soap extends StudipSoapClient
         $result = $this->call('getObjectByReference', $param);
         if ($result != false)
         {
-                    
+
             $objects = $this->parseXML($result);
             foreach($objects as $count => $object_data)
                 if (is_array($object_data["references"]))
@@ -396,7 +396,7 @@ class Ilias3Soap extends StudipSoapClient
         }
         return false;
     }
-    
+
     /**
     * get reference by title
     *
@@ -447,7 +447,7 @@ class Ilias3Soap extends StudipSoapClient
     $type = $object_data["type"];
     $title = utf8_encode($object_data["title"]);
     $description = utf8_encode($object_data["description"]);
-    
+
     $xml = "<!DOCTYPE Objects SYSTEM \"http://www.ilias.uni-koeln.de/download/dtd/ilias_object_0_1.dtd\">
 <Objects>
   <Object type=\"$type\">
@@ -467,7 +467,7 @@ class Ilias3Soap extends StudipSoapClient
             );
         return $this->call('addObject', $param);
     }
-    
+
     /**
     * delete object
     *
@@ -516,7 +516,7 @@ class Ilias3Soap extends StudipSoapClient
     */
     function getTreeChilds($ref_id, $types = "", $user_id = "")
     {
-        if ($types == "") 
+        if ($types == "")
             $types = array();
         $param = array(
             'sid' => $this->getSID(),
@@ -528,7 +528,7 @@ class Ilias3Soap extends StudipSoapClient
         $result = $this->call('getTreeChilds', $param);
         if ($result != false)
         {
-            
+
             $objects = $this->parseXML($result);
             foreach($objects as $count => $object_data)
                 if (is_array($object_data["references"]))
@@ -563,12 +563,12 @@ class Ilias3Soap extends StudipSoapClient
             'sid' => $this->getSID()
             );
         $result = $this->call('getOperations', $param);
-        if (is_array($result))  
+        if (is_array($result))
             foreach ($result as $operation_set)
                 $operations[$operation_set["operation"]] = $operation_set["ops_id"];
         return $operations;
     }
-    
+
     /**
     * get object tree operations
     *
@@ -595,7 +595,7 @@ class Ilias3Soap extends StudipSoapClient
         }
         return false;
     }
-    
+
     /**
     * get user roles
     *
@@ -660,7 +660,7 @@ class Ilias3Soap extends StudipSoapClient
     $type = "role";
     $title = utf8_encode($role_data["title"]);
     $description = utf8_encode($role_data["description"]);
-    
+
     $xml = "<!DOCTYPE Objects SYSTEM \"http://www.ilias.uni-koeln.de/download/dtd/ilias_object_0_1.dtd\">
 <Objects>
   <Object type=\"$type\">
@@ -681,10 +681,10 @@ class Ilias3Soap extends StudipSoapClient
         $result = $this->call('addRole', $param);
         if (is_array($result))
             return current($result);
-        else 
+        else
             return false;
     }
-    
+
     /**
     * add role from tremplate
     *
@@ -700,7 +700,7 @@ class Ilias3Soap extends StudipSoapClient
     $type = "role";
     $title = utf8_encode($role_data["title"]);
     $description = utf8_encode($role_data["description"]);
-    
+
     $xml = "<!DOCTYPE Objects SYSTEM \"http://www.ilias.uni-koeln.de/download/dtd/ilias_object_0_1.dtd\">
 <Objects>
   <Object type=\"$type\">
@@ -722,10 +722,10 @@ class Ilias3Soap extends StudipSoapClient
         $result = $this->call('addRoleFromTemplate', $param);
         if (is_array($result))
             return current($result);
-        else 
+        else
             return false;
     }
-    
+
     /**
     * delete user role entry
     *
@@ -784,7 +784,7 @@ class Ilias3Soap extends StudipSoapClient
            );
         return $this->call('grantPermissions', $param);
     }
-    
+
     /**
     * revoke permissions
     *
@@ -804,7 +804,7 @@ class Ilias3Soap extends StudipSoapClient
         return $this->call('revokePermissions', $param);
     }
 
-/////////////////////////   
+/////////////////////////
 // USER-FUNCTIONS //
 ///////////////////////
 
@@ -841,7 +841,7 @@ class Ilias3Soap extends StudipSoapClient
             );
         $result = $this->call('getUser', $param); // returns user-data-array
         /*
-        if (is_array($result))  
+        if (is_array($result))
             foreach($result as $key => $value)
                 $result[$key] = utf8_decode($result[$key]);
         */
@@ -861,7 +861,7 @@ class Ilias3Soap extends StudipSoapClient
     {
         foreach($user_data as $key => $value)
             $user_data[$key] = utf8_encode($user_data[$key]);
-            
+
         $param = array(
             'sid' => $this->getSID(),
             'user_data' => $user_data,
@@ -882,7 +882,7 @@ class Ilias3Soap extends StudipSoapClient
     {
         foreach($user_data as $key => $value)
             $user_data[$key] = utf8_encode($user_data[$key]);
-            
+
         $param = array(
             'sid' => $this->getSID(),
             'user_data' => $user_data
@@ -952,7 +952,7 @@ class Ilias3Soap extends StudipSoapClient
         else
             return true;
     }
-    
+
     /**
     * add course member
     *
@@ -987,7 +987,7 @@ class Ilias3Soap extends StudipSoapClient
     {
         foreach($course_data as $key => $value)
             $course_data[$key] = utf8_encode($course_data[$key]);
-            
+
         $xml = $this->getCourseXML($course_data);
         $param = array(
             'sid' => $this->getSID(),
@@ -997,7 +997,7 @@ class Ilias3Soap extends StudipSoapClient
         $crs_id = $this->call('addCourse', $param);
         return $crs_id;
     }
-    
+
     /**
     * get course-xml
     *

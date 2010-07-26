@@ -146,6 +146,7 @@ $EXTERN_SRI_ENABLE_BY_ROOT = FALSE;                         //only root allows t
 $EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG = FALSE;                        //free access to external pages (without the need of a configuration), independent of SRI settings above
 
 $SOAP_ENABLE = FALSE;
+$SOAP_USE_PHP5 = FALSE;
 
 $WEBSERVICES_ENABLE = FALSE;                            //Stud.IP module: webservices
 
@@ -160,6 +161,7 @@ $ELEARNING_INTERFACE_MODULES = array(
         "ABSOLUTE_PATH_SOAP" => "http://<your Ilias3 installation>/webservice/soap/server.php?wsdl",
         "CLASS_PREFIX" => "Ilias3",
         "auth_necessary" => true,
+        "USER_AUTO_CREATE" => false,
         "USER_PREFIX" => "studip_",
         "target_file" => "studip_referrer.php",
         "logo_file" => "assets/images/logos/ilias_logo.png",
@@ -174,6 +176,49 @@ $ELEARNING_INTERFACE_MODULES = array(
                         "glo" => array("name" => "ILIAS-Glossar", "icon" => "assets/images/icon-lern.gif"),
                         "tst" => array("name" => "ILIAS-Test", "icon" => "assets/images/icon-lern.gif")
                         ),
+        "global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
+        "roles" =>  array(
+                        "autor" => "4",
+                        "tutor" => "4",
+                        "dozent" => "4",
+                        "admin" => "4",
+                        "root" => "2"
+                        ),
+        "crs_roles" =>  array(
+                        "autor" => "member",
+                        "tutor" => "tutor",
+                        "dozent" => "admin",
+                        "admin" => "admin",
+                        "root" => "admin"
+                        )
+        )
+    );
+    
+$ELEARNING_INTERFACE_MODULES = array(
+    "ilias4" => array(
+        "name" => "ILIAS 4",
+        "ABSOLUTE_PATH_ELEARNINGMODULES" => "http://<your Ilias3 installation>/",
+        "ABSOLUTE_PATH_SOAP" => "http://<your Ilias3 installation>/webservice/soap/server.php?wsdl",
+        "CLASS_PREFIX" => "Ilias4",
+        "auth_necessary" => true,
+        "USER_AUTO_CREATE" => true,
+        "USER_PREFIX" => "",
+        "target_file" => "studip_referrer.php",
+        "logo_file" => "assets/images/logos/ilias_logo.png",
+        "soap_data" => array(
+                        "username" => "<username>",     //this credentials are used to communicate with your Ilias 3 installation over SOAP
+                        "password" => "<password>",
+                        "client" => "<ilias client id>"),
+        "types" => array(
+                   "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "assets/images/icon-lern.gif"),
+                   "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" => "assets/images/icon-lern.gif"),
+                   "lm" => array("name" => "ILIAS-Lerneinheit", "icon" => "assets/images/icon-lern.gif"),
+                   "glo" => array("name" => "ILIAS-Glossar", "icon" => "assets/images/icon-lern.gif"),
+                   "tst" => array("name" => "ILIAS-Test", "icon" => "assets/images/icon-lern.gif"),
+                   "svy" => array("name" => "ILIAS-Umfrage", "icon" => "assets/images/icon-lern.gif"),
+                   "exc" => array("name" => "ILIAS-&Uuml;bung", "icon" => "assets/images/icon-lern.gif"),
+                   "dbk" => array("name" => "ILIAS Digilib Book", "icon" => "assets/images/icon-lern.gif")
+                   ),
         "global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
         "roles" =>  array(
                         "autor" => "4",

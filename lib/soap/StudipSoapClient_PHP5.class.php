@@ -1,7 +1,5 @@
 <?
 # Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
 /**
 * Adapter for using php5 ext:soap with Ilias3Soap
 *
@@ -14,7 +12,7 @@ class StudipSoapClient
 {
     var $soap_client;
     var $error;
-    
+
     function StudipSoapClient($path)
     {
         $this->getCorrectedWsdl($path);
@@ -28,13 +26,14 @@ class StudipSoapClient
     function call($method, $params)
     {
         $this->faultstring = "";
+        $this->soap_client->_cookies = array();
         try{
             $result = $this->soap_client->__soapCall($method, $params);
         } catch  (SoapFault $fault){
             $this->faultstring = $fault->faultstring;
             if ($this->faultstring != "Session not valid")
                 $this->error .= "<hr><font size=\"-1\"><b>" . sprintf(_("SOAP-Fehler, Funktion \"%s\":"), $method) . "</b> " . $fault->faultstring . " (" .  $fault->faultcode . ")<br>".print_r($params,1).'</font><hr>';
-                echo $this->error;
+                error_log($this->error);
                 $this->soap_client->fault = true;
             return false;
         }
@@ -45,11 +44,11 @@ class StudipSoapClient
                 if (is_array($result[$index])){
                     //hmmm
                 } else {
-                    $result[$index] = utf8_decode($result[$index]);
+                    $result[$index] = studip_utf8decode($result[$index]);
                 }
             }
         } else {
-            $result = utf8_decode($result);
+            $result = studip_utf8decode($result);
         }
         $this->soap_client->fault = false;
         return $result;
@@ -64,7 +63,7 @@ class StudipSoapClient
         else
             return false;
     }
-    
+
     function getCorrectedWsdl($path){
         $correct_elements = array (
         0 => 'usr_id',
@@ -97,10 +96,10 @@ class StudipSoapClient
         27 => 'user_language',
         28 => 'import_id'
         );
-        
+
         //grmpf. !$this->cms_type == aufruf von admin_elearning_interface.php
         if(!$this->cms_type) @unlink($GLOBALS['TMP_PATH'] . '/' . md5($path) . '.wsdl');
-        
+
         if($path && !file_exists($GLOBALS['TMP_PATH'] . '/' . md5($path) . '.wsdl')){
             $wsdl = simplexml_load_file($path);
             $xsd = $wsdl->types->children('http://www.w3.org/2001/XMLSchema');

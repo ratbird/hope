@@ -140,6 +140,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
 
             echo ELearningUtils::getCMSHeader($connected_cms[$cms_select]->getName());
             echo "<br>\n";
+            echo ELearningUtils::getHeader(_("Suche"));
             echo ELearningUtils::getSearchfield(sprintf(_("Um im System %s nach Content-Modulen zu suchen, geben Sie einen Suchbegriff ein:"), $connected_cms[$cms_select]->getName()));
             echo "<br>\n";
             if (! ($searchresult_content_modules == false))
@@ -152,7 +153,6 @@ if ($ELEARNING_INTERFACE_ENABLE)
                 }
                 echo "<br>\n";
             }
-            echo ELearningUtils::getHeader(_("Suche"));
             if ( ( strlen( trim($search_key) ) > 2 ) AND ($searchresult_content_modules == false))
             echo MessageBox::info(sprintf( _("Es gibt im System %s zu diesem Suchbegriff keine Content-Module."),  $connected_cms[$cms_select]->getName()));
             echo ELearningUtils::getCMSFooter($connected_cms[$cms_select]->getLogo());

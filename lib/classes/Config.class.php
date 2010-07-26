@@ -234,15 +234,22 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         if(!$entry->type) {
             $entry->type = 'string';
         }
-        return $entry->store() ? $entry : null;
+        $ret = $entry->store() ? $entry : null;
+        if ($ret) {
+            $this->fetchData();
+        }
+        return $ret;
     }
-    
+
     function delete($field)
     {
         if (!$field) {
             throw new InvalidArgumentException("config fieldname is mandatory");
         }
         $deleted = ConfigEntry::deleteBySql("field=" . DbManager::get()->quote($field));
+        if ($deleted) {
+            $this->fetchData();
+        }
         return $deleted;
     }
 }

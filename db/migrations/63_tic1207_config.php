@@ -27,7 +27,12 @@ class Tic1207Config extends Migration
         $db->exec("UPDATE config SET description = 'Die Standardeinrichtung für Studiengruppen kann hier gesetzt werden.' WHERE field = 'STUDYGROUP_DEFAULT_INST'");
         $db->exec("UPDATE config SET description = 'Hier werden die globalen Einstellungen aller Studiengruppen hinterlegt.' WHERE field = 'STUDYGROUP_SETTINGS'");
         $db->exec("UPDATE config SET description = 'Hier werden die Nutzungsbedinungen der Studiengruppen hinterlegt.' WHERE field =  'STUDYGROUP_TERMS'");
-
+        $db->exec("UPDATE config SET `type` = 'string' WHERE `type` =  ''");
+		$db->exec("UPDATE config SET `type` = 'string'
+                   WHERE `field` LIKE  'ELEARNING_INTERFACE%'
+                   AND `field` <>  'ELEARNING_INTERFACE_ENABLE'
+                   AND `field` NOT LIKE 'ELEARNING_INTERFACE%ACTIVE'
+                   AND `type` = 'boolean'");
     }
 
     function down()

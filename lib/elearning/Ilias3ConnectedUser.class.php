@@ -23,14 +23,21 @@ class Ilias3ConnectedUser extends ConnectedUser
     * constructor
     *
     * init class.
-    * @access 
+    * @access
     * @param string $cms system-type
-    */ 
+    */
     function Ilias3ConnectedUser($cms, $user_id = false)
     {
         global $connected_cms, $perm;
 
         parent::ConnectedUser($cms, $user_id);
+        // create account automatically if it doesn't exist
+        if (! $this->isConnected() AND ($connected_cms[$this->cms_type]->USER_AUTO_CREATE == true))
+        {
+            $this->setPassword(md5(uniqid("4dfmjsnll")));
+            $this->newUser();
+            $this->readData();
+        }
         $this->roles = array($connected_cms[$cms]->roles[$perm->get_perm($this->studip_id)]);
     }
 
@@ -71,7 +78,7 @@ class Ilias3ConnectedUser extends ConnectedUser
     function getLoginData($username)
     {
         global $connected_cms;
-    
+
         $user_id = $connected_cms[$this->cms_type]->soap_client->lookupUser($username);
 
         if ($user_id == false)
@@ -87,7 +94,7 @@ class Ilias3ConnectedUser extends ConnectedUser
         $this->external_password = $user_data["passwd"];
         return true;
     }
-    
+
     /**
     * get crypted password
     *
@@ -143,7 +150,7 @@ class Ilias3ConnectedUser extends ConnectedUser
         $object_data["description"] = sprintf(_("Hier befinden sich die persönlichen Lernmodule des Users %s."), $this->getName());
         $object_data["type"] = "cat";
         $object_data["owner"] = $this->getId();
-        
+
         $cat = $connected_cms[$this->cms_type]->soap_client->getReferenceByTitle($object_data["title"]);
         if ($cat != false && $connected_cms[$this->cms_type]->soap_client->checkReferenceById($cat) )
         {
@@ -153,7 +160,7 @@ class Ilias3ConnectedUser extends ConnectedUser
         else
         {
             $this->category = $connected_cms[$this->cms_type]->soap_client->addObject($object_data, $connected_cms[$this->cms_type]->main_category_node_id);
-        }   
+        }
         if ($this->category != false)
             parent::setConnection( $this->getUserType() );
         else
@@ -175,7 +182,7 @@ class Ilias3ConnectedUser extends ConnectedUser
             $connected_cms[$this->cms_type]->soap_client->revokePermissions($role, $this->category);
         return true;
     }
-    
+
     /**
     * new user
     *
@@ -190,9 +197,9 @@ class Ilias3ConnectedUser extends ConnectedUser
         if ($this->getLoginData($this->login))
         {
             $messages["error"] .= sprintf(_("Es existiert bereits ein Account mit dem Benutzernamen \"%s\"."), $this->login) . "<br>\n";
-            return false;           
+            return false;
         }
-        
+
         // data for user-account in ILIAS 3
         $user_data["login"] = $this->login;
         $user_data["passwd"] = $this->external_password;
@@ -207,7 +214,7 @@ class Ilias3ConnectedUser extends ConnectedUser
         $user_data["active"] = 1;
         $user_data["approve_date"] = date('Y-m-d H:i:s');
         $user_data["accepted_agreement"] = true;
-        
+
         if ($connected_cms[$this->cms_type]->user_style != "")
             $user_data["user_style"] = $connected_cms[$this->cms_type]->user_style;
         if ($connected_cms[$this->cms_type]->user_skin != "")
@@ -224,7 +231,7 @@ class Ilias3ConnectedUser extends ConnectedUser
 //          $connected_cms[$this->cms_type]->soap_client->updatePassword($user_id, $user_data["passwd"]);
 
 //          $this->newUserCategory();
-            
+
             $this->setConnection(USER_TYPE_CREATED);
             return true;
         }
@@ -279,17 +286,17 @@ class Ilias3ConnectedUser extends ConnectedUser
     function setConnection($user_type)
     {
         global $connected_cms;
-        
+
         if ($connected_cms[$this->cms_type]->encrypt_passwords == "md5")
         {
 //          echo "PASSWORD-ENCRYPTION";
             $this->external_password = $this->getCryptedPassword( $this->external_password );
         }
-            
+
         $connected_cms[$this->cms_type]->soap_client->setCachingStatus(false);
         parent::setConnection($user_type);
     }
-    
+
     /**
     * get sid
     *

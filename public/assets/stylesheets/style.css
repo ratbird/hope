@@ -494,6 +494,11 @@ p.info {
     margin: 0px;
 }
 
+/* elements only displayed when printed */
+.print {
+    display: none;
+}
+
 /* --- Styles fuer printhead und printcontent ------------------------------- */
 td.printhead {
     background-image: url('../images/steelblau.jpg');

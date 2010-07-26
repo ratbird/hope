@@ -13,10 +13,10 @@ $title = $heading = $ids = array();
 // check, if at least one entry is visible
 $show = false;
 foreach ($entry as $element) :
-	$title[] = strip_tags($element['content']);
-	if ($element['title']) :
-		$heading[] = $element['title'];
-	endif;
+    $title[] = strip_tags($element['content']);
+    if ($element['title']) :
+        $heading[] = $element['title'];
+    endif;
     $ids[] = $element['id'];
     if ($element['visible']) $show = true;
 endforeach;
@@ -31,22 +31,22 @@ endforeach;
     <dl class="hover" style="height: <?= $height ?>px; 
         border: 1px solid <?= $entry[0]['color'] ?>; 
         background-image: url('<?= Assets::url('images/calendar/category'. $cat .'.jpg') ?>')">
-		<dt style="background-color: <?= $entry[0]['color'] ?>">
+        <dt style="background-color: <?= $entry[0]['color'] ?>">
             <?= $entry[0]['start_formatted'] ?> - <?= $entry[0]['end_formatted'] ?>, <b><?= implode(', ', $heading) ?></b>
-		</dt>
-		<dd> 
-			<? foreach ($entry as $element) : 
+        </dt>
+        <dd> 
+            <? foreach ($entry as $element) : 
                 if (!isset($element['visible']) || $element['visible']) : ?>
-    			<?= $element['content'] ?><br>
+                <?= $element['content'] ?><br>
                 <? elseif ($show_hidden) : ?>
-    			<span class="invisible_entry"><?= $element['content'] ?></span><br>
+                <span class="invisible_entry"><?= $element['content'] ?></span><br>
                 <? endif ?>
-			<? endforeach; /* the elements for this grouped entry */ ?>
-		</dd>
-	</dl>
+            <? endforeach; /* the elements for this grouped entry */ ?>
+        </dd>
+    </dl>
     </a>
 
-	<div class="snatch" style="display: none"><div> </div></div>
+    <div class="snatch" style="display: none"><div> </div></div>
 
     <div style="position: absolute; right: 0px; top: 0px;">
         <? if (is_array($entry['icons'])) foreach ($entry['icons'] as $icon) : ?>

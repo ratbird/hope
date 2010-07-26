@@ -17,27 +17,27 @@ define('DEFAULT_COLOR_VIRTUAL', $GLOBALS['PERS_TERMIN_KAT'][1]['color']);
 class CalendarScheduleModel
 {
 
-	/**
-	 * update an existing entry or -if $data['id'] is not set- create a new entry
-	 *
-	 * @param  mixed  $data
-	 */
-	static function storeEntry($data)
-	{
-		if ($data['id']) {     // update
-		    $stmt = DBManager::get()->prepare("UPDATE schedule
-			    SET start = ?, end = ?, day = ?, title = ?, content = ?, color = ?, user_id = ?
-    			WHERE id = ?");
-			$stmt->execute(array($data['start'], $data['end'], $data['day'], $data['title'],
-				$data['content'], $data['color'], $data['user_id'], $data['id']));
-		} else {
-			$stmt = DBManager::get()->prepare("INSERT INTO schedule
-				(start, end, day, title, content, color, user_id)
-				VALUES (?, ?, ?, ?, ?, ?, ?)");
-			$stmt->execute(array($data['start'], $data['end'], $data['day'], $data['title'],
-				$data['content'], $data['color'], $data['user_id']));
-		}
-	}
+    /**
+     * update an existing entry or -if $data['id'] is not set- create a new entry
+     *
+     * @param  mixed  $data
+     */
+    static function storeEntry($data)
+    {
+        if ($data['id']) {     // update
+            $stmt = DBManager::get()->prepare("UPDATE schedule
+                SET start = ?, end = ?, day = ?, title = ?, content = ?, color = ?, user_id = ?
+                WHERE id = ?");
+            $stmt->execute(array($data['start'], $data['end'], $data['day'], $data['title'],
+                $data['content'], $data['color'], $data['user_id'], $data['id']));
+        } else {
+            $stmt = DBManager::get()->prepare("INSERT INTO schedule
+                (start, end, day, title, content, color, user_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute(array($data['start'], $data['end'], $data['day'], $data['title'],
+                $data['content'], $data['color'], $data['user_id']));
+        }
+    }
 
     static function storeSeminarEntry($data)
     {
@@ -47,25 +47,25 @@ class CalendarScheduleModel
         $stmt->execute(array($data['id'], $GLOBALS['user']->id, $data['cycle_id'], $data['color']));
     }
 
-	/**
-	 * delete the entry with the submitted id, belonging to the current user
-	 *
-	 * @param  string  $id
-	 */
-	static function deleteEntry($id)
-	{
-		$stmt = DBManager::get()->prepare("DELETE FROM schedule
-			WHERE id = ? AND user_id = ?");
-		$stmt->execute(array($id, $GLOBALS['user']->id));
-	}
+    /**
+     * delete the entry with the submitted id, belonging to the current user
+     *
+     * @param  string  $id
+     */
+    static function deleteEntry($id)
+    {
+        $stmt = DBManager::get()->prepare("DELETE FROM schedule
+            WHERE id = ? AND user_id = ?");
+        $stmt->execute(array($id, $GLOBALS['user']->id));
+    }
 
     static function getScheduleEntries($user_id, $start_hour, $end_hour, $id = false)
     {
         $ret = array();
 
-		// fetch user-generated entries
+        // fetch user-generated entries
         if (!$id) {
-		    $stmt = DBManager::get()->prepare("SELECT * FROM schedule
+            $stmt = DBManager::get()->prepare("SELECT * FROM schedule
                 WHERE user_id = ? AND (
                     (start >= ? AND end <= ?)
                     OR (start <= ? AND end >= ?)
@@ -73,27 +73,27 @@ class CalendarScheduleModel
                 )");
             $start = $start_hour * 100;
             $end   = $end_hour   * 100;
-    		$stmt->execute(array($user_id, $start, $end, $start, $start, $end, $end));
+            $stmt->execute(array($user_id, $start, $end, $start, $start, $end, $end));
         } else {
-		    $stmt = DBManager::get()->prepare("SELECT * FROM schedule
+            $stmt = DBManager::get()->prepare("SELECT * FROM schedule
                 WHERE user_id = ? AND id = ?");
-    		$stmt->execute(array($user_id, $id));
+            $stmt->execute(array($user_id, $id));
         }
 
-		$entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
-		foreach($entries as $entry) {
+        $entries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach($entries as $entry) {
             $entry['start_formatted'] = sprintf("%02d", floor($entry['start'] / 100)) .':'. sprintf("%02d", floor($entry['start'] % 100));
             $entry['end_formatted'] = sprintf("%02d", floor($entry['end'] / 100)) .':'. sprintf("%02d", floor($entry['end'] % 100));
             $entry['title']   = htmlReady($entry['title']);
             $entry['content'] = htmlReady($entry['content']);
-    		$entry['start_hour']   = sprintf("%02d", floor($entry['start'] / 100));
-    		$entry['start_minute'] = sprintf("%02d", $entry['start'] % 100);
-    		$entry['end_hour']     = sprintf("%02d", floor($entry['end'] / 100));
-    		$entry['end_minute']   = sprintf("%02d", $entry['end'] % 100);
+            $entry['start_hour']   = sprintf("%02d", floor($entry['start'] / 100));
+            $entry['start_minute'] = sprintf("%02d", $entry['start'] % 100);
+            $entry['end_hour']     = sprintf("%02d", floor($entry['end'] / 100));
+            $entry['end_minute']   = sprintf("%02d", $entry['end'] % 100);
             $entry['onClick']      = "STUDIP.Schedule.showScheduleDetails('". $entry['id'] ."'); return false;";
 
             $ret[$entry['day']][] = $entry;
-		}
+        }
 
         return $ret;
     }
@@ -188,10 +188,10 @@ class CalendarScheduleModel
     static function getSeminarEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false, $seminar_id = false, $cycle_id = false)
     {
         // get all virtually added seminars
-		$stmt = DBManager::get()->prepare("SELECT * FROM schedule_seminare as c
-			LEFT JOIN seminare as s ON (s.Seminar_id = c.Seminar_id)
-			WHERE c.user_id = ? AND s.start_time = ?");
-		$stmt->execute(array($user_id, $semester['beginn']));
+        $stmt = DBManager::get()->prepare("SELECT * FROM schedule_seminare as c
+            LEFT JOIN seminare as s ON (s.Seminar_id = c.Seminar_id)
+            WHERE c.user_id = ? AND s.start_time = ?");
+        $stmt->execute(array($user_id, $semester['beginn']));
 
         while ($entry = $stmt->fetch()) {
             $seminars[$entry['seminar_id']] = array(
@@ -199,19 +199,19 @@ class CalendarScheduleModel
             );
         }
 
-		// fetch seminar-entries 
-		$stmt = DBManager::get()->prepare("SELECT * FROM seminar_user as su
-			LEFT JOIN seminare as s USING (Seminar_id)
-			WHERE su.user_id = ?  AND (s.start_time = ?
+        // fetch seminar-entries 
+        $stmt = DBManager::get()->prepare("SELECT * FROM seminar_user as su
+            LEFT JOIN seminare as s USING (Seminar_id)
+            WHERE su.user_id = ?  AND (s.start_time = ?
                 OR (s.start_time < ? AND s.duration_time = -1)
                 OR (s.start_time + s.duration_time >= ?))");
-		$stmt->execute(array($user_id, $semester['beginn'], $semester['beginn'], $semester['beginn']));
+        $stmt->execute(array($user_id, $semester['beginn'], $semester['beginn'], $semester['beginn']));
 
         while ($entry = $stmt->fetch()) {
             $seminars[$entry['Seminar_id']] = $entry;
         }
-		
-		if (is_array($seminars)) foreach ($seminars as $data) {
+        
+        if (is_array($seminars)) foreach ($seminars as $data) {
             $entries = self::getSeminarEntry($data['Seminar_id'], $user_id);
 
             foreach ($entries as $entry) {
@@ -221,9 +221,9 @@ class CalendarScheduleModel
                     $ret[$entry['day']][] = $entry;
                 }
             }
-		}
+        }
 
-		return $ret;
+        return $ret;
 
     }
 
@@ -231,18 +231,18 @@ class CalendarScheduleModel
     static function getSeminarEntriesForInstitute($user_id, $semester, $start_hour, $end_hour, $institute_id,
                                                   $show_hidden = false, $seminar_id = false, $cycle_id = false)
     {
-		// fetch seminar-entries 
-		$stmt = DBManager::get()->prepare("SELECT * FROM seminare as s
-			WHERE Institut_id = ? AND (start_time = ?
+        // fetch seminar-entries 
+        $stmt = DBManager::get()->prepare("SELECT * FROM seminare as s
+            WHERE Institut_id = ? AND (start_time = ?
                 OR (start_time < ? AND duration_time = -1)
                 OR (start_time + duration_time >= ?))");
-		$stmt->execute(array($institute_id, $semester['beginn'], $semester['beginn'], $semester['beginn']));
+        $stmt->execute(array($institute_id, $semester['beginn'], $semester['beginn'], $semester['beginn']));
 
         while ($entry = $stmt->fetch()) {
             $seminars[$entry['Seminar_id']] = $entry;
         }
-		
-		if (is_array($seminars)) foreach ($seminars as $data) {
+        
+        if (is_array($seminars)) foreach ($seminars as $data) {
             $entries = self::getSeminarEntry($data['Seminar_id'], $user_id);
 
             foreach ($entries as $entry) {
@@ -257,9 +257,9 @@ class CalendarScheduleModel
                     $ret[$entry['day']][] = $entry;
                 }
             }
-		}
+        }
 
-		return $ret;
+        return $ret;
     }
 
 
@@ -298,14 +298,14 @@ class CalendarScheduleModel
         return $entries;
     }
 
-	/**
-	 * return an array of entries in the schedule (personal ones and regular seminar-dates)
-	 *
-	 * @param  string  $user_id
-	 * @param  mixed   $semester  the data for the semester to be displayed
-	 */
-	static function getEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false)
-	{
+    /**
+     * return an array of entries in the schedule (personal ones and regular seminar-dates)
+     *
+     * @param  string  $user_id
+     * @param  mixed   $semester  the data for the semester to be displayed
+     */
+    static function getEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false)
+    {
         // merge the schedule and seminar-entries
         $entries = self::getScheduleEntries($user_id, $start_hour, $end_hour);
         $seminar = self::getSeminarEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden);
@@ -316,7 +316,7 @@ class CalendarScheduleModel
         }
 
         return $entries;
-	}
+    }
 
     static function adminBind($seminar_id, $cycle_id, $visible = true) {
         $stmt = DBManager::get()->prepare("SELECT * FROM schedule_seminare

@@ -10,7 +10,7 @@
 <div style="width: 100%;">
 <script>
 if (!STUDIP.CURRENTPAGE) {
-	STUDIP.CURRENTPAGE = {};
+    STUDIP.CURRENTPAGE = {};
 }
 STUDIP.CURRENTPAGE.selectUser = function (username, name) {
     location.href = STUDIP.URLHelper.getURL("about.php", {"username": username});

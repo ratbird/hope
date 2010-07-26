@@ -17,44 +17,44 @@ require_once 'lib/classes/SemesterData.class.php';
 
 class Calendar_InstscheduleController extends AuthenticatedController
 {
-	
-	/**
-	 * delivers the style-sheet used for printing.
-	 *
-	 * @param  int  $whole_height  the overall-height of the timetable
-	 * @param  int  $entry_height  the height of one hour in the timetable
-	 */
-	function cssprint_action($whole_height, $entry_height) {
-		header('Content-Type: text/css');
-		$this->whole_height = $whole_height;
-		$this->entry_height = $entry_height;
-		$this->render_template('calendar/print_style');
-		page_close();
-	}
+    
+    /**
+     * delivers the style-sheet used for printing.
+     *
+     * @param  int  $whole_height  the overall-height of the timetable
+     * @param  int  $entry_height  the height of one hour in the timetable
+     */
+    function cssprint_action($whole_height, $entry_height) {
+        header('Content-Type: text/css');
+        $this->whole_height = $whole_height;
+        $this->entry_height = $entry_height;
+        $this->render_template('calendar/print_style');
+        page_close();
+    }
 
-	/**
-	 * delivers the style-sheet used for displaying the timetable.
-	 *
-	 * @param  int  $whole_height  the overall-height of the timetable
-	 * @param  int  $entry_height  the height of one hour in the timetable
-	 */
-	function css_action($whole_height, $entry_height) {
-		header('Content-Type: text/css');
-		$this->whole_height = $whole_height;
-		$this->entry_height = $entry_height;
-		$this->render_template('calendar/stylesheet');
-		page_close();
-	}
+    /**
+     * delivers the style-sheet used for displaying the timetable.
+     *
+     * @param  int  $whole_height  the overall-height of the timetable
+     * @param  int  $entry_height  the height of one hour in the timetable
+     */
+    function css_action($whole_height, $entry_height) {
+        header('Content-Type: text/css');
+        $this->whole_height = $whole_height;
+        $this->entry_height = $entry_height;
+        $this->render_template('calendar/stylesheet');
+        page_close();
+    }
 
-	/**
-	 * this action is the main action of the schedule-controller, setting the environment for the timetable,
-	 * accepting a comma-separated list of days.
-	 *
-	 * @param  string  a list of an arbitrary mix of the numbers 0-6, separated with a comma (e.g. 1,2,3,4,5 (for Monday to Friday, the default))
-	 */
-	function index_action($days = false)
-	{
-		global $_include_additional_header, $my_schedule_settings;
+    /**
+     * this action is the main action of the schedule-controller, setting the environment for the timetable,
+     * accepting a comma-separated list of days.
+     *
+     * @param  string  a list of an arbitrary mix of the numbers 0-6, separated with a comma (e.g. 1,2,3,4,5 (for Monday to Friday, the default))
+     */
+    function index_action($days = false)
+    {
+        global $_include_additional_header, $my_schedule_settings;
 
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
@@ -81,13 +81,13 @@ class Calendar_InstscheduleController extends AuthenticatedController
         }
 
         // load semester-data and current semester
-		$semdata = new SemesterData();
-		$this->semesters = $semdata->getAllSemesterData();
+        $semdata = new SemesterData();
+        $this->semesters = $semdata->getAllSemesterData();
 
         if (Request::get('semester_id')) {
             $this->current_semester = $semdata->getSemesterData(Request::get('semester_id'));
         } else {
-    		$this->current_semester = $semdata->getCurrentSemesterData();
+            $this->current_semester = $semdata->getCurrentSemesterData();
         }
 
         $this->entries = (array)CalendarInstscheduleModel::getInstituteEntries($GLOBALS['user']->id,
@@ -102,45 +102,45 @@ class Calendar_InstscheduleController extends AuthenticatedController
             $this->show_entry = $this->flash['entry'];
         }
 
-		if (!$days) {
-			if (Request::getArray('days')) {
-				$this->days = array_keys(Request::getArray('days'));
-			} else {
+        if (!$days) {
+            if (Request::getArray('days')) {
+                $this->days = array_keys(Request::getArray('days'));
+            } else {
                 $this->days = array(1,2,3,4,5,6,0);
-			}
-		} else {
-			$this->days = explode(',', $days);
-		}
+            }
+        } else {
+            $this->days = explode(',', $days);
+        }
 
-		$this->controller = $this;
-		$this->calendar_view = new CalendarView($this->entries, 'instschedule');
-		$this->calendar_view->setHeight(40 + (20 * Request::get('zoom', 0)));
-		$this->calendar_view->setDays($this->days);
+        $this->controller = $this;
+        $this->calendar_view = new CalendarView($this->entries, 'instschedule');
+        $this->calendar_view->setHeight(40 + (20 * Request::get('zoom', 0)));
+        $this->calendar_view->setDays($this->days);
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
         $this->calendar_view->setReadOnly();
-		$this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
+        $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
 
         if (Request::get('printview')) {
-    		$_include_additional_header .= '<link rel="stylesheet" href="'
-    			. $this->url_for('calendar/instschedule/cssprint/'. $this->calendar_view->getOverallHeight() 
-    			. '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen,print" />' . "\n";
-    			
-    		$_include_additional_header .= '<link rel="stylesheet" href="'
-    			. URLHelper::getLink('assets/stylesheets/style_print.css')
-    			.'" type="text/css" media="screen,print" />' . "\n";
+            $_include_additional_header .= '<link rel="stylesheet" href="'
+                . $this->url_for('calendar/instschedule/cssprint/'. $this->calendar_view->getOverallHeight() 
+                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen,print" />' . "\n";
+                
+            $_include_additional_header .= '<link rel="stylesheet" href="'
+                . URLHelper::getLink('assets/stylesheets/style_print.css')
+                .'" type="text/css" media="screen,print" />' . "\n";
         } else {
-    		$_include_additional_header = '<link rel="stylesheet" href="'
-    			. $this->url_for('calendar/instschedule/css/'. $this->calendar_view->getOverallHeight() 
-    			. '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen" />' . "\n";
-    		$_include_additional_header .= '<link rel="stylesheet" href="'
-    			. $this->url_for('calendar/instschedule/cssprint/'. $this->calendar_view->getOverallHeight() 
-    			. '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="print" />' . "\n";
-    			
-    		$_include_additional_header .= '<link rel="stylesheet" href="'
-    			. URLHelper::getLink('assets/stylesheets/style_print.css')
-    			.'" type="text/css" media="print" />' . "\n";
+            $_include_additional_header = '<link rel="stylesheet" href="'
+                . $this->url_for('calendar/instschedule/css/'. $this->calendar_view->getOverallHeight() 
+                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen" />' . "\n";
+            $_include_additional_header .= '<link rel="stylesheet" href="'
+                . $this->url_for('calendar/instschedule/cssprint/'. $this->calendar_view->getOverallHeight() 
+                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="print" />' . "\n";
+                
+            $_include_additional_header .= '<link rel="stylesheet" href="'
+                . URLHelper::getLink('assets/stylesheets/style_print.css')
+                .'" type="text/css" media="print" />' . "\n";
         }
-	}
+    }
 
     function groupedentry_action($start, $end, $seminars, $ajax = false) {
         $this->show_entry = array(

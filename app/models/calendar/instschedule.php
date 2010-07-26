@@ -54,18 +54,18 @@ class CalendarInstscheduleModel
 
     static function getInstituteEntries($user_id, $semester, $start_hour, $end_hour, $institute_id)
     {
-		// fetch seminar-entries 
-		$stmt = DBManager::get()->prepare("SELECT * FROM seminare as s
-			WHERE Institut_id = ? AND (start_time = ?
+        // fetch seminar-entries 
+        $stmt = DBManager::get()->prepare("SELECT * FROM seminare as s
+            WHERE Institut_id = ? AND (start_time = ?
                 OR (start_time < ? AND duration_time = -1)
                 OR (start_time + duration_time >= ?))");
-		$stmt->execute(array($institute_id, $semester['beginn'], $semester['beginn'], $semester['beginn']));
+        $stmt->execute(array($institute_id, $semester['beginn'], $semester['beginn'], $semester['beginn']));
 
         while ($entry = $stmt->fetch()) {
             $seminars[$entry['Seminar_id']] = $entry;
         }
-		
-		if (is_array($seminars)) foreach ($seminars as $data) {
+        
+        if (is_array($seminars)) foreach ($seminars as $data) {
             $entries = self::getSeminarEntry($data['Seminar_id'], $user_id);
 
             foreach ($entries as $entry) {
@@ -81,8 +81,8 @@ class CalendarInstscheduleModel
                     $ret[$entry['day']][] = $entry;
                 }
             }
-		}
+        }
 
-		return $ret;
+        return $ret;
     }
 }

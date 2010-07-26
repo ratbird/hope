@@ -114,7 +114,7 @@ function makeButton($name, $mode = "img", $tooltip = false, $inputname = false) 
             break;
         
         case 'input':
-        	$inputname || $inputname = $name;
+            $inputname || $inputname = $name;
             $tag = "\n" . sprintf('<input class="button" type="image" src="%s" %s '.
                                   'name="%s" >',
                                 $url, $tooltext, $inputname);

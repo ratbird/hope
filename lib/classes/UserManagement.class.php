@@ -727,42 +727,42 @@ class UserManagement
 
         // delete documents of this user
         if ($delete_documents) {
-	        $temp_count = 0;
-	        $query = "SELECT dokument_id FROM dokumente WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-	        $this->db->query($query);
-	        while ($this->db->next_record()) {
-	            if (delete_document($this->db->f("dokument_id")))
-	                $temp_count ++;
-	        }
-	        if ($temp_count) {
-	            $this->msg .= "info§" . sprintf(_("%s Dokumente gel&ouml;scht."), $temp_count) . "§";
-	        }
+            $temp_count = 0;
+            $query = "SELECT dokument_id FROM dokumente WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
+            $this->db->query($query);
+            while ($this->db->next_record()) {
+                if (delete_document($this->db->f("dokument_id")))
+                    $temp_count ++;
+            }
+            if ($temp_count) {
+                $this->msg .= "info§" . sprintf(_("%s Dokumente gel&ouml;scht."), $temp_count) . "§";
+            }
 
-	        // delete empty folders of this user
-	        $temp_count = 0;
-	        $query = "SELECT folder_id FROM folder WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "' ORDER BY mkdate DESC";
-	        $this->db->query($query);
-	        while ($this->db->next_record()) {
-	            $query = "SELECT count(*) AS count FROM folder WHERE range_id = '".$this->db->f("folder_id")."'";
-	            $this->db2->query($query);
-	            $this->db2->next_record();
-	            if (!$this->db2->f("count") && !doc_count($this->db->f("folder_id"))) {
-	                $query = "DELETE FROM folder WHERE folder_id ='".$this->db->f("folder_id")."'";
-	                $this->db2->query($query);
-	                $temp_count += $this->db2->affected_rows();
-	            }
-	        }
-	        if ($temp_count) {
-	            $this->msg .= "info§" . sprintf(_("%s leere Ordner gel&ouml;scht."), $temp_count) . "§";
-	        }
+            // delete empty folders of this user
+            $temp_count = 0;
+            $query = "SELECT folder_id FROM folder WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "' ORDER BY mkdate DESC";
+            $this->db->query($query);
+            while ($this->db->next_record()) {
+                $query = "SELECT count(*) AS count FROM folder WHERE range_id = '".$this->db->f("folder_id")."'";
+                $this->db2->query($query);
+                $this->db2->next_record();
+                if (!$this->db2->f("count") && !doc_count($this->db->f("folder_id"))) {
+                    $query = "DELETE FROM folder WHERE folder_id ='".$this->db->f("folder_id")."'";
+                    $this->db2->query($query);
+                    $temp_count += $this->db2->affected_rows();
+                }
+            }
+            if ($temp_count) {
+                $this->msg .= "info§" . sprintf(_("%s leere Ordner gel&ouml;scht."), $temp_count) . "§";
+            }
 
-	        // folder left?
-	        $query = "SELECT count(*) AS count FROM folder WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
-	        $this->db->query($query);
-	        $this->db->next_record();
-	        if ($this->db->f("count")) {
-	            $this->msg .= sprintf("info§" . _("%s Ordner konnten nicht gel&ouml;scht werden, da sie noch Dokumente anderer BenutzerInnen enthalten.") . "§", $this->db->f("count"));
-	        }
+            // folder left?
+            $query = "SELECT count(*) AS count FROM folder WHERE user_id='" . $this->user_data['auth_user_md5.user_id'] . "'";
+            $this->db->query($query);
+            $this->db->next_record();
+            if ($this->db->f("count")) {
+                $this->msg .= sprintf("info§" . _("%s Ordner konnten nicht gel&ouml;scht werden, da sie noch Dokumente anderer BenutzerInnen enthalten.") . "§", $this->db->f("count"));
+            }
         }
         // kill all the ressources that are assigned to the user (and all the linked or subordinated stuff!)
         if ($GLOBALS['RESOURCES_ENABLE']) {

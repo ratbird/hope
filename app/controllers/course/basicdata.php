@@ -36,13 +36,13 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->course_id = $SessSemName[1];
         
         if ((Request::get('section') === 'details') || ($this->flash['section'] === 'details')) {
-        	//Navigation im Admin-Bereich:
+            //Navigation im Admin-Bereich:
             $this->section = 'details';
             UrlHelper::bindLinkParam('section', $section);
             Navigation::activateItem('/course/admin/details');
         } else {
             //Navigation in der Veranstaltung:
-        	Navigation::activateItem('/admin/course/details');
+            Navigation::activateItem('/admin/course/details');
             $this->section = 'admin';
         }
         
@@ -334,7 +334,7 @@ class Course_BasicdataController extends AuthenticatedController {
                 if (substr($req_name, 0, 7) === "course_") {
                     $varname = substr($req_name, 7);
                     if ($varname === "name" && !$req_value) {
-                    	$this->msg[] = array("error", _("Name der Veranstaltung darf nicht leer sein."));
+                        $this->msg[] = array("error", _("Name der Veranstaltung darf nicht leer sein."));
                     } elseif ($sem->{$varname} != $req_value) {
                         $sem->{$varname} = $req_value;
                         $changemade = true;

@@ -10,22 +10,22 @@ endforeach;
 ?>
 
 <div class="schedule_entry <?= (isset($entry['visible']) && !$entry['visible']) ? 'invisible_entry' : '' ?>" style="top: <?= $top ?>px; height: <?= $height ?>px; width: <?= $width ?>%<?= ($col > 0) ? ';left:'. ($col * $width) .'%' : '' ?>" title="<?= htmlReady($entry['title']) ?>">
-	<a href="<?= ($entry['url']) ? $entry['url'] : $controller->url_for('calendar/'. $context .'/entry/'. $entry['id']) ?>"
+    <a href="<?= ($entry['url']) ? $entry['url'] : $controller->url_for('calendar/'. $context .'/entry/'. $entry['id']) ?>"
         <?= $entry['onClick'] ? 'onClick="' . $entry['onClick'] . '"' : '' ?>>
     <!-- for safari5 we need to set the height for the dl as well -->
-	<dl class="hover" style="height: <?= $height - 2 ?>px; 
+    <dl class="hover" style="height: <?= $height - 2 ?>px; 
         border: 1px solid <?= $entry['color'] ?>;
         background-image: url('<?= Assets::url('images/calendar/category'. $cat .'.jpg') ?>')">
-		<dt style="background-color: <?= $entry['color'] ?>;">
-			<?= $entry['start_formatted'] ?> - <?= $entry['end_formatted'] ?><?= ($entry['title']) ? ', <b>'. $entry['title'] .'</b>' : '' ?>
-		</dt>
-		<dd> 
-			<?= $entry['content'] ?><br>
-		</dd>
-	</dl>
-	</a>
+        <dt style="background-color: <?= $entry['color'] ?>;">
+            <?= $entry['start_formatted'] ?> - <?= $entry['end_formatted'] ?><?= ($entry['title']) ? ', <b>'. $entry['title'] .'</b>' : '' ?>
+        </dt>
+        <dd> 
+            <?= $entry['content'] ?><br>
+        </dd>
+    </dl>
+    </a>
 
-	<div class="snatch" style="display: none"><div> </div></div>
+    <div class="snatch" style="display: none"><div> </div></div>
 
     <div id="schedule_icons">
         <? if (is_array($entry['icons'])) foreach ($entry['icons'] as $icon) : ?>

@@ -17,44 +17,44 @@ require_once 'lib/classes/SemesterData.class.php';
 
 class Calendar_ScheduleController extends AuthenticatedController
 {
-	
-	/**
-	 * delivers the style-sheet used for printing.
-	 *
-	 * @param  int  $whole_height  the overall-height of the timetable
-	 * @param  int  $entry_height  the height of one hour in the timetable
-	 */
-	function cssprint_action($whole_height, $entry_height) {
-		header('Content-Type: text/css');
-		$this->whole_height = $whole_height;
-		$this->entry_height = $entry_height;
-		$this->render_template('calendar/print_style');
-		page_close();
-	}
+    
+    /**
+     * delivers the style-sheet used for printing.
+     *
+     * @param  int  $whole_height  the overall-height of the timetable
+     * @param  int  $entry_height  the height of one hour in the timetable
+     */
+    function cssprint_action($whole_height, $entry_height) {
+        header('Content-Type: text/css');
+        $this->whole_height = $whole_height;
+        $this->entry_height = $entry_height;
+        $this->render_template('calendar/print_style');
+        page_close();
+    }
 
-	/**
-	 * delivers the style-sheet used for displaying the timetable.
-	 *
-	 * @param  int  $whole_height  the overall-height of the timetable
-	 * @param  int  $entry_height  the height of one hour in the timetable
-	 */
-	function css_action($whole_height, $entry_height) {
-		header('Content-Type: text/css');
-		$this->whole_height = $whole_height;
-		$this->entry_height = $entry_height;
-		$this->render_template('calendar/stylesheet');
-		page_close();
-	}
+    /**
+     * delivers the style-sheet used for displaying the timetable.
+     *
+     * @param  int  $whole_height  the overall-height of the timetable
+     * @param  int  $entry_height  the height of one hour in the timetable
+     */
+    function css_action($whole_height, $entry_height) {
+        header('Content-Type: text/css');
+        $this->whole_height = $whole_height;
+        $this->entry_height = $entry_height;
+        $this->render_template('calendar/stylesheet');
+        page_close();
+    }
 
-	/**
-	 * this action is the main action of the schedule-controller, setting the environment for the timetable,
-	 * accepting a comma-separated list of days.
-	 *
-	 * @param  string  a list of an arbitrary mix of the numbers 0-6, separated with a comma (e.g. 1,2,3,4,5 (for Monday to Friday, the default))
-	 */
-	function index_action($days = false)
-	{
-		global $_include_additional_header, $my_schedule_settings;
+    /**
+     * this action is the main action of the schedule-controller, setting the environment for the timetable,
+     * accepting a comma-separated list of days.
+     *
+     * @param  string  a list of an arbitrary mix of the numbers 0-6, separated with a comma (e.g. 1,2,3,4,5 (for Monday to Friday, the default))
+     */
+    function index_action($days = false)
+    {
+        global $_include_additional_header, $my_schedule_settings;
 
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
@@ -86,9 +86,9 @@ class Calendar_ScheduleController extends AuthenticatedController
         if ($this->flash['show_hidden']) $show_hidden = true;
 
         // load semester-data and current semester
-		$semdata = new SemesterData();
-		$this->semesters = $semdata->getAllSemesterData();
-		$this->current_semester = $semdata->getCurrentSemesterData();
+        $semdata = new SemesterData();
+        $this->semesters = $semdata->getAllSemesterData();
+        $this->current_semester = $semdata->getCurrentSemesterData();
 
         // convert old settings, if necessary (mein_stundenplan.php)
         if (!$my_schedule_settings['converted']) {
@@ -116,7 +116,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
 
         if ($inst_mode) {
-    		$this->entries = CalendarScheduleModel::getInstituteEntries($GLOBALS['user']->id, $this->current_semester,
+            $this->entries = CalendarScheduleModel::getInstituteEntries($GLOBALS['user']->id, $this->current_semester,
                 $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $institute_id, $show_hidden);
 
             $GLOBALS['HELP_KEYWORD'] = "Basis.MyStudIPStundenplan";
@@ -125,10 +125,10 @@ class Calendar_ScheduleController extends AuthenticatedController
         } else {
             $GLOBALS['HELP_KEYWORD'] = "Basis.MyStudIPStundenplan";
             $GLOBALS['CURRENT_PAGE'] = _("Mein Stundenplan");
-		    Navigation::activateItem('/calendar/schedule');
+            Navigation::activateItem('/calendar/schedule');
 
             // get the entries to be displayed in the schedule
-    		$this->entries = CalendarScheduleModel::getEntries($GLOBALS['user']->id, $this->current_semester,
+            $this->entries = CalendarScheduleModel::getEntries($GLOBALS['user']->id, $this->current_semester,
                 $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $show_hidden);
         }
 
@@ -156,78 +156,78 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         }
 
-		if (!$days) {
-			if (Request::getArray('days')) {
-				$this->days = array_keys(Request::getArray('days'));
-			} else {
+        if (!$days) {
+            if (Request::getArray('days')) {
+                $this->days = array_keys(Request::getArray('days'));
+            } else {
                 $this->days = $my_schedule_settings['glb_days'];
-			}
-		} else {
-			$this->days = explode(',', $days);
-		}
+            }
+        } else {
+            $this->days = explode(',', $days);
+        }
 
-		$this->controller = $this;
-		$this->calendar_view = new CalendarView($this->entries, 'schedule');
-		$this->calendar_view->setHeight(40 + (20 * Request::get('zoom', 0)));
-		$this->calendar_view->setDays($this->days);
+        $this->controller = $this;
+        $this->calendar_view = new CalendarView($this->entries, 'schedule');
+        $this->calendar_view->setHeight(40 + (20 * Request::get('zoom', 0)));
+        $this->calendar_view->setDays($this->days);
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
 
         if ($inst_mode) {
-		    $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
+            $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
         }
 
         if (Request::get('printview')) {
-    		$_include_additional_header .= '<link rel="stylesheet" href="'
-    			. $this->url_for('calendar/schedule/cssprint/'. $this->calendar_view->getOverallHeight() 
-    			. '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen,print" />' . "\n";
-    			
-    		$_include_additional_header .= '<link rel="stylesheet" href="'
-    			. URLHelper::getLink('assets/stylesheets/style_print.css')
-    			.'" type="text/css" media="screen,print" />' . "\n";
+            $_include_additional_header .= '<link rel="stylesheet" href="'
+                . $this->url_for('calendar/schedule/cssprint/'. $this->calendar_view->getOverallHeight() 
+                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen,print" />' . "\n";
+                
+            $_include_additional_header .= '<link rel="stylesheet" href="'
+                . URLHelper::getLink('assets/stylesheets/style_print.css')
+                .'" type="text/css" media="screen,print" />' . "\n";
         } else {
-    		$_include_additional_header = '<link rel="stylesheet" href="'
-    			. $this->url_for('calendar/schedule/css/'. $this->calendar_view->getOverallHeight() 
-    			. '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen" />' . "\n";
-    		$_include_additional_header .= '<link rel="stylesheet" href="'
-    			. $this->url_for('calendar/schedule/cssprint/'. $this->calendar_view->getOverallHeight() 
-    			. '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="print" />' . "\n";
-    			
-    		$_include_additional_header .= '<link rel="stylesheet" href="'
-    			. URLHelper::getLink('assets/stylesheets/style_print.css')
-    			.'" type="text/css" media="print" />' . "\n";
+            $_include_additional_header = '<link rel="stylesheet" href="'
+                . $this->url_for('calendar/schedule/css/'. $this->calendar_view->getOverallHeight() 
+                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen" />' . "\n";
+            $_include_additional_header .= '<link rel="stylesheet" href="'
+                . $this->url_for('calendar/schedule/cssprint/'. $this->calendar_view->getOverallHeight() 
+                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="print" />' . "\n";
+                
+            $_include_additional_header .= '<link rel="stylesheet" href="'
+                . URLHelper::getLink('assets/stylesheets/style_print.css')
+                .'" type="text/css" media="print" />' . "\n";
         }
 
         $this->show_hidden    = $show_hidden;
         $this->inst_mode      = $inst_mode;
-	}
+    }
 
 
-	/**
-	 * this action is called whenever a new entry shall be modified or added to the schedule
-	 *
-	 * @param  string  $id  optional, if id given, the entry with this id is updated
-	 */
-	function addEntry_action( $id = false )
-	{
-		if ($id) {
-			$data['id'] = $id;
-		}
+    /**
+     * this action is called whenever a new entry shall be modified or added to the schedule
+     *
+     * @param  string  $id  optional, if id given, the entry with this id is updated
+     */
+    function addEntry_action( $id = false )
+    {
+        if ($id) {
+            $data['id'] = $id;
+        }
 
         $error = false;
 
-		if (Request::get('hour') || Request::get('day')) {
-			$data['start']   = Request::int('hour') * 100;
-			$data['end']     = (Request::int('hour')  + 1) * 100;
-			$data['day']     = Request::int('day');
+        if (Request::get('hour') || Request::get('day')) {
+            $data['start']   = Request::int('hour') * 100;
+            $data['end']     = (Request::int('hour')  + 1) * 100;
+            $data['day']     = Request::int('day');
 
             // validate the submitted data
             if ($data['start'] >= $data['end'] || Request::int('hour') < 0 || Request::int('hour') > 23) {
                 $error = true;
             }
-		} else {
-			$data['start'] = (Request::int('entry_start_hour') * 100) + Request::int('entry_start_minute');
-			$data['end']   = (Request::int('entry_end_hour') * 100) + Request::int('entry_end_minute');
-			$data['day']   = Request::int('entry_day');
+        } else {
+            $data['start'] = (Request::int('entry_start_hour') * 100) + Request::int('entry_start_minute');
+            $data['end']   = (Request::int('entry_end_hour') * 100) + Request::int('entry_end_minute');
+            $data['day']   = Request::int('entry_day');
 
             if ($data['start'] >= $data['end']
                 || Request::int('entry_start_hour')   < 0 || Request::int('entry_start_hour')   > 23
@@ -240,7 +240,7 @@ class Calendar_ScheduleController extends AuthenticatedController
 
 
 
-		}
+        }
 
         if ($error) {
             $this->flash['messages'] = array('error'. chr(167) ._("Eintrag konnte nicht gespeichert werden, da die Start- und/oder Endzeit ungültigt war!"));
@@ -256,19 +256,19 @@ class Calendar_ScheduleController extends AuthenticatedController
             CalendarScheduleModel::storeEntry($data);
         }
 
-		$this->redirect('calendar/schedule');
-	}
+        $this->redirect('calendar/schedule');
+    }
 
 
-	/**
-	 * this action keeps the entry of the submitted_id and enables displaying of the entry-dialog.
-	 * If no id is submitted, an empty entry_dialog is displayed.
-	 *
-	 * @param  string  $id  the id of the entry to edit (if any), false otherwise.
-	 */
-	function entry_action($id, $cycle_id = false)
-	{
-		$this->flash['entry'] = array(
+    /**
+     * this action keeps the entry of the submitted_id and enables displaying of the entry-dialog.
+     * If no id is submitted, an empty entry_dialog is displayed.
+     *
+     * @param  string  $id  the id of the entry to edit (if any), false otherwise.
+     */
+    function entry_action($id, $cycle_id = false)
+    {
+        $this->flash['entry'] = array(
             'id' => $id,
             'cycle_id' => $cycle_id
         );
@@ -278,7 +278,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
 
         $this->redirect('calendar/schedule/');
-	}
+    }
 
 
     function entryajax_action($id, $cycle_id = false)
@@ -312,23 +312,23 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
     }
 
-	/**
-	 * delete the entry of the submitted id (only entry belonging to the current
-	 * use can be deleted)
-	 *
-	 * @param  string  $id  the id of the entry to delete
-	 */
-	function delete_action($id) 
-	{
-		CalendarScheduleModel::deleteEntry($id);
-		$this->redirect('calendar/schedule');
-	}
+    /**
+     * delete the entry of the submitted id (only entry belonging to the current
+     * use can be deleted)
+     *
+     * @param  string  $id  the id of the entry to delete
+     */
+    function delete_action($id) 
+    {
+        CalendarScheduleModel::deleteEntry($id);
+        $this->redirect('calendar/schedule');
+    }
 
-	/**
-	 * store the color-settings for the seminar
-	 *
-	 * @param  string  $seminar_id
-	 */
+    /**
+     * store the color-settings for the seminar
+     *
+     * @param  string  $seminar_id
+     */
     function editseminar_action($seminar_id, $cycle_id)
     {
         $data = array(
@@ -337,7 +337,7 @@ class Calendar_ScheduleController extends AuthenticatedController
             'color'    => Request::get('entry_color')
         );
 
-		CalendarScheduleModel::storeSeminarEntry($data);
+        CalendarScheduleModel::storeSeminarEntry($data);
 
         $this->redirect('calendar/schedule');
     }
@@ -351,7 +351,7 @@ class Calendar_ScheduleController extends AuthenticatedController
                 'color'    => false
             );
 
-	    	CalendarScheduleModel::storeSeminarEntry($data);
+            CalendarScheduleModel::storeSeminarEntry($data);
         }
 
         $this->redirect('calendar/schedule');
@@ -359,7 +359,7 @@ class Calendar_ScheduleController extends AuthenticatedController
 
 
     function adminbind_action($seminar_id, $cycle_id, $visible, $ajax = false) {
-		CalendarScheduleModel::adminBind($seminar_id, $cycle_id, $visible);
+        CalendarScheduleModel::adminBind($seminar_id, $cycle_id, $visible);
 
         if (!$ajax) {
             $this->redirect('calendar/schedule');
@@ -369,7 +369,7 @@ class Calendar_ScheduleController extends AuthenticatedController
     }
 
     function unbind_action($seminar_id, $cycle_id = false, $ajax = false) {
-		CalendarScheduleModel::unbind($seminar_id, $cycle_id);
+        CalendarScheduleModel::unbind($seminar_id, $cycle_id);
 
         if (!$ajax) {
             $this->redirect('calendar/schedule');
@@ -379,7 +379,7 @@ class Calendar_ScheduleController extends AuthenticatedController
     }
 
     function bind_action($seminar_id, $cycle_id, $ajax = false) {
-		CalendarScheduleModel::bind($seminar_id, $cycle_id);
+        CalendarScheduleModel::bind($seminar_id, $cycle_id);
 
         if (Request::get('show_hidden')) {
             $this->flash['show_hidden'] = true;

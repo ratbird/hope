@@ -146,19 +146,19 @@ if (count($_kill_user)) {
     }
     ?>
 <tr class="steel2">
-	<td colspan="5" align="right">
-	<div>
-	<label for="delete_documents"><?=_("Dokumente der Nutzer löschen:")?></label>
+    <td colspan="5" align="right">
+    <div>
+    <label for="delete_documents"><?=_("Dokumente der Nutzer löschen:")?></label>
     <input style="vertical-align:middle" type="checkbox" checked name="delete_documents" id="delete_documents" value="1">
-	</div>
-	<div>
-	<label for="send_email"><?=_("Benachrichtigung per Email verschicken:")?></label>
-	<input style="vertical-align:middle" type="checkbox" checked name="send_email" id="send_email" value="1">
-	</div>
-	<div>
-	<?=makeButton('loeschen', "input",  _("Ausgewählte Nutzeraccounts löschen"), 'kill_accounts')?>
-	</div>
-	</td>
+    </div>
+    <div>
+    <label for="send_email"><?=_("Benachrichtigung per Email verschicken:")?></label>
+    <input style="vertical-align:middle" type="checkbox" checked name="send_email" id="send_email" value="1">
+    </div>
+    <div>
+    <?=makeButton('loeschen', "input",  _("Ausgewählte Nutzeraccounts löschen"), 'kill_accounts')?>
+    </div>
+    </td>
 </tr>
     <?
     echo '</table></div></form>';

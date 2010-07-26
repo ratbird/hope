@@ -33,11 +33,11 @@ include('lib/seminar_open.php'); // initialise Stud.IP-Session
 // -- here you have to put initialisations for the current page
 
 if ($druck) {
-    self::removeStylesheet('style.css');
-    self::addStylesheet('style_print.css');
+    PageLayout::removeStylesheet('style.css');
+    PageLayout::addStylesheet('style_print.css');
 } elseif (($dump_id) || ($forum_dump_id) || ($wiki_dump_id)) {
-    self::removeStylesheet('style.css');
-    self::addStylesheet('style_dump.css');
+    PageLayout::removeStylesheet('style.css');
+    PageLayout::addStylesheet('style_dump.css');
 }
 PageLayout::setHelpKeyword("Basis.Archiv");
 PageLayout::setTitle(_("Archiv"));

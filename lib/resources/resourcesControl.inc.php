@@ -169,8 +169,8 @@ include ("$RELATIVE_PATH_RESOURCES/views/page_intros.inc.php");
 Kopf der Ausgabe
 /*****************************************************************************/
 if (isset($_REQUEST['print_view'])){
-    self::removeStylesheet('style.css');
-    self::addStylesheet('style_print.css'); // use special stylesheet for printing
+    PageLayout::removeStylesheet('style.css');
+    PageLayout::addStylesheet('style_print.css'); // use special stylesheet for printing
 }
 
 include ('lib/include/html_head.inc.php');

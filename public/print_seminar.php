@@ -34,8 +34,8 @@ if (!isset($SessSemName[0]) || $SessSemName[0] == "") {
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
-self::removeStylesheet('style.css');
-self::addStylesheet('style_print.css'); // use special stylesheet for printing
+PageLayout::removeStylesheet('style.css');
+PageLayout::addStylesheet('style_print.css'); // use special stylesheet for printing
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head

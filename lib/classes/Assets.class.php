@@ -257,7 +257,7 @@ class Assets {
    *   stylesheet_path('style') => /stylesheets/style.css
    */
   static function stylesheet_path($source) {
-    return Assets::compute_public_path($source, 'stylesheets', 'css');
+    return Assets::compute_public_path($source, 'stylesheets', 'css')."?2.0";
   }
 
 

@@ -2620,7 +2620,7 @@ if ($level == 2)
                         "WHERE inst_perms = 'dozent' " .
                             $clause .
                             "AND (username LIKE :input OR Vorname LIKE :input OR Nachname LIKE :input) " .
-                        "ORDER BY Nachname");
+                        "ORDER BY Nachname", sprintf(_("%s auswählen"), get_title_for_status('dozent', 1, $seminar_type)));
                 print QuickSearch::get("add_doz", $Dozentensuche)
                             ->render();
                 ?>
@@ -2676,7 +2676,7 @@ if ($level == 2)
                         print _("Vertretung hinzuf&uuml;gen");
                         print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_dep\">";
 
-                        $deputysearch = new PermissionSearch('username', '', '', array('permission' => getValidDeputyPerms()));
+                        $deputysearch = new PermissionSearch('username', _("Vertretung auswählen"), 'username', array('permission' => getValidDeputyPerms()));
                         print QuickSearch::get("add_dep", $deputysearch)
                                 ->render();
                         ?>
@@ -2758,11 +2758,13 @@ if ($level == 2)
                         print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_tut\">";
 
                         $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
-                        foreach($sem_create_data["sem_bet_inst"] as $val) {
-                            $clause.=",'$val'";
+                        if ($sem_create_data["sem_bet_inst"]) {
+                            foreach($sem_create_data["sem_bet_inst"] as $val) {
+                                $clause.=",'$val'";
+                            }
                         }
                         $clause.=") ";
-                        $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ".
+                        $Tutorensuche = new SQLSearch("SELECT DISTINCT username, ".
                             $_fullname_sql['full_rev'] ." AS fullname " .
                             "FROM user_inst " .
                                 "LEFT JOIN auth_user_md5 USING (user_id) " .
@@ -2770,8 +2772,8 @@ if ($level == 2)
                             "WHERE inst_perms in ('dozent', 'tutor') " .
                                 $clause .
                                 "AND (username LIKE :input OR Vorname LIKE :input OR Nachname LIKE :input) " .
-                            "ORDER BY Nachname");
-                        print QuickSearch::get("add_tut", $Dozentensuche)
+                            "ORDER BY Nachname", sprintf(_("%s auswählen"), get_title_for_status('tutor', 1, $seminar_type)));
+                        print QuickSearch::get("add_tut", $Tutorensuche)
                                 ->render();
                         ?>
                         <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>

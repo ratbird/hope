@@ -76,7 +76,6 @@ div#barBottomshadow {
     background-image: url('../images/header_schatten.png');
 }
 
-
 div#barTopFont {
 	position: absolute;
 	top: 10px;
@@ -136,9 +135,10 @@ div#header {
 
 div#barTopMenu {
 	position: absolute;
-	top: 48px;
+	top: 45px;
 	left: 0px;
 	text-align: right;
+    z-index: 3;
 }
 
 div#barTopMenu ul {
@@ -152,7 +152,17 @@ div#barTopMenu li {
 	list-style-type: none;
 	font-size: 9pt;
 	font-weight: bold;
-	padding: 0px 3px;
+	padding: 0 3px;
+    min-width: 64px;
+    display: block;
+}
+
+div#barTopMenu li div {
+    font-size:12px; 
+    z-index:2; 
+    background-position: top center; 
+    background-repeat: no-repeat; 
+    display: block;
 }
 
 div#barTopMenu li:hover {
@@ -160,8 +170,10 @@ div#barTopMenu li:hover {
 }
 
 div#barTopMenu a {
+    display: block;
 	list-style-type: none;
 	color: #7387ac;
+	padding-top: 34px;
 }
 
 div#barTopMenu a:hover {

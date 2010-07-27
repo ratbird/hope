@@ -23,10 +23,9 @@
                 }
                 ?>
                 <li>
-                <div style="font-size:12px; z-index:2; line-height:90%; padding-bottom:3px">
+                <div style="background-image: url('<?= $image['src'] ?>'); " title="<?= $image['title'] ?>">
                 <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" <?= $accesskey_attr ?>>
-                <img <? foreach ($image as $key => $value) printf('%s="%s" ', $key, htmlReady($value)) ?>>
-                <br>
+                <!-- <img <? foreach ($image as $key => $value) printf('%s="%s" ', $key, htmlReady($value)) ?>> -->
                 <?= htmlReady($nav->getTitle()) ?>
                 </a></div>
                 </li>
@@ -88,7 +87,7 @@
               ?>
               <input type="hidden" name="search_sem_sem" value="<?= $search_semester_nr ?>">
               <input type="hidden" name="search_sem_qs_choose" value="title_lecturer_number">
-              <input class="quicksearchbutton" type="image" src="<?= Assets::url('images/quicksearch_button.png ') ?>" name="search_sem_do_search" value="OK" title="<?= sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)) ?>">
+              <input class="quicksearchbutton" type="image" src="<?= Assets::url('images/icons/16/white/search.png') ?>" name="search_sem_do_search" value="OK" title="<?= sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)) ?>">
             </form>
             </li>
             <? endif ?>

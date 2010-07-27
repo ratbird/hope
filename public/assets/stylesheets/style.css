@@ -982,13 +982,13 @@ div.clear {
 }
 
 #tabs2 li {
-    background: url("../images/pfeilweiss2.gif") no-repeat left top;
-    padding-left: 10px;
+    background: url("../images/pfeilweiss2.gif") no-repeat left center;
+    padding-left: 16px;
     margin-left: 1.5em;
 }
 
 #tabs2 li.current {
-    background: url("../images/forumrot3.gif") no-repeat left top;
+    background: url("../images/forumrot3.gif") no-repeat left center;
 }
 
 
@@ -1135,33 +1135,33 @@ div.messagebox_info {
     color: #000000;
     border-color: #4B6FCB;
     background-color: #d8e3fc;
-    background-image: url("../images/icons/icon_info.png");
+    background-image: url("../images/messagebox/info.png");
 }
 
 div.messagebox_success {
     color: #000000;
     border-color: #4B8847;
     background-color: #dcf1da;
-    background-image: url("../images/icons/icon_success.png");
+    background-image: url("../images/messagebox/success.png");
 }
 
 div.messagebox_error {
     color: #000000;
     border-color: #C74039;
     background-color: #ffdddc;
-    background-image: url("../images/icons/icon_error.png");
+    background-image: url("../images/messagebox/error.png");
 }
 
 div.messagebox_exception {
     color: #D8000C;
     background-color: #ffbaba;
-    background-image: url("../images/icons/icon_exception.png");
+    background-image: url("../images/messagebox/exception.png");
 }
 
 div.messagebox_modal {
     color: #000000;
     background-color: #f3e180;
-    background-image: url("../images/icons/icon_modal.png");
+    background-image: url("../images/messagebox/question.png");
     margin: -8px 8px 8px -8px;
 }
 
@@ -1186,14 +1186,14 @@ div.messagebox .messagebox_buttons a {
     *display: inline; /* IE star hack */
 }
 div.messagebox .messagebox_buttons a.close {
-  background-image: url("../images/icons/cross_inv.png");
+  background-image: url("../images/messagebox/cross_inv.png");
 }
 div.messagebox .messagebox_buttons a.details {
-  background-image: url("../images/icons/minimize_inv.png");
+  background-image: url("../images/messagebox/minimize_inv.png");
 }
 
 div.messagebox.details_hidden .messagebox_buttons a.details {
-  background-image: url("../images/icons/maximize_inv.png");
+  background-image: url("../images/messagebox/maximize_inv.png");
 }
 div.messagebox.details_hidden .messagebox_details {
   height: 0;

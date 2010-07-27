@@ -22,11 +22,11 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                     <tr align="center" valign="top">
                         <th width="2%" colspan="2" nowrap="nowrap" align="center">
                             <a href="gruppe.php">
-                                <?= Assets::img('gruppe.gif', tooltip2(_("Gruppe ändern"))) ?>
+                                <?= Assets::img('icons/16/white/group.png', tooltip2(_("Gruppe ändern"))) ?>
                             </a>
                         </th>
                         <th width="85%" align="left"><?= _("Name") ?></th>
-                        <th width="10%"><b><?= _("Inhalt") ?></b></th>
+                        <th width="10%" align="left"><b><?= _("Inhalt") ?></b></th>
                         <th width="3%"></th>
                     </tr>
                     <?= $this->render_partial("meine_seminare/_group") ?>
@@ -106,7 +106,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
 
                             <td width="3%" class="<?= $cssSw->getClass() ?>" align="center">
                                 <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('auswahl' => $wait['seminar_id'], 'cmd' => 'suppose_to_kill_admission')) ?>">
-                                    <?= Assets::img("logout_seminare.gif", tooltip2(_("aus der Veranstaltung abmelden"))) ?>
+                                    <?= Assets::img('icons/16/grey/door-leave.png', tooltip2(_("aus der Veranstaltung abmelden"))) ?>
                                 </a>
                             </td>
                         </tr>
@@ -160,7 +160,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                     </a>
                                 </td>
 
-                                <td class="<?= $cssSw->getClass() ?>" align="left" nowrap>
+                                <td class="<?= $cssSw->getClass() ?>" align="left" nowrap="nowrap">
 
                                     <? print_seminar_content($instid, $values, "institut"); ?>
 
@@ -168,10 +168,11 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
 
                                         <a href="<?= !$auth->auth['jscript'] ? 'chat_online.php' : '#' ?>"
                                            onClick="return open_chat(<?= $chat_info[$instid]['is_active'] ? 'false' : "'$instid'" ?>);">
-                                            <?= chat_get_chat_icon($chat_info[$instid]['chatter'], $chat_invs[$chat_info[$instid]['chatuniqid']], $chat_info[$instid]['is_active'],true) ?>
+                                            <?= Assets::img("icons/16/grey/chat.png") ?>
+                                            <? /*= chat_get_chat_icon($chat_info[$instid]['chatter'], $chat_invs[$chat_info[$instid]['chatuniqid']], $chat_info[$instid]['is_active'],true)*/ ?>
                                         </a>
                                     <? } else { ?>
-                                        <?= Assets::img("icon-leer.gif", array('size' => '15@17')) ?>
+                                        <?= Assets::img("icon-leer.gif", array('size' => '16')) ?>
                                     <? } ?>
 
                                 </td>
@@ -179,12 +180,12 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                 <? if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] && $values['status'] == 'user') { ?>
                                     <td class="<?= $cssSw->getClass() ?>" align="center">
                                         <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('auswahl' => $instid, 'cmd' => 'inst_kill')) ?>">
-                                            <?= Assets::img('logout_seminare.gif', tooltip2(_("aus der Einrichtung austragen"))) ?>
+                                            <?= Assets::img('icons/16/grey/door-leave.png', tooltip2(_("aus der Einrichtung austragen"))) ?>
                                         </a>
                                     </td>
                                 <? } else { ?>
                                     <td class="'<?= $cssSw->getClass() ?>" align="center">
-                                        <?= Assets::img('blank.gif', array('size' => '19@17')) ?>
+                                        <?= Assets::img('blank.gif', array('size' => '16')) ?>
                                     </td>
                                 <? } ?>
                             </tr>

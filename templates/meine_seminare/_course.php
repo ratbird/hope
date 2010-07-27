@@ -61,19 +61,11 @@ foreach ($group_members as $member) {
                     else {
                         $infotext .= _("Um die Veranstaltung sichtbar zu machen, wenden Sie sich an eineN der zuständigen AdministratorInnen.");
                     }
-
                 ?>
-
-                    <font size="-1">
-                        <?= _("(versteckt)") ?>
-                        <?= Assets::img("info.gif", tooltip2($infotext, TRUE, TRUE)) ?>
-                    </font>
-
+                        <?= _("[versteckt]") ?>
+                        <?= Assets::img('icons/16/grey/info_circle.png', tooltip2($infotext, TRUE, TRUE)) ?>
                 <? } ?>
-
             </td>
-
-
             <td class="<?= $cssSw->getClass() ?>" align="left" nowrap>
                 <? print_seminar_content($semid, $values); ?>
 
@@ -81,10 +73,11 @@ foreach ($group_members as $member) {
 
                     <a href="<?= !$auth->auth['jscript'] ? 'chat_online.php' : '#' ?>"
                        onClick="return open_chat(<?= $chat_info[$semid]['is_active'] ? 'false' : "'$semid'" ?>);">
-                        <?= chat_get_chat_icon($chat_info[$semid]['chatter'], $chat_invs[$chat_info[$semid]['chatuniqid']], $chat_info[$semid]['is_active'],true) ?>
+                        <?= Assets::img("icons/16/grey/chat.png") ?>
+                        <? /*= chat_get_chat_icon($chat_info[$semid]['chatter'], $chat_invs[$chat_info[$semid]['chatuniqid']], $chat_info[$semid]['is_active'],true)*/ ?>
                     </a>
                 <? } else { ?>
-                    <?= Assets::img("icon-leer.gif", array('size' => '15@17')) ?>
+                    <?= Assets::img("blank.gif", array('size' => '16')) ?>
                 <? } ?>
 
             </td>
@@ -100,7 +93,7 @@ foreach ($group_members as $member) {
                 ?>
                 <td class="<?= $cssSw->getClass() ?>" align="center">
                     <a href="<?= UrlHelper::getUrl($course_url) ?>">
-                        <?= Assets::img("minikey", array("size" => "15@17") + tooltip2(_("Veranstaltung administrieren"))) ?>
+                        <?= Assets::img('icons/16/grey/admin.png', array("size" => "16") + tooltip2(_("Veranstaltung administrieren"))) ?>
                     </a>
                 </td>
 
@@ -108,7 +101,7 @@ foreach ($group_members as $member) {
 
                 <td class="<?= $cssSw->getClass() ?>" align="center" nowrap>
                     <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('auswahl' => $semid, 'cmd' => 'no_kill')) ?>">
-                        <?= Assets::img("logout_seminare_no.gif", tooltip2(_("Das Abonnement ist bindend. Bitte wenden Sie sich an die Dozentin oder den Dozenten."))) ?>
+                        <?= Assets::img('icons/16/grey/lock-locked.png', tooltip2(_("Das Abonnement ist bindend. Bitte wenden Sie sich an die Dozentin oder den Dozenten."))) ?>
                     </a>
                 </td>
 
@@ -116,7 +109,7 @@ foreach ($group_members as $member) {
 
                 <td class="<?= $cssSw->getClass() ?>" align="center" nowrap>
                     <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('auswahl' => $semid, 'cmd' => 'suppose_to_kill')) ?>">
-                        <?= Assets::img("logout_seminare.gif", tooltip2(_("aus der Veranstaltung abmelden"))) ?>
+                        <?= Assets::img('icons/16/grey/door-leave.png', tooltip2(_("aus der Veranstaltung abmelden"))) ?>
                     </a>
                 </td>
             <? } ?>

@@ -982,13 +982,13 @@ div.clear {
 }
 
 #tabs2 li {
-    background: url("../images/pfeilweiss2.gif") no-repeat left center;
+    background: url("../images/icons/16/grey/arr_1right.png") no-repeat left center;
     padding-left: 16px;
     margin-left: 1.5em;
 }
 
 #tabs2 li.current {
-    background: url("../images/forumrot3.gif") no-repeat left center;
+    background: url("../images/icons/16/red/arr_1right.png") no-repeat left center;
 }
 
 

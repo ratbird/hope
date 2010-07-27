@@ -146,7 +146,7 @@ global $SEM_TYPE;
 
                                 <td class="<?= $class ?>" align="right">
                                     <a href="<?= URLHelper::getLink('seminar_main.php', array('auswahl' => $semid, 'redirect_to' => 'adminarea_start.php', 'new_sem' => 'TRUE')) ?>">
-                                        <?= Assets::img('admin.gif', tooltip2(_("Veranstaltungsdaten bearbeiten"))) ?>
+                                        <?= Assets::img('icons/16/grey/admin.png', tooltip2(_("Veranstaltungsdaten bearbeiten"))) ?>
                                     </a>
                                 </td>
                             </tr>

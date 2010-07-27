@@ -2,25 +2,19 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-/*
-meine_seminare.php - Anzeige der eigenen Seminare (anhaengig vom Status)
-Copyright (C) 2000 Stefan Suchi <suchi@gmx.de>, Ralf Stockmann <rstockm@gwdg.de>
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
-
+/**
+ * meine_seminare.php - Anzeige der eigenen Seminare (anhaengig vom Status)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Stefan Suchi <suchi@gmx.de>
+ * @author      Ralf Stockmann <rstockm@gwdg.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
 
 require '../lib/bootstrap.php';
 
@@ -36,34 +30,37 @@ global $SEM_CLASS,
 
 ob_start(); //Outputbuffering für maximal Performance
 
-function print_seminar_content ($semid, $my_obj_values, $type = 'seminar') {
-
-  foreach (words('forum files news scm literature schedule wiki elearning vote') as $key) {
-    $navigation[$key] = $my_obj_values[$key];
-  }
-
-  foreach (PluginEngine::getPlugins('StandardPlugin', $semid) as $plugin) {
-    $navigation[] = $plugin->getIconNavigation($semid, $my_obj_values['visitdate']);
-  }
-
-  foreach ($navigation as $key => $nav) {
-    if (isset($nav) && $nav->isVisible(true)) {
-        // need to use strtr() here to deal with seminar_main craziness
-        $url = $type.'_main.php?auswahl='.$semid.'&redirect_to='.strtr($nav->getURL(), '?', '&');
-        printf('&nbsp; <a href="%s"><img ', htmlspecialchars($url));
-        foreach ($nav->getImage() as $key => $value) {
-            printf('%s="%s" ', $key, htmlReady($value));
-        }
-        echo '></a>';
-    } else if (is_string($key)) {
-        $width = $key == 'wiki' ? 20 : ($key == 'elearning' ? 18 : 13);
-        echo '&nbsp; '.Assets::img('icon-leer.gif', array('width' => $width, 'height' => 17));
+/**
+ *
+ * @param unknown_type $semid
+ * @param unknown_type $my_obj_values
+ * @param unknown_type $type
+ */
+function print_seminar_content($semid, $my_obj_values, $type = 'seminar')
+{
+    foreach (words('forum files news scm literature schedule wiki vote elearning') as $key) {
+        $navigation[$key] = $my_obj_values[$key];
     }
-  }
 
-  echo "&nbsp;";
+    foreach (PluginEngine::getPlugins('StandardPlugin', $semid) as $plugin) {
+        $navigation[] = $plugin->getIconNavigation($semid, $my_obj_values['visitdate']);
+    }
 
-} // Ende function print_seminar_content
+    foreach ($navigation as $key => $nav) {
+        if (isset($nav) && $nav->isVisible(true)) {
+            // need to use strtr() here to deal with seminar_main craziness
+            $url = $type.'_main.php?auswahl='.$semid.'&redirect_to='.strtr($nav->getURL(), '?', '&');
+            printf('<a href="%s"><img ', htmlspecialchars($url));
+            foreach ($nav->getImage() as $key => $value) {
+                printf('%s="%s" ', $key, htmlReady($value));
+            }
+            echo '></a>';
+        } else if (is_string($key)) {
+            echo Assets::img('blank.gif', array('width' => 16, 'height' => 16));
+        }
+        echo ' ';
+    }
+}
 
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
@@ -393,24 +390,24 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         $infobox = array    (
             array  ("kategorie"  => _("Information:"),
                 "eintrag" => array  (
-                    array ( "icon" => "ausruf_small.gif",
+                    array ( "icon" => 'icons/16/black/info.png',
                                     "text"  => $anzahltext
                     )
                 )
             ),
             array  ("kategorie" => _("Veranstaltungen:"),
                 "eintrag" => array  (
-                    array    (  "icon" => "suche2.gif",
+                    array    (  "icon" => 'icons/16/black/search.png',
                                         "text"  => sprintf(_("Um weitere Veranstaltungen in Ihre pers&ouml;nliche Auswahl aufzunehmen, nutzen Sie bitte die %sSuchfunktion%s"), "<a href=\"sem_portal.php\">", "</a>")
                     ),
-                    array    (  "icon" => "admin.gif",
+                    array    (  "icon" => 'icons/16/black/admin.png',
                                         "text"  => sprintf(_("Um Veranstaltungen anzulegen, nutzen Sie bitte den %sVeranstaltungs-Assistenten%s"), "<a href=\"admin_seminare_assi.php?new_session=TRUE\">", "</a>")
                     )
                 )
             ),
             array  ("kategorie" => _("Einrichtungen:"),
                 "eintrag" => array  (
-                    array    (  "icon" => "cont_res1.gif",
+                    array    (  "icon" => 'icons/16/black/institute.png',
                                         "text"  => sprintf(_("Um Einrichtungen zu suchen und sich Informationen anzeigen zu lassen, nutzen Sie die %sEinrichtungssuche%s."), "<a href=\"institut_browse.php\">", "</a>")
                     )
                 )
@@ -425,20 +422,20 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         $infobox = array    (
             array  ("kategorie"  => _("Information:"),
                 "eintrag" => array  (
-                    array ( "icon" => "ausruf_small.gif",
+                    array ( "icon" => 'icons/16/black/info.png',
                                     "text"  => $anzahltext
                     )
                 )
             ),
             array  ("kategorie" => _("Aktionen:"),
                 "eintrag" => array  (
-                    array    (  "icon" => "suche2.gif",
+                    array    (  "icon" => 'icons/16/black/search.png',
                                         "text"  => sprintf(_("Um weitere Veranstaltungen in Ihre pers&ouml;nliche Auswahl aufzunehmen, nutzen Sie bitte die %sSuchfunktion%s"), "<a href=\"sem_portal.php\">", "</a>")
                     ),
-                    array    (  "icon" => "cont_res1.gif",
+                    array    (  "icon" => 'icons/16/black/institute.png',
                                         "text"  => sprintf(_("Um Einrichtungen zu suchen und sich Informationen anzeigen zu lassen, nutzen Sie die %sEinrichtungssuche%s."), "<a href=\"institut_browse.php\">", "</a>")
                     ),
-                    array    (  "icon" => "meinesem.gif",
+                    array    (  "icon" => 'icons/16/black/institute.png',
                                         "text"  => sprintf(_("Wenn Sie weitere Einrichtungen in ihre pers&ouml;nliche Auswahl aufnehmen m&ouml;chten, k&ouml;nnen sie sich hier %szuordnen%s."), "<a href=\"edit_about.php?view=Studium#einrichtungen\">", "</a>")
                     )
                 )
@@ -447,13 +444,13 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
 
     $infobox[] = array('kategorie' => _("Einstellungen:"),
-                    'eintrag' => array(array("icon" => "gruppe.gif",
+                    'eintrag' => array(array("icon" => 'icons/16/black/group.png',
                                                 "text"  => sprintf(
                                                 _("Gruppierung der angezeigten Veranstaltungen %s&auml;ndern%s."),
                                                 "<a href=\"gruppe.php\">", "</a>")
                                                 )));
     if (get_config('MAIL_NOTIFICATION_ENABLE')){
-        $infobox[count($infobox)-1]['eintrag'][] = array(   'icon' => 'cont_nachricht_pfeil.gif',
+        $infobox[count($infobox)-1]['eintrag'][] = array(   'icon' => 'icons/16/black/mail.png',
                                                             'text' => sprintf(_("Benachrichtigung über neue Inhalte %sanpassen%s."),
                                                                     '<a href="sem_notification.php">', '</a>'));
     }

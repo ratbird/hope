@@ -4,60 +4,71 @@
 # Lifter003: TODO
 require_once("lib/classes/StudipDocumentTree.class.php");
 
-function get_group_names($group_field, $groups){
+/**
+ *
+ * @param unknown_type $group_field
+ * @param unknown_type $groups
+ */
+function get_group_names($group_field, $groups)
+{
     global $SEM_TYPE, $SEM_CLASS;
     $groupcount = 1;
-    if ($group_field == 'sem_tree_id'){
+    if ($group_field == 'sem_tree_id') {
         $the_tree = TreeAbstract::GetInstance("StudipSemTree", array("build_index" => true));
     }
-    if ($group_field == 'sem_number'){
+    if ($group_field == 'sem_number') {
         $all_semester = SemesterData::GetSemesterArray();
     }
-    foreach ($groups as $key => $value){
-            switch ($group_field){
-                    case 'sem_number':
-                    $ret[$key] = $all_semester[$key]['name'];
-                    break;
+    foreach ($groups as $key => $value) {
+        switch ($group_field){
+            case 'sem_number':
+            $ret[$key] = $all_semester[$key]['name'];
+            break;
 
-                    case 'sem_tree_id':
-                    if ($the_tree->tree_data[$key]) {
-                        //$ret[$key] = $the_tree->getShortPath($key);
-                        $ret[$key][0] = $the_tree->tree_data[$key]['name'];
-                        $ret[$key][1] = $the_tree->getShortPath($the_tree->tree_data[$key]['parent_id']);
-                    } else {
-                        //$ret[$key] = _("keine Studienbereiche eingetragen");
-                        $ret[$key][0] = _("keine Studienbereiche eingetragen");
-                        $ret[$key][1] = '';
-                    }
-                    break;
-
-                    case 'sem_status':
-                    $ret[$key] = $SEM_TYPE[$key]["name"]." (". $SEM_CLASS[$SEM_TYPE[$key]["class"]]["name"].")";
-                    break;
-
-                    case 'not_grouped':
-                    $ret[$key] = _("keine Gruppierung");
-                    break;
-
-                    case 'gruppe':
-                    $ret[$key] = _("Gruppe")." ".$groupcount;
-                    $groupcount++;
-                    break;
-
-                    case 'dozent_id':
-                    $ret[$key] = get_fullname($key, 'no_title_short');
-                    break;
-
-                    default:
-                    $ret[$key] = 'unknown';
-                    break;
+            case 'sem_tree_id':
+            if ($the_tree->tree_data[$key]) {
+                //$ret[$key] = $the_tree->getShortPath($key);
+                $ret[$key][0] = $the_tree->tree_data[$key]['name'];
+                $ret[$key][1] = $the_tree->getShortPath($the_tree->tree_data[$key]['parent_id']);
+            } else {
+                //$ret[$key] = _("keine Studienbereiche eingetragen");
+                $ret[$key][0] = _("keine Studienbereiche eingetragen");
+                $ret[$key][1] = '';
             }
+            break;
+
+            case 'sem_status':
+            $ret[$key] = $SEM_TYPE[$key]["name"]." (". $SEM_CLASS[$SEM_TYPE[$key]["class"]]["name"].")";
+            break;
+
+            case 'not_grouped':
+            $ret[$key] = _("keine Gruppierung");
+            break;
+
+            case 'gruppe':
+            $ret[$key] = _("Gruppe")." ".$groupcount;
+            $groupcount++;
+            break;
+
+            case 'dozent_id':
+            $ret[$key] = get_fullname($key, 'no_title_short');
+            break;
+
+            default:
+            $ret[$key] = 'unknown';
+            break;
+        }
     }
     return $ret;
 }
 
-function sort_groups($group_field, &$groups){
-
+/**
+ *
+ * @param unknown_type $group_field
+ * @param unknown_type $groups
+ */
+function sort_groups($group_field, &$groups)
+{
     switch ($group_field){
 
         case 'sem_number':
@@ -91,7 +102,7 @@ function sort_groups($group_field, &$groups){
         default:
     }
 
-    foreach ($groups as $key => $value){
+    foreach ($groups as $key => $value) {
         usort($value, create_function('$a,$b',
         'if ($a["gruppe"] != $b["gruppe"]){
             return (int)($a["gruppe"] - $b["gruppe"]);
@@ -101,10 +112,15 @@ function sort_groups($group_field, &$groups){
         $groups[$key] = $value;
     }
     return true;
-
 }
 
-function check_group_new($group_members, $my_obj){
+/**
+ *
+ * @param unknown_type $group_members
+ * @param unknown_type $my_obj
+ */
+function check_group_new($group_members, $my_obj)
+{
     $group_last_modified = false;
     foreach ($group_members as $member){
         $seminar_content = $my_obj[$member['seminar_id']];
@@ -119,7 +135,13 @@ function check_group_new($group_members, $my_obj){
     return $group_last_modified;
 }
 
-function correct_group_sem_number(&$groups, &$my_obj){
+/**
+ *
+ * @param unknown_type $groups
+ * @param unknown_type $my_obj
+ */
+function correct_group_sem_number(&$groups, &$my_obj)
+{
     if (is_array($groups)){
         $sem_data = SemesterData::GetSemesterArray();
         //end($sem_data);
@@ -157,8 +179,13 @@ function correct_group_sem_number(&$groups, &$my_obj){
     return false;
 }
 
-function add_sem_name(&$my_obj){
-    if ($GLOBALS['user']->cfg->getValue('SHOWSEM_ENABLE')){
+/**
+ *
+ * @param unknown_type $my_obj
+ */
+function add_sem_name(&$my_obj)
+{
+    if ($GLOBALS['user']->cfg->getValue('SHOWSEM_ENABLE')) {
         $sem_data = SemesterData::GetSemesterArray();
         foreach ($my_obj as $seminar_id => $values){
             if ($values['obj_type'] == 'sem' && $values['sem_number'] != $values['sem_number_end']){
@@ -173,7 +200,14 @@ function add_sem_name(&$my_obj){
     return true;
 }
 
-function fill_groups(&$groups, $group_key, $group_entry){
+/**
+ *
+ * @param unknown_type $groups
+ * @param unknown_type $group_key
+ * @param unknown_type $group_entry
+ */
+function fill_groups(&$groups, $group_key, $group_entry)
+{
     if (is_null($group_key)){
         $group_key = 'not_grouped';
     }
@@ -186,9 +220,22 @@ function fill_groups(&$groups, $group_key, $group_entry){
     }
 }
 
-function get_obj_clause ($table_name, $range_field, $count_field, $if_clause,
+/**
+ *
+ * @param unknown_type $table_name
+ * @param unknown_type $range_field
+ * @param unknown_type $count_field
+ * @param unknown_type $if_clause
+ * @param unknown_type $type
+ * @param unknown_type $add_fields
+ * @param unknown_type $add_on
+ * @param unknown_type $object_field
+ * @param unknown_type $user_id
+ */
+function get_obj_clause($table_name, $range_field, $count_field, $if_clause,
         $type = false, $add_fields = false, $add_on = false, $object_field = false,
-        $user_id = NULL) {
+        $user_id = NULL)
+{
 
     if (is_null($user_id)) {
         $user_id = $GLOBALS['user']->id;
@@ -208,12 +255,18 @@ function get_obj_clause ($table_name, $range_field, $count_field, $if_clause,
     GROUP BY my.object_id ORDER BY NULL";
 }
 
-
-function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
-
+/**
+ *
+ * @param unknown_type $my_obj
+ * @param unknown_type $user_id
+ * @param unknown_type $modules
+ */
+function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
+{
     $db2 = new DB_seminar;
     $db2->query("CREATE TEMPORARY TABLE IF NOT EXISTS myobj_".$user_id." ( object_id char(32) NOT NULL, PRIMARY KEY (object_id)) type=HEAP");
     $db2->query("REPLACE INTO  myobj_" . $user_id . " (object_id) VALUES ('" . join("'),('", array_keys($my_obj)) . "')");
+
     // Postings
     $db2->query(get_obj_clause('px_topics a','Seminar_id','topic_id',"(chdate > IFNULL(b.visitdate,0) AND chdate >= mkdate AND a.user_id !='$user_id')", 'forum'));
     while($db2->next_record()) {
@@ -229,11 +282,11 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
 
             if ($db2->f('neue')) {
                 $nav->setURL('forum.php?view=neue&sort=age');
-                $nav->setImage('icon-posting2.gif', array('title' =>
+                $nav->setImage('icons/16/red/new/forum.png', array('title' =>
                     sprintf(_('%s Postings, %s neue'), $db2->f('count'), $db2->f('neue'))));
             } else if ($db2->f('count')) {
                 $nav->setURL('forum.php?view=reset&sort=age');
-                $nav->setImage('icon-posting.gif', array('title' => sprintf(_('%s Postings'), $db2->f('count'))));
+                $nav->setImage('icons/16/grey/forum.png', array('title' => sprintf(_('%s Postings'), $db2->f('count'))));
             }
 
             $my_obj[$object_id]['forum'] = $nav;
@@ -268,11 +321,11 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
 
             if ($db2->f('neue')) {
                 $nav->setURL('folder.php?cmd=all');
-                $nav->setImage('icon-disc2.gif', array('title' =>
+                $nav->setImage('icons/16/red/new/files.png', array('title' =>
                     sprintf(_('%s Dokumente, %s neue'), $db2->f('count'), $db2->f('neue'))));
             } else if ($db2->f('count')) {
                 $nav->setURL('folder.php?cmd=tree');
-                $nav->setImage('icon-disc.gif', array('title' => sprintf(_('%s Dokumente'), $db2->f('count'))));
+                $nav->setImage('icons/16/grey/files.png', array('title' => sprintf(_('%s Dokumente'), $db2->f('count'))));
             }
 
             $my_obj[$object_id]['files'] = $nav;
@@ -293,10 +346,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
 
         if ($db2->f('neue')) {
             $nav->setURL('?new_news=true');
-            $nav->setImage('icon-news2.gif', array('title' =>
+            $nav->setImage('icons/16/red/new/news.png', array('title' =>
                 sprintf(_('%s Ankündigungen, %s neue'), $db2->f('count'), $db2->f('neue'))));
         } else if ($db2->f('count')) {
-            $nav->setImage('icon-news.gif', array('title' => sprintf(_('%s Ankündigungen'), $db2->f('count'))));
+            $nav->setImage('icons/16/grey/news.png', array('title' => sprintf(_('%s News'), $db2->f('count'))));
         }
 
         $my_obj[$object_id]['news'] = $nav;
@@ -318,7 +371,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
 
             if ($db2->f('count')) {
                 if ($db2->f('neue')) {
-                    $image = 'icon-cont2.gif';
+                    $image = 'icons/16/red/new/infopage.png';
 
                     if ($db2->f('count') == 1) {
                         $title = $db2->f('tab_name')._(' (geändert)');
@@ -326,7 +379,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
                         $title = sprintf(_('%s Einträge, %s neue'), $db2->f('count') ,$db2->f('neue'));
                     }
                 } else {
-                    $image = 'icon-cont.gif';
+                    $image = 'icons/16/grey/infopage.png';
 
                     if ($db2->f('count') == 1) {
                         $title = $db2->f('tab_name');
@@ -339,30 +392,6 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
             }
 
             $my_obj[$object_id]['scm'] = $nav;
-        }
-    }
-
-    //Literaturlisten
-    $db2->query(get_obj_clause('lit_list a','range_id','list_id',"(chdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", 'literature', false, " AND a.visibility=1"));
-    while($db2->next_record()) {
-        $object_id = $db2->f('object_id');
-        if ($my_obj[$object_id]["modules"]["literature"]) {
-            $my_obj[$object_id]["neuelitlist"] = $db2->f("neue");
-            $my_obj[$object_id]["litlist"] = $db2->f("count");
-            if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
-                $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
-            }
-
-            $nav = new Navigation('literature', 'literatur.php');
-
-            if ($db2->f('neue')) {
-                $nav->setImage('icon-lit2.gif', array('title' =>
-                    sprintf(_('%s Literaturlisten, %s neue'), $db2->f('count'), $db2->f('neue'))));
-            } else if ($db2->f('count')) {
-                $nav->setImage('icon-lit.gif', array('title' => sprintf(_('%s Literaturlisten'), $db2->f('count'))));
-            }
-
-            $my_obj[$object_id]['literature'] = $nav;
         }
     }
 
@@ -380,10 +409,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
             $nav = new Navigation('schedule', 'dates.php');
 
             if ($db2->f('neue')) {
-                $nav->setImage('icon-uhr2.gif', array('title' =>
+                $nav->setImage('icons/16/red/new/schedule.png', array('title' =>
                     sprintf(_('%s Termine, %s neue'), $db2->f('count'), $db2->f('neue'))));
             } else if ($db2->f('count')) {
-                $nav->setImage('icon-uhr.gif', array('title' => sprintf(_('%s Termine'), $db2->f('count'))));
+                $nav->setImage('icons/16/grey/schedule.png', array('title' => sprintf(_('%s Termine'), $db2->f('count'))));
             }
 
             $my_obj[$object_id]['schedule'] = $nav;
@@ -406,11 +435,11 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
 
                 if ($db2->f('neue')) {
                     $nav->setURL('wiki.php?view=listnew');
-                    $nav->setImage('icon-wiki2.gif', array('title' =>
+                    $nav->setImage('icons/16/red/new/wiki.png', array('title' =>
                         sprintf(_('%s WikiSeiten, %s Änderungen'), $db2->f('count'), $db2->f('neue'))));
                 } else if ($db2->f('count')) {
                     $nav->setURL('wiki.php');
-                    $nav->setImage('icon-wiki.gif', array('title' => sprintf(_('%s WikiSeiten'), $db2->f('count'))));
+                    $nav->setImage('icons/16/grey/wiki.png', array('title' => sprintf(_('%s WikiSeiten'), $db2->f('count'))));
                 }
 
                 $my_obj[$object_id]['wiki'] = $nav;
@@ -435,10 +464,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
                 $nav = new Navigation('elearning', 'elearning_interface.php?view=show');
 
                 if ($db2->f('neue')) {
-                    $nav->setImage('icon-lern2.gif', array('title' =>
+                    $nav->setImage('icons/16/red/new/lernmodule.png', array('title' =>
                         sprintf(_('%s Content-Modul(e), %s neue'), $db2->f('count'), $db2->f('neue'))));
                 } else if ($db2->f('count')) {
-                    $nav->setImage('icon-lern.gif', array('title' => sprintf(_('%s Content-Modul(e)'), $db2->f('count'))));
+                    $nav->setImage('icons/16/grey/lernmodule.png', array('title' => sprintf(_('%s Content-Modul(e)'), $db2->f('count'))));
                 }
 
                 $my_obj[$object_id]['elearning'] = $nav;
@@ -474,13 +503,39 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
             $nav = new Navigation('vote', '#vote');
 
             if ($my_obj[$object_id]['neuevotes']) {
-                $nav->setImage('icon-vote2.gif', array('title' =>
+                $nav->setImage('icons/16/red/new/votes.png', array('title' =>
                     sprintf(_('%s Umfrage(n), %s neue'), $my_obj[$object_id]['votes'], $my_obj[$object_id]['neuevotes'])));
             } else if ($my_obj[$object_id]['votes']) {
-                $nav->setImage('icon-vote.gif', array('title' => sprintf(_('%s Umfrage(n)'), $my_obj[$object_id]['votes'])));
+                $nav->setImage('icons/16/grey/votes.png', array('title' => sprintf(_('%s Umfrage(n)'), $my_obj[$object_id]['votes'])));
             }
 
             $my_obj[$object_id]['vote'] = $nav;
+        }
+    }
+
+    //Literaturlisten
+    if (get_config('LITERATURE_ENABLE')) {
+        $db2->query(get_obj_clause('lit_list a','range_id','list_id',"(chdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", 'literature', false, " AND a.visibility=1"));
+        while($db2->next_record()) {
+            $object_id = $db2->f('object_id');
+            if ($my_obj[$object_id]["modules"]["literature"]) {
+                $my_obj[$object_id]["neuelitlist"] = $db2->f("neue");
+                $my_obj[$object_id]["litlist"] = $db2->f("count");
+                if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
+                    $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
+                }
+
+                $nav = new Navigation('literature', 'literatur.php');
+
+                if ($db2->f('neue')) {
+                    $nav->setImage('icons/16/red/new/literature.png', array('title' =>
+                        sprintf(_('%s Literaturlisten, %s neue'), $db2->f('count'), $db2->f('neue'))));
+                } else if ($db2->f('count')) {
+                    $nav->setImage('icons/16/grey/literature.png', array('title' => sprintf(_('%s Literaturlisten'), $db2->f('count'))));
+                }
+
+                $my_obj[$object_id]['literature'] = $nav;
+            }
         }
     }
 
@@ -494,14 +549,14 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL) {
  *
  * @return array All fields that may be specified for course grouping
  */
-function getValidGroupingFields() {
+function getValidGroupingFields()
+{
     return array(
-            'not_grouped',
-            'sem_number',
-            'sem_tree_id',
-            'sem_status',
-            'gruppe',
-            'dozent_id'
-        );
+        'not_grouped',
+        'sem_number',
+        'sem_tree_id',
+        'sem_status',
+        'gruppe',
+        'dozent_id'
+    );
 }
-?>

@@ -15,7 +15,7 @@ foreach ($groups as $group_id => $group_members) {
             </td>
         </tr>
         <tr>
-            <td class="blue_gradient" valign="top" nowrap height="20" colspan="2">
+            <td class="blue_gradient" valign="bottom" nowrap height="20" colspan="2">
                 <?= Assets::img("blank.gif", array("size" => "1@20", "style" => "vertical-align: middle;")) ?>
                 <? if (isset($_my_sem_open[$group_id])) { ?>
 
@@ -23,14 +23,14 @@ foreach ($groups as $group_id => $group_members) {
                        href="<?= URLHelper::getLink($_SERVER['PHP_SELF'] . '#' . $group_id, array('view' => $view, 'close_my_sem' => $group_id)) ?>"
                        <?= tooltip(_("Gruppierung schließen"), true) ?>>
 
-                        <?= Assets::img($last_modified ? 'forumrotrunt.gif' : 'forumgraurunt.gif') ?>
+                        <?= Assets::img($last_modified ? 'icons/16/red/arr_1down.png' : 'icons/16/grey/arr_1down.png') ?>
                     </a>
                 <? } else { ?>
                     <a class="tree" name="<?= $group_id ?>"
                        href="<?= URLHelper::getLink($_SERVER['PHP_SELF'] . '#' . $group_id, array('view' => $view, 'open_my_sem' => $group_id)) ?>"
                        <?= tooltip(_("Gruppierung öffnen"), true) ?>>
 
-                        <?= Assets::img($last_modified ? 'forumrot.gif' : 'forumgrau.gif') ?>
+                        <?= Assets::img($last_modified ? 'icons/16/red/arr_1right.png' : 'icons/16/grey/arr_1right.png') ?>
                     </a>
                 <?
 

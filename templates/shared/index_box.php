@@ -13,7 +13,7 @@
             <td class="topic" style="text-align: right;">
                 <? if (isset($admin_url)): ?>
                     <a href="<?= URLHelper::getLink($admin_url) ?>" title="<?= htmlReady($admin_title) ?>">
-                        <?= Assets::img('pfeillink.gif', array('alt' => htmlReady($admin_title))) ?>
+                        <?= Assets::img('icons/16/white/arr_2right.png', array('alt' => htmlReady($admin_title))) ?>
                     </a>
                 <? endif ?>
             </td>

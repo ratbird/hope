@@ -131,15 +131,15 @@ $infobox = array(
         array("kategorie" => _("Information:"),
             "eintrag" => array(
                 array(
-                    "icon" => 'ausruf_small.gif',
+                    "icon" => 'icons/16/black/info.png',
                     "text" => _("Hier können Sie die Profile aller NutzerInnen abrufen, die im System registriert sind.")
                 ),
                 array(
-                    "icon" => 'ausruf_small.gif',
+                    "icon" => 'icons/16/black/info.png',
                     "text" => _("Sie erhalten auf der Profilseite von MitarbeiternInnen an Einrichtungen auch weiterf&uuml;hrende Informationen, wie Sprechstunden und Raumangaben.")
                 ),
                 array(
-                    "icon" => 'ausruf_small.gif',
+                    "icon" => 'icons/16/black/info.png',
                     "text" => _("Wählen Sie den gewünschten Bereich aus oder suchen Sie nach einem Namen!")
                 )
             )
@@ -147,7 +147,7 @@ $infobox = array(
         array("kategorie" => _("Ansichten:"),
             "eintrag" => array(
                 array(
-                    "icon" => 'suche2.gif',
+                    "icon" => 'icons/16/black/crown.png',
                     "text" => '<a href="'.URLHelper::getLink('score.php').'">'._("Zur Stud.IP-Rangliste").'</a>'
                 )
             )

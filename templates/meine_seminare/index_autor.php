@@ -164,7 +164,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                     <? print_seminar_content($instid, $values, "institut"); ?>
                                 </td>
 
-                                <td class="<?= $cssSw->getClass() ?>" align="left" nowrap="nowrap">
+                                <td class="<?= $cssSw->getClass() ?>" align="right" nowrap="nowrap">
                                 <? if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] && $values['status'] == 'user') { ?>
                                     <? if (get_config('CHAT_ENABLE') && $values["modules"]["chat"]) { ?>
 

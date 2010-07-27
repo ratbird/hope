@@ -70,7 +70,7 @@ foreach ($group_members as $member) {
                 <? print_seminar_content($semid, $values); ?>
             </td>
 
-            <td class="<?= $cssSw->getClass() ?>" align="left">
+            <td class="<?= $cssSw->getClass() ?>" align="right" nowrap="nowrap">
             <? if (get_config('CHAT_ENABLE') && $values["modules"]["chat"]) { ?>
 
                 <a href="<?= !$auth->auth['jscript'] ? 'chat_online.php' : '#' ?>"

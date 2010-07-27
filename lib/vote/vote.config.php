@@ -34,11 +34,11 @@ define ("VOTE_FILE_SHOW", "lib/vote/vote_show.inc.php");
 
 define ("VOTE_PATH_PICTURES", $GLOBALS['ASSETS_URL']."images/");
 
-define ("VOTE_ICON_BIG",     VOTE_PATH_PICTURES."vote.gif");
+define ("VOTE_ICON_BIG",     Assets::image_path('icons/16/white/votes.png'));
 define ("VOTE_ICON_VOTE",    VOTE_PATH_PICTURES."vote-icon.gif");
 define ("VOTE_ICON_TEST",    VOTE_PATH_PICTURES."test-icon.gif");
 define ("VOTE_ICON_STOPPED", VOTE_PATH_PICTURES."vote-stopped-icon.gif");
-define ("VOTE_ICON_ARROW",   VOTE_PATH_PICTURES."pfeillink.gif");
+define ("VOTE_ICON_ARROW",   Assets::image_path('icons/16/white/arr_2right.png'));
 define ("VOTE_ICON_SUCCESS", VOTE_PATH_PICTURES."ok.gif");
 define ("VOTE_ICON_ERROR",   VOTE_PATH_PICTURES."x.gif");
 define ("VOTE_ICON_INFO",    VOTE_PATH_PICTURES."ausruf.gif");

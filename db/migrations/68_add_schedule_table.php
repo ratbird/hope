@@ -12,15 +12,17 @@ class AddScheduleTable extends Migration
         // create new multi-purpose schedule table
         DBManager::get()->exec("
             CREATE TABLE `schedule` (
-                `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
-                `start` INT NOT NULL COMMENT 'start hour and minutes',
-                `end` INT NOT NULL COMMENT 'end hour and minutes',
-                `day` INT NOT NULL COMMENT 'day of week, 0-6',
-                `title` VARCHAR( 255 ) NOT NULL ,
-                `content` VARCHAR( 255 ) NOT NULL ,
-                `color` VARCHAR( 7 ) NOT NULL COMMENT 'color, rgb in hex' ,
-                `user_id` VARCHAR( 32 ) NOT NULL
-            )
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `start` smallint(6) NOT NULL COMMENT 'start hour and minutes',
+                `end` smallint(6) NOT NULL COMMENT 'end hour and minutes',
+                `day` tinyint(4) NOT NULL COMMENT 'day of week, 0-6',
+                `title` varchar(255) NOT NULL,
+                `content` varchar(255) NOT NULL,
+                `color` varchar(7) NOT NULL COMMENT 'color, rgb in hex',
+                `user_id` varchar(32) NOT NULL,
+                PRIMARY KEY (`id`),
+                KEY `user_id` (`user_id`)
+                ) ENGINE=MyISAM ;
         ");
 
         DBManager::get()->exec("
@@ -35,7 +37,7 @@ class AddScheduleTable extends Migration
         ");
 
         // move old "virtual" entries to new table
-        $db = DBManager::get()->query("SELECT sus.* FROM seminar_user_schedule as sus
+        $db = DBManager::get()->query("SELECT sus.*, metadata_dates FROM seminar_user_schedule as sus
             LEFT JOIN seminare as s ON (s.Seminar_id = sus.range_id)
             WHERE s.Seminar_id IS NOT NULL");
 
@@ -43,11 +45,12 @@ class AddScheduleTable extends Migration
             (user_id, seminar_id, metadate_id) VALUES(?, ?, ?)");
 
         while ($data = $db->fetch()) {
-            $sem = new Seminar($data['range_id']);
-            foreach ($sem->getCycles() as $cycle) {
-                $stmt->execute(array($data['user_id'], $data['range_id'], $cycle->getMetaDateID()));
+            $md = @unserialize($data['metadata_dates']);
+            if (is_array($md['turnus_data'])) {
+                foreach ($md['turnus_data'] as $cycle) {
+                    $stmt->execute(array($data['user_id'], $data['range_id'], $cycle['metadate_id']));
+                }
             }
-            unset($sem);
         }
 
     }

@@ -1,9 +1,8 @@
 <?php
-require_once 'lib/classes/SeminarCycleDate.class.php';
 
 class Step00202EnhancedSeminarCycle extends Migration
 {
-    
+
     function description()
     {
         return 'adds new table seminar_cycle_dates and converts old metadata_dates';
@@ -29,23 +28,27 @@ class Step00202EnhancedSeminarCycle extends Migration
                   KEY `seminar_id` (`seminar_id`)
                 ) TYPE=MyISAM;");
 
-        foreach ($db->query("SELECT Seminar_id, metadata_dates FROM seminare") as $row) {
+        $stmt = $db->prepare("INSERT INTO `seminar_cycle_dates`
+         (`metadate_id`, `seminar_id`, `start_time`, `end_time`, `weekday`,
+          `description`, `cycle`, `week_offset`, `mkdate`, `chdate`)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        foreach ($db->query("SELECT Seminar_id, metadata_dates, mkdate, chdate FROM seminare") as $row) {
             $md = @unserialize($row['metadata_dates']);
             if (is_array($md['turnus_data'])) {
                 foreach ($md['turnus_data'] as $c) {
                     if ($c['metadate_id']) {
-                        $cd = new SeminarCycleDate();
-                        $cd->setId($c['metadate_id']);
-                        $cd->weekday = $c['day'];
-                        $cd->description = $c['desc'];
-                        $cd->start_hour = $c['start_stunde'];
-                        $cd->start_minute = $c['start_minute'];
-                        $cd->end_hour = $c['end_stunde'];
-                        $cd->end_minute = $c['end_minute'];
-                        $cd->cycle = $md['turnus'];
-                        $cd->week_offset = $md['start_woche'];
-                        $cd->seminar_id = $row['Seminar_id'];
-                        $cd->store();
+                        $stmt->execute(array($c['metadate_id'],
+                                            $row['Seminar_id'],
+                                            sprintf('%02s:%02s', (int)$c['start_stunde'], (int)$c['start_minute']),
+                                            sprintf('%02s:%02s', (int)$c['end_stunde'], (int)$c['end_minute']),
+                                            (int)$c['day'],
+                                            (string)$c['desc'],
+                                            (int)$md['turnus'],
+                                            (int)$md['start_woche'],
+                                            $row['mkdate'],
+                                            $row['chdate']
+                                            )
+                                         );
                     }
                 }
             }

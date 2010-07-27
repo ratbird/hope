@@ -19,7 +19,7 @@ if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COL
                     <FONT size="-1">
                         <SELECT name="day">
                             <? foreach(range(1,6) + array(0) as $d) : ?>
-                                <OPTION value="1"<?=($tpl['mdDayNumber']==$d) ? 'selected="selected"' : ''?>><?=getWeekday($d, false)?></OPTION>
+                                <OPTION value="<?=$d?>"<?=($tpl['mdDayNumber']==$d) ? 'selected="selected"' : ''?>><?=getWeekday($d, false)?></OPTION>
                             <? endforeach; ?>
                             </SELECT>
                         <INPUT type="text" id="start_stunde" name="start_stunde" maxlength="2" size="2" value="<?=$tpl['start_stunde']?>">:

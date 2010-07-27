@@ -147,6 +147,7 @@ $sem->registerCommand('editDeletedSingleDate', 'raumzeit_editDeletedSingleDate')
 $sem->registerCommand('freeText', 'raumzeit_freeText');
 $sem->registerCommand('removeRequest', 'raumzeit_removeRequest');
 $sem->registerCommand('removeSeminarRequest', 'raumzeit_removeSeminarRequest');
+$sem->registerCommand('moveCycle', 'raumzeit_moveCycle');
 $sem->processCommands();
 
 // get possible start-weeks

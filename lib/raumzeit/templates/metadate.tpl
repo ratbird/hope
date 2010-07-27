@@ -47,6 +47,12 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                 <? } ?>
                 <TD width="20%" nowrap="nowrap" class="<?=$tpl['class']?>" align="right">
                     <? if (!$_LOCKED) { ?>
+                    <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=up&cycle_id='. $tpl['md_id']) ?>">
+                    <?= Assets::img('move_up.gif', array('align' => 'absmiddle'))?>
+                    </a>
+                    <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=down&cycle_id='. $tpl['md_id']) ?>">
+                    <?= Assets::img('move_down.gif', array('align' => 'absmiddle'))?>
+                    </a>
                     <A href="<?= URLHelper::getLink('?cmd=deleteCycle&cycle_id='. $tpl['md_id']) ?>">
                         <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/trash.gif" border="0" align="absmiddle" <?=tooltip(_("Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!"))?>>
                     </A>
@@ -72,7 +78,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                         <FONT size="-1"><B>
                             <SELECT name="day">
                             <? foreach(range(1,6) + array(0) as $d) : ?>
-                                <OPTION value="1"<?=($tpl['mdDayNumber']==$d) ? 'selected="selected"' : ''?>><?=getWeekday($d, false)?></OPTION>
+                                <OPTION value="<?=$d?>"<?=($tpl['mdDayNumber']==$d) ? 'selected="selected"' : ''?>><?=getWeekday($d, false)?></OPTION>
                             <? endforeach; ?>
                             </SELECT>,
                             <INPUT type="text" name="start_stunde" maxlength="2" size="2" value="<?=leadingZero($tpl['mdStartHour'])?>"> :
@@ -109,6 +115,12 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                         <INPUT type="text" name="sws" maxlength="3" size="1" value="<?=$tpl['sws']?>">
                     </FORM></TD>
                 <TD width="5%" nowrap="nowrap" class="<?=$tpl['class']?>" align="right">
+                    <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=up&cycle_id='. $tpl['md_id']) ?>">
+                    <?= Assets::img('move_up.gif', array('align' => 'absmiddle'))?>
+                    </a>
+                    <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=down&cycle_id='. $tpl['md_id']) ?>">
+                    <?= Assets::img('move_down.gif', array('align' => 'absmiddle'))?>
+                    </a>
                     <A href="<?= URLHelper::getLink('?cmd=deleteCycle&cycle_id='. $tpl['md_id']) ?>">
                         <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/trash.gif" border="0" valign="absmiddle"  <?=tooltip(_("Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!"))?>>
                     </A>

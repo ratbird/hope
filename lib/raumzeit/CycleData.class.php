@@ -39,18 +39,39 @@ require_once('lib/raumzeit/SingleDate.class.php');
 require_once('lib/raumzeit/IssueDB.class.php');
 require_once 'lib/classes/SeminarCycleDate.class.php';
 
+/**
+ * Enter description here ...
+ * @author noack
+ *
+ */
 class CycleData {
-    
+
+    /**
+     * Enter description here ...
+     * @var unknown_type
+     */
     private $alias = array( 'start_stunde' => 'start_hour',
                             'end_stunde' => 'end_hour',
                             'day' => 'weekday',
                             'desc' => 'description');
-    
+
+    /**
+     * Enter description here ...
+     * @var unknown_type
+     */
     public $termine = NULL; // Array
 
+    /**
+     * Enter description here ...
+     * @var unknown_type
+     */
     private $cycle_date = null;
-    
-    function CycleData($cycle_data = FALSE) {
+
+    /**
+     * Enter description here ...
+     * @param unknown_type $cycle_data
+     */
+    function __construct($cycle_data = FALSE) {
         if ($cycle_data instanceof SeminarCycleDate) {
             $this->cycle_date = $cycle_data;
         } else {
@@ -112,32 +133,32 @@ class CycleData {
     function setDay($day) {
         $this->cycle_date->weekday = $day;
     }
-    
+
     function __get($field) {
         if(isset($this->alias[$field])) {
             $field = $this->alias[$field];
         }
         return $this->cycle_date->$field;
     }
-    
+
     function __set($field, $value) {
         if(isset($this->alias[$field])) {
             $field = $this->alias[$field];
         }
         return $this->cycle_date->$field = $value;
     }
-    
+
     function __isset($field) {
         if(isset($this->alias[$field])) {
             $field = $this->alias[$field];
         }
         return isset($this->cycle_date->$field);
     }
-    
+
     function storeCycleDate(){
         return $this->cycle_date->store();
     }
-    
+
     function store() {
         foreach ($this->termine as $val) {
             $val->store();
@@ -185,7 +206,7 @@ class CycleData {
         $this->termine[$date_id]->setExTermin(true);
         $this->termine[$date_id]->store();
     }
-    
+
     function unDeleteSingleDate($date_id, $filterStart, $filterEnd) {
         if (!$this->termine) {
             $this->readSingleDates($filterStart, $filterEnd);
@@ -247,7 +268,7 @@ class CycleData {
             return $this->cycle_date->toString($short);
         }
     }
-    
+
     function toArray(){
         $ret = $this->cycle_date->toArray();
         foreach($this->alias as $a => $o) {

@@ -333,7 +333,7 @@ class Seminar {
         }
 
         $ret['regular']['turnus_data'] = $cycles;
-        
+
         // the irregular single-dates
         foreach ($dates as $val) {
             $zw = array(
@@ -998,7 +998,7 @@ class Seminar {
         $old_start = mktime($cycle->getStartStunde(),$cycle->getStartMinute());
         $old_end = mktime($cycle->getEndStunde(), $cycle->getEndMinute());
         $do_changes = false;
-        
+
         if (($new_start < $old_start) || ($new_end > $old_end) || ($data['day'] != $cycle->day) ) {
             $has_bookings = false;
 
@@ -1056,13 +1056,18 @@ class Seminar {
             $message = true;
             $do_changes = true;
         }
+        if ($data['day'] != $cycle->day) {
+            $message = true;
+            $same_time = false;
+            $do_changes = true;
+        }
         if (round(str_replace(',','.', $data['sws']),1) != $cycle->sws) {
             $cycle->sws = $data['sws'];
             $this->createMessage(_("Die Semesterwochenstunden für Dozenten des regelmäßigen Eintrags wurden geändert."));
             $message = true;
             $do_changes = true;
         }
-        
+
         if ($do_changes) {
             $change_from = $cycle->toString();
             if ($this->metadate->editCycle($data)) {
@@ -1079,8 +1084,9 @@ class Seminar {
                     $message = true;
                 }
             }
+            $this->metadate->sortCycleData();
         }
-        
+
         if (!$message) {
             $this->createInfo("Sie haben keine Änderungen vorgenommen!");
         }

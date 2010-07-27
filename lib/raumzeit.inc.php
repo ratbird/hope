@@ -64,7 +64,7 @@ function raumzeit_delete_singledate() {
         // deletion approved, delete show approval-message
         if ($_REQUEST['approveDelete']) {
             if($GLOBALS["RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW"]){
-                $sem->createMessage(sprintf(_("Sie haben den Termin %s gelöscht, dem ein Thema zugeorndet war. Sie können das Thema in der %sExpertenansicht des Ablaufplans%s einem anderen Termin (z.B. einem Ausweichtermin) zuordnen."), 
+                $sem->createMessage(sprintf(_("Sie haben den Termin %s gelöscht, dem ein Thema zugeorndet war. Sie können das Thema in der %sExpertenansicht des Ablaufplans%s einem anderen Termin (z.B. einem Ausweichtermin) zuordnen."),
                     $termin->toString(), '<a href="'. URLHelper::getLink('themen.php?cmd=changeViewMode&newFilter=expert') .'">', '</a>'));
             } else {
                 $sem->createMessage(sprintf(_("Der Termin %s wurde gelöscht!"), $termin->toString()));
@@ -241,7 +241,7 @@ function raumzeit_selectSemester() {
         $sem->setStartSemester($_REQUEST['startSemester']);
         $sem->setEndSemester($_REQUEST['endSemester']);
         $sem->removeAndUpdateSingleDates();
-        
+
             // apply new filter for choosen semester (if necessary)
             $current_semester = $semester->getCurrentSemesterData();
 
@@ -298,15 +298,15 @@ function raumzeit_doDeleteCycle() {
 function raumzeit_doAddSingleDate() {
     global $sem, $cmd;
 
-    // check validity of the date 
+    // check validity of the date
     if (!check_singledate($_REQUEST['day'], $_REQUEST['month'], $_REQUEST['year'], $_REQUEST['start_stunde'],
-        $_REQUEST['start_minute'], $_REQUEST['end_stunde'], $_REQUEST['end_minute'])) { 
-        $sem->createError(_("Bitte geben Sie ein gültiges Datum und eine gültige Uhrzeit an!")); 
-        $cmd = 'createNewSingleDate'; 
-    } 
-    
+        $_REQUEST['start_minute'], $_REQUEST['end_stunde'], $_REQUEST['end_minute'])) {
+        $sem->createError(_("Bitte geben Sie ein gültiges Datum und eine gültige Uhrzeit an!"));
+        $cmd = 'createNewSingleDate';
+    }
+
     // create date
-    else { 
+    else {
         $termin = new SingleDate();
         $start = mktime($_REQUEST['start_stunde'], $_REQUEST['start_minute'], 0, $_REQUEST['month'], $_REQUEST['day'], $_REQUEST['year']);
         $ende = mktime($_REQUEST['end_stunde'], $_REQUEST['end_minute'], 0, $_REQUEST['month'], $_REQUEST['day'], $_REQUEST['year']);
@@ -389,8 +389,8 @@ function raumzeit_editSingleDate() {
             $sem->appendMessages($termin->getMessages());
         }
         $sem->readSingleDatesForCycle($_REQUEST['cycle_id'], true);
-    } 
-    
+    }
+
     // unregelmäßiger Termin
     else {
         // the choosen singleDate is irregular, so we can edit it directly
@@ -398,7 +398,7 @@ function raumzeit_editSingleDate() {
 
         $bookRoom = false;
         if ($start >= $termin->date && $ende <= $termin->end_time) {
-            $bookRoom = true;   
+            $bookRoom = true;
         } else {
             if (!$_REQUEST['approveChange']) {
                 $zw_termin = new SingleDate();
@@ -479,5 +479,32 @@ function raumzeit_removeSeminarRequest() {
     global $sem;
     $sem->removeSeminarRequest();
     $sem->createMessage(sprintf(_("Die Raumanfrage für die Veranstaltung wurde gelöscht.")));
+}
+
+function raumzeit_MoveCycle() {
+    global $sem;
+    $cycle_id = Request::option('cycle_id');
+    $direction = Request::option('direction');
+    $cycles = $sem->getCycles();
+    $cycle_ids = array_keys($cycles);
+    $pos = array_search($cycle_id, $cycle_ids);
+    if ($direction == "up"){
+        if($pos > 0){
+            $cycle_ids[$pos] = $cycle_ids[$pos - 1];
+            $cycle_ids[$pos - 1] = $cycle_id;
+        } else {
+            $cycle_ids[] = array_shift($cycle_ids);
+        }
+    } elseif (isset($cycle_ids[$pos + 1])){
+        $cycle_ids[$pos] = $cycle_ids[$pos + 1];
+        $cycle_ids[$pos + 1] = $cycle_id;
+    } else {
+        array_unshift($cycle_ids, array_pop($cycle_ids));
+    }
+    foreach ($cycle_ids as $sort => $id) {
+        $cycles[$id]->sorter = $sort;
+    }
+    $sem->metadate->sortCycleData();
+    $sem->createMessage(_("Die regelmäßigen Zeiten wurden neu geordnet."));
 }
 ?>

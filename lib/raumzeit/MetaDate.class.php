@@ -72,7 +72,7 @@ class MetaDate {
             return $first_metadate  ? $first_metadate->week_offset = $start_woche : null;
         }
     }
-    
+
     function getFirstMetadate() {
         $first_metadate_id = array_shift(array_keys($this->cycles));
         return $first_metadate_id ? $this->cycles[$first_metadate_id] : null;
@@ -110,17 +110,20 @@ class MetaDate {
 
     function setCycleData($data = array(), &$cycle) {
         $cycle->seminar_id = $this->getSeminarId();
+        if ($last_one = array_pop(array_keys($this->cycles))) {
+            $cycle->sorter = $this->cycles[$last_one]->sorter > 0 ? $this->cycles[$last_one]->sorter + 1 : 0;
+        }
         if ($cycle->getDescription() != $data['description']) {
             $cycle->setDescription($data['description']);
         }
         if(isset($data['weekday'])) $cycle->weekday = (int)$data['weekday'];
         if(isset($data['week_offset'])) $cycle->week_offset = (int)$data['week_offset'];
         if(isset($data['sws'])) $cycle->sws = $data['sws'];
-        
+
         if (isset($data['day']) && isset($data['start_stunde']) && isset($data['start_minute']) && isset($data['end_stunde']) && isset($data['end_minute'])) {
 
             if (
-                ($data['start_stunde'] > 23) || ($data['start_stunde'] < 0) || 
+                ($data['start_stunde'] > 23) || ($data['start_stunde'] < 0) ||
                 ($data['end_stunde'] > 23)   || ($data['end_stunde']   < 0) ||
                 ($data['start_minute'] > 59)   || ($data['start_minute']   < 0) ||
                 ($data['end_minute'] > 59)   || ($data['end_minute']   < 0)
@@ -128,14 +131,14 @@ class MetaDate {
                 return FALSE;
             }
 
-            if (mktime((int)$data['start_stunde'], (int)$data['start_minute']) < mktime((int)$data['end_stunde'], (int)$data['end_minute'])) {          
+            if (mktime((int)$data['start_stunde'], (int)$data['start_minute']) < mktime((int)$data['end_stunde'], (int)$data['end_minute'])) {
                 $cycle->setDay($data['day']);
                 $cycle->setStart($data['start_stunde'], $data['start_minute']);
                 $cycle->setEnd($data['end_stunde'], $data['end_minute']);
                 return TRUE;
             }
         }
-        
+
         return FALSE;
     }
 
@@ -152,6 +155,7 @@ class MetaDate {
         $cycle = new CycleData();
         if ($this->setCycleData($data, $cycle)) {
             $this->cycles[$cycle->getMetadateID()] = $cycle;
+            $this->sortCycleData();
             $this->createSingleDates($cycle->getMetadateID());
             return $cycle->getMetadateID();
         }
@@ -181,6 +185,7 @@ class MetaDate {
                         unset($cycle->termine[$key]);
                     }
                 }
+                $this->sortCycleData();
             }
             return sizeof($termine);
         } else {
@@ -196,7 +201,7 @@ class MetaDate {
                 $termine = $cycle->getSingleDates();
                 foreach ($termine as $key => $termin) {
                     // get all isues of this date ( zero, one, or more, if the expert view is activated)
-                    // and store them at the relative position of this single date 
+                    // and store them at the relative position of this single date
                     $issues[$singledate_count] = $termin->getIssueIDs();
                     $singledate_count++;
                 }
@@ -213,11 +218,11 @@ class MetaDate {
                 $termine = $cycle->getSingleDates();
 
                 // new dates counter
-                $new_singledate_count = 0;               
+                $new_singledate_count = 0;
 
                 // loop through the single dates and add the themes (issues)
                 foreach ($termine as $key => $termin) {
-                    // check, if there are issues for this single date 
+                    // check, if there are issues for this single date
                     if( $issues[$new_singledate_count] != NULL ) {
                         // add all issues:
                         foreach( $issues[$new_singledate_count] as $issue_key => $issue_id){
@@ -225,12 +230,12 @@ class MetaDate {
                             $termin->store();
                         }
                     }
-                    unset($issues[$new_singledate_count]);                  
+                    unset($issues[$new_singledate_count]);
                     $new_singledate_count++;
                 }
 
                 // delete issues, that are not assigned to a single date because of to few dates
-                // (only if the schedule expert view is off)           
+                // (only if the schedule expert view is off)
                 if(!$GLOBALS["RESOURCES_ENABLES_EXPERT_SCHEDULE_VIEW"]){
                     if( $new_singledate_count < $singledate_count) {
                         for($i = $new_singledate_count; $i < $singledate_count; $i++){
@@ -243,7 +248,7 @@ class MetaDate {
                         }
                     }
                 }
-
+                $this->sortCycleData();
                 return $count;
             }
         }
@@ -276,9 +281,10 @@ class MetaDate {
         foreach($this->cycles as $one) {
             $changed += $one->storeCycleDate();
         }
+        $this->sortCycleData();
         return $changed;
     }
-    
+
 
     function restore() {
        $this->cycles = array();
@@ -291,16 +297,23 @@ class MetaDate {
         //TODO: Löschen eines MetaDate-Eintrages (CycleData);
     }
 
-    function sortCycleData($a, $b) {
-        if ($a['day'] == $b['day']) {
-            if ($a['start_hour'] == $b['start_hour']) {
-                return 0;   
-            } 
-            return ($a['start_hour'] < $b['start_hour']) ? -1 : 1;  
-        } 
-        return ($a['day'] < $b['day']) ? -1 : 1;
+    private function sortCycleDataHelper($a, $b) {
+        if ($a->sorter == $b->sorter) {
+	        if ($a->weekday == $b->weekday) {
+	            if ($a->start_hour == $b->start_hour) {
+	                return 0;
+	            }
+	            return ($a->start_hour < $b->start_hour) ? -1 : 1;
+	        }
+            return ($a->weekday <  $b->weekday) ? -1 : 1;
+        }
+        return ($a->sorter < $b->sorter) ? -1 : 1;
     }
-        
+
+    function sortCycleData() {
+        uasort($this->cycles, array($this, 'sortCycleDataHelper'));
+    }
+
     function getCycleData() {
         $ret = array();
         foreach ($this->cycles as $val) {
@@ -308,7 +321,7 @@ class MetaDate {
         }
         return $ret;
     }
-    
+
     function getCycles() {
         return $this->cycles;
     }
@@ -416,10 +429,10 @@ class MetaDate {
 
         // The currently existing singledates for the by metadate_id denoted  regular time-entry
         $existingSingleDates =& $this->cycles[$metadate_id]->getSingleDates();
-        
+
         $start_woche = $this->cycles[$metadate_id]->week_offset;
         $turnus = $this->cycles[$metadate_id]->cycle;
-        
+
         // HolidayData is used to decide wether a date is during a holiday an should be created as an ex_termin.
         // Additionally, it is used to show which type of holiday we've got.
         $holiday = new HolidayData();
@@ -446,10 +459,10 @@ class MetaDate {
                     if (($val->date == $start_time) && ($val->end_time == $end_time)) {
                         // match found: count as single date for this regular date
                         $single_date_count++;
-                    }                
+                    }
                     $week++;
-                } while($end_time < $sem_end);            
-            } 
+                } while($end_time < $sem_end);
+            }
 
             // were there any matching single dates?
             if($single_date_count > 0 ) {
@@ -457,13 +470,13 @@ class MetaDate {
                 // check, if array is already created, if not, do so
                 if($GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"] == NULL){
                     $GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"] = array();
-                } 
+                }
 
-                // set flag for further calls of this method here, that 
+                // set flag for further calls of this method here, that
                 // for this regular (meta)date there have been matching single dates;
                 // this means that there was an "ablaufplan" created;
-                // if so, no additional dates should be created for 
-                // this regular date, only existing dates should be used                
+                // if so, no additional dates should be created for
+                // this regular date, only existing dates should be used
                 $GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"][$metadate_id] = TRUE;
             }
 
@@ -503,7 +516,7 @@ class MetaDate {
                 }
             }
             */
-            
+
             /*
              * We only create dates, which do not already exist, so we do not overwrite existing dates.
              *
@@ -602,7 +615,7 @@ class MetaDate {
                         $termin->setExTermin(true);
                         }*/
                 //}
-                
+
                 // store the singleDate to database
                 $termin->store();
             }

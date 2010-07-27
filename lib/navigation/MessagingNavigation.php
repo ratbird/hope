@@ -31,7 +31,7 @@ class MessagingNavigation extends Navigation
         $neux = count_x_messages_from_user('in', 'all',
             'AND mkdate > '.(int)$my_messaging_settings['last_box_visit'].' AND message_user.readed = 0 ');
 
-        $icon = $neum ? 'header/header_nachricht2' : 'header/header_nachricht';
+        $icon = $neum ? 'icons/32/blue/new/mail.png' : 'icons/32/blue/mail.png';
 
         if ($neux > 0) {
             $tip = sprintf(ngettext('Sie haben %d neue ungelesene Nachricht',

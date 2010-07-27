@@ -27,13 +27,13 @@ class CommunityNavigation extends Navigation
 
         parent::__construct(_('Community'), 'online.php');
 
-        $onlineimage = 'header/header_nutzer';
+        $onlineimage = 'icons/32/blue/community.png';
         $onlinetip = _('Nur Sie sind online');
         $active_time = $my_messaging_settings['active_time'];
         $user_count = get_users_online_count($active_time ? $active_time : 5);
 
         if ($user_count) {
-            $onlineimage = 'header/header_nutzeronline';
+            $onlineimage = 'icons/32/blue/new/community.png';
 
             if ($user_count == 1) {
                 $onlinetip = _('Außer Ihnen ist eine Person online');

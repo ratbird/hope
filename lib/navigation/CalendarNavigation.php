@@ -31,7 +31,7 @@ class CalendarNavigation extends Navigation
         }
 
         $this->setURL($planerurl);
-        $this->setImage('header/header_planer', array('title' => $planerinfo));
+        $this->setImage('icons/32/blue/schedule.png', array('title' => $planerinfo));
     }
 
     /**

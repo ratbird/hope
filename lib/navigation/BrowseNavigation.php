@@ -42,7 +42,7 @@ class BrowseNavigation extends Navigation
 
         parent::__construct($coursetext, $courselink);
 
-        $this->setImage('header/header_meinesem', array('title' => $courseinfo));
+        $this->setImage('icons/32/blue/seminar.png', array('title' => $courseinfo));
     }
 
     /**

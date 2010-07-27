@@ -2605,22 +2605,29 @@ if ($level == 2)
                 print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type));
                 print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\">";
 
-                $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
-                if (is_array($sem_create_data["sem_bet_inst"])) {
-                    foreach($sem_create_data["sem_bet_inst"] as $val) {
-                        $clause.=",'$val'";
+                if ($SEM_CLASS[$SEM_TYPE[$sem_create_data["sem_status"]]["class"]]["only_inst_user"]) {
+                    $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
+                    if (is_array($sem_create_data["sem_bet_inst"])) {
+                        foreach($sem_create_data["sem_bet_inst"] as $val) {
+                            $clause.=",'$val'";
+                        }
                     }
+                    $clause.=") ";
                 }
-                $clause.=") ";
-                $Dozentensuche = new SQLSearch("SELECT DISTINCT username, ".
-                        $_fullname_sql['full_rev'] ." AS fullname " .
+                $add_teacher_query = "SELECT DISTINCT auth_user_md5.user_id, " .
+                            $_fullname_sql['full_rev'] ." AS fullname " .
                         "FROM user_inst " .
-                            "LEFT JOIN auth_user_md5 USING (user_id) " .
-                            "LEFT JOIN user_info USING(user_id) " .
-                        "WHERE inst_perms = 'dozent' " .
+                                "LEFT JOIN auth_user_md5 ON (user_inst.user_id = auth_user_md5.user_id) " .
+                                "LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
+                        "WHERE (auth_user_md5.username LIKE :input " .
+                                "OR auth_user_md5.Vorname LIKE :input " .
+                                "OR auth_user_md5.Nachname LIKE :input) " .
+                            "AND auth_user_md5.perms IN %s " .
                             $clause .
-                            "AND (username LIKE :input OR Vorname LIKE :input OR Nachname LIKE :input) " .
-                        "ORDER BY Nachname", sprintf(_("%s auswählen"), get_title_for_status('dozent', 1, $seminar_type)));
+                        "ORDER BY auth_user_md5.Nachname DESC ";
+                $Dozentensuche = new SQLSearch(sprintf($add_teacher_query, "('dozent')"), 
+                        sprintf(_("%s auswählen"), 
+                        get_title_for_status('dozent', 1, $seminar_type)), "username");
                 print QuickSearch::get("add_doz", $Dozentensuche)
                             ->render();
                 ?>
@@ -2764,15 +2771,10 @@ if ($level == 2)
                             }
                         }
                         $clause.=") ";
-                        $Tutorensuche = new SQLSearch("SELECT DISTINCT username, ".
-                            $_fullname_sql['full_rev'] ." AS fullname " .
-                            "FROM user_inst " .
-                                "LEFT JOIN auth_user_md5 USING (user_id) " .
-                                "LEFT JOIN user_info USING(user_id) " .
-                            "WHERE inst_perms in ('dozent', 'tutor') " .
-                                $clause .
-                                "AND (username LIKE :input OR Vorname LIKE :input OR Nachname LIKE :input) " .
-                            "ORDER BY Nachname", sprintf(_("%s auswählen"), get_title_for_status('tutor', 1, $seminar_type)));
+                        $Tutorensuche = new SQLSearch(sprintf($add_teacher_query, "('dozent', 'tutor')"), 
+                                sprintf(_("%s auswählen"), 
+                                    get_title_for_status('tutor', 1, $seminar_type)
+                                ), "username");
                         print QuickSearch::get("add_tut", $Tutorensuche)
                                 ->render();
                         ?>

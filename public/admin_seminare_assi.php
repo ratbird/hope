@@ -2603,7 +2603,7 @@ if ($level == 2)
                 <td <? echo $cssSw->getFullClass() ?> width="50%" colspan="2">
                 <?php
                 print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type));
-                print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\">";
+                print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\"> ";
 
                 if ($SEM_CLASS[$SEM_TYPE[$sem_create_data["sem_status"]]["class"]]["only_inst_user"]) {
                     $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
@@ -2629,6 +2629,7 @@ if ($level == 2)
                         sprintf(_("%s auswählen"), 
                         get_title_for_status('dozent', 1, $seminar_type)), "username");
                 print QuickSearch::get("add_doz", $Dozentensuche)
+                            ->withButton()
                             ->render();
                 ?>
                 <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
@@ -2681,10 +2682,11 @@ if ($level == 2)
                         <td class="<? echo $cssSw->getClass() ?>" width="50%" colspan="2">
                         <?php
                         print _("Vertretung hinzuf&uuml;gen");
-                        print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_dep\">";
+                        print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_dep\"> ";
 
                         $deputysearch = new PermissionSearch('username', _("Vertretung auswählen"), 'username', array('permission' => getValidDeputyPerms()));
                         print QuickSearch::get("add_dep", $deputysearch)
+                                ->withButton()
                                 ->render();
                         ?>
                         <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
@@ -2762,7 +2764,7 @@ if ($level == 2)
                         <td class="<? echo $cssSw->getClass() ?>" width="50%" colspan="2">
                         <?php
                         print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('tutor', 1, $seminar_type));
-                        print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_tut\">";
+                        print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_tut\"> ";
 
                         $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
                         if ($sem_create_data["sem_bet_inst"]) {
@@ -2776,6 +2778,7 @@ if ($level == 2)
                                     get_title_for_status('tutor', 1, $seminar_type)
                                 ), "username");
                         print QuickSearch::get("add_tut", $Tutorensuche)
+                                ->withButton()
                                 ->render();
                         ?>
                         <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>

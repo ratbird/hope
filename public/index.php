@@ -2,25 +2,19 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-/*
-index.php - Startseite von Stud.IP (anhaengig vom Status)
-Copyright (C) 2000 Stefan Suchi <suchi@gmx.de>, Ralf Stockmann <rstockm@gwdg.de>
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
-
+/**
+ * index.php - Startseite von Stud.IP (anhaengig vom Status)
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Stefan Suchi <suchi@gmx.de>
+ * @author      Ralf Stockmann <rstockm@gwdg.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
 
 require '../lib/bootstrap.php';
 
@@ -121,7 +115,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
         <table class="index_box">
             <tr>
                 <td class="topic" style="font-weight: bold;" colspan="2">
-                    <?= Assets::img('home.gif', array('class' => 'middle')) ?>
+                    <?= Assets::img('icons/16/white/home.png', array('class' => 'middle')) ?>
                     <?= htmlReady($ueberschrift) ?>
                 </td>
             </tr>
@@ -186,7 +180,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
     // display votes
     if (get_config('VOTE_ENABLE')) {
         include 'lib/vote/vote_show.inc.php';
-        show_votes ('studip', $auth->auth['uid'], $perm);
+        show_votes('studip', $auth->auth['uid'], $perm);
     }
 } else { //displaymodul for nobody
     $index_nobody_template = $GLOBALS['template_factory']->open('index_nobody');
@@ -236,7 +230,7 @@ if (is_object($user) && $user->id != 'nobody') {
 
             ob_start();
             $feed->rssfeed_start();
-            echo $layout->render(array('title' => $feedtitle, 'content_for_layout' => ob_get_clean()));
+            echo $layout->render(array('title' => $feedtitle, 'icon_url' => 'icons/16/white/rss.png', 'admin_url' => URLHelper::getLink('edit_about.php', array('view' => 'rss')), 'content_for_layout' => ob_get_clean()));
         }
     }
 }

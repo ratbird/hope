@@ -89,7 +89,7 @@ class Course_AvatarController extends AuthenticatedController
         if ($this->studygroup_mode) {
             $this->redirect(URLHelper::getUrl('dispatch.php/course/studygroup/edit/' . $this->course_id));
         } else {
-            $this->redirect(URLHelper::getUrl('admin_seminare1.php?s_id=' . $this->course_id));
+            $this->redirect(URLHelper::getUrl('dispatch.php/course/basicdata/view/' . $this->course_id));
         }
     }
 }

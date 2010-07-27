@@ -13,7 +13,7 @@
       <?= _("zurück zur Studiengruppenadministration") ?>
     </a>
     <? else: ?>
-    <a href="<?= URLHelper::getLink('admin_seminare1.php?s_id=' . $course_id) ?>">
+    <a href="<?= URLHelper::getLink('dispatch.php/course/basicdata/view/' . $course_id) ?>">
       <?= Assets::img('forumgruen.gif', array('style' => 'vertical-align: baseline;')) ?>
       <?= _("zurück zur Veranstaltungsadministration") ?>
     </a>

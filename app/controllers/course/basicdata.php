@@ -21,7 +21,7 @@ class Course_BasicdataController extends AuthenticatedController {
      * Action wie Set ausgeführt wurde, von der hierher weitergeleitet worden ist.
      * Wichtige Daten dazu wurden dann über $this->flash übertragen.
      */
-    public function view_action() {
+    public function view_action($course_id = null) {
         global $SessSemName, $user, $perm, $_fullname_sql, $SEM_CLASS, $SEM_TYPE;
         
         $deputies_enabled = get_config('DEPUTIES_ENABLE');
@@ -33,7 +33,7 @@ class Course_BasicdataController extends AuthenticatedController {
         }
         Request::set('new_tut_parameter', $this->flash['new_tut_parameter']);
         
-        $this->course_id = $SessSemName[1];
+        $this->course_id = $SessSemName[1] ? $SessSemName[1] : $course_id;
         
         if ((Request::get('section') === 'details') || ($this->flash['section'] === 'details')) {
             //Navigation im Admin-Bereich:

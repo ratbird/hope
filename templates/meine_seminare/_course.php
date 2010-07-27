@@ -66,21 +66,21 @@ foreach ($group_members as $member) {
                         <?= Assets::img('icons/16/grey/info_circle.png', tooltip2($infotext, TRUE, TRUE)) ?>
                 <? } ?>
             </td>
-            <td class="<?= $cssSw->getClass() ?>" align="left" nowrap>
+            <td class="<?= $cssSw->getClass() ?>" align="left" nowrap="nowrap">
                 <? print_seminar_content($semid, $values); ?>
-
-                <? if (get_config('CHAT_ENABLE') && $values["modules"]["chat"]) { ?>
-
-                    <a href="<?= !$auth->auth['jscript'] ? 'chat_online.php' : '#' ?>"
-                       onClick="return open_chat(<?= $chat_info[$semid]['is_active'] ? 'false' : "'$semid'" ?>);">
-                        <?= Assets::img("icons/16/grey/chat.png") ?>
-                        <? /*= chat_get_chat_icon($chat_info[$semid]['chatter'], $chat_invs[$chat_info[$semid]['chatuniqid']], $chat_info[$semid]['is_active'],true)*/ ?>
-                    </a>
-                <? } else { ?>
-                    <?= Assets::img("blank.gif", array('size' => '16')) ?>
-                <? } ?>
-
             </td>
+
+            <td class="<?= $cssSw->getClass() ?>" align="left">
+            <? if (get_config('CHAT_ENABLE') && $values["modules"]["chat"]) { ?>
+
+                <a href="<?= !$auth->auth['jscript'] ? 'chat_online.php' : '#' ?>"
+                   onClick="return open_chat(<?= $chat_info[$semid]['is_active'] ? 'false' : "'$semid'" ?>);">
+                    <?= Assets::img("icons/16/grey/chat.png") ?>
+                    <? /*= chat_get_chat_icon($chat_info[$semid]['chatter'], $chat_invs[$chat_info[$semid]['chatuniqid']], $chat_info[$semid]['is_active'],true)*/ ?>
+                </a>
+            <? } else { ?>
+                <?= Assets::img("blank.gif", array('size' => '16')) ?>
+            <? } ?>
 
             <? if (in_array($values["status"], array("dozent", "tutor"))) { ?>
                 <?
@@ -91,28 +91,24 @@ foreach ($group_members as $member) {
                         $course_url = 'dispatch.php/course/management?cid='. $semid;
                     }
                 ?>
-                <td class="<?= $cssSw->getClass() ?>" align="center">
+
                     <a href="<?= UrlHelper::getUrl($course_url) ?>">
                         <?= Assets::img('icons/16/grey/admin.png', array("size" => "16") + tooltip2(_("Veranstaltung administrieren"))) ?>
                     </a>
-                </td>
 
             <? } else if ($values["binding"]) { ?>
 
-                <td class="<?= $cssSw->getClass() ?>" align="center" nowrap>
                     <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('auswahl' => $semid, 'cmd' => 'no_kill')) ?>">
                         <?= Assets::img('icons/16/grey/lock-locked.png', tooltip2(_("Das Abonnement ist bindend. Bitte wenden Sie sich an die Dozentin oder den Dozenten."))) ?>
                     </a>
-                </td>
 
             <? } else { ?>
 
-                <td class="<?= $cssSw->getClass() ?>" align="center" nowrap>
                     <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('auswahl' => $semid, 'cmd' => 'suppose_to_kill')) ?>">
                         <?= Assets::img('icons/16/grey/door-leave.png', tooltip2(_("aus der Veranstaltung abmelden"))) ?>
                     </a>
-                </td>
             <? } ?>
+            </td>
         </tr>
     <?
     }

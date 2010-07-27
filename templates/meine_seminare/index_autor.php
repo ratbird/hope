@@ -141,7 +141,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                         <th width="1%">&nbsp; </th>
                         <th width="86%" align="left"><?= _("Meine Einrichtungen") ?></th>
                         <th width="10%"><b><?= _("Inhalt") ?></b></th>
-                        <th width="3%"><b>&nbsp;&nbsp;</b></th>
+                        <th width="3%"></th>
                     </tr>
 
                     <? foreach ($my_obj as $instid => $values) {
@@ -161,9 +161,11 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                 </td>
 
                                 <td class="<?= $cssSw->getClass() ?>" align="left" nowrap="nowrap">
-
                                     <? print_seminar_content($instid, $values, "institut"); ?>
+                                </td>
 
+                                <td class="<?= $cssSw->getClass() ?>" align="left" nowrap="nowrap">
+                                <? if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] && $values['status'] == 'user') { ?>
                                     <? if (get_config('CHAT_ENABLE') && $values["modules"]["chat"]) { ?>
 
                                         <a href="<?= !$auth->auth['jscript'] ? 'chat_online.php' : '#' ?>"
@@ -175,19 +177,13 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                         <?= Assets::img("icon-leer.gif", array('size' => '16')) ?>
                                     <? } ?>
 
-                                </td>
-
-                                <? if ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] && $values['status'] == 'user') { ?>
-                                    <td class="<?= $cssSw->getClass() ?>" align="center">
                                         <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('auswahl' => $instid, 'cmd' => 'inst_kill')) ?>">
                                             <?= Assets::img('icons/16/grey/door-leave.png', tooltip2(_("aus der Einrichtung austragen"))) ?>
                                         </a>
-                                    </td>
                                 <? } else { ?>
-                                    <td class="'<?= $cssSw->getClass() ?>" align="center">
                                         <?= Assets::img('blank.gif', array('size' => '16')) ?>
-                                    </td>
                                 <? } ?>
+                                    </td>
                             </tr>
                         <? } ?>
                     <? } ?>

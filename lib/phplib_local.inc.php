@@ -116,6 +116,8 @@ require_once 'lib/classes/SessionDecoder.class.php';
 require_once 'lib/classes/StudipMail.class.php';
 require_once 'lib/classes/PageLayout.php';
 
+$SOFTWARE_VERSION = '1.12 alpha svn';
+
 PageLayout::initialize();
 
 //Besser hier globale Variablen definieren...
@@ -127,7 +129,6 @@ $GLOBALS['_fullname_sql']['no_title_rev'] = "CONCAT(Nachname ,', ', Vorname)";
 $GLOBALS['_fullname_sql']['no_title_short'] = "CONCAT(Nachname,', ',UCASE(LEFT(TRIM(Vorname),1)),'.')";
 $GLOBALS['_fullname_sql']['no_title_motto'] = "CONCAT(Vorname ,' ', Nachname,IF(motto!='',CONCAT(', ',motto),''))";
 //software version - please leave it as it is!
-$SOFTWARE_VERSION = '1.12 alpha svn';
 
 // set up global navigation
 require_once 'lib/navigation/StudipNavigation.php';

@@ -208,7 +208,8 @@ class Assets {
    *   Assets::javascript_path('ajax') => /javascripts/ajax.js
    */
   static function javascript_path($source) {
-    return Assets::compute_public_path($source, 'javascripts', 'js');
+    return Assets::compute_public_path($source, 'javascripts', 'js')
+        ."?".urlencode($GLOBALS['SOFTWARE_VERSION']);
   }
 
 
@@ -257,7 +258,8 @@ class Assets {
    *   stylesheet_path('style') => /stylesheets/style.css
    */
   static function stylesheet_path($source) {
-    return Assets::compute_public_path($source, 'stylesheets', 'css')."?2.0";
+    return Assets::compute_public_path($source, 'stylesheets', 'css')
+        ."?".urlencode($GLOBALS['SOFTWARE_VERSION']);
   }
 
 

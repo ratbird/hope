@@ -2614,7 +2614,7 @@ if ($level == 2)
                     }
                     $clause.=") ";
                 }
-                $add_teacher_query = "SELECT DISTINCT auth_user_md5.user_id, " .
+                $add_teacher_query = "SELECT DISTINCT auth_user_md5.username, " .
                             $_fullname_sql['full_rev'] ." AS fullname " .
                         "FROM user_inst " .
                                 "LEFT JOIN auth_user_md5 ON (user_inst.user_id = auth_user_md5.user_id) " .

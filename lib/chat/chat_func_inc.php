@@ -2,34 +2,19 @@
 # Lifter007: TODO
 # Lifter003: TODO
 /**
-* Chat Functions
-*
-*
-* @author       André Noack <noack@data-quest.de>
-* @access       public
-* @modulegroup  chat_modules
-* @module       chat_func_inc
-* @package      Chat
-*/
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// chat_func_inc.php
-//
-// Copyright (c) 2003 André Noack <noack@data-quest.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
+ * chat_func_inc.php - Chat Functions
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      André Noack <noack@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @package     chat
+ */
+
 
 require_once $GLOBALS['RELATIVE_PATH_CHAT'].'/ChatServer.class.php';
 //Studip includes
@@ -38,8 +23,9 @@ require_once 'lib/messaging.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/contact.inc.php';
 
-function chat_kill_chat($chatid){
-    if (get_config('CHAT_ENABLE')){
+function chat_kill_chat($chatid)
+{
+    if (get_config('CHAT_ENABLE')) {
         if (chat_get_entry_level($chatid) == "admin"){
             $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
             $chatServer->caching = false;
@@ -49,29 +35,33 @@ function chat_kill_chat($chatid){
     }
 }
 
-function chat_get_chat_icon($chatter,$chatinv,$is_active,$as_icon = false){
-    if (get_config('CHAT_ENABLE')){
-            $pic_prefix = ($as_icon) ? "icon-" : "";
-            $pic_path = $GLOBALS['ASSETS_URL']."images/";
-            $image = "<img border=\"0\" src=\"" . $pic_path . $pic_prefix;
-            if (!$chatter){
-                $image .= "chat1.gif\"" . tooltip(_("Dieser Chatraum ist leer"));
-            } elseif ($chatinv){
-                $image .= "chateinladung.gif\"" . tooltip(_("Sie haben eine gültige Einladung für diesen Chatraum")
-                    . " " . (($chatter == 1) ? _("Es ist eine Person in diesem Chatraum.") : sprintf(_("Es sind %s Personen in diesem Chatraum"),$chatter)));
-            } elseif ($chatter == 1 && $is_active) {
-                $image .= "chat3.gif\"" . tooltip(_("Sie sind alleine in diesem Chatraum"));
-            } else {
-                $image .= "chat2.gif\"" . tooltip(($chatter == 1) ? _("Es ist eine Person in diesem Chatraum.") : sprintf(_("Es sind %s Personen in diesem Chatraum"),$chatter));
-            }
-            $image .= "align=\"texttop\">";
-            return $image;
+function chat_get_chat_icon($chatter, $chatinv, $is_active, $as_icon = false, $color = 'grey', $active_color = 'red', $class = "middle")
+{
+    if (get_config('CHAT_ENABLE')) {
+        #$pic_prefix = ($as_icon) ? "icon-" : "";
+        $image = 'icons/16/';
+        if (!$chatter){
+            $image .= $color.'/chat.png';
+            $title = _("Dieser Chatraum ist leer");
+        } elseif ($chatinv){
+            $image .= $active_color.'/new/chat.png';
+            $title = _("Sie haben eine gültige Einladung für diesen Chatraum")
+                . " " . (($chatter == 1) ? _("Es ist eine Person in diesem Chatraum.") : sprintf(_("Es sind %s Personen in diesem Chatraum"),$chatter));
+        } elseif ($chatter == 1 && $is_active) {
+            $image .= $active_color.'/new/chat.png';
+            $title = _("Sie sind alleine in diesem Chatraum");
+        } else {
+            $image .= $active_color.'/new/chat.png';
+            $title = ($chatter == 1) ? _("Es ist eine Person in diesem Chatraum.") : sprintf(_("Es sind %s Personen in diesem Chatraum"),$chatter);
+        }
+        return Assets::img($image, array('title' => $title, 'class' => $class));
     } else {
         return false;
     }
 }
 
-function chat_get_entry_level($chatid){
+function chat_get_entry_level($chatid)
+{
     global $perm,$user,$auth;
     $object_type = get_object_type($chatid);
     $chat_entry_level = false;
@@ -113,7 +103,8 @@ function chat_get_entry_level($chatid){
     return $chat_entry_level;
 }
 
-function chat_get_name($chatid){
+function chat_get_name($chatid)
+{
     $db = new DB_Seminar();
     if ($chatid != "studip"){
         $db->query("SELECT Name from seminare WHERE Seminar_id='$chatid'");
@@ -132,52 +123,54 @@ function chat_get_name($chatid){
     }
 }
 
-function chat_show_info($chatid){
+function chat_show_info($chatid)
+{
     global $auth;
-        if (get_config('CHAT_ENABLE')){
-            $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
-            $sms = new messaging();
-            $chatter = $chatServer->isActiveChat($chatid);
-            $chatinv = $sms->check_chatinv($chatid);
-            $is_active = $chatServer->isActiveUser($auth->auth['uid'],$chatid);
-            $chatname = ($chatter) ? $chatServer->chatDetail[$chatid]['name'] : chat_get_name($chatid);
-            if (chat_get_entry_level($chatid) || $is_active || $chatinv){
-                //Ausgabe der Kopfzeile
-                chat_get_javascript();
-                echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
-                echo "\n<tr><td class=\"topic\" colspan=\"2\">";
-                echo "\n" . chat_get_chat_icon($chatter,$chatinv,$is_active);
-                echo "\n <b>" . _("Chatraum:") . " " . htmlReady($chatname) . "</b></td></tr>";
-                echo chat_get_content($chatid,$chatter,$chatinv,$chatServer->chatDetail[$chatid]['password'],$is_active,$chatServer->getUsers($chatid));
-                echo "\n</table>";
-                return true;
-            }
+    if (get_config('CHAT_ENABLE')) {
+        $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
+        $sms = new messaging();
+        $chatter = $chatServer->isActiveChat($chatid);
+        $chatinv = $sms->check_chatinv($chatid);
+        $is_active = $chatServer->isActiveUser($auth->auth['uid'],$chatid);
+        $chatname = ($chatter) ? $chatServer->chatDetail[$chatid]['name'] : chat_get_name($chatid);
+        if (chat_get_entry_level($chatid) || $is_active || $chatinv){
+            //Ausgabe der Kopfzeile
+            chat_get_javascript();
+            echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
+            echo "\n<tr><td class=\"topic\" colspan=\"2\">";
+            echo "\n" . chat_get_chat_icon($chatter, $chatinv, $is_active, false, 'white', 'white');
+            echo "\n <b>" . _("Chatraum:") . " " . htmlReady($chatname) . "</b></td></tr>";
+            echo chat_get_content($chatid,$chatter,$chatinv,$chatServer->chatDetail[$chatid]['password'],$is_active,$chatServer->getUsers($chatid));
+            echo "\n</table>";
+            return true;
         }
-        return false;
+    }
+    return false;
 }
 
-function chat_get_content($chatid,$chatter,$chatinv,$password,$is_active,$chat_user){
+function chat_get_content($chatid, $chatter, $chatinv, $password, $is_active, $chat_user)
+{
     $pic_path = $GLOBALS['ASSETS_URL']."images/";
     $ret = "\n<tr><td class=\"steel1\" width=\"50%\" valign=\"center\"><p class=\"info\">";
     if (($entry_level = chat_get_entry_level($chatid)) || $chatinv){
         if (!$is_active){
             $ret .= "<a href=\"#\" onClick=\"javascript:return open_chat('$chatid');\">";
-            $ret .= "<img border=\"0\" align=\"absmiddle\" src=\"$pic_path/chat1.gif\" " . tooltip(_("Diesen Chatraum betreten")) ." ></a>&nbsp;&nbsp;";
+            $ret .= "<img src=\"".Assets::image_path('icons/16/grey/chat.png')."\" " . tooltip(_("Diesen Chatraum betreten")) ." ></a> ";
             $ret .= sprintf(_("Sie k&ouml;nnen diesen Chatraum %sbetreten%s."),"<a href=\"#\" onClick=\"javascript:return open_chat('$chatid');\">","</a>");
             if ($chatinv){
                 $ret .= "&nbsp;" . _("(Sie wurden eingeladen.)");
             }
         } else {
-            $ret .= "<img border=\"0\" align=\"absmiddle\" src=\"$pic_path/chat1.gif\" " . tooltip(_("Sie haben diesen Chatraum bereits betreten.")) ." >&nbsp;&nbsp;";
+            $ret .= "<img src=\"".Assets::image_path('icons/16/grey/chat.png')."\" " . tooltip(_("Sie haben diesen Chatraum bereits betreten.")) ."> ";
             $ret .= _("Sie haben diesen Chatraum bereits betreten.");
         }
         if ($password){
-            $ret .= "<br><img border=\"0\" align=\"absmiddle\" src=\"$pic_path/closelock.gif\" >&nbsp;&nbsp;";
+            $ret .= "<br><img border=\"0\" align=\"absmiddle\" src=\"".Assets::image_path('icons/16/grey/lock-locked.png')."\" >&nbsp;&nbsp;";
             $ret .= _("Dieser Chatraum ist mit einem Passwort gesichert.");
         }
         if ($chatter && $entry_level == "admin"){
             $ret .= "<br><a href=\"" . $GLOBALS['PHP_SELF'] . "?kill_chat=$chatid\">";
-            $ret .= "<img border=\"0\" align=\"absmiddle\" src=\"$pic_path/trash.gif\" " . tooltip(_("Diesen Chatraum leeren")) ." ></a>&nbsp;&nbsp;";
+            $ret .= "<img src=\"".Assets::image_path('icons/16/grey/trash.png')."\" " . tooltip(_("Diesen Chatraum leeren")) ."></a> ";
             $ret .= sprintf(_("Diesen Chatraum %sleeren%s"),"<a href=\"" . $GLOBALS['PHP_SELF'] . "?kill_chat=$chatid\">","</a>");
         }
         if ($entry_level == "admin" && count($_SESSION['chat_logs'][$chatid])){
@@ -197,7 +190,7 @@ function chat_get_content($chatid,$chatter,$chatinv,$password,$is_active,$chat_u
         $ret .= "<img border=\"0\" align=\"absmiddle\" src=\"$pic_path/nochat.gif\" >&nbsp;&nbsp;";
         $ret .= _("Um diesen Chatraum zu betreten, brauchen sie eine g&uuml;ltige Einladung.");
     }
-    $ret .= "\n</font></div></td><td class=\"steel1\" width=\"50%\" valign=\"center\"><p class=\"info\">";
+    $ret .= "</p></td><td class=\"steel1\" width=\"50%\" valign=\"center\"><p class=\"info\">";
     if (!$chatter){
         $ret .= _("Dieser Chatraum ist leer.");
     } else {
@@ -217,7 +210,8 @@ function chat_get_content($chatid,$chatter,$chatinv,$password,$is_active,$chat_u
     return $ret;
 }
 
-function chat_get_online_icon($user_id = false, $username = false, $pref_chat_id = false){
+function chat_get_online_icon($user_id = false, $username = false, $pref_chat_id = false)
+{
     global $i_page;
     if (get_config('CHAT_ENABLE')) {
         if ($user_id && !$username){
@@ -252,7 +246,8 @@ function chat_get_online_icon($user_id = false, $username = false, $pref_chat_id
     }
 }
 
-function chat_get_javascript(){
+function chat_get_javascript()
+{
     global $auth;
     echo "\t\t<script type=\"text/javascript\">\n";
     echo "\t\tfunction open_chat(chatid) {\n";
@@ -262,5 +257,3 @@ function chat_get_javascript(){
     echo "\t\t}\nreturn false;\n}\n";
     echo "\t\t</script>\n";
 }
-
-?>

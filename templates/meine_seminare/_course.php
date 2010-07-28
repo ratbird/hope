@@ -71,16 +71,15 @@ foreach ($group_members as $member) {
             </td>
 
             <td class="<?= $cssSw->getClass() ?>" align="right" nowrap="nowrap">
-            <? if (get_config('CHAT_ENABLE') && $values["modules"]["chat"]) { ?>
+            <? /* if (get_config('CHAT_ENABLE') && $values["modules"]["chat"]) { ?>
 
                 <a href="<?= !$auth->auth['jscript'] ? 'chat_online.php' : '#' ?>"
                    onClick="return open_chat(<?= $chat_info[$semid]['is_active'] ? 'false' : "'$semid'" ?>);">
-                    <?= Assets::img("icons/16/grey/chat.png") ?>
-                    <? /*= chat_get_chat_icon($chat_info[$semid]['chatter'], $chat_invs[$chat_info[$semid]['chatuniqid']], $chat_info[$semid]['is_active'],true)*/ ?>
+                    <?= chat_get_chat_icon($chat_info[$semid]['chatter'], $chat_invs[$chat_info[$semid]['chatuniqid']], $chat_info[$semid]['is_active'],true) ?>
                 </a>
             <? } else { ?>
                 <?= Assets::img("blank.gif", array('size' => '16')) ?>
-            <? } ?>
+            <? } */ ?>
 
             <? if (in_array($values["status"], array("dozent", "tutor"))) { ?>
                 <?

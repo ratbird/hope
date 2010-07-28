@@ -3,19 +3,17 @@
 # Lifter007: TODO
 # Lifter003: TODO
 /**
- * online.php
+ * online.php - Anzeigemodul fuer Personen die Online sind
  *
- * Anzeigemodul fuer Personen die Online sind
- *
- * PHP Version 5
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * @author      André Noack <andre.noack@gmx.net>
  * @author      Cornelis Kater <ckater@gwdg.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @copyright   2002-2009 Stud.IP
  * @license     http://www.gnu.org/licenses/gpl.html GPL Licence 3
- * @package     studip_core
- * @access      public
  */
 
 
@@ -119,54 +117,34 @@ if ($sms_msg) {
     $sess->unregister('sms_msg');
 }
 
-if (($change_view) || ($delete_user) || ($view=="Messaging")) {
+//brauchen wir das hier noch?
+/*if (($change_view) || ($delete_user) || ($view=="Messaging")) {
     include 'lib/include/messagingSettings.inc.php';
     change_messaging_view();
     echo "</td></tr></table>";
     page_close();
     die;
-}
+}*/
 
 
 ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
-<?
-if ($msg)
-    {
-    echo"<tr><td class=\"blank\"colspan=2><br>";
-    parse_msg ($msg);
+<? if ($msg) {
+    echo"<tr><td class=\"blank\"colspan=2>";
+    parse_msg($msg);
     echo"</td></tr>";
-    }
-
-    ?>
+} ?>
     <tr>
-        <td class="onlineinfo">
-        <?
-        print(_("Hier k&ouml;nnen Sie sehen, wer au&szlig;er Ihnen im Moment online ist.") . "<p>");
-        printf(_("Sie k&ouml;nnen diesen Usern eine Nachricht schicken %s oder sie zum Chatten %s einladen."), sprintf("<img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" width=\"24\" height=\"21\" %s border=\"0\"><br>", tooltip(_("Nachricht an User verschicken"))), sprintf("<img src=\"".$GLOBALS['ASSETS_URL']."images/chat1.gif\" width=\"24\" height=\"21\" %s border=\"0\">", tooltip(_("zum Chatten einladen"))));
-        print("\n<br>" . _("Wenn Sie auf den Namen klicken, kommen Sie zum Profil des Users."));
-
-        if ($SessSemName[0] && $SessSemName["class"] == "inst")
-            echo "<br><br><a href=\"institut_main.php\">" . _("Zur&uuml;ck zur ausgew&auml;hlten Einrichtung") . "</a>";
-        elseif ($SessSemName[0])
-            echo "<br><br><a href=\"seminar_main.php\">" . _("Zur&uuml;ck zur ausgew&auml;hlten Veranstaltung") . "</a>";
-        ?>
-        <td class="blank" align="right"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/infobox/online.jpg" border="0"></td>
-    </tr>
-    <tr>
-        <td class="blank" colspan="2">
+        <td class="blank" valign="top" align="center">
     <?
 ob_end_flush();
 ob_start();
     //Erzeugen der Liste aktiver und inaktiver Buddies
     $different_groups=FALSE;
 
-
     $owner_id = $user->id;
     $db=new DB_Seminar;
     $db2=new DB_Seminar;
-
-
 
         foreach($filtered_buddies as $username=>$value) { //alle durchgehen die online sind
             $user_id = $value["userid"];
@@ -193,14 +171,14 @@ if (is_array($non_group_buddies))
     $cssSw->switchClass();
     //Anzeige
 ?>
-    <table width="100%" cellspacing="0" border="0" cellpadding="2">
+    <table width="98%" cellspacing="0" border="0" cellpadding="2">
         <tr>
 
 <?  //Kopfzeile
     if ($my_messaging_settings["show_only_buddys"])
-        echo "\n<td class=\"".$cssSw->getHeaderClass()."\" width=\"50%\" align=\"center\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20><font size=-1><b>" . _("Buddies") . "</b></font></td></tr>\n";
+        echo "\n<td class=\"".$cssSw->getHeaderClass()."\" width=\"50%\" align=\"center\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20><font size=-1><b>" . _("Kontakte") . "</b></font></td></tr>\n";
     else
-        echo "\n<td class=\"".$cssSw->getHeaderClass()."\" width=\"50%\" align=\"center\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20><font size=-1><b>" . _("Buddies") . "</b></font></td><td class=\"".$cssSw->getHeaderClass()."\" width=\"50%\" align=\"center\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20><font size=-1><b>" . _("andere Nutzer") . "</b></font></td></tr>\n";
+        echo "\n<td class=\"".$cssSw->getHeaderClass()."\" width=\"50%\" align=\"center\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20><font size=-1><b>" . _("Kontakte") . "</b></font></td><td class=\"".$cssSw->getHeaderClass()."\" width=\"50%\" align=\"center\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=1 height=20><font size=-1><b>" . _("andere Nutzer") . "</b></font></td></tr>\n";
     echo "<tr>";
 
     //Buddiespalte
@@ -373,6 +351,32 @@ if (is_array($non_group_buddies))
             <? if ($weitere > 0) : ?>
                 <div align="center"><font size="-1" align="center"><br><?=sprintf(_("+ %s unsichtbare NutzerInnen"), $weitere)?></font></div>
             <? endif; ?>
+        </td>
+        <td class="blank" valign="top" align="right" width="270">
+        <?
+        $infobox = array(
+            array("kategorie" => _("Information:"),
+                    "eintrag" => array(
+                        array("icon" => 'icons/16/black/info.png',
+                              "text"  => _("Hier können Sie sehen, wer au&szlig;er Ihnen im Moment online ist.")
+                        ),
+                        array("icon" => 'icons/16/black/mail.png',
+                              "text"  => _("Sie können diesen Usern eine Nachricht schicken oder sie zum Chatten einladen.")
+                        ),
+                        array("icon" => 'icons/16/black/profile.png',
+                              "text"  => _("Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Users.")
+                        )
+                )
+            )
+        );
+
+        print_infobox($infobox, 'infobox/online.jpg');
+        #if ($SessSemName[0] && $SessSemName["class"] == "inst")
+        #    echo "<br><br><a href=\"institut_main.php\">" . _("Zur&uuml;ck zur ausgew&auml;hlten Einrichtung") . "</a>";
+        #elseif ($SessSemName[0])
+        #    echo "<br><br><a href=\"seminar_main.php\">" . _("Zur&uuml;ck zur ausgew&auml;hlten Veranstaltung") . "</a>";
+        ?>
+        <br>
         </td>
     </tr>
 </table>

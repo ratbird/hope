@@ -314,18 +314,24 @@ function open_im() {
 
             if ($username==$auth->auth["uname"]) {
                 if ($auth->auth["jscript"]) {
-                    echo "<br>&nbsp;<font size=\"-1\"><a href='javascript:open_im();'>" . _("Stud.IP Messenger starten") . "</a></font>";
+                    echo "<br><a href='javascript:open_im();'>" . _("Stud.IP Messenger starten") . "</a>";
                 }
             } else {
                 if (CheckBuddy($username)==FALSE) {
-                    echo "<br><font size=\"-1\">&nbsp;<a href=\"". URLHelper::getLink("?cmd=add_user&add_uname=".$username) ."\">" . _("zu Buddies hinzuf&uuml;gen") . "</a></font>";
+                    echo "<br><a href=\"". URLHelper::getLink("?cmd=add_user&add_uname=".$username) ."\">"
+                         . Assets::img('icons/16/grey/person.png', array('title' =>_("zu den Kontakten hinzufügen"), 'class' => 'middle'))
+                         . " " . _("zu den Kontakten hinzufügen") . " </a>";
                 }
-                echo "<br><font size=\"-1\"> <a href=\"". URLHelper::getLink("sms_send.php?sms_source_page=about.php&rec_uname=".$db->f("username")) ."\">&nbsp;" . _("Nachricht an Nutzer") . "&nbsp;<img style=\"vertical-align:middle\" src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" " . tooltip(_("Nachricht an Nutzer verschicken")) . " border=0 align=texttop></a></font>";
+                echo "<br><a href=\"". URLHelper::getLink("sms_send.php?sms_source_page=about.php&rec_uname=".$db->f("username")) ."\">"
+                     . Assets::img('icons/16/grey/mail.png', array('title' => _("Nachricht an Nutzer verschicken"), 'class' => 'middle'))
+                     . " " . _("Nachricht an Nutzer") . "</a>";
 
             }
 
             // Export dieses Users als Vcard
-            echo "<br><font size=\"-1\"><a href=\"". URLHelper::getLink("contact_export.php") ."\">&nbsp;"._("vCard herunterladen")."&nbsp;<img style=\"vertical-align:middle\" src=\"".$GLOBALS['ASSETS_URL']."images/vcardexport.gif\" border=\"0\" ".tooltip(_("als vCard exportieren"))."></a></font>";
+            echo "<br><a href=\"". URLHelper::getLink("contact_export.php") ."\">"
+                 . Assets::img('icons/16/grey/vcard.png', array('title' => _("vCard herunterladen"), 'class' => 'middle'))
+                 . " " . _("vCard herunterladen") ."</a>";
 
             ?>
 

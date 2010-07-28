@@ -3,25 +3,22 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-/*
-show_dates.inc.php enthält Funktionen zum Anzeigen von Terminen
-Copyright (C) 2000 André Noack <anoack@mcis.de>, Cornelis Kater <ckater@gwdg.de>,
-Stefan Suchi <suchi@gmx.de>
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA   02111-1307, USA.
-*/
+/**
+ * show_dates.inc.php - Funktionen zum Anzeigen von Terminen
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      André Noack <anoack@mcis.de>
+ * @author      Cornelis Kater <ckater@gwdg.de>
+ * @author      Stefan Suchi <suchi@gmx.de>
+ * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @package     dates
+ */
 
 require_once('lib/visual.inc.php');
 require_once('lib/dates.inc.php');
@@ -30,16 +27,24 @@ require_once('lib/msg.inc.php');
 
 if ($GLOBALS["CALENDAR_ENABLE"])
     require_once($RELATIVE_PATH_CALENDAR . "/lib/DbCalendarEventList.class.php");
-
-/*
- *TODO: Bedarf eine kompletten Überarbeitung!!!!
+/**
+ * TODO: Bedarf eine kompletten Überarbeitung!!!!
  *
  * Es wird kein Seminar-Objekt instanziert
  * -> es werden hier noch keine neuen Termine angelegt, wenn ein neues Semester eingetragen wurden
+ *
+ * @param $date_start
+ * @param $date_end
+ * @param $open
+ * @param $range_id
+ * @param $show_not
+ * @param $show_docs
+ * @param $show_admin
+ * @param $full_width
+ * @param $show_as_window
  */
-
-function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 0,
-        $show_docs = TRUE, $show_admin = FALSE, $full_width = TRUE, $show_as_window = TRUE) {
+function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 0, $show_docs = TRUE, $show_admin = FALSE, $full_width = TRUE, $show_as_window = TRUE)
+{
     global $PHP_SELF, $TERMIN_TYP, $SessSemName, $user, $username, $rechte;
 
     // wenn man keinen Start und Endtag angibt, soll wohl alles angezeigt werden
@@ -139,23 +144,23 @@ function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 
             if ($show_admin) {
                 $colspan++;
                 if (!$show_whole_time) {
-                    printf("\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" border=\"0\" %s><b>", tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")));
+                    printf("\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" %s><b>", tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")));
                     printf(_("Termine für die Zeit vom %s bis zum %s"), strftime("%d. %B %Y", $date_start), strftime("%d. %B %Y", $date_end));
-                    printf( "</b></td>\n<td align = \"right\" class=\"topic\">%s<img src=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\" %s></a></td></tr>", $admin_link, tooltip(_("Neuen Termin anlegen")));
+                    printf( "</b></td>\n<td align = \"right\" class=\"topic\">%s<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" %s></a></td></tr>", $admin_link, tooltip(_("Neuen Termin anlegen")));
                     }
                 else {
-                    printf("\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" border=\"0\" %s><b>", tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")));
+                    printf("\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" %s><b>", tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")));
                     printf(_("Termine"));
-                    printf("</b></td>\n<td align = \"right\" class=\"topic\">%s<img src=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\" %s ></a></td></tr>", $admin_link, tooltip(_("Neuen Termin anlegen")));
+                    printf("</b></td>\n<td align = \"right\" class=\"topic\">%s<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" %s ></a></td></tr>", $admin_link, tooltip(_("Neuen Termin anlegen")));
                     }
                 }
             else
                 if (!$show_whole_time) {
-                    printf("\n<tr valign=\"baseline\"><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" border=\"0\" %s><b>", tooltip(_("Termine. Klicken Sie auf den Pfeil, um eine Beschreibung des Termins anzuzeigen.")));
+                    printf("\n<tr valign=\"baseline\"><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" %s><b>", tooltip(_("Termine. Klicken Sie auf den Pfeil, um eine Beschreibung des Termins anzuzeigen.")));
                     printf(_("Termine für die Zeit vom %s bis zum %s"), strftime("%d. %B %Y", $date_start), strftime("%d. %B %Y", $date_end));
                     print("</b></td></tr>");
                 } else {
-                    printf("\n<tr valign=\"baseline\"><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" border=\"0\" %s><b>", tooltip(_("Termine. Klicken Sie auf den Pfeil, um eine Beschreibung des Termins anzuzeigen.")));
+                    printf("\n<tr valign=\"baseline\"><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" %s><b>", tooltip(_("Termine. Klicken Sie auf den Pfeil, um eine Beschreibung des Termins anzuzeigen.")));
                     printf(_("Termine"));
                     print("</b></td></tr>");
                 }
@@ -175,7 +180,7 @@ function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 
                 print "<a href=\"".URLHelper::getLink("raumzeit.php?cmd=createNewSingleDate#newSingleDate")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/add_sheet.gif\"".tooltip(_("Einen neuen Termin anlegen"))." border=0></a></td>";
             print "\n<td class=\"steelgraulight\" align=\"center\">";
             if ($open == "all")
-                print "<a href=\"".URLHelper::getLink("?dclose=1")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/close_all.gif\" ".tooltip(_("Alle schließen"))." border=\"0\"></a>";
+                print "<a href=\"".URLHelper::getLink("?dclose=1")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/close_all.gif\" ".tooltip(_("Alle schließen"))."></a>";
             else
                 print "<a href=\"".URLHelper::getLink("?dopen=all")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/open_all.gif\" ".tooltip(_("Alle öffnen"))."border=\"0\"></a>";
             print "\n</td></tr>\n<tr><td class=\"blank\" colspan=\"2\">";
@@ -238,7 +243,7 @@ function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 
                 $zusatz .= "<a href=\"".URLHelper::getLink("folder.php?cmd=tree&open=" . $db2->f("folder_id"));
                 $zusatz .= "#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icon-disc.gif\" ";
                 $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
-                $zusatz .= " border=\"0\" align=\"absmiddle\"></a>";
+                $zusatz .= "></a>";
                 if ($num_docs > 5)
                     $tmp_num_docs = 5;
                 else
@@ -247,7 +252,7 @@ function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 
                     $zusatz .= "<a href=\"".URLHelper::getLink("folder.php?cmd=tree&open=" . $db2->f("folder_id"));
                     $zusatz .= "#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/file1b.gif\" ";
                     $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
-                    $zusatz .= " border=\"0\" align=\"absmiddle\"></a>";
+                    $zusatz .= "></a>";
                 }
             }
 
@@ -255,7 +260,7 @@ function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 
             $zusatz .= " <a href=\"calendar.php?cmd=showweek&atime=" . $db->f("date");
             $zusatz .= "\"><img style=\"vertical-align:bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/popupkalender.gif\" ";
             $zusatz .= tooltip(sprintf(_("Zum %s in den persönlichen Terminkalender springen"), date("d.m.Y", $db->f("date"))));
-            $zusatz .= " border=\"0\"></a>";
+            $zusatz .= "></a>";
 
 
             if ($open != $db->f("termin_id"))
@@ -301,7 +306,7 @@ function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 
     elseif (($show_admin) && ($show_as_window)) {   //no dates, but the possibility to create one (only, if show_dates is used in window-style)
         print("\n<table class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">");
         printf("\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\"><b>  %s</b></td>",_("Termine"));
-        printf("\n<td align =\"right\" class=\"topic\"> %s<img src=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\" %s></a> </td></tr>", $admin_link, tooltip(_("Termine einstellen")));
+        printf("\n<td align =\"right\" class=\"topic\"> %s<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" %s></a> </td></tr>", $admin_link, tooltip(_("Termine einstellen")));
         ?>
         <tr>
             <td class="steel1" colspan="2">
@@ -328,7 +333,17 @@ function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 
     }
 }
 
-function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALSE, $show_admin=FALSE, $open){
+/**
+ *
+ * @param unknown_type $range_id
+ * @param unknown_type $date_start
+ * @param unknown_type $date_end
+ * @param unknown_type $show_docs
+ * @param unknown_type $show_admin
+ * @param unknown_type $open
+ */
+function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALSE, $show_admin=FALSE, $open)
+{
     global $PHP_SELF, $SessSemName, $user, $TERMIN_TYP;
     global $PERS_TERMIN_KAT, $username, $LastLogin;
 
@@ -345,13 +360,13 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
         echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
         if ($show_admin) {
             $colspan++;
-            echo "\n<tr><td class=\"topic\"> <img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" border=\"0\" " . tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")) . "> <b>";
+            echo "\n<tr><td class=\"topic\"> <img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" " . tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")) . "> <b>";
             printf(_("Termine für die Zeit vom %s bis zum %s"), strftime("%d. %B %Y", $list->getStart()), strftime("%d. %B %Y", $list->getEnd()));
             echo "</b></td>";
-            echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\" " . tooltip(_("Neuen Termin anlegen")) . "></a></td></tr>";
+            echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Neuen Termin anlegen")) . "></a></td></tr>";
         }
         else {
-            echo "\n<tr><td class=\"topic\"> <img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" border=\"0\" " . tooltip(_("Termine. Klicken Sie auf den Pfeil, um eine Beschreibung des Termins anzuzeigen.")) . "><b>  ";
+            echo "\n<tr><td class=\"topic\"> <img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" " . tooltip(_("Termine. Klicken Sie auf den Pfeil, um eine Beschreibung des Termins anzuzeigen.")) . "><b>  ";
             printf(_("Termine für die Zeit vom %s bis zum %s"), strftime("%d. %B %Y", $list->getStart()), strftime("%d. %B %Y", $list->getEnd()));
             echo "</b></td></tr>";
         }
@@ -365,7 +380,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
             $add_to_link = "&username=$username";
 
         while ($termin = $list->nextEvent()) {
-            $icon = " <img src=\"".$GLOBALS['ASSETS_URL']."images/termin-icon.gif\" border=\"0\" " . tooltip(_("Termin")) . ">";
+            $icon = " <img src=\"".$GLOBALS['ASSETS_URL']."images/termin-icon.gif\" " . tooltip(_("Termin")) . ">";
 
             $zusatz = '';
             if ($termin->getLocation()) {
@@ -461,7 +476,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
     else if ($show_admin) {
         echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
         echo "\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\"> <b>" . _("Termine") . "</b></td>";
-        echo "\n<td align =\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\" " . tooltip(_("Termine einstellen")) . "></a> </td></tr>";
+        echo "\n<td align =\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Termine einstellen")) . "></a> </td></tr>";
         ?>
 
         <tr>
@@ -481,7 +496,16 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
     }
 }
 
-function show_all_dates ($date_start, $date_end, $show_docs=FALSE, $show_admin=TRUE, $open){
+/**
+ *
+ * @param unknown_type $date_start
+ * @param unknown_type $date_end
+ * @param unknown_type $show_docs
+ * @param unknown_type $show_admin
+ * @param unknown_type $open
+ */
+function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TRUE, $open)
+{
     global $PHP_SELF, $RELATIVE_PATH_CALENDAR, $SessSemName, $user, $TERMIN_TYP;
     global $PERS_TERMIN_KAT, $username, $CALENDAR_DRIVER, $LastLogin, $calendar_user_control_data;
 
@@ -500,12 +524,12 @@ function show_all_dates ($date_start, $date_end, $show_docs=FALSE, $show_admin=T
         // Ausgabe der Kopfzeile
         echo "<table class=\"index_box\">";
         echo "\n<tr><td class=\"topic\" align=\"left\">\n";
-        echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/meinetermine.gif\" border=\"0\" ";
+        echo "<img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" ";
         echo tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen."));
-        echo " align=\"absmiddle\"><b>  ";
+        echo "> <b>";
         echo _("Meine aktuellen Termine");
         echo "</b></td>";
-        echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\" " . tooltip(_("Neuen Termin anlegen")) . "></a> </td></tr>\n";
+        echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Neuen Termin anlegen")) . "></a> </td></tr>\n";
 
         // Ausgabe der Daten
         echo "<tr><td class=\"blank\" colspan=\"2\">";
@@ -559,13 +583,13 @@ function show_all_dates ($date_start, $date_end, $show_docs=FALSE, $show_admin=T
                                     . "&redirect_to=folder.php&cmd=tree&open=" . $db->f("folder_id")
                                     . "#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icon-disc.gif\" ";
                     $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
-                    $zusatz .= " border=\"0\" align=absmiddle>";
+                    $zusatz .= ">";
                     if ($num_docs > 5)
                         $tmp_num_docs = 5;
                     else
                         $tmp_num_docs = $num_docs;
                     for ($i = 1; $i < $tmp_num_docs; $i++)
-                        $zusatz .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/file1b.gif\" alt=\"\" border=\"0\" align=\"absmiddle\">";
+                        $zusatz .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/file1b.gif\" alt=\"\">";
 
                     $zusatz .= "</a>";
                 }
@@ -665,8 +689,8 @@ function show_all_dates ($date_start, $date_end, $show_docs=FALSE, $show_admin=T
     // keine Termine da, aber die Moeglichkeit welche einzustellen
     else if($show_admin) {
         echo "\n<table class=\"index_box\">";
-        echo "\n<tr><td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/meinetermine.gif\" border=\"0\" align=\"texttop\"><b>  " . _("Termine") . "</b></td>";
-        echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\" " . tooltip(_("Termine einstellen")) . "></a> </td></tr>";
+        echo "\n<tr><td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/meinetermine.gif\"><b>  " . _("Termine") . "</b></td>";
+        echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Termine einstellen")) . "></a> </td></tr>";
         ?>
         <tr>
             <td class="steel1" colspan="2">

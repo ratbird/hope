@@ -3,21 +3,21 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-
 /**
- * showNews.inc.php
+ * showNews.inc.php - Anzeigefunktion fuer News
  *
- * Anzeigefunktion fuer News
- *
- * PHP Version 5
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * @author      Ralf Stockmann <rstockm@gwdg.de>
  * @author      Cornelis Kater <ckater@gwdg.de>
  * @author      Stefan Suchi <suchi@gmx.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @copyright   2001-2009 Stud.IP
- * @license     http://www.gnu.org/licenses/gpl.html GPL Licence 3
- * @package     studip_core
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @package     news
  */
 
 require_once 'lib/functions.php';
@@ -28,7 +28,12 @@ require_once ('lib/classes/StudipNews.class.php');
 require_once ('lib/classes/StudipComments.class.php');
 require_once ('lib/classes/Seminar.class.php');
 
-function process_news_commands(&$cmd_data) {
+/**
+ *
+ * @param unknown_type $cmd_data
+ */
+function process_news_commands(&$cmd_data)
+{
     //Auf und Zuklappen News
 
     $cmd_data["comopen"]='';
@@ -44,10 +49,19 @@ function process_news_commands(&$cmd_data) {
     if ($_REQUEST['nclose'])  $cmd_data["nopen"]='';
     if ($_REQUEST['comnew']) $cmd_data["comnew"]=$_REQUEST['comnew'];
     if ($_REQUEST['comdel']) $cmd_data["comdel"]=$_REQUEST['comdel'];
-
 }
 
-function commentbox($num, $authorname, $authoruname, $date, $dellink, $content) {
+/**
+ *
+ * @param unknown_type $num
+ * @param unknown_type $authorname
+ * @param unknown_type $authoruname
+ * @param unknown_type $date
+ * @param unknown_type $dellink
+ * @param unknown_type $content
+ */
+function commentbox($num, $authorname, $authoruname, $date, $dellink, $content)
+{
     $out=array();
     $out[]="<table style=\"border: 1px black solid;\" cellpadding=3 cellspacing=0 width=100%>";
     $out[].="<tr style=\"background:#ffffcc\">";
@@ -59,7 +73,7 @@ function commentbox($num, $authorname, $authoruname, $date, $dellink, $content) 
     $out[].="</td>";
     $out[].="<td align=right style=\"border-bottom: 1px black dotted\">";
     if ($dellink) {
-        $out[].="<a href=\"$dellink\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=0></a>";
+        $out[].="<a href=\"$dellink\">".Assets::img('icons/16/grey/trash.png')."</a>";
     } else {
         $out[]=" ";
     }
@@ -70,8 +84,14 @@ function commentbox($num, $authorname, $authoruname, $date, $dellink, $content) 
     return implode("\n",$out);
 }
 
-function delete_comment($comment_id) {
+/**
+ *
+ * @param unknown_type $comment_id
+ */
+function delete_comment($comment_id)
+{
     global $auth, $perm;
+
     $ok = 0;
     $comment = new StudipComments($comment_id);
     if (!$comment->isNew()) {
@@ -90,6 +110,16 @@ function delete_comment($comment_id) {
     return $ok;
 }
 
+/**
+ *
+ * @param unknown_type $range_id
+ * @param unknown_type $show_admin
+ * @param unknown_type $limit
+ * @param unknown_type $open
+ * @param unknown_type $width
+ * @param unknown_type $last_visited
+ * @param unknown_type $cmd_data
+ */
 function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = "100%", $last_visited = 0, $cmd_data)
 {
     global $auth, $SessSemName;
@@ -125,7 +155,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
             echo"\n<table class=\"index_box\"$width>";
             echo"\n<tr><td class=\"topic\" colspan=\"2\"><img src=\"".Assets::image_path('icons/16/white/news.png')."\" border=\"0\"". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "align=\"texttop\"><b> " . _("News") . "</b></td>";
             echo"\n<td align=\"right\" class=\"topic\">";
-            echo "<a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\"" . tooltip(_("News einstellen")) . "></a> ";
+            echo "<a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".Assets::image_path('icons/16/white/admin.png')."\" border=\"0\"" . tooltip(_("News einstellen")) . "></a> ";
             echo"</td></tr>";
             echo "\n<tr><td class=\"steel1\" colspan=\"3\"><p class=\"info\">" . _("Es sind keine aktuellen Ankündigungen vorhanden. Um neue Ankündigungen zu erstellen, klicken Sie auf die Doppelpfeile.") . "</p>";
             echo "\n</td></tr></table>";
@@ -148,7 +178,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
         if ($show_admin) {
             $colspan++;
             echo "\n<td align=\"right\" class=\"topic\" width=\"1%\">";
-            echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&modus=admin&cmd=show")."\"><img src=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\"" . tooltip(_("News bearbeiten")) . "></a> ";
+            echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&modus=admin&cmd=show")."\"><img src=\"".Assets::image_path('icons/16/white/admin.png')."\" border=\"0\"" . tooltip(_("News bearbeiten")) . "></a> ";
             echo "\n</td>";
         }
         echo "\n</tr>\n<tr><td class=\"blank\" colspan=\"$colspan\">";
@@ -163,11 +193,16 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
 
     }
     echo "</td></tr></table>";
-
-    return TRUE;
+    return true;
 }
 
-function show_rss_news($range_id, $type){
+/**
+ *
+ * @param unknown_type $range_id
+ * @param unknown_type $type
+ */
+function show_rss_news($range_id, $type)
+{
     $RssTimeFmt = '%Y-%m-%dT%H:%MZ';
     $last_changed = 0;
     switch ($type){
@@ -229,9 +264,15 @@ function show_rss_news($range_id, $type){
     return true;
 }
 
-
-function show_news_item($news_item, $cmd_data, $show_admin, $admin_link) {
-
+/**
+ *
+ * @param unknown_type $news_item
+ * @param unknown_type $cmd_data
+ * @param unknown_type $show_admin
+ * @param unknown_type $admin_link
+ */
+function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
+{
   global $auth, $_fullname_sql;
 
   $db2 = new DB_Seminar();
@@ -310,7 +351,15 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link) {
   return ob_get_clean();
 }
 
-function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link) {
+/**
+ *
+ * @param unknown_type $news_item
+ * @param unknown_type $cmd_data
+ * @param unknown_type $show_admin
+ * @param unknown_type $admin_link
+ */
+function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
+{
     global $auth, $_fullname_sql;
 
     $db2 = new DB_Seminar();
@@ -424,4 +473,3 @@ function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
     echo "</tr></table>";
     return ob_get_clean();
 }
-

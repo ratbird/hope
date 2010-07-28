@@ -2,35 +2,19 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-
 /**
-* displays editable personal messaging-settings
-*
-* @author       Nils K. Windisch <studip@nkwindisch.de>
-* @access       public
-* @modulegroup  Messaging
-* @module       sms_box.php
-* @package      Stud.IP Core
-*/
-
-/*
-messagingSettings.php
-Copyright (C) 2003 Nils K. Windisch <info@nkwindisch.de>
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
+ * messagingSettings.php - displays editable personal messaging-settings
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Nils K. Windisch <studip@nkwindisch.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @package     message
+ */
 
 require_once ('lib/language.inc.php');
 require_once ('config.inc.php');
@@ -146,8 +130,12 @@ if ($do_add_user_x)
 
 ## FUNCTION ##
 
-function change_messaging_view() {
-    global $_fullname_sql,$my_messaging_settings, $PHP_SELF, $perm, $user, $search_exp, $add_user, $add_user_x, $do_add_user_x, $new_search_x, $i_page, $search_exp, $gosearch_x, $smsforward, $reset_txt, $email_forward, $user_cfg, $FOAF_ENABLE;
+function change_messaging_view()
+{
+    global $_fullname_sql,$my_messaging_settings, $PHP_SELF, $perm, $user, $search_exp,
+           $add_user, $add_user_x, $do_add_user_x, $new_search_x, $i_page, $search_exp,
+           $gosearch_x, $smsforward, $reset_txt, $email_forward, $user_cfg, $FOAF_ENABLE;
+
     $msging=new messaging;
     $db=new DB_Seminar;
     $db2=new DB_Seminar;
@@ -287,7 +275,7 @@ function change_messaging_view() {
                         } else { // kein empfaenger ausgewaehlt
                             if ($search_exp == "") { ?>
                                 <input type="text" name="search_exp" size="30" value="">
-                                <input type="image" name="gosearch" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suche2.gif" border="0"><?
+                                <input type="image" name="gosearch" src="<?=Assets::image_path('icons/16/black/search.png') ?>" class="middle" border="0"><?
                             } else {
                                 $db->query("SELECT username, ".$_fullname_sql['full_rev']." AS fullname, perms FROM auth_user_md5 LEFT JOIN user_info USING(user_id) WHERE (username LIKE '%$search_exp%' OR Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%') AND ".get_vis_query('auth_user_md5')." ORDER BY Nachname ASC");
                                 if (!$db->num_rows()) { // wenn keine treffer

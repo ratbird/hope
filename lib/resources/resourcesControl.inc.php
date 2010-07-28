@@ -68,7 +68,7 @@ Navigation aufbauen
 /*****************************************************************************/
 
 $resources_nav = new Navigation(_('Ressourcen'));
-$resources_nav->setImage('header/header_admin', array('title' => _('Zur Ressourcenverwaltung')));
+$resources_nav->setImage('icons/32/blue/resources.png', array('title' => _('Zur Ressourcenverwaltung')));
 
 // Reiter "Uebersicht"
 $navigation = new Navigation(_('Übersicht'));

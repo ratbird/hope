@@ -14,9 +14,9 @@
  *
  * @author      Cornelis Kater <ckater@gwdg.de>
  * @author      Nils K. Windisch <studip@nkwindisch.de>
- * @copyright   2002-2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
+ * @package     message
  */
 
 require '../lib/bootstrap.php';
@@ -39,6 +39,7 @@ require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/sms_functions.inc.php');
 require_once ('lib/user_visible.inc.php');
 
+// wofür wird das hier benötigt?
 if (get_config('CHAT_ENABLE')) {
     include_once $RELATIVE_PATH_CHAT.'/chat_func_inc.php';
     $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
@@ -361,7 +362,7 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
     $messagesubject = Request::quoted('subject');
     $course_id = Request::option('course_id');
     $cid = Request::get('cid');
-    
+
     if ((in_array($_REQUEST['filter'], words('all prelim waiting')) && $course_id) || ($_REQUEST['filter'] == 'send_sms_to_all' && isset($_REQUEST['who'])) && $perm->have_studip_perm('tutor', $course_id) || ($_REQUEST['filter'] == 'inst_status' && isset($_REQUEST['who']) && $perm->have_perm('admin') && isset($cid)))
     {
         //Datenbank abfragen für die verschiedenen Filter
@@ -463,8 +464,8 @@ if ($add_allreceiver_button_x) {
 
 
 // add receiver from freesearch
-if ($add_freesearch_x && Request::get("adressee")) { 
-    $sms_data["p_rec"] = array_add_value(array(Request::get("adressee")), $sms_data["p_rec"]); 
+if ($add_freesearch_x && Request::get("adressee")) {
+    $sms_data["p_rec"] = array_add_value(array(Request::get("adressee")), $sms_data["p_rec"]);
 }
 
 
@@ -680,7 +681,7 @@ $txt['008'] = _("Lesebestätigung");
         } else {
             $emailforwardinfo = _("Ihre Nachricht wird nicht gleichzeitig als E-Mail weitergeleitet.");
         }
-        $emailforwardinfo = array("kategorie" => _("Emailweiterleitung:"),"eintrag" => array(array("icon" => "nachricht1.gif", "text" => sprintf($emailforwardinfo))));
+        $emailforwardinfo = array("kategorie" => _("Emailweiterleitung:"),"eintrag" => array(array("icon" => "icons/16/black/mail.png", "text" => sprintf($emailforwardinfo))));
     }
 
     $smsinfos = "";
@@ -688,38 +689,38 @@ $txt['008'] = _("Lesebestätigung");
     // emailforwarding?!
     if($GLOBALS["MESSAGING_FORWARD_AS_EMAIL"] == TRUE) {
         if($sms_data["tmpemailsnd"] == 1) {
-            $smsinfos .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/vote_answer_correct.gif\" width=\"16\" height=\"16\" border=0 alt=\"\">";
+            $smsinfos .= Assets::img('icons/16/green/accept.png');
         } else {
-            $smsinfos = "<img src=\"".$GLOBALS['ASSETS_URL']."images/vote_answer_wrong.gif\" width=\"16\" height=\"16\" border=0 alt=\"\">";
+            $smsinfos .= Assets::img('icons/16/red/decline.png');
         }
-        $smsinfos .= "&nbsp;"._("Emailweiterleitung")."<br>";
+        $smsinfos .= " "  ._("Emailweiterleitung")."<br>";
     }
 
     // readingconfirmation?!
     if($sms_data["tmpreadsnd"] == 1) {
-        $smsinfos .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/vote_answer_correct.gif\" width=\"16\" height=\"16\" border=0 alt=\"\">";
+        $smsinfos .= Assets::img('icons/16/green/accept.png');
     } else {
-        $smsinfos .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/vote_answer_wrong.gif\" width=\"16\" height=\"16\" border=0 alt=\"\">";
+        $smsinfos .= Assets::img('icons/16/red/decline.png');
     }
-    $smsinfos .= "&nbsp;"._("Lesebestätigung")."<br>";
+    $smsinfos .= " " . _("Lesebestätigung")."<br>";
 
     // save the message?!
     if($sms_data["tmpsavesnd"] == 1) {
-        $smsinfos .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/vote_answer_correct.gif\" width=\"16\" height=\"16\" border=0 alt=\"\">";
+        $smsinfos .= Assets::img('icons/16/green/accept.png');
     } else {
-        $smsinfos .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/vote_answer_wrong.gif\" width=\"16\" height=\"16\" border=0 alt=\"\">";
+        $smsinfos .= Assets::img('icons/16/red/decline.png');
     }
-    $smsinfos .= "&nbsp;"._("Speichern")."<br>";
+    $smsinfos .= " " . _("Speichern")."<br>";
 
     // signature?!
     if($sms_data["sig"] == 1) {
-        $smsinfos .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/vote_answer_correct.gif\" width=\"16\" height=\"16\" border=0 alt=\"\">";
+        $smsinfos .= Assets::img('icons/16/green/accept.png');
     } else {
-        $smsinfos .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/vote_answer_wrong.gif\" width=\"16\" height=\"16\" border=0 alt=\"\">";
+        $smsinfos .= Assets::img('icons/16/red/decline.png');
     }
-    $smsinfos .= "&nbsp;"._("Signatur");
+    $smsinfos .= " "  ._("Signatur");
 
-    $smsinfos = array("kategorie" => _("Übersicht:"),"eintrag" => array(array("icon" => "einst.gif", "text" => sprintf($smsinfos))));
+    $smsinfos = array("kategorie" => _("Übersicht:"),"eintrag" => array(array("icon" => "icons/16/black/info.png", "text" => sprintf($smsinfos))));
 ?>
         </form>
     </td>

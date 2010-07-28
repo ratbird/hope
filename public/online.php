@@ -317,6 +317,8 @@ if (is_array($non_group_buddies))
                     </font>
                 </td>
             </tr>
+            </table>
+            </td>
             <?
             } else {
             ?>

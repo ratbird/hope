@@ -48,7 +48,7 @@
     <td width="5%" align="center">
         <a href="<?= URLHelper::getLink('sms_send.php', array('sms_source_page' => 'online.php',
                                                               'rec_uname' => $tmp_online_uname)) ?>">
-            <?= Assets::img('nachricht1.gif', array('alt' => _("Nachricht an User verschicken"))) ?>
+            <?= Assets::img('icons/16/grey/mail.png', array('alt' => _("Nachricht an User verschicken"))) ?>
         </a>
     </td>
 
@@ -57,7 +57,7 @@
             <a href="<?= URLHelper::getLink("online.php",
                                             array("cmd" => "delete_user",
                                                   "delete_uname" => $tmp_online_uname)) ?>">
-                <?= Assets::img('trash.gif', array('alt' => _("aus der Buddy-Liste entfernen"))) ?>
+                <?= Assets::img('icons/16/grey/trash.png', array('alt' => _("aus der Buddy-Liste entfernen"))) ?>
             </a>
         <? else : ?>
             &nbsp;

@@ -1,10 +1,10 @@
 /*
  * l10n.js
- * Version 0.1.1
+ * Version 0.1.2
  *
- * 2010-05-16
+ * 2010-07-29
  * 
- * By Elijah Grey, http://eligrey.com
+ * By Eli Grey, http://eligrey.com
  *
  * License: GNU GPL v3 and the X11/MIT license
  *   See COPYING.md
@@ -17,46 +17,38 @@ newcap: true, immed: true, maxlen: 90, indent: 4 */
 
 "use strict";
 
-if (!Array.prototype.indexOf)
-{
-  Array.prototype.indexOf = function(elt /*, from*/)
-  {
-    var len = this.length >>> 0;
-
-    var from = Number(arguments[1]) || 0;
-    from = (from < 0)
-         ? Math.ceil(from)
-         : Math.floor(from);
-    if (from < 0)
-      from += len;
-
-    for (; from < len; from++)
-    {
-      if (from in this &&
-          this[from] === elt)
-        return from;
-    }
-    return -1;
-  };
-}
-
 (function (String) {
-	var undefType = "undefined",
-	stringType    = "string",
-	hasOwnProp    = Object.prototype.hasOwnProperty,
-	loadQueues    = {},
-	localeCache   = {},
-	localizations = {},
-	False         = !1,
-	XHR,
+	var
+		  undefType     = "undefined"
+		, stringType    = "string"
+		, hasOwnProp    = Object.prototype.hasOwnProperty
+		, loadQueues    = {}
+		, localeCache   = {}
+		, localizations = {}
+		, False         = !1
+		, XHR
 	
-	getLocale = function (locale) {
+	, arrayIndexOf = Array.prototype.indexOf || function (item) {
+		var
+			  len = this.length
+			, i   = 0
+		;
+		
+		for (; i < len; i++) {
+			if (i in this && this[i] === item) {
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	, getLocale = function (locale) {
 		// remove x- for cases like en-US-x-hixie and en-US-hixie which are equivalent
 		// also memoize the results for each locale
 		return localeCache[locale] ||
 		       (localeCache[locale] = locale.toLowerCase().replace(/x-/g, ""));
-	},
-	requestJSON = function (uri) {
+	}
+	, requestJSON = function (uri) {
 		var req = new XHR();
 		
 		// sadly, this has to be blocking to allow for a graceful degrading API
@@ -76,8 +68,8 @@ if (!Array.prototype.indexOf)
 		} else {
 			return JSON.parse(req.responseText);
 		}
-	},
-	load = String.toLocaleString = function (data) {
+	}
+	, load = String.toLocaleString = function (data) {
 		// don't handle function.toLocaleString(indentationAmount:Number), which is
 		// a JavaScript feature, though not an ECMAScript feature
 		if (arguments.length > 0 && typeof data !== "number") {
@@ -127,8 +119,8 @@ if (!Array.prototype.indexOf)
 		}
 		// Return what function.toLocaleString() normally returns
 		return Function.prototype.toLocaleString.apply(String, arguments);
-	},
-	processLoadQueue = function (locale) {
+	}
+	, processLoadQueue = function (locale) {
 		var queue = loadQueues[locale],
 		i = 0,
 		len = queue.length;
@@ -140,7 +132,9 @@ if (!Array.prototype.indexOf)
 		}
 		
 		delete loadQueues[locale];
-	};
+	}
+	
+	;
 	
 	if (typeof XMLHttpRequest === undefType && typeof ActiveXObject !== undefType) {
 		var AXO = ActiveXObject;
@@ -172,17 +166,21 @@ if (!Array.prototype.indexOf)
 	}
 	
 	if (typeof document !== undefType) {
-		var linkElems = document.getElementsByTagName("link"),
-		i = linkElems.length;
+		var
+			  linkElems = document.getElementsByTagName("link")
+			, i = linkElems.length
+		;
 		
 		while (i--) {
-			var linkElem = linkElems[i],
-			relList = (linkElem.getAttribute("rel") || "").toLowerCase().split(/\s+/);
+			var
+				  linkElem = linkElems[i]
+				, relList = (linkElem.getAttribute("rel") || "").toLowerCase().split(/\s+/)
+			;
 			
 			// multiple localizations
-			if (relList.indexOf("localizations") !== -1) {
+			if (arrayIndexOf.call(relList, "localizations") !== -1) {
 				load(linkElem.getAttribute("href"));
-			} else if (relList.indexOf("localization") !== -1) {
+			} else if (arrayIndexOf.call(relList, "localization") !== -1) {
 				// single localization
 				var localization = {};
 				localization[getLocale(linkElem.getAttribute("hreflang") || "")] =
@@ -193,9 +191,11 @@ if (!Array.prototype.indexOf)
 	}
 	
 	String.prototype.toLocaleString = function () {
-		var parts = getLocale(String.locale).split("-"),
-		i = parts.length,
-		thisValue = this.valueOf();
+		var
+			  parts = getLocale(String.locale).split("-")
+			, i = parts.length
+			, thisValue = this.valueOf()
+		;
 		
 		// Iterate through locales starting at most-specific until localization is found
 		while (i) {

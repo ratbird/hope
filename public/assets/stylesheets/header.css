@@ -162,3 +162,6 @@ div#header {
     text-align: center;
 }
 
+#barTopMenu a:hover {
+    color: #fff;
+}

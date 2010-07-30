@@ -46,7 +46,7 @@ class LocalizationsController extends TrailsController {
 
     function show_action($language = NULL)
     {
-        $this->setContentType('application/javascript');
+        $this->setContentType('application/javascript; charset=UTF-8');
 
         $expires = time() + 30 * 60 * 60 * 24;
         $this->response->addHeader('Expires', gmdate(DATE_RFC1123, $expires));

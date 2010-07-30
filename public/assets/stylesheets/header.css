@@ -149,39 +149,16 @@ div#header {
     padding: 0;
     min-width: 64px;
     z-index: 2;
-    position: relative;
-    top: 0px;
-    -moz-transition:    all 0.2s ease-in;
-    -webkit-transition: all 0.2s ease-in;
-    -o-transition:      all 0.2s ease-in;
-}
-
-#barTopMenu li:hover {
-    background-image: url('../images/headnaviback2.jpg');
-    top: 5px;
 }
 
 #barTopMenu a {
     display: block;
     color: #7387ac;
-    padding: 34px 3px 5px 3px;
+    padding: 34px 3px 0px 3px;
     background-position: top center;
     background-repeat: no-repeat;
     font-weight: bold;
     font-size: 12px;
     text-align: center;
-    -moz-transition:    color 0.2s ease-in;
-    -webkit-transition: color 0.2s ease-in;
-    -o-transition:      color 0.2s ease-in;
-}
-
-#barTopMenu a:hover {
-    color: #fff;
-    text-shadow: #000 0px 1px 5px;
-    padding-bottom: 0;
-}
-
-#barTopMenu a:active {
-    color: #f00;
 }
 

@@ -174,12 +174,20 @@ function AddBuddy($username)
 function AddNewContact ($user_id)
 {   // Inserting an new contact
     global $user;
+
+    // get default permission if group calendar is enabled
+    if (get_config('CALENDAR_GROUP_ENABLE')) {
+        $calpermission = 'calpermission = ' . (int) get_config('CALENDAR_DEFAULT_PERMISSION') . ', ';
+    } else {
+        $calpermission = '';
+    }
+
     $contact_id = MakeUniqueContactID();
     $owner_id = $user->id;
     $db=new DB_Seminar;
     $db->query ("SELECT contact_id FROM contact WHERE owner_id = '$owner_id' AND user_id = '$user_id'");
     if (!$db->next_record())    // nur wenn es die Kombination owner/user noch nicht gibt
-        $db->query("INSERT INTO contact SET contact_id = '$contact_id', owner_id = '$owner_id', user_id= '$user_id', buddy=0");
+        $db->query("INSERT INTO contact SET contact_id = '$contact_id', owner_id = '$owner_id', user_id= '$user_id', {$calpermission}buddy=0");
     return $contact_id;
 }
 
@@ -214,11 +222,11 @@ function GetUserInfo($user_id)
     $db->query ("SELECT * FROM user_info WHERE user_id = '$user_id'");
     if ($db->next_record()) {
         if ($db->f("Home")!="")
-            $userinfo[_("Homepage")] = FixLinks(HtmlReady($db->f("Home")));
+            $userinfo[_("Homepage")] = FixLinks(htmlReady($db->f("Home")));
         if ($db->f("privatnr")!="")
-            $userinfo[_("Tel. (privat)")] = HtmlReady($db->f("privatnr"));
+            $userinfo[_("Tel. (privat)")] = htmlReady($db->f("privatnr"));
         if ($db->f("privatcell")!="")
-            $userinfo[_("Mobiltelefon")] = HtmlReady($db->f("privatcell"));
+            $userinfo[_("Mobiltelefon")] = htmlReady($db->f("privatcell"));
         if (get_config("ENABLE_SKYPE_INFO") && UserConfig::get($user_id)->SKYPE_NAME) {
             if(UserConfig::get($user_id)->SKYPE_ONLINE_STATUS){
                 $img = sprintf('<img src="http://mystatus.skype.com/smallicon/%s" style="border: none;vertical-align:middle" width="16" height="16" alt="My status">', htmlReady(UserConfig::get($user_id)->SKYPE_NAME));
@@ -229,7 +237,7 @@ function GetUserInfo($user_id)
                                     htmlReady(UserConfig::get($user_id)->SKYPE_NAME), $img);
         }
         if ($db->f("privadr")!="")
-            $userinfo[_("Adresse")] = HtmlReady($db->f("privadr"),1);
+            $userinfo[_("Adresse")] = htmlReady($db->f("privadr"),1);
 
     }
     return $userinfo;
@@ -331,17 +339,41 @@ function ShowContact ($contact_id)
 {   // Ausgabe eines Kontaktes
     global $PHP_SELF, $open, $filter, $forum, $auth, $view;
     $db=new DB_Seminar;
-    $db->query ("SELECT contact_id, user_id, buddy FROM contact WHERE contact_id = '$contact_id'");
+    $db->query ("SELECT contact_id, user_id, buddy, calpermission FROM contact WHERE contact_id = '$contact_id'");
     if ($db->next_record()) {
         if ($open == $contact_id || $open == "all") {
             $rnd = rand(0,10000);
+
+            // switch icon to display the users permission
+            if (get_config('CALENDAR_GROUP_ENABLE') && $GLOBALS['perm']->get_perm($db->f('user_id') != 'root')) {
+                $calstatus = '<a href="' . URLHelper::getLink('', array('view' => $view, 'cmd' => 'changecal', 'contact_id' => $contact_id, 'userid' => $db->f('user_id'), 'open' => $open, 'rnd' => $rnd));
+                $calstatus .= '#anker">';
+                switch ($db->f('calpermission')) {
+                    case 2:
+                        $calstatus .= sprintf("<img src=\"{$GLOBALS['ASSETS_URL']}images/group_cal_visible.gif\" border=\"0\" %s>",
+                        tooltip(_("Mein Kalender ist für dieses Mitglied lesbar")));
+                    break;
+                    case 4:
+                        $calstatus .= sprintf("<img src=\"{$GLOBALS['ASSETS_URL']}images/group_cal_writable.gif\" border=\"0\" %s>",
+                        tooltip(_("Mein Kalender ist für dieses Mitglied schreibbar")));
+                    break;
+                    default:
+                        $calstatus .= sprintf("<img src=\"{$GLOBALS['ASSETS_URL']}images/group_cal.gif\" border=\"0\" %s>",
+                        tooltip(_("Mein Kalender ist für dieses Mitglied unsichtbar")));
+                    break;
+                }
+                $calstatus .= '</a>&nbsp;';
+            } else {
+                $calstatus = '';
+            }
+
             if ($db->f("buddy")=="1") {
                 $buddy = "<a href=\"$PHP_SELF?view=$view&cmd=changebuddy&contact_id=$contact_id&open=$open&rnd=$rnd#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/nutzeronline.gif\" border=\"0\" ".tooltip(_("Als Buddy entfernen"))."></a>&nbsp; ";
             } else {
                 $buddy = "<a href=\"$PHP_SELF?view=$view&cmd=changebuddy&contact_id=$contact_id&open=$open&rnd=$rnd#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/nutzer.gif\" border=\"0\" ".tooltip(_("Zu Buddies hinzufügen"))."></a>&nbsp; ";
             }
             $lastrow =      "<tr><td colspan=\"2\" class=\"steel1\" align=\"right\">"
-                        .$buddy
+                        .$calstatus . $buddy
                         ."<a href=\"$PHP_SELF?edit_id=$contact_id\"><img src=\"".$GLOBALS['ASSETS_URL']."images/einst.gif\" border=\"0\" ".tooltip(_("Editieren"))."></a>&nbsp; "
                         ."<a href=\"contact_export.php?contactid=$contact_id\"><img src=\"".$GLOBALS['ASSETS_URL']."images/vcardexport.gif\" border=\"0\" ".tooltip(_("Als vCard exportieren"))."></a>&nbsp; "
                         ."<a href=\"$PHP_SELF?view=$view&cmd=delete&contact_id=$contact_id&open=$open\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Kontakt löschen"))."></a></td></tr>"
@@ -608,6 +640,32 @@ function PrintAllContact($filter="")
         }
     }
     echo "</td></tr></table>";
+}
+
+function switch_member_cal ($user_id) {
+    global $user;
+
+    // admins and roots have no calendar
+    if ($GLOBALS['perm']->have_perm('admin')) {
+        return FALSE;
+    }
+
+    $db =& new DB_Seminar();
+    $perm_user = $GLOBALS['perm']->get_perm($user_id);
+    // users with global perm 'root' or 'admin' have no calendar
+    if ($perm_user != 'admin' && $perm_user != 'root') {
+        $query = "SELECT calpermission FROM contact WHERE owner_id = '{$user->id}' ";
+        $query .= "AND user_id = '$user_id'";
+        $db->query($query);
+        if  ($db->next_record()) {
+            $calperm = $db->f('calpermission');
+            $calperm = (($calperm > 4 || $calperm < 1) ? 1 : $calperm);
+            $calperm = ($calperm < 4 ? $calperm * 2 : 1);
+            $query = "UPDATE contact SET calpermission = $calperm WHERE owner_id = '";
+            $query .= "{$user->id}' AND user_id = '$user_id' AND user_id != 'user_entry'";
+            $db->query($query);
+        }
+    }
 }
 
 ?>

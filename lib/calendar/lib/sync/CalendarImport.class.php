@@ -1,18 +1,14 @@
 <?
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
 /**
 * CalendarImport.class.php
 * 
-* 
-* 
 *
-* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @access       public
-* @modulegroup  calendar_modules
-* @module       calendar_import
-* @package  Calendar
+* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @version	$Id: CalendarImport.class.php,v 1.2 2008/12/23 09:50:34 thienel Exp $
+* @access		public
+* @modulegroup	calendar_modules
+* @module		calendar_import
+* @package	Calendar
 */
 
 // +---------------------------------------------------------------------------+
@@ -38,32 +34,78 @@
 
 global $RELATIVE_PATH_CALENDAR;
 
-require_once("$RELATIVE_PATH_CALENDAR/lib/ErrorHandler.class.php");
+require_once $RELATIVE_PATH_CALENDAR . '/lib/ErrorHandler.class.php';
 
 define('IGNORE_ERRORS', 1);
 
 class CalendarImport {
-    
-    function CalendarImport () {
-        
-        // initialize error handler
-        init_error_handler('_calendar_error');
-    }
-    
-    function getCount () {
-    
-    }
-    
-    function importIntoDatabase ($ignore = 'IGNORE_ERRORS') {
-    
-    }
-    
-    function importIntoObjects ($ignore = 'IGNORE_ERRORS') {
-    
-    }
-    
-    function getObjects () {
-    
-    }
-    
+
+	var $_parser;
+	var $data;
+	var $public_to_private = FALSE;
+	
+	function CalendarImport (&$parser, $data = NULL) {
+		
+		// initialize error handler
+		init_error_handler('_calendar_error');
+		
+		$this->_parser =& $parser;
+		$this->data = $data;
+	}
+	
+/*	function setParser (&$parser) {
+	
+		$this->_parser = $parser;
+	}
+*/	
+	function &getContent () {
+		return $this->data;
+	}
+	
+	function importIntoDatabase ($range_id, $ignore = 'IGNORE_ERRORS') {
+		$this->_parser->changePublicToPrivate($this->public_to_private);
+		if ($this->_parser->parseIntoDatabase($range_id, $this->getContent(), $ignore))
+			return TRUE;
+		
+		return FALSE;
+	}
+	
+	function importIntoObjects ($ignore = 'IGNORE_ERRORS') {
+		$this->_parser->changePublicToPrivate($this->public_to_private);
+		if ($this->_parser->parseIntoObjects($this->getContent(), $ignore))
+			return TRUE;
+		
+		return FALSE;
+	}
+	
+	function getObjects () {
+		
+		return $objects =& $this->_parser->getObjects();
+	}
+	
+	function getCount () {
+
+		return $this->_parser->getCount($this->getContent());
+	}
+	
+	function changePublicToPrivate ($value = TRUE) {
+		$this->public_to_private = $value;
+	}
+	
+	function getClientIdentifier () {
+		if (!$client_identifier = $this->_parser->getClientIdentifier()) {
+			return $this->_parser->getClientIdentifier($this->getContent());
+		}
+		return $client_identifier;
+	}
+	
+	function setImportSem ($do_import) {
+		if ($do_import) {
+			$this->_parser->import_sem = TRUE;
+		} else {
+			$this->_parser->import_sem = FALSE;
+		}
+	}
+	
 }
+?>

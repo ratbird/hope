@@ -1,79 +1,83 @@
 <?
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
 // Wrapper class for driver functions in calendar/lib/driver/
 
-require_once($RELATIVE_PATH_CALENDAR
-        . "/lib/CalendarEvent.class.php");
-require_once($RELATIVE_PATH_CALENDAR
-        . "/lib/driver/$CALENDAR_DRIVER/event_driver.inc.php");
+require_once($RELATIVE_PATH_CALENDAR . '/lib/CalendarEvent.class.php');
 
 class DbCalendarEvent extends CalendarEvent {
-    
-    function DbCalendarEvent ($id = '', $properties = NULL) {
-        global $user, $PERS_TERMIN_KAT, $TERMIN_TYP;
-        
-        $this->user_id = $user->id;
-                
-        if ($id != '' && !$properties) {
-            $this->restore($id);
-        }
-        else {
-            parent::CalendarEvent($properties);
-        }
-    }
-    
-    // public
-    function getDescription () {
-    
-        if(isset($this->properties['DESCRIPTION']))
-            return $this->properties['DESCRIPTION'];
-        elseif ($description = event_get_description($this->id)) {
-            $this->properties['DESCRIPTION'] = $description;
-            return $this->properties['DESCRIPTION'];
-        } else {
-            return $this->properties['DESCRIPTION'] = '';
-        }
-    }
-    
-    // Store event in database
-    // public
-    function save () {
-    
-        event_save($this);
-    }
-    
-    // delete event in database
-    // public
-    function delete () {
-    
-        return event_delete($this->id, $this->user_id);
-    }
-    
-    // get event out of database
-    // public
-    function restore ($id) {
-    
-        if(!event_restore($id, $this))
-            die("Unable to restore this event (ID='$id')!");
-    }
-    
-    function update ($new_event) {
-    
-        $properties = $new_event->getProperty();
-        // never update the uid and the make date!
-        $uid = $this->getProperty('UID');
-        $mkdate = $this->getMakeDate();
-        foreach ($properties as $name => $value)
-            $this->setProperty($name, $value);
-        $this->setProperty('UID', $uid);
-        
-        $this->setMakeDate($mkdate);
-        $this->setDayEvent($new_event->isDayEvent());
-        $this->chng_flag = TRUE;
-    }
-        
+	
+	var $driver;
+	
+	function DbCalendarEvent (&$calendar, $event_id = '', $properties = NULL) {
+		$this->driver =& CalendarDriver::getInstance($calendar->getUserId(),
+				$calendar->getPermission());
+		if ($event_id != '' && is_null($properties)) {
+			$this->restore($event_id);
+			parent::CalendarEvent($this->properties, $event_id, $calendar->getUserId(),
+					$calendar->getPermission());
+		}
+		else {
+			parent::CalendarEvent($properties, NULL, $calendar->getUserId(),
+					$calendar->getPermission());
+			$this->chng_flag = TRUE;
+		}
+		
+	}
+	
+	// Store event in database
+	// public
+	function save () {
+		if (!$this->havePermission(CALENDAR_EVENT_PERM_WRITABLE)) {
+			return FALSE;
+		}
+		
+		if ($this->isModified()) {
+			$this->setChangeDate();
+			return $this->driver->writeObjectsIntoDatabase($this);
+		}
+	}
+	
+	// delete event in database
+	// public
+	function delete () {
+		if ($this->havePermission(CALENDAR_EVENT_PERM_WRITABLE)) {
+			return $this->driver->deleteObjectsFromDatabase($this);
+		}
+		
+		return FALSE;
+	}
+	
+	// get event out of database
+	// public
+	function restore ($event_id) {
+		
+		$this->driver->openDatabaseGetSingleObject($event_id);
+		$this->properties = $this->driver->nextProperties();
+		$this->id = $event_id;
+	}
+	
+	function update ($new_event) {
+		if ($this->havePermission(CALENDAR_EVENT_PERM_WRITABLE)) {
+			return FALSE;
+		}
+		
+		$properties = $new_event->getProperty();
+		// never update the uid, the make date and the author!
+		$uid = $this->getProperty('UID');
+		$mkdate = $this->getMakeDate();
+		$author = $this->getProperty('STUDIP_AUTHOR_ID');
+		foreach ($properties as $name => $value) {
+			$this->setProperty($name, $value);
+		}
+		$this->setProperty('STUDIP_AUTHOR_ID', $author);
+		$this->setProperty('UID', $uid);
+		$this->setMakeDate($mkdate);
+		if ($this->isDayEvent())
+			$new_event->setDayEvent();
+		$this->chng_flag = TRUE;
+		
+		return TRUE;
+	}
+		
 }
 
 ?>

@@ -117,6 +117,10 @@ if ($existingowninfolabel) {
     }
 }
 
+// change calendar permission if group calendar is enabled
+if ($cmd == 'changecal' && get_config('CALENDAR_GROUP_ENABLE')) {
+    switch_member_cal($userid);
+}
 
 $size_of_book = GetSizeofBook()
 

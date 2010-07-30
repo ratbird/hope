@@ -212,7 +212,7 @@ function InsertPersonStatusgruppe ($user_id, $statusgruppe_id) {
     $db->query("SELECT * FROM statusgruppe_user WHERE statusgruppe_id = '$statusgruppe_id' AND user_id = '$user_id'");
     if (!$db->next_record()) {
         $db->query("INSERT INTO statusgruppe_user SET statusgruppe_id = '$statusgruppe_id', user_id = '$user_id', position = '$position'");
-        MakeDatafieldsDefault($user_id, $statusgruppe_id);      
+        MakeDatafieldsDefault($user_id, $statusgruppe_id);
         $writedone = TRUE;
     } else {
         $writedone = FALSE;
@@ -637,9 +637,9 @@ function GetAllStatusgruppen($parent, $check_user = null, $exclude = false)
 {
     $db = new DB_Seminar();
     $db->query("SELECT * FROM statusgruppen WHERE range_id = '$parent' ORDER BY position ASC");
-    
-    if ($db->num_rows() == 0) return false; 
-    
+
+    if ($db->num_rows() == 0) return false;
+
     $childs = array();
 
     while ($db->next_record()) {
@@ -664,11 +664,11 @@ function GetAllStatusgruppen($parent, $check_user = null, $exclude = false)
             }
         }
 
-        if (($check_user && $exclude && ($user_in_child || $user_there)) || !$check_user || (!$exclude && $check_user)) {           
+        if (($check_user && $exclude && ($user_in_child || $user_there)) || !$check_user || (!$exclude && $check_user)) {
             $childs[$db->f('statusgruppe_id')] = array (
                     /*
                     'name' => $db->f('name'),
-                    'size' => $db->f('size'),                   
+                    'size' => $db->f('size'),
                     'selfassign' => $db->f('selfassign'),
                     'position' => $db->f('position'),
                     */
@@ -679,7 +679,7 @@ function GetAllStatusgruppen($parent, $check_user = null, $exclude = false)
                     'child' => $kids
                     );
         }
-    }   
+    }
 
     return (is_array($childs)) ? $childs : FALSE;
 }
@@ -863,7 +863,7 @@ function get_role_data_recursive($roles, $user_id, &$default_entries, $filter = 
                         $show_star = true;
                         $has_denoted_fields = true;
                     }
-                    
+
                     if ($view) { // Sichtbarkeitsberechtigung
                         $zw2 .= '<td %class%><font size="-1">'.trim($value);
                         if ($show_star) $zw2 .= ' *';
@@ -903,7 +903,7 @@ function getPersonsForRole($role_id) {
     global $_fullname_sql;
 
     $persons = array();
-    
+
     $db = new DB_Seminar();
     $db->query ("SELECT statusgruppe_user.user_id, " . $_fullname_sql['full_rev'] . " AS fullname , username, position FROM statusgruppe_user LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN user_info USING (user_id) WHERE statusgruppe_id = '$role_id' ORDER BY position ASC");
     while ($db->next_record()) {
@@ -922,16 +922,16 @@ function sortStatusgruppeByName($statusgruppe_id) {
     $db = new DB_Seminar();
     $db2 = new DB_Seminar();
     // Zuerst Mitglieder der Gruppe nach Nachnamen sortiert aus DB holen
-    $sql =      "SELECT * FROM statusgruppe_user su                
-        LEFT JOIN auth_user_md5 a ON a.user_id=su.user_id 
-        WHERE statusgruppe_id = '".$statusgruppe_id."' 
+    $sql =      "SELECT * FROM statusgruppe_user su
+        LEFT JOIN auth_user_md5 a ON a.user_id=su.user_id
+        WHERE statusgruppe_id = '".$statusgruppe_id."'
         ORDER BY a.Nachname";
     $db->query($sql);
     while ($db->next_record()) {
         // Positionierung neu vergeben
-        $sql =  "UPDATE statusgruppe_user 
-            SET position=$position 
-            WHERE user_id = '".$db->f("user_id")."' 
+        $sql =  "UPDATE statusgruppe_user
+            SET position=$position
+            WHERE user_id = '".$db->f("user_id")."'
             AND statusgruppe_id = '".$statusgruppe_id."' ";
         $position++;
         $db2->query($sql);
@@ -942,7 +942,7 @@ function getPersons($range_id, $type = false) {
     global $_fullname_sql, $_range_type;
 
     $bereitszugeordnet = GetAllSelected($range_id);
-    
+
     if ($type == 'sem') {
         $query = "SELECT seminar_user.user_id, username, " . $_fullname_sql['full_rev'] .
                 " AS fullname, perms FROM seminar_user " .
@@ -956,9 +956,9 @@ function getPersons($range_id, $type = false) {
             " LEFT JOIN user_info USING (user_id) ".
             " LEFT JOIN seminar_user c ON (c.user_id=a.user_id AND c.seminar_id='$range_id')  ".
             " WHERE d.seminar_id = '$range_id' AND a.inst_perms IN ('tutor','dozent') AND ISNULL(c.seminar_id) " .
-            " GROUP BY a.user_id ORDER BY Nachname";        
+            " GROUP BY a.user_id ORDER BY Nachname";
     } else {
-        $query = "SELECT user_inst.user_id, username, " . $_fullname_sql['full_rev'] .  
+        $query = "SELECT user_inst.user_id, username, " . $_fullname_sql['full_rev'] .
             " AS fullname, inst_perms AS perms FROM user_inst ".
             " LEFT JOIN auth_user_md5 USING(user_id) ".
             " LEFT JOIN user_info USING (user_id) ".
@@ -968,7 +968,7 @@ function getPersons($range_id, $type = false) {
     $db = new DB_Seminar();
     $db->query($query);
     while ($db->next_record()) {
-        if (in_array($db->f("user_id"), $bereitszugeordnet)) { 
+        if (in_array($db->f("user_id"), $bereitszugeordnet)) {
             $hasgroup = true;
         } else {
             $hasgroup = false;
@@ -985,13 +985,13 @@ function getPersons($range_id, $type = false) {
     return $all_persons;
 }
 
-function getSearchResults ($search_exp, $range_id, $type = 'inst') { 
+function getSearchResults ($search_exp, $range_id, $type = 'inst') {
     global $SessSemName, $_fullname_sql;
 
     $ret = '';
     $db=new DB_Seminar;
     if ($type == "sem") {
-        $query = "SELECT a.user_id, username, " . $_fullname_sql['full_rev'] ." AS fullname, perms FROM auth_user_md5 a ".      
+        $query = "SELECT a.user_id, username, " . $_fullname_sql['full_rev'] ." AS fullname, perms FROM auth_user_md5 a ".
         "LEFT JOIN user_info USING (user_id) LEFT JOIN seminar_user b ON (b.user_id=a.user_id AND b.seminar_id='$range_id')  ".
         "WHERE perms IN ('autor','tutor','dozent') AND ISNULL(b.seminar_id) AND ".
         "(username LIKE '%$search_exp%' OR Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%') ".
@@ -1004,18 +1004,18 @@ function getSearchResults ($search_exp, $range_id, $type = 'inst') {
     }
 
     $db->query($query); // results all users which are not in the seminar
-    if (!$db->num_rows()) {     
+    if (!$db->num_rows()) {
         return false;
-    } else {        
+    } else {
         while ($db->next_record()) {
             $ret[] = array(
                 'username' => $db->f('username'),
                 'fullname' => $db->f('fullname'),
                 'perms' => $db->f('perms')
-            );          
-        }       
+            );
+        }
         return $ret;
-    }   
+    }
 }
 
 function checkExternDefaultForUser($user_id) {
@@ -1026,4 +1026,43 @@ function checkExternDefaultForUser($user_id) {
         $stmt = DBManager::get()->prepare("UPDATE user_inst SET externdefault = 1 WHERE user_id = ?");
         $stmt->execute(array($user_id));
     }
+}
+
+function GetAllowedUsersQuery($table_alias = 'contact', $user_id = false){
+    static $users = null;
+    if(!$user_id) $user_id = $GLOBALS['user']->id;
+    if($GLOBALS['perm']->have_perm('tutor')) return " AND 1 ";
+    if(is_null($users)){
+        $users = array();
+        $stg = GetSemStatusgruppenForUser($user_id);
+        $db = new DB_Seminar("SELECT DISTINCT user_id FROM statusgruppe_user WHERE statusgruppe_id IN('".join("','", $stg)."')");
+        while($db->next_record()){
+            $users[] = $db->f(0);
+        }
+    }
+    if(count($users)){
+        return " AND $table_alias.user_id IN('".join("','", $users)."')";
+    } else {
+        return " AND 0 ";
+    }
+}
+
+/**
+* get all statusgruppen for one user and one range
+*
+* get all statusgruppen for one user and one range
+*
+* @access   public
+* @param    string  $range_id
+* @param    string  $user_id
+* @return   array   (structure statusgruppe_id => name)
+*/
+function GetStatusgruppen ($range_id, $user_id) {
+    $db =& new DB_Seminar();
+    $db->query("SELECT a.statusgruppe_id,a.name FROM statusgruppen a
+                LEFT JOIN statusgruppe_user b USING(statusgruppe_id) WHERE user_id='$user_id' AND range_id='$range_id'");
+    while ($db->next_record()) {
+        $ret[$db->f("statusgruppe_id")] = $db->f("name");
+    }
+    return (is_array($ret)) ? $ret : FALSE;
 }

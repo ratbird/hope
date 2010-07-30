@@ -26,6 +26,7 @@ require_once('config.inc.php');
 require_once('lib/msg.inc.php');
 
 if ($GLOBALS["CALENDAR_ENABLE"])
+    require_once($RELATIVE_PATH_CALENDAR . "/lib/SingleCalendar.class.php");
     require_once($RELATIVE_PATH_CALENDAR . "/lib/DbCalendarEventList.class.php");
 /**
  * TODO: Bedarf eine kompletten Überarbeitung!!!!
@@ -67,11 +68,11 @@ function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 
     }
 
     if ($show_admin) {
-        if ($range_id == $user->id)
+        if ($range_id == $user->id) {
             // Für persönliche Termine Einsprung in Terminkalender
-            $admin_link="<a href=\"calendar.php?cmd=edit\">";
-        else {
-            $admin_link="<a href=\"".URLHelper::getLink("raumzeit.php?seminar_id=".$range_id)."\">";
+            $admin_link='<a href="calendar.php?cmd=edit">';
+        } else {
+            $admin_link='<a href="'.URLHelper::getLink("raumzeit.php?seminar_id=".$range_id).'">';
         }
     }
 
@@ -348,10 +349,15 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
     global $PERS_TERMIN_KAT, $username, $LastLogin;
 
     if ($show_admin && $range_id == $user->id) {
-        $admin_link = sprintf("<a href=\"./calendar.php?cmd=edit&source_page=%s\">", rawurlencode($PHP_SELF));
+        $admin_link = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'source_page' => URLHelper::getURL())).'">';
     }
 
-    $list = new DbCalendarEventList($range_id, $date_start, $date_end, TRUE);
+    if ($date_end <= $date_start) {
+        // show seven days
+        $date_end = $date_start + 7*24*60*60;
+    }
+
+    $list = new DbCalendarEventList(new SingleCalendar($range_id, CALENDAR_PERMISSION_READABLE), $date_start, $date_end, TRUE, null, ($GLOBALS['user']->id == $range_id ? array() : array('CLASS' => 'PUBLIC')));
 
     if ($list->existEvent()) {
 
@@ -376,9 +382,6 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
         echo "\n<tr><td class=\"blank\" colspan=$colspan>";
         echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\"><tr><td class=\"blank\">";
 
-        if ($username)
-            $add_to_link = "&username=$username";
-
         while ($termin = $list->nextEvent()) {
             $icon = " <img src=\"".$GLOBALS['ASSETS_URL']."images/termin-icon.gif\" " . tooltip(_("Termin")) . ">";
 
@@ -400,9 +403,9 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
                 if (date("Ymd", $termin->getStart()) < date("Ymd", $termin->getEnd())) {
                     $titel .= " - ".substr(strftime("%a", $termin->getEnd()),0,2);
                     $titel .= date(". d.m.Y, H:i", $termin->getEnd());
-                }
-                else
+                } else {
                     $titel .= " - ".date("H:i", $termin->getEnd());
+                }
             }
 
             if ($termin->getTitle()) {
@@ -410,31 +413,31 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
                 $titel .= ", ".$tmp_titel;
             }
 
-            if ($termin->getChangeDate() > $LastLogin)
-                $new=TRUE;
-            else
-                $new=FALSE;
+            $new = ($termin->getChangeDate() > $LastLogin);
 
             // Zur Identifikation von auf- bzw. zugeklappten Terminen muss zusaetzlich
             // die Startzeit ueberprueft werden, da die Wiederholung eines Termins die
             // gleiche ID besitzt.
             $app_ident = $termin->getId() . $termin->getStart();
-            if ($open != $app_ident)
-                $link = $PHP_SELF . "?dopen=$app_ident$add_to_link#a";
-            else
-                $link = $PHP_SELF . "?dclose=true$add_to_link";
+            if ($open != $app_ident) {
+                $link = URLHelper::getLink('', ($username ? array('dopen' => $app_ident, 'username' => $username) : array('dopen' => $app_ident))) . '#a';
+            } else {
+                $link = URLHelper::getLink('', ($username ? array('dclose' => 'true', 'username' => $username) : array('dclose' => 'true')));
+            }
 
             echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
 
-            if ($link)
+            if ($link) {
                 $titel = "<a href=\"$link\" class=\"tree\" >$titel</a>";
+            }
 
-            if ($open == $app_ident)
+            if ($open == $app_ident) {
                 // Ebenso muss hier als letzer Parameter eine Methode getMkdate o.ae. angefuegt werden
                 printhead(0, 0, $link, "open", $new, $icon, $titel, $zusatz, $termin->getChangeDate());
-            else
+            } else {
                 // hier auch.....
                 printhead(0, 0, $link, "close", $new, $icon, $titel, $zusatz, $termin->getChangeDate());
+            }
 
             echo "</tr></table> ";
 
@@ -442,30 +445,29 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
                 echo "<a name=\"a\"></a>";
 
                 $content = '';
-                if ($termin->getDescription())
+                if ($termin->getDescription()) {
                     $content .= sprintf("%s<br><br>", formatReady($termin->getDescription(), TRUE, TRUE));
-                else
+                } else {
                     $content .= _("Keine Beschreibung vorhanden") . "<br><br>";
+                }
 
                 if (sizeof($PERS_TERMIN_KAT) > 1) {
                     $content .= sprintf("<b>%s</b> %s", _("Kategorie:"),
                             htmlReady($termin->toStringCategories()));
                 }
 
-                $content .= '<br><b>' . _("Priorit&auml;t:") . ' </b>'
-                        . htmlReady($termin->toStringPriority());
+                $content .= '<br><b>' . _("Priorit&auml;t:") . ' </b>' . htmlReady($termin->toStringPriority());
                 $content .= '&nbsp; &nbsp; &nbsp; &nbsp; ';
-                $content .= '<b>' . _("Sichtbarkeit:") . ' </b>'
-                        . htmlReady($termin->toStringAccessibility());
+                $content .= '<b>' . _("Sichtbarkeit:") . ' </b>' . htmlReady($termin->toStringAccessibility());
                 $content .= '<br>' . htmlReady($termin->toStringRecurrence());
 
-                if ($show_admin)
-                    $content .= sprintf("<div align=\"center\"><a href=\"./calendar.php?cmd=edit&termin_id=%s&atime=%s&source_page=%s\">"
-                                        . makeButton("bearbeiten", "img")
-                                        . "</a></div>", $termin->getId(), $termin->getStart(), rawurlencode($PHP_SELF));
+                if ($show_admin) {
+                    $content .= '<div align="center"><a href="'.URLHelper::getURL('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL('about.php')))
+                                . '">' . makeButton('bearbeiten', 'img') . '</a></div>';
+                }
 
                 echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
-                printcontent(0,0, $content, $edit);
+                printcontent(0, 0, $content, $edit);
                 echo "</tr></table> ";
                 }
         }
@@ -509,15 +511,9 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
     global $PHP_SELF, $RELATIVE_PATH_CALENDAR, $SessSemName, $user, $TERMIN_TYP;
     global $PERS_TERMIN_KAT, $username, $CALENDAR_DRIVER, $LastLogin, $calendar_user_control_data;
 
-    $admin_link = sprintf("<a href=\"./calendar.php?cmd=edit&source_page=%s\">", rawurlencode($PHP_SELF));
+    $admin_link = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'source_page' => URLHelper::getURL())).'">';
 
-    if (is_array($calendar_user_control_data["bind_seminare"]))
-        $bind_seminare = array_keys($calendar_user_control_data["bind_seminare"], "TRUE");
-    else
-        $bind_seminare = "";
-
-    $list = new DbCalendarEventList($user->id, $date_start, $date_end, TRUE);
-    $list->bindSeminarEvents($bind_seminare);
+    $list = new DbCalendarEventList(new SingleCalendar($user->id, CALENDAR_PERMISSION_OWN), $date_start, $date_end, TRUE, Calendar::getBindSeminare());
 
     if ($list->existEvent()) {
 
@@ -539,17 +535,18 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
             $have_write_permission = ((strtolower(get_class($termin)) == 'seminarevent' && $termin->haveWritePermission())
                     || (strtolower(get_class($termin)) != 'seminarevent'));
 
-            $zusatz = "";
-            if(strtolower(get_class($termin)) == 'seminarevent')
-                $zusatz .= "<a href=\"".URLHelper::getLink("seminar_main.php?auswahl=" . $termin->getSeminarId())
+            $zusatz = '';
+            if(strtolower(get_class($termin)) == 'seminarevent') {
+                $zusatz .= '<a href='.URLHelper::getLink("seminar_main.php?auswahl=" . $termin->getSeminarId())
                                 . "\"><font size=\"-1\">".htmlReady(mila($termin->getSemName(), 22))
-                                . " </font></a>";
+                                . ' </font></a>';
+            }
 
-            $titel = "";
+            $titel = '';
             $length = 70;
-            if (date("Ymd", $termin->getStart()) == date("Ymd", time()))
+            if (date('Ymd', $termin->getStart()) == date("Ymd", time())) {
                 $titel .= _("Heute") . date(", H:i", $termin->getStart());
-            else {
+            } else {
                 $titel .= substr(strftime("%a,", $termin->getStart()),0,2);
                 $titel .= date(". d.m.Y, H:i", $termin->getStart());
                 $length = 55;
@@ -559,16 +556,17 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                 $titel .= " - ".substr(strftime("%a,",$termin->getEnd()),0,2);
                 $titel .= date(". d.m.Y, H:i", $termin->getEnd());
                 $length = 55;
+            } else {
+                $titel .= ' - '.date("H:i", $termin->getEnd());
             }
-            else
-                $titel .= " - ".date("H:i", $termin->getEnd());
 
-            if (strtolower(get_class($termin)) == 'seminarevent')
+            if (strtolower(get_class($termin)) == 'seminarevent') {
                 //Beschneiden des Titels
-                $titel .= ", " . htmlReady(mila($termin->getTitle(), $length - 10));
-            else
+                $titel .= ', ' . htmlReady(mila($termin->getTitle(), $length - 10));
+            } else {
                 //Beschneiden des Titels
-                $titel .= ", " . htmlReady(mila($termin->getTitle(), $length));
+                $titel .= ', ' . htmlReady(mila($termin->getTitle(), $length));
+            }
 
             //Dokumente zaehlen
             $num_docs = 0;
@@ -579,8 +577,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                     $db = new DB_Seminar();
                     $db->query("SELECT folder_id FROM folder WHERE range_id ='" . $termin->getId() . "' ");
                     $db->next_record();
-                    $zusatz .= "<a href=\"seminar_main.php?auswahl=" . $termin->getSeminarId()
-                                    . "&redirect_to=folder.php&cmd=tree&open=" . $db->f("folder_id")
+                    $zusatz .= '<a href="'.URLHelper::getLink('seminar_main.php', array('auswahl' => $termin->getSeminarId(), 'redirect_to' => URLHelper::getURL('folder.php', array('cmd' => 'tree', 'open' => $db->f('folder_id')))))
                                     . "#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icon-disc.gif\" ";
                     $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
                     $zusatz .= ">";
@@ -591,33 +588,37 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                     for ($i = 1; $i < $tmp_num_docs; $i++)
                         $zusatz .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/file1b.gif\" alt=\"\">";
 
-                    $zusatz .= "</a>";
+                    $zusatz .= '</a>';
                 }
             }
 
-            if ($termin->getChangeDate() > $LastLogin)
+            if ($termin->getChangeDate() > $LastLogin) {
                 $new = TRUE;
-            else
+            } else {
                 $new = FALSE;
+            }
 
             // Zur Identifikation von auf- bzw. zugeklappten Terminen muss zusätzlich
             // die Startzeit überprüft werden, da die Wiederholung eines Termins die
             // gleiche ID besitzt.
             $app_ident = $termin->getId() . $termin->getStart();
-            if ($open != $app_ident)
+            if ($open != $app_ident) {
                 $link = URLHelper::getLink("?dopen=".$app_ident."#a");
-            else
+            } else {
                 $link = URLHelper::getLink("?dclose=true");
+            }
 
-            if ($link)
+            if ($link) {
                 $titel = "<a href=\"$link\" class=\"tree\" >".$titel."</a>";
+            }
 
             echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
 
-            if ($open == $app_ident)
+            if ($open == $app_ident) {
                 printhead(0, 0, $link, "open", $new, $icon, $titel, $zusatz, $termin->getChangeDate());
-            else
+            } else {
                 printhead(0, 0, $link, "close", $new, $icon, $titel, $zusatz, $termin->getChangeDate());
+            }
 
             echo "</tr></table> ";
 
@@ -625,28 +626,34 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                 echo "<a name=\"a\"></a>";
 
                 $content = "";
-                if($termin->getDescription())
+                if($termin->getDescription()) {
                     $content .= sprintf("%s<br><br>", formatReady($termin->getDescription(), TRUE, TRUE));
-                else
+                } else {
                     $content .= _("Keine Beschreibung vorhanden") . "<br><br>";
+                }
+
+                if (strtolower(get_class($termin)) == 'seminarcalendarevent') {
+                    $content .= '<b>' . _("Seminar:") . '</b>' . htmlReady($termin->getSemName()) . '<br>';
+                }
 
                 $have_category = FALSE;
                 if (sizeof($PERS_TERMIN_KAT) > 1 && strtolower(get_class($termin)) != 'seminarevent') {
                     $content .= "<b>" . _("Kategorie:") . "</b> " . htmlReady($termin->toStringCategories());
                     $have_category = TRUE;
-                }
-                elseif (sizeof($TERMIN_TYP) > 1 && strtolower(get_class($termin)) == 'seminarevent') {
+                } elseif (sizeof($TERMIN_TYP) > 1 && strtolower(get_class($termin)) == 'seminarevent') {
                     $content .= "<b>" . _("Art des Termins:") . "</b> " . htmlReady($termin->toStringCategories());
                     $have_category = TRUE;
                 }
 
                 if ($termin->getLocation()) {
-                    if ($have_category)
+                    if ($have_category) {
                         $content .= "&nbsp; &nbsp; &nbsp; &nbsp; ";
-                    if (strtolower(get_class($termin)) == 'seminartermin')
+                    }
+                    if (strtolower(get_class($termin)) == 'seminartermin') {
                         $content .= "<b>" . _("Raum:") . " </b>";
-                    else
+                    } else {
                         $content .= "<b>" . _("Ort:") . " </b>";
+                    }
                     $content .= htmlReady(mila($termin->getLocation(), 25));
                 }
 
@@ -662,21 +669,19 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                 $edit = FALSE;
                 if ($have_write_permission) {
                     // Seminar appointment
-                    if ($termin->getType() == 1) {
+                    if (strtolower(get_class($termin)) == 'seminarevent') {
                         $edit = sprintf("<a href=\"./raumzeit.php?seminar_id=%s&cmd=open&open_close_id=%s#%s\">"
                                     . makeButton("bearbeiten", "img")
                                     . "</a>", $termin->getSeminarId(), $termin->getId(), $termin->getId());
                     }
                     else {
                         // Personal appointment
-                        $edit = sprintf("<a href=\"./calendar.php?cmd=edit&termin_id=%s"
-                                    . "&atime=%s&source_page=%s\">"
-                                    . makeButton("bearbeiten", "img") . "</a>"
-                                    , $termin->getId(), $termin->getStart(), rawurlencode($PHP_SELF));
+                        $edit = '<a href="'.URLHelper::getLink('calendar.php', array('cmd' => 'edit', 'termin_id' => $termin->getId(), 'atime' => $termin->getStart(), 'source_page' => URLHelper::getURL()))
+                                . '">' . makeButton("bearbeiten", "img") . '</a>';
                     }
-                }
-                else
+                } else {
                     $content .= "<br>";
+                }
 
                 echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>";
                 printcontent(0, FALSE, $content, $edit);

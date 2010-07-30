@@ -151,14 +151,14 @@ div#header {
     z-index: 2;
     position: relative;
     top: 0px;
-    -moz-transition:    all 0.1s;
-    -webkit-transition: all 0.1s;
-    -o-transition:      all 0.1s;
+    -moz-transition:    all 0.2s ease-in;
+    -webkit-transition: all 0.2s ease-in;
+    -o-transition:      all 0.2s ease-in;
 }
 
 #barTopMenu li:hover {
     background-image: url('../images/headnaviback2.jpg');
-    top: 6px;
+    top: 5px;
 }
 
 #barTopMenu a {

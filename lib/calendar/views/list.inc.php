@@ -1,11 +1,11 @@
 <?
 /**
-* year.inc.php
+* month.inc.php
 *
 *
 *
 * @author		Peter Thienel <pthienel@web.de>
-* @version		$Id: year.inc.php,v 1.5 2009/10/07 20:10:42 thienel Exp $
+* @version		$Id: list.inc.php,v 1.2 2009/09/06 01:33:37 thienel Exp $
 * @access		public
 * @modulegroup	calendar
 * @module		calendar
@@ -20,7 +20,7 @@
 define("PHPDOC_DUMMY",true);
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
-// year.inc.php
+// month.inc.php
 //
 // Copyright (c) 2003 Peter Tienel <pthienel@web.de>
 // +---------------------------------------------------------------------------+
@@ -38,10 +38,9 @@ define("PHPDOC_DUMMY",true);
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once $RELATIVE_PATH_CALENDAR . '/lib/DbCalendarYear.class.php';
-include 'lib/include/html_head.inc.php';
+require("$ABSOLUTE_PATH_STUDIP/html_head.inc.php");
 
-if (strtolower(get_class($_calendar)) == 'groupcalendar' && $forum['jshover'] == 1 && $auth->auth['jscript']) {
+if ($forum["jshover"] == 1 AND $auth->auth["jscript"]) { // JS an und erwuenscht?
 	echo "<script language=\"JavaScript\">";
 	echo "var ol_textfont = \"Arial\"";
 	echo "</script>";
@@ -49,15 +48,13 @@ if (strtolower(get_class($_calendar)) == 'groupcalendar' && $forum['jshover'] ==
 	echo "<SCRIPT LANGUAGE=\"JavaScript\" SRC=\"".$GLOBALS['ASSETS_URL']."javascripts/overlib.js\"></SCRIPT>";
 }
 
-$view = $_calendar->toStringYear($atime, $_REQUEST['cal_restrict'], Calendar::getBindSeminare($_calendar->getUserId()));
-$CURRENT_PAGE = $_calendar->getHeadline();
-include 'lib/include/header.php';
-include $RELATIVE_PATH_CALENDAR . '/views/navigation.inc.php';
+require("$ABSOLUTE_PATH_STUDIP/header.php");
+require($ABSOLUTE_PATH_STUDIP . $RELATIVE_PATH_CALENDAR . "/views/navigation.inc.php");
 
 $print_jump_to = FALSE;
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\" align=\"center\">\n";
 if ($auth->auth['jscript'] && $auth->auth["xres"] > 1024) {
-	if (get_config('CALENDAR_GROUP_ENABLE')) {
+	if ($GLOBALS['CALENDAR_GROUP_ENABLE']) {
 		echo "<tr><td class=\"blank\" width=\"25%\" nowrap=\"nowrap\">\n";
 		echo jumpTo($jmp_month, $jmp_day, $jmp_year);
 		echo "</td><td class=\"blank\" width=\"25%\" nowrap=\"nowrap\">\n";
@@ -66,32 +63,53 @@ if ($auth->auth['jscript'] && $auth->auth["xres"] > 1024) {
 		echo calendar_select($_calendar->getId());
 		echo "</td></tr>\n";
 	} else {
-		echo "<tr><td class=\"blank\" nowrap=\"nowrap\" colspan=\"2\">\n";
+		echo "<tr><td class=\"blank\" width=\"25%\" nowrap=\"nowrap\">\n";
 		echo jumpTo($jmp_month, $jmp_day, $jmp_year);
-		echo "</td><td class=\"blank\">";
+		echo "</td><td class=\"blank\" width=\"25%\" nowrap=\"nowrap\">\n";
 		echo restrict_category($cal_restrict['studip_category'], $cmd, $atime);
+		echo "</td><td class=\"blank\" width=\"50%\" nowrap=\"nowrap\">\n";
+		echo '&nbsp;';
 		echo "</td></tr>\n";
 	}
 } else {
 	if (get_config('CALENDAR_GROUP_ENABLE')) {
 		echo "<tr><td class=\"blank\" nowrap=\"nowrap\" colspan=\"2\">\n";
-		echo calendar_select($_calendar->getId());
-		echo "</td><td class=\"blank\" width=\"50%\" nowrap=\"nowrap\">\n";
 		echo restrict_category($cal_restrict['studip_category'], $cmd, $atime);
+		echo "</td><td class=\"blank\" width=\"50%\" nowrap=\"nowrap\">\n";
+		echo calendar_select($_calendar->getId());
 		echo "</td></tr>\n";
 		$print_jump_to = TRUE;
 	} else {
-		echo "<tr><td class=\"blank\" nowrap=\"nowrap\" colspan=\"2\">\n";
+		echo "<tr><td class=\"blank\" width=\"25%\" nowrap=\"nowrap\">\n";
 		echo jumpTo($jmp_month, $jmp_day, $jmp_year);
-		echo "</td><td class=\"blank\" width=\"50%\" nowrap=\"nowrap\">\n";
+		echo "</td><td class=\"blank\" width=\"25%\" nowrap=\"nowrap\">\n";
 		echo restrict_category($cal_restrict['studip_category'], $cmd, $atime);
+		echo "</td><td class=\"blank\" width=\"50%\" nowrap=\"nowrap\">\n";
+		echo '&nbsp;';
 		echo "</td></tr>\n";
 	}
 }
 
 echo "<tr><td class=\"blank\" colspan=\"3\" width=\"100%\" align=\"center\">\n";
 
-echo $view;
+
+
+##########################################################################################
+
+
+if (!$view->printout()) {
+	if (date('Ymd', $view->start) == date('Ymd', time())) {
+		echo '<p style="text-align: left;">' . _("Keine aktuellen Termine") . '</p>';
+	} else {
+		echo '<p style="text-align: left;">';
+		printf(_("Keine Termine in der Zeit vom %s bis zum %s"), strftime('%x', $view->start), strftime('%x', $view->end));
+		echo '</p>';
+	}
+}
+
+########################################################################################################
+
+
 
 echo "</td></tr><tr><td  colspan=\"3\" align=\"center\" class=\"blank\">\n";
 if ($print_jump_to) {
@@ -99,4 +117,3 @@ if ($print_jump_to) {
 } else {
 	echo "<br />&nbsp;";
 }
-?>

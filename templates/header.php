@@ -7,32 +7,29 @@
     <div id="barTopFont">
     <?= htmlentities($GLOBALS['UNI_NAME_CLEAN']) ?>
     </div>
-    <div id="barTopMenu">
-        <ul>
-        <? $accesskey = 0 ?>
-        <? foreach (Navigation::getItem('/') as $nav) : ?>
-            <? if ($nav->isVisible(true)) : ?>
-                <?
-                $accesskey_attr = '';
-                $image = $nav->getImage();
+    <ul id="barTopMenu">
+    <? $accesskey = 0 ?>
+    <? foreach (Navigation::getItem('/') as $nav) : ?>
+        <? if ($nav->isVisible(true)) : ?>
+            <?
+            $accesskey_attr = '';
+            $image = $nav->getImage();
 
-                if ($accesskey_enabled) {
-                    $accesskey = ++$accesskey % 10;
-                    $accesskey_attr = 'accesskey="' . $accesskey . '"';
-                    $image['title'] .= "  [ALT] + $accesskey";
-                }
-                ?>
-                <li>
-                <div style="background-image: url('<?= $image['src'] ?>'); " title="<?= $image['title'] ?>">
-                <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" <?= $accesskey_attr ?>>
-                <!-- <img <? foreach ($image as $key => $value) printf('%s="%s" ', $key, htmlReady($value)) ?>> -->
-                <?= htmlReady($nav->getTitle()) ?>
-                </a></div>
-                </li>
-            <? endif ?>
-        <? endforeach ?>
-        </ul>
-    </div>
+            if ($accesskey_enabled) {
+                $accesskey = ++$accesskey % 10;
+                $accesskey_attr = 'accesskey="' . $accesskey . '"';
+                $image['title'] .= "  [ALT] + $accesskey";
+            }
+            ?>
+            <li>
+                <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>"
+                    style="background-image: url('<?= $image['src'] ?>'); "
+                    title="<?= $image['title'] ?>"
+                   <?= $accesskey_attr ?>><?= htmlReady($nav->getTitle()) ?></a>
+            </li>
+        <? endif ?>
+    <? endforeach ?>
+    </ul>
 </div>
 <!--Statische Text Links -->
 <div id="barTopTools">

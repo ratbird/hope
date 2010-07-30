@@ -7,6 +7,8 @@
     </title>
     <?= PageLayout::getHeadElements() ?>
 
+    <script src="<?= URLHelper::getLink('dispatch.php/localizations/' . $GLOBALS['_language']) ?>"></script>
+
     <script>
       STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";
       STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";

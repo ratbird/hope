@@ -79,9 +79,16 @@ set_exception_handler('studip_default_exception_handler');
 require_once 'lib/classes/URLHelper.php';
 require_once 'lib/navigation/Navigation.php';
 require_once 'lib/navigation/AutoNavigation.php';
+require_once 'lib/classes/PageLayout.php';
+
+//software version - please leave it as it is!
+$SOFTWARE_VERSION = '1.12 alpha svn';
 
 // set dummy navigation until db is ready
 Navigation::setRootNavigation(new Navigation(''));
+
+// set up default page layout
+PageLayout::initialize();
 
 // set default pdo connection
 require_once('lib/classes/DBManager.class.php');
@@ -114,11 +121,6 @@ require_once('lib/classes/StudipNews.class.php');
 require_once('lib/classes/StudipCacheFactory.class.php');
 require_once 'lib/classes/SessionDecoder.class.php';
 require_once 'lib/classes/StudipMail.class.php';
-require_once 'lib/classes/PageLayout.php';
-
-$SOFTWARE_VERSION = '1.12 alpha svn';
-
-PageLayout::initialize();
 
 //Besser hier globale Variablen definieren...
 $GLOBALS['_fullname_sql'] = array();
@@ -128,7 +130,6 @@ $GLOBALS['_fullname_sql']['no_title'] = "CONCAT(Vorname ,' ', Nachname)";
 $GLOBALS['_fullname_sql']['no_title_rev'] = "CONCAT(Nachname ,', ', Vorname)";
 $GLOBALS['_fullname_sql']['no_title_short'] = "CONCAT(Nachname,', ',UCASE(LEFT(TRIM(Vorname),1)),'.')";
 $GLOBALS['_fullname_sql']['no_title_motto'] = "CONCAT(Vorname ,' ', Nachname,IF(motto!='',CONCAT(', ',motto),''))";
-//software version - please leave it as it is!
 
 // set up global navigation
 require_once 'lib/navigation/StudipNavigation.php';

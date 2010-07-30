@@ -42,12 +42,15 @@
         </title>
         <?= PageLayout::getHeadElements() ?>
 
+        <script src="<?= URLHelper::getLink('dispatch.php/localizations/' . $GLOBALS['_language']) ?>"></script>
+
         <script>
             STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";
             STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";
             String.locale = "<?= strtr($GLOBALS['_language'], '_', '-') ?>";
         </script>
     </head>
+
     <body id="<?= PageLayout::getBodyElementId() ?>">
       <?= PageLayout::getBodyElements() ?>
       <div id="overdiv_container"></div>

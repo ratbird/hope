@@ -45,17 +45,16 @@ class ProfileNavigation extends Navigation
             $hp_txt = _('Zu Ihrer Profilseite') . ', ' .
                 sprintf(ngettext('Sie haben %d neuen Eintrag im Gästebuch.',
                                  'Sie haben %d neue Einträge im Gästebuch.', $count), $count);
-            $picture = 'icons/32/blue/new/profile.png';
+            $hp_class = 'new';
             $hp_link = 'about.php?guestbook=open#guest';
         } else {
             $hp_txt = _('Zu Ihrer Profilseite');
-            $picture = 'icons/32/blue/profile.png';
             $hp_link = 'about.php';
         }
 
         $hp_txt .= sprintf(' (%s, %s)', $auth->auth['uname'], $auth->auth['perm']);
         $this->setURL($hp_link);
-        $this->setImage($picture, array('title' => $hp_txt));
+        $this->setImage('header/profile.png', array('title' => $hp_txt, 'class' => $hp_class));
     }
 
     /**

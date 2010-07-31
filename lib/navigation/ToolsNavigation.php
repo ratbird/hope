@@ -27,7 +27,7 @@ class ToolsNavigation extends Navigation
     {
         parent::__construct(_('Tools'), 'admin_news.php', array('range_id' => 'self'));
 
-        $image = 'icons/32/blue/tools.png';
+        $image = 'header/tools.png';
         $tip = _('Tools');
 
         $this->setImage($image, array('title' => $tip));

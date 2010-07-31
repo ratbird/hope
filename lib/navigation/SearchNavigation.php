@@ -27,11 +27,8 @@ class SearchNavigation extends Navigation
     {
         parent::__construct(_('Suche'), 'sem_portal.php');
 
-        //TODO: anpassen
-        $image = 'icons/32/blue/search.png';
         $tip = _('Suche');
-
-        $this->setImage($image, array('title' => $tip));
+        $this->setImage('header/search.png', array('title' => $tip));
     }
 
     /**

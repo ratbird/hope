@@ -21,11 +21,11 @@
                 $image['title'] .= "  [ALT] + $accesskey";
             }
             ?>
-            <li>
-                <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>"
-                    style="background-image: url('<?= $image['src'] ?>'); "
-                    title="<?= $image['title'] ?>"
-                   <?= $accesskey_attr ?>><?= htmlReady($nav->getTitle()) ?></a>
+            <li<? if ($nav->isActive()) : ?> class="active"<? endif ?>>
+                <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" title="<?= $image['title'] ?>" <?= $accesskey_attr ?>>
+                   <div style="background-image: url('<?= $image['src'] ?>');" class="<?= $image['class'] ?>"> </div>
+                   <?= htmlReady($nav->getTitle()) ?>
+               </a>
             </li>
         <? endif ?>
     <? endforeach ?>

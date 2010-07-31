@@ -27,13 +27,12 @@ class CommunityNavigation extends Navigation
 
         parent::__construct(_('Community'), 'online.php');
 
-        $onlineimage = 'icons/32/blue/community.png';
         $onlinetip = _('Nur Sie sind online');
         $active_time = $my_messaging_settings['active_time'];
         $user_count = get_users_online_count($active_time ? $active_time : 5);
 
         if ($user_count) {
-            $onlineimage = 'icons/32/blue/new/community.png';
+            $onlineclass = 'new';
 
             if ($user_count == 1) {
                 $onlinetip = _('Außer Ihnen ist eine Person online');
@@ -42,7 +41,7 @@ class CommunityNavigation extends Navigation
             }
         }
 
-        $this->setImage($onlineimage, array('title' => $onlinetip));
+        $this->setImage('header/community.png', array('title' => $onlinetip, 'class' => $onlineclass));
     }
 
     /**

@@ -31,7 +31,7 @@ class MessagingNavigation extends Navigation
         $neux = count_x_messages_from_user('in', 'all',
             'AND mkdate > '.(int)$my_messaging_settings['last_box_visit'].' AND message_user.readed = 0 ');
 
-        $icon = $neum ? 'icons/32/blue/new/mail.png' : 'icons/32/blue/mail.png';
+        $mailclass = $neum ? 'new' : '';
 
         if ($neux > 0) {
             $tip = sprintf(ngettext('Sie haben %d neue ungelesene Nachricht',
@@ -46,7 +46,7 @@ class MessagingNavigation extends Navigation
             $tip = _('Sie haben keine alten empfangenen Nachrichten');
         }
 
-        $this->setImage($icon, array('title' => $tip));
+        $this->setImage('header/mail.png', array('title' => $tip, 'class' => $mailclass));
     }
 
     /**

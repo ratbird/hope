@@ -1,16 +1,18 @@
 <?
+# Lifter002: TODO
+# Lifter007: TODO
+# Lifter003: TODO
 /**
 * Error.class.php
 * 
 * 
 * 
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @version	$Id: Error.class.php,v 1.2 2008/12/23 09:50:14 thienel Exp $
-* @access		public
-* @modulegroup	calendar_modules
-* @module		Calendar
-* @package	calendar_export
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  calendar_modules
+* @module       Calendar
+* @package  calendar_export
 */
 
 // +---------------------------------------------------------------------------+
@@ -37,39 +39,39 @@
 
 class Error {
 
-	var $status;
-	var $message;
-	var $file;
-	var $line;
-	
-	function Error ($status, $message, $file = '', $line = '') {
-	
-		$this->status = $status;
-		$this->message = $message;
-		$this->file = $file;
-		$this->line = $line;
-	}
-	
-	function getStatus () {
-		
-		return $this->status;
-	}
-	
-	function getMessage () {
-		
-		return $this->message;
-	}
-	
-	function getFile () {
-	
-		return $this->file;
-	}
-	
-	function getLine () {
-	
-		return $this->line;
-	}
-	
+    var $status;
+    var $message;
+    var $file;
+    var $line;
+    
+    function Error ($status, $message, $file = '', $line = '') {
+    
+        $this->status = $status;
+        $this->message = $message;
+        $this->file = $file;
+        $this->line = $line;
+    }
+    
+    function getStatus () {
+        
+        return $this->status;
+    }
+    
+    function getMessage () {
+        
+        return $this->message;
+    }
+    
+    function getFile () {
+    
+        return $this->file;
+    }
+    
+    function getLine () {
+    
+        return $this->line;
+    }
+    
 }
 
-?>
+        

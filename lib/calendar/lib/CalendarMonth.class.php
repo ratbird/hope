@@ -1,4 +1,7 @@
 <?
+# Lifter002: TODO
+# Lifter007: TODO
+# Lifter003: TODO
 
 /*
 CalendarMonth.class.php - 0.8.20020409a
@@ -22,41 +25,42 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 //****************************************************************************
 
-require_once $RELATIVE_PATH_CALENDAR . '/lib/CalendarYear.class.php';
+require_once("config.inc.php");
+require_once($RELATIVE_PATH_CALENDAR . "/lib/CalendarYear.class.php");
 
 class CalendarMonth extends CalendarYear{
 
-	var $mon;      // Monat (int)
-	
-	// Konstruktor
-	function CalendarMonth ($tmstamp) {
-		$this->year = date("Y", $tmstamp);
-		$this->mon = date("n", $tmstamp);
-		$this->ts = mktime(12, 0, 0, $this->mon, 1, $this->year, 0);
-	}
-	
-	// public
-	function getValue () {
-		return $this->mon;
-	}
-	
-	// public
-	function toString () {
-		return htmlentities(strftime("%B", $this->ts), ENT_QUOTES);
-	}
-	
-	// public
-	function getStart () {
-		return mktime(0, 0, 0, $this->mon, 1, $this->year);
-	}
-	
-	// public
-	function getEnd () {
-		$next_mon = $this->mon + 1;
-		return mktime(0, 0, 0, $next_mon, 1, $this->year) - 1;
-	}
-	
-	
+    var $mon;      // Monat (int)
+    
+    // Konstruktor
+    function CalendarMonth ($tmstamp) {
+        $this->year = date("Y", $tmstamp);
+        $this->mon = date("n", $tmstamp);
+        $this->ts = mktime(12, 0, 0, $this->mon, 1, $this->year, 0);
+    }
+    
+    // public
+    function getValue () {
+        return $this->mon;
+    }
+    
+    // public
+    function toString () {
+        return htmlentities(strftime("%B", $this->ts), ENT_QUOTES);
+    }
+    
+    // public
+    function getStart () {
+        return mktime(0, 0, 0, $this->mon, 1, $this->year);
+    }
+    
+    // public
+    function getEnd () {
+        $next_mon = $this->mon + 1;
+        return mktime(0, 0, 0, $next_mon, 1, $this->year) - 1;
+    }
+    
+    
 } // class Month
 
 ?>

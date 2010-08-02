@@ -1,19 +1,27 @@
 <?
+# Lifter002: TODO
+# Lifter007: TODO
+# Lifter003: TODO
 /**
-* CalendarWriter.class.php
+* CalendarWriteriCalendar.class.php
 *
 *
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @version	$Id: CalendarWriter.class.php,v 1.2 2008/12/23 09:50:34 thienel Exp $
-* @access		public
-* @modulegroup	calendar_modules
-* @module		calendar_export
-* @package	Calendar
+* Based on the iCalendar export functions from The Horde Project
+* www.horde.org
+* horde/lib/iCalendar.php,v 1.19
+* Copyright 2003 Mike Cochrane <mike@graftonhall.co.nz>
+*
+*
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  calendar_modules
+* @module       calendar_export
+* @package  Calendar
 */
 
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
-// CalendarWriter.class.php
+// CalendarWriteriCalendar.class.php
 // 
 // Copyright (C) 2003 Peter Thienel <pthienel@web.de>,
 // Suchi & Berg GmbH <info@data-quest.de>
@@ -34,42 +42,31 @@
  
 global $RELATIVE_PATH_CALENDAR;
 
-require_once $RELATIVE_PATH_CALENDAR . '/lib/ErrorHandler.class.php';
+require_once("$RELATIVE_PATH_CALENDAR/lib/ErrorHandler.class.php");
 
 class CalendarWriter {
 
-	var $default_filename_suffix;
-	var $format;
-	var $client_identifier;
-	
-	function CalendarWriter () {
-		
-		// initialize error handler
-		init_error_handler('_calendar_error');
-	}
-	
-	function write (&$event) {
-		
-		return $event->properties;
-	}
-	
-	function writeHeader () {
-	
-	}
-	
-	function writeFooter () {
-	
-	}
-	
-	function getDefaultFilenameSuffix () {
-	
-		return $this->default_filename_suffix;
-	}
-	
-	function getFormat () {
-	
-		return $this->format;
-	}
-	
+    var $default_filename_suffix;
+    var $format;
+    
+    function CalendarWriter () {
+        
+        // initialize error handler
+        init_error_handler('_calendar_error');
+    }
+    
+    function write (&$events) {
+    
+    }
+    
+    function getDefaultFilenameSuffix () {
+    
+        return $this->default_filename_suffix;
+    }
+    
+    function getFormat () {
+    
+        return $this->format;
+    }
+    
 }
-?>

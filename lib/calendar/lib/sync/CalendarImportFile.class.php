@@ -1,14 +1,18 @@
 <?
+# Lifter002: TODO
+# Lifter007: TODO
+# Lifter003: TODO
 /**
 * CalendarImportFile.class.php
 * 
 * 
-* @author		Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
-* @version	$Id: CalendarImportFile.class.php,v 1.2 2008/12/23 09:50:34 thienel Exp $
-* @access		public
-* @modulegroup	calendar_modules
-* @module		calendar_import
-* @package	Calendar
+* 
+*
+* @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
+* @access       public
+* @modulegroup  calendar_modules
+* @module       calendar_import
+* @package  Calendar
 */
 
 // +---------------------------------------------------------------------------+
@@ -34,140 +38,169 @@
 
 global $RELATIVE_PATH_CALENDAR;
 
-require_once $RELATIVE_PATH_CALENDAR . '/lib/sync/CalendarImport.class.php';
+require_once("$RELATIVE_PATH_CALENDAR/lib/sync/CalendarImport.class.php");
 
 class CalendarImportFile extends CalendarImport {
-	
-	var $file;
-	var $path;
-	
-	/**
-	*
-	*/
-	function CalendarImportFile (&$parser, $file, $path = '') {
-		
-		parent::CalendarImport($parser);
-		$this->file = $file;
-		$this->path = $path;
-	}
-	
-	/**
-	*
-	*/
-  function &getContent () {
-		global $_calendar_error;
-	
-		$data = '';
-		if (!$file = @fopen($this->file['tmp_name'], 'rb')) {
-			$_calendar_error->throwError(ERROR_FATAL,
-					_("Die Import-Datei konnte nicht geöffnet werden!"));
-			return FALSE;
-		}
-		
-		if ($file) {
-			while (!feof($file))
-				$data .= fread($file, 1024);
-			fclose($file);
-		}
+    
+    var $_parser;
+    var $file;
+    var $path;
+    
+    /**
+    *
+    */
+    function CalendarImportFile (&$parser, $file, $path = '') {
+        
+        parent::CalendarImport();
+        $this->_parser =& $parser;
+        $this->file = $file;
+        $this->path = $path;
+    }
+    
+    /**
+    *
+    */
+  function getContent () {
+        global $_calendar_error;
+    
+        $data = '';
+        if (!$file = @fopen($this->file['tmp_name'], 'rb')) {
+            $_calendar_error->throwError(ERROR_FATAL,
+                    _("Die Import-Datei konnte nicht geöffnet werden!"));
+            return FALSE;
+        }
+        
+        if ($file) {
+            while (!feof($file))
+                $data .= fread($file, 1024);
+            fclose($file);
+        }
 
-		return $data;
-	}
+        return $data;
+    }
 
-	
-	/**
-	*
-	*/
-	function getFileName () {
-	
-		return $this->file['name'];
-	}
-	
-	/**
-	*
-	*/
-	function getFileType () {
-	
-		return $this->_parser->getType();
-	}
-	
-	/**
-	*
-	*/
-	function getFileSize () {
-		
-		if (file_exists($this->file['tmp_name']))
-			return filesize($this->file['tmp_name']);
-		
-		return FALSE;
-	}
-	
-	/**
-	*
-	*/
-	function checkFile () {
-	
-		return TRUE;
-	}
-	
-	/**
-	*
-	*/
-	function importIntoDatabase ($range_id, $ignore = 'IGNORE_ERRORS') {
-		global $_calendar_error;
-		
-		if ($this->checkFile())	{
-			parent::importIntoDatabase($range_id, $ignore);
-			return TRUE;
-		}
-		$_calendar_error->throwError(ERROR_CRITICAL,
-				_("Die Datei konnte nicht gelesen werden!"));
-		return FALSE;
-	}
-	
-	/**
-	*
-	*/
-	function importIntoObjects ($ignore = 'IGNORE_ERRORS') {
-		global $_calendar_error;
-		
-		if ($this->checkFile()) {
-			parent::importIntoObjects($ignore);
-			return TRUE;
-		}
-		$_calendar_error->throwError(ERROR_CRITICAL,
-					_("Die Datei konnte nicht gelesen werden!"));
-		return FALSE;
-	}
-	
-	/**
-	*
-	*/
-	function deleteFile () {
-		global $_calendar_error;
-		
-		if (!unlink($this->file['tmp_name'])) {
-			$_calendar_error->throwError(ERROR_FATAL,
-					_("Die Datei konnte nicht gel&ouml;scht werden!"));
-			return FALSE;
-		}
-		
-		return TRUE;
-	}
-	
-	/**
-	*
-	*/
-	function _getFileExtension () {
-	
-		$i = strrpos($this->file['name'], '.');
-		if (!$i)
-			return '';
+    
+    /**
+    *
+    */
+    function getFileName () {
+    
+        return $this->file['name'];
+    }
+    
+    /**
+    *
+    */
+    function getFileType () {
+    
+        return $this->_parser->getType();
+    }
+    
+    /**
+    *
+    */
+    function getFileSize () {
+        
+        if (file_exists($this->file['tmp_name']))
+            return filesize($this->file['tmp_name']);
+        
+        return FALSE;
+    }
+    
+    /**
+    *
+    */
+    function checkFile () {
+    
+        return TRUE;
+    }
+    
+    /**
+    *
+    */
+    function setParser (&$parser) {
+    
+        $this->_parser = $parser;
+    }
+    
+    /**
+    *
+    */
+    function getCount () {
+    
+        return $this->_parser->getCount($this->getContent());
+    }
+    
+    /**
+    *
+    */
+    function importIntoDatabase ($ignore = 'IGNORE_ERRORS') {
+        global $_calendar_error;
+        
+        if ($this->checkFile()) {
+            if ($this->_parser->parseIntoDatabase($this->getContent(), $ignore))
+                return TRUE;
+            
+            $_calendar_error->throwError(ERROR_CRITICAL,
+                    _("Die Datei konnte nicht gelesen werden!"));
+            return FALSE;
+        }
+        
+        return FALSE;
+    }
+    
+    /**
+    *
+    */
+    function importIntoObjects ($ignore = 'IGNORE_ERRORS') {
+        global $_calendar_error;
+    
+        if ($this->checkFile()) {
+            if ($this->_parser->parseIntoObjects($this->getContent(), $ignore))
+                return TRUE;
+            
+            $_calendar_error->throwError(ERROR_CRITICAL,
+                    _("Die Datei konnte nicht gelesen werden!"));
+            return FALSE;
+        }
+        
+        return $errors;
+    }
+    
+    function getObjects () {
+        
+        return $object =& $this->_parser->getObjects();
+    }
+    
+    /**
+    *
+    */
+    function deleteFile () {
+        global $_calendar_error;
+        
+        if (!unlink($this->file['tmp_name'])) {
+            $_calendar_error->throwError(ERROR_FATAL,
+                    _("Die Datei konnte nicht gel&ouml;scht werden!"));
+            return FALSE;
+        }
+        
+        return TRUE;
+    }
+    
+    /**
+    *
+    */
+    function _getFileExtension () {
+    
+        $i = strrpos($this->file['name'], '.');
+        if (!$i)
+            return '';
 
-		$l = strlen($this->file['name']) - $i;
-		$ext = substr($this->file['name'], $i + 1, $l);
+        $l = strlen($this->file['name']) - $i;
+        $ext = substr($this->file['name'], $i + 1, $l);
 
-		return $ext;
-	}
-	
+        return $ext;
+    }
+    
 }
 ?>

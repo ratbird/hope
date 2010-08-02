@@ -1,118 +1,95 @@
 <?
+# Lifter002: TODO
+# Lifter005: TODO
+# Lifter007: TODO
+# Lifter003: TODO
 /**
-* day.inc.php
-*
-*
-*
-* @author		Peter Thienel <pthienel@web.de>
-* @version		$Id: day.inc.php,v 1.4 2009/10/07 20:10:42 thienel Exp $
-* @access		public
-* @modulegroup	calendar
-* @module		calendar
-* @package	calendar
-*/
-/**
-* workaround for PHPDoc
-*
-* Use this if module contains no elements to document !
-* @const PHPDOC_DUMMY
-*/
-define("PHPDOC_DUMMY",true);
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// day.inc.php
-//
-// Copyright (c) 2003 Peter Tienel <pthienel@web.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
+ * day.inc.php
+ *
+ * Shows the day calendar
+ *
+ * PHP version 5
+ *
+ * LICENSE
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * @author     Peter Thienel <pthienel@web.de>
+ * @author     Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @copyright  2003-2009 Stud.IP
+ * @license    http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category   Stud.IP
+ * @package    calendar
+ */
 
-include_once $RELATIVE_PATH_CALENDAR . '/lib/DbCalendarDay.class.php';
-include 'lib/include/html_head.inc.php';
+// Begin of output
+include('lib/include/html_head.inc.php');
 
-if ($forum["jshover"] == 1 AND $auth->auth["jscript"]) { // JS an und erwuenscht?
-	echo "<script language=\"JavaScript\">";
-	echo "var ol_textfont = \"Arial\"";
-	echo "</script>";
-	echo "<DIV ID=\"overDiv\" STYLE=\"position:absolute; visibility:hidden; z-index:1000;\"></DIV>";
-	echo "<SCRIPT LANGUAGE=\"JavaScript\" SRC=\"".$GLOBALS['ASSETS_URL']."javascripts/overlib.js\"></SCRIPT>";
-}
-$view = $_calendar->toStringDay($atime, $st, $et, $_REQUEST['cal_restrict'], Calendar::getBindSeminare($_calendar->getUserId()));
-$CURRENT_PAGE = $_calendar->getHeadline();
-include 'lib/include/header.php';
-include $RELATIVE_PATH_CALENDAR . '/views/navigation.inc.php';
+include('lib/include/header.php');
 
-$print_jump_to = FALSE;
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
-if ($auth->auth['jscript'] && $auth->auth["xres"] > 1024) {
-	if (get_config('CALENDAR_GROUP_ENABLE')) {
-		echo "<tr><td class=\"blank\" width=\"25%\" nowrap=\"nowrap\">\n";
-		echo jumpTo($jmp_month, $jmp_day, $jmp_year);
-		echo "</td><td class=\"blank\" width=\"25%\" nowrap=\"nowrap\">\n";
-		echo restrict_category($cal_restrict['studip_category'], $cmd, $atime);
-		echo "</td><td class=\"blank\" width=\"50%\">";
-		echo calendar_select($_calendar->getId());
-		echo "</td></tr>\n";
-	} else {
-		echo "<tr><td class=\"blank\" nowrap=\"nowrap\" colspan=\"2\">\n";
-		echo jumpTo($jmp_month, $jmp_day, $jmp_year);
-		echo "</td><td class=\"blank\">";
-		echo restrict_category($cal_restrict['studip_category'], $cmd, $atime);
-		echo "</td></tr>\n";
-	}
-} else {
-	if (get_config('CALENDAR_GROUP_ENABLE')) {
-		echo "<tr><td class=\"blank\" nowrap=\"nowrap\" colspan=\"2\">\n";
-		echo calendar_select($_calendar->getId());
-		echo "</td><td class=\"blank\" width=\"50%\" nowrap=\"nowrap\">\n";
-		echo restrict_category($cal_restrict['studip_category'], $cmd, $atime);
-		echo "</td></tr>\n";
-		$print_jump_to = TRUE;
-	} else {
-		echo "<tr><td class=\"blank\" nowrap=\"nowrap\" colspan=\"2\">\n";
-		echo jumpTo($jmp_month, $jmp_day, $jmp_year);
-		echo "</td><td class=\"blank\" width=\"50%\" nowrap=\"nowrap\">\n";
-		echo restrict_category($cal_restrict['studip_category'], $cmd, $atime);
-		echo "</td></tr>\n";
-	}
+echo "<tr><td class=\"blank\" width=\"60%\"><br>\n";
+echo "<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+echo "<tr><td class=\"blank\" width=\"100%\">\n";
+echo "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n";
+echo "<td align=\"center\" width=\"10%\" height=\"40\"><a href=\"$PHP_SELF?cmd=showday&atime=";
+echo $atime - 86400 . "\">\n";
+$tooltip = tooltip(_("zurück"));
+echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_previous.gif\"$tooltip></a></td>\n";
+echo "<td class=\"calhead\" width=\"80%\" class=\"cal\"><b>\n";
+
+echo $aday->toString("LONG") . ", " . $aday->getDate();
+// event. Feiertagsnamen ausgeben
+if ($hday = holiday($atime))
+    echo "<br>" . $hday["name"];
+
+echo "</b></td>\n";
+echo "<td align=\"center\" width=\"10%\"><a href=\"$PHP_SELF?cmd=showday&atime=";
+echo $atime + 86400 . "\">\n";
+$tooltip = tooltip(_("vor"));
+echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_next.gif\"$tooltip></a></td>\n";
+echo "</tr>\n";
+
+if ($st > 0) {
+    echo "<tr><td align=\"center\" colspan=\"3\"><a href=\"$PHP_SELF?cmd=showday&atime=";
+    echo ($atime - ($at - $st + 1) * 3600) . "\">";
+    $tooltip = tooltip(_("zeig davor"));
+    echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_up.gif\"$tooltip></a></td></tr>\n";
 }
-echo "<tr><td valign=\"top\" class=\"blank\" colspan=\"2\" nowrap=\"nowrap\">\n";
+echo "</table>\n</td></tr>\n<tr><td class=\"blank\">\n";
+echo "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\">";
 
-echo $view;
+echo $tab["table"];
 
-echo "</td><td valign=\"top\" align=\"left\" class=\"blank\">\n";
-if (!isset($_REQUEST['imt'])) {
-	$imt = mktime(12, 0, 0, date('n', $atime) - 1,
-		date('j', $atime), date('Y', $atime));
-}/* else {
-	$imt = mktime(12, 0, 0, date('n', $imt),
-		date('j', $imt), date('Y', $imt));
-}*/
-if ($print_jump_to) {
-	echo jumpTo($jmp_month, $jmp_day, $jmp_year);
+if ($et < 23) {
+    echo "<tr><td align=\"center\" colspan=\"" . $tab["max_columns"] . "\">";
+    echo "<a href=\"$PHP_SELF?cmd=showday&atime=";
+    echo ($atime + ($et - $at + 1) * 3600) . "\">";
+    $tooltip = tooltip(_("zeig danach"));
+    echo "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_down.gif\"$tooltip></a></td></tr>\n";
 }
+else
+    echo "<tr><td colspan=\"" . $tab["max_columns"] . "\">&nbsp;</td></tr>\n";
 
-echo includeMonth($imt, "$PHP_SELF?cmd=showday&atime=", '', '', $atime);
-
-$imt = mktime(12, 0, 0, date('n', $imt) + 1,
-		date('j', $imt), date('Y', $imt));
-
-echo includeMonth($imt, "$PHP_SELF?cmd=showday&atime=", 'NONAVARROWS', '', $atime);
-
-$imt = mktime(12, 0, 0, date('n', $imt) + 1,
-		date('j', $imt), date('Y', $imt));
-
-echo includeMonth($imt, "$PHP_SELF?cmd=showday&atime=", 'NONAVARROWS', '', $atime);
-echo "</td></tr><tr><td class=\"blank\" width=\"100%\" colspan=\"3\">&nbsp;";
+echo "</table>\n</td></tr>\n</table>\n<td width=\"40%\" valign=\"top\" class=\"blank\"><br>\n";
+echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
+echo "<tr><td>\n";
+echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+jumpTo($jmp_m, $jmp_d, $jmp_y);
+echo "</table></td></tr>\n";
+$link = "$PHP_SELF?cmd=showday&atime=";
+echo "<tr><td align=\"center\">".includeMonth($atime, $link)."</td></tr>\n";
+echo "</table>\n";
 ?>

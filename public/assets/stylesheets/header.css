@@ -161,11 +161,11 @@ div#header {
 }
 
 #barTopMenu li.active a:hover, #barTopMenu a:hover {
-    color: #fff;
+    color: #e63d3d;
 }
 
-#barTopMenu li.active a, #barTopMenu a:active {
-    color: #e63d3d;
+#barTopMenu li.active a {
+    color: #fff;
 }
 
 /* normal icon */
@@ -180,7 +180,7 @@ div#header {
 
 /* hover icon */
 #barTopMenu a:hover div, #barTopMenu li.active a:hover div {
-    background-position: -64px 0px;
+    background-position: -128px 0px;
 }
 
 /* new icon */
@@ -190,15 +190,15 @@ div#header {
 
 /* new hover icon */
 #barTopMenu a:hover div.new, #barTopMenu li.active a:hover div.new {
-    background-position: -96px 0px;
+    background-position: -160px 0px;
 }
 
 /* active icon */
-#barTopMenu li.active a div, #barTopMenu li a:active div {
-    background-position: -128px 0px;
+#barTopMenu li.active a div {
+    background-position: -64px 0px;
 }
 
 /* new active icon */
-#barTopMenu li.active a div.new, #barTopMenu li a:active div.new {
-    background-position: -160px 0px;
+#barTopMenu li.active a div.new {
+    background-position: -96px 0px;
 }

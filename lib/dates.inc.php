@@ -597,7 +597,14 @@ function Termin_Eingabe_javascript ($t = 0, $n = 0, $atime=0, $ss = '', $sm = ''
 
     return  $txt;
 }                                                                                               
-
+/**
+ * Return an array of formatted room snippets, possibly linked
+ *
+ * @param array  an associative array of rooms
+ * @param bool   true if you want links, otherwise false
+ *
+ * @return array an array of formatted room snippets
+ */
 function getFormattedRooms($rooms, $link = false) {
     $room_list = array();
 

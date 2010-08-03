@@ -61,8 +61,12 @@ class SingleDate {
     var $messages = NULL;
     var $content = '';
 
-    //var $check_array = array()        // This array is used to check if the singledate has been changed and needs to be stored
-
+    /**
+     * Return the SingleDate instance of the given id
+     *
+     * @param string      the id of the instance
+     * @return SingleDate the SingleDate instance
+     */
     function getInstance($singledate_id) {
         static $singledate_object_pool;
 

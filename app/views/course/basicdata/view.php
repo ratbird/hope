@@ -27,7 +27,7 @@ $infobox = array(
           "eintrag"   => $aktionen
     ),
     array("kategorie" => _("Informationen:"),
-          "eintrag"   => 
+          "eintrag"   =>
         array(
             array(
                   "icon" => 'ausruf_small.gif',
@@ -62,7 +62,7 @@ $width_namecolumn = 60;
 
 <form name="details" method="post" action="<?= $controller->url_for('course/basicdata/set?cid='.$course_id) ?>">
 <div style="text-align:center" id="settings" class="steel1">
-  
+
   <h2 id="bd_basicsettings" class="steelgraulight"><?= _("Grundeinstellungen") ?></h2>
   <div><table width="100%">
   <?php
@@ -78,7 +78,7 @@ $width_namecolumn = 60;
                  <?= $attribute['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
              </td>
              <td style="text-align: left" width="<?= 100-$width_column1 ?>%"><?=
-             $attribute['locked'] 
+             $attribute['locked']
                  ? formatReady($attribute['title'])
                  : $this->render_partial("course/basicdata/_input", array('input' => $attribute))
              ?></td>
@@ -87,7 +87,7 @@ $width_namecolumn = 60;
   }
   ?>
   </table></div>
-  
+
   <h2 id="bd_inst" class="steelgraulight"><?= _("Einrichtungen") ?></h2>
   <div><table width="100%">
   <?php
@@ -103,7 +103,7 @@ $width_namecolumn = 60;
                 <?= $inst['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
              </td>
              <td style="text-align: left" width="<?= 100-$width_column1 ?>%"><?=
-             $inst['locked'] 
+             $inst['locked']
                  ? formatReady($inst['title'])
                  : $this->render_partial("course/basicdata/_input", array('input' => $inst))
              ?></td>
@@ -112,19 +112,19 @@ $width_namecolumn = 60;
   }
   ?>
   </table></div>
-  
+
   <h2 id="bd_personal" class="steelgraulight"><?= _("Personal") ?></h2>
   <div><table style="width: 100%">
   <tr>
     <td style="width: <?= $width_column1/2 ?>%; font-weight: bold; vertical-align: top;"><?= $dozenten_title ?></td>
     <td style="width: <?= 100-$width_column1-($width_column1/2) ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
         <ul style="list-style-type: none; text-indent: -25px;">
-        <? $num = 0; 
+        <? $num = 0;
         foreach($dozenten as $dozent) : ?>
         <li>
             <span style="vertical-align: middle; text-align: left;">
-                <?= Avatar::getAvatar(null, $dozent["username"])->getImageTag(Avatar::SMALL) ?>
-                <?= get_fullname($dozent["user_id"], 'full_rev')." (".$dozent["username"].")" ?>
+                <?= Avatar::getAvatar($dozent["user_id"], $dozent['username'])->getImageTag(Avatar::SMALL) ?>
+                <?= get_fullname($dozent["user_id"], 'full_rev', true)." (".$dozent["username"].")" ?>
             </span>
             <? if ($perm_dozent) : ?>
             <span style="argin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
@@ -142,7 +142,7 @@ $width_namecolumn = 60;
                 </a>
             </span>
             <? endif; ?>
-            
+
         </li>
     <? $num++; endforeach; ?>
         </ul>
@@ -165,8 +165,8 @@ $width_namecolumn = 60;
     <? foreach($deputies as $deputy) : ?>
         <li>
             <span style="vertical-align: middle; text-align: left">
-                <?= Avatar::getAvatar(null, $deputy["username"])->getImageTag(Avatar::SMALL) ?>
-                <?= get_fullname($deputy["user_id"], 'full_rev')." (".$deputy["username"].", "._("Status").": ".$deputy['perms'].")" ?>
+                <?= Avatar::getAvatar($deputy["user_id"], $deputy["username"])->getImageTag(Avatar::SMALL) ?>
+                <?= get_fullname($deputy["user_id"], 'full_rev', true)." (".$deputy["username"].", "._("Status").": ".$deputy['perms'].")" ?>
             </span>
             <? if ($perm_dozent) : ?>
             <span style="margin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
@@ -176,7 +176,7 @@ $width_namecolumn = 60;
                 <?= Assets::img("trash.gif") ?></a>
             </span>
             <? endif; ?>
-            
+
         </li>
     <? endforeach; ?>
     </ul>
@@ -196,12 +196,12 @@ $width_namecolumn = 60;
     <td style="width: <?= $width_column1/2 ?>%;  font-weight: bold; vertical-align: top;"><?= $tutor_title ?></td>
     <td style="width: <?= 100-$width_column1-($width_column1/2) ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
     <ul style="list-style-type: none; text-indent: -25px;">
-    <? $num = 0; 
+    <? $num = 0;
         foreach($tutoren as $tutor) : ?>
         <li>
             <span style="vertical-align: middle; text-align: left">
-                <?= Avatar::getAvatar(null, $tutor["username"])->getImageTag(Avatar::SMALL) ?>
-                <?= get_fullname($tutor["user_id"], 'full_rev')."<br>(".$tutor["username"].")" ?>
+                <?= Avatar::getAvatar($tutor["user_id"], $tutor["username"])->getImageTag(Avatar::SMALL) ?>
+                <?= get_fullname($tutor["user_id"], 'full_rev', true)."<br>(".$tutor["username"].")" ?>
             </span>
             <? if ($perm_dozent) : ?>
             <span style="margin: 3px; vertical-align: middle; white-space: nowrap;">
@@ -218,7 +218,7 @@ $width_namecolumn = 60;
                 <?= Assets::img("trash.gif") ?></a>
             </span>
             <? endif; ?>
-            
+
         </li>
     <? $num++; endforeach; ?>
     </ul>
@@ -238,11 +238,11 @@ $width_namecolumn = 60;
     </td>
   </tr>
   </table></div>
-  
-  
+
+
   <h2 id="bd_description" class="steelgraulight"><?= _("Beschreibungen") ?></h2>
   <div><table style="width: 100%">
-  <?php 
+  <?php
   if (!$descriptions) {
       ?>
       <tr><td colspan="2"><?= _("Fehlende Datenzeilen") ?></td></tr>
@@ -255,7 +255,7 @@ $width_namecolumn = 60;
                 <?= $description['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
              </td>
              <td style="text-align: left; width: <?= 100-$width_column1 ?>%"><?=
-             $description['locked'] 
+             $description['locked']
                  ? formatReady($description['title'])
                  : $this->render_partial("course/basicdata/_input", array('input' => $description))
              ?></td>
@@ -264,7 +264,7 @@ $width_namecolumn = 60;
   }
   ?>
   </table></div>
-  
+
 </div>
 <div style="text-align:center; padding: 15px">
   <? echo makeButton("uebernehmen", "input") ?>

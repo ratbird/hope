@@ -15,7 +15,7 @@ require_once 'lib/classes/Institute.class.php';
 
 class Course_BasicdataController extends AuthenticatedController {
     public $msg = array();
-    
+
     /**
      * Zeigt die Grunddaten an. Man beachte, dass eventuell zuvor eine andere
      * Action wie Set ausgeführt wurde, von der hierher weitergeleitet worden ist.
@@ -23,18 +23,18 @@ class Course_BasicdataController extends AuthenticatedController {
      */
     public function view_action($course_id = null) {
         global $SessSemName, $user, $perm, $_fullname_sql, $SEM_CLASS, $SEM_TYPE;
-        
+
         $deputies_enabled = get_config('DEPUTIES_ENABLE');
-        
+
         //damit QuickSearch funktioniert:
         Request::set('new_doz_parameter', $this->flash['new_doz_parameter']);
         if ($deputies_enabled) {
             Request::set('new_dep_parameter', $this->flash['new_dep_parameter']);
         }
         Request::set('new_tut_parameter', $this->flash['new_tut_parameter']);
-        
+
         $this->course_id = $SessSemName[1] ? $SessSemName[1] : $course_id;
-        
+
         if ((Request::get('section') === 'details') || ($this->flash['section'] === 'details')) {
             //Navigation im Admin-Bereich:
             $this->section = 'details';
@@ -45,7 +45,7 @@ class Course_BasicdataController extends AuthenticatedController {
             Navigation::activateItem('/admin/course/details');
             $this->section = 'admin';
         }
-        
+
         //Auswähler für Admin-Bereich:
         if (!$this->course_id) {
             PageLayout::setTitle(_('Studienbereichsauswahl'));
@@ -57,24 +57,24 @@ class Course_BasicdataController extends AuthenticatedController {
             include 'lib/include/header.php';
             include 'lib/include/admin_search_form.inc.php';  // will not return
         }
-        
+
         //Berechtigungscheck:
         if (!$perm->have_studip_perm("tutor",$this->course_id)) {
             throw new AccessDeniedException(_("Sie haben keine Berechtigung diese " .
                     "Veranstaltung zu verändern."));
         }
-        
+
         //Kopf initialisieren:
         PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenGrunddaten");
         PageLayout::setTitle(_("Verwaltung der Grunddaten"));
         if (getHeaderLine($this->course_id)) {
             PageLayout::setTitle(getHeaderLine($this->course_id)." - ".PageLayout::getTitle());
         }
-        
+
         //Daten sammeln:
         $sem = new Seminar($this->course_id);
         $data = $sem->getData();
-        
+
         //Erster Reiter des Akkordions: Grundeinstellungen
         $this->attributes = array();
         $this->attributes[] = array(
@@ -149,18 +149,18 @@ class Course_BasicdataController extends AuthenticatedController {
             'title' => _("Beschreibung"),
             'name' => "course_description",
             'type' => 'textarea',
-            'value' => htmlReady($data['description']), 
+            'value' => htmlReady($data['description']),
             'locked' => LockRules::Check($this->course_id, 'Beschreibung')
         );
-        
-        
-        //Zweiter Reiter: Institute 
+
+
+        //Zweiter Reiter: Institute
         $this->institutional = array();
         $institute = Institute::getMyInstitutes();
         $choices = array();
         foreach ($institute as $inst) {
             //$choices[$inst['Institut_id']] = $inst['Name'];
-            $choices[$inst['Institut_id']] = 
+            $choices[$inst['Institut_id']] =
                 ($inst['is_fak'] ? "<span style=\"font-weight: bold\">" : "&nbsp;&nbsp;&nbsp;&nbsp;") .
                 htmlReady($inst['Name']) .
                 ($inst['is_fak'] ? "</span>" : "");
@@ -177,7 +177,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $institute = Institute::getInstitutes();
         $choices = array();
         foreach ($institute as $inst) {
-            $choices[$inst['Institut_id']] = 
+            $choices[$inst['Institut_id']] =
                 ($inst['is_fak'] ? "<span style=\"font-weight: bold\">" : "&nbsp;&nbsp;&nbsp;&nbsp;") .
                 htmlReady($inst['Name']) .
                 ($inst['is_fak'] ? "</span>" : "");
@@ -193,13 +193,13 @@ class Course_BasicdataController extends AuthenticatedController {
             'choices' => $choices,
             'locked' => LockRules::Check($this->course_id, 'seminar_inst')
         );
-        
-        
+
+
         //Dritter Reiter: Personal
         if ($SEM_CLASS[$SEM_TYPE[$sem->status]["class"]]["only_inst_user"]) {
-            $clause="AND user_inst.Institut_id IN (". 
+            $clause="AND user_inst.Institut_id IN (".
                     "SELECT institut_id FROM seminar_inst " .
-                    "WHERE seminar_id = '".$this->course_id."' " . 
+                    "WHERE seminar_id = '".$this->course_id."' " .
                 ") ";
         }
         $query = "SELECT DISTINCT auth_user_md5.user_id, " .
@@ -215,8 +215,8 @@ class Course_BasicdataController extends AuthenticatedController {
                         "ORDER BY auth_user_md5.Nachname DESC ";
         $this->dozenten = $sem->getMembers('dozent');
         $Dozentensuche = new SQLSearch(
-                        sprintf($query, "('dozent')"), 
-                        sprintf(_("Name %s"), get_title_for_status('dozent', 1, $seminar_type)), 
+                        sprintf($query, "('dozent')"),
+                        sprintf(_("Name %s"), get_title_for_status('dozent', 1, $seminar_type)),
                         "user_id");
         $this->dozentensuche = QuickSearch::get("new_doz", $Dozentensuche)
                                     ->withButton()
@@ -226,7 +226,7 @@ class Course_BasicdataController extends AuthenticatedController {
         if ($this->deputies_enabled) {
             $this->deputies = getDeputies($this->course_id);
             $deputysearch = new PermissionSearch(
-                    "username", 
+                    "username",
                     sprintf(_("Name %s"), get_title_for_status('deputy', 1, $seminar_type)),
                     "username",
                     array('permission' => getValidDeputyPerms())
@@ -238,41 +238,41 @@ class Course_BasicdataController extends AuthenticatedController {
         }
         $this->tutoren = $sem->getMembers('tutor');
         $Tutorensuche = new SQLSearch(
-                        sprintf($query, "('tutor', 'dozent')"), 
-                        sprintf(_("Name %s"), get_title_for_status('tutor', 1, $seminar_type)), 
+                        sprintf($query, "('tutor', 'dozent')"),
+                        sprintf(_("Name %s"), get_title_for_status('tutor', 1, $seminar_type)),
                         "user_id");
         $this->tutorensuche = QuickSearch::get("new_tut", $Tutorensuche)
                                     ->withButton()
                                     ->render();
         $this->tutor_title = get_title_for_status('tutor', 1, $seminar_type);
-        
+
         //Vierter Reiter: Beschreibungen (darunter Datenfelder)
         $this->descriptions[] = array(
             'title' => _("Teilnehmer/-innen"),
             'name' => "course_participants",
             'type' => 'textarea',
-            'value' => $data['participants'], 
+            'value' => $data['participants'],
             'locked' => LockRules::Check($this->course_id, 'teilnehmer')
         );
         $this->descriptions[] = array(
             'title' => _("Voraussetzungen"),
             'name' => "course_requirements",
             'type' => 'textarea',
-            'value' => $data['requirements'], 
+            'value' => $data['requirements'],
             'locked' => LockRules::Check($this->course_id, 'voraussetzungen')
         );
         $this->descriptions[] = array(
             'title' => _("Lernorganisation"),
             'name' => "course_orga",
             'type' => 'textarea',
-            'value' => $data['orga'], 
+            'value' => $data['orga'],
             'locked' => LockRules::Check($this->course_id, 'lernorga')
         );
         $this->descriptions[] = array(
             'title' => _("Leistungsnachweis"),
             'name' => "course_leistungsnachweis",
             'type' => 'textarea',
-            'value' => $data['leistungsnachweis'], 
+            'value' => $data['leistungsnachweis'],
             'locked' => LockRules::Check($this->course_id, 'leistungsnachweis')
         );
         $this->descriptions[] = array(
@@ -285,10 +285,10 @@ class Course_BasicdataController extends AuthenticatedController {
                 "</span>",
             'name' => "course_location",
             'type' => 'textarea',
-            'value' => $data['location'], 
+            'value' => $data['location'],
             'locked' => LockRules::Check($this->course_id, 'Ort')
         );
-        
+
         $datenfelder = DataFieldEntry::getDataFieldEntries($this->course_id, 'sem', $data["status"]);
         if ($datenfelder) {
             foreach($datenfelder as $datenfeld) {
@@ -297,8 +297,8 @@ class Course_BasicdataController extends AuthenticatedController {
                         'title' => $datenfeld->getName(),
                         'name' => "datafield_".$datenfeld->getID(),
                         'type' => "datafield",
-                        'value' => $datenfeld->getHTML("datafields"), 
-                        'locked' => !$datenfeld->isEditable() 
+                        'value' => $datenfeld->getHTML("datafields"),
+                        'locked' => !$datenfeld->isEditable()
                             || LockRules::Check($this->course_id, $datenfeld->getID())
                     );
                 }
@@ -308,16 +308,16 @@ class Course_BasicdataController extends AuthenticatedController {
             'title' => _("Sonstiges"),
             'name' => "course_misc",
             'type' => 'textarea',
-            'value' => $data['misc'], 
+            'value' => $data['misc'],
             'locked' => LockRules::Check($this->course_id, 'Sonstiges')
         );
-        
+
         $this->perm_dozent = $perm->have_studip_perm("dozent", $this->course_id);
         $this->mkstring = $data['mkdate'] ? date("d.m.Y, G:i", $data['mkdate']) : _("unbekannt");
         $this->chstring = $data['chdate'] ? date("d.m.Y, G:i", $data['chdate']) : _("unbekannt");
-        $this->flash->discard(); //schmeißt ab jetzt unnötige Variablen aus der Session. 
+        $this->flash->discard(); //schmeißt ab jetzt unnötige Variablen aus der Session.
     }
-    
+
     /**
      * Ändert alle Grunddaten der Veranstaltung (bis auf Personal) und leitet
      * danach weiter auf View.
@@ -338,11 +338,11 @@ class Course_BasicdataController extends AuthenticatedController {
                     } elseif ($sem->{$varname} != $req_value) {
                         $sem->{$varname} = $req_value;
                         $changemade = true;
-                        if (in_array($varname, array("participants", 
-                                "requirements", 
-                                "orga", 
-                                "leistungsnachweis", 
-                                "location", 
+                        if (in_array($varname, array("participants",
+                                "requirements",
+                                "orga",
+                                "leistungsnachweis",
+                                "location",
                                 "misc"))) {
                         }
                     }
@@ -353,22 +353,24 @@ class Course_BasicdataController extends AuthenticatedController {
                 $changemade = true;
             }
             //Datenfelder:
+            $invalid_datafields = array();
             $all_fields_types = DataFieldEntry::getDataFieldEntries($sem->id, 'sem', $sem->status);
             foreach (Request::getArray('datafields') as $datafield_id => $datafield_value) {
                 $datafield = $all_fields_types[$datafield_id];
                 $valueBefore = $datafield->getValue();
-                //noch klären, dass nicht nutzlose Datenfelder angelegt werden:
-                if ($datafield->getType() === "bool" && !$valueBefore) {
-                    $valueBefore = "0";
+                //the magic goes on and on: onDataFieldEntry::setValueFromSubmit() uses remove_magic_quotes()
+                $datafield->setValueFromSubmit(get_magic_quotes_gpc() ? Request::addslashes($datafield_value) : $datafield_value);
+                if ($valueBefore != $datafield->getValue()) {
+                    if ($datafield->isValid()) {
+                        $datafield->store();
+                        $changemade = true;
+                    } else {
+                        $invalid_datafields[] = $datafield->getName();
+                    }
                 }
-                if ($datafield->getType() === "selectbox" && !$valueBefore) {
-                    $valueBefore = "0";
-                }
-                if ($valueBefore != $datafield_value) {
-                    $datafield->setValue($datafield_value);
-                    $datafield->store();
-                    $changemade = true;
-                }
+            }
+            if (count($invalid_datafields)) {
+                $this->msg[] = array("error", _("Die Eingaben für folgende Felder sind ungültig und wurden nicht gespeichert:") . '<br>' . join(', ', array_map('htmlready', $invalid_datafields)));
             }
             $sem->store();
             if ($changemade) {
@@ -416,7 +418,7 @@ class Course_BasicdataController extends AuthenticatedController {
             if ($_POST['new_tut'] && $_POST['add_tutor_x']
                     && $perm->have_studip_perm("tutor",$SessSemName[1])) {
                 if ($sem->addMember($_POST['new_tut'], "tutor")) {
-                    $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."), 
+                    $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."),
                             get_title_for_status('tutor', 1, $sem->status)));
                 }
             }
@@ -430,7 +432,7 @@ class Course_BasicdataController extends AuthenticatedController {
             }
         }
         $this->flash['msg'] = $this->msg;
-        
+
         if (($_POST["new_doz_parameter"]
                 && !$_POST["add_dozent_x"]
                 && $_POST["new_doz_parameter"] !== sprintf(_("Name %s"), get_title_for_status('dozent', 1, $sem->status)))
@@ -453,7 +455,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
-    
+
     /**
      * Löscht einen Dozenten (bis auf den letzten Dozenten)
      * Leitet danach weiter auf View und öffnet den Reiter Personal.
@@ -483,7 +485,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
-    
+
     /**
      * Löscht einen Stellvertreter.
      * Leitet danach weiter auf View und öffnet den Reiter Personal.
@@ -494,10 +496,10 @@ class Course_BasicdataController extends AuthenticatedController {
         if ($perm->have_studip_perm("dozent",$SessSemName[1])) {
             if ($deputy !== $user->id) {
                 if (deleteDeputy($deputy, $SessSemName[1])) {
-                    $this->msg[] = array("msg", sprintf(_("%s wurde entfernt."), 
+                    $this->msg[] = array("msg", sprintf(_("%s wurde entfernt."),
                         get_title_for_status('deputy', 1, $seminar_type)));
                 } else {
-                    $this->msg[] = array("error", sprintf(_("%s konnte nicht entfernt werden."), 
+                    $this->msg[] = array("error", sprintf(_("%s konnte nicht entfernt werden."),
                        get_title_for_status('deputy', 1, $seminar_type)));
                 }
             } else {
@@ -513,7 +515,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
-    
+
     /**
      * Löscht einen Tutor
      * Leitet danach weiter auf View und öffnet den Reiter Personal.
@@ -539,7 +541,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
-    
+
     /**
      * Falls eine Person in der >>Reihenfolge<< hochgestuft werden soll.
      * Leitet danach weiter auf View und öffnet den Reiter Personal.
@@ -571,7 +573,7 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
-    
+
     /**
      * Falls eine Person in der >>Reihenfolge<< runtergestuft werden soll.
      * Leitet danach weiter auf View und öffnet den Reiter Personal.
@@ -603,5 +605,5 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
-    
+
 }

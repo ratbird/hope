@@ -23,7 +23,8 @@ if (!defined('ELEMENTS_PER_PAGE')) define("ELEMENTS_PER_PAGE", 20);
 class StudygroupController extends AuthenticatedController {
 
     /**
-     *
+     * Displays a pageable and sortable overview of all studygoups
+     * 
      * @param $page
      * @param $sort
      */
@@ -50,7 +51,8 @@ class StudygroupController extends AuthenticatedController {
       }
 
     /**
-     *
+     * Displays a search form to query for specific studygroup
+     * 
      * @param $page
      * @param $sort
      */

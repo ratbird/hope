@@ -16,16 +16,44 @@
 
 class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
 {
+    /**
+     * table row data
+     * @var array
+     */
     protected $content = array();
+    /**
+     * new state of entry
+     * @var boolean
+     */
     protected $is_new = true;
-    
+
+    /**
+     * name of db table
+     * @var string
+     */
     protected $db_table = '';
+    /**
+     * table columns
+     * @var array
+     */
     protected $db_fields = null;
+    /**
+     * primary key columns
+     * @var array
+     */
     protected $pk = null;
-    
+
+    /**
+     * db table metadata
+     * @var array
+     */
     protected static $schemes;
-    
-    public static function TableScheme($db_table)
+
+    /**
+     * fetch table metadata from db ro from local cache
+     * @param string $db_table
+     */
+    protected static function TableScheme($db_table)
     {
         if (self::$schemes === null) {
             $cache = StudipCacheFactory::getCache();
@@ -50,13 +78,24 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         return isset(self::$schemes[$db_table]);
     }
-    
+
+    /**
+     * force reload of cached table metadata
+     */
     public static function expireTableScheme()
     {
         StudipCacheFactory::getCache()->expire('DB_TABLE_SCHEMES');
         self::$schemes = null;
     }
-    
+
+    /**
+     * returns new instance for given class and key
+     * when found in db, else null
+     * should be overridden in subclass to omit $class param
+     * @param string $class
+     * @param string primary key
+     * @return null|NULL
+     */
     public static function find($class, $id)
     {
         $record = new $class($id);
@@ -66,7 +105,14 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             return null;
         }
     }
-    
+
+    /**
+     * returns array of instances of given class filtered by given sql
+     * should be overridden in subclass to omit $class param
+     * @param string $class
+     * @param string sql clause to use on the right side of WHERE
+     * @return array
+     */
     public static function findBySQL($class, $where)
     {
         $record = new $class();
@@ -83,7 +129,13 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         return $ret;
     }
-    
+
+    /**
+     * deletes table rows specified by given class and sql clause
+     * @param string $class
+     * @param string sql clause to use on the right side of WHERE
+     * @return number
+     */
     public static function deleteBySQL($class, $where)
     {
         $record = new $class();
@@ -91,7 +143,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         $sql = "DELETE FROM `" .  $record->db_table . "` WHERE " . $where;
         return $db->exec($sql);
     }
-    
+
+    /**
+     *
+     * @param string $id primary key of table
+     */
     function __construct($id = null)
     {
         if (!$this->db_table){
@@ -109,15 +165,21 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             $this->restore();
         }
     }
-    
-    function getTableScheme()
+
+    protected function getTableScheme()
     {
         if(self::TableScheme($this->db_table)){
             $this->db_fields =& self::$schemes[$this->db_table]['db_fields'];
             $this->pk =& self::$schemes[$this->db_table]['pk'];
         }
     }
-    
+
+    /**
+     * set primary key for entry, combined keys must be passed as array
+     * @param string|array primary key
+     * @throws Exception
+     * @return boolean
+     */
     function setId($id)
     {
         if (!is_array($id)){
@@ -133,7 +195,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         return false;
     }
-    
+
+    /**
+     * returns primary key, false if none is set
+     * @return boolean|string|array
+     */
     function getId()
     {
         if (count($this->pk) == 1){
@@ -145,7 +211,12 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             return (count($this->pk) == count($id) ? $id : false);
         }
     }
-    
+
+    /**
+     * create new unique pk as md5 hash
+     * if pk consists of multiple columns, false is returned
+     * @return boolean|string
+     */
     function getNewId()
     {
         $id = false;
@@ -158,8 +229,14 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         return $id;
     }
-    
-    
+
+
+    /**
+     * returns data of table row as assoc array or false
+     * if no data available
+     * @deprecated
+     * @return array|boolean
+     */
     function getData()
     {
         if ($this->haveData()) {
@@ -168,7 +245,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             return FALSE;
         }
     }
-    
+
+    /**
+     * returns data of table row as assoc array
+     * @return array
+     */
     function toArray()
     {
         $ret = array();
@@ -177,13 +258,24 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         return $ret;
     }
-    
+
+    /**
+     * returns value of a column
+     * @param string $field
+     * @return null|string
+     */
     function getValue($field)
     {
         $field = strtolower($field);
         return (array_key_exists($field, $this->content) ? $this->content[$field] : null);
     }
-    
+
+    /**
+     * sets value of a column
+     * @param string $field
+     * @param string $value
+     * @return string
+     */
     function setValue($field, $value)
     {
         $field = strtolower($field);
@@ -194,17 +286,24 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         return $ret;
     }
-    
+
+    /**
+     * magic method for dynamic properties
+     */
     function __get($field)
     {
         return $this->getValue($field);
     }
-    
+    /**
+     * magic method for dynamic properties
+     */
     function __set($field, $value)
     {
          return $this->setValue($field, $value);
     }
-    
+    /**
+     * magic method for dynamic properties
+     */
     function __isset($field)
     {
         $field = strtolower($field);
@@ -233,31 +332,47 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
     {
         $this->$offset = $value;
     }
-    
+    /**
+     * ArrayAccess: unset the value at the given offset (not applicable)
+     */
     public function offsetUnset($offset)
     {
-        
+
     }
-    
-     /**
+    /**
      * IteratorAggregate
      */
     public function getIterator()
     {
         return new ArrayIterator($this->content);
     }
-    
+    /**
+     * Countable
+     */
     public function count()
     {
         return count($this->content);
     }
-    
+
+    /**
+     * check if given column exists in table
+     * @param string $field
+     * @return boolean
+     */
     function isField($field)
     {
         $field = strtolower($field);
         return isset($this->db_fields[$field]);
     }
-    
+
+    /**
+     * set multiple column values
+     * if second param is set, existing data in object will be
+     * discarded, else new data overrides old data
+     * @param array $data assoc array
+     * @param boolean $reset
+     * @return number of columns changed
+     */
     function setData($data, $reset = false)
     {
         $count = 0;
@@ -275,22 +390,39 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         return $count;
     }
-    
+
+    /**
+     * check if object is empty
+     * @return number of columns with values
+     */
     function haveData()
     {
         return count($this->content);
     }
-    
+
+    /**
+     * check if object exists in database
+     * @return boolean
+     */
     function isNew()
     {
         return $this->is_new;
     }
-    
+
+    /**
+     * set object to new state
+     * @param boolean $is_new
+     * @return boolean
+     */
     function setNew($is_new)
     {
         return $this->is_new = $is_new;
     }
-    
+
+    /**
+     * returns sql clause with current table and pk
+     * @return boolean|string
+     */
     function getWhereQuery()
     {
         $where_query = null;
@@ -307,7 +439,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
         }
         return $where_query;
     }
-    
+
+    /**
+     * restore entry from database
+     * @return boolean
+     */
     function restore()
     {
         $where_query = $this->getWhereQuery();
@@ -329,10 +465,15 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             return FALSE;
         }
     }
-    
+
+    /**
+     * store entry in database
+     * if data is actually changed triggerChdate() is called
+     * @return number|boolean
+     */
     function store()
     {
-        
+
         if ($this->isNew() && !$this->getId()) {
             $this->setId($this->getNewId());
         }
@@ -345,7 +486,7 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
                 $query_part[] = "`$key` = " . DBManager::get()->quote($value) . " ";
             }
         }
-        
+
         if ($where_query){
             if (!$this->isNew()){
                 $query = "UPDATE `{$this->db_table}` SET "
@@ -371,7 +512,11 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             return false;
         }
     }
-    
+
+    /**
+     * set chdate column to current timestamp
+     * @return boolean
+     */
     function triggerChdate()
     {
         if ($this->db_fields['chdate']){
@@ -385,7 +530,12 @@ class SimpleORMap implements ArrayAccess, Countable, IteratorAggregate
             return false;
         }
     }
-    
+
+    /**
+     * delete entry from database
+     * the object is cleared and turned to new state
+     * @return boolean
+     */
     function delete()
     {
         if (!$this->isNew()){

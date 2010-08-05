@@ -26,22 +26,42 @@ class Semester extends SimpleORMap
 
     protected $db_table = 'semester_data';
 
+    /**
+     * returns semester object for given id or null
+     * @param string $id
+     * @return NULL|Semester
+     */
     static function find($id)
     {
         $semester_cache = self::getAll();
         return isset($semester_cache[$id]) ? $semester_cache[$id] : null;
     }
 
+    /**
+     * returns array of Semester objects
+     * @param string $where sql clause
+     * @return array
+     */
     static function findBySql($where)
     {
         return SimpleORMap::findBySql(__CLASS__, $where);
     }
 
+    /**
+     * delete Semester in db
+     * @param string $where sql clause
+     * @return number
+     */
     static function deleteBySQL($where)
     {
         return SimpleORMap::deleteBySQL(__CLASS__, $where);
     }
 
+    /**
+     * returns Semester for given timestamp
+     * @param integer $timestamp
+     * @return null|Semester
+     */
     static function findByTimestamp($timestamp)
     {
         foreach(self::getAll() as $semester) {
@@ -53,6 +73,11 @@ class Semester extends SimpleORMap
         return $found;
     }
 
+    /**
+     * returns following Semester for given timestamp
+     * @param integer $timestamp
+     * @return null|Semester
+     */
     static function findNext($timestamp = null)
     {
         $timestamp = $timestamp OR $timestamp = time();
@@ -64,12 +89,21 @@ class Semester extends SimpleORMap
         }
     }
 
+    /**
+     * returns current Semester
+     */
     static function findCurrent()
     {
         self::getAll();
         return self::$current_semester;
     }
 
+    /**
+     * returns array of all existing semester objects
+     * orderd by begin
+     * @param boolean $force_reload
+     * @return array
+     */
     static function getAll($force_reload = false)
     {
         if (!is_array(self::$semester_cache) || $force_reload) {
@@ -84,6 +118,9 @@ class Semester extends SimpleORMap
         return self::$semester_cache;
     }
 
+    /* (non-PHPdoc)
+     * @see lib/classes/SimpleORMap::setData()
+     */
     function setData($data, $reset = false)
     {
         parent::setData($data, $reset);
@@ -95,6 +132,9 @@ class Semester extends SimpleORMap
         return $this->haveData();
     }
 
+    /* (non-PHPdoc)
+     * @see lib/classes/SimpleORMap::toArray()
+     */
     function toArray()
     {
         $ret = parent::toArray();
@@ -104,6 +144,11 @@ class Semester extends SimpleORMap
         return $ret;
     }
 
+    /**
+     * returns "Semesterwoche" for a given timestamp
+     * @param integer $timestamp
+     * @return number|boolean
+     */
     function getSemWeekNumber($timestamp)
     {
         $current_sem_week = (int)strftime('%W', $timestamp);

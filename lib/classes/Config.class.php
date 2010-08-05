@@ -22,9 +22,21 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
 
     private static $instance = null;
 
+    /**
+     * contains all config entries as field => value pairs
+     * @var array
+     */
     protected $data = array();
+    /**
+     * contains additional metadata for config fields
+     * @var array
+     */
     protected $metadata = array();
 
+    /**
+     * returns singleton instance
+     * @return Config
+     */
     public static function get()
     {
         if (self::$instance === null) {
@@ -34,27 +46,52 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         return self::$instance;
     }
 
+    /**
+     * alias of Config::get() for compatibility
+     * @return Config
+     */
     public static function getInstance()
     {
         return self::get();
     }
 
+    /**
+     * use to set singleton instance for testing
+     * or to unset by passing null
+     * @param Config $my_instance
+     */
     public static function set($my_instance)
     {
         self::$instance = $my_instance;
     }
 
+    /**
+     * pass array of config entries in field => value pairs
+     * to circumvent fetching from database
+     * @param array $data
+     */
     function __construct($data = null)
     {
         $this->fetchData($data);
     }
 
+    /**
+     * export all global config entries into global namespace
+     */
     function extractAllGlobal() {
         foreach ($this->getFields('global') as $key) {
             $GLOBALS[$key] = $this->getValue($key);
         }
     }
 
+    /**
+     * returns a list of config entry names, filtered by
+     * given params
+     * @param string filter by range: global or user
+     * @param string filter by section
+     * @param string filter by prefix of name
+     * @return array
+     */
     function getFields($range = null, $section = null, $prefix = null)
     {
         $filter = array();
@@ -76,12 +113,24 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         return $ret;
     }
 
+    /**
+     * returns metadata for config entry
+     * @param srting $field
+     * @return array
+     */
     function getMetadata($field)
     {
         return $this->metadata[$field];
     }
 
-    function getValue ($field) {
+    /**
+     * returns value of config entry
+     * for compatibility reasons an existing variable in global
+     * namespace with the same name is also returned
+     * @param string $field
+     * @return Ambigous
+     */
+    function getValue($field) {
         if (array_key_exists($field, $this->data)) {
             return $this->data[$field];
         }
@@ -90,7 +139,14 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         }
     }
 
-    function setValue ($field, $value) {
+    /**
+     * set config entry to given value, but don't store it
+     * in database
+     * @param string $field
+     * @param unknown_type $value
+     * @return
+     */
+    function setValue($field, $value) {
         if (array_key_exists($field, $this->data)) {
             return $this->data[$field] = $value;
         }
@@ -103,52 +159,65 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
     {
         return new ArrayIterator($this->data);
     }
-
+    /**
+     * magic method for dynamic properties
+     */
     function __get($field) {
         return $this->getValue($field);
     }
-
+    /**
+     * magic method for dynamic properties
+     */
     function __set($field, $value) {
          return $this->setValue($field, $value);
     }
-
+    /**
+     * magic method for dynamic properties
+     */
     function __isset($field) {
         return isset($this->data[$field]);
     }
     /**
      * ArrayAccess: Check whether the given offset exists.
      */
-    public function offsetExists ($offset)
+    public function offsetExists($offset)
     {
         return isset($this->$offset);
     }
-
     /**
      * ArrayAccess: Get the value at the given offset.
      */
-    public function offsetGet ($offset)
+    public function offsetGet($offset)
     {
         return $this->$offset;
     }
-
     /**
      * ArrayAccess: Set the value at the given offset.
      */
-    public function offsetSet ($offset, $value)
+    public function offsetSet($offset, $value)
     {
         $this->$offset = $value;
     }
-
-    public function offsetUnset ($offset)
+    /**
+     * ArrayAccess: unset the value at the given offset (not applicable)
+     */
+    public function offsetUnset($offset)
     {
 
     }
-
-    public function count ()
+    /**
+     * Countable
+     */
+    public function count()
     {
         return count($this->data);
     }
 
+    /**
+     * fetch config data from table config
+     * pass array to override database access
+     * @param array $data
+     */
     protected function fetchData($data = null)
     {
         if ($data !== null) {
@@ -176,6 +245,14 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         }
     }
 
+    /**
+     * store new value for existing config entry in database
+     * posts notification ConfigValueChanged if entry is changed
+     * @param string $field
+     * @param string $data
+     * @throws InvalidArgumentException
+     * @return boolean
+     */
     function store($field, $data)
     {
         if (!is_array($data)) {
@@ -217,6 +294,13 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         }
     }
 
+    /**
+     * creates a new config entry in database
+     * @param string name of entry
+     * @param array data to insert as assoc array
+     * @throws InvalidArgumentException
+     * @return Ambigous <NULL, ConfigEntry>
+     */
     function create($field, $data = array())
     {
         if (!$field) {
@@ -241,6 +325,12 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
         return $ret;
     }
 
+    /**
+     * delete config entry from database
+     * @param string name of entry
+     * @throws InvalidArgumentException
+     * @return integer number of deleted rows
+     */
     function delete($field)
     {
         if (!$field) {

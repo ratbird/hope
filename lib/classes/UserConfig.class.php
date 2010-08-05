@@ -19,9 +19,23 @@ require_once 'UserConfigEntry.class.php';
 
 class UserConfig extends Config
 {
+    /**
+     * cache of created UserConfig instances
+     * @var array
+     */
     private static $instances;
+    /**
+     * user_id
+     * @var string
+     */
     private $user_id;
 
+    /**
+     * returns cached instance for given user_id
+     * creates new objects if needed
+     * @param string $user_id
+     * @return UserConfig
+     */
     public static function get($user_id)
     {
         if (self::$instances[$user_id] === null) {
@@ -31,11 +45,25 @@ class UserConfig extends Config
         return self::$instances[$user_id];
     }
 
+    /**
+     * set cached instance for given user_id
+     * use for testing or to unset cached instance by passing
+     * null as second param
+     * @param string $user_id
+     * @param UserConfig $my_instance
+     */
     public static function set($user_id, $my_instance)
     {
         self::$instances[$user_id] = $my_instance;
     }
 
+    /**
+     * passing null as first param is for compatibility and
+     * should be considered deprecated.
+     * passing data array as second param only for testing
+     * @param string $user_id
+     * @param array $data
+     */
     function __construct($user_id = null, $data = null)
     {
         if($user_id !== null) {
@@ -43,7 +71,10 @@ class UserConfig extends Config
         }
     }
 
-    function fetchData($data = null)
+    /* (non-PHPdoc)
+     * @see lib/classes/Config::fetchData()
+     */
+    protected function fetchData($data = null)
     {
         if ($data !== null) {
             $this->data = $data;
@@ -70,17 +101,33 @@ class UserConfig extends Config
         }
     }
 
+    /**
+     * kept for compatibility, should be private
+     *
+     * @deprecated
+     * @param string $user_id
+     */
     function setUserId($user_id)
     {
         $this->user_id = $user_id;
         $this->fetchData();
     }
 
+    /**
+     * returns the user id
+     *
+     * @return string
+     */
     function getUserId()
     {
         return $this->user_id;
     }
 
+    /* old style usage with $user_id, $key as params
+     * still works but is deprecated
+     * (non-PHPdoc)
+     * @see lib/classes/Config::getValue()
+     */
     function getValue($field)
     {
         $args = func_get_args();
@@ -98,6 +145,11 @@ class UserConfig extends Config
         return parent::getValue($field);
     }
 
+    /* old style usage with $value, $user_id, $key as params
+     * still works but is deprecated
+     * (non-PHPdoc)
+     * @see lib/classes/Config::setValue()
+     */
     function setValue($field, $value)
     {
         $args = func_get_args();
@@ -115,6 +167,12 @@ class UserConfig extends Config
         return parent::setValue($field, $value);
     }
 
+    /**
+     * old style usage with $user_id, $key as params
+     * still works but is deprecated
+     * @param string $field
+     * @return bool
+     */
     function unsetValue($field)
     {
         $args = func_get_args();
@@ -132,6 +190,9 @@ class UserConfig extends Config
         return $this->delete($field);
     }
 
+    /* (non-PHPdoc)
+     * @see lib/classes/Config::store()
+     */
     function store($field, $value)
     {
 
@@ -150,6 +211,9 @@ class UserConfig extends Config
 
     }
 
+    /* (non-PHPdoc)
+     * @see lib/classes/Config::delete()
+     */
     function delete($field)
     {
         $entry = UserConfigEntry::findByFieldAndUser($field, $this->user_id);

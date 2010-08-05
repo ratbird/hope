@@ -160,11 +160,7 @@ div#header {
     text-align: center;
 }
 
-#barTopMenu li.active a:hover, #barTopMenu a:hover {
-    color: #e63d3d;
-}
-
-#barTopMenu li.active a {
+#barTopMenu li.active a:hover, #barTopMenu a:hover, #barTopMenu li.active a {
     color: #fff;
 }
 
@@ -175,12 +171,7 @@ div#header {
     height: 32px;
     background-repeat: no-repeat;
     background-position: 0px 0px;
-    margin: auto;
-}
-
-/* hover icon */
-#barTopMenu a:hover div, #barTopMenu li.active a:hover div {
-    background-position: -128px 0px;
+    margin: auto auto 4px auto;
 }
 
 /* new icon */
@@ -188,17 +179,12 @@ div#header {
     background-position: -32px 0px;
 }
 
-/* new hover icon */
-#barTopMenu a:hover div.new, #barTopMenu li.active a:hover div.new {
-    background-position: -160px 0px;
-}
-
-/* active icon */
-#barTopMenu li.active a div {
+/* hover icon */
+#barTopMenu a:hover div, #barTopMenu li.active a:hover div, #barTopMenu li.active a div {
     background-position: -64px 0px;
 }
 
-/* new active icon */
-#barTopMenu li.active a div.new {
+/* new hover icon */
+#barTopMenu a:hover div.new, #barTopMenu li.active a:hover div.new, #barTopMenu li.active a div.new {
     background-position: -96px 0px;
 }

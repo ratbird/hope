@@ -17,35 +17,6 @@ require_once 'lib/classes/SemesterData.class.php';
 
 class Calendar_ScheduleController extends AuthenticatedController
 {
-    
-    /**
-     * delivers the style-sheet used for printing.
-     *
-     * @param  int  $whole_height  the overall-height of the timetable
-     * @param  int  $entry_height  the height of one hour in the timetable
-     */
-    function cssprint_action($whole_height, $entry_height) {
-        header('Content-Type: text/css');
-        $this->whole_height = $whole_height;
-        $this->entry_height = $entry_height;
-        $this->render_template('calendar/print_style');
-        page_close();
-    }
-
-    /**
-     * delivers the style-sheet used for displaying the timetable.
-     *
-     * @param  int  $whole_height  the overall-height of the timetable
-     * @param  int  $entry_height  the height of one hour in the timetable
-     */
-    function css_action($whole_height, $entry_height) {
-        header('Content-Type: text/css');
-        $this->whole_height = $whole_height;
-        $this->entry_height = $entry_height;
-        $this->render_template('calendar/stylesheet');
-        page_close();
-    }
-
     /**
      * this action is the main action of the schedule-controller, setting the environment for the timetable,
      * accepting a comma-separated list of days.
@@ -54,7 +25,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      */
     function index_action($days = false)
     {
-        global $_include_additional_header, $my_schedule_settings;
+        global $my_schedule_settings;
 
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
@@ -115,21 +86,21 @@ class Calendar_ScheduleController extends AuthenticatedController
             }
         }
 
+        PageLayout::setHelpKeyword('Basis.MyStudIPStundenplan');
+        PageLayout::setTitle(_('Mein Stundenplan'));
+
         if ($inst_mode) {
+            // get the entries to be displayed in the schedule
             $this->entries = CalendarScheduleModel::getInstituteEntries($GLOBALS['user']->id, $this->current_semester,
                 $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $institute_id, $show_hidden);
 
-            $GLOBALS['HELP_KEYWORD'] = "Basis.MyStudIPStundenplan";
-            $GLOBALS['CURRENT_PAGE'] = _("Mein Stundenplan");
             Navigation::activateItem('/browse/my_courses/schedule');
         } else {
-            $GLOBALS['HELP_KEYWORD'] = "Basis.MyStudIPStundenplan";
-            $GLOBALS['CURRENT_PAGE'] = _("Mein Stundenplan");
-            Navigation::activateItem('/calendar/schedule');
-
             // get the entries to be displayed in the schedule
             $this->entries = CalendarScheduleModel::getEntries($GLOBALS['user']->id, $this->current_semester,
                 $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $show_hidden);
+
+            Navigation::activateItem('/calendar/schedule');
         }
 
         // have we chosen an entry to display?
@@ -176,25 +147,18 @@ class Calendar_ScheduleController extends AuthenticatedController
             $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
         }
 
+        $style_parameters = array(
+            'whole_height' => $this->calendar_view->getOverallHeight(),
+            'entry_height' => $this->calendar_view->getHeight()
+        );
+
+        $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views');
+        PageLayout::addStyle($factory->render('calendar/stylesheet', $style_parameters));
+
         if (Request::get('printview')) {
-            $_include_additional_header .= '<link rel="stylesheet" href="'
-                . $this->url_for('calendar/schedule/cssprint/'. $this->calendar_view->getOverallHeight() 
-                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen,print" />' . "\n";
-                
-            $_include_additional_header .= '<link rel="stylesheet" href="'
-                . URLHelper::getLink('assets/stylesheets/style_print.css')
-                .'" type="text/css" media="screen,print" />' . "\n";
+            PageLayout::addStylesheet('style_print.css');
         } else {
-            $_include_additional_header = '<link rel="stylesheet" href="'
-                . $this->url_for('calendar/schedule/css/'. $this->calendar_view->getOverallHeight() 
-                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen" />' . "\n";
-            $_include_additional_header .= '<link rel="stylesheet" href="'
-                . $this->url_for('calendar/schedule/cssprint/'. $this->calendar_view->getOverallHeight() 
-                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="print" />' . "\n";
-                
-            $_include_additional_header .= '<link rel="stylesheet" href="'
-                . URLHelper::getLink('assets/stylesheets/style_print.css')
-                .'" type="text/css" media="print" />' . "\n";
+            PageLayout::addStylesheet('style_print.css', array('media' => 'print'));
         }
 
         $this->show_hidden    = $show_hidden;

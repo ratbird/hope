@@ -18,16 +18,16 @@ $sem = Seminar::getInstance($show_entry['id']);
         <? endif ?>
 
         <b><?= _("Veranstaltungsnummer") ?>:</b>
-        <?= $sem->getNumber() ?><br><br>
+        <?= htmlReady($sem->getNumber()) ?><br><br>
         
         <b><?= _("Name") ?>:</b>
-        <?= $sem->getName() ?><br><br>
+        <?= htmlReady($sem->getName()) ?><br><br>
 
 
         <b><?= _("Dozenten") ?>:</b>
         <? $pos = 0;foreach ($sem->getMembers('dozent') as $dozent) :
             if ($pos > 0) echo ', ';
-            ?><a target="_blank" href="<?= UrlHelper::getLink('about.php?username=' . $dozent['username']) ?>"><?= $dozent['fullname'] ?></a><?
+            ?><a href="<?= URLHelper::getLink('about.php?username=' . $dozent['username']) ?>"><?= htmlReady($dozent['fullname']) ?></a><?
             $pos++;
         endforeach ?>
         <br><br>
@@ -36,7 +36,7 @@ $sem = Seminar::getInstance($show_entry['id']);
         <?= $sem->getDatesHTML() ?><br>
 
         <?= Assets::img('link_intern') ?>
-        <a target="_blank" href="<?= UrlHelper::getLink('details.php?sem_id='. $show_entry['id']) ?>">Zur Veranstaltung</a><br>
+        <a href="<?= URLHelper::getLink('details.php?sem_id='. $show_entry['id']) ?>">Zur Veranstaltung</a><br>
         <br>
 
         <div style="text-align: center">

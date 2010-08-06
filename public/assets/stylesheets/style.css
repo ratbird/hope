@@ -1385,6 +1385,25 @@ table.schedule_headings td {
 	background-color: #E8EEF7;
 }
 
+div.schedule_day {
+    border-right: 3px double #DDDDDD;
+    position: relative;
+}
+
+div.schedule_marker {
+    border-bottom: 1px dotted #DDDDDD;
+    border-top: 1px solid #DDDDDD;
+    padding: 0px;
+}
+
+div.schedule_hours {
+    border-top: 1px solid #DDDDDD;
+    border-right: 1px solid #DDDDDD;
+    padding-bottom: 1px;
+    color: black;
+    padding-right: 3px;
+}
+
 div.schedule_entry {
 	position: absolute;
 	margin: 0;

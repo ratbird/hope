@@ -17,35 +17,6 @@ require_once 'lib/classes/SemesterData.class.php';
 
 class Calendar_InstscheduleController extends AuthenticatedController
 {
-    
-    /**
-     * delivers the style-sheet used for printing.
-     *
-     * @param  int  $whole_height  the overall-height of the timetable
-     * @param  int  $entry_height  the height of one hour in the timetable
-     */
-    function cssprint_action($whole_height, $entry_height) {
-        header('Content-Type: text/css');
-        $this->whole_height = $whole_height;
-        $this->entry_height = $entry_height;
-        $this->render_template('calendar/print_style');
-        page_close();
-    }
-
-    /**
-     * delivers the style-sheet used for displaying the timetable.
-     *
-     * @param  int  $whole_height  the overall-height of the timetable
-     * @param  int  $entry_height  the height of one hour in the timetable
-     */
-    function css_action($whole_height, $entry_height) {
-        header('Content-Type: text/css');
-        $this->whole_height = $whole_height;
-        $this->entry_height = $entry_height;
-        $this->render_template('calendar/stylesheet');
-        page_close();
-    }
-
     /**
      * this action is the main action of the schedule-controller, setting the environment for the timetable,
      * accepting a comma-separated list of days.
@@ -54,7 +25,7 @@ class Calendar_InstscheduleController extends AuthenticatedController
      */
     function index_action($days = false)
     {
-        global $_include_additional_header, $my_schedule_settings;
+        global $my_schedule_settings;
 
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
@@ -94,8 +65,8 @@ class Calendar_InstscheduleController extends AuthenticatedController
                          $this->current_semester, 8, 20, $institute_id);
 
         Navigation::activateItem('/course/main/schedule');
-        $GLOBALS['HELP_KEYWORD'] = "Basis.TerminkalenderStundenplan";
-        $GLOBALS['CURRENT_PAGE'] = $GLOBALS['SessSemName']["header_line"]." - "._("Veranstaltungs-Timetable");
+        PageLayout::setHelpKeyword('Basis.TerminkalenderStundenplan');
+        PageLayout::setTitle($GLOBALS['SessSemName']['header_line'].' - '._('Veranstaltungs-Timetable'));
 
         // have we chosen an entry to display?
         if ($this->flash['entry']) {
@@ -120,25 +91,18 @@ class Calendar_InstscheduleController extends AuthenticatedController
         $this->calendar_view->setReadOnly();
         $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
 
+        $style_parameters = array(
+            'whole_height' => $this->calendar_view->getOverallHeight(),
+            'entry_height' => $this->calendar_view->getHeight()
+        );
+
+        $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views');
+        PageLayout::addStyle($factory->render('calendar/stylesheet', $style_parameters));
+
         if (Request::get('printview')) {
-            $_include_additional_header .= '<link rel="stylesheet" href="'
-                . $this->url_for('calendar/instschedule/cssprint/'. $this->calendar_view->getOverallHeight() 
-                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen,print" />' . "\n";
-                
-            $_include_additional_header .= '<link rel="stylesheet" href="'
-                . URLHelper::getLink('assets/stylesheets/style_print.css')
-                .'" type="text/css" media="screen,print" />' . "\n";
+            PageLayout::addStylesheet('style_print.css');
         } else {
-            $_include_additional_header = '<link rel="stylesheet" href="'
-                . $this->url_for('calendar/instschedule/css/'. $this->calendar_view->getOverallHeight() 
-                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="screen" />' . "\n";
-            $_include_additional_header .= '<link rel="stylesheet" href="'
-                . $this->url_for('calendar/instschedule/cssprint/'. $this->calendar_view->getOverallHeight() 
-                . '/'. $this->calendar_view->getHeight()) .'" type="text/css" media="print" />' . "\n";
-                
-            $_include_additional_header .= '<link rel="stylesheet" href="'
-                . URLHelper::getLink('assets/stylesheets/style_print.css')
-                .'" type="text/css" media="print" />' . "\n";
+            PageLayout::addStylesheet('style_print.css', array('media' => 'print'));
         }
     }
 

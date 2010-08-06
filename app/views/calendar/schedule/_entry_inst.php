@@ -1,6 +1,4 @@
 <?
-$cssSw = new CssClassSwitcher();
-
 foreach ($show_entry['seminars'] as $sem_id) {
     $seminars[] = Seminar::getInstance($sem_id);
 }
@@ -11,19 +9,19 @@ foreach ($show_entry['seminars'] as $sem_id) {
         <table class="default">
             <thead>
                 <tr>
-                    <th>Nummer</th>
-                    <th>Name</th>
+                    <th><?= _('Nummer') ?></th>
+                    <th><?= _('Name') ?></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <? foreach ($seminars as $seminar) : ?>
-                    <tr <?= $cssSw->getFullClass() ?>>
-                        <td width="15%"><?= $seminar->getNumber() ?></td>
+                    <tr class="<?= TextHelper::cycle('steelgraulight', 'steel1') ?>">
+                        <td width="15%"><?= htmlReady($seminar->getNumber()) ?></td>
                         <td width="60%">
-                            <a target="_blank" href="<?= UrlHelper::getLink('details.php?sem_id='. $seminar->getId()) ?>">
+                            <a href="<?= URLHelper::getLink('details.php?sem_id='. $seminar->getId()) ?>">
                                 <?= Assets::img('link_intern') ?>
-                                <?= $seminar->getName() ?>
+                                <?= htmlReady($seminar->getName()) ?>
                             </a>
                         </td>
                         <td width="25%">
@@ -39,7 +37,6 @@ foreach ($show_entry['seminars'] as $sem_id) {
                             </a>
                         </td>
                     </tr>
-                    <? $cssSw->switchClass() ?>
                 <? endforeach ?>
             </tbody>
         </table>

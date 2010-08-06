@@ -12,18 +12,18 @@ foreach ($show_entry['seminars'] as $sem_id) {
         <table class="default">
             <thead>
                 <tr>
-                    <th><?=_("Nummer")?></th>
-                    <th><?=_("Name")?></th>
+                    <th><?= _('Nummer') ?></th>
+                    <th><?= _('Name') ?></th>
                 </tr>
             </thead>
             <tbody>
                 <? foreach ($seminars as $seminar) : ?>
                     <tr class="<?= TextHelper::cycle('steelgraulight', 'steel1')?>">
-                        <td width="15%"><?= htmlready($seminar->getNumber()) ?></td>
+                        <td width="15%"><?= htmlReady($seminar->getNumber()) ?></td>
                         <td width="85%">
-                            <a href="<?= UrlHelper::getLink('details.php?sem_id='. $seminar->getId()) ?>">
+                            <a href="<?= URLHelper::getLink('details.php?sem_id='. $seminar->getId()) ?>">
                                 <?= Assets::img('link_intern') ?>
-                                <?= htmlready($seminar->getName()) ?>
+                                <?= htmlReady($seminar->getName()) ?>
                             </a>
                         </td>
                     </tr>

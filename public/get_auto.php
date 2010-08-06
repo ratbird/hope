@@ -17,7 +17,6 @@ if (!$_POST["pass"])
     ?>
         <!DOCTYPE html>
     <html><head><title><?=_("Autologin Datei erzeugen")?></title>
-        <script type="text/javascript" src="<?= $GLOBALS['ASSETS_URL'] ?>javascripts/md5.js"></script>
     <script type="text/javascript">
     function doSubmit(){
         if (document.forms[0].pass.value!="") document.forms[0].submit();

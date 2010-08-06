@@ -187,116 +187,36 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
         }
         else {
             if (ELearningUtils::getConfigValue("encrypt_passwords", $this->cms_type) != "")
-                $encrypt_passwords = ELearningUtils::getConfigValue("encrypt_passwords", $this->cms_type);
+            $encrypt_passwords = ELearningUtils::getConfigValue("encrypt_passwords", $this->cms_type);
         }
-
-
-        if ($messages["error"] != "")
-            echo "<b><img src=\"".$GLOBALS['ASSETS_URL']."images/x_small2.gif\" alt=\"Fehler\">&nbsp;" . $messages["error"] . "</b><br><br>";
-
-        echo "<table>";
-        echo "<tr valign=\"top\"><td width=30% align=\"left\"><font size=\"-1\">";
-        echo "<b>" . _("SOAP-Verbindung: ") . "</b>";
-        echo "</td><td><font size=\"-1\">";
-        $error = $this->soap_client->getError();
-        if ($error != false)
-            echo sprintf(_("Beim Herstellen der SOAP-Verbindung trat folgender Fehler auf:")) . "<br><br>" . $error;
-        else
-            echo sprintf(_("Die SOAP-Verbindung zum Klienten \"%s\" wurde hergestellt, der Name des Administrator-Accounts ist \"%s\"."), $this->soap_data["client"], $this->soap_data["username"]);
-        echo "<br>\n";
-        echo "<br>\n";
-        echo "</td></tr><tr><td  width=30% align=\"left\"><font size=\"-1\">";
 
         $cat = $this->soap_client->getObjectByReference( $this->main_category_node_id );
-        echo "<b>" . _("Kategorie: ") . "</b>";
-        echo "</td><td>";
-        echo "<input type=\"text\" size=\"20\" border=0 value=\"" . $cat["title"] . "\" name=\"cat_name\">&nbsp;";
-        echo "<img  src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\" " . tooltip(_("Geben Sie hier den Namen einer bestehenden ILIAS 4 - Kategorie ein, in der die Lernmodule und User-Kategorien abgelegt werden sollen."), TRUE, TRUE) . ">";
-        echo "</td></tr><tr><td></td><td><font size=\"-1\">";
-        echo " (ID " . $this->main_category_node_id;
-        if ($cat["description"] != "")
-            echo ", " . _("Beschreibung: ") . $cat["description"];
-        echo ")";
-        echo "<br>\n";
-        echo "<br>\n";
-        echo "</td></tr><tr><td  width=30% align=\"left\"><font size=\"-1\">";
-
         $user_cat = $this->soap_client->getObjectByReference( $this->user_category_node_id );
-        echo "<b>" . _("Kategorie für Userdaten: ") . "</b>";
-        echo "</td><td>";
         $title = $this->link->getModuleLink($user_cat["title"], $this->user_category_node_id, "cat");
-        if ($title)
-            echo $title;
-        else
-            echo $user_cat["title"];
-        echo "</td></tr><tr><td></td><td><font size=\"-1\">";
-        echo " (ID " . $this->user_category_node_id;
-        if ($cat["description"] != "")
-            echo ", " . _("Beschreibung: ") . $cat["description"];
-        echo ")";
-        echo "<br>\n";
-        echo "<br>\n";
-        echo "</td></tr><tr><td  width=30% align=\"left\"><font size=\"-1\">";
-
-        echo "<b>" . _("Rollen-Template für die perönliche Kategorie: ") . "</b>";
-        echo "</td><td>";
-        echo "<input type=\"text\" size=\"20\" border=0 value=\"" . ELearningUtils::getConfigValue("user_role_template_name", $this->cms_type) . "\" name=\"role_template_name\">&nbsp;";
-        echo "<img  src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\" " . tooltip(_("Geben Sie den Namen des Rollen-Templates ein, das für die persönliche Kategorie von DozentInnen verwendet werden soll (z.B. \"Author\")."), TRUE, TRUE) . ">"	;
-        echo "</td></tr><tr><td></td><td><font size=\"-1\">";
-        echo " (ID " . $this->user_role_template_id;
-        echo ")";
-        echo "<br>\n";
-        echo "<br>\n";
-        echo "</td></tr><tr><td  width=30% align=\"left\"><font size=\"-1\">";
-
-        echo "<b>" . _("Passwörter: ") . "</b>";
-        echo "</td><td><font size=\"-1\">";
-        echo "<input type=\"checkbox\" border=0 value=\"md5\" name=\"encrypt_passwords\"";
-        if ($encrypt_passwords == "md5")
-            echo " checked";
-        echo ">&nbsp;" . _("ILIAS-Passwörter verschlüsselt speichern.");
-        echo "<img  src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\" " . tooltip(_("Wählen Sie diese Option, wenn die ILIAS-Passwörter der zugeordneten Accounts verschlüsselt in der Stud.IP-Datenbank abgelegt werden sollen."), TRUE, TRUE) . ">"	;
-        echo "</td></tr><tr><td></td><td><font size=\"-1\">";
-        echo "<br>\n";
-        echo "<br>\n";
-        echo "</td></tr><tr><td  width=30% align=\"left\"><font size=\"-1\">";
-
-        echo "<b>" . _("LDAP-Einstellung: ") . "</b>";
-        echo "</td><td><font size=\"-1\">";
-        echo "<select name=\"ldap_enable\">";
-        echo '<option></option>';
-        $ldap_plugins = 0;
+        $ldap_options = array();
         foreach (StudipAuthAbstract::GetInstance() as $plugin) {
             if($plugin instanceof StudipAuthLdap) {
-                echo '<option '.($plugin->plugin_name == $this->ldap_enable ? 'selected' : '').'>' . $plugin->plugin_name . '</option>';
-                ++$ldap_plugins;
+                $ldap_options[] = '<option '.($plugin->plugin_name == $this->ldap_enable ? 'selected' : '').'>' . $plugin->plugin_name . '</option>';
             }
         }
-        echo "</select>";
-        echo "<br>";
-        if ($ldap_plugins) {
-            echo _("Authentifizierungsplugin (nur LDAP) beim Anlegen von externen Accounts übernehmen.");
-            echo "<img  src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\" " . tooltip(_("Wählen Sie hier ein Authentifizierungsplugin, damit neu angelegte ILIAS-Accounts den Authentifizierungsmodus LDAP erhalten, wenn dieser Modus auch für den vorhandenen Stud.IP-Account gilt. Andernfalls erhalten alle ILIAS-Accounts den default-Modus"), TRUE, TRUE) . ">"	;
-        } else {
-            echo _("(Um diese Einstellung zu nutzen muss zumindest ein LDAP Authentifizierungsplugin aktiviert sein.)");
-        }
-        echo "</td></tr><tr><td></td><td><font size=\"-1\">";
-        echo "<br>\n";
-        echo "<br>\n";
-        echo "</td></tr>";
-
-        echo "<tr><td></td><td><font size=\"-1\">";
-        echo "<br>\n";
-        echo "<br>\n";
-
-        echo "</td></tr>";
-        echo "</table>";
-        echo "<center><input type=\"IMAGE\" " . makeButton("uebernehmen", "src") . " border=0 value=\"" . _("Abschicken") . "\" name=\"submit\"></center><br>";
-        echo "<br>\n";
-
+        ob_start();
         ConnectedCMS::getPreferences();
+        $module_types = ob_get_clean();
 
-        echo "<br>\n";
+        $template = $GLOBALS['template_factory']->open('elearning/ilias4_connected_cms_preferences.php');
+        $template->set_attribute('messages', $messages);
+        $template->set_attribute('soap_error', $this->soap_client->getError());
+        $template->set_attribute('soap_data', $this->soap_data);
+        $template->set_attribute('main_category_node_id',  $this->main_category_node_id);
+        $template->set_attribute('main_category_node_id_title', $cat['title']);
+        $template->set_attribute('user_category_node_id',  $this->user_category_node_id);
+        $template->set_attribute('user_category_node_id_title', $title);
+        $template->set_attribute('user_role_template_name', ELearningUtils::getConfigValue("user_role_template_name", $this->cms_type));
+        $template->set_attribute('user_role_template_id', $this->user_role_template_id);
+        $template->set_attribute('encrypt_passwords', $encrypt_passwords);
+        $template->set_attribute('ldap_options', count($ldap_options) ? join("\n", array('<option></option>') + $ldap_options) : '');
+        $template->set_attribute('module_types', $module_types);
+        echo $template->render();
     }
 
 }

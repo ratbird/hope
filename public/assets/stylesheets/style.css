@@ -1335,9 +1335,9 @@ img.plugin_preview {
 
 /* --- textarea resizer ----------------------------------------------------- */
 .ui-resizable-handle.ui-resizable-s {
-    background: #eee url(../images/vendor/handle_background.png) no-repeat scroll center 4px;
+    background: #eee url(../images/vendor/handle_background.png) no-repeat center;
     bottom: 0;
-    cursor: ns-resize;
+    cursor: s-resize;
     height: 12px;
 }
 

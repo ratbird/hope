@@ -2363,6 +2363,20 @@ CREATE TABLE `vote_user` (
 -- --------------------------------------------------------
 
 --
+-- Tabellenstruktur für Tabelle `wap_sessions`
+--
+
+DROP TABLE IF EXISTS `wap_sessions`;
+CREATE TABLE `wap_sessions` (
+  `user_id` char(32) NOT NULL default '',
+  `session_id` char(32) NOT NULL default '',
+  `creation_time` datetime default NULL,
+  PRIMARY KEY  (`session_id`)
+) TYPE=MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Tabellenstruktur für Tabelle `wiki`
 --
 

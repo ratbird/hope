@@ -35,6 +35,11 @@ class PageLayout
     private static $help_keyword;
 
     /**
+     * base item for tab view (defaults to active item in top nav)
+     */
+    private static $tab_navigation = false;
+
+    /**
      * array of HTML HEAD elements (initialized with default set)
      */
     private static $head_elements = array();
@@ -104,6 +109,33 @@ class PageLayout
     public static function getHelpKeyword()
     {
         return isset(self::$help_keyword) ? self::$help_keyword : 'Basis.Allgemeines';
+    }
+
+    /**
+     * Select which tabs (if any) should be displayed on the page. The
+     * argument specifies a navigation item in the tree whose children
+     * will form the first level of tabs. If $path is NULL, no tabs are
+     * displayed. The default setting is to use the active element in
+     * the top navigation.
+     *
+     * @param string $path       path of navigation item for tabs or NULL
+     */
+    public static function setTabNavigation($path)
+    {
+        self::$tab_navigation = isset($path) ? Navigation::getItem($path) : NULL;
+    }
+
+    /**
+     * Returns the base navigation object (not its path) for the tabs.
+     * May return NULL if tab display is disabled.
+     */
+    public static function getTabNavigation()
+    {
+        if (self::$tab_navigation === false) {
+            self::$tab_navigation = Navigation::getItem('/')->activeSubNavigation();
+        }
+
+        return self::$tab_navigation;
     }
 
     /**

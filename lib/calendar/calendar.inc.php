@@ -224,7 +224,8 @@ switch ($cmd)
     case 'changeview':
         PageLayout::setHelpKeyword("Basis.TerminkalenderEinstellungen");
         PageLayout::setTitle(_("Einstellungen des Terminkalenders bearbeiten"));
-        Navigation::activateItem('/account/calendar');
+        Navigation::activateItem('/links/account/calendar');
+        PageLayout::setTabNavigation('/links/account');
         break;
 
     case 'export':

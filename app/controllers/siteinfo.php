@@ -51,6 +51,7 @@ class SiteinfoController extends StudipController
         }
         $this->set_layout($this->layout);
         PageLayout::setTitle(_('Impressum'));
+        PageLayout::setTabNavigation('/links/siteinfo');
     }
 
     function populate_ids($args)
@@ -73,14 +74,12 @@ class SiteinfoController extends StudipController
 
     function add_navigation($action)
     {
-        Navigation::addItem('/siteinfo', new Navigation(_('Impressum')));
-
         foreach ($this->si->get_all_rubrics() as $rubric) {
             $rubric[1] = language_filter($rubric[1]);
             if ($rubric[1] == '') {
                 $rubric[1] = _('unbenannt');
             }
-            Navigation::addItem('/siteinfo/'.$rubric[0],
+            Navigation::addItem('/links/siteinfo/'.$rubric[0],
                 new Navigation($rubric[1], $this->url_for('siteinfo/show/'.$rubric[0])));
         }
 
@@ -89,15 +88,15 @@ class SiteinfoController extends StudipController
             if ($detail[2] == '') {
                 $detail[2] = _('unbenannt');
             }
-            Navigation::addItem('/siteinfo/'.$detail[1].'/'.$detail[0],
+            Navigation::addItem('/links/siteinfo/'.$detail[1].'/'.$detail[0],
                 new Navigation($detail[2], $this->url_for('siteinfo/show/'.$detail[1].'/'.$detail[0])));
         }
 
         if ($action != 'new') {
             if ($this->currentdetail > 0) {
-                Navigation::activateItem('/siteinfo/'.$this->currentrubric.'/'.$this->currentdetail);
+                Navigation::activateItem('/links/siteinfo/'.$this->currentrubric.'/'.$this->currentdetail);
             } else {
-                Navigation::activateItem('/siteinfo/'.$this->currentrubric);
+                Navigation::activateItem('/links/siteinfo/'.$this->currentrubric);
             }
         }
     }
@@ -150,11 +149,11 @@ class SiteinfoController extends StudipController
     function new_action ($givenrubric=NULL)
     {
         if($givenrubric===NULL){
-            Navigation::addItem('/siteinfo/rubric_new',
+            Navigation::addItem('/links/siteinfo/rubric_new',
                 new AutoNavigation(_('neue Rubrik'), $this->url_for('siteinfo/new')));
             $this->edit_rubric = TRUE;
         } else {
-            Navigation::addItem('/siteinfo/'.$this->currentrubric.'/detail_new',
+            Navigation::addItem('/links/siteinfo/'.$this->currentrubric.'/detail_new',
                 new AutoNavigation(_('neue Seite'), $this->url_for('siteinfo/new/'.$this->currentrubric)));
             $this->rubrics = $this->si->get_all_rubrics();
         }

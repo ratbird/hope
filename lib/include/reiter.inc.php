@@ -104,7 +104,7 @@ class reiter {
             }
         }
 
-        $navigation = Navigation::getItem('/')->activeSubNavigation();
+        $navigation = PageLayout::getTabNavigation();
 
         if (isset($navigation)) {
             echo $GLOBALS['template_factory']->render('tabs', compact('navigation'));

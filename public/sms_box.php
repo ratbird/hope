@@ -77,7 +77,8 @@ $db7 = new DB_Seminar;
 
 if ($change_view) {
     PageLayout::setHelpKeyword("Basis.MyStudIPMessaging");
-    Navigation::activateItem('/account/message');
+    Navigation::activateItem('/links/account/message');
+    PageLayout::setTabNavigation('/links/account');
 } else {
     PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
     Navigation::activateItem('/messaging/' . $sms_data['view']);

@@ -110,9 +110,7 @@ class StudipNavigation extends Navigation
 
         //settings
         if (is_object($user) && $user->id != 'nobody') {
-            //TODO: suboptimal
-            $this->addSubNavigation('account', new AccountNavigation());
-            $links->addSubNavigation('account', new Navigation(_('Einstellungen'), 'edit_about.php', array('view' => 'allgemein')));
+            $links->addSubNavigation('account', new AccountNavigation());
         }
 
         //sitemap
@@ -121,7 +119,7 @@ class StudipNavigation extends Navigation
         }
 
         //imprint
-        $links->addSubNavigation('imprint', new Navigation(_('Impressum'), 'dispatch.php/siteinfo/show'));
+        $links->addSubNavigation('siteinfo', new Navigation(_('Impressum'), 'dispatch.php/siteinfo/show'));
 
         //help
         if (get_config('EXTERNAL_HELP')) {

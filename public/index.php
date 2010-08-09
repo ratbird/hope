@@ -79,10 +79,10 @@ if (get_config('NEWS_RSS_EXPORT_ENABLE') && ($auth->is_authenticated() && $user-
 
 PageLayout::setHelpKeyword("Basis.Startseite"); // set keyword for new help
 PageLayout::setTitle(_("Startseite"));
+Navigation::activateItem('/start');
+PageLayout::setTabNavigation(NULL); // disable display of tabs
+
 // Start of Output
-$navigation = Navigation::getItem('/start');
-
-
 include 'lib/include/html_head.inc.php'; // Output of html head
 include 'lib/include/header.php';
 
@@ -130,7 +130,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
             <? endif ?>
             <tr>
                 <td class="blank" valign="top" style="padding-left:25px; width:80%;">
-                <? foreach ($navigation as $nav) : ?>
+                <? foreach (Navigation::getItem('/start') as $nav) : ?>
                     <? if ($nav->isVisible()) : ?>
                         <div class="mainmenu">
                         <? if (is_internal_url($url = $nav->getURL())) : ?>

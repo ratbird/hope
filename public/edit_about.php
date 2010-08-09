@@ -472,17 +472,20 @@ switch($view) {
     case "Login":
         PageLayout::setHelpKeyword("Basis.MyStudIPAutoLogin");
         PageLayout::setTitle(_("Auto-Login einrichten"));
-        Navigation::activateItem('/account/login');
+        Navigation::activateItem('/links/account/login');
+        PageLayout::setTabNavigation('/links/account');
         break;
     case "Forum":
         PageLayout::setHelpKeyword("Basis.MyStudIPForum");
         PageLayout::setTitle(_("Einstellungen des Forums anpassen"));
-        Navigation::activateItem('/account/forum');
+        Navigation::activateItem('/links/account/forum');
+        PageLayout::setTabNavigation('/links/account');
         break;
     case "calendar":
         PageLayout::setHelpKeyword("Basis.MyStudIPTerminkalender");
         PageLayout::setTitle(_("Einstellungen des Terminkalenders anpassen"));
-        Navigation::activateItem('/account/calendar');
+        Navigation::activateItem('/links/account/calendar');
+        PageLayout::setTabNavigation('/links/account');
         break;
     case "Tools":
         PageLayout::setHelpKeyword("Basis.HomepageTools");
@@ -491,16 +494,19 @@ switch($view) {
     case "Messaging":
         PageLayout::setHelpKeyword("Basis.MyStudIPMessaging");
         PageLayout::setTitle(_("Einstellungen des Nachrichtensystems anpassen"));
-        Navigation::activateItem('/account/messaging');
+        Navigation::activateItem('/links/account/messaging');
+        PageLayout::setTabNavigation('/links/account');
         break;
     case "rss":
         PageLayout::setHelpKeyword("Basis.MyStudIPRSS");
         PageLayout::setTitle(_("Einstellungen der RSS-Anzeige anpassen"));
-        Navigation::activateItem('/account/rss');
+        Navigation::activateItem('/links/account/rss');
+        PageLayout::setTabNavigation('/links/account');
         break;
     case "allgemein":
         PageLayout::setTitle(_("Allgemeine Einstellungen anpassen"));
-        Navigation::activateItem('/account/general');
+        Navigation::activateItem('/links/account/general');
+        PageLayout::setTabNavigation('/links/account');
         break;
     case "privacy":
         PageLayout::setHelpKeyword("Basis.MyStudIPPrivacy");
@@ -508,13 +514,14 @@ switch($view) {
         if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE') && $my_about->auth_user["user_id"] != $user->id) {
             Navigation::activateItem('/profil/privacy');
         } else {
-            Navigation::activateItem('/account/privacy');
+            Navigation::activateItem('/links/account/privacy');
+            PageLayout::setTabNavigation('/links/account');
         }
         break;
     case "deputies":
         PageLayout::setHelpKeyword("Basis.MyStudIPDeputies");
         PageLayout::setTitle(_("Standardvertretung"));
-        Navigation::activateItem('/account/deputies');
+        Navigation::activateItem('/links/account/deputies');
         break;
     default:
         PageLayout::setHelpKeyword("Basis.MyStudIP");

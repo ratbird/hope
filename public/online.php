@@ -53,7 +53,8 @@ PageLayout::setHelpKeyword("Basis.InteraktionWhosOnline");
 PageLayout::setTitle(_("Wer ist online?"));
 
 if (Request::get('change_view')) {
-    Navigation::activateItem('/account/messaging');
+    Navigation::activateItem('/links/account/messaging');
+    PageLayout::setTabNavigation('/links/account');
 } else {
     Navigation::activateItem('/community/who');
 }

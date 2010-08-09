@@ -17,10 +17,10 @@ endforeach;
         border: 1px solid <?= $entry['color'] ?>;
         background-image: url('<?= Assets::url('images/calendar/category'. $cat .'.jpg') ?>')">
         <dt style="background-color: <?= $entry['color'] ?>;">
-            <?= $entry['start_formatted'] ?> - <?= $entry['end_formatted'] ?><?= ($entry['title']) ? ', <b>'. $entry['title'] .'</b>' : '' ?>
+            <?= $entry['start_formatted'] ?> - <?= $entry['end_formatted'] ?><?= $entry['title'] ? ', <b>'. htmlReady($entry['title']) .'</b>' : '' ?>
         </dt>
         <dd> 
-            <?= $entry['content'] ?><br>
+            <?= htmlReady($entry['content']) ?><br>
         </dd>
     </dl>
     </a>
@@ -31,10 +31,10 @@ endforeach;
         <? if (is_array($entry['icons'])) foreach ($entry['icons'] as $icon) : ?>
             <? if($icon['url']) : ?>
             <a href="<?= $icon['url'] ?>" <?= $icon['onClick'] ? 'onClick="'. $icon['onClick'] .'"' : '' ?>>
-                <?= Assets::img($icon['image'], array('title' => $icon['title'], 'alt' => $icon['title'])) ?>
+                <?= Assets::img($icon['image'], array('title' => htmlReady($icon['title']), 'alt' => htmlReady($icon['title']))) ?>
             </a>
             <? else : ?>
-            <?= Assets::img($icon['image'], array('title' => $icon['title'])) ?>
+            <?= Assets::img($icon['image'], array('title' => htmlReady($icon['title']))) ?>
             <? endif; ?>
         <? endforeach ?>
     </div>

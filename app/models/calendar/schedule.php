@@ -106,8 +106,8 @@ class CalendarScheduleModel
         foreach($entries as $entry) {
             $entry['start_formatted'] = sprintf("%02d", floor($entry['start'] / 100)) .':'. sprintf("%02d", floor($entry['start'] % 100));
             $entry['end_formatted'] = sprintf("%02d", floor($entry['end'] / 100)) .':'. sprintf("%02d", floor($entry['end'] % 100));
-            $entry['title']   = htmlReady($entry['title']);
-            $entry['content'] = htmlReady($entry['content']);
+            $entry['title']        = $entry['title'];
+            $entry['content']      = $entry['content'];
             $entry['start_hour']   = sprintf("%02d", floor($entry['start'] / 100));
             $entry['start_minute'] = sprintf("%02d", $entry['start'] % 100);
             $entry['end_hour']     = sprintf("%02d", floor($entry['end'] / 100));
@@ -148,7 +148,7 @@ class CalendarScheduleModel
                 $entry['start']   = ((int)$cycle->getStartStunde() * 100) + ($cycle->getStartMinute());
                 $entry['end']     = ((int)$cycle->getEndStunde() * 100) + ($cycle->getEndMinute());
                 $entry['day']     = $cycle->getDay();
-                $entry['content'] = htmlReady($sem->getNumber()) .' '. htmlReady($sem->getName());
+                $entry['content'] = $sem->getNumber() . ' ' . $sem->getName();
                 $entry['url']     = UrlHelper::getLink('dispatch.php/calendar/schedule/entry/' . $seminar_id
                                   . '/' . $cycle->getMetaDateId());
                 $entry['onClick'] = "STUDIP.Schedule.showSeminarDetails('$seminar_id', '"

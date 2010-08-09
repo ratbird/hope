@@ -35,9 +35,9 @@
         <br>
 
         <b><?= _("Titel") ?>:</b>
-        <input type="text" name="entry_title" style="width: 98%" value="<?= $show_entry['title'] ?>">
+        <input type="text" name="entry_title" style="width: 98%" value="<?= htmlReady($show_entry['title']) ?>">
         <b><?= _("Beschreibung") ?>:</b>
-        <textarea name="entry_content" style="width: 98%" rows="7"><?= $show_entry['content'] ?></textarea>
+        <textarea name="entry_content" style="width: 98%" rows="7"><?= htmlReady($show_entry['content']) ?></textarea>
         <br>
         <div style="text-align: center">
             <input type="image" <?= makebutton('speichern', 'src') ?> style="margin-right: 20px;">

@@ -5,41 +5,28 @@
     </tr>
     <tr class="steel1">
         <td valign="top">
-        <ul>
-        <? foreach($navigation as $nav) : ?>
-            <li><b><a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>"> <?= htmlReady($nav->getTitle()) ?></a></b>
-            <? if(count($nav->getSubNavigation()) > 0) : ?>
-            <ul>
-            <? foreach ($nav->getSubNavigation() as $subnav) : ?>
-                <li><a href="<?= URLHelper::getLink($subnav->getURL(), $link_params) ?>"> <?= htmlReady($subnav->getTitle()) ?></a>
-                <? if(count($nav->getSubNavigation()) > 0) : ?>
-                <ul>
-                <? foreach ($subnav->getSubNavigation() as $subsubnav) : ?>
-                    <li><a href="<?= URLHelper::getLink($subsubnav->getURL(), $link_params) ?>"> <?= htmlReady($subsubnav->getTitle()) ?></a></li>
-                <? endforeach ?>
-                </ul>
-                <? endif ?>
-                </li>
-            <? endforeach ?>
-            </ul>
-            <? endif ?>
-            </li>
-        <? endforeach ?>
-        </ul>
+            <?= $this->render_partial('sitemap/navigation',
+                    array('navigation' => $navigation, 'needs_image' => true, 'style' => 'bold')) ?>
         </td>
         <td valign="top">
-        <ul>
-        <? foreach($subnavigation as $nav) : ?>
-            <li><b><a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>"> <?= htmlReady($nav->getTitle()) ?></a></b>
-            <ul>
-            <? foreach ($nav->getSubNavigation() as $subsubnav) : ?>
-                <li><a href="<?= URLHelper::getLink($subsubnav->getURL(), $link_params) ?>"> <?= htmlReady($subsubnav->getTitle()) ?></a>
-                </li>
-            <? endforeach ?>
-            </ul>
-            </li>
-        <? endforeach ?>
-        </ul>
+            <?= $this->render_partial('sitemap/navigation',
+                    array('navigation' => $quicklinks, 'needs_image' => false, 'style' => 'bold')) ?>
         </td>
     </tr>
 </table>
+
+<?
+$infobox_content = array(
+    array(
+        'kategorie' => _('Hinweise:'),
+        'eintrag'   => array(
+            array(
+                'icon' => 'info.gif',
+                'text' => _('Auf dieser Seite finden Sie eine Übersicht über alle verfügbaren Seiten.')
+            )
+        )
+    )
+);
+
+$infobox = array('picture' => 'infobox/administration.jpg', 'content' => $infobox_content);
+?>

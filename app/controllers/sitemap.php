@@ -23,71 +23,14 @@ require_once 'app/controllers/authenticated_controller.php';
  */
 class SitemapController extends AuthenticatedController
 {
-    //using the StudipCache for the sitemap
-    const SITEMAP_CACHE_KEY = '/sitemap/';
-
     /**
-     * The only main method, that loads the navigation object and displays it.
+     * The only main method, loads the navigation object and displays it.
      */
     public function index_action()
     {
-        //we need the id of the user
-        $userid = $GLOBALS['auth']->auth['uid'];
-
-        //Setting title and activate this item in the navigation
         PageLayout::setTitle(_('Sitemap'));
-        Navigation::activateItem('/sitemap');
 
-        //getting the cache
-        $cache = StudipCacheFactory::getCache();
-
-        //getting the main-navigation from the cache
-        $this->navigation = unserialize($cache->read(self::SITEMAP_CACHE_KEY.'main/'.$userid));
-
-        //load the navigation, if the cache is empty
-        if (empty($this->navigation)) {
-            //remove hidden subnavigations from the main navigation in a new object
-            $this->navigation = new StudipNavigation('ignore');
-            $this->navigation->removeSubNavigation('course');
-            $this->navigation->removeSubNavigation('links');
-            $this->navigation->removeSubNavigation('login');
-            $this->navigation->removeSubNavigation('account');
-            $this->navigation->removeSubNavigation('start');
-            $this->navigation->removeSubNavigation('sitemap');
-            //adding an entry to the sitemap navigation
-            $this->navigation->insertSubNavigation('account', new Navigation(_('Start'), 'index.php'), 'browse');
-            //storing this navigation into the cache
-            $cache->write(self::SITEMAP_CACHE_KEY.'main/'.$userid, serialize($this->navigation));
-        }
-
-        //getting quick-links (either from the cache or from a new object)
-        $this->subnavigation = unserialize($cache->read(self::SITEMAP_CACHE_KEY.'quicklinks/'.$userid));
-        if (empty($this->subnavigation)) {
-            $subnavigation = new StudipNavigation('ignore');
-            foreach ($subnavigation as $key => $nav) {
-                //only the quick-links
-                if ($key == 'links') {
-                    $this->subnavigation = $nav;
-                }
-            }
-            //storing this navigation into the cache
-            $cache->write(self::SITEMAP_CACHE_KEY.'quicklinks/'.$userid, serialize($this->subnavigation));
-        }
-        $this->subnavigation->removeSubNavigation('account');
-        $this->subnavigation->insertSubNavigation('account', new AccountNavigation(), 'sitemap');
-
-        //infobox
-        $infobox_content = array(
-            array(
-                'kategorie' => _('Hinweise:'),
-                'eintrag'   => array(
-                    array(
-                        'icon' => 'info.gif',
-                        'text' => _('Auf dieser Seite finden Sie eine Übersicht über alle verfügbaren Seiten.')
-                    )
-                )
-            )
-        );
-        $this->infobox = array('picture' => 'infobox/administration.jpg', 'content' => $infobox_content);
+        $this->navigation = Navigation::getItem('/');
+        $this->quicklinks = Navigation::getItem('/links');
     }
 }

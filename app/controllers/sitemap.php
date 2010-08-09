@@ -30,6 +30,10 @@ class SitemapController extends AuthenticatedController
     {
         PageLayout::setTitle(_('Sitemap'));
 
+        foreach (Navigation::getItem('/start') as $nav) {
+            $nav->setEnabled(false);
+        }
+
         $this->navigation = Navigation::getItem('/');
         $this->quicklinks = Navigation::getItem('/links');
     }

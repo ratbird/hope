@@ -15,13 +15,20 @@ require_once 'app/models/calendar/calendar.php';
 require_once 'app/models/calendar/view.php';
 require_once 'lib/classes/SemesterData.class.php';
 
+/**
+ * Personal schedule controller.
+ *
+ * @since      Class available since Release 2.0.0
+ */
 class Calendar_ScheduleController extends AuthenticatedController
 {
+
     /**
      * this action is the main action of the schedule-controller, setting the environment for the timetable,
      * accepting a comma-separated list of days.
      *
      * @param  string  a list of an arbitrary mix of the numbers 0-6, separated with a comma (e.g. 1,2,3,4,5 (for Monday to Friday, the default))
+     * @return void
      */
     function index_action($days = false)
     {
@@ -170,6 +177,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      * this action is called whenever a new entry shall be modified or added to the schedule
      *
      * @param  string  $id  optional, if id given, the entry with this id is updated
+     * @return void
      */
     function addEntry_action( $id = false )
     {
@@ -229,6 +237,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      * If no id is submitted, an empty entry_dialog is displayed.
      *
      * @param  string  $id  the id of the entry to edit (if any), false otherwise.
+     * @return void
      */
     function entry_action($id, $cycle_id = false)
     {
@@ -244,7 +253,13 @@ class Calendar_ScheduleController extends AuthenticatedController
         $this->redirect('calendar/schedule/');
     }
 
-
+    /**
+     * Return an HTML fragment containing a form to edit an entry
+     *
+     * @param  string  the ID of a course
+     * @param  string  an optional cycle's ID
+     * @return void
+     */
     function entryajax_action($id, $cycle_id = false)
     {
         $this->response->addHeader('Content-Type', 'text/html; charset=windows-1252');
@@ -257,6 +272,15 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
     }
 
+    /**
+     * Returns an HTML fragment of a grouped entry in the schedule of an institute.
+     *
+     * @param string  the start time of the group, e.g. "1000"
+     * @param string  the end time of the group, e.g. "1200"
+     * @param string  the ID of the institute
+     * @param string  true if this is an Ajax request
+     * @return void
+     */
     function groupedentry_action($start, $end, $seminars, $ajax = false) {
         $this->show_entry = array(
             'type'     => 'inst',
@@ -283,6 +307,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      * use can be deleted)
      *
      * @param  string  $id  the id of the entry to delete
+     * @return void
      */
     function delete_action($id) 
     {
@@ -294,6 +319,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      * store the color-settings for the seminar
      *
      * @param  string  $seminar_id
+     * @return void
      */
     function editseminar_action($seminar_id, $cycle_id)
     {
@@ -308,6 +334,12 @@ class Calendar_ScheduleController extends AuthenticatedController
         $this->redirect('calendar/schedule');
     }
 
+    /**
+     * Adds the appointments of a course to your schedule.
+     *
+     * @param  string  the ID of the course
+     * @return void
+     */
     function addvirtual_action($seminar_id) {
         $sem = Seminar::getInstance($seminar_id);
         foreach ($sem->getCycles() as $cycle) {
@@ -324,6 +356,15 @@ class Calendar_ScheduleController extends AuthenticatedController
     }
 
 
+    /**
+     * Set the visibility of the course.
+     *
+     * @param  string  the ID of the course
+     * @param  string  the ID of the cycle
+     * @param  string  visibility; either '1' or '0'
+     * @param  string  if you give this optional param, it signals an Ajax request
+     * @return void
+     */
     function adminbind_action($seminar_id, $cycle_id, $visible, $ajax = false) {
         CalendarScheduleModel::adminBind($seminar_id, $cycle_id, $visible);
 
@@ -334,6 +375,14 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
     }
 
+    /**
+     * Hide the give appointment.
+     *
+     * @param  string  the ID of the course
+     * @param  string  the ID of the cycle
+     * @param  string  if you give this optional param, it signals an Ajax request
+     * @return void
+     */
     function unbind_action($seminar_id, $cycle_id = false, $ajax = false) {
         CalendarScheduleModel::unbind($seminar_id, $cycle_id);
 
@@ -344,6 +393,14 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
     }
 
+    /**
+     * Show the given appointment.
+     *
+     * @param  string  the ID of the course
+     * @param  string  the ID of the cycle
+     * @param  string  if you give this optional param, it signals an Ajax request
+     * @return void
+     */
     function bind_action($seminar_id, $cycle_id, $ajax = false) {
         CalendarScheduleModel::bind($seminar_id, $cycle_id);
 
@@ -358,10 +415,24 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
     }
 
+    /**
+     * Show the settings' form.
+     *
+     * @return void
+     */
     function settings_action()
     {
     }
 
+    /**
+     * Store the settings
+     *
+     * @param string  the start time of the calendar to show, e.g. "1000"
+     * @param string  the end time of the calendar to show, e.g. "1200"
+     * @param string  the days to show
+     * @param string  the ID of the semester
+     * @return void
+     */
     function storesettings_action($start_hour = false, $end_hour = false, $days = false, $semester_id = false)
     {
         global $my_schedule_settings;

@@ -14,6 +14,11 @@ define('DEFAULT_COLOR_SEM', $GLOBALS['PERS_TERMIN_KAT'][2]['color']);
 define('DEFAULT_COLOR_NEW', $GLOBALS['PERS_TERMIN_KAT'][3]['color']);
 define('DEFAULT_COLOR_VIRTUAL', $GLOBALS['PERS_TERMIN_KAT'][1]['color']);
 
+/**
+ * Pseudo-namespace containing helper methods for the schedule.
+ *
+ * @since      Class available since Release 2.0.0
+ */
 class CalendarScheduleModel
 {
 
@@ -39,6 +44,12 @@ class CalendarScheduleModel
         }
     }
 
+    /**
+     * Update an existing entry of a course or create a new entry if $data['id'] is not set
+     *
+     * @param mixed  the data to store
+     * @return void
+     */
     static function storeSeminarEntry($data)
     {
         $stmt = DBManager::get()->prepare("REPLACE INTO schedule_seminare
@@ -51,6 +62,7 @@ class CalendarScheduleModel
      * delete the entry with the submitted id, belonging to the current user
      *
      * @param  string  $id
+     * @return void
      */
     static function deleteEntry($id)
     {
@@ -59,6 +71,16 @@ class CalendarScheduleModel
         $stmt->execute(array($id, $GLOBALS['user']->id));
     }
 
+
+    /**
+     * Returns the schedule entries (optionally of a given course)
+     *
+     * @param string  the ID of the user
+     * @param int     the start hour
+     * @param int     the end hour
+     * @param string  optional; the ID of the course
+     * @return array  an array containing the entries
+     */
     static function getScheduleEntries($user_id, $start_hour, $end_hour, $id = false)
     {
         $ret = array();
@@ -98,6 +120,15 @@ class CalendarScheduleModel
         return $ret;
     }
 
+    /**
+     * Return an entry for the specified course
+     *
+     * @param string  the ID of the course
+     * @param string  the ID of the user
+     * @param mixed   either false or the ID of the cycle
+     *
+     * @return array  the course's entry
+     */
     static function getSeminarEntry($seminar_id, $user_id, $cycle_id = false)
     {
         $ret = array();
@@ -185,7 +216,17 @@ class CalendarScheduleModel
         return $ret;
     }
 
-    static function getSeminarEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false, $seminar_id = false, $cycle_id = false)
+    /**
+     * Returns an schedule entry of a course
+     *
+     * @param string  the ID of the user
+     * @param string  the ID of the course
+     * @param int     the start hour
+     * @param int     the end hour
+     * @param string  optional; true to show hidden, false otherwise
+     * @return array  an array containing the properties of the entry
+     */
+    static function getSeminarEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false)
     {
         // get all virtually added seminars
         $stmt = DBManager::get()->prepare("SELECT * FROM schedule_seminare as c
@@ -228,8 +269,17 @@ class CalendarScheduleModel
     }
 
 
-    static function getSeminarEntriesForInstitute($user_id, $semester, $start_hour, $end_hour, $institute_id,
-                                                  $show_hidden = false, $seminar_id = false, $cycle_id = false)
+    /**
+     * Returns the schedule entries of the specified institute
+     *
+     * @param string  the ID of the user
+     * @param array   an array containing the "beginn" of the semester
+     * @param int     the start hour
+     * @param int     the end hour
+     * @param string  the ID of the institute
+     * @return array  an array containing the entries
+     */
+    static function getSeminarEntriesForInstitute($user_id, $semester, $start_hour, $end_hour, $institute_id)
     {
         // fetch seminar-entries 
         $stmt = DBManager::get()->prepare("SELECT * FROM seminare as s
@@ -263,6 +313,14 @@ class CalendarScheduleModel
     }
 
 
+    /**
+     * Returns the ID of the cycle of a course specified by start and end.
+     *
+     * @param  Seminar  an instance of a Seminar
+     * @param  string   the start of the cycle
+     * @param  string   the end of the cycle
+     * @return string   the ID of the cycle
+     */
     static function getSeminarCycleId(Seminar $seminar, $start, $end) {
         foreach ($seminar->getCycles() as $cycle) {
             if (leadingZero($cycle->getStartStunde()) . leadingZero($cycle->getStartMinute()) == $start
@@ -272,6 +330,11 @@ class CalendarScheduleModel
         }
     }
 
+    /**
+     * @param  string the ID of the course
+     * @param  string the ID of the cycle
+     * @return bool true if visible, false otherwise
+     */
     static function isSeminarVisible($seminar_id, $cycle_id) {
         $stmt = DBManager::get()->prepare("SELECT visible
             FROM schedule_seminare
@@ -284,6 +347,17 @@ class CalendarScheduleModel
         }
     }
 
+    /**
+     * Returns a merged array consisting of normal and courses' entries 
+     *
+     * @param string  the user's ID
+     * @param string  the course's ID
+     * @param string  the start hour of the entries
+     * @param string  the end hour of the entries
+     * @param string  the institute's ID
+     * @param bool    filters hidden entries
+     * @return array  an array of entries
+     */
     static function getInstituteEntries($user_id, $semester, $start_hour, $end_hour, $institute_id, $show_hidden = false)
     {
         // merge the schedule and seminar-entries
@@ -318,6 +392,14 @@ class CalendarScheduleModel
         return $entries;
     }
 
+    /**
+     * Toggle entries' visibility
+     *
+     * @param  string  the course's ID
+     * @param  string  the cycle's ID
+     * @param  bool    the value to switch to
+     * @return void
+     */
     static function adminBind($seminar_id, $cycle_id, $visible = true) {
         $stmt = DBManager::get()->prepare("SELECT * FROM schedule_seminare
             WHERE seminar_id = ? AND user_id = ? AND metadate_id = ?");
@@ -338,6 +420,13 @@ class CalendarScheduleModel
        
     }
 
+    /**
+     * Switch a cycle to invisible.
+     *
+     * @param  string  the course's ID
+     * @param  string  the cycle's ID
+     * @return void
+     */
     static function unbind($seminar_id, $cycle_id = false)
     {
         $stmt = DBManager::get()->prepare("SELECT su.*, sc.seminar_id as present
@@ -369,6 +458,13 @@ class CalendarScheduleModel
         }
     }
 
+    /**
+     * Switch a cycle to visible.
+     *
+     * @param  string  the course's ID
+     * @param  string  the cycle's ID
+     * @return void
+     */
     static function bind($seminar_id, $cycle_id)
     {
         $stmt = DBManager::get()->prepare("UPDATE schedule_seminare

@@ -14,9 +14,22 @@ define('DEFAULT_COLOR_SEM', $GLOBALS['PERS_TERMIN_KAT'][2]['color']);
 define('DEFAULT_COLOR_NEW', $GLOBALS['PERS_TERMIN_KAT'][3]['color']);
 define('DEFAULT_COLOR_VIRTUAL', $GLOBALS['PERS_TERMIN_KAT'][1]['color']);
 
+/**
+ * Pseudo-namespace containing helper methods for the calendar of institutes.
+ *
+ * @since      Class available since Release 2.0.0
+ */
 class CalendarInstscheduleModel
 {
 
+    /**
+     * Returns an schedule entry of a course
+     *
+     * @param string  the ID of the course
+     * @param string  the ID of the user
+     * @param string  optional; if given, specifies the ID of the entry
+     * @return array  an array containing the properties of the entry
+     */
     static function getSeminarEntry($seminar_id, $user_id, $cycle_id = false)
     {
         $ret = array();
@@ -52,6 +65,16 @@ class CalendarInstscheduleModel
     }
 
 
+    /**
+     * Returns the schedule entries of the specified institute
+     *
+     * @param string  the ID of the user
+     * @param array   an array containing the "beginn" of the semester
+     * @param int     the start hour
+     * @param int     the end hour
+     * @param string  the ID of the institute
+     * @return array  an array containing the entries
+     */
     static function getInstituteEntries($user_id, $semester, $start_hour, $end_hour, $institute_id)
     {
         // fetch seminar-entries 

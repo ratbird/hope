@@ -13,6 +13,12 @@
 
 require_once('app/models/calendar/calendar.php');
 
+/**
+ * Kind of bean class for the calendar view.
+ *
+ * @since      Class available since Release 2.0.0
+ */
+
 class CalendarView
 {
 
@@ -34,7 +40,7 @@ class CalendarView
      *   'start' => the (start hour * 100) + (start minute)
      *   'end'   => the (end hour * 100) + (end minute)
      *   'day'   => day of week (0 = Sunday, ... , 6 = Saturday)
-     *   'title' => the entry's title
+     *   'title' => the entry`s title
      *   'content' => whatever shall be the content of the entry as a string
      *  )
      *
@@ -157,44 +163,94 @@ class CalendarView
      */
     public function getMatrix()
     {
-        return CalendarModel::generateMatrix($this->getEntries());
+        if (!is_array($this->getEntries())) {
+            return array();
+        }
+          
+        $matrix = array();
+        foreach ($this->getEntries() as $day => $entries_for_day) {
+            $group_matrix = array();
+            foreach ($entries_for_day as $groups) {
+                foreach ($groups as $group) {
+                    if (is_array($group[0])) $data = $group[0]; else $data = $group;
+
+                    for ($i = floor($data['start'] / 100); $i <= floor($data['end'] / 100); $i++) {
+                        for ($j = 0; $j < 60; $j++) {
+                            if (($i * 100) + $j >= $data['start'] && ($i * 100) + $j < $data['end']) {
+                                $group_matrix[($i * 100) + $j]++;
+                            }
+                        }
+                    } 
+                }
+            }
+
+            $matrix[$day] = $group_matrix;
+        }
+
+        return $matrix;
     }
 
 
     /* * * * * * * * * * * * * * *
      * * *   G E T T E R S   * * * 
      * * * * * * * * * * * * * * */
+
+    /**
+     * @return mixed the context
+     */
     public function getContext()
     {
         return $this->context;
     }
 
+    /**
+     * @return mixed the days
+     */
     public function getDays()
     {
         return $this->days;
     }
 
+    /**
+     * @return array an array consisting of the start and end hour
+     */
     public function getRange() {
         return array($this->start_hour, $this->end_hour);
     }
 
+    /**
+     * @return bool true if grouped, false otherwise
+     */
     public function isGrouped()
     {
         return $this->grouped;
     }
 
+    /**
+     * @return mixed the height
+     */
     public function getHeight() {
         return $this->height;
     }
 
+    /**
+     * @return mixed the overall height
+     */
     public function getOverallHeight() {
         return $this->height * ($this->end_hour - $this->start_hour) + 60;
     }
 
+    /**
+     * @param bool true to make it read only, false otherwise
+     * @return void
+     */
     public function setReadOnly($readonly = true) {
         $this->read_only = $readonly;
     }
 
+    /**
+     * @return bool true if read only, false otherwise
+     */
     public function isReadOnly() {
         return $this->read_only;
     }

@@ -15,6 +15,11 @@ require_once 'app/models/calendar/calendar.php';
 require_once 'app/models/calendar/view.php';
 require_once 'lib/classes/SemesterData.class.php';
 
+/**
+ * Controller of the institutes' schedules.
+ * *
+ * @since      Class available since Release 2.0.0
+ */
 class Calendar_InstscheduleController extends AuthenticatedController
 {
     /**
@@ -106,6 +111,15 @@ class Calendar_InstscheduleController extends AuthenticatedController
         }
     }
 
+    /**
+     * Returns an HTML fragment of a grouped entry in the schedule of an institute.
+     *
+     * @param string  the start time of the group, e.g. "1000"
+     * @param string  the end time of the group, e.g. "1200"
+     * @param string  the IDs of the courses
+     * @param string  true if this is an Ajax request
+     * @return void
+     */
     function groupedentry_action($start, $end, $seminars, $ajax = false) {
         $this->show_entry = array(
             'type'     => 'inst',

@@ -9,35 +9,21 @@
  * the License, or (at your option) any later version.
  */
 
+/**
+ * Pseudo-namespace containing helper methods for the calendar.
+ *
+ * @since      Class available since Release 2.0.0
+ */
+
 class CalendarModel
 {
 
-    static function generateMatrix($grouped_entries)
-    {
-        $matrix = array();
-        if (is_array($grouped_entries)) foreach ($grouped_entries as $day => $entries_for_day) {
-            $group_matrix = array();
-            foreach ($entries_for_day as $groups) {
-                foreach ($groups as $group) {
-                    if (is_array($group[0])) $data = $group[0]; else $data = $group;
-
-                    for ($i = floor($data['start'] / 100); $i <= floor($data['end'] / 100); $i++) {
-                        for ($j = 0; $j < 60; $j++) {
-                            if (($i * 100) + $j >= $data['start'] && ($i * 100) + $j < $data['end']) {
-                                $group_matrix[($i * 100) + $j]++;
-                            }
-                        }
-                    } 
-                }
-            }
-
-            $matrix[$day] = $group_matrix;
-        }
-
-        return $matrix;
-    }
-
-
+    /**
+     * Sorts and groups (by duration) an array of entries
+     *
+     * @param array   the entries
+     * @return array  the sorted and grouped entries
+     */
     static function sortAndGroupEntries($entries)
     {
         // optimize for each day
@@ -101,7 +87,12 @@ class CalendarModel
 
     }
 
-
+    /**
+     * Sort the given entries.
+     * 
+     * @param array   the entries
+     * @return array  the sorted entries
+     */
     static function sortEntries($entries)
     {
         // optimize for each day

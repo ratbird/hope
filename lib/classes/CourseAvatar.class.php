@@ -94,5 +94,14 @@ class CourseAvatar extends Avatar
         Avatar::SMALL  => array( 20,  20));
       return $dimensions[$size];
     }
-}
 
+    /**
+     * Return the default title of the avatar.
+     * @return string the default title
+     */
+    function getDefaultTitle()
+    {
+        require_once 'lib/classes/Seminar.class.php';
+        return Seminar::GetInstance($this->user_id)->name;
+    }
+}

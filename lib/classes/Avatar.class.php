@@ -50,6 +50,10 @@ class Avatar {
    */
   const MAX_FILE_SIZE = 716800;
 
+  /**
+   * This constant holds the username and ID of the "nobody" avatar.
+   */
+  const NOBODY = 'nobody';
 
   /**
    * Holds the user's id
@@ -87,7 +91,7 @@ class Avatar {
    * @return mixed   the user's avatar.
    */
   static function getNobody() {
-    return new Avatar('nobody', 'nobody');
+    return new Avatar(Avatar::NOBODY, Avatar::NOBODY);
   }
 
 
@@ -171,7 +175,7 @@ class Avatar {
    *                  otherwise.
    */
   function is_customized() {
-    return $this->user_id !== 'nobody' &&
+    return $this->user_id !== Avatar::NOBODY &&
            file_exists($this->getCustomAvatarPath(Avatar::MEDIUM));
   }
 
@@ -213,8 +217,7 @@ class Avatar {
     }
 
     if (!isset($opt['title'])) {
-      require_once 'lib/functions.php';
-      $opt['title'] = htmlReady(get_fullname($this->user_id));
+      $opt['title'] = htmlReady($this->getDefaultTitle());
     }
 
     if (!isset($opt['alt'])) {
@@ -432,5 +435,18 @@ class Avatar {
     # execute PHP internal error handler
     return false;
   }
-}
 
+    /**
+     * Return the default title of the avatar.
+     * @return string the default title
+     */
+    function getDefaultTitle()
+    {
+        if ($this->user_id === Avatar::NOBODY) {
+          return Avatar::NOBODY;
+        }
+
+        require_once 'lib/functions.php';
+        return get_fullname($this->user_id);
+    }
+}

@@ -69,4 +69,17 @@ class InstituteAvatar extends CourseAvatar
     {
         return $GLOBALS['DYNAMIC_CONTENT_PATH'] . "/institute";
     }
+
+    /**
+     * Return the default title of the avatar.
+     * @return string the default title
+     */
+    function getDefaultTitle()
+    {
+        require "lib/classes/Institute.class.php";
+        $institute = Institute::find($this->user_id);
+        return $institute
+               ? $institute->getValue('Name')
+               : Avatar::NOBODY;
+    }
 }

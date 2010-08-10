@@ -112,6 +112,5 @@
 </div>
 <? if (isset($navigation)) : ?>
     <?= $this->render_partial('tabs') ?>
-    <?= $this->render_partial('breadcrumb') ?>
 <? endif ?>
 <!-- Ende Header -->

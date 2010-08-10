@@ -158,7 +158,3 @@ a, a:link, a:visited {
 body, input, textarea, td, th, blockquote, p, form, ul {
 	font-size: 10pt;
 }
-
-.print {
-    display: block;
-}

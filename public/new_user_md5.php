@@ -946,7 +946,7 @@ if (isset($_GET['details']) || $showform ) {
         $i++;
     }
     if($i%2!=0) echo "<td class=steel1>&nbsp;</td><td class=steel1 colspan=\"2\">&nbsp;</td>";
-    echo "<tr><td class=steel1 align=\"right\" colspan=\"5\"><a href=\"#\" onClick=\"\$('.pers_browse_datafields').each(function(index){if(\$(this).css('display')=='none') $(this).css('display',''); else $(this).css('display','none');});this.innerHTML=(this.innerHTML=='Zuklappen')?'"._("Erweiterte Suche")."':'"._("Zuklappen")."';\">".(($datafields_empty)?_("Erweiterte Suche"):_("Zuklappen"))."</a></td></tr>";
+    echo "<tr><td class=steel1 align=\"right\" colspan=\"5\"><a href=\"#\" onClick=\"\$('.pers_browse_datafields').toggle();this.innerHTML=(this.innerHTML=='Zuklappen')?'"._("Erweiterte Suche")."':'"._("Zuklappen")."';\">".(($datafields_empty)?_("Erweiterte Suche"):_("Zuklappen"))."</a></td></tr>";
     //Datenfelder:Ende
 
 

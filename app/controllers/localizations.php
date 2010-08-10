@@ -12,7 +12,7 @@
 /**
  * TODO
  */
-class LocalizationsController extends TrailsController {
+class LocalizationsController extends Trails_Controller {
 
     /**
      * Callback function being called before an action is executed. If this
@@ -46,12 +46,12 @@ class LocalizationsController extends TrailsController {
 
     function show_action($language = NULL)
     {
-        $this->setContentType('application/javascript; charset=UTF-8');
+        $this->set_content_type('application/javascript; charset=UTF-8');
 
         $expires = time() + 30 * 60 * 60 * 24;
-        $this->response->addHeader('Expires', gmdate(DATE_RFC1123, $expires));
-        $this->response->addHeader('Cache-Control', 'public');
-        $this->response->addHeader('Pragma', 'public');
+        $this->response->add_header('Expires', gmdate(DATE_RFC1123, $expires));
+        $this->response->add_header('Cache-Control', 'public');
+        $this->response->add_header('Pragma', 'public');
 
         $this->language = $language;
         setLocaleEnv($language, "studip");
@@ -60,8 +60,8 @@ class LocalizationsController extends TrailsController {
 
     function not_acceptable_action($language = NULL)
     {
-        $this->setStatus(406);
-        $this->setContentType('application/json');
+        $this->set_status(406);
+        $this->set_content_type('application/json');
         $this->render_text(
             json_encode(array_keys($GLOBALS['INSTALLED_LANGUAGES'])));
     }

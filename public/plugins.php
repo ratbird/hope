@@ -16,12 +16,6 @@
 require '../lib/bootstrap.php';
 
 require_once 'lib/functions.php';
-require_once 'lib/trails/TrailsController.php';
-require_once 'lib/trails/TrailsDispatcher.php';
-require_once 'lib/trails/TrailsFlash.php';
-require_once 'lib/trails/TrailsInflector.php';
-require_once 'lib/trails/TrailsResponse.php';
-require_once 'lib/exceptions/TrailsException.php';
 require_once 'lib/exceptions/AccessDeniedException.php';
 
 # set base url for URLHelper class

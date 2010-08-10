@@ -27,13 +27,6 @@ $trails_uri = rtrim($ABSOLUTE_URI_STUDIP, '/') . '/dispatch.php';
 # load trails
 require_once 'vendor/trails/trails.php';
 
-require_once 'lib/trails/TrailsController.php';
-require_once 'lib/trails/TrailsDispatcher.php';
-require_once 'lib/trails/TrailsFlash.php';
-require_once 'lib/trails/TrailsInflector.php';
-require_once 'lib/trails/TrailsResponse.php';
-require_once 'lib/exceptions/TrailsException.php';
-
 # set base url for URLHelper class
 URLHelper::setBaseUrl($ABSOLUTE_URI_STUDIP);
 

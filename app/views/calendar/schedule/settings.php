@@ -1,6 +1,6 @@
 <div id="schedule_settings" class="edit_entry">
     <div id="schedule_settings_drag" class="window_heading">
-        <?= _("Einstellungen des Stundenplans Ã¤ndern") ?>
+        <?= _("Einstellungen des Stundenplans ändern") ?>
     </div>
     <form method="post" action="<?= $controller->url_for('calendar/schedule/storesettings') ?>" style="margin: 10px;">
         <div class="settings" style="width: 30%">

@@ -76,10 +76,10 @@ class InstituteAvatar extends CourseAvatar
      */
     function getDefaultTitle()
     {
-        require "lib/classes/Institute.class.php";
+        require_once "lib/classes/Institute.class.php";
         $institute = Institute::find($this->user_id);
         return $institute
-               ? $institute->getValue('Name')
+               ? $institute->name
                : Avatar::NOBODY;
     }
 }

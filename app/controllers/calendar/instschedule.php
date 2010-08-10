@@ -9,7 +9,7 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'lib/trails/AuthenticatedController.php';
+require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/calendar/instschedule.php';
 require_once 'app/models/calendar/calendar.php';
 require_once 'app/models/calendar/view.php';

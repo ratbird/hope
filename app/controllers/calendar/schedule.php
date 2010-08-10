@@ -9,7 +9,7 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'lib/trails/AuthenticatedController.php';
+require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/calendar/schedule.php';
 require_once 'app/models/calendar/calendar.php';
 require_once 'app/models/calendar/view.php';
@@ -262,7 +262,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      */
     function entryajax_action($id, $cycle_id = false)
     {
-        $this->response->addHeader('Content-Type', 'text/html; charset=windows-1252');
+        $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
         if ($cycle_id) {
             $this->show_entry = array_pop(CalendarScheduleModel::getSeminarEntry($id, $GLOBALS['user']->id, $cycle_id));
             $this->render_template('calendar/schedule/_entry_course');
@@ -291,7 +291,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         );
 
         if ($ajax) {
-            $this->response->addHeader('Content-Type', 'text/html; charset=windows-1252');
+            $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
             $this->render_template('calendar/schedule/_entry_inst');
         } else {
             if (Request::get('show_hidden')) {

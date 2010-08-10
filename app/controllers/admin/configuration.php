@@ -16,7 +16,7 @@
  */
 
 //Imports
-require_once 'lib/trails/AuthenticatedController.php';
+require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/configuration.php';
 require_once 'lib/messaging.inc.php';
 require_once 'lib/user_visible.inc.php';

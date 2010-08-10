@@ -20,11 +20,7 @@
     <?= PageLayout::getBodyElements() ?>
     <div id="overdiv_container"></div>
 
-    <div id="ajax_notification">
-      <?= Assets::img('ajax_indicator.gif') ?> <?= _('Wird geladen') ?>&hellip;
-    </div>
-
-    <? include 'lib/include/header.php'; ?>
+    <? include 'lib/include/header.php' ?>
 
     <div id="layout_container" style="padding: 1em">
       <div id="layout_infobox">

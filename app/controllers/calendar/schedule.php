@@ -281,7 +281,8 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @param string  true if this is an Ajax request
      * @return void
      */
-    function groupedentry_action($start, $end, $seminars, $ajax = false) {
+    function groupedentry_action($start, $end, $seminars, $ajax = false)
+    {
         $this->show_entry = array(
             'type'     => 'inst',
             'seminars' => (array)explode(',', $seminars),
@@ -340,7 +341,8 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @param  string  the ID of the course
      * @return void
      */
-    function addvirtual_action($seminar_id) {
+    function addvirtual_action($seminar_id) 
+    {
         $sem = Seminar::getInstance($seminar_id);
         foreach ($sem->getCycles() as $cycle) {
             $data = array(
@@ -365,7 +367,8 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @param  string  if you give this optional param, it signals an Ajax request
      * @return void
      */
-    function adminbind_action($seminar_id, $cycle_id, $visible, $ajax = false) {
+    function adminbind_action($seminar_id, $cycle_id, $visible, $ajax = false) 
+    {
         CalendarScheduleModel::adminBind($seminar_id, $cycle_id, $visible);
 
         if (!$ajax) {
@@ -383,7 +386,8 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @param  string  if you give this optional param, it signals an Ajax request
      * @return void
      */
-    function unbind_action($seminar_id, $cycle_id = false, $ajax = false) {
+    function unbind_action($seminar_id, $cycle_id = false, $ajax = false) 
+    {
         CalendarScheduleModel::unbind($seminar_id, $cycle_id);
 
         if (!$ajax) {
@@ -401,7 +405,8 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @param  string  if you give this optional param, it signals an Ajax request
      * @return void
      */
-    function bind_action($seminar_id, $cycle_id, $ajax = false) {
+    function bind_action($seminar_id, $cycle_id, $ajax = false) 
+    {
         CalendarScheduleModel::bind($seminar_id, $cycle_id);
 
         if (Request::get('show_hidden')) {

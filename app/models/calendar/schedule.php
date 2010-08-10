@@ -321,7 +321,8 @@ class CalendarScheduleModel
      * @param  string   the end of the cycle
      * @return string   the ID of the cycle
      */
-    static function getSeminarCycleId(Seminar $seminar, $start, $end) {
+    static function getSeminarCycleId(Seminar $seminar, $start, $end) 
+    {
         foreach ($seminar->getCycles() as $cycle) {
             if (leadingZero($cycle->getStartStunde()) . leadingZero($cycle->getStartMinute()) == $start
                 && leadingZero($cycle->getEndStunde()) . leadingZero($cycle->getEndMinute()) == $end) {
@@ -335,7 +336,8 @@ class CalendarScheduleModel
      * @param  string the ID of the cycle
      * @return bool true if visible, false otherwise
      */
-    static function isSeminarVisible($seminar_id, $cycle_id) {
+    static function isSeminarVisible($seminar_id, $cycle_id) 
+    {
         $stmt = DBManager::get()->prepare("SELECT visible
             FROM schedule_seminare
             WHERE seminar_id = ? AND user_id = ? AND metadate_id = ?");
@@ -400,7 +402,8 @@ class CalendarScheduleModel
      * @param  bool    the value to switch to
      * @return void
      */
-    static function adminBind($seminar_id, $cycle_id, $visible = true) {
+    static function adminBind($seminar_id, $cycle_id, $visible = true) 
+    {
         $stmt = DBManager::get()->prepare("SELECT * FROM schedule_seminare
             WHERE seminar_id = ? AND user_id = ? AND metadate_id = ?");
         $stmt->execute(array($seminar_id, $GLOBALS['user']->id, $cycle_id));

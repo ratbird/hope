@@ -88,7 +88,8 @@ class CalendarView
      *
      * @param  int  $entry_height  the height of one hour in the schedule
      */
-    public function setHeight($height) {
+    public function setHeight($height)
+    {
         $this->height = $height;
     }
 
@@ -98,7 +99,8 @@ class CalendarView
      * @param  int  $start_hour  the hour to start displaying at
      * @param  int  $end_hour    the hour to stop displaying at
      */
-    public function setRange($start_hour, $end_hour) {
+    public function setRange($start_hour, $end_hour)
+    {
         $this->start_hour = $start_hour;
         $this->end_hour = $end_hour;
     }
@@ -114,7 +116,7 @@ class CalendarView
     {
         foreach ($entries as $day => $entry_list) {
             foreach ($entry_list as $entry) {
-                if (!isset($entry['color']) || !isset($entry['start']) || !isset($entry['end']) 
+                if (!isset($entry['color']) || !isset($entry['start']) || !isset($entry['end'])
                     || !isset($entry['title']) || !isset($entry['content']) ) {
                     throw new Exception('The entry '. print_r($entry, true) .' does not follow the specifications!');
                 }
@@ -123,7 +125,7 @@ class CalendarView
 
         return true;
     }
-    
+
 
     /**
      * Call this function th enable/disable the grouping of entries with the same start and end.
@@ -166,7 +168,7 @@ class CalendarView
         if (!is_array($this->getEntries())) {
             return array();
         }
-          
+
         $matrix = array();
         foreach ($this->getEntries() as $day => $entries_for_day) {
             $group_matrix = array();
@@ -180,7 +182,7 @@ class CalendarView
                                 $group_matrix[($i * 100) + $j]++;
                             }
                         }
-                    } 
+                    }
                 }
             }
 
@@ -192,7 +194,7 @@ class CalendarView
 
 
     /* * * * * * * * * * * * * * *
-     * * *   G E T T E R S   * * * 
+     * * *   G E T T E R S   * * *
      * * * * * * * * * * * * * * */
 
     /**
@@ -214,7 +216,8 @@ class CalendarView
     /**
      * @return array an array consisting of the start and end hour
      */
-    public function getRange() {
+    public function getRange()
+    {
         return array($this->start_hour, $this->end_hour);
     }
 
@@ -229,14 +232,16 @@ class CalendarView
     /**
      * @return mixed the height
      */
-    public function getHeight() {
+    public function getHeight()
+    {
         return $this->height;
     }
 
     /**
      * @return mixed the overall height
      */
-    public function getOverallHeight() {
+    public function getOverallHeight()
+    {
         return $this->height * ($this->end_hour - $this->start_hour) + 60;
     }
 
@@ -244,14 +249,16 @@ class CalendarView
      * @param bool true to make it read only, false otherwise
      * @return void
      */
-    public function setReadOnly($readonly = true) {
+    public function setReadOnly($readonly = true)
+    {
         $this->read_only = $readonly;
     }
 
     /**
      * @return bool true if read only, false otherwise
      */
-    public function isReadOnly() {
+    public function isReadOnly()
+    {
         return $this->read_only;
     }
 }

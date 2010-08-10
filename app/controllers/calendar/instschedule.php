@@ -120,7 +120,8 @@ class Calendar_InstscheduleController extends AuthenticatedController
      * @param string  true if this is an Ajax request
      * @return void
      */
-    function groupedentry_action($start, $end, $seminars, $ajax = false) {
+    function groupedentry_action($start, $end, $seminars, $ajax = false)
+    {
         $this->show_entry = array(
             'type'     => 'inst',
             'seminars' => (array)explode(',', $seminars),

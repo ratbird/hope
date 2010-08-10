@@ -35,8 +35,7 @@ class PluginEngine {
     public static function routeRequest($dispatch_to) {
         $dispatch_to = ltrim($dispatch_to, '/');
         if (strlen($dispatch_to) === 0) {
-            throw new Studip_PluginNotFoundException(
-              _("Es wurde kein Plugin gewählt."));
+            throw new PluginNotFoundException(_('Es wurde kein Plugin gewählt.'));
         }
         $pos = strpos($dispatch_to, '/');
         return $pos === FALSE

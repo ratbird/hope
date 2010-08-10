@@ -18,7 +18,8 @@ require_once 'app/controllers/authenticated_controller.php';
  * @author tgloeggl
  * @author aklassen
  */
-class Course_ManagementController extends AuthenticatedController {
+class Course_ManagementController extends AuthenticatedController
+{
 
     // see Trails_Controller#before_filter
     function before_filter(&$action, &$args)

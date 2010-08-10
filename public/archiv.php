@@ -93,6 +93,7 @@ if (($close) || ($suche)){
 $archiv_data['sortby'] = Request::option('sortby', 'Name');
 
 $u_id = $user->id;
+unset($message, $details);
 
 //Loeschen aus dem Archiv
 if (($delete_id) && Request::submitted('delete_really')){
@@ -101,7 +102,7 @@ if (($delete_id) && Request::submitted('delete_really')){
         $db2->next_record();
         $db->query("DELETE FROM archiv WHERE seminar_id = '$delete_id'");
         if ($db->affected_rows()) {
-            $success = sprintf(_('Die Veranstaltung "%s" wurde aus dem Archiv gelöscht'), htmlReady($db2->f("name")));
+            $message = sprintf(_('Die Veranstaltung "%s" wurde aus dem Archiv gelöscht'), htmlReady($db2->f("name")));
             log_event("SEM_DELETE_FROM_ARCHIVE",$delete_id,NULL,$db2->f("name")." (".$db2->f("semester").")"); // ...logging...
         }
         if ($db2->f("archiv_file_id")) {
@@ -123,8 +124,8 @@ if (($delete_id) && Request::submitted('delete_really')){
 
 //Sicherheitsabfrage
 if ($delete_id) {
-    $name = DBManager::get()->query("SELECT name FROM archiv WHERE seminar_id= '$delete_id'")->fetch(PDO::FETCH_COLUMN);
-    echo createQuestion(sprintf(_('Wollen Sie die Veranstaltung"%s" wirklich löschen? Sämtliche Daten und die mit der Veranstaltung archivierte Dateisammlung werden unwiderruflich gelöscht!'), htmlReady($name)),
+    $name = DBManager::get()->query("SELECT name FROM archiv WHERE seminar_id= '$delete_id'")->fetchColumn();
+    echo createQuestion(sprintf(_('Wollen Sie die Veranstaltung "%s" wirklich löschen? Sämtliche Daten und die mit der Veranstaltung archivierte Dateisammlung werden unwiderruflich gelöscht!'), htmlReady($name)),
             array('delete_really' => 'true', 'delete_id' => $delete_id), array('back' => 'true'));
 }
 
@@ -167,7 +168,7 @@ if (!empty($dump_id)) {
             echo $db->f('dump');
         }
     } else {
-        echo _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.");
+        $msg="error§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.");
     }
 }
 
@@ -184,7 +185,7 @@ elseif (!empty($forum_dump_id)) {
             echo $db->f('forumdump');
         }
     } else {
-        echo _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.");
+        $msg="error§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.");
     }
 }
 
@@ -203,7 +204,7 @@ elseif (!empty($wiki_dump_id)) {
             echo "</td></tr></table>";
         }
     } else {
-        echo _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.");
+        $msg="error§" . _("Sie haben leider nicht die notwendige Berechtigung für diese Aktion.");
     }
 }
 
@@ -216,10 +217,12 @@ PageLayout::setHelpKeyword("Basis.SuchenArchiv");
 include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 ?>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
-    <? if ($msg) { ?><? parse_msg($msg); ?><? } ?>
+    <? if ($msg) { parse_msg($msg); } ?>
     <tr>
         <td class="blank" >
-        <?= $success? MessageBox::success($success, $details) : '' ?>
+                <? if (isset($message)) : ?>
+                    <?= MessageBox::success($message, $details) ?>
+                <? endif ?>
                 <form  name="search" method="post" action="<?= URLHelper::getLink() ?>" >
                     <table border=0 cellspacing=0 cellpadding=2>
                         <tr <? $cssSw->switchClass() ?>>
@@ -353,7 +356,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                 </form>
         </td>
         <td class="blank" align="right" valign="top" width="270">
-            <?= print_infobox('', 'infobox/archiv.jpg') ?>
+            <?= print_infobox(array(), 'infobox/archiv.jpg') ?>
         </td>
     </tr>
 

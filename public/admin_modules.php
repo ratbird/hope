@@ -76,11 +76,6 @@ $header_line = getHeaderLine($range_id);
 if ($header_line)
     PageLayout::setTitle($header_line." - ".PageLayout::getTitle());
 
-//Output starts here
-
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
-include 'lib/include/admin_search_form.inc.php';
 
 $amodules=new AdminModules;
 
@@ -219,7 +214,7 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
 }
 
 //wenn wir frisch reinkommen, werden benoetigte Daten eingelesen
-if (($range_id) && (!$uebernehmen_x) && (!$delete_forum) && (!$delete_documents) && (!$resolve_conflicts)) {
+if (($range_id) && (!$default_x) && (!$uebernehmen_x) && (!$delete_forum) && (!$delete_documents) && (!$resolve_conflicts)) {
     $admin_modules_data["modules_list"] = $amodules->getLocalModules($range_id);
     $admin_modules_data["orig_bin"] = $amodules->getBin($range_id);
     $admin_modules_data["changed_bin"] = $amodules->getBin($range_id);
@@ -229,13 +224,22 @@ if (($range_id) && (!$uebernehmen_x) && (!$delete_forum) && (!$delete_documents)
 } else {
     //Sicherheitscheck ob ueberhaupt was zum Bearbeiten gewaehlt ist.
     if (!$admin_modules_data["range_id"]) {
-        echo "</td></tr></table>";
-        die;
+        throw new AccessDeniedException();
+    }
+    if (!count($admin_modules_data["conflicts"])) {
+        header("Location: " . URLHelper::getURL(""));
     }
 }
 
 if ($admin_modules_data["range_id"])
 {
+
+//Output starts here
+
+include ('lib/include/html_head.inc.php'); // Output of html head
+include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
+include 'lib/include/admin_search_form.inc.php';
+
 ?>
     <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>

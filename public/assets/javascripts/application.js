@@ -751,7 +751,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);
     if ($("#folder_" + md5_id + "_body").is(':visible')) {
       $("#folder_" + md5_id + "_header").css('fontWeight', 'normal');
-      $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
+      $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
       $("#folder_" + md5_id + "_arrow_td").addClass('printhead2');
       $("#folder_" + md5_id + "_arrow_td").removeClass('printhead3');
       $("#folder_" + md5_id + "_body").slideUp(400);
@@ -762,7 +762,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
         var adress = STUDIP.Filesystem.getURL();
         $("#folder_" + md5_id + "_body").load(adress, { getfolderbody: md5_id }, function () {
           $("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
-          $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
+          $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
           $("#folder_" + md5_id + "_arrow_td").addClass('printhead3');
           $("#folder_" + md5_id + "_arrow_td").removeClass('printhead2');
           STUDIP.Filesystem.unsetarrows();
@@ -774,7 +774,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
         });
       } else {
         $("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
-        $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
+        $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
         $("#folder_" + md5_id + "_arrow_td").addClass('printhead3');
         $("#folder_" + md5_id + "_arrow_td").removeClass('printhead2');
         STUDIP.Filesystem.unsetarrows();
@@ -805,7 +805,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
       $("#file_" + md5_id + "_header").css("fontWeight", 'normal');
       $("#file_" + md5_id + "_arrow_td").addClass('printhead2');
       $("#file_" + md5_id + "_arrow_td").removeClass('printhead3');
-      $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
+      $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
       STUDIP.URLHelper.removeLinkParam('data[open][' + md5_id + ']');
       STUDIP.URLHelper.updateAllLinks("#filesystem_area");
     } else {
@@ -813,7 +813,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
         var adress = STUDIP.Filesystem.getURL();
         $("#file_" + md5_id + "_body").load(adress, { getfilebody: md5_id }, function () {
           $("#file_" + md5_id + "_header").css('fontWeight', 'bold');
-          $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
+          $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
           $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
           $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
           $("#file_" + md5_id + "_body").slideDown(400);
@@ -826,7 +826,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
         $("#file_" + md5_id + "_header").css('fontWeight', 'bold');
         $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
         $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
-        $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
+        $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
         $("#file_" + md5_id + "_body").slideDown(400);
         STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
         STUDIP.URLHelper.updateAllLinks("#filesystem_area");
@@ -874,7 +874,7 @@ STUDIP.News = {
       function () {
         $("#news_item_" + id + "_content").slideDown(400);
         $("#news_item_" + id + " .printhead2 img")
-            .attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.gif");
+            .attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
         $("#news_item_" + id + " .printhead2")
             .removeClass("printhead2")
             .addClass("printhead3");
@@ -886,7 +886,7 @@ STUDIP.News = {
   close: function (id) {
     $("#news_item_" + id + "_content").slideUp(400);
     $("#news_item_" + id + " .printhead3 img")
-        .attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.gif");
+        .attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
     $("#news_item_" + id + " .printhead3")
         .removeClass("printhead3")
         .addClass("printhead2");

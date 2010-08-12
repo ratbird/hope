@@ -372,10 +372,10 @@ function createInfoxboxArray($mode){
         $infobox = array    (
             array ("kategorie"  => "Information:",
                 "eintrag" => array  (
-                        array    (  "icon" => "ausruf_small.gif",
+                        array    (  "icon" => 'icons/16/black/info.png',
                                 "text"  => _("Um eine Druckansicht Ihrer Veranstaltungen zu erstellen, wählen Sie bitte zunächst das entsprechende Semester aus und engen gegebenenfalls ihre Suchabfrage ein.")
                                 ),
-                        array    (  "icon" => "ausruf_small.gif",
+                        array    (  "icon" => 'icons/16/black/info.png',
                                 "text" => $GLOBALS['FDF_USAGE_HINT']
                         ))
             ),
@@ -385,10 +385,10 @@ function createInfoxboxArray($mode){
         $infobox = array(
             array  ("kategorie"  => "Information:",
                     "eintrag" =>    array (
-                            array ( "icon" => "ausruf_small.gif",
+                            array ( "icon" => 'icons/16/black/info.png',
                                     "text"  => _("Erstellen Sie ihre Veranstaltungsübersicht und bearbeiten Sie fehlende oder falsche Einträge.")
                                     ),
-                        array    (  "icon" => "ausruf_small.gif",
+                        array    (  "icon" => 'icons/16/black/info.png',
                                 "text" => $GLOBALS['FDF_USAGE_HINT']
                         )
                                     )
@@ -409,10 +409,10 @@ function createInfoxboxArray($mode){
         $infobox = array(
             array  ("kategorie"  => "Information:",
                     "eintrag" =>    array (
-                            array ( "icon" => "icon-posting.gif",
+                            array ( "icon" => 'icons/16/black/forum.png',
                                     "text"  => _("Über den/die Link(s) können Sie sich Ihre Veranstaltungsübersicht anzeigen lassen.")
                                     ),
-                        array    (  "icon" => "ausruf_small.gif",
+                        array    (  "icon" => 'icons/16/black/info.png',
                                 "text" => $GLOBALS['FDF_USAGE_HINT']
                         )
                         )

@@ -69,7 +69,7 @@ echo "\n<tr>\n";
 echo "<th width=\"2%\" nowrap colspan=\"2\" align=\"center\">";
 echo "&nbsp;<a href=\"gruppe.php\">";
 $tooltip = tooltip(_("Gruppe ändern"));
-echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/gruppe.gif\"{$tooltip}border=\"0\">";
+echo "<img src=\"" . Assets::image_path('icons/16/white./group.png') . "\" {$tooltip}>";
 echo "</a></th>\n";
 echo "<th width=\"64%\" align=\"left\">";
 echo "<a href=\"$PHP_SELF?cmd=bind&sortby=Name&order=$order\">" . _("Name") . "</a></th>\n";

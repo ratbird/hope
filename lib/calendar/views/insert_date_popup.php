@@ -390,13 +390,13 @@ if ($mcount > 3) {
             echo ($form_name ? "&form_name=$form_name" : '');
             echo ($submit ? '&submit=1' : '');
             echo '&mcount=',$mcount,'&element_switch=',$element_switch,'&c=',$c,'&atime=',$atime,$q,'">';
-            echo '<img border="0" src="',$GLOBALS['ASSETS_URL'],'images/calendar_previous_double_small.gif"';
+            echo '<img border="0" src="' . Assets::image_path('icons/16/darkblue/arr_eol-left.png') . '"';
             echo tooltip($mcount . ' ' . _('Monate zurück')),' border="0"></a>';
             echo '&nbsp;<a href="',$PHP_SELF,'?imt=',mktime(0,0,0,$atimex['mon'] - $mcounth,10,$atimex['year']);
             echo ($form_name ? "&form_name=$form_name" : '');
             echo ($submit ? '&submit=1' : '');
             echo '&mcount=',$mcount,'&element_switch=',$element_switch,'&c=',$c,'&atime=',$atime,$q,'">';
-            echo '<img border="0" src="',$GLOBALS['ASSETS_URL'],'images/calendar_previous_small.gif"';
+            echo '<img border="0" src="' . Assets::image_path('icons/16/darkblue/arr_2left.png') . '"';
             echo tooltip($mcounth .' ' . _('Monate zurück')),' border="0"></a></td>', "\n";
             if ($mcounth - 2 > 0) {
                 echo '<td class="blank" colspan="' , ($mcounth - 2) , '" align=center>';
@@ -408,13 +408,13 @@ if ($mcount > 3) {
             echo ($form_name ? "&form_name=$form_name" : '');
             echo ($submit ? '&submit=1' : '');
             echo '&element_switch=',$element_switch,'&c=',$c,'&atime=',$atime,$q,'">';
-            echo '<img border="0" src="',$GLOBALS['ASSETS_URL'],'images/calendar_next_small.gif"';
+            echo '<img border="0" src="' . Assets::image_path('icons/16/darkblue/arr_2right.png') . '"';
             echo tooltip($mcounth . ' ' . _('Monate vor')),' border="0"></a>&nbsp;', "\n";
             echo '<a href="',$PHP_SELF,'?imt=',mktime(0,0,0,$atimex['mon'] + $mcount,10,$atimex['year']);
             echo ($form_name ? "&form_name=$form_name" : '');
             echo ($submit ? '&submit=1' : '');
             echo '&mcount=',$mcount,'&element_switch=',$element_switch,'&c=',$c,'&atime=',$atime,$q,'">';
-            echo '<img border="0" src="',$GLOBALS['ASSETS_URL'],'images/calendar_next_double_small.gif"';
+            echo '<img border="0" src="' . Assets::image_path('icons/16/darkblue/arr_eol-right.png') . '"';
             echo tooltip($mcount .' ' . _('Monate vor')),' border="0"></a>&nbsp;</td>';
         } elseif ($zeiten) {
             echo '<td class="blank" colspan="',$mcounth,'" align="center">', $zeiten_buttons, "</td>\n";

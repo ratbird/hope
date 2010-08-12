@@ -114,8 +114,8 @@ class TreeView {
     function TreeView($tree_class_name,$args = null){
         $this->tree_class_name = $tree_class_name;
         $this->tree = TreeAbstract::GetInstance($tree_class_name,$args);
-        $this->pic_open = ($this->use_aging) ? "forumgraurunt2.gif" : "forumrotrunt.gif";
-        $this->pic_close = ($this->use_aging) ? "forumgrau2.gif" : "forumgrau.gif";
+        $this->pic_open = ($this->use_aging) ? "forumgraurunt2.png" : "forumrotrunt.gif";
+        $this->pic_close = ($this->use_aging) ? "forumgrau2.png" : "forumgrau.gif";
 
         URLHelper::bindLinkParam("open_ranges", $this->open_ranges);
         URLHelper::bindLinkParam("open_items", $this->open_items);

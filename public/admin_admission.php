@@ -802,7 +802,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
             </blockquote>
         </td>
         <td class="blank" align="right">
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/board2.jpg" border="0" alt="">
+             <?= Assets::img("infobox/board2.jpg") ?>
         </td>
     </tr>
     <tr>

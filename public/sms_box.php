@@ -553,11 +553,11 @@ $query_time = $query_time_sort;
         // assemble infobox
         $infobox = array($tmp_array_1,
             array("kategorie" => _("Information:"),"eintrag" => array(
-                array('icon' => "ausruf_small.gif", "text" => $show_message_count))),
+                array('icon' => 'icons/16/black/info.png', "text" => $show_message_count))),
             array("kategorie" => _("nach Zeit filtern:"),"eintrag" => array(
-                array('icon' => "suchen.gif", "text" => $time_by_links))),
+                array('icon' => 'icons/16/black/search.png', "text" => $time_by_links))),
             array("kategorie" => _("weitere Ansichten:"),"eintrag" => array(
-                array('icon' => "suchen.gif", "text" => $view_by_links))),
+                array('icon' => 'icons/16/black/search.png', "text" => $view_by_links))),
             array("kategorie" => _("Optionen:"),"eintrag" => array(
                 array("icon" => "link_intern.gif", "text" => sprintf("<a href=\"%s?cmd_show=openall\">"._("Alle Nachrichten aufklappen")."</a><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" height=\"2\"><br><a href=\"%s?cmd=mark_allsmsreaded\">"._("Alle als gelesen speichern")."</a><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" height=\"2\"><br>    <a href=\"%s?cmd=admin_folder&cmd_2=new\">"._("Neuen Ordner erstellen")."</a>", $PHP_SELF, $PHP_SELF, $PHP_SELF, $PHP_SELF))))
         );

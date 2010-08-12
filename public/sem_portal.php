@@ -277,20 +277,20 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
 
     //toplist link switcher
     if ($sem_portal["toplist"] != 4)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=4\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\">&nbsp;"._("neueste Veranstaltungen")."</a><br>";
+        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=4\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\"> "._("neueste Veranstaltungen")."</a><br>";
     if ($sem_portal["toplist"] != 1)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=1\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\">&nbsp;"._("Teilnehmeranzahl")."</a><br>";
+        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=1\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\"> "._("Teilnehmeranzahl")."</a><br>";
     if ($sem_portal["toplist"] != 2)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\">&nbsp;"._("die meisten Materialien")."</a><br>";
+        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\"> "._("die meisten Materialien")."</a><br>";
     if ($sem_portal["toplist"] != 3)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=3\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\">&nbsp;"._("aktivste Veranstaltungen")."</a><br>";
+        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=3\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\"> "._("aktivste Veranstaltungen")."</a><br>";
     // if ($sem_portal["bereich"] == "all")
     $infotxt = _("Sie können hier nach allen Veranstaltungen suchen, sich Informationen anzeigen lassen und Veranstaltungen abonnieren.");
 
     $infobox[] =
-        array  ("kategorie" => _("Aktionen:"),
+        array  ("kategorie" => _("Information:"),
             "eintrag" => array        (
-                array         (        'icon' => "suchen.gif",
+                array         (        'icon' => 'icons/16/black/search.png',
                     "text"  =>        $infotxt
                 )
         )
@@ -299,11 +299,12 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
     $infobox[] = ($sem_portal['bereich'] !="all") ?
                 array  ("kategorie"  => _("Information:"),
                         "eintrag" => array  (
-                                    array ( 'icon' => "ausruf_small.gif",
+                                    array ( 'icon' => 'icons/16/black/info.png',
                                             "text"  => sprintf (_("Gew&auml;hlte Kategorie: <b>%s</b>")."<br>"._("%s Veranstaltungen vorhanden"), $SEM_CLASS[$sem_portal["bereich"]]["name"], $anzahl_seminare_class)
                                                         . (($anzahl_seminare_class && $anzahl_seminare_class < 30) ? "<br>" . sprintf(_("Alle Veranstaltungen %sanzeigen%s"),"<a href=\"$PHP_SELF?do_show_class=1\">","</a>") : ""))
                                         )
                         ) : FALSE;
+    $infobox[] = $information_entry;
     $infobox[] =
         array  ("kategorie" => _("Topliste:"),
             "eintrag" => array  (

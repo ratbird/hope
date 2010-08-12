@@ -610,10 +610,10 @@ function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
     } else {
         $ret .= "<a href=\"$href$ptime&imt=";
         $ret .= mktime(0, 0, -1, $amonth->mon, 15, $amonth->year - 1) . "\">";
-        $ret .= "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_previous_double_small.gif\"";
+        $ret .= "<img src=\"" . Assets::image_path('icons/16/darkblue/arr_eol-left.png') . "\"";
         $ret .= tooltip(_("ein Jahr zurück")) . "></a>";
         $ret .= "<a href=\"$href$ptime&imt=" . ($amonth->getStart() - 1) . "\">";
-        $ret .= "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_previous_small.gif\"";
+        $ret .= "<img src=\"" . Assets::image_path('icons/16/darkblue/arr_2left.png') . "\"";
         $ret .= tooltip(_("einen Monat zurück")) . "></a>\n";
     }
     $ret .= "</td>\n";
@@ -629,11 +629,11 @@ function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
         $ret .= '&nbsp;';
     } else {
         $ret .= "<a href=\"$href$ptime&imt=" . ($amonth->getEnd() + 1) . "\">";
-        $ret .= "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_next_small.gif\"";
+        $ret .= "<img src=\"" . Assets::image_path('icons/16/darkblue/arr_2right.png') . "\"";
         $ret .= tooltip(_("einen Monat vor")) . "></a>";
         $ret .= "<a href=\"$href$ptime&imt=";
         $ret .= (mktime(0, 0, 1, $amonth->mon, 1, $amonth->year + 1)) . "\">";
-        $ret .= "<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/calendar_next_double_small.gif\"";
+        $ret .= "<img src=\"" . Assets::image_path('icons/16/darkblue/arr_eol-right.png') . "\"";
         $ret .= tooltip(_("ein Jahr vor")) . "></a>\n";
     }
     $ret .= "</td></tr>\n";
@@ -788,15 +788,15 @@ function info_icons (&$event) {
     if ($event->getType() == 'PUBLIC') {
         $ret .= "<div align=\"right\">";
         $div = TRUE;
-        $ret .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/calendar_public.gif\" ";
-        $ret .= "border=\"0\"" . tooltip($tooltip) . " valign>";
+        $ret .= "<img src=\"" . Assets::image_path('icons/16/darkblue/visibility-visible.png') . "\" ";
+        $ret .= tooltip($tooltip) . ">";
     }
 
     if ($event->getRepeat('rtype') != 'SINGLE') {
         if (!$div)
             $ret .= "<div align=\"right\">";
-        $ret .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/recur.gif\" ";
-        $ret .= "border=\"0\"" . tooltip($event->toStringRecurrence()) . ">";
+        $ret .= "<img src=\"" . Assets::image_path('icons/16/darkblue/refresh.png') . "\" ";
+        $ret .= tooltip($event->toStringRecurrence()) . ">";
     }
 
     $ret .= "</div>";

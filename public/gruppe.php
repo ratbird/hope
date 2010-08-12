@@ -54,36 +54,42 @@ $no_grouping_allowed = ($forced_grouping == 'not_grouped' || !in_array($forced_g
 
 if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("admin")) {
 ?>
-<table width="75%" border=0 cellpadding=0 cellspacing=0 align=center>
+<table class="index_box">
     <tr>
-        <td class="topic">&nbsp;&nbsp;<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/gruppe.gif" alt="Gruppe &auml;ndern" border=0>&nbsp;&nbsp;<b><?=_("Gruppenzuordnung")?></b></td>
+        <td class="topic">
+            <img src="<?= Assets::image_path('icons/16/white/group.png')?>" <?= tooltip(_("Gruppe ändern")) ?>>
+            <b><?=_("Gruppenzuordnung")?></b>
+        </td>
     </tr>
-    <tr><td class="blank">
-    <p style="margin:20px;">
-    <?=_("Hier k&ouml;nnen Sie Ihre Veranstaltungen in Farbgruppen einordnen und eine Gliederung nach Kategorien festlegen. <br>Die Darstellung unter <b>meine Veranstaltungen</b> wird entsprechend den Gruppen sortiert bzw. entsprechend der gew&auml;hlten Kategorie gegliedert.")?>
-
-    </p>
-    </td>
+    <tr>
+        <td class="blank">
+            <p style="margin:20px;">
+            <?=_("Hier k&ouml;nnen Sie Ihre Veranstaltungen in Farbgruppen einordnen und eine Gliederung nach Kategorien festlegen. <br>Die Darstellung unter <b>meine Veranstaltungen</b> wird entsprechend den Gruppen sortiert bzw. entsprechend der gew&auml;hlten Kategorie gegliedert.")?>
+            </p>
+        </td>
     </tr>
-    <tr><td class="blank">
-    <form method=post action="meine_seminare.php">
+    <tr>
+        <td class="blank">
+    <form method="post" action="meine_seminare.php">
     <table border="0" cellpadding="0" cellspacing="0" width="90%" align="center">
-    <tr><td class="blank" align="right">
-    <?=_("Kategorie zur Gliederung:")?>
-    &nbsp;
-    <select name="select_group_field">
-        <?php if ($no_grouping_allowed) { ?>
-        <option value="not_grouped" <?=($_my_sem_group_field == 'not_grouped' ? 'selected' : '')?>><?=_("keine Gliederung")?></option>
-        <?php } ?>
-        <option value="sem_number" <?=($_my_sem_group_field == 'sem_number' ? 'selected' : '')?>><?=_("Semester")?></option>
-        <option value="sem_tree_id" <?=($_my_sem_group_field == 'sem_tree_id' ? 'selected' : '')?>><?=_("Studienbereich")?></option>
-        <option value="sem_status" <?=($_my_sem_group_field == 'sem_status' ? 'selected' : '')?>><?=_("Typ")?></option>
-        <option value="gruppe" <?=($_my_sem_group_field == 'gruppe' ? 'selected' : '')?>><?=_("Farbgruppen")?></option>
-        <option value="dozent_id" <?=($_my_sem_group_field == 'dozent_id' ? 'selected' : '')?>><?=_("Dozenten")?></option>
-    </select>
-    </td><td class="blank" align="center" colspan="8">
-    <input type="image" <?=makeButton("absenden", "src") ?> border="0" value="absenden">
-    </td></tr>
+    <tr>
+        <td class="blank" align="right">
+        <?=_("Kategorie zur Gliederung:")?>
+        <select name="select_group_field">
+            <?php if ($no_grouping_allowed) { ?>
+            <option value="not_grouped" <?=($_my_sem_group_field == 'not_grouped' ? 'selected' : '')?>><?=_("keine Gliederung")?></option>
+            <?php } ?>
+            <option value="sem_number" <?=($_my_sem_group_field == 'sem_number' ? 'selected' : '')?>><?=_("Semester")?></option>
+            <option value="sem_tree_id" <?=($_my_sem_group_field == 'sem_tree_id' ? 'selected' : '')?>><?=_("Studienbereich")?></option>
+            <option value="sem_status" <?=($_my_sem_group_field == 'sem_status' ? 'selected' : '')?>><?=_("Typ")?></option>
+            <option value="gruppe" <?=($_my_sem_group_field == 'gruppe' ? 'selected' : '')?>><?=_("Farbgruppen")?></option>
+            <option value="dozent_id" <?=($_my_sem_group_field == 'dozent_id' ? 'selected' : '')?>><?=_("Dozenten")?></option>
+        </select>
+        </td>
+        <td class="blank" align="center" colspan="8">
+        <input type="image" <?=makeButton("absenden", "src") ?> border="0" value="absenden">
+        </td>
+    </tr>
     <tr><td class="blank" align="right" colspan="9">
     &nbsp;
     </td></tr>

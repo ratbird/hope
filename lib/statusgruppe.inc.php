@@ -836,7 +836,7 @@ function get_role_data_recursive($roles, $user_id, &$default_entries, $filter = 
       $entries = DataFieldEntry::getDataFieldEntries(array($user_id, $role_id));
 
         if ($role['user_there']) {
-            $out_zw .= '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="'.$GLOBALS['ASSETS_URL'].'/images/forumgrau2.gif">&nbsp;</td><td colspan="2"><b>'.$new_pred.'</b></td></tr>';
+            $out_zw .= '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="'.$GLOBALS['ASSETS_URL'].'/images/forumgrau2.png">&nbsp;</td><td colspan="2"><b>'.$new_pred.'</b></td></tr>';
             $zw = '<td %class%></td><td %class%><font size="-1">'.$new_pred.'</font></td>';
         }
 

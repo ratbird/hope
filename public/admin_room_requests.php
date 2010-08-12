@@ -44,7 +44,7 @@ if ($RESOURCES_ENABLE) {
     include_once ($RELATIVE_PATH_RESOURCES."/lib/RoomRequest.class.php");
 }
 
-// temporary link to this help page untill a separate page is available 
+// temporary link to this help page untill a separate page is available
 PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenAendernVonZeitenUndTerminen");
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
@@ -229,7 +229,7 @@ if ($perm->have_perm("admin"))
             </blockquote>
         </td>
         <td class="blank" align="right">
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/board2.jpg" border="0">
+            <?= Assets::img("infobox/board2.jpg") ?>
         </td>
     </tr>
     <tr>

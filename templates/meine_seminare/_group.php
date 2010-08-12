@@ -16,7 +16,7 @@ foreach ($groups as $group_id => $group_members) {
         </tr>
         <tr>
             <td class="blue_gradient" valign="bottom" nowrap height="20" colspan="2">
-                <?= Assets::img("blank.gif", array("size" => "1@20", "style" => "vertical-align: middle;")) ?>
+                <?= Assets::img("blank.gif", array("size" => "1@20")) ?>
                 <? if (isset($_my_sem_open[$group_id])) { ?>
 
                     <a class="tree" style="font-weight:bold;" name="<?= $group_id ?>"

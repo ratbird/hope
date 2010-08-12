@@ -171,18 +171,18 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
         $infobox = array    (
         array ("kategorie"  => _("Information:"),
             "eintrag" => array  (
-                            array ( "icon" => "ausruf_small.gif",
+                            array ( "icon" => 'icons/16/black/info.png',
                                     "text"  => _("Auf dieser Seite sehen Sie Ihre Benutzer-Accounts und Lernmodule in angebundenen Systemen.")
                                  )
                             )
             )
         );
         $infobox[1]["kategorie"] = _("Aktionen:");
-            $infobox[1]["eintrag"][] = array (  "icon" => "forumgrau.gif" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => 'icons/16/black/person.png' ,
                                         "text"  => _("Sie k&ouml;nnen f&uuml;r jedes externe System einen eigenen Benutzer-Account erstellen oder zuordnen.")
                                     );
 
-            $infobox[1]["eintrag"][] = array (  "icon" => "icon-lern.gif" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => 'icons/16/black/lernmodule.png' ,
                                         "text"  => sprintf(_("Wenn Sie &uuml;ber die entsprechenden Rechte verf&uuml;gen, k&ouml;nnen Sie eigene Lernmodule erstellen."))
                                     );
             print_infobox($infobox, "infobox/lernmodule.jpg");

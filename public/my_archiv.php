@@ -168,15 +168,15 @@ $anzahltext = sprintf(_("Es befinden sich zur Zeit %s Veranstaltungen im Archiv.
 $infobox = array    (
     array  ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-            array ( 'icon' => "ausruf_small.gif",
-                            "text"  => $anzahltext
+            array ( 'icon' => 'icons/16/black/info.png',
+                    "text" => $anzahltext
             )
         )
     ),
     array  ("kategorie" => _("Aktionen:"),
         "eintrag" => array  (
-            array    (  'icon' => "suche2.gif",
-                                "text"  => sprintf(_("Um Informationen &uuml;ber andere archivierte Veranstaltungen anzuzeigen nutzen Sie die <br>%sSuche im Archiv%s"), '<a href="'. URLHelper::getLink("archiv.php") .'">', '</a>')
+            array ( 'icon' => 'icons/16/black/search.png',
+                    "text" => sprintf(_("Um Informationen &uuml;ber andere archivierte Veranstaltungen anzuzeigen nutzen Sie die %sSuche im Archiv%s"), '<a href="'. URLHelper::getLink("archiv.php") .'">', '</a>')
             )
         )
     )

@@ -193,12 +193,8 @@ table.links1 {
     background-color: #FFFFFF;
 }
 
-table.toolbar {
-    background-image: url('../images/steelblau.jpg');
-}
-
-td.toolbar {
-    background-image: url('../images/steelblau.jpg');
+table.toolbar, td.toolbar, .steel, td.printhead {
+    background-image: url('../images/steelblau.png');
 }
 
 table.default {
@@ -432,9 +428,7 @@ table.collapsable tr.loaded-details td:first-child tr:first-child td:first-child
 .grey {
     background: none; background-color: #BBBBBB;
 }
-.steel {
-    background-image: url('../images/steelblau.jpg');
-}
+
 .steelgraudunkel {
     background-image: url('../images/steelgraudunkel.gif');
 }
@@ -495,16 +489,13 @@ p.info {
 }
 
 /* --- Styles fuer printhead und printcontent ------------------------------- */
-td.printhead {
-    background-image: url('../images/steelblau.jpg');
-}
 
 td.printhead2 {
-    background-image: url('../images/steelblau2.gif');
+    background-image: url('../images/steelblau2.png');
 }
 
 td.printhead3 {
-    background-image: url('../images/steelblau3.gif');
+    background-image: url('../images/steelblau3.png');
 }
 
 td.colorline {
@@ -741,6 +732,10 @@ dd {
 
 .middle {
     vertical-align: middle;
+}
+
+.text-top {
+    vertical-align: text-top;
 }
 
 /* --- index.php anpassungen an den boxen zur vereinheitlichung ------------- */

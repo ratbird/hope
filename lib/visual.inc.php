@@ -1171,18 +1171,18 @@ function printhead ($breite, $left, $link, $open, $new, $icon,
         $addon = '';
         if ($index) $addon =  " ($indikator: $index)";
         if ($open == "close") {
-            $print .= $GLOBALS['ASSETS_URL']."images/forumgrau2.gif\"" . tooltip(_("Objekt aufklappen") . $addon);
+            $print .= $GLOBALS['ASSETS_URL']."images/forumgrau2.png\"" . tooltip(_("Objekt aufklappen") . $addon);
         }
         else {
-            $print .= $GLOBALS['ASSETS_URL']."images/forumgraurunt2.gif\"" . tooltip(_("Objekt zuklappen") . $addon);
+            $print .= $GLOBALS['ASSETS_URL']."images/forumgraurunt2.png\"" . tooltip(_("Objekt zuklappen") . $addon);
         }
     }
     else {
         if ($open == "close") {
-            $print .= $GLOBALS['ASSETS_URL']."images/forumgrau2.gif\"";
+            $print .= $GLOBALS['ASSETS_URL']."images/forumgrau2.png\"";
         }
         else {
-            $print .= $GLOBALS['ASSETS_URL']."images/forumgraurunt2.gif\"";
+            $print .= $GLOBALS['ASSETS_URL']."images/forumgraurunt2.png\"";
         }
     }
 

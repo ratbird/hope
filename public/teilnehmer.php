@@ -99,14 +99,14 @@ PageLayout::setTitle($SessSemName["header_line"]. " - " . _("TeilnehmerInnen"));
 Navigation::activateItem('/course/members/view');
 
 //Subject for sms
-$stmt =DBManager::get()->query("SELECT VeranstaltungsNummer as sn FROM seminare WHERE Seminar_id = '".$SessSemName[1]."'"); 
-$result = $stmt->fetch(); 
-$subject = ( $result["sn"] == "" ) ? "[".$SessSemName['0']."]" : "[".$result['sn'].": ".$SessSemName['0']."]"; 
+$stmt =DBManager::get()->query("SELECT VeranstaltungsNummer as sn FROM seminare WHERE Seminar_id = '".$SessSemName[1]."'");
+$result = $stmt->fetch();
+$subject = ( $result["sn"] == "" ) ? "[".$SessSemName['0']."]" : "[".$result['sn'].": ".$SessSemName['0']."]";
 
 // Send message to multiple user
 if (isset($_REQUEST['do_send_msg_x']) && isset($_REQUEST['send_msg']) && Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'participants')){
         $post = NULL;
-        $sms_data = array();    
+        $sms_data = array();
         $send_msg = array_keys($_REQUEST['send_msg']);
         page_close(NULL);
 
@@ -854,14 +854,14 @@ $anzahl_teilnehmer_kontingent = $db->f('teilnehmer_kontingent');
             while ($db3->next_record()) {
                 if ($db3->f("showscore") == 1) {
                     if ($rechte) {
-                        printf ("<a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/showscore1.gif\" border=\"0\" %s>&nbsp; &nbsp; </a>", URLHelper::getLink('?cmd=hidescore'), tooltip(_("Aktivitätsanzeige eingeschaltet. Klicken zum Ausschalten.")));
+                        printf ("<a href=\"%s\"><img src=\"" . Assets::image_path('showscore1.png') . "\" %s> </a>", URLHelper::getLink('?cmd=hidescore'), tooltip(_("Aktivitätsanzeige eingeschaltet. Klicken zum Ausschalten.")));
                     } else {
                         echo "&nbsp; ";
                     }
                     $showscore = TRUE;
                 } else {
                     if ($rechte) {
-                        printf ("<a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/showscore0.gif\" border=\"0\" %s>&nbsp; &nbsp; </a>", URLHelper::getLink('?cmd=showscore'), tooltip(_("Aktivitätsanzeige ausgeschaltet. Klicken zum Einschalten.")));
+                        printf ("<a href=\"%s\"><img src=\"" . Assets::image_path('showscore0.png') . "\" %s> </a>", URLHelper::getLink('?cmd=showscore'), tooltip(_("Aktivitätsanzeige ausgeschaltet. Klicken zum Einschalten.")));
                     } else {
                         echo "&nbsp; ";
                     }
@@ -1205,7 +1205,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
     echo "<td class=\"$class\" align=\"center\"><font size=\"-1\">".$Dokumente."</font></td>";
 
     echo "<td class=\"$class\" align=\"center\">";
-    
+
     $username=$db->f("username");
     if ($db->f('visible') == 'yes' || $i_see_everybody) {
         if (get_config('CHAT_ENABLE')){
@@ -1213,7 +1213,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
         }
 
         printf ("<a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" %s border=\"0\"></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => "teilnehmer.php", "subject" => $subject, "rec_uname" => $db->f("username"))), tooltip(_("Nachricht an User verschicken")));
-    
+
     if (isset($multiaction[$key]['send'][0]) && $rechte)
     printf("<input type=\"checkbox\" name=\"send_msg[%s]\" value=\"1\"></td>", $username);
     }

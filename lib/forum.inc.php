@@ -971,7 +971,7 @@ function forum_print_toolbar ($id="") {
                 $print .= "<input type=hidden name=view value='".$forum["view"]."'>";
                 $print .= "<input type=image name=create value=\"abschicken\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\"".tooltip(_("Sortierung durchführen")).">";
             }
-            $print .= "&nbsp;&nbsp;</td><td class=\"blank\"><a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&toolbar=close&open=$open")."\" ".tooltip(_("Toolbar einfahren"))."><img src=\"".$GLOBALS['ASSETS_URL']."images/griff.jpg\" align=\"middle\" border=\"0\"></a>";
+            $print .= "&nbsp;&nbsp;</td><td class=\"blank\"><a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&toolbar=close&open=$open")."\" ".tooltip(_("Toolbar einfahren"))."><img src=\"".$GLOBALS['ASSETS_URL']."images/griff.png\" class=\"middle\"></a>";
 
             $print .= "</td><td class=\"blank\" width=\"99%\"></td></tr>";
             if ($forum["view"] != "tree" && $forum["view"] != "mixed")
@@ -980,7 +980,7 @@ function forum_print_toolbar ($id="") {
 
         } else {
             $print .= "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" class=\"blank\"><tr><td class=\"blank\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"22\" width=\"1\"></td>";
-            $print .= "<td class=\"blank\"><font size=\"-1\"><a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&toolbar=open&open=$open")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/griff2.jpg\" align=\"middle\" border=\"0\"".tooltip(_("Toolbar ausfahren"))."></a>";
+            $print .= "<td class=\"blank\"><font size=\"-1\"><a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&toolbar=open&open=$open")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/griff2.png\" class=\"middle\"".tooltip(_("Toolbar ausfahren"))."></a>";
             $print .= '</td></tr></table>';
         }
         $print .= "</td></tr></table>\n";

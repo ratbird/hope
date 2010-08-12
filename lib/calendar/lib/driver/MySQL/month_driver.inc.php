@@ -45,7 +45,7 @@ function month_restore (&$ttthis) {
                 $adate = $rep['ts'];
                 while($duration-- && $adate <= $end){
                     if($adate > $start)
-                        new_event($ttthis, $db, $adate);
+                        newMonthEvent($ttthis, $db, $adate);
                     
                     $adate += 86400;
                 }
@@ -62,7 +62,7 @@ function month_restore (&$ttthis) {
                         $duration_first = ($xdate - $start_ts) / 86400 + 1;
                         $md_date = $start_ts;
                         while($duration_first-- && $md_date <= $end && $md_date <= $expire){
-                            new_event($ttthis, $db, $md_date);
+                            newMonthEvent($ttthis, $db, $md_date);
                             $md_date += 86400;
                         }
                     }
@@ -73,7 +73,7 @@ function month_restore (&$ttthis) {
                 while($duration--){
                     $md_date = $adate;
                     while($md_date <= $db->f('expire') && $md_date <= $end){
-                        new_event($ttthis, $db, $md_date);
+                        newMonthEvent($ttthis, $db, $md_date);
                         $md_date += 86400 * $rep['linterval'];
                     }
                     $adate += 86400;
@@ -88,7 +88,7 @@ function month_restore (&$ttthis) {
                         $md_date = $adate;
                         $count = $duration;
                         while($count-- && $md_date <= $end && $md_date <= $expire){
-                            new_event($ttthis, $db, $md_date);
+                            newMonthEvent($ttthis, $db, $md_date);
                             $md_date += 86400;
                         }
                     }
@@ -101,7 +101,7 @@ function month_restore (&$ttthis) {
                             while($count--){
                                 if($wdate > $end || $wdate > $expire)
                                     break 2;
-                                new_event($ttthis, $db, $wdate);
+                                newMonthEvent($ttthis, $db, $wdate);
                                 $wdate += 86400;
                             }
                         }
@@ -125,7 +125,7 @@ function month_restore (&$ttthis) {
                         while($count--){
                             if($wdate > $end || $wdate > $db->f('expire'))
                                 break 3;
-                            new_event($ttthis, $db, $wdate);
+                            newMonthEvent($ttthis, $db, $wdate);
                             $wdate += 86400;
                         }
                     }
@@ -139,7 +139,7 @@ function month_restore (&$ttthis) {
                     $adate = mktime(12,0,0,date('n',$db->f('start')),date('j',$db->f('start')),date('Y',$db->f('start')),0);
                     $count = $duration;
                     while($count-- && $adate <= $end && $adate <= $db->f('expire')){
-                        new_event($ttthis, $db, $adate);
+                        newMonthEvent($ttthis, $db, $adate);
                         $adate += 86400;
                     }
                 }
@@ -201,7 +201,7 @@ function month_restore (&$ttthis) {
                     $xdate++;
                     $md_date = $ttthis->ts;
                     while($md_date < $xdate && $md_date <= $db->f('expire')){
-                        new_event($ttthis, $db, $md_date);
+                        newMonthEvent($ttthis, $db, $md_date);
                         $md_date += 86400;
                     }
                 }
@@ -213,7 +213,7 @@ function month_restore (&$ttthis) {
                         // verhindert die Anzeige an Tagen, die auﬂerhalb des Monats liegen (am 29. bis 31.)
                         if(!$rep['wdays'] ? date('j', $adate) == $rep['day'] : TRUE
                             && $md_date <= $db->f('expire') && $md_date <= $end)
-                                new_event($ttthis, $db, $md_date);
+                                newMonthEvent($ttthis, $db, $md_date);
                         $md_date += 86400;
                     }
                     $amonth += $rep['linterval'];
@@ -248,7 +248,7 @@ function month_restore (&$ttthis) {
                             $event_end = $end;
                         $count = $duration;
                         while($wdate < $event_end && $wdate < $expire + 1){
-                            new_event($ttthis, $db, $wdate);
+                            newMonthEvent($ttthis, $db, $wdate);
                             $wdate += 86400;
                         }
                     }
@@ -301,14 +301,14 @@ function month_restore (&$ttthis) {
                     $duration_first -= date('z', $ttthis->month->ts);
                     if($xdate + $duration * 86400 > $start){
                         while($duration_first-- > 0 && $md_date <= $end && $md_date <= $expire){
-                            new_event($ttthis, $db, $md_date);
+                            newMonthEvent($ttthis, $db, $md_date);
                             $md_date += 86400;
                         }
                     }
                 }
                 
                 while($duration-- && $adate <= $expire && $adate <= $end){
-                    new_event($ttthis, $db, $adate);
+                    newMonthEvent($ttthis, $db, $adate);
                     $adate += 86400;
                 }
                 break;
@@ -316,7 +316,7 @@ function month_restore (&$ttthis) {
     }
 }
 
-function new_event (&$ttthis, &$db, $date) {
+function newMonthEvent (&$ttthis, &$db, $date) {
     // if this date is in the exceptions return FALSE
     if (in_array($date, explode(',', $db->f('exceptions'))))
         return FALSE;

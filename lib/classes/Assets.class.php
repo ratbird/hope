@@ -283,9 +283,6 @@ class Assets {
 
       # consider asset host
       $source = Assets::url(ltrim($source, '/'));
-
-      # add current software version
-      $source .= "?".urlencode($GLOBALS['SOFTWARE_VERSION']);
     }
 
     return $source;

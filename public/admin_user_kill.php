@@ -123,7 +123,7 @@ if (count($_kill_user)) {
     echo chr(10).'<form name="admin_user_kill" method="POST" action="'.UrlHelper::getLink('', array('kill' => 1)).'">';
     echo chr(10).'<input type="hidden" name="studipticket" value="'.get_ticket().'">';
     echo chr(10).'<div style="text-align:right">';
-    echo chr(10).'<img '.makeButton('auswahlumkehr','src').' '.tooltip(_("Auswahl umkehren")) .' onClick="$(\'input[name^=selected_user]\').each(function(i){this.checked = !this.checked;});return false;">';
+    echo chr(10).'<img '.makeButton('auswahlumkehr','src').' '.tooltip(_("Auswahl umkehren")) .' onClick="$(\'input[name^=selected_user]\').attr(\'checked\', function (_, v) { return !v; })">';
     echo chr(10).'</div>';
     echo chr(10).'<table cellpadding="2" cellspacing="0" width="100%">';
     echo chr(10).'<tr>';

@@ -3,24 +3,20 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-
 /**
- * details.php
+ * details.php - Detail-Uebersicht und Statistik fuer ein Seminar
  *
- * Detail-Uebersicht und Statistik fuer ein Seminar
- *
- * PHP version 5
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * @author      Cornelis Kater <ckater@gwdg.de>
  * @author      Stefan Suchi <suchi@gmx.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @copyright   2000-2009 Stud.IP
- * @license     http://www.gnu.org/licenses/gpl.html GPL Licence 3
- * @package     studip_core
- * @access      public
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
-
-
 
 require '../lib/bootstrap.php';
 
@@ -40,8 +36,8 @@ require_once 'lib/classes/StudipStmInstance.class.php';
 require_once 'lib/classes/StudipAdmissionGroup.class.php';
 require_once 'lib/classes/StudipStudyArea.class.php';
 require_once 'lib/classes/UserDomain.php';
-require_once "lib/classes/CourseAvatar.class.php";
-require_once ('lib/deputies_functions.inc.php');
+require_once 'lib/classes/CourseAvatar.class.php';
+require_once 'lib/deputies_functions.inc.php';
 
 include 'lib/seminar_open.php'; // initialise Stud.IP-Session
 
@@ -219,9 +215,9 @@ else
             }
 
             if (($mein_status) || ($admission_status)) {
-                $picture_tmp = "haken.gif";
+                $picture_tmp = 'icons/16/green/accept.png';
             } else {
-                $picture_tmp = "x2.gif";
+                $picture_tmp = 'icons/16/red/decline.png';
             }
 
             if (($mein_status) || ($admission_status)) {
@@ -263,10 +259,10 @@ else
         array   ("kategorie" => _("Berechtigungen:"),
             "eintrag" => array  (
                 array   (   "icon" => "blank.gif",
-                    "text"  => _("Lesen:") . "&nbsp; ".get_ampel_read($mein_status, $admission_status, $db2->f("Lesezugriff"), FALSE, $db2->f("admission_starttime"), $db2->f("admission_endtime_sem"), $db2->f("admission_prelim"))
+                    "text"  => _("Lesen:") . " " . get_ampel_read($mein_status, $admission_status, $db2->f("Lesezugriff"), FALSE, $db2->f("admission_starttime"), $db2->f("admission_endtime_sem"), $db2->f("admission_prelim"))
                 ),
                 array   (   "icon" => "blank.gif",
-                    "text"  => _("Schreiben:") . "&nbsp; ".get_ampel_write($mein_status, $admission_status, $db2->f("Schreibzugriff"), FALSE, $db2->f("admission_starttime"), $db2->f("admission_endtime_sem"), $db2->f("admission_prelim"))
+                    "text"  => _("Schreiben:") . " " . get_ampel_write($mein_status, $admission_status, $db2->f("Schreibzugriff"), FALSE, $db2->f("admission_starttime"), $db2->f("admission_endtime_sem"), $db2->f("admission_prelim"))
                 )
             )
         )
@@ -275,31 +271,31 @@ else
 if ($abo_msg || $back_msg || $delete_msg || $info_msg || $plan_msg || $mein_status || $perm->have_studip_perm("admin",$sem_id) ) {
     $infobox[2]["kategorie"] = _("Aktionen:");
     if (($abo_msg) && (!$skip_verify)) {
-        $infobox[2]["eintrag"][] = array (  "icon" => "link_intern.gif" ,
+        $infobox[2]["eintrag"][] = array (  "icon" => 'icons/16/black/door-enter.png',
                                     "text"  => "<a href=\"".URLHelper::getLink("sem_verify.php?id=".$sem_id."&send_from_search=$send_from_search&send_from_search_page=$send_from_search_page")."\">".$abo_msg. "</a>"
                                 );
     } elseif ($sem_id != $SessSemName[1] && ($perm->have_studip_perm("admin",$sem_id) || ($mein_status && !$admission_status)) ) {
-        $infobox[2]["eintrag"][] = array (  "icon" => "link_intern.gif" ,
+        $infobox[2]["eintrag"][] = array (  "icon" => 'icons/16/black/door-enter.png',
                                     "text"  => "<a href=\"".URLHelper::getLink("seminar_main.php?auswahl=".$sem_id."")."\">"._("direkt zur Veranstaltung"). "</a>"
                                 );
     }
     if ($delete_msg) {
-        $infobox[2]["eintrag"][] = array (  "icon" => "link_intern.gif" ,
+        $infobox[2]["eintrag"][] = array (  "icon" => 'icons/16/black/door-leave.png',
                                     "text"  => "<a href=\"".URLHelper::getLink("meine_seminare.php?auswahl=".$sem_id."&cmd=suppose_to_kill")."\">".$delete_msg."</a>"
                                 );
     }
     if ($back_msg) {
-        $infobox[2]["eintrag"][] = array (  "icon" => "link_intern.gif" ,
+        $infobox[2]["eintrag"][] = array (  "icon" => 'icons/16/black/link-intern.png',
                                     "text"  => "<a href=\"".URLHelper::getLink($send_from_search_page)."\">".$back_msg. "</a>"
                                 );
     }
     if ($info_msg) {
-        $infobox[2]["eintrag"][] = array (  "icon" => "ausruf_small.gif" ,
+        $infobox[2]["eintrag"][] = array (  "icon" => 'icons/16/black/info.png',
                                     "text"  => $info_msg
                                 );
     }
     if ($plan_msg) {
-        $infobox[2]["eintrag"][] = array (  "icon" => "link_intern.gif" ,
+        $infobox[2]["eintrag"][] = array (  "icon" => 'icons/16/black/info.png',
                                     "text"  => $plan_msg
                                 );
     }
@@ -309,7 +305,7 @@ if ($abo_msg || $back_msg || $delete_msg || $info_msg || $plan_msg || $mein_stat
 
 if ($db2->f("admission_binding")) {
     $infobox[count($infobox)]["kategorie"] = _("Information:");
-    $infobox[count($infobox)-1]["eintrag"][] = array (  "icon" => "info.gif" ,
+    $infobox[count($infobox)-1]["eintrag"][] = array (  "icon" => 'icons/16/black/info.png',
                                 "text"  => _("Das Abonnement dieser Veranstaltung ist <u>bindend</u>!")
                             );
 }
@@ -543,13 +539,13 @@ echo $template_factory->render(
                 </td>
             </tr>
             <? }
-            if (get_config('STM_ENABLE')){
+            if (get_config('STM_ENABLE')) {
                 $stms = StudipStmInstance::GetStmInstancesBySeminar($sem_id);
                 if (count($stms)){
                     $stm_out = array();
-                    foreach($stms as $stm_id => $stm){
-                        if ($stm['complete']){
-                            $stm_out[] = '<a href="'.URLHelper::getLink('stm_details.php?stm_instance_id='.$stm_id).'"><img src="'.$GLOBALS['ASSETS_URL'].'images/link_intern.gif" border="0">&nbsp;&nbsp;' . ($stm['id_number'] ? htmlReady($stm['id_number']).': ' : '') . htmlReady($stm['title']) . '</a>';
+                    foreach( $stms as $stm_id => $stm) {
+                        if ($stm['complete']) {
+                            $stm_out[] = '<a href="'.URLHelper::getLink('stm_details.php?stm_instance_id='.$stm_id).'"><img src="'. Assets::image_path('icons/16/grey/link-intern.png') . ($stm['id_number'] ? htmlReady($stm['id_number']).': ' : '') . htmlReady($stm['title']) . '</a>';
                         }
                     }
                     ?>

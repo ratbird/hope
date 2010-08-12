@@ -992,7 +992,7 @@ class ShowToolsRequests {
                         $desc.=sprintf(_("Es existieren Überschneidungen zur gewünschten Belegungszeit.")."\n");
                 else
                     $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, $GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE']);
-                $html = "<img src=\"".$GLOBALS['ASSETS_URL']."images/ampel_rot.gif\" ".tooltip($desc, TRUE, TRUE).">";
+                $html = "<img src=\"" . Assets::image_path('icons/16/red/decline.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
                 $status = 2;
             } else {
                 $desc.=sprintf(_("Einige der gewünschten Belegungszeiten überschneiden sich mit eingetragenen Belegungen bzw. Sperrzeiten:\n"));
@@ -1004,11 +1004,11 @@ class ShowToolsRequests {
                             else
                                 $desc.=sprintf(_("%s von %s bis %s Uhr")."\n", date("d.m.Y", $val2["begin"]), date("H:i", $val2["begin"]), date("H:i", $val2["end"]));
                 }
-                $html = "<img src=\"".$GLOBALS['ASSETS_URL']."images/ampel_gelb.gif\" ".tooltip($desc, TRUE, TRUE).">";
+                $html = "<img src=\"" . Assets::image_path('icons/16/black/exclamation.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
                 $status = 1;
             }
         } else {
-            $html = "<img src=\"".$GLOBALS['ASSETS_URL']."images/ampel_gruen.gif\" ".tooltip(_("Es existieren keine Überschneidungen"), TRUE, TRUE).">";
+            $html = "<img src=\"" . Assets::image_path('icons/16/green/accept.png') . "\" ".tooltip(_("Es existieren keine Überschneidungen"), TRUE, TRUE).">";
             $status = 0;
         }
         return array("html"=>$html, "status"=>$status);
@@ -1032,7 +1032,7 @@ class ShowToolsRequests {
                         $desc.=sprintf(_("Es existieren Überschneidungen zur gewünschten Belegungszeit.")."\n");
                 else
                     $desc.=sprintf(_("Es existieren Überschneidungen oder Belegungssperren zu mehr als %s%% aller gewünschten Belegungszeiten.")."\n".$lock_desc, $GLOBALS['RESOURCES_ALLOW_SINGLE_ASSIGN_PERCENTAGE']);
-                $html = "<img src=\"".$GLOBALS['ASSETS_URL']."images/ampel_rot.gif\" ".tooltip($desc, TRUE, TRUE).">";
+                $html = "<img src=\"" . Assets::image_path('icons/16/red/decline.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
                 $status = 2;
             } else {
                 $desc.=sprintf(_("Einige der gewünschten Belegungszeiten überschneiden sich mit eingetragenen Belegungen bzw. Sperrzeiten:\n"));
@@ -1042,11 +1042,11 @@ class ShowToolsRequests {
                     else
                         $desc.=sprintf(_("%s von %s bis %s Uhr")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("H:i", $val["end"]));
                 }
-                $html = "<img src=\"".$GLOBALS['ASSETS_URL']."images/ampel_gelb.gif\" ".tooltip($desc, TRUE, TRUE).">";
+                $html = "<img src=\"" . Assets::image_path('icons/16/black/exclamation.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
                 $status = 1;
             }
         } else {
-            $html = "<img src=\"".$GLOBALS['ASSETS_URL']."images/ampel_gruen.gif\" ".tooltip(_("Es existieren keine Überschneidungen"), TRUE, TRUE).">";
+            $html = "<img src=\"" . Assets::image_path('icons/16/green/accept.png') . "\" ".tooltip(_("Es existieren keine Überschneidungen"), TRUE, TRUE).">";
             $status = 0;
         }
         return array("html"=>$html, "status"=>$status);

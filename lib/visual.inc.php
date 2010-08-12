@@ -12,13 +12,18 @@ include_once('lib/classes/searchtypes/SQLSearch.class.php');
 include_once('lib/classes/searchtypes/StandardSearch.class.php');
 include_once('lib/classes/searchtypes/PermissionSearch.class.php');
 
-/*****************************************************************************
-get_ampel_state is a helper function for get_ampel_write and get_ampel_read.
-It checks if the new parameters lead to a "lower" trafficlight. If so, the new
-level and the new text are set and returned.
-/*****************************************************************************/
-
-function get_ampel_state ($cur_ampel_state, $new_level, $new_text) {
+/**
+ * get_ampel_state is a helper function for get_ampel_write and get_ampel_read.
+ * It checks if the new parameters lead to a "lower" trafficlight. If so, the new
+ * level and the new text are set and returned.
+ *
+ * @param unknown_type $cur_ampel_state
+ * @param unknown_type $new_level
+ * @param unknown_type $new_text
+ * @return
+ */
+function get_ampel_state ($cur_ampel_state, $new_level, $new_text)
+{
     if ($cur_ampel_state["access"] < $new_level) {
         $cur_ampel_state["access"] = $new_level;
         $cur_ampel_state["text"] = $new_text;
@@ -26,13 +31,21 @@ function get_ampel_state ($cur_ampel_state, $new_level, $new_text) {
     return $cur_ampel_state;
 }
 
-/*****************************************************************************
-get_ampel_write, waehlt die geeignete Grafik in der Ampel Ansicht
-(fuer Berechtigungen) aus. Benoetigt den Status in der Veranstaltung
-und auf der Anmeldeliste und den read_level der Veranstaltung
-/*****************************************************************************/
-
-function get_ampel_write ($mein_status, $admission_status, $write_level, $print="TRUE", $start = -1, $ende = -1, $temporaly = 0) {
+/**
+ * get_ampel_write, waehlt die geeignete Grafik in der Ampel Ansicht
+ * (fuer Berechtigungen) aus. Benoetigt den Status in der Veranstaltung
+ * und auf der Anmeldeliste und den read_level der Veranstaltung
+ *
+ * @param unknown_type $mein_status
+ * @param unknown_type $admission_status
+ * @param unknown_type $write_level
+ * @param unknown_type $print
+ * @param unknown_type $start
+ * @param unknown_type $ende
+ * @param unknown_type $temporaly
+ */
+function get_ampel_write ($mein_status, $admission_status, $write_level, $print="TRUE", $start = -1, $ende = -1, $temporaly = 0)
+{
     global $perm;
 
     $ampel_state["access"] = 0;     // the current "lowest" access-level. If already yellow, it can't be green again, etc.
@@ -90,31 +103,39 @@ function get_ampel_write ($mein_status, $admission_status, $write_level, $print=
 
     switch ($ampel_state["access"]) {
         case 0 :
-            $color = "gruen";
+            $color = 'icons/16/green/accept';
             break;
         case 1 :
-            $color = "gelb";
+            $color = 'icons/16/black/exclamation.png';
             break;
         case 2 :
-            $color = "rot";
+            $color = 'icons/16/red/decline.png';
             break;
     }
 
-    $ampel_status="<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/ampel_$color.gif\" width=\"11\" height=\"16\">&nbsp;<font size=-1>". $ampel_state["text"] ."</font>";
+    $ampel_status = "<img border=\"0\" src=\"". Assets::image_path($color) . "\"> ". $ampel_state["text"];
 
-    if ($print==TRUE) {
+    if ($print == TRUE) {
         echo $ampel_status;
     }
     return $ampel_status;
 }
 
-/*****************************************************************************
-get_ampel_read, waehlt die geeignete Grafik in der Ampel Ansicht
-(fuer Berechtigungen) aus. Benoetigt den Status in der Veranstaltung
-und auf der Anmeldeliste und den read_level der Veranstaltung
-/*****************************************************************************/
-
-function get_ampel_read ($mein_status, $admission_status, $read_level, $print="TRUE", $start = -1, $ende = -1, $temporaly = 0) {
+/**
+ * get_ampel_read, waehlt die geeignete Grafik in der Ampel Ansicht
+ * (fuer Berechtigungen) aus. Benoetigt den Status in der Veranstaltung
+ * und auf der Anmeldeliste und den read_level der Veranstaltung
+ *
+ * @param unknown_type $mein_status
+ * @param unknown_type $admission_status
+ * @param unknown_type $read_level
+ * @param unknown_type $print
+ * @param unknown_type $start
+ * @param unknown_type $ende
+ * @param unknown_type $temporaly
+ */
+function get_ampel_read ($mein_status, $admission_status, $read_level, $print="TRUE", $start = -1, $ende = -1, $temporaly = 0)
+{
     global $perm;
 
     $ampel_state["access"] = 0;     // the current "lowest" access-level. If already yellow, it can't be green again, etc.
@@ -170,19 +191,19 @@ function get_ampel_read ($mein_status, $admission_status, $read_level, $print="T
 
     switch ($ampel_state["access"]) {
         case 0 :
-            $color = "gruen";
+            $color = 'icons/16/green/accept';
             break;
         case 1 :
-            $color = "gelb";
+            $color = 'icons/16/black/exclamation.png';
             break;
         case 2 :
-            $color = "rot";
+            $color = 'icons/16/red/decline.png';
             break;
     }
 
-    $ampel_status="<img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/ampel_$color.gif\" width=\"11\" height=\"16\">&nbsp;<font size=-1>". $ampel_state["text"] ."</font>";
+    $ampel_status = "<img src=\"". Assets::image_path($color) . "\"> ". $ampel_state["text"];
 
-    if ($print==TRUE) {
+    if ($print == TRUE) {
         echo $ampel_status;
     }
     return $ampel_status;

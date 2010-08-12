@@ -356,16 +356,16 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                 if ($_check_plugin && isset($_lit_data[$cid]['check_accession'][$_check_plugin])){
                     $check = $_lit_data[$cid]['check_accession'][$_check_plugin];
                     if ($check['found']){
-                        $ampel_pic = 'ampel_gruen.gif';
+                        $ampel_pic = 'icons/16/green/accept.png';
                         $tt = _("gefunden");
                     } else if (count($check['error'])){
-                        $ampel_pic = 'ampel_gelb.gif';
+                        $ampel_pic = 'icons/16/black/exclamation.png';
                         $tt = _("keine automatische Suche möglich");
                     } else {
-                        $ampel_pic = 'ampel_rot.gif';
+                        $ampel_pic = 'icons/16/red/decline.png';
                         $tt =_("nicht gefunden");
                     }
-                    $ampel = '<span ' . tooltip($tt,false) . '><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $ampel_pic . '" style="vertical-align:middle;">&nbsp(' . $_check_plugin . ')</span>&nbsp;&nbsp;';
+                    $ampel = '<span ' . tooltip($tt,false) . '><img class="middle" src="' . Assets::image_path($ampel_pic) . '" > (' . $_check_plugin . ')</span>&nbsp;&nbsp;';
                 }
                 $addon = $ampel . '<input type="checkbox" style="vertical-align:middle;" name="_check_list[]" value="' . $element->getValue('catalog_id') . '" '
                         . (is_array($_check_list) && in_array($element->getValue('catalog_id'), $_check_list) ? 'checked' : '') .' >';

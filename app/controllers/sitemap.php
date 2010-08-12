@@ -17,14 +17,12 @@ require_once 'app/controllers/authenticated_controller.php';
 
 /**
  * The sitemap is only visible for logged in users, because the sitemap depends
- * on the permissions of the user. It creates two new StudipNavigation Objects
- * to display the main navigation (toolbar) and the quick-links (subnavigation)
- *
+ * on the permissions of the user.
  */
 class SitemapController extends AuthenticatedController
 {
     /**
-     * The only main method, loads the navigation object and displays it.
+     * The only method, loads the navigation object and displays it.
      */
     public function index_action()
     {

@@ -1,6 +1,6 @@
 <?php
 /*
- * CourseNavigation.php - navigation for course page
+ * CourseNavigation.php - navigation for course / institute area
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -8,7 +8,6 @@
  * the License, or (at your option) any later version.
  *
  * @author      Elmar Ludwig
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  */
@@ -34,7 +33,24 @@ class CourseNavigation extends Navigation
      */
     public function __construct()
     {
-        parent::__construct(_('Veranstaltung'));
+        global $user, $perm;
+
+        // check if logged in
+        if (is_object($user) && $user->id != 'nobody') {
+            $coursetext = _('Veranstaltungen');
+            $courseinfo = _('Meine Veranstaltungen & Einrichtungen');
+            $courselink = 'meine_seminare.php';
+        } else {
+            $coursetext = _('Freie');
+            $courseinfo = _('Freie Veranstaltungen');
+            $courselink = 'freie.php';
+        }
+
+        parent::__construct($coursetext, $courselink);
+
+        if (is_object($user) && !$perm->have_perm('root')) {
+            $this->setImage('header/seminar.png', array('title' => $courseinfo));
+        }
     }
 
     /**
@@ -70,9 +86,7 @@ class CourseNavigation extends Navigation
         if ($sem_class == 'sem') {
             $navigation->addSubNavigation('info', new Navigation(_('Kurzinfo'), 'seminar_main.php'));
 
-            if ($studygroup_mode) {
-                //TODO $navigation->addSubNavigation('details', new Navigation(_('Details'), 'dispatch.php/course/studygroup/details/'.$SessSemName[1]));
-            } else {
+            if (!$studygroup_mode) {
                 $navigation->addSubNavigation('details', new Navigation(_('Details'), 'details.php'));
                 $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'print_seminar.php'));
             }
@@ -98,14 +112,14 @@ class CourseNavigation extends Navigation
 
         // admin (study group only)
         if ($studygroup_mode && $perm->have_studip_perm('dozent', $SessSemName[1])) {
-            $this->addSubNavigation('admin', new Navigation(_('Admin'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]));
+            $navigation = new Navigation(_('Admin'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]);
+            $this->addSubNavigation('admin', $navigation);
         } else if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$studygroup_mode) {
             $navigation = new Navigation(_('Verwaltung'));
 
             $navigation->addSubNavigation('main', new Navigation(_("Verwaltung"), 'dispatch.php/course/management'));
             //$navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'admin_seminare1.php?section=details'));
             $navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'dispatch.php/course/basicdata/view?section=details'));
-
 
             if ($sem_class == 'sem') {
                 $navigation->addSubNavigation('studycourse', new Navigation(_("Studienbereiche"),
@@ -158,7 +172,8 @@ class CourseNavigation extends Navigation
                 $navigation = new Navigation(_('TeilnehmerInnen'));
 
                 if ($studygroup_mode) {
-                    $this->addSubNavigation('members', new Navigation(_('TeilnehmerInnen'), 'dispatch.php/course/studygroup/members/'.$SessSemName[1]));
+                    $navigation->setURL('dispatch.php/course/studygroup/members/'.$SessSemName[1]);
+                    $this->addSubNavigation('members', $navigation);
                 } else if (!is_array($AUTO_INSERT_SEM) || !in_array($SessSemName[1], $AUTO_INSERT_SEM) || $perm->have_studip_perm('tutor', $SessSemName[1])) {
                     $navigation->addSubNavigation('view', new Navigation(_('TeilnehmerInnen'), 'teilnehmer.php'));
 

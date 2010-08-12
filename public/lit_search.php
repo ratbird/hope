@@ -39,7 +39,7 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 PageLayout::setHelpKeyword("Basis.Literatursuche");
 PageLayout::setTitle(_("Literatursuche"));
-Navigation::activateItem('/search/literatures');
+Navigation::activateItem('/search/literature');
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head

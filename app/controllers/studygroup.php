@@ -39,12 +39,10 @@ class StudygroupController extends AuthenticatedController {
         if($this->page < 1 || $this->page > ceil($anzahl/ELEMENTS_PER_PAGE)) $this->page = 1;
         $this->lower_bound = ($this->page - 1) * ELEMENTS_PER_PAGE;
 
-
         $groups = StudygroupModel::getAllGroups($this->sort, $this->lower_bound, ELEMENTS_PER_PAGE);
 
-
         PageLayout::setTitle(_('Studiengruppen anzeigen'));
-        Navigation::activateItem('/community/studygroups/all');
+        Navigation::activateItem('/community/studygroups/browse');
         $this->groups = $groups;
         $this->anzahl = $anzahl;
         $this->userid = $GLOBALS['auth']->auth['uid'];

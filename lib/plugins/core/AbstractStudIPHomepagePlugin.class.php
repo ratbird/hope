@@ -61,8 +61,8 @@ class AbstractStudIPHomepagePlugin extends AbstractStudIPLegacyPlugin implements
         $navigation->insertSubNavigation('self', $navigation_copy, $item_names[0]);
         $navigation->setTitle($this->getDisplayTitle());
 
-        if (Navigation::hasItem('/profil')) {
-            Navigation::addItem('/profil/' . $this->getPluginclassname(), $navigation);
+        if (Navigation::hasItem('/profile')) {
+            Navigation::addItem('/profile/' . $this->getPluginclassname(), $navigation);
         }
     }
 

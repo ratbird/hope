@@ -59,8 +59,8 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 PageLayout::setHelpKeyword("Basis.MyStudIPBenachrichtigung");
 PageLayout::setTitle(_("Benachrichtigung über neue Inhalte anpassen"));
-Navigation::activateItem('/links/account/notification');
-PageLayout::setTabNavigation('/links/account');
+Navigation::activateItem('/links/settings/notification');
+PageLayout::setTabNavigation('/links/settings');
 
 include('lib/include/html_head.inc.php'); // Output of html head
 include('lib/include/header.php');   // Output of Stud.IP head

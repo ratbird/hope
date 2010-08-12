@@ -11,12 +11,12 @@
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * @since       Stud.IP version 2.0
+ * @since       2.0
  */
 
 /**
- * This navigation includes all search pages depending on the activated modules
- *
+ * This navigation includes all search pages depending on the
+ * activated modules.
  */
 class SearchNavigation extends Navigation
 {
@@ -25,10 +25,9 @@ class SearchNavigation extends Navigation
      */
     public function __construct()
     {
-        parent::__construct(_('Suche'), 'sem_portal.php');
+        parent::__construct(_('Suche'));
 
-        $tip = _('Suche');
-        $this->setImage('header/search.png', array('title' => $tip));
+        $this->setImage('header/search.png', array('title' => _('Suche')));
     }
 
     /**
@@ -39,46 +38,51 @@ class SearchNavigation extends Navigation
     {
         parent::initSubNavigation();
 
-        // Overview (überflüssig)
-        // $this->addSubNavigation('all', new Navigation(_('Übersicht'), 'auswahl_suche.php'));
-
-        // Courses
+        // browse courses
         $navigation = new Navigation(_('Veranstaltungen'), 'sem_portal.php');
         $navigation->addSubNavigation('all', new Navigation(_('Alle'), 'sem_portal.php?reset_all=TRUE', array('view' => 'all')));
+
         foreach ($GLOBALS['SEM_CLASS'] as $key => $val) {
             if (!$val['studygroup_mode']) {
                 $navigation->addSubNavigation($key, new Navigation($val['name'], 'sem_portal.php?reset_all=TRUE&cmd=qs', array('view' => $key)));
             }
         }
 
-        //Studienmodule
+        // browse modules
         if (get_config('STM_ENABLE')) {
             $navigation->addSubNavigation('mod', new Navigation(_('Studienmodule'), 'sem_portal.php?reset_all=TRUE', array('view' => 'mod')));
         }
+
         $this->addSubNavigation('courses', $navigation);
 
-        // Archiv
-        $this->addSubNavigation('archiv', new Navigation(_('Archiv'), 'archiv.php'));
+        // search archive
+        $navigation = new Navigation(_('Archiv'), 'archiv.php');
+        $this->addSubNavigation('archive', $navigation);
 
-        // study groups
+        // search groups
         if (get_config('STUDYGROUPS_ENABLE')) {
-            $this->addSubNavigation('studygroups', new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/search'));
+            $navigation = new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/search');
+            $this->addSubNavigation('studygroups', $navigation);
         }
 
-        // Personen
-        $this->addSubNavigation('persons', new Navigation(_('Personen'), 'browse.php'));
+        // search users
+        $navigation = new Navigation(_('Personen'), 'browse.php');
+        $this->addSubNavigation('users', $navigation);
 
-        // Institutes
-        $this->addSubNavigation('institutes', new Navigation(_('Einrichtungen'), 'institut_browse.php'));
+        // browse institutes
+        $navigation = new Navigation(_('Einrichtungen'), 'institut_browse.php');
+        $this->addSubNavigation('institutes', $navigation);
 
-        // Literatur
+        // search literature
         if (get_config('LITERATURE_ENABLE')) {
-            $this->addSubNavigation('literatures', new Navigation(_('Literatur'), 'lit_search.php'));
+            $navigation = new Navigation(_('Literatur'), 'lit_search.php');
+            $this->addSubNavigation('literature', $navigation);
         }
 
-        // Resources
+        // browse resources
         if (get_config('RESOURCES_ENABLE')) {
-            $this->addSubNavigation('resources', new Navigation(_('Ressourcen'), 'resources.php', array('view' => 'search', 'view_mode' => 'search', 'new_search' => 'true')));
+            $navigation = new Navigation(_('Ressourcen'), 'resources.php', array('view' => 'search', 'view_mode' => 'search', 'new_search' => 'true'));
+            $this->addSubNavigation('resources', $navigation);
         }
     }
 }

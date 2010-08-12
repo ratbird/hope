@@ -41,8 +41,7 @@ if ($druck) {
 }
 PageLayout::setHelpKeyword("Basis.Archiv");
 PageLayout::setTitle(_("Archiv"));
-Navigation::activateItem('/search/archiv');
-
+Navigation::activateItem('/search/archive');
 
 // Start of Output
 include('lib/include/html_head.inc.php'); // Output of html head

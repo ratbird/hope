@@ -11,27 +11,23 @@
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ */
 
-//Imports
-require_once 'StartNavigation.php';
-require_once 'BrowseNavigation.php';
-require_once 'CourseNavigation.php';
-require_once 'MessagingNavigation.php';
-require_once 'CommunityNavigation.php';
-require_once 'ProfileNavigation.php';
-require_once 'CalendarNavigation.php';
-require_once 'SearchNavigation.php';
-require_once 'ToolsNavigation.php';
 require_once 'AdminNavigation.php';
-require_once 'AccountNavigation.php';
-require_once 'LoginNavigation.php';
+require_once 'BrowseNavigation.php';
+require_once 'CalendarNavigation.php';
+require_once 'CommunityNavigation.php';
+require_once 'CourseNavigation.php';
 require_once 'HelpNavigation.php';
+require_once 'LoginNavigation.php';
+require_once 'MessagingNavigation.php';
+require_once 'ProfileNavigation.php';
+require_once 'SearchNavigation.php';
+require_once 'StartNavigation.php';
+require_once 'ToolsNavigation.php';
 
 /**
- * This is the class for the main navigation (toolbar) at the top of the page
- * It's includes all subnavigation depending on the permissions of the user.
- *
+ * This is the class for the top navigation (toolbar) in the page header.
  */
 class StudipNavigation extends Navigation
 {
@@ -41,7 +37,7 @@ class StudipNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $user, $perm, $user;
+        global $perm, $user;
 
         parent::initSubNavigation();
 
@@ -49,7 +45,7 @@ class StudipNavigation extends Navigation
         $this->addSubNavigation('start', new StartNavigation());
 
         // if the user is not logged in, he will see the free courses, otherwise
-        // the my seminars page will be shown.
+        // the my courses page will be shown.
         if (is_object($user) && $user->id != 'nobody' || get_config('ENABLE_FREE_ACCESS')) {
             $this->addSubNavigation('browse', new BrowseNavigation());
         }
@@ -60,73 +56,91 @@ class StudipNavigation extends Navigation
             $this->addSubNavigation('course', new CourseNavigation());
         }
 
-        // the internal message system
         if (is_object($user) && $user->id != 'nobody') {
+            // internal message system
             $this->addSubNavigation('messaging', new MessagingNavigation());
-        }
 
-        // the new community page
-        if (is_object($user) && $user->id != 'nobody') {
+            // community page
             $this->addSubNavigation('community', new CommunityNavigation());
         }
 
-        // the user profile page. to see this navigation, the user has to be at
-        //least an "autor"
+        // user profile page
         if (is_object($user) && $perm->have_perm('autor')) {
-            $this->addSubNavigation('profil', new ProfileNavigation());
+            $this->addSubNavigation('profile', new ProfileNavigation());
         }
 
-        // the calendar, schedule page
         if (is_object($user) && $user->id != 'nobody') {
+            // calendar and schedule page
             $this->addSubNavigation('calendar', new CalendarNavigation());
-        }
 
-        // the new search page
-        if (is_object($user) && $user->id != 'nobody') {
+            // search page
             $this->addSubNavigation('search', new SearchNavigation());
         }
 
-        // the new tools page. to see this navigation, the user has to be at
-        //least an "autor"
+        // tools page
         if (is_object($user) && $perm->have_perm('autor')) {
             $this->addSubNavigation('tools', new ToolsNavigation());
         }
 
-        //the admin page is only for tutors or higher permissions
+        // admin page
         if (is_object($user) && $perm->have_perm('tutor')) {
             $this->addSubNavigation('admin', new AdminNavigation());
         }
 
-        // the resourcemanagment, if it is enabled. only available for admins or higher
+        // resource managment, if it is enabled
         if (is_object($user) && $perm->have_perm('admin') && get_config('RESOURCES_ENABLE')) {
             //TODO: suboptimal, es sollte eine ResourcesNavigation geben
-            $resources_nav = new Navigation(_('Ressourcen'), 'resources.php');
-            $resources_nav->setImage('header/resources.png', array('title' => _('Zur Ressourcenverwaltung')));
-            $this->addSubNavigation('resources', $resources_nav);
+            $navigation = new Navigation(_('Ressourcen'), 'resources.php');
+            $navigation->setImage('header/resources.png', array('title' => _('Zur Ressourcenverwaltung')));
+            $this->addSubNavigation('resources', $navigation);
         }
 
         // quick links
         $links = new Navigation('Links');
 
-        //settings
+        // settings
         if (is_object($user) && $user->id != 'nobody') {
-            $links->addSubNavigation('account', new AccountNavigation());
+            $navigation = new Navigation(_('Einstellungen'));
+            $navigation->addSubNavigation('general', new Navigation(_('Allgemeines'), 'edit_about.php', array('view' => 'allgemein')));
+            $navigation->addSubNavigation('privacy', new Navigation(_('Privatsphäre'), 'edit_about.php', array('view' => 'privacy')));
+            $navigation->addSubNavigation('messaging', new Navigation(_('Nachrichten'), 'edit_about.php', array('view' => 'Messaging')));
+            $navigation->addSubNavigation('forum', new Navigation(_('Forum'), 'edit_about.php', array('view' => 'Forum')));
+
+            if (get_config('CALENDAR_ENABLE')) {
+                $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'edit_about.php', array('view' => 'calendar')));
+            }
+
+            $navigation->addSubNavigation('rss', new Navigation(_('RSS-Feeds'), 'edit_about.php', array('view' => 'rss')));
+
+            if (!$perm->have_perm('admin')) {
+                if (get_config('MAIL_NOTIFICATION_ENABLE')) {
+                    $navigation->addSubNavigation('notification', new Navigation(_('Benachrichtigung'), 'sem_notification.php'));
+                }
+
+                $navigation->addSubNavigation('login', new Navigation(_('Login'), 'edit_about.php', array('view' => 'Login')));
+            }
+
+            if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && $perm->get_perm() == 'dozent') {
+                $navigation->addSubNavigation('deputies', new Navigation(_('Standardvertretung'), 'edit_about.php', array('view' => 'deputies')));
+            }
+
+            $links->addSubNavigation('settings', $navigation);
         }
 
-        //sitemap
+        // sitemap
         if (is_object($user) && $user->id != 'nobody') {
             $links->addSubNavigation('sitemap', new Navigation(_('Sitemap'), 'dispatch.php/sitemap/'));
         }
 
-        //imprint
+        // imprint
         $links->addSubNavigation('siteinfo', new Navigation(_('Impressum'), 'dispatch.php/siteinfo/show'));
 
-        //help
+        // help
         if (get_config('EXTERNAL_HELP')) {
             $links->addSubNavigation('help', new HelpNavigation(_('Hilfe')));
         }
 
-        //login or logout
+        // login / logout
         if (is_object($user) && $user->id != 'nobody') {
             $links->addSubNavigation('logout', new Navigation(_('Logout'), 'logout.php'));
         } else {
@@ -141,7 +155,6 @@ class StudipNavigation extends Navigation
             $links->addSubNavigation('login', new Navigation(_('Login'), 'index.php?again=yes'));
         }
 
-        //adding the quick links to the main navigation
         $this->addSubNavigation('links', $links);
 
         // login page

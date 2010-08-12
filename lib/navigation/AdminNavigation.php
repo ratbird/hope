@@ -11,7 +11,7 @@
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ */
 
 class AdminNavigation extends Navigation
 {
@@ -97,7 +97,6 @@ class AdminNavigation extends Navigation
 
         // institute administration
         $navigation = new Navigation(_('Einrichtungen'));
-        $navigation->setURL('admin_news.php?list=TRUE&view=news_inst');
 
         if ($perm->have_perm('admin')) {
             $navigation->setURL('admin_institut.php?list=TRUE&quit=1');

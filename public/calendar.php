@@ -11,8 +11,6 @@
  * the License, or (at your option) any later version.
  *
  * @author      Peter Thienel <pthienel@data.quest.de>
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @copyright   2002-2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     calendar

@@ -58,7 +58,8 @@ class Course_StudygroupController extends AuthenticatedController {
     /**
      * shows details of a studygroup
      *
-     * @param string id of a studygroup     *
+     * @param string id of a studygroup
+     *
      * @return void
      */
     function details_action($id)
@@ -66,7 +67,6 @@ class Course_StudygroupController extends AuthenticatedController {
         global $perm;
 
         PageLayout::setTitle(getHeaderLine($id) . ' - ' . _('Studiengruppendetails'));
-        //TODO Navigation::activateItem('/course/main/details');
 
         $stmt = DBManager::get()->prepare("SELECT * FROM admission_seminar_user"
                     . " WHERE user_id = ? AND seminar_id = ?");

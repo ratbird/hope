@@ -43,7 +43,7 @@ require_once ('lib/visual.inc.php');
 $cssSw = new cssClassSwitcher;                                  // Klasse für Zebra-Design
 $cssSw->enableHover();
 PageLayout::setTitle(_("Mein Adressbuch"));
-Navigation::activateItem('/community/address_book/' . Request::get('view', 'alpha'));
+Navigation::activateItem('/community/contacts/' . Request::get('view'));
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head

@@ -8,10 +8,9 @@
  * the License, or (at your option) any later version.
  *
  * @author      Elmar Ludwig
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ */
 
 class StartNavigation extends Navigation
 {
@@ -157,7 +156,7 @@ class StartNavigation extends Navigation
         }
 
         // global search
-        $navigation = new Navigation(_('Suchen'), 'auswahl_suche.php');
+        $navigation = new Navigation(_('Suchen'), 'sem_portal.php');
         $navigation->addSubNavigation('user', new Navigation(_('Personensuche'), 'browse.php'));
         $navigation->addSubNavigation('course', new Navigation(_('Veranstaltungssuche'), 'sem_portal.php'));
         $this->addSubNavigation('search', $navigation);

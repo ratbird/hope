@@ -12,7 +12,6 @@
  *
  * @author      Arne Schroeder <schroeder@data-quest.de>
  * @author      Suchi & Berg GmbH <info@data-quest.de>
- * @copyright   2005-2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
 */

@@ -11,8 +11,6 @@
  * the License, or (at your option) any later version.
  *
  * @author      Peter Thienel <pthienel@web.de>
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @copyright   2003-2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     calendar
@@ -219,13 +217,6 @@ switch ($cmd)
         PageLayout::setTitle(_("Mein persönlicher Terminkalender - Jahresansicht"));
         Navigation::activateItem('/calendar/calendar/year');
         $calendar_sess_control_data['view_prv'] = $cmd;
-        break;
-
-    case 'changeview':
-        PageLayout::setHelpKeyword("Basis.TerminkalenderEinstellungen");
-        PageLayout::setTitle(_("Einstellungen des Terminkalenders bearbeiten"));
-        Navigation::activateItem('/links/account/calendar');
-        PageLayout::setTabNavigation('/links/account');
         break;
 
     case 'export':
@@ -568,12 +559,6 @@ if ($cmd == 'bind')
 if ($cmd == 'export')
 {
     include($RELATIVE_PATH_CALENDAR . "/views/export.inc.php");
-}
-
-// Ansicht anpassen **********************************************************
-if ($cmd == 'changeview')
-{
-    include($RELATIVE_PATH_CALENDAR . "/calendar_settings.inc.php");
 }
 
 // Seite richtig schiessen

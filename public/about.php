@@ -254,14 +254,16 @@ $show_tabs = ($user_id == $user->id && $perm->have_perm("autor"))
              || $perm->have_perm("root")
              || $admin_darf;
 
+// FIXME these tabs should not have been added anyway
 if (!$show_tabs) {
-    foreach (Navigation::getItem('/profil') as $key=>$nav) {
+    foreach (Navigation::getItem('/profile') as $key => $nav) {
         if ($key != 'view') {
-            Navigation::removeItem('/profil/'.$key);
+            Navigation::removeItem('/profile/'.$key);
         }
     }
 }
-Navigation::activateItem('/profil/view');
+
+Navigation::activateItem('/profile/view');
 
 // TODO this can be removed when page output is moved to a template
 URLHelper::addLinkParam('username', $username);
@@ -278,10 +280,10 @@ function open_im() {
 }
 </script>
 
-<? if ($msg) : ?>
-    <?= parse_msg($msg) ?>
-<? endif ?>
 <table width="100%" border="0" cellpadding="1" cellspacing="0">
+    <? if ($msg) : ?>
+        <?= parse_msg($msg) ?>
+    <? endif ?>
     <tr>
         <td class="steel1" valign="top">
             <br>

@@ -51,13 +51,7 @@ $cssSw=new cssClassSwitcher;
 
 PageLayout::setHelpKeyword("Basis.InteraktionWhosOnline");
 PageLayout::setTitle(_("Wer ist online?"));
-
-if (Request::get('change_view')) {
-    Navigation::activateItem('/links/account/messaging');
-    PageLayout::setTabNavigation('/links/account');
-} else {
-    Navigation::activateItem('/community/who');
-}
+Navigation::activateItem('/community/online');
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -117,15 +111,6 @@ if ($sms_msg) {
     $sms_msg = '';
     $sess->unregister('sms_msg');
 }
-
-//brauchen wir das hier noch?
-/*if (($change_view) || ($delete_user) || ($view=="Messaging")) {
-    include 'lib/include/messagingSettings.inc.php';
-    change_messaging_view();
-    echo "</td></tr></table>";
-    page_close();
-    die;
-}*/
 
 
 ?>

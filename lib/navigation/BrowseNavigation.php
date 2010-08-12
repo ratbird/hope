@@ -8,10 +8,9 @@
  * the License, or (at your option) any later version.
  *
  * @author      Elmar Ludwig
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ */
 
 class BrowseNavigation extends Navigation
 {
@@ -22,18 +21,10 @@ class BrowseNavigation extends Navigation
     {
         global $user, $perm;
 
-        // logged in
+        // check if logged in
         if (is_object($user) && $user->id != 'nobody') {
             $coursetext = _('Veranstaltungen');
             $courseinfo = _('Meine Veranstaltungen & Einrichtungen');
-            // as admin or root
-            if ($perm->have_perm('root')) {
-                $courselink = 'adminarea_start.php';
-            // as user
-            }  else {
-                $courselink = 'meine_seminare.php';
-            }
-        // not logged in
         } else {
             $coursetext = _('Freie');
             $courseinfo = _('Freie Veranstaltungen');
@@ -42,7 +33,9 @@ class BrowseNavigation extends Navigation
 
         parent::__construct($coursetext, $courselink);
 
-        $this->setImage('header/seminar.png', array('title' => $courseinfo));
+        if (!$_SESSION['SessionSeminar']) {
+            $this->setImage('header/seminar.png', array('title' => $courseinfo));
+        }
     }
 
     /**
@@ -51,12 +44,12 @@ class BrowseNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $perm;
+        global $user, $perm;
 
         parent::initSubNavigation();
 
         // my courses
-        if (!$perm->have_perm('root')) {
+        if (is_object($user) && $user->id != 'nobody' && !$perm->have_perm('root')) {
             $navigation = new Navigation(_('Meine Veranstaltungen'));
             $navigation->addSubNavigation('list', new Navigation(_('Übersicht'), 'meine_seminare.php'));
 

@@ -75,16 +75,9 @@ $db = new DB_Seminar;
 $db6 = new DB_Seminar;
 $db7 = new DB_Seminar;
 
-if ($change_view) {
-    PageLayout::setHelpKeyword("Basis.MyStudIPMessaging");
-    Navigation::activateItem('/links/account/message');
-    PageLayout::setTabNavigation('/links/account');
-} else {
-    PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
-    Navigation::activateItem('/messaging/' . $sms_data['view']);
-}
-
 PageLayout::setTitle(_("Systeminterne Nachrichten"));
+PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
+Navigation::activateItem('/messaging/' . $sms_data['view']);
 
 // Output of html head and Stud.IP head
 include ('lib/include/html_head.inc.php');
@@ -93,15 +86,6 @@ include ('lib/include/header.php');
 // check the messaging settings, avoids severals errors
 check_messaging_default();
 
-
-if (($change_view) || ($delete_user) || ($view=="Messaging")) {
-    change_messaging_view();
-    echo "</td></tr></table>";
-    // Save data back to database.
-    include ('lib/include/html_end.inc.php');
-    page_close();
-    die;
-}
 
 if ($readingconfirmation) {
     $sms_data['tmpreadsnd'] = "";

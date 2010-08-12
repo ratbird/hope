@@ -3,7 +3,7 @@ $infobox = array();
 $infobox['picture'] = StudygroupAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMAL);
 
 $aktionen[] = array(
-    "text" => '<a href="'.$controller->url_for('course/studygroup/new').'">'._('Neue Studiengruppe gründen').'</a>',
+    "text" => '<a href="'.$controller->url_for('course/studygroup/new').'">'._('Neue Studiengruppe anlegen').'</a>',
     "icon" => "icon-cont.gif"
 );
 $aktionen[] = array(

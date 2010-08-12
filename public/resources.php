@@ -10,7 +10,6 @@
  *
  * @author      Cornelis Kater <ckater@gwdg.de>
  * @author      Suchi & Berg GmbH <info@data-quest.de>
- * @copyright   2002-2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     resources

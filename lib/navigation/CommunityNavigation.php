@@ -8,16 +8,13 @@
  * the License, or (at your option) any later version.
  *
  * @author      Elmar Ludwig
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * @since       Stud.IP version 2.0
  */
 
 /**
- * This is the new community page for interacting between the users. it includes
- * the contacts, studygroups, chat and highscores.
- *
+ * Navigation for the community page used for user interaction.
+ * It includes the contacts, study groups, chat and ranking.
  */
 class CommunityNavigation extends Navigation
 {
@@ -25,7 +22,7 @@ class CommunityNavigation extends Navigation
     {
         global $my_messaging_settings;
 
-        parent::__construct(_('Community'), 'online.php');
+        parent::__construct(_('Community'));
 
         $onlinetip = _('Nur Sie sind online');
         $active_time = $my_messaging_settings['active_time'];
@@ -55,15 +52,16 @@ class CommunityNavigation extends Navigation
         parent::initSubNavigation();
 
         // online list
-        $this->addSubNavigation('who', new Navigation(_('Wer ist online?'), 'online.php'));
+        $navigation = new Navigation(_('Wer ist online?'), 'online.php');
+        $this->addSubNavigation('online', $navigation);
 
-        // address book
+        // contacts
         $navigation = new Navigation(_('Kontakte'));
         $navigation->addSubNavigation('alpha', new Navigation(_('Meine Kontakte'), 'contact.php', array('view' => 'alpha')));
         $navigation->addSubNavigation('gruppen', new Navigation(_('Meine Gruppen'), 'contact.php', array('view' => 'gruppen')));
         $navigation->addSubNavigation('admin_groups', new Navigation(_('Gruppenverwaltung'), 'contact_statusgruppen.php'));
         $navigation->addSubNavigation('export', new Navigation(_('vCard-Export'), 'contact_export.php'));
-        $this->addSubNavigation('address_book', $navigation);
+        $this->addSubNavigation('contacts', $navigation);
 
         // chat
         if (get_config('CHAT_ENABLE')) {
@@ -74,12 +72,13 @@ class CommunityNavigation extends Navigation
         // study groups
         if (get_config('STUDYGROUPS_ENABLE')) {
             $navigation = new Navigation(_('Studiengruppen'));
-            $navigation->addSubNavigation('all', new Navigation(_('Alle Studiengruppen'), 'dispatch.php/studygroup/browse/1/founded_asc'));
+            $navigation->addSubNavigation('browse', new Navigation(_('Alle Studiengruppen'), 'dispatch.php/studygroup/browse'));
             $navigation->addSubNavigation('new', new Navigation(_('Neue Studiengruppe anlegen'), 'dispatch.php/course/studygroup/new'));
             $this->addSubNavigation('studygroups', $navigation);
         }
 
-        // stud.ip highscore
-        $this->addSubNavigation('score', new Navigation(_('Rangliste'), 'score.php'));
+        // ranking
+        $navigation = new Navigation(_('Rangliste'), 'score.php');
+        $this->addSubNavigation('score', $navigation);
     }
 }

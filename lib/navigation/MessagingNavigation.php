@@ -8,10 +8,9 @@
  * the License, or (at your option) any later version.
  *
  * @author      Elmar Ludwig
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ */
 
 require_once 'lib/sms_functions.inc.php';
 
@@ -24,7 +23,7 @@ class MessagingNavigation extends Navigation
     {
         global $user, $neux;
 
-        parent::__construct(_('Nachrichten'), 'sms_box.php?sms_inout=in');
+        parent::__construct(_('Nachrichten'));
 
         $neum = count_messages_from_user('in', ' AND message_user.readed = 0 ');
         $altm = count_messages_from_user('in', ' AND message_user.readed = 1 ');
@@ -57,7 +56,6 @@ class MessagingNavigation extends Navigation
     {
         parent::initSubNavigation();
 
-        // message box
         $this->addSubNavigation('in', new Navigation(_('Posteingang'), 'sms_box.php', array('sms_inout' => 'in')));
         $this->addSubNavigation('out', new Navigation(_('Gesendet'), 'sms_box.php', array('sms_inout' => 'out')));
         $this->addSubNavigation('write', new Navigation(_('Neue Nachricht schreiben'), 'sms_send.php?cmd=new'));

@@ -8,17 +8,15 @@
  * the License, or (at your option) any later version.
  *
  * @author      Elmar Ludwig
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ */
 
 require_once 'lib/edit_about.inc.php';
 
 /**
- * This is the new profile page instead of the old homepage
- * It includes all informations and functions for a user
- *
+ * Navigation for the user's profile page. This page includes all
+ * information about a user and allows editing this data.
  */
 class ProfileNavigation extends Navigation
 {
@@ -89,11 +87,13 @@ class ProfileNavigation extends Navigation
         $my_about = new about($username, NULL);
         $my_about->get_user_details();
 
-        // main profile
-        $this->addSubNavigation('view', new Navigation(_('Profil'), 'about.php'));
+        // profile
+        $navigation = new Navigation(_('Profil'), 'about.php');
+        $this->addSubNavigation('view', $navigation);
 
         // avatar
-        $this->addSubNavigation('avatar', new Navigation(_('Bild'), 'edit_about.php', array('view' => 'Bild')));
+        $navigation = new Navigation(_('Bild'), 'edit_about.php', array('view' => 'Bild'));
+        $this->addSubNavigation('avatar', $navigation);
 
         // profile data
         $navigation = new Navigation(_('Nutzerdaten'));
@@ -113,9 +113,11 @@ class ProfileNavigation extends Navigation
                 $navigation->addSubNavigation('inst_data', new Navigation(_('Einrichtungsdaten'), 'edit_about.php', array('view' => 'Karriere')));
             }
         }
+
         $this->addSubNavigation('edit', $navigation);
 
         // user defined sections
-        $this->addSubNavigation('sections', new Navigation(_('Kategorien'), 'edit_about.php', array('view' => 'Sonstiges')));
+        $navigation = new Navigation(_('Kategorien'), 'edit_about.php', array('view' => 'Sonstiges'));
+        $this->addSubNavigation('sections', $navigation);
     }
 }

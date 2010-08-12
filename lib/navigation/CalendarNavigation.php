@@ -8,10 +8,9 @@
  * the License, or (at your option) any later version.
  *
  * @author      Elmar Ludwig
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
-*/
+ */
 
 class CalendarNavigation extends Navigation
 {
@@ -59,7 +58,8 @@ class CalendarNavigation extends Navigation
 
         // schedule
         if (!$perm->have_perm('admin')) {
-            $this->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule'));
+            $navigation = new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule');
+            $this->addSubNavigation('schedule', $navigation);
         }
     }
 }

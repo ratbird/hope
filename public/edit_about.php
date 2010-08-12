@@ -434,27 +434,27 @@ switch($view) {
     case "Bild":
         PageLayout::setHelpKeyword("Basis.HomepageBild");
         PageLayout::setTitle(_("Hochladen eines persönlichen Bildes"));
-        Navigation::activateItem('/profil/avatar');
+        Navigation::activateItem('/profile/avatar');
         break;
     case "Daten":
         PageLayout::setHelpKeyword("Basis.HomepagePersönlicheDaten");
         PageLayout::setTitle(_("Benutzerkonto bearbeiten"));
-        Navigation::activateItem('/profil/edit/profile');
+        Navigation::activateItem('/profile/edit/profile');
         break;
     case "Karriere":
         PageLayout::setHelpKeyword("Basis.HomepageUniversitäreDaten");
         PageLayout::setTitle(_("Einrichtungsdaten bearbeiten"));
-        Navigation::activateItem('/profil/edit/inst_data');
+        Navigation::activateItem('/profile/edit/inst_data');
         break;
     case 'Studium':
         PageLayout::setHelpKeyword("Basis.HomepageUniversitäreDaten");
         PageLayout::setTitle(_("Studiengang bearbeiten"));
-        Navigation::activateItem('/profil/edit/study_data');
+        Navigation::activateItem('/profile/edit/study_data');
         break;
     case 'userdomains':
         PageLayout::setHelpKeyword("Basis.HomepageNutzerdomänen");
         PageLayout::setTitle(_("Nutzerdomänen bearbeiten"));
-        Navigation::activateItem('/profil/edit/user_domains');
+        Navigation::activateItem('/profile/edit/user_domains');
         break;
     case "Lebenslauf":
         PageLayout::setHelpKeyword("Basis.HomepageLebenslauf");
@@ -462,30 +462,30 @@ switch($view) {
             PageLayout::setTitle(_("Lebenslauf, Arbeitsschwerpunkte und Publikationen bearbeiten"));
         else
             PageLayout::setTitle(_("Lebenslauf bearbeiten"));
-        Navigation::activateItem('/profil/edit/private');
+        Navigation::activateItem('/profile/edit/private');
         break;
     case "Sonstiges":
         PageLayout::setHelpKeyword("Basis.HomepageSonstiges");
         PageLayout::setTitle(_("Eigene Kategorien bearbeiten"));
-        Navigation::activateItem('/profil/sections');
+        Navigation::activateItem('/profile/sections');
         break;
     case "Login":
         PageLayout::setHelpKeyword("Basis.MyStudIPAutoLogin");
         PageLayout::setTitle(_("Auto-Login einrichten"));
-        Navigation::activateItem('/links/account/login');
-        PageLayout::setTabNavigation('/links/account');
+        Navigation::activateItem('/links/settings/login');
+        PageLayout::setTabNavigation('/links/settings');
         break;
     case "Forum":
         PageLayout::setHelpKeyword("Basis.MyStudIPForum");
         PageLayout::setTitle(_("Einstellungen des Forums anpassen"));
-        Navigation::activateItem('/links/account/forum');
-        PageLayout::setTabNavigation('/links/account');
+        Navigation::activateItem('/links/settings/forum');
+        PageLayout::setTabNavigation('/links/settings');
         break;
     case "calendar":
         PageLayout::setHelpKeyword("Basis.MyStudIPTerminkalender");
         PageLayout::setTitle(_("Einstellungen des Terminkalenders anpassen"));
-        Navigation::activateItem('/links/account/calendar');
-        PageLayout::setTabNavigation('/links/account');
+        Navigation::activateItem('/links/settings/calendar');
+        PageLayout::setTabNavigation('/links/settings');
         break;
     case "Tools":
         PageLayout::setHelpKeyword("Basis.HomepageTools");
@@ -494,34 +494,35 @@ switch($view) {
     case "Messaging":
         PageLayout::setHelpKeyword("Basis.MyStudIPMessaging");
         PageLayout::setTitle(_("Einstellungen des Nachrichtensystems anpassen"));
-        Navigation::activateItem('/links/account/messaging');
-        PageLayout::setTabNavigation('/links/account');
+        Navigation::activateItem('/links/settings/messaging');
+        PageLayout::setTabNavigation('/links/settings');
         break;
     case "rss":
         PageLayout::setHelpKeyword("Basis.MyStudIPRSS");
         PageLayout::setTitle(_("Einstellungen der RSS-Anzeige anpassen"));
-        Navigation::activateItem('/links/account/rss');
-        PageLayout::setTabNavigation('/links/account');
+        Navigation::activateItem('/links/settings/rss');
+        PageLayout::setTabNavigation('/links/settings');
         break;
     case "allgemein":
         PageLayout::setTitle(_("Allgemeine Einstellungen anpassen"));
-        Navigation::activateItem('/links/account/general');
-        PageLayout::setTabNavigation('/links/account');
+        Navigation::activateItem('/links/settings/general');
+        PageLayout::setTabNavigation('/links/settings');
         break;
     case "privacy":
         PageLayout::setHelpKeyword("Basis.MyStudIPPrivacy");
         PageLayout::setTitle(_("Privatsphäre"));
         if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE') && $my_about->auth_user["user_id"] != $user->id) {
-            Navigation::activateItem('/profil/privacy');
+            Navigation::activateItem('/profile/privacy');
         } else {
-            Navigation::activateItem('/links/account/privacy');
-            PageLayout::setTabNavigation('/links/account');
+            Navigation::activateItem('/links/settings/privacy');
+            PageLayout::setTabNavigation('/links/settings');
         }
         break;
     case "deputies":
         PageLayout::setHelpKeyword("Basis.MyStudIPDeputies");
         PageLayout::setTitle(_("Standardvertretung"));
-        Navigation::activateItem('/links/account/deputies');
+        Navigation::activateItem('/links/settings/deputies');
+        PageLayout::setTabNavigation('/links/settings');
         break;
     default:
         PageLayout::setHelpKeyword("Basis.MyStudIP");

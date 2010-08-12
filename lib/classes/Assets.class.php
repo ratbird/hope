@@ -208,8 +208,7 @@ class Assets {
    *   Assets::javascript_path('ajax') => /javascripts/ajax.js
    */
   static function javascript_path($source) {
-    return Assets::compute_public_path($source, 'javascripts', 'js')
-        ."?".urlencode($GLOBALS['SOFTWARE_VERSION']);
+    return Assets::compute_public_path($source, 'javascripts', 'js');
   }
 
 
@@ -258,8 +257,7 @@ class Assets {
    *   stylesheet_path('style') => /stylesheets/style.css
    */
   static function stylesheet_path($source) {
-    return Assets::compute_public_path($source, 'stylesheets', 'css')
-        ."?".urlencode($GLOBALS['SOFTWARE_VERSION']);
+    return Assets::compute_public_path($source, 'stylesheets', 'css');
   }
 
 
@@ -285,6 +283,9 @@ class Assets {
 
       # consider asset host
       $source = Assets::url(ltrim($source, '/'));
+
+      # add current software version
+      $source .= "?".urlencode($GLOBALS['SOFTWARE_VERSION']);
     }
 
     return $source;

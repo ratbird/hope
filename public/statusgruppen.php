@@ -307,14 +307,14 @@ if ($delete_id)
     $infobox = array    (
         array  ("kategorie"  => _("Information:"),
             "eintrag" => array  (
-                array ( "icon" => "ausruf_small.gif",
+                array ( "icon" => "icons/16/black/info.png",
                                             "text"  => $Memberstatus
                 )
             )
         )
     );
     if($self_assign_exclusive){
-        $infobox[0]["eintrag"][] = array ("icon" => "ausruf_small.gif" ,
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/info.png" ,
                                     "text"  => _("In dieser Veranstaltung können Sie sich nur in eine der möglichen Gruppen eintragen.")
                                     );
 
@@ -349,17 +349,17 @@ if ($delete_id)
                                 );
         }
         if ($link_mail_all) {
-            $infobox[1]["eintrag"][] = array (  "icon" => "ausruf_small.gif" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
                                     "text"  => sprintf(_("Um eine E-Mail an alle TeilnehmerInnen der Veranstaltung zu versenden, klicken Sie %shier%s."), $link_mail_all, "</a>")
                                 );
         }
         if ($link_mail_waiting) {
-            $infobox[1]["eintrag"][] = array (  "icon" => "ausruf_small.gif" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
                                     "text"  => sprintf(_("Um eine E-Mail an alle TeilnehmerInnen auf der Warteliste zu versenden, klicken Sie %shier%s."), $link_mail_waiting, "</a>")
                                 );
         }
         if ($link_mail_prelim) {
-            $infobox[1]["eintrag"][] = array (  "icon" => "ausruf_small.gif" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
                                     "text"  => sprintf(_("Um eine E-Mail an alle vorläufig akzeptierten TeilnehmerInnen zu versenden, klicken Sie %shier%s."), $link_mail_prelim, "</a>")
                                 );
         }

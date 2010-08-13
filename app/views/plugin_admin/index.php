@@ -115,10 +115,10 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                'icon' => 'ausruf_small.gif',
+                "icon" => "icons/16/black/info.png",
                 'text' => _('Per Default-Aktivierung lassen sich Standard-Plugins automatisch in allen Veranstaltungen einer Einrichtung aktivieren.')
             ), array(
-                'icon' => 'ausruf_small.gif',
+                "icon" => "icons/16/black/info.png",
                 'text' => _('Position gibt die Reihenfolge des Plugins in der Navigation an. Erlaubt sind nur Werte größer als 0.')
             )
         )

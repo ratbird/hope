@@ -81,7 +81,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
     checkObjectModule("elearning_interface");
 
     $infobox = array    (array ("kategorie"  => _("Information:"),
-            "eintrag" => array  (array (    "icon" => "ausruf_small.gif",
+            "eintrag" => array  (array (    "icon" => "icons/16/black/info.png",
                                     "text"  => sprintf(_("Auf dieser Seite k&ouml;nnen Sie nach Lernmodulen im angebundenen ILIAS-System suchen.")) ) ) ) );
 
     $infobox[1]["kategorie"] = _("Aktionen:");

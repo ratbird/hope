@@ -6,7 +6,7 @@
     </TD>
     <? } ?>
     <TD width="90%" nowrap class="<?=$tpl['class']?>"<?=!$tpl['space'] ? ' colspan="3"' : ' colspan="2"'?>>
-        <INPUT type="image" src="<?=$GLOBALS['ASSETS_URL']?>images/move_right.gif" border="0" align="abstop" alt="<?=_("Ausgewählte Themen diesem Termin zuordnen")?>" title="<?=_("Ausgewählte Themen diesem Termin zuordnen")?>" name="<?=$tpl['sd_id']?><?=$tpl['cycle_id'] ? '_'.$tpl['cycle_id'] : ''?>">
+        <INPUT type="image" src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/yellow/arr_2right.png" border="0" align="abstop" alt="<?=_("Ausgewählte Themen diesem Termin zuordnen")?>" title="<?=_("Ausgewählte Themen diesem Termin zuordnen")?>" name="<?=$tpl['sd_id']?><?=$tpl['cycle_id'] ? '_'.$tpl['cycle_id'] : ''?>">
         <FONT size="-1" color="#000000">
             <?=$tpl['date']?>,
             <?=$tpl['room']?>

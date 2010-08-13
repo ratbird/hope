@@ -107,10 +107,10 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                'icon' => 'ausruf_small.gif',
+                "icon" => "icons/16/black/info.png",
                 'text' => _('Hier werden alle Benutzer und Plugins angezeigt, die der ausgewählten Rolle zugewiesen sind.')
             ), array(
-                'icon' => 'ausruf_small.gif',
+                "icon" => "icons/16/black/info.png",
                 'text' => _('Klicken Sie auf den Namen eines Nutzers oder Plugins, um die Rollenzuweisungen dieses Nutzers oder Plugins zu ändern.')
             )
         )

@@ -52,11 +52,11 @@ printf("&nbsp;<a href=\"%s?cmd=showmonth&atime=%s\">",
     $PHP_SELF, mktime(12, 0, 0, $amonth->getMonth(),
             date('j', $amonth->getStart()), date('Y', $amonth->getStart()) - 1));
 $tooltip = tooltip(_("ein Jahr zurück"));
-echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_eol_left.png')."\"$tooltip></a>";
+echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_eol_left.png')."\"$tooltip></a>";
 printf("&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"%s?cmd=showmonth&atime=%s\">",
     $PHP_SELF, $amonth->getStart() - 1);
 $tooltip = tooltip(_("einen Monat zurück"));
-echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2left.png')."\"$tooltip></a>&nbsp;</td>\n";
+echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2left.png')."\"$tooltip></a>&nbsp;</td>\n";
 printf("<td colspan=%s class=\"calhead\">\n", $mod == "nokw" ? "5" : "6");
 echo "<font size=\"+2\">";
 echo htmlentities(strftime("%B ", $amonth->getStart()), ENT_QUOTES) . $amonth->getYear();
@@ -64,12 +64,12 @@ echo "</font></td>\n";
 printf("<td align=\"center\">&nbsp;<a href=\"%s?cmd=showmonth&atime=%s\">",
     $PHP_SELF, $amonth->getEnd() + 1);
 $tooltip = tooltip(_("einen Monat vor"));
-echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2right.png')."\"$tooltip></a>";
+echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2right.png')."\"$tooltip></a>";
 printf("&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"%s?cmd=showmonth&atime=%s\">",
     $PHP_SELF, mktime(12, 0, 0, $amonth->getMonth(),
             date('j', $amonth->getStart()), date('Y', $amonth->getEnd()) + 1));
 $tooltip = tooltip(_("ein Jahr vor"));
-echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_eol-right.png')."\"$tooltip></a></td>\n";
+echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_eol-right.png')."\"$tooltip></a></td>\n";
 echo "</tr>\n<tr>\n";
 
 $weekdays_german = array("MO", "DI", "MI", "DO", "FR", "SA", "SO");
@@ -250,7 +250,7 @@ function month_up_down (&$month_obj, $day_timestamp, $step, $max_events)
             $tooltip = tooltip($tooltip);
             echo "<a href=\"$PHP_SELF?cmd=showmonth&atime=$day_timestamp&step=";
             echo ($step + $max_events) . "\">";
-            echo "<img src=\"".Assets::image_path('icons/16/darkblue/arr_1down.png')."\" ";
+            echo "<img src=\"".Assets::image_path('icons/16/blue/arr_1down.png')."\" ";
             echo $tooltip . " border=\"0\"></a>\n";
             $spacer = FALSE;
         }
@@ -262,7 +262,7 @@ function month_up_down (&$month_obj, $day_timestamp, $step, $max_events)
             $tooltip = tooltip($tooltip);
             echo "<a href=\"$PHP_SELF?cmd=showmonth&atime=$day_timestamp&step=";
             echo ($step - $max_events) . "\">";
-            echo "<img src=\"".Assets::image_path('icons/16/darkblue/arr_1up.png')."\" ";
+            echo "<img src=\"".Assets::image_path('icons/16/blue/arr_1up.png')."\" ";
             echo $tooltip . " border=\"0\"></a>\n";
             $month_obj->setPointer($atime, $step);
         }
@@ -274,7 +274,7 @@ function month_up_down (&$month_obj, $day_timestamp, $step, $max_events)
                 $month_obj->numberOfEvents($day_timestamp) - $max_events);
         $tooltip = tooltip($tooltip);
         echo "<a href=\"$PHP_SELF?cmd=showmonth&atime=$day_timestamp&step=";
-        echo ($max_events) . "\"><img src=\"".Assets::image_path('icons/16/darkblue/arr_1down.png')."\" ";
+        echo ($max_events) . "\"><img src=\"".Assets::image_path('icons/16/blue/arr_1down.png')."\" ";
         echo $tooltip . " border=\"0\"></a>\n";
     }
 }

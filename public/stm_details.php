@@ -133,7 +133,7 @@ if (!$stm_obj->isNew()){
             <? // Infobox
 
 
-    $picture_tmp = "ausruf_small.gif";
+    $picture_tmp = "icons/16/black/info.png";
 
     $enter = false;
     /*if (!$perm->have_perm('dozent')){
@@ -178,7 +178,7 @@ if (1 || $back_msg || $info_msg || $enter) {
                                 );
     }
     if ($info_msg) {
-        $infobox[0]["eintrag"][] = array (  "icon" => "ausruf_small.gif" ,
+        $infobox[0]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
                                     "text"  => $info_msg
                                 );
     }

@@ -84,7 +84,7 @@ switch ($view) {
         $infobox = array(
                     array  ("kategorie"  => _("Information:"),
                             "eintrag" => array (
-                                array ("icon" => "ausruf_small.gif",
+                                array ("icon" => "icons/16/black/info.png",
                                     "text"  => ($resources_data["list_recurse"]) ? _("Untergeordnete Ebenen werden ausgegeben.") : _("Untergeordnete Ebenen werden <u>nicht</u> ausgegeben.")))),
                     array  ("kategorie" => _("Aktionen:"),
                             "eintrag" => array (
@@ -252,7 +252,7 @@ switch ($view) {
         $infobox = array(
                     array  ("kategorie"  => _("Information:"),
                             "eintrag" => array (
-                                array ("icon" => "ausruf_small.gif",
+                                array ("icon" => "icons/16/black/info.png",
                                     "text"  => ($resources_data["skip_closed_requests"]) ? _("Bereits bearbeitete Anfragen werden <u>nicht</u> angezeigt.") : _("Bereits bearbeitete Anfragen werden weiterhin angezeigt.")))),
                     array  ("kategorie" => _("Aktionen:"),
                             "eintrag" => array (
@@ -278,7 +278,7 @@ switch ($view) {
         $infobox = array(
                     array  ("kategorie"  => _("Information:"),
                             "eintrag" => array (
-                                array ("icon" => "ausruf_small.gif",
+                                array ("icon" => "icons/16/black/info.png",
                                     "text"  => ($perm->have_studip_perm("autor", $SessSemName[1]) ?
                                                 (($SessSemName["class"] == "sem") ? _("Als Teilnehmer der Veranstaltung haben Sie die Möglichkeit, diese Ressourcen frei zu belegen oder den Belegungsplan einzusehen.") :
                                                                                 _("Als Mitarbeiter der Einrichtung haben Sie die Möglichkeit, diese Ressourcen frei zu belegen oder den Belegungsplan einzusehen.")) :

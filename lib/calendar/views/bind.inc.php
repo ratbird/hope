@@ -134,7 +134,7 @@ echo "\n</td>\n";
 echo "<td class=\"blank\" width=\"270\" valign=\"top\" align=\"right\">\n";
 $info_content = array(array("kategorie" => _("Information:"),
                                             "eintrag" => array(
-                                                array('icon' => "ausruf_small.gif",
+                                                array("icon" => "icons/16/black/info.png",
                                                             "text" => _("Termine aus den ausgew&auml;hlten Veranstaltungen werden in Ihren Terminkalender &uuml;bernommen.")
                                             ))));
 

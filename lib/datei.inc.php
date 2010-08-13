@@ -1323,7 +1323,7 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     }
 
     if ($move == $datei["dokument_id"])
-        $content.="<br>" . sprintf(_("Diese Datei wurde zum Verschieben / Kopieren markiert. Bitte w&auml;hlen Sie das Einf&uuml;gen-Symbol %s, um diese Datei in den gew&uuml;nschten Ordner zu verschieben / kopieren. Wenn Sie diese Datei in eine andere Veranstaltung verschieben / kopieren möchten, wählen Sie die gewünschte Veranstaltung oben auf der Seite aus (sofern Sie Dozent oder Tutor in einer anderen Veranstaltung sind)."), "<img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=0 " . tooltip(_("Klicken Sie dieses Symbol, um diese Datei in einen anderen Ordner einzufügen")) . ">");
+        $content.="<br>" . sprintf(_("Diese Datei wurde zum Verschieben / Kopieren markiert. Bitte w&auml;hlen Sie das Einf&uuml;gen-Symbol %s, um diese Datei in den gew&uuml;nschten Ordner zu verschieben / kopieren. Wenn Sie diese Datei in eine andere Veranstaltung verschieben / kopieren möchten, wählen Sie die gewünschte Veranstaltung oben auf der Seite aus (sofern Sie Dozent oder Tutor in einer anderen Veranstaltung sind)."), "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\" border=0 " . tooltip(_("Klicken Sie dieses Symbol, um diese Datei in einen anderen Ordner einzufügen")) . ">");
 
     $content.= "\n";
 
@@ -1360,7 +1360,7 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     //Dokument_Body ausgeben; dies ist auch der Bereich, der über Ajax abgerufen werden wird
     print "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0>";
     if ($datei["protected"]) {
-        $content .= "<br><br><hr><table><tr><td><img src=\"".$GLOBALS['ASSETS_URL']."images/ausruf.gif\" valign=\"baseline\"></td><td><font size=\"2\"><b>"
+        $content .= "<br><br><hr><table><tr><td><img src=\"".$GLOBALS['ASSETS_URL']."images/ausruf.gif\" valign=\"bottom\"></td><td><font size=\"2\"><b>"
                             ._("Diese Datei ist urheberrechtlich geschützt.");
                             $content .= "<br>";
                             if(check_protected_download($datei["dokument_id"])){
@@ -1392,7 +1392,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     print "<div style=\"display:none\" id=\"getmd5_fi".$folder_id."_$countfiles\">".$datei['dokument_id']."</div>";
     print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\"><tr>";
     if (!$all) {
-        print "<td width=5px nowrap=\"nowrap\" valign=\"baseline\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/datatree_2.gif\"></td>";
+        print "<td width=5px nowrap=\"nowrap\" valign=\"bottom\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/datatree_2.gif\"></td>";
     }
 
     //Farbe des Pfeils bestimmen:
@@ -1410,14 +1410,14 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
 
     if ($open[$datei["dokument_id"]]) {
         print "<td id=\"file_".$datei["dokument_id"]."_arrow_td\" nowrap valign=\"top\"" .
-            "align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead3\" valign=\"baseline\">&nbsp<a href=\"";
+            "align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead3\" valign=\"bottom\">&nbsp<a href=\"";
         print URLHelper::getLink("?close=".$datei["dokument_id"]."#anker");
         print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefilebody('".
             $datei["dokument_id"]."', '".$SessionSeminar."')\"><img id=\"file_".
             $datei["dokument_id"]."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL'].
             "images/forumgraurunt2.png\"".tooltip(_("Objekt zuklappen"))." border=0></a></td>";
     } else {
-        print "<td id=\"file_".$datei["dokument_id"]."_arrow_td\" nowrap valign=\"top\" align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead2\" valign=\"baseline\">&nbsp<a href=\"";
+        print "<td id=\"file_".$datei["dokument_id"]."_arrow_td\" nowrap valign=\"top\" align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead2\" valign=\"bottom\">&nbsp<a href=\"";
         print URLHelper::getLink("?open=".$datei["dokument_id"]."#anker");
         print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefilebody('".
             $datei["dokument_id"]."', '".$SessionSeminar."')\"><img id=\"file_".
@@ -1443,7 +1443,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
                 "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" border=0 title=\"Datei verschieben\"></a></span>";
     }
 
-    print "<td class=\"printhead\" valign=\"baseline\">";
+    print "<td class=\"printhead\" valign=\"bottom\">";
     if ($change == $datei["dokument_id"]) {
         print "<span id=\"file_".$datei["dokument_id"]."_header\" style=\"font-weight: bold\"><a href=\"".URLHelper::getLink("?close=".$datei["dokument_id"]."#anker")."\" class=\"tree\"";
         print ' name="anker"></a>';
@@ -1486,7 +1486,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
 
 
     //So und jetzt die rechtsbündigen Sachen:
-    print "</a></td><td align=\"right\" class=\"printhead\" valign=\"baseline\">";
+    print "</a></td><td align=\"right\" class=\"printhead\" valign=\"bottom\">";
     if ($datei['username']) {
         print "<a href=\"".URLHelper::getLink('about.php?username='.$datei['username'])."\">".htmlReady($datei['fullname'])."</a> ";
     } else {
@@ -1551,12 +1551,12 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
 
     $content='';
     if ($super_folder){
-        $content .=  '<img  src="'.$GLOBALS['ASSETS_URL'].'images/lock.gif">&nbsp;'
+        $content .=  '<img  src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/black/lock-locked.png">&nbsp;'
             . sprintf(_("Dieser Ordner ist nicht zugänglich, da der übergeordnete Ordner \"%s\" nicht lesbar oder nicht sichtbar ist!"), htmlReady($folder_tree->getValue($super_folder,'name')))
             . '<hr>';
     }
     if ($folder_tree->isExerciseFolder($folder_id)){
-        $content .=  '<img  src="'.$GLOBALS['ASSETS_URL'].'images/eigene2.gif">&nbsp;'
+        $content .=  '<img  src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/black/edit.png">&nbsp;'
                 . _("Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden.")
                 . (!$rechte ? _("Sie selbst haben folgende Dateien in diesen Ordner eingestellt:")
                 . '<br><b>' . htmlReady(join('; ', get_user_documents_in_folder($folder_id, $GLOBALS['user']->id))).'</b>' : '')
@@ -1615,7 +1615,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
     else
         $content .= _("Keine Beschreibung vorhanden");
     if ($move == $result["folder_id"]){
-        $content .="<br>" . sprintf(_("Dieser Ordner wurde zum Verschieben / Kopieren markiert. Bitte w&auml;hlen Sie das Einf&uuml;gen-Symbol %s, um ihn in den gew&uuml;nschten Ordner zu verschieben."), "<img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=0 " . tooltip(_("Klicken Sie auf dieses Symbol, um diesen Ordner in einen anderen Ordner einzufügen.")) . ">");
+        $content .="<br>" . sprintf(_("Dieser Ordner wurde zum Verschieben / Kopieren markiert. Bitte w&auml;hlen Sie das Einf&uuml;gen-Symbol %s, um ihn in den gew&uuml;nschten Ordner zu verschieben."), "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\" border=0 " . tooltip(_("Klicken Sie auf dieses Symbol, um diesen Ordner in einen anderen Ordner einzufügen.")) . ">");
         if($rechte) $content .= _("Wenn Sie den Ordner in eine andere Veranstaltung verschieben / kopieren möchten, wählen Sie die gewünschte Veranstaltung oben auf der Seite aus.");
     }
     if ($upload == $folder_id) {
@@ -1765,10 +1765,10 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 
     //Abzweigung, wenn Ordner ein Unterordner ist
     if ($depth > 3) //Warum gerade 3, soll jeder selbst rausfinden
-        print "<td width=5px nowrap=\"nowrap\" valign=\"baseline\"><img src=\"".$GLOBALS['ASSETS_URL']."images/datatree_2.gif\"></td>";
+        print "<td width=5px nowrap=\"nowrap\" valign=\"bottom\"><img src=\"".$GLOBALS['ASSETS_URL']."images/datatree_2.gif\"></td>";
     else
         print "<td></td>";
-    print "<td valign=\"baseline\">";
+    print "<td valign=\"bottom\">";
 
     //Farbe des Pfeils bestimmen:
     $chdate = (($result["chdate"]) ? $result["chdate"] : $result["mkdate"]);
@@ -1813,14 +1813,14 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     //Jetzt folgt der Link zum Aufklappen
     if ($open[$folder_id]) {
         //print "<td width=1px class=\"printhead\">&nbsp;</td>";
-        print "<td id=\"folder_".$folder_id."_arrow_td\" nowrap valign=\"top\" align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead3\" valign=\"baseline\">";
+        print "<td id=\"folder_".$folder_id."_arrow_td\" nowrap valign=\"top\" align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead3\" valign=\"bottom\">";
         print "&nbsp;<a href=\"".URLHelper::getLink("?close=".$folder_id."#anker");
         print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><img id=\"folder_".$folder_id."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL']."images/forumgraurunt2.png\"".tooltip(_("Objekt zuklappen"))." border=0></a>";
         print "</td>";
         //print ($javascriptok ? "<td class=\"printhead\"><a href=\"Javascript: changefolderbody('".$folder_id."')\" class=\"tree\"><span id=\"folder_".$folder_id."_header\" style=\"font-weight: bold\">" :
-        print "<td class=\"printhead\" valign=\"baseline\">";
+        print "<td class=\"printhead\" valign=\"bottom\">";
         if ($move && ($move != $folder_id) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
-                print "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=0></a>";
+                print "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\" border=0></a>&nbsp;";
         }
         if (($anchor_id == $folder_id) || (($move == $folder_id))) {
             print "<a name=\"anker\"></a>";
@@ -1829,13 +1829,13 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         print "<a href=\"".URLHelper::getLink("?close=".$folder_id."#anker")."\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><span id=\"folder_".$folder_id."_header\" style=\"font-weight: bold\">";
     } else {
         //print "<td width=1px class=\"printhead\">&nbsp;</td>";
-        print "<td id=\"folder_".$folder_id."_arrow_td\" nowrap valign=\"top\" align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead2\" valign=\"baseline\">";
+        print "<td id=\"folder_".$folder_id."_arrow_td\" nowrap valign=\"top\" align=\"left\" width=1% bgcolor=\"$timecolor\" class=\"printhead2\" valign=\"bottom\">";
         print "&nbsp;<a href=\"";
         print URLHelper::getLink("?open=".$folder_id."#anker");
         print "\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><img id=\"folder_".$folder_id."_arrow_img\" src=\"".$GLOBALS['ASSETS_URL']."images/forumgrau2.png\"".tooltip(_("Objekt aufklappen"))." border=0></a></td>";
-        print "<td class=\"printhead\" valign=\"baseline\">";
+        print "<td class=\"printhead\" valign=\"bottom\">";
                 if ($move && ($move != $folder_id) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
-                print "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=0></a>";
+                print "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\" border=0></a>&nbsp";
         }
         print $bewegeflaeche_anfasser;
         print "<a href=\"".URLHelper::getLink("?open=".$folder_id."#anker")."\" class=\"tree\" " .
@@ -1846,22 +1846,22 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     $document_count = doc_count($folder_id);
 
     if ($document_count > 0)
-        print "<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder.gif\" border=0>";
+        print "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-full.png\" border=0>&nbsp;";
     else
-        print "<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder2.gif\" border=0>";
+        print "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-full.png\" border=0>&nbsp;";
 
     // Schloss, wenn Folder gelockt
     if ($folder_tree->isLockedFolder($folder_id))
-        print "<img ".tooltip(_("Dieser Ordner ist gesperrt."))." src=\"".$GLOBALS['ASSETS_URL']."images/closelock.gif\">";
+        print "<img ".tooltip(_("Dieser Ordner ist gesperrt."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/lock-locked.png\">";
     //Wenn verdeckt durch gesperrten übergeordneten Ordner
     else if ( ($super_folder = $folder_tree->getNextSuperFolder($folder_id)) )
-        print "<img ".tooltip(_("Dieser Ordner ist nicht zugänglich, da ein übergeordneter Ordner gesperrt ist."))." src=\"".$GLOBALS['ASSETS_URL']."images/lock.gif\">";
+        print "<img ".tooltip(_("Dieser Ordner ist nicht zugänglich, da ein übergeordneter Ordner gesperrt ist."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/lock-locked.png\">";
     // Wenn es ein Hausaufgabenordner ist
     if ($folder_tree->isExerciseFolder($folder_id))
-        print "<img ".tooltip(_("Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden."))." src=\"".$GLOBALS['ASSETS_URL']."images/eigene2.gif\" width=\"18\" HEIGTH=\"18\">";
+        print "<img ".tooltip(_("Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/edit.png\" width=\"18\" HEIGTH=\"18\">";
     //Pfeile, wenn Datei bewegt werden soll
     if ($move && ($folder_id != $move) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
-        print "</a><span class=\"move_arrows\"><a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=0></a></span>";
+        print "</a><span class=\"move_arrows\"><a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\" border=0></a></span>";
         if ($open[$folder_id])
             print "<a href=\"".URLHelper::getLink("?close=".$folder_id."#anker")."\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\">";
         else
@@ -1926,7 +1926,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     print "</a></td>";
 
     //So und jetzt die rechtsbündigen Sachen:
-    print "</td><td align=right class=\"printhead\" valign=\"baseline\">";
+    print "</td><td align=right class=\"printhead\" valign=\"bottom\">";
 
     print "<a href=\"".URLHelper::getLink('about.php?username='.$result['username'])."\">".htmlReady($result['fullname'])."</a> ";
 
@@ -1967,25 +1967,24 @@ function GetFileIcon($ext, $with_img_tag = false){
     switch ($extension){
         case 'rtf':
         case 'doc':
-            $icon = 'rtf-icon.gif';
         case 'docx':
-      $icon = 'rtf-icon.gif';
-    break;
+            $icon = 'icons/16/blue/file-text.png';
+        break;
         case 'xls':
         case 'csv':
-            $icon = 'xls-icon.gif';
+            $icon = 'icons/16/blue/file-xls.png';
         break;
         case 'zip':
         case 'tgz':
         case 'gz':
         case 'bz2':
-            $icon = 'zip-icon.gif';
+            $icon = 'icons/16/blue/file-archiv.png';
         break;
         case 'ppt':
-            $icon = 'ppt-icon.gif';
+            $icon = 'icons/16/blue/file-presentation.png';
         break;
         case 'pdf':
-            $icon = 'pdf-icon.gif';
+            $icon = 'icons/16/blue/file-pdf.png';
         break;
         case 'gif':
         case 'jpg':
@@ -1993,10 +1992,10 @@ function GetFileIcon($ext, $with_img_tag = false){
         case 'jpeg':
         case 'png':
         case 'bmp':
-            $icon = 'pic-icon.gif';
+            $icon = 'icons/16/blue/file-image.png';
         break;
         default:
-            $icon = 'txt-icon.gif';
+            $icon = 'icons/16/blue/file-generic.png';
         break;
     }
     return ($with_img_tag ? '<img src="'.$GLOBALS['ASSETS_URL'].'images/'.$icon.'" border="0">' : $icon);

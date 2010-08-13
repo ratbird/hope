@@ -6,7 +6,7 @@
             <TR>
                 <TD width="2%" align="left" valign="top" class="<?=$tpl['class']?>">
                     <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
-                        <?= Assets::img('forumgraurunt.gif') ?>
+                        <?= Assets::img('icons/16/blue/arr_1right.png') ?>
                     </A>
                 </TD>
                 <TD width="43%" nowrap class="<?=$tpl['class']?>">
@@ -36,7 +36,7 @@
                 <TD width="5%" class="<?=$tpl['class']?>" align="right">
                     <A href="<?= URLHelper::getLink('?cmd=delete_singledate&sd_id='. $tpl['sd_id'] 
                         .'&cycle_id='. ($tpl['cycle_id'] ? $tpl['cycle_id'] : '')) ?>">
-                        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/trash.gif" border="0" align="absmiddle">
+                        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/trash.png" border="0" align="absmiddle">
                     </A>
                 </TD>
             </TR>
@@ -122,7 +122,7 @@
             <tr>
                 <td width="2%" align="left" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap">
                     <a href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
-                        <img src="<?=$GLOBALS['ASSETS_URL']?>images/forumgraurunt.gif" border="0" align="abstop">
+                        <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1right.png" border="0" align="abstop">
                     </a>
                 </td>
                 <td width="43%" nowrap class="<?=$tpl['class']?>">

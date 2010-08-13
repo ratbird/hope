@@ -169,7 +169,7 @@ if ($EXPORT_ENABLE)
         $infobox = array(
         array ("kategorie"  => _("Information:"),
             "eintrag" => array  (
-                            array ( "icon" => "pictures/ausruf_small.gif",
+                            array ( "icon" => "icons/16/black/info.png",
                                     "text"  => _("Die Parameter, mit denen diese Seite aufgerufen wurde, sind fehlerhaft.")
                                  )
                             )

@@ -456,13 +456,13 @@ if (sizeof($configurations)) {
     $info_content = array(
                                     array("kategorie" => "Information:",
                                                 "eintrag" => array(
-                                                    array("icon" => "ausruf_small.gif",
+                                                    array("icon" => "icons/16/black/info.png",
                                                                 "text" => $info_max_configs
                                                     ),
                                                     array("icon" => "on_small.gif",
                                                                 "text" => $info_is_default
                                                     ),
-                                                    array("icon" => "ausruf_small.gif",
+                                                    array("icon" => "icons/16/black/info.png",
                                                                 "text" => $info_no_default
                                                     )
                                     )),
@@ -479,7 +479,7 @@ if (sizeof($configurations)) {
     $info_content = array(
                                     array("kategorie" => "Information:",
                                                 "eintrag" => array(
-                                                    array("icon" => "ausruf_small.gif",
+                                                    array("icon" => "icons/16/black/info.png",
                                                                 "text" => $info_max_configs
                                                     )
                                     )));

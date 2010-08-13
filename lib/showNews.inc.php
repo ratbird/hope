@@ -153,9 +153,9 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
     if (!count($news)) {
         if ($show_admin) {
             echo"\n<table class=\"index_box\"$width>";
-            echo"\n<tr><td class=\"topic\" colspan=\"2\"><img src=\"".Assets::image_path('icons/16/white/news.png')."\" border=\"0\"". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "align=\"texttop\"><b> " . _("News") . "</b></td>";
+            echo"\n<tr><td class=\"topic\" colspan=\"2\"><img src=\"".Assets::image_path('icons/16/white/breaking-news.png')."\" ". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b> " . _("Ankündigungen") . "</b></td>";
             echo"\n<td align=\"right\" class=\"topic\">";
-            echo "<a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".Assets::image_path('icons/16/white/admin.png')."\" border=\"0\"" . tooltip(_("News einstellen")) . "></a> ";
+            echo "<a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Ankündigungen einstellen")) . "></a> ";
             echo"</td></tr>";
             echo "\n<tr><td class=\"steel1\" colspan=\"3\"><p class=\"info\">" . _("Es sind keine aktuellen Ankündigungen vorhanden. Um neue Ankündigungen zu erstellen, klicken Sie auf die Doppelpfeile.") . "</p>";
             echo "\n</td></tr></table>";
@@ -168,17 +168,17 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
 
         //Ausgabe der Kopfzeile vor erster auszugebener Ankündigungen
         echo"\n<table class=\"index_box\"$width>";
-        echo"\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/news.png')."\" border=\"0\"". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b>" . _("News") . "</b></td>";
+        echo"\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/breaking-news.png')."\" ". tooltip(_("Newsticker. Klicken Sie auf die Pfeile (rechts), um neue Ankündigungen in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b>" . _("Ankündigungen") . "</b></td>";
         if ($rss_id) {
             $colspan++;
             echo "\n<td align=\"right\" class=\"topic\">";
-            echo "\n<a href=\"rss.php?id=$rss_id\"><img src=\"".Assets::image_path('icons/16/white/rss.png')."\" border=\"0\"" . tooltip(_("RSS-Feed")) . "></a>";
+            echo "\n<a href=\"rss.php?id=$rss_id\"><img src=\"".Assets::image_path('icons/16/white/rss.png')."\" " . tooltip(_("RSS-Feed")) . "></a>";
             echo "\n</td>";
         }
         if ($show_admin) {
             $colspan++;
             echo "\n<td align=\"right\" class=\"topic\" width=\"1%\">";
-            echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&modus=admin&cmd=show")."\"><img src=\"".Assets::image_path('icons/16/white/admin.png')."\" border=\"0\"" . tooltip(_("News bearbeiten")) . "></a> ";
+            echo " <a href=\"".URLHelper::getLink("admin_news.php?$admin_link&modus=admin&cmd=show")."\"><img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Ankündigungen bearbeiten")) . "></a> ";
             echo "\n</td>";
         }
         echo "\n</tr>\n<tr><td class=\"blank\" colspan=\"$colspan\">";
@@ -333,7 +333,7 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
 
   echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\"><tr>";
 
-  $icon=" <img src=\"".$GLOBALS['ASSETS_URL']."images/news-icon.gif\" border=0>";
+  $icon = Assets::img('icons/16/blue/news.png', array('class' => 'text-bottom'));
 
   if ($news_item['open'])
     printhead(0, 0, $link, "open", $tempnew, $icon, $titel, $zusatz, $news_item['date']);

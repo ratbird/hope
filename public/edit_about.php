@@ -719,7 +719,7 @@ if ($view != 'Forum'
                 $content[] = array (
                     'kategorie' => _("Informationen:"),
                     'eintrag' => array(
-                        array('icon' => 'ausruf_small.gif',
+                        array("icon" => "icons/16/black/info.png",
                             'text' => $info_text[$view]
                     )
                     )

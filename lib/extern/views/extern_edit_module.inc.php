@@ -177,13 +177,13 @@ if ($module->getType() != 0) {
     $info_content = array(
                                     array("kategorie" => "Information:",
                                                 "eintrag" => array(
-                                                    array("icon" => "ausruf_small.gif",
+                                                    array("icon" => "icons/16/black/info.png",
                                                                 "text" => $info_edit_element
                                                     )
                                     )),
                                     array("kategorie" => "Aktion:",
                                             "eintrag" => array(
-                                                    array("icon" => "ausruf_small.gif",
+                                                    array("icon" => "icons/16/black/info.png",
                                                                 "text" => $info_preview,
                                                     )
                                     )));
@@ -193,7 +193,7 @@ else {
     $info_content = array(
                                     array("kategorie" => "Information:",
                                                 "eintrag" => array(
-                                                    array("icon" => "ausruf_small.gif",
+                                                    array("icon" => "icons/16/black/info.png",
                                                                 "text" => $info_edit_element
                                                     )
                                     )));

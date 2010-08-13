@@ -612,7 +612,7 @@ if (isset($atermin) && strtolower(get_class($atermin)) == "seminarevent") {
                 , $link_to_seminar, '</a>');
 
         $info_box['all'][0]['kategorie'] = _("Information:");
-        $info_box['all'][0]['eintrag'][] = array('icon' => "ausruf_small.gif",
+        $info_box['all'][0]['eintrag'][] = array("icon" => "icons/16/black/info.png",
                 "text" => $info_box['sem1']);
         $info_box['all'][1]['kategorie'] = _("Aktion:");
         $info_box['all'][1]['eintrag'][] = array('icon' => "meinesem.gif",
@@ -622,7 +622,7 @@ if (isset($atermin) && strtolower(get_class($atermin)) == "seminarevent") {
     }
     else {
         $info_box['all'][0]['kategorie'] = _("Information:");
-        $info_box['all'][0]['eintrag'][] = array('icon' => "ausruf_small.gif",
+        $info_box['all'][0]['eintrag'][] = array("icon" => "icons/16/black/info.png",
                 "text" => $info_box['sem1']);
         $info_box['all'][1]['kategorie'] = _("Aktion:");
         $info_box['all'][1]['eintrag'][] = array('icon' => "meinesem.gif",
@@ -678,7 +678,7 @@ else {
                 "</a>");
     }
     $info_box['all'][0]['kategorie'] = _("Information:");
-    $info_box['all'][0]['eintrag'][] = array('icon' => "ausruf_small.gif",
+    $info_box['all'][0]['eintrag'][] = array("icon" => "icons/16/black/info.png",
             "text" => $info_box['count']);
     if ($termin_id) {
         $info_box['all'][1]['kategorie'] = _("Aktion:");

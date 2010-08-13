@@ -736,6 +736,10 @@ dd {
     vertical-align: text-top;
 }
 
+.text-bottom {
+    vertical-align: text-bottom;
+}
+
 /* --- index.php anpassungen an den boxen zur vereinheitlichung ------------- */
 div.index_container {
     width: 70%;

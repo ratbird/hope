@@ -8,7 +8,7 @@ $infobox['content'][] = array(
     'eintrag'   => array(
         array(
             'text' => _("Als Mitarbeiter Ihrer Einrichtung können Sie für diese Inhalte in mehreren Kategorien bereitstellen. Inhalte in Ihrer Einrichtung können von allen Stud.IP-Nutzern abgerufen werden."),
-            'icon' => 'ausruf_small.gif'
+            "icon" => "icons/16/black/info.png"
          )
      )
 );

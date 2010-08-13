@@ -186,7 +186,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
         $infobox = array    (
         array ("kategorie"  => _("Information:"),
             "eintrag" => array  (
-                            array ( 'icon' => "ausruf_small.gif",
+                            array ( "icon" => "icons/16/black/info.png",
                                     "text"  => _("Hier k&ouml;nnen Sie an angebundene Systeme verwalten.")
                                  )
                             )

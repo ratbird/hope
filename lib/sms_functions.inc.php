@@ -122,26 +122,38 @@ function count_messages_from_user($snd_rec, $where="") {
 
 }
 
-
-function show_icon($sms_show, $value) {
+/**
+ *
+ * @param unknown_type $sms_show
+ * @param unknown_type $value
+ */
+function show_icon($sms_show, $value)
+{
     if ($sms_show == $value) {
-        $x = "forum_indikator_gelb2.gif";
+        $x = 'icons/16/red/arr_1right.png';
     } else {
         $x = "blank.gif";
     }
     return $x;
 }
 
-function showfoldericon($tmp, $count) {
+/**
+ *
+ * @param unknown_type $tmp
+ * @param unknown_type $count
+ */
+function showfoldericon($tmp, $count)
+{
     global $sms_show, $sms_data, $PHP_SELF;
+
     if ($count == "0" && folder_openclose($sms_show['folder'][$sms_data['view']], $tmp) == "close") {
-        $picture = "cont_folder2.gif";
+        $picture = "icons/16/blue/folder-empty.png";
     } else if ($count == "0" && folder_openclose($sms_show['folder'][$sms_data['view']], $tmp) == "open") {
-        $picture = "cont_folder4.gif";
+        $picture = "icons/16/blue/folder-empty.png";
     } else if ($count != "0" && folder_openclose($sms_show['folder'][$sms_data['view']], $tmp) == "close") {
-        $picture = "cont_folder.gif";
+        $picture = "icons/16/blue/folder-full.png";
     } else if ($count != "0" && folder_openclose($sms_show['folder'][$sms_data['view']], $tmp) == "open") {
-        $picture = "cont_folder3.gif";
+        $picture = "icons/16/blue/folder-full.png";
     }
     return $picture;
 }
@@ -703,9 +715,9 @@ function show_precform() {
             }
         }
         $tmp .= "</select><br>";
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"del_receiver_button\" src=\"".Assets::image_path('icons/16/grey/trash.png'). "\" ".tooltip(_("löscht alle ausgewählten EmpfängerInnen"))." border=\"0\">";
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"del_receiver_button\" src=\"".Assets::image_path('icons/16/blue/trash.png'). "\" ".tooltip(_("löscht alle ausgewählten EmpfängerInnen"))." border=\"0\">";
         $tmp .= " <font size=\"-1\">"._("ausgewählte löschen")."</font><br>";
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"del_allreceiver_button\" src=\"".Assets::image_path('icons/16/grey/trash.png'). "\" ".tooltip(_("Empfängerliste leeren"))." border=\"0\">";
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"del_allreceiver_button\" src=\"".Assets::image_path('icons/16/blue/trash.png'). "\" ".tooltip(_("Empfängerliste leeren"))." border=\"0\">";
         $tmp .= " <font size=\"-1\">"._("Empfängerliste leeren")."</font>";
     }
 
@@ -718,7 +730,7 @@ function show_addrform() {
 
     global $PHP_SELF, $sms_data, $user, $db, $_fullname_sql, $adresses_array, $search_exp, $my_messaging_settings;
 
-    $picture = 'move_up.gif';
+    $picture = 'icons/16/yellow/arr_2up.png';
 
     // list of adresses
     $query_for_adresses = "SELECT contact.user_id, username, ".$_fullname_sql['full_rev']." AS fullname FROM contact LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN user_info USING (user_id) WHERE owner_id = '".$user->id."' ORDER BY Nachname ASC";
@@ -756,9 +768,9 @@ function show_addrform() {
             $tmp .= "<select size=\"".$tmp_01."\" name=\"add_receiver[]\" multiple style=\"width: 250\">";
             $tmp .= $tmp_02;
             $tmp .= "</select><br>";
-            $tmp .= "<input type=\"image\" name=\"add_receiver_button\" src=\"".$GLOBALS['ASSETS_URL']."images/".$picture."\" border=\"0\" ".tooltip(_("fügt alle ausgewähtlen Personen der EmpfängerInnenliste hinzu")).">";
+            $tmp .= "<input type=\"image\" name=\"add_receiver_button\" src=\"" . Assets::image_path($picture) . "\" class=\"text-top\" ".tooltip(_("fügt alle ausgewähtlen Personen der EmpfängerInnenliste hinzu")).">";
             $tmp .= "&nbsp;<font size=\"-1\">"._("ausgew&auml;hlte hinzufügen")."";
-            $tmp .= "&nbsp;<br><input type=\"image\" name=\"add_allreceiver_button\" src=\"".$GLOBALS['ASSETS_URL']."images/".$picture."\" border=\"0\" ".tooltip(_("fügt alle Personen der EmpfängerInnenliste hinzu")).">";
+            $tmp .= "&nbsp;<br><input type=\"image\" name=\"add_allreceiver_button\" src=\"" . Assets::image_path($picture) . "\" class=\"text-top\" ".tooltip(_("fügt alle Personen der EmpfängerInnenliste hinzu")).">";
             $tmp .= "&nbsp;<font size=\"-1\">"._("alle hinzuf&uuml;gen")."</font>";
 
         }
@@ -799,7 +811,7 @@ function show_addrform() {
         print "<input type=\"image\" name=\"add_freesearch\" ".
             tooltip(_("zu Empfängerliste hinzufügen")).
             " value=\""._("zu Empf&auml;ngerliste hinzuf&uuml;gen").
-            "\" src=\"".$GLOBALS['ASSETS_URL']."images/".$picture."\" border=\"0\">&nbsp;";
+            "\" src=\"" . Assets::image_path($picture) . "\" class=\"text-top\"> ";
     }
 
     print QuickSearch::get("adressee", new StandardSearch("username"))
@@ -809,7 +821,7 @@ function show_addrform() {
         ->render();
     ?>
 
-    <input style="vertical-align: text-top;" type="image" name="search_person" src="<?= Assets::image_path('icons/16/grey/search.png') ?>" border="0">
+    <input style="vertical-align: text-top;" type="image" name="search_person" src="<?= Assets::image_path('icons/16/blue/search.png') ?>">
 
     <?
     $tmp .= ob_get_clean();
@@ -830,20 +842,20 @@ function show_msgform() {
     if ($message) { $tmp .= htmlReady(stripslashes($message)); }
     $tmp .= "</textarea>\n<br><br>";
     // send/ break-button
-    if (sizeof($sms_data["p_rec"]) > "0") { $tmp .= "<input type=\"image\" ".makeButton("abschicken", "src")." name=\"cmd_insert\" border=0 align=\"absmiddle\">"; }
+    if (sizeof($sms_data["p_rec"]) > "0") { $tmp .= "<input type=\"image\" ".makeButton("abschicken", "src")." name=\"cmd_insert\">"; }
     $tmp .= "&nbsp;<a href=\"sms_box.php\">".makeButton("abbrechen", "img")."</a>&nbsp;";
-    $tmp .= "<input type=\"image\" ".makeButton("vorschau", "src")." name=\"cmd\" border=0 align=\"absmiddle\">";
+    $tmp .= "<input type=\"image\" ".makeButton("vorschau", "src")." name=\"cmd\">";
     $tmp .= "<br><br>";
     $tmp .= "</div>";
     return $tmp;
 
 }
 
-function show_previewform() {
-
+function show_previewform()
+{
     global $sms_data, $message, $signature, $my_messaging_settings, $messagesubject;
 
-    $tmp = "<input type=\"image\" name=\"refresh_message\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind3.gif\" border=\"0\" ".tooltip(_("aktualisiert die Vorschau der aktuellen Nachricht.")).">&nbsp;"._("Vorschau erneuern.")."<br><br>";
+    $tmp = "<input type=\"image\" name=\"refresh_message\" class=\"text-top\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("aktualisiert die Vorschau der aktuellen Nachricht."))."> "._("Vorschau erneuern.")."<br><br>";
     $tmp .= "<b>"._("Betreff:")."</b><br>".htmlready(stripslashes($messagesubject));
     $tmp .= "<br><br><b>"._("Nachricht:")."</b><br>";
     $tmp .= formatReady(stripslashes($message));
@@ -857,7 +869,6 @@ function show_previewform() {
     }
 
     return $tmp;
-
 }
 
 function show_sigform()
@@ -867,7 +878,7 @@ function show_sigform()
     if ($sms_data["sig"] == "1") {
             $tmp =  "<font size=\"-1\">";
             $tmp .= _("Dieser Nachricht wird eine Signatur angehängt");
-            $tmp .= "<br><input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_sig_button\" src=\"".Assets::image_path('icons/16/grey/vcard.png'). "\" ".tooltip(_("entfernt die Signatur von der aktuellen Nachricht.")).">&nbsp;"._("Signatur entfernen.");
+            $tmp .= "<br><input class=\"text-top\" type=\"image\" name=\"rmv_sig_button\" src=\"".Assets::image_path('icons/16/blue/vcard.png'). "\" ".tooltip(_("entfernt die Signatur von der aktuellen Nachricht."))."> "._("Signatur entfernen.");
             $tmp .= "</font><br>";
             $tmp .= "<textarea name=\"signature\" style=\"width: 250px\" cols=20 rows=7 wrap=\"virtual\">\n";
             if (!$signature) {
@@ -879,7 +890,7 @@ function show_sigform()
     } else {
         $tmp =  "<font size=\"-1\">";
         $tmp .=  _("Dieser Nachricht wird keine Signatur angehängt");
-            $tmp .= "<br><input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_sig_button\" src=\"".Assets::image_path('icons/16/grey/vcard.png'). "\" ".tooltip(_("fügt der aktuellen Nachricht eine Signatur an.")).">&nbsp;"._("Signatur anhängen.");
+            $tmp .= "<br><input class=\"text-top\" type=\"image\" name=\"add_sig_button\" src=\"".Assets::image_path('icons/16/blue/vcard.png'). "\" ".tooltip(_("fügt der aktuellen Nachricht eine Signatur an."))."> "._("Signatur anhängen.");
         $tmp .= "</font>";
     }
 
@@ -892,13 +903,13 @@ function show_msgsaveoptionsform()
     global $sms_data, $my_messaging_settings;
 
     if($sms_data["tmpsavesnd"] == 1) {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/grey/checkbox-checked.png'). "\" ".tooltip(_("Klicken Sie hier um die Nachricht nicht zu speichern.")).">&nbsp;"._("Klicken Sie das Icon um die Nachricht nicht zu speichern.");
+        $tmp .= "<input class=\"text-top\" type=\"image\" name=\"rmv_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" ".tooltip(_("Klicken Sie hier um die Nachricht nicht zu speichern."))."> "._("Klicken Sie das Icon um die Nachricht nicht zu speichern.");
         // do we have any personal folders? if, show them here
         if (have_msgfolder("out") == TRUE) {
             // walk throw personal folders
-            $tmp .= "<br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"5\" height=\"5\" border=0>";
+            $tmp .= "<br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"5\" height=\"5\">";
             $tmp .= "<br>"._("in: ");
-            $tmp .= "<select name=\"tmp_save_snd_folder\" style=\"vertical-align:middle; font-size:11pt; width: 180px\">";
+            $tmp .= "<select name=\"tmp_save_snd_folder\" style=\"width: 180px\" class=\"middle\">";
             $tmp .=  "<option value=\"dummy\">"._("Postausgang")."</option>";
             for($x="0";$x<sizeof($my_messaging_settings["folder"]["out"]);$x++) {
                 if (htmlready(stripslashes(return_val_from_key($my_messaging_settings["folder"]["out"], $x))) != "dummy") {
@@ -908,7 +919,7 @@ function show_msgsaveoptionsform()
             $tmp .= "</select>";
         }
     } else {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/grey/checkbox-unchecked.png'). "\" " . tooltip(_("Klicken Sie hier um die Nachricht zu speichern.")).">&nbsp;"._("Klicken Sie das Icon um die Nachricht zu speichern.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpsavesnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Klicken Sie hier um die Nachricht zu speichern.")).">&nbsp;"._("Klicken Sie das Icon um die Nachricht zu speichern.");
     }
 
     $tmp = "<font size=\"-1\">".$tmp."</font>";
@@ -920,9 +931,9 @@ function show_msgemailoptionsform()
     global $sms_data, $my_messaging_settings;
 
     if($sms_data["tmpemailsnd"] == 1) {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/grey/checkbox-checked.png'). "\" " . tooltip(_("Klicken Sie hier um die Nachricht nicht (auch) als Email zu versenden.")).">&nbsp;"._("Klicken Sie das Icon um die Nachricht nicht (auch) als Email zu versenden.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" " . tooltip(_("Klicken Sie hier um die Nachricht nicht (auch) als Email zu versenden.")).">&nbsp;"._("Klicken Sie das Icon um die Nachricht nicht (auch) als Email zu versenden.");
     } else {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/grey/checkbox-unchecked.png'). "\" " . tooltip(_("Klicken Sie hier um die Nachricht (auch) als Email zu versenden.")).">&nbsp;"._("Klicken Sie das Icon um die Nachricht (auch) als Email zu versenden.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpemailsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Klicken Sie hier um die Nachricht (auch) als Email zu versenden.")).">&nbsp;"._("Klicken Sie das Icon um die Nachricht (auch) als Email zu versenden.");
     }
 
     $tmp = "<font size=\"-1\">".$tmp."</font>";
@@ -934,9 +945,9 @@ function show_msgreadconfirmoptionsform()
     global $sms_data, $my_messaging_settings;
 
     if($sms_data["tmpreadsnd"] == 1) {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/grey/checkbox-checked.png'). "\" " . tooltip(_("Klicken Sie hier um für diese Nachricht keine Lesebestätigung anzufordern.")).">&nbsp;"._("Klicken Sie das Icon um keine Lesebestätigung anzufordern.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"rmv_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-checked.png'). "\" " . tooltip(_("Klicken Sie hier um für diese Nachricht keine Lesebestätigung anzufordern.")).">&nbsp;"._("Klicken Sie das Icon um keine Lesebestätigung anzufordern.");
     } else {
-        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/grey/checkbox-unchecked.png'). "\" " . tooltip(_("Klicken Sie hier um für diese Nachricht eine Lesebestätigung anzufordern.")).">&nbsp;"._("Klicken Sie das Icon um eine Lesebestätigung anzufordern.");
+        $tmp .= "<input style=\"vertical-align: text-top;\" type=\"image\" name=\"add_tmpreadsnd_button\" src=\"".Assets::image_path('icons/16/blue/checkbox-unchecked.png'). "\" " . tooltip(_("Klicken Sie hier um für diese Nachricht eine Lesebestätigung anzufordern.")).">&nbsp;"._("Klicken Sie das Icon um eine Lesebestätigung anzufordern.");
     }
 
     $tmp = "<font size=\"-1\">".$tmp."</font>";
@@ -983,7 +994,7 @@ function show_attachmentform()
             $print.= "</td><td>" . htmlReady($attachment["filename"]) ."&nbsp;(";
             $print.= ($attachment["filesize"] / 1024 / 1024 >= 1 ? round($attachment["filesize"] / 1024 / 1024) ." Mb" : round($attachment["filesize"] / 1024)." Kb");
             $print.= ")</td><td style=\"padding-left:5px\">";
-            $print.= "<input type=\"image\" name=\"remove_attachment_{$attachment['dokument_id']}\" src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" ".tooltip(_("entfernt den Dateianhang")).">";
+            $print.= "<input type=\"image\" name=\"remove_attachment_{$attachment['dokument_id']}\" src=\"". Assets::image_path('icons/16/blue/trash.png') . "\" ".tooltip(_("entfernt den Dateianhang")).">";
             $print.= "</td></tr>";
         }
         $print.= "</table>";

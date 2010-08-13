@@ -72,7 +72,7 @@ echo "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\" ali
 echo "<tr>\n";
 echo "<td align=\"center\" width=\"15%\"><a href=\"$PHP_SELF?cmd=showweek&atime=";
 echo $aweek->getStart() - 1 . "\">&nbsp;";
-echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2left.png')."\"";
+echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2left.png')."\"";
 echo tooltip(_("eine Woche zurück")) . ">&nbsp;</a></td>\n";
 echo "<td width=\"70%\" class=\"calhead\">";
 printf(_("%s. Woche vom %s bis %s"), strftime("%V", $aweek->getStart()),
@@ -80,14 +80,14 @@ printf(_("%s. Woche vom %s bis %s"), strftime("%V", $aweek->getStart()),
 echo "</td>\n";
 echo "<td align=\"center\" width=\"15%\"><a href=\"$PHP_SELF?cmd=showweek&atime=";
 echo $aweek->getEnd() + 259201 . "\">&nbsp;";
-echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2right.png')."\"";
+echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2right.png')."\"";
 echo tooltip(_("eine Woche vor")) . ">&nbsp;</a></td>\n";
 echo "</tr></table>\n</td></tr>\n";
 
 echo "<tr><td nowrap=\"nowrap\" align=\"center\" width=\"$width\"$colspan_1>";
 if ($st > 0) {
     echo "<a href=\"calendar.php?cmd=showweek&atime=$atime&wtime=" . ($st - 1) . "\">";
-    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2up.png')."\"";
+    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2up.png')."\"";
     echo tooltip(_("zeig davor")) . "></a>";
 }
 else
@@ -98,7 +98,7 @@ echo "</td>" . $tab["table"][0];
 echo "<td nowrap=\"nowrap\" align=\"center\" width=\"$width\"$colspan_1>";
 if ($st > 0) {
     echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($st - 1) . "\">";
-    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2up.png')."\"";
+    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2up.png')."\"";
     echo tooltip(_("zeig davor")) . "></a>";
 }
 else
@@ -146,7 +146,7 @@ for ($i = 2; $i < sizeof($tab["table"]); $i++) {
 echo "<tr><td$colspan_1 align=\"center\">";
 if ($et < 23) {
     echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($et + 1) . "\">";
-    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2down.png')."\"";
+    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2down.png')."\"";
     echo tooltip(_("zeig danach")) . "></a>";
 }
 else
@@ -155,7 +155,7 @@ echo "</td><td colspan=\"{$tab['max_columns']}\">&nbsp;</td>";
 echo "<td$colspan_1 align=\"center\">";
 if ($et < 23) {
     echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($et + 1) . "\">";
-    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2down.png')."\"";
+    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2down.png')."\"";
     echo tooltip(_("zeig danach")) . "></a>";
 }
 else

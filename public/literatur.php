@@ -67,7 +67,7 @@ if ( ($list = StudipLitList::GetFormattedListsByRange($SessSemName[1], object_ge
 <?
 $infobox[0] = array ("kategorie" => _("Information:"),
                     "eintrag" =>    array(
-                                    array("icon" => "ausruf_small.gif","text"  =>   _("Hier sehen sie Literaturlisten.")),
+                                    array("icon" => "icons/16/black/literature.png","text"  =>   _("Hier sehen sie Literaturlisten.")),
                                     )
                     );
 $infobox[1] = array ("kategorie" => _("Aktionen:"));

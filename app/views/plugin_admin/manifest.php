@@ -49,7 +49,7 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                'icon' => 'ausruf_small.gif',
+                "icon" => "icons/16/black/info.png",
                 'text' => _('Hier finden Sie weitere Informationen zum ausgewählten Plugin.')
             )
         )

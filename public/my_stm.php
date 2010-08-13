@@ -183,7 +183,7 @@ if (count($my_stm)) {
 $infobox = array    (
     array  ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-            array ( "icon" => "ausruf_small.gif",
+            array ( "icon" => "icons/16/black/info.png",
                             "text"  => sprintf(_("Es sind zur Zeit %s Veranstaltungen zu Studienmodulen zugewiesen."), count($all_sems))
             ),
             array    (  "icon" => "blank.gif",

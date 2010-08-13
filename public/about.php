@@ -321,18 +321,18 @@ function open_im() {
             } else {
                 if (CheckBuddy($username)==FALSE) {
                     echo "<br><a href=\"". URLHelper::getLink("?cmd=add_user&add_uname=".$username) ."\">"
-                         . Assets::img('icons/16/darkblue/person.png', array('title' =>_("zu den Kontakten hinzufügen"), 'class' => 'middle'))
+                         . Assets::img('icons/16/blue/person.png', array('title' =>_("zu den Kontakten hinzufügen"), 'class' => 'middle'))
                          . " " . _("zu den Kontakten hinzufügen") . " </a>";
                 }
                 echo "<br><a href=\"". URLHelper::getLink("sms_send.php?sms_source_page=about.php&rec_uname=".$db->f("username")) ."\">"
-                     . Assets::img('icons/16/darkblue/mail.png', array('title' => _("Nachricht an Nutzer verschicken"), 'class' => 'middle'))
+                     . Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht an Nutzer verschicken"), 'class' => 'middle'))
                      . " " . _("Nachricht an Nutzer") . "</a>";
 
             }
 
             // Export dieses Users als Vcard
             echo "<br><a href=\"". URLHelper::getLink("contact_export.php") ."\">"
-                 . Assets::img('icons/16/darkblue/vcard.png', array('title' => _("vCard herunterladen"), 'class' => 'middle'))
+                 . Assets::img('icons/16/blue/vcard.png', array('title' => _("vCard herunterladen"), 'class' => 'middle'))
                  . " " . _("vCard herunterladen") ."</a>";
 
             ?>

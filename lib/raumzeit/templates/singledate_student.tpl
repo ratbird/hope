@@ -37,7 +37,7 @@
             if ($tpl['forumCount'] == 1) $txt = _("%s Foreneintrag vorhanden"); else $txt = _("%s Foreinträge vorhanden");
     ?>
         <a href="<?=URLHelper::getLink("forum.php?open=".$tpl['issue_id']."&treeviewstartposting=&view=#anker")?>">
-            <img src="<?=$GLOBALS['ASSETS_URL']?>images/icon-posting.gif" border="0" align="absbottom" <?=tooltip(sprintf($txt, $tpl['forumCount']))?>>
+            <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/forum.png" border="0" align="absbottom" <?=tooltip(sprintf($txt, $tpl['forumCount']))?>>
         </a>
     <? endif; ?>
     </td>
@@ -45,7 +45,7 @@
     <td width="1%" class="<?=$tpl['class']?>" valign="bottom" nowrap="nowrap">
     <? if ($tpl['fileCountAll'] > 0) : ?>
         <a href="<?=URLHelper::getLink("folder.php?open=".$tpl['folder_id']."&cmd=tree#anker")?>">
-            <img src="<?=$GLOBALS['ASSETS_URL']?>images/icon-disc.gif" align="absmiddle" border="0" <?=tooltip(sprintf(_("%s Dokument(e) vorhanden"), $tpl['fileCountAll']))?>><?if ($tpl['fileCountAll'] > 1) :
+            <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/download.png" align="absmiddle" border="0" <?=tooltip(sprintf(_("%s Dokument(e) vorhanden"), $tpl['fileCountAll']))?>><?if ($tpl['fileCountAll'] > 1) :
                 for ($i = 1; ($i < $tpl['fileCountAll'] && $i < 5); $i++) :
                     ?><img src="<?=$GLOBALS['ASSETS_URL']?>/images/file1b.gif" align="absmiddle" border="0" <?=tooltip(sprintf(_("%s Dokument(e) vorhanden"), $tpl['fileCountAll']))?>><?
                 endfor;
@@ -94,7 +94,7 @@
     </td>
 
     <td width="1%" align="right" valign="top" class="steelred" nowrap>
-        <img src="<?=$GLOBALS['ASSETS_URL']?>images/termin-icon.gif" border="0" align="abstop">&nbsp;
+        <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" border="0" class="text-bottom">&nbsp;
     </td>
 
     <td nowrap class="steelred" valign="bottom">

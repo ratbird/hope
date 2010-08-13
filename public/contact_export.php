@@ -69,7 +69,7 @@ if ($mode == "select_group"){
     $infobox = array (
         array ("kategorie"  => "Information:",
             "eintrag" => array  (
-                array ( "icon" => "ausruf_small.gif",
+                array ( "icon" => "icons/16/black/info.png",
                     "text"  => _("Bitte wählen sie eine bestimme Gruppe ihres Adressbuches oder ihr vollständiges Adressbuch und drücken anschließend auf 'Export'.")
                 ),
             )

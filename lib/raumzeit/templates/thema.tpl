@@ -4,10 +4,10 @@
         <INPUT type="checkbox" name="themen[]" value="<?=$tpl['issue_id']?>"<?=$tpl['selected']?>>
         <? if ($issue_open[$tpl['issue_id']]) { ?>
             <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['issue_id'] .'#'. $tpl['issue_id']) ?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/forumgraurunt.gif" border="0" align="abstop">
+            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1down.png" border="0" class="text-bottom">
         <? } else { ?>
             <A href="<?= URLHelper::getLink('?cmd=open&open_close_id='. $tpl['issue_id'] .'#'. $tpl['issue_id']) ?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/forumgrau.gif" border="0" align="abstop">
+            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1right.png" border="0" class="text-bottom">
         <? } ?>
         </A>
     </TD>
@@ -25,16 +25,16 @@
     <TD width="20%" align="right" class="steel" nowrap>
         <? if (!$tpl['first']) { ?>
         <A href="<?= URLHelper::getLink('?newPriority='. ($tpl['priority'] - 1) .'&issueID='. $tpl['issue_id'] .'&cmd=changePriority') ?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/move_up.gif" border="0" align="absmiddle">
+            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/yellow/arr_2up.png" border="0" class="text-bottom">
         </A>
         <? } ?>
         <? if (!$tpl['last']) { ?>
         <A href="<?= URLHelper::getLink('?newPriority='. ($tpl['priority'] + 1) .'&issueID='. $tpl['issue_id'] .'&cmd=changePriority') ?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/move_down.gif" border="0" align="absmiddle">
+            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/yellow/arr_2down.png" border="0" class="text-bottom">
         </A>
         <? } ?>
         <A href="<?= URLHelper::getLink('?cmd=deleteIssue&issue_id='. $tpl['issue_id']) ?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/trash.gif" border="0" align="absmiddle">
+            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/trash.png" border="0" class="text-bottom">
         </A>
     </TD>
 </TR>

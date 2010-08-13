@@ -184,12 +184,12 @@ print_lit_import_dlg();
 <?
 $infobox[0] = array ("kategorie" => _("Information:"),
                     "eintrag" =>    array(
-                                    array('icon' => "blank.gif","text"  =>  _("Hier können Sie Literaturlisten erstellen / bearbeiten.")),
+                                    array('icon' => "icons/16/black/literature.png","text"  =>  _("Hier können Sie Literaturlisten erstellen / bearbeiten.")),
                                     )
                     );
 
 if (!$_the_tree->getNumKids('root')){
-    $infobox[0]["eintrag"][] = array('icon' => "ausruf_small.gif","text"  => _("Sie haben noch keine Listen angelegt!") );
+    $infobox[0]["eintrag"][] = array('icon' => "icons/16/black/info.png","text"  => _("Sie haben noch keine Listen angelegt!") );
 } else {
     $lists = $_the_tree->getKids('root');
     $list_count['visible'] = 0;
@@ -205,15 +205,15 @@ if (!$_the_tree->getNumKids('root')){
             $list_count['invisible_entries'] += $_the_tree->getNumKids($lists[$i]);
         }
     }
-    $infobox[0]["eintrag"][] = array('icon' => "vote-icon-visible.gif",
+    $infobox[0]["eintrag"][] = array('icon' => "icons/16/black/visibility-visible.png",
                                     "text"  => sprintf(_("%s öffentlich sichtbare Listen, insgesamt %s Eintr&auml;ge"),$list_count['visible'],$list_count['visible_entries']));
-    $infobox[0]["eintrag"][] = array('icon' => "vote-icon-invisible.gif",
+    $infobox[0]["eintrag"][] = array('icon' => "icons/16/black/visibility-invisible.png",
                                     "text" => sprintf(_("%s unsichtbare Listen, insgesamt %s Eintr&auml;ge"),$list_count['invisible'],$list_count['invisible_entries']) );
 }
 
 $infobox[1] = array ("kategorie" => _("Aktionen:"));
-$infobox[1]["eintrag"][] = array('icon' => "link_intern.gif","text"  => "<a href=\"lit_search.php\">" . _("Literatur suchen") . "</a>" );
-$infobox[1]["eintrag"][] = array('icon' => "link_intern.gif","text"  => "<a href=\"admin_lit_element.php?_range_id=new_entry\">" . _("Neue Literatur anlegen") . "</a>" );
+$infobox[1]["eintrag"][] = array('icon' => "icons/16/black/search.png","text"  => "<a href=\"lit_search.php\">" . _("Literatur suchen") . "</a>" );
+$infobox[1]["eintrag"][] = array('icon' => "icons/16/black/add/	literature.png","text"  => "<a href=\"admin_lit_element.php?_range_id=new_entry\">" . _("Neue Literatur anlegen") . "</a>" );
 
 print_infobox ($infobox, "infobox/literaturelist.jpg");
 ?>

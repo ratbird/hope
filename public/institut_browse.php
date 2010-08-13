@@ -95,7 +95,7 @@ $the_tree->showTree();
     <td class="blank" align="right" valign="top" width="270">
     <?
 $infobox = array(array("kategorie"  => _("Information:"),
-                        "eintrag" => array(array("icon" => "ausruf_small.gif",
+                        "eintrag" => array(array("icon" => "icons/16/black/info.png",
                                                 "text"  => _("Sie k&ouml;nnen sich durch den Einrichtungsbaum klicken oder das Suchformular benutzen"))
                                         )
                         )

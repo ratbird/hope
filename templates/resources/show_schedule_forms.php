@@ -74,7 +74,7 @@
                 $content[] = array('kategorie' => _("Informationen:"),
                     'eintrag' => array(
                         array(
-                            'icon' => 'ausruf_small.gif',
+                            "icon" => "icons/16/black/info.png",
                             'text' => _("Sie sehen hier die Einzelheiten der Belegung. Falls Sie über entsprechende Rechte verfügen, können Sie sie bearbeiten oder eine neue Belegung erstellen.")
                         )
                     )

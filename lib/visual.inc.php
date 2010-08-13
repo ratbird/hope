@@ -103,7 +103,7 @@ function get_ampel_write ($mein_status, $admission_status, $write_level, $print=
 
     switch ($ampel_state["access"]) {
         case 0 :
-            $color = 'icons/16/green/accept';
+            $color = 'icons/16/green/accept.png';
             break;
         case 1 :
             $color = 'icons/16/black/exclamation.png';
@@ -191,7 +191,7 @@ function get_ampel_read ($mein_status, $admission_status, $read_level, $print="T
 
     switch ($ampel_state["access"]) {
         case 0 :
-            $color = 'icons/16/green/accept';
+            $color = 'icons/16/green/accept.png';
             break;
         case 1 :
             $color = 'icons/16/black/exclamation.png';
@@ -1068,13 +1068,12 @@ function smile ($text = "", $extern = FALSE) {
 * @param        boolean TRUE if function is called from external pages
 * @return       string  convertet text
 */
-function symbol ($text = "", $extern = FALSE) {
-    global $SYMBOL_SHORT, $CANONICAL_RELATIVE_PATH_STUDIP;
+function symbol ($text = "", $extern = FALSE)
+{
+    global $SYMBOL_SHORT;
 
     if(empty($text))
         return $text;
-
-        $path = $GLOBALS['DYNAMIC_CONTENT_URL'] . '/symbol';
 
     $patterns = array();
     $replaces = array();
@@ -1082,8 +1081,7 @@ function symbol ($text = "", $extern = FALSE) {
     reset($SYMBOL_SHORT);
     while (list($key, $value) = each($SYMBOL_SHORT)) {
         $patterns[] = "'" . preg_quote($key) . "'m";
-        $replaces[] = "<img " . tooltip($key)
-                . " border=\"0\" src=\"$path/$value.gif\">";
+        $replaces[] = $value;
     }
 
     return preg_replace($patterns, $replaces, $text);
@@ -1105,9 +1103,26 @@ function mila ($titel, $size = 60) {
     return $titel;
 }
 
-//Ausgabe der Aufklapp-Kopfzeile
-function printhead ($breite, $left, $link, $open, $new, $icon,
-        $titel, $zusatz, $timestmp = 0, $printout = TRUE, $index = "", $indikator = "age", $css_class = NULL) {
+/**
+ * Ausgabe der Aufklapp-Kopfzeile
+ *
+ * @param $breite
+ * @param $left
+ * @param $link
+ * @param $open
+ * @param $new
+ * @param $icon
+ * @param $titel
+ * @param $zusatz
+ * @param $timestmp
+ * @param $printout
+ * @param $index
+ * @param $indikator
+ * @param $css_class
+ */
+function printhead($breite, $left, $link, $open, $new, $icon, $titel, $zusatz,
+                   $timestmp = 0, $printout = TRUE, $index = "", $indikator = "age",
+                   $css_class = NULL) {
         global $user;
 
         // Verzweigung was der Pfeil anzeigen soll
@@ -1211,8 +1226,8 @@ function printhead ($breite, $left, $link, $open, $new, $icon,
     if ($link) {
         $print .= "</a>";
     }
-    $print .= "</td><td class=\"".$class."\" nowrap=\"nowrap\" width=\"1%\" valign=\"middle\">$icon</td>";
-    $print .= "<td class=\"".$class."\" align=\"left\" width=\"20%\" nowrap=\"nowrap\"  valign=\"bottom\">&nbsp;";
+    $print .= "</td><td class=\"".$class."\" nowrap=\"nowrap\" width=\"1%\" valign=\"bottom\">$icon&nbsp;</td>";
+    $print .= "<td class=\"".$class."\" align=\"left\" width=\"20%\" nowrap=\"nowrap\" valign=\"bottom\"> ";
     $print .= $titel."</td><td align=\"right\" nowrap=\"nowrap\" class=\"".$class."\" width=\"99%\" valign=\"bottom\">";
     $print .= $zusatz."</td>";
 
@@ -1269,7 +1284,7 @@ function printcontent ($breite, $write = FALSE, $inhalt, $edit, $printout = TRUE
         ),
     array  ("kategorie" => "Aktionen:",
                "eintrag" => array   (
-                            array ( "icon" => "ausruf_small.gif",
+                            array ( "icon" => "icons/16/black/info.png",
                                     "text"  => "es sind noch 19 Veranstaltungen vorhanden."
                                     )
             )

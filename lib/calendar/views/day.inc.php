@@ -47,7 +47,7 @@ echo "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\"
 echo "<td align=\"center\" width=\"10%\" height=\"40\"><a href=\"$PHP_SELF?cmd=showday&atime=";
 echo $atime - 86400 . "\">\n";
 $tooltip = tooltip(_("zurück"));
-echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2left.png')."\"$tooltip></a></td>\n";
+echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2left.png')."\"$tooltip></a></td>\n";
 echo "<td class=\"calhead\" width=\"80%\" class=\"cal\"><b>\n";
 
 echo $aday->toString("LONG") . ", " . $aday->getDate();
@@ -59,14 +59,14 @@ echo "</b></td>\n";
 echo "<td align=\"center\" width=\"10%\"><a href=\"$PHP_SELF?cmd=showday&atime=";
 echo $atime + 86400 . "\">\n";
 $tooltip = tooltip(_("vor"));
-echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2right.png')."\"$tooltip></a></td>\n";
+echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2right.png')."\"$tooltip></a></td>\n";
 echo "</tr>\n";
 
 if ($st > 0) {
     echo "<tr><td align=\"center\" colspan=\"3\"><a href=\"$PHP_SELF?cmd=showday&atime=";
     echo ($atime - ($at - $st + 1) * 3600) . "\">";
     $tooltip = tooltip(_("zeig davor"));
-    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2up.png')."\"$tooltip></a></td></tr>\n";
+    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2up.png')."\"$tooltip></a></td></tr>\n";
 }
 echo "</table>\n</td></tr>\n<tr><td class=\"blank\">\n";
 echo "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"1\">";
@@ -78,7 +78,7 @@ if ($et < 23) {
     echo "<a href=\"$PHP_SELF?cmd=showday&atime=";
     echo ($atime + ($et - $at + 1) * 3600) . "\">";
     $tooltip = tooltip(_("zeig danach"));
-    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/darkblue/arr_2down.png')."\"$tooltip></a></td></tr>\n";
+    echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2down.png')."\"$tooltip></a></td></tr>\n";
 }
 else
     echo "<tr><td colspan=\"" . $tab["max_columns"] . "\">&nbsp;</td></tr>\n";

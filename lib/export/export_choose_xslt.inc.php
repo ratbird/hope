@@ -93,7 +93,7 @@ if (!CheckParamXSLT())
     $infobox = array(
     array ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-                        array ( "icon" => "ausruf_small.gif",
+                        array ( "icon" => "icons/16/black/info.png",
                                 "text"  => _("Die Parameter, mit denen diese Seite aufgerufen wurde, sind fehlerhaft oder unvollständig.")
                              )
                         )
@@ -154,7 +154,7 @@ elseif (!isset($page) or ($page == 0)) // Seite 1 : Auswahl des Dateiformats
     $infobox = array    (
     array ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-                        array ( "icon" => "ausruf_small.gif",
+                        array ( "icon" => "icons/16/black/info.png",
                                 "text"  => sprintf(_("Diese Seite bereitet die Datenausgabe vor. %s Schritt 1/3 %s"), "<br><i>", "</i>")
                              )
                         )
@@ -225,7 +225,7 @@ elseif ($page == 1) // Seite 2 : Auswahl des XSLT-Scripts
     $infobox = array    (
     array ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-                        array ( "icon" => "ausruf_small.gif",
+                        array ( "icon" => "icons/16/black/info.png",
                                 "text"  => sprintf(_("Diese Seite bereitet die Datenausgabe vor. %s Schritt 2/3 %s"), "<br><i>", "</i>")
                              )
                         )
@@ -284,7 +284,7 @@ elseif ($page == 2)  // Seite 3 : Download der Dateien
     $infobox = array    (
     array ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-                        array ( "icon" => "ausruf_small.gif",
+                        array ( "icon" => "icons/16/black/info.png",
                                 "text"  => sprintf(_("Diese Seite bereitet die Datenausgabe vor. %s Schritt 3/3 %s"), "<br><i>", "</i>")
                              )
                         )

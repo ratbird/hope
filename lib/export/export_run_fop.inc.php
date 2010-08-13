@@ -73,7 +73,7 @@ if (!CheckParamRUN_FOP())
     $infobox = array(
     array ("kategorie"  => _("Information:"),
         "eintrag" => array  (
-                        array ( 'icon' => "ausruf_small.gif",
+                        array ( "icon" => "icons/16/black/info.png",
                                 "text"  => _("Die Parametern, mit denen diese Seite aufgerufen wurde, sind fehlerhaft.")
                              )
                         )
@@ -143,7 +143,7 @@ else
         $infobox = array    (
         array ("kategorie"  => _("Information:"),
             "eintrag" => array  (
-                            array ( 'icon' => "ausruf_small.gif",
+                            array ( "icon" => "icons/16/black/info.png",
                                     "text"  => $xslt_info
                                  )
                             )

@@ -130,7 +130,7 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         }
 
         $info['all'][0]['kategorie'] = _("Information:");
-        $info['all'][0]['eintrag'][] = array('icon' => 'ausruf_small.gif',
+        $info['all'][0]['eintrag'][] = array("icon" => "icons/16/black/info.png",
                 'text' => $info['sync']);
         $info['all'][0]['eintrag'][] = array('icon' => 'blank.gif',
                 'text' => $info['export']);
@@ -260,12 +260,12 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
             }
 
             $info['all'][0]['kategorie'] = _("Information:");
-            $info['all'][0]['eintrag'][] = array('icon' => 'ausruf_small.gif',
+            $info['all'][0]['eintrag'][] = array("icon" => "icons/16/black/info.png",
                     'text' => $info['import']);
         }
         else {
             $info['all'][0]['kategorie'] = _("Information:");
-            $info['all'][0]['eintrag'][] = array('icon' => 'ausruf_small.gif',
+            $info['all'][0]['eintrag'][] = array("icon" => "icons/16/black/info.png",
                     'text' => _("Sie k&ouml;nnen Termindaten importieren, exportieren und synchronisieren."));
         }
         echo "</table\n</td>\n";

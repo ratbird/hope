@@ -521,9 +521,9 @@ $query_time = $query_time_sort;
 
         // did we came from a ...?
         if ($SessSemName[0] && $SessSemName["class"] == "inst") {
-            $tmp_array_1 = array("kategorie" => _("Zur&uuml;ck:"),"eintrag" => array(array('icon' => "ausruf_small.gif", "text" => "<a href=\"institut_main.php\">"._("Zur&uuml;ck zur ausgew&auml;hlten Einrichtung")."</a>")));
+            $tmp_array_1 = array("kategorie" => _("Zur&uuml;ck:"),"eintrag" => array(array("icon" => "icons/16/black/info.png", "text" => "<a href=\"institut_main.php\">"._("Zur&uuml;ck zur ausgew&auml;hlten Einrichtung")."</a>")));
         } else if ($SessSemName[0]) {
-            $tmp_array_1 = array("kategorie" => _("Zur&uuml;ck:"),"eintrag" => array(array('icon' => "ausruf_small.gif", "text" => "<a href=\"seminar_main.php\">"._("Zur&uuml;ck zur ausgew&auml;hlten Veranstaltung")."</a>")));
+            $tmp_array_1 = array("kategorie" => _("Zur&uuml;ck:"),"eintrag" => array(array("icon" => "icons/16/black/info.png", "text" => "<a href=\"seminar_main.php\">"._("Zur&uuml;ck zur ausgew&auml;hlten Veranstaltung")."</a>")));
         }
         // how many items do we have?
         $neum = count_messages_from_user('in', " AND message_user.readed = 0 ");

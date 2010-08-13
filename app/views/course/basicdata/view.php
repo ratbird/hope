@@ -30,15 +30,15 @@ $infobox = array(
           "eintrag"   =>
         array(
             array(
-                  "icon" => 'ausruf_small.gif',
+                  "icon" => "icons/16/black/info.png",
                       "text" => sprintf(_('Angelegt am %s'), "<b>$mkstring</b>")
             ),
             array(
-                  "icon" => 'ausruf_small.gif',
+                  "icon" => "icons/16/black/info.png",
                   "text" => sprintf(_('Letzte Änderung am %s'), "<b>$chstring</b>")
             ),
             array(
-                  "icon" => 'ausruf_small.gif',
+                  "icon" => "icons/16/black/info.png",
                   "text" => _("Mit roten Sternchen markierte Felder sind Pflichtfelder.")
             )
         )

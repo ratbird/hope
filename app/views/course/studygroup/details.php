@@ -27,7 +27,7 @@ $infobox['content'] = array(
         'eintrag'   => array(
             array(
                 'text' => _("Hier sehen Sie weitere Informationen zur Studiengruppe. Außerdem können sie ihr beitreten/eine Mitgliedschaft beantragen."),
-                'icon' => 'ausruf_small.gif'
+                "icon" => "icons/16/black/info.png"
             )
         )
     ),

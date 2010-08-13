@@ -140,7 +140,7 @@ class StmInstanceAssiVisualization{
         echo $table->open(array('class' => 'steelgraulight'));
         echo $form->getFormStart();
         $infobox = array ();
-        $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array("icon"=>"ausruf_small.gif",
+        $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array("icon"=>"icons/16/black/info.png",
         "text"=> sprintf(_("Die Textfelder <b>Inhalte</b> und <b>Hinweise</b> m&uuml;ssen nach den Konventionen
         des StudIPWiki formatiert werden. Beachten Sie dabei die %sFormatierungsm&ouml;glichkeiten%s. <br>
         Der Button <b>Vorschau</b> zeigt das Ergebnis unter dem jeweiligen Textfeld an.")

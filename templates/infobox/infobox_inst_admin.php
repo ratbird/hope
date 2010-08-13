@@ -23,7 +23,7 @@
 
       <tr>
           <td align="center" valign="top" width="1%">
-            <img src="<?=$GLOBALS['ASSETS_URL']?>images/ausruf_small.gif">
+            <?= Assets::img('icons/16/black/info.png') ?>
           </td>
           <td width="99%" align="left">
 

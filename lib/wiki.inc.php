@@ -1028,7 +1028,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     } else {
         $help_url="help/index.php?help_page=ix_forum6.htm";
     }
-    $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "ausruf_small.gif", "text"=> sprintf(_("Sie k&ouml;nnen beliebigen Text einf&uuml;gen und vorhandenen Text &auml;ndern. Beachten Sie dabei die %sFormatierungsm&ouml;glichkeiten%s. Links entstehen automatisch aus W&ouml;rtern, die mit Gro&szlig;buchstaben beginnen und einen Gro&szlig;buchstaben in der Wortmitte enthalten."),'<a href="'.$help_url.'" target="_blank">','</a>'))));
+    $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=> sprintf(_("Sie k&ouml;nnen beliebigen Text einf&uuml;gen und vorhandenen Text &auml;ndern. Beachten Sie dabei die %sFormatierungsm&ouml;glichkeiten%s. Links entstehen automatisch aus W&ouml;rtern, die mit Gro&szlig;buchstaben beginnen und einen Gro&szlig;buchstaben in der Wortmitte enthalten."),'<a href="'.$help_url.'" target="_blank">','</a>'))));
     end_blank_table();
     echo "</td>"; // end of content area
     showPageFrameEnd($infobox);
@@ -1068,7 +1068,7 @@ function exportWiki() {
     begin_blank_table();
     parse_msg("info§"._("Alle Wiki-Seiten werden als große HTML-Datei zusammengefügt und in einem neuen Fenster angezeigt. Von dort aus können Sie die Datei abspeichern."));
     $infobox = array ();
-    $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "ausruf_small.gif", "text"=>_("Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert."))));
+    $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=>_("Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert."))));
     print "</tr><tr align=center><td>";
     print "<a href=\"".URLHelper::getLink("?view=wikiprintall")."\" target=\"_blank\"><img ".makebutton("weiter","src"). " border=0></a></td></tr>";
     end_blank_table();
@@ -1195,7 +1195,7 @@ function getSearchbox($preselection, $keyword) {
     $search_text.="</form>";
     return array("kategorie"=> _("Suche:"),
         "eintrag" => array(array(
-            "icon" => "suchen.gif",
+            "icon" => "icons/16/black/search.png",
             "text"=>$search_text)));
 }
 
@@ -1266,7 +1266,7 @@ function getShowPageInfobox($keyword, $latest_version) {
         "text"=>$toccont)));
 
     if (!$latest_version) {
-        $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "ausruf_small.gif", "text"=> sprintf(_("Sie betrachten eine alte Version, die nicht mehr geändert werden kann. Verwenden Sie dazu die %saktuelle Version%s."), '<a href="'.URLHelper::getLink('?keyword='.urlencode($keyword)).'">','</a>'))));
+        $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=> sprintf(_("Sie betrachten eine alte Version, die nicht mehr geändert werden kann. Verwenden Sie dazu die %saktuelle Version%s."), '<a href="'.URLHelper::getLink('?keyword='.urlencode($keyword)).'">','</a>'))));
     }
     $infobox[] = array("kategorie"  => _("Ansicht:"), "eintrag" => $views);
 
@@ -1327,7 +1327,7 @@ function getDiffPageInfobox($keyword) {
     $views=array(array('icon' => "blank.gif", "text" => $viewtext));
 
     $infobox = array ();
-    $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "ausruf_small.gif", "text"=>_("Sie betrachten die Änderungsgeschichte eines Dokumentes. Falls einzelne Versionen gelöscht wurden, kann es zu falschen AutorInnenzuordnungen kommen."))));
+    $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=>_("Sie betrachten die Änderungsgeschichte eines Dokumentes. Falls einzelne Versionen gelöscht wurden, kann es zu falschen AutorInnenzuordnungen kommen."))));
     $infobox[] = array("kategorie"  => _("Ansicht:"), "eintrag" => $views);
     $infobox[] = array("kategorie" => _("Alte Versionen dieser Seite:"),
             "eintrag" => array(array('icon' => "blank.gif","text"=>$versiontext)));
@@ -1424,7 +1424,7 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
 
     if ($perm->have_studip_perm("autor", $SessSemName[1])) {
         if (!$latest_version) {
-            $edit='<img src="'.$GLOBALS['ASSETS_URL'].'images/ausruf_small2.gif">'. _("Ältere Version, nicht bearbeitbar!");
+            $edit='<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/black/lock-locked.png">'. _("Ältere Version, nicht bearbeitbar!");
         } else {
             $edit="";
             if ($perm->have_studip_perm("autor", $SessSemName[1])) {
@@ -1645,7 +1645,7 @@ function showComboDiff($keyword, $db=NULL) {
                 echo "<tr bgcolor=$col>";
                 echo "<td width=30 align=center valign=top>";
                 echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=3 width=3><br>";
-                echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\" ". tooltip(_("Änderung von").' ' . get_fullname($last_author), TRUE, TRUE). ">";
+                echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" ". tooltip(_("Änderung von").' ' . get_fullname($last_author), TRUE, TRUE). ">";
                 echo "</td>";
                 echo "<td><font size=-1>";
                 echo wikiReady($collect);

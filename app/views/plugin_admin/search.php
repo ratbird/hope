@@ -108,10 +108,10 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                'icon' => 'ausruf_small.gif',
+                "icon" => "icons/16/black/info.png",
                 'text' => _('In der Liste "Empfohlene Plugins" finden Sie von anderen Betreibern empfohlene Plugins.')
             ), array(
-                'icon' => 'ausruf_small.gif',
+                "icon" => "icons/16/black/info.png",
                 'text' => _('Alternativ können Plugins und Plugin-Updates auch als ZIP-Datei hochgeladen werden.')
             )
         )

@@ -336,7 +336,7 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
     $infobox[] = ($sem_portal['bereich'] !="all") ?
                 array  ("kategorie"  => _("Information:"),
                         "eintrag" => array  (
-                                    array ( "icon" => "ausruf_small.gif",
+                                    array ( "icon" => "icons/16/black/info.png",
                                             "text"  => sprintf (_("Gew&auml;hlte Kategorie: <b>%s</b>")."<br>"._("%s Studienmodule vorhanden"), _("Studienmodule"), $anzahl_seminare_class)
                                                         . (($anzahl_seminare_class && $anzahl_seminare_class < 30) ? "<br>" . sprintf(_("Alle Studienmodule %sanzeigen%s"),"<a href=\"$PHP_SELF?do_show_class=mod\">","</a>") : ""))
                                         )

@@ -50,7 +50,7 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                'icon' => 'ausruf_small.gif',
+                "icon" => "icons/16/black/info.png",
                 'text' => _('Eine Mehrfachauswahl in der Liste der Einrichtungen ist durch Drücken der Strg-Taste möglich.')
             )
         )

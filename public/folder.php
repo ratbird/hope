@@ -745,7 +745,7 @@ echo "\n<body onUnLoad=\"upload_end()\">";
             if($folder_tree->isFolder($folder_system_data["move"])){
                 echo "\n" . '<td class="blank">&nbsp;</td>';
                 echo "\n" . '<td class="blank" width="60%" style="font-size:80%;">';
-                echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/move.gif" name="move_to_top_folder" ' . tooltip(_("Auf die obere Ebene verschieben / kopieren")) . '>';
+                echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/yellow/arr_2right.png" class="middle" name="move_to_top_folder" ' . tooltip(_("Auf die obere Ebene verschieben / kopieren")) . '>';
                 echo '&nbsp;' . _("Auf die obere Ebene verschieben / kopieren") . '</td>';
                 echo "\n" . '<td class="blank"><input type="image" border="0" vspace="2" ' . makeButton($button_name,'src') . ' name="move_to_top_folder" ' . tooltip(_("Auf die obere Ebene verschieben / kopieren")) . '>';
                 echo "\n</td></tr><tr>";
@@ -754,14 +754,14 @@ echo "\n<body onUnLoad=\"upload_end()\">";
             echo "\n" . '<div style="margin-left:25px;">';
             echo _("Veranstaltung") .':';
             echo '</div></td><td class="blank" width="60%">';
-            echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/move.gif" name="move_to_sem" id="move_to_sem_arrow" ' . tooltip(_("In diese Veranstaltung verschieben / kopieren")) . '>';
+            echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/yellow/arr_2right.png" class="middle" name="move_to_sem" id="move_to_sem_arrow" ' . tooltip(_("In diese Veranstaltung verschieben / kopieren")) . '>';
             echo "\n" . '<select id="sem_move_id" name="sem_move_id[]" style="width:60%">';
             foreach ($my_sem as $id => $name){
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
             }
             echo "\n" . '</select>';
             if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
-                echo "\n<a href=\"\" onClick=\"STUDIP.CURRENTPAGE.createMultiSelect('#sem_move_id', 'Veranstaltungen'); $(this).hide(); return false\">".Assets::img("rewind", array('title' => _("Mehrere Veranstaltungen auswählen")))."</a>";
+                echo "\n<a href=\"\" onClick=\"STUDIP.CURRENTPAGE.createMultiSelect('#sem_move_id', 'Veranstaltungen'); $(this).hide(); return false\">".Assets::img("icons/16/blue/refresh.png", array('title' => _("Mehrere Veranstaltungen auswählen"), "class" => "middle"))."</a>";
             }
             echo "\n</td>";
             echo "\n" . '<td class="blank"><input type="image" border="0" vspace="2"' . makeButton($button_name,'src') . ' name="move_to_sem" ' . tooltip(_("In diese Veranstaltung verschieben / kopieren")) . '>';
@@ -771,14 +771,14 @@ echo "\n<body onUnLoad=\"upload_end()\">";
             echo "\n" . '<div style="margin-left:25px;">';
             echo _("Einrichtung").':';
             echo '</div></td><td class="blank" width="60%">';
-            echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/move.gif" id="move_to_inst_arrow" name="move_to_inst" ' . tooltip(_("In diese Einrichtung verschieben / kopieren")) . '>';
+            echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/yellow/arr_2right.png" class="middle" id="move_to_inst_arrow" class="middle" name="move_to_inst" ' . tooltip(_("In diese Einrichtung verschieben / kopieren")) . '>';
             echo "\n" . '<select id="inst_move_id" name="inst_move_id[]" style="width:60%">';
             foreach ($my_inst as $id => $name){
                 echo "\n" . '<option value="'.$id.'">' . htmlReady(my_substr($name,0,70)) . '</option>';
             }
             echo "\n" . '</select>';
             if ($config['FILESYSTEM_MULTICOPY_ENABLE']) {
-                echo "\n<a href=\"\" onClick=\"STUDIP.CURRENTPAGE.createMultiSelect('#inst_move_id', 'Institute'); $(this).hide(); return false\">".Assets::img("rewind", array('title' => _("Mehrere Einrichtungen auswählen")))."</a>";
+                echo "\n<a href=\"\" onClick=\"STUDIP.CURRENTPAGE.createMultiSelect('#inst_move_id', 'Institute'); $(this).hide(); return false\">".Assets::img("icons/16/blue/refresh.png", array('title' => _("Mehrere Einrichtungen auswählen"), "class" => "middle"))."</a>";
             }
             echo "\n</td>";
             echo "\n" . '<td class="blank"><input type="image" border="0" vspace="2" ' . makeButton($button_name,'src') . ' name="move_to_inst" ' . tooltip(_("In diese Einrichtung verschieben / kopieren")) . '>';

@@ -280,20 +280,20 @@ echo "</td></tr>";
 <?
 $infobox[0] = array ("kategorie" => _("Information:"),
                     "eintrag" =>    array(
-                                    array("icon" => "blank.gif","text"  =>  _("Hier können Sie Literatur / Quellen erfassen, oder von Ihnen erfasste Einträge ändern.")),
+                                    array("icon" => "icons/16/black/literature.png","text"  =>  _("Hier können Sie Literatur / Quellen erfassen, oder von Ihnen erfasste Einträge ändern.")),
                                     array("icon" => "blank.gif","text"  =>  ($_the_element->getValue("user_id") == "studip" ? "<b>" . _("Systemeintrag:") . "</b><br>" . _("Dies ist ein vom System generierter Eintrag.") : "<b>" . _("Eingetragen von:") . "</b><br>" . get_fullname($_the_element->getValue("user_id"),'full',true))),
                                     array("icon" => "blank.gif","text"  =>  "<b>" . _("Letzte Änderung am:") . "</b><br>" . strftime("%d.%m.%Y",$_the_element->getValue("chdate")))
                                     )
                     );
 if ($_the_element->isNewEntry()){
-    $infobox[0]["eintrag"][] = array("icon" => "ausruf_small.gif","text"  => _("Dies ist ein neuer Eintrag, der noch nicht gespeichert wurde!") );
+    $infobox[0]["eintrag"][] = array("icon" => "icons/16/black/info.png","text"  => _("Dies ist ein neuer Eintrag, der noch nicht gespeichert wurde!") );
 }
 if (!$_the_element->isChangeable()){
-    $infobox[0]["eintrag"][] = array("icon" => "ausruf_small.gif","text"  => _("Sie haben diesen Eintrag nicht selbst vorgenommen, und dürfen ihn daher nicht verändern! Wenn Sie mit diesem Eintrag arbeiten wollen, können Sie sich eine persönliche Kopie erstellen.") );
+    $infobox[0]["eintrag"][] = array("icon" => "icons/16/black/info.png","text"  => _("Sie haben diesen Eintrag nicht selbst vorgenommen, und dürfen ihn daher nicht verändern! Wenn Sie mit diesem Eintrag arbeiten wollen, können Sie sich eine persönliche Kopie erstellen.") );
 }
 $infobox[1] = array ("kategorie" => _("Aktionen:"));
-$infobox[1]["eintrag"][] = array("icon" => "link_intern.gif","text"  => "<a href=\"admin_lit_list.php\">" . _("Literaturlisten bearbeiten") . "</a>" );
-$infobox[1]["eintrag"][] = array("icon" => "link_intern.gif","text"  => "<a href=\"lit_search.php\">" . _("Literatur suchen") . "</a>" );
+$infobox[1]["eintrag"][] = array("icon" => "icons/16/black/literature.png","text"  => "<a href=\"admin_lit_list.php\">" . _("Literaturlisten bearbeiten") . "</a>" );
+$infobox[1]["eintrag"][] = array("icon" => "icons/16/black/search.png","text"  => "<a href=\"lit_search.php\">" . _("Literatur suchen") . "</a>" );
 
 print_infobox($infobox, "infobox/literaturelist.jpg");
 

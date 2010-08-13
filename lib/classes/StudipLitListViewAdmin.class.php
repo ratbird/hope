@@ -359,8 +359,8 @@ class StudipLitListViewAdmin extends TreeView{
                 $content .= "\n<tr><td class=\"steelgraulight\" align=\"left\" style=\"font-size:10pt;border-left: 1px solid black;border-right: 1px solid black;\">" . _("Sichtbarkeit:") . "</td></tr>";
                 $content .= "\n<tr><td class=\"steel1\" align=\"left\" style=\"font-size:10pt;border-left: 1px solid black;border-right: 1px solid black;\">"
                 . ($this->tree->tree_data[$item_id]['visibility']
-                ? "<img src=\"".$GLOBALS['ASSETS_URL']."images/vote-icon-visible.gif\" border=\"0\" style=\"vertical-align:bottom;\">&nbsp;" . _("Sichtbar")
-                : "<img src=\"".$GLOBALS['ASSETS_URL']."images/vote-icon-invisible.gif\" border=\"0\" style=\"vertical-align:bottom;\">&nbsp;" . _("Unsichtbar")) . " </td></tr>";
+                ? "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/visibility-visible.png\" border=\"0\" style=\"vertical-align:bottom;\">&nbsp;" . _("Sichtbar")
+                : "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/visibility-invisible.png\" border=\"0\" style=\"vertical-align:bottom;\">&nbsp;" . _("Unsichtbar")) . " </td></tr>";
             }
         } else {
             $content .= "\n<tr><td class=\"steel1\" align=\"left\">$edit_content</td></tr>";
@@ -429,24 +429,24 @@ class StudipLitListViewAdmin extends TreeView{
             $head .= "</td><td align=\"right\" valign=\"bottom\" nowrap class=\"printhead\">";
             if (!$this->tree->isFirstKid($item_id)){
                 $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id") .
-                "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_up.gif\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" " .
+                "\"><img src=\"".$GLOBALS['ASSETS_URL']."icons/16/yellow/arr2_up.png\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" " .
                 tooltip(_("Element nach oben verschieben")) ."></a>";
             }
             if (!$this->tree->isLastKid($item_id)){
                 $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id") .
-                "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_down.gif\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" " .
+                "\"><img src=\"".$GLOBALS['ASSETS_URL']."icons/16/yellow/arr2_down.png\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" " .
                 tooltip(_("Element nach unten verschieben")) . "></a>";
             }
             if ($this->tree->isElement($item_id)){
                 $head .= ($this->clip_board->isInClipboard($this->tree->tree_data[$item_id]["catalog_id"]))
-                        ? "<img src=\"".$GLOBALS['ASSETS_URL']."images/forum_fav.gif\" hspace=\"4\" width=\"12\" height=\"11\" border=\"0\" " .
+                        ? "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/exclaim.png\" hspace=\"4\" width=\"12\" height=\"11\" border=\"0\" " .
                         tooltip(_("Dieser Eintrag ist bereits in ihrer Merkliste")) . ">"
                         :"<a href=\"". $this->getSelf("cmd=InClipboard&item_id=$item_id") .
-                        "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forum_fav2.gif\" hspace=\"4\" width=\"12\" height=\"11\" border=\"0\" " .
+                        "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" hspace=\"4\" width=\"12\" height=\"11\" border=\"0\" " .
                         tooltip(_("Eintrag in Merkliste aufnehmen")) . "></a>";
             } else {
                 $head .= "<a href=\"". $this->getSelf("cmd=InClipboard&item_id=$item_id") .
-                "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forum_fav2.gif\" hspace=\"4\" width=\"12\" height=\"11\" border=\"0\" " .
+                "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" hspace=\"4\" width=\"12\" height=\"11\" border=\"0\" " .
                 tooltip(_("Komplette Liste in Merkliste aufnehmen")) . "></a>";
             }
             $head .= "&nbsp;";
@@ -462,22 +462,22 @@ class StudipLitListViewAdmin extends TreeView{
                 $head .= "<a href=\"";
                 $head .= ($this->open_ranges[$item_id]) ? $this->getSelf("close_range={$item_id}") : $this->getSelf("open_range={$item_id}");
                 $head .= "\"><img border=\"0\"  src=\"".$GLOBALS['ASSETS_URL']."images/";
-                $head .= ($this->open_ranges[$item_id]) ? "cont_folder3.gif" : "cont_folder.gif";
+                $head .= ($this->open_ranges[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
                 $head .= "\" ";
                 $head .= (!$this->open_ranges[$item_id])? tooltip(_("Alle Unterelemente öffnen")) : tooltip(_("Alle Unterelemente schließen"));
                 $head .= "></a>";
             } else {
                 $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
-                $head .= ($this->open_items[$item_id]) ? "cont_folder4.gif" : "cont_folder2.gif";
-                $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . "border=\"0\">";
+                $head .= ($this->open_items[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
+                $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . "border=\"0\">&nbsp;";
             }
             if ($item_id != "root"){
-                $head .= "<a href=\"" . $this->getSelf("cmd=ToggleVisibility&item_id={$item_id}") . "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/";
-                $head .= ($this->tree->tree_data[$item_id]['visibility']) ? "vote-icon-visible.gif" : "vote-icon-invisible.gif";
+                $head .= "&nbsp;<a href=\"" . $this->getSelf("cmd=ToggleVisibility&item_id={$item_id}") . "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/";
+                $head .= ($this->tree->tree_data[$item_id]['visibility']) ? "icons/16/blue/visibility-visible.png" : "icons/16/blue/visibility-visible.png";
                 $head .= "\" border=\"0\" " . tooltip(_("Sichtbarkeit ändern")) . "></a>";
             }
         } else {
-            $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_lit.gif";
+            $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/literature.png";
             $head .= "\" border=\"0\">";
         }
     return $head . "</td>";
@@ -500,7 +500,7 @@ class StudipLitListViewAdmin extends TreeView{
             $edit_name = "format";
             $rows = 2;
             $content .= "\n<tr><td class=\"steelgraulight\" style=\"font-size:10pt;border-left: 1px solid black;border-right: 1px solid black;\" ><b>". _("Formatierung der Liste bearbeiten:") . "</b>"
-                    . "&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\""
+                    . "&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\""
                     . tooltip($this->format_info, TRUE, TRUE) . " align=\"absmiddle\"></td></tr>";
             $content .= "<tr><td class=\"steel1\" align=\"center\" style=\"font-size:10pt;border-left: 1px solid black;border-right: 1px solid black;\"><textarea name=\"edit_{$edit_name}\" style=\"width:100%\" rows=\"$rows\">" . $this->tree->tree_data[$this->edit_item_id][$edit_name]
                 . "</textarea></td></tr>";
@@ -527,9 +527,9 @@ class StudipLitListViewAdmin extends TreeView{
         $content = "";
         if ($this->msg[$item_id]){
             $msg = explode("§",$this->msg[$item_id]);
-            $pics = array('error' => 'x_small2.gif', 'info' => 'ausruf_small2.gif', 'msg' => 'ok_small2.gif');
+            $pics = array('error' => 'icons/16/red/decline.png', 'info' => 'icons/16/black/info.png', 'msg' => 'icons/16/green/accept.png');
             $content = "\n<tr><td colspan=\"{$colspan}\"><table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" width=\"100%\" style=\"font-size:10pt\">
-                        <tr><td align=\"center\" width=\"25\"><img width=\"22\" height=\"20\" src=\"".$GLOBALS['ASSETS_URL']."images/" . $pics[$msg[0]] . "\" ></td>
+                        <tr><td align=\"center\" width=\"25\"><img src=\"".$GLOBALS['ASSETS_URL']."images/" . $pics[$msg[0]] . "\" ></td>
                         <td align=\"left\">" . $msg[1] . "</td></tr>
                         </table></td></tr><tr>";
         }

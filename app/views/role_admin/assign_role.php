@@ -101,7 +101,7 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                'icon' => 'ausruf_small.gif',
+                "icon" => "icons/16/black/info.png",
                 'text' => _('Hier können Sie nach Benutzern suchen und ihnen verschiedene Rollen zuweisen.')
             )
         )

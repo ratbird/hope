@@ -23,7 +23,7 @@
 
       <tr>
           <td align="center" valign="top" width="1%">
-            <img src="<?= $GLOBALS['ASSETS_URL']?>images/ausruf_small.gif">
+            <?= Assets::img('icons/16/black/info.png') ?>
           </td>
           <td width="99%" align="left">
             <?= _("Hier können Sie für die einzelnen Termine Beschreibungen eingeben, Themen im Forum und Dateiordner anlegen.")?>
@@ -33,7 +33,7 @@
 
       <tr>
           <td align="center" valign="top" width="1%">
-            <img src="<?= $GLOBALS['ASSETS_URL']?>images/ausruf_small.gif">
+            <?= Assets::img('icons/16/black/info.png') ?>
           </td>
           <td width="99%" align="left">
             <?= sprintf(_("Zeitänderungen, Raumbuchungen und Termine anlegen können Sie unter %sZeiten%s."), '<a href="raumzeit.php">', '</a>')?><br>

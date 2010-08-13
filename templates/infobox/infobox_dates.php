@@ -22,7 +22,7 @@
 
       <tr>
           <td align="center" valign="top" width="1%">
-            <img src="<?=$GLOBALS['ASSETS_URL']?>images/ausruf_small.gif">
+            <?= Assets::img('icons/16/black/info.png') ?>
           </td>
           <td width="99%" align="left">
             <?=_("Hier finden Sie alle Termine der Veranstaltung.")?>
@@ -49,7 +49,7 @@
 
        <tr>
          <td align="center" valign="top" width="1%">
-           <img src="<?=$GLOBALS['ASSETS_URL']?>images/link_intern.gif">
+           <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/black/add/date.png">
          </td>
          <td width="99%" align="left">
 
@@ -61,7 +61,7 @@
 
        <tr>
          <td align="center" valign="top" width="1%">
-           <img src="<?=$GLOBALS['ASSETS_URL']?>images/link_intern.gif">
+           <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/black/date.png">
          </td>
          <td width="99%" align="left">
 
@@ -73,7 +73,7 @@
 
        <tr>
          <td align="center" valign="top" width="1%">
-           <img src="<?=$GLOBALS['ASSETS_URL']?>images/link_intern.gif">
+           <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/black/schedule.png">
          </td>
          <td width="99%" align="left">
 
@@ -85,7 +85,7 @@
 
        <tr>
          <td align="center" valign="top" width="1%">
-           <img src="<?=$GLOBALS['ASSETS_URL']?>images/link_intern.gif">
+           <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/black/download.png">
          </td>
          <td width="99%" align="left">
 

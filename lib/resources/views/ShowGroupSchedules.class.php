@@ -227,7 +227,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                     <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="35" border="0">
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"  width="10%" align="left">&nbsp;
-                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&previous_day=1"><img class="middle" src="<?= Assets::image_path('icons/16/darkblue/arr_2left.png') ?>" <? echo tooltip (_("Vorherigen Tag anzeigen")) ?>></a>
+                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&previous_day=1"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2left.png') ?>" <? echo tooltip (_("Vorherigen Tag anzeigen")) ?>></a>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" align="center">
                 <b>
@@ -239,14 +239,14 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
-                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&next_day=1"><img  class="middle"  src="<?= Assets::image_path('icons/16/darkblue/arr_2left.png') ?>" <? echo tooltip (_("Nächsten Tag anzeigen")) ?>></a>
+                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&next_day=1"><img  class="middle"  src="<?= Assets::image_path('icons/16/blue/arr_2left.png') ?>" <? echo tooltip (_("Nächsten Tag anzeigen")) ?>></a>
                 </td>
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
                     <?
                     if ((!$resources_data["schedule_time_range"]) || ($resources_data["schedule_time_range"] == 1))
-                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/darkblue/arr_2up.png') . "\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : -1, tooltip (_("Frühere Belegungen anzeigen")));
+                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2up.png') . "\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : -1, tooltip (_("Frühere Belegungen anzeigen")));
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" colspan="2">
@@ -285,7 +285,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <td class="<? echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
                     <?
                     if ((!$resources_data["schedule_time_range"]) || ($resources_data["schedule_time_range"] == -1))
-                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/darkblue/arr_2down.png') . "\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : 1, tooltip (_("Spätere Belegungen anzeigen")));
+                        printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2down.png') . "\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : 1, tooltip (_("Spätere Belegungen anzeigen")));
                     ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="20%" nowrap colspan="3">

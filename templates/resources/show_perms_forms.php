@@ -24,7 +24,7 @@
                 $content[] = array('kategorie' => _("Informationen:"),
                     'eintrag' => array(
                         array(
-                            'icon' => 'ausruf_small.gif',
+                            "icon" => "icons/16/black/info.png",
                             'text' => _("Hier können Sie Berechtigungen für den Zugriff auf die Ressource vergeben.") ."<br>".
                                 _("<b>Achtung:</b> Alle hier erteilten Berechtigungen gelten ebenfalls für die Ressourcen, die der gewählten Ressource untergeordnet sind!")
                         )

@@ -10,7 +10,7 @@ $infobox['content'] = array(
         'eintrag'   => array(
             array(
                 'text' => 'Hier können Sie angeben, welche Module/Plugins in Studiengruppen verwendet werden dürfen.',
-                'icon' => 'ausruf_small.gif'
+                "icon" => "icons/16/black/info.png"
             )
         )
     )

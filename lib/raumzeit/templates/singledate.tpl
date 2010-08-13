@@ -33,10 +33,10 @@
     <TD width="20%" nowrap class="<?=$tpl['class']?>" align="right">
         <? if (!$_LOCKED) { ?>
         <A href="<?= URLHelper::getLink('?cmd='. ($sd_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/edit_transparent.gif" border="0" align="absmiddle" <?=tooltip(_("Termin bearbeiten"))?>>
+            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/edit.png" <?=tooltip(_("Termin bearbeiten"))?>>
         </A>
         <A href="<?= URLHelper::getLink('?cmd=delete_singledate&sd_id='. $tpl['sd_id'] .'&cycle_id='. $tpl['cycle_id'])?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/trash.gif" border="0" align="absmiddle" <?=tooltip(_("Termin löschen"))?>>
+            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/trash.png" <?=tooltip(_("Termin löschen"))?>>
         </A>
         <? } ?>
     </TD>
@@ -47,10 +47,10 @@
         <? if (!$_LOCKED) { ?>
             <? if ($GLOBALS['perm']->have_perm('dozent')) : ?>
                 <A href="<?= URLHelper::getLink('?cmd='. ($sd_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-                    <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($sd_open[$tpl['sd_id']]) ? 'forumgraurunt' : 'simple_indicator_gray'?>.gif" border="0">
+                    <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($sd_open[$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1right.png' : 'images/icons/16/blue/arr_1down.png'?>.gif">
                 </A>
             <? else : ?>
-                <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/forumgrau2.gif" border="0">
+                <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1right.png">
             <? endif; ?>
             <INPUT type="checkbox" name="singledate[]" value="<?=$tpl['sd_id']?>" <?=$tpl['checked']?>>
         <? } ?>

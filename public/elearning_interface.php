@@ -390,24 +390,24 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
         $infobox = array    (
         array ("kategorie"  => _("Information:"),
             "eintrag" => array  (
-                            array ( "icon" => "ausruf_small.gif",
+                            array ( "icon" => "icons/16/black/learnmodule.png",
                                     "text"  => _("Hier k&ouml;nnen Sie Lernmodule f&uuml;r die Veranstaltung einh&auml;ngen und aush&auml;ngen. Das Laden dieser Seite kann etwas l&auml;nger dauern, da Daten zwischen Stud.IP und den angebundenen Systemen ausgetauscht werden.")
                                  )
                             )
             )
         );
         $infobox[1]["kategorie"] = _("Aktionen:");
-            $infobox[1]["eintrag"][] = array (  "icon" => "forumgrau.gif" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/arr_2right.png" ,
                                         "text"  => _("W&auml;hlen Sie das System, aus dem Sie ein Modul einh&auml;ngen wollen. Anschlie&szlig;end k&ouml;nnen Sie nach Modulen suchen. Gefundene Module k&ouml;nnen Sie mit dem Button \"hinzuf&uuml;gen\" der Veranstaltung zuordnen.")
                                     );
 
-            $infobox[1]["eintrag"][] = array (  "icon" => "icon-lern.gif" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/add/learnmodule.png" ,
                                         "text"  => sprintf(_("Um neue Lernmodule zu erstellen, wechseln Sie auf die Seite %s, auf der sie Ihre Lernmodule und externen Nutzer-Accounts verwalten k&ouml;nnen."), "<a href=\"my_elearning.php\">\"" . _("Meine Lernmodule") . "\"</a>")
                                     );
 
         if ($course_output["courses"]) {
             $infobox[2]["kategorie"] = _("Verkn&uuml;pfungen:");
-                $infobox[2]["eintrag"][] = array (	"icon" => "forumgrau.gif" ,
+                $infobox[2]["eintrag"][] = array (	"icon" => "icons/16/black/arr_2right.png" ,
                                             "text"  => $course_output["update"]
                                         );
         }
@@ -419,18 +419,18 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
         $infobox = array    (
         array ("kategorie"  => _("Information:"),
             "eintrag" => array  (
-                            array ( "icon" => "ausruf_small.gif",
+                            array ( "icon" => "icons/16/black/learnmodule.png",
                                     "text"  => _("Hier sehen sie die Lernmodule, die an diese Veranstaltung angeh&auml;ngt wurden.")
                                  )
                             )
             )
         );
         $infobox[1]["kategorie"] = _("Aktionen:");
-            $infobox[1]["eintrag"][] = array (  "icon" => "forumgrau.gif" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
                                         "text"  => _("Wenn Sie in einem Lernmodul auf 'Starten' klicken, &ouml;ffnet sich ein neues Fenster mit dem Lernmodul.")
                                     );
 
-            $infobox[1]["eintrag"][] = array (  "icon" => "icon-lern.gif" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/learnmodule.png" ,
                                         "text"  => sprintf(_("Um neue Lernmodule zu erstellen, wechseln Sie auf die Seite %s, auf der sie Ihre Lernmodule und externen Nutzer-Accounts verwalten k&ouml;nnen."), "<a href=\"my_elearning.php\">\"" . _("Meine Lernmodule") . "\"</a>")
                                     );
 

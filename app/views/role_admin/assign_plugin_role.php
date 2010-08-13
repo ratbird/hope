@@ -80,10 +80,10 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                'icon' => 'ausruf_small.gif',
+                "icon" => "icons/16/black/info.png",
                 'text' => _('Sie können hier den Zugriff auf ein Plugin durch die Auswahl von Rollen beschränken.')
             ), array(
-                'icon' => 'ausruf_small.gif',
+                "icon" => "icons/16/black/info.png",
                 'text' => _('Wählen Sie z.B. "Evaluationsbeauftragte", so können alle Nutzer, die sich in der Rolle "Evaluationsbeauftragte" befinden, dieses Plugin sehen und nutzen.')
             )
         )

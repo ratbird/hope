@@ -109,7 +109,6 @@ $_msg .= $_the_search->search_plugin->getError("msg");
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
     <td class="blank" valign="top">
-    <h1>Nach Literatur suchen</h1>
     <?
     //TODO: Mssagebox
 if ($_msg)  {
@@ -206,14 +205,14 @@ if (($num_hits = $_the_search->getNumHits())){
 echo _("Anzeige: ");
 if ($_the_search->start_result > 1) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result - 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr2_left.png\" hspace=\"3\" border=\"0\"></a>";
 } else {
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
 }
 echo $_the_search->start_result . " - " . $end_result;
 if ($_the_search->start_result + 4 < $num_hits) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result + 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_right.gif\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr2_right.png\" hspace=\"3\" border=\"0\"></a>";
 } else {
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
 }
@@ -227,13 +226,13 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
         echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr>";
         $link=URLHelper::getLink('',array('cmd'=>'add_to_clipboard','catalog_id'=>$element->getValue("catalog_id")));
         if ($_the_clipboard->isInClipboard($element->getValue("catalog_id"))) {
-            $addon="<img src=\"".$GLOBALS['ASSETS_URL']."images/forum_fav.gif\" hspace=\"4\"  border=\"0\" " .
+            $addon="<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/exclaim.png\" hspace=\"4\"  border=\"0\" " .
                 tooltip(_("Dieser Eintrag ist bereits in ihrer Merkliste")) . ">";
         } else {
-            $addon="<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forum_fav2.gif\" hspace=\"4\"  border=\"0\" " .
+            $addon="<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" hspace=\"4\"  border=\"0\" " .
                 tooltip(_("Eintrag in Merkliste aufnehmen")) . "></a>";
         }
-        printhead(0,0,false,"open",true,"<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_lit.gif\" border=\"0\" align=\"bottom\">",
+        printhead(0,0,false,"open",true,"<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/literature.png\" border=\"0\" align=\"bottom\">",
               htmlReady(my_substr($element->getShortName(),0,85)),$addon);
         echo "\n</tr></table>";
         $content = "";
@@ -273,14 +272,14 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
 echo _("Anzeige: ");
 if ($_the_search->start_result > 1) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result - 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr2_left.png\" hspace=\"3\" border=\"0\"></a>";
 } else {
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
 }
 echo $_the_search->start_result . " - " . $end_result;
 if ($_the_search->start_result + 4 < $num_hits) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result + 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_right.gif\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr2_right.png\" hspace=\"3\" border=\"0\"></a>";
 } else {
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
 }
@@ -298,19 +297,19 @@ if ($_the_search->start_result + 4 < $num_hits) {
 <?
 $infobox[0] = array ("kategorie" => _("Information:"),
                     "eintrag" =>    array(
-                                    array("icon" => "blank.gif","text"  =>  _("Hier können Sie in verschiedenen Katalogen nach Literatur suchen.")),
+                                    array("icon" => "icons/16/black/search.png","text"  =>  _("Hier können Sie in verschiedenen Katalogen nach Literatur suchen.")),
                                     array("icon" => "blank.gif","text"  =>  "<b>" . _("Ausgew&auml;hlter Katalog:") . "</b><br>" . $_the_search->search_plugin->description),
                                     )
                     );
 if ($num_hits){
-    $infobox[0]["eintrag"][] = array("icon" => "ausruf_small.gif","text"  => sprintf(_("Suchergebnis: %s Treffer"),$num_hits) );
+    $infobox[0]["eintrag"][] = array("icon" => "icons/16/black/info.png","text"  => sprintf(_("Suchergebnis: %s Treffer"),$num_hits) );
 } else {
-    $infobox[0]["eintrag"][] = array("icon" => "ausruf_small.gif","text"  => _("Es liegt kein Suchergebnis vor.") );
+    $infobox[0]["eintrag"][] = array("icon" => "icons/16/black/info.png","text"  => _("Es liegt kein Suchergebnis vor.") );
 }
 
 $infobox[1] = array ("kategorie" => _("Aktionen:"));
-$infobox[1]["eintrag"][] = array("icon" => "link_intern.gif","text"  => "<a href=\"".URLHelper::getLink('admin_lit_list.php')."\">" . _("Literaturlisten bearbeiten") . "</a>" );
-$infobox[1]["eintrag"][] = array("icon" => "link_intern.gif","text"  => "<a href=\"".URLHelper::getLink('admin_lit_element.php',array('_range_id'=>'new_entry'))."\">" . _("Neue Literatur anlegen") . "</a>" );
+$infobox[1]["eintrag"][] = array("icon" => "icons/16/black/literature.png","text"  => "<a href=\"".URLHelper::getLink('admin_lit_list.php')."\">" . _("Literaturlisten bearbeiten") . "</a>" );
+$infobox[1]["eintrag"][] = array("icon" => "icons/16/black/add/literature.png","text"  => "<a href=\"".URLHelper::getLink('admin_lit_element.php',array('_range_id'=>'new_entry'))."\">" . _("Neue Literatur anlegen") . "</a>" );
 
 print_infobox ($infobox, "infobox/board1.jpg");
 

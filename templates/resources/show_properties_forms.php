@@ -39,7 +39,7 @@
                 $content[] = array('kategorie' => _("Informationen:"),
                     'eintrag' => array(
                         array(
-                            'icon' => 'ausruf_small.gif',
+                            "icon" => "icons/16/black/info.png",
                             'text' => _("Hier können Sie Ressourcen-Eigenschaften bearbeiten.")
                         )
                     )

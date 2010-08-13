@@ -554,12 +554,13 @@ $SMILE_SHORT = array( //diese Kuerzel fuegen das angegebene Smiley ein (Dateinam
     ";-)"=>"wink");
 
 //Shorts for symbols
-$SYMBOL_SHORT = array( //use this shorts to insert an symbols (filename + ".gif")
-    "=)"=>"symbol03" ,
-    "(="=>"symbol04" ,
-    "(c)"=>"symbol05" ,
-    "(r)"=>"symbol06" ,
-    " tm "=>"symbol08");
+$SYMBOL_SHORT = array(
+    "=)"    => "&rArr;" ,
+    "(="    => "&lArr;" ,
+    "(c)"   => "&copy;" ,
+    "(r)"   => "&reg;" ,
+    " tm "  => "&trade;"
+);
 
 
 /*configuration for additional modules
@@ -646,7 +647,7 @@ $INST_ADMIN_DATAFIELDS_VIEW = array(
 /*
  * Fields that may not be hidden by users in their privacy settings.
  * Can be configured per permission level.
- * @see lib/edit_about.inc.php in function get_homepage_elements for 
+ * @see lib/edit_about.inc.php in function get_homepage_elements for
  * available fields.
  * Entries look like "'field_name' => true".
  */

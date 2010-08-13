@@ -464,7 +464,7 @@ function printRightRegion ( ) {
     $action_array[] = array( "icon" => "icon-disc.gif",
                  "text" => $action_text3 );
 
-    $info_array[] = array( "icon" => "ausruf_small.gif",
+    $info_array[] = array( "icon" => "icons/16/black/info.png",
                "text" => $info_text );
 
     $infobox = array( array( "kategorie" => _("Information:" ),

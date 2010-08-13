@@ -49,11 +49,11 @@ $infobox = array(
         array("kategorie" => _("Information:"),
             "eintrag" => array(
                 array(
-                    "icon" => 'ausruf_small.gif',
+                    "icon" => "icons/16/black/info.png",
                     "text" => _("Auf dieser Seite können Sie abrufen, wie weit Sie in der Stud.IP-Rangliste aufgestiegen sind. Je aktiver Sie sich im System verhalten, desto höher klettern Sie!")
                 ),
                 array(
-                    "icon" => 'ausruf_small.gif',
+                    "icon" => "icons/16/black/info.png",
                     "text" => _("Sie erhalten auf der Profilseite von MitarbeiternInnen an Einrichtungen auch weiterführende Informationen, wie Sprechstunden und Raumangaben.")
                 )
             )

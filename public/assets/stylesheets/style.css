@@ -44,8 +44,7 @@ h1.content, h2.content, h3.content {
 }
 
 h1.topic {
-    color: #FFFFFF;        $('h2', response).remove();
-
+    color: #FFFFFF;
     font-weight: bold;
     font-size: 1.6em;
     margin-bottom: 0.1em;
@@ -322,7 +321,7 @@ table.collapsable tbody.collapsed tr:first-child td:first-child a {
     background-image: url(../images/forumgrau.gif);
     background-position: 4px -6px;
 	color: #000;
-	font-weight: normal
+	font-weight: normal;
 }
 
 table.collapsable tbody.empty tr:first-child td:first-child {

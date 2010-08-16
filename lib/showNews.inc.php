@@ -73,7 +73,7 @@ function commentbox($num, $authorname, $authoruname, $date, $dellink, $content)
     $out[].="</td>";
     $out[].="<td align=right style=\"border-bottom: 1px black dotted\">";
     if ($dellink) {
-        $out[].="<a href=\"$dellink\">".Assets::img('icons/16/grey/trash.png')."</a>";
+        $out[].="<a href=\"$dellink\">".Assets::img('icons/16/blue/trash.png')."</a>";
     } else {
         $out[]=" ";
     }
@@ -333,7 +333,7 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
 
   echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\"><tr>";
 
-  $icon = Assets::img('icons/16/blue/news.png', array('class' => 'text-bottom'));
+  $icon = Assets::img('icons/16/grey/news.png', array('class' => 'text-bottom'));
 
   if ($news_item['open'])
     printhead(0, 0, $link, "open", $tempnew, $icon, $titel, $zusatz, $news_item['date']);

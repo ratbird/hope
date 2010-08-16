@@ -111,7 +111,7 @@ function PrintAktualStatusgruppen ($roles, $level = 0, $pred = '') {
         echo '<td width="90%" class="steel" style="height: 25px"><font size="-1">';
 
         printf ("<b>%s&nbsp;%s</b></font>",
-            CheckAssignRights($role_id,$user->id, $SessSemName[1])?"&nbsp;<a href=\"".URLHelper::getLink("?assign=$role_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=\"0\"". tooltip(_("In diese Gruppe eintragen"))."></a>":"",
+            CheckAssignRights($role_id,$user->id, $SessSemName[1])?"&nbsp;<a href=\"".URLHelper::getLink("?assign=$role_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr2_right.png\" border=\"0\"". tooltip(_("In diese Gruppe eintragen"))."></a>":"",
             htmlReady($title)
         );
 
@@ -129,12 +129,12 @@ function PrintAktualStatusgruppen ($roles, $level = 0, $pred = '') {
         echo '</font></td><td width="10%" class="steel" valign="bottom" align="right" nowrap>';
 
         if ((CheckUserStatusgruppe($role_id, $user->id) || $rechte) && ($folder_id = CheckStatusgruppeFolder($role_id)) ){
-            echo "<a href=\"".URLHelper::getLink("folder.php?cmd=tree&open=$folder_id#anker")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icon-disc.gif\" ".tooltip(_("Dateiordner vorhanden"))."></a>&nbsp;";
+            echo "<a href=\"".URLHelper::getLink("folder.php?cmd=tree&open=$folder_id#anker")."\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/files.png\" ".tooltip(_("Dateiordner vorhanden"))."></a>&nbsp;";
         }
 
         if ($rechte || CheckUserStatusgruppe($role_id, $user->id)) {  // nicht alle duerfen Gruppenmails/Gruppensms verschicken
-            echo "&nbsp;<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=statusgruppen.php&group_id=".$role_id."&emailrequest=1&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/mailnachricht.gif\" " . tooltip(_("Systemnachricht mit Emailweiterleitung an alle Gruppenmitglieder verschicken")) . " border=\"0\"></a>&nbsp;";
-            echo "&nbsp;<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=statusgruppen.php&group_id=".$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" " . tooltip(_("Systemnachricht an alle Gruppenmitglieder verschicken")) . " border=\"0\"></a>&nbsp;";
+            echo "&nbsp;<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=statusgruppen.php&group_id=".$role_id."&emailrequest=1&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht mit Emailweiterleitung an alle Gruppenmitglieder verschicken")) . " border=\"0\"></a>&nbsp;";
+            echo "&nbsp;<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=statusgruppen.php&group_id=".$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an alle Gruppenmitglieder verschicken")) . " border=\"0\"></a>&nbsp;";
         } else {
             echo "&nbsp;";
         }
@@ -176,11 +176,11 @@ function PrintAktualStatusgruppen ($roles, $level = 0, $pred = '') {
             echo '</td>';
             echo "<td width=\"10%\" class=\"$class\" align=\"right\">";
             if ((($data['role']->getSelfAssign() == '1')|| ($data['role']->getSelfassign()  == '2')) && $user->id == $db2->f("user_id")) {
-                echo "<a href=\"".URLHelper::getLink("?delete_id=".$role_id)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" " . tooltip(_("Aus dieser Gruppe austragen")) . " border=\"0\"></a>&nbsp; ";
+                echo "<a href=\"".URLHelper::getLink("?delete_id=".$role_id)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/trash.png\" " . tooltip(_("Aus dieser Gruppe austragen")) . " border=\"0\"></a>&nbsp; ";
             }
 
             if (($visio[$db2->f('user_id')] || $rechte) && ($db2->f('user_id') != $user->id)) {
-                echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$db2->f("username"))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" " . tooltip(_("Systemnachricht an User verschicken")) . " border=\"0\"></a>";
+                echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$db2->f("username"))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an User verschicken")) . " border=\"0\"></a>";
             }
             echo "&nbsp;</td>";
             echo "</tr>";
@@ -224,7 +224,7 @@ function PrintNonMembers ($range_id)
                 if ($rechte || $db->f("visible")=="yes" || $db->f("user_id")==$user->id) {
                     echo "<td width=\"90%\" class=\"$class\"><font size=\"-1\"><a href=\"".URLHelper::getLink("about.php?username=".$db->f("username"))."\">&nbsp;".htmlReady($db->f("fullname"))."</a>".($db->f("user_id") == $user->id && $db->f("visible") != "yes" ? " "._("(unsichtbar)") : '')."</font></td>";
                     echo "<td width=\"10%\" class=\"$class\" align=\"right\">";
-                    echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$db->f("username"))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" " . tooltip(_("Systemnachricht an User verschicken")) . " border=\"0\"></a>";
+                    echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$db->f("username"))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an User verschicken")) . " border=\"0\"></a>";
                     echo "&nbsp;</td>";
                 } else {
                     echo "<td width=\"90%\" class=\"$class\"><font size=\"-1\" color=\"#666666\">". _("(unsichtbareR NutzerIn)"). "</font></td>";
@@ -307,7 +307,7 @@ if ($delete_id)
     $infobox = array    (
         array  ("kategorie"  => _("Information:"),
             "eintrag" => array  (
-                array ( "icon" => "icons/16/black/info.png",
+                array ( "icon" => "icons/16/black/group.png",
                                             "text"  => $Memberstatus
                 )
             )
@@ -321,13 +321,13 @@ if ($delete_id)
     }
 
     $infobox[1]["kategorie"] = _("Aktionen:");
-        $infobox[1]["eintrag"][] = array (  "icon" => "nachricht1.gif" ,
+        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/mail.png" ,
                                     "text"  => _("Um Personen eine systeminterne Kurznachricht zu senden, benutzen Sie bitte das normale Briefsymbol.")
                                 );
-        $infobox[1]["eintrag"][] = array (  "icon" => "move.gif" ,
+        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/arr_2right.png" ,
                                     "text"  => _("In Gruppen mit diesem Symbol können Sie sich selbst eintragen. Klicken Sie auf das jeweilige Symbol um sich einzutragen.")
                                 );
-        $infobox[1]["eintrag"][] = array (  "icon" => "trash.gif" ,
+        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/trash.png" ,
                                     "text"  => _("Aus diesen Gruppen können Sie sich selbst austragen.")
                                 );
     if ($rechte) {
@@ -340,26 +340,26 @@ if ($delete_id)
         #$link_mail_all = $adr_all ? "<a href=\"mailto:".$adr_all."?subject=".rawurlencode($SessSemName[0])."\">" : NULL;
         #$link_mail_prelim = $adr_prelim ?  "<a href=\"mailto:".$adr_prelim."?subject=".rawurlencode($SessSemName[0])."\">" : NULL;
         #$link_mail_waiting = $adr_waiting ? "<a href=\"mailto:".$adr_waiting."?subject=".rawurlencode($SessSemName[0])."\">" : NULL;
-        $infobox[1]["eintrag"][] = array (  "icon" => "einst.gif",
+        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/admin.png",
                                 "text"  => sprintf(_("Um Gruppen anzulegen und ihnen Personen zuzuordnen nutzen Sie %sFunktionen / Gruppen verwalten%s."), "<a href=\"".URLHelper::getLink("admin_statusgruppe.php?view=statusgruppe_sem&new_sem=TRUE&range_id=$SessSemName[1]")."\">", "</a>")
                                 );
         if ($anzahltext > 0) {
-            $infobox[1]["eintrag"][] = array (  "icon" => "mailnachricht.gif" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "images/icons/16/black/mail.png" ,
                                     "text"  => _("Mit dem erweiterten Briefsymbol können Sie eine E-Mail an alle Gruppenmitglieder verschicken.")
                                 );
         }
         if ($link_mail_all) {
-            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/mail.png" ,
                                     "text"  => sprintf(_("Um eine E-Mail an alle TeilnehmerInnen der Veranstaltung zu versenden, klicken Sie %shier%s."), $link_mail_all, "</a>")
                                 );
         }
         if ($link_mail_waiting) {
-            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/mail.png" ,
                                     "text"  => sprintf(_("Um eine E-Mail an alle TeilnehmerInnen auf der Warteliste zu versenden, klicken Sie %shier%s."), $link_mail_waiting, "</a>")
                                 );
         }
         if ($link_mail_prelim) {
-            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/mail.png" ,
                                     "text"  => sprintf(_("Um eine E-Mail an alle vorläufig akzeptierten TeilnehmerInnen zu versenden, klicken Sie %shier%s."), $link_mail_prelim, "</a>")
                                 );
         }

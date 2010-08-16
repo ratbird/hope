@@ -516,15 +516,15 @@ function ForumIcon ($forumposting) {
     }
     if ($forumposting["type"]=="folder") {
         if ($forumposting["lonely"]==FALSE)
-            $bild = $GLOBALS['ASSETS_URL']."images/cont_folder.gif";
+            $bild = $GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-full.png";
         else
-            $bild = $GLOBALS['ASSETS_URL']."images/cont_folder2.gif";
+            $bild = $GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-empty.png";
     } else {
         if ($forumposting["shrink"] == TRUE && $forumposting["lonely"]==FALSE) {
             $bild = $GLOBALS['ASSETS_URL']."images/forum_shrink.gif";
             $addon = tooltip(sprintf(_("komprimierter Thread mit %s Postings"), $forumposting["shrinkcount"]));
         } else
-            $bild = $GLOBALS['ASSETS_URL']."images/cont_blatt.gif";
+            $bild = $GLOBALS['ASSETS_URL']."images/icons/16/blue/forum.png";
     }
 
     if ($forum["jshover"]==1 AND $auth->auth["jscript"] AND $forumposting["description"]!="" && $forumposting["openclose"]=="close") {
@@ -550,7 +550,7 @@ function ForumIcon ($forumposting) {
     }
     if ($cmd=="move" && $rechte && $topic_id != $forumposting["id"] )  // ein Beitrag wird verschoben, gelbe Pfeile davor
         $forumposting["icon"] =  "<a href=\"".URLHelper::getLink("?target=Thema&move_id=".$topic_id."&parent_id=".$forumposting["id"])."\">"
-                    ."<img src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=0 " . tooltip(_("Postings in dieses Thema verschieben")) . "></a>"
+                    ."<img src=\"".$GLOBALS['ASSETS_URL']."images/16/yellow/arr2_right.png\" border=0 " . tooltip(_("Postings in dieses Thema verschieben")) . "></a>"
                     .$forumposting["icon"];
     return $forumposting;
 }
@@ -934,21 +934,21 @@ function forum_print_toolbar ($id="") {
             $print .= "<td class=\"steelkante\" valign=\"middle\"><font size=\"-1\">"._("Indikator:")."&nbsp;</font>";
 
             if ($forum["indikator"] == "age")
-                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot_indikator.gif\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["age"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["age"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=age")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forum_indikator_grau.gif\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["age"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=age")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["age"]["name"]."</font></a> &nbsp;";
             if ($forum["indikator"] == "viewcount")
-                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/forum_indikator_gruen.gif\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["viewcount"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/green/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["viewcount"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=viewcount")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forum_indikator_grau.gif\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["viewcount"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=viewcount")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["viewcount"]["name"]."</font></a> &nbsp;";
             if ($forum["indikator"] == "rating")
-                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/forum_indikator_gelb.gif\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["rating"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["rating"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=rating")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forum_indikator_grau.gif\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["rating"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=rating")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["rating"]["name"]."</font></a> &nbsp;";
             if ($forum["indikator"] == "score")
-                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/forum_indikator_blau.gif\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["score"]["name"]." </font>&nbsp;";
+                $print .=  "</td><td nowrap class=\"steelgraulight_shadow\" valign=\"middle\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1right.png\" align=\"absmiddle\"><font size=\"-1\">".$indexvars["score"]["name"]." </font>&nbsp;";
             else
-                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=score")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forum_indikator_grau.gif\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["score"]["name"]."</font></a> &nbsp;";
+                $print .=  "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;<a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&open=$open&indikator=score")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/arr_1right.png\" border=\"0\" align=\"absmiddle\"><font size=\"-1\" color=\"#555555\">".$indexvars["score"]["name"]."</font></a> &nbsp;";
 
             if ($forum["view"] != "tree" && $forum["view"] != "mixed") { // Anzeige der Sortierung nicht in der Themenansicht
                 $print .= "</td><td nowrap class=\"steelkante\" valign=\"middle\">&nbsp;|&nbsp;&nbsp;<font size=\"-1\">Sortierung:&nbsp;&nbsp;</font>";
@@ -969,7 +969,7 @@ function forum_print_toolbar ($id="") {
                 $print .= "</select>&nbsp;&nbsp;";
                 $print .= "<input type=hidden name=flatviewstartposting value='".$flatviewstartposting."'>";
                 $print .= "<input type=hidden name=view value='".$forum["view"]."'>";
-                $print .= "<input type=image name=create value=\"abschicken\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\"".tooltip(_("Sortierung durchführen")).">";
+                $print .= "<input type=image name=create value=\"abschicken\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/green/accept.png\" border=\"0\"".tooltip(_("Sortierung durchführen")).">";
             }
             $print .= "&nbsp;&nbsp;</td><td class=\"blank\"><a href=\"".URLHelper::getLink("?flatviewstartposting=$flatviewstartposting&toolbar=close&open=$open")."\" ".tooltip(_("Toolbar einfahren"))."><img src=\"".$GLOBALS['ASSETS_URL']."images/griff.png\" class=\"middle\"></a>";
 
@@ -1064,9 +1064,9 @@ function forum_draw_topicline() {
 /*
 
     echo "\n<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-    echo "<tr><td class=\"topic\" width=\"99%\"><b>&nbsp;<img src='".$GLOBALS['ASSETS_URL']."images/icon-posting.gif' align=absmiddle>&nbsp; ". $SessSemName["header_line"] ." - " . _("Forum") . "</b></td><td class=\"topic\" width=\"1%\" align=\"right\" nowrap>";
+    echo "<tr><td class=\"topic\" width=\"99%\"><b>&nbsp;<img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/forum.png' align=absmiddle>&nbsp; ". $SessSemName["header_line"] ." - " . _("Forum") . "</b></td><td class=\"topic\" width=\"1%\" align=\"right\" nowrap>";
     if ($user->id != "nobody")
-        echo "<a href='".URLHelper::getLink("?forumsend=anpassen")."'><img src='".$GLOBALS['ASSETS_URL']."images/pfeillink.gif' border=0 " . tooltip(_("Look & Feel anpassen")) . ">&nbsp;</a>";
+        echo "<a href='".URLHelper::getLink("?forumsend=anpassen")."'><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/white/admin.png' border=0 " . tooltip(_("Look & Feel anpassen")) . ">&nbsp;</a>";
     echo "</td></tr>";
 */
 echo "\n<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
@@ -1243,10 +1243,10 @@ function printposting ($forumposting) {
     // die Favoritenanzeige
 
         if ($forumposting["fav"]!="0") {
-            $favicon = $GLOBALS['ASSETS_URL']."images/forum_fav.gif";
+            $favicon = $GLOBALS['ASSETS_URL']."images/icons/16/red/exclaim.png";
             $favtxt = _("aus den Favoriten entfernen");
         } else {
-            $favicon = $GLOBALS['ASSETS_URL']."images/forum_fav2.gif";
+            $favicon = $GLOBALS['ASSETS_URL']."images/icons/16/grey/exclaim.png";
             $favtxt = _("zu den Favoriten hinzufügen");
         }
         $rand = "&random=".rand();
@@ -1256,7 +1256,7 @@ function printposting ($forumposting) {
     // Antwort-Pfeil
 
         if (!(have_sem_write_perm()) && !$delete_id)
-            $forumhead[] = "<a href=\"".URLHelper::getLink("write_topic.php?write=1&root_id=".$forumposting["rootid"]."&topic_id=".$forumposting["id"])."\" target=\"_blank\"><img src=\"".$GLOBALS['ASSETS_URL']."images/antwortnew.gif\" border=0 " . tooltip(_("Hier klicken um in einem neuen Fenster zu antworten")) . "></a>";
+            $forumhead[] = "<a href=\"".URLHelper::getLink("write_topic.php?write=1&root_id=".$forumposting["rootid"]."&topic_id=".$forumposting["id"])."\" target=\"_blank\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/add/forum.png\" border=0 " . tooltip(_("Hier klicken um in einem neuen Fenster zu antworten")) . "></a>";
 
         $zusatz = ForumParseZusatz($forumhead);
 
@@ -1479,7 +1479,7 @@ $db->query($query);
 <?
 
 if ($forum["view"]=="flatfolder")
-    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder.gif\" align=\"baseline\"><font size=\"-1\"><b> Thema:</b> ".mila(ForumGetName($forum["flatfolder"]),40)." / ";
+    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-full.png\" align=\"baseline\"><font size=\"-1\"><b> Thema:</b> ".mila(ForumGetName($forum["flatfolder"]),40)." / ";
 
 if ($forum["search"]!="" && $forum["view"]=="search") {
     echo "<font size=\"-1\">&nbsp;". _('Suchbegriff:');
@@ -1501,10 +1501,10 @@ echo "</td>";
 echo "<td class=\"steelgraudunkel\" align=\"center\" width=\"10%\">";
 if ($forum["flatallopen"]=="TRUE")
     echo "<a href=\"".URLHelper::getLink(
-        "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=FALSE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/close_all.gif' border=0 " . tooltip(_("Alle zuklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
+        "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=FALSE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/icons/sonstige/close_all.png' border=0 " . tooltip(_("Alle zuklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
 else
     echo "<a href=\"".URLHelper::getLink(
-        "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=TRUE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/open_all.gif' border=0 " . tooltip(_("Alle aufklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
+        "?flatviewstartposting=".$forum["flatviewstartposting"]."&flatallopen=TRUE")."\"><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='10' align=middle><img src='".$GLOBALS['ASSETS_URL']."images/icons/sonstige/open_all.png' border=0 " . tooltip(_("Alle aufklappen")) . " align=middle><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0></a>";
 
 echo "</td><td class=\"steelgraudunkel\" align=\"right\" width=\"45%\">";
 echo forum_print_navi($forum)."&nbsp;&nbsp;&nbsp;".forum_get_index($forumposting)."&nbsp;&nbsp;&nbsp;";
@@ -1702,7 +1702,7 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
     echo "<table class=blank border=0 cellpadding=0 cellspacing=0 width=\"100%\"><tr><td class='blank'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='4'></td></tr><tr>";
     echo "<td align=center class=steelgraudunkel><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif' border=0 height='20' align=middle>";
     if (($perm->have_perm("autor")) && (($rechte) || ($SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["topic_create_autor"])))
-        echo "<a href='".URLHelper::getLink("?neuesthema=TRUE#anker")."'><img src='".$GLOBALS['ASSETS_URL']."images/forumgraurunt.gif' border=0 align=middle " . tooltip(_("Neues Thema anlegen")) . "><img src='".$GLOBALS['ASSETS_URL']."images/cont_folder2.gif' " . tooltip(_("Neues Thema anlegen")) . " border=0 align=middle></a>";
+        echo "<a href='".URLHelper::getLink("?neuesthema=TRUE#anker")."'><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png' border=0 align=middle " . tooltip(_("Neues Thema anlegen")) . "><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/add/folder-empty.png' " . tooltip(_("Neues Thema anlegen")) . " border=0 align=middle></a>";
     echo "</td></tr><tr><td class=blank>&nbsp; <br>&nbsp; <br></td></tr></table>\n";
 
 
@@ -1928,7 +1928,7 @@ function forum_move_navi ($topic_id) {
             <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr>
                 <td class="steel2" colspan="2">
-                    &nbsp; <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/move.gif" border="0">&nbsp;<b><font size="-1"><?=sprintf(_("Als Thema verschieben (zusammen mit %s Antworten):"), $count)?></font></b>
+                    &nbsp; <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr2_right.png" border="0">&nbsp;<b><font size="-1"><?=sprintf(_("Als Thema verschieben (zusammen mit %s Antworten):"), $count)?></font></b>
                 </td>
             </tr>
             <tr>
@@ -1942,7 +1942,7 @@ function forum_move_navi ($topic_id) {
                 </td>
                 <td class="steel1" width="80%">
             <?      echo "<form action=\"".URLHelper::getLink('')."\" method=\"POST\">"; ?>
-                    <input type="image" name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move.gif" border="0" <?=tooltip(_("dahin verschieben"))?>>&nbsp;
+                    <input type="image" name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr2_right.png" border="0" <?=tooltip(_("dahin verschieben"))?>>&nbsp;
                     <select Name="sem_id" size="1">
             <?      while ($db->next_record()) {
                             if ($check_modules->checkLocal('forum',$db->f("Seminar_id"),'sem')) {
@@ -1966,7 +1966,7 @@ function forum_move_navi ($topic_id) {
                 </td>
                 <td class="steel1" width="80%">
             <?      echo "<form action=\"".URLHelper::getLink('')."\" method=\"POST\">"; ?>
-                    <input type=image name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move.gif" border=0 <?=tooltip(_("dahin verschieben"))?>>&nbsp;
+                    <input type=image name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr2_right.png" border=0 <?=tooltip(_("dahin verschieben"))?>>&nbsp;
                 <select Name="inst_id" size="1">
             <?      while ($db2->next_record()) {
                             if ($check_modules->checkLocal('forum',$db2->f("Institut_id"),'inst')) {

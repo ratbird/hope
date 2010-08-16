@@ -562,10 +562,10 @@ function format ($text) {
                     "'(^|\s)-(?!-)(\S+-)+(?=(\s|$))'e",     // SL-kleiner
                     "'(^|\s)&gt;(?!&gt;)(\S+&gt;)+(?=(\s|$))'ie",  // SL-hochgestellt
                     "'(^|\s)&lt;(?!&lt;)(\S+&lt;)+(?=(\s|$))'ie",  // SL-tiefgestellt
-                    "'(^|\n)\!([^!].*)'m",              // Ueberschrift 4. Ordnung
-                    "'(^|\n)\!{2}([^!].*)'m",           // Ueberschrift 3. Ordnung
-                    "'(^|\n)\!{3}([^!].*)'m",           // Ueberschrift 2. Ordnung
-                    "'(^|\n)\!{4}([^!].*)'m",           // Ueberschrift 1. Ordnung
+                    "'(^|\n)\!([^!\n].*)'m",              // Ueberschrift 4. Ordnung
+                    "'(^|\n)\!{2}([^!\n].*)'m",           // Ueberschrift 3. Ordnung
+                    "'(^|\n)\!{3}([^!\n].*)'m",           // Ueberschrift 2. Ordnung
+                    "'(^|\n)\!{4}([^!\n].*)'m",           // Ueberschrift 1. Ordnung
                     "'(\n|\A)(([-=]+ .+(\n|\Z))+)'e",    // Listen
                                         "'(\n|\A)((\\|.+(\n|\Z))+)'e",    // Tabellen
                     "'%%(.+?)%%'s",               // ML-kursiv

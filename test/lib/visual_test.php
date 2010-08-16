@@ -34,5 +34,10 @@ class VisualFunctionsTest extends UnitTestCase {
       $this->assertEqual(htmlReady($string), $expected);
     }
   }
+
+    function testFormatReadyTicket1255()
+    {
+      $this->assertEqual(formatReady("!\nHallo Welt"), "!<br>Hallo Welt");
+    }
 }
 

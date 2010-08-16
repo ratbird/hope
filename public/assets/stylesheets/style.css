@@ -1334,12 +1334,12 @@ img.plugin_preview {
 
 /* --- general style classes ------------------------------------------------ */
 .arrow_right {
-    background: transparent url('../images/arrow_right.png') top left no-repeat !important;
-    background-position: 3px 0 !important;
+    background: transparent url('../images/icons/16/grey/arr_1right.png') top left no-repeat !important;
+    background-position: 0px 0px !important;
 }
 .arrow_down {
-    background: transparent url('../images/arrow_down.png') top left no-repeat !important;
-    background-position: 0 3px !important;
+    background: transparent url('../images/icons/16/grey/arr_1down.png') top left no-repeat !important;
+    background-position: 0px 0px !important;
 }
 
 /* --- calendar api --------------------------------------------------------- */

@@ -107,7 +107,7 @@ FOR ($i=0; $i<9; $i++)
 
     if($group_field == 'sem_tree_id'){
         $add_fields = ',sem_tree_id';
-        $add_query = "LEFT JOIN seminar_sem_tree sst ON (sst.seminar_id=seminar_user.seminar_id)";
+        $add_query = "LEFT JOIN seminar_sem_tree sst ON (sst.seminar_id=seminar_user.Seminar_id)";
     }
 
     if($group_field == 'dozent_id'){

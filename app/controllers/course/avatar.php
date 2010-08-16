@@ -45,7 +45,7 @@ class Course_AvatarController extends AuthenticatedController
         $layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
 
         if ($this->studygroup_mode) {
-            Navigation::activateItem('/course/studygroup/admin');
+            Navigation::activateItem('/course/admin');
         } else {
             Navigation::activateItem('/admin/course/details');
         }

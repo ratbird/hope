@@ -138,7 +138,7 @@ $width_namecolumn = 60;
             </span>
             <span style="vertical-align: middle">
                 <a href="<?= $controller->url_for('course/basicdata/deletedozent', $dozent["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("trash.gif") ?>
+                <?= Assets::img("icons/16/blue/trash.png") ?>
                 </a>
             </span>
             <? endif; ?>
@@ -176,7 +176,7 @@ $width_namecolumn = 60;
             </span>
             <span style="vertical-align: middle">
                 <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $deputy["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("trash.gif") ?></a>
+                <?= Assets::img("icons/16/blue/trash.png") ?></a>
             </span>
             <? endif; ?>
 
@@ -221,7 +221,7 @@ $width_namecolumn = 60;
             </span>
             <span style="margin: 3px; vertical-align: middle">
                 <a href="<?= $controller->url_for('course/basicdata/deletetutor', $tutor["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("trash.gif") ?></a>
+                <?= Assets::img("icons/16/blue/trash.png") ?></a>
             </span>
             <? endif; ?>
 

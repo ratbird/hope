@@ -73,10 +73,12 @@ class StartNavigation extends Navigation
 
         parent::initSubNavigation();
 
+        $sem_create_perm = in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent';
+
         // my courses
-    if ($perm->have_perm('root')) {
+        if ($perm->have_perm('root')) {
             $navigation = new Navigation(_('Veranstaltungsübersicht'), 'sem_portal.php');
-    } else if ($perm->have_perm('admin')) {
+        } else if ($perm->have_perm('admin')) {
             $navigation = new Navigation(_('Veranstaltungen an meinen Einrichtungen'), 'meine_seminare.php');
         } else {
             $navigation = new Navigation(_('Meine Veranstaltungen'), 'meine_seminare.php');
@@ -96,7 +98,7 @@ class StartNavigation extends Navigation
         if ($perm->have_perm('dozent')) {
             $navigation = new Navigation(_('Verwaltung von Veranstaltungen'), 'adminarea_start.php?list=TRUE');
 
-            if ($perm->have_perm(get_config('SEM_CREATE_PERM'))) {
+            if ($perm->have_perm($sem_create_perm)) {
                 $navigation->addSubNavigation('new_course', new Navigation(_('neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
             }
 
@@ -108,19 +110,19 @@ class StartNavigation extends Navigation
         }
 
         // insitute administration
-    if ($perm->have_perm('admin')) {
+        if ($perm->have_perm('admin')) {
             $navigation = new Navigation(_('Verwaltung von Einrichtungen'), 'admin_institut.php?list=TRUE');
             $this->addSubNavigation('admin_inst', $navigation);
         }
 
         // user administration
-    if ($perm->have_perm('root')) {
+        if ($perm->have_perm('root')) {
             $navigation = new Navigation(_('Verwaltung globaler Einstellungen'), 'new_user_md5.php');
             $this->addSubNavigation('admin_user', $navigation);
-    } else if ($perm->have_perm('admin') && !get_config('RESTRICTED_USER_MANAGEMENT')) {
+        } else if ($perm->have_perm('admin') && !get_config('RESTRICTED_USER_MANAGEMENT')) {
             $navigation = new Navigation(_('globale Benutzerverwaltung'), 'new_user_md5.php');
             $this->addSubNavigation('admin_user', $navigation);
-    }
+        }
 
         // plugin and role administration
         if ($perm->have_perm('root')) {
@@ -136,6 +138,7 @@ class StartNavigation extends Navigation
             if (get_config('CALENDAR_ENABLE')) {
                 $navigation->addSubNavigation('calendar', new Navigation(_('Terminkalender'), 'calendar.php'));
             }
+
             $navigation->addSubNavigation('address_book', new Navigation(_('Adressbuch'), 'contact.php'));
             $navigation->addSubNavigation('schedule', new Navigation(_('Stundenplan'), 'dispatch.php/calendar/schedule'));
             $this->addSubNavigation('messaging', $navigation);
@@ -162,10 +165,10 @@ class StartNavigation extends Navigation
         $this->addSubNavigation('search', $navigation);
 
         // external help
-    if (get_config('EXTERNAL_HELP')) {
+        if (get_config('EXTERNAL_HELP')) {
             $navigation = new Navigation(_('Hilfe'), format_help_url('Basis.Allgemeines'));
             $navigation->addSubNavigation('intro', new Navigation(_('Schnelleinstieg'), format_help_url('Basis.SchnellEinstiegKomplett')));
             $this->addSubNavigation('help', $navigation);
-    }
+        }
     }
 }

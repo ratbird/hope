@@ -582,15 +582,18 @@ function ajax_show_body($mid)   {
 
     if ($sms_data['view'] == 'in')
         {
-            $query = "SELECT message.*, folder,confirmed_read,answered,message_user.readed,dont_delete,Vorname,Nachname,username,count(dokument_id) as num_attachments FROM message_user
+             $stmt = $db->prepare("SELECT message.*, folder,confirmed_read,answered,message_user.readed,dont_delete,Vorname,Nachname,username,count(dokument_id) as num_attachments FROM message_user
                     LEFT JOIN message USING (message_id) LEFT JOIN auth_user_md5 ON (autor_id=auth_user_md5.user_id)
                     LEFT JOIN dokumente ON range_id=message_user.message_id
-                    WHERE message_user.user_id = '".$user_id."' AND message_user.snd_rec = 'rec'
+                    WHERE message_user.user_id = :user_id AND message_user.snd_rec = 'rec'
                     AND message_user.deleted = 0
-                    AND message.message_id = '".$mid."' GROUP BY message_user.message_id";
-            $res = $db->query($query);
+                    AND message.message_id = :mid GROUP BY message_user.message_id");
+            $stmt->bindParam(':user_id', $user_id);
+            $stmt->bindParam(':mid', $mid);
+            $stmt->execute();
+
             $tmp_move_to_folder = sizeof($sms_data['tmp']['move_to_folder']);
-            $row = $res->fetch();
+            $row = $stmt->fetch();
 
             $prm['folder'] = $my_messaging_settings['folder']['active']['in'];
             $prm['answered'] = $row["answered"];

@@ -77,7 +77,7 @@ class RSSFeed
 
                 if ($v['enclosure_url']) {
                     echo "<tr><td></td>
-                    <td><a href=\"{$v['enclosure_url']}\" TARGET=\"_blank\"><img src=\"". $GLOBALS['ASSETS_URL'] . "images/podcast_icon.gif\" border=\"0\" align=\"absmiddle\"></a>
+                    <td><a href=\"{$v['enclosure_url']}\" TARGET=\"_blank\"><img src=\"". $GLOBALS['ASSETS_URL'] . "icons/16/grey/rss.png\" border=\"0\" align=\"absmiddle\"></a>
                     <font size=\"-2\">".htmlReady('('.$v['enclosure_type'] . ' - ' . floor($v['enclosure_length']/1024) . ' kb)')."</font>
                     </td></tr>\n";
                 }

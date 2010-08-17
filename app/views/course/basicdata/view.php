@@ -12,12 +12,12 @@
 //Infobox:
 $aktionen = array();
 $aktionen[] = array(
-              "icon" => "edit_transparent.gif",
+              "icon" => "icons/16/black/edit.png",
               "text" => '<a href="' .
 $controller->url_for('course/avatar/update', $course_id) .
                         '">' . _("Bild ändern") . '</a>');
 $aktionen[] = array(
-              "icon" => "trash.gif",
+              "icon" => "icons/16/black/trash.png",
               "text" => '<a href="' .
 $controller->url_for('course/avatar/delete', $course_id) .
                         '">' . _("Bild löschen") . '</a>');

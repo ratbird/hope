@@ -510,14 +510,14 @@ $query_time = $query_time_sort;
 
         // build infobox_content > viewfilter
         $time_by_links = "";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=all\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "all")."\" width=\"8\" border=\"0\">&nbsp;"._("alle Nachrichten")."</a><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" height=\"2\"><br>";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=24h\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "24h")."\" width=\"8\" border=\"0\">&nbsp;"._("letzte 24 Stunden")."</a><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" height=\"2\"><br>";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=7d\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "7d")."\" width=\"8\" border=\"0\">&nbsp;"._("letzte 7 Tage")."</a><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" height=\"2\"><br>";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=30d\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "30d")."\" width=\"8\" border=\"0\">&nbsp;"._("letzte 30 Tage")."</a><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" height=\"2\"><br>";
+        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=all\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "all")."\" width=\"8\" border=\"0\">&nbsp;"._("alle Nachrichten")."</a><br>";
+        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=24h\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "24h")."\" width=\"8\" border=\"0\">&nbsp;"._("letzte 24 Stunden")."</a><br>";
+        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=7d\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "7d")."\" width=\"8\" border=\"0\">&nbsp;"._("letzte 7 Tage")."</a><br>";
+        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=30d\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "30d")."\" width=\"8\" border=\"0\">&nbsp;"._("letzte 30 Tage")."</a><br>";
         $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=older\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "older")."\" width=\"8\" border=\"0\">&nbsp;"._("&auml;lter als 30 Tage")."</a>";
 
         $view_by_links = "";
-        $view_by_links .= "<a href=\"".$PHP_SELF."?sms_time=new\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "new")."\" width=\"8\" border=\"0\">&nbsp;"._("neue Nachrichten")."</a><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" height=\"2\">";
+        $view_by_links .= "<a href=\"".$PHP_SELF."?sms_time=new\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "new")."\" width=\"8\" border=\"0\">&nbsp;"._("neue Nachrichten")."</a><br>";
 
         // did we came from a ...?
         if ($SessSemName[0] && $SessSemName["class"] == "inst") {
@@ -543,7 +543,7 @@ $query_time = $query_time_sort;
             array("kategorie" => _("weitere Ansichten:"),"eintrag" => array(
                 array('icon' => 'icons/16/black/search.png', "text" => $view_by_links))),
             array("kategorie" => _("Optionen:"),"eintrag" => array(
-                array("icon" => "link_intern.gif", "text" => sprintf("<a href=\"%s?cmd_show=openall\">"._("Alle Nachrichten aufklappen")."</a><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" height=\"2\"><br><a href=\"%s?cmd=mark_allsmsreaded\">"._("Alle als gelesen speichern")."</a><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" border=\"0\" height=\"2\"><br>    <a href=\"%s?cmd=admin_folder&cmd_2=new\">"._("Neuen Ordner erstellen")."</a>", $PHP_SELF, $PHP_SELF, $PHP_SELF, $PHP_SELF))))
+                array("icon" => "link_intern.gif", "text" => sprintf("<a href=\"%s?cmd_show=openall\">"._("Alle Nachrichten aufklappen")."</a><br><a href=\"%s?cmd=mark_allsmsreaded\">"._("Alle als gelesen speichern")."</a><br><a href=\"%s?cmd=admin_folder&cmd_2=new\">"._("Neuen Ordner erstellen")."</a>", $PHP_SELF, $PHP_SELF, $PHP_SELF, $PHP_SELF))))
         );
         // display infobox
         print_infobox($infobox, "infobox/messages.jpg"); ?>

@@ -18,7 +18,7 @@
                     $name ?>_parameter" value="<?= $defaultName ?>">
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>
-            <input style="vertical-align:middle" type="image" src="<?= Assets::image_path("icons/16/black/search.png")?>">
+            <input style="vertical-align:middle" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>">
     <? endif ?>
         </div>
 <? endif ?>

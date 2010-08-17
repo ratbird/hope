@@ -30,15 +30,14 @@ class MessagesController extends AuthenticatedController {
    */
 
   function get_msg_body_action($id = NULL, $open = NULL , $n = NULL) {
-    global $sms_data, $count;
+    global $sms_data, $count, $msging;
+    $msging = new messaging();
     $count = $n;
     if (is_null($id) || is_null($open) || is_null($n)) {
       $this->set_status(400);
       return $this->render_nothing();
     }
-    $this->id = $id;
     $sms_data['open'] = $open ? $id : NULL;
-    $this->msg = ajax_show_body($id);
-    $this->render_template('messages/open_or_close');
+    $this->render_text(studip_utf8encode(ajax_show_body($id)));
   }
 }

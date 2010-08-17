@@ -393,7 +393,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
 <tr>
     <td class="blank" valign="top">
     <form method="POST" name="edit" action="<?= UrlHelper::getLink() ?>">
-    <table class="default" cellpadding="2" cellspacing="0">
+    <table class="default">
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Name:")?> </td>
         <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" name="Name" size=50 maxlength=254 value="<?php echo htmlReady($db->f("Name")) ?>"></td>
@@ -442,7 +442,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
     ?></select></td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
-        <td class="<? echo $cssSw->getClass() ?>" ><?=_("Strasse:")?> </td>
+        <td class="<? echo $cssSw->getClass() ?>" ><?=_("Straße:")?> </td>
         <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" name="strasse" size=32 maxlength=254 value="<?php echo htmlReady($db->f("Strasse")) ?>"></td>
     </tr>
     <tr <? $cssSw->switchClass() ?>><td class="<? echo $cssSw->getClass() ?>" ><?=_("Ort:")?> </td><td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" name="plz" size=32 maxlength=254 value="<?php echo htmlReady($db->f("Plz")) ?>"></td></tr>

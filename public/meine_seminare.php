@@ -262,7 +262,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
 
     if($group_field == 'sem_tree_id'){
         $add_fields = ',sem_tree_id';
-        $add_query = "LEFT JOIN seminar_sem_tree sst ON (sst.seminar_id=seminar_user.Seminar_id)";
+        $add_query = "LEFT JOIN seminar_sem_tree sst ON (sst.seminar_id=seminare.Seminar_id)";
     }
 
     if($group_field == 'dozent_id'){

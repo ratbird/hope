@@ -2,7 +2,7 @@
     <?= MessageBox::error($error) ?>
 <? endif ?>
 
-<h1><?= _("Einrichtungssbild hochladen") ?></h1>
+<h1><?= _("Einrichtungsbild hochladen") ?></h1>
 
 <div style="float: left; padding: 0 1em 1em 0;">
     <?= InstituteAvatar::getAvatar($institute_id)->getImageTag(Avatar::NORMAL) ?>

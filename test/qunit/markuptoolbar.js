@@ -1,54 +1,39 @@
 module("markup toolbar", {
 
   setup: function () {
-    this.klon = $("textarea-editor").clone(true).writeAttribute({id: null});
-    $("textarea-editor").insert({after: this.klon});
-    this.textarea = this.klon.down("textarea");
-  },
-
-  teardown: function () {
-    delete this.textarea;
-    this.klon.remove();
-    delete this.klon;
+    this.klon = $("#textarea-editor").clone().removeAttr('id');
+    $("#textarea-editor").after(this.klon);
+    this.textarea = this.klon.find("textarea");
   },
 
   addToolbar: function (buttonSet) {
-    STUDIP.Markup.addToolbar(this.textarea, buttonSet);
-    return this.textarea.previous(".editor_toolbar");
+    $(this.textarea).addToolbar(buttonSet);
+    return $(this.textarea).prev(".editor_toolbar");
   }
 });
 
 
 test("default toolbar for textarea", function () {
-  STUDIP.Markup.addToolbar(this.textarea);
-  var toolbar = this.textarea.previous(".editor_toolbar");
+  $(this.textarea).addToolbar(STUDIP.Markup.buttonSet);
+  var toolbar = this.textarea.prev(".editor_toolbar");
   ok(toolbar);
-  equals(toolbar.select("button").size(), STUDIP.Markup.buttonSet.length);
+  equals(toolbar.find("button").length, STUDIP.Markup.buttonSet.length);
 });
 
 test("empty toolbar for textarea", function () {
-  var toolbar = this.addToolbar({});
+  var toolbar = this.addToolbar([]);
   ok(toolbar);
-  equals(toolbar.select("button").size(), 0);
-});
-
-test("add button set to toolbar", function () {
-  var toolbar = this.addToolbar({});
-  equals(toolbar.select("button").size(), 0);
-  this.textarea.addButtonSet(STUDIP.Markup.buttonSet);
-  equals(toolbar.select("button").size(), STUDIP.Markup.buttonSet.length);
+  equals(toolbar.find("button").length, 0);
 });
 
 test("add single button to toolbar", function () {
-  var toolbar = this.addToolbar({});
-  this.textarea.addButton({name: "klass", "label": "label", open: "<", close: ">"});
+  var toolbar = this.addToolbar([{name: "klass", "label": "label", open: "<", close: ">"}]);
 
-  var buttons = toolbar.select("button");
-  equals(buttons.size(), 1);
+  var buttons = toolbar.find("button");
+  equals(buttons.length, 1);
 
-  ok(buttons[0].hasClassName("klass"));
+  ok(buttons.first().hasClass("klass"));
   equals(buttons[0].innerHTML, "label");
-  $("main").show(); buttons[0].simulate('click'); $("main").hide();
-  equals(this.textarea.value, "<>");
+  $("#main").show(); buttons.first().trigger('click'); $("#main").hide();
+  equals(this.textarea.val(), "<>");
 });
-

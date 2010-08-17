@@ -18,7 +18,7 @@
                     $name ?>_parameter" value="<?= $defaultName ?>">
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>
-            <input style="vertical-align:middle" type="image" src="<?= Assets::image_path("suche2.gif")?>">
+            <input style="vertical-align:middle" type="image" src="<?= Assets::image_path("icons/16/black/search.png")?>">
     <? endif ?>
         </div>
 <? endif ?>
@@ -30,7 +30,9 @@
                 "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
                 <?= $JSfunction ? htmlReady($JSfunction) : "null" ?>);
 <? if ($beschriftung && !$defaultID) : ?>
-            $("#<?= $id ?>").attr("value", "<?= $beschriftung ?>");
-            $("#<?= $id ?>").css("color", "<?= $descriptionColor ?>");
+            (function ($) {
+                $("#<?= $id ?>").attr("value", "<?= $beschriftung ?>");
+                $("#<?= $id ?>").css("color", "<?= $descriptionColor ?>");
+            })(jQuery);
 <? endif ?>
         </script>

@@ -16,7 +16,7 @@ if ($withButton) : ?>
 </select>
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>
-    <input style="vertical-align:middle" type="image" src="<?= Assets::image_path("suche2.gif") ?>">
+    <input style="vertical-align:middle" type="image" src="<?= Assets::image_path("icons/16/black/search.png") ?>">
     <? endif ?>
     </div>
 <? endif ?>

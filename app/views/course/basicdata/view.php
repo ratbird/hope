@@ -130,10 +130,10 @@ $width_namecolumn = 60;
             <span style="argin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $dozent["user_id"], "dozent") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("move_up") ?></a>
+                <?= Assets::img("icons/16/yellow/arr_2up.png") ?></a>
                 <? endif; if ($num < count($dozenten)-1) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $dozent["user_id"], "dozent") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("move_down") ?></a>
+                <?= Assets::img("icons/16/yellow/arr_2down.png") ?></a>
                 <? endif; ?>
             </span>
             <span style="vertical-align: middle">
@@ -150,8 +150,11 @@ $width_namecolumn = 60;
     <? if ($perm_dozent) : ?>
     <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
         <?= sprintf(_("%s hinzufügen"), $dozenten_title) ?>
-        <br><input type="image" src="<?= Assets::image_path("move_left") ?>" name="add_dozent">
-            <?= $dozentensuche ?>
+        <br>
+            <span style="white-space: nowrap">
+                <input type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_dozent">
+                <?= $dozentensuche ?>
+            </span>
         <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
     </td>
     <? endif; ?>
@@ -184,8 +187,11 @@ $width_namecolumn = 60;
     <? if ($perm_dozent) : ?>
     <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
         <?= sprintf(_("%s hinzufügen"), $deputy_title) ?>
-        <br><input type="image" src="<?= Assets::image_path("move_left") ?>" name="add_deputy">
-            <?= $deputysearch ?>
+        <br>
+            <span style="white-space: nowrap">
+                <input type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_deputy">
+                <?= $deputysearch ?>
+            </span>
         <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
     </td>
     <? endif; ?>
@@ -207,10 +213,10 @@ $width_namecolumn = 60;
             <span style="margin: 3px; vertical-align: middle; white-space: nowrap;">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $tutor["user_id"], "tutor") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("move_up") ?></a>
+                <?= Assets::img("icons/16/yellow/arr_2up.png") ?></a>
                 <? endif; if ($num < count($tutoren)-1) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $tutor["user_id"], "tutor") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("move_down") ?></a>
+                <?= Assets::img("icons/16/yellow/arr_2down.png") ?></a>
                 <? endif; ?>
             </span>
             <span style="margin: 3px; vertical-align: middle">
@@ -226,8 +232,11 @@ $width_namecolumn = 60;
     <? if ($perm_dozent) : ?>
     <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
         <?= sprintf(_("%s hinzufügen"), $tutor_title) ?>
-        <br><input type="image" src="<?= Assets::image_path("move_left") ?>" name="add_tutor">
-            <?= $tutorensuche ?>
+        <br>
+            <span style="white-space: nowrap">
+                <input type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_tutor">
+                <?= $tutorensuche ?>
+            </span>
         <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
     </td>
     <? endif; ?>
@@ -273,12 +282,12 @@ $width_namecolumn = 60;
 </div>
 </form>
 <script>
-$("#settings").accordion({
+jQuery("#settings").accordion({
     <?= $flash['open'] ? "active: '#".$flash['open']."',\n" : "" ?>
     collapsible: true,
     autoHeight: false,
     change: function (event, ui) {
-        $('#open_variable').attr('value', ui.newHeader.attr('id'));
+    	jQuery('#open_variable').attr('value', ui.newHeader.attr('id'));
     }
 });
 </script>

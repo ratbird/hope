@@ -145,9 +145,7 @@ class PageLayout
      */
     public static function addStyle($content)
     {
-        $style_attributes = array('type' => 'text/css');
-
-        self::addHeadElement('style', $style_attributes, $content);
+        self::addHeadElement('style', array(), $content);
     }
 
     /**
@@ -160,8 +158,6 @@ class PageLayout
     {
         $style_attributes = array(
             'rel'   => 'stylesheet',
-            'type'  => 'text/css',
-        //  'media' => 'screen',
             'href'  => Assets::stylesheet_path($source));
 
         self::addHeadElement('link', array_merge($style_attributes, $attributes));
@@ -190,7 +186,6 @@ class PageLayout
     public static function addScript($source)
     {
         $script_attributes = array(
-            'type'  => 'text/javascript',
             'src'   => Assets::javascript_path($source));
 
         self::addHeadElement('script', $script_attributes, '');
@@ -204,7 +199,6 @@ class PageLayout
     public static function removeScript($source)
     {
         $script_attributes = array(
-            'type'  => 'text/javascript',
             'src'   => Assets::javascript_path($source));
 
         self::removeHeadElement('script', $script_attributes);

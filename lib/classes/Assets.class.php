@@ -181,18 +181,18 @@ class Assets {
    * Examples:
    *
    *   Assets::script('prototype') =>
-   *     <script language="JavaScript" type="text/javascript" src="/javascript/prototype.js"></script>
+   *     <script src="/javascript/prototype.js"></script>
    *
    *   Assets::script('common.javascript', '/elsewhere/cools') =>
-   *     <script language="JavaScript" type="text/javascript" src="/js/common.javascript"></script>
-   *     <script language="JavaScript" type="text/javascript" src="/elsewhere/cools.js"></script>
+   *     <script src="/js/common.javascript"></script>
+   *     <script src="/elsewhere/cools.js"></script>
    */
   static function script($atLeastOneArgument) {
     $html = '';
     foreach (func_get_args() as $source) {
       $source = Assets::javascript_path($source);
       $html .= Assets::content_tag('script', '',
-                 array('type' => 'text/javascript', 'src' => $source));
+                 array('src' => $source));
       $html .= "\n";
     }
 
@@ -218,14 +218,14 @@ class Assets {
    * Examples:
    *
    *   Assets::stylesheet('style') =>
-   *     <link href="/stylesheets/style.css" media="screen" rel="stylesheet" type="text/css">
+   *     <link href="/stylesheets/style.css" media="screen" rel="stylesheet">
    *
    *   Assets::stylesheet('style', array('media' => 'all'))  =>
-   *     <link href="/stylesheets/style.css" media="all" rel="stylesheet" type="text/css">
+   *     <link href="/stylesheets/style.css" media="all" rel="stylesheet">
    *
    *   Assets::stylesheet('random.styles', '/css/stylish') =>
-   *     <link href="/stylesheets/random.styles" media="screen" rel="stylesheet" type="text/css">
-   *     <link href="/css/stylish.css" media="screen" rel="stylesheet" type="text/css">
+   *     <link href="/stylesheets/random.styles" media="screen" rel="stylesheet">
+   *     <link href="/css/stylish.css" media="screen" rel="stylesheet">
    */
   static function stylesheet($atLeastOneArgument) {
     $sources = func_get_args();
@@ -238,7 +238,6 @@ class Assets {
     foreach ($sources as $source) {
       $source = Assets::stylesheet_path($source);
       $opt = array_merge(array('rel'   => 'stylesheet',
-                               'type'  => 'text/css',
                                'media' => 'screen',
                                'href'  => $source),
                          $sourceOptions);

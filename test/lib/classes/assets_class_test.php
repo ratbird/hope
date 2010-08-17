@@ -181,19 +181,19 @@ class AssetsHelpersTestCase extends UnitTestCase {
 
 
   function test_script_should_return_script_tag() {
-    $expected = '<script type="text/javascript" src="'.STATIC_ASSETS_URL.'javascripts/prototype.js"></script>' . "\n";
+    $expected = '<script src="'.STATIC_ASSETS_URL.'javascripts/prototype.js"></script>' . "\n";
     $this->assertEqual(Assets::script('prototype'), $expected);
   }
 
 
   function test_script_should_return_multiple_script_tags() {
-    $expected  = '<script type="text/javascript" src="'.STATIC_ASSETS_URL.'javascripts/prototype.js"></script>' . "\n";
-    $expected .= '<script type="text/javascript" src="'.STATIC_ASSETS_URL.'javascripts/scriptaculous.js"></script>' . "\n";
+    $expected  = '<script src="'.STATIC_ASSETS_URL.'javascripts/prototype.js"></script>' . "\n";
+    $expected .= '<script src="'.STATIC_ASSETS_URL.'javascripts/scriptaculous.js"></script>' . "\n";
     $this->assertEqual(Assets::script('prototype', 'scriptaculous'), $expected);
   }
 
   function test_script_should_respect_url_parameters() {
-    $expected  = '<script type="text/javascript" '.
+    $expected  = '<script '.
                  'src="'.STATIC_ASSETS_URL.'javascripts/scriptaculous.js?load=effects,dragdrop">'.
                  '</script>' . "\n";
     $this->assertEqual(Assets::script('scriptaculous.js?load=effects,dragdrop'), $expected);
@@ -201,23 +201,23 @@ class AssetsHelpersTestCase extends UnitTestCase {
 
 
   function test_stylesheet_should_return_link_tag() {
-    $expected = '<link href="'.STATIC_ASSETS_URL.'stylesheets/blue.css" media="screen" rel="stylesheet" type="text/css">' . "\n";
+    $expected = '<link href="'.STATIC_ASSETS_URL.'stylesheets/blue.css" media="screen" rel="stylesheet">' . "\n";
     $this->assertEqual(Assets::stylesheet('blue'), $expected);
   }
 
 
   function test_stylesheet_should_return_multiple_link_tags() {
-    $expected  = '<link href="'.STATIC_ASSETS_URL.'stylesheets/blue.css" media="screen" rel="stylesheet" type="text/css">' . "\n";
-    $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/green.css" media="screen" rel="stylesheet" type="text/css">' . "\n";
-    $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/red.css" media="screen" rel="stylesheet" type="text/css">' . "\n";
+    $expected  = '<link href="'.STATIC_ASSETS_URL.'stylesheets/blue.css" media="screen" rel="stylesheet">' . "\n";
+    $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/green.css" media="screen" rel="stylesheet">' . "\n";
+    $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/red.css" media="screen" rel="stylesheet">' . "\n";
     $this->assertEqual(Assets::stylesheet('blue', 'green', 'red'), $expected);
   }
 
 
   function test_stylesheet_should_respect_options() {
-    $expected  = '<link href="'.STATIC_ASSETS_URL.'stylesheets/blue.css" media="all" rel="stylesheet" type="text/css">' . "\n";
-    $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/green.css" media="all" rel="stylesheet" type="text/css">' . "\n";
-    $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/red.css" media="all" rel="stylesheet" type="text/css">' . "\n";
+    $expected  = '<link href="'.STATIC_ASSETS_URL.'stylesheets/blue.css" media="all" rel="stylesheet">' . "\n";
+    $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/green.css" media="all" rel="stylesheet">' . "\n";
+    $expected .= '<link href="'.STATIC_ASSETS_URL.'stylesheets/red.css" media="all" rel="stylesheet">' . "\n";
     $this->assertEqual(Assets::stylesheet('blue', 'green', 'red', array('media' => 'all')), $expected);
   }
 }

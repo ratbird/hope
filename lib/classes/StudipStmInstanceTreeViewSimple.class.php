@@ -127,9 +127,9 @@ class StudipStmInstanceTreeViewSimple {
             if ($num_entries = $this->tree->getNumEntries($item_id)){
                 if ($this->show_entries != "level"){
                     echo "<a " . tooltip(_("alle Einträge auf dieser Ebene anzeigen")) ." href=\"" . $this->getSelf("cmd=show_stm_tree&item_id=$item_id") ."\">";
-                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/forumrot.gif\" border=\"0\">&nbsp;";
+                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1right.png\" border=\"0\">&nbsp;";
                 } else {
-                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/forumrotrunt.gif\" border=\"0\">&nbsp;";
+                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1down.png\" border=\"0\">&nbsp;";
                 }
                 printf(_("<b>%s</b> Eintr&auml;ge auf dieser Ebene.&nbsp;"),$num_entries);
                 if ($this->show_entries != "level"){

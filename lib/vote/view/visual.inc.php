@@ -167,7 +167,7 @@ function createBoxLine ($title, $imgURL, $userName, $userID, $date) {
    $htmlArrow =
       "  <td bgcolor=\"".$timecolor."\" class=\"printhead3\" nowrap ".
       "      width=\"1%\" align=\"left\" valign=\"top\">\n".
-      "   &nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/forumrotrunt.gif\">\n".
+      "   &nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1down.png\">\n".
       " </td>";
 
    $htmlIcon =

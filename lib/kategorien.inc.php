@@ -36,7 +36,7 @@ function print_freie($username) {
     $db->query("SELECT * FROM auth_user_md5 LEFT JOIN kategorien ON(range_id=user_id) WHERE username='$username' AND NOT ISNULL(range_id) ORDER BY priority ");
 
     echo '<tr><td align="left" valign="top" class="blank"><blockquote><br>'. "\n";
-    echo _("Hier können Sie beliebige eigene Kategorien anlegen. Diese Kategorien erscheinen auf Ihrer Profilseite. Mit den Pfeilsymbolen k&ouml;nnen sie die Reihenfolge, in der die Kategorien angezeigt werden, ver&auml;ndern.");
+    echo _("Hier können Sie beliebige eigene Kategorien anlegen. Diese Kategorien erscheinen auf Ihrer Profilseite. Mit den Pfeilsymbolen k&ouml;nnen Sie die Reihenfolge, in der die Kategorien angezeigt werden, ver&auml;ndern.");
     echo "<br>\n";
     echo _("Verwenden Sie die Option \"f&uuml;r andere unsichtbar\", um Memos anzulegen, die nur f&uuml;r Sie selbst auf der Profilseite sichtbar werden - andere Nutzer k&ouml;nnen diese Daten nicht einsehen.");
     echo "\n<br><br></blockquote></td></tr>\n".'<tr><td class="blank">';

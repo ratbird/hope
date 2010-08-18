@@ -18,7 +18,7 @@
             <?= Assets::img('ausruf_small') ?>
           </td>
           <td width="99%" align="left">
-            <?= _("Hier können sie ihre Kontaktdaten für die Einrichtungen angeben, an denen Sie tätig sind.") ?>
+            <?= _("Hier können Sie ihre Kontaktdaten für die Einrichtungen angeben, an denen Sie tätig sind.") ?>
           </td>
       </tr>
 

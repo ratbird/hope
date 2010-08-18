@@ -43,7 +43,7 @@ function print_rss($username) {
 
     $db->query(sprintf("SELECT * FROM auth_user_md5 a, rss_feeds r WHERE a.username='%s' AND a.user_id=r.user_id ORDER BY r.priority",$username));
     echo "<tr><td align=\"left\" valign=\"top\" class=\"blank\"><p class=\"info\"><br>";
-    echo _("Hier können Sie beliebige eigene RSS-Feeds einbinden. Diese RSS-Feeds erscheinen auf Ihrer pers&ouml;nlichen Startseite. Mit den Pfeilsymbolen k&ouml;nnen sie die Reihenfolge, in der die RSS-Feeds angezeigt werden, ver&auml;ndern.");
+    echo _("Hier können Sie beliebige eigene RSS-Feeds einbinden. Diese RSS-Feeds erscheinen auf Ihrer pers&ouml;nlichen Startseite. Mit den Pfeilsymbolen k&ouml;nnen Sie die Reihenfolge, in der die RSS-Feeds angezeigt werden, ver&auml;ndern.");
     echo "<br>\n";
     echo _("<b>Achtung:</b> Je mehr RSS-Feeds Sie definieren, desto l&auml;nger ist die Ladezeit der Startseite f&uuml;r Sie!");
     echo "<br>\n";

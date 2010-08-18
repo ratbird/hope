@@ -762,9 +762,9 @@ if ($view == 'Bild') {
 
     echo '</td><td class="'.$cssSw->getClass().'" width="70%" align="left" valign="top">';
     echo '<form enctype="multipart/form-data" action="' . $_SERVER['PHP_SELF'] . '?cmd=copy&username=' . $username . '&view=Bild&studipticket='.get_ticket().'" method="POST">';
-    echo "<br>\n" . _("Hochladen eines Bildes:") . "<br><br>\n" . _("1. Wählen sie mit <b>Durchsuchen</b> eine Bilddatei von ihrer Festplatte aus.") . "<br><br>\n";
+    echo "<br>\n" . _("Hochladen eines Bildes:") . "<br><br>\n" . _("1. Wählen Sie mit <b>Durchsuchen</b> eine Bilddatei von ihrer Festplatte aus.") . "<br><br>\n";
     echo '&nbsp;&nbsp;<input name="imgfile" type="file" style="width: 80%" cols="'.round($max_col*0.7*0.8)."\"><br><br>\n";
-    echo _("2. Klicken sie auf <b>absenden</b>, um das Bild hochzuladen.") . "<br><br>\n";
+    echo _("2. Klicken Sie auf <b>absenden</b>, um das Bild hochzuladen.") . "<br><br>\n";
     echo '&nbsp;&nbsp;<input type="image" ' . makeButton('absenden', 'src') . ' border="0" value="' . _("absenden") . "\"><br><br>\n";
     echo '<b>'. _("ACHTUNG!"). '</b><br>';
     printf (_("Die Bilddatei darf max. %d KB groß sein, es sind nur Dateien mit den Endungen %s, %s oder %s erlaubt!"), Avatar::MAX_FILE_SIZE / 1024, '<b>.jpg</b>', '<b>.png</b>', '<b>.gif</b>');
@@ -1057,7 +1057,7 @@ if ($view == 'Studium') {
             echo _("Um sich als Student einer Einrichtung zuzuordnen, wählen Sie die entsprechende Einrichtung aus der folgenden Liste aus:") . "<br>\n";
             echo "<br>\n".'<div align="left"><a name="einrichtungen"></a>';
             $my_about->select_inst();
-            echo "</div><br>" . _("Wenn sie aus Einrichtungen wieder ausgetragen werden möchten, markieren Sie die entsprechenden Felder in der linken Tabelle.") . "<br>\n";
+            echo "</div><br>" . _("Wenn Sie aus Einrichtungen wieder ausgetragen werden möchten, markieren Sie die entsprechenden Felder in der linken Tabelle.") . "<br>\n";
             echo _("Mit einem Klick auf <b>&Uuml;bernehmen</b> werden die gewählten Änderungen durchgeführt.") . "<br><br> \n";
             echo '<input type="image" ' . makeButton('uebernehmen', 'src') . ' value="' . _("Änderungen übernehmen") . '">';
         } else {
@@ -1394,7 +1394,7 @@ if ($view == 'notification') {
 if ($view == 'Login') {
     echo '<tr><td colspan="2" class="blank">'."<br><br>\n" ;
     if ($my_about->check == 'user' && !$perm->have_perm('admin')) {
-        echo _("Um die automatische Anmeldung zu nutzen, m&uuml;ssen Sie ihre pers&ouml;nliche Login-Datei auf ihren Rechner kopieren. Mit dem folgenden Link &ouml;ffnet sich ein Fenster, indem Sie ihr Passwort eingeben m&uuml;ssen.") . " ";
+        echo _("Um die automatische Anmeldung zu nutzen, m&uuml;ssen Sie Ihre pers&ouml;nliche Login-Datei auf ihren Rechner kopieren. Mit dem folgenden Link &ouml;ffnet sich ein Fenster, indem Sie ihr Passwort eingeben m&uuml;ssen.") . " ";
         echo _("Dann wird die Datei erstellt und zu Ihrem Rechner geschickt.") . "<br><br>\n";
         echo '<div align="center"><b><a href="javascript:oeffne();">' . _("Auto-Login-Datei erzeugen") . '</a></b></div>';
         echo "<br><br>\n" . _("<b>ACHTUNG!</b> Die automatische Anmeldung stellt eine große Sicherheitslücke dar. Jeder, der Zugriff auf Ihren Rechner hat, kann sich damit unter Ihrem Namen in Stud.IP einloggen!");

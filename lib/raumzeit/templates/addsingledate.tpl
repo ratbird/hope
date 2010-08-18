@@ -12,7 +12,7 @@
         <TABLE cellpadding="2" cellspacing="0" border="0" width="100%">
             <TR>
                 <TD width="2%" align="right" valign="top" class="<?=$tpl['class']?>">
-                    <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/forumgraurunt.gif" border="0" align="abstop">
+                    <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1down.png" border="0" align="abstop">
                 </TD>
                 <TD width="98%" nowrap class="<?=$tpl['class']?>" colspan="8">
                     <FONT size="-1">

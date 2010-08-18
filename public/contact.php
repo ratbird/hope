@@ -128,10 +128,10 @@ $size_of_book = GetSizeofBook()
 <?
 if ($open != "all" && $size_of_book>0) {
     $link=URLHelper::getLink('',array('view'=>$view, 'open'=>'all', 'filter'=>$filter));
-    echo "&nbsp; <a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumgraurunt.gif\" border=\"0\">&nbsp; <font size=\"2\">"._("Alle aufklappen (").((($size_of_book = GetSizeofBook()) == 1) ? _("1 Eintrag") : sprintf(_("%d Eintr&auml;ge"),$size_of_book)).")</font></a></td>";
+    echo "&nbsp; <a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png\" border=\"0\">&nbsp; <font size=\"2\">"._("Alle aufklappen (").((($size_of_book = GetSizeofBook()) == 1) ? _("1 Eintrag") : sprintf(_("%d Eintr&auml;ge"),$size_of_book)).")</font></a></td>";
 } elseif ($size_of_book>0) {
     $link=URLHelper::getLink('',array('filter'=>$filter));
-    echo "&nbsp; <a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumgraurauf.gif\" border=\"0\">&nbsp; <font size=\"2\">"._("Alle zuklappen (").((($size_of_book = GetSizeofBook()) == 1) ? _("1 Eintrag") : sprintf(_("%d Eintr&auml;ge"),$size_of_book)).")</font></a></td>";
+    echo "&nbsp; <a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1up.png\" border=\"0\">&nbsp; <font size=\"2\">"._("Alle zuklappen (").((($size_of_book = GetSizeofBook()) == 1) ? _("1 Eintrag") : sprintf(_("%d Eintr&auml;ge"),$size_of_book)).")</font></a></td>";
 }
 
 echo "<td class=\"blank\" align=\"right\">";
@@ -261,18 +261,18 @@ if ($edit_id) {
 if (!$edit_id) {
 
     if ($size_of_book>0)
-        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/nachrichtsmall.gif\">&nbsp; "._("Nachricht an Kontakt");
+        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/icons/16/bluemail.png\">&nbsp; "._("Nachricht an Kontakt");
     if ($open && $size_of_book>0)
-        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/forumgraurauf.gif\">&nbsp; "._("Kontakt zuklappen");
+        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1up.png\">&nbsp; "._("Kontakt zuklappen");
     if ((!$open) && $size_of_book>0)
-        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/forumgraurunt.gif\">&nbsp; "._("Kontakt aufklappen");
+        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png\">&nbsp; "._("Kontakt aufklappen");
     if ($open && $size_of_book>0) {
-        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/nutzer.gif\">&nbsp; "._("Buddystatus");
-        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/einst.gif\">&nbsp; "._("Eigene Rubriken");
-        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/trash.gif\">&nbsp; "._("Kontakt löschen");
+        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/person.png\">&nbsp; "._("Buddystatus");
+        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/edit.png\">&nbsp; "._("Eigene Rubriken");
+        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/trash.png\">&nbsp; "._("Kontakt löschen");
     }
     if (($open || $contact["view"]=="gruppen") && $size_of_book>0) {
-        $hints .= "&nbsp; |&nbsp; <img style=\"vertical-align:middle;\" src= \"".$GLOBALS['ASSETS_URL']."images/vcardexport.gif\">&nbsp; "._("als vCard exportieren");
+        $hints .= "&nbsp; |&nbsp; <img style=\"vertical-align:middle;\" src= \"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/vcard.png\">&nbsp; "._("als vCard exportieren");
     }
     echo    "<br><font size=\"2\" color=\"#555555\">"._("Bedienung:").$hints;
 }

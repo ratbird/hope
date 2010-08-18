@@ -257,7 +257,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                 <tr>
                     <td class="steelgraulight" colspan="3" align="center">
                         <a href="<?= URLHelper::getLink($PHP_SELF."?cmd=openAll") ?>">
-                            <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/forumgraurunt.gif" title="<?=_("Alle Themen aufklappen")?>" border="0">
+                            <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/blue/arr_1down.png" title="<?=_("Alle Themen aufklappen")?>" border="0">
                         </a>
                     </td>
                 </tr>

@@ -313,7 +313,7 @@ table.collapsable tbody tr:first-child td:first-child {
 }
 
 table.collapsable tbody tr:first-child td:first-child a {
-    background: transparent url(../images/forumgraurunt.gif) 2px no-repeat;
+    background: transparent url(../images/icons/16/blue/arr_1down.png) 2px no-repeat;
 	color: #000;
 }
 

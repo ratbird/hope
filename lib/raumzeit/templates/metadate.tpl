@@ -70,7 +70,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
             <TR>
                 <TD width="2%" align="left" valign="top" class="<?=$tpl['class']?>" nowrap="nowrap">
                     <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['md_id'] .'#'. $tpl['md_id']) ?>">
-                        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/forumgraurunt.gif" border="0" valign="absmiddle">
+                        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1down.png" border="0" valign="absmiddle">
                     </A>
                 </TD>
                 <TD width="93%" nowrap="nowrap" class="<?=$tpl['class']?>">

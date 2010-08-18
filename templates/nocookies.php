@@ -8,7 +8,7 @@
 <table class="blank" width="750" align="center" border="0" cellpadding="0" cellspacing="0">
 <tr>
     <td class="topic">
-    <img src="<?=$GLOBALS['ASSETS_URL']?>images/login.gif" border="0">
+    <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/white/door-enter.png" border="0">
     <b><?=_("Stud.IP - Login")?></b>
     </td>
 </tr>

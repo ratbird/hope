@@ -18,7 +18,7 @@ $(function () {
   <tbody>
     <tr>
       <td class="topic">
-        <?= Assets::img('login.gif', array('alt' => _('Login-Icon'))) ?>
+        <?= Assets::img('icons/16/white/door-enter.png', array('alt' => _('Anmelden'))) ?>
         <strong><?=_("Stud.IP - Login")?></strong>
       </td>
     </tr>

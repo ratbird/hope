@@ -7,7 +7,7 @@
 <table class="index_box logintable">
 <tr>
     <td class="topic">
-    <img src="<?=$GLOBALS['ASSETS_URL']?>images/login.gif" border="0">
+    <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/white/door-enter.png" border="0">
     <b>&nbsp;<?=sprintf(_("Stud.IP - Neues Passwort anfordern (Schritt %s von 5)"), $step)?></b>
     </td>
 </tr>

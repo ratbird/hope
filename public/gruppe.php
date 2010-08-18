@@ -152,10 +152,10 @@ FOR ($i=0; $i<9; $i++)
             echo '<tr><td class="blue_gradient" valign="middle" height="20" colspan="9">';
             if (isset($_my_sem_open[$group_id])){
                 echo '<a class="tree" style="font-weight:bold" name="' . $group_id . '" href="' . $PHP_SELF . '?close_my_sem=' . $group_id . '#' .$group_id . '" ' . tooltip(_("Gruppierung schließen"), true) . '>';
-                echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/forumgraurunt.gif"   hspace="3" border="0">';
+                echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/arr_1down.png"   hspace="3" border="0">';
             } else {
                 echo '<a class="tree"  name="' . $group_id . '" href="' . $PHP_SELF . '?open_my_sem=' . $group_id . '#' .$group_id . '" ' . tooltip(_("Gruppierung öffnen"), true) . '>';
-                echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/forumgrau.gif"  hspace="3" border="0">';
+                echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/arr_1right.png"  hspace="3" border="0">';
             }
             if (is_array($group_names[$group_id])){
                 $group_name = $group_names[$group_id][1] . " > " . $group_names[$group_id][0];

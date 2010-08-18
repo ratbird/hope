@@ -53,7 +53,7 @@
 
       <tr>
         <td align="center" valign="top" width="1%">
-          <img src="<?= $GLOBALS['ASSETS_URL']?>images/forumrot.gif">
+          <img src="<?= $GLOBALS['ASSETS_URL']?>images/icons/16/red/arr_1right.png">
         </td>
         <td width="99%" align="left">
           <a href="themen.php?cmd=changeViewMode&newFilter=simple"><?= _("Standardansicht")?></a>
@@ -63,7 +63,7 @@
 
       <tr>
         <td align="center" valign="top" width="1%">
-          <img src="<?= $GLOBALS['ASSETS_URL']?>images/forumgrau.gif">
+          <img src="<?= $GLOBALS['ASSETS_URL']?>images/icons/16/black/arr_1right.png">
         </td>
         <td width="99%" align="left">
           <a href="themen.php?cmd=changeViewMode&newFilter=expert"><?= _("Erweiterte Ansicht")?></a>

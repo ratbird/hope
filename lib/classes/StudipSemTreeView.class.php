@@ -123,7 +123,7 @@ class StudipSemTreeView extends TreeView {
         $head .= ($this->open_items[$item_id])? $this->getSelf("close_item={$item_id}") . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
                                             : $this->getSelf("open_item={$item_id}") . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
         $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
-        $head .= ($this->open_items[$item_id]) ? "forumrotrunt.gif" : "forumgrau.gif";
+        $head .= ($this->open_items[$item_id]) ? "icons/16/blue/arr_1down.png" : "icons/16/blue/arr_1right.png";
         $head .= "\" border=\"0\" align=\"baseline\" hspace=\"2\">";
         $head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\" border=\"0\">" : "";
         $head .= "</a>";

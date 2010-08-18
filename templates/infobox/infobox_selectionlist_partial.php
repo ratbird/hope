@@ -9,7 +9,7 @@
     <? if ( $selectionlist[$i]["is_selected"] ) : ?>
     <tr>
       <td width="1%" align="center" valign="top">
-        <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/forumrot.gif">
+        <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/red/arr_1right.png">
       </td>
       <td width="99%" align="left">
         <a href="<?= $selectionlist[$i]["url"] ?>"><?= $selectionlist[$i]["linktext"] ?></a>
@@ -19,7 +19,7 @@
     <? else: ?>
     <tr>
       <td width="1%" align="center" valign="top">
-        <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/forumgrau.gif">
+        <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/black/arr_1right.png">
       </td>
       <td width="99%" align="left">
         <a href="<?= $selectionlist[$i]["url"] ?>"><?= $selectionlist[$i]["linktext"] ?></a>

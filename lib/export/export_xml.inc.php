@@ -180,10 +180,10 @@ if (($o_mode == "file") OR ($o_mode == "choose"))
     {
         $link = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .' ">';
         $infobox[1]["kategorie"] = _("Aktionen:");
-            $infobox[1]["eintrag"][] = array (  'icon' => "icon-disc.gif" ,
+            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/download.png" ,
                                         "text"  => sprintf(_("Um die XML-Datei jetzt herunterzuladen klicken Sie %s hier %s."), $link, "</a>")
                                     );
-//          $infobox[1]["eintrag"][] = array (  'icon' => "forumgrau.gif" ,
+//          $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/link-intern.png" ,
 //                                      "text"  => _("Wenn Sie die Daten in ein anderes Format konvertieren wollen, klicken Sie auf 'weiter'.")
 //                                  );
     }

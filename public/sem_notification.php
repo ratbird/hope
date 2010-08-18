@@ -230,12 +230,12 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                 $out .= '<a class="tree" style="font-weight:bold" name="' . $group_id;
                 $out .= '" href="' . $PHP_SELF . '?close_my_sem=' . $group_id;
                 $out .= '#' .$group_id . '" ' . tooltip(_("Gruppierung schließen"), true) . '>';
-                $out .= '<img src="'.$GLOBALS['ASSETS_URL'].'images/forumgraurunt.gif"   hspace="3" border="0">';
+                $out .= '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/arr_1down.png"   hspace="3" border="0">';
             } else {
                 $out .= '<a class="tree"  name="' . $group_id . '" href="' . $PHP_SELF;
                 $out .= '?open_my_sem=' . $group_id . '#' .$group_id;
                 $out .= '" ' . tooltip(_("Gruppierung öffnen"), true) . '>';
-                $out .= '<img src="'.$GLOBALS['ASSETS_URL'].'images/forumgrau.gif"  hspace="3" border="0">';
+                $out .= '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/arr_1right.png"  hspace="3" border="0">';
             }
             if (is_array($group_names[$group_id])){
                 $group_name = $group_names[$group_id][1] . " > " . $group_names[$group_id][0];

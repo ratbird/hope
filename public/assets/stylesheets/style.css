@@ -318,14 +318,14 @@ table.collapsable tbody tr:first-child td:first-child a {
 }
 
 table.collapsable tbody.collapsed tr:first-child td:first-child a {
-    background-image: url(../images/forumgrau.gif);
+    background-image: url(../images/icons/16/blue/arr_1right.png);
     background-position: 4px -6px;
 	color: #000;
 	font-weight: normal;
 }
 
 table.collapsable tbody.empty tr:first-child td:first-child {
-    background: transparent url(../images/forumgrau.gif) 4px -2px no-repeat;
+    background: transparent url(../images/icons/16/blue/arr_1right.png) 4px -2px no-repeat;
 }
 
 /* Table details */

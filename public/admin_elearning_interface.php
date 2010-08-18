@@ -193,24 +193,24 @@ if ($ELEARNING_INTERFACE_ENABLE)
             )
         );
         $infobox[1]["kategorie"] = _("Aktionen:");
-            $infobox[1]["eintrag"][] = array (  'icon' => "forumgrau.gif" ,
+            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/info.png" ,
                                         "text"  => _("Nachdem Sie ein angebundenes System ausgew&auml;hlt haben, wird die Verbindung zum System gepr&uuml;ft.")
                                     );
 
         switch($status_info)
         {
             case "active":
-            $infobox[1]["eintrag"][] = array (  'icon' => "forumgrau.gif" ,
+            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/green/accept.png" ,
                                         "text"  => sprintf(_("Die Verbindung zum System \"%s\" ist <b>aktiv</b>. Sie k&ouml;nnen die Einbindung des Systems in Stud.IP jederzeit deaktivieren."), $connected_cms[$cms_select]->getName())
                                     );
             break;
             case "not active":
-            $infobox[1]["eintrag"][] = array (  'icon' => "forumgrau.gif" ,
+            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/exclaim.png" ,
                                         "text"  => sprintf(_("Die Verbindung zum System \"%s\" steht, das System ist jedoch nicht aktiviert. Sie k&ouml;nnen die Einbindung des Systems in Stud.IP jederzeit aktivieren. Solange die Verbindung nicht aktiviert wurde, werden die Module des Systems \"%s\" in Stud.IP nicht angezeigt."), $connected_cms[$cms_select]->getName(), $connected_cms[$cms_select]->getName())
                                     );
             break;
             case "error":
-            $infobox[1]["eintrag"][] = array (  'icon' => "forumgrau.gif" ,
+            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/red/decline.png" ,
                                         "text"  => sprintf(_("Bei der Pr&uuml;fung der Verbindung sind Fehler aufgetreten. Sie m&uuml;ssen zun&auml;chst die Eintr&auml;ge in der Konfigurationsdatei korrigieren, bevor das System angebunden werden kann."), $connected_cms[$cms_select]->getName())
                                     );
             break;

@@ -2,7 +2,7 @@
 <div style="width: <?= $box_width ?>px; background-color: #ffffff; border: 1px #999999 solid; display:inline-block">
 <? $input_style = " style=\"width: ".($box_width-23)."px; background-color:#ffffff; border: 0px;\""; ?>
     <? if ($box_align === "left") : ?>
-            <input style="vertical-align:middle; width: 19px" type="image" src="<?= Assets::image_path("suchen.gif")?>">
+            <input class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>">
     <? endif ?>
 <? endif ?>
 <? if ($inputStyle) {
@@ -13,12 +13,12 @@
                 "onBlur=\"if (this.value == ''){this.value = '$beschriftung';$(this).css('color', '".$descriptionColor."');}\"";
         } ?>
             <input type=hidden id="<?= $id ?>_realvalue" name="<?= $name ?>" value="<?= $defaultID ?>">
-            <input<?= $input_style.($inputClass ? " class=\"".$inputClass."\"" : "") 
-                ?> id="<?= $id ?>"<?= ($clear_input ? $clear_input : "") ?> type=text name="<?= 
+            <input<?= $input_style.($inputClass ? " class=\"".$inputClass."\"" : "")
+                ?> id="<?= $id ?>"<?= ($clear_input ? $clear_input : "") ?> type=text name="<?=
                     $name ?>_parameter" value="<?= $defaultName ?>">
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>
-            <input class="middle" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>">
+            <input class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>">
     <? endif ?>
         </div>
 <? endif ?>

@@ -346,10 +346,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
         if ($db2->f('neue')) {
             $nav->setURL('?new_news=true');
-            $nav->setImage('icons/16/red/new/news.png', array('title' =>
+            $nav->setImage('icons/16/red/new/breaking-news.png', array('title' =>
                 sprintf(_('%s Ankündigungen, %s neue'), $db2->f('count'), $db2->f('neue'))));
         } else if ($db2->f('count')) {
-            $nav->setImage('icons/16/grey/news.png', array('title' => sprintf(_('%s News'), $db2->f('count'))));
+            $nav->setImage('icons/16/grey/breaking-news.png', array('title' => sprintf(_('%s News'), $db2->f('count'))));
         }
 
         $my_obj[$object_id]['news'] = $nav;
@@ -503,10 +503,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             $nav = new Navigation('vote', '#vote');
 
             if ($my_obj[$object_id]['neuevotes']) {
-                $nav->setImage('icons/16/red/new/votes.png', array('title' =>
+                $nav->setImage('icons/16/red/new/vote.png', array('title' =>
                     sprintf(_('%s Umfrage(n), %s neue'), $my_obj[$object_id]['votes'], $my_obj[$object_id]['neuevotes'])));
             } else if ($my_obj[$object_id]['votes']) {
-                $nav->setImage('icons/16/grey/votes.png', array('title' => sprintf(_('%s Umfrage(n)'), $my_obj[$object_id]['votes'])));
+                $nav->setImage('icons/16/grey/vote.png', array('title' => sprintf(_('%s Umfrage(n)'), $my_obj[$object_id]['votes'])));
             }
 
             $my_obj[$object_id]['vote'] = $nav;

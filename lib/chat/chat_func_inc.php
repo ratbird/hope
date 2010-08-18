@@ -236,9 +236,9 @@ function chat_get_online_icon($user_id = false, $username = false, $pref_chat_id
             if ($pref_chat_id && $admin_chats[$pref_chat_id]){
                 $ret .= "&selected_chat_id=$pref_chat_id";
             }
-            $ret .= "\"><img src=\"{$pic_path}chat1.gif\" ".tooltip(_("zum Chatten einladen"))." border=\"0\"></a>";
+            $ret .= "\">".Assets::img('icons/16/blue/chat.png', array('title' => _("zum Chatten einladen"), 'class' => 'text-bottom'))."</a>";
         } else {
-            $ret = "<img src=\"{$pic_path}chat1.gif\" " . tooltip(_("Sie haben in keinem aktiven Chatraum die Berechtigung andere NutzerInnen einzuladen!")) . " border=\"0\">";
+            $ret = Assets::img('icons/16/blue/chat.png', array('title' => _("Sie haben in keinem aktiven Chatraum die Berechtigung andere NutzerInnen einzuladen"), 'class' => 'text-bottom'));
         }
         return $ret;
     } else {

@@ -3,37 +3,22 @@
 # Lifter005: TODO - overlib
 # Lifter007: TODO
 # Lifter003: TODO
-
 /**
-* displays messages in in- and outboxfolders
-*
-* @author               Nils K. Windisch <studip@nkwindisch.de>, Cornelis Kater <ckater@gwdg.de>
-* @access               public
-* @modulegroup  Messaging
-* @module               sms_box.php
-* @package          Stud.IP Core
-*/
-
-/*
-sms_box.php - Verwaltung von systeminternen Kurznachrichten - Eingang/ Ausgang
-Copyright (C) 2002 Cornelis Kater <ckater@gwdg.de>, Nils K. Windisch <info@nkwindisch.de>
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-*/
-
-// page_open
+ * sms_box.php - displays messages in in- and outboxfolders
+ *
+ * Verwaltung von systeminternen Kurznachrichten - Eingang/ Ausgang
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Nils K. Windisch <studip@nkwindisch.de>
+ * @author      Cornelis Kater <ckater@gwdg.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @package     messaging
+ */
 
 require '../lib/bootstrap.php';
 
@@ -51,12 +36,14 @@ require_once ('lib/include/messagingSettings.inc.php');
 require_once ('lib/messaging.inc.php');
 require_once ('lib/statusgruppe.inc.php');
 require_once ('lib/sms_functions.inc.php');
+
 if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
     $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
     $chatServer->caching = true;
     $admin_chats = $chatServer->getAdminChats($auth->auth['uid']);
 }
+
 // let's register some ...
 $sess->register("sms_data");
 $sess->register("sms_show");
@@ -232,12 +219,12 @@ if ($sms_time) {
 
 // determine several later displayed texts in relation to the selected view
 if ($sms_data['view'] == "in") {
-    $info_text_001 = "<img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" border=\"0\" align=\"texttop\"><b>&nbsp;"._("empfangene systeminterne Nachrichten anzeigen")."</b>";
+    $info_text_001 = "<img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" align=\"texttop\"><b>&nbsp;"._("empfangene systeminterne Nachrichten anzeigen")."</b>";
     $info_text_002 = _("Posteingang");
     $no_message_text_box = _("im Posteingang");
     $tmp_snd_rec = "rec";
 } else if ($sms_data['view'] == "out") {
-    $info_text_001 = "<img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" border=\"0\" align=\"texttop\"><b>&nbsp;"._("gesendete systeminterne Nachrichten anzeigen")."</b>";
+    $info_text_001 = "<img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" align=\"texttop\"><b>&nbsp;"._("gesendete systeminterne Nachrichten anzeigen")."</b>";
     $info_text_002 = _("Postausgang");
     $no_message_text_box = _("im Postausgang");
     $tmp_snd_rec = "snd";
@@ -384,8 +371,8 @@ $query_time = $query_time_sort;
             printhead(0, 0, FALSE, "open", FALSE, "<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder.gif\" border=0>", $titel, FALSE);
             echo "</tr></table> ";
             $content_content = $tmp[1]."<div align=\"center\">".$tmp[4]."
-            <input type=\"image\" name=\"".$tmp[2]."\" border=\"0\" ".makeButton("uebernehmen", "src")." value=\"a\" align=\"absmiddle\">
-            <input type=\"image\" name=\"a\" border=\"0\" ".makeButton("abbrechen", "src")." value=\"a\" align=\"absmiddle\"><div>";
+            <input type=\"image\" name=\"".$tmp[2]."\" ".makeButton("uebernehmen", "src")." value=\"a\" align=\"absmiddle\">
+            <input type=\"image\" name=\"a\" ".makeButton("abbrechen", "src")." value=\"a\" align=\"absmiddle\"><div>";
             echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";
             printcontent("99%",0, $content_content, FALSE);
             echo "</form></tr></table>";
@@ -415,12 +402,12 @@ $query_time = $query_time_sort;
             $content_content = "<div align=\"center\">
                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">
                 <input type=\"hidden\" name=\"cmd\" value=\"select_all\">
-                <input type=\"image\" name=\"select\" border=\"0\" ".makeButton("alleauswaehlen", "src")." value=\"loeschen\" align=\"absmiddle\">
+                <input type=\"image\" name=\"select\" ".makeButton("alleauswaehlen", "src")." value=\"loeschen\" align=\"absmiddle\">
                 </form>
                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">
-                <input type=\"image\" name=\"delete_selected_button\" border=\"0\" ".makeButton("loeschen", "src")." value=\"delete_selected\" align=\"absmiddle\">";
+                <input type=\"image\" name=\"delete_selected_button\" ".makeButton("loeschen", "src")." value=\"delete_selected\" align=\"absmiddle\">";
                 if (have_msgfolder($sms_data['view']) == TRUE) {
-                    $content_content .= "&nbsp;<input type=\"image\" name=\"move_selected_button\" border=\"0\" ".makeButton("verschieben", "src")." value=\"move\" align=\"absmiddle\">";
+                    $content_content .= "&nbsp;<input type=\"image\" name=\"move_selected_button\" ".makeButton("verschieben", "src")." value=\"move\" align=\"absmiddle\">";
                 }
                 $content_content .= "<br></div>";
             if (folder_openclose($sms_show['folder'][$sms_data['view']], "all") == "open") {
@@ -471,26 +458,26 @@ $query_time = $query_time_sort;
                             $content_content = "<div align=\"center\">"._("Ordneroptionen:")."
                                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">
                                     <input type=\"hidden\" name=\"delete_folder\" value=\"".$x."\">
-                                    <input type=\"image\" name=\"delete_folder_button\" border=\"0\" ".makeButton("loeschen", "src")." value=\"a\" align=\"absmiddle\">
+                                    <input type=\"image\" name=\"delete_folder_button\" ".makeButton("loeschen", "src")." value=\"a\" align=\"absmiddle\">
                                 </form>
                                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">
                                     <input type=\"hidden\" name=\"cmd\" value=\"admin_folder\">
                                     <input type=\"hidden\" name=\"ren_folder\" value=\"".$x."\">
-                                    <input type=\"image\" name=\"x\" border=\"0\" ".makeButton("umbenennen", "src")." value=\"a\" align=\"absmiddle\">
+                                    <input type=\"image\" name=\"x\" ".makeButton("umbenennen", "src")." value=\"a\" align=\"absmiddle\">
                                 </form>";
                             if ($count_timefilter != "0") {
                                 $content_content .= "
                                     <br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"5\"><br>"._("markierte Nachrichten:")."
                                     <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">
                                         <input type=\"hidden\" name=\"cmd\" value=\"select_all\">
-                                        <input type=\"image\" name=\"select\" border=\"0\" ".makeButton("alleauswaehlen", "src")." value=\"loeschen\" align=\"absmiddle\">
+                                        <input type=\"image\" name=\"select\" ".makeButton("alleauswaehlen", "src")." value=\"loeschen\" align=\"absmiddle\">
                                         </form>
                                         <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">
-                                        <input type=\"image\" name=\"delete_selected_button\" border=\"0\" ".makeButton("loeschen", "src")." value=\"delete_selected\" align=\"absmiddle\">
-                                        <input type=\"image\" name=\"move_selected_button\" border=\"0\" ".makeButton("verschieben", "src")." value=\"move\" align=\"absmiddle\"><br>";
+                                        <input type=\"image\" name=\"delete_selected_button\" ".makeButton("loeschen", "src")." value=\"delete_selected\" align=\"absmiddle\">
+                                        <input type=\"image\" name=\"move_selected_button\" ".makeButton("verschieben", "src")." value=\"move\" align=\"absmiddle\"><br>";
                             }
                             $content_content .= "</div>";
-                            echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\">\n\t<tr>";
+                            echo "\n<table cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\">\n\t<tr>";
                             if ($count_timefilter != "0") {
                                 echo "\n\t<td class=\"blank\" background=\"".$GLOBALS['ASSETS_URL']."images/forumstrichgrau.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"100%\" width=\"10px\"></td>\n";
                             }
@@ -510,14 +497,14 @@ $query_time = $query_time_sort;
 
         // build infobox_content > viewfilter
         $time_by_links = "";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=all\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "all")."\" width=\"8\" border=\"0\">&nbsp;"._("alle Nachrichten")."</a><br>";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=24h\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "24h")."\" width=\"8\" border=\"0\">&nbsp;"._("letzte 24 Stunden")."</a><br>";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=7d\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "7d")."\" width=\"8\" border=\"0\">&nbsp;"._("letzte 7 Tage")."</a><br>";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=30d\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "30d")."\" width=\"8\" border=\"0\">&nbsp;"._("letzte 30 Tage")."</a><br>";
-        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=older\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "older")."\" width=\"8\" border=\"0\">&nbsp;"._("&auml;lter als 30 Tage")."</a>";
+        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=all\">".Assets::img(show_icon($sms_data["time"], "all"), array('width' => '16', 'class' => 'text-bottom'))." "._("alle Nachrichten")."</a><br>";
+        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=24h\">".Assets::img(show_icon($sms_data["time"], "24h"), array('width' => '16', 'class' => 'text-bottom'))." "._("letzte 24 Stunden")."</a><br>";
+        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=7d\">".Assets::img(show_icon($sms_data["time"], "7d"), array('width' => '16', 'class' => 'text-bottom'))." "._("letzte 7 Tage")."</a><br>";
+        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=30d\">".Assets::img(show_icon($sms_data["time"], "30d"), array('width' => '16', 'class' => 'text-bottom'))." "._("letzte 30 Tage")."</a><br>";
+        $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=older\">".Assets::img(show_icon($sms_data["time"], "older"), array('width' => '16', 'class' => 'text-bottom'))." "._("&auml;lter als 30 Tage")."</a>";
 
         $view_by_links = "";
-        $view_by_links .= "<a href=\"".$PHP_SELF."?sms_time=new\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "new")."\" width=\"8\" border=\"0\">&nbsp;"._("neue Nachrichten")."</a><br>";
+        $view_by_links .= "<a href=\"".$PHP_SELF."?sms_time=new\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "new")."\" width=\"8\">&nbsp;"._("neue Nachrichten")."</a><br>";
 
         // did we came from a ...?
         if ($SessSemName[0] && $SessSemName["class"] == "inst") {
@@ -539,11 +526,11 @@ $query_time = $query_time_sort;
             array("kategorie" => _("Information:"),"eintrag" => array(
                 array('icon' => 'icons/16/black/info.png', "text" => $show_message_count))),
             array("kategorie" => _("nach Zeit filtern:"),"eintrag" => array(
-                array('icon' => 'icons/16/black/search.png', "text" => $time_by_links))),
+                array('icon' => 'icons/16/black/date.png', "text" => $time_by_links))),
             array("kategorie" => _("weitere Ansichten:"),"eintrag" => array(
                 array('icon' => 'icons/16/black/search.png', "text" => $view_by_links))),
             array("kategorie" => _("Optionen:"),"eintrag" => array(
-                array("icon" => "link_intern.gif", "text" => sprintf("<a href=\"%s?cmd_show=openall\">"._("Alle Nachrichten aufklappen")."</a><br><a href=\"%s?cmd=mark_allsmsreaded\">"._("Alle als gelesen speichern")."</a><br><a href=\"%s?cmd=admin_folder&cmd_2=new\">"._("Neuen Ordner erstellen")."</a>", $PHP_SELF, $PHP_SELF, $PHP_SELF, $PHP_SELF))))
+                array("icon" => 'icons/16/black/admin.png', "text" => sprintf("<a href=\"%s?cmd_show=openall\">"._("Alle Nachrichten aufklappen")."</a><br><a href=\"%s?cmd=mark_allsmsreaded\">"._("Alle als gelesen speichern")."</a><br><a href=\"%s?cmd=admin_folder&cmd_2=new\">"._("Neuen Ordner erstellen")."</a>", $PHP_SELF, $PHP_SELF, $PHP_SELF, $PHP_SELF))))
         );
         // display infobox
         print_infobox($infobox, "infobox/messages.jpg"); ?>

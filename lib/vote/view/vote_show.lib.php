@@ -29,7 +29,8 @@ require_once ("lib/vote/vote.config.php");
  * @param    String   $voteID   The unique vote id
  * @returns  String   The HTML-image-link
  */
-function createVoteLink ($voteID) {
+function createVoteLink ($voteID)
+{
    $html = "<img src=\"".VOTE_FILE_SHOW."?voteID=".$voteID."\">\n";
    return $html;
 }
@@ -39,7 +40,8 @@ function createVoteLink ($voteID) {
  * @param    Object   $vote   The vote object
  * @returns  String   The HTML-form-header
  */
-function createFormHeader (&$vote) {
+function createFormHeader(&$vote)
+{
    $html = "";
 
    $html .=
@@ -329,7 +331,8 @@ function createVoteForm (&$vote, $userID) {
  *
  * @returns  string    the HTML-text
  */
-function createOpeningOrClosingArrow ($eval=FALSE) {
+function createOpeningOrClosingArrow($eval = FALSE)
+{
    $html .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\"".
       " width=\"100%\">\n";
    $html .= " <tr>\n";
@@ -351,18 +354,14 @@ if($eval) {
       $arrowlink .= ($isHomepage) ? "&" : "?";
       $arrowlink .= "openAllEvals=1&openStoppedEvals=1#votetop";
       $html.=URLHelper::getLink($arrowlink)."\">\n";
-
-      $html .= "    <img src=\"".VOTE_PATH_PICTURES."forumgraurunt.gif\"".
-     tooltip(_("Alle Evaluationen öffnen!"))." border=\"0\">\n";
+      $html .= Assets::img('icons/16/grey/arr_1down.png', tooltip(_("Alle Evaluationen öffnen!")));
    }
    /* ---------------------------------------------------------------------- */
 
    /* Show closeAll-buton -------------------------------------------------- */
    else {
       $html .= URLHelper::getLink($arrowlink)."\">\n";
-
-      $html .= "    <img src=\"".VOTE_PATH_PICTURES."forumgraurauf.gif\""
-     . tooltip(_("Alle Evaluationen schließen!"))." border=\"0\">\n";
+      $html .= Assets::img('icons/16/grey/arr_1up.png', tooltip(_("Alle Evaluationen schließen!")));
    }
 
 } else {
@@ -371,18 +370,14 @@ if($eval) {
       $arrowlink .= ($isHomepage) ? "&" : "?";
       $arrowlink .= "openAllVotes=1&openStoppedVotes=1#votetop";
       $html.=URLHelper::getLink($arrowlink)."\">\n";
-
-      $html .= "    <img src=\"".VOTE_PATH_PICTURES."forumgraurunt.gif\"".
-     tooltip(_("Alle Umfragen und Tests öffnen!"))." border=\"0\">\n";
+      $html .= Assets::img('icons/16/grey/arr_1down.png', tooltip(_("Alle Umfragen und Tests öffnen!")));
    }
    /* ---------------------------------------------------------------------- */
 
    /* Show closeAll-buton -------------------------------------------------- */
    else {
       $html .= URLHelper::getLink($arrowlink)."\">\n";
-
-      $html .= "    <img src=\"".VOTE_PATH_PICTURES."forumgraurauf.gif\""
-     . tooltip(_("Alle Umfragen und Tests schließen!"))." border=\"0\">\n";
+      $html .= Assets::img('icons/16/grey/arr_1down.png', tooltip(_("Alle Umfragen und Tests schließen!")));
    }
    /* ---------------------------------------------------------------------- */
 }
@@ -401,7 +396,8 @@ if($eval) {
  *                            the headline only
  * @returns  String   The HTML-text
  */
-function createVoteHeadline (&$vote, $open, $openID, $evalDB = "", $isHomepage = NO) {
+function createVoteHeadline(&$vote, $open, $openID, $evalDB = "", $isHomepage = NO)
+{
 
    $maxTitleLength = ($isHomepage)
       ? VOTE_SHOW_MAXTITLELENGTH
@@ -422,7 +418,7 @@ function createVoteHeadline (&$vote, $open, $openID, $evalDB = "", $isHomepage =
       VOTE_ICON_VOTE;
    if ($vote->x_instanceof () == INSTANCEOF_EVAL)
      $icon = EVAL_PIC_ICON;
-   $icon = "&nbsp;<img src=\"".$icon."\" border=\"0\">";
+   $icon = Assets::img($icon, array('class' => 'text-bottom'));
    $voteInfo = $number." / <a href=\"".URLHelper::getLink("about.php?username=".$authorUsername)."\">\n"
       . "  <font size=\"-1\" color=\"#333399\">".htmlReady($authorName)."</font>\n"
       . " </a>\n"
@@ -457,8 +453,8 @@ function createVoteHeadline (&$vote, $open, $openID, $evalDB = "", $isHomepage =
  * @param    array    $stoppedVotes   The stopped vote
  * @returns  String   The HTML-text
  */
-function createStoppedVotesHeadline ($stoppedVotes, $openStoppedVotes,
-                     $stoppedEvals = NULL) {
+function createStoppedVotesHeadline($stoppedVotes, $openStoppedVotes, $stoppedEvals = NULL)
+{
    $link = "?openStoppedVotes=" .
        ($openStoppedVotes ? NO : YES);
    if (!empty ($GLOBALS["username"]))
@@ -468,8 +464,7 @@ function createStoppedVotesHeadline ($stoppedVotes, $openStoppedVotes,
 
    return "<tr>"
        . printhead (0, 0, $link, ($openStoppedVotes) ? "open" : "close",
-            FALSE, "&nbsp;<img src=\"".VOTE_ICON_STOPPED.
-            "\" border=\"0\">",
+            FALSE, Assets::img(VOTE_ICON_STOPPED, array('class' => 'text-bottom')),
             "<a href=\"".$link."\" class=\"tree\">" .
             _("Abgelaufene Umfragen") . "</a>".
             "<a name=\"stoppedvotes\">&nbsp;</a>",
@@ -485,7 +480,8 @@ function createStoppedVotesHeadline ($stoppedVotes, $openStoppedVotes,
  * @param    object   $vote       The vote
  * @returns  String   The HTML-text
  */
-function createStoppedVoteHeader (&$vote, $evalDB = NULL) {
+function createStoppedVoteHeader(&$vote, $evalDB = NULL)
+{
     $date           = $vote->getChangedate ();
     $authorName     = get_fullname ($vote->getAuthorID ());
     $authorUsername = get_username ($vote->getAuthorID ());
@@ -521,8 +517,8 @@ function createStoppedVoteHeader (&$vote, $evalDB = NULL) {
  * @param    object   $vote       The vote
  * @returns  String   The HTML-text
  */
-function createStoppedVoteFooter () {
-
+function createStoppedVoteFooter()
+{
     $html .= "</td>\n";
     $html .= "</tr></table>\n";
     $html .= "<br>\n";
@@ -536,7 +532,8 @@ function createStoppedVoteFooter () {
  * @param    bool     $firstTime  whether the report is created 1st time
  * @returns  String   The HTML-text
  */
-function createSuccessReport (&$vote, $firstTime = YES, $changed = NO) {
+function createSuccessReport (&$vote, $firstTime = YES, $changed = NO)
+{
    global $perm, $auth;
 
    $html     = "";
@@ -656,7 +653,8 @@ function createSuccessReport (&$vote, $firstTime = YES, $changed = NO) {
  *                              without having voted
  * @returns  String   The HTML-text
  */
-function createVoteResult ($vote, $preview = NO) {
+function createVoteResult ($vote, $preview = NO)
+{
    global $auth, $forum, $perm;
 
    $haveFullPerm = $perm->have_studip_perm ("tutor", $vote->getRangeID()) ||
@@ -806,7 +804,8 @@ function createVoteResult ($vote, $preview = NO) {
  * @param    bool   $isAssociated  whether the current user has used the vote
  * @returns  String                The HTML-text
  */
-function createVoteInfo (&$vote, $isAssociated = NO) {
+function createVoteInfo (&$vote, $isAssociated = NO)
+{
    $html     = "";
    $stopdate = $vote->getRealStopdate ();
    $number   = $vote->getNumberPersons ();
@@ -932,14 +931,7 @@ define ("VOTE_MESSAGE_EMPTY",
 
 
 
-function sortBySurname ($a, $b) {
-//     $db = new VoteDB();
-
-//     $surname_a = strstr( $db->getAuthorRealname($a), ' ');
-//     $surname_b = strstr( $db->getAuthorRealname($b), ' ');
-
-    return strcmp( strtolower (get_nachname ($a)),
-           strtolower (get_nachname ($b)));
+function sortBySurname ($a, $b)
+{
+    return strcmp( strtolower (get_nachname ($a)), strtolower (get_nachname ($b)));
 }
-
-?>

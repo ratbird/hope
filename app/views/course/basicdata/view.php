@@ -130,10 +130,10 @@ $width_namecolumn = 60;
             <span style="argin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $dozent["user_id"], "dozent") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("icons/16/yellow/arr_2up.png") ?></a>
+                <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
                 <? endif; if ($num < count($dozenten)-1) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $dozent["user_id"], "dozent") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("icons/16/yellow/arr_2down.png") ?></a>
+                <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
                 <? endif; ?>
             </span>
             <span style="vertical-align: middle">
@@ -152,7 +152,7 @@ $width_namecolumn = 60;
         <?= sprintf(_("%s hinzufügen"), $dozenten_title) ?>
         <br>
             <span style="white-space: nowrap">
-                <input type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_dozent">
+                <input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_dozent">
                 <?= $dozentensuche ?>
             </span>
         <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
@@ -189,7 +189,7 @@ $width_namecolumn = 60;
         <?= sprintf(_("%s hinzufügen"), $deputy_title) ?>
         <br>
             <span style="white-space: nowrap">
-                <input type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_deputy">
+                <input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_deputy">
                 <?= $deputysearch ?>
             </span>
         <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
@@ -213,10 +213,10 @@ $width_namecolumn = 60;
             <span style="margin: 3px; vertical-align: middle; white-space: nowrap;">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $tutor["user_id"], "tutor") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("icons/16/yellow/arr_2up.png") ?></a>
+                <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
                 <? endif; if ($num < count($tutoren)-1) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $tutor["user_id"], "tutor") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("icons/16/yellow/arr_2down.png") ?></a>
+                <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
                 <? endif; ?>
             </span>
             <span style="margin: 3px; vertical-align: middle">
@@ -234,7 +234,7 @@ $width_namecolumn = 60;
         <?= sprintf(_("%s hinzufügen"), $tutor_title) ?>
         <br>
             <span style="white-space: nowrap">
-                <input type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_tutor">
+                <input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_tutor">
                 <?= $tutorensuche ?>
             </span>
         <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>

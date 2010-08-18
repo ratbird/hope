@@ -56,14 +56,21 @@ function return_val_from_key($array, $key) {
     return $array[$key];
 }
 
-function MessageIcon($message_hovericon) {
+/**
+ *
+ * @param array $message_hovericon
+ * @return string
+ */
+function MessageIcon($message_hovericon)
+{
     global $my_messaging_settings, $PHP_SELF, $auth, $forum;
+
     if ($message_hovericon["content"]!="" && $message_hovericon["openclose"]=="close" &&  $forum["jshover"] == "1") {
         $hovericon = "<img onmouseover=\"return STUDIP.OverDiv.BindInline(
         {position:'middle right', id: '".$message_hovericon["id"]."',
-        content_element_type: 'message', initiator: this}, event);\" src=\"".$GLOBALS['ASSETS_URL']."images/".$message_hovericon["picture"]."\">";
+        content_element_type: 'message', initiator: this}, event);\" src=\"".Assets::image_path($message_hovericon["picture"])."\" class=\"text-bottom\">";
     } else {
-        $hovericon = "<a href=\"".$message_hovericon['link']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$message_hovericon["picture"]."\"></a>";
+        $hovericon = "<a href=\"".$message_hovericon['link']."\">".Assets::img($message_hovericon["picture"], array('class' => 'text-bottom'))."</a>";
     }
     return $hovericon;
 }
@@ -298,7 +305,7 @@ function print_snd_message($psm) {
     $message_hovericon['openclose'] = $open;
     $message_hovericon['content'] = $psm['message'];
     $message_hovericon['id'] = $psm['message_id'];
-    $message_hovericon["picture"] = "cont_nachricht.gif";
+    $message_hovericon['picture'] = 'icons/16/blue/mail.png';
     $icon = MessageIcon($message_hovericon);
     // print message_header
     echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\" class=\"steel1\"><tr>";
@@ -342,13 +349,13 @@ function print_rec_message($prm) {
     if ($prm['readed'] == "1") { // unread=new ... is message new? if new and opened=set readed
         $red = FALSE;
         if ($prm['answered'] == 1) {
-            $picture = "cont_nachricht_pfeil.gif";
+            $picture = "icons/16/blue/move_right/mail.png";
         } else {
-            $picture = "cont_nachricht.gif";
+            $picture = 'icons/16/blue/mail.png';
         }
     } else {
         $red = TRUE;
-        $picture = "cont_nachricht_rot.gif";
+        $picture = 'icons/16/red/new/mail.png';
         if ($open == "open") $msging->set_read_message($prm['message_id']);
     }
     if ($prm['dont_delete'] == "1") { // disable the checkbox if message is locked
@@ -466,7 +473,7 @@ function print_rec_message($prm) {
         $tmp_line2 = "forumstrich.gif";
     }
     echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\" class=\"steel1\"><tr>";
-    echo "<td class=\"blank\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_line1."\"></td>";
+    echo "<td class=\"blank\">".Assets::img($tmp_line1, array('class' => 'text-bottom'))."</td>";
 
     // if messages with priority are enabled, we pass a steelred css-class
     if ($GLOBALS['MESSAGE_PRIORITY'] && ($prm['priority'] == 'high')) {
@@ -565,7 +572,7 @@ function print_messages() {
     }
     if (!$n) { // wenn keine nachrichten zum anzeigen
         echo "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\">";
-        $srch_result = "info§<font size=-1><b>".$no_message_text."</b></font>";
+        $srch_result = "info§".$no_message_text;
         parse_msg ($srch_result, "§", "steel1", 2, FALSE);
         echo "</td></tr></table>";
     }

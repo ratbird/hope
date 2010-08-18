@@ -20,10 +20,10 @@
  * @package     dates
  */
 
-require_once('lib/visual.inc.php');
-require_once('lib/dates.inc.php');
-require_once('config.inc.php');
-require_once('lib/msg.inc.php');
+require_once 'lib/visual.inc.php';
+require_once 'lib/dates.inc.php';
+require_once 'config.inc.php';
+require_once 'lib/msg.inc.php';
 
 if ($GLOBALS["CALENDAR_ENABLE"])
     require_once($RELATIVE_PATH_CALENDAR . "/lib/DbCalendarEventList.class.php");
@@ -43,7 +43,9 @@ if ($GLOBALS["CALENDAR_ENABLE"])
  * @param $full_width
  * @param $show_as_window
  */
-function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 0, $show_docs = TRUE, $show_admin = FALSE, $full_width = TRUE, $show_as_window = TRUE)
+function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0,
+                    $show_docs = TRUE, $show_admin = FALSE, $full_width = TRUE,
+                    $show_as_window = TRUE)
 {
     global $PHP_SELF, $TERMIN_TYP, $SessSemName, $user, $username, $rechte;
 
@@ -268,7 +270,7 @@ function show_dates ($date_start, $date_end, $open, $range_id = "", $show_not = 
             else
                 $link=URLHelper::getLink("?dclose=true".$add_to_link);
 
-            $icon = Assets::img('icons/16/blue/date.png', array('class' => 'text-bottom'));
+            $icon = Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom'));
 
             if ($link)
                 $titel = "<a href=\"$link\" class=\"tree\" >".$titel."</a>";
@@ -380,7 +382,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
             $add_to_link = "&username=$username";
 
         while ($termin = $list->nextEvent()) {
-            $icon = Assets::img('icons/16/blue/date.png', array('class' => 'text-bottom'));
+            $icon = Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom'));
 
             $zusatz = '';
             if ($termin->getLocation()) {
@@ -535,7 +537,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
         echo "<tr><td class=\"blank\" colspan=\"2\">";
 
         while ($termin = $list->nextEvent()) {
-            $icon = Assets::img('icons/16/blue/date.png', array('class' => 'text-bottom'));
+            $icon = Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom'));
             $have_write_permission = ((strtolower(get_class($termin)) == 'seminarevent' && $termin->haveWritePermission())
                     || (strtolower(get_class($termin)) != 'seminarevent'));
 

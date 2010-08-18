@@ -95,7 +95,7 @@ define ("EVAL_LIB_SHOW", EVAL_PATH."evaluation_show.lib.php");
 /* -------------------------------------------------- end: library constants */
 
 /* Picture constants ------------------------------------------------------- */
-define ("EVAL_PIC_ICON", PATH_PICTURES."eval-icon.gif");
+define ("EVAL_PIC_ICON", Assets::image_path('icons/16/grey/test.png'));
 define ("EVAL_PIC_PREVIEW", PATH_PICTURES."preview.gif");
 define ("EVAL_PIC_ADMIN", PATH_PICTURES."administration.gif");
 define ("EVAL_PIC_LOGO", "evaluation.jpg");

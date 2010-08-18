@@ -16,7 +16,7 @@
  * @author      Nils K. Windisch <studip@nkwindisch.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * @package     message
+ * @package     messaging
  */
 
 require_once ('lib/language.inc.php');

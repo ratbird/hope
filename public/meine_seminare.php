@@ -400,7 +400,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                     array    (  "icon" => 'icons/16/black/search.png',
                                         "text"  => sprintf(_("Um weitere Veranstaltungen in Ihre pers&ouml;nliche Auswahl aufzunehmen, nutzen Sie bitte die %sSuchfunktion%s"), "<a href=\"sem_portal.php\">", "</a>")
                     ),
-                    array    (  "icon" => 'icons/16/black/admin.png',
+                    array    (  "icon" => 'icons/16/black/add/seminar.png',
                                         "text"  => sprintf(_("Um Veranstaltungen anzulegen, nutzen Sie bitte den %sVeranstaltungs-Assistenten%s"), "<a href=\"admin_seminare_assi.php?new_session=TRUE\">", "</a>")
                     )
                 )

@@ -51,7 +51,8 @@ $cssSw = new cssClassSwitcher;
 * @author   Cornelis Kater <kater@data-quest.de>
 * @package  resources
 **/
-class ShowToolsRequests {
+class ShowToolsRequests
+{
     var $db;
     var $db2;
     var $cssSw;         //the cssClassSwitcher
@@ -59,7 +60,8 @@ class ShowToolsRequests {
     var $semester_id;
     var $show_requests_no_time = false;
 
-    function ShowToolsRequests($semester_id, $resolve_requests_no_time = null) {
+    function ShowToolsRequests($semester_id, $resolve_requests_no_time = null)
+    {
         $this->db = new DB_Seminar;
         $this->db2 = new DB_Seminar;
         if (!$semester_id){
@@ -319,8 +321,8 @@ class ShowToolsRequests {
                     //echo "<font size=\"-1\">";
                     echo $zt->cell("&nbsp;");
                     echo $zt->cell("<font size=\"-1\">$i.</font>");
-                    echo $zt->cell("<a href=\"resources.php?view=edit_request&edit=".$val['request_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\"".tooltip('Anfrage bearbeiten')."></a>");
-                    echo $zt->cell((($resources_data['requests_open'][$val['request_id']]) ? '' : '<img src="'.$GLOBALS['ASSETS_URL'].'images/haken_transparent.gif">')."</font>");
+                    echo $zt->cell("<a href=\"resources.php?view=edit_request&edit=".$val['request_id']."\">".Assets::img('icons/16/blue/edit.png', tooltip(_("Anfrage bearbeiten")))."</a>");
+                    echo $zt->cell((($resources_data['requests_open'][$val['request_id']]) ? '' : Assets::img('icons/16/green/accept.png'))."</font>");
                     echo $zt->cell("<font size=\"-1\">".htmlReady($semObj->seminar_number)."</font>");
                     echo $zt->cell("<font size=\"-1\"><a href=\"details.php?sem_id=".$semObj->getId()."&send_from_search=true&send_from_search_page=".urlencode($CANONICAL_RELATIVE_PATH_STUDIP."resources.php?view=list_requests")."\">".my_substr(htmlReady($semObj->getName()),0,50)."</a><br></font>");
                     echo $zt->openCell();
@@ -359,9 +361,14 @@ class ShowToolsRequests {
         }
     }
 
-
-    function showRequest($request_id) {
+    /**
+     *
+     * @param $request_id
+     */
+    function showRequest($request_id)
+    {
         global $PHP_SELF, $cssSw, $resources_data, $perm;
+
         $reqObj = new RoomRequest($request_id);
         $semObj = new Seminar($reqObj->getSeminarId());
         $sem_link = $perm->have_studip_perm('tutor', $semObj->getId()) ?
@@ -369,9 +376,9 @@ class ShowToolsRequests {
             "details.php?sem_id=" . $semObj->getId() . "&send_from_search=1&send_from_search_page="
             . rawurlencode($PHP_SELF . "?working_on_request=$request_id");
         ?>
-        <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
         <form method="POST" action="<?echo $PHP_SELF ?>?working_on_request=<?=$request_id?>">
-            <input type="hidden" name="view" value="edit_request">
+        <input type="hidden" name="view" value="edit_request">
+        <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
@@ -488,17 +495,18 @@ class ShowToolsRequests {
                         </tr>
                         <tr>
                             <td width="70%">
-                            <font size="-1">
                             <?
                             if ($request_resource_id = $reqObj->getResourceId()) {
                                 $resObj = ResourceObject::Factory($request_resource_id);
-                                print "<img src=\"".$GLOBALS['ASSETS_URL']."images/".$this->getGlobalIconName($request_resource_id)."\" ".tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE).">";
-                                print "&nbsp;".$resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
+                                print $resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
+                                print ' <img class="text-top" src="' . Assets::image_path(($this->isGlobal($request_resource_id)) ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                if ($this->isGlobal($request_resource_id)) {
+                                    print ' [global]';
+                                }
                             } else
                                 print _("Es wurde kein Raum angefordert.");
 
                             ?>
-                            </font>
                             </td>
                             <?
                             $i=0;
@@ -508,7 +516,7 @@ class ShowToolsRequests {
                                     print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                     if ($request_resource_id) {
                                         if ($request_resource_id == $val["resource_id"]) {
-                                            print "<img src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE).">";
+                                            print Assets::img('icons/16/green/accept.png', tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE));
                                         } else {
                                             $overlap_status = $this->showGroupOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$request_resource_id], $val["events_count"], $val["overlap_events_count"][$request_resource_id], $val["termin_ids"]);
                                             print $overlap_status["html"];
@@ -527,7 +535,7 @@ class ShowToolsRequests {
                                     print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                     if ($request_resource_id) {
                                         if ($request_resource_id == $val["resource_id"]) {
-                                            print "<img src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE).">";
+                                            print Assets::img('icons/16/green/accept.png', tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE));
                                         } else {
                                             $overlap_status = $this->showOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$request_resource_id][$key], $val["events_count"], $val["overlap_events_count"][$request_resource_id]);
                                             print $overlap_status["html"];
@@ -561,7 +569,7 @@ class ShowToolsRequests {
                             </td>
                         </tr>
                         <?
-                        if (get_config('RESOURCES_ENABLE_GROUPING')){
+                        if (get_config('RESOURCES_ENABLE_GROUPING')) {
                             $room_group = RoomGroups::GetInstance();
                             $group_id = $resources_data['actual_room_group'];
                             ?>
@@ -595,11 +603,14 @@ class ShowToolsRequests {
                             foreach ($room_group->getGroupContent($group_id) as $key) {
                         ?>
                         <tr>
-                            <td width="70%"><font size="-1">
+                            <td width="70%">
                                 <?
                                 $resObj = ResourceObject::Factory($key);
-                                print "<img src=\"".$GLOBALS['ASSETS_URL']."images/".$this->getGlobalIconName($key)."\" ".tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE).">";
-                                print "&nbsp;".$resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
+                                print $resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
+                                print ' <img class="text-top" src="' . Assets::image_path(($this->isGlobal($key)) ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                if ($this->isGlobal($key)) {
+                                    print ' [global]';
+                                }
                             ?>
                             </td>
                             <?
@@ -609,7 +620,7 @@ class ShowToolsRequests {
                                     foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"] as $key2 => $val2) {
                                         print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                         if ($key == $val2["resource_id"]) {
-                                            print "<img src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE).">";
+                                            print Assets::img('icons/16/green/accept.png', tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE));
                                         } else {
                                             $overlap_status = $this->showGroupOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
                                             print $overlap_status["html"];
@@ -626,7 +637,7 @@ class ShowToolsRequests {
                                     foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"] as $key2 => $val2) {
                                         print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                         if ($key == $val2["resource_id"]) {
-                                            print "<img src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE).">";
+                                            print Assets::img('icons/16/green/accept.png', tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE));
                                         } else {
                                             $overlap_status = $this->showOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key][$key2], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()]);
                                             print $overlap_status["html"];
@@ -658,7 +669,6 @@ class ShowToolsRequests {
                                 }
                                 ?>
                             </td>
-                        </font></td>
                         </tr>
                         <?
                                 }
@@ -667,7 +677,7 @@ class ShowToolsRequests {
                         ?>
                         <tr>
                             <td style="border-top:1px solid;" width="100%" colspan="<?=$cols+2?>">
-                                <font size="-1"><b><?=_("weitere passende R&auml;ume:")?></b>
+                                <font size="-1"><b><?=_("weitere passende Räume:")?></b>
                                 </font>
                             </td>
                         </tr>
@@ -686,11 +696,14 @@ class ShowToolsRequests {
                             foreach ($matching_rooms as $key=>$val) {
                             ?>
                         <tr>
-                            <td width="70%"><font size="-1">
+                            <td width="70%">
                                 <?
                                 $resObj = ResourceObject::Factory($key);
-                                print "<img src=\"".$GLOBALS['ASSETS_URL']."images/".$this->getGlobalIconName($key)."\" ".tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE).">";
-                                print "&nbsp;".$resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
+                                print $resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
+                                print ' <img class="text-top" src="' . Assets::image_path(($this->isGlobal($key)) ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                if ($this->isGlobal($key)) {
+                                    print ' [global]';
+                                }
                             ?>
                             </td>
                             <?
@@ -700,7 +713,7 @@ class ShowToolsRequests {
                                     foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"] as $key2 => $val2) {
                                         print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                         if ($key == $val2["resource_id"]) {
-                                            print "<img src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE).">";
+                                            print Assets::img('icons/16/green/accept.png', tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE));
                                         } else {
                                             $overlap_status = $this->showGroupOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
                                             print $overlap_status["html"];
@@ -717,7 +730,7 @@ class ShowToolsRequests {
                                     foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"] as $key2 => $val2) {
                                         print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                         if ($key == $val2["resource_id"]) {
-                                            print "<img src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE).">";
+                                            print Assets::img('icons/16/green/accept.png', tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE));
                                         } else {
                                             $overlap_status = $this->showOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key][$key2], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()]);
                                             print $overlap_status["html"];
@@ -748,7 +761,6 @@ class ShowToolsRequests {
                                 }
                                 ?>
                             </td>
-                        </font></td>
                         </tr>
                             <?
                             }
@@ -757,16 +769,16 @@ class ShowToolsRequests {
                             <td colspan="<?=$cols+2?>" align="center">
                                 <font size="-1">
                                     <?=_("zeige R&auml;ume")?>
-                                    <a href="<?=$PHP_SELF?>?dec_limit_low=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/-.gif" border="0" <?=tooltip(_("-10"))?>></a>
+                                    <a href="<?=$PHP_SELF?>?dec_limit_low=1">-</a>
                                     <input type="text" name="search_rooms_limit_low" maxlength="2" size="1" style="font-size:8pt" value="<?=($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_low"] + 1)?>">
-                                    <a href="<?=$PHP_SELF?>?inc_limit_low=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/+.gif" border="0" <?=tooltip(_("+10"))?>></a>
+                                    <a href="<?=$PHP_SELF?>?inc_limit_low=1">+</a>
 
                                     bis
-                                    <a href="<?=$PHP_SELF?>?dec_limit_high=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/-.gif" border="0" <?=tooltip(_("-10"))?>></a>
+                                    <a href="<?=$PHP_SELF?>?dec_limit_high=1">-</a>
                                     <input type="text" name="search_rooms_limit_high" maxlength="2" size="1" style="font-size:8pt" value="<?=$resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["search_limit_high"]?>">
-                                    <a href="<?=$PHP_SELF?>?inc_limit_high=1"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/+.gif" border="0" <?=tooltip(_("+10"))?>></a>
+                                    <a href="<?=$PHP_SELF?>?inc_limit_high=1">+</a>
 
-                                    <input type="image" name="matching_rooms_limit_submit" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" border="0" <?=tooltip(_("ausgewählten Bereich anzeigen"))?>>
+                                    <input type="image" name="matching_rooms_limit_submit" src="<?= Assets::image_path('icons/16/yellow/arr_2up.png') ?>" <?=tooltip(_("ausgewählten Bereich anzeigen"))?>>
                                 </font>
                             </td>
                         </tr>
@@ -786,11 +798,14 @@ class ShowToolsRequests {
                             foreach ($clipped_rooms as $key=>$val) {
                         ?>
                         <tr>
-                            <td width="70%"><font size="-1">
+                            <td width="70%">
                                 <?
                                 $resObj = ResourceObject::Factory($key);
-                                print "<img src=\"".$GLOBALS['ASSETS_URL']."images/".$this->getGlobalIconName($key)."\" ".tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE).">";
-                                print "&nbsp;".$resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
+                                print $resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
+                                print ' <img class="text-top" src="' . Assets::image_path(($this->isGlobal($key)) ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                if ($this->isGlobal($key)) {
+                                    print ' [global]';
+                                }
                             ?>
                             </td>
                             <?
@@ -969,13 +984,21 @@ class ShowToolsRequests {
                 ?>
                 </td>
             </tr>
-        </form>
         </table>
+        </form>
         <br><br>
         <?
     }
 
-    function showGroupOverlapStatus($overlaps, $events_count, $overlap_events_count, $group_dates) {
+    /**
+     *
+     * @param $overlaps
+     * @param $events_count
+     * @param $overlap_events_count
+     * @param $group_dates
+     */
+    function showGroupOverlapStatus($overlaps, $events_count, $overlap_events_count, $group_dates)
+    {
         if ($overlap_events_count) {
             foreach ($overlaps as $val) {
                 if ($val["lock"])
@@ -1056,16 +1079,15 @@ class ShowToolsRequests {
      * Return a different icon-name for a resource depending on the owner_id
      *
      * @param string $resource_id
-     * return string $room-icon
+     * return boolean
      */
-    private function getGlobalIconName($resource_id)
+    private function isGlobal($resource_id)
     {
         $owner_id = DBManager::get()->query("SELECT owner_id from resources_objects WHERE resource_id='".$resource_id."'")->fetchColumn();
         if ($owner_id == '"global') {
-                return "room_global.png";
-        } else {
-                return "info.gif";
+            return true;
         }
+        return false;
     }
 
 }

@@ -27,7 +27,7 @@ function footer() {
 }
 
 function reenter_mail() {
-    echo _('Sollten Sie keine E-Mail erhalten haben, können Sie sich einen neuen Aktivierungsschlüssel zuschicken lassen. Geben Sie dazu Ihre gewünschte E-Mail Adresse unten an:');
+    echo _('Sollten Sie keine E-Mail erhalten haben, können Sie sich einen neuen Aktivierungsschlüssel zuschicken lassen. Geben Sie dazu Ihre gewünschte E-Mail-Adresse unten an:');
     echo '<form action="activate_email.php" method="post">'
         .'<input type="hidden" name="uid" value="'. htmlReady($_REQUEST['uid']) .'">'
         .'<table><tr><td>'. _('E-Mail:') .'</td><td><input type="text" name="email1"></td></tr>'
@@ -36,7 +36,7 @@ function reenter_mail() {
 }
 
 function mail_explain() {
-    echo _('Sie haben Ihre E-Mail Adresse geändert. Um diese frei zu schalten müssen Sie den Ihnen an Ihre neue Adresse zugeschickten Aktivierungs Schlüssel im unten stehenden Eingabefeld eintragen.');
+    echo _('Sie haben Ihre E-Mail-Adresse geändert. Um diese frei zu schalten müssen Sie den Ihnen an Ihre neue Adresse zugeschickten Aktivierungs Schlüssel im unten stehenden Eingabefeld eintragen.');
     echo '<br><form action="activate_email.php" method="post"><input type="text" name="key"><input name="uid" type="hidden" value="'.htmlReady($_REQUEST['uid']).'"><br>'
         .makeButton("abschicken","input"). '</form><br><br>';
 
@@ -62,12 +62,12 @@ if(isset($_REQUEST['key'])) {
         $db->query(sprintf("UPDATE auth_user_md5 SET validation_key='' WHERE user_id='%s'", $uid));
         unset($_SESSION['half_logged_in']);
         head(PageLayout::getTitle());
-        echo _('Ihre E-Mail Adresse wurde erfolgreich geändert.');
+        echo _('Ihre E-Mail-Adresse wurde erfolgreich geändert.');
         printf(' <a href="index.php">%s</a>', _('Zum Login'));
         footer();
     } else if ($key == '') {
         head(PageLayout::getTitle());
-        echo _('Ihre E-Mail Adresse ist bereits geändert.');
+        echo _('Ihre E-Mail-Adresse ist bereits geändert.');
         printf(' <a href="index.php">%s</a>', _('Zum Login'));
         footer();
     } else {
@@ -80,7 +80,7 @@ if(isset($_REQUEST['key'])) {
         if($_SESSION['semi_logged_in'] == $_REQUEST['uid']) {
             reenter_mail();
         } else {
-            printf(_('Sie können sich %seinloggen%s und sich den Bestätigungscode neu oder an eine andere E-Mail Adresse schicken lassen.'),
+            printf(_('Sie können sich %seinloggen%s und sich den Bestätigungscode neu oder an eine andere E-Mail-Adresse schicken lassen.'),
                     '<a href="index.php?again=yes">', '</a>');
         }
         footer();
@@ -110,7 +110,7 @@ if(isset($_REQUEST['key'])) {
         }
     } else {
         head(PageLayout::getTitle());
-        printf('<b>%s</b>', _('Die eingegebenen E-Mail Adressen stimmen nicht überein. Bitte überprüfen Sie Ihre Eingabe.'));
+        printf('<b>%s</b>', _('Die eingegebenen E-Mail-Adressen stimmen nicht überein. Bitte überprüfen Sie Ihre Eingabe.'));
         reenter_mail();
         footer();
     }

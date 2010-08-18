@@ -125,7 +125,7 @@ if (check_ticket($studipticket)) {
         if($_REQUEST['email1'] == $_REQUEST['email2']) {
             $my_about->edit_email($_REQUEST['email1']);
         } else {
-            $my_about->msg.= "info§" . _('Die Wiederholung der E-Mail Adresse stimmt nicht mit Ihrer Eingabe überein. Bitte überprüfen Sie Ihre Eingabe.'). '§';
+            $my_about->msg.= "info§" . _('Die Wiederholung der E-Mail-Adresse stimmt nicht mit Ihrer Eingabe überein. Bitte überprüfen Sie Ihre Eingabe.'). '§';
         }
     }
 

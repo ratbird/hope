@@ -137,7 +137,7 @@ function edit_email($uid, $email, $force=False) {
             return array(True, $msg);
         }
 
-        $msg.= "info§<b>" . sprintf(_('An Ihre neue E-Mail Adresse <b>%s</b> wurde ein Aktivierungslink geschickt, dem Sie folgen müssen bevor Sie sich das nächste mal einloggen können.'), $email). '</b>§';
+        $msg.= "info§<b>" . sprintf(_('An Ihre neue E-Mail-Adresse <b>%s</b> wurde ein Aktivierungslink geschickt, dem Sie folgen müssen bevor Sie sich das nächste mal einloggen können.'), $email). '</b>§';
         $db->query("UPDATE auth_user_md5 SET validation_key='$key' WHERE user_id='".$uid."'");
         log_event("USER_NEWPWD",$uid); // logging
     }

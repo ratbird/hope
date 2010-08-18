@@ -73,7 +73,7 @@
                             <?php
                             if (!$NOT_HIDEABLE_FIELDS[$my_perm]['email']) {
                                 echo '<br>';
-                                echo _("Wenn Sie hier Ihre E-Mailadresse verstecken, wird stattdessen die E-Mailadresse Ihrer (Standard-)Einrichtung angezeigt.");
+                                echo _("Wenn Sie hier Ihre E-Mail-Adresse verstecken, wird stattdessen die E-Mailadresse Ihrer (Standard-)Einrichtung angezeigt.");
                             }
                             ?>
                             </font>
@@ -97,7 +97,7 @@
                             <?php } ?>
                             <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['email']) {?>
                             <input type="checkbox" name="email"<?php echo $email_visibility ? ' checked="checked"' : '' ?>>
-                            <?php echo _('eigene Emailadresse sichtbar'); ?>
+                            <?php echo _('eigene E-Mail-Adresse sichtbar'); ?>
                             <br>
                             <?php } ?>
                         </td>

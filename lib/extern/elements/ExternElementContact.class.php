@@ -121,7 +121,7 @@ class ExternElementContact extends ExternElement {
         $table .= $edit_form->editRadioGeneric('hideinstname', $title, $info, $values, $names);
         
         $title = _("Email und Hompage getrennt:");
-        $info = _("Sinnvoll ist diese Option bei sehr langen Email-Adresse und Homepage-Links der Mitarbeiter. Diese werden dann unterhalb des Adressfeldes ausgegeben.");
+        $info = _("Sinnvoll ist diese Option bei sehr langen E-Mail-Adressen und Homepage-Links der Mitarbeiter. Diese werden dann unterhalb des Adressfeldes ausgegeben.");
         $table .= $edit_form->editCheckboxGeneric('separatelinks', $title, $info, '1', '0');
         
         $title = _("Adresszusatz:");

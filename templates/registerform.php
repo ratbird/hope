@@ -74,7 +74,7 @@ function checkEmail(){
  var Email = document.login.Email.value;
  var checked = true;
  if ((re_email.test(Email))==false || Email.length==0) {
-    alert("<?=_("Die E-Mail Adresse ist nicht korrekt!")?>");
+    alert("<?=_("Die E-Mail-Adresse ist nicht korrekt!")?>");
         document.login.Email.focus();
     checked = false;
     }

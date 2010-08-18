@@ -5,7 +5,7 @@
  <b><?= _('E-Mail Aktivierung') ?></b>
 </td></tr>
 <tr><td style="background-color: #fff; padding: 1.5em;">
-<?= _('Sie haben Ihre E-Mail Adresse geändert. Um diese frei zu schalten müssen Sie den Ihnen an Ihre neue Adresse zugeschickten Aktivierungs Schlüssel im unten stehenden Eingabefeld eintragen.'); ?>
+<?= _('Sie haben Ihre E-Mail-Adresse geändert. Um diese frei zu schalten müssen Sie den Ihnen an Ihre neue Adresse zugeschickten Aktivierungs Schlüssel im unten stehenden Eingabefeld eintragen.'); ?>
 <br><form action="activate_email.php" method="post">
  <input name="key">
  <input name="uid" type="hidden" value="<?= $uid ?>">
@@ -20,7 +20,7 @@
  <b><?= _('E-Mail Aktivierung neu senden') ?></b>
 </td></tr>
 <tr><td style="background-color: #fff; padding: 1.5em;">
-<?= _('Sollten Sie keine E-Mail erhalten haben, können Sie sich einen neuen Aktivierungsschlüssel zuschicken lassen. Geben Sie dazu Ihre gewünschte E-Mail Adresse unten an:'); ?>
+<?= _('Sollten Sie keine E-Mail erhalten haben, können Sie sich einen neuen Aktivierungsschlüssel zuschicken lassen. Geben Sie dazu Ihre gewünschte E-Mail-Adresse unten an:'); ?>
 <form action="activate_email.php" method="post">
 <input type="hidden" name="uid" value="<?= $uid ?>">
 <table><tr><td><?= _('E-Mail:') ?></td><td><input name="email1"></td></tr>

@@ -157,7 +157,7 @@ $export_pagename = _("Datenexport - Startseite");
         );
         {
             $infobox[1]["kategorie"] = _("Aktionen:");
-                $infobox[1]["eintrag"][] = array (  "icon" => "forumrot.gif" ,
+                $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
                                             "text"  => sprintf(_("W&auml;hlen Sie die Art der Daten, die Sie exportieren wollen, und die Einrichtung, aus der die Daten gelesen werden sollen. Klicken Sie dann auf 'weiter.'"), $link2, "</a>")
                                         );
         }

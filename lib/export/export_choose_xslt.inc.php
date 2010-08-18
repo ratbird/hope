@@ -162,7 +162,7 @@ elseif (!isset($page) or ($page == 0)) // Seite 1 : Auswahl des Dateiformats
     );
     $link = "<a href=\"./test.xml"."\">";
     $infobox[1]["kategorie"] = _("Aktionen:");
-        $infobox[1]["eintrag"][] = array (  "icon" => "forumrot.gif" ,
+        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
                                     "text"  => _("Bitte w&auml;hlen Sie das Dateiformat, in dem Ihre Daten ausgegeben werden sollen. Klicken Sie anschließend auf 'weiter'.")
                                 );
 }
@@ -233,7 +233,7 @@ elseif ($page == 1) // Seite 2 : Auswahl des XSLT-Scripts
     );
     $link = "<a href=\"./test.xml"."\">";
     $infobox[1]["kategorie"] = _("Aktionen:");
-        $infobox[1]["eintrag"][] = array (  "icon" => "forumrot.gif" ,
+        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
                                     "text"  => _("W&auml;hlen Sie bitte eines der zur Verf&uuml;gung stehenden Ausgabemodule. Klicken Sie dann auf 'weiter'.")
                                 );
 }
@@ -292,12 +292,12 @@ elseif ($page == 2)  // Seite 3 : Download der Dateien
     );
     $link = "<a href=\"./test.xml"."\">";
     $infobox[1]["kategorie"] = _("Aktionen:");
-        $infobox[1]["eintrag"][] = array (  "icon" => "icon-disc.gif" ,
+        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/download.png" ,
                                     "text"  => _("Sie können sich die XML-Daten und das XSLT-Skript herunterladen.")
                                 );
     if ($XSLT_ENABLE)
     {
-        $infobox[1]["eintrag"][] = array (  "icon" => "forumrot.gif" ,
+        $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/info.png" ,
                                     "text"  => _("Wenn Sie auf 'weiter' klicken, wird mit dem installierten XSLT-Prozessor die Ausgabedatei erzeugt.")
                                 );
     }

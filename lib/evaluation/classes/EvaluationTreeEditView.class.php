@@ -507,7 +507,7 @@ function getEvalPath(){
     $path .= "<a class=\"tree\" href=\""
         . $this->getSelf("itemID=root")
         . "\">"
-#       . "<img src=\"".PICTURES."forumrot.gif\" "
+#       . "<img src=\"".PICTURES."images/icons/16/red/arr_1right.png\" "
 #       . "width=\"10\" hight=\"20\" border=\"0\">"
 #       . "&nbsp;"
         . _("Evaluation")

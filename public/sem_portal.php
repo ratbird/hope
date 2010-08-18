@@ -226,7 +226,7 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
         if($sem_browse_data['group_by'] != $i){
             $group_by_links .= "<a href=\"$PHP_SELF?group_by=$i&keep_result_set=1\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"10\" height=\"20\" border=\"0\">";
         } else {
-            $group_by_links .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\" align=\"bottom\">";
+            $group_by_links .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\" align=\"bottom\">";
         }
         $group_by_links .= "&nbsp;" . $sem_browse_obj->group_by_fields[$i]['name'];
         if($sem_browse_data['group_by'] != $i){
@@ -277,13 +277,13 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
 
     //toplist link switcher
     if ($sem_portal["toplist"] != 4)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=4\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\"> "._("neueste Veranstaltungen")."</a><br>";
+        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=4\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("neueste Veranstaltungen")."</a><br>";
     if ($sem_portal["toplist"] != 1)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=1\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\"> "._("Teilnehmeranzahl")."</a><br>";
+        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=1\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("Teilnehmeranzahl")."</a><br>";
     if ($sem_portal["toplist"] != 2)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\"> "._("die meisten Materialien")."</a><br>";
+        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=2\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("die meisten Materialien")."</a><br>";
     if ($sem_portal["toplist"] != 3)
-        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=3\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\"> "._("aktivste Veranstaltungen")."</a><br>";
+        $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=3\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("aktivste Veranstaltungen")."</a><br>";
     // if ($sem_portal["bereich"] == "all")
     $infotxt = _("Sie können hier nach allen Veranstaltungen suchen, sich Informationen anzeigen lassen und Veranstaltungen abonnieren.");
 

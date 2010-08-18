@@ -114,9 +114,9 @@ class StudipStmInstanceTreeViewSimple {
             if ($this->tree->hasKids($item_id) && ($num_entries = $this->tree->getNumEntries($this->start_item_id,true))){
                 if ($this->show_entries != "sublevels"){
                     echo "<a " . tooltip(_("alle Einträge in allen Unterebenen anzeigen")) ." href=\"" . $this->getSelf("cmd=show_stm_tree&item_id={$this->start_item_id}_withkids") ."\">";
-                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/forumrot.gif\" border=\"0\">&nbsp;";
+                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1right.pngf\" border=\"0\">&nbsp;";
                 } else {
-                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/forumrotrunt.gif\" border=\"0\">&nbsp;";
+                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1down.png\" border=\"0\">&nbsp;";
                 }
                 printf(_("<b>%s</b> Eintr&auml;ge in allen Unterebenen vorhanden"), $num_entries);
                 if ($this->show_entries != "sublevels"){

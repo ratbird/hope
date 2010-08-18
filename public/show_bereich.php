@@ -121,7 +121,7 @@ for ($i = 0; $i < count($sem_browse_obj->group_by_fields); ++$i){
     if($group_by != $i){
         $group_by_links .= "<a href=\"".URLHelper::getLink("",array('group_by'=>$i))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"10\" height=\"20\" border=\"0\">";
     } else {
-        $group_by_links .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=\"0\" align=\"bottom\">";
+        $group_by_links .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\" align=\"bottom\">";
     }
     $group_by_links .= "&nbsp;" . $sem_browse_obj->group_by_fields[$i]['name'];
     if($group_by != $i){

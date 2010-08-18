@@ -2098,7 +2098,7 @@ if ((!$sem_create_data["sem_class"]) && (!$level)){
                     <?
                     foreach (SeminarCategories::GetAll() as $category) {
                         if(!$category->course_creation_forbidden){
-                            echo "<tr><td width=\"3%\" class=\"blank\"><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumrot.gif\" border=0></a><td>";
+                            echo "<tr><td width=\"3%\" class=\"blank\"><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\"><img src=\"".$GLOBALS['ASSETS_URL']."icons/16/grey/arr_1right.png\" border=0></a><td>";
                             echo "<td width=\"97%\" class=\"blank\"><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\">".$category->name."</a><td></tr>";
                         echo "<tr><td width=\"3%\" class=\"blank\">&nbsp; <td>";
                             echo "<td width=\"97%\" class=\"blank\"><font size=-1>".$category->create_description."</font><td></tr>";

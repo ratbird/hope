@@ -224,7 +224,7 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
     $group_by_links = "";
     for ($i = 0; $i < count($sem_browse_obj->group_by_fields); ++$i){
         if($sem_browse_data['group_by'] != $i){
-            $group_by_links .= "<a href=\"$PHP_SELF?group_by=$i&keep_result_set=1\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"10\" height=\"20\" border=\"0\">";
+            $group_by_links .= "<a href=\"$PHP_SELF?group_by=$i&keep_result_set=1\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\" height=\"20\" border=\"0\">";
         } else {
             $group_by_links .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\" align=\"bottom\">";
         }
@@ -241,7 +241,7 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
     if ($sem_portal['bereich'] != 'mod') {
             $infobox[] =    array(  "kategorie" => _("Aktionen:"),
                             "eintrag" => array(array(   'icon' => "blank.gif",
-                                                        "text" => '<a href="'.$PHP_SELF.'?send_excel=1"><img src="'.$GLOBALS['ASSETS_URL'].'images/xls-icon.gif" align="absbottom" border="0">&nbsp;'._("Download des Ergebnisses").'</a>'))
+                                                        "text" => '<a href="'.$PHP_SELF.'?send_excel=1"><img src="'.$GLOBALS['ASSETS_URL'].'images/icons/blue/download.png" align="absbottom" border="0">&nbsp;'._("Download des Ergebnisses").'</a>'))
                     );
     }
 } elseif ($sem_portal['bereich'] != 'mod') {

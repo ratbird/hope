@@ -9,8 +9,8 @@
            $input_style = " style=\"".$inputStyle."\"";
         }
         if ($beschriftung) {
-            $clear_input = " onFocus=\"if (this.value == '$beschriftung'){this.value = ''; $(this).css('color', '');}\" " .
-                "onBlur=\"if (this.value == ''){this.value = '$beschriftung';$(this).css('color', '".$descriptionColor."');}\"";
+            $clear_input = " onFocus=\"if (this.value == '$beschriftung'){this.value = ''; jQuery(this).css('color', '');}\" " .
+                "onBlur=\"if (this.value == ''){this.value = '$beschriftung';jQuery(this).css('color', '".$descriptionColor."');}\"";
         } ?>
             <input type=hidden id="<?= $id ?>_realvalue" name="<?= $name ?>" value="<?= $defaultID ?>">
             <input<?= $input_style.($inputClass ? " class=\"".$inputClass."\"" : "")

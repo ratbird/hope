@@ -7,14 +7,16 @@
 /**
  * score.php - Stud.IP Highscore List
  *
- * PHP Version 5
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * @author      Stefan Suchi <suchi@gmx.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @access      public
- * @copyright   2000-2009 Stud.IP
- * @license     http://www.gnu.org/licenses/gpl.html GPL Licence 3
-*/
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
 
 
 require '../lib/bootstrap.php';

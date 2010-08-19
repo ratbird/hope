@@ -34,9 +34,7 @@ URLHelper::setBaseUrl($ABSOLUTE_URI_STUDIP);
 unregister_globals();
 
 # dispatch
-$request_uri = $_SERVER['REQUEST_URI'] === $_SERVER['PHP_SELF']
-               ? '/'
-               : substr($_SERVER['REQUEST_URI'], strlen($_SERVER['PHP_SELF']));
+$request_uri = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : '/';
 
 $default_controller = 'default';
 

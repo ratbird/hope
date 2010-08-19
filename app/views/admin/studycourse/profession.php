@@ -16,13 +16,13 @@
     </tr>
     <? foreach ($studycourses as $fach_id => $studycourse): ?>
     <tbody class="<?= count($studycourse['degree'])?'':'empty' ?>">
-    <tr class="steel">
+    <tr class="steel" valign="bottom">
         <td><? if (count($studycourse['degree']) < 1): ?><?=$fach_id+1 ?>. <?= htmlReady($studycourse['name']) ?> <? else: ?> <a class="toggler" href="#"><?=$fach_id+1 ?>. <?= htmlReady($studycourse['name']) ?></a><? endif; ?></td>
         <td><?= $studycourse['count_sem'] ?> </td>
         <td><?= $studycourse['count_user'] ?> </td>
-        <td><a href="<?=$controller->url_for('admin/studycourse/edit_profession/'.$studycourse['studiengang_id'])?>"><?= Assets::img('edit_transparent.gif', array('title' => 'Studiengang bearbeiten')) ?></a></td>
-        <td><? if ($studycourse['count_user'] > 0): ?><a href="<?=URLHelper::getLink("sms_send.php?sms_source_page=sms_box.php&sp_id=".$studycourse['studiengang_id']."&emailrequest=1&subject="._("Informationen zum Studiengang:")." ". $studycourse['name']) ?>"><?= Assets::img('mailnachricht.gif', array('title' => 'Nachricht an alle Nutzer schicken')) ?></a><? endif;?></td>
-        <td><? if ($studycourse['count_user'] == 0 && $studycourse['count_sem'] == 0): ?> <a href="<?=$controller->url_for('admin/studycourse/delete_profession')?>?prof_id=<?= $studycourse['studiengang_id'] ?>"><?= Assets::img('trash.gif', array('title' => 'Studiengang löschen')) ?></a><? endif;?></td>
+        <td><a href="<?=$controller->url_for('admin/studycourse/edit_profession/'.$studycourse['studiengang_id'])?>"><?= Assets::img('icons/16/blue/edit.png', array('title' => 'Studiengang bearbeiten')) ?></a></td>
+        <td><? if ($studycourse['count_user'] > 0): ?><a href="<?=URLHelper::getLink("sms_send.php?sms_source_page=sms_box.php&sp_id=".$studycourse['studiengang_id']."&emailrequest=1&subject="._("Informationen zum Studiengang:")." ". $studycourse['name']) ?>"><?= Assets::img('icons/16/blue/mail.png', array('title' => 'Nachricht an alle Nutzer schicken')) ?></a><? endif;?></td>
+        <td><? if ($studycourse['count_user'] == 0 && $studycourse['count_sem'] == 0): ?> <a href="<?=$controller->url_for('admin/studycourse/delete_profession')?>?prof_id=<?= $studycourse['studiengang_id'] ?>"><?= Assets::img('icons/16/blue/trash.png', array('title' => 'Studiengang löschen')) ?></a><? endif;?></td>
     </tr>
     <? foreach ($studycourse['degree'] as $index => $degree): ?>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">

@@ -887,7 +887,7 @@ if (isset($_GET['details']) || $showform ) {
                 echo "<tr><td class=\"steel2\" colspan=3 align=\"center\">";
                 echo "&nbsp;" . htmlReady($db2->f("Name"));
                 echo ' <a href="' . URLHelper::getLink(sprintf('inst_admin.php?details=%s&admin_inst_id=%s', $db->f("username"), $db2->f("Institut_id"))) . '">';
-                echo "<img class=\"middle\" src=\"".$GLOBALS['ASSETS_URL']."images/admin.gif\" ".tooltip(_("Ändern der Einträge des Benutzers in der jeweiligen Einrichtung"))."\"></a>";
+                echo "<img class=\"text-top\" src=\"".Assets::image_path('icons/16/blue/institute.png')."\" ".tooltip(_("Ändern der Einträge des Benutzers in der jeweiligen Einrichtung"))."\"></a>";
                 echo "</td></tr>\n";
             }
             ?>

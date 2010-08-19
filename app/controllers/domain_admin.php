@@ -119,15 +119,15 @@ class DomainAdminController extends AuthenticatedController
             array(
                 'kategorie' => _('Nutzerdomänen verwalten'),
                 'eintrag'   => array(array(
-                    'icon' => 'add_sheet.gif',
+                    'icon' => 'icons/16/black/plus.png',
                     'text' => '<a href="'.$this->url_for('domain_admin/new').'">'._('Neue Nutzerdomäne anlegen').'</a>'
                 ))
             ), array(
                 'kategorie' => _('Informationen'),
                 'eintrag'   => array(array(
-                    'icon' => 'info.gif',
+                    'icon' => 'icons/16/black/info.png',
                     'text' => sprintf(_('In der Stud.IP-Hilfe finden Sie %sHinweise zur Verwendung von Nutzerdomänen%s.'),
-                                        '<a href="'.format_help_url('Admins.Nutzerdomaenen').'">', '</a>')
+                                        '<a target="_blank" href="'.format_help_url('Admins.Nutzerdomaenen').'">', '</a>')
                 ))
             )
         );

@@ -1277,7 +1277,7 @@ function printcontent ($breite, $write = FALSE, $inhalt, $edit, $printout = TRUE
                             array    (  "icon" => "suchen.gif",
                                     "text"  => "Um weitere Veranstaltungen bitte Blabla"
                                     ),
-                            array    (  "icon" => "admin.gif",
+                            array    (  "icon" => "icons/16/black/info.png",
                                     "text"  => "um Verwaltung  Veranstaltungen bitte Blabla"
                                     )
             )

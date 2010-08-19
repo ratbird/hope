@@ -179,7 +179,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             print "\n<tr>";
             print "\n<td width=\"5%\" class=\"steelgraulight\" align=\"left\"> ";
             if ($rechte)
-                print "<a href=\"".URLHelper::getLink("raumzeit.php?cmd=createNewSingleDate#newSingleDate")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/add_sheet.gif\"".tooltip(_("Einen neuen Termin anlegen"))." border=0></a></td>";
+                print "<a href=\"".URLHelper::getLink("raumzeit.php?cmd=createNewSingleDate#newSingleDate")."\"><img class=\"middle\" src=\"".Assets::image_path('icons/16/blue/plus.png')."\" ".tooltip(_("Einen neuen Termin anlegen"))."></a></td>";
             print "\n<td class=\"steelgraulight\" align=\"center\">";
             if ($open == "all")
                 print "<a href=\"".URLHelper::getLink("?dclose=1")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/close_all.gif\" ".tooltip(_("Alle schließen"))."></a>";

@@ -325,7 +325,7 @@ table.collapsable tbody.collapsed tr:first-child td:first-child a {
 }
 
 table.collapsable tbody.empty tr:first-child td:first-child {
-    background: transparent url(../images/icons/16/blue/arr_1right.png) 4px -2px no-repeat;
+    background: transparent url(../images/icons/16/grey/arr_1right.png) 0px 6px no-repeat;
 }
 
 /* Table details */

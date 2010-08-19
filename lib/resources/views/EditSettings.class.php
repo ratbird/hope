@@ -597,7 +597,7 @@ class EditSettings {
                     ?>
                         <tr>
                             <td colspan="3">
-                                <a href="<?=$PHP_SELF?>?create_lock=edit"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0"></a>
+                                <a href="<?=$PHP_SELF?>?create_lock=edit"><?= Assets::img('icons/16/blue/plus.png')?></a>
                             </td>
                         </tr>
                     </table>
@@ -679,7 +679,7 @@ class EditSettings {
                     ?>
                         <tr>
                             <td colspan="3">
-                                <a href="<?=$PHP_SELF?>?create_lock=assign"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0"></a>
+                                <a href="<?=$PHP_SELF?>?create_lock=assign"><?= Assets::img('icons/16/blue/plus.png')?></a>
                             </td>
                         </tr>
                     </table>

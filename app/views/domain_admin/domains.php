@@ -31,11 +31,11 @@
     </td>
     <td>
       <a href="<?= $controller->url_for('domain_admin/edit/'.$domain->getID()) ?>">
-        <?= Assets::img('edit_transparent.gif', array('alt' => _('bearbeiten'))) ?>
+        <?= Assets::img('icons/16/blue/edit.png', array('title' => _('bearbeiten'))) ?>
       </a>
       <? if (count($domain->getUsers()) == 0): ?>
         <a href="<?= $controller->url_for('domain_admin/delete/'.$domain->getID()) ?>">
-          <?= Assets::img('trash.gif', array('alt' => _('löschen'))) ?>
+          <?= Assets::img('icons/16/blue/trash.png', array('title' => _('löschen'))) ?>
         </a>
       <? endif ?>
     </td>

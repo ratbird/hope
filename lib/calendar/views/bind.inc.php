@@ -58,7 +58,7 @@ $query = "SELECT visitdate, seminare.Name, seminare.Seminar_id, seminar_user.sta
 $db->query($query);
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
-echo "<tr><td class=\"blank\" width=\"90%\">\n";
+echo "<tr><td class=\"blank\">\n";
 echo "<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"1\" class=\"blank\">\n";
 
 if (!empty($calendar_sess_control_data["view_prv"]))

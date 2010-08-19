@@ -271,7 +271,7 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         echo "</table\n</td>\n";
 
         echo "<td class=\"blank\" align=\"right\" valign=\"top\" width=\"1%\" valign=\"top\">\n";
-        print_infobox($info['all'], "dates.jpg");
+        print_infobox($info['all'], "infobox/dates.jpg");
     }
 
     echo "</td>\n";

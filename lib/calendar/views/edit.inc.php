@@ -38,7 +38,7 @@ include('lib/include/html_head.inc.php');
 include('lib/include/header.php');
 
 echo "<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-echo "<tr><td class=\"blank\" width=\"100%\" valign=\"top\">\n";
+echo "<tr><td class=\"blank\" valign=\"top\">\n";
 echo "<table class=\"blank\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n";
 
 if (!empty($err))
@@ -49,9 +49,9 @@ if (!empty($err))
     my_info($error_message, "blank", 2);
 }
 
-echo "<tr><td class=\"blank\" width=\"100%\" valign=\"top\">\n";
+echo "<tr><td class=\"blank\" valign=\"top\">\n";
 echo "<form name=\"Formular\" action=\"$PHP_SELF?cmd=edit\" method=\"post\">";
-echo "<table class=\"blank\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">\n";
+echo "<table align=\"center\" class=\"blank\" width=\"98%\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">\n";
 
 if (isset($atermin) && strtolower(get_class($atermin)) == "seminarevent") {
     // form is not editable
@@ -555,7 +555,7 @@ else{
         echo ($err["exc_time"] ? $error_sign : "");
         echo to_string_popupcalendar(12, $disabled);
         echo '&nbsp;&nbsp;';
-        echo "<input align=\"absmiddle\" type=\"image\" src=\"".$GLOBALS['ASSETS_URL']."images/add_right.gif\"";
+        echo "<input class=\"middle\" type=\"image\" src=\"".Assets::image_path('icons/16/blue/add.png')."\"";
         echo " name=\"add_exc\"" . tooltip(_("Ausnahme hinzufügen")) . ">";
         echo "&nbsp; &nbsp;</font></td><td><font size=\"-1\">\n";
         echo "<select name=\"exc_delete[]\" size=\"4\" multiple=\"multiple\" style=\"width:170px; vertical-align:middle;\">\n";
@@ -615,9 +615,9 @@ if (isset($atermin) && strtolower(get_class($atermin)) == "seminarevent") {
         $info_box['all'][0]['eintrag'][] = array("icon" => "icons/16/black/info.png",
                 "text" => $info_box['sem1']);
         $info_box['all'][1]['kategorie'] = _("Aktion:");
-        $info_box['all'][1]['eintrag'][] = array('icon' => "meinesem.gif",
+        $info_box['all'][1]['eintrag'][] = array('icon' => "icons/16/black/add/date.png",
                 "text" => $info_box['sem2']);
-        $info_box['all'][1]['eintrag'][] = array('icon' => "admin.gif",
+        $info_box['all'][1]['eintrag'][] = array('icon' => "icons/16/black/seminar.png",
                 "text" => $info_box['sem3']);
     }
     else {
@@ -625,7 +625,7 @@ if (isset($atermin) && strtolower(get_class($atermin)) == "seminarevent") {
         $info_box['all'][0]['eintrag'][] = array("icon" => "icons/16/black/info.png",
                 "text" => $info_box['sem1']);
         $info_box['all'][1]['kategorie'] = _("Aktion:");
-        $info_box['all'][1]['eintrag'][] = array('icon' => "meinesem.gif",
+        $info_box['all'][1]['eintrag'][] = array('icon' => "icons/16/black/add/date.png",
                 "text" => $info_box['sem2']);
     }
     $info_box['all'][1]['eintrag'][] = $info_box['export'];

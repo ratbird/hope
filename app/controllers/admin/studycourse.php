@@ -251,19 +251,19 @@ class Admin_StudycourseController extends AuthenticatedController
         $infobox = array('picture' => 'infobox/board1.jpg');
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/studycourse/profession').'">'._('Gruppierung nach Fächer').'</a>',
-            "icon" => "icon-cont.gif"
+            "icon" => "icons/16/black/visibility-visible.png"
         );
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/studycourse/degree').'">'._('Gruppierung nach Abschlüssen').'</a>',
-            "icon" => "icon-cont.gif"
+            "icon" => "icons/16/black/visibility-visible.png"
         );
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/studycourse/newprofession').'">'._('Neue Fächer anlegen').'</a>',
-            "icon" => "admin.gif"
+            "icon" => "icons/16/black/plus.png"
         );
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/studycourse/newdegree').'">'._('Neue Abschlüsse anlegen').'</a>',
-            "icon" => "admin.gif"
+            "icon" => "icons/16/black/plus.png"
         );
 
         $infobox['content'] = array(
@@ -276,11 +276,11 @@ class Admin_StudycourseController extends AuthenticatedController
                 'eintrag'   => array(
                     array(
                         "text" => _("Auf dieser Seite können Sie die Studiengänge verwalten. Zusätzlich können Sie allen Benutzern eines Studiengangs eine Nachricht senden."),
-                        "icon" => "ausruf_small2.gif"
+                        "icon" => "icons/16/black/info.png"
                     ),
                     array(
                         "text" => _("Studiengänge bestehen aus einem Fach und einem oder mehreren Abschlüssen. Bestehende Studiengänge und Abschlüsse können nur gelöscht werden, wenn diese keine Nutzer haben."),
-                        "icon" => "ausruf_small2.gif"
+                        "icon" => "icons/16/black/info.png"
                     )
                 )
             )

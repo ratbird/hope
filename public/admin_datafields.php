@@ -57,10 +57,14 @@ $cssSw=new cssClassSwitcher;
 $sess->register("admin_datafields_data");
 
 
-// handles output of column "Feldtyp"
-function printDataFieldType ($targetID, $currStruct)
+/**
+ * handles output of column "Feldtyp"
+ *
+ * @param unknown_type $targetID
+ * @param unknown_type $currStruct
+ */
+function printDataFieldType($targetID, $currStruct)
 {
-    echo '<font size="-1">';
     if ($currStruct == 0 || $targetID == $currStruct->getID()) {
         print "<select name=\"datafield_type\">";
         foreach (DataFieldEntry::getSupportedTypes() as $type) {
@@ -74,9 +78,9 @@ function printDataFieldType ($targetID, $currStruct)
         if ($_GET['edit_typeparam'] == $currStruct->getID()) {  // edit button clicked?
             print '<br><a name="a">' . $currStruct->getHTMLEditor('typeparam') . "</a>";
             printf('<input type="hidden" name="datafield_id" value="%s">', $currStruct->getID());
-            print ' <input type="image" name="save" src="'.$GLOBALS['ASSETS_URL'].'images/haken_transparent.gif" border="0" align="middle" title="&Auml;nderungen speichern">';
-            print ' <input type="image" name="preview" src="'.$GLOBALS['ASSETS_URL'].'images/preview.gif" border="0" align="middle" title="Vorschau">';
-            printf(' <a href="%s"><img src="'.$GLOBALS['ASSETS_URL'].'images/x_transparent.gif" border="0" align="middle" title="Bearbeitung abbrechen"></a>',
+            print ' <input type="image" name="save" src="'.Assets::image_path('icons/16/blue/accept.png').'" title="&Auml;nderungen speichern">';
+            print ' <input type="image" name="preview" src="'.$GLOBALS['ASSETS_URL'].'images/preview.gif" title="Vorschau">';
+            printf(' <a href="%s"><img src="'.Assets::image_path('icons/16/blue/decline.png').'" title="Bearbeitung abbrechen"></a>',
                     URLHelper::getLink("?cancel=TRUE"));
         }
         elseif ($_POST['preview_x'] && $_POST['datafield_id'] == $currStruct->getID()) { // preview button clicked?
@@ -84,18 +88,17 @@ function printDataFieldType ($targetID, $currStruct)
             $currStruct->setTypeParam($_POST['typeparam']);
             $sbox = DataFieldEntry::createDataFieldEntry($currStruct);
             print '<a name="a">' . $sbox->getHTML('') . '</a>';
-            printf(' <a href="%s"><img src="'.$GLOBALS['ASSETS_URL'].'images/haken_transparent.gif" border="0" align="middle" title="Fertig"></a>',
+            printf(' <a href="%s"><img src="'.Assets::image_path('icons/16/blue/accept.png').'" title="Fertig"></a>',
                      URLHelper::getLink("?cancel=TRUE"));
-            printf(' <a href="%s"><img src="'.$GLOBALS['ASSETS_URL'].'images/edit_transparent.gif" border="0" align="middle" title="Eintr&auml;ge bearbeiten"></a>',
+            printf(' <a href="%s"><img src="'.Assets::image_path('icons/16/blue/edit.png').'" title="Eintr&auml;ge bearbeiten"></a>',
                      URLHelper::getLink("?edit_typeparam=".$_POST['datafield_id']."#a"));
         }
         else
             if (in_array($currStruct->getType(), array('selectbox', 'radio', 'combo'))) {
                 printf(" <a href=\"%s\">", URLHelper::getLink("?edit_typeparam=".$currStruct->getID()."#a"));
-                print  '<img src="'.$GLOBALS['ASSETS_URL'].'images/edit_transparent.gif" border="0" align="middle" title="Eintr&auml;ge bearbeiten"></a>';
+                print  '<img src="'.Assets::image_path('icons/16/blue/edit.png').'" title="Eintr&auml;ge bearbeiten"></a>';
             }
     }
-    echo '</font>';
 }
 
 PageLayout::setTitle(_("Verwaltung generischer Datenfelder"));
@@ -134,10 +137,9 @@ if ($_POST['save_x'] || $_POST['preview_x']) {  // do we edit or preview a (sele
 elseif ($send && ($admin_datafields_data["change_datafield"]
 || $admin_datafields_data["create_datafield"])) {
 
-
-
-
-    function datafield_check_array($datafield) {    // we do not want duplicated code (guter Scherz :-)
+    // we do not want duplicated code (guter Scherz :-)
+    function datafield_check_array($datafield)
+    {
         $class = $datafield;
         if (is_array($datafield)) {
             $class = 0;
@@ -168,35 +170,32 @@ elseif ($send && ($admin_datafields_data["change_datafield"]
     $fieldStruct->store();
     if ($admin_datafields_data["change_datafield"]) {
         $admin_datafields_data["change_datafield"] = FALSE;
-        $msg = "msg§"._("Die &Auml;nderungen am Datenfeld wurden &uuml;bernommen.");
+        $msg = _("Die Änderungen am Datenfeld wurden übernommen.");
     } else {
         $admin_datafields_data["create_datafield"] = FALSE;
-        $msg = "msg§"._("Das Datenfeld wurde angelegt.");
+        $msg = _("Das Datenfeld wurde erfolgreich angelegt.");
     }
 }
 
 if ($kill_datafield) { // contains a datafield_id
     DataFieldStructure::remove($kill_datafield);
-    $msg = "msg§"._("Das Datenfeld wurde gel&ouml;scht.");
+    $msg = _("Das Datenfeld wurde gelöscht.");
 }
 
 ?>
+<div id="layout_container" style="padding: 1em;">
 <form method="POST" name="modules" action="<?=  URLHelper::getLink("?send=TRUE#a") ?>">
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td class="blank" valign="top">
-            <? if (isset($msg)) { ?>
-                <table width="100%">
-                <? parse_msg($msg, "§", "blank", 1, FALSE); ?>
-                </table>
-            <? } ?>
+            <?= ($msg) ? MessageBox::success($msg) : '' ?>
         </td>
     </tr>
     <tr>
         <td class="blank">
-        <b><font size="-1"><?=_("Datenfelder f&uuml;r Veranstaltungen")?></font></b>
+        <b><?=_("Datenfelder f&uuml;r Veranstaltungen")?></b>
         <table width="100%" border="0" cellpadding="2" cellspacing="0">
-            <tr>
+            <tr style="height: 2em">
                 <td class="steel" width="20%" align="left" valign="bottom">
                     <font size="-1">
                     <b><?=_("Name")?></b>
@@ -326,14 +325,14 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        print  ' <input type="image" name="send_datafield" src="'.$GLOBALS['ASSETS_URL'].'images/haken_transparent.gif" border="0" title="Änderungen übernehmen">';
-                        printf ('<a href="%s"><img src="'.$GLOBALS['ASSETS_URL'].'images/x_transparent.gif" border="0" title="Bearbeitung abbrechen"></a>',
+                        print  ' <input type="image" name="send_datafield" src="'.Assets::image_path('icons/16/blue/accept.png').'" title="Änderungen übernehmen">';
+                        printf ('<a href="%s"><img src="'.Assets::image_path('icons/16/blue/decline.png').'" title="Bearbeitung abbrechen"></a>',
                                 URLHelper::getLink("?cancel=TRUE"));
                     }
                     else
-                        printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" %s></a>",
+                        printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" %s></a>",
                                 URLHelper::getLink("?change_datafield=".$val->getID()."#a"), tooltip(_("Datenfeld ändern")));
-                    printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" %s></a>",
+                    printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/trash.png')."\" %s></a>",
                             URLHelper::getLink("?kill_datafield=".$val->getID()), tooltip(_("Datenfeld löschen")));
                     ?>
                 </td>
@@ -357,7 +356,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class" style="font-size: 8pt;">";
+                        <select name="datafield_class" style="font-size: 8pt;">
                         <option value="FALSE"><?=_("alle")?></option>
                         <?
                         foreach ($SEM_CLASS as $key=>$val)
@@ -401,8 +400,8 @@ if ($kill_datafield) { // contains a datafield_id
                     &nbsp;
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center" nowrap>
-                    <input type="image" name="send" src="<?= $GLOBALS['ASSETS_URL'] ?>images/haken_transparent.gif" border="0" <?=tooltip(_("Datenfeld speichern"))?>>
-                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/x_transparent.gif" border="0" <?=tooltip(_("Anlegen abbrechen"))?>>
+                    <input type="image" name="send" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" <?=tooltip(_("Datenfeld speichern"))?>>
+                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= Assets::image_path('icons/16/blue/decline.png') ?>" <?=tooltip(_("Anlegen abbrechen"))?>>
                 </td>
             </tr>
             <?
@@ -411,7 +410,7 @@ if ($kill_datafield) { // contains a datafield_id
         </table>
         <?
         if ($admin_datafields_data["create_datafield"] != "sem") {
-            ?><a href="<?= URLHelper::getLink("?create_new=sem#a") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0" <?=tooltip(_("Neues Datenfeld für Veranstaltungen anlegen"))?>></a><?
+            ?><a href="<?= URLHelper::getLink("?create_new=sem#a") ?>"><img src="<?= Assets::image_path('icons/16/blue/plus.png') ?>" <?=tooltip(_("Neues Datenfeld für Veranstaltungen anlegen"))?>></a><?
         }
         ?>
         <br><br>
@@ -419,9 +418,9 @@ if ($kill_datafield) { // contains a datafield_id
     </tr>
     <tr>
         <td class="blank" colspan=2>
-        <b><font size="-1"><?=_("Datenfelder f&uuml;r Einrichtungen")?></font></b>
+        <b><?=_("Datenfelder f&uuml;r Einrichtungen")?></b>
         <table width = "100%" border="0" cellpadding="2" cellspacing="0" align="center">
-            <tr>
+            <tr style="height: 2em">
                 <td class="steel" width="20%" align="left" valign="bottom">
 
                     <font size="-1">
@@ -562,14 +561,14 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        print  ' <input type="image" name="send_datafield" src="'.$GLOBALS['ASSETS_URL'].'images/haken_transparent.gif" border="0" title="Änderungen übernehmen">';
-                        printf ('<a href="%s"><img src="'.$GLOBALS['ASSETS_URL'].'images/x_transparent.gif" border="0" title="Bearbeitung abbrechen"></a>',
+                        print  ' <input type="image" name="send_datafield" src="'.Assets::image_path('icons/16/blue/accept.png').'" title="Änderungen übernehmen">';
+                        printf ('<a href="%s"><img src="'.Assets::image_path('icons/16/blue/decline.png').'" title="Bearbeitung abbrechen"></a>',
                                 URLHelper::getLink("?cancel=TRUE"));
                     }
                     else
-                        printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" %s></a>",
+                        printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" %s></a>",
                                 URLHelper::getLink("?change_datafield=".$val->getID()."#a"), tooltip(_("Datenfeld ändern")));
-                    printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" %s></a>",
+                    printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/trash.png')."\" %s></a>",
                             URLHelper::getLink("?kill_datafield=".$val->getID()), tooltip(_("Datenfeld löschen")));
                     ?>
                 </td>
@@ -593,7 +592,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class" style="font-size: 8pt;">";
+                        <select name="datafield_class" style="font-size: 8pt;">
                         <option value="FALSE"><?=_("alle")?></option>
                         <?
                         foreach ($INST_TYPE as $key=>$val) {
@@ -605,7 +604,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_edit_perms" style="font-size: 8pt;">";
+                        <select name="datafield_edit_perms" style="font-size: 8pt;">
                         <option value="user">user</option>
                         <option value="autor">autor</option>
                         <option value="tutor">tutor</option>
@@ -617,7 +616,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_view_perms" style="font-size: 8pt;">";
+                        <select name="datafield_view_perms" style="font-size: 8pt;">
                         <option value="all"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -637,8 +636,8 @@ if ($kill_datafield) { // contains a datafield_id
                     &nbsp;
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center" nowrap>
-                    <input type="image" name="send" src="<?= $GLOBALS['ASSETS_URL'] ?>images/haken_transparent.gif" border="0" <?=tooltip(_("Datenfeld speichern"))?>>
-                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/x_transparent.gif" border="0" <?=tooltip(_("Anlegen abbrechen"))?>>
+                    <input type="image" name="send" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" <?=tooltip(_("Datenfeld speichern"))?>>
+                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= Assets::image_path('icons/16/blue/decline.png') ?>" <?=tooltip(_("Anlegen abbrechen"))?>>
                 </td>
             </tr>
             <?
@@ -647,7 +646,7 @@ if ($kill_datafield) { // contains a datafield_id
         </table>
         <?
         if ($admin_datafields_data["create_datafield"] != "inst") {
-            ?><a href="<?= URLHelper::getLink("?create_new=inst#a") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0" <?=tooltip(_("Neues Datenfeld für Einrichtungen anlegen"))?>></a><?
+            ?><a href="<?= URLHelper::getLink("?create_new=inst#a") ?>"><img src="<?= Assets::image_path('icons/16/blue/plus.png') ?>" <?=tooltip(_("Neues Datenfeld für Einrichtungen anlegen"))?>></a><?
         }
         ?>
         <br><br>
@@ -655,11 +654,10 @@ if ($kill_datafield) { // contains a datafield_id
     </tr>
     <tr>
         <td class="blank" colspan=2>
-        <b><font size="-1"><?=_("Datenfelder f&uuml;r Nutzer")?></font></b>
+        <b><?=_("Datenfelder f&uuml;r Nutzer")?></b>
         <table width = "100%" border="0" cellpadding="2" cellspacing="0" align="center">
-            <tr>
+            <tr style="height: 2em">
                 <td class="steel" width="20%" align="left" valign="bottom">
-
                     <font size="-1">
                     <b><?=_("Name")?></b>
                     </font>
@@ -800,14 +798,14 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        print  ' <input type="image" name="send_datafield" src="'.$GLOBALS['ASSETS_URL'].'images/haken_transparent.gif" border="0" title="Änderungen übernehmen">';
-                        printf ('<a href="%s"><img src="'.$GLOBALS['ASSETS_URL'].'images/x_transparent.gif" border="0" title="Bearbeitung abbrechen"></a>',
+                        print  ' <input type="image" name="send_datafield" src="'.Assets::image_path('icons/16/blue/accept.png').'" title="Änderungen übernehmen">';
+                        printf ('<a href="%s"><img src="'.Assets::image_path('icons/16/blue/decline.png').'" title="Bearbeitung abbrechen"></a>',
                                 URLHelper::getLink("?cancel=TRUE"));
                     }
                     else
-                        printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" %s></a>",
+                        printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" %s></a>",
                                 URLHelper::getLink("?change_datafield=".$val->getID()."#a"), tooltip(_("Datenfeld ändern")));
-                    printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" %s></a>",
+                    printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/trash.png')."\" %s></a>",
                             URLHelper::getLink("?kill_datafield=".$val->getID()), tooltip(_("Datenfeld löschen")));
                     ?>
                 </td>
@@ -831,7 +829,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">";
+                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">
                         <option value="FALSE"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -844,7 +842,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_edit_perms" style="font-size: 8pt;">";
+                        <select name="datafield_edit_perms" style="font-size: 8pt;">
                         <option value="user">user</option>
                         <option value="autor">autor</option>
                         <option value="tutor">tutor</option>
@@ -856,7 +854,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_view_perms" style="font-size: 8pt;">";
+                        <select name="datafield_view_perms" style="font-size: 8pt;">
                         <option value="all"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -876,8 +874,8 @@ if ($kill_datafield) { // contains a datafield_id
                     &nbsp;
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center" nowrap>
-                    <input type="image" name="send" src="<?= $GLOBALS['ASSETS_URL'] ?>images/haken_transparent.gif" border="0" <?=tooltip(_("Datenfeld speichern"))?> >
-                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/x_transparent.gif" border="0" <?=tooltip(_("Anlegen abbrechen"))?> ></a>
+                    <input type="image" name="send" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" <?=tooltip(_("Datenfeld speichern"))?>>
+                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= Assets::image_path('icons/16/blue/decline.png') ?>" <?=tooltip(_("Anlegen abbrechen"))?>>
                 </td>
             </tr>
             <?
@@ -886,7 +884,7 @@ if ($kill_datafield) { // contains a datafield_id
         </table>
         <?
         if ($admin_datafields_data["create_datafield"] != "user") {
-            ?><a href="<?= URLHelper::getLink("?create_new=user#a") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0" <?=tooltip(_("Neues Datenfeld für Nutzer anlegen"))?>></a><?
+            ?><a href="<?= URLHelper::getLink("?create_new=user#a") ?>"><img src="<?= Assets::image_path('icons/16/blue/plus.png') ?>" <?=tooltip(_("Neues Datenfeld für Nutzer anlegen"))?>></a><?
         }
         ?>
         <br><br>
@@ -894,11 +892,10 @@ if ($kill_datafield) { // contains a datafield_id
     </tr>
     <tr>
         <td class="blank" colspan=2>
-        <b><font size="-1"><?=_("Datenfelder f&uuml;r Nutzerrollen in Einrichtungen")?></font></b>
+        <b><?=_("Datenfelder f&uuml;r Nutzerrollen in Einrichtungen")?></b>
         <table width = "100%" border="0" cellpadding="2" cellspacing="0" align="center">
-            <tr>
+            <tr style="height: 2em">
                 <td class="steel" width="20%" align="left" valign="bottom">
-
                     <font size="-1">
                     <b><?=_("Name")?></b>
                     </font>
@@ -1037,14 +1034,14 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        print  ' <input type="image" name="send_datafield" src="'.$GLOBALS['ASSETS_URL'].'images/haken_transparent.gif" border="0" title="Änderungen übernehmen">';
-                        printf ('<a href="%s"><img src="'.$GLOBALS['ASSETS_URL'].'images/x_transparent.gif" border="0" title="Bearbeitung abbrechen"></a>',
+                        print  ' <input type="image" name="send_datafield" src="'.Assets::image_path('icons/16/blue/accept.png').'" title="Änderungen übernehmen">';
+                        printf ('<a href="%s"><img src="'.Assets::image_path('icons/16/blue/decline.png').'" title="Bearbeitung abbrechen"></a>',
                                 URLHelper::getLink("?cancel=TRUE"));
                     }
                     else
-                        printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" %s></a>",
+                        printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" %s></a>",
                                 URLHelper::getLink("?change_datafield=".$val->getID()."#a"), tooltip(_("Datenfeld ändern")));
-                    printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" %s></a>",
+                    printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/trash.png')."\" %s></a>",
                             URLHelper::getLink("?kill_datafield=".$val->getID()), tooltip(_("Datenfeld löschen")));
                     ?>
                 </td>
@@ -1068,7 +1065,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">";
+                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">
                         <option value="FALSE"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1081,7 +1078,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_edit_perms" style="font-size: 8pt;">";
+                        <select name="datafield_edit_perms" style="font-size: 8pt;">
                         <option value="user">user</option>
                         <option value="autor">autor</option>
                         <option value="tutor">tutor</option>
@@ -1093,7 +1090,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_view_perms" style="font-size: 8pt;">";
+                        <select name="datafield_view_perms" style="font-size: 8pt;">
                         <option value="all"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1113,8 +1110,8 @@ if ($kill_datafield) { // contains a datafield_id
                     &nbsp;
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center" nowrap>
-                    <input type="image" name="send" src="<?= $GLOBALS['ASSETS_URL'] ?>images/haken_transparent.gif" border="0" <?=tooltip(_("Datenfeld speichern"))?> >
-                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/x_transparent.gif" border="0" <?=tooltip(_("Anlegen abbrechen"))?> ></a>
+                    <input type="image" name="send" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" <?=tooltip(_("Datenfeld speichern"))?>>
+                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= Assets::image_path('icons/16/blue/decline.png') ?>" <?=tooltip(_("Anlegen abbrechen"))?>>
                 </td>
             </tr>
             <?
@@ -1123,7 +1120,7 @@ if ($kill_datafield) { // contains a datafield_id
         </table>
         <?
         if ($admin_datafields_data["create_datafield"] != "userinstrole") {
-            ?><a href="<?= URLHelper::getLink("?create_new=userinstrole#a") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0" <?=tooltip(_("Neues Datenfeld für Nutzer anlegen"))?>></a><?
+            ?><a href="<?= URLHelper::getLink("?create_new=userinstrole#a") ?>"><img src="<?= Assets::image_path('icons/16/blue/plus.png') ?>" <?=tooltip(_("Neues Datenfeld für Nutzer anlegen"))?>></a><?
         }
         ?>
         <br><br>
@@ -1138,11 +1135,10 @@ if ($kill_datafield) { // contains a datafield_id
     ?>
     <tr>
         <td class="blank" colspan=2>
-        <b><font size="-1"><?=_("Datenfelder f&uuml;r Nutzer-Zusatzangaben in Veranstaltungen")?></font></b>
+        <b><?=_("Datenfelder f&uuml;r Nutzer-Zusatzangaben in Veranstaltungen")?></b>
         <table width = "100%" border="0" cellpadding="2" cellspacing="0" align="center">
-            <tr>
+            <tr style="height: 2em">
                 <td class="steel" width="20%" align="left" valign="bottom">
-
                     <font size="-1">
                     <b><?=_("Name")?></b>
                     </font>
@@ -1281,14 +1277,14 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        print  ' <input type="image" name="send_datafield" src="'.$GLOBALS['ASSETS_URL'].'images/haken_transparent.gif" border="0" title="Änderungen übernehmen">';
-                        printf ('<a href="%s"><img src="'.$GLOBALS['ASSETS_URL'].'images/x_transparent.gif" border="0" title="Bearbeitung abbrechen"></a>',
+                        print  ' <input type="image" name="send_datafield" src="'.Assets::image_path('icons/16/blue/accept.png').'" title="Änderungen übernehmen">';
+                        printf ('<a href="%s"><img src="'.Assets::image_path('icons/16/blue/decline.png').'" title="Bearbeitung abbrechen"></a>',
                                 URLHelper::getLink("?cancel=TRUE"));
                     }
                     else
-                        printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" %s></a>",
+                        printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" %s></a>",
                                 URLHelper::getLink("?change_datafield=".$val->getID()."#a"), tooltip(_("Datenfeld ändern")));
-                    printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" %s></a>",
+                    printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/trash.png')."\" %s></a>",
                             URLHelper::getLink("?kill_datafield=".$val->getID()), tooltip(_("Datenfeld löschen")));
                     ?>
                 </td>
@@ -1312,7 +1308,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">";
+                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">
                         <option value="FALSE"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1325,7 +1321,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_edit_perms" style="font-size: 8pt;">";
+                        <select name="datafield_edit_perms" style="font-size: 8pt;">
                         <option value="user">user</option>
                         <option value="autor">autor</option>
                         <option value="tutor">tutor</option>
@@ -1337,7 +1333,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_view_perms" style="font-size: 8pt;">";
+                        <select name="datafield_view_perms" style="font-size: 8pt;">
                         <option value="all"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1357,8 +1353,8 @@ if ($kill_datafield) { // contains a datafield_id
                     &nbsp;
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center" nowrap>
-                    <input type="image" name="send" src="<?= $GLOBALS['ASSETS_URL'] ?>images/haken_transparent.gif" border="0" <?=tooltip(_("Datenfeld speichern"))?> >
-                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/x_transparent.gif" border="0" <?=tooltip(_("Anlegen abbrechen"))?> ></a>
+                    <input type="image" name="send" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" <?=tooltip(_("Datenfeld speichern"))?>>
+                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= Assets::image_path('icons/16/blue/decline.png') ?>" <?=tooltip(_("Anlegen abbrechen"))?>>
                 </td>
             </tr>
             <?
@@ -1367,7 +1363,7 @@ if ($kill_datafield) { // contains a datafield_id
         </table>
         <?
         if ($admin_datafields_data["create_datafield"] != "usersemdata") {
-            ?><a href="<?= URLHelper::getLink("?create_new=usersemdata#a") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0" <?=tooltip(_("Neues Datenfeld für Nutzer-Zusatzangaben anlegen"))?>></a><?
+            ?><a href="<?= URLHelper::getLink("?create_new=usersemdata#a") ?>"><img src="<?= Assets::image_path('icons/16/blue/plus.png') ?>" <?=tooltip(_("Neues Datenfeld für Nutzer-Zusatzangaben anlegen"))?>></a><?
         }
         ?>
         <br><br>
@@ -1381,9 +1377,9 @@ if ($kill_datafield) { // contains a datafield_id
     ?>
     <tr>
         <td class="blank" colspan=2>
-        <b><font size="-1"><?=_("Datenfelder f&uuml;r Rollen in Einrichtungen")?></font></b>
+        <b><?=_("Datenfelder f&uuml;r Rollen in Einrichtungen")?></b>
         <table width = "100%" border="0" cellpadding="2" cellspacing="0" align="center">
-            <tr>
+            <tr style="height: 2em">
                 <td class="steel" width="20%" align="left" valign="bottom">
                     <font size="-1">
                     <b><?=_("Name")?></b>
@@ -1523,14 +1519,14 @@ if ($kill_datafield) { // contains a datafield_id
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <?
                     if ($admin_datafields_data["change_datafield"] == $val->getID()) {
-                        print  ' <input type="image" name="send_datafield" src="'.$GLOBALS['ASSETS_URL'].'images/haken_transparent.gif" border="0" title="Änderungen übernehmen">';
-                        printf ('<a href="%s"><img src="'.$GLOBALS['ASSETS_URL'].'images/x_transparent.gif" border="0" title="Bearbeitung abbrechen"></a>',
+                        print  ' <input type="image" name="send_datafield" src="'.Assets::image_path('icons/16/blue/accept.png').'" title="Änderungen übernehmen">';
+                        printf ('<a href="%s"><img src="'.Assets::image_path('icons/16/blue/decline.png').'" title="Bearbeitung abbrechen"></a>',
                                 URLHelper::getLink("?cancel=TRUE"));
                     }
                     else
-                        printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" %s></a>",
+                        printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" %s></a>",
                                 URLHelper::getLink("?change_datafield=".$val->getID()."#a"), tooltip(_("Datenfeld ändern")));
-                    printf (" <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" %s></a>",
+                    printf (" <a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/trash.png')."\" %s></a>",
                             URLHelper::getLink("?kill_datafield=".$val->getID()), tooltip(_("Datenfeld löschen")));
                     ?>
                 </td>
@@ -1554,7 +1550,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">";
+                        <select name="datafield_class[]"  multiple size="7" style="font-size: 8pt;">
                         <option value="FALSE"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1567,7 +1563,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_edit_perms" style="font-size: 8pt;">";
+                        <select name="datafield_edit_perms" style="font-size: 8pt;">
                         <option value="user">user</option>
                         <option value="autor">autor</option>
                         <option value="tutor">tutor</option>
@@ -1579,7 +1575,7 @@ if ($kill_datafield) { // contains a datafield_id
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center">
                     <font size="-1">
-                        <select name="datafield_view_perms" style="font-size: 8pt;">";
+                        <select name="datafield_view_perms" style="font-size: 8pt;">
                         <option value="all"><?=_("alle")?></option>
                         <option value="user">user</option>
                         <option value="autor">autor</option>
@@ -1599,8 +1595,8 @@ if ($kill_datafield) { // contains a datafield_id
                     &nbsp;
                 </td>
                 <td class="<?=$cssSw->getClass()?>" align="center" nowrap>
-                    <input type="image" name="send" src="<?= $GLOBALS['ASSETS_URL'] ?>images/haken_transparent.gif" border="0" <?=tooltip(_("Datenfeld speichern"))?> >
-                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/x_transparent.gif" border="0" <?=tooltip(_("Anlegen abbrechen"))?> ></a>
+                    <input type="image" name="send" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>" <?=tooltip(_("Datenfeld speichern"))?>>
+                    <a href="<?= URLHelper::getLink("?cancel=TRUE") ?>"><img src="<?= Assets::image_path('icons/16/blue/decline.png') ?>" <?=tooltip(_("Anlegen abbrechen"))?>>
                 </td>
             </tr>
             <?
@@ -1609,7 +1605,7 @@ if ($kill_datafield) { // contains a datafield_id
         </table>
         <?
         if ($admin_datafields_data["create_datafield"] != "roleinstdata") {
-            ?><a href="<?= URLHelper::getLink("?create_new=roleinstdata#a") ?>"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/add_right.gif" border="0" <?=tooltip(_("Neues Datenfeld für Nutzer-Zusatzangaben anlegen"))?>></a><?
+            ?><a href="<?= URLHelper::getLink("?create_new=roleinstdata#a") ?>"><img src="<?= Assets::image_path('icons/16/blue/plus.png') ?>" <?=tooltip(_("Neues Datenfeld für Nutzer-Zusatzangaben anlegen"))?>></a><?
         }
         ?>
         <br><br>
@@ -1617,6 +1613,7 @@ if ($kill_datafield) { // contains a datafield_id
     </tr>
 </table>
 </form>
+</div>
 <?
     include ('lib/include/html_end.inc.php');
     page_close();

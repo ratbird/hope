@@ -106,22 +106,22 @@ class SiteinfoController extends StudipController
         global $rubrics_empty;
         if (!$rubrics_empty) {
             if ($this->currentrubric > 0) {
-                $infobox_actions[] = array('icon' => 'add_sheet.gif',
+                $infobox_actions[] = array('icon' => 'icons/16/black/plus.png',
                                            'text' => '<a href="'.$this->url_for('siteinfo/new/'.$this->currentrubric).'">'._('neue Seite anlegen').'</a>');
             }
             if ($this->currentdetail > 0) {
-                $infobox_actions[] = array('icon' => 'edit_transparent.gif',
+                $infobox_actions[] = array('icon' => 'icons/16/black/edit.png',
                                            'text' => '<a href="'.$this->url_for('siteinfo/edit/'.$this->currentrubric.'/'.$this->currentdetail).'">'._('Seite bearbeiten').'</a>');
-                $infobox_actions[] = array('icon' => 'trash.gif',
+                $infobox_actions[] = array('icon' => 'icons/16/black/trash.png',
                                            'text' => '<a href="'.$this->url_for('siteinfo/delete/'.$this->currentrubric.'/'.$this->currentdetail).'">'._('Seite löschen').'</a>');
             }
         }
-        $infobox_actions[] = array('icon' => 'cont_folder_add.gif',
+        $infobox_actions[] = array('icon' => 'icons/16/black/plus.png',
                                    'text' => '<a href="'.$this->url_for('siteinfo/new').'">'._('neue Rubrik anlegen').'</a>');
         if ($this->currentrubric > 0) {
-            $infobox_actions[] = array('icon' => 'cont_folder4.gif',
+            $infobox_actions[] = array('icon' => 'icons/16/black/edit.png',
                                        'text' => '<a href="'.$this->url_for('siteinfo/edit/'.$this->currentrubric).'">'._('Rubrik bearbeiten').'</a>');
-            $infobox_actions[] = array('icon' => 'trash.gif',
+            $infobox_actions[] = array('icon' => 'icons/16/black/trash.png',
                                        'text' => '<a href="'.$this->url_for('siteinfo/delete/'.$this->currentrubric).'">'._('Rubrik löschen').'</a>');
         }
         return array('picture' => 'infobox/impressum.jpg',

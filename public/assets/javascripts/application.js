@@ -752,8 +752,8 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
     if (jQuery("#folder_" + md5_id + "_body").is(':visible')) {
       jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'normal');
       jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
-      jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead2');
-      jQuery("#folder_" + md5_id + "_arrow_td").removeClass('printhead3');
+      jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead2')
+                                               .removeClass('printhead3');
       jQuery("#folder_" + md5_id + "_body").slideUp(400);
       STUDIP.URLHelper.removeLinkParam('data[open][' + md5_id + ']');
       STUDIP.URLHelper.updateAllLinks("#filesystem_area");
@@ -763,8 +763,8 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
         jQuery("#folder_" + md5_id + "_body").load(adress, { getfolderbody: md5_id }, function () {
           jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
           jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
-          jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead3');
-          jQuery("#folder_" + md5_id + "_arrow_td").removeClass('printhead2');
+          jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead3')
+                                                   .removeClass('printhead2');
           STUDIP.Filesystem.unsetarrows();
           STUDIP.Filesystem.setdraggables();
           STUDIP.Filesystem.setdroppables();
@@ -775,8 +775,8 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
       } else {
         jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
         jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
-        jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead3');
-        jQuery("#folder_" + md5_id + "_arrow_td").removeClass('printhead2');
+        jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead3')
+                                                 .removeClass('printhead2');
         STUDIP.Filesystem.unsetarrows();
         STUDIP.Filesystem.setdraggables();
         STUDIP.Filesystem.setdroppables();
@@ -802,8 +802,8 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
     if (jQuery("#file_" + md5_id + "_body").is(':visible')) {
       jQuery("#file_" + md5_id + "_body").slideUp(400);
       jQuery("#file_" + md5_id + "_header").css("fontWeight", 'normal');
-      jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead2');
-      jQuery("#file_" + md5_id + "_arrow_td").removeClass('printhead3');
+      jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead2')
+                                             .removeClass('printhead3');
       jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
       STUDIP.URLHelper.removeLinkParam('data[open][' + md5_id + ']');
       STUDIP.URLHelper.updateAllLinks("#filesystem_area");
@@ -813,8 +813,8 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
         jQuery("#file_" + md5_id + "_body").load(adress, { getfilebody: md5_id }, function () {
           jQuery("#file_" + md5_id + "_header").css('fontWeight', 'bold');
           jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
-          jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3');
-          jQuery("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
+          jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3')
+                                                 .removeClass('printhead2');
           jQuery("#file_" + md5_id + "_body").slideDown(400);
           STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
           STUDIP.URLHelper.updateAllLinks("#filesystem_area");
@@ -823,8 +823,8 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
         //Falls der Dateikörper schon geladen ist.
         jQuery("#file_" + md5_id + "_body_row").show();
         jQuery("#file_" + md5_id + "_header").css('fontWeight', 'bold');
-        jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3');
-        jQuery("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
+        jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3')
+                                               .removeClass('printhead2');
         jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
         jQuery("#file_" + md5_id + "_body").slideDown(400);
         STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
@@ -1021,26 +1021,26 @@ STUDIP.MultiSelect = {
     jQuery(id).multiselect({sortable: false, itemName: itemName});
   }
 };
-jQuery(function ($) {
-  $.extend($.ui.multiselect, {
+jQuery(function () {
+  jQuery.extend(jQuery.ui.multiselect, {
     locale: {
       addAll: "Alle hinzufügen".toLocaleString(),
       removeAll: "Alle entfernen".toLocaleString(),
       itemsCount: "ausgewählt".toLocaleString()
     }
   });
-}(jQuery));
+});
 
 
 /* ------------------------------------------------------------------------
  * application wide setup
  * ------------------------------------------------------------------------ */
 
-jQuery(function ($) {
+jQuery(function () {
   // AJAX Indicator
   STUDIP.ajax_indicator = true;
 
-  $('.add_toolbar').addToolbar(STUDIP.Markup.buttonSet);
+  jQuery('.add_toolbar').addToolbar(STUDIP.Markup.buttonSet);
 
   // compress tabs
   STUDIP.Tabs.initialize();
@@ -1049,49 +1049,50 @@ jQuery(function ($) {
 
   // autofocus for all browsers
   if (!("autofocus" in document.createElement("input"))) {
-    $('[autofocus]').first().focus();
+	  jQuery('[autofocus]').first().focus();
   }
+  console.log(jQuery('textarea.resizable'));
 
-  $('textarea.resizable').resizable({
+  jQuery('textarea.resizable').resizable({
     handles: 's',
     minHeight: 50
   });
-}(jQuery));
+});
 
 /* ------------------------------------------------------------------------
  * application collapsable tablerows
  * ------------------------------------------------------------------------ */
-jQuery(function ($) {
+jQuery(function () {
 
-  $('table.collapsable .toggler').click(function () {
+  jQuery('table.collapsable .toggler').click(function () {
 
-    $(this).closest('tbody').toggleClass('collapsed');
+  jQuery(this).closest('tbody').toggleClass('collapsed');
     return false;
   }).closest('.collapsable').find('tbody').filter(':not(.open)').find('.toggler').click();
   
-  $('a.load-in-new-row').live('click', function () {
+  jQuery('a.load-in-new-row').live('click', function () {
     if ($(this).closest('tr').next().hasClass('loaded-details')) {
-      $(this).closest('tr').next().remove();
+      jQuery(this).closest('tr').next().remove();
       return false;
     }
     var that = this;
-    $(that).showAjaxNotification();
-    var row = $('<tr />').addClass('loaded-details'),
-    cell = $('<td />').attr('colspan', $(this).closest('td').siblings().length + 1).appendTo(row);
-    $(this).closest('tr').after(row);
-    $.get($(this).attr('href'), function (response) {
+    jQuery(that).showAjaxNotification();
+    var row = jQuery('<tr />').addClass('loaded-details'),
+    cell = jQuery('<td />').attr('colspan', jQuery(this).closest('td').siblings().length + 1).appendTo(row);
+    jQuery(this).closest('tr').after(row);
+    jQuery.get(jQuery(this).attr('href'), function (response) {
       cell.html(response);
-      $(that).hideAjaxNotification();
+      jQuery(that).hideAjaxNotification();
     });
     return false;
   });
 
-  $('.loaded-details a.cancel').live('click', function () {
-    $(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
+  jQuery('.loaded-details a.cancel').live('click', function () {
+    jQuery(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
     return false;
   });
 	
-}(jQuery));
+});
 
 
 

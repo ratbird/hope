@@ -23,8 +23,8 @@
 /* ------------------------------------------------------------------------
  * jQuery plugin "metadata" configuration
  * ------------------------------------------------------------------------ */
-if ("metadata" in $) {
-  $.metadata.setType("html5");
+if ("metadata" in jQuery) {
+  jQuery.metadata.setType("html5");
 }
 
 /* ------------------------------------------------------------------------
@@ -90,7 +90,7 @@ if ("metadata" in $) {
 /* ------------------------------------------------------------------------
  * jQuery plugin "addToolbar"
  * ------------------------------------------------------------------------ */
-(function () {
+(function ($) {
 
   var getSelection = function (element)  {
     if (!!document.selection) {
@@ -152,7 +152,7 @@ if ("metadata" in $) {
       });
     }
   });
-}());
+}(jQuery));
 
 /* ------------------------------------------------------------------------
  * the global STUDIP namespace
@@ -246,24 +246,24 @@ STUDIP.URLHelper = {
     adress = adress[0].split("?");
     var url_parameters = (adress.length > 1) ? adress[adress.length - 1].split("&") : [];
     var parameters = {};
-    $.each(url_parameters, function (index, value) {
+    jQuery.each(url_parameters, function (index, value) {
       var assoc = value.split("=");
       parameters[assoc[0]] = assoc[1];
     });
     adress = adress[0];
     // add new parameter:
-    parameters = $.extend(parameters, this.params);
+    parameters = jQuery.extend(parameters, this.params);
     // delete unwanted parameters:
-    $.each(this.badParams, function (badParam) {
+    jQuery.each(this.badParams, function (badParam) {
       if (parameters[badParam] !== undefined) {
         delete parameters[badParam];
       }
     });
     //merging in the param_object - as you see this has got priority:
-    parameters = $.extend(parameters, param_object);
+    parameters = jQuery.extend(parameters, param_object);
     // glueing together:
     var param_strings = [];
-    $.each(parameters, function (param, value) {
+    jQuery.each(parameters, function (param, value) {
       param_strings.push(param + "=" + value);
     });
     if (param_strings.length > 0) {
@@ -329,10 +329,10 @@ STUDIP.URLHelper = {
     if (context_selector === undefined) {
       context_selector = "";
     }
-    $(context_selector + ' a:not(.fixed, .extern)').each(function (index, anchor) {
-      var href = $(anchor).attr('href');   //the adress of the link to be modified
+    jQuery(context_selector + ' a:not(.fixed, .extern)').each(function (index, anchor) {
+      var href = jQuery(anchor).attr('href');   //the adress of the link to be modified
       href = STUDIP.URLHelper.getLink(href);
-      $(anchor).attr('href', href);
+      jQuery(anchor).attr('href', href);
     });
   }
 };
@@ -344,24 +344,24 @@ STUDIP.study_area_selection = {
 
   initialize: function () {
     // Ein bisschen hässlich im Sinne von "DRY", aber wie sonst?
-    $('input[name^="study_area_selection[add]"]').live('click', function () {
-      var parameters = $(this).metadata();
+    jQuery('input[name^="study_area_selection[add]"]').live('click', function () {
+      var parameters = jQuery(this).metadata();
       if (!(parameters && parameters.id)) {
         return;
       }
       STUDIP.study_area_selection.add(parameters.id, parameters.course_id || '');
       return false;
     });
-    $('input[name^="study_area_selection[remove]"]').live('click', function () {
-      var parameters = $(this).metadata();
+    jQuery('input[name^="study_area_selection[remove]"]').live('click', function () {
+      var parameters = jQuery(this).metadata();
       if (!(parameters && parameters.id)) {
         return;
       }
       STUDIP.study_area_selection.remove(parameters.id, parameters.course_id || '');
       return false;
     });
-    $('a.study_area_selection_expand').live('click', function () {
-      var parameters = $(this).metadata();
+    jQuery('a.study_area_selection_expand').live('click', function () {
+      var parameters = jQuery(this).metadata();
       if (!(parameters && parameters.id)) {
         return;
       }
@@ -372,14 +372,14 @@ STUDIP.study_area_selection = {
 
   url: function (action, args) {
     return STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/course/study_areas/' +
-           $.makeArray(arguments).join('/');
+           jQuery.makeArray(arguments).join('/');
   },
 
   add: function (id, course_id) {
     // may not be visible at the current
-    $('.study_area_selection_add_' + id).attr('disabled', true).fadeTo('slow', 0);
+    jQuery('.study_area_selection_add_' + id).attr('disabled', true).fadeTo('slow', 0);
 
-    $.ajax({
+    jQuery.ajax({
       type: 'POST',
       url: STUDIP.study_area_selection.url('add', course_id || ''),
       data: ({id: id}),
@@ -387,60 +387,60 @@ STUDIP.study_area_selection = {
       async: false, // Critical request thus synchronous
       success: function (data) {
 //      STUDIP.study_area_selection.swishAndFlick(id, 'study_area_selection_selected');
-        $('#study_area_selection_none').fadeOut();
-        $('#study_area_selection_selected').replaceWith(data);
+        jQuery('#study_area_selection_none').fadeOut();
+        jQuery('#study_area_selection_selected').replaceWith(data);
         STUDIP.study_area_selection.refreshSelection();
       }
     });
   },
 
   remove: function (id, course_id) {
-    var $selection = $('#study_area_selection_' + id);
+    var jQueryselection = jQuery('#study_area_selection_' + id);
 
-    if ($selection.siblings().length === 0) {
-      $('#study_area_selection_at_least_one').fadeIn().delay(5000).fadeOut();
-      $selection.effect('bounce', 'fast');
+    if (jQueryselection.siblings().length === 0) {
+      jQuery('#study_area_selection_at_least_one').fadeIn().delay(5000).fadeOut();
+      jQueryselection.effect('bounce', 'fast');
       return;
     }
 
-    $.ajax({
+    jQuery.ajax({
       type: 'POST',
       url: STUDIP.study_area_selection.url('remove', course_id || ''),
       data: ({id: id}),
       dataType: 'html',
       async: false, // Critical request thus synchronous
       success: function (data) {
-        $selection.fadeOut(function () {
-          $(this).remove();
+        jQueryselection.fadeOut(function () {
+          jQuery(this).remove();
         });
-        if ($('#study_area_selection_selected li').length === 0) {
-          $('#study_area_selection_none').fadeIn();
+        if (jQuery('#study_area_selection_selected li').length === 0) {
+          jQuery('#study_area_selection_none').fadeIn();
         }
-        $('.study_area_selection_add_' + id).css({
+        jQuery('.study_area_selection_add_' + id).css({
           visibility: 'visible',
           opacity: 0
         }).fadeTo('slow', 1, function () {
-          $(this).attr('disabled', false);
+          jQuery(this).attr('disabled', false);
         });
 
         STUDIP.study_area_selection.refreshSelection();
       },
       error: function () {
-        $selection.fadeIn();
+        jQueryselection.fadeIn();
       }
     });
   },
 
   expandSelection: function (id, course_id) {
-    $.post(STUDIP.study_area_selection.url('expand', course_id || '', id), function (data) {
-        $('#study_area_selection_selectables ul').replaceWith(data);
+    jQuery.post(STUDIP.study_area_selection.url('expand', course_id || '', id), function (data) {
+        jQuery('#study_area_selection_selectables ul').replaceWith(data);
       }, 'html');
   },
 
   refreshSelection: function () {
     // "even=odd && odd=even ??" - this may seem strange but jQuery and Stud.IP differ in odd/even
-    $('#study_area_selection_selected li:odd').removeClass('odd').addClass('even');
-    $('#study_area_selection_selected li:even').removeClass('even').addClass('odd');
+    jQuery('#study_area_selection_selected li:odd').removeClass('odd').addClass('even');
+    jQuery('#study_area_selection_selected li:even').removeClass('even').addClass('odd');
   }
 };
 
@@ -468,7 +468,7 @@ STUDIP.Tabs = (function () {
 
   // check heights of list and items to check for wrapping
   function needs_compression() {
-    return $(list).height() > $('li:first', list).height();
+    return jQuery(list).height() > jQuery('li:first', list).height();
   }
 
   // returns the largest feasible item
@@ -476,7 +476,7 @@ STUDIP.Tabs = (function () {
     var largest = 5, item, letters;
 
     items.each(function () {
-      letters = $(this).html().length;
+      letters = jQuery(this).html().length;
       if (letters > largest) {
         item = this;
         largest = letters;
@@ -487,30 +487,30 @@ STUDIP.Tabs = (function () {
 
   // truncates an item
   function truncate(item) {
-    var text = $(item).html(),
+    var text = jQuery(item).html(),
       length = Math.max(text.length - 4, 4);
     if (length < text.length) {
-      $(item).html(text.substr(0, length) + "\u2026");
+      jQuery(item).html(text.substr(0, length) + "\u2026");
     }
   }
 
   return {
     // initializes, observes resize events and compresses the tabs
     initialize: function () {
-      list = $('#tabs');
+      list = jQuery('#tabs');
       if (list.length === 0) {
         return;
       }
-      items = $('li a', list);
-      $(list).data('old_width', $(window).width());
+      items = jQuery('li a', list);
+      jQuery(list).data('old_width', jQuery(window).width());
 
       // strip contents and set titles
       items.each(function () {
-        $(this).html($(this).html().trim());
-        $(this).attr('title', $(this).html());
+        jQuery(this).html(jQuery(this).html().trim());
+        jQuery(this).attr('title', jQuery(this).html());
       });
 
-      $(window).bind('resize', this.resize);
+      jQuery(window).bind('resize', this.resize);
       this.compress();
     },
 
@@ -525,13 +525,13 @@ STUDIP.Tabs = (function () {
 
     // event handler called when resizing the browser
     resize: function () {
-      var new_width = $(window).width();
-      if (new_width > $(list).data('old_width')) {
+      var new_width = jQuery(window).width();
+      if (new_width > jQuery(list).data('old_width')) {
         items.each(function () {
-          $(this).html($(this).attr('title'));
+          jQuery(this).html(jQuery(this).attr('title'));
         });
       }
-      $(list).data('old_width', new_width);
+      jQuery(list).data('old_width', new_width);
       STUDIP.Tabs.compress();
     }
   };
@@ -558,7 +558,7 @@ STUDIP.Dialogbox = {
       this.closeScope(scope);
     }
     if (!this.currentBoxes[id]) {
-      $('<div id="Dialogbox_' + id + '">' + content + '</div>').dialog({
+      jQuery('<div id="Dialogbox_' + id + '">' + content + '</div>').dialog({
         show: 'slide',
         hide: 'slide',
         title: title,
@@ -578,28 +578,28 @@ STUDIP.Dialogbox = {
   },
 
   closeScope: function (scope) {
-    $("#Dialogbox_" + this.currentScopes[scope]).dialog('close');
+    jQuery("#Dialogbox_" + this.currentScopes[scope]).dialog('close');
     delete this.currentScopes[scope];
   },
 
   closeBox: function (id, kill) {
     delete this.currentBoxes[id];
     if (kill) {
-      $("#Dialogbox_" + id).remove();
+      jQuery("#Dialogbox_" + id).remove();
     } else {
-      $("#Dialogbox_" + id).attr("id", "#Dialogbox_" + id + "_dragged");
+      jQuery("#Dialogbox_" + id).attr("id", "#Dialogbox_" + id + "_dragged");
     }
   },
 
   openForumPosting: function (id, element) {
     var coord; //coordinates to give to dialogbox - "center" means center of window
     if (element) {
-      coord = $(element).position();
+      coord = jQuery(element).position();
       coord = [coord.left + 15, coord.top];
     } else {
       coord = 'center';
     }
-    $.getJSON("dispatch.php/content_element/get_formatted/forum/" + id, function (data) {
+    jQuery.getJSON("dispatch.php/content_element/get_formatted/forum/" + id, function (data) {
       STUDIP.Dialogbox.openBox(id, data.title, data.content, coord, "forum");
     });
   }
@@ -624,8 +624,8 @@ STUDIP.Filesystem = {
    * sehen nur die gelben Pfeile zum Sortieren.
    */
   unsetarrows     : function () {
-    $("span.move_arrows,span.updown_marker").hide();
-    $("span.anfasser").show();
+    jQuery("span.move_arrows,span.updown_marker").hide();
+    jQuery("span.anfasser").show();
   }
 };
 
@@ -634,12 +634,12 @@ STUDIP.Filesystem = {
  * deklariert Ordner und Dateien als ziehbare Elemente bzw. macht sie sortierbar
  */
 STUDIP.Filesystem.setdraggables = function () {
-  $("div.folder_container").each(function () {
+  jQuery("div.folder_container").each(function () {
     var id = this.getAttribute('id');
     var md5_id = id.substr(id.lastIndexOf('_') + 1);
     //wenn es einen Anfasser gibt, also wenn Nutzer verschieben darf
-    if ($('a.drag', this)) {
-      $(this).sortable({
+    if (jQuery('a.drag', this)) {
+      jQuery(this).sortable({
         handle: 'a.drag',
         opacity: 0.6,
         revert: 300,
@@ -648,20 +648,20 @@ STUDIP.Filesystem.setdraggables = function () {
           var id = this.getAttribute('id');
           var sorttype = (id.lastIndexOf('subfolders') !== -1 ? "folder" : "file");
           md5_id = id.substr(id.lastIndexOf('_') + 1);
-          var order = $(this).sortable('serialize', {key: "order"}).split("&");
-          order = $.map(order, function (component) {
+          var order = jQuery(this).sortable('serialize', {key: "order"}).split("&");
+          order = jQuery.map(order, function (component) {
             return component.substr(component.lastIndexOf('=') + 1);
           });
-          var order_ids = $.map(order, function (order_number) {
+          var order_ids = jQuery.map(order, function (order_number) {
             if (sorttype === "folder") {
               // Unterordner:
-              return $("#getmd5_fo" + md5_id + "_" + order_number).html();
+              return jQuery("#getmd5_fo" + md5_id + "_" + order_number).html();
             } else {
               // Dateien:
-              return $("#getmd5_fi" + md5_id + "_"  + order_number).html();
+              return jQuery("#getmd5_fi" + md5_id + "_"  + order_number).html();
             }
           });
-          $.ajax({
+          jQuery.ajax({
             url: STUDIP.Filesystem.getURL(),
             data: {
               sorttype: sorttype,
@@ -679,7 +679,7 @@ STUDIP.Filesystem.setdraggables = function () {
  * deklariert Ordner als Objekte, in die Dateien gedropped werden können
  */
 STUDIP.Filesystem.setdroppables = function () {
-  $("div.droppable").droppable({
+  jQuery("div.droppable").droppable({
     accept: '.draggable',
     hoverClass: 'hover',
     over: function () {
@@ -690,13 +690,13 @@ STUDIP.Filesystem.setdroppables = function () {
     drop: function (event, ui) {
       var id = ui.draggable.attr('id');
       var file_md5_id = id.substr(id.indexOf('_') + 1);
-      file_md5_id = $("#getmd5_fi" + file_md5_id).html();
-      var folder_md5_id = $(this).attr('id');
+      file_md5_id = jQuery("#getmd5_fi" + file_md5_id).html();
+      var folder_md5_id = jQuery(this).attr('id');
       folder_md5_id = folder_md5_id.substr(folder_md5_id.lastIndexOf('_') + 1);
       //alert("Drop "+file_md5_id+" on "+folder_md5_id);
       var adress = STUDIP.Filesystem.getURL();
       if ((event.keyCode === 17)  || (event.ctrlKey)) {
-        $.ajax({
+        jQuery.ajax({
           url: adress,
           data: {
             copyintofolder: folder_md5_id,
@@ -707,7 +707,7 @@ STUDIP.Filesystem.setdroppables = function () {
           }
         });
       } else {
-        $.ajax({
+        jQuery.ajax({
           url: adress,
           data: {
             moveintofolder: folder_md5_id,
@@ -730,7 +730,7 @@ STUDIP.Filesystem.openhoveredfolder = function (md5_id) {
   var zeit = new Date();
   if (md5_id === STUDIP.Filesystem.hovered_folder) {
     if (STUDIP.Filesystem.hover_begin < zeit.getTime() - 1000) {
-      if ($("#folder_" + md5_id + "_body").is(':hidden')) {
+      if (jQuery("#folder_" + md5_id + "_body").is(':hidden')) {
         STUDIP.Filesystem.changefolderbody(md5_id);
         STUDIP.Filesystem.hover_begin = zeit.getTime();
       }
@@ -749,38 +749,38 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
   if (!STUDIP.Filesystem.movelock) {
     STUDIP.Filesystem.movelock = true;
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);
-    if ($("#folder_" + md5_id + "_body").is(':visible')) {
-      $("#folder_" + md5_id + "_header").css('fontWeight', 'normal');
-      $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
-      $("#folder_" + md5_id + "_arrow_td").addClass('printhead2');
-      $("#folder_" + md5_id + "_arrow_td").removeClass('printhead3');
-      $("#folder_" + md5_id + "_body").slideUp(400);
+    if (jQuery("#folder_" + md5_id + "_body").is(':visible')) {
+      jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'normal');
+      jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
+      jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead2');
+      jQuery("#folder_" + md5_id + "_arrow_td").removeClass('printhead3');
+      jQuery("#folder_" + md5_id + "_body").slideUp(400);
       STUDIP.URLHelper.removeLinkParam('data[open][' + md5_id + ']');
       STUDIP.URLHelper.updateAllLinks("#filesystem_area");
     } else {
-      if ($("#folder_" + md5_id + "_body").html() === "") {
+      if (jQuery("#folder_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
-        $("#folder_" + md5_id + "_body").load(adress, { getfolderbody: md5_id }, function () {
-          $("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
-          $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
-          $("#folder_" + md5_id + "_arrow_td").addClass('printhead3');
-          $("#folder_" + md5_id + "_arrow_td").removeClass('printhead2');
+        jQuery("#folder_" + md5_id + "_body").load(adress, { getfolderbody: md5_id }, function () {
+          jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
+          jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
+          jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead3');
+          jQuery("#folder_" + md5_id + "_arrow_td").removeClass('printhead2');
           STUDIP.Filesystem.unsetarrows();
           STUDIP.Filesystem.setdraggables();
           STUDIP.Filesystem.setdroppables();
-          $("#folder_" + md5_id + "_body").slideDown(400);
+          jQuery("#folder_" + md5_id + "_body").slideDown(400);
           STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
           STUDIP.URLHelper.updateAllLinks("#filesystem_area");
         });
       } else {
-        $("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
-        $("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
-        $("#folder_" + md5_id + "_arrow_td").addClass('printhead3');
-        $("#folder_" + md5_id + "_arrow_td").removeClass('printhead2');
+        jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
+        jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
+        jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead3');
+        jQuery("#folder_" + md5_id + "_arrow_td").removeClass('printhead2');
         STUDIP.Filesystem.unsetarrows();
         STUDIP.Filesystem.setdraggables();
         STUDIP.Filesystem.setdroppables();
-        $("#folder_" + md5_id + "_body").slideDown(400);
+        jQuery("#folder_" + md5_id + "_body").slideDown(400);
         STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
         STUDIP.URLHelper.updateAllLinks("#filesystem_area");
       }
@@ -798,36 +798,35 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
   if (!STUDIP.Filesystem.movelock) {
     STUDIP.Filesystem.movelock = true;
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);
-    //if ($("file_" + md5_id + "_body_row").style.visibility === "visible") {
-
-    if ($("#file_" + md5_id + "_body").is(':visible')) {
-      $("#file_" + md5_id + "_body").slideUp(400);
-      $("#file_" + md5_id + "_header").css("fontWeight", 'normal');
-      $("#file_" + md5_id + "_arrow_td").addClass('printhead2');
-      $("#file_" + md5_id + "_arrow_td").removeClass('printhead3');
-      $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
+    
+    if (jQuery("#file_" + md5_id + "_body").is(':visible')) {
+      jQuery("#file_" + md5_id + "_body").slideUp(400);
+      jQuery("#file_" + md5_id + "_header").css("fontWeight", 'normal');
+      jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead2');
+      jQuery("#file_" + md5_id + "_arrow_td").removeClass('printhead3');
+      jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
       STUDIP.URLHelper.removeLinkParam('data[open][' + md5_id + ']');
       STUDIP.URLHelper.updateAllLinks("#filesystem_area");
     } else {
-      if ($("#file_" + md5_id + "_body").html() === "") {
+      if (jQuery("#file_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
-        $("#file_" + md5_id + "_body").load(adress, { getfilebody: md5_id }, function () {
-          $("#file_" + md5_id + "_header").css('fontWeight', 'bold');
-          $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
-          $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
-          $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
-          $("#file_" + md5_id + "_body").slideDown(400);
+        jQuery("#file_" + md5_id + "_body").load(adress, { getfilebody: md5_id }, function () {
+          jQuery("#file_" + md5_id + "_header").css('fontWeight', 'bold');
+          jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
+          jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3');
+          jQuery("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
+          jQuery("#file_" + md5_id + "_body").slideDown(400);
           STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
           STUDIP.URLHelper.updateAllLinks("#filesystem_area");
         });
       } else {
         //Falls der Dateikörper schon geladen ist.
-        $("#file_" + md5_id + "_body_row").show();
-        $("#file_" + md5_id + "_header").css('fontWeight', 'bold');
-        $("#file_" + md5_id + "_arrow_td").addClass('printhead3');
-        $("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
-        $("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
-        $("#file_" + md5_id + "_body").slideDown(400);
+        jQuery("#file_" + md5_id + "_body_row").show();
+        jQuery("#file_" + md5_id + "_header").css('fontWeight', 'bold');
+        jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3');
+        jQuery("#file_" + md5_id + "_arrow_td").removeClass('printhead2');
+        jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
+        jQuery("#file_" + md5_id + "_body").slideDown(400);
         STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
         STUDIP.URLHelper.updateAllLinks("#filesystem_area");
       }
@@ -844,12 +843,12 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
 STUDIP.Arbeitsgruppen = {
 
   toggleOption: function (user_id) {
-    if ($('#user_opt_' + user_id).is(':hidden')) {
-      $('#user_opt_' + user_id).show('slide', {direction: 'left'}, 400, function () {
-        $('#user_opt_' + user_id).css("display", "inline-block");
+    if (jQuery('#user_opt_' + user_id).is(':hidden')) {
+      jQuery('#user_opt_' + user_id).show('slide', {direction: 'left'}, 400, function () {
+        jQuery('#user_opt_' + user_id).css("display", "inline-block");
       });
     } else {
-      $('#user_opt_' + user_id).hide('slide', {direction: 'left'}, 400);
+      jQuery('#user_opt_' + user_id).hide('slide', {direction: 'left'}, 400);
     }
   }
 };
@@ -860,7 +859,7 @@ STUDIP.Arbeitsgruppen = {
 
 STUDIP.News = {
   openclose: function (id, admin_link) {
-    if ($("#news_item_" + id + "_content").is(':visible')) {
+    if (jQuery("#news_item_" + id + "_content").is(':visible')) {
       STUDIP.News.close(id);
     } else {
       STUDIP.News.open(id, admin_link);
@@ -868,45 +867,45 @@ STUDIP.News = {
   },
 
   open: function (id, admin_link) {
-    $("#news_item_" + id + "_content").load(
+    jQuery("#news_item_" + id + "_content").load(
       STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/news/get_news/' + id,
       {admin_link: admin_link},
       function () {
-        $("#news_item_" + id + "_content").slideDown(400);
-        $("#news_item_" + id + " .printhead2 img")
+        jQuery("#news_item_" + id + "_content").slideDown(400);
+        jQuery("#news_item_" + id + " .printhead2 img")
             .attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
-        $("#news_item_" + id + " .printhead2")
+        jQuery("#news_item_" + id + " .printhead2")
             .removeClass("printhead2")
             .addClass("printhead3");
-        $("#news_item_" + id + " .printhead b").css("font-weight", "bold");
-        $("#news_item_" + id + " .printhead a.tree").css("font-weight", "bold");
+        jQuery("#news_item_" + id + " .printhead b").css("font-weight", "bold");
+        jQuery("#news_item_" + id + " .printhead a.tree").css("font-weight", "bold");
       });
   },
 
   close: function (id) {
-    $("#news_item_" + id + "_content").slideUp(400);
-    $("#news_item_" + id + " .printhead3 img")
+    jQuery("#news_item_" + id + "_content").slideUp(400);
+    jQuery("#news_item_" + id + " .printhead3 img")
         .attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
-    $("#news_item_" + id + " .printhead3")
+    jQuery("#news_item_" + id + " .printhead3")
         .removeClass("printhead3")
         .addClass("printhead2");
-    $("#news_item_" + id + " .printhead b").css("font-weight", "normal");
-    $("#news_item_" + id + " .printhead a.tree").css("font-weight", "normal");
+    jQuery("#news_item_" + id + " .printhead b").css("font-weight", "normal");
+    jQuery("#news_item_" + id + " .printhead a.tree").css("font-weight", "normal");
   }
 };
 
 /* ------------------------------------------------------------------------
  * ajax_loader
  * ------------------------------------------------------------------------ */
-$('[data-behaviour="\'ajaxContent\'"]').live('click', function () {
-  var parameters = $(this).metadata(),
+jQuery('[data-behaviour="\'ajaxContent\'"]').live('click', function () {
+  var parameters = jQuery(this).metadata(),
     indicator = ("indicator" in parameters) ? parameters.indicator : this,
-    target    = ("target" in parameters) ? parameters.target : $(this).next(),
-    url       = ("url" in parameters) ? parameters.url : $(this).attr('href');
+    target    = ("target" in parameters) ? parameters.target : jQuery(this).next(),
+    url       = ("url" in parameters) ? parameters.url : jQuery(this).attr('href');
 
-  $(indicator).showAjaxNotification('right');
-  $(target).load(url, function () {
-    $(indicator).hideAjaxNotification();
+  jQuery(indicator).showAjaxNotification('right');
+  jQuery(target).load(url, function () {
+    jQuery(indicator).hideAjaxNotification();
   });
   return false;
 });
@@ -915,17 +914,17 @@ $('[data-behaviour="\'ajaxContent\'"]').live('click', function () {
  * messages boxes
  * ------------------------------------------------------------------------ */
 
-$('.messagebox .messagebox_buttons a').live('click', function () {
-  if ($(this).is('.details')) {
-    $(this).closest('.messagebox').toggleClass('details_hidden');
-  } else if ($(this).is('.close')) {
-    $(this).closest('.messagebox').fadeOut(function () {
-      $(this).remove();
+jQuery('.messagebox .messagebox_buttons a').live('click', function () {
+  if (jQuery(this).is('.details')) {
+    jQuery(this).closest('.messagebox').toggleClass('details_hidden');
+  } else if (jQuery(this).is('.close')) {
+    jQuery(this).closest('.messagebox').fadeOut(function () {
+      jQuery(this).remove();
     });
   }
   return false;
 }).live('focus', function () {
-  $(this).blur(); // Get rid of the ugly "clicked border" due to the text-indent
+  jQuery(this).blur(); // Get rid of the ugly "clicked border" due to the text-indent
 });
 
 /* ------------------------------------------------------------------------
@@ -940,15 +939,15 @@ STUDIP.QuickSearch = {
    * @return: JSON-object (not as a string)
    */
   formToJSON: function (selector) {
-    selector = $(selector).parents("form");
+    selector = jQuery(selector).parents("form");
     var form = {};   //the basic JSON-object that will be returned later
-    $(selector).find(':input[name]').each(function () {
-      var name = $(this).attr('name');   //name of the input
+    jQuery(selector).find(':input[name]').each(function () {
+      var name = jQuery(this).attr('name');   //name of the input
       if (form[name]) {
         //for double-variables (not arrays):
-        form[name] = form[name] + ',' + $(this).val();
+        form[name] = form[name] + ',' + jQuery(this).val();
       } else {
-        form[name] = $(this).val();
+        form[name] = jQuery(this).val();
       }
     });
     return form;
@@ -962,7 +961,7 @@ STUDIP.QuickSearch = {
    * @return: void
    */
   autocomplete: function (name, url, func) {
-    $('#' + name).autocomplete({
+    jQuery('#' + name).autocomplete({
       disabled: true,
       source: function (input, add) {
         //get the variables that should be sent:
@@ -970,7 +969,7 @@ STUDIP.QuickSearch = {
           form_data: STUDIP.QuickSearch.formToJSON('#' + name),
           request: input.term
         };
-        $.ajax({
+        jQuery.ajax({
           url: url,
           type: "post",
           dataType: "json",
@@ -978,7 +977,7 @@ STUDIP.QuickSearch = {
           success: function (data) {
             var stripTags = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
             var suggestions = [];  //an array of possible selections
-            $.each(data, function (i, val) {
+            jQuery.each(data, function (i, val) {
               //adding a label and a hidden item_id - don't use "value":
               suggestions.push({
                 label: val.item_name,                       //what is displayed in the drobdown-boc
@@ -993,7 +992,7 @@ STUDIP.QuickSearch = {
       },
       select: function (event, ui) {
         //inserts the ID of the selected item in the hidden input:
-        $('#' + name + "_realvalue").attr("value", ui.item.item_id);
+        jQuery('#' + name + "_realvalue").attr("value", ui.item.item_id);
         //and execute a special function defined before by the programmer:
         if (func) {
           func(ui.item.item_id, ui.item.label);
@@ -1003,12 +1002,41 @@ STUDIP.QuickSearch = {
   }
 };
 
+/* ------------------------------------------------------------------------
+ * Multiselect
+ * ------------------------------------------------------------------------ */
+
+/**
+ * Turns a select-box into an easy to use multiple select-box 
+ */
+STUDIP.MultiSelect = {
+  /**
+   * @param id string: 
+   */
+  create: function (id, itemName) {
+    if (!jQuery(id).attr('multiple')) {
+      jQuery(id).attr('multiple', 'multiple');
+      jQuery(id).css('height', '120px');
+    }
+    jQuery(id).multiselect({sortable: false, itemName: itemName});
+  }
+};
+jQuery(function ($) {
+  $.extend($.ui.multiselect, {
+    locale: {
+      addAll: "Alle hinzufügen".toLocaleString(),
+      removeAll: "Alle entfernen".toLocaleString(),
+      itemsCount: "ausgewählt".toLocaleString()
+    }
+  });
+}(jQuery));
+
 
 /* ------------------------------------------------------------------------
  * application wide setup
  * ------------------------------------------------------------------------ */
 
-$(document).ready(function () {
+jQuery(function ($) {
   // AJAX Indicator
   STUDIP.ajax_indicator = true;
 
@@ -1028,7 +1056,7 @@ $(document).ready(function () {
     handles: 's',
     minHeight: 50
   });
-});
+}(jQuery));
 
 /* ------------------------------------------------------------------------
  * application collapsable tablerows
@@ -1040,45 +1068,45 @@ jQuery(function ($) {
     $(this).closest('tbody').toggleClass('collapsed');
     return false;
   }).closest('.collapsable').find('tbody').filter(':not(.open)').find('.toggler').click();
-});
-
-$('a.load-in-new-row').live('click', function () {
-  if ($(this).closest('tr').next().hasClass('loaded-details')) {
-    $(this).closest('tr').next().remove();
+  
+  $('a.load-in-new-row').live('click', function () {
+    if ($(this).closest('tr').next().hasClass('loaded-details')) {
+      $(this).closest('tr').next().remove();
+      return false;
+    }
+    var that = this;
+    $(that).showAjaxNotification();
+    var row = $('<tr />').addClass('loaded-details'),
+    cell = $('<td />').attr('colspan', $(this).closest('td').siblings().length + 1).appendTo(row);
+    $(this).closest('tr').after(row);
+    $.get($(this).attr('href'), function (response) {
+      cell.html(response);
+      $(that).hideAjaxNotification();
+    });
     return false;
-  }
-
-  var that = this;
-  $(that).showAjaxNotification();
-
-  var row = $('<tr />').addClass('loaded-details'),
-      cell = $('<td />').attr('colspan', $(this).closest('td').siblings().length + 1).appendTo(row);
-  $(this).closest('tr').after(row);
-  $.get($(this).attr('href'), function (response) {
-    cell.html(response);
-    $(that).hideAjaxNotification();
   });
 
-  return false;
-});
+  $('.loaded-details a.cancel').live('click', function () {
+    $(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
+    return false;
+  });
+	
+}(jQuery));
 
-$('.loaded-details a.cancel').live('click', function () {
-  $(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
-  return false;
-});
+
 
 /* ------------------------------------------------------------------------
  * only numbers in the input field
  * ------------------------------------------------------------------------ */
-$('input.allow-only-numbers').live('keyup', function () {
-  $(this).val($(this).val().replace(/\D/, ''));
+jQuery('input.allow-only-numbers').live('keyup', function () {
+  jQuery(this).val(jQuery(this).val().replace(/\D/, ''));
 });
 
 /* ------------------------------------------------------------------------
  * additional jQuery (UI) settings for Stud.IP
  * ------------------------------------------------------------------------ */
 
-$.ui.accordion.prototype.options.icons = {
+jQuery.ui.accordion.prototype.options.icons = {
   header: 'arrow_right',
   headerSelected: 'arrow_down'
 };
@@ -1110,7 +1138,7 @@ STUDIP.Calendar = {
    * @return: int
    */
   clickedHour: function (e, day) {
-    return Math.floor(((e.pageY - Math.ceil($('#day_' + day).offset().top)) - 2) / this.cell_height) + STUDIP.Calendar.start_hour;
+    return Math.floor(((e.pageY - Math.ceil(jQuery('#day_' + day).offset().top)) - 2) / this.cell_height) + STUDIP.Calendar.start_hour;
   },
 
   newEntry: function (e, day) {
@@ -1125,12 +1153,12 @@ STUDIP.Calendar = {
     var hour = STUDIP.Calendar.clickedHour(e, day);
 
     // fill values of overlay
-    $('#entry_hour_start').text(hour);
-    $('#entry_hour_end').text(hour + 1);
-    $('#entry_day').text(STUDIP.Calendar.day_names[day].toLocaleString());
+    jQuery('#entry_hour_start').text(hour);
+    jQuery('#entry_hour_end').text(hour + 1);
+    jQuery('#entry_day').text(STUDIP.Calendar.day_names[day].toLocaleString());
 
     // the entry in the schedule
-    var the_entry = $('<div/>')
+    var the_entry = jQuery('<div/>')
       .addClass('schedule_entry')
       .attr('id', 'schedule_empty_entry')
       .css({
@@ -1140,32 +1168,32 @@ STUDIP.Calendar = {
       })
       .html(STUDIP.Calendar.the_entry_content);
 
-    $('#day_' + day).append(the_entry);
-    $('#schedule_empty_entry').css('top', ((hour - STUDIP.Calendar.start_hour) * STUDIP.Calendar.cell_height) + 'px');
+    jQuery('#day_' + day).append(the_entry);
+    jQuery('#schedule_empty_entry').css('top', ((hour - STUDIP.Calendar.start_hour) * STUDIP.Calendar.cell_height) + 'px');
 
     // the formula to fill in the data
-    $('#empty_entry_start').text(hour);
-    $('#empty_entry_end').text(hour + 1);
+    jQuery('#empty_entry_start').text(hour);
+    jQuery('#empty_entry_end').text(hour + 1);
 
-    // $('new_entry_form').action = '<?= $controller->url_for('calendar/schedule/addEntry') ?>/'+ hour +'/'+ day;
-    $('#new_entry_hour').val(hour);
-    $('#new_entry_day').val(day);
+    // jQuery('new_entry_form').action = '<?= jQuerycontroller->url_for('calendar/schedule/addEntry') ?>/'+ hour +'/'+ day;
+    jQuery('#new_entry_hour').val(hour);
+    jQuery('#new_entry_day').val(day);
 
     // show the entry in data-view of the timetable
-    $('#schedule_empty_entry').fadeIn('fast');
+    jQuery('#schedule_empty_entry').fadeIn('fast');
 
 
     // show the overlay
-    $('#schedule_new_entry').show();
+    jQuery('#schedule_new_entry').show();
 
     // set the position of the overlay
-    $('#schedule_new_entry').css({
-      top: Math.floor(the_entry.offset().top - $('#schedule_new_entry').height() - 20),
+    jQuery('#schedule_new_entry').css({
+      top: Math.floor(the_entry.offset().top - jQuery('#schedule_new_entry').height() - 20),
       left: Math.floor(the_entry.offset().left)
     });
 
-    if ($('#schedule_new_entry').offset().top < 0) {
-      $('#schedule_new_entry').css({
+    if (jQuery('#schedule_new_entry').offset().top < 0) {
+      jQuery('#schedule_new_entry').css({
         top:  Math.floor(the_entry.offset().top + the_entry.height() + 20)
       });
     }
@@ -1179,25 +1207,25 @@ STUDIP.Calendar = {
    * @return: void
    */
   cancelNewEntry: function (fade) {
-    if ($('#schedule_new_entry').is(':visible') ||
-        $('#edit_entry').is(':visible') ||
-        $('#edit_sem_entry').is(':visible') ||
-        $('#edit_inst_entry').is(':visible')
+    if (jQuery('#schedule_new_entry').is(':visible') ||
+        jQuery('#edit_entry').is(':visible') ||
+        jQuery('#edit_sem_entry').is(':visible') ||
+        jQuery('#edit_inst_entry').is(':visible')
     ) {
       if (fade) {
-        $('#edit_sem_entry').fadeOut('fast');
-        $('#edit_inst_entry').fadeOut('fast');
-        $('#schedule_empty_entry').fadeOut('fast');
-        $('#schedule_new_entry').fadeOut('fast');
-        $('#edit_entry').fadeOut('fast');
+        jQuery('#edit_sem_entry').fadeOut('fast');
+        jQuery('#edit_inst_entry').fadeOut('fast');
+        jQuery('#schedule_empty_entry').fadeOut('fast');
+        jQuery('#schedule_new_entry').fadeOut('fast');
+        jQuery('#edit_entry').fadeOut('fast');
       } else {
-        $('#edit_sem_entry').hide();
-        $('#edit_inst_entry').hide();
-        $('#schedule_new_entry').hide();
-        $('#edit_entry').hide();
+        jQuery('#edit_sem_entry').hide();
+        jQuery('#edit_inst_entry').hide();
+        jQuery('#schedule_new_entry').hide();
+        jQuery('#edit_entry').hide();
       }
 
-      $('#schedule_empty_entry').remove();
+      jQuery('#schedule_empty_entry').remove();
     }
   },
 
@@ -1207,7 +1235,7 @@ STUDIP.Calendar = {
    * @param  object  the input-element to check
    */
   validateHour: function (element) {
-    var hour = $(element).val();
+    var hour = jQuery(element).val();
 
     if (parseInt(hour, 10) !== hour) {
       hour = 0;
@@ -1219,7 +1247,7 @@ STUDIP.Calendar = {
       hour = 0;
     }
 
-    $(element).val(hour);
+    jQuery(element).val(hour);
   },
 
   /**
@@ -1228,7 +1256,7 @@ STUDIP.Calendar = {
    * @param  object  the input-element to check
    */
   validateMinute: function (element) {
-    var minute = $(element).val();
+    var minute = jQuery(element).val();
 
     if (parseInt(minute, 10) !== minute) {
       minute = 0;
@@ -1240,7 +1268,7 @@ STUDIP.Calendar = {
       minute = 0;
     }
 
-    $(element).val(minute);
+    jQuery(element).val(minute);
   },
 
   /**
@@ -1254,8 +1282,8 @@ STUDIP.Calendar = {
    * @return: bool true if valid time-range, false otherwise
    */
   checkTimeslot: function (start_hour, start_minute, end_hour, end_minute) {
-    if ($(start_hour).val() + ($(start_minute).val() * 100) >=
-        $(end_hour).val() + ($(end_minute).val() * 100)) {
+    if (jQuery(start_hour).val() + (jQuery(start_minute).val() * 100) >=
+        jQuery(end_hour).val() + (jQuery(end_minute).val() * 100)) {
       return false;
     }
 
@@ -1276,26 +1304,26 @@ STUDIP.Schedule = {
   showDetails: function () {
 
     // set the values for detailed view
-    $('select[name=entry_day]').val($('#new_entry_day').val());
-    $('input[name=entry_start_hour]').val($('#new_entry_hour').val());
-    $('input[name=entry_start_minute]').val('00');
-    $('input[name=entry_end_hour]').val(parseInt($('#new_entry_hour').val(), 10) + 1);
-    $('input[name=entry_end_minute]').val('00');
+    jQuery('select[name=entry_day]').val(jQuery('#new_entry_day').val());
+    jQuery('input[name=entry_start_hour]').val(jQuery('#new_entry_hour').val());
+    jQuery('input[name=entry_start_minute]').val('00');
+    jQuery('input[name=entry_end_hour]').val(parseInt(jQuery('#new_entry_hour').val(), 10) + 1);
+    jQuery('input[name=entry_end_minute]').val('00');
 
-    $('input[name=entry_title]').val($('#entry_title').val());
-    $('textarea[name=entry_content]').val($('#entry_content').val());
+    jQuery('input[name=entry_title]').val(jQuery('#entry_title').val());
+    jQuery('textarea[name=entry_content]').val(jQuery('#entry_content').val());
 
-    $('#edit_entry_drag').html($('#new_entry_drag').html());
+    jQuery('#edit_entry_drag').html(jQuery('#new_entry_drag').html());
 
     // morph to the detailed view
-    $('#schedule_new_entry').animate({
-      left: Math.floor($(window).width() / 4),  // for safari
+    jQuery('#schedule_new_entry').animate({
+      left: Math.floor(jQuery(window).width() / 4),  // for safari
       width: '50%',
       top: '180px'
     }, 500, function () {
-      $('#edit_entry').fadeIn(400, function () {
+      jQuery('#edit_entry').fadeIn(400, function () {
         // reset the box
-        $('#schedule_new_entry').css({
+        jQuery('#schedule_new_entry').css({
           display: 'none',
           left: 0,
           width: '400px',
@@ -1309,29 +1337,29 @@ STUDIP.Schedule = {
 
   showSeminarDetails: function (seminar_id, cycle_id) {
     STUDIP.Calendar.noNewEntry = true;
-    $('#edit_sem_entry').fadeOut('fast');
-    $.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/entryajax/' + seminar_id + '/' + cycle_id, function (data) {
-      $('#edit_sem_entry').remove();
-      $('body').append(data);
+    jQuery('#edit_sem_entry').fadeOut('fast');
+    jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/entryajax/' + seminar_id + '/' + cycle_id, function (data) {
+      jQuery('#edit_sem_entry').remove();
+      jQuery('body').append(data);
     });
   },
 
   showScheduleDetails: function (id) {
     STUDIP.Calendar.noNewEntry = true;
-    $('#edit_entry').fadeOut('fast');
-    $.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/entryajax/' + id, function (data) {
-      $('#edit_entry').remove();
-      $('body').append(data);
+    jQuery('#edit_entry').fadeOut('fast');
+    jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/entryajax/' + id, function (data) {
+      jQuery('#edit_entry').remove();
+      jQuery('body').append(data);
     });
 
   },
 
   showInstituteDetails: function (link) {
     STUDIP.Calendar.noNewEntry = true;
-    $('#edit_inst_entry').fadeOut('fast');
-    $.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/groupedentry/' + $(link).attr('data') + '/true', function (data) {
-      $('#edit_inst_entry').remove();
-      $('body').append(data);
+    jQuery('#edit_inst_entry').fadeOut('fast');
+    jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/groupedentry/' + jQuery(link).attr('data') + '/true', function (data) {
+      jQuery('#edit_inst_entry').remove();
+      jQuery('body').append(data);
     });
 
     return false;
@@ -1339,25 +1367,25 @@ STUDIP.Schedule = {
 
   instSemUnbind : function (seminar_id, cycle_id) {
     STUDIP.Schedule.inst_changed = true;
-    $.ajax({
+    jQuery.ajax({
       type: 'GET',
       url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/adminbind/' + seminar_id + '/' + cycle_id + '/0/true'
     });
 
-    $('#' + seminar_id + '_' + cycle_id + '_hide').fadeOut('fast', function () {
-      $('#' + seminar_id + '_' + cycle_id + '_show').fadeIn('fast');
+    jQuery('#' + seminar_id + '_' + cycle_id + '_hide').fadeOut('fast', function () {
+      jQuery('#' + seminar_id + '_' + cycle_id + '_show').fadeIn('fast');
     });
   },
 
   instSemBind : function (seminar_id, cycle_id) {
     STUDIP.Schedule.inst_changed = true;
-    $.ajax({
+    jQuery.ajax({
       type: 'GET',
       url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/adminbind/' + seminar_id + '/' + cycle_id + '/1/true'
     });
 
-    $('#' + seminar_id + '_' + cycle_id + '_show').fadeOut('fast', function () {
-      $('#' + seminar_id + '_' + cycle_id + '_hide').fadeIn('fast');
+    jQuery('#' + seminar_id + '_' + cycle_id + '_show').fadeOut('fast', function () {
+      jQuery('#' + seminar_id + '_' + cycle_id + '_hide').fadeIn('fast');
     });
   },
 
@@ -1365,27 +1393,27 @@ STUDIP.Schedule = {
     if (STUDIP.Schedule.inst_changed) {
       return true;
     }
-    $(element).fadeOut('fast');
+    jQuery(element).fadeOut('fast');
     return false;
   },
 
   hideEntry: function (element, seminar_id, cycle_id) {
     STUDIP.Calendar.noNewEntry = true;
-    $.ajax({
+    jQuery.ajax({
       type: 'GET',
       url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/unbind/' + seminar_id + '/' + cycle_id
     });
-    $(element).parents('.schedule_entry').fadeOut('fast');
+    jQuery(element).parents('.schedule_entry').fadeOut('fast');
   },
 
   checkFormFields: function () {
-    if (!STUDIP.Calendar.checkTimeslot($('#schedule_entry_hours > input[name=entry_start_hour]'),
-      $('#schedule_entry_hours > input[name=entry_start_minute]'),
-      $('#schedule_entry_hours > input[name=entry_end_hour]'),
-      $('#schedule_entry_hours > input[name=entry_end_minute]'))) {
+    if (!STUDIP.Calendar.checkTimeslot(jQuery('#schedule_entry_hours > input[name=entry_start_hour]'),
+      jQuery('#schedule_entry_hours > input[name=entry_start_minute]'),
+      jQuery('#schedule_entry_hours > input[name=entry_end_hour]'),
+      jQuery('#schedule_entry_hours > input[name=entry_end_minute]'))) {
 
-      $('#schedule_entry_hours').addClass('invalid');
-      $('#schedule_entry_hours > span[class=invalid_message]').show();
+      jQuery('#schedule_entry_hours').addClass('invalid');
+      jQuery('#schedule_entry_hours > span[class=invalid_message]').show();
       return false;
     }
 
@@ -1396,10 +1424,10 @@ STUDIP.Schedule = {
 STUDIP.Instschedule = {
   showInstituteDetails: function (link) {
     STUDIP.Calendar.noNewEntry = true;
-    $('#edit_inst_entry').fadeOut('fast');
-    $.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/instschedule/groupedentry/' + $(link).attr('data') + '/true', function (data) {
-      $('#edit_inst_entry').remove();
-      $('body').append(data);
+    jQuery('#edit_inst_entry').fadeOut('fast');
+    jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/instschedule/groupedentry/' + jQuery(link).attr('data') + '/true', function (data) {
+      jQuery('#edit_inst_entry').remove();
+      jQuery('body').append(data);
     });
 
     return false;

@@ -121,7 +121,7 @@
                     </tr>
                     <tr>
                         <td class="steel1" colspan="<?= $user_domains ? 3 : 2; ?>">
-                            <?= _('neu hinzugefügte Elemente sind standardmäßig sichtbar für'); ?>
+                            <?= _('neu hinzugefügte Profil-Elemente sind standardmäßig sichtbar für'); ?>
                             <select name="default_homepage_visibility">
                                 <option value="">-- <?= _("bitte wählen"); ?> --</option>
                                 <option value="<?= VISIBILITY_ME; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_ME) ? ' selected="selected"' : '' ?>><?= _("nur mich selbst") ?></option>

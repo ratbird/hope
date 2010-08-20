@@ -66,7 +66,7 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
             ELearningUtils::bench("load cms $cms");
             $new_module_form[$cms] = ELearningUtils::getNewModuleForm($cms);
         } else {
-            $messages['error'] = _("Die Lernmodulschnittstelle ist momentan nicht erreichbar.");
+            $messages['error'] = sprintf(_("Das Lernmodul %s ist momentan nicht erreichbar. Bitte wenden Sie sich an ihren Systemadministrator."),$cms);
         }
     if ($messages["info"] != "")
     {

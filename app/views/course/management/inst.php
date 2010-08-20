@@ -16,7 +16,8 @@ $infobox['content'][] = array(
 ?>
 
 <div style="padding-left:0.5em; background-color: white; width: 100%">
-    <h2 class="smashbox_kategorie"><?=_("Grundeinstellungen");?></h2>
+  <? if ($is_admin) : ?>
+  <h2 class="smashbox_kategorie"><?=_("Grundeinstellungen");?></h2>
 
   <div class="smashbox_stripe">
     <div style="margin-left: 1.5em;">
@@ -36,7 +37,7 @@ $infobox['content'][] = array(
     </div>
 
     <br style="clear: both;">
-
+    <? endif ?>
     <h2 class="smashbox_kategorie"><?=_("Weitere Inhaltselemente");?></h2>
 
   <div class="smashbox_stripe">

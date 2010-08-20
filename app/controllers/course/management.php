@@ -26,34 +26,38 @@ class Course_ManagementController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
-        if (SeminarCategories::GetBySeminarId($SessSemName[1])->studygroup_mode == true) {
-            throw new Exception(_('Dies ist eine Studiengruppe und kein Seminar!'));
+        if ($_SESSION['SessSemName']['class'] == 'sem') {
+            if (SeminarCategories::GetBySeminarId($_SESSION['SessSemName'][1])->studygroup_mode == true) {
+                throw new Exception(_('Dies ist eine Studiengruppe und kein Seminar!'));
+            }
         }
-        PageLayout::setTitle(_("Veranstaltung verwalten"));
+        PageLayout::setTitle(sprintf(_("%s - Verwaltung"), $_SESSION['SessSemName']['header_line']));
         PageLayout::setHelpKeyword('Basis.Veranstaltungsverwaltung');
     }
 
     function index_action($section = '')
     {
         Navigation::activateItem('course/admin/main');
-
-        if ($GLOBALS['SessSemName']['class'] == 'inst') {
+        if ($_SESSION['SessSemName']['class'] == 'inst') {
             $this->redirect('course/management/inst');
             return;
         }
 
-        $sem = Seminar::getInstance($GLOBALS['SessSemName'][1]);
+        $sem = Seminar::getInstance($_SESSION['SessSemName'][1]);
         $this->visible = $sem->isVisible();
+        $this->is_admin = $GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessSemName'][1]);
     }
 
     function inst_action()
     {
         Navigation::activateItem('course/admin/main');
+        $this->is_admin = $GLOBALS['perm']->have_studip_perm('admin', $_SESSION['SessSemName'][1]);
+
     }
 
     function visible_action($visible)
     {
-        $sem = Seminar::getInstance($GLOBALS['SessSemName'][1]);
+        $sem = Seminar::getInstance($_SESSION['SessSemName'][1]);
         if ($visible) {
             $sem->visible = 1;
         } else {

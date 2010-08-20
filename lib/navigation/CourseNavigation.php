@@ -118,16 +118,20 @@ class CourseNavigation extends Navigation
             $navigation = new Navigation(_('Verwaltung'));
 
             $navigation->addSubNavigation('main', new Navigation(_("Verwaltung"), 'dispatch.php/course/management'));
-            //$navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'admin_seminare1.php?section=details'));
-            $navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'dispatch.php/course/basicdata/view?section=details'));
 
+            if ($sem_class == 'sem') {
+                $navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'dispatch.php/course/basicdata/view?section=details'));
+            }
             if ($sem_class == 'sem') {
                 $navigation->addSubNavigation('studycourse', new Navigation(_("Studienbereiche"),
                     'dispatch.php/course/study_areas/show/' . $_SESSION['SessionSeminar'],
-                    array('list' => 'TRUE', 'section' => 'studycourse')));
+                array('list' => 'TRUE', 'section' => 'studycourse')));
                 $navigation->addSubNavigation('dates', new Navigation(_("Zeiten/Räume"), 'raumzeit.php?section=dates'));
             }
 
+            if ($sem_class == 'inst' && $perm->have_studip_perm('admin', $SessSemName[1])) {
+                $navigation->addSubNavigation('details', new Navigation(_("Grunddaten"), 'admin_institut.php?section=details'));
+            }
             $navigation->addSubNavigation('news', new Navigation(_("Ankündigungen"), 'admin_news.php?section=news'));
 
             if (get_config('VOTE_ENABLE')) {

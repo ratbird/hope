@@ -332,7 +332,7 @@ function is_element_visible_for_user($user_id, $owner_id, $element_visibility) {
         // No element visibility given (user has not configured this element yet)
         // Set default visibility as element visibility
         if (!$element_visibility) {
-            $element_visibility = get_default_homepage_visibility();
+            $element_visibility = get_default_homepage_visibility($owner_id);
         }
         // Check if the given element is visible according to its visibility.
         switch ($element_visibility) {
@@ -348,7 +348,7 @@ function is_element_visible_for_user($user_id, $owner_id, $element_visibility) {
                 $user_domains = UserDomain::getUserDomainsForUser($user_id);
                 $owner_domains = UserDomain::getUserDomainsForUser($owner_id);
                 if (array_intersect($user_domains, $owner_domains)) {
-                    $visible = true;
+                    $is_visible = true;
                 }
                 break;
             case VISIBILITY_BUDDIES:
@@ -398,15 +398,19 @@ function is_element_visible_externally($owner_id, $owner_perm, $field_name, $ele
  * 
  * @return int Default visibility level.
  */
-function get_default_homepage_visibility() {
-    $default_visibility = get_config('HOMEPAGE_VISIBILITY_DEFAULT');
-    // Set to configured value or Stud.IP internal if configured value is 
-    // invalid.
-    if (defined($default_visibility))
-        $default_visibility = constant($default_visibility);
-    else
-        $default_visibility = constant("VISIBILITY_STUDIP");
-    return $default_visibility;
+function get_default_homepage_visibility($user_id) {
+    $result = DBManager::get()->query("SELECT `default_homepage_visibility` ".
+        "FROM `user_visibility` WHERE `user_id`='".$user_id."' LIMIT 1");
+    $data = $result->fetch();
+    if (intval($data['default_homepage_visibility']) != 0) {
+        $result = $data['default_homepage_visibility'];
+    } else {
+        $result = @constant(Config::getInstance()->getValue('HOMEPAGE_VISIBILITY_DEFAULT'));
+        if (!$result) {
+            $result = VISIBILITY_STUDIP;
+        }
+    }
+    return $result;
 }
 
 /**
@@ -461,7 +465,7 @@ function get_homepage_element_visibility($user_id, $element_name) {
     if (isset($visibilities[$element_name])) {
         return $visibilities[$element_name];
     } else {
-        return get_default_homepage_visibility();
+        return get_default_homepage_visibility($user_id);
     }
 }
 

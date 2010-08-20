@@ -48,6 +48,9 @@ $args['chat_visibility'] = get_local_visibility_by_id($user_id, 'chat');
 $args['search_visibility'] = get_local_visibility_by_id($user_id, 'search');
 $args['email_visibility'] = get_local_visibility_by_id($user_id, 'email');
 
+// Get default visibility for homepage elements.
+$args['default_homepage_visibility'] = get_default_homepage_visibility($user_id);
+
 // Now get elements of user's homepage.
 $homepage_elements_unsorted = $my_about->get_homepage_elements();
 

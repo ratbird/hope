@@ -171,7 +171,7 @@ function update_freie() {
         if ($secret) {
             set_homepage_element_visibility($user->id, 'kat_'.$id, VISIBILITY_ME);
         } else {
-                set_homepage_element_visibility($user->id, 'kat_'.$id, get_default_homepage_visibility());
+            set_homepage_element_visibility($user->id, 'kat_'.$id, get_default_homepage_visibility($user->id));
         }
     }
     parse_msg ("msg§" . _("Kategorien ge&auml;ndert!"));

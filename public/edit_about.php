@@ -312,6 +312,23 @@ if (check_ticket($studipticket)) {
         }
     }
 
+    if (Request::submitted('set_default_homepage_visibility')) {
+        if (Request::get('default_homepage_visibility')) {
+            $success = $my_about->set_default_homepage_visibility(
+                Request::int('default_homepage_visibility'));
+            if ($success) {
+                $my_about->msg .= 'msg§'.
+                    _('Die Standardsichtbarkeit der Profilelemente wurde gespeichert.');
+            } else {
+                $my_about->msg .= 'error§'.
+                    _('Die Standardsichtbarkeit der Profilelemente wurde nicht gespeichert!');
+            }
+        } else {
+            $my_about->msg .= 'error§'.
+                _('Bitte wählen Sie eine Standardsichtbarkeit für Ihre Profilelemente!');
+        }
+    }
+
     if (Request::submitted('set_all_homepage_visibility')) {
         if (Request::get('all_homepage_visibility')) {
             $success = $my_about->change_all_homepage_visibility(Request::int('all_homepage_visibility'));

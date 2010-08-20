@@ -2,24 +2,24 @@
     <tr>
         <td class="blank" width="100%" colspan="2" align="center">
             <p class="info">
-                <b><?php echo _("Hier können Sie Ihre Sichtbarkeit im System einstellen."); ?></b>
+                <b><?= _("Hier können Sie Ihre Sichtbarkeit im System einstellen."); ?></b>
             </p>
-            <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_global_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
+            <form method="post" action="<?= URLHelper::getLink('edit_about.php', array('cmd' => 'change_global_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
                 <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0">
                     <tr>
-                        <th width="50%"><?php echo _("Option"); ?></th>
-                        <th width="50%"><?php echo _("Auswahl"); ?></th>
+                        <th width="50%"><?= _("Option"); ?></th>
+                        <th width="50%"><?= _("Auswahl"); ?></th>
                     </tr>
                     <tr>
                         <td colspan="2" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">
-                            <b><?php echo _('globale Einstellungen'); ?></b>
+                            <b><?= _('globale Einstellungen'); ?></b>
                         </td>
                     </tr>
                     <tr>
                         <td width="50%" align="right" class="blank" style="border-bottom:1px dotted black;" width="66%">
                             <font size="-1"><?print _("globale Sichtbarkeit");?></font><br>
                             <br><div align="left"><font size="-1">
-                            <?php echo _("Sie können wählen, ob Sie für andere NutzerInnen sichtbar sein und alle Kommunikationsfunktionen von Stud.IP nutzen können wollen, oder ob Sie unsichtbar sein möchten und dann nur eingeschränkte Kommunikationsfunktionen nutzen können.");?>
+                            <?= _("Sie können wählen, ob Sie für andere NutzerInnen sichtbar sein und alle Kommunikationsfunktionen von Stud.IP nutzen können wollen, oder ob Sie unsichtbar sein möchten und dann nur eingeschränkte Kommunikationsfunktionen nutzen können.");?>
                             </font></div>
                         </td>
                         <td width="50%" class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>" width="34%">
@@ -69,7 +69,7 @@
                             <br>
                             <div align="left">
                             <font size="-1">
-                            <?php echo _("Stellen Sie hier ein, in welchen Bereichen des Systems Sie erscheinen wollen."); ?>
+                            <?= _("Stellen Sie hier ein, in welchen Bereichen des Systems Sie erscheinen wollen."); ?>
                             <?php
                             if (!$NOT_HIDEABLE_FIELDS[$my_perm]['email']) {
                                 echo '<br>';
@@ -81,23 +81,23 @@
                         </td>
                         <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>">
                             <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['online']) {?>
-                            <input type="checkbox" name="online"<?php echo $online_visibility ? ' checked="checked"' : '' ?>>
-                            <?php echo _('sichtbar in "Wer ist online"'); ?>
+                            <input type="checkbox" name="online"<?= $online_visibility ? ' checked="checked"' : '' ?>>
+                            <?= _('sichtbar in "Wer ist online"'); ?>
                             <br>
                             <?php } ?>
                             <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['chat'] && get_config('CHAT_ENABLE')) {?>
-                            <input type="checkbox" name="chat"<?php echo $chat_visibility ? ' checked="checked"' : '' ?>>
-                            <?php echo _('eigener Chatraum sichtbar'); ?>
+                            <input type="checkbox" name="chat"<?= $chat_visibility ? ' checked="checked"' : '' ?>>
+                            <?= _('eigener Chatraum sichtbar'); ?>
                             <br>
                             <?php } ?>
                             <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['search']) {?>
-                            <input type="checkbox" name="search"<?php echo $search_visibility ? ' checked="checked"' : '' ?>>
-                            <?php echo _('auffindbar über die Personensuche'); ?>
+                            <input type="checkbox" name="search"<?= $search_visibility ? ' checked="checked"' : '' ?>>
+                            <?= _('auffindbar über die Personensuche'); ?>
                             <br>
                             <?php } ?>
                             <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['email']) {?>
-                            <input type="checkbox" name="email"<?php echo $email_visibility ? ' checked="checked"' : '' ?>>
-                            <?php echo _('eigene E-Mail-Adresse sichtbar'); ?>
+                            <input type="checkbox" name="email"<?= $email_visibility ? ' checked="checked"' : '' ?>>
+                            <?= _('eigene E-Mail-Adresse sichtbar'); ?>
                             <br>
                             <?php } ?>
                         </td>
@@ -106,77 +106,94 @@
                     <tr>
                         <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>" colspan="2">
                             <input type="hidden" name="view" value="privacy">
-                            <?php echo makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'change_global_visibility'); ?>
+                            <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'change_global_visibility'); ?>
                         </td>
                     </tr>
                 </table>
             </form>
             <br/>
-            <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_homepage_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
+            <form method="post" action="<?= URLHelper::getLink('edit_about.php', array('cmd' => 'change_homepage_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
                 <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0">
                     <tr>
-                        <td colspan="<?php echo $user_domains ? 6 : 5; ?>" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">
-                            <b><?php echo _('eigenes Profil'); ?></b>
+                        <td colspan="<?= $user_domains ? 6 : 5; ?>" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">
+                            <b><?= _('eigenes Profil'); ?></b>
                         </td>
                     </tr>
                     <tr>
-                        <td class="steel1" colspan="<?php echo $user_domains ? 6 : 5; ?>">
-                            <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_all_homepage_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
-                                    <?php echo _('alle Sichtbarkeiten setzen auf'); ?>
-                                    <select name="all_homepage_visibility">
-                                        <option value="">-- <?php echo _("bitte wählen"); ?> --</option>
-                                        <option value="<?php echo VISIBILITY_ME; ?>"><?= _("nur mich selbst") ?></option>
-                                        <option value="<?php echo VISIBILITY_BUDDIES; ?>"><?= _("Buddies") ?></option>
-                                        <?php if ($user_domains) { ?>
-                                        <option value="<?php echo VISIBILITY_DOMAIN; ?>"><?= _("meine Nutzerdomäne") ?></option>
-                                        <?php } ?>
-                                        <option value="<?php echo VISIBILITY_STUDIP; ?>"><?= _("Stud.IP-intern") ?></option>
-                                        <option value="<?php echo VISIBILITY_EXTERN; ?>"><?= _("externe Seiten") ?></option>
-                                    </select>
-                                    <input type="hidden" name="view" value="privacy">
-                                    <?php echo makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_all_homepage_visibility'); ?>
-                            </form>
+                        <td class="steel1" colspan="<?= $user_domains ? 3 : 2; ?>">
+                            <?= _('neu hinzugefügte Elemente sind standardmäßig sichtbar für'); ?>
+                            <select name="default_homepage_visibility">
+                                <option value="">-- <?= _("bitte wählen"); ?> --</option>
+                                <option value="<?= VISIBILITY_ME; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_ME) ? ' selected="selected"' : '' ?>><?= _("nur mich selbst") ?></option>
+                                <option value="<?= VISIBILITY_BUDDIES; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_BUDDIES) ? ' selected="selected"' : '' ?>><?= _("Buddies") ?></option>
+                                <?php if ($user_domains) { ?>
+                                <option value="<?= VISIBILITY_DOMAIN; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_DOMAIN) ? ' selected="selected"' : '' ?>><?= _("meine Nutzerdomäne") ?></option>
+                                <?php } ?>
+                                <option value="<?= VISIBILITY_STUDIP; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_STUDIP) ? ' selected="selected"' : '' ?>><?= _("Stud.IP-intern") ?></option>
+                                <option value="<?= VISIBILITY_EXTERN; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_EXTERN) ? ' selected="selected"' : '' ?>><?= _("externe Seiten") ?></option>
+                            </select>
+                        </td>
+                        <td class="steel1" colspan="3">
+                            <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_default_homepage_visibility'); ?>
                         </td>
                     </tr>
                     <tr>
-                        <th width="'40%'"><?php echo _('Profil-Element'); ?></th>
-                        <th colspan="<?php echo $user_domains ? 5 : 4; ?>" align="center"><?php echo _('sichtbar für'); ?></th>
+                        <td class="steel1" colspan="<?= $user_domains ? 3 : 2; ?>">
+                            <?= _('alle Sichtbarkeiten setzen auf'); ?>
+                            <select name="all_homepage_visibility">
+                                <option value="">-- <?= _("bitte wählen"); ?> --</option>
+                                <option value="<?= VISIBILITY_ME; ?>"><?= _("nur mich selbst") ?></option>
+                                <option value="<?= VISIBILITY_BUDDIES; ?>"><?= _("Buddies") ?></option>
+                                <?php if ($user_domains) { ?>
+                                <option value="<?= VISIBILITY_DOMAIN; ?>"><?= _("meine Nutzerdomäne") ?></option>
+                                <?php } ?>
+                                <option value="<?= VISIBILITY_STUDIP; ?>"><?= _("Stud.IP-intern") ?></option>
+                                <option value="<?= VISIBILITY_EXTERN; ?>"><?= _("externe Seiten") ?></option>
+                            </select>
+                        </td>
+                        <td class="steel1" colspan="3">
+                            <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_all_homepage_visibility'); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th width="'40%'"><?= _('Profil-Element'); ?></th>
+                        <th colspan="<?= $user_domains ? 5 : 4; ?>" align="center"><?= _('sichtbar für'); ?></th>
                     </tr>
                     <tr class="steelgraulight">
                         <td width="40%">&nbsp;</td>
-                        <td align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><i><?php echo _('nur mich selbst'); ?></i></td>
-                        <td align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><i><?php echo _('Buddies'); ?></i></td>
+                        <td align="center" width="<?= $user_domains ? '12%' : '15%'; ?>"><i><?= _('nur mich selbst'); ?></i></td>
+                        <td align="center" width="<?= $user_domains ? '12%' : '15%'; ?>"><i><?= _('Buddies'); ?></i></td>
                         <?php if ($user_domains) { ?>
-                        <td align="center" width="12%"><i><?php echo _('Nutzerdomäne'); ?></i></td>
+                        <td align="center" width="12%"><i><?= _('Nutzerdomäne'); ?></i></td>
                         <?php } ?>
-                        <td align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><i><?php echo _('Stud.IP-intern'); ?></i></td>
-                        <td align="center" width="<?php echo $user_domains ? '12%' : '15%'; ?>"><i><?php echo _('externe Seiten'); ?></i></td>
+                        <td align="center" width="<?= $user_domains ? '12%' : '15%'; ?>"><i><?= _('Stud.IP-intern'); ?></i></td>
+                        <td align="center" width="<?= $user_domains ? '12%' : '15%'; ?>"><i><?= _('externe Seiten'); ?></i></td>
                     </tr>
                     <?php foreach ($homepage_elements as $category => $elements) { ?>
                     <tr class="blue_gradient">
-                        <td colspan="<?php echo $user_domains ? 6 : 5; ?>">
-                            <?php echo $category; ?>
+                        <td colspan="<?= $user_domains ? 6 : 5; ?>">
+                            <?= $category; ?>
                         </td>
                     </tr>
                     <?php foreach ($elements as $key => $element) { ?>
                     <tr class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>">
-                        <td><?php echo $element['name']; ?>
+                        <td><?= $element['name']; ?></td>
                         <td align="center">
-                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_ME; ?>"<?php echo ($element['visibility'] == VISIBILITY_ME) ? ' checked="checked"' : ''; ?>>
+                            <input type="radio" name="<?= $key; ?>" value="<?= VISIBILITY_ME; ?>"<?= ($element['visibility'] == VISIBILITY_ME) ? ' checked="checked"' : ''; ?>>
                         </td>
                         <td align="center">
-                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_BUDDIES; ?>"<?php echo ($element['visibility'] == VISIBILITY_BUDDIES) ? ' checked="checked"' : ''; ?>>
+                            <input type="radio" name="<?= $key; ?>" value="<?= VISIBILITY_BUDDIES; ?>"<?= ($element['visibility'] == VISIBILITY_BUDDIES) ? ' checked="checked"' : ''; ?>>
                         </td>
                         <?php if ($user_domains) { ?>
                         <td align="center">
-                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_DOMAIN; ?>"<?php echo ($element['visibility'] == VISIBILITY_DOMAIN) ? ' checked="checked"' : ''; ?>>
+                            <input type="radio" name="<?= $key; ?>" value="<?= VISIBILITY_DOMAIN; ?>"<?= ($element['visibility'] == VISIBILITY_DOMAIN) ? ' checked="checked"' : ''; ?>>
                         </td>
                         <?php } ?>
                         <td align="center">
-                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_STUDIP; ?>"<?php echo ($element['visibility'] == VISIBILITY_STUDIP) ? ' checked="checked"' : ''; ?>>
+                            <input type="radio" name="<?= $key; ?>" value="<?= VISIBILITY_STUDIP; ?>"<?= ($element['visibility'] == VISIBILITY_STUDIP) ? ' checked="checked"' : ''; ?>>
                         </td>
                         <td align="center">
-                            <input type="radio" name="<?php echo $key; ?>" value="<?php echo VISIBILITY_EXTERN; ?>"<?php echo ($element['visibility'] == VISIBILITY_EXTERN) ? ' checked="checked"' : ''; ?>>
+                            <input type="radio" name="<?= $key; ?>" value="<?= VISIBILITY_EXTERN; ?>"<?= ($element['visibility'] == VISIBILITY_EXTERN) ? ' checked="checked"' : ''; ?>>
                         </td>
                     </tr>
                     <?php
@@ -184,9 +201,9 @@
                         }
                     ?>
                     <tr class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>">
-                        <td colspan="<?php echo $user_domains ? 6 : 5; ?>">
+                        <td colspan="<?= $user_domains ? 6 : 5; ?>">
                             <input type="hidden" name="view" value="privacy">
-                            <?php echo makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'change_homepage_visibility'); ?>
+                            <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'change_homepage_visibility'); ?>
                         </td>
                     </tr>
                 </table>

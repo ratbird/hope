@@ -555,7 +555,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     $this->flash['request'] = Request::getInstance();
 
                 }
-                if (Request::get('choose_member') || Request::get('add_member_x')) {
+                if (Request::get('choose_member') && Request::get('add_member_x')) {
                     $msg = new Messaging();
                     $receiver = Request::get('choose_member');
                     $sem = new Seminar($id);

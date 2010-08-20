@@ -87,7 +87,7 @@ class Step00191ModulesEnable extends Migration
 
         //moving
         foreach ($this->modules as $module) {
-            $db->exec("DELETE FROM `config` WHERE `field` = {$module['field']}");
+            $db->exec("DELETE FROM `config` WHERE `field` = '" . $module['field'] . "'");
         }
 
         //new

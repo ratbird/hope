@@ -696,8 +696,8 @@ class UserManagement
 
           if (is_array($groups = $stmt->fetchAll())) {
             foreach($groups as $group) {
+                $sem = Seminar::GetInstance($group['Seminar_id']);
                 if (StudygroupModel::countMembers($group['Seminar_id']) > 1) {
-                    $sem = new Seminar($group['Seminar_id']);
                     // check whether there are tutors or even autors that can be promoted
                     $tutors = $sem->getMembers('tutor');
                     $autors = $sem->getMembers('autor');
@@ -712,12 +712,11 @@ class UserManagement
                         StudygroupModel::promote_user($new_founder['username'], $sem->getId(), 'dozent');
                         continue;
                     }
-                    // since no suitable successor was found, we are allowed to remove the studygroup
-                    else {
-                        $sem->delete();
-                    }
-                    unset($sem);
+                // since no suitable successor was found, we are allowed to remove the studygroup    
+                } else {
+                    $sem->delete();
                 }
+                unset($sem);
             }
           }
         }

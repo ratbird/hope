@@ -376,7 +376,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 StudygroupModel::promote_user($old_dozent['uname'],$id,'tutor');
 
                 // add new founder
-                $new_founder = Request::get('choose_founder');
+                $new_founder = Request::quoted('choose_founder');
                 StudygroupModel::promote_user(get_username($new_founder), $id,'dozent');
             }
 

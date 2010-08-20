@@ -58,7 +58,7 @@ $infobox['content'] = array(
   <td><textarea name='groupdescription' rows=5 cols=50><?= htmlReady($sem->description) ?></textarea></td>
 </tr>
 
-<? if ($GLOBALS['perm']->have_studip_perm('dozent', $sem_id) || true) : ?>
+<? if ($GLOBALS['perm']->have_studip_perm('dozent', $sem_id)) : ?>
     <?= $this->render_partial("course/studygroup/_replace_founder", array('tutors' => $tutors)) ?>
 <? endif; ?>
 

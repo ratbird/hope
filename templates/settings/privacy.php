@@ -119,6 +119,7 @@
                             <b><?php echo _('eigenes Profil'); ?></b>
                         </td>
                     </tr>
+                    <tr>
                         <td class="steel1" colspan="<?php echo $user_domains ? 6 : 5; ?>">
                             <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('cmd' => 'change_all_homepage_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
                                     <?php echo _('alle Sichtbarkeiten setzen auf'); ?>
@@ -136,6 +137,7 @@
                                     <?php echo makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_all_homepage_visibility'); ?>
                             </form>
                         </td>
+                    </tr>
                     <tr>
                         <th width="'40%'"><?php echo _('Profil-Element'); ?></th>
                         <th colspan="<?php echo $user_domains ? 5 : 4; ?>" align="center"><?php echo _('sichtbar für'); ?></th>

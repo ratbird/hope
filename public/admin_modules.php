@@ -56,7 +56,7 @@ $sess->register("plugin_toggle");
 
 
 PageLayout::setTitle(_("Verwaltung verwendeter Module und Plugins"));
-if (Request::get('section') == 'modules') {
+if (Request::get('section') == 'modules' && $SessSemName['class'] == 'sem') {
     UrlHelper::bindLinkParam('section', $section);
     Navigation::activateItem('/course/modules');
 } else {

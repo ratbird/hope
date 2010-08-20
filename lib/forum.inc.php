@@ -612,8 +612,8 @@ function forum_get_buttons ($forumposting) {
     { if (!(have_sem_write_perm())) { // nur mit Rechten...
         if ($view=="search") $tmp = "&view=tree";
         if ($view=="mixed") $tmp = "&open=".$forumposting["id"]."&view=flatfolder";
-            $edit = "<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&flatviewstartposting=0&sort=age".$tmp."#anker")."\">&nbsp;" . makeButton("antworten", "img") . "</a>";
-            $edit .= "<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=TRUE&flatviewstartposting=0&sort=age".$tmp."#anker")."\">&nbsp;" . makeButton("zitieren", "img") . "</a>";
+            $edit = "<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&flatviewstartposting=0&shrinkopen=".$forumposting["rootid"]."&sort=age".$tmp."#anker")."\">&nbsp;" . makeButton("antworten", "img") . "</a>";
+            $edit .= "<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=TRUE&flatviewstartposting=0&shrinkopen=".$forumposting["rootid"]."&sort=age".$tmp."#anker")."\">&nbsp;" . makeButton("zitieren", "img") . "</a>";
             if ($forumposting["lonely"]==TRUE && ($rechte || $forumposting["perms"]=="write")) // ich darf bearbeiten
                 $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?edit_id=".$forumposting["id"]."&view=".$forum["view"]."&flatviewstartposting=".$forum["flatviewstartposting"]."#anker")."\">"
                 . makeButton("bearbeiten", "img") . "</a>";

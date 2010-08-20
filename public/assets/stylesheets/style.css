@@ -73,7 +73,7 @@ h2.topic, h3.topic {
 }
 
 .topic img {
-	vertical-align: middle; /* for the topic-icons */
+    vertical-align: middle; /* for the topic-icons */
 }
 
 /* --- Links ---------------------------------------------------------------- */
@@ -139,7 +139,7 @@ table.infobox td {
 
 /* prevent line box gap, see https://developer.mozilla.org/en/Images%2c_Tables%2c_and_Mysterious_Gaps */
 td.infobox-img img {
-	display: block;
+    display: block;
 }
 
 td.infobox-avatar {
@@ -307,21 +307,21 @@ table.collapsable tbody.empty tr:first-child td:first-child {
 }
 
 table.collapsable tbody tr:first-child td:first-child {
-	color: #000;
+    color: #000;
     font-weight: bold;
     padding-left: 0;
 }
 
 table.collapsable tbody tr:first-child td:first-child a {
     background: transparent url(../images/icons/16/blue/arr_1down.png) 2px no-repeat;
-	color: #000;
+    color: #000;
 }
 
 table.collapsable tbody.collapsed tr:first-child td:first-child a {
     background-image: url(../images/icons/16/blue/arr_1right.png);
     background-position: 4px -6px;
-	color: #000;
-	font-weight: normal;
+    color: #000;
+    font-weight: normal;
 }
 
 table.collapsable tbody.empty tr:first-child td:first-child {
@@ -333,11 +333,11 @@ table tr.loaded-details > td {
     padding: 0 20px 5px 20px;
 }
 table tr.loaded-details td table {
-	border: 1px solid #888;
-	border-top: 0;
+    border: 1px solid #888;
+    border-top: 0;
 }
 table tr.loaded-details td:first-child tr:first-child td:first-child {
-	font-weight: normal;
+    font-weight: normal;
 }
 table.collapsable tr.loaded-details td:first-child tr:first-child td:first-child {
     padding-left: 20px;
@@ -759,18 +759,18 @@ td.index_box_cell {
 
 /* --- Inhaltsverzeichnis Wikis --------------------------------------------- */
 div.wikitoc {
-        font-size: 1em;
-        margin-bottom: 5px;
+    font-size: 1em;
+    margin-bottom: 5px;
 }
 
 div.wikitoc_editlink {
-        font-size: 1em;
-        padding-top: 5px;
-        margin-bottom: -10px;
+    font-size: 1em;
+    padding-top: 5px;
+    margin-bottom: -10px;
 }
 
 span.wikitoc_editlink {
-        font-size: 75%;
+    font-size: 75%;
 }
 
 span.wikitoc_toggler {
@@ -778,46 +778,46 @@ span.wikitoc_toggler {
 }
 
 div.wikitoc h4 {
-        font-size:1em;
-        margin:0px;
-        margin-left:-10px;
-        color:black;
+    font-size:1em;
+    margin:0px;
+    margin-left:-10px;
+    color:black;
 }
 div.wikitoc h3 {
-        font-size:1em;
-        margin:0px;
-        margin-left:-10px;
-        color:black;
+    font-size:1em;
+    margin:0px;
+    margin-left:-10px;
+    color:black;
 }
 div.wikitoc h2 {
-        font-size:1em;
-        margin:0px;
-        margin-left:-10px;
-        color:black;
+    font-size:1em;
+    margin:0px;
+    margin-left:-10px;
+    color:black;
 }
 div.wikitoc h1 {
-        font-size:1em;
-        margin:0px;
-        margin-left:-10px;
-        color:black;
+    font-size:1em;
+    margin:0px;
+    margin-left:-10px;
+    color:black;
 }
 div.wikitoc ul ul ul ul {
-        list-style: none;
-        padding-left:30px;
+    list-style: none;
+    padding-left:30px;
 }
 div.wikitoc ul ul ul {
-        list-style: none;
-        padding-left:20px;
+    list-style: none;
+    padding-left:20px;
 }
 div.wikitoc ul ul {
-        list-style: none;
-        padding-left:10px;
+    list-style: none;
+    padding-left:10px;
 }
 div.wikitoc ul {
-        list-style: none;
-        padding-left:0px;
-        margin-top:0px;
-        margin-bottom:0px;
+    list-style: none;
+    padding-left:0px;
+    margin-top:0px;
+    margin-bottom:0px;
 }
 
 /* --- AJAX indicator ------------------------------------------------------- */
@@ -837,7 +837,7 @@ div.wikitoc ul {
     padding-top: 5px;
 }
 #ajax_notification img {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 .ajax_notification {
   position: relative;
@@ -1354,13 +1354,13 @@ img.plugin_preview {
 }
 
 #schedule {
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 #schedule_headings {
-	margin-left: 41px;
-	background-color: #E8EEF7;
+    margin-left: 41px;
+    background-color: #E8EEF7;
 }
 
 #schedule_empty_entry dl {
@@ -1373,7 +1373,7 @@ img.plugin_preview {
 }
 
 table.schedule_headings td {
-	background-color: #E8EEF7;
+    background-color: #E8EEF7;
 }
 
 div.schedule_day {
@@ -1396,88 +1396,88 @@ div.schedule_hours {
 }
 
 div.schedule_entry {
-	position: absolute;
-	margin: 0;
-	padding: 0;
-	overflow: hidden; 
-	padding-bottom: 2px;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+    padding-bottom: 2px;
 }
 
 div.schedule_entry dl {
-	color: white;
-	height: 100%; 
-	margin: 0px;
-	-moz-border-radius: 3px;
+    color: white;
+    height: 100%; 
+    margin: 0px;
+    -moz-border-radius: 3px;
 }
 
 div.schedule_entry dl.hover:hover  {
-	opacity: 0.7;
+    opacity: 0.7;
 }
 
 div.schedule_entry dl dt {
-	-moz-border-radius-topleft: 3px;
-	-moz-border-radius-topright: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
 }
 
 div.schedule_entry dl dd {
-	margin: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
     padding: 2px;
-	overflow: hidden;
-	word-wrap: break-word;
+    overflow: hidden;
+    word-wrap: break-word;
 }
 
 div.schedule_entry dl a {
-	color: white;
+    color: white;
 }
 
 div.schedule_entry dl a:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 div.snatch {
-	position: absolute;
-	bottom: 4px;
-	text-align: center;
-	width: 100%;
-	cursor: ns-resize;
-	padding-bottom: 2px;
+    position: absolute;
+    bottom: 4px;
+    text-align: center;
+    width: 100%;
+    cursor: ns-resize;
+    padding-bottom: 2px;
 }
 
 div.snatch div {
-	border-top: 3px double white;
-	margin-left: auto;
-	margin-right: auto;
-	cursor: ns-resize;
-	height: 0px; 
-	width: 10px;
+    border-top: 3px double white;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: ns-resize;
+    height: 0px; 
+    width: 10px;
 }
 
 #schedule_new_entry {
-	position: absolute;
-	border: 2px solid #E0E0F0;
-	width: 400px;
-	height: 230px;
-	background-color: #E8EEF7;
-	-moz-border-radius: 10px;
-	font-size: 12pt;
+    position: absolute;
+    border: 2px solid #E0E0F0;
+    width: 400px;
+    height: 230px;
+    background-color: #E8EEF7;
+    -moz-border-radius: 10px;
+    font-size: 12pt;
 }
 
 div.schedule_edit_entry {
-	position: absolute;
+    position: absolute;
 
-	left: 50%;
-	top: 180px;
-	margin-left: -25%;
-	min-height: 15em;
+    left: 50%;
+    top: 180px;
+    margin-left: -25%;
+    min-height: 15em;
     max-height: 80em;
     height: auto;
-	width: 50%;
+    width: 50%;
 
     padding-bottom: 1em;
 
-	background-color: #E8EEF7;
-	border: 2px solid #E0E0F0;
-	-moz-border-radius: 10px;
+    background-color: #E8EEF7;
+    border: 2px solid #E0E0F0;
+    -moz-border-radius: 10px;
     z-index: 10;
 }
 
@@ -1488,13 +1488,13 @@ div.schedule_edit_entry > form {
 }
 
 div.window_heading {
-	font-size: 12pt;
-	font-weight: bold;
-	text-align: center;
+    font-size: 12pt;
+    font-weight: bold;
+    text-align: center;
     background-image: url(../images/fill1.gif);
-	-moz-border-radius-topleft: 10px;
-	-moz-border-radius-topright: 10px;
-	color: white;
+    -moz-border-radius-topleft: 10px;
+    -moz-border-radius-topright: 10px;
+    color: white;
 }
 
 #color_picker {

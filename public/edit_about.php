@@ -303,7 +303,7 @@ if (check_ticket($studipticket)) {
         UserConfig::get($user->id)->store('SHOWSEM_ENABLE', (int)$_REQUEST['showsem_enable']);
     }
 
-    if ($cmd == 'change_global_visibility') {
+    if (Request::submitted('change_global_visibility')) {
         $success = $my_about->change_global_visibility($global_visibility, $online, $chat, $search, $email);
         if ($success) {
             $my_about->msg .= 'msg§'._('Ihre Sichtbarkeitseinstellungen wurden gespeichert.');
@@ -312,9 +312,9 @@ if (check_ticket($studipticket)) {
         }
     }
 
-    if ($cmd == 'change_all_homepage_visibility') {
-        if ($_REQUEST['all_homepage_visibility']) {
-            $success = $my_about->change_all_homepage_visibility($_REQUEST['all_homepage_visibility']);
+    if (Request::submitted('set_all_homepage_visibility')) {
+        if (Request::get('all_homepage_visibility')) {
+            $success = $my_about->change_all_homepage_visibility(Request::int('all_homepage_visibility'));
             if ($success) {
                 $my_about->msg .= 'msg§'._('Die Sichtbarkeit der Profilelemente wurde gespeichert.');
             } else {
@@ -325,7 +325,7 @@ if (check_ticket($studipticket)) {
         }
     }
 
-    if ($cmd == 'change_homepage_visibility') {
+    if (Request::submitted('change_homepage_visibility')) {
         $data = $_POST;
         unset($data["change_homepage_visibility_x"]);
         unset($data["change_homepage_visibility_y"]);

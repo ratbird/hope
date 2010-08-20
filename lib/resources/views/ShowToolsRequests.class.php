@@ -499,8 +499,8 @@ class ShowToolsRequests
                             if ($request_resource_id = $reqObj->getResourceId()) {
                                 $resObj = ResourceObject::Factory($request_resource_id);
                                 print $resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
-                                print ' <img class="text-top" src="' . Assets::image_path(($this->isGlobal($request_resource_id)) ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
-                                if ($this->isGlobal($request_resource_id)) {
+                                print ' <img class="text-top" src="' . Assets::image_path(($resObj->getOwnerId() == 'global') ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                if ($resObj->getOwnerId() == 'global') {
                                     print ' [global]';
                                 }
                             } else
@@ -607,8 +607,8 @@ class ShowToolsRequests
                                 <?
                                 $resObj = ResourceObject::Factory($key);
                                 print $resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
-                                print ' <img class="text-top" src="' . Assets::image_path(($this->isGlobal($key)) ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
-                                if ($this->isGlobal($key)) {
+                                print ' <img class="text-top" src="' . Assets::image_path(($resObj->getOwnerId() == 'global') ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                if ($resObj->getOwnerId() == 'global') {
                                     print ' [global]';
                                 }
                             ?>
@@ -700,8 +700,8 @@ class ShowToolsRequests
                                 <?
                                 $resObj = ResourceObject::Factory($key);
                                 print $resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
-                                print ' <img class="text-top" src="' . Assets::image_path(($this->isGlobal($key)) ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
-                                if ($this->isGlobal($key)) {
+                                print ' <img class="text-top" src="' . Assets::image_path(($resObj->getOwnerId() == 'global') ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                if ($resObj->getOwnerId() == 'global') {
                                     print ' [global]';
                                 }
                             ?>
@@ -802,8 +802,8 @@ class ShowToolsRequests
                                 <?
                                 $resObj = ResourceObject::Factory($key);
                                 print $resObj->getFormattedLink($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["first_event"]);
-                                print ' <img class="text-top" src="' . Assets::image_path(($this->isGlobal($key)) ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
-                                if ($this->isGlobal($key)) {
+                                print ' <img class="text-top" src="' . Assets::image_path(($resObj->getOwnerId() == 'global') ? 'icons/16/red/info-circle.png' : 'icons/16/grey/info-circle.png') . '" ' . tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObj->getPlainProperties(TRUE), TRUE, TRUE). '>';
+                                if ($resObj->getOwnerId() == 'global') {
                                     print ' [global]';
                                 }
                             ?>
@@ -1074,20 +1074,4 @@ class ShowToolsRequests
         }
         return array("html"=>$html, "status"=>$status);
     }
-
-    /**
-     * Return a different icon-name for a resource depending on the owner_id
-     *
-     * @param string $resource_id
-     * return boolean
-     */
-    private function isGlobal($resource_id)
-    {
-        $owner_id = DBManager::get()->query("SELECT owner_id from resources_objects WHERE resource_id='".$resource_id."'")->fetchColumn();
-        if ($owner_id == '"global') {
-            return true;
-        }
-        return false;
-    }
-
 }

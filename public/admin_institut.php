@@ -325,7 +325,7 @@ while ( is_array($_REQUEST)
         closeObject();
         break;
     case 'i_trykill_x':
-        $message = "Sind Sie sicher, dass Sie diese Einrichtung löschen wollen?";
+        $message = _("Sind Sie sicher, dass Sie diese Einrichtung löschen wollen?");
         $post['i_id'] = Request::option('i_id');
         $post['i_kill_x'] = 1;
         $post['Name'] = Request::get('Name');

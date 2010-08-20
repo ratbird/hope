@@ -112,7 +112,13 @@ function get_vis_query($table_alias = 'auth_user_md5', $context='') {
     if ($perm->have_perm("root")) return "1";
 
     $my_domains = UserDomain::getUserDomainsForUser($auth->auth['uid']);
-    $query = "$table_alias.visible = 'global'";
+    $query = "($table_alias.visible = 'global'";
+
+    if ($context) {
+        $query .= " AND user_visibility.$context = 1)";
+    } else {
+        $query .= ")";
+    }
 
     foreach ($my_domains as $domain) {
         $my_domain_ids[] = $domain->getID();
@@ -134,7 +140,13 @@ function get_vis_query($table_alias = 'auth_user_md5', $context='') {
     }
 
     if (get_config('USER_VISIBILITY_UNKNOWN')) {
-        $query .= " OR $table_alias.visible = 'unknown'";
+        $query .= " OR ($table_alias.visible = 'unknown'";
+    }
+
+    if ($context) {
+        $query .= " AND user_visibility.$context = 1)";
+    } else {
+        $query .= ")";
     }
 
     $query .= ")";

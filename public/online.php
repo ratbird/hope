@@ -67,10 +67,19 @@ $alle=count($kompletter_datensatz);
 
 //Only use visible users
 $visible_users=array();
+$myDomains = UserDomain::getUserDomainsForUser($user->id);
 
 foreach($kompletter_datensatz as $key=>$val){
-    if($val['is_visible']){
-        $visible_users[$key]=$val;
+    $global_visibility = get_global_visibility_by_id($val['userid']);
+    $domains = UserDomain::getUserDomainsForUser($val['userid']);
+    if (count($domains) && $global_visibility == 'yes') {
+        if (array_intersect($myDomains, $domains) && $val['is_visible']) {
+            $visible_users[$key]=$val;
+        }
+    } else {
+        if($val['is_visible']){
+            $visible_users[$key]=$val;
+        }
     }
 }
 

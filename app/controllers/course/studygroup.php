@@ -781,13 +781,12 @@ class Course_StudygroupController extends AuthenticatedController {
 
     function message_action($id)
     {
-        $sem        = new Seminar($id);
-        $source     = 'dispatch.php/course/studygroup/member/' . $id;
+        $sem         = Seminar::GetInstance($id);
+        $source      = 'dispatch.php/course/studygroup/member/' . $id;
         if (strlen($sem->getName()) > 32) //cut subject if to long
-            $subject = sprintf(_("[Studiengruppe: %s...]"),substr($sem->getName(), 0, 30));
+            $subject = sprintf(_("[Studiengruppe: %s...]"),studip_substr($sem->getName(), 0, 30));
         else
             $subject = sprintf(_("[Studiengruppe: %s]"),$sem->getName());
-
 
         $this->redirect(URLHelper::getURL('sms_send.php', array('sms_source_page' => $source, 'course_id' => $id, 'emailrequest' => 1, 'subject' => $subject, 'filter' => 'all')));
     }

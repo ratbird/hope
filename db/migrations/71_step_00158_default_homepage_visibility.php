@@ -13,7 +13,7 @@ class Step00158DefaultHomepageVisibility extends Migration
     function up()
     {
         $db = DBManager::get();
-        $query = $db->exec("ALTER TABLE `user_visibility` ADD `default_homepage_visiblity` INT NOT NULL DEFAULT 0 AFTER `homepage` ");
+        $query = $db->exec("ALTER TABLE `user_visibility` ADD `default_homepage_visibility` INT NOT NULL DEFAULT 0 AFTER `homepage` ");
     }
 
     function down()

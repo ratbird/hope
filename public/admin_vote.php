@@ -60,9 +60,9 @@ if (Request::get('section') == 'votings') {
         if ($view_mode == "fak"){
             $view_mode = "inst";
         }
-        if ($links_admin_data['topkat'] == 'sem') {
+        if ($links_admin_data['topkat'] == 'sem' && !SeminarCategories::getByTypeId($SessSemName['art_num'])->studygroup_mode) {
             Navigation::activateItem('/admin/course/vote');
-        } else {
+        } elseif  ($links_admin_data['topkat'] == 'inst') {
             Navigation::activateItem('/admin/institute/vote');
         }
     } else {

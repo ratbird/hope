@@ -34,7 +34,7 @@ if(isset($flash['question']) && isset($flash['candidate'])) {
     $dialog = $GLOBALS['template_factory']->open('shared/question');
     echo $this->render_partial($dialog,array(
                         "question" => $flash['question'], 
-                        "approvalLink" => $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$flash['candidate'].'/remove_approved//' . get_ticket()), 
+                        "approvalLink" => $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$flash['candidate'].'/remove_approved/todo/' . get_ticket()), 
                         "disapprovalLink" => $controller->url_for('course/studygroup/members/'.$sem_id.'/'.$page)
                     ));
 }

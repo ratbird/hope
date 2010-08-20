@@ -237,14 +237,23 @@ class StudygroupModel
 
     /**
      * retrieves the count of all studygroups
+     * 
+     *  param string search a filter term
      *
      * @return string count
      */
-    function countGroups()
+    function countGroups($search = null)
     {
         $status = studygroup_sem_types();
-
-        return DBManager::get()->query("SELECT COUNT(*) as c FROM seminare WHERE status IN ('" . implode("','", $status) . "')")->fetchColumn();
+		
+        $sql = "SELECT COUNT(*) as c FROM seminare WHERE status IN ('" . implode("','", $status) . "')";
+    	
+        if (isset($search)) {
+            $search = DBManager::get()->quote('%' . $search . '%');
+            $sql .= " AND seminare.Name LIKE {$search}";
+        }
+        
+        return DBManager::get()->query($sql)->fetchColumn();
     }
 
     /**
@@ -285,22 +294,25 @@ class StudygroupModel
             $sql = "SELECT s.*, (SELECT COUNT(*) FROM seminar_user as su "
                  . "WHERE s.Seminar_id = su.Seminar_id) as countsems "
                  . "FROM seminare as s "
-                 . "WHERE s.status IN ('". implode("','", $status)."') "
-                 . "ORDER BY countsems $sort_order";
+                 . "WHERE s.status IN ('". implode("','", $status)."') ";
+            if(!empty($search)) $sql.= "AND s.Name LIKE {$search} ";
+            $sql .= "ORDER BY countsems $sort_order";
         }
         elseif ($sort == 'founder_asc' || $sort == 'founder_desc') {
             $sql = "SELECT s.* FROM seminare as s "
                  . "LEFT JOIN seminar_user as su ON s.Seminar_id = su.Seminar_id AND su.status = 'dozent' "
                  . "LEFT JOIN auth_user_md5 as aum ON su.user_id = aum.user_id "
-                 . "WHERE s.status IN ('". implode("','", $status)."') "
-                 . "ORDER BY aum.Nachname ". $sort_order;
+                 . "WHERE s.status IN ('". implode("','", $status)."') ";
+            if(!empty($search)) $sql.= "AND s.Name LIKE {$search} ";
+            $sql     .= "ORDER BY aum.Nachname ". $sort_order;
         }
         elseif ($sort == 'ismember_asc' || $sort == 'ismember_desc') {
             $sql = "SELECT s.*, "
                  . "( SELECT su.user_id FROM seminar_user AS su WHERE su.user_id = '".$GLOBALS['user']->id."' AND su.Seminar_id = s.Seminar_id ) "
                  . "AS ismember FROM seminare AS s  "
-                 . "WHERE s.status IN ('". implode("','", $status)."') "
-                 . "ORDER BY `ismember`". $sort_order;
+                 . "WHERE s.status IN ('". implode("','", $status)."') ";
+           if(!empty($search)) $sql.= "AND s.Name LIKE {$search} ";
+           $sql  .= "ORDER BY `ismember`". $sort_order;
 
         }
         elseif ($sort == 'access_asc') {

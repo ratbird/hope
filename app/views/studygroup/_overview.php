@@ -41,7 +41,7 @@
         <? foreach ($groups as $group) : ?>
             <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
                 <td>
-                   <img src="<?=StudygroupAvatar::getAvatar($group['Seminar_id'])->getUrl(Avatar::SMALL);?>" style="vertical-align:middle;">
+                   <?=StudygroupAvatar::getAvatar($group['Seminar_id'])->getImageTag(Avatar::SMALL);?>
                 </td>
                 <td style="text-align:left;">
                     <? if (StudygroupModel::isMember($this->userid,$group['Seminar_id'] )): ?>

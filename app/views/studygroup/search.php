@@ -1,8 +1,7 @@
 <?php
 require_once 'lib/classes/StudygroupAvatar.class.php';
-require_once 'lib/classes/Avatar.class.php';
 
-$infobox = array();
+
 $infobox['picture'] = 'infobox/studygroup.jpg';
 $infobox['content'] = array(
     array(
@@ -12,43 +11,22 @@ $infobox['content'] = array(
         )
     )
 );
-
-URLHelper::removeLinkParam('cid');
-list($sort_type, $sort_order) = explode('_', $sort);
-
-?>
-
-<?= $this->render_partial("course/studygroup/_feedback") ?>
-
-<style>
-.sortasc {
-  background-image: url(<?=Assets::image_path('dreieck_up.png')?>);
-  background-repeat:no-repeat;
-  background-position:center right;
-}
-.sortdesc {
-  background-image: url(<?=Assets::image_path('dreieck_down.png')?>);
-  background-repeat:no-repeat;
-  background-position:center right;
-}
-th {
-  background: none;
-  padding: 2px 15px 2px 15px;
-  text-align:center;
-}
-</style>
-<?
-    $sort_url =$controller->url_for("studygroup/search/{$page}/");
-    $link = "dispatch.php/studygroup/search/%s/".$sort;
+$sort_url = $controller->url_for("studygroup/search/1/");
+$link = "dispatch.php/studygroup/search/%s/".$sort;
 
 ?>
 <form action="<?= $controller->url_for('studygroup/search') ?>" method=post>
-    <?
-     $searchbox = $GLOBALS['template_factory']->open('shared/searchbox');
-     echo $this->render_partial($searchbox);
-    ?>
+	<div class="search_box" align="center">
+        <input name="searchtext" type="text" size="45" style="vertical-align: middle;" value="<?=$search?>" />
+        <input type="image" <?= makeButton('suchestarten','src')?> style="vertical-align: middle;"/>
+         <a href="<?=URLHelper::getLink('',array('action' => 'deny'))?>">
+            <?= makeButton('zuruecksetzen', 'img', _('Suche zur¸cksetzen')) ?>
+        </a>
+	</div>
 </form>
 <br>
+
+<?= $this->render_partial("course/studygroup/_feedback") ?>
 
 <? if ($anzahl >= 1):?>
     <?=$this->render_partial("studygroup/_overview", array('sort_url' => $sort_url, 'link' => $link))?>

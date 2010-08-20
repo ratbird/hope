@@ -12,32 +12,8 @@ $infobox['content'] = array(
         )
     )
 );
-
-URLHelper::removeLinkParam('cid');
-list($sort_type, $sort_order) = explode('_', $sort);
-
-?>
-
-<style>
-.sortasc {
-  background-image: url(<?=Assets::image_path('dreieck_up.png')?>);
-  background-repeat:no-repeat;
-  background-position:center right;
-}
-.sortdesc {
-  background-image: url(<?=Assets::image_path('dreieck_down.png')?>);
-  background-repeat:no-repeat;
-  background-position:center right;
-}
-th {
-  background: none;
-  padding: 2px 15px 2px 15px;
-  text-align:center;
-}
-</style>
-<?
-    $sort_url =$controller->url_for('studygroup/browse/1/');
-    $link = "dispatch.php/studygroup/browse/%s/".$sort;
+$sort_url =$controller->url_for('studygroup/browse/1/');
+$link = "dispatch.php/studygroup/browse/%s/".$sort;
 ?>
 <?=$this->render_partial("studygroup/_overview", array('sort_url' => $sort_url, 'link' => $link))?>
 

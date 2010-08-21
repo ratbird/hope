@@ -43,8 +43,15 @@ $infobox['content'] = array(
 <?= $this->render_partial("course/studygroup/_feedback") ?>
 <h1><?= _("Studiengruppe bearbeiten") ?></h1>
 
-<form action="<?= $controller->url_for('course/studygroup/update/'.$sem_id) ?>" method=post>
+<? if ($deactivate_modules_names): ?>
+	<?= createQuestion(_("Möchten Sie folgende Module wirklich deaktivieren? Vorhandene Inhalte werden in der Regel dabei gelöscht. ")."\n".
+	           $deactivate_modules_names,
+	           array("really_deactivate" => "1"), 
+	           array("abort_deactivate" => "1"), 
+	           $controller->url_for('course/studygroup/update/'.$sem_id)); ?>
+<?php  endif; ?>
 
+<form action="<?= $controller->url_for('course/studygroup/update/'.$sem_id) ?>" method=post>
 
 <table class="blank" width="75%" cellspacing="5" cellpadding="0" border="0">
 
@@ -89,7 +96,7 @@ $infobox['content'] = array(
   <td style='text-align:right;'>Zugang:</td>
   <td>
       <select size=0 name="groupaccess">
-          <option <?= ($sem->admission_prelim == 0) ? 'selected="selected"':'' ?> value="all">Offen für alle
+          <option <?= ($sem->admission_prelim == 0) ? 'selected="selected"':'' ?> value="all">Offen fï¿½r alle
          <option <?= ($sem->admission_prelim == 1) ? 'selected="selected"':'' ?> value="invite">Auf Anfrage
       </select>
   </td>

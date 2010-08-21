@@ -473,7 +473,7 @@ class StudipLitListViewAdmin extends TreeView{
             }
             if ($item_id != "root"){
                 $head .= "&nbsp;<a href=\"" . $this->getSelf("cmd=ToggleVisibility&item_id={$item_id}") . "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/";
-                $head .= ($this->tree->tree_data[$item_id]['visibility']) ? "icons/16/blue/visibility-visible.png" : "icons/16/blue/visibility-visible.png";
+                $head .= ($this->tree->tree_data[$item_id]['visibility']) ? "icons/16/blue/visibility-visible.png" : "icons/16/blue/visibility-invisible.png";
                 $head .= "\" border=\"0\" " . tooltip(_("Sichtbarkeit ändern")) . "></a>";
             }
         } else {

@@ -1,13 +1,23 @@
 <?php
-
+$icon = 'link_intern.gif';
 if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId())) {
-    $participate_link = '<a href="'. UrlHelper::getLink('seminar_main.php?auswahl='. $studygroup->getId()) .'">%s</a>';
-    $participate = sprintf($participate_link, _("Direkt zur Studiengruppe"));
-} else if ($membership_requested) {
-    $participate = _("Mitgliedschaft bereits beantragt!");
+	$action = _("Persönlicher Status:");
+    if ($membership_requested) {
+        $infotext= _("Mitgliedschaft bereits beantragt!");
+    } else {
+        $infolink = '<a href="'. UrlHelper::getLink('seminar_main.php?auswahl='. $studygroup->getId()) .'">%s</a>';
+        $infotext= sprintf($infolink, _("Direkt zur Studiengruppe"));
+    }
+} else if ($GLOBALS['perm']->have_perm('admin')) {
+        $action = _("Hinweis:");
+        $infotext= '<font color = red>' . _('Sie sind einE AdministratorIn und können sich daher nicht für Studiengruppen anmelden.') . '</font>';
+        $icon = 'icons/16/red/decline.png';
+
+
 } else {
-    $participate_link = '<a href="'. UrlHelper::getLink('sem_verify.php?id='. $studygroup->getId()) .'">%s</a>';
-    $participate = sprintf( $participate_link, $studygroup->admission_prelim ? _("Mitgliedschaft beantragen") : _("Studiengruppe beitreten"));
+	$action = _("Aktionen:");
+    $infolink = '<a href="'. UrlHelper::getLink('sem_verify.php?id='. $studygroup->getId()) .'">%s</a>';
+    $infotext= sprintf( $infolink, $studygroup->admission_prelim ? _("Mitgliedschaft beantragen") : _("Studiengruppe beitreten"));
 }
 
 $all_mods = $studygroup->getMembers('dozent') + $studygroup->getMembers('tutor');
@@ -32,11 +42,11 @@ $infobox['content'] = array(
         )
     ),
     array(
-        'kategorie' => _("Aktionen"),
+        'kategorie' => $action,
         'eintrag'   => array(
             array(
-                'text' => $participate,
-                'icon' => 'link_intern.gif'
+                'text' => $infotext,
+                'icon' => $icon
             ),
         )
     )

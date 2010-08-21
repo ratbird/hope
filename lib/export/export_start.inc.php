@@ -123,7 +123,7 @@ $export_pagename = _("Datenexport - Startseite");
     $export_pagecontent .= "</select><br><br><br><br>";
 
     $export_pagecontent .="<b><font size=\"-1\">". _("Aus welchem Semester sollen die Daten exportiert werden (f&uuml;r Veranstaltungsexport): ") .  "</font></b><br>";
-    $export_pagecontent .= SemesterData::GetSemesterSelector(array('name' => 'ex_sem'), Semester::findCurrent()->getId(), 'semester_id', true);
+    $export_pagecontent .= SemesterData::GetSemesterSelector(array('name' => 'ex_sem'), (Semester::findCurrent() ? Semester::findCurrent()->getId() : null), 'semester_id', true);
     $export_pagecontent .= "<br><br>";
 
     $export_pagecontent .="<b><font size=\"-1\">". _("Welche Arten von Veranstaltungen sollen exportiert werden? ") .  "</font></b><br>";

@@ -7,7 +7,7 @@
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * @author      Andr� Kla�en <andre.klassen@elan-ev.de>
+ * @author      André Klaßen <andre.klassen@elan-ev.de>
  * @copyright   2009-2010 ELAN e.V.
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
@@ -51,7 +51,7 @@ class Course_StudygroupController extends AuthenticatedController {
         PageLayout::setTitle(_("Studiengruppe bearbeiten"));
         PageLayout::setHelpKeyword('Basis.Studiengruppen');
         } else {
-            throw new Exception(_("Die von Ihnen gew�hlte Option ist im System nicht aktiviert."));
+            throw new Exception(_("Die von Ihnen gewählte Option ist im System nicht aktiviert."));
         }
     }
 
@@ -204,16 +204,16 @@ class Course_StudygroupController extends AuthenticatedController {
                 $stmt = $pdo->query($query = "SELECT * FROM seminare WHERE name = "
                                            . $pdo->quote(Request::get('groupname')));
                 if ($stmt->fetch()) {
-                    $errors[] = _("Eine Veranstaltung/Studiengruppe mit diesem Namen existiert bereits. Bitte w�hlen Sie einen anderen Namen");
+                    $errors[] = _("Eine Veranstaltung/Studiengruppe mit diesem Namen existiert bereits. Bitte wählen Sie einen anderen Namen");
                 }
             }
 
             if (!Request::get('grouptermsofuse_ok')) {
-                $errors[] = _("Sie m�ssen die Nutzungsbedingungen durch Setzen des H�kchens bei 'Einverstanden' akzeptieren.");
+                $errors[] = _("Sie müssen die Nutzungsbedingungen durch Setzen des Häkchens bei 'Einverstanden' akzeptieren.");
             }
 
             if ($admin && (!is_array($founders) || !sizeof($founders))) {
-                $errors[] = _("Sie m�ssen mindestens einen Gruppengr�nder eintragen!");
+                $errors[] = _("Sie müssen mindestens einen Gruppengründer eintragen!");
             }
 
             if (count($errors)) {
@@ -239,7 +239,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     $sem->admission_prelim = 0;
                 } else {
                     $sem->admission_prelim    = 1;
-                    $sem->admission_prelim_txt = _("Die ModeratorInnen der Studiengruppe k�nnen Ihren Aufnahmewunsch best�tigen oder ablehnen. Erst nach Best�tigung erhalten Sie vollen Zugriff auf die Gruppe.");
+                    $sem->admission_prelim_txt = _("Die ModeratorInnen der Studiengruppe können Ihren Aufnahmewunsch bestätigen oder ablehnen. Erst nach Bestätigung erhalten Sie vollen Zugriff auf die Gruppe.");
                 }
                 $sem->admission_endtime     = -1;
                 $sem->admission_binding     = 0;
@@ -284,7 +284,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     if ($key=='schedule') continue; // no schedule for studygroups
                     if ($available_modules[$key] && $enable) {
                         $mods->setBit($bitmask, $mods->registered_modules[$key]["id"]);
-                    	$methodActivate = "module".$key."Activate";
+                        $methodActivate = "module".$key."Activate";
                         if (method_exists($mods, $methodActivate)) {
                             $mods->$methodActivate($sem->id);
                             echo "<h1>Activate $key!</h1>";
@@ -352,15 +352,15 @@ class Course_StudygroupController extends AuthenticatedController {
 
             $this->deactivate_modules_names = "";
             if ($this->flash['deactivate_modules']) {
-            	$amodules = new AdminModules();
-            	foreach ($this->flash['deactivate_modules'] as $key) {
-            			$this->deactivate_modules_names .= "- ".$amodules->registered_modules[$key]['name']."\n";
-            	}
+                $amodules = new AdminModules();
+                foreach ($this->flash['deactivate_modules'] as $key) {
+                        $this->deactivate_modules_names .= "- ".$amodules->registered_modules[$key]['name']."\n";
+                }
             }   
             if ($this->flash['deactivate_plugins']) {
-            	foreach ($this->flash['deactivate_plugins'] as $key => $name) {
-            			$this->deactivate_modules_names .= "- ".$name."\n";
-            	}
+                foreach ($this->flash['deactivate_plugins'] as $key => $name) {
+                        $this->deactivate_modules_names .= "- ".$name."\n";
+                }
             }
             
         }
@@ -387,29 +387,29 @@ class Course_StudygroupController extends AuthenticatedController {
             $founders = StudygroupModel::getFounders($id);
 
             if (Request::get('abort_deactivate')) {
-            	// abort confirmtion dialog
+                // abort confirmtion dialog
                 $this->flash['info'] .= _("Es wurden keine Module deaktiviert.");
-        		// let's go to the studygroup
-        		return $this->redirect('course/studygroup/edit/' . $id);
+                // let's go to the studygroup
+                return $this->redirect('course/studygroup/edit/' . $id);
             
             } else if (Request::get('really_deactivate')) {
-            	// really deactive modules
-            	
-            	// 1. Modules
-            	if (is_array($this->flash['deactivate_modules'])) {
-            	    $sem  = new Seminar($id);
+                // really deactive modules
+                
+                // 1. Modules
+                if (is_array($this->flash['deactivate_modules'])) {
+                    $sem  = new Seminar($id);
                     $mods = new Modules();
                     $admin_mods = new AdminModules();
                     $bitmask = $sem->modules;
                     foreach ($this->flash['deactivate_modules'] as $key) {
-                	    $mods->clearBit($bitmask, $mods->registered_modules[$key]["id"]);
-                	    $methodDeactivate = "module".ucfirst($key)."Deactivate";
-                	    if (method_exists($admin_mods, $methodDeactivate)) {
+                        $mods->clearBit($bitmask, $mods->registered_modules[$key]["id"]);
+                        $methodDeactivate = "module".ucfirst($key)."Deactivate";
+                        if (method_exists($admin_mods, $methodDeactivate)) {
                             $admin_mods->$methodDeactivate($sem->id);
-                        }	
+                        }    
                     }
                 }
-            	
+                
                 $sem->modules = $bitmask;
                 $sem->store();
                 
@@ -419,12 +419,12 @@ class Course_StudygroupController extends AuthenticatedController {
                     $plugin_manager = PluginManager::getInstance();
                     foreach ($this->flash['deactivate_plugins'] as $plugin_id => $name) {
                         $plugin_manager->setPluginActivated($plugin_id, $id, false);
-                    }					
+                    }                    
                 }
                 
                 // Success message
                 
-        		$this->flash['success'] .= _("Die �nderungen wurden erfolgreich �bernommen.");
+                $this->flash['success'] .= _("Deaktiverung erfolgreich vorgenommen.");
                 return $this->redirect('course/studygroup/edit/' . $id);
                 
             } else if (Request::submitted('replace_founder'))  {
@@ -451,7 +451,7 @@ class Course_StudygroupController extends AuthenticatedController {
                                                . $pdo->quote(Request::get('groupname'))
                                                . " AND Seminar_id != " . $pdo->quote( $id ));
                     if ($stmt->fetch()) {
-                        $errors[] = _("Eine Veranstaltung/Studiengruppe mit diesem Namen existiert bereits. Bitte w�hlen Sie einen anderen Namen");
+                        $errors[] = _("Eine Veranstaltung/Studiengruppe mit diesem Namen existiert bereits. Bitte wählen Sie einen anderen Namen");
                     }
                 }
                 if (count($errors)) {
@@ -470,7 +470,7 @@ class Course_StudygroupController extends AuthenticatedController {
                         $sem->admission_prelim = 0;
                     } else {
                         $sem->admission_prelim = 1;
-                        $sem->admission_prelim_txt = _("Die ModeratorInnen der Studiengruppe k�nnen Ihren Aufnahmewunsch best�tigen oder ablehnen. Erst nach Best�tigung erhalten Sie vollen Zugriff auf die Gruppe.");
+                        $sem->admission_prelim_txt = _("Die ModeratorInnen der Studiengruppe können Ihren Aufnahmewunsch bestätigen oder ablehnen. Erst nach Bestätigung erhalten Sie vollen Zugriff auf die Gruppe.");
                     }
 
                     // get the current bitmask
@@ -483,23 +483,23 @@ class Course_StudygroupController extends AuthenticatedController {
                     $orig_modules = $mods->getLocalModules($sem->id, "sem");
                     
                     $deactivate_modules=array();
-                        	
+                            
                     foreach (array_keys($available_modules) as $key){
                         if($key == 'participants') continue;
                         if ($_REQUEST['groupmodule'][$key]) {
-                        	// activate modules
+                            // activate modules
                             $mods->setBit($bitmask, $mods->registered_modules[$key]["id"]);
                             if (!$orig_modules[$key]) {
-                            	$methodActivate = "module".ucfirst($key)."Activate";
+                                $methodActivate = "module".ucfirst($key)."Activate";
                                 if (method_exists($admin_mods, $methodActivate)) {
                                     $admin_mods->$methodActivate($sem->id);
                                 }
                             }
                         } else {
-                        	// prepare for deactivation
-                        	// (user will have to confirm)
+                            // prepare for deactivation
+                            // (user will have to confirm)
                             if ($orig_modules[$key]) {
-                        		$deactivate_modules[]=$key;
+                                $deactivate_modules[]=$key;
                             }
                         }
                     }
@@ -521,9 +521,9 @@ class Course_StudygroupController extends AuthenticatedController {
                         if ($groupplugin[$key] && $name) {
                             $plugin_manager->setPluginActivated($plugin_id, $id, true);
                         } else {
-                        	if ($plugin_manager->isPluginActivated($plugin_id, $id)) {
-                        		$deactivate_plugins[$plugin_id] = $name;                            	
-                        	}
+                            if ($plugin_manager->isPluginActivated($plugin_id, $id)) {
+                                $deactivate_plugins[$plugin_id] = $name;                                
+                            }
                         }
                     }
                     $this->flash['deactivate_plugins'] = $deactivate_plugins;
@@ -533,7 +533,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
         if (!$this->flash['errors']) {
              // Everything seems fine
-        	$this->flash['success'] .= _("Die �nderungen wurden erfolgreich �bernommen.");
+            $this->flash['success'] .= _("Die Änderungen wurden erfolgreich übernommen.");
         }
         // let's go to the studygroup
         $this->redirect('course/studygroup/edit/' . $id);
@@ -589,7 +589,7 @@ class Course_StudygroupController extends AuthenticatedController {
         if ($perm->have_studip_perm('tutor', $id)) {
 
             if (!$action) {
-                $this->flash['success'] = _("Es wurde keine korrekte Option gew�hlt.");
+                $this->flash['success'] = _("Es wurde keine korrekte Option gewählt.");
             } elseif ($action == 'accept') {
                 StudygroupModel::accept_user($user,$id);
                 $this->flash['success'] = sprintf(_("Der Nutzer %s wurde akzeptiert."), get_fullname_from_uname($user, 'full', true));
@@ -652,9 +652,9 @@ class Course_StudygroupController extends AuthenticatedController {
                 if(!$perm->have_studip_perm('dozent',$id,get_userid($user))) {
                     if ($action == 'promote' && $status != 'dozent') {
                         StudygroupModel::promote_user($user,$id,$status);
-                        $this->flash['success'] = sprintf(_("Der Status des Nutzer %s wurde ge�ndert."), get_fullname_from_uname($user, 'full', true));
+                        $this->flash['success'] = sprintf(_("Der Status des Nutzer %s wurde geändert."), get_fullname_from_uname($user, 'full', true));
                     } elseif ($action == 'remove') {
-                        $this->flash['question'] = sprintf(_("M�chten Sie wirklich den Nutzer %s aus der Studiengruppe entfernen?"), get_fullname_from_uname($user, 'full', true));
+                        $this->flash['question'] = sprintf(_("Möchten Sie wirklich den Nutzer %s aus der Studiengruppe entfernen?"), get_fullname_from_uname($user, 'full', true));
                         $this->flash['candidate'] = $user;
 
                     } elseif ($action == 'remove_approved' && check_ticket($studipticket)) {
@@ -664,7 +664,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 } else {
                     $this->flash['messages'] = array(
                         'error' => array (
-                            'title' => _("Jede Studiengruppe muss mindestens einen Gruppengr�nder haben!")
+                            'title' => _("Jede Studiengruppe muss mindestens einen Gruppengründer haben!")
                         )
                     );
                 }
@@ -704,7 +704,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
                 $template->set_attribute('approvalLink', $this->url_for('course/studygroup/delete/' . $id . '/true/' . get_ticket()));
                 $template->set_attribute('disapprovalLink', $this->url_for('course/studygroup/edit/' . $id));
-                $template->set_attribute('question', _("Sind Sie sicher, dass Sie diese Studiengruppe l�schen m�chten?"));
+                $template->set_attribute('question', _("Sind Sie sicher, dass Sie diese Studiengruppe löschen möchten?"));
 
                 $this->flash['question'] = $template->render();
                 $this->redirect('course/studygroup/edit/' . $id);
@@ -759,7 +759,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
         // set variables for view
         $this->can_deactivate = ($db->fetchColumn() != 0) ? false : true;
-        $this->current_page   = _("Verwaltung erlaubter Module und Plugins f�r Studiengruppen");
+        $this->current_page   = _("Verwaltung erlaubter Module und Plugins für Studiengruppen");
         $this->configured     = count(studygroup_sem_types()) > 0;
         $this->modules        = $modules;
         $this->enabled        = $enabled;
@@ -781,13 +781,13 @@ class Course_StudygroupController extends AuthenticatedController {
 
         foreach (Request::getArray('modules') as $key => $value) {
             if ($value=='invalid') {
-                $errors[] = _("Sie m�ssen sich bei jedem Module entscheiden, ob es zur Verf�gung stehen soll oder nicht!");
+                $errors[] = _("Sie müssen sich bei jedem Module entscheiden, ob es zur Verfügung stehen soll oder nicht!");
                 break;
             }
         }
 
         if (Request::quoted('institute') == 'invalid') {
-            $errors[] = _("Bitte w�hlen Sie eine Einrichtung aus, der die Studiengruppen zugeordnet werden sollen!");
+            $errors[] = _("Bitte wählen Sie eine Einrichtung aus, der die Studiengruppen zugeordnet werden sollen!");
         }
 
         if (!Request::quoted('terms') || Request::quoted('terms') == 'invalid') {
@@ -842,7 +842,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 . " WHERE status IN ('" . implode("', '", studygroup_sem_types()) . "')");
         if (($count = $db->fetchColumn()) != 0) {
             $this->flash['messages'] = array('error' => array(
-                'title' => sprintf(_("Sie k�nnen die Studiengruppen nicht deaktivieren, da noch %s Studiengruppen vorhanden sind!"), $count)
+                'title' => sprintf(_("Sie können die Studiengruppen nicht deaktivieren, da noch %s Studiengruppen vorhanden sind!"), $count)
             ));
         } else {
             Config::get()->store("STUDYGROUPS_ENABLE", false);

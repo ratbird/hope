@@ -7,18 +7,18 @@ $aktionen[] = array(
     "icon" => "icons/16/black/plus.png"
 );
 $aktionen[] = array(
-    "text" => '<a href="'.$controller->url_for('course/studygroup/delete/'.$sem_id).'">'._('Diese Studiengruppe l�schen').'</a>',
+    "text" => '<a href="'.$controller->url_for('course/studygroup/delete/'.$sem_id).'">'._('Diese Studiengruppe löschen').'</a>',
     "icon" => "icons/16/black/trash.png"
 );
 
 if ($GLOBALS['perm']->have_studip_perm('tutor', $sem_id)) {
     $aktionen[] = array(
         "icon" => "icons/16/black/edit.png",
-        "text" => '<a href="'.  URLHelper::getLink('dispatch.php/course/avatar/update/' . $sem_id) .'">'. _("Bild �ndern") .'</a>'
+        "text" => '<a href="'.  URLHelper::getLink('dispatch.php/course/avatar/update/' . $sem_id) .'">'. _("Bild ändern") .'</a>'
     );
     $aktionen[] = array(
         "icon" => "icons/16/black/trash.png",
-        "text" => '<a href="'. URLHelper::getLink('dispatch.php/course/avatar/delete/'. $sem_id) .'">'. _("Bild l�schen") .'</a>'
+        "text" => '<a href="'. URLHelper::getLink('dispatch.php/course/avatar/delete/'. $sem_id) .'">'. _("Bild löschen") .'</a>'
     );
 }
 
@@ -27,7 +27,7 @@ $infobox['content'] = array(
         'kategorie' => _("Information"),
         'eintrag'   => array(
             array(
-                "text" => _("Studiengruppen sind eine einfache M�glichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen gr�nden."),
+                "text" => _("Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen gründen."),
                 "icon" => "icons/16/black/info.png"
             )
         )
@@ -109,7 +109,7 @@ $infobox['content'] = array(
 
 <tr>
   <td></td>
-  <td><input type='submit' value="�nderungen �bernehmen"></td>
+  <td><input type='submit' value="Änderungen übernehmen"></td>
 </tr>
 
 </table>

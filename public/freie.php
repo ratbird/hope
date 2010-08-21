@@ -125,7 +125,7 @@ function get_my_sem_values(&$my_sem) {
 
 function print_seminar_content($semid,$my_sem_values) {
 
-    foreach (words('forum files news scm literature schedule wiki vote') as $key) {
+    foreach (words('forum files news scm schedule wiki vote literature') as $key) {
         $navigation[$key] = $my_sem_values[$key];
     }
 

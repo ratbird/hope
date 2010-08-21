@@ -1437,27 +1437,23 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         $bewegeflaeche = "<span class=\"updown_marker\" id=\"pfeile_".$datei["dokument_id"]."\">";
         if (($position == "middle") || ($position == "bottom")) {
             $bewegeflaeche .= "<a href=\"".URLHelper::getLink('?open='.$datei['dokument_id'])."_mfu_\" title=\""._("Datei nach oben schieben").
-                "\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/move_up.gif\"></a>";
+                "\">".Assets::img("icons/16/yellow/arr_2up.png")."</a>";
         }
         if (($position == "middle") || ($position == "top")) {
             $bewegeflaeche .= "<a href=\"".URLHelper::getLink('?open='.
                     $datei['dokument_id'])."_mfd_\" title=\""._("Datei nach unten schieben").
-                    "\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/move_down.gif\"></a>";
+                    "\">".Assets::img("icons/16/yellow/arr_2down.png")."</a>";
         }
         $bewegeflaeche .= "</span>";
-        $bewegeflaeche_anfasser = "<span class=\"anfasser\" style=\"display:none\"><a href=\"#\" class=\"drag\" onclick=\"return false\" " .
-                "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" class=\"text-top\" title=\"Datei verschieben\"></a></span> ";
     }
 
     print "<td class=\"printhead\" valign=\"bottom\">";
     if ($change == $datei["dokument_id"]) {
         print "<span id=\"file_".$datei["dokument_id"]."_header\" style=\"font-weight: bold\"><a href=\"".URLHelper::getLink("?close=".$datei["dokument_id"]."#anker")."\" class=\"tree\"";
         print ' name="anker"></a>';
-        print $bewegeflaeche_anfasser;
         print "<img src=\"".$GLOBALS['ASSETS_URL']."images/".GetFileIcon(getFileExtension($datei['filename']))."\">";
         print "<input style=\"font-size: 8pt; width: 50%;\" type=\"text\" size=20 maxlength=255 name=\"change_name\" value=\"".htmlReady($datei["name"])."\"></b>";
     } else {
-        print $bewegeflaeche_anfasser;
         if (($move == $datei["dokument_id"]) ||  ($upload == $datei["dokument_id"]) || ($anchor_id == $datei["dokument_id"])) {
             print "<a name=\"anker\"></a>";
         }
@@ -1804,16 +1800,14 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         $bewegeflaeche = "<span class=\"updown_marker\" id=\"pfeile_".$folder_id."\">";
         if (($position == "middle") || ($position == "bottom")) {
             $bewegeflaeche .= "<a href=\"".URLHelper::getLink('?open='.$folder_id)."_mfou_\" title=\""._("Nach oben verschieben").
-                    "\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/move_up.gif\"></a>";
+                    "\">".Assets::img("icons/16/yellow/arr_2up.png")."</a>";
         }
         if (($position == "middle") || ($position == "top")) {
             $bewegeflaeche .= "<a href=\"".URLHelper::getLink('?open='.
                     $folder_id)."_mfod_\" title=\""._("Nach unten verschieben").
-                    "\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/move_down.gif\"></a>";
+                    "\">".Assets::img("icons/16/yellow/arr_2down.png")."</a>";
         }
         $bewegeflaeche .= "</span>";
-        $bewegeflaeche_anfasser = "<span class=\"anfasser\" style=\"display:none\"><a href=\"#\" class=\"drag\" onclick=\"return false\" " .
-                "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" class=\"text-top\" title=\"Ordner verschieben\"></a></span> ";
     }
 
     //Jetzt folgt der Link zum Aufklappen
@@ -1831,7 +1825,6 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         if (($anchor_id == $folder_id) || (($move == $folder_id))) {
             print "<a name=\"anker\"></a>";
         }
-        print $bewegeflaeche_anfasser;
         print "<a href=\"".URLHelper::getLink("?close=".$folder_id."#anker")."\" class=\"tree\" onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><span id=\"folder_".$folder_id."_header\" style=\"font-weight: bold\">";
     } else {
         //print "<td width=1px class=\"printhead\">&nbsp;</td>";
@@ -1843,7 +1836,6 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
                 if ($move && ($move != $folder_id) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
                 print "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\" border=0></a>&nbsp";
         }
-        print $bewegeflaeche_anfasser;
         print "<a href=\"".URLHelper::getLink("?open=".$folder_id."#anker")."\" class=\"tree\" " .
                 "onClick=\"return STUDIP.Filesystem.changefolderbody('".$folder_id."')\"><span id=\"folder_".$folder_id."_header\" " .
                 "style=\"font-weight: normal\">";

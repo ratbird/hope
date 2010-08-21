@@ -107,7 +107,7 @@ class ResourcesBrowse {
                 <input name="search_exp" type="text" style="vertical-align: middle;" size=35 maxlength=255 value="<? echo htmlReady(stripslashes($this->searchArray["search_exp"])); ?>">
                 <input type="image" align="absmiddle"  <? echo makeButton ("suchestarten", "src") ?> name="start_search" border=0 value="<?=_("Suche starten")?>">
                 &nbsp;
-                <a href="<?=$PHP_SELF?>?quick_view=search&quick_view_mode=<?=$GLOBALS['view_mode']?>&reset=TRUE"><?=makeButton("neuesuche")?></a>
+                <a href="<?=$PHP_SELF?>?view=search&quick_view_mode=<?=$GLOBALS['view_mode']?>&reset=TRUE"><?=makeButton("neuesuche")?></a>
             </td>
         </tr>
         <?
@@ -150,7 +150,7 @@ class ResourcesBrowse {
                     $top_level_name = _("pers&ouml;nliche Ressourcen");
                 break;
             }
-            $result = sprintf (" <font size=\"-1\">%s %s %s</font>", ($view=='search') ? "<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=$view_mode&reset=TRUE\">" : "", $top_level_name, ($view=='search') ? "</a>" : "");
+            $result = sprintf (" <font size=\"-1\">%s %s %s</font>", ($view=='search') ? "<a href=\"$PHP_SELF?view=search&quick_view_mode=$view_mode&reset=TRUE\">" : "", $top_level_name, ($view=='search') ? "</a>" : "");
             for ($i = sizeof($result_arr)-1; $i>=0; $i--) {
                 if ($view)
                     $result.= sprintf (" > <a href=\"%s?quick_view=%s&quick_view_mode=%s&%s=%s\"><font size = -1>%s</font></a>", $PHP_SELF, (!$view) ? "search" : $view, $view_mode, ($view=='search') ? "open_level" : "actual_object", $result_arr[$i]["id"], htmlReady($result_arr[$i]["name"]));
@@ -403,7 +403,7 @@ class ResourcesBrowse {
             <td <? echo $this->cssSw->getFullClass() ?>width="15%" align="right" nowrap valign="top">
                 <?
                 if ($way_back>=0) {
-                    printf ("<a href = \"%s?quick_view=search&quick_view_mode=%s&%s\">", $PHP_SELF, $view_mode, (!$way_back) ? "reset=TRUE" : "open_level=$way_back");
+                    printf ("<a href = \"%s?view=search&quick_view_mode=%s&%s\">", $PHP_SELF, $view_mode, (!$way_back) ? "reset=TRUE" : "open_level=$way_back");
                     print ("<img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" border=\"0\">&nbsp; <font size=\"-1\">"._("eine Ebene zur&uuml;ck")."</font></a>");
                 }
                 ?>
@@ -428,7 +428,7 @@ class ResourcesBrowse {
                             print "</td><td width=\"40%\" valign=\"top\">";
                             $switched = TRUE;
                         }
-                        printf ("<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=%s&open_level=%s\"><font size=\"-1\"><b>%s</b></font></a><br>", $view_mode, $this->db->f("resource_id"), htmlReady($this->db->f("name")));
+                        printf ("<a href=\"$PHP_SELF?view=search&quick_view_mode=%s&open_level=%s\"><font size=\"-1\"><b>%s</b></font></a><br>", $view_mode, $this->db->f("resource_id"), htmlReady($this->db->f("name")));
                         $i++;
                     }
                     print "</table>";

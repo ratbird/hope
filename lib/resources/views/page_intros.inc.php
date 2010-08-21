@@ -61,13 +61,13 @@ switch ($view) {
                     array  ("kategorie" => _("Aktionen:"),
                             "eintrag" => array (
                                 array   ("icon" => "suchen.gif",
-                                    "text"  => (($resources_data["search_mode"] == "browse") || (!$resources_data["search_mode"]))? sprintf(_("Gewünschte Eigenschaften <br>%sangeben%s"), "<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=".$view_mode."&mode=properties\">", "</a>") :  sprintf(_("Gewünschte Eigenschaften <br>%snicht angeben%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&mode=browse\">", "</a>")),
+                                    "text"  => (($resources_data["search_mode"] == "browse") || (!$resources_data["search_mode"]))? sprintf(_("Gewünschte Eigenschaften <br>%sangeben%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&mode=properties\">", "</a>") :  sprintf(_("Gewünschte Eigenschaften <br>%snicht angeben%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&mode=browse\">", "</a>")),
                                 array   ("icon" => "meinetermine.gif",
-                                    "text"  => (!$resources_data["check_assigns"])? sprintf(_("Gewünschte Belegungszeit %sberücksichtigen%s"), "<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=".$view_mode."&check_assigns=TRUE\">", "</a>") :  sprintf(_("Gewünschte Belegungszeit <br>%snicht berücksichtigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&check_assigns=FALSE\">", "</a>")),
+                                    "text"  => (!$resources_data["check_assigns"])? sprintf(_("Gewünschte Belegungszeit %sberücksichtigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&check_assigns=TRUE\">", "</a>") :  sprintf(_("Gewünschte Belegungszeit <br>%snicht berücksichtigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&check_assigns=FALSE\">", "</a>")),
                                 array   ("icon" => "cont_res5.gif",
-                                    "text"  => (!$resources_data["search_only_rooms"])? sprintf(_("Nur Räume %sanzeigen%s"), "<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=".$view_mode."&search_only_rooms=1\">", "</a>") :  sprintf(_("Alle Ressourcen %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=0\">", "</a>")),
+                                    "text"  => (!$resources_data["search_only_rooms"])? sprintf(_("Nur Räume %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=1\">", "</a>") :  sprintf(_("Alle Ressourcen %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=0\">", "</a>")),
                                 array("icon" => "blank.gif",
-                                    "text"  => "<br><a href=\"$PHP_SELF?quick_view=search&quick_view_mode=".$view_mode."&reset=TRUE\">".makeButton("neuesuche")."</a>"))));
+                                    "text"  => "<br><a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&reset=TRUE\">".makeButton("neuesuche")."</a>"))));
         $infopic = "rooms.jpg";
         $clipboard = TRUE;
     break;
@@ -130,11 +130,11 @@ switch ($view) {
 
         if ($view_mode == "search")
             $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
-                                    "text"  =>"<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
+                                    "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
 
         if ($view_mode == "no_nav")
             $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
-                                    "text"  =>"<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
+                                    "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
 
         if ($view_mode != "search" && $view_mode != "no_nav") {
             if ($SessSemName["class"] == "sem")
@@ -168,11 +168,11 @@ switch ($view) {
 
         if ($view_mode == "search")
             $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
-                                    "text"  =>"<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
+                                    "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
 
         if ($view_mode == "no_nav"){
             $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
-                                    "text"  =>"<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
+                                    "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
             $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
                                     "text"  =>sprintf (_("%sBelegungsplan%s anzeigen"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?quick_view=openobject_schedule&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?quick_view=view_schedule".(($view_mode == "no_nav") ? "&quick_view_mode=no_nav" : "")."\">", "</a>"));
 
@@ -257,7 +257,7 @@ switch ($view) {
                     array  ("kategorie" => _("Aktionen:"),
                             "eintrag" => array (
                                 array   ("icon" =>  "icons/16/black/search.png" ,
-                                    "text"  =>  "<a href=\"javascript:void(null)\" onClick=\"window.open('resources.php?quick_view=search&quick_view_mode=no_nav','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes')\" >"._("Ressourcen suchen")."</a>"),
+                                    "text"  =>  "<a href=\"javascript:void(null)\" onClick=\"window.open('resources.php?view=search&quick_view_mode=no_nav','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes')\" >"._("Ressourcen suchen")."</a>"),
                                 array   ("icon" =>  (!$resources_data["skip_closed_requests"]) ? "icons/16/black/checkbox-unchecked.png" : "icons/16/black/checkbox-checked.png",
                                     "text"  => ($resources_data["skip_closed_requests"]) ? sprintf(_("Bearbeitete Anfragen %sanzeigen%s."), "<a href=\"$PHP_SELF?skip_closed_requests=FALSE\">", "</a>") :  sprintf(_("Bearbeitete Anfragen %snicht anzeigen%s"), "<a href=\"$PHP_SELF?skip_closed_requests=TRUE\">", "</a>")),
                                 array   ("icon" =>  "icons/16/black/mail.png",
@@ -312,7 +312,7 @@ switch ($view) {
 
             if ($view_mode == "no_nav")
                 $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
-                                    "text"  =>"<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
+                                    "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
 
             if ($view_mode != "search" && $view_mode != "no_nav") {
                 if ($SessSemName["class"] == "sem")
@@ -325,7 +325,7 @@ switch ($view) {
 
             if ($view_mode == "search")
                 $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
-                                        "text"  =>"<a href=\"$PHP_SELF?quick_view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
+                                        "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
         $infopic = "schedule.jpg";
         }
     break;

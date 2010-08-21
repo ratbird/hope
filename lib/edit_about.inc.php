@@ -927,7 +927,9 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         $guestbook = new Guestbook($this->auth_user['user_id'], true, 1);
         $guestbook = $guestbook->checkGuestbook();
         // Homepage plugins
-        $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
+        //$homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
+        // Deactivate plugin visibility settings because they aren't working now.
+        $homepageplugins = array();
 
         $user_domains = count(UserDomain::getUserDomains());
 

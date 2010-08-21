@@ -39,7 +39,7 @@ require_once ("lib/classes/DataFieldEntry.class.php");
 require_once('lib/classes/searchtypes/SQLSearch.class.php');
 require_once('lib/classes/QuickSearch.class.php');
 
-if ($perm->have_studip_perm('admin', $SessSemName[1])) {
+if ($perm->have_perm('admin')) {
     $admin_view = true;
 }
 
@@ -68,7 +68,7 @@ require_once 'lib/admin_search.inc.php';
 if ($SessSemName[1])
     $inst_id=$SessSemName[1];
 
-if ($admin_view && !$perm->have_studip_perm('admin', $inst_id)) {
+if ($admin_view && !$perm->have_studip_perm('admin', $inst_id) && !$list) {
     $admin_view = false;
 }
 

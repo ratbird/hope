@@ -100,10 +100,7 @@ folgende Einstellungen nötig:
 
 LdapReader authentifiziert nicht den Nutzer direkt gegen den LDAP Server, sondern benutzt einen konfigurierten LDAP 
 Account mit Leserechten, um das Passwort des Nutzers aus dem Verzeichnis zu lesen und mit dem eingegebenen zu vergleichen. 
-Anonymes Binden wird dazu nicht benötigt. Der Vorteil dieser Lösung ist, dass das JavaScript basierte challenge-response 
-Verfahren zur verschlüsselten Übertragung des Passwortes in Stud.IP weiter genutzt werden kann (bei Verwendung von LdapAuth 
-wird es automatisch deaktiviert). Im Verzeichnis aber muss das Passwort als MD5 Hash vorliegen (Standard ist meist CRYPT, 
-es sollte aber unproblematisch sein ein zusätzliches Attribut einzuführen). Dieses Plugin ist als Beispiel gedacht, und 
+Anonymes Binden wird dazu nicht benötigt. Dieses Plugin ist als Beispiel gedacht, und 
 sollte als Vorlage für eigene Plugins dienen.
 Einstellungen:
 

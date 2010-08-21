@@ -368,7 +368,7 @@ $query_time = $query_time_sort;
             }
             $titel = "  <input type=\"text\" name=\"".$tmp[0]."\"".$tmp[3]." style=\"font-size: 8pt\">";
             echo "\n<form action=\"".$PHP_SELF."\" method=\"post\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";
-            printhead(0, 0, FALSE, "open", FALSE, "<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder.gif\" border=0>", $titel, FALSE);
+            printhead(0, 0, FALSE, "open", FALSE, ' ' . Assets::img('icons/16/blue/add/folder-empty.png', array('class' => 'text-top')) . ' ', $titel, FALSE);
             echo "</tr></table> ";
             $content_content = $tmp[1]."<div align=\"center\">".$tmp[4]."
             <input type=\"image\" name=\"".$tmp[2]."\" ".makeButton("uebernehmen", "src")." value=\"a\" align=\"absmiddle\">
@@ -530,7 +530,9 @@ $query_time = $query_time_sort;
             array("kategorie" => _("weitere Ansichten:"),"eintrag" => array(
                 array('icon' => 'icons/16/black/new/mail.png', "text" => $view_by_links))),
             array("kategorie" => _("Optionen:"),"eintrag" => array(
-                array("icon" => 'icons/16/black/admin.png', "text" => sprintf("<a href=\"%s?cmd_show=openall\">"._("Alle Nachrichten aufklappen")."</a><br><a href=\"%s?cmd=mark_allsmsreaded\">"._("Alle als gelesen speichern")."</a><br><a href=\"%s?cmd=admin_folder&cmd_2=new\">"._("Neuen Ordner erstellen")."</a>", $PHP_SELF, $PHP_SELF, $PHP_SELF, $PHP_SELF))))
+                array("icon" => 'icons/16/black/admin.png', "text" => sprintf("<a href=\"%s?cmd_show=openall\">"._("Alle Nachrichten aufklappen")."</a><br><a href=\"%s?cmd=mark_allsmsreaded\">"._("Alle als gelesen speichern")."</a>", $PHP_SELF, $PHP_SELF, $PHP_SELF)),
+                array("icon" => 'icons/16/black/add/folder-empty.png', "text" => sprintf("<a href=\"%s?cmd=admin_folder&cmd_2=new\">"._("Neuen Ordner erstellen")."</a>", $PHP_SELF))
+            ))
         );
         // display infobox
         print_infobox($infobox, "infobox/messages.jpg"); ?>

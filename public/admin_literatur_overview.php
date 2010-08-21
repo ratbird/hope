@@ -348,9 +348,11 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
             $element->setValues($data);
             if ($element->getValue('catalog_id')){
                 if ($_anker_id == $element->getValue('catalog_id')){
-                    $icon = "<a name=\"anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/cont_lit.gif\" border=\"0\" align=\"bottom\"></a>";
+                    $icon = "<a name=\"anker\">";
+                    $icon .= Assets::img('icons/16/grey/literature.png', array('class' => 'text-top'));
+                    $icon .= "</a>";
                 } else {
-                    $icon = "<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_lit.gif\" border=\"0\" align=\"bottom\">";
+                    $icon = Assets::img('icons/16/grey/literature.png', array('class' => 'text-top'));
                 }
                 $ampel = "";
                 if ($_check_plugin && isset($_lit_data[$cid]['check_accession'][$_check_plugin])){

@@ -306,37 +306,38 @@ class TreeView {
     */
     function getItemHeadPics($item_id){
         $head = $this->getItemHeadFrontPic($item_id);
-        $head .= "\n<td  class=\"printhead\" nowrap  align=\"left\" valign=\"bottom\">";
+        $head .= "\n<td  class=\"printhead\" nowrap align=\"left\" valign=\"bottom\">";
         if ($this->tree->hasKids($item_id)){
             $head .= "<a href=\"";
             $head .= ($this->open_ranges[$item_id]) ? $this->getSelf("close_range={$item_id}") : $this->getSelf("open_range={$item_id}");
-            $head .= "\"><img border=\"0\"  src=\"".$GLOBALS['ASSETS_URL']."images/";
-            $head .= ($this->open_ranges[$item_id]) ? "cont_folder3.gif" : "cont_folder.gif";
+            $head .= "\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
+            $head .= ($this->open_ranges[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
             $head .= "\" ";
             $head .= (!$this->open_ranges[$item_id])? tooltip(_("Alle Unterelemente öffnen")) : tooltip(_("Alle Unterelemente schließen"));
             $head .= "></a>";
         } else {
-            $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
-            $head .= ($this->open_items[$item_id]) ? "cont_folder4.gif" : "cont_folder2.gif";
-            $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . "border=\"0\">";
+            $head .= "<img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
+            $head .= ($this->open_items[$item_id]) ? "icons/16/blue/folder-empty.png" : "icons/16/blue/folder-empty.png";
+            $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . ">";
         }
     return $head . "</td>";
     }
 
-    function getItemHeadFrontPic($item_id){
+    function getItemHeadFrontPic($item_id)
+    {
         if ($this->use_aging){
             $head = "<td bgcolor=\"" . $this->getAgingColor($item_id) . "\" class=\""
             . (($this->open_items[$item_id]) ? 'printhead3' : 'printhead2')
             . "\" nowrap width=\"1%\"  align=\"left\" valign=\"top\">";
         } else {
-            $head = "<td class=\"printhead\" nowrap  align=\"left\" valign=\"top\">";
+            $head = "<td class=\"printhead\" nowrap align=\"left\" valign=\"bottom\">";
         }
         $head .= "<a href=\"";
         $head .= ($this->open_items[$item_id])? $this->getSelf("close_item={$item_id}") . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
                                             : $this->getSelf("open_item={$item_id}") . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
         $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
         $head .= ($this->open_items[$item_id]) ? $this->pic_open : $this->pic_close;
-        $head .= "\" border=\"0\" align=\"baseline\" hspace=\"4\">";
+        $head .= "\">";
         $head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\" border=\"0\">" : "";
         $head .= "</a>";
         $head .= '</td>';

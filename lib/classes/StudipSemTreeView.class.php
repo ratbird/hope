@@ -122,21 +122,21 @@ class StudipSemTreeView extends TreeView {
         $head .= "<a href=\"";
         $head .= ($this->open_items[$item_id])? $this->getSelf("close_item={$item_id}") . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
                                             : $this->getSelf("open_item={$item_id}") . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
-        $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
+        $head .= "<img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
         $head .= ($this->open_items[$item_id]) ? "icons/16/blue/arr_1down.png" : "icons/16/blue/arr_1right.png";
-        $head .= "\" border=\"0\" align=\"baseline\" hspace=\"2\">";
-        $head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\" border=\"0\">" : "";
+        $head .= "\">";
+        $head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\">" : "";
         $head .= "</a>";
         if ($this->tree->hasKids($item_id)){
-            $head .= "<img border=\"0\"  src=\"".$GLOBALS['ASSETS_URL']."images/";
-            $head .= ($this->open_ranges[$item_id]) ? "cont_folder3.gif" : "cont_folder.gif";
+            $head .= "<img class=\"text-top\"  src=\"".$GLOBALS['ASSETS_URL']."images/";
+            $head .= ($this->open_ranges[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
             $head .= "\" ";
             $head .= (!$this->open_ranges[$item_id])? tooltip(_("Alle Unterelement öffnen")) : tooltip(_("Alle Unterelemente schliessen"));
             $head .= ">";
         } else {
-            $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
-            $head .= ($this->open_items[$item_id]) ? "cont_folder4.gif" : "cont_folder2.gif";
-            $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . "border=\"0\">";
+            $head .= "<img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/";
+            $head .= ($this->open_items[$item_id]) ? "icons/16/blue/folder-empty.png" : "icons/16/blue/folder-empty.png";
+            $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . ">";
         }
     return $head;
     }

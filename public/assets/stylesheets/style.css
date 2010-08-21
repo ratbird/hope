@@ -301,19 +301,18 @@ table.collapsable tbody tr:first-child td:first-child {
 }
 
 table.collapsable tbody tr:first-child td:first-child a {
-    background: transparent url(../images/icons/16/blue/arr_1down.png) 2px no-repeat;
+    background: transparent url(../images/icons/16/blue/arr_1down.png) no-repeat;
     color: #000;
 }
 
 table.collapsable tbody.collapsed tr:first-child td:first-child a {
     background-image: url(../images/icons/16/blue/arr_1right.png);
-    background-position: 4px -6px;
     color: #000;
     font-weight: normal;
 }
 
 table.collapsable tbody.empty tr:first-child td:first-child {
-    background: transparent url(../images/icons/16/grey/arr_1right.png) 0px 6px no-repeat;
+    background: transparent url(../images/icons/16/grey/arr_1right.png) no-repeat;
 }
 
 /* Table details */

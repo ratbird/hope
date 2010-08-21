@@ -588,7 +588,7 @@ class EditSettings {
                             } else {
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_begin")));
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_end")));
-                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag bearbeiten")).">&nbsp;&nbsp;</a>";
+                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" ".tooltip(_("Diesen Eintrag bearbeiten"))."></a> ";
                                 print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))) . "></a></td>";
                             }
                         }
@@ -670,7 +670,7 @@ class EditSettings {
                             } else {
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_begin")));
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_end")));
-                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag bearbeiten")).">&nbsp;&nbsp;</a>";
+                                print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" ".tooltip(_("Diesen Eintrag bearbeiten"))."></a> ";
                                 print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a></td>";
                             }
                         }

@@ -259,7 +259,7 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
             <?=htmlReady($db->f(0))?>
             </td>
             <td <?=$cssSw->getFullClass()?> width="1%">
-            <?=($one['details'] ? '<a href="'.$PHP_SELF.'?'.$one['details'].'"><img src="'.$pic_path.'/edit_transparent.gif" alt="edit"></a>' : "&nbsp;")?>
+            <?=($one['details'] ? '<a href="'.$PHP_SELF.'?'.$one['details'].'">'.Assets::img('icons/16/blue/edit.png').'</a>' : "")?>
             </td>
             </tr>
             <?

@@ -322,7 +322,7 @@ function table_body ($db, $range_id, $structure, $css_switcher) {
                     if ($admin_view) {
                         echo '<td '.$css_switcher->getFullClass().'>';
                         echo '<a href="'.URLHelper::getLink('edit_about.php?view=Karriere&username='.$db->f('username').'&switch='.$id).'"><font size="-1">';
-                        echo '<img src="'.$GLOBALS['ASSETS_URL'].'/images/edit_transparent.gif" border="0">';
+                        echo Assets::img('icons/16/blue/edit.png');
                         echo '</font></a></td>';
 
                         echo '<td '.$css_switcher->getFullClass().'>';

@@ -104,7 +104,7 @@ class ShowList extends ShowTreeRow{
         } else {
             //Daten vorbereiten
             if (!$resObject->getCategoryIconnr())
-                $icon="<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder2.gif\">";
+                $icon = Assets::img('icons/16/grey/folder-full.png', array('class' => 'text-top'));
             else
                 $icon="<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_res".$resObject->getCategoryIconnr().".gif\">";
 

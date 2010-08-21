@@ -208,31 +208,31 @@ function print_snd_message($psm) {
         $tmp_cmd = "open_selected";
         $tmp_picture = "icons/16/blue/lock-locked.png";
         $tmp_tooltip = tooltip(_("Löschschutz deaktivieren."));
-        $trash =  Assets::img('blank.gif');
+        $trash =  Assets::img('blank.gif', array('width' => '16'));
     } else {
         $tmp_cmd = "safe_selected";
         $tmp_picture = "icons/16/blue/lock-unlocked.png";
         $tmp_tooltip = tooltip(_("Löschschutz für diese Nachricht aktivieren."));
-        $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$psm['message_id']."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a>";
+        $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$psm['message_id']."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a> ";
     }
 
-    $zusatz = "<font size=-1>";
     if ($x == 1) { // if only one receiver
         $zusatz .= sprintf(_("an %s, %s"), "</font><a href=\"about.php?username=".$psm['rec_uname']."\"><font size=-1 color=\"#333399\">".htmlReady($psm['rec_vorname'])."&nbsp;".htmlReady($psm['rec_nachname'])."</font></a><font size=-1>", date("d.m.y, H:i",$psm['mkdate']));
         $zusatz .= "&nbsp;";
         if (have_msgfolder($sms_data['view']) == TRUE) {
-            $zusatz .= "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder_sms_move.gif\" border=0 ".tooltip(_("Diese Nachricht in einen frei wählbaren Ordner verschieben."))."></a>";
+            $zusatz .= "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\">";
+            $zusatz .= Assets::img('icons/16/blue/move_right/folder-empty.png', array('class' => 'text-top', 'title' => _("Diese Nachricht in einen frei wählbaren Ordner verschieben."))) . "</a> ";
         }
-        $zusatz .= "<a href=\"".$PHP_SELF."?cmd=".$tmp_cmd."&sel_lock=".$psm['message_id']."#".$psm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture.".gif\" border=0 ".$tmp_tooltip."></a><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"2\">".$trash."<input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
+        $zusatz .= "<a href=\"".$PHP_SELF."?cmd=".$tmp_cmd."&sel_lock=".$psm['message_id']."#".$psm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
     } else if ($x >= "2") { // if more than one receiver
         $zusatz .= sprintf(_("an %s Empf&auml;nger, %s"), $x, date("d.m.y, H:i",$psm['mkdate']));
         $zusatz .= "&nbsp;";
         if (have_msgfolder($sms_data['view']) == TRUE) {
-            $zusatz .= "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder_sms_move.gif\" border=0 ".tooltip(_("Diese Nachricht in einen frei wählbaren Ordner verschieben."))."></a>";
+            $zusatz .= "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\">";
+            $zusatz .= Assets::img('icons/16/blue/move_right/folder-empty.png', array('class' => 'text-top', 'title' => _("Diese Nachricht in einen frei wählbaren Ordner verschieben."))) . "</a> ";
         }
-        $zusatz .= "<a href=\"".$PHP_SELF."?cmd=".$tmp_cmd."&sel_lock=".$psm['message_id']."#".$psm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture.".gif\" border=0 ".$tmp_tooltip."></a><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"2\">".$trash."<input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
+        $zusatz .= "<a href=\"".$PHP_SELF."?cmd=".$tmp_cmd."&sel_lock=".$psm['message_id']."#".$psm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
     }
-    $zusatz .= "</font>";
 
     if ($open == "open") {
         $content = formatReady($psm['message']);
@@ -362,16 +362,17 @@ function print_rec_message($prm) {
         $tmp_cmd = "open_selected";
         $tmp_picture = "icons/16/blue/lock-locked.png";
         $tmp_tooltip = tooltip(_("Löschschutz deaktivieren."));
-        $trash =  Assets::img('blank.gif');
+        $trash =  Assets::img('blank.gif', array('width' => '16'));
     } else {
         $tmp_cmd = "safe_selected";
         $tmp_picture = "icons/16/blue/lock-unlocked.png";
         $tmp_tooltip = tooltip(_("Löschschutz für diese Nachricht aktivieren."));
-        $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$prm['message_id']."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a>";
+        $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$prm['message_id']."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a> ";
     }
     // zusatz
     if (have_msgfolder($sms_data['view']) == TRUE) {
-        $move_option = "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$prm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder_sms_move.gif\" ".tooltip(_("Diese Nachricht in einen frei wählbaren Ordner verschieben."))."></a>";
+        $move_option = "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\">";
+        $move_option .= Assets::img('icons/16/blue/move_right/folder-empty.png', array('class' => 'text-top', 'title' => _("Diese Nachricht in einen frei wählbaren Ordner verschieben."))) . "</a> ";
     }
     $zusatz = "<font size=-1>";
     if ($prm['user_id_snd'] == "____%system%____") {

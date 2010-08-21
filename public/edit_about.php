@@ -360,12 +360,12 @@ if (check_ticket($studipticket)) {
         $deputy_id_parameter = Request::get('deputy_id_parameter');
     }
 
-    if ($add_deputy_x) {
+    if (Request::submitted('add_deputy')) {
         if (!isDeputy(Request::get('deputy_id'), $my_about->auth_user["user_id"])) {
             if (Request::get('deputy_id') != $my_about->auth_user["user_id"]) {
                 $success = addDeputy(Request::get('deputy_id'), $my_about->auth_user["user_id"]);
                 if ($success) {
-                    $my_about->msg .= 'msg§'.sprintf(_('%s wurde als Vertretung eingetragen.'), get_fullname($_REQUEST['deputy_id'], 'full'));
+                    $my_about->msg .= 'msg§'.sprintf(_('%s wurde als Vertretung eingetragen.'), get_fullname(Request::get('deputy_id'), 'full'));
                 } else {
                     $my_about->msg .= 'error§'._('Fehler beim Eintragen der Vertretung!');
                 }
@@ -373,15 +373,16 @@ if (check_ticket($studipticket)) {
                 $my_about->msg .= 'error§'._('Sie können sich nicht als Ihre eigene Vertretung eintragen!');
             }
         } else {
-            $my_about->msg .= 'error§'.sprintf(_('%s ist bereits als Vertretung eingetragen.'), get_fullname($_REQUEST['deputy_id'], 'full'));
+            $my_about->msg .= 'error§'.sprintf(_('%s ist bereits als Vertretung eingetragen.'), get_fullname(Request::get('deputy_id'), 'full'));
         }
     }
 
     if ($cmd == 'change_deputies') {
-         if (isset($_REQUEST['delete_deputy'])) {
-            $deleted = deleteDeputy($_REQUEST['delete_deputy'], $my_about->auth_user["user_id"]);
-            foreach ($_REQUEST['delete_deputy'] as $deputy) {
-                unset($_REQUEST['edit_about_'.$deputy]);
+        $deputyArray = Request::getArray('delete_deputy');
+        if ($deputyArray) {
+            $deleted = deleteDeputy($deputyArray, $my_about->auth_user["user_id"]);
+            foreach ($deputyArray as $deputy) {
+                Request::set('edit_about_'.$deputy, false);
             }
             if ($deleted) {
                 $my_about->msg .= ($deleted == 1) ? 'msg§'._('Die Vertretung wurde entfernt.').'§' : 'msg§'.sprintf(_('Es wurden %s Vertretungen entfernt.'), $deleted).'§';
@@ -391,11 +392,13 @@ if (check_ticket($studipticket)) {
         }
         $success = false;
         $changed_deputies = array();
-        for ($i=0 ; $i<sizeof($_REQUEST['deputy_ids']) ; $i++) {
-            if (isset($_REQUEST['edit_about_'.$_REQUEST['deputy_ids'][$i]]) &&
-                    $_REQUEST['edit_about_'.$_REQUEST['deputy_ids'][$i]] != $_REQUEST['deputy_saved_edit_about'][$i]) {
-                $success = setDeputyHomepageRights($_REQUEST['deputy_ids'][$i], $my_about->auth_user["user_id"], intval($_REQUEST['edit_about_'.$_REQUEST['deputy_ids'][$i]]));
-                $changed_deputies[] = $_REQUEST['deputy_ids'][$i];
+        $given_ids = Request::getArray('deputy_ids');
+        $saved_values = Request::getArray('deputy_saved_edit_about');
+        for ($i=0 ; $i<sizeof($given_ids) ; $i++) {
+            if (Request::get('edit_about_'.$given_ids[$i]) &&
+                    Request::get('edit_about_'.$given_ids[$i]) != $saved_values[$i]) {
+                $success = setDeputyHomepageRights($given_ids[$i], $my_about->auth_user["user_id"], Request::int('edit_about_'.$given_ids[$i]));
+                $changed_deputies[] = $given_ids[$i];
             }
         }
         if ($success && $changed_deputies) {

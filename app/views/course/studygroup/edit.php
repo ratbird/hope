@@ -96,7 +96,7 @@ $infobox['content'] = array(
   <td style='text-align:right;'>Zugang:</td>
   <td>
       <select size=0 name="groupaccess">
-          <option <?= ($sem->admission_prelim == 0) ? 'selected="selected"':'' ?> value="all">Offen fï¿½r alle
+          <option <?= ($sem->admission_prelim == 0) ? 'selected="selected"':'' ?> value="all">Offen für alle
          <option <?= ($sem->admission_prelim == 1) ? 'selected="selected"':'' ?> value="invite">Auf Anfrage
       </select>
   </td>

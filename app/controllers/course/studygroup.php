@@ -287,7 +287,6 @@ class Course_StudygroupController extends AuthenticatedController {
                         $methodActivate = "module".$key."Activate";
                         if (method_exists($mods, $methodActivate)) {
                             $mods->$methodActivate($sem->id);
-                            echo "<h1>Activate $key!</h1>";
                         }
                     }
                 }
@@ -533,7 +532,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
         if (!$this->flash['errors']) {
              // Everything seems fine
-            $this->flash['success'] .= _("Die Änderungen wurden erfolgreich übernommen.");
+            $this->flash['success'] = _("Die Änderungen wurden erfolgreich übernommen.");
         }
         // let's go to the studygroup
         $this->redirect('course/studygroup/edit/' . $id);
@@ -842,7 +841,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 . " WHERE status IN ('" . implode("', '", studygroup_sem_types()) . "')");
         if (($count = $db->fetchColumn()) != 0) {
             $this->flash['messages'] = array('error' => array(
-                'title' => sprintf(_("Sie kÃ¶nnen die Studiengruppen nicht deaktivieren, da noch %s Studiengruppen vorhanden sind!"), $count)
+                'title' => sprintf(_("Sie können die Studiengruppen nicht deaktivieren, da noch %s Studiengruppen vorhanden sind!"), $count)
             ));
         } else {
             Config::get()->store("STUDYGROUPS_ENABLE", false);

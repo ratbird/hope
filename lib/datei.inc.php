@@ -1765,7 +1765,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 
     $depth = $folder_tree->getItemPath($folder_id);
     $depth = count(explode(" / ", $depth));
-    print "<div id=\"folder_".(($depth > 3) ? $result['range_id'] : "root")."_".$countfolder."\">";
+    print "<div id=\"folder_".(($depth > 3) ? $result['range_id'] : "root")."_".$countfolder."\" class=\"draggable_folder\">";
     print "<div style=\"display:none\" id=\"getmd5_fo".$result['range_id']."_".$countfolder."\">".$folder_id."</div>";
     print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\"><tr>";
 

@@ -625,8 +625,8 @@ STUDIP.Filesystem = {
    */
   unsetarrows     : function () {
     jQuery("span.move_arrows,span.updown_marker").hide();
-    //jQuery("span.anfasser").show();
     jQuery(".draggable").css("cursor", "move");
+    jQuery(".draggable_folder").css("cursor", "move");
   }
 };
 
@@ -639,40 +639,38 @@ STUDIP.Filesystem.setdraggables = function () {
     var id = this.getAttribute('id');
     var md5_id = id.substr(id.lastIndexOf('_') + 1);
     //wenn es einen Anfasser gibt, also wenn Nutzer verschieben darf
-    if (jQuery('a.drag', this)) {
-      jQuery(this).sortable({
-        //handle: 'a.drag',
-        opacity: 0.6,
-        revert: 300,
-        scroll: true,
-        update: function () {
-          var id = this.getAttribute('id');
-          var sorttype = (id.lastIndexOf('subfolders') !== -1 ? "folder" : "file");
-          md5_id = id.substr(id.lastIndexOf('_') + 1);
-          var order = jQuery(this).sortable('serialize', {key: "order"}).split("&");
-          order = jQuery.map(order, function (component) {
-            return component.substr(component.lastIndexOf('=') + 1);
-          });
-          var order_ids = jQuery.map(order, function (order_number) {
-            if (sorttype === "folder") {
-              // Unterordner:
-              return jQuery("#getmd5_fo" + md5_id + "_" + order_number).html();
-            } else {
-              // Dateien:
-              return jQuery("#getmd5_fi" + md5_id + "_"  + order_number).html();
-            }
-          });
-          jQuery.ajax({
-            url: STUDIP.Filesystem.getURL(),
-            data: {
-              sorttype: sorttype,
-              folder_sort: md5_id,
-              file_order: order_ids.join(",")
-            }
-          });
-        }
-      });
-    }
+    jQuery(this).sortable({
+      axis: "y",
+      opacity: 0.6,
+      revert: 300,
+      scroll: true,
+      update: function () {
+        var id = this.getAttribute('id');
+        var sorttype = (id.lastIndexOf('subfolders') !== -1 ? "folder" : "file");
+        md5_id = id.substr(id.lastIndexOf('_') + 1);
+        var order = jQuery(this).sortable('serialize', {key: "order"}).split("&");
+        order = jQuery.map(order, function (component) {
+          return component.substr(component.lastIndexOf('=') + 1);
+        });
+        var order_ids = jQuery.map(order, function (order_number) {
+          if (sorttype === "folder") {
+            // Unterordner:
+            return jQuery("#getmd5_fo" + md5_id + "_" + order_number).html();
+          } else {
+            // Dateien:
+            return jQuery("#getmd5_fi" + md5_id + "_"  + order_number).html();
+          }
+        });
+        jQuery.ajax({
+          url: STUDIP.Filesystem.getURL(),
+          data: {
+            sorttype: sorttype,
+            folder_sort: md5_id,
+            file_order: order_ids.join(",")
+          }
+        });
+      }
+    });
   });
 };
 

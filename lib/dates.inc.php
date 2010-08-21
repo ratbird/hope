@@ -591,7 +591,7 @@ function Termin_Eingabe_javascript ($t = 0, $n = 0, $atime=0, $ss = '', $sm = ''
     $q = ($ss !== '')? "&ss={$ss}&sm={$sm}&es={$es}&em={$em}":'';
     $txt .= "<a href=\"javascript:window.open('";
     $txt .= "termin_eingabe_dispatch.php?mcount={$km}&element_switch={$t}&c={$n}{$at}{$q}{$bla}', 'kalender', 'dependent=yes $sb, width=$kx, height=$ky');void(0);";
-    $txt .= '"><img src="'.$GLOBALS['ASSETS_URL'].'images/popupkalender.gif" width="17" height="18" border="0" style="vertical-align:bottom" ';
+    $txt .= '"><img src="' . Assets::image_path('popupcalendar.png') . '" style="vertical-align:bottom" ';
     $txt .= tooltip(_("Für eine Eingabehilfe zur einfacheren Terminwahl bitte hier klicken."),TRUE,FALSE);
     $txt .= '></a>';
 

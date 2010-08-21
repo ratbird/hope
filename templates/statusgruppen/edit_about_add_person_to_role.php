@@ -27,7 +27,7 @@
                 echo _("Einrichtung") . ':&nbsp;<i>' . $data['Name'] . '</i>';
             ?>
                 <a href="<?= URLHelper::getLink('?view=Daten&subview=AddPersonToRole&username='. $username) ?>">
-                    <img src="<?=$GLOBALS['ASSETS_URL']?>/images/rewind.gif" border="0">
+                    <?=Assets::img('icons/16/blue/refresh.png', array('class' => 'text-top')) ?>
                 </a>
                 <br><br>
                 <?=_("Funktion auswählen")?>:<br>

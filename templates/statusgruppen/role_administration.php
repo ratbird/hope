@@ -79,14 +79,14 @@
 
                         <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap>
                             <input
-                                src="<?= Assets::image_path('antwortnew') ?>"
+                                src="<?= Assets::image_path('icons/16/yellow/arr_eol-right.png') ?>"
                                 name="do_person_sort[<?= $person['username'] ?>]" type="image">
                         </td>
 
                         <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap style="padding-left: 6px;">
                             <? if ($pos < sizeof($persons)) : ?>
                             <a href="<?= URLHelper::getLink('?cmd=move_down&role_id='. $role_id .'&username='. $person['username']) ?>">
-                                <?= Assets::img('move_down') ?>
+                                <?= Assets::img('icons/16/yellow/arr_2down.png') ?>
                             </a>
                             <? endif; ?>
                         </td>
@@ -94,7 +94,7 @@
                         <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap style="padding-left: 4px;">
                             <? if ($pos > 1) : ?>
                             <a href="<?= URLHelper::getLink('?cmd=move_up&role_id='. $role_id .'&username='. $person['username']) ?>">
-                                <?= Assets::img('move_up') ?>
+                                <?= Assets::img('icons/16/yellow/arr_2up.png') ?>
                             </a>
                             <? endif; ?>
                         </td>

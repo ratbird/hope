@@ -3,7 +3,7 @@
   <table style="width: 80%;">
     <tr>
       <td class="topic">
-        <?= Assets::img('news-icon.gif') ?>
+        <?= Assets::img('icons/16/white/info.png') ?>
         <b>
           <?= _('Stud.IP Web-Migrator') ?>
         </b>

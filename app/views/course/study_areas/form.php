@@ -41,7 +41,7 @@
                       array('study_area_selection[rewind_button]' => 1,
                             'study_area_selection[last_selected]' => $selected,
                            'study_area_selection[showall]' => (int) $selection->getShowAll())) ?>">
-        <?= Assets::img('rewind.gif') ?>
+        <?= Assets::img('icons/16/blue/refresh.png') ?>
       </a>
 
       <? if (!sizeof($selection->getSearchResult())) : ?>

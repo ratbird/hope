@@ -96,7 +96,7 @@ define ("EVAL_LIB_SHOW", EVAL_PATH."evaluation_show.lib.php");
 
 /* Picture constants ------------------------------------------------------- */
 define ("EVAL_PIC_ICON", Assets::image_path('icons/16/grey/test.png'));
-define ("EVAL_PIC_PREVIEW", Assets::image_path('preview.gif'));
+define ("EVAL_PIC_PREVIEW", Assets::image_path('icons/16/blue/question-circle.png'));
 define ("EVAL_PIC_ADMIN", Assets::image_path('administration.gif'));
 define ("EVAL_PIC_LOGO", Assets::image_path('infobox/evaluation.jpg'));
 define ("EVAL_PIC_ARROW", Assets::image_path('forumgruen.gif'));
@@ -141,8 +141,8 @@ define ("EVAL_PIC_TREE_QUESTIONGROUP_FILLED", Assets::image_path('eval_qgroup_fi
 define ("EVAL_PIC_EXPORT_FILE", Assets::image_path('images/icons/16/blue/file-xls.png'));
 define ("EVAL_PIC_YES", Assets::image_path('symbol01.gif'));
 define ("EVAL_PIC_NO",  Assets::image_path('symbol02.gif'));
-define ("EVAL_PIC_SHARED",  Assets::image_path('on_small_transparent.gif'));
-define ("EVAL_PIC_NOTSHARED",  Assets::image_path('off_small_blank_transparent.gif'));
+define ("EVAL_PIC_SHARED",  Assets::image_path('icons/16/blue/checkbox-checked.png'));
+define ("EVAL_PIC_NOTSHARED",  Assets::image_path('icons/16/blue/checkbox-unchecked.png'));
 /* -------------------------------------------------- end: picture constants */
 
 /* CSS constants ----------------------------------------------------------- */

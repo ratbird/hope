@@ -120,7 +120,7 @@ function PrintAktualStatusgruppen ($range_id, $view, $edit_id="")
                 }
                 printf ("\n\t<tr>\n\t\t<td><font color=\"%s\">$k</font></td>", $farbe);
                 printf ("<td class=\"%s\" colspan=\"2\"><font size=\"2\">%s</font></td>",$class, htmlReady($db2->f("fullname")));
-                printf ("<td><a href=\"%s\"" . Assets::image_path('icons/16/red/trash.png')." %s></a></td>", URLHelper::getLink($PHP_SELF.'?cmd=remove_person&statusgruppe_id='.$statusgruppe_id.'&username='.$db2->f("username").'&range_id='.$range_id.'&view='.$view), tooltip(_("Person aus der Gruppe entfernen")));
+                printf ("<td><a href=\"%s\"" . Assets::image_path('icons/16/red/trash.png') . " %s></a></td>", URLHelper::getLink($PHP_SELF.'?cmd=remove_person&statusgruppe_id='.$statusgruppe_id.'&username='.$db2->f("username").'&range_id='.$range_id.'&view='.$view), tooltip(_("Person aus der Gruppe entfernen")));
                 echo "\n\t</tr>";
                 $k++;
             }
@@ -339,15 +339,15 @@ if ($db->num_rows()>0) {   // haben wir schon Gruppen? dann Anzeige
                 echo "&nbsp; <font size=\"-1\">"._("Ihr Suchbegriff muss mindestens 3 Zeichen umfassen!");
                 echo "<br><br><font size=\"-1\">&nbsp; " . _("freie Personensuche (wird in Adressbuch übernommen)") . "</font><br>";
                 echo "&nbsp; <input type=\"text\" name=\"search_exp\" value=\"\">";
-                printf ("<input type=\"IMAGE\" name=\"search\" src= \"".$GLOBALS['ASSETS_URL']."images/suchen.gif\" border=\"0\" value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
+                printf ("<input type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
             } else {
                 PrintSearchResults($search_exp, $range_id);
-                printf ("<input type=\"IMAGE\" name=\"search\" src= \"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" border=\"0\" value=\" %s \" %s>&nbsp;  ", _("neue Suche"), tooltip(_("neue Suche")));
+                printf ("<input type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("neue Suche"), tooltip(_("neue Suche")));
             }
         } else {
             echo "<font size=\"-1\">&nbsp; " . _("freie Personensuche (wird in Adressbuch &uuml;bernommen)") . "</font><br>";
             echo "&nbsp; <input type=\"text\" name=\"search_exp\" value=\"\">";
-            printf ("<input type=\"IMAGE\" name=\"search\" src= \"".$GLOBALS['ASSETS_URL']."images/suchen.gif\" border=\"0\" value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
+            printf ("<input type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
         }
     } ?>
         <br><br>

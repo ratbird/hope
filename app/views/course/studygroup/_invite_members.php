@@ -12,7 +12,7 @@
                         <? endforeach; ?>
                     </select>
                     <input type="image" name="add_member" <?= makebutton('einladen','src')?> style="vertical-align:middle;">
-                    <input type="image" name="new_search" src="<?= Assets::image_path('rewind.gif') ?>" title="<?= _("neue Suche starten") ?>" style="vertical-align:middle;">
+                    <input type="image" name="new_search" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" title="<?= _("neue Suche starten") ?>" style="vertical-align:middle;">
                 <div>
             <? else : ?>
                 <?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?><br>

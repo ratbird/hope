@@ -141,20 +141,20 @@ if ($search_exp) {
     $search_exp = str_replace("_","\_",$search_exp);
     if (strlen(trim($search_exp))<3) {
         echo "&nbsp; <font size=\"-1\">"._("Ihr Suchbegriff muss mindestens 3 Zeichen umfassen! ");
-        printf ("<a href=\"".URLHelper::getLink()."\"><img src= \"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" border=\"0\" value=\"" . _("neue Suche") . "\" %s>", tooltip(_("neue Suche")));
+        printf ("<a href=\"".URLHelper::getLink()."\"><img src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" value=\"" . _("neue Suche") . "\" %s>", tooltip(_("neue Suche")));
     } else {
         $search_exp = trim($search_exp);
         if (SearchResults($search_exp)) {
-            printf ("<input type=\"IMAGE\" name=\"addsearch\" src=\"".$GLOBALS['ASSETS_URL']."images/move_down.gif\" border=\"0\" value=\"" . _("In Adressbuch eintragen") . "\" %s>&nbsp;  ", tooltip(_("In Adressbuch eintragen")));
+            printf ("<input type=\"IMAGE\" name=\"addsearch\" src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" value=\"" . _("In Adressbuch eintragen") . "\" %s>	 ", tooltip(_("In Adressbuch eintragen")));
             echo SearchResults($search_exp);
         } else {
-            echo "&nbsp; <font size=\"2\">"._("keine Treffer zum Suchbegriff:")."</font><b>&nbsp; $search_exp&nbsp; </b>";
+            echo "<font size=\"2\">"._("keine Treffer zum Suchbegriff:")."</font><b>&nbsp; $search_exp&nbsp; </b>";
         }
-        printf ("<a href=\"".URLHelper::getLink()."\"><img src= \"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" border=\"0\" value=\"" . _("neue Suche") . "\" %s>", tooltip(_("neue Suche")));
+        printf ("<a href=\"".URLHelper::getLink()."\"><img src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\"  value=\"" . _("neue Suche") . "\" %s>", tooltip(_("neue Suche")));
     }
 } else {
     echo "<font size=\"2\" color=\"#555555\">". _("Person zum Eintrag in das Adressbuch suchen:")."</font>&nbsp; <input type=\"text\" name=\"search_exp\" value=\"\">";
-    printf ("<input type=\"IMAGE\" name=\"search\" src= \"".$GLOBALS['ASSETS_URL']."images/suchen.gif\" border=\"0\" value=\"" . _("Personen suchen") . "\" %s>&nbsp;  ", tooltip(_("Person suchen")));
+    printf ("<input type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  border=\"0\" value=\"" . _("Personen suchen") . "\" %s>&nbsp;  ", tooltip(_("Person suchen")));
 }
 echo "</td></tr>";
 

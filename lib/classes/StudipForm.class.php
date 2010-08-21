@@ -245,7 +245,7 @@ class StudipForm {
             } else {
                 $atime = time();
             }
-            $ret .= "&nbsp; <img align=\"absmiddle\" src=\"{$GLOBALS['ASSETS_URL']}images/popupkalender.gif\" border=\"0\" ";
+            $ret .= "&nbsp; <img align=\"absmiddle\" src=\"".Assets::image_path('popupcalendar.png')."\" ";
             $ret .= "onClick=\"window.open('";
             $ret .= URLHelper::getLink("termin_eingabe_dispatch.php", 
                  array("form_name" => $this->form_name, 

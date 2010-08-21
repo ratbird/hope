@@ -753,13 +753,13 @@ class ELearningUtils
                 $output .= "<table>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 if (ELearningUtils::getConfigValue("ACTIVE", $cms_type)) {
-                    $output .= "<tr><td><img src=\"assets/images/on_small.gif\" border=\"0\"></td><td><b>". sprintf(_("Die Schnittstelle zum System %s ist aktiv."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</b></td></tr>";
+                    $output .= "<tr><td>" .  Assets::img('icons/16/blue/checkbox-checked.png', array('class' => 'text-top')) . "</td><td><b>". sprintf(_("Die Schnittstelle zum System %s ist aktiv."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</b></td></tr>";
                     $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 }
                 elseif ($data["config"] < 1)
-                    $output .= "<tr><td><img src=\"assets/images/off_small_blank.gif\" border=\"0\"></td><td><i>". sprintf(_("Die Schnittstelle f&uuml;r das System %s wurde noch nicht eingerichtet."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
+                    $output .= "<tr><td>" .  Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top')) . "</td><td><i>". sprintf(_("Die Schnittstelle f&uuml;r das System %s wurde noch nicht eingerichtet."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
                 elseif ($data["config"] < 1)
-                    $output .= "<tr><td><img src=\"assets/images/off_small.gif\" border=\"0\"></td><td><i>". sprintf(_("Die Schnittstelle wurde noch nicht aktiviert."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
+                    $output .= "<tr><td>" .  Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top')) . "</td><td><i>". sprintf(_("Die Schnittstelle wurde noch nicht aktiviert."), $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</i></td></tr>";
 
                 if ($data["accounts"])
                     $output .= "<tr><td colspan=\"2\">". sprintf(_("%s Stud.IP-User-Accounts sind mit Accounts im System %s verkn&uuml;pft."), $data["accounts"], $ELEARNING_INTERFACE_MODULES[$cms_type]["name"]) . "</td></tr>";

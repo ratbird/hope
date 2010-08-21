@@ -875,12 +875,12 @@ function showSearchForm($name, $search_string='', $user_only=FALSE, $administrab
             $old_art=$val["art"];
         }
         ?></select>
-        <font size=-1><input type="image" align="absmiddle" name="<? echo "reset_".$name ?>" src="<?= $GLOBALS['ASSETS_URL'] ?>images/rewind.gif" <?=tooltip (_("Suche zurücksetzen")) ?> border="0" value="<?=_("neue Suche")?>"></font>
+        <font size=-1><input type="image" align="absmiddle" name="<? echo "reset_".$name ?>" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>"  <?=tooltip (_("Suche zurücksetzen")) ?> border="0" value="<?=_("neue Suche")?>"></font>
         <?
     } else {
         ?>
         <font size=-1><input type="text" align="absmiddle" name=" <? echo "search_string_".$name ?>" size=30 maxlength=255></font>
-        <font size=-1><input type="image" align="absmiddle" name=" <? echo "do_".$name ?>" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <?=tooltip (_("Starten Sie hier Ihre Suche")) ?> border=0 value="<?=_("suchen")?>"></font>
+        <font size=-1><input type="image" align="absmiddle" name=" <? echo "do_".$name ?>" src="<?= Assets::image_path('icons/16/blue/search.png') ?>"  <?=tooltip (_("Starten Sie hier Ihre Suche")) ?> border=0 value="<?=_("suchen")?>"></font>
         <?
     }
 }

@@ -162,11 +162,11 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         // if javascript enabled display icon for popup calendar
         if ($auth->auth["jscript"]) {
             $insert_date_start = "&nbsp;"
-                . "<img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/popupkalender.gif\" border=\"0\" "
+                . "<img align=\"absmiddle\" src=\"".Assets::image_path('popupcalendar.png')."\" "
                 . "onClick=\"window.open('termin_eingabe_dispatch.php?element_switch=9', 'InsertDate', "
                 . "'dependent=yes, width=210, height=210, left=500, top=150')\">";
             $insert_date_end = "&nbsp;"
-                . "<img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/popupkalender.gif\" border=\"0\" "
+                . "<img align=\"absmiddle\" src=\"".Assets::image_path('popupcalendar.png')."\" "
                 . "onClick=\"window.open('termin_eingabe_dispatch.php?element_switch=10', 'InsertDate', "
                 . "'dependent=yes, width=210, height=210, left=500, top=150')\">";
         }

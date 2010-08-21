@@ -88,7 +88,7 @@ switch ($view) {
                                     "text"  => ($resources_data["list_recurse"]) ? _("Untergeordnete Ebenen werden ausgegeben.") : _("Untergeordnete Ebenen werden <u>nicht</u> ausgegeben.")))),
                     array  ("kategorie" => _("Aktionen:"),
                             "eintrag" => array (
-                                array   ("icon" =>  (!$resources_data["list_recurse"]) ? "on_small.gif" : "off_small.gif",
+                                array   ("icon" =>  (!$resources_data["list_recurse"]) ? "icons/16/black/checkbox-checked.png" : "icons/16/black/checkbox-unchecked.png",
                                     "text"  => ($resources_data["list_recurse"]) ? sprintf(_("Ressourcen in untergeordneten Ebenen %snicht ausgeben%s."), "<a href=\"$PHP_SELF?nrecurse_list=TRUE\">", "</a>") :  sprintf(_("Ressourcen in untergeordneten Ebenen %s(mit) ausgeben%s"), "<a href=\"$PHP_SELF?recurse_list=TRUE\">", "</a>")))));
         $infopic = "rooms.jpg";
     break;
@@ -258,7 +258,7 @@ switch ($view) {
                             "eintrag" => array (
                                 array   ("icon" =>  "link_intern.gif" ,
                                     "text"  =>  "<a href=\"javascript:void(null)\" onClick=\"window.open('resources.php?quick_view=search&quick_view_mode=no_nav','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes')\" >"._("Ressourcen suchen")."</a>"),
-                                array   ("icon" =>  (!$resources_data["skip_closed_requests"]) ? "off_small.gif" : "on_small.gif",
+                                array   ("icon" =>  (!$resources_data["skip_closed_requests"]) ? "icons/16/black/checkbox-unchecked.png" : "icons/16/black/checkbox-checked.png",
                                     "text"  => ($resources_data["skip_closed_requests"]) ? sprintf(_("Bearbeitete Anfragen %sanzeigen%s."), "<a href=\"$PHP_SELF?skip_closed_requests=FALSE\">", "</a>") :  sprintf(_("Bearbeitete Anfragen %snicht anzeigen%s"), "<a href=\"$PHP_SELF?skip_closed_requests=TRUE\">", "</a>")),
                                 array   ("icon" =>  "nachricht1.gif",
                                     "text"  => sprintf(_("Nachrichten zu zugewiesenen Anfragen %sversenden%s."), "<a href=\"$PHP_SELF?snd_closed_request_sms=TRUE\">", "</a>")))));

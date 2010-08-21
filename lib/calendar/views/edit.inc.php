@@ -706,7 +706,7 @@ function to_string_popupcalendar ($element, $disabled)
     // if javascript enabled display icon for popup calendar
     if ($GLOBALS['auth']->auth['jscript'] && !$disabled) {
         return "&nbsp;"
-            . "<img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/popupkalender.gif\" border=\"0\" "
+            . "<img align=\"absmiddle\" src=\"".Assets::image_path('popupcalendar.png')."\" "
             . "onClick=\"window.open('termin_eingabe_dispatch.php?element_switch=$element&atime={$GLOBALS['atime']}', 'InsertDate', "
             . "'dependent=yes, width=210, height=210, left=500, top=150')\">";
     }

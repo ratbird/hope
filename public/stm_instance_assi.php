@@ -213,8 +213,8 @@ class InstanceStmControl {
         $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
                             'reset' => array('type' => 'zuruecksetzen', 'info' => _("Formularfelder leeren")),
                             'continue' => array('type' => 'weiter', 'info' => _("Dieses Formular abschicken")),
-                            'search' => array('type' => 'suchen.gif', 'info' => _("Freie Suche"), 'is_picture' => 'true'),
-                            'preview' => array('type' => 'preview.gif', 'info' => _("Wiki Vorschau"), 'is_picture' => 'true')
+                            'search' => array('type' => 'icons/16/black/search.png', 'info' => _("Freie Suche"), 'is_picture' => 'true'),
+                            'preview' => array('type' => 'icons/16/black/question-circle.png', 'info' => _("Wiki Vorschau"), 'is_picture' => 'true')
                             );
 
 

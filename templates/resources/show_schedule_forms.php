@@ -350,7 +350,7 @@
                     printf ("<option value=\"%s\">%s  </option>", $key, htmlReady(my_substr($val, 0, 40)));
                 }
                 print "</select>";
-                print "&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("neue Suche starten"))." name=\"reset_room_search\">";
+                print "&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\"  ".tooltip(_("neue Suche starten"))." name=\"reset_room_search\">";
                 print "&nbsp;&nbsp;".makeButton('verschieben', 'input', _("Die Belegung in den ausgewählten Raum verschieben"),'send_change_resource');
             } else {
                 ?>
@@ -360,7 +360,7 @@
                 <?}?>
                 </select>
                 </font>
-                &nbsp;<input type="image" src="<?=$GLOBALS['ASSETS_URL']?>images/rewind.gif" <?=tooltip(_("neue Suche starten"))?> name="reset_room_search">
+                &nbsp;<input type="image" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>"  <?=tooltip(_("neue Suche starten"))?> name="reset_room_search">
                 &nbsp;&nbsp;
                 <?=makeButton('kopieren', 'input', _("Die Belegung in die ausgewählten Räume kopieren"),'send_change_resource')?>
                 <?

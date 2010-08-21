@@ -155,16 +155,16 @@ class ExternEditModule extends ExternEditHtml {
 
                 // visible
                 if ($visible[$order[$i]]) {
-                    $out .= "<input type=\"image\" name=\"{$this->element_name}_hide[{$order[$i]}]\" ";
-                    $out .= "src=\"{$GLOBALS['ASSETS_URL']}images/on_small.gif\"";
-                    $out .= tooltip(_("Datenfeld ausblenden"));
-                    $out .= "border=\"0\" align=\"middle\">\n";
+                    $out .= "<input type=\"image\" name=\"{$this->element_name}_hide[{$order[$i]}]\" src=";
+                    $out .= Assets::image_path('icons/16/blue/checkbox-checked.png');
+                    $out .= " ".tooltip(_("Datenfeld ausblenden"));
+                    $out .= " align=\"middle\">\n";
                 }
                 else {
-                    $out .= "<input type=\"image\" name=\"{$this->element_name}_show[{$order[$i]}]\" ";
-                    $out .= "src=\"{$GLOBALS['ASSETS_URL']}images/off_small_blank.gif\"";
-                    $out .= tooltip(_("Datenfeld anzeigen"));
-                    $out .= "border=\"0\" align=\"middle\">\n</td>\n";
+                    $out .= "<input type=\"image\" name=\"{$this->element_name}_show[{$order[$i]}]\" src=";
+                    $out .= Assets::image_path('icons/16/blue/checkbox-unchecked.png');
+                    $out .= " ".tooltip(_("Datenfeld anzeigen"));
+                    $out .= " align=\"middle\">\n</td>\n";
                 }
             }
 
@@ -304,16 +304,16 @@ class ExternEditModule extends ExternEditHtml {
 
             // visible
             if (in_array($id, $groups_visible)) {
-                $out .= "<td align=\"center\"><input type=\"image\" name=\"{$this->element_name}_hide_group[$id]\" ";
-                $out .= "src=\"{$GLOBALS['ASSETS_URL']}images/on_small.gif\"";
-                $out .= tooltip(_("Spalte ausblenden"));
-                $out .= "border=\"0\" align=\"middle\">\n</td>\n";
+                $out .= "<td align=\"center\"><input type=\"image\" name=\"{$this->element_name}_hide_group[$id]\" src=";
+                $out .= Assets::image_path('icons/16/blue/checkbox-checked.png');
+                $out .= " ".tooltip(_("Spalte ausblenden"));
+                $out .= " align=\"middle\">\n</td>\n";
             }
             else {
-                $out .= "<td align=\"center\"><input type=\"image\" name=\"{$this->element_name}_show_group[$id]\" ";
-                $out .= "src=\"{$GLOBALS['ASSETS_URL']}images/off_small_blank.gif\"";
-                $out .= tooltip(_("Spalte einblenden"));
-                $out .= "border=\"0\" align=\"middle\">\n</td>\n";
+                $out .= "<td align=\"center\"><input type=\"image\" name=\"{$this->element_name}_show_group[$id]\" src=";
+                $out .= Assets::image_path('icons/16/blue/checkbox-unchecked.png');
+                $out .= " ".tooltip(_("Spalte einblenden"));                
+                $out .= " align=\"middle\">\n</td>\n";
             }
             $out .= "<td>&nbsp;</td></tr>\n";
             $this->css->switchClass();

@@ -24,7 +24,7 @@
                     <option value="<?= $data['username'] ?>"><?= htmlReady(my_substr($data['fullname']." (".$data['username'],0,35)) ?>) - <?= $data['perms'] ?></option>
                     <? endforeach; ?>
                 </select>
-                <input type="image" name="new_search" src="<?= Assets::image_path('rewind.gif') ?>" title="<?= _("neue Suche starten") ?>">
+                <input type="image" name="new_search" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" title="<?= _("neue Suche starten") ?>">
                 <? if (sizeof($results_choose_founders) == 500) : ?>
                 <br><span style="color:red"><?= sprintf(_("Es werden nur die ersten %s Treffer angezeigt!"), 500) ?></span>
                 <? endif; ?>

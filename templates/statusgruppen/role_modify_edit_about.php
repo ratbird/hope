@@ -65,9 +65,8 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."
 
                     // Set-Default Checkbox
                     echo '<td class="'.$cssSw->getClass().'" align="right">';
-                    echo '<a href="'. URLHelper::getLink('?cmd=set_default&username='.$username.'&view='.$view.'&subview='.$subview.'&role_id='.$role_id.'&chgdef_entry_id='.$id.'&cor_inst_id='.$inst_id.'&sec_range_id='.$role_id.'&subview_id='.$subview_id.'&studipticket='.get_ticket()).'" ';
-                    echo tooltip(_("Diese Daten von den Standarddaten übernehmen")). '>';
-                    echo '<img src="'.$GLOBALS['ASSETS_URL'].'/images/off_small_blank_transparent.gif" border="0">';
+                    echo '<a href="'. URLHelper::getLink('?cmd=set_default&username='.$username.'&view='.$view.'&subview='.$subview.'&role_id='.$role_id.'&chgdef_entry_id='.$id.'&cor_inst_id='.$inst_id.'&sec_range_id='.$role_id.'&subview_id='.$subview_id.'&studipticket='.get_ticket()).'" >';
+                    echo Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top', 'title' =>_("Diese Daten von den Standarddaten übernehmen")));
                     echo '</a>';
                 } else {
                     if ($entry->getValue() == 'default_value') {
@@ -77,8 +76,8 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."
                         // UnSet-Default Checkbox
                         echo '<td class="'.$cssSw->getClass().'" align="right">';
                         if ($entry->structure->editAllowed($auth->auth['perm'])) {
-                            echo '<a href="'. URLHelper::getLink('?cmd=unset_default&username='.$username.'&view='.$view.'&subview='.$subview.'&role_id='.$role_id.'&chgdef_entry_id='.$id.'&cor_inst_id='.$inst_id.'&sec_range_id='.$role_id.'&subview_id='.$subview_id.'&studipticket='.get_ticket()) .'" ';
-                            echo tooltip(_("Diese Daten NICHT von den Standarddaten übernehmen")). '>';
+                            echo '<a href="'. URLHelper::getLink('?cmd=unset_default&username='.$username.'&view='.$view.'&subview='.$subview.'&role_id='.$role_id.'&chgdef_entry_id='.$id.'&cor_inst_id='.$inst_id.'&sec_range_id='.$role_id.'&subview_id='.$subview_id.'&studipticket='.get_ticket()) .'" >';
+                            echo Assets::img('icons/16/blue/checkbox-checked.png', array('class' => 'text-top', 'title' =>_("Diese Daten NICHT von den Standarddaten übernehmen")));
                             echo '<img src="'.$GLOBALS['ASSETS_URL'].'/images/on_small_transparent.gif" border="0">';
                             echo '</a>';
                         }

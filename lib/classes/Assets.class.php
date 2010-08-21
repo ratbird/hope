@@ -129,7 +129,7 @@ class Assets {
    *
    * The source can be supplied as a...
    * * full path, like "/my_images/image.gif"
-   * * file name, like "rss.gif", that gets expanded to "/images/rss.gif"
+   * * file name, like "rss.png", that gets expanded to "/images/rss.png"
    * * file name without extension, like "logo", that gets expanded to "/images/logo.png"
    */
   static function img($source, $opt = array()) {
@@ -165,7 +165,7 @@ class Assets {
    *   like "/my_images/image.gif"
    *
    * file name,
-   *   like "rss.gif", that gets expanded to "/images/rss.gif"
+   *   like "rss.png", that gets expanded to "/images/rss.png"
    *
    * file name without extension,
    *   like "logo", that gets expanded to "/images/logo.gif"

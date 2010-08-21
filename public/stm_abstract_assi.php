@@ -117,7 +117,7 @@ class AbstractStmControl{
         $form_buttons = array('continue' => array('type' => 'weiter', 'info' => _("Dieses Formular abschicken")),
                             'reset' => array('type' => 'zuruecksetzen', 'info' => _("Formularfelder leeren")),
                             'back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
-                            'preview' => array('type' => 'preview.gif', 'info' => _("Wiki Vorschau"), 'is_picture' => 'true'));
+                            'preview' => array('type' => 'icons/16/black/question-circle.png', 'info' => _("Wiki Vorschau"), 'is_picture' => 'true'));
                             
                             
 

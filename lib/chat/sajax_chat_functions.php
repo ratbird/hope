@@ -84,17 +84,11 @@ function get_chat_status($chatid){
             if ($chatServer->getPerm($user->id,$chatid)){
                 ?>
                 <a href="javascript:<?=(($chatServer->chatDetail[$chatid]['password']) ? "doUnlock();" : "doLock();")?>">
-                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['password']) ? "closelock.gif" : "openlock.gif")?>"
-                    border="0" align="absmiddle"
-                    <?=tooltip(($chatServer->chatDetail[$chatid]['password']) ? _("Zugangsschutz für diesen Chat aufheben") : _("Diesen Chat absichern"))?>>
+                <?=(($chatServer->chatDetail[$chatid]['password']) ? Assets::img('icons/blue/lock-locked.png',  array('title' => _("Zugangsschutz für diesen Chat aufheben"))) : Assets::img('icons/blue/lock-unlocked.png',  array('title' => _("Diesen Chat absichern")))) ?>
                 </a>
                 <?
             } else {
-                ?>
-                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['password']) ? "closelock.gif" : "openlock.gif")?>"
-                    border="0" align="absmiddle"
-                    <?=tooltip(($chatServer->chatDetail[$chatid]['password']) ? _("Dieser Chat ist zugangsbeschränkt.") : _("Dieser Chat ist nicht zugangsbeschränkt."))?>>
-                <?
+				(($chatServer->chatDetail[$chatid]['password']) ? Assets::img('icons/blue/lock-locked.png',  array('title' => _("Dieser Chat ist zugangsbeschränkt."))) : Assets::img('icons/blue/lock-unlocked.png',  array('title' => _("Dieser Chat ist nicht zugangsbeschränkt.")))) ?>
             }
             if (count($chatServer->chatDetail[$chatid]['log'])){
                 ?>

@@ -166,18 +166,6 @@ img.preview {
 
 /* --- Tabellen ------------------------------------------------------------- */
 /* //TODO: optimieren und aufräumen */
-td.shadowver {
-    background-image: url('../images/shadowver.gif');
-}
-
-td.shadowhor {
-    background-image: url('../images/shadowhor.gif');
-}
-
-td.shadowcor {
-    background-image: url('../images/shadowcor.gif');
-}
-
 td.reiterunten {
     background-image: url('../images/reiter3.jpg');
 }

@@ -26,7 +26,7 @@
                     <? endif;
                 endwhile; ?>
                 </select>
-                <?= Assets::img('pfeiltransparent') ?> <input type="image" name="assign" <?=makeButton("zuweisen", "src")?> value="<?=_("Zuweisen")?>">
+				<input type="image" name="assign" <?=makeButton("zuweisen", "src")?> value="<?=_("Zuweisen")?>">
             <? else : ?>
                 <b><?=  htmlReady($resObject->getCategoryName()) ?></b>
                 <input type="hidden" name="change_category_id" value="<?= $resObject->getCategoryId() ?>">

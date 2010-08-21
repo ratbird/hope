@@ -3304,7 +3304,7 @@ if ($level == 4) {
                             <br><font size="-1"><b><?=("gew&uuml;nschter Raum:")?></b><br><br>
                             <?
                             print "<b>".htmlReady($resObject->getName())."</b>,&nbsp;"._("verantwortlich:")."&nbsp;<a href=\"".URLHelper::getLink($resObject->getOwnerLink())."\">".$resObject->getOwnerName()."</a>";  //getOwnerLink() does not contain the output of an URLHelper
-                            print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("den ausgewählten Raum löschen"))." border=\"0\" name=\"reset_resource_id\">";
+                            print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("den ausgewählten Raum löschen"))." border=\"0\" name=\"reset_resource_id\">";
                             ?>
                             </font>
                         </td>
@@ -3352,7 +3352,7 @@ if ($level == 4) {
                                                         }
                                                         print "</select>";
                                                         print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Raumtyp auswählen")).">";
-                                                        print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("alle Angaben zurücksetzen"))." border=\"0\" name=\"reset_room_type\"><br><br>";
+                                                        print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("alle Angaben zurücksetzen"))." border=\"0\" name=\"reset_room_type\"><br><br>";
                                                     }
 
                                                     print _("Folgende Eigenschaften sind w&uuml;nschbar:")."<br><br>";
@@ -3432,8 +3432,8 @@ if ($level == 4) {
                                                     printf ("<option value=\"%s\">%s </option>", $key, htmlReady(my_substr($val, 0, 30)));
                                                 }
                                                 print "</select></font>";
-                                                print "&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" ".tooltip(_("Den Raum als Wunschraum auswählen"))." border=\"0\" name=\"send_room\">";
-                                                print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" ".tooltip(_("neue Suche starten"))." border=\"0\" name=\"reset_room_search\">";
+                                                print "&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/accept.png') . "\"".tooltip(_("Den Raum als Wunschraum auswählen"))." border=\"0\" name=\"send_room\">";
+                                                print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("neue Suche starten"))." border=\"0\" name=\"reset_room_search\">";
                                                 if ($search_properties_x)
                                                     print "<br><br>"._("(Diese R&auml;ume erf&uuml;llen die Wunschkriterien, die Sie links angegeben haben.)");
                                             }

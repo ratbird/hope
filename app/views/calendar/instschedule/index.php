@@ -46,7 +46,7 @@ $semester_chooser .= '<input type="image" src="'. Assets::image_path('GruenerHak
 
 $infobox['content'][1]['eintrag'][] = array (
     'text' => $semester_chooser,
-    'icon' => 'popupkalender.gif'
+    'icon' => 'icons/16/black/schedule.png'
 );
 ?>
 <div style="text-align: center; font-weight: bold; font-size: 1.2em">

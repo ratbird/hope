@@ -1900,8 +1900,8 @@ class EvalOverview {
 
        $startDate = ($startMode=="immediate") ? time() : $startDate;
 
-       $html .= "&nbsp;<input type=image name=\"save2_button\" align=middle border=\"0\" "
-      . "src=".$GLOBALS['ASSETS_URL']."images/pfeiltransparent.gif" . tooltip(_("Endzeitpunkt neu berechnen.")) . ">";
+       $html .= "&nbsp;<input type=image name=\"save2_button\" align=middle "
+      . Assets::image_path('icons/16/blue/refresh.png') ." ". tooltip(_("Endzeitpunkt neu berechnen.")) . ">";
        $html .= sprintf( _(" (<b>%s</b> um <b>%s</b> Uhr)"),
                strftime( "%d.%m.%Y", $startDate + $timeSpan ),
                strftime( "%H:%M", $startDate + $timeSpan ) );

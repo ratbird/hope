@@ -79,7 +79,7 @@ function printDataFieldType($targetID, $currStruct)
             print '<br><a name="a">' . $currStruct->getHTMLEditor('typeparam') . "</a>";
             printf('<input type="hidden" name="datafield_id" value="%s">', $currStruct->getID());
             print ' <input type="image" name="save" src="'.Assets::image_path('icons/16/blue/accept.png').'" title="&Auml;nderungen speichern">';
-            print ' <input type="image" name="preview" src="'.$GLOBALS['ASSETS_URL'].'images/preview.gif" title="Vorschau">';
+            print ' <input type="image" name="preview" src="'.Assets::image_path('icons/16/blue/question-circle.png').'" title="Vorschau">';
             printf(' <a href="%s"><img src="'.Assets::image_path('icons/16/blue/decline.png').'" title="Bearbeitung abbrechen"></a>',
                     URLHelper::getLink("?cancel=TRUE"));
         }

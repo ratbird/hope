@@ -260,7 +260,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
 
             //calendar jump
             $zusatz .= " <a href=\"calendar.php?cmd=showweek&atime=" . $db->f("date");
-            $zusatz .= "\"><img style=\"vertical-align:bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/popupkalender.gif\" ";
+            $zusatz .= "\"><img style=\"vertical-align:bottom\" src=\"".Assets::image_path('popupcalendar.png')."\" ";
             $zusatz .= tooltip(sprintf(_("Zum %s in den persönlichen Terminkalender springen"), date("d.m.Y", $db->f("date"))));
             $zusatz .= "></a>";
 

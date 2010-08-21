@@ -52,9 +52,10 @@
                         </a>
                         <? if (in_array('StandardPlugin', $plugin['type'])): ?>
                             <a href="<?= $controller->url_for('plugin_admin/default_activation', $pluginid) ?>">
-                                <?= Assets::img('config.png', array('class' => 'middle', 'title' => _('Default-Aktivierung'))) ?>
+                                <?= Assets::img('icons/16/blue/tools.png', array('class' => 'text-top', 'title' => _('Default-Aktivierung'))) ?>
                             </a>
                         <? endif ?>
+                    </td>
                     <td <?= $plugin['enabled'] ? '' : 'class="quiet"' ?>>
                         <?= join(', ', $plugin['type']) ?>
                     </td>

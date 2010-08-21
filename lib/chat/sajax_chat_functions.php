@@ -98,8 +98,7 @@ function get_chat_status($chatid){
             }
             if (count($chatServer->chatDetail[$chatid]['log'])){
                 ?>
-                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/logging.gif" border="0" align="absmiddle"
-                    <?=tooltip(_("Dieser Chat wird aufgezeichnet."))?>>
+                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/logging.gif" <?=tooltip(_("Dieser Chat wird aufgezeichnet."))?>>
                 <?
             }
             ?>
@@ -112,9 +111,7 @@ function get_chat_status($chatid){
                 if ($chat_log['start']){
                     ?>
                     <a href="javascript:doLogSend();">
-                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/file.gif"
-                        border="0" hspace="5" align="absmiddle"
-                        <?=tooltip(sprintf(_("Download des letzten Chatlogs (%s)"), strftime('%X',$chat_log['start'])))?>>
+                    <?= Assets::img('icons/16/blue/download.png', tooltip(_("Download des letzten Chatlogs"))) ?>
                     </a>
                     <?
                 }
@@ -128,10 +125,10 @@ function get_chat_status($chatid){
             }
             ?>
             <a href="javascript:printhelp();">
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/blue/help.png" border=0 hspace="5" align="texttop" <?=tooltip(_("Chat Kommandos einblenden"))?>>
+            <?= Assets::img('icons/16/white/info.png', array('title' => _("Chat Kommandos einblenden"), 'class' => 'text-top')) ?>
             </a>
             <a href="<?=$CANONICAL_RELATIVE_PATH_STUDIP?>show_smiley.php" target="_blank">
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/asmile.gif" hspace="5" border=0 align="absmiddle" <?=tooltip(_("Alle verfügbaren Smileys anzeigen"))?>>
+            <img src="<?= $GLOBALS['DYNAMIC_CONTENT_URL'] ?>/smile/asmile.gif" <?=tooltip(_("Alle verfügbaren Smileys anzeigen"))?>>
             </a></td>
         </tr>
     </table>

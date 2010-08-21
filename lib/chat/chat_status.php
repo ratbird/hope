@@ -116,25 +116,28 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
         <tr>
             <td width="80%" align="left" class="topic" >
             <?
-            if ($chatServer->getPerm($user->id,$chatid)){
+            if ($chatServer->getPerm($user->id,$chatid)) {
+                if ($chatServer->chatDetail[$chatid]['password']) {
                 ?>
-                <a href="javascript:<?=(($chatServer->chatDetail[$chatid]['password']) ? "doUnlock();" : "doLock();")?>">
-                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['password']) ? "closelock.gif" : "openlock.gif")?>"
-                    border="0" align="absmiddle"
-                    <?=tooltip(($chatServer->chatDetail[$chatid]['password']) ? _("Zugangsschutz für diesen Chat aufheben") : _("Diesen Chat absichern"))?>>
-                </a>
-                <?
+                    <a href="javascript:doUnlock();">
+                    <?= Assets::img('icons/16/white/lock-locked.png', array('title' => _("Zugangsschutz für diesen Chat aufheben"), 'class' => 'text-top')) ?>
+                    </a>
+                <? } else { ?>
+                    <a href="javascript:doLock();">
+                    <?= Assets::img('icons/16/white/lock-unlocked.png', array('title' => _("Diesen Chat absichern"), 'class' => 'text-top')) ?>
+                    </a>
+                <? }
             } else {
+                if ($chatServer->chatDetail[$chatid]['password']) {
                 ?>
-                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['password']) ? "closelock.gif" : "openlock.gif")?>"
-                    border="0" align="absmiddle"
-                    <?=tooltip(($chatServer->chatDetail[$chatid]['password']) ? _("Dieser Chat ist zugangsbeschränkt.") : _("Dieser Chat ist nicht zugangsbeschränkt."))?>>
-                <?
+                    <?= Assets::img('icons/16/white/lock-locked.png', array('title' => _("Dieser Chat ist zugangsbeschränkt."), 'class' => 'text-top')) ?>
+                <? } else { ?>
+                    <?= Assets::img('icons/16/white/lock-unlocked.png', array('title' => _("Dieser Chat ist nicht zugangsbeschränkt."), 'class' => 'text-top')) ?>
+                <? }
             }
             if (count($chatServer->chatDetail[$chatid]['log'])){
                 ?>
-                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/logging.gif" border="0" align="absmiddle"
-                    <?=tooltip(_("Dieser Chat wird aufgezeichnet."))?>>
+                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/logging.gif" <?=tooltip(_("Dieser Chat wird aufgezeichnet."))?>>
                 <?
             }
             ?>
@@ -146,33 +149,27 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
                 if ($chatServer->chatDetail[$chatid]['users'][$user->id]['log']){
                     ?>
                     <a href="javascript:doLogSend();">
-                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/file.gif"
-                        border="0" hspace="5" align="absmiddle"
-                        <?=tooltip(_("Download des letzten Chatlogs"))?>>
+                    <?= Assets::img('icons/16/blue/download.png', tooltip(_("Download des letzten Chatlogs"))) ?>
                     </a>
                     <?
                 }
                 ?>
                 <a href="javascript:<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? "doLogStop();" : "doLogStart();")?>">
                 <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? "stop_log.gif" : "start_log.gif")?>"
-                    border="0" hspace="5" align="absmiddle"
-                    <?=tooltip(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? _("Die Aufzeichnung für diesen Chat beenden.") : _("Eine Aufzeichnung für diesen Chat starten."))?>>
+                <?=tooltip(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? _("Die Aufzeichnung für diesen Chat beenden.") : _("Eine Aufzeichnung für diesen Chat starten."))?>>
                 </a>
                 <?
             }
             ?>
             <a href="javascript:printhelp();">
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/blue/help.png" border=0 hspace="5" align="texttop" <?=tooltip(_("Chat Kommandos einblenden"))?>>
+            <?= Assets::img('icons/16/white/info.png', array('title' => _("Chat Kommandos einblenden"), 'class' => 'text-top')) ?>
             </a>
             <a href="<?=$CANONICAL_RELATIVE_PATH_STUDIP?>show_smiley.php" target="_blank">
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/asmile.gif" hspace="5" border=0 align="absmiddle" <?=tooltip(_("Alle verfügbaren Smileys anzeigen"))?>>
+            <img src="<?= $GLOBALS['DYNAMIC_CONTENT_URL'] ?>/smile/asmile.gif" <?=tooltip(_("Alle verfügbaren Smileys anzeigen"))?> class="text-top">
             </a></td>
         </tr>
     </table>
 </div>
 </body>
 </html>
-<?
-page_close();
-?>
-
+<? page_close();

@@ -526,7 +526,7 @@ $query_time = $query_time_sort;
             array("kategorie" => _("Information:"),"eintrag" => array(
                 array('icon' => 'icons/16/black/info.png', "text" => $show_message_count))),
             array("kategorie" => _("nach Zeit filtern:"),"eintrag" => array(
-                array('icon' => 'icons/16/black/date.png', "text" => $time_by_links))),
+                array('icon' => 'icons/16/black/new/mail.png', "text" => $time_by_links))),
             array("kategorie" => _("weitere Ansichten:"),"eintrag" => array(
                 array('icon' => 'icons/16/black/search.png', "text" => $view_by_links))),
             array("kategorie" => _("Optionen:"),"eintrag" => array(

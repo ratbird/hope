@@ -93,8 +93,8 @@ foreach ($group_members as $member) {
                     }
                 ?>
 
-                    <a href="<?= UrlHelper::getUrl($course_url) ?>">
-                        <?= Assets::img('icons/16/grey/admin.png', array("size" => "16") + tooltip2(_("Veranstaltung administrieren"))) ?>
+                    <a href="<?= URLHelper::getUrl($course_url) ?>">
+                        <?= Assets::img('icons/16/grey/admin.png', tooltip2(_("Veranstaltung administrieren"))) ?>
                     </a>
 
             <? } else if ($values["binding"]) { ?>

@@ -736,9 +736,15 @@ $txt['008'] = _("Lesebestätigung");
     $infobox = array(
         $smsinfos,
         $emailforwardinfo,
-        array("kategorie" => _("Smilies & Textformatierung:"),"eintrag" => array(
-            array("icon" => "asmile.gif", "text" => sprintf(_("%s Liste mit allen Smilies %s Hilfe zu Smilies %s Hilfe zur Textformatierung %s"), "<a href=\"show_smiley.php\" target=\"_blank\">", "</a><br><a href=\"".$help_url_smil."\" target=\"_blank\">", "</a><br><a href=\"".$help_url_format."\" target=\"_blank\">", "</a>"))
-        ))
+        array(
+            "kategorie" => _("Smilies & Textformatierung:"),
+            "eintrag" => array(
+                array(
+                    "icon" => "icons/16/black/link-extern.png",
+                    "text" => sprintf(_("%s Liste mit allen Smilies %s Hilfe zu Smilies %s Hilfe zur Textformatierung %s"), "<a href=\"show_smiley.php\" target=\"_blank\">", "</a><br><a href=\"".$help_url_smil."\" target=\"_blank\">", "</a><br><a href=\"".$help_url_format."\" target=\"_blank\">", "</a>")
+                )
+            )
+        )
     );
 
     print_infobox($infobox, "infobox/messages.jpg"); ?>

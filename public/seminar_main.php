@@ -202,21 +202,11 @@ $quarter_year = 60 * 60 * 24 * 90;
                     }
                 }
 
-                if ($show) { ?>
-                    <table cellspacing="1" cellpadding="0" border="0" style="border:1px solid black;background:#FFFFDD">
-                        <tr>
-                            <td align="center" valign="center">
-                                &nbsp;<img src="<?=$GLOBALS['ASSETS_URL']?>/images/ausruf.gif">&nbsp;
-                            </td>
-                            <td>
-                                <?= _("Sie haben noch nicht die für diese Veranstaltung benötigten Zusatzinformationen eingetragen.")?><br>
-                                <?= _("Um das nochzuholen gehen Sie unter \"TeilnehmerInnen\" auf \"Zusatzangaben\"")?><br>
-                                <?= _("oder klicken sie auf")?>
-                                &nbsp;&nbsp;<a href="<?=URLHelper::getLink("teilnehmer_aux.php")?>"><img src="<?=$GLOBALS['ASSETS_URL']?>/images/link_intern.gif" border="0" valign="absmiddle">&nbsp;<?= _("Direkt zu den Zusatzangaben") ?></a>
-                            </td>
-                        </tr>
-                    </table>
-                <?
+                if ($show) {
+                    echo MessageBox::info(_("Sie haben noch nicht die für diese Veranstaltung benötigten Zusatzinformationen eingetragen."), array(
+                        _('Um das nochzuholen gehen Sie unter "TeilnehmerInnen" auf "Zusatzangaben"'),
+                        _("oder") . ' <a href="' . URLHelper::getLink("teilnehmer_aux.php") . '"> ' . _("direkt zu den Zusatzangaben") . '</a>'
+                    ));
                 }
             }
         }

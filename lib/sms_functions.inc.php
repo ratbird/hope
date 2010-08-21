@@ -282,7 +282,7 @@ function print_snd_message($psm) {
     }
 
     if ($psm['num_attachments'])
-        $attachment_icon = " <img src=\"".$GLOBALS['ASSETS_URL']."images/attachment.gif\" border=0 ".tooltip(_("Diese Nachricht enthält einen Dateianhang.")).">";
+        $attachment_icon = Assets::img('icons/16/grey/staple.png', array('class' => 'text-top', 'title' => _("Diese Nachricht enthält einen Dateianhang.")));
     else
         $attachment_icon = "";
 
@@ -297,7 +297,7 @@ function print_snd_message($psm) {
     $titel = "<a name=\"{$psm['message_id']}\" "
            . "href=\"{$link}\" "
            . "class=\"tree\" "
-           . $custom_data . ">"
+           . $custom_data . "> "
            . htmlready($psm['message_subject'])
            . "{$attachment_icon}</a>";
     $message_hovericon['titel'] = $psm['message_subject'];
@@ -384,7 +384,7 @@ function print_rec_message($prm) {
     $zusatz .= "</font>";
 
     if ($prm["num_attachments"])
-        $attachment_icon = " <img src=\"".$GLOBALS['ASSETS_URL']."images/attachment.gif\" border=0 ".tooltip(_("Diese Nachricht enthält einen Dateianhang.")).">";
+        $attachment_icon = Assets::img('icons/16/grey/staple.png', array('class' => 'text-top', 'title' => _("Diese Nachricht enthält einen Dateianhang.")));
     else
         $attachment_icon = "";
 
@@ -399,7 +399,7 @@ function print_rec_message($prm) {
     $titel = "<a name=\"{$prm['message_id']}\" "
            . "href=\"{$link}\" "
            . "class=\"tree\" "
-           . $custom_data . '">'
+           . $custom_data . '"> '
            . htmlReady($prm['message_subject'])."{$attachment_icon}</a>";
 
     if ($open == 'open'){

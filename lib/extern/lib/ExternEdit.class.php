@@ -227,7 +227,7 @@ class ExternEdit {
             $open = "close";
         }
 
-        $titel = sprintf(_("Angaben zum Element %s"), "&quot;$element_real_name&quot;");
+        $titel = $element_real_name;
         $titel = "<a class=\"tree\" href=\"$link\">$titel</a>";
         if ($this->element_name == $this->edit_element)
             $titel .= "<a name=\"anker\">&nbsp;</a>";

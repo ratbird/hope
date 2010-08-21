@@ -412,9 +412,9 @@ class ResourcesBrowse {
         <tr>
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> align="left" colspan="2">
                 <?
-                if ((!$this->db->num_rows()) || (!$sublevels)) {
-                    echo "<br><font size=-1><img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/ausruf_small2.gif\">&nbsp; <b>"._("Auf dieser Ebene existieren keine weiteren Unterebenen")."</b><br>&nbsp; </font>";
-                } else {
+                if ((!$this->db->num_rows()) || (!$sublevels)) { ?>
+                    <?= MessageBox::info(_("Auf dieser Ebene existieren keine weiteren Unterebenen")) ?>
+                <? } else {
                 ?>
                 <table width="90%" cellpadding=5 cellspacing=0 border=0 align="center">
                     <?

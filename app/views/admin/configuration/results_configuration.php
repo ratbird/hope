@@ -12,21 +12,15 @@
     <tbody>
         <tr>
             <th><?=_("Name")?></th>
-            <th></th>
-            <th><?=_("Value")?></th>
+            <th><?=_("Wert")?></th>
             <th width="40%" ><?=_("Beschreibung")?></th>
-
+            <th><?= _('Aktion') ?></th>
         </tr>
         <? if (!empty($search_filter)): ''?>
             <?foreach ($search_filter as $config): ?>
                     <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
                         <td>
                             <?=$config['field']?>
-                        </td>
-                        <td>
-                            <a class="load-in-new-row" href="<?=$controller->url_for('admin/configuration/edit_configuration/'.$config['config_id'])?>">
-                            <?= Assets::img('edit_transparent.gif', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
-                            </a>
                         </td>
                         <td>
                             <? if ($config['type'] == 'string'): ''?><em><?= htmlReady($config['value'])?></em>
@@ -40,6 +34,11 @@
                         <td>
                             <?=$config['description']?>
                         </td>
+                        <td align="right">
+                            <a class="load-in-new-row" href="<?=$controller->url_for('admin/configuration/edit_configuration/'.$config['config_id'])?>">
+                            <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
+                            </a>
+                        </td>
                     </tr>
             <?endforeach; ?>
         <?endif ; ?>
@@ -52,11 +51,11 @@ $infobox_content = array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(
             array(
-                "icon" => "icon-cont.gif",
-                "text" => '<a href="'.$controller->url_for('admin/configuration/configuration').'">'._('Konfiguration').'</a>'
+                "icon" => "icons/16/black/admin.png",
+                "text" => '<a href="'.$controller->url_for('admin/configuration/configuration').'">'._('Zurück zur Konfiguration').'</a>'
             ),
             array(
-                "icon" => "icon-cont.gif",
+                "icon" => "icons/16/black/person.png",
                 "text" => '<a href="'.$controller->url_for('admin/configuration/user_configuration').'">'._('Nutzerparameter abrufen').'</a>'
             )
         )
@@ -64,8 +63,8 @@ $infobox_content = array(
         'kategorie' => _('Suche:'),
         'eintrag'   => array(
             array(
-                'icon' => 'suchen.gif',
-                'text' =>  $this->render_partial('admin/configuration/results_filter', compact('search_filter', 'config_filter'))
+                'icon' => "icons/16/black/arr_2right.png",
+                'text' => $this->render_partial('admin/configuration/results_filter', compact('search_filter', 'config_filter'))
         )
        )
     ), array(
@@ -74,7 +73,7 @@ $infobox_content = array(
             array(
                         "text" => _("Sie können hier Parameter der Systemkonfiguration
                         direkt verändern. Sie können sowohl auf System- als auch Nutzervariablen zugreifen."),
-                        "icon" => "ausruf_small2.gif"
+                        "icon" => "icons/16/black/info.png"
                         )
         )
     )

@@ -759,12 +759,12 @@ function getFileExtension($str) {
 
 /**
  * Checks whether a given file upload is valid and allowed.
- * 
+ *
  * @param $the_file file to upload to Stud.IP
- * @param $real_file_name an optional real file name for handling files 
- *   inside a ZIP (otherwise, the filename of the ZIP itself would always be 
+ * @param $real_file_name an optional real file name for handling files
+ *   inside a ZIP (otherwise, the filename of the ZIP itself would always be
  *   used)
- * 
+ *
  * @return Can the given file be uploaded to Stud.IP?
  */
 function validate_upload($the_file, $real_file_name='') {
@@ -1138,7 +1138,7 @@ function insert_link_db($range_id, $the_file_size, $refresh = FALSE) {
     $range_id = trim($range_id);        // laestige white spaces loswerden
     $description = trim($description);      // laestige white spaces loswerden
     $name = trim($name);            // laestige white spaces loswerden
-    
+
     $url_parts = parse_url($the_link);
     $the_file_name = basename($url_parts['path']);
 
@@ -1158,7 +1158,7 @@ function insert_link_db($range_id, $the_file_size, $refresh = FALSE) {
         $doc->protected = $protect;
         $doc->autor_host = $_SERVER['REMOTE_ADDR'];
         $doc->author_name = get_fullname($user_id);
-        
+
     } else {
         $doc = StudipDocument::find($refresh);
         $doc->user_id = $user_id;
@@ -1369,15 +1369,12 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     //Dokument_Body ausgeben; dies ist auch der Bereich, der über Ajax abgerufen werden wird
     print "<table width=\"100%\" cellpadding=0 cellspacing=0 border=0>";
     if ($datei["protected"]) {
-        $content .= "<br><br><hr><table><tr><td><img src=\"".$GLOBALS['ASSETS_URL']."images/ausruf.gif\" valign=\"bottom\"></td><td><font size=\"2\"><b>"
-                            ._("Diese Datei ist urheberrechtlich geschützt.");
-                            $content .= "<br>";
-                            if(check_protected_download($datei["dokument_id"])){
-                                $content .=_("Sie darf nur im Rahmen dieser Veranstaltung verwendet werden, jede weitere Verbreitung ist unzul&auml;ssig!");
-                            } else {
-                                $content .= _("Sie k&ouml;nnen diese Datei nicht herunterladen, so lange diese Veranstaltung einen offenen Teilnehmerkreis aufweist.");
-                            }
-                            $content .= "</td></tr></table>";
+        if(check_protected_download($datei["dokument_id"])){
+            $detail .=_("Sie darf nur im Rahmen dieser Veranstaltung verwendet werden, jede weitere Verbreitung ist unzul&auml;ssig!");
+        } else {
+            $detail .= _("Sie k&ouml;nnen diese Datei nicht herunterladen, so lange diese Veranstaltung einen offenen Teilnehmerkreis aufweist.");
+        }
+        $content .= MessageBox::info(_("Diese Datei ist urheberrechtlich geschützt."), array($detail));
     }
     if ($filelink == $datei["dokument_id"])
         $content .= link_item($datei["dokument_id"],FALSE,FALSE,$datei["dokument_id"]);
@@ -1449,7 +1446,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         }
         $bewegeflaeche .= "</span>";
         $bewegeflaeche_anfasser = "<span class=\"anfasser\" style=\"display:none\"><a href=\"#\" class=\"drag\" onclick=\"return false\" " .
-                "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" class=\"text-top\" border=0 title=\"Datei verschieben\"></a></span> ";
+                "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" class=\"text-top\" title=\"Datei verschieben\"></a></span> ";
     }
 
     print "<td class=\"printhead\" valign=\"bottom\">";
@@ -1816,7 +1813,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         }
         $bewegeflaeche .= "</span>";
         $bewegeflaeche_anfasser = "<span class=\"anfasser\" style=\"display:none\"><a href=\"#\" class=\"drag\" onclick=\"return false\" " .
-                "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" class=\"text-top\" border=0 title=\"Ordner verschieben\"></a></span> ";
+                "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" class=\"text-top\" title=\"Ordner verschieben\"></a></span> ";
     }
 
     //Jetzt folgt der Link zum Aufklappen

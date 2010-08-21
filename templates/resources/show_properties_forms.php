@@ -102,8 +102,7 @@
                 endwhile; ?>
             </select>
         <? else : ?>
-            <?= Assets::img('ausruf_small2.gif', array('align' => 'absmiddle')) ?>
-            <?= _("Sie k&ouml;nnen die Einordnung in die Orga-Struktur nicht &auml;ndern.") ?>
+            <?= MessageBox::info(_("Sie k&ouml;nnen die Einordnung in die Orga-Struktur nicht &auml;ndern.")) ?>
         <? endif; ?>
         </td>
     </tr>

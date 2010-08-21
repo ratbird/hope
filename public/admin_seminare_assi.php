@@ -2092,33 +2092,27 @@ if ((!$sem_create_data["sem_class"]) && (!$level)){
             </td>
         </tr>
         <tr>
-            <td class="blank" colspan="1">&nbsp;
-                <blockquote>
-                    <table cellpadding=0 cellspacing=2 width="90%" border="0">
-                    <?
-                    foreach (SeminarCategories::GetAll() as $category) {
-                        if(!$category->course_creation_forbidden){
-                            echo "<tr><td width=\"3%\" class=\"blank\"><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\">" .  Assets::img('icons/16/blue/link-intern.png', array('class' => 'text-top')) . "</a><td>";
-                            echo "<td width=\"97%\" class=\"blank\"><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\">".$category->name."</a><td></tr>";
-                        echo "<tr><td width=\"3%\" class=\"blank\">&nbsp; <td>";
-                            echo "<td width=\"97%\" class=\"blank\"><font size=-1>".$category->create_description."</font><td></tr>";
-                        }
+            <td class="blank">
+                <ul>
+                <? foreach (SeminarCategories::GetAll() as $category) {
+                    if (!$category->course_creation_forbidden) {
+                        echo "<li><b><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\">".$category->name."</b></a><br>";
+                        echo $category->create_description."</li>";
                     }
-                    ?>
-                    </table>
-                </blockquote>
+                } ?>
+                </ul>
             </td>
+            <td class="blank"></td>
         </tr>
         <? if ($GLOBALS['STUDYGROUPS_ENABLE']) : ?>
         <tr>
             <td class="blank">
-            <blockquote>
-            <br>
+            <p class="info">
             <?=_("Sie können auch Studiengruppen anlegen, die funktional deutlich eingeschränkt sind und vor allem Formen selbstorganisierten Lernens unterstützen sollen:")?>
-            &nbsp;<a href="<?=URLHelper::getLink('dispatch.php/course/studygroup/new')?>"><?=_("Studiengruppen anlegen")?></a>.
-            </blockquote>
+            <a href="<?=URLHelper::getLink('dispatch.php/course/studygroup/new')?>"><?=_("Studiengruppen anlegen")?></a>.
+            </p>
             </td>
-            <td class="blank">&nbsp;</td>
+            <td class="blank"></td>
         </tr>
         <? endif; ?>
     </table>
@@ -2625,8 +2619,8 @@ if ($level == 2)
                             "AND auth_user_md5.perms IN %s " .
                             $clause .
                         "ORDER BY auth_user_md5.Nachname DESC ";
-                $Dozentensuche = new SQLSearch(sprintf($add_teacher_query, "('dozent')"), 
-                        sprintf(_("%s auswählen"), 
+                $Dozentensuche = new SQLSearch(sprintf($add_teacher_query, "('dozent')"),
+                        sprintf(_("%s auswählen"),
                         get_title_for_status('dozent', 1, $seminar_type)), "username");
                 print QuickSearch::get("add_doz", $Dozentensuche)
                             ->withButton()
@@ -2773,8 +2767,8 @@ if ($level == 2)
                             }
                         }
                         $clause.=") ";
-                        $Tutorensuche = new SQLSearch(sprintf($add_teacher_query, "('dozent', 'tutor')"), 
-                                sprintf(_("%s auswählen"), 
+                        $Tutorensuche = new SQLSearch(sprintf($add_teacher_query, "('dozent', 'tutor')"),
+                                sprintf(_("%s auswählen"),
                                     get_title_for_status('tutor', 1, $seminar_type)
                                 ), "username");
                         print QuickSearch::get("add_tut", $Tutorensuche)
@@ -3059,7 +3053,7 @@ if ($level == 3) {
                                         if ($sem_create_data["turnus_count"]>1) {
                                             ?>
                                             &nbsp; <a href="<? echo URLHelper::getLink("?delete_turnus_field=".($i+1)) ?>">
-                                            	<?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' =>_('Dieses Feld aus der Auswahl löschen'))); 
+                                            	<?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' =>_('Dieses Feld aus der Auswahl löschen')));
                                         }
                                         echo  Termin_Eingabe_javascript(4, $i, 0, $ss,$sm,$es,$em);
 

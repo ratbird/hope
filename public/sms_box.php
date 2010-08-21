@@ -528,7 +528,7 @@ $query_time = $query_time_sort;
             array("kategorie" => _("nach Zeit filtern:"),"eintrag" => array(
                 array('icon' => 'icons/16/black/new/mail.png', "text" => $time_by_links))),
             array("kategorie" => _("weitere Ansichten:"),"eintrag" => array(
-                array('icon' => 'icons/16/black/search.png', "text" => $view_by_links))),
+                array('icon' => 'icons/16/black/new/mail.png', "text" => $view_by_links))),
             array("kategorie" => _("Optionen:"),"eintrag" => array(
                 array("icon" => 'icons/16/black/admin.png', "text" => sprintf("<a href=\"%s?cmd_show=openall\">"._("Alle Nachrichten aufklappen")."</a><br><a href=\"%s?cmd=mark_allsmsreaded\">"._("Alle als gelesen speichern")."</a><br><a href=\"%s?cmd=admin_folder&cmd_2=new\">"._("Neuen Ordner erstellen")."</a>", $PHP_SELF, $PHP_SELF, $PHP_SELF, $PHP_SELF))))
         );

@@ -63,7 +63,7 @@ $infobox_content = array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(
             array(
-                "icon" => "icon-cont.gif",
+                "icon" => "icons/16/black/person.png",
                 "text" => '<a href="'.$controller->url_for('admin/configuration/user_configuration').'">'._('Nutzerparameter abrufen').'</a>'
             )
         )
@@ -72,7 +72,7 @@ $infobox_content = array(
         'kategorie' => _('Anzeigefilter:'),
         'eintrag'   => array(
             array(
-                "icon" => "suchen.gif",
+                "icon" => "icons/16/black/arr_2right.png",
                 "text" => $this->render_partial('admin/configuration/config_filter', compact('allconfigs', 'config_filter'))
             )
        )
@@ -80,7 +80,7 @@ $infobox_content = array(
         'kategorie' => _('Suche:'),
         'eintrag'   => array(
             array(
-                "icon" => "suchen.gif",
+                "icon" => "icons/16/black/search.png",
                 "text" =>  $this->render_partial('admin/configuration/results_filter', compact('search_filter', 'config_filter'))
         )
        )
@@ -88,7 +88,7 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                "icon" => "ausruf_small2.gif",
+                "icon" => "icons/16/black/info.png",
                 "text" => _("Sie können hier Parameter der Systemkonfiguration direkt verändern. Sie können sowohl auf System- als auch Nutzervariablen zugreifen.")
                 )
         )

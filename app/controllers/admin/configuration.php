@@ -12,7 +12,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     admin
- * @since       Stud.IP version 1.12
+ * @since       Stud.IP version 2.0
  */
 
 //Imports
@@ -130,12 +130,12 @@ class Admin_ConfigurationController extends AuthenticatedController
      */
     function user_configuration_action($give_all = NULL)
     {
-        
+
         if ($give_all == 'update') {
             UserConfig::get(Request::get('user_id'))->store(Request::get('field'), Request::get('value'));
             $this->flash['success'] = sprintf(_("Der Konfigurationseintrag: %s wurde erfolgreich geändert!"), Request::get('field'));
         }
-        
+
         if (Request::submitted('user_id')) {
             $this->user_id = Request::get('user_id');
             if ($this->user_id) {
@@ -149,7 +149,7 @@ class Admin_ConfigurationController extends AuthenticatedController
             $this->give_alls = ConfigurationModel::searchUserConfiguration($this->user_id, true);
         }
 
-        
+
 
         PageLayout::setTitle(_("Verwalten von Nutzerkonfigurationen"));
     }
@@ -187,12 +187,12 @@ class Admin_ConfigurationController extends AuthenticatedController
     {
         $infobox = array('picture' => 'infobox/config.jpg');
         $aktionen[] = array(
-            "text" => '<a href="'.$this->url_for('admin/configuration/configuration').'">'._('Konfiguration').'</a>',
-            "icon" => "icon-cont.gif"
+            "text" => '<a href="'.$this->url_for('admin/configuration/configuration').'">'._('Zurück zur Konfiguration').'</a>',
+            "icon" => "icons/16/black/admin.png"
         );
         $aktionen[] = array(
             "text" => '<a href="'.$this->url_for('admin/configuration/user_configuration').'">'._('Nutzerparameter abrufen').'</a>',
-            "icon" => "icon-cont.gif"
+            "icon" => "icons/16/black/person.png"
         );
 
         $infobox['content'] = array(
@@ -205,7 +205,7 @@ class Admin_ConfigurationController extends AuthenticatedController
                 'eintrag'   => array(
                     array(
                         "text" => _("Sie können hier Parameter der Systemkonfiguration direkt verändern. Sie können sowohl auf System- als auch Nutzervariablen zugreifen."),
-                        "icon" => "ausruf_small2.gif"
+                        "icon" => "icons/16/black/info.png"
                         )
                     )
                 )

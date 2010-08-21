@@ -360,7 +360,7 @@ if (is_array($non_group_buddies))
                         array("icon" => 'icons/16/black/mail.png',
                               "text"  => _("Sie können diesen Usern eine Nachricht schicken oder sie zum Chatten einladen.")
                         ),
-                        array("icon" => 'icons/16/black/profile.png',
+                        array("icon" => 'icons/16/black/person.png',
                               "text"  => _("Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Users.")
                         )
                 )

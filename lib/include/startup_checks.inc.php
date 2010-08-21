@@ -50,13 +50,10 @@ foreach ($list as $key=>$val) {
         $problems_found++;
 }
 
-if ($problems_found) {
-    ?>
+if ($problems_found) { ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
     <tr>
-        <td class="topic" colspan=2>&nbsp; <b>
-            Startup Checks
-        </td>
+        <td class="topic" colspan=2>&nbsp; <b> Startup Checks </b></td>
     </tr>
     <tr>
         <td class="blank" valign="top">
@@ -90,7 +87,7 @@ if ($problems_found) {
                     &nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"  width="3%" align="left">
-                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" alt="<?= $GLOBALS['ASSETS_URL'] ?>images/ausruf_small2.gif" width="22" height="20" border="0">
+                    <?= Assets::img('icons/16/grey/info-circle.png') ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>"  width="2%" align="center" valign="top">
                     <font size="-1"><b><?=($i) ? $i."." : ""?></b></font>
@@ -118,5 +115,6 @@ if ($problems_found) {
 </table>
 <?php
 include ('lib/include/html_end.inc.php');
+page_close();
 die;
 }

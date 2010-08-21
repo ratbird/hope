@@ -38,7 +38,7 @@
         <td>
             <?= htmlReady($search_user['description'])?>
         </td>
-        <td>
+        <td align="right">
             <a class="load-in-new-row" href="<?=$controller->url_for('admin/configuration/edit_user_config/'.$user_id.'/'.$search_user['field'])?>">
             <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
             </a>
@@ -78,9 +78,9 @@
         <td>
             <?= htmlReady($give_all['description'])?>
         </td>
-        <td>
+        <td align="right">
             <a class="load-in-new-row" href="<?=$controller->url_for('admin/configuration/edit_configuration/'.$give_all['config_id'])?>">
-            <?= Assets::img('icons/16/blue/link-intern.png', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
+            <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
             </a>
         </td>
     </tr>

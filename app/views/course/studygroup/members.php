@@ -4,13 +4,9 @@ if ($rechte) {
     $aktionen = array(
         'kategorie' => _("Aktionen"),
         'eintrag'   => array(
-            array(
-                'text' => _("Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglieder der Studiengruppe zu entfernen."),
-                'icon' => "icon-cont.gif"
-            ),
              array(
                 'text' => '<a href="'. $controller->url_for('course/studygroup/message/'.$sem_id.'/').'">'. _("Nachricht an alle Gruppenmitglieder verschicken") .'</a>',
-                'icon' => "nachricht1.gif"
+                'icon' => "icons/16/black/mail.png"
             )
         )
     );
@@ -25,7 +21,13 @@ $infobox['picture'] = StudygroupAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMA
 $infobox['content'] = array(
     array(
         'kategorie' => _("Information"),
-        'eintrag'   => array(array("text" => $text, "icon" => "ausruf_small2.gif"))
+        'eintrag'   => array(
+            array("text" => $text, "icon" => "icons/16/black/info.png"),
+            array(
+                'text' => _("Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglieder der Studiengruppe zu entfernen."),
+                'icon' => "icons/16/black/info.png"
+            )
+        )
     ),
     $aktionen
 );
@@ -33,8 +35,8 @@ $infobox['content'] = array(
 if(isset($flash['question']) && isset($flash['candidate'])) {
     $dialog = $GLOBALS['template_factory']->open('shared/question');
     echo $this->render_partial($dialog,array(
-                        "question" => $flash['question'], 
-                        "approvalLink" => $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$flash['candidate'].'/remove_approved/todo/' . get_ticket()), 
+                        "question" => $flash['question'],
+                        "approvalLink" => $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$flash['candidate'].'/remove_approved/todo/' . get_ticket()),
                         "disapprovalLink" => $controller->url_for('course/studygroup/members/'.$sem_id.'/'.$page)
                     ));
 }

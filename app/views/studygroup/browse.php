@@ -8,7 +8,10 @@ $infobox['content'] = array(
     array(
         'kategorie'=>_("Information"),
         'eintrag'=>array(
-            array("text"=>_("Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen gründen. Auf dieser Seite finden Sie eine Liste aller Studiengruppen. Klicken Sie auf die Überschriften, um die jeweiligen Spalten zu sortieren."),"icon"=>"ausruf_small2.gif")
+            array(
+                "text" => _("Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen gründen. Auf dieser Seite finden Sie eine Liste aller Studiengruppen. Klicken Sie auf die Überschriften, um die jeweiligen Spalten zu sortieren."),
+                "icon" => "icons/16/black/info.png"
+            )
         )
     )
 );

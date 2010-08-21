@@ -104,7 +104,7 @@ define ("EVAL_PIC_ARROW_ACTIVE", Assets::image_path('forumgruenrunt.gif'));
 define ("EVAL_PIC_SUCCESS", Assets::image_path('icons/16/green/accept.png'));
 define ("EVAL_PIC_ERROR",   Assets::image_path('icons/16/red/decline.png'));
 define ("EVAL_PIC_INFO",    Assets::image_path('icons/16/grey/exclaim.png'));
-define ("EVAL_PIC_INFO_SMALL", Assets::image_path('ausruf_small2.gif'));
+define ("EVAL_PIC_INFO_SMALL", Assets::image_path('icons/16/black/info.png'));
 define ("EVAL_PIC_HELP",    Assets::image_path('icons/16/grey/help.png'));
 define ("EVAL_PIC_MOVE_GROUP",    Assets::image_path('icons/16/yello/arr2_left.png'));
 define ("EVAL_PIC_MOVE_UP",    Assets::image_path('icons/16/yello/arr2_up.png'));

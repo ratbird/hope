@@ -8,9 +8,6 @@
 * This class contains Utilities for the elearning-interface.
 *
 * @author   Arne Schröder <schroeder@data-quest.de>
-* @access   public
-* @modulegroup  elearning_interface_modules
-* @module       ELearningUtils
 * @package  ELearning-Interface
 */
 class ELearningUtils
@@ -790,7 +787,7 @@ class ELearningUtils
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 $output .= "</table>";
                 $output .= "</form>";
-                $output .= ELearningUtils::getCMSFooter("<br><img src=\"assets/images/ausruf.gif\" border=\"0\">");
+                $output .= ELearningUtils::getCMSFooter('');
             }
             $output .= "<br>";
         }

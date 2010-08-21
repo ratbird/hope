@@ -13,8 +13,8 @@
             <?=_("verantworlicheN NutzerIn &auml;ndern:") ?><br>
             <? showSearchForm("search_owner", $search_string_search_owner, FALSE,TRUE);
         else : ?>
-            <?= Assets::img('ausruf_small2.gif', array('align' => 'absmiddle')) ?>
-            &nbsp;<?= _("Sie k&ouml;nnen den/die verantwortlicheN NutzerIn nicht &auml;ndern.") ?>
+            <?= MessageBox::info(_("Sie können den/die verantwortlicheN NutzerIn nicht ändern.")) ?>
+
         <? endif; ?>
         </td>
 
@@ -121,8 +121,7 @@
         <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
         </td>
         <td class="<? echo $cssSw->getClass() ?>" colspan=3>
-            <?= Assets::img('ausruf_small2.gif', array('align' => 'absmiddle')) ?>
-            &nbsp;<?= _("Es sind keine weiteren Berechtigungen eingetragen") ?>
+            <?= MessageBox::info(_("Es sind keine weiteren Berechtigungen eingetragen")) ?>
         </td>
     </tr>
     <? endif; // selectPerms
@@ -147,7 +146,7 @@
             &nbsp;
         </td>
         <td class="<? echo $cssSw->getClass() ?>" colspan=3 align="center">
-            <br><input type="image" <?=makeButton("uebernehmen", "src")?> border=0 name="submit" value="<?=_("Zuweisen")?>"><br>&nbsp;
+            <br><input type="image" <?=makeButton("uebernehmen", "src")?> name="submit" value="<?=_("Zuweisen")?>"><br>&nbsp;
         </td>
     </tr>
 </table>

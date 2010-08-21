@@ -12,30 +12,23 @@
     <? $cssSw->switchClass() ?>
     <tr>
         <td class="<? echo $cssSw->getClass() ?>" colspan="3" align="center">
+        <? if ($resAssign->isNew()) : ?>
+            <?= MessageBox::info(_("Sie erstellen eine neue Belegung")) ?>
+        <? endif; ?>
         <?
         if (!$lockedAssign) :
         ?>
-            <br>&nbsp;
-            <input type="image" align="absmiddle"  <?=makeButton("uebernehmen", "src") ?> name="submit" value="<?= _("Übernehmen") ?>">
+            <input type="image" <?=makeButton("uebernehmen", "src") ?> name="submit" value="<?= _("Übernehmen") ?>">
             &nbsp;<a href="<?= URLHelper::getLink('?cancel_edit_assign=1&quick_view_mode='. $view_mode) ?>"><?=makeButton("abbrechen", "img") ?></a>
         <? endif; ?>
 
         <? if ($killButton) : ?>
-            &nbsp;<input type="image" align="absmiddle" <?=makeButton("loeschen", "src") ?> name="kill_assign" value="<?=_("l&ouml;schen")?>">
+            &nbsp;<input type="image" <?=makeButton("loeschen", "src") ?> name="kill_assign" value="<?=_("l&ouml;schen")?>">
         <? endif; ?>
 
-        <br>
-        <? if  ($resAssign->isNew()) : ?>
-            <?= Assets::img('ausruf_small2', array('align' => 'absmiddle')); ?>
-            <?= _("Sie erstellen eine neue Belegung") ?>
-            <? "<br><img src=\"".$GLOBALS['ASSETS_URL']."images/ausruf_small2.gif\" align=\"absmiddle\">&nbsp;"._("Sie erstellen eine neue Belegung"); ?>
-        <? elseif (!$lockedAssign) : ?>
-            &nbsp;
-        <? endif;
-
-        if ($lockedAssign) : ?>
+        <? if ($lockedAssign) : ?>
             <br>
-            <?= Assets::img('ausruf_small2', array('align' => 'absmiddle')) ?>
+            <?= Assets::img('icons/16/grey/info-circle.png') ?>
             <? if ($owner_type == "sem") : ?>
                 <?= sprintf ( _("Diese Belegung ist ein regelm&auml;&szlig;iger Termin der Veranstaltung %s, die in diesem Raum stattfindet."),
                     ($perm->have_studip_perm("user", $seminarID)) ?
@@ -64,7 +57,7 @@
                 <? endif ?>
             <? else : ?>
                 <?= _("Sie haben nicht die Berechtigung, diese Belegung zu bearbeiten."); ?>
-            <? endif;   ?>
+            <? endif; ?>
         <? endif; ?>
         </td>
 

@@ -103,9 +103,7 @@ function show_documents($documents, $open = null){
                     $edit.= '&nbsp;<a href="'. GetDownloadLink( $db->f('dokument_id'), $db->f('filename'), $type, 'zip') . '">' . makeButton('alsziparchiv', 'img') . '</a>';
                 }
                 if ($db->f("protected")) {
-                    $content .= "<br><br><hr><table><tr><td><img src=\"$pic_path/ausruf.gif\" valign=\"middle\"></td><td><font size=\"2\"><b>"
-                                ._("Diese Datei ist urheberrechtlich geschützt.<br>Sie darf nur im Rahmen dieser Veranstaltung verwendet werden, jede weitere Verbreitung ist strafbar!")
-                                ."</td></tr></table>";
+                    $content = "<br>" . MessageBox::info(_("Diese Datei ist urheberrechtlich geschützt."), array(_("Sie darf nur im Rahmen dieser Veranstaltung verwendet werden, jede weitere Verbreitung ist strafbar!")));
                 }
                 echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr>";
                 printcontent ("100%",false, $content, $edit);

@@ -223,20 +223,21 @@ function chat_get_online_icon($user_id = false, $username = false, $pref_chat_id
         if (!$user_id && !$username){
             return false;
         }
-        $pic_path = $GLOBALS['ASSETS_URL']."images/";
+        #$pic_path = $GLOBALS['ASSETS_URL']."images/";
+
         $stud_path = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'];
         $chatServer = ChatServer::GetInstance($GLOBALS['CHAT_SERVER_NAME']);
         $admin_chats = $chatServer->getAdminChats($GLOBALS['auth']->auth['uid']);
         if ($tmp_num_chats = $chatServer->chatUser[$user_id]) {
-            $ret = "<a href=\"{$stud_path}chat_online.php?search_user={$user_id}\"><img src=\"{$pic_path}chat2.gif\""
-            .tooltip(($tmp_num_chats == 1) ? _("Dieser User befindet sich in einem Chatraum.") : sprintf(_("Dieser User befindet sich in %s Chaträumen"),$tmp_num_chats))
-            ." border=\"0\"></a>";
+            $ret  = "<a href=\"{$stud_path}chat_online.php?search_user={$user_id}\">";
+            $ret .= Assets::img('icons/16/blue/new/chat.png', tooltip(($tmp_num_chats == 1) ? _("Dieser Benutzer befindet sich in einem Chatraum.") : sprintf(_("Dieser Benutzer befindet sich in %s Chaträumen"), $tmp_num_chats)));
+            $ret .= "</a>";
         } elseif (is_array($admin_chats)) {
             $ret = "<a href=\"{$stud_path}sms_send.php?sms_source_page=$i_page&cmd=write_chatinv&rec_uname=$username";
             if ($pref_chat_id && $admin_chats[$pref_chat_id]){
                 $ret .= "&selected_chat_id=$pref_chat_id";
             }
-            $ret .= "\">".Assets::img('icons/16/blue/chat.png', array('title' => _("zum Chatten einladen"), 'class' => 'text-bottom'))."</a>";
+            $ret .= "\">".Assets::img('icons/16/blue/add/chat.png', array('title' => _("zum Chatten einladen"), 'class' => 'text-bottom'))."</a>";
         } else {
             $ret = Assets::img('icons/16/blue/chat.png', array('title' => _("Sie haben in keinem aktiven Chatraum die Berechtigung andere NutzerInnen einzuladen"), 'class' => 'text-bottom'));
         }

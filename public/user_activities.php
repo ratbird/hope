@@ -82,7 +82,7 @@ function show_documents($documents, $open = null){
             //$box = sprintf ("<input type=\"CHECKBOX\" %s name=\"download_ids[]\" value=\"%s\">",($check_all) ? "checked" : "" , $db->f("dokument_id"));
             //Zusatzangaben erstellen
             $zusatz="<a href=\"about.php?username=".$db->f("username")."\"><font color=\"#333399\">".htmlReady($db->f("fullname"))."</font></a>&nbsp;".date("d.m.Y - H:i", $chdate);
-            if ($db->f("protected")==1)  $zusatz .= "&nbsp;<img src=\"$pic_path/ausruf_small3.gif\" ".tooltip(_("Diese Datei ist urheberrechtlich geschützt!")).">";
+            if ($db->f("protected")==1) $zusatz .= Assets::img('icons/16/grey/info-circle.png', tooltip(_("Diese Datei ist urheberrechtlich geschützt!")));
             if ($db->f("url")!="") $zusatz .= "&nbsp;<img src=\"$pic_path/link_extern.gif\" ".tooltip(_("Diese Datei wird von einem externen Server geladen!")).">";
             $zusatz .= $box;
             echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr>";

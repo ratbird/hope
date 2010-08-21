@@ -206,12 +206,12 @@ function print_snd_message($psm) {
     $x = $psm['num_rec']; // how many receivers are there?
     if ($psm['dont_delete'] == "1") { // disable the checkbox if message is locked
         $tmp_cmd = "open_selected";
-        $tmp_picture = "closelock2";
+        $tmp_picture = "icons/16/blue/lock-locked.png";
         $tmp_tooltip = tooltip(_("Löschschutz deaktivieren."));
         $trash =  Assets::img('blank.gif');
     } else {
         $tmp_cmd = "safe_selected";
-        $tmp_picture = "openlock2";
+        $tmp_picture = "icons/16/blue/lock-unlocked.png";
         $tmp_tooltip = tooltip(_("Löschschutz für diese Nachricht aktivieren."));
         $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$psm['message_id']."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a>";
     }
@@ -277,7 +277,7 @@ function print_snd_message($psm) {
         // buttons
         $edit = "&nbsp;<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$psm['message_id']."\" ".tooltip(_("Diese Nachricht löschen.")).">".makeButton("loeschen", "img")."</a>&nbsp;";
         if (have_msgfolder($sms_data['view']) == TRUE) {
-            $edit .= "&nbsp;<a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\" ".tooltip(_("Diese Nachricht in einen frei wählbaren Ordner verschieben.")).">".makeButton("verschieben", "img")."</a><br><br>";
+            $edit .= " <a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\" ".tooltip(_("Diese Nachricht in einen frei wählbaren Ordner verschieben.")).">".makeButton("verschieben", "img")."</a><br><br>";
         }
     }
 
@@ -360,18 +360,18 @@ function print_rec_message($prm) {
     }
     if ($prm['dont_delete'] == "1") { // disable the checkbox if message is locked
         $tmp_cmd = "open_selected";
-        $tmp_picture = "closelock2";
+        $tmp_picture = "icons/16/blue/lock-locked.png";
         $tmp_tooltip = tooltip(_("Löschschutz deaktivieren."));
         $trash =  Assets::img('blank.gif');
     } else {
         $tmp_cmd = "safe_selected";
-        $tmp_picture = "openlock2";
+        $tmp_picture = "icons/16/blue/lock-unlocked.png";
         $tmp_tooltip = tooltip(_("Löschschutz für diese Nachricht aktivieren."));
         $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$prm['message_id']."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a>";
     }
     // zusatz
     if (have_msgfolder($sms_data['view']) == TRUE) {
-        $move_option = "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$prm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder_sms_move.gif\" border=0 ".tooltip(_("Diese Nachricht in einen frei wählbaren Ordner verschieben."))."></a>";
+        $move_option = "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$prm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/cont_folder_sms_move.gif\" ".tooltip(_("Diese Nachricht in einen frei wählbaren Ordner verschieben."))."></a>";
     }
     $zusatz = "<font size=-1>";
     if ($prm['user_id_snd'] == "____%system%____") {
@@ -380,7 +380,7 @@ function print_rec_message($prm) {
         $zusatz .= sprintf(_("von %s, "), "</font><a href=\"about.php?username=".$prm['uname_snd']."\"><font size=-1 color=\"#333399\">".htmlReady($prm['vorname'])."&nbsp;".htmlReady($prm['nachname'])."</font></a><font size=-1>");
     }
     $zusatz .= date("d.m.y, H:i", $prm['mkdate']);
-    $zusatz .= "&nbsp;".$move_option."<a href=\"".$PHP_SELF."?cmd=".$tmp_cmd."&sel_lock=".$prm['message_id']."#".$prm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture.".gif\" border=0 ".$tmp_tooltip."></a><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"2\">".$trash."<input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$prm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
+    $zusatz .= " ".$move_option."<a href=\"".$PHP_SELF."?cmd=".$tmp_cmd."&sel_lock=".$prm['message_id']."#".$prm['message_id']."\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$prm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
     $zusatz .= "</font>";
 
     if ($prm["num_attachments"])

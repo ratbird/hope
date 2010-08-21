@@ -27,11 +27,10 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                         <B><?=_("Raum:")?></B>
                         <?=$tpl['room']?>
                     </FONT>
-                    <? /* rotes Ausrufungszeichen */?>
                     <? if ($tpl['ausruf']) { ?>
-                    <A href="javascript:alert('<?=$tpl['ausruf']?>')">
-                        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/ausrufezeichen_rot.gif" alt="<?=$tpl['ausruf']?>" border="0" align="absmiddle" <?=tooltip(_("Wichtige Informationen über Raumbuchungen anzeigen"))?>>
-                    </A>
+                    <a href="javascript:alert('<?=$tpl['ausruf']?>')">
+                        <?= Assets::img('icons/16/red/exclaim-circle.png', tooltip(_("Wichtige Informationen über Raumbuchungen anzeigen"))) ?>
+                    </a>
                     <? } ?>
                 </TD>
                 <TD width="20%" nowrap="nowrap" class="<?=$tpl['class']?>">

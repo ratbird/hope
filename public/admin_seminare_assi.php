@@ -972,7 +972,7 @@ if ($delete_tut) {
   $level=2;
 }
 
-if (($send_doz_x) && (!$reset_search_x)) {
+if (($send_doz_x) && (!$reset_search_x) && ($add_doz)) {
     $next_position = sizeof($sem_create_data["sem_doz"]) + 1;
     $doz_id = get_userid($add_doz);
     $sem_create_data["sem_doz"][$doz_id]= $next_position;
@@ -995,7 +995,7 @@ if (($send_doz_x) && (!$reset_search_x)) {
     $level=2;
 }
 
-if ($deputies_enabled && $send_dep_x && !$reset_search_x) {
+if ($deputies_enabled && $send_dep_x && !$reset_search_x && $add_dep) {
     $dep_id = get_userid($add_dep);
     $sem_create_data["sem_dep"][$dep_id] = array(
             'user_id' => $dep_id,
@@ -1010,7 +1010,7 @@ if ($deputies_enabled && $send_dep_x && !$reset_search_x) {
     $level=2;
 }
 
-if (($send_tut_x) && (!$reset_search_x)) {
+if (($send_tut_x) && (!$reset_search_x) && ($add_tut)) {
     $next_position = sizeof($sem_create_data["sem_tut"]) + 1;
     $tut_id = get_userid($add_tut);
     $sem_create_data["sem_tut"][$tut_id]= $next_position;

@@ -1449,7 +1449,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         }
         $bewegeflaeche .= "</span>";
         $bewegeflaeche_anfasser = "<span class=\"anfasser\" style=\"display:none\"><a href=\"#\" class=\"drag\" onclick=\"return false\" " .
-                "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" border=0 title=\"Datei verschieben\"></a></span>";
+                "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" class=\"text-top\" border=0 title=\"Datei verschieben\"></a></span> ";
     }
 
     print "<td class=\"printhead\" valign=\"bottom\">";
@@ -1816,7 +1816,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         }
         $bewegeflaeche .= "</span>";
         $bewegeflaeche_anfasser = "<span class=\"anfasser\" style=\"display:none\"><a href=\"#\" class=\"drag\" onclick=\"return false\" " .
-                "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" border=0 title=\"Ordner verschieben\"></a></span>";
+                "style=\"cursor: move\"><img src=\"".$GLOBALS['ASSETS_URL']."/images/verschieben.png\" class=\"text-top\" border=0 title=\"Ordner verschieben\"></a></span> ";
     }
 
     //Jetzt folgt der Link zum Aufklappen

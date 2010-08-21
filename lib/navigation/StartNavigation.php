@@ -89,13 +89,21 @@ class StartNavigation extends Navigation
                 if ($perm->have_perm('autor') && get_config('STUDYGROUPS_ENABLE')) {
                     $navigation->addSubNavigation('new_studygroup', new Navigation(_('Studiengruppe anlegen'), 'dispatch.php/course/studygroup/new'));
                 }
+            } else {
+                if ($perm->have_perm($sem_create_perm)) {
+                    $navigation->addSubNavigation('new_course', new Navigation(_('neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
+                }
+                if (get_config('STUDYGROUPS_ENABLE')) {
+                    $navigation->addSubNavigation('new_studygroup', new Navigation(_('Studiengruppe anlegen'), 'dispatch.php/course/studygroup/new'));
+                }
+            
             }
         }
 
         $this->addSubNavigation('my_courses', $navigation);
 
         // course administration
-        if ($perm->have_perm('dozent')) {
+        if ($perm->have_perm('admin')) {
             $navigation = new Navigation(_('Verwaltung von Veranstaltungen'), 'adminarea_start.php?list=TRUE');
 
             if ($perm->have_perm($sem_create_perm)) {

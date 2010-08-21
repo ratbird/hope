@@ -5,27 +5,29 @@
 require_once("Ilias3ConnectedUser.class.php");
 
 /**
-* class to handle ILIAS 4 user-accounts
-*
-* This class contains methods to handle connected ILIAS 4 user-accounts.
-*
-* @author	Arne Schröder <schroeder@data-quest.de>
-* @access	public
-* @modulegroup	elearning_interface_modules
-* @module		Ilias4ConnectedUser
-* @package	ELearning-Interface
-*/
-class Ilias4ConnectedUser extends Ilias3ConnectedUser {
+ * class to handle ILIAS 4 user-accounts
+ *
+ * This class contains methods to handle connected ILIAS 4 user-accounts.
+ *
+ * @author    Arne Schröder <schroeder@data-quest.de>
+ * @access    public
+ * @modulegroup    elearning_interface_modules
+ * @module        Ilias4ConnectedUser
+ * @package    ELearning-Interface
+ */
+class Ilias4ConnectedUser extends Ilias3ConnectedUser
+{
     var $roles;
     var $user_sid;
     /**
-    * constructor
-    *
-    * init class.
-    * @access
-    * @param string $cms system-type
-    */
-    function Ilias4ConnectedUser($cms, $user_id = false) {
+     * constructor
+     *
+     * init class.
+     * @access
+     * @param string $cms system-type
+     */
+    function Ilias4ConnectedUser($cms, $user_id = false)
+    {
         parent::Ilias3ConnectedUser($cms, $user_id);
 
         // get auth_plugin
@@ -34,13 +36,14 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser {
     }
 
     /**
-    * new user
-    *
-    * save new user
-    * @access public
-    * @return boolean returns false on error
-    */
-    function newUser() {
+     * new user
+     *
+     * save new user
+     * @access public
+     * @return boolean returns false on error
+     */
+    function newUser()
+    {
         global $connected_cms, $auth, $messages;
 
         if ($this->getLoginData($this->login)) {
@@ -65,15 +68,17 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser {
         // new values for ILIAS 4
         $user_data["agree_date"] = date('Y-m-d H:i:s');
         $user_data["external_account"] = $this->login;
-        if ($this->auth_plugin && $this->auth_plugin != "standard" &&  ($this->auth_plugin  == $connected_cms->ldap_enable))
+        if ($this->auth_plugin && $this->auth_plugin != "standard" &&  ($this->auth_plugin  == $connected_cms->ldap_enable)) {
             $user_data["auth_mode"] = "ldap";
-        else
+        } else {
             $user_data["auth_mode"] = "default";
-
-        if ($connected_cms[$this->cms_type]->user_style != "")
+        }
+        if ($connected_cms[$this->cms_type]->user_style != "") {
             $user_data["user_style"] = $connected_cms[$this->cms_type]->user_style;
-        if ($connected_cms[$this->cms_type]->user_skin != "")
+        }
+        if ($connected_cms[$this->cms_type]->user_skin != "") {
             $user_data["user_skin"] = $connected_cms[$this->cms_type]->user_skin;
+        }
 
         $role_id = $connected_cms[$this->cms_type]->roles[$auth->auth["perm"]];
 
@@ -82,25 +87,25 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser {
         if ($user_id != false) {
             $this->id = $user_id;
 
-//			$connected_cms[$this->cms_type]->soap_client->updatePassword($user_id, $user_data["passwd"]);
+            //            $connected_cms[$this->cms_type]->soap_client->updatePassword($user_id, $user_data["passwd"]);
 
-//			$this->newUserCategory();
+            //            $this->newUserCategory();
 
             $this->setConnection(USER_TYPE_CREATED);
             return true;
         }
-        echo $connected_cms[$this->cms_type]->soap_client->getError();
         return false;
     }
 
     /**
-    * create new user category
-    *
-    * create new user category
-    * @access public
-    * @return boolean returns false on error
-    */
-    function newUserCategory() {
+     * create new user category
+     *
+     * create new user category
+     * @access public
+     * @return boolean returns false on error
+     */
+    function newUserCategory()
+    {
         global $connected_cms, $messages;
 
         $connected_cms[$this->cms_type]->soap_client->setCachingStatus(false);
@@ -115,13 +120,12 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser {
         if ($cat != false && $connected_cms[$this->cms_type]->soap_client->checkReferenceById($cat) ) {
             $messages["info"] .= sprintf(_("Ihre persönliche Kategorie wurde bereits angelegt."), $this->login) . "<br>\n";
             $this->category = $cat;
-        }
-        else {
+        } else {
             $this->category = $connected_cms[$this->cms_type]->soap_client->addObject($object_data, $connected_cms[$this->cms_type]->user_category_node_id);
         }
-        if ($this->category != false)
+        if ($this->category != false) {
             ConnectedUser::setConnection( $this->getUserType() );
-        else {
+        } else {
             echo "CATEGORY_ERROR".$connected_cms[$this->cms_type]->user_category_node_id ."-";
             return false;
         }
@@ -129,15 +133,16 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser {
         $role_data["title"] = "studip_usr" . $this->getId() . "_cat" . $this->category;
         $role_data["description"] = sprintf(_("User-Rolle von %s. Diese Rolle wurde von Stud.IP generiert."), $this->getName());
         $role_id = $connected_cms[$this->cms_type]->soap_client->getObjectByTitle($role_data["title"], "role");
-        if ($role_id != false)
+        if ($role_id != false) {
             $messages["info"] .= sprintf(_("Ihre persönliche Userrolle wurde bereits angelegt."), $this->login) . "<br>\n";
-        else
+        } else {
             $role_id = $connected_cms[$this->cms_type]->soap_client->addRoleFromTemplate($role_data, $this->category, $connected_cms[$this->cms_type]->user_role_template_id);
+        }
         $connected_cms[$this->cms_type]->soap_client->addUserRoleEntry($this->getId(), $role_id);
         // delete permissions for all global roles for this category
-        foreach ($connected_cms[$this->cms_type]->global_roles as $key => $role)
+        foreach ($connected_cms[$this->cms_type]->global_roles as $key => $role) {
             $connected_cms[$this->cms_type]->soap_client->revokePermissions($role, $this->category);
+        }
         return true;
     }
 }
-?>

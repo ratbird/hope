@@ -5,16 +5,16 @@
 require_once("Ilias3Soap.class.php");
 
 /**
-* class to use ILIAS-4-Webservices
-*
-* This class contains methods to connect to the ILIAS-4-Soap-Server.
-*
-* @author	Arne Schröder <schroeder@data-quest.de>
-* @access	public
-* @modulegroup	elearning_interface_modules
-* @module		Ilias4Soap
-* @package	ELearning-Interface
-*/
+ * class to use ILIAS-4-Webservices
+ *
+ * This class contains methods to connect to the ILIAS-4-Soap-Server.
+ *
+ * @author    Arne Schröder <schroeder@data-quest.de>
+ * @access    public
+ * @modulegroup    elearning_interface_modules
+ * @module        Ilias4Soap
+ * @package    ELearning-Interface
+ */
 class Ilias4Soap extends Ilias3Soap
 {
     var $cms_type;
@@ -25,12 +25,12 @@ class Ilias4Soap extends Ilias3Soap
     var $separator_string;
 
     /**
-    * constructor
-    *
-    * init class.
-    * @access
-    * @param string $cms system-type
-    */
+     * constructor
+     *
+     * init class.
+     * @access
+     * @param string $cms system-type
+     */
     function Ilias4Soap($cms)
     {
         parent::Ilias3Soap($cms);
@@ -38,18 +38,19 @@ class Ilias4Soap extends Ilias3Soap
     }
 
     /**
-    * add user by importUsers
-    *
-    * adds new user and sets role-id
-    * @access public
-    * @param array user_data user-data
-    * @param string role_id global role-id for new user
-    * @return string user-id
-    */
+     * add user by importUsers
+     *
+     * adds new user and sets role-id
+     * @access public
+     * @param array user_data user-data
+     * @param string role_id global role-id for new user
+     * @return string user-id
+     */
     function addUser($user_data, $role_id)
     {
-        foreach($user_data as $key => $value)
+        foreach($user_data as $key => $value) {
             $user_data[$key] = studip_utf8encode($user_data[$key]);
+        }
 
         $usr_xml = "<Users>
 <User>
@@ -69,9 +70,10 @@ class Ilias4Soap extends Ilias3Soap
 <TimeLimitMessage>0</TimeLimitMessage>
 <ApproveDate>".$user_data["approve_date"]."</ApproveDate>
 <AgreeDate>".$user_data["agree_date"]."</AgreeDate>";
-if (($user_data["user_skin"] != "") OR ($user_data["user_style"] != ""))
-    $usr_xml .= "<Look Skin=\"".$user_data["user_skin"]."\" Style=\"".$user_data["user_style"]."\"/>";
-$usr_xml .= "<AuthMode type=\"".$user_data["auth_mode"]."\"/>
+        if (($user_data["user_skin"] != "") OR ($user_data["user_style"] != "")) {
+            $usr_xml .= "<Look Skin=\"".$user_data["user_skin"]."\" Style=\"".$user_data["user_style"]."\"/>";
+        }
+        $usr_xml .= "<AuthMode type=\"".$user_data["auth_mode"]."\"/>
 <ExternalAccount>".$user_data["external_account"]."</ExternalAccount>
 </User>
 </Users>";
@@ -82,27 +84,28 @@ $usr_xml .= "<AuthMode type=\"".$user_data["auth_mode"]."\"/>
             'usr_xml' => $usr_xml,
             'conflict_role' => 1,
             'send_account_mail' => 0
-            );
+        );
         $result = $this->call('importUsers', $param);
 
         $s = simplexml_load_string(studip_utf8encode($result));
 
         if ($s->rows->row->column[3] == "successful")
-            return $s->rows->row->column[0];
+        return $s->rows->row->column[0];
         else
-            return false;
+        return false;
     }
 
     /**
-    * copy object
-    *
-    * copy ilias-object
-    * @access public
-    * @param string source_id reference-id
-    * @param string target_id reference-id
-    * @return string result
-    */
-    function copyObject($source_id, $target_id) {
+     * copy object
+     *
+     * copy ilias-object
+     * @access public
+     * @param string source_id reference-id
+     * @param string target_id reference-id
+     * @return string result
+     */
+    function copyObject($source_id, $target_id)
+    {
         $type = $object_data["type"];
         $title = studip_utf8encode($object_data["title"]);
         $description = studip_utf8encode($object_data["description"]);
@@ -112,38 +115,39 @@ $usr_xml .= "<AuthMode type=\"".$user_data["auth_mode"]."\"/>
         $param = array(
             'sid' => $this->getSID(),
             'xml' => $xml
-            );
+        );
         return $this->call('copyObject', $param);
     }
 
     /**
-    * get path
-    *
-    * returns repository-path to ilias-object
-    * @access public
-    * @param string source_id reference-id
-    * @param string target_id reference-id
-    * @return string result
-    */
-    function getPath($ref_id) {
+     * get path
+     *
+     * returns repository-path to ilias-object
+     * @access public
+     * @param string source_id reference-id
+     * @param string target_id reference-id
+     * @return string result
+     */
+    function getPath($ref_id)
+    {
         $param = array(
             'sid' => $this->getSID(),
             'ref_id' => $ref_id
-            );
+        );
         $result = $this->call('getPathForRefId', $param);
 
         if ($result) {
             $s = simplexml_load_string(studip_utf8encode($result));
 
-            foreach ($s->rows->row as $row)
+            foreach ($s->rows->row as $row) {
                 $path[] = htmlReady(studip_utf8decode($row->column[2]));
+            }
         }
 
-        if (is_array($path))
+        if (is_array($path)) {
             return implode($path, $this->seperator_string);
-        else
+        } else {
             return false;
+        }
     }
-
 }
-?>

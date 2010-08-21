@@ -5,42 +5,44 @@
 require_once("Ilias3ContentModule.class.php");
 
 /**
-* class to handle ILIAS 4 learning modules and tests
-*
-* This class contains methods to handle ILIAS 4 learning modules and tests.
-*
-* @author	Arne Schröder <schroeder@data-quest.de>
-* @access	public
-* @modulegroup	elearning_interface_modules
-* @module		Ilias4ContentModule
-* @package	ELearning-Interface
-*/
+ * class to handle ILIAS 4 learning modules and tests
+ *
+ * This class contains methods to handle ILIAS 4 learning modules and tests.
+ *
+ * @author    Arne Schröder <schroeder@data-quest.de>
+ * @access    public
+ * @modulegroup    elearning_interface_modules
+ * @module        Ilias4ContentModule
+ * @package    ELearning-Interface
+ */
 class Ilias4ContentModule extends Ilias3ContentModule
 {
     var $object_id;
 
     /**
-    * constructor
-    *
-    * init class.
-    * @access public
-    * @param string $module_id module-id
-    * @param string $module_type module-type
-    * @param string $cms_type system-type
-    */
-    function Ilias4ContentModule($module_id = "", $module_type, $cms_type) {
+     * constructor
+     *
+     * init class.
+     * @access public
+     * @param string $module_id module-id
+     * @param string $module_type module-type
+     * @param string $cms_type system-type
+     */
+    function Ilias4ContentModule($module_id = "", $module_type, $cms_type)
+    {
         parent::Ilias3ContentModule($module_id, $module_type, $cms_type);
     }
 
     /**
-    * set connection
-    *
-    * sets connection with seminar
-    * @access public
-    * @param string $seminar_id seminar-id
-    * @return boolean successful
-    */
-    function setConnection($seminar_id) {
+     * set connection
+     *
+     * sets connection with seminar
+     * @access public
+     * @param string $seminar_id seminar-id
+     * @return boolean successful
+     */
+    function setConnection($seminar_id)
+    {
         global $connected_cms, $messages;
 
         $write_permission = $_POST["write_permission"];
@@ -58,17 +60,15 @@ class Ilias4ContentModule extends Ilias3ContentModule
 
         $crs_id == $connected_cms[$this->cms_type]->createCourse($seminar_id);
 
-        if ($crs_id == false)
-                return false;
+        if ($crs_id == false) return false;
 
         $ref_id = $this->getId();
 
         if ($_REQUEST["copy_object"] == "1") {
             $ref_id = $connected_cms[$this->cms_type]->soap_client->copyObject($this->id, $crs_id);
-        }
-        else
+        } else {
             $ref_id = $connected_cms[$this->cms_type]->soap_client->addReference($this->id, $crs_id);
-
+        }
         if (!$ref_id) {
             $messages["error"] .= _("Zuordnungs-Fehler: Objekt konnte nicht angelegt werden.");
             return false;
@@ -78,7 +78,7 @@ class Ilias4ContentModule extends Ilias3ContentModule
         $admin_operations = $connected_cms[$this->cms_type]->permissions->getOperationArray(array(OPERATION_VISIBLE, OPERATION_READ, OPERATION_WRITE, OPERATION_DELETE));
         $admin_operations_no_delete = $connected_cms[$this->cms_type]->permissions->getOperationArray(array(OPERATION_VISIBLE, OPERATION_READ, OPERATION_WRITE));
         $admin_operations_readonly = $connected_cms[$this->cms_type]->permissions->getOperationArray(array(OPERATION_VISIBLE, OPERATION_READ, OPERATION_DELETE));
-        foreach ($local_roles as $key => $role_data){
+        foreach ($local_roles as $key => $role_data) {
             // check only if local role is il_crs_member, -tutor or -admin
             if (strpos($role_data["title"], "il_crs_") === 0) {
                 if(strpos($role_data["title"], 'il_crs_member') === 0){
@@ -97,10 +97,9 @@ class Ilias4ContentModule extends Ilias3ContentModule
         if ($ref_id) {
             $this->setId($ref_id);
             return ContentModule::setConnection($seminar_id);
-        }
-        else
+        } else {
             $messages["error"] .= _("Die Zuordnung konnte nicht gespeichert werden.");
+        }
         return false;
     }
 }
-?>

@@ -7,61 +7,64 @@ require_once("lib/classes/Seminar.class.php");
 require_once("lib/classes/Institute.class.php");
 
 /**
-* main-class for connection to ILIAS 4
-*
-* This class contains the main methods of the elearning-interface to connect to ILIAS 4. Extends Ilias3ConnectedCMS.
-*
-* @author	Arne Schröder <schroeder@data-quest.de>
-* @access	public
-* @modulegroup	elearning_interface_modules
-* @module		Ilias4ConnectedCMS
-* @package	ELearning-Interface
-*/
+ * main-class for connection to ILIAS 4
+ *
+ * This class contains the main methods of the elearning-interface to connect to ILIAS 4. Extends Ilias3ConnectedCMS.
+ *
+ * @author   Arne Schröder <schroeder@data-quest.de>
+ * @access   public
+ * @modulegroup  elearning_interface_modules
+ * @module       Ilias4ConnectedCMS
+ * @package  ELearning-Interface
+ */
 class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
 {
     var $user_category_node_id;
     /**
-    * constructor
-    *
-    * init class.
-    * @access public
-    * @param string $cms system-type
-    */
-    function Ilias4ConnectedCMS($cms) {
+     * constructor
+     *
+     * init class.
+     * @access public
+     * @param string $cms system-type
+     */
+    function Ilias4ConnectedCMS($cms)
+    {
         global $messages, $SessSemName;
         parent::Ilias3ConnectedCMS($cms);
-        if (ELearningUtils::getConfigValue("user_category_id", $cms))
+        if (ELearningUtils::getConfigValue("user_category_id", $cms)) {
             $this->user_category_node_id = ELearningUtils::getConfigValue("user_category_id", $cms);
-        else
+        } else {
             $this->user_category_node_id = $this->main_category_node_id;
-        if (ELearningUtils::getConfigValue("ldap_enable", $cms))
+        }
+        if (ELearningUtils::getConfigValue("ldap_enable", $cms)) {
             $this->ldap_enable = ELearningUtils::getConfigValue("ldap_enable", $cms);
+        }
     }
 
     /**
-    * check connected modules and update connections
-    *
-    * checks if there are modules in the course that are not connected to the seminar
-    * @access public
-    * @param string $course_id course-id
-    * @return boolean successful
-    */
-    function updateConnections($course_id) {
+     * check connected modules and update connections
+     *
+     * checks if there are modules in the course that are not connected to the seminar
+     * @access public
+     * @param string $course_id course-id
+     * @return boolean successful
+     */
+    function updateConnections($course_id)
+    {
         global $connected_cms, $messages, $SessSemName, $object_connections;
 
         $db = DBManager::get();
 
         $types = array();
-        foreach ($this->types as $type => $name)
-        {
+        foreach ($this->types as $type => $name) {
             $types[] = $type;
         }
 
         // Workaround: getTreeChilds() liefert ALLE Referenzen der beteiligten Objekte, hier sollen aber nur die aus dem Kurs geprüft werden. Deshalb Abgleich der Pfade aller gefundenen Objekt-Referenzen.
         $result = $this->soap_client->getObjectByReference($course_id);
-        if ($result)
+        if ($result) {
             $course_path = $this->soap_client->getPath($course_id) . $this->soap_client->seperator_string . $result["title"];
-
+        }
 
         $result = $this->soap_client->getTreeChilds($course_id, $types, $this->user->getId());
 
@@ -78,20 +81,21 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
                 }
             }
             if ($counter < 1)
-                $messages["info"] .= _("Die Zuordnungen sind bereits auf dem aktuellen Stand.") . "<br>";
+            $messages["info"] .= _("Die Zuordnungen sind bereits auf dem aktuellen Stand.") . "<br>";
         }
         ELearningUtils::bench("update connections");
     }
 
     /**
-    * create course
-    *
-    * creates new ilias course
-    * @access public
-    * @param string $seminar_id seminar-id
-    * @return boolean successful
-    */
-    function createCourse($seminar_id) {
+     * create course
+     *
+     * creates new ilias course
+     * @access public
+     * @param string $seminar_id seminar-id
+     * @return boolean successful
+     */
+    function createCourse($seminar_id)
+    {
         global $messages, $SessSemName, $DEFAULT_LANGUAGE, $ELEARNING_INTERFACE_MODULES;
 
         $crs_id = ObjectConnections::getConnectionModuleId($seminar_id, "crs", $this->cms_type);
@@ -101,8 +105,9 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
         if ($crs_id == false) {
             $seminar = Seminar::getInstance($seminar_id);
             $home_institute = Institute::find($seminar->getInstitutId());
-            if ($home_institute)
+            if ($home_institute) {
                 $ref_id = ObjectConnections::getConnectionModuleId($home_institute->getId(), "cat", $this->cms_type);
+            }
             if ($ref_id < 1) {
                 // Kategorie für Heimateinrichtung anlegen
                 $object_data["title"] = sprintf("%s", $home_institute->name);
@@ -112,8 +117,9 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
                 $ref_id = $this->soap_client->addObject($object_data, $this->main_category_node_id);
                 ObjectConnections::setConnection($home_institute->getId(), $ref_id, "cat", $this->cms_type);
             }
-            if ($ref_id < 1)
+            if ($ref_id < 1) {
                 $ref_id = $this->main_category_node_id;
+            }
 
             // Kurs anlegen
             $lang_array = explode("_",$DEFAULT_LANGUAGE);
@@ -124,7 +130,7 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
             if ($crs_id == false) {
                 $messages["error"] .= _("Zuordnungs-Fehler: Kurs konnte nicht angelegt werden.");
                 return false;
-             }
+            }
             ObjectConnections::setConnection($seminar_id, $crs_id, "crs", $this->cms_type);
 
             // Rollen zuordnen
@@ -134,23 +140,24 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
     }
 
     /**
-    * get preferences
-    *
-    * shows additional settings.
-    * @access public
-    */
-    function getPreferences() {
+     * get preferences
+     *
+     * shows additional settings.
+     * @access public
+     */
+    function getPreferences()
+    {
         global $connected_cms, $role_template_name, $cat_name, $style_setting;
 
         $this->soap_client->setCachingStatus(false);
 
         if ($cat_name != "") {
             $cat = $this->soap_client->getReferenceByTitle( trim( $cat_name ), "cat");
-            if ($cat == false)
+            if ($cat == false) {
                 $messages["error"] .= sprintf(_("Das Objekt mit dem Namen \"%s\" wurde im System %s nicht gefunden."), $cat_name, $this->getName()) . "<br>\n";
-            elseif ($cat != "") {
-                    ELearningUtils::setConfigValue("category_id", $cat, $this->cms_type);
-                    $this->main_category_node_id = $cat;
+            } elseif ($cat != "") {
+                ELearningUtils::setConfigValue("category_id", $cat, $this->cms_type);
+                $this->main_category_node_id = $cat;
             }
         }
 
@@ -163,15 +170,16 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
             if ($user_cat != false) {
                 $this->user_category_node_id = $user_cat;
                 ELearningUtils::setConfigValue("user_category_id", $user_cat, $this->cms_type);
-            }
-            else
+            } else {
                 $messages["error"] .= sprintf(_("Die Kategorie für User-Daten konnte nicht angelegt werden."), $cat_name, $this->getName()) . "<br>\n";
+            }
         }
 
         if ($role_template_name != "") {
             $role_template = $this->soap_client->getObjectByTitle( trim( $role_template_name ), "rolt" );
-            if ($role_template == false)
+            if ($role_template == false) {
                 $messages["error"] .= sprintf(_("Das Rollen-Template mit dem Namen \"%s\" wurde im System %s nicht gefunden."), $role_template_name, $this->getName()) . "<br>\n";
+            }
             if (is_array($role_template)) {
                 ELearningUtils::setConfigValue("user_role_template_id", $role_template["obj_id"], $this->cms_type);
                 ELearningUtils::setConfigValue("user_role_template_name", $role_template["title"], $this->cms_type);
@@ -184,8 +192,7 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
             $encrypt_passwords = $_REQUEST["encrypt_passwords"];
             ELearningUtils::setConfigValue("ldap_enable", $_REQUEST["ldap_enable"], $this->cms_type);
             $this->ldap_enable = $_REQUEST["ldap_enable"];
-        }
-        else {
+        } else {
             if (ELearningUtils::getConfigValue("encrypt_passwords", $this->cms_type) != "")
             $encrypt_passwords = ELearningUtils::getConfigValue("encrypt_passwords", $this->cms_type);
         }
@@ -195,7 +202,7 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
         $title = $this->link->getModuleLink($user_cat["title"], $this->user_category_node_id, "cat");
         $ldap_options = array();
         foreach (StudipAuthAbstract::GetInstance() as $plugin) {
-            if($plugin instanceof StudipAuthLdap) {
+            if ($plugin instanceof StudipAuthLdap) {
                 $ldap_options[] = '<option '.($plugin->plugin_name == $this->ldap_enable ? 'selected' : '').'>' . $plugin->plugin_name . '</option>';
             }
         }
@@ -220,4 +227,3 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
     }
 
 }
-?>

@@ -757,8 +757,17 @@ function getFileExtension($str) {
     return $ext;
 }
 
-//Check auf korrekten Upload
-function validate_upload($the_file) {
+/**
+ * Checks whether a given file upload is valid and allowed.
+ * 
+ * @param $the_file file to upload to Stud.IP
+ * @param $real_file_name an optional real file name for handling files 
+ *   inside a ZIP (otherwise, the filename of the ZIP itself would always be 
+ *   used)
+ * 
+ * @return Can the given file be uploaded to Stud.IP?
+ */
+function validate_upload($the_file, $real_file_name='') {
     global $UPLOAD_TYPES,$the_file_size, $msg, $the_file_name, $SessSemName, $user, $auth, $i_page;
 
     if ($i_page == "sms_send.php") {
@@ -784,7 +793,7 @@ function validate_upload($the_file) {
     } else { # pruefen, ob der Typ stimmt
 
         //Die Dateierweiterung von dem Original erfragen
-        $pext = strtolower(getFileExtension($the_file_name));
+        $pext = strtolower(getFileExtension($real_file_name ? $real_file_name : $the_file_name));
         if ($pext == "doc")
             $doc=TRUE;
 
@@ -2381,7 +2390,9 @@ function upload_recursively($range_id, $dir) {
     // Alle Dateien hinzufuegen.
     while (list ($nr, $file) = each($files)) {
         if ($count['files'] >= $max_files) break;
-        $count['files'] += upload_zip_file($range_id, $file);
+        if (validate_upload($file, $file)) {
+            $count['files'] += upload_zip_file($range_id, $file);
+        }
     }
 
     // Alle Unterverzeichnisse hinzufuegen.

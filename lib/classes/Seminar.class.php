@@ -2276,7 +2276,11 @@ class Seminar {
      * @param force bool: if false (default) the user will only be upgraded and not degraded in his/her status
      */
     public function addMember($user_id, $status = 'autor', $force = false) {
-        $db = DBManager::get();
+        if (in_array(get_global_perm($user_id), array("admin", "root"))) {
+		    throw Exception(_("Root und Admin dürfen nicht in Veranstaltungen eingetragen werden."));
+			return;
+		}
+		$db = DBManager::get();
         $rangordnung = array_flip(array('user', 'autor', 'tutor', 'dozent'));
         if (!$force) {
             $old_status = $db->query("SELECT status " .

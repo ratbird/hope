@@ -1051,8 +1051,7 @@ jQuery(function () {
   if (!("autofocus" in document.createElement("input"))) {
 	  jQuery('[autofocus]').first().focus();
   }
-  console.log(jQuery('textarea.resizable'));
-
+  
   jQuery('textarea.resizable').resizable({
     handles: 's',
     minHeight: 50

@@ -172,25 +172,25 @@ class ExternModuleDownload extends ExternModule {
                 switch ($file_suffix[1]) {
                     case "txt" :
                         if (!$picture_file = $this->config->getValue("Main", "icontxt"))
-                            $icon = "txt-icon.gif";
+                            $icon = "icons/16/blue/file-text.png";
                         break;
                     case "xls" :
                         if (!$picture_file = $this->config->getValue("Main", "iconxls"))
-                            $icon = "xls-icon.gif";
+                            $icon = "icons/16/blue/file-archive.png";
                         break;
                     case "ppt" :
                         if (!$picture_file = $this->config->getValue("Main", "iconppt"))
-                            $icon = "ppt-icon.gif";
+                            $icon = "icons/16/blue/file-presentation.png";
                         break;
                     case "rtf" :
                         if (!$picture_file = $this->config->getValue("Main", "iconrtf"))
-                            $icon = "rtf-icon.gif";
+                            $icon = "icons/16/blue/file-text.png";
                         break;
                     case "zip" :
                     case "tgz" :
                     case "gz" :
                         if (!$picture_file = $this->config->getValue("Main", "iconzip"))
-                            $icon = "zip-icon.gif";
+                            $icon = "icons/16/blue/file-archive.png";
                         break;
                     case "jpg" :
                     case "png" :
@@ -198,15 +198,15 @@ class ExternModuleDownload extends ExternModule {
                     case "jpeg" :
                     case "tif" :
                         if (!$picture_file = $this->config->getValue("Main", "iconpic"))
-                            $icon = "pic-icon.gif";
+                            $icon = "icons/16/blue/file-image.png";
                         break;
                     case "pdf" :
                         if (!$picture_file = $this->config->getValue("Main", "iconpdf"))
-                            $icon = "pdf-icon.gif";
+                            $icon = "icons/16/blue/file-pdf.png";
                         break;
                     default :
                         if (!$picture_file = $this->config->getValue("Main", "icondefault"))
-                            $icon = "txt-icon.gif";
+                            $icon = "icons/16/blue/file-generic.png";
                 }
 
                 if ($icon) {
@@ -297,25 +297,25 @@ class ExternModuleDownload extends ExternModule {
             switch ($file_suffix[1]) {
                 case "txt" :
                     if (!$picture_file = $this->config->getValue("Main", "icontxt"))
-                        $icon = "txt-icon.gif";
+                        $icon = "icons/16/blue/file-text.png";
                     break;
                 case "xls" :
                     if (!$picture_file = $this->config->getValue("Main", "iconxls"))
-                        $icon = "xls-icon.gif";
+                        $icon = "icons/16/blue/file-xls.png";
                     break;
                 case "ppt" :
                     if (!$picture_file = $this->config->getValue("Main", "iconppt"))
-                        $icon = "ppt-icon.gif";
+                        $icon = "icons/16/blue/file-presentation.png";
                     break;
                 case "rtf" :
                     if (!$picture_file = $this->config->getValue("Main", "iconrtf"))
-                        $icon = "rtf-icon.gif";
+                        $icon = "icons/16/blue/file-text.png";
                     break;
                 case "zip" :
                 case "tgz" :
                 case "gz" :
                     if (!$picture_file = $this->config->getValue("Main", "iconzip"))
-                        $icon = "zip-icon.gif";
+                        $icon = "icons/16/blue/file-archive.png";
                     break;
                 case "jpg" :
                 case "png" :
@@ -323,15 +323,15 @@ class ExternModuleDownload extends ExternModule {
                 case "jpeg" :
                 case "tif" :
                     if (!$picture_file = $this->config->getValue("Main", "iconpic"))
-                        $icon = "pic-icon.gif";
+                        $icon = "icons/16/blue/file-image.png";
                     break;
                 case "pdf" :
                     if (!$picture_file = $this->config->getValue("Main", "iconpdf"))
-                        $icon = "pdf-icon.gif";
+                        $icon = "icons/16/blue/file-pdf.png";
                     break;
                 default :
                     if (!$picture_file = $this->config->getValue("Main", "icondefault"))
-                        $icon = "txt-icon.gif";
+                        $icon = "icons/16/blue/file-generic.png";
             }
 
             if ($icon)

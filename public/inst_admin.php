@@ -272,8 +272,8 @@ function table_body ($db, $range_id, $structure, $css_switcher) {
                 } else {
                     echo '&nbsp;<a href="'.URLHelper::getLink('?cmd=removeFromInstitute&username='.$db->f('username')).'">';
                 }
-                echo '<img src="'.$GLOBALS['ASSETS_URL'].'/images/trash.gif" border="0"></a>&nbsp;';
-                echo "\n</td>\n";
+                echo Assets::img('icons/16/blue/trash.png', array('class' => 'text-top'));
+                echo "</a>&nbsp\n</td>\n";
             }
         }
 
@@ -328,8 +328,8 @@ function table_body ($db, $range_id, $structure, $css_switcher) {
 
                         echo '<td '.$css_switcher->getFullClass().'>';
                         echo '&nbsp;<a href="'.URLHelper::getLink('?cmd=removeFromGroup&username='.$db->f('username').'&role_id='.$id).'">';
-                        echo '<img src="'.$GLOBALS['ASSETS_URL'].'/images/trash.gif" border="0"></a>&nbsp;';
-                        echo '</td>';
+                        echo Assets::img('icons/16/blue/trash.png', array('class' => 'text-top'));
+                        echo '</a>&nbsp</td>';
                     }
                     elseif ($structure["nachricht"]) {
                         echo '<td '.$css_switcher->getFullClass().' colspan=\"2\">&nbsp;</td>';

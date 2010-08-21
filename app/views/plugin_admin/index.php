@@ -66,20 +66,20 @@
                     </td>
                     <td>
                         <a href="<?= $controller->url_for('role_admin/assign_plugin_role', $pluginid) ?>">
-                            <?= Assets::img('edit_transparent.gif', array('title' => _('Zugriffsrechte bearbeiten'))) ?>
+                            <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Zugriffsrechte bearbeiten'))) ?>
                         </a>
                     </td>
                     <td>
                         <? if (!$plugin['depends']): ?>
                             <a href="<?= $controller->url_for('plugin_admin/download', $pluginid) ?>">
-                                <?= Assets::img('icon-disc.gif', array('title' => _('Herunterladen'))) ?>
+                                <?= Assets::img('icons/16/blue/download.png', array('title' => _('Herunterladen'))) ?>
                             </a>
                         <? endif ?>
                     </td>
                     <td>
                         <? if (!$plugin['depends']): ?>
                             <a href="<?= $controller->url_for('plugin_admin/ask_delete', $pluginid) ?>">
-                                <?= Assets::img('trash.gif', array('title' => _('Deinstallieren'))) ?>
+                                <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Deinstallieren'))) ?>
                             </a>
                         <? endif ?>
                     </td>
@@ -99,7 +99,7 @@ $infobox_content = array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(
             array(
-                'icon' => 'link_intern.gif',
+                'icon' => 'icons/16/black/add/plugin.png',
                 'text' => '<a href="'.$controller->url_for('plugin_admin/search').'">'._('Weitere Plugins installieren').'</a>'
             )
         )
@@ -107,7 +107,7 @@ $infobox_content = array(
         'kategorie' => _('Anzeigefilter:'),
         'eintrag'   => array(
             array(
-                'icon' => 'suchen.gif',
+                'icon' => 'icons/16/black/search.png',
                 'text' => $this->render_partial('plugin_admin/plugin_filter')
             )
         )

@@ -525,12 +525,12 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
             <?
             $aktionen = array();
             $aktionen[] = array(
-              "icon" => "edit_transparent.gif",
+              "icon" => "icons/16/black/edit.png",
               "text" => '<a href="' .
                         URLHelper::getLink('dispatch.php/institute/avatar/update/' . $i_id) .
                         '">' . _("Bild ändern") . '</a>');
             $aktionen[] = array(
-              "icon" => "trash.gif",
+              "icon" => "icons/16/black/trash.png",
               "text" => '<a href="' .
                         URLHelper::getLink('dispatch.php/institute/avatar/delete/'. $i_id) .
                         '">' . _("Bild löschen") . '</a>');

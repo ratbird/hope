@@ -36,8 +36,8 @@
                         <? if ($conf['type'] == 'string'): ''?><em><?= htmlReady($conf['value'])?></em>
                             <? elseif ($conf['type'] == 'integer'): ''?> <?= htmlReady($conf['value'])?>
                             <? elseif ($conf['type'] == 'boolean'): ''?>
-                                <?if ($conf["value"]):?><?= Assets::img('haken_transparent.gif', array('title' => _('TRUE'))) ?>
-                                <? else :?> <?= Assets::img('x_transparent.gif', array('title' => _('FALSE'))) ?>
+                                <?if ($conf["value"]):?><?= Assets::img('icons/16/green/accept.png', array('title' => _('TRUE'))) ?>
+                                <? else :?> <?= Assets::img('icons/16/red/decline.png', array('title' => _('FALSE'))) ?>
                                 <? endif; ?>
                         <? endif; ?>
                     </td>
@@ -49,7 +49,7 @@
                     </td>
                     <td align="right">
                         <a class="load-in-new-row" href="<?=$controller->url_for('admin/configuration/edit_configuration/'.$conf['config_id'])?>">
-                        <?= Assets::img('edit_transparent.gif', array('title' => 'Konfigurationsparameter bearbeiten')) ?></a>
+                        <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Konfigurationsparameter bearbeiten')) ?></a>
                     </td>
                 </tr>
             <? endforeach; ?>

@@ -7,7 +7,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
             <TR>
                 <TD width="2%" align="right" valign="center" class="<?=$tpl['class']?>">
                     <A href="<?= URLHelper::getLink('?cmd=open&open_close_id=' . $tpl['md_id'] .'#'. $tpl['md_id']) ?>">
-                        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/simple_indicator_gray.gif" border="0">
+                    	<?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top')) ?>
                     </A>
                 </TD>
                 <TD width="23%" nowrap="nowrap" class="<?=$tpl['class']?>">
@@ -54,7 +54,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                     <?= Assets::img('move_down.gif', array('align' => 'absmiddle'))?>
                     </a>
                     <A href="<?= URLHelper::getLink('?cmd=deleteCycle&cycle_id='. $tpl['md_id']) ?>">
-                        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/trash.gif" border="0" align="absmiddle" <?=tooltip(_("Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!"))?>>
+                        <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!'))) ?>
                     </A>
                     <? } ?>
                 </TD>
@@ -122,7 +122,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                     <?= Assets::img('move_down.gif', array('align' => 'absmiddle'))?>
                     </a>
                     <A href="<?= URLHelper::getLink('?cmd=deleteCycle&cycle_id='. $tpl['md_id']) ?>">
-                        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/trash.gif" border="0" valign="absmiddle"  <?=tooltip(_("Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!"))?>>
+                        <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!'))) ?>
                     </A>
 
                 </TD>

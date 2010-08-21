@@ -115,7 +115,7 @@
 
                         <td class="<?= $cssSw->getClass() ?>" width="1%" colspan="2" align="right">
                             <a href="<?= URLHelper::getLink('?role_id='. $role_id .'&cmd=removePerson&username='. $person['username']) ?>">
-                            <?= Assets::img('trash.gif') ?>
+                            <?= Assets::img('icons/16/blue/trash.png') ?>
                             </a>
                         </td>
                     </tr>

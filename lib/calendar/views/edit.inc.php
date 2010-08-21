@@ -565,7 +565,7 @@ else{
         }
         echo "</select>\n</font></td></tr>\n";
         echo "<tr><td>&nbsp;</td>\n<td><input style=\"vertical-align:middle;\" type=\"image\" ";
-        echo " src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" name=\"del_exc\"";
+        echo " src=\"" . Assets::image_path('icons/16/blue/trash.png') . "\" name=\"del_exc\"";
         echo tooltip(_("ausgewählte Ausnahme löschen")) . ">\n";
         echo '<font size="-1">' . _("ausgew&auml;hlte l&ouml;schen") . '</font>';
         echo "</td></tr></table>\n</td>\n</tr>\n";
@@ -585,7 +585,7 @@ if ($termin_id) {
     $info_box['export_link'] .= $atermin->getId();
     if (strtolower(get_class($atermin)) == "seminarevent")
         $info_box['export_link'] .= '&evtype=sem';
-    $info_box['export'] = array('icon' => 'vcardexport.gif',
+    $info_box['export'] = array('icon' => 'icons/16/black/date.png',
             'text' => sprintf(_("Sie k&ouml;nnen diesen Termin einzeln %sexportieren%s."),
             "<a href=\"{$info_box['export_link']}\">", "</a>"));
 }

@@ -4,7 +4,7 @@
         <A name="<?=$tpl['sd_id']?>" />
         <? if (!$_LOCKED) { ?>
         <A href="<?= URLHelper::getLink('?cmd='. ($sd_open[$tpl['sd_id']] ? 'close' : 'open') . '&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($sd_open[$tpl['sd_id']]) ? 'forumgraurunt' : 'simple_indicator_gray'?>.gif" border="0" align="abstop" <?=tooltip(_("Termin zum Bearbeiten öffnen"))?>>
+           	<?= ($sd_open[$tpl['sd_id']]) ? Assets::img('icons/blue/arr_1down.png', array('class' => 'text-top')) : Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top')) ?>
         </A>
         <INPUT type="checkbox" name="singledate[]" value="<?=$tpl['sd_id']?>" <?=$tpl['checked']?>>
         <? } ?>
@@ -43,11 +43,12 @@
 </TR>
 <? } else { ?>
 <TR>
+	asfdsfds
     <TD width="2%" align="right" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap">
         <? if (!$_LOCKED) { ?>
             <? if ($GLOBALS['perm']->have_perm('dozent')) : ?>
                 <A href="<?= URLHelper::getLink('?cmd='. ($sd_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-                    <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($sd_open[$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1right.png' : 'images/icons/16/blue/arr_1down.png'?>.gif">
+                    <?=($sd_open[$tpl['sd_id']]) ? Assets::img('icons/16/blue/arr_1down.png') : Assets::img('icons/16/blue/arr_1right.png') ?>
                 </A>
             <? else : ?>
                 <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1right.png">
@@ -74,7 +75,7 @@
     <TD width="20%" nowrap class="<?=$tpl['class']?>" align="right">
         <? if (!$_LOCKED) { ?>
         <a href="<?= URLHelper::getLink('?cmd=undelete_singledate&sd_id='. $tpl['sd_id'] .'&cycle_id='. ($tpl['cycle_id'] ? $tpl['cycle_id'] : ''))?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/untrash.gif" border="0" align="absmiddle" <?=tooltip(_("Termin wiederherstellen"))?>>
+            <?= Assets::img('icons/16/grey/decline/trash.png', array('class' => 'text-top', 'title' => _("Termin wiederherstellen")))?>
         </A>
         <? } ?>
     </TD>

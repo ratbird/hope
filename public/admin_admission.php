@@ -1205,11 +1205,11 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                                     } else {
                                         printf ("<input type=\"HIDDEN\" name=\"studg_ratio_old[]\" value=\"%s\">", $val["ratio"]);
                                         printf ("<input type=\"TEXT\" name=\"studg_ratio[]\" size=5 maxlength=5 value=\"%s\"><font size=-1> %% (%s Teilnehmer)</font>", $val["ratio"], $num_stg[$key]);
-                                        echo '<input type="image" name="delete_studg['. $key .']" src="'. Assets::image_path('trash.gif') .'" '. tooltip(_("Den Studiengang aus der Liste löschen")) .'>';
+                                        echo '<input type="image" name="delete_studg['. $key .']" src="'. Assets::image_path('icons/16/blue/trash.png') .'" '. tooltip(_("Den Studiengang aus der Liste löschen")) .'>';
                                     }
                                 } elseif (!LockRules::Check($seminar_id, 'admission_studiengang') && (!($admin_admission_data["admission_type_org"] && !$perm->have_perm("admin")))) {
                                     if ($val['count'] == 0) {
-                                        echo '<input type="image" name="delete_studg['. $key .']" src="'. Assets::image_path('trash.gif') .'" '. tooltip(_("Den Studiengang aus der Liste löschen")) .'>';
+                                        echo '<input type="image" name="delete_studg['. $key .']" src="'. Assets::image_path('icons/16/blue/trash.png') .'" '. tooltip(_("Den Studiengang aus der Liste löschen")) .'>';
                                     } else {
                                         echo '<font size=-1>'.sprintf(_("(%s Einträge vorhanden)"), $val['count']) . '</font>';
                                     }
@@ -1386,7 +1386,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                                     </td>
                                     <td class="<?= $cssSw->getClass() ?>" nowrap colspan=2 >
                                     <?if (!LockRules::check($seminar_id, 'user_domain')){?>
-                                        <input type="image" name="delete_domain[<?= $domain->getID() ?>]" src="<?= Assets::image_path('trash.gif') ?>" <?= tooltip(_("Nutzerdomäne aus der Liste löschen")) ?>>
+                                        <input type="image" name="delete_domain[<?= $domain->getID() ?>]" src="<?= Assets::image_path('icons/16/blue/trash.png') ?>" <?= tooltip(_("Nutzerdomäne aus der Liste löschen")) ?>>
                                     <?}?>
                                     </td>
                                 </tr>

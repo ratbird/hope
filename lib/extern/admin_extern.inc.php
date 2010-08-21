@@ -373,48 +373,43 @@ if (!$have_config) {
                 ?>
                 <td <?= $css_switcher_2->getFullClass() ?> width="5%">
                     <a href="<?= URLHelper::getLink('?com=download_config&config_id='. $configuration['id'] .'&module='. $module_type["module"]) ?>">
-                        <?= Assets::img('download', array('alt' => _("Konfigurationsdatei herunterladen"), 'title' => _("Konfigurationsdatei herunterladen"))) ?>
+                        <?= Assets::img('icons/16/blue/download.png', array('alt' => _("Konfigurationsdatei herunterladen"), 'title' => _("Konfigurationsdatei herunterladen"))) ?>
                     </a>
                 </td>
 
                 <td <?= $css_switcher_2->getFullClass() ?> width="5%">
                     <a href="<?= URLHelper::getLink('?com=upload_config&config_id='. $configuration['id']) ?>">
-                        <?= Assets::img('upload', array('alt' => _("Konfigurationsdatei hochladen"), 'title' => _("Konfigurationsdatei hochladen"))) ?>
+                        <?= Assets::img('icons/16/blue/upload.png', array('alt' => _("Konfigurationsdatei hochladen"), 'title' => _("Konfigurationsdatei hochladen"))) ?>
                     </a>
                 </td>
                 <?
 
                 echo "<td" . $css_switcher_2->getFullClass() . " width=\"5%\">";
-                $tooltip = _("weitere Informationen anzeigen");
-                echo '<a href="' . URLHelper::getLink('?com=info&config_id=' . $configuration['id']) . '"><img src="';
-                echo $GLOBALS['ASSETS_URL']."images/i.gif\" border=\"0\"" . tooltip($tooltip) . "></a>\n</td>\n";
+                echo '<a href="' . URLHelper::getLink('?com=info&config_id=' . $configuration['id']) . '">';
+                echo Assets::img('icons/16/blue/infopage.png', array('class' => 'text-top', 'title' => _("weitere Informationen anzeigen")));
+                echo "</a>\n</td>\n";
                 echo "<td" . $css_switcher_2->getFullClass() . " width=\"5%\">";
 
                 // Switching for the is_default option. Read the comment above.
                 if ($configuration["is_default"]) {
                     echo '<a href="' . URLHelper::getLink('?com=unset_default&config_id=' . $configuration['id']) . '#anker">';
-                    $tooltip = _("Standard entziehen");
-                    echo '<img src="';
-                    echo $GLOBALS['ASSETS_URL']."images/on_small.gif\" border=\"0\"" . tooltip($tooltip) . ">\n";
+                    echo Assets::img('icons/16/blue/checkbox-checked.png', array('class' => 'text-top', 'title' => _("Standard zuweisen")));
                 }
                 else {
                     echo '<a href="' . URLHelper::getLink('?com=set_default&config_id=' . $configuration['id']) . '#anker">';
-                    $tooltip = _("Standard zuweisen");
-                    echo '<img src="'.$GLOBALS['ASSETS_URL']."images/off_small_blank.gif\" border=\"0\"" . tooltip($tooltip) . ">";
+                    echo Assets::img('icons/16/blue/checkbox-unchecked.png', array('class' => 'text-top', 'title' => _("Standard entziehen")));
                 }
 
                 echo "</a>\n</td>\n";
                 echo "<td" . $css_switcher_2->getFullClass() . " align=\"center\" width=\"5%\">\n";
                 echo '<a href="' . URLHelper::getLink('?com=delete_sec&config_id=' . $configuration['id']) . '#anker">';
-                echo '<img src="' . $GLOBALS['ASSETS_URL'];
-                $tooltip = _("Konfiguration löschen");
-                echo "images/trash.gif\" border=\"0\"" . tooltip($tooltip) . "></a>\n</td>\n";
+                echo  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Konfiguration löschen"))) . "</a>\n</td>\n";
                 echo "<td" . $css_switcher_2->getFullClass() . " align=\"right\" width=\"20%\" ";
                 echo ">\n";
                 echo '<a href="' . URLHelper::getLink('?com=edit&mod=' . $module_type['module'] . '&config_id=' . $configuration['id']) . '"><img ';
-                echo makeButton("bearbeiten", "src") . " border=\"0\"";
+                echo makeButton("bearbeiten", "src") . " class='middle'";
                 $tooltip = _("Konfiguration bearbeiten");
-                echo tooltip($tooltip) . "></a>&nbsp;\n</td></tr>\n";
+                echo tooltip($tooltip) . " ></a>\n</td></tr>\n";
 
                 if ($_REQUEST['com'] == 'upload_config' && $_REQUEST['config_id'] == $configuration['id']) {
                     $template = $GLOBALS['template_factory']->open('extern/upload_form');
@@ -459,7 +454,7 @@ if (sizeof($configurations)) {
                                                     array("icon" => "icons/16/black/info.png",
                                                                 "text" => $info_max_configs
                                                     ),
-                                                    array("icon" => "on_small.gif",
+                                                    array("icon" => "icons/16/black/checkbox-checked.png",
                                                                 "text" => $info_is_default
                                                     ),
                                                     array("icon" => "icons/16/black/info.png",
@@ -468,10 +463,10 @@ if (sizeof($configurations)) {
                                     )),
                                     array("kategorie" => "Aktion:",
                                             "eintrag" => array(
-                                                    array("icon" => "i.gif",
+                                                    array("icon" => "icons/16/black/infopage.png",
                                                                 "text" => $info_further_info,
                                                     ),
-                                                    array("icon" => "off_small_blank.gif",
+                                                    array("icon" => "icons/16/black/checkbox-unchecked.png",
                                                                 "text" => $info_set_default
                                                     ))
                                     ));

@@ -16,10 +16,10 @@
                 <? elseif ($edit['type'] == 'integer'): ''?> <input class="allow-only-numbers" name="value" type="text" value="<?= htmlReady($edit['value'])?>" />
                 <? elseif ($edit['type'] == 'boolean'): ''?>
                 <select name="value">
-                    <option value = "1" <?= $edit['value'] ? 'selected="selected"' : '' ?> style="background: url(<?= Assets::image_path('haken_transparent.gif') ?>) right center no-repeat">
+                    <option value = "1" <?= $edit['value'] ? 'selected="selected"' : '' ?> style="background: url(<?= Assets::image_path('icons/16/green/accept.png') ?>) right center no-repeat">
                         TRUE
                     </option>
-                    <option value = "0" <?= $edit['value'] ? '' : 'selected="selected"' ?> style="background: url(<?= Assets::image_path('x_transparent.gif') ?>) right center no-repeat">
+                    <option value = "0" <?= $edit['value'] ? '' : 'selected="selected"' ?> style="background: url(<?= Assets::image_path('icons/16/red/decline.png') ?>) right center no-repeat">
                         FALSE
                     </option>
                 </select>

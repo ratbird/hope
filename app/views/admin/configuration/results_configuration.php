@@ -32,8 +32,8 @@
                             <? if ($config['type'] == 'string'): ''?><em><?= htmlReady($config['value'])?></em>
                             <? elseif ($config['type'] == 'integer'): ''?> <?= htmlReady($config['value'])?>
                             <? elseif ($config['type'] == 'boolean'): ''?>
-                                <?if ($config["value"]):?><?= Assets::img('haken_transparent.gif', array('title' => _('TRUE'))) ?>
-                                <? else :?> <?= Assets::img('x_transparent.gif', array('title' => _('FALSE'))) ?>
+                                <?if ($config["value"]):?><?= Assets::img('icons/16/green/accept.png', array('title' => _('TRUE'))) ?>
+                                <? else :?> <?= Assets::img('icons/16/red/decline.png', array('title' => _('FALSE'))) ?>
                                 <? endif; ?>
                             <? endif; ?>
                         </td>

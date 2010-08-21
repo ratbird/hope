@@ -122,7 +122,7 @@
             <tr>
                 <td width="2%" align="left" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap">
                     <a href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
-                        <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1right.png" border="0" align="abstop">
+                        <?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top'))?>
                     </a>
                 </td>
                 <td width="43%" nowrap class="<?=$tpl['class']?>">
@@ -139,7 +139,7 @@
                     <? if (!$_LOCKED) { ?>
                         <a href="<?= URLHelper::getLink('?cmd=undelete_singledate&sd_id='. $tpl['sd_id'] 
                             .'&cycle_id='. ($tpl['cycle_id'] ? $tpl['cycle_id'] : '')) ?>">
-                            <img src="<?=$GLOBALS['ASSETS_URL']?>images/untrash.gif" border="0" align="absmiddle">
+                            <?= Assets::img('icons/16/grey/decline/trash.png', array('class' => 'text-top', 'title' => _("Termin wiederherstellen"))) ?>
                         </a>
                     <? } ?>
                 </td>

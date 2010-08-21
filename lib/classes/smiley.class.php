@@ -426,7 +426,7 @@ class smiley {
             //echo $table->cell('<input readonly name="short_'.$urlname.'.gif" value="'.$db->f('short').'" size="5">');
             echo $table->cell($this->db->f('short_name'), array('align'=>'center'));
             echo $table->cell((($this->db->f('short_name'))?  $this->db->f('short_counter') : '-'), array('align'=>'center'));
-            echo $table->cell('&nbsp;<a href="'.URLHelper::getLink('?cmd=delete&img='.$this->db->f('smiley_id').(($this->fc != '')?'&fc='.$this->fc:'')).'" alt="delete" title="'.sprintf(_("Smiley %s löschen"),'&quot;'.$smile_name.'&quot;').'"><img src="'.$GLOBALS['ASSETS_URL'].'images/trash.gif" border="0" width="12" height="17"></a>&nbsp;', array('align'=>'center'));
+            echo $table->cell('&nbsp;<a href="'.URLHelper::getLink('?cmd=delete&img='.$this->db->f('smiley_id').(($this->fc != '')?'&fc='.$this->fc:'')).'" alt="delete" title="'.sprintf(_("Smiley %s löschen"),'&quot;'.$smile_name.'&quot;').'">'. Assets::img('icons/16/blue/trash.png', array('class' => 'text-top')) . ' "</a>&nbsp;', array('align'=>'center'));
             echo $table->closeRow();
         }
         echo $table->openRow();

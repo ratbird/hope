@@ -283,21 +283,20 @@ function raumzeit_parse_messages($msgs) {
         }
 
         $zw = explode('§', $msg);
-        $small = true;
 
         switch ($zw[0]) {
             case 'info':
-                $pic = ($small ? 'ausruf_small2.gif' : 'ausruf.gif');
+                $pic = 'icons/16/grey/exclaim.png';
                 $color = '#000000';
                 break;
 
             case 'error':
-                $pic = ($small ? 'x_small2.gif' : 'x.gif');
+                $pic = 'icons/16/red/decline.png';
                 $color = '#FF2020';
                 break;
 
             case 'msg':
-                $pic = ($small ? 'ok_small2.gif' : 'ok.gif');
+                $pic = 'icons/16/green/accept.png';
                 $color = '#008000';
                 break;
         }

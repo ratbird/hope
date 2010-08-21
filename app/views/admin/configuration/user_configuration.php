@@ -27,8 +27,8 @@
             <? if ($search_user['type'] == 'string'): ''?><em><?= htmlReady($search_user['value'])?></em>
             <? elseif ($search_user['type'] == 'integer'): ''?> <?= htmlReady($search_user['value'])?>
             <? elseif ($search_user['type'] == 'boolean'): ''?>
-                <?if ($search_user["value"] == '1'):?><?= Assets::img('haken_transparent.gif', array('title' => _('TRUE'))) ?>
-                <? else :?> <?= Assets::img('x_transparent.gif', array('title' => _('FALSE'))) ?>
+                <?if ($search_user["value"] == '1'):?><?= Assets::img('icons/16/green/accept.png', array('title' => _('TRUE'))) ?>
+                <? else :?> <?= Assets::img('icons/16/red/decline.png', array('title' => _('FALSE'))) ?>
                 <? endif; ?>
             <? endif; ?>
         </td>
@@ -40,7 +40,7 @@
         </td>
         <td>
             <a class="load-in-new-row" href="<?=$controller->url_for('admin/configuration/edit_user_config/'.$user_id.'/'.$search_user['field'])?>">
-            <?= Assets::img('edit_transparent.gif', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
+            <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
             </a>
         </td>
     </tr>
@@ -67,8 +67,8 @@
             <? if ($give_all['type'] == 'string'): ''?><em><?= htmlReady($give_all['value'])?></em>
             <? elseif ($give_all['type'] == 'integer'): ''?> <?= htmlReady($give_all['value'])?>
             <? elseif ($give_all['type'] == 'boolean'): ''?>
-                <?if ($give_all["value"]):?><?= Assets::img('haken_transparent.gif', array('title' => _('TRUE'))) ?>
-                <? else :?> <?= Assets::img('x_transparent.gif', array('title' => _('FALSE'))) ?>
+                <?if ($give_all["value"]):?><?= Assets::img('icons/16/green/accept.png', array('title' => _('TRUE'))) ?>
+                <? else :?> <?= Assets::img('icons/16/red/decline.png', array('title' => _('FALSE'))) ?>
                 <? endif; ?>
             <? endif; ?>
         </td>
@@ -80,7 +80,7 @@
         </td>
         <td>
             <a class="load-in-new-row" href="<?=$controller->url_for('admin/configuration/edit_configuration/'.$give_all['config_id'])?>">
-            <?= Assets::img('edit_transparent.gif', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
+            <?= Assets::img('icons/16/blue/link-intern.png', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
             </a>
         </td>
     </tr>
@@ -99,18 +99,18 @@ $infobox_content = array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(
             array(
-                "text" => '<a href="'.$controller->url_for('admin/configuration/configuration').'">'._('Konfiguration').'</a>',
-                "icon" => "icon-cont.gif"
+                "text" => '<a href="'.$controller->url_for('admin/configuration/configuration').'">'._('Globale Konfiguration').'</a>',
+                "icon" => "icons/16/black/admin.png"
             ), array(
-                "text" => '<a href="'.$controller->url_for('admin/configuration/user_configuration/'.'giveAll').'">'._('Alle USER-Parameter').'</a>',
-                "icon" => "icon-cont.gif"
+                "text" => '<a href="'.$controller->url_for('admin/configuration/user_configuration/'.'giveAll').'">'._('Alle Nutzer-Einstellungen').'</a>',
+                "icon" => "icons/16/black/person.png"
             )
           )
     ), array(
         'kategorie' => _('Eingabe:'),
         'eintrag'   => array(
             array(
-                "icon" => "suchen.gif",
+                "icon" => "icons/16/black/search.png",
                 "text" =>  $this->render_partial('admin/configuration/user_filter', compact('allconfigs', 'config_filter'))
             )
         )
@@ -120,11 +120,11 @@ $infobox_content = array(
         'eintrag'   => array(
             array(
                 "text" => _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein."),
-                "icon" => "ausruf_small2.gif"
+                "icon" => "icons/16/black/info.png"
                 ),
             array(
-                "text" => _("USER-Parameter: Parameter die in der Tabelle config mit der Variabel -user- in der -range- Spalte versehen sind."),
-                "icon" => "ausruf_small2.gif"
+                "text" => _("Einstellungen, die für einen Stud.IP-Nutzer gelten."),
+                "icon" => "icons/16/black/info.png"
                 )
         )
     )

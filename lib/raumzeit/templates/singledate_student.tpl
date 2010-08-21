@@ -7,16 +7,14 @@
         </A>
     </TD>
 
-    <TD width="1%" align="right" valign="top" class="<?=$tpl['class']?>" nowrap>
-        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/termin-icon.gif" border="0" align="abstop">&nbsp;
+    <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap>
+    	 <?= Assets::img('icons/16/grey/date.png', array('class' => 'text-top')) ?> 
     </TD>
 
     <td nowrap class="<?=$tpl['class']?>" valign="bottom">
         <a class="tree" href="<?=URLHelper::getLink("?cmd=".($issue_open[$tpl['sd_id']] ? 'close' : 'open')."&open_close_id=".$tpl['sd_id']."#".$tpl['sd_id'])?>">
-            <font size="-1">
-                <i><?=$tpl['art']?>:&nbsp;</i>
+                &nbsp;<i><?=$tpl['art']?>:&nbsp;</i>
                 <?=$tpl['date']?>&nbsp;&nbsp;&nbsp;&nbsp;
-            </font>
         </a>
     </td>
 

@@ -4,7 +4,7 @@
     <div id="error" style="background:white;margin:0;padding:1em;">
       <table border="0" cellspacing="0" cellpadding="2">
         <tr>
-          <td align="center" width="50"><?= Assets::img('x.gif') ?></td>
+          <td align="center" width="50"><?= Assets::img('icons/16/red/decline.png') ?></td>
           <td align="left"><font color="#FF2020"><?= $error ?></font></td>
         </tr>
       </table>

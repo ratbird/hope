@@ -36,7 +36,7 @@
             <td style="text-align: right;">
                 <? if (!$role->getSystemtype()): ?>
                     <a href="<?= $controller->url_for('role_admin/ask_remove_role', $role_id) ?>">
-                        <?= Assets::img('trash.gif', array('title' => _('Rolle löschen'))) ?>
+                        <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Rolle löschen'))) ?>
                     </a>
                 <? endif ?>
             </td>
@@ -60,16 +60,16 @@ $infobox_content = array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(
             array(
-                'icon' => 'link_intern.gif',
+                'icon' => 'icons/16/black/admin.png',
                 'text' => '<a href="'.$controller->url_for('role_admin').'">'._('Rollen verwalten').'</a>'
             ), array(
-                'icon' => 'link_intern.gif',
+                'icon' => 'icons/16/black/person.png',
                 'text' => '<a href="'.$controller->url_for('role_admin/assign_role').'">'._('Benutzerzuweisungen bearbeiten').'</a>'
             ), array(
-                'icon' => 'link_intern.gif',
+                'icon' => 'icons/16/black/plugin.png',
                 'text' => '<a href="'.$controller->url_for('role_admin/assign_plugin_role').'">'._('Pluginzuweisungen bearbeiten').'</a>'
             ), array(
-                'icon' => 'link_intern.gif',
+                'icon' => 'icons/16/black/log.png',
                 'text' => '<a href="'.$controller->url_for('role_admin/show_role').'">'._('Rollenzuweisungen anzeigen').'</a>'
             )
         )

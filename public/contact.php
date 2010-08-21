@@ -180,7 +180,9 @@ if (($contact["view"])=="alpha") {
     echo "<td width=\"8%\" align=\"center\" valign=\"center\" ".$cssSw->getHover()." class=\"".$cssSw->getClass()."\" "
         . tooltip(($size_of_book == 1) ? _("1 Eintrag") : sprintf(_("%d Einträge"),$size_of_book),false)
         ."><a href=\"".URLHelper::getLink('',array('filter'=>'all'))."\">a-z</a>"
-        ."&nbsp; <a href=\"".URLHelper::getLink('contact_export.php',array('groupid'=>'all'))."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/vcardexport.gif\" border=\"0\" ".tooltip(_("Alle Einträge als vCard exportieren"))."></a></td>";
+        ."&nbsp; <a href=\"".URLHelper::getLink('contact_export.php',array('groupid'=>'all'))."\">"
+        .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Alle Einträge als vCard exportieren")))
+        . "</a></td>";
     if (!$filter) {
         $cssSw->switchClass();
     }
@@ -215,7 +217,9 @@ if (($contact["view"])=="gruppen") {
     }
     echo "<td nowrap ".$cssSw->getHover()." class=\"".$cssSw->getClass()."\">&nbsp; "
     ."<a href=\"".URLHelper::getLink('',array('filter'=>'all'))."\"><font size=\"2\">" . _("Alle Gruppen") . "</font></a>"
-    ."&nbsp; <a href=\"".URLHelper::getLink('',array('groupid'=>'all'))."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/vcardexport.gif\" border=\"0\" ".tooltip(_("Alle Einträge als vCard exportieren"))."></a>&nbsp; </td>";
+    ."&nbsp; <a href=\"".URLHelper::getLink('',array('groupid'=>'all'))."\"><img style=\"vertical-align:middle;\""
+    .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Alle Einträge als vCard exportieren")))
+	. "</a>&nbsp; </td>";
     if (!$filter) {
         $cssSw->switchClass();
     }
@@ -229,7 +233,7 @@ if (($contact["view"])=="gruppen") {
             $smslink=URLHelper::getLink('sms_send.php',array('sms_source_page'=>'contact.php', 'group_id'=>$filter));
             $exportlink=URLHelper::getLink('contact_export.php',array('groupid'=>$db->f("statusgruppe_id")));
             $maillink = "&nbsp; <a href=\"$smslink\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/nachrichtsmall.gif\" valign=\"bottom\" border=\"0\"".tooltip(_("Nachricht an alle Personen dieser Gruppe schicken"))."></a>";
-            $maillink .= "&nbsp; <a href=\"$exportlink\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/vcardexport.gif\" border=\"0\" ".tooltip(_("Diese Gruppe als vCard exportieren"))."></a>";
+            $maillink .= "&nbsp; <a href=\"$exportlink\"><img style=\"vertical-align:middle;\"" .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Diese Gruppe als vCard exportieren"))) ." </a>";
         } else {
             $color = "";
             $maillink ="";
@@ -261,7 +265,7 @@ if ($edit_id) {
 if (!$edit_id) {
 
     if ($size_of_book>0)
-        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/icons/16/bluemail.png\">&nbsp; "._("Nachricht an Kontakt");
+        $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\">&nbsp; "._("Nachricht an Kontakt");
     if ($open && $size_of_book>0)
         $hints .= "&nbsp; |&nbsp; <img src= \"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1up.png\">&nbsp; "._("Kontakt zuklappen");
     if ((!$open) && $size_of_book>0)

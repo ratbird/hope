@@ -27,7 +27,7 @@ require '../lib/bootstrap.php';
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
 $perm->check('root');
 
-if (!$SMILEYADMIN_ENABLE) {
+if (!get_config('SMILEYADMIN_ENABLE')) {
     print '<p>' . _("Smiley-Modul abgeschaltet."). '</p>';
     include ('lib/include/html_end.inc.php');
     page_close();

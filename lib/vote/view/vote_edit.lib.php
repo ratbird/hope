@@ -453,15 +453,15 @@ function printRightRegion ( ) {
     if( $type == "test" && $pageMode != MODE_RESTRICTED ) {
         $action_text1_extra =
         _("Deklarieren Sie mindestens eine Antwort als richtig, indem Sie einen Haken in die entsprechende Box setzen.");
-        $action_array[] = array( "icon" => "symbol01.gif",
+        $action_array[] = array( "icon" => "icons/16/black/checkbox-checked.png",
                      "text" => $action_text1_extra );
     }
 
     if( $pageMode != MODE_RESTRICTED )
-    $action_array[] = array ( "icon" => "vote-icon-visible.gif",
+    $action_array[] = array ( "icon" => "icons/16/black/visibility-visible.png",
                   "text" => $action_text2 );
 
-    $action_array[] = array( "icon" => "icon-disc.gif",
+    $action_array[] = array( "icon" => "icons/16/black/download.png",
                  "text" => $action_text3 );
 
     $info_array[] = array( "icon" => "icons/16/black/info.png",

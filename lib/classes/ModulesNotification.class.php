@@ -256,7 +256,7 @@ class ModulesNotification extends Modules {
                     $text = _("1 neuer Beitrag im Forum:");
                 }
                 $redirect = '&again=yes&redirect_to=forum.php&view=neue&sort=age';
-        $icon = "icon-posting.gif";
+        $icon = "icons/16/blue/forum.png";
                 break;
             case 'documents' :
                 if ($r_data['neuedokumente'] > 1) {
@@ -265,7 +265,7 @@ class ModulesNotification extends Modules {
                     $text = _("1 neues Dokument hochgeladen:");
                 }
                 $redirect = '&again=yes&redirect_to=folder.php&cmd=all';
-        $icon = "icon-disc.gif";
+        $icon = "icons/16/blue/files.png";
                 break;
             case 'schedule' :
                 if ($r_data['neuetermine'] > 1) {
@@ -274,7 +274,7 @@ class ModulesNotification extends Modules {
                     $text = _("1 neuer Termin angelegt:");
                 }
                 $redirect = '&again=yes&redirect_to=dates.php#a';
-        $icon = "icon-uhr.gif";
+        $icon = "icons/16/blue/date.png";
                 break;
             case 'literature' :
                 if ($r_data['neuelitlist'] > 1) {
@@ -283,7 +283,7 @@ class ModulesNotification extends Modules {
                     $text = _("1 neue Literaturliste angelegt");
                 }
                 $redirect = '&again=yes&redirect_to=literatur.php';
-        $icon = "icon-lit.gif";
+        $icon = "icons/16/blue/literature.png";
                 break;
             case 'elearning_interface' :
                 if (get_config('ELEARNING_INTERFACE_ENABLE')) {
@@ -293,7 +293,7 @@ class ModulesNotification extends Modules {
                         $text = _("1 neues Content-Modul angelegt");
                     }
                     $redirect = "&again=yes&redirect_to=elearning_interface.php&seminar_id=$range_id&view=show";
-            $icon = "icon-lern.gif";
+            $icon = "icons/16/blue/learnmodule.png";
                 }
                 break;
             case 'wiki' :
@@ -303,14 +303,14 @@ class ModulesNotification extends Modules {
                     $text = _("1 Wikiseite wurde angelegt oder bearbeitet:");
                 }
                 $redirect = '&again=yes&redirect_to=wiki.php&view=listnew';
-        $icon = "icon-wiki.gif";
+        $icon = "icons/16/blue/wiki.png";
                 break;
             case 'scm' :
                 if ($r_data['neuscmcontent']) {
                     $text = sprintf(_("Die Seite \"%s\" wurde neu angelegt oder bearbeitet:"), $r_data['scmtabname']);
                 }
                 $redirect = '&again=yes&redirect_to=scm.php';
-        $icon = "icon-cont.gif";
+        $icon = "icons/16/blue/infopage.png";
                 break;
             case 'votes' :
                 if (get_config('VOTE_ENABLE')) {
@@ -321,7 +321,7 @@ class ModulesNotification extends Modules {
                     }
                 }
                 $redirect = '&again=yes#votes';
-        $icon = "icon-vote.gif";
+        $icon = "icons/16/blue/vote.png";
                 break;
             case 'news' :
                 if ($r_data['neuenews'] > 1) {
@@ -330,14 +330,14 @@ class ModulesNotification extends Modules {
                     $text = _("Eine neue Ankündigung wurde angelegt:");
                 }
                 $redirect = '&again=yes';
-        $icon = "icon-news.gif";
+        $icon = "icons/16/blue/breaking-news.png";
                 break;
             case 'basic_data' :
                 if ($r_data['chdate'] > $r_data['visitdate']) {
                     $text = _("Die Grunddaten wurden geändert:");
                 }
                 $redirect = '&again=yes&redirect_to=details.php';
-        $icon = "home.gif";
+        $icon = "icons/16/blue/home.png";
                 break;
             default :
                 $redirect = '';

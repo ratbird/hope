@@ -240,8 +240,8 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
                     );
     if ($sem_portal['bereich'] != 'mod') {
             $infobox[] =    array(  "kategorie" => _("Aktionen:"),
-                            "eintrag" => array(array(   'icon' => "blank.gif",
-                                                        "text" => '<a href="'.$PHP_SELF.'?send_excel=1"><img src="'.$GLOBALS['ASSETS_URL'].'images/icons/blue/download.png" align="absbottom" border="0">&nbsp;'._("Download des Ergebnisses").'</a>'))
+                            "eintrag" => array(array(   'icon' => "icons/16/blue/download.png",
+                                                        "text" => '<a href="'.$PHP_SELF.'?send_excel=1">' . _("Download des Ergebnisses") . '</a>'))
                     );
     }
 } elseif ($sem_portal['bereich'] != 'mod') {

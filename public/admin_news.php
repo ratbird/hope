@@ -263,10 +263,10 @@ if (!$cmd OR $cmd=="show") {
     echo "<form action=\"". URLHelper::getLink("?cmd=new_entry&range_id=$news_range_id&view_mode=$view_mode")."\" method=\"POST\">";
     echo "<hr width=\"100%\"><br><b>" . _("gew&auml;hlter Bereich:") . " </b>".htmlReady($news_range_name). "<br><br>";
     if (get_config('NEWS_RSS_EXPORT_ENABLE') && $news->get_news_range_perm($news_range_id) > 1){
-        echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/rss.gif" border="0" align="absmiddle">&nbsp;';
+        echo Assets::img('icons/16/grey/rss.png', array('class' => 'text-top'));
         echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Die Ankündigungen des gew&auml;hlten Bereiches als RSS-feed zur Verf&uuml;gung stellen") . '</font>&nbsp;';
         vprintf("\n".'<input type="image" src="'.$GLOBALS['ASSETS_URL'].'images/%s" %s border="0" name="change_rss" align="absmiddle">',
-                (StudipNews::GetRssIdFromRangeId($news_range_id) ? array('haken.gif',tooltip(_("RSS Export ist eingeschaltet"))) : array('x2.gif',tooltip(_("RSS Export ist ausgeschaltet")))));
+                (StudipNews::GetRssIdFromRangeId($news_range_id) ? array('icons/16/green/accept.png',tooltip(_("RSS Export ist eingeschaltet"))) : array('icons/16/red/decline.png',tooltip(_("RSS Export ist ausgeschaltet")))));
         echo "\n<br><br>";
     }
     echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Eine neue Ankündigung im gew&auml;hlten Bereich erstellen") . '</font>&nbsp;';

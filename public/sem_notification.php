@@ -69,37 +69,36 @@ function print_module_icons ($m_enabled) {
     foreach ($m_enabled as $m_name => $m_data) {
         switch ($m_name) {
             case 'news' :
-                $m_icon = $GLOBALS['ASSETS_URL'].'images/icon-news.gif';
+                $m_icon = Assets::image_path('images/16/icons/white/news.png');
                 break;
             case 'forum' :
-                $m_icon = $GLOBALS['ASSETS_URL'].'images/icon-posting.gif';
+                $m_icon = Assets::image_path('images/16/icons/white/forum.png');
                 break;
             case 'documents' :
-                $m_icon = $GLOBALS['ASSETS_URL'].'images/icon-disc.gif';
+                $m_icon = Assets::image_path('images/16/icons/white/files.png');
                 break;
             case 'schedule' :
-                $m_icon = $GLOBALS['ASSETS_URL'].'images/icon-uhr.gif';
+                $m_icon = Assets::image_path('images/16/icons/white/schedule.png');
                 break;
             case 'literature' :
-                $m_icon = $GLOBALS['ASSETS_URL'].'images/icon-lit.gif';
+                $m_icon = Assets::image_path('images/16/icons/white/literature.png');
                 break;
             case 'elearning_interface' :
-                $m_icon = $GLOBALS['ASSETS_URL'].'images/icon-lern.gif';
+                $m_icon = Assets::image_path('images/16/icons/white/learnmodule.png');
                 break;
             case 'wiki' :
-                $m_icon = $GLOBALS['ASSETS_URL'].'images/icon-wiki.gif';
+                $m_icon = Assets::image_path('images/16/icons/white/wiki.png');
                 break;
             case 'scm' :
-                $m_icon = $GLOBALS['ASSETS_URL'].'images/icon-cont.gif';
+                $m_icon = Assets::image_path('images/16/icons/white/infopage.png');
                 break;
             case 'votes' :
-                $m_icon = $GLOBALS['ASSETS_URL'].'images/icon-vote.gif';
+                $m_icon = Assets::image_path('images/16/icons/white/vote.png');
                 break;
             case 'basic_data' :
-                $m_icon = $GLOBALS['ASSETS_URL'].'images/icon-guest.gif';
+                $m_icon = Assets::image_path('images/16/icons/white/seminar.png');
                 break;
             default :
-                $m_icon = $GLOBALS['ASSETS_URL'].'images/icon-posting.gif';
                 break;
         }
         echo "<th><img border=\"0\" align=\"center\" src=\"$m_icon\" alt=\"";

@@ -182,9 +182,9 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 print "<a href=\"".URLHelper::getLink("raumzeit.php?cmd=createNewSingleDate#newSingleDate")."\"><img class=\"middle\" src=\"".Assets::image_path('icons/16/blue/plus.png')."\" ".tooltip(_("Einen neuen Termin anlegen"))."></a></td>";
             print "\n<td class=\"steelgraulight\" align=\"center\">";
             if ($open == "all")
-                print "<a href=\"".URLHelper::getLink("?dclose=1")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/close_all.gif\" ".tooltip(_("Alle schließen"))."></a>";
+                print "<a href=\"".URLHelper::getLink("?dclose=1")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/close_all.png\" ".tooltip(_("Alle schließen"))."></a>";
             else
-                print "<a href=\"".URLHelper::getLink("?dopen=all")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/open_all.gif\" ".tooltip(_("Alle öffnen"))."border=\"0\"></a>";
+                print "<a href=\"".URLHelper::getLink("?dopen=all")."\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/open_all.png\" ".tooltip(_("Alle öffnen"))."border=\"0\"></a>";
             print "\n</td></tr>\n<tr><td class=\"blank\" colspan=\"2\">";
         }
 

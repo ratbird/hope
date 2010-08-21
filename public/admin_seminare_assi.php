@@ -2098,7 +2098,7 @@ if ((!$sem_create_data["sem_class"]) && (!$level)){
                     <?
                     foreach (SeminarCategories::GetAll() as $category) {
                         if(!$category->course_creation_forbidden){
-                            echo "<tr><td width=\"3%\" class=\"blank\"><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\"><img src=\"".$GLOBALS['ASSETS_URL']."icons/16/grey/arr_1right.png\" border=0></a><td>";
+                            echo "<tr><td width=\"3%\" class=\"blank\"><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\">" .  Assets::img('icons/16/blue/link-intern.png', array('class' => 'text-top')) . "</a><td>";
                             echo "<td width=\"97%\" class=\"blank\"><a href=\"".URLHelper::getLink("?start_level=TRUE&class=".$category->id)."\">".$category->name."</a><td></tr>";
                         echo "<tr><td width=\"3%\" class=\"blank\">&nbsp; <td>";
                             echo "<td width=\"97%\" class=\"blank\"><font size=-1>".$category->create_description."</font><td></tr>";
@@ -2547,12 +2547,12 @@ if ($level == 2)
                         $i = 0;
                                 foreach($sem_create_data["sem_doz"] as $key=>$val) {
                                     echo "<tr>";
-                                     $img_src = "images/trash.gif";
+                                     $img_src = Assets::image_path('icons/16/blue/trash.png');
                                      $href = "?delete_doz=".get_username($key)."#anker";
 
                                      echo "<td>";
                                      echo "<a href='".URLHelper::getLink($href)."'>";
-                                     echo "<img src='{$GLOBALS['ASSETS_URL']}{$img_src}' border='0'>";
+                                     echo "<img src='$img_src' border='0'>";
                                      echo "</a>";
                                      echo "</td>";
 
@@ -2588,7 +2588,7 @@ if ($level == 2)
                            $i++;
                         }
                            echo "</table>";
-                     //     printf ("&nbsp; <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\"></a> &nbsp; <font size=\"-1\"><b>%s (%s)&nbsp; &nbsp; <br>", URLHelper::getLink($PHP_SELF."?delete_doz=".get_username($key)), get_fullname($key,"full_rev",true), get_username($key));
+                     //     printf ("&nbsp; <a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/trash.png\" border=\"0\"></a> &nbsp; <font size=\"-1\"><b>%s (%s)&nbsp; &nbsp; <br>", URLHelper::getLink($PHP_SELF."?delete_doz=".get_username($key)), get_fullname($key,"full_rev",true), get_username($key));
                          } else {
                                 printf ("<font size=\"-1\">&nbsp;  ". sprintf(_("Keine %s gew&auml;hlt."), get_title_for_status('dozent', 2, $sem_create_data["sem_status"]))."</font><br >");
                             }
@@ -2653,10 +2653,10 @@ if ($level == 2)
                                                             echo "<td>";
 
                                                             $href = "?delete_dep=".get_username($key)."#anker";
-                                                            $img_src = "images/trash.gif";
+                                                            $img_src = Assets::image_path('icons/16/blue/trash.png');
 
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
-                                                            echo "<img src='{$GLOBALS['ASSETS_URL']}{$img_src}' border='0'>";
+                                                            echo "<img src='$img_src' border='0'>";
                                                             echo "</a>";
                                                             echo "</td>";
                               echo "<td>";
@@ -2710,10 +2710,10 @@ if ($level == 2)
                                                             echo "<td>";
 
                                                             $href = "?delete_tut=".get_username($key)."#anker";
-                                                            $img_src = "images/trash.gif";
+                                                            $img_src = Assets::image_path('icons/16/blue/trash.png');
 
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
-                                                            echo "<img src='{$GLOBALS['ASSETS_URL']}{$img_src}' border='0'>";
+                                                            echo "<img src='$img_src' border='0'>";
                                                             echo "</a>";
                                                             echo "</td>";
 
@@ -2725,7 +2725,7 @@ if ($level == 2)
                                                             $img_src ="images/move_up.gif";
 
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
-                                                            echo "<img src='{$GLOBALS['ASSETS_URL']}{$img_src}' border='0'>";
+                                                            echo "<img src='$img_src' border='0'>";
                                                             echo "</a>";
                            }
                            echo "</td>";
@@ -2900,7 +2900,7 @@ if ($level == 2)
                                                 </td>
                                                 <td class="<?= $cssSw->getClass() ?>" nowrap colspan=2 >
                                                 <a href="<?= URLHelper::getLink('?delete_domain='.$domain_id) ?>">
-                                                <img src="<?= $GLOBALS['ASSETS_URL'].'images/trash.gif'.'" '.tooltip(_('Nutzerdomäne aus der Liste löschen')) ?>>
+                                                 	<?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' =>_('Nutzerdomäne aus der Liste löschen'))) ?>
                                                 </a>
                                                 </td>
                                             </tr>
@@ -3058,8 +3058,8 @@ if ($level == 3) {
 
                                         if ($sem_create_data["turnus_count"]>1) {
                                             ?>
-                                            &nbsp; <a href="<? echo URLHelper::getLink("?delete_turnus_field=".($i+1)) ?>"><img border=0 src="<?= $GLOBALS['ASSETS_URL'] ?>images/trash.gif" <? echo tooltip(_("Dieses Feld aus der Auswahl löschen"), TRUE) ?> ></a>
-                                            <?
+                                            &nbsp; <a href="<? echo URLHelper::getLink("?delete_turnus_field=".($i+1)) ?>">
+                                            	<?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' =>_('Dieses Feld aus der Auswahl löschen'))); 
                                         }
                                         echo  Termin_Eingabe_javascript(4, $i, 0, $ss,$sm,$es,$em);
 
@@ -3162,8 +3162,8 @@ if ($level == 3) {
                                         if ($sem_create_data["term_count"]>1)
                                             {
                                             ?>
-                                            &nbsp; <a href="<? echo URLHelper::getLink("?delete_term_field=".($i+1)) ?>"><img border=0 src="<?= $GLOBALS['ASSETS_URL'] ?>images/trash.gif" <? echo tooltip(_("Dieses Feld aus der Auswahl löschen"), TRUE) ?> ></a>
-                                            <?
+                                            &nbsp; <a href="<? echo URLHelper::getLink("?delete_term_field=".($i+1)) ?>">
+                                            <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' =>_('Dieses Feld aus der Auswahl löschen')));
                                             }
                                         echo  Termin_Eingabe_javascript (5, $i, 0, $ss, $sm, $es, $em);
                                         }
@@ -3866,9 +3866,9 @@ if ($level == 5)
                                         if($sem_create_data["admission_enable_quota"]){
                                             printf ("<input type=\"HIDDEN\" name=\"sem_studg_ratio_old[]\" value=\"%s\">", $val["ratio"]);
                                             printf ("<input type=\"TEXT\" name=\"sem_studg_ratio[]\" size=5 maxlength=5 value=\"%s\"><font size=-1> %% (%s Teilnehmer)</font>", $val["ratio"], $num_stg[$key]);
-                                            printf ("&nbsp; <a href=\"%s\"><img border=0 src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" ".tooltip(_("Den Studiengang aus der Liste löschen")).">", URLHelper::getLink("?sem_delete_studg=".$key));
+                                            printf ("&nbsp; <a href=\"%s\"><img border=0 src=\"".Assets::image_path('icons/16/blue/trash.png')."\" ".tooltip(_("Den Studiengang aus der Liste löschen")).">", URLHelper::getLink("?sem_delete_studg=".$key));
                                         } else {
-                                            printf ("&nbsp; <a href=\"%s\"><img border=0 src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" ".tooltip(_("Den Studiengang aus der Liste löschen")).">", URLHelper::getLink("?sem_delete_studg=".$key));
+                                            printf ("&nbsp; <a href=\"%s\"><img border=0 src=\"".Assets::image_path('icons/16/blue/trash.png')."\" ".tooltip(_("Den Studiengang aus der Liste löschen")).">", URLHelper::getLink("?sem_delete_studg=".$key));
                                         }
                                         ?>
                                         </td>

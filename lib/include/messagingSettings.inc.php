@@ -268,21 +268,21 @@ function change_messaging_view()
                             $smsforward['rec'] = $db2->f("smsforward_rec");
                         }
                         if ($smsforward['rec']) { // empfaenger ausgewaehlt
-                            printf("&nbsp;<font size=\"-1\">"._("Empfänger: %s%s%s")."</font>&nbsp;&nbsp;<input type=\"image\" name=\"del_forwardrec\" src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Empfänger und Weiterleitung löschen.")).">&nbsp;<input type=\"image\" name=\"del_forwardrec\" src=\"".$GLOBALS['ASSETS_URL']."images/suche2.gif\" border=\"0\" ".tooltip(_("Neuen Empfänger suchen."))."><br>", "<a href=\"about.php?username=".get_username($smsforward['rec'])."\">", get_fullname($smsforward['rec'],'full',true), "</a>");
+                            printf("&nbsp;<font size=\"-1\">"._("Empfänger: %s%s%s")."</font>&nbsp;&nbsp;<input type=\"image\" name=\"del_forwardrec\" src=\"" . Assets::image_path('icons/16/blue/trash.png') . "\" ".tooltip(_("Empfänger und Weiterleitung löschen.")).">&nbsp;<input type=\"image\" name=\"del_forwardrec\" src=\"".Assets::image_path('icons/16/blue/search.png')."\"  ".tooltip(_("Neuen Empfänger suchen."))."><br>", "<a href=\"about.php?username=".get_username($smsforward['rec'])."\">", get_fullname($smsforward['rec'],'full',true), "</a>");
                             echo "<input type=\"checkbox\" value=\"1\" name=\"smsforward_copy\"";
                             if ($smsforward['copy'] == "1") echo " checked";
                             echo ">&nbsp;<font size=\"-1\">".("Kopie im persönlichen Posteingang speichern.")."</font>";
                         } else { // kein empfaenger ausgewaehlt
                             if ($search_exp == "") { ?>
                                 <input type="text" name="search_exp" size="30" value="">
-                                <input type="image" name="gosearch" src="<?=Assets::image_path('icons/16/black/search.png') ?>" class="middle" border="0"><?
+                                <input type="image" name="gosearch" src="<?=Assets::image_path('icons/16/blue/search.png') ?>" class="middle" border="0"><?
                             } else {
                                 $db->query("SELECT username, ".$_fullname_sql['full_rev']." AS fullname, perms FROM auth_user_md5 LEFT JOIN user_info USING(user_id) WHERE (username LIKE '%$search_exp%' OR Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%') AND ".get_vis_query('auth_user_md5')." ORDER BY Nachname ASC");
                                 if (!$db->num_rows()) { // wenn keine treffer
                                     echo "&nbsp;<input type=\"image\" name=\"reset_freesearch\" src=\"".$GLOBALS['ASSETS_URL']."images/rewind.gif\" border=\"0\" value=\""._("Suche zur&uuml;cksetzen")."\" ".tooltip(_("setzt die Suche zurück")).">";
                                     echo "<font size=\"-1\">&nbsp;"._("keine Treffer")."</font>";
                                 } else { // treffer auswählen
-                                    echo "<input type=\"image\" name=\"add_smsforward_rec\" ".tooltip(_("als Empfänger weitergeleiteter Nachrichten eintragen"))." value=\""._("als Empfänger auswählen")."\" src=\"".$GLOBALS['ASSETS_URL']."images/vote_answer_correct.gif\" border=\"0\">&nbsp;&nbsp;";
+                                    echo "<input type=\"image\" name=\"add_smsforward_rec\" ".tooltip(_("als Empfänger weitergeleiteter Nachrichten eintragen"))." value=\""._("als Empfänger auswählen")."\" src=\"".Assets::image_path('icons/16/blue/accept.png')."\" border=\"0\">&nbsp;&nbsp;";
                                     echo "<select size=\"1\" name=\"smsforward_rec\">";
                                     while ($db->next_record()) {
                                         if (get_username($user->id) != $db->f("username")) {

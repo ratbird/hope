@@ -343,8 +343,11 @@ function ShowContact ($contact_id)
             $lastrow =      "<tr><td colspan=\"2\" class=\"steel1\" align=\"right\">"
                         .$buddy
                         ."<a href=\"$PHP_SELF?edit_id=$contact_id\"><img src=\"".$GLOBALS['ASSETS_URL']."images/einst.gif\" border=\"0\" ".tooltip(_("Editieren"))."></a>&nbsp; "
-                        ."<a href=\"contact_export.php?contactid=$contact_id\"><img src=\"".$GLOBALS['ASSETS_URL']."images/vcardexport.gif\" border=\"0\" ".tooltip(_("Als vCard exportieren"))."></a>&nbsp; "
-                        ."<a href=\"$PHP_SELF?view=$view&cmd=delete&contact_id=$contact_id&open=$open\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Kontakt löschen"))."></a></td></tr>"
+                        ."<a href=\"contact_export.php?contactid=$contact_id\">"
+                        .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Als vCard exportieren")))
+                        ." <a href=\"$PHP_SELF?view=$view&cmd=delete&contact_id=$contact_id&open=$open\">"
+                        .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Kontakt löschen")))
+                        ." </a></td></tr>"
                         ."<tr><td colspan=\"2\" class=\"steelgraulight\" align=\"center\"><a href=\"$PHP_SELF?view=$view&filter=$filter\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumgraurauf.gif\" border=\"0\" ".tooltip(_("Kontakte schließen"))."></a></td></tr>";
         } else {
             if ($forum["jshover"]==1) { // Hovern
@@ -439,9 +442,9 @@ function ShowEditContact ($contact_id)
         $output .= "<tr><td class=\"steel1\" colspan=\"3\">&nbsp; </td></tr>";
         while ($db2->next_record())     {
             if ($i ==0) {
-                $output .= "<tr><td class=\"steel1\" width=\"100\" NOWRAP>&nbsp; <input type=\"HIDDEN\" name=\"userinfo_id[]\" value=\"".$db2->f("userinfo_id")."\"><input type=\"text\" name=\"existingowninfolabel[]\" value=\"".$db2->f("name")."\"></td><td class=\"steel1\" width=\"250\"><textarea name=\"existingowninfocontent[]\" value=\"".$db2->f("content")."\" style=\"width: 90%\" cols=\"20\" rows\"3\" wrap=virtual>".$db2->f("content")."</textarea></td><td class=\"steel1\" width=\"50\"><a href=\"$PHP_SELF?edit_id=$contact_id&deluserinfo=".$db2->f("userinfo_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."></a></td></tr>";
+                $output .= "<tr><td class=\"steel1\" width=\"100\" NOWRAP>&nbsp; <input type=\"HIDDEN\" name=\"userinfo_id[]\" value=\"".$db2->f("userinfo_id")."\"><input type=\"text\" name=\"existingowninfolabel[]\" value=\"".$db2->f("name")."\"></td><td class=\"steel1\" width=\"250\"><textarea name=\"existingowninfocontent[]\" value=\"".$db2->f("content")."\" style=\"width: 90%\" cols=\"20\" rows\"3\" wrap=virtual>".$db2->f("content")."</textarea></td><td class=\"steel1\" width=\"50\"><a href=\"$PHP_SELF?edit_id=$contact_id&deluserinfo=".$db2->f("userinfo_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))) . "</a></td></tr>";
             } else {
-                $output .= "<tr><td class=\"steel1\" width=\"100\" NOWRAP>&nbsp; <input type=\"HIDDEN\" name=\"userinfo_id[]\" value=\"".$db2->f("userinfo_id")."\"><input type=\"text\" name=\"existingowninfolabel[]\" value=\"".$db2->f("name")."\"></td><td NOWRAP class=\"steel1\" width=\"250\"><textarea name=\"existingowninfocontent[]\" value=\"".$db2->f("content")."\" style=\"width: 90%\" cols=\"20\" rows\"3\" wrap=virtual>".$db2->f("content")."</textarea></td><td class=\"steel1\" width=\"50\" nowrap><a href=\"$PHP_SELF?edit_id=$contact_id&deluserinfo=".$db2->f("userinfo_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."></a>&nbsp; <a href=\"$PHP_SELF?edit_id=$contact_id&move=".$db2->f("userinfo_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_up.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag nach oben schieben"))."></a></td></tr>";
+                $output .= "<tr><td class=\"steel1\" width=\"100\" NOWRAP>&nbsp; <input type=\"HIDDEN\" name=\"userinfo_id[]\" value=\"".$db2->f("userinfo_id")."\"><input type=\"text\" name=\"existingowninfolabel[]\" value=\"".$db2->f("name")."\"></td><td NOWRAP class=\"steel1\" width=\"250\"><textarea name=\"existingowninfocontent[]\" value=\"".$db2->f("content")."\" style=\"width: 90%\" cols=\"20\" rows\"3\" wrap=virtual>".$db2->f("content")."</textarea></td><td class=\"steel1\" width=\"50\" nowrap><a href=\"$PHP_SELF?edit_id=$contact_id&deluserinfo=".$db2->f("userinfo_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))) . "</a>&nbsp; <a href=\"$PHP_SELF?edit_id=$contact_id&move=".$db2->f("userinfo_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_up.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag nach oben schieben"))."></a></td></tr>";
             }
             $i++;
         }

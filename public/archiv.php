@@ -480,7 +480,7 @@ if ($archiv_data["perform_search"]) {
                 }
                 echo "</td><td class=\"$class\" width=\"3%\">&nbsp;";
                 if (archiv_check_perm($db->f("seminar_id")) == "admin")
-                    echo "<a href=\"". URLHelper::getLink("?delete_id=".$db->f('seminar_id')) ."\">&nbsp;<img border=0 src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" " . tooltip(_("Diese Veranstaltung aus dem Archiv entfernen")) . "></a>";
+                    echo "<a href=\"". URLHelper::getLink("?delete_id=".$db->f('seminar_id')) ."\">&nbsp;<img border=0 src=\"". Assets::image_path('icons/16/blue/trash.png') ."\" " . tooltip(_("Diese Veranstaltung aus dem Archiv entfernen")) . "></a>";
                 echo "</td>";
             } else
                 echo "<td class=\"$class\" width=\"9%\" colspan=\"3\">&nbsp;</td>";
@@ -524,7 +524,7 @@ if ($archiv_data["perform_search"]) {
                     while ($db2->next_record()) {
                         echo "<font size=\"-1\">".htmlReady($db2->f("fullname")). " (" . _("Status:") . " ". $db2->f("status"). ")</font>";
                         if ($db2->f("status") != "dozent")
-                            echo "<a href=\"". URLHelper::getLink("?delete_user=".$db2->f("user_id")."&d_sem_id=".$db->f("seminar_id")) ,"#anker\"><font size=\"-1\">&nbsp;" . _("Zugriffsberechtigung entfernen") . "</font> <img border=0 src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" " . tooltip(_("Dieser Person die Zugriffsberechtigung entziehen")) . "></a>";
+                            echo "<a href=\"". URLHelper::getLink("?delete_user=".$db2->f("user_id")."&d_sem_id=".$db->f("seminar_id")) ,"#anker\"><font size=\"-1\">&nbsp;" . _("Zugriffsberechtigung entfernen") . "</font> <img border=0 src=\"". Assets::image_path('icons/16/blue/trash.png') ."\" " . tooltip(_("Dieser Person die Zugriffsberechtigung entziehen")) . "></a>";
                         echo "<br>";
                     }
                     if (($add_user) && (!$new_search)) {

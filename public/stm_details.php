@@ -144,7 +144,7 @@ if (!$stm_obj->isNew()){
             $enter = true;
             $status_text = _("Sie können dieses Modul belegen.");
         } else {
-            $picture_tmp = "pictures/x2.gif";
+            $picture_tmp = "images/icons/16/red/decline.png";
             $status_text =  _("Sie können dieses Modul nicht belegen.")
                         . '<br>' . _("Sie erfüllen die Voraussetzungen nicht.");
         }

@@ -190,7 +190,7 @@ class CalendarScheduleModel
 
                     $entry['icons'][] = array(
                         'url'   => $bind_url,
-                        'image' => 'unhide',
+                        'image' => 'icons/16/blue/visibility-visible.png',
                         'onClick' => 'STUDIP.Calendar.noNewEntry = true;',
                         'title' => _("Diesen Eintrag wieder einblenden")
                     );

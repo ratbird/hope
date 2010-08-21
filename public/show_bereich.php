@@ -137,10 +137,10 @@ if (($EXPORT_ENABLE) AND ($level == "s") AND ($perm->have_perm("tutor")))
 {
     include_once($PATH_EXPORT . "/export_linking_func.inc.php");
     $infobox[] =    array(  "kategorie" => _("Daten ausgeben:"),
-                            "eintrag" => array(array(   "icon" => "blank.gif",
+                            "eintrag" => array(array(   "icon" => "icons/16/black/download.png",
                                                         "text" => export_link($SessSemName[1], "veranstaltung", $SessSemName[0])),
-                                                array( 'icon' => 'blank.gif',
-                                                        "text" => '<a href="'.$PHP_SELF.'?send_excel=1&group_by='.(int)$group_by.'"><img src="'.$GLOBALS['ASSETS_URL'].'images/xls-icon.gif" align="absbottom" border="0">&nbsp;'._("Download als Excel Tabelle").'</a>')
+                                                array( 'icon' => 'icons/16/black/file-xls.png',
+                                                        "text" => '<a href="'.$PHP_SELF.'?send_excel=1&group_by='.(int)$group_by.'">'._("Download als Excel Tabelle").'</a>')
 
                                                         )
                     );
@@ -149,10 +149,10 @@ if (($EXPORT_ENABLE) AND ($level == "sbb") AND ($perm->have_perm("tutor")))
 {
     include_once($PATH_EXPORT . "/export_linking_func.inc.php");
     $infobox[] =    array(  "kategorie" => _("Daten ausgeben:"),
-                            "eintrag" => array(array(   "icon" => "blank.gif",
+                            "eintrag" => array(array(   "icon" => "icons/16/black/download.png",
                                                         "text" => export_link($id, "veranstaltung", $id)),
-                                                array( 'icon' => 'blank.gif',
-                                                        "text" => '<a href="'.$PHP_SELF.'?send_excel=1&group_by='.(int)$group_by.'"><img src="'.$GLOBALS['ASSETS_URL'].'images/xls-icon.gif" align="absbottom" border="0">&nbsp;'._("Download als Excel Tabelle").'</a>')
+                                                array( 'icon' => 'icons/16/black/file-xls.png',
+                                                        "text" => '<a href="'.$PHP_SELF.'?send_excel=1&group_by='.(int)$group_by.'">'._("Download als Excel Tabelle").'</a>')
 
                                                         )
                     );

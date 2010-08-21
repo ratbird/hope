@@ -39,17 +39,17 @@ define ("VOTE_ICON_VOTE",    Assets::image_path('icons/16/grey/vote.png'));
 define ("VOTE_ICON_TEST",    Assets::image_path('icons/16/grey/test.png'));
 define ("VOTE_ICON_STOPPED", Assets::image_path('icons/16/grey/vote-stopped.png'));
 define ("VOTE_ICON_ARROW",   Assets::image_path('icons/16/white/admin.png'));
-define ("VOTE_ICON_SUCCESS", VOTE_PATH_PICTURES."ok.gif");
-define ("VOTE_ICON_ERROR",   VOTE_PATH_PICTURES."x.gif");
-define ("VOTE_ICON_INFO",    VOTE_PATH_PICTURES."ausruf.gif");
-define ("VOTE_ICON_LIST",    VOTE_PATH_PICTURES."file.gif");
+define ("VOTE_ICON_SUCCESS", VOTE_PATH_PICTURES."icons/16/green/accept.png");
+define ("VOTE_ICON_ERROR",   VOTE_PATH_PICTURES."icons/16/red/decline.png");
+define ("VOTE_ICON_INFO",    VOTE_PATH_PICTURES."icons/16/grey/exclaim.png");
+define ("VOTE_ICON_LIST",    VOTE_PATH_PICTURES."icons/16/grey/file-generic.png");
 
 define ("VOTE_BAR_LEFT",   VOTE_PATH_PICTURES."bar_l.gif");
 define ("VOTE_BAR_MIDDLE",  VOTE_PATH_PICTURES."vote_bar_");
 define ("VOTE_BAR_RIGHT",  VOTE_PATH_PICTURES."bar_r.gif");
 
-define ("VOTE_ANSWER_CORRECT", VOTE_PATH_PICTURES."haken_transparent.gif");
-define ("VOTE_ANSWER_WRONG",   VOTE_PATH_PICTURES."x_transparent.gif");
+define ("VOTE_ANSWER_CORRECT", VOTE_PATH_PICTURES."icons/16/green/accept.png");
+define ("VOTE_ANSWER_WRONG",   VOTE_PATH_PICTURES."icons/16/red/decline.png");
 
 define ("VOTE_COLOR_SUCCESS", "#008000");
 define ("VOTE_COLOR_ERROR",   "#E00000");

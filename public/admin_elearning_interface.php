@@ -110,17 +110,17 @@ if ($ELEARNING_INTERFACE_ENABLE)
         {
             if ($msg["error"] != "")
             {
-                echo "<tr><td valign=\"middle\"><img src=\"".$GLOBALS['ASSETS_URL']."images/x2.gif\" alt=\"Fehler\"></td><td valign=\"middle\">" . $msg["error"] . "</td></tr>";
+                echo "<tr><td valign=\"middle\">" . Assets::img('icons/16/red/decline.png', array('class' => 'text-top', 'title' => _('Fehler'))) . $msg["error"] . "</td></tr>";
                 $error_count++;
             }
             else
-                echo "<tr><td valign=\"middle\"><img src=\"".$GLOBALS['ASSETS_URL']."images/haken.gif\" alt=\"OK\"></td><td valign=\"middle\">" . $msg["info"] . "</td></tr>";
+                echo "<tr><td valign=\"middle\">" . Assets::img('icons/16/green/accept.png', array('class' => 'text-top', 'title' => _('OK'))) . $msg["info"] . "</td></tr>";
         }
         echo "<tr><td><br></td></tr>";
         if ($error_count > 0)
         {
             $status_info = "error";
-            echo "<tr><td valign=\"middle\"><img src=\"".$GLOBALS['ASSETS_URL']."images/x2.gif\" alt=\"OK\"></td><td valign=\"middle\"><b>";
+            echo "<tr><td valign=\"middle\">" . Assets::img('icons/16/red/decline.png', array('class' => 'text-top', 'title' => _('Fehler'))) . "<b>";
             echo _("Beim Laden der Schnittstelle sind Fehler aufgetreten. ");
             if (ELearningUtils::isCMSActive($cms_select))
             {
@@ -130,7 +130,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
             echo "</b></td></tr>";
         }
         else
-            echo "<tr><td valign=\"middle\"><img src=\"".$GLOBALS['ASSETS_URL']."images/haken.gif\" alt=\"OK\"></td><td valign=\"middle\"><b>" .sprintf( _("Die Schnittstelle zum %s-System ist korrekt konfiguriert."), $connected_cms[$cms_select]->getName()) . "</b></td></tr>";
+            echo "<tr><td valign=\"middle\">" . Assets::img('icons/16/green/accept.png', array('class' => 'text-top', 'title' => _('OK'))) . "<b>" .sprintf( _("Die Schnittstelle zum %s-System ist korrekt konfiguriert."), $connected_cms[$cms_select]->getName()) . "</b></td></tr>";
         echo "</table>";
         echo "<br>\n";
         echo ELearningUtils::getCMSHeader($connected_cms[$cms_select]->getName());
@@ -210,7 +210,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
                                     );
             break;
             case "error":
-            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/red/decline.png" ,
+            $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/decline.png" ,
                                         "text"  => sprintf(_("Bei der Pr&uuml;fung der Verbindung sind Fehler aufgetreten. Sie m&uuml;ssen zun&auml;chst die Eintr&auml;ge in der Konfigurationsdatei korrigieren, bevor das System angebunden werden kann."), $connected_cms[$cms_select]->getName())
                                     );
             break;

@@ -101,7 +101,7 @@ function PrintAktualStatusgruppen ($range_id, $view, $edit_id="")
         echo "\n\t\t<td width=\"5%\">";
         printf ("                 <input type=\"IMAGE\" name=\"%s\" src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=\"0\" %s>&nbsp; </td>", $statusgruppe_id, tooltip(_("Markierte Personen dieser Gruppe zuordnen")));
         printf ("             <td width=\"85%%\" class=\"%s\">&nbsp; %s </td><td class=\"%s\" width=\"5%%\"><a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/einst.gif\" border=\"0\" %s></a></td>", ($edit_id == $statusgruppe_id?"topicwrite":"topic"), htmlReady($db->f("name")), ($edit_id == $statusgruppe_id?"topicwrite":"topic"), URLHelper::getLink($PHP_SELF."?edit_id=".$statusgruppe_id."&range_id=".$range_id."&view=".$view."&cmd=edit_statusgruppe"), tooltip(_("Gruppenname oder -größe anpassen")) );
-        printf ("             <td width=\"5%%\"><a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash_att.gif\" width=\"11\" height=\"17\" border=\"0\" %s></a></td>", URLHelper::getLink($PHP_SELF."?cmd=verify_remove_statusgruppe&statusgruppe_id=".$statusgruppe_id."&range_id=".$range_id."&view=".$view."&name=".$db->f("name")), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
+        printf ("             <td width=\"5%%\"><a href=\"%s\"><img src=\"".Assets::image_path('icons/16/red/trash.png')."\" %s></a></td>", URLHelper::getLink($PHP_SELF."?cmd=verify_remove_statusgruppe&statusgruppe_id=".$statusgruppe_id."&range_id=".$range_id."&view=".$view."&name=".$db->f("name")), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
         echo    "\n\t</tr>";
 
         $db2->query ("SELECT statusgruppe_user.user_id, " . $_fullname_sql['full'] . " AS fullname , username FROM statusgruppe_user LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN user_info USING (user_id) WHERE statusgruppe_id = '$statusgruppe_id'");
@@ -120,7 +120,7 @@ function PrintAktualStatusgruppen ($range_id, $view, $edit_id="")
                 }
                 printf ("\n\t<tr>\n\t\t<td><font color=\"%s\">$k</font></td>", $farbe);
                 printf ("<td class=\"%s\" colspan=\"2\"><font size=\"2\">%s</font></td>",$class, htmlReady($db2->f("fullname")));
-                printf ("<td><a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" width=\"11\" height=\"17\" border=\"0\" %s></a></td>", URLHelper::getLink($PHP_SELF.'?cmd=remove_person&statusgruppe_id='.$statusgruppe_id.'&username='.$db2->f("username").'&range_id='.$range_id.'&view='.$view), tooltip(_("Person aus der Gruppe entfernen")));
+                printf ("<td><a href=\"%s\"" . Assets::image_path('icons/16/red/trash.png')." %s></a></td>", URLHelper::getLink($PHP_SELF.'?cmd=remove_person&statusgruppe_id='.$statusgruppe_id.'&username='.$db2->f("username").'&range_id='.$range_id.'&view='.$view), tooltip(_("Person aus der Gruppe entfernen")));
                 echo "\n\t</tr>";
                 $k++;
             }

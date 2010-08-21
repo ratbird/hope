@@ -712,9 +712,9 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $content = "";
         if ($this->msg[$item_id]){
             $msg = explode("§",$this->msg[$item_id]);
-            $pics = array('error' => 'x.gif', 'info' => 'ausruf.gif', 'msg' => 'ok.gif');
+            $pics = array('error' => 'icons/16/red/decline.png', 'info' => 'icons/16/grey/exclaim.png', 'msg' => 'icons/16/green/accept.png');
             $content = "\n<tr><td colspan=\"{$colspan}\"><table border=\"0\" cellspacing=\"0\" cellpadding=\"2\" width=\"100%\" style=\"font-size:10pt\">
-                        <tr><td class=\"blank\" align=\"center\" width=\"25\"><img width=\"16\" height=\"16\" src=\"".$GLOBALS['ASSETS_URL']."images/" . $pics[$msg[0]] . "\" ></td>
+                        <tr><td class=\"blank\" align=\"center\" width=\"25\">" .  Assets::img($pics[$msg[0]], array('class' => 'text-top')) . "</td>
                         <td class=\"blank\" align=\"left\">" . $msg[1] . "</td></tr>
                         </table></td></tr><tr>";
         }

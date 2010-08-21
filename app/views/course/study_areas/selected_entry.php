@@ -7,7 +7,7 @@ $_id = htmlReady($area->getID());
          style="vertical-align: middle;"
          type="image"
          name="study_area_selection[remove][<?= $_id ?>]"
-         src="<?= Assets::image_path('trash.gif') ?>">
+         src="<?= Assets::image_path('icons/16/blue/trash.png') ?>">
   <a class="study_area_selection_expand"
      data-id="'<?= htmlReady($area->getParentId()) ?>'" data-course_id="'<?= htmlReady($course_id) ?>'"
      href="<?= URLHelper::getLink(isset($url) ? $url : '',

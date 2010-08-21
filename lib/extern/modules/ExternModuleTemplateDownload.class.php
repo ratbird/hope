@@ -207,25 +207,25 @@ class ExternModuleTemplateDownload extends ExternModule {
                 switch ($file_suffix[1]) {
                     case 'txt' :
                         if (!$content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $this->config->getValue('Main', 'icontxt'))
-                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/txt-icon.gif';
+                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-text.png';
                         break;
                     case 'xls' :
                         if (!$content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $this->config->getValue('Main', 'iconxls'))
-                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/xls-icon.gif';
+                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-xls.png';
                         break;
                     case 'ppt' :
                         if (!$content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $this->config->getValue('Main', 'iconppt'))
-                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/ppt-icon.gif';
+                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-presentation.png';
                         break;
                     case 'rtf' :
                         if (!$content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $this->config->getValue('Main', 'iconrtf'))
-                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/rtf-icon.gif';
+                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-text.png';
                         break;
                     case 'zip' :
                     case 'tgz' :
                     case 'gz' :
                         if (!$content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $this->config->getValue('Main', 'iconzip'))
-                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/zip-icon.gif';
+                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-archive.png';
                         break;
                     case 'jpg' :
                     case 'png' :
@@ -233,15 +233,15 @@ class ExternModuleTemplateDownload extends ExternModule {
                     case 'jpeg' :
                     case 'tif' :
                         if (!$content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $this->config->getValue('Main', 'iconpic'))
-                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/pic-icon.gif';
+                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-image.png';
                         break;
                     case 'pdf' :
                         if (!$content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $this->config->getValue('Main', 'iconpdf'))
-                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/pdf-icon.gif';
+                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-pdf.png';
                         break;
                     default :
                         if (!$content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $this->config->getValue('Main', 'icondefault'))
-                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/txt-icon.gif';
+                            $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-generic.png';
                 }
                 $content['FILES']['FILE'][$i]['FILE_NO'] = $i + 1;
                 

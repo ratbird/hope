@@ -50,7 +50,7 @@ function get_my_sem_values(&$my_sem) {
     while($db2->next_record()) {
         if ($db2->f('count')) {
             $nav = new Navigation('forum', 'forum.php?view=reset');
-            $nav->setImage('icon-posting.gif', array('title' => sprintf(_('%s Postings'), $db2->f('count'))));
+            $nav->setImage('icons/16/grey/forum.png', array('title' => sprintf(_('%s Postings'), $db2->f('count'))));
             $my_sem[$db2->f('Seminar_id')]['forum'] = $nav;
         }
     }
@@ -68,7 +68,7 @@ function get_my_sem_values(&$my_sem) {
     while($db2->next_record()) {
         if ($db2->f('count')) {
             $nav = new Navigation('news', '');
-            $nav->setImage('icon-news.gif', array('title' => sprintf(_('%s Ankündigungen'), $db2->f('count'))));
+            $nav->setImage('icons/16/grey/news.png', array('title' => sprintf(_('%s Ankündigungen'), $db2->f('count'))));
             $my_sem[$db2->f('range_id')]['news'] = $nav;
         }
     }
@@ -77,7 +77,7 @@ function get_my_sem_values(&$my_sem) {
     while($db2->next_record()) {
         if ($db2->f('count')) {
             $nav = new Navigation('scm', 'scm.php');
-            $nav->setImage('icon-cont.gif', array('title' => sprintf(_('%s Einträge'), $db2->f('count'))));
+            $nav->setImage('icons/16/grey/infopage.png', array('title' => sprintf(_('%s Einträge'), $db2->f('count'))));
             $my_sem[$db2->f('range_id')]['scm'] = $nav;
         }
     }
@@ -86,7 +86,7 @@ function get_my_sem_values(&$my_sem) {
     while($db2->next_record()) {
         if ($db2->f('count')) {
             $nav = new Navigation('literature', 'literatur.php');
-            $nav->setImage('icon-lit.gif', array('title' => sprintf(_('%s Literaturlisten'), $db2->f('count'))));
+            $nav->setImage('icons/16/grey/literature.png', array('title' => sprintf(_('%s Literaturlisten'), $db2->f('count'))));
             $my_sem[$db2->f('range_id')]['literature'] = $nav;
         }
     }
@@ -95,7 +95,7 @@ function get_my_sem_values(&$my_sem) {
     while($db2->next_record()) {
         if ($db2->f('count')) {
             $nav = new Navigation('schedule', 'dates.php');
-            $nav->setImage('icon-uhr.gif', array('title' => sprintf(_('%s Termine'), $db2->f('count'))));
+            $nav->setImage('icons/16/grey/schedule.png', array('title' => sprintf(_('%s Termine'), $db2->f('count'))));
             $my_sem[$db2->f('range_id')]['schedule'] = $nav;
         }
     }
@@ -104,7 +104,7 @@ function get_my_sem_values(&$my_sem) {
         while($db2->next_record()) {
             if ($db2->f('count')) {
                 $nav = new Navigation('wiki', 'wiki.php');
-                $nav->setImage('icon-wiki.gif', array('title' => sprintf(_('%s WikiSeiten'), $db2->f('count'))));
+                $nav->setImage('icons/16/grey/wiki.pn', array('title' => sprintf(_('%s WikiSeiten'), $db2->f('count'))));
                 $my_sem[$db2->f('range_id')]['wiki'] = $nav;
             }
         }
@@ -114,7 +114,7 @@ function get_my_sem_values(&$my_sem) {
         while($db2->next_record()) {
             if ($db2->f('count')) {
                 $nav = new Navigation('vote', '#vote');
-                $nav->setImage('icon-vote.gif', array('title' => sprintf(_('%s Umfrage(n)'), $db2->f('count'))));
+                $nav->setImage('icons/16/grey/vote.png', array('title' => sprintf(_('%s Umfrage(n)'), $db2->f('count'))));
                 $my_sem[$db2->f('range_id')]['vote'] = $nav;
             }
         }
@@ -209,7 +209,7 @@ if ($num_my_sem) {
     }
 ?>
     </td>
-    <td class="blank"  width="1%" align="right" valign="top"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/board1.jpg" border="0"></td>
+    <td class="blank"  width="1%" align="right" valign="top"><?=Assets::img('infobox/board1.jpg') ?></td>
 </tr>
 
 <? if ($num_my_sem): ?>

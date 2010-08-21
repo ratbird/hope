@@ -610,10 +610,10 @@ class EvalOverview {
    */
   function createInfoBox ($imgLogo) {
     /* Define infobox text ------------------------------------------------ */
-      $info1 =  array ("icon" => basename(EVAL_PIC_ICON),
+      $info1 =  array ("icon" => "icons/16/black/test.png",
              "text" => _("Auf dieser Seite haben Sie eine Übersicht aller in dem ausgewählten Bereich existierenden Evaluationen sowie Ihrer eigenen Evaluationsvorlagen."));
 
-      $info2 = array ("icon" => "cont_folder4.gif",
+      $info2 = array ("icon" => "icons/16/black/info.png",
             "text" => _("Sie können eine Evaluation aufklappen und dann Bereichen zuordnen und ihre Laufzeit bestimmen."));
 
 
@@ -621,7 +621,7 @@ class EvalOverview {
               "eintrag"   => array ($info1, $info2)));
     /* ------------------------------------------------------- end: infobox */
 
-    return print_infobox ($infobox, 'infobox/'.$imgLogo, YES);
+    return print_infobox ($infobox, $imgLogo, YES);
   }
 
 

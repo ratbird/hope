@@ -79,7 +79,7 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
 
     <td class="blank" width="1%" align="center">
         <a href="<?= URLHelper::getLink('?role_id='. $id .'&cmd=removePerson&username='. $person['username'])  ?>">
-        <?= Assets::img('trash.gif', array('title' => _("Gruppenzuordnung für diese Person aufheben"))) ?>
+        <?= Assets::img('icons/16/blue/trash.png', array('title' => _("Gruppenzuordnung für diese Person aufheben"))) ?>
         </a>
     </td>
 </tr>

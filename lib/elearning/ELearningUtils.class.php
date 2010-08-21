@@ -577,9 +577,9 @@ class ELearningUtils
         $output .= "</b></font>";
         $output .= "</td><td class=\"steelgraulight\" align=\"left\" width=\"40%\">";
         if ($elearning_open_close["all open"] != "")
-            $output .= "<a href=\"" . $PHP_SELF . "?close_all=1&view=$view&cms_select=$cms_select&search_key=$search_key\"><img src=\"".$GLOBALS['ASSETS_URL']."images/close_all.gif\" alt=\"" . _("Alle Module schlie&szlig;en") . "\" title=\"" . _("Alle Module schlie&szlig;en") . "\"  border=\"0\">";
+            $output .= "<a href=\"" . $PHP_SELF . "?close_all=1&view=$view&cms_select=$cms_select&search_key=$search_key\"><img src=\"".$GLOBALS['ASSETS_URL']."images/close_all.png\" alt=\"" . _("Alle Module schlie&szlig;en") . "\" title=\"" . _("Alle Module schlie&szlig;en") . "\"  border=\"0\">";
         else
-            $output .= "<a href=\"" . $PHP_SELF . "?open_all=1&view=$view&cms_select=$cms_select&search_key=$search_key\"><img src=\"".$GLOBALS['ASSETS_URL']."images/open_all.gif\" alt=\"" . _("Alle Module &ouml;ffnen") . "\" title=\"" . _("Alle Module &ouml;ffnen") . "\"  border=\"0\">";
+            $output .= "<a href=\"" . $PHP_SELF . "?open_all=1&view=$view&cms_select=$cms_select&search_key=$search_key\"><img src=\"".$GLOBALS['ASSETS_URL']."images/open_all.png\" alt=\"" . _("Alle Module &ouml;ffnen") . "\" title=\"" . _("Alle Module &ouml;ffnen") . "\"  border=\"0\">";
         $output .= "</a></td></tr>";
         $output .= "</table>";
         return $output;
@@ -776,7 +776,7 @@ class ELearningUtils
                 $output .= "<form method=\"POST\" action=\"" . UrlHelper::getLink() . "\">";
                 $output .= "<table>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
-                $output .= "<tr><td><img src=\"assets/images/x_transparent.gif\" border=\"0\"></td><td><i>".sprintf(_("F&uuml;r das System mit dem Index \"%s\" existieren keine Voreinstellungen in den Konfigurationsdateien mehr."), $cms_type) . "</i></td></tr>";
+                $output .= "<tr><td>" . Assets::img('icons/16/red/decline.png', array('class' => 'text-top')) . "</td><td><i>".sprintf(_("F&uuml;r das System mit dem Index \"%s\" existieren keine Voreinstellungen in den Konfigurationsdateien mehr."), $cms_type) . "</i></td></tr>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 $output .= "<tr><td colspan=\"2\"><b>". _("In der Stud.IP-Datenbank sind noch folgende Informationen zu diesem System gespeichert:") . "</b></td></tr>";
                 if ($data["accounts"])

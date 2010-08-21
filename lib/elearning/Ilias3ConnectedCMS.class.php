@@ -138,7 +138,7 @@ class Ilias3ConnectedCMS extends ConnectedCMS
 
 
         if ($messages["error"] != "")
-            echo "<b><img src=\"".$GLOBALS['ASSETS_URL']."images/x_small2.gif\" alt=\"Fehler\">&nbsp;" . $messages["error"] . "</b><br><br>";
+            echo "<b>" . Assets::img('icons/16/red/decline.png', array('class' => 'text-top', 'title' => _('Fehler'))) . " " . $messages["error"] . "</b><br><br>";
 
         echo "<table>";
         echo "<tr valign=\"top\"><td width=30% align=\"left\"><font size=\"-1\">";

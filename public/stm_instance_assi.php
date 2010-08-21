@@ -259,7 +259,7 @@ class InstanceStmControl {
         for ($i = 0; $i < count($this->sel_group); $i++) {                  
             $form_buttons["fill_$i"] = array('type' => 'zuweisen', 'info' => _("Gewaehlte Veranstaltung zuweisen"));
             for ($j = 0; $j < count($this->inst_stm->elements[$group_index][$i]); $j++) {
-                $form_buttons["remove_". $i . "_" . $j] = array('type' => 'trash.gif', 'info' => _("Diese Veranstaltung entfernen"), 'is_picture' => 'true');
+                $form_buttons["remove_". $i . "_" . $j] = array('type' => Assets::image_path('icons/16/blue/trash.png'), 'info' => _("Diese Veranstaltung entfernen"), 'is_picture' => 'true');
             }
         }
 

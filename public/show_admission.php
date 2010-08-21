@@ -718,8 +718,8 @@ if(is_object($group_obj)){
                 </div>
                 <div style="margin-bottom: 5px;margin-right:5px;" align="right">
                 <a href="<?=URLHelper::getLink('?cmd=send_excel_sheet')?>">
-                <img src="<?=$GLOBALS['ASSETS_URL']?>images/xls-icon.gif" align="absbottom" border="0"></a>
-                <img src="<?=$GLOBALS['ASSETS_URL']?>images/symbol04.gif" align="absbottom" border="0" hspace="5"><?=_("Download als Excel Datei")?></div>
+                <?= Assets::img('icons/16/blue/download.png', array('class' => 'text-top')) ?>
+				<?=_("Download als Excel Datei")?></a></div>
             </td>
             </form>
         </tr>
@@ -753,7 +753,7 @@ if(is_object($group_obj)){
         $teilnehmer = $semdata['count_teilnehmer'];
         if($teilnehmer){
             $teilnehmer .= '&nbsp;<a href="'.URLHelper::getLink('export.php', array('range_id' => $seminar_id, 'ex_type' => 'person', 'xslt_filename' => _("TeilnehmerInnen") . ' '. $semdata['Name'],'format' => 'csv', 'choose' => 'csv-teiln', 'o_mode'=> 'passthrough')).'">';
-            $teilnehmer .= '<img align="absbottom" src="'.$GLOBALS['ASSETS_URL'].'images/xls-icon.gif" border="0" '.tooltip(_("Teilnehmerliste downloaden")).' ></a>';
+            $teilnehmer .= Assets::img('icons/16/blue/download.png', tooltip(_("Teilnehmerliste downloaden"))) .'</a>';
         }
         $cssSw->switchClass();
         $teilnehmer_aux = $semdata['count_teilnehmer_aux'];
@@ -761,12 +761,12 @@ if(is_object($group_obj)){
         $count2 = $semdata['count_anmeldung'];
         if($count2){
             $count2 .= '&nbsp;<a href="'.URLHelper::getLink('export.php', array('range_id' => $seminar_id, 'ex_type' => 'person', 'xslt_filename' => _("Anmeldungen") . ' '. $semdata['Name'], 'format' => 'csv', 'choose' => 'csv-warteliste', 'filter' => 'accepted', 'o_mode' => 'passthrough')).'">';
-            $count2 .= '<img align="absbottom" src="'.$GLOBALS['ASSETS_URL'].'images/xls-icon.gif" border="0" '.tooltip(_("Anmeldeliste downloaden")).' ></a>';
+            $count2 .= Assets::img('icons/16/blue/download.png', tooltip(_("Anmeldeliste downloaden"))) .'</a>';
         }
         $count3 = $semdata['count_wartende'];
         if($count3){
             $count3 .= '&nbsp;<a href="'.URLHelper::getLink('export.php', array('range_id' => $seminar_id, 'ex_type' => 'person', 'xslt_filename' => _("Warteliste") . ' '. $semdata['Name'], 'format' => 'csv', 'choose' =>'csv-warteliste', 'filter' => 'awaiting', 'o_mode' => 'passthrough')).'">';
-            $count3 .= '<img align="absbottom" src="'.$GLOBALS['ASSETS_URL'].'images/xls-icon.gif" border="0" '.tooltip(_("Warteliste downloaden")).' ></a>';
+            $count3 .= Assets::img('icons/16/blue/download.png', tooltip(_("Warteliste downloaden"))) .' ></a>';
         }
         // show end date only if it is actually relevant
         $datum = $semdata['admission_type'] == 1 || $semdata['admission_type'] == 2 && $semdata['admission_enable_quota'] ? $semdata['admission_endtime'] : -1;

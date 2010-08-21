@@ -52,7 +52,7 @@ printf("&nbsp;<a href=\"%s?cmd=showmonth&atime=%s\">",
     $PHP_SELF, mktime(12, 0, 0, $amonth->getMonth(),
             date('j', $amonth->getStart()), date('Y', $amonth->getStart()) - 1));
 $tooltip = tooltip(_("ein Jahr zurück"));
-echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_eol_left.png')."\"$tooltip></a>";
+echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_eol-left.png')."\"$tooltip></a>";
 printf("&nbsp; &nbsp; &nbsp; &nbsp;<a href=\"%s?cmd=showmonth&atime=%s\">",
     $PHP_SELF, $amonth->getStart() - 1);
 $tooltip = tooltip(_("einen Monat zurück"));

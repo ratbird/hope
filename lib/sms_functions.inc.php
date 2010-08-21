@@ -208,12 +208,12 @@ function print_snd_message($psm) {
         $tmp_cmd = "open_selected";
         $tmp_picture = "closelock2";
         $tmp_tooltip = tooltip(_("Löschschutz deaktivieren."));
-        $trash = "<img src=\"".$GLOBALS['ASSETS_URL']."images/trash2no.gif\" border=0 ".tooltip(_("Diese Nachricht kann momentan nicht gelöscht werden.")).">";
+        $trash =  Assets::img('blank.gif');
     } else {
         $tmp_cmd = "safe_selected";
         $tmp_picture = "openlock2";
         $tmp_tooltip = tooltip(_("Löschschutz für diese Nachricht aktivieren."));
-        $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$psm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash2.gif\" border=0 ".tooltip(_("Diese Nachricht löschen."))."></a>";
+        $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$psm['message_id']."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a>";
     }
 
     $zusatz = "<font size=-1>";
@@ -362,12 +362,12 @@ function print_rec_message($prm) {
         $tmp_cmd = "open_selected";
         $tmp_picture = "closelock2";
         $tmp_tooltip = tooltip(_("Löschschutz deaktivieren."));
-        $trash = "<img src=\"".$GLOBALS['ASSETS_URL']."images/trash2no.gif\" border=0 ".tooltip(_("Diese Nachricht kann momentan nicht gelöscht werden.")).">";
+        $trash =  Assets::img('blank.gif');
     } else {
         $tmp_cmd = "safe_selected";
         $tmp_picture = "openlock2";
         $tmp_tooltip = tooltip(_("Löschschutz für diese Nachricht aktivieren."));
-        $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$prm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash2.gif\" border=0 ".tooltip(_("Diese Nachricht löschen."))."></a>";
+        $trash = "<a href=\"".$PHP_SELF."?cmd=delete_selected&sel_sms[1]=".$prm['message_id']."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diese Nachricht löschen."))) . "</a>";
     }
     // zusatz
     if (have_msgfolder($sms_data['view']) == TRUE) {

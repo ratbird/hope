@@ -167,7 +167,7 @@ class AbstractStmControl{
             }
             
             foreach($this->abs_elements[$i] as $index => $elem) {
-                $form_buttons['remove_elem_' . $i . '_' . $index] = array('type' => 'trash.gif', 'info' => _("Diese Zeile entfernen"), 'is_picture' => 'true');             
+                $form_buttons['remove_elem_' . $i . '_' . $index] = array('type' => Assets::image_path('icons/16/blue/trash.png'), 'info' => _("Diese Zeile entfernen"), 'is_picture' => 'true');             
             }
         }
 
@@ -236,7 +236,7 @@ class AbstractStmControl{
                             'submit' => array('type' => 'submit', 'info' => ""));
 
         foreach ($this->assigns as $index => $val)                      
-            $form_buttons['remove_' . $index] = array('type' => 'trash.gif', 'info' => _("Diese Zeile entfernen"), 'is_picture' => 'true');             
+            $form_buttons['remove_' . $index] = array('type' => Assets::image_path('icons/16/blue/trash.png'), 'info' => _("Diese Zeile entfernen"), 'is_picture' => 'true');             
 
         if (!is_object($this->assign_form)){
             $this->assign_form = new StudipForm($form_fields, $form_buttons, "assign_form", false);

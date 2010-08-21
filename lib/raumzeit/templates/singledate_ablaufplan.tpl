@@ -2,7 +2,7 @@
     <TD width="1%" align="right" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap">
         <A name="<?=$tpl['sd_id']?>" />
         <A href="<?= URLHelper::getLink('?cmd='. ($issue_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL'].(($issue_open[$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1down' : 'images/icons/16/blue/arr_1right')?>.png" border="0">
+            <IMG src="<?=$GLOBALS['ASSETS_URL'].(($issue_open[$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1down.png' : 'images/icons/16/blue/arr_1right.png')?>.png" border="0">
         </A>
     </TD>
     <TD width="1%" align="right" valign="top" class="<?=$tpl['class']?>" nowrap="nowrap">

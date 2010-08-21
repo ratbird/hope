@@ -173,7 +173,7 @@ class EditSettings {
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" valign="middle" align="center">
                     <font size=-1>
                         <a href="<? echo $PHP_SELF ?>?delete_root_user_id=<? echo $this->db->f("user_id") ?>">
-                            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/trash.gif" border="0" <?=tooltip(_("Berechtigungen löschen")) ?>>
+	                        <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Berechtigungen löschen'))) ?>
                         </a>
                     </font>
                 </td>
@@ -289,12 +289,12 @@ class EditSettings {
                                 if (!$this->db2->f("system")) {
                                     ?>
                                     <a href="<? echo $PHP_SELF ?>?delete_type_property_id=<? echo $this->db2->f("property_id") ?>&delete_type_category_id=<? echo $this->db2->f("category_id") ?>">
-                                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/trash.gif" border="0" <?=tooltip(_("Eigenschaft löschen"))?>>
+                   	                        <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Eigenschaft löschen'))) ?>
                                     </a>
                                     <?
                                 } else {
                                     ?>
-                                    <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/lighttrash.gif" border="0" <?=tooltip(_("Löschen der Eigenschaft nicht möglich, Systemobjekt!"))?>>
+                                            <?=Assets::img('icons/16/blue/decline/trash.png', array('class' => 'text-top', 'title' => _('Löschen der Eigenschaft nicht möglich, Systemobjekt!'))) ?>
                                     <?
                                 }
                                 ?>
@@ -583,13 +583,13 @@ class EditSettings {
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
                                 print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\">";
                                 print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
-                                print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."></a>";
+                                print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a>";
                                 print "</td></tr>";
                             } else {
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_begin")));
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_end")));
                                 print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag bearbeiten")).">&nbsp;&nbsp;</a>";
-                                print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."></a></td>";
+                                print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))) . "></a></td>";
                             }
                         }
                         print "</tr>";
@@ -665,13 +665,13 @@ class EditSettings {
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
                                 print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\">";
                                 print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".$GLOBALS['ASSETS_URL']."images/haken_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
-                                print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."></a>";
+                                print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a>";
                                 print "</td></tr>";
                             } else {
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_begin")));
                                 printf ("<td width=\"40%%\"><font size=\"-1\">%s</font></td>", date("d.m.Y H:i", $this->db->f("lock_end")));
                                 print "<td width=\"10%%\" align=\"right\" valign=\"top\"><a href=\"$PHP_SELF?edit_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/edit_transparent.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag bearbeiten")).">&nbsp;&nbsp;</a>";
-                                print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/trash.gif\" border=\"0\" ".tooltip(_("Diesen Eintrag löschen"))."></a></td>";
+                                print "<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a></td>";
                             }
                         }
                         print "</tr>";

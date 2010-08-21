@@ -1221,7 +1221,7 @@ function link_form ($range_id, $updating=FALSE) {
         }
     }
     if ($folder_system_data["linkerror"]==TRUE) {
-        $print.="<hr><img src=\"".$GLOBALS['ASSETS_URL']."images/x.gif\" align=\"left\"><font color=\"red\">";
+        $print.="<hr>".  Assets::img('icons/16/red/accept.png', array('class' => 'text-top')) . "<font color=\"red\">";
         $print.=_("&nbsp;FEHLER: unter der angegebenen Adresse wurde keine Datei gefunden.<br>&nbsp;Bitte kontrollieren Sie die Pfadangabe!");
         $print.="</font><hr>";
     }

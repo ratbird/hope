@@ -163,7 +163,7 @@ $termine = getAllSortedSingleDates($sem);
                 <tr>
                     <td class="steelgraulight" colspan="6" height="24" align="center">
                         <a href="<?= URLHelper::getLink($PHP_SELF."?cmd=".(($openAll) ? 'close' : 'open')."All") ?>">
-                            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($openAll) ? 'close' : 'open'?>_all.gif" border="0" <?=tooltip(sprintf("Alle Termine %sklappen", ($openAll) ? 'zu' : 'auf'))?>>
+                            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($openAll) ? 'close' : 'open'?>_all.png" border="0" <?=tooltip(sprintf("Alle Termine %sklappen", ($openAll) ? 'zu' : 'auf'))?>>
                         </a>
                     </td>
                 </tr>

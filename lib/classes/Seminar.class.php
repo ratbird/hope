@@ -327,6 +327,9 @@ class Seminar {
         $cycles = $this->metadate->getCycleData();
         $dates = $this->getSingleDates();
 
+        foreach (array_keys($cycles) as $id) {
+            $cycles[$id]['first_date'] = CycleDataDB::getFirstDate($id);
+        }
         // besser wieder mit direktem Query statt Objekten
         if (is_array($cycles) && (sizeof($cycles) == 0)) {
             $cycles = FALSE;
@@ -2164,6 +2167,8 @@ class Seminar {
 
 
         $template->set_attribute('dates', $this->getUndecoratedData());
+        $template->set_attribute('seminar_id', $this->getId());
+
         $template->set_attributes($params);
         return trim($template->render());
     }

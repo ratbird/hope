@@ -3,23 +3,24 @@
 <? else : ?>
 
   <?
-  if (!isset($link)) $link = true; 
-  if (!isset($show_room)) $show_room = true; 
+  if (!isset($link)) $link = true;
+  if (!isset($show_room)) $show_room = true;
   $output = array();
 
   if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
-    if ($cycle['cycle'] == 1) : 
-      $cycle_output = $cycle['tostring'] . ' ' . _("(zweiwöchentlich)");
-    elseif ($cycle['cycle'] == 2) : 
-      $cycle_output = $cycle['tostring'] . ' ' . _("(dreiwöchentlich)");
-    else : 
-      $cycle_output = $cycle['tostring'];
+    $first_date = sprintf(_("ab %s"), strftime('%x', $cycle['first_date']['date']));
+    if ($cycle['cycle'] == 1) :
+      $cycle_output = $cycle['tostring'] . ' ' . sprintf(_("(zweiwöchentlich, %s)"), $first_date);
+    elseif ($cycle['cycle'] == 2) :
+      $cycle_output = $cycle['tostring'] . ' ' .  sprintf(_("(dreiwöchentlich, %s)"), $first_date);
+    else :
+      $cycle_output = $cycle['tostring'] . ' (' . $first_date . ')';
     endif;
-    if ($cycle['desc']) 
+    if ($cycle['desc'])
       $cycle_output .= ', <i>'. htmlReady($cycle['desc']) .'</i>';
 
     if ($show_room) :
-      $cycle_output .= $this->render_partial('dates/_seminar_rooms', 
+      $cycle_output .= $this->render_partial('dates/_seminar_rooms',
         array('assigned' => $cycle['assigned_rooms'],
           'freetext' => $cycle['freetext_rooms'],
           'link'     => $link));
@@ -55,6 +56,6 @@
     <br>
     <br>
     <?= sprintf(_("Details zu allen Terminen im %sAblaufplan%s"),
-      '<a href="'.URLHelper::getLink('seminar_main.php?redirect_to=dates.php').'">', '</a>') ?>
+      '<a href="'.URLHelper::getLink('seminar_main.php', array('auswahl' => $seminar_id, 'redirect_to' => 'dates.php')).'">', '</a>') ?>
   <? endif ?>
 <? endif ?>

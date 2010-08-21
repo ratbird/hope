@@ -131,4 +131,16 @@ class CycleDataDB {
 
         return $ret;
     }
+
+    /**
+     * returns the first date for a given metadate_id as array
+     * @param string $metadate_id
+     * @return array
+     */
+    function getFirstDate($metadate_id)
+    {
+        $db = DbManager::get();
+        $ret = $db->query("SELECT * FROM termine WHERE metadate_id=" . $db->quote($metadate_id) . " ORDER BY date ASC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+        return $ret;
+    }
 }

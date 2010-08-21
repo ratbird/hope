@@ -67,7 +67,8 @@ class Course_StudygroupController extends AuthenticatedController {
         global $perm;
 
         PageLayout::setTitle(getHeaderLine($id) . ' - ' . _('Studiengruppendetails'));
-
+        PageLayout::setHelpKeyword('Basis.StudiengruppenAbonnieren');
+        
         $stmt = DBManager::get()->prepare("SELECT * FROM admission_seminar_user"
                     . " WHERE user_id = ? AND seminar_id = ?");
         $stmt->execute(array($GLOBALS['user']->id, $id));
@@ -96,6 +97,7 @@ class Course_StudygroupController extends AuthenticatedController {
      */
     function new_action()
     {
+        PageLayout::setHelpKeyword('Basis.StudiengruppenAnlegen');
         closeObject();
 
         PageLayout::setTitle(_("Studiengruppe anlegen"));
@@ -329,9 +331,10 @@ class Course_StudygroupController extends AuthenticatedController {
     function edit_action($id)
     {
         global $perm;
-
+        
         $this->flash->keep('deactivate_modules');
         $this->flash->keep('deactivate_plugins');
+        PageLayout::setHelpKeyword('Basis.StudiengruppenBearbeiten');
         
         // if we are permitted to edit the studygroup get some data...
         if ($perm->have_studip_perm('dozent', $id)) {
@@ -553,7 +556,8 @@ class Course_StudygroupController extends AuthenticatedController {
     {
         PageLayout::setTitle(getHeaderLine($id) . ' - ' . _("TeilnehmerInnen"));
         Navigation::activateItem('/course/members');
-
+        PageLayout::setHelpKeyword('Basis.StudiengruppenBenutzer');
+        
         $sem          = new Seminar($id);
         $this->page   = $page;
         $this->anzahl = StudygroupModel::countMembers($id);

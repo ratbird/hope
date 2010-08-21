@@ -219,12 +219,12 @@ if ($sms_time) {
 
 // determine several later displayed texts in relation to the selected view
 if ($sms_data['view'] == "in") {
-    $info_text_001 = "<img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" align=\"texttop\"><b>&nbsp;"._("empfangene systeminterne Nachrichten anzeigen")."</b>";
+    $info_text_001 = Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('empfangene systeminterne Nachrichten anzeigen')))."</b>";
     $info_text_002 = _("Posteingang");
     $no_message_text_box = _("im Posteingang");
     $tmp_snd_rec = "rec";
 } else if ($sms_data['view'] == "out") {
-    $info_text_001 = "<img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" align=\"texttop\"><b>&nbsp;"._("gesendete systeminterne Nachrichten anzeigen")."</b>";
+    $info_text_001 = Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('gesendete systeminterne Nachrichten anzeigen')))."</b>";
     $info_text_002 = _("Postausgang");
     $no_message_text_box = _("im Postausgang");
     $tmp_snd_rec = "snd";

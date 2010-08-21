@@ -111,7 +111,7 @@ STUDIP.CURRENTPAGE.selectUser = function (username, name) {
         <td align="right">
             <?= $user['chat'] ?>
             <a href="<?= URLHelper::getLink('sms_send.php', array('sms_source_page' => 'browse.php', 'rec_uname' => $user['username'])) ?>">
-                <img src="<?=Assets::url()?>images/nachricht1.gif" title="<?=_("Nachricht an User verschicken")?>">
+                <?= Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht an Benutzer verschicken')))?>
             </a>
         </td>
     </tr>
@@ -131,11 +131,11 @@ $infobox = array(
         array("kategorie" => _("Information:"),
             "eintrag" => array(
                 array(
-                    "icon" => 'icons/16/black/info.png',
+                    "icon" => 'icons/16/black/person.png',
                     "text" => _("Hier können Sie die Profile aller NutzerInnen abrufen, die im System registriert sind.")
                 ),
                 array(
-                    "icon" => 'icons/16/black/info.png',
+                    "icon" => 'icons/16/black/institute.png',
                     "text" => _("Sie erhalten auf der Profilseite von MitarbeiternInnen an Einrichtungen auch weiterf&uuml;hrende Informationen, wie Sprechstunden und Raumangaben.")
                 ),
                 array(

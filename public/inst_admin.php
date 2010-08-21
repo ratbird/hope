@@ -260,7 +260,7 @@ function table_body ($db, $range_id, $structure, $css_switcher) {
         if ($structure["nachricht"]) {
             printf("<td%salign=\"left\" width=\"1%%\"".(($admin_view) ? "" : " colspan=\"2\""). " nowrap>\n",$css_switcher->getFullClass());
             printf("<a href=\"%s\">", URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php" . "&rec_uname=".$db->f("username")));
-            printf("<img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" alt=\"%s\" ", _("Nachricht an User verschicken"));
+            printf("<img src=\"" . Assets::image_path('icons/16/blue/mail.png') . "\" alt=\"%s\" ", _("Nachricht an User verschicken"));
             printf("title=\"%s\" border=\"0\" valign=\"baseline\"></a>", _("Nachricht an User verschicken"));
             echo '</td>';
 
@@ -666,7 +666,7 @@ if ($inst_id != "" && $inst_id !="0") {
                         <td class="steel1">
                             <font size="-1">
                                 <br>
-                                <?=sprintf(_("Klicken Sie auf %s%s Rundmail an alle MitarbeiterInnen%s, um eine E-Mail an alle MitarbeiterInnen zu verschicken."), "<a href=\"mailto:" . join(",",$mail_list) . "?subject=" . urlencode(_("MitarbeiterInnen-Rundmail")) .  "\">",  '<img src="'.$GLOBALS['ASSETS_URL'].'/images/link_intern.gif" border="0">', "</a>");?>
+                                <?=sprintf(_("Klicken Sie auf %s%s Rundmail an alle MitarbeiterInnen%s, um eine E-Mail an alle MitarbeiterInnen zu verschicken."), "<a href=\"mailto:" . join(",",$mail_list) . "?subject=" . urlencode(_("MitarbeiterInnen-Rundmail")) .  "\">",  '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/mail.png" border="0">', "</a>");?>
                             </font>
                         </td>
                     </tr>
@@ -677,7 +677,7 @@ if ($inst_id != "" && $inst_id !="0") {
                                 <br>
                                 <?=sprintf(_("Klicken Sie auf %s%s Stud.IP Nachricht an alle MitarbeiterInnen%s, um eine interne Nachricht an alle MitarbeiterInnen zu verschicken."),
                                     "<a href=\"".URLHelper::getLink("sms_send.php?inst_id=$inst_id&subject=" . urlencode(_("MitarbeiterInnen-Rundmail - ". $SessSemName[0])))."\">",
-                                    '<img src="'.$GLOBALS['ASSETS_URL'].'/images/link_intern.gif" border="0">',
+                                    '<img src="'.Assets::image_path('icons/16/blue/mail.png').'" border="0">',
                                     "</a>"
                                 );?>
                             </font>
@@ -965,7 +965,7 @@ if ($show == "funktion") {
                         echo "<font size=\"-1\"><b>&nbsp;";
                         echo htmlReady($zw_title);
                         echo "<b></font>"."</td><td class=\"steelkante\" colspan=\"2\" height=\"20\">";
-                        echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php" . "&group_id=".$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder der Gruppe %s verschicken"), $zw_title)) . " border=\"0\"></a>&nbsp;";
+                        echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php" . "&group_id=".$role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"" . Assets::image_path('icons/16/blue/mail.png') . "\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder der Gruppe %s verschicken"), $zw_title)) . " border=\"0\"></a>&nbsp;";
                         echo "</td></tr>\n";
                     }
                     else {
@@ -1029,8 +1029,8 @@ elseif ($show == "status") {
             echo $permission;
             echo "<b></font>"."</td><td class=\"steelkante\" colspan=\"2\" height=\"20\">";
             echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php&filter=inst_status&who=".$key . "&group_id=" .
-                 $role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"".$GLOBALS['ASSETS_URL'] .
-                 "images/nachricht1.gif\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder mit dem Status %s verschicken"), $permission)) .
+                 $role_id."&subject=".rawurlencode($SessSemName[0]))."\"><img src=\"" . Assets::image_path('icons/16/blue/mail.png')
+                ."\" " . tooltip(sprintf(_("Nachricht an alle Mitglieder mit dem Status %s verschicken"), $permission)) .
                  " border=\"0\"></a>&nbsp;";
             echo "</td></tr>\n";
 

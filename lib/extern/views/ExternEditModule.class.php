@@ -142,15 +142,15 @@ class ExternEditModule extends ExternEditHtml {
             if (!in_array("visible", $hide)) {
                 // move left
                 $out .= "<td valign=\"middle\" nowrap=\"nowrap\">";
-                $out .= "<input type=\"image\" name=\"{$this->element_name}_move_left[$i]\" ";
-                $out .= "src=\"{$GLOBALS['ASSETS_URL']}images/move_up.gif\"";
-                $out .= tooltip(_("Datenfeld verschieben"));
+                $out .= "<input type=\"image\" name=\"{$this->element_name}_move_left[$i]\" src=";
+                $out .= Assets::image_path('icons/16/yellow/arr_2up.png');
+                $out .= " ".tooltip(_("Datenfeld verschieben"));
                 $out .= "border=\"0\" align=\"middle\">\n";
 
                 // move right
-                $out .= "<input type=\"image\" name=\"{$this->element_name}_move_right[$i]\" ";
-                $out .= "src=\"{$GLOBALS['ASSETS_URL']}images/move_down.gif\"";
-                $out .= tooltip(_("Datenfeld verschieben"));
+                $out .= "<input type=\"image\" name=\"{$this->element_name}_move_right[$i]\" src=";
+                $out .= Assets::image_path('icons/16/yellow/arr_2down.png');
+                $out .= " ".tooltip(_("Datenfeld verschieben"));
                 $out .= "border=\"0\" align=\"middle\">\n&nbsp;";
 
                 // visible
@@ -398,15 +398,15 @@ class ExternEditModule extends ExternEditHtml {
                         
                 // move up
             $out .= "<td valign=\"top\" align=\"center\" nowrap=\"nowrap\">";
-            $out .= "<input type=\"image\" name=\"{$this->element_name}_move_left[$i]\" ";
-            $out .= "img src=\"{$GLOBALS['ASSETS_URL']}images/move_up.gif\"";
-            $out .= tooltip(_("Datenfeld verschieben"));
+            $out .= "<input type=\"image\" name=\"{$this->element_name}_move_left[$i]\" src=";
+            $out .= Assets::image_path('icons/16/yellow/arr_2up.png');
+            $out .= " ".tooltip(_("Datenfeld verschieben"));
             $out .= "border=\"0\" align=\"middle\">\n";
             
             // move down
-            $out .= "<input type=\"image\" name=\"{$this->element_name}_move_right[$i]\" ";
-            $out .= "src=\"{$GLOBALS['ASSETS_URL']}images/move_down.gif\"";
-            $out .= tooltip(_("Datenfeld verschieben"));
+            $out .= "<input type=\"image\" name=\"{$this->element_name}_move_right[$i]\" src=";
+            $out .= Assets::image_path('icons/16/yellow/arr_2up.png');
+            $out .= " ".tooltip(_("Datenfeld verschieben"));
             $out .= "border=\"0\" align=\"middle\">\n&nbsp;";
             $out .= "</td>\n";
             

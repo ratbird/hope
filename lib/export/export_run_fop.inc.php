@@ -82,7 +82,7 @@ if (!CheckParamRUN_FOP())
 }
 elseif ($FOP_ENABLE != true)
 {
-    $infobox[1]["eintrag"][] = array (  'icon' => "einst.gif",
+    $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/admin.png",
                                 "text"  => sprintf(_("Die Erweiterung zum Erzeugen von PDF-Dateien ist nicht aktiviert, es konnten daher nur Formatting Objects erzeugt werden."))
                             );
 }
@@ -151,7 +151,7 @@ else
         );
         {
             $infobox[1]["kategorie"] = _("Aktionen:");
-                $infobox[1]["eintrag"][] = array (  'icon' => "nachricht1.gif" ,
+                $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/download.png" ,
                                             "text"  => sprintf(_("Um die Ausgabe-Datei herunterzuladen, klicken Sie %s hier %s."), $link2, "</a>")
                                         );
         }

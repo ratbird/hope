@@ -1437,12 +1437,12 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         $bewegeflaeche = "<span class=\"updown_marker\" id=\"pfeile_".$datei["dokument_id"]."\">";
         if (($position == "middle") || ($position == "bottom")) {
             $bewegeflaeche .= "<a href=\"".URLHelper::getLink('?open='.$datei['dokument_id'])."_mfu_\" title=\""._("Datei nach oben schieben").
-                "\">".Assets::img("icons/16/yellow/arr_2up.png")."</a>";
+                "\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top')) . "</a>";
         }
         if (($position == "middle") || ($position == "top")) {
             $bewegeflaeche .= "<a href=\"".URLHelper::getLink('?open='.
                     $datei['dokument_id'])."_mfd_\" title=\""._("Datei nach unten schieben").
-                    "\">".Assets::img("icons/16/yellow/arr_2down.png")."</a>";
+                    "\">". Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top')) . "</a>";
         }
         $bewegeflaeche .= "</span>";
     }
@@ -1800,12 +1800,12 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         $bewegeflaeche = "<span class=\"updown_marker\" id=\"pfeile_".$folder_id."\">";
         if (($position == "middle") || ($position == "bottom")) {
             $bewegeflaeche .= "<a href=\"".URLHelper::getLink('?open='.$folder_id)."_mfou_\" title=\""._("Nach oben verschieben").
-                    "\">".Assets::img("icons/16/yellow/arr_2up.png")."</a>";
+                    "\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top')) . "</a>";
         }
         if (($position == "middle") || ($position == "top")) {
             $bewegeflaeche .= "<a href=\"".URLHelper::getLink('?open='.
                     $folder_id)."_mfod_\" title=\""._("Nach unten verschieben").
-                    "\">".Assets::img("icons/16/yellow/arr_2down.png")."</a>";
+                    "\">" . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top')) . "</a>";
         }
         $bewegeflaeche .= "</span>";
     }
@@ -1976,7 +1976,7 @@ function GetFileIcon($ext, $with_img_tag = false){
         case 'tgz':
         case 'gz':
         case 'bz2':
-            $icon = 'icons/16/blue/file-archiv.png';
+            $icon = 'icons/16/blue/file-archive.png';
         break;
         case 'ppt':
             $icon = 'icons/16/blue/file-presentation.png';

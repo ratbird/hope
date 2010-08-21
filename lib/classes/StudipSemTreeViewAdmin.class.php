@@ -740,13 +740,13 @@ class StudipSemTreeViewAdmin extends TreeView {
             $head .= "</td><td nowrap align=\"right\" valign=\"bottom\" class=\"printhead\">";
             if (!$this->tree->isFirstKid($item_id)){
                 $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id") .
-                "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_up.gif\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" " .
-                tooltip(_("Element nach oben")) ."></a>";
+                "\">" .  Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' => _("Element nach oben"))) .
+                "</a>";
             }
             if (!$this->tree->isLastKid($item_id)){
                 $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id") .
-                "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_down.gif\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" " .
-                tooltip(_("Element nach unten")) . "></a>";
+                "\">" . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' => _("Element nach unten"))) .
+                "</a>";
             }
             $head .= "&nbsp;";
         }

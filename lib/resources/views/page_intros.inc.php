@@ -256,11 +256,11 @@ switch ($view) {
                                     "text"  => ($resources_data["skip_closed_requests"]) ? _("Bereits bearbeitete Anfragen werden <u>nicht</u> angezeigt.") : _("Bereits bearbeitete Anfragen werden weiterhin angezeigt.")))),
                     array  ("kategorie" => _("Aktionen:"),
                             "eintrag" => array (
-                                array   ("icon" =>  "link_intern.gif" ,
+                                array   ("icon" =>  "icons/16/black/search.png" ,
                                     "text"  =>  "<a href=\"javascript:void(null)\" onClick=\"window.open('resources.php?quick_view=search&quick_view_mode=no_nav','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes')\" >"._("Ressourcen suchen")."</a>"),
                                 array   ("icon" =>  (!$resources_data["skip_closed_requests"]) ? "icons/16/black/checkbox-unchecked.png" : "icons/16/black/checkbox-checked.png",
                                     "text"  => ($resources_data["skip_closed_requests"]) ? sprintf(_("Bearbeitete Anfragen %sanzeigen%s."), "<a href=\"$PHP_SELF?skip_closed_requests=FALSE\">", "</a>") :  sprintf(_("Bearbeitete Anfragen %snicht anzeigen%s"), "<a href=\"$PHP_SELF?skip_closed_requests=TRUE\">", "</a>")),
-                                array   ("icon" =>  "nachricht1.gif",
+                                array   ("icon" =>  "icons/16/black/mail.png",
                                     "text"  => sprintf(_("Nachrichten zu zugewiesenen Anfragen %sversenden%s."), "<a href=\"$PHP_SELF?snd_closed_request_sms=TRUE\">", "</a>")))));
         $infopic = "rooms.jpg";
         $clipboard = TRUE;

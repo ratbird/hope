@@ -127,7 +127,7 @@ if ($new_msgs[0] OR $cmd)  print ("self.focus();\n");
 
 <table width="100%" border=0 cellpadding=2 cellspacing=0>
 <tr>
-    <td class="topic" colspan=2><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/nutzer.gif" border="0" align="texttop"><b>&nbsp;Stud.IP-Messenger (<?=$auth->auth["uname"]?>)</b></td>
+    <td class="topic" colspan=2><?=Assets::img('icons/16/grey/person.png', array('class' => 'text-top')) ?><b>&nbsp;Stud.IP-Messenger (<?=$auth->auth["uname"]?>)</b></td>
 </tr>
 <tr><td class="blank" width="50%" valign="top"><br><table width="100%" border=0 cellpadding=1 cellspacing=0 valign="top">
 <?php
@@ -140,7 +140,7 @@ if ($auth->auth["uid"] != "nobody"){
                     echo "<tr><td class=\"blank\" colspan=2 align=\"left\" ><font size=-1><b>" . _("Buddies:") . "</b></td></tr>";
                 }
                 echo "<tr><td class='blank' width='90%' align='left'><font size=-1><a " . tooltip(sprintf(_("letztes Lebenszeichen: %s"),date("i:s",$detail['last_action'])),false) . " href=\"javascript:coming_home('about.php?username=$tmp_uname');\">".htmlReady($detail['name'])."</a></font></td>\n";
-                echo "<td  class='blank' width='10%' align='middle'><font size=-1><a href='$PHP_SELF?cmd=write&msg_rec=$tmp_uname'><img src=\"".$GLOBALS['ASSETS_URL']."images/nachricht1.gif\" ".tooltip(_("Nachricht an User verschicken"))." border=\"0\" width=\"24\" height=\"21\"></a></font></td></tr>";
+                echo "<td  class='blank' width='10%' align='middle'><font size=-1><a href='$PHP_SELF?cmd=write&msg_rec=$tmp_uname'>" . Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht an Benutzer verschicken'))) . "</a></font></td></tr>";
                 $c++;
             }
         }

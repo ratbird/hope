@@ -232,8 +232,8 @@ if (($contact["view"])=="gruppen") {
             $color = "color=\"#FF0000\"";
             $smslink=URLHelper::getLink('sms_send.php',array('sms_source_page'=>'contact.php', 'group_id'=>$filter));
             $exportlink=URLHelper::getLink('contact_export.php',array('groupid'=>$db->f("statusgruppe_id")));
-            $maillink = "&nbsp; <a href=\"$smslink\"><img style=\"vertical-align:middle;\" src=\"".$GLOBALS['ASSETS_URL']."images/nachrichtsmall.gif\" valign=\"bottom\" border=\"0\"".tooltip(_("Nachricht an alle Personen dieser Gruppe schicken"))."></a>";
-            $maillink .= "&nbsp; <a href=\"$exportlink\"><img style=\"vertical-align:middle;\"" .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Diese Gruppe als vCard exportieren"))) ." </a>";
+            $maillink = "&nbsp; <a href=\"$smslink\">" .  Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' => _("Nachricht an alle Personen dieser Gruppe schicken"))) . "</a>";
+            $maillink .= "&nbsp; <a href=\"$exportlink\">" .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Diese Gruppe als vCard exportieren"))) ." </a>";
         } else {
             $color = "";
             $maillink ="";

@@ -614,13 +614,13 @@ class StudipRangeTreeViewAdmin extends TreeView{
             $head .= "</td><td nowrap align=\"right\" valign=\"bottom\" class=\"printhead\">";
             if (!$this->tree->isFirstKid($item_id)){
                 $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id") .
-                "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_up.gif\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" " .
-                tooltip(_("Element nach oben verschieben")) ."></a>";
+                "\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' => _("Element nach oben verschieben"))) . " ".
+                "</a>";
             }
             if (!$this->tree->isLastKid($item_id)){
                 $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id") .
-                "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_down.gif\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" " .
-                tooltip(_("Element nach unten verschieben")) . "></a>";
+                "\">" . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' => _("Element nach unten verschieben"))) . " ".
+                "</a>";
             }
             $head .= "&nbsp;";
         }
@@ -682,13 +682,13 @@ class StudipRangeTreeViewAdmin extends TreeView{
                         . "<td class=\"topic\" width=\"10%\" align=\"right\">";
                 if ($cat_snap->pos && $cat_snap->getField("kategorie_id") != "new_entry"){
                     $content .= "<a href=\"". $this->getSelf("cmd=OrderCat&direction=up&item_id=$item_id&cat_id=" . $cat_snap->getField("kategorie_id"))
-                            . "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_up.gif\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" "
-                            . tooltip(_("Datenfeld nach oben")) ."></a>";
+                            . "\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' => _("Datenfeld nach oben"))) .
+                            "</a>";
                 }
                 if ($cat_snap->pos != $cat_snap->numRows-1 && $cat_snap->getField("kategorie_id") != "new_entry"){
                     $content .= "<a href=\"". $this->getSelf("cmd=OrderCat&direction=down&item_id=$item_id&cat_id=" . $cat_snap->getField("kategorie_id"))
-                            . "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_down.gif\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" "
-                            . tooltip(_("Datenfeld nach unten")) ."></a>";
+                            . "\">" . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' => _("Datenfeld nach unten"))) .
+                            "</a>";
                 }
                 $content .= "</tr>";
                 $content .= "\n<tr><td class=\"blank\" colspan=\"2\"><textarea style=\"width:100%;font-size:8pt;border:0px;\" cols=\"60\" rows=\"2\" name=\"cat_content["

@@ -7,18 +7,18 @@ $aktionen[] = array(
     "icon" => "icons/16/black/plus.png"
 );
 $aktionen[] = array(
-    "text" => '<a href="'.$controller->url_for('course/studygroup/delete/'.$sem_id).'">'._('Diese Studiengruppe lÃ¶schen').'</a>',
+    "text" => '<a href="'.$controller->url_for('course/studygroup/delete/'.$sem_id).'">'._('Diese Studiengruppe löschen').'</a>',
     "icon" => "icons/16/black/trash.png"
 );
 
 if ($GLOBALS['perm']->have_studip_perm('tutor', $sem_id)) {
     $aktionen[] = array(
         "icon" => "icons/16/black/edit.png",
-        "text" => '<a href="'.  URLHelper::getLink('dispatch.php/course/avatar/update/' . $sem_id) .'">'. _("Bild Ã¤ndern") .'</a>'
+        "text" => '<a href="'.  URLHelper::getLink('dispatch.php/course/avatar/update/' . $sem_id) .'">'. _("Bild ändern") .'</a>'
     );
     $aktionen[] = array(
         "icon" => "icons/16/black/trash.png",
-        "text" => '<a href="'. URLHelper::getLink('dispatch.php/course/avatar/delete/'. $sem_id) .'">'. _("Bild lÃ¶schen") .'</a>'
+        "text" => '<a href="'. URLHelper::getLink('dispatch.php/course/avatar/delete/'. $sem_id) .'">'. _("Bild löschen") .'</a>'
     );
 }
 
@@ -27,7 +27,7 @@ $infobox['content'] = array(
         'kategorie' => _("Information"),
         'eintrag'   => array(
             array(
-                "text" => _("Studiengruppen sind eine einfache MÃ¶glichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen grÃ¼nden."),
+                "text" => _("Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen gründen."),
                 "icon" => "icons/16/black/info.png"
             )
         )
@@ -43,15 +43,8 @@ $infobox['content'] = array(
 <?= $this->render_partial("course/studygroup/_feedback") ?>
 <h1><?= _("Studiengruppe bearbeiten") ?></h1>
 
-<? if ($deactivate_modules_names): ?>
-	<?= createQuestion(_("MÃ¶chten Sie folgende Module wirklich deaktivieren? ")."\n".
-	           $deactivate_modules_names,
-	           array("really_deactivate" => "1"), 
-	           array("abort_deactivate" => "1"), 
-	           $controller->url_for('course/studygroup/update/'.$sem_id)); ?>
-<?php  endif; ?>
-
 <form action="<?= $controller->url_for('course/studygroup/update/'.$sem_id) ?>" method=post>
+
 
 <table class="blank" width="75%" cellspacing="5" cellpadding="0" border="0">
 
@@ -96,7 +89,7 @@ $infobox['content'] = array(
   <td style='text-align:right;'>Zugang:</td>
   <td>
       <select size=0 name="groupaccess">
-          <option <?= ($sem->admission_prelim == 0) ? 'selected="selected"':'' ?> value="all">Offen fï¿½r alle
+          <option <?= ($sem->admission_prelim == 0) ? 'selected="selected"':'' ?> value="all">Offen für alle
          <option <?= ($sem->admission_prelim == 1) ? 'selected="selected"':'' ?> value="invite">Auf Anfrage
       </select>
   </td>
@@ -109,7 +102,7 @@ $infobox['content'] = array(
 
 <tr>
   <td></td>
-  <td><input type='submit' value="Ã„nderungen Ã¼bernehmen"></td>
+  <td><input type='submit' value="Änderungen übernehmen"></td>
 </tr>
 
 </table>

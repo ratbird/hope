@@ -6,7 +6,7 @@
             <TR>
                 <TD width="2%" align="left" valign="top" class="<?=$tpl['class']?>">
                     <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
-                        <?= Assets::img('icons/16/blue/arr_1right.png') ?>
+                        <?= Assets::img('icons/16/blue/arr_1down.png') ?>
                     </A>
                 </TD>
                 <TD width="43%" nowrap class="<?=$tpl['class']?>">
@@ -122,7 +122,7 @@
             <tr>
                 <td width="2%" align="left" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap">
                     <a href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
-                        <?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top'))?>
+                        <?= Assets::img('icons/16/blue/arr_1down.png', array('class' => 'text-top'))?>
                     </a>
                 </td>
                 <td width="43%" nowrap class="<?=$tpl['class']?>">

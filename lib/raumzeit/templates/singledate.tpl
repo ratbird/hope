@@ -4,7 +4,7 @@
         <A name="<?=$tpl['sd_id']?>" />
         <? if (!$_LOCKED) { ?>
         <A href="<?= URLHelper::getLink('?cmd='. ($sd_open[$tpl['sd_id']] ? 'close' : 'open') . '&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-           	<?= ($sd_open[$tpl['sd_id']]) ? Assets::img('icons/blue/arr_1down.png', array('class' => 'text-top')) : Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top')) ?>
+           	<?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top')) ?>
         </A>
         <INPUT type="checkbox" name="singledate[]" value="<?=$tpl['sd_id']?>" <?=$tpl['checked']?>>
         <? } ?>
@@ -43,12 +43,11 @@
 </TR>
 <? } else { ?>
 <TR>
-	asfdsfds
     <TD width="2%" align="right" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap">
         <? if (!$_LOCKED) { ?>
             <? if ($GLOBALS['perm']->have_perm('dozent')) : ?>
                 <A href="<?= URLHelper::getLink('?cmd='. ($sd_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-                    <?=($sd_open[$tpl['sd_id']]) ? Assets::img('icons/16/blue/arr_1down.png') : Assets::img('icons/16/blue/arr_1right.png') ?>
+                    <?= Assets::img('icons/16/blue/arr_1right.png') ?>
                 </A>
             <? else : ?>
                 <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/arr_1right.png">

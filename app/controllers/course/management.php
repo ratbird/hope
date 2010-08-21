@@ -32,7 +32,7 @@ class Course_ManagementController extends AuthenticatedController
             }
         }
         PageLayout::setTitle(sprintf(_("%s - Verwaltung"), $_SESSION['SessSemName']['header_line']));
-        PageLayout::setHelpKeyword('Basis.Veranstaltungsverwaltung');
+        PageLayout::setHelpKeyword('Basis.InVeranstaltungVerwaltung');
     }
 
     /**

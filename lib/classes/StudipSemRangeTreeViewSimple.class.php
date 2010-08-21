@@ -72,8 +72,8 @@ class StudipSemRangeTreeViewSimple {
         echo "</div></td>";
         echo "<td nowrap class=\"steelgraulight\" align=\"right\" valign=\"bottom\" style=\"font-size:10pt;\">";
         if ($this->start_item_id != "root"){
-            echo "\n<a href=\"" .$this->getSelf("start_item_id={$this->tree->tree_data[$this->start_item_id]['parent_id']}", false) . "\">
-            <img src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" border=\"0\" align=\"bottom\" hspace=\"3\">" . _("eine Ebene zur&uuml;ck") . "</a>";
+            echo "\n<a href=\"" .$this->getSelf("start_item_id={$this->tree->tree_data[$this->start_item_id]['parent_id']}", false) . "\">".
+            Assets::img('icons/16/blue/arr_2left.png', array('class' => 'text-top', 'title' =>_('eine Ebene zur&uuml;ck'))). "</a>";
         } else {
             echo "&nbsp;";
         }

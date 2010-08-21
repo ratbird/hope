@@ -2555,7 +2555,7 @@ if ($level == 2)
                            if ($i > 0)
                            {
                                                             $href = "?moveup_doz=".get_username($key)."&foo=".time()."#anker";
-                                                            $img_src = "images/move_up.gif";
+                                                            $img_src = Assets::image_path('icons/16/yellow/arr_2up.png');
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
                                                             echo "<img src='{$GLOBALS['ASSETS_URL']}{$img_src}' border='0'>";
                                                             echo "</a>";
@@ -2566,7 +2566,7 @@ if ($level == 2)
                            if ($i < (sizeof($sem_create_data["sem_doz"]) - 1))
                            {
                                                             $href = "?movedown_doz=".get_username($key)."&foo=".time()."#anker";
-                                                            $img_src = "images/move_down.gif";
+                                                            $img_src = Assets::image_path('icons/16/yellow/arr_2down.png');
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
                                                             echo "<img src='{$GLOBALS['ASSETS_URL']}{$img_src}' border='0'>";
                                                             echo "</a>";
@@ -2597,7 +2597,7 @@ if ($level == 2)
                 <td <? echo $cssSw->getFullClass() ?> width="50%" colspan="2">
                 <?php
                 print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type));
-                print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\"> ";
+                print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\"> ";
 
                 if ($SEM_CLASS[$SEM_TYPE[$sem_create_data["sem_status"]]["class"]]["only_inst_user"]) {
                     $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
@@ -2676,7 +2676,7 @@ if ($level == 2)
                         <td class="<? echo $cssSw->getClass() ?>" width="50%" colspan="2">
                         <?php
                         print _("Vertretung hinzuf&uuml;gen");
-                        print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_dep\"> ";
+                        print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_dep\"> ";
 
                         $deputysearch = new PermissionSearch('username', _("Vertretung auswählen"), 'username', array('permission' => getValidDeputyPerms()));
                         print QuickSearch::get("add_dep", $deputysearch)
@@ -2716,8 +2716,7 @@ if ($level == 2)
                            if ($i > 0)
                            {
                                                             $href = "?moveup_tut=".get_username($key)."&foo=".time()."#anker";
-                                                            $img_src ="images/move_up.gif";
-
+                                                            $img_src = Assets::image_path('icons/16/yellow/arr_2up.png');
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
                                                             echo "<img src='$img_src' border='0'>";
                                                             echo "</a>";
@@ -2728,8 +2727,7 @@ if ($level == 2)
                            if ($i < (sizeof($sem_create_data["sem_tut"]) - 1))
                            {
                                                             $href = "?movedown_tut=".get_username($key)."&foo=".time()."#anker";
-                                                            $img_src = "images/move_down.gif";
-
+                                                            $img_src = Assets::image_path('icons/16/yellow/arr_2down.png');
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
                                                             echo "<img src='{$GLOBALS['ASSETS_URL']}{$img_src}' border='0'>";
                                                             echo "</a>";
@@ -2758,7 +2756,7 @@ if ($level == 2)
                         <td class="<? echo $cssSw->getClass() ?>" width="50%" colspan="2">
                         <?php
                         print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('tutor', 1, $seminar_type));
-                        print "<br><input type=\"IMAGE\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_tut\"> ";
+                        print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_tut\"> ";
 
                         $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
                         if ($sem_create_data["sem_bet_inst"]) {
@@ -3452,7 +3450,7 @@ if ($level == 4) {
                                 <tr>
                                     <td colspan="2" align="right">
                                         <font size="-1"><?=("passende R&auml;ume suchen")?></font>
-                                        <input type="image" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" <? echo tooltip(_("passende Räume suchen")) ?> border="0" name="search_properties">
+                           				<input type="image" src="<?= Assets::image_path('icons/16/yellow/arr_2right.png') ?>" <? echo tooltip(_("passende Räume suchen")) ?> name="search_properties">
                                     </td>
                                     <td>
                                         &nbsp;

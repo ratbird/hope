@@ -196,7 +196,7 @@ else
         if ($xslt_process)
         {
             $infobox[1]["kategorie"] = _("Aktionen:");
-                $infobox[1]["eintrag"][] = array (  'icon' => "icon-disc.gif" ,
+                $infobox[1]["eintrag"][] = array (  'icon' => "icons/16/black/download.png" ,
                                             "text"  => sprintf(_("Um die Ausgabe-Datei herunterzuladen, klicken Sie %shier%s."), $link2, "</a>")
                                         );
         }

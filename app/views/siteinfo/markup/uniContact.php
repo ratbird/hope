@@ -1,4 +1,4 @@
 <a href="mailto:<?= $contact ?>">
-    <?= Assets::img('link_extern.gif') ?>
+    <?= Assets::img('icons/16/blue/link-extern.png') ?>
     <?= $contact ?>
 </a>

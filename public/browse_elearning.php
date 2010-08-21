@@ -85,7 +85,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
                                     "text"  => sprintf(_("Auf dieser Seite k&ouml;nnen Sie nach Lernmodulen im angebundenen ILIAS-System suchen.")) ) ) ) );
 
     $infobox[1]["kategorie"] = _("Aktionen:");
-    $infobox[1]["eintrag"][] = array (  "icon" => "icon-lern.gif" ,
+    $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/learnmodule.png" ,
                                     "text"  => sprintf(_("Geben Sie einen Suchbegriff ein und klicken Sie auf 'Suche starten'. Die Suche bezieht sich auf den ausgew&auml;hlten Suchbereich.")));
 
     ?>

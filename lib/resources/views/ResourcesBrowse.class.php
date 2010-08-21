@@ -404,7 +404,7 @@ class ResourcesBrowse {
                 <?
                 if ($way_back>=0) {
                     printf ("<a href = \"%s?view=search&quick_view_mode=%s&%s\">", $PHP_SELF, $view_mode, (!$way_back) ? "reset=TRUE" : "open_level=$way_back");
-                    print ("<img align=\"absmiddle\" src=\"".$GLOBALS['ASSETS_URL']."images/move_left.gif\" border=\"0\">&nbsp; <font size=\"-1\">"._("eine Ebene zur&uuml;ck")."</font></a>");
+                    print Assets::img('icons/16/blue/arr_2left.png', array('class' => 'text-top', 'title' =>_('eine Ebene zur&uuml;ck'))). "</font></a>";
                 }
                 ?>
             </td>

@@ -992,7 +992,7 @@ class EvalTemplateGUI {
       switch( $level ) {
       case "0":
       case "Evaluation":
-     $infoMain =  array ("icon" => basename(EVAL_PIC_ICON),
+     $infoMain =  array ("icon" => EVAL_PIC_ICON,
                "text" => _("Links können Sie die Grundattribute der Evaluation definieren und neue Gruppierungsblöcke anlegen."));
      break;
 
@@ -1002,12 +1002,12 @@ class EvalTemplateGUI {
      switch( $group->getChildType() ) {
      case "":
      case "EvaluationGroup":
-         $infoMain =  array ("icon" => basename(EVAL_PIC_TREE_GROUP),
+         $infoMain =  array ("icon" => EVAL_PIC_TREE_GROUP,
               "text" => _("Links können Sie den ausgewählten Gruppierungsblock bearbeiten und darin Fragenblöcke oder weitere Gruppierungsblöcke anlegen."));
          break;
 
      case "EvaluationQuestion":
-         $infoMain =  array ("icon" => basename(EVAL_PIC_TREE_QUESTIONGROUP),
+         $infoMain =  array ("icon" => EVAL_PIC_TREE_QUESTIONGROUP,
               "text" => _("Links können Sie den ausgewählten Fragenblock bearbeiten und darin Fragen des zugeordneten Vorlagentyps anlegen.<br>Sie können auch den Vorlagentyp ändern. Dies wirkt sich auf alle Fragen aus."));
          break;
      }
@@ -1016,10 +1016,10 @@ class EvalTemplateGUI {
       $previewLink = EvalCommon::createEvalShowLink( $evalID, _("Vorschau"), YES, NO );
       $previewLink .= (" " . _("der Evaluation"));
 
-      $infoTemplates =  array ("icon" => basename(EVAL_PIC_HELP),
+      $infoTemplates =  array ("icon" => EVAL_PIC_HELP,
                 "text" => _("Der rechte Bereich dient der Bearbeitung von Antwortenvorlagen."));
 
-      $infoPreview =  array ("icon" => basename(EVAL_PIC_PREVIEW),
+      $infoPreview =  array ("icon" => EVAL_PIC_PREVIEW,
               "text" => $previewLink);
 
       if (get_Username($rangeID))
@@ -1034,7 +1034,7 @@ class EvalTemplateGUI {
                   "\">",
                   "</a>");
 
-      $infoOverview =  array ("icon" => basename(EVAL_PIC_BACK),
+      $infoOverview =  array ("icon" => EVAL_PIC_BACK,
                 "text" => $infoOverviewText);
       if($command){
       $infobox = array (array ("kategorie" => _("Aktionen:"),

@@ -47,10 +47,10 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                 <TD width="20%" nowrap="nowrap" class="<?=$tpl['class']?>" align="right">
                     <? if (!$_LOCKED) { ?>
                     <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=up&cycle_id='. $tpl['md_id']) ?>">
-                    <?= Assets::img('move_up.gif', array('align' => 'absmiddle'))?>
+                    <?= Assets::img('icons/16/yellow/arr_2up.png', array('align' => 'absmiddle'))?>
                     </a>
                     <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=down&cycle_id='. $tpl['md_id']) ?>">
-                    <?= Assets::img('move_down.gif', array('align' => 'absmiddle'))?>
+                    <?= Assets::img('icons/16/yellow/arr_2down.png', array('align' => 'absmiddle'))?>
                     </a>
                     <A href="<?= URLHelper::getLink('?cmd=deleteCycle&cycle_id='. $tpl['md_id']) ?>">
                         <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!'))) ?>
@@ -115,10 +115,10 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                     </FORM></TD>
                 <TD width="5%" nowrap="nowrap" class="<?=$tpl['class']?>" align="right">
                     <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=up&cycle_id='. $tpl['md_id']) ?>">
-                    <?= Assets::img('move_up.gif', array('align' => 'absmiddle'))?>
+                    <?= Assets::img('icons/16/yellow/arr_2up.png', array('align' => 'absmiddle'))?>
                     </a>
                     <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=down&cycle_id='. $tpl['md_id']) ?>">
-                    <?= Assets::img('move_down.gif', array('align' => 'absmiddle'))?>
+                    <?= Assets::img('icons/16/yellow/arr_2down.png', array('align' => 'absmiddle'))?>
                     </a>
                     <A href="<?= URLHelper::getLink('?cmd=deleteCycle&cycle_id='. $tpl['md_id']) ?>">
                         <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Regelmäßige Zeit inklusive aller zugehörigen Termine löschen!'))) ?>

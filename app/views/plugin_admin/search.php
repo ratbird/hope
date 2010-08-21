@@ -92,7 +92,7 @@ $infobox_content = array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(
             array(
-                'icon' => 'link_intern.gif',
+                'icon' => 'icons/16/black/plugin.png',
                 'text' => '<a href="'.$controller->url_for('plugin_admin').'">'._('Verwaltung von Plugins').'</a>'
             )
         )
@@ -100,7 +100,7 @@ $infobox_content = array(
         'kategorie' => _('Links:'),
         'eintrag'   => array(
             array(
-                'icon' => 'link_extern.gif',
+                'icon' => 'icons/16/black/info.png',
                 'text' => '<a href="http://plugins.studip.de/" target="_blank">'._('Alle Plugins im Plugin-Marktplatz').'</a>'
             )
         )

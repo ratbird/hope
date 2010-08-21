@@ -60,9 +60,9 @@ switch ($view) {
         $infobox = array(
                     array  ("kategorie" => _("Aktionen:"),
                             "eintrag" => array (
-                                array   ("icon" => "suchen.gif",
+                                array   ("icon" => "icons/16/black/search.png",
                                     "text"  => (($resources_data["search_mode"] == "browse") || (!$resources_data["search_mode"]))? sprintf(_("Gewünschte Eigenschaften <br>%sangeben%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&mode=properties\">", "</a>") :  sprintf(_("Gewünschte Eigenschaften <br>%snicht angeben%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&mode=browse\">", "</a>")),
-                                array   ("icon" => "meinetermine.gif",
+                                array   ("icon" => "icons/16/black/schedule.png",
                                     "text"  => (!$resources_data["check_assigns"])? sprintf(_("Gewünschte Belegungszeit %sberücksichtigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&check_assigns=TRUE\">", "</a>") :  sprintf(_("Gewünschte Belegungszeit <br>%snicht berücksichtigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&check_assigns=FALSE\">", "</a>")),
                                 array   ("icon" => "cont_res5.gif",
                                     "text"  => (!$resources_data["search_only_rooms"])? sprintf(_("Nur Räume %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=1\">", "</a>") :  sprintf(_("Alle Ressourcen %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=0\">", "</a>")),

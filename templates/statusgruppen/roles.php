@@ -30,14 +30,14 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
         <? endif; ?>
             
         <? if ($move) : ?>
-        <a href="#"><?= Assets::img('move') ?></a>
+        <a href="#"><?= Assets::img('icons/16/yellow/arr2_right.png') ?></a>
         <? endif; ?>
         
         <? if ($sort) : 
             if ($pos > 1) : ?>
-        <a href="<?= URLHelper::getLink('?cmd=moveUp&view=sort&role_id='. $id) ?>"><?= Assets::img('move_up'); ?></a>
+        <a href="<?= URLHelper::getLink('?cmd=moveUp&view=sort&role_id='. $id) ?>"><?= Assets::img('icons/16/yellow/arr_2up'); ?></a>
         <? endif; if ($pos < sizeof($roles)) : ?>
-        <a href="<?= URLHelper::getLink('?cmd=moveDown&view=sort&role_id='. $id) ?>"><?= Assets::img('move_down'); ?></a>
+        <a href="<?= URLHelper::getLink('?cmd=moveDown&view=sort&role_id='. $id) ?>"><?= Assets::img('icons/16/yellow/arr_2down'); ?></a>
         <? endif;
         endif;
         ?>
@@ -52,7 +52,7 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
     </td>
     <td width="1%" class="printhead" align="right" valign="bottom" nowrap>
         <? if ($role['role']->hasFolder()) :
-            echo Assets::img('icon-disc');
+            echo Assets::img('icons/16/blue/documents.png');
         endif; ?>
 
         &nbsp;

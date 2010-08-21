@@ -103,9 +103,9 @@ if ($db->next_record()) $can_change = TRUE; // Person darf etwas aendern....
  */
 function createInfoBox ($imgLogo) {
         /* Define infobox text ------------------------------------------------ */
-        $info1 =  array ("icon" => "eval-icon.gif",
+        $info1 =  array ("icon" => "icons/16/black/vote.png",
                 "text" => _("Auf dieser Seite k&ouml;nnen Sie die Auswertung Ihrer Evaluation konfigurieren."));
-    $info2 = array ("icon" => "i.gif",
+    $info2 = array ("icon" => "icons/16/black/info.png",
             "text" => _("W&auml;hlen Sie Ihre Einstellungen und dr&uuml;cken Sie auf \"Template speichern\". Anschlie&szlig;end kommen Sie mit dem Button unten links zur&uuml;ck zu Ihrer Evaluation."));
 
     $infobox = array (array ("kategorie" => _("Information:"),

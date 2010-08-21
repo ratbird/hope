@@ -99,7 +99,7 @@ function PrintAktualStatusgruppen ($range_id, $view, $edit_id="")
         echo "\n<table width=\"95%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">";
         echo "\n\t<tr>";
         echo "\n\t\t<td width=\"5%\">";
-        printf ("                 <input type=\"IMAGE\" name=\"%s\" src=\"".$GLOBALS['ASSETS_URL']."images/move.gif\" border=\"0\" %s>&nbsp; </td>", $statusgruppe_id, tooltip(_("Markierte Personen dieser Gruppe zuordnen")));
+        printf ("                 <input type=\"IMAGE\" name=\"%s\" src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')."\"  %s>&nbsp; </td>", $statusgruppe_id, tooltip(_("Markierte Personen dieser Gruppe zuordnen")));
         printf ("             <td width=\"85%%\" class=\"%s\">&nbsp; %s </td><td class=\"%s\" width=\"5%%\"><a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/einst.gif\" border=\"0\" %s></a></td>", ($edit_id == $statusgruppe_id?"topicwrite":"topic"), htmlReady($db->f("name")), ($edit_id == $statusgruppe_id?"topicwrite":"topic"), URLHelper::getLink($PHP_SELF."?edit_id=".$statusgruppe_id."&range_id=".$range_id."&view=".$view."&cmd=edit_statusgruppe"), tooltip(_("Gruppenname oder -größe anpassen")) );
         printf ("             <td width=\"5%%\"><a href=\"%s\"><img src=\"".Assets::image_path('icons/16/red/trash.png')."\" %s></a></td>", URLHelper::getLink($PHP_SELF."?cmd=verify_remove_statusgruppe&statusgruppe_id=".$statusgruppe_id."&range_id=".$range_id."&view=".$view."&name=".$db->f("name")), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
         echo    "\n\t</tr>";
@@ -134,7 +134,7 @@ function PrintAktualStatusgruppen ($range_id, $view, $edit_id="")
         $i++;
         echo "</table>";
         if ($i < $AnzahlStatusgruppen) {
-            printf ("<p align=\"center\"><a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/move_up.gif\"  vspace=\"1\" width=\"13\" height=\"11\" border=\"0\"  %s><img src=\"".$GLOBALS['ASSETS_URL']."images/move_down.gif\" vspace=\"1\" width=\"13\" height=\"11\" border=\"0\" %s></a><br>&nbsp;", URLHelper::getLink($PHP_SELF.'?cmd=swap&statusgruppe_id='.$statusgruppe_id.'&range_id='.$range_id.'&view='.$view), tooltip(_("Gruppenreihenfolge tauschen")), tooltip(_("Gruppenreihenfolge tauschen")));
+            printf ("<p align=\"center\"><a href=\"%s\"><img src=\"". Assets::image_path('icons/16/yellow/arr_2up.png') . "\" %s><img src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png')."\" %s></a><br>&nbsp;", URLHelper::getLink($PHP_SELF.'?cmd=swap&statusgruppe_id='.$statusgruppe_id.'&range_id='.$range_id.'&view='.$view), tooltip(_("Gruppenreihenfolge tauschen")), tooltip(_("Gruppenreihenfolge tauschen")));
         }
     }
 }
@@ -279,7 +279,7 @@ if (is_array($msgs)) {
             <input type="text" name="new_statusgruppe_name" style="vertical-align:middle" value="<?=_("Gruppenname")?>">
             &nbsp; &nbsp; &nbsp; <b><?=_("Einf&uuml;gen")?></b>&nbsp;
             <?
-            printf ("<input type=\"IMAGE\" name=\"add_new_statusgruppe\" src=\"".$GLOBALS['ASSETS_URL']."images/move_down.gif\" border=\"0\" value=\" %s \" %s>&nbsp;  &nbsp; &nbsp; ", _("neue Statusgruppe"), tooltip(_("neue Gruppe anlegen")));
+            printf ("<input type=\"IMAGE\" name=\"add_new_statusgruppe\" src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" value=\" %s \" %s>&nbsp;  &nbsp; &nbsp; ", _("neue Statusgruppe"), tooltip(_("neue Gruppe anlegen")));
             ?>
           </form>
 <?
@@ -299,7 +299,7 @@ if (is_array($msgs)) {
             <input type="text" name="new_statusgruppe_name" style="vertical-align:middle" value="<? echo htmlReady($gruppe_name);?>">
             &nbsp; &nbsp; &nbsp; <b><?=_("&Auml;ndern")?></b>&nbsp;
             <?
-            printf ("<input type=\"IMAGE\" name=\"add_new_statusgruppe\" src=\"".$GLOBALS['ASSETS_URL']."images/move_down.gif\" border=\"0\" value=\" %s \" %s>&nbsp;  &nbsp; &nbsp; ", _("Gruppe anpassen"), tooltip(_("Gruppe anpassen")));
+            printf ("<input type=\"IMAGE\" name=\"add_new_statusgruppe\" src=\"". Assets::image_path('icons/16/yellow/arr_2up.png') . "\" value=\" %s \" %s>&nbsp;  &nbsp; &nbsp; ", _("Gruppe anpassen"), tooltip(_("Gruppe anpassen")));
             ?>
           </form>
 <?

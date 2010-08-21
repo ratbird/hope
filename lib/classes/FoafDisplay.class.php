@@ -178,7 +178,7 @@ class FoafDisplay {
         // inhaltbox
         echo "\n<tr>\n<td class=\"blank\">";
         echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\">\n<tr>";
-        printhead("100%","0",$link,$open,0,"<img src=\"".$GLOBALS['ASSETS_URL']."images/icon-guest.gif\">",$titel,"");
+        printhead("100%","0",$link,$open,0, Assets::img('icons/16/blue/guestbook.png', array('class' => 'text-top')),$titel,"");
         if ($open=="open") {
             echo "</tr>\n<tr>\n<td colspan=\"4\" align=\"center\">";
             echo $msg;

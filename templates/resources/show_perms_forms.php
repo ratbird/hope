@@ -95,7 +95,7 @@
                     <?= Assets::img('trash', array('title' => _("Berechtigung löschen"))) ?>
                 </a>
             <? else : ?>
-                <?= Assets::img('lighttrash', array('title' => _("Sie dürfen diese Berechtigung leider nicht löschen"))); ?>
+                <?= Assets::img('icons/16/grey/decline/trash.png', array('title' => _("Sie dürfen diese Berechtigung leider nicht löschen"))); ?>
             <? endif; ?>
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="50%">

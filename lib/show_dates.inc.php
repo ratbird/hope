@@ -243,7 +243,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $db2->query("SELECT folder_id FROM folder WHERE range_id ='" . $db->f("termin_id")."' ");
                 $db2->next_record();
                 $zusatz .= "<a href=\"".URLHelper::getLink("folder.php?cmd=tree&open=" . $db2->f("folder_id"));
-                $zusatz .= "#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icon-disc.gif\" ";
+                $zusatz .= "#anker\"><img src=\"".Assets::image_path('icons/16/blue/documents.png')."\" ";
                 $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
                 $zusatz .= "></a>";
                 if ($num_docs > 5)
@@ -583,7 +583,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                     $db->next_record();
                     $zusatz .= "<a href=\"seminar_main.php?auswahl=" . $termin->getSeminarId()
                                     . "&redirect_to=folder.php&cmd=tree&open=" . $db->f("folder_id")
-                                    . "#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icon-disc.gif\" ";
+                                    . "#anker\"><img src=\"".Assets::image_path('icons/16/blue/documents.png')."\" ";
                     $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
                     $zusatz .= ">";
                     if ($num_docs > 5)
@@ -691,7 +691,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
     // keine Termine da, aber die Moeglichkeit welche einzustellen
     else if($show_admin) {
         echo "\n<table class=\"index_box\">";
-        echo "\n<tr><td class=\"topic\"><img src=\"".$GLOBALS['ASSETS_URL']."images/meinetermine.gif\"><b>  " . _("Termine") . "</b></td>";
+        echo "\n<tr><td class=\"topic\">" . Assets::img('icons/16/white/schedule.png', array('class' => 'text-top', 'title' =>_('Termine'))) . "<b>  " . _("Termine") . "</b></td>";
         echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Termine einstellen")) . "></a> </td></tr>";
         ?>
         <tr>

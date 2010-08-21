@@ -405,7 +405,7 @@ class ExternEditModule extends ExternEditHtml {
             
             // move down
             $out .= "<input type=\"image\" name=\"{$this->element_name}_move_right[$i]\" src=";
-            $out .= Assets::image_path('icons/16/yellow/arr_2up.png');
+            $out .= Assets::image_path('icons/16/yellow/arr_2down.png');
             $out .= " ".tooltip(_("Datenfeld verschieben"));
             $out .= "border=\"0\" align=\"middle\">\n&nbsp;";
             $out .= "</td>\n";

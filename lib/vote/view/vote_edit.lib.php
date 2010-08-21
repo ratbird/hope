@@ -161,12 +161,6 @@ function printFormStart ( $voteID, $rangeID, $referer ) {
     $voteID = "";
     }
 
-#####################
-    $debug = "<img src=\"".VOTE_PATH_PICTURES."icon-chat.gif\" style=\"vertical-align:middle;\""
-    . tooltip($GLOBALS["debug"], FALSE, TRUE)
-    . ">&nbsp;";
-#####################
-
     $html = createBoxHeader (FALSE, ' style="width: 100%;"', $task_string,
                  VOTE_PATH_PICTURES.$type."-icon.gif","","","","",
                  "blank" );
@@ -349,11 +343,11 @@ function printAnswerFields ( $answers ) {
         if( count($answers) > 1 ) {
         $html .= "<td align=center>";
         $html .= "<input type=image name=\"move_up[$i]\" "
-            . "src=\"".VOTE_PATH_PICTURES."move_up.gif\" "
-            . tooltip(_("Antwort hochschieben")) . "border=0 align=bottom>\n"
+            . "src=\"" . Assets::image_path('icons/16/yellow/arr_2up.png') . "\" "
+            . tooltip(_("Antwort hochschieben")) . " align=bottom>\n"
             . "<input type=image name=\"move_down[$i]\" "
-            . "src=\"".VOTE_PATH_PICTURES."move_down.gif\" "
-            . tooltip(_("Antwort runterschieben")) . "border=0 align=bottom>\n";
+            . "src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" "
+            . tooltip(_("Antwort runterschieben")) . " align=bottom>\n";
         $html .= "</td>";
         }
         $html .= "<td align=center><input type=checkbox id=deleteCheckboxes name=\"deleteAnswers[$i]\"></td>";
@@ -447,7 +441,7 @@ function printRightRegion ( ) {
     $action_text3 = _("Wenn Sie zufrieden sind, klicken Sie auf 'speichern'.");
 
     /* -------------------------------------------------------- */
-    $action_array[] = array ( "icon" => "icon-posting.gif",
+    $action_array[] = array ( "icon" => "icons/16/black/info.png.gif",
                   "text" => $action_text1 );
 
     if( $type == "test" && $pageMode != MODE_RESTRICTED ) {

@@ -454,7 +454,7 @@ if ($perm->have_perm("admin"))
                     <tr>
                         <td colspan="2" align="right">
                             <font size="-1"><?=("passende R&auml;ume suchen")?></font>
-                            <input type="image" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_right.gif" <? echo tooltip(_("passende Räume suchen")) ?> border="0" name="search_properties">
+                            <input type="image" src="<?= Assets::image_path('icons/16/yellow/arr_2right.png') ?>" <? echo tooltip(_("passende Räume suchen")) ?> name="search_properties">
                         </td>
                         <td>
                             &nbsp;

@@ -383,7 +383,7 @@ $query_time = $query_time_sort;
         $count_timefilter = count_x_messages_from_user($sms_data['view'], "all", $query_time_sort." AND folder=''");
         $open = folder_openclose($sms_show['folder'][$sms_data['view']], "all");
         if ($sms_data['tmp']['move_to_folder'] && $open == "close") {
-            $picture = "move.gif";
+            $picture = Assets::image_path('icons/16/yellow/arr2_right.png');
             $link = $PHP_SELF."?move_folder=free";
         } else {
             $picture = showfoldericon("all", $count);
@@ -433,7 +433,7 @@ $query_time = $query_time_sort;
                     // this folder is open?
                     $open = folder_openclose($sms_show['folder'][$sms_data['view']], $x);
                     if ($sms_data['tmp']['move_to_folder'] && $open == "close") {
-                        $picture = "move.gif";
+                        $picture = Assets::image_path('icons/16/yellow/arr2_right.png');
                         $link = $PHP_SELF."?move_folder=".$x;
                     } else {
                         $link = $PHP_SELF."?cmd=";

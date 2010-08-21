@@ -376,7 +376,6 @@ function ShowContact ($contact_id)
                             .get_fullname($db->f("user_id"), $format = "full_rev",true )."</b></font></td>"
                             . "<td class=\"blue_gradient\">"
                             // export to vcf
-//                          ."<a href=\"sms_send.php?sms_source_page=contact.php&rec_uname=".get_username($db->f("user_id"))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/meinetermine.gif\" border=\"0\" ".tooltip(_("Nachricht schreiben"))." align=\"right\"></a>"
                             ."<a href=\"sms_send.php?sms_source_page=contact.php&rec_uname=".get_username($db->f("user_id"))."\">" . Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht schreiben'))) . "</a>"
                             ."</td>"
                             ."

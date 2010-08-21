@@ -83,7 +83,7 @@ function show_documents($documents, $open = null){
             //Zusatzangaben erstellen
             $zusatz="<a href=\"about.php?username=".$db->f("username")."\"><font color=\"#333399\">".htmlReady($db->f("fullname"))."</font></a>&nbsp;".date("d.m.Y - H:i", $chdate);
             if ($db->f("protected")==1) $zusatz .= Assets::img('icons/16/grey/info-circle.png', tooltip(_("Diese Datei ist urheberrechtlich geschützt!")));
-            if ($db->f("url")!="") $zusatz .= "&nbsp;<img src=\"$pic_path/link_extern.gif\" ".tooltip(_("Diese Datei wird von einem externen Server geladen!")).">";
+            if ($db->f("url")!="") $zusatz .= Assets::img('icons/16/blue/link-extern.png', array('class' => 'text-top', 'title' =>_('Diese Datei wird von einem externen Server geladen!')));
             $zusatz .= $box;
             echo "\n<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr>";
             printhead (0, 0, $link, $is_open, false , $icon, $titel, $zusatz, $chdate);
@@ -307,7 +307,7 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
         echo "\n<table width=\"80%\" cellpadding=\"0\" cellspacing=\"0\"><tr>";
             $content = '<div style="margin-bottom:10px;"><b>'
                         .'<a href="seminar_main.php?auswahl='.$db->f('Seminar_id')
-                        . '&redirect_to=folder.php&cmd=all"><img src="'.$pic_path.'/icon-disc.gif" border="0" align="absmiddle" hspace="4" >'
+                        . '&redirect_to=folder.php&cmd=all"><img src="'.Assets::image_path('icons/16/blue/documents.png').'" align="absmiddle">'
                         .getHeaderLine($db->f('Seminar_id')).'</a></b>
                         <br>'._("Status in der Veranstaltung:").'&nbsp;<b>'.$db->f('status').'</b></div>';
             $content .= '<div style="margin-bottom:10px;" align="center"><a href="'.$PHP_SELF.'?download_as_zip='.$db->f('Seminar_id').'">'
@@ -343,7 +343,7 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
         echo "\n<table width=\"80%\" cellpadding=\"0\" cellspacing=\"0\"><tr>";
             $content = '<div style="margin-bottom:10px;"><b>'
                         .'<a href="institut_main.php?auswahl='.$db->f('Institut_id')
-                        . '&redirect_to=folder.php&cmd=all"><img src="'.$pic_path.'/icon-disc.gif" border="0" align="absmiddle" hspace="4" >'
+                        . '&redirect_to=folder.php&cmd=all"><img src="'.Assets::image_path('icons/16/blue/documents.png').'" align="absmiddle" hspace="4" >'
                         .getHeaderLine($db->f('Institut_id')).'</a></b>
                         <br>'._("Status in der Einrichtung:").'&nbsp;<b>'.$db->f('status').'</b></div>';
             $content .= '<div style="margin-bottom:10px;" align="center"><a href="'.$PHP_SELF.'?download_as_zip='.$db->f('Institut_id').'">'

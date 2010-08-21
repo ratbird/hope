@@ -9,7 +9,7 @@ $expand_id = $area->hasChildren() ? $id : $area->getParentId();
        data-id="'<?= $id ?>'" data-course_id="'<?= htmlReady($course_id) ?>'"
        type="image"
        name="study_area_selection[add][<?= $id ?>]"
-       src="<?= Assets::image_path('move_left.gif') ?>"
+       src="<?= Assets::image_path('icons/16/yellow/arr_2left.png') ?>"
        title="<?= _("Diesen Studienbereich zuordnen") ?>"
        alt="<?= _("Diesen Studienbereich zuordnen") ?>"
        <?= !$area->isAssignable() || $selection->includes($area)

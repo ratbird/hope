@@ -33,7 +33,7 @@
         <td></td>
         <td><?= $degree['count_user'] ?></td>
         <td></td>
-        <td colspan="3"><a href="<?=URLHelper::getLink("sms_send.php?sms_source_page=sms_box.php&prof_id=".$studycourse['studiengang_id']."&deg_id=".$degree['abschluss_id']."&emailrequest=1&subject="._("Informationen zum Studiengang:")." ". $studycourse['name'])." (".$degree['name'].")"?>"><?= Assets::img('mailnachricht.gif', array('title' => 'Nachricht an alle Nutzer schicken')) ?></a> </td>
+        <td colspan="3"><a href="<?=URLHelper::getLink("sms_send.php?sms_source_page=sms_box.php&prof_id=".$studycourse['studiengang_id']."&deg_id=".$degree['abschluss_id']."&emailrequest=1&subject="._("Informationen zum Studiengang:")." ". $studycourse['name'])." (".$degree['name'].")"?>"><?= Assets::img('icons/16/blue/mail.png', array('title' => 'Nachricht an alle Nutzer schicken')) ?></a> </td>
     </tr>
     <? endforeach; TextHelper::reset_cycle(); ?>
     </tbody>

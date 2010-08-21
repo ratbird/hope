@@ -15,7 +15,7 @@ if($red)
 <div align="center">
 <table width="70%" border=0 cellpadding=0 cellspacing=0>
 <tr><td class="topic<?=$class ?>" colspan=3 align="left">
- <img src="<?=$GLOBALS['ASSETS_URL']?>/images/mailnachricht.gif" border="0" align="absmiddle">
+ <?=Assets::img('icons/16/white/mail.png', array('class' => 'text-top')) ?>
  <b>&nbsp;<?= $headline; ?></b>
 </td></tr>
 <tr><td style="background-color: #fff; padding: 1.5em;">

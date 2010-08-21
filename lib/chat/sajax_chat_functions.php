@@ -91,9 +91,7 @@ function get_chat_status($chatid){
 				(($chatServer->chatDetail[$chatid]['password']) ? Assets::img('icons/blue/lock-locked.png',  array('title' => _("Dieser Chat ist zugangsbeschränkt."))) : Assets::img('icons/blue/lock-unlocked.png',  array('title' => _("Dieser Chat ist nicht zugangsbeschränkt.")))) ?>
             }
             if (count($chatServer->chatDetail[$chatid]['log'])){
-                ?>
-                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/logging.gif" <?=tooltip(_("Dieser Chat wird aufgezeichnet."))?>>
-                <?
+                Assets::img('icons/16/grey/log.png', array('class' => 'text-top', 'title' =>_("Dieser Chat wird aufgezeichnet."))) ?>
             }
             ?>
             <b>Chat - <?=htmlReady($chatServer->chatDetail[$chatid]["name"])?></b>

@@ -136,9 +136,7 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
                 <? }
             }
             if (count($chatServer->chatDetail[$chatid]['log'])){
-                ?>
-                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/logging.gif" <?=tooltip(_("Dieser Chat wird aufgezeichnet."))?>>
-                <?
+                Assets::img('icons/16/grey/log.png', array('class' => 'text-top', 'title' =>_("Dieser Chat wird aufgezeichnet."))) ?>
             }
             ?>
             <b>Chat - <?=htmlReady($chatServer->chatDetail[$chatid]["name"])?></b>

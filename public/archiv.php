@@ -473,7 +473,7 @@ if ($archiv_data["perform_search"]) {
             if (archiv_check_perm($db->f("seminar_id")))
                 $view = 1;
             if ($view == 1) {
-                echo "<td class=\"$class\" width=\"3%\">&nbsp;<a href=\"". URLHelper::getLink("?dump_id=".$db->f('seminar_id')) ."\" target=_blank><img src=\"".$GLOBALS['ASSETS_URL']."images/i.gif\" " . tooltip(_("Komplettansicht")) . " border=\"0\"></a></td>";
+                echo "<td class=\"$class\" width=\"3%\">&nbsp;<a href=\"". URLHelper::getLink("?dump_id=".$db->f('seminar_id')) ."\" target=_blank>" .  Assets::img('icons/16/blue/info.png', array('class' => 'text-top', , 'title' =>_('Komplettansicht'))) . "</a></td>";
                 echo "<td class=\"$class\" width=\"3%\">&nbsp;";
                 if (!$db->f('archiv_file_id')=='') {
                     echo '<a href="' . URLHelper::getLink(GetDownloadLink($db->f('archiv_file_id'), $file_name, 1)) .'"><img src="'.$GLOBALS['ASSETS_URL'].'images/files.gif" ' . tooltip(_("Dateisammlung")) . ' border="0"></a>';

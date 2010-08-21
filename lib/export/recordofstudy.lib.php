@@ -31,7 +31,7 @@ function printSiteTitle($semester = NULL){
     $html = "<table border=0 class=blank align=center cellspacing=0 cellpadding=0 width=\"100%\">\n"
           . "   <tr valign=top align=center>\n"
           . "    <td class=topic align=left colspan=\"2\">\n"
-          . "     <img src=\"".$GLOBALS['ASSETS_URL']."images/meinesem.gif\" alt=\""._("Veranstaltungsübersicht erstellen")."\" align=\"texttop\">\n"
+          . "     " . Assets::img('icons/16/white/seminar.png', array('class' => 'text-top', 'title' =>_('Veranstaltungsübersicht erstellen')) . "\n"
           . "     &nbsp;<b>"._("Veranstaltungsübersicht erstellen:")."</b>\n"
           . "     <font size=\"-1\">$semester</font>\n"
           . "    </td>\n"

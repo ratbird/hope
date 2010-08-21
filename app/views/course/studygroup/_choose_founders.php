@@ -18,7 +18,7 @@
             <? if (is_array($results_choose_founders)) : ?>
                 <b><?= sizeof($results_choose_founders) ?></b>
                 <?= sizeof($results_choose_founders) == 1 ? _("NutzerIn gefunden:") : _("NutzerInnen gefunden:") ?><br>
-                <input type="image" name="add_founder" src="<?= Assets::image_path('move_left.gif') ?>" title="<?= _("NutzerIn hinzufügen") ?>">
+                <input type="image" name="add_founder" src="<?= Assets::image_path('icons/16/yellow/arr_2left.png') ?>" title="<?= _("NutzerIn hinzufügen") ?>">
                 <select name="choose_founder">
                     <? foreach ($results_choose_founders as $user_id => $data) : ?>
                     <option value="<?= $data['username'] ?>"><?= htmlReady(my_substr($data['fullname']." (".$data['username'],0,35)) ?>) - <?= $data['perms'] ?></option>

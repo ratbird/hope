@@ -875,9 +875,9 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
     if ($extern) {
         $link_pic = '';
     } elseif ($intern) {
-        $link_pic = "<img src=\"".$GLOBALS['ASSETS_URL']."images/link_intern.gif\" border=\"0\" alt=\"intern\">";
+        $link_pic = Assets::img('icons/16/blue/link.intern.png', array('class' => 'text-top', 'title' =>_('interner Link')));  
     } else {
-        $link_pic = "<img src=\"".$GLOBALS['ASSETS_URL']."images/link_extern.gif\" border=\"0\" alt=\"extern\">";
+        $link_pic = Assets::img('icons/16/blue/link-extern.png', array('class' => 'text-top', 'title' =>_('externer Link')))." ";
     }
 
     if ($mod == 'LINK') {

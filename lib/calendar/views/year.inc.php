@@ -136,13 +136,13 @@ for ($i = 1; $i < 32; $i++)
             if  ($apps) {
                 if  ($apps > 1) {
                     echo "</td><td$day_class align=\"right\">";
-                    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icon-uhr.gif\" ";
+                    echo "<img src=\"".Assets::image_path('icons/16/blue/date.png')."\" ";
                     echo tooltip(sprintf(_("%s Termine"), $apps)) . " border=\"0\">";
                     echo "</td></tr></table>\n";
                 }
                 else {
                     echo "</td><td$day_class align=\"right\">";
-                    echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icon-uhr.gif\" ";
+                    echo "<img src=\"".Assets::image_path('icons/16/blue/date.png')."\" ";
                     echo tooltip(_("1 Termin")) . " border=\"0\">";
                     echo "</td></tr></table>";
                 }

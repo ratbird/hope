@@ -48,10 +48,10 @@
                     </select>
                 </td>
                 <td style="text-align: center;">
-                    <input type="image" name="assign_role" src="<?= Assets::image_path('move_left.gif') ?>" title="<?= _('Markierte Rollen dem Benutzer zuweisen') ?>">
+                    <input type="image" name="assign_role" src="<?= Assets::image_path('icons/16/yellow/arr_2left.png') ?>" title="<?= _('Markierte Rollen dem Benutzer zuweisen') ?>">
                     <br>
                     <br>
-                    <input type="image" name="remove_role" src="<?= Assets::image_path('move_right.gif') ?>" title="<?= _('Markierte Rollen entfernen') ?>">
+                    <input type="image" name="remove_role" src="<?= Assets::image_path('icons/16/yellow/arr_2right.png') ?>" title="<?= _('Markierte Rollen entfernen') ?>">
                 </td>
                 <td>
                     <select size="10" name="rolesel[]" multiple style="width: 300px;">

@@ -100,7 +100,7 @@ foreach ($group_members as $member) {
             <? } else if ($values["binding"]) { ?>
 
                     <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('auswahl' => $semid, 'cmd' => 'no_kill')) ?>">
-                        <?= Assets::img('icons/16/grey/lock-locked.png', tooltip2(_("Das Abonnement ist bindend. Bitte wenden Sie sich an die Dozentin oder den Dozenten."))) ?>
+                        <?= Assets::img('icons/16/grey/decline/door-leave.png', tooltip2(_("Das Abonnement ist bindend. Bitte wenden Sie sich an die Dozentin oder den Dozenten."))) ?>
                     </a>
 
             <? } else { ?>

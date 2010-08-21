@@ -92,13 +92,13 @@ class EvalShow {
    */
   function createInfoBox( $eval, $voted ) {
 
-      $info1 =  array( "icon" => basename(EVAL_PIC_EXCLAIM),
+      $info1 =  array( "icon" => EVAL_PIC_EXCLAIM,
                "text" => EvalShow::getAnonymousText( $eval, $voted ) );
 
-      $info2 =  array( "icon" => basename(EVAL_PIC_TIME),
+      $info2 =  array( "icon" => EVAL_PIC_TIME,
                "text" => EvalShow::getStopdateText( $eval, $voted ) );
 
-      $info3 = array( "icon" => basename(EVAL_PIC_HELP),
+      $info3 = array( "icon" => EVAL_PIC_HELP,
               "text" => sprintf(_("Mit %s gekennzeichnete Fragen müssen beantwortet werden."),
                     "<b><span class=\"eval_error\">**</span></b>") );
 

@@ -114,21 +114,21 @@ if ($num_my_sem) {
         echo '&nbsp; ';
         // postings-field
         if ($db->f("forumdump"))
-            echo "<a href=\"". URLHelper::getLink("archiv.php?forum_dump_id=".$db->f('seminar_id')) ."\" target=\"blank\">". Assets::img('icon-posting.gif', array('title' => 'Beiträge des Forums der Veranstaltung')) ."</a>";
+            echo "<a href=\"". URLHelper::getLink("archiv.php?forum_dump_id=".$db->f('seminar_id')) ."\" target=\"blank\">". Assets::img('icons/16/grey/forum.png', array('title' => 'Beiträge des Forums der Veranstaltung')) ."</a>";
         else
             echo Assets::img('icon-leer.gif');
         echo '&nbsp; ';
         // documents-field
         $file_name = _("Dateisammlung") . '-' . substr($db->f('name'),0,200) . '.zip';
         if ($db->f('archiv_file_id')) {
-            echo "<a href=\"". URLHelper::getLink(GetDownloadLink($db->f('archiv_file_id'), $file_name, 1)) ."\">". Assets::img('icon-disc.gif', array('title' => 'Dateisammlung der Veranstaltung herunterladen')) ."</a>";
+            echo "<a href=\"". URLHelper::getLink(GetDownloadLink($db->f('archiv_file_id'), $file_name, 1)) ."\">". Assets::img('icons/16/blue/download.png', array('title' => 'Dateisammlung der Veranstaltung herunterladen')) ."</a>";
         } else {
             echo Assets::img('icon-leer.gif');
         }
         echo '&nbsp; ';
         // wiki-field
         if ($db->f("wikidump"))
-            echo "<a href=\"". URLHelper::getLink("archiv.php?wiki_dump_id=".$db->f('seminar_id')) ."\" target=\"blank\">". Assets::img('icon-wiki.gif', array('title' => 'Beiträge des Wikis der Veranstaltung')) ."</a>";
+            echo "<a href=\"". URLHelper::getLink("archiv.php?wiki_dump_id=".$db->f('seminar_id')) ."\" target=\"blank\">". Assets::img('icons/16/blue/wiki.png', array('title' => 'Beiträge des Wikis der Veranstaltung')) ."</a>";
         else
             echo Assets::img('icon-leer.gif');
         echo '</td>';

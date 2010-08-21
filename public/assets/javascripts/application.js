@@ -625,7 +625,8 @@ STUDIP.Filesystem = {
    */
   unsetarrows     : function () {
     jQuery("span.move_arrows,span.updown_marker").hide();
-    jQuery("span.anfasser").show();
+    //jQuery("span.anfasser").show();
+    jQuery(".draggable").css("cursor", "move");
   }
 };
 
@@ -640,7 +641,7 @@ STUDIP.Filesystem.setdraggables = function () {
     //wenn es einen Anfasser gibt, also wenn Nutzer verschieben darf
     if (jQuery('a.drag', this)) {
       jQuery(this).sortable({
-        handle: 'a.drag',
+        //handle: 'a.drag',
         opacity: 0.6,
         revert: 300,
         scroll: true,

@@ -58,7 +58,7 @@ $infobox['content'][] = array(
               </div>
           </a>
 
-         <a class="click_me" href="<?= UrlHelper::getLink('admin_evaluation.php?section=evaluation') ?>">
+         <a class="click_me" href="<?= UrlHelper::getLink('admin_evaluation.php?section=evaluation&view=eval_inst') ?>">
             <div>
                   <span class="click_head"><?=_("Evaluationen");?></span>
                   <p><?=_("Richten Sie für Ihre Einrichtung eine öffentliche Umfragen ein.");?></p>

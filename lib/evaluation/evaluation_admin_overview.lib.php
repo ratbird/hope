@@ -819,11 +819,10 @@ class EvalOverview {
 
     /* get allowed range id's for user */
     $rangeIDs = $this->db->getValidRangeIDs ($this->perm,$this->user,$currentRangeID);
-
     /* add the currently shown range if neccessary */
-#    if( is_array($rangeIDs) &&
-#   ! in_array( $currentRangeID, array_keys($rangeIDs) ) )
-#   $rangeIDs[$currentRangeID] = array( "name" => $this->db->getRangename($currentRangeID) );
+    if( is_array($rangeIDs) && !in_array( $currentRangeID, array_keys($rangeIDs) ) ) {
+        $rangeIDs[$currentRangeID] = array( "name" => $this->db->getRangename($currentRangeID) );
+    }
 
     foreach ($rangeIDs as $rangeID => $object) {
       $option = new HTML ("option");

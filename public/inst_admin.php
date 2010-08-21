@@ -49,7 +49,6 @@ if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
 
 $css_switcher = new CssClassSwitcher();
 echo $css_switcher->GetHoverJSFunction();
-
 // this page is used for administration (if the user has the proper rights)
 // or for just displaying the workers and their roles
 if (Request::get('section') == 'personal') {
@@ -59,7 +58,7 @@ if (Request::get('section') == 'personal') {
     $perm->check("autor");
 } else {
     PageLayout::setTitle(_("Verwaltung der MitarbeiterInnen"));
-    Navigation::activateItem('/course/institute/faculty');
+    Navigation::activateItem('/admin/institute/faculty');
     $perm->check("admin");
 }
 

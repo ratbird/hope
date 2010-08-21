@@ -65,7 +65,7 @@
          </td>
          <td width="99%" align="left">
 
-                       <a href="<?= URLHelper::getLink("dispatch.php/course/management/index/dates")?>"><?= _("Zur Terminverwaltung") ?></a>
+                       <a href="<?= URLHelper::getLink("raumzeit.php?section=dates")?>"><?= _("Zur Terminverwaltung") ?></a>
 
            <br>
          </td>

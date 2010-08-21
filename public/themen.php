@@ -64,7 +64,7 @@ if(!$GLOBALS["RESOURCES_ENABLE_EXPERT_SCHEDULE_VIEW"]){
 
 PageLayout::setTitle(_("Verwaltung der Themen des Ablaufplans"));
 
-if (Request::get('section') == 'topics') {
+if (Request::get('section') == 'topics' ||  !$perm->have_perm('admin')) {
     UrlHelper::bindLinkParam('section', $section);
     Navigation::activateItem('/course/schedule/topics');
 } else {

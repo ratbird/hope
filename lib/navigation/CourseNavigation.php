@@ -108,7 +108,7 @@ class CourseNavigation extends Navigation
 
         // admin (study group only)
         if ($studygroup_mode && $perm->have_studip_perm('dozent', $SessSemName[1])) {
-            $navigation = new Navigation(_('Admin'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]);
+            $navigation = new Navigation(_('Verwaltung'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]);
             $this->addSubNavigation('admin', $navigation);
         } else if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$studygroup_mode) {
             $navigation = new Navigation(_('Verwaltung'));

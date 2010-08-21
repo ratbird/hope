@@ -83,7 +83,7 @@ class StudipNavigation extends Navigation
         }
 
         // admin page
-        if (is_object($user) && $perm->have_perm('tutor')) {
+        if (is_object($user) && $perm->have_perm('admin')) {
             $this->addSubNavigation('admin', new AdminNavigation());
         }
 

@@ -99,12 +99,8 @@ class CourseNavigation extends Navigation
             $navigation->addSubNavigation('courses', new Navigation(_('Veranstaltungen'), 'show_bereich.php?level=s&id='.$SessSemName[1]));
             $navigation->addSubNavigation('schedule', new Navigation(_('Veranstaltungs-Stundenplan'), 'dispatch.php/calendar/instschedule?institute_id='.$SessSemName[1]));
 
-            if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
-                if ($perm->have_perm('admin')) {
-                    $navigation->addSubNavigation('admin', new Navigation(_('Administration der Einrichtung'), 'admin_institut.php?new_inst=TRUE'));
-                } else {
-                    $navigation->addSubNavigation('admin', new Navigation(_('Administration der Einrichtung'), 'admin_lit_list.php?new_inst=TRUE&view=literatur_inst'));
-                }
+            if ($perm->have_studip_perm('tutor', $SessSemName[1]) && $perm->have_perm('admin')) {
+                $navigation->addSubNavigation('admin', new Navigation(_('Administration der Einrichtung'), 'admin_institut.php?new_inst=TRUE'));
             }
         }
 
@@ -246,10 +242,6 @@ class CourseNavigation extends Navigation
         if (get_config('LITERATURE_ENABLE') && $modules['literature']) {
             $navigation = new Navigation(_('Literatur'));
             $navigation->addSubNavigation('view', new Navigation(_('Literatur'), 'literatur.php?view=literatur_'.$sem_class));
-
-            if ($sem_class == 'inst') {
-                $navigation->setTitle(_('Literatur zur Einrichtung'));
-            }
 
             $navigation->addSubNavigation('print', new Navigation(_('Druckansicht'), 'lit_print_view.php?_range_id=' . $SessSemName[1]));
 

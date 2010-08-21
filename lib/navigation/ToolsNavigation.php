@@ -36,7 +36,7 @@ class ToolsNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $auth;
+        global $auth, $perm;
 
         parent::initSubNavigation();
 
@@ -65,6 +65,12 @@ class ToolsNavigation extends Navigation
         if (get_config('ELEARNING_INTERFACE_ENABLE')) {
             $navigation = new Navigation(_('Lernmodule'), 'my_elearning.php');
             $this->addSubNavigation('elearning', $navigation);
+        }
+
+        // export
+        if (get_config('EXPORT_ENABLE') && $perm->have_perm('tutor')) {
+            $navigation = new Navigation(_('Export'), 'export.php');
+            $this->addSubNavigation('export', $navigation);
         }
     }
 }

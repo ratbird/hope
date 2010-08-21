@@ -188,14 +188,14 @@ process_news_commands($institut_main_data);
 ($rechte) ? $show_admin=TRUE : $show_admin=FALSE;
 show_news($auswahl,$show_admin, 0, $institut_main_data["nopen"], "100%", object_get_visit($SessSemName[1], "inst"), $institut_main_data);
 
-//show chat info
-if (get_config('CHAT_ENABLE') && $modules["chat"]) {
-    chat_show_info($auswahl);
-}
-
 // include and show votes and tests
 if (get_config('VOTE_ENABLE')) {
     show_votes ($auswahl, $auth->auth["uid"], $perm, YES);
+}
+
+//show chat info
+if (get_config('CHAT_ENABLE') && $modules["chat"]) {
+    chat_show_info($auswahl);
 }
 
 // display plugins

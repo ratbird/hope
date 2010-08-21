@@ -53,84 +53,85 @@ class AdminNavigation extends Navigation
 
         $sem_create_perm = in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent';
 
-        // course administration
-        $navigation = new Navigation(_('Veranstaltungen'), 'adminarea_start.php?list=TRUE');
-        //$navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'admin_seminare1.php?list=TRUE'));
-        $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'dispatch.php/course/basicdata/view?list=TRUE'));
-        $navigation->addSubNavigation('study_areas', new Navigation(_('Studienbereiche'),
-                                      'dispatch.php/course/study_areas/show/' . $_SESSION['SessionSeminar'], array('list' => 'TRUE')));
-        $navigation->addSubNavigation('dates', new Navigation(_('Zeiten / Räume'), 'raumzeit.php?list=TRUE'));
-        $navigation->addSubNavigation('schedule', new Navigation(_('Ablaufplan'), 'themen.php?list=TRUE'));
-        $navigation->addSubNavigation('news', new Navigation(_('Ankündigungen'), 'admin_news.php?list=TRUE&view=news_sem'));
+        if($perm->have_perm('admin')) {
 
-        if (get_config('VOTE_ENABLE')) {
-            $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_sem'));
-            $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_sem'));
-        }
+            // course administration nur für admins und root
+            $navigation = new Navigation(_('Veranstaltungen'), 'adminarea_start.php?list=TRUE');
 
-        if (get_config('LITERATURE_ENABLE')) {
-            $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php?list=TRUE&view=literatur_sem'));
-        }
-        $navigation->addSubNavigation('admission', new Navigation(_('Zugangsberechtigungen'), 'admin_admission.php?list=TRUE'));
-        $navigation->addSubNavigation('groups', new Navigation(_('Gruppen / Funktionen'), 'admin_statusgruppe.php?list=TRUE'));
-        $navigation->addSubNavigation('modules', new Navigation(_('Inhaltselemente'), 'admin_modules.php?list=TRUE&view=modules_sem'));
+            $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'dispatch.php/course/basicdata/view?list=TRUE'));
+            $navigation->addSubNavigation('study_areas', new Navigation(_('Studienbereiche'),
+                                          'dispatch.php/course/study_areas/show/' . $_SESSION['SessionSeminar'], array('list' => 'TRUE')));
+            $navigation->addSubNavigation('dates', new Navigation(_('Zeiten / Räume'), 'raumzeit.php?list=TRUE'));
+            $navigation->addSubNavigation('schedule', new Navigation(_('Ablaufplan'), 'themen.php?list=TRUE'));
+            $navigation->addSubNavigation('news', new Navigation(_('Ankündigungen'), 'admin_news.php?list=TRUE&view=news_sem'));
 
-        if ($perm->have_perm($sem_create_perm)) {
-            $navigation->addSubNavigation('copy', new Navigation(_('Veranstaltung kopieren'), 'copy_assi.php?list=TRUE&new_session=TRUE'));
-            $navigation->addSubNavigation('create', new Navigation(_('Neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
-
-            if (get_config('ALLOW_DOZENT_ARCHIV') || $perm->have_perm('admin')) {
-                $navigation->addSubNavigation('archive', new Navigation(_('Archivieren'), 'archiv_assi.php?list=TRUE&new_session=TRUE'));
+            if (get_config('VOTE_ENABLE')) {
+                $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_sem'));
+                $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_sem'));
             }
 
-            if (get_config('ALLOW_DOZENT_VISIBILITY') || $perm->have_perm('admin')) {
-                $navigation->addSubNavigation('visibility', new Navigation(_('Sichtbarkeit'), 'admin_visibility.php?list=TRUE'));
+            if (get_config('LITERATURE_ENABLE')) {
+                $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php?list=TRUE&view=literatur_sem'));
             }
-        }
+            $navigation->addSubNavigation('admission', new Navigation(_('Zugangsberechtigungen'), 'admin_admission.php?list=TRUE'));
+            $navigation->addSubNavigation('groups', new Navigation(_('Gruppen / Funktionen'), 'admin_statusgruppe.php?list=TRUE'));
+            $navigation->addSubNavigation('modules', new Navigation(_('Inhaltselemente'), 'admin_modules.php?list=TRUE&view=modules_sem'));
 
-        if (get_config('SEMINAR_LOCK_ENABLE') && $perm->have_perm('admin')) {
-            $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperren'), 'admin_lock.php?list=TRUE'));
-        }
+            if ($perm->have_perm($sem_create_perm)) {
+                $navigation->addSubNavigation('copy', new Navigation(_('Veranstaltung kopieren'), 'copy_assi.php?list=TRUE&new_session=TRUE'));
+                $navigation->addSubNavigation('create', new Navigation(_('Neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
 
-        $navigation->addSubNavigation('aux_data', new Navigation(_('Zusatzangaben'), 'admin_aux.php?list=TRUE'));
-        $this->addSubNavigation('course', $navigation);
+                if (get_config('ALLOW_DOZENT_ARCHIV') || $perm->have_perm('admin')) {
+                    $navigation->addSubNavigation('archive', new Navigation(_('Archivieren'), 'archiv_assi.php?list=TRUE&new_session=TRUE'));
+                }
 
-        // institute administration
-        $navigation = new Navigation(_('Einrichtungen'));
+                if (get_config('ALLOW_DOZENT_VISIBILITY') || $perm->have_perm('admin')) {
+                    $navigation->addSubNavigation('visibility', new Navigation(_('Sichtbarkeit'), 'admin_visibility.php?list=TRUE'));
+                }
+            }
 
-        if ($perm->have_perm('admin')) {
+            if (get_config('SEMINAR_LOCK_ENABLE') && $perm->have_perm('admin')) {
+                $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperren'), 'admin_lock.php?list=TRUE'));
+            }
+
+            $navigation->addSubNavigation('aux_data', new Navigation(_('Zusatzangaben'), 'admin_aux.php?list=TRUE'));
+            $this->addSubNavigation('course', $navigation);
+
+
+            // institute administration
+            $navigation = new Navigation(_('Einrichtungen'));
+
             $navigation->setURL('admin_institut.php?list=TRUE&quit=1');
             $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'admin_institut.php?list=TRUE'));
             $navigation->addSubNavigation('faculty', new Navigation(_('Mitarbeiter'), 'inst_admin.php?list=TRUE'));
             $navigation->addSubNavigation('groups', new Navigation(_('Gruppen / Funktionen'), 'admin_roles.php?list=TRUE'));
-        }
 
-        $navigation->addSubNavigation('news', new Navigation(_('Ankündigungen'), 'admin_news.php?list=TRUE&view=news_inst'));
 
-        if (get_config('VOTE_ENABLE')) {
-            $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_inst'));
-            $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_inst'));
-        }
+            $navigation->addSubNavigation('news', new Navigation(_('Ankündigungen'), 'admin_news.php?list=TRUE&view=news_inst'));
 
-        if (get_config('LITERATURE_ENABLE')) {
-            $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php?list=TRUE&view=literatur_inst'));
-        }
+            if (get_config('VOTE_ENABLE')) {
+                $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_inst'));
+                $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_inst'));
+            }
 
-        if ($perm->have_perm('admin'))
-            $navigation->addSubNavigation('modules', new Navigation(_('Inhaltselemente'), 'admin_modules.php?list=TRUE&view=modules_inst'));
+            if (get_config('LITERATURE_ENABLE')) {
+                $navigation->addSubNavigation('literature', new Navigation(_('Literatur'), 'admin_lit_list.php?list=TRUE&view=literatur_inst'));
+            }
 
-        if (get_config('EXTERN_ENABLE') && $perm->have_perm('admin')) {
-            $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_inst'));
-        }
+            if ($perm->have_perm('admin'))
+                $navigation->addSubNavigation('modules', new Navigation(_('Inhaltselemente'), 'admin_modules.php?list=TRUE&view=modules_inst'));
 
-        if ($perm->have_perm("root") || ($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') != 'none')) {
-            $navigation->addSubNavigation('create', new Navigation(_('Neue Einrichtung anlegen'), 'admin_institut.php?i_view=new'));
-        }
+            if (get_config('EXTERN_ENABLE') && $perm->have_perm('admin')) {
+                $navigation->addSubNavigation('external', new Navigation(_('Externe Seiten'), 'admin_extern.php?list=TRUE&view=extern_inst'));
+            }
 
-        $this->addSubNavigation('institute', $navigation);
+            if ($perm->have_perm("root") || ($perm->is_fak_admin() && get_config('INST_FAK_ADMIN_PERMS') != 'none')) {
+                $navigation->addSubNavigation('create', new Navigation(_('Neue Einrichtung anlegen'), 'admin_institut.php?i_view=new'));
+            }
 
-        // global config / user administration
-        if ($perm->have_perm('admin')) {
+            $this->addSubNavigation('institute', $navigation);
+
+            // global config / user administration
             $navigation = new Navigation(_('Globale Einstellungen'));
 
             if (!get_config('RESTRICTED_USER_MANAGEMENT') || $perm->have_perm('root')) {
@@ -199,10 +200,6 @@ class AdminNavigation extends Navigation
         if ($perm->have_perm('root')) {
             $navigation->addSubNavigation('plugins', new Navigation(_('Pluginverwaltung'), 'dispatch.php/plugin_admin'));
             $navigation->addSubNavigation('roles', new Navigation(_('Rollenverwaltung'), 'dispatch.php/role_admin'));
-        }
-
-        if (get_config('EXPORT_ENABLE')) {
-            $navigation->addSubNavigation('export', new Navigation(_('Export'), 'export.php'));
         }
 
         if ($perm->have_perm('admin')) {

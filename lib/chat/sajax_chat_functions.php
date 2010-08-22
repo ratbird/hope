@@ -84,14 +84,14 @@ function get_chat_status($chatid){
             if ($chatServer->getPerm($user->id,$chatid)){
                 ?>
                 <a href="javascript:<?=(($chatServer->chatDetail[$chatid]['password']) ? "doUnlock();" : "doLock();")?>">
-                <?=(($chatServer->chatDetail[$chatid]['password']) ? Assets::img('icons/blue/lock-locked.png',  array('title' => _("Zugangsschutz für diesen Chat aufheben"))) : Assets::img('icons/blue/lock-unlocked.png',  array('title' => _("Diesen Chat absichern")))) ?>
+                <?=($chatServer->chatDetail[$chatid]['password'] ? Assets::img('icons/16/white/lock-locked.png',  array('title' => _("Zugangsschutz für diesen Chat aufheben"))) : Assets::img('icons/16/white/lock-unlocked.png',  array('title' => _("Diesen Chat absichern")))) ?>
                 </a>
                 <?
             } else {
-				(($chatServer->chatDetail[$chatid]['password']) ? Assets::img('icons/blue/lock-locked.png',  array('title' => _("Dieser Chat ist zugangsbeschränkt."))) : Assets::img('icons/blue/lock-unlocked.png',  array('title' => _("Dieser Chat ist nicht zugangsbeschränkt.")))) ?>
+                echo $chatServer->chatDetail[$chatid]['password'] ? Assets::img('icons/16/white/lock-locked.png',  array('title' => _("Dieser Chat ist zugangsbeschränkt."))) : Assets::img('icons/16/white/lock-unlocked.png',  array('title' => _("Dieser Chat ist nicht zugangsbeschränkt.")));
             }
             if (count($chatServer->chatDetail[$chatid]['log'])){
-                Assets::img('icons/16/grey/log.png', array('class' => 'text-top', 'title' =>_("Dieser Chat wird aufgezeichnet."))) ?>
+                echo Assets::img('icons/16/grey/log.png', array('class' => 'text-top', 'title' =>_("Dieser Chat wird aufgezeichnet.")));
             }
             ?>
             <b>Chat - <?=htmlReady($chatServer->chatDetail[$chatid]["name"])?></b>
@@ -103,7 +103,7 @@ function get_chat_status($chatid){
                 if ($chat_log['start']){
                     ?>
                     <a href="javascript:doLogSend();">
-                    <?= Assets::img('icons/16/blue/download.png', tooltip(_("Download des letzten Chatlogs"))) ?>
+                    <?= Assets::img('icons/16/white/download.png', tooltip(_("Download des letzten Chatlogs"))) ?>
                     </a>
                     <?
                 }

@@ -277,7 +277,7 @@ if (check_ticket($_REQUEST['studipticket'])){
             $username = get_username($u_id);
             $question = sprintf(_('Möchten Sie wirklich den User **%s** löschen ?'), $username);
             echo $GLOBALS['template_factory']->
-                 render('shared/question_form.php',
+                 render('usermanagement/question_form.php',
                         array('action' => UrlHelper::getLink('',array("studipticket" => get_ticket(), 'u_kill_id' => $u_id)),
                               'question' => $question,
                               'elements' => array('<input id="u_kill_documents" name="u_kill_documents" value="1" checked type="checkbox">

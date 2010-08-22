@@ -348,7 +348,9 @@ function ShowContact ($contact_id)
                         ." <a href=\"$PHP_SELF?view=$view&cmd=delete&contact_id=$contact_id&open=$open\">"
                         .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Kontakt löschen")))
                         ." </a></td></tr>"
-                        ."<tr><td colspan=\"2\" class=\"steelgraulight\" align=\"center\"><a href=\"$PHP_SELF?view=$view&filter=$filter\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumgraurauf.gif\" border=\"0\" ".tooltip(_("Kontakte schließen"))."></a></td></tr>";
+                        ."<tr><td colspan=\"2\" class=\"steelgraulight\" align=\"center\"><a href=\"$PHP_SELF?view=$view&filter=$filter\">"
+                        .Assets::img('icons/16/blue/arr_1up.png', array('class' => 'text-top', 'title' =>_('Kontakte schließen')))
+						."</a></td></tr>";
         } else {
             if ($forum["jshover"]==1) { // Hovern
                 $hoverlink = "<a href=\"$PHP_SELF?view=$view&filter=$filter&open=".$contact_id."#anker\" ";

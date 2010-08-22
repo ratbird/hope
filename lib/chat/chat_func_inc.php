@@ -177,7 +177,7 @@ function chat_get_content($chatid, $chatter, $chatinv, $password, $is_active, $c
             $ret .= '<br>'._("Ihre gespeicherten Aufzeichnungen:");
             $ret .= '<ol style="margin:3px;padding:3px;">';
             foreach($_SESSION['chat_logs'][$chatid] as $log_id => $chat_log){
-                $ret .= '<li style="list-style-image:url('.$pic_path.'file.gif);list-style-position:inside">';
+                $ret .= '<li style="list-style-image:url('.Assets::image_path('icons/16/grey/log.png').');list-style-position:inside">';
                 $ret .= '<a href="#" onclick="window.open(\'chat_dispatcher.php?target=chat_dummy.php&log_id='.$log_id.'&chatid='.$chatid.'\', \'chat_dummy\', \'scrollbars=no,width=100,height=100,resizable=no\');return false;">';
                 $ret .= _("Start") . ': ' . strftime('%X', $chat_log['start']) . ', ' . (int)count($chat_log['msg']) . ' ' . _("Zeilen");
                 $ret .= '</li>';

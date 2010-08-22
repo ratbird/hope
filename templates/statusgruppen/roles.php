@@ -52,7 +52,7 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
     </td>
     <td width="1%" class="printhead" align="right" valign="bottom" nowrap>
         <? if ($role['role']->hasFolder()) :
-            echo Assets::img('icons/16/blue/documents.png');
+            echo Assets::img('icons/16/blue/files.png');
         endif; ?>
 
         &nbsp;

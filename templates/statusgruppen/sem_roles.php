@@ -17,10 +17,10 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
     </td>
     <td width="5%" class="<?= $topic_class ?>" align="right" colspan="3" nowrap>
         <? if ($role['role']->hasFolder()) :
-            echo Assets::img('icons/16/blue/documents.png', array('title' => _("Dateiordner vorhanden")));
+            echo Assets::img('icons/16/grey/files.png', array('title' => _("Dateiordner vorhanden")));
         endif; ?>
         <? if ($role['role']->getSelfAssign()) :
-            echo Assets::img('icons/16/blue/person.png', array('title' => _("Personen können sich dieser Gruppe selbst zuordnen")));
+            echo Assets::img('icons/16/grey/person.png', array('title' => _("Personen können sich dieser Gruppe selbst zuordnen")));
         endif; ?>
         <a href="<?= URLHelper::getLink('?cmd=editRole&role_id='.  $id) ?>">
             <?= Assets::img('icons/16/blue/edit.png', array('title' => _("Gruppe bearbeiten"))) ?>

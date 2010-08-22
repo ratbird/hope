@@ -307,7 +307,7 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
         echo "\n<table width=\"80%\" cellpadding=\"0\" cellspacing=\"0\"><tr>";
             $content = '<div style="margin-bottom:10px;"><b>'
                         .'<a href="seminar_main.php?auswahl='.$db->f('Seminar_id')
-                        . '&redirect_to=folder.php&cmd=all"><img src="'.Assets::image_path('icons/16/blue/documents.png').'" align="absmiddle">'
+                        . '&redirect_to=folder.php&cmd=all"><img src="'.Assets::image_path('icons/16/blue/files.png').'" align="absmiddle">'
                         .getHeaderLine($db->f('Seminar_id')).'</a></b>
                         <br>'._("Status in der Veranstaltung:").'&nbsp;<b>'.$db->f('status').'</b></div>';
             $content .= '<div style="margin-bottom:10px;" align="center"><a href="'.$PHP_SELF.'?download_as_zip='.$db->f('Seminar_id').'">'
@@ -343,7 +343,7 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
         echo "\n<table width=\"80%\" cellpadding=\"0\" cellspacing=\"0\"><tr>";
             $content = '<div style="margin-bottom:10px;"><b>'
                         .'<a href="institut_main.php?auswahl='.$db->f('Institut_id')
-                        . '&redirect_to=folder.php&cmd=all"><img src="'.Assets::image_path('icons/16/blue/documents.png').'" align="absmiddle" hspace="4" >'
+                        . '&redirect_to=folder.php&cmd=all"><img src="'.Assets::image_path('icons/16/blue/files.png').'" align="absmiddle" hspace="4" >'
                         .getHeaderLine($db->f('Institut_id')).'</a></b>
                         <br>'._("Status in der Einrichtung:").'&nbsp;<b>'.$db->f('status').'</b></div>';
             $content .= '<div style="margin-bottom:10px;" align="center"><a href="'.$PHP_SELF.'?download_as_zip='.$db->f('Institut_id').'">'
@@ -422,7 +422,7 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
                 echo "\n<table width=\"80%\" cellpadding=\"0\" cellspacing=\"0\"><tr>";
                 $content = '<div style="margin-bottom:10px;"><b>'
                         .'<a href="about.php?username='.get_username($db->f('range_id'))
-                        . '&guestbook=open#guest"><img src="'.$pic_path.'/guestbook.gif" border="0" align="absmiddle" hspace="4" >'
+                        . '&guestbook=open#guest"><img src="'.Assets::image_path('icons/16/blue/guestbook.png').'" align="absmiddle" hspace="4" >'
                         . _("Gästebuch"). ': ' . htmlReady(get_fullname($db->f('range_id'))).'</a></b></div>';
 
                 $content .= show_posts_guestbook($user_id,$db->f('range_id'));

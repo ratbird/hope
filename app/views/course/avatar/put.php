@@ -9,12 +9,12 @@
 <p>
     <? if ($this->studygroup_mode) : ?>
     <a href="<?= URLHelper::getLink('dispatch.php/course/studygroup/edit/' . $course_id) ?>">
-      <?= Assets::img('forumgruen.gif', array('style' => 'vertical-align: baseline;')) ?>
+      <?= Assets::img('icons/16/blue/arr_1left.png', array('style' => 'vertical-align: baseline;')) ?>
       <?= _("zurück zur Studiengruppenadministration") ?>
     </a>
     <? else: ?>
     <a href="<?= URLHelper::getLink('dispatch.php/course/basicdata/view/' . $course_id) ?>">
-      <?= Assets::img('forumgruen.gif', array('style' => 'vertical-align: baseline;')) ?>
+      <?= Assets::img('icons/16/blue/arr_1left.png', array('style' => 'vertical-align: baseline;')) ?>
       <?= _("zurück zur Veranstaltungsadministration") ?>
     </a>
     <? endif ?>

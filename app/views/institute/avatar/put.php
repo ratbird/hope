@@ -8,7 +8,7 @@
 
 <p>
     <a href="<?= URLHelper::getLink('admin_institut.php?i_id=' . $institute_id) ?>">
-      <?= Assets::img('forumgruen.gif', array('style' => 'vertical-align: baseline;')) ?>
+      <?= Assets::img('icons/16/blue/arr_1left.png', array('style' => 'vertical-align: baseline;')) ?>
       <?= _("zurück zur Einrichtungsadministration") ?>
     </a>
 </p>

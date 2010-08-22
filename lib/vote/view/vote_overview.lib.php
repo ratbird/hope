@@ -463,9 +463,9 @@ reset($votes);
         else                        $html .="    <td class=\"steelkante\" colspan=\"9\">\n";
         $html .="    <center>\n";
         if (($mode == VOTE_STATE_ACTIVE) && ($openID == ("openallactive")))
-            $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID")."\"><img src=\"".VOTE_PATH_PICTURES."forumgraurauf.gif\" alt=\"".$label["arrow_close_all"]."\" title=\"".$label["arrow_close_all"]."\" border=0></a> \n";
+            $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID")."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1up.png')."\" alt=\"".$label["arrow_close_all"]."\" title=\"".$label["arrow_close_all"]."\" border=0></a> \n";
         elseif (($mode == VOTE_STATE_STOPPED) && ($openID == ("openallstopped")))
-            $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID")."\"><img src=\"".VOTE_PATH_PICTURES."forumgraurauf.gif\" alt=\"".$label["arrow_close_all"]."\" title=\"".$label["arrow_close_all"]."\" border=0></a> \n";
+            $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID")."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1up.png')."\" alt=\"".$label["arrow_close_all"]."\" title=\"".$label["arrow_close_all"]."\" border=0></a> \n";
         else
             $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID&openID=openall".$mode."#openvote")."\"><img src=\"".VOTE_PATH_PICTURES."images/icons/16/blue/arr_1down.png\" alt=\"".$label["arrow_open_all"]."\" title=\"".$label["arrow_open_all"]."\" border=0></a> \n";
         $html .="    </center></td>\n"

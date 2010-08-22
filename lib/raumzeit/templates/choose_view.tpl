@@ -13,14 +13,14 @@
     if ($tpl['selected'] == $key) { ?>
         <TD class="steelgraulight_shadow" nowrap="nowrap" valign="middle">
             &nbsp;
-            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/forumrot_indikator.gif" align="middle">
+            <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
             <FONT size="-1"><?=$val?></FONT> &nbsp;
         </TD>
 <? } else { ?>
         <TD class="steelkante" nowrap="nowrap" valign="middle">
             &nbsp;
             <A href="<?= URLHelper::getLink('themen.php?cmd=changeViewMode&newFilter=' . $key) ?>">
-                <?= Assets::img('forum_indikator_grau', array('align' => 'middle')) ?>
+                <?= Assets::img('icons/16/blue/arr_1right.png', array('align' => 'text-top')) ?>
                 <font color="#555555" size="-1"><?=$val?></font>
             </A>
             &nbsp;

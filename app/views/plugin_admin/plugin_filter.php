@@ -11,6 +11,6 @@
     </select>
 
     <noscript>
-        <input type="image" class="middle" name="show" src="<?= Assets::image_path('GruenerHakenButton.png') ?>">
+        <input type="image" class="middle" name="show" src="<?= Assets::image_path('icons/16/blue/accept.png') ?>">
     </noscript>
 </form>

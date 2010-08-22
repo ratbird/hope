@@ -1249,7 +1249,7 @@ function printcontent ($breite, $write = FALSE, $inhalt, $edit, $printout = TRUE
         $print .= "<br><br><div align=\"center\">$edit</div><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"6\" border=\"0\">";
         if ($addon!="")
             if (substr($addon,0,5)=="open:") // es wird der öffnen-Pfeil mit Link ausgegeben
-                $print .= "</td><td valign=\"middle\" class=\"steel1\" nowrap><a href=\"".substr($addon,5)."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumgrau4.gif\" align=\"middle\" border=\"0\"".tooltip(_("Bewertungsbereich öffnen"))."></a>&nbsp;";
+                $print .= "</td><td valign=\"middle\" class=\"steel1\" nowrap><a href=\"".substr($addon,5)."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1left.png')."\" align=\"middle\" border=\"0\"".tooltip(_("Bewertungsbereich öffnen"))."></a>&nbsp;";
             else {              // es wird erweiterter Inhalt ausgegeben
                 $print .= "</td><td class=\"steelblau_schatten\" nowrap>";
                 $print .= "<font size=\"-2\" color=\"#444444\">$addon";

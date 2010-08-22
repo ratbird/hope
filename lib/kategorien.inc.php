@@ -66,12 +66,12 @@ function print_freie($username) {
             echo ">" . _("f&uuml;r andere unsichtbar") . "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
             if ($count){
                 echo "\n".'<a href="'.URLHelper::getLink('?freie=order_freie&direction=up&username='.$username.'&view='.$view.'&cat_id=' . $db->f('kategorie_id'))
-                . '">' . Assets::img('icons/16/yelloq/arr_2up.png', array('class' => 'text-top', 'title' =>_('Kategorie nach oben verschieben'))) 
+                . '">' . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('Kategorie nach oben verschieben'))) 
                	. '</a>';
             }
             if (($count+$hidden_count) != ($db->num_rows()-1) ){
                 echo "\n".'<a href="'.URLHelper::getLink('?freie=order_freie&direction=down&username='.$username.'&view='.$view.'&cat_id=' . $db->f("kategorie_id"))
-                . '">' . Assets::img('icons/16/yelloq/arr_2down.png', array('class' => 'text-top', 'title' =>_('Kategorie nach unten verschieben'))) 
+                . '">' . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' =>_('Kategorie nach unten verschieben'))) 
                 . '</a>';
             }
             echo "<br>\n&nbsp;</blockquote></td></tr>\n";

@@ -992,7 +992,7 @@ if ($view == 'Studium') {
                 echo '<input type="CHECKBOX" name="fach_abschluss_delete[]" value="'.$studiengang_id.'">';
             } else {
                 echo '<td class="'.$cssSw->getClass().'">' . htmlReady($details['semester']). '</td><td class="' . $cssSw->getClass().'" align="center">';
-                echo '<img src="'. $GLOBALS['ASSETS_URL'] . 'images/haken_transparent.gif">';
+                echo Assets::img('icons/16/grey/accept.png', array('class' => 'text-top'));
             }
 
             echo "</td><tr>\n";
@@ -1060,9 +1060,9 @@ if ($view == 'Studium') {
                 if ($allow_change_in) {
                     echo '<input type="CHECKBOX" name="inst_delete[]" value="'.$inst_id.'">';
                 } else {
-                    echo '<img src="'. $GLOBALS['ASSETS_URL'] . 'images/haken_transparent.gif">';
+	                echo Assets::img('icons/16/grey/accept.png', array('class' => 'text-top'));
                 }
-                echo "</td></tr>\n";
+                echo "</td></tr>\n";   
                 $i++;
                 $flag = TRUE;
             }
@@ -1124,7 +1124,7 @@ if ($view == 'userdomains') {
         if ($allow_change_ud){
             echo '<input type="CHECKBOX" name="userdomain_delete[]" value="'.$domain->getID().'">';
         } else {
-            echo '<img src="'. $GLOBALS['ASSETS_URL'] . 'images/haken_transparent.gif" border="0">';
+            echo Assets::img('icons/16/grey/accept.png', array('class' => 'text-top'));
         }
         echo "</td><tr>\n";
         $i++;

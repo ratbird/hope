@@ -22,7 +22,7 @@
       </tr>
       <tr>
         <td align="center" width="1%" valign="top">
-            <?= Assets::img('ausruf_small2') ?>
+            <?= Assets::img('icons/16/black/group.png') ?>
         </td>
         <td width="99%" align="left">
             <?= _("Wenn bei einer Gruppe der Selbsteintrag aktivert ist, können sich Teilnehmer selbst eintragen und austragen.")?>
@@ -30,7 +30,7 @@
       </tr>
       <tr>
                 <td align="center" width="1%" valign="top">
-                    <?= Assets::img('link_intern') ?>
+                    <?= Assets::img('icons/16/black/question.png') ?>
                 </td>
                 <td width="99%" align="left">
                     <?
@@ -55,7 +55,7 @@
 
       <tr>
                 <td align="center" width="1%" valign="top">
-                    <?= Assets::img('einst') ?>
+                     <?= ($self_assign_all) ? Assets::img('icons/16/black/checkbox-checked.png') : Assets::img('icons/16/black/checkbox-unchecked.png') ?>
                 </td>
                 <td width="99%" align="left">
                     <? if ($self_assign_all) : ?>
@@ -70,7 +70,7 @@
 
       <tr>
                 <td align="center" width="1%" valign="top">
-                    <?= Assets::img('einst') ?>
+                    <?= ($self_assign_exclusive) ? Assets::img('icons/16/black/checkbox-checked.png') : Assets::img('icons/16/black/checkbox-unchecked.png') ?>
                 </td>
                 <td width="99%" align="left">
                     <? if ($self_assign_exclusive) : ?>

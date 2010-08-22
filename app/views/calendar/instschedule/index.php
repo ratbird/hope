@@ -42,7 +42,7 @@ foreach (array_reverse($semesters) as $semester) :
     $semester_chooser .= '>'. $semester['name'] .'</option>';
 endforeach;
 $semester_chooser .= '</select> ';
-$semester_chooser .= '<input type="image" src="'. Assets::image_path('GruenerHakenButton.png') .'"></form>';
+$semester_chooser .= '<input type="image" src="'. Assets::image_path('icons/16/blue/accept.png') .'"></form>';
 
 $infobox['content'][1]['eintrag'][] = array (
     'text' => $semester_chooser,

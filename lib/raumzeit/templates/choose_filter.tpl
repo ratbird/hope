@@ -24,14 +24,14 @@ if ( (!$tpl['forceShowAll']) && (sizeof($tpl['semester']) <= 2)) {
         if ($tpl['selected'] == $key) { ?>
             <TD class="steelgraulight_shadow" nowrap="nowrap" valign="middle" width="117" height="20">
                 &nbsp;
-                <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/forumrot_indikator.gif" align="middle">
-                <FONT size="-1"><?=$val?></FONT>
+                <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
+				<FONT size="-1"><?=$val?></FONT>
             </TD>
     <? } else { ?>
             <TD class="steelkante" nowrap="nowrap" valign="middle" width="117" height="20">
                 &nbsp;
                 <a href="<?= URLHelper::getLink('?cmd=applyFilter&newFilter=' . $key) ?>">
-                    <?= Assets::img('forum_indikator_grau', array('align' => 'middle')) ?>
+                    <?= Assets::img('icons/16/blue/arr_1right.png', array('align' => 'text-top')) ?>
                     <font color="#555555" size="-1"><?=$val?></font>
                 </A>
                 &nbsp;

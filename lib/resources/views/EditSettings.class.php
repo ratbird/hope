@@ -294,7 +294,7 @@ class EditSettings {
                                     <?
                                 } else {
                                     ?>
-                                            <?=Assets::img('icons/16/blue/decline/trash.png', array('class' => 'text-top', 'title' => _('Löschen der Eigenschaft nicht möglich, Systemobjekt!'))) ?>
+                                            <?=Assets::img('icons/16/grey/decline/trash.png', array('class' => 'text-top', 'title' => _('Löschen der Eigenschaft nicht möglich, Systemobjekt!'))) ?>
                                     <?
                                 }
                                 ?>

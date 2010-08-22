@@ -280,10 +280,10 @@ if (check_ticket($_REQUEST['studipticket'])){
                  render('shared/question_form.php',
                         array('action' => UrlHelper::getLink('',array("studipticket" => get_ticket(), 'u_kill_id' => $u_id)),
                               'question' => $question,
-                              'elements' => array('<label style="padding-left:0.5em" for="u_kill_documents">'._("Dokumente löschen?").'</label>
-                                                   <input id="u_kill_documents" name="u_kill_documents" value="1" checked type="checkbox">',
-                                                  '<label style="padding-left:0.5em" for="u_kill_send_mail">'._("Emailbenachrichtigung verschicken?").'</label>
-                                                   <input id="u_kill_send_mail" name="u_kill_send_mail" value="1" checked type="checkbox">'
+                              'elements' => array('<input id="u_kill_documents" name="u_kill_documents" value="1" checked type="checkbox">
+                                                  <label style="padding-left:0.5em" for="u_kill_documents">'._("Dokumente löschen?").'</label>',
+                                                  '<input id="u_kill_send_mail" name="u_kill_send_mail" value="1" checked type="checkbox">
+                                                  <label style="padding-left:0.5em" for="u_kill_send_mail">'._("Emailbenachrichtigung verschicken?").'</label>'
                                                  ),
                               'approvalbutton' => makebutton('ja','input', _("Diesen Nutzer löschen."),'u_kill_approved'),
                               'disapprovalbutton' => makebutton('nein', 'input', _("Löschen abbrechen"),''))

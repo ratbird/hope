@@ -54,7 +54,7 @@ $infobox['content'][1]['eintrag'][] = array (
 
 $infobox['content'][1]['eintrag'][] = array (
     'text' => $hidden_text,
-    'icon' => '"icons/16/black/info.png"
+    'icon' => 'icons/16/black/info.png'
 );
 
 ?>

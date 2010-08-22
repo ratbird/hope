@@ -59,7 +59,7 @@ function get_my_sem_values(&$my_sem) {
     while($db2->next_record()) {
         if ($db2->f('count')) {
             $nav = new Navigation('files', 'folder.php?cmd=tree');
-            $nav->setImage(Assets:images('icons/16/grey/documents.png'), array('title' => sprintf(_('%s Dokumente'), $db2->f('count'))));
+            $nav->setImage(Assets::images('icons/16/grey/documents.png'), array('title' => sprintf(_('%s Dokumente'), $db2->f('count'))));
             $my_sem[$db2->f('seminar_id')]['files'] = $nav;
         }
     }

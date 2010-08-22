@@ -273,7 +273,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         }
         return true;
     }
-    
+
     function execCommandInsertFak(){
         $studip_object_id = $_REQUEST['insert_fak'];
         $parent_id = 'root';
@@ -297,7 +297,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         }
         return true;
     }
-    
+
     function execCommandAssertDeleteItem(){
         $item_id = $_REQUEST['item_id'];
         if ($this->isParentAdmin($item_id)){
@@ -506,7 +506,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         if ($item_id == $this->edit_item_id )
             return $this->getEditItemContent();
         if ($item_id == $this->move_item_id){
-            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben markiert. Bitte w&auml;hlen Sie ein Einfügesymbol %s aus, um das Element zu verschieben."), "<img src=\"".Assets::image_path('icons/16/yellow/arr2_right.png')."\" "images/move.gif\" border=\"0\" " .tooltip(_("Einfügesymbol")) . ">");
+            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben markiert. Bitte w&auml;hlen Sie ein Einfügesymbol %s aus, um das Element zu verschieben."), "<img src=\"".Assets::image_path('icons/16/yellow/arr2_right.png')."\" " .tooltip(_("Einfügesymbol")) . ">");
             }
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt\">";
         $content .= $this->getItemMessage($item_id);

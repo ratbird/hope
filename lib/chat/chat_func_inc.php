@@ -187,7 +187,7 @@ function chat_get_content($chatid, $chatter, $chatinv, $password, $is_active, $c
 
         }
     } else {
-        $ret .=  Assets::img('icons/16/grey/decline/chat.png', array('class' => 'text-top')); 
+        $ret .=  Assets::img('icons/16/grey/decline/chat.png', array('class' => 'text-top'));
         $ret .= "&nbsp;&nbsp;". _("Um diesen Chatraum zu betreten, brauchen sie eine g&uuml;ltige Einladung.");
     }
     $ret .= "</p></td><td class=\"steel1\" width=\"50%\" valign=\"center\"><p class=\"info\">";
@@ -239,7 +239,7 @@ function chat_get_online_icon($user_id = false, $username = false, $pref_chat_id
             }
             $ret .= "\">".Assets::img('icons/16/blue/add/chat.png', array('title' => _("zum Chatten einladen"), 'class' => 'text-bottom'))."</a>";
         } else {
-            $ret = Assets::img('icons/16/blue/chat.png', array('title' => _("Sie haben in keinem aktiven Chatraum die Berechtigung andere NutzerInnen einzuladen"), 'class' => 'text-bottom'));
+            $ret = Assets::img('icons/16/grey/decline/chat.png', array('title' => _("Sie haben in keinem aktiven Chatraum die Berechtigung andere NutzerInnen einzuladen"), 'class' => 'text-bottom'));
         }
         return $ret;
     } else {

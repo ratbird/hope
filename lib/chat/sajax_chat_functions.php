@@ -120,7 +120,7 @@ function get_chat_status($chatid){
             <?= Assets::img('icons/16/white/info.png', array('title' => _("Chat Kommandos einblenden"), 'class' => 'text-top')) ?>
             </a>
             <a href="<?=$CANONICAL_RELATIVE_PATH_STUDIP?>show_smiley.php" target="_blank">
-            <img src="<?= $GLOBALS['DYNAMIC_CONTENT_URL'] ?>/smile/asmile.gif" <?=tooltip(_("Alle verfügbaren Smileys anzeigen"))?>>
+            <?= Assets::img('icons/16/white/smiley.png', array('class' => 'text-top', 'title' => _("Alle verfügbaren Smileys anzeigen"))) ?>
             </a></td>
         </tr>
     </table>

@@ -54,7 +54,7 @@ $infobox['content'][] = array(
 ?>
 
 <div style="padding-left:0.5em; background-color: white; width: 100%">
-  <h2 class="smashbox_kategorie"><?=_("Grundeinstellungen");?></h2>
+  <h1 class="smashbox_kategorie"><?=_("Grundeinstellungen");?></h1>
 
   <div class="smashbox_stripe">
       <div style="margin-left: 1.5em;">
@@ -99,7 +99,7 @@ $infobox['content'][] = array(
          <br style="clear: both;">
   </div>
 
-  <h2 class="smashbox_kategorie"><?=_("Weitere Inhaltselemente");?></h2>
+  <h1 class="smashbox_kategorie"><?=_("Weitere Inhaltselemente");?></h1>
 
   <div class="smashbox_stripe">
       <div style="margin-left: 1.5em;">

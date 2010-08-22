@@ -118,15 +118,14 @@ $arguments = array();
 
 //Admin-Abfrage
 $fields[] = 'user_inst.inst_perms';
-$tables[] = 'JOIN user_inst USING (user_id)';
-$filter[] = "IF(:inst_id != '0', user_inst.Institut_id = :inst_id, TRUE)";
-$filter[] = "user_inst.inst_perms != 'user'";
+$tables[] = 'LEFT JOIN user_inst USING (user_id)';
+$filter[] = "IF(:inst_id != '0', user_inst.Institut_id = :inst_id AND user_inst.inst_perms != 'user', TRUE)";
 $arguments[":inst_id"] = $inst_id;
 
 
 //Admin-Abfrage
 $fields[] = 'seminar_user.status';
-$tables[] = 'JOIN seminar_user USING (user_id)';
+$tables[] = 'LEFT JOIN seminar_user USING (user_id)';
 $filter[] = "IF(:sem_id != '0', seminar_user.Seminar_id = :sem_id, TRUE)";
 $arguments[":sem_id"] = $sem_id;
 
@@ -148,6 +147,7 @@ if ($name || $inst_id || $sem_id)
 {
     $statement = $db->prepare($query);
     $statement->execute($arguments);
+    print $query;
     $result = $statement->fetchAll();
 
     foreach ($result as $row)

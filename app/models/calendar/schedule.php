@@ -190,7 +190,7 @@ class CalendarScheduleModel
 
                     $entry['icons'][] = array(
                         'url'   => $bind_url,
-                        'image' => 'icons/16/blue/visibility-visible.png',
+                        'image' => Assets::image_path('icons/16/white/visibility-visible.png'),
                         'onClick' => 'STUDIP.Calendar.noNewEntry = true;',
                         'title' => _("Diesen Eintrag wieder einblenden")
                     );
@@ -202,7 +202,7 @@ class CalendarScheduleModel
                                 . $seminar_id . '/' . $cycle->getMetaDateId());
                     $entry['icons'][] = array(
                         'url'     => $unbind_url,
-                        'image'   => 'hide',
+                        'image'   => Assets::image_path('icons/16/white/visibility-invisible.png'),
                         'onClick' => "STUDIP.Schedule.hideEntry(this, '$seminar_id', '". $cycle->getMetaDateId() ."'); return false;", 
                         'title'   => _("Dieses Eintrag ausblenden")
                     );

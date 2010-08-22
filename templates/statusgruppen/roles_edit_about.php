@@ -18,9 +18,9 @@ if (is_array($institutes) && sizeof($institutes) > 0) :
     </td>
     <td class="printhead" nowrap="nowrap" width="1%" valign="bottom">
         <? if ($pos_inst > 1) : ?>
-        <a href="<?= URLHelper::getLink('?view=Karriere&username='. $username .'&cmd=move&direction=up&move_inst='. $inst_id .'&studipticket='. get_ticket()) ?>"><?= Assets::img('icons/16/yellow/arr_2up'); ?></a>
+        <a href="<?= URLHelper::getLink('?view=Karriere&username='. $username .'&cmd=move&direction=up&move_inst='. $inst_id .'&studipticket='. get_ticket()) ?>"><?= Assets::img('icons/16/yellow/arr_2up.png'); ?></a>
         <? endif; if ($pos_inst < sizeof($institutes)) : ?>
-        <a href="<?= URLHelper::getLink('?view=Karriere&username='. $username .'&cmd=move&direction=down&move_inst='. $inst_id .'&studipticket='. get_ticket()) ?>"><?= Assets::img('icons/16/yellow/arr_2down'); ?></a>
+        <a href="<?= URLHelper::getLink('?view=Karriere&username='. $username .'&cmd=move&direction=down&move_inst='. $inst_id .'&studipticket='. get_ticket()) ?>"><?= Assets::img('icons/16/yellow/arr_2down.png'); ?></a>
         <? endif; ?>
         &nbsp;
     </td>

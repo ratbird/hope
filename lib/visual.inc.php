@@ -467,7 +467,7 @@ function format_wiki_comment($comment, $metainfo, $show_comment) {
         $comment = decodehtml($comment);
         $comment = preg_replace("/<.*>/U","",$comment);
         $metainfo = decodeHTML($metainfo);
-        return '<nowikilink><a href="javascript:void(0);" '.tooltip(sprintf("%s %s:\n%s",_("Kommentar von"),$metainfo,$comment),TRUE,TRUE) . "><img src=\"".$GLOBALS['ASSETS_URL']."images/icon-comment.gif\" border=0></a></nowikilink>";
+        return '<nowikilink><a href="javascript:void(0);" '.tooltip(sprintf("%s %s:\n%s",_("Kommentar von"),$metainfo,$comment),TRUE,TRUE) . "><img src=\"".$GLOBALS['ASSETS_URL']."images/comment.png\" border=0></a></nowikilink>";
     } else {
         echo "<p>Error: unknown show_comment value in format_wiki_comment: ".$show_comment."</p>";
         die();

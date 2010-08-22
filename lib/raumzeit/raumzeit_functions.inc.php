@@ -163,9 +163,9 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
         $tpl['ausruf'] .= '\n\n'.$val->getRoomRequestInfo();
         $request_status = $val->getRoomRequestStatus();
         if ($request_status == 'declined') {
-            $tpl['symbol'] = 'ausrufezeichen_rot';
+            $tpl['symbol'] = 'icons/16/red/exclaim.png';
         } else {
-            $tpl['symbol'] = 'pending.png';
+            $tpl['symbol'] = 'icons/16/grey/pause/date.png';
         }
     } else {
         $tpl['room_request'] = false;

@@ -521,7 +521,7 @@ function ForumIcon ($forumposting) {
             $bild = $GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-empty.png";
     } else {
         if ($forumposting["shrink"] == TRUE && $forumposting["lonely"]==FALSE) {
-            $bild = $GLOBALS['ASSETS_URL']."images/forum_shrink.gif";
+            $bild = $GLOBALS['ASSETS_URL']."images/icons/16/blue/forum-shrink.png";
             $addon = tooltip(sprintf(_("komprimierter Thread mit %s Postings"), $forumposting["shrinkcount"]));
         } else
             $bild = $GLOBALS['ASSETS_URL']."images/icons/16/blue/forum.png";

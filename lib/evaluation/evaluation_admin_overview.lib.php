@@ -250,7 +250,7 @@ class EvalOverview {
      $copyButton->addAttr ("style", "vertical-align:middle;");
      $copyButton->addAttr ("type", "image");
      $copyButton->addAttr ("name", "copy_public_template_button");
-     $copyButton->addAttr ("src", Assets::image_path('icons/16/yellow/arr_2down'));
+     $copyButton->addAttr ("src", Assets::image_path('icons/16/yellow/arr_2down.png'));
      $copyButton->addAttr ("border", "0");
      $copyButton->addAttr ("alt", _("Kopieren"));
      $copyButton->addAttr ("title", _("Diese öffentliche Evaluationsvorlagen zu den eigenen Evaluationsvorlagen kopieren"));

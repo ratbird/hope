@@ -133,7 +133,7 @@ define ("EVAL_PIC_ARROW_STOPPED_OPEN", Assets::image_path('images/icons/16/red/a
 define ("EVAL_PIC_TREE_ARROW", Assets::image_path('icons/16/blue/arr_1right.png'));
 define ("EVAL_PIC_TREE_ARROW_ACTIVE", Assets::image_path('icons/16/blue/arr_1down.png'));
 define ("EVAL_PIC_TREE_BLANC", Assets::image_path('forumleer.gif'));
-define ("EVAL_PIC_TREE_ROOT", Assets::image_path('eval-icon.gif'));
+define ("EVAL_PIC_TREE_ROOT", Assets::image_path('icons/16/grey/vote.png'));
 define ("EVAL_PIC_TREE_GROUP", Assets::image_path('eval_group.gif'));
 define ("EVAL_PIC_TREE_GROUP_FILLED", Assets::image_path('eval_group_filled.gif'));
 define ("EVAL_PIC_TREE_QUESTIONGROUP", Assets::image_path('eval_qgroup.gif'));

@@ -136,7 +136,7 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
                 <? }
             }
             if (count($chatServer->chatDetail[$chatid]['log'])){
-               echo Assets::img('icons/16/grey/log.png', array('class' => 'text-top', 'title' =>_("Dieser Chat wird aufgezeichnet.")));
+               echo Assets::img('icons/16/white/log.png', array('class' => 'text-top', 'title' =>_("Dieser Chat wird aufgezeichnet.")));
             }
             ?>
             <b>Chat - <?=htmlReady($chatServer->chatDetail[$chatid]["name"])?></b>
@@ -153,7 +153,7 @@ if (!$chatServer->isActiveUser($user->id,$chatid)) {
                 }
                 ?>
                 <a href="javascript:<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? "doLogStop();" : "doLogStart();")?>">
-                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? "stop_log.gif" : "start_log.gif")?>"
+                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? <?=Assets::image_path('icons/16/white/stop.png')?> : Assets::image_path('icons/16/white/start.png') : Assets::image_path('icons/16/white/stop.png'))?>"
                 <?=tooltip(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? _("Die Aufzeichnung für diesen Chat beenden.") : _("Eine Aufzeichnung für diesen Chat starten."))?>>
                 </a>
                 <?

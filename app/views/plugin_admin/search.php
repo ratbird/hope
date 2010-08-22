@@ -64,7 +64,7 @@
                 <td class="plugin_install">
                     <form action="<?= $controller->url_for('plugin_admin/install', $name) ?>" method="post">
                         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
-                        <input type="image" name="install" src="<?= Assets::image_path('install.png') ?>" title="<?= _('Plugin installieren') ?>">
+                        <input type="image" name="install" src="<?= Assets::image_path('icons/16/blue/install.png') ?>" title="<?= _('Plugin installieren') ?>">
                     </form>
                 </td>
             </tr>

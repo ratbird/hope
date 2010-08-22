@@ -849,7 +849,8 @@ if (isset($_GET['details']) || $showform ) {
 
             <? // links to everywhere
             echo "<tr><td class=\"steelgraulight\" colspan=3 align=\"center\">";
-            echo _("Profil") . " <a href=\"".URLHelper::getLink('about.php?username=' . $db->f("username")) . "\"><img class=\"middle\" src=\"".$GLOBALS['ASSETS_URL']."images/einst.gif\" ".tooltip(_("Zum Profil des Benutzers"))."></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            echo _("Profil") . " <a href=\"".URLHelper::getLink('about.php?username=' . $db->f("username")) . "\">";
+            echo Assets::img('icons/16/blue/person.png',  array('class' => 'text-top', 'title' => _("Zum Profil des Benutzers"))) . "</a> ";
             echo _("Nachricht an BenutzerIn") . " <a href=\"".URLHelper::getLink('sms_send.php?rec_uname=' . $db->f("username")) . "\">" . Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('Nachricht an den Benutzer verschicken'))) . "</a>";
             echo "</td></tr>";
             if ($perm->have_perm('root')){
@@ -862,7 +863,7 @@ if (isset($_GET['details']) || $showform ) {
                     echo "<tr><td class=\"steel2\" colspan=3 align=\"center\">";
                     echo "&nbsp;" . _("Log") . "&nbsp;";
                     echo '<a href="' . URLHelper::getLink('dispatch.php/event_log/show', array('search' => $db->f('username'), 'type' => 'user', 'object_id' => $db->f('user_id'))) .'">'.
-                    Assets::img('icons/16/blue/search.png', array('class' => 'text-top')).'</a>';
+                    Assets::img('icons/16/blue/log.png', array('class' => 'text-top')).'</a>';
                     echo "</td></tr>\n";
                 }
             }

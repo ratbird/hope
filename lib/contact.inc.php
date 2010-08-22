@@ -342,7 +342,7 @@ function ShowContact ($contact_id)
             }
             $lastrow =      "<tr><td colspan=\"2\" class=\"steel1\" align=\"right\">"
                         .$buddy
-                        ."<a href=\"$PHP_SELF?edit_id=$contact_id\"><img src=\"".$GLOBALS['ASSETS_URL']."images/einst.gif\" border=\"0\" ".tooltip(_("Editieren"))."></a>&nbsp; "
+                        ."<a href=\"$PHP_SELF?edit_id=$contact_id\">" . Assets::img('icons/16/blue/edit.png', array('class' => 'text-top', 'title' => _('Editieren'))) . "</a> "
                         ."<a href=\"contact_export.php?contactid=$contact_id\">"
                         .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Als vCard exportieren")))
                         ." <a href=\"$PHP_SELF?view=$view&cmd=delete&contact_id=$contact_id&open=$open\">"

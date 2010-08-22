@@ -38,11 +38,10 @@ include ("lib/include/header.php");   // Output of Stud.IP head
 ?>
 <table width="70%" border=0 cellpadding=0 cellspacing=0 align="center">
 <tr>
-    <td class="topic" colspan="2"><img src="<?=$GLOBALS['ASSETS_URL']?>images/einst.gif" border="0"> <b><?=_("Module in Stud.IP")?></b></td>
+    <td class="topic" colspan="2"><?= Assets::img('icons/16/white/seminar.png')?> <b><?=_("Module in Stud.IP")?></b></td>
 </tr>
 <tr>
     <td class="blank">
-    <blockquote>
         <?php if ($perm->have_perm('root') && get_config('STM_ENABLE') ) {?>
         <br><a href="stm_abstract_assi.php"><b><?=_("Allgemeine Module anlegen und bearbeiten")?></b></a><br>
         <font size=-1><?=_("Hier k&ouml;nnen Sie Allgemeine Module anlegen und bearbeiten.")?></font>
@@ -54,9 +53,11 @@ include ("lib/include/header.php");   // Output of Stud.IP head
         <font size=-1><?=_("Hier k&ouml;nnen Administratoren Konkrete Module anlegen und Modulverantwortliche Ihre Konkreten Module bearbeiten.")?></font>
         <br>
         <?php }?>
-    </blockquote>
+        <? if (!get_config('STM_ENABLE')) {
+            echo MessageBox::error(_('Diese Funktion ist deaktiviert. Bitte wenden Sie sich an Ihren Systemadministor'));
+        } ?>
     </td>
-    <td class="blank" align="right" valign="top"><img src="<?=$GLOBALS['ASSETS_URL']?>images/archiv.jpg" border="0"></td>
+    <td class="blank" align="right" valign="top"><img src="<?=$GLOBALS['ASSETS_URL']?>images/infobox/archiv.jpg" border="0"></td>
 </tr>
 </table>
 

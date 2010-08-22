@@ -21,7 +21,7 @@
 
             <? if ($plugin_name) : ?>
                 <br>
-                <?= strlen($plugin["description"]) > 0 ? Assets::img('ausruf_small3') : '' ?>
+                <?= strlen($plugin["description"]) > 0 ? Assets::img('icons/16/grey/info-circle.png') : '' ?>
                 <?= formatReady($plugin["description"]) ?><br>
                 <br>
                 <?= _("1. W&auml;hlen Sie mit <b>Durchsuchen</b> eine Datei von Ihrer Festplatte aus.") ?><br>

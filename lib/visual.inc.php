@@ -873,9 +873,9 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
     }
 
     if ($extern) {
-        $link_pic = '';
+        $link_pic = ' ';
     } elseif ($intern) {
-        $link_pic = Assets::img('icons/16/blue/link-intern.png', array('class' => 'text-top', 'title' =>_('interner Link')));
+        $link_pic = Assets::img('icons/16/blue/link-intern.png', array('class' => 'text-top', 'title' =>_('interner Link')))." ";
     } else {
         $link_pic = Assets::img('icons/16/blue/link-extern.png', array('class' => 'text-top', 'title' =>_('externer Link')))." ";
     }

@@ -68,9 +68,10 @@
 .ui-widget :active { outline: none; }
 
 /* Stud.IP special design for buttons */ 
-.ui-state-default.ui-element, .ui-button, .ui-button.ui-state-default, .ui-menu-item .ui-state-hover, .ui-dialog-titlebar-close.ui-state-hover, .ui-state-hover.ui-datepicker-prev-hover, .ui-state-hover.ui-datepicker-next-hover, .ui-datepicker-calendar .ui-state-default, .ui-slider-handle.ui-state-default { background: url(../images/steel_with_steel1_bg.jpg) 0px -3px repeat-x; border: thin solid #aaaaaa; border-top: thin solid #dddddd; border-left-color: #cccccc; }
+.ui-state-default.ui-element, .ui-button, .ui-button.ui-state-default, .ui-menu-item .ui-state-hover, .ui-dialog-titlebar-close.ui-state-hover, .ui-state-hover.ui-datepicker-prev-hover, .ui-state-hover.ui-datepicker-next-hover, .ui-datepicker-calendar .ui-state-default, .ui-slider-handle.ui-state-default { background: #ddddff; border: thin solid #aaaaaa; border-top: thin solid #dddddd; border-left-color: #cccccc; }
 .ui-state-active.ui-element, .ui-state-active.ui-button, .ui-datepicker-calendar .ui-state-active, .ui-slider-handle.ui-state-active { background: url(../images/steel4.jpg) 0px -3px repeat-x; border: thin solid #aaaaaa; border-top: none; border-left-color: #cccccc; }
 .ui-state-active.ui-widget-header, .ui-state-active.ui-accordion-header, .ui-state-active.ui-element { font-weight: bold; }
+.ui-autocomplete.ui-menu.ui-widget-content { background: #ffffff; border: thin solid #555555; }
 
 /* Interaction Cues
 ----------------------------------*/
@@ -302,7 +303,8 @@
 .ui-resizable-se { cursor: se-resize; width: 12px; height: 12px; right: 1px; bottom: 1px; }
 .ui-resizable-sw { cursor: sw-resize; width: 9px; height: 9px; left: -5px; bottom: -5px; }
 .ui-resizable-nw { cursor: nw-resize; width: 9px; height: 9px; left: -5px; top: -5px; }
-.ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}/* Selectable
+.ui-resizable-ne { cursor: ne-resize; width: 9px; height: 9px; right: -5px; top: -5px;}
+/* Selectable
 ----------------------------------*/
 .ui-selectable-helper { border:1px dotted black }
 /* Accordion
@@ -316,7 +318,8 @@
 .ui-accordion-icons .ui-accordion-header a { padding-left: 2.2em; }
 .ui-accordion .ui-accordion-header .ui-icon { position: absolute; left: .5em; top: 50%; margin-top: -8px; }
 .ui-accordion .ui-accordion-content { padding: 1em 2.2em; border-top: 0; margin-top: -2px; position: relative; top: 1px; margin-bottom: 2px; overflow: auto; display: none; zoom: 1; }
-.ui-accordion .ui-accordion-content-active { display: block; }/* Autocomplete
+.ui-accordion .ui-accordion-content-active { display: block; }
+/* Autocomplete
 ----------------------------------*/
 .ui-autocomplete { position: absolute; cursor: default; }	
 .ui-autocomplete-loading { background: white url('../images/vendor/jquery-ui/ui-anim_basic_16x16.gif') right center no-repeat; }

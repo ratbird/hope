@@ -125,7 +125,7 @@
                             <select name="default_homepage_visibility">
                                 <option value="">-- <?= _("bitte wählen"); ?> --</option>
                                 <option value="<?= VISIBILITY_ME; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_ME) ? ' selected="selected"' : '' ?>><?= _("nur mich selbst") ?></option>
-                                <option value="<?= VISIBILITY_BUDDIES; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_BUDDIES) ? ' selected="selected"' : '' ?>><?= _("Kontakte im Adressbuch") ?></option>
+                                <option value="<?= VISIBILITY_BUDDIES; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_BUDDIES) ? ' selected="selected"' : '' ?>><?= _("Buddies") ?></option>
                                 <?php if ($user_domains) { ?>
                                 <option value="<?= VISIBILITY_DOMAIN; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_DOMAIN) ? ' selected="selected"' : '' ?>><?= _("meine Nutzerdomäne") ?></option>
                                 <?php } ?>
@@ -143,7 +143,7 @@
                             <select name="all_homepage_visibility">
                                 <option value="">-- <?= _("bitte wählen"); ?> --</option>
                                 <option value="<?= VISIBILITY_ME; ?>"><?= _("nur mich selbst") ?></option>
-                                <option value="<?= VISIBILITY_BUDDIES; ?>"><?= _("Kontakte im Adressbuch") ?></option>
+                                <option value="<?= VISIBILITY_BUDDIES; ?>"><?= _("Buddies") ?></option>
                                 <?php if ($user_domains) { ?>
                                 <option value="<?= VISIBILITY_DOMAIN; ?>"><?= _("meine Nutzerdomäne") ?></option>
                                 <?php } ?>
@@ -162,7 +162,7 @@
                     <tr class="steelgraulight">
                         <td width="40%">&nbsp;</td>
                         <td align="center" width="<?= $user_domains ? '12%' : '15%'; ?>"><i><?= _('nur mich selbst'); ?></i></td>
-                        <td align="center" width="<?= $user_domains ? '12%' : '15%'; ?>"><i><?= _('Kontakte im Adressbuch'); ?></i></td>
+                        <td align="center" width="<?= $user_domains ? '12%' : '15%'; ?>"><i><?= _('Buddies'); ?></i></td>
                         <?php if ($user_domains) { ?>
                         <td align="center" width="12%"><i><?= _('Nutzerdomäne'); ?></i></td>
                         <?php } ?>

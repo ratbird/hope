@@ -4,9 +4,9 @@
 # Lifter003: TODO
 /**
 * ExternModuleTemplateDownload.class.php
-* 
-* 
-* 
+*
+*
+*
 *
 * @author       Peter Thienel <thienel@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -18,7 +18,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // ExternModuleTemplateDownload.class.php
-// 
+//
 // Copyright (C) 2007 Peter Thienel <thienel@data-quest.de>,
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
@@ -52,7 +52,7 @@ class ExternModuleTemplateDownload extends ExternModule {
 
     var $markers = array();
     var $args = array('seminar_id');
-    
+
     /**
     *
     */
@@ -63,7 +63,7 @@ class ExternModuleTemplateDownload extends ExternModule {
         $this->registered_elements = array(
                 'LinkInternTemplate', 'TemplateGeneric'
         );
-        
+
         $this->field_names = array (
                 _("Icon"),
                 _("Dateiname"),
@@ -72,34 +72,34 @@ class ExternModuleTemplateDownload extends ExternModule {
                 _("Gr&ouml;&szlig;e"),
                 _("Upload durch")
         );
-        
+
         parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
     }
-    
+
     function setup () {
         // extend $data_fields if generic datafields are set
     //  $config_datafields = $this->config->getValue("Main", "genericdatafields");
     //  $this->data_fields = array_merge((array)$this->data_fields, (array)$config_datafields);
-        
+
         // setup module properties
     //  $this->elements["LinkIntern"]->link_module_type = 2;
     //  $this->elements["LinkIntern"]->real_name = _("Link zum Modul MitarbeiterInnendetails");
-    
+
         $this->elements['TemplateGeneric']->real_name = _("Template");
         $this->elements['LinkInternTemplate']->link_module_type = array(2, 14);
         $this->elements['LinkInternTemplate']->real_name = _("Link zum Modul MitarbeiterInnendetails");
-    
+
     }
-    
+
     function toStringEdit ($open_elements = '', $post_vars = '',
             $faulty_values = '', $anker = '') {
-        
+
         $this->updateGenericDatafields('TemplateGeneric', 'user');
         $this->elements['TemplateGeneric']->markers = $this->getMarkerDescription('TemplateGeneric');
-        
+
         return parent::toStringEdit($open_elements, $post_vars, $faulty_values, $anker);
     }
-    
+
     function getMarkerDescription ($element_name) {
         $markers['TemplateGeneric'][] = array('__GLOBAL__', _("Globale Variablen (gültig im gesamten Template)."));
         $markers['TemplateGeneric'][] = array('###FILES-COUNT###', '');
@@ -136,10 +136,10 @@ class ExternModuleTemplateDownload extends ExternModule {
         $markers['TemplateGeneric'][] = array('<!-- END FILE -->');
         $markers['TemplateGeneric'][] = array('<!-- END FILES -->', '');
         $markers['TemplateGeneric'][] = array('<!-- END DOWNLOAD -->', '');
-    
+
         return $markers[$element_name];
     }
-    
+
     function getContent ($args = NULL, $raw = FALSE) {
         $db = new DB_Seminar();
         $error_message = "";
@@ -147,7 +147,7 @@ class ExternModuleTemplateDownload extends ExternModule {
             $args = array();
         }
         $content = array();
-        
+
         // check for valid range_id
         if(!$this->checkRangeId($this->config->range_id)) {
             $error_message = $GLOBALS['EXTERN_ERROR_MESSAGE'];
@@ -181,10 +181,10 @@ class ExternModuleTemplateDownload extends ExternModule {
         if (!$nameformat = $this->config->getValue('Main', 'nameformat')) {
             $nameformat = 'no_title_short';
         }
-        
+
         // generic data fields
         $generic_datafields = $this->config->getValue('TemplateGeneric', 'genericdatafields');
-        
+
         $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $seminar_id));
         $allowed_folders = $folder_tree->getReadableFolders('nobody');
         $query = "SELECT dokument_id, name, description, filename, d.mkdate, d.chdate, filesize, ";
@@ -244,9 +244,9 @@ class ExternModuleTemplateDownload extends ExternModule {
                             $content['FILES']['FILE'][$i]['FILE_ICON-HREF'] = $GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-generic.png';
                 }
                 $content['FILES']['FILE'][$i]['FILE_NO'] = $i + 1;
-                
+
                 $download_link = GetDownloadLink($db->f('dokument_id'), $db->f('filename'));
-                
+
                 $content['FILES']['FILE'][$i]['FILE_HREF'] = $download_link;
                 $content['FILES']['FILE'][$i]['FILE_NAME'] = ExternModule::ExtHtmlReady($db->f('name'));
                 $content['FILES']['FILE'][$i]['FILE_FILE-NAME'] = ExternModule::ExtHtmlReady($db->f('filename'));
@@ -254,7 +254,7 @@ class ExternModuleTemplateDownload extends ExternModule {
                                                      $this->config->getValue("Main", "lengthdesc")));
                 $content['FILES']['FILE'][$i]['FILE_UPLOAD-DATE'] = strftime($this->config->getValue("Main", "dateformat"), $db->f("mkdate"));
                 $content['FILES']['FILE'][$i]['FILE_SIZE'] = $db->f('filesize') > 1048576 ? round($db->f('filesize') / 1048576, 1) . " MB" : round($db->f("filesize") / 1024, 1) . " kB";
-                
+
                 $content['FILES']['FILE'][$i]['USERNAME'] = $db->f('username');
                 $content['FILES']['FILE'][$i]['FULLNAME'] = ExternModule::ExtHtmlReady($db->f('fullname') ? $db->f('fullname') : $db->f('author_name'));
                 $content['FILES']['FILE'][$i]['FIRSTNAME'] = ExternModule::ExtHtmlReady($db->f('Vorname'));
@@ -262,17 +262,18 @@ class ExternModuleTemplateDownload extends ExternModule {
                 $content['FILES']['FILE'][$i]['TITLEFRONT'] = ExternModule::ExtHtmlReady($db->f('title_front'));
                 $content['FILES']['FILE'][$i]['TITLEREAR'] = ExternModule::ExtHtmlReady($db->f('title_rear'));
                 $content['FILES']['FILE'][$i]['PERSONDETAIL-HREF'] = $this->elements['LinkInternTemplate']->createUrl('Persondetails', array('link_args' => 'username=' . $db->f('username')));
-                
+
                 // if user is member of a group then link name to details page
                 $link_persondetail = '';
                 if (GetRoleNames(GetAllStatusgruppen($this->config->range_id, $db->f('user_id')))) {
                     $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_PERSONDETAIL-HREF'] = $this->elements['LinkInternTemplate']->createUrl('Persondetails', array('link_args' => 'username=' . $db->f('username')));
-                    $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_FULLNAME'] = ExternModule::ExtHtmlReady($db->f('fullname') ? $db->f('fullname') : $db->f('author_name'));                    $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_FIRSTNAME'] = ExternModule::ExtHtmlReady($db->f('Vorname'));
+                    $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_FULLNAME'] = ExternModule::ExtHtmlReady($db->f('fullname') ? $db->f('fullname') : $db->f('author_name'));
+                    $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_FIRSTNAME'] = ExternModule::ExtHtmlReady($db->f('Vorname'));
                     $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_LASTNAME'] = ExternModule::ExtHtmlReady($db->f('Nachname'));
                     $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_TITLEFRONT'] = ExternModule::ExtHtmlReady($db->f('title_front'));
                     $content['FILES']['FILE'][$i]['PERSONDETAIL-LINK']['LINK_TITLEREAR'] = ExternModule::ExtHtmlReady($db->f('title_rear'));
                 }
-                
+
                 // generic data fields
                 if (is_array($generic_datafields)) {
                     $localEntries = DataFieldEntry::getDataFieldEntries($db->f('user_id'), 'user');
@@ -287,12 +288,12 @@ class ExternModuleTemplateDownload extends ExternModule {
                         $k++;
                     }
                 }
-                
+
                 $i++;
             }
         }
         $content['__GLOBAL__']['FILES-COUNT'] = $i;
-        
+
         return $content;
     }
 
@@ -300,20 +301,20 @@ class ExternModuleTemplateDownload extends ExternModule {
         if (!$language = $this->config->getValue("Main", "language"))
             $language = "de_DE";
         init_i18n($language);
-        
+
         echo $this->elements['TemplateGeneric']->toString(array('content' => $this->getContent($args), 'subpart' => 'DOWNLOAD'));
-        
+
     }
-    
+
     function printoutPreview () {
         if (!$language = $this->config->getValue("Main", "language"))
             $language = "de_DE";
         init_i18n($language);
-        
+
         echo $this->elements['TemplateGeneric']->toString(array('content' => $this->getContent($args), 'subpart' => 'DOWNLOAD', 'hide_markers' => FALSE));
-        
+
     }
-    
+
 }
 
 ?>

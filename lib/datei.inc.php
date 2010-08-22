@@ -1139,7 +1139,7 @@ function insert_link_db($range_id, $the_file_size, $refresh = FALSE) {
     $description = trim($description);      // laestige white spaces loswerden
     $name = trim($name);            // laestige white spaces loswerden
 
-    $url_parts = parse_url($the_link);
+    $url_parts = parse_url(remove_magic_quotes($the_link));
     $the_file_name = basename($url_parts['path']);
 
     if ($protect=="on") $protect = 1;

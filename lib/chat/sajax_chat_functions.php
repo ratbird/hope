@@ -109,7 +109,7 @@ function get_chat_status($chatid){
                 }
                 ?>
                 <a href="javascript:<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? "doLogStop();" : "doLogStart();")?>">
-                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? Assets::image_path('icons/16/white/stop.png') : Assets::image_path('icons/16/white/start.png')))?>"
+                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/<?=(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? Assets::image_path('icons/16/white/stop.png') : Assets::image_path('icons/16/white/start.png'))?>"
                     border="0" hspace="5" align="absmiddle"
                     <?=tooltip(($chatServer->chatDetail[$chatid]['log'][$user->id]) ? _("Die Aufzeichnung für diesen Chat beenden.") : _("Eine Aufzeichnung für diesen Chat starten."))?>>
                 </a>

@@ -78,7 +78,7 @@ elseif (Request::submitted('kill_accounts') && check_ticket(Request::option('stu
             $umanager->user_data = array();
             $umanager->msg = '';
             $umanager->getFromDatabase($udetail['user_id']);
-            
+
             if ($umanager->deleteUser(Request::int('delete_documents'))) {
                 $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
                 $msg[] = MessageBox::success(sprintf(_("Der Benutzer <em>%s</em> wurde gelöscht."), $uname), $details);
@@ -125,38 +125,37 @@ if (count($_kill_user)) {
     echo chr(10).'<div style="text-align:right">';
     echo chr(10).'<img '.makeButton('auswahlumkehr','src').' '.tooltip(_("Auswahl umkehren")) .' onClick="$(\'input[name^=selected_user]\').attr(\'checked\', function (_, v) { return !v; })">';
     echo chr(10).'</div>';
-    echo chr(10).'<table cellpadding="2" cellspacing="0" width="100%">';
+    echo chr(10).'<table class="default">';
     echo chr(10).'<tr>';
-    echo '<th align="left">' . _("Benutzername") . '</th>';
-    echo '<th align="left">' . _("Name (status)") . '</th>';
-    echo '<th align="left">' . _("Email") . '</th>';
-    echo '<th align="left">' . _("Authentifizierung") . '</th>';
-    echo '<th width="10">' . _("Löschen?") . '</th>';
+    echo '<th>' . _("Benutzername") . '</th>';
+    echo '<th>' . _("Name (status)") . '</th>';
+    echo '<th>' . _("Email") . '</th>';
+    echo '<th>' . _("Authentifizierung") . '</th>';
+    echo '<th>' . _("Löschen?") . '</th>';
     echo '</tr>';
     foreach($_kill_user as $username => $userdetail){
-        echo chr(10).'<tr  class="'.TextHelper::cycle('cycle_odd', 'cycle_even') .'">
-        <td style="font-weight:bold"><a href="'.UrlHelper::getLink('new_user_md5.php?details='.$username).'">'.$username . '</a></td>';
-        echo chr(10).'<td>' . htmlReady(
-        $userdetail['Vorname'] . ' ' . $userdetail['Nachname'] . ' ('.$userdetail['perms'].')').'</td>';
+        echo chr(10).'<tr  class="'.TextHelper::cycle('cycle_odd', 'cycle_even') .'">';
+        echo chr(10).'<td style="font-weight:bold"><a href="'.UrlHelper::getLink('new_user_md5.php?details='.$username).'">'.$username . '</a></td>';
+        echo chr(10).'<td>' . htmlReady($userdetail['Vorname'] . ' ' . $userdetail['Nachname'] . ' ('.$userdetail['perms'].')').'</td>';
         echo chr(10).'<td>' . htmlReady($userdetail['Email']) . '</td>';
         echo chr(10).'<td>' . htmlReady(is_null($userdetail['auth_plugin']) ? 'standard' : $userdetail['auth_plugin']) . '</td>';
-        echo chr(10).'<td align="center"><input type="checkbox" value="1" name="selected_user['.$username.']" '
-        .($userdetail['selected'] ? ' checked ' : '') .'></td>';
+        echo chr(10).'<td align="center">';
+        echo chr(10).'<input type="checkbox" value="1" name="selected_user['.$username.']" ' .($userdetail['selected'] ? ' checked ' : '') .'></td>';
         echo chr(10).'</tr>';
     }
     ?>
 <tr class="steel2">
     <td colspan="5" align="right">
     <div>
-    <label for="delete_documents"><?=_("Dokumente der Nutzer löschen:")?></label>
-    <input style="vertical-align:middle" type="checkbox" checked name="delete_documents" id="delete_documents" value="1">
+        <input style="vertical-align:middle" type="checkbox" checked name="delete_documents" id="delete_documents" value="1">
+        <label for="delete_documents"><?=_("Dokumente der Nutzer löschen")?></label>
     </div>
     <div>
-    <label for="send_email"><?=_("Benachrichtigung per Email verschicken:")?></label>
-    <input style="vertical-align:middle" type="checkbox" checked name="send_email" id="send_email" value="1">
+        <input style="vertical-align:middle" type="checkbox" checked name="send_email" id="send_email" value="1">
+        <label for="send_email"><?=_("Benachrichtigung per Email verschicken")?></label>
     </div>
     <div>
-    <?=makeButton('loeschen', "input",  _("Ausgewählte Nutzeraccounts löschen"), 'kill_accounts')?>
+        <?=makeButton('loeschen', "input",  _("Ausgewählte Nutzeraccounts löschen"), 'kill_accounts')?>
     </div>
     </td>
 </tr>

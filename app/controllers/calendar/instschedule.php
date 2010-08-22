@@ -71,7 +71,7 @@ class Calendar_InstscheduleController extends AuthenticatedController
 
         Navigation::activateItem('/course/main/schedule');
         PageLayout::setHelpKeyword('Basis.TerminkalenderStundenplan');
-        PageLayout::setTitle($GLOBALS['SessSemName']['header_line'].' - '._('Veranstaltungs-Timetable'));
+        PageLayout::setTitle($GLOBALS['SessSemName']['header_line'].' - '._('Veranstaltungs-Stundenplan'));
 
         // have we chosen an entry to display?
         if ($this->flash['entry']) {

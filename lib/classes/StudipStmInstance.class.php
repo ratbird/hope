@@ -4,20 +4,20 @@
 # Lifter003: TODO
 /**
 * StudipModulesInstance.class.php
-* 
-* 
-* 
+*
+*
+*
 *
 * @author   André Noack <noack@data-quest.de>
 * @access   public
 
-* @package  
+* @package
 */
 
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipModulesInstance.class.php
-// 
+//
 // Copyright (C) 2006
 // André Noack <noack@data-quest.de>,
 // Suchi & Berg GmbH <info@data-quest.de>
@@ -36,7 +36,6 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-define('STUDIPSTMINSTANCE_DB_TABLE', 'stm_instances');
 define('LANGUAGE_ID',"09c438e63455e3e1b3deabe65fdbc087");
 
 require_once "lib/classes/SimpleORMap.class.php";
@@ -45,11 +44,11 @@ require_once "lib/classes/Seminar.class.php";
 
 
 class StudipStmInstance extends SimpleORMap {
-    
+
     var $elements = array();
     var $el_struct = array();
     var $assigns = array();
-    
+
     static function GetStmInstancesByUser($user_id, $semester_id = false){
         $ret = array();
         $query = "SELECT DISTINCT stm_instances.stm_instance_id as my_id, stm_instances.*,stm_abstract.*,stm_instances_text.*,semester_data.name as sem_name FROM stm_instances_user
@@ -64,7 +63,7 @@ class StudipStmInstance extends SimpleORMap {
         $ret = $rs->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
         return array_map('reset', $ret);
     }
-    
+
     static function GetStmInstancesBySeminar($seminar_id, $semester_id = false){
         $ret = array();
         $query = "SELECT DISTINCT stm_instances.stm_instance_id as my_id, stm_instances.*,stm_abstract.*,stm_instances_text.*,semester_data.name as sem_name FROM stm_instances_elements
@@ -79,11 +78,11 @@ class StudipStmInstance extends SimpleORMap {
         $ret = $rs->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
         return array_map('reset', $ret);
     }
-    
+
     static function GetStmInstancesBySeminarAndUser($seminar_id, $user_id){
         $ret = array();
         $query = "SELECT DISTINCT stm_instances.stm_instance_id as my_id, stm_instances.*,stm_abstract.*,stm_instances_text.*,semester_data.name as sem_name FROM stm_instances_user
-                INNER JOIN stm_instances_elements ON stm_instances_elements.element_id = stm_instances_user.element_id AND stm_instances_elements.stm_instance_id = stm_instances_user.stm_instance_id 
+                INNER JOIN stm_instances_elements ON stm_instances_elements.element_id = stm_instances_user.element_id AND stm_instances_elements.stm_instance_id = stm_instances_user.stm_instance_id
                 INNER JOIN stm_instances ON stm_instances.stm_instance_id = stm_instances_elements.stm_instance_id
                 INNER JOIN stm_abstract ON stm_instances.stm_abstr_id = stm_abstract.stm_abstr_id
                 INNER JOIN stm_instances_text ON stm_instances.stm_instance_id = stm_instances_text.stm_instance_id AND stm_instances_text.lang_id='".LANGUAGE_ID."'
@@ -94,15 +93,16 @@ class StudipStmInstance extends SimpleORMap {
         $ret = $rs->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
         return array_map('reset', $ret);
     }
-    
+
     function __construct ($id = NULL, $stm_abstr_id = null) {
+        $this->db_table = 'stm_instances';
         parent::__construct($id);
         if ($this->isNew()) {
             $this->setValue('stm_abstr_id', $stm_abstr_id);
             $this->setValue('lang_id', LANGUAGE_ID);
         }
     }
-    
+
     function addElement ($element = null, $sem_id = null) {
         if (!is_object($element)){
             $obj = new StudipStmInstanceElement($element, $this->getId(), $sem_id);
@@ -115,7 +115,7 @@ class StudipStmInstance extends SimpleORMap {
         $this->triggerChdate();
         return $obj->getId();
     }
-    
+
     function deleteElement ($id) {
         $ret = false;
         if (isset($this->elements[$id])){
@@ -125,7 +125,7 @@ class StudipStmInstance extends SimpleORMap {
         }
         return $ret;
     }
-    
+
     function &getElement ($id) {
         if (isset($this->elements[$id])){
             return $this->elements[$id];
@@ -133,7 +133,7 @@ class StudipStmInstance extends SimpleORMap {
             return null;
         }
     }
-    
+
     function restoreElements (){
         $this->el_struct = array();
         $this->elements = StudipStmInstanceElement::GetElementsByInstance($this->getId(), true);
@@ -142,7 +142,7 @@ class StudipStmInstance extends SimpleORMap {
         }
         return count($this->elements);
     }
-    
+
     function addParticipant($user_id, $elementgroup, $groupsem){
         foreach($this->el_struct[$elementgroup] as $element => $sem_ids){
             if (count($sem_ids) > 1 && isset($groupsem[$element])){
@@ -150,7 +150,7 @@ class StudipStmInstance extends SimpleORMap {
             } else {
                 $sem_to_insert = $sem_ids[0];
             }
-            $inserted += DBManager::get()->exec(sprintf("INSERT INTO stm_instances_user 
+            $inserted += DBManager::get()->exec(sprintf("INSERT INTO stm_instances_user
                                     (stm_instance_id,element_id,user_id,mkdate)
                                     VALUES ('%s','%s','%s',UNIX_TIMESTAMP())",
                                     $this->getId(),$element,$user_id));
@@ -158,7 +158,7 @@ class StudipStmInstance extends SimpleORMap {
         }
         return ($inserted == count($this->el_struct[$elementgroup]));
     }
-    
+
     function deleteParticipant($user_id){
         $el = StudipStmInstanceElement::GetElementsByInstanceParticipant($this->getId(), $user_id);
         if (count($el)){
@@ -174,45 +174,45 @@ class StudipStmInstance extends SimpleORMap {
         }
         return false;
     }
-    
+
     function getGroupCount(){
         return count($this->el_struct);
     }
-    
+
     function getGroupedElementSemCount($elementgroup, $element_id){
         return count($this->getGroupedElementSem($elementgroup, $element_id));
     }
-    
+
     function getGroupedElementSem($elementgroup, $element_id){
         $ret = $this->el_struct[$elementgroup][$element_id];
         if(!is_array($ret)) $ret = array();
         return $ret;
     }
-    
+
     function isParticipant($user_id){
-        return 
+        return
             DBManager::get()
             ->query("SELECT mkdate FROM stm_instances_user WHERE user_id='$user_id' AND stm_instance_id='".$this->getId()."' LIMIT 1")
             ->fetchColumn();
     }
-    
+
     function isAllowedToEnter($user_id, $check_semester = false){
         $abstr_id = $this->getValue('stm_abstr_id');
         if ($check_semester) $add = " AND sem BETWEEN earliest AND latest ";
-        return 
+        return
             DBManager::get()
             ->query("SELECT * FROM stm_abstract_assign saa INNER JOIN his_stud_stg hss ON (hss.stg=saa.stg AND hss.abschl=saa.abschl)
                     WHERE user_id='$user_id' AND stm_abstr_id='$abstr_id' $add LIMIT 1")
             ->fetchColumn();
     }
-    
+
     function isAllowedToEdit($user_id){
         if($GLOBALS['perm']->have_perm('root', $user_id)) return true;
         if($GLOBALS['perm']->have_perm('admin', $user_id) && ($GLOBALS['perm']->have_studip_perm('admin', $this->getValue('homeinst'), $user_id))) return true;
         if($GLOBALS['perm']->have_perm('dozent', $user_id) && $this->getValue('responsible') == $user_id) return true;
         return false;
     }
-    
+
     function restoreAssigns(){
         $this->assigns = array();
         if ($stm_abstr_id = $this->getValue('stm_abstr_id')){
@@ -225,7 +225,7 @@ class StudipStmInstance extends SimpleORMap {
         }
         return count($this->assigns);
     }
-    
+
     function restore () {
         $where_query = $this->getWhereQuery();
         if ($where_query){
@@ -253,7 +253,7 @@ class StudipStmInstance extends SimpleORMap {
         }
         return !$this->isNew();
     }
-    
+
     function store () {
         $ret = 0;
         $e_stored = 0;
@@ -268,7 +268,7 @@ class StudipStmInstance extends SimpleORMap {
         $ret += parent::store();
         return $ret;
     }
-    
+
     function delete () {
         $ret = 0;
         $e_stored = 0;
@@ -278,7 +278,7 @@ class StudipStmInstance extends SimpleORMap {
         $ret += parent::delete();
         return $ret;
     }
-    
+
     function getValue($field){
         switch ($field){
             case 'displayname':

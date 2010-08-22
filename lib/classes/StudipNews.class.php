@@ -36,8 +36,6 @@ require_once 'lib/classes/StudipComments.class.php';
 require_once 'lib/classes/Config.class.php';
 require_once 'lib/object.inc.php';
 
-define('STUDIPNEWS_DB_TABLE', 'news');
-
 class StudipNews extends SimpleORMap {
 
     public $ranges = array();
@@ -47,19 +45,19 @@ class StudipNews extends SimpleORMap {
         if ($only_visible){
             $clause = " AND date < UNIX_TIMESTAMP() AND (date+expire) > UNIX_TIMESTAMP() ";
         }
-        $query = "SELECT news_id as idx," . STUDIPNEWS_DB_TABLE . ".* FROM " . STUDIPNEWS_DB_TABLE . "_range
-                    INNER JOIN " . STUDIPNEWS_DB_TABLE . " USING(news_id) WHERE range_id='$range_id' "
+        $query = "SELECT news_id as idx,news.* FROM news_range
+                    INNER JOIN news USING(news_id) WHERE range_id='$range_id' "
                     . $clause . " ORDER BY date DESC, chdate DESC, topic ASC";
         $rs = DBManager::get()->query($query);
         $news = $rs->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
         $ret = array_map('array_shift', $news);
-        
+
         return ($as_objects ? StudipNews::GetNewsObjects($ret) : $ret);
     }
 
     public static function GetNewsByAuthor($user_id, $as_objects = false){
         $ret = array();
-        $query = "SELECT news_id as idx," . STUDIPNEWS_DB_TABLE . ".* FROM "
+        $query = "SELECT news_id as idx,news.* FROM "
                     . STUDIPNEWS_DB_TABLE . " WHERE user_id='$user_id' ORDER BY date DESC, chdate DESC";
         $rs = DBManager::get()->query($query);
         $news = $rs->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
@@ -95,7 +93,7 @@ class StudipNews extends SimpleORMap {
     public static function GetRssIdFromUserId($user_id){
         return StudipNews::GetRssIdFromRangeId($user_id);
     }
-    
+
     public static function GetRangeFromRssID($rss_id){
         if ($rss_id){
             $ret = DBManager::get()
@@ -105,19 +103,19 @@ class StudipNews extends SimpleORMap {
         }
         return false;
     }
-    
+
     public static function GetRangeIdFromRssID($rss_id){
         $ret = StudipNews::GetRangeFromRssID($rss_id);
         return $ret['range_id'];
     }
-    
+
     public static function GetRssIdFromRangeId($range_id){
         $query = "SELECT rss_id FROM news_rss_range WHERE range_id='$range_id'";
         return DBManager::get()
                 ->query($query)
                 ->fetchColumn();
     }
-    
+
     public static function SetRssId($range_id, $type = false){
         if (!$type){
             $type = get_object_type($range_id);
@@ -127,12 +125,12 @@ class StudipNews extends SimpleORMap {
         $affected_rows = DBManager::get()->exec("REPLACE INTO news_rss_range (range_id,rss_id,range_type) VALUES ('$range_id','$rss_id','$type')");
         return $affected_rows;
     }
-    
+
     public static function  UnsetRssId($range_id){
         $affected_rows = DBManager::get()->exec("DELETE FROM news_rss_range WHERE range_id='$range_id'");
         return $affected_rows;
     }
-    
+
     public static function GetAdminMsg($user_id, $date){
         return sprintf(_("Zuletzt aktualisiert von %s (%s) am %s"),get_fullname($user_id) ,get_username($user_id) ,date("d.m.y",$date));
     }
@@ -141,13 +139,13 @@ class StudipNews extends SimpleORMap {
         $db = DBManager::get();
         if (!Config::GetInstance()->getValue('NEWS_DISABLE_GARBAGE_COLLECT')){
             $result = $db->query(
-                                "SELECT news.news_id FROM news where (date+expire)<UNIX_TIMESTAMP() 
+                                "SELECT news.news_id FROM news where (date+expire)<UNIX_TIMESTAMP()
                                 UNION DISTINCT
                                 SELECT news_range.news_id FROM news_range LEFT JOIN news USING (news_id) WHERE ISNULL(news.news_id)
                                 UNION DISTINCT
                                 SELECT news.news_id FROM news LEFT JOIN news_range USING (news_id) WHERE range_id IS NULL"
                                 )->fetchAll(PDO::FETCH_COLUMN, 0);
-            
+
             if (is_array($result)) {
                 $kill_news = "('".join("','",$result)."')";
                 $killed = $db->exec("DELETE FROM news WHERE news_id IN $kill_news");
@@ -171,22 +169,42 @@ class StudipNews extends SimpleORMap {
         }
         return $ret;
     }
-    
+
     public static function DeleteNewsRanges($range_id){
         $ret = DBManager::get()->exec("DELETE FROM news_range WHERE range_id='$range_id'");
         StudipNews::DoGarbageCollect();
         return $ret;
     }
-    
+
     public static function DeleteNewsByAuthor($user_id){
         foreach (StudipNews::GetNewsByAuthor($user_id, true) as $news){
             $deleted += $news->delete();
         }
         return $deleted;
     }
-    
-    function __construct($id = null){
-        $this->db_table = STUDIPNEWS_DB_TABLE;
+
+    static function find($id)
+    {
+        return SimpleORMap::find(__CLASS__, $id);
+    }
+
+    static function findBySql($where)
+    {
+        return SimpleORMap::findBySql(__CLASS__, $where);
+    }
+
+    static function deleteBySql($where)
+    {
+        return SimpleORMap::deleteBySql(__CLASS__, $where);
+    }
+
+    /**
+     *
+     * @param string $id primary key of table
+     */
+    function __construct($id = null)
+    {
+        $this->db_table = 'news';
         parent::__construct($id);
     }
 

@@ -18,7 +18,6 @@ require_once 'SimpleORMap.class.php';
 
 class ConfigEntry extends SimpleORMap
 {
-    protected $db_table = 'config';
 
     static function find($id)
     {
@@ -38,5 +37,15 @@ class ConfigEntry extends SimpleORMap
     static function deleteBySql($where)
     {
         return SimpleORMap::deleteBySql(__CLASS__, $where);
+    }
+
+    /**
+     *
+     * @param string $id primary key of table
+     */
+    function __construct($id = null)
+    {
+        $this->db_table = 'config';
+        parent::__construct($id);
     }
 }

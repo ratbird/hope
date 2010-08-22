@@ -15,7 +15,7 @@
 // This file is part of Stud.IP
 //
 // Copyright (C) 2005 Tobias Thelen ,   <tthelen@uni-osnabrueck.de>
-// 
+//
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -33,22 +33,35 @@
 
 require_once 'lib/classes/SimpleORMap.class.php';
 
-define('STUDIPCOMMENTS_DB_TABLE', 'comments');
 
-class StudipComments extends SimpleORMap {
+class StudipComments extends SimpleORMap
+{
 
-    function __construct($id = null){
-        parent::__construct($id);
+    static function find($id)
+    {
+        return SimpleORMap::find(__CLASS__, $id);
     }
 
-    function NumCommentsForObject($object_id) {
+    static function findBySql($where)
+    {
+        return SimpleORMap::findBySql(__CLASS__, $where);
+    }
+
+    static function deleteBySql($where)
+    {
+        return SimpleORMap::deleteBySql(__CLASS__, $where);
+    }
+
+    static function NumCommentsForObject($object_id)
+    {
         $query = "SELECT COUNT(*) AS count FROM comments WHERE object_id='$object_id'";
         return DBManager::get()
                 ->query($query)
                 ->fetchColumn();
     }
-    
-    function NumCommentsForObjectSinceLastVisit($object_id, $comments_since = 0, $exclude_user_id = null) {
+
+    static function NumCommentsForObjectSinceLastVisit($object_id, $comments_since = 0, $exclude_user_id = null)
+     {
         $query = "SELECT COUNT(*) AS count FROM comments WHERE object_id='$object_id'";
         $query .= " AND chdate > " . (int)$comments_since;
         if ($exclude_user_id) $query .= " AND user_id != '$exclude_user_id'";
@@ -56,21 +69,33 @@ class StudipComments extends SimpleORMap {
                 ->query($query)
                 ->fetchColumn();
     }
-    
-    function GetCommentsForObject($object_id) {
+
+    static function GetCommentsForObject($object_id)
+     {
         global $_fullname_sql;
         $query="SELECT comments.content, " . $_fullname_sql['full'] ." AS fullname, a.username, comments.mkdate,comments.comment_id FROM comments LEFT JOIN auth_user_md5 a USING (user_id) LEFT JOIN user_info USING (user_id) WHERE object_id='$object_id' ORDER BY comments.mkdate";
         return DBManager::get()
                 ->query($query)
                 ->fetchAll(PDO::FETCH_BOTH);
     }
-    
-    function DeleteCommentsByObject($object_ids){
-        if (!is_array($object_ids)){
+
+    static function DeleteCommentsByObject($object_ids)
+    {
+        if (!is_array($object_ids)) {
             $object_ids = array($object_ids);
         }
-        $query = "DELETE FROM comments WHERE object_id IN ('" . join("','", $object_ids). "')";
-        return DBManager::get()->exec($query);
+        $where = "object_id IN ('" . join("','", $object_ids). "')";
+        return self::deleteBySQL($where);
+    }
+
+    /**
+     *
+     * @param string $id primary key of table
+     */
+    function __construct($id = null)
+    {
+        $this->db_table = 'comments';
+        parent::__construct($id);
     }
 }
 

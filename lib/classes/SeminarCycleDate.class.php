@@ -18,7 +18,6 @@ require_once 'SimpleORMap.class.php';
 
 class SeminarCycleDate extends SimpleORMap
 {
-    protected $db_table = 'seminar_cycle_dates';
 
     static function find($id)
     {
@@ -29,24 +28,34 @@ class SeminarCycleDate extends SimpleORMap
     {
         return SimpleORMap::findBySql(__CLASS__, $where);
     }
-    
+
     static function findBySeminar($seminar_id)
     {
         return self::findBySql("seminar_id=" . DbManager::get()->quote($seminar_id) . " ORDER BY sorter ASC, weekday ASC, start_time ASC");
     }
-    
+
     static function findByTermin($termin_id)
     {
         $found = self::findBySql("metadate_id=(SELECT metadate_id FROM termine WHERE temin_id=" . DbManager::get()->quote($termin_id) . "
                                   UNION SELECT metadate_id FROM ex_termine WHERE temin_id=" . DbManager::get()->quote($termin_id) . ")");
         return is_array($found) ? $found[0] : null;
     }
-    
+
     static function deleteBySql($where)
     {
         return SimpleORMap::deleteBySql(__CLASS__, $where);
     }
-    
+
+    /**
+     *
+     * @param string $id primary key of table
+     */
+    function __construct($id = null)
+    {
+        $this->db_table = 'seminar_cycle_dates';
+        parent::__construct($id);
+    }
+
     function getValue($field)
     {
         if (in_array($field, array('start_hour', 'start_minute'))) {
@@ -59,7 +68,7 @@ class SeminarCycleDate extends SimpleORMap
         }
         return parent::getValue($field);
     }
-    
+
     function setValue($field, $value)
     {
         if ($field == 'start_hour') {
@@ -83,14 +92,14 @@ class SeminarCycleDate extends SimpleORMap
         }
         return parent::setValue($field, $value);
     }
-    
+
     function setData($data, $reset = false)
     {
         $count = parent::setData($data, $reset);
         $this->sws = $this->content['sws'];
         return $count;
     }
-    
+
     function toArray()
     {
         $ret = parent::toArray();
@@ -99,7 +108,7 @@ class SeminarCycleDate extends SimpleORMap
         }
         return $ret;
     }
-    
+
     function toString($format = 'short')
     {
         $template['short'] = '%s. %02s:%02s - %02s:%02s';
@@ -117,5 +126,5 @@ class SeminarCycleDate extends SimpleORMap
                        $this->week_offset + 1,
                        $this->description ? ' ('.$this->description.')' : '');
     }
-    
+
 }

@@ -15,7 +15,7 @@
 // This file is part of Stud.IP
 //
 // Copyright (C) 2006 André Noack, Suchi & Berg GmbH <info@data-quest.de>
-// 
+//
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -33,14 +33,11 @@
 
 require_once 'lib/classes/SimpleORMap.class.php';
 
-define('STUDIPSCMENTRY_DB_TABLE', 'scm');
-
 class StudipScmEntry extends SimpleORMap {
 
     public static function GetSCMEntriesForRange($range_id, $as_objects = false){
         $ret = array();
-        $query = "SELECT " . STUDIPSCMENTRY_DB_TABLE . ".* FROM "
-                    . STUDIPSCMENTRY_DB_TABLE . " WHERE range_id='$range_id' ORDER BY mkdate";
+        $query = "SELECT scm.* FROM scm WHERE range_id='$range_id' ORDER BY mkdate";
         $rs = DBManager::get()->query($query);
         while ($row = $rs->fetch(PDO::FETCH_ASSOC)){
             if (!$as_objects){
@@ -53,24 +50,44 @@ class StudipScmEntry extends SimpleORMap {
         }
         return $ret;
     }
-    
+
     public static function GetNumSCMEntriesForRange($range_id){
-        $query = "SELECT COUNT(*) FROM "
-                    . STUDIPSCMENTRY_DB_TABLE . " WHERE range_id='$range_id'";
+        $query = "SELECT COUNT(*) FROM scm WHERE range_id='$range_id'";
         return DBManager::get()
                 ->query($query)
                 ->fetchColumn();
     }
-    
+
     public static function DeleteSCMEntriesForRange($range_ids){
         if (!is_array($range_ids)){
             $range_ids = array($range_ids);
         }
-        $query = "DELETE FROM " . STUDIPSCMENTRY_DB_TABLE . " WHERE range_id IN ('" . join("','", $range_ids). "')";
+        $query = "DELETE FROM scm WHERE range_id IN ('" . join("','", $range_ids). "')";
         return DBManager::get()->exec($query);
     }
-    
-    function __construct($id = null){
+
+    static function find($id)
+    {
+        return SimpleORMap::find(__CLASS__, $id);
+    }
+
+    static function findBySql($where)
+    {
+        return SimpleORMap::findBySql(__CLASS__, $where);
+    }
+
+    static function deleteBySql($where)
+    {
+        return SimpleORMap::deleteBySql(__CLASS__, $where);
+    }
+
+    /**
+     *
+     * @param string $id primary key of table
+     */
+    function __construct($id = null)
+    {
+        $this->db_table = 'scm';
         parent::__construct($id);
     }
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * UserConfigEntry.class.php
- * model class for table user_config 
+ * model class for table user_config
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -18,7 +18,6 @@ require_once 'SimpleORMap.class.php';
 
 class UserConfigEntry extends SimpleORMap
 {
-    protected $db_table = 'user_config';
 
     static function find($id)
     {
@@ -29,21 +28,31 @@ class UserConfigEntry extends SimpleORMap
     {
         return SimpleORMap::findBySql(__CLASS__, $where);
     }
-    
+
     static function findByFieldAndUser($field, $user_id)
     {
         $found = self::findBySql("field=" . DbManager::get()->quote($field) . " AND user_id=" . DbManager::get()->quote($user_id));
         return isset($found[0]) ? $found[0] : null;
     }
-    
+
     static function deleteBySql($where)
     {
         return SimpleORMap::deleteBySql(__CLASS__, $where);
     }
-    
+
     static function deleteByUser($user_id)
     {
         $where = " user_id = " . DBManager::get()->quote($user_id);
-        return self::deleteBySQL($where); 
+        return self::deleteBySQL($where);
+    }
+
+    /**
+     *
+     * @param string $id primary key of table
+     */
+    function __construct($id = null)
+    {
+        $this->db_table = 'user_config';
+        parent::__construct($id);
     }
 }

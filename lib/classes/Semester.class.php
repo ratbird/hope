@@ -24,8 +24,6 @@ class Semester extends SimpleORMap
     private static $semester_cache;
     private static $current_semester;
 
-    protected $db_table = 'semester_data';
-
     /**
      * returns semester object for given id or null
      * @param string $id
@@ -116,6 +114,16 @@ class Semester extends SimpleORMap
             }
         }
         return self::$semester_cache;
+    }
+
+    /**
+     *
+     * @param string $id primary key of table
+     */
+    function __construct($id = null)
+    {
+        $this->db_table = 'semester_data';
+        parent::__construct($id);
     }
 
     /* (non-PHPdoc)

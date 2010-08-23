@@ -57,8 +57,7 @@ class StudipNews extends SimpleORMap {
 
     public static function GetNewsByAuthor($user_id, $as_objects = false){
         $ret = array();
-        $query = "SELECT news_id as idx,news.* FROM "
-                    . STUDIPNEWS_DB_TABLE . " WHERE user_id='$user_id' ORDER BY date DESC, chdate DESC";
+        $query = "SELECT news_id as idx,news.* FROM news WHERE user_id='$user_id' ORDER BY date DESC, chdate DESC";
         $rs = DBManager::get()->query($query);
         $news = $rs->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
         $ret = array_map('array_shift', $news);

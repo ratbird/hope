@@ -90,6 +90,8 @@ class Step00184Html5Video extends Migration
                     expires timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
                     PRIMARY KEY (id))");
 
+        $db->exec("DROP TABLE image_proxy_cache");
+
         $this->insertConfig($this->options_new);
         $this->deleteConfig($this->options_old);
     }
@@ -100,6 +102,15 @@ class Step00184Html5Video extends Migration
     function down()
     {
         $db = DBManager::get();
+
+        $db->exec("CREATE TABLE image_proxy_cache (
+                    id char(32) NOT NULL,
+                    type char(10) NOT NULL,
+                    length int(10) unsigned NOT NULL,
+                    error char(15) NOT NULL,
+                    chdate timestamp NOT NULL,
+                    PRIMARY KEY (id),
+                    KEY chdate (chdate, id))");
 
         $db->exec("DROP TABLE media_cache");
 

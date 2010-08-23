@@ -223,16 +223,16 @@ class TreeView {
         $level_output = "";
         if ($item_id != $this->start_item_id){
             if ($this->tree->isLastKid($item_id))
-                $level_output = "<td class=\"blank\" valign=\"top\"  heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich2.gif\"  border=\"0\" ></td>"; //last
+                $level_output = "<td class=\"blank tree-indent\" valign=\"top\"  heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich2.gif\"  border=\"0\" ></td>"; //last
             else
-                $level_output = "<td class=\"blank\" valign=\"top\"  heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich3.gif\"  border=\"0\" ></td>"; //crossing
+                $level_output = "<td class=\"blank tree-indent\" valign=\"top\"  heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich3.gif\"  border=\"0\" ></td>"; //crossing
             $parent_id = $item_id;
             while($this->tree->tree_data[$parent_id]['parent_id'] != $this->start_item_id){
                 $parent_id = $this->tree->tree_data[$parent_id]['parent_id'];
                 if ($this->tree->isLastKid($parent_id))
-                    $level_output = "<td class=\"blank\" valign=\"top\" width=\"10\" heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"10\" height=\"20\" border=\"0\" ></td>" . $level_output; //nothing
+                    $level_output = "<td class=\"blank tree-indent\" valign=\"top\" width=\"10\" heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"10\" height=\"20\" border=\"0\" ></td>" . $level_output; //nothing
                 else
-                    $level_output = "<td class=\"blank\" valign=\"top\"  heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\"  border=\"0\" ></td>" . $level_output; //vertical line
+                    $level_output = "<td class=\"blank tree-indent\" valign=\"top\"  heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\"  border=\"0\" ></td>" . $level_output; //vertical line
             }
         }
         //$level_output = "<td class=\"blank\" valign=\"top\" width=\"20\" heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"20\" height=\"20\" border=\"0\" ></td>" . $level_output;

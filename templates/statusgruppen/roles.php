@@ -30,7 +30,7 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
         <? endif; ?>
             
         <? if ($move) : ?>
-        <a href="#"><?= Assets::img('icons/16/yellow/arr2_right.png') ?></a>
+        <a href="#"><?= Assets::img('icons/16/yellow/arr_2right.png') ?></a>
         <? endif; ?>
         
         <? if ($sort) : 

@@ -205,14 +205,14 @@ if (($num_hits = $_the_search->getNumHits())){
 echo _("Anzeige: ");
 if ($_the_search->start_result > 1) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result - 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr2_left.png\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_2left.png\" hspace=\"3\" border=\"0\"></a>";
 } else {
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
 }
 echo $_the_search->start_result . " - " . $end_result;
 if ($_the_search->start_result + 4 < $num_hits) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result + 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr2_right.png\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_2right.png\" hspace=\"3\" border=\"0\"></a>";
 } else {
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
 }
@@ -272,14 +272,14 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
 echo _("Anzeige: ");
 if ($_the_search->start_result > 1) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result - 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr2_left.png\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2left.png\" hspace=\"3\" border=\"0\"></a>";
 } else {
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
 }
 echo $_the_search->start_result . " - " . $end_result;
 if ($_the_search->start_result + 4 < $num_hits) {
     $link=URLHelper::getLink('',array('change_start_result'=>($_the_search->start_result + 5)));
-    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr2_right.png\" hspace=\"3\" border=\"0\"></a>";
+    echo "<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_2right.png\" hspace=\"3\" border=\"0\"></a>";
 } else {
     echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"17\" height=\"18\" border=\"0\">";
 }

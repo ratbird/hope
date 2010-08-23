@@ -42,12 +42,12 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
 //html attributes for form
-$_attributes['text'] = array('style' => 'width:100%');
-$_attributes['textarea'] = array('style' => 'width:100%','rows'=>2);
+$_attributes['text'] = array('style' => 'width:98%');
+$_attributes['textarea'] = array('style' => 'width:98%','rows'=>2);
 $_attributes['select'] = array();
 $_attributes['date'] = array();
 $_attributes['combo'] = array('style' => 'width:45%');
-$_attributes['lit_select'] = array('style' => 'font-size:8pt;width:100%');
+$_attributes['lit_select'] = array('style' => 'font-size:8pt;width:98%');
 
 
 if ($_REQUEST['cmd'] == "new_entry"){
@@ -181,7 +181,7 @@ $_msg .= $_the_clipboard->msg;
 ?>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-    <td class="blank" width="99%" align="left" valign="top">
+    <td class="blank" valign="top">
 
     <?
 if ($_msg)  {
@@ -191,11 +191,12 @@ if ($_msg)  {
 } else {
     echo "<br><br>";
 }
+echo $_the_form->getFormStart("$PHP_SELF?_catalog_id=$_catalog_id");
 ?>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
 <?
 $class_changer = new CssClassSwitcher();
-echo $_the_form->getFormStart("$PHP_SELF?_catalog_id=$_catalog_id");
+
 echo "<tr><td " . $class_changer->getFullClass() . " align=\"left\" width=\"40%\" style=\"font-size:10pt;\">"
     . sprintf(_("Anzahl an Referenzen für diesen Eintrag: %s"), (int)$_the_element->reference_count) ."</td>";
 echo "<td " . $class_changer->getFullClass() . " align=\"center\">";
@@ -273,9 +274,6 @@ echo "</td></tr>";
 ?>
 </table>
 </td>
-<td class="blank" align="center" valign="top">
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-<tr>
 <td class="blank" width="270" align="right" valign="top">
 <?
 $infobox[0] = array ("kategorie" => _("Information:"),
@@ -298,28 +296,27 @@ $infobox[1]["eintrag"][] = array("icon" => "icons/16/black/search.png","text"  =
 print_infobox($infobox, "infobox/literaturelist.jpg");
 
 ?>
-</td>
-</tr>
+<table width="250" align="center" border="0" cellpadding="0" cellspacing="0">
 <tr>
-    <td class="blank" align="center" valign="top">
+<td class="blank" align="center" valign="top">
     <b><?=_("Merkliste:")?></b>
     <br>
     <?=$_the_clip_form->getFormField("clip_content", array_merge(array('size' => $_the_clipboard->getNumElements()),(array) $_attributes['lit_select']))?>
-    <div align="center" style="background-image:url(<?= $GLOBALS['ASSETS_URL'] ?>images/border.jpg);background-repeat:repeat-y;margin:3px;"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="2" border="0"></div>
+    <div align="center" style="background-image:url(<?= $GLOBALS['ASSETS_URL'] ?>images/border.jpg); background-repeat:repeat-y; margin:3px; height: 2px;"> </div>
     <?=$_the_clip_form->getFormField("clip_cmd", $_attributes['lit_select'])?>
     <div align="center">
-    <?=$_the_clip_form->getFormButton("clip_ok",array('style'=>'vertical-align:middle;margin:3px;'))?>
+    <?=$_the_clip_form->getFormButton("clip_ok", array('style'=>'vertical-align:middle; margin:3px;'))?>
     </div>
+    <?= $_the_clip_form->getHiddenField(md5("is_sended"),1) ?>
     </td>
 </tr>
 </table>
-<?
-echo $_the_clip_form->getHiddenField(md5("is_sended"),1) . $_the_form->getFormEnd();
-?>
 </td>
 </tr>
 </table>
 <?
+$_the_form->getFormEnd();
+
 include ('lib/include/html_end.inc.php');
 page_close();
 ?>

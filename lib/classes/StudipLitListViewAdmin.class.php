@@ -39,10 +39,8 @@ require_once('lib/classes/lit_search_plugins/StudipLitSearchPluginZ3950Abstract.
 * @author   André Noack <noack@data-quest.de>
 * @package
 */
-class StudipLitListViewAdmin extends TreeView{
-
-
-
+class StudipLitListViewAdmin extends TreeView
+{
     var $mode;
 
     var $edit_item_id;
@@ -239,7 +237,7 @@ class StudipLitListViewAdmin extends TreeView{
         $this->msg[$item_id] = "msg§" . (($direction == "up") ? _("Element wurde um eine Position nach oben verschoben.") : _("Element wurde um eine Position nach unten verschoben."));
         return true;
     }
-    
+
     function execCommandSortKids(){
         $item_id = $_REQUEST['item_id'];
         $kids = $this->tree->getKids($item_id);
@@ -258,7 +256,7 @@ class StudipLitListViewAdmin extends TreeView{
         $this->msg[$item_id] = "msg§" . _("Die Unterelemente wurden alphabetisch sortiert.") . '§';
         return true;
     }
-    
+
     function execCommandAssertDeleteItem(){
         $item_id = $_REQUEST['item_id'];
         $this->mode = "AssertDeleteItem";
@@ -336,9 +334,10 @@ class StudipLitListViewAdmin extends TreeView{
         $content .= $this->getItemMessage($item_id);
         if (!$edit_content){
             if ($item_id == "root" && $this->tree->range_type != 'user'){
-                $content .= "\n<form name=\"userlist_form\" action=\"" . $this->getSelf("cmd=CopyUserList") . "\" method=\"POST\">";
                 $user_lists = $this->tree->GetListsByRange($GLOBALS['auth']->auth['uid']);
-                $content .= "\n<tr><td class=\"steel1\" align=\"left\"><b>" . _("Pers&ouml;nliche Literaturlisten:")
+                $content .= "\n<tr><td class=\"steel1\" align=\"left\">";
+                $content .= "\n<form name=\"userlist_form\" action=\"" . $this->getSelf("cmd=CopyUserList") . "\" method=\"POST\">";
+                $content .= "<b>" . _("Pers&ouml;nliche Literaturlisten:")
                 ."</b><br><br>\n<select name=\"user_list\" style=\"vertical-align:middle;width:70%;\">";
                 if (is_array($user_lists)){
                     foreach ($user_lists as $list_id => $list_name){
@@ -413,12 +412,13 @@ class StudipLitListViewAdmin extends TreeView{
                     }
                 }
             }
-            $content .= "</td></tr></table>";
+            $content .= "</form></td></tr></table>";
         }
         return $content;
     }
 
-    function getItemHead($item_id){
+    function getItemHead($item_id)
+    {
         $head = "";
         $head .= parent::getItemHead($item_id);
         if ($this->tree->tree_data[$item_id]['parent_id'] == $this->start_item_id){
@@ -428,57 +428,57 @@ class StudipLitListViewAdmin extends TreeView{
         if ($item_id != $this->start_item_id && $item_id != $this->edit_item_id){
             $head .= "</td><td align=\"right\" valign=\"bottom\" nowrap class=\"printhead\">";
             if (!$this->tree->isFirstKid($item_id)){
-                $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id") .
-                "\"><img src=\"".$GLOBALS['ASSETS_URL']."icons/16/yellow/arr2_up.png\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" " .
+                $head .= " <a href=\"". $this->getSelf("cmd=OrderItem&direction=up&item_id=$item_id") .
+                "\"><img src=\"" . Assets::image_path('icons/16/yellow/arr_2up.png') . "\" " .
                 tooltip(_("Element nach oben verschieben")) ."></a>";
             }
             if (!$this->tree->isLastKid($item_id)){
-                $head .= "<a href=\"". $this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id") .
-                "\"><img src=\"".$GLOBALS['ASSETS_URL']."icons/16/yellow/arr2_down.png\" hspace=\"4\" width=\"13\" height=\"11\" border=\"0\" " .
+                $head .= " <a href=\"". $this->getSelf("cmd=OrderItem&direction=down&item_id=$item_id") .
+                "\"><img src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" " .
                 tooltip(_("Element nach unten verschieben")) . "></a>";
             }
             if ($this->tree->isElement($item_id)){
                 $head .= ($this->clip_board->isInClipboard($this->tree->tree_data[$item_id]["catalog_id"]))
-                        ? "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/exclaim.png\" hspace=\"4\" width=\"12\" height=\"11\" border=\"0\" " .
+                        ? "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/exclaim.png\" " .
                         tooltip(_("Dieser Eintrag ist bereits in ihrer Merkliste")) . ">"
                         :"<a href=\"". $this->getSelf("cmd=InClipboard&item_id=$item_id") .
-                        "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" hspace=\"4\" width=\"12\" height=\"11\" border=\"0\" " .
+                        "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" " .
                         tooltip(_("Eintrag in Merkliste aufnehmen")) . "></a>";
             } else {
-                $head .= "<a href=\"". $this->getSelf("cmd=InClipboard&item_id=$item_id") .
-                "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" hspace=\"4\" width=\"12\" height=\"11\" border=\"0\" " .
+                $head .= " <a href=\"". $this->getSelf("cmd=InClipboard&item_id=$item_id") .
+                "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" " .
                 tooltip(_("Komplette Liste in Merkliste aufnehmen")) . "></a>";
             }
-            $head .= "&nbsp;";
+            $head .= "";
         }
         return $head;
     }
 
-    function getItemHeadPics($item_id){
+    function getItemHeadPics($item_id)
+    {
         $head = $this->getItemHeadFrontPic($item_id);
         $head .= "\n<td  class=\"printhead\" nowrap  align=\"left\" valign=\"bottom\">";
         if (!$this->tree->isElement($item_id)){
             if ($this->tree->hasKids($item_id)){
                 $head .= "<a href=\"";
                 $head .= ($this->open_ranges[$item_id]) ? $this->getSelf("close_range={$item_id}") : $this->getSelf("open_range={$item_id}");
-                $head .= "\"><img border=\"0\"  src=\"".$GLOBALS['ASSETS_URL']."images/";
+                $head .= "\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/";
                 $head .= ($this->open_ranges[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
                 $head .= "\" ";
                 $head .= (!$this->open_ranges[$item_id])? tooltip(_("Alle Unterelemente öffnen")) : tooltip(_("Alle Unterelemente schließen"));
                 $head .= "></a>";
             } else {
-                $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
+                $head .= "&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/";
                 $head .= ($this->open_items[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
-                $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . "border=\"0\">&nbsp;";
+                $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . ">";
             }
             if ($item_id != "root"){
-                $head .= "&nbsp;<a href=\"" . $this->getSelf("cmd=ToggleVisibility&item_id={$item_id}") . "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/";
+                $head .= " <a href=\"" . $this->getSelf("cmd=ToggleVisibility&item_id={$item_id}") . "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/";
                 $head .= ($this->tree->tree_data[$item_id]['visibility']) ? "icons/16/blue/visibility-visible.png" : "icons/16/blue/visibility-invisible.png";
-                $head .= "\" border=\"0\" " . tooltip(_("Sichtbarkeit ändern")) . "></a>";
+                $head .= "\" " . tooltip(_("Sichtbarkeit ändern")) . "></a>";
             }
         } else {
-            $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/literature.png";
-            $head .= "\" border=\"0\">";
+            $head .= Assets::img('icons/16/blue/literature.png');
         }
     return $head . "</td>";
     }

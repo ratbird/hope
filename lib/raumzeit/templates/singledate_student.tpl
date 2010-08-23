@@ -1,18 +1,10 @@
 <? if (!$tpl['deleted']) : ?>
 <TR>
-    <TD width="1%" align="left" valign="top" bgcolor="<?=$tpl['aging_color']?>" class="<?=$tpl['class']?><?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ? '3' : '2'?>" nowrap>
-        <A name="<?=$tpl['sd_id']?>" />
-        <A href="<?=URLHelper::getLink("?cmd=".($issue_open[$tpl['sd_id']] ? 'close' : 'open')."&open_close_id=".$tpl['sd_id']."#".$tpl['sd_id'])?>">
-        	&nbsp;
-        	<?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ?
-        		 Assets::img('forumgraurunt.png') :
-    			 Assets::img('forumgrau2.png')
-    	 	?>
-        </A>
-    </TD>
+    <TD width="1%" align="left" valign="top" bgcolor="<?=$tpl['aging_color']?>" class="<?=$tpl['class']?><?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ? '3' : '2'?>" nowrap><A href="<?=URLHelper::getLink("?cmd=".($issue_open[$tpl['sd_id']] ? 'close' : 'open')."&open_close_id=".$tpl['sd_id']."#".$tpl['sd_id'])?>">&nbsp;<?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ? Assets::img('forumgraurunt2.png') : Assets::img('forumgrau2.png') ?></A></TD>
 
     <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap>
-    	 <?= Assets::img('icons/16/grey/date.png', array('class' => 'text-top')) ?> 
+        <A name="<?=$tpl['sd_id']?>" />
+        <?= Assets::img('icons/16/grey/date.png', array('class' => 'text-top')) ?>
     </TD>
 
     <td nowrap class="<?=$tpl['class']?>" valign="bottom">
@@ -48,9 +40,9 @@
     <? if ($tpl['fileCountAll'] > 0) : ?>
         <a href="<?=URLHelper::getLink("folder.php?open=".$tpl['folder_id']."&cmd=tree#anker")?>">
             <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/download.png" align="absmiddle" border="0" <?=tooltip(sprintf(_("%s Dokument(e) vorhanden"), $tpl['fileCountAll']))?>><?if ($tpl['fileCountAll'] > 1) :
-				//oldscool: dublicate the right border of the icon according to document count. Do we need this anymore?
-				/*
-				for ($i = 1; ($i < $tpl['fileCountAll'] && $i < 5); $i++) :
+                //oldscool: dublicate the right border of the icon according to document count. Do we need this anymore?
+                /*
+                for ($i = 1; ($i < $tpl['fileCountAll'] && $i < 5); $i++) :
                     ?><img src="<?=$GLOBALS['ASSETS_URL']?>/images/file1b.gif" align="absmiddle" border="0" <?=tooltip(sprintf(_("%s Dokument(e) vorhanden"), $tpl['fileCountAll']))?>><?
                 endfor;*/
             endif;
@@ -63,7 +55,7 @@
         <?=$tpl['calendar'].'&nbsp;'?>
     </td>
     <? endif ?>
-    
+
 </tr>
 <? if ($issue_open[$tpl['sd_id']] || $tpl['openall']) { ?>
 <TR>

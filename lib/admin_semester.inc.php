@@ -4,9 +4,9 @@
 # Lifter003: TODO
 /**
 * admin_semester.inc.php
-* 
+*
 * create some constants for semester data
-* 
+*
 * @access       public
 * @package      studip_core
 * @modulegroup  config
@@ -17,7 +17,7 @@
 // This file is part of Stud.IP
 // config_tools_semester.inc.php
 // hier werden ein paar Semester-Konstanten errechnet
-// Copyright (C) 2003 Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>, 
+// Copyright (C) 2003 Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>,
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
 // modify it under the terms of the GNU General Public License
@@ -52,7 +52,7 @@ function semester_makeSemesterArray() {
 // deprecated, see above
 function semester_insertIntoSemesterdataFromArray ($SEMESTER) {
     if ($db = new DB_Seminar) {
-        //print_r($db);   
+        //print_r($db);
     }
     //$db->query("use studip");
 
@@ -91,7 +91,7 @@ function semester_check_form_field($semesterdata) {
         $error[$errorcount] .= _("Vorlesungsende");
         $errorcount++;
     }
-   
+
     if ($errorcount) {
         $data = _("Fehler! Folgende Felder sind ungültig:&nbsp;");
         for ($i=0; $i<count($error); $i++) {
@@ -115,7 +115,7 @@ function semester_check_form_field($semesterdata) {
     if (((mktime(0,0,0,$semesterdata["lectureStartMonth"],$semesterdata["lectureStartDay"],$semesterdata["lectureStartYear"])-mktime(0,0,0,$semesterdata["startMonth"],$semesterdata["startDay"],$semesterdata["startYear"]))<0) || ((mktime(0,0,0,$semesterdata["expireMonth"],$semesterdata["expireDay"],$semesterdata["expireYear"])-mktime(0,0,0,$semesterdata["lectureExpireMonth"],$semesterdata["lectureExpireDay"],$semesterdata["lectureExpireYear"]))<0)) {
         return _("Der Vorlesungszeitraum muss innerhalb des Semesters liegen");
     }
-    
+
     return 1;
 
 
@@ -149,7 +149,7 @@ function semester_make_new_semester_button($link) {
 }
 
 function semester_make_timestamp_data_to_single_data($semesterdata) {
-    $semesterdata["startDay"] = date("d",$semesterdata["beginn"]);  
+    $semesterdata["startDay"] = date("d",$semesterdata["beginn"]);
     $semesterdata["startMonth"] = date("n",$semesterdata["beginn"]);
     $semesterdata["startYear"] = date("Y",$semesterdata["beginn"]);
     $semesterdata["expireDay"] = date("d",$semesterdata["ende"]);
@@ -177,7 +177,7 @@ function semester_show_new_semester_form($link, $cssSw, $semesterdata, $modus=""
 
     $data =     "<form method=\"POST\" name=\"newSemester\" action=\"".$link."\">";
     $data .=    "<tr><td class=\"";
-    $cssSw->switchClass(); 
+    $cssSw->switchClass();
     $data .=    "".$cssSw->getClass()."\"><font size=2><b>"._("Name des Semesters:")."</b></font></td><td class=".$cssSw->getClass()."><input type=\"text\" name=\"semesterdata[name]\" value=\"".$semesterdata["name"]."\"size=60 maxlength=254></td></tr>";
     $data .=    "<tr><td class=\"".$cssSw->getClass()."\"><font size=2><b>"._("Beschreibung:")."</b></font></td><td class=\"".$cssSw->getClass()."\"><textarea cols=50 ROWS=4 name=\"semesterdata[description]\">".$semesterdata["description"]."</textarea></td></tr>";
     $cssSw->switchClass();
@@ -186,7 +186,7 @@ function semester_show_new_semester_form($link, $cssSw, $semesterdata, $modus=""
         $data .= "<font size=2 color=\"red\">&nbsp;&nbsp;&nbsp;"._("Das Startdatum kann nur bei Semestern ge&auml;ndert werden, in denen keine Veranstaltungen liegen!")."</font>";
     }
     $data .= "</td></tr>";
-    $cssSw->switchClass(); 
+    $cssSw->switchClass();
     // hier if-Abfrage, da Start des Semesters nur geändert werden darf, wenn das Semester leer ist
     // Grund: Studip-Code ;)
     if (isset($semesterdata["startDay"]) && isset($semesterdata["startMonth"]) && isset($semesterdata["startYear"]) && (strlen($semesterdata["semester_id"])!=0)) {
@@ -245,7 +245,7 @@ function semester_show_new_semester_form($link, $cssSw, $semesterdata, $modus=""
             $data .=    "<option ";
             $semesterdata["startMonth"] == 9 ? $data .= "selected " : $data .= "";
             $data .=    "value=\"9\">"._("September")."</option>";
-            $data .=    "<option "; 
+            $data .=    "<option ";
             $semesterdata["startMonth"] == 10 ? $data .= "selected " : $data .= "";
             $data .=    "value=\"10\">"._("Oktober")."</option>";
             $data .=    "<option ";
@@ -291,7 +291,7 @@ function semester_show_new_semester_form($link, $cssSw, $semesterdata, $modus=""
         $data .=    "<option ";
         $semesterdata["startMonth"] == 9 ? $data .= "selected " : $data .= "";
         $data .=    "value=\"9\">"._("September")."</option>";
-        $data .=    "<option "; 
+        $data .=    "<option ";
         $semesterdata["startMonth"] == 10 ? $data .= "selected " : $data .= "";
         $data .=    "value=\"10\">"._("Oktober")."</option>";
         $data .=    "<option ";
@@ -338,7 +338,7 @@ function semester_show_new_semester_form($link, $cssSw, $semesterdata, $modus=""
     $data .=    "<option ";
     $semesterdata["expireMonth"] == 9 ? $data .= "selected " : $data .= "";
     $data .=    "value=\"9\">"._("September")."</option>";
-    $data .=    "<option "; 
+    $data .=    "<option ";
     $semesterdata["expireMonth"] == 10 ? $data .= "selected " : $data .= "";
     $data .=    "value=\"10\">"._("Oktober")."</option>";
     $data .=    "<option ";
@@ -386,7 +386,7 @@ function semester_show_new_semester_form($link, $cssSw, $semesterdata, $modus=""
     $data .=    "<option ";
     $semesterdata["lectureStartMonth"] == 9 ? $data .= "selected " : $data .= "";
     $data .=    "value=\"9\">"._("September")."</option>";
-    $data .=    "<option "; 
+    $data .=    "<option ";
     $semesterdata["lectureStartMonth"] == 10 ? $data .= "selected " : $data .= "";
     $data .=    "value=\"10\">"._("Oktober")."</option>";
     $data .=    "<option ";
@@ -436,7 +436,7 @@ function semester_show_new_semester_form($link, $cssSw, $semesterdata, $modus=""
     $data .=    "<option ";
     $semesterdata["lectureExpireMonth"] == 9 ? $data .= "selected " : $data .= "";
     $data .=    "value=\"9\">"._("September")."</option>";
-    $data .=    "<option "; 
+    $data .=    "<option ";
     $semesterdata["lectureExpireMonth"] == 10 ? $data .= "selected " : $data .= "";
     $data .=    "value=\"10\">"._("Oktober")."</option>";
     $data .=    "<option ";
@@ -458,7 +458,7 @@ function semester_show_new_semester_form($link, $cssSw, $semesterdata, $modus=""
     if ($modus=="change") {
         $data.= "<input type=\"IMAGE\" name=\"create\" value=\"Bearbeiten\" ".makeButton("uebernehmen", "src").">&nbsp;&nbsp;";
         $data.= "<input type=\"hidden\" name=\"create\" value=\"Bearbeiten\">";
-    } else {    
+    } else {
         $data .=    "<input type=\"hidden\" name=\"newEntry\" value=\"1\">";
         $data .=    "<input type=\"IMAGE\" name=\"create\" value=\"Anlegen\" ".makeButton("anlegen", "src").">&nbsp;&nbsp;";
         $data .=    "<input type=\"hidden\" name=\"create\" value=\"Anlegen\">";
@@ -478,7 +478,7 @@ function semester_count_continuos_seminars() {
     $continuos_seminars_in_sem = array();
     $allSemesters = $semester->getAllSemesterData();
     for ($i=0;$i<count($allSemesters);$i++) {
-        $continuos_seminars_in_sem[$allSemesters[$i]["semester_id"]]=0; 
+        $continuos_seminars_in_sem[$allSemesters[$i]["semester_id"]]=0;
     }
     $sql =  "SELECT start_time FROM seminare WHERE ".
             "duration_time = -1";
@@ -492,8 +492,8 @@ function semester_count_continuos_seminars() {
                 for ($j=$i;$j<count($allSemesters);$j++) {
                     $continuos_seminars_in_sem[$allSemesters[$j]["semester_id"]]++;
                 }
-            }   
-        }   
+            }
+        }
     }
     return $continuos_seminars_in_sem;
 }
@@ -504,7 +504,7 @@ function semester_count_duration_seminars() {
     $duration_seminars_in_sem = array();
     $allSemesters = $semester->getAllSemesterData();
     for ($i=0;$i<count($allSemesters);$i++) {
-        $duration_seminars_in_sem[$allSemesters[$i]["semester_id"]]=0;  
+        $duration_seminars_in_sem[$allSemesters[$i]["semester_id"]]=0;
     }
     $sql =  "SELECT start_time, duration_time FROM seminare WHERE ".
             "duration_time!=0 AND duration_time!=-1";
@@ -524,7 +524,7 @@ function semester_count_duration_seminars() {
                     }
                 }
             }
-        }   
+        }
     }
     return $duration_seminars_in_sem;
 }
@@ -544,16 +544,17 @@ function semester_count_absolut_seminars_in_semester($semester_id) {
     return $db->f("count");
 }
 
-function semester_show_semester_header(){
+function semester_show_semester_header()
+{
     $data =     "<tr><td class=\"blank\" colspan=2>";
     $data .=    "<table align=center bg=\"#ffffff\" width=\"100%\" border=0 cellpadding=2 cellspacing=0>";
     $data .=    "<tr valign=top align=middle>";
-    $data .=    "<th align=left width=\"15%\"><font size=2>"._("Name")."</font></th>";
-    $data .=    "<th align=left width=\"12%\"><font size=2>"._("Beginn")."</font></th>";
-    $data .=    "<th align=left width=\"12%\"><font size=2>"._("Ende")."</font></th>";
-    $data .=    "<th align=left width=\"12%\"><font size=2>"._("Vorlesungsbeginn")."</font></th>";
-    $data .=    "<th align=left width=\"12%\"><font size=2>"._("Vorlesungsende")."</font></th>";
-    $data .=    "<th align=left width=\"12%\"><font size=2>"._("Anzahl Veranstaltungen")."</font></th>";
+    $data .=    "<th align=left width=\"15%\">"._("Name")."</th>";
+    $data .=    "<th align=left width=\"12%\">"._("Beginn")."</th>";
+    $data .=    "<th align=left width=\"12%\">"._("Ende")."</th>";
+    $data .=    "<th align=left width=\"12%\">"._("Vorlesungsbeginn")."</th>";
+    $data .=    "<th align=left width=\"12%\">"._("Vorlesungsende")."</th>";
+    $data .=    "<th align=left width=\"12%\">>"._("Anzahl Veranstaltungen")."</th>";
     $data .=    "<th align=left width=\"20%\"></th>";
     $data .=    "<th align=left width=\"20%\"></th>";
     $data .=    "</tr></table></td></tr>";
@@ -561,10 +562,11 @@ function semester_show_semester_header(){
 }
 
 //list all Semesters
-function semester_show_semesters($all_semesters) {
+function semester_show_semesters($all_semesters)
+{
     $duration_seminar_semester = semester_count_duration_seminars();
     $continuos_seminar_semester = semester_count_continuos_seminars();
-    $showSemesters = "<table align=center bg=\"#ffffff\" width=\"100%\" border=0 cellpadding=2 cellspacing=0><tr><td class=\"blank\" colspan=8><br></td></tr>";
+    $showSemesters = "<table width=\"100%\" border=0 cellpadding=2 cellspacing=0>";
     $count = count($all_semesters);
     for ($i=0; $i<$count; $i++) {
         $absolut_seminars = semester_count_absolut_seminars_in_semester($all_semesters[$i]["semester_id"]);
@@ -575,24 +577,25 @@ function semester_show_semesters($all_semesters) {
 }
 
 //list one Semester
-function semester_show_semester($semester, $i, $duration_seminar_semester, $absolut_seminars, $continuos_seminar_semester) {
+function semester_show_semester($semester, $i, $duration_seminar_semester, $absolut_seminars, $continuos_seminar_semester)
+{
    if (($i % 2) == 0) {
         $style = "steel1";
    } else {
         $style = "steelgraulight";
    }
    $row =   "<tr>";
-   $row .=  "<td class=".$style." width=\"15%\"><font size=1>".$semester[name]."</font></td>";
-   $row .=  "<td class=".$style." width=\"12%\"><font size=1>".date("d.m.Y", $semester["beginn"])."</font></td>";
-   $row .=  "<td class=".$style." width=\"12%\"><font size=1>".date("d.m.Y", $semester["ende"])."</font></td>";
-   $row .=  "<td class=".$style." width=\"12%\"><font size=1>".date("d.m.Y", $semester["vorles_beginn"])."</font></td>";
-   $row .=  "<td class=".$style." width=\"12%\"><font size=1>".date("d.m.Y", $semester["vorles_ende"])."</font></td>";
-   $row .=  "<td class=".$style." width=\"12%\"><font size=1>";
+   $row .=  "<td class=".$style." width=\"15%\">".$semester["name"]."</td>";
+   $row .=  "<td class=".$style." width=\"12%\">".date("d.m.Y", $semester["beginn"])."</td>";
+   $row .=  "<td class=".$style." width=\"12%\">".date("d.m.Y", $semester["ende"])."</td>";
+   $row .=  "<td class=".$style." width=\"12%\">".date("d.m.Y", $semester["vorles_beginn"])."</td>";
+   $row .=  "<td class=".$style." width=\"12%\">".date("d.m.Y", $semester["vorles_ende"])."</td>";
+   $row .=  "<td class=".$style." width=\"12%\">";
    $row .=  $duration_seminar_semester[$semester["semester_id"]]+$absolut_seminars."&nbsp;(+&nbsp;".$continuos_seminar_semester[$semester["semester_id"]]."&nbsp;"._("implizit").")</font></td>";
    //$row .=    "<br>".$continuos_seminar_semester[$semester["semester_id"]]."&nbsp;"._("kontinuierlich");
-   //$row .=    "<br>".$absolut_seminars."&nbsp;"._("1-Semester")."</font></td>";
-   $row .=  "<td width=\"15%\" align=\"RIGHT\" class=".$style."><a href=\"admin_semester.php?change=1&semester_id=".$semester[semester_id]."\">".makeButton("bearbeiten")."</a></td>";
-   $row .=  "<td width=\"15%\" align=\"RIGHT\" class=".$style."><a href=\"admin_semester.php?delete=1&semester_id=".$semester["semester_id"]."\">".makeButton("loeschen"). "</a></td>";
+   //$row .=    "<br>".$absolut_seminars."&nbsp;"._("1-Semester")."</td>";
+   $row .=  "<td colspan=\"2\" width=\"15%\" align=\"RIGHT\" class=".$style."><a href=\"admin_semester.php?change=1&semester_id=".$semester["semester_id"]."\">".Assets::img('icons/16/blue/edit.png')."</a> ";
+   $row .=  "<a href=\"admin_semester.php?delete=1&semester_id=".$semester["semester_id"]."\">".Assets::img('icons/16/blue/trash.png')."</a></td>";
    $row .=  "</tr>";
    return $row;
 }
@@ -651,9 +654,9 @@ function holiday_show_holiday($holidaydata, $i) {
         $style = "steelgraulight";
    }
    $row =   "<tr>";
-   $row .=  "<td class=".$style." width=\"35%\"><font size=1>".$holidaydata["name"]."</font></td>";
-   $row .=  "<td class=".$style." width=\"20%\"><font size=1>".date("d.m.Y", $holidaydata["beginn"])."</font></td>";
-   $row .=  "<td class=".$style." width=\"20%\"><font size=1>".date("d.m.Y", $holidaydata["ende"])."</font></td>";
+   $row .=  "<td class=".$style." width=\"35%\">".$holidaydata["name"]."</td>";
+   $row .=  "<td class=".$style." width=\"20%\">".date("d.m.Y", $holidaydata["beginn"])."</td>";
+   $row .=  "<td class=".$style." width=\"20%\">".date("d.m.Y", $holidaydata["ende"])."</td>";
    $row .=  "<td width=\"15%\" align=\"RIGHT\" class=".$style."><a href=\"admin_semester.php?holidayChange=1&holiday_id=".$holidaydata["holiday_id"]."\">".makeButton("bearbeiten")."</a></td>";
    $row .=  "<td width=\"15%\" align=\"RIGHT\" class=".$style."><a href=\"admin_semester.php?delete=1&holiday_id=".$holidaydata["holiday_id"]."\">".makeButton("loeschen")."</a></td>";
    $row .=  "</tr>";
@@ -671,17 +674,17 @@ function holiday_show_holidays($allHolidays) {
     }
 
 
-    
-function holiday_show_new_holiday_form($link, $cssSw, $holidaydata, $modus="") { 
+
+function holiday_show_new_holiday_form($link, $cssSw, $holidaydata, $modus="") {
 
     $data =     "<form method=\"POST\" name=\"newHoliday\" action=\"".$link."\">";
     $data .=    "<tr><td class=\"";
-    $cssSw->switchClass(); 
+    $cssSw->switchClass();
     $data .=    "".$cssSw->getClass()."\"><font size=2><b>"._("Name der Ferien:")."</b></font></td><td class=".$cssSw->getClass()."><input type=\"text\" name=\"holidaydata[name]\" value=\"".$holidaydata["name"]."\"size=60 maxlength=254></td></tr>";
     $data .=    "<tr><td class=\"".$cssSw->getClass()."\"><font size=2><b>"._("Beschreibung:")."</b></font></td><td class=\"".$cssSw->getClass()."\"><textarea cols=50 ROWS=4 name=\"holidaydata[description]\">".$holidaydata["description"]."</textarea></td></tr>";
     $cssSw->switchClass();
     $data .= "<tr><td height=50 colspan=2 class=\"".$cssSw->getClass()."\"><font size=2><b>Bitte geben Sie den zeitlichen Rahmen der Ferien ein</b></font></td></tr>";
-    $cssSw->switchClass(); 
+    $cssSw->switchClass();
     $data .=    "<tr><td class=\"".$cssSw->getClass()."\"><table cellspacing=0 cellpadding=0 border=0><tr><td width=\"40%\"><font size=2>"._("Anfang:")."</font></td><td class=\"".$cssSw->getClass()."\"><td width=\"\"><input type=\"text\" name=\"holidaydata[startDay]\" value=\"".$holidaydata["startDay"]."\" size=\"2\" maxlength=\"2\">";
     $data .=    ".</td>";
     $data .=    "<td width=\"\" class=\"".$cssSw->getClass()."\"><select name=\"holidaydata[startMonth]\" size=\"1\">";
@@ -712,7 +715,7 @@ function holiday_show_new_holiday_form($link, $cssSw, $holidaydata, $modus="") {
     $data .=    "<option ";
     $holidaydata["startMonth"] == 9 ? $data .= "selected " : $data .= "";
     $data .=    "value=\"9\">"._("September")."</option>";
-    $data .=    "<option "; 
+    $data .=    "<option ";
     $holidaydata["startMonth"] == 10 ? $data .= "selected " : $data .= "";
     $data .=    "value=\"10\">"._("Oktober")."</option>";
     $data .=    "<option ";
@@ -757,7 +760,7 @@ function holiday_show_new_holiday_form($link, $cssSw, $holidaydata, $modus="") {
     $data .=    "<option ";
     $holidaydata["expireMonth"] == 9 ? $data .= "selected " : $data .= "";
     $data .=    "value=\"9\">"._("September")."</option>";
-    $data .=    "<option "; 
+    $data .=    "<option ";
     $holidaydata["expireMonth"] == 10 ? $data .= "selected " : $data .= "";
     $data .=    "value=\"10\">"._("Oktober")."</option>";
     $data .=    "<option ";
@@ -777,7 +780,7 @@ function holiday_show_new_holiday_form($link, $cssSw, $holidaydata, $modus="") {
     if ($modus=="change") {
         $data.= "<input type=\"IMAGE\" name=\"create\" value=\"Ferienbearbeiten\" ".makeButton("uebernehmen", "src").">&nbsp;&nbsp;";
         $data.= "<input type=\"hidden\" name=\"create\" value=\"Ferienbearbeiten\">";
-    } else {    
+    } else {
         $data .=    "<input type=\"hidden\" name=\"newEntry\" value=\"1\">";
         $data .=    "<input type=\"IMAGE\" name=\"create\" value=\"Ferienanlegen\" ".makeButton("anlegen", "src").">&nbsp;&nbsp;";
         $data.= "<input type=\"hidden\" name=\"create\" value=\"Ferienanlegen\">";
@@ -790,7 +793,7 @@ function holiday_show_new_holiday_form($link, $cssSw, $holidaydata, $modus="") {
     return $data;
 
 }
-    
+
 function holiday_check_form_field($holidaydata) { // check insert_form
     $errorcount = 0;
     if (strlen($holidaydata["name"])==0) {
@@ -805,7 +808,7 @@ function holiday_check_form_field($holidaydata) { // check insert_form
         $error[$errorcount] .= _("Enddatum");
         $errorcount++;
     }
-   
+
     if ($errorcount) {
         $data = _("Fehler! Folgende Felder sind ungültig:&nbsp;");
         for ($i=0; $i<count($error); $i++) {
@@ -826,8 +829,8 @@ function holiday_check_form_field($holidaydata) { // check insert_form
     return 1;
 }
 
-function holiday_make_timestamp_data_to_single_data($holidaydata) { 
-    $holidaydata["startDay"] = date("d",$holidaydata["beginn"]);    
+function holiday_make_timestamp_data_to_single_data($holidaydata) {
+    $holidaydata["startDay"] = date("d",$holidaydata["beginn"]);
     $holidaydata["startMonth"] = date("n",$holidaydata["beginn"]);
     $holidaydata["startYear"] = date("Y",$holidaydata["beginn"]);
     $holidaydata["expireDay"] = date("d",$holidaydata["ende"]);
@@ -870,7 +873,7 @@ function semester_show_overview($link) {
     $allSemesters = $semester->getAllSemesterData();
     $header = semester_show_semester_header();
     if ($allSemesters==0) {
-        $content = "error§"._("Kein Semester vorhanden!");  
+        $content = "error§"._("Kein Semester vorhanden!");
         $content = parse_msg($content);
     } else {
         $content = semester_show_semesters($allSemesters);

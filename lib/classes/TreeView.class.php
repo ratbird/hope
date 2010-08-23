@@ -114,7 +114,7 @@ class TreeView {
     function TreeView($tree_class_name,$args = null){
         $this->tree_class_name = $tree_class_name;
         $this->tree = TreeAbstract::GetInstance($tree_class_name,$args);
-        $this->pic_open = ($this->use_aging) ? "forumgraurunt2.png" : "icons/16/red/arr_1right.png";
+        $this->pic_open = ($this->use_aging) ? "forumgraurunt2.png" : "icons/16/blue/arr_1down.png";
         $this->pic_close = ($this->use_aging) ? "forumgrau2.png" : "icons/16/blue/arr_1right.png";
 
         URLHelper::bindLinkParam("open_ranges", $this->open_ranges);
@@ -219,20 +219,21 @@ class TreeView {
     * @access   private
     * @param    string  $item_id
     */
-    function printLevelOutput($item_id){
+    function printLevelOutput($item_id)
+    {
         $level_output = "";
         if ($item_id != $this->start_item_id){
             if ($this->tree->isLastKid($item_id))
-                $level_output = "<td class=\"blank tree-indent\" valign=\"top\"  heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich2.gif\"  border=\"0\" ></td>"; //last
+                $level_output = "<td class=\"blank tree-indent\" valign=\"top\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich2.gif\" ></td>"; //last
             else
-                $level_output = "<td class=\"blank tree-indent\" valign=\"top\"  heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich3.gif\"  border=\"0\" ></td>"; //crossing
+                $level_output = "<td class=\"blank tree-indent\" valign=\"top\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich3.gif\" ></td>"; //crossing
             $parent_id = $item_id;
             while($this->tree->tree_data[$parent_id]['parent_id'] != $this->start_item_id){
                 $parent_id = $this->tree->tree_data[$parent_id]['parent_id'];
                 if ($this->tree->isLastKid($parent_id))
-                    $level_output = "<td class=\"blank tree-indent\" valign=\"top\" width=\"10\" heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"10\" height=\"20\" border=\"0\" ></td>" . $level_output; //nothing
+                    $level_output = "<td class=\"blank tree-indent\" valign=\"top\" width=\"10\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"10\" height=\"20\"></td>" . $level_output; //nothing
                 else
-                    $level_output = "<td class=\"blank tree-indent\" valign=\"top\"  heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\"  border=\"0\" ></td>" . $level_output; //vertical line
+                    $level_output = "<td class=\"blank tree-indent\" valign=\"top\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\"></td>" . $level_output; //vertical line
             }
         }
         //$level_output = "<td class=\"blank\" valign=\"top\" width=\"20\" heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"20\" height=\"20\" border=\"0\" ></td>" . $level_output;
@@ -246,12 +247,13 @@ class TreeView {
     * @access   private
     * @param    string  $item_id
     */
-    function printItemOutput($item_id){
+    function printItemOutput($item_id)
+    {
         echo $this->getItemHeadPics($item_id);
         echo "\n<td class=\"printhead\" nowrap width=\"1\" valign=\"middle\">";
         if ($this->anchor == $item_id)
             echo "<a name=\"anchor\">";
-        echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"  border=\"0\" height=\"20\" width=\"1\">";
+        echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" height=\"20\" width=\"1\">";
         if ($this->anchor == $item_id)
             echo "</a>";
         echo "\n</td><td class=\"printhead\" align=\"left\" width=\"99%\" nowrap valign=\"bottom\">";
@@ -304,7 +306,8 @@ class TreeView {
     * @param    string  $item_id
     * @return   string
     */
-    function getItemHeadPics($item_id){
+    function getItemHeadPics($item_id)
+    {
         $head = $this->getItemHeadFrontPic($item_id);
         $head .= "\n<td  class=\"printhead\" nowrap align=\"left\" valign=\"bottom\">";
         if ($this->tree->hasKids($item_id)){
@@ -335,10 +338,10 @@ class TreeView {
         $head .= "<a href=\"";
         $head .= ($this->open_items[$item_id])? $this->getSelf("close_item={$item_id}") . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
                                             : $this->getSelf("open_item={$item_id}") . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
-        $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
+        $head .= "&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/";
         $head .= ($this->open_items[$item_id]) ? $this->pic_open : $this->pic_close;
         $head .= "\">";
-        $head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\" border=\"0\">" : "";
+        #$head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\" border=\"0\">" : "";
         $head .= "</a>";
         $head .= '</td>';
         return $head;

@@ -550,7 +550,7 @@ function ForumIcon ($forumposting) {
     }
     if ($cmd=="move" && $rechte && $topic_id != $forumposting["id"] )  // ein Beitrag wird verschoben, gelbe Pfeile davor
         $forumposting["icon"] =  "<a href=\"".URLHelper::getLink("?target=Thema&move_id=".$topic_id."&parent_id=".$forumposting["id"])."\">"
-                    ."<img src=\"".$GLOBALS['ASSETS_URL']."images/16/yellow/arr2_right.png\" border=0 " . tooltip(_("Postings in dieses Thema verschieben")) . "></a>"
+                    ."<img src=\"".$GLOBALS['ASSETS_URL']."images/16/yellow/arr_2right.png\" border=0 " . tooltip(_("Postings in dieses Thema verschieben")) . "></a>"
                     .$forumposting["icon"];
     return $forumposting;
 }
@@ -1928,7 +1928,7 @@ function forum_move_navi ($topic_id) {
             <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr>
                 <td class="steel2" colspan="2">
-                    &nbsp; <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr2_right.png" border="0">&nbsp;<b><font size="-1"><?=sprintf(_("Als Thema verschieben (zusammen mit %s Antworten):"), $count)?></font></b>
+                    &nbsp; <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr_2right.png" border="0">&nbsp;<b><font size="-1"><?=sprintf(_("Als Thema verschieben (zusammen mit %s Antworten):"), $count)?></font></b>
                 </td>
             </tr>
             <tr>
@@ -1942,7 +1942,7 @@ function forum_move_navi ($topic_id) {
                 </td>
                 <td class="steel1" width="80%">
             <?      echo "<form action=\"".URLHelper::getLink('')."\" method=\"POST\">"; ?>
-                    <input type="image" name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr2_right.png" border="0" <?=tooltip(_("dahin verschieben"))?>>&nbsp;
+                    <input type="image" name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr_2right.png" border="0" <?=tooltip(_("dahin verschieben"))?>>&nbsp;
                     <select Name="sem_id" size="1">
             <?      while ($db->next_record()) {
                             if ($check_modules->checkLocal('forum',$db->f("Seminar_id"),'sem')) {
@@ -1966,7 +1966,7 @@ function forum_move_navi ($topic_id) {
                 </td>
                 <td class="steel1" width="80%">
             <?      echo "<form action=\"".URLHelper::getLink('')."\" method=\"POST\">"; ?>
-                    <input type=image name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr2_right.png" border=0 <?=tooltip(_("dahin verschieben"))?>>&nbsp;
+                    <input type=image name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr_2right.png" border=0 <?=tooltip(_("dahin verschieben"))?>>&nbsp;
                 <select Name="inst_id" size="1">
             <?      while ($db2->next_record()) {
                             if ($check_modules->checkLocal('forum',$db2->f("Institut_id"),'inst')) {

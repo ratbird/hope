@@ -1,11 +1,7 @@
 <TR>
-    <TD width="1%" align="right" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap">
-        <A name="<?=$tpl['sd_id']?>" />
-        <A href="<?= URLHelper::getLink('?cmd='. ($issue_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-            <IMG src="<?=$GLOBALS['ASSETS_URL'].(($issue_open[$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1down.png' : 'images/icons/16/blue/arr_1right.png')?>.png" border="0">
-        </A>
-    </TD>
+    <TD width="1%" align="right" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap"><A href="<?= URLHelper::getLink('?cmd='. ($issue_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">&nbsp;<IMG src="<?=$GLOBALS['ASSETS_URL'].(($issue_open[$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1down.png' : 'images/icons/16/blue/arr_1right.png')?>.png"></A></TD>
     <TD width="1%" align="right" valign="top" class="<?=$tpl['class']?>" nowrap="nowrap">
+        <A name="<?=$tpl['sd_id']?>" />
         <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" border="0" class="text-bottom">&nbsp;
     </TD>
 
@@ -52,12 +48,12 @@
                     <font size="-1">
                         <? if ($modules['forum'] || $modules['documents']) : ?>
                         <b><?=_("Verknüfpungen mit diesem Termin:")?></b><br>
-                        <? 
+                        <?
                         if ($modules['forum']) :
                             if ($tpl['forumEntry']) :
                                 echo _("Forenthema vorhanden").'<br>';
                                 echo '<INPUT type="hidden" name="forumFolder" value="on">';
-                            else : 
+                            else :
                                 echo '<input type="checkbox" name="forumFolder'.($openAll ? '§'.$tpl['sd_id']: '').'"> ';
                                 echo _("Thema im Forum anlegen"). '<br>';
                             endif;

@@ -7,7 +7,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
             <TR>
                 <TD width="2%" align="right" valign="center" class="<?=$tpl['class']?>">
                     <A href="<?= URLHelper::getLink('?cmd=open&open_close_id=' . $tpl['md_id'] .'#'. $tpl['md_id']) ?>">
-                    	<?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top')) ?>
+                    <?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top')) ?>
                     </A>
                 </TD>
                 <TD width="23%" nowrap="nowrap" class="<?=$tpl['class']?>">

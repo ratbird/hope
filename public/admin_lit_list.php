@@ -213,32 +213,29 @@ if (!$_the_tree->getNumKids('root')){
 
 $infobox[1] = array ("kategorie" => _("Aktionen:"));
 $infobox[1]["eintrag"][] = array('icon' => "icons/16/black/search.png","text"  => "<a href=\"lit_search.php\">" . _("Literatur suchen") . "</a>" );
-$infobox[1]["eintrag"][] = array('icon' => "icons/16/black/add/ literature.png","text"  => "<a href=\"admin_lit_element.php?_range_id=new_entry\">" . _("Neue Literatur anlegen") . "</a>" );
+$infobox[1]["eintrag"][] = array('icon' => "icons/16/black/add/literature.png","text"  => "<a href=\"admin_lit_element.php?_range_id=new_entry\">" . _("Neue Literatur anlegen") . "</a>" );
 
 print_infobox ($infobox, "infobox/literaturelist.jpg");
 ?>
 <table width="250" align="center">
-<?=$_the_clip_form->getFormStart($_the_treeview->getSelf());?>
 <tr>
     <td class="blank" align="center" valign="top">
+    <?=$_the_clip_form->getFormStart($_the_treeview->getSelf());?>
     <b><?=_("Merkliste:")?></b>
     <br>
     <?=$_the_clip_form->getFormField("clip_content", array_merge(array('size' => $_the_clipboard->getNumElements()),(array) $_attributes['lit_select']))?>
-    <div align="center" style="background-image:url(<?= $GLOBALS['ASSETS_URL'] ?>images/border.jpg);background-repeat:repeat-y;margin:3px;"><img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="2" border="0"></div>
+    <div align="center" style="background-image:url(<?= $GLOBALS['ASSETS_URL'] ?>images/border.jpg);background-repeat:repeat-y;margin:3px; height: 2px;"></div>
     <?=$_the_clip_form->getFormField("clip_cmd", $_attributes['lit_select'])?>
     <div align="center">
     <?=$_the_clip_form->getFormButton("clip_ok",array('style'=>'vertical-align:middle;margin:3px;'))?>
     </div>
+    <?= $_the_clip_form->getFormEnd(); ?>
     </td>
 </tr>
 </table>
-<?
-echo $_the_clip_form->getFormEnd();
-?>
 </td>
 </tr>
 </table>
 <?
 include ('lib/include/html_end.inc.php');
 page_close();
-?>

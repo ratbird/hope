@@ -383,7 +383,7 @@ $query_time = $query_time_sort;
         $count_timefilter = count_x_messages_from_user($sms_data['view'], "all", $query_time_sort." AND folder=''");
         $open = folder_openclose($sms_show['folder'][$sms_data['view']], "all");
         if ($sms_data['tmp']['move_to_folder'] && $open == "close") {
-            $picture = Assets::image_path('icons/16/yellow/arr2_right.png');
+            $picture = Assets::image_path('icons/16/yellow/arr_2right.png');
             $link = $PHP_SELF."?move_folder=free";
         } else {
             $picture = showfoldericon("all", $count);
@@ -433,7 +433,7 @@ $query_time = $query_time_sort;
                     // this folder is open?
                     $open = folder_openclose($sms_show['folder'][$sms_data['view']], $x);
                     if ($sms_data['tmp']['move_to_folder'] && $open == "close") {
-                        $picture = Assets::image_path('icons/16/yellow/arr2_right.png');
+                        $picture = Assets::image_path('icons/16/yellow/arr_2right.png');
                         $link = $PHP_SELF."?move_folder=".$x;
                     } else {
                         $link = $PHP_SELF."?cmd=";
@@ -504,7 +504,7 @@ $query_time = $query_time_sort;
         $time_by_links .= "<a href=\"".$PHP_SELF."?sms_time=older\">".Assets::img(show_icon($sms_data["time"], "older"), array('width' => '16', 'class' => 'text-bottom'))." "._("&auml;lter als 30 Tage")."</a>";
 
         $view_by_links = "";
-        $view_by_links .= "<a href=\"".$PHP_SELF."?sms_time=new\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".show_icon($sms_data["time"], "new")."\" width=\"8\">&nbsp;"._("neue Nachrichten")."</a><br>";
+        $view_by_links .= "<a href=\"".$PHP_SELF."?sms_time=new\">".Assets::img(show_icon($sms_data["time"], "new"), array('width' => '16', 'class' => 'text-bottom'))." "._("neue Nachrichten")."</a><br>";
 
         // did we came from a ...?
         if ($SessSemName[0] && $SessSemName["class"] == "inst") {
@@ -544,11 +544,8 @@ $query_time = $query_time_sort;
 </table>
 <?php
 
-// i was here
 if ($my_messaging_settings["last_box_visit"] < time()) {
     $my_messaging_settings["last_box_visit"] = time();
 }
 include ('lib/include/html_end.inc.php');
-// Save data back to database.
 page_close();
-?>

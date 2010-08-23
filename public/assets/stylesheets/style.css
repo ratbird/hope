@@ -305,18 +305,21 @@ table.collapsable tbody tr:first-child td:first-child {
 }
 
 table.collapsable tbody tr:first-child td:first-child a {
-    background: transparent url(../images/icons/16/blue/arr_1down.png) no-repeat;
+    background: url(../images/icons/16/blue/arr_1down.png) no-repeat;
+    background-position: left center;
     color: #000;
 }
 
 table.collapsable tbody.collapsed tr:first-child td:first-child a {
-    background-image: url(../images/icons/16/blue/arr_1right.png);
+    background: url(../images/icons/16/blue/arr_1right.png) no-repeat;
+    background-position: left center;
     color: #000;
     font-weight: normal;
 }
 
 table.collapsable tbody.empty tr:first-child td:first-child {
-    background: transparent url(../images/icons/16/grey/arr_1right.png) no-repeat;
+    background: url(../images/icons/16/grey/arr_1right.png) no-repeat;
+    background-position: left center;
 }
 
 /* Table details */

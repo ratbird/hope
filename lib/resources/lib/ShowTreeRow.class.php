@@ -12,7 +12,7 @@ class ShowTreeRow {
 
         ?><table border=0 cellpadding=0 cellspacing=0 width="99%" align="center">
             <tr>
-                <td class="blank" valign="top" heigth=21 nowrap><?
+                <td class="blank tree-indent" valign="top" heigth=21 nowrap><?
 
         if (!$content)
             $content=_("Keine Beschreibung");
@@ -57,17 +57,17 @@ class ShowTreeRow {
                 if ($level)
                     for ($i=1;$i<=$level;$i++) {
                         if ($this->lines[$i]==0) {
-                            $striche.= "<td class=\"blank\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
+                            $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
                             }
                         else {
-                            $striche.= "<td class=\"blank\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer2.gif\"></td>";
+                            $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer2.gif\"></td>";
                             }
                     }
 
                 if ($weitere)
-                    $striche.= "<td class=\"blank\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrichgrau.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
+                    $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrichgrau.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
                 else
-                    $striche.= "<td class=\"blank\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/steel1.jpg\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
+                    $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/steel1.jpg\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
 
                 echo $striche;
 

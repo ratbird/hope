@@ -901,17 +901,17 @@ function ForumParseZusatz($forumhead) {
 *
 **/
 function ForumStriche($forumposting) {
-    $striche = "<td class=\"blank\" nowrap background='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'></td>";
+    $striche = "<td class=\"blank tree-indent\" nowrap background='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'></td>";
     for ($i=0;$i<$forumposting["level"];$i++) {
         if ($forumposting["lines"][$i+1]==0)
-            $striche .= "<td class=\"blank\" nowrap background='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'></td>";
+            $striche .= "<td class=\"blank tree-indent\" nowrap background='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'></td>";
         else
-            $striche .= "<td class=\"blank\" nowrap background='".$GLOBALS['ASSETS_URL']."images/forumstrich.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer2.gif'></td>";
+            $striche .= "<td class=\"blank tree-indent\" nowrap background='".$GLOBALS['ASSETS_URL']."images/forumstrich.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer2.gif'></td>";
     }
     if ($forumposting["lonely"]==FALSE)
-        $striche.= "<td class=\"blank\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrichgrau.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
+        $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrichgrau.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
     else
-        $striche.= "<td class=\"blank\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/steel1.jpg\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
+        $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/steel1.jpg\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
     return $striche;
 }
 
@@ -1723,7 +1723,7 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
  */
 function indentPosting (&$forumposting, $level)
 {
-    echo "<table class=\"blank\" border=0 cellpadding=0 cellspacing=0 width=\"100%\" valign=\"top\"><tr valign=\"top\"><td class=\"blank\" nowrap valign=\"top\" ><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'>";
+    echo "<table class=\"blank\" border=0 cellpadding=0 cellspacing=0 width=\"100%\" valign=\"top\"><tr valign=\"top\"><td class=\"blank tree-indent\" nowrap valign=\"top\" ><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'>";
 
     if ($level){
         $striche = "";

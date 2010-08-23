@@ -274,6 +274,10 @@ tr.cycle_even:hover {
     background-color: #B7C2E2;
 }
 
+td.tree-indent img {
+    vertical-align: bottom;
+}
+
 /** table.collapsable **/
 table.collapsable tbody.collapsed tr {
     display: none;

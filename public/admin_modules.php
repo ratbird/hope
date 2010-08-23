@@ -208,42 +208,37 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
             $plugin_toggle = array();
         }
         if( $changes ){
-            $msg .= "msg§Die ver&auml;nderte Modulkonfiguration wurde &uuml;bernommen";
+            $admin_modules_data['msg'] = 'msg§'._('Die veränderte Modulkonfiguration wurde übernommen.');
+            header('Location: ' . URLHelper::getURL());
+            page_close();
+            die();
         }
     }
 }
 
 //wenn wir frisch reinkommen, werden benoetigte Daten eingelesen
-if (($range_id) && (!$default_x) && (!$uebernehmen_x) && (!$delete_forum) && (!$delete_documents) && (!$resolve_conflicts)) {
+if (($range_id) && (!$default_x) && (!$uebernehmen_x) && (!$resolve_conflicts)) {
     $admin_modules_data["modules_list"] = $amodules->getLocalModules($range_id);
     $admin_modules_data["orig_bin"] = $amodules->getBin($range_id);
     $admin_modules_data["changed_bin"] = $amodules->getBin($range_id);
     $admin_modules_data["range_id"] = $range_id;
     $admin_modules_data["conflicts"] = array();
     $plugin_toggle = array();
-} else {
-    //Sicherheitscheck ob ueberhaupt was zum Bearbeiten gewaehlt ist.
-    if (!$admin_modules_data["range_id"]) {
-        include 'lib/include/html_head.inc.php';
-        include 'lib/include/header.php';
-        include 'lib/include/admin_search_form.inc.php';
-        include 'lib/include/html_end.inc.php';
-        exit;
-    }
-
-    if (!count($admin_modules_data["conflicts"])) {
-        header("Location: " . URLHelper::getURL(""));
-    }
 }
 
-if ($admin_modules_data["range_id"])
-{
+if (isset($admin_modules_data['msg'])) {
+    $msg = $admin_modules_data['msg'];
+    unset($admin_modules_data['msg']);
+}
 
 //Output starts here
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 include 'lib/include/admin_search_form.inc.php';
+
+if ($admin_modules_data["range_id"])
+{
 
 ?>
     <table width="100%" border="0" cellpadding="0" cellspacing="0">

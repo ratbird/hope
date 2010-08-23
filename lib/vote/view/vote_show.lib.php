@@ -924,7 +924,7 @@ function createVoteInfo (&$vote, $isAssociated = NO)
 /* ------------------------------------------------------------------------- */
 define ("VOTE_MESSAGE_EMPTY",
     "<p class=\"info\">\n".
-    "  "._("Es sind keine aktuellen Umfragen vorhanden. Um neue Umfragen zu erstellen, klicken Sie auf die Doppelpfeile.")."\n".
+    "  "._("Es sind keine aktuellen Umfragen vorhanden. Um neue Umfragen zu erstellen, klicken Sie rechts auf die Zahnräder.")."\n".
     "</p>\n");
 /* ------------------------------------------------------------------------- */
 

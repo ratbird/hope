@@ -157,7 +157,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
             echo"\n<td align=\"right\" class=\"topic\">";
             echo "<a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Ankündigungen einstellen")) . "></a> ";
             echo"</td></tr>";
-            echo "\n<tr><td class=\"steel1\" colspan=\"3\"><p class=\"info\">" . _("Es sind keine aktuellen Ankündigungen vorhanden. Um neue Ankündigungen zu erstellen, klicken Sie auf die Doppelpfeile.") . "</p>";
+            echo "\n<tr><td class=\"steel1\" colspan=\"3\"><p class=\"info\">" . _("Es sind keine aktuellen Ankündigungen vorhanden. Um neue Ankündigungen zu erstellen, klicken Sie rechts auf die ZahnrÃ¤der.") . "</p>";
             echo "\n</td></tr></table>";
             return TRUE;
         } else {

@@ -315,7 +315,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
         <tr>
             <td class="steel1" colspan="2">
                 <p class="info">
-                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie auf die Doppelpfeile.") ?>
+                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die Zahnräder.") ?>
                 </p>
             </td>
         </tr>
@@ -486,7 +486,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
         <tr>
             <td class="steel1" colspan="2">
                 <p class="info">
-                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie auf die Doppelpfeile.") ?>
+                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die Zahnräder.") ?>
                 </p>
             </td>
         </tr>
@@ -701,7 +701,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
         <tr>
             <td class="steel1" colspan="2">
                 <p class="info">
-                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie auf die Doppelpfeile.") ?>
+                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die Zahnräder.") ?>
                 </p>
             </td>
         </tr>

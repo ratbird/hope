@@ -965,8 +965,8 @@ div.clear {
 
 #tabs2 li {
     background: url("../images/icons/16/grey/arr_1right.png") no-repeat left center;
-    padding-left: 16px;
-    margin-left: 1.5em;
+    padding-left: 20px;
+    margin-left: 1em;
 }
 
 #tabs2 li.current {

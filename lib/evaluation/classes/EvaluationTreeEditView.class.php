@@ -286,7 +286,7 @@ function showEvalTree(){
    if ($this->moveItemID){
 
     $html .= " <tr>\n";
-#       . "   <td width=\"10\"class=\"blank\" "
+#       . "   <td width=\"10\"class=\"blank tree-indent\" "
 #       . "background=\"".PATH_PICTURES."forumstrich.gif\">"
 #       . "<img src=\""
 #       . PATH_PICTURES."forumstrich.gif\" heigth=\"20\" width=\"10\" border=\"0\" >"
@@ -740,13 +740,13 @@ function createTreeLevelOutput($item_id, $start_itemID = NULL){
         ($item_id != ROOT_BLOCK) ||
         ($item_id != $this->tree->tree_data[$this->startItemID]['parent_id']))){
         if ($this->tree->isLastKid($item_id) || $item_id == ROOT_BLOCK) 
-            $level_output = "<td class=\"blank\" valign=\"top\"  "
+            $level_output = "<td class=\"blank tree-indent\" valign=\"top\"  "
                 . "heigth=\"21\" nowrap>"
                 . "<img src=\"". PATH_PICTURES ."forumstrich2.gif\" "
                 . "border=\"0\" >"
                 . "</td>"; //last
         else 
-            $level_output = "   <td class=\"blank\" valign=\"top\" "
+            $level_output = "   <td class=\"blank tree-indent\" valign=\"top\" "
                 . "heigth=\"21\" nowrap>"
                 . "<img src=\"". PATH_PICTURES
                 . "forumstrich3.gif\" border=\"0\">"
@@ -770,7 +770,7 @@ function createTreeLevelOutput($item_id, $start_itemID = NULL){
                     . "</td>"
                     . $level_output; //nothing
             } else {
-                $level_output = "   <td class=\"blank\" valign=\"top\"  "
+                $level_output = "   <td class=\"blank tree-indent\" valign=\"top\"  "
                     . "heigth=\"21\" nowrap><img src=\""
                     . PATH_PICTURES."forumstrich.gif\"  border=\"0\" >"
                     . "</td>"

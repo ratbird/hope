@@ -146,12 +146,12 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             if ($show_admin) {
                 $colspan++;
                 if (!$show_whole_time) {
-                    printf("\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" %s><b>", tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")));
+                    printf("\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" %s><b>", tooltip(_("Termine. Klicken rechts Sie auf die Zahnräder, um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")));
                     printf(_("Termine für die Zeit vom %s bis zum %s"), strftime("%d. %B %Y", $date_start), strftime("%d. %B %Y", $date_end));
                     printf( "</b></td>\n<td align = \"right\" class=\"topic\">%s<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" %s></a></td></tr>", $admin_link, tooltip(_("Neuen Termin anlegen")));
                     }
                 else {
-                    printf("\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" %s><b>", tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")));
+                    printf("\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" %s><b>", tooltip(_("Termine. Klicken rechts Sie auf die Zahnräder, um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")));
                     printf(_("Termine"));
                     printf("</b></td>\n<td align = \"right\" class=\"topic\">%s<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" %s ></a></td></tr>", $admin_link, tooltip(_("Neuen Termin anlegen")));
                     }
@@ -315,7 +315,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
         <tr>
             <td class="steel1" colspan="2">
                 <p class="info">
-                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die ZahnrÃ¤der.") ?>
+                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die Zahnräder.") ?>
                 </p>
             </td>
         </tr>
@@ -364,7 +364,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
         echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
         if ($show_admin) {
             $colspan++;
-            echo "\n<tr><td class=\"topic\"> <img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" " . tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")) . "> <b>";
+            echo "\n<tr><td class=\"topic\"> <img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" " . tooltip(_("Termine. Klicken rechts Sie auf die Zahnräder, um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")) . "> <b>";
             printf(_("Termine für die Zeit vom %s bis zum %s"), strftime("%d. %B %Y", $list->getStart()), strftime("%d. %B %Y", $list->getEnd()));
             echo "</b></td>";
             echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Neuen Termin anlegen")) . "></a></td></tr>";
@@ -486,7 +486,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
         <tr>
             <td class="steel1" colspan="2">
                 <p class="info">
-                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die ZahnrÃ¤der.") ?>
+                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die Zahnräder.") ?>
                 </p>
             </td>
         </tr>
@@ -529,7 +529,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
         echo "<table class=\"index_box\">";
         echo "\n<tr><td class=\"topic\" align=\"left\">\n";
         echo "<img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" ";
-        echo tooltip(_("Termine. Klicken Sie auf die Pfeile (rechts), um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen."));
+        echo tooltip(_("Termine. Klicken rechts Sie auf die Zahnräder, um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen."));
         echo "> <b>";
         echo _("Meine aktuellen Termine");
         echo "</b></td>";
@@ -701,7 +701,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
         <tr>
             <td class="steel1" colspan="2">
                 <p class="info">
-                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die ZahnrÃ¤der.") ?>
+                    <?= _("Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, klicken Sie rechts auf die Zahnräder.") ?>
                 </p>
             </td>
         </tr>

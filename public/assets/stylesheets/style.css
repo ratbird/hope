@@ -1537,3 +1537,60 @@ th.sortdesc {
     background: transparent url('../images/dreieck_down.png') no-repeat center right;
     padding: 2px 15px;
 }
+
+/* classes for the evaluation modules in Stud.IP */
+
+.eval_title {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #213499;
+}
+
+.eval_error {
+    color: #E00000;
+}
+
+.eval_success {
+    color: #008000;
+}
+
+.eval_info {
+    color: #333333;
+}
+
+.eval_metainfo {
+    font-size: 0.8em;
+}
+
+.eval_highlight {
+    background-image:url('../images/steelgraulight_hover.gif');
+}
+
+.eval_gray {
+    background: none; background-color:#d5d5dd;
+}
+
+.steel_with_graulight_bg {
+    background-image: url('../images/steel_with_graulight_bg.jpg');
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.steel_with_steel1_bg {
+    background-image: url('../images/steel_with_steel1_bg.jpg');
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.steel3 {
+    background-image: url('../images/steel3.jpg');
+}
+
+.steelblau4 {
+    background-image: url('../images/steelblau4.jpg');
+}
+
+h3.eval {
+    font-size: 1.3em;
+    color: #000000;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+}

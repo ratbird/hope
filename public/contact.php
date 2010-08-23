@@ -145,7 +145,7 @@ if ($search_exp) {
     } else {
         $search_exp = trim($search_exp);
         if (SearchResults($search_exp)) {
-            printf ("<input type=\"IMAGE\" name=\"addsearch\" src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" value=\"" . _("In Adressbuch eintragen") . "\" %s>	 ", tooltip(_("In Adressbuch eintragen")));
+            printf ("<input type=\"IMAGE\" name=\"addsearch\" src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" value=\"" . _("In Adressbuch eintragen") . "\" %s>     ", tooltip(_("In Adressbuch eintragen")));
             echo SearchResults($search_exp);
         } else {
             echo "<font size=\"2\">"._("keine Treffer zum Suchbegriff:")."</font><b>&nbsp; $search_exp&nbsp; </b>";
@@ -219,7 +219,7 @@ if (($contact["view"])=="gruppen") {
     ."<a href=\"".URLHelper::getLink('',array('filter'=>'all'))."\"><font size=\"2\">" . _("Alle Gruppen") . "</font></a>"
     ."&nbsp; <a href=\"".URLHelper::getLink('',array('groupid'=>'all'))."\"><img style=\"vertical-align:middle;\""
     .  Assets::img('icons/16/blue/vcard.png', array('class' => 'text-top', 'title' => _("Alle Einträge als vCard exportieren")))
-	. "</a>&nbsp; </td>";
+    . "</a>&nbsp; </td>";
     if (!$filter) {
         $cssSw->switchClass();
     }

@@ -299,12 +299,12 @@ class MetaDate {
 
     private function sortCycleDataHelper($a, $b) {
         if ($a->sorter == $b->sorter) {
-	        if ($a->weekday == $b->weekday) {
-	            if ($a->start_hour == $b->start_hour) {
-	                return 0;
-	            }
-	            return ($a->start_hour < $b->start_hour) ? -1 : 1;
-	        }
+            if ($a->weekday == $b->weekday) {
+                if ($a->start_hour == $b->start_hour) {
+                    return 0;
+                }
+                return ($a->start_hour < $b->start_hour) ? -1 : 1;
+            }
             return ($a->weekday <  $b->weekday) ? -1 : 1;
         }
         return ($a->sorter < $b->sorter) ? -1 : 1;

@@ -2895,7 +2895,7 @@ if ($level == 2)
                                                 </td>
                                                 <td class="<?= $cssSw->getClass() ?>" nowrap colspan=2 >
                                                 <a href="<?= URLHelper::getLink('?delete_domain='.$domain_id) ?>">
-                                                 	<?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' =>_('Nutzerdomäne aus der Liste löschen'))) ?>
+                                                    <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' =>_('Nutzerdomäne aus der Liste löschen'))) ?>
                                                 </a>
                                                 </td>
                                             </tr>
@@ -3054,7 +3054,7 @@ if ($level == 3) {
                                         if ($sem_create_data["turnus_count"]>1) {
                                             ?>
                                             &nbsp; <a href="<? echo URLHelper::getLink("?delete_turnus_field=".($i+1)) ?>">
-                                            	<?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' =>_('Dieses Feld aus der Auswahl löschen')));
+                                                <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' =>_('Dieses Feld aus der Auswahl löschen')));
                                         }
                                         echo  Termin_Eingabe_javascript(4, $i, 0, $ss,$sm,$es,$em);
 
@@ -3453,7 +3453,7 @@ if ($level == 4) {
                                 <tr>
                                     <td colspan="2" align="right">
                                         <font size="-1"><?=("passende R&auml;ume suchen")?></font>
-                           				<input type="image" src="<?= Assets::image_path('icons/16/yellow/arr_2right.png') ?>" <? echo tooltip(_("passende Räume suchen")) ?> name="search_properties">
+                                        <input type="image" src="<?= Assets::image_path('icons/16/yellow/arr_2right.png') ?>" <? echo tooltip(_("passende Räume suchen")) ?> name="search_properties">
                                     </td>
                                     <td>
                                         &nbsp;

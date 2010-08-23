@@ -245,9 +245,9 @@ class StudygroupModel
     function countGroups($search = null)
     {
         $status = studygroup_sem_types();
-		
+
         $sql = "SELECT COUNT(*) as c FROM seminare WHERE status IN ('" . implode("','", $status) . "')";
-    	
+
         if (isset($search)) {
             $search = DBManager::get()->quote('%' . $search . '%');
             $sql .= " AND seminare.Name LIKE {$search}";

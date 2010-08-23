@@ -69,12 +69,12 @@ function print_rss($username) {
             if ($count){
                 echo "\n<a href=\"$PHP_SELF?rss=order_rss&direction=up&username=$username&view=$view&cat_id=" . $db->f("feed_id")
                 . "&show_rss_bsp=$show_rss_bsp\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('RSS-Feed nach oben verschieben'))) 
-				. "</a>";
+                . "</a>";
             }
             if ($count != ($db->num_rows()-1) ){
                 echo "\n<a href=\"$PHP_SELF?rss=order_rss&direction=down&username=$username&view=$view&cat_id=" . $db->f("feed_id")
                 . "&show_rss_bsp=$show_rss_bsp\">" .  Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' =>_('RSS-Feed nach unten verschieben'))) 
-				. "</a>"; 
+                . "</a>"; 
               }
             echo "<br>&nbsp;</div></td></tr>";
             echo "<tr><td class=\"".$cssSw->getClass()."\"><div style=\"padding: 10px; margin: 0px;\">URL:<BR><input type='text' name='rss_url[]' style=\"width: 50%\" value='".htmlReady($db->f("url"))."' size=40>";

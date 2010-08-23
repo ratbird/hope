@@ -719,7 +719,7 @@ if(is_object($group_obj)){
                 <div style="margin-bottom: 5px;margin-right:5px;" align="right">
                 <a href="<?=URLHelper::getLink('?cmd=send_excel_sheet')?>">
                 <?= Assets::img('icons/16/blue/download.png', array('class' => 'text-top')) ?>
-				<?=_("Download als Excel Datei")?></a></div>
+                <?=_("Download als Excel Datei")?></a></div>
             </td>
             </form>
         </tr>

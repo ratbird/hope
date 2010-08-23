@@ -87,10 +87,10 @@ class StudygroupController extends AuthenticatedController {
         // let the user know that there is no studygroup for the searchterm
         if (empty($groups) && !$reset) {
             if( Request::submitted('searchtext')) {
-            	$this->flash['info'] = _("Der Suchbegriff ist zu kurz.");
-            	unset($this->flash['searchterm']);
+                $this->flash['info'] = _("Der Suchbegriff ist zu kurz.");
+                unset($this->flash['searchterm']);
             } elseif (isset($this->flash['searchterm'])) {
-            	$this->flash['info'] = _("Es wurden keine Studiengruppen für den Suchbegriff gefunden");
+                $this->flash['info'] = _("Es wurden keine Studiengruppen für den Suchbegriff gefunden");
             }
         } elseif (!$check) {
             unset($this->flash['info']);

@@ -407,7 +407,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
 
         if ($course_output["courses"]) {
             $infobox[2]["kategorie"] = _("Verkn&uuml;pfungen:");
-                $infobox[2]["eintrag"][] = array (	"icon" => "icons/16/black/arr_2right.png" ,
+                $infobox[2]["eintrag"][] = array ("icon" => "icons/16/black/arr_2right.png" ,
                                             "text"  => $course_output["update"]
                                         );
         }

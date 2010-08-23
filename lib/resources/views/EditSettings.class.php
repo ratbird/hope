@@ -173,7 +173,7 @@ class EditSettings {
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" valign="middle" align="center">
                     <font size=-1>
                         <a href="<? echo $PHP_SELF ?>?delete_root_user_id=<? echo $this->db->f("user_id") ?>">
-	                        <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Berechtigungen löschen'))) ?>
+                            <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Berechtigungen löschen'))) ?>
                         </a>
                     </font>
                 </td>
@@ -289,7 +289,7 @@ class EditSettings {
                                 if (!$this->db2->f("system")) {
                                     ?>
                                     <a href="<? echo $PHP_SELF ?>?delete_type_property_id=<? echo $this->db2->f("property_id") ?>&delete_type_category_id=<? echo $this->db2->f("category_id") ?>">
-                   	                        <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Eigenschaft löschen'))) ?>
+                                            <?=Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Eigenschaft löschen'))) ?>
                                     </a>
                                     <?
                                 } else {

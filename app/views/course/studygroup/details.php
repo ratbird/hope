@@ -1,7 +1,7 @@
 <?php
 $icon = 'link_intern.gif';
 if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId())) {
-	$action = _("Persönlicher Status:");
+    $action = _("Persönlicher Status:");
     if ($membership_requested) {
         $infotext= _("Mitgliedschaft bereits beantragt!");
     } else {
@@ -15,7 +15,7 @@ if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId())) {
 
 
 } else {
-	$action = _("Aktionen:");
+    $action = _("Aktionen:");
     $infolink = '<a href="'. UrlHelper::getLink('sem_verify.php?id='. $studygroup->getId()) .'">%s</a>';
     $infotext= sprintf( $infolink, $studygroup->admission_prelim ? _("Mitgliedschaft beantragen") : _("Studiengruppe beitreten"));
 }

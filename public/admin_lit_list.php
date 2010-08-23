@@ -213,7 +213,7 @@ if (!$_the_tree->getNumKids('root')){
 
 $infobox[1] = array ("kategorie" => _("Aktionen:"));
 $infobox[1]["eintrag"][] = array('icon' => "icons/16/black/search.png","text"  => "<a href=\"lit_search.php\">" . _("Literatur suchen") . "</a>" );
-$infobox[1]["eintrag"][] = array('icon' => "icons/16/black/add/	literature.png","text"  => "<a href=\"admin_lit_element.php?_range_id=new_entry\">" . _("Neue Literatur anlegen") . "</a>" );
+$infobox[1]["eintrag"][] = array('icon' => "icons/16/black/add/ literature.png","text"  => "<a href=\"admin_lit_element.php?_range_id=new_entry\">" . _("Neue Literatur anlegen") . "</a>" );
 
 print_infobox ($infobox, "infobox/literaturelist.jpg");
 ?>

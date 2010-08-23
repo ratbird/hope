@@ -37,7 +37,7 @@
                     </select>
                 </td>
                 <td style="text-align: center;">
-                    <input type="image" name="assign_role" src="<?= Assets::image_path(icons/16/yellow/arr_2left.png') ?>" title="<?= _('Markierte Rollen dem Plugin zuweisen') ?>">
+                    <input type="image" name="assign_role" src="<?= Assets::image_path('icons/16/yellow/arr_2left.png') ?>" title="<?= _('Markierte Rollen dem Plugin zuweisen') ?>">
                     <br>
                     <br>
                     <input type="image" name="remove_role" src="<?= Assets::image_path('icons/16/yellow/arr_2right.png') ?>" title="<?= _('Markierte Rollen entfernen') ?>">

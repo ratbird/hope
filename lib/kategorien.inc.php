@@ -67,7 +67,7 @@ function print_freie($username) {
             if ($count){
                 echo "\n".'<a href="'.URLHelper::getLink('?freie=order_freie&direction=up&username='.$username.'&view='.$view.'&cat_id=' . $db->f('kategorie_id'))
                 . '">' . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('Kategorie nach oben verschieben'))) 
-               	. '</a>';
+                . '</a>';
             }
             if (($count+$hidden_count) != ($db->num_rows()-1) ){
                 echo "\n".'<a href="'.URLHelper::getLink('?freie=order_freie&direction=down&username='.$username.'&view='.$view.'&cat_id=' . $db->f("kategorie_id"))

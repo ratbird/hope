@@ -350,7 +350,7 @@ function ShowContact ($contact_id)
                         ." </a></td></tr>"
                         ."<tr><td colspan=\"2\" class=\"steelgraulight\" align=\"center\"><a href=\"$PHP_SELF?view=$view&filter=$filter\">"
                         .Assets::img('icons/16/blue/arr_1up.png', array('class' => 'text-top', 'title' =>_('Kontakte schlieﬂen')))
-						."</a></td></tr>";
+                        ."</a></td></tr>";
         } else {
             if ($forum["jshover"]==1) { // Hovern
                 $hoverlink = "<a href=\"$PHP_SELF?view=$view&filter=$filter&open=".$contact_id."#anker\" ";

@@ -1060,7 +1060,7 @@ if ($view == 'Studium') {
                 if ($allow_change_in) {
                     echo '<input type="CHECKBOX" name="inst_delete[]" value="'.$inst_id.'">';
                 } else {
-	                echo Assets::img('icons/16/grey/accept.png', array('class' => 'text-top'));
+                    echo Assets::img('icons/16/grey/accept.png', array('class' => 'text-top'));
                 }
                 echo "</td></tr>\n";   
                 $i++;

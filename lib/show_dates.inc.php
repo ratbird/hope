@@ -246,8 +246,8 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $zusatz .= "#anker\"><img src=\"".Assets::image_path('icons/16/blue/files.png')."\" ";
                 $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
                 $zusatz .= "></a>";
-				//oldscool: dublicate the right border of the icon according to document count. Do we need this anymore?
-				/*
+                //oldscool: dublicate the right border of the icon according to document count. Do we need this anymore?
+                /*
                 if ($num_docs > 5)
                     $tmp_num_docs = 5;
                 else
@@ -588,8 +588,8 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                                     . "#anker\"><img src=\"".Assets::image_path('icons/16/blue/files.png')."\" ";
                     $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
                     $zusatz .= ">";
-					//oldscool: dublicate the right border of the icon according to document count. Do we need this anymore?
-					/*
+                    //oldscool: dublicate the right border of the icon according to document count. Do we need this anymore?
+                    /*
                     if ($num_docs > 5)
                         $tmp_num_docs = 5;
                     else

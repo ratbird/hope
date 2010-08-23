@@ -287,7 +287,7 @@ jQuery("#settings").accordion({
     collapsible: true,
     autoHeight: false,
     change: function (event, ui) {
-    	jQuery('#open_variable').attr('value', ui.newHeader.attr('id'));
+        jQuery('#open_variable').attr('value', ui.newHeader.attr('id'));
     }
 });
 </script>

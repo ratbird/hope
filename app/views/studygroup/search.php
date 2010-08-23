@@ -18,13 +18,13 @@ $link = "dispatch.php/studygroup/search/%s/".$sort;
 
 ?>
 <form action="<?= $controller->url_for('studygroup/search') ?>" method=post>
-	<div class="search_box" align="center">
+    <div class="search_box" align="center">
         <input name="searchtext" type="text" size="45" style="vertical-align: middle;" value="<?=$search?>" />
         <input type="image" <?= makeButton('suchestarten','src')?> style="vertical-align: middle;"/>
          <a href="<?=URLHelper::getLink('',array('action' => 'deny'))?>">
             <?= makeButton('zuruecksetzen', 'img', _('Suche zur¸cksetzen')) ?>
         </a>
-	</div>
+    </div>
 </form>
 <br>
 

@@ -453,7 +453,7 @@ $SYMBOL_SHORT = array( //use this shorts to insert an symbols (filename + ".gif"
     "(="=>"symbol04" ,
     "(c)"=>"symbol05" ,
     "(r)"=>"symbol06" ,
-    " tm "=>"symbol08");
+    " tm "=>"symbol08");«
 
 
 /*configuration for additional modules
@@ -495,7 +495,7 @@ $xslt_filename_default = "studip";
 
 // existing output formats
 $output_formats = array(
-    "html"      =>      "Hypertext (HTML)",
+    "html"      =>      "Hypertext Markup Language (HTML)",
     "rtf"       =>      "Rich Text Format (RTF)",
     "txt"       =>      "Text (TXT)",
     "csv"       =>      "Comma Separated Values (Excel)",
@@ -504,16 +504,16 @@ $output_formats = array(
 );
 
 // Icons für die Ausgabeformate
-$export_icon["xml"] = "xls-icon.gif";
-$export_icon["xslt"] = "xls-icon.gif";
-$export_icon["xsl"] = "xls-icon.gif";
-$export_icon["rtf"] = "rtf-icon.gif";
-$export_icon["fo"] = "pdf-icon.gif";
-$export_icon["pdf"] = "pdf-icon.gif";
-$export_icon["html"] = "txt-icon.gif";
-$export_icon["htm"] = "txt-icon.gif";
-$export_icon["txt"] = "txt-icon.gif";
-$export_icon["csv"] = "xls-icon.gif";
+$export_icon["xml"] = "icons/16/blue/file-generic.png";
+$export_icon["xslt"] = "icons/16/blue/file-generic.png";
+$export_icon["xsl"] = "icons/16/blue/file-generic.png";
+$export_icon["rtf"] = "icons/16/blue/file-text.png";
+$export_icon["fo"] = "icons/16/blue/file-generic.png";
+$export_icon["pdf"] = "icons/16/blue/file-pdf.png";
+$export_icon["html"] = "icons/16/blue/file-text.png";
+$export_icon["htm"] = "icons/16/blue/file-text.png";
+$export_icon["txt"] = "icons/16/blue/file-text.png";
+$export_icon["csv"] = "icons/16/blue/file-xls.png";
 // more icons can be added here
 
 // PDF- templates for the "record of study" course-export

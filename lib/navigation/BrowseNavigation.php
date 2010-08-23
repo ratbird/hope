@@ -47,6 +47,7 @@ class BrowseNavigation extends Navigation
         global $user, $perm;
 
         parent::initSubNavigation();
+        $sem_create_perm = in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent';
 
         // my courses
         if (is_object($user) && $user->id != 'nobody' && !$perm->have_perm('root')) {
@@ -66,7 +67,9 @@ class BrowseNavigation extends Navigation
                     $navigation->addSubNavigation('record_of_study', new Navigation(_('Druckansicht'), 'recordofstudy.php'));
                 }
             }
-
+            if ($perm->have_perm($sem_create_perm)) {
+                $navigation->addSubNavigation('create', new Navigation(_('Neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
+            }
             $this->addSubNavigation('my_courses', $navigation);
         }
     }

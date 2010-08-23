@@ -2063,8 +2063,11 @@ switch ($level) {
         break;
 }
 
-Navigation::activateItem('/admin/course/create');
-
+if (!$perm->have_perm('admin')) {
+    Navigation::activateItem('/browse/my_courses/create');
+} else {
+    Navigation::activateItem('/admin/course/create');
+}
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head

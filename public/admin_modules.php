@@ -224,8 +224,13 @@ if (($range_id) && (!$default_x) && (!$uebernehmen_x) && (!$delete_forum) && (!$
 } else {
     //Sicherheitscheck ob ueberhaupt was zum Bearbeiten gewaehlt ist.
     if (!$admin_modules_data["range_id"]) {
-        throw new AccessDeniedException();
+        include 'lib/include/html_head.inc.php';
+        include 'lib/include/header.php';
+        include 'lib/include/admin_search_form.inc.php';
+        include 'lib/include/html_end.inc.php';
+        exit;
     }
+
     if (!count($admin_modules_data["conflicts"])) {
         header("Location: " . URLHelper::getURL(""));
     }

@@ -58,7 +58,7 @@
   background-image: url('../images/steelblau4.jpg');
 }
 
-h3 {
+h3.eval_h3 {
   font-size: 1.3em;
   color: #000000;
   font-weight: bold;

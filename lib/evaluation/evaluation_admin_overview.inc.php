@@ -243,6 +243,7 @@ $line->addAttr ("noshade", "noshade");
 #$td->addContent ($line);
 $td->addContent (new HTMLempty ("br"));
 $headline = new HTML ("h3");
+$headline->addAttr("class","eval_h3");
 $headline->addContent(_("Evaluationen"));
 $td->addContent($headline);
 

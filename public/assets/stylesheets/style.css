@@ -834,22 +834,22 @@ div.wikitoc ul {
     vertical-align: middle;
 }
 .ajax_notification {
-  position: relative;
+    position: relative;
 }
 .ajax_notification .notification {
-  background: rgba(255, 255, 255, 0.5) url(../images/ajax_indicator_small.gif) center center no-repeat;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  -moz-border-radius: 8px;
-  -webkit-border-radius: 8px;
-  display: inline-block;
-  *display: inline;
-  height: 16px;
-  margin: 0 3px;
-  opacity: 1;
-  position: absolute;
-  width: 16px;
-  zoom: 1;
+    background: rgba(255, 255, 255, 0.5) url(../images/ajax_indicator_small.gif) center center no-repeat;
+    border: 1px solid #ccc;
+    display: inline-block;
+    *display: inline;
+    height: 16px;
+    margin: 0 3px;
+    opacity: 1;
+    position: absolute;
+    width: 16px;
+    zoom: 1;
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
 }
 
 /* --- Autocompleter -------------------------------------------------------- */
@@ -1401,16 +1401,10 @@ div.schedule_entry dl {
     color: white;
     height: 100%; 
     margin: 0px;
-    -moz-border-radius: 3px;
 }
 
 div.schedule_entry dl.hover:hover  {
     opacity: 0.7;
-}
-
-div.schedule_entry dl dt {
-    -moz-border-radius-topleft: 3px;
-    -moz-border-radius-topright: 3px;
 }
 
 div.schedule_entry dl dd {
@@ -1452,13 +1446,11 @@ div.snatch div {
     width: 400px;
     height: 230px;
     background-color: #E8EEF7;
-    -moz-border-radius: 10px;
-    font-size: 12pt;
+    z-index: 3;
 }
 
-div.schedule_edit_entry {
+div.schedule_edit_entry, #schedule_settings {
     position: absolute;
-
     left: 50%;
     top: 180px;
     margin-left: -25%;
@@ -1466,13 +1458,10 @@ div.schedule_edit_entry {
     max-height: 80em;
     height: auto;
     width: 50%;
-
     padding-bottom: 1em;
-
     background-color: #E8EEF7;
     border: 2px solid #E0E0F0;
-    -moz-border-radius: 10px;
-    z-index: 10;
+    z-index: 4;
 }
 
 div.schedule_edit_entry > form {
@@ -1482,13 +1471,12 @@ div.schedule_edit_entry > form {
 }
 
 div.window_heading {
-    font-size: 12pt;
     font-weight: bold;
     text-align: center;
-    background-image: url(../images/fill1.gif);
-    -moz-border-radius-topleft: 10px;
-    -moz-border-radius-topright: 10px;
-    color: white;
+    background-image: url('../images/fill1.gif');
+    color: #FFF;
+    cursor: move;
+    padding: 2px;
 }
 
 #color_picker {
@@ -1526,11 +1514,10 @@ div.settings div {
     font-weight: bold;
 }
 
-/* classes for sortable table headers */
-
+/* classes for sortable table headers --------------------------------------- */
 tr.sortable {
     background: url('../images/steelgraudunkel.gif');
-    cursor: pointer;"
+    cursor: pointer;
 }
 th.sortasc {
     background: transparent url('../images/dreieck_up.png') no-repeat center right;
@@ -1541,8 +1528,7 @@ th.sortdesc {
     padding: 2px 15px;
 }
 
-/* classes for the evaluation modules in Stud.IP */
-
+/* classes for the evaluation modules in Stud.IP ---------------------------- */
 .eval_title {
     font-size: 1.2em;
     font-weight: bold;

@@ -1,4 +1,4 @@
-<?php
+<?
 $zoom = Request::get('zoom', 0);
 
 $text  = _("Der Stundenplan zeigt Ihre regelmäßigen Veranstaltungen dieses Semesters sowie von Ihnen selbst erstellte Belegungen.");
@@ -24,7 +24,7 @@ $infobox['content'] = array(
         'kategorie' => _("Information:"),
         'eintrag'   => array(
             array("text" => $text, "icon" => "icons/16/black/info.png"),
-            array("text" => $text2, "icon" => "icons/16/black/info.png")
+            array("text" => $text2, "icon" => "icons/16/black/search.png")
         )
     ),
 
@@ -44,7 +44,7 @@ $infobox['content'][1]['eintrag'][] = array (
     'text' => '<a href="'. $controller->url_for('calendar/schedule/index/'. implode(',', $days)
            .  '?printview=true' . (Request::get('show_hidden') ? '&show_hidden=true' : ''))
            .  '" target="_blank">'._("Druckansicht") .'</a>',
-    'icon' => "icons/16/black/info.png"
+    'icon' => "icons/16/black/print.png"
 );
 
 $infobox['content'][1]['eintrag'][] = array (
@@ -54,7 +54,7 @@ $infobox['content'][1]['eintrag'][] = array (
 
 $infobox['content'][1]['eintrag'][] = array (
     'text' => $hidden_text,
-    'icon' => 'icons/16/black/info.png'
+    'icon' => 'icons/16/black/visibility-visible.png'
 );
 
 ?>

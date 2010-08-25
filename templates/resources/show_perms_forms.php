@@ -92,7 +92,7 @@
             <!-- Trash  -->
             <? if (($owner_perms) || (($admin_perms) && ($db->f("perms") == "autor"))) : ?>
                 <a href="<?= UrlHelper::getLink('?change_object_perms='. $resObject->getId() .'&delete_user_perms='. $db->f("user_id")) ?>">
-                    <?= Assets::img('trash', array('title' => _("Berechtigung löschen"))) ?>
+                    <?= Assets::img('icons/16/blue/trash.png', array('title' => _("Berechtigung löschen"))) ?>
                 </a>
             <? else : ?>
                 <?= Assets::img('icons/16/grey/decline/trash.png', array('title' => _("Sie dürfen diese Berechtigung leider nicht löschen"))); ?>

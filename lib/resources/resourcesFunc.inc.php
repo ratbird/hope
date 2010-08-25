@@ -384,7 +384,7 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
     if (!$user_id)
         $user_id = $user->id;
     if ($only_not_closed) {
-        $criteria = ' closed = 0 '; 
+        $criteria = ' closed = 0 ';
     } else {
         $criteria = ' 1 ';
     }
@@ -392,9 +392,9 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
         $criteria .= " AND rr.request_id='$single_request' ";
     } elseif ($semester_id){
         $semester = SemesterData::GetInstance()->getSemesterData($semester_id);
-        $criteria .= ' AND ((rr.termin_id <> \'\' AND tt.date BETWEEN ' . (int)$semester['beginn'] . ' AND ' . (int)$semester['ende'] 
+        $criteria .= ' AND ((rr.termin_id <> \'\' AND tt.date BETWEEN ' . (int)$semester['beginn'] . ' AND ' . (int)$semester['ende']
                     . ')  OR (rr.termin_id = \'\' AND t.date BETWEEN ' . (int)$semester['beginn'] . ' AND ' . (int)$semester['ende'] . ')) ';
-    } 
+    }
     if ((getGlobalPerms($user_id) == "admin") || ($perm->have_perm("root"))) {
         $query = sprintf("SELECT request_id, closed, tt.termin_id as tt_termin_id, rr.termin_id as rr_termin_id,
                             COUNT(IF(t.date_typ IN ".getPresenceTypeClause(). ",t.termin_id,NULL)) as anzahl_termine,
@@ -403,7 +403,7 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
                             INNER JOIN seminare s USING(seminar_id)
                             LEFT JOIN termine tt ON (tt.termin_id = rr.termin_id AND tt.date > UNIX_TIMESTAMP())
                             LEFT JOIN termine t ON(s.Seminar_id = t.range_id AND t.date > UNIX_TIMESTAMP()) WHERE $criteria GROUP BY request_id");
-                            
+
         $db->cache_query($query);
         while ($db->next_record()) {
             $requests [$db->f("request_id")] = array("my_sem"=>TRUE, "my_res"=> strlen($db->f("resource_id")) > 0, "closed"=>$db->f("closed"));
@@ -428,7 +428,7 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
         }
         if (sizeof($my_res)) {
             $in_resource_id =  "('".join("','",array_keys($my_res))."')";
-            $query_res = sprintf("SELECT request_id, closed, tt.termin_id as tt_termin_id, rr.termin_id as rr_termin_id, 
+            $query_res = sprintf("SELECT request_id, closed, tt.termin_id as tt_termin_id, rr.termin_id as rr_termin_id,
                                 COUNT(IF(t.date_typ IN ".getPresenceTypeClause(). ",t.termin_id,NULL)) as anzahl_termine,
                                 rr.resource_id
                                 FROM resources_requests rr
@@ -446,7 +446,7 @@ function getMyRoomRequests($user_id = '', $semester_id = null, $only_not_closed 
         }
         if (sizeof($my_sems)) {
             $in_seminar_id =  "('".join("','",array_keys($my_sems))."')";
-            $query_sem = sprintf("SELECT request_id, closed, tt.termin_id as tt_termin_id, rr.termin_id as rr_termin_id, 
+            $query_sem = sprintf("SELECT request_id, closed, tt.termin_id as tt_termin_id, rr.termin_id as rr_termin_id,
                                 COUNT(IF(t.date_typ IN ".getPresenceTypeClause(). ",t.termin_id,NULL)) as anzahl_termine,
                                 rr.resource_id
                                 FROM resources_requests rr
@@ -855,13 +855,13 @@ function showSearchForm($name, $search_string='', $user_only=FALSE, $administrab
 
         ?>
         <input type="hidden" name="<? echo "search_string_".$name ?>" value="<? echo $search_string ?>">
-        <font size=-1><input type="image" align="absmiddle"  name="<? echo "send_".$name ?>" src="<?= $GLOBALS['ASSETS_URL'] ?>images/move_<?=$img_dir.".gif\" ".tooltip (_("diesen Eintrag übernehmen")) ?> border="0" value="<?=_("&uuml;bernehmen")?>" ></font>
+        <input type="image" name="<? echo "send_".$name ?>" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr_2<?=$img_dir.".png\" ".tooltip (_("diesen Eintrag übernehmen")) ?> value="<?=_("&uuml;bernehmen")?>" >
         <select align="absmiddle" name="<? echo "submit_".$name ?>">
         <?
         if ($allow_all)
             print "<option style=\"vertical-align: middle;\" value=\"all\">"._("jedeR")."</option>";
 
-        if ( is_array($my_objects) ) 
+        if ( is_array($my_objects) )
         foreach ($my_objects as $key=>$val) {
             if ($val["art"] != $old_art) {
                 ?>

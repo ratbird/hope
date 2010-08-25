@@ -56,7 +56,7 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
             <table cellspacing="0" cellpadding="0" border="0" width="100%">
                 <tr>
                     <?
-                    printhead ("99%", FALSE, "", "open", true, $xml_printimage, $xml_printlink, $xml_printdesc);
+                    printhead ("99%", FALSE, "", "open", true, ' ' . $xml_printimage, $xml_printlink, $xml_printdesc);
                     ?>
                 </tr>
             </table>
@@ -75,7 +75,7 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
             <table cellspacing="0" cellpadding="0" border="0" width="100%">
                 <tr>
                     <?
-                    printhead ("99%", FALSE, "", "open", true, $xslt_printimage, $xslt_printlink, $xslt_printdesc);
+                    printhead ("99%", FALSE, "", "open", true, ' ' . $xslt_printimage, $xslt_printlink, $xslt_printdesc);
                     ?>
                 </tr>
             </table>
@@ -94,7 +94,7 @@ if (($o_mode != "direct") AND ($o_mode != "passthrough"))
             <table cellspacing="0" cellpadding="0" border="0" width="100%">
                 <tr>
                     <?
-                    printhead ("99%", FALSE, "", "open", true, $result_printimage, $result_printlink, $result_printdesc);
+                    printhead ("99%", FALSE, "", "open", true, ' ' . $result_printimage, $result_printlink, $result_printdesc);
                     ?>
                 </tr>
             </table>

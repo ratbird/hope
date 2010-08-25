@@ -807,13 +807,13 @@ $anzahl_teilnehmer_kontingent = $db->f('teilnehmer_kontingent');
                         </td>
                         <? if (!isset($view_order) || ($view_order == "abc")) { ?>
                         <td nowrap class="steelgraulight_shadow" valign="middle">
-                            &nbsp;<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/red/arr_1right.png" align="absmiddle">
+                            <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Alphabetisch")?></font>&nbsp;
                         <? } else { ?>
                         <td nowrap class="steelkante" valign="middle">
                             &nbsp;
                             <a href="<?= URLHelper::getLink('?view_order=abc') ?>">
-                                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/arr_1right.png" border="0" align="absmiddle">
+                                <?= Assets::img('icons/16/grey/arr_1right.png', array('class' => 'text-top')) ?>
                                 <font size="-1" color="#555555"><?=_("Alphabetisch")?></font>
                             </a>
                             &nbsp;
@@ -821,13 +821,13 @@ $anzahl_teilnehmer_kontingent = $db->f('teilnehmer_kontingent');
                         </td>
                         <? if (isset($view_order) && ($view_order == "date")) { ?>
                         <td nowrap class="steelgraulight_shadow" valign="middle">
-                            &nbsp;<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/red/arr_1right.png" align="absmiddle">
+                            <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Anmeldedatum")?></font>&nbsp;
                         <? } else { ?>
                         <td nowrap class="steelkante" valign="middle">
                             &nbsp;
                             <a href="<?= URLHelper::getLink('?view_order=date') ?>">
-                                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/arr_1right.png" border="0" align="absmiddle">
+                                <?= Assets::img('icons/16/grey/arr_1right.png', array('class' => 'text-top')) ?>
                                 <font size="-1" color="#555555"><?=_("Anmeldedatum")?></font>
                             </a>
                             &nbsp;
@@ -835,13 +835,13 @@ $anzahl_teilnehmer_kontingent = $db->f('teilnehmer_kontingent');
                         </td>
                         <? if (isset($view_order) && ($view_order == "active")) { ?>
                         <td nowrap class="steelgraulight_shadow" valign="middle">
-                            &nbsp;<img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/red/arr_1right.png" align="absmiddle">
+                            <?= Assets::img('icons/16/red/arr_1right.png', array('class' => 'text-top')) ?>
                             <font size="-1"><?=_("Aktivität")?></font>&nbsp;
                         <? } else { ?>
                         <td nowrap class="steelkante" valign="middle">
                             &nbsp;
                             <a href="<?= URLHelper::getLink('?view_order=active') ?>">
-                                <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/arr_1right.png" border="0" align="absmiddle">
+                                <?= Assets::img('icons/16/grey/arr_1right.png', array('class' => 'text-top')) ?>
                                 <font size="-1" color="#555555"><?=_("Aktivität")?></font>
                             </a>
                             &nbsp;
@@ -879,10 +879,9 @@ $anzahl_teilnehmer_kontingent = $db->f('teilnehmer_kontingent');
     <tr>
         <td class="blank" width="100%" colspan="2">
         <a href="<?= URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php', 'course_id' => $SessSemName[1], 'emailrequest' => 1, 'subject' => $subject, 'filter' => 'all')) ?>">
-        <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/mail.png" border="0" vspace="3" hspace="3" align="absmiddle">
-        <span style="font-size:80%">
+        <?= Assets::img('icons/16/blue/move_right/mail.png', array('class' => 'text-top')) ?>
         <?=_("Systemnachricht mit Emailweiterleitung an alle Teilnehmer verschicken")?>
-        </span></a>
+        </a>
         </td>
     </tr>
     <? } ?>
@@ -990,7 +989,7 @@ while (list ($key, $val) = each ($gruppe)) {
             $tooltiptxt = _("Alle Informationsfelder aufklappen");
         }
         print "<a href=\"".URLHelper::getLink("?cmd=allinfos&area=$key")."\">";
-        print "<img src=\"".$GLOBALS['ASSETS_URL']."images/$image\" border=\"0\" ".tooltip($tooltiptxt)." class=\"text-bottom\"></a>";
+        print "<img src=\"". Assets::image_path($image) ."\" ".tooltip($tooltiptxt)." class=\"text-top\"></a>";
     } else {
         print "&nbsp; ";
     }
@@ -1179,7 +1178,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
     printf ("<td class=\"%s\" nowrap>%s<font size=\"-1\">&nbsp;%s.</td>", $class, $anker, $c);
     printf ("<td colspan=\"2\" class=\"%s\">", $class);
     if ($rechte) {
-        printf ("<a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/%s\" border=\"0\"", $link, $img);
+        printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/%s\"", $link, $img);
         echo tooltip(sprintf(_("Weitere Informationen über %s"), $db->f("username")));
         echo ">&nbsp;</a>";
     }
@@ -1209,13 +1208,13 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
     $username=$db->f("username");
     if ($db->f('visible') == 'yes' || $i_see_everybody) {
         if (get_config('CHAT_ENABLE')){
-            echo chat_get_online_icon($db->f("user_id"),$db->f("username"),$SessSemName[1]) . "&nbsp;";
+            echo chat_get_online_icon($db->f("user_id"),$db->f("username"),$SessSemName[1]) . " ";
         }
 
-        printf ("<a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s border=\"0\"></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => "teilnehmer.php", "subject" => $subject, "rec_uname" => $db->f("username"))), tooltip(_("Nachricht an User verschicken")));
+        printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s ></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => "teilnehmer.php", "subject" => $subject, "rec_uname" => $db->f("username"))), tooltip(_("Nachricht an User verschicken")));
 
     if (isset($multiaction[$key]['send'][0]) && $rechte)
-    printf("<input type=\"checkbox\" name=\"send_msg[%s]\" value=\"1\"></td>", $username);
+    printf("<input class=\"text-top\" type=\"checkbox\" name=\"send_msg[%s]\" value=\"1\"></td>", $username);
     }
 
     echo "</td>";
@@ -1423,10 +1422,9 @@ if ($rechte) {
         <tr>
         <td class="blank" width="100%" colspan="2">
         <a href="<?= URLHelper::getLink('sms_send.php', array( 'sms_source_page' => 'teilnehmer.php', 'course_id' => $SessSemName[1],  'emailrequest' => 1, 'subject' => $subject, 'filter' => 'waiting')) ?>">
-        <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/mail.png" border="0" vspace="3" hspace="3" align="absmiddle">
-        <span style="font-size:80%">
+        <?= Assets::img('icons/16/blue/move_right/mail.png', array('class' => 'text-top'))?>
         <?=_("Systemnachricht mit Emailweiterleitung an alle Wartenden verschicken")?>
-        </span></a>
+        </a>
         </td>
         </tr>
         <?
@@ -1458,9 +1456,9 @@ if ($rechte) {
                 printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><font size=\"-1\">%s</font></td>", $cssSw->getClass(), $db->f("position"));
             printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">&nbsp; </td>", $cssSw->getClass());
 
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><a href=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s border=\"0\"></a></td>", $cssSw->getClass(), URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php', 'rec_uname' => $db->f("username"))), tooltip(_("Nachricht an User verschicken")));
+            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><a href=\"%s\"><img class=\"text-bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s></a></td>", $cssSw->getClass(), URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php', 'rec_uname' => $db->f("username"))), tooltip(_("Nachricht an User verschicken")));
             if(!LockRules::Check($id, 'participants')){
-                printf ("<td width=\"15%%\" align=\"center\" class=\"%s\"><input type=\"image\" name=\"admission_rein[%s]\" border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\">
+                printf ("<td width=\"15%%\" align=\"center\" class=\"%s\"><input type=\"image\" name=\"admission_rein[%s]\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\">
                         <input type=\"checkbox\" name=\"admission_insert[%s]\" value=\"1\"></td>", $cssSw->getClass(), $db->f("username"), $db->f("username"));
                 printf ("<td width=\"15%%\" align=\"center\" class=\"%s\"><a href=\"%s\"><img border=\"0\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2down.png\"></a>
                         <input type=\"checkbox\" name=\"admission_delete[%s]\" value=\"1\"></td>", $cssSw->getClass(), URLHelper::getLink("?cmd=admission_raus&username=".$db->f("username")."&studipticket=$studipticket"), $db->f("username"));
@@ -1725,20 +1723,18 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     echo "</table>\n</form>";
 } // end insert autor
 
-if (($EXPORT_ENABLE) AND ($perm->have_studip_perm("tutor", $SessSemName[1]))) {
+if (get_config('EXPORT_ENABLE') AND $perm->have_studip_perm("tutor", $SessSemName[1])) {
     include_once($PATH_EXPORT . "/export_linking_func.inc.php");
     echo chr(10) . '<tr>';
-    echo chr(10) . "<td class=\"blank\"><b><font size=\"-1\">" . export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "rtf", "rtf-teiln", "", _("TeilnehmerInnen exportieren als rtf Dokument") . '<img align="bottom" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-text.png" border="0">', 'passthrough'). "</font></b></td>";
-    echo chr(10) . "<td class=\"blank\"><b><font size=\"-1\">" . export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "csv", "csv-teiln", "", _("TeilnehmerInnen exportieren als csv Dokument") . '<img align="bottom" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-xls.png" border="0">', 'passthrough') . "</font></b></td>";
-    echo chr(10) . '</tr>
-';
+    echo chr(10) . "<td class=\"blank\"><b>" . export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "rtf", "rtf-teiln", "", Assets::img('icons/16/blue/file-text.png', array('class' => 'text-top')) . ' ' . _("TeilnehmerInnen exportieren als rtf Dokument"), 'passthrough'). "</b></td>";
+    echo chr(10) . "<td class=\"blank\"><b>" . export_link($SessSemName[1], "person", _("TeilnehmerInnen") . ' '. $SessSemName[0], "csv", "csv-teiln", "", Assets::img('icons/16/blue/file-xls.png', array('class' => 'text-top')) . ' ' . _("TeilnehmerInnen exportieren als csv Dokument"), 'passthrough') . "</b></td>";
+    echo chr(10) . '</tr>';
 
-    if ($awaiting){
+    if ($awaiting) {
         echo chr(10) . '<tr>';
-        echo chr(10) . "<td class=\"blank\"><b><font size=\"-1\">" . export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "rtf", "rtf-warteliste","awaiting",_("Warteliste exportieren als rtf Dokument") . '<img align="bottom" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-text.png" border="0">', 'passthrough') . "</font></b></td>";
-        echo chr(10) . "<td class=\"blank\"><b><font size=\"-1\">" . export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "csv", "csv-warteliste","awaiting",_("Warteliste exportieren csv Dokument") . '<img align="bottom" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/file-xls.png" border="0">', 'passthrough') . "</font></b></td>";
-        echo chr(10) . '</tr>
-';
+        echo chr(10) . "<td class=\"blank\"><b>" . export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "rtf", "rtf-warteliste", "awaiting", Assets::img('icons/16/blue/file-text.png', array('class' => 'text-top')) . ' ' . _("Warteliste exportieren als rtf Dokument"), 'passthrough') . "</b></td>";
+        echo chr(10) . "<td class=\"blank\"><b>" . export_link($SessSemName[1], "person", _("Warteliste") .' ' . $SessSemName[0], "csv", "csv-warteliste", "awaiting", Assets::img('icons/16/blue/file-xls.png', array('class' => 'text-top')) . ' ' . _("Warteliste exportieren csv Dokument"), 'passthrough') . "</b></td>";
+        echo chr(10) . '</tr>';
     }
 }
 ?>

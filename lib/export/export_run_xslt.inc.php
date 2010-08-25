@@ -73,7 +73,7 @@ global $XSLT_ENABLE, $ex_type, $o_mode, $xml_file_id, $page, $format, $output_fo
         $export_error_num++;
         return false;
     }
-    
+
     return true;
 }
 
@@ -165,20 +165,20 @@ else
         }
 
 
-        $xml_printimage = '<a href="' . GetDownloadLink($xml_file_id, $xml_filename, 2) . '" target="_blank"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '" border=0></a>';
-        $xml_printlink = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) . '" class="tree">' . $xml_filename . '</a>';
+        $xml_printimage = ' <a href="' . GetDownloadLink($xml_file_id, $xml_filename, 2) . '" target="_blank"><img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '"></a>';
+        $xml_printlink = ' <a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) . '" class="tree">' . $xml_filename . '</a>';
         $xml_printdesc = _("XML-Daten");
         $xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags können mit einem XSLT-Script verarbeitet werden.") . '<br>';
 
-        $xslt_printimage = '<a href="'. GetDownloadLink($xslt_files[$choose]['file'], $xslt_files[$choose]['name'].'.xsl', 3) . '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xslt'] . '" border=0></a>';
-        $xslt_printlink = '<a href="' . GetDownloadLink($xslt_files[$choose]['file'], $xslt_files[$choose]['name'].'.xsl', 3) .  '" class="tree">' . $xslt_files[$choose]['name'] . '.xsl</a>';
+        $xslt_printimage = ' <a href="'. GetDownloadLink($xslt_files[$choose]['file'], $xslt_files[$choose]['name'].'.xsl', 3) . '"> <img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xslt'] . '"></a>';
+        $xslt_printlink = ' <a href="' . GetDownloadLink($xslt_files[$choose]['file'], $xslt_files[$choose]['name'].'.xsl', 3) .  '" class="tree"> ' . $xslt_files[$choose]['name'] . '.xsl</a>';
         $xslt_printdesc = _("XSLT-Datei");
         $xslt_printcontent = _("Dies ist das XSLT-Script zur Konvertierung der Daten. Klicken Sie auf den Dateinamen, um die Datei zu öffnen.") . '<br>';
 
         if ($xslt_process)
         {
-            $result_printimage = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon[$format] . '" border=0></a>';
-            $result_printlink = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '" class="tree">' . htmlReady($xslt_filename) . '.' . $format . '</a>';
+            $result_printimage = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '"> <img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon[$format] . '"></a>';
+            $result_printlink = '<a href="'. GetDownloadLink($result_file, $xslt_filename .'.'. $format, 2) . '" class="tree"> ' . htmlReady($xslt_filename) . '.' . $format . '</a>';
             $result_printdesc = _("Ausgabe-Datei");
             $result_printcontent = _("Dies ist die fertige Ausgabedatei.") . "<br>";
         }

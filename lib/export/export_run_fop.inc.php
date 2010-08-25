@@ -111,8 +111,8 @@ else
 //          $export_pagecontent .= "&nbsp;&nbsp;&nbsp;&nbsp; - &nbsp;&nbsp;" . $link2 . _("Datei herunterladen") . "</a></td></tr>";
             $export_pagecontent .= '</td></tr></table><br>';
 
-            $result_printimage = '<a href="' . GetDownloadLink($pdf_file, $xslt_filename . '.pdf', 2). '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['pdf'] . '" border=0></a>';
-            $result_printlink = '<a href="'. GetDownloadLink($pdf_file, $xslt_filename . '.pdf', 2).   '" class="tree">' . $xslt_filename . '.pdf</a>';
+            $result_printimage = ' <a href="' . GetDownloadLink($pdf_file, $xslt_filename . '.pdf', 2). '"> <img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['pdf'] . '"></a>';
+            $result_printlink = ' <a href="'. GetDownloadLink($pdf_file, $xslt_filename . '.pdf', 2).   '" class="tree"> ' . $xslt_filename . '.pdf</a>';
             $result_printdesc = _("PDF-Datei");
             $result_printcontent = _("Dies ist die fertige PDF-Datei.") . '<br>';
         }
@@ -129,12 +129,12 @@ else
             $export_error_num ++;
         }
 
-        $xml_printimage = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2). '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '" border=0></a>';
-        $xml_printlink = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .  '" class="tree">' . $xml_filename . '</a>';
+        $xml_printimage = ' <a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2). '">< img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '"></a>';
+        $xml_printlink = ' <a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) .  '" class="tree"> ' . $xml_filename . '</a>';
         $xml_printdesc = _("XML-Daten");
         $xml_printcontent = _("In dieser Datei sind die Daten als XML-Tags gespeichert. Diese Tags k&ouml;nnen mit einem XSLT-Script verarbeitet werden.") . "<br>";
 
-        $xslt_printimage = '<a href="'. GetDownloadLink($result_file,$xslt_filename .'.'. $format,2) . '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon[$format] . '" border=0></a>';
+        $xslt_printimage = '<a href="'. GetDownloadLink($result_file,$xslt_filename .'.'. $format,2) . '"> <img class="text-top" src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon[$format] . '"></a>';
         $xslt_printlink = '<a href="'. GetDownloadLink($result_file,$xslt_filename .'.'. $format,2) . '" class="tree">' . $xslt_filename .'.'. $format . '</a>';
         $xslt_printdesc = _("Formatting-Objects-Datei");
         $xslt_printcontent = _("In dieser Datei sind die Formatting Objects zur Erzeugung der PDF-Datei gespeichert.") . "<br>";

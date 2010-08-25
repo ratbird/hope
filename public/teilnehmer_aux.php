@@ -219,18 +219,18 @@ function aux_html() {
     echo $zt->closeRow();
 
     echo $zt->openHeaderRow();
-    echo $zt->cell('<font size="-2">Name</font>', array('align' => 'left', 'valign' => 'top'));
+    echo $zt->cell('<b>Name</b>', array('align' => 'left', 'valign' => 'top'));
     foreach ($data['header'] as $id => $name) {
-        echo $zt->cell('<font size="-2">'.htmlReady($name).'</font>', array('align' => 'left', 'valign' => 'top'));
+        echo $zt->cell('<b>'.htmlReady($name).'</b>', array('align' => 'left', 'valign' => 'top'));
     }
     echo $zt->closeRow();
 
     // einzelne Nutzerdaten ausgeben
     foreach ($data['aux'] as $uid => $cur_user) {
         echo $zt->openRow();
-        echo $zt->cell('<font size="-2">&nbsp;<a href="'.URLHelper::getLink('about.php?username='.$cur_user['username']).'">'.htmlReady($cur_user['fullname']).'</a></font>');
+        echo $zt->cell(' <a href="'.URLHelper::getLink('about.php?username='.$cur_user['username']).'">'.htmlReady($cur_user['fullname']).'</a>');
         foreach ($data['header'] as $showkey => $dontcare) {
-            echo $zt->cell('<font size="-2">'. htmlReady($cur_user['entry'][$showkey]) . '</font>', array('align' => 'left'));
+            echo $zt->cell(htmlReady($cur_user['entry'][$showkey]), array('align' => 'left'));
         }
         echo $zt->closeRow();
     }

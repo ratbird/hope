@@ -38,9 +38,8 @@ blockquote {
 }
 
 /* --- Überschriften -------------------------------------------------------- */
-
 h1.content, h2.content, h3.content {
-    color: #213499;
+    color: #24437c;
 }
 
 h1.topic {
@@ -77,9 +76,8 @@ h2.topic, h3.topic {
 }
 
 /* --- Links ---------------------------------------------------------------- */
-/* //TODO: überflüssige klassen entfernen... */
 a, a:link, a:visited {
-    color: #213499;
+    color: #24437c;
     text-decoration: none;
 }
 a:link.index, a:visited.index {
@@ -158,7 +156,6 @@ td.infoboxrahmen {
 }
 
 /* --- image preview -------------------------------------------------------- */
-
 img.preview {
     max-height: 500px;
     max-width: 750px;
@@ -1458,6 +1455,7 @@ div.schedule_edit_entry, #schedule_settings {
     max-height: 80em;
     height: auto;
     width: 50%;
+    min-width: 700px;
     padding-bottom: 1em;
     background-color: #E8EEF7;
     border: 2px solid #E0E0F0;
@@ -1532,7 +1530,7 @@ th.sortdesc {
 .eval_title {
     font-size: 1.2em;
     font-weight: bold;
-    color: #213499;
+    color: #24437c;
 }
 
 .eval_error {

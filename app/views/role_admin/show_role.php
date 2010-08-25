@@ -90,7 +90,7 @@ $infobox_content = array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(
             array(
-                'icon' => 'icons/16/black/admin.png',
+                'icon' => 'icons/16/black/roles.png',
                 'text' => '<a href="'.$controller->url_for('role_admin').'">'._('Rollen verwalten').'</a>'
             ), array(
                 'icon' => 'icons/16/black/person.png',

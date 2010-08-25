@@ -4,7 +4,7 @@ $infobox['picture'] = StudygroupAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMA
 
 $aktionen[] = array(
     "text" => '<a href="'.$controller->url_for('course/studygroup/new').'">'._('Neue Studiengruppe anlegen').'</a>',
-    "icon" => "icons/16/black/plus.png"
+    "icon" => "icons/16/black/add/studygroup.png"
 );
 $aktionen[] = array(
     "text" => '<a href="'.$controller->url_for('course/studygroup/delete/'.$sem_id).'">'._('Diese Studiengruppe löschen').'</a>',
@@ -37,7 +37,6 @@ $infobox['content'] = array(
         'eintrag'   => $aktionen
     )
 );
-
 ?>
 
 <?= $this->render_partial("course/studygroup/_feedback") ?>
@@ -46,8 +45,8 @@ $infobox['content'] = array(
 <? if ($deactivate_modules_names): ?>
     <?= createQuestion(_("Möchten Sie folgende Module wirklich deaktivieren? Vorhandene Inhalte werden in der Regel dabei gelöscht. ")."\n".
                $deactivate_modules_names,
-               array("really_deactivate" => "1"), 
-               array("abort_deactivate" => "1"), 
+               array("really_deactivate" => "1"),
+               array("abort_deactivate" => "1"),
                $controller->url_for('course/studygroup/update/'.$sem_id)); ?>
 <?php  endif; ?>
 

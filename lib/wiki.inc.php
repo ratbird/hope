@@ -1168,11 +1168,12 @@ function showPageFrameStart() {
 * @param    array   ready to pass to print_infoxbox()
 *
 **/
-function showPageFrameEnd($infobox) {
+function showPageFrameEnd($infobox)
+{
     // start of infobox area
     echo "<td class=\"blank\" width=\"270\" align=\"right\" valign=\"top\">";
     print_infobox ($infobox, "infobox/wiki.jpg");
-    echo "</td></tr><tr><td colspan=3 class=\"blank\">&nbsp;</td></tr>";
+    echo "<br></td></tr>";
     echo "</table>"; // end infoframe (content+box)
     echo "</td></tr></table>"; // end page box
 }
@@ -1183,7 +1184,8 @@ function showPageFrameEnd($infobox) {
 * @param    string  preselection - put in searchbox
 *
 **/
-function getSearchbox($preselection, $keyword) {
+function getSearchbox($preselection, $keyword)
+{
     // search
     $search_text="<form method='post' action='".URLHelper::getLink('')."'>";
     $search_text.="<input type='hidden' name='view' value='search'>";
@@ -1208,7 +1210,8 @@ function getSearchbox($preselection, $keyword) {
 * @param    bool    Is version displayed latest version?
 *
 **/
-function getShowPageInfobox($keyword, $latest_version) {
+function getShowPageInfobox($keyword, $latest_version)
+{
     global $show_wiki_comments;
 
     $versions=getWikiPageVersions($keyword);
@@ -1222,13 +1225,22 @@ function getShowPageInfobox($keyword, $latest_version) {
         $versiontext=_("Keine alten Versionen.");
     }
 
-    $viewtext="<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=show")."\">"._("Standard")."</a><br>";
-    $viewtext .= "<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=wikiprint&version=$version")."\" target=\"_blank\">"._("Druckansicht")."</a>";
+    $viewtext="<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=show")."\">"._("Standard")."</a>";
     if (count($versions)>=1) {
         $viewtext .= "<br><a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=showdiff&view=diff")."\">"._("Textänderungen anzeigen")."</a>";
         $viewtext .= "<br><a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=showcombo&view=combodiff")."\">"._("Text mit AutorInnenzuordnung anzeigen")."</a>";
     }
-    $views=array(array('icon' => "blank.gif", "text" => $viewtext));
+    $printtext = "<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=wikiprint&version=$version")."\" target=\"_blank\">"._("Druckansicht")."</a>";
+
+    $views = array(
+    array(
+        'icon' => "icons/16/black/wiki.png",
+        'text' => $viewtext
+    ),
+    array(
+        'icon' => "icons/16/black/print.png",
+        'text' => $printtext
+    ));
 
     $backlinktext="";
     $first=1;
@@ -1244,8 +1256,10 @@ function getShowPageInfobox($keyword, $latest_version) {
     if (empty($backlinktext)) {
         $backlinktext = _("Keine Verweise vorhanden.");
     }
-    $backlinktext= array(array('icon' => "icon-leer.gif", "text" =>
- $backlinktext));
+    $backlinktext= array(array(
+        'icon' => "icons/16/black/link-intern.png",
+        'text' => $backlinktext
+    ));
 
     // assemble infobox
     $infobox = array ();
@@ -1262,7 +1276,7 @@ function getShowPageInfobox($keyword, $latest_version) {
         $toceditlink.=")</span>";
     }
     $infobox[] = array("kategorie"=> _("QuickLinks")."&nbsp;".$toceditlink, # disabled toggling: get_toc_toggler(),
-        "eintrag" => array(array('icon' => "blank.gif",
+        "eintrag" => array(array('icon' => "icons/16/black/link-intern.png",
         "text"=>$toccont)));
 
     if (!$latest_version) {
@@ -1293,7 +1307,7 @@ function getShowPageInfobox($keyword, $latest_version) {
             $comment_text=$comment_icon."<br>".$comment_none;
     }
     $infobox[] = array("kategorie"=> _("Kommentare").$comment_addon.":",
-            "eintrag" => array(array('icon' => "blank.gif",
+            "eintrag" => array(array('icon' => "comment.png",
                     "text"=>$comment_text)));
 
 

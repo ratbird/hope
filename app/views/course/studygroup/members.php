@@ -19,6 +19,7 @@ $infobox = array();
 $infobox['picture'] = StudygroupAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMAL);
 
 $infobox['content'] = array(
+    $aktionen,
     array(
         'kategorie' => _("Information"),
         'eintrag'   => array(
@@ -28,8 +29,7 @@ $infobox['content'] = array(
                 'icon' => "icons/16/black/info.png"
             )
         )
-    ),
-    $aktionen
+    )
 );
 
 if(isset($flash['question']) && isset($flash['candidate'])) {
@@ -64,8 +64,8 @@ list-style-position:outside;list-style-type:none;">
                onClick    ="STUDIP.Arbeitsgruppen.toggleOption('<?= $m['user_id'] ?>')"
                title="klicken für weitere Optionen">
                 <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::MEDIUM, array("title" => _("klicken für weitere Optionen"))) ?>
-                <div class='invitation' style="display:none;position:absolute;bottom:10px;right:10px;width:10px;height:10px">
-                    <?= Assets::img('einst2') ?>
+                <div class='invitation' style="display:none; position:absolute; top:0px; left:83px; width:16px; height:16px">
+                    <?= Assets::img('icons/16/blue/edit.png') ?>
                 </div>
             </div>
         <? else : ?>

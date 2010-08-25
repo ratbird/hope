@@ -29,7 +29,7 @@ $infobox['content'] = array(
 
 $infobox['content'][1]['eintrag'][] = array (
     'text' => '<a href="'. $controller->url_for('calendar/instschedule/index/'. implode(',', $days) .'?printview=true') .'" target="_blank">'._("Druckansicht") .'</a>',
-    'icon' => 'icons/16/black/info.png'
+    'icon' => 'icons/16/black/print.png'
 );
 
 $semester_chooser  = '<form method="post" action="'. $controller->url_for('calendar/instschedule') .'">';

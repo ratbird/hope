@@ -337,13 +337,15 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
         }
     }
     if (is_array($_lit_data)){
-        echo "\n<table width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\"><tr><td class=\"steel1\">";
+        echo "\n<table width=\"99%\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" align=\"center\"><tr><th align=\"left\">";
         if (is_array($_open) && count($_open)){
-            echo "\n<a href=\"$PHP_SELF?cmd=close_all\" class=\"tree\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumgraurunt2.png\" border=\"0\" hspace=\"3\">" . _("Alle Einträge zuklappen") . "</a>";
+            echo "\n<a href=\"$PHP_SELF?cmd=close_all\" class=\"tree\"><img class=\"text-top\" src=\"". Assets::image_path('icons/16/blue/arr_1down.png') ."\"> " . _("Alle Einträge zuklappen") . "</a>";
         } else {
-            echo "\n<a href=\"$PHP_SELF?cmd=open_all\" class=\"tree\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumgrau2.png\" border=\"0\" hspace=\"3\">" . _("Alle Einträge aufklappen") . "</a>";
+            echo "\n<a href=\"$PHP_SELF?cmd=open_all\" class=\"tree\"><img class=\"text-top\" src=\"". Assets::image_path('icons/16/blue/arr_1right.png') ."\"> " . _("Alle Einträge aufklappen") . "</a>";
         }
-        echo "\n</td><td class=\"steel1\" align=\"right\"><a href=\"lit_overview_print_view.php\" class=\"tree\" target=\"_blank\">" . _("Druckansicht") ."</a>&nbsp;&nbsp;</td></tr></table>";
+        echo "\n</th><th align=\"right\">";
+        echo "<a href=\"lit_overview_print_view.php\" class=\"tree\" target=\"_blank\">" . Assets::img('icons/16/blue/print.png', array('class' => 'text-top')) . " " . _("Druckansicht") ."</a></th>";
+        echo "</tr></table>";
         foreach ($_lit_data as $cid => $data){
             $element->setValues($data);
             if ($element->getValue('catalog_id')){

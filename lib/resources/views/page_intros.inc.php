@@ -66,7 +66,7 @@ switch ($view) {
                                     "text"  => (!$resources_data["check_assigns"])? sprintf(_("Gewünschte Belegungszeit %sberücksichtigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&check_assigns=TRUE\">", "</a>") :  sprintf(_("Gewünschte Belegungszeit <br>%snicht berücksichtigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&check_assigns=FALSE\">", "</a>")),
                                 array   ("icon" => "icons/16/black/resources.png",
                                     "text"  => (!$resources_data["search_only_rooms"])? sprintf(_("Nur Räume %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=1\">", "</a>") :  sprintf(_("Alle Ressourcen %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=0\">", "</a>")),
-                                array("icon" => "blank.gif",
+                                array("icon" => "icons/16/black/search.png",
                                     "text"  => "<br><a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&reset=TRUE\">".makeButton("neuesuche")."</a>"))));
         $infopic = "rooms.jpg";
         $clipboard = TRUE;
@@ -122,18 +122,18 @@ switch ($view) {
         Navigation::activateItem('/resources/objects/view_schedule');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
-        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/resources.png",
                                 "text"  => sprintf (_("%sEigenschaften%s anzeigen"), "<a href=\"$PHP_SELF?quick_view=view_details&quick_view_mode=".$view_mode."\">", "</a>"));
         if (($ActualObjectPerms->havePerm("autor")) && ($currentObject->getCategoryId()))
-            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/add/date.png",
                                     "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
 
         if ($view_mode == "search")
-            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
 
         if ($view_mode == "no_nav")
-            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
 
         if ($view_mode != "search" && $view_mode != "no_nav") {
@@ -150,7 +150,7 @@ switch ($view) {
                                 "text"  => sprintf (_("%sSemesterplan%s anzeigen"), "<a href=\"$PHP_SELF?quick_view=view_sem_schedule&quick_view_mode=".$view_mode."\">", "</a>"));
 
         $infobox[0]["eintrag"][] = array (
-            "icon" => "icons/16/black/schedule.png",
+            "icon" => "icons/16/black/print.png",
             "text"  => "<a href=\"$PHP_SELF?view=view_schedule&print_view=1\" target=\"_blank\">" . _("Druckansicht") . "</a>");
     break;
     case "view_sem_schedule":
@@ -160,18 +160,18 @@ switch ($view) {
 
         $infobox[0]["kategorie"] = _("Aktionen:");
 
-        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/resources.png",
                                 "text"  => sprintf (_("%sEigenschaften%s anzeigen"), "<a href=\"$PHP_SELF?quick_view=view_details&quick_view_mode=".$view_mode."\">", "</a>"));
         if (($ActualObjectPerms->havePerm("autor")) && ($currentObject->getCategoryId()))
-            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/add/date.png",
                                     "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
 
         if ($view_mode == "search")
-            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
 
         if ($view_mode == "no_nav"){
-            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>sprintf (_("%sBelegungsplan%s anzeigen"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?quick_view=openobject_schedule&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?quick_view=view_schedule".(($view_mode == "no_nav") ? "&quick_view_mode=no_nav" : "")."\">", "</a>"));
@@ -186,7 +186,7 @@ switch ($view) {
                                         "text"  => "<a href=\"institut_main.php\">"._("zurück zur Einrichtung")."</a>");
         }
 
-        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/print.png",
                                 "text"  => "<a href=\"$PHP_SELF?view=view_sem_schedule&print_view=1\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
@@ -199,7 +199,7 @@ switch ($view) {
         Navigation::activateItem('/resources/view/group_schedule');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
-        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/print.png",
                                 "text"  => "<a href=\"$PHP_SELF?view=view_group_schedule&print_view=1\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
@@ -211,7 +211,7 @@ switch ($view) {
         Navigation::activateItem('/resources/view/group_schedule_daily');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
-        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/print.png",
                                 "text"  => "<a href=\"$PHP_SELF?view=view_group_schedule_daily&print_view=1\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
@@ -306,12 +306,12 @@ switch ($view) {
                     $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                             "text"  =>sprintf (_("%sBelegungsplan%s anzeigen"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?quick_view=openobject_schedule&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?quick_view=view_schedule".(($view_mode == "no_nav") ? "&quick_view_mode=no_nav" : "")."\">", "</a>"));
                 if (($ActualObjectPerms->havePerm("autor")) && ($currentObject->getCategoryId()))
-                    $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+                    $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/add/date.png",
                                             "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
             }
 
             if ($view_mode == "no_nav")
-                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
 
             if ($view_mode != "search" && $view_mode != "no_nav") {
@@ -324,7 +324,7 @@ switch ($view) {
             }
 
             if ($view_mode == "search")
-                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
                                         "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
         $infopic = "schedule.jpg";
         }
@@ -347,7 +347,7 @@ switch ($view) {
         Navigation::activateItem('/course/resources/group_schedule');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
-        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/print.png",
                                 "text"  => "<a href=\"$PHP_SELF?view=openobject_group_schedule&print_view=1\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");

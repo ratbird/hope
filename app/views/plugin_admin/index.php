@@ -43,7 +43,7 @@
             <? foreach ($plugins as $plugin): ?>
                 <? $pluginid = $plugin['id'] ?>
                 <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-                    <td style="padding-left: 1ex;">
+                    <td style="padding-left: 1ex;" width="30">
                         <input type="checkbox" name="enabled_<?= $pluginid ?>" value="1" <?= $plugin['enabled'] ? 'checked' : '' ?>>
                     </td>
                     <td>
@@ -65,19 +65,19 @@
                     <td>
                         <input name="position_<?= $pluginid ?>" type="text" size="2" value="<?= $plugin['position'] ?>" <?= $plugin['enabled'] ? '' : 'disabled' ?>>
                     </td>
-                    <td>
+                    <td width="20">
                         <a href="<?= $controller->url_for('role_admin/assign_plugin_role', $pluginid) ?>">
                             <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Zugriffsrechte bearbeiten'))) ?>
                         </a>
                     </td>
-                    <td>
+                    <td width="20">
                         <? if (!$plugin['depends']): ?>
                             <a href="<?= $controller->url_for('plugin_admin/download', $pluginid) ?>">
                                 <?= Assets::img('icons/16/blue/download.png', array('title' => _('Herunterladen'))) ?>
                             </a>
                         <? endif ?>
                     </td>
-                    <td>
+                    <td width="20">
                         <? if (!$plugin['depends']): ?>
                             <a href="<?= $controller->url_for('plugin_admin/ask_delete', $pluginid) ?>">
                                 <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Deinstallieren'))) ?>

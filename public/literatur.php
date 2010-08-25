@@ -65,22 +65,27 @@ if ( ($list = StudipLitList::GetFormattedListsByRange($SessSemName[1], object_ge
 </td>
 <td class="blank" width="270" align="right" valign="top">
 <?
-$infobox[0] = array ("kategorie" => _("Information:"),
-                    "eintrag" =>    array(
-                                    array("icon" => "icons/16/black/literature.png","text"  =>   _("Hier sehen sie Literaturlisten.")),
-                                    )
-                    );
-$infobox[1] = array ("kategorie" => _("Aktionen:"));
-$infobox[1]["eintrag"][] = array("icon" => "blank.gif","text"  =>  _("Sie k&ouml;nnen jede dieser Listen in ihren pers&ouml;nlichen Literaturbereich kopieren, um erweiterte Informationen über die Eintr&auml;ge zu erhalten.") );
+$infobox[0] = array(
+    "kategorie" => _("Information:"),
+    "eintrag" => array(array(
+        "icon" => "icons/16/black/literature.png",
+        "text" => _("Hier sehen Sie Literaturlisten.")
+    ))
+);
+$infobox[1] = array (
+    "kategorie" => _("Aktionen:"),
+    "eintrag" => array(array(
+        "icon" => "icons/16/black/add/literature.png",
+        "text" => _("Sie k&ouml;nnen jede dieser Listen in ihren pers&ouml;nlichen Literaturbereich kopieren, um erweiterte Informationen über die Eintr&auml;ge zu erhalten.")
+    ))
+);
 
 print_infobox ($infobox, "infobox/literaturelist.jpg");
 ?>
-</td>
-</tr>
-<tr><td class="blank" colspan="2">&nbsp;</td></tr>
+        <br>
+        </td>
+    </tr>
 </table>
 <?
 include ('lib/include/html_end.inc.php');
-// Save data back to database.
 page_close();
-?>

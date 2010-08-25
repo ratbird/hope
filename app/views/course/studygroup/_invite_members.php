@@ -18,7 +18,7 @@
                 <?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?><br>
                 <div style="clear:left">
                     <input type="text" name="search_for_member" style="width:300px;vertical-align:middle;">
-                    <input type="image" name="search_member" src="<?= Assets::image_path('suchen.gif') ?>" title="<?= _("Suchen") ?>" style="vertical-align:middle;"><br>   
+                    <input type="image" name="search_member" src="<?= Assets::image_path('icons/16/blue/search.png') ?>" title="<?= _("Suchen") ?>" style="vertical-align:middle;"><br>   
                 <div>
             <? endif; ?>
         </div>

@@ -220,11 +220,11 @@ if ($perm->have_perm("admin"))
             <?=_("Sie k&ouml;nnen hier Angaben &uuml;ber einen gew&uuml;nschten Raum und gew&uuml;nschte Raumeigenschaften machen.")?> <br>
             <?
             if ($my_requests[$admin_rooms_data["resRequest"]->getId()])
-                printf (_("Sie k&ouml;nnen diese Anfrage auch selbst %saufl&ouml;sen%s."), "<a href=\"resources.php?view=edit_request&single_request=".$admin_rooms_data["resRequest"]->getId()."\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/link_intern.gif\" border=\"0\">&nbsp;", "</a>");
+                printf (_("Sie k&ouml;nnen diese Anfrage auch selbst %saufl&ouml;sen%s."), "<a href=\"resources.php?view=edit_request&single_request=".$admin_rooms_data["resRequest"]->getId()."\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/schedule.png\" border=\"0\">&nbsp;", "</a>");
             else
                 print _("Diese Anfragen werden von den zust&auml;ndigen Raumadministratoren bearbeitet. Ihnen wird ein passender Raum f&uuml;r ihre Veranstaltung zugewiesen."); ?>
       <br><br>
-      <a href="raumzeit.php?seminar_id=<?=$seminar_id?>"><img src="<?=$GLOBALS['ASSETS_URL']?>images/link_intern.gif" border="0">&nbsp;<?=_("Zurück zur Seite Zeiten / Räume");?></a><br>
+      <a href="raumzeit.php?seminar_id=<?=$seminar_id?>"><img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/black/schedule.png" border="0">&nbsp;<?=_("Zurück zur Seite Zeiten / Räume");?></a><br>
             <br>
             </blockquote>
         </td>
@@ -301,7 +301,7 @@ if ($perm->have_perm("admin"))
 
                     ?>
                 </font>
-                <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/info.gif"
+                <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                     <? echo tooltip(_("Der ausgewählte Raum bietet folgende der wünschbaren Eigenschaften:")." \n".$resObject->getPlainProperties(TRUE), TRUE, TRUE) ?>
                 >
             </td>
@@ -440,8 +440,8 @@ if ($perm->have_perm("admin"))
                                 <? print ((($search_exp_room) || ($search_properties_x)) && (!$result)) ? "<br>"._("<b>Keinen</b> Raum gefunden.")."<br>" : "";?>
                                 </font><br>
                                 <font size=-1><?=_("Geben Sie zur Suche den Raumnamen ganz oder teilweise ein:"); ?></font>
-                                <input type="text" size="30" maxlength="255" name="search_exp_room">&nbsp;
-                                <input type="image" src="<?= $GLOBALS['ASSETS_URL'] ?>images/suchen.gif" <? echo tooltip(_("Suche starten")) ?> border="0" name="search_room"><br>
+                                <input type="text" size="30" maxlength="255" name="search_exp_room">
+                                <input type="image" src="<?= Assets::image_path('icons/16/blue/search.png') ?>" <? echo tooltip(_("Suche starten")) ?> name="search_room"><br>
                                 <?
                             }
                             ?>

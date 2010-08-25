@@ -377,7 +377,7 @@ class StudipForm {
     }
 
     function getFormFieldInfo($name){
-        return "\n<img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\""
+        return "\n<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\""
                 . tooltip($this->form_fields[$name]['info'], TRUE, TRUE) . " align=\"absmiddle\">";
     }
 

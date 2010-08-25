@@ -189,14 +189,14 @@ $infobox = array    (
             array    (  "icon" => "blank.gif",
                                 "text"  => sprintf(_("Sie sind in %s Modulen als Verantwortlicher eingetragen."), $num_my_mod)
             ),
-            array    (  "icon" => "suchen.gif",
+            array    (  "icon" => "icons/16/black/search.png",
                                 "text"  => _("Um mehr Informationen &uuml;ber ein Studienmodul anzuzeigen, klicken sie bitte aus den Namen des Moduls.")
             )
         )
     ),
     array  ("kategorie" => _("Aktionen:"),
         "eintrag" => array  (
-            array    (  "icon" => "suchen.gif",
+            array    (  "icon" => "icons/16/black/search.png",
                                 "text"  => sprintf(_("Um Informationen &uuml;ber alle Studienmodule anzuzeigen nutzen Sie die <br> %sSuche nach Studienmodulen%s"), '<a href="sem_portal.php?view=mod&reset_all=TRUE">', '</a>')
             )
         )

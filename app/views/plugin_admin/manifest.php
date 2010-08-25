@@ -41,7 +41,7 @@ $infobox_content = array(
         'kategorie' => _('Aktionen:'),
         'eintrag'   => array(
             array(
-                'icon' => 'link_intern.gif',
+                'icon' => 'icons/16/black/schedule.png',
                 'text' => '<a href="'.$controller->url_for('plugin_admin').'">'._('Verwaltung von Plugins').'</a>'
             )
         )

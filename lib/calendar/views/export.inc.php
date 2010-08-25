@@ -189,7 +189,7 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
                 . "<option value=\"ALL\"" . ($extype == 'ALL' ? 'selected="selected"' : '')
                 . ">" . _("Alle Termine") . "</option>\n</select>"
                 . "&nbsp;&nbsp;&nbsp;<img src=\""
-                . $GLOBALS['ASSETS_URL']."images/info.gif\"" . tooltip($tooltip, TRUE, TRUE) . ">\n"
+                . $GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"" . tooltip($tooltip, TRUE, TRUE) . ">\n"
                 . "<br>&nbsp;\n<div><font size=\"-1\">"
                 . _("Geben Sie an, aus welchem Zeitbereich Termine exportiert werden sollen:")
                 . "</div><br>\n&nbsp; &nbsp; <input type=\"radio\" name=\"experiod\" value=\"all\" ";

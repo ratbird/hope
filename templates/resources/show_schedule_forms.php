@@ -38,7 +38,7 @@
                 <? if ($perm->have_studip_perm("tutor", $seminarID)) : ?>
                     <br>
                     <?= sprintf( _("Um die Belegung zu ver&auml;ndern, &auml;ndern Sie diese auf der Seite %sZeiten / R&auml;ume%s der Veranstaltung"),
-                        "<img src=\"".$GLOBALS['ASSETS_URL']."images/link_intern.gif\" border=\"0\">&nbsp;<a href=\"raumzeit.php?seminar_id=". $seminarID ."\" onClick=\"return check_opener(this)\">",
+                        "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/schedule.png\" border=\"0\">&nbsp;<a href=\"raumzeit.php?seminar_id=". $seminarID ."\" onClick=\"return check_opener(this)\">",
                         "</a>");
                     ?>
                 <? endif; ?>
@@ -51,7 +51,7 @@
                 <? if ($perm->have_studip_perm("tutor", $seminarID)) : ?>
                     <br>
                     <?= sprintf (_("Um die Belegung zu ver&auml;ndern, &auml;ndern Sie bitte den Termin auf der Seite %sZeiten / R&auml;ume%s der Veranstaltung"),
-                        "<img src=\"".$GLOBALS['ASSETS_URL']."images/link_intern.gif\" border=\"0\">&nbsp;<a href=\"raumzeit.php?seminar_id=".
+                        "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/schedule.png\" border=\"0\">&nbsp;<a href=\"raumzeit.php?seminar_id=".
                             $seminarID . "#irregular_dates\" onClick=\"return check_opener(this)\">", "</a>");
                     ?>
                 <? endif ?>

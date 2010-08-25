@@ -175,7 +175,7 @@ class StudipSemRangeTreeViewSimple {
             $ret .= "&nbsp;&gt;&nbsp;<a href=\"" . $this->getSelf("start_item_id={$this->start_item_id}",false) . "\">" . htmlReady($this->tree->tree_data[$this->start_item_id]["name"]) . "</a>";
 
         }
-        $ret .= "&nbsp;<a href=\"#\" " . tooltip(kill_format($this->getTooltip($this->start_item_id)),false,true) . "><img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\" border=\"0\" align=\"absmiddle\"></a>";
+        $ret .= "&nbsp;<a href=\"#\" " . tooltip(kill_format($this->getTooltip($this->start_item_id)),false,true) . "><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" border=\"0\" align=\"absmiddle\"></a>";
         return $ret;
     }
 

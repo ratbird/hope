@@ -1,5 +1,5 @@
 <?php
-$icon = 'link_intern.gif';
+$icon = 'icons/16/black/schedule.png';
 if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId())) {
     $action = _("Persönlicher Status:");
     if ($membership_requested) {
@@ -54,7 +54,7 @@ $infobox['content'] = array(
 
 $search = array(
     'text' => '<a href="'. UrlHelper::getLink($send_from_search_page) . '">'. _("zurück zur Suche") .'</a>',
-    'icon' => 'link_intern.gif'
+    'icon' => 'icons/16/black/schedule.png'
 );
 
 if ($send_from_search_page) {

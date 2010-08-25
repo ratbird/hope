@@ -1274,7 +1274,7 @@ function printcontent ($breite, $write = FALSE, $inhalt, $edit, $printout = TRUE
     $infobox = array    (
     array  ("kategorie"  => "Information:",
             "eintrag" => array  (
-                            array    (  "icon" => "suchen.gif",
+                            array    (  "icon" => "icons/16/black/search.png",
                                     "text"  => "Um weitere Veranstaltungen bitte Blabla"
                                     ),
                             array    (  "icon" => "icons/16/black/info.png",

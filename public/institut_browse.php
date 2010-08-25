@@ -110,7 +110,7 @@ $such_form = "<form action=\"".URLHelper::getLink("?cmd=suche")."\" method=\"pos
             . "<div align=\"right\" style=\"width:95%;\"><input type=\"image\" border=\"0\" " . makeButton("suchestarten","src") . tooltip(_("Suche starten")) . " vspace=\"3\" >"
             . "</div></form>";
 $infobox[1]["kategorie"] = _("Suchen:");
-$infobox[1]["eintrag"][] = array (  "icon" => "suchen.gif" ,
+$infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/search.png" ,
                                     "text" => $such_form
                                 );
 print_infobox($infobox, "infobox/institutes.jpg");

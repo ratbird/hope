@@ -849,7 +849,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                         <?=_("Diese Veranstaltung ist Mitglied einer Gruppe. Die Art des Anmeldeverfahrens können sie nur für die Gruppe insgesamt ändern.")?>
                         <br>
                         <a href="<?=URLHelper::getLink('show_admission.php?group_sem_x=1&group_id='.$group_obj->getId())?>">
-                        <img src="<?=$GLOBALS['ASSETS_URL']?>images/link_intern.gif" border="0"> <?=_("Gruppenverwaltung")?></a>
+                        <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/black/schedule.png" border="0"> <?=_("Gruppenverwaltung")?></a>
                         <div style="margin-top:5px;">
                         <?=_("Veranstaltungsgruppe:")?>&nbsp;<?=htmlReady($group_obj->getValue('name'))?>
                         <ol>

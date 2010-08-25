@@ -1691,7 +1691,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             $cssSw->switchClass();
             echo "<tr><td class=\"steel1\" colspan=\"2\" align=\"right\" nowrap=\"nowrap\">";
             if($sem->isAdmissionEnabled()){
-                echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/info.gif" align="absmiddle" hspace="3" border="0" '.tooltip(_("Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden."),1,1).' >';
+                echo '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/grey/info-circle.png" align="absmiddle" hspace="3" border="0" '.tooltip(_("Mit dieser Einstellung beeinflussen Sie, ob Teilnehmer die Sie hinzufügen auf die Kontingentplätze angerechnet werden."),1,1).' >';
                 echo '<font size="-1"><label for="kontingent2">'._("Kontingent berücksichtigen:");
                 echo '&nbsp;<select name="consider_contingent" id="kontingent2">';
                 echo '<option value="">'._("Kein Kontingent").'</option>';

@@ -200,7 +200,7 @@ function printTitleField ( $title = "" ) {
 
     $html = "<font size=-1><b>" . _("Titel:")   . "</b></font><br>"
     . "<input type=text size=50 maxlength=100 name=\"title\" value=\"".htmlReady($title)."\" ".$js." tabindex=1>";
-    $html .= "&nbsp;<img src=\"".VOTE_PATH_PICTURES."info.gif\" align=middle "
+    $html .= "&nbsp;<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
     . tooltip( _("Wenn Sie keinen Titel angeben, wird dieser automatisch aus der Fragestellung übernommen."),
            FALSE, TRUE )
     . " border=0>";
@@ -552,7 +552,7 @@ function printRuntimeSettings ( $startMode = "manual",
 
     $html .= "<tr><td colspan=2 style=\"padding-bottom:0;\">\n";
     $html .= "<font size=-1><b>" . _("Einstellungen zur Laufzeit:") . "</b></font>";
-    $html .= "&nbsp;<img src=\"".VOTE_PATH_PICTURES."info.gif\" align=middle "
+    $html .= "&nbsp;<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
     . tooltip( ($type=="test"
             ? _("Legen Sie hier fest, von wann bis wann der Test in Stud.IP öffentlich sichtbar sein soll.")
             : _("Legen Sie hier fest, von wann bis wann die Umfrage in Stud.IP öffentlich sichtbar sein soll.")),
@@ -712,7 +712,7 @@ function printProperties ( $multipleChoice,
     // result visibility
     $html .= "<tr><td align=right class=blank style=\"border-bottom:1px dotted black;\">";
     if( $type == "test" ) {
-    $html .= "<img src=\"".VOTE_PATH_PICTURES."info.gif\" align=middle "
+    $html .= "<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
         . tooltip(_("Bedenken Sie, dass die Einstellung 'immer', also eine Voransicht des Zwischenstands, bei einem Test nicht unbedingt sinnvoll ist."),
               FALSE, TRUE)
         . " border=0>&nbsp;";
@@ -777,7 +777,7 @@ function printProperties ( $multipleChoice,
     // -------------------------------------------
     // anonymity
     $html .= "<tr><td align=right class=blank style=\"border-bottom:1px dotted black;\">";
-    $html .= "<img src=\"".VOTE_PATH_PICTURES."info.gif\" align=middle "
+    $html .= "<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
     . tooltip(_("'Anonym' bedeutet, dass niemandem angezeigt und nirgends gespeichert wird, welche Antwort ein Teilnehmer wählt. \n\n'Personalisiert' bedeutet, dass Sie sehen können, wer wofür stimmt."), FALSE, TRUE)
     . " border=0>&nbsp;";
 
@@ -804,7 +804,7 @@ function printProperties ( $multipleChoice,
     // -------------------------------------------
     // names visibility
     $html .= "<tr><td align=right class=blank style=\"border-bottom:1px dotted black;\">";
-    $html .= "<img src=\"".VOTE_PATH_PICTURES."info.gif\" align=middle "
+    $html .= "<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
     . tooltip(_("Diese Option ist nur möglich, wenn Sie die Auswertung auf 'personalisiert' schalten, und wenn die Ergebnissichtbarkeit nicht auf 'nie' steht. "),
           FALSE, TRUE)
     . " border=0>&nbsp;";
@@ -827,7 +827,7 @@ function printProperties ( $multipleChoice,
     // changeable?
     if( ! ($anonymous && $pageMode == MODE_RESTRICTED ) ) {
     $html .= "<tr><td align=right class=blank>";
-    $html .= "<img src=\"".VOTE_PATH_PICTURES."info.gif\" align=middle "
+    $html .= "<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
         . tooltip(_("Diese Option ist nur möglich, wenn Sie die Auswertung auf 'personalisiert' schalten. ").
               ( ($type=="test")
             ? _("\n\nBeachten Sie außerdem, dass das Einschalten dieser Option in Kombination mit 'Richtigkeits-Anzeige: sofort' keinen Sinn macht.")

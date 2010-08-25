@@ -327,7 +327,7 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
     $infobox[] =
         array  ("kategorie" => _("Aktionen:"),
             "eintrag" => array        (
-                array         (        "icon" => "suchen.gif",
+                array         (        "icon" => "icons/16/black/search.png",
                     "text"  =>        $infotxt
                 )
         )

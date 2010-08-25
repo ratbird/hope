@@ -100,8 +100,8 @@ function PrintAktualStatusgruppen ($range_id, $view, $edit_id="")
         echo "\n\t<tr>";
         echo "\n\t\t<td width=\"5%\">";
         printf ("                 <input type=\"IMAGE\" name=\"%s\" src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')."\"  %s>&nbsp; </td>", $statusgruppe_id, tooltip(_("Markierte Personen dieser Gruppe zuordnen")));
-        printf ("             <td width=\"85%%\" class=\"%s\">&nbsp; %s </td><td class=\"%s\" width=\"5%%\"><a href=\"%s\"><img src=\"".Assets::image_path('icons/16/blue/edit.png')."\" %s></a></td>", ($edit_id == $statusgruppe_id?"topicwrite":"topic"), htmlReady($db->f("name")), ($edit_id == $statusgruppe_id?"topicwrite":"topic"), URLHelper::getLink($PHP_SELF."?edit_id=".$statusgruppe_id."&range_id=".$range_id."&view=".$view."&cmd=edit_statusgruppe"), tooltip(_("Gruppenname oder -größe anpassen")) );
-        printf ("             <td width=\"5%%\"><a href=\"%s\"><img src=\"".Assets::image_path('icons/16/red/trash.png')."\" %s></a></td>", URLHelper::getLink($PHP_SELF."?cmd=verify_remove_statusgruppe&statusgruppe_id=".$statusgruppe_id."&range_id=".$range_id."&view=".$view."&name=".$db->f("name")), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
+        printf ("             <td width=\"85%%\" class=\"%s\">&nbsp; %s </td><td class=\"%s\" width=\"5%%\"><a href=\"%s\"><img src=\"".Assets::image_path('icons/16/white/edit.png')."\" %s></a></td>", ($edit_id == $statusgruppe_id?"topicwrite":"topic"), htmlReady($db->f("name")), ($edit_id == $statusgruppe_id?"topicwrite":"topic"), URLHelper::getLink($PHP_SELF."?edit_id=".$statusgruppe_id."&range_id=".$range_id."&view=".$view."&cmd=edit_statusgruppe"), tooltip(_("Gruppenname oder -größe anpassen")) );
+        printf ("             <td align=\"right\" width=\"5%%\" class=\"%s\"><a href=\"%s\"><img src=\"".Assets::image_path('icons/16/white/trash.png')."\" %s></a></td>", ($edit_id == $statusgruppe_id?"topicwrite":"topic"), URLHelper::getLink($PHP_SELF."?cmd=verify_remove_statusgruppe&statusgruppe_id=".$statusgruppe_id."&range_id=".$range_id."&view=".$view."&name=".$db->f("name")), tooltip(_("Gruppe mit Personenzuordnung entfernen")));
         echo    "\n\t</tr>";
 
         $db2->query ("SELECT statusgruppe_user.user_id, " . $_fullname_sql['full'] . " AS fullname , username FROM statusgruppe_user LEFT JOIN auth_user_md5 USING(user_id) LEFT JOIN user_info USING (user_id) WHERE statusgruppe_id = '$statusgruppe_id'");
@@ -118,9 +118,9 @@ function PrintAktualStatusgruppen ($range_id, $view, $edit_id="")
                 } else {
                     $class="steelgraulight";
                 }
-                printf ("\n\t<tr>\n\t\t<td><font color=\"%s\">$k</font></td>", $farbe);
-                printf ("<td class=\"%s\" colspan=\"2\"><font size=\"2\">%s</font></td>",$class, htmlReady($db2->f("fullname")));
-                printf ("<td><a href=\"%s\"" . Assets::image_path('icons/16/red/trash.png') . " %s></a></td>", URLHelper::getLink($PHP_SELF.'?cmd=remove_person&statusgruppe_id='.$statusgruppe_id.'&username='.$db2->f("username").'&range_id='.$range_id.'&view='.$view), tooltip(_("Person aus der Gruppe entfernen")));
+                printf ("\n\t<tr>\n\t\t<td align=\"right\"><font color=\"%s\">$k</font></td>", $farbe);
+                printf ("<td class=\"%s\" colspan=\"2\">%s</td>", $class, htmlReady($db2->f("fullname")));
+                printf ("<td align=\"right\" class=\"%s\"><a href=\"%s\">" . Assets::img('icons/16/blue/trash.png', tooltip(_("Person aus der Gruppe entfernen"))) . "</a></td>", $class, URLHelper::getLink($PHP_SELF.'?cmd=remove_person&statusgruppe_id='.$statusgruppe_id.'&username='.$db2->f("username").'&range_id='.$range_id.'&view='.$view));
                 echo "\n\t</tr>";
                 $k++;
             }
@@ -297,9 +297,9 @@ if (is_array($msgs)) {
         ?>
             <font size="2"><?=_("neuer Gruppenname:")?> </font>
             <input type="text" name="new_statusgruppe_name" style="vertical-align:middle" value="<? echo htmlReady($gruppe_name);?>">
-            &nbsp; &nbsp; &nbsp; <b><?=_("&Auml;ndern")?></b>&nbsp;
+            &nbsp; &nbsp; &nbsp; <b><?=_("&Auml;ndern")?></b>
             <?
-            printf ("<input type=\"IMAGE\" name=\"add_new_statusgruppe\" src=\"". Assets::image_path('icons/16/yellow/arr_2up.png') . "\" value=\" %s \" %s>&nbsp;  &nbsp; &nbsp; ", _("Gruppe anpassen"), tooltip(_("Gruppe anpassen")));
+            printf ("<input type=\"IMAGE\" name=\"add_new_statusgruppe\" src=\"". Assets::image_path('icons/16/green/accept.png') . "\" value=\" %s \" %s>&nbsp;  &nbsp; &nbsp; ", _("Gruppe anpassen"), tooltip(_("Gruppe anpassen")));
             ?>
           </form>
 <?
@@ -339,15 +339,15 @@ if ($db->num_rows()>0) {   // haben wir schon Gruppen? dann Anzeige
                 echo "&nbsp; <font size=\"-1\">"._("Ihr Suchbegriff muss mindestens 3 Zeichen umfassen!");
                 echo "<br><br><font size=\"-1\">&nbsp; " . _("freie Personensuche (wird in Adressbuch übernommen)") . "</font><br>";
                 echo "&nbsp; <input type=\"text\" name=\"search_exp\" value=\"\">";
-                printf ("<input type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
+                printf (" <input class=\"middle\" type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
             } else {
                 PrintSearchResults($search_exp, $range_id);
                 printf ("<input type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("neue Suche"), tooltip(_("neue Suche")));
             }
         } else {
-            echo "<font size=\"-1\">&nbsp; " . _("freie Personensuche (wird in Adressbuch &uuml;bernommen)") . "</font><br>";
+            echo _("freie Personensuche (wird in Adressbuch &uuml;bernommen)") . "<br>";
             echo "&nbsp; <input type=\"text\" name=\"search_exp\" value=\"\">";
-            printf ("<input type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
+            printf (" <input class=\"middle\" type=\"IMAGE\" name=\"search\" src=\"" . Assets::image_path('icons/16/blue/search.png') . "\"  value=\" %s \" %s>&nbsp;  ", _("Person suchen"), tooltip(_("Person suchen")));
         }
     } ?>
         <br><br>
@@ -389,8 +389,6 @@ if ($db->num_rows()>0) {   // haben wir schon Gruppen? dann Anzeige
 </table>
 <?php
 }
-// Ende Gruppenuebersicht
-
     include ('lib/include/html_end.inc.php');
     page_close();
-?>
+

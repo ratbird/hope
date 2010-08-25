@@ -122,7 +122,7 @@ if (!$set_recur_x) {
     echo ($wholeday ? ' checked="checked"' : '') . "$disabled> &nbsp;";
     echo _("ganzt&auml;gig");
     $info = _("Als ganztägig markierte Termine beginnen um 00:00 Uhr am angegebenen Starttag und enden um 23.59 am angegeben Endtag.");
-    echo "&nbsp;&nbsp;&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\"";
+    echo "&nbsp;&nbsp;&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
     echo tooltip($info, TRUE, TRUE) . ">\n";
     echo "</font></td>\n</tr>\n";
     echo "<tr><td colspan=\"2\"><font size=\"-1\">&nbsp;</font></td></tr>\n";
@@ -210,7 +210,7 @@ if (!$set_recur_x) {
         echo "</select>\n&nbsp; &nbsp;";
         echo "<input type=\"text\" name=\"cat_text\" size=\"30\" maxlength=\"255\" value=\"$cat_text\">\n";
         $info = _("Sie können beliebige Kategorien in das Freitextfeld eingeben. Trennen Sie einzelne Kategorien bitte durch ein Komma.");
-        echo "&nbsp;&nbsp;&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\"";
+        echo "&nbsp;&nbsp;&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
         echo tooltip($info, TRUE, TRUE) . ">\n";
     }
     echo "</td>\n</tr>\n";
@@ -240,7 +240,7 @@ if (!$set_recur_x) {
             echo ">$via_name\n";
         }
         echo "</select>&nbsp;&nbsp;&nbsp;";
-        echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\"";
+        echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\"";
         echo tooltip($info, TRUE, TRUE) . ">\n";
 
         echo "&nbsp;&nbsp;&nbsp;" . _("Priorit&auml;t:");
@@ -555,7 +555,7 @@ else{
         echo ($err["exc_time"] ? $error_sign : "");
         echo to_string_popupcalendar(12, $disabled);
         echo '&nbsp;&nbsp;';
-        echo "<input class=\"middle\" type=\"image\" src=\"".Assets::image_path('icons/16/blue/add.png')."\"";
+        echo "<input class=\"middle\" type=\"image\" src=\"".Assets::image_path('icons/16/blue/add/date.png')."\"";
         echo " name=\"add_exc\"" . tooltip(_("Ausnahme hinzufügen")) . ">";
         echo "&nbsp; &nbsp;</font></td><td><font size=\"-1\">\n";
         echo "<select name=\"exc_delete[]\" size=\"4\" multiple=\"multiple\" style=\"width:170px; vertical-align:middle;\">\n";

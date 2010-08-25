@@ -139,7 +139,7 @@ class StudipSemTreeViewSimple {
             } else {
                 $info = ($this->tree->tree_data[$item_id]['info']) ? $this->tree->tree_data[$item_id]['info'] :  _("Keine weitere Info vorhanden");
             }
-            $ret = "<a href=\"#\" " . tooltip(kill_format($info), false, true) . "><img src=\"".$GLOBALS['ASSETS_URL']."images/info.gif\" border=\"0\" align=\"absmiddle\"></a>";
+            $ret = "<a href=\"#\" " . tooltip(kill_format($info), false, true) . "><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\" border=\"0\" align=\"absmiddle\"></a>";
         }
         return $ret;
     }

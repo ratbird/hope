@@ -87,7 +87,7 @@
 
        <tr>
          <td align="center" valign="top" width="1%">
-           <img src="<?= $GLOBALS['ASSETS_URL']?>images/link_intern.gif">
+           <img src="<?= $GLOBALS['ASSETS_URL']?>images/icons/16/black/schedule.png">
          </td>
          <td width="99%" align="left">
            <a href="raumzeit.php?cmd=createNewSingleDate#newSingleDate"><?= _("Einen neuen Termin anlegen") ?></a>

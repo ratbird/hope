@@ -189,7 +189,7 @@ class ExternEditModule extends ExternEditHtml {
             if (substr($widths[0], -1) != "%")
                 $out .= " checked=\"checked\"";
             $out .= "><font size=\"2\">" . _("Pixel") . "&nbsp; &nbsp;</font>\n";
-            $out .= "<img src=\"{$GLOBALS['ASSETS_URL']}images/info.gif\"";
+            $out .= "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/grey/info-circle.png\"";
             $out .= tooltip($info, TRUE, TRUE) . ">$error_sign</td></tr>\n";
         }
 
@@ -475,7 +475,7 @@ class ExternEditModule extends ExternEditHtml {
         $out .= $selector->getChooserField(array('style' => 'width:98%;','size' => 15),
                 70, 'subjectareasselected');
         $out .= '</td><td width="20%" style="vertical-align: top;">';
-        $out .= ' <img align="top" src="' . $GLOBALS['ASSETS_URL'] . 'images/info.gif"';
+        $out .= ' <img align="top" src="' . $GLOBALS['ASSETS_URL'] . 'images/icons/16/grey/info-circle.png"';
         $out .= tooltip($info, TRUE, TRUE) . "><span style=\"vertical-align:top;\">$error_sign</span>";
         $out .= "</td></tr></table>\n</td></tr>\n";
         

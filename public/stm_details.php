@@ -168,12 +168,12 @@ if (!$stm_obj->isNew()){
 if (1 || $back_msg || $info_msg || $enter) {
     $infobox[0]["kategorie"] = _("Aktionen:");
     if ($enter) {
-        $infobox[0]["eintrag"][] = array (  "icon" => "link_intern.gif" ,
+        $infobox[0]["eintrag"][] = array (  "icon" => "icons/16/black/schedule.png" ,
                                     "text"  => "<a href=\"$PHP_SELF?cmd=enter&stm_instance_id=".$stm_obj->getId()."&send_from_search=1&send_from_search_page=".urlencode($send_from_search_page)."\">"._("Tragen Sie sich hier in das Modul ein"). "</a>"
                                 );
     }
     if ($back_msg) {
-        $infobox[0]["eintrag"][] = array (  "icon" => "link_intern.gif" ,
+        $infobox[0]["eintrag"][] = array (  "icon" => "icons/16/black/schedule.png" ,
                                     "text"  => "<a href=\"$send_from_search_page\">".$back_msg. "</a>"
                                 );
     }
@@ -183,7 +183,7 @@ if (1 || $back_msg || $info_msg || $enter) {
                                 );
     }
     if($stm_obj->isAllowedToEdit($user->id)){
-        $infobox[0]["eintrag"][] = array (  "icon" => "link_intern.gif" ,
+        $infobox[0]["eintrag"][] = array (  "icon" => "icons/16/black/schedule.png" ,
                                     "text"  => "<a href=\"stm_instance_assi.php?sel_stm_form_1508068a50572e5faff81c27f7b3a72f=1&sel_stm_form_sel_".$stm_obj->getId()."_x=1\">"._("Bearbeiten Sie dieses Modul"). "</a>"
                                 );
     }
@@ -192,7 +192,7 @@ if (1 || $back_msg || $info_msg || $enter) {
 
 if (!$stm_obj->getValue('complete')) {
     $infobox[count($infobox)]["kategorie"] = _("Information:");
-    $infobox[count($infobox)-1]["eintrag"][] = array (  "icon" => "info.gif" ,
+    $infobox[count($infobox)-1]["eintrag"][] = array (  "icon" => "icons/16/grey/info-circle.png" ,
                                 "text"  => _("Dieses Studienmodul ist noch unvollständig!")
                             );
 }
@@ -332,7 +332,7 @@ print_infobox ($infobox, "infobox/contract.jpg");
                     if ( strcmp($el_id, ($el_id = $stm_obj->elements[$element_id]->getValue('element_id')))
                     && ( ($row_span = $stm_obj->getGroupedElementSemCount($el_group, $el_id)) > 1)){
                         echo '<td style="background-color:yellow;border:1px solid" width="1%" align="center" valign="middle" rowspan="'.$row_span.'">';
-                        echo "\n<img src=\"{$GLOBALS['ASSETS_URL']}images/info.gif\""
+                        echo "\n<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/grey/info-circle.png\""
                         . tooltip(_("Aus diesen Veranstaltungen muss alternativ gewählt werden."), TRUE, TRUE) . " align=\"absmiddle\">";
                         echo '</td>';
                     }

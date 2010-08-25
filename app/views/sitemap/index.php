@@ -21,7 +21,7 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                'icon' => 'info.gif',
+                'icon' => 'icons/16/grey/info-circle.png',
                 'text' => _('Auf dieser Seite finden Sie eine Übersicht über alle verfügbaren Seiten.')
             )
         )

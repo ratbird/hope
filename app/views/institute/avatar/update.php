@@ -16,7 +16,7 @@
     <input id="upload-input" name="avatar" type="file">
 
     <p class="quiet">
-        <?= Assets::img("info.gif", array('style' => 'vertical-align: middle;')) ?>
+        <?= Assets::img("icons/16/grey/info-circle.png", array('style' => 'vertical-align: middle;')) ?>
         <? printf(_("Die Bilddatei darf max. %d KB groß sein, es sind nur Dateien mit den Endungen %s, %s oder %s erlaubt!"),
                   Avatar::MAX_FILE_SIZE / 1024,
                   '<b>.jpg</b>', '<b>.png</b>', '<b>.gif</b>') ?>

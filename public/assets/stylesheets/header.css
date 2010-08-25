@@ -144,6 +144,7 @@ div#header {
 }
 
 #barTopMenu li {
+    display: inline;
     float: left;
     list-style-type: none;
     padding: 0;

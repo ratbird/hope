@@ -1783,7 +1783,7 @@ class EvalOverview {
     $html .= "<table border=0 align=center cellspacing=0 cellpadding=4 width=\"100%\">\n";
     $html .= "<tr><td colspan=\"2\">\n";
     $html .= "<b>" . _("Einstellungen zur Start- und Endzeit:") . "</b>";
-    $html .= "&nbsp;<img src=\"".PATH_PICTURES."info.gif\" align=middle "
+    $html .= "&nbsp;<img src=\"".PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
    . tooltip( ($eval->isTemplate()
           ? _("Legen Sie  fest, von wann bis wann alle eingehängten und kopierten Instanzen dieser Evaluationsvorlage in Stud.IP öffentlich sichtbar sein sollen.")
           : _("Legen Sie  fest, von wann bis wann die Evaluation in Stud.IP öffentlich sichtbar sein soll.")),

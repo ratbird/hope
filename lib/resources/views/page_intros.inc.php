@@ -64,7 +64,7 @@ switch ($view) {
                                     "text"  => (($resources_data["search_mode"] == "browse") || (!$resources_data["search_mode"]))? sprintf(_("Gewünschte Eigenschaften <br>%sangeben%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&mode=properties\">", "</a>") :  sprintf(_("Gewünschte Eigenschaften <br>%snicht angeben%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&mode=browse\">", "</a>")),
                                 array   ("icon" => "icons/16/black/schedule.png",
                                     "text"  => (!$resources_data["check_assigns"])? sprintf(_("Gewünschte Belegungszeit %sberücksichtigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&check_assigns=TRUE\">", "</a>") :  sprintf(_("Gewünschte Belegungszeit <br>%snicht berücksichtigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&check_assigns=FALSE\">", "</a>")),
-                                array   ("icon" => "cont_res5.gif",
+                                array   ("icon" => "icons/16/black/resources.png",
                                     "text"  => (!$resources_data["search_only_rooms"])? sprintf(_("Nur Räume %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=1\">", "</a>") :  sprintf(_("Alle Ressourcen %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=0\">", "</a>")),
                                 array("icon" => "blank.gif",
                                     "text"  => "<br><a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&reset=TRUE\">".makeButton("neuesuche")."</a>"))));
@@ -104,7 +104,7 @@ switch ($view) {
             $infobox = array(
                         array  ("kategorie" => _("Aktionen:"),
                                 "eintrag" => array (
-                                    array   ("icon" => "link_intern.gif",
+                                    array   ("icon" => "icons/16/black/schedule.png",
                                         "text"  => "<a href=\"$PHP_SELF?quick_view=view_schedule&quick_view_mode=".$view_mode."\">"._("zurück zum Belegungsplan")."</a>"))));
         }
     break;
@@ -122,35 +122,35 @@ switch ($view) {
         Navigation::activateItem('/resources/objects/view_schedule');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
-        $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                 "text"  => sprintf (_("%sEigenschaften%s anzeigen"), "<a href=\"$PHP_SELF?quick_view=view_details&quick_view_mode=".$view_mode."\">", "</a>"));
         if (($ActualObjectPerms->havePerm("autor")) && ($currentObject->getCategoryId()))
-            $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
 
         if ($view_mode == "search")
-            $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
 
         if ($view_mode == "no_nav")
-            $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
 
         if ($view_mode != "search" && $view_mode != "no_nav") {
             if ($SessSemName["class"] == "sem")
-                $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                         "text"  => "<a href=\"seminar_main.php\">"._("zurück zur Veranstaltung")."</a>");
             if ($SessSemName["class"] == "inst")
-                $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                         "text"  => "<a href=\"institut_main.php\">"._("zurück zur Einrichtung")."</a>");
         }
 
         if (get_config('RESOURCES_ENABLE_SEM_SCHEDULE'))
-            $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                 "text"  => sprintf (_("%sSemesterplan%s anzeigen"), "<a href=\"$PHP_SELF?quick_view=view_sem_schedule&quick_view_mode=".$view_mode."\">", "</a>"));
 
         $infobox[0]["eintrag"][] = array (
-            "icon" => "link_intern.gif",
+            "icon" => "icons/16/black/schedule.png",
             "text"  => "<a href=\"$PHP_SELF?view=view_schedule&print_view=1\" target=\"_blank\">" . _("Druckansicht") . "</a>");
     break;
     case "view_sem_schedule":
@@ -160,33 +160,33 @@ switch ($view) {
 
         $infobox[0]["kategorie"] = _("Aktionen:");
 
-        $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                 "text"  => sprintf (_("%sEigenschaften%s anzeigen"), "<a href=\"$PHP_SELF?quick_view=view_details&quick_view_mode=".$view_mode."\">", "</a>"));
         if (($ActualObjectPerms->havePerm("autor")) && ($currentObject->getCategoryId()))
-            $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
 
         if ($view_mode == "search")
-            $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
 
         if ($view_mode == "no_nav"){
-            $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
-            $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>sprintf (_("%sBelegungsplan%s anzeigen"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?quick_view=openobject_schedule&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?quick_view=view_schedule".(($view_mode == "no_nav") ? "&quick_view_mode=no_nav" : "")."\">", "</a>"));
 
         }
         if ($view_mode != "search" && $view_mode != "no_nav") {
             if ($SessSemName["class"] == "sem")
-                $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                         "text"  => "<a href=\"seminar_main.php\">"._("zurück zur Veranstaltung")."</a>");
             if ($SessSemName["class"] == "inst")
-                $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                         "text"  => "<a href=\"institut_main.php\">"._("zurück zur Einrichtung")."</a>");
         }
 
-        $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                 "text"  => "<a href=\"$PHP_SELF?view=view_sem_schedule&print_view=1\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
@@ -199,7 +199,7 @@ switch ($view) {
         Navigation::activateItem('/resources/view/group_schedule');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
-        $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                 "text"  => "<a href=\"$PHP_SELF?view=view_group_schedule&print_view=1\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
@@ -211,7 +211,7 @@ switch ($view) {
         Navigation::activateItem('/resources/view/group_schedule_daily');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
-        $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                 "text"  => "<a href=\"$PHP_SELF?view=view_group_schedule_daily&print_view=1\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
@@ -303,28 +303,28 @@ switch ($view) {
 
             if (is_object($currentObject)) {
                 if ($currentObject->getCategoryId())
-                    $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+                    $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                             "text"  =>sprintf (_("%sBelegungsplan%s anzeigen"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?quick_view=openobject_schedule&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?quick_view=view_schedule".(($view_mode == "no_nav") ? "&quick_view_mode=no_nav" : "")."\">", "</a>"));
                 if (($ActualObjectPerms->havePerm("autor")) && ($currentObject->getCategoryId()))
-                    $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+                    $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                             "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
             }
 
             if ($view_mode == "no_nav")
-                $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
 
             if ($view_mode != "search" && $view_mode != "no_nav") {
                 if ($SessSemName["class"] == "sem")
-                    $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+                    $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                             "text"  => "<a href=\"seminar_main.php\">"._("zurück zur Veranstaltung")."</a>");
                 if ($SessSemName["class"] == "inst")
-                    $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+                    $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                             "text"  => "<a href=\"institut_main.php\">"._("zurück zur Einrichtung")."</a>");
             }
 
             if ($view_mode == "search")
-                $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                         "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
         $infopic = "schedule.jpg";
         }
@@ -347,7 +347,7 @@ switch ($view) {
         Navigation::activateItem('/course/resources/group_schedule');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
-        $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                 "text"  => "<a href=\"$PHP_SELF?view=openobject_group_schedule&print_view=1\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
@@ -358,7 +358,7 @@ switch ($view) {
         Navigation::activateItem('/resources/room_requests/schedule');
 
         $infobox[0]["kategorie"] = _("Aktionen:");
-        $infobox[0]["eintrag"][] = array ("icon" => "link_intern.gif",
+        $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>  sprintf("<a href=\"javascript:void(null)\" onclick=\"window.open('resources.php?actual_object={$resources_data['resolve_requests_one_res']}&amp;quick_view=view_sem_schedule&amp;quick_view_mode=no_nav','','scrollbars=yes,left=10,top=10,width=1000,height=680,resizable=yes');\">%s</a>", _("Semesterplan")));
 
 

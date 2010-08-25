@@ -424,7 +424,7 @@ class EvalTemplateGUI {
     
     if($onthefly!=1){
        $img = new HTMpty( "img" );
-       $img->attr( "src", PATH_PICTURES."info.gif" );
+       $img->attr( "src", PATH_PICTURES."icons/16/grey/info-circle.png" );
        $img->attr( "align", "middle" );
        $img->attr( "border", 0 );
        $img->stri( tooltip( _("Geben Sie hier einen Namen für Ihre Vorlage ein. Wenn Sie eine systemweite Vorlage bearbeiten, und speichern, wird eine neue Vorlage für Sie persönlich angelegt."),
@@ -867,7 +867,7 @@ class EvalTemplateGUI {
      $form->cont( $input );
 
      $img = new HTMpty( "img" );
-     $img->attr( "src", PATH_PICTURES."info.gif" );
+     $img->attr( "src", PATH_PICTURES."icons/16/grey/info-circle.png" );
      $img->attr( "align", "middle" );
      $img->attr( "border", 0 );
      $img->stri( tooltip( _("Geben Sie hier einen Namen für Ihre Vorlage ein. Ändern Sie den Namen, um eine neue Vorlage anzulegen." ),

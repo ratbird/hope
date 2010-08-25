@@ -147,7 +147,7 @@ class StudipSemTreeSearch {
         $paths[]=htmlReady($currpath);
         return $paths;
     }
-    
+
     function getChooserField($attributes = array(), $cols = 70, $field_name = 'chooser'){
         if ($this->institut_id){
             $this->getExpectedRanges();
@@ -177,7 +177,7 @@ class StudipSemTreeSearch {
         $ret .= "</div>";
         return $ret;
     }
-    
+
     function getPath($item_id,$delimeter = ">"){
         return $this->tree->getShortPath($item_id);
     }
@@ -192,9 +192,10 @@ class StudipSemTreeSearch {
         return $ret;
     }
 
-    function getSearchButton($attributes = array()){
-        $ret = "\n<input border=\"0\" type=\"image\" name=\"{$this->form_name}_do_search\" src=\"".$GLOBALS['ASSETS_URL']."images/suchen.gif\"" . tooltip(_("Suche nach Studienbereichen starten"));
-        foreach($attributes as $key => $value){
+    function getSearchButton($attributes = array())
+    {
+        $ret = "\n<input type=\"image\" name=\"{$this->form_name}_do_search\" src=\"". Assets::image_path('icons/16/blue/search.png')."\"" . tooltip(_("Suche nach Studienbereichen starten"));
+        foreach ($attributes as $key => $value) {
             $ret .= "$key=\"$value\"";
         }
         $ret .= ">";

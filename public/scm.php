@@ -122,7 +122,7 @@ function scm_seminar_footer($table) {
 function scm_change_header($table, $titel, $user_id, $chdate) {
     $zusatz = "<font size=-1>";
     $zusatz .= sprintf(_("Zuletzt ge&auml;ndert von %s am %s"), "</font><a href=\"".URLHelper::getLink("about.php?username=".get_username($user_id))."\"><font size=-1 color=\"#333399\">".get_fullname ($user_id,'full',true)."</font></a><font size=-1>", date("d.m.Y, H:i",$chdate)."<font size=-1>&nbsp;"."</font>");
-    $icon="&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/info.png\">";
+    $icon = Assets::img('icons/16/grey/infopage.png', array('class' => 'text-top'));
 
     echo $table->openRow();
     echo $table->openCell(array("colspan"=>"2"));

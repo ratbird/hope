@@ -3,37 +3,19 @@
 # Lifter007: TODO
 # Lifter003: TODO
 /**
-* Seminar.class.php
-*
-* the seminar main-class
-*
-*
-* @author       Till Glöggler <tgloeggl@uni-osnabrueck.de>; Stefan Suchi <suchi@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
-* @access       public
-* @modulegroup      core
-* @module       Seminar.class.php
-* @package      raumzeit
-*/
-
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// Seminar.class.php
-// zentrale Veranstaltungsklasse
-// Copyright (C) 2004 Cornelis Kater <kater@data-quest>, data-quest GmbH <info@data-quest.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
+ * Seminar.class.php - This class represents a Seminar in Stud.IP
+ *
+ * This class provides functions for seminar-members, seminar-dates, and seminar-modules
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Till Glöggler <tgloeggl@uni-osnabrueck.de>; Stefan Suchi <suchi@data-quest>, Suchi & Berg GmbH <info@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
 
 require_once ('lib/functions.php');
 require_once ('lib/admission.inc.php');
@@ -2109,7 +2091,8 @@ class Seminar {
      *
      * @author Till Glöggler <tgloeggl@uos.de>
      */
-    function getDatesHTML($params = array()) {
+    function getDatesHTML($params = array())
+    {
         $template = $GLOBALS['template_factory']->open('dates/seminar_html.php');
         $template->set_attributes($params);
 
@@ -2124,7 +2107,8 @@ class Seminar {
      *
      * @author Till Glöggler <tgloeggl@uos.de>
      */
-    function getDatesExport($params = array()) {
+    function getDatesExport($params = array())
+    {
         $template = $GLOBALS['template_factory']->open('dates/seminar_export.php');
         $template->set_attributes($params);
         return $this->getDatesTemplate($template);
@@ -2138,7 +2122,8 @@ class Seminar {
      *
      * @author Till Glöggler <tgloeggl@uos.de>
      */
-    function getDatesXML($params = array()) {
+    function getDatesXML($params = array())
+    {
         $template = $GLOBALS['template_factory']->open('dates/seminar_xml.php');
         $template->set_attributes($params);
         return $this->getDatesTemplate($template);
@@ -2152,7 +2137,8 @@ class Seminar {
      *
      * @author Till Glöggler <tgloeggl@uos.de>
      */
-    function getDatesTemplate($template, $params = array()) {
+    function getDatesTemplate($template, $params = array())
+    {
         if (!$template instanceof Flexi_Template && is_string($template)) {
             $template = $GLOBALS['template_factory']->open($template);
         }

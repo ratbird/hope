@@ -2,38 +2,20 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-// +--------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// SingleDate.class.php
-//
-// Diese Klasse stellt einen einzelnen Eintrag in der Tabelle termine, bzw. ex_termine dar.
-//
-// +--------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +--------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +--------------------------------------------------------------------------+
-
-
 /**
- * SingleDate.class.php
+ * SingelDate.class.php - Ein (Ex-)Termin
  *
+ * Diese Klasse stellt einen einzelnen Eintrag in der Tabelle termine, bzw. ex_termine dar.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
  *
  * @author      Till Glöggler <tgloeggl@uos.de>
- * @version     19. Oktober 2005
- * @access      protected
- * @package     raumzeit
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
-
 require_once('lib/raumzeit/SingleDateDB.class.php');
 require_once('lib/dates.inc.php');
 require_once('lib/classes/HolidayData.class.php');
@@ -653,7 +635,8 @@ class SingleDate {
      *
      * @author Till Glöggler <tgloeggl@uos.de>
      */
-    function getDatesHTML($params = array()) {
+    function getDatesHTML($params = array())
+    {
         $template = $GLOBALS['template_factory']->open('dates/date_html.php');
         $template->set_attributes($params);
 
@@ -668,7 +651,8 @@ class SingleDate {
      *
      * @author Till Glöggler <tgloeggl@uos.de>
      */
-    function getDatesExport($params = array()) {
+    function getDatesExport($params = array())
+    {
         $template = $GLOBALS['template_factory']->open('dates/date_html.php');
         $params['link'] = false;
         $template->set_attributes($params);
@@ -684,7 +668,8 @@ class SingleDate {
      *
      * @author Till Glöggler <tgloeggl@uos.de>
      */
-    function getDatesXML($params = array()) {
+    function getDatesXML($params = array())
+    {
         $template = $GLOBALS['template_factory']->open('dates/date_xml.php');
         $template->set_attributes($params);
         return $this->getDatesTemplate($template);
@@ -698,7 +683,8 @@ class SingleDate {
      *
      * @author Till Glöggler <tgloeggl@uos.de>
      */
-    function getDatesTemplate($template) {
+    function getDatesTemplate($template)
+    {
         if (!$template instanceof Flexi_Template && is_string($template)) {
             $template = $GLOBALS['template_factory']->open($template);
         }

@@ -1122,10 +1122,11 @@ function mila ($titel, $size = 60) {
  */
 function printhead($breite, $left, $link, $open, $new, $icon, $titel, $zusatz,
                    $timestmp = 0, $printout = TRUE, $index = "", $indikator = "age",
-                   $css_class = NULL) {
-        global $user;
+                   $css_class = NULL)
+{
+    global $user;
 
-        // Verzweigung was der Pfeil anzeigen soll
+    // Verzweigung was der Pfeil anzeigen soll
     if ($indikator == "viewcount") {
         if ($index == "0") {
             $timecolor = "#BBBBBB";
@@ -1199,7 +1200,7 @@ function printhead($breite, $left, $link, $open, $new, $icon, $titel, $zusatz,
     if ($link)
         $print .= "<a href=\"".$link."\">";
 
-    $print .= "&nbsp;<img src=\"";
+    $print .= "<img src=\"";
     if ($open == "open")
         $titel = "<b>" . $titel . "</b>";
 
@@ -1207,26 +1208,26 @@ function printhead($breite, $left, $link, $open, $new, $icon, $titel, $zusatz,
         $addon = '';
         if ($index) $addon =  " ($indikator: $index)";
         if ($open == "close") {
-            $print .= $GLOBALS['ASSETS_URL']."images/forumgrau2.png\"" . tooltip(_("Objekt aufklappen") . $addon);
+            $print .= Assets::image_path('forumgrau2.png') . "\"" . tooltip(_("Objekt aufklappen") . $addon);
         }
         else {
-            $print .= $GLOBALS['ASSETS_URL']."images/forumgraurunt2.png\"" . tooltip(_("Objekt zuklappen") . $addon);
+            $print .= Assets::image_path('forumgraurunt2.png') . "\"" . tooltip(_("Objekt zuklappen") . $addon);
         }
     }
     else {
         if ($open == "close") {
-            $print .= $GLOBALS['ASSETS_URL']."images/forumgrau2.png\"";
+            $print .= Assets::image_path('forumgrau2.png') . "\"";
         }
         else {
-            $print .= $GLOBALS['ASSETS_URL']."images/forumgraurunt2.png\"";
+            $print .= Assets::image_path('forumgraurunt2.png') . "\"";
         }
     }
 
-    $print .= " >";
+    $print .= " > ";
     if ($link) {
-        $print .= "</a>";
+        $print .= "</a> ";
     }
-    $print .= "</td><td class=\"".$class."\" nowrap=\"nowrap\" width=\"1%\" valign=\"bottom\">$icon&nbsp;</td>";
+    $print .= "</td><td class=\"".$class."\" nowrap=\"nowrap\" width=\"1%\" valign=\"bottom\"> $icon &nbsp; </td>";
     $print .= "<td class=\"".$class."\" align=\"left\" width=\"20%\" nowrap=\"nowrap\" valign=\"bottom\"> ";
     $print .= $titel."</td><td align=\"right\" nowrap=\"nowrap\" class=\"".$class."\" width=\"99%\" valign=\"bottom\">";
     $print .= $zusatz."</td>";

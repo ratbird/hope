@@ -338,7 +338,7 @@ class TreeView {
         $head .= "<a href=\"";
         $head .= ($this->open_items[$item_id])? $this->getSelf("close_item={$item_id}") . "\"" . tooltip(_("Dieses Element schließen"),true) . ">"
                                             : $this->getSelf("open_item={$item_id}") . "\"" . tooltip(_("Dieses Element öffnen"),true) . ">";
-        $head .= "&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/";
+        $head .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/";
         $head .= ($this->open_items[$item_id]) ? $this->pic_open : $this->pic_close;
         $head .= "\">";
         #$head .= (!$this->open_items[$item_id]) ? "<img  src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"5\" border=\"0\">" : "";

@@ -1,10 +1,10 @@
 <? if (!$tpl['deleted']) : ?>
 <TR>
-    <TD width="1%" align="left" valign="top" bgcolor="<?=$tpl['aging_color']?>" class="<?=$tpl['class']?><?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ? '3' : '2'?>" nowrap><A href="<?=URLHelper::getLink("?cmd=".($issue_open[$tpl['sd_id']] ? 'close' : 'open')."&open_close_id=".$tpl['sd_id']."#".$tpl['sd_id'])?>">&nbsp;<?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ? Assets::img('forumgraurunt2.png') : Assets::img('forumgrau2.png') ?></A></TD>
+    <TD width="1%" align="left" valign="top" bgcolor="<?=$tpl['aging_color']?>" class="<?=$tpl['class']?><?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ? '3' : '2'?>" nowrap><A href="<?=URLHelper::getLink("?cmd=".($issue_open[$tpl['sd_id']] ? 'close' : 'open')."&open_close_id=".$tpl['sd_id']."#".$tpl['sd_id'])?>"><?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ? Assets::img('forumgraurunt2.png') : Assets::img('forumgrau2.png') ?></A></TD>
 
     <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap>
         <A name="<?=$tpl['sd_id']?>" />
-        <?= Assets::img('icons/16/grey/date.png', array('class' => 'text-top')) ?>
+        &nbsp;<?= Assets::img('icons/16/grey/date.png', array('class' => 'text-top')) ?>
     </TD>
 
     <td nowrap class="<?=$tpl['class']?>" valign="bottom">

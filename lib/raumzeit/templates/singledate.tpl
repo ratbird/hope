@@ -4,7 +4,7 @@
         <A name="<?=$tpl['sd_id']?>" />
         <? if (!$_LOCKED) { ?>
         <A href="<?= URLHelper::getLink('?cmd='. ($sd_open[$tpl['sd_id']] ? 'close' : 'open') . '&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-           	<?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top')) ?>
+            <?= Assets::img('icons/16/blue/arr_1right.png', array('class' => 'text-top')) ?>
         </A>
         <INPUT type="checkbox" name="singledate[]" value="<?=$tpl['sd_id']?>" <?=$tpl['checked']?>>
         <? } ?>
@@ -13,7 +13,7 @@
         <? if (!$_LOCKED) { ?>
         <A class="tree" href="<?= URLHelper::getLink('?cmd='. ($sd_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
         <? } ?>
-            <FONT size="-1" color="#000000">
+            <FONT color="#000000">
                 <?=$tpl['date']?>
             </FONT>
         <? if (!$_LOCKED) { ?>
@@ -21,7 +21,7 @@
         <? } ?>
     </TD>
     <TD width="30%" nowrap class="<?=$tpl['class']?>">
-        <FONT size="-1" color="#000000">
+        <FONT color="#000000">
             <?=$tpl['room']?>
         </FONT>
         <? if ($tpl['ausruf']) { ?>
@@ -62,11 +62,9 @@
     </TD>
     <TD width="30%" nowrap class="<?=$tpl['class']?>">
         <? if ($tpl['comment']) : ?>
-        <font size="-1">
             <i><?=_("Kommentar")?>: <?=$tpl['comment']?></i>
-        </font>
         <? else : ?>
-        <font size="-1" color="#666666">
+        <font color="#666666">
             <?=$tpl['room']?>
         </font>
         <? endif; ?>

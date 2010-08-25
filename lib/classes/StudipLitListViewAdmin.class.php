@@ -462,13 +462,13 @@ class StudipLitListViewAdmin extends TreeView
             if ($this->tree->hasKids($item_id)){
                 $head .= "<a href=\"";
                 $head .= ($this->open_ranges[$item_id]) ? $this->getSelf("close_range={$item_id}") : $this->getSelf("open_range={$item_id}");
-                $head .= "\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/";
+                $head .= "\"> <img src=\"".$GLOBALS['ASSETS_URL']."images/";
                 $head .= ($this->open_ranges[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
                 $head .= "\" ";
                 $head .= (!$this->open_ranges[$item_id])? tooltip(_("Alle Unterelemente öffnen")) : tooltip(_("Alle Unterelemente schließen"));
                 $head .= "></a>";
             } else {
-                $head .= "&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/";
+                $head .= " <img src=\"".$GLOBALS['ASSETS_URL']."images/";
                 $head .= ($this->open_items[$item_id]) ? "icons/16/blue/folder-full.png" : "icons/16/blue/folder-full.png";
                 $head .= "\" " . tooltip(_("Dieses Element hat keine Unterelemente")) . ">";
             }
@@ -501,7 +501,7 @@ class StudipLitListViewAdmin extends TreeView
             $rows = 2;
             $content .= "\n<tr><td class=\"steelgraulight\" style=\"font-size:10pt;border-left: 1px solid black;border-right: 1px solid black;\" ><b>". _("Formatierung der Liste bearbeiten:") . "</b>"
                     . "&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/info-circle.png\""
-                    . tooltip($this->format_info, TRUE, TRUE) . " align=\"absmiddle\"></td></tr>";
+                    . tooltip($this->format_info, TRUE, TRUE) . " class=\"text-top\"></td></tr>";
             $content .= "<tr><td class=\"steel1\" align=\"center\" style=\"font-size:10pt;border-left: 1px solid black;border-right: 1px solid black;\"><textarea name=\"edit_{$edit_name}\" style=\"width:100%\" rows=\"$rows\">" . $this->tree->tree_data[$this->edit_item_id][$edit_name]
                 . "</textarea></td></tr>";
             $content .= "\n<tr><td class=\"steelgraulight\" style=\"font-size:10pt;border-bottom: 1px solid black;;border-left: 1px solid black;border-right: 1px solid black;\" >

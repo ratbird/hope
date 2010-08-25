@@ -19,7 +19,7 @@ class Step00158DefaultHomepageVisibility extends Migration
     function down()
     {
         $db = DBManager::get();
-        $query = $db->prepare("ALTER TABLE user_visibility DROP default_homepage_visibility");
+        $query = $db->exec("ALTER TABLE `user_visibility` DROP `default_homepage_visibility`");
     }
 }
 ?>

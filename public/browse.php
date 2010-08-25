@@ -147,7 +147,6 @@ if ($name || $inst_id || $sem_id)
 {
     $statement = $db->prepare($query);
     $statement->execute($arguments);
-    print $query;
     $result = $statement->fetchAll();
 
     foreach ($result as $row)

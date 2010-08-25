@@ -33,10 +33,10 @@ class Step00198Deputies extends Migration
     {
         $db = DBManager::get();
 
-        $query = $db->prepare("INSERT INTO `config` ".
+        $query = $db->prepare("INSERT IGNORE INTO `config` ".
             "(`config_id`, `parent_id`, `field`, `value`, `is_default`, ".
                 "`type`, `range`, `section`, `position`, `mkdate`, `chdate`, ".
-                "`description`, `comment`, `message_template`) 
+                "`description`, `comment`, `message_template`)
             VALUES (MD5(?), '', ?, ?, '1', ?, 'global', 'deputies', '0', ".
                 "UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, '', '')");
 
@@ -57,7 +57,6 @@ class Step00198Deputies extends Migration
     function down()
     {
         $db = DBManager::get();
-
         $db->exec("DROP TABLE `deputies`");
     }
 }

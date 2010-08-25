@@ -23,6 +23,6 @@ if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turn
 
         $pos++;
     endforeach; ?>
-    <?= $roominfo; ?>
+    <?= $roominfo ?>
     <? $roominfo = '';
-endforeach;
+endforeach ?>

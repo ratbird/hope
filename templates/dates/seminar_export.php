@@ -21,7 +21,7 @@ if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
 
     $output[] = $cycle_output;
   endforeach ?>
-  <?= implode(", \n", $output); ?>
+  <?= implode(", \n", $output) ?>
   <? $presence_types = getPresenceTypes(); ?>
   <? if (is_array($dates['irregular'])): ?>
       <? foreach ($dates['irregular'] as $date) : ?>

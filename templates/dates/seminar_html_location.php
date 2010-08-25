@@ -35,13 +35,13 @@ endforeach;
 ?>
 
 <? if (sizeof($output) == 0) : ?>
-  <?= _("nicht angegeben"); ?>
+  <?= _("nicht angegeben") ?>
 <? else: ?>
 <table class="default">
   <? foreach ($output as $room => $dates) : ?>
   <tr>
     <td><?= $room ?></td>
     <td><?= implode(', ', $dates) ?></td>
-  <? endforeach; ?>
+  <? endforeach ?>
 </table>
 <? endif ?>

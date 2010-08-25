@@ -28,7 +28,7 @@
 
     $output[] = $cycle_output;
   endforeach ?>
-  <?= implode('<br>', $output); ?>
+  <?= implode('<br>', $output) ?>
   <?= sizeof($output) ? '<br>' : '' ?>
 
   <? $presence_types = getPresenceTypes(); ?>
@@ -38,7 +38,7 @@
             $irregular[] = $date; $irregular_strings[] = $date['tostring']; $irregular_rooms[$date['resource_id']]++;
         endif;
     endforeach;
-    unset($irregular_rooms['']); ?>
+    unset($irregular_rooms['']) ?>
 
     <? if (is_array($irregular) && sizeof($irregular)) : ?>
         <?= _("Termine am") ?> <?= implode('', shrink_dates($irregular));
@@ -47,7 +47,7 @@
                 $irregular_rooms = array_slice($irregular_rooms, sizeof($irregular_rooms) - 3, sizeof($irregular_rooms));
             endif;
             ?><?= _(", Ort:") ?>
-            <?= implode(', ', getFormattedRooms($irregular_rooms, $link)); ?>
+            <?= implode(', ', getFormattedRooms($irregular_rooms, $link)) ?>
         <? endif ?>
     <? endif ?>
   <? endif ?>

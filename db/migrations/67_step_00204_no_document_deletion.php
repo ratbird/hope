@@ -20,7 +20,7 @@ class Step00204NoDocumentDeletion extends Migration
     function down()
     {
         $db = DBManager::get();
-        $query = $db->prepare("ALTER TABLE `dokumente` DROP `author_name`");
+        $db->exec("ALTER TABLE `dokumente` DROP `author_name`");
     }
 }
 ?>

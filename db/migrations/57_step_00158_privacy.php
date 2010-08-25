@@ -34,7 +34,7 @@ class Step00158Privacy extends Migration
     function up()
     {
         $db = DBManager::get();
-        $query = $db->prepare("INSERT IGNORE INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES (MD5(?), '', ?, ?, '1', ?, 'global', 'privacy', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, '', '')");
+        $query = $db->prepare("INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES (MD5(?), '', ?, ?, '1', ?, 'global', 'privacy', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, '', '')");
 
         // insert new configuration entries
         foreach (self::$config_entries as $entry) {
@@ -69,10 +69,10 @@ class Step00158Privacy extends Migration
     function down()
     {
         $db = DBManager::get();
-        $query = $db->prepare("DELETE FROM `config` WHERE `config_id` = MD5(?)");
+        $query = $db->prepare("DELETE FROM `config` WHERE `field` = ?");
 
         foreach (self::$config_entries as $entry) {
-            $query->execute(array(md5($entry['name'])));
+            $query->execute(array($entry['name']));
         }
 
         // add "hidden" field to user categories...

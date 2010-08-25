@@ -28,7 +28,7 @@ class Step00202EnhancedSeminarCycle extends Migration
                   KEY `seminar_id` (`seminar_id`)
                 ) TYPE=MyISAM;");
 
-        $stmt = $db->prepare("INSERT IGNORE INTO `seminar_cycle_dates`
+        $stmt = $db->prepare("INSERT INTO `seminar_cycle_dates`
          (`metadate_id`, `seminar_id`, `start_time`, `end_time`, `weekday`,
           `description`, `cycle`, `week_offset`, `mkdate`, `chdate`)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -58,7 +58,7 @@ class Step00202EnhancedSeminarCycle extends Migration
     function down()
     {
         $db = DBManager::get();
-        $query = $db->prepare("DROP TABLE `seminar_cycle_dates`");
+        $db->exec("DROP TABLE `seminar_cycle_dates`");
     }
 }
 ?>

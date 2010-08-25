@@ -91,6 +91,6 @@ class Step00191ModulesEnable extends Migration
         }
 
         //new
-        $db->exec("DELETE FROM `config` WHERE `field` = 'LITERATURE_ENABLE'}");
+        $db->exec("DELETE FROM `config` WHERE `field` = 'LITERATURE_ENABLE'");
     }
 }

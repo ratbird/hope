@@ -4,7 +4,7 @@ require_once(realpath(dirname(__FILE__).'/../../lib/user_visible.inc.php'));
 
 class Step00158Privacy extends Migration
 {
-    
+
     static $config_entries = array(
         // Do users with status "dozent" always have to be visible?
         array(
@@ -34,7 +34,7 @@ class Step00158Privacy extends Migration
     function up()
     {
         $db = DBManager::get();
-        $query = $db->prepare("INSERT INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES (MD5(?), '', ?, ?, '1', ?, 'global', 'privacy', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, '', '')");
+        $query = $db->prepare("INSERT IGNORE INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES (MD5(?), '', ?, ?, '1', ?, 'global', 'privacy', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, '', '')");
 
         // insert new configuration entries
         foreach (self::$config_entries as $entry) {
@@ -46,7 +46,7 @@ class Step00158Privacy extends Migration
 
         // insert entries for all existing users
         $db->exec("INSERT INTO `user_visibility` (SELECT `user_id`, 1, 1, 1, 1, '', ".time()." FROM `auth_user_md5`)");
-        
+
         // transfer hidden categories to privacy settings
         $data = $db->query("SELECT * FROM `kategorien` WHERE hidden=1 GROUP BY `range_id`");
         $categories = array();
@@ -58,10 +58,10 @@ class Step00158Privacy extends Migration
         foreach ($categories as $owner_id => $settings) {
             $db->exec("UPDATE `user_visibility` SET `homepage`='".serialize($settings)."' WHERE `user_id`='".$owner_id."'");
         }
-        
+
         // remove hidden attribute of custom categories (is configured in privacy settings now)
         $db->exec("ALTER TABLE `kategorien` DROP `hidden`");
-        
+
         // add field for anonymous postings in forum
         $db->exec("ALTER TABLE `px_topics` ADD `anonymous` TINYINT(4) NOT NULL DEFAULT 0");
     }
@@ -69,17 +69,17 @@ class Step00158Privacy extends Migration
     function down()
     {
         $db = DBManager::get();
-        $query = $db->prepare("DELETE FROM `config WHERE `config_id = MD5(?)");
+        $query = $db->prepare("DELETE FROM `config` WHERE `config_id` = MD5(?)");
 
         foreach (self::$config_entries as $entry) {
             $query->execute(array(md5($entry['name'])));
         }
-        
+
         // add "hidden" field to user categories...
         $db->exec("ALTER TABLE `kategorien` ADD `hidden` TINYINT(4) NOT NULL DEFAULT 0 AFTER `content`");
         // ... and set it there according to privacy settings
-        $db->query("SELECT `user_id`, `homepage` FROM `user_visibility` WHERE `homepage` LIKE '%kat_%'");
-        while ($current = $db->fetch()) {
+        $result = $db->query("SELECT `user_id`, `homepage` FROM `user_visibility` WHERE `homepage` LIKE '%kat_%'");
+        while ($current = $result->fetch()) {
             $data = unserialize($current['homepage']);
             foreach ($data as $key => $visibility) {
                 if (substr($key, 0, 4) == 'kat_' && $visibility == VISIBILITY_ME) {
@@ -91,7 +91,7 @@ class Step00158Privacy extends Migration
 
         // delete privacy settings from database
         $db->exec("DROP TABLE `user_visibility`");
-        
+
         // delete anonymous flag from forum posts
         $db->exec("ALTER TABLE `px_topics` DROP `anonymous`");
     }

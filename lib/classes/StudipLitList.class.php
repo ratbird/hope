@@ -385,8 +385,9 @@ class StudipLitList extends TreeAbstract {
                     $ret .= "\n<div align=\"left\"><b><u>" . htmlReady($tree->tree_data[$lists[$i]]['name']) . "</u></b></div>";
                 }
                 if ($copy_link){
-                    $ret .= "\n<div align=\"right\" style=\"font-size:10pt\"><a href=\"".URLHelper::getLink("admin_lit_list.php?cmd=CopyUserList&_range_id=self&user_list=".$lists[$i]."#anchor")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/schedule.png\" border=\"0\">"
-                        . "&nbsp;" . _("Literaturliste kopieren") . "</a></div>";
+                    $ret .= "\n<div align=\"right\" style=\"font-size:10pt\"><a href=\"".URLHelper::getLink("admin_lit_list.php?cmd=CopyUserList&_range_id=self&user_list=".$lists[$i]."#anchor")."\">";
+                    $ret .= Assets::img('icons/16/blue/add/literature.png', array('class' => 'text-top'));
+                    $ret .= " " . _("Literaturliste kopieren") . "</a></div>";
                 } else {
                     $ret .= "\n<br>\n";
                 }

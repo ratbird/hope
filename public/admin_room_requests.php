@@ -95,7 +95,12 @@ if ($SessSemName[1]) {
 }
 
 PageLayout::setTitle(getHeaderLine($seminar_id)." -  "._("Raumanfrage"));
-Navigation::activateItem('/admin/course/dates');
+if (Request::get('section') == 'dates' || !$perm->have_perm('admin')) {
+    UrlHelper::bindLinkParam('section', $section);
+    Navigation::activateItem('/course/admin/dates');
+} else {
+    Navigation::activateItem('/admin/course/dates');
+}
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -223,8 +228,10 @@ if ($perm->have_perm("admin"))
                 printf (_("Sie k&ouml;nnen diese Anfrage auch selbst %saufl&ouml;sen%s."), "<a href=\"resources.php?view=edit_request&single_request=".$admin_rooms_data["resRequest"]->getId()."\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/schedule.png\" border=\"0\">&nbsp;", "</a>");
             else
                 print _("Diese Anfragen werden von den zust&auml;ndigen Raumadministratoren bearbeitet. Ihnen wird ein passender Raum f&uuml;r ihre Veranstaltung zugewiesen."); ?>
-      <br><br>
-      <a href="raumzeit.php?seminar_id=<?=$seminar_id?>"><img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/black/schedule.png" border="0">&nbsp;<?=_("Zurück zur Seite Zeiten / Räume");?></a><br>
+            <br><br>
+                <a href="<?= UrlHelper::getLink('raumzeit.php?seminar_id='. $seminar_id) ?>">
+                    <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/black/schedule.png" border="0">&nbsp;<?=_("Zurück zur Seite Zeiten / Räume");?>
+                </a><br>
             <br>
             </blockquote>
         </td>
@@ -234,7 +241,7 @@ if ($perm->have_perm("admin"))
     </tr>
     <tr>
     <td class="blank" colspan=2>
-    <form method="POST" name="room_requests" action="<? echo $PHP_SELF ?>#anker" >
+    <form method="POST" name="room_requests" action="<? UrlHelper::getLink() ?>#anker" >
         <table width="99%" border=0 cellpadding=2 cellspacing=0 align="center">
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=4>

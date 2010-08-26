@@ -31,14 +31,16 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-class EvalShow {
+class EvalShow
+{
 
   /**
    * createEvaluationHeader: generate the head of an evaluation (title and base text)
    * @param   the evaluation
    * @returns a table row
    */
-  function createEvaluationHeader( $eval, $votedNow, $votedEarlier ) {
+  function createEvaluationHeader( $eval, $votedNow, $votedEarlier )
+  {
       $br = new HTMpty( "br" );
 
       $tr = new HTM( "tr" );
@@ -65,9 +67,11 @@ class EvalShow {
 
       $td2->cont( $br );
       if( $votedNow ) {
-      $td2->cont( EvalCommon::createReportMessage( _("Vielen Dank für Ihre Teilnahme."), EVAL_PIC_SUCCESS, EVAL_CSS_SUCCESS ) );
+      $td2->cont(MessageBox::success(_("Vielen Dank für Ihre Teilnahme.")));
+      #$td2->cont( EvalCommon::createReportMessage( _("Vielen Dank für Ihre Teilnahme."), EVAL_PIC_SUCCESS, EVAL_CSS_SUCCESS ) );
       } elseif( $votedEarlier ) {
-      $td2->cont( EvalCommon::createReportMessage( _("Sie haben an dieser Evaluation bereits teilgenommen."), EVAL_PIC_INFO, EVAL_CSS_INFO ) );
+      $td2->cont(MessageBox::info(_("Sie haben an dieser Evaluation bereits teilgenommen.")));
+      #$td2->cont( EvalCommon::createReportMessage( _("Sie haben an dieser Evaluation bereits teilgenommen."), EVAL_PIC_INFO, EVAL_CSS_INFO ) );
       } else {
       $td2->html( formatReady($eval->getText()) );
       $td2->cont( $br );
@@ -320,7 +324,7 @@ class EvalShow {
       if( $isPreview ) {
          $button = new HTM( "a" );
 #         $button->attr( "href", "javascript:location.reload()" );
-         $button->attr( "href", UrlHelper::getLink('show_evaluation.php?evalID=' . 
+         $button->attr( "href", UrlHelper::getLink('show_evaluation.php?evalID=' .
             $eval->getObjectID() . '&isPreview=1'));
 
          $img = new HTMpty( "img" );

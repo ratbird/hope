@@ -322,7 +322,7 @@ class EvalTemplateGUI {
      $tableA->attr("cellpadding", "2");
      $tableA->attr("cellspacing", "0");
      $tableA->attr("width","100%");
-     
+
      $trA = new HTM( "tr" );
      $tdA = new HTM( "td" );
      $tdA->attr( "class", "topic" );
@@ -346,7 +346,7 @@ class EvalTemplateGUI {
                ? _("Likertskala erstellen")
                : _("Likertskala bearbeiten") );
        break;
-      case EVALQUESTION_TYPE_POL: 
+      case EVALQUESTION_TYPE_POL:
        $tdA->html( $isCreate
                ? _("Polskala erstellen")
                : _("Polskala bearbeiten") );
@@ -391,7 +391,7 @@ class EvalTemplateGUI {
     $input->attr( "value", $onthefly );
     $form->cont( $input );
     }
-    
+
     $input = new HTMpty( "input" );
     $input->attr( "type", "hidden" );
     $input->attr( "name", "template_id" );
@@ -421,12 +421,11 @@ class EvalTemplateGUI {
     $input->attr( "name", "parentID" );
     $input->attr( "value", $question->getParentID());
     $form->cont( $input );
-    
+
     if($onthefly!=1){
        $img = new HTMpty( "img" );
-       $img->attr( "src", PATH_PICTURES."icons/16/grey/info-circle.png" );
-       $img->attr( "align", "middle" );
-       $img->attr( "border", 0 );
+       $img->attr( "src", Assets::image_path('icons/16/grey/info-circle.png'));
+       $img->attr( "class", "middle" );
        $img->stri( tooltip( _("Geben Sie hier einen Namen für Ihre Vorlage ein. Wenn Sie eine systemweite Vorlage bearbeiten, und speichern, wird eine neue Vorlage für Sie persönlich angelegt."),
                 FALSE, TRUE ) );
        $form->cont( $img );
@@ -444,7 +443,7 @@ class EvalTemplateGUI {
       ? $radio->attr( "checked" ) : 0;
        $form->cont( $radio );
        $form->cont( _("ja") );
-       
+
        $radio = new HTMpty( "input" );
        $radio->attr( "type", "radio" );
        $radio->attr( "name", "template_multiple" );
@@ -455,7 +454,7 @@ class EvalTemplateGUI {
        $form->cont( _("nein") );
        $form->cont( $this->BR );
        /*end:  multiple - radiobuttons -------------------- */
-       
+
        /* show multiple choice checkboxes & answers------------------------- */
        $form->cont( $this->createSubHeadline( _("Antworten").": " ) );
        for( $i=0; $answer = $question->getNextChild(); $i++ ) {
@@ -472,7 +471,7 @@ class EvalTemplateGUI {
       $input->attr( "name", "template_delete_answers[".$i."]" );
       $input->attr( "value", $answer->getObjectID () );
       $form->cont( $input );
-      
+
       $input = new HTMpty( "input" );
       $input->attr( "type", "hidden" );
       $input->attr( "name", "template_answers[".$i."][answer_id]" );
@@ -481,7 +480,7 @@ class EvalTemplateGUI {
       $form->cont( $this->BR );
        }
        /* ------------------------- end: multiple choice checkboxes &answers */
-   
+
        /* add button ------------------------------------ */
        $input = new HTMpty( "input" );
        $input->attr( "type", "image" );
@@ -492,7 +491,7 @@ class EvalTemplateGUI {
        $input->attr( "style", "vertical-align:middle;" );
        $form->html("&nbsp;");
        $form->cont( $input );
-       
+
        /* add number of answers - list ------------------ */
        $select = new HTM( "select" );
        $select->attr( "name", "template_add_num_answers" );
@@ -505,13 +504,13 @@ class EvalTemplateGUI {
       $select->cont( $option );
        }
        $form->cont( $select );
-       
+
        /* delete button --------------------------------- */
        $input = new HTMpty( "input" );
        $input->attr( "type", "image" );
        $input->attr( "name", "template_delete_answers_button" );
 #       $input->stri( makeButton( "markierteloeschen", "src" ) );
-       $input->addAttr ("src", EVAL_PIC_REMOVE);       
+       $input->addAttr ("src", EVAL_PIC_REMOVE);
        $input->attr( "border", "0" );
        $input->attr( "style", "vertical-align:middle;" );
        $form->html("&nbsp;");
@@ -544,7 +543,7 @@ class EvalTemplateGUI {
               $form->cont( $this->BR );
            }
            else{
-             
+
               if($answer->getText(UNQUOTED) == "" ){
              $oldid=$answer->getObjectID();
              //continue;
@@ -564,15 +563,15 @@ class EvalTemplateGUI {
               $input->attr( "value", $answer->getObjectID() );
               $form->cont( $input );
               }
-             
+
            }
-        
+
         }
-    
+
          }
          else{
         $isResidual = YES;
-        
+
          }
          if($lastone!=-1 && $i== ($question->getNumberChildren()-1)){
         $form->cont( _("Beschriftung letzte Antwort") );
@@ -588,7 +587,7 @@ class EvalTemplateGUI {
         $input->attr( "name", "template_answers[1][answer_id]" );
         $input->attr( "value", $oldid );
         $form->cont( $input );
-         }  
+         }
       }
       $form->cont( $this->BR );
       $form->cont( $this->
@@ -611,8 +610,8 @@ class EvalTemplateGUI {
       }
       $form->cont( $select );
       $form->cont( $this->BR );
-      
-      
+
+
        }
        if($type == EVALQUESTION_TYPE_LIKERT){
       $form->cont( $this->createSubHeadline( _("Antworten").": " ) );
@@ -659,7 +658,7 @@ class EvalTemplateGUI {
       $input->attr( "style", "vertical-align:middle;" );
       $form->html("&nbsp;");
       $form->cont( $input );
-      
+
       /* add number of answers - list ------------------ */
       $select = new HTM( "select" );
       $select->attr( "name", "template_add_num_answers" );
@@ -672,39 +671,39 @@ class EvalTemplateGUI {
          $select->cont( $option );
       }
       $form->cont( $select );
-      
+
       /* delete answers button --------------------------------- */
       $input = new HTMpty( "input" );
       $input->attr( "type", "image" );
       $input->attr( "name", "template_delete_answers_button" );
 #       $input->stri( makeButton( "markierteloeschen", "src" ) );
-      $input->addAttr ("src", EVAL_PIC_REMOVE);       
+      $input->addAttr ("src", EVAL_PIC_REMOVE);
       $input->attr( "border", "0" );
       $input->attr( "style", "vertical-align:middle;" );
       $form->html("&nbsp;");
       $form->cont( $input );
       $form->cont( $this->BR );
-      
-      
+
+
        }
-       
+
     }
     if($type == EVALQUESTION_TYPE_LIKERT || $type == EVALQUESTION_TYPE_POL){
        /* residual category ------------------------------------ */
        $form->cont( $this->createSubHeadline( _("Ausweichantwort").": " ) );
-       
+
        /* residual - radiobuttons ------------------------------ */
        $radio = new HTMpty( "input" );
        $radio->attr( "type", "radio" );
        $radio->attr( "name", "template_residual" );
        $radio->attr( "value", YES );
-       
+
        $value = $isResidual ? "checked" : "unchecked";
        $radio->attr( $value );
-       
+
        $form->cont( $radio );
        $form->cont( _("ja").":" );
-       
+
        /* residual text field -------------> */
        $input = new HTMpty( "input" );
        $input->attr( "type", "text" );
@@ -721,14 +720,14 @@ class EvalTemplateGUI {
        $radio->attr( "type", "radio" );
        $radio->attr( "name", "template_residual" );
        $radio->attr( "value", NO );
-       
+
        $value = $value == "unchecked" ? "checked" : "unchecked";
        $radio->attr( $value );
-       
+
        $form->cont( $radio );
        $form->cont( _("nein") );
        /*end:  residual - radiobuttons -------------------- */
-       
+
        $input = new HTMpty( "input" );
        $input->attr( "type", "hidden" );
        $input->attr( "name", "template_residual_id" );
@@ -743,7 +742,7 @@ class EvalTemplateGUI {
        $input->attr( "name", "cmd" );
        $input->attr( "value", "QuestionAnswersCreated");
        $form->cont( $input );
-       
+
        $input = new HTMpty( "input" );
        $input->attr( "type", "image" );
        $input->attr( "name", "template_save2_button" );
@@ -759,7 +758,7 @@ class EvalTemplateGUI {
        $input->attr( "border", "0" );
        $input->attr( "style", "vertical-align:middle; " );
     }
-    
+
     if( !strstr($this->command, "create") ) {
        $showDelete = YES;
        $input2 = new HTMpty( "input" );
@@ -782,7 +781,7 @@ class EvalTemplateGUI {
     $td->attr( "align", "center" );
     $td->cont( $input );
     $tr->cont( $td );
-    
+
     if( $showDelete ) {
        $td = new HTM( "td" );
        $td->attr( "class", "steelkante" );
@@ -790,7 +789,7 @@ class EvalTemplateGUI {
        $td->cont( $input2 );
        $tr->cont( $td );
     }
-    
+
     $table->cont( $tr );
     $form->cont( $table );
 
@@ -799,11 +798,11 @@ class EvalTemplateGUI {
     $trA->cont( $tdA );
     $tableA->cont( $trA );
     return $tableA;
- 
+
   }
 
 
- 
+
 /**
    * Creates the form for the Polskala templates
    * @param
@@ -867,9 +866,8 @@ class EvalTemplateGUI {
      $form->cont( $input );
 
      $img = new HTMpty( "img" );
-     $img->attr( "src", PATH_PICTURES."icons/16/grey/info-circle.png" );
-     $img->attr( "align", "middle" );
-     $img->attr( "border", 0 );
+     $img->attr( "src", Assets::image_path("icons/16/grey/info-circle.png"));
+     $img->attr( "class", "middle" );
      $img->stri( tooltip( _("Geben Sie hier einen Namen für Ihre Vorlage ein. Ändern Sie den Namen, um eine neue Vorlage anzulegen." ),
            FALSE, TRUE ) );
      $form->cont( $img );

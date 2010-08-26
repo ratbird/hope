@@ -112,4 +112,3 @@ else
     include (EVAL_PATH.EVAL_FILE_OVERVIEW);
 
 page_close ();
-?>

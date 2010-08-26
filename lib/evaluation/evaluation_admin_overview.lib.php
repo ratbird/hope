@@ -1647,7 +1647,9 @@ class EvalOverview {
    * @param text   string        The Text to draw
    * @param evalID string needed if you want to delete an evaluation (not needed)
    */
-  function createSafeguard( $sign, $text, $mode = NULL, $evalID = NULL, $showrangeID = NULL, $referer = NULL ) {
+  function createSafeguard( $sign, $text, $mode = NULL, $evalID = NULL, $showrangeID = NULL, $referer = NULL )
+  {
+      //TODO: auf messagebox bzw. createQuestion umstellen!!!
 
       $label = array(
            "referer" => _("Zum vorherigen Bereich zur&uuml;ckkehren."),
@@ -1663,7 +1665,7 @@ class EvalOverview {
      . "    <td width=\"34\" valign=\"middle\" style=\"vertical-align:middle;\">\n";
 
       if ($sign != "")
-     $html .="     <img src=\"".PATH_PICTURES."$sign.gif\" alt=\"$sign.gif\" =\"middle\">\n";
+      $html .="     <img src=\"".Assets::image_path($sign)."\" alt=\"$sign\" =\"middle\">\n";
 
       $html .="    </td>\n";
       $html .="    <td align=\"left\" valign=\"middle\" style=\"vertical-align:middle;\">\n";
@@ -1783,12 +1785,12 @@ class EvalOverview {
     $html .= "<table border=0 align=center cellspacing=0 cellpadding=4 width=\"100%\">\n";
     $html .= "<tr><td colspan=\"2\">\n";
     $html .= "<b>" . _("Einstellungen zur Start- und Endzeit:") . "</b>";
-    $html .= "&nbsp;<img src=\"".PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
+    $html .= " <img src=\"".Assets::image_path('icons/16/grey/info-circle.png')."\" class=\"middle\" "
    . tooltip( ($eval->isTemplate()
           ? _("Legen Sie  fest, von wann bis wann alle eingehängten und kopierten Instanzen dieser Evaluationsvorlage in Stud.IP öffentlich sichtbar sein sollen.")
           : _("Legen Sie  fest, von wann bis wann die Evaluation in Stud.IP öffentlich sichtbar sein soll.")),
          FALSE, TRUE )
-   . " border=\"0\">";
+   . ">";
     $html .= "</td></tr>";
     $html .= "<tr>";
 

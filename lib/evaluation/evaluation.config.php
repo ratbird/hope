@@ -55,7 +55,6 @@ define ("EVAL_PATH_RELATIV", "lib/evaluation/");
 define ("EVAL_PATH", EVAL_PATH_RELATIV);
 define ("EVAL_PATH_CLASSES", EVAL_PATH."classes/");
 define ("EVAL_PATH_DBCLASSES", EVAL_PATH_CLASSES."db/");
-define ("PATH_PICTURES", $GLOBALS['ASSETS_URL'] . "images/");
 /* ----------------------------------------------------- end: path constatns */
 
 /* Class constants --------------------------------------------------------- */
@@ -80,7 +79,6 @@ define ("EVAL_FILE_EXPORTMANAGERCSV", EVAL_PATH_CLASSES."EvaluationExportManager
 define ("EVAL_FILE_EVALTREE", EVAL_PATH_CLASSES."EvaluationTree.class.php");
 define ("EVAL_FILE_EDIT_TREEVIEW", EVAL_PATH_CLASSES."EvaluationTreeEditView.class.php");
 define ("EVAL_FILE_SHOW_TREEVIEW", EVAL_PATH_CLASSES."EvaluationTreeShowUser.class.php");
-define ("EVAL_FILE_CSS", "evaluation.css");
 
 define ("HTML", EVAL_PATH_CLASSES."HTML.class.php");
 define ("HTMLempty", EVAL_PATH_CLASSES."HTMLempty.class.php");
@@ -97,7 +95,7 @@ define ("EVAL_LIB_SHOW", EVAL_PATH."evaluation_show.lib.php");
 /* Picture constants ------------------------------------------------------- */
 define ("EVAL_PIC_ICON", Assets::image_path('icons/16/grey/test.png'));
 define ("EVAL_PIC_PREVIEW", Assets::image_path('icons/16/blue/question-circle.png'));
-define ("EVAL_PIC_ADMIN", Assets::image_path('administration.gif'));
+define ("EVAL_PIC_ADMIN", Assets::image_path('icons/16/blue/admin.png'));
 define ("EVAL_PIC_LOGO", Assets::image_path('infobox/evaluation.jpg'));
 define ("EVAL_PIC_ARROW", Assets::image_path('icons/16/green/arr_1right.png'));
 define ("EVAL_PIC_ARROW_ACTIVE", Assets::image_path('icons/16/green/arr_1down.png'));
@@ -113,7 +111,7 @@ define ("EVAL_PIC_MOVE_RIGHT", Assets::image_path('icons/16/yello/arr_2right.png
 define ("EVAL_PIC_MOVE_LEFT", Assets::image_path('icons/16/yello/arr_2left.png'));
 define ("EVAL_PIC_CREATE_ANSWERS", Assets::image_path('eval_create_answers.gif'));
 define ("EVAL_PIC_EDIT_ANSWERS", Assets::image_path('eval_edit_answers.gif'));
-define ("EVAL_PIC_TIME",       Assets::image_path('icons/16/blue/date.png'));
+define ("EVAL_PIC_TIME",       Assets::image_path('icons/16/black/date.png'));
 define ("EVAL_PIC_EXCLAIM",    Assets::image_path('icons/16/black/info.png'));
 define ("EVAL_PIC_DELETE_GROUP",    Assets::image_path('delete-group.gif'));
 define ("EVAL_PIC_MOVE_BUTTON",    Assets::image_path('eval_move_button.gif'));
@@ -128,8 +126,8 @@ define ("EVAL_PIC_ARROW_NEW", Assets::image_path('icons/16/yellow/arr_1right.png
 define ("EVAL_PIC_ARROW_NEW_OPEN", Assets::image_path('icons/16/yellow/arr_1down.png'));
 define ("EVAL_PIC_ARROW_RUNNING", Assets::image_path('icons/16/green/arr_1right.png'));
 define ("EVAL_PIC_ARROW_RUNNING_OPEN", Assets::image_path('icons/16/green/arr_1down.png'));
-define ("EVAL_PIC_ARROW_STOPPED", Assets::image_path('images/icons/16/red/arr_1right.png'));
-define ("EVAL_PIC_ARROW_STOPPED_OPEN", Assets::image_path('images/icons/16/red/arr_1down.png'));
+define ("EVAL_PIC_ARROW_STOPPED", Assets::image_path('icons/16/red/arr_1right.png'));
+define ("EVAL_PIC_ARROW_STOPPED_OPEN", Assets::image_path('icons/16/red/arr_1down.png'));
 define ("EVAL_PIC_TREE_ARROW", Assets::image_path('icons/16/blue/arr_1right.png'));
 define ("EVAL_PIC_TREE_ARROW_ACTIVE", Assets::image_path('icons/16/blue/arr_1down.png'));
 define ("EVAL_PIC_TREE_BLANC", Assets::image_path('forumleer.gif'));
@@ -138,9 +136,9 @@ define ("EVAL_PIC_TREE_GROUP", Assets::image_path('eval_group.gif'));
 define ("EVAL_PIC_TREE_GROUP_FILLED", Assets::image_path('eval_group_filled.gif'));
 define ("EVAL_PIC_TREE_QUESTIONGROUP", Assets::image_path('eval_qgroup.gif'));
 define ("EVAL_PIC_TREE_QUESTIONGROUP_FILLED", Assets::image_path('eval_qgroup_filled.gif'));
-define ("EVAL_PIC_EXPORT_FILE", Assets::image_path('images/icons/16/blue/file-xls.png'));
-define ("EVAL_PIC_YES", Assets::image_path('symbol01.gif'));
-define ("EVAL_PIC_NO",  Assets::image_path('symbol02.gif'));
+define ("EVAL_PIC_EXPORT_FILE", Assets::image_path('icons/16/blue/file-xls.png'));
+define ("EVAL_PIC_YES", Assets::image_path('icons/16/green/accept.png'));
+define ("EVAL_PIC_NO",  Assets::image_path('icons/16/red/decline.png'));
 define ("EVAL_PIC_SHARED",  Assets::image_path('icons/16/blue/checkbox-checked.png'));
 define ("EVAL_PIC_NOTSHARED",  Assets::image_path('icons/16/blue/checkbox-unchecked.png'));
 /* -------------------------------------------------- end: picture constants */

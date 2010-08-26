@@ -341,8 +341,7 @@ class EvaluationTreeShowUser {
               isset($_POST["voteButton_x"]) &&
               is_array( $GLOBALS["mandatories"] ) &&
               in_array( $question->getObjectID(), $GLOBALS["mandatories"] ) )
-#       ? "background-image:url(".PATH_PICTURES."steelgraulight_hover.gif".")"
-        ? "background-image:url(".PATH_PICTURES."steelgroup1.gif"."); border-left:3px solid red; border-right:3px solid red;"
+        ? "background-image:url(".Assets::image_path("steelgroup1.gif")."); border-left:3px solid red; border-right:3px solid red;"
         : "";
 
     /* Skala (one row question) ---------------------------------------- */
@@ -370,13 +369,10 @@ class EvaluationTreeShowUser {
             if( ! $answer->getText() ) {
                 /* answer has NO text ------------ */
                 if( $answer->getPosition() <= $lastTextAnswer/2 ) //&& $numAnswers > 4 )
-                //$headCell = "<img src=\"".PATH_PICTURES."symbol04.gif\" alt=\"&lt;--\" border=\"0\" >";
                 $headCell = "&lt;--";
                 elseif( $answer->getPosition() >= round($lastTextAnswer/2) + $lastTextAnswer % 2 ) //&& $numAnswers > 4 )
-                //$headCell = "<img src=\"".PATH_PICTURES."symbol03.gif\" alt=\"--&gt;\" border=\"0\" >";
                 $headCell = "--&gt;";
                 else
-                //$headCell = "<img src=\"".PATH_PICTURES."horizontal_line.gif\" alt=\"---\" border=\"0\" >";
                 $headCell = "&lt;- -&gt;";
 
                 $noWrap = YES;

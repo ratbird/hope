@@ -101,8 +101,7 @@ $form = new HTM( "form" );
 $form->attr( "action", $PHP_SELF."?evalID=".$evalID );
 $form->attr( "method", "post" );
 
-$titlebar = EvalCommon::createTitle( _("Stud.IP Online-Evaluation"),
-                     PATH_PICTURES."eval-icon.gif" );
+$titlebar = EvalCommon::createTitle( _("Stud.IP Online-Evaluation"), Assets::image_path('icons/16/white/test.png') );
 $form->cont( $titlebar );
 
 /* Surrounding Table ------------------------------------------------------- */
@@ -217,19 +216,19 @@ page_close();
   *
   * @param object  the Evaluation object (when called externally).
   */
- function checkMandatoryItems( $item ) 
+ function checkMandatoryItems( $item )
  {
      global $mandatories;
 
-     if( $children = $item->getChildren() ) 
+     if( $children = $item->getChildren() )
      {
-        foreach( $children as $child ) 
+        foreach( $children as $child )
         {
          checkMandatoryItems( $child );
         }
      }
 
-     if( $item->x_instanceof() == INSTANCEOF_EVALQUESTION ) 
+     if( $item->x_instanceof() == INSTANCEOF_EVALQUESTION )
      {
         $group = $item->getParentObject();
 
@@ -253,7 +252,7 @@ page_close();
   * vote for an answer of given ID
   * @param string  the ID.
   */
- function voteFor( $answer_id ) 
+ function voteFor( $answer_id )
  {
     global $debug;
     global $userID;

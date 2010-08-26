@@ -41,7 +41,7 @@ require_once(EVAL_FILE_EVAL);
 
 
 # defines ==================================================================== #
- 
+
 /**
  * @const NO_TEMPLATE_GROUP  title of the template without temtplateID
  * @access private
@@ -111,20 +111,20 @@ class EvaluationTreeEditView {
 
 /**
 * Reference to the tree structure
-* 
+*
 * @access   public
 * @var      object EvaluationTree  $tree
 */
 var $tree;
-    
+
 /**
 * contains the item with the current html anchor
-* 
+*
 * @access   public
 * @var      string  $anchor
 */
 var $anchor;
-    
+
 /**
 * the item to start with
 *
@@ -209,7 +209,7 @@ function EvaluationTreeEditView ( $itemID = ROOT_BLOCK, $evalID = NULL ){
 
     if ($_REQUEST["abbort_move"])
         $this->moveItemID = NULL;
-        
+
     if ($this->moveItemID != NULL){
      if (is_array($this->tree->tree_data)){
         if (!array_key_exists($this->moveItemID,$this->tree->tree_data)){
@@ -220,10 +220,10 @@ function EvaluationTreeEditView ( $itemID = ROOT_BLOCK, $evalID = NULL ){
      }
     }
 
-    
+
     # execute the comand ==================================================== #
     $this->parseCommand ();
-    
+
     # set the new changedate ================================================ #
     if ( $this->changed ){
         $this->tree->eval->setChangedate ( time() );
@@ -275,8 +275,8 @@ function showEvalTree(){
     $html .= ($this->moveItemID) ? "1" : "1";
     $html .="\""
         . ">\n"
-        . $this->getEvalPath() 
-#       . "<img src=\"". PATH_PICTURES 
+        . $this->getEvalPath()
+#       . "<img src=\"".
 #       . "/forumleer.gif\"  border=\"0\" height=\"20\" width=\"1\">\n"
         . "   </td>\n"
         . " </tr>\n";
@@ -287,24 +287,24 @@ function showEvalTree(){
 
     $html .= " <tr>\n";
 #       . "   <td width=\"10\"class=\"blank tree-indent\" "
-#       . "background=\"".PATH_PICTURES."forumstrich.gif\">"
+#       . "background=\"".."forumstrich.gif\">"
 #       . "<img src=\""
-#       . PATH_PICTURES."forumstrich.gif\" heigth=\"20\" width=\"10\" border=\"0\" >"
+#       . ."forumstrich.gif\" heigth=\"20\" width=\"10\" border=\"0\" >"
 #       . "</td>\n"
     $html .= "  <td class=\"graulight\" align=\"left\" valign=\"top\" width=\"100%\">\n";
 
 
     $mode = $this->getInstance ($this->moveItemID);
-    
+
     switch ($mode){
 
         case ARRANGMENT_BLOCK:
             $group =& $this->tree->getGroupObject($this->moveItemID);
             $title = htmlready ($group->getTitle());
             $msg = sprintf(_("Sie haben den Gruppierungsblock <b>%s</b> zum Verschieben ausgewählt. Sie können ihn nun in einen leeren Gruppierungsblock, einen Gruppierungsblock ohne Frageblöcke oder in die oberste Ebene verschieben."),$title);
-            
+
             break;
-            
+
         case QUESTION_BLOCK:
             $group = &$this->tree->getGroupObject ($this->moveItemID);
             $title = htmlready ($group->getTitle());
@@ -312,27 +312,27 @@ function showEvalTree(){
                 $title = NO_QUESTION_GROUP_TITLE;
             $msg = sprintf(_("Sie haben den Fragenblock <b>%s</b> zum Verschieben ausgewählt. Sie können ihn nun in einen leeren Gruppierungsblock oder einen Gruppierungsblock mit Frageblöcke verschieben."),$title);
             break;
-            
+
         default:
-            
+
             $msg = _("Es wurde ein ungültiger Block zum verschieben ausgewählt.");
             break;
     }
-    
+
 
     $table = new HTML ("table");
     $table->addAttr ("border","0");
     $table->addAttr ("cellspacing","0");
     $table->addAttr ("cellpadding","2");
     $table->addAttr ("width","100%");
-    
+
     $tr = new HTML ("tr");
-    
+
     $td = new HTML ("td");
     $td->addAttr ("align","center");
     $td->addAttr ("class","graulight");
     $td->addAttr ("width","25");
-    
+
     $img = new HTMLempty ("img");
     $img->addAttr ("width","32");
     $img->addAttr ("height","32");
@@ -366,23 +366,23 @@ function showEvalTree(){
     $html .= "</td></tr>\n";
    }
    # ============================= END: display the infos when moving a block #
-   
+
     $html .= " <tr>\n"
         . "  <td class=\"blank\"  align=\"left\" valign=\"top\" "
         . "colspan=\"";
     $html .= ($this->moveItemID) ? "1" : "1";
     $html .= "\""
         . ">\n";
-        
+
     if ( !$this->startItemID != ROOT_BLOCK ){
         $html .= "<a name=\"anchor\"></a>\n";
     }
-    
+
     $html .=  $this->showTree($this->startItemID, 1)
         . "  </td>\n"
         . " </tr>\n"
         . "</table>\n";
-        
+
     return $html;
 }
 
@@ -396,7 +396,7 @@ function showEvalTree(){
 ################################################################################
 
 /**
-* prints out the tree beginning at the parent-item 
+* prints out the tree beginning at the parent-item
 *
 * @access  public
 * @param   string   $itemID  the item to display
@@ -435,24 +435,24 @@ function showTree($itemID = ROOT_BLOCK, $start = NULL){
 
     // this is the first / the opened item
     if ($start){
-    
+
         $mode = $this->getInstance ($itemID);
-        
+
         switch ($mode){
-        
+
             case ROOT_BLOCK:
 
                 break;
-                
+
             case ARRANGMENT_BLOCK:
-            
+
             case QUESTION_BLOCK:
 
                 $group      = &$this->tree->getGroupObject ($itemID);
                 $parentID   = $group->getParentID ();
-                
+
                 $mode = $this->getInstance ($parentID);
-                
+
                 if ($mode == ROOT_BLOCK){
 
                     $eval = new Evaluation ($this->evalID, NULL, EVAL_LOAD_FIRST_CHILDREN);
@@ -465,22 +465,22 @@ function showTree($itemID = ROOT_BLOCK, $start = NULL){
                     while ($child = $parentgroup->getNextChild ())
                         $items2[] = $child->getObjectID ();
                 }
-                    
+
                 $num_items2 = count($items2);
 
                 $num_items = $num_items2;
                 $items = $items2;
                 break;
-        
+
         }
-    
+
     }
 
     for ($j = 0; $j < $num_items; ++$j){
-    
+
         $html .= $this->createTreeLevelOutput($items[$j]);
         $html .= $this->createTreeItemOutput($items[$j]);
-        
+
         if ( $this->tree->hasKids($items[$j]) &&
              $this->itemID == $items[$j] )
             $html .= $this->showTree($this->tree->tree_childs[$items[$j]]);
@@ -502,13 +502,13 @@ function getEvalPath(){
         . _("Sie sind hier:")
         . "&nbsp;";
     if ( 0 && $this->startItemID != ROOT_ITEM ){
-        
+
 
     $path .= "<a class=\"tree\" href=\""
         . $this->getSelf("itemID=root")
         . "\">"
-#       . "<img src=\"".PICTURES."images/icons/16/red/arr_1right.png\" "
-#       . "width=\"10\" hight=\"20\" border=\"0\">"
+#       . "<img src=\"".Assets::image_path("icons/16/red/arr_1right.png")."\" "
+#       . "width=\"10\" hight=\"20\">"
 #       . "&nbsp;"
         . _("Evaluation")
         . "</a>";
@@ -520,9 +520,9 @@ function getEvalPath(){
         . htmlready( my_substr (
             $this->tree->tree_data[ROOT_BLOCK]["name"],0,60))
         . "</a>";
-    
+
     # collecting the parent blocks =========================================== #
-    
+
     if ($parents = $this->tree->getParents($this->startItemID)){
         for($i = count($parents)-1; $i >= 0; --$i){
            if ($parents[$i] != ROOT_BLOCK)
@@ -542,7 +542,7 @@ function getEvalPath(){
 
 
 /**
-* returns html for the icons in front of the name of the item 
+* returns html for the icons in front of the name of the item
 *
 * @access  private
 * @param   string   $itemID the item-heas id
@@ -551,7 +551,7 @@ function getEvalPath(){
 function getItemHeadPics ( $itemID ){
 
     $mode = $this->getInstance( $itemID );
-    
+
    if ($this->itemID == $itemID){
 
     $img = new HTMLempty ("img");
@@ -563,7 +563,7 @@ function getItemHeadPics ( $itemID ){
     $head = $img->createContent();
 
    } else {
-    
+
     $a = new HTML ("a");
     $a->addAttr ("href",$this->getSelf("itemID={$itemID}"));
 
@@ -573,23 +573,23 @@ function getItemHeadPics ( $itemID ){
     $img->addAttr ("align","baseline");
     $img->addAttr ("hspace","2");
     $img->addString (tooltip (_("Diesen Block öffnen."),true));
-    
+
     $a->addContent ($img);
-    
+
     $head = $a->createContent ();
-   
+
    }
 
    # collecting the image and tooltip for this item ========================== #
-   
+
    switch ($mode){
-   
+
     case ROOT_BLOCK:
-    
+
         $tooltip = _("Dies ist ihre Evaluation.");
         $image = EVAL_PIC_ICON;
         break;
-        
+
     case ARRANGMENT_BLOCK:
 
         $group = &$this->tree->getGroupObject($itemID);
@@ -604,7 +604,7 @@ function getItemHeadPics ( $itemID ){
             : EVAL_PIC_TREE_GROUP_FILLED;
 
         break;
-        
+
     case QUESTION_BLOCK:
 
         $group = &$this->tree->getGroupObject($itemID);
@@ -619,12 +619,12 @@ function getItemHeadPics ( $itemID ){
             : EVAL_PIC_TREE_QUESTIONGROUP_FILLED;
 
         break;
-        
+
     default:
-    
+
         $tooltip = _("Kein Blocktyp.");
         $image = EVAL_PIC_TREE_GROUP;
-        
+
         break;
    }
 
@@ -635,7 +635,7 @@ function getItemHeadPics ( $itemID ){
     $img->addAttr ("align","baseline");
     $img->addAttr ("src",$image);
     $img->addString (tooltip ($tooltip,true));
-    
+
     $head .= $img->createContent ();
 
     return $head;
@@ -650,11 +650,11 @@ function getItemHeadPics ( $itemID ){
 * @return  string   the item content (html)
 */
 function getItemContent($itemID){
-    
+
     $content = "";
 
     if ($this->getItemMessage($itemID)){
-    
+
         $table = new HTML ("table");
         $table->addAttr ("width","99%");
         $table->addAttr ("cellpadding","2");
@@ -671,15 +671,15 @@ function getItemContent($itemID){
 
         $content .= "<br>" . $table->createContent ();
     }
-    
-    
+
+
     $content .= "<form action=\"".$this->getSelf("item_id={$itemID}",1)
             . "\" method=\"POST\" style=\"display:inline;\">\n";
-            
+
     $content .= "<br>";
 
     $mode = $this->getInstance($itemID);
-    
+
     switch ($mode){
      case ROOT_BLOCK:
 
@@ -692,29 +692,29 @@ function getItemContent($itemID){
      case ARRANGMENT_BLOCK:
 
         $content .= $this->createTitleInput(ARRANGMENT_BLOCK);
-            
+
             $group = &$this->tree->getGroupObject($itemID);
             if ($children = $group->getChildren()){
                 if ($this->getInstance( $children[0]->getObjectID()) == ARRANGMENT_BLOCK)
                     $show = ARRANGMENT_BLOCK;
                 else
                     $show = QUESTION_BLOCK;
-            } else 
+            } else
                 $show = "both";
         $content .=  $this->createButtonbar($show);
         break;
-        
+
      case QUESTION_BLOCK:
-     
+
         $content .= $this->createTitleInput(QUESTION_BLOCK)
             . $this->createQuestionFeatures()
             . $this->createQuestionForm()
             . $this->createButtonbar(NULL);
         break;
     }
-    
+
     $content .= "</form>\n";
-    
+
     return $content;
 }
 
@@ -730,7 +730,7 @@ function getItemContent($itemID){
 function createTreeLevelOutput($item_id, $start_itemID = NULL){
 
     $level_output = "";
-    
+
     // without the first strichcode
     $item_parent = $this->tree->tree_data[$item_id]['parent_id'];
     $startitem_parent = $this->tree->tree_data[$this->startItemID]['parent_id'];
@@ -739,17 +739,15 @@ function createTreeLevelOutput($item_id, $start_itemID = NULL){
         && (
         ($item_id != ROOT_BLOCK) ||
         ($item_id != $this->tree->tree_data[$this->startItemID]['parent_id']))){
-        if ($this->tree->isLastKid($item_id) || $item_id == ROOT_BLOCK) 
+        if ($this->tree->isLastKid($item_id) || $item_id == ROOT_BLOCK)
             $level_output = "<td class=\"blank tree-indent\" valign=\"top\"  "
                 . "heigth=\"21\" nowrap>"
-                . "<img src=\"". PATH_PICTURES ."forumstrich2.gif\" "
-                . "border=\"0\" >"
+                . "<img src=\"". Assets::image_path("forumstrich2.gif")."\">"
                 . "</td>"; //last
-        else 
+        else
             $level_output = "   <td class=\"blank tree-indent\" valign=\"top\" "
                 . "heigth=\"21\" nowrap>"
-                . "<img src=\"". PATH_PICTURES
-                . "forumstrich3.gif\" border=\"0\">"
+                . "<img src=\"". Assets::image_path("forumstrich3.gif")."\">"
                 . "</td>"; //crossing
 
         $parent_id = $item_id;
@@ -765,14 +763,12 @@ function createTreeLevelOutput($item_id, $start_itemID = NULL){
             if ($this->tree->isLastKid($parent_id)){
                 $level_output = "<td class=\"blank\" valign=\"top\" "
                     . "width=\"10\" heigth=\"21\" nowrap>"
-                    . "<img src=\"". PATH_PICTURES ."forumleer.gif\" "
-                    . "width=\"10\" height=\"20\" border=\"0\" >"
+                    . "<img src=\"". Assets::image_path("forumleer.gif")."\">"
                     . "</td>"
                     . $level_output; //nothing
             } else {
                 $level_output = "   <td class=\"blank tree-indent\" valign=\"top\"  "
-                    . "heigth=\"21\" nowrap><img src=\""
-                    . PATH_PICTURES."forumstrich.gif\"  border=\"0\" >"
+                    . "heigth=\"21\" nowrap><img src=\"" . Assets::image_path("forumstrich.gif")."\">"
                     . "</td>"
                     . $level_output; //vertical line
             }
@@ -785,12 +781,11 @@ function createTreeLevelOutput($item_id, $start_itemID = NULL){
             ($this->tree->tree_data[$item_id]['parent_id'] == ROOT_BLOCK)){
                 $level_output = "<td class=\"blank\" valign=\"top\" "
                     . "width=\"10\" heigth=\"21\" nowrap>"
-                    . "<img src=\"". PATH_PICTURES ."forumleer.gif\" "
-                    . "width=\"10\" height=\"20\" border=\"0\" >"
+                    . "<img src=\"". Assets::image_path("forumleer.gif")."\">"
                     . "</td>"
                     . $level_output; //nothing
         }
-        
+
     }
 
     $html = "<table border=\"0\" width=\"100%\" cellspacing=\"0\" "
@@ -816,8 +811,7 @@ function createTreeItemOutput($item_id){
         . "  <td class=\"printhead\" nowrap width=\"1\" valign=\"middle\">\n";
     if ($this->anchor == $item_id)
         $html .= "<a name=\"anchor\">";
-    $html .= "<img src=\"".PATH_PICTURES."forumleer.gif\" "
-        . "border=\"0\" height=\"20\" width=\"1\">\n";
+    $html .= "<img src=\"".Assets::image_path("forumleer.gif")."\">";
     if ($this->anchor == $item_id)
         $html .= "</a>";
     $html .= "\n"
@@ -844,9 +838,9 @@ function createTreeItemOutput($item_id){
 function createTreeItemDetails($item_id){
 
     $mode = $this->getInstance ($item_id);
-    
+
     switch ($mode){
-    
+
         case ROOT_BLOCK:
             $eval = new Evaluation ($this->evalID, NULL, EVAL_LOAD_FIRST_CHILDREN);
             $hasKids = ($eval->getNumberChildren() == 0)
@@ -855,26 +849,26 @@ function createTreeItemDetails($item_id){
             $isLastKid = YES;
             break;
             break;
-            
+
         case ARRANGMENT_BLOCK:
             $group = &$this->tree->getGroupObject($item_id);
             $hasKids = ($group->getNumberChildren() == 0)
                 ? NO
                 : YES;
-                
+
             $par = $this->getInstance ($group->getParentID ());
-            
+
              if ($par == ROOT_BLOCK)
                 $parent = new Evaluation ($group->getParentID (), NULL, EVAL_LOAD_FIRST_CHILDREN);
             else
                 $parent =& $this->tree->getGroupObject($group->getParentID ());
-            
-            $isLastKid = ($parent->getNumberChildren() 
+
+            $isLastKid = ($parent->getNumberChildren()
                 == $group->getPosition () + 1)
                 ? YES
                 : NO;
             break;
-            
+
         case QUESTION_BLOCK:
 
             $hasKids = NO;
@@ -884,26 +878,26 @@ function createTreeItemDetails($item_id){
 
              if ($par == ROOT_BLOCK) $parent = new Evaluation ($group->getParentID (), NULL, EVAL_LOAD_FIRST_CHILDREN);
              else $parent = &$this->tree->getGroupObject($group->getParentID);
-            $isLastKid = ($parent->getNumberChildren() 
+            $isLastKid = ($parent->getNumberChildren()
                 == $group->getPosition () + 1)
                 ? YES
                 : NO;
             break;
-            
+
         default:
             $hasKids = NO;
             $isLastKid = NO;
             break;
     }
-        
-    if (!$hasKids || (!$this->itemID == $item_id)) 
+
+    if (!$hasKids || (!$this->itemID == $item_id))
         $level_output = $this->createLevelOutputTD ("forumleer.gif") . $level_output;
-    else 
+    else
         $level_output = $this->createLevelOutputTD ("forumstrich.gif") . $level_output;#
 
 #   if (($isLastKid))
 #       $level_output = $this->createLevelOutputTD ("forumleer.gif") . $level_output;
-#   else 
+#   else
 #       $level_output = $this->createLevelOutputTD ("forumstrich.gif") . $level_output;
 
     if ($item_id != $this->startItemID){
@@ -912,7 +906,7 @@ function createTreeItemDetails($item_id){
         while(($this->tree->tree_data[$parent_id]['parent_id'] != $this->tree->tree_data[$this->startItemID]['parent_id'] ) &&
             ($this->tree->tree_data[$parent_id]['parent_id'] != $start_itemID) &&
             ($this->tree->tree_data[$parent_id]['parent_id'] != ROOT_BLOCK)){
-            
+
             $parent_id = $this->tree->tree_data[$parent_id]['parent_id'];
 
 #           if (($this->tree->isLastKid($parent_id)) || (!$hasKids))
@@ -927,25 +921,25 @@ function createTreeItemDetails($item_id){
     $table->addAttr ("cellspacing","0");
     $table->addAttr ("cellpadding","0");
     $table->addAttr ("width","100%");
-    
+
     $tr = new HTML ("tr");
-    
+
     if ($level_output);
         $tr->addHTMLContent ($level_output);
-        
+
     $td = new HTML ("td");
     $td->addAttr ("class","printcontent");
     $td->addAttr ("width","100%");
-    
+
     $div = new HTML ("div");
     $div->addAttr ("align","center");
     $div->setTextareaCheck ();
     $div->addHTMLContent ($this->getItemContent($item_id));
-    
+
     $td->addContent ($div);
     $tr->addContent ($td);
     $table->addContent ($tr);
-        
+
     return $table->createContent ();
 }
 
@@ -962,7 +956,7 @@ function getItemHead($itemID){
     $mode = $this->getInstance($itemID);
 
     if ($this->itemID == $itemID){
-    
+
 #       $group = new EvaluationGroup($itemID);
         $head = "&nbsp;";
         if ($this->tree->tree_data[$itemID]['name'] == "" && $mode == QUESTION_BLOCK)
@@ -993,7 +987,7 @@ function getItemHead($itemID){
                 . _("Vorlage") . ": "
                 . $templateTitle
                 . "</b>&nbsp;";
-        
+
         }
 
         $head = "&nbsp;<a class=\"tree\" href=\""
@@ -1020,7 +1014,7 @@ function getItemHead($itemID){
         ($this->tree->tree_data[$itemID]['parent_id'] != $this->moveItemID) &&
         ($mode == ARRANGMENT_BLOCK || $itemID == ROOT_BLOCK) &&
         $this->moveItemID != $itemID2){
-        
+
         $parentID = $this->tree->tree_data[$itemID]['parent_id'];
         if (!$parentID) $parentID = ROOT_BLOCK;
         while ($parentID != ROOT_BLOCK && $parentID != $this->moveItemID){
@@ -1028,7 +1022,7 @@ function getItemHead($itemID){
             if ($parentID == $this->moveItemID)
                 $moveItemIsParent = 1;
         }
-        
+
         $moveItem = "   </td>\n"
             . "   <td align=\"right\" valign=\"middle\" class=\"printhead\" nowrap=\"nowrap\">\n"
             . $this->createLinkImage(EVAL_PIC_MOVE_GROUP,
@@ -1037,10 +1031,10 @@ function getItemHead($itemID){
                 NO,NULL,NO)
             . "&nbsp;";
     }
-    
+
     if ($moveItem && !$moveItemIsParent){
         $move_mode = $this->getInstance ($this->moveItemID);
-        
+
         if ($mode == ARRANGMENT_BLOCK){
             $group = &$this->tree->getGroupObject ($itemID);
             if ($children = $group->getChildren()){
@@ -1054,7 +1048,7 @@ function getItemHead($itemID){
             $move_type = ARRANGMENT_BLOCK;
         else
             $move_type = "no";
-            
+
 
 
         if (($move_type == "both") ||
@@ -1062,10 +1056,10 @@ function getItemHead($itemID){
             $head .= $moveItem;
         }
     }
-    
+
     if (!($this->tree->isFirstKid($itemID) && $this->tree->isLastKid($itemID)) &&
         ($itemID != $this->startItemID) &&
-        ($this->tree->tree_data[$itemID]['parent_id'] == $this->startItemID)){ 
+        ($this->tree->tree_data[$itemID]['parent_id'] == $this->startItemID)){
         $head .= "   </td>\n"
             . "   <td align=\"right\" valign=\"bottom\" class=\"printhead\" nowrap=\"nowrap\">\n"
             . $this->createLinkImage(EVAL_PIC_MOVE_UP,
@@ -1108,40 +1102,40 @@ function getItemMessage ( $itemID, $colspan = 1 ){
     $table->addAttr ("cellspacing","0");
     $table->addAttr ("cellpadding","2");
     $table->addAttr ("width","100%");
-    
+
     $tr = new HTML ("tr");
-    
+
     $td = new HTML ("td");
     $td->addAttr ("align","center");
     $td->addAttr ("width","25");
-    
+
     $img = new HTMLempty ("img");
     $img->addAttr ("width","32");
     $img->addAttr ("height","32");
     $img->addAttr ("src",$pics[$msg[0]]);
-    
+
     $td->addContent ($img);
     $tr->addContent ($td);
-    
+
     $td = new HTML ("td");
     $td->addAttr ("align","left");
-    
+
     $font = new HTML ("font");
     $font->addAttr ("color",$colors[$msg[0]]);
     $font->addHTMLContent ( ($msg[1])
         ? $msg[1]
         : "");
-        
+
     $td->addContent ($font);
     $tr->addContent ($td);
     $table->addContent ($tr);
 
     return $table->createContent ();
-    
+
    } else {
-   
+
     return NULL;
-   
+
    }
 }
 
@@ -1175,9 +1169,9 @@ function getSelf ( $param = "", $with_start_item = true ){
 
     if ($this->moveItemID)
         $url .= "&moveItemID=" . $this->moveItemID;
-    
+
     $url .= "#anchor";
-    
+
     return UrlHelper::getLink($url);
 }
 
@@ -1242,7 +1236,7 @@ function parseCommand(){
  * @return   boolean  true (reinits the tree)
  */
 function execCommandCancel(){
-    
+
 
     $itemID = $_REQUEST['startItemID'];
 
@@ -1260,8 +1254,8 @@ function execCommandCancel(){
 * @return  boolean  true (reinits the tree)
 */
 function execCommandUpdateItem ( $no_delete = false ){
-    
-    
+
+
     $mode = $this->getInstance($this->itemID);
 
     $title = $_REQUEST['title'];
@@ -1270,16 +1264,16 @@ function execCommandUpdateItem ( $no_delete = false ){
     $text = $_REQUEST['text'];
 
     switch ($mode){
-     case ROOT_BLOCK:   
+     case ROOT_BLOCK:
 
         $this->tree->eval->setTitle($title, QUOTED);
         $this->tree->eval->setText($text, QUOTED);
-        
+
         //global features
         $this->tree->eval->setAnonymous($_REQUEST['anonymous']);
 
         $this->tree->eval->save();
-        
+
         if ($this->tree->eval->isError)
             return EvalCommon::showErrorReport ($this->tree->eval,
                 _("Fehler beim Einlesen (root-item)"));
@@ -1308,10 +1302,10 @@ function execCommandUpdateItem ( $no_delete = false ){
         $group->setText($text, QUOTED);
         $group->setMandatory($_REQUEST['mandatory']);
         $group->save();
-        
+
         // update the questions
         $msg = $this->execCommandUpdateQuestions();
-        
+
         $no_answers = 0;
         $group = &$this->tree->getGroupObject($this->itemID, true);
         // info about missing answers
@@ -1329,11 +1323,11 @@ function execCommandUpdateItem ( $no_delete = false ){
                 if ($this->msg[$this->itemID])
                     $this->msg[$this->itemID] .= "<br>".sprintf(_("%s Fragen wurden noch keine Antwortenmöglichkeiten zugewiesen."),$no_answers);
                 else
-                    $this->msg[$this->itemID] .= "info§".sprintf(_("%s Fragen wurden noch keine Antwortenmöglichkeiten zugewiesen."),$no_answers);          
+                    $this->msg[$this->itemID] .= "info§".sprintf(_("%s Fragen wurden noch keine Antwortenmöglichkeiten zugewiesen."),$no_answers);
             }
-        
+
         }
-        
+
         if ($group->isError)
             return EvalCommon::showErrorReport ($this->tree->eval,
                 _("Fehler beim Einlesen (Fragenblock)"));
@@ -1342,10 +1336,10 @@ function execCommandUpdateItem ( $no_delete = false ){
         else
             $this->msg[$this->itemID] .= "msg§"
                 . _("Veränderungen wurden gespeichert.");
-            
+
         if ($msg)
             $this->msg[$this->itemID] = $this->msg[$this->itemID]."<br>".$msg;
-            
+
 #   }
         break;
      default:
@@ -1362,12 +1356,12 @@ function execCommandUpdateItem ( $no_delete = false ){
 
 /**
  * Creates a delete-request
- * 
+ *
  * @access   public
 * @return    boolean  false
  */
 function execCommandAssertDeleteItem(){
-    
+
 
     $group = &$this->tree->getGroupObject($this->itemID);
     if ($group->getChildType() == "EvaluationQuestion")
@@ -1411,7 +1405,7 @@ function execCommandAssertDeleteItem(){
         $this->msg[$this->itemID] .= "<br>"
         . _("Wollen sie diesen Gruppierungsblock wirklich l&ouml;schen?");
     }
-    
+
     $this->msg[$this->itemID] .= "<br><br>"
         . $this->createLinkButton("ja2",
             _("löschen"),
@@ -1442,7 +1436,7 @@ function execCommandDeleteItem(){
         $numberofchildren = $this->tree->getNumKidsKids($this->itemID);
 
     $group->delete();
-    
+
     if ($group->isError)
         return EvalCommon::showErrorReport ($group,
             _("Fehler beim Löschen eines Block."));
@@ -1451,18 +1445,18 @@ function execCommandDeleteItem(){
         if ($numberofchildren){
             $this->msg[$parentID] = "msg§" . sprintf(_("Der Fragenblock <b>%s</b> und alle darin enthaltenen Fragen (insgesamt %s) wurden gel&ouml;scht. "),$title,$numberofchildren);
         } else {
-            $this->msg[$parentID] = "msg§" . sprintf(_("Der Fragenblock <b>%s</b> wurden gel&ouml;scht. "), $title);    
+            $this->msg[$parentID] = "msg§" . sprintf(_("Der Fragenblock <b>%s</b> wurden gel&ouml;scht. "), $title);
         }
     } else {
         if ($numberofchildren){
             $this->msg[$parentID] = "msg§" . sprintf(_("Der Gruppierungsblock <b>%s</b> und alle Unterblöcke (insgesamt %s) wurden gel&ouml;scht. "),$title,$numberofchildren);
         } else {
-            $this->msg[$parentID] = "msg§" . sprintf(_("Der Gruppierungsblock <b>%s</b> wurden gel&ouml;scht. "), $title);  
+            $this->msg[$parentID] = "msg§" . sprintf(_("Der Gruppierungsblock <b>%s</b> wurden gel&ouml;scht. "), $title);
         }
     }
 
     $this->changed = true;
-    
+
     $this->startItemID = $parentID;
     $this->itemID = $parentID;
 
@@ -1470,13 +1464,13 @@ function execCommandDeleteItem(){
 }
 
 /**
- * Creates a new Group and adds it to the tree 
- * 
+ * Creates a new Group and adds it to the tree
+ *
  * @access   public
  * @return   boolean  true (reinits the tree)
  */
 function execCommandAddGroup(){
-    
+
 
     $group = new EvaluationGroup();
     $group->setTitle( NEW_ARRANGMENT_BLOCK_TITLE , QUOTED);
@@ -1503,20 +1497,20 @@ function execCommandAddGroup(){
         $this->msg[$this->itemID] = "msg§"
             . _("Ein neuer Gruppierungsblock wurde angelegt.");
     }
-    
+
     $this->execCommandUpdateItem();
-    
+
     return true;
 }
 
 /**
  * adds a questions-group
- * 
+ *
  * @access   private
  * @return   boolean  true (reinits the tree)
  */
 function execCommandAddQGroup(){
-    
+
 
     $group = new EvaluationGroup();
     $group->setTitle( NEW_QUESTION_BLOCK_BLOCK_TITLE , QUOTED);
@@ -1544,7 +1538,7 @@ function execCommandAddQGroup(){
 */
 
     $mode = $this->getInstance($this->itemID);
-    
+
     if ($mode == ROOT_BLOCK){
         $this->tree->eval->addChild($group);
         $this->tree->eval->save();
@@ -1565,54 +1559,54 @@ function execCommandAddQGroup(){
             $this->msg[$this->itemID] = "msg§"
                 . sprintf(_("Ein neuer Fragenblock mit der Antwortenvorlage <b>%s</b> wurde angelegt."),
                     htmlReady ($template->getText()));
-        else 
+        else
             $this->msg[$this->itemID] = "msg§"
                 . sprintf(_("Ein neuer Fragenblock mit keiner Antwortenvorlage wurde angelegt."),
                     1);
     }
     $this->execCommandUpdateItem();
-    
+
     return true;
 }
 
 /**
  * Updates the templateID of a group
- * 
+ *
  * @access   private
  * @return   boolean  true (reinits the tree)
  */
 function execCommandChangeTemplate(){
-    
-    
+
+
     $this->execCommandUpdateItem();
-    
+
     $group = &$this->tree->getGroupObject($this->itemID);
     $group->setTemplateID($_REQUEST["templateID"]);
     $group->save();
-    
+
     if ($group->isError)
         return EvalCommon::showErrorReport ($group,
             _("Fehler beim Zuordnen eines Templates."));
-            
+
     $templateID = $group->getTemplateID();
     if ($templateID){
 
         $template = new EvaluationQuestion($templateID);
         $templateTitle = htmlReady ($template->getText());
-        
+
     } else
         $templateTitle = NO_TEMPLATE_GROUP;
-    
+
     $this->msg[$this->itemID] = "msg§"
             . sprintf(_("Die Vorlage <b>%s</b> wurde dem Fragenblock zugeordnet."),
                 $templateTitle);
-        
+
     return true;
 }
 
 /**
  * Update the Question content
- * 
+ *
  * @access  private
  * @param   boolean  $no_delete  YES/NO (optional)
  * @return  string   the udpatemessage
@@ -1627,29 +1621,29 @@ function execCommandUpdateQuestions ( $no_delete = false ){
 
     $qgroup = &$this->tree->getGroupObject($this->itemID);
     $questionsDB = $qgroup->getChildren();
-    
+
     if (is_array($_REQUEST['cmd']))
         if (key($_REQUEST['cmd']) == "UpdateItem")
             $delete_empty_questions = 1;
-        
+
     for( $i=0; $i<count($questions); $i++ ) {
 
         if (!isset($deleteQuestions[$i])){
             $question = new EvaluationQuestion($questions[$i]['questionID'], NULL,
             EVAL_LOAD_FIRST_CHILDREN);
-            
+
             // remove any empty questions
             if( (empty( $questions[$i]['text'] )) && $delete_empty_questions ) {
-                
+
                 $question->delete();
                 $deletecount++;
-                
+
                 // upadate the questiontext to the db
-            } else { 
-                
+            } else {
+
                 $question->setText($questions[$i]['text'], QUOTED);
                 $question->save();
-            } 
+            }
         }
     }
     $msg = NULL;
@@ -1663,17 +1657,17 @@ function execCommandUpdateQuestions ( $no_delete = false ){
 
 /**
  * Adds Questions
- * 
+ *
  * @access   private
  * @return   boolean  true (reinits the tree)
  */
 function execCommandAddQuestions(){
-    
+
     $addquestions = $_REQUEST['newQuestionFields'];
-    
+
     $qgroup = &$this->tree->getGroupObject($this->itemID);
     $templateID = $qgroup->getTemplateID();
-    
+
     for ($i=1;$i<=$addquestions;$i++){
         $template = new EvaluationQuestion ($templateID, NULL, EVAL_LOAD_FIRST_CHILDREN);
         $newquestion = $template->duplicate ();
@@ -1684,22 +1678,22 @@ function execCommandAddQuestions(){
             return EvalCommon::showErrorReport ($this->tree->eval,
                 _("Fehler beim Anlegen neuer Fragen."));
     }
-            
+
     if ($addquestions == "1")
         $this->msg[$this->itemID] = "msg§"
             . _("Es wurde eine neue Frage hinzugefügt.");
     else
         $this->msg[$this->itemID] = "msg§"
             . sprintf(_("Es wurden %s neue Fragen hinzugefügt."),$addquestions);
-            
+
     $this->execCommandUpdateItem( NO );
-    
+
     return true;
 }
 
 /**
  * deletes questions
- * 
+ *
  * @access   private
  * @return   boolean  true (reinits the tree)
  */
@@ -1720,7 +1714,7 @@ function execCommandDeleteQuestions(){
             $deletecount++;
         }
     }
-    
+
     if ($deletecount == "1")
         $this->msg[$this->itemID] = "msg§"
             . _("Es wurde eine Frage gelöscht.");
@@ -1730,22 +1724,22 @@ function execCommandDeleteQuestions(){
     else
         $this->msg[$this->itemID] = "msg§"
             . _("Es wurde keine Frage gelöscht.");
-    
+
     $this->execCommandUpdateItem();
-    
+
     return true;
 }
 
 /**
  * creates an info-message and updates the item
- * 
+ *
  * @access   private
  * @return   boolean  true (reinits the tree)
  */
 function execCommandQuestionAnswersCreate(){
-    
+
     $this->execCommandUpdateItem();
-        
+
      // extract the questionID from the command
      foreach( $_REQUEST as $key => $value ) {
          if( preg_match( "/template_(.*)_button_x/", $key, $command ) )
@@ -1753,10 +1747,10 @@ function execCommandQuestionAnswersCreate(){
          }
       if ( preg_match( "/(.*)_#(.*)/", $command[1], $command_parts ) )
         $questionID = $command_parts[2];
-        
+
     $question = new EvaluationQuestion($questionID);
     $questiontitle = htmlReady($question->getText());
-    
+
     $this->msg[$this->itemID] = "msg§"
 #           . sprintf(_("Sie können nun der Frage <b>%s</b> im rechten Bereich Antworten zuweisen.")
 #               , $questiontitle)
@@ -1768,28 +1762,28 @@ function execCommandQuestionAnswersCreate(){
 
 /**
  * creates an confirm-message if answers were created
- * 
+ *
  * @access   private
  * @return   boolean  false
  */
 function execCommandQuestionAnswersCreated(){
 
     $id = $this->itemID;
-    
+
     $question = new EvaluationQuestion($_REQUEST["questionID"]);
     $title = htmlready ($question->getTitle());
-    
+
     $this->msg[$this->itemID] = "msg§"
         . sprintf(_("Der Frage <b>%s</b> wurden Antwortenmöglichkeiten zugewiesen."),$title);
-        
+
     $this->changed = true;
-    
+
     return false;
 }
 
 /**
  * Moves a Questions
- * 
+ *
  * @access   private
  * @return   boolean  true (reinits the tree)
  */
@@ -1801,27 +1795,27 @@ function execCommandMoveQuestionUp(){
         if( preg_match( "/cmd_(.*)_#(.*)_§(.*)_button_x/", $key, $command ) )
             break;
     }
-    
+
     $questionID = $command[2];
     $oldposition = $command[3];
-    
+
     $this->swapPosition($this->itemID, $questionID, $oldposition,
         "up");
-    
+
     if ($oldposition == 0)
         $this->msg[$this->itemID] = "msg§"
             . _("Die Frage wurde von Position 1 an die letzte Stelle verschoben.");
     else
         $this->msg[$this->itemID] = "msg§"
             . sprintf(_("Die Frage wurde von Position %s nach oben verschoben."), $oldposition+1);
-            
+
     $this->msg[$this->itemID] .= "<br>". _("Veränderungen wurden gespeichert.");
     return true;
 }
 
 /**
  * Moves a Questions
- * 
+ *
  * @access   private
  * @return   boolean  true (reinits the tree)
  */
@@ -1837,7 +1831,7 @@ function execCommandMoveQuestionDown(){
     $questionID = $command[2];
     $oldposition = $command[3];
 
-    $this->swapPosition($this->itemID, $questionID, $oldposition, 
+    $this->swapPosition($this->itemID, $questionID, $oldposition,
         "down");
 
     if ($oldposition == $numberchild-1)
@@ -1847,24 +1841,24 @@ function execCommandMoveQuestionDown(){
     else
     $this->msg[$this->itemID] = "msg§"
             . sprintf(_("Die Frage wurde von Position %s nach oben verschoben."), $oldposition+1);
-            
+
     $this->msg[$this->itemID] .= "<br>". _("Veränderungen wurden gespeichert.");
     return true;
 }
 
 /**
  * Moves a Group up or down
- * 
+ *
  * @access   private
  * @return   boolean  true (reinits the tree)
  */
 function execCommandMove(){
-    
+
     $direction = $_REQUEST['direction'];
 
     $group = &$this->tree->getGroupObject($_REQUEST['groupID']);
     $oldposition = $group->getPosition();
-    
+
     $this->swapPosition($this->itemID, $_REQUEST['groupID'],
         $oldposition, $_REQUEST['direction']);
 
@@ -1876,11 +1870,11 @@ function execCommandMove(){
         $this->msg[$this->itemID] .= _("Gruppierungsblock");
 
     if (($oldposition == 0) && ($direction == "up"))
-            $this->msg[$this->itemID] .= 
+            $this->msg[$this->itemID] .=
                 _(" wurde von Position 1 an die letzte Stelle verschoben.");
     elseif (($oldposition == $group->getNumberChildren()-1)
         && ($direction == "down"))
-        $this->msg[$this->itemID] .= 
+        $this->msg[$this->itemID] .=
             sprintf(_(" wurde von Position %s an die erste Stelle verschoben.")
                 , $oldposition+1);
     else
@@ -1895,43 +1889,43 @@ function execCommandMove(){
 
 /**
  * Moves a Group from one parent to another
- * 
+ *
  * @access   private
  * @return   boolean  true (reinits the tree)
  */
 function execCommandMoveGroup(){
-    
-    
+
+
     $moveGroupeID = $_REQUEST['moveGroupeID'];
-    
+
     if (!$this->moveItemID){
         $this->msg[$this->itemID] = "msg§"
             . _("Fehler beim Verschieben eines Blocks. Es wurde kein Block zum verschieben ausgewählt.");
         return false;
     }
-    
+
     $mode = $this->getInstance ($this->itemID);
-    
+
     if (!$mode){
         $this->msg[$this->itemID] = "msg§"
             . _("Fehler beim Verschieben eines Blocks. Der Zielblock besitzt keinen Typ.");
         return false;
     }
-    
+
     $move_mode = $this->getInstance ($this->moveItemID);
-    
+
     if (!$move_mode){
         $this->msg[$this->itemID] = "msg§"
             . _("Fehler beim Verschieben eines Blocks. Der Zielblock besitzt keinen Typ.");
         return false;
     }
-    
+
     $move_group =&$this->tree->getGroupObject($this->moveItemID);
     $move_group_title = htmlready ($move_group->getTitle ());
     $oldparentID = $move_group->getParentID ();
-    
+
     switch ($mode){
-    
+
         case ROOT_BLOCK:
 
             if ($children = $this->tree->eval->getChildren()){
@@ -1941,12 +1935,12 @@ function execCommandMoveGroup(){
                     return false;
                 }
             }
-            
+
             $newgroup = $move_group->duplicate ();
-            
+
             $this->tree->eval->addChild ($newgroup);
             $this->tree->eval->save ();
-            
+
             if (($oldparentID == $this->evalID) || $oldparentID == "root"){
 
                 $grouptodelete = $this->tree->eval->getChild ($move_group->getObjectID());
@@ -1962,7 +1956,7 @@ function execCommandMoveGroup(){
                 $grouptodelete->delete ();
                 $oldparentgroup->save ();
             }
-            
+
             if ($this->tree->eval->isError)
                 return EvalCommon::showErrorReport ($group,
                     _("Fehler beim Verschieben eines Blocks."));
@@ -1975,12 +1969,12 @@ function execCommandMoveGroup(){
             if ($grouptodelete->isError)
                 return EvalCommon::showErrorReport ($newgroup,
                     _("Fehler beim Verschieben eines Blocks."));
-            
+
             $this->msg[$this->itemID] = "msg§"
                 . sprintf(_("Der Block <b>%s</b> wurde in die Hauptebene verschoben."),
                     $move_group_title);
             break;
-            
+
         case ARRANGMENT_BLOCK:
 
             $group = &$this->tree->getGroupObject($this->itemID);
@@ -2015,7 +2009,7 @@ function execCommandMoveGroup(){
                     return EvalCommon::showErrorReport ($newgroup,
                         _("Fehler beim Verschieben eines Blocks."));
             }
-            
+
             if ($group->isError)
                 return EvalCommon::showErrorReport ($group,
                     _("Fehler beim Verschieben eines Blocks."));
@@ -2029,16 +2023,16 @@ function execCommandMoveGroup(){
                 return EvalCommon::showErrorReport ($newgroup,
                     _("Fehler beim Verschieben eines Blocks."));
 
-                    
+
             $this->msg[$this->itemID] = "msg§"
                 . sprintf(_("Der Block <b>%s</b> wurde in diesen Gruppierungsblock verschoben."),
                     $move_group_title);
             break;
-        
+
         case QUESTION_BLOCK:
 
             $group = &$this->tree->getGroupObject($this->itemID);
-            
+
             if ($children = $group->getChildren()){
                 if ($this->getInstance( $children[0]->getObjectID()) != $move_mode){
                     $this->msg[$this->itemID] = "msg§"
@@ -2049,7 +2043,7 @@ function execCommandMoveGroup(){
 
             $oldparentID = $move_group->getParentID ();
             if ($oldparentID == ROOT_BLOCK){
-            
+
                 $this->msg[$this->itemID] = "msg§"
                         . _("Fehler beim Verschieben eines Blocks. Ein Fragenblock kann nicht auf die oberste Ebene verschoben werden.");
                     return false;
@@ -2059,7 +2053,7 @@ function execCommandMoveGroup(){
                         . _("Fehler beim Verschieben eines Blocks. Ein Fragenblock kann nicht auf die oberste Ebene verschoben werden.");
                     return false;
             } else {
-            
+
                 $oldparent = &$this->tree->getGroupObject($oldparentID);
             }
 
@@ -2072,7 +2066,7 @@ function execCommandMoveGroup(){
             $grouptodelete->delete ();
             $oldparent->save ();
 
-            
+
             if ($group->isError)
                 return EvalCommon::showErrorReport ($group,
                     _("Fehler beim Verschieben eines Blocks."));
@@ -2088,18 +2082,18 @@ function execCommandMoveGroup(){
             if ($oldparent->isError)
                 return EvalCommon::showErrorReport ($oldparent,
                     _("Fehler beim Verschieben eines Blocks."));
-            
+
             $this->msg[$this->itemID] = "msg§"
                 . sprintf(_("Der Block <b>%s</b> wurde in diesen Fragenblock verschoben."),
                     $move_group_title);
-            
+
             break;
     }
-    
+
     $this->moveItemID = NULL;
-    
+
     $this->changed = true;
-    
+
     return true;
 }
 
@@ -2116,7 +2110,7 @@ function execCommandMoveGroup(){
 * creates the html for the create new group options
 *
 * @access  private
-* 
+*
 * @param   string  $show  the blocktyp to display
 * @return  string         the buttons (html)
 */
@@ -2131,15 +2125,15 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
     $table->addAttr ("cellpadding","6");
     $table->addAttr ("cellspacing","0");
     $table->addAttr ("div","left");
-    
+
     $tr = new HTML ("tr");
-    
+
     $td = new HTML ("td");
     $td->addAttr ("class","steelgrau");
     $td->addAttr ("align","center");
-    
+
     $seperator = "&nbsp;|&nbsp;&nbsp;";
-    
+
     // the update-button
     $buttons = "&nbsp;"
         . $this->createButton(
@@ -2149,7 +2143,7 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
 
     $infotext .= "\n"
         . _("- die Veränderungen dieses Blocks speichern.");
-    
+
     // the new group-button
    if ($show == "both" || $show == ARRANGMENT_BLOCK || $show == ROOT_BLOCK){
     $buttons .= $seperator
@@ -2163,7 +2157,7 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
 
     // the new question-group-button
    if ($show == "both" || $show == QUESTION_BLOCK){
-   
+
     $buttons .=  $seperator
         . $this->createTemplateSelection()
         . $this->createButton("erstellen-qgroup",
@@ -2175,20 +2169,20 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
 
     // the move-button
    if ($this->itemID != ROOT_BLOCK && !$this->moveItemID){
-    
+
     $a = new HTML ("a");
     $a->addAttr ("href",
         $this->getSelf ("&moveItemID=" . $this->itemID));
-        
+
     $img = new HTMLempty ("img");
     $img->addAttr ("border","0");
     $img->addAttr ("style","vertical-align:middle;");
     $img->addAttr ("src", EVAL_PIC_MOVE_BUTTON);
     $img->addAttr ("style","vertical-align:middle;");
     $img->addString (tooltip (_("Diesen Block verschieben.")));
-        
+
     $a->addContent ($img);
-    
+
     $button = new HTMLempty ("input");
     $button->addAttr ("type", "image");
     $button->addAttr ("name", "&moveItemID=" . $this->itemID);
@@ -2196,7 +2190,7 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
     $button->addAttr ("border", "0");
     $button->addAttr ("src", EVAL_PIC_MOVE_BUTTON);
     $button->addString (Tooltip (_("Diesen Block verschieben.")));
-    
+
     $buttons .= $seperator
         . $this->createButton("verschieben",
             _("Diesen Block verschieben."),
@@ -2204,8 +2198,8 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
 #       . $a->createContent ();
     $infotext .= "\n"
         . _("- diesen Block zum Verschieben markieren.");
-        
-    $movebutton = 1;    
+
+    $movebutton = 1;
    }
 
 
@@ -2218,7 +2212,7 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
     $button->addAttr ("border", "0");
     $button->addAttr ("src", EVAL_PIC_DELETE_GROUP);
     $button->addString (Tooltip (_("Diesen Block und alle seine Unterblöcke löschen.")));
-    
+
     $buttons .= ($movebutton)
         ? "&nbsp;"
         : $seperator;
@@ -2230,7 +2224,7 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
     $infotext .= "\n"
         . _("- diesen Block und seine Unterblöcke löschen.");
    }
-        
+
     // the abort-button
     $child = $this->tree->eval->getNextChild();
     $number_of_childs = $this->tree->eval->getNumberChildren();
@@ -2242,18 +2236,18 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
         $child->getTitle(QOUTED) == FIRST_ARRANGMENT_BLOCK_TITLE &&
         $child->getChildren() == NULL &&
         $child->getText == ""){
-    
+
         $a = new HTML ("a");
         $a->addAttr("href", UrlHelper::getLink(EVAL_FILE_ADMIN. "?evalID="
             . $this->tree->eval->getObjectID() . "&abort_creation_button_x=1"));
-        
+
         $img = new HTMLempty ("img");
         $img->addAttr ("border","0");
         $img->addAttr ("style","vertical-align:middle;");
         $img->addString (makeButton("abbrechen","src"));
         $img->addAttr ("style","vertical-align:middle;");
         $img->addString (tooltip (_("Erstellung einer Evaluation abbrechen")));
-        
+
         $a->addContent ($img);
 
         $buttons .= $seperator
@@ -2261,22 +2255,22 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
     $infotext .= "\n"
         . _("Die Erstellung dieser Evaluation abbrechen.");
    }
-                
+
     $td->addHTMLContent (
         $this->createImage (EVAL_PIC_HELP,$infotext));
     $td->addHTMLContent ($buttons);
     $tr->addContent ($td);
     $table->addContent ($tr);
-    
-    
-    return $table->createContent ();    
+
+
+    return $table->createContent ();
 }
 
 /**
 * creates the html for the create new group options
 *
 * @access   private
-* @param    string $show 
+* @param    string $show
 * @return   string the html
 */
 function createFormNew($show = ARRANGMENT_BLOCK){
@@ -2290,47 +2284,47 @@ function createFormNew($show = ARRANGMENT_BLOCK){
     $table->addAttr ("div","left");
 
     $tr = new HTML ("tr");
-    
+
     $td = new HTML ("td");
     $td->addAttr ("class","blank");
     $td->addAttr ("align","center");
     $td->addContent (new HTMLempty ("br"));
-    
+
 #   $tr->addContent ($td);
 #   $table->addContent ($tr);
-    
+
     $tr = new HTML ("tr");
-    
+
     $td = new HTML ("td");
     $td->addAttr ("class","steel1kante");
 #   $td->addAttr ("class","steelgrau");
     $td->addAttr ("align","center");
-    
+
     $img = new HTMLempty ("img");
-    $img->addAttr ("src",PATH_PICTURES."blank.gif");
+    $img->addAttr ("src", Assets::image_path("blank.gif"));
     $img->addAttr ("width","30");
     $img->addAttr ("height","1");
     $img->addAttr ("alt","");
-    
+
 #   $td->addContent ($img);
 #   $td->addContent (new HTMLempty ("br"));
-    
-    
+
+
     $group_selection = _("Gruppierungsblock")
         . "&nbsp;"
         . $this->createButton(
             "erstellen",
             _("Einen neuen Gruppierungsblock erstellen"),
             "cmd[AddGroup]");
-            
+
     $qgroup_selection = _("Fragenblock mit")
         . "&nbsp;"
         . $this->createTemplateSelection()
         . $this->createButton("erstellen",_("Einen neuen Fragenblock erstellen"),
                 "cmd[AddQGroup]");
-                
+
     $seperator = "&nbsp;|&nbsp;";
-    
+
     switch ($show){
         case ARRANGMENT_BLOCK:
             $td->addHTMLContent ($group_selection);
@@ -2357,55 +2351,55 @@ function createFormNew($show = ARRANGMENT_BLOCK){
         $child->getTitle(QOUTED) == _("Erster Gruppierungsblock") &&
         $child->getChildren() == NULL &&
         $child->getText == ""){
-        
-        
-        
+
+
+
         $cancel = $seperator ."&nbsp;";
-        
+
         $a = new HTML ("a");
         $a->addAttr("href", UrlHelper::getLink(EVAL_FILE_ADMIN . "?evalID="
             . $this->tree->eval->getObjectID() . "&abort_creation_button_x=1"));
-        
+
         $img = new HTMLempty ("img");
         $img->addAttr ("border","0");
         $img->addAttr ("style","vertical-align:middle;");
         $img->addString (makeButton("abbrechen","src"));
         $img->addAttr ("style","vertical-align:middle;");
         $img->addString (tooltip(_("Erstellung einer Evaluation abbrechen")));
-        
+
         $a->addContent ($img);
 
         $cancel .= $a->createContent ();
-    
+
         $td->addHTMLContent ($cancel);
-        
+
     }
 
     $tr->addContent ($td);
     $table->addContent ($tr);
-    
-    
-    return $table->createContent ();    
+
+
+    return $table->createContent ();
 }
 
 /**
 * creates the html for the title and text input
 *
 * @access   private
-* @param    string  $mode 
+* @param    string  $mode
 * @return   string the html
 */
 function createTitleInput($mode = ROOT_BLOCK){
 
     switch ($mode) {
-    
+
         case ROOT_BLOCK:
             $title_label = _("Titel der Evaluation");
             $title       = htmlentities ($this->tree->eval->getTitle());
             $text_label  = _("Zusätzlicher Text");
             $text        = htmlentities ($this->tree->eval->getText());
             break;
-            
+
         case ARRANGMENT_BLOCK:
             $title_label = _("Titel des Gruppierungsblocks");
             $group       =  &$this->tree->getGroupObject($this->itemID);
@@ -2413,7 +2407,7 @@ function createTitleInput($mode = ROOT_BLOCK){
             $text_label  = _("Zusätzlicher Text");
             $text        = htmlentities ($group->getText());
             break;
-            
+
         case QUESTION_BLOCK:
             $title_label = _("Titel des Fragenblocks");
             $title_info  = _("Die Angabe des Titels ist bei einem Fragenblock optional.");
@@ -2424,57 +2418,57 @@ function createTitleInput($mode = ROOT_BLOCK){
             break;
     }
     $text_info = _("Die Angabe des zusätzlichen Textes ist optional.");
-    
+
     $table = new HTML ("table");
     $table->addAttr ("width","98%");
     $table->addAttr ("border","0");
     $table->addAttr ("cellpadding","2");
     $table->addAttr ("cellpadding","0");
-    
+
     $tr = new HTML ("tr");
-    
+
     $td = new HTML ("td");
     $td->addContent ($title_label . ":");
     if ($mode == QUESTION_BLOCK)
         $td->addHTMLContent ($this->createImage(EVAL_PIC_HELP,$title_info));
-    
+
     $tr->addContent ($td);
-    
+
     $td = new HTML ("td");
-    
+
     $input = new HTMLempty ("input");
     $input->addAttr ("type","text");
     $input->addAttr ("name","title");
     $input->addString ("value=\"".$title."\"");
     $input->addAttr ("size","60");
     $input->addAttr ("style","vertical-align:middle;");
-    
+
     $td->addContent ($input);
     $tr->addContent ($td);
     $table->addContent ($tr);
-    
+
     $tr = new HTML ("tr");
-    
+
     $td = new HTML ("td");
     $td->addContent ($text_label . ":");
     $td->addHTMLContent ($this->createImage(EVAL_PIC_HELP, $text_info));
-    
+
     $tr->addContent ($td);
-    
+
     $td = new HTML ("td");
-    
+
     $textarea = "<textarea name=\"text\" cols=\"40\" rows=\"4\" "
         . "style=\"vertical-align:top;\">";
     $textarea .=($text)
             ? $text
             : "";
     $textarea .= "</textarea>";
-    
+
     $td->addHTMLContent ($textarea);
     $td->setTextareaCheck ();
     $tr->addContent ($td);
     $table->addContent ($tr);
-        
+
     return $table->createContent ();
 }
 
@@ -2494,14 +2488,14 @@ function createUpdateButton ( $mode = NULL ){
 //      . "   <input type=hidden name=\"cmd\" value=\"UpdateItem\">\n"
         . $this->createButton("uebernehmen",_("Änderungen übernehmen."),
             "cmd[UpdateItem]");
-            
+
     if($mode == NULL){
         $button .= "&nbsp;&nbsp;|&nbsp;&nbsp;"._("Diesen Block")."&nbsp;"
             . $this->createButton("loeschen",
             _("Diesen Block und alle seine Unterblöcke löschen."),
             "cmd[AssertDeleteItem]");
     }
-    
+
     $button .= "  </td>\n"
         . " </tr>\n"
 //      . " </form></tr>\n"
@@ -2516,62 +2510,62 @@ function createUpdateButton ( $mode = NULL ){
 * @return   string the html
 */
 function createGlobalFeatures (){
-    
+
     $table = new HTML ("table");
     $table->addAttr ("width","99%");
     $table->addAttr ("border","0");
     $table->addAttr ("cellpadding","2");
     $table->addAttr ("cellspacing","2");
-    
+
     $tr = new HTML ("tr");
-    
+
     $td = new HTML ("td");
     $td->addAttr ("class","steelgraulight");
     $td->addAttr ("colspan","2");
-    
+
     $b = new HTML ("b");
     $b->addContent (_("Globale Eigenschaften"));
     $b->addContent (":");
-    
+
     $td->addContent ($b);
     $tr->addContent ($td);
     $table->addContent ($tr);
-    
+
     $tr = new HTML ("tr");
-    
+
     $td = new HTML ("td");
     $td->addAttr ("style","border-bottom:0px dotted black;");
     $td->addContent (_("Die Auswertung der Evaluation läuft"));
     $td->addContent (":");
-    
+
     $tr->addContent ($td);
-    
+
     $td = new HTML ("td");
     $td->addAttr ("style","border-bottom:0px dotted black;");
-    
+
     $input = new HTMLempty ("input");
     $input->addAttr ("type","radio");
     $input->addAttr ("value","1");
     $input->addAttr ("name","anonymous");
     if ($this->tree->eval->isAnonymous())
         $input->addAttr ("checked","checked");
-        
+
     $input2 = new HTMLempty ("input");
     $input2->addAttr ("type","radio");
     $input2->addAttr ("value","0");
     $input2->addAttr ("name","anonymous");
     if (!$this->tree->eval->isAnonymous())
         $input2->addAttr ("checked","checked");
-        
+
     $td->addContent ($input);
     $td->addContent (_("anonym"));
     $td->addContent (new HTMLempty ("br"));
     $td->addContent ($input2);
     $td->addContent (_("personalisiert"));
-    
+
     $tr->addContent ($td);
     $table->addContent ($tr);
-    
+
     return $table->createContent ();
 }
 
@@ -2582,7 +2576,7 @@ function createGlobalFeatures (){
 * @return   string the html
 */
 function createQuestionFeatures(){
-    
+
     $group      = &$this->tree->getGroupObject($this->itemID);
     $templateID = $group->getTemplateID();
 
@@ -2591,10 +2585,10 @@ function createQuestionFeatures(){
         $templateTitle = htmlReady ($template->getText());
     } else
         $templateTitle = NO_TEMPLATE_GROUP;//_("keine Vorlage");
-        
+
     if ( $templateTitle == "" )
                 $templateTitle = NO_TEMPLATE;
-        
+
     $table = new HTML ("table");
     $table->addAttr ("border","0");
     $table->addAttr ("align", "center");
@@ -2602,56 +2596,56 @@ function createQuestionFeatures(){
     $table->addAttr ("cellpadding", "0");
     $table->addAttr ("width", "98%");
 //    $table->addAttr ("style", "border:5px solid white;");
-    
+
     $tr = new HTML ("tr");
-    
+
     $td = new HTMl ("td");
     $td->addAttr ("class","steelgraulight");
     $td->addAttr ("colspan","2");
-    
+
     $b = new HTML ("b");
     $b->addContent (_("Eigenschaften"));
     $b->addContent (":");
-    
+
     $td->addContent ($b);
     $tr->addContent ($td);
     $table->addContent ($tr);
 
     $tr = new HTML ("tr");
-    
+
     $td = new HTMl ("td");
     $td->addAttr ("style","border-bottom:0px dotted black;");
     $td->addContent (_("Die Fragen dieses Blocks müssen beantwortet werden (Pflichtfelder):"));
-    
+
     $tr->addContent ($td);
-    
+
     $td = new HTMl ("td");
     $td->addAttr ("style","border-bottom:0px dotted black;");
-    
+
     $input = new HTMLempty ("input");
     $input->addAttr ("type","radio");
     $input->addAttr ("value","0");
     $input->addAttr ("name","mandatory");
     if (!$group->isMandatory()) $input->addAttr ("checked","checked");
-    
+
     $td->addContent($input);
     $td->addContent(_("nein"));
     $td->addContent(new HTMLempty ("br"));
-    
+
     $input = new HTMLempty ("input");
     $input->addAttr ("type","radio");
     $input->addAttr ("value","1");
     $input->addAttr ("name","mandatory");
     if ($group->isMandatory()) $input->addAttr ("checked","checked");
-    
+
     $td->addContent($input);
     $td->addContent(_("ja"));
-    
+
     $tr->addContent ($td);
     $table->addContent ($tr);
 
     $tr = new HTML ("tr");
-    
+
     $td = new HTML ("td");
     $td->addAttr ("style","border-bottom:0px dotted black;");
     $td->addHTMLContent (sprintf(_("Diesem Fragenblock ist die Antwortenvorlage <b>%s</b> zugewiesen."),
@@ -2659,12 +2653,12 @@ function createQuestionFeatures(){
     $text = _("Das Zuweisen einer Antwortenvorlage ändert alle Antwortenmöglichkeiten der Fragen dieses Fragenblocks.");
     if ($templateTitle == NO_TEMPLATE_GROUP)
         $text .= " "._("Da dieser Fragenblock keine Antwortenvorlage benutzt, würde ein Zuweisen einer Antwortenvorlage zum Verlust aller eingegebenen Antworten führen.");
-    
+
     $td->addHTMLContent ($this->createImage(EVAL_PIC_HELP,
         $text));
-    
+
     $tr->addContent ($td);
-    
+
     $td = new HTML ("td");
     $td->addAttr ("style","border-bottom:0px dotted black;");
     $td->addAttr ("nowrap","nowrap");
@@ -2673,7 +2667,7 @@ function createQuestionFeatures(){
     $td->addHTMLContent ($this->createButton("zuweisen",
         _("Eine andere Antwortenvorlage für diesen Fragenblock auswählen"),
         "cmd[ChangeTemplate]"));
-        
+
     $tr->addContent ($td);
     $table->addContent ($tr);
 
@@ -2691,91 +2685,91 @@ function createQuestionForm(){
     $qgroup     = &$this->tree->getGroupObject($this->itemID);
     $questions  = $qgroup->getChildren();
     $templateID = $qgroup->getTemplateID();
-    
+
     $table = new HTML ("table");
     $table->addAttr ("border","0");
     $table->addAttr ("align", "center");
     $table->addAttr ("cellspacing", "0");
     $table->addAttr ("cellpadding", "2");
     $table->addAttr ("width", "98%");
-    
+
     $tr = new HTML ("tr");
-    
+
     $td = new HTML ("td");
     $td->addAttr ("align","center");
-    
+
     $table2 = new HTML ("table");
     $table2->addAttr ("border","0");
     $table2->addAttr ("class", "blank");
     $table2->addAttr ("cellspacing", "0");
     $table2->addAttr ("cellpadding", "0");
     $table2->addAttr ("width", "100%");
-    
+
     // captions
     $tr2 = new HTML ("tr");
-    
+
     $showclass = "steelgraulight";
-    
+
     $td2 = new HTML ("td");
     $td2->addAttr ("class",$showclass);
     $td2->addAttr ("align","center");
     $td2->addAttr ("width","15");
-    
+
     $b = new HTML ("b");
     $b->addContent ("#");
-    
+
     $td2->addContent ($b);
     $tr2->addContent ($td2);
-    
+
     $td2 = new HTML ("td");
     $td2->addAttr ("class",$showclass);
-    
+
     $b = new HTML ("b");
     $b->addContent (_("Frage"));
-    
+
     $td2->addContent ($b);
     $tr2->addContent ($td2);
-    
+
     $td2 = new HTML ("td");
     $td2->addAttr ("class",$showclass);
-    
+
    if( count($questions) > 1 ){
     $b = new HTML ("b");
     $b->addContent (_("Position"));
-    
+
     $td2->addContent ($b);
 
    } else {
 
     $td2->addContent ("");
-   
+
    }
 
     $tr2->addContent ($td2);
-    
+
     $td2 = new HTML ("td");
     $td2->addAttr ("class",$showclass);
-    
+
     $b = new HTML ("b");
     $b->addContent (_("Löschen"));
-    
+
     $td2->addContent ($b);
     $tr2->addContent ($td2);
-    
+
    // only if template is NO_TEMPLATE_GROUP
    if ($templateID == NULL){
     $td2 = new HTML ("td");
     $td2->addAttr ("class",$showclass);
-    
+
     $b = new HTML ("b");
     $b->addContent (_("Antworten"));
-    
+
     $td2->addContent ($b);
     $tr2->addContent ($td2);
    }
-    
+
     $table2->addContent ($tr2);
-    
+
     $i = 0;
    foreach ($questions as $question){
     $tr2 = new HTML ("tr");
@@ -2795,71 +2789,71 @@ function createQuestionForm(){
         $tr2->addAttr ("class", "eval_highlight");
     else
         $tr2->addAttr ("class", ($i%2 == 1 ? "steelgraulight" : "steel1"));
-    
+
     $td2 = new HTML ("td");
     $td2->addAttr ("align","center");
-    
+
     $font = new HTML ("font");
     $font->addAttr ("size","-1");
     $font->addContent (($i+1).".");
-    
+
     $td2->addContent ($font);
     $tr2->addContent ($td2);
-    
+
     $td2 = new HTML ("td");
     $td2->addAttr ("align","left");
-    
+
     $input = new HTMLempty ("input");
     $input->addAttr ("type","tex");
     $input->addAttr ("size","70");
     $input->addAttr ("name","questions[$i][text]");
     $input->addAttr ("value", $question->getText() );
     $input->addAttr ("tabindex",3+$i);
-    
+
     $td2->addContent ($input);
 #   $td2->addHTMLContent ("POST: -".$question->getPosition()."-!");
-    
+
     $input = new HTMLempty ("input");
     $input->addAttr ("type","hidden");
     $input->addAttr ("name","questions[$i][questionID]");
     $input->addAttr ("value", $question->getObjectID() );
-    
+
     $td2->addContent ($input);
-    
+
     $input = new HTMLempty ("input");
     $input->addAttr ("type","hidden");
     $input->addAttr ("name","questions[$i][position]");
     $input->addAttr ("value", $question->getPosition() );
-    
+
     $td2->addContent ($input);
-    
+
     $input = new HTMLempty ("input");
     $input->addAttr ("type","hidden");
     $input->addAttr ("name","questions[$i][counter]");
     $input->addAttr ("value", $question->getPosition() );
-    
+
     $td2->addContent ($input);
-    
+
     $tr2->addContent ($td2);
-    
+
     // move-up/down arrows and counter
     if( count($questions) > 1 ) {
-    
+
      $numberchildren = $qgroup->getNumberChildren();
-     
+
      if ($question->getPosition() == 0)
         $tooltipup = _("Diese Frage mit der letzten Frage vertauschen.");
      else
         $tooltipup = _("Diese Frage eine Position nach oben verschieben.");
-     
+
      if ($question->getPosition() == $numberchildren-1)
         $tooltipdown = _("Diese Frage mit der ersten Frage vertauschen.");
      else
         $tooltipdown = _("Diese Frage eine Position nach unten verschieben.");
-     
+
      $td2 = new HTML ("td");
      $td2->addAttr ("align","center");
-     
+
      $button = new HTMLempty ("input");
      $button->addAttr ("type", "image");
      $button->addAttr ("name", "cmd_MoveQuestionUp_#".$question->getObjectID()."_§".$question->getPosition()."_button");
@@ -2867,9 +2861,9 @@ function createQuestionForm(){
      $button->addAttr ("border", "0");
      $button->addAttr ("src", EVAL_PIC_MOVE_UP);
      $button->addString (Tooltip ($tooltipup));
-    
+
      $td2->addContent ($button);
-     
+
      $button = new HTMLempty ("input");
      $button->addAttr ("type", "image");
      $button->addAttr ("name", "cmd_MoveQuestionDown_#".$question->getObjectID()."_§".$question->getPosition()."_button");
@@ -2877,21 +2871,21 @@ function createQuestionForm(){
      $button->addAttr ("border", "0");
      $button->addAttr ("src", EVAL_PIC_MOVE_DOWN);
      $button->addString (Tooltip ($tooltipdown));
-    
+
      $td2->addContent ($button);
-    
+
     } else {
-    
+
      $td2 = new HTML ("td");
      $td2->addAttr ("align","center");
      $td2->addContent (" ");
     }
-    
+
     $tr2->addContent ($td2);
-    
+
     $td2 = new HTML ("td");
     $td2->addAttr ("align","center");
-    
+
     $input = new HTMLempty ("input");
     $input->addAttr ("type","checkbox");
     $input->addAttr ("id","deleteCheckboxes");
@@ -2899,10 +2893,10 @@ function createQuestionForm(){
 
     $td2->addContent ($input);
     $tr2->addContent ($td2);
-    
+
     // if template is NO_TEMPLATE_GROUP
     if ($templateID == NULL) {
-     
+
      // hat noch keine antworten
      if ($question->getChildren() == NULL){
         $image = EVAL_PIC_CREATE_ANSWERS;
@@ -2919,15 +2913,15 @@ function createQuestionForm(){
         }
         $text .= "";
     }
-     
+
      $td2 = new HTML ("td");
      $td2->addAttr ("align","center");
      $td2->addAttr ("valign","middle");
      $td2->addHTMLContent (
         $this->createImage(EVAL_PIC_HELP, $text));
-        
+
     $questionID = $question->getObjectID();
-        
+
     $button = new HTMLempty ("input");
     $button->addAttr ("type", "image");
     $button->addAttr ("name", "template_create_question_answers_#".$questionID."_button");
@@ -2941,41 +2935,41 @@ function createQuestionForm(){
 
      $tr2->addContent ($td2);
     }
-        
+
     $table2->addContent ($tr2);
     $i++;
    }
 
    if (sizeof($questions) == 0){
-    
+
     $tr2 = new HTML ("tr");
     $td2->addAttr ("class","steel1");
 
     $td2 = new HTML ("td");
     $td2->addAttr ("align","center");
     $td2->addContent (" ");
-    
+
     $tr2->addContent ($td2);
-    
+
     $td2 = new HTML ("td");
     $td2->addContent (_("Dieser Block besitzt keine Fragen."));
-    
+
     $tr2->addContent ($td2);
-    
+
     $td2 = new HTML ("td");
     $td2->addContent (" ");
-    
+
     $tr2->addContent ($td2);
-    
+
     $td2 = new HTML ("td");
     $td2->addContent (" ");
-    
+
     $tr2->addContent ($td2);
     $table2->addContent ($tr2);
    }
-    
+
     $td->addContent ($table2);
-    
+
     // the new questions und delete questions buttons
     $table2 = new HTML ("table");
     $table2->addAttr ("width","100%");
@@ -2986,10 +2980,10 @@ function createQuestionForm(){
             : "steel1kante");
     $table2->addAttr ("cellspacing", "0");
     $table2->addAttr ("cellpadding", "2");
-    
+
     // buttons
     $tr2 = new HTML ("tr");
-    
+
     $td2 = new HTML ("td");
     $td2->addAttr ("align","left");
 
@@ -2997,7 +2991,7 @@ function createQuestionForm(){
     $select->addAttr ("style", "vertical-align:middle;");
     $select->addAttr ("name", "newQuestionFields");
     $select->addAttr ("size", "1");
-    
+
    for ( $i=1; $i<=10; $i++ ) {
 
         $option = new HTML ("option");
@@ -3006,7 +3000,7 @@ function createQuestionForm(){
 
         $select->addContent ($option);
    }
-    
+
     $td2->addContent ($select);
     $td2->addContent (_("Frage/en"));
     $td2->addContent (" ");
@@ -3015,30 +3009,30 @@ function createQuestionForm(){
             "hinzufuegen",
             _("Fragen hinzufügen"),
             "cmd[AddQuestions]"));
-            
+
     $tr2->addContent($td2);
-    
+
     $td2 = new HTML ("td");
     $td2->addAttr ("align","right");
-    
+
     $font = new HTML ("font");
     $font->addAttr ("size","-1");
     $font->addContent (_("markierte Fragen "));
-    
+
     $td2->addContent ($font);
     $td2->addHTMLContent (
         $this->createButton(
             "loeschen",
             _("Markierte Fragen löschen"),
             "cmd[DeleteQuestions]"));
-            
+
     $tr2->addContent ($td2);
     $table2->addContent ($tr2);
-    
+
     $td->addContent ($table2);
     $tr->addContent ($td);
     $table->addContent ($tr);
-    
+
     return $table->createContent();
 }
 # ######################################################## end: HTML functions #
@@ -3057,7 +3051,7 @@ function createQuestionForm(){
 * @param    string  $name the name (and button-image)
 * @param    string  $alt the alt-text (optional)
 * @param    string  $value the value (optional)
-* @return   string the button 
+* @return   string the button
 */
 function createButton($name, $alt = "", $value = ""){
 
@@ -3095,7 +3089,7 @@ function createLinkButton ( $name, $alt = "", $value = "" ){
 * creates a link-image
 *
 * @access  private
-* @param   string   $pic      the image 
+* @param   string   $pic      the image
 * @param   string   $alt      the alt-text (optional)
 * @param   string   $value    the value (optional)
 * @param   boolean  $tooltip  display as tooltip? (optional)
@@ -3112,18 +3106,18 @@ function createLinkImage( $pic,
 
     $a = new HTML ("a");
     $a->addAttr ("href",$this->getSelf($value));
-    
+
     $img = new HTMLempty ("img");
     $img->addAttr ("src",$pic);
     $img->addAttr ("border","0");
     $img->addAttr ("style","vertical-align:middle;");
     if ($tooltip)
         $img->addString (tooltip($alt,TRUE,TRUE));
-    else 
+    else
         $img->addAttr ("alt",$alt);
     if ($args)
         $img->addString ($args);
-        
+
     $a->addContent ($img);
 
     return $a->createContent ();
@@ -3132,9 +3126,9 @@ function createLinkImage( $pic,
 
 /**
 * creates an image
-* 
+*
 * @access  private
-* @param   string   $pic   the image 
+* @param   string   $pic   the image
 * @param   string   $alt   the alt-text (optional)
 * @param   string   $args  additional options (optional)
 * @return  string          the image (html)
@@ -3151,11 +3145,11 @@ function createImage ( $pic,
     if (empty($args)) {
     $img->addAttr ("alt", $alt);
     $img->addAttr ("title", $alt);
-    } else 
+    } else
     $img->addString($alt);
     if ($args);
         $img->addString ($args);
-        
+
     return $img->createContent ();
 }
 
@@ -3167,20 +3161,19 @@ function createImage ( $pic,
 * @param   string  $pic  the image
 * @return  string        the image
 */
-function createLevelOutputTD ( $pic = "forumleer.gif" ){
-
+function createLevelOutputTD ( $pic = "forumleer.gif" )
+{
     $td = new HTML ("td");
     $td->addAttr ("class","blank");
-    $td->addAttr ("background",PATH_PICTURES.$pic);
+    $td->addAttr ("background", Assets::image_path($pic));
 
     $img = new HTMLempty ("img");
     $img->addAttr ("width","10");
     $img->addAttr ("height","20");
-    $img->addAttr ("border","0");
-    $img->addAttr ("src",PATH_PICTURES.$pic);
-    
+    $img->addAttr ("src", Assets::image_path($pic));
+
     $td->addContent ($img);
-    
+
     return $td->createContent ();
 }
 
@@ -3211,10 +3204,10 @@ function createTemplateSelection ( $selected = NULL ){
 
         $questiontext = $question->getText();
 
-        if( $question->getParentID() == '0') 
+        if( $question->getParentID() == '0')
             $questiontext .= " " . EVAL_ROOT_TAG;
 
-        
+
        switch( $questiontyp ) {
 
          case EVALQUESTION_TYPE_POL:
@@ -3224,8 +3217,8 @@ function createTemplateSelection ( $selected = NULL ){
 
          case EVALQUESTION_TYPE_LIKERT:
           array_push($arrayOfSkalaTemplates, array($question->getObjectID(),
-            ($questiontext)));   
-          break; 
+            ($questiontext)));
+          break;
 
          case EVALQUESTION_TYPE_MC:
           $answer = $question->getNextChild ();
@@ -3240,9 +3233,9 @@ function createTemplateSelection ( $selected = NULL ){
           break;
         }
     }
-    
+
    } // End:  if (is_array ($arrayOfTemplateIDs))
-   
+
 
     $select = new HTML ("select");
     $select->addAttr ("name","templateID");
@@ -3251,7 +3244,7 @@ function createTemplateSelection ( $selected = NULL ){
     $option = new HTML ("option");
     $option->addAttr ("value","");
     $option->addContent (NO_TEMPLATE_GROUP);
-    
+
     $select->addContent ($option);
 
 
@@ -3268,9 +3261,9 @@ function createTemplateSelection ( $selected = NULL ){
             $option->addHTMLContent ($template[1]);
             $optgroup->addContent ($option);
         }
-        
+
         $select->addContent ($optgroup);
-        
+
     }
 
 
@@ -3294,10 +3287,10 @@ function createTemplateSelection ( $selected = NULL ){
 
 
     if ( !empty($arrayOfNormalTemplates) && is_array($arrayOfNormalTemplates) ){
-    
+
         $optgroup = new HTML ("optgroup");
         $optgroup->addAttr ("label",_("Multiple Choice:"));
-    
+
         foreach ($arrayOfNormalTemplates as $template){
             $option = new HTML ("option");
             $option->addAttr ("value",$template[0]);
@@ -3306,9 +3299,9 @@ function createTemplateSelection ( $selected = NULL ){
             $option->addContent ($template[1]);
             $optgroup->addContent ($option);
         }
-        
+
         $select->addContent ($optgroup);
-        
+
     }
 
 
@@ -3359,7 +3352,7 @@ function getInstance ( $itemID ){
                                                                         'load_mode' => EVAL_LOAD_FIRST_CHILDREN));
         $group = &$tree->getGroupObject($itemID);
         $childtype = $group->getChildType();
-        
+
         if ($childtype == "EvaluationQuestion")
             return QUESTION_BLOCK;
         else
@@ -3381,7 +3374,7 @@ function swapPosition ( $parentID,
                         $objectID,
                         $oldposition,
                         $direction ){
-    
+
     if ( $parentID == ROOT_BLOCK ) $group =  $this->tree->eval;
     else $group =  &$this->tree->getGroupObject( $parentID);
 
@@ -3399,7 +3392,7 @@ function swapPosition ( $parentID,
         else
             $newposition = $oldposition+1;
     }
-    
+
     while( $swapitem = $group->getNextChild () ){
         if ( $swapitem->getPosition () == $newposition ){
             $swapitem->setPosition ($oldposition);
@@ -3413,7 +3406,7 @@ function swapPosition ( $parentID,
         $object = &$this->tree->getGroupObject( $objectID );
     $object->setPosition ( $newposition );
     $object->save ();
-    
+
     if ( $swapitem->isError )
         return EvalCommon::showErrorReport ( $swapitem,
                 _("Fehler beim verschieben.") );

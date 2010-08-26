@@ -9,9 +9,9 @@
  * the License, or (at your option) any later version.
  *
  * @author      André Noack <noack@data-quest.de>
- * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
+ * @since       2.0
 */
 
 require_once 'SimpleORMap.class.php';
@@ -126,5 +126,4 @@ class SeminarCycleDate extends SimpleORMap
                        $this->week_offset + 1,
                        $this->description ? ' ('.$this->description.')' : '');
     }
-
 }

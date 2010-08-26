@@ -23,6 +23,10 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +--------------------------------------------------------------------------+
 
+require_once 'lib/raumzeit/CycleDataDB.class.php';
+require_once 'lib/raumzeit/SingleDate.class.php';
+require_once 'lib/raumzeit/IssueDB.class.php';
+require_once 'lib/classes/SeminarCycleDate.class.php';
 
 /**
  * CylceData.class.php
@@ -33,19 +37,8 @@
  * @access      protected
  * @package     raumzeit
  */
-
-require_once('lib/raumzeit/CycleDataDB.class.php');
-require_once('lib/raumzeit/SingleDate.class.php');
-require_once('lib/raumzeit/IssueDB.class.php');
-require_once 'lib/classes/SeminarCycleDate.class.php';
-
-/**
- * Enter description here ...
- * @author noack
- *
- */
-class CycleData {
-
+class CycleData
+{
     /**
      * Enter description here ...
      * @var unknown_type
@@ -71,7 +64,8 @@ class CycleData {
      * Enter description here ...
      * @param unknown_type $cycle_data
      */
-    function __construct($cycle_data = FALSE) {
+    function __construct($cycle_data = FALSE)
+    {
         if ($cycle_data instanceof SeminarCycleDate) {
             $this->cycle_date = $cycle_data;
         } else {
@@ -88,78 +82,94 @@ class CycleData {
         }
     }
 
-    function getDescription() {
+    function getDescription()
+    {
         return $this->cycle_date->description;
     }
 
-    function setDescription($description) {
+    function setDescription($description)
+    {
         $this->cycle_date->description = $description;
     }
 
-    function setStart($start_stunde, $start_minute) {
+    function setStart($start_stunde, $start_minute)
+    {
         $this->cycle_date->start_hour = (int)$start_stunde;
         $this->cycle_date->start_minute = (int)$start_minute;
     }
 
-    function setEnd($end_stunde, $end_minute) {
+    function setEnd($end_stunde, $end_minute)
+    {
         $this->cycle_date->end_hour = (int)$end_stunde;
         $this->cycle_date->end_minute = (int)$end_minute;
     }
 
-    function getStartStunde () {
+    function getStartStunde ()
+    {
         return $this->cycle_date->start_hour;
     }
 
-    function getStartMinute () {
+    function getStartMinute ()
+    {
         return $this->cycle_date->start_minute;
     }
 
-    function getEndStunde () {
+    function getEndStunde ()
+    {
         return $this->cycle_date->end_hour;
     }
 
-    function getEndMinute () {
+    function getEndMinute ()
+    {
         return $this->cycle_date->end_minute;
     }
 
-    function getMetaDateID() {
+    function getMetaDateID()
+    {
         return $this->cycle_date->getId();
     }
 
-    function getDay() {
+    function getDay()
+    {
         return $this->cycle_date->weekday;
     }
 
-    function setDay($day) {
+    function setDay($day)
+    {
         $this->cycle_date->weekday = $day;
     }
 
-    function __get($field) {
+    function __get($field)
+    {
         if(isset($this->alias[$field])) {
             $field = $this->alias[$field];
         }
         return $this->cycle_date->$field;
     }
 
-    function __set($field, $value) {
+    function __set($field, $value)
+    {
         if(isset($this->alias[$field])) {
             $field = $this->alias[$field];
         }
         return $this->cycle_date->$field = $value;
     }
 
-    function __isset($field) {
+    function __isset($field)
+    {
         if(isset($this->alias[$field])) {
             $field = $this->alias[$field];
         }
         return isset($this->cycle_date->$field);
     }
 
-    function storeCycleDate(){
+    function storeCycleDate()
+    {
         return $this->cycle_date->store();
     }
 
-    function store() {
+    function store()
+    {
         foreach ($this->termine as $val) {
             $val->store();
         }
@@ -167,7 +177,8 @@ class CycleData {
         return TRUE;
     }
 
-    function restore() {
+    function restore()
+    {
         foreach ($this->termine as $key => $val) {
             $new_termine[$key] = $val->restore();
         }
@@ -175,7 +186,8 @@ class CycleData {
         return TRUE;
     }
 
-    function delete($removeSingles = TRUE) {
+    function delete($removeSingles = TRUE)
+    {
         if ($removeSingles) {
             if (!$this->termine) {
                 $this->readSingleDates();
@@ -198,7 +210,8 @@ class CycleData {
         return $this->cycle_date->delete();
     }
 
-    function deleteSingleDate($date_id, $filterStart, $filterEnd) {
+    function deleteSingleDate($date_id, $filterStart, $filterEnd)
+    {
         if (!$this->termine) {
             $this->readSingleDates($filterStart, $filterEnd);
         }
@@ -207,7 +220,8 @@ class CycleData {
         $this->termine[$date_id]->store();
     }
 
-    function unDeleteSingleDate($date_id, $filterStart, $filterEnd) {
+    function unDeleteSingleDate($date_id, $filterStart, $filterEnd)
+    {
         if (!$this->termine) {
             $this->readSingleDates($filterStart, $filterEnd);
         }
@@ -221,7 +235,8 @@ class CycleData {
         return true;
     }
 
-    function readSingleDates($start = 0, $end = 0) {
+    function readSingleDates($start = 0, $end = 0)
+    {
         $this->termine = array();
         $termin_data = CycleDataDB::getTermine($this->metadate_id, $start, $end);
         if ($termin_data) {
@@ -238,20 +253,23 @@ class CycleData {
         return FALSE;
     }
 
-    function getSingleDates() {
+    function getSingleDates()
+    {
         if (!$this->termine) {
             $this->readSingleDates();
         }
         return $this->termine;
     }
 
-    function getFreeTextPredominantRoom($filterStart = 0, $filterEnd = 0) {
+    function getFreeTextPredominantRoom($filterStart = 0, $filterEnd = 0)
+    {
         if ($room = CycleDataDB::getFreeTextPredominantRoomDB($this->metadate_id, $filterStart, $filterEnd)) {
             return $room;
         }
     }
 
-    function getPredominantRoom($filterStart = 0, $filterEnd = 0) {
+    function getPredominantRoom($filterStart = 0, $filterEnd = 0)
+    {
         if ($rooms = CycleDataDB::getPredominantRoomDB($this->metadate_id, $filterStart, $filterEnd)) {
             return $rooms;
         }
@@ -259,7 +277,8 @@ class CycleData {
         return FALSE;
     }
 
-    function toString($short = false) {
+    function toString($short = false)
+    {
         if($short === false) {
             return $this->cycle_date->toString('long');
         } else if ($short === true) {
@@ -269,7 +288,8 @@ class CycleData {
         }
     }
 
-    function toArray(){
+    function toArray()
+    {
         $ret = $this->cycle_date->toArray();
         foreach($this->alias as $a => $o) {
             $ret[$a] = $this->cycle_date->$o;
@@ -281,7 +301,8 @@ class CycleData {
         return $ret;
     }
 
-    function autoAssignIssues($themen, $filterStart, $filterEnd) {
+    function autoAssignIssues($themen, $filterStart, $filterEnd)
+    {
         $this->readSingleDates($filterStart, $filterEnd);
         $z = 0;
         foreach ($this->termine as $key => $val) {
@@ -295,7 +316,8 @@ class CycleData {
         $this->store();
     }
 
-    function removeRequest($singledate_id, $filterStart, $filterEnd) {
+    function removeRequest($singledate_id, $filterStart, $filterEnd)
+    {
         $this->readSingleDates($filterStart, $filterEnd);
         $this->termine[$singledate_id]->removeRequest();
     }

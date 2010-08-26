@@ -33,10 +33,10 @@
  * @access      protected
  * @package     raumzeit
  */
-
-class CycleDataDB {
-
-    function getTermine($metadate_id, $start = 0, $end = 0) {
+class CycleDataDB
+{
+    function getTermine($metadate_id, $start = 0, $end = 0)
+    {
         $db = new DB_Seminar();
 
         if (($start != 0) || ($end != 0)) {
@@ -71,12 +71,14 @@ class CycleDataDB {
         return FALSE;
     }
 
-    function sort_dates($a, $b) {
+    function sort_dates($a, $b)
+    {
         if ($a['date'] == $b['date']) return 0;
         return ($a['date'] < $b['date']) ? -1 : 1;
     }
 
-    function deleteNewerSingleDates($metadate_id, $timestamp, $keepIssues = false) {
+    function deleteNewerSingleDates($metadate_id, $timestamp, $keepIssues = false)
+    {
         $db = new DB_Seminar();
 
         $c = 0;
@@ -93,7 +95,8 @@ class CycleDataDB {
         return $c;
     }
 
-    function getPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0) {
+    function getPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0)
+    {
         $db = new DB_Seminar();
         $rooms = array();
 
@@ -115,7 +118,8 @@ class CycleDataDB {
         return $rooms;
     }
 
-    function getFreeTextPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0) {
+    function getFreeTextPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0)
+    {
         if (($filterStart == 0) && ($filterEnd == 0)) {
             $query = "SELECT COUNT(raum) as c, raum FROM termine WHERE termine.metadate_id = '$metadate_id' GROUP BY raum ORDER BY c DESC";
         } else {

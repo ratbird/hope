@@ -34,16 +34,18 @@
  * @package     raumzeit
  */
 
-require_once('lib/raumzeit/MetaDateDB.class.php');
-require_once('lib/raumzeit/CycleData.class.php');
+require_once 'lib/raumzeit/MetaDateDB.class.php';
+require_once 'lib/raumzeit/CycleData.class.php';
 
-class MetaDate {
+class MetaDate
+{
     var $seminar_id = '';
     var $seminarStartTime = 0;
     var $seminarDurationTime = 0;
     var $cycles = Array();
 
-    function MetaDate($seminar_id = '') {
+    function MetaDate($seminar_id = '')
+    {
         if ($seminar_id != '') {
             $this->seminar_id = $seminar_id;
             $this->restore();
@@ -51,11 +53,13 @@ class MetaDate {
 
     }
 
-    function getArt() {
+    function getArt()
+    {
         return 1;
     }
 
-    function getStartWoche($metadate_id = null) {
+    function getStartWoche($metadate_id = null)
+    {
         if ($metadate_id) {
             return $this->cycles[$metadate_id]->week_offset;
         } else {
@@ -64,7 +68,8 @@ class MetaDate {
         }
     }
 
-    function setStartWoche($start_woche, $metadate_id = null) {
+    function setStartWoche($start_woche, $metadate_id = null)
+    {
         if ($metadate_id) {
             return $this->cycles[$metadate_id]->week_offset = $start_woche;
         } else {
@@ -73,12 +78,14 @@ class MetaDate {
         }
     }
 
-    function getFirstMetadate() {
+    function getFirstMetadate()
+    {
         $first_metadate_id = array_shift(array_keys($this->cycles));
         return $first_metadate_id ? $this->cycles[$first_metadate_id] : null;
     }
 
-    function getTurnus($metadate_id = null) {
+    function getTurnus($metadate_id = null)
+    {
         if ($metadate_id) {
             return $this->cycles[$metadate_id]->cycle;
         } else {
@@ -87,7 +94,8 @@ class MetaDate {
         }
     }
 
-    function setTurnus($turnus, $metadate_id = null) {
+    function setTurnus($turnus, $metadate_id = null)
+    {
         if ($metadate_id) {
             return $this->cycles[$metadate_id]->cycle = $turnus;
         } else {
@@ -96,19 +104,23 @@ class MetaDate {
         }
     }
 
-    function setSeminarStartTime($start) {
+    function setSeminarStartTime($start)
+    {
         $this->seminarStartTime = $start;
     }
 
-    function setSeminarDurationTime($duration) {
+    function setSeminarDurationTime($duration)
+    {
         $this->seminarDurationTime = $duration;
     }
 
-    function getSeminarID() {
+    function getSeminarID()
+    {
         return $this->seminar_id;
     }
 
-    function setCycleData($data = array(), &$cycle) {
+    function setCycleData($data = array(), &$cycle)
+    {
         $cycle->seminar_id = $this->getSeminarId();
         if ($last_one = array_pop(array_keys($this->cycles))) {
             $cycle->sorter = $this->cycles[$last_one]->sorter > 0 ? $this->cycles[$last_one]->sorter + 1 : 0;
@@ -145,7 +157,8 @@ class MetaDate {
     /*
      * adds a regular time entry
      */
-    function addCycle($data = array()) {
+    function addCycle($data = array())
+    {
         $data['day'] = (int)$data['day'];
         $data['start_stunde'] = (int)$data['start_stunde'];
         $data['start_minute'] = (int)$data['start_minute'];
@@ -162,7 +175,8 @@ class MetaDate {
         return FALSE;
     }
 
-    function editCycle($data = array()) {
+    function editCycle($data = array())
+    {
         $cycle = $this->cycles[$data['cycle_id']];
         $new_start = mktime((int)$data['start_stunde'], (int)$data['start_minute']);
         $new_end = mktime((int)$data['end_stunde'], (int)$data['end_minute']);
@@ -255,21 +269,25 @@ class MetaDate {
         return FALSE;
     }
 
-    function deleteCycle($cycle_id) {
+    function deleteCycle($cycle_id)
+    {
         $this->cycles[$cycle_id]->delete();
         unset ($this->cycles[$cycle_id]);
         return TRUE;
     }
 
-    function deleteSingleDate($cycle_id, $date_id, $filterStart, $filterEnd) {
+    function deleteSingleDate($cycle_id, $date_id, $filterStart, $filterEnd)
+    {
         $this->cycles[$cycle_id]->deleteSingleDate($date_id, $filterStart, $filterEnd);
     }
 
-    function unDeleteSingleDate($cycle_id, $date_id, $filterStart, $filterEnd) {
+    function unDeleteSingleDate($cycle_id, $date_id, $filterStart, $filterEnd)
+    {
         return $this->cycles[$cycle_id]->unDeleteSingleDate($date_id, $filterStart, $filterEnd);
     }
 
-    function store() {
+    function store()
+    {
         $old_cycle_dates = array();
         foreach(SeminarCycleDate::findBySeminar($this->seminar_id) as $c){
             $old_cycle_dates[$c->getId()] = $c;
@@ -286,18 +304,21 @@ class MetaDate {
     }
 
 
-    function restore() {
+    function restore()
+    {
        $this->cycles = array();
        foreach (SeminarCycleDate::findBySeminar($this->seminar_id) as $c) {
            $this->cycles[$c->getId()] = new CycleData($c);
        }
     }
 
-    function delete ($removeSingleDates = TRUE) {
+    function delete ($removeSingleDates = TRUE)
+    {
         //TODO: Löschen eines MetaDate-Eintrages (CycleData);
     }
 
-    private function sortCycleDataHelper($a, $b) {
+    private function sortCycleDataHelper($a, $b)
+    {
         if ($a->sorter == $b->sorter) {
             if ($a->weekday == $b->weekday) {
                 if ($a->start_hour == $b->start_hour) {
@@ -310,11 +331,13 @@ class MetaDate {
         return ($a->sorter < $b->sorter) ? -1 : 1;
     }
 
-    function sortCycleData() {
+    function sortCycleData()
+    {
         uasort($this->cycles, array($this, 'sortCycleDataHelper'));
     }
 
-    function getCycleData() {
+    function getCycleData()
+    {
         $ret = array();
         foreach ($this->cycles as $val) {
             $ret[$val->getMetaDateID()] = $val->toArray();
@@ -322,11 +345,13 @@ class MetaDate {
         return $ret;
     }
 
-    function getCycles() {
+    function getCycles()
+    {
         return $this->cycles;
     }
 
-    function getMetaDataAsArray() {
+    function getMetaDataAsArray()
+    {
         $ret['turnus_data'] = $this->getCycleData();
         $ret['art'] = $this->getArt();
         $ret['start_termin'] = $this->getStartTermin();
@@ -335,7 +360,8 @@ class MetaDate {
         return $ret;
     }
 
-    function &getSingleDates($metadate_id, $filterStart = 0, $filterEnd = 0) {
+    function &getSingleDates($metadate_id, $filterStart = 0, $filterEnd = 0)
+    {
         if (!$this->cycles[$metadate_id]->termine) {
             $this->readSingleDates($metadate_id, $filterStart, $filterEnd);
         }
@@ -343,11 +369,13 @@ class MetaDate {
         return $this->cycles[$metadate_id]->termine;
     }
 
-    function readSingleDates($metadate_id, $start = 0, $end = 0) {
+    function readSingleDates($metadate_id, $start = 0, $end = 0)
+    {
         return $this->cycles[$metadate_id]->readSingleDates($start, $end);
     }
 
-    function hasDates($metadate_id, $filterStart = 0, $filterEnd = 0) {
+    function hasDates($metadate_id, $filterStart = 0, $filterEnd = 0)
+    {
         if (!isset($this->hasDatesTmp[$metadate_id])) {
             $this->hasDatesTmp[$metadate_id] = MetaDateDB::has_dates($metadate_id, $this->getSeminarID(), $filterStart, $filterEnd);
         }
@@ -365,7 +393,8 @@ class MetaDate {
         return FALSE;
     }*/
 
-    function createSingleDates($data, $irregularSingleDates = NULL) {
+    function createSingleDates($data, $irregularSingleDates = NULL)
+    {
         if (is_array($data)) {
             $metadate_id = $data['metadate_id'];
             $startAfterTimeStamp = $data['startAfterTimeStamp'];
@@ -421,7 +450,8 @@ class MetaDate {
         }
     }
 
-    function createSingleDatesForSemester($metadate_id, $sem_begin, $sem_end, $startAfterTimeStamp, $corr, &$irregularSingleDates) {
+    function createSingleDatesForSemester($metadate_id, $sem_begin, $sem_end, $startAfterTimeStamp, $corr, &$irregularSingleDates)
+    {
         //global $CONVERT_SINGLE_DATES;
 
         // loads the singledates of the by metadate_id denoted regular time-entry into the object
@@ -627,6 +657,5 @@ class MetaDate {
 
         // store all the other stuff
         $this->store();
-
     }
 }

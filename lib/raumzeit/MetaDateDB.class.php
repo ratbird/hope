@@ -33,10 +33,10 @@
  * @access      protected
  * @package     raumzeit
  */
-
-class MetaDateDB {
-    
-    function has_dates($metadate_id, $seminar_id, $filterStart = 0, $filterEnd = 0) {
+class MetaDateDB
+{
+    function has_dates($metadate_id, $seminar_id, $filterStart = 0, $filterEnd = 0)
+    {
         $db = new DB_Seminar();
 
         if ($filterStart == 0) {

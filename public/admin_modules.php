@@ -17,7 +17,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // admin_modules.php
-// Module fuer Veranstaltungen und Einrichtungen (definiert in Modules.class.php) an/abschalten
+// Inhaltselemente fuer Veranstaltungen und Einrichtungen (definiert in Modules.class.php) an/abschalten
 // Copyright (C) 2002 Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ $sess->register("admin_modules_data");
 $sess->register("plugin_toggle");
 
 
-PageLayout::setTitle(_("Verwaltung verwendeter Module und Plugins"));
+PageLayout::setTitle(_("Verwaltung verwendeter Inhaltselemente und Plugins"));
 if (Request::get('section') == 'modules' && $SessSemName['class'] == 'sem') {
     UrlHelper::bindLinkParam('section', $section);
     Navigation::activateItem('/course/modules');
@@ -177,7 +177,7 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
     }
     if( !count( $admin_modules_data["conflicts"] ) )  {
         $changes = false;
-        // Module speichern
+        // Inhaltselemente speichern
         if( $admin_modules_data["orig_bin"] != $admin_modules_data["changed_bin"] ){
             $amodules->writeBin($admin_modules_data["range_id"], $admin_modules_data["changed_bin"]);
             $admin_modules_data["orig_bin"] = $admin_modules_data["changed_bin"];
@@ -208,7 +208,7 @@ if ($perm->have_studip_perm("tutor", $admin_modules_data["range_id"])) {
             $plugin_toggle = array();
         }
         if( $changes ){
-            $admin_modules_data['msg'] = 'msg§'._('Die veränderte Modulkonfiguration wurde übernommen.');
+            $admin_modules_data['msg'] = 'msg§'._('Die veränderte Konfiguration wurde übernommen.');
             header('Location: ' . URLHelper::getURL());
             page_close();
             die();
@@ -253,8 +253,8 @@ if ($admin_modules_data["range_id"])
             <? } ?>
             <br>
             <blockquote>
-            <b><?=_("Module konfigurieren") ?></b><br><br>
-            <?=_("Sie k&ouml;nnen hier einzelne Module nachtr&auml;glich aktivieren oder deaktivieren.")?> <br>
+            <b><?=_("Inhaltselemente konfigurieren") ?></b><br><br>
+            <?=_("Sie k&ouml;nnen hier einzelne Inhaltselemente nachtr&auml;glich aktivieren oder deaktivieren.")?> <br>
             <?/*=_("Mit &raquo;zur&uuml;cksetzten&laquo; k&ouml;nnen Sie die Ausgangs-Modulkonfiguration wieder herstellen.")?> <br><br> */ ?>
             </blockquote>
         </td>

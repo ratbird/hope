@@ -64,13 +64,13 @@ class StudipAuthStandard extends StudipAuthAbstract {
         $this->dbv_auth->params[] = mysql_escape_string($username);
         $db = $this->dbv_auth->get_query("view:AUTH_USER_UNAME");
         if (!$db->next_record()){
-            $this->error_msg= _("Dieser Username existiert nicht!") ;
+            $this->error_msg= _("Dieser Benutzername existiert nicht!") ;
             return false;
         } elseif ($db->f("username") != $username) {
             $this->error_msg = _("Bitte achten Sie auf korrekte Gro&szlig;-Kleinschreibung beim Username!");
             return false;
         } elseif (!is_null($db->f("auth_plugin")) && $db->f("auth_plugin") != "standard"){
-            $this->error_msg = sprintf(_("Dieser Username wird bereits über %s authentifiziert!"),$db->f("auth_plugin")) ;
+            $this->error_msg = sprintf(_("Dieser Benutzername wird bereits über %s authentifiziert!"),$db->f("auth_plugin")) ;
             return false;
         } else {
             $uid   = $db->f("user_id");
@@ -88,7 +88,7 @@ class StudipAuthStandard extends StudipAuthAbstract {
         $this->dbv_auth->params[] = mysql_escape_string($username);
         $db = $this->dbv_auth->get_query("view:AUTH_USER_UNAME");
         if (!$db->next_record()){
-            $this->error_msg = _("Der Username wurde nicht gefunden.");
+            $this->error_msg = _("Der Benutzername wurde nicht gefunden.");
             return false;
         } else {
             return true;

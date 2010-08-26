@@ -709,7 +709,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
 
         if (!$validator->ValidateUsername($username))
         {
-            $this->error_msg=$this->error_msg. _("Der gewählte Username ist zu kurz!") . "<br>";
+            $this->error_msg=$this->error_msg. _("Der gewählte Benutzername ist zu kurz!") . "<br>";
             return false;
         }                                                       // username syntaktisch falsch oder zu kurz
         // auf doppelte Vergabe wird weiter unten getestet.
@@ -756,7 +756,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
 
         if ($check_uname['found']){
             //   error_log("username schon vorhanden", 0);
-            $this->error_msg = $this->error_msg. _("Der gewählte Username ist bereits vorhanden!") . "<br>";
+            $this->error_msg = $this->error_msg. _("Der gewählte Benutzername ist bereits vorhanden!") . "<br>";
             return false;                  // username schon vorhanden
         }
 

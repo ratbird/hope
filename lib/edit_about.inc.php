@@ -628,18 +628,18 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             if (!StudipAuthAbstract::CheckField('auth_user_md5.username', $this->auth_user['auth_plugin']) && $this->auth_user['username'] != $new_username) {
                 if ($ALLOW_CHANGE_USERNAME) {
                     if (!$validator->ValidateUsername($new_username)) {
-                        $this->msg=$this->msg . "error§" . _("Der gewählte Username ist nicht lang genug!") . "§";
+                        $this->msg=$this->msg . "error§" . _("Der gewählte Benutzername ist nicht lang genug!") . "§";
                         return false;
                     }
                     $check_uname = StudipAuthAbstract::CheckUsername($new_username);
                     if ($check_uname['found']) {
-                        $this->msg .= "error§" . _("Der Username wird bereits von einem anderen Benutzer verwendet. Bitte wählen sie einen anderen Usernamen!") . "§";
+                        $this->msg .= "error§" . _("Der Benutzername wird bereits von einem anderen Benutzer verwendet. Bitte wählen sie einen anderen Usernamen!") . "§";
                         return false;
                     } else {
                         //$this->msg .= "info§" . $check_uname['error'] ."§";
                     }
                     $this->db->query("UPDATE auth_user_md5 SET username='$new_username' WHERE user_id='".$this->auth_user["user_id"]."'");
-                    $this->msg=$this->msg . "msg§" . _("Ihr Username wurde ge&auml;ndert!") . "§";
+                    $this->msg=$this->msg . "msg§" . _("Ihr Benutzername wurde ge&auml;ndert!") . "§";
                     $this->logout_user = TRUE;
                 } else $new_username = $this->auth_user['username'];
             }

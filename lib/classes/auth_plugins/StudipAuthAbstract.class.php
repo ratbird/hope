@@ -298,7 +298,7 @@ class StudipAuthAbstract {
         if ($db->next_record()){
             $auth_plugin = is_null($db->f("auth_plugin")) ? "standard" : $db->f("auth_plugin");
             if ($auth_plugin != $this->plugin_name){
-                $this->error_msg = sprintf(_("Dieser Username wird bereits über %s authentifiziert!"),$auth_plugin) . "<br>";
+                $this->error_msg = sprintf(_("Dieser Benutzername wird bereits über %s authentifiziert!"),$auth_plugin) . "<br>";
                 return false;
             }
             $uid = $db->f("user_id");

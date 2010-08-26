@@ -225,7 +225,7 @@ class StudipAuthLdap extends StudipAuthAbstract {
             return false;
         }
         if (!ldap_count_entries($this->conn, $result)){
-            $this->error_msg = _("Der Username wurde nicht gefunden.");
+            $this->error_msg = _("Der Benutzername wurde nicht gefunden.");
             return false;
         }
         return true;

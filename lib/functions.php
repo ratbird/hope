@@ -271,7 +271,7 @@ function checkObjectModule($modul) {
         $name = strtoupper($modul{0}).substr($modul, 1, strlen($modul));
 
         if (!$Modules->checkLocal($modul, $SessSemName[1])) {
-            parse_window ("error§" . sprintf(_("Das Modul &raquo;%s&laquo; ist f&uuml;r dieses Objekt leider nicht verf&uuml;gbar."), $name), "§",
+            parse_window ("error§" . sprintf(_("Das Inhaltselement &raquo;%s&laquo; ist f&uuml;r dieses Objekt leider nicht verf&uuml;gbar."), $name), "§",
                     _("Modul nicht verf&uuml;gbar"),
                     sprintf(_("%sHier%s geht es wieder zur Anmeldung beziehungsweise Startseite."), "<a href=\"index.php\"><b>&nbsp;", "</b></a>") . "<br>&nbsp;");
             die;

@@ -314,7 +314,7 @@ class ELearningUtils
             $new_account_step--;
         }
 
-        // Username was sent
+        // Benutzername was sent
         if (($ext_username != "") AND ! ($_REQUEST['go_back_x'] != "") AND ($_REQUEST['assign_x'] != ""))
         {
             $caching_status = $connected_cms[$new_account_cms]->soap_client->getCachingStatus();

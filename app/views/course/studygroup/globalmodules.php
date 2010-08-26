@@ -48,7 +48,7 @@ $cssSw = new cssClassSwitcher();
     <!-- Title -->
 <table class="default">
     <tr>
-        <th colspan="2"><b><?= _("Aktivierbare Module / Plugins") ?></b></th>
+        <th colspan="2"><b><?= _("Aktivierbare Inhaltselemente / Plugins") ?></b></th>
     </tr>
     <?= $cssSw->switchClass(); ?>
     <tr>

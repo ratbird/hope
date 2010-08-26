@@ -331,7 +331,7 @@ class UserManagement
 
         // Is the username correct?
         if (!$this->validator->ValidateUsername($newuser['auth_user_md5.username'])) {
-            $this->msg .= "error§" .  _("Der gewählte Username ist zu kurz oder enthält unzulässige Zeichen!") . "§";
+            $this->msg .= "error§" .  _("Der gewählte Benutzername ist zu kurz oder enthält unzulässige Zeichen!") . "§";
             return FALSE;
         }
 
@@ -454,12 +454,12 @@ class UserManagement
         if (isset($newuser['auth_user_md5.username'])) {
             if ($this->user_data['auth_user_md5.username'] != $newuser['auth_user_md5.username']) {
                 if (!$this->validator->ValidateUsername($newuser['auth_user_md5.username'])) {
-                    $this->msg .= "error§" .  _("Der gewählte Username ist zu kurz oder enthält unzulässige Zeichen!") . "§";
+                    $this->msg .= "error§" .  _("Der gewählte Benutzername ist zu kurz oder enthält unzulässige Zeichen!") . "§";
                     return FALSE;
                 }
                 $check_uname = StudipAuthAbstract::CheckUsername($newuser['auth_user_md5.username']);
                 if ($check_uname['found']) {
-                    $this->msg .= "error§" . _("Der Username wird bereits von einem anderen Benutzer verwendet. Bitte wählen sie einen anderen Benutzernamen!") . "§";
+                    $this->msg .= "error§" . _("Der Benutzername wird bereits von einem anderen Benutzer verwendet. Bitte wählen sie einen anderen Benutzernamen!") . "§";
                     return false;
                 } else {
                     //$this->msg .= "info§" . $check_uname['error'] ."§";

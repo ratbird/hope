@@ -80,7 +80,7 @@ class StudipAuthLdapReader extends StudipAuthLdap {
                 return false;
             }
         } else {
-            $this->error_msg = _("Der Username wurde nicht gefunden.");
+            $this->error_msg = _("Der Benutzername wurde nicht gefunden.");
             return false;
         }
         $this->user_data = $info[0];

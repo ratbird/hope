@@ -789,7 +789,7 @@ class WebTestCase extends SimpleTestCase {
     /**
      *    Retries a request after setting the authentication
      *    for the current realm.
-     *    @param string $username    Username for realm.
+     *    @param string $username    Benutzername for realm.
      *    @param string $password    Password for realm.
      *    @return boolean/string     HTML on successful fetch. Note
      *                               that authentication may still have

@@ -195,7 +195,7 @@ class SimpleUserAgent {
      *    Sets the identity for the current realm.
      *    @param string $host        Host to which realm applies.
      *    @param string $realm       Full name of realm.
-     *    @param string $username    Username for realm.
+     *    @param string $username    Benutzername for realm.
      *    @param string $password    Password for realm.
      *    @access public
      */

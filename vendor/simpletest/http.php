@@ -122,7 +122,7 @@ class SimpleProxyRoute extends SimpleRoute {
      *    Stashes the proxy address.
      *    @param SimpleUrl $url     URL as object.
      *    @param string $proxy      Proxy URL.
-     *    @param string $username   Username for autentication.
+     *    @param string $username   Benutzername for autentication.
      *    @param string $password   Password for autentication.
      *    @access public
      */

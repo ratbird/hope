@@ -558,6 +558,8 @@ class Course_StudygroupController extends AuthenticatedController {
         Navigation::activateItem('/course/members');
         PageLayout::setHelpKeyword('Basis.StudiengruppenBenutzer');
         
+        Request::set('choose_member_parameter', $this->flash['choose_member_parameter']);
+        
         $sem          = new Seminar($id);
         $this->page   = $page;
         $this->anzahl = StudygroupModel::countMembers($id);
@@ -573,6 +575,16 @@ class Course_StudygroupController extends AuthenticatedController {
         $this->moderators       = $sem->getMembers('dozent');
         $this->tutors           = $sem->getMembers('tutor');
         $this->accepted         = $sem->getAdmissionMembers('accepted');
+        $this->inviting_search = new SQLSearch("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
+                                    . "FROM auth_user_md5 "
+                                    . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
+                                    . "LEFT JOIN seminar_user ON (auth_user_md5.user_id = seminar_user.user_id AND seminar_user.Seminar_id = '".addslashes($id)."') "
+                                    . "WHERE perms  NOT IN ('root', 'admin') "
+                                    . "AND seminar_user.Seminar_id IS NULL "
+                                    . "AND " . get_vis_query()
+                                    . " AND (username LIKE :input OR Vorname LIKE :input "
+                                    . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input)"
+                                    . "LIMIT 50", _("Nutzer suchen"), "user_id");
         $this->rechte           = $GLOBALS['perm']->have_studip_perm("tutor", $id);
     }
 
@@ -600,44 +612,6 @@ class Course_StudygroupController extends AuthenticatedController {
                 StudygroupModel::deny_user($user,$id);
                 $this->flash['success'] = sprintf(_("Der Nutzer %s wurde nicht akzeptiert."), get_fullname_from_uname($user, 'full', true));
             } elseif ($action == 'add_invites') {
-                if (Request::submitted('search_member')) {
-                    $search_for_member = Request::get('search_for_member');
-                    if ($search_for_member) {
-                        // search for the user
-                        $pdo = DBManager::get();
-                        $search_for_member = $pdo->quote('%' . $search_for_member . '%');
-                        $stmt = $pdo->query("SELECT auth_user_md5.user_id, {$GLOBALS['_fullname_sql']['full_rev']} as fullname, username, perms "
-                                    . "FROM auth_user_md5 "
-                                    . "LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id) "
-                                    . "LEFT JOIN seminar_user ON (auth_user_md5.user_id = seminar_user.user_id AND seminar_user.Seminar_id = '$id') "
-                                    . "WHERE perms  NOT IN ('root', 'admin') "
-                                    . "AND seminar_user.Seminar_id IS NULL "
-                                    . "AND " . get_vis_query()
-                                    . " AND (username LIKE $search_for_member OR Vorname LIKE $search_for_member "
-                                    . "OR Nachname LIKE $search_for_member)"
-                                    . "LIMIT 50");
-                        while ($data = $stmt->fetch()) {
-                            $results_members[$data['user_id']] = array(
-                                'fullname' => $data['fullname'],
-                                'username' => $data['username'],
-                                'perms'    => $data['perms']
-                            );
-                        }
-                    }
-                    if (isset($results_members)) {
-                        $count_members = sizeof($results_members);
-                        $msg .= $count_members == 1 ? _("Es wurde 1 NutzerIn gefunden.") : sprintf(_("Es wurden %s NutzerInnen gefunden."), $count_members);
-                        if ($count_members == 50){
-                            $msg = sprintf(_("Es werden immer nur die ersten %s Treffer angezeigt! Bitte konkretisieren Sie gegebenenfalls den Suchbegriff."), $count_members);
-                        }
-                        $this->flash['success'] = $msg;
-                    } else {
-                        $this->flash['info'] = sprintf(_("Der Suchbegriff %s ergab keine Treffer."), htmlReady(Request::get('search_for_member')));
-                    }
-                    $this->flash['results_choose_members'] = $results_members;
-                    $this->flash['request'] = Request::getInstance();
-
-                }
                 if (Request::get('choose_member') && Request::get('add_member_x')) {
                     $msg = new Messaging();
                     $receiver = Request::get('choose_member');
@@ -671,6 +645,10 @@ class Course_StudygroupController extends AuthenticatedController {
                         )
                     );
                 }
+            }
+            //Für die QuickSearch-Suche:
+            if (Request::get('choose_member_parameter') && Request::get('choose_member_parameter') !== _("Nutzer suchen") ) { 
+                $this->flash['choose_member_parameter'] = Request::get('choose_member_parameter');
             }
             $this->redirect('course/studygroup/members/' . $id);
         }   else {

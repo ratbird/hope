@@ -112,7 +112,7 @@ list-style-position:outside;list-style-type:none;">
 <? endif;?>
 </br>
 <? if ($rechte) : ?>
-    <?=$this->render_partial("course/studygroup/_invite_members", array('members' => $flash['members'], 'results_choose_members' => $flash['results_choose_members']));?>
+    <?=$this->render_partial("course/studygroup/_invite_members", array('inviting_search' => $inviting_search));?>
     <? if (count($accepted) > 0) : ?>
         <h2 style="clear:left; padding-top: 50px;"><?= _("Offene Mitgliedsanträge") ?></h2>
         <table cellspacing="0" cellpadding="2" border="0" style="max-width: 100%; min-width: 70%">

@@ -32,7 +32,8 @@
 // +---------------------------------------------------------------------------+
 
 function CliErrorHandler($errno, $errstr, $errfile, $errline) {
-    if ($errno & ~(E_NOTICE | E_STRICT | E_DEPRECATED | E_WARNING) && error_reporting()){
+    //8192 === E_DEPRECATED erst ab 5.3 bekannt
+    if ($errno & ~(E_NOTICE | E_STRICT | 8192 | E_WARNING) && error_reporting()){
         fwrite(STDERR,"$errstr \n$errfile line $errline\n");
         exit(1);
     }
@@ -55,10 +56,6 @@ set_include_path($include_path);
 set_error_handler('CliErrorHandler');
 
 require_once $STUDIP_BASE_PATH . "/lib/bootstrap.php";
-
-
-
-$PLUGINS_CACHING = FALSE;   //maybe only the www user is allowed to create tmp dirs?
 
 //cli scripts run always as faked (Stud.IP) root
 $auth = new Seminar_Auth();

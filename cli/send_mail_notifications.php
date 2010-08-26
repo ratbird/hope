@@ -4,9 +4,9 @@
 # Lifter003: TODO
 /**
 * send_mail_notifications.php
-* 
-* 
-* 
+*
+*
+*
 *
 * @author       André Noack <noack@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -14,7 +14,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // send_mail_notifications.php
-// 
+//
 // Copyright (C) 2005 André Noack <noack@data-quest.de>,
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
@@ -38,11 +38,11 @@ require_once 'lib/classes/ModulesNotification.class.php';
 
 
 get_config('MAIL_NOTIFICATION_ENABLE') || trigger_error('Mail notifications are disabled in this Stud.IP installation.', E_USER_ERROR);
-($MAIL_LOCALHOST && $MAIL_HOST_NAME && $ABSOLUTE_URI_STUDIP) || trigger_error('To use mail notifications you MUST set correct values for $MAIL_LOCALHOST, $MAIL_HOST_NAME and $ABSOLUTE_URI_STUDIP in local.inc!', E_USER_ERROR);
+($ABSOLUTE_URI_STUDIP) || trigger_error('To use mail notifications you MUST set correct values for $ABSOLUTE_URI_STUDIP in config_local.inc.php!', E_USER_ERROR);
 
 set_time_limit(60*60*2);
 
-// note: notifications for plugins not implemented 
+// note: notifications for plugins not implemented
 
 $db = new DB_Seminar();
 $notification = new ModulesNotification();
@@ -51,7 +51,7 @@ $query = "SELECT aum.user_id,aum.username,{$GLOBALS['_fullname_sql']['full']} as
 if (get_config('DEPUTIES_ENABLE')) {
     $query .= " UNION ".getMyDeputySeminarsQuery('notification_cli', '', '', '', '');
 }
-$query .= " GROUP BY su.user_id";
+$query .= " GROUP BY user_id";
 $db->query($query);
 while($db->next_record()){
     $user->start($db->f("user_id"));

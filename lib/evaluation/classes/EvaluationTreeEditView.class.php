@@ -289,7 +289,7 @@ function showEvalTree(){
 #       . "   <td width=\"10\"class=\"blank tree-indent\" "
 #       . "background=\"".."forumstrich.gif\">"
 #       . "<img src=\""
-#       . ."forumstrich.gif\" heigth=\"20\" width=\"10\" border=\"0\" >"
+#       . ."forumstrich.gif\" width=\"10\" border=\"0\" >"
 #       . "</td>\n"
     $html .= "  <td class=\"graulight\" align=\"left\" valign=\"top\" width=\"100%\">\n";
 
@@ -741,12 +741,12 @@ function createTreeLevelOutput($item_id, $start_itemID = NULL){
         ($item_id != $this->tree->tree_data[$this->startItemID]['parent_id']))){
         if ($this->tree->isLastKid($item_id) || $item_id == ROOT_BLOCK)
             $level_output = "<td class=\"blank tree-indent\" valign=\"top\"  "
-                . "heigth=\"21\" nowrap>"
+                . "nowrap>"
                 . "<img src=\"". Assets::image_path("forumstrich2.gif")."\">"
                 . "</td>"; //last
         else
             $level_output = "   <td class=\"blank tree-indent\" valign=\"top\" "
-                . "heigth=\"21\" nowrap>"
+                . "nowrap>"
                 . "<img src=\"". Assets::image_path("forumstrich3.gif")."\">"
                 . "</td>"; //crossing
 
@@ -762,13 +762,13 @@ function createTreeLevelOutput($item_id, $start_itemID = NULL){
 
             if ($this->tree->isLastKid($parent_id)){
                 $level_output = "<td class=\"blank\" valign=\"top\" "
-                    . "width=\"10\" heigth=\"21\" nowrap>"
+                    . "width=\"10\" nowrap>"
                     . "<img src=\"". Assets::image_path("forumleer.gif")."\">"
                     . "</td>"
                     . $level_output; //nothing
             } else {
                 $level_output = "   <td class=\"blank tree-indent\" valign=\"top\"  "
-                    . "heigth=\"21\" nowrap><img src=\"" . Assets::image_path("forumstrich.gif")."\">"
+                    . "nowrap><img src=\"" . Assets::image_path("forumstrich.gif")."\">"
                     . "</td>"
                     . $level_output; //vertical line
             }
@@ -780,7 +780,7 @@ function createTreeLevelOutput($item_id, $start_itemID = NULL){
             ($this->startItemID == ROOT_BLOCK) &&
             ($this->tree->tree_data[$item_id]['parent_id'] == ROOT_BLOCK)){
                 $level_output = "<td class=\"blank\" valign=\"top\" "
-                    . "width=\"10\" heigth=\"21\" nowrap>"
+                    . "width=\"10\" nowrap>"
                     . "<img src=\"". Assets::image_path("forumleer.gif")."\">"
                     . "</td>"
                     . $level_output; //nothing

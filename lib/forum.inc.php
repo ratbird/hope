@@ -1730,7 +1730,7 @@ function indentPosting (&$forumposting, $level)
         for ($i=0;$i<$level;$i++) {
             if ($i==($level-1)) {
                 if ($forumposting["lines"][$i+1]>1) $striche.= "<img src='".$GLOBALS['ASSETS_URL']."images/forumstrich3.gif'>";         //Kreuzung
-                else $striche.= "<img src='".$GLOBALS['ASSETS_URL']."images/forumstrich2.gif' heigth='22'>";                //abknickend
+                else $striche.= "<img src='".$GLOBALS['ASSETS_URL']."images/forumstrich2.gif'>";                //abknickend
                 $forumposting["lines"][$i+1] -= 1;
             } else {
                 if ($forumposting["lines"][$i+1]==0) $striche .= "<img src='".$GLOBALS['ASSETS_URL']."images/forumleer.gif'>";      //Leerzelle

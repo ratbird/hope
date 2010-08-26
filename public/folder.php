@@ -892,7 +892,7 @@ div.droppable.hover {
 </style>";
 
         print '<table border=0 cellpadding=0 cellspacing=0 width="100%"><tr>';
-        print "<td class=\"blank\" valign=\"top\" heigth=21 nowrap width=1px>&nbsp;</td>";
+        print "<td class=\"blank\" valign=\"top\" nowrap width=1px>&nbsp;</td>";
         print "<td>";
         print "<div class=\"\" id=\"folder_subfolders_root\">"; //class = "folder_container" for sorting
         //Seminar...
@@ -1049,7 +1049,7 @@ div.droppable.hover {
 
         print "</td</tr></table></td><td>";
         print '<tr>';
-        print "<td class=\"blank\" valign=\"top\" heigth=21 nowrap width=1px>&nbsp;</td>";
+        print "<td class=\"blank\" valign=\"top\" nowrap width=1px>&nbsp;</td>";
         print "<td id=\"folder_1\">";
 
         //Ordnen nach: Typ, Name, Größe, Downloads, Autor, Alter

@@ -236,7 +236,6 @@ class TreeView {
                     $level_output = "<td class=\"blank tree-indent\" valign=\"top\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\"></td>" . $level_output; //vertical line
             }
         }
-        //$level_output = "<td class=\"blank\" valign=\"top\" width=\"20\" heigth=\"21\" nowrap><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" width=\"20\" height=\"20\" border=\"0\" ></td>" . $level_output;
         echo "\n<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr>$level_output";
         return;
     }

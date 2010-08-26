@@ -44,7 +44,7 @@ class ShowTreeRow {
 
         ?><table border=0 cellpadding=0 cellspacing=0 width="99%" align="center">
             <tr>
-                <td class="blank tree-indent" valign="top" heigth=21 nowrap><?
+                <td class="blank tree-indent" valign="top" nowrap><?
 
         if (!$content)
             $content=_("Keine Beschreibung");

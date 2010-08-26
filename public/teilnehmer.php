@@ -1158,7 +1158,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
     echo "<tr>";
     if ($showscore == TRUE) {
         printf("<td bgcolor=\"#%s%s%s\" class=\"%s\">", $red, $green,$blue, $class2);
-        printf("<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" %s width=\"10\" heigth=\"10\"></td>", tooltip(_("Aktivität: ").round($aktivity_index_user)."%"));
+        printf("<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" %s width=\"10\"></td>", tooltip(_("Aktivität: ").round($aktivity_index_user)."%"));
     }
 
     if ($rechte) {

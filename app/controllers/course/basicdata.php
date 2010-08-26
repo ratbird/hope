@@ -1,27 +1,35 @@
 <?php
-
 /*
- * Copyright (C) 2010 - Rasmus Fuhse <fuhse@data-quest.de>
+ * studygroup.php - contains Course_BasicdataController
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Rasmus Fuhse <fuhse@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       2.0
  */
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/classes/Institute.class.php';
 
-class Course_BasicdataController extends AuthenticatedController {
+class Course_BasicdataController extends AuthenticatedController
+{
     public $msg = array();
 
     /**
      * Zeigt die Grunddaten an. Man beachte, dass eventuell zuvor eine andere
      * Action wie Set ausgeführt wurde, von der hierher weitergeleitet worden ist.
      * Wichtige Daten dazu wurden dann über $this->flash übertragen.
+     *
+     * @param md5 $course_id
      */
-    public function view_action($course_id = null) {
+    public function view_action($course_id = null)
+    {
         global $SessSemName, $user, $perm, $_fullname_sql, $SEM_CLASS, $SEM_TYPE;
 
         $deputies_enabled = get_config('DEPUTIES_ENABLE');
@@ -322,8 +330,10 @@ class Course_BasicdataController extends AuthenticatedController {
      * Ändert alle Grunddaten der Veranstaltung (bis auf Personal) und leitet
      * danach weiter auf View.
      */
-    public function set_action() {
+    public function set_action()
+    {
         global $SessSemName, $user, $perm;
+
         $deputies_enabled = get_config('DEPUTIES_ENABLE');
         $sem = new Seminar($SessSemName[1]);
         $this->msg = array();
@@ -459,9 +469,13 @@ class Course_BasicdataController extends AuthenticatedController {
     /**
      * Löscht einen Dozenten (bis auf den letzten Dozenten)
      * Leitet danach weiter auf View und öffnet den Reiter Personal.
+     *
+     * @param md5 $dozent
      */
-    public function deletedozent_action($dozent) {
+    public function deletedozent_action($dozent)
+    {
         global $SessSemName, $user, $perm;
+
         $this->msg = array();
         if ($perm->have_studip_perm("dozent",$SessSemName[1])) {
             if ($dozent !== $user->id) {
@@ -489,9 +503,13 @@ class Course_BasicdataController extends AuthenticatedController {
     /**
      * Löscht einen Stellvertreter.
      * Leitet danach weiter auf View und öffnet den Reiter Personal.
+     *
+     * @param md5 $deputy
      */
-    public function deletedeputy_action($deputy) {
+    public function deletedeputy_action($deputy)
+    {
         global $SessSemName, $user, $perm;
+
         $this->msg = array();
         if ($perm->have_studip_perm("dozent",$SessSemName[1])) {
             if ($deputy !== $user->id) {
@@ -519,9 +537,13 @@ class Course_BasicdataController extends AuthenticatedController {
     /**
      * Löscht einen Tutor
      * Leitet danach weiter auf View und öffnet den Reiter Personal.
+     *
+     * @param md5 $tutor
      */
-    public function deletetutor_action($tutor) {
+    public function deletetutor_action($tutor)
+    {
         global $SessSemName, $user, $perm;
+
         $this->msg = array();
         if ($perm->have_studip_perm("dozent",$SessSemName[1])) {
             $sem = new Seminar($SessSemName[1]);
@@ -545,9 +567,14 @@ class Course_BasicdataController extends AuthenticatedController {
     /**
      * Falls eine Person in der >>Reihenfolge<< hochgestuft werden soll.
      * Leitet danach weiter auf View und öffnet den Reiter Personal.
+     *
+     * @param md5 $user_id
+     * @param string $status
      */
-    public function priorityupfor_action($user_id, $status = "dozent") {
+    public function priorityupfor_action($user_id, $status = "dozent")
+    {
         global $SessSemName, $user, $perm;
+
         $this->msg = array();
         if ($perm->have_studip_perm("dozent",$SessSemName[1])) {
             $sem = new Seminar($SessSemName[1]);
@@ -577,9 +604,14 @@ class Course_BasicdataController extends AuthenticatedController {
     /**
      * Falls eine Person in der >>Reihenfolge<< runtergestuft werden soll.
      * Leitet danach weiter auf View und öffnet den Reiter Personal.
+     *
+     * @param md5 $user_id
+     * @param string $status
      */
-    public function prioritydownfor_action($user_id, $status = "dozent") {
+    public function prioritydownfor_action($user_id, $status = "dozent")
+    {
         global $SessSemName, $user, $perm;
+
         $this->msg = array();
         if ($perm->have_studip_perm("dozent",$SessSemName[1])) {
             $sem = new Seminar($SessSemName[1]);
@@ -605,5 +637,4 @@ class Course_BasicdataController extends AuthenticatedController {
         $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
-
 }

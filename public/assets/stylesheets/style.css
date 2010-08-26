@@ -275,6 +275,24 @@ td.tree-indent img {
     vertical-align: bottom;
 }
 
+td.tree-elbow-line {
+    width: 5px;
+    vertical-align: bottom;
+    background-image: url(../images/datatree_1.gif);
+    background-repeat: repeat-y;
+}
+
+td.tree-elbow-end {
+    width: 5px;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+td.tree-elbow-line img,
+td.tree-elbow-end img {
+    display: block;
+}
+
 /** table.collapsable **/
 table.collapsable tbody.collapsed tr {
     display: none;

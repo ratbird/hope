@@ -1398,7 +1398,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     print "<div style=\"display:none\" id=\"getmd5_fi".$folder_id."_$countfiles\">".$datei['dokument_id']."</div>";
     print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\"><tr>";
     if (!$all) {
-        print "<td width=5px nowrap=\"nowrap\" valign=\"bottom\"><img src=\"".$GLOBALS['ASSETS_URL']."images/datatree_2.gif\"></td>";
+        print "<td class=\"tree-elbow-end\">" . Assets::img("datatree_2.gif") . "</td>";
     }
 
     //Farbe des Pfeils bestimmen:
@@ -1690,7 +1690,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
             && (($rechte) || ($folder_tree->isExecutable($folder_id, $user->id))) ) {
         print "<tr>";
         //Der Navigationsast nach unten
-        print "<td width=5px valign=bottom style=\"background-image: url(".$GLOBALS['ASSETS_URL']."images/datatree_1.gif); background-repeat: repeat-y;\"><img src=\"".$GLOBALS['ASSETS_URL']."images/datatree_3.gif\"></td>";
+        print "<td class=\"tree-elbow-line\">" . Assets::img("datatree_3.gif") . "</td>";
         //Mehrere Zeilen, die wiederum Dateien mit eventuellen Optionen sind.
         print "<td colspan=3>";
 
@@ -1767,7 +1767,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 
     //Abzweigung, wenn Ordner ein Unterordner ist
     if ($depth > 3) //Warum gerade 3, soll jeder selbst rausfinden
-        print "<td width=5px nowrap=\"nowrap\" valign=\"bottom\"><img src=\"".$GLOBALS['ASSETS_URL']."images/datatree_2.gif\"></td>";
+        print "<td class=\"tree-elbow-end\">" . Assets::img("datatree_2.gif") . "</td>";
     else
         print "<td></td>";
     print "<td valign=\"bottom\">";

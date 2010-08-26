@@ -96,7 +96,7 @@ function edit_email($uid, $email, $force=False) {
 
     $db->query("SELECT user_id, Email,Vorname,Nachname FROM auth_user_md5 WHERE Email='$email'") ;
     if ($db->next_record() and $db->f('user_id') != $uid) {
-        $msg.=  "error§" . sprintf(_("Die angegebene E-Mail-Adresse wird bereits von einem anderen User (%s %s) verwendet. Bitte geben Sie eine andere E-Mail-Adresse an."), htmlReady($db->f("Vorname")), htmlReady($db->f("Nachname"))) . "§";
+        $msg.=  "error§" . sprintf(_("Die angegebene E-Mail-Adresse wird bereits von einem anderen Benutzer (%s %s) verwendet. Bitte geben Sie eine andere E-Mail-Adresse an."), htmlReady($db->f("Vorname")), htmlReady($db->f("Nachname"))) . "§";
         return array(False, $msg);
     }
 
@@ -192,15 +192,15 @@ function parse_datafields($user_id) {
 class about extends messaging {
 
     var $db;     //unsere Datenbankverbindung
-    var $auth_user = array();        // assoziatives Array, enthält die Userdaten aus der Tabelle auth_user_md5
-    var $user_info = array();        // assoziatives Array, enthält die Userdaten aus der Tabelle user_info
-    var $user_inst = array();        // assoziatives Array, enthält die Userdaten aus der Tabelle user_inst
-    var $user_fach_abschluss = array(); // assoziatives Array, enthält die Userdaten aus der Tabelle user_studiengang
-    var $user_userdomains = array(); // assoziatives Array, enthält die Userdaten aus der Tabelle user_userdomains
+    var $auth_user = array();        // assoziatives Array, enthält die Benutzerdaten aus der Tabelle auth_user_md5
+    var $user_info = array();        // assoziatives Array, enthält die Benutzerdaten aus der Tabelle user_info
+    var $user_inst = array();        // assoziatives Array, enthält die Benutzerdaten aus der Tabelle user_inst
+    var $user_fach_abschluss = array(); // assoziatives Array, enthält die Benutzerdaten aus der Tabelle user_studiengang
+    var $user_userdomains = array(); // assoziatives Array, enthält die Benutzerdaten aus der Tabelle user_userdomains
     var $check = "";    //Hilfsvariable für den Rechtecheck
     var $special_user = FALSE;  // Hilfsvariable für bes. Institutsfunktionen
     var $msg = ""; //enthält evtl Fehlermeldungen
-    var $logout_user = FALSE; //Hilfsvariable, zeigt an, ob der User ausgeloggt werden muß
+    var $logout_user = FALSE; //Hilfsvariable, zeigt an, ob der Benutzer ausgeloggt werden muß
     var $priv_msg = "";  //Änderungsnachricht bei Adminzugriff
     var $default_url = "http://www"; //default fuer private URL
 
@@ -633,7 +633,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
                     }
                     $check_uname = StudipAuthAbstract::CheckUsername($new_username);
                     if ($check_uname['found']) {
-                        $this->msg .= "error§" . _("Der Username wird bereits von einem anderen User verwendet. Bitte wählen sie einen anderen Usernamen!") . "§";
+                        $this->msg .= "error§" . _("Der Username wird bereits von einem anderen Benutzer verwendet. Bitte wählen sie einen anderen Usernamen!") . "§";
                         return false;
                     } else {
                         //$this->msg .= "info§" . $check_uname['error'] ."§";

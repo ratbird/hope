@@ -617,11 +617,11 @@ function createLabel(){
 
         "visibility" => _("Sichtbarkeit"),
         "visibility_alt" => array(
-            "invis" => _("Dieser Eintrag ist f&uuml;r die User unsichtbar."),
+            "invis" => _("Dieser Eintrag ist f&uuml;r die Benutzer unsichtbar."),
             "vis" => _("Dieser Eintrag ist f&uuml;r User sichtbar.")),
         "visibility_tooltip" => array(
-            "invis" => _("Diesen Eintrag f&uuml;r die User sichtbar machen."),
-            "vis" => _("Diesen Eintrag f&uuml;r die User unsichtbar machen.")),
+            "invis" => _("Diesen Eintrag f&uuml;r die Benutzer sichtbar machen."),
+            "vis" => _("Diesen Eintrag f&uuml;r die Benutzer unsichtbar machen.")),
 
         "status" => _("Status"),
         "status_button_new" => "start",

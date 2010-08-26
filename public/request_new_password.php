@@ -84,7 +84,7 @@ class UserManagementRequestNewPassword extends UserManagement {
             return FALSE;
         }
 
-        $this->msg .= "msg§" . sprintf(_("Passwort von User \"%s\" neu gesetzt."), $this->user_data['auth_user_md5.username']) . "§";
+        $this->msg .= "msg§" . sprintf(_("Passwort von Benutzer \"%s\" neu gesetzt."), $this->user_data['auth_user_md5.username']) . "§";
 
         // include language-specific subject and mailbody
         $user_language = getUserLanguagePath($this->user_data['auth_user_md5.user_id']);

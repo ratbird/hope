@@ -40,7 +40,7 @@ ResourcesUserRoots, stellt Stamm-Ressourcen zur Verfuegung
 /*****************************************************************************/
 
 class ResourcesUserRoots {
-    var $user_global_perm;          //Globaler Status des Users, fuer den Klasse initiert wird
+    var $user_global_perm;          //Globaler Status des Benutzers, fuer den Klasse initiert wird
     var $range_id;                  //the id of the User (could be a Person, Einrichtung oder Veranstaltung)
     var $my_roots;                  //Alle meine Ressourcen-Staemme
     

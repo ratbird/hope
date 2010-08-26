@@ -171,7 +171,7 @@
             if (!$lockedAssign) : ?>
             <br><br>
                 <? if ($user_name)
-                    print _("einen anderen User (NutzerIn oder Einrichtung) eintragen:");
+                    print _("einen anderen Benutzer (NutzerIn oder Einrichtung) eintragen:");
                  else
                     print _("einen Nutzer (Person oder Einrichtung) eintragen:"); ?>
                 <br>

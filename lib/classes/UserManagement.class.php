@@ -459,7 +459,7 @@ class UserManagement
                 }
                 $check_uname = StudipAuthAbstract::CheckUsername($newuser['auth_user_md5.username']);
                 if ($check_uname['found']) {
-                    $this->msg .= "error§" . _("Der Username wird bereits von einem anderen Benutzer verwendet. Bitte wählen sie einen anderen Usernamen!") . "§";
+                    $this->msg .= "error§" . _("Der Username wird bereits von einem anderen Benutzer verwendet. Bitte wählen sie einen anderen Benutzernamen!") . "§";
                     return false;
                 } else {
                     //$this->msg .= "info§" . $check_uname['error'] ."§";

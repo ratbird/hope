@@ -2629,7 +2629,7 @@ if ($level == 2)
                             ->withButton()
                             ->render();
                 ?>
-                <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
+                <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
                 </td>
             </tr>
                  <?php if ($deputies_enabled) { ?>
@@ -2686,7 +2686,7 @@ if ($level == 2)
                                 ->withButton()
                                 ->render();
                         ?>
-                        <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
+                        <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
                         </td>
                     </tr>
                     <?php } ?>
@@ -2776,7 +2776,7 @@ if ($level == 2)
                                 ->withButton()
                                 ->render();
                         ?>
-                        <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.")?></font>
+                        <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
                         </td>
                     </tr>
 

@@ -147,7 +147,7 @@ class StudipAuthLdap extends StudipAuthAbstract {
             return false;
         }
         if (!($result = @ldap_search($this->conn, $user_dn, "objectclass=*"))){
-            $this->error_msg = _("Abholen der User Attribute fehlgeschlagen.") .$this->getLdapError();
+            $this->error_msg = _("Abholen der Benutzer Attribute fehlgeschlagen.") .$this->getLdapError();
             return false;
         }
         if (@ldap_count_entries($this->conn, $result)){
@@ -210,7 +210,7 @@ class StudipAuthLdap extends StudipAuthAbstract {
             $username = utf8_encode($username);
         }
         if (!$this->anonymous_bind){
-            $this->error = _("Kann den Usernamen nicht überprüfen, anonymous_bind ist ausgeschaltet!");
+            $this->error = _("Kann den Benutzernamen nicht überprüfen, anonymous_bind ist ausgeschaltet!");
             return false;
         }
         if (!$this->doLdapConnect()){

@@ -155,7 +155,7 @@ $width_namecolumn = 60;
                 <input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_dozent">
                 <?= $dozentensuche ?>
             </span>
-        <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
+        <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.") ?>
     </td>
     <? endif; ?>
     </tr></table><hr style="clear:both"></td>
@@ -192,7 +192,7 @@ $width_namecolumn = 60;
                 <input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_deputy">
                 <?= $deputysearch ?>
             </span>
-        <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
+        <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.") ?>
     </td>
     <? endif; ?>
     </tr></table><hr style="clear:both"></td>
@@ -237,7 +237,7 @@ $width_namecolumn = 60;
                 <input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_tutor">
                 <?= $tutorensuche ?>
             </span>
-        <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
+        <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.") ?>
     </td>
     <? endif; ?>
     </tr></table>

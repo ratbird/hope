@@ -504,7 +504,7 @@ $db6=new DB_Seminar;
     //User schon in der Seminar_user vorhanden? Und was macht er da eigentlich?
         if ($SemUserStatus) {
             if ($SemUserStatus=="user") { //Nur user? Dann muessen wir noch mal puefen
-                if ($SemSecLevelWrite==2) { //Schreiben nur per Passwort, der User darf es eingeben
+                if ($SemSecLevelWrite==2) { //Schreiben nur per Passwort, der Benutzer darf es eingeben
                     if ($perm->have_perm("autor")) { //nur globale Autoren duerfen sich hochstufen!
                         printf ("<tr><td class=\"blank\" colspan=2>&nbsp; &nbsp; " . _("Bitte geben Sie das Passwort f&uuml;r die Veranstaltung %s ein.") . "<br><br></td></tr>", '<b>'.$SeminarName.'</b>');
                         ?>
@@ -628,7 +628,7 @@ $db6=new DB_Seminar;
                     {
                         $user_studiengang[$db->f('studiengang_id')] = 1;
                     }
-                    if (!$sem_verify_suggest_studg) {//Wir wissen noch nicht mit welchem Studiengang der User rein will
+                    if (!$sem_verify_suggest_studg) {//Wir wissen noch nicht mit welchem Studiengang der Benutzer rein will
                         if (count($user_studiengang) == 1 || (count($user_studiengang) > 1 && !$current_seminar->isAdmissionQuotaEnabled())) {//Nur einen passenden gefunden? Dann nehmen wir einfach mal diesen...
                             $sem_verify_suggest_studg = key($user_studiengang);
                         } elseif (count($user_studiengang) > 1) { //Mehrere gefunden, fragen welcher es denn sein soll
@@ -848,7 +848,7 @@ $db6=new DB_Seminar;
                 } else {//kein Passwortschutz, also wird der Kerl auf jeden Fall autor im Seminar
                     $InsertStatus="autor";
                 }
-            } else {//der User ist auch global 'User'
+            } else {//der Benutzer ist auch global 'User'
                 if ($SemSecLevelRead>0) {//Lesen duerfen nur Autoren, also wech hier
                     parse_msg (sprintf("info§"._("Um an der Veranstaltung <b>%s</b> teilnehmen zu k&ouml;nnen, m&uuml;ssen Sie zumindest auf die Registrierungsmail geantwortet haben!"), $SeminarName));
                     echo "<tr><td class=\"blank\" colspan=2><a href=\"index.php\">&nbsp;&nbsp; "._("Zur&uuml;ck zur Startseite")."</a>";

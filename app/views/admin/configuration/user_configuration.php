@@ -119,7 +119,7 @@ $infobox_content = array(
         'kategorie' => _('Hinweise:'),
         'eintrag'   => array(
             array(
-                "text" => _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein."),
+                "text" => _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein."),
                 "icon" => "icons/16/black/info.png"
                 ),
             array(

@@ -568,7 +568,7 @@ class VoteDB extends StudipObject {
       $this->db->query("SELECT username FROM auth_user_md5 WHERE ".
                "user_id='".$authorID."'");
       if ($this->db->nf() == 0) {
-     $this->throwError (1, _("Keinen User mit der ID gefunden"),
+     $this->throwError (1, _("Es wurde kein Benutzer mit der ID gefunden"),
                 __LINE__, __FILE__);
       } else {
      $this->db->next_record ();

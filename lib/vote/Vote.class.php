@@ -1037,7 +1037,7 @@ class Vote extends StudipObject {
      $this->throwError (1, _("Objekt besitzt keine ID!"));
 
       if (empty ($this->authorID))
-     $this->throwError (2, _("Objekt ist keinem User zugeordnet!"));
+     $this->throwError (2, _("Objekt ist keinem Benutzer zugeordnet!"));
 
       if (empty ($this->rangeID))
      $this->throwError (3, _("Objekt ist keinem Bereich zugeordnet!"));

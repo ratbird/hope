@@ -1211,7 +1211,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
             echo chat_get_online_icon($db->f("user_id"),$db->f("username"),$SessSemName[1]) . " ";
         }
 
-        printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s ></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => "teilnehmer.php", "subject" => $subject, "rec_uname" => $db->f("username"))), tooltip(_("Nachricht an User verschicken")));
+        printf ("<a href=\"%s\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s ></a>", URLHelper::getLink("sms_send.php", array("sms_source_page" => "teilnehmer.php", "subject" => $subject, "rec_uname" => $db->f("username"))), tooltip(_("Nachricht an Benutzer verschicken")));
 
     if (isset($multiaction[$key]['send'][0]) && $rechte)
     printf("<input class=\"text-top\" type=\"checkbox\" name=\"send_msg[%s]\" value=\"1\"></td>", $username);
@@ -1456,7 +1456,7 @@ if ($rechte) {
                 printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><font size=\"-1\">%s</font></td>", $cssSw->getClass(), $db->f("position"));
             printf ("<td width=\"10%%\" align=\"center\" class=\"%s\">&nbsp; </td>", $cssSw->getClass());
 
-            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><a href=\"%s\"><img class=\"text-bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s></a></td>", $cssSw->getClass(), URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php', 'rec_uname' => $db->f("username"))), tooltip(_("Nachricht an User verschicken")));
+            printf ("<td width=\"10%%\" align=\"center\" class=\"%s\"><a href=\"%s\"><img class=\"text-bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" %s></a></td>", $cssSw->getClass(), URLHelper::getLink('sms_send.php', array('sms_source_page' => 'teilnehmer.php', 'rec_uname' => $db->f("username"))), tooltip(_("Nachricht an Benutzer verschicken")));
             if(!LockRules::Check($id, 'participants')){
                 printf ("<td width=\"15%%\" align=\"center\" class=\"%s\"><input type=\"image\" name=\"admission_rein[%s]\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2up.png\">
                         <input type=\"checkbox\" name=\"admission_insert[%s]\" value=\"1\"></td>", $cssSw->getClass(), $db->f("username"), $db->f("username"));
@@ -1589,7 +1589,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     <table width="99%" border="0" cellpadding="2" cellspacing="0" border=0 align="center">
     <tr>
         <td class="steel1" width="40%" align="left">&nbsp; <font size=-1><b><?=_("Nutzer in die Veranstaltung eintragen")?></b></font>
-        <br><font size=-1>&nbsp; <? printf(_("Bitte geben Sie den Vornamen, Nachnamen %s oder Usernamen zur Suche ein"), "<br>&nbsp;")?> </font></td>
+        <br><font size=-1>&nbsp; <? printf(_("Bitte geben Sie den Vornamen, Nachnamen %s oder Benutzernamen zur Suche ein"), "<br>&nbsp;")?> </font></td>
         <td class="steel1" width="40%" align="left">
         <input type="hidden" name="studipticket" value="<?=$studipticket?>">
         <?php

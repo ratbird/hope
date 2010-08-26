@@ -27,7 +27,7 @@
 // welches kein ordentliches Parsen zuläßt. Kann kein Titel (dc_title) erkannt werden, werden
 // als Titel die ersten 40 Zeichen des Suchergebnisses eingetragen.
 // Zusätzlich wird immer das gesammte Suchergebis im Feld "Inhaltliche Beschreibung" (dc_description)
-// abgelegt, so das der User notfalls die Datenzuordnung selbst vornehmen kann.
+// abgelegt, so das der Benutzer notfalls die Datenzuordnung selbst vornehmen kann.
 $_lit_search_plugins[] = array('name' => 'DDB_Experimental', 'link' => '');
 */
 

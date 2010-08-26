@@ -42,7 +42,7 @@
     <td width="3%" align="center">
         <a href="<?= URLHelper::getLink('sms_send.php', array('sms_source_page' => 'online.php',
                                                               'rec_uname' => $tmp_online_uname)) ?>">
-            <?= Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht an User verschicken"), 'class' => 'text-bottom')) ?>
+            <?= Assets::img('icons/16/blue/mail.png', array('title' => _("Nachricht an Benutzer verschicken"), 'class' => 'text-bottom')) ?>
         </a>
     </td>
 

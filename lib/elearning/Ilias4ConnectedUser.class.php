@@ -112,7 +112,7 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser
 
         // data for user-category in ILIAS 4
         $object_data["title"] = sprintf(_("Eigene Daten von %s (%s)."), $this->getName(), $this->getId());
-        $object_data["description"] = sprintf(_("Hier befinden sich die persönlichen Lernmodule des Users %s."), $this->getName());
+        $object_data["description"] = sprintf(_("Hier befinden sich die persönlichen Lernmodule des Benutzers %s."), $this->getName());
         $object_data["type"] = "cat";
         $object_data["owner"] = $this->getId();
 

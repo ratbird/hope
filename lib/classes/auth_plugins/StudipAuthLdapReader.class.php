@@ -71,7 +71,7 @@ class StudipAuthLdapReader extends StudipAuthLdap {
             return false;
         }
         if (!($result = @ldap_search($this->conn, $this->base_dn, $this->getLdapFilter($username)))){
-            $this->error_msg = _("Abholen der User Attribute fehlgeschlagen.") .$this->getLdapError();
+            $this->error_msg = _("Abholen der Benutzer Attribute fehlgeschlagen.") .$this->getLdapError();
             return false;
         }
         if (@ldap_count_entries($this->conn, $result)){

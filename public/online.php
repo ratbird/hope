@@ -358,10 +358,10 @@ if (is_array($non_group_buddies))
                               "text"  => _("Hier können Sie sehen, wer au&szlig;er Ihnen im Moment online ist.")
                         ),
                         array("icon" => 'icons/16/black/mail.png',
-                              "text"  => _("Sie können diesen Usern eine Nachricht schicken oder sie zum Chatten einladen.")
+                              "text"  => _("Sie können diesen Benutzern eine Nachricht schicken oder sie zum Chatten einladen.")
                         ),
                         array("icon" => 'icons/16/black/person.png',
-                              "text"  => _("Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Users.")
+                              "text"  => _("Wenn Sie auf den Namen klicken, kommen Sie zur Homepage des Benutzers.")
                         )
                 )
             )

@@ -767,7 +767,7 @@ class Seminar_Register_Auth extends Seminar_Auth {
 
         while($this->db->next_record()) {
             //error_log("E-Mail schon vorhanden", 0);
-            $this->error_msg=$this->error_msg. _("Die angegebene E-Mail-Adresse wird bereits von einem anderen User verwendet. Sie müssen eine andere E-Mail-Adresse angeben!") . "<br>";
+            $this->error_msg=$this->error_msg. _("Die angegebene E-Mail-Adresse wird bereits von einem anderen Benutzer verwendet. Sie müssen eine andere E-Mail-Adresse angeben!") . "<br>";
             return false;                  // Email schon vorhanden
         }
 

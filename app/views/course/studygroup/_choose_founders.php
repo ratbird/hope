@@ -32,7 +32,7 @@
                 <?= _("GruppengründerIn hinzufügen:") ?><br>
                 <input type="text" name="search_for_founder">
                 <input type="image" name="search_founder" src="<?= Assets::image_path('icons/16/blue/search.png') ?>" title="<?= _("Suchen") ?>"><br>
-                <?= _("Geben Sie zur Suche den Vor-, Nach- oder Usernamen ein.") ?>
+                <?= _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.") ?>
             <? endif; ?>
             </div>
         <? endif; ?>

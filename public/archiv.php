@@ -549,7 +549,7 @@ if ($archiv_data["perform_search"]) {
                         echo "<hr><b><font size=\"-1\">" . _("Person Berechtigung erteilen:") . " </font></b><br>";
                         if (($add_user) && (!$db2->affected_rows())  && (!$new_search))
                             echo "<br><b><font size=\"-1\">" . _("Es wurde keine Person zu dem eingegebenem Suchbegriff gefunden!") . "</font></b><br>";
-                        echo "<font size=\"-1\">" . _("Bitte Namen, Vornamen oder Usernamen eingeben:") . "</font>&nbsp; ";
+                        echo "<font size=\"-1\">" . _("Bitte Namen, Vornamen oder Benutzernamen eingeben:") . "</font>&nbsp; ";
                         echo "<br><input type=\"TEXT\" size=20 maxlength=255 name=\"search_exp\">";
                         echo "&nbsp;<font size=\"-1\"><br><input type=\"SUBMIT\"  name=\"add_user\" value=\"" . _("Suche starten") . "\"></font>";
                         echo "</form>";

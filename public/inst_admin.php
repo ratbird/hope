@@ -31,7 +31,7 @@ $auth->login_if($auth->auth["uid"] == "nobody");
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
-require_once("lib/msg.inc.php"); //Ausgaberoutinen an den User
+require_once("lib/msg.inc.php"); //Ausgaberoutinen an den Benutzer
 require_once("config/config.inc.php"); //Grunddaten laden
 require_once("lib/visual.inc.php"); //htmlReady
 require_once ("lib/statusgruppe.inc.php");  //Funktionen der Statusgruppen
@@ -260,8 +260,8 @@ function table_body ($db, $range_id, $structure, $css_switcher) {
         if ($structure["nachricht"]) {
             printf("<td%salign=\"left\" width=\"1%%\"".(($admin_view) ? "" : " colspan=\"2\""). " nowrap>\n",$css_switcher->getFullClass());
             printf("<a href=\"%s\">", URLHelper::getLink("sms_send.php?sms_source_page=inst_admin.php" . "&rec_uname=".$db->f("username")));
-            printf("<img src=\"" . Assets::image_path('icons/16/blue/mail.png') . "\" alt=\"%s\" ", _("Nachricht an User verschicken"));
-            printf("title=\"%s\" border=\"0\" valign=\"baseline\"></a>", _("Nachricht an User verschicken"));
+            printf("<img src=\"" . Assets::image_path('icons/16/blue/mail.png') . "\" alt=\"%s\" ", _("Nachricht an Benutzer verschicken"));
+            printf("title=\"%s\" border=\"0\" valign=\"baseline\"></a>", _("Nachricht an Benutzer verschicken"));
             echo '</td>';
 
             if ($admin_view) {
@@ -392,19 +392,19 @@ if (!isset($details) || isset($set)) {
 
                 else {
                     if ($perms=='autor' AND $scherge=='user') {
-                        my_error("<b>" . _("Sie k&ouml;nnen den User nicht auf AUTORiN hochstufen, da er oder sie im gesamten System nur den Status USER hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden.") . "</b>");
+                        my_error("<b>" . _("Sie k&ouml;nnen den Benutzer nicht auf AUTORiN hochstufen, da er oder sie im gesamten System nur den Status USER hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden.") . "</b>");
                     }
                     elseif ($perms=='tutor' AND ($scherge=='user' OR $scherge=='autor')) {
-                        my_error("<b>" . sprintf(_("Sie k&ouml;nnen den User nicht auf TUTORiN hochstufen, da er oder sie im gesamten System nur den Status %s hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden."), $scherge) . "</b>");
+                        my_error("<b>" . sprintf(_("Sie k&ouml;nnen den Benutzer nicht auf TUTORiN hochstufen, da er oder sie im gesamten System nur den Status %s hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden."), $scherge) . "</b>");
                     }
                     elseif ($perms=='dozent' AND ($scherge=='user' OR $scherge=='autor' OR $scherge=='tutor')) {
-                        my_error("<b>" . sprintf(_("Sie k&ouml;nnen den User nicht auf DOZENTiN hochstufen, da er oder sie im gesamten System nur den Status %s hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden."), $scherge) . "</b>");
+                        my_error("<b>" . sprintf(_("Sie k&ouml;nnen den Benutzer nicht auf DOZENTiN hochstufen, da er oder sie im gesamten System nur den Status %s hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden."), $scherge) . "</b>");
                     }
                     elseif ($perms=='admin' AND ($scherge=='user' OR $scherge=='autor' OR $scherge=='tutor' OR $scherge=='dozent')) {
-                        my_error("<b>" . sprintf(_("Sie k&ouml;nnen den User nicht auf ADMIN hochstufen, da er oder sie im gesamten System nur den Status %s hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden."), $scherge) . "</b>");
+                        my_error("<b>" . sprintf(_("Sie k&ouml;nnen den Benutzer nicht auf ADMIN hochstufen, da er oder sie im gesamten System nur den Status %s hat. Wenn Sie dennoch an der Bef&ouml;rderung festhalten wollen, kontaktieren Sie bitte eineN der Systemadministrierenden."), $scherge) . "</b>");
                     }
                     elseif ($perms=='root') {
-                        my_error("<b>" . _("Sie k&ouml;nnen den User nicht auf ROOT hochstufen, dieser Status ist an einer Einrichtung nicht vorgesehen.") . "</b>");
+                        my_error("<b>" . _("Sie k&ouml;nnen den Benutzer nicht auf ROOT hochstufen, dieser Status ist an einer Einrichtung nicht vorgesehen.") . "</b>");
                     }
                     elseif ($scherge == 'admin' && $perms != 'admin') {
                         my_error("<b>" . _("Globale AdministratorInnen k&ouml;nnen auch an Einrichtung nur den Status \"admin\" haben.") . "</b>");

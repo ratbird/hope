@@ -180,7 +180,7 @@ function PrintAktualStatusgruppen ($roles, $level = 0, $pred = '') {
             }
 
             if (($visio[$db2->f('user_id')] || $rechte) && ($db2->f('user_id') != $user->id)) {
-                echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$db2->f("username"))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an User verschicken")) . " border=\"0\"></a>";
+                echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$db2->f("username"))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an Benutzer verschicken")) . " border=\"0\"></a>";
             }
             echo "&nbsp;</td>";
             echo "</tr>";
@@ -224,7 +224,7 @@ function PrintNonMembers ($range_id)
                 if ($rechte || $db->f("visible")=="yes" || $db->f("user_id")==$user->id) {
                     echo "<td width=\"90%\" class=\"$class\"><font size=\"-1\"><a href=\"".URLHelper::getLink("about.php?username=".$db->f("username"))."\">&nbsp;".htmlReady($db->f("fullname"))."</a>".($db->f("user_id") == $user->id && $db->f("visible") != "yes" ? " "._("(unsichtbar)") : '')."</font></td>";
                     echo "<td width=\"10%\" class=\"$class\" align=\"right\">";
-                    echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$db->f("username"))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an User verschicken")) . " border=\"0\"></a>";
+                    echo "<a href=\"".URLHelper::getLink("sms_send.php?sms_source_page=teilnehmer.php&rec_uname=".$db->f("username"))."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/mail.png\" " . tooltip(_("Systemnachricht an Benutzer verschicken")) . " border=\"0\"></a>";
                     echo "&nbsp;</td>";
                 } else {
                     echo "<td width=\"90%\" class=\"$class\"><font size=\"-1\" color=\"#666666\">". _("(unsichtbareR NutzerIn)"). "</font></td>";

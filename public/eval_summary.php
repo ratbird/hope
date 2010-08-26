@@ -81,7 +81,7 @@ if (isset($cmd)) {
             } else
                 $db->query(sprintf("UPDATE eval_group_template SET group_type='%s' WHERE evalgroup_id='%s' AND user_id='%s'",$group_type,$evalgroup_id,$auth->auth["uid"]));
         } else { // Datensatz nicht vorhanden --> INSERT
-            // Ist der User auch wirklich der Eigentuemer der Eval?
+            // Ist der Benutzer auch wirklich der Eigentuemer der Eval?
             $db->query(sprintf("SELECT * FROM eval WHERE eval_id='%s'",$eval_id));
             if ($db->next_record() && ($db->f("author_id")==$auth->auth["uid"] || $staff_member))
                 $db->query(sprintf("INSERT INTO eval_group_template (evalgroup_id, user_id, group_type) VALUES ('%s','%s','%s')",$evalgroup_id,$auth->auth["uid"],$group_type));

@@ -144,7 +144,9 @@ if (isset($eval_id) && $can_change) {
     $db_template->next_record();
 
     echo "<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">";
-    echo "<tr><td class=\"topic\" colspan=\"4\" align=\"left\"><IMG SRC=\"{$GLOBALS['ASSETS_URL']}images/eval-icon.gif\" border=\"0\"><font size=\"-1\"><b>"._("Auswertungskonfiguration")."</b></font></td></tr>\n";
+    echo "<tr><td class=\"topic\" colspan=\"4\" align=\"left\">";
+    echo Assets::img('icons/16/white/test.png');
+    echo "<b>"._("Auswertungskonfiguration")."</b></td></tr>\n";
     echo "  <tr>";
     echo "    <td colspan=\"4\" class=\"blank\">&nbsp;</td>\n";
     echo "  </tr>";

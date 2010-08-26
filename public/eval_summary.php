@@ -481,7 +481,9 @@ if ($db->next_record()) {
 
   // Evaluation existiert auch...
   echo "<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">\n";
-  echo "<tr><td class=\"topic\" align=\"left\"><font color=\"".($ausgabeformat==1 ? "white" : "black")."\">".($ausgabeformat==1 ? "<IMG SRC=\"".$GLOBALS['ASSETS_URL']."images/eval-icon.gif\" border=\"0\">&nbsp;" : "" )."<b>"._("Evaluations-Auswertung")."</b></font></td>\n";
+  echo "<tr><td class=\"topic\" align=\"left\"><font color=\"".($ausgabeformat==1 ? "white" : "black")."\">";
+  echo ($ausgabeformat==1 ? Assets::img('icons/16/white/test.png') : "" );
+  echo "<b>"._("Evaluations-Auswertung")."</b></font></td>\n";
   echo "<td class=\"".($ausgabeformat==1 ? "topic" : "blank" )."\" align=\"RIGHT\">".($ausgabeformat==1 ? "<a href=\"eval_summary_export.php?eval_id=".$eval_id."\" TARGET=\"_blank\"><font color=\"WHITE\">"._("PDF-Export")."</font></a><b>&nbsp;|&nbsp;</b><a href=\"".$PHP_SELF."?eval_id=".$eval_id."&ausgabeformat=2\" TARGET=\"_blank\"><font color=\"WHITE\">"._("Druckansicht")."</font></a>&nbsp;&nbsp;<a href=\"eval_config.php?eval_id=".$eval_id."\"><IMG SRC=\"".Assets::image_path('icons/16/white/arr_2right.png')."\" border=\"0\" ALT=\""._("Auswertung konfigurieren")."\" TITLE=\""._("Auswertung konfigurieren")."\"></a>" : "" ) ."&nbsp;</td>\n";
   echo "</tr>\n";
   echo "<tr><td class=\"blank\" colspan=\"2\" align=\"left\">&nbsp;</td></tr>\n";

@@ -17,7 +17,7 @@ if (!$show_hidden) {
 }
 
 $infobox = array();
-$infobox['picture'] = 'schedule.jpg';
+$infobox['picture'] = 'infobox/schedules.jpg';
 
 $infobox['content'] = array(
     array(

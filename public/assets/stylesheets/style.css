@@ -247,10 +247,6 @@ td.aufklapp {
     background-color : #FFFAEE;
 }
 
-td.suche {
-    background-image: url('../images/suche2.jpg');
-}
-
 table.blank, td.blank, td.onlineinfo, td.blanksmall {
     background-color: #FFFFFF;
 }

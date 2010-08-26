@@ -190,7 +190,7 @@ switch ($view) {
                                 "text"  => "<a href=\"$PHP_SELF?view=view_sem_schedule&print_view=1\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
-        //$infopic = "schedule.jpg";
+        //$infopic = "infobox/schedules.jpg";
     break;
     case "view_group_schedule":
         $room_groups = RoomGroups::GetInstance();
@@ -284,7 +284,7 @@ switch ($view) {
                                                                                 _("Als Mitarbeiter der Einrichtung haben Sie die Möglichkeit, diese Ressourcen frei zu belegen oder den Belegungsplan einzusehen.")) :
                                                 (($SessSemName["class"] == "sem") ? _("Sie können hier die Details und den Belegungsplan der dieser Veranstaltung zugeordneten Ressourcen einsehen.") :
                                                                                 _("Sie können hier den Details und Belegungsplan der dieser Einrichtung zugeordneten Ressourcen einsehen.")))))));
-        $infopic = "schedule.jpg";
+        $infopic = "infobox/schedules.jpg";
     break;
     case "openobject_details":
     case "view_details":
@@ -326,7 +326,7 @@ switch ($view) {
             if ($view_mode == "search")
                 $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
                                         "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
-        $infopic = "schedule.jpg";
+        $infopic = "infobox/schedules.jpg";
         }
     break;
     case "openobject_schedule":

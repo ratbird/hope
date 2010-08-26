@@ -58,7 +58,7 @@
                 </td>
                 <td class="plugin_score">
                     <? for ($i = 0; $i < $plugin['score']; ++$i): ?>
-                        <?= Assets::img('star.png') ?>
+                        <?= Assets::img('icons/16/grey/star.png') ?>
                     <? endfor ?>
                 </td>
                 <td class="plugin_install">

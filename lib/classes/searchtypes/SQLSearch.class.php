@@ -1,12 +1,17 @@
 <?php
-
-/*
- * Copyright (C) 2010 - Rasmus Fuhse <fuhse@data-quest.de>
+/**
+ * SQLSearch.class.php - Class of type SearchType used for searches with QuickSearch 
+ *
+ * Long description for file (if any)...
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Rasmus <fuhse@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
 
 require_once "lib/classes/searchtypes/SearchType.class.php";
@@ -40,7 +45,8 @@ class SQLSearch extends SearchType {
      * in this search. array("input_name" => "placeholder_in_sql_query")
      * @return void
      */
-    public function __construct($query, $title = "", $avatarLike = "", $presets = array()) {
+    public function __construct($query, $title = "", $avatarLike = "", $presets = array()) 
+    {
         $this->sql = $query;
         $this->presets = $presets;
         $this->title = $title;
@@ -50,14 +56,16 @@ class SQLSearch extends SearchType {
     /**
      * returns an object of type SQLSearch with parameters to constructor
      */
-    static public function get($query, $title = "", $avatarLike = "", $presets = array()) {
+    static public function get($query, $title = "", $avatarLike = "", $presets = array()) 
+    {
         return new SQLSearch($query, $title, $avatarLike, $presets);
     }
     /**
      * returns the title/description of the searchfield
      * @return string: title/description
      */
-    public function getTitle() {
+    public function getTitle() 
+    {
         return $this->title;
     }
     /**
@@ -66,7 +74,8 @@ class SQLSearch extends SearchType {
      * @param size enum(NORMAL, SMALL, MEDIUM): size of the avatar-image
      * @return string: adress of an image
      */
-    public function getAvatar($id) {
+    public function getAvatar($id) 
+    {
         switch ($this->avatarLike) {
             case "username":
                 return Avatar::getAvatar(NULL, get_userid($id))->getURL(Avatar::SMALL);
@@ -85,7 +94,8 @@ class SQLSearch extends SearchType {
      * @param size enum(NORMAL, SMALL, MEDIUM): size of the avatar
      * @return string: like "<img src="...avatar.jpg" ... >"
      */
-    public function getAvatarImageTag($id, $size = Avatar::SMALL) {
+    public function getAvatarImageTag($id, $size = Avatar::SMALL) 
+    {
         switch ($this->avatarLike) {
             case "username":
                 return Avatar::getAvatar(get_userid($id))->getImageTag($size);
@@ -107,7 +117,8 @@ class SQLSearch extends SearchType {
      * @param contextual_data array: an associative array with more variables
      * @return array: array(array(), ...)
      */
-    public function getResults($input, $contextual_data = array()) {
+    public function getResults($input, $contextual_data = array()) 
+    {
         $db = DBManager::get();
         $statement = $db->prepare($this->sql, array(PDO::FETCH_NUM));
         $data = array();
@@ -128,7 +139,8 @@ class SQLSearch extends SearchType {
      * returns the absolute path to this class for autoincluding this class.
      * @return: path to this class
      */
-    public function includePath() {
+    public function includePath() 
+    {
         return __file__;
     }
 }

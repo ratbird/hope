@@ -41,6 +41,7 @@ require_once 'vendor/email_message/blackhole_message.php';
 
 $cssSw = new cssClassSwitcher;
 
+PageLayout::setHelpKeyword("Admins.Benutzerkonten");
 PageLayout::setTitle(_("Benutzerverwaltung"));
 Navigation::activateItem('/admin/config/new_user');
 

@@ -95,7 +95,7 @@ elseif (Request::submitted('kill_accounts') && check_ticket(Request::option('stu
 }
 
 ob_start();
-
+PageLayout::setHelpKeyword("Admins.Benutzerkonten");
 PageLayout::setTitle(_("Löschen von Benutzer-Accounts"));
 Navigation::activateItem('/admin/config/new_user');
 

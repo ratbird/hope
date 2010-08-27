@@ -33,12 +33,12 @@ $infobox['content'] = array(
     )
 );
 
-if (!$inst_mode) :
+if (!$inst_mode) {
     $infobox['content'][1]['eintrag'][] = array (
         'text' => '<a href="'. $controller->url_for('calendar/schedule/entry') .'">'._("Neuer Eintrag") .'</a>',
         'icon' => 'icons/16/black/add/date.png'
     );
-endif;
+}
 
 $infobox['content'][1]['eintrag'][] = array (
     'text' => '<a href="'. $controller->url_for('calendar/schedule/index/'. implode(',', $days)
@@ -57,10 +57,12 @@ $infobox['content'][1]['eintrag'][] = array (
     'icon' => 'icons/16/black/visibility-visible.png'
 );
 
-$infobox['content'][1]['eintrag'][] = array (
-    'text' => '<a href="'. $controller->url_for('calendar/schedule') .'">'. _("Zurück zur Wochenansicht") .'</a>',
-    'icon' => 'icons/16/black/link-intern.png'
-);
+if (count($this->days) == 1) {
+    $infobox['content'][1]['eintrag'][] = array (
+        'text' => '<a href="'. $controller->url_for('calendar/schedule') .'">'. _("Zurück zur Wochenansicht") .'</a>',
+        'icon' => 'icons/16/black/schedule.png'
+    );
+}
 
 ?>
 <div style="text-align: center; font-weight: bold; font-size: 1.2em">

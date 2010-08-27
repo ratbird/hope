@@ -1,29 +1,18 @@
 <?php
 /**
- * QuickSearch.class.php
+ * QuickSearch.class.php - GUI class for quciksearch
  *
- * @author        Rasmus Fuhse <fuhse@data-quest.de>, Suchi & Berg GmbH <info@data-quest.de>
- * @version        $Id:$
+ * Long description for file (if any)...
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Rasmus <fuhse@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// QuickSearch.class.php
-// Copyright (C) 2009 Rasmus Fuhse <fuhse@data-quest.de>
-// Suchi & Berg GmbH <info@data-quest.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
 
 require_once "lib/classes/Avatar.class.php";
 require_once "lib/classes/CourseAvatar.class.php";
@@ -106,7 +95,8 @@ class QuickSearch {
      * returns an instance of QuickSearch so you can use it as singleton
      * @return object of type QuickSearch
      */
-    public static function get($name, $search = NULL) {
+    public static function get($name, $search = NULL) 
+    {
         return new QuickSearch($name, $search);
     }
     
@@ -121,7 +111,8 @@ class QuickSearch {
      * the searchfield will automatically search for persons, courses, workgroups, institutes and
      * you don't need to call the specialSearch-method.
      */
-    public function QuickSearch($name, $search = NULL) {
+    public function QuickSearch($name, $search = NULL) 
+    {
         self::$count_QS++;
         $this->name = $name;
         $this->withButton = false;
@@ -140,7 +131,8 @@ class QuickSearch {
      * @param design:    associative array of params.
      * @return self
      */
-    public function withButton($design = array()) {
+    public function withButton($design = array()) 
+    {
         $this->withButton = true;
         if (isset($design['width'])) {
             $this->box_width = $design['width'];
@@ -153,7 +145,8 @@ class QuickSearch {
      * this will disable a submit button for the searchfield
      * @return self
      */
-    public function withoutButton() {
+    public function withoutButton() 
+    {
         $this->withButton = false;
         return $this;
     }
@@ -166,7 +159,8 @@ class QuickSearch {
      *   something like "ae2b1fca515949e5d54fb22b8ed95575", "test_dozent"
      * @return self
      */
-    public function defaultValue($valueID, $valueName) {
+    public function defaultValue($valueID, $valueName) 
+    {
         $this->defaultID = $valueID;
         $this->defaultName = $valueName;
         return $this;
@@ -177,7 +171,8 @@ class QuickSearch {
      * @param class: any css class name for the "input type=text" tag
      * @return self
      */
-    public function setInputClass($class) {
+    public function setInputClass($class) 
+    {
         $this->inputClass = $class;
         return $this;
     }
@@ -187,7 +182,8 @@ class QuickSearch {
      * @param style: one or more css-proporties separated with ";"
      * @return self
      */
-    public function setInputStyle($style) {
+    public function setInputStyle($style) 
+    {
         $this->inputStyle = $style;
         return $this;
     }
@@ -198,7 +194,8 @@ class QuickSearch {
      * @param color: string like "green" or "#ff0000"  
      * @return self
      */
-    public function setDescriptionColor($color) {
+    public function setDescriptionColor($color) 
+    {
         $this->descriptionColor = $color;
         return $this;
     }
@@ -207,7 +204,8 @@ class QuickSearch {
      * disables the select-box, which is displayed for non-JS users who will 
      * choose with this box, which item they want to have.
      */
-    public function noSelectbox($set = true) {
+    public function noSelectbox($set = true) 
+    {
         $this->selectBox = !$set;
         return $this;
     }
@@ -220,7 +218,8 @@ class QuickSearch {
      * @param function_name:  string
      * @return self
      */
-    public function fireJSFunctionOnSelect($function_name) {
+    public function fireJSFunctionOnSelect($function_name) 
+    {
         $this->jsfunction = $function_name;
         return $this;
     }
@@ -230,7 +229,8 @@ class QuickSearch {
      * @param attr_array: array like array("title" => "hello world")
      * @return self
      */
-    public function withAttributes($attr_array) {
+    public function withAttributes($attr_array) 
+    {
         if (is_array($attr_array)) {
             $this->withAttributes = $attr_array;
         }
@@ -242,7 +242,8 @@ class QuickSearch {
      * comment: the Ajax-Result (for the javascript-instant-search) will be also displayed here,
      * but that does not need to concern you.
      */
-    public function render() {
+    public function render() 
+    {
         if (trim(Request::get($this->name.'_parameter')) 
                && (Request::get($this->name.'_parameter') != $this->beschriftung()) 
                && !Request::get($this->name)
@@ -316,7 +317,8 @@ class QuickSearch {
      * @param request:    the request from the searchfield typed by the user.
      * @return:    array(array(item_id, item-name), ...) mostly limited to 5.
      */
-    private function searchresults($request) {
+    private function searchresults($request) 
+    {
         if ($this->search instanceof SearchType) {
             try {
                 $results = $this->search->getResults($request, $_REQUEST);
@@ -336,7 +338,8 @@ class QuickSearch {
      * when the user focusses on the searchfield.
      * @return:    localized-string
      */
-    private function beschriftung() {
+    private function beschriftung() 
+    {
         if ($this->search instanceof SearchType) {
             return $this->search->getTitle();
         } else {

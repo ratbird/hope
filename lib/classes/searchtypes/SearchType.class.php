@@ -1,25 +1,18 @@
 <?php
-
-
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// QuickSearch.class.php
-// Copyright (C) 2010 Rasmus Fuhse <fuhse@data-quest.de>
-// Suchi & Berg GmbH <info@data-quest.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
+/**
+ * SQLSearch.class.php - A class-structure for alle search-objects in Stud.IP.
+ *
+ * Long description for file (if any)...
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Rasmus <fuhse@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
 
 /**
  * A class-structure for alle search-objects in Stud.IP.
@@ -34,7 +27,8 @@ abstract class SearchType {
      * title of the search like "search for courses" or just "courses"
      * @return string
      */
-    public function getTitle() {
+    public function getTitle() 
+    {
         return "";
     }
     
@@ -44,7 +38,8 @@ abstract class SearchType {
      * @param id: string
      * @return: string URL to a picture
      */
-    public function getAvatar($id) {
+    public function getAvatar($id) 
+    {
         return "";
     }
     
@@ -54,7 +49,8 @@ abstract class SearchType {
      * @param id: string
      * @return: string HTML of a picture
      */
-    public function getAvatarImageTag($id) {
+    public function getAvatarImageTag($id) 
+    {
         return "";
     }
     
@@ -72,7 +68,8 @@ abstract class SearchType {
      * @param keyword: string
      * @return array
      */
-    public function getResults($keyword, $contextual_data = array()) {
+    public function getResults($keyword, $contextual_data = array()) 
+    {
         return array(array("", _("Die Suchklasse, die Sie verwenden, enthält keine Methode getResults.")));
     }
     

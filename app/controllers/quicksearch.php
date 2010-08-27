@@ -1,13 +1,17 @@
 <?php
-/*
- * quicksearch.php
+/**
+ * quicksearch.php - trails-controller for delivering search-suggestions
  *
- * Copyright (c) 2010  Rasmus Fuhse
+ * Long description for file (if any)...
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Rasmus <fuhse@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
 
 require_once 'lib/classes/searchtypes/SearchType.class.php';
@@ -30,7 +34,8 @@ class QuicksearchController extends AuthenticatedController {
      * by user.
      * @param query_id string: first argument of url -> id of query in session
      */
-    public function response_action($query_id) {
+    public function response_action($query_id) 
+    {
         $this->extraInclude($query_id);
         $this->cleanUp();
         $_SESSION['QuickSearches'][$query_id]['time'] = time();
@@ -46,7 +51,8 @@ class QuicksearchController extends AuthenticatedController {
      * @param query_id string: id of the query in session
      * @return object or string: ready search-object or string
      */
-    private function getSearch($query_id) {
+    private function getSearch($query_id) 
+    {
         if (isset($_SESSION['QuickSearches'][$query_id])) {
             $search_query = $_SESSION['QuickSearches'][$query_id]['query'];
             $search_object = $_SESSION['QuickSearches'][$query_id]['object'];
@@ -74,7 +80,8 @@ class QuicksearchController extends AuthenticatedController {
      * @param query_id string: id of the query in session
      * @return void
      */
-    private function extraInclude($query_id) {
+    private function extraInclude($query_id) 
+    {
         if ($_SESSION['QuickSearches'][$query_id]['includePath']) {
             include_once($_SESSION['QuickSearches'][$query_id]['includePath']);
         }
@@ -85,7 +92,8 @@ class QuicksearchController extends AuthenticatedController {
      * @param results array: array of searchresults
      * @return array: array of searchresults formatted
      */
-    private function extraResultFormat($results) {
+    private function extraResultFormat($results) 
+    {
         $input = studip_utf8decode(Request::get('request'));
         foreach ($results as $key => $result) {
             $results[$key][1] = preg_replace("/(".$input.")/i", "<b>$1</b>", $result[1]);
@@ -98,7 +106,8 @@ class QuicksearchController extends AuthenticatedController {
      * @param request:    the request from the searchfield typed by the user.
      * @return:    array(array(item_id, item-name), ...) mostly limited to 5.
      */
-    private function getResults($request) {
+    private function getResults($request) 
+    {
         if ($this->search instanceof SearchType) {
             try {
                 $results = $this->search->getResults($request, $this->form_data);
@@ -116,7 +125,8 @@ class QuicksearchController extends AuthenticatedController {
      * deletes all older requests, that have not been used since half an hour
      * @return void
      */
-    private function cleanUp() {
+    private function cleanUp() 
+    {
         $count = 0;
         $lifetime = $GLOBALS['AUTH_LIFETIME'] ? $GLOBALS['AUTH_LIFETIME'] : 30;
         foreach($_SESSION['QuickSearches'] as $query_id => $query) {
@@ -131,7 +141,8 @@ class QuicksearchController extends AuthenticatedController {
     /**
      * method to recursively convert an array from uft8 to iso-1
      */
-    private function utf8_array_decode($input) {
+    private function utf8_array_decode($input) 
+    {
         $return = array();
         foreach ($input as $key => $val) {
             if( is_array($val) ) {

@@ -1,12 +1,17 @@
 <?php
-
-/*
- * Copyright (C) 2010 - Rasmus Fuhse <fuhse@data-quest.de>
+/**
+ * StandardSearch.class.php - Class of type SearchType used for searches with QuickSearch
+ *
+ * Long description for file (if any)...
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Rasmus <fuhse@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
 
 require_once "lib/classes/searchtypes/SQLSearch.class.php";
@@ -38,21 +43,24 @@ class StandardSearch extends SQLSearch {
      * in this search. array("input_name" => "placeholder_in_sql_query")
      * @return void
      */
-    public function __construct($search) {
+    public function __construct($search) 
+    {
         $this->avatarLike = $this->search = $search;
     }
 
     /**
      * returns an object of type SQLSearch with parameters to constructor
      */
-    static public function get($search) {
+    static public function get($search) 
+    {
         return new SQLSearch($search);
     }
     /**
      * returns the title/description of the searchfield
      * @return string: title/description
      */
-    public function getTitle() {
+    public function getTitle() 
+    {
         switch ($this->search) {
             case "username":
             case "user_id":
@@ -74,7 +82,8 @@ class StandardSearch extends SQLSearch {
      * @param contextual_data array: an associative array with more variables
      * @return array: array(array(), ...)
      */
-    public function getResults($input, $contextual_data = array()) {
+    public function getResults($input, $contextual_data = array()) 
+    {
         $db = DBManager::get();
         $statement = $db->prepare($this->getSQL(), array(PDO::FETCH_NUM));
         $data = array();
@@ -91,7 +100,8 @@ class StandardSearch extends SQLSearch {
         return $results;
     }
 
-    private function getSQL() {
+    private function getSQL() 
+    {
         switch ($this->search) {
             case "username":
                 return "SELECT DISTINCT auth_user_md5.username, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) " .
@@ -155,7 +165,8 @@ class StandardSearch extends SQLSearch {
      * returns the absolute path to this class for autoincluding this class.
      * @return: path to this class
      */
-    public function includePath() {
+    public function includePath() 
+    {
         return __file__;
     }
 }

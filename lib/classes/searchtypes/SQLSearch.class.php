@@ -30,7 +30,7 @@ require_once "lib/functions.php";
 
 class SQLSearch extends SearchType {
     
-    private $SQL;
+    private $sql;
     private $avatarLike;
     
     /**
@@ -41,7 +41,7 @@ class SQLSearch extends SearchType {
      * @return void
      */
     public function __construct($query, $title = "", $avatarLike = "", $presets = array()) {
-        $this->SQL = $query;
+        $this->sql = $query;
         $this->presets = $presets;
         $this->title = $title;
         $this->avatarLike = $avatarLike;
@@ -109,11 +109,11 @@ class SQLSearch extends SearchType {
      */
     public function getResults($input, $contextual_data = array()) {
         $db = DBManager::get();
-        $statement = $db->prepare($this->SQL, array(PDO::FETCH_NUM));
+        $statement = $db->prepare($this->sql, array(PDO::FETCH_NUM));
         $data = array();
         if (is_array($contextual_data)) {
             foreach ($contextual_data as $name => $value) {
-               if (($name !== "input") && (strpos($this->SQL, ":".$name) !== FALSE)) {
+               if (($name !== "input") && (strpos($this->sql, ":".$name) !== FALSE)) {
                   $data[":".$name] = $value;
                }
             }

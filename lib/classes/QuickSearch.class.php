@@ -25,11 +25,11 @@
 // Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 // +---------------------------------------------------------------------------+
 
-require_once("lib/classes/Avatar.class.php");
-require_once("lib/classes/CourseAvatar.class.php");
-require_once("lib/classes/InstituteAvatar.class.php");
+require_once "lib/classes/Avatar.class.php";
+require_once "lib/classes/CourseAvatar.class.php";
+require_once "lib/classes/InstituteAvatar.class.php";
 
-require_once ("lib/classes/searchtypes/SeminarSearch.class.php");
+require_once "lib/classes/searchtypes/SeminarSearch.class.php";
 
 
 /**
@@ -221,7 +221,7 @@ class QuickSearch {
      * @return self
      */
     public function fireJSFunctionOnSelect($function_name) {
-        $this->JSfunction = $function_name;
+        $this->jsfunction = $function_name;
         return $this;
     }
     
@@ -289,7 +289,7 @@ class QuickSearch {
             $template->set_attribute('inputClass', $this->inputClass);
             $template->set_attribute('withAttributes', $this->withAttributes ? $this->withAttributes : array());
             $template->set_attribute('descriptionColor', $this->descriptionColor ? $this->descriptionColor : "#888888");
-            $template->set_attribute('JSfunction', $this->JSfunction);
+            $template->set_attribute('jsfunction', $this->jsfunction);
             $template->set_attribute('count_QS', self::$count_QS);
             $template->set_attribute('id', $this->getId());
             $template->set_attribute('query_id', $query_id);

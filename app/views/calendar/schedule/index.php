@@ -57,6 +57,11 @@ $infobox['content'][1]['eintrag'][] = array (
     'icon' => 'icons/16/black/visibility-visible.png'
 );
 
+$infobox['content'][1]['eintrag'][] = array (
+    'text' => '<a href="'. $controller->url_for('calendar/schedule') .'">'. _("Zurück zur Wochenansicht") .'</a>',
+    'icon' => 'icons/16/black/link-intern.png'
+);
+
 ?>
 <div style="text-align: center; font-weight: bold; font-size: 1.2em">
     <?= _("Mein Stundenplan im") ?>

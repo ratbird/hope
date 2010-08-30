@@ -26,12 +26,12 @@
             //Die Autovervollständigen-Funktion aktivieren:
             STUDIP.QuickSearch.autocomplete("<?= $id ?>",
                 "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
-                <?= $jsfunction ? htmlReady($jsfunction) : "null" ?>),
+                <?= $jsfunction ? htmlReady($jsfunction) : "null" ?>,
                 <? if ($beschriftung && !$defaultID) : ?>
                 '<?= htmlReady($beschriftung) ?>',
-                '<?= $descriptionColor ?>';
+                '<?= $descriptionColor ?>');
                 <? else : ?>
                 null,
-                null;
+                null);
                 <? endif ?>
         </script>

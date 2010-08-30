@@ -56,19 +56,7 @@ class QuicksearchController extends AuthenticatedController {
         if (isset($_SESSION['QuickSearches'][$query_id])) {
             $search_query = $_SESSION['QuickSearches'][$query_id]['query'];
             $search_object = $_SESSION['QuickSearches'][$query_id]['object'];
-            if ($search_object) {
-                //search with an object:
-                return unserialize($search_object);
-            } elseif (!in_array($search_query,
-                    array("username", "user_id", "Seminar_id",
-                         "Institut_id", "Arbeitsgruppe_id"))) {
-                //search with a special SQL-query:
-                $this->specialSQL = $search_query;
-                return "special";
-            } else {
-                //search for username, Seminar_id and so on:
-                return $search_query;
-            }
+            return unserialize($search_object);
         } else {
             return "";
         }

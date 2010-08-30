@@ -10,9 +10,13 @@ if ($withButton) : ?>
     <? endif ?>
 <? endif ?>
 <select<?= $input_style .($inputClass ? " class=\"".$inputClass."\"" : "") ?> name="<?= $name ?>">
-<? foreach ($searchresults as $result) : ?>
+<? if (count($searchresults)) : ?>
+  <? foreach ($searchresults as $result) : ?>
   <option value="<?= $result[0] ?>"><?= $result[1] ?></option>
-<? endforeach ?>
+  <? endforeach ?>
+<? else : ?>
+  <option value=""><?= _("Keine Treffer gefunden") ?></option> 
+<? endif ?>
 </select>
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>

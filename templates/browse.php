@@ -8,14 +8,6 @@
 
 <!-- form zur wahl der institute -->
 <div style="width: 100%;">
-<script>
-if (!STUDIP.CURRENTPAGE) {
-    STUDIP.CURRENTPAGE = {};
-}
-STUDIP.CURRENTPAGE.selectUser = function (username, name) {
-    location.href = STUDIP.URLHelper.getURL("about.php", {"username": username});
-};
-</script>
 <table width="100%" cellpadding="2" cellspacing="0">
     <? if (count($institutes)): ?>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
@@ -59,7 +51,7 @@ STUDIP.CURRENTPAGE.selectUser = function (username, name) {
                     ->withoutButton()
                     ->noSelectbox()
                     ->defaultValue("", $name)
-                    ->fireJSFunctionOnSelect("STUDIP.CURRENTPAGE.selectUser")
+                    ->fireJSFunctionOnSelect("STUDIP.Browse.selectUser")
                     ->render() ?>
         </td>
     </tr>

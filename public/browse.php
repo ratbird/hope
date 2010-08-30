@@ -112,21 +112,33 @@ $template->set_attribute('courses', $courses);
 
 /* --- Results -------------------------------------------------------------- */
 
-$fields = array('username', $_fullname_sql['full_rev'].' AS fullname', 'perms', 'auth_user_md5.user_id', get_vis_query('auth_user_md5', 'search').' AS visible');
-$tables = array('auth_user_md5', 'LEFT JOIN user_info USING (user_id)', 'LEFT JOIN user_visibility USING (user_id)');
+$fields = array('username', 
+                $_fullname_sql['full_rev'].' AS fullname', 
+                'perms', 
+                'auth_user_md5.user_id', 
+                get_vis_query('auth_user_md5', 'search').' AS visible');
+$tables = array('auth_user_md5', 
+                'LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id)', 
+                'LEFT JOIN user_visibility ON (auth_user_md5.user_id = user_visibility.user_id)');
 $arguments = array();
 
 //Admin-Abfrage
 $fields[] = 'user_inst.inst_perms';
-$tables[] = 'LEFT JOIN user_inst USING (user_id)';
+$tables[] = 'LEFT JOIN user_inst ON (auth_user_md5.user_id = user_inst.user_id)';
+if (!$perm->have_perm('root')) {
+    $tables[] = 'LEFT JOIN user_inst AS ui2 ON (ui2.Institut_id = user_inst.Institut_id AND ui2.user_id = '.$db->quote($user-id).')';
+}
 $filter[] = "IF(:inst_id != '0', user_inst.Institut_id = :inst_id AND user_inst.inst_perms != 'user', TRUE)";
 $arguments[":inst_id"] = $inst_id;
 
 
 //Admin-Abfrage
 $fields[] = 'seminar_user.status';
-$tables[] = 'LEFT JOIN seminar_user USING (user_id)';
+$tables[] = 'LEFT JOIN seminar_user ON (auth_user_md5.user_id = seminar_user.user_id)';
 $filter[] = "IF(:sem_id != '0', seminar_user.Seminar_id = :sem_id, TRUE)";
+if (!$perm->have_perm('admin')) {
+    $tables[] = 'LEFT JOIN seminar_user AS su2 ON (su2.Seminar_id = seminar_user.Seminar_id AND su2.user_id = '.$db->quote($user-id).')';
+}
 $arguments[":sem_id"] = $sem_id;
 
 // freie Suche

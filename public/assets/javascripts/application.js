@@ -959,8 +959,12 @@ STUDIP.QuickSearch = {
    *        when user has selected something
    * @return: void
    */
-  autocomplete: function (name, url, func) {
-    jQuery('#' + name).autocomplete({
+  autocomplete: function (name, url, func, title, titleColor) {
+      if (title) {
+	    jQuery('#' + name).attr("value", title)
+	                    .css("color", titleColor);
+      }
+      jQuery('#' + name).autocomplete({
       disabled: true,
       source: function (input, add) {
         //get the variables that should be sent:
@@ -1030,6 +1034,16 @@ jQuery(function () {
   });
 });
 
+
+/* ------------------------------------------------------------------------
+ * browse.php
+ * ------------------------------------------------------------------------ */
+
+STUDIP.Browse = {
+  selectUser: function (username, name) {
+    location.href = STUDIP.URLHelper.getURL("about.php", {"username": username});
+  }
+}
 
 /* ------------------------------------------------------------------------
  * application wide setup

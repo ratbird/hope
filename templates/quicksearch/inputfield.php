@@ -24,15 +24,14 @@
 <? endif ?>
         <script type="text/javascript" language="javascript">
             //Die Autovervollständigen-Funktion aktivieren:
-            //dispatch.php/quicksearch/response/<?= $query_id ?>?searchkey=test
-
             STUDIP.QuickSearch.autocomplete("<?= $id ?>",
                 "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
-                <?= $jsfunction ? htmlReady($jsfunction) : "null" ?>);
-<? if ($beschriftung && !$defaultID) : ?>
-            (function ($) {
-                $("#<?= $id ?>").attr("value", "<?= $beschriftung ?>");
-                $("#<?= $id ?>").css("color", "<?= $descriptionColor ?>");
-            })(jQuery);
-<? endif ?>
+                <?= $jsfunction ? htmlReady($jsfunction) : "null" ?>),
+                <? if ($beschriftung && !$defaultID) : ?>
+                '<?= htmlReady($beschriftung) ?>',
+                '<?= $descriptionColor ?>';
+                <? else : ?>
+                null,
+                null;
+                <? endif ?>
         </script>

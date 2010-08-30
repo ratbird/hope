@@ -360,7 +360,7 @@ if (check_ticket($studipticket)) {
         $deputy_id_parameter = Request::get('deputy_id_parameter');
     }
 
-    if (Request::submitted('add_deputy')) {
+    if (Request::submitted('add_deputy') && Request::get('deputy_id')) {
         if (!isDeputy(Request::get('deputy_id'), $my_about->auth_user["user_id"])) {
             if (Request::get('deputy_id') != $my_about->auth_user["user_id"]) {
                 $success = addDeputy(Request::get('deputy_id'), $my_about->auth_user["user_id"]);

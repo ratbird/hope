@@ -531,6 +531,7 @@ if (($SemUserStatus == "autor") || ($rechte)) {
     //wurde Code fuer Hochladen uebermittelt (=id+"_u_"), wird entsprechende Variable gesetzt
     if ($open_cmd == 'u' && (!$cancel_x)) {
         $folder_system_data["upload"]=$open_id;
+        unset($folder_system_data["refresh"]);
         unset($folder_system_data["zipupload"]);
     }
     if ($open_cmd == 'z' && $rechte  && !$cancel_x) {

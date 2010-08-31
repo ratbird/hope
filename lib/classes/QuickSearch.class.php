@@ -189,18 +189,6 @@ class QuickSearch {
     }
     
     /**
-     * sets the color of the description viewable, while the user has 
-     * written nothing in the searchfield. Invisible for Non-JS users. 
-     * @param color: string like "green" or "#ff0000"  
-     * @return self
-     */
-    public function setDescriptionColor($color) 
-    {
-        $this->descriptionColor = $color;
-        return $this;
-    }
-    
-    /**
      * disables the select-box, which is displayed for non-JS users who will 
      * choose with this box, which item they want to have.
      */
@@ -289,7 +277,6 @@ class QuickSearch {
             $template->set_attribute('defaultName', $this->defaultName);
             $template->set_attribute('inputClass', $this->inputClass);
             $template->set_attribute('withAttributes', $this->withAttributes ? $this->withAttributes : array());
-            $template->set_attribute('descriptionColor', $this->descriptionColor ? $this->descriptionColor : "#888888");
             $template->set_attribute('jsfunction', $this->jsfunction);
             $template->set_attribute('count_QS', self::$count_QS);
             $template->set_attribute('id', $this->getId());

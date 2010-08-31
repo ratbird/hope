@@ -74,7 +74,7 @@
                     ->setInputClass("quicksearchbox")
                     ->withAttributes(array("title" => sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name))))
                     ->setInputStyle("width: 130px; color: #ffffff")
-                    ->setDescriptionColor("#e5e5e5")
+                    //->setDescriptionColor("#e5e5e5")
                     ->fireJSFunctionOnSelect("selectSem")
                     ->noSelectbox()
                     ->render();

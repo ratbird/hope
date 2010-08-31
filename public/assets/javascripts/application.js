@@ -959,10 +959,10 @@ STUDIP.QuickSearch = {
    *        when user has selected something
    * @return: void
    */
-  autocomplete: function (name, url, func, title, titleColor) {
+  autocomplete: function (name, url, func, title) {
       if (title) {
 	    jQuery('#' + name).attr("value", title)
-	                    .css("color", titleColor);
+	                      .css("opacity", 0.7);
       }
       jQuery('#' + name).autocomplete({
       disabled: true,

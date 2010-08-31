@@ -9,8 +9,8 @@
            $input_style = " style=\"".$inputStyle."\"";
         }
         if ($beschriftung) {
-            $clear_input = " onFocus=\"if (this.value == '$beschriftung'){this.value = ''; jQuery(this).css('color', '');}\" " .
-                "onBlur=\"if (this.value == ''){this.value = '$beschriftung';jQuery(this).css('color', '".$descriptionColor."');}\"";
+            $clear_input = " onFocus=\"if (this.value == '$beschriftung'){this.value = ''; jQuery(this).css('opacity', '1');}\" " .
+                "onBlur=\"if (this.value == ''){this.value = '$beschriftung';jQuery(this).css('opacity', '0.7');}\"";
         } ?>
             <input type=hidden id="<?= $id ?>_realvalue" name="<?= $name ?>" value="<?= $defaultID ?>">
             <input<?= $input_style.($inputClass ? " class=\"".$inputClass."\"" : "")
@@ -28,10 +28,8 @@
                 "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
                 <?= $jsfunction ? htmlReady($jsfunction) : "null" ?>,
                 <? if ($beschriftung && !$defaultID) : ?>
-                '<?= htmlReady($beschriftung) ?>',
-                '<?= $descriptionColor ?>');
+                '<?= htmlReady($beschriftung) ?>');
                 <? else : ?>
-                null,
                 null);
                 <? endif ?>
         </script>

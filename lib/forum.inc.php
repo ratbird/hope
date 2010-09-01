@@ -531,7 +531,7 @@ function ForumIcon ($forumposting) {
         $forumposting["icon"] = "<img class=\"forum-icon\" src=\"".$bild."\" border=0 data-forumid=\"'".$forumposting["id"]."'\">";
         if ($forum["view"]=="tree" && $forumposting["type"]=="folder") { // wir kommen aus der Themenansicht
             $forumposting["icon"] = "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]."&openall=TRUE#anker")."\">"
-              + $forumposting["icon"] + "</a>";
+              . $forumposting["icon"] . "</a>";
         }
     } else {
         if ($forum["view"]=="tree" && $forumposting["type"]=="folder")

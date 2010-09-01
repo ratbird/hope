@@ -528,20 +528,11 @@ function ForumIcon ($forumposting) {
     }
 
     if ($forum["jshover"]==1 AND $auth->auth["jscript"] AND $forumposting["description"]!="" && $forumposting["openclose"]=="close") {
+        $forumposting["icon"] = "<img class=\"forum-icon\" src=\"".$bild."\" border=0 data-forumid=\"'".$forumposting["id"]."'\">";
         if ($forum["view"]=="tree" && $forumposting["type"]=="folder") { // wir kommen aus der Themenansicht
-            $hoverlink = "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]."&openall=TRUE#anker")."\" ";
-            $txt = "<i>" . _("Hier klicken um alle Postings im Thema zu öffnen") . "</i>";
-        } else {
-            $hoverlink = "<a href=\"javascript:void(0);\" ";
-            $txt = "";
+            $forumposting["icon"] = "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]."&openall=TRUE#anker")."\">"
+              + $forumposting["icon"] + "</a>";
         }
-        $forumposting["icon"] = $hoverlink .
-            "><img src=\"".$bild."\" border=0 onmouseover=\"$(this).hoverIntent({over: STUDIP.Dialogbox.openForumPosting('".
-                $forumposting["id"]."', '#forum_posting_".$forumposting["id"]."_icon'), ".
-                "sensitivity: 1, " .
-                "interval: 1000, " .
-                "out: STUDIP.Dialogbox.closeBox('".$forumposting["id"]."')" .
-            "});\" id=\"forum_posting_".$forumposting["id"]."_icon\"></a>";
     } else {
         if ($forum["view"]=="tree" && $forumposting["type"]=="folder")
             $forumposting["icon"] = "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]."&folderopen=".$forumposting["id"]."&openall=TRUE#anker")."\"><img src=\"".$bild."\" border=0 " . tooltip(_("Alle Postings im Thema öffnen")) . "></a>";

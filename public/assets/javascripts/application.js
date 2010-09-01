@@ -552,6 +552,8 @@ STUDIP.Tabs = (function () {
 STUDIP.Dialogbox = {
   currentScopes: {},
   currentBoxes: {},
+  forumTimeout: null,
+  cache: {},
 
   openBox: function (id, title, content, coord, scope) {
     if (scope && this.currentBoxes[this.currentScopes[scope]] && (id !== this.currentBoxes[this.currentScopes[scope]])) {
@@ -563,7 +565,7 @@ STUDIP.Dialogbox = {
         hide: 'slide',
         title: title,
         position: coord,
-        width: 460,
+        width: Math.min(600, window.innerWidth - 64),
         close: function (event, ui) {
           STUDIP.Dialogbox.closeBox(id, true);
         },
@@ -592,18 +594,40 @@ STUDIP.Dialogbox = {
   },
 
   openForumPosting: function (id, element) {
-    var coord; //coordinates to give to dialogbox - "center" means center of window
+    var coord = "center", //coordinates to give to dialogbox - "center" means center of window
+        data = STUDIP.Dialogbox.cache["forum_" + id];
+
     if (element) {
       coord = jQuery(element).position();
       coord = [coord.left + 15, coord.top];
-    } else {
-      coord = 'center';
     }
-    jQuery.getJSON("dispatch.php/content_element/get_formatted/forum/" + id, function (data) {
-      STUDIP.Dialogbox.openBox(id, data.title, data.content, coord, "forum");
-    });
+
+    STUDIP.Dialogbox.closeForumPosting(id);
+    STUDIP.Dialogbox.forumTimeout = window.setTimeout(function () {
+      if (!data) {
+        jQuery.getJSON("dispatch.php/content_element/get_formatted/forum/" + id, function (data) {
+          STUDIP.Dialogbox.cache["forum_" + id] = data;
+          STUDIP.Dialogbox.openBox(id, data.title, data.content, coord, "forum");
+        });
+      } else {
+        STUDIP.Dialogbox.openBox(id, data.title, data.content, coord, "forum");
+      }
+    }, 300);
+  },
+
+  closeForumPosting: function () {
+    window.clearTimeout(STUDIP.Dialogbox.forumTimeout);
+    STUDIP.Dialogbox.forumTimeout = null;
+
+    STUDIP.Dialogbox.closeScope("forum");
   }
 };
+
+jQuery('.forum-icon').live('mouseenter', function () {
+  STUDIP.Dialogbox.openForumPosting( $(this).metadata().forumid, this);
+}).live('mouseleave', function () {
+  STUDIP.Dialogbox.closeForumPosting();
+});
 
 /* ------------------------------------------------------------------------
  * Dateibereich
@@ -797,7 +821,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
   if (!STUDIP.Filesystem.movelock) {
     STUDIP.Filesystem.movelock = true;
     window.setTimeout("STUDIP.Filesystem.movelock = false;", 410);
-    
+
     if (jQuery("#file_" + md5_id + "_body").is(':visible')) {
       jQuery("#file_" + md5_id + "_body").slideUp(400);
       jQuery("#file_" + md5_id + "_header").css("fontWeight", 'normal');
@@ -1010,11 +1034,11 @@ STUDIP.QuickSearch = {
  * ------------------------------------------------------------------------ */
 
 /**
- * Turns a select-box into an easy to use multiple select-box 
+ * Turns a select-box into an easy to use multiple select-box
  */
 STUDIP.MultiSelect = {
   /**
-   * @param id string: 
+   * @param id string:
    */
   create: function (id, itemName) {
     if (!jQuery(id).attr('multiple')) {
@@ -1064,7 +1088,7 @@ jQuery(function () {
   if (!("autofocus" in document.createElement("input"))) {
 	  jQuery('[autofocus]').first().focus();
   }
-  
+
   jQuery('textarea.resizable').resizable({
     handles: 's',
     minHeight: 50
@@ -1081,7 +1105,7 @@ jQuery(function () {
   jQuery(this).closest('tbody').toggleClass('collapsed');
     return false;
   }).closest('.collapsable').find('tbody').filter(':not(.open)').find('.toggler').click();
-  
+
   jQuery('a.load-in-new-row').live('click', function () {
     if ($(this).closest('tr').next().hasClass('loaded-details')) {
       jQuery(this).closest('tr').next().remove();
@@ -1103,7 +1127,7 @@ jQuery(function () {
     jQuery(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
     return false;
   });
-	
+
 });
 
 

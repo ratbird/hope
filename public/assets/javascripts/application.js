@@ -565,7 +565,9 @@ STUDIP.Dialogbox = {
         hide: 'slide',
         title: title,
         position: coord,
-        width: Math.min(600, window.innerWidth - 64),
+        width: Math.min(600, jQuery(window).width() - 64),
+        height: 'auto',
+        maxHeight: jQuery(window).height(),
         close: function (event, ui) {
           STUDIP.Dialogbox.closeBox(id, true);
         },
@@ -599,7 +601,7 @@ STUDIP.Dialogbox = {
 
     if (element) {
       coord = jQuery(element).position();
-      coord = [coord.left + 15, coord.top];
+      coord = [coord.left + jQuery(element).width() + 2, coord.top - jQuery(window).scrollTop()];
     }
 
     STUDIP.Dialogbox.closeForumPosting(id);

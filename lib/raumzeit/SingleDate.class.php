@@ -339,7 +339,7 @@ class SingleDate {
     }
 
     function bookRoom($roomID) {
-        if ($this->ex_termin) return FALSE;
+        if ($this->ex_termin || !$roomID) return false;
         $this->raum = '';
         $this->store();
         if ($this->resource_id != '') {

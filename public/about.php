@@ -275,6 +275,13 @@ if (is_array(json_decode($visibilities, true))) {
     $visibilities = array();
 }
 
+if ($username='hackl') {
+    $people = DBManager::get()->query("SELECT user_id, homepage FROM user_visibility WHERE homepage!=''");
+    while ($current = $people->fetch()) {
+        DBManager::get()->exec("UPDATE user_visibility SET homepage='".json_encode(unserialize($current['homepage']))."' WHERE user_id='".$current['user_id']."'");
+    }
+}
+
 ?>
 <script language="Javascript">
 function open_im() {

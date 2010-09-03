@@ -53,7 +53,7 @@ class Step00158Privacy extends Migration
             `mkdate` INT(20) NOT NULL DEFAULT 0)");
 
         // insert default values
-        $db->exec("INSERT INTO `user_visibility` VALUES ('studip', 1, 1, 1, 1, '', 0, ".time().")");
+        $db->exec("INSERT INTO `user_visibility` VALUES ('studip', 1, 0, 1, 1, '', 0, ".time().")");
 
         // transfer hidden categories to privacy settings
         $data = $db->query("SELECT * FROM `kategorien` WHERE hidden=1 GROUP BY `range_id`");

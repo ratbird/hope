@@ -45,7 +45,7 @@ class Step00158Privacy extends Migration
         $db->exec("CREATE TABLE `user_visibility` (
             `user_id` VARCHAR(32) NOT NULL PRIMARY KEY, 
             `online` TINYINT(1) NOT NULL DEFAULT 1, 
-            `chat` TINYINT(1) NOT NULL DEFAULT 0, 
+            `chat` TINYINT(1) NOT NULL DEFAULT 1, 
             `search` TINYINT(1) NOT NULL DEFAULT 1, 
             `email` TINYINT(1) NOT NULL DEFAULT 1, 
             `homepage` TEXT NOT NULL DEFAULT '', 
@@ -53,7 +53,7 @@ class Step00158Privacy extends Migration
             `mkdate` INT(20) NOT NULL DEFAULT 0)");
 
         // insert default values
-        $db->exec("INSERT INTO `user_visibility` VALUES ('studip', 1, 0, 1, 1, '', 0, ".time().")");
+        $db->exec("INSERT INTO `user_visibility` VALUES ('studip', 1, 1, 1, 1, '', 0, ".time().")");
 
         // transfer hidden categories to privacy settings
         $data = $db->query("SELECT * FROM `kategorien` WHERE hidden=1 GROUP BY `range_id`");

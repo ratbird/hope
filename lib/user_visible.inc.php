@@ -263,7 +263,7 @@ function get_global_visibility_by_username($username) {
  * <li><b>search</b>: Can the user be found via person search?</li>
  * <li><b>email</b>: Is user's email address shown?</li>
  * <li><b>homepage</b>: Visibility of all user homepage elements, stored as 
- * serialized array</li>
+ * JSON-serialized array</li>
  * </ul>
  * 
  * @param string $user_id user ID to check
@@ -276,9 +276,16 @@ function get_global_visibility_by_username($username) {
 function get_local_visibility_by_id($user_id, $context, $return_user_perm=false) {
     global $NOT_HIDEABLE_FIELDS;
     $stmt = DBManager::get()->query("SELECT a.`perms`, u.`".$context.
-        "` FROM `user_visibility` u JOIN auth_user_md5 a ON ".
+        "` FROM `auth_user_md5` a LEFT JOIN `user_visibility` u ON ".
         "(u.`user_id`=a.`user_id`) WHERE a.`user_id`='".$user_id."'");
     $data = $stmt->fetch();
+    if ($data[$context] === null) {
+        $stmt = DBManager::get()->query("SELECT `".$context.
+            "` FROM `user_visibility` WHERE `user_id`='studip'");
+        $user_perm = $data['perm'];
+        $data = $stmt->fetch();
+        $data['perms'] = $user_perm;
+    }
     // Valid context given.
     if ($data[$context]) {
         // Context may not be hidden per global config setting.
@@ -473,7 +480,7 @@ function get_visible_email($user_id) {
  */
 function get_homepage_element_visibility($user_id, $element_name) {
     $visibilities = get_local_visibility_by_id($user_id, 'homepage');
-    $visibilities = unserialize($visibilities);
+    $visibilities = json_decode($visibilities, true);
     if (isset($visibilities[$element_name])) {
         return $visibilities[$element_name];
     } else {
@@ -491,10 +498,10 @@ function get_homepage_element_visibility($user_id, $element_name) {
  */
 function set_homepage_element_visibility($user_id, $element_name, $visibility) {
     $visibilities = get_local_visibility_by_id($user_id, 'homepage');
-    $visibilities = unserialize($visibilities);
+    $visibilities = json_decode($visibilities, true);
     $visibilities[$element_name] = $visibility;
     return DBManager::get()->exec("UPDATE user_visibility SET homepage='".
-        serialize($visibilities)."' WHERE user_id='".$user_id."'");
+        json_encode($visibilities)."' WHERE user_id='".$user_id."'");
 }
 
 ?>

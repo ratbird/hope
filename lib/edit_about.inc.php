@@ -810,7 +810,15 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $success1 = $this->change_all_homepage_visibility(VISIBILITY_ME);
         }
         $success2 = DBManager::get()->exec("UPDATE auth_user_md5 SET visible='".$global."' WHERE user_id='".$this->auth_user["user_id"]."'");
-        $success3 = DBManager::get()->exec("UPDATE user_visibility SET online=".$online.", chat=".$chat.", search=".$search.", email=".$email." WHERE user_id='".$this->auth_user["user_id"]."'");
+        $data = DBManager::get()->query("SELECT `user_id` FROM `user_visibility` WHERE `user_id`='".$this->auth_user["user_id"]."'");
+        if ($data->fetch()) {
+            $success3 = DBManager::get()->exec("UPDATE user_visibility 
+                SET online=".$online.", chat=".$chat.", search=".$search.", email=".$email." 
+                WHERE user_id='".$this->auth_user["user_id"]."'");
+        } else {
+            $success3 = DBManager::get()->exec("INSERT INTO user_visibility 
+                SET `user_id`='".$this->auth_user["user_id"]."', `online`=".$online.", `chat`=".$chat.", `search`=".$search.", `email`=".$email.", `mkdate`=".time());
+        }
         return true;
     }
 
@@ -837,8 +845,18 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $new_data[$key]['category'] = $entry['category'];
             $db_result[$key] = $new_visibility;
         }
+        $existing = DBManager::get()->query(
+            "SELECT `user_id` FROM `user_visibility` WHERE `user_id`='".
+            $this->auth_user["user_id"]."'")->fetch();
         // Write serialized data back to database.
-        $query = "UPDATE user_visibility SET homepage='".serialize($db_result)."' WHERE user_id='".$this->auth_user['user_id']."'";
+        if ($existing) {
+            $query = "UPDATE user_visibility SET homepage='".json_encode($db_result).
+                "' WHERE user_id='".$this->auth_user['user_id']."'";
+        } else {
+            $query = "INSERT INTO `user_visibility` SET `user_id`='".
+                $this->auth_user['user_id']."', `homepage`='".json_encode($db_result).
+                "', `mkdate`=".time();
+        }
         $success = DBManager::get()->exec($query);
         if ($success) {
             $result = $new_data;
@@ -855,9 +873,18 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      */
     function set_default_homepage_visibility($visibility) {
         $success = false;
-        $query = "UPDATE `user_visibility` SET `default_homepage_visibility`=".
-            intval($visibility)." WHERE `user_id`='".
-            $this->auth_user["user_id"]."'";
+        $existing = DBManager::get()->query(
+            "SELECT `user_id` FROM `user_visibility` WHERE `user_id`='".
+            $this->auth_user["user_id"]."'")->fetch();
+        if ($existing) {
+            $query = "UPDATE `user_visibility` SET `default_homepage_visibility`=".
+                intval($visibility)." WHERE `user_id`='".
+                $this->auth_user["user_id"]."'";
+        } else {
+            $query = "INSERT INTO `user_visibility` SET `user_id`='".
+                $this->auth_user["user_id"]."', `default_homepage_visibility`=".
+                intval($visibility).", `mkdate`=".time();
+        }
         $success = DBManager::get()->exec($query);
         return $success;
     }
@@ -871,8 +898,17 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      */
     function change_homepage_visibility($data) {
         $success = false;
-        $query = "UPDATE `user_visibility` SET homepage='".serialize($data).
-            "' WHERE user_id='".$this->auth_user["user_id"]."'";
+        $existing = DBManager::get()->query(
+            "SELECT `user_id` FROM `user_visibility` WHERE `user_id`='".
+            $this->auth_user["user_id"]."'")->fetch();
+        if ($existing) {
+            $query = "UPDATE `user_visibility` SET `homepage`='".json_encode($data).
+                "' WHERE user_id='".$this->auth_user["user_id"]."'";
+        } else {
+            $query = "INSERT INTO `user_visibility` SET `user_id`='".
+                $this->auth_user["user_id"]."', `homepage`='".
+                json_encode($data)."', `mkdate`=".time();
+        } 
         $success = DBManager::get()->exec($query);
         return $success;
     }
@@ -895,8 +931,8 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         $my_data = $my_data->fetch();
 
         $homepage_visibility = get_local_visibility_by_id($this->auth_user['user_id'], 'homepage');
-        if (is_array(unserialize($homepage_visibility))) {
-            $homepage_visibility = unserialize($homepage_visibility);
+        if (is_array(json_decode($homepage_visibility, true))) {
+            $homepage_visibility = json_decode($homepage_visibility, true);
         } else {
             $homepage_visibility = array();
         }

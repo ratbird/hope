@@ -268,7 +268,12 @@ Navigation::activateItem('/profile/view');
 // TODO this can be removed when page output is moved to a template
 URLHelper::addLinkParam('username', $username);
 
-$visibilities = unserialize(get_local_visibility_by_username($username, 'homepage'));
+$visibilities = get_local_visibility_by_username($username, 'homepage');
+if (is_array(json_decode($visibilities, true))) {
+    $visibilities = json_decode($visibilities, true);
+} else {
+    $visibilities = array();
+}
 
 ?>
 <script language="Javascript">

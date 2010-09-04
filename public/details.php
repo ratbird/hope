@@ -545,7 +545,8 @@ echo $template_factory->render(
                     $stm_out = array();
                     foreach( $stms as $stm_id => $stm) {
                         if ($stm['complete']) {
-                            $stm_out[] = '<a href="'.URLHelper::getLink('stm_details.php?stm_instance_id='.$stm_id).'"><img src="'. Assets::image_path('icons/16/grey/link-intern.png') . ($stm['id_number'] ? htmlReady($stm['id_number']).': ' : '') . htmlReady($stm['title']) . '</a>';
+                            $stm_out[] = '<a href="'.URLHelper::getLink('stm_details.php?stm_instance_id='.$stm_id).'">'
+                                        .'<img src="' . Assets::image_path('icons/16/grey/link-intern.png') . '" ' . ($stm['id_number'] ? htmlReady($stm['id_number']).': ' : '') . htmlReady($stm['title']) . '></a>';
                         }
                     }
                     ?>

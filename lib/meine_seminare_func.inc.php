@@ -464,10 +464,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 $nav = new Navigation('elearning', 'elearning_interface.php?view=show');
 
                 if ($db2->f('neue')) {
-                    $nav->setImage('icons/16/red/new/lernmodule.png', array('title' =>
+                    $nav->setImage('icons/16/red/new/learnmodule.png', array('title' =>
                         sprintf(_('%s Content-Modul(e), %s neue'), $db2->f('count'), $db2->f('neue'))));
                 } else if ($db2->f('count')) {
-                    $nav->setImage('icons/16/grey/lernmodule.png', array('title' => sprintf(_('%s Content-Modul(e)'), $db2->f('count'))));
+                    $nav->setImage('icons/16/grey/learnmodule.png', array('title' => sprintf(_('%s Content-Modul(e)'), $db2->f('count'))));
                 }
 
                 $my_obj[$object_id]['elearning'] = $nav;

@@ -104,7 +104,7 @@ function get_my_sem_values(&$my_sem) {
         while($db2->next_record()) {
             if ($db2->f('count')) {
                 $nav = new Navigation('wiki', 'wiki.php');
-                $nav->setImage('icons/16/grey/wiki.pn', array('title' => sprintf(_('%s WikiSeiten'), $db2->f('count'))));
+                $nav->setImage('icons/16/grey/wiki.png', array('title' => sprintf(_('%s WikiSeiten'), $db2->f('count'))));
                 $my_sem[$db2->f('range_id')]['wiki'] = $nav;
             }
         }

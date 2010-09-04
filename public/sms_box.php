@@ -383,7 +383,7 @@ $query_time = $query_time_sort;
         $count_timefilter = count_x_messages_from_user($sms_data['view'], "all", $query_time_sort." AND folder=''");
         $open = folder_openclose($sms_show['folder'][$sms_data['view']], "all");
         if ($sms_data['tmp']['move_to_folder'] && $open == "close") {
-            $picture = Assets::image_path('icons/16/yellow/arr_2right.png');
+            $picture = 'icons/16/yellow/arr_2right.png';
             $link = $PHP_SELF."?move_folder=free";
         } else {
             $picture = showfoldericon("all", $count);
@@ -393,10 +393,10 @@ $query_time = $query_time_sort;
             $link_add = "&cmd_show=openall";
         }
         $titel = "<a href=\"".$link."\" class=\"tree\" >".$info_text_002."</a>";
-        $symbol = "<a href=\"".$link.$link_add."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$picture."\" border=0></a>";
+        $symbol = "<a href=\"".$link.$link_add."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$picture."\"></a>";
         echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";
         $zusatz = show_nachrichtencount($count, $count_timefilter);
-        printhead(0, 0, $link, $open, FALSE, "<a href=\"".$link.$link_add."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$picture."\" border=0></a>", $titel, $zusatz);
+        printhead(0, 0, $link, $open, FALSE, "<a href=\"".$link.$link_add."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$picture."\"></a>", $titel, $zusatz);
         echo "</tr></table>";
         if (!$move_to_folder) {
             $content_content = "<div align=\"center\">
@@ -433,7 +433,7 @@ $query_time = $query_time_sort;
                     // this folder is open?
                     $open = folder_openclose($sms_show['folder'][$sms_data['view']], $x);
                     if ($sms_data['tmp']['move_to_folder'] && $open == "close") {
-                        $picture = Assets::image_path('icons/16/yellow/arr_2right.png');
+                        $picture = 'icons/16/yellow/arr_2right.png';
                         $link = $PHP_SELF."?move_folder=".$x;
                     } else {
                         $link = $PHP_SELF."?cmd=";
@@ -449,7 +449,7 @@ $query_time = $query_time_sort;
                     $zusatz = show_nachrichtencount($count, $count_timefilter);
                     // display titel
                     echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";
-                    printhead(0, 0, $link, $open, FALSE, "<a href=\"".$link.$link_add."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$picture."\" border=0></a>", $titel, $zusatz);
+                    printhead(0, 0, $link, $open, FALSE, "<a href=\"".$link.$link_add."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$picture."\"></a>", $titel, $zusatz);
                     echo "</tr></table> ";
                     // do we move messages?
                     if (!$move_to_folder) {

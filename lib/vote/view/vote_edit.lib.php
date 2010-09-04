@@ -162,7 +162,7 @@ function printFormStart ( $voteID, $rangeID, $referer ) {
     }
 
     $html = createBoxHeader (FALSE, ' style="width: 100%;"', $task_string,
-                 VOTE_PATH_PICTURES.$type."-icon.gif","","","","",
+                 Assets::image_path($type."-icon.gif"),"","","","",
                  "blank" );
     $html .= "<form action=\"".$GLOBALS['PHP_SELF']."?page=edit&type=".$type."\" name=\"voteform\" method=post>"
     . "<input type=hidden name=\"voteID\" value=\"".$voteID."\">"
@@ -200,11 +200,7 @@ function printTitleField ( $title = "" ) {
 
     $html = "<font size=-1><b>" . _("Titel:")   . "</b></font><br>"
     . "<input type=text size=50 maxlength=100 name=\"title\" value=\"".htmlReady($title)."\" ".$js." tabindex=1>";
-    $html .= "&nbsp;<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
-    . tooltip( _("Wenn Sie keinen Titel angeben, wird dieser automatisch aus der Fragestellung übernommen."),
-           FALSE, TRUE )
-    . " border=0>";
-
+    $html .= Assets::img('icons/16/grey/info-circle.png', tooltip(_("Wenn Sie keinen Titel angeben, wird dieser automatisch aus der Fragestellung übernommen."), FALSE, TRUE));
     $html .= "<br><br>\n";
 
     echo $html;
@@ -441,7 +437,7 @@ function printRightRegion ( ) {
     $action_text3 = _("Wenn Sie zufrieden sind, klicken Sie auf 'speichern'.");
 
     /* -------------------------------------------------------- */
-    $action_array[] = array ( "icon" => "icons/16/black/info.png.gif",
+    $action_array[] = array ( "icon" => "icons/16/black/info.png",
                   "text" => $action_text1 );
 
     if( $type == "test" && $pageMode != MODE_RESTRICTED ) {
@@ -552,12 +548,12 @@ function printRuntimeSettings ( $startMode = "manual",
 
     $html .= "<tr><td colspan=2 style=\"padding-bottom:0;\">\n";
     $html .= "<font size=-1><b>" . _("Einstellungen zur Laufzeit:") . "</b></font>";
-    $html .= "&nbsp;<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
+    $html .= "<img src=\"".Assets::image_path('icons/16/grey/info-circle.png')."\" "
     . tooltip( ($type=="test"
             ? _("Legen Sie hier fest, von wann bis wann der Test in Stud.IP öffentlich sichtbar sein soll.")
             : _("Legen Sie hier fest, von wann bis wann die Umfrage in Stud.IP öffentlich sichtbar sein soll.")),
            FALSE, TRUE )
-    . " border=0>";
+    . ">";
     $html .= "</td></tr>";
 
     $html .= "<tr><td class=steel1 width=\"50%\" valign=top>"
@@ -712,10 +708,10 @@ function printProperties ( $multipleChoice,
     // result visibility
     $html .= "<tr><td align=right class=blank style=\"border-bottom:1px dotted black;\">";
     if( $type == "test" ) {
-    $html .= "<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
+    $html .= "<img src=\"".Assets::image_path('icons/16/grey/info-circle.png')."\" "
         . tooltip(_("Bedenken Sie, dass die Einstellung 'immer', also eine Voransicht des Zwischenstands, bei einem Test nicht unbedingt sinnvoll ist."),
               FALSE, TRUE)
-        . " border=0>&nbsp;";
+        . "> ";
     }
 
     $html .= "<font size=-1>";
@@ -777,9 +773,9 @@ function printProperties ( $multipleChoice,
     // -------------------------------------------
     // anonymity
     $html .= "<tr><td align=right class=blank style=\"border-bottom:1px dotted black;\">";
-    $html .= "<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
+    $html .= "<img src=\"".Assets::image_path('icons/16/grey/info-circle.png')."\" "
     . tooltip(_("'Anonym' bedeutet, dass niemandem angezeigt und nirgends gespeichert wird, welche Antwort ein Teilnehmer wählt. \n\n'Personalisiert' bedeutet, dass Sie sehen können, wer wofür stimmt."), FALSE, TRUE)
-    . " border=0>&nbsp;";
+    . "> ";
 
     $html .= "<font size=-1>";
     $html .= ($type=="test")
@@ -804,10 +800,10 @@ function printProperties ( $multipleChoice,
     // -------------------------------------------
     // names visibility
     $html .= "<tr><td align=right class=blank style=\"border-bottom:1px dotted black;\">";
-    $html .= "<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
+    $html .= "<img src=\"".Assets::image_path('icons/16/grey/info-circle.png')."\" "
     . tooltip(_("Diese Option ist nur möglich, wenn Sie die Auswertung auf 'personalisiert' schalten, und wenn die Ergebnissichtbarkeit nicht auf 'nie' steht. "),
           FALSE, TRUE)
-    . " border=0>&nbsp;";
+    . "> ";
 
     $html .= "<font size=-1>";
     $html .= _("Die Namen der Teilnehmer werden &ouml;ffentlich sichtbar gemacht:") . "</font>&nbsp;&nbsp;";
@@ -827,13 +823,13 @@ function printProperties ( $multipleChoice,
     // changeable?
     if( ! ($anonymous && $pageMode == MODE_RESTRICTED ) ) {
     $html .= "<tr><td align=right class=blank>";
-    $html .= "<img src=\"".VOTE_PATH_PICTURES."icons/16/grey/info-circle.png\" align=middle "
+    $html .= "<img src=\"".Assets::image_path('"icons/16/grey/info-circle.png')."\" "
         . tooltip(_("Diese Option ist nur möglich, wenn Sie die Auswertung auf 'personalisiert' schalten. ").
               ( ($type=="test")
             ? _("\n\nBeachten Sie außerdem, dass das Einschalten dieser Option in Kombination mit 'Richtigkeits-Anzeige: sofort' keinen Sinn macht.")
             : "" ),
               FALSE, TRUE)
-        . " border=0>&nbsp;";
+        . "> ";
 
     $html .= "<font size=-1>";
     $html .= _("Der Teilnehmer darf seine gegebene(n) Antwort(en) beliebig oft revidieren:");
@@ -896,13 +892,12 @@ function printFormEnd ( ) {
  * @param   bool $option    the condition
  * @returns string          the HTML <img.. tag
  */
-function image_if_true( $option ) {
-
-    if( $option )
-    return "&nbsp;<img width=11 height=12 src=\"".VOTE_PATH_PICTURES."symbol01.gif\" border=0 alt=\"x\">&nbsp;";
+function image_if_true($option)
+{
+    if ($option)
+        return Assets::img('icons/16/grey/decline.png');
     else
-    return "&nbsp;<img width=11 height=12 src=\"".VOTE_PATH_PICTURES."blank.gif\" border=0 alt=\"\">&nbsp;";
-
+        return " <img width=16 height=16 src=\"".Assets::image_path('blank.gif')."\"> ";
 }
 
 ?>

@@ -791,7 +791,7 @@ function createVoteResult ($vote, $preview = NO)
 
    $html .= " </table>\n";
    $html .= "</div>\n";
-   $html .= "<img src=\"".VOTE_PATH_PICTURES."blank.gif\" width=1 height=5 border=0 alt=\"\"><br>";
+   $html .= "<br>";
 
    return $html;
 }

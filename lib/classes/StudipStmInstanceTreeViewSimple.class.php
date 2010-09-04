@@ -5,8 +5,8 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // StudipStmInstanceTreeViewSimple.class.php
-// 
-// Copyright (c) 2003 André Noack <noack@data-quest.de> 
+//
+// Copyright (c) 2003 André Noack <noack@data-quest.de>
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -34,14 +34,14 @@ require_once("config.inc.php");
 *
 * @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 */
 class StudipStmInstanceTreeViewSimple {
 
-    
+
     var $tree;
     var $show_entries;
-    
+
     /**
     * constructor
     *
@@ -59,7 +59,7 @@ class StudipStmInstanceTreeViewSimple {
             $this->start_item_id = "root";
         }
     }
-    
+
     function showStmInstanceTree(){
         echo "\n<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
         echo "\n<tr><td class=\"steelgraulight\" align=\"left\" valign=\"top\" style=\"font-size:10pt;\">"
@@ -79,7 +79,7 @@ class StudipStmInstanceTreeViewSimple {
         $this->showContent($this->start_item_id);
         echo "\n</td></tr></table>";
     }
-    
+
     function showKids($item_id){
         $num_kids = $this->tree->getNumKids($item_id);
         $kids = $this->tree->getKids($item_id);
@@ -103,20 +103,20 @@ class StudipStmInstanceTreeViewSimple {
         }
         echo "\n</td></tr></table>";
     }
-    
+
     function getTooltip($item_id){
         return '';
     }
-    
+
     function showContent($item_id){
         echo "\n<div align=\"center\" style=\"margin-left:10px;margin-top:10px;margin-bottom:10px;font-size:10pt\">";
         if ($item_id != "root"){
             if ($this->tree->hasKids($item_id) && ($num_entries = $this->tree->getNumEntries($this->start_item_id,true))){
                 if ($this->show_entries != "sublevels"){
                     echo "<a " . tooltip(_("alle Einträge in allen Unterebenen anzeigen")) ." href=\"" . $this->getSelf("cmd=show_stm_tree&item_id={$this->start_item_id}_withkids") ."\">";
-                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1right.pngf\" border=\"0\">&nbsp;";
+                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1right.png\">&nbsp;";
                 } else {
-                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1down.png\" border=\"0\">&nbsp;";
+                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1down.png\">&nbsp;";
                 }
                 printf(_("<b>%s</b> Eintr&auml;ge in allen Unterebenen vorhanden"), $num_entries);
                 if ($this->show_entries != "sublevels"){
@@ -127,9 +127,9 @@ class StudipStmInstanceTreeViewSimple {
             if ($num_entries = $this->tree->getNumEntries($item_id)){
                 if ($this->show_entries != "level"){
                     echo "<a " . tooltip(_("alle Einträge auf dieser Ebene anzeigen")) ." href=\"" . $this->getSelf("cmd=show_stm_tree&item_id=$item_id") ."\">";
-                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1right.png\" border=\"0\">&nbsp;";
+                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1right.png\">&nbsp;";
                 } else {
-                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1down.png\" border=\"0\">&nbsp;";
+                    echo "<img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/blue/arr_1down.png\">&nbsp;";
                 }
                 printf(_("<b>%s</b> Eintr&auml;ge auf dieser Ebene.&nbsp;"),$num_entries);
                 if ($this->show_entries != "level"){
@@ -141,12 +141,12 @@ class StudipStmInstanceTreeViewSimple {
         }
         echo "\n</div>";
     }
-    
+
     function getSemPath(){
-        
+
         if ($parents = $this->tree->getParents($this->start_item_id)){
             for($i = count($parents)-1; $i >= 0; --$i){
-                $ret .= "&nbsp;&gt;&nbsp;<a href=\"" . $this->getSelf("start_item_id={$parents[$i]}",false) 
+                $ret .= "&nbsp;&gt;&nbsp;<a href=\"" . $this->getSelf("start_item_id={$parents[$i]}",false)
                     . "\">" .htmlReady($this->tree->tree_data[$parents[$i]]["name"]) . "</a>";
             }
         }
@@ -154,14 +154,14 @@ class StudipStmInstanceTreeViewSimple {
             $ret = "&nbsp;&gt;&nbsp;<a href=\"" . $this->getSelf("start_item_id=root",false) . "\">" .htmlReady($this->tree->root_name) . "</a>";
         } else {
             $ret .= "&nbsp;&gt;&nbsp;<a href=\"" . $this->getSelf("start_item_id={$this->start_item_id}",false) . "\">" . htmlReady($this->tree->tree_data[$this->start_item_id]["name"]) . "</a>";
-        
+
         }
         //$ret .= "&nbsp;<a href=\"#\" " . tooltip(kill_format($this->getTooltip($this->start_item_id)),false,true) . "><img src=\"{$GLOBALS['ASSETS_URL']}images/icons/16/grey/info-circle.png\" border=\"0\" align=\"absmiddle\"></a>";
         return $ret;
     }
 
-    
-    
+
+
     function getSelf($param = "", $with_start_item = true){
         if ($param)
             $url = $GLOBALS['PHP_SELF'] . (($with_start_item) ? "?start_item_id=" . $this->start_item_id . "&" : "?") . $param ;

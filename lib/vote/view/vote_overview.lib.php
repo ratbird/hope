@@ -46,7 +46,7 @@ function printSafeguard($sign,$text,$mode = NULL, $voteID = NULL, $showrangeID =
           . "    <td width=\"34\" valign=\"middle\" style=\"vertical-align:middle;\">\n";//style=\"vertical-align:top;\"
     $color = "";
     if ($sign != ""){
-        $html .="     <img src=\"".VOTE_PATH_PICTURES."$sign.gif\" alt=\"$sign.gif\" =\"middle\">\n";
+        $html .="     <img src=\"".Assets::image_path($sign.'.gif')."\">\n";
         if ($sign == "ausruf")
             $color = VOTE_COLOR_ERROR;
         elseif ($sign == "ok")
@@ -176,12 +176,14 @@ $html = "\n" . $cssSw->GetHoverJSFunction() . "\n";
  * @param $range    array An array with alle accessable rangeIDs [0] and the titles [1]
  * @param $sarchRange   string The ID of the range to display
  */
-function printSelections($range,$sarchRange = "",$safeguard = NULL){
+function printSelections($range,$sarchRange = "",$safeguard = NULL)
+{
     global $rangemode,$label,$showrangeID;
+
     $arraysize = count($range);
 
     $bgimage = "     <td class=\"blank\" width=\"270\" rowspan=\"4\" align=\"center\" valign=\"top\" style=\"vertical-align:top;\">"
-         . "      <img src=\"".VOTE_PATH_PICTURES."infobox/voting.jpg\" alt=\"".$label["sitetitle_title"]."\" align=\"middle\" border=\"0\">\n"
+         . "      <img src=\"".Assets::image_path('infobox/voting.jpg')."\" alt=\"".$label["sitetitle_title"]."\">\n"
          . "     </td>\n";
 
     $html = "<table border=\"0\" class=\"blank\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
@@ -467,7 +469,7 @@ reset($votes);
         elseif (($mode == VOTE_STATE_STOPPED) && ($openID == ("openallstopped")))
             $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID")."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1up.png')."\" alt=\"".$label["arrow_close_all"]."\" title=\"".$label["arrow_close_all"]."\" border=0></a> \n";
         else
-            $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID&openID=openall".$mode."#openvote")."\"><img src=\"".VOTE_PATH_PICTURES."images/icons/16/blue/arr_1down.png\" alt=\"".$label["arrow_open_all"]."\" title=\"".$label["arrow_open_all"]."\" border=0></a> \n";
+            $html .="     <a href=\"".URLHelper::getLink("?showrangeID=$showrangeID&openID=openall".$mode."#openvote")."\"><img src=\"".Assets::image_path('icons/16/blue/arr_1down.png')."\" alt=\"".$label["arrow_open_all"]."\" title=\"".$label["arrow_open_all"]."\"></a> \n";
         $html .="    </center></td>\n"
               . "   </tr>\n";
     }
@@ -533,7 +535,7 @@ function makeTableHeaderCell($text = "&nbsp;", $width = "5%", $align = "center",
  * @return string a string with a table-head
 */
 function makeTableDataCell($text = "&nbsp;", $class = "steel1", $align = "center", $width = "5%", $colspan = "1"){
-    if ($text == "blindgif") $text = "<img width=\"$width\" height=\"1\" src=\"".VOTE_PATH_PICTURES."blank.gif\" alt=\"\">";
+    if ($text == "blindgif") $text = "<img width=\"$width\" height=\"1\" src=\"".Assets::image_path('blank.gif')."\" alt=\"\">";
     $html = "    <td class=\"$class\" align=\"$align\" width=\"$width\" colspan=\"$colspan\">\n"
           . "     <font size=\"-1\">$text</font>\n"
           . "    </td>\n";

@@ -69,34 +69,34 @@ function print_module_icons ($m_enabled) {
     foreach ($m_enabled as $m_name => $m_data) {
         switch ($m_name) {
             case 'news' :
-                $m_icon = Assets::image_path('images/16/icons/white/news.png');
+                $m_icon = Assets::image_path('icons/16/white/news.png');
                 break;
             case 'forum' :
-                $m_icon = Assets::image_path('images/16/icons/white/forum.png');
+                $m_icon = Assets::image_path('icons/16/white/forum.png');
                 break;
             case 'documents' :
-                $m_icon = Assets::image_path('images/16/icons/white/files.png');
+                $m_icon = Assets::image_path('icons/16/white/files.png');
                 break;
             case 'schedule' :
-                $m_icon = Assets::image_path('images/16/icons/white/schedule.png');
+                $m_icon = Assets::image_path('icons/16/white/schedule.png');
                 break;
             case 'literature' :
-                $m_icon = Assets::image_path('images/16/icons/white/literature.png');
+                $m_icon = Assets::image_path('icons/16/white/literature.png');
                 break;
             case 'elearning_interface' :
-                $m_icon = Assets::image_path('images/16/icons/white/learnmodule.png');
+                $m_icon = Assets::image_path('icons/16/white/learnmodule.png');
                 break;
             case 'wiki' :
-                $m_icon = Assets::image_path('images/16/icons/white/wiki.png');
+                $m_icon = Assets::image_path('icons/16/white/wiki.png');
                 break;
             case 'scm' :
-                $m_icon = Assets::image_path('images/16/icons/white/infopage.png');
+                $m_icon = Assets::image_path('icons/16/white/infopage.png');
                 break;
             case 'votes' :
-                $m_icon = Assets::image_path('images/16/icons/white/vote.png');
+                $m_icon = Assets::image_path('icons/16/white/vote.png');
                 break;
             case 'basic_data' :
-                $m_icon = Assets::image_path('images/16/icons/white/seminar.png');
+                $m_icon = Assets::image_path('icons/16/white/seminar.png');
                 break;
             default :
                 break;
@@ -229,12 +229,12 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
                 $out .= '<a class="tree" style="font-weight:bold" name="' . $group_id;
                 $out .= '" href="' . $PHP_SELF . '?close_my_sem=' . $group_id;
                 $out .= '#' .$group_id . '" ' . tooltip(_("Gruppierung schließen"), true) . '>';
-                $out .= '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/arr_1down.png"   hspace="3" border="0">';
+                $out .= Assets::img('icons/16/blue/arr_1down.png');
             } else {
                 $out .= '<a class="tree"  name="' . $group_id . '" href="' . $PHP_SELF;
                 $out .= '?open_my_sem=' . $group_id . '#' .$group_id;
                 $out .= '" ' . tooltip(_("Gruppierung öffnen"), true) . '>';
-                $out .= '<img src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/blue/arr_1right.png"  hspace="3" border="0">';
+                $out .= Assets::img('icons/16/blue/arr_1right.png');
             }
             if (is_array($group_names[$group_id])){
                 $group_name = $group_names[$group_id][1] . " > " . $group_names[$group_id][0];

@@ -1,5 +1,9 @@
 <TR>
-    <TD width="1%" align="right" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap"><A href="<?= URLHelper::getLink('?cmd='. ($issue_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>"><IMG src="<?=$GLOBALS['ASSETS_URL'].(($issue_open[$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1down.png' : 'images/icons/16/blue/arr_1right.png')?>.png"></A></TD>
+    <TD width="1%" align="right" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap">
+        <A href="<?= URLHelper::getLink('?cmd='. ($issue_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
+        <IMG src="<?=$GLOBALS['ASSETS_URL'].(($issue_open[$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1down.png' : 'images/icons/16/blue/arr_1right.png')?>">
+        </A>
+    </TD>
     <TD width="1%" align="right" valign="top" class="<?=$tpl['class']?>" nowrap="nowrap">
         <A name="<?=$tpl['sd_id']?>" />
         <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" border="0" class="text-bottom">&nbsp;

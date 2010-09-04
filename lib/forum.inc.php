@@ -541,7 +541,7 @@ function ForumIcon ($forumposting) {
     }
     if ($cmd=="move" && $rechte && $topic_id != $forumposting["id"] )  // ein Beitrag wird verschoben, gelbe Pfeile davor
         $forumposting["icon"] =  "<a href=\"".URLHelper::getLink("?target=Thema&move_id=".$topic_id."&parent_id=".$forumposting["id"])."\">"
-                    ."<img src=\"".$GLOBALS['ASSETS_URL']."images/16/yellow/arr_2right.png\" border=0 " . tooltip(_("Postings in dieses Thema verschieben")) . "></a>"
+                    ."<img src=\"".$GLOBALS['ASSETS_URL']."icons/16/yellow/arr_2right.png\" border=0 " . tooltip(_("Postings in dieses Thema verschieben")) . "></a>"
                     .$forumposting["icon"];
     return $forumposting;
 }

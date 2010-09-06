@@ -626,7 +626,7 @@ STUDIP.Dialogbox = {
 };
 
 jQuery('.forum-icon').live('mouseenter', function () {
-  STUDIP.Dialogbox.openForumPosting( $(this).metadata().forumid, this);
+  STUDIP.Dialogbox.openForumPosting($(this).metadata().forumid, this);
 }).live('mouseleave', function () {
   STUDIP.Dialogbox.closeForumPosting();
 });
@@ -986,11 +986,11 @@ STUDIP.QuickSearch = {
    * @return: void
    */
   autocomplete: function (name, url, func, title) {
-      if (title) {
-	    jQuery('#' + name).attr("value", title)
-	                      .css("opacity", 0.7);
-      }
-      jQuery('#' + name).autocomplete({
+    if (title) {
+      jQuery('#' + name).attr("value", title)
+                        .css("opacity", 0.7);
+    }
+    jQuery('#' + name).autocomplete({
       disabled: true,
       source: function (input, add) {
         //get the variables that should be sent:
@@ -1069,7 +1069,7 @@ STUDIP.Browse = {
   selectUser: function (username, name) {
     location.href = STUDIP.URLHelper.getURL("about.php", {"username": username});
   }
-}
+};
 
 /* ------------------------------------------------------------------------
  * application wide setup
@@ -1088,7 +1088,7 @@ jQuery(function () {
 
   // autofocus for all browsers
   if (!("autofocus" in document.createElement("input"))) {
-	  jQuery('[autofocus]').first().focus();
+    jQuery('[autofocus]').first().focus();
   }
 
   jQuery('textarea.resizable').resizable({
@@ -1104,7 +1104,7 @@ jQuery(function () {
 
   jQuery('table.collapsable .toggler').click(function () {
 
-  jQuery(this).closest('tbody').toggleClass('collapsed');
+    jQuery(this).closest('tbody').toggleClass('collapsed');
     return false;
   }).closest('.collapsable').find('tbody').filter(':not(.open)').find('.toggler').click();
 

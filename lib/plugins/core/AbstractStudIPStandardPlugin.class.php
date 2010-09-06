@@ -41,7 +41,7 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
         $navigation->insertSubNavigation('self', $navigation_copy, $item_names[0]);
         $navigation->setTitle($this->getDisplayTitle());
 
-        if (Navigation::hasItem('/course')) {
+        if (Navigation::hasItem('/course') && $this->isActivated()) {
             Navigation::addItem('/course/' . $this->getPluginclassname(), $navigation);
         }
     }

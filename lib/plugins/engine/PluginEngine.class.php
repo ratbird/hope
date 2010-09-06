@@ -50,14 +50,14 @@ class PluginEngine {
      * loaded here may change in the future.
      */
     public static function loadPlugins() {
-        global $SessionSeminar, $user, $perm;
+        global $user, $perm;
 
         // load homepage plugins
         self::getPlugins('HomepagePlugin');
 
-        // load activated course plugins
-        if (isset($SessionSeminar)) {
-            self::getPlugins('StandardPlugin', $SessionSeminar);
+        // load course plugins
+        if (isset($_SESSION['SessionSeminar'])) {
+            self::getPlugins('StandardPlugin');
         }
 
         // load admin plugins

@@ -60,11 +60,15 @@ abstract class StudIPPlugin {
      * Get the activation status of this plugin in the given context.
      * This also checks the plugin default activations.
      *
-     * @param $context   context range id
+     * @param $context   context range id (optional)
      */
-    public function isActivated($context) {
+    public function isActivated($context = NULL) {
         $plugin_id = $this->getPluginId();
         $plugin_manager = PluginManager::getInstance();
+
+        if (!isset($context)) {
+            $context = $_SESSION['SessionSeminar'];
+        }
 
         return $plugin_manager->isPluginActivated($plugin_id, $context);
     }

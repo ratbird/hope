@@ -49,16 +49,23 @@ class Admin_ConfigurationController extends AuthenticatedController
      */
     function configuration_action($section = null)
     {
+        PageLayout::setTitle(_('Verwaltung von Systemkonfigurationen'));
+
         $config_filter = Request::option('config_filter', null);
         if ($config_filter == '-1') {
             $config_filter = null;
         }
-        $this->config_filter = $config_filter;
-        // set variables for view
-        PageLayout::setTitle(_('Verwaltung von Systemkonfigurationen'));
 
+        // set variables for view
+        $this->config_filter = $config_filter;
         $this->allconfigs = ConfigurationModel::getConfig();
         $this->current_section = $section;
+        $this->allsections = array_keys($this->allconfigs);
+
+        // adjust variables if neccessary
+        if (!is_null($config_filter)) {
+            $this->allconfigs = array($config_filter => $this->allconfigs[$config_filter]);
+        }
     }
 
     /**

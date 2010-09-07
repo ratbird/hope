@@ -290,62 +290,59 @@ td.tree-elbow-end img {
 }
 
 /** table.collapsable **/
-table.collapsable tbody.collapsed tr {
+
+
+.collapsable > .collapsed > tr {
     display: none;
 }
 
-table.collapsable tbody.collapsed tr:first-child {
+.collapsable > .collapsed > tr:first-child {
     display: table-row;
 }
 
-table.collapsable tbody.collapsed tr:first-child td,
-table.collapsable tbody.empty tr:first-child td {
+.collapsable > .collapsed > tr:first-child > td,
+.collapsable > .empty > tr:first-child > td {
     border-bottom: 0;
 }
 
-table.collapsable tbody tr td:first-child,
-table.collapsable tbody tr:first-child td:first-child a,
-table.collapsable tbody.empty tr:first-child td:first-child {
+.collapsable td:first-child,
+.collapsable tr:first-child > td:first-child a,
+.collapsable > .empty > tr:first-child > td:first-child {
     padding-left: 20px;
 }
 
-table.collapsable tbody tr:first-child td:first-child {
+.collapsable tr:first-child > td:first-child {
     color: #000;
     font-weight: bold;
     padding-left: 0;
 }
 
-table.collapsable tbody tr:first-child td:first-child a {
-    background: url(../images/icons/16/blue/arr_1down.png) no-repeat;
-    background-position: left center;
+.collapsable tr:first-child > td:first-child a {
+    background: url(../images/icons/16/blue/arr_1down.png) left center no-repeat;
     color: #000;
 }
 
-table.collapsable tbody.collapsed tr:first-child td:first-child a {
-    background: url(../images/icons/16/blue/arr_1right.png) no-repeat;
-    background-position: left center;
-    color: #000;
+.collapsable > .collapsed > tr:first-child > td:first-child a {
+    background-image: url(../images/icons/16/blue/arr_1right.png);
     font-weight: normal;
 }
 
-table.collapsable tbody.empty tr:first-child td:first-child {
-    background: url(../images/icons/16/grey/arr_1right.png) no-repeat;
-    background-position: left center;
+.collapsable > .empty > tr:first-child > td:first-child {
+    background: url(../images/icons/16/grey/arr_1right.png) left center no-repeat;
 }
 
 /* Table details */
-table tr.loaded-details > td {
-    padding: 0 20px 5px 20px;
+.loaded-details > td {
+    padding: 0 20px 5px 20px !important;
 }
-table tr.loaded-details td table {
+.loaded-details table {
     border: 1px solid #888;
     border-top: 0;
 }
-table tr.loaded-details td:first-child tr:first-child td:first-child {
+.loaded-details td:first-child tr:first-child td:first-child {
     font-weight: normal;
-}
-table.collapsable tr.loaded-details td:first-child tr:first-child td:first-child {
     padding-left: 20px;
+    padding-top: 0;
 }
 
 /* --- Sonstige ------------------------------------------------------------- */

@@ -1100,33 +1100,38 @@ jQuery(function () {
 /* ------------------------------------------------------------------------
  * application collapsable tablerows
  * ------------------------------------------------------------------------ */
-jQuery(function () {
+jQuery(function ($) {
 
-  jQuery('table.collapsable .toggler').click(function () {
-
-    jQuery(this).closest('tbody').toggleClass('collapsed');
-    return false;
-  }).closest('.collapsable').find('tbody').filter(':not(.open)').find('.toggler').click();
-
-  jQuery('a.load-in-new-row').live('click', function () {
-    if ($(this).closest('tr').next().hasClass('loaded-details')) {
-      jQuery(this).closest('tr').next().remove();
-      return false;
-    }
-    var that = this;
-    jQuery(that).showAjaxNotification();
-    var row = jQuery('<tr />').addClass('loaded-details'),
-    cell = jQuery('<td />').attr('colspan', jQuery(this).closest('td').siblings().length + 1).appendTo(row);
-    jQuery(this).closest('tr').after(row);
-    jQuery.get(jQuery(this).attr('href'), function (response) {
-      cell.html(response);
-      jQuery(that).hideAjaxNotification();
-    });
+  $('table.collapsable .toggler').focus(function () {
+    $(this).blur();	
+  }).click(function () {
+    $(this).closest('tbody').toggleClass('collapsed');
     return false;
   });
 
-  jQuery('.loaded-details a.cancel').live('click', function () {
-    jQuery(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
+  $('a.load-in-new-row').live('click', function () {
+    if ($(this).closest('tr').next().hasClass('loaded-details')) {
+      $(this).closest('tr').next().remove();
+      return false;
+    }
+    $(this).showAjaxNotification();
+
+    var that = this;
+    $.get( $(this).attr('href'), function (response) {
+      var row = $('<tr />').addClass('loaded-details'),
+        cell = $('<td />')
+          .attr('colspan', $(that).closest('td').siblings().length + 1)
+          .html(response)
+          .appendTo(row);
+      $(that).hideAjaxNotification()
+        .closest('tr').after(row);
+    });
+
+    return false;
+  });
+
+  $('.loaded-details a.cancel').live('click', function () {
+    $(this).closest('.loaded-details').prev().find('a.load-in-new-row').click();
     return false;
   });
 

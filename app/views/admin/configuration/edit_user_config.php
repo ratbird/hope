@@ -21,7 +21,7 @@
             <td><?= htmlReady($search_user['description'])?></td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-            <td></td>
+            <td>&nbsp;</td>
             <td>
                 <?= makeButton('uebernehmen2','input',_('Änderungen übernehmen'),'uebernehmen') ?>
                 <a class="cancel" href="<?=$controller->url_for('admin/configuration/configuration')?>"><?= makebutton('abbrechen', 'img', _('Zurück zur Übersicht'))?></a>

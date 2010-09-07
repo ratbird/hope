@@ -1,20 +1,28 @@
-<?= (isset($flash['success']))?MessageBox::info($flash['success']):'' ?>
-<?= (isset($flash['error']))?MessageBox::error($flash['error'], $flash['error_detail']):'' ?>
-<? if (empty($via_ajax)): ?>
-<h2><?=_("Bearbeiten von Konfigurationsparameter")?></h2>
+<? if (isset($flash['success'])): ?>
+    <?= MessageBox::info($flash['success']) ?>
 <? endif; ?>
+<? if (isset($flash['error'])): ?>
+    <?= MessageBox::error($flash['error'], $flash['error_detail']) ?>
+<? endif; ?>
+
+<? if (empty($via_ajax)): ?>
+<h2><?= _("Bearbeiten von Konfigurationsparameter") ?></h2>
+<? endif; ?>
+
 <form action="<?= $controller->url_for('admin/configuration/edit_configuration/'.$edit['config_id']) ?>" method=post>
     <table class="default">
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-            <td><?=_("Name")?> (<em>field</em>): </td>
+            <td><?= _("Name") ?>:</td>
             <td><?= htmlReady($edit['field'])?></td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-            <td><?=_("Inhalt")?> (<em>value</em>): </td>
+            <td><?= _("Inhalt") ?>:</td>
             <td>
-                <? if ($edit['type'] == 'string'): ''?><textarea cols="55" rows="4" name="value"><?= htmlReady($edit['value'])?></textarea>
-                <? elseif ($edit['type'] == 'integer'): ''?> <input class="allow-only-numbers" name="value" type="text" value="<?= htmlReady($edit['value'])?>" />
-                <? elseif ($edit['type'] == 'boolean'): ''?>
+            <? if ($edit['type'] == 'string'): ?>
+                <textarea cols="55" rows="4" name="value"><?= htmlReady($edit['value'])?></textarea>
+            <? elseif ($edit['type'] == 'integer'): ?>
+                <input class="allow-only-numbers" name="value" type="text" value="<?= htmlReady($edit['value'])?>" />
+            <? elseif ($edit['type'] == 'boolean'): ?>
                 <select name="value">
                     <option value = "1" <?= $edit['value'] ? 'selected="selected"' : '' ?> style="background: url(<?= Assets::image_path('icons/16/green/accept.png') ?>) right center no-repeat">
                         TRUE
@@ -23,44 +31,39 @@
                         FALSE
                     </option>
                 </select>
-                <? endif; ?>
+            <? endif; ?>
             </td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-            <td><?=_("Beschreibung")?> (<em>description</em>): </td>
+            <td><?= _("Beschreibung") ?>:</td>
             <td><?= htmlReady($edit['description'])?></td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-            <td><?=_("Kommentar")?> (<em>comment</em>): </td>
-            <td><textarea cols="55" rows="4" name="comment"><?= htmlReady($edit['comment'])?></textarea></td>
+            <td><?= _("Kommentar") ?>:</td>
+            <td><textarea cols="55" rows="4" name="comment"><?= htmlReady($edit['comment']) ?></textarea></td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-            <td><?=_("Standard")?> (<em>is_default</em>): </td>
+            <td><?= _("Standard") ?>:</td>
             <td>
-                <? if ($edit['is_default'] == 1): ''?> TRUE
-                <? elseif ($edit['is_default'] == 0): ''?> FALSE
-                <? elseif ($edit['is_default'] == NULL): ''?> <?= _('<em>-kein Eintrag vorhanden</em>')?>
-                <? endif; ?>
-            </td>
-        </tr>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-            <td>
-                <?=_("Typ")?> (<em>type</em>):
-            </td>
-            <td>
-                <?= $edit['type']?>
+            <? if ($edit['is_default'] == 1): ?>
+                TRUE
+            <? elseif ($edit['is_default'] == 0): ?>
+                FALSE
+            <? elseif ($edit['is_default'] == NULL): ?>
+                <em>- <?= _('kein Eintrag vorhanden') ?> -</em>
+            <? endif; ?>
             </td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-            <td>
-                <?=_("Bereich")?> (<em>range</em>):
-            </td>
-            <td>
-                <?= $edit['range']?>
-            </td>
+            <td><?= _("Typ") ?></td>
+            <td><?= $edit['type'] ?></td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-            <td><label for="section"><?=_("Kategorie")?> (<em>section</em>):</label></td>
+            <td><?= _("Bereich") ?>:</td>
+            <td><?= $edit['range'] ?></td>
+        </tr>
+        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <td><label for="section"><?= _("Kategorie") ?>:</label></td>
             <td>
                 <select name= "section" onchange="$(this).next('input').val( $(this).val() );">
                 <? foreach (array_keys($allconfigs) as $section): ?>
@@ -71,14 +74,16 @@
                 <? endforeach; ?>
                 </select>
                 <input type="text" name="section_new" id="section">
-                <?= _('(<em>Bitte die neue Kategorie eingeben</em>)')?>
+                (<em><?= _('Bitte die neue Kategorie eingeben')?></em>)
            </td>
         </tr>
         <tr class="steel2">
-            <td></td>
+            <td>&nbsp;</td>
             <td>
                 <?= makeButton('uebernehmen2','input',_('Änderungen übernehmen'),'uebernehmen') ?>
-                <a class="cancel" href="<?=$controller->url_for('admin/configuration/configuration')?>"><?= makebutton('abbrechen', 'img', _('Zurück zur Übersicht'))?></a>
+                <a class="cancel" href="<?= $controller->url_for('admin/configuration/configuration') ?>">
+                    <?= makebutton('abbrechen', 'img', _('Zurück zur Übersicht')) ?>
+                </a>
             </td>
         </tr>
     </table>

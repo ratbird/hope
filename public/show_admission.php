@@ -55,12 +55,12 @@ function semadmission_get_data($seminare_condition){
     if ($institut_id == "all"  && $perm->have_perm("root")){
         $query = "SELECT * FROM seminare WHERE 1 $seminare_condition ORDER BY admission_group DESC, start_time DESC, Name";
     } elseif ($all == 'all'){
-        $query = "SELECT seminare.* FROM seminare LEFT JOIN seminar_inst USING (Institut_id)
-        INNER JOIN Institute ON seminar_inst.institut_id = Institute.Institut_id WHERE Institute.fakultaets_id  = '{$institut_id}' $seminare_condition 
+        $query = "SELECT seminare.* FROM seminare
+        JOIN Institute USING ( Institut_id ) WHERE Institute.fakultaets_id  = '{$institut_id}' $seminare_condition 
         GROUP BY seminare.Seminar_id ORDER BY admission_group DESC, start_time DESC, Name";
     }else{
-        $query = "SELECT seminare.* FROM seminare LEFT JOIN seminar_inst USING (Institut_id)
-        WHERE seminar_inst.institut_id = '{$institut_id}' $seminare_condition 
+        $query = "SELECT seminare.* FROM seminare
+        WHERE seminare.Institut_id = '{$institut_id}' $seminare_condition 
         GROUP BY seminare.Seminar_id ORDER BY admission_group DESC, start_time DESC, Name";
     }
     

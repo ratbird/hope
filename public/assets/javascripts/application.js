@@ -1117,7 +1117,7 @@ jQuery(function ($) {
     $(this).showAjaxNotification();
 
     var that = this;
-    $.get( $(this).attr('href'), function (response) {
+    $.get($(this).attr('href'), function (response) {
       var row = $('<tr />').addClass('loaded-details'),
         cell = $('<td />')
           .attr('colspan', $(that).closest('td').siblings().length + 1)

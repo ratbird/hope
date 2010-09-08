@@ -384,8 +384,7 @@ class StudipMail
                 $text_message = _("Diese Nachricht ist im HTML-Format verfasst. Sie benötigen eine E-Mail-Anwendung, die das HTML-Format anzeigen kann.");
             }
             $transporter->CreateQuotedPrintableTextPart($transporter->WrapText($text_message), "", $text_part);
-        $t = array($text_part, $html_part);
-            $transporter->AddAlternativeMultipart($t);
+            $transporter->AddAlternativeMultipart($part = array($text_part, $html_part));
         } else {
             $transporter->AddQuotedPrintableTextPart($this->getBodyText());
         }

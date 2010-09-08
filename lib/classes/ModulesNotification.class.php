@@ -204,7 +204,6 @@ class ModulesNotification extends Modules {
         get_my_obj_values($my_sem, $user_id);
 
         $news = array();
-        $cssSw = new cssClassSwitcher;
         foreach ($my_sem as $seminar_id => $s_data) {
             $m_notification = ($s_data['modulesInt'] + $m_extended)
                     & $m_all_notifications[$seminar_id];
@@ -221,15 +220,20 @@ class ModulesNotification extends Modules {
                 $news[$s_data['name']] = $n_data;
             }
         }
-        $template = $GLOBALS['template_factory']->open('mail_notification_html');
-        $template->set_attribute('lang', getUserLanguagePath($user_id));
-        $template->set_attribute('news', $news);
-        $template->set_attribute('cssSw', $cssSw);
+        if (count($news)) {
+            $cssSw = new cssClassSwitcher;
+            $template = $GLOBALS['template_factory']->open('mail_notification_html');
+            $template->set_attribute('lang', getUserLanguagePath($user_id));
+            $template->set_attribute('news', $news);
+            $template->set_attribute('cssSw', $cssSw);
 
-        $template_text = $GLOBALS['template_factory']->open('mail_notification_text');
-        $template_text->set_attribute('news', $news);
+            $template_text = $GLOBALS['template_factory']->open('mail_notification_text');
+            $template_text->set_attribute('news', $news);
 
-        return array('text'=>$template_text->render(), 'html'=>$template->render());;
+            return array('text'=>$template_text->render(), 'html'=>$template->render());;
+        } else {
+            return FALSE;
+        }
     }
 
     // only range = 'sem' is implemented

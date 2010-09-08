@@ -76,7 +76,7 @@ if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && $newmsgset_x)
     $user_cfg->store("FOAF_SHOW_IDENTITY", (int)isset($foaf_show_identity));
     $user_cfg->store("ONLINE_NAME_FORMAT", $_REQUEST['online_format']);
     $user_cfg->store("CHAT_USE_AJAX_CLIENT", (int)($_REQUEST['chat_client_version'] == 'ajax'));
-    $user_cfg->store("MAIL_AS_HTML", ($_REQUEST['mail_format'] == 'html' ? 'yes' : 'no'));
+    $user_cfg->store("MAIL_AS_HTML", (Request::option('mail_format') == 'html' ? 'yes' : 'no'));
 
     $my_messaging_settings["changed"] = TRUE;
     $my_messaging_settings["show_only_buddys"] = $show_only_buddys;
@@ -229,17 +229,16 @@ function change_messaging_view()
                         </font>
                     </td>
                 </tr>
-        <tr  <? $cssSw->switchClass() ?>>
+                <tr  <? $cssSw->switchClass() ?>>
                   <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                     <font size="-1"><?print _("Email in folgendem Format versenden");?></font>
                   </td>
                   <td <?=$cssSw->getFullClass()?>>
-                     <INPUT TYPE="radio" NAME="mail_format" VALUE="text" <?=($user_cfg->getValue('MAIL_AS_HTML') == 'no' || !$user_cfg->getValue('MAIL_AS_HTML') ? 'CHECKED' : '')?>>&nbsp;<?=_("Text")?><BR>
-                     <INPUT TYPE="radio" NAME="mail_format" VALUE="html" <?=($user_cfg->getValue('MAIL_AS_HTML') == 'yes' ? 'CHECKED' : '')?>>&nbsp;<?=_("HTML")?>
+                     <input type="radio" name="mail_format" value="text" <?=($user_cfg->getValue('MAIL_AS_HTML') == 'no' || !$user_cfg->getValue('MAIL_AS_HTML') ? 'checked' : '')?>>&nbsp;<?=_("Text")?><br>
+                     <input type="radio" name="mail_format" value="html" <?=($user_cfg->getValue('MAIL_AS_HTML') == 'yes' ? 'checked' : '')?>>&nbsp;<?=_("HTML")?>
                    </td>
                  </tr>
                 <? } ?>
-
 
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">

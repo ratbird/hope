@@ -220,7 +220,7 @@ class SimpleUrl {
     
     /**
      *    Accessor for user name.
-     *    @return string    Benutzername preceding host.
+     *    @return string    Username preceding host.
      *    @access public
      */
     function getUsername() {

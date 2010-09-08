@@ -65,7 +65,7 @@ class SimpleRealm {
     
     /**
      *    Sets the identity to try within this realm.
-     *    @param string $username    Benutzername in authentication dialog.
+     *    @param string $username    Username in authentication dialog.
      *    @param string $username    Password in authentication dialog.
      *    @access public
      */
@@ -172,7 +172,7 @@ class SimpleAuthenticator {
      *    against that realm.
      *    @param string $host        Server hosting realm.
      *    @param string $realm       Name of realm.
-     *    @param string $username    Benutzername for realm.
+     *    @param string $username    Username for realm.
      *    @param string $password    Password for realm.
      *    @access public
      */
@@ -223,7 +223,7 @@ class SimpleAuthenticator {
      *    Presents the appropriate headers for this
      *    location for basic authentication.
      *    @param SimpleHttpRequest $request  Request to modify.
-     *    @param string $username            Benutzername for realm.
+     *    @param string $username            Username for realm.
      *    @param string $password            Password for realm.
      *    @access public
      */

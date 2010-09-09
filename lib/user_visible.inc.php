@@ -113,9 +113,34 @@ function get_vis_query($table_alias = 'auth_user_md5', $context='') {
 
     $my_domains = UserDomain::getUserDomainsForUser($auth->auth['uid']);
     $query = "($table_alias.visible = 'global'";
+    
+    /*
+     *  Check if the user has set own visibilities or if the system default 
+     *  should be used.
+     */
+    if ($context) {
+        $custom = DBManager::get()->query("SELECT ".$context." FROM user_visibility WHERE user_id='".$auth->auth['uid']."'");
+        // Own settings.
+        if ($custom->fetch()) {
+            $contextQuery = " AND user_visibility.$context = 1";
+        // No settings defined, use system default
+        } else {
+            $custom = DBManager::get()->query("SELECT ".$context." FROM user_visibility WHERE user_id='studip'");
+            $default = $custom->fetch();
+            // system default is "not visible".
+            if ($default[$context] == 0) {
+                $contextQuery = " AND 0";
+            } else {
+                $contextQuery = " AND 1";
+            }
+        }
+    }
+    
+    // are users with visibility "unknown" treated as visible?
+    $unknown = get_config('USER_VISIBILITY_UNKNOWN');
 
     if ($context) {
-        $query .= " AND user_visibility.$context = 1)";
+        $query .= $contextQuery.")";
     } else {
         $query .= ")";
     }
@@ -134,22 +159,23 @@ function get_vis_query($table_alias = 'auth_user_md5', $context='') {
     $query .= " AND ($table_alias.visible = 'always'";
 
     if ($context) {
-        $query .= " OR ($table_alias.visible = 'yes' AND user_visibility.$context = 1)";
+        $query .= " OR ($table_alias.visible = 'yes'".$contextQuery."))";
     } else {
-        $query .= " OR $table_alias.visible = 'yes'";
+        $query .= " OR $table_alias.visible = 'yes')";
     }
 
-    if (get_config('USER_VISIBILITY_UNKNOWN')) {
+    if ($unknown) {
         $query .= " OR ($table_alias.visible = 'unknown'";
     }
 
     if ($context) {
-        $query .= " AND user_visibility.$context = 1)";
-    } else {
+        $query .= $contextQuery;
+    }
+    
+    if ($unknown) {
         $query .= ")";
     }
 
-    $query .= ")";
     return "($query)";
 }
 

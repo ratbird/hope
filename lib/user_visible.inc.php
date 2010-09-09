@@ -119,21 +119,8 @@ function get_vis_query($table_alias = 'auth_user_md5', $context='') {
      *  should be used.
      */
     if ($context) {
-        $custom = DBManager::get()->query("SELECT ".$context." FROM user_visibility WHERE user_id='".$auth->auth['uid']."'");
-        // Own settings.
-        if ($custom->fetch()) {
-            $contextQuery = " AND user_visibility.$context = 1";
-        // No settings defined, use system default
-        } else {
-            $custom = DBManager::get()->query("SELECT ".$context." FROM user_visibility WHERE user_id='studip'");
-            $default = $custom->fetch();
-            // system default is "not visible".
-            if ($default[$context] == 0) {
-                $contextQuery = " AND 0";
-            } else {
-                $contextQuery = " AND 1";
-            }
-        }
+        $contextQuery = " AND IFNULL(user_visibility.$context, ".
+            "(SELECT $context FROM user_visibility WHERE user_id='studip' LIMIT 1)) = 1";
     }
     
     // are users with visibility "unknown" treated as visible?

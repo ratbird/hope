@@ -1080,9 +1080,10 @@ div.droppable.hover {
         if ($folder_system_data['orderby'] == "date_rev")
             $query .= " ORDER BY a.chdate DESC";
         $result2 = $db->query($query)->fetchAll();
-        foreach ($result2 as $datei) {
-            if ($folder_tree->isReadable($datei['range_id'], $user->id)) {
-                display_file_line($datei,
+        if (count($result2)) {
+            foreach ($result2 as $datei) {
+                if ($folder_tree->isReadable($datei['range_id'], $user->id)) {
+                    display_file_line($datei,
                         $range_id,
                         $folder_system_data["open"],
                         $change,
@@ -1092,7 +1093,17 @@ div.droppable.hover {
                         $folder_system_data["refresh"],
                         $folder_system_data["link"],
                         $open_id);
+                }
             }
+        } else {
+            //Infomeldung, wenn keine Dateien existieren:
+            print "<div style=\"width: 100%; text-align: center; margin: 10px; \">";
+        	print _("Es existieren noch keine Dateien in dieser Veranstaltung.");
+        	if ($rechte) {
+        	    print "<br>";
+        	    printf(_("Klicken Sie auf %sOrdneransicht%s, um welche hochzuladen oder zu verlinken."), "<a href=\"".URLHelper::getLink(Navigation::getItem("/course/files/tree")->getUrl())."\">", "</a>");
+        	}
+        	print "</div>";
         }
 
         //display_folder_system($range_id, 0,$folder_system_data["open"], '', $change, $folder_system_data["move"], $folder_system_data["upload"], TRUE, $folder_system_data["refresh"], $folder_system_data["link"]);

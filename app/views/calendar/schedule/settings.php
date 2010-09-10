@@ -1,9 +1,26 @@
+<div id="schedule-settings-dialog-shadow"></div>
 <div id="schedule_settings" class="edit_entry">
-    <div id="schedule_settings_drag" class="window_heading">
+    <div class="window_heading_nodrag">
         <?= _("Einstellungen des Stundenplans ändern") ?>
     </div>
     <form method="post" action="<?= $controller->url_for('calendar/schedule/storesettings') ?>" style="margin: 10px;">
-        <div class="settings" style="width: 30%">
+        <div class="settings">
+            <div><?= _("Angezeigtes Semester") ?>:</div>
+            <select name="semester_id">
+            <? foreach ($semesters as $semester) : ?>
+                <? if ($semester['ende'] > time()) : ?>
+                <option value="<?= $semester['semester_id'] ?>" <?= $settings['glb_sem'] == $semester['semester_id'] ? 'selected="selected"' : '' ?>>
+                    <?= $semester['name'] ?>
+                    <?= $semester['beginn'] < time() && $semester['ende'] > time() ? '(aktuelles Semester)' : '' ?>
+                </option>
+                <? endif ?>
+            <? endforeach ?>
+            </select>
+            <br>
+            <br>
+        </div>
+
+        <div class="settings" style="width: 45%">
             <div><?= _("Angezeigter Zeitraum") ?>:</div>
 
             <?= _("von") ?>
@@ -28,7 +45,7 @@
             <?= _("Uhr") ?><br>
         </div>
 
-        <div class="settings" style="width: 30%">
+        <div class="settings" style="width: 45%">
             <div><?= _("Angezeigte Wochentage") ?>:</div>
             <? foreach (array(1,2,3,4,5,6,0) as $day) : ?>
                 <label>
@@ -39,29 +56,12 @@
             <? endforeach ?>
         </div>
 
-        <div class="settings" style="width: 30%">
-            <div><?= _("Angezeigtes Semester") ?>:</div>
-            <select name="semester_id">
-            <? foreach ($semesters as $semester) : ?>
-                <? if ($semester['ende'] > time()) : ?>
-                <option value="<?= $semester['semester_id'] ?>" <?= $settings['glb_sem'] == $semester['semester_id'] ? 'selected="selected"' : '' ?>>
-                    <?= $semester['name'] ?>
-                    <?= $semester['beginn'] < time() && $semester['ende'] > time() ? '(aktuelles Semester)' : '' ?>
-                </option>
-                <? endif ?>
-            <? endforeach ?>
-            </select>
-        </div>
-
         <div style="text-align: center; clear: both">
             <br>
             <input type="image" <?= makebutton('speichern', 'src') ?>>
-            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="$('#schedule_settings').remove(); return false">
+            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="$('#schedule_settings').remove();$('#schedule-settings-dialog-shadow').remove(); return false">
                 <?= makebutton('abbrechen') ?>
             </a>
         </div>
     </form>
 </div>
-<script>
-  $('#schedule_settings').draggable({ handle: 'schedule_settings_drag' });
-</script>

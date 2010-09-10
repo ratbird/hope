@@ -1113,13 +1113,14 @@ div.droppable.hover {
         </td>
     </tr>
 </table>
-<script type="text/javascript">
-//Initialisierung der Ordner und Dateien und verschwinden lassen der gelben Pfeile durch Anfasser:
-STUDIP.Filesystem.unsetarrows();
-STUDIP.Filesystem.setdraggables();
-STUDIP.Filesystem.setdroppables();
-</script>
-
+<? if ($rechte) : ?>
+    <script type="text/javascript">
+    //Initialisierung der Ordner und Dateien und verschwinden lassen der gelben Pfeile durch Anfasser:
+    STUDIP.Filesystem.unsetarrows();
+    STUDIP.Filesystem.setdraggables();
+    STUDIP.Filesystem.setdroppables();
+    </script>
+<? endif; ?>
 <?php
     } else { //if $all
         if (!$folder_system_data["upload"] && !$folder_system_data["link"])

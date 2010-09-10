@@ -1394,7 +1394,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
     //Einbinden einer Klasse, die Informationen über den ganzen Baum enthält
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     $javascriptok = true;
-    print "\n\t<div class=\"draggable\" id=\"file_".$folder_id."_$countfiles\">";
+    print "\n\t<div class=\"".($rechte ? "draggable" : "")."\" id=\"file_".$folder_id."_$countfiles\">";
     print "<div style=\"display:none\" id=\"getmd5_fi".$folder_id."_$countfiles\">".$datei['dokument_id']."</div>";
     print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\"><tr>";
     if (!$all) {
@@ -1694,7 +1694,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
         //Mehrere Zeilen, die wiederum Dateien mit eventuellen Optionen sind.
         print "<td colspan=3>";
 
-        print "<div class=\"folder_container\" id=\"folder_subfolders_".$folder_id."\">";
+        print "<div class=\"folder_container".($rechte ? " sortable" : "")."\" id=\"folder_subfolders_".$folder_id."\">";
         //Unterordner darstellen:
         is_array($folders_kids) || $folders_kids = array();
         $subfolders = array();
@@ -1713,7 +1713,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
 
         //Dateien darstellen:
         $countfolder++;
-        print "<div class=\"folder_container\" id=\"folder_".$folder_id."\">";
+        print "<div class=\"folder_container".($rechte ? " sortable" : "")."\" id=\"folder_".$folder_id."\">";
         if (($rechte) || ($folder_tree->isReadable($folder_id, $user->id))) {
             $query = "SELECT a.*,". $_fullname_sql['full'] ." AS fullname, " .
                             "username, " .
@@ -1761,7 +1761,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 
     $depth = $folder_tree->getItemPath($folder_id);
     $depth = count(explode(" / ", $depth));
-    print "<div id=\"folder_".(($depth > 3) ? $result['range_id'] : "root")."_".$countfolder."\" class=\"draggable_folder\">";
+    print "<div id=\"folder_".(($depth > 3) ? $result['range_id'] : "root")."_".$countfolder."\"".($rechte ? " class=\"draggable_folder\"" : "").">";
     print "<div style=\"display:none\" id=\"getmd5_fo".$result['range_id']."_".$countfolder."\">".$folder_id."</div>";
     print "<table cellpadding=0 border=0 cellspacing=0 width=\"100%\"><tr>";
 

@@ -651,8 +651,8 @@ STUDIP.Filesystem = {
    */
   unsetarrows     : function () {
     jQuery("span.move_arrows,span.updown_marker").hide();
-    jQuery(".draggable").css("cursor", "move");
-    jQuery(".draggable_folder").css("cursor", "move");
+    jQuery(".sortable .draggable").css("cursor", "move");
+    jQuery(".sortable .draggable_folder").css("cursor", "move");
   }
 };
 
@@ -661,7 +661,7 @@ STUDIP.Filesystem = {
  * deklariert Ordner und Dateien als ziehbare Elemente bzw. macht sie sortierbar
  */
 STUDIP.Filesystem.setdraggables = function () {
-  jQuery("div.folder_container").each(function () {
+  jQuery("div.folder_container.sortable").each(function () {
     var id = this.getAttribute('id');
     var md5_id = id.substr(id.lastIndexOf('_') + 1);
     //wenn es einen Anfasser gibt, also wenn Nutzer verschieben darf

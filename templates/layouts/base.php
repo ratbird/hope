@@ -3,7 +3,7 @@
   <head>
     <meta charset="WINDOWS-1252">
     <title>
-      <?= htmlReady($GLOBALS['HTML_HEAD_TITLE'] . ' - ' . PageLayout::getTitle()) ?>
+      <?= htmlReady(PageLayout::getTitle() . ' - ' . $GLOBALS['UNI_NAME_CLEAN']) ?>
     </title>
     <?= PageLayout::getHeadElements() ?>
 

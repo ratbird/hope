@@ -2373,6 +2373,10 @@ class Seminar
                 "FROM seminar_user " .
                 "WHERE status = ".$db->quote($status)." " .
                     "AND Seminar_id = ".$db->quote($this->id)."")->fetch(PDO::FETCH_COLUMN, 0);
+        $numberOfTeachers = $db->query("SELECT COUNT(*) " .
+                "FROM seminar_user " .
+                "WHERE Seminar_id = ".$db->quote($this->id)." ".
+                    "AND status = 'dozent' ")->fetch(PDO::FETCH_COLUMN, 0);
         if (!$old_status) {
             $db->exec("INSERT INTO seminar_user " .
                    "SET status = ".$db->quote($status).", " .
@@ -2381,7 +2385,8 @@ class Seminar
                        "position = ".$db->quote($new_position)." " .
                        "");
             return $this;
-        } elseif (!$force || $angordnung[$old_status] < $rangordnung[$status]) {
+        } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status]) 
+                && ($old_status !== "dozent" || $numberOfTeachers > 1)) {
             $db->exec("UPDATE seminar_user " .
                    "SET status = ".$db->quote($status).", " .
                        "position = ".$db->quote($new_position)." " .
@@ -2390,6 +2395,12 @@ class Seminar
                        "");
             return $this;
         } else {
+            if ($old_status === "dozent" && $numberOfTeachers <= 1) {
+                $this->createError(sprintf(_("Die Veranstaltung muss wenigstens " .
+                        "<b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben! " .
+                        "Tragen Sie zunächst einen anderen ein, um diesen herabzustufen."),
+                        get_title_for_status('dozent', 1, $this->status)));
+            }
             return false;
         }
     }
@@ -2426,7 +2437,7 @@ class Seminar
         } else {
             $this->createError(sprintf(_("Die Veranstaltung muss wenigstens " .
                     "<b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben! " .
-                    "Tragen Sie zun&auml;chst einen anderen ein, um diesen zu l&ouml;schen."),
+                    "Tragen Sie zunächst einen anderen ein, um diesen zu l&ouml;schen."),
                     get_title_for_status('dozent', 1, $this->status)));
             return false;
         }

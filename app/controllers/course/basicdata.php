@@ -430,6 +430,8 @@ class Course_BasicdataController extends AuthenticatedController
                 if ($sem->addMember($_POST['new_tut'], "tutor")) {
                     $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."),
                             get_title_for_status('tutor', 1, $sem->status)));
+                } else {
+                    $this->msg = array_merge($this->msg, array_map('$this->convertMessage', $sem->messages));
                 }
             }
         } else {
@@ -636,5 +638,9 @@ class Course_BasicdataController extends AuthenticatedController
         $this->flash['open'] = "bd_personal";
         $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
+    }
+    
+    private function convertMessage($msg) { 
+        return explode("§", $msg);
     }
 }

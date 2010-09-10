@@ -3,7 +3,7 @@
   <head>
     <meta charset="WINDOWS-1252">
     <title>
-      <?= $GLOBALS['HTML_HEAD_TITLE'] ?> - <?= htmlReady(PageLayout::getTitle()) ?>
+      <?= htmlReady($GLOBALS['HTML_HEAD_TITLE'] . ' - ' . PageLayout::getTitle()) ?>
     </title>
     <?= PageLayout::getHeadElements() ?>
 

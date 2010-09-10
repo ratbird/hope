@@ -453,92 +453,88 @@ if (!isset($details) || isset($set)) {
 
     // Jemand soll ans Institut...
     //if (isset($berufen_x) && $ins_id != "" && ($perm->have_perm("root") || (!$SessSemName["is_fak"] && $perm->have_studip_perm("admin",$SessSemName["fak"])))) {
-    if (isset($berufen_x) && $ins_id != "") {
-        if ($u_id == "0") {
-            my_error("<b>" . _("Bitte eine Person ausw&auml;hlen!") . "</b>");
-        } else {
-            $db->query("SELECT *  FROM user_inst WHERE Institut_id = '$ins_id' AND user_id = '$u_id'");
-            if (($db->next_record()) && ($db->f("inst_perms") != "user")) {
-                // der Admin hat Tomaten auf den Augen, der Mitarbeiter sitzt schon im Institut
-                my_error("<b>" . _("Die Person ist bereits in der Einrichtung eingetragen. Um Rechte etc. zu &auml;ndern folgen Sie dem Link zu den Nutzerdaten der Person!") . "</b>");
-            } else {  // mal nach dem globalen Status sehen
-                $db3->query("SELECT " . $_fullname_sql['full'] . " AS fullname, perms FROM auth_user_md5 a LEFT JOIN user_info USING(user_id) WHERE a.user_id = '$u_id'");
-                $db3->next_record();
-                $Fullname = $db3->f("fullname");
-                if ($db3->f("perms") == "root")
-                    my_error("<b>" . _("ROOTs k&ouml;nnen nicht berufen werden!") . "</b>");
-                elseif ($db3->f("perms") == "admin") {
-                    if ($perm->have_perm("root") || (!$SessSemName["is_fak"] && $perm->have_studip_perm("admin",$SessSemName["fak"]))) {
+    if (isset($berufen_x) && $ins_id != "" && $u_id && $u_id !== _("Nutzer eintragen")) {
+        $db->query("SELECT *  FROM user_inst WHERE Institut_id = '$ins_id' AND user_id = '$u_id'");
+        if (($db->next_record()) && ($db->f("inst_perms") != "user")) {
+            // der Admin hat Tomaten auf den Augen, der Mitarbeiter sitzt schon im Institut
+            my_error("<b>" . _("Die Person ist bereits in der Einrichtung eingetragen. Um Rechte etc. zu &auml;ndern folgen Sie dem Link zu den Nutzerdaten der Person!") . "</b>");
+        } else {  // mal nach dem globalen Status sehen
+            $db3->query("SELECT " . $_fullname_sql['full'] . " AS fullname, perms FROM auth_user_md5 a LEFT JOIN user_info USING(user_id) WHERE a.user_id = '$u_id'");
+            $db3->next_record();
+            $Fullname = $db3->f("fullname");
+            if ($db3->f("perms") == "root")
+                my_error("<b>" . _("ROOTs k&ouml;nnen nicht berufen werden!") . "</b>");
+            elseif ($db3->f("perms") == "admin") {
+                if ($perm->have_perm("root") || (!$SessSemName["is_fak"] && $perm->have_studip_perm("admin",$SessSemName["fak"]))) {
+                 // Emails schreiben...
+                    if($_POST['enable_mail_admin'] == "admin" && $_POST['enable_mail_dozent'] == "dozent"){
+                        $in = "'admin','dozent'";
+                        $wem = "Admins und Dozenten";
+                    }else if($_POST['enable_mail_admin'] == "admin"){
+                        $in = "'admin'";
+                        $wem = "Admins";
+                    }else if($_POST['enable_mail_dozent'] == "dozent"){
+                        $in = "'dozent'";
+                        $wem = "Dozenten";
+                    }
+                    if($in != ""){
+                        $i=0;
+                        $notin = array();
 
-                        // Emails schreiben...
-                        if($_POST['enable_mail_admin'] == "admin" && $_POST['enable_mail_dozent'] == "dozent"){
-                            $in = "'admin','dozent'";
-                            $wem = "Admins und Dozenten";
-                        }else if($_POST['enable_mail_admin'] == "admin"){
-                            $in = "'admin'";
-                            $wem = "Admins";
-                        }else if($_POST['enable_mail_dozent'] == "dozent"){
-                            $in = "'dozent'";
-                            $wem = "Dozenten";
+                    $db->query(sprintf("SELECT Name FROM Institute WHERE Institut_id = '%s' ",$ins_id));
+                        if($db->next_record())
+                            $instname = $db->f("Name");
+                        $vorname = $Fullname;
+                        //$nachname = siehe $vorname
+
+                        $db->query(sprintf("SELECT a.user_id,b.Vorname,b.Nachname,b.Email FROM user_inst a INNER JOIN auth_user_md5 b ON a.user_id = b.user_id WHERE a.Institut_id = '%s' AND a.inst_perms IN (%s)",$ins_id,$in));
+                        while($db->next_record()){
+                            $user_language = getUserLanguagePath($db->f('user_id'));
+                            include("locale/$user_language/LC_MAILS/new_admin_mail.inc.php");
+                            StudipMail::sendMessage($db->f('Email'), $subject, $mailbody);
+                            $notin[$i] = $db->f('user_id'); $i++;
                         }
-                        if($in != ""){
-                            $i=0;
-                            $notin = array();
-
-                            $db->query(sprintf("SELECT Name FROM Institute WHERE Institut_id = '%s' ",$ins_id));
-                            if($db->next_record())
-                                $instname = $db->f("Name");
-                            $vorname = $Fullname;
-                            //$nachname = siehe $vorname
-
-                            $db->query(sprintf("SELECT a.user_id,b.Vorname,b.Nachname,b.Email FROM user_inst a INNER JOIN auth_user_md5 b ON a.user_id = b.user_id WHERE a.Institut_id = '%s' AND a.inst_perms IN (%s)",$ins_id,$in));
+                        if($in != "'dozent'"){
+                            //Noch ein paar Mails für die Fakultätsadmins
+                            $db->query(sprintf("SELECT a.user_id,b.Vorname,b.Nachname,b.Email FROM user_inst a INNER JOIN auth_user_md5 b ON a.user_id = b.user_id WHERE a.user_id NOT IN ('%s','%s') AND a.Institut_id IN (SELECT fakultaets_id FROM Institute WHERE Institut_id = '%s' AND fakultaets_id !=  Institut_id) AND a.inst_perms = 'admin'",implode("','",$notin),$u_id,$ins_id));
                             while($db->next_record()){
                                 $user_language = getUserLanguagePath($db->f('user_id'));
                                 include("locale/$user_language/LC_MAILS/new_admin_mail.inc.php");
                                 StudipMail::sendMessage($db->f('Email'), $subject, $mailbody);
-                                $notin[$i] = $db->f('user_id'); $i++;
+                                $i++;
                             }
-                            if($in != "'dozent'"){
-                                //Noch ein paar Mails für die Fakultätsadmins
-                                $db->query(sprintf("SELECT a.user_id,b.Vorname,b.Nachname,b.Email FROM user_inst a INNER JOIN auth_user_md5 b ON a.user_id = b.user_id WHERE a.user_id NOT IN ('%s','%s') AND a.Institut_id IN (SELECT fakultaets_id FROM Institute WHERE Institut_id = '%s' AND fakultaets_id !=  Institut_id) AND a.inst_perms = 'admin'",implode("','",$notin),$u_id,$ins_id));
-                                while($db->next_record()){
-                                    $user_language = getUserLanguagePath($db->f('user_id'));
-                                    include("locale/$user_language/LC_MAILS/new_admin_mail.inc.php");
-                                    StudipMail::sendMessage($db->f('Email'), $subject, $mailbody);
-                                    $i++;
-                                }
-                            }
-                            my_msg("<b>" . sprintf(_("Es wurden ingesamt %s Mails an die %s der Einrichtung geschickt."),$i,$wem) . "</b>");
                         }
-
-                        log_event('INST_USER_ADD', $ins_id ,$u_id, 'admin');
-
-                        // als admin aufnehmen
-                        $db2->query("INSERT into user_inst (user_id, Institut_id, inst_perms) values ('$u_id', '$ins_id', 'admin')");
-                        my_msg("<b>" . sprintf(_("%s wurde als \"admin\" in die Einrichtung aufgenommen."), $Fullname) . "</b>");
-                    } else {
-                        my_error("<b>" . _("Sie haben keine Berechtigung einen Admin zu berufen!") . "</b>");
+                        my_msg("<b>" . sprintf(_("Es wurden ingesamt %s Mails an die %s der Einrichtung geschickt."),$i,$wem) . "</b>");
                     }
+
+                    log_event('INST_USER_ADD', $ins_id ,$u_id, 'admin');
+
+                    // als admin aufnehmen
+                    $db2->query("INSERT into user_inst (user_id, Institut_id, inst_perms) values ('$u_id', '$ins_id', 'admin')");
+                    my_msg("<b>" . sprintf(_("%s wurde als \"admin\" in die Einrichtung aufgenommen."), $Fullname) . "</b>");
                 } else {
-                    $insert_perms = $db3->f("perms");
-                    //ok, aber nur hochstufen auf Maximal-Status (hat sich selbst schonmal gemeldet als Student an dem Inst)
-                    if ($db->f("inst_perms") == "user") {
-                         log_event('INST_USER_STATUS', $ins_id ,$u_id, $insert_perms);
-
-                        $db2->query("UPDATE user_inst SET inst_perms='$insert_perms' WHERE user_id='$u_id' AND Institut_id = '$ins_id' ");
-                    // ok, neu aufnehmen als das was er global ist
-                    } else {
-                         log_event('INST_USER_ADD', $ins_id ,$u_id, $insert_perms);
-                        $db2->query("INSERT into user_inst (user_id, Institut_id, inst_perms) values ('$u_id', '$ins_id', '$insert_perms')");
-                    }
-                    if ($db2->affected_rows())
-                        my_msg("<b>" . sprintf(_("%s wurde als \"%s\" in die Einrichtung aufgenommen. Um Rechte etc. zu &auml;ndern folgen Sie dem Link zu den Nutzerdaten der Person!"), $Fullname, $insert_perms) . "</b>");
-                    else
-                        parse_msg ("error§<b>" . sprintf(_("%s konnte nicht in die Einrichtung aufgenommen werden!"), $Fullname) . "§");
+                	my_error("<b>" . _("Sie haben keine Berechtigung einen Admin zu berufen!") . "</b>");
                 }
+            } else {
+            	$insert_perms = $db3->f("perms");
+            	//ok, aber nur hochstufen auf Maximal-Status (hat sich selbst schonmal gemeldet als Student an dem Inst)
+            	if ($db->f("inst_perms") == "user") {
+            		log_event('INST_USER_STATUS', $ins_id ,$u_id, $insert_perms);
+
+            		$db2->query("UPDATE user_inst SET inst_perms='$insert_perms' WHERE user_id='$u_id' AND Institut_id = '$ins_id' ");
+            		// ok, neu aufnehmen als das was er global ist
+            	} else {
+            		log_event('INST_USER_ADD', $ins_id ,$u_id, $insert_perms);
+            		$db2->query("INSERT into user_inst (user_id, Institut_id, inst_perms) values ('$u_id', '$ins_id', '$insert_perms')");
+            	}
+            	if ($db2->affected_rows())
+            	my_msg("<b>" . sprintf(_("%s wurde als \"%s\" in die Einrichtung aufgenommen. Um Rechte etc. zu &auml;ndern folgen Sie dem Link zu den Nutzerdaten der Person!"), $Fullname, $insert_perms) . "</b>");
+            	else
+            	parse_msg ("error§<b>" . sprintf(_("%s konnte nicht in die Einrichtung aufgenommen werden!"), $Fullname) . "§");
             }
-            checkExternDefaultForUser($u_id);
         }
+        checkExternDefaultForUser($u_id);
+
         $inst_id=$ins_id;
     }
 }
@@ -600,7 +596,6 @@ if ($inst_id != "" && $inst_id !="0") {
         if ((isset($search_exp) && strlen($search_exp) > 2) || !isset($set)) {
             $search_exp = trim($search_exp);
             // Der Admin will neue Sklaven ins Institut berufen...
-            $db->query ("SELECT DISTINCT auth_user_md5.user_id, " . $_fullname_sql['full_rev'] . " AS fullname, username, perms  FROM auth_user_md5 LEFT JOIN user_info USING(user_id)LEFT JOIN user_inst ON user_inst.user_id=auth_user_md5.user_id AND Institut_id = '$inst_id' WHERE perms !='root' AND (user_inst.inst_perms = 'user' OR user_inst.inst_perms IS NULL) AND (Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%' OR username LIKE '%$search_exp%') ORDER BY Nachname ");
             $InstituteUser = new SQLSearch("SELECT DISTINCT auth_user_md5.user_id, " . $_fullname_sql['full_rev'] . " AS fullname " .
                 "FROM auth_user_md5 " .
                     "LEFT JOIN user_info USING(user_id) " .
@@ -622,17 +617,14 @@ if ($inst_id != "" && $inst_id !="0") {
                         </tr>
                         <tr>
                             <td class="steel1">
-                                <font size=-1>
-                                    <? printf(_("es wurden %s Personen gefunden") . "<br>", $db->num_rows());
-                                    if ($db->num_rows()) {
-                                    echo _("bitte w&auml;hlen Sie die zu berufende Person aus der Liste aus.");?>
-                                </font>
+                                <?= _("Suchen Sie im folgenden Feld nach Nutzern und klicken Sie anschließend 'hinzufügen', um den Nutzer als Personal einzutragen.") ?>
                             </td>
                         </tr>
                         <tr>
                             <td class="steel1">
                             <?php
                             print QuickSearch::get("u_id", $InstituteUser)
+                                    ->withButton()
                                     ->render();
                             ?>
                             &nbsp;
@@ -641,15 +633,13 @@ if ($inst_id != "" && $inst_id !="0") {
                             <input type="checkbox" id="enable_mail_admin" name="enable_mail_admin" value="admin"><label for="enable_mail_admin" ><?=_("Admins der Einrichtung benachrichtigen")?></label><br>
                             <input type="checkbox" id="enable_mail_dozent" name="enable_mail_dozent" value="dozent"><label for="enable_mail_dozent" ><?=_("Dozenten der Einrichtung benachrichtigen")?></label><br>
                             <input type="image" name="berufen" <?=makeButton("hinzufuegen", "src")?> border=0 value="<?=_("berufen")?>">
-                        <? } ?>
-                            <input type="image" name="reset" <?=makeButton("neuesuche", "src")?> border=0 value="<?=_("Neue Suche")?>">
                             </td>
                         </tr>
                     </table>
                 </form>
             </td>
             <? // Ende der Berufung
-
+            
         }
             ?>
 

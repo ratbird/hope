@@ -28,7 +28,7 @@
                 "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
                 <?= $jsfunction ? htmlReady($jsfunction) : "null" ?>,
                 <? if ($beschriftung && !$defaultID) : ?>
-                '<?= htmlReady($beschriftung) ?>');
+                '<?= $beschriftung ?>');
                 <? else : ?>
                 null);
                 <? endif ?>

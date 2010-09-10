@@ -129,15 +129,15 @@ $width_namecolumn = 60;
             <? if ($perm_dozent) : ?>
             <span style="argin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
                 <? if ($num > 0) : ?>
-                <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $dozent["user_id"], "dozent") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
+                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/priorityupfor', $dozent["user_id"], "dozent"), array('section' => $section)) ?>">
                 <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
                 <? endif; if ($num < count($dozenten)-1) : ?>
-                <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $dozent["user_id"], "dozent") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
+                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/prioritydownfor', $dozent["user_id"], "dozent"), array('section' => $section)) ?>">
                 <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
                 <? endif; ?>
             </span>
             <span style="vertical-align: middle">
-                <a href="<?= $controller->url_for('course/basicdata/deletedozent', $dozent["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
+                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/deletedozent', $dozent["user_id"]), array('section' => $section)) ?>">
                 <?= Assets::img("icons/16/blue/trash.png") ?>
                 </a>
             </span>
@@ -175,7 +175,7 @@ $width_namecolumn = 60;
             <span style="margin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
             </span>
             <span style="vertical-align: middle">
-                <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $deputy["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
+                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/deletedeputy', $deputy["user_id"]), array('section' => $section)) ?>">
                 <?= Assets::img("icons/16/blue/trash.png") ?></a>
             </span>
             <? endif; ?>
@@ -212,16 +212,17 @@ $width_namecolumn = 60;
             <? if ($perm_dozent) : ?>
             <span style="margin: 3px; vertical-align: middle; white-space: nowrap;">
                 <? if ($num > 0) : ?>
-                <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $tutor["user_id"], "tutor") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
+                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/priorityupfor', $tutor["user_id"], "tutor"), array('section' => $section)) ?>">
                 <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
                 <? endif; if ($num < count($tutoren)-1) : ?>
-                <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $tutor["user_id"], "tutor") ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
+                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/prioritydownfor', $tutor["user_id"], "tutor"), array('section' => $section)) ?>">
                 <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
                 <? endif; ?>
             </span>
             <span style="margin: 3px; vertical-align: middle">
-                <a href="<?= $controller->url_for('course/basicdata/deletetutor', $tutor["user_id"]) ?>?cid=<?= $course_id ?>&section=<?= $section ?>">
-                <?= Assets::img("icons/16/blue/trash.png") ?></a>
+                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/deletetutor', $tutor["user_id"]), array('section' => $section)) ?>">
+                <?= Assets::img("icons/16/blue/trash.png") ?>
+                </a>
             </span>
             <? endif; ?>
 

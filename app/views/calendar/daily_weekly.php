@@ -77,7 +77,7 @@ $cell_steps = $cell_height / 60;
         <td style="vertical-align: top">
             <!-- the days with the date for the timetable -->
             <div id="day_<?= $day ?>" class="schedule_day" style="overflow: hidden">
-                <? if (is_array($entries['day_'. $day]) && sizeof($entries['day_'. $day]) > 0) :
+                <? if (!empty($entries['day_'. $day])) :
                 $width = floor( 98 / sizeof($entries['day_'. $day])); $col = 0;
                 foreach ($entries['day_'. $day] as $grouped_entries) : 
 

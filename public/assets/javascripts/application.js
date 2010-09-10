@@ -1326,8 +1326,8 @@ STUDIP.Calendar = {
    * @return: bool true if valid time-range, false otherwise
    */
   checkTimeslot: function (start_hour, start_minute, end_hour, end_minute) {
-    if (jQuery(start_hour).val() + (jQuery(start_minute).val() * 100) >=
-        jQuery(end_hour).val() + (jQuery(end_minute).val() * 100)) {
+    if ((jQuery(start_hour).val() + (jQuery(start_minute).val() * 100)) >=
+        (Query(end_hour).val() + (jQuery(end_minute).val() * 100))) {
       return false;
     }
 

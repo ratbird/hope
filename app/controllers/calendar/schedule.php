@@ -134,7 +134,8 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         }
 
-        if (!$days) {
+        // check type-safe if days is false otherwise sunday (0) cannot be chosen
+        if ($days === false) {
             if (Request::getArray('days')) {
                 $this->days = array_keys(Request::getArray('days'));
             } else {
@@ -163,6 +164,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         PageLayout::addStyle($factory->render('calendar/stylesheet', $style_parameters));
 
         if (Request::get('printview')) {
+            $this->calendar_view->setReadOnly();
             PageLayout::addStylesheet('style_print.css');
         } else {
             PageLayout::addStylesheet('style_print.css', array('media' => 'print'));
@@ -215,7 +217,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
 
         if ($error) {
-            $this->flash['messages'] = array('error'. chr(167) ._("Eintrag konnte nicht gespeichert werden, da die Start- und/oder Endzeit ungültigt war!"));
+            $this->flash['messages'] = array('error'. chr(167) ._("Eintrag konnte nicht gespeichert werden, da die Start- und/oder Endzeit ungültigt ist!"));
         } else {
             $data['title']   = Request::get('entry_title');
             $data['content'] = Request::get('entry_content');
@@ -225,6 +227,7 @@ class Calendar_ScheduleController extends AuthenticatedController
             } else {
                 $data['color'] = DEFAULT_COLOR_NEW;
             }
+
             CalendarScheduleModel::storeEntry($data);
         }
 

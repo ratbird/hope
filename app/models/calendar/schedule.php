@@ -113,6 +113,7 @@ class CalendarScheduleModel
             $entry['end_hour']     = sprintf("%02d", floor($entry['end'] / 100));
             $entry['end_minute']   = sprintf("%02d", $entry['end'] % 100);
             $entry['onClick']      = "STUDIP.Schedule.showScheduleDetails('". $entry['id'] ."'); return false;";
+            $entry['visible']      = true;
 
             $ret[$entry['day']][] = $entry;
         }

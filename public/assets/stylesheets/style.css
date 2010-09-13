@@ -289,9 +289,7 @@ td.tree-elbow-end img {
     display: block;
 }
 
-/** table.collapsable **/
-
-
+/* --- table.collapsable --------------------------------------------------- */
 .collapsable > .collapsed > tr {
     display: none;
 }
@@ -331,7 +329,7 @@ td.tree-elbow-end img {
     background: url(../images/icons/16/grey/arr_1right.png) left center no-repeat;
 }
 
-/* Table details */
+/* --- Table details -------------------------------------------------------- */
 .loaded-details > td {
     padding: 0 20px 5px 20px !important;
 }

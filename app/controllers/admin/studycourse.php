@@ -12,7 +12,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     studycourses
- * @since       Stud.IP version 1.12
+ * @since       Stud.IP version 2.0
  */
 
 require_once 'app/controllers/authenticated_controller.php';
@@ -43,43 +43,38 @@ class Admin_StudycourseController extends AuthenticatedController
     /**
      * Maintenance view for profession with the degrees
      */
-    function profession_action()
+    public function profession_action()
     {
+        //set title
         PageLayout::setTitle(_('Verwaltung der Studiengänge'));
 
+        //get data
         $this->studycourses = StudycourseModel::getStudyCourses();
+        $this->infobox = $this->getInfobox();
+
         //sorting
         if(Request::get('sortby') == 'users') {
             usort($this->studycourses, array('Admin_StudycourseController', 'sortByUsers'));
         } elseif (Request::get('sortby') == 'seminars') {
             usort($this->studycourses, array('Admin_StudycourseController', 'sortBySeminars'));
         }
-
-        $this->infobox = $this->getInfobox();
-
-        if (Request::submitted('delete')) {
-            $this->delete_profession_action();
-        }
     }
 
     /**
      * Maintenance view for degrees with the professions
      */
-    function degree_action()
+    public function degree_action()
     {
-        // set variables for view
+        // set title
         PageLayout::setTitle(_('Gruppierung von Studienabschlüssen'));
 
+        //get data
         $this->studydegrees = StudycourseModel::getStudyDegrees();
+        $this->infobox = $this-> getInfobox();
+
         //sorting
         if(Request::get('sortby') == 'users') {
             usort($this->studydegrees, array('Admin_StudycourseController', 'sortByUsers'));
-        }
-
-        $this->infobox = $this-> getInfobox();
-
-        if (Request::submitted('delete')) {
-            $this->delete_degree_action();
         }
     }
 
@@ -87,8 +82,9 @@ class Admin_StudycourseController extends AuthenticatedController
      * Edit the selected profession
      * @param $prof_id
      */
-    function edit_profession_action($prof_id)
+    public function edit_profession_action($prof_id)
     {
+        //save changes
         if (Request::submitted('uebernehmen')) {
             if (Request::get('professionname')) {
                 $prof_name = Request::get('professionname');
@@ -103,8 +99,6 @@ class Admin_StudycourseController extends AuthenticatedController
         }
 
         PageLayout::setTitle(_("Fächer editieren"));
-
-        // set variables for view
         $this->edit = StudycourseModel::getStudyCourseInfo($prof_id);
         $this->infobox = $this->getInfobox();
     }
@@ -113,7 +107,7 @@ class Admin_StudycourseController extends AuthenticatedController
      * Edit the selected degree
      * @param $deg_id
      */
-    function edit_degree_action($deg_id)
+    public function edit_degree_action($deg_id)
     {
         if (Request::submitted('uebernehmen')) {
             if (Request::get('degreename')) {
@@ -129,8 +123,6 @@ class Admin_StudycourseController extends AuthenticatedController
         }
 
         PageLayout::setTitle(_("Abschlüsse editieren"));
-
-        // set variables for view
         $this->edit = StudycourseModel::getStudyDegreeInfo($deg_id);
         $this->infobox = $this->getInfobox();
     }
@@ -138,15 +130,15 @@ class Admin_StudycourseController extends AuthenticatedController
     /**
      * Delete a profession
      * Only if count_user=0
-     * @param $delete_course
+     *
+     * @param string $prof_id
      */
-    function delete_profession_action()
+    function delete_profession_action($prof_id)
     {
-        $prof_id = Request::get('prof_id');
-        if (Request::submitted('delete')) {
+        if (Request::int('delete') == 1) {
             $profession = StudycourseModel::getStudyCourses($prof_id);
             //Check ob studiengang leer ist
-            if ($profession[0][count_user] == 0) {
+            if ($profession[0]['count_user'] == 0) {
                 if (StudycourseModel::deleteStudyCourse($prof_id)) {
                     $this->flash['success'] = _("Der Studiengang wurde erfolgreich gelöscht!");
                 } else {
@@ -155,23 +147,21 @@ class Admin_StudycourseController extends AuthenticatedController
             } else {
                 $this->flash['error']=_("Zu löschende Studiengänge müssen leer sein!");
             }
-            $this->redirect('admin/studycourse/profession');
-        } else {
-            //Sicherheitsabfrage
+        } elseif (!Request::get('back')) {
             $this->flash['delete'] = StudycourseModel::getStudyCourses($prof_id);
-            $this->redirect('admin/studycourse/profession');
         }
+        $this->redirect('admin/studycourse/profession');
     }
 
     /**
      * Delete a degree
      * Only if count_user = 0
-     * @param $delete_degree
+     *
+     * @param string $deg_id
      */
-    function delete_degree_action()
+    function delete_degree_action($deg_id)
     {
-        $deg_id = Request::get('deg_id');
-        if (Request::submitted('delete')) {
+        if (Request::int('delete') == 1) {
             $degree = StudycourseModel::getStudyDegrees($deg_id);
             //Check ob Abschluss leer ist
             if ($degree[0][count_user] == 0) {
@@ -183,12 +173,10 @@ class Admin_StudycourseController extends AuthenticatedController
             } else {
                 $this->flash['error'] = _("Zu löschende Abschlüsse müssen leer sein!");
             }
-            $this->redirect('admin/studycourse/degree');
-        } else {
-            //Sicherheitsabfrage
-            $this->flash['delete']=StudycourseModel::getStudyDegrees($deg_id);
-            $this->redirect('admin/studycourse/degree');
+        } elseif (!Request::get('back')) {
+            $this->flash['delete'] = StudycourseModel::getStudyDegrees($deg_id);
         }
+        $this->redirect('admin/studycourse/degree');
     }
 
     /**
@@ -213,7 +201,6 @@ class Admin_StudycourseController extends AuthenticatedController
         }
 
         PageLayout::setTitle(_("Anlegen von Studienfächern"));
-
         $this->infobox = $this-> getInfobox();
     }
 
@@ -304,4 +291,3 @@ class Admin_StudycourseController extends AuthenticatedController
         return ($a['count_sem'] > $b['count_sem']) ? -1 : 1;
     }
 }
-?>

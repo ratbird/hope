@@ -39,7 +39,7 @@ class StudycourseModel
         $studycourses = unserialize($cache->read(self::STUDYCOURSE_CACHE_KEY.$sci));
 
         if (empty($studycourses)) {
-            if (! is_null($sci)) {
+            if (!is_null($sci)) {
                 //one profession with id and count studys
                 $query = "SELECT s.studiengang_id, s.name,s.beschreibung, "
                        . "count(user_studiengang.studiengang_id) AS count_user, "
@@ -49,17 +49,24 @@ class StudycourseModel
                        . "LEFT JOIN admission_seminar_studiengang USING(studiengang_id)"
                        . "WHERE s.studiengang_id='{$sci}' "
                        . "GROUP BY studiengang_id ORDER BY name";
+                $studycourses = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
             } else {
                 // all profession
-                $query = "SELECT s.studiengang_id,s.name,s.beschreibung, "
-                       . "count(user_studiengang.studiengang_id) AS count_user, "
-                       . "count(admission_seminar_studiengang.seminar_id) AS count_sem "
-                       . "FROM studiengaenge s "
-                       . "LEFT JOIN user_studiengang USING(studiengang_id) "
-                       . "LEFT JOIN admission_seminar_studiengang USING(studiengang_id) "
-                       . "GROUP BY studiengang_id ORDER BY name";
+                  $query1 = "SELECT studiengang_id, name, beschreibung "
+                        . "FROM studiengaenge ORDER BY name";
+                  $query2 = "SELECT studiengang_id, count(user_id) AS count_user "
+                        . "FROM user_studiengang GROUP BY studiengang_id";
+                  $query3 = "SELECT studiengang_id, count(seminar_id) AS count_sem "
+                        . "FROM admission_seminar_studiengang GROUP BY studiengang_id";
+                $studycourses = DBManager::get()->query($query1)->fetchAll(PDO::FETCH_ASSOC);
+                $users = DBManager::get()->query($query2)->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
+                $seminars = DBManager::get()->query($query3)->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
+                foreach ($studycourses as $index => $course) {
+                    $studycourses[$index]['count_user'] = $users[$course['studiengang_id']][0];
+                    $studycourses[$index]['count_sem'] = $seminars[$course['studiengang_id']][0];
+                }
             }
-            $studycourses = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+
             foreach ($studycourses as $index => $row) {
                 // get one profession with all degrees
                 $query = "SELECT DISTINCT abschluss.name, abschluss.abschluss_id, "
@@ -169,9 +176,9 @@ class StudycourseModel
     public static function getStudyDegreeInfo($deg_id = NULL)
     {
         if (!is_null($deg_id)) {
-            $query = "SELECT a.abschluss_id, a.name,a.beschreibung "
-                   . "FROM abschluss a "
-                   . "WHERE a.abschluss_id = '{$deg_id}'";
+            $query = "SELECT abschluss_id, name, beschreibung "
+                   . "FROM abschluss "
+                   . "WHERE abschluss_id = '{$deg_id}'";
             return DBManager::get()->query($query)->fetch(PDO::FETCH_ASSOC);
         }
         return false;

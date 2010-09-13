@@ -760,7 +760,7 @@ function makeArrow($timestmp,$open,$displayclass,$mode,$voteID = NULL){
         $html.= "         <a href=\"".URLHelper::getLink($oclink)."\" title=\"".$label["arrow_closethis"]."\">\n";
 
 
-    $html.= "     <img src=\"".$GLOBALS['ASSETS_URL']."images/forum".$icon.".gif\" border=\"0\" align=\"middle\" alt=\"";//style=\"vertical-align:middle;\"
+    $html.= "     <img src=\"" . Assets::image_path('icons/16/' . $icon . '/arr_1_right.png') . "\"";
     if ($open == "closed")
         $html.= $label["arrow_openthis"];
     else

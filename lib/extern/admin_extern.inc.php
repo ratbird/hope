@@ -68,12 +68,7 @@ if ($_REQUEST['com'] == 'download_config') {
 PageLayout::setTitle(_("Verwaltung externer Seiten"));
 
 if ($links_admin_data["topkat"] == "inst") {
-    if (Request::get('section') == 'extern') {
-        UrlHelper::bindLinkParam('section', $section);
-        Navigation::activateItem('/course/admin/extern');
-    } else {
-        Navigation::activateItem('/admin/institute/external');
-    }
+    Navigation::activateItem('/admin/institute/external');
 } else {
     Navigation::activateItem('/admin/config/external');
 }

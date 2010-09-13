@@ -65,7 +65,7 @@
          </td>
          <td width="99%" align="left">
 
-                       <a href="<?= URLHelper::getLink("raumzeit.php?section=dates")?>"><?= _("Zur Terminverwaltung") ?></a>
+                       <a href="<?= URLHelper::getLink("raumzeit.php")?>"><?= _("Zur Terminverwaltung") ?></a>
 
            <br>
          </td>
@@ -77,7 +77,7 @@
          </td>
          <td width="99%" align="left">
 
-                       <a href="<?= URLHelper::getLink("themen.php?section=topics")?>"><?= _("Zur Ablaufplanverwaltung") ?></a>
+                       <a href="<?= URLHelper::getLink("themen.php")?>"><?= _("Zur Ablaufplanverwaltung") ?></a>
 
            <br>
          </td>

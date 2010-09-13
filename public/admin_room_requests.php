@@ -95,11 +95,11 @@ if ($SessSemName[1]) {
 }
 
 PageLayout::setTitle(getHeaderLine($seminar_id)." -  "._("Raumanfrage"));
-if (Request::get('section') == 'dates' || !$perm->have_perm('admin')) {
-    UrlHelper::bindLinkParam('section', $section);
-    Navigation::activateItem('/course/admin/dates');
-} else {
+
+if ($perm->have_perm('admin')) {
     Navigation::activateItem('/admin/course/dates');
+} else {
+    Navigation::activateItem('/course/admin/dates');
 }
 
 // Start of Output

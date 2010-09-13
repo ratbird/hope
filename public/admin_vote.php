@@ -51,23 +51,22 @@ PageLayout::setTitle(_("Verwaltung von Umfragen und Tests"));
 
 require_once 'lib/admin_search.inc.php';
 
-if (Request::get('section') == 'votings') {
-   UrlHelper::bindLinkParam('section', $section);
-   Navigation::activateItem('/course/admin/votings');
-} else {
-    if ($list || $view) {
-        $view_mode = get_object_type($the_range);
-        if ($view_mode == "fak"){
-            $view_mode = "inst";
-        }
-        if ($links_admin_data['topkat'] == 'sem' && !SeminarCategories::getByTypeId($SessSemName['art_num'])->studygroup_mode) {
+if ($list || $view) {
+    $view_mode = get_object_type($the_range);
+    if ($view_mode == "fak"){
+        $view_mode = "inst";
+    }
+    if ($perm->have_perm('admin')) {
+        if ($links_admin_data['topkat'] == 'sem') {
             Navigation::activateItem('/admin/course/vote');
-        } elseif  ($links_admin_data['topkat'] == 'inst') {
+        } else {
             Navigation::activateItem('/admin/institute/vote');
         }
     } else {
-        Navigation::activateItem('/tools/vote');
+        Navigation::activateItem('/course/admin/vote');
     }
+} else {
+    Navigation::activateItem('/tools/vote');
 }
 
 include_once('lib/include/html_head.inc.php');

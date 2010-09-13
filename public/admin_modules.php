@@ -54,17 +54,16 @@ $cssSw=new cssClassSwitcher;
 $sess->register("admin_modules_data");
 $sess->register("plugin_toggle");
 
-
 PageLayout::setTitle(_("Verwaltung verwendeter Inhaltselemente und Plugins"));
-if (Request::get('section') == 'modules' && $SessSemName['class'] == 'sem') {
-    UrlHelper::bindLinkParam('section', $section);
-    Navigation::activateItem('/course/modules');
-} else {
+
+if ($perm->have_perm('admin')) {
     if ($links_admin_data['topkat'] == 'sem') {
         Navigation::activateItem('/admin/course/modules');
     } else {
         Navigation::activateItem('/admin/institute/modules');
     }
+} else {
+    Navigation::activateItem('/course/modules');
 }
 
 //get ID

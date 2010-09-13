@@ -269,10 +269,7 @@ if (Navigation::hasItem("/course/admin")) {
 
 // add navigation item: add modules
 if (Navigation::hasItem('/course')
-    && (($perm->have_studip_perm('tutor', $SessSemName[1]) && $SessSemName['class'] == 'sem')
-    || ($perm->have_studip_perm('admin', $SessSemName[1]) && $SessSemName['class'] == 'inst'))
+    && ($perm->have_studip_perm('tutor', $SessSemName[1]) && $SessSemName['class'] == 'sem')
     && !$SEM_CLASS[$SEM_TYPE[$SessSemName['art_num']]['class']]['studygroup_mode']) {
-    Navigation::addItem('/course/modules',
-        new Navigation(_('+'), 'admin_modules.php?section=modules'));
+    Navigation::addItem('/course/modules', new Navigation('+', 'admin_modules.php'));
 }
-

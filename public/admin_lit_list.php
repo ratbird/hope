@@ -56,13 +56,8 @@ if (!$_range_id){
     $_range_id = $auth->auth['uid'];
 }
 
-if (Request::get('section') == 'literature') {
-    UrlHelper::bindLinkParam('section', $section);
-    Navigation::activateItem('/course/literature/edit');
-    $_range_id = ($SessSemName[1]) ? $SessSemName[1] : $_range_id;
-} else {
-    if ($list  || $view || $view_mode || $_range_id != $auth->auth['uid']){
-
+if ($list  || $view || $view_mode || $_range_id != $auth->auth['uid']){
+    if ($perm->have_perm('admin')) {
         include 'lib/admin_search.inc.php';
 
         if ($links_admin_data['topkat'] == 'sem') {
@@ -70,11 +65,13 @@ if (Request::get('section') == 'literature') {
         } else {
             Navigation::activateItem('/admin/institute/literature');
         }
-        $_range_id = ($SessSemName[1]) ? $SessSemName[1] : $_range_id;
     } else {
-        Navigation::activateItem('/tools/literature');
-        closeObject();
+        Navigation::activateItem('/course/literature/edit');
     }
+    $_range_id = ($SessSemName[1]) ? $SessSemName[1] : $_range_id;
+} else {
+    Navigation::activateItem('/tools/literature');
+    closeObject();
 }
 
 $_lit_range = $_range_id;

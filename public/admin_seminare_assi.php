@@ -65,7 +65,7 @@ if ($RESOURCES_ENABLE) {
 
 //cancel
 if ($cancel_x) {
-    header ("Location: " . UrlHelper::getUrl('dispatch.php/course/basicdata/view', array('section' => $perm->have_perm('admin') ? '' : 'details')));
+    header ("Location: " . UrlHelper::getUrl('dispatch.php/course/basicdata/view'));
 }
 
 // Get a database connection and Stuff
@@ -1969,7 +1969,7 @@ if (($form == 6) && ($jump_next_x))
 //Nur der Form halber... es geht weiter zur SCM-Seite
 if (($form == 7) && ($jump_next_x)) {
     if (!$sem_create_data["modules_list"]["scm"] && !$sem_create_data["modules_list"]["schedule"]) {
-        header ('Location: ' . UrlHelper::getUrl('dispatch.php/course/basicdata/view', array('section' => $perm->have_perm('admin') ? '' : 'details')));
+        header ('Location: ' . UrlHelper::getUrl('dispatch.php/course/basicdata/view'));
         die;
     } elseif (!$sem_create_data["modules_list"]["scm"]) {
         //header ("Location: admin_dates.php?assi=yes&ebene=sem&range_id=".$sem_create_data["sem_id"]);
@@ -1995,7 +1995,7 @@ if (($form == 8) && ($jump_next_x)) {
             //if ($sem_create_data["modules_list"]["schedule"]) // ## RAUMZEIT : schedule duerfte veraltet sein, muesste als komplett weg
                 //header ("Location: admin_dates.php?assi=yes&ebene=sem&range_id=".$sem_create_data["sem_id"]);
             //else
-                header ('Location: ' . UrlHelper::getUrl('dispatch.php/course/basicdata/view', array('section' => $perm->have_perm('admin') ? '' : 'details')));
+                header ('Location: ' . UrlHelper::getUrl('dispatch.php/course/basicdata/view'));
             page_close();
             die;
             }
@@ -2010,7 +2010,7 @@ if (($form == 8) && ($jump_next_x)) {
         //if ($sem_create_data["modules_list"]["schedule"]) // ## RAUMZEIT : siehe oben
         //  header ("Location: admin_dates.php?assi=yes&ebene=sem&range_id=".$sem_create_data["sem_id"]);
         //else
-            header ("Location: " . UrlHelper::getUrl('dispatch.php/course/basicdata/view', array('section' => $perm->have_perm('admin') ? '' : 'details')));
+            header ("Location: " . UrlHelper::getUrl('dispatch.php/course/basicdata/view'));
         page_close();
         die;
     }

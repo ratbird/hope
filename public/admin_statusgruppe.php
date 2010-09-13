@@ -46,11 +46,10 @@ PageLayout::setHelpKeyword("Basis.VeranstaltungenVerwaltenGruppen");
 
 PageLayout::setTitle(_("Verwaltung von Gruppen und Funktionen"));
 
-if (Request::get('section') == 'groups') {
-    UrlHelper::bindLinkParam('section', $section);
-    Navigation::activateItem('/course/members/edit_groups');
-} else {
+if ($perm->have_perm('admin')) {
     Navigation::activateItem('/admin/course/groups');
+} else {
+    Navigation::activateItem('/course/members/edit_groups');
 }
 
 //get ID, if a object is open

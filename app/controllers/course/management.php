@@ -38,11 +38,9 @@ class Course_ManagementController extends AuthenticatedController
     /**
      * shows index page of course management
      *
-     * @param string section
-     *
      * @return void
      */
-    function index_action($section = '')
+    function index_action()
     {
         Navigation::activateItem('course/admin/main');
         if ($_SESSION['SessSemName']['class'] == 'inst') {

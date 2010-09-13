@@ -45,14 +45,9 @@ require_once 'lib/admin_search.inc.php';
  * PageLayout::setHelpKeyword("Basis.EinrichtungenVerwaltenGruppen"); 
  */
 PageLayout::setHelpKeyword("Basis.Allgemeines"); 
-
 PageLayout::setTitle(_("Verwaltung von Gruppen und Funktionen"));
-if (Request::get('section') == 'groups') {
-    UrlHelper::bindLinkParam('section', $section);
-    Navigation::activateItem('/course/faculty/edit_groups');
-} else {
-    Navigation::activateItem('/admin/institute/groups');
-}
+
+Navigation::activateItem('/admin/institute/groups');
 
 //get ID, if a object is open
 if ($SessSemName[1])

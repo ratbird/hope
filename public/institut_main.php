@@ -213,4 +213,4 @@ if (get_config('CHAT_ENABLE') && $modules["chat"]) {
 }
 
 include ('lib/include/html_end.inc.php');
-page_close()
+page_close();

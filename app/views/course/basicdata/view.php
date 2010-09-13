@@ -60,7 +60,7 @@ $width_namecolumn = 60;
 
 <div style="min-width: 600px">
 
-<form name="details" method="post" action="<?= $controller->url_for('course/basicdata/set?cid='.$course_id) ?>">
+<form name="details" method="post" action="<?= $controller->url_for('course/basicdata/set') ?>">
 <div style="text-align:center" id="settings" class="steel1">
 
   <h2 id="bd_basicsettings" class="steelgraulight"><?= _("Grundeinstellungen") ?></h2>
@@ -129,15 +129,15 @@ $width_namecolumn = 60;
             <? if ($perm_dozent) : ?>
             <span style="argin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
                 <? if ($num > 0) : ?>
-                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/priorityupfor', $dozent["user_id"], "dozent"), array('section' => $section)) ?>">
+                <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $dozent["user_id"], "dozent") ?>">
                 <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
                 <? endif; if ($num < count($dozenten)-1) : ?>
-                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/prioritydownfor', $dozent["user_id"], "dozent"), array('section' => $section)) ?>">
+                <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $dozent["user_id"], "dozent") ?>">
                 <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
                 <? endif; ?>
             </span>
             <span style="vertical-align: middle">
-                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/deletedozent', $dozent["user_id"]), array('section' => $section)) ?>">
+                <a href="<?= $controller->url_for('course/basicdata/deletedozent', $dozent["user_id"]) ?>">
                 <?= Assets::img("icons/16/blue/trash.png") ?>
                 </a>
             </span>
@@ -175,7 +175,7 @@ $width_namecolumn = 60;
             <span style="margin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
             </span>
             <span style="vertical-align: middle">
-                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/deletedeputy', $deputy["user_id"]), array('section' => $section)) ?>">
+                <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $deputy["user_id"]) ?>">
                 <?= Assets::img("icons/16/blue/trash.png") ?></a>
             </span>
             <? endif; ?>
@@ -212,15 +212,15 @@ $width_namecolumn = 60;
             <? if ($perm_dozent) : ?>
             <span style="margin: 3px; vertical-align: middle; white-space: nowrap;">
                 <? if ($num > 0) : ?>
-                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/priorityupfor', $tutor["user_id"], "tutor"), array('section' => $section)) ?>">
+                <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $tutor["user_id"], "tutor") ?>">
                 <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
                 <? endif; if ($num < count($tutoren)-1) : ?>
-                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/prioritydownfor', $tutor["user_id"], "tutor"), array('section' => $section)) ?>">
+                <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $tutor["user_id"], "tutor") ?>">
                 <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
                 <? endif; ?>
             </span>
             <span style="margin: 3px; vertical-align: middle">
-                <a href="<?= URLHelper::getLink($controller->url_for('course/basicdata/deletetutor', $tutor["user_id"]), array('section' => $section)) ?>">
+                <a href="<?= $controller->url_for('course/basicdata/deletetutor', $tutor["user_id"]) ?>">
                 <?= Assets::img("icons/16/blue/trash.png") ?>
                 </a>
             </span>
@@ -278,7 +278,6 @@ $width_namecolumn = 60;
 </div>
 <div style="text-align:center; padding: 15px">
   <? echo makeButton("uebernehmen", "input") ?>
-  <input type="hidden" name="section" value="<?= $section ?>">
   <input id="open_variable" type="hidden" name="open" value="<?= $flash['open'] ?>">
 </div>
 </form>

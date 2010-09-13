@@ -43,15 +43,12 @@ class Course_BasicdataController extends AuthenticatedController
 
         $this->course_id = $SessSemName[1] ? $SessSemName[1] : $course_id;
 
-        if ((Request::get('section') === 'details') || ($this->flash['section'] === 'details')) {
+        if ($perm->have_perm('admin')) {
             //Navigation im Admin-Bereich:
-            $this->section = 'details';
-            UrlHelper::bindLinkParam('section', $section);
-            Navigation::activateItem('/course/admin/details');
+            Navigation::activateItem('/admin/course/details');
         } else {
             //Navigation in der Veranstaltung:
-            Navigation::activateItem('/admin/course/details');
-            $this->section = 'admin';
+            Navigation::activateItem('/course/admin/details');
         }
 
         //Auswähler für Admin-Bereich:
@@ -464,7 +461,6 @@ class Course_BasicdataController extends AuthenticatedController
         }
         $this->flash['new_tut_parameter'] = $_POST['new_tut'] ? null : Request::get('new_tut_parameter');
         $this->flash['open'] = Request::get("open");
-        $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
 
@@ -498,7 +494,6 @@ class Course_BasicdataController extends AuthenticatedController
         }
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = "bd_personal";
-        $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
 
@@ -532,7 +527,6 @@ class Course_BasicdataController extends AuthenticatedController
         }
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = "bd_personal";
-        $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
 
@@ -562,7 +556,6 @@ class Course_BasicdataController extends AuthenticatedController
         }
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = "bd_personal";
-        $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
 
@@ -599,7 +592,6 @@ class Course_BasicdataController extends AuthenticatedController
         }
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = "bd_personal";
-        $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
 
@@ -636,7 +628,6 @@ class Course_BasicdataController extends AuthenticatedController
         }
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = "bd_personal";
-        $this->flash['section'] = Request::get("section");
         $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
     }
     

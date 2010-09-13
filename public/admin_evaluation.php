@@ -57,19 +57,18 @@ PageLayout::setTitle(_("Verwaltung von Evaluationen"));
 require_once ('lib/evaluation/evaluation.config.php');
 require_once 'lib/admin_search.inc.php';
 
-if (Request::get('section') == 'evaluation') {
-   UrlHelper::bindLinkParam('section', $section);
-   Navigation::activateItem('/course/admin/evaluation');
-} else {
-    if ($list || $view) {
+if ($list || $view) {
+    if ($perm->have_perm('admin')) {
         if ($links_admin_data['topkat'] == 'sem') {
             Navigation::activateItem('/admin/course/evaluation');
         } else {
             Navigation::activateItem('/admin/institute/evaluation');
         }
     } else {
-        Navigation::activateItem('/tools/evaluation');
+        Navigation::activateItem('/course/admin/evaluation');
     }
+} else {
+    Navigation::activateItem('/tools/evaluation');
 }
 
 if (($SessSemName[1]) && (($view == "eval_sem") || ($view == "eval_inst")))

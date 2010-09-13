@@ -63,11 +63,11 @@ if ($RESOURCES_ENABLE) {
 }
 
 PageLayout::setTitle(_("Verwaltung von Zeiten und Raumangaben"));
-if (Request::get('section') == 'dates' || !$perm->have_perm('admin')) {
-    UrlHelper::bindLinkParam('section', $section);
-    Navigation::activateItem('/course/admin/dates');
-} else {
+
+if ($perm->have_perm('admin')) {
     Navigation::activateItem('/admin/course/dates');
+} else {
+    Navigation::activateItem('/course/admin/dates');
 }
 
 // bind linkParams for chosen semester and opened dates

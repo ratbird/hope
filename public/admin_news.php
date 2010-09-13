@@ -52,17 +52,10 @@ if (!$news_range_id){
 PageLayout::setHelpKeyword("Basis.News");
 PageLayout::setTitle(_("Verwaltung von Ankündigungen"));
 
-if (Request::get('section') == 'news') {
-    UrlHelper::bindLinkParam('section', $section);
-    Navigation::activateItem('/course/admin/news');
+if ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user'){
+    include 'lib/admin_search.inc.php';
 
-    if ($SessSemName[1]) {
-        $news_range_id = $SessSemName[1];
-        $news_range_name = '';
-    }
-} else {
-    if ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' ){
-        include 'lib/admin_search.inc.php';
+    if ($perm->have_perm('admin')) {
         if ($links_admin_data['topkat'] == 'sem' && !SeminarCategories::getByTypeId($SessSemName['art_num'])->studygroup_mode) {
             Navigation::activateItem('/admin/course/news');
         } elseif ($links_admin_data['topkat'] == 'inst') {
@@ -70,15 +63,16 @@ if (Request::get('section') == 'news') {
         } else {
             Navigation::activateItem('/tools/news');
         }
-
-        if ($SessSemName[1]) {
-            $news_range_id = $SessSemName[1];
-            $news_range_name = '';
-        }
     } else {
-       Navigation::activateItem('/tools/news');
-        closeObject();
+        Navigation::activateItem('/course/admin/news');
     }
+    if ($SessSemName[1]) {
+        $news_range_id = $SessSemName[1];
+        $news_range_name = '';
+    }
+} else {
+    Navigation::activateItem('/tools/news');
+    closeObject();
 }
 
 $news = new AdminNewsController();

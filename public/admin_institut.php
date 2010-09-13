@@ -346,12 +346,7 @@ require_once 'lib/admin_search.inc.php';
 
 PageLayout::setTitle(_("Verwaltung der Grunddaten"));
 
-if (Request::get('section') == 'details') {
-    UrlHelper::bindLinkParam('section', $section);
-    Navigation::activateItem('/course/admin/details');
-} else {
-    Navigation::activateItem('/admin/institute/details');
-}
+Navigation::activateItem('/admin/institute/details');
 
 //get ID from a open Institut
 if ($SessSemName[1])

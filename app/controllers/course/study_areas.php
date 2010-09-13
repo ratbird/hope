@@ -48,16 +48,17 @@ class Course_StudyAreasController extends AuthenticatedController {
    */
   function show_action($course_id = '') {
 
+    global $perm;
+
     # prepare layout
     $layout =
       $GLOBALS['template_factory']->open('layouts/base_without_infobox');
     $this->set_layout($layout);
 
-    if (Request::get('section') == 'studycourse') {
-        UrlHelper::bindLinkParam('section', $section);
-        Navigation::activateItem('/course/admin/studycourse');
-    } else {
+    if ($perm->have_perm('admin')) {
         Navigation::activateItem('/admin/course/study_areas');
+    } else {
+        Navigation::activateItem('/course/admin/studycourse');
     }
 
     # w/o a course ID show the admin search form

@@ -199,8 +199,8 @@ if (!$cmd OR $cmd=="show") {
         $news->send_sms();
     if ($perm->have_perm("autor")) {    // allow autors, needed for studygroups
         if ($perm->have_perm("admin")) {
-            echo"\n<tr><td class=\"blank\"><blockquote><br><b>" . _("Bereichsauswahl") . "</b><br>&nbsp; </blockquote></td></tr>\n";
-            echo "<tr><td class=\"blank\"><blockquote>";
+            echo"\n<tr><td class=\"blank\"><p class=\"info\"><br><b>" . _("Bereichsauswahl") . "</b><br>&nbsp; </p></td></tr>\n";
+            echo "<tr><td class=\"blank\"><p class=\"info\">";
             echo "<table width=\"50%\" cellspacing=0 cellpadding=2 border=0>";
             echo "<form action=\"". URLHelper::getLink("?cmd=search") ."\" method=\"POST\">";
             echo "<tr><td class=\"steel1\">";
@@ -208,23 +208,23 @@ if (!$cmd OR $cmd=="show") {
             echo "&nbsp; <input type=\"TEXT\" style=\"vertical-align:middle;\" name=\"search\" size=\"20\">&nbsp;&nbsp;";
             echo "<input type=\"IMAGE\" style=\"vertical-align:middle;\" name=\"submit\" " . makeButton("suchestarten","src") . tooltip( _("Suche starten")) ." border=\"0\">";
             echo "</td></tr></form></table>\n";
-            echo "</blockquote>";
+            echo "</p>";
             echo "</td></tr>";
         } else
             $news->search_range("blah");
-        echo "\n<tr><td class=\"blank\"><blockquote>";
+        echo "\n<tr><td class=\"blank\"><p class=\"info\">";
         if ($perm->have_perm("admin"))
         echo "<hr>";
         echo "<br><b>" . _("verf&uuml;gbare Bereiche");
-        echo "</b></blockquote></td></tr>\n ";
+        echo "</b></p></td></tr>\n ";
         $typen = array( "user"=> array('name' => _("Benutzer"), 'view_mode' => 'user', 'id_param' => 'range_id'),
                         "sem"=>  array('name' => _("Veranstaltung"), 'view_mode' => 'sem', 'id_param' => 'select_sem_id'),
                         "inst"=> array('name' => _("Einrichtung"), 'view_mode' => 'inst', 'id_param' => 'admin_inst_id'),
                         "fak"=>  array('name' => _("Fakult&auml;t"), 'view_mode' => 'inst', 'id_param' => 'admin_inst_id'));
         $my_cols=3;
         if ($perm->have_perm("autor")) {   // allow autors, needed for studygroups
-            echo "\n<tr><td class=\"blank\"><blockquote>";
-            echo "<font size=\"-1\" style=\"vertical-align:middle;\">" . _("Sie k&ouml;nnen&nbsp; <b>Pers&ouml;nliche Ankündigungen</b> bearbeiten") . "</font>&nbsp;";
+            echo "\n<tr><td class=\"blank\"><p class=\"info\">";
+            echo _("Sie k&ouml;nnen&nbsp; <b>Pers&ouml;nliche Ankündigungen</b> bearbeiten") . "&nbsp;";
             echo "<a href=\"". URLHelper::getLink("?range_id=self") ."\">&nbsp; <img style=\"vertical-align:middle;\" " . makeButton("bearbeiten","src") . tooltip(_("Persönliche Ankündigungen bearbeiten")) ." border=\"0\"></a>";
         }
         if ($perm->have_perm("root")) {
@@ -236,11 +236,11 @@ if (!$cmd OR $cmd=="show") {
             echo "<br><br><font size=\"-1\" style=\"vertical-align:middle;\">" . _("<i>oder</i> <b>hier</b> einen der gefundenen Bereiche ausw&auml;hlen:") . "&nbsp;</font>";
 
         if ($perm->have_perm("autor"))   // allow autors, needed for studygroups
-            echo "</blockquote></td></tr>";
+            echo "</p></td></tr>";
 
         if ($news->search_result) {
             uasort($news->search_result, 'callback_cmp_newsarray');
-            echo "\n".'<tr><td width="100%" class="blank"><blockquote>';
+            echo "\n".'<tr><td width="100%" class="blank"><p class="info">';
             echo '<table width="'.round(0.88*$news->xres).'" cellspacing="0" cellpadding="2" border="0">';
             $css = new CssClassSwitcher(array("steel1","steel1"));
             $css->hoverenabled = TRUE;
@@ -259,10 +259,10 @@ if (!$cmd OR $cmd=="show") {
                 }
                 echo "\n</ul></div></td>";
             }
-            echo "\n</table></blockquote></td></tr>";
+            echo "\n</table></p></td></tr>";
         }
     }
-    echo "\n<tr><td class=\"blank\"><br><blockquote>";
+    echo "\n<tr><td class=\"blank\"><br><p class=\"info\">";
     echo "<form action=\"". URLHelper::getLink("?cmd=new_entry&range_id=$news_range_id&view_mode=$view_mode")."\" method=\"POST\">";
     echo "<hr width=\"100%\"><br><b>" . _("gew&auml;hlter Bereich:") . " </b>".htmlReady($news_range_name). "<br><br>";
     if (get_config('NEWS_RSS_EXPORT_ENABLE') && $news->get_news_range_perm($news_range_id) > 1){
@@ -274,11 +274,11 @@ if (!$cmd OR $cmd=="show") {
     }
     echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Eine neue Ankündigung im gew&auml;hlten Bereich erstellen") . '</font>&nbsp;';
     echo makeButton('erstellen', 'input', _("Eine neue Ankündigung erstellen"), 'new_entry');
-    echo "</b>\n</blockquote>\n</form>\n</td>\n</tr>\n ";
+    echo "</b>\n</p>\n</form>\n</td>\n</tr>\n ";
     if (!$news->show_news($news_range_id)) {
-        echo "\n".'<tr><td class="blank"><blockquote>';
+        echo "\n".'<tr><td class="blank"><p class="info">';
         echo '<font size="-1" style="vertical-align:middle;">' . _("Im gew&auml;hlten Bereich sind keine Ankündigungen vorhanden!") . '<br><br>';
-        echo '</blockquote></td></tr>';
+        echo '</p></td></tr>';
     }
 }
 echo "\n</table>";

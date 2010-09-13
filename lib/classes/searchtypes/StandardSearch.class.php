@@ -43,7 +43,7 @@ class StandardSearch extends SQLSearch {
      * in this search. array("input_name" => "placeholder_in_sql_query")
      * @return void
      */
-    public function __construct($search) 
+    public function __construct($search)
     {
         $this->avatarLike = $this->search = $search;
     }
@@ -51,7 +51,7 @@ class StandardSearch extends SQLSearch {
     /**
      * returns an object of type SQLSearch with parameters to constructor
      */
-    static public function get($search) 
+    static public function get($search)
     {
         return new SQLSearch($search);
     }
@@ -59,7 +59,7 @@ class StandardSearch extends SQLSearch {
      * returns the title/description of the searchfield
      * @return string: title/description
      */
-    public function getTitle() 
+    public function getTitle()
     {
         switch ($this->search) {
             case "username":
@@ -82,7 +82,7 @@ class StandardSearch extends SQLSearch {
      * @param contextual_data array: an associative array with more variables
      * @return array: array(array(), ...)
      */
-    public function getResults($input, $contextual_data = array()) 
+    public function getResults($input, $contextual_data = array())
     {
         $db = DBManager::get();
         $statement = $db->prepare($this->getSQL(), array(PDO::FETCH_NUM));
@@ -100,7 +100,7 @@ class StandardSearch extends SQLSearch {
         return $results;
     }
 
-    private function getSQL() 
+    private function getSQL()
     {
         switch ($this->search) {
             case "username":
@@ -111,7 +111,7 @@ class StandardSearch extends SQLSearch {
                         "ORDER BY user_info.score DESC " .
                         "LIMIT 5";
             case "user_id":
-                return "SELECT DISTINCT auth_user_md5.user_id, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname, \" <em>(\", auth_user_md5.username,\")</em>\") " .
+                return "SELECT DISTINCT auth_user_md5.user_id, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname, \" (\", auth_user_md5.username,\")\") " .
                         "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
                         "WHERE CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input " .
@@ -165,7 +165,7 @@ class StandardSearch extends SQLSearch {
      * returns the absolute path to this class for autoincluding this class.
      * @return: path to this class
      */
-    public function includePath() 
+    public function includePath()
     {
         return __file__;
     }

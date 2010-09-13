@@ -47,7 +47,7 @@ class Admin_ConfigurationController extends AuthenticatedController
      *
      * @param   string $section
      */
-    function configuration_action($section = null)
+    public function configuration_action($section = null)
     {
         PageLayout::setTitle(_('Verwaltung von Systemkonfigurationen'));
 
@@ -71,10 +71,11 @@ class Admin_ConfigurationController extends AuthenticatedController
     /**
      * Searchview: filter = field
      */
-    function results_configuration_action()
+    public function results_configuration_action()
     {
         if (Request::get('search_config')) {
             $this->search_filter = ConfigurationModel::searchConfig(Request::get('search_config'));
+            $this->search = Request::get('search_config');
         } else {
             $this->flash['error'] = _("Bitte geben Sie einen Suchparameter ein.");
             $this->redirect('admin/configuration/configuration');
@@ -87,7 +88,7 @@ class Admin_ConfigurationController extends AuthenticatedController
      *
      * @param   md5 $config_id
      */
-    function edit_configuration_action($config_id)
+    public function edit_configuration_action($config_id)
     {
         if (Request::submitted('uebernehmen')) {
             if (Request::get('value') || Request::get('value')== 0) {
@@ -135,7 +136,7 @@ class Admin_ConfigurationController extends AuthenticatedController
      *
      * @param   string $give_all
      */
-    function user_configuration_action($give_all = NULL)
+    public function user_configuration_action($give_all = NULL)
     {
 
         if ($give_all == 'update') {
@@ -167,7 +168,7 @@ class Admin_ConfigurationController extends AuthenticatedController
      * @param   md5 $user_id
      * @param   md5 $field
      */
-    function edit_user_config_action($user_id, $field)
+    public function edit_user_config_action($user_id, $field)
     {
         if ($field && $user_id) {
             $this->search_user = ConfigurationModel::showUserConfiguration($user_id, $field);

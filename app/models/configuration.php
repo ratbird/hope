@@ -12,7 +12,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     admin
- * @since       Stud.IP version 1.12
+ * @since       Stud.IP version 2.0
  */
 
 /**
@@ -42,7 +42,7 @@ class ConfigurationModel
      * Search for the key (field)
      *
      * @param   string $search_key
-     *
+
      * @return  array() list of config-entries
      */
     public static function searchConfig($search_key)

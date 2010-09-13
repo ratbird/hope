@@ -8,6 +8,7 @@
  <h3>
     <?= _('Verwaltung von Systemkonfigurationen')?>
 </h3>
+<? if (!empty($search_filter)) : ?>
 <table id="config_table" class="default collapsable">
     <tbody>
         <tr>
@@ -16,34 +17,35 @@
             <th width="40%" ><?=_("Beschreibung")?></th>
             <th><?= _('Aktion') ?></th>
         </tr>
-        <? if (!empty($search_filter)): ''?>
-            <?foreach ($search_filter as $config): ?>
-                    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-                        <td>
-                            <?=$config['field']?>
-                        </td>
-                        <td>
-                            <? if ($config['type'] == 'string'): ''?><em><?= htmlReady($config['value'])?></em>
-                            <? elseif ($config['type'] == 'integer'): ''?> <?= htmlReady($config['value'])?>
-                            <? elseif ($config['type'] == 'boolean'): ''?>
-                                <?if ($config["value"]):?><?= Assets::img('icons/16/green/accept.png', array('title' => _('TRUE'))) ?>
-                                <? else :?> <?= Assets::img('icons/16/red/decline.png', array('title' => _('FALSE'))) ?>
-                                <? endif; ?>
-                            <? endif; ?>
-                        </td>
-                        <td>
-                            <?=$config['description']?>
-                        </td>
-                        <td align="right">
-                            <a class="load-in-new-row" href="<?=$controller->url_for('admin/configuration/edit_configuration/'.$config['config_id'])?>">
-                            <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
-                            </a>
-                        </td>
-                    </tr>
-            <?endforeach; ?>
-        <?endif ; ?>
+        <?foreach ($search_filter as $config): ?>
+            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+                <td>
+                    <?=$config['field']?>
+                </td>
+                <td>
+                    <? if ($config['type'] == 'string'): ''?><em><?= htmlReady($config['value'])?></em>
+                    <? elseif ($config['type'] == 'integer'): ''?> <?= htmlReady($config['value'])?>
+                    <? elseif ($config['type'] == 'boolean'): ''?>
+                        <?if ($config["value"]):?><?= Assets::img('icons/16/green/accept.png', array('title' => _('TRUE'))) ?>
+                        <? else :?> <?= Assets::img('icons/16/red/decline.png', array('title' => _('FALSE'))) ?>
+                        <? endif; ?>
+                    <? endif; ?>
+                </td>
+                <td>
+                    <?=$config['description']?>
+                </td>
+                <td align="right">
+                    <a class="load-in-new-row" href="<?=$controller->url_for('admin/configuration/edit_configuration/'.$config['config_id'])?>">
+                    <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Konfigurationsparameter bearbeiten')) ?>
+                    </a>
+                </td>
+            </tr>
+        <?endforeach; ?>
 </tbody>
 </table>
+<? else : ?>
+<?= MessageBox::info(_('Es wurden keine Ergebnisse gefunden. Bitte probieren Sie einen anderen Begriff.'))?>
+<?endif ; ?>
 
 <?
 $infobox_content = array(

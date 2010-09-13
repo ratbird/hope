@@ -18,9 +18,7 @@
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td><?= _("Inhalt") ?>:</td>
             <td>
-            <? if ($edit['type'] == 'string'): ?>
-                <textarea cols="55" rows="4" name="value"><?= htmlReady($edit['value'])?></textarea>
-            <? elseif ($edit['type'] == 'integer'): ?>
+            <? if ($edit['type'] == 'integer'): ?>
                 <input class="allow-only-numbers" name="value" type="text" value="<?= htmlReady($edit['value'])?>" />
             <? elseif ($edit['type'] == 'boolean'): ?>
                 <select name="value">
@@ -31,16 +29,14 @@
                         FALSE
                     </option>
                 </select>
+            <? else : ?>
+                <textarea cols="80" rows="3" name="value"><?= htmlReady($edit['value'])?></textarea>
             <? endif; ?>
             </td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-            <td><?= _("Beschreibung") ?>:</td>
-            <td><?= htmlReady($edit['description'])?></td>
-        </tr>
-        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td><?= _("Kommentar") ?>:</td>
-            <td><textarea cols="55" rows="4" name="comment"><?= htmlReady($edit['comment']) ?></textarea></td>
+            <td><textarea cols="80" rows="2" name="comment"><?= htmlReady($edit['comment']) ?></textarea></td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td><?= _("Standard") ?>:</td>

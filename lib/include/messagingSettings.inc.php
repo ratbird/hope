@@ -274,7 +274,7 @@ function change_messaging_view()
                         } else { // kein empfaenger ausgewaehlt
                             if ($search_exp == "") { ?>
                                 <input type="text" name="search_exp" size="30" value="">
-                                <input type="image" name="gosearch" src="<?=Assets::image_path('icons/16/blue/search.png') ?>" class="middle" border="0"><?
+                                <input type="image" name="gosearch" src="<?=Assets::image_path('icons/16/blue/search.png') ?>" class="middle" title="<?= _("Nach Empfänger suchen") ?>" border="0"><?
                             } else {
                                 $db->query("SELECT username, ".$_fullname_sql['full_rev']." AS fullname, perms FROM auth_user_md5 LEFT JOIN user_info USING(user_id) WHERE (username LIKE '%$search_exp%' OR Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%') AND ".get_vis_query('auth_user_md5')." ORDER BY Nachname ASC");
                                 if (!$db->num_rows()) { // wenn keine treffer
@@ -289,7 +289,7 @@ function change_messaging_view()
                                         }
                                     } ?>
                                     </select>
-                                    <input type="image" name="reset_serach" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" class="text-top" value="<?=_("Suche zur&uuml;cksetzen")?>" <?=tooltip(_("setzt die Suche zurück"))?>> <?
+                                    <input type="image" name="reset_serach" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" class="text-top" value="<?=_("Suche zurücksetzen")?>" <?=tooltip(_("setzt die Suche zurück"))?>> <?
                                 }
                             }
                         }

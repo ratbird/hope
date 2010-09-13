@@ -292,7 +292,7 @@ $css_switcher->switchClass();
                             echo '<input type="hidden" name="atime" value="'.$atime.'">';
                     ?>
                         <input type="hidden" name="view" value="calendar">
-                        <input type="image" <? echo makeButton("uebernehmen" , "src"); ?> border="0">
+                        <? echo makeButton("uebernehmen" , "input", _("Änderungen übernehmen")); ?>
                     </td>
                 </tr>
             </table>

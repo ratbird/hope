@@ -392,15 +392,14 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
     echo '<tr><td class="blank" align="center" colspan="';
     echo (sizeof($enabled_modules) + 3) . '"><br>';
-    echo "<input type=\"image\" " . makeButton("uebernehmen", "src");
+    echo makeButton("uebernehmen", "input", _("Änderungen übernehmen"));
     if ($_REQUEST['view'] != 'notification') {
-        echo " border=\"0\" value=\"absenden\">&nbsp; <a href=\"$PHP_SELF\">";
+        echo "&nbsp; <a href=\"$PHP_SELF\">";
     } else {
-        echo " border=\"0\" value=\"absenden\">&nbsp; <a href=\"$PHP_SELF?view=notification\">";
+        echo "&nbsp; <a href=\"$PHP_SELF?view=notification\">";
     }
-    echo '<img ' . makeButton('zuruecksetzen', 'src') . ' border="0"';
-    echo tooltip(_("zurücksetzen"));
-    echo '><input type="hidden" name="cmd" value="set_sem_notification"><br>&nbsp; </td></tr></form>';
+    echo makeButton('zuruecksetzen', 'img', _("zurücksetzen"));
+    echo '<input type="hidden" name="cmd" value="set_sem_notification"><br>&nbsp; </td></tr></form>';
     echo "</table>\n";
 }
 

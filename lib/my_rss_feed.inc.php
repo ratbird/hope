@@ -81,7 +81,7 @@ function print_rss($username) {
             echo "&nbsp; &nbsp; &nbsp; <input type=checkbox name='rss_secret[$count]' value='1'";
             IF ($db->f("hidden")=='1') echo " checked";
             echo ">" . _("unsichtbar") . "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
-            echo "<br><br><input type='IMAGE' name='update' border=0 align=\"absmiddle\"" . makeButton("uebernehmen", "src") . " value='" . _("ver&auml;ndern") . "'>";
+            echo "<br><br>" . makeButton("uebernehmen", "input", _("verändern"));
             echo "&nbsp;<a href='$PHP_SELF?rss=delete_rss&rss_id=$id&view=$view&username=$username&show_rss_bsp=$show_rss_bsp'>";
             echo makeButton("loeschen") . "</a><br>&nbsp; </div></td></tr>";
             $count++;

@@ -193,10 +193,6 @@ if (get_config('VOTE_ENABLE')) {
     show_votes ($auswahl, $auth->auth["uid"], $perm, YES);
 }
 
-//show chat info
-if (get_config('CHAT_ENABLE') && $modules["chat"]) {
-    chat_show_info($auswahl);
-}
 
 // display plugins
 $plugins = PluginEngine::getPlugins('StandardPlugin', $SessSemName[1]);
@@ -211,7 +207,10 @@ foreach ($plugins as $plugin) {
     }
 }
 
-  include ('lib/include/html_end.inc.php');
-  // Save data back to database.
-  page_close()
- ?>
+//show chat info
+if (get_config('CHAT_ENABLE') && $modules["chat"]) {
+    chat_show_info($auswahl);
+}
+
+include ('lib/include/html_end.inc.php');
+page_close()

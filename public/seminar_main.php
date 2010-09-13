@@ -248,15 +248,8 @@ if (!$studygroup_mode) {
     show_dates($start_zeit, $end_zeit, $smain_data["dopen"], $auswahl, 0, TRUE, $show_admin);
 }
 
-// show chat info
-if (get_config('CHAT_ENABLE') && $modules["chat"])
-{
-    chat_show_info($auswahl);
-}
-
 // include and show votes and tests
-if (get_config('VOTE_ENABLE'))
-{
+if (get_config('VOTE_ENABLE')) {
     show_votes ($auswahl, $auth->auth["uid"], $perm, YES);
 }
 
@@ -273,6 +266,10 @@ foreach ($plugins as $plugin) {
     }
 }
 
-    include ('lib/include/html_end.inc.php');
-    page_close();
-?>
+// show chat info
+if (get_config('CHAT_ENABLE') && $modules["chat"]) {
+    chat_show_info($auswahl);
+}
+
+include ('lib/include/html_end.inc.php');
+page_close();

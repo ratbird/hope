@@ -89,22 +89,22 @@ class Config implements ArrayAccess, Countable, IteratorAggregate
      * given params
      * @param string filter by range: global or user
      * @param string filter by section
-     * @param string filter by prefix of name
+     * @param string filter by part of name
      * @return array
      */
-    function getFields($range = null, $section = null, $prefix = null)
+    function getFields($range = null, $section = null, $name = null)
     {
         $filter = array();
-        if(in_array($range, words('global user'))){
+        if (in_array($range, words('global user'))) {
             $filter[] = '$a["range"]=="'.$range.'"';
         }
-        if($section){
+        if ($section) {
             $filter[] = '$a["section"]=="'.$section.'"';
         }
-        if($prefix){
-            $filter[] = 'preg_match("/^'.preg_quote($prefix, '/').'/i", $a["field"])';
+        if ($name) {
+            $filter[] = 'preg_match("/'.preg_quote($name, '/').'/i", $a["field"])';
         }
-        if(count($filter)){
+        if (count($filter)) {
             $filterfunc = create_function('$a', 'return ' . join(' && ', $filter) .  ';');
             $ret = array_keys(array_filter($this->metadata, $filterfunc));
         } else {

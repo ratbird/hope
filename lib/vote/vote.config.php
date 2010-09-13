@@ -43,7 +43,7 @@ define ("VOTE_ICON_INFO",    Assets::image_path("icons/16/grey/exclaim.png"));
 define ("VOTE_ICON_LIST",    Assets::image_path("icons/16/grey/file-generic.png"));
 
 define ("VOTE_BAR_LEFT",   Assets::image_path("bar_l.gif"));
-define ("VOTE_BAR_MIDDLE",  Assets::image_path("vote_bar_"));
+define ("VOTE_BAR_MIDDLE",  "vote_bar_");
 define ("VOTE_BAR_RIGHT",  Assets::image_path("bar_r.gif"));
 
 define ("VOTE_ANSWER_CORRECT", Assets::image_path("icons/16/green/accept.png"));

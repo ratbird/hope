@@ -223,7 +223,8 @@ $html .= makeNewVoteSelectForm(VOTE_FILE_ADMIN."?page=edit");
  * @param votes                 array        an array with all the data (optional)
  * @param openID                string        display the results of this voteID (optional)
  */
-function printVoteTable($mode, $votes = NULL, $openID = NULL){
+function printVoteTable($mode, $votes = NULL, $openID = NULL)
+{
     global $rangemode, $label, $showrangeID;
 
     $fontstart  = "<font size=\"-1\">";
@@ -232,7 +233,7 @@ function printVoteTable($mode, $votes = NULL, $openID = NULL){
     switch ($mode){
      case VOTE_STATE_NEW:
       $table_title = $label["table_title_new"];
-      $icon = "gelb";
+      $icon = "yellow";
       $specific_status = $label["startdate"];
       $status_value = "start";
       $status_button = $label["status_button_new"];
@@ -241,7 +242,7 @@ function printVoteTable($mode, $votes = NULL, $openID = NULL){
       break;
      case VOTE_STATE_ACTIVE:
       $table_title = $label["table_title_active"];
-      $icon = "gruen";
+      $icon = "green";
       $specific_status = $label["enddate"];
       $status_value = "stop";
       $status_button = $label["status_button_active"];
@@ -250,7 +251,7 @@ function printVoteTable($mode, $votes = NULL, $openID = NULL){
       break;
      case VOTE_STATE_STOPPED:
       $table_title = $label["table_title_stopped"];
-      $icon = "rot";
+      $icon = "red";
       $specific_status = $label["visibility"];
       $status_value = "continue";
       $status_button = $label["status_button_stopped"];
@@ -603,7 +604,7 @@ function makeTableDataCellForm( $displayclass = "steel1",
         $button = makeButton($button_name, 'img', decodeHTML($button_tooltip));
     }
     else{
-        $button = "<img src=\"{$GLOBALS['ASSETS_URL']}images/vote-icon-$button_name.gif\" width=\"18\" alt=\"".$button_name."\" title=\"".$button_tooltip."\" border=\"0\" align=\"middle\">";
+        $button = "<img src=\"" . Assets::image_path('icons/16/blue/visibility-' . $button_name . '.png') . "\" alt=\"".$button_name."\" title=\"".$button_tooltip."\" class=\"middle\">";
     }
 
     $html.="     <td class=$displayclass width=\"93\" align=\"center\" style=\"vertical-align:middle;\">\n"
@@ -733,22 +734,26 @@ function makeSearchForm(){
  * @access private
  * @return
 */
-function makeArrow($timestmp,$open,$displayclass,$mode,$voteID = NULL){
+function makeArrow($timestmp ,$open, $displayclass, $mode, $voteID = NULL)
+{
     global $label, $showrangeID;
 
     switch ($mode){
      case "new":
-            $icon = "gelb";
+            $icon = "icons/16/yellow/arr_1";
         break;
      case "active":
-            $icon = "gruen";
+            $icon = "icons/16/green/arr_1";
         break;
      case "stopped":
-            $icon = "rot";
+            $icon = "icons/16/red/arr_1";
         break;
     }
-    if ($open == "open")
-        $icon .= "runt";
+    if ($open == "open") {
+        $icon .= "down.png";
+    } else {
+        $icon .= "right.png";
+    }
 
     $html = "    <td class=\"".$displayclass."\" nowrap width=\"10\">\n";
 
@@ -760,7 +765,7 @@ function makeArrow($timestmp,$open,$displayclass,$mode,$voteID = NULL){
         $html.= "         <a href=\"".URLHelper::getLink($oclink)."\" title=\"".$label["arrow_closethis"]."\">\n";
 
 
-    $html.= "     <img src=\"".$GLOBALS['ASSETS_URL']."images/forum".$icon.".gif\" border=\"0\" align=\"middle\" alt=\"";//style=\"vertical-align:middle;\"
+    $html.= "     <img src=\"" . Assets::image_path($icon) . "\" class=\"middle\"";
     if ($open == "closed")
         $html.= $label["arrow_openthis"];
     else
@@ -769,4 +774,3 @@ function makeArrow($timestmp,$open,$displayclass,$mode,$voteID = NULL){
          .  "    </td>\n";
     return $html;
 }
-?>

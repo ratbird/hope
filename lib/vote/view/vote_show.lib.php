@@ -730,7 +730,7 @@ function createVoteResult ($vote, $preview = NO)
       // sind möglich
       $html .= "<tr>\n";
       $html .= "<td".$extraStyle." width=".$leftCellWidth." align=right valign=middle nowrap>";
-      $html .= "<font size=-1><b>".$percent."%</b></font>\n";
+      $html .= "<b>".$percent."%</b>\n";
       if( ! $revealNames ) {
       // the bars
       if ($percent < 50){
@@ -738,10 +738,10 @@ function createVoteResult ($vote, $preview = NO)
       } else {
           $bar = VOTE_BAR_MIDDLE . '50.png';
       }
-      $html .= "&nbsp;<img src=\"".VOTE_BAR_LEFT."\" width=1 height=10 align=middle>";
-      $html .= "<img src=\"".$bar."\"";
-      $html .= " width=\"" . ($val/$max * 100 + 1) . "\" height=10 align=middle>";
-      $html .= "<img src=\"".VOTE_BAR_RIGHT."\" width=1 height=10 align=middle>";
+      $html .= "&nbsp;<img src=\"".VOTE_BAR_LEFT."\" width=1 height=10 class=middle>";
+      $html .= "<img src=\"". Assets::image_path($bar) ."\"";
+      $html .= " width=\"" . ($val/$max * 100 + 1) . "\" height=10 class=middle>";
+      $html .= "<img src=\"".VOTE_BAR_RIGHT."\" width=1 height=10 class=middle>";
       }
       $html .= "&nbsp;</td>\n";
 
@@ -750,8 +750,8 @@ function createVoteResult ($vote, $preview = NO)
 
      $html .= "<td".$extraStyle.">";
      $html .= ($answer["correct"])
-        ? "<img src=\"".VOTE_ANSWER_CORRECT."\" border=0 ".tooltip(_("Richtige Antwort")).">"
-        : "<img src=\"".VOTE_ANSWER_WRONG."\" border=0 ".tooltip(_("Falsche Antwort")).">";
+        ? "<img src=\"".VOTE_ANSWER_CORRECT."\" ".tooltip(_("Richtige Antwort")).">"
+        : "<img src=\"".VOTE_ANSWER_WRONG."\" ".tooltip(_("Falsche Antwort")).">";
      $html .= "</td>\n";
       }
 

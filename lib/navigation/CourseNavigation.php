@@ -111,10 +111,11 @@ class CourseNavigation extends Navigation
         $this->addSubNavigation('main', $navigation);
 
         // admin area
+        $navigation = new Navigation(_('Verwaltung'));
+
         if ($studygroup_mode) {
             if ($perm->have_studip_perm('dozent', $SessSemName[1])) {
-                $navigation = new Navigation(_('Verwaltung'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]);
-                $this->addSubNavigation('admin', $navigation);
+                $navigation->addSubNavigation('main', new Navigation(_('Verwaltung'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]));
             }
         } else if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$perm->have_perm('admin')) {
             $navigation = new Navigation(_('Verwaltung'));
@@ -127,16 +128,18 @@ class CourseNavigation extends Navigation
                 $navigation->addSubNavigation('dates', new Navigation(_('Zeiten/Räume'), 'raumzeit.php'));
                 $navigation->addSubNavigation('admission', new Navigation(_('Zugangseinstellungen'), 'admin_admission.php'));
             }
+        }
 
+        if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$perm->have_perm('admin')) {
             $navigation->addSubNavigation('news', new Navigation(_('Ankündigungen'), 'admin_news.php?view=news_' . $sem_class));
 
             if (get_config('VOTE_ENABLE')) {
                 $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_' . $sem_class));
                 $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_' . $sem_class));
             }
-
-            $this->addSubNavigation('admin', $navigation);
         }
+
+        $this->addSubNavigation('admin', $navigation);
 
         // forum
         if ($modules['forum']) {

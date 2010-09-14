@@ -340,7 +340,7 @@ class Course_StudygroupController extends AuthenticatedController {
         if ($perm->have_studip_perm('dozent', $id)) {
 
             PageLayout::setTitle(getHeaderLine($id) . ' - ' . _('Studiengruppe bearbeiten'));
-            Navigation::activateItem('/course/admin');
+            Navigation::activateItem('/course/admin/main');
 
             $sem                     = new Seminar($id);
             $this->sem_id            = $id;

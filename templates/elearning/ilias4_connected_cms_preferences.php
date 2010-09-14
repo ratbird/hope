@@ -37,7 +37,7 @@ if ($messages["error"] != "") {
         </tr>
         <tr>
             <td>&nbsp;</td>
-            <td>(ID <?=$user_category_node_id_?>)</td>
+            <td>(ID <?=$user_category_node_id?>)</td>
         </tr>
         <tr>
             <td width="30%" style="text-align: left; font-weight: bold;">

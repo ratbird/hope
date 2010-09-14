@@ -2544,12 +2544,10 @@ if ($level == 2)
                         $i = 0;
                                 foreach($sem_create_data["sem_doz"] as $key=>$val) {
                                     echo "<tr>";
-                                     $img_src = Assets::image_path('icons/16/blue/trash.png');
                                      $href = "?delete_doz=".get_username($key)."#anker";
-
                                      echo "<td>";
                                      echo "<a href='".URLHelper::getLink($href)."'>";
-                                     echo "<img src='$img_src' border='0'>";
+                                     echo Assets::img('icons/16/blue/trash.png');
                                      echo "</a>";
                                      echo "</td>";
 
@@ -2558,9 +2556,8 @@ if ($level == 2)
                            if ($i > 0)
                            {
                                                             $href = "?moveup_doz=".get_username($key)."&foo=".time()."#anker";
-                                                            $img_src = Assets::image_path('icons/16/yellow/arr_2up.png');
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
-                                                            echo "<img src='{$GLOBALS['ASSETS_URL']}{$img_src}' border='0'>";
+                                                            echo Assets::img('icons/16/yellow/arr_2up.png');
                                                             echo "</a>";
                            }
                            echo "</td>";
@@ -2569,9 +2566,8 @@ if ($level == 2)
                            if ($i < (sizeof($sem_create_data["sem_doz"]) - 1))
                            {
                                                             $href = "?movedown_doz=".get_username($key)."&foo=".time()."#anker";
-                                                            $img_src = Assets::image_path('icons/16/yellow/arr_2down.png');
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
-                                                            echo "<img src='{$GLOBALS['ASSETS_URL']}{$img_src}' border='0'>";
+                                                            echo Assets::img('icons/16/yellow/arr_2down.png');
                                                             echo "</a>";
                            }
                            echo "</td>";
@@ -2650,10 +2646,8 @@ if ($level == 2)
                                                             echo "<td>";
 
                                                             $href = "?delete_dep=".get_username($key)."#anker";
-                                                            $img_src = Assets::image_path('icons/16/blue/trash.png');
-
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
-                                                            echo "<img src='$img_src' border='0'>";
+                                                            echo Assets::img('icons/16/blue/trash.png');
                                                             echo "</a>";
                                                             echo "</td>";
                               echo "<td>";
@@ -2707,10 +2701,8 @@ if ($level == 2)
                                                             echo "<td>";
 
                                                             $href = "?delete_tut=".get_username($key)."#anker";
-                                                            $img_src = Assets::image_path('icons/16/blue/trash.png');
-
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
-                                                            echo "<img src='$img_src' border='0'>";
+                                                            echo Assets::img('icons/16/blue/trash.png');
                                                             echo "</a>";
                                                             echo "</td>";
 
@@ -2719,9 +2711,8 @@ if ($level == 2)
                            if ($i > 0)
                            {
                                                             $href = "?moveup_tut=".get_username($key)."&foo=".time()."#anker";
-                                                            $img_src = Assets::image_path('icons/16/yellow/arr_2up.png');
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
-                                                            echo "<img src='$img_src' border='0'>";
+                                                            echo Assets::img('icons/16/yellow/arr_2up.png');
                                                             echo "</a>";
                            }
                            echo "</td>";
@@ -2730,9 +2721,8 @@ if ($level == 2)
                            if ($i < (sizeof($sem_create_data["sem_tut"]) - 1))
                            {
                                                             $href = "?movedown_tut=".get_username($key)."&foo=".time()."#anker";
-                                                            $img_src = Assets::image_path('icons/16/yellow/arr_2down.png');
                                                             echo "<a href='".URLHelper::getLink($href)."'>";
-                                                            echo "<img src='{$GLOBALS['ASSETS_URL']}{$img_src}' border='0'>";
+                                                            echo Assets::img('icons/16/yellow/arr_2down.png');
                                                             echo "</a>";
                            }
                            echo "</td>";

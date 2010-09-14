@@ -59,7 +59,7 @@ $infobox['content'][] = array(
   <div class="smashbox_stripe">
       <div style="margin-left: 1.5em;">
 
-        <a class="click_me" href="<?= $controller->url_for('course/basicdata/view') ?>">
+        <a class="click_me" href="<?= $controller->url_for('course/basicdata/view/'. $GLOBALS['SessSemName'][1]) ?>">
           <div>
               <span class="click_head"><?=_("Grunddaten")?></span>
               <p><?=_("Prüfen und Bearbeiten Sie in diesem Verwaltungsbereich die Grundeinstellungen dieser Veranstaltung.")?></p>

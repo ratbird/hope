@@ -122,7 +122,8 @@ class CourseNavigation extends Navigation
             $navigation->addSubNavigation('main', new Navigation(_('Verwaltung'), 'dispatch.php/course/management'));
 
             if ($sem_class == 'sem') {
-                $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'), 'dispatch.php/course/basicdata/view'));
+                $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'),
+                    'dispatch.php/course/basicdata/view/' . $_SESSION['SessionSeminar']));
                 $navigation->addSubNavigation('studycourse', new Navigation(_('Studienbereiche'),
                     'dispatch.php/course/study_areas/show/' . $_SESSION['SessionSeminar']));
                 $navigation->addSubNavigation('dates', new Navigation(_('Zeiten/Räume'), 'raumzeit.php'));

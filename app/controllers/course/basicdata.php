@@ -30,7 +30,7 @@ class Course_BasicdataController extends AuthenticatedController
      */
     public function view_action($course_id = null)
     {
-        global $SessSemName, $user, $perm, $_fullname_sql, $SEM_CLASS, $SEM_TYPE;
+        global $user, $perm, $_fullname_sql;
 
         $deputies_enabled = get_config('DEPUTIES_ENABLE');
 
@@ -41,7 +41,7 @@ class Course_BasicdataController extends AuthenticatedController
         }
         Request::set('new_tut_parameter', $this->flash['new_tut_parameter']);
 
-        $this->course_id = $SessSemName[1] ? $SessSemName[1] : $course_id;
+        $this->course_id = $course_id;
 
         if ($perm->have_perm('admin')) {
             //Navigation im Admin-Bereich:
@@ -61,6 +61,7 @@ class Course_BasicdataController extends AuthenticatedController
             include 'lib/include/html_head.inc.php';
             include 'lib/include/header.php';
             include 'lib/include/admin_search_form.inc.php';  // will not return
+            die(); //must not return
         }
 
         //Berechtigungscheck:
@@ -77,7 +78,7 @@ class Course_BasicdataController extends AuthenticatedController
         }
 
         //Daten sammeln:
-        $sem = new Seminar($this->course_id);
+        $sem = Seminar::getInstance($this->course_id);
         $data = $sem->getData();
 
         //Erster Reiter des Akkordions: Grundeinstellungen
@@ -201,7 +202,7 @@ class Course_BasicdataController extends AuthenticatedController
 
 
         //Dritter Reiter: Personal
-        if ($SEM_CLASS[$SEM_TYPE[$sem->status]["class"]]["only_inst_user"]) {
+        if (SeminarCategories::getByTypeId($sem->status)->only_inst_user) {
             $clause="AND user_inst.Institut_id IN (".
                     "SELECT institut_id FROM seminar_inst " .
                     "WHERE seminar_id = '".$this->course_id."' " .
@@ -221,35 +222,35 @@ class Course_BasicdataController extends AuthenticatedController
         $this->dozenten = $sem->getMembers('dozent');
         $Dozentensuche = new SQLSearch(
                         sprintf($query, "('dozent')"),
-                        sprintf(_("Name %s"), get_title_for_status('dozent', 1, $seminar_type)),
+                        sprintf(_("Name %s"), get_title_for_status('dozent', 1, $sem->status)),
                         "user_id");
         $this->dozentensuche = QuickSearch::get("new_doz", $Dozentensuche)
                                     ->withButton()
                                     ->render();
-        $this->dozenten_title = get_title_for_status('dozent', 1, $seminar_type);
+        $this->dozenten_title = get_title_for_status('dozent', 1, $sem->status);
         $this->deputies_enabled = $deputies_enabled;
         if ($this->deputies_enabled) {
             $this->deputies = getDeputies($this->course_id);
             $deputysearch = new PermissionSearch(
-                    "username",
-                    sprintf(_("Name %s"), get_title_for_status('deputy', 1, $seminar_type)),
-                    "username",
+                    "user_id",
+                    sprintf(_("Name %s"), get_title_for_status('deputy', 1, $sem->status)),
+                    "user_id",
                     array('permission' => getValidDeputyPerms())
                 );
             $this->deputysearch = QuickSearch::get('new_dep', $deputysearch)
                                     ->withButton()
                                     ->render();
-            $this->deputy_title = get_title_for_status('deputy', 1, $seminar_type);
+            $this->deputy_title = get_title_for_status('deputy', 1, $sem->status);
         }
         $this->tutoren = $sem->getMembers('tutor');
         $Tutorensuche = new SQLSearch(
                         sprintf($query, "('tutor', 'dozent')"),
-                        sprintf(_("Name %s"), get_title_for_status('tutor', 1, $seminar_type)),
+                        sprintf(_("Name %s"), get_title_for_status('tutor', 1, $sem->status)),
                         "user_id");
         $this->tutorensuche = QuickSearch::get("new_tut", $Tutorensuche)
                                     ->withButton()
                                     ->render();
-        $this->tutor_title = get_title_for_status('tutor', 1, $seminar_type);
+        $this->tutor_title = get_title_for_status('tutor', 1, $sem->status);
 
         //Vierter Reiter: Beschreibungen (darunter Datenfelder)
         $this->descriptions[] = array(
@@ -327,15 +328,15 @@ class Course_BasicdataController extends AuthenticatedController
      * Ändert alle Grunddaten der Veranstaltung (bis auf Personal) und leitet
      * danach weiter auf View.
      */
-    public function set_action()
+    public function set_action($course_id)
     {
-        global $SessSemName, $user, $perm;
+        global $user, $perm;
 
         $deputies_enabled = get_config('DEPUTIES_ENABLE');
-        $sem = new Seminar($SessSemName[1]);
+        $sem = Seminar::getInstance($course_id);
         $this->msg = array();
         //Seminar-Daten:
-        if ($perm->have_studip_perm("tutor",$SessSemName[1])) {
+        if ($perm->have_studip_perm("tutor", $sem->getId())) {
             $changemade = false;
             foreach (Request::getInstance() as $req_name => $req_value) {
                 if (substr($req_name, 0, 7) === "course_") {
@@ -388,14 +389,14 @@ class Course_BasicdataController extends AuthenticatedController
 
             //Dozenten hinzufügen:
             if ($_POST['new_doz'] && $_POST['add_dozent_x']
-                   && $perm->have_studip_perm("dozent",$SessSemName[1])) {
+                   && $perm->have_studip_perm("dozent", $sem->getId())) {
                 if ($sem->addMember($_POST['new_doz'], "dozent")) {
                     // Only applicable when globally enabled and user deputies enabled too
                     if ($deputies_enabled) {
                         // Check whether chosen person is set as deputy
                         // -> delete deputy entry.
-                        if (isDeputy($_POST['new_doz'], $SessSemName[1])) {
-                            deleteDeputy($_POST['new_doz'], $SessSemName[1]);
+                        if (isDeputy($_POST['new_doz'], $sem->getId())) {
+                            deleteDeputy($_POST['new_doz'], $sem->getId());
                         }
                         // Add default deputies of the chosen lecturer...
                         if (get_config('DEPUTIES_DEFAULTENTRY_ENABLE')) {
@@ -403,8 +404,8 @@ class Course_BasicdataController extends AuthenticatedController
                             $lecturers = $sem->getMembers('dozent');
                             foreach ($deputies as $deputy) {
                                 // ..but only if not already set as lecturer or deputy.
-                                if (!isset($lecturers[$deputy['user_id']]) && !isDeputy($deputy['user_id'], $SessSemName[1])) {
-                                    addDeputy($deputy['user_id'], $SessSemName[1]);
+                                if (!isset($lecturers[$deputy['user_id']]) && !isDeputy($deputy['user_id'], $sem->getId())) {
+                                    addDeputy($deputy['user_id'], $sem->getId());
                                 }
                             }
                         }
@@ -415,25 +416,22 @@ class Course_BasicdataController extends AuthenticatedController
             }
             //Vertretung hinzufügen:
             if ($deputies_enabled && $_POST['new_dep'] && $_POST['add_deputy_x']
-                   && $perm->have_studip_perm("dozent",$SessSemName[1])) {
-                if (addDeputy($_POST['new_dep'], $SessSemName[1])) {
+                   && $perm->have_studip_perm("dozent", $sem->getId())) {
+                if (addDeputy($_POST['new_dep'], $sem->getId())) {
                     $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."),
                             get_title_for_status('deputy', 1, $sem->status)));
                 }
             }
             //Tutoren hinzufügen:
             if ($_POST['new_tut'] && $_POST['add_tutor_x']
-                    && $perm->have_studip_perm("tutor",$SessSemName[1])) {
+                    && $perm->have_studip_perm("tutor", $sem->getId())) {
                 if ($sem->addMember($_POST['new_tut'], "tutor")) {
                     $this->msg[] = array("msg", sprintf(_("%s wurde hinzugefügt."),
                             get_title_for_status('tutor', 1, $sem->status)));
-                } else {
-                    $this->msg = array_merge($this->msg, array_map('$this->convertMessage', $sem->messages));
                 }
             }
         } else {
-            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese " .
-                    "Veranstaltung zu ver&auml;ndern."));
+            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese Veranstaltung zu verändern."));
         }
         foreach($sem->getStackedMessages() as $key => $messages) {
             foreach($messages['details'] as $message) {
@@ -461,7 +459,7 @@ class Course_BasicdataController extends AuthenticatedController
         }
         $this->flash['new_tut_parameter'] = $_POST['new_tut'] ? null : Request::get('new_tut_parameter');
         $this->flash['open'] = Request::get("open");
-        $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
+        $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
     }
 
     /**
@@ -470,14 +468,14 @@ class Course_BasicdataController extends AuthenticatedController
      *
      * @param md5 $dozent
      */
-    public function deletedozent_action($dozent)
+    public function deletedozent_action($course_id, $dozent)
     {
-        global $SessSemName, $user, $perm;
+        global $user, $perm;
 
+        $sem = Seminar::getInstance($course_id);
         $this->msg = array();
-        if ($perm->have_studip_perm("dozent",$SessSemName[1])) {
+        if ($perm->have_studip_perm("dozent", $sem->getId())) {
             if ($dozent !== $user->id) {
-                $sem = new Seminar($SessSemName[1]);
                 $sem->deleteMember($dozent);
                 foreach($sem->getStackedMessages() as $key => $messages) {
                     foreach($messages['details'] as $message) {
@@ -485,16 +483,14 @@ class Course_BasicdataController extends AuthenticatedController
                     }
                 }
             } else {
-                $this->msg[] = array("error", _("Sie d&uuml;rfen sich nicht selbst aus " .
-                        "der Veranstaltung austragen."));
+                $this->msg[] = array("error", _("Sie dürfen sich nicht selbst aus der Veranstaltung austragen."));
             }
         } else {
-            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese " .
-                    "Veranstaltung zu ver&auml;ndern."));
+            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese Veranstaltung zu verändern."));
         }
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = "bd_personal";
-        $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
+        $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
     }
 
     /**
@@ -503,31 +499,30 @@ class Course_BasicdataController extends AuthenticatedController
      *
      * @param md5 $deputy
      */
-    public function deletedeputy_action($deputy)
+    public function deletedeputy_action($course_id, $deputy)
     {
-        global $SessSemName, $user, $perm;
+        global $user, $perm;
 
+        $sem = Seminar::getInstance($course_id);
         $this->msg = array();
-        if ($perm->have_studip_perm("dozent",$SessSemName[1])) {
+        if ($perm->have_studip_perm("dozent", $sem->getId())) {
             if ($deputy !== $user->id) {
-                if (deleteDeputy($deputy, $SessSemName[1])) {
+                if (deleteDeputy($deputy, $sem->getId())) {
                     $this->msg[] = array("msg", sprintf(_("%s wurde entfernt."),
-                        get_title_for_status('deputy', 1, $seminar_type)));
+                        get_title_for_status('deputy', 1, $sem->status)));
                 } else {
                     $this->msg[] = array("error", sprintf(_("%s konnte nicht entfernt werden."),
-                       get_title_for_status('deputy', 1, $seminar_type)));
+                       get_title_for_status('deputy', 1, $sem->status)));
                 }
             } else {
-                $this->msg[] = array("error", _("Sie d&uuml;rfen sich nicht selbst aus " .
-                        "der Veranstaltung austragen."));
+                $this->msg[] = array("error", _("Sie dürfen sich nicht selbst aus der Veranstaltung austragen."));
             }
         } else {
-            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese " .
-                    "Veranstaltung zu ver&auml;ndern."));
+            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese Veranstaltung zu verändern."));
         }
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = "bd_personal";
-        $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
+        $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
     }
 
     /**
@@ -536,13 +531,13 @@ class Course_BasicdataController extends AuthenticatedController
      *
      * @param md5 $tutor
      */
-    public function deletetutor_action($tutor)
+    public function deletetutor_action($course_id, $tutor)
     {
-        global $SessSemName, $user, $perm;
+        global $user, $perm;
 
+        $sem = Seminar::getInstance($course_id);
         $this->msg = array();
-        if ($perm->have_studip_perm("dozent",$SessSemName[1])) {
-            $sem = new Seminar($SessSemName[1]);
+        if ($perm->have_studip_perm("dozent", $sem->getId())) {
             $sem->deleteMember($tutor);
             $this->messages = array_merge($this->messages, $sem->getStackedMessages());
             foreach($sem->getStackedMessages() as $key => $messages) {
@@ -551,12 +546,11 @@ class Course_BasicdataController extends AuthenticatedController
                 }
             }
         } else {
-            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese " .
-                    "Veranstaltung zu ver&auml;ndern."));
+            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese Veranstaltung zu verändern."));
         }
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = "bd_personal";
-        $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
+        $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
     }
 
     /**
@@ -566,13 +560,13 @@ class Course_BasicdataController extends AuthenticatedController
      * @param md5 $user_id
      * @param string $status
      */
-    public function priorityupfor_action($user_id, $status = "dozent")
+    public function priorityupfor_action($course_id, $user_id, $status = "dozent")
     {
-        global $SessSemName, $user, $perm;
+        global $user, $perm;
 
+        $sem = Seminar::getInstance($course_id);
         $this->msg = array();
-        if ($perm->have_studip_perm("dozent",$SessSemName[1])) {
-            $sem = new Seminar($SessSemName[1]);
+        if ($perm->have_studip_perm("dozent", $sem->getId())) {
             $teilnehmer = $sem->getMembers($status);
             $members = array();
             foreach($teilnehmer as $key => $member) {
@@ -587,12 +581,11 @@ class Course_BasicdataController extends AuthenticatedController
             }
             $sem->setMemberPriority($members, $status);
         } else {
-            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese " .
-                    "Veranstaltung zu ver&auml;ndern."));
+            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese Veranstaltung zu verändern."));
         }
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = "bd_personal";
-        $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
+        $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
     }
 
     /**
@@ -602,13 +595,13 @@ class Course_BasicdataController extends AuthenticatedController
      * @param md5 $user_id
      * @param string $status
      */
-    public function prioritydownfor_action($user_id, $status = "dozent")
+    public function prioritydownfor_action($course_id, $user_id, $status = "dozent")
     {
-        global $SessSemName, $user, $perm;
+        global $user, $perm;
 
+        $sem = Seminar::getInstance($course_id);
         $this->msg = array();
-        if ($perm->have_studip_perm("dozent",$SessSemName[1])) {
-            $sem = new Seminar($SessSemName[1]);
+        if ($perm->have_studip_perm("dozent", $sem->getId())) {
             $teilnehmer = $sem->getMembers($status);
             $members = array();
             foreach($teilnehmer as $key => $member) {
@@ -623,15 +616,14 @@ class Course_BasicdataController extends AuthenticatedController
             }
             $sem->setMemberPriority($members, $status);
         } else {
-            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese " .
-                    "Veranstaltung zu ver&auml;ndern."));
+            $this->msg[] = array("error", _("Sie haben keine Berechtigung diese Veranstaltung zu verändern."));
         }
         $this->flash['msg'] = $this->msg;
         $this->flash['open'] = "bd_personal";
-        $this->redirect('course/basicdata/view?cid='.$SessSemName[1]);
+        $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
     }
-    
-    private function convertMessage($msg) { 
+
+    private function convertMessage($msg) {
         return explode("§", $msg);
     }
 }

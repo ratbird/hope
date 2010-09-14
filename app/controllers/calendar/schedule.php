@@ -18,7 +18,7 @@ require_once 'lib/classes/SemesterData.class.php';
 /**
  * Personal schedule controller.
  *
- * @since      Class available since Release 2.0.0
+ * @since      2.0
  */
 class Calendar_ScheduleController extends AuthenticatedController
 {

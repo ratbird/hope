@@ -16,7 +16,7 @@ require_once('app/models/calendar/calendar.php');
 /**
  * Kind of bean class for the calendar view.
  *
- * @since      Class available since Release 2.0.0
+ * @since      2.0
  */
 
 class CalendarView

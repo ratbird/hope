@@ -18,7 +18,7 @@ require_once 'lib/classes/SemesterData.class.php';
 /**
  * Controller of the institutes' schedules.
  * *
- * @since      Class available since Release 2.0.0
+ * @since      2.0
  */
 class Calendar_InstscheduleController extends AuthenticatedController
 {

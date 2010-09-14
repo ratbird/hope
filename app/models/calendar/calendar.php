@@ -12,7 +12,7 @@
 /**
  * Pseudo-namespace containing helper methods for the calendar.
  *
- * @since      Class available since Release 2.0.0
+ * @since      2.0
  */
 
 class CalendarModel

@@ -30,12 +30,10 @@
     <? if($GLOBALS['UNI_LOGIN_ADD']) : ?>
     <tr>
         <td colspan="2" bgcolor="#FFFFFF">
-            <blockquote>
-            <font size="-1">
+            <p class="info">
             &nbsp;<br>
             <?=$GLOBALS['UNI_LOGIN_ADD']?>
-            </font>
-            </blockquote>
+            </p>
         </td>
     </tr>
     <? endif; ?>

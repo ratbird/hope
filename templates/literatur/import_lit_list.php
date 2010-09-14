@@ -1,4 +1,4 @@
-<blockquote>
+<p class="info">
     <form enctype="multipart/form-data" action="<?= URLHelper::getLink('?_range_id='. $_range_id .'&username='. $username) ?>" method="post">
         <input type="hidden" name="cmd" value="import_lit_list">
         <table border="0" cellspacing="0" cellpadding="0">
@@ -37,4 +37,4 @@
             </tr>
       </table>
     </form>
-</blockquote>
+</p>

@@ -35,16 +35,16 @@ function print_freie($username) {
 
     $db->query("SELECT * FROM auth_user_md5 LEFT JOIN kategorien ON(range_id=user_id) WHERE username='$username' AND NOT ISNULL(range_id) ORDER BY priority ");
 
-    echo '<tr><td align="left" valign="top" class="blank"><blockquote><br>'. "\n";
+    echo '<tr><td align="left" valign="top" class="blank"><p class="info"><br>'. "\n";
     echo _("Hier können Sie beliebige eigene Kategorien anlegen. Diese Kategorien erscheinen auf Ihrer Profilseite. Mit den Pfeilsymbolen k&ouml;nnen Sie die Reihenfolge, in der die Kategorien angezeigt werden, ver&auml;ndern.");
     echo "<br>\n";
     echo _("Verwenden Sie die Option \"f&uuml;r andere unsichtbar\", um Memos anzulegen, die nur f&uuml;r Sie selbst auf der Profilseite sichtbar werden - andere Nutzer k&ouml;nnen diese Daten nicht einsehen.");
-    echo "\n<br><br></blockquote></td></tr>\n".'<tr><td class="blank">';
+    echo "\n<br><br></p></td></tr>\n".'<tr><td class="blank">';
     echo '<form action="'. URLHelper::getLink('?freie=update_freie&username='.$username.'&view='.$view) .'" method="POST" name="edit_freie">';
     echo '<table width="100%" class="blank" border="0" cellpadding="0" cellspacing="0">';
     if (!$db->num_rows())
-        echo '<tr><td class="'.$cssSw->getClass().'"><font size="-1"><b><blockquote>' . _("Es existieren zur Zeit keine eigenen Kategorien.") . "</blockquote></b></font></td></tr>\n";
-    echo '<tr><td class="'.$cssSw->getClass().'"> <blockquote>' . _("Kategorie") . '&nbsp; <a href="'.URLHelper::getLink('?freie=create_freie&view='.$view.'&username='.$username).'">' . makeButton("neuanlegen") . "</a></blockquote></td></tr>\n";
+        echo '<tr><td class="'.$cssSw->getClass().'"><font size="-1"><b><p class="info">' . _("Es existieren zur Zeit keine eigenen Kategorien.") . "</p></b></font></td></tr>\n";
+    echo '<tr><td class="'.$cssSw->getClass().'"> <p class="info">' . _("Kategorie") . '&nbsp; <a href="'.URLHelper::getLink('?freie=create_freie&view='.$view.'&username='.$username).'">' . makeButton("neuanlegen") . "</a></p></td></tr>\n";
     $count = 0;
     $hidden_count = 0;
     while ($db->next_record() ){
@@ -59,7 +59,7 @@ function print_freie($username) {
             if ($count)
                 echo "<br>\n";
             echo '<input type="hidden" name="freie_id[]" value="'.$db->f("kategorie_id")."\">\n";
-            echo '<blockquote><input type="text" name="freie_name[]" style="width: 50%" value="' . htmlReady($db->f("name")).'" size="40">';
+            echo '<p class="info"><input type="text" name="freie_name[]" style="width: 50%" value="' . htmlReady($db->f("name")).'" size="40">';
             echo '&nbsp; &nbsp; &nbsp; <input type=checkbox name="freie_secret['.$count.']" value="1"';
             IF ($visibility == VISIBILITY_ME)
                 echo " checked";
@@ -74,25 +74,25 @@ function print_freie($username) {
                 . '">' . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' =>_('Kategorie nach unten verschieben'))) 
                 . '</a>';
             }
-            echo "<br>\n&nbsp;</blockquote></td></tr>\n";
+            echo "<br>\n&nbsp;</p></td></tr>\n";
             // Breite für textarea
             $cols = ($auth->auth["jscript"])? ceil($auth->auth["xres"]/13):50;
-            echo '<tr><td class="'.$cssSw->getClass(). '"><blockquote><textarea  name="freie_content[]" style="width: 90%" cols="' . $cols . '" rows="7" wrap="virtual">' . htmlReady($db->f('content')) . '</textarea>';
+            echo '<tr><td class="'.$cssSw->getClass(). '"><p class="info"><textarea  name="freie_content[]" style="width: 90%" cols="' . $cols . '" rows="7" wrap="virtual">' . htmlReady($db->f('content')) . '</textarea>';
             echo '<br><br><input type="image" name="update" border="0" align="absmiddle" ' . makeButton("uebernehmen", "src") . ' value="' . _("ver&auml;ndern") . '">';
             echo '&nbsp;<a href="'.URLHelper::getLink('?freie=verify_delete_freie&freie_id='.$id.'&view='.$view.'&username='.$username).'">';
-            echo makeButton("loeschen") . "</a><br>\n&nbsp; </blockquote></td></tr>\n";
+            echo makeButton("loeschen") . "</a><br>\n&nbsp; </p></td></tr>\n";
             $count++;
             }
         }
     if ($hidden_count) {
-        echo '<tr><td class="'.$cssSw->getClass().'"><font size="-1"><b><blockquote>';
+        echo '<tr><td class="'.$cssSw->getClass().'"><font size="-1"><b><p class="info">';
         if ($hidden_count > 1) {
             printf(_("Es existiereren zus&auml;tzlich %s Kategorien, die Sie nicht einsehen und bearbeiten k&ouml;nnen."), $hidden_count);
         } else {
             print(_("Es existiert zus&auml;tzlich eine Kategorie, die Sie nicht einsehen und bearbeiten k&ouml;nnen."));
 
         }
-        echo '</blockquote></b></font></td></tr>'."\n";
+        echo '</p></b></font></td></tr>'."\n";
     }
     echo '</td></tr></table></form></td></tr>'."\n";
 }

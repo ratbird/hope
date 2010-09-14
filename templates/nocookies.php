@@ -14,7 +14,7 @@
 </tr>
 <tr>
     <td>
-        <blockquote>
+        <p class="info">
         <p><b><?=_("Was sind Cookies?")?></b></p>
         <?= _("Cookies werden normalerweise benutzt, damit der Browser BenutzerInnen
         der Seiten beim wiederholten Aufrufen dieser Seiten wiedererkennen kann.
@@ -47,7 +47,7 @@
                 <li><?=_("\"Erlaube Cookies nur von dem Server, von dem die aktuelle Seite stammt\"")?>
                 </ul>
         </ol>
-        </blockquote>
+        </p>
     </td>
 </tr>
 </table>

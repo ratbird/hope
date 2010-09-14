@@ -219,19 +219,17 @@ function print_snd_message($psm) {
     if ($x == 1) { // if only one receiver
         $zusatz .= sprintf(_("an %s, %s"), "</font><a href=\"about.php?username=".$psm['rec_uname']."\"><font size=-1 color=\"#333399\">".htmlReady($psm['rec_vorname'])."&nbsp;".htmlReady($psm['rec_nachname'])."</font></a><font size=-1>", date("d.m.y, H:i",$psm['mkdate']));
         $zusatz .= "&nbsp;";
-        if (have_msgfolder($sms_data['view']) == TRUE) {
-            $zusatz .= "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\">";
-            $zusatz .= Assets::img('icons/16/blue/move_right/folder-empty.png', array('class' => 'text-top', 'title' => _("Diese Nachricht in einen frei wählbaren Ordner verschieben."))) . "</a> ";
-        }
         $zusatz .= "<a href=\"".$PHP_SELF."?cmd=".$tmp_cmd."&sel_lock=".$psm['message_id']."#".$psm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
     } else if ($x >= "2") { // if more than one receiver
         $zusatz .= sprintf(_("an %s Empf&auml;nger, %s"), $x, date("d.m.y, H:i",$psm['mkdate']));
         $zusatz .= "&nbsp;";
-        if (have_msgfolder($sms_data['view']) == TRUE) {
-            $zusatz .= "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\">";
-            $zusatz .= Assets::img('icons/16/blue/move_right/folder-empty.png', array('class' => 'text-top', 'title' => _("Diese Nachricht in einen frei wählbaren Ordner verschieben."))) . "</a> ";
-        }
         $zusatz .= "<a href=\"".$PHP_SELF."?cmd=".$tmp_cmd."&sel_lock=".$psm['message_id']."#".$psm['message_id']."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/".$tmp_picture."\" ".$tmp_tooltip."></a> ".$trash." <input type=\"checkbox\" name=\"sel_sms[]\" value=\"".$psm['message_id']."\" ".CheckChecked($cmd, "select_all").">";
+    }
+
+    if (have_msgfolder($sms_data['view']) == TRUE) {
+        $zusatz .= " <a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\">";
+        $zusatz .= Assets::img('icons/16/blue/move_right/folder-empty.png', array('class' => 'text-top', 'title' => _("Diese Nachricht in einen frei wählbaren Ordner verschieben.")));
+        $zusatz .= "</a> ";
     }
 
     if ($open == "open") {
@@ -371,7 +369,7 @@ function print_rec_message($prm) {
     }
     // zusatz
     if (have_msgfolder($sms_data['view']) == TRUE) {
-        $move_option = "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$psm['message_id']."\">";
+        $move_option = "<a href=\"".$PHP_SELF."?move_to_folder[1]=".$prm['message_id']."\">";
         $move_option .= Assets::img('icons/16/blue/move_right/folder-empty.png', array('class' => 'text-top', 'title' => _("Diese Nachricht in einen frei wählbaren Ordner verschieben."))) . "</a> ";
     }
     $zusatz = "<font size=-1>";

@@ -990,7 +990,7 @@ class EvalTemplateGUI {
       switch( $level ) {
       case "0":
       case "Evaluation":
-     $infoMain =  array ("icon" => EVAL_PIC_ICON,
+     $infoMain =  array ("icon" => Assets::image_path('icons/16/black/test.png'),
                "text" => _("Links können Sie die Grundattribute der Evaluation definieren und neue Gruppierungsblöcke anlegen."));
      break;
 
@@ -1014,10 +1014,10 @@ class EvalTemplateGUI {
       $previewLink = EvalCommon::createEvalShowLink( $evalID, _("Vorschau"), YES, NO );
       $previewLink .= (" " . _("der Evaluation"));
 
-      $infoTemplates =  array ("icon" => EVAL_PIC_HELP,
+      $infoTemplates =  array ("icon" => Assets::image_path('icons/16/black/info.png'),
                 "text" => _("Der rechte Bereich dient der Bearbeitung von Antwortenvorlagen."));
 
-      $infoPreview =  array ("icon" => EVAL_PIC_PREVIEW,
+      $infoPreview =  array ("icon" => Assets::image_path('icons/16/black/question-circle.png'),
               "text" => $previewLink);
 
       if (get_Username($rangeID))
@@ -1032,7 +1032,7 @@ class EvalTemplateGUI {
                   "\">",
                   "</a>");
 
-      $infoOverview =  array ("icon" => EVAL_PIC_BACK,
+      $infoOverview =  array ("icon" => Assets::image_path('icons/16/black/link-intern.png'),
                 "text" => $infoOverviewText);
       if($command){
       $infobox = array (array ("kategorie" => _("Aktionen:"),

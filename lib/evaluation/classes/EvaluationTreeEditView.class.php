@@ -1084,59 +1084,23 @@ function getItemHead($itemID){
 * @param   integer  $colspan  the needed colspan (optional)
 * @return  string             the item message (html)
 */
-function getItemMessage ( $itemID, $colspan = 1 ){
+function getItemMessage($itemID, $colspan = 1)
+{
+    if ($this->msg[$itemID]) {
+        $msg = explode("§", $this->msg[$itemID]);
 
-   if ($this->msg[$itemID]){
-        $msg = explode("§",$this->msg[$itemID]);
-        $pics = array(
-            'error' => EVAL_PIC_ERROR,
-            'info' => EVAL_PIC_INFO,
-            'msg' => EVAL_PIC_SUCCESS);
-        $colors = array(
-            'error' => "red",
-            'info' => "black",
-            'msg' => "green");
+        if ($msg[0] == 'msg') {
+            $msg[0] = 'success';
+        }
+        if (strpos($msg[1], '<br>')) {
+            $details = explode("<br>", $msg[1]);
+            $msg[1] = array_shift($details);
+        }
 
-    $table = new HTML ("table");
-    $table->addAttr ("border","0");
-    $table->addAttr ("cellspacing","0");
-    $table->addAttr ("cellpadding","2");
-    $table->addAttr ("width","100%");
-
-    $tr = new HTML ("tr");
-
-    $td = new HTML ("td");
-    $td->addAttr ("align","center");
-    $td->addAttr ("width","25");
-
-    $img = new HTMLempty ("img");
-    $img->addAttr ("width","32");
-    $img->addAttr ("height","32");
-    $img->addAttr ("src",$pics[$msg[0]]);
-
-    $td->addContent ($img);
-    $tr->addContent ($td);
-
-    $td = new HTML ("td");
-    $td->addAttr ("align","left");
-
-    $font = new HTML ("font");
-    $font->addAttr ("color",$colors[$msg[0]]);
-    $font->addHTMLContent ( ($msg[1])
-        ? $msg[1]
-        : "");
-
-    $td->addContent ($font);
-    $tr->addContent ($td);
-    $table->addContent ($tr);
-
-    return $table->createContent ();
-
-   } else {
-
-    return NULL;
-
-   }
+        return MessageBox::$msg[0]($msg[1], $details);
+    } else {
+        return NULL;
+    }
 }
 
 

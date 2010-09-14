@@ -1664,8 +1664,14 @@ class EvalOverview {
      . "   <tr>\n"
      . "    <td width=\"34\" valign=\"middle\" style=\"vertical-align:middle;\">\n";
 
-      if ($sign != "")
-      $html .="     <img src=\"".Assets::image_path($sign)."\" alt=\"$sign\" =\"middle\">\n";
+      if ($sign != "") {
+          if($sign == 'ok') {
+              $sign = 'messagebox/info.png';
+          } elseif ($sign == 'ausruf') {
+              $sign = 'messagebox/question.png';
+          }
+          $html .= Assets::img($sign, array('class' => 'middle'));
+      }
 
       $html .="    </td>\n";
       $html .="    <td align=\"left\" valign=\"middle\" style=\"vertical-align:middle;\">\n";

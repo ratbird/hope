@@ -425,10 +425,10 @@ if ($archiv_data["perform_search"]) {
     <tr>
         <td class="blank" colspan="2">
         <?
-
-        echo "<blockquote><b><font size=-1>";
+        
+        echo "<p class=\"info\"><b>";
         printf(_("Es wurden %s Veranstaltungen gefunden."), $hits);
-        echo "</font></b></blockquote>";
+        echo "</b></p>";
 
 
         echo "<br><br><table class=\"blank\"  width=99% align=center cellspacing=0 border=0>\n";

@@ -170,7 +170,7 @@ class AdminNewsController {
             $this->msg .= "error§" . _("Sie d&uuml;rfen diesen Ankündigungs-Bereich nicht administrieren!") . "§";
             return FALSE;
         }
-        echo "\n<tr><td width=\"100%\" class=\"blank\"><blockquote>";
+        echo "\n<tr><td width=\"100%\" class=\"blank\"><p class=\"info\">";
         echo "\n<form action=\"".URLHelper::getLink("?cmd=kill&view_mode=$view_mode")."\" method=\"POST\">";
         echo "<table class=\"blank\" align=\"left\" width=\"".round(0.88*$this->xres)."\" cellspacing=\"0\" cellpadding=\"2\" border=\"0\">";
         echo "\n<tr><td class=\"blank\" colspan=\"4\" align=\"left\" style=\"vertical-align:middle;\"><font size=-1 >" . _("Vorhandene Ankündigungen im gew&auml;hlten Bereich:") . "<br>";
@@ -197,7 +197,7 @@ class AdminNewsController {
             echo "</td></tr>";
         }
         echo "\n<tr><td class=\"blank\" colspan=8>&nbsp; </td></tr>";
-        echo "\n</table></form><br><br></blockquote></td></tr>";
+        echo "\n</table></form><br><br></p></td></tr>";
         return TRUE;
     }
 

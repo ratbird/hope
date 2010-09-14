@@ -344,8 +344,9 @@ class StudipLitListViewAdmin extends TreeView
                         $content .= "\n<option value=\"$list_id\">" . htmlReady($list_name) . "</option>";
                     }
                 }
-                $content .= "\n</select>&nbsp;&nbsp;<input type=\"image\" " . makeButton("kopieerstellen","src")
-                . tooltip(_("Eine Kopie der ausgewählten Liste erstellen")) . " style=\"vertical-align:middle;\" border=\"0\"></td></tr></form>";
+                $content .= "\n</select>&nbsp;&nbsp;" . 
+                    makeButton("kopieerstellen", "input", _("Eine Kopie der ausgewählten Liste erstellen")) .
+                    "</td></tr></form>";
             }
             if ($this->tree->isElement($item_id)) {
                 //$content .= "\n<tr><td class=\"steelkante\" align=\"left\" style=\"font-size:10pt\">" . _("Anmerkung:") ." </td></tr>";
@@ -512,12 +513,12 @@ class StudipLitListViewAdmin extends TreeView
             . ((!$this->tree->tree_data[$this->edit_item_id]['visibility']) ? "checked" : "") . ">" . _("Nein") . "</td></tr>";
 
         }
-        $content .= "<tr><td class=\"steel1\">&nbsp;</td></tr><tr><td class=\"steel1\" align=\"center\"><input type=\"image\" "
-                . makeButton("speichern","src") . tooltip("Einstellungen speichern") . " border=\"0\">"
-                . "&nbsp;<a href=\"" . $this->getSelf("cmd=Cancel&item_id="
-                . $this->edit_item_id) . "\">"
-                . "<img " .makeButton("abbrechen","src") . tooltip(_("Aktion abbrechen"))
-                . " border=\"0\"></a></td></tr>";
+        $content .= "<tr><td class=\"steel1\">&nbsp;</td></tr><tr><td class=\"steel1\" align=\"center\">" .
+                makeButton("speichern","src", _("Einstellungen speichern")) . 
+                "&nbsp;<a href=\"" . $this->getSelf("cmd=Cancel&item_id=" .
+                $this->edit_item_id) . "\">" .
+                "<img " .makeButton("abbrechen","src") . tooltip(_("Aktion abbrechen")) .
+                " border=\"0\"></a></td></tr>";
         $content .= "\n</form>";
 
         return $content;

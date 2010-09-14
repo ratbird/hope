@@ -153,6 +153,7 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         if ($inst_mode) {
             $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
+            $this->calendar_view->setReadOnly();
         }
 
         $style_parameters = array(
@@ -217,7 +218,9 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
 
         if ($error) {
-            $this->flash['messages'] = array('error'. chr(167) ._("Eintrag konnte nicht gespeichert werden, da die Start- und/oder Endzeit ungültigt ist!"));
+            $this->flash['messages'] = array('error' => 
+                array(_("Eintrag konnte nicht gespeichert werden, da die Start- und/oder Endzeit ungültigt ist!"))
+             );
         } else {
             $data['title']   = Request::get('entry_title');
             $data['content'] = Request::get('entry_content');

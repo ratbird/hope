@@ -35,7 +35,7 @@ $sem = Seminar::getInstance($show_entry['id']);
         <b><?= _("Veranstaltungszeiten") ?>:</b><br>
         <?= $sem->getDatesHTML() ?><br>
 
-        <?= Assets::img('link_intern') ?>
+        <?= Assets::img('icons/16/blue/link-intern.png') ?>
         <a href="<?= URLHelper::getLink('details.php?sem_id='. $show_entry['id']) ?>">Zur Veranstaltung</a><br>
         <br>
 

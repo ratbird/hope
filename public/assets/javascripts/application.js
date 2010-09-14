@@ -1279,15 +1279,12 @@ STUDIP.Calendar = {
    * @param  object  the input-element to check
    */
   validateHour: function (element) {
-    var hour = jQuery(element).val();
+    var hour = parseInt(jQuery(element).val());
 
-    if (parseInt(hour, 10) !== hour) {
-      hour = 0;
-    }
     if (hour > 23) {
       hour = 23;
     }
-    if (hour < 0) {
+    if (hour < 0 || isNaN(hour)) {
       hour = 0;
     }
 
@@ -1300,15 +1297,12 @@ STUDIP.Calendar = {
    * @param  object  the input-element to check
    */
   validateMinute: function (element) {
-    var minute = jQuery(element).val();
+    var minute = parseInt(jQuery(element).val());
 
-    if (parseInt(minute, 10) !== minute) {
-      minute = 0;
-    }
     if (minute > 59) {
       minute = 59;
     }
-    if (minute < 0) {
+    if (minute < 0 || isNaN(minute)) {
       minute = 0;
     }
 
@@ -1326,8 +1320,8 @@ STUDIP.Calendar = {
    * @return: bool true if valid time-range, false otherwise
    */
   checkTimeslot: function (start_hour, start_minute, end_hour, end_minute) {
-    if ((jQuery(start_hour).val() + (jQuery(start_minute).val() * 100)) >=
-        (jQuery(end_hour).val() + (jQuery(end_minute).val() * 100))) {
+    if ((parseInt(start_hour.val()) + (parseInt(start_minute.val()) * 100)) >=
+        (parseInt(end_hour.val()) + (parseInt(end_minute.val()) * 100))) {
       return false;
     }
 

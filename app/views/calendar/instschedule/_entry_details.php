@@ -22,7 +22,7 @@ foreach ($show_entry['seminars'] as $sem_id) {
                         <td width="15%"><?= htmlReady($seminar->getNumber()) ?></td>
                         <td width="85%">
                             <a href="<?= URLHelper::getLink('details.php?sem_id='. $seminar->getId()) ?>">
-                                <?= Assets::img('link_intern') ?>
+                                <?= Assets::img('icons/16/blue/link-intern.png') ?>
                                 <?= htmlReady($seminar->getName()) ?>
                             </a>
                         </td>

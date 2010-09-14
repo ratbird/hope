@@ -13,7 +13,7 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @package     studycourses
- * @since       Stud.IP version 1.12
+ * @since       2.0
  */
 
 /**
@@ -100,13 +100,21 @@ class StudycourseModel
                        . "FROM abschluss a LEFT JOIN user_studiengang us USING (abschluss_id) "
                        . "WHERE a.abschluss_id = '{$sdi}' "
                        . "GROUP BY a.abschluss_id ORDER BY a.name";
+                $studydegrees = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
             } else {
                 // get  all degrees
-                $query = "SELECT a.abschluss_id, a.name, count(us.abschluss_id) AS count_user "
-                       . "FROM abschluss a LEFT JOIN user_studiengang us USING (abschluss_id) "
-                       . "GROUP BY a.abschluss_id ORDER BY a.name";
+                $query1 = "SELECT abschluss_id, name FROM abschluss ORDER BY name";
+                $query2 = "SELECT abschluss_id, count(abschluss_id) AS count_user "
+                        . "FROM user_studiengang GROUP BY abschluss_id";
+
+                $studydegrees = DBManager::get()->query($query1)->fetchAll(PDO::FETCH_ASSOC);
+                $users = DBManager::get()->query($query2)->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
+
+                foreach ($studydegrees as $index => $degree) {
+                    $studydegrees[$index]['count_user'] = $users[$degree['abschluss_id']][0];
+                }
             }
-            $studydegrees = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+
             foreach ($studydegrees as $index => $row) {
                 // one degree with all professions
                 $query = "SELECT DISTINCT studiengaenge.name, studiengaenge.studiengang_id, "

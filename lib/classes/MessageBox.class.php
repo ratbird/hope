@@ -4,19 +4,16 @@
  *
  * html-boxes for different kinds of messages
  *
- * LICENSE
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
  *
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @copyright   2009 Stud.IP
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL Licence 2
  * @category    Stud.IP
  * @package     layout
- * @since       Stud.IP version 1.10
+ * @since       1.10
  *
  */
 
@@ -113,7 +110,7 @@ class MessageBox
      * @param string $title
      * @param string $template every developer can customize his own debugbox
      * @return string html-output of the messagebox
-     * @since Stud.IP version 1.12
+     * @since 2.0
      */
     public static function debug($message, $title = '', $template = 'debug_standard')
     {

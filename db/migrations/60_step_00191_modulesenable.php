@@ -51,7 +51,7 @@ class Step00191ModulesEnable extends Migration
             ),
             array('field' => 'SCM_ENABLE',
                   'value' => (get_config('SCM_ENABLE'))?'1':'0',
-                  'comment' => 'chaltet ein oder aus, ob freie Informationsseiten global verfügbar sind.',
+                  'comment' => 'Schaltet ein oder aus, ob freie Informationsseiten global verfügbar sind.',
             ),
             array('field' => 'BANNER_ADS_ENABLE',
                   'value' => (get_config('BANNER_ADS_ENABLE'))?'1':'0',

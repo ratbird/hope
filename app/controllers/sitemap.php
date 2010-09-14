@@ -10,7 +10,7 @@
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
- * @since       Stud.IP version 2.0
+ * @since       2.0
  */
 
 require_once 'app/controllers/authenticated_controller.php';

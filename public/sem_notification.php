@@ -65,7 +65,8 @@ PageLayout::setTabNavigation('/links/settings');
 include('lib/include/html_head.inc.php'); // Output of html head
 include('lib/include/header.php');   // Output of Stud.IP head
 
-function print_module_icons ($m_enabled) {
+function print_module_icons ($m_enabled)
+{
     foreach ($m_enabled as $m_name => $m_data) {
         switch ($m_name) {
             case 'news' :
@@ -101,9 +102,7 @@ function print_module_icons ($m_enabled) {
             default :
                 break;
         }
-        echo "<th><img border=\"0\" align=\"center\" src=\"$m_icon\" alt=\"";
-        echo $m_data['name'] . "\" title=\"";
-        echo $m_data['name'] . "\"></th>";
+        echo "<th>" . Assets::img($m_icon, array('class' => 'middle', 'title' => $m_data['name'])) . "</th>";
     }
 }
 
@@ -182,10 +181,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     </td>
     </tr>
     <tr>
-        <th rowspan="2" colspan="2" width="90%" valign="middle" align="center"><?=_("Veranstaltung")?></th>
-        <th width="10%" colspan="<? echo sizeof($enabled_modules) + 1; ?>">&nbsp;</th>
-    </tr>
-    <tr>
+        <th colspan="2" width="90%"><?=_("Veranstaltung")?></th>
 <?
     print_module_icons($enabled_modules);
     echo '<th align="center" style="font-size:small;">';
@@ -374,21 +370,21 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     }
     echo "</tr>\n";
     if ($GLOBALS['auth']->auth['jscript']) {
-        echo '<tr><th colspan="2" align="right" style="font-size:small;">';
-        echo _("Benachrichtigung für alle aufgelisteten Veranstaltungen:") . '</th>';
+        echo '<tr class="steel2"><td colspan="2" align="right">';
+        echo _("Benachrichtigung für alle aufgelisteten Veranstaltungen:") . '</td>';
         for ($i = 0; $i < sizeof($enabled_modules); $i++) {
-            echo "<th><input type=\"checkbox\" id=\"mod_row_$i\" ";
+            echo "<td><input type=\"checkbox\" id=\"mod_row_$i\" ";
             if ($c_checked[$i] == $db->num_rows()) {
                 echo 'checked="checked"';
             }
-            echo "onClick=\"selectColumn($i, this)\"></th>";
+            echo "onClick=\"selectColumn($i, this)\"></td>";
         }
-        echo '<th><input type="checkbox" onClick="selectAll(';
+        echo '<td><input type="checkbox" onClick="selectAll(';
         echo sizeof($enabled_modules) . ', this)"';
         if (array_sum($c_checked) == $db->num_rows() * sizeof($enabled_modules)) {
             echo ' checked="checked"';
         }
-        echo "></th></tr>\n";
+        echo "></td></tr>\n";
     }
     echo '<tr><td class="blank" align="center" colspan="';
     echo (sizeof($enabled_modules) + 3) . '"><br>';

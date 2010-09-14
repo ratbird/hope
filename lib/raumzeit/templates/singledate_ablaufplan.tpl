@@ -1,37 +1,30 @@
-<TR>
-    <TD width="1%" align="right" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap">
+<TR style="height: 1.8em">
+    <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap="nowrap">
         <A href="<?= URLHelper::getLink('?cmd='. ($issue_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-        <IMG src="<?=$GLOBALS['ASSETS_URL'].(($issue_open[$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1down.png' : 'images/icons/16/blue/arr_1right.png')?>">
+        <IMG class="middle" src="<?=$GLOBALS['ASSETS_URL'].(($issue_open[$tpl['sd_id']]) ? 'images/icons/16/blue/arr_1down.png' : 'images/icons/16/blue/arr_1right.png')?>">
         </A>
     </TD>
-    <TD width="1%" align="right" valign="top" class="<?=$tpl['class']?>" nowrap="nowrap">
+    <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap="nowrap">
         <A name="<?=$tpl['sd_id']?>" />
-        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" border="0" class="text-bottom">&nbsp;
+        <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/date.png" class="middle">&nbsp;
     </TD>
-
     <TD nowrap="nowrap" class="<?=$tpl['class']?>" valign="bottom">
         <A class="tree" href="<?= URLHelper::getLink('?cmd='. ($issue_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">
-            <FONT size="-1">
                 <i><?=$tpl['art']?>:&nbsp;</i>
-                <?=$tpl['date']?>&nbsp;&nbsp;&nbsp;&nbsp;
-            </FONT>
+                <?=$tpl['date']?>&nbsp;
         </A>
     </TD>
 
     <td width="80%" nowrap="nowrap" class="<?=$tpl['class']?>" valign="bottom" align="left">
-        <font size="-1" color="#000000">
-            <?=htmlReady(mila($tpl['theme_title']))?>
-        </font>
+        <?=htmlReady(mila($tpl['theme_title']))?>
     </td>
 
     <td width="10%" nowrap="nowrap" class="<?=$tpl['class']?>" valign="bottom">
-        <font size="-1" color="#000000">
-            <?=$tpl['room']?>
-        </font>
+        <?=$tpl['room']?>
     </td>
 
     <td width="1%" class="<?=$tpl['class']?>" nowrap="nowrap" valign="bottom" align="right">
-        <?=$tpl['calendar']?>&nbsp;
+        <?=$tpl['calendar']?>
     </td>
 </tr>
 <? if ($issue_open[$tpl['sd_id']] || $openAll) { ?>

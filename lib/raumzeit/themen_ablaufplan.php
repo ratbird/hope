@@ -150,7 +150,7 @@ $termine = getAllSortedSingleDates($sem);
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
         <td class="blank" valign="top">
-        <?php 
+        <?php
             // show messages
             if ($messages = $sem->getStackedMessages()) :
                 foreach ($messages as $type => $message_data) :
@@ -235,9 +235,9 @@ $termine = getAllSortedSingleDates($sem);
 
                     // calendar jump
                     $tpl['calendar'] = "&nbsp;<a href=\"".URLHelper::getLink("calendar.php?cmd=showweek&atime=". $singledate->getStartTime());
-                    $tpl['calendar'] .= "\"><img style=\"vertical-align:bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/schedule.png\" ";
+                    $tpl['calendar'] .= "\"><img class=\"text-top\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/schedule.png\" ";
                     $tpl['calendar'] .= tooltip(sprintf(_("Zum %s in den persönlichen Terminkalender springen"), date("m.d", $singledate->getStartTime())));
-                    $tpl['calendar'] .= ' border="0"></a>';
+                    $tpl['calendar'] .= '></a>';
 
                         // activated modules
                         $tpl['modules'] = $modules;

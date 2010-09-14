@@ -675,7 +675,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
    public function select_abschluss()
    {
         echo '<select name="new_abschluss"><option selected="selected"> -- Bitte Abschluss auswählen -- </option>'."\n";
-        $this->db->query("SELECT a.abschluss_id,a.name FROM abschluss AS a LEFT JOIN user_studiengang AS b ON (b.user_id='".$this->auth_user["user_id"]."' AND a.abschluss_id=b.abschluss_id) WHERE b.abschluss_id IS NULL ORDER BY a.name");
+        $this->db->query("SELECT abschluss_id,name FROM abschluss ORDER BY name");
         while ($this->db->next_record()) {
             echo "<option value=\"".$this->db->f("abschluss_id")."\">".htmlReady(my_substr($this->db->f("name"),0,50))."</option>\n";
         }
@@ -812,11 +812,11 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         $success2 = DBManager::get()->exec("UPDATE auth_user_md5 SET visible='".$global."' WHERE user_id='".$this->auth_user["user_id"]."'");
         $data = DBManager::get()->query("SELECT `user_id` FROM `user_visibility` WHERE `user_id`='".$this->auth_user["user_id"]."'");
         if ($data->fetch()) {
-            $success3 = DBManager::get()->exec("UPDATE user_visibility 
-                SET online=".$online.", chat=".$chat.", search=".$search.", email=".$email." 
+            $success3 = DBManager::get()->exec("UPDATE user_visibility
+                SET online=".$online.", chat=".$chat.", search=".$search.", email=".$email."
                 WHERE user_id='".$this->auth_user["user_id"]."'");
         } else {
-            $success3 = DBManager::get()->exec("INSERT INTO user_visibility 
+            $success3 = DBManager::get()->exec("INSERT INTO user_visibility
                 SET `user_id`='".$this->auth_user["user_id"]."', `online`=".$online.", `chat`=".$chat.", `search`=".$search.", `email`=".$email.", `mkdate`=".time());
         }
         return true;
@@ -863,11 +863,11 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         }
         return $result;
     }
-    
+
     /**
-     * Sets a default visibility for elements that are added to a user's 
+     * Sets a default visibility for elements that are added to a user's
      * homepage but whose visibility hasn't been configured explicitly yet.
-     * 
+     *
      * @param int $visibility default visibility for new homepage elements
      * @return Number of affected database rows (hopefully 1).
      */
@@ -908,7 +908,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $query = "INSERT INTO `user_visibility` SET `user_id`='".
                 $this->auth_user["user_id"]."', `homepage`='".
                 json_encode($data)."', `mkdate`=".time();
-        } 
+        }
         $success = DBManager::get()->exec($query);
         return $success;
     }

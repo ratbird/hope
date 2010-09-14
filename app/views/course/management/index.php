@@ -10,7 +10,7 @@ if ($GLOBALS['perm']->have_perm('dozent')) {
             'eintrag'   => array(
                 array(
                     'text' => _("Diese Veranstaltung <a href=".URLHelper::getLink('copy_assi.php?list=TRUE&new_session=TRUE')."\>kopieren</a> und damit eine neue Veranstaltung mit gleichen Einstellungen erstellen."),
-                    'icon' => 'icons/16/black/schedule.png'
+                    'icon' => 'icons/16/black/add/seminar.png'
                 ),
             )
         )
@@ -23,7 +23,7 @@ if (($GLOBALS['perm']->have_studip_perm('dozent', $GLOBALS['SessSemName'][1])
 
     $infobox['content'][0]['eintrag'][] = array(
         'text' => _("Diese Veranstaltung <a href=".URLHelper::getLink('archiv_assi.php?list=TRUE&new_session=TRUE')."\>archivieren</a> und damit beenden."),
-        'icon' => 'icons/16/black/schedule.png'
+        'icon' => 'icons/16/black/remove/seminar.png'
     );
 
     if ($visible) {
@@ -37,7 +37,7 @@ if (($GLOBALS['perm']->have_studip_perm('dozent', $GLOBALS['SessSemName'][1])
     }
     $infobox['content'][0]['eintrag'][] = array(
         'text' => $text,
-        'icon' => 'icons/16/black/schedule.png'
+        'icon' => 'icons/16/black/visibility-invisible.png'
     );
 }
 

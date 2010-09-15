@@ -45,6 +45,6 @@ $infobox['content'][] = array(
         <? endif ?>
 
         </div>
-        <br style="clear: both;">
+        <br style="clear: left;">
     </div>
 </div>

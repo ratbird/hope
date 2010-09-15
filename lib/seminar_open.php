@@ -260,13 +260,6 @@ if (isset($SessionSeminar) && $SessionSeminar != '') {
 // load the default set of plugins
 PluginEngine::loadPlugins();
 
-// push "/course/admin" to the right:
-if (Navigation::hasItem("/course/admin")) {
-    $admin_navigation = Navigation::getItem("/course/admin");
-    Navigation::removeItem("/course/admin");
-    Navigation::addItem('/course/admin', $admin_navigation);
-}
-
 // add navigation item: add modules
 if (Navigation::hasItem('/course')
     && ($perm->have_studip_perm('tutor', $SessSemName[1]) && $SessSemName['class'] == 'sem')

@@ -122,21 +122,37 @@ class CourseNavigation extends Navigation
             $navigation->addSubNavigation('main', new Navigation(_('Verwaltung'), 'dispatch.php/course/management'));
 
             if ($sem_class == 'sem') {
-                $navigation->addSubNavigation('details', new Navigation(_('Grunddaten'),
-                    'dispatch.php/course/basicdata/view/' . $_SESSION['SessionSeminar']));
-                $navigation->addSubNavigation('studycourse', new Navigation(_('Studienbereiche'),
-                    'dispatch.php/course/study_areas/show/' . $_SESSION['SessionSeminar']));
-                $navigation->addSubNavigation('dates', new Navigation(_('Zeiten/Räume'), 'raumzeit.php'));
-                $navigation->addSubNavigation('admission', new Navigation(_('Zugangseinstellungen'), 'admin_admission.php'));
+                $item = new Navigation(_('Grunddaten'), 'dispatch.php/course/basicdata/view/' . $_SESSION['SessionSeminar']);
+                $item->setDescription(_('Prüfen und Bearbeiten Sie in diesem Verwaltungsbereich die Grundeinstellungen dieser Veranstaltung.'));
+                $navigation->addSubNavigation('details', $item);
+
+                $item = new Navigation(_('Studienbereiche'), 'dispatch.php/course/study_areas/show/' . $_SESSION['SessionSeminar']);
+                $item->setDescription(_('Legen Sie hier fest, in welchen Studienbereichen diese Veranstaltung im Verzeichnis aller Veranstaltungen erscheint.'));
+                $navigation->addSubNavigation('studycourse', $item);
+
+                $item = new Navigation(_('Zeiten/Räume'), 'raumzeit.php');
+                $item->setDescription(_('Verändern Sie hier Angaben über regelmäßige Veranstaltungszeiten, Einzeltermine und Ortsangaben.'));
+                $navigation->addSubNavigation('dates', $item);
+
+                $item = new Navigation(_('Zugangseinstellungen'), 'admin_admission.php');
+                $item->setDescription(_('Richten Sie hier verschiedene Zugangsbeschränkungen, Anmeldeverfahren oder einen Passwortschutz für Ihre Veranstaltung ein.'));
+                $navigation->addSubNavigation('admission', $item);
             }
         }
 
         if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$perm->have_perm('admin')) {
-            $navigation->addSubNavigation('news', new Navigation(_('Ankündigungen'), 'admin_news.php?view=news_' . $sem_class));
+            $item = new Navigation(_('Ankündigungen'), 'admin_news.php?view=news_' . $sem_class);
+            $item->setDescription(_('Erstellen Sie Ankündigungen und bearbeiten Sie laufende Ankündigungen.'));
+            $navigation->addSubNavigation('news', $item);
 
             if (get_config('VOTE_ENABLE')) {
-                $navigation->addSubNavigation('vote', new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_' . $sem_class));
-                $navigation->addSubNavigation('evaluation', new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_' . $sem_class));
+                $item = new Navigation(_('Umfragen und Tests'), 'admin_vote.php?view=vote_' . $sem_class);
+                $item->setDescription(_('Erstellen und bearbeiten Sie einfache Umfragen und Tests.'));
+                $navigation->addSubNavigation('vote', $item);
+
+                $item = new Navigation(_('Evaluationen'), 'admin_evaluation.php?view=eval_' . $sem_class);
+                $item->setDescription(_('Richten Sie fragebogenbasierte Umfragen und Lehrevaluationen ein.'));
+                $navigation->addSubNavigation('evaluation', $item);
             }
         }
 

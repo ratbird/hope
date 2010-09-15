@@ -39,6 +39,7 @@ class Navigation implements IteratorAggregate
     protected $params;
     protected $subnav;
     protected $title;
+    protected $description;
     protected $url;
 
     /**
@@ -182,6 +183,16 @@ class Navigation implements IteratorAggregate
     }
 
     /**
+     * Return the description associated with this navigation item.
+     *
+     * @return string   description of item or NULL (no description set)
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
      * Return the current URL associated with this navigation item.
      * If not URL is set but there are subnavigation items, the URL
      * of the first visible subnavigation item is returned.
@@ -295,6 +306,16 @@ class Navigation implements IteratorAggregate
     public function setTitle($title)
     {
         $this->title = $title;
+    }
+
+    /**
+     * Set the description of this navigation item.
+     *
+     * @param string $description    description text
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
     }
 
     /**

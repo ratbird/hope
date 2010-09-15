@@ -53,73 +53,28 @@ $infobox['content'][] = array(
 
 ?>
 
-<div style="padding-left:0.5em; background-color: white; width: 100%">
-  <h1 class="smashbox_kategorie"><?=_("Grundeinstellungen")?></h1>
+<h1 class="smashbox_kategorie">
+    <?= _('Verwaltungsfunktionen') ?>
+</h1>
 
-  <div class="smashbox_stripe">
-      <div style="margin-left: 1.5em;">
+<div class="smashbox_stripe">
+    <div style="margin-left: 1.5em;">
 
-        <a class="click_me" href="<?= $controller->url_for('course/basicdata/view/'. $GLOBALS['SessSemName'][1]) ?>">
-          <div>
-              <span class="click_head"><?=_("Grunddaten")?></span>
-              <p><?=_("Prüfen und Bearbeiten Sie in diesem Verwaltungsbereich die Grundeinstellungen dieser Veranstaltung.")?></p>
-          </div>
-          </a>
-
-             <a class="click_me" href="<?= $controller->url_for('course/study_areas/show/'. $GLOBALS['SessSemName'][1]) ?>">
-          <div>
-              <span class="click_head"><?=_("Studienbereiche")?></span>
-              <p><?=_("Legen Sie hier fest, in welchen Studienbereichen diese Veranstaltung im Verzeichnis aller Veranstaltungen erscheint.")?></p>
-          </div>
-          </a>
-
-             <a class="click_me" href="<?= UrlHelper::getLink('raumzeit.php') ?>">
-          <div>
-              <span class="click_head"><?=_("Zeit und Ort")?></span>
-              <p><?=_("Verändern Sie hier Angaben über regelmäßige Veranstaltungszeiten, Einzeltermine und Ortsangaben.")?></p>
-          </div>
-          </a>
-
-          <a class="click_me" href="<?= UrlHelper::getLink('admin_admission.php') ?>">
-          <div>
-              <span class="click_head"><?=_("Zugangseinstellungen")?></span>
-              <p><?=_("Richten Sie hier verschiedene Zugangsbeschränkungen, Anmeldeverfahren oder einen Passwortschutz für Ihre Veranstaltung ein.")?></p>
-          </div>
-          </a>
+        <? foreach (Navigation::getItem('/course/admin') as $name => $nav) : ?>
+            <? if ($nav->isVisible() && $name != 'main') : ?>
+                <a class="click_me" href="<?= URLHelper::getLink($nav->getURL()) ?>">
+                    <div>
+                        <span class="click_head">
+                            <?= htmlReady($nav->getTitle()) ?>
+                        </span>
+                        <p>
+                            <?= htmlReady($nav->getDescription()) ?>
+                        </p>
+                    </div>
+                </a>
+            <? endif ?>
+        <? endforeach ?>
 
     </div>
-         <br style="clear: left;">
-  </div>
-
-  <h1 class="smashbox_kategorie"><?=_("Weitere Inhaltselemente")?></h1>
-
-  <div class="smashbox_stripe">
-      <div style="margin-left: 1.5em;">
-
-          <a class="click_me" href="<?= UrlHelper::getLink('admin_news.php?view=news_sem') ?>">
-          <div>
-              <span class="click_head"><?=_("Ankündigungen")?></span>
-              <p><?=_("Erstellen Sie Ankündigungen für Ihre Veranstaltung und bearbeiten Sie laufende Ankündigungen.")?></p>
-              </div>
-          </a>
-
-          <? if (get_config('VOTE_ENABLE')) : ?>
-          <a class="click_me" href="<?= UrlHelper::getLink('admin_vote.php??view=vote_sem') ?>">
-          <div>
-              <span class="click_head"><?=_("Umfragen und Tests")?></span>
-              <p><?=_("Erstellen Sie für Ihre Veranstaltung einfachen Umfragen und Tests.")?></p>
-              </div>
-          </a>
-
-            <a class="click_me" href="<?= UrlHelper::getLink('admin_evaluation.php?view=eval_sem') ?>">
-             <div>
-              <span class="click_head"><?=_("Evaluationen")?></span>
-              <p><?=_("Richten Sie für Ihre Veranstaltung fragebogenbasierte Umfragen und Lehr-Evaluationen ein.")?></p>
-          </div>
-          </a>
-          <? endif ?>
-
-        </div>
-        <br style="clear: left;">
-    </div>
+    <br style="clear: left;">
 </div>

@@ -15,36 +15,28 @@ $infobox['content'][] = array(
 
 ?>
 
-<div style="padding-left:0.5em; background-color: white; width: 100%">
-    <h1 class="smashbox_kategorie"><?=_("Weitere Inhaltselemente")?></h1>
+<h1 class="smashbox_kategorie">
+    <?= _('Verwaltungsfunktionen') ?>
+</h1>
 
-  <div class="smashbox_stripe">
-      <div style="margin-left: 1.5em;">
+<div class="smashbox_stripe">
+    <div style="margin-left: 1.5em;">
 
-          <a class="click_me" href="<?= UrlHelper::getLink('admin_news.php?view=news_inst') ?>">
-          <div>
-              <span class="click_head"><?=_("Ankündigungen")?></span>
-              <p><?=_("Erstellen Sie Ankündigungen für ihre Einrichtung und bearbeiten Sie laufende Ankündigungen.")?></p>
-              </div>
-          </a>
+        <? foreach (Navigation::getItem('/course/admin') as $name => $nav) : ?>
+            <? if ($nav->isVisible() && $name != 'main') : ?>
+                <a class="click_me" href="<?= URLHelper::getLink($nav->getURL()) ?>">
+                    <div>
+                        <span class="click_head">
+                            <?= htmlReady($nav->getTitle()) ?>
+                        </span>
+                        <p>
+                            <?= htmlReady($nav->getDescription()) ?>
+                        </p>
+                    </div>
+                </a>
+            <? endif ?>
+        <? endforeach ?>
 
-          <? if (get_config('VOTE_ENABLE')) : ?>
-          <a class="click_me" href="<?= UrlHelper::getLink('admin_vote.php?view=vote_inst') ?>">
-          <div>
-              <span class="click_head"><?=_("Umfragen und Tests")?></span>
-              <p><?=_("Erstellen Sie in Ihre Einrichtung einfache Umfragen und Tests.")?></p>
-              </div>
-          </a>
-
-         <a class="click_me" href="<?= UrlHelper::getLink('admin_evaluation.php?view=eval_inst') ?>">
-            <div>
-                  <span class="click_head"><?=_("Evaluationen")?></span>
-                  <p><?=_("Richten Sie für Ihre Einrichtung eine öffentliche Umfragen ein.")?></p>
-            </div>
-        </a>
-        <? endif ?>
-
-        </div>
-        <br style="clear: left;">
     </div>
+    <br style="clear: left;">
 </div>

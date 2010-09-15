@@ -43,9 +43,9 @@ if ($_REQUEST['range_id'] == "self"){
     $news_range_id = $auth->auth['uid'];
 } else if (isset($_REQUEST['range_id'])){
     $news_range_id = $_REQUEST['range_id'];
-}
-
-if (!$news_range_id){
+} else if ($view == 'news_sem' || $view == 'news_inst') {
+    $news_range_id = $SessSemName[1];
+} else if (!$news_range_id){
     $news_range_id = $auth->auth['uid'];
 }
 
@@ -66,13 +66,9 @@ if ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip'
     } else {
         Navigation::activateItem('/course/admin/news');
     }
-    if ($SessSemName[1]) {
-        $news_range_id = $SessSemName[1];
-        $news_range_name = '';
-    }
 } else {
     Navigation::activateItem('/tools/news');
-    closeObject();
+    $view_mode = 'user';
 }
 
 $news = new AdminNewsController();
@@ -191,7 +187,7 @@ if ($cmd=="new_entry") {
 if (!$cmd OR $cmd=="show") {
     if ($news->sms)
         $news->send_sms();
-    if ($perm->have_perm("autor")) {    // allow autors, needed for studygroups
+    if ($perm->have_perm('admin') || $perm->have_perm('autor') && $view_mode == 'user') {    // allow autors, needed for studygroups
         if ($perm->have_perm("admin")) {
             echo"\n<tr><td class=\"blank\"><p class=\"info\"><br><b>" . _("Bereichsauswahl") . "</b><br>&nbsp; </p></td></tr>\n";
             echo "<tr><td class=\"blank\"><p class=\"info\">";
@@ -212,9 +208,9 @@ if (!$cmd OR $cmd=="show") {
         echo "<br><b>" . _("verf&uuml;gbare Bereiche");
         echo "</b></p></td></tr>\n ";
         $typen = array( "user"=> array('name' => _("Benutzer"), 'view_mode' => 'user', 'id_param' => 'range_id'),
-                        "sem"=>  array('name' => _("Veranstaltung"), 'view_mode' => 'sem', 'id_param' => 'select_sem_id'),
-                        "inst"=> array('name' => _("Einrichtung"), 'view_mode' => 'inst', 'id_param' => 'admin_inst_id'),
-                        "fak"=>  array('name' => _("Fakult&auml;t"), 'view_mode' => 'inst', 'id_param' => 'admin_inst_id'));
+                        "sem"=>  array('name' => _("Veranstaltung"), 'view_mode' => 'sem', 'id_param' => 'range_id'),
+                        "inst"=> array('name' => _("Einrichtung"), 'view_mode' => 'inst', 'id_param' => 'range_id'),
+                        "fak"=>  array('name' => _("Fakult&auml;t"), 'view_mode' => 'inst', 'id_param' => 'range_id'));
         $my_cols=3;
         if ($perm->have_perm("autor")) {   // allow autors, needed for studygroups
             echo "\n<tr><td class=\"blank\"><p class=\"info\">";
@@ -245,8 +241,9 @@ if (!$cmd OR $cmd=="show") {
                 echo "\n".'<td class="steel1" width="'.floor(100/$my_cols).'%" align="center" valign="top"><b>'.$typen_value['name'].'</b><br><div style="font-size:smaller;text-align:left;"><ul>';
                 reset($news->search_result);
                 while (list ($range,$details) = each ($news->search_result)) {
+                    $link_view_mode = $perm->have_perm('admin') ? $typen_value['view_mode'] : 'user';
                     if ($details['type'] == $typen_key) {
-                        echo "\n<li " . $css->getHover() . '><a href="'. URLHelper::getLink("?{$typen_value['id_param']}=$range&range_id=$range&view_mode={$typen_value['view_mode']}") .'">' .htmlReady($details['name']);
+                        echo "\n<li " . $css->getHover() . '><a href="'. URLHelper::getLink("?{$typen_value['id_param']}=$range&range_id=$range&view_mode={$link_view_mode}") .'">' .htmlReady($details['name']);
                         echo ($details['anzahl']) ? ' ('.$details['anzahl'].')' : ' (0)';
                         echo '</a></li>';
                     }
@@ -258,7 +255,9 @@ if (!$cmd OR $cmd=="show") {
     }
     echo "\n<tr><td class=\"blank\"><br><p class=\"info\">";
     echo "<form action=\"". URLHelper::getLink("?cmd=new_entry&range_id=$news_range_id&view_mode=$view_mode")."\" method=\"POST\">";
-    echo "<hr width=\"100%\"><br><b>" . _("gew&auml;hlter Bereich:") . " </b>".htmlReady($news_range_name). "<br><br>";
+    if ($perm->have_perm('admin') || $perm->have_perm('autor') && $view_mode == 'user') {
+        echo "<hr width=\"100%\"><br><b>" . _("gew&auml;hlter Bereich:") . " </b>".htmlReady($news_range_name). "<br><br>";
+    }
     if (get_config('NEWS_RSS_EXPORT_ENABLE') && $news->get_news_range_perm($news_range_id) > 1){
         echo Assets::img('icons/16/grey/rss.png', array('class' => 'text-top'));
         echo "\n".'<font size="-1" style="vertical-align:middle;">' . _("Die Ankündigungen des gew&auml;hlten Bereiches als RSS-feed zur Verf&uuml;gung stellen") . '</font>&nbsp;';

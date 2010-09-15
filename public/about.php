@@ -538,8 +538,9 @@ function open_im() {
 
 // News zur person anzeigen!!!
 $show_admin = $perm->have_perm("autor") && $auth->auth["uid"] == $user_id;
-if (is_element_visible_for_user($user->id, $user_id, $visibilities['news']))
+if (is_element_visible_for_user($user->id, $user_id, $visibilities['news'])) {
     show_news($user_id, $show_admin, 0, $about_data["nopen"], "100%", 0, $about_data);
+}
 
 // alle persoenlichen Termine anzeigen, aber keine privaten
 if (get_config('CALENDAR_ENABLE')) {

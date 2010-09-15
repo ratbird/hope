@@ -344,7 +344,7 @@ function show_news_item($news_item, $cmd_data, $show_admin, $admin_link)
 
   echo "<div id=\"news_item_".$id."_content\"".($news_item['open'] ? "" : " style=\"display:none\"").">";
   if ($news_item['open']) {
-    return show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link);
+    echo show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link);
   }
   echo "</div>";
 

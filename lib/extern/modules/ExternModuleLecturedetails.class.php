@@ -413,7 +413,7 @@ class ExternModuleLecturedetails extends ExternModule {
                 if ($this->config->getValue("Main", "studiplinktarget") != "signin") {
                     $studip_link = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'seminar_main.php?auswahl=';
                     $studip_link .= $this->seminar_id;
-                    $studip_link .= "&again=1&redirect_to=admin_seminare1.php&login=true&new_sem=TRUE";
+                    $studip_link .= "&again=1&redirect_to=dispatch.php/course/basicdata/view/".$this->seminar_id."&login=true&new_sem=TRUE";
                 }
                 else {
                     $studip_link = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'details.php?again=1&sem_id=';

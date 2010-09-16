@@ -314,7 +314,7 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
                 }
             }
 
-            $content['__GLOBAL__']['STUDIP-EDIT-HREF'] = "{$GLOBALS['ABSOLUTE_URI_STUDIP']}seminar_main.php?auswahl={$this->seminar_id}&again=1&redirect_to=admin_seminare1.php&login=true&new_sem=TRUE";
+            $content['__GLOBAL__']['STUDIP-EDIT-HREF'] = "{$GLOBALS['ABSOLUTE_URI_STUDIP']}seminar_main.php?auswahl={$this->seminar_id}&again=1&redirect_to=dispatch.php/course/basicdata/view/".$this->seminar_id."&login=true&new_sem=TRUE";
             $content['__GLOBAL__']['STUDIP-REGISTER-HREF'] = "{$GLOBALS['ABSOLUTE_URI_STUDIP']}details.php?again=1&sem_id={$this->seminar_id}";
         }
 

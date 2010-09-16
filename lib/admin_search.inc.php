@@ -183,8 +183,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     }
 
     //here are all the pages/views listed, which require the search form for Veranstaltungen
-    if ($i_page == "admin_seminare1.php"
-            OR $i_page == "themen.php"
+    if ($i_page == "themen.php"
             OR $i_page == "raumzeit.php"
             OR $i_page == "admin_admission.php"
             OR $i_page == "admin_room_requests.php"

@@ -349,7 +349,7 @@ STUDIP.study_area_selection = {
       if (!(parameters && parameters.id)) {
         return;
       }
-      STUDIP.study_area_selection.add(parameters.id, parameters.course_id || '');
+      STUDIP.study_area_selection.add(parameters.id, parameters.course_id || '-');
       return false;
     });
     jQuery('input[name^="study_area_selection[remove]"]').live('click', function () {
@@ -357,7 +357,7 @@ STUDIP.study_area_selection = {
       if (!(parameters && parameters.id)) {
         return;
       }
-      STUDIP.study_area_selection.remove(parameters.id, parameters.course_id || '');
+      STUDIP.study_area_selection.remove(parameters.id, parameters.course_id || '-');
       return false;
     });
     jQuery('a.study_area_selection_expand').live('click', function () {
@@ -365,7 +365,7 @@ STUDIP.study_area_selection = {
       if (!(parameters && parameters.id)) {
         return;
       }
-      STUDIP.study_area_selection.expandSelection(parameters.id, parameters.course_id || '');
+      STUDIP.study_area_selection.expandSelection(parameters.id, parameters.course_id || '-');
       return false;
     });
   },
@@ -381,7 +381,7 @@ STUDIP.study_area_selection = {
 
     jQuery.ajax({
       type: 'POST',
-      url: STUDIP.study_area_selection.url('add', course_id || ''),
+      url: STUDIP.study_area_selection.url('add', course_id || '-'),
       data: ({id: id}),
       dataType: 'html',
       async: false, // Critical request thus synchronous
@@ -405,7 +405,7 @@ STUDIP.study_area_selection = {
 
     jQuery.ajax({
       type: 'POST',
-      url: STUDIP.study_area_selection.url('remove', course_id || ''),
+      url: STUDIP.study_area_selection.url('remove', course_id || '-'),
       data: ({id: id}),
       dataType: 'html',
       async: false, // Critical request thus synchronous
@@ -432,7 +432,7 @@ STUDIP.study_area_selection = {
   },
 
   expandSelection: function (id, course_id) {
-    jQuery.post(STUDIP.study_area_selection.url('expand', course_id || '', id), function (data) {
+    jQuery.post(STUDIP.study_area_selection.url('expand', course_id || '-', id), function (data) {
         jQuery('#study_area_selection_selectables ul').replaceWith(data);
       }, 'html');
   },

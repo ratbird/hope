@@ -103,6 +103,11 @@ if (isset($study_areas['areas'])) {
     $area_selection->setAreas((array) $sem_create_data["sem_bereich"]);
 }
 
+if (isset($study_areas['selected'])) {
+    $area_selection->setSelected($study_areas['selected']);
+}
+
+
 $user_id = $auth->auth["uid"];
 $errormsg='';
 
@@ -435,7 +440,6 @@ if ($form == 1)
 if ($form == 2) {
 
     # evaluate study area selection
-
     # action: add
     if (isset($study_areas['add'])) {
         foreach ($study_areas['add'] as $key => $value) {
@@ -459,11 +463,6 @@ if ($form == 2) {
     else if (isset($study_areas['search_key']) &&
              $study_areas['search_key'] != '') {
         $area_selection->setSearchKey($study_areas['search_key']);
-    }
-
-    # action: expand
-    else if (isset($study_areas['selected'])) {
-        $area_selection->setSelected($study_areas['selected']);
     }
 
     $sem_create_data["sem_bereich"] = $area_selection->getAreaIDs();
@@ -2786,7 +2785,8 @@ if ($level == 2)
                                 list(,$smm_semester_id) = array_values(SemesterData::GetInstance()->getSemesterDataByDate($sem_create_data["sem_start_time"]));
 
                                 echo $factory->render('course/study_areas/form',
-                                                      array('selection' => $area_selection,
+                                                      array('course_id' => '-',
+                                                            'selection' => $area_selection,
                                                             'semester_id' => $smm_semester_id));
                                 ?>
 

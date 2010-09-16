@@ -1,5 +1,5 @@
 <?php
-# Lifter007: TODO
+                          # Lifter007: TODO
 # Lifter003: TODO
 
 /*
@@ -32,10 +32,22 @@ class Course_StudyAreasController extends AuthenticatedController {
 
     # user must have tutor permission
     $course_id = current($args);
-    if ($course_id && !$perm->have_studip_perm("tutor", $course_id)) {
+    if (self::isCourseId($course_id)
+        && !$perm->have_studip_perm("tutor", $course_id)) {
       $this->set_status(403);
       return FALSE;
     }
+  }
+
+  /**
+   * Every string is a valid course ID except the string '-'
+   *
+   * @param mixed  the value to check
+   * @return bool  TRUE if it is courseID-ish, FALSE otherwise
+   */
+  static function isCourseId($id)
+  {
+      return is_string($id) && $id !== '-';
   }
 
 
@@ -46,7 +58,7 @@ class Course_StudyAreasController extends AuthenticatedController {
    *
    * @return void
    */
-  function show_action($course_id = '') {
+  function show_action($course_id = '-') {
 
     global $perm;
 
@@ -62,7 +74,7 @@ class Course_StudyAreasController extends AuthenticatedController {
     }
 
     # w/o a course ID show the admin search form
-    if ($course_id === '') {
+    if (!self::isCourseId($course_id)) {
       PageLayout::setTitle(_('Studienbereichsauswahl'));
 
       require_once 'lib/admin_search.inc.php';
@@ -162,7 +174,7 @@ class Course_StudyAreasController extends AuthenticatedController {
    *
    * @return void
    */
-  function add_action($course_id = NULL)  {
+  function add_action($course_id = '-')  {
 
     $this->set_course($course_id);
 
@@ -191,7 +203,7 @@ class Course_StudyAreasController extends AuthenticatedController {
    *
    * @return void
    */
-  function remove_action($course_id = NULL) {
+  function remove_action($course_id = '-') {
 
     $id = isset($_POST['id']) ? $_POST['id'] : NULL;
 
@@ -226,7 +238,7 @@ class Course_StudyAreasController extends AuthenticatedController {
    *
    * @return void
    */
-  function expand_action($course_id = NULL, $id = NULL) {
+  function expand_action($course_id = '-', $id = NULL) {
 
     $this->set_course($course_id);
 
@@ -255,7 +267,7 @@ class Course_StudyAreasController extends AuthenticatedController {
    *                    the selection form
    */
   function get_selection($course_id) {
-    if ($course_id) {
+    if (self::isCourseId($course_id)) {
       $selection = new StudipStudyAreaSelection($course_id);
     }
     else {
@@ -277,7 +289,7 @@ class Course_StudyAreasController extends AuthenticatedController {
   function store_selection($course_id, $selection) {
 
     # w/ course ID, write the new study areas to the db
-    if ($course_id) {
+    if (self::isCourseId($course_id)) {
       $course = Seminar::getInstance($course_id);
       $course->setStudyAreas($selection->getAreaIDs());
     }
@@ -291,7 +303,7 @@ class Course_StudyAreasController extends AuthenticatedController {
 
   function set_course($course_id){
     $this->selection = self::get_selection($course_id);
-    if ($course_id){
+    if (self::isCourseId($course_id)){
       $this->course_id = $course_id;
       $this->course = Seminar::getInstance($course_id);
       $this->semester_id = SemesterData::GetSemesterIdByDate($this->course->getSemesterStartTime());

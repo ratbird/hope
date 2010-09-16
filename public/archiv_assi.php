@@ -65,7 +65,18 @@ $db4 = new DB_Seminar;
 $sess->register("archiv_assi_data");
 $cssSw = new cssClassSwitcher;
 
-Navigation::activateItem('/admin/course/archive');
+if ($perm->have_perm('admin')) {
+    Navigation::activateItem('/admin/course/archive');
+} else {
+    Navigation::activateItem('/course/admin/main');
+}
+
+PageLayout::setTitle(_("Archivieren von Veranstaltungen"));
+
+//Change header_line if open object
+if ($SessSemName[1]) {
+    PageLayout::setTitle(getHeaderLine($SessSemName[1]) . " - " . PageLayout::getTitle());
+}
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -213,6 +224,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
 <body>
 
 <table width="100%" border=0 cellpadding=0 cellspacing=0>
+    <? if($perm->have_perm('admin')) : ?>
     <tr>
         <td class="topic" colspan=2><b>&nbsp;
         <?
@@ -223,6 +235,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
         ?></b>
         </td>
     </tr>
+    <? endif ?>
     <tr>
         <td class="blank" colspan=2><b>&nbsp;
         <table align="center" width="99%" border=0 cellpadding=2 cellspacing=0>
@@ -425,8 +438,17 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                 }
                 printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink($PHP_SELF."?archive_kill=TRUE"), makeButton("archivieren", "img"));
                 if (!$links_admin_data["sem_id"]) {
-                    echo '&nbsp;<a href="' .
-                     URLHelper::getLink((($SessSemName[1]) ? 'admin_seminare1.php?list=TRUE' : $_SERVER['PHP_SELF'].'?list=TRUE&new_session=TRUE')). '">' . makeButton('abbrechen', 'img') . '</a>';
+                    echo '&nbsp;<a href="';
+
+                    if ($perm->have_perm('admin')) {
+                        echo URLHelper::getLink((($SessSemName[1]) 
+                            ? 'dispatch.php/course/basicdata/view/'. $SessSemName[1] .'?list=TRUE'
+                            : '?list=TRUE&new_session=TRUE'));
+                    } else {
+                        echo URLHelper::getLink('dispatch.php/course/management');
+                    }
+
+                    echo '">' . makeButton('abbrechen', 'img') . '</a>';
                 }
                 // can we inc?
                 if ($archiv_assi_data["pos"] < sizeof($archiv_assi_data["sems"])-1) {

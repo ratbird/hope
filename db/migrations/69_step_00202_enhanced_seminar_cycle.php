@@ -11,6 +11,26 @@ class Step00202EnhancedSeminarCycle extends Migration
     function up()
     {
         $db = DBManager::get();
+        $options[] =
+        array(
+            'name'        => 'ALLOW_METADATE_SORTING',
+            'type'        => 'boolean',
+            'value'       => 0,
+            'section'     => 'allow_views',
+            'description' => 'Soll es erlaubt sein, dass regelmäßige Zeiten einer Veranstaltung frei sortiert werden können?'
+            );
+
+        $stmt = $db->prepare("
+                INSERT IGNORE INTO config
+                    (config_id, field, value, is_default, type, section, mkdate, chdate, description)
+                VALUES
+                    (MD5(:name), :name, :value, 1, :type, :section, UNIX_TIMESTAMP(),  UNIX_TIMESTAMP(), :description)
+                ");
+
+        foreach ($options as $option) {
+            $stmt->execute($option);
+        }
+
         $db->exec("CREATE TABLE IF NOT EXISTS `seminar_cycle_dates` (
                   `metadate_id` varchar(32) NOT NULL,
                   `seminar_id` varchar(32) NOT NULL,
@@ -59,6 +79,7 @@ class Step00202EnhancedSeminarCycle extends Migration
     {
         $db = DBManager::get();
         $db->exec("DROP TABLE `seminar_cycle_dates`");
+        $db->exec("DELETE FROM config WHERE field LIKE 'ALLOW_METADATE_SORTING'");
     }
 }
 ?>

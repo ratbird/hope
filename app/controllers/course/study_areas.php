@@ -73,7 +73,7 @@ class Course_StudyAreasController extends AuthenticatedController
         if ($perm->have_perm('admin')) {
             Navigation::activateItem('/admin/course/study_areas');
         } else {
-            Navigation::activateItem('/course/admin/studycourse');
+            Navigation::activateItem('/course/admin/study_areas');
         }
 
         // w/o a course ID show the admin search form

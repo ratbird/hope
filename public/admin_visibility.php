@@ -44,7 +44,12 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 require_once 'lib/admin_search.inc.php';
 
 PageLayout::setTitle(_("Verwaltung der Sichtbarkeit von Veranstaltungen"));
-Navigation::activateItem('/admin/course/visibility');
+
+if ($perm->have_perm('admin')) {
+    Navigation::activateItem('/admin/course/visibility');
+} else {
+    Navigation::activateItem('/course/admin/main/visibility');
+}
 
 //get ID from a open Seminar
 if ($SessSemName[1])

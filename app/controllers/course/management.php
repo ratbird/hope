@@ -20,14 +20,12 @@ require_once 'app/controllers/authenticated_controller.php';
 
 class Course_ManagementController extends AuthenticatedController
 {
-
-    // see Trails_Controller#before_filter
     function before_filter(&$action, &$args)
     {
         parent::before_filter($action, $args);
 
         if ($_SESSION['SessSemName']['class'] == 'sem') {
-            if (SeminarCategories::GetBySeminarId($_SESSION['SessSemName'][1])->studygroup_mode == true) {
+            if (SeminarCategories::GetBySeminarId($_SESSION['SessSemName'][1])->studygroup_mode) {
                 throw new Exception(_('Dies ist eine Studiengruppe und kein Seminar!'));
             }
         }
@@ -36,52 +34,18 @@ class Course_ManagementController extends AuthenticatedController
     }
 
     /**
-     * shows index page of course management
+     * shows index page of course or institute management
      *
      * @return void
      */
     function index_action()
     {
         Navigation::activateItem('course/admin/main');
+
         if ($_SESSION['SessSemName']['class'] == 'inst') {
-            $this->redirect('course/management/inst');
-            return;
-        }
-
-        $sem = Seminar::getInstance($_SESSION['SessSemName'][1]);
-        $this->visible = $sem->isVisible();
-        $this->is_admin = $GLOBALS['perm']->have_studip_perm('tutor', $_SESSION['SessSemName'][1]);
-    }
-
-    /**
-     * shows index page of inst management
-     *
-     * @return void
-     */
-    function inst_action()
-    {
-        Navigation::activateItem('course/admin/main');
-        $this->is_admin = $GLOBALS['perm']->have_studip_perm('admin', $_SESSION['SessSemName'][1]);
-
-    }
-
-    /**
-     * sets visibility of a seminar
-     *
-     * @param visible
-     * 
-     * @return void
-     */
-    function visible_action($visible)
-    {
-        $sem = Seminar::getInstance($_SESSION['SessSemName'][1]);
-        if ($visible) {
-            $sem->visible = 1;
+            $this->infotext = _('Als Mitarbeiter Ihrer Einrichtung können Sie für diese Inhalte in mehreren Kategorien bereitstellen. Inhalte in Ihrer Einrichtung können von allen Stud.IP-Nutzern abgerufen werden.');
         } else {
-            $sem->visible = 0;
+            $this->infotext = _('Sie können hier Ihre Veranstaltung in mehreren Kategorien anpassen. Informationen wie Grunddaten oder Termine und Einstellungen, Zugangsbeschränkungen und Funktionen können Sie hier administrieren.');
         }
-        $sem->store();
-
-        $this->redirect('course/management/index');
     }
 }

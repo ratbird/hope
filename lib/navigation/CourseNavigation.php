@@ -80,6 +80,8 @@ class CourseNavigation extends Navigation
             $scms = array_values(StudipScmEntry::GetSCMEntriesForRange($SessSemName[1]));
         }
 
+        $sem_create_perm = in_array(get_config('SEM_CREATE_PERM'), array('root','admin','dozent')) ? get_config('SEM_CREATE_PERM') : 'dozent';
+
         // general information
         $navigation = new Navigation(_('Übersicht'));
 
@@ -119,7 +121,8 @@ class CourseNavigation extends Navigation
             }
         } else if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$perm->have_perm('admin')) {
             $navigation = new Navigation(_('Verwaltung'));
-            $navigation->addSubNavigation('main', new Navigation(_('Verwaltung'), 'dispatch.php/course/management'));
+            $main = new Navigation(_('Verwaltung'), 'dispatch.php/course/management');
+            $navigation->addSubNavigation('main', $main);
 
             if ($sem_class == 'sem') {
                 $item = new Navigation(_('Grunddaten'), 'dispatch.php/course/basicdata/view/' . $_SESSION['SessionSeminar']);
@@ -128,7 +131,7 @@ class CourseNavigation extends Navigation
 
                 $item = new Navigation(_('Studienbereiche'), 'dispatch.php/course/study_areas/show/' . $_SESSION['SessionSeminar']);
                 $item->setDescription(_('Legen Sie hier fest, in welchen Studienbereichen diese Veranstaltung im Verzeichnis aller Veranstaltungen erscheint.'));
-                $navigation->addSubNavigation('studycourse', $item);
+                $navigation->addSubNavigation('study_areas', $item);
 
                 $item = new Navigation(_('Zeiten/Räume'), 'raumzeit.php');
                 $item->setDescription(_('Verändern Sie hier Angaben über regelmäßige Veranstaltungszeiten, Einzeltermine und Ortsangaben.'));
@@ -137,6 +140,30 @@ class CourseNavigation extends Navigation
                 $item = new Navigation(_('Zugangseinstellungen'), 'admin_admission.php');
                 $item->setDescription(_('Richten Sie hier verschiedene Zugangsbeschränkungen, Anmeldeverfahren oder einen Passwortschutz für Ihre Veranstaltung ein.'));
                 $navigation->addSubNavigation('admission', $item);
+
+                $item = new Navigation(_('Zusatzangaben'), 'admin_aux.php');
+                $item->setDescription(_('Hier können Sie Vorlagen zur Erhebung weiter Angaben von Ihren Teilnehmern auswählen.'));
+                $navigation->addSubNavigation('aux_data', $item);
+
+                if ($perm->have_perm($sem_create_perm)) {
+                    if (!LockRules::check($SessSemName[1], 'seminar_copy')) {
+                        $item = new Navigation(_('Veranstaltung kopieren'), 'admin_seminare_assi.php?cmd=do_copy&cp_id='.$SessSemName[1].'&start_level=TRUE&class=1');
+                        $item->setImage('icons/16/black/add/seminar.png');
+                        $main->addSubNavigation('copy', $item);
+                    }
+
+                    if (get_config('ALLOW_DOZENT_ARCHIV')) {
+                        $item = new Navigation(_('Veranstaltung archivieren'), 'archiv_assi.php');
+                        $item->setImage('icons/16/black/remove/seminar.png');
+                        $main->addSubNavigation('archive', $item);
+                    }
+
+                    if (get_config('ALLOW_DOZENT_VISIBILITY')) {
+                        $item = new Navigation(_('Sichtbarkeit ändern'), 'admin_visibility.php');
+                        $item->setImage('icons/16/black/visibility-invisible.png');
+                        $main->addSubNavigation('visibility', $item);
+                    }
+                }
             }
         }
 
@@ -229,7 +256,7 @@ class CourseNavigation extends Navigation
             $navigation->addSubNavigation('other', new Navigation(_('Andere Termine'), 'dates.php?cmd=setType&type=other'));
 
             if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
-                $navigation->addSubNavigation('topics', new Navigation(_('Ablaufplan bearbeiten'), 'themen.php?seminar_id='.$SessSemName[1]));
+                $navigation->addSubNavigation('edit', new Navigation(_('Ablaufplan bearbeiten'), 'themen.php?seminar_id='.$SessSemName[1]));
             }
 
             $this->addSubNavigation('schedule', $navigation);

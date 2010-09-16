@@ -2,55 +2,35 @@
 /* * * * * * * * * * * * *
  * * * I N F O B O X * * *
  * * * * * * * * * * * * */
-$infobox['picture'] = 'infobox/administration.jpg';
-if ($GLOBALS['perm']->have_perm('dozent')) {
-    $infobox['content'] = array(
+
+$infobox = array(
+    'picture' => 'infobox/administration.jpg',
+    'content' => array(
         array(
-            'kategorie' => _("Aktionen"),
+            'kategorie' => _('Information'),
             'eintrag'   => array(
                 array(
-                    'text' => _("Diese Veranstaltung <a href=".URLHelper::getLink('copy_assi.php?list=TRUE&new_session=TRUE')."\>kopieren</a> und damit eine neue Veranstaltung mit gleichen Einstellungen erstellen."),
-                    'icon' => 'icons/16/black/add/seminar.png'
-                ),
+                    'icon' => 'icons/16/black/info.png',
+                    'text' => $this->infotext
+                )
             )
         )
-    );
-}
-
-if (($GLOBALS['perm']->have_studip_perm('dozent', $GLOBALS['SessSemName'][1])
-    && get_config('ALLOW_DOZENT_ARCHIV'))
-    || $GLOBALS['perm']->have_perm('admin')) {
-
-    $infobox['content'][0]['eintrag'][] = array(
-        'text' => _("Diese Veranstaltung <a href=".URLHelper::getLink('archiv_assi.php?list=TRUE&new_session=TRUE')."\>archivieren</a> und damit beenden."),
-        'icon' => 'icons/16/black/remove/seminar.png'
-    );
-
-    if ($visible) {
-        $text = sprintf(_('Diese Veranstaltung %sunsichtbar%s schalten'),
-            '<a href="'.  $controller->url_for('course/management/visible/0') .'">',
-            '</a>');
-    } else {
-        $text = sprintf(_('Diese Veranstaltung %ssichtbar%s schalten'),
-            '<a href="'.  $controller->url_for('course/management/visible/1') .'">',
-            '</a>');
-    }
-    $infobox['content'][0]['eintrag'][] = array(
-        'text' => $text,
-        'icon' => 'icons/16/black/visibility-invisible.png'
-    );
-}
-
-$infobox['content'][] = array(
-    'kategorie' => _("Information"),
-    'eintrag'   => array(
-        array(
-            'text' => _("Sie können hier Ihre Veranstaltung in mehreren Kategorien anpassen. Informationen wie Grunddaten oder Termine und Einstellungen  Zugangsbeschränkungen und Funktionen können Sie hier administrieren."),
-            "icon" => "icons/16/black/info.png"
-         )
-     )
+    )
 );
 
+$items = array();
+
+foreach (Navigation::getItem('/course/admin/main') as $nav) {
+    if ($nav->isVisible(true)) {
+        $image = $nav->getImage();
+        $text = '<a href="' . URLHelper::getLink($nav->getURL()) . '">' . htmlReady($nav->getTitle()). '</a>';
+        $items[] = array('icon' => $image['src'], 'text' => $text);
+    }
+}
+
+if (count($items)) {
+    array_unshift($infobox['content'], array('kategorie' => _('Aktionen'), 'eintrag' => $items));
+}
 ?>
 
 <h1 class="smashbox_kategorie">

@@ -68,6 +68,12 @@ if (!$perm->have_perm('root')) {
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
+// would use Trails_Flash here, but this is not trails
+if (isset($_SESSION['archive_message'])) {
+    $meldung = $_SESSION['archive_message'];
+    unset($_SESSION['archive_message']);
+}
+
 echo "\n" . $cssSw->GetHoverJSFunction() . "\n";
 
 $sortby = Request::option('sortby', 'name');
@@ -89,6 +95,9 @@ if (!$num_my_sem)
 if ($num_my_sem) {
     ?>
             <table cellpadding="1" cellspacing="0" width="98%">
+                <? if ($meldung) : ?>
+                    <? parse_msg($meldung) ?>
+                <? endif ?>
                 <tr>
                     <th width="1%"></th>
                     <th width="82%" align="left"><a href="<?= URLHelper::getLink("?sortby=name&view=". $view) ?>"><? echo(_("Name")) ?></a></th>

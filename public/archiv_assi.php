@@ -68,7 +68,7 @@ $cssSw = new cssClassSwitcher;
 if ($perm->have_perm('admin')) {
     Navigation::activateItem('/admin/course/archive');
 } else {
-    Navigation::activateItem('/course/admin/main');
+    Navigation::activateItem('/course/admin/main/archive');
 }
 
 PageLayout::setTitle(_("Archivieren von Veranstaltungen"));
@@ -77,11 +77,6 @@ PageLayout::setTitle(_("Archivieren von Veranstaltungen"));
 if ($SessSemName[1]) {
     PageLayout::setTitle(getHeaderLine($SessSemName[1]) . " - " . PageLayout::getTitle());
 }
-
-// Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php'); // Output of Stud.IP head
-include 'lib/include/admin_search_form.inc.php';
 
 // single delete (a Veranstaltung is open)
 if ($SessSemName[1]) {
@@ -131,21 +126,12 @@ if ($dec)
 if(LockRules::Check($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"], 'seminar_archive')) {
         $lockRule = new LockRules();
         $lockdata = $lockRule->getSemLockRule($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"]);
-        $msg = 'error§' . _("Die Veranstaltung kann nicht archiviert werden.").'§';
         if ($lockdata['description']){
-            $msg .= "info§" . fixlinks($lockdata['description']).'§';
+            $details = fixlinks($lockdata['description']);
+        } else {
+            $details = _("Die Veranstaltung kann nicht archiviert werden.");
         }
-        ?>
-        <table border=0 align="center" cellspacing=0 cellpadding=0 width="100%">
-        <tr><td class="blank" colspan=2><br>
-        <?
-        parse_msg($msg);
-        ?>
-        </td></tr>
-        </table>
-        <?
-        page_close();
-        die();
+        throw new AccessDeniedException($details);
 }
 
 // Delete (and archive) the lecture
@@ -172,11 +158,7 @@ if ($archive_kill) {
         
         $sem->delete();
         
-        if ($messages = $sem->getStackedMessages()) {
-            foreach ($messages as $type => $message_data) {
-                echo MessageBox::$type( $message_data['title'], $message_data['details'] );
-            }
-        }
+        $messages = $sem->getStackedMessages();
         unset($sem);
             
         // Successful archived, if we are here
@@ -184,6 +166,14 @@ if ($archive_kill) {
 
         // unset the checker, lecture is now killed!
         unset($archiv_assi_data["sem_check"][$s_id]);
+
+        // redirect non-admin users to overview page, since the course is gone now
+        if (!$perm->have_perm('admin')) {
+            $_SESSION['archive_message'] = $msg;
+            header('Location: ' . URLHelper::getURL('my_archiv.php'));
+            page_close();
+            die();
+        }
 
         // if there are lectures left....
         if (is_array($archiv_assi_data["sem_check"])) {
@@ -202,6 +192,11 @@ if ($archive_kill) {
         }
     }
 }
+
+// Start of Output
+include ('lib/include/html_head.inc.php'); // Output of html head
+include ('lib/include/header.php'); // Output of Stud.IP head
+include 'lib/include/admin_search_form.inc.php';
 
 // Outputs...
 if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0)) {
@@ -237,7 +232,12 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
     </tr>
     <? endif ?>
     <tr>
-        <td class="blank" colspan=2><b>&nbsp;
+        <td class="blank" colspan=2>
+        <? if ($messages) : ?>
+            <? foreach ($messages as $type => $message_data) : ?>
+                <?= MessageBox::$type($message_data['title'], $message_data['details']) ?>
+            <? endforeach ?>
+        <? endif ?>
         <table align="center" width="99%" border=0 cellpadding=2 cellspacing=0>
             <?
             parse_msg($msg, "§", "blank", 3);

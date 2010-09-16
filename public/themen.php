@@ -67,7 +67,7 @@ PageLayout::setTitle(_("Verwaltung der Themen des Ablaufplans"));
 if ($perm->have_perm('admin')) {
     Navigation::activateItem('/admin/course/schedule');
 } else {
-    Navigation::activateItem('/course/schedule/topics');
+    Navigation::activateItem('/course/schedule/edit');
 }
 
 //Change header_line if open object

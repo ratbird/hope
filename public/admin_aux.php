@@ -46,7 +46,12 @@ if (Request::submitted('aux_rule')) {
 }
 
 PageLayout::setTitle(_("Verwaltung der Zusatzangaben von Veranstaltungen"));
-Navigation::activateItem('/admin/course/aux_data');
+
+if ($perm->have_perm('admin')) {
+    Navigation::activateItem('/admin/course/aux_data');
+} else {
+    Navigation::activateItem('/course/admin/aux_data');
+}
 
 //get ID from a open Seminar
 if ($SessSemName[1])

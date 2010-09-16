@@ -2062,10 +2062,10 @@ switch ($level) {
         break;
 }
 
-if (!$perm->have_perm('admin')) {
-    Navigation::activateItem('/browse/my_courses/create');
-} else {
+if ($perm->have_perm('admin')) {
     Navigation::activateItem('/admin/course/create');
+} else {
+    Navigation::activateItem('/browse/my_courses/create');
 }
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head

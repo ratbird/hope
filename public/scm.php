@@ -49,9 +49,14 @@ $scms = array_values(StudipScmEntry::GetSCMEntriesForRange($SessSemName[1]));
 
 $msg = ""; // Message to display
 
+if ($_SESSION['scm-flash']) {
+    $msg = $_SESSION['scm-flash'];
+    unset($_SESSION['scm-flash']);
+}
+
 $_show_scm = Request::option('show_scm', $scms[0]['scm_id']);
 
-if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
+if ($perm->have_studip_perm('tutor', $SessSemName[1]) && in_array($i_view, words('change kill first_position'))) {
     if ($i_view == 'change') {
         $_show_scm = scm_change_content($_show_scm, $SessSemName[1], $scm_name, $scm_preset, $content);
         $msg = "msg§"._("Die Änderungen wurden übernommen.");
@@ -76,6 +81,10 @@ if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
         $scms = array_values(StudipScmEntry::GetSCMEntriesForRange($SessSemName[1]));
         $_show_scm = $scms[0]['scm_id'];
     }
+    $_SESSION['scm-flash'] = $msg;
+    header('Location: ' . UrlHelper::getUrl('scm.php', array('show_scm' => $_show_scm)));
+    page_close();
+    die();
 }
 
 $scm = new StudipScmEntry($_show_scm);

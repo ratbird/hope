@@ -1,18 +1,18 @@
 <?
 if ($errors = $flash['errors']) {
     if ($flash['create']) {
-        echo MessageBox::error(_("Beim Anlegen der Studiengruppe traten folgende Fehler auf:"),$errors);        
+        echo MessageBox::error(_("Beim Anlegen der Studiengruppe traten folgende Fehler auf:"), array_map('htmlReady', $errors));
     } elseif ($flash['edit']) {
-        echo MessageBox::error(_("Beim Bearbeiten der Studiengruppe traten folgende Fehler auf:"),$errors);
+        echo MessageBox::error(_("Beim Bearbeiten der Studiengruppe traten folgende Fehler auf:"),array_map('htmlReady', $errors));
     }
 }
 
 if ($success = $flash['success']) {
-    echo MessageBox::success($success);   
+    echo MessageBox::success($success);
 }
 
 if ($info = $flash['info']) {
-    echo MessageBox::info($info); 
+    echo MessageBox::info($info);
 }
 
 if ($messages = $flash['messages']) {

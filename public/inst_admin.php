@@ -514,24 +514,24 @@ if (!isset($details) || isset($set)) {
                     $db2->query("INSERT into user_inst (user_id, Institut_id, inst_perms) values ('$u_id', '$ins_id', 'admin')");
                     my_msg("<b>" . sprintf(_("%s wurde als \"admin\" in die Einrichtung aufgenommen."), $Fullname) . "</b>");
                 } else {
-                	my_error("<b>" . _("Sie haben keine Berechtigung einen Admin zu berufen!") . "</b>");
+                    my_error("<b>" . _("Sie haben keine Berechtigung einen Admin zu berufen!") . "</b>");
                 }
             } else {
-            	$insert_perms = $db3->f("perms");
-            	//ok, aber nur hochstufen auf Maximal-Status (hat sich selbst schonmal gemeldet als Student an dem Inst)
-            	if ($db->f("inst_perms") == "user") {
-            		log_event('INST_USER_STATUS', $ins_id ,$u_id, $insert_perms);
+                $insert_perms = $db3->f("perms");
+                //ok, aber nur hochstufen auf Maximal-Status (hat sich selbst schonmal gemeldet als Student an dem Inst)
+                if ($db->f("inst_perms") == "user") {
+                    log_event('INST_USER_STATUS', $ins_id ,$u_id, $insert_perms);
 
-            		$db2->query("UPDATE user_inst SET inst_perms='$insert_perms' WHERE user_id='$u_id' AND Institut_id = '$ins_id' ");
-            		// ok, neu aufnehmen als das was er global ist
-            	} else {
-            		log_event('INST_USER_ADD', $ins_id ,$u_id, $insert_perms);
-            		$db2->query("INSERT into user_inst (user_id, Institut_id, inst_perms) values ('$u_id', '$ins_id', '$insert_perms')");
-            	}
-            	if ($db2->affected_rows())
-            	my_msg("<b>" . sprintf(_("%s wurde als \"%s\" in die Einrichtung aufgenommen. Um Rechte etc. zu &auml;ndern folgen Sie dem Link zu den Nutzerdaten der Person!"), $Fullname, $insert_perms) . "</b>");
-            	else
-            	parse_msg ("error§<b>" . sprintf(_("%s konnte nicht in die Einrichtung aufgenommen werden!"), $Fullname) . "§");
+                    $db2->query("UPDATE user_inst SET inst_perms='$insert_perms' WHERE user_id='$u_id' AND Institut_id = '$ins_id' ");
+                    // ok, neu aufnehmen als das was er global ist
+                } else {
+                    log_event('INST_USER_ADD', $ins_id ,$u_id, $insert_perms);
+                    $db2->query("INSERT into user_inst (user_id, Institut_id, inst_perms) values ('$u_id', '$ins_id', '$insert_perms')");
+                }
+                if ($db2->affected_rows())
+                my_msg("<b>" . sprintf(_("%s wurde als \"%s\" in die Einrichtung aufgenommen. Um Rechte etc. zu &auml;ndern folgen Sie dem Link zu den Nutzerdaten der Person!"), $Fullname, $insert_perms) . "</b>");
+                else
+                parse_msg ("error§<b>" . sprintf(_("%s konnte nicht in die Einrichtung aufgenommen werden!"), $Fullname) . "§");
             }
         }
         checkExternDefaultForUser($u_id);

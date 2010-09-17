@@ -1098,12 +1098,12 @@ div.droppable.hover {
         } else {
             //Infomeldung, wenn keine Dateien existieren:
             print "<div style=\"width: 100%; text-align: center; margin: 10px; \">";
-        	print _("Es existieren noch keine Dateien in dieser Veranstaltung.");
-        	if ($rechte) {
-        	    print "<br>";
-        	    printf(_("Klicken Sie auf %sOrdneransicht%s, um welche hochzuladen oder zu verlinken."), "<a href=\"".URLHelper::getLink(Navigation::getItem("/course/files/tree")->getUrl())."\">", "</a>");
-        	}
-        	print "</div>";
+            print _("Es existieren noch keine Dateien in dieser Veranstaltung.");
+            if ($rechte) {
+                print "<br>";
+                printf(_("Klicken Sie auf %sOrdneransicht%s, um welche hochzuladen oder zu verlinken."), "<a href=\"".URLHelper::getLink(Navigation::getItem("/course/files/tree")->getUrl())."\">", "</a>");
+            }
+            print "</div>";
         }
 
         //display_folder_system($range_id, 0,$folder_system_data["open"], '', $change, $folder_system_data["move"], $folder_system_data["upload"], TRUE, $folder_system_data["refresh"], $folder_system_data["link"]);

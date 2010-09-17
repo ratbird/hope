@@ -118,16 +118,22 @@ $width_namecolumn = 60;
   <tr>
     <td style="width: <?= $width_column1/2 ?>%; font-weight: bold; vertical-align: top;"><?= $dozenten_title ?></td>
     <td style="width: <?= 100-$width_column1-($width_column1/2) ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
-        <ul style="list-style-type: none; text-indent: -25px;">
+        <ul style="list-style-type: none; padding-left: 0px;">
         <? $num = 0;
         foreach($dozenten as $dozent) : ?>
-        <li>
-            <span style="vertical-align: middle; text-align: left;">
+        <li style="text-align: left; padding-left: 0px;">
+            <span style="display: inline-block; vertical-align: middle;">
                 <?= Avatar::getAvatar($dozent["user_id"], $dozent['username'])->getImageTag(Avatar::SMALL) ?>
-                <?= get_fullname($dozent["user_id"], 'full_rev', true)." (".$dozent["username"].")" ?>
-            </span>
+            <span>
             <? if ($perm_dozent) : ?>
-            <span style="argin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
+            <span style="display: inline-block; vertical-align: middle;">
+                <a href="<?= $controller->url_for('course/basicdata/deletedozent', $course_id, $dozent["user_id"]) ?>">
+                <?= Assets::img("icons/16/blue/trash.png") ?>
+                </a>
+            </span>
+            <? endif; ?>
+            <? if ($perm_dozent) : ?>
+            <span style="white-space: nowrap; width: 32px; display: inline-block; vertical-align: middle;">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $dozent["user_id"], "dozent") ?>">
                 <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
@@ -136,12 +142,11 @@ $width_namecolumn = 60;
                 <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
                 <? endif; ?>
             </span>
-            <span style="vertical-align: middle">
-                <a href="<?= $controller->url_for('course/basicdata/deletedozent', $course_id, $dozent["user_id"]) ?>">
-                <?= Assets::img("icons/16/blue/trash.png") ?>
-                </a>
-            </span>
             <? endif; ?>
+            <span style="display: inline-block; padding-left: 3px; vertical-align: middle;">
+                <?= get_fullname($dozent["user_id"], 'full_rev', true)." (".$dozent["username"].")" ?>
+            </span>
+            
 
         </li>
     <? $num++; endforeach; ?>
@@ -201,16 +206,22 @@ $width_namecolumn = 60;
   <tr>
     <td style="width: <?= $width_column1/2 ?>%;  font-weight: bold; vertical-align: top;"><?= $tutor_title ?></td>
     <td style="width: <?= 100-$width_column1-($width_column1/2) ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
-    <ul style="list-style-type: none; text-indent: -25px;">
+    <ul style="list-style-type: none; padding-left: 0px;">
     <? $num = 0;
         foreach($tutoren as $tutor) : ?>
-        <li>
-            <span style="vertical-align: middle; text-align: left">
+        <li style="text-align: left; padding-left: 0px;">
+            <span style="display: inline-block; vertical-align: middle;">
                 <?= Avatar::getAvatar($tutor["user_id"], $tutor["username"])->getImageTag(Avatar::SMALL) ?>
-                <?= get_fullname($tutor["user_id"], 'full_rev', true)."<br>(".$tutor["username"].")" ?>
             </span>
             <? if ($perm_dozent) : ?>
-            <span style="margin: 3px; vertical-align: middle; white-space: nowrap;">
+            <span style="display: inline-block; vertical-align: middle;">
+                <a href="<?= $controller->url_for('course/basicdata/deletetutor', $course_id, $tutor["user_id"]) ?>">
+                <?= Assets::img("icons/16/blue/trash.png") ?>
+                </a>
+            </span>
+            <? endif; ?>
+            <? if ($perm_dozent) : ?>
+            <span style="white-space: nowrap; width: 32px; display: inline-block; vertical-align: middle;">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $tutor["user_id"], "tutor") ?>">
                 <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
@@ -219,13 +230,10 @@ $width_namecolumn = 60;
                 <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
                 <? endif; ?>
             </span>
-            <span style="margin: 3px; vertical-align: middle">
-                <a href="<?= $controller->url_for('course/basicdata/deletetutor', $course_id, $tutor["user_id"]) ?>">
-                <?= Assets::img("icons/16/blue/trash.png") ?>
-                </a>
-            </span>
             <? endif; ?>
-
+            <span style="display: inline-block; padding-left: 3px; vertical-align: middle;">
+                <?= get_fullname($tutor["user_id"], 'full_rev', true)."<br>(".$tutor["username"].")" ?>
+            </span>
         </li>
     <? $num++; endforeach; ?>
     </ul>

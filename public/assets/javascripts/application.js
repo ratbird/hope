@@ -505,9 +505,9 @@ STUDIP.Tabs = (function () {
       jQuery(list).data('old_width', jQuery(window).width());
 
       // strip contents and set titles
-      items.each(function () {
-        jQuery(this).html(jQuery(this).html().trim());
-        jQuery(this).attr('title', jQuery(this).html());
+      items.each(function (index, element) {
+        jQuery(element).html(jQuery.trim(jQuery(element).html()));
+        jQuery(element).attr('title', jQuery(element).html());
       });
 
       jQuery(window).bind('resize', this.resize);
@@ -1095,7 +1095,18 @@ jQuery(function () {
     handles: 's',
     minHeight: 50
   });
+  
+  jQuery(window.document).ajaxError(function (event, request, ajax_options) {
+    jQuery(jQuery("<div>" + request.responseText + "</div>")).dialog({
+      modal: true,
+      show: 'puff',
+      hide: 'puff',
+      title: "AJAX-Fehler!".toLocaleString()
+    });
+  });
 });
+
+
 
 /* ------------------------------------------------------------------------
  * application collapsable tablerows
@@ -1103,7 +1114,7 @@ jQuery(function () {
 jQuery(function ($) {
 
   $('table.collapsable .toggler').focus(function () {
-    $(this).blur();	
+    $(this).blur();
   }).click(function () {
     $(this).closest('tbody').toggleClass('collapsed');
     return false;

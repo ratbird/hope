@@ -626,7 +626,7 @@ STUDIP.Dialogbox = {
 };
 
 jQuery('.forum-icon').live('mouseenter', function () {
-  STUDIP.Dialogbox.openForumPosting($(this).metadata().forumid, this);
+  STUDIP.Dialogbox.openForumPosting(jQuery(this).metadata().forumid, this);
 }).live('mouseleave', function () {
   STUDIP.Dialogbox.closeForumPosting();
 });

@@ -1096,14 +1096,7 @@ jQuery(function () {
     minHeight: 50
   });
   
-  jQuery(window.document).ajaxError(function (event, request, ajax_options) {
-    jQuery(jQuery("<div>" + request.responseText + "</div>")).dialog({
-      modal: true,
-      show: 'puff',
-      hide: 'puff',
-      title: "AJAX-Fehler!".toLocaleString()
-    });
-  });
+  
 });
 
 

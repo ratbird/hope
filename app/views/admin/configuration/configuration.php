@@ -27,8 +27,8 @@
     </thead>
 <? $outer_index = 1; foreach ($allconfigs as $section => $config): ?>
     <tbody <?= ((!is_null($current_section) and $current_section == $section) or !is_null($config_filter)) ? '': 'class="collapsed"' ?>>
-        <tr class="steel">
-            <td colspan="5">
+        <tr class="steel header-row">
+            <td class="toggle-indicator" colspan="5">
                 <a class="toggler" href="<?= $controller->url_for('admin/configuration/configuration/'.$section) ?>">
                     <?= empty($section) ? '- '._(' Ohne Kategorie ').' -' : $section ?>
                     (<?=count($config['data'])?>)
@@ -37,7 +37,7 @@
         </tr>
     <? foreach ($config['data'] as $index => $conf): ?>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-            <td>
+            <td class="label-cell">
                 <?=$conf['field']?>
             </td>
             <td>

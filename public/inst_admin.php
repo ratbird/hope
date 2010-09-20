@@ -69,13 +69,13 @@ require_once 'lib/admin_search.inc.php';
 if ($SessSemName[1])
     $inst_id=$SessSemName[1];
 
-if ($admin_view && !$perm->have_studip_perm('admin', $inst_id)) {
-    $admin_view = false;
-}
-
 if (!$admin_view) {
     checkObject();
     checkObjectModule("personal");
+}
+
+if ($admin_view && !$perm->have_studip_perm('admin', $inst_id)) {
+    $admin_view = false;
 }
 
 //Change header_line if open object
@@ -87,7 +87,7 @@ if ($header_line)
 include ("lib/include/html_head.inc.php"); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 
-if ($admin_view) {
+if ($admin_view || !isset($inst_id)) {
     include 'lib/include/admin_search_form.inc.php';
 }
 

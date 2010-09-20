@@ -44,7 +44,7 @@ class StudipDocument extends SimpleORMap {
      * returns new instance for given class and key
      * when found in db, else null
      * @param string primary key
-     * @return null|NULL
+     * @return StudipDocument object|NULL
      */
     static function find($id)
     {
@@ -54,7 +54,7 @@ class StudipDocument extends SimpleORMap {
     /**
      * returns array of instances of given class filtered by given sql
      * @param string sql clause to use on the right side of WHERE
-     * @return array
+     * @return array of StudipDocument
      */
     static function findBySql($where)
     {
@@ -64,7 +64,7 @@ class StudipDocument extends SimpleORMap {
     /**
      * returns array of document-objects of given course id
      * @param string sql clause to use on the right side of WHERE
-     * @return array
+     * @return array of StudipDocument
      */
     static function findByCourseId($cid)
     {
@@ -74,7 +74,7 @@ class StudipDocument extends SimpleORMap {
     /**
      * returns array of document-objects of given folder id
      * @param string sql clause to use on the right side of WHERE
-     * @return array
+     * @return array of StudipDocument
      */
     static function findByFolderId($folder_id)
     {
@@ -92,7 +92,7 @@ class StudipDocument extends SimpleORMap {
     }
 
     /**
-     *
+     * constructor
      * @param string $id primary key of table
      */
     function __construct($id = null)
@@ -101,4 +101,3 @@ class StudipDocument extends SimpleORMap {
         parent::__construct($id);
     }
 }
-?>

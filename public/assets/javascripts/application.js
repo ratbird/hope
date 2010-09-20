@@ -991,7 +991,6 @@ STUDIP.QuickSearch = {
                         .css("opacity", 0.7);
     }
     jQuery('#' + name).autocomplete({
-      disabled: true,
       source: function (input, add) {
         //get the variables that should be sent:
         var send_vars = {

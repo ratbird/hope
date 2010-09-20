@@ -41,10 +41,10 @@ require_once 'lib/classes/SimpleORMap.class.php';
 class StudipDocument extends SimpleORMap {
 
     /**
-     * returns new instance for given class and key
-     * when found in db, else null
-     * @param string primary key
-     * @return StudipDocument object|NULL
+     * returns new instance of StudipDocument for given id or null if id does 
+     * not exist
+     * @param id string primary key of table 'dokumente' in db
+     * @return object of type StudipDocument that matches id or null if nothing matches id
      */
     static function find($id)
     {
@@ -52,9 +52,11 @@ class StudipDocument extends SimpleORMap {
     }
 
     /**
-     * returns array of instances of given class filtered by given sql
-     * @param string sql clause to use on the right side of WHERE
-     * @return array of StudipDocument
+     * returns array of instances of StudipDocument filtered by given sql-where-clause
+     * @param string: sql-where clause to use on the right side of WHERE to 
+     * filter all StudipDocuments in an array
+     * @return array of StudipDocument filtered by where (sql-qhere-clause) or 
+     * empty array if no matches were found
      */
     static function findBySql($where)
     {
@@ -62,9 +64,10 @@ class StudipDocument extends SimpleORMap {
     }
 
     /**
-     * returns array of document-objects of given course id
-     * @param string sql clause to use on the right side of WHERE
-     * @return array of StudipDocument
+     * returns array of StudipDocument-objects of given course id
+     * @param string cid: course_id in the db (Seminar_id) with which all 
+     * StudipDocuments should be filtered
+     * @return array of all StudipDocument from the course with the given course_id
      */
     static function findByCourseId($cid)
     {
@@ -72,9 +75,10 @@ class StudipDocument extends SimpleORMap {
     }
 
     /**
-     * returns array of document-objects of given folder id
-     * @param string sql clause to use on the right side of WHERE
-     * @return array of StudipDocument
+     * returns array of document-objects of given folder with id folder_id
+     * @param string folder_id: id of a folder whose documents we want to catch
+     * @return array of StudipDocument objects of the given folder_id's folder 
+     * or empty if that folder contains no documents.
      */
     static function findByFolderId($folder_id)
     {
@@ -82,9 +86,11 @@ class StudipDocument extends SimpleORMap {
     }
 
     /**
-     * deletes table rows specified by given class and sql clause
-     * @param string sql clause to use on the right side of WHERE
-     * @return number
+     * deletes table rows which matches the given sql-where clause and returns 
+     * the number of deleted rows. 
+     * @param string sql clause to use on the right side of WHERE to delete 
+     * all rows matching this clause
+     * @return int: number of rows deleted by the given sql-where-clause. 
      */
     static function deleteBySql($where)
     {
@@ -93,7 +99,8 @@ class StudipDocument extends SimpleORMap {
 
     /**
      * constructor
-     * @param string $id primary key of table
+     * @param string id: primary key of table dokumente
+     * @return null
      */
     function __construct($id = null)
     {

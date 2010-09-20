@@ -36,10 +36,10 @@
 
 <?php
 if ($score->ReturnPublik()) {
-    $icon = 'icons/16/black/crown.png';
+    $icon = 'icons/16/black/remove/crown.png';
     $action = '<a href="'. URLHelper::getLink('score.php?cmd=kill') .'">'._("Ihren Wert von der Liste löschen").'</a>';
 } else {
-    $icon = 'icons/16/black/crown.png';
+    $icon = 'icons/16/black/add/crown.png';
     $action = '<a href="'. URLHelper::getLink('score.php?cmd=write') .'">'._("Diesen Wert auf der Liste veröffentlichen").'</a>';
 }
 $infobox = array(

@@ -173,15 +173,19 @@ class Score
         }
 
         if ( ($news = $this->score_content_cache[$user_id]['newscount']) ) {
-            $content .= "<a href=\"about.php?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/news.png')."\" ".tooltip(sprintf(_("%s persönliche Ankündigungen"), $news))."></a> ";
+            if ($news == 1)
+                $tmp = _("persönliche Ankündigung");
+            else
+                $tmp = _("persönliche Ankündigungen");
+            $content .= "<a href=\"about.php?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/breaking-news.png')."\" ".tooltip("$news $tmp")."></a> ";
         } else {
             $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
         }
         if ( ($vote = $this->score_content_cache[$user_id]['votecount']) ) {
             if ($vote == 1)
-                $tmp = _("Votes");
+                $tmp = _("Umfrage");
             else
-                $tmp = _("Votes");
+                $tmp = _("Umfragen");
             $content .= "<a href=\"about.php?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/vote.png')."\" ".tooltip("$vote $tmp")."></a> ";
         } else {
             $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";

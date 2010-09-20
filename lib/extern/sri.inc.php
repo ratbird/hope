@@ -172,26 +172,18 @@ foreach ($EXTERN_MODULE_TYPES as $type) {
         $module_obj = ExternModule::GetInstance($range_id, $module_name, $config_id, $default, $global_id);
     }
 }
+// drop URL parameters from page_url 
+$page_url = preg_replace('/\?.*/', '', $_REQUEST['page_url']); 
+ 
+$sri_url = $module_obj->config->getValue('Main', 'sriurl'); 
 
-// drop URL parameters from page_url
-$page_url = preg_replace('/\?.*/', '', $_REQUEST['page_url']);
+if (isset($sri_url)) { 
+    // drop URL parameters from sri_url 
+    $sri_url = preg_replace('/\?.*/', '', $sri_url); 
+} 
 
-$sri_url = $module_obj->config->getValue('Main', 'sriurl');
+if ($page_url != $sri_url || !sri_is_enabled($module_obj->config->range_id)) { 
 
-if (isset($sri_url)) {
-    $sri_array = preg_split('/[\s,]+/', $sri_url);
-
-    for ($i = 0; $i < count($sri_array); $i++) {
-        // drop URL parameters from sri_url
-        $current_sri = preg_replace('/\?.*/', '', $sri_array[$i]);
-        if ($current_sri == $page_url) {
-            $match = true;
-            break;
-        }
-    }
-}
-
-if (!$match || !sri_is_enabled($module_obj->config->range_id)) {
     echo $EXTERN_ERROR_MESSAGE;
     exit;
 }

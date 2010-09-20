@@ -33,29 +33,59 @@
 
 require_once 'lib/classes/SimpleORMap.class.php';
 
+/**
+ * Small class derived from SimpleORMap to give access to the table dokumente
+ * @author André Noack
+ *
+ */
 class StudipDocument extends SimpleORMap {
 
-
+    /**
+     * returns new instance for given class and key
+     * when found in db, else null
+     * @param string primary key
+     * @return null|NULL
+     */
     static function find($id)
     {
         return SimpleORMap::find(__CLASS__,$id);
     }
 
+    /**
+     * returns array of instances of given class filtered by given sql
+     * @param string sql clause to use on the right side of WHERE
+     * @return array
+     */
     static function findBySql($where)
     {
         return SimpleORMap::findBySql(__CLASS__,$where);
     }
 
+    /**
+     * returns array of document-objects of given course id
+     * @param string sql clause to use on the right side of WHERE
+     * @return array
+     */
     static function findByCourseId($cid)
     {
         return self::findBySql("seminar_id = " . DBManager::get()->quote($cid));
     }
 
+    /**
+     * returns array of document-objects of given folder id
+     * @param string sql clause to use on the right side of WHERE
+     * @return array
+     */
     static function findByFolderId($folder_id)
     {
          return self::findBySql("folder_id = " . DBManager::get()->quote($folder_id));
     }
 
+    /**
+     * deletes table rows specified by given class and sql clause
+     * @param string sql clause to use on the right side of WHERE
+     * @return number
+     */
     static function deleteBySql($where)
     {
         return SimpleORMap::deleteBySql(__CLASS__, $where);

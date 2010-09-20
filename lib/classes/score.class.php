@@ -164,7 +164,7 @@ class Score
         $username = $this->score_content_cache[$user_id]['username'];
         if ( ($gaeste = $this->score_content_cache[$user_id]['guestcount']) !== null ) {
             if ($gaeste == 1)
-                $tmp = _("Gästebuch aktiviert mit 1 Eintrag");
+                $tmp = _("Gästebuch aktiviert mit einem Eintrag");
             else
                 $tmp = sprintf(_("Gästebuch aktiviert mit %s Einträgen"), $gaeste);
             $content .= "<a href=\"about.php?username=$username&guestbook=open#guest\"><img src=\"".Assets::image_path('icons/16/blue/guestbook.png')."\" ".tooltip("$tmp")."></a> ";
@@ -173,19 +173,23 @@ class Score
         }
 
         if ( ($news = $this->score_content_cache[$user_id]['newscount']) ) {
-            if ($news == 1)
-                $tmp = _("persönliche Ankündigung");
-            else
+            if ($news == 1) {
+                $tmp = _("Eine persönliche Ankündigung");
+                unset($news);
+            } else {
                 $tmp = _("persönliche Ankündigungen");
+            }
             $content .= "<a href=\"about.php?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/breaking-news.png')."\" ".tooltip("$news $tmp")."></a> ";
         } else {
             $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";
         }
         if ( ($vote = $this->score_content_cache[$user_id]['votecount']) ) {
-            if ($vote == 1)
-                $tmp = _("Umfrage");
-            else
+            if ($vote == 1) {
+                $tmp = _("Eine Umfrage");
+                unset($vote);
+            } else {
                 $tmp = _("Umfragen");
+            }
             $content .= "<a href=\"about.php?username=$username\"><img src=\"".Assets::image_path('icons/16/blue/vote.png')."\" ".tooltip("$vote $tmp")."></a> ";
         } else {
             $content .= "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"16\"> ";

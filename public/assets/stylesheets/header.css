@@ -175,13 +175,13 @@ div#header {
     margin: auto auto 4px auto;
 }
 
-/* new icon */
-#barTopMenu a div.new {
+/* hover icon */
+#barTopMenu a:hover div, #barTopMenu li.active a:hover div, #barTopMenu li.active a div {
     background-position: -32px 0px;
 }
 
-/* hover icon */
-#barTopMenu a:hover div, #barTopMenu li.active a:hover div, #barTopMenu li.active a div {
+/* new icon */
+#barTopMenu a div.new {
     background-position: -64px 0px;
 }
 

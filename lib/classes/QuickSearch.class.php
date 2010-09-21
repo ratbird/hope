@@ -2,8 +2,6 @@
 /**
  * QuickSearch.class.php - GUI class for quciksearch
  *
- * Long description for file (if any)...
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -14,11 +12,11 @@
  * @category    Stud.IP
  */
 
-require_once "lib/classes/Avatar.class.php";
-require_once "lib/classes/CourseAvatar.class.php";
-require_once "lib/classes/InstituteAvatar.class.php";
+require_once 'lib/classes/Avatar.class.php';
+require_once 'lib/classes/CourseAvatar.class.php';
+require_once 'lib/classes/InstituteAvatar.class.php';
 
-require_once "lib/classes/searchtypes/SeminarSearch.class.php";
+require_once 'lib/classes/searchtypes/SeminarSearch.class.php';
 
 
 /**
@@ -78,7 +76,8 @@ require_once "lib/classes/searchtypes/SeminarSearch.class.php";
  * for details.
  * Enjoy!
  */
-class QuickSearch {
+class QuickSearch
+{
     
     static $count_QS = 0;       //static counter of all instances of this class
     
@@ -93,6 +92,13 @@ class QuickSearch {
     
     /**
      * returns an instance of QuickSearch so you can use it as singleton
+     *
+     * @param string $name the name of the destinated variable in your html-form. Handle it
+     * as if it was an '<input type="text" name="yourname">' input.
+     * @param string $search if set to user_id, username, Seminar_id, Arbeitsgruppe_id or Institute_id
+     * the searchfield will automatically search for persons, courses, workgroups, institutes and
+     * you don't need to call the specialSearch-method.
+     *
      * @return object of type QuickSearch
      */
     public static function get($name, $search = NULL) 
@@ -105,11 +111,14 @@ class QuickSearch {
      * constructor which prepares a searchfield for persons, courses, institutes or
      * special items you may want to search for. This is a GUI-class, see
      * QuickSearch.class.php for further documentation.
-     * @param name:    the name of the destinated variable in your html-form. Handle it
+     *
+     * @param string $name the name of the destinated variable in your html-form. Handle it
      * as if it was an '<input type="text" name="yourname">' input.
-     * @param search:    if set to user_id, username, Seminar_id, Arbeitsgruppe_id or Institute_id
+     * @param string $search if set to user_id, username, Seminar_id, Arbeitsgruppe_id or Institute_id
      * the searchfield will automatically search for persons, courses, workgroups, institutes and
      * you don't need to call the specialSearch-method.
+     *
+     * @return void
      */
     public function QuickSearch($name, $search = NULL) 
     {
@@ -128,8 +137,9 @@ class QuickSearch {
      * if set to true, the searchfield will be a nice-looking grey searchfield with
      * a magnifier-symbol as a submit-button. Set this to false to create your own
      * submit-button and style of the form.
-     * @param design:    associative array of params.
-     * @return self
+     * @param mixed $design  associative array of params.
+     *
+     * @return QuickSearch
      */
     public function withButton($design = array()) 
     {
@@ -143,7 +153,8 @@ class QuickSearch {
     
     /**
      * this will disable a submit button for the searchfield
-     * @return self
+     *
+     * @return QuickSearch
      */
     public function withoutButton() 
     {
@@ -153,11 +164,13 @@ class QuickSearch {
     
     /**
      * Here you can set a default-value for the searchfield
-     * @param valueID: the default-ID that should be stored
-     * @param valueName: the default value, that should be displayed
+     *
+     * @param string $valueID the default-ID that should be stored
+     * @param string $valueName the default value, that should be displayed
      * - remember that these may not be the same, they may be
      *   something like "ae2b1fca515949e5d54fb22b8ed95575", "test_dozent"
-     * @return self
+     *
+     * @return QuickSearch
      */
     public function defaultValue($valueID, $valueName) 
     {
@@ -168,8 +181,10 @@ class QuickSearch {
     
     /**
      * defines a css class for the searchfield
-     * @param class: any css class name for the "input type=text" tag
-     * @return self
+     *
+     * @param string $class any css class name for the "input type=text" tag
+     *
+     * @return QuickSearch
      */
     public function setInputClass($class) 
     {
@@ -179,8 +194,10 @@ class QuickSearch {
     
     /**
      * defines css-proporties for searchfield that will be included as 'style="$style"'
-     * @param style: one or more css-proporties separated with ";"
-     * @return self
+     *
+     * @param string $style one or more css-proporties separated with ";"
+     *
+     * @return QuickSearch
      */
     public function setInputStyle($style) 
     {
@@ -191,6 +208,10 @@ class QuickSearch {
     /**
      * disables the select-box, which is displayed for non-JS users who will 
      * choose with this box, which item they want to have.
+     *
+     * @param bool $set false if we DO want a select-box, false otherwise
+     *
+     * @return QuickSearch
      */
     public function noSelectbox($set = true) 
     {
@@ -203,8 +224,10 @@ class QuickSearch {
      * value in the QuickSearch field. Arguments are: 
      * function fireme(id_of_item, text_of_item)
      * example setting: QS->fireJSFunctionOnSelect('fireme');
-     * @param function_name:  string
-     * @return self
+     *
+     * @param string $function_name the name of the javascript function
+     *
+     * @return QuickSearch
      */
     public function fireJSFunctionOnSelect($function_name) 
     {
@@ -214,8 +237,10 @@ class QuickSearch {
     
     /**
      * assigns special attributes to the html-element of the searchfield
-     * @param attr_array: array like array("title" => "hello world")
-     * @return self
+     *
+     * @param array $ttr_array like array("title" => "hello world")
+     *
+     * @return QuickSearch
      */
     public function withAttributes($attr_array) 
     {
@@ -229,6 +254,8 @@ class QuickSearch {
      * last step: display everything and be happy!
      * comment: the Ajax-Result (for the javascript-instant-search) will be also displayed here,
      * but that does not need to concern you.
+     *
+     * @return string
      */
     public function render() 
     {
@@ -301,8 +328,10 @@ class QuickSearch {
     
     /**
      * private method to get a result-array in the way of array(array(item_id, item-name)).
-     * @param request:    the request from the searchfield typed by the user.
-     * @return:    array(array(item_id, item-name), ...) mostly limited to 5.
+     *
+     * @param string $request the request from the searchfield typed by the user.
+     *
+     * @return array array(array(item_id, item-name), ...) mostly limited to 5.
      */
     private function searchresults($request) 
     {
@@ -323,7 +352,8 @@ class QuickSearch {
     /**
      * get the label of the searchfield that is written in javascript and disappears
      * when the user focusses on the searchfield.
-     * @return:    localized-string
+     *
+     * @return string localized-string
      */
     private function beschriftung() 
     {

@@ -2,8 +2,6 @@
 /**
  * quicksearch.php - trails-controller for delivering search-suggestions
  *
- * Long description for file (if any)...
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -17,22 +15,24 @@
 require_once 'lib/classes/searchtypes/SearchType.class.php';
 
 require_once 'app/controllers/authenticated_controller.php';
-require_once "lib/classes/Avatar.class.php";
-require_once "lib/classes/CourseAvatar.class.php";
-require_once "lib/classes/InstituteAvatar.class.php";
+require_once 'lib/classes/Avatar.class.php';
+require_once 'lib/classes/CourseAvatar.class.php';
+require_once 'lib/classes/InstituteAvatar.class.php';
 
 /**
  * Controller for the ajax-response of the QuickSearch class found in
  * lib/classes/QuickSearch.class.php
  */
-class QuicksearchController extends AuthenticatedController {
+class QuicksearchController extends AuthenticatedController
+{
 
     private $specialSQL;
 
     /**
      * the one action which is called by the QuickSearch-form when typed in
      * by user.
-     * @param query_id string: first argument of url -> id of query in session
+     *
+     * @param string query_id first argument of url -> id of query in session
      */
     public function response_action($query_id) 
     {
@@ -48,8 +48,10 @@ class QuicksearchController extends AuthenticatedController {
 
     /**
      * instantiates the search-object (or string)
-     * @param query_id string: id of the query in session
-     * @return object or string: ready search-object or string
+     *
+     * @param string query_id id of the query in session
+     *
+     * @return object|string ready search-object or string
      */
     private function getSearch($query_id) 
     {
@@ -65,7 +67,9 @@ class QuicksearchController extends AuthenticatedController {
     /**
      * includes the class of the search-object so we can re-instantiate this object
      * later
-     * @param query_id string: id of the query in session
+     *
+     * @param string $query_id id of the query in session
+     *
      * @return void
      */
     private function extraInclude($query_id) 
@@ -77,8 +81,10 @@ class QuicksearchController extends AuthenticatedController {
 
     /**
      * formats the results so that the searchword is marked bold
-     * @param results array: array of searchresults
-     * @return array: array of searchresults formatted
+     *
+     * @param array $results array of searchresults
+     *
+     * @return array array of searchresults formatted
      */
     private function extraResultFormat($results) 
     {
@@ -91,8 +97,10 @@ class QuicksearchController extends AuthenticatedController {
 
     /**
      * private method to get a result-array in the way of array(array(item_id, item-name)).
-     * @param request:    the request from the searchfield typed by the user.
-     * @return:    array(array(item_id, item-name), ...) mostly limited to 5.
+     *
+     * @param array $request the request from the searchfield typed by the user.
+     *
+     * @return array array(array(item_id, item-name), ...) mostly limited to 5.
      */
     private function getResults($request) 
     {
@@ -111,6 +119,7 @@ class QuicksearchController extends AuthenticatedController {
 
     /**
      * deletes all older requests, that have not been used since half an hour
+     *
      * @return void
      */
     private function cleanUp() 
@@ -128,6 +137,10 @@ class QuicksearchController extends AuthenticatedController {
 
     /**
      * method to recursively convert an array from uft8 to iso-1
+     *
+     * @param array $input
+     * 
+     * @return array
      */
     private function utf8_array_decode($input) 
     {

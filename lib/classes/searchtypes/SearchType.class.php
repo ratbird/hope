@@ -2,8 +2,6 @@
 /**
  * SQLSearch.class.php - A class-structure for alle search-objects in Stud.IP.
  *
- * Long description for file (if any)...
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -22,9 +20,12 @@
  * @author Rasmus Fuhse
  * 
  */
-abstract class SearchType {
+abstract class SearchType
+{
+
     /**
      * title of the search like "search for courses" or just "courses"
+     *
      * @return string
      */
     public function getTitle() 
@@ -35,7 +36,9 @@ abstract class SearchType {
     /**
      * Returns an URL to a picture of that type. Return "" for nothing found.
      * For example: "return CourseAvatar::getAvatar($id)->getURL(Avatar::SMALL)".
-     * @param id: string
+     *
+     * @param string $id
+     *
      * @return: string URL to a picture
      */
     public function getAvatar($id) 
@@ -46,8 +49,10 @@ abstract class SearchType {
     /**
      * Returns an HTML-Tag of a picture of that type. Return "" for nothing found.
      * For example: "return CourseAvatar::getAvatar($id)->getImageTag(Avatar::SMALL)".
-     * @param id: string
-     * @return: string HTML of a picture
+     *
+     * @param string $id
+     *
+     * @return string HTML of a picture
      */
     public function getAvatarImageTag($id) 
     {
@@ -65,7 +70,10 @@ abstract class SearchType {
      * )
      * where $key is an identifier like user_id and $name is a displayed text
      * that should appear to represent that ID.
-     * @param keyword: string
+     *
+     * @param string $keyword
+     * @param string $contextual_data
+     *
      * @return array
      */
     public function getResults($keyword, $contextual_data = array()) 
@@ -78,7 +86,7 @@ abstract class SearchType {
      * always available when necessary.
      * Should be: "return __file__;"
      * 
-     * @return string   path to this file
+     * @return string path to this file
      */
     abstract public function includePath();
 }

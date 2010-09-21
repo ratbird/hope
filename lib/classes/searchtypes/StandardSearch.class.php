@@ -2,8 +2,6 @@
 /**
  * StandardSearch.class.php - Class of type SearchType used for searches with QuickSearch
  *
- * Long description for file (if any)...
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -14,8 +12,8 @@
  * @category    Stud.IP
  */
 
-require_once "lib/classes/searchtypes/SQLSearch.class.php";
-require_once "lib/functions.php";
+require_once 'lib/classes/searchtypes/SQLSearch.class.php';
+require_once 'lib/functions.php';
 
 /**
  * Class of type SearchType used for searches with QuickSearch
@@ -31,16 +29,16 @@ require_once "lib/functions.php";
  *
  */
 
-class StandardSearch extends SQLSearch {
+class StandardSearch extends SQLSearch
+{
 
     private $search;
     private $avatarLike;
 
     /**
      *
-     * @param string $query: SQL with at least ":input" as parameter
-     * @param array $presets: variables from the same form that should be used
-     * in this search. array("input_name" => "placeholder_in_sql_query")
+     * @param string $search
+     *
      * @return void
      */
     public function __construct($search)
@@ -50,14 +48,20 @@ class StandardSearch extends SQLSearch {
 
     /**
      * returns an object of type SQLSearch with parameters to constructor
+     *
+     * @param string $search
+     *
+     * @return SQLSearch
      */
     static public function get($search)
     {
         return new SQLSearch($search);
     }
+
     /**
      * returns the title/description of the searchfield
-     * @return string: title/description
+     *
+     * @return string title/description
      */
     public function getTitle()
     {
@@ -73,14 +77,17 @@ class StandardSearch extends SQLSearch {
                 return _("Einrichtung suchen");
         }
     }
+
     /**
      * returns the results of a search
      * Use the contextual_data variable to send more variables than just the input
      * to the SQL. QuickSearch for example sends all other variables of the same
      * <form>-tag here.
-     * @param input string: the search-word(s)
-     * @param contextual_data array: an associative array with more variables
-     * @return array: array(array(), ...)
+     *
+     * @param string input the search-word(s)
+     * @param array contextual_data an associative array with more variables
+     *
+     * @return array array(array(), ...)
      */
     public function getResults($input, $contextual_data = array())
     {
@@ -100,6 +107,11 @@ class StandardSearch extends SQLSearch {
         return $results;
     }
 
+    /**
+     * returns a sql-string appropriate for the searchtype of the current class
+     *
+     * @return string
+     */
     private function getSQL()
     {
         switch ($this->search) {
@@ -163,6 +175,7 @@ class StandardSearch extends SQLSearch {
     /**
      * A very simple overwrite of the same method from SearchType class.
      * returns the absolute path to this class for autoincluding this class.
+     *
      * @return: path to this class
      */
     public function includePath()

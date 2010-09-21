@@ -14,8 +14,8 @@
  * @category    Stud.IP
  */
 
-require_once "lib/classes/searchtypes/SearchType.class.php";
-require_once "lib/functions.php";
+require_once 'lib/classes/searchtypes/SearchType.class.php';
+require_once 'lib/functions.php';
 
 /**
  * Class of type SearchType used for searches with QuickSearch 
@@ -33,16 +33,20 @@ require_once "lib/functions.php";
  *
  */
 
-class SQLSearch extends SearchType {
+class SQLSearch extends SearchType
+{
     
     private $sql;
     private $avatarLike;
     
     /**
      * 
-     * @param string $query: SQL with at least ":input" as parameter 
-     * @param array $presets: variables from the same form that should be used 
+     * @param string $query SQL with at least ":input" as parameter 
+     * @param string $title
+     * @param string $avatarLike
+     * @param array $presets variables from the same form that should be used 
      * in this search. array("input_name" => "placeholder_in_sql_query")
+     *
      * @return void
      */
     public function __construct($query, $title = "", $avatarLike = "", $presets = array()) 
@@ -55,24 +59,37 @@ class SQLSearch extends SearchType {
     
     /**
      * returns an object of type SQLSearch with parameters to constructor
+     *
+     * @param string $query SQL with at least ":input" as parameter 
+     * @param string $title
+     * @param string $avatarLike
+     * @param array $presets variables from the same form that should be used 
+     * in this search. array("input_name" => "placeholder_in_sql_query")
+     *
+     * @return SQLSearch
      */
     static public function get($query, $title = "", $avatarLike = "", $presets = array()) 
     {
         return new SQLSearch($query, $title, $avatarLike, $presets);
     }
+
     /**
      * returns the title/description of the searchfield
-     * @return string: title/description
+     *
+     * @return string title/description
      */
     public function getTitle() 
     {
         return $this->title;
     }
+
     /**
      * returns an adress of the avatar of the searched item (if avatar enabled)
-     * @param id string: id of the item which can be username, user_id, Seminar_id or Institut_id
-     * @param size enum(NORMAL, SMALL, MEDIUM): size of the avatar-image
-     * @return string: adress of an image
+     *
+     * @param string $id id of the item which can be username, user_id, Seminar_id or Institut_id
+     * @param string $size enum(NORMAL, SMALL, MEDIUM): size of the avatar-image
+     *
+     * @return string adress of an image
      */
     public function getAvatar($id) 
     {
@@ -88,11 +105,14 @@ class SQLSearch extends SearchType {
                 return InstituteAvatar::getAvatar(NULL, $id)->getURL(Avatar::SMALL);
         }
     }
+
     /**
      * returns an html tag of the image of the searched item (if avatar enabled)
-     * @param id string: id of the item which can be username, user_id, Seminar_id or Institut_id
-     * @param size enum(NORMAL, SMALL, MEDIUM): size of the avatar
-     * @return string: like "<img src="...avatar.jpg" ... >"
+     *
+     * @param string $id id of the item which can be username, user_id, Seminar_id or Institut_id
+     * @param constant $size enum(NORMAL, SMALL, MEDIUM): size of the avatar
+     *
+     * @return string like "<img src="...avatar.jpg" ... >"
      */
     public function getAvatarImageTag($id, $size = Avatar::SMALL) 
     {
@@ -108,14 +128,17 @@ class SQLSearch extends SearchType {
                 return InstituteAvatar::getAvatar(NULL, $id)->getImageTag($size);
         }
     }
+
     /**
      * returns the results of a search
      * Use the contextual_data variable to send more variables than just the input
      * to the SQL. QuickSearch for example sends all other variables of the same
      * <form>-tag here.
-     * @param input string: the search-word(s)
-     * @param contextual_data array: an associative array with more variables
-     * @return array: array(array(), ...)
+     *
+     * @param string $input the search-word(s)
+     * @param array $contextual_data an associative array with more variables
+     *
+     * @return array  array(array(), ...)
      */
     public function getResults($input, $contextual_data = array()) 
     {
@@ -134,10 +157,12 @@ class SQLSearch extends SearchType {
         $results = $statement->fetchAll();
         return $results;
     }
+
     /**
      * A very simple overwrite of the same method from SearchType class.
      * returns the absolute path to this class for autoincluding this class.
-     * @return: path to this class
+     *
+     * @return string path to this class
      */
     public function includePath() 
     {

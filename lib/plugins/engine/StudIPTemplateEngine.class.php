@@ -142,11 +142,4 @@ class StudIPTemplateEngine
     {
         echo MessageBox::info($text);
     }
-
-    static function showQuestionMessage($text, $colspan=2, $newrow=true)
-    {
-        echo '<tr><td colspan="' . $colspan . '">';
-        echo createQuestion(sprintf("%s", htmlReady($text)), array('true'), array('false'));
-        echo "</td></tr>";
-    }
 }

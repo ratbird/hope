@@ -26,7 +26,7 @@
 </tr>
 <? endforeach ?>
 </table>
-<? if (ceil($num_postings / ELEMENTS_PER_PAGE) > 1) : ?>
+<? if (ceil($numberOfPersons / ELEMENTS_PER_PAGE) > 1) : ?>
 <div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel"><?= $this->render_partial("shared/pagechooser", array("perPage" => ELEMENTS_PER_PAGE, "num_postings" => $numberOfPersons,
     "page"=>$page, "pagelink" => "score.php?page=%s"));
 ?></div>

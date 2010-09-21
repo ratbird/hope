@@ -4,37 +4,17 @@
 # Lifter007: TODO
 # Lifter003: TODO
 /**
-* dates.php
-*
-* Schedule for Students
-*
-* @author       Till Glöggler <tgloeggl@uni-osnabrueck.de>
-* @access       public
-* @modulegroup      views
-* @module       dates.php
-* @package      studip_core
-*/
-
-
-// Copyright (C) 2005-2007 Till Glöggler <tgloeggl@uni-osnabrueck.de>
-// This file is part of Stud.IP
-// dates.php
-// Anzeige des Ablaufplans einer Veranstaltung in der Studentenansicht
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
-
+ * dates.php - schedule for students
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Till Glöggler <tgloeggl@uni-osnabrueck.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
 
 require '../lib/bootstrap.php';
 
@@ -74,8 +54,10 @@ PageLayout::setTitle($SessSemName["header_line"].' - '._("Ablaufplan"));
 
 if ($type == '1') {
     Navigation::activateItem('/course/schedule/type1');
+    UrlHelper::bindLinkParam('type', $type);
 } else if ($type == 'other') {
     Navigation::activateItem('/course/schedule/other');
+    UrlHelper::bindLinkParam('type', $type);
 } else {
     Navigation::activateItem('/course/schedule/all');
 }
@@ -184,8 +166,12 @@ if ($cmd == 'openAll') $openAll = true;
                 <? if (is_array($termine) && sizeof($termine) > 0) : ?>
                 <tr>
                     <td class="steelgraulight" colspan="10" height="24" align="center">
-                        <a href="<?=URLHelper::getLink('?cmd='.(($openAll) ? 'close' : 'open'))?>All">
-                            <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($openAll) ? 'close' : 'open'?>_all.png" border="0" <?=tooltip(sprintf("Alle Termine %sklappen", ($openAll) ? 'zu' : 'auf'))?>>
+                        <a href="<?= URLHelper::getLink('?cmd='.(($openAll) ? 'close' : 'open') .'All') ?>">
+                            <? if ($openAll) : ?>
+                            <?= Assets::img('close_all.png', array('title' => _("Alle Termine zuklappen"))) ?>
+                            <? else : ?>
+                            <?= Assets::img('open_all.png', array('title' => _("Alle Termine aufklappen"))) ?>
+                            <? endif ?>
                         </a>
                     </td>
                 </tr>

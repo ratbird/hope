@@ -105,8 +105,8 @@ class AssetsHelpersTestCase extends UnitTestCase {
   }
 
 
-  function test_image_path_should_add_png_if_no_extension_were_given() {
-    $expected = STATIC_ASSETS_URL.'images/logo.png';
+  function test_image_path_should_add_gif_if_no_extension_were_given() {
+    $expected = STATIC_ASSETS_URL.'images/logo.gif';
     $this->assertEqual(Assets::image_path('logo'), $expected);
   }
 

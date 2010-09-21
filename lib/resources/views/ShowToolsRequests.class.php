@@ -1065,7 +1065,7 @@ class ShowToolsRequests
                     else
                         $desc.=sprintf(_("%s von %s bis %s Uhr")."\n", date("d.m.Y", $val["begin"]), date("H:i", $val["begin"]), date("H:i", $val["end"]));
                 }
-                $html = "<img src=\"" . Assets::image_path('icons/16/black/exclamation.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
+                $html = "<img src=\"" . Assets::image_path('icons/16/grey/exclaim-circle.png') . "\" ".tooltip($desc, TRUE, TRUE).">";
                 $status = 1;
             }
         } else {

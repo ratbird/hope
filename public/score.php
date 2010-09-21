@@ -88,8 +88,6 @@ $template->set_attribute('user', $user);
 $template->set_attribute('score', $score);
 $template->set_attribute('numberOfPersons', $anzahl);
 $template->set_attribute('page', $page);
-$template->ELEMENTS_PER_PAGE = ELEMENTS_PER_PAGE;
 $template->set_layout("layouts/base");
 echo $template->render();
 page_close();
-?>

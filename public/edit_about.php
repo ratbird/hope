@@ -711,9 +711,6 @@ if ($view != 'Forum'
         && $view != 'notification') {
     echo '<table class="blank" cellspacing=0 cellpadding=0 border=0 width="100%">'."\n";
 
-//  echo '<tr><td class="'.(($username != $auth->auth["uname"])? 'topicwrite':'topic').'" colspan=2><img src="'. $GLOBALS['ASSETS_URL'] . 'images/einst.gif" border="0" align="texttop"><b>&nbsp;';
-
-
     if ($username != $auth->auth['uname']) {
         echo '<tr><td class="topicwrite" colspan="2"> &nbsp; &nbsp; <b><font size="-1">';
         printf(_("Daten von: %s %s (%s), Status: %s"), htmlReady($my_about->auth_user['Vorname']), htmlReady($my_about->auth_user['Nachname']), $username, $my_about->auth_user['perms']);
@@ -1066,7 +1063,7 @@ if ($view == 'Studium') {
                 } else {
                     echo Assets::img('icons/16/grey/accept.png', array('class' => 'text-top'));
                 }
-                echo "</td></tr>\n";   
+                echo "</td></tr>\n";
                 $i++;
                 $flag = TRUE;
             }

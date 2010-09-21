@@ -65,7 +65,7 @@ h2.topic, h3.topic { font-family: Arial, Helvetica, sans-serif; color: #FFFFFF; 
 .steelgroup7 {background-image: url('../images/steelgroup7.gif');}
 
 .grey {background: none; background-color: #BBBBBB;	font-family: Arial, Helvetica, sans-serif;}
-.steel {background-image: url('../images/steelblau.jpg');	font-family: Arial, Helvetica, sans-serif;}
+.steel {background-image: url('../images/steelblau.png');	font-family: Arial, Helvetica, sans-serif;}
 .steelgraudunkel {background-image: url('../images/steelgraudunkel.gif');	font-family: Arial, Helvetica, sans-serif;}
 .steelgraulight {background-image: url('../images/steelgraulight.jpg');	font-family: Arial, Helvetica, sans-serif;}
 .steel2 { background-color: #FFFFFF; background-image: url('../images/steel2.jpg');	font-family: Arial, Helvetica, sans-serif;}
@@ -73,9 +73,9 @@ h2.topic, h3.topic { font-family: Arial, Helvetica, sans-serif; color: #FFFFFF; 
 .quote {margin-left: 20px; padding:3px; margin-right: 8em; border: 1px solid black; background: none; background-color: #EEEEEE;}
 
 /* Styles fuer printhead und printcontent */
-td.printhead {background-image: url('../images/steelblau.jpg');  font-family: Arial, Helvetica, sans-serif; font-size:10pt}
-td.printhead2 {background-image: url('../images/steelblau2.gif');  font-family: Arial, Helvetica, sans-serif; font-size:10pt}
-td.printhead3 {background-image: url('../images/steelblau3.gif');  font-family: Arial, Helvetica, sans-serif; font-size:10pt}
+td.printhead {background-image: url('../images/steelblau.png');  font-family: Arial, Helvetica, sans-serif; font-size:10pt}
+td.printhead2 {background-image: url('../images/steelblau2.png');  font-family: Arial, Helvetica, sans-serif; font-size:10pt}
+td.printhead3 {background-image: url('../images/steelblau3.png');  font-family: Arial, Helvetica, sans-serif; font-size:10pt}
 td.colorline {background-image: url('../images/colorline.gif');  font-family: Arial, Helvetica, sans-serif; font-size:10pt}
 td.colorline2 {background-image: url('../images/colorline2.gif');  font-family: Arial, Helvetica, sans-serif; font-size:10pt}
 A:link.printhead {color:#333399;  font-family: Arial, Helvetica, sans-serif; font-size:10pt}

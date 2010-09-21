@@ -39,14 +39,8 @@
     <td width="1%" class="<?=$tpl['class']?>" valign="bottom" nowrap="nowrap">
     <? if ($tpl['fileCountAll'] > 0) : ?>
         <a href="<?=URLHelper::getLink("folder.php?open=".$tpl['folder_id']."&cmd=tree#anker")?>">
-            <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/download.png" align="absmiddle" border="0" <?=tooltip(sprintf(_("%s Dokument(e) vorhanden"), $tpl['fileCountAll']))?>><?if ($tpl['fileCountAll'] > 1) :
-                //oldscool: dublicate the right border of the icon according to document count. Do we need this anymore?
-                /*
-                for ($i = 1; ($i < $tpl['fileCountAll'] && $i < 5); $i++) :
-                    ?><img src="<?=$GLOBALS['ASSETS_URL']?>/images/file1b.gif" align="absmiddle" border="0" <?=tooltip(sprintf(_("%s Dokument(e) vorhanden"), $tpl['fileCountAll']))?>><?
-                endfor;*/
-            endif;
-        ?></a>
+            <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/download.png" align="absmiddle" border="0" <?=tooltip(sprintf(_("%s Dokument(e) vorhanden"), $tpl['fileCountAll']))?>>
+        </a>
     <? endif; ?>
     </td>
 

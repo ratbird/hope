@@ -2,9 +2,9 @@
     <td style='text-align:right; vertical-align:top;'><?= _("Gruppengründer:") ?></td>
     <td nowrap>
         <div style="width: 49%; float: left;">
-        <? if (is_array($founders) && sizeof($founders) > 0) : 
+        <? if (is_array($founders) && sizeof($founders) > 0) :
             foreach ($founders as $founder) :?>
-                <input type="image" name="remove_founder" value="<?= $founder['username'] ?>" src="<?= Assets::image_path('trash') ?>" <?= tooltip("NutzerIn entfernen") ?>>
+                <input type="image" name="remove_founder" value="<?= $founder['username'] ?>" src="<?= Assets::image_path('icons/16/blue/trash.png') ?>" <?= tooltip("NutzerIn entfernen") ?>>
                 <?= $founder['fullname'] ?> (<?= $founder['username'] ?>)
                 <input type="hidden" name="founders[<?= $founder['username'] ?>]" value="<?= $founder['fullname'] ?>">
                 <br>

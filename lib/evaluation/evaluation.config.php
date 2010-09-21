@@ -113,8 +113,8 @@ define ("EVAL_PIC_CREATE_ANSWERS", Assets::image_path('eval_create_answers.gif')
 define ("EVAL_PIC_EDIT_ANSWERS", Assets::image_path('eval_edit_answers.gif'));
 define ("EVAL_PIC_TIME",       Assets::image_path('icons/16/black/date.png'));
 define ("EVAL_PIC_EXCLAIM",    Assets::image_path('icons/16/black/info.png'));
-define ("EVAL_PIC_DELETE_GROUP",    Assets::image_path('delete-group.gif'));
-define ("EVAL_PIC_MOVE_BUTTON",    Assets::image_path('eval_move_button.gif'));
+define ("EVAL_PIC_DELETE_GROUP",    Assets::image_path('icons/16/blue/trash.png'));
+define ("EVAL_PIC_MOVE_BUTTON",    Assets::image_path('icons/16/yellow/arr_2right.png'));
 define ("EVAL_PIC_ADD",    Assets::image_path('icons/16/blue/plus.png'));
 define ("EVAL_PIC_ADD_TEMPLATE", Assets::image_path('icons/16/blue/plus.png'));
 define ("EVAL_PIC_REMOVE",    Assets::image_path('icons/16/blue/trash.png'));

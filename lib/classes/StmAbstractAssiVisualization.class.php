@@ -26,7 +26,7 @@ class StmAbstractAssiVisualization {
             "<b>" . _("Wahl eines Allgemeinen Moduls") . "</b><br>"
             . _("Bitte w&auml;hlen sie das Modul aus, welches sie editieren wollen oder l&ouml;schen Sie ein Allgemeines Modul mit dem entsprechenden Knopf. Sie k&ouml;nnen alternativ auch ein neues Modul anlegen. Beachten Sie bitte, dass sie nur Allgemeine Module bearbeiten und l&ouml;schen k&ouml;nnen, zu denen kein Konkretes Modul existiert!")
             , array('align' => 'center', 'class' => 'blank'));
-            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/archiv.jpg" border="0">');
+            echo $table->cell(Assets::img('infobox/archiv.jpg'));
         echo $table->close();
 
         echo $table->open(array('class' => 'steelgraulight'));

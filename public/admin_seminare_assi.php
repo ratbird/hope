@@ -2169,7 +2169,7 @@ elseif ((!$level) || ($level == 1))
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%"  colspan=3>
                             &nbsp; <input type="text" name="sem_name" size=58 maxlength=254 value="<? echo htmlReady(stripslashes($sem_create_data["sem_name"])) ?>">
-                            <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
+                            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                 <? echo tooltip(_("Bitte geben Sie hier einen aussagekräftigen, aber möglichst knappen Titel für die Veranstaltung ein. Dieser Eintrag erscheint innerhalb Stud.IPs durchgehend zur Identifikation der Veranstaltung."), TRUE, TRUE) ?>
                             >
                             <font color="red" size=+2>*</font>
@@ -2739,7 +2739,7 @@ if ($level == 2)
                                 printf ("<font size=\"-1\">&nbsp;  ". sprintf(_("Keine %s gew&auml;hlt."), get_title_for_status('tutor', 2, $sem_create_data["sem_status"]))."</font><br >");
                             }
                             ?>
-                            &nbsp; <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
+                            &nbsp; <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                 <?
                                 echo tooltip(sprintf(_("Die Namen der %s, die in der Veranstaltung weitergehende Rechte erhalten (meist studentische Hilfskräfte). Nutzen Sie die Suchfunktion (Lupensymbol), um weitere Eintragungen vorzunehmen, oder das Mülltonnensymbol, um Einträge zu löschen."), get_title_for_status('tutor', 2, $sem_create_data["sem_status"])), TRUE, TRUE);
                                 ?>
@@ -2774,7 +2774,7 @@ if ($level == 2)
                             <td colspan="4" class="<? echo $cssSw->getClass() ?>">
 
                                 <?= _("Studienbereiche:") ?>
-                                <img src="<?= Assets::image_path('info') ?>"
+                                <img src="<?= Assets::image_path('icons/16/grey/info-circle.png') ?>"
                                     <?= tooltip( _("Sie müssen mindestens einen Studienbereich auswählen! Der Studienbereich legt z.B. fest, wo die Veranstaltung im Vorlesungsverzeichnis auftaucht."), TRUE, TRUE ) ?>
                                 >
                                 <font color="red" size=+2>*</font>

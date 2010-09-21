@@ -166,10 +166,10 @@ $ELEARNING_INTERFACE_MODULES["ilias38x"] = array(
         "password" => "soapsucks",
         "client" => "foobar38"),
     "types" =>  array(
-        "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "assets/images/icon-lern.gif"),
-        "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
-        "lm" => array("name" => "ILIAS-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
-        "tst" => array("name" => "ILIAS-Test", "icon" =>  "assets/images/icon-lern.gif")
+        "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
+        "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" =>  "assets/images/icons/16/grey/learnmodule.png"),
+        "lm" => array("name" => "ILIAS-Lerneinheit", "icon" =>  "assets/images/icons/16/grey/learnmodule.png"),
+        "tst" => array("name" => "ILIAS-Test", "icon" =>  "assets/images/icons/16/grey/learnmodule.png")
     ),
     "global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
     "roles" =>  array(
@@ -203,10 +203,10 @@ array(
         "password" => "hochgeheim",
         "client" => "foobar2"),
     "types" => array(
-        "htlm" => array("name" => "HTML-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
-        "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
-        "lm" => array("name" => "ILIAS-Lerneinheit", "icon" =>  "assets/images/icon-lern.gif"),
-        "tst" => array("name" => "ILIAS-Test", "icon" =>  "assets/images/icon-lern.gif")),
+        "htlm" => array("name" => "HTML-Lerneinheit", "icon" =>  "assets/images/icons/16/grey/learnmodule.png"),
+        "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" =>  "assets/images/icons/16/grey/learnmodule.png"),
+        "lm" => array("name" => "ILIAS-Lerneinheit", "icon" =>  "assets/images/icons/16/grey/learnmodule.png"),
+        "tst" => array("name" => "ILIAS-Test", "icon" =>  "assets/images/icons/16/grey/learnmodule.png")),
     "global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
     "roles" => array(
         "autor" => "4",

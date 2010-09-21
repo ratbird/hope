@@ -246,18 +246,6 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $zusatz .= "#anker\"><img src=\"".Assets::image_path('icons/16/blue/files.png')."\" ";
                 $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
                 $zusatz .= "></a>";
-                //oldscool: dublicate the right border of the icon according to document count. Do we need this anymore?
-                /*
-                if ($num_docs > 5)
-                    $tmp_num_docs = 5;
-                else
-                    $tmp_num_docs = $num_docs;
-                for ($i = 1; $i < $tmp_num_docs; $i++) {
-                    $zusatz .= "<a href=\"".URLHelper::getLink("folder.php?cmd=tree&open=" . $db2->f("folder_id"));
-                    $zusatz .= "#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/file1b.gif\" ";
-                    $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
-                    $zusatz .= "></a>";
-                }*/
             }
 
             //calendar jump

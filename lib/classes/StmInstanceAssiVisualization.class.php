@@ -23,7 +23,7 @@ class StmInstanceAssiVisualization{
             "<b>" . _("Wahl eines Konkreten Moduls") . "</b><br>
             " . _("Bitte w&auml;hlen sie die entsprechende Aktion f&uuml;r ein vorhandenes Konkretes Modul aus. Sie k&ouml;nnen alternativ auch ein neues Modul instanziieren.")
             , array('align' => 'center', 'class' => 'blank'));
-            echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/archiv.jpg" border="0">');
+            echo $table->cell(Assets::img('infobox/archiv.jpg'));
         echo $table->close();
 
         echo $table->open(array('class' => 'steelgraulight'));
@@ -284,9 +284,9 @@ class StmInstanceAssiVisualization{
                 echo $table->cell($elem->getWorkload());
                 echo $table->cell(($elem->getSemester()==0?"kein":($elem->getSemester()==1?"Sommersemester":"Wintersemester")));
                 if ($inst_stm->isFilled($i,$j))
-                    echo $table->cell('<img border="0" src="' .$GLOBALS['ASSETS_URL'] . 'images/haken_transparent.gif">');
+                    echo $table->cell(Assets::img('icons/16/green/accept.png'));
                 else
-                    echo $table->cell('<img border="0" src="' .$GLOBALS['ASSETS_URL'] . 'images/x_transparent.gif">');
+                    echo $table->cell(Assets::img('icons/16/red/decline.png'));
 
             }
             echo $table->openRow(array('style' => 'text-align: center'));

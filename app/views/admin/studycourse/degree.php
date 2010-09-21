@@ -14,9 +14,9 @@
         <th colspan="3"><b> <?=_("Aktion")?></b></th>
     </tr>
     <? foreach ($studydegrees as $abschluss_id => $studydegree) : ?>
-    <tbody class="<?= count($studydegree['profession'])?'':'empty' ?> collapsed">
-    <tr class="steel">
-        <td><? if (count($studydegree['profession']) < 1): ?><?=$abschluss_id+1 ?>. <?= htmlReady($studydegree['name']) ?> <? else: ?> <a class="toggler" href="#"><?=$abschluss_id+1 ?>. <?= htmlReady($studydegree['name']) ?> </a><? endif; ?></td>
+    <tbody class="<?= count($studydegree['profession'])?'':'empty' ?> collapsed ">
+    <tr class="steel header-row">
+        <td class="toggle-indicator"><? if (count($studydegree['profession']) < 1): ?><?=$abschluss_id+1 ?>. <?= htmlReady($studydegree['name']) ?> <? else: ?> <a class="toggler" href="#"><?=$abschluss_id+1 ?>. <?= htmlReady($studydegree['name']) ?> </a><? endif; ?></td>
         <td> <?= $studydegree['count_user'] ?> </td>
         <td width="20">
             <? if ($studydegree['count_user'] > 0): ?><a href="<?=URLHelper::getLink("sms_send.php?sms_source_page=sms_box.php&sd_id=".$studydegree['abschluss_id']."&emailrequest=1&subject="._("Informationen zum Studienabschluss:")." ". $studydegree['name']) ?>">
@@ -36,7 +36,7 @@
     </tr>
     <?php foreach ($studydegree['profession'] as $index => $studycourse): ?>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-        <td>
+        <td class="label-cell">
            <?=$abschluss_id + 1 ?>.<?=$index + 1 ?>
            <?= htmlReady($studycourse['name']) ?>
         </td>

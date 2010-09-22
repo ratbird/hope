@@ -99,21 +99,25 @@ class StudipCacheFactory {
         # TODO encoding for strings... but probably the caller should care..
         $arguments = json_encode($arguments);
 
+        // strip leading STUDIP_BASE_PATH from file path
+        if (strpos($file, $GLOBALS['STUDIP_BASE_PATH']) === 0) {
+            $file = substr($file, strlen($GLOBALS['STUDIP_BASE_PATH']) + 1);
+        }
+
+        self::unconfigure();
+
         $cfg = self::getConfig();
 
-        $cfg->setValue($file,
-                       'cache_class_file',
-                       'Absoluter Pfad der Datei, die die StudipCache-Klasse '.
-                       'enthält');
-        $cfg->setValue($class,
-                       'cache_class',
-                       'Klassenname des zu verwendenden StudipCaches');
-        $cfg->setValue($arguments,
-                       'cache_init_args',
-                       'JSON-kodiertes Array von Argumenten für die '.
-                       'Instanziierung der StudipCache-Klasse');
+        $cfg->create('cache_class', array(
+            'description' => 'Pfad der Datei, die die StudipCache-Klasse enthält'));
+        $cfg->create('cache_class_file', array(
+            'description' => 'Klassenname des zu verwendenden StudipCaches'));
+        $cfg->create('cache_init_args', array(
+            'description' => 'JSON-kodiertes Array von Argumenten für die Instanziierung der StudipCache-Klasse'));
 
-        self::$cache = NULL;
+        $cfg->store('cache_class', $class);
+        $cfg->store('cache_class_file', $file);
+        $cfg->store('cache_init_args', $arguments);
     }
 
 
@@ -127,9 +131,9 @@ class StudipCacheFactory {
 
         $cfg = self::getConfig();
 
-        $cfg->unsetValue('cache_class_file');
-        $cfg->unsetValue('cache_class');
-        $cfg->unsetValue('cache_init_args');
+        $cfg->delete('cache_class');
+        $cfg->delete('cache_class_file');
+        $cfg->delete('cache_init_args');
 
         self::$cache = NULL;
     }

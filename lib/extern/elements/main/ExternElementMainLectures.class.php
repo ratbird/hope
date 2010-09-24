@@ -231,7 +231,7 @@ class ExternElementMainLectures extends ExternElementMain {
         $table .= $edit_form->editTextfieldGeneric("textnogroups", $title, $info, 40, 150);
         
         $titles = array(_("Semester"), _("Bereich"), _("DozentIn"), _("Typ"), _("Einrichtung"));
-        $info = _("Geben Sie eine Bezeichnung fr die entsprechende Gruppierungsart ein.");
+        $info = _("Geben Sie eine Bezeichnung für die entsprechende Gruppierungsart ein.");
         $table .= $edit_form->editTextfieldGeneric("aliasesgrouping", $titles, $info, 40, 150);
         
         $content_table .= $edit_form->editContentTable($headline, $table);

@@ -157,7 +157,7 @@ class ExternElementMainDownload extends ExternElementMain {
         $table .= $edit_form->editOptionGeneric("dateformat", $title, $info, $values, $names);
         
         $title = _("Sprache:");
-        $info = _("Wählen Sie eine Sprache fr die Datumsangaben aus.");
+        $info = _("Wählen Sie eine Sprache für die Datumsangaben aus.");
         $values = array("", "de_DE", "en_GB");
         $names = array(_("keine Auswahl"), _("Deutsch"), _("Englisch"));
         $table .= $edit_form->editOptionGeneric("language", $title, $info, $values, $names);

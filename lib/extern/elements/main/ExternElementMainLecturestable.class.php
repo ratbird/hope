@@ -255,14 +255,14 @@ class ExternElementMainLecturestable extends ExternElementMain {
         $headline = $edit_form->editHeadline(_("Weitere Angaben"));
         
         $title = _("Namensformat:");
-        $info = _("Wï¿½len Sie, wie Personennamen formatiert werden sollen.");
+        $info = _("Wählen Sie, wie Personennamen formatiert werden sollen.");
         $values = array("", "no_title_short", "no_title", "no_title_rev", "full", "full_rev");
         $names = array(_("keine Auswahl"), _("Meyer, P."), _("Peter Meyer"), _("Meyer Peter"),
                 _("Dr. Peter Meyer"), _("Meyer, Peter, Dr."));
         $table = $edit_form->editOptionGeneric("nameformat", $title, $info, $values, $names);
         
         $title = _("Sprache:");
-        $info = _("Wï¿½len Sie eine Sprache fr die Datumsangaben aus.");
+        $info = _("Wählen Sie eine Sprache für die Datumsangaben aus.");
         $values = array("", "de_DE", "en_GB");
         $names = array(_("keine Auswahl"), _("Deutsch"), _("Englisch"));
         $table .= $edit_form->editOptionGeneric("language", $title, $info, $values, $names);

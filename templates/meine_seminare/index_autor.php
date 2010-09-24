@@ -173,7 +173,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                             <?= chat_get_chat_icon($chat_info[$instid]['chatter'], $chat_invs[$chat_info[$instid]['chatuniqid']], $chat_info[$instid]['is_active'], true, 'grey', 'red', '') ?>
                                         </a>
                                     <? } else { ?>
-                                        <?= Assets::img("icon-leer.gif", array('size' => '16')) ?>
+                                        <?= Assets::img("blank.gif", array('size' => '16')) ?>
                                     <? } ?>
 
                                         <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('auswahl' => $instid, 'cmd' => 'inst_kill')) ?>">

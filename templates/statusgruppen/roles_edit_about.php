@@ -9,9 +9,9 @@ if (is_array($institutes) && sizeof($institutes) > 0) :
         <a name="<?= $inst_id ?>"></a>
         <a class="tree" href="<?= URLHelper::getLink('?view='. $view .'&username='. $username .'&switch='. $inst_id .'&trash='. rand() .'#'. $inst_id) ?>">
             <? if ($open == $inst_id) :
-                echo Assets::img('forumgraurunt');
+                echo Assets::img('icons/16/blue/arr_1down.png');
             else :
-                echo '&nbsp;' . Assets::img('forumgrau');
+                echo Assets::img('icons/16/blue/arr_1right.png');
             endif; ?>
             <?= htmlReady($institute['Name']) ?>
         </a>
@@ -57,9 +57,9 @@ if (is_array($institutes) && sizeof($institutes) > 0) :
         <a name="<?= $role_id ?>">
         <a class="tree" href="<?= URLHelper::getLink('?view='. $view .'&username='. $username .'&switch='. $role_id .'&trash='. rand() .'#'. $role_id) ?>">
             <? if ($open == $role_id) :
-                echo Assets::img('forumgraurunt');
+                echo Assets::img('icons/16/blue/arr_1down.png');
             else :
-                echo '&nbsp;' . Assets::img('forumgrau');
+                echo '&nbsp;' . Assets::img('icons/16/blue/arr_1right.png');
             endif; ?>
             <?= htmlReady($role['name_long']) ?>
         </a>

@@ -307,7 +307,7 @@ if ($delete_id)
     $infobox = array    (
         array  ("kategorie"  => _("Information:"),
             "eintrag" => array  (
-                array ( "icon" => "icons/16/black/group.png",
+                array ( "icon" => "icons/16/black/info.png",
                                             "text"  => $Memberstatus
                 )
             )
@@ -344,7 +344,7 @@ if ($delete_id)
                                 "text"  => sprintf(_("Um Gruppen anzulegen und ihnen Personen zuzuordnen nutzen Sie %sFunktionen / Gruppen verwalten%s."), "<a href=\"".URLHelper::getLink("admin_statusgruppe.php?view=statusgruppe_sem&new_sem=TRUE&range_id=$SessSemName[1]")."\">", "</a>")
                                 );
         if ($anzahltext > 0) {
-            $infobox[1]["eintrag"][] = array (  "icon" => "images/icons/16/black/mail.png" ,
+            $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/mail.png" ,
                                     "text"  => _("Mit dem erweiterten Briefsymbol können Sie eine E-Mail an alle Gruppenmitglieder verschicken.")
                                 );
         }

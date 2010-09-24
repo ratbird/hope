@@ -22,7 +22,7 @@
       </tr>
       <tr>
         <td align="center" width="1%" valign="top">
-            <?= Assets::img('icons/16/black/group.png') ?>
+            <?= Assets::img('icons/16/black/info.png') ?>
         </td>
         <td width="99%" align="left">
             <?= _("Wenn bei einer Gruppe der Selbsteintrag aktivert ist, können sich Teilnehmer selbst eintragen und austragen.")?>
@@ -30,7 +30,7 @@
       </tr>
       <tr>
                 <td align="center" width="1%" valign="top">
-                    <?= Assets::img('icons/16/black/question.png') ?>
+                    <?= Assets::img('icons/16/black/info.png') ?>
                 </td>
                 <td width="99%" align="left">
                     <?

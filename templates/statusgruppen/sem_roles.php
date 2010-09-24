@@ -26,10 +26,10 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
             <?= Assets::img('icons/16/blue/edit.png', array('title' => _("Gruppe bearbeiten"))) ?>
         </a>
         <a href="<?= URLHelper::getLink('?cmd=sortByName&role_id='.  $id) ?>">
-            <?= Assets::img('sort', array('title' => _("Personen dieser Gruppe alphabetisch sortieren"))) ?>
+            <?= Assets::img('icons/16/blue/arr_eol-down.png', array('title' => _("Personen dieser Gruppe alphabetisch sortieren"))) ?>
         </a>
     </td>
-    <td width="1%" class="blank" nowrap style="padding-left: 5px">
+    <td width="1%" class="<?= $topic_class ?>" align="right" style="padding-left: 5px;">
         <a href="<?= URLHelper::getLink('?cmd=deleteRole&role_id='. $id) ?>">
             <?= Assets::img('icons/16/red/trash.png', array('title' => _("Gruppe mit Personenzuordnung entfernen"))) ?>
         </a>
@@ -77,7 +77,7 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
         <? endif; ?>
     </td>
 
-    <td class="blank" width="1%" align="center">
+    <td class="<?= $cssSw->getClass() ?>" width="1%" align="right">
         <a href="<?= URLHelper::getLink('?role_id='. $id .'&cmd=removePerson&username='. $person['username'])  ?>">
         <?= Assets::img('icons/16/blue/trash.png', array('title' => _("Gruppenzuordnung für diese Person aufheben"))) ?>
         </a>

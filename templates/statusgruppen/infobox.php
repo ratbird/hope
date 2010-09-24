@@ -22,19 +22,19 @@
       </tr>
 
       <tr>
-                <td align="center" width="1%" valign="top">
-                    <?= Assets::img('link_intern') ?>
-                </td>
-                <td width="99%" align="left">
-                    <a href="<?= $help_url=format_help_url("Basis.EinrichtungenVerwaltenGruppen") ?>">
-                        <?= _("Bedienungshinweise in der Hilfe") ?>
-                    </a>
-                </td>
+        <td align="center" width="1%" valign="top">
+            <?= Assets::img('icons/16/black/info.png') ?>
+        </td>
+        <td width="99%" align="left">
+            <a href="<?= $help_url=format_help_url("Basis.EinrichtungenVerwaltenGruppen") ?>">
+                <?= _("Bedienungshinweise in der Hilfe") ?>
+            </a>
+        </td>
       </tr>
 
       <tr>
           <td align="center" width="1%" valign="top">
-            <?= Assets::img('link_intern') ?>
+            <?= Assets::img('icons/16/black/add/community.png') ?>
           </td>
           <td width="99%" align="left">
 
@@ -45,7 +45,7 @@
 
       <tr>
           <td align="center" width="1%" valign="top">
-            <?= Assets::img('link_intern') ?>
+            <?= Assets::img('icons/16/black/refresh.png') ?>
           </td>
           <td width="99%" align="left">
 

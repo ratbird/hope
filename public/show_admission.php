@@ -56,14 +56,14 @@ function semadmission_get_data($seminare_condition){
         $query = "SELECT * FROM seminare WHERE 1 $seminare_condition ORDER BY admission_group DESC, start_time DESC, Name";
     } elseif ($all == 'all'){
         $query = "SELECT seminare.* FROM seminare
-        JOIN Institute USING ( Institut_id ) WHERE Institute.fakultaets_id  = '{$institut_id}' $seminare_condition 
+        JOIN Institute USING ( Institut_id ) WHERE Institute.fakultaets_id  = '{$institut_id}' $seminare_condition
         GROUP BY seminare.Seminar_id ORDER BY admission_group DESC, start_time DESC, Name";
     }else{
         $query = "SELECT seminare.* FROM seminare
-        WHERE seminare.Institut_id = '{$institut_id}' $seminare_condition 
+        WHERE seminare.Institut_id = '{$institut_id}' $seminare_condition
         GROUP BY seminare.Seminar_id ORDER BY admission_group DESC, start_time DESC, Name";
     }
-    
+
     $db->query($query);
     while($db->next_record()){
         $seminar_id = $db->f("Seminar_id");
@@ -100,7 +100,7 @@ function semadmission_create_result_xls($data){
     require_once "vendor/write_excel/BIFFwriter.php";
     require_once "vendor/write_excel/Worksheet.php";
     require_once "vendor/write_excel/Workbook.php";
-    
+
     global $_my_inst;
     $tempfile = null;
     if (count($data)) {
@@ -112,7 +112,7 @@ function semadmission_create_result_xls($data){
         $head_format->set_bold();
         $head_format->set_align("left");
         $head_format->set_align("vcenter");
-        
+
         $head_format_merged =& $workbook->addformat();
         $head_format_merged->set_size(12);
         $head_format_merged->set_bold();
@@ -120,26 +120,26 @@ function semadmission_create_result_xls($data){
         $head_format_merged->set_align("vcenter");
         $head_format_merged->set_merge();
         $head_format_merged->set_text_wrap();
-        
+
         $caption_format =& $workbook->addformat();
         $caption_format->set_size(10);
         $caption_format->set_align("left");
         $caption_format->set_align("vcenter");
         $caption_format->set_bold();
         //$caption_format->set_text_wrap();
-        
+
         $data_format =& $workbook->addformat();
         $data_format->set_size(10);
         $data_format->set_align("left");
         $data_format->set_align("vcenter");
-        
+
         $caption_format_merged =& $workbook->addformat();
         $caption_format_merged->set_size(10);
         $caption_format_merged->set_merge();
         $caption_format_merged->set_align("left");
         $caption_format_merged->set_align("vcenter");
         $caption_format_merged->set_bold();
-        
+
         // Creating the first worksheet
         $worksheet1 =& $workbook->addworksheet(_("laufende Anmeldeverfahren"));
         $worksheet1->set_row(0, 20);
@@ -154,14 +154,14 @@ function semadmission_create_result_xls($data){
         $worksheet1->write_string(1, 0, sprintf(_("Einrichtung: %s, Semester: %s"),
         $_my_inst[$_SESSION['show_admission']['institut_id']]['name'],
         $semester), $caption_format);
-        
+
         foreach(range(1,10) as $c) $worksheet1->write_blank(0,$c,$head_format);
         foreach(range(1,10) as $c) $worksheet1->write_blank(1,$c,$head_format);
         $worksheet1->set_column(1, 1, 40);
         foreach(range(2,10) as $c) $worksheet1->set_column(1, $c, 15);
-        
+
         $row = 2;
-        
+
         $worksheet1->write_string($row,0, _("Gruppe"), $caption_format);
         $worksheet1->write_string($row,1, _("Veranstaltung"), $caption_format);
         $worksheet1->write_string($row,2, _("Status"), $caption_format);
@@ -173,9 +173,9 @@ function semadmission_create_result_xls($data){
         $worksheet1->write_string($row,8, _("Losdatum / Ende Kontingente"), $caption_format);
         $worksheet1->write_string($row,9, _("Anmeldestartzeit"), $caption_format);
         $worksheet1->write_string($row,10, _("Anmeldeendzeit"), $caption_format);
-        
+
         ++$row;
-        
+
         $groupcount = 0;
         foreach($data as $seminar_id => $semdata) {
             $teilnehmer = $semdata['count_teilnehmer'];
@@ -276,8 +276,8 @@ $cols[] = array(10,_("Anz. zusätzlich"),'count_teilnehmer_aux');
 $cols[] = array(10,_("Max."),'admission_turnout');
 $cols[] = array(10,_("Anmeldeliste") ,'count_anmeldung');
 $cols[] = array(10, _("Warteliste"),'count_wartende');
-$cols[] = array(10, _("Losdatum").Assets::img('info', array('title' => 'bei chronologischen Verfahren: Ende der Kontingentierung',
-                                'style' => 'vertical-align: bottom;')),'admission_endtime');
+$cols[] = array(10, _("Losdatum") . ' ' . Assets::img('icons/16/grey/info-circle.png', array('title' => 'bei chronologischen Verfahren: Ende der Kontingentierung',
+                                'class' => 'text-top')), 'admission_endtime');
 $cols[] = array(10, _("Startzeit"),'admission_starttime');
 $cols[] = array(10, _("Endzeit"),'admission_endtime_sem');
 
@@ -323,7 +323,7 @@ if (!is_array($_my_inst)){
     }
 }
 if(isset($_REQUEST['admissiongroupdelete_x']) && isset($_REQUEST['group_id'])){
-    $msg[] = array('info', _("Wollen Sie die Gruppierung f&uuml;r die ausgew&auml;hlte Gruppe aufl&ouml;sen?") 
+    $msg[] = array('info', _("Wollen Sie die Gruppierung f&uuml;r die ausgew&auml;hlte Gruppe aufl&ouml;sen?")
                             . '<br>' . _("Beachten Sie, dass f&uuml;r bereits eingetragene / auf der Warteliste stehende TeilnehmerInnen keine &Auml;nderungen vorgenommen werden.")
                             . '<form action="'.URLHelper::getLink().'" method="post">'
                             . '<input type="hidden" name="group_sem_x" value="1"><div style="padding:3px;">'
@@ -478,7 +478,7 @@ if(isset($_REQUEST['sortby'])){
         }
     }
 }
-        
+
 if ($_REQUEST['cmd'] == 'send_excel_sheet'){
     $tmpfile = basename(semadmission_create_result_xls(semadmission_get_data($seminare_condition)));
     if($tmpfile){
@@ -685,7 +685,7 @@ if(is_object($group_obj)){
                     printf ("<option %s value=\"%s\" style=\"%s\">%s (%s)</option>\n",
                         ($key == $_SESSION['show_admission']['institut_id']) ? "selected" : "" , $key,($value["is_fak"] ? "font-weight:bold;" : ""),
                         htmlReady($value["name"]), $value["num_sem"]);
-                    
+
                     if ($value["is_fak"] == 'all'){
                         $num_inst = $value["num_inst"];
                         for ($i = 0; $i < $num_inst; ++$i){
@@ -718,8 +718,8 @@ if(is_object($group_obj)){
                 </div>
                 <div style="margin-bottom: 5px;margin-right:5px;" align="right">
                 <a href="<?=URLHelper::getLink('?cmd=send_excel_sheet')?>">
-                <?= Assets::img('icons/16/blue/download.png', array('class' => 'text-top')) ?>
-                <?=_("Download als Excel Datei")?></a></div>
+                <?= Assets::img('icons/16/blue/file-xls.png', array('class' => 'text-top')) ?>
+                <?= _("Download als Excel Datei") ?></a></div>
             </td>
             </form>
         </tr>
@@ -766,7 +766,7 @@ if(is_object($group_obj)){
         $count3 = $semdata['count_wartende'];
         if($count3){
             $count3 .= '&nbsp;<a href="'.URLHelper::getLink('export.php', array('range_id' => $seminar_id, 'ex_type' => 'person', 'xslt_filename' => _("Warteliste") . ' '. $semdata['Name'], 'format' => 'csv', 'choose' =>'csv-warteliste', 'filter' => 'awaiting', 'o_mode' => 'passthrough')).'">';
-            $count3 .= Assets::img('icons/16/blue/download.png', tooltip(_("Warteliste downloaden"))) .' ></a>';
+            $count3 .= Assets::img('icons/16/blue/download.png', tooltip(_("Warteliste downloaden"))) .'</a>';
         }
         // show end date only if it is actually relevant
         $datum = $semdata['admission_type'] == 1 || $semdata['admission_type'] == 2 && $semdata['admission_enable_quota'] ? $semdata['admission_endtime'] : -1;

@@ -63,8 +63,8 @@
                             &nbsp;
                         </td>
                         <td class="steelkante" width="1%" nowrap>
-                            <?= ($role->getSelfassign()) ? Assets::img('nutzer', array('title' => _("Personen können sich dieser Gruppe selbst zuordnen"))) : '' ?>
-                            <a href="<?= URLHelper::getLink('?cmd=sortByName&role_id='. $role_id ) ?>"><?= Assets::img('sort') ?></a>
+                            <?= ($role->getSelfassign()) ? Assets::img('icons/16/grey/info-circle.png', array('title' => _("Personen können sich dieser Gruppe selbst zuordnen"))) : '' ?>
+                            <a href="<?= URLHelper::getLink('?cmd=sortByName&role_id='. $role_id ) ?>"><?= Assets::img('icons/16/blue/arr_eol-down.png') ?></a>
                         </td>
                     </tr>
                     <!-- Persons assigned to this role -->

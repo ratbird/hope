@@ -137,14 +137,13 @@ function print_seminar_content($semid,$my_sem_values) {
         if (isset($nav) && $nav->isVisible(true)) {
             // need to use strtr() here to deal with seminar_main craziness
             $url = 'seminar_main.php?auswahl='.$semid.'&redirect_to='.strtr($nav->getURL(), '?', '&');
-            printf('&nbsp; <a href="%s"><img ', htmlspecialchars($url));
+            printf(' <a href="%s"><img ', htmlspecialchars($url));
             foreach ($nav->getImage() as $key => $value) {
                 printf('%s="%s" ', $key, htmlReady($value));
             }
             echo '></a>';
         } else if (is_string($key)) {
-            $width = $key == 'wiki' ? 20 : ($key == 'elearning' ? 18 : 13);
-            echo '&nbsp; '.Assets::img('icon-leer.gif', array('width' => $width, 'height' => 17));
+            echo ' '.Assets::img('blank.gif', array('width' => 16, 'height' => 16));
         }
     }
     echo "&nbsp;";

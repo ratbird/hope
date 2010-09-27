@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: studip\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-24 17:09+0200\n"
+"POT-Creation-Date: 2010-09-27 12:44+0200\n"
 "PO-Revision-Date: 2010-09-24 17:06+0200\n"
 "Last-Translator: Stefan Suchi <suchi@data-quest.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -183,7 +183,6 @@ msgid "Information:"
 msgstr "Information:"
 
 #: ../public/stm_details.php:196
-#, fuzzy
 msgid "Dieses Studienmodul ist noch unvollständig!"
 msgstr "This study module still is incomplete."
 
@@ -253,7 +252,6 @@ msgid "Modulart"
 msgstr "Module type"
 
 #: ../public/stm_details.php:286
-#, fuzzy
 msgid "Version der Prüfungsordnung"
 msgstr "Version of examination order"
 
@@ -1962,6 +1960,7 @@ msgstr ""
 #: ../public/admin_news.php:128
 msgid "Mindestens ein Bereich zum Anzeigen der Ankündigung muss gewählt sein!"
 msgstr ""
+"You must select at least one area for the announcement to be displayed!"
 
 #: ../public/admin_news.php:137
 msgid "Der RSS Export wurde für diesen Bereich ausgeschaltet!"
@@ -2196,7 +2195,7 @@ msgstr "Click %shere%s for copying the selected course."
 
 #: ../public/archiv_assi.php:74
 msgid "Archivieren von Veranstaltungen"
-msgstr ""
+msgstr "Archiving of courses"
 
 #: ../public/archiv_assi.php:132
 msgid "Die Veranstaltung kann nicht archiviert werden."
@@ -2381,11 +2380,11 @@ msgstr "Schedule"
 
 #: ../public/dates.php:171
 msgid "Alle Termine zuklappen"
-msgstr ""
+msgstr "Close all appointments"
 
 #: ../public/dates.php:173
 msgid "Alle Termine aufklappen"
-msgstr ""
+msgstr "Open all appointments"
 
 #: ../public/dates.php:218 ../lib/raumzeit/themen_ablaufplan.php:239
 #: ../lib/show_dates.inc.php:254
@@ -2754,21 +2753,18 @@ msgstr "The changed permission settings have not been saved."
 
 #
 #: ../public/edit_about.php:321
-#, fuzzy
 msgid "Die Standardsichtbarkeit der Profilelemente wurde gespeichert."
-msgstr "Visibility of profile elements saved."
+msgstr "Default visibility of the profile elements has been saved."
 
 #
 #: ../public/edit_about.php:324
-#, fuzzy
 msgid "Die Standardsichtbarkeit der Profilelemente wurde nicht gespeichert!"
-msgstr "Visibility of profile elements saved."
+msgstr "Default visibility of the profile elements has not been saved."
 
 #
 #: ../public/edit_about.php:328
-#, fuzzy
 msgid "Bitte wählen Sie eine Standardsichtbarkeit für Ihre Profilelemente!"
-msgstr "Please, select visibility status of your profile elements!"
+msgstr "Please, select default visibility of your profile elements!"
 
 #
 #: ../public/edit_about.php:336 ../public/edit_about.php:355
@@ -3612,6 +3608,8 @@ msgid ""
 "Suchen Sie im folgenden Feld nach Nutzern und klicken Sie anschließend "
 "'hinzufügen', um den Nutzer als Personal einzutragen."
 msgstr ""
+"Search for users in the field below and then click on 'add' in order to add "
+"the user as staff member."
 
 #: ../public/inst_admin.php:633
 msgid "Folgende nur bei Zuordnung eines Admins:"
@@ -3975,9 +3973,8 @@ msgstr "General discussions"
 
 #: ../public/admin_institut.php:129 ../public/admin_seminare_assi.php:1854
 #: ../lib/classes/AdminModules.class.php:141
-#, fuzzy
 msgid "Hier ist Raum für allgemeine Diskussionen"
-msgstr "Here is space for general discussion"
+msgstr "This is the place for some general discussion"
 
 #: ../public/admin_institut.php:130 ../public/folder.php:337
 #: ../public/folder.php:781 ../public/admin_seminare_assi.php:1858
@@ -4399,7 +4396,7 @@ msgstr "Error"
 #: ../public/admin_elearning_interface.php:117
 #: ../public/admin_elearning_interface.php:133
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: ../public/admin_elearning_interface.php:124
 msgid "Beim Laden der Schnittstelle sind Fehler aufgetreten. "
@@ -4899,13 +4896,12 @@ msgstr ""
 "enter yourself for your preferred course as well."
 
 #: ../public/sem_verify.php:326
-#, fuzzy
 msgid ""
 "Wenn Sie dort über die Warteliste nachrücken, wird ihre Eintragung in dieser "
 "Veranstaltung automatisch gelöscht."
 msgstr ""
-"If you move off the waiting list for the other course, then your entry for "
-"this course will automatically be deleted."
+"If you move off the waiting list for the other course, then your enrolment "
+"for this course will automatically be deleted."
 
 #: ../public/sem_verify.php:333
 #, php-format
@@ -4939,8 +4935,8 @@ msgid ""
 "Sobald Sie in dieser Veranstaltung von der Warteliste aufrücken, wird ihre "
 "dortige Eintragung automatisch gelöscht."
 msgstr ""
-"As soon as you move off the waiting list for this course, your enrolment for "
-"the other course will automatically be deleted."
+"At the moment you move off the waiting list for this course, your enrolment "
+"for the other course will automatically be deleted."
 
 #: ../public/sem_verify.php:350
 #, php-format
@@ -4974,8 +4970,8 @@ msgstr "You have been placed on the waiting list for course %s."
 msgid ""
 "Sobald Sie hier nachrücken, wird ihre andere Anmeldung automatisch gelöscht."
 msgstr ""
-"As soon as you move off the waiting list here, your enrolment for the other "
-"course will automatically be deleted."
+"Your enrolment for the other course will automatically be deleted once you "
+"move off the waiting list of this course."
 
 #: ../public/sem_verify.php:365 ../public/sem_verify.php:382
 #, php-format
@@ -4983,13 +4979,13 @@ msgid "Sie stehen bereits für die Veranstaltung %s auf der Warteliste."
 msgstr "You have already been placed on the waiting list for course %s."
 
 #: ../public/sem_verify.php:368
-#, fuzzy, php-format
+#, php-format
 msgid ""
 "Ihre Anmeldung für die Veranstaltung %s wird automatisch gelöscht, wenn Sie "
 "dort über die Warteliste aufrücken."
 msgstr ""
-"Your enrolment for the course %s will automatically be deleted once you move "
-"off the waiting list for the other course."
+"Your enrolment for course %s will automatically be deleted once you move off "
+"the waiting list for the other course."
 
 #: ../public/sem_verify.php:372
 #, php-format
@@ -7283,9 +7279,8 @@ msgid "Die Verlinkung wurde gelöscht"
 msgstr "The link was deleted."
 
 #: ../public/folder.php:414
-#, fuzzy
 msgid "Die Verlinkung konnte nicht gelöscht werden"
-msgstr "The link can not be deleted."
+msgstr "The link can not be deleted"
 
 #: ../public/folder.php:604
 msgid ""
@@ -7364,9 +7359,8 @@ msgstr "Move / copy to this institute"
 
 #
 #: ../public/folder.php:765
-#, fuzzy
 msgid "Mehrere Einrichtungen auswählen"
-msgstr "Select institute(s)"
+msgstr "Select institutes"
 
 #: ../public/folder.php:777 ../public/admin_seminare_assi.php:3056
 msgid "ausw&auml;hlen oder wie Eingabe"
@@ -7432,13 +7426,13 @@ msgstr "Date"
 
 #: ../public/folder.php:1101
 msgid "Es existieren noch keine Dateien in dieser Veranstaltung."
-msgstr ""
+msgstr "No files exist in this course."
 
 #: ../public/folder.php:1104
 #, php-format
 msgid ""
 "Klicken Sie auf %sOrdneransicht%s, um welche hochzuladen oder zu verlinken."
-msgstr ""
+msgstr "In order to upload or link some click on %sFolder view%s"
 
 #: ../public/archiv.php:43 ../lib/navigation/SearchNavigation.php:59
 msgid "Archiv"
@@ -8212,7 +8206,7 @@ msgstr "The changes have been applied."
 
 #: ../public/admin_modules.php:255
 msgid "Inhaltselemente konfigurieren"
-msgstr ""
+msgstr "Configure content elements"
 
 #: ../public/admin_modules.php:256
 msgid ""
@@ -8347,7 +8341,7 @@ msgid ""
 "Das Endsemester darf nicht vor dem Startsemester liegen. Bitte &auml;ndern "
 "Sie die entsprechenden Einstellungen!"
 msgstr ""
-"The semester end cannot be prior the begin semester. Please, change the "
+"The semester end can not be prior the begin semester. Please, change the "
 "appropriate settings!"
 
 #: ../public/admin_seminare_assi.php:850
@@ -9830,10 +9824,9 @@ msgid "Leistungsnachweis:"
 msgstr "Performance accreditation:"
 
 #: ../public/admin_seminare_assi.php:3979
-#, fuzzy
 msgid ""
 "Bitte geben Sie hier ein, welche Leistungsnachweise erbracht werden müssen."
-msgstr "Please, enter the performance accreditation to be achieved."
+msgstr "Here, please, enter the performance accreditation to be achieved."
 
 #: ../public/admin_seminare_assi.php:4001
 msgid "Diese Daten werden von ihrem zust&auml;ndigen Administrator erfasst."
@@ -10453,6 +10446,8 @@ msgid ""
 "Das Lernmodul %s ist momentan nicht erreichbar. Bitte wenden Sie sich an "
 "ihren Systemadministrator."
 msgstr ""
+"At present, learning module %s can not be reached. Please, contact your "
+"system administrator."
 
 #: ../public/my_elearning.php:99
 #, php-format
@@ -11777,10 +11772,9 @@ msgstr ""
 "admitted to this course."
 
 #: ../public/teilnehmer.php:521
-#, fuzzy
 msgid ""
 "Es stehen keine weiteren Plätze mehr im Teilnehmerkontingent zur Verfügung."
-msgstr "No further places in the contingent groups are available."
+msgstr "No place left in the contingent group."
 
 #: ../public/teilnehmer.php:565 ../public/teilnehmer.php:591
 #, php-format
@@ -12519,7 +12513,7 @@ msgstr "Start Stud.IP Messenger"
 #
 #: ../public/about.php:329 ../public/about.php:330
 msgid "zu den Kontakten hinzufügen"
-msgstr ""
+msgstr "add to contacts"
 
 #: ../public/about.php:333
 msgid "Nachricht an Nutzer verschicken"
@@ -13071,6 +13065,7 @@ msgid ""
 "Diese Funktion ist deaktiviert. Bitte wenden Sie sich an Ihren "
 "Systemadministor"
 msgstr ""
+"This function is deactivated. Please, contact your system administrator"
 
 #: ../public/admin_teilnehmer_view.php:42
 #: ../public/admin_teilnehmer_view.php:79
@@ -15028,14 +15023,13 @@ msgid "Mit Schreibrechten f&uuml;r alle DozentInnen dieser Veranstaltung"
 msgstr "Write access for all the lecturers of this course"
 
 #: ../lib/elearning/Ilias4ConnectedLink.class.php:95
-#, fuzzy
 msgid ""
 "DozentInnen haben Schreibzugriff für Inhalte und Struktur des Lernmoduls. "
 "TutorInnen und DozentInnen können die Verknüpfung zur Veranstaltung wieder "
 "löschen."
 msgstr ""
 "Lecturers have write access to content and structure of the learning module. "
-"Tutors and lecturers are autorised to delete the link to the course."
+"Tutors and lecturers are authorised to delete the link to the course."
 
 #
 #: ../lib/elearning/Ilias4ConnectedLink.class.php:97
@@ -15060,14 +15054,13 @@ msgid "Mit Schreibrechten f&uuml;r alle TeilnehmerInnen dieser Veranstaltung"
 msgstr "Write access for all participants of this course"
 
 #: ../lib/elearning/Ilias4ConnectedLink.class.php:99
-#, fuzzy
 msgid ""
 "DozentInnen, TutorInnen und TeilnehmerInnen haben Schreibzugriff für Inhalte "
 "und Struktur des Lernmoduls. TutorInnen und DozentInnen können die "
 "Verknüpfung zur Veranstaltung wieder löschen."
 msgstr ""
 "Lecturers, tutors and participants have write access to content and "
-"structure of the learning module. Tutors and lecturers are autorised to "
+"structure of the learning module. Tutors and lecturers are authorised to "
 "delete the link to the course."
 
 #
@@ -15384,7 +15377,7 @@ msgstr "Overview"
 
 #: ../lib/navigation/CourseNavigation.php:97
 msgid "Administration dieser Veranstaltung"
-msgstr ""
+msgstr "Administer this course"
 
 #: ../lib/navigation/CourseNavigation.php:101
 msgid "Austragen aus der Veranstaltung"
@@ -15480,6 +15473,8 @@ msgid ""
 "Hier können Sie Vorlagen zur Erhebung weiter Angaben von Ihren Teilnehmern "
 "auswählen."
 msgstr ""
+"Here you can select templates for recording further data of your "
+"participants."
 
 #: ../lib/navigation/CourseNavigation.php:150
 #: ../lib/navigation/AdminNavigation.php:81
@@ -15845,7 +15840,7 @@ msgstr "Administration plugins"
 
 #: ../lib/navigation/LoginNavigation.php:26
 msgid "für registrierte NutzerInnen"
-msgstr ""
+msgstr "for registered users"
 
 #: ../lib/navigation/LoginNavigation.php:31
 msgid "für Single Sign On mit CAS"
@@ -15869,17 +15864,16 @@ msgstr "for becoming a user"
 
 #: ../lib/navigation/LoginNavigation.php:48
 msgid "Freier Zugang"
-msgstr ""
+msgstr "Open access"
 
 #: ../lib/navigation/LoginNavigation.php:49
 msgid "ohne Registrierung"
-msgstr ""
+msgstr "without registration"
 
 #: ../lib/navigation/LoginNavigation.php:55
 msgid "zu Bedienung und Funktionsumfang"
 msgstr "for use and range of functions"
 
-#
 #: ../lib/navigation/StudipNavigation.php:94
 #: ../lib/resources/resourcesControl.inc.php:71
 msgid "Zur Ressourcenverwaltung"
@@ -16466,12 +16460,11 @@ msgid "Dieser Chatraum ist leer."
 msgstr "This chat room is empty."
 
 #: ../lib/chat/chat_func_inc.php:233
-#, fuzzy
 msgid "Dieser Benutzer befindet sich in einem Chatraum."
 msgstr "This user is in a chat room."
 
 #: ../lib/chat/chat_func_inc.php:233
-#, fuzzy, php-format
+#, php-format
 msgid "Dieser Benutzer befindet sich in %s Chaträumen"
 msgstr "This user is in %s chat rooms"
 
@@ -16657,9 +16650,8 @@ msgid "Neuen Empfänger suchen."
 msgstr "Search new addressee."
 
 #: ../lib/include/messagingSettings.inc.php:277
-#, fuzzy
 msgid "Nach Empfänger suchen"
-msgstr "Search new addressee."
+msgstr "Search for addressee."
 
 #: ../lib/include/messagingSettings.inc.php:281
 #: ../lib/include/messagingSettings.inc.php:292
@@ -16809,11 +16801,10 @@ msgstr ""
 "do not show future courses - begin of the (last) course semester is elapsed"
 
 #: ../lib/include/admin_search_form.inc.php:275
-#, fuzzy
 msgid ""
 "nur inaktive Veranstaltungen auswählen (letzte Aktion vor mehr als sechs "
 "Monaten)"
-msgstr "choose inactive courses, only (last action was more than 6 months ago)"
+msgstr "select inactive courses, only (last action at least 6 months ago)"
 
 #: ../lib/include/admin_search_form.inc.php:432
 msgid "Alle ausgewählten Veranstaltungen"
@@ -16829,9 +16820,8 @@ msgstr "Warning!: Archiving is a step which <b>can not</b> be made undone!"
 #: ../lib/include/admin_search_form.inc.php:466
 #: ../lib/include/admin_search_form.inc.php:495 ../lib/wiki.inc.php:737
 #: ../lib/wiki.inc.php:763
-#, fuzzy
 msgid "Änderungen"
-msgstr "Changes of"
+msgstr "Changes"
 
 #: ../lib/include/admin_search_form.inc.php:471
 #, php-format
@@ -17906,7 +17896,7 @@ msgstr "Please, use correct upper and lower cases for the username!"
 #: ../lib/classes/auth_plugins/StudipAuthAbstract.class.php:301
 #, php-format
 msgid "Dieser Benutzername wird bereits über %s authentifiziert!"
-msgstr ""
+msgstr "This user name is already authenticated via %s!"
 
 #: ../lib/classes/auth_plugins/StudipAuthStandard.class.php:80
 #: ../lib/classes/auth_plugins/StudipAuthLdapReader.class.php:106
@@ -18262,7 +18252,7 @@ msgstr "OR"
 
 #: ../lib/classes/score.class.php:167
 msgid "Gästebuch mit einem Eintrag"
-msgstr "Guest book activated with 1 entry"
+msgstr "Guest book with one entry"
 
 #: ../lib/classes/score.class.php:169
 #, php-format
@@ -18271,22 +18261,22 @@ msgstr "Guest book activated with %s entries"
 
 #: ../lib/classes/score.class.php:177
 msgid "Eine persönliche Ankündigung"
-msgstr ""
+msgstr "One personal announcement"
 
 #: ../lib/classes/score.class.php:179
 #, php-format
 msgid "%s persönliche Ankündigungen"
-msgstr "%s personal news"
+msgstr "%s personal announcements"
 
 #
 #: ../lib/classes/score.class.php:187
 msgid "Eine Umfrage"
-msgstr ""
+msgstr "One voting"
 
 #: ../lib/classes/score.class.php:189
-#, fuzzy, php-format
+#, php-format
 msgid "%s Umfragen"
-msgstr "%s voting(s):"
+msgstr "%s votings"
 
 #: ../lib/classes/score.class.php:198
 msgid "Termin"
@@ -19632,7 +19622,7 @@ msgstr "The room request has been withdrawn!"
 #: ../lib/classes/Seminar.class.php:1583
 #, php-format
 msgid "Die Startwoche für den Termin %s wurde geändert."
-msgstr ""
+msgstr "Start week for appointment %s changed."
 
 #: ../lib/classes/Seminar.class.php:1637
 #, php-format
@@ -19725,7 +19715,7 @@ msgstr "Invalid institute entries. At least one institute must be entered."
 
 #: ../lib/classes/Seminar.class.php:2361
 msgid "Root und Admin dürfen nicht in Veranstaltungen eingetragen werden."
-msgstr ""
+msgstr "Root and administrators may not be entered for any course."
 
 #: ../lib/classes/Seminar.class.php:2399
 #, php-format
@@ -20372,9 +20362,9 @@ msgid "%s Eintr&auml;ge aus den Ankündigungen gel&ouml;scht."
 msgstr "%s appointment entries deleted."
 
 #: ../lib/classes/UserManagement.class.php:818
-#, fuzzy, php-format
+#, php-format
 msgid "%s Verweise auf Ankündigungen gel&ouml;scht."
-msgstr "%s links to news have been deleted!"
+msgstr "%s links to announcements deleted."
 
 #: ../lib/classes/UserManagement.class.php:844
 #, php-format
@@ -21383,7 +21373,7 @@ msgstr "No description available."
 #: ../lib/classes/SeminarCycleDate.class.php:179
 #, php-format
 msgid "%s, ab der %s. Semesterwoche"
-msgstr ""
+msgstr "%s, from the %s semester week"
 
 #: ../lib/soap/StudipSoapClient_PHP5.class.php:35
 #: ../lib/soap/StudipSoapClient.class.php:31
@@ -22101,9 +22091,8 @@ msgid "Haupttemplate"
 msgstr "Main template"
 
 #: ../lib/extern/modules/ExternModuleTemplateLecturedetails.class.php:106
-#, fuzzy
 msgid "Template für statistische Daten aus Stud.IP"
-msgstr "Template for statistical data of Stud.IP"
+msgstr "Template for statistical Stud.IP data"
 
 #: ../lib/extern/modules/ExternModuleTemplateLecturedetails.class.php:121
 #: ../lib/extern/modules/ExternModuleTemplateDownload.class.php:104
@@ -22208,7 +22197,6 @@ msgid "Enddatum der Terminliste"
 msgstr "End date of the list of appointments"
 
 #: ../lib/extern/modules/ExternModuleTemplatePersondetails.class.php:210
-#, fuzzy
 msgid "Start und Endzeit oder ganztügig"
 msgstr "Start and end time or all-day"
 
@@ -22217,7 +22205,6 @@ msgid "Laufende Nummer"
 msgstr "Serial number"
 
 #: ../lib/extern/modules/ExternModuleTemplatePersondetails.class.php:535
-#, fuzzy
 msgid "ganztügig"
 msgstr "all-day"
 
@@ -22424,9 +22411,8 @@ msgid "Optionen für Veranstaltungstyp"
 msgstr "Options for courses type"
 
 #: ../lib/extern/modules/ExternModuleTemplateSemBrowse.class.php:171
-#, fuzzy
 msgid "Optionen für logische Verknüpfung"
-msgstr "Options for logical composition"
+msgstr "Options for logical links"
 
 #: ../lib/extern/modules/ExternModuleTemplateSemBrowse.class.php:176
 msgid "Ausgabe, wenn keine Veranstaltungen auf aktueller Ebene vorhanden sind"
@@ -25188,9 +25174,9 @@ msgid "Sie können beliebig viele Studienbereiche auswählen."
 msgstr "Here, you can select arbitrarily many study modules."
 
 #: ../lib/extern/views/ExternEditModule.class.php:465
-#, fuzzy, php-format
+#, php-format
 msgid "Geben Sie '%%%' ein, um alle Studienbereiche zu finden."
-msgstr "For searching for all study modules enter '%%%'."
+msgstr "In order to search for all study modules enter '%%%'."
 
 #: ../lib/extern/views/ExternEditModule.class.php:469
 msgid " (Suchergebnisse werden blau angezeigt)"
@@ -25960,7 +25946,6 @@ msgid "Dies ist ihre Evaluation."
 msgstr "This is your evaluation."
 
 #: ../lib/evaluation/classes/EvaluationTreeEditView.class.php:598
-#, fuzzy
 msgid "Dieser Gruppierungsblock enthält keine Blöcke."
 msgstr "This content block does not contain any block."
 
@@ -26103,7 +26088,7 @@ msgid "Der Fragenblock <b>%s</b> wurden gel&ouml;scht. "
 msgstr "Question block <b>%s</b> deleted. "
 
 #: ../lib/evaluation/classes/EvaluationTreeEditView.class.php:1416
-#, fuzzy, php-format
+#, php-format
 msgid ""
 "Der Gruppierungsblock <b>%s</b> und alle Unterblöcke (insgesamt %s) wurden "
 "gel&ouml;scht. "
@@ -26408,9 +26393,8 @@ msgid "Die Angabe des zusätzlichen Textes ist optional."
 msgstr "Entering an additional text is optional."
 
 #: ../lib/evaluation/classes/EvaluationTreeEditView.class.php:2453
-#, fuzzy
 msgid "Änderungen übernehmen."
-msgstr "Changes saved"
+msgstr "Save changes."
 
 #: ../lib/evaluation/classes/EvaluationTreeEditView.class.php:2457
 msgid "Diesen Block"
@@ -31188,13 +31172,12 @@ msgstr "Participation is <b>not</b> anonymous."
 
 #
 #: ../lib/vote/view/vote_show.lib.php:927
-#, fuzzy
 msgid ""
 "Es sind keine aktuellen Umfragen vorhanden. Um neue Umfragen zu erstellen, "
 "klicken Sie rechts auf die Zahnräder."
 msgstr ""
-"There are no current votings available. In order to create a new one, click "
-"on the double arrow."
+"No current voting available. In order to create a new one click on the "
+"double arrow on the right."
 
 #: ../lib/vote/view/vote_edit.lib.php:154
 msgid "Gespeicherten Test bearbeiten"
@@ -31458,7 +31441,6 @@ msgstr ""
 "This option is available only if you have selected 'personalised' reporting."
 
 #: ../lib/vote/view/vote_edit.lib.php:829
-#, fuzzy
 msgid ""
 "\n"
 "\n"
@@ -31467,8 +31449,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Please, note, that selecting this option in combination with 'show accuracy: "
-"immediately' does not make sense."
+"Please, note, that it does not make any sense to activate at the same time "
+"this option and 'Display accuracy: immediately'."
 
 #: ../lib/vote/view/vote_edit.lib.php:835
 msgid ""
@@ -32186,11 +32168,9 @@ msgid "Es wurden keine Umfragen mit der angegebenen ID gefunden."
 msgstr "No votings with the given ID found."
 
 #: ../lib/vote/VoteDB.class.php:571
-#, fuzzy
 msgid "Es wurde kein Benutzer mit der ID gefunden"
-msgstr "No user found."
+msgstr "No user with the given ID found."
 
-#
 #: ../lib/vote/VoteDB.class.php:625
 msgid "Die Umfrage konnte nicht gestartet werden"
 msgstr "Voting can not be started."
@@ -33813,40 +33793,38 @@ msgid "hat am %s geschrieben:"
 msgstr "has writen on %s :"
 
 #: ../lib/showNews.inc.php:156
-#, fuzzy
 msgid ""
 "Newsticker. Klicken Sie rechts auf die Zahnräder, um neue News in diesen "
 "Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den "
 "ganzen Nachrichtentext zu lesen."
 msgstr ""
-"News ticker. Click on the arrow (right) in order to create new news in this "
-"area. Click on the arrow on the left hand side to read the entire news text."
+"News ticker. Click the cog-wheel on the right in order to create new news in "
+"this area. Click the arrows on the left in order to read the entire news "
+"text."
 
-#
 #: ../lib/showNews.inc.php:158
 msgid "Ankündigungen einstellen"
 msgstr "%sCreate%s a new announcement"
 
 #
 #: ../lib/showNews.inc.php:160
-#, fuzzy
 msgid ""
 "Es sind keine aktuellen Ankündigungen vorhanden. Um neue Ankündigungen zu "
 "erstellen, klicken Sie rechts auf die Zahnräder."
 msgstr ""
-"There are no current appointments available. In order to create new "
-"appointments, click on the double arrow."
+"No current appointments available. Click the cog-wheel in order to create a "
+"new appointment."
 
 #
 #: ../lib/showNews.inc.php:171
-#, fuzzy
 msgid ""
 "Newsticker. Klicken Sie rechts auf die Zahnräder, um neue Ankündigungen in "
 "diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um "
 "den ganzen Nachrichtentext zu lesen."
 msgstr ""
-"News ticker. Click on the arrow (right) in order to create new news in this "
-"area. Click on the arrow on the left hand side to read the entire news text."
+"News ticker. Click the cog-wheel on the right in order to create a new "
+"announcement in this area. Click the arrows on the left in order to read the "
+"entire news text."
 
 #
 #: ../lib/showNews.inc.php:181
@@ -34188,10 +34166,9 @@ msgstr ""
 "lecturer or tutor of a different course). "
 
 #: ../lib/datei.inc.php:1335
-#, fuzzy
 msgid ""
 "Klicken Sie dieses Symbol, um diese Datei in einen anderen Ordner einzufügen"
-msgstr "Click this symbol to paste this file to a different folder"
+msgstr "Click this symbol in order to paste this file to a different folder"
 
 #: ../lib/datei.inc.php:1373
 msgid ""
@@ -34648,14 +34625,14 @@ msgstr "Click here for assistance to simplified choice of appointment."
 
 #: ../lib/show_dates.inc.php:149 ../lib/show_dates.inc.php:154
 #: ../lib/show_dates.inc.php:355 ../lib/show_dates.inc.php:520
-#, fuzzy
 msgid ""
 "Termine. Klicken Sie rechts auf die Zahnräder, um Termine in diesen Bereich "
 "zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die "
 "Terminbeschreibung zu lesen."
 msgstr ""
-"Appointments. Click on the arrow (right) to edit appointments in this area. "
-"Click on the simple arrow to read the appointment description."
+"Appointments. Click the cog-wheel on the right in order to edit appointments "
+"in this area. Click the simple arrow in order to read the appointment "
+"description."
 
 #: ../lib/show_dates.inc.php:150 ../lib/show_dates.inc.php:162
 #: ../lib/show_dates.inc.php:356 ../lib/show_dates.inc.php:362
@@ -34715,17 +34692,16 @@ msgstr "Create appointments"
 
 #: ../lib/show_dates.inc.php:306 ../lib/show_dates.inc.php:477
 #: ../lib/show_dates.inc.php:682
-#, fuzzy
 msgid ""
 "Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, "
 "klicken Sie rechts auf die Zahnräder."
 msgstr ""
-"There are no current appointments available. In order to create new "
-"appointments, click on the double arrow."
+"No current appointment available. Click the cog-wheel on the right in order "
+"to create new appointments."
 
 #: ../lib/show_dates.inc.php:318
 msgid "Es sind keine aktuellen Termine vorhanden."
-msgstr "There is not any current appointment."
+msgstr "No current appointment available."
 
 #: ../lib/show_dates.inc.php:385 ../lib/show_dates.inc.php:543
 msgid "Heute"
@@ -34784,7 +34760,7 @@ msgstr "Unparseable or potentially dangerous Latex formula"
 
 #: ../lib/visual.inc.php:878
 msgid "interner Link"
-msgstr ""
+msgstr "internal link"
 
 #: ../lib/visual.inc.php:880
 msgid "externer Link"
@@ -36985,14 +36961,13 @@ msgstr ""
 "information such as office hours and office location."
 
 #: ../templates/quicksearch/selectbox.php:18
-#, fuzzy
 msgid "Keine Treffer gefunden"
-msgstr "No title found."
+msgstr "No match found."
 
 #
 #: ../templates/settings/privacy.php:5
 msgid "Hier können Sie Ihre Sichtbarkeit im System einstellen."
-msgstr "Here you can administer your visible"
+msgstr "Here you can administer your visibility"
 
 #: ../templates/settings/privacy.php:15
 msgid "globale Einstellungen"
@@ -37078,7 +37053,7 @@ msgstr "personal e-mail address visible"
 
 #: ../templates/settings/privacy.php:124
 msgid "neu hinzugefügte Profil-Elemente sind standardmäßig sichtbar für"
-msgstr ""
+msgstr "newly added profile elements are by default visible to"
 
 #
 #: ../templates/settings/privacy.php:126 ../templates/settings/privacy.php:144
@@ -37299,12 +37274,12 @@ msgstr "(fortnightly)"
 #
 #: ../templates/dates/seminar_export.php:10
 msgid "(dreiwöchentlich)"
-msgstr "(fortnightly)"
+msgstr "(every third week)"
 
 #
 #: ../templates/dates/seminar_export.php:12
 msgid "(wöchentlich)"
-msgstr "weekly"
+msgstr "(weekly)"
 
 #: ../templates/dates/seminar_export.php:33
 #: ../templates/dates/seminar_html.php:44
@@ -37314,24 +37289,24 @@ msgstr "Appointments on"
 #: ../templates/dates/seminar_html.php:11
 #, php-format
 msgid "ab %s"
-msgstr ""
+msgstr "from %s"
 
 #: ../templates/dates/seminar_html.php:13
-#, fuzzy, php-format
+#, php-format
 msgid "(zweiwöchentlich, %s)"
-msgstr "(fortnightly)"
+msgstr "(fortnightly, %s)"
 
 #
 #: ../templates/dates/seminar_html.php:15
-#, fuzzy, php-format
+#, php-format
 msgid "(dreiwöchentlich, %s)"
-msgstr "(fortnightly)"
+msgstr "(every third week, %s)"
 
 #
 #: ../templates/dates/seminar_html.php:49 ../templates/dates/date_xml.php:4
 #: ../templates/dates/date_html.php:4
 msgid ", Ort:"
-msgstr ",city:"
+msgstr ", city:"
 
 #: ../templates/dates/seminar_html.php:58
 #, php-format
@@ -37468,17 +37443,16 @@ msgid ""
 "Benutzen Sie den Link »neue Rubrik anlegen« in der Infobox, um eine Rubrik "
 "anzulegen."
 msgstr ""
-"Please, use the link create new category in the information box for creating "
-"a new category."
+"Follow the link »create new category« in the information box in order to "
+"create a new category."
 
 #: ../app/models/siteinfo.php:36
-#, fuzzy
 msgid ""
 "Benutzen Sie den Link »neue Seite anlegen« in der Infobox, um eine Seite in "
 "dieser Rubrik anzulegen."
 msgstr ""
-"Please, use the link create new page in the information box for creating a "
-"new page."
+"Follow the link »create new page« in the information box in order to create a "
+"new page in this category."
 
 #: ../app/models/siteinfo.php:40
 msgid ""
@@ -37682,11 +37656,11 @@ msgstr ""
 
 #: ../app/controllers/course/studygroup.php:393
 msgid "Es wurden keine Inhaltselemente deaktiviert."
-msgstr ""
+msgstr "No content elements deactivated."
 
 #: ../app/controllers/course/studygroup.php:429
 msgid "Modul(e) erfolgreich deaktiviert."
-msgstr ""
+msgstr "Module(s) successfully deactivated."
 
 #: ../app/controllers/course/studygroup.php:538
 msgid "Die Änderungen wurden erfolgreich übernommen."
@@ -37822,7 +37796,7 @@ msgstr "This is not a seminar but a study group!"
 #: ../app/controllers/course/management.php:32
 #, php-format
 msgid "%s - Verwaltung"
-msgstr ""
+msgstr "%s - administration"
 
 #: ../app/controllers/course/management.php:46
 msgid ""
@@ -38210,7 +38184,7 @@ msgstr "Administer user configurations"
 #: ../app/controllers/admin/configuration.php:198
 #: ../app/views/admin/configuration/results_configuration.php:57
 msgid "Zurück zur Konfiguration"
-msgstr ""
+msgstr "Back to configuration"
 
 #: ../app/controllers/admin/configuration.php:202
 #: ../app/views/admin/configuration/configuration.php:75
@@ -38440,9 +38414,8 @@ msgstr ""
 "deactivate study groups."
 
 #: ../app/views/course/studygroup/globalmodules.php:51
-#, fuzzy
 msgid "Aktivierbare Inhaltselemente / Plugins"
-msgstr "Modules / plugins activatable"
+msgstr "Activatable content elementes / plugins"
 
 #: ../app/views/course/studygroup/globalmodules.php:56
 msgid "immer aktiv"
@@ -38612,7 +38585,7 @@ msgstr "Directly to the study group"
 
 #: ../app/views/course/studygroup/details.php:12
 msgid "Hinweis:"
-msgstr ""
+msgstr "Information"
 
 #: ../app/views/course/studygroup/details.php:13
 msgid ""
@@ -38653,6 +38626,8 @@ msgid ""
 "Möchten Sie folgende Inhaltselemente wirklich deaktivieren? Vorhandene "
 "Inhalte werden in der Regel dabei gelöscht. "
 msgstr ""
+"Are you sure to deactivate the following content elements? Usually, contents "
+"available will be deleted, too. "
 
 #: ../app/views/course/studygroup/_choose_founders.php:2
 #: ../app/views/course/studygroup/_replace_founder.php:2
@@ -38683,7 +38658,7 @@ msgstr "Enteras founder of the group"
 
 #: ../app/views/course/management/index.php:37
 msgid "Verwaltungsfunktionen"
-msgstr ""
+msgstr "Course functions"
 
 #: ../app/views/course/basicdata/view.php:34
 #, php-format
@@ -38842,12 +38817,11 @@ msgid "Ausgabe des Inhaltes von http://www.studip.de/crew.php."
 msgstr "Display the content of http://www.studip.de/crew.php."
 
 #: ../app/views/siteinfo/help.php:28
-#, fuzzy, php-format
+#, php-format
 msgid ""
 "Ausgabe von Ranglisten für die mit %s angegebenen Kriterien, die die "
 "Ausprägungen:"
-msgstr ""
-"Display of ranking lists with respect to the criteria provided through %s:"
+msgstr "Display of ranking lists with respect to the given %s criteria:"
 
 #: ../app/views/siteinfo/help.php:40
 #, php-format
@@ -38962,11 +38936,9 @@ msgstr ""
 "the table of results for sorting the respective columns. "
 
 #: ../app/views/studygroup/search.php:25
-#, fuzzy
 msgid "Suche zur¸cksetzen"
 msgstr "Reset search"
 
-#
 #: ../app/views/studygroup/browse.php:12
 msgid ""
 "Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen "
@@ -39384,7 +39356,6 @@ msgstr "On this page you find an overview of all available pages."
 msgid "Name des Studienabschlusses:"
 msgstr "Name of degree:"
 
-#
 #: ../app/views/admin/studycourse/edit_degree.php:16
 #: ../app/views/admin/studycourse/edit_profession.php:16
 #: ../app/views/admin/configuration/edit_configuration.php:81
@@ -39398,33 +39369,26 @@ msgstr "Back to overview"
 msgid "Wollen Sie den Abschluss \"%s\" wirklich löschen?"
 msgstr "Are you sure to delete degree \"%s\"?"
 
-#
 #: ../app/views/admin/studycourse/degree.php:12
 msgid "Name der Abschlüsse"
 msgstr "Name of the degrees"
 
-#
 #: ../app/views/admin/studycourse/degree.php:22
 msgid "Informationen zum Studienabschluss:"
 msgstr "Information on degree:"
 
-#
 #: ../app/views/admin/studycourse/degree.php:23
 msgid "Nachricht an alle Nutzer schicken"
 msgstr "Send message to all user"
 
-#
 #: ../app/views/admin/studycourse/degree.php:28
-#, fuzzy
 msgid "Abschluss bearbeiten"
-msgstr "Create degree:"
+msgstr "Edit degree"
 
-#
 #: ../app/views/admin/studycourse/degree.php:33
 msgid "Abschluss löschen"
-msgstr ""
+msgstr "Delete degree"
 
-#
 #: ../app/views/admin/studycourse/degree.php:44
 #: ../app/views/admin/studycourse/profession.php:26
 #: ../app/views/admin/studycourse/profession.php:49
@@ -39462,20 +39426,17 @@ msgid "Name des Studienganges"
 msgstr "Name of the course of study"
 
 #: ../app/views/admin/studycourse/profession.php:27
-#, fuzzy
 msgid "Nachricht an alle Benutzer schicken"
-msgstr "Send message to user"
+msgstr "Send message to all users"
 
 #: ../app/views/admin/studycourse/profession.php:37
 msgid "Studiengang löschen"
-msgstr ""
+msgstr "Delete course of study"
 
-#
 #: ../app/views/admin/configuration/config_filter.php:7
 msgid "Ohne Kategorie"
 msgstr "Without category"
 
-#
 #: ../app/views/admin/configuration/edit_configuration.php:9
 msgid "Bearbeiten von Konfigurationsparameter"
 msgstr "Administration of configuration variables"
@@ -39526,7 +39487,7 @@ msgstr "global configuration"
 #
 #: ../app/views/admin/configuration/user_configuration.php:105
 msgid "Alle Nutzer-Einstellungen"
-msgstr ""
+msgstr "All user settings"
 
 #
 #: ../app/views/admin/configuration/user_configuration.php:110
@@ -39535,7 +39496,7 @@ msgstr "Input:"
 
 #: ../app/views/admin/configuration/user_configuration.php:126
 msgid "Einstellungen, die für einen Stud.IP-Nutzer gelten."
-msgstr ""
+msgstr "Settings valid for a Stud.IP user."
 
 #
 #: ../app/views/admin/configuration/configuration.php:33
@@ -39556,7 +39517,7 @@ msgstr "Content:"
 msgid ""
 "Es wurden keine Ergebnisse gefunden. Bitte probieren Sie einen anderen "
 "Begriff."
-msgstr ""
+msgstr "No results found. Please, try a different term."
 
 #
 #: ../app/views/admin/configuration/results_configuration.php:76
@@ -39682,7 +39643,7 @@ msgstr "My time table in"
 
 #: ../app/views/calendar/daily_weekly.php:45
 msgid "zurück zur Wochenansicht"
-msgstr ""
+msgstr "back to week view"
 
 #~ msgid "Wählen Sie eine Sprache fr die Datumsangaben aus."
 #~ msgstr "Select a language for the date information."

@@ -635,13 +635,11 @@ function printRuntimeSettings ( $startMode = "manual",
 
     $startDate = ($startMode=="immediate") ? time() : $startDate;
 
-    $html .= "&nbsp;<input type=image name=\"updatetimespanbutton\" align=middle "
-         . Assets::image_path('icons/16/blue/refresh.png') ." ". tooltip(_("Endzeitpunkt neu berechnen.")) . ">";
-    $html .= "<font size=-1>";
+    $html .= " <input class=\"middle\" type=\"image\" name=\"updatetimespanbutton\" src=\""
+         . Assets::image_path('icons/16/blue/refresh.png') ."\" ". tooltip(_("Endzeitpunkt neu berechnen.")) . ">";
     $html .= sprintf( _(" (<b>%s</b> um <b>%s</b> Uhr)"),
               strftime( "%d.%m.%Y", $startDate + $timeSpan ),
               strftime( "%H:%M", $startDate + $timeSpan ) );
-    $html .= "</font>";
     }
 
     $html .= "</td></tr></table>";

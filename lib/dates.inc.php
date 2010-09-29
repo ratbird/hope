@@ -608,7 +608,7 @@ function Termin_Eingabe_javascript ($t = 0, $n = 0, $atime=0, $ss = '', $sm = ''
 function getFormattedRooms($rooms, $link = false) {
     $room_list = array();
 
-    foreach ($rooms as $room_id => $count) {
+    if (is_array($rooms)) foreach ($rooms as $room_id => $count) {
         $resObj =& ResourceObject::Factory($room_id);
         if ($link) {
             $room_list[] = $resObj->getFormattedLink(TRUE, TRUE, TRUE);

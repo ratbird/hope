@@ -605,15 +605,18 @@ function Termin_Eingabe_javascript ($t = 0, $n = 0, $atime=0, $ss = '', $sm = ''
  *
  * @return array an array of formatted room snippets
  */
-function getFormattedRooms($rooms, $link = false) {
+function getFormattedRooms($rooms, $link = false)
+{
     $room_list = array();
 
-    if (is_array($rooms)) foreach ($rooms as $room_id => $count) {
-        $resObj =& ResourceObject::Factory($room_id);
-        if ($link) {
-            $room_list[] = $resObj->getFormattedLink(TRUE, TRUE, TRUE);
-        } else {
-            $room_list[] = $resObj->getName();
+    if (is_array($rooms)) {
+        foreach ($rooms as $room_id => $count) {
+            $resObj =& ResourceObject::Factory($room_id);
+            if ($link) {
+                $room_list[] = $resObj->getFormattedLink(TRUE, TRUE, TRUE);
+            } else {
+                $room_list[] = $resObj->getName();
+            }
         }
     }
 

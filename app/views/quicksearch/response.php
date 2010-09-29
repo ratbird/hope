@@ -10,7 +10,7 @@ foreach ($searchresults as $number => $result) {
     if ($search instanceof SearchType) {
         $res_array['item_name'] .= $search->getAvatarImageTag($result[0]);
     }
-    $res_array['item_name'] .= studip_utf8encode(htmlReady($result[1]));
+    $res_array['item_name'] .= studip_utf8encode($result[1]);
     $output[] = $res_array;
 }
 print json_encode($output);

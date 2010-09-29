@@ -81,7 +81,7 @@ class QuicksearchController extends AuthenticatedController
 
     /**
      * formats the results so that the searchword is marked bold and all 
-     * htmlentities from the searchtype-object are decoded. 
+     * htmlentities from the result of the searchtype-object are escaped. 
      *
      * @param array $results array of searchresults
      *
@@ -89,7 +89,7 @@ class QuicksearchController extends AuthenticatedController
      */
     private function extraResultFormat($results) 
     {
-        $input = studip_utf8decode(Request::get('request'));
+        $input = htmlReady(studip_utf8decode(Request::get('request')));
         foreach ($results as $key => $result) {
             $results[$key][1] = preg_replace("/(".$input.")/i", "<b>$1</b>", htmlReady($result[1]));
         }

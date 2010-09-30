@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: studip\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-24 17:09+0200\n"
+"POT-Creation-Date: 2010-09-27 12:44+0200\n"
 "PO-Revision-Date: 2010-09-24 17:06+0200\n"
 "Last-Translator: Stefan Suchi <suchi@data-quest.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -183,7 +183,6 @@ msgid "Information:"
 msgstr "Information:"
 
 #: ../public/stm_details.php:196
-#, 
 msgid "Dieses Studienmodul ist noch unvollständig!"
 msgstr "This study module still is incomplete."
 
@@ -1960,7 +1959,8 @@ msgstr ""
 #
 #: ../public/admin_news.php:128
 msgid "Mindestens ein Bereich zum Anzeigen der Ankündigung muss gewählt sein!"
-msgstr "You must select at least one area for the announcement to be displayed!"
+msgstr ""
+"You must select at least one area for the announcement to be displayed!"
 
 #: ../public/admin_news.php:137
 msgid "Der RSS Export wurde für diesen Bereich ausgeschaltet!"
@@ -2753,19 +2753,16 @@ msgstr "The changed permission settings have not been saved."
 
 #
 #: ../public/edit_about.php:321
-#, 
 msgid "Die Standardsichtbarkeit der Profilelemente wurde gespeichert."
 msgstr "Default visibility of the profile elements has been saved."
 
 #
 #: ../public/edit_about.php:324
-#, 
 msgid "Die Standardsichtbarkeit der Profilelemente wurde nicht gespeichert!"
 msgstr "Default visibility of the profile elements has not been saved."
 
 #
 #: ../public/edit_about.php:328
-#, 
 msgid "Bitte wählen Sie eine Standardsichtbarkeit für Ihre Profilelemente!"
 msgstr "Please, select default visibility of your profile elements!"
 
@@ -3611,8 +3608,8 @@ msgid ""
 "Suchen Sie im folgenden Feld nach Nutzern und klicken Sie anschließend "
 "'hinzufügen', um den Nutzer als Personal einzutragen."
 msgstr ""
-"Search for users in the field below and then click on 'add'"
-" in order to add the user as staff member."
+"Search for users in the field below and then click on 'add' in order to add "
+"the user as staff member."
 
 #: ../public/inst_admin.php:633
 msgid "Folgende nur bei Zuordnung eines Admins:"
@@ -3976,7 +3973,6 @@ msgstr "General discussions"
 
 #: ../public/admin_institut.php:129 ../public/admin_seminare_assi.php:1854
 #: ../lib/classes/AdminModules.class.php:141
-#, 
 msgid "Hier ist Raum für allgemeine Diskussionen"
 msgstr "This is the place for some general discussion"
 
@@ -4900,13 +4896,12 @@ msgstr ""
 "enter yourself for your preferred course as well."
 
 #: ../public/sem_verify.php:326
-#, 
 msgid ""
 "Wenn Sie dort über die Warteliste nachrücken, wird ihre Eintragung in dieser "
 "Veranstaltung automatisch gelöscht."
 msgstr ""
-"If you move off the waiting list for the other course, then your enrolment for "
-"this course will automatically be deleted."
+"If you move off the waiting list for the other course, then your enrolment "
+"for this course will automatically be deleted."
 
 #: ../public/sem_verify.php:333
 #, php-format
@@ -4940,8 +4935,8 @@ msgid ""
 "Sobald Sie in dieser Veranstaltung von der Warteliste aufrücken, wird ihre "
 "dortige Eintragung automatisch gelöscht."
 msgstr ""
-"At the moment you move off the waiting list for this course, your enrolment for "
-"the other course will automatically be deleted."
+"At the moment you move off the waiting list for this course, your enrolment "
+"for the other course will automatically be deleted."
 
 #: ../public/sem_verify.php:350
 #, php-format
@@ -4975,8 +4970,8 @@ msgstr "You have been placed on the waiting list for course %s."
 msgid ""
 "Sobald Sie hier nachrücken, wird ihre andere Anmeldung automatisch gelöscht."
 msgstr ""
-"Your enrolment for the other "
-"course will automatically be deleted once you move off the waiting list of this course."
+"Your enrolment for the other course will automatically be deleted once you "
+"move off the waiting list of this course."
 
 #: ../public/sem_verify.php:365 ../public/sem_verify.php:382
 #, php-format
@@ -4989,8 +4984,8 @@ msgid ""
 "Ihre Anmeldung für die Veranstaltung %s wird automatisch gelöscht, wenn Sie "
 "dort über die Warteliste aufrücken."
 msgstr ""
-"Your enrolment for course %s will automatically be deleted once you move "
-"off the waiting list for the other course."
+"Your enrolment for course %s will automatically be deleted once you move off "
+"the waiting list for the other course."
 
 #: ../public/sem_verify.php:372
 #, php-format
@@ -10450,8 +10445,9 @@ msgstr "My learning modules and user accounts"
 msgid ""
 "Das Lernmodul %s ist momentan nicht erreichbar. Bitte wenden Sie sich an "
 "ihren Systemadministrator."
-msgstr "At present, learning module %s can not be reached. Please, "
-"contact your system administrator."
+msgstr ""
+"At present, learning module %s can not be reached. Please, contact your "
+"system administrator."
 
 #: ../public/my_elearning.php:99
 #, php-format
@@ -15476,8 +15472,9 @@ msgstr ""
 msgid ""
 "Hier können Sie Vorlagen zur Erhebung weiter Angaben von Ihren Teilnehmern "
 "auswählen."
-msgstr "Here you can select templates for recording further "
-"data of your participants."
+msgstr ""
+"Here you can select templates for recording further data of your "
+"participants."
 
 #: ../lib/navigation/CourseNavigation.php:150
 #: ../lib/navigation/AdminNavigation.php:81
@@ -15898,7 +15895,7 @@ msgstr "Notification"
 #: ../lib/navigation/StudipNavigation.php:132
 #: ../app/controllers/sitemap.php:29
 msgid "Sitemap"
-msgstr "Page"
+msgstr "Sitemap"
 
 #: ../lib/navigation/StudipNavigation.php:136
 #: ../app/controllers/siteinfo.php:53
@@ -16467,6 +16464,7 @@ msgid "Dieser Benutzer befindet sich in einem Chatraum."
 msgstr "This user is in a chat room."
 
 #: ../lib/chat/chat_func_inc.php:233
+#, php-format
 msgid "Dieser Benutzer befindet sich in %s Chaträumen"
 msgstr "This user is in %s chat rooms"
 
@@ -31178,8 +31176,8 @@ msgid ""
 "Es sind keine aktuellen Umfragen vorhanden. Um neue Umfragen zu erstellen, "
 "klicken Sie rechts auf die Zahnräder."
 msgstr ""
-"No current voting available. In order to create a new one click "
-"on the double arrow on the right."
+"No current voting available. In order to create a new one click on the "
+"double arrow on the right."
 
 #: ../lib/vote/view/vote_edit.lib.php:154
 msgid "Gespeicherten Test bearbeiten"
@@ -31451,8 +31449,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Please, note, that it does not make any sense to activate at the "
-"same time this option and 'Display accuracy: immediately'."
+"Please, note, that it does not make any sense to activate at the same time "
+"this option and 'Display accuracy: immediately'."
 
 #: ../lib/vote/view/vote_edit.lib.php:835
 msgid ""
@@ -33800,8 +33798,9 @@ msgid ""
 "Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den "
 "ganzen Nachrichtentext zu lesen."
 msgstr ""
-"News ticker. Click the cog-wheel on the right in order to create new news in this "
-"area. Click the arrows on the left in order to read the entire news text."
+"News ticker. Click the cog-wheel on the right in order to create new news in "
+"this area. Click the arrows on the left in order to read the entire news "
+"text."
 
 #: ../lib/showNews.inc.php:158
 msgid "Ankündigungen einstellen"
@@ -33813,8 +33812,8 @@ msgid ""
 "Es sind keine aktuellen Ankündigungen vorhanden. Um neue Ankündigungen zu "
 "erstellen, klicken Sie rechts auf die Zahnräder."
 msgstr ""
-"No current appointments available. Click the cog-wheel in order to create a new "
-"appointment."
+"No current appointments available. Click the cog-wheel in order to create a "
+"new appointment."
 
 #
 #: ../lib/showNews.inc.php:171
@@ -33824,7 +33823,8 @@ msgid ""
 "den ganzen Nachrichtentext zu lesen."
 msgstr ""
 "News ticker. Click the cog-wheel on the right in order to create a new "
-"announcement in this area. Click the arrows on the left in order to read the entire news text."
+"announcement in this area. Click the arrows on the left in order to read the "
+"entire news text."
 
 #
 #: ../lib/showNews.inc.php:181
@@ -34630,8 +34630,9 @@ msgid ""
 "zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die "
 "Terminbeschreibung zu lesen."
 msgstr ""
-"Appointments. Click the cog-wheel on the right in order to edit appointments in this area. "
-"Click the simple arrow in order to read the appointment description."
+"Appointments. Click the cog-wheel on the right in order to edit appointments "
+"in this area. Click the simple arrow in order to read the appointment "
+"description."
 
 #: ../lib/show_dates.inc.php:150 ../lib/show_dates.inc.php:162
 #: ../lib/show_dates.inc.php:356 ../lib/show_dates.inc.php:362
@@ -34695,8 +34696,8 @@ msgid ""
 "Es sind keine aktuellen Termine vorhanden. Um neue Termine zu erstellen, "
 "klicken Sie rechts auf die Zahnräder."
 msgstr ""
-"No current appointment available. Click the cog-wheel on the right "
-"in order to create new appointments."
+"No current appointment available. Click the cog-wheel on the right in order "
+"to create new appointments."
 
 #: ../lib/show_dates.inc.php:318
 msgid "Es sind keine aktuellen Termine vorhanden."
@@ -35464,7 +35465,7 @@ msgstr "Subject specific didactics"
 
 #: ../config/config.inc.php:120
 msgid "Übung"
-msgstr "Problem session"
+msgstr "Exercise Course"
 
 #: ../config/config.inc.php:121
 msgid "Proseminar"
@@ -37442,16 +37443,16 @@ msgid ""
 "Benutzen Sie den Link »neue Rubrik anlegen« in der Infobox, um eine Rubrik "
 "anzulegen."
 msgstr ""
-"Follow the link »create new category« in the information box in order to create "
-"a new category."
+"Follow the link »create new category« in the information box in order to "
+"create a new category."
 
 #: ../app/models/siteinfo.php:36
 msgid ""
 "Benutzen Sie den Link »neue Seite anlegen« in der Infobox, um eine Seite in "
 "dieser Rubrik anzulegen."
 msgstr ""
-"Follow the link »create new page« in the information box in order to create "
-"a new page in this category."
+"Follow the link »create new page« in the information box in order to create a "
+"new page in this category."
 
 #: ../app/models/siteinfo.php:40
 msgid ""
@@ -38625,8 +38626,8 @@ msgid ""
 "Möchten Sie folgende Inhaltselemente wirklich deaktivieren? Vorhandene "
 "Inhalte werden in der Regel dabei gelöscht. "
 msgstr ""
-"Are you sure to deactivate the following content elements? "
-"Usually, contents available will be deleted, too. "
+"Are you sure to deactivate the following content elements? Usually, contents "
+"available will be deleted, too. "
 
 #: ../app/views/course/studygroup/_choose_founders.php:2
 #: ../app/views/course/studygroup/_replace_founder.php:2
@@ -38816,13 +38817,11 @@ msgid "Ausgabe des Inhaltes von http://www.studip.de/crew.php."
 msgstr "Display the content of http://www.studip.de/crew.php."
 
 #: ../app/views/siteinfo/help.php:28
-#, fuzzy, php-format
-#, HK: DER DEUTSCHE SATZ IST UNVOLLSTÄNDIG!
+#, php-format
 msgid ""
 "Ausgabe von Ranglisten für die mit %s angegebenen Kriterien, die die "
 "Ausprägungen:"
-msgstr ""
-"Display of ranking lists with respect to the given %s criteria:"
+msgstr "Display of ranking lists with respect to the given %s criteria:"
 
 #: ../app/views/siteinfo/help.php:40
 #, php-format

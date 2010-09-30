@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: studip\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-27 12:44+0200\n"
+"POT-Creation-Date: 2010-09-30 19:54+0200\n"
 "PO-Revision-Date: 2010-09-24 17:06+0200\n"
 "Last-Translator: Stefan Suchi <suchi@data-quest.de>\n"
 "Language-Team:  <de@li.org>\n"
@@ -1386,7 +1386,7 @@ msgstr "Are you sure to delete %s %s from %s?"
 #: ../public/eval_summary_export.php:501
 #: ../lib/classes/FoafDisplay.class.php:229
 #: ../lib/evaluation/classes/EvaluationTreeEditView.class.php:2525
-#: ../lib/vote/view/vote_edit.lib.php:796 ../lib/forum.inc.php:495
+#: ../lib/vote/view/vote_edit.lib.php:794 ../lib/forum.inc.php:495
 #: ../lib/forum.inc.php:565 ../lib/forum.inc.php:1190
 #: ../lib/forum.inc.php:1194 ../lib/archiv.inc.php:439
 #: ../lib/archiv.inc.php:487
@@ -5852,7 +5852,7 @@ msgstr "all"
 #: ../lib/include/messagingSettings.inc.php:226
 #: ../lib/calendar/views/edit.inc.php:520
 #: ../lib/calendar/calendar_settings.inc.php:280
-#: ../lib/vote/view/vote_edit.lib.php:742
+#: ../lib/vote/view/vote_edit.lib.php:740
 msgid "nie"
 msgstr "never"
 
@@ -7907,7 +7907,7 @@ msgstr "Period of view"
 #: ../public/admin_banner_ads.php:111
 #: ../lib/evaluation/evaluation_admin_overview.lib.php:1836
 #: ../lib/vote/view/vote_edit.lib.php:581
-#: ../lib/vote/view/vote_edit.lib.php:766
+#: ../lib/vote/view/vote_edit.lib.php:764
 msgid "sofort"
 msgstr "immediately"
 
@@ -9308,18 +9308,21 @@ msgstr "Remove this field from the selection"
 #: ../lib/resources/views/ShowGroupSchedules.class.php:176
 #: ../lib/resources/views/ShowGroupSchedulesDaily.class.php:170
 #: ../lib/resources/views/ShowGroupSchedulesDaily.class.php:171
+#: ../templates/dates/seminar_xml.php:3
 msgid "wöchentlich"
 msgstr "weekly"
 
 #: ../public/admin_seminare_assi.php:3069
 #: ../lib/classes/SeminarCycleDate.class.php:180
 #: ../lib/resources/views/ShowSchedulesRequests.class.php:198
+#: ../templates/dates/seminar_xml.php:4
 msgid "zweiwöchentlich"
 msgstr "fortnightly"
 
 #
 #: ../public/admin_seminare_assi.php:3069
 #: ../lib/classes/SeminarCycleDate.class.php:180
+#: ../templates/dates/seminar_xml.php:5
 msgid "dreiwöchentlich"
 msgstr "fortnightly"
 
@@ -15895,7 +15898,7 @@ msgstr "Notification"
 #: ../lib/navigation/StudipNavigation.php:132
 #: ../app/controllers/sitemap.php:29
 msgid "Sitemap"
-msgstr "Page"
+msgstr "Sitemap"
 
 #: ../lib/navigation/StudipNavigation.php:136
 #: ../app/controllers/siteinfo.php:53
@@ -16548,7 +16551,7 @@ msgstr "Would you like to carry on?"
 #: ../lib/include/messagingSettings.inc.php:167
 #: ../lib/include/forumsettings.inc.php:61
 #: ../lib/calendar/calendar_settings.inc.php:78
-#: ../lib/vote/view/vote_edit.lib.php:683 ../lib/mystudip.inc.php:97
+#: ../lib/vote/view/vote_edit.lib.php:681 ../lib/mystudip.inc.php:97
 #: ../templates/settings/privacy.php:10
 msgid "Option"
 msgstr "Option"
@@ -16557,7 +16560,7 @@ msgstr "Option"
 #: ../lib/include/forumsettings.inc.php:62 ../lib/classes/smiley.class.php:355
 #: ../lib/classes/smiley.class.php:373
 #: ../lib/calendar/calendar_settings.inc.php:79
-#: ../lib/vote/view/vote_edit.lib.php:684 ../lib/mystudip.inc.php:98
+#: ../lib/vote/view/vote_edit.lib.php:682 ../lib/mystudip.inc.php:98
 #: ../templates/settings/privacy.php:11
 msgid "Auswahl"
 msgstr "Selection"
@@ -16595,7 +16598,7 @@ msgid "Kopie empfangener Nachrichten an eigene E-Mail-Adresse schicken"
 msgstr "Send a copy of all incoming messages to your own e-mail-address"
 
 #: ../lib/include/messagingSettings.inc.php:227
-#: ../lib/vote/view/vote_edit.lib.php:739 ../lib/user_visible.inc.php:190
+#: ../lib/vote/view/vote_edit.lib.php:737 ../lib/user_visible.inc.php:190
 msgid "immer"
 msgstr "always"
 
@@ -26409,7 +26412,7 @@ msgid "Die Auswertung der Evaluation läuft"
 msgstr "Report of this evaluation is running"
 
 #: ../lib/evaluation/classes/EvaluationTreeEditView.class.php:2528
-#: ../lib/vote/view/vote_edit.lib.php:797
+#: ../lib/vote/view/vote_edit.lib.php:795
 msgid "personalisiert"
 msgstr "personalised"
 
@@ -26427,9 +26430,9 @@ msgstr "All questions in this block must be replied to (mandatory fields):"
 #: ../lib/evaluation/evaluation_admin_overview.lib.php:247
 #: ../lib/evaluation/evaluation_admin_template.lib.php:454
 #: ../lib/evaluation/evaluation_admin_template.lib.php:728
-#: ../lib/vote/view/vote_edit.lib.php:703
-#: ../lib/vote/view/vote_edit.lib.php:819
-#: ../lib/vote/view/vote_edit.lib.php:848
+#: ../lib/vote/view/vote_edit.lib.php:701
+#: ../lib/vote/view/vote_edit.lib.php:817
+#: ../lib/vote/view/vote_edit.lib.php:846
 #: ../templates/settings/deputies.php:51
 msgid "nein"
 msgstr "no"
@@ -26438,9 +26441,9 @@ msgstr "no"
 #: ../lib/evaluation/evaluation_admin_overview.lib.php:246
 #: ../lib/evaluation/evaluation_admin_template.lib.php:445
 #: ../lib/evaluation/evaluation_admin_template.lib.php:705
-#: ../lib/vote/view/vote_edit.lib.php:704
-#: ../lib/vote/view/vote_edit.lib.php:818
-#: ../lib/vote/view/vote_edit.lib.php:849
+#: ../lib/vote/view/vote_edit.lib.php:702
+#: ../lib/vote/view/vote_edit.lib.php:816
+#: ../lib/vote/view/vote_edit.lib.php:847
 #: ../templates/settings/deputies.php:49
 msgid "ja"
 msgstr "yes"
@@ -27214,7 +27217,7 @@ msgid "Endzeitpunkt neu berechnen."
 msgstr "Calculate end date again."
 
 #: ../lib/evaluation/evaluation_admin_overview.lib.php:1913
-#: ../lib/vote/view/vote_edit.lib.php:641
+#: ../lib/vote/view/vote_edit.lib.php:640
 #, php-format
 msgid " (<b>%s</b> um <b>%s</b> Uhr)"
 msgstr " (<b>%s</b> at <b>%s</b>)"
@@ -31362,15 +31365,15 @@ msgstr ""
 "Enter here from when and until when the voting should be publicly visible in "
 "Stud.IP."
 
-#: ../lib/vote/view/vote_edit.lib.php:678
+#: ../lib/vote/view/vote_edit.lib.php:676
 msgid "Weitere Eigenschaften:"
 msgstr "Further properties:"
 
-#: ../lib/vote/view/vote_edit.lib.php:690
+#: ../lib/vote/view/vote_edit.lib.php:688
 msgid "Die Auswahl mehrerer Antworten ist erlaubt <i>(Multiple Choice)</i>:"
 msgstr "The selection of multiple answers is allowed <i>(Multiple Choice)</i>"
 
-#: ../lib/vote/view/vote_edit.lib.php:712
+#: ../lib/vote/view/vote_edit.lib.php:710
 msgid ""
 "Bedenken Sie, dass die Einstellung 'immer', also eine Voransicht des "
 "Zwischenstands, bei einem Test nicht unbedingt sinnvoll ist."
@@ -31378,29 +31381,29 @@ msgstr ""
 "Be aware that the setting 'always', that is an ongoing view of the "
 "intermediate results, does not always make sense."
 
-#: ../lib/vote/view/vote_edit.lib.php:718
+#: ../lib/vote/view/vote_edit.lib.php:716
 msgid "Der Teilnehmer sieht die (Zwischen-)Ergebnisse:"
 msgstr "The participant can view the (intermediate) results:"
 
-#: ../lib/vote/view/vote_edit.lib.php:740
+#: ../lib/vote/view/vote_edit.lib.php:738
 msgid "erst nachdem er seine Stimme(n) abgegeben hat"
 msgstr "only after he/she has taken part."
 
-#: ../lib/vote/view/vote_edit.lib.php:741
-#: ../lib/vote/view/vote_edit.lib.php:767
+#: ../lib/vote/view/vote_edit.lib.php:739
+#: ../lib/vote/view/vote_edit.lib.php:765
 msgid "erst nach Ablauf des Tests"
 msgstr "only after the test is terminated"
 
 #
-#: ../lib/vote/view/vote_edit.lib.php:741
+#: ../lib/vote/view/vote_edit.lib.php:739
 msgid "erst nach Ablauf der Umfrage"
 msgstr "only after the voting is terminated"
 
-#: ../lib/vote/view/vote_edit.lib.php:750
+#: ../lib/vote/view/vote_edit.lib.php:748
 msgid "Der Teilnehmer sieht, ob seine Antwort(en) richtig war(en):"
 msgstr "The participant sees whether his/her answer(s) was/were correct:"
 
-#: ../lib/vote/view/vote_edit.lib.php:777
+#: ../lib/vote/view/vote_edit.lib.php:775
 msgid ""
 "'Anonym' bedeutet, dass niemandem angezeigt und nirgends gespeichert wird, "
 "welche Antwort ein Teilnehmer wählt. \n"
@@ -31412,16 +31415,16 @@ msgstr ""
 "\n"
 "'Personalised' means that you can see who voted for what."
 
-#: ../lib/vote/view/vote_edit.lib.php:782
+#: ../lib/vote/view/vote_edit.lib.php:780
 msgid "Die Auswertung des Tests l&auml;uft:"
 msgstr "Test reporting runs:"
 
 #
-#: ../lib/vote/view/vote_edit.lib.php:783
+#: ../lib/vote/view/vote_edit.lib.php:781
 msgid "Die Auswertung der Umfrage l&auml;uft:"
 msgstr "Voting reporting runs:"
 
-#: ../lib/vote/view/vote_edit.lib.php:804
+#: ../lib/vote/view/vote_edit.lib.php:802
 msgid ""
 "Diese Option ist nur möglich, wenn Sie die Auswertung auf 'personalisiert' "
 "schalten, und wenn die Ergebnissichtbarkeit nicht auf 'nie' steht. "
@@ -31429,18 +31432,18 @@ msgstr ""
 "This option is available only if you have selected 'personalised' reporting, "
 "and when result visibility is not set to 'never'."
 
-#: ../lib/vote/view/vote_edit.lib.php:809
+#: ../lib/vote/view/vote_edit.lib.php:807
 msgid "Die Namen der Teilnehmer werden &ouml;ffentlich sichtbar gemacht:"
 msgstr "The names of the participants will be made publicly visible:"
 
-#: ../lib/vote/view/vote_edit.lib.php:827
+#: ../lib/vote/view/vote_edit.lib.php:825
 msgid ""
 "Diese Option ist nur möglich, wenn Sie die Auswertung auf 'personalisiert' "
 "schalten. "
 msgstr ""
 "This option is available only if you have selected 'personalised' reporting."
 
-#: ../lib/vote/view/vote_edit.lib.php:829
+#: ../lib/vote/view/vote_edit.lib.php:827
 msgid ""
 "\n"
 "\n"
@@ -31452,7 +31455,7 @@ msgstr ""
 "Please, note, that it does not make any sense to activate at the same time "
 "this option and 'Display accuracy: immediately'."
 
-#: ../lib/vote/view/vote_edit.lib.php:835
+#: ../lib/vote/view/vote_edit.lib.php:833
 msgid ""
 "Der Teilnehmer darf seine gegebene(n) Antwort(en) beliebig oft revidieren:"
 msgstr "The participant my edit his/her given answer(s) arbitrarily often:"
@@ -35465,7 +35468,7 @@ msgstr "Subject specific didactics"
 
 #: ../config/config.inc.php:120
 msgid "Übung"
-msgstr "Problem session"
+msgstr "Exercise Course"
 
 #: ../config/config.inc.php:121
 msgid "Proseminar"
@@ -38288,7 +38291,7 @@ msgid_plural ""
 msgstr[0] "For the chosen institute the plugin has been activated by default."
 msgstr[1] "For the chosen institutes the plugin has been activated by default."
 
-#: ../app/controllers/quicksearch.php:116
+#: ../app/controllers/quicksearch.php:117
 msgid "Session abgelaufen oder unbekannter Suchtyp"
 msgstr "Outdated session or unknown type of search"
 

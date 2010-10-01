@@ -51,7 +51,9 @@ require_once(EVAL_FILE_EVAL);
 require_once(EVAL_FILE_OBJECTDB);
 
 // Start of Output
-Navigation::activateItem('/homepage/tools/evaluation');
+PageLayout::setTitle(_('Evaluations-Auswertung'));
+PageLayout::setHelpKeyword('Basis.Evaluationen');
+Navigation::activateItem('/tools/evaluation');
 
 $eval = new Evaluation($eval_id);
 $no_permissons = EvaluationObjectDB::getEvalUserRangesWithNoPermission ($eval);

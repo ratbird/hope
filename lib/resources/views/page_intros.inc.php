@@ -68,7 +68,7 @@ switch ($view) {
                                     "text"  => (!$resources_data["search_only_rooms"])? sprintf(_("Nur Räume %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=1\">", "</a>") :  sprintf(_("Alle Ressourcen %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=0\">", "</a>")),
                                 array("icon" => "icons/16/black/search.png",
                                     "text"  => "<br><a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&reset=TRUE\">".makeButton("neuesuche")."</a>"))));
-        $infopic = "rooms.jpg";
+        $infopic = "infobox/rooms.jpg";
         $clipboard = TRUE;
     break;
     //Reiter "Listen"
@@ -90,7 +90,7 @@ switch ($view) {
                             "eintrag" => array (
                                 array   ("icon" =>  (!$resources_data["list_recurse"]) ? "icons/16/black/checkbox-checked.png" : "icons/16/black/checkbox-unchecked.png",
                                     "text"  => ($resources_data["list_recurse"]) ? sprintf(_("Ressourcen in untergeordneten Ebenen %snicht ausgeben%s."), "<a href=\"$PHP_SELF?nrecurse_list=TRUE\">", "</a>") :  sprintf(_("Ressourcen in untergeordneten Ebenen %s(mit) ausgeben%s"), "<a href=\"$PHP_SELF?recurse_list=TRUE\">", "</a>")))));
-        $infopic = "rooms.jpg";
+        $infopic = "infobox/rooms.jpg";
     break;
 
     //Reiter "Objekt"
@@ -262,7 +262,7 @@ switch ($view) {
                                     "text"  => ($resources_data["skip_closed_requests"]) ? sprintf(_("Bearbeitete Anfragen %sanzeigen%s."), "<a href=\"$PHP_SELF?skip_closed_requests=FALSE\">", "</a>") :  sprintf(_("Bearbeitete Anfragen %snicht anzeigen%s"), "<a href=\"$PHP_SELF?skip_closed_requests=TRUE\">", "</a>")),
                                 array   ("icon" =>  "icons/16/black/mail.png",
                                     "text"  => sprintf(_("Nachrichten zu zugewiesenen Anfragen %sversenden%s."), "<a href=\"$PHP_SELF?snd_closed_request_sms=TRUE\">", "</a>")))));
-        $infopic = "rooms.jpg";
+        $infopic = "infobox/rooms.jpg";
         $clipboard = TRUE;
     break;
     case 'list_requests':

@@ -62,6 +62,7 @@
         </td>
 
         <!-- Infobox -->
+        <? if (!$GLOBALS['suppress_infobox']) : ?>
         <td rowspan="5" valign="top" style="padding-left: 20px" align="right">
             <?
                 $content[] = array('kategorie' => _("Informationen:"),
@@ -81,6 +82,7 @@
                 echo $infobox->render();
             ?>
         </td>
+        <? endif ?>
     </tr>
 
     <? $cssSw->switchClass(); ?>

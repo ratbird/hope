@@ -22,7 +22,7 @@ $link = "dispatch.php/studygroup/search/%s/".$sort;
         <input name="searchtext" type="text" size="45" style="vertical-align: middle;" value="<?=$search?>" />
         <input type="image" <?= makeButton('suchestarten','src')?> style="vertical-align: middle;"/>
          <a href="<?=URLHelper::getLink('',array('action' => 'deny'))?>">
-            <?= makeButton('zuruecksetzen', 'img', _('Suche zur¸cksetzen')) ?>
+            <?= makeButton('zuruecksetzen', 'img', _('Suche zurücksetzen')) ?>
         </a>
     </div>
 </form>

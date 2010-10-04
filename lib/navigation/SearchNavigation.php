@@ -59,12 +59,6 @@ class SearchNavigation extends Navigation
         $navigation = new Navigation(_('Archiv'), 'archiv.php');
         $this->addSubNavigation('archive', $navigation);
 
-        // search groups
-        if (get_config('STUDYGROUPS_ENABLE')) {
-            $navigation = new Navigation(_('Studiengruppen'), 'dispatch.php/studygroup/search');
-            $this->addSubNavigation('studygroups', $navigation);
-        }
-
         // search users
         $navigation = new Navigation(_('Personen'), 'browse.php');
         $this->addSubNavigation('users', $navigation);

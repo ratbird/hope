@@ -43,9 +43,7 @@ class SearchNavigation extends Navigation
         $navigation->addSubNavigation('all', new Navigation(_('Alle'), 'sem_portal.php?reset_all=TRUE', array('view' => 'all')));
 
         foreach ($GLOBALS['SEM_CLASS'] as $key => $val) {
-            if (!$val['studygroup_mode']) {
-                $navigation->addSubNavigation($key, new Navigation($val['name'], 'sem_portal.php?reset_all=TRUE&cmd=qs', array('view' => $key)));
-            }
+            $navigation->addSubNavigation($key, new Navigation($val['name'], 'sem_portal.php?reset_all=TRUE&cmd=qs', array('view' => $key)));
         }
 
         // browse modules

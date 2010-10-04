@@ -44,13 +44,11 @@ class Course_AvatarController extends AuthenticatedController
         # choose base layout w/o infobox and set tabs
         $layout = $GLOBALS['template_factory']->open('layouts/base_without_infobox');
 
-        if ($GLOBALS['perm']->have_perm('admin')) {
-            //Navigation im Admin-Bereich:
+        if ($this->studygroup_mode) {
+            Navigation::activateItem('/course/admin/main');
+        } else if ($GLOBALS['perm']->have_perm('admin')) {
             Navigation::activateItem('/admin/course/details');
-        } elseif ($this->studygroup_mode) {
-            Navigation::activateItem('/course/admin');
         } else {
-            //Navigation in der Veranstaltung:
             Navigation::activateItem('/course/admin/details');
         }
         $this->set_layout($layout);

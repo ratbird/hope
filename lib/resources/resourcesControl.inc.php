@@ -67,8 +67,7 @@ include ("$RELATIVE_PATH_RESOURCES/lib/evaluate_values.php");
 Navigation aufbauen
 /*****************************************************************************/
 
-$resources_nav = new Navigation(_('Ressourcen'));
-$resources_nav->setImage('header/resources.png', array('title' => _('Zur Ressourcenverwaltung')));
+$resources_nav = Navigation::getItem('/resources');
 
 // Reiter "Uebersicht"
 $navigation = new Navigation(_('Übersicht'));
@@ -159,8 +158,6 @@ if ((getGlobalPerms($user->id) == 'admin') || ($perm->have_perm('root'))) {
 
     $resources_nav->addSubNavigation('settings', $navigation);
 }
-
-Navigation::addItem('/resources', $resources_nav);
 
 //load content, text, pictures and stuff
 include ("$RELATIVE_PATH_RESOURCES/views/page_intros.inc.php");

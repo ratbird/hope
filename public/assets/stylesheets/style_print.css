@@ -3,123 +3,121 @@
 *******************************************************************************/
 /* //TODO: für druck noch weiter optmieren */
 body {
-	font-family: Arial, Helvetica, sans-serif;
-	background-image: none;
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: none;
 }
 
 a:visited, a:link, a:hover, a:active {
-	text-decoration : none;
+    text-decoration : none;
 }
 
 td.angemeldet {
-	border:1px solid #000000;
+    border:1px solid #000000;
 }
 td.rahmen_white {
-	border:1px solid #000000;
-	background-color: #FFFFFF;
-	background-image: none;
+    border:1px solid #000000;
+    background-color: #FFFFFF;
+    background-image: none;
 }
 td.rahmen_steel {
-	border:1px solid #000000;
-	background-image: url('../images/steel1.jpg');
+    border:1px solid #000000;
+    background-image: url('../images/steel1.jpg');
 }
 td.rahmen_steelgraulight {
-	border:1px solid #000000;
-	background-image: url('../images/steelgraulight.jpg');
+    border: 1px solid #000000;
+    background-image: url('../images/steelgraulight.jpg');
 }
 
-#ajax_notification {
+.hidden {
     display: none;
 }
 
 /* --- print-style for calendar api------------------------------------------ */
 
 #schedule {
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 #schedule_headings {
-	margin-left: 41px;
-	background-color: none;
+    margin-left: 41px;
+    background-color: none;
 }
 
 table.schedule_headings td {
-	background-color: none;
+    background-color: none;
 }
 
 
 div.schedule_entry {
-	position: absolute;
-	margin: 0;
-	padding: 0;
-	overflow: hidden; 
-	padding-bottom: 2px;
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; 
+    padding-bottom: 2px;
 }
 
 div.schedule_entry dl {
-	color: white;
-	height: 100%; 
-	margin: 0px;
+    color: white;
+    height: 100%; 
+    margin: 0px;
 }
 
 div.schedule_entry dl.hover:hover  {
-	opacity: 0.7;
+    opacity: 0.7;
 }
 
 div.schedule_entry dl dd {
-	margin: 0px 0px 0px 0px;
-	overflow: hidden;
-	word-wrap: break-word;
+    margin: 0px 0px 0px 0px;
+    overflow: hidden;
+    word-wrap: break-word;
 }
 
 div.schedule_entry dl a {
-	color: white;
+    color: white;
 }
 
 div.schedule_entry dl a:hover {
-	text-decoration: underline;
+    text-decoration: underline;
 }
 
 div.snatch {
-	position: absolute;
-	bottom: 4px;
-	text-align: center;
-	width: 100%;
-	cursor: ns-resize;
-	padding-bottom: 2px;
+    position: absolute;
+    bottom: 4px;
+    text-align: center;
+    width: 100%;
+    cursor: ns-resize;
+    padding-bottom: 2px;
 }
 
 div.snatch div {
-	border-top: 3px double white;
-	margin-left: auto;
-	margin-right: auto;
-	cursor: ns-resize;
-	height: 0px; 
-	width: 10px;
+    border-top: 3px double white;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: ns-resize;
+    height: 0px; 
+    width: 10px;
 }
 
 #new_entry {
-	position: absolute;
-	border: 2px solid #E0E0F0;
-	width: 400px;
-	height: 230px;
-	background-color: #E8EEF7;
-	font-size: 12pt;
+    position: absolute;
+    border: 2px solid #E0E0F0;
+    width: 400px;
+    height: 230px;
+    background-color: #E8EEF7;
+    font-size: 12pt;
 }
 
 div.new_entry {
-	position: absolute;
-
-	left: 50%;
-	top: 180px;
-	margin-left: -25%;
-	height: 320px;
-	width: 50%;
-
-	font-size: 12pt;
-	background-color: #E8EEF7;
-	border: 2px solid #E0E0F0;
+    position: absolute;
+    left: 50%;
+    top: 180px;
+    margin-left: -25%;
+    height: 320px;
+    width: 50%;
+    font-size: 12pt;
+    background-color: #E8EEF7;
+    border: 2px solid #E0E0F0;
 }
 
 div.window_heading {
@@ -132,20 +130,20 @@ div.window_heading {
 }
 
 #layout_content {
-	margin-right: 0px;
+    margin-right: 0px;
 }
 
 #header, #barTopFont, #barTopMenu, #barTopTools,
 #barTopStudip, #barBottomLeft, #barBottommiddle,
 #barBottomright, #barBottomshadow, #tabs, #tabs2,
 #layout_infobox, #schedule_icons, #edit_inst_entry {
-	display: none !important;
+    display: none !important;
 }
 
 a, a:link, a:visited {
-	color: black;
+    color: black;
 }
 
 body, input, textarea, td, th, blockquote, p, form, ul {
-	font-size: 10pt;
+    font-size: 10pt;
 }

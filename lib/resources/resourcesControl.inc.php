@@ -435,7 +435,11 @@ if ($view == "view_schedule" || $view == "openobject_schedule") {
         $ViewSchedules->setLengthUnit($resources_data["schedule_length_unit"]);
         $ViewSchedules->setWeekOffset($resources_data["schedule_week_offset"]);
         $ViewSchedules->setUsedView($view);
-        $ViewSchedules->navigator($_REQUEST['print_view']);
+
+        if (!Request::get('print_view')) {
+            $ViewSchedules->navigator();
+        }
+
         $suppress_infobox = TRUE;
         ?>                      </td>
                             </tr>
@@ -464,7 +468,7 @@ if ($view == "view_schedule" || $view == "openobject_schedule") {
             if ($resources_data["schedule_mode"] == "list") //view List
                 $ViewSchedules->showScheduleList($schedule_start_time, $schedule_end_time);
             else
-                $ViewSchedules->showScheduleGraphical($schedule_start_time, $schedule_end_time);
+                $ViewSchedules->showScheduleGraphical((Request::get('print_view'))?true:false);
     } else {
         echo "</td></tr>";
         $msg->displayMsg(15);

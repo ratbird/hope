@@ -90,7 +90,7 @@ class ShowSchedules {
         $this->used_view = $value;
     }
 
-    function navigator($print_view = false)
+    function navigator()
     {
         global $cssSw, $view_mode, $PHP_SELF;
 
@@ -104,7 +104,6 @@ class ShowSchedules {
         $start_time = mktime (0, 0, 0, date("n",$this->start_time), date("j", $this->start_time)+$offset+($this->week_offset*7), date("Y", $this->start_time));
         $end_time = mktime (23, 59, 0, date("n",$start_time), date("j", $start_time)+6, date("Y", $start_time));
 
-        if (!$print_view) {
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
         <form method="POST" action="<?echo $PHP_SELF ?>?navigate=TRUE&quick_view=view_schedule&quick_view_mode=<?=$view_mode?>">
@@ -144,7 +143,6 @@ class ShowSchedules {
             </tr>
         </table>
     <?
-        }
     }
 
     function showScheduleList($print_view = false) {
@@ -223,7 +221,7 @@ class ShowSchedules {
     <?
     }
 
-    function showScheduleGraphical() {
+    function showScheduleGraphical($print_view = false) {
         global $RELATIVE_PATH_RESOURCES, $PHP_SELF, $cssSw, $view_mode, $resources_data, $ActualObjectPerms;
 
         $categories["na"] = 4;
@@ -295,7 +293,7 @@ class ShowSchedules {
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">
                     <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" height="35" border="0">
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>"  width="10%" align="left">&nbsp;
+                <td class="<? echo $cssSw->getClass() ?> hidden"  width="10%" align="left">&nbsp;
                     <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&previous_week=TRUE"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2left.png') ?>" <? echo tooltip (_("Vorherige Woche anzeigen")) ?>border="0"></a>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="76%" align="center" style="font-weight:bold">
@@ -305,12 +303,12 @@ class ShowSchedules {
                     $this->showSemWeekNumber($start_time);
                     ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
+                <td class="<? echo $cssSw->getClass() ?> hidden" width="10%" align="center">&nbsp;
                     <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&next_week=TRUE"><img class="middle" src="<?= Assets::image_path('icons/16/blue/arr_2right.png') ?>" <? echo tooltip (_("Nächste Woche anzeigen")) ?>border="0"></a>
                 </td>
             </tr>
             <tr>
-                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
+                <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?> hidden" width="4%" align="center" valign="bottom">&nbsp;
                     <?
                     if ((!$resources_data["schedule_time_range"]) || ($resources_data["schedule_time_range"] == 1))
                         printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2up.png') . "\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : -1, tooltip (_("Frühere Belegungen anzeigen")));
@@ -321,7 +319,7 @@ class ShowSchedules {
                     echo "&nbsp;<font size=-1>"._("Anzahl der Belegungen in diesem Zeitraum:")." ", $assign_events->numberOfEvents()."</font><br>&nbsp;";
                     ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" width="20%" nowrap>
+                <td class="<? echo $cssSw->getClass() ?> hidden" width="20%" nowrap>
                     <?
                     print "<select style=\"font-size:10px;\" name=\"show_repeat_mode\">";
                     printf ("<option style=\"font-size:10px;\" %s value=\"all\">"._("alle Belegungen")."</option>", ($resources_data["show_repeat_mode"] == "all") ? "selected" : "");
@@ -333,7 +331,7 @@ class ShowSchedules {
                 </td>
             </tr>
             <tr>
-                <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
+                <td class="<? echo $cssSw->getClass() ?> hidden" width="4%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan="3">
                     <?
@@ -342,7 +340,7 @@ class ShowSchedules {
                 </td>
             </tr>
             <tr>
-                <td class="<? echo $cssSw->getClass() ?>" width="4%" align="center" valign="bottom">&nbsp;
+                <td class="<? echo $cssSw->getClass() ?> hidden" width="4%" align="center" valign="bottom">&nbsp;
                     <?
                     if ((!$resources_data["schedule_time_range"]) || ($resources_data["schedule_time_range"] == -1))
                         printf ("<a href=\"%s?quick_view=%s&quick_view_mode=%s&time_range=%s\"><img src=\"" . Assets::image_path('icons/16/blue/arr_2down.png') . "\" %sborder=\"0\"></a>", $PHP_SELF, $this->used_view, $view_mode, ($resources_data["schedule_time_range"]) ? "FALSE" : 1, tooltip (_("Spätere Belegungen anzeigen")));

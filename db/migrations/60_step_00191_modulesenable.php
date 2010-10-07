@@ -65,8 +65,8 @@ class Step00191ModulesEnable extends Migration
         $db = DBManager::get();
 
         // existing
-        $db->exec("UPDATE `config` SET `section` =  'modules', `chdate` = '".time()."' WHERE `field` = 'RESOURCES_ENABLE'");
-        $db->exec("UPDATE `config` SET `section` =  'modules', `type` = 'boolean', `range` = 'global', `chdate` = '".time()."' WHERE `field` = 'STUDYGROUPS_ENABLE'");
+        $db->exec("UPDATE `config` SET `section` =  'modules', `chdate` = '".time()."' WHERE `field` = 'FOAF_ENABLE'");
+        $db->exec("UPDATE `config` SET `section` =  'studygroups', `type` = 'boolean', `range` = 'global', `chdate` = '".time()."' WHERE `field` = 'STUDYGROUPS_ENABLE'");
 
         //moving
         foreach ($this->getModules() as $module) {
@@ -75,6 +75,9 @@ class Step00191ModulesEnable extends Migration
 
         // new
         $db->exec("INSERT IGNORE INTO `config` ( `config_id` , `parent_id` , `field` , `value` , `is_default` , `type` , `range` , `section` , `position` , `mkdate` , `chdate` , `description` , `comment` , `message_template` ) VALUES ( MD5('LITERATURE_ENABLE'), '', 'LITERATURE_ENABLE', '1', '1', 'boolean', 'global', 'modules', '0', '".time()."', '".time()."', 'Schaltet ein oder aus, ob die Literaturverwaltung global verfügbar ist.', '', '')");
+
+        //changing studygroup config
+        $db->exec("UPDATE config SET value = REPLACE (value, '|', ' ') WHERE field = 'STUDYGROUP_SETTINGS'");
     }
 
     function down()
@@ -92,5 +95,8 @@ class Step00191ModulesEnable extends Migration
 
         //new
         $db->exec("DELETE FROM `config` WHERE `field` = 'LITERATURE_ENABLE'");
+
+        //changing studygroup config
+        $db->exec("UPDATE config SET value = REPLACE (value, ' ', '|') WHERE field = 'STUDYGROUP_SETTINGS'");
     }
 }

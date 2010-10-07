@@ -466,7 +466,7 @@ if ($view == "view_schedule" || $view == "openobject_schedule") {
             <?
         if (($resources_data["schedule_start_time"]) && ($resources_data["schedule_end_time"]))
             if ($resources_data["schedule_mode"] == "list") //view List
-                $ViewSchedules->showScheduleList($schedule_start_time, $schedule_end_time);
+                $ViewSchedules->showScheduleList((Request::get('print_view'))?true:false);
             else
                 $ViewSchedules->showScheduleGraphical((Request::get('print_view'))?true:false);
     } else {

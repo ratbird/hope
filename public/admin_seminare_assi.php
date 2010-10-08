@@ -1973,7 +1973,7 @@ if (($form == 7) && ($jump_next_x)) {
     } elseif (!$sem_create_data["modules_list"]["scm"]) {
         //header ("Location: admin_dates.php?assi=yes&ebene=sem&range_id=".$sem_create_data["sem_id"]);
         // ## RAUMZEIT : Welche Zeile ist hier die richtige? raumzeit.php oder themen.php?
-        header ("Location: raumzeit.php?seminar_id=".$sem_create_data["sem_id"]);
+        header ("Location: raumzeit.php?cid=".$sem_create_data["sem_id"]);
         die;
     }
     $level=8;

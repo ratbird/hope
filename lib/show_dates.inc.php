@@ -73,7 +73,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
             // Für persönliche Termine Einsprung in Terminkalender
             $admin_link="<a href=\"calendar.php?cmd=edit\">";
         else {
-            $admin_link="<a href=\"".URLHelper::getLink("raumzeit.php?seminar_id=".$range_id)."\">";
+            $admin_link="<a href=\"".URLHelper::getLink("raumzeit.php?cid=".$range_id)."\">";
         }
     }
 
@@ -647,7 +647,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                 if ($have_write_permission) {
                     // Seminar appointment
                     if ($termin->getType() == 1) {
-                        $edit = sprintf("<a href=\"./raumzeit.php?seminar_id=%s&cmd=open&open_close_id=%s#%s\">"
+                        $edit = sprintf("<a href=\"./raumzeit.php?cid=%s&cmd=open&open_close_id=%s#%s\">"
                                     . makeButton("bearbeiten", "img")
                                     . "</a>", $termin->getSeminarId(), $termin->getId(), $termin->getId());
                     }

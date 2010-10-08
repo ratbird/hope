@@ -23,7 +23,7 @@
             ?>
             <li<? if ($nav->isActive()) : ?> class="active"<? endif ?>>
                 <a href="<?= URLHelper::getLink($nav->getURL(), $link_params) ?>" title="<?= $image['title'] ?>" <?= $accesskey_attr ?>>
-                   <div style="background-image: url('<?= $image['src'] ?>');" class="<?= $image['class'] ?>"> </div>
+                   <span style="background-image: url('<?= $image['src'] ?>');" class="<?= $image['class'] ?>"> </span><br>
                    <?= htmlReady($nav->getTitle()) ?>
                </a>
             </li>

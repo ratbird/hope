@@ -144,7 +144,6 @@ div#header {
 }
 
 #barTopMenu li {
-    display: inline;
     float: left;
     list-style-type: none;
     padding: 0;
@@ -166,26 +165,25 @@ div#header {
 }
 
 /* normal icon */
-#barTopMenu a div {
-    display: block;
+#barTopMenu a span {
+    display: inline-block;
     width: 32px;
     height: 32px;
     background-repeat: no-repeat;
     background-position: 0px 0px;
-    margin: auto auto 4px auto;
 }
 
 /* hover icon */
-#barTopMenu a:hover div, #barTopMenu li.active a:hover div, #barTopMenu li.active a div {
+#barTopMenu a:hover span, #barTopMenu li.active a:hover span, #barTopMenu li.active a span {
     background-position: -32px 0px;
 }
 
 /* new icon */
-#barTopMenu a div.new {
+#barTopMenu a span.new {
     background-position: -64px 0px;
 }
 
 /* new hover icon */
-#barTopMenu a:hover div.new, #barTopMenu li.active a:hover div.new, #barTopMenu li.active a div.new {
+#barTopMenu a:hover span.new, #barTopMenu li.active a:hover span.new, #barTopMenu li.active a span.new {
     background-position: -96px 0px;
 }

@@ -662,9 +662,9 @@ class AssignObject {
                 $semid = null;
                 error_log("unknown type of assign_user_id {$this->assign_user_id}");
             }
-            log_event("RES_ASSIGN_DEL_SEM",$this->resource_id,$semid,$this->getFormattedShortInfo(),"",$_GLOBALS['user']->id);
+            log_event("RES_ASSIGN_DEL_SEM",$this->resource_id,$semid,$this->getFormattedShortInfo(),"",$GLOBALS['user']->id);
         } else {
-            log_event("RES_ASSIGN_DEL_SINGLE",$this->resource_id,NULL,$this->getFormattedShortInfo(),NULL,$_GLOBALS['user']->id);
+            log_event("RES_ASSIGN_DEL_SINGLE",$this->resource_id,NULL,$this->getFormattedShortInfo(),NULL,$GLOBALS['user']->id);
         }
         
         $query = sprintf("DELETE FROM resources_assign WHERE assign_id='%s'", $this->id);

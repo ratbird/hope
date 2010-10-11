@@ -363,7 +363,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
                         $ampel_pic = 'icons/16/green/accept.png';
                         $tt = _("gefunden");
                     } else if (count($check['error'])){
-                        $ampel_pic = 'icons/16/black/exclamation.png';
+                        $ampel_pic = 'icons/16/black/exclaim.png';
                         $tt = _("keine automatische Suche möglich");
                     } else {
                         $ampel_pic = 'icons/16/red/decline.png';

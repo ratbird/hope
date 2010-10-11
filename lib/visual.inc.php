@@ -106,7 +106,7 @@ function get_ampel_write ($mein_status, $admission_status, $write_level, $print=
             $color = 'icons/16/green/accept.png';
             break;
         case 1 :
-            $color = 'icons/16/black/exclamation.png';
+            $color = 'icons/16/black/exclaim.png';
             break;
         case 2 :
             $color = 'icons/16/red/decline.png';
@@ -194,7 +194,7 @@ function get_ampel_read ($mein_status, $admission_status, $read_level, $print="T
             $color = 'icons/16/green/accept.png';
             break;
         case 1 :
-            $color = 'icons/16/black/exclamation.png';
+            $color = 'icons/16/black/exclaim.png';
             break;
         case 2 :
             $color = 'icons/16/red/decline.png';

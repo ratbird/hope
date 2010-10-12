@@ -245,7 +245,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @param  string  $id  the id of the entry to edit (if any), false otherwise.
      * @return void
      */
-    function entry_action($id, $cycle_id = false)
+    function entry_action($id = false, $cycle_id = false)
     {
         $this->flash['entry'] = array(
             'id' => $id,

@@ -59,7 +59,7 @@
         <div style="text-align: center; clear: both">
             <br>
             <input type="image" <?= makebutton('speichern', 'src') ?>>
-            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="$('#schedule_settings').remove();$('#schedule-settings-dialog-shadow').remove(); return false">
+            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="jQuery('#schedule_settings').remove();jQuery('#schedule-settings-dialog-shadow').remove(); return false">
                 <?= makebutton('abbrechen') ?>
             </a>
         </div>

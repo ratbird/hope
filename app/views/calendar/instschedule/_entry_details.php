@@ -40,5 +40,5 @@ foreach ($show_entry['seminars'] as $sem_id) {
     </form>
 </div>
 <script>
-    $('#edit_inst_entry').draggable({ handle: 'edit_inst_entry_drag' });
+    jQuery('#edit_inst_entry').draggable({ handle: 'edit_inst_entry_drag' });
 </script>

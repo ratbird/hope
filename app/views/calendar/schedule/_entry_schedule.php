@@ -20,7 +20,7 @@
             <input type="text" size="2" name="entry_end_minute" value="<?= $show_entry['end_minute'] ?>" style="margin-right: 10px"
                 onChange="STUDIP.Calendar.validateMinute(this)">
 
-            <span class="invalid_message"><?= _("Die Startzeit liegt vor der Endzeit!") ?></span>
+            <span class="invalid_message"><?= _("Die Endzeit liegt vor der Startzeit!") ?></span>
         </div>
 
         <div id="color_picker">
@@ -47,7 +47,7 @@
             <? endif ?>
 
             <? if ($show_entry) : ?>
-            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="$('#edit_entry').fadeOut('fast');return false"><?= makebutton('abbrechen') ?></a>
+            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="jQuery('#edit_entry').fadeOut('fast');return false"><?= makebutton('abbrechen') ?></a>
             <? else: ?>
             <a href="javascript:STUDIP.Calendar.cancelNewEntry(true)"><?= makebutton('abbrechen') ?></a>
             <? endif ?>
@@ -55,5 +55,5 @@
     </form>
 </div>
 <script>
-    $('#edit_entry').draggable({ handle: 'edit_entry_drag' });
+    jQuery('#edit_entry').draggable({ handle: 'edit_entry_drag' });
 </script>

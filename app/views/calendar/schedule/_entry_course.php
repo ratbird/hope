@@ -56,12 +56,12 @@ $sem = Seminar::getInstance($show_entry['id']);
                 </a>
             <? endif ?>
 
-            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="$('#edit_sem_entry').fadeOut('fast'); return false">
+            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="jQuery('#edit_sem_entry').fadeOut('fast'); return false">
                 <?= makebutton('abbrechen') ?>
             </a>
         </div>
     </form>
 </div>
 <script>
-    $('#edit_sem_entry').draggable({ handle: 'edit_sem_entry_drag' });
+    jQuery('#edit_sem_entry').draggable({ handle: 'edit_sem_entry_drag' });
 </script>

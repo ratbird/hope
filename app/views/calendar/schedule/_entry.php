@@ -27,5 +27,5 @@
     </form>
 </div>
 <script>
-    $('#schedule_new_entry').draggable({ handle: 'new_entry_drag' });
+    jQuery('#schedule_new_entry').draggable({ handle: 'new_entry_drag' });
 </script>

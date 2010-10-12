@@ -19,9 +19,9 @@ $cell_steps = $cell_height / 60;
   STUDIP.Calendar.start_hour = <?= $start_hour ?>;
     
   <? if (!$calendar_view->isReadOnly()) : ?>
-  $(window).load(function() {
+  jQuery(window).load(function() {
     <? foreach ($days as $day) : ?> 
-    $('#day_<?= $day ?>').click(function(e) {
+    jQuery('#day_<?= $day ?>').click(function(e) {
         STUDIP.Calendar.newEntry(e, <?= $day ?>); 
     });  
     <? endforeach ?>

@@ -230,7 +230,7 @@ if ($perm->have_perm("admin"))
                 print _("Diese Anfragen werden von den zust&auml;ndigen Raumadministratoren bearbeitet. Ihnen wird ein passender Raum f&uuml;r ihre Veranstaltung zugewiesen."); ?>
             <br><br>
                 <a href="<?= UrlHelper::getLink('raumzeit.php?seminar_id='. $seminar_id) ?>">
-                    <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/black/schedule.png" border="0">&nbsp;<?=_("Zurück zur Seite Zeiten / Räume");?>
+                    <?= _("Zurück zur Seite Zeiten / Räume") ?>
                 </a><br>
             <br>
             </blockquote>
@@ -414,7 +414,7 @@ if ($perm->have_perm("admin"))
                                         printf ("<option value=\"%s\">%s </option>", $db->f("category_id"), htmlReady(my_substr($db->f("name"), 0, 30)));
                                     }
                                 print "</select></font>";
-                                print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".Assets::image_path.('icons/16/blue/accept.png')." ".tooltip(_("Raumtyp auswählen")).">";
+                                print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".Assets::image_path('icons/16/blue/accept.png')." ".tooltip(_("Raumtyp auswählen")).">";
                             }
                             ?>
                             </font>

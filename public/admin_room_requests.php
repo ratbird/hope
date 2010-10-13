@@ -225,7 +225,7 @@ if ($perm->have_perm("admin"))
             <?=_("Sie k&ouml;nnen hier Angaben &uuml;ber einen gew&uuml;nschten Raum und gew&uuml;nschte Raumeigenschaften machen.")?> <br>
             <?
             if ($my_requests[$admin_rooms_data["resRequest"]->getId()])
-                printf (_("Sie k&ouml;nnen diese Anfrage auch selbst %saufl&ouml;sen%s."), "<a href=\"resources.php?view=edit_request&single_request=".$admin_rooms_data["resRequest"]->getId()."\">&nbsp;<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/schedule.png\" border=\"0\">&nbsp;", "</a>");
+                printf (_("Sie k&ouml;nnen diese Anfrage auch selbst %saufl&ouml;sen%s."), "<a href=\"resources.php?view=edit_request&single_request=".$admin_rooms_data["resRequest"]->getId()."\">", "</a>");
             else
                 print _("Diese Anfragen werden von den zust&auml;ndigen Raumadministratoren bearbeitet. Ihnen wird ein passender Raum f&uuml;r ihre Veranstaltung zugewiesen."); ?>
             <br><br>

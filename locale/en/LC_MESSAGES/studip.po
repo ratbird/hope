@@ -39627,7 +39627,7 @@ msgstr "Displayed week-days"
 #
 #: ../app/views/calendar/schedule/index.php:14
 msgid "Ausgeblendete Veranstaltungen anzeigen"
-msgstr "%sShow%s hidden courses"
+msgstr "Show hidden courses"
 
 #
 #: ../app/views/calendar/schedule/index.php:16

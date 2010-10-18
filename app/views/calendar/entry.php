@@ -20,7 +20,7 @@ endforeach;
             <?= $entry['start_formatted'] ?> - <?= $entry['end_formatted'] ?><?= $entry['title'] ? ', <b>'. htmlReady($entry['title']) .'</b>' : '' ?>
         </dt>
         <dd> 
-            <?= htmlReady($entry['content']) ?><br>
+            <?= nl2br(htmlReady($entry['content'])) ?><br>
         </dd>
     </dl>
     </a>

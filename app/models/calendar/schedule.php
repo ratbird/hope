@@ -150,12 +150,22 @@ class CalendarScheduleModel
                 $entry['end']     = ((int)$cycle->getEndStunde() * 100) + ($cycle->getEndMinute());
                 $entry['day']     = $cycle->getDay();
                 $entry['content'] = $sem->getNumber() . ' ' . $sem->getName();
+
+                $entry['title']   = '';
+                // check, if the date is assigned to a room
+                if ($rooms = $cycle->getPredominantRoom()) {
+                    $entry['title'] .= implode('', getFormattedRooms(array_slice($rooms, 0, 1)));
+                }
+
+                // add the lecturer
+                $main_lecturer = array_pop($sem->getMembers('dozent'));
+                $entry['content'] .= "\n". $main_lecturer['fullname'];
+
                 $entry['url']     = UrlHelper::getLink('dispatch.php/calendar/schedule/entry/' . $seminar_id
                                   . '/' . $cycle->getMetaDateId());
                 $entry['onClick'] = "STUDIP.Schedule.showSeminarDetails('$seminar_id', '"
                                   . $cycle->getMetaDateId() ."'); return false;";
 
-                $entry['title']   = '';
 
                 // check the settings for this entry
                 $stmt2 = DBManager::get()->prepare("SELECT sc.*, IF(su.user_id IS NULL, 'virtual', 'sem') as type 

@@ -148,7 +148,7 @@ if ($search_exp) {
             printf ("<input type=\"IMAGE\" name=\"addsearch\" src=\"" . Assets::image_path('icons/16/yellow/arr_2down.png') . "\" value=\"" . _("In Adressbuch eintragen") . "\" %s>     ", tooltip(_("In Adressbuch eintragen")));
             echo SearchResults($search_exp);
         } else {
-            echo "<font size=\"2\">"._("keine Treffer zum Suchbegriff:")."</font><b>&nbsp; $search_exp&nbsp; </b>";
+            echo "<font size=\"2\">"._("keine Treffer zum Suchbegriff:")."</font><b>&nbsp; " . htmlReady($search_exp) . "&nbsp; </b>";
         }
         printf ("<a href=\"".URLHelper::getLink()."\"><img src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\"  value=\"" . _("neue Suche") . "\" %s>", tooltip(_("neue Suche")));
     }

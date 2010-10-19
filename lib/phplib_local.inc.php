@@ -73,7 +73,11 @@ function studip_default_exception_handler($exception) {
     }
     exit;
 }
-set_exception_handler('studip_default_exception_handler');
+
+// command line or http request?
+if (!isset($GLOBALS['argc'])) {
+    set_exception_handler('studip_default_exception_handler');
+}
 
 require_once 'lib/classes/URLHelper.php';
 require_once 'lib/navigation/Navigation.php';

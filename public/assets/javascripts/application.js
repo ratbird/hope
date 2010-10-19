@@ -1324,8 +1324,8 @@ STUDIP.Calendar = {
    * @return: bool true if valid time-range, false otherwise
    */
   checkTimeslot: function (start_hour, start_minute, end_hour, end_minute) {
-    if ((parseInt(start_hour.val(), 10) + (parseInt(start_minute.val(), 10) * 100)) >=
-        (parseInt(end_hour.val(), 10) + (parseInt(end_minute.val(), 10) * 100))) {
+    if ((parseInt(start_hour.val(), 10) * 100) + parseInt(start_minute.val(), 10) >=
+        (parseInt(end_hour.val(), 10) * 100) + parseInt(end_minute.val(), 10)) {
       return false;
     }
 

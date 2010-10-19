@@ -270,7 +270,7 @@ function change_messaging_view()
                             printf("&nbsp;<font size=\"-1\">"._("Empfänger: %s%s%s")."</font>&nbsp;&nbsp;<input type=\"image\" name=\"del_forwardrec\" src=\"" . Assets::image_path('icons/16/blue/trash.png') . "\" ".tooltip(_("Empfänger und Weiterleitung löschen.")).">&nbsp;<input type=\"image\" name=\"del_forwardrec\" src=\"".Assets::image_path('icons/16/blue/search.png')."\"  ".tooltip(_("Neuen Empfänger suchen."))."><br>", "<a href=\"about.php?username=".get_username($smsforward['rec'])."\">", get_fullname($smsforward['rec'],'full',true), "</a>");
                             echo "<input type=\"checkbox\" value=\"1\" name=\"smsforward_copy\"";
                             if ($smsforward['copy'] == "1") echo " checked";
-                            echo ">&nbsp;<font size=\"-1\">".("Kopie im persönlichen Posteingang speichern.")."</font>";
+                            echo ">&nbsp;<font size=\"-1\">"._("Kopie im persönlichen Posteingang speichern.")."</font>";
                         } else { // kein empfaenger ausgewaehlt
                             if ($search_exp == "") { ?>
                                 <input type="text" name="search_exp" size="30" value="">

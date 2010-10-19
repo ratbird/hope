@@ -80,7 +80,7 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
                 // $parent_description = formatReady($db->f("description"));
                 $parent_description = $db->f("description");
                 if (preg_match("/<admin_msg/",$parent_description))
-                    $parent_description = forum_parse_edit($parent_description);
+                    $parent_description = forum_parse_edit($parent_description, $db->f("anonymous"));
                 $parent_description = formatReady($parent_description);
                 printcontent ("100%","",$parent_description,"");
                 echo "\n</tr>";

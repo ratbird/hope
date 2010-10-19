@@ -111,13 +111,13 @@ function dump_sem($sem_id, $print_view = false) {
         {
         $dump .="<tr><td width=\"15%\">";
         $dump .="<b>" . _("Veranstaltungsnummer:") . "&nbsp;</b></td><td width=75% align=left>";
-        $dump.= $db2->f("VeranstaltungsNummer")."</td></tr>\n";
+        $dump.= htmlReady($db2->f("VeranstaltungsNummer"))."</td></tr>\n";
         }
     if ($db2->f("ects")!="")
         {
         $dump .="<tr><td width=\"15%\">";
         $dump .="<b>" . _("ECTS-Punkte:") . "&nbsp;</b></td><td width=75% align=left>";
-        $dump.= $db2->f("ects")."</td></tr>\n";
+        $dump.= htmlReady($db2->f("ects"))."</td></tr>\n";
         }
     if ($db2->f("Beschreibung")!="")
         {

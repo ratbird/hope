@@ -374,7 +374,7 @@ echo $template_factory->render(
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">
                 <?
                 if ($db2->f("VeranstaltungsNummer"))
-                    printf ("<font size=-1><b>" . _("Veranstaltungsnummer:") . "</b></font><br><font size=-1>%s</font>",$db2->f("VeranstaltungsNummer"));
+                    printf ("<font size=-1><b>" . _("Veranstaltungsnummer:") . "</b></font><br><font size=-1>%s</font>",htmlReady($db2->f("VeranstaltungsNummer")));
                 else
                     print "&nbsp; ";
                 ?>

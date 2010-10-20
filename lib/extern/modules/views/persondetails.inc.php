@@ -23,7 +23,7 @@ $sem_id = $args["seminar_id"];
 $this->visibilities = get_local_visibility_by_username($username, 'homepage', true);
 if ($this->visibilities) {
     $this->owner_perm = $this->visibilities['perms'];
-    $this->visibilities = unserialize($this->visibilities['homepage']);
+    $this->visibilities = json_decode($this->visibilities['homepage'], true);
 } else {
     $this->visibilities = array();
     $this->owner_perm = 'user';
@@ -281,7 +281,9 @@ function kategorien (&$module, $db, $alias_content, $text_div, $text_div_end) {
 
     $db_kategorien->query($query);
     while ($db_kategorien->next_record()) {
-        if (is_element_visible_externally($db->f("user_id"), $module->owner_perm, 'kat_'.$db->f('kategorie_id'), $module->visibilities['kat_'.$db->f('kategorie_id')])) {
+        if (is_element_visible_externally($db->f("user_id"), $module->owner_perm, 
+                'kat_'.$db_kategorien->f('kategorie_id'), 
+                $module->visibilities['kat_'.$db_kategorien->f('kategorie_id')])) {
             echo "<tr><td width=\"100%\">\n";
             echo "<table" . $module->config->getAttributes("TableParagraph", "table") . ">\n";
             echo "<tr" . $module->config->getAttributes("TableParagraphHeadline", "tr") . ">";

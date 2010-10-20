@@ -64,7 +64,7 @@ class Step00158Privacy extends Migration
         }
         // ... and write settings to user privacy table
         foreach ($categories as $owner_id => $settings) {
-            $db->exec("UPDATE `user_visibility` SET `homepage`='".serialize($settings)."' WHERE `user_id`='".$owner_id."'");
+            $db->exec("INSERT IGNORE INTO `user_visibility` SET `homepage`='".serialize($settings)."' WHERE `user_id`='".$owner_id."'");
         }
 
         // remove hidden attribute of custom categories (is configured in privacy settings now)

@@ -131,10 +131,6 @@ class UserManagement
             if ($this->db->affected_rows() == 0) {
                 return FALSE;
             }
-            $this->db->query("INSERT INTO user_visibility SET user_id = '".$this->user_data['auth_user_md5.user_id']."', mkdate='".time()."'");
-            if ($this->db->affected_rows() == 0) {
-                return FALSE;
-            }
             log_event("USER_CREATE",$this->user_data['auth_user_md5.user_id']);
         }
 

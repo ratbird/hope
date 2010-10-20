@@ -1007,7 +1007,9 @@ STUDIP.QuickSearch = {
               suggestions.push({
                 label: val.item_name,                       //what is displayed in the drobdown-boc
                 item_id: val.item_id,                       //the hidden ID of the item
-                value: val.item_name !== null ? val.item_name.replace(stripTags, "") : "" //what is inserted in the visible input-box
+                value: val.item_name !== null 
+                  ? $("<div/>").html(val.item_name.replace(stripTags, "")).text() 
+                  : "" //what is inserted in the visible input-box
               });
             });
             //pass it to the function of UI-widget:
@@ -1037,8 +1039,8 @@ STUDIP.QuickSearch = {
           this.value = title;
         }
       });
-      jQuery(this).css("opacity", 0.7);
-      this.value = title;
+      jQuery('#' + name).css("opacity", 0.7);
+      jQuery('#' + name).val(title);
     }
   }
 };

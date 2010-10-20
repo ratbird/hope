@@ -120,14 +120,14 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
     }
 
     if (is_array($range_id)) {
-        $query = "SELECT t.*, th.title as Titel, th.description as Info, s.Name FROM termine t LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen as th USING (issue_id) LEFT JOIN seminare s ON (range_id = Seminar_id) ";
+        $query = "SELECT t.*, th.issue_id, th.title as Titel, th.description as Info, s.Name FROM termine t LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen as th USING (issue_id) LEFT JOIN seminare s ON (range_id = Seminar_id) ";
         $query .= "WHERE (Seminar_id IN '" . implode(",", $range_id);
         $query .= "' $show_query $tmp_query ) ORDER BY date";
     }
     else if (strlen($range_id))
-        $query = "SELECT t.*, th.title as Titel, th.description as Info FROM termine t LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen as th USING (issue_id) WHERE (range_id='$range_id' $show_query $tmp_query ) ORDER BY date";
+        $query = "SELECT t.*, th.issue_id, th.title as Titel, th.description as Info FROM termine t LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen as th USING (issue_id) WHERE (range_id='$range_id' $show_query $tmp_query ) ORDER BY date";
     else {
-        $query = "SELECT t.*, th.title as Titel, th.description as Info, s.Name, su.* FROM termine t ".
+        $query = "SELECT t.*, th.issue_id, th.title as Titel, th.description as Info, s.Name, su.* FROM termine t ".
             "LEFT JOIN themen_termine USING (termin_id) ".
             "LEFT JOIN themen as th USING (issue_id) ".
             "LEFT JOIN seminare s ON (range_id = s.Seminar_id) ".
@@ -200,6 +200,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $zusatz .= "<a href=\"".URLHelper::getLink("seminar_main.php?auswahl=" . $db->f("range_id"))
                                 . "\"><font size=\"-1\">" . htmlReady(mila($db->f("Name"), 22))
                                 . "</font></a>";
+                $current_seminar_id = $db->f("range_id");
             }
             else {
                 $termin = new SingleDate($db->f('termin_id'));
@@ -210,12 +211,22 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 }else{
                     $zusatz .= _("Ort:").' '._("k.A.") . " ";
                 }
+                $current_seminar_id = $range_id;
             }
 
             //Dokumente zaehlen
-            $num_docs = '';
+            $num_docs = 0;
+            $folder_id = '';
             if ($show_docs) {
-                $num_docs = doc_count($db->f("termin_id"));
+                $row = DBManager::get()
+                       ->query("SELECT folder_id, issue_id FROM themen_termine
+                                INNER JOIN folder ON issue_id=range_id
+                                WHERE termin_id ='" . $db->f("termin_id") . "' LIMIT 1")
+                       ->fetch(PDO::FETCH_ASSOC);
+                if ($row['folder_id']) {
+                    $num_docs = doc_count($row['issue_id'], $current_seminar_id);
+                    $folder_id = $row['folder_id'];
+                }
             }
 
             $titel = '';
@@ -234,15 +245,13 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $titel .= ", " . $tmp_titel;
                 }
 
-            if ($db->f("chdate") > max(object_get_visit($SessSemName[1], "schedule"), object_get_visit($SessSemName[1], "sem")))
+            if ($db->f("chdate") > max(object_get_visit($current_seminar_id, "schedule"), object_get_visit($current_seminar_id, "sem")))
                 $new = false;
             else
                 $new = FALSE;
 
             if ($num_docs) {
-                $db2->query("SELECT folder_id FROM folder WHERE range_id ='" . $db->f("termin_id")."' ");
-                $db2->next_record();
-                $zusatz .= "<a href=\"".URLHelper::getLink("folder.php?cmd=tree&open=" . $db2->f("folder_id"));
+                $zusatz .= "<a href=\"".URLHelper::getLink("folder.php", array('cmd' => 'tree' , 'open' =>  $folder_id, 'cid' => $current_seminar_id));
                 $zusatz .= "#anker\"><img src=\"".Assets::image_path('icons/16/blue/files.png')."\" ";
                 $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
                 $zusatz .= "></a>";
@@ -565,17 +574,21 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
             //Dokumente zaehlen
             $num_docs = 0;
             if ($show_docs && strtolower(get_class($termin)) == 'seminarevent') {
-                $num_docs = doc_count($termin->getId());
 
-                if ($num_docs) {
-                    $db = new DB_Seminar();
-                    $db->query("SELECT folder_id FROM folder WHERE range_id ='" . $termin->getId() . "' ");
-                    $db->next_record();
-                    $zusatz .= "<a href=\"seminar_main.php?auswahl=" . $termin->getSeminarId()
-                                    . "&redirect_to=folder.php&cmd=tree&open=" . $db->f("folder_id")
-                                    . "#anker\"><img src=\"".Assets::image_path('icons/16/blue/files.png')."\" ";
-                    $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
-                    $zusatz .= ">";
+                $row = DBManager::get()
+                       ->query("SELECT folder_id, issue_id FROM themen_termine
+                                INNER JOIN folder ON issue_id=range_id
+                                WHERE termin_id ='" . $termin->getId() . "' LIMIT 1")
+                       ->fetch(PDO::FETCH_ASSOC);
+                if ($row['folder_id']) {
+                    $num_docs = doc_count($row['issue_id'],  $termin->getSeminarId());
+                    if ($num_docs) {
+                        $zusatz .= "<a href=\"seminar_main.php?auswahl=" . $termin->getSeminarId()
+                        . "&redirect_to=folder.php&cmd=tree&open=" . $row['folder_id']
+                        . "#anker\"><img src=\"".Assets::image_path('icons/16/blue/files.png')."\" ";
+                        $zusatz .= tooltip(sprintf(_("%s Dokument(e) vorhanden"), $num_docs));
+                        $zusatz .= ">";
+                    }
                 }
             }
 

@@ -335,13 +335,19 @@ function getFolderId($parent_id, $in_recursion = false){
 }
 
 /**
- * Counts and returns the number of subfolders and files of the given folder.
- * @parent_id: id of the given folder
- * @return: number of readable subfolders and files
+ * Counts and returns the number files in the given folder and subfolders.
+ * Files not visible to the current user are not counted
+ *
+ * @param $parent_id     a folder id
+ * @param $range_id      the range id for the folder, course or institute id
+ * @return integer
  */
-function doc_count ($parent_id) {
+function doc_count($parent_id, $range_id = null) {
     global $SessionSeminar, $user;
-    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    if ($range_id === null)  {
+        $range_id = $SessionSeminar;
+    }
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $range_id));
     $db=new DB_Seminar;
     $arr = $folder_tree->getReadableKidsKids($parent_id,$user->id);
     if($folder_tree->isReadable($parent_id,$user->id) && $folder_tree->isExecutable($parent_id,$user->id)) $arr[] = $parent_id;

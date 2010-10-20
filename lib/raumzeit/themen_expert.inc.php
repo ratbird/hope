@@ -50,8 +50,8 @@ function themen_doAddIssue() {
     $issue->setDescription($_REQUEST['theme_description']);
     $issue->setForum(($_REQUEST['forumFolder'] == 'on') ? TRUE : FALSE);
     $issue->setFile(($_REQUEST['fileFolder'] == 'on') ? TRUE : FALSE);
+    $sem->addIssue($issue);     // sets $issue->priority
     $issue->store();
-    $sem->addIssue($issue);
     $sem->createMessage(_("Folgendes Thema wurde hinzugefügt:").'<br><li>'.htmlReady($issue->toString()));
 }
 

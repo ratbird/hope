@@ -850,9 +850,7 @@ class Seminar
     function addIssue(&$issue)
     {
         $this->readIssues();
-        if (get_class($issue) != 'issue') {
-            return FALSE;
-        } else {
+        if ($issue instanceof Issue) {
             $max = -1;
             if (is_array($this->issues)) foreach ($this->issues as $val) {
                 if ($val->getPriority() > $max) {
@@ -863,6 +861,8 @@ class Seminar
             $issue->setPriority($max);
             $this->issues[$issue->getIssueID()] =& $issue;
             return TRUE;
+        } else {
+            return FALSE;
         }
     }
 

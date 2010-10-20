@@ -23,8 +23,8 @@ function themen_doAddIssue() {
     $issue->setDescription($_REQUEST['theme_description']);
     $issue->setForum(($_REQUEST['forumFolder'] == 'on') ? TRUE : FALSE);
     $issue->setFile(($_REQUEST['fileFolder'] == 'on') ? TRUE : FALSE);
+    $sem->addIssue($issue);     // sets $issue->priority
     $issue->store();
-    $sem->addIssue($issue);
 
     $termin = new SingleDate($_REQUEST['singledate_id']);
     $termin->addIssueID($issue->getIssueID());

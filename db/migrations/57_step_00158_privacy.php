@@ -64,7 +64,7 @@ class Step00158Privacy extends Migration
         }
         // ... and write settings to user privacy table
         foreach ($categories as $owner_id => $settings) {
-            $db->exec("INSERT IGNORE INTO `user_visibility` SET `homepage`='".serialize($settings)."' WHERE `user_id`='".$owner_id."'");
+            $db->exec("INSERT IGNORE INTO `user_visibility` SET `homepage`='".json_encode($settings)."' WHERE `user_id`='".$owner_id."'");
         }
 
         // remove hidden attribute of custom categories (is configured in privacy settings now)
@@ -88,7 +88,7 @@ class Step00158Privacy extends Migration
         // ... and set it there according to privacy settings
         $result = $db->query("SELECT `user_id`, `homepage` FROM `user_visibility` WHERE `homepage` LIKE '%kat_%'");
         while ($current = $result->fetch()) {
-            $data = unserialize($current['homepage']);
+            $data = json_decode($current['homepage'], true);
             foreach ($data as $key => $visibility) {
                 if (substr($key, 0, 4) == 'kat_' && $visibility == VISIBILITY_ME) {
                     $category_id = substr($key, 4);

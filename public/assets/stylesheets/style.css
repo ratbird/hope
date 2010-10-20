@@ -1188,6 +1188,7 @@ div.messagebox.details_hidden .messagebox_details {
 }
 
 /* --- Quicksearch ---------------------------------------------------------- */
+
 form#quicksearch {
     display: inline;
 }
@@ -1207,13 +1208,15 @@ input.quicksearchbutton {
     vertical-align: middle;
 }
 
-form#quicksearch .autocomplete li {
-    display: block;
-    font-size: 10px;
+div.quicksearch_frame {
+    background-color: #ffffff; 
+    border: 1px #999999 solid; 
+    display:inline-block;
 }
 
-#quicksearch_autocomplete_choices .informal {
-    display: none;
+div.quicksearch_frame input, div.quicksearch_frame select {
+    background-color:#ffffff; 
+    border: 0px;
 }
 
 /* --- Avatars of users, courses and institutes ----------------------------- */

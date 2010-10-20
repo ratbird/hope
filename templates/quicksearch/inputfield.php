@@ -1,6 +1,6 @@
 <? if ($withButton) : ?>
-<div style="width: <?= $box_width ?>px; background-color: #ffffff; border: 1px #999999 solid; display:inline-block">
-<? $input_style = " style=\"width: ".($box_width-23)."px; background-color:#ffffff; border: 0px;\""; ?>
+<div class="quicksearch_frame" style="width: <?= $box_width ?>px;">
+<? $input_style = " style=\"width: ".($box_width-23)."px;\""; ?>
     <? if ($box_align === "left") : ?>
             <input class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>">
     <? endif ?>
@@ -8,7 +8,7 @@
 <? 
 if ($inputStyle) {
     $input_style = " style=\"".$inputStyle."\"";
-} 
+}
 ?>
             <input type=hidden id="<?= $id ?>_realvalue" name="<?= $name ?>" value="<?= $defaultID ?>">
             <input<?= $input_style.($inputClass ? " class=\"".$inputClass."\"" : "")

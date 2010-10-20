@@ -3,8 +3,8 @@
 //Kein Javascript aktiviert, also über Select-Box arbeiten. Wir sind automatisch schon in Schritt 2 der
                 //non-javascript-Suche.
 if ($withButton) : ?>
-<div style="width: <?= $box_width ?>px; background-color: #ffffff; border: 1px #999999 solid; display:inline-block">
-<? $input_style = " style=\"width: ".($box_width-23)."px; background-color:#ffffff; border: 0px;\""; ?>
+<div class="quicksearch_frame" style="width: <?= $box_width ?>px;">
+<? $input_style = " style=\"width: ".($box_width-23)."px;\""; ?>
     <? if ($box_align === "left") : ?>
     <input class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/refresh.png") ?>">
     <? endif ?>

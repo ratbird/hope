@@ -5,13 +5,11 @@
             <input class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>">
     <? endif ?>
 <? endif ?>
-<? if ($inputStyle) {
-           $input_style = " style=\"".$inputStyle."\"";
-        }
-        if ($beschriftung) {
-            $clear_input = " onFocus=\"if (this.value == '$beschriftung'){this.value = ''; jQuery(this).css('opacity', '1');}\" " .
-                "onBlur=\"if (this.value == ''){this.value = '$beschriftung';jQuery(this).css('opacity', '0.7');}\"";
-        } ?>
+<? 
+if ($inputStyle) {
+    $input_style = " style=\"".$inputStyle."\"";
+} 
+?>
             <input type=hidden id="<?= $id ?>_realvalue" name="<?= $name ?>" value="<?= $defaultID ?>">
             <input<?= $input_style.($inputClass ? " class=\"".$inputClass."\"" : "")
                 ?> id="<?= $id ?>"<?= ($clear_input ? $clear_input : "") ?> type=text name="<?=

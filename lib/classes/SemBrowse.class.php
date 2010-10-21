@@ -256,7 +256,7 @@ class SemBrowse {
         echo "</td></tr>";
         echo $this->search_obj->getFormEnd();
         echo "</table>\n";
-        echo '<script type="text/javascript">jQuery("#' . $quicksearch->getId() . '").focus();</script>' . chr(10);
+        echo '<script type="text/javascript">jQuery(function () { jQuery("#' . $quicksearch->getId() . '").focus(); });</script>' . chr(10);
     }
 
     function print_xts(){

@@ -51,23 +51,36 @@ $GLOBALS['template_factory'] =
 
 // set default exception handler
 function studip_default_exception_handler($exception) {
+
     if ($exception instanceof AccessDeniedException) {
-        header('HTTP/1.1 403 ' . $exception->getMessage());
+        $status = 403;
         $template = 'access_denied_exception';
     } else if ($exception instanceof CheckObjectException) {
-        header('HTTP/1.1 403 ' . $exception->getMessage());
+        $status = 403;
         $template = 'check_object_exception';
     } else {
-        header('HTTP/1.1 500 ' . $exception->getMessage());
+        $status = 500;
         error_log($exception->__toString());
         $template = 'unhandled_exception';
     }
+
+    header('HTTP/1.1 ' . $status . ' ' . $exception->getMessage());
+
+    // ajax requests return JSON instead
+    // re-use the http status code determined above
+    if (!strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest')) {
+        header('Content-Type: application/json; charset=UTF-8');
+        $template = 'json_exception';
+    }
+
     while (ob_get_level()) {
         ob_end_clean();
     }
+
     try {
-        echo $GLOBALS['template_factory']->render($template,
-                                              compact('exception'));
+        $args = compact('exception', 'status');
+        echo $GLOBALS['template_factory']->render($template, $args);
+
     } catch (Exception $e) {
         echo 'Error: ' . htmlspecialchars($e->getMessage());
     }

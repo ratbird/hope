@@ -13,9 +13,7 @@ $translations = array(
 );
 
 // translations have to be UTF8 for #json_encode
-foreach ($translations as &$value) {
-    $value = utf8_encode($value);
-}
+$translations = $plugin->utf8EncodeArray($translations);
 
 ?>
 String.toLocaleString({

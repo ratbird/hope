@@ -55,14 +55,34 @@ class LocalizationsController extends Trails_Controller {
 
         $this->language = $language;
         setLocaleEnv($language, "studip");
+
+        // make this instance available to the view to use
+        // the helper methods
+        $this->plugin = $this;
     }
 
 
     function not_acceptable_action($language = NULL)
     {
         $this->set_status(406);
-        $this->set_content_type('application/json');
-        $this->render_text(
-            json_encode(array_keys($GLOBALS['INSTALLED_LANGUAGES'])));
+        $this->set_content_type('application/json; charset=UTF-8');
+        $languages = array_keys($GLOBALS['INSTALLED_LANGUAGES']);
+        $this->render_text(json_encode($this->utf8EncodeArray($languages)));
+    }
+
+
+    /**
+     * Return an UTF-8 encoded (one dimensional!) array
+     *
+     * @param array   the original array w/ latin-1 encoded keys and values
+     * @return array  an array w/ utf-8 encoded keys and values
+     */
+    function utf8EncodeArray(array $src)
+    {
+        $new = array();
+        foreach ($src as $k => $v) {
+            $new[is_int($k) ? $k : utf8_encode($k)] = utf8_encode($v);
+        }
+        return $new;
     }
 }

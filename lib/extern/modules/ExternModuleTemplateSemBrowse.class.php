@@ -89,9 +89,9 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                 _("Zeiten"),
                 _("DozentIn")
         );
-        
+
         $this->approved_params = array('start_item_id', 'sem', 'do_search', 'quick_search', 'show_result', 'title', 'sub_title', 'number', 'comment', 'lecturer', 'scope', 'combination', 'type', 'qs_choose', 'withkids', 'xls_export', 'group_by');
-        
+
         parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
     }
 
@@ -782,10 +782,8 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COUSE-NO'] = $k + 1;
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSEDETAILS-HREF'] = $this->elements['LinkInternLecturedetails']->createUrl(array('link_args' => 'seminar_id=' . $seminar_id));
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSE_NUMBER'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['VeranstaltungsNummer']));
-                            
-                            // !!!!!!!!!!!!!! FORMATREADY !!!!!!!!!!!!!!!!!!!!!!!!!
-                            /*********************************************************/
-                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['DESCRIPTION'] = ExternModule::ExtFormatReady(key($sem_data[$seminar_id]['Beschreibung']));
+
+                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['DESCRIPTION'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['Beschreibung']), true);
 
                             $sem_number_start = key($sem_data[$seminar_id]["sem_number"]);
                             $sem_number_end = key($sem_data[$seminar_id]["sem_number_end"]);
@@ -1036,7 +1034,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
             $nameformat = 'full_rev';
         }
         $dbv = new DbView();
-        $query = ("SELECT seminare.Seminar_id, VeranstaltungsNummer, seminare.status, seminare.status, seminare.Untertitel, seminare.Ort, seminare.art, seminare.Beschreibung, IF(seminare.visible=0,CONCAT(seminare.Name, ' ". _("(versteckt)") ."'), seminare.Name) AS Name, 
+        $query = ("SELECT seminare.Seminar_id, VeranstaltungsNummer, seminare.status, seminare.status, seminare.Untertitel, seminare.Ort, seminare.art, seminare.Beschreibung, IF(seminare.visible=0,CONCAT(seminare.Name, ' ". _("(versteckt)") ."'), seminare.Name) AS Name,
                 $add_fields" . $_fullname_sql[$nameformat] ." AS fullname, auth_user_md5.username, title_front, title_rear, Vorname, Nachname,
                 " . $dbv->sem_number_sql . " AS sem_number, " . $dbv->sem_number_end_sql . " AS sem_number_end, seminar_user.position AS position FROM seminare
                 LEFT JOIN seminar_user ON (seminare.Seminar_id=seminar_user.Seminar_id AND seminar_user.status='dozent')

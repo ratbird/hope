@@ -56,12 +56,13 @@ div.schedule_entry {
     overflow: hidden; 
     padding-bottom: 2px;
     font-size: 11px;
+    color: #000000;
 }
 
 div.schedule_entry dl {
-    color: white;
     height: 100%; 
     margin: 0px;
+    background-image: none;
 }
 
 div.schedule_entry dl.hover:hover  {
@@ -72,10 +73,6 @@ div.schedule_entry dl dd {
     margin: 0px 0px 0px 0px;
     overflow: hidden;
     word-wrap: break-word;
-}
-
-div.schedule_entry dl a {
-    color: white;
 }
 
 div.schedule_entry dl a:hover {
@@ -89,15 +86,6 @@ div.snatch {
     width: 100%;
     cursor: ns-resize;
     padding-bottom: 2px;
-}
-
-div.snatch div {
-    border-top: 3px double white;
-    margin-left: auto;
-    margin-right: auto;
-    cursor: ns-resize;
-    height: 0px; 
-    width: 10px;
 }
 
 #new_entry {

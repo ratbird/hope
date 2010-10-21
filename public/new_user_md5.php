@@ -184,9 +184,11 @@ if (check_ticket($_REQUEST['studipticket'])){
                 $newuser['auth_user_md5.perms'] = implode($perms,",");
             if ($delete_val_key == "1")
                 $newuser['auth_user_md5.validation_key'] = '';
-            $newuser['auth_user_md5.locked']     = (isset($locked) ? $locked : 0);
-            $newuser['auth_user_md5.lock_comment']    = (isset($lock_comment) ? stripslashes(trim($lock_comment)) : "");
-            $newuser['auth_user_md5.locked_by'] = ($locked==1 ? $auth->auth["uid"] : "");
+            if ( !($UserManagement->user_data['auth_user_md5.locked'] && $locked) ) {
+                $newuser['auth_user_md5.locked']     = (isset($locked) ? $locked : 0);
+                $newuser['auth_user_md5.lock_comment']    = (isset($lock_comment) ? stripslashes(trim($lock_comment)) : "");
+                $newuser['auth_user_md5.locked_by'] = ($locked==1 ? $auth->auth["uid"] : "");
+            }
 
             if (isset($auth_plugin))
                 $newuser['auth_user_md5.auth_plugin'] = $auth_plugin;

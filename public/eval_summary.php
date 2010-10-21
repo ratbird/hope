@@ -364,7 +364,7 @@ function groups($parent_id)
             echo "  <tr><td class=\"".($ausgabeformat==1 ? "steelgraulight" : "blank")."\" colspan=\"2\">\n";
             if (do_template("show_questionblock_headline")) {
                 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td align=\"left\"><b>".$global_counter.".".$local_counter.". ".formatReady($db_groups->f("title"))."</b></td>";
-                echo "<td align=\"RIGHT\">".($ausgabeformat==1 && !($freetype) ? "<a href=\"$PHP_SELF?eval_id=$eval_id&evalgroup_id=".$db_groups->f("evalgroup_id")."&group_type=".($group_type=="normal" ? "table" : "normal")."&cmd=change_group_type#anker\"><IMG SRC=\"".Assets::image_path('icons/16/blue/refresh.png')."\" TITLE=\""._("Zum Darstellungstyp")." ".($group_type=="normal"?_("Tabelle"):_("Normal"))." "._("wechseln").".\" border=\"0\"></a>" : "&nbsp;"). "</td>";
+                echo "<td align=\"RIGHT\">".($ausgabeformat==1 && !($freetype) ? "<a href=\"$PHP_SELF?eval_id=$eval_id&evalgroup_id=".$db_groups->f("evalgroup_id")."&group_type=".($group_type=="normal" ? "table" : "normal")."&cmd=change_group_type#anker\"><IMG SRC=\"".Assets::image_path('icons/16/blue/'.($group_type=='normal' ? 'vote-stopped' : 'vote').'.png')."\" TITLE=\""._("Zum Darstellungstyp")." ".($group_type=="normal"?_("Tabelle"):_("Normal"))." "._("wechseln").".\" border=\"0\"></a>" : "&nbsp;"). "</td>";
                 echo "</tr></table>\n";
             }
             if ($evalgroup_id == $db_groups->f("evalgroup_id")) {

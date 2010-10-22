@@ -262,7 +262,7 @@ class Statusgruppe {
                     $description = _("Ablage für Ordner und Dokumente dieser Gruppe");
               $permission = 15;
                     create_folder(addslashes($title), $description, $this->statusgruppe_id, $permission);
-                    $this->messages[] = 'msg§Es wurde ein Gruppenordner angelegt.§';
+                    $this->messages['msg'][] = _("Es wurde ein Gruppenordner angelegt.");
                 }
             }
 
@@ -290,7 +290,7 @@ class Statusgruppe {
 
             // a group cannot be its own vather!
             if ($_REQUEST['vather'] == $this->statusgruppe_id) {
-                $this->messages[] = 'error§' ._("Sie könne diese Gruppe nicht sich selbst unterordnen!");
+                $this->messages['error'][] = _("Sie könne diese Gruppe nicht sich selbst unterordnen!");
             } else
             
             // check if the group shall be moved
@@ -304,19 +304,38 @@ class Statusgruppe {
                     $this->range_id = $vather_id;
                     //$db->query("UPDATE statusgruppen SET range_id = '$vather_id' WHERE statusgruppe_id = '{$this->statusgruppe_id}'");
                 } else {
-                    $this->messages[] = 'error§' ._("Sie können diese Gruppe nicht einer ihr untergeordneten Gruppe zuweisen!");
+                    $this->messages['error'][] = _("Sie können diese Gruppe nicht einer ihr untergeordneten Gruppe zuweisen!");
                 }
             }
         }
                 
         if (!$this->isSeminar() && is_array($invalidEntries)) {
-            $this->messages[] = 'error§' . _("Korrigieren Sie die fehlerhaften Eingaben!");
+            $this->messages['error'][] = _("Korrigieren Sie die fehlerhaften Eingaben!");
             return false;
         }
         return true;
 
     }
     
+    /**
+     * add the classes messages to the submitted msg-array
+     *
+     * @param mixed $msgs the already present messages
+     *
+     * @return mixed the original+class messages
+     */
+    function getMessages($msgs)
+    {
+        foreach (array('error', 'info', 'msg') as $type) {
+            if (is_array($this->messages[$type])) {
+                foreach ($this->messages[$type] as $msg) {
+                    $msgs[$type][] = $msg;
+                }
+            }
+        }
+
+        return $msgs;
+    }
     /* * * * * * * * * * * * * * * * * * * *
      * * * S T A T I C   M E T H O D S * * *
      * * * * * * * * * * * * * * * * * * * */

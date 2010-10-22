@@ -179,7 +179,7 @@ if ($_REQUEST['cmd'] == 'move_down') {
 // a chosen person is sorted in after a second chosen person - allows to sort arbitrary over long distances
 if ($_REQUEST['cmd'] == 'sort_person') {
     if (!is_array($_REQUEST['sort_person'])) {
-        $msgs[] = 'error§'. _("Bitte wählen Sie die Person aus, die einsortiert werden soll!");
+        $msgs['error'][] = _("Bitte wählen Sie die Person aus, die einsortiert werden soll!");
     } else {
         if (is_array($_REQUEST['do_person_sort'])) {
             // do_person_sort is an array and we need the key of the first element
@@ -206,31 +206,31 @@ if ($_REQUEST['cmd'] == 'sortByName') {
 // add a person to a statusgroup
 // the person is participant (if we administrate a seminar), or the person is member (if we administrate an institute)
 if ($_REQUEST['cmd'] == 'addPersonsToRoleDirect' ) {
-    $msgs[] = 'msg§'. _("Die Personen wurden der Gruppe hinzugefügt.");
-    $msgs[] = 'info§'. _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
+    $msgs['msg'][]  = _("Die Personen wurden der Gruppe hinzugefügt.");
+    $msgs['info'][] = _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
     
     MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'direct', $_REQUEST['persons_to_add'], $workgroup_mode);
 }
 
 // only for seminars - the person is member of the institute the seminar is in
 if ($_REQUEST['cmd'] == 'addPersonsToRoleIndirect' ) {
-    $msgs[] = 'msg§'. _("Die Personen wurden der Gruppe hinzugefügt.");
-    $msgs[] = 'info§'. _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
+    $msgs['msg'][]  = _("Die Personen wurden der Gruppe hinzugefügt.");
+    $msgs['info'][] = _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
     
     MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'indirect', $_REQUEST['persons_to_add'], $workgroup_mode);
 }
 
 // the person shall be added via the free search
 if ($_REQUEST['cmd'] == 'addPersonsToRoleSearch' ) {
-    $msgs[] = 'msg§'. _("Die Personen wurden der Gruppe hinzugefügt.");
-    $msgs[] = 'info§'. _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
+    $msgs['msg'][]  = _("Die Personen wurden der Gruppe hinzugefügt.");
+    $msgs['info'][] = _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
     
     MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'search', $_REQUEST['persons_to_add'], $workgroup_mode);
 }
 
 // delete a person from a statusgroup
 if ($_REQUEST['cmd'] == 'removePerson') {
-    $msgs[] = 'msg§'. _("Die Person wurde aus der Gruppe entfernt!");
+    $msgs['msg'][] = _("Die Person wurde aus der Gruppe entfernt!");
     RemovePersonStatusgruppe ($_REQUEST['username'], $_REQUEST['role_id']); 
 }
 
@@ -239,17 +239,17 @@ if ($_REQUEST['cmd'] == 'editRole') {
     $statusgruppe = new Statusgruppe($_REQUEST['role_id']); 
     $name = htmlReady($statusgruppe->getName());
     if ($statusgruppe->checkData()) {
-        $msgs[] = 'info§' . sprintf(_("Die Daten der Gruppe %s wurden geändert!"), '<b>'. $name .'</b>');
+        $msgs['info'][] = sprintf(_("Die Daten der Gruppe %s wurden geändert!"), '<b>'. $name .'</b>');
     }
     $statusgruppe->store();
-    $msgs = array_merge($msgs, $statusgruppe->getMessages());
+    $msgs = $statusgruppe->getMessages($msgs);
 }
 
 // ask, if the user really intends to delete the role
 if ($_REQUEST['cmd'] == 'deleteRole') {
     $statusgruppe = new Statusgruppe($_REQUEST['role_id']); 
     if ($_REQUEST['really']) {
-        $msgs[] = 'msg§' . sprintf(_("Die Gruppe %s wurde gelöscht!"), htmlReady($statusgruppe->getName()));
+        $msgs['msg'][] = sprintf(_("Die Gruppe %s wurde gelöscht!"), htmlReady($statusgruppe->getName()));
         $statusgruppe->delete();
     } else {
         echo createQuestion(sprintf(_("Sind Sie sicher, dass Sie die Gruppe **%s** löschen möchten?"), $statusgruppe->getName() ),
@@ -280,12 +280,12 @@ if ($_REQUEST['cmd'] == 'addRole') {
         if ($new_role->checkData()) {                   
             $new_role->store();
             $open = $new_role->getId();
-            $msgs[] = 'msg§' . sprintf(_("Die Gruppe %s wurde hinzugefügt!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
+            $msgs['msg'][] = sprintf(_("Die Gruppe %s wurde hinzugefügt!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
         } else {
             $displayNewRole = true;
         }
         
-        $msgs = array_merge($msgs, $new_role->getMessages());
+        $msgs = $new_role->getMessages($msgs);
     }
 }
 

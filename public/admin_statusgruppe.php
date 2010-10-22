@@ -177,17 +177,17 @@ $msgs = array();
 // activation and deactvation of options for the statusgroups
 if ($_REQUEST['cmd'] == 'activateSelfAssignAll') {
     SetSelfAssignAll($range_id, true);
-    $msgs[] = 'msg§' . _("Selbsteintrag in allen Gruppen wurde eingeschaltet!");
+    $msgs['msg'][] = _("Selbsteintrag in allen Gruppen wurde eingeschaltet!");
 }
 
 if ($_REQUEST['cmd'] == 'deactivateSelfAssignAll') {
     SetSelfAssignAll($range_id, false);
-    $msgs[] = 'msg§' . _("Selbsteintrag in allen Gruppen wurde ausgeschaltet!");
+    $msgs['msg'][] = _("Selbsteintrag in allen Gruppen wurde ausgeschaltet!");
 }
 
 if ($_REQUEST['cmd'] == 'deactivateSelfAssignExclusive') {
     SetSelfAssignExclusive($range_id, false);
-    $msgs[] = 'msg§' . _("Selbsteintrag in nur einer Gruppe erlauben wurde ausgeschaltet!");
+    $msgs['msg'][] = _("Selbsteintrag in nur einer Gruppe erlauben wurde ausgeschaltet!");
 }
 
 if ($_REQUEST['cmd'] == 'activateSelfAssignExclusive') {
@@ -200,12 +200,11 @@ if ($_REQUEST['cmd'] == 'activateSelfAssignExclusive') {
             $multis .= '<li>' . htmlReady(get_fullname($one['user_id']) . ' ('. $one['gruppen'] . ')').'</li>';
         }
         $multis .= '</ul>';
-        $msgs[] = 'error§'.
-            _("Achtung, folgende Teilnehmer sind bereits in mehr als einer Gruppe eingetragen. Sie müssen die Eintragungen manuell korrigieren, um den exklusiven Selbsteintrag einzuschalten.")
+        $msgs['error'][] = _("Achtung, folgende Teilnehmer sind bereits in mehr als einer Gruppe eingetragen. Sie müssen die Eintragungen manuell korrigieren, um den exklusiven Selbsteintrag einzuschalten.")
             . '<br>'. $multis;
         SetSelfAssignExclusive($range_id, false);
     } else {
-        $msgs[] = 'msg§' . _("Selbsteintrag in nur einer Gruppe erlauben wurde eingeschaltet!");
+        $msgs['msg'][] = _("Selbsteintrag in nur einer Gruppe erlauben wurde eingeschaltet!");
     }
 }
 
@@ -251,12 +250,12 @@ if (isset($_REQUEST['searchPersons'])) {
 }
 
 if ($personsAdded) {
-    $msgs[] = 'msg§'. _("Die Personen wurden der Gruppe hinzugefügt.");
+    $msgs['msg'][] = _("Die Personen wurden der Gruppe hinzugefügt.");
 }
 
 // delete a person from a statusgroup
 if ($_REQUEST['cmd'] == 'removePerson') {
-    $msgs[] = 'msg§'. _("Die Person wurde aus der Gruppe entfernt!");
+    $msgs['msg'][] = _("Die Person wurde aus der Gruppe entfernt!");
     RemovePersonStatusgruppe ($_REQUEST['username'], $_REQUEST['role_id']);
 }
 
@@ -265,20 +264,20 @@ if ($_REQUEST['cmd'] == 'doEditRole') {
     $statusgruppe = new Statusgruppe($_REQUEST['role_id']);
     $name = htmlReady($statusgruppe->getName());
     if ($statusgruppe->checkData()) {
-        $msgs[] = 'info§' . sprintf(_("Die Daten der Gruppe %s wurden geändert!"), '<b>'. $name .'</b>');
+        $msgs['info'][] = sprintf(_("Die Daten der Gruppe %s wurden geändert!"), '<b>'. $name .'</b>');
     }
     $statusgruppe->store();
-    $msgs = array_merge($msgs, $statusgruppe->getMessages());
+    $msgs = $statusgruppe->getMessages($msgs);
 }
 
 // ask, if the user really intends to delete the role
 if ($_REQUEST['cmd'] == 'deleteRole') {
     $statusgruppe = new Statusgruppe($_REQUEST['role_id']);
     if ($_REQUEST['really']) {
-        $msgs[] = 'msg§' . sprintf(_("Die Gruppe %s wurde gelöscht!"), htmlReady($statusgruppe->getName()));
+        $msgs['msg'][] = sprintf(_("Die Gruppe %s wurde gelöscht!"), htmlReady($statusgruppe->getName()));
         $statusgruppe->delete();
     } else {
-        $msgs[] = 'info§' . sprintf(_("Sind Sie sicher, dass Sie die Gruppe %s löschen möchten?"), '<b>'. htmlReady($statusgruppe->getName()) .'</b>')
+        $msgs['info'][] = sprintf(_("Sind Sie sicher, dass Sie die Gruppe %s löschen möchten?"), '<b>'. htmlReady($statusgruppe->getName()) .'</b>')
             . '<br><a href="'. URLHelper::getLink('?cmd=deleteRole&really=true&role_id='. $_REQUEST['role_id']) .'">'. makebutton('ja') .'</a>'
             . '&nbsp;&nbsp;&nbsp;&nbsp;'
             . '<a href="'. URLHelper::getLink('') .'">'. makebutton('nein') .'</a>';
@@ -299,15 +298,15 @@ if ($_REQUEST['cmd'] == 'addRole' && !isset($_REQUEST['choosePreset'])) {
         if ($new_role->checkData()) {
             // show a hint if a role with the same name already exists
             if (Statusgruppe::countByName($new_role->getName(), $new_role->getRange_Id()) > 0) {
-                $msgs[] = 'info§' . sprintf(_("Die Gruppe %s wurde hinzugefügt, es gibt jedoch bereits ein Gruppe mit demselben Namen!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
+                $msgs['info'][] = sprintf(_("Die Gruppe %s wurde hinzugefügt, es gibt jedoch bereits ein Gruppe mit demselben Namen!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
             } else {
-                $msgs[] = 'msg§' . sprintf(_("Die Gruppe %s wurde hinzugefügt!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
+                $msgs['msg'][] = sprintf(_("Die Gruppe %s wurde hinzugefügt!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
             }
 
             $new_role->store();
         }
 
-        $msgs = array_merge($msgs, $new_role->getMessages());
+        $msgs = $new_role->getMessages($msgs);
     }
 }
 
@@ -325,8 +324,7 @@ if ($self_assign_exclusive) {
             $multis .= '<li>' . htmlReady(get_fullname($one['user_id']) . ' ('. $one['gruppen'] . ')').'</li>';
         }
         $multis .= '</ul>';
-        $msgs[] = 'error§'.
-            _("Achtung, der exklusive Selbsteintrag wurde ausgeschaltet, da folgende Teilnehmer in mehr als einer Gruppe eingetragen sind. Sie müssen die Eintragungen manuell korrigieren, um den exklusiven Selbsteintrag wieder einzuschalten.")
+        $msgs['error'][] = _("Achtung, der exklusive Selbsteintrag wurde ausgeschaltet, da folgende Teilnehmer in mehr als einer Gruppe eingetragen sind. Sie müssen die Eintragungen manuell korrigieren, um den exklusiven Selbsteintrag wieder einzuschalten.")
             . '<br>'. $multis;
         SetSelfAssignExclusive($range_id, false);
     }

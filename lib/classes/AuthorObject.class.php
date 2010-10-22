@@ -38,7 +38,7 @@
 define ("INSTANCEOF_AUTHOR_OBJECT", "AuthorObject");
 
 define ("ERROR_NORMAL", "1");
-define ("ERROR_CRITICAL", "2");
+define ("ERROR_CRITICAL", "8");
 # =========================================================================== #
 
 

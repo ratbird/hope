@@ -261,10 +261,13 @@ class CalendarScheduleModel
         // fetch seminar-entries 
         $stmt = DBManager::get()->prepare("SELECT * FROM seminar_user as su
             LEFT JOIN seminare as s USING (Seminar_id)
-            WHERE su.user_id = ?  AND (s.start_time = ?
-                OR (s.start_time < ? AND s.duration_time = -1)
-                OR (s.start_time + s.duration_time >= ?))");
-        $stmt->execute(array($user_id, $semester['beginn'], $semester['beginn'], $semester['beginn']));
+            WHERE su.user_id = :userid AND (s.start_time = :begin
+                OR (s.start_time < :begin AND s.duration_time = -1)
+                OR (s.start_time + s.duration_time >= :begin
+                    AND s.start_time <= :begin))");
+        $stmt->bindParam(':begin', $semester['beginn']);
+        $stmt->bindParam(':userid', $user_id);
+        $stmt->execute();
 
         while ($entry = $stmt->fetch()) {
             $seminars[$entry['Seminar_id']] = $entry;

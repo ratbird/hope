@@ -67,14 +67,16 @@ class EvalShow
 
       $td2->cont( $br );
       if( $votedNow ) {
-      $td2->cont(MessageBox::success(_("Vielen Dank für Ihre Teilnahme.")));
-      #$td2->cont( EvalCommon::createReportMessage( _("Vielen Dank für Ihre Teilnahme."), EVAL_PIC_SUCCESS, EVAL_CSS_SUCCESS ) );
+          $message = new HTML('div');
+          $message->_content = array(MessageBox::success(_("Vielen Dank für Ihre Teilnahme.")));
+          $td2->cont($message);
       } elseif( $votedEarlier ) {
-      $td2->cont(MessageBox::info(_("Sie haben an dieser Evaluation bereits teilgenommen.")));
-      #$td2->cont( EvalCommon::createReportMessage( _("Sie haben an dieser Evaluation bereits teilgenommen."), EVAL_PIC_INFO, EVAL_CSS_INFO ) );
+          $message = new HTML('div');
+          $message->_content = array(MessageBox::info(_("Sie haben an dieser Evaluation bereits teilgenommen.")));
+          $td2->cont($message);
       } else {
-      $td2->html( formatReady($eval->getText()) );
-      $td2->cont( $br );
+          $td2->html( formatReady($eval->getText()) );
+          $td2->cont( $br );
       }
       $tr2->cont( $td2 );
 

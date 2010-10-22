@@ -62,17 +62,22 @@ div.schedule_entry {
 div.schedule_entry dl {
     height: 100%; 
     margin: 0px;
-    background-image: none;
+    color: black ! important;
+    background-image: none ! important;
 }
 
 div.schedule_entry dl.hover:hover  {
-    opacity: 0.7;
+    opacity: 1;
 }
 
 div.schedule_entry dl dd {
     margin: 0px 0px 0px 0px;
     overflow: hidden;
     word-wrap: break-word;
+}
+
+div.schedule_entry dl dt {
+    background-color: transparent ! important;
 }
 
 div.schedule_entry dl a:hover {

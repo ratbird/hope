@@ -154,12 +154,19 @@ class CalendarScheduleModel
                 $entry['title']   = '';
                 // check, if the date is assigned to a room
                 if ($rooms = $cycle->getPredominantRoom()) {
-                    $entry['title'] .= implode('', getFormattedRooms(array_slice($rooms, 0, 1)));
+                    $entry['title'] .= implode('', getFormattedRooms(array_slice($rooms, 0, 1))) 
+                                    . (sizeof($rooms) > 1 ? ', u.a.' : '');
                 }
 
                 // add the lecturer
-                $main_lecturer = array_pop($sem->getMembers('dozent'));
-                $entry['content'] .= "\n". $main_lecturer['fullname'];
+                $members = $sem->getMembers('dozent');
+
+                foreach ($members as $member) {
+                    $lecturers[] = $member['Nachname'];
+                }
+                $entry['content'] .= " (". implode(', ', array_slice($lecturers, 0, 3)) 
+                                  . (sizeof($members) > 3 ? ' et al.' : '').')';
+
 
                 $entry['url']     = UrlHelper::getLink('dispatch.php/calendar/schedule/entry/' . $seminar_id
                                   . '/' . $cycle->getMetaDateId());

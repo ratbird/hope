@@ -220,7 +220,9 @@ if ($_catalog_id != "new_entry" && !$_the_clipboard->isInClipboard($_catalog_id)
         . makeButton('merkliste','src') . tooltip(_("Eintrag in Merkliste aufnehmen")) ."></a>";
 }
 echo "</td></tr>";
-echo '<p style="font-size:-1">' . _("Alle mit einem Sternchen ") . '<span style="font-size:1.5em;color:red;font-weigth:bold;">*</span>' . _(" markierten Felder müssen ausgefüllt werden.") .'</p>';
+echo '<p style="font-size:-1">';
+printf(_('Alle mit einem Sternchen %s markierten Felder müssen ausgefüllt werden.'),'<span style="font-size:1.5em;color:red;font-weigth:bold;">*</span>');
+echo '</p>';
 foreach ($_the_element->fields as $field_name => $field_detail){
     if ($field_detail['caption']){
         echo "<tr><td " . $class_changer->getFullClass() . ">";

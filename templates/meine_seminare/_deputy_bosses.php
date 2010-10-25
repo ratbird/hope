@@ -7,7 +7,7 @@
     foreach ($my_bosses as $boss) { ?>
     <tr class="<?php echo TextHelper::cycle('steel1', 'steelgraulight'); ?>">
         <td>
-            <?php echo Avatar::getAvatar($boss['user_id'])->getImageTag(Avatar::SMALL); ?>
+            <?= Avatar::getAvatar($boss['user_id'])->getImageTag(Avatar::SMALL, array('title' => htmlReady($boss['fullname']))) ?>
             <?php
             $name_text = '';
             if ($boss['edit_about'] && $deputies_edit_about_enabled) {

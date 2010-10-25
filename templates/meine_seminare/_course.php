@@ -23,9 +23,9 @@ foreach ($group_members as $member) {
 
             <td class="<?= $cssSw->getClass() ?>">
                 <? if ($studygroup_mode) { ?>
-                    <?= StudygroupAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL) ?>
+                    <?= StudygroupAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['semname']))) ?>
                 <? } else { ?>
-                    <?= CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL) ?>
+                    <?= CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['semname']))) ?>
                 <? } ?>
             </td>
 

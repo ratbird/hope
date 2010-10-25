@@ -151,7 +151,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                             ?>
                             <tr <?= $cssSw->getHover()?>>
                                 <td class="<?= $cssSw->getClass() ?>">
-                                    <?= InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL) ?>
+                                    <?= InstituteAvatar::getAvatar($instid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['name']))) ?>
                                 </td>
 
                                 <td align="left" class="<?= $cssSw->getClass() ?>">

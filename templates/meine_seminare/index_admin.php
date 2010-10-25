@@ -104,7 +104,7 @@ global $SEM_TYPE;
 
                             <tr <?= $cssSw->getHover()?>>
                                 <td class="<?= $class ?>">
-                                    <?= CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL) ?>
+                                    <?= CourseAvatar::getAvatar($semid)->getImageTag(Avatar::SMALL, array('title' => htmlReady($values['name']))) ?>
                                 </td>
 
                                 <td class="<?= $class ?>">

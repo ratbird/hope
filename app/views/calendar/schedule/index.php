@@ -4,11 +4,6 @@ $zoom = Request::get('zoom', 0);
 $text  = _("Der Stundenplan zeigt Ihre regelm‰ﬂigen Veranstaltungen dieses Semesters sowie von Ihnen selbst erstellte Belegungen.");
 $text2 = sprintf( _("Um neue Veranstaltungen hinzuzuf¸gen, verwenden Sie die %sVeranstaltungssuche%s."),
         '<a href="'. UrlHelper::getLink('sem_portal.php') .'">', '</a>');
-if ($zoom) {
-    $zoom_text = '<a href="'. UrlHelper::getLink('', array('zoom' => 0)) .'">'. _("Normalansicht") .'</a>';
-} else {
-    $zoom_text = '<a href="'. UrlHelper::getLink('', array('zoom' => 7)) .'">'. _("Groﬂansicht") .'</a>';
-}
 
 if (!$show_hidden) {
     $hidden_text = '<a href="'. $controller->url_for('calendar/schedule/?show_hidden=true') .'">'. _("Ausgeblendete Veranstaltungen anzeigen") .'</a>';
@@ -30,7 +25,12 @@ $infobox['content'] = array(
 
     array(
         'kategorie' => _("Aktionen:")
+    ),
+
+    array(
+        'kategorie' => _("Darstellungsgrˆﬂe:")
     )
+
 );
 
 if (!$inst_mode) {
@@ -57,6 +57,21 @@ $infobox['content'][1]['eintrag'][] = array (
     'icon' => 'icons/16/black/visibility-visible.png'
 );
 
+// Infobox-exntries for viewport size
+$infobox['content'][2]['eintrag'] = array (
+    array (
+        'icon' => 'icons/16/'. ($zoom == 0 ? 'red' : 'black') . '/schedule.png',
+        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 0)) .'">'. _("klein") .'</a>'
+    ),
+    array (
+        'icon' => 'icons/16/'. ($zoom == 2 ? 'red' : 'black') . '/schedule.png',
+        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 2)) .'">'. _("mittel") .'</a>'
+    ),
+    array (
+        'icon' => 'icons/16/'. ($zoom == 4 ? 'red' : 'black') . '/schedule.png',
+        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 4)) .'">'. _("groﬂ") .'</a>'
+    )
+);
 ?>
 <div style="text-align: center; font-weight: bold; font-size: 1.2em">
     <?= _("Mein Stundenplan im") ?>

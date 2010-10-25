@@ -260,15 +260,18 @@ class StudipLitListViewAdmin extends TreeView
     function execCommandAssertDeleteItem(){
         $item_id = $_REQUEST['item_id'];
         $this->mode = "AssertDeleteItem";
-        $this->msg[$item_id] = "info§" ._("Sie beabsichtigen diese Liste inklusive aller Eintr&auml;ge, zu l&ouml;schen. ")
-                        . sprintf(_("Es werden insgesamt %s Eintr&auml;ge gel&ouml;scht!"),count($this->tree->getKidsKids($item_id)))
-                        . "<br>" . _("Wollen Sie diese Liste wirklich l&ouml;schen?") . "<br>"
-                        . "<a href=\"" . $this->getSelf("cmd=DeleteItem&item_id=$item_id") . "\">"
-                        . "<img " .makeButton("ja2","src") . tooltip(_("löschen"))
-                        . " border=\"0\"></a>&nbsp;"
-                        . "<a href=\"" . $this->getSelf("cmd=Cancel&item_id=$item_id") . "\">"
-                        . "<img " .makeButton("nein","src") . tooltip(_("abbrechen"))
-                        . " border=\"0\"></a>";
+        
+        $template = $GLOBALS['template_factory']->open('shared/question');
+        $question = _("Sie beabsichtigen diese Liste inklusive aller Einträge, zu löschen. ")
+                    . sprintf(_("Es werden insgesamt %s Einträge gelöscht!"),count($this->tree->getKidsKids($item_id)))
+                    . "\n" . _("Wollen Sie diese Liste wirklich löschen?");
+        
+        $template->set_attribute('approvalLink', $this->getSelf("cmd=DeleteItem&item_id=$item_id"));
+        $template->set_attribute('disapprovalLink', $this->getSelf("cmd=Cancel&item_id=$item_id"));
+        $template->set_attribute('question', $question);
+
+        echo $template->render();
+
         return false;
     }
 

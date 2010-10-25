@@ -222,7 +222,7 @@ class CalendarScheduleModel
                         'url'     => $unbind_url,
                         'image'   => Assets::image_path('icons/16/white/visibility-visible.png'),
                         'onClick' => "STUDIP.Schedule.hideEntry(this, '$seminar_id', '". $cycle->getMetaDateId() ."'); return false;", 
-                        'title'   => _("Dieses Eintrag ausblenden")
+                        'title'   => _("Diesen Eintrag ausblenden")
                     );
 
                 }

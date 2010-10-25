@@ -37651,7 +37651,7 @@ msgstr "Show again this entry"
 
 #
 #: ../app/models/calendar/schedule.php:218
-msgid "Dieses Eintrag ausblenden"
+msgid "Diesen Eintrag ausblenden"
 msgstr "Hide this entry"
 
 #: ../app/models/siteinfo.php:34

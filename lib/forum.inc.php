@@ -1894,7 +1894,7 @@ function forum_move_navi ($topic_id) {
 
     // wohin darf ich schieben? Abfragen je nach Rechten
 
-    if ($perm->have_perm("tutor") OR $perm->have_perm("dozent"))
+    if ($perm->have_perm("autor"))
         $query = "SELECT DISTINCT seminare.Seminar_id, seminare.Name FROM seminar_user LEFT JOIN seminare USING(Seminar_id) WHERE user_id ='$user->id ' AND (seminar_user.status = 'tutor' OR seminar_user.status = 'dozent') ORDER BY Name";
     if ($perm->have_perm("admin"))
         $query = "SELECT seminare.* FROM user_inst LEFT JOIN Institute USING (Institut_id) LEFT JOIN seminare USING(Institut_id) LEFT OUTER JOIN seminar_user USING(Seminar_id) WHERE user_inst.inst_perms='admin' AND user_inst.user_id='$user->id' AND seminare.Institut_id is not NULL GROUP BY seminare.Seminar_id ORDER BY seminare.Name";
@@ -1949,7 +1949,8 @@ function forum_move_navi ($topic_id) {
                 </td>
             </tr>
             <?
-        if ($db2->num_rows()) {   // Es kann auch in Institute verschoben werden
+
+        if (is_object($db2) && $db2->num_rows()) {   // Es kann auch in Institute verschoben werden
         ?>
             <tr>
                 <td class="steel1" align="right" nowrap width="20%" valign="baseline">

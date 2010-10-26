@@ -1044,7 +1044,7 @@ while (list ($key, $val) = each ($gruppe)) {
     } else if ($key == "dozent" && $rechte) {
         printf("<td class=\"steel\" width=\"9%%\" align=\"center\" valign=\"bottom\">&nbsp;</td>");
     }
-    printf("<td class=\"steel\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Postings"));
+    printf("<td class=\"steel\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Forenbeiträge"));
     printf("<td class=\"steel\" width=\"10%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Dokumente"));
     printf("<td class=\"steel\" width=\"9%%\" align=\"center\" valign=\"bottom\"><font size=\"-1\"><b>%s</b></font></td>", _("Nachricht"));
 

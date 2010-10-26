@@ -522,7 +522,7 @@ function ForumIcon ($forumposting) {
     } else {
         if ($forumposting["shrink"] == TRUE && $forumposting["lonely"]==FALSE) {
             $bild = $GLOBALS['ASSETS_URL']."images/icons/16/blue/forum-shrink.png";
-            $addon = tooltip(sprintf(_("komprimierter Thread mit %s Postings"), $forumposting["shrinkcount"]));
+            $addon = tooltip(sprintf(_("komprimiertes Thema mit %s Forenbeiträgen"), $forumposting["shrinkcount"]));
         } else
             $bild = $GLOBALS['ASSETS_URL']."images/icons/16/blue/forum.png";
     }
@@ -535,13 +535,13 @@ function ForumIcon ($forumposting) {
         }
     } else {
         if ($forum["view"]=="tree" && $forumposting["type"]=="folder")
-            $forumposting["icon"] = "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]."&folderopen=".$forumposting["id"]."&openall=TRUE#anker")."\"><img src=\"".$bild."\" border=0 " . tooltip(_("Alle Postings im Thema öffnen")) . "></a>";
+            $forumposting["icon"] = "<a href=\"".URLHelper::getLink("?open=".$forumposting["id"]."&folderopen=".$forumposting["id"]."&openall=TRUE#anker")."\"><img src=\"".$bild."\" border=0 " . tooltip(_("Alle Forenbeiträge im Thema öffnen")) . "></a>";
         else
             $forumposting["icon"] = "<img src=\"".$bild."\" $addon>";
     }
     if ($cmd=="move" && $rechte && $topic_id != $forumposting["id"] )  // ein Beitrag wird verschoben, gelbe Pfeile davor
         $forumposting["icon"] =  "<a href=\"".URLHelper::getLink("?target=Thema&move_id=".$topic_id."&parent_id=".$forumposting["id"])."\">"
-                    ."<img src=\"" . Assets::image_path('icons/16/yellow/arr_2right.png') . "\" " . tooltip(_("Postings in dieses Thema verschieben")) . "></a>"
+                    ."<img src=\"" . Assets::image_path('icons/16/yellow/arr_2right.png') . "\" " . tooltip(_("Forenbeiträge in dieses Thema verschieben")) . "></a>"
                     .$forumposting["icon"];
     return $forumposting;
 }
@@ -676,7 +676,7 @@ function ForumEmpty () {
 function ForumNoPostings () {
     global $forum;
     if ($forum["view"] != "search")
-        $text = _("In dieser Ansicht gibt es derzeit keine Beiträge.");
+        $text = _("In dieser Ansicht gibt es derzeit keine Forenbeiträge.");
     else
         $text = sprintf(_("Zu Ihrem Suchbegriff '%s' gibt es keine Treffer."), htmlReady($forum['searchstring'])) .
             "<br><a href=\"".URLHelper::getLink("?view=search&reset=1")."\">" . _("Neue Suche") . "</a>";
@@ -795,7 +795,7 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
     if ($perm->have_perm("autor"))
         $db->query ($query);
     if  ($db->affected_rows() == 0) {
-        throw new Exception(_("Fehler beim Anlegen eines Postings."));
+        throw new Exception(_("Fehler beim Anlegen eines Forenbeitrags."));
     }
     return $topic_id;
 }
@@ -861,10 +861,10 @@ function UpdateTopic ($name="[no name]", $topic_id, $description, $anonymous)
         $query = "UPDATE px_topics SET name = '$name', description = '$description', chdate= '$chdate', anonymous=".($anonymous ? 1 : 0)." WHERE topic_id = '$topic_id'";
         $db->query ($query);
         if ($db->affected_rows() == 0) {
-            throw new Exception(_("Aktualisieren des Postings fehlgeschlagen."));
+            throw new Exception(_("Aktualisieren des Forenbeitrags fehlgeschlagen."));
         }
     } else {
-        throw new AccessDeniedException(_("Ihnen fehlen die Rechte, diesen Beitrag zu bearbeiten."));
+        throw new AccessDeniedException(_("Ihnen fehlen die Rechte, diesen Forenbeitrag zu bearbeiten."));
     }
 }
 
@@ -1485,7 +1485,7 @@ if ($forum["search"]!="" && $forum["view"]=="search") {
     }
     echo "/ ". _('Treffer: ').$forum["forumsum"]."</font>";
 } else {
-    echo "<font size=\"-1\">&nbsp;Postings: ".$forum["forumsum"]."</font>";
+    echo "<font size=\"-1\">: ". _('Forenbeiträge: ').$forum["forumsum"]."</font>";
 }
 echo "</td>";
 
@@ -1659,7 +1659,7 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
                 echo "<a href=\"".URLHelper::getLink("?view=tree&themeview=tree")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumflat.gif\" border=\"0\" align=\"top\"></a>";
         }
         echo "</font><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\" border=0 height=\"20\" align=\"middle\"></td>";
-        echo "<td class=\"steelgraudunkel\" width=\"33%\"align=\"right\"><font size=\"-1\">" . _("<b>Postings</b> / letzter Eintrag") . "&nbsp;&nbsp;".forum_get_index($forumposting)."&nbsp;&nbsp;</font></td></tr></table>\n";
+        echo "<td class=\"steelgraudunkel\" width=\"33%\"align=\"right\"><font size=\"-1\">" . _("<b>Forenbeiträge</b> / letzter Eintrag") . "&nbsp;&nbsp;".forum_get_index($forumposting)."&nbsp;&nbsp;</font></td></tr></table>\n";
         while ($db->next_record()) {
             $forumposting["id"] = $db->f("topic_id");
             $forumposting["name"] = $db->f("name");

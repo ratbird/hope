@@ -95,7 +95,7 @@ class ExternElementStudipInfo extends ExternElement {
         $attributes = array("headline", "homeinst", "involvedinst", "countuser",
                 "countpostings", "countdocuments");
         $titles = array(_("&Uuml;berschrift:"), _("Heimatinstitut:"), _("beteiligte Institute:"),
-                _("Teilnehmer:"), _("Postings:"), _("Dokumente:"));
+                _("Teilnehmer:"), _("Forenbeiträge:"), _("Dokumente:"));
         for ($i = 0; $i < sizeof($attributes); $i++)
             $table .= $edit_form->editTextfieldGeneric($attributes[$i], $titles[$i], $info, 40, 150);
         

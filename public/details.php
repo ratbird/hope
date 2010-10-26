@@ -847,7 +847,7 @@ echo $template_factory->render(
             <?
                 $db3->query("SELECT count(*) as anzahl FROM px_topics WHERE Seminar_id = '$sem_id'");
                 $db3->next_record();
-                printf ("<font size=-1><b>" . _("Postings:") . "&nbsp;</b></font><font size=-1>%s </font>", ($db3->f("anzahl")) ? $db3->f("anzahl") : _("keine"));
+                printf ("<font size=-1><b>" . _("Forenbeiträge:") . "&nbsp;</b></font><font size=-1>%s </font>", ($db3->f("anzahl")) ? $db3->f("anzahl") : _("keine"));
             ?>
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="25%" valign="top">

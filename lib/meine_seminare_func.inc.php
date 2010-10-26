@@ -283,10 +283,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             if ($db2->f('neue')) {
                 $nav->setURL('forum.php?view=neue&sort=age');
                 $nav->setImage('icons/16/red/new/forum.png', array('title' =>
-                    sprintf(_('%s Postings, %s neue'), $db2->f('count'), $db2->f('neue'))));
+                    sprintf(_('%s Forenbeiträge, %s neue'), $db2->f('count'), $db2->f('neue'))));
             } else if ($db2->f('count')) {
                 $nav->setURL('forum.php?view=reset&sort=age');
-                $nav->setImage('icons/16/grey/forum.png', array('title' => sprintf(_('%s Postings'), $db2->f('count'))));
+                $nav->setImage('icons/16/grey/forum.png', array('title' => sprintf(_('%s Forenbeiträge'), $db2->f('count'))));
             }
 
             $my_obj[$object_id]['forum'] = $nav;
@@ -349,7 +349,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             $nav->setImage('icons/16/red/new/breaking-news.png', array('title' =>
                 sprintf(_('%s Ankündigungen, %s neue'), $db2->f('count'), $db2->f('neue'))));
         } else if ($db2->f('count')) {
-            $nav->setImage('icons/16/grey/breaking-news.png', array('title' => sprintf(_('%s News'), $db2->f('count'))));
+            $nav->setImage('icons/16/grey/breaking-news.png', array('title' => sprintf(_('%s Ankündigungen'), $db2->f('count'))));
         }
 
         $my_obj[$object_id]['news'] = $nav;
@@ -465,9 +465,9 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
                 if ($db2->f('neue')) {
                     $nav->setImage('icons/16/red/new/learnmodule.png', array('title' =>
-                        sprintf(_('%s Content-Modul(e), %s neue'), $db2->f('count'), $db2->f('neue'))));
+                        sprintf(_('%s Lernmodule, %s neue'), $db2->f('count'), $db2->f('neue'))));
                 } else if ($db2->f('count')) {
-                    $nav->setImage('icons/16/grey/learnmodule.png', array('title' => sprintf(_('%s Content-Modul(e)'), $db2->f('count'))));
+                    $nav->setImage('icons/16/grey/learnmodule.png', array('title' => sprintf(_('%s Lernmodule'), $db2->f('count'))));
                 }
 
                 $my_obj[$object_id]['elearning'] = $nav;

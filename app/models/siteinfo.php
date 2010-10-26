@@ -439,7 +439,7 @@ class SiteinfoMarkupEngine {
                                          "title" => _("registrierte Autoren"),
                                          "detail" => "");
         $indicator['posting'] = array("query" => "SELECT count(*) FROM px_topics",
-                                      "title" => _("Postings"),
+                                      "title" => _("Forenbeiträge"),
                                       "detail" => "");
         $indicator['document'] = array("query" => "SELECT count(*) FROM dokumente WHERE url = ''",
                                        "title" => _("Dokumente"),

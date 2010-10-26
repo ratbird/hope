@@ -214,7 +214,7 @@ function dump_sem($sem_id, $print_view = false) {
 
     $db3->query("SELECT count(*) as anzahl FROM px_topics WHERE Seminar_id = '$sem_id'");
     $db3->next_record();
-    $dump.= "<tr><td width=\"15%\"><b>" . _("Postings:") . "&nbsp;</b></td><td>".$db3->f("anzahl")."</td></tr>\n";
+    $dump.= "<tr><td width=\"15%\"><b>" . _("Forenbeiträge:") . "&nbsp;</b></td><td>".$db3->f("anzahl")."</td></tr>\n";
 
     if ($Modules["documents"]) {
         //do not show hidden documents
@@ -386,7 +386,7 @@ function dump_sem($sem_id, $print_view = false) {
                     $dump .= "<H2 class=\"topic\">&nbsp;".get_title_for_status($key, $db->affected_rows(), $sem_type)."</H2>";
                     $dump.= "</td></tr>\n";
                     $dump.="<th width=\"30%%\">" . _("Name") . "</th>";
-                    $dump.="<th width=\"10%%\">" . _("Postings") . "</th>";
+                    $dump.="<th width=\"10%%\">" . _("Forenbeiträge") . "</th>";
                     $dump.="<th width=10%><b>" . _("Dokumente") . "</b></th></tr>\n";
 
                     while ($db->next_record()) {

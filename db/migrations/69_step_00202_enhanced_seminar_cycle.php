@@ -73,6 +73,8 @@ class Step00202EnhancedSeminarCycle extends Migration
                 }
             }
         }
+        //So Long, and Thanks for All the Fish
+        $db->exec("ALTER TABLE `seminare` DROP `metadata_dates`");
     }
 
     function down()

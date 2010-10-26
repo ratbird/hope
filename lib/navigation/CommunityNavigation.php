@@ -29,7 +29,6 @@ class CommunityNavigation extends Navigation
         $user_count = get_users_online_count($active_time ? $active_time : 5);
 
         if ($user_count) {
-            $onlineclass = 'new';
 
             if ($user_count == 1) {
                 $onlinetip = _('Außer Ihnen ist eine Person online');
@@ -38,7 +37,7 @@ class CommunityNavigation extends Navigation
             }
         }
 
-        $this->setImage('header/community.png', array('title' => $onlinetip, 'class' => $onlineclass));
+        $this->setImage('header/community.png', array('title' => $onlinetip));
     }
 
     /**

@@ -264,6 +264,9 @@ if (!isset($_GET["create_pdf"])){
     require_once('lib/include/header.php');
 }
 echo $out;
+if (!isset($_GET["create_pdf"])) {
+    require_once 'lib/include/html_end.inc.php';
+}
 page_close ();
 /* **END*of*displays*the*site*********************************************** */
 

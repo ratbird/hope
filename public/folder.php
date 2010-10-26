@@ -1143,11 +1143,7 @@ div.droppable.hover {
         } else {
             //Infomeldung, wenn keine Dateien existieren:
             $msg = _("Es existieren noch keine Dateien in dieser Veranstaltung.");
-            if($rechte) {
-                echo MessageBox::info($msg, array(sprintf(_("Klicken Sie auf %sOrdneransicht%s, um welche hochzuladen oder zu verlinken."), "<a href=\"".URLHelper::getLink(Navigation::getItem("/course/files/tree")->getUrl())."\">", "</a>")));
-            } else {
-                echo MessageBox::info($msg);
-            }
+            echo MessageBox::info($msg, ($rechte) ? array(sprintf(_("Klicken Sie auf %sOrdneransicht%s, um welche hochzuladen oder zu verlinken."), "<a href=\"".URLHelper::getLink(Navigation::getItem("/course/files/tree")->getUrl())."\">", "</a>")) : array());
         }
         //display_folder_system($range_id, 0,$folder_system_data["open"], '', $change, $folder_system_data["move"], $folder_system_data["upload"], TRUE, $folder_system_data["refresh"], $folder_system_data["link"]);
     }

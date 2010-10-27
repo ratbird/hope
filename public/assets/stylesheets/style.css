@@ -1341,6 +1341,12 @@ img.plugin_preview {
     background: transparent url('../images/icons/16/blue/arr_1down.png') top left no-repeat !important;
     background-position: 0px 0px !important;
 }
+h1:hover .arrow_right, h2:hover .arrow_right, h3:hover .arrow_right, h4:hover .arrow_right {
+    background: transparent url('../images/icons/16/red/arr_1right.png') top left no-repeat !important;
+}
+h1:hover .arrow_down, h2:hover .arrow_down, h3:hover .arrow_down, h4:hover .arrow_down {
+    background: transparent url('../images/icons/16/red/arr_1down.png') top left no-repeat !important;
+}
 
 /* --- calendar api --------------------------------------------------------- */
 .invalid { /* an invalid form entry */

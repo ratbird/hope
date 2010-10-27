@@ -4,9 +4,9 @@
 # Lifter003: TODO
 /**
 * AssignObject.class.php
-* 
+*
 * class for an assign-object
-* 
+*
 *
 * @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -61,12 +61,12 @@ class AssignObject {
     var $isNewObject;
     var $chng_flag;
     var $events;
-    
+
     function Factory(){
         static $assign_object_pool;
-        
+
         $argn = func_num_args();
-        
+
         if ($argn == 1){
             if ( ($id = func_get_arg(0)) ){
                 if (is_object($assign_object_pool[$id]) && $assign_object_pool[$id]->getId() == $id){
@@ -79,12 +79,12 @@ class AssignObject {
         }
         return new AssignObject(func_get_args());
     }
-    
+
     function AssignObject($argv) {
         global $user;
-        
+
         $this->user_id = $user->id;
-        
+
         if($argv && !is_array($argv)) {
             $id = $argv;
             if (!$this->restore($id)){
@@ -110,11 +110,11 @@ class AssignObject {
             $this->isNewObject =TRUE;
         }
     }
-    
+
     function createId() {
         $this->id = md5(uniqid("BartSimpson",1));
     }
-    
+
     function create() {
         $db = DBManager::get();
         $query = sprintf("SELECT assign_id FROM resources_assign WHERE assign_id ='%s' ", $this->id);
@@ -129,7 +129,7 @@ class AssignObject {
     function getId() {
         return $this->id;
     }
-    
+
     function getAssignUserId() {
         return $this->assign_user_id;
     }
@@ -143,7 +143,7 @@ class AssignObject {
         } else {
             $id = $event_obj->assign_user_id;
         }
-            
+
         switch (get_object_type($id)) {
             case "user":
                 if (!$explain)
@@ -187,7 +187,7 @@ class AssignObject {
                     if (!$explain)
                         return $res["Name"];
                     else
-                        return $res["Name"]." (".$TERMIN_TYP[$res["date_typ"]]["name"].")"; 
+                        return $res["Name"]." (".$TERMIN_TYP[$res["date_typ"]]["name"].")";
             break;
             case "global":
             default:
@@ -197,14 +197,14 @@ class AssignObject {
     }
 
     function getUsername($use_free_name=TRUE, $explain=true) {
-        if ($this->assign_user_id) 
+        if ($this->assign_user_id)
             return $this->getOwnerName($explain)."\n".$this->getUserFreeName();
         elseif ($use_free_name)
             return $this->getUserFreeName(). ($explain ? " (" . _("direkter Eintrag") . ")" : "");
-        else 
+        else
             return FALSE;
     }
-    
+
     function getOwnerType() {
         $type = get_object_type($this->getAssignUserId());
         return $type == "fak" ? "inst" : $type;
@@ -262,7 +262,7 @@ class AssignObject {
     function getRepeatDayOfWeek() {
         return $this->repeat_day_of_week;
     }
-    
+
     function getRepeatMode() {
         if ((!$this->repeat_month_of_year) && (!$this->repeat_week_of_month) && (!$this->repeat_day_of_month) && (!$this->repeat_day_of_week) && (!$this->repeat_quantity)) {
             if ( $this->repeat_end && date("z", $this->repeat_end) != date("z", $this->begin) )
@@ -278,10 +278,10 @@ class AssignObject {
         else
             return "d";
     }
-    
+
     function getRepeatEndByQuantity() {
         create_assigns($this, $this, -1, -1);
-        
+
         $max_date = 0;
         if(is_array($this->events)){
             foreach ($this->events as $val) {
@@ -291,31 +291,31 @@ class AssignObject {
         }
         return $max_date;
     }
-    
+
     function getEvents() {
         $this->events = array();
         create_assigns($this, $this);
         return $this->events;
     }
-    
+
     function isNew() {
         return $this->isNewObject;
     }
-    
-    function isRepeatEndSemEnd() {
-        $semester = new SemesterData; 
-        $all_semester = $semester->getAllSemesterData(); 
 
-        foreach ($all_semester as $a)   
+    function isRepeatEndSemEnd() {
+        $semester = new SemesterData;
+        $all_semester = $semester->getAllSemesterData();
+
+        foreach ($all_semester as $a)
             if (($this->begin >= $a["beginn"]) &&($this->begin <= $a["ende"]))
                 if ($this->repeat_end==$a["vorles_ende"])
                     return true;
         return false;
     }
-    
+
     function checkLock() {
         global $user;
-        
+
         $resObject = ResourceObject::Factory($this->resource_id);
         //load the events of the actual assign...
         create_assigns($this, $this);
@@ -326,14 +326,14 @@ class AssignObject {
                 $lock = getLockPeriod("assign", $obj->getBegin(), $obj->getEnd());
                 if ($lock) {
                     $locks[$lock[2]] = array("lock_begin"=>$lock[0], "lock_end"=>$lock[1]);
-                }   
+                }
             }
             if ($locks) {
                 return $locks;
             }
-        }   
+        }
     }
-    
+
     function checkOverlap($check_locks = TRUE) {
         global $user;
         $resObject = ResourceObject::Factory($this->resource_id);
@@ -342,8 +342,8 @@ class AssignObject {
         if ($this->repeat_end)
             $end = mktime (23,59,59, date("n", $this->repeat_end), date("j", $this->repeat_end), date("Y", $this->repeat_end));
         else
-            $end = mktime (23,59,59, date("n", $this->end), date("j", $this->end), date("Y", $this->end));  
-        
+            $end = mktime (23,59,59, date("n", $this->end), date("j", $this->end), date("Y", $this->end));
+
         //load the events of the actual assign...
         create_assigns($this, $this);
 
@@ -353,17 +353,17 @@ class AssignObject {
                 $lock = getLockPeriod("assign", $obj->getBegin(), $obj->getEnd());
                 if ($lock) {
                     $overlaps[] = array("begin" =>$obj->getBegin(), "end"=>$obj->getEnd(), "lock"=> TRUE, "lock_begin"=>$lock[0], "lock_end"=>$lock[1], "lock_id"=>$lock[2],);
-                }   
+                }
             }
             if ($overlaps) {
                 return $overlaps;
             }
         }
-        
+
         //...and add the events of existing assigns in the given resource...
         list_restore_assign($this, $this->resource_id, $start, $end);
         //..so we have a "virtual" set of assign-events in the given resource. Now we can check overlaps...
-        
+
         //check for regular overlaps
         if (!$resObject->getMultipleAssign()) { //when multiple assigns are allowed, we need no check...
             if (is_array($this->events))
@@ -398,7 +398,7 @@ class AssignObject {
         } else
             return FALSE;
     }
-    
+
     function getFormattedShortInfo() {
         $info = strftime("%A", $this->begin);
         $info.= ", ".date("d.m.Y", $this->begin);
@@ -411,10 +411,10 @@ class AssignObject {
             $info.=", ".$this->getFormattedRepeatMode();
         return $info;
     }
-    
+
     function getFormattedRepeatMode() {
         switch ($this->getRepeatMode()) {
-            case "d": 
+            case "d":
                 $str[1]= _("jeden Tag");
                 $str[2]= _("jeden zweiten Tag");
                 $str[3]= _("jeden dritten Tag");
@@ -423,13 +423,13 @@ class AssignObject {
                 $str[6]= _("jeden sechsten Tag");
                 $max=6;
             break;
-            case "w": 
+            case "w":
                 $str[1]= _("jede Woche");
                 $str[2]= _("jede zweite Woche");
                 $str[3]= _("jede dritte Woche");
                 $max=3;
             break;
-            case "m": 
+            case "m":
                 $str[1]= _("jeden Monat");
                 $str[2]= _("jeden zweiten Monat");
                 $str[3]= _("jeden dritten Monat");
@@ -443,7 +443,7 @@ class AssignObject {
                 $str[11]= _("jeden elften Monat");
                 $max=11;
             break;
-            case "y": 
+            case "y":
                 $str[1]= _("jedes Jahr");
                 $str[2]= _("jedes zweite Jahr");
                 $str[3]= _("jedes dritte Jahr");
@@ -452,7 +452,7 @@ class AssignObject {
                 $max=5;
             break;
         }
-        return $str[$this->getRepeatInterval()];    
+        return $str[$this->getRepeatInterval()];
     }
 
     function setResourceId($value) {
@@ -464,7 +464,7 @@ class AssignObject {
         $this->user_free_name=$value;
         $this->chng_flag=TRUE;
     }
-    
+
     function setAssignUserId($value) {
         $this->assign_user_id=$value;
         $this->chng_flag=TRUE;
@@ -509,7 +509,7 @@ class AssignObject {
         $this->repeat_week_of_month=$value;
         $this->chng_flag=TRUE;
     }
-    
+
     function setRepeatDayOfWeek($value) {
         $this->repeat_day_of_week=$value;
         $this->chng_flag=TRUE;
@@ -529,7 +529,7 @@ class AssignObject {
         }
         $query = sprintf("SELECT * FROM resources_assign WHERE assign_id='%s' ",$id);
         $result = $db->query($query);
-        
+
         if($res = $result->fetch()) {
             $this->id = $id;
             $this->resource_id = $res["resource_id"];
@@ -557,15 +557,15 @@ class AssignObject {
         if ((($this->chng_flag) || ($create)) && (($this->assign_user_id) || ($this->user_free_name))) {
             $chdate = time();
             $mkdate = time();
-            
+
             //insert NULL instead of nothing
             if (!$this->assign_user_id)
                 $tmp_assign_user_id = "NULL";
             else
                 $tmp_assign_user_id = "'$this->assign_user_id'";
-                
+
             if($create) {
-                $query = sprintf("INSERT INTO resources_assign SET assign_id='%s', resource_id='%s', " 
+                $query = sprintf("INSERT INTO resources_assign SET assign_id='%s', resource_id='%s', "
                     ."assign_user_id=%s, user_free_name='%s', begin='%s', end='%s', repeat_end='%s', "
                     ."repeat_quantity='%s', repeat_interval='%s', repeat_month_of_year='%s', repeat_day_of_month='%s',  "
                     ."repeat_week_of_month='%s', repeat_day_of_week='%s', mkdate='%s' "
@@ -574,11 +574,11 @@ class AssignObject {
                              , $this->repeat_month_of_year, $this->repeat_day_of_month, $this->repeat_week_of_month
                              , $this->repeat_day_of_week, $mkdate);
             } else {
-                $query = sprintf("UPDATE resources_assign SET resource_id='%s', " 
+                $query = sprintf("UPDATE resources_assign SET resource_id='%s', "
                     ."assign_user_id=%s, user_free_name='%s', begin='%s', end='%s', repeat_end='%s', "
                     ."repeat_quantity='%s', repeat_interval='%s', repeat_month_of_year='%s', repeat_day_of_month='%s',  "
                     ."repeat_week_of_month='%s', repeat_day_of_week='%s' WHERE assign_id='%s' "
-                             , $this->resource_id, $tmp_assign_user_id, $this->user_free_name, $this->begin 
+                             , $this->resource_id, $tmp_assign_user_id, $this->user_free_name, $this->begin
                              , $this->end, $this->repeat_end, $this->repeat_quantity, $this->repeat_interval
                              , $this->repeat_month_of_year, $this->repeat_day_of_month, $this->repeat_week_of_month
                              , $this->repeat_day_of_week, $this->id);
@@ -620,37 +620,16 @@ class AssignObject {
                 if (!is_null($key)){
                     $sem->setMetaDateValue($key, 'resource_id', $this->resource_id);
                     $sem->setMetaDateValue($key, 'room_description', '');
-                    $changed = $sem->store();   
+                    $changed = $sem->store();
                 }
             }
         }
         return $changed;
     }
-    
+
     function delete() {
         $db = DBManager::get();
-        /*
-        NOTE: this feature isn't used at the moment. I could be useful, if a functionality to delete assings from
-        Veranstaltungen by an resources admin will be implemented. So - we keep it for the future...
-    
-        //update the owner in the case it is a Veranstaltung (delete resource_id from the metadata array)
-        if ($this->getOwnerType() == "sem") {
-            $query = sprintf ("SELECT metadata_dates FROM seminare WHERE Seminar_id = '%s' ", $this->assign_user_id);
-            $this->db->query($query);
-            $this->db->next_record();
-            
-            $metadata_termin = unserialize ($this->db->f("metadata_dates"));
-            
-            foreach ($metadata_termin["turnus_data"] as $key =>$val)
-                if ($val["resource_id"] == $this->resource_id) {
-                    $metadata_termin["turnus_data"][$key]["resource_id"]=FALSE;
-                }
-            
-            $serialized_metadata = serialize($metadata_termin);
-            $query = sprintf ("UPDATE seminare SET metadata_dates ='%s' WHERE Seminar_id = '%s' ", $serialized_metadata, $this->assign_user_id);
-            $this->db->query($query);
-        }
-        */
+
         // LOGGING
         if ($this->assign_user_id) {
             $type = $this->getOwnerType();
@@ -666,13 +645,13 @@ class AssignObject {
         } else {
             log_event("RES_ASSIGN_DEL_SINGLE",$this->resource_id,NULL,$this->getFormattedShortInfo(),NULL,$GLOBALS['user']->id);
         }
-        
+
         $query = sprintf("DELETE FROM resources_assign WHERE assign_id='%s'", $this->id);
         if($db->exec($query))
             return TRUE;
         return FALSE;
     }
-    
+
     function getCopyForResource($resource_id){
         $new_assign = new AssignObject(array(null, $resource_id));
         foreach(array(  'assign_user_id',

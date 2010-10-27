@@ -72,31 +72,6 @@ class VeranstaltungResourcesAssign {
         //kill all assigned rooms (only roomes and only resources assigned directly to the Veranstaltung, not to a termin!) to create new ones
         $this->deleteAssignedRooms();
 
-        //if no schedule-date exits, we take the metadates (only in this case! else we take only the concrete dates from the termin table!)
-        /*if (!isSchedule($this->seminar_id,true,true)){
-            $seminar = Seminar::GetInstance($this->seminar_id);
-            $result2 = array_merge((array)$result, (array)$this->changeMetaAssigns('', '', '', FALSE, FALSE, $check_locks));
-            if (is_array($result2)){
-                $clear_turnus = false;
-                foreach($result2 as $key => $value){
-                    if (is_array($value['overlap_assigns'])){
-                        foreach($value['overlap_assigns'] as $overlap){
-                            $meta_key = $seminar->getMetaDatesKey($overlap["begin"],$overlap["end"]);
-                            if (!is_null($meta_key)){
-                                $keys_to_clear[] = $meta_key;
-                                $clear_turnus = true;
-                            }
-                        }
-                    }
-                }
-                if ($clear_turnus){
-                    $this->clearTurnusData(array_unique($keys_to_clear)); //die, dreaded resource_id, die!!!
-                }
-            }
-            
-            $result = array_merge((array)$result, (array)$result2);
-        }
-        */
         //Raumanfrage als bearbeitet markieren, wenn vorhanden
         if(get_config('RESOURCES_ALLOW_ROOM_REQUESTS')){
             $request = new RoomRequest(getSeminarRoomRequest($this->seminar_id));
@@ -107,111 +82,14 @@ class VeranstaltungResourcesAssign {
         return $result;
     }
 
-    //kills resource_id in metadata_dates
-   /* function clearTurnusData($keys_to_clear = null){
-        $seminar = Seminar::GetInstance($this->seminar_id);
-        foreach ($seminar->getMetaDates() as $key => $val){
-            if (is_null($keys_to_clear) || in_array($key, $keys_to_clear)){
-                $seminar->setMetaDateValue($key,'resource_id','');
-                $seminar->setMetaDateValue($key,'room_description','');
-            }
-        }
-        $seminar->store();
-        $seminar->restore();
-        $this->turnus_cleared = true;
-    }
-*/
-    //this method creates all assign-objects based on the seminar-metadata
-    function &getMetaAssignObjects ($term_data='', $veranstaltung_start_time='', $veranstaltung_duration_time='') {
-        $semester = new SemesterData;
-        $all_semester = $semester->getAllSemesterData();
 
-        //load data of the Veranstaltung
-        if (!$term_data) {
-            $query = sprintf("SELECT start_time, duration_time, metadata_dates FROM seminare WHERE Seminar_id = '%s' ", $this->seminar_id);
-            $this->db->query($query);
-            $this->db->next_record();
-
-            $term_data = unserialize ($this->db->f("metadata_dates"));
-            $veranstaltung_start_time = $this->db->f("start_time");
-            $veranstaltung_duration_time = $this->db->f("duration_time");
-        }
-
-        //determine first day of the start-week as sem_begin
-        if ($term_data["start_woche"] >= 0) {
-            foreach ($all_semester as $val)
-                if (($veranstaltung_start_time >= $val["beginn"]) AND ($veranstaltung_start_time <= $val["ende"])) {
-                    $sem_begin = mktime(0, 0, 0, date("n",$val["vorles_beginn"]), date("j",$val["vorles_beginn"])+($term_data["start_woche"] * 7),  date("Y",$val["vorles_beginn"]));
-                }
-        } else
-            $sem_begin = $term_data["start_termin"];
-
-        //if there happens a mistake with the $sem_beginn, cancel.
-        if ($sem_begin <= 0) {
-            return FALSE;
-        }
-
-        $dow = date("w", $sem_begin);
-
-        if ($dow <= 5)
-            $corr = ($dow -1) * -1;
-        elseif ($dow == 6)
-            $corr = 2;
-        elseif ($dow == 0)
-            $corr = 1;
-        else
-            $corr = 0;
-
-        if ($corr)
-            $sem_begin_uncorrected = $sem_begin;
-
-        $sem_begin = mktime(0, 0, 0, date("n",$sem_begin), date("j",$sem_begin)+$corr,  date("Y",$sem_begin));
-
-
-        //determine the last day as sem_end
-        foreach ($all_semester as $val)
-            if  ((($veranstaltung_start_time + $veranstaltung_duration_time + 1) >= $val["beginn"]) AND (($veranstaltung_start_time + $veranstaltung_duration_time +1) <= $val["ende"])) {
-                $sem_end=$val["vorles_ende"];
-            }
-
-        $interval = $term_data["turnus"] + 1;
-
-        //create the assigns
-        $i=0;
-        if (is_array($term_data["turnus_data"])) {
-            foreach ($term_data["turnus_data"] as $val) {
-                $start_time = mktime ((int)$val["start_stunde"], (int)$val["start_minute"], 0, date("n", $sem_begin), date("j", $sem_begin) + ($val["day"] -1), date("Y", $sem_begin));
-                $end_time = mktime ((int)$val["end_stunde"], (int)$val["end_minute"], 0, date("n", $sem_begin), date("j", $sem_begin) + ($val["day"] -1), date("Y", $sem_begin));
-
-                //check if we have to correct the timestamps for a whole week (in special cases, sem_beginn is not a Monday but the assign is)
-                if (($sem_begin_uncorrected) && ($start_time < $sem_begin_uncorrected) && ($term_data["turnus"]))  {
-                    $start_time = mktime (date("G", $start_time), date("i", $start_time), 0, date("n", $start_time), date("j", $start_time) +  7, date("Y", $start_time));
-                    $end_time = mktime (date("G", $end_time), date("i", $end_time), 0, date("n", $end_time), date("j", $end_time) +  7, date("Y", $end_time));
-                }
-
-                $day_of_week = date("w", $start_time);
-                if ($day_of_week == 0)
-                    $day_of_week = 7;
-
-                $AssignObjects[] = AssignObject::Factory(FALSE, $val["resource_id"], $this->seminar_id, $user_free_name,
-                                            $start_time, $end_time, $sem_end,
-                                            -1, $interval, 0, 0,
-                                            0, $day_of_week);
-            }
-        }
-
-        if (is_array($AssignObjects))
-            return $AssignObjects;
-        else
-            return FALSE;
-    }
 
     function &getDateAssignObjects($presence_dates_only = FALSE) {
         $sem = Seminar::getInstance($this->seminar_id);
 
         // get regular metadates
         foreach ($sem->getCycles() as $cycle_id => $cycle) {
-            // get the assigned singledates 
+            // get the assigned singledates
             $dates = $sem->getSingleDatesForCycle($cycle_id);
             foreach ($dates as $date) {
                 if ($date->isPresence() || !$presence_dates_only) {

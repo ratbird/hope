@@ -1,5 +1,5 @@
 <?
-class LockRules extends DBMigration {
+class LockRulez extends DBMigration {
 
     function description () {
         return 'creates table for lock rules';

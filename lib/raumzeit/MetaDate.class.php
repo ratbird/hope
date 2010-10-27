@@ -382,16 +382,7 @@ class MetaDate
 
         return $this->hasDatesTmp[$metadate_id];
     }
-    /*function isLectureFreeTime($time, $all_semester) {
-        foreach ($all_semester as $val) {
-            if (($val['beginn'] <= $time) && ($val['ende'] >= $time)) {
-                if (($val['vorles_beginn'] <= $time) && ($val['vorles_ende'] >= $time)) {
-                    return TRUE;
-                }
-            }
-        }
-        return FALSE;
-    }*/
+
 
     function createSingleDates($data, $irregularSingleDates = NULL)
     {
@@ -452,7 +443,6 @@ class MetaDate
 
     function createSingleDatesForSemester($metadate_id, $sem_begin, $sem_end, $startAfterTimeStamp, $corr, &$irregularSingleDates)
     {
-        //global $CONVERT_SINGLE_DATES;
 
         // loads the singledates of the by metadate_id denoted regular time-entry into the object
         $this->readSingleDates($metadate_id);
@@ -470,48 +460,6 @@ class MetaDate
         // This variable is used to check if a given singledate shall be created in a bi-weekly seminar.
         if ($start_woche == -1) $start_woche = 0;
         $odd_or_even = 1 - ($start_woche % 2);
-
-        /*if ($CONVERT_SINGLE_DATES) {
-            // calculate the number of matching single dates for this metadate (regular date):
-            $single_date_count = 0;
-
-            // loop through every (unconverted) single date
-            foreach ($irregularSingleDates as $key => $val) {
-
-                // loop through every week
-                $week = 0;
-                do {
-                    //create timestamps for the singledate to be tested
-                    $start_time = mktime ((int)$this->cycles[$metadate_id]->start_stunde, (int)$this->cycles[$metadate_id]->start_minute, 0, date("n", $sem_begin), (date("j", $sem_begin)+$corr) + ($this->cycles[$metadate_id]->day -1) + ($week * 7), date("Y", $sem_begin));
-                    $end_time = mktime ((int)$this->cycles[$metadate_id]->end_stunde, (int)$this->cycles[$metadate_id]->end_minute, 0, date("n", $sem_begin), (date("j", $sem_begin)+$corr) + ($this->cycles[$metadate_id]->day -1) + ($week * 7), date("Y", $sem_begin));
-
-                    // compare the calculated "would-be" dates (start_time, end_time) with the existing single dates
-                    if (($val->date == $start_time) && ($val->end_time == $end_time)) {
-                        // match found: count as single date for this regular date
-                        $single_date_count++;
-                    }
-                    $week++;
-                } while($end_time < $sem_end);
-            }
-
-            // were there any matching single dates?
-            if($single_date_count > 0 ) {
-
-                // check, if array is already created, if not, do so
-                if($GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"] == NULL){
-                    $GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"] = array();
-                }
-
-                // set flag for further calls of this method here, that
-                // for this regular (meta)date there have been matching single dates;
-                // this means that there was an "ablaufplan" created;
-                // if so, no additional dates should be created for
-                // this regular date, only existing dates should be used
-                $GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"][$metadate_id] = TRUE;
-            }
-
-        }
-        */
 
         $week = 0;
 
@@ -536,16 +484,6 @@ class MetaDate
 
             $end_time = mktime ((int)$this->cycles[$metadate_id]->end_stunde, (int)$this->cycles[$metadate_id]->end_minute, 0, date("n", $sem_begin), (date("j", $sem_begin)+$corr) + ($this->cycles[$metadate_id]->day -1) + ($week * 7), date("Y", $sem_begin));
 
-            // convert the start_time to start_woche, stepwise
-            /*if ($CONVERT_SINGLE_DATES) {
-                if ($this->start_termin != -1) {
-                    if ($this->start_termin > $start_time) {
-                        $this->start_woche++;
-                        $dateExists = true;
-                    }
-                }
-            }
-            */
 
             /*
              * We only create dates, which do not already exist, so we do not overwrite existing dates.
@@ -569,26 +507,6 @@ class MetaDate
                 }
             }
 
-            /*
-             * for converting existing dates, which belong to specific metadates
-             */
-            /*if ($CONVERT_SINGLE_DATES) {
-                foreach ($irregularSingleDates as $key => $val) {
-                    if (($val->date == $start_time) && ($val->end_time == $end_time)) {
-                        $irregularSingleDates[$key]->setMetaDateID($metadate_id);
-                        $irregularSingleDates[$key]->range_id = $this->seminar_id;
-                        $irregularSingleDates[$key]->update = TRUE;
-                        $irregularSingleDates[$key]->store();
-                        if ($irregularSingleDates[$key]->room) {
-                            $irregularSingleDates[$key]->setFreeRoomText('');
-                        }
-                        $dateExists = TRUE;
-                    }
-                }
-            }
-            */
-            // conversion end
-
             if (!($end_time < $sem_end)) {
                 $dateExists = true;
             }
@@ -597,22 +515,11 @@ class MetaDate
                 $dateExists = true;
             }
 
-            /*
-            if (!$this->isLectureFreeTime($start_time, $all_semester)) {
-                $dateExists = TRUE;
-            }
-            */
 
             if (!$dateExists) {
                 unset($termin);
                 $termin = new SingleDate(array('seminar_id' => $this->seminar_id));
 
-                // check, if this metadate has been marked
-                /*if($GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"] != NULL && $GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"][$metadate_id] != NULL) {
-                    if ($GLOBALS["TEMP_METADATE_HAS_EXISTING_SCHEDULE_PLAN"][$metadate_id] == TRUE) {
-                        $termin->setExTermin(true);
-                    }
-                }*/
 
                 $all_holiday = $holiday->getAllHolidays(); // fetch all Holidays
                 foreach ($all_holiday as $val2) {
@@ -633,18 +540,7 @@ class MetaDate
                 $termin->setMetaDateID($metadate_id);
                 $termin->setTime($start_time, $end_time);
                 $termin->setDateType($date_typ);
-                /*if ($CONVERT_SINGLE_DATES && !$termin->isExTermin()) {
-                    if ($this->cycles[$metadate_id]->resource_id) {
-                        $termin->bookRoom($this->cycles[$metadate_id]->resource_id);
-                    } else {
-                        if ($this->cycles[$metadate_id]->room) {
-                            $termin->setFreeRoomText($this->cycles[$metadate_id]->room);
-                        }
-                    }
-                    /*if (sizeof($irregularSingleDates) > 0) {
-                        $termin->setExTermin(true);
-                        }*/
-                //}
+
 
                 // store the singleDate to database
                 $termin->store();

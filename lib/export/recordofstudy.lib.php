@@ -199,7 +199,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     // the right site of the page
     $html .="     <td class=\"blank\" width=\"270\" valign=\"top\" align=\"center\">\n";
     echo $html;
-    print_infobox($infobox, "folders.jpg");
+    print_infobox($infobox, "infobox/folders.jpg");
     $html = "      <br>\n"
           . createButton("zurueck",_("Abbrechen und ein anderes Semester auswählen."),"select_new_semester")
           . createButton("weiter",_("Weiter zum Download ihrer Veranstaltungsübersicht."),"create_pdf")
@@ -262,7 +262,7 @@ function printPdfAssortment($infobox,$seminars){
     $html .="     </font></td>\n"
           . "     <td align=\"right\" width=\"270\" valign=\"top\">\n";
     echo $html;
-    print_infobox($infobox, "folders.jpg");
+    print_infobox($infobox, "infobox/folders.jpg");
 //  $html = "     <form action=\"$PHP_SELF\" method=post>"
 //        . "     <center>\n"
 //        . "       <a href=\"recordofstudy.php\">\n"

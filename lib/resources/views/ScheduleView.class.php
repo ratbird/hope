@@ -362,7 +362,7 @@ class ScheduleView {
         $out = htmlReady(substr($name, 0,50));
         if (strlen($name)>50) $out.= "...";
         if ($print_view){
-            $out = htmlReady(preg_replace('/EB[0-9]+/', '<b>\0</b>', $name));
+            $out = preg_replace('/EB[0-9]+/', '<b>\0</b>', htmlready($name,false,false));
         }
         return nl2br($out);
     }

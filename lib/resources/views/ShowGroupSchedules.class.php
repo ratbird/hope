@@ -320,7 +320,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
             <tr>
                 <td align="center">
                 <div style="font-size:150%;font-weight:bold;">
-                <?=htmlReady($room_group->room_groups[$this->group_id]['name'].' - ' .$this->semester['name'])?>
+                <?=htmlReady($room_group->getGroupName($this->group_id) . ' - ' . $this->semester['name'])?>
                 <br>
                 <? printf(_("Wochentag: %s"), htmlReady(strftime('%A', $schedule->base_date))); ?>
                 </div>
@@ -350,7 +350,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <?
                 $num = 1;
                 foreach($single_assigns as $event) {
-                    printf ("<font size=-1>"._("%s ist von <b>%s</b> bis <b>%s</b>, belegt von <b>%s</b>")."</font><br>",'EB'.$num++.': ' . htmlReady(getResourceObjectName($event->getResourceId())), strftime("%A, %d.%m.%Y %H:%M", $event->getBegin()), strftime("%A, %d.%m.%Y %H:%M", $event->getEnd()), $event->getName());
+                    printf ("<font size=-1>"._("%s ist von <b>%s</b> bis <b>%s</b>, belegt von <b>%s</b>")."</font><br>",'EB'.$num++.': ' . htmlReady(getResourceObjectName($event->getResourceId())), strftime("%A, %d.%m.%Y %H:%M", $event->getBegin()), strftime("%A, %d.%m.%Y %H:%M", $event->getEnd()), htmlready($event->getName()));
                 }
                 ?>
                 </td>

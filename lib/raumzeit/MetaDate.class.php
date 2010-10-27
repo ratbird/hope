@@ -354,7 +354,6 @@ class MetaDate
     {
         $ret['turnus_data'] = $this->getCycleData();
         $ret['art'] = $this->getArt();
-        $ret['start_termin'] = $this->getStartTermin();
         $ret['start_woche'] = $this->getStartWoche();
         $ret['turnus'] = $this->getTurnus();
         return $ret;

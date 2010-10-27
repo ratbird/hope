@@ -271,12 +271,12 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
             array('<!-- BEGIN DATES -->', ''),
             array('<!-- BEGIN REGULAR_DATES -->', ''),
             array('###TURNUS###', ''),
-            array('###START_WEEK', ''),
-            array('###START_DATE###', ''),
             array('<!-- BEGIN REGULAR_DATE -->', ''),
             array('###DAY_OF_WEEK###', ''),
             array('###START_TIME###', ''),
             array('###END_TIME###', ''),
+            array('###START_WEEK###', ''),
+            array('###CYCLE###', ''),
             array('###REGULAR_DESCRIPTION###', ''),
             array('<!-- BEGIN REGULAR_ROOMS -->', ''),
             array('<!-- BEGIN ROOMS -->', ''),
@@ -870,6 +870,8 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
 
     function getDates ($seminar_id, $start_time = 0, $end_time = 0) {
         $dow_array = array(_("So"), _("Mo"), _("Di"), _("Mi"), _("Do"), _("Fr"), _("Sa"));
+        $cycles_array = array(_("wöchentlich"), _("zweiwöchentlich"), _("dreiwöchentlich"));
+
         $cont = array();
         // irregular dates
         $meta = new MetaDate($seminar_id);
@@ -879,9 +881,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
         if ($meta->getStartWoche()) {
             $cont['REGULAR_DATES']['START_WEEK'] = $meta->getStartWoche();
         }
-        if ($start_date = $meta->getStartTermin() > 0) {
-            $cont['REGULAR_DATES']['START_DATE'] = $start_date;
-        }
+
         //$cont['REGULAR_TYPE'] = $GLOBALS['TERMIN_TYP'][$meta->getArt()]['name'];
         $i = 0;
 
@@ -892,6 +892,8 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                 'DAY_OF_WEEK' => $dow_array[$cycle['day']],
                 'START_TIME' => sprintf('%02d:%02d', $cycle['start_hour'], $cycle['start_minute']),
                 'END_TIME' => sprintf('%02d:%02d', $cycle['end_hour'], $cycle['end_minute']),
+                'START_WEEK' => $cycle['week_offset'] + 1,
+                'CYCLE' => $cycles_array[(int)$cycle['cycle']],
                 'REGULAR_DESCRIPTION' => ExternModule::ExtHtmlReady(trim($cycle['desc'])),
                 'REGULAR_DELIMITER' => true);
             $k = 0;
@@ -1113,7 +1115,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
 
             case 1:
             uksort($group_by_data, create_function('$a,$b',
-            '$the_tree = TreeAbstract::GetInstance("StudipSemTree");
+            '$the_tree = TreeAbstract::GetInstance("StudipSemTree", false);
             $the_tree->buildIndex();
             return (int)($the_tree->tree_data[$a]["index"] - $the_tree->tree_data[$b]["index"]);
             '));

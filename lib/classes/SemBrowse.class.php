@@ -405,15 +405,15 @@ class SemBrowse {
                 echo "</b></font></td></tr><tr>";
                 ob_end_flush();
                 ob_start();
-                
+
                 if (is_array($sem_ids['Seminar_id'])){
                    while(list($seminar_id,) = each($sem_ids['Seminar_id'])){
-                        
+
                         // create instance of seminar-object
                         $seminar_obj = new Seminar($seminar_id);
                         // is this sem a studygroup?
                         $studygroup_mode = SeminarCategories::GetByTypeId($seminar_obj->getStatus())->studygroup_mode;
-                        
+
                         $sem_name = key($sem_data[$seminar_id]["Name"]);
                         $seminar_number = key($sem_data[$seminar_id]['VeranstaltungsNummer']);
 
@@ -693,9 +693,9 @@ class SemBrowse {
             $add_fields = "";
             $add_query = "";
         }
-        
+
         $dbv = new DbView();
-        
+
         $query = ("SELECT seminare.Seminar_id,VeranstaltungsNummer, seminare.status, IF(seminare.visible=0,CONCAT(seminare.Name, ' ". _("(versteckt)") ."'), seminare.Name) AS Name,
                 $add_fields" . $_fullname_sql['full'] ." AS fullname, auth_user_md5.username,
                 " . $dbv->sem_number_sql . " AS sem_number, " . $dbv->sem_number_end_sql . " AS sem_number_end, seminar_user.position AS position FROM seminare
@@ -769,7 +769,7 @@ class SemBrowse {
 
             case 1:
             uksort($group_by_data, create_function('$a,$b',
-            '$the_tree = TreeAbstract::GetInstance("StudipSemTree");
+            '$the_tree = TreeAbstract::GetInstance("StudipSemTree", false);
             $the_tree->buildIndex();
             return (int)($the_tree->tree_data[$a]["index"] - $the_tree->tree_data[$b]["index"]);
             '));

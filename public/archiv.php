@@ -425,7 +425,7 @@ if ($archiv_data["perform_search"]) {
     <tr>
         <td class="blank" colspan="2">
         <?
-        
+
         echo "<p class=\"info\"><b>";
         printf(_("Es wurden %s Veranstaltungen gefunden."), $hits);
         echo "</b></p>";
@@ -476,7 +476,7 @@ if ($archiv_data["perform_search"]) {
                 echo "<td class=\"$class\" width=\"3%\">&nbsp;<a href=\"". URLHelper::getLink("?dump_id=".$db->f('seminar_id')) ."\" target=_blank>" .  Assets::img('icons/16/blue/info.png', array('class' => 'text-top', 'title' =>_('Komplettansicht'))) . "</a></td>";
                 echo "<td class=\"$class\" width=\"3%\">&nbsp;";
                 if (!$db->f('archiv_file_id')=='') {
-                    echo '<a href="' . URLHelper::getLink(GetDownloadLink($db->f('archiv_file_id'), $file_name, 1)) .'">" ' .  Assets::img('icons/16/blue/download.png', array('class' => 'text-top', 'title' =>_('Dateisammlung'))) . '</a>';
+                    echo '<a href="' . URLHelper::getLink(GetDownloadLink($db->f('archiv_file_id'), $file_name, 1)) .'"> ' .  Assets::img('icons/16/blue/download.png', array('class' => 'text-top', 'title' =>_('Dateisammlung'))) . '</a>';
                 }
                 echo "</td><td class=\"$class\" width=\"3%\">&nbsp;";
                 if (archiv_check_perm($db->f("seminar_id")) == "admin")

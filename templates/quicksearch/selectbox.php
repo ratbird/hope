@@ -23,7 +23,7 @@ if ($withButton) : ?>
 </select>
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>
-    <input class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/refresh.png") ?>">
+    <input class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/refresh.png") ?>" title="<?= _("Suche zurücksetzen") ?>">
     <? endif ?>
     </div>
 <? endif ?>

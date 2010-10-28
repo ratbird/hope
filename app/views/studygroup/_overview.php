@@ -1,49 +1,31 @@
-<table class border="0" cellpadding="2" cellspacing="0" width="100%">
-    <tr style="background: url(<?=Assets::image_path('steelgraudunkel.gif')?>);cursor: pointer;" title="<?=_("Klicken, um die Sortierung zu ändern")?>">
+<table class="default">
+    <tr title="<?=_("Klicken, um die Sortierung zu ändern")?>">
             <th class="nosort" width="1%"></th>
             <th width="59%" <?= ($sort_type == 'name') ? 'class="sort'. $sort_order .'"' : '' ?>>
-              <a href =<? if($sort == "name_asc") :?>"<?=$sort_url?>name_desc">
-                            <? else: ?>"<?=$sort_url?>name_asc">
-                <? endif;?><?= _("Name") ?>
-                        </a>
-                    </th>
+                <a href="<?= $sort_url . ($sort == 'name_asc' ? 'name_desc' : 'name_asc') ?>"><?= _("Name") ?></a>
+            </th>
             <th width="10%" <?= ($sort_type == 'founded') ? 'class="sort'. $sort_order .'"' : '' ?>>
-                        <a href =<? if($sort == "founded_asc") :?>"<?=$sort_url?>founded_desc">
-                <? else: ?>"<?=$sort_url?>founded_asc">
-                            <? endif;?><?= _("gegründet") ?>
-                        </a>
-                    </th>
-                    <th width="5%" <?= ($sort_type == 'member') ? 'class="sort'. $sort_order .'"' : '' ?>>
-                        <a href =<? if($sort == "member_asc") :?>"<?=$sort_url?>member_desc">
-                <? else: ?>"<?=$sort_url?>member_asc">
-                            <? endif;?><?= _("Mitglieder") ?>
-                        </a>
-                    </th>
-                    <th width="15%" <?= ($sort_type == 'founder') ? 'class="sort'. $sort_order .'"' : '' ?>>
-                        <a href =<? if($sort == "founder_asc") :?>"<?=$sort_url?>founder_desc">
-                <? else: ?>"<?=$sort_url?>founder_asc">
-                            <? endif;?><?= _("GründerIn") ?>
-                        </a>
-                    </th>
-                    <th width="5%" <?= ($sort_type == 'ismember') ? 'class="sort'. $sort_order .'"' : '' ?>>
-                        <a href =<? if($sort == "ismember_asc") :?>"<?=$sort_url?>ismember_desc">
-                <? else: ?>"<?=$sort_url?>ismember_asc">
-                            <? endif;?><?= _("Mitglied") ?>
-                        </a>
-                    </th>
-                    <th width="5%" <?= ($sort_type == 'access') ? 'class="sort'. $sort_order .'"' : '' ?>>
-                        <a href =<? if($sort == "access_asc") :?><?=$sort_url?>access_desc>
-                <? else: ?><?=$sort_url?>access_asc>
-                            <? endif; ?><?= _("Zugang") ?>
-                        </a>
-                    </th>
+                <a href="<?= $sort_url . ($sort == 'founded_asc' ? 'founded_desc' : 'founded_asc') ?>"><?= _("gegründet") ?></a>
+            </th>
+            <th width="5%" <?= ($sort_type == 'member') ? 'class="sort'. $sort_order .'"' : '' ?>>
+                <a href="<?= $sort_url . ($sort == 'member_asc' ? 'member_desc' : 'member_asc') ?>"><?= _("Mitglieder") ?></a>
+            </th>
+            <th width="15%" <?= ($sort_type == 'founder') ? 'class="sort'. $sort_order .'"' : '' ?>>
+                <a href="<?= $sort_url . ($sort == 'founder_asc' ? 'founder_desc' : 'founder_asc') ?>"><?= _("GründerIn") ?></a>
+            </th>
+            <th width="5%" <?= ($sort_type == 'ismember') ? 'class="sort'. $sort_order .'"' : '' ?>>
+                <a href="<?= $sort_url . ($sort == 'ismember_asc' ? 'ismember_desc' : 'ismember_asc') ?>"><?= _("Mitglied") ?></a>
+            </th>
+            <th width="5%" <?= ($sort_type == 'access') ? 'class="sort'. $sort_order .'"' : '' ?>>
+                <a href="<?= $sort_url . ($sort == 'access_asc' ? 'access_desc' : 'access_asc') ?>"><?= _("Zugang") ?></a>
+            </th>
         </tr>
         <? foreach ($groups as $group) : ?>
             <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
                 <td>
-                   <?=StudygroupAvatar::getAvatar($group['Seminar_id'])->getImageTag(Avatar::SMALL);?>
+                   <?=StudygroupAvatar::getAvatar($group['Seminar_id'])->getImageTag(Avatar::SMALL)?>
                 </td>
-                <td style="text-align:left;">
+                <td>
                     <? if (StudygroupModel::isMember($this->userid,$group['Seminar_id'] )): ?>
                         <a href="<?=URLHelper::getlink("seminar_main.php?auswahl=".$group['Seminar_id'])?>">
                     <? else: ?>
@@ -51,15 +33,15 @@
                     <? endif; ?>
                        <?=htmlready($group['Name'])?></a>
                  </td>
-                 <td align="center"><?=strftime('%x', $group['mkdate']);?>
+                 <td><?=strftime('%x', $group['mkdate'])?>
                 </td>
                 <td align="center">
-                    <?=StudygroupModel::countMembers($group['Seminar_id']);?>
+                    <?=StudygroupModel::countMembers($group['Seminar_id'])?>
                 </td>
-                <td style="text-align:left;white-space:nowrap;">
+                <td style="white-space:nowrap;">
                     <? $founders = StudygroupModel::getFounder($group['Seminar_id']);
                     foreach ($founders as $founder) : ?>
-                    <img src="<?=Avatar::getAvatar($founder['user_id'])->getUrl(Avatar::SMALL);?>" style="vertical-align:middle;">
+                    <?=Avatar::getAvatar($founder['user_id'])->getImageTag(Avatar::SMALL)?>
                     <a href="<?=URLHelper::getlink('about.php?username='.$founder['uname'])?>"><?=htmlready($founder['fullname'])?></a>
                     <br>
                     <? endforeach; ?>

@@ -4,12 +4,15 @@
                 //non-javascript-Suche.
 if ($withButton) : ?>
 <div class="quicksearch_frame" style="width: <?= $box_width ?>px;">
-<? $input_style = " style=\"width: ".($box_width-23)."px;\""; ?>
+<? $withAttributes['style'] = "width: ".($box_width-23)."px;"; ?>
     <? if ($box_align === "left") : ?>
     <input class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/refresh.png") ?>">
     <? endif ?>
 <? endif ?>
-<select<?= $input_style .($inputClass ? " class=\"".$inputClass."\"" : "") ?> name="<?= $name ?>">
+<select<? foreach ($withAttributes as $attr_name => $attr_value) {
+              print ' '.$attr_name.'="'.$attr_value.'"';
+          }
+          ?> name="<?= $name ?>">
 <? if (count($searchresults)) : ?>
   <? foreach ($searchresults as $result) : ?>
   <option value="<?= $result[0] ?>"><?= $result[1] ?></option>

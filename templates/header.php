@@ -71,10 +71,11 @@
               </script>
               <?php
               print QuickSearch::get("search_sem_quick_search", new SeminarSearch())
-                    ->setInputClass("quicksearchbox")
-                    ->withAttributes(array("title" => sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name))))
-                    ->setInputStyle("width: 130px; color: #ffffff")
-                    //->setDescriptionColor("#e5e5e5")
+                    ->setAttributes(array(
+                        "title" => sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)),
+                        "class" => "quicksearchbox",
+                        "style" => "width: 130px; color: #ffffff;"
+                    ))
                     ->fireJSFunctionOnSelect("selectSem")
                     ->noSelectbox()
                     ->render();

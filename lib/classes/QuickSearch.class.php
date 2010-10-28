@@ -87,6 +87,7 @@ class QuickSearch
     private $withButton;        //if true, the field will be displayed with a looking-glass-button to click on
     private $specialBeschriftung;
     private $selectBox = true;
+    private $withAttributes = array();
     private $box_width = "233"; //width of the box withButton
     private $box_align = "right";//align of the lookingglass in the withButton-box
     
@@ -188,7 +189,7 @@ class QuickSearch
      */
     public function setInputClass($class) 
     {
-        $this->inputClass = $class;
+        $this->withAttributes['class'] = $class;
         return $this;
     }
     
@@ -201,7 +202,7 @@ class QuickSearch
      */
     public function setInputStyle($style) 
     {
-        $this->inputStyle = $style;
+        $this->withAttributes['style'] = $style;
         return $this;
     }
     
@@ -242,7 +243,7 @@ class QuickSearch
      *
      * @return QuickSearch
      */
-    public function withAttributes($attr_array) 
+    public function setAttributes($attr_array) 
     {
         if (is_array($attr_array)) {
             $this->withAttributes = $attr_array;

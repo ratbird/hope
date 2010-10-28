@@ -159,24 +159,30 @@ function shrink_dates($dates) {
             $conjuncted=FALSE;
 
         if ((!$dates[$i]["conjuncted"]) || (!$dates[$i+1]["conjuncted"])) {
-            $return_string.=date (" j.n.", $dates[$i]["start_time"]);
+            // if the current date is a conjunction, add the year
+            // to receive an output of the format "dd.mm - dd.mm.yyyy"
+            if ($dates[$i]['conjuncted']) {
+                $return_string .= date (" d.m.Y", $dates[$i]["start_time"]);
+            } else {
+                $return_string .= date (" d.m.", $dates[$i]["start_time"]);
+            }
         }
 
         if ((!$conjuncted) && ($dates[$i+1]["conjuncted"])) {
-            $return_string.=" -";
+            $return_string .= ' -';
             $conjuncted=TRUE;
         } else if ((!$dates[$i+1]["conjuncted"]) && ($dates[$i+1]["time_match"])) {
-            $return_string.=",";
+            $return_string .= ',';
         }
 
         if (!$dates[$i+1]["time_match"]) {
-            $return_string.=" ".date("G:i", $dates[$i]["start_time"]);
-            if (date("G:i", $dates[$i]["start_time"]) != date("G:i", $dates[$i]["end_time"])) {
-                $return_string.=" - ".date("G:i", $dates[$i]["end_time"]);
+            $return_string .= ' ' . date("H:i", $dates[$i]["start_time"]);
+            if (date("H:i", $dates[$i]["start_time"]) != date("H:i", $dates[$i]["end_time"])) {
+                $return_string .= ' - ' . date("H:i", $dates[$i]["end_time"]);
             }
             if ($i+1 != sizeof ($dates)) {
 
-                $return_string.=",";
+                $return_string .= ',';
             }
         }
         

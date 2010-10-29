@@ -1,5 +1,5 @@
 <table class="default">
-    <tr title="<?=_("Klicken, um die Sortierung zu ändern")?>">
+    <tr class="sortable" title="<?=_("Klicken, um die Sortierung zu ändern")?>">
             <th class="nosort" width="1%"></th>
             <th width="59%" <?= ($sort_type == 'name') ? 'class="sort'. $sort_order .'"' : '' ?>>
                 <a href="<?= $sort_url . ($sort == 'name_asc' ? 'name_desc' : 'name_asc') ?>"><?= _("Name") ?></a>
@@ -7,10 +7,10 @@
             <th width="10%" <?= ($sort_type == 'founded') ? 'class="sort'. $sort_order .'"' : '' ?>>
                 <a href="<?= $sort_url . ($sort == 'founded_asc' ? 'founded_desc' : 'founded_asc') ?>"><?= _("gegründet") ?></a>
             </th>
-            <th width="5%" <?= ($sort_type == 'member') ? 'class="sort'. $sort_order .'"' : '' ?>>
+            <th width="6%" <?= ($sort_type == 'member') ? 'class="sort'. $sort_order .'"' : '' ?>>
                 <a href="<?= $sort_url . ($sort == 'member_asc' ? 'member_desc' : 'member_asc') ?>"><?= _("Mitglieder") ?></a>
             </th>
-            <th width="15%" <?= ($sort_type == 'founder') ? 'class="sort'. $sort_order .'"' : '' ?>>
+            <th width="14%" <?= ($sort_type == 'founder') ? 'class="sort'. $sort_order .'"' : '' ?>>
                 <a href="<?= $sort_url . ($sort == 'founder_asc' ? 'founder_desc' : 'founder_asc') ?>"><?= _("GründerIn") ?></a>
             </th>
             <th width="5%" <?= ($sort_type == 'ismember') ? 'class="sort'. $sort_order .'"' : '' ?>>

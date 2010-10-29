@@ -48,7 +48,8 @@ class StudygroupController extends AuthenticatedController {
         }
 
         $this->lower_bound = ($this->page - 1) * ELEMENTS_PER_PAGE;
-
+        list ($this->sort_type, $this->sort_order) = split('[_]', $this->sort);
+        
         if (empty($this->search) && isset($this->flash['searchterm']))  {
             $this->search = $this->flash['searchterm'];
         }
@@ -74,7 +75,6 @@ class StudygroupController extends AuthenticatedController {
         } elseif (!$check || $this->groups) {
             unset($this->flash['info']);
             if($this->page < 1 || $this->page > ceil($this->anzahl/ELEMENTS_PER_PAGE)) $this->page = 1;
-            list ($this->sort_type, $this->sort_order) = split('[_]', $this->sort);
         }
     }
 }

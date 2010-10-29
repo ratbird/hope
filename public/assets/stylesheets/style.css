@@ -1552,13 +1552,15 @@ div#schedule-settings-dialog-shadow {
 tr.sortable {
     background: url('../images/steelgraudunkel.gif');
 }
-tr.sortable.th.sortasc {
+
+tr.sortable th.sortasc {
     background: transparent url('../images/dreieck_up.png') no-repeat center right;
-    padding: 2px 15px;
+    padding-right: 15px;
 }
-tr.sortable.th.sortdesc {
+
+tr.sortable th.sortdesc {
     background: transparent url('../images/dreieck_down.png') no-repeat center right;
-    padding: 2px 15px;
+    padding-right: 15px;
 }
 
 /* classes for the evaluation modules in Stud.IP ---------------------------- */

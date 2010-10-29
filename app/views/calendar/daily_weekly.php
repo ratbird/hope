@@ -41,10 +41,10 @@ $cell_steps = $cell_height / 60;
             <td style="text-align: center; width: <?= floor(100 / sizeof($days)) ?>%">
                 <a href="<?= $controller->url_for('calendar/'. $calendar_view->getContext() .'/index/'. $day) ?>">
                     <?= getWeekday($day, false) ?>
-                    <? if (sizeof($calendar_view->getDays()) == 1) : ?>
-                    (<a href="<?= $controller->url_for('calendar/'. $calendar_view->getContext()) ?>"><?= _("zurück zur Wochenansicht") ?></a>)
-                    <? endif ?>
                 </a>
+                <? if (sizeof($calendar_view->getDays()) == 1) : ?>
+                (<a href="<?= $controller->url_for('calendar/'. $calendar_view->getContext()) ?>"><?= _("zurück zur Wochenansicht") ?></a>)
+                <? endif ?>
             </td>
             <? endforeach; ?>
         </tr>

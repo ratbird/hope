@@ -815,7 +815,7 @@ class ShowToolsRequests
                                     foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["groups"] as $key2 => $val2) {
                                         print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                         if ($key == $val2["resource_id"]) {
-                                            print "<img src=\"".Assets::image_path.('icons/16/blue/accept.png')." ".tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE).">";
+                                            print "<img src=\"".Assets::image_path('icons/16/blue/accept.png')." ".tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE).">";
                                         } else {
                                             $overlap_status = $this->showGroupOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()], $val2["termin_ids"]);
                                             print $overlap_status["html"];
@@ -833,7 +833,7 @@ class ShowToolsRequests
                                     foreach ($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["assign_objects"] as $key2 => $val2) {
                                         print "<td width=\"1%\" nowrap><font size=\"-1\">";
                                         if ($key == $val2["resource_id"]) {
-                                            print "<img src=\"".Assets::image_path.('icons/16/blue/accept.png')." ".tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE).">";
+                                            print "<img src=\"".Assets::image_path('icons/16/blue/accept.png')." ".tooltip(_("Dieser Raum ist augenblicklich gebucht"), TRUE, TRUE).">";
                                         } else {
                                             $overlap_status = $this->showOverlapStatus($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["detected_overlaps"][$key][$key2], $val2["events_count"], $val2["overlap_events_count"][$resObj->getId()]);
                                             print $overlap_status["html"];

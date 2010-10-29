@@ -355,7 +355,7 @@ if ($perm->have_perm("admin"))
                                                 printf ("<option value=\"%s\" %s>%s </option>", $db->f("category_id"), ($category_id == $db->f("category_id")) ? "selected" : "", htmlReady(my_substr($db->f("name"), 0, 30)));
                                             }
                                             print "</select>";
-                                            print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"" . Assets::image_path.('icons/16/blue/accept.png') . " border=\"0\" ".tooltip(_("Raumtyp auswählen")).">";
+                                            print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"" . Assets::image_path('icons/16/blue/accept.png') . " border=\"0\" ".tooltip(_("Raumtyp auswählen")).">";
                                             print "&nbsp;&nbsp;<input type=\"IMAGE\" src=\"" . Assets::image_path('icons/16/blue/refresh.png') . "\" ".tooltip(_("alle Angaben zurücksetzen"))." name=\"reset_room_type\"><br><br>";
                                         }
 

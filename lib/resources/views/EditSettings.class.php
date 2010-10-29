@@ -582,7 +582,7 @@ class EditSettings {
 
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
                                 print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\">";
-                                print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".Assets::image_path.('icons/16/blue/accept.png')."\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
+                                print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".Assets::image_path('icons/16/blue/accept.png')."\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
                                 print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a>";
                                 print "</td></tr>";
                             } else {
@@ -664,7 +664,7 @@ class EditSettings {
 
                                 print "<td width=\"20%%\" align=\"right\" valign=\"top\"><font size=\"-1\">";
                                 print "<br><input type=\"HIDDEN\" name=\"lock_id[]\" value=\"".$this->db->f("lock_id")."\">";
-                                print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".Assets::image_path.('icons/16/blue/accept.png')."\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
+                                print "<input type=\"IMAGE\" name=\"lock_sent\" src=\"".Assets::image_path('icons/16/blue/accept.png')."\" border=\"0\" ".tooltip(_("Diesen Eintrag speichern")).">";
                                 print "&nbsp;&nbsp;<a href=\"$PHP_SELF?kill_lock=".$this->db->f("lock_id")."\">" .  Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _("Diesen Eintrag löschen"))). "</a>";
                                 print "</td></tr>";
                             } else {

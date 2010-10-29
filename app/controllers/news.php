@@ -16,10 +16,32 @@
 require_once 'lib/functions.php';
 require_once 'lib/showNews.inc.php';
 require_once 'lib/user_visible.inc.php';
-require_once 'app/controllers/authenticated_controller.php';
+require_once 'studip_controller.php';
 
-class NewsController extends AuthenticatedController
+class NewsController extends StudipController
 {
+    /**
+     * Callback function being called before an action is executed.
+     */
+    function before_filter(&$action, &$args)
+    {
+        // open session
+        page_open(array('sess' => 'Seminar_Session',
+                        'auth' => 'Seminar_Default_Auth',
+                        'perm' => 'Seminar_Perm',
+                        'user' => 'Seminar_User'));
+
+        // set up user session
+        include 'lib/seminar_open.php';
+    }
+
+    /**
+     * Callback function being called after an action is executed.
+     */
+    function after_filter($action, $args)
+    {
+        page_close();
+    }
 
     function get_news_action($id)
     {
@@ -53,9 +75,6 @@ class NewsController extends AuthenticatedController
                                           );
         $this->render_text(studip_utf8encode($content));
     }
-
-
-
 
     /**
      * Checks for permission of the user to view the given news

@@ -35,9 +35,7 @@ class Calendar_InstscheduleController extends AuthenticatedController
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
         // try to find the correct institute-id
-        $institute_id = Request::get('institute_id', 
-                        $SessSemName[1] ? $SessSemName[1] :
-                        Request::get('cid', false));
+        $institute_id = Request::get('cid', $SessSemName[1]);
 
         
         if (!$institute_id) {
@@ -52,8 +50,9 @@ class Calendar_InstscheduleController extends AuthenticatedController
             $myschedule = true;
         }
 
-        if (!$institute_id || get_object_type($institute_id) != 'inst') {
-            throw new Exception('Cannot display institute-calender. No valid ID given!');
+        if (!$institute_id || (in_array(get_object_type($institute_id), words('inst fak')) === false)) {
+            throw new Exception(sprintf_('Kann Einrichtungskalendar nicht anzeigen!'
+                . 'Es wurde eine ungültige Instituts-Id übergeben (%s)!', $institute_id));
         }
 
         // load semester-data and current semester

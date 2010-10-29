@@ -381,6 +381,7 @@ if ($delete_id) {
             printposting($forumposting);
 
             echo "<br></td></tr></table>\n<br></td></tr></table>";
+            include 'lib/include/html_end.inc.php';
             page_close();
             die;
         }

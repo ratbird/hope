@@ -1294,8 +1294,7 @@ function printposting ($forumposting) {
         $forumposting = ForumGetRights($forumposting);
         if ($forumposting["writestatus"] != "none") { // Posting wird geschrieben
             if ($forumposting["writestatus"] == "update" && $forumposting["lonely"] == FALSE) {
-                echo _("Kein Zugriff auf dieses Element möglich.");
-                die;
+                throw new AccessDeniedException(_("Kein Zugriff auf dieses Element möglich."));
             } else {
                 $description = editarea($forumposting);
             }
@@ -1420,7 +1419,7 @@ if ($forum["view"]=="search") {
         $addon = " AND (".$forum["search"].")";
     } else {
         echo forum_search_field()."<br><br>";
-        $nomsg="TRUE";
+        include 'lib/include/html_end.inc.php';
         page_close(); //Niemals vergessen, wenn Session oder Benutzervariablen benutzt werden !!!
         die;
     }
@@ -1436,11 +1435,10 @@ $db->query($query);
 if ($db->num_rows() > 0 || isset($new_topic)) {  // Forum ist nicht leer
     $forum["forumsum"] = $db->num_rows();
 } else { // das Forum ist leer
-    if ($nomsg!="TRUE") {
-        echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
-        echo ForumNoPostings();
-        echo "</table>";
-    }
+    echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
+    echo ForumNoPostings();
+    echo "</table>";
+    include 'lib/include/html_end.inc.php';
     page_close(); //Niemals vergessen, wenn Session oder Benutzervariablen benutzt werden !!!
     die;
 }
@@ -1622,6 +1620,7 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
         echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
         echo ForumEmpty();
         echo "</table>";
+        include 'lib/include/html_end.inc.php';
         page_close(); //Niemals vergessen, wenn Session oder Benutzervariablen benutzt werden !!!
         die;
     } else {

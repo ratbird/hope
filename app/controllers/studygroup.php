@@ -48,7 +48,7 @@ class StudygroupController extends AuthenticatedController {
         }
 
         $this->lower_bound = ($this->page - 1) * ELEMENTS_PER_PAGE;
-        list ($this->sort_type, $this->sort_order) = split('[_]', $this->sort);
+        list ($this->sort_type, $this->sort_order) = explode('_', $this->sort);
         
         if (empty($this->search) && isset($this->flash['searchterm']))  {
             $this->search = $this->flash['searchterm'];

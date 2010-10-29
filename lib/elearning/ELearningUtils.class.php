@@ -669,9 +669,8 @@ class ELearningUtils
         $rs = $db->query("SELECT DISTINCT system_type, module_id
                           FROM object_contentmodules
                           WHERE module_type = 'crs' AND object_id = " . $db->quote($sem_id))
-                        ->fetchAll(PDO::FETCH_ASSOC|PDO::FETCH_GROUP);
-        $courses = array_map('array_shift', $rs);
-
+                        ->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($rs as $row) $courses[$row['system_type']] = $row['module_id'];
         if (is_array($courses))
             foreach($courses as $system_type => $crs_id)
                 if (ELearningUtils::isCMSActive($system_type)) {

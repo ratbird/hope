@@ -47,6 +47,16 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser
         global $connected_cms, $auth, $messages;
 
         if ($this->getLoginData($this->login)) {
+            //automatische Zuordnung von bestehenden Ilias Accounts
+            if ($connected_cms[$this->cms_type]->USER_AUTO_CREATE == true &&
+            $connected_cms[$this->cms_type]->USER_PREFIX == '') {
+                $this->setConnection(USER_TYPE_CREATED);
+                $ok = $connected_cms[$this->cms_type]->soap_client->updatePassword($this->id, $this->external_password);
+                if ($ok) {
+                    $messages["info"] .= sprintf(_("Verbindung mit Nutzer ID %s wiederhergestellt."), $this->id);
+                }
+                return true;
+            }
             $messages["error"] .= sprintf(_("Es existiert bereits ein Account mit dem Benutzernamen \"%s\" (Account ID %s)."), $this->login, $this->id) . "<br>\n";
             return false;
         }

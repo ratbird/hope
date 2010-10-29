@@ -260,21 +260,16 @@ function checkObject() {
 
 
 /**
-* This function checks, if given modul is allowed in this stud-ip object
+* This function checks, if given module is allowed in this stud-ip object
 */
-function checkObjectModule($modul) {
-    global $SessSemName, $AUTH_LIFETIME;
+function checkObjectModule($module) {
+    global $SessSemName;
 
     if ($SessSemName[1]) {
-        $Modules=new Modules;
+        $modules = new Modules();
 
-        $name = strtoupper($modul{0}).substr($modul, 1, strlen($modul));
-
-        if (!$Modules->checkLocal($modul, $SessSemName[1])) {
-            parse_window ("error§" . sprintf(_("Das Inhaltselement &raquo;%s&laquo; ist f&uuml;r dieses Objekt leider nicht verf&uuml;gbar."), $name), "§",
-                    _("Modul nicht verf&uuml;gbar"),
-                    sprintf(_("%sHier%s geht es wieder zur Anmeldung beziehungsweise Startseite."), "<a href=\"index.php\"><b>&nbsp;", "</b></a>") . "<br>&nbsp;");
-            die;
+        if (!$modules->checkLocal($module, $SessSemName[1])) {
+            throw new CheckObjectException(sprintf(_('Das Inhaltselement "%s" ist für dieses Objekt leider nicht verfügbar.'), ucfirst($module)));
         }
     }
 }

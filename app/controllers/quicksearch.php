@@ -90,6 +90,10 @@ class QuicksearchController extends AuthenticatedController
     private function extraResultFormat($results) 
     {
         $input = htmlReady(studip_utf8decode(Request::get('request')));
+        $input = str_replace(
+                    array("\\",   '^',  '.',  '$',  '|',  '(',  ')',  '[',  ']',  '*',  '+',  '?',  '{',  '}',  ','), 
+                    array("\\\\", '\^', '\.', '\$', '\|', '\(', '\)', '\[', '\]', '\*', '\+', '\?', '\{', '\}', '\,'), 
+                    $input);
         foreach ($results as $key => $result) {
             $results[$key][1] = preg_replace("/(".$input.")/i", "<b>$1</b>", htmlReady($result[1]));
         }

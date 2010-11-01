@@ -255,6 +255,8 @@ if ($view=="listall") {
 
 } // end default action
 
+include 'lib/include/html_end.inc.php';
+
 // Save data back to database.
 page_close()
 ?>

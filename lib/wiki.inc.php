@@ -488,6 +488,7 @@ function showDeleteDialog($keyword, $version) {
         end_blank_table();
         echo '</td></tr></table>';
         include ('lib/include/html_end.inc.php');
+        page_close();
         die;
     }
     $islatest=0; // will another version become latest version?
@@ -507,6 +508,7 @@ function showDeleteDialog($keyword, $version) {
         end_blank_table();
         echo '</td></tr></table>';
         include ('lib/include/html_end.inc.php');
+        page_close();
         die;
     }
     begin_blank_table();
@@ -541,6 +543,7 @@ function showDeleteAllDialog($keyword) {
         end_blank_table();
         echo '</td></tr></table>';
         include ('lib/include/html_end.inc.php');
+        page_close();
         die;
     }
     begin_blank_table();
@@ -586,6 +589,7 @@ function deleteWikiPage($keyword, $version, $range_id) {
         end_blank_table();
         echo '</td></tr></table>';
         include ('lib/include/html_end.inc.php');
+        page_close();
         die;
     }
     $lv=getLatestVersion($keyword, $SessSemName[1]);
@@ -595,6 +599,7 @@ function deleteWikiPage($keyword, $version, $range_id) {
         end_blank_table();
         echo '</td></tr></table>';
         include ('lib/include/html_end.inc.php');
+        page_close();
         die;
     }
     $q="DELETE FROM wiki WHERE keyword='$keyword' AND version='$version' AND range_id='$range_id'";
@@ -637,6 +642,7 @@ function deleteAllWikiPage($keyword, $range_id) {
         end_blank_table();
         echo '</td></tr></table>';
         include ('lib/include/html_end.inc.php');
+        page_close();
         die;
     }
     $q="DELETE FROM wiki WHERE keyword='$keyword' AND range_id='$range_id'";
@@ -722,6 +728,7 @@ function listPages($mode, $sortby=NULL) {
         parse_msg ("info\xa7" . $nopages);
         echo '</table></td></tr></table>';
         include ('lib/include/html_end.inc.php');
+        page_close();
         die;
     }
 
@@ -1531,6 +1538,7 @@ function showDiffs($keyword, $versions_since) {
         end_blank_table();
         echo '</td></tr></table>';
         include ('lib/include/html_end.inc.php');
+        page_close();
         die;
     }
 

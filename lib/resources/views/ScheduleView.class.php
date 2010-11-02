@@ -80,40 +80,43 @@ class ScheduleView {
 
     function addEvent($column, $name, $start_time, $end_time, $link='', $add_info='', $category=0) {
 
-        if (date ("G", $end_time) >= $this->start_hour) {
-            if (date ("G", $end_time) > $this->end_hour) {
-                $rows = ((($this->end_hour - date("G", $start_time))+1) *4);
-                $rows = $rows - (int)(date("i", $start_time) / 15);
-            } else
-                $rows = ceil(((date("G", $end_time) - date("G", $start_time)) * 4) + ((date("i", $end_time) - date("i", $start_time)) / 15));
+        // if the date ends before the starting hour of the schedule, do not add it or the schedule will break
+        if (date('G', $end_time) < $this->start_hour
+            || (date('G', $end_time) == $this->start_hour &&  date('i', $end_time) == 0)) return;
 
-            if (date ("G", $start_time) < $this->start_hour) {
-                $rows = $rows - (($this->start_hour - date ("G", $start_time)) *4);
-                $rows = $rows + (int)(date ("i", $start_time)/ 15);
-                $idx_corr_h = $this->start_hour - date ("G", $start_time);
-                $idx_corr_m = (0 - date ("i", $start_time)) ;
-            } else {
-                $idx_corr_h = 0;
-                $idx_corr_m = 0;
-            }
-            $sort_index = date("G", $start_time)+$idx_corr_h . '-' . (int)((date("i", $start_time)+$idx_corr_m) / 15) .'-'. $column;
 
-            $id = md5(uniqid("rss",1));
-            if( ($collision_id = $this->checkCollision($sort_index,$category)) ){
-                $this->events[$collision_id]['collisions'][] = array('name' => $name, 'link' => $link,'add_info' => $add_info);
-            } else {
-                $this->events[$id]=array (
-                            "sort_index" => $sort_index,
-                            "id" =>$id,
-                            "rows" => $rows,
-                            "name" => $name,
-                            "start_time" => $start_time,
-                            "end_time" => $end_time,
-                            "link" => $link,
-                            "add_info" => $add_info,
-                            "category" => $category
-                            );
-            }
+        if (date ("G", $end_time) > $this->end_hour) {
+            $rows = ((($this->end_hour - date("G", $start_time))+1) *4);
+            $rows = $rows - (int)(date("i", $start_time) / 15);
+        } else
+            $rows = ceil(((date("G", $end_time) - date("G", $start_time)) * 4) + ((date("i", $end_time) - date("i", $start_time)) / 15));
+
+        if (date ("G", $start_time) < $this->start_hour) {
+            $rows = $rows - (($this->start_hour - date ("G", $start_time)) *4);
+            $rows = $rows + (int)(date ("i", $start_time)/ 15);
+            $idx_corr_h = $this->start_hour - date ("G", $start_time);
+            $idx_corr_m = (0 - date ("i", $start_time)) ;
+        } else {
+            $idx_corr_h = 0;
+            $idx_corr_m = 0;
+        }
+        $sort_index = date("G", $start_time)+$idx_corr_h . '-' . (int)((date("i", $start_time)+$idx_corr_m) / 15) .'-'. $column;
+
+        $id = md5(uniqid("rss",1));
+        if( ($collision_id = $this->checkCollision($sort_index,$category)) ){
+            $this->events[$collision_id]['collisions'][] = array('name' => $name, 'link' => $link,'add_info' => $add_info);
+        } else {
+            $this->events[$id]=array (
+                        "sort_index" => $sort_index,
+                        "id" =>$id,
+                        "rows" => $rows,
+                        "name" => $name,
+                        "start_time" => $start_time,
+                        "end_time" => $end_time,
+                        "link" => $link,
+                        "add_info" => $add_info,
+                        "category" => $category
+                        );
         }
     }
 

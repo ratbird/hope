@@ -261,7 +261,7 @@ class ShowSchedules {
             $end_hour = 22;
         }
 
-        $schedule=new ScheduleWeek($start_hour, $end_hour, FALSE, $start_time, true);
+        $schedule = new ScheduleWeek($start_hour, $end_hour, FALSE, $start_time, true);
 
         if ($ActualObjectPerms->havePerm("autor"))
             $schedule->add_link = "resources.php?cancel_edit_assign=1&quick_view=$view&quick_view_mode=".$view_mode."&add_ts=";

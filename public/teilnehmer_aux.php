@@ -359,6 +359,7 @@ switch ($_REQUEST['display_type']) {
         echo $ct->closeRow();
 
         echo $ct->close();
+        include 'lib/include/html_end.inc.php';
         page_close();
         break;
 }

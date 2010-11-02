@@ -971,7 +971,7 @@ if (isset($_GET['details']) || $showform ) {
         echo '<a href="' . URLHelper::getLink('', array('extSearch' => ($_SESSION['extSearch'] == 1) ? 0 : 1)) . '">';
         echo (($_SESSION['extSearch'] == 1) ?  _('Zuklappen') : _('Erweiterte Suche')) . '</a>';
     }else{
-        echo "<a href=\"#\" onClick=\"\jQuery('.pers_browse_datafields').toggle(); this.innerHTML=(!jQuery('.pers_browse_datafields').is(':visible'))?'" . _("Erweiterte Suche") . "':'" . _("Zuklappen") . "';\">";
+        echo "<a href=\"#\" onClick=\"jQuery('.pers_browse_datafields').toggle(); this.innerHTML=(!jQuery('.pers_browse_datafields').is(':visible'))?'" . _("Erweiterte Suche") . "':'" . _("Zuklappen") . "';\">";
         echo (($datafields_empty) ? _('Erweiterte Suche') : _('Zuklappen')) . '</a>';
     }
     

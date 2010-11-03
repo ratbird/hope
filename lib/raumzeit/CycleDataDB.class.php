@@ -101,9 +101,9 @@ class CycleDataDB
         $rooms = array();
 
         if (($filterStart == 0) && ($filterEnd == 0)) {
-            $query = "SELECT COUNT(resource_id) as c, resource_id FROM termine LEFT JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' GROUP BY resource_id ORDER BY c DESC";
+            $query = "SELECT COUNT(resource_id) as c, resource_id FROM termine INNER JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' GROUP BY resource_id ORDER BY c DESC";
         } else {
-            $query = "SELECT COUNT(resource_id) as c, resource_id FROM termine LEFT JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' AND termine.date >= $filterStart AND termine.end_time <= $filterEnd GROUP BY resource_id ORDER BY c DESC";
+            $query = "SELECT COUNT(resource_id) as c, resource_id FROM termine INNER JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' AND termine.date >= $filterStart AND termine.end_time <= $filterEnd GROUP BY resource_id ORDER BY c DESC";
         }
 
         $db->query($query);

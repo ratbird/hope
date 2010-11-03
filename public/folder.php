@@ -324,7 +324,6 @@ if ($open_cmd) {
     unset($folder_system_data["move"]);
     unset($folder_system_data["refresh"]);
     unset($folder_system_data["upload"]);
-    unset($folder_system_data["copy"]);
 }
 
 if ($rechte || $owner || $create_folder_perm) {

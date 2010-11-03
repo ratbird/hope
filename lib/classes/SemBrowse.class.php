@@ -423,7 +423,7 @@ class SemBrowse {
                             if ($seminar_obj->admission_prelim) $sem_name .= ', '. _("Zutritt auf Anfrage");
                             $sem_name .= ')';
                             echo '<td width="1%" class="steel1">';
-                            echo StudygroupAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, array('title' => $seminar_obj->getName()));
+                            echo StudygroupAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, array('title' => htmlReady($seminar_obj->getName())));
                             echo '</td>';
                         } else {
                             $sem_number_start = key($sem_data[$seminar_id]["sem_number"]);
@@ -435,7 +435,7 @@ class SemBrowse {
                                 $sem_name .= " (" . $this->search_obj->sem_dates[$sem_number_start]['name'] . ")";
                             }
                             echo '<td width="1%" class="steel1">';
-                            echo CourseAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, array('title' => $seminar_obj->getName()));
+                            echo CourseAvatar::getAvatar($seminar_id)->getImageTag(Avatar::SMALL, array('title' => htmlReady($seminar_obj->getName())));
                             echo '</td>';
 
                         }

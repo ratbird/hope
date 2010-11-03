@@ -321,10 +321,10 @@ class Seminar
      *
      * @returns  mixed  a multidimensional array of seminar-dates
      */
-    function getUndecoratedData()
+    function getUndecoratedData($filter = false)
     {
         $cycles = $this->metadate->getCycleData();
-        $dates = $this->getSingleDates();
+        $dates = $this->getSingleDates($filter, $filter);
 
         foreach (array_keys($cycles) as $id) {
             $cycles[$id]['first_date'] = CycleDataDB::getFirstDate($id);
@@ -2179,10 +2179,7 @@ class Seminar
      */
     function getDatesHTML($params = array())
     {
-        $template = $GLOBALS['template_factory']->open('dates/seminar_html.php');
-        $template->set_attributes($params);
-
-        return $this->getDatesTemplate($template);
+       return $this->getDatesTemplate('dates/seminar_html.php', $params);
     }
 
     /**
@@ -2195,9 +2192,7 @@ class Seminar
      */
     function getDatesExport($params = array())
     {
-        $template = $GLOBALS['template_factory']->open('dates/seminar_export.php');
-        $template->set_attributes($params);
-        return $this->getDatesTemplate($template);
+        return $this->getDatesTemplate('dates/seminar_export.php', $params);
     }
 
     /**
@@ -2210,15 +2205,14 @@ class Seminar
      */
     function getDatesXML($params = array())
     {
-        $template = $GLOBALS['template_factory']->open('dates/seminar_xml.php');
-        $template->set_attributes($params);
-        return $this->getDatesTemplate($template);
+        return $this->getDatesTemplate('dates/seminar_xml.php', $params);
     }
 
     /**
      * returns a representation of the seminar-dates with a specifiable template
      *
      * @param  mixed  this can be a template-object or a string pointing to a template in path_to_studip/templates
+     * @param  array  optional parameters which are passed to the template
      * @return  string  the template output of the dates
      *
      * @author Till Glöggler <tgloeggl@uos.de>
@@ -2232,13 +2226,12 @@ class Seminar
         if ($params['semester_id']) {
             // generate filter data
             $filter = getFilterForSemester($params['semester_id']);
-
             // apply filter
             $this->applyTimeFilter($filter['filterStart'], $filter['filterEnd']);
         }
 
 
-        $template->set_attribute('dates', $this->getUndecoratedData());
+        $template->set_attribute('dates', $this->getUndecoratedData(isset($params['semester_id'])));
         $template->set_attribute('seminar_id', $this->getId());
 
         $template->set_attributes($params);
@@ -2385,7 +2378,7 @@ class Seminar
                        "position = ".$db->quote($new_position)." " .
                        "");
             return $this;
-        } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status]) 
+        } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])
                 && ($old_status !== "dozent" || $numberOfTeachers > 1)) {
             $db->exec("UPDATE seminar_user " .
                    "SET status = ".$db->quote($status).", " .

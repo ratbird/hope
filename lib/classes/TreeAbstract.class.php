@@ -6,8 +6,8 @@
 // This file is part of Stud.IP
 // TreeAbstract.class.php
 // Abstract Base Class to handle in-memory tree structures
-// 
-// Copyright (c) 2002 André Noack <noack@data-quest.de> 
+//
+// Copyright (c) 2002 André Noack <noack@data-quest.de>
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -33,10 +33,10 @@ require_once("lib/classes/DbView.class.php");
 *
 * @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 */
 class TreeAbstract {
-    
+
     /**
     * the name of the root element
     *
@@ -54,9 +54,9 @@ class TreeAbstract {
     /**
     * array containing all tree items
     *
-    * associative array, key is an unique identifier (eg primary key from DB table) 
+    * associative array, key is an unique identifier (eg primary key from DB table)
     * value is another assoc. array containing the other fieldname/fieldvalue pairs
-    * these fieldnames must be used : 
+    * these fieldnames must be used :
     * parent_id, name, priority
     * @access public
     * @var array    $tree_data
@@ -70,7 +70,7 @@ class TreeAbstract {
     * @var array    $tree_childs
     */
     var $tree_childs = array();
-    
+
     /**
     * array containing the number of direct childs of all items
     *
@@ -79,9 +79,9 @@ class TreeAbstract {
     * @var array    $tree_num_childs
     */
     var $tree_num_childs = array();
-    
+
     var $index_offset = 0;
-    
+
     /**
     * static method used to ensure that only one instance exists
     *
@@ -91,11 +91,11 @@ class TreeAbstract {
     * @static
     * @param    string  $class_name     the name of the used tree_class
     * @param    mixed   $args           argumentlist passed to the constructor in the tree_class (if needed)
-    * @return   mixed   always an object, type is one of AbstractTree s childclasses 
+    * @return   mixed   always an object, type is one of AbstractTree s childclasses
     */
     function GetInstance($class_name, $args = null, $invalidate_cache = false){
         static $tree_instance;
-        
+
         if ($args){
             $class_hash = $class_name . "_" . md5(serialize($args));
         } elseif ($args === false && is_array($tree_instance)){
@@ -115,16 +115,16 @@ class TreeAbstract {
         if (!is_object($tree_instance[$class_hash]) || $invalidate_cache){
             $tree_instance[$class_hash] = new $class_name($args);
         }
-        
+
         return $tree_instance[$class_hash];
     }
-    
+
     /**
     * constructor
     *
     * do not use directly, call &GetInstance()
     * @access private
-    */ 
+    */
     function TreeAbstract() {
         $this->view = new DbView();
         $this->init();
@@ -144,7 +144,7 @@ class TreeAbstract {
         $this->index_offset = 0;
         $this->tree_data['root'] = array('parent_id' => null, 'name' => &$this->root_name, 'index' => 0);
     }
-    
+
     /**
     * store one item in tree_data array
     *
@@ -154,18 +154,18 @@ class TreeAbstract {
     * @param    string  $parent_id
     * @param    string  $name
     * @param    integer $priority
-    * 
+    *
     */
-    
+
     function storeItem($item_id,$parent_id,$name,$priority){
-        $this->tree_data[$item_id]["parent_id"] = $parent_id; 
+        $this->tree_data[$item_id]["parent_id"] = $parent_id;
         $this->tree_data[$item_id]["priority"] = $priority;
         $this->tree_data[$item_id]["name"] = $name;
         $this->tree_childs[$parent_id][] = $item_id;
         ++$this->tree_num_childs[$parent_id];
         return;
     }
-    
+
     /**
     * build an index for sorting purpose
     *
@@ -173,27 +173,30 @@ class TreeAbstract {
     *
     * @access   public
     * @param    string  $item_id
-    * 
+    *
     */
-    
+
     function buildIndex($item_id = false){
-        if (!$item_id){
+        if ($item_id === false && $this->index_offset > 0) {
+            return;
+        }
+        if (!$item_id) {
             $item_id = "root";
         }
         $this->tree_data[$item_id]['index'] = $this->index_offset;
         ++$this->index_offset;
-        if (($num_kids = $this->getNumKids($item_id))){
+        if (($num_kids = $this->getNumKids($item_id))) {
             for($i = 0; $i < $num_kids; ++$i){
                 $this->buildIndex($this->tree_childs[$item_id][$i]);
             }
         }
         return;
     }
-    
+
     /**
     * returns all direct kids
     *
-    * 
+    *
     * @access   public
     * @param    string  $item_id
     * @return   array
@@ -201,12 +204,12 @@ class TreeAbstract {
     function getKids($item_id){
 
         return (is_array($this->tree_childs[$item_id])) ? $this->tree_childs[$item_id] : null;
-    }           
-    
+    }
+
     /**
     * returns the number of all direct kids
     *
-    * 
+    *
     * @access   public
     * @param    string  $item_id
     * @param    bool    $in_recursion
@@ -218,7 +221,7 @@ class TreeAbstract {
         }
         return $this->tree_num_childs[$item_id];
     }
-    
+
     /**
     * returns all direct kids and kids of kids and so on...
     *
@@ -242,11 +245,11 @@ class TreeAbstract {
         }
         return (!$in_recursion) ? $kidskids : null;
     }
-    
+
     /**
     * returns the number of all kids and kidskids...
     *
-    * 
+    *
     * @access   public
     * @param    string  $item_id
     * @param    bool    $in_recursion
@@ -267,7 +270,7 @@ class TreeAbstract {
         }
         return (!$in_recursion) ? $num_kidskids : null;
     }
-    
+
     /**
     * checks if item is the last kid
     *
@@ -283,7 +286,7 @@ class TreeAbstract {
         else
             return ($this->tree_childs[$parent_id][$num_kids-1] == $item_id);
     }
-    
+
     /**
     * checks if item is the first kid
     *
@@ -299,7 +302,7 @@ class TreeAbstract {
         else
             return ($this->tree_childs[$parent_id][0] == $item_id);
     }
-    
+
     /**
     * checks if given item is a kid or kidkid...of given ancestor
     *
@@ -312,7 +315,7 @@ class TreeAbstract {
     function isChildOf($ancestor_id,$item_id){
         return in_array($item_id,$this->getKidsKids($ancestor_id));
     }
-    
+
     /**
     * checks if item has one or more kids
     *
@@ -323,14 +326,14 @@ class TreeAbstract {
     function hasKids($item_id){
         return ($this->getNumKids($item_id)) ? true : false;
     }
-    
+
     /**
     * Returns tree path
     *
     * returns a string with the item and all parents separated with a slash
     * @access   public
     * @param    string  $item_id
-    * @return   string  
+    * @return   string
     */
     function getItemPath($item_id){
         if (!$this->tree_data[$item_id])
@@ -342,7 +345,7 @@ class TreeAbstract {
         }
         return $path;
     }
-    
+
     /**
     * Returns tree path as array of item_id s
     *
@@ -363,7 +366,7 @@ class TreeAbstract {
         }
         return $ret;
     }
-    
+
     function getShortPath($item_id, $depth = false, $delimeter = ">"){
         if (!$this->tree_data[$item_id]){
             return false;
@@ -380,7 +383,7 @@ class TreeAbstract {
         $ret .= $this->tree_data[$item_id]['name'];
         return $ret;
     }
-    
+
     /**
     * Returns the maximum priority value from a parents child
     *
@@ -401,7 +404,7 @@ class TreeAbstract {
             return $this->getNumEntriesKids($item_id);
         }
     }
-    
+
     function getNumEntriesKids($item_id, $in_recursion = false){
         static $num_entries;
         if (!$in_recursion){
@@ -417,7 +420,7 @@ class TreeAbstract {
         }
         return (!$in_recursion) ? $num_entries : null;
     }
-    
+
     function getValue($item_id, $field) {
         return (isset($this->tree_data[$item_id][$field]) ? $this->tree_data[$item_id][$field] : null);
     }

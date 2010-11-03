@@ -830,7 +830,7 @@ function show_addrform() {
         ->render();
     ?>
 
-    <input style="vertical-align: text-top;" type="image" name="search_person" src="<?= Assets::image_path('icons/16/blue/search.png') ?>">
+    <input style="vertical-align: text-top;" type="image" name="search_person" src="<?= !Request::get("adressee_parameter") ? Assets::image_path('icons/16/blue/search.png') : Assets::image_path('icons/16/blue/refresh.png') ?>">
 
     <?
     $tmp .= ob_get_clean();

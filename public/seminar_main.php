@@ -204,7 +204,7 @@ $quarter_year = 60 * 60 * 24 * 90;
 
                 if ($show) {
                     echo MessageBox::info(_("Sie haben noch nicht die für diese Veranstaltung benötigten Zusatzinformationen eingetragen."), array(
-                        _('Um das nochzuholen gehen Sie unter "TeilnehmerInnen" auf "Zusatzangaben"'),
+                        _('Um das nachzuholen, gehen Sie unter "TeilnehmerInnen" auf "Zusatzangaben"'),
                         _("oder") . ' <a href="' . URLHelper::getLink("teilnehmer_aux.php") . '"> ' . _("direkt zu den Zusatzangaben") . '</a>'
                     ));
                 }

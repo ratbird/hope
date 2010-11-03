@@ -87,7 +87,7 @@ if ($_REQUEST["getfilebody"]) {
         if ($folder_tree->isReadable($result['range_id'] , $user->id)) {
             $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, a.user_id, a.*, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.dokument_id = ".$db->quote($_REQUEST["getfilebody"])."";
             $datei = $db->query($query)->fetch();
-            display_file_body($datei, $folder_system_data["open"], $change, $folder_system_data["move"], $folder_system_data["upload"], FALSE, $folder_system_data["refresh"], $folder_system_data["link"], NULL);
+            display_file_body($datei, $result['range_id'], $folder_system_data["open"], $change, $folder_system_data["move"], FALSE, FALSE, FALSE, $folder_system_data["link"], NULL);
         }
     } catch(Exception $e) {
         header("HTTP/1.0 500 Internal Server Error");

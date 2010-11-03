@@ -806,9 +806,9 @@ function show_addrform() {
                    .submit();
                return;
            }
-           if (!$("select[name=del_receiver[]] #" + username).length) {
+           if (!$("select[name=del_receiver[]] [value=" + username + "]").length) {
                $("select[name=del_receiver[]]")
-                   .append($('<option id="' + username + '">' + name + '</option>'))
+                   .append($('<option value="' + username + '">' + name + '</option>'))
                    .attr("size", $(this).attr("size") + 1);
                window.setTimeout("$('input[name=adressee_parameter]').val('');", 10);
            }

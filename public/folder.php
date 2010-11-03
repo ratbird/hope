@@ -320,6 +320,12 @@ if($folder_system_data["mode"] != '' && ($open_cmd && !in_array($open_cmd, array
     $folder_system_data["move"]='';
     $folder_system_data["mode"]='';
 }
+if ($open_cmd) {
+    unset($folder_system_data["move"]);
+    unset($folder_system_data["refresh"]);
+    unset($folder_system_data["upload"]);
+    unset($folder_system_data["copy"]);
+}
 
 if ($rechte || $owner || $create_folder_perm) {
     //wurde Code fuer Anlegen von Ordnern ubermittelt (=id+"_n_"), wird entsprechende Funktion aufgerufen

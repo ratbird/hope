@@ -8,7 +8,7 @@
             <div><?= _("Angezeigtes Semester") ?>:</div>
             <select name="semester_id">
             <? foreach ($semesters as $semester) : ?>
-                <? if ($semester['ende'] > time()) : ?>
+                <? if ($semester['ende'] > time() - strtotime('1year 1day')) : ?>
                 <option value="<?= $semester['semester_id'] ?>" <?= $settings['glb_sem'] == $semester['semester_id'] ? 'selected="selected"' : '' ?>>
                     <?= $semester['name'] ?>
                     <?= $semester['beginn'] < time() && $semester['ende'] > time() ? '(aktuelles Semester)' : '' ?>

@@ -816,7 +816,7 @@ function show_addrform() {
     </script>
     <?php
 
-    if (Request::get("adressee_parameter") && !Request::get("adressee")) {
+    if ((Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen") )) {
         print "<input type=\"image\" name=\"add_freesearch\" ".
             tooltip(_("zu Empfängerliste hinzufügen")).
             " value=\""._("zu Empf&auml;ngerliste hinzuf&uuml;gen").
@@ -830,7 +830,15 @@ function show_addrform() {
         ->render();
     ?>
 
-    <input style="vertical-align: text-top;" type="image" name="search_person" src="<?= !Request::get("adressee_parameter") ? Assets::image_path('icons/16/blue/search.png') : Assets::image_path('icons/16/blue/refresh.png') ?>">
+    <input style="vertical-align: text-top;" 
+           type="image" 
+           name="search_person" 
+           title="<?= !(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen") )
+                        ? _("Suche starten")
+                        : _("Suche zurücksetzen") ?>"
+           src="<?= !(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen") )
+                        ? Assets::image_path('icons/16/blue/search.png') 
+                        : Assets::image_path('icons/16/blue/refresh.png') ?>">
 
     <?
     $tmp .= ob_get_clean();

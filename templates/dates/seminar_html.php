@@ -22,40 +22,43 @@
     if ($show_room) :
       $cycle_output .= $this->render_partial('dates/_seminar_rooms',
         array('assigned' => $cycle['assigned_rooms'],
-          'freetext' => $cycle['freetext_rooms'],
-          'link'     => $link));
+          'freetext'     => $cycle['freetext_rooms'],
+          'link'         => $link
+        ));
     endif;
 
     $output[] = $cycle_output;
-  endforeach ?>
-  <?= implode('<br>', $output) ?>
-  <?= sizeof($output) ? '<br>' : '' ?>
+  endforeach;
 
-  <? $presence_types = getPresenceTypes(); ?>
-  <? if (is_array($dates['irregular'])):
+  echo implode('<br>', $output);
+  echo sizeof($output) ? '<br>' : '';
+
+  $presence_types = getPresenceTypes();
+  if (is_array($dates['irregular'])):
     foreach ($dates['irregular'] as $date) :
         if (in_array($date['typ'], $presence_types) !== false) :
             $irregular[] = $date; $irregular_strings[] = $date['tostring']; $irregular_rooms[$date['resource_id']]++;
         endif;
     endforeach;
-    unset($irregular_rooms['']) ?>
+    unset($irregular_rooms['']);
 
-    <? if (is_array($irregular) && sizeof($irregular)) : ?>
-        <?= _("Termine am") ?> <?= implode('', shrink_dates($irregular));
+    if (is_array($irregular) && sizeof($irregular)) :
+        echo _("Termine am") . implode('', shrink_dates($irregular));
         if (is_array($irregular_rooms) && sizeof($irregular_rooms) > 0) :
             if (sizeof($irregular_rooms) > 3) :
                 $irregular_rooms = array_slice($irregular_rooms, sizeof($irregular_rooms) - 3, sizeof($irregular_rooms));
             endif;
-            ?><?= _(", Ort:") ?>
-            <?= implode(', ', getFormattedRooms($irregular_rooms, $link)) ?>
-        <? endif ?>
-    <? endif ?>
-  <? endif ?>
 
-  <? if ($link_to_dates) : ?>
+            echo _(", Ort:");
+            echo implode(', ', getFormattedRooms($irregular_rooms, $link));
+        endif;
+    endif;
+  endif;
+
+  if ($link_to_dates) : ?>
     <br>
     <br>
     <?= sprintf(_("Details zu allen Terminen im %sAblaufplan%s"),
-      '<a href="'.URLHelper::getLink('seminar_main.php', array('auswahl' => $seminar_id, 'redirect_to' => 'dates.php')).'">', '</a>') ?>
-  <? endif ?>
-<? endif ?>
+      '<a href="'.URLHelper::getLink('seminar_main.php', array('auswahl' => $seminar_id, 'redirect_to' => 'dates.php')).'">', '</a>') ?><?
+  endif;
+endif;

@@ -292,7 +292,7 @@ while ($tmp_first_date < $end_date) {
                     $show_sorter = $cyclecount > 1 && Config::get()->ALLOW_METADATE_SORTING;
                     foreach ($sem->metadate->getCycles() as $metadate_id => $cycle) {        // cycle trough all CycleData objects
                         $tpl = $cycle_element = $cycle->toArray();
-                        if (!$tpl['room'] = $sem->getDatesTemplate('dates/seminar_predominant', array('cycle_id' => $metadate_id))) {
+                        if (!$tpl['room'] = $sem->getDatesTemplate('dates/seminar_predominant_html', array('cycle_id' => $metadate_id))) {
                             $tpl['room'] = _("keiner");
                         }
 

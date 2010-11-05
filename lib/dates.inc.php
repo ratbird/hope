@@ -603,13 +603,14 @@ function Termin_Eingabe_javascript ($t = 0, $n = 0, $atime=0, $ss = '', $sm = ''
 
     return  $txt;
 }                                                                                               
+
 /**
- * Return an array of formatted room snippets, possibly linked
+ * Return an array of room snippets, possibly linked
  *
- * @param array  an associative array of rooms
- * @param bool   true if you want links, otherwise false
+ * @param array $rooms  an associative array of rooms
+ * @param bool  $html   true if you want links, otherwise false
  *
- * @return array an array of formatted room snippets
+ * @return array  an array of (formatted) room snippets
  */
 function getFormattedRooms($rooms, $link = false)
 {
@@ -617,10 +618,34 @@ function getFormattedRooms($rooms, $link = false)
 
     if (is_array($rooms)) {
         foreach ($rooms as $room_id => $count) {
-            $resObj =& ResourceObject::Factory($room_id);
-            if ($link) {
-                $room_list[] = $resObj->getFormattedLink(TRUE, TRUE, TRUE);
-            } else {
+            if ($room_id) {
+                $resObj =& ResourceObject::Factory($room_id);
+                if ($link) {
+                    $room_list[] = $resObj->getFormattedLink(TRUE, TRUE, TRUE);
+                } else {
+                    $room_list[] = htmlReady($resObj->getName());
+                }
+            }
+        }
+    }
+
+    return $room_list;
+}
+
+/**
+ * Return an array of room snippets without any formatting
+ *
+ * @param array $rooms  an associative array of rooms
+ *
+ * @return array  an array of room snippets
+ */
+function getPlainRooms($rooms) {
+    $room_list = array();
+
+    if (is_array($rooms)) {
+        foreach ($rooms as $room_id => $count) {
+            if ($room_id) {
+                $resObj =& ResourceObject::Factory($room_id);
                 $room_list[] = $resObj->getName();
             }
         }

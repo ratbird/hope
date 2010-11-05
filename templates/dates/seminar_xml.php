@@ -14,8 +14,8 @@ if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turn
     <wochentag><?= getWeekDay($cycle['day']) ?></wochentag>
     <zeit><?= $cycle['start_hour'] ?>:<?= $cycle['start_minute'] ?>-<?= $cycle['end_hour'] ?>:<?= $cycle['end_minute'] ?></zeit>
     <raum>
-        <gebucht><?= implode(', ', getFormattedRooms($cycle['assigned_rooms'], false)) ?></gebucht>
-        <freitext><?= implode(', ', array_keys($cycle['freetext_rooms'])) ?></freitext>
+        <gebucht><?= htmlspecialchars(implode(', ', getPlainRooms($cycle['assigned_rooms']))) ?></gebucht>
+        <freitext><?= htmlspecialchars(implode(', ', array_keys($cycle['freetext_rooms']))) ?></freitext>
     </raum>
 </raumzeit>
 <? endforeach ?>
@@ -23,11 +23,11 @@ if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turn
 <? if (is_array($dates['irregular'])) foreach ($dates['irregular'] as $date) : ?>
 <raumzeit>
     <datum><?= date('d.m.Y', $date['start_time']) ?></datum>
-    <wochentag><?= getWeekDay(date('d', $date['start_time'])) ?></wochentag>
+    <wochentag><?= getWeekDay(date('w', $date['start_time'])) ?></wochentag>
     <zeit><?= date('H:i', $date['start_time']) ?>-<?= date('H:i', $date['end_time']) ?></zeit>
     <raum>
-        <gebucht><?= implode(', ', getFormattedRooms(array($date['resource_id'] => 1), false)) ?></gebucht>
-        <freitext><?= $date['raum'] ?></freitext>
+        <gebucht><?= htmlspecialchars(implode(', ', getPlainRooms(array($date['resource_id'] => 1)))) ?></gebucht>
+        <freitext><?= htmlspecialchars($date['raum']) ?></freitext>
     </raum>
 </raumzeit>
 <? endforeach ?>

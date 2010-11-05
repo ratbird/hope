@@ -1,6 +1,6 @@
 <date><?
 echo $date->toString();
 if ($date->getResourceId()) :
-    echo _(", Ort:");
-    echo implode(', ', getFormattedRooms(array($date->getResourceId() => '1'), false));
+    echo ', '. _("Ort:") .' ';
+    echo htmlspecialchars(implode(', ', getPlainRooms(array($date->getResourceId() => '1'))));
 endif ?></date>

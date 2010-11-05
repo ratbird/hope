@@ -298,6 +298,9 @@ class CycleData
         $ret['freetext_rooms'] = $this->getFreetextPredominantRoom();
         $ret['tostring']       = $this->toString();
         $ret['tostring_short'] = $this->toString(true);
+
+        $ret['start_minute'] = leadingZero($ret['start_minute']);
+        $ret['end_minute'] = leadingZero($ret['end_minute']);
         return $ret;
     }
 

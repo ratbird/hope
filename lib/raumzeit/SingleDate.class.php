@@ -653,7 +653,7 @@ class SingleDate {
      */
     function getDatesExport($params = array())
     {
-        $template = $GLOBALS['template_factory']->open('dates/date_html.php');
+        $template = $GLOBALS['template_factory']->open('dates/date_export.php');
         $params['link'] = false;
         $template->set_attributes($params);
 

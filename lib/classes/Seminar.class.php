@@ -1630,7 +1630,7 @@ class Seminar
                         $info[$i]['name'] = $cycle->toString().' ('.$semester['name'].')';
                         $info[$i]['weekend'] = ($cycle->getDay() == 6 || $cycle->getDay() == 0);
                         $this->applyTimeFilter($semester['beginn'], $semester['ende']);
-                        $raum = $this->getDatesTemplate('dates/seminar_predominant', array('cycle_id' => $metadate_id));
+                        $raum = $this->getDatesTemplate('dates/seminar_predominant_html', array('cycle_id' => $metadate_id));
                         if ($raum) {
                             $info[$i]['name'] .= '<br>&nbsp;&nbsp;&nbsp;&nbsp;'.$raum;
                             $room_stat = $this->getStatOfNotBookedRooms($cycle->getMetadateId());

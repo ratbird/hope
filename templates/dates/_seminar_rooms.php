@@ -4,12 +4,12 @@ if (!isset($link)) $link = false;
 if (($assigned && sizeof($assigned)) || sizeof($freetext)) :
   
     if ($assigned):
-        $rooms = getFormattedRooms($assigned, $link);
+        $rooms = $plain ? getPlainRooms($assigned) : getFormattedRooms($assigned, $link);
     endif;
 
     if ($freetext):
         foreach ($freetext as $name => $count) :
-            if ($name) $rooms[] = '(' . $name . ')';
+            if ($name) $rooms[] = '('. ($plain ? $name : htmlReady($name)) . ')';
         endforeach;
     endif;
     $ort .= ' Ort: ';

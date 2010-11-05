@@ -16,7 +16,7 @@ if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turn
             if ($link) :
                 $roominfo .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
             else :
-                $roominfo .= $resObj->getName();
+                $roominfo .= htmlReady($resObj->getName());
             endif;
             unset($resObj);
         endif;

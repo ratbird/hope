@@ -554,7 +554,7 @@ function semester_show_semester_header()
     $data .=    "<th align=left width=\"12%\">"._("Ende")."</th>";
     $data .=    "<th align=left width=\"12%\">"._("Vorlesungsbeginn")."</th>";
     $data .=    "<th align=left width=\"12%\">"._("Vorlesungsende")."</th>";
-    $data .=    "<th align=left width=\"12%\">>"._("Anzahl Veranstaltungen")."</th>";
+    $data .=    "<th align=left width=\"12%\">"._("Anzahl Veranstaltungen")."</th>";
     $data .=    "<th align=left width=\"20%\"></th>";
     $data .=    "<th align=left width=\"20%\"></th>";
     $data .=    "</tr></table></td></tr>";

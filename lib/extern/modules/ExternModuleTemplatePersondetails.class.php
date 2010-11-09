@@ -251,11 +251,6 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         if (in_array(get_object_type($this->config->range_id), array('fak', 'global'))) {
             $global_view = true;
             $selected_item_ids = $this->config->getValue('SelectInstitutes', 'institutesselected');
-            if (is_array($selected_item_ids)) {
-                $selected_item_ids = array_merge(array($this->config->range_id), $selected_item_ids);
-            } else {
-                $selected_item_ids = array($this->config->range_id);
-            }
             // at least one institute has to be selected in the configuration
             if (!is_array($selected_item_ids)) {
                 return array();

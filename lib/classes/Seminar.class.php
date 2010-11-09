@@ -2389,10 +2389,9 @@ class Seminar
             return $this;
         } else {
             if ($old_status === "dozent" && $numberOfTeachers <= 1) {
-                $this->createError(sprintf(_("Die Veranstaltung muss wenigstens " .
-                        "<b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben! " .
-                        "Tragen Sie zunächst einen anderen ein, um diesen herabzustufen."),
-                        get_title_for_status('dozent', 1, $this->status)));
+                $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),
+                                   get_title_for_status('dozent', 1, $this->status)) .
+                                   ' ' . _("Tragen Sie zunächst einen anderen ein, um diesen herabzustufen."));
             }
             return false;
         }
@@ -2409,29 +2408,21 @@ class Seminar
         $db = DBManager::get();
         $stillleft = $db->query("SELECT count(*) " .
                     "FROM seminar_user " .
-                    "WHERE user_id != ".$db->quote($status)." " .
+                    "WHERE user_id != ".$db->quote($user_id)." " .
                         "AND status = 'dozent' ".
                         "AND Seminar_id = ".$db->quote($this->id))->fetch(PDO::FETCH_COLUMN, 0);
-        $allowed = ($stillleft > 1);
-        if (!$allowed) {
-            $old_status = $db->query("SELECT status " .
-                    "FROM seminar_user " .
-                    "WHERE user_id = ".$db->quote($user_id)." " .
-                        "AND Seminar_id = ".$db->quote($this->id))->fetch(PDO::FETCH_COLUMN, 0);
-            $allowed = ($old_status !== "dozent");
-        }
-        if ($allowed) {
+
+        if ($stillleft > 0) {
             $db->exec("DELETE FROM seminar_user " .
                    "WHERE Seminar_id = ".$db->quote($this->id)." " .
                        "AND user_id = ".$db->quote($user_id));
-            $this->createMessage(sprintf(_("Nutzer %s wurde aus Veranstaltung entfernt."),
-                    "<i>".get_fullname($user_id)."</i>"));
+            $this->createMessage(sprintf(_("Nutzer %s wurde aus der Veranstaltung entfernt."),
+                    "<i>".htmlReady(get_fullname($user_id))."</i>"));
             return $this;
         } else {
-            $this->createError(sprintf(_("Die Veranstaltung muss wenigstens " .
-                    "<b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben! " .
-                    "Tragen Sie zunächst einen anderen ein, um diesen zu l&ouml;schen."),
-                    get_title_for_status('dozent', 1, $this->status)));
+            $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),
+                                   get_title_for_status('dozent', 1, $this->status)) .
+                                   ' ' . _("Tragen Sie zunächst einen anderen ein, um diesen zu löschen."));
             return false;
         }
     }

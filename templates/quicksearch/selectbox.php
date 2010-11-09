@@ -15,10 +15,10 @@ if ($withButton) : ?>
           ?> name="<?= $name ?>">
 <? if (count($searchresults)) : ?>
   <? foreach ($searchresults as $result) : ?>
-  <option value="<?= $result[0] ?>"><?= $result[1] ?></option>
+  <option value="<?= htmlReady($result[0]) ?>"><?= htmlReady($result[1]) ?></option>
   <? endforeach ?>
 <? else : ?>
-  <option value=""><?= _("Keine Treffer gefunden") ?></option> 
+  <option value=""><?= _("Keine Treffer gefunden") ?></option>
 <? endif ?>
 </select>
 <? if ($withButton) : ?>

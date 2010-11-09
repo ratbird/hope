@@ -42,6 +42,7 @@ class SingleDate {
     var $issues = NULL;
     var $messages = NULL;
     var $content = '';
+    var $room_request = NULL;
 
     /**
      * Return the SingleDate instance of the given id
@@ -52,15 +53,12 @@ class SingleDate {
     function getInstance($singledate_id) {
         static $singledate_object_pool;
 
-        if ($id){
-            if ($refresh_cache){
-                $singledate_object_pool[$id] = null;
-            }
-            if (is_object($singledate_object_pool[$id]) && $singledate_object_pool[$id]->getTerminId() == $id){
-                return $singledate_object_pool[$id];
+        if ($singledate_id){
+            if (is_object($singledate_object_pool[$singledate_id]) && $singledate_object_pool[$singledate_id]->getTerminId() == $singledate_id){
+                return $singledate_object_pool[$singledate_id];
             } else {
-                $seminar_object_pool[$id] = new SingleDate($id);
-                return $singledate_object_pool[$id];
+                $singledate_object_pool[$singledate_id] = new SingleDate($singledate_id);
+                return $singledate_object_pool[$singledate_id];
             }
         } else {
             return new SingleDate();

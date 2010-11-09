@@ -34,7 +34,7 @@
  */
 
 class SingleDateDB {
-    function storeSingleDate($termin) {
+    static function storeSingleDate($termin) {
         $db = new DB_Seminar();
 
         if ($termin->isExTermin()) {
@@ -69,7 +69,7 @@ class SingleDateDB {
         return TRUE;
     }
 
-    function restoreSingleDate($termin_id) {
+    static function restoreSingleDate($termin_id) {
         $db = new DB_Seminar();
         $db->query("SELECT termine.*, resource_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termin_id = '$termin_id'");
         if ($db->next_record() && $db->f('termin_id')) {
@@ -88,7 +88,7 @@ class SingleDateDB {
         }
     }
 
-    function deleteSingleDate($id, $ex_termin) {
+    static function deleteSingleDate($id, $ex_termin) {
         $db = new DB_Seminar();
         if ($ex_termin) {
             $table = 'ex_termine';
@@ -102,7 +102,7 @@ class SingleDateDB {
         return TRUE;
     }
 
-    function getAssignID($termin_id) {
+    static function getAssignID($termin_id) {
         $db = new DB_Seminar();
         $db->query("SELECT assign_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termin_id = '$termin_id'");
         if ($db->next_record()) {
@@ -112,7 +112,7 @@ class SingleDateDB {
         return FALSE;
     }
 
-    function getRequestID($termin_id) {
+    static function getRequestID($termin_id) {
         $db = new DB_Seminar();
         $db->query("SELECT request_id FROM resources_requests WHERE termin_id = '$termin_id'");
         if ($db->next_record()) {
@@ -122,7 +122,7 @@ class SingleDateDB {
         return FALSE;
     }
 
-    function getIssueIDs($termin_id) {
+    static function getIssueIDs($termin_id) {
         $db = new DB_Seminar();
         $db->query("SELECT tt.* FROM themen_termine as tt LEFT JOIN themen as t ON (tt.issue_id = t.issue_id) WHERE termin_id = '$termin_id' AND t.issue_id IS NOT NULL");
 
@@ -136,13 +136,13 @@ class SingleDateDB {
         return $ret;
     }
 
-    function deleteIssueID($issue_id, $termin_id) {
+    static function deleteIssueID($issue_id, $termin_id) {
         $db = new DB_Seminar();
         $db->query("DELETE FROM themen_termine WHERE termin_id = '$termin_id' AND issue_id = '$issue_id'");
         return TRUE;
     }
 
-    function deleteRequest($termin_id) {
+    static function deleteRequest($termin_id) {
         $db = new DB_Seminar();
         $db->query("DELETE FROM resources_requests WHERE termin_id = '$termin_id'");
         return TRUE;

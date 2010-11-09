@@ -253,7 +253,11 @@ class ExternModuleTemplatePersons extends ExternModule {
                 
                 $j = 0;
                 while ($db->next_record()) {
-        
+
+                    $visibilities = get_local_visibility_by_id($db->f('user_id'), 'homepage', true);
+                    $user_perm = $visibilities['perms'];
+                    $visibilities = json_decode($visibilities['homepage'], true);
+
                     if ($defaultaddress) {
                         $query = 'SELECT ui.raum, ui.sprechzeiten, ui.Telefon, inst_perms,  Email, ';
                         $query .= 'title_front, title_rear, ';
@@ -285,26 +289,34 @@ class ExternModuleTemplatePersons extends ExternModule {
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['PERSONDETAIL-HREF'] = $this->elements['LinkInternTemplate']->createUrl(array('link_args' => 'username=' . $db_out->f('username')));
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['USERNAME'] = $db_out->f('username');
 
-                    $avatar = Avatar::getAvatar($db_out->f('user_id'));
+                    if (is_element_visible_externally($db->f('user_id'), $user_perm, 'picture', $visibilities['picture'])) {
+                        $avatar = Avatar::getAvatar($db_out->f('user_id'));
+                    } else {
+                        $avatar = Avatar::getNobody();
+                    }
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['IMAGE-URL-SMALL'] = $avatar->getURL(Avatar::SMALL);
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['IMAGE-URL-MEDIUM'] = $avatar->getURL(Avatar::MEDIUM);
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['IMAGE-URL-NORMAL'] = $avatar->getURL(Avatar::NORMAL);
 
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['PHONE'] = ExternModule::ExtHtmlReady($db_out->f('Telefon'));
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['ROOM'] = ExternModule::ExtHtmlReady($db_out->f('raum'));
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL'] = $db_out->f('Email');
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL-LOCAL'] = array_shift(explode('@', $db_out->f('Email')));
-                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL-DOMAIN'] = array_pop(explode('@', $db_out->f('Email')));
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL'] = get_visible_email($db->f('user_id'));
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL-LOCAL'] = array_shift(explode('@', $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL']));
+                    $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL-DOMAIN'] = array_pop(explode('@', $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['EMAIL']));
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['OFFICEHOURS'] = ExternModule::ExtHtmlReady($db_out->f('sprechzeiten'));
                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['PERSON-NO'] = $j + 1;
-                    
+
                     // generic data fields
                     if (is_array($generic_datafields)) {
                         $localEntries = DataFieldEntry::getDataFieldEntries($db_out->f('user_id'), 'user');
                         #$datafields = $datafields_obj->getLocalFields($db_out->f('user_id'));
                         $k = 1;
                         foreach ($generic_datafields as $datafield) {
-                            if (isset($localEntries[$datafield]) && is_object($localEntries[$datafield])) {
+                            if (isset($localEntries[$datafield]) && 
+                                    is_object($localEntries[$datafield] && 
+                                    is_element_visible_externally($db_out->f('user_id'), 
+                                        $user_perm, $localEntries[$datafield]->getId(), 
+                                        $visibilities[$localEntries[$datafield]->getId()]))) {
                                 $localEntry = $localEntries[$datafield]->getDisplayValue();
                                 if ($localEntry) {
                                     $content['PERSONS']['GROUP'][$i]['PERSON'][$j]['DATAFIELD_' . $k] = $localEntry;
@@ -325,7 +337,6 @@ class ExternModuleTemplatePersons extends ExternModule {
         if (!$language = $this->config->getValue("Main", "language"))
             $language = "de_DE";
         init_i18n($language);
-        
         echo $this->elements['TemplateGeneric']->toString(array('content' => $this->getContent($args), 'subpart' => 'PERSONS'));
         
     }

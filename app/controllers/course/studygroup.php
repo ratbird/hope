@@ -616,12 +616,10 @@ class Course_StudygroupController extends AuthenticatedController {
                     $msg = new Messaging();
                     $receiver = Request::get('choose_member');
                     $sem = new Seminar($id);
-                    $u_name = get_fullname($user, 'full', true);
-                    $message = sprintf(_("%s möchte Sie auf die Studiengruppe %s aufmerksam machen. Klicken Sie auf den untenstehenden Link "
-                             . "um direkt zur Studiengruppe zu gelangen.\n\n %s"),
-                             $u_name, $sem->name, URLHelper::getlink("dispatch.php/course/studygroup/details/" . $id, array('cid' => NULL)));
+                    $message = sprintf(_("%s möchte Sie auf die Studiengruppe %s aufmerksam machen. Klicken Sie auf den untenstehenden Link um direkt zur Studiengruppe zu gelangen.\n\n %s"),
+                             get_fullname(), $sem->name, URLHelper::getlink("dispatch.php/course/studygroup/details/" . $id, array('cid' => NULL)));
                     $subject = _("Sie wurden in eine Studiengruppe eingeladen");
-                    $msg->insert_message($message, get_username($receiver),'', '', '', '', '', $subject);
+                    $msg->insert_message(addslashes($message), get_username($receiver),'', '', '', '', '', addslashes($subject));
                     $this->flash['success'] = sprintf(_("Der Nutzer %s wurde in die Studiengruppe eingeladen."), get_fullname($receiver, 'full', true));
                 }
             }
@@ -629,7 +627,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 if(!$perm->have_studip_perm('dozent',$id,get_userid($user))) {
                     if ($action == 'promote' && $status != 'dozent') {
                         StudygroupModel::promote_user($user,$id,$status);
-                        $this->flash['success'] = sprintf(_("Der Status des Nutzer %s wurde geändert."), get_fullname_from_uname($user, 'full', true));
+                        $this->flash['success'] = sprintf(_("Der Status des Nutzers %s wurde geändert."), get_fullname_from_uname($user, 'full', true));
                     } elseif ($action == 'remove') {
                         $this->flash['question'] = sprintf(_("Möchten Sie wirklich den Nutzer %s aus der Studiengruppe entfernen?"), get_fullname_from_uname($user, 'full', true));
                         $this->flash['candidate'] = $user;

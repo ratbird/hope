@@ -60,14 +60,14 @@ class IssueDB {
         if ($issue->forum) {
             $db->query("SELECT topic_id FROM px_topics WHERE topic_id = '{$issue->issue_id}'");
             if ($db->num_rows() == 0) {
-                $db->query("INSERT INTO px_topics (topic_id, root_id, parent_id, name, description, mkdate, chdate, author, Seminar_id, user_id) VALUES ('{$issue->issue_id}', '{$issue->issue_id}', '0', '".mysql_escape_string($issue->toString())."', '"._("Themenbezogene Diskussionen")."', '".time()."', '".time()."', '', '{$issue->seminar_id}' , '{$user->id}')");
+                $db->query("INSERT INTO px_topics (topic_id, root_id, parent_id, name, description, mkdate, chdate, author, Seminar_id, user_id) VALUES ('{$issue->issue_id}', '{$issue->issue_id}', '0', '".mysql_escape_string($issue->toString())."', '"._("Themenbezogene Diskussionen")."', '".time()."', '".time()."', '".get_fullname($user->id)."', '{$issue->seminar_id}' , '{$user->id}')");
             } else {
                 $db->query("UPDATE px_topics SET name = '".mysql_escape_string($issue->toString())."' WHERE topic_id = '{$issue->issue_id}'");
             }
         } else {
             //$db->query("DELETE FROM px_topics WHERE topic_id = '{$issue->issue_id}'");
         }
-
+        
         if ($issue->new) {
             $db->query("INSERT INTO themen (issue_id, seminar_id, author_id, title, description, mkdate, chdate, priority) VALUES ('{$issue->issue_id}', '{$issue->seminar_id}', '{$issue->author_id}', '".mysql_escape_string($issue->title)."', '".mysql_escape_string($issue->description)."', '{$issue->mkdate}', '{$issue->chdate}', '{$issue->priority}')");
         } else {

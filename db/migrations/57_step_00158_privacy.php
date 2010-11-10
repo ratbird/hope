@@ -43,13 +43,13 @@ class Step00158Privacy extends Migration
 
         // create database table for privacy settings
         $db->exec("CREATE TABLE `user_visibility` (
-            `user_id` VARCHAR(32) NOT NULL PRIMARY KEY, 
-            `online` TINYINT(1) NOT NULL DEFAULT 1, 
-            `chat` TINYINT(1) NOT NULL DEFAULT 1, 
-            `search` TINYINT(1) NOT NULL DEFAULT 1, 
-            `email` TINYINT(1) NOT NULL DEFAULT 1, 
-            `homepage` TEXT NOT NULL DEFAULT '', 
-            `default_homepage_visibility` INT NOT NULL DEFAULT 0 , 
+            `user_id` VARCHAR(32) NOT NULL PRIMARY KEY,
+            `online` TINYINT(1) NOT NULL DEFAULT 1,
+            `chat` TINYINT(1) NOT NULL DEFAULT 1,
+            `search` TINYINT(1) NOT NULL DEFAULT 1,
+            `email` TINYINT(1) NOT NULL DEFAULT 1,
+            `homepage` TEXT NOT NULL DEFAULT '',
+            `default_homepage_visibility` INT NOT NULL DEFAULT 0 ,
             `mkdate` INT(20) NOT NULL DEFAULT 0)");
 
         // insert default values
@@ -64,7 +64,7 @@ class Step00158Privacy extends Migration
         }
         // ... and write settings to user privacy table
         foreach ($categories as $owner_id => $settings) {
-            $db->exec("INSERT IGNORE INTO `user_visibility` SET `homepage`='".json_encode($settings)."' WHERE `user_id`='".$owner_id."'");
+            $db->exec("INSERT IGNORE INTO `user_visibility` (`homepage`,`user_id`) VALUES (".$db->quote(json_encode($settings)).",".$db->quote($owner_id).")");
         }
 
         // remove hidden attribute of custom categories (is configured in privacy settings now)

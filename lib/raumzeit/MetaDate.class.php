@@ -36,6 +36,7 @@
 
 require_once 'lib/raumzeit/MetaDateDB.class.php';
 require_once 'lib/raumzeit/CycleData.class.php';
+require_once 'lib/resources/lib/AssignObject.class.php';
 
 class MetaDate
 {
@@ -157,7 +158,7 @@ class MetaDate
     /*
      * adds a regular time entry
      */
-    function addCycle($data = array())
+    function addCycle($data = array(), $create_single_dates = true)
     {
         $data['day'] = (int)$data['day'];
         $data['start_stunde'] = (int)$data['start_stunde'];
@@ -169,7 +170,7 @@ class MetaDate
         if ($this->setCycleData($data, $cycle)) {
             $this->cycles[$cycle->getMetadateID()] = $cycle;
             $this->sortCycleData();
-            $this->createSingleDates($cycle->getMetadateID());
+            if ($create_single_dates) $this->createSingleDates($cycle->getMetadateID());
             return $cycle->getMetadateID();
         }
         return FALSE;
@@ -196,7 +197,7 @@ class MetaDate
                         $termine[$key]->setTime($t_start, $t_end);
                         $termine[$key]->store();
                     } else {
-                        unset($cycle->termine[$key]);
+                        unset($termine[$key]);
                     }
                 }
                 $this->sortCycleData();
@@ -221,7 +222,6 @@ class MetaDate
                 }
                 // remove all SingleDates in the future for this CycleData
                 $count = CycleDataDB::deleteNewerSingleDates($data['cycle_id'], time(), true);
-
                 // create new SingleDates
                 $this->createSingleDates(array('metadate_id' => $cycle->getMetaDateId(), 'startAfterTimeStamp' => time()));
 
@@ -373,6 +373,14 @@ class MetaDate
         return $this->cycles[$metadate_id]->readSingleDates($start, $end);
     }
 
+    /**
+     * returns true if a given cycle has at least one date at all or in the given time range
+     *
+     * @param string cycle id
+     * @param int $filterStart
+     * @param int $filterEnd
+     * @return bool
+     */
     function hasDates($metadate_id, $filterStart = 0, $filterEnd = 0)
     {
         if (!isset($this->hasDatesTmp[$metadate_id])) {
@@ -382,8 +390,33 @@ class MetaDate
         return $this->hasDatesTmp[$metadate_id];
     }
 
+    /**
+     * create single dates for one cycle and all semester and store them in database, deleting obsolete ones
+     *
+     * @param mixed cycle id (string) or array with 'metadate_id' => string cycle id, 'startAfterTimeStamp' => int timestamp to override semester start
+     */
+    function createSingleDates($data)
+    {
+        foreach ($this->getVirtualSingleDates($data) as $semester_id => $dates_for_semester) {
+            list($dates, $dates_to_delete) = array_values($dates_for_semester);
+            foreach ($dates_to_delete as $d) $d->delete();
+            foreach ($dates as $d) {
+                if ($d->isUpdate()) continue; //vorhandene Termine nicht speichern wg. chdate
+                $d->store();
+            }
+        }
+        //das sollte nicht nötig sein, muss aber erst genauer untersucht werden
+        $this->store();
+        $this->restore();
+    }
 
-    function createSingleDates($data, $irregularSingleDates = NULL)
+    /**
+     * generate single date objects for one cycle and all semester, existing dates are merged in
+     *
+     * @param mixed cycle id (string) or array with 'metadate_id' => string cycle id, 'startAfterTimeStamp' => int timestamp to override semester start
+     * @return array array of arrays, for each semester id  an array of two arrays of SingleDate objects: 'dates' => all new and surviving dates, 'dates_to_delete' => obsolete dates
+     */
+    function getVirtualSingleDates($data)
     {
         if (is_array($data)) {
             $metadate_id = $data['metadate_id'];
@@ -392,6 +425,8 @@ class MetaDate
             $metadate_id = $data;
             $startAfterTimeStamp = 0;
         }
+
+        $ret = array();
 
         $semester = new SemesterData;
         $all_semester = $semester->getAllSemesterData();
@@ -435,13 +470,46 @@ class MetaDate
                     $corr = 1;
                 else
                     $corr = 0;
-                $this->createSingleDatesForSemester($metadate_id, $val['vorles_beginn'], $val['vorles_ende'], $startAfterTimeStamp, $corr, $irregularSingleDates);
+                $ret[$val['semester_id']] = $this->getVirtualSingleDatesForSemester($metadate_id, $val['vorles_beginn'], $val['vorles_ende'], $startAfterTimeStamp, $corr);
             }
         }
+        return $ret;
     }
 
-    function createSingleDatesForSemester($metadate_id, $sem_begin, $sem_end, $startAfterTimeStamp, $corr, &$irregularSingleDates)
+    /**
+     * create single dates for one cycle and one semester and store them in database, deleting obsolete ones
+     *
+     * @param string cycle id
+     * @param int timestamp of semester start
+     * @param int timestamp of semester end
+     * @param int alternative timestamp to start from
+     * @param int correction calculation, if the semester does not start on monday (number of days?)
+     */
+    function createSingleDatesForSemester($metadate_id, $sem_begin, $sem_end, $startAfterTimeStamp, $corr)
     {
+        list($dates, $dates_to_delete) = array_values($this->getVirtualSingleDatesForSemester($metadate_id, $sem_begin, $sem_end, $startAfterTimeStamp, $corr));
+        foreach ($dates_to_delete as $d) $d->delete();
+        foreach ($dates as $d) {
+            if ($d->isUpdate()) continue; //vorhandene Termine nicht speichern wg. chdate
+            $d->store();
+        }
+        $this->store();//? who knows
+    }
+
+    /**
+     * generate single date objects for one cycle and one semester, existing dates are merged in
+     *
+     * @param string cycle id
+     * @param int timestamp of semester start
+     * @param int timestamp of semester end
+     * @param int alternative timestamp to start from
+     * @param int correction calculation, if the semester does not start on monday (number of days?)
+     * @return array returns an array of two arrays of SingleDate objects: 'dates' => all new and surviving dates, 'dates_to_delete' => obsolete dates
+     */
+    function getVirtualSingleDatesForSemester($metadate_id, $sem_begin, $sem_end, $startAfterTimeStamp, $corr)
+    {
+        $dates = array();
+        $dates_to_delete = array();
 
         // loads the singledates of the by metadate_id denoted regular time-entry into the object
         $this->readSingleDates($metadate_id);
@@ -491,18 +559,23 @@ class MetaDate
              */
             foreach ($existingSingleDates as $key => $val) {
                 // take only the singledate into account, that maps the current timepoint
-                if (($val->date == $start_time) && ($val->end_time == $end_time)) {
+                if ($start_time > $startAfterTimeStamp && ($val->date == $start_time) && ($val->end_time == $end_time)) {
 
                     // bi-weekly check
                     if ($turnus > 0 && ($week - $start_woche) > 0 && (($week - $start_woche) % ($turnus + 1)) ) {
-                        $val->delete();
+                        $dates_to_delete[$key] = $val;
+                        unset($existingSingleDates[$key]);
                     }
 
                     // delete singledates if they are earlier than the chosen start-week
                     if ($start_woche > $week) {
-                        $val->delete();
+                        $dates_to_delete[$key] = $val;
+                        unset($existingSingleDates[$key]);
                     }
                     $dateExists = true;
+                    if (isset($existingSingleDates[$key])) {
+                        $dates[$key] = $val;
+                    }
                 }
             }
 
@@ -516,9 +589,8 @@ class MetaDate
 
 
             if (!$dateExists) {
-                unset($termin);
-                $termin = new SingleDate(array('seminar_id' => $this->seminar_id));
 
+                $termin = new SingleDate(array('seminar_id' => $this->seminar_id));
 
                 $all_holiday = $holiday->getAllHolidays(); // fetch all Holidays
                 foreach ($all_holiday as $val2) {
@@ -538,11 +610,9 @@ class MetaDate
                 // fill the singleDate-Object with data
                 $termin->setMetaDateID($metadate_id);
                 $termin->setTime($start_time, $end_time);
-                $termin->setDateType($date_typ);
+                $termin->setDateType(1); //best guess
 
-
-                // store the singleDate to database
-                $termin->store();
+                $dates[$termin->getTerminID()] = $termin;
             }
 
             //inc the week
@@ -550,7 +620,38 @@ class MetaDate
 
         } while ($end_time < $sem_end);
 
-        // store all the other stuff
-        $this->store();
+        return array('dates' => $dates, 'dates_to_delete' => $dates_to_delete);
+    }
+
+    /**
+     * returns an array of AssignObjects for one cycle for given room
+     * assigns are not stored, used for collision checks before the cycle is stored
+     * (for now only in admin_seminare_assi.php)
+     *
+     * @param string id of cycle
+     * @param string id of room
+     * @return array array of AssignObject
+     */
+    function getVirtualMetaAssignObjects($metadate_id, $resource_id)
+    {
+        $ret = array();
+        foreach ($this->getVirtualSingleDates($metadate_id) as $semester_id => $dates_for_semester) {
+            list($dates, $dates_to_delete) = array_values($dates_for_semester);
+            foreach ($dates as $d) {
+                $ao = new AssignObject(null);
+                $ao->setResourceId($resource_id);
+                $ao->setBegin($d->getStartTime());
+                $ao->setEnd($d->getEndTime());
+                $ao->setRepeatEnd($d->getEndTime());
+                $ao->setRepeatQuantity(0);
+                $ao->setRepeatInterval(0);
+                $ao->setRepeatMonthOfYear(0);
+                $ao->setRepeatDayOfMonth(0);
+                $ao->setRepeatWeekOfMonth(0);
+                $ao->setRepeatDayOfWeek(0);
+                $ret[] = $ao;
+            }
+        }
+        return $ret;
     }
 }

@@ -1269,9 +1269,9 @@ if (($form == 4) && ($jump_next_x)) {
         if (($sem_create_data["resRequest"]->getSettedPropertiesCount() === 0)
         && ($sem_create_data["resRequest"]->getResourceId() === NULL)
         && (!(get_config('RESOURCES_ALLOW_SEMASSI_SKIP_REQUEST') && $sem_create_data['skip_room_request']))) {
-            $errormsg.="error§"._("Die Anfrage konnte nicht gespeichert werden, da Sie mindestens einen Raumwunsch oder eine gew&uuml;nschte Eigenschaft (z.B. Anzahl der Sitzpl&auml;tze) angeben m&uuml;ssen!");
+            $errormsg.="error§"._("Die Anfrage konnte nicht gespeichert werden, da Sie mindestens einen Raumwunsch oder eine gew&uuml;nschte Eigenschaft (z.B. Anzahl der Sitzpl&auml;tze) angeben m&uuml;ssen!") . '§';
             if(get_config('RESOURCES_ALLOW_SEMASSI_SKIP_REQUEST')){
-                $errormsg.="§info§"._("Wenn Sie keinen Raum ben&ouml;tigen, aktivieren Sie die entsprechende Option. Die freien Angaben zu R&auml;umen werden auch ohne Raumwunsch gespeichert.");
+                $errormsg.="info§"._("Wenn Sie keinen Raum ben&ouml;tigen, aktivieren Sie die entsprechende Option. Die freien Angaben zu R&auml;umen werden auch ohne Raumwunsch gespeichert.") . '§';
             }
             $dont_anchor = TRUE;
         }
@@ -1279,11 +1279,16 @@ if (($form == 4) && ($jump_next_x)) {
 
     //checks for direct ressources-assign
     if ($sem_create_data["term_art"]==0) {
-        for ($i=0; $i<$sem_create_data["turnus_count"]; $i++) {
-            //check overlaps...
-            if ($RESOURCES_ENABLE) {
-                $checkResult = $resAssign->changeMetaAssigns($sem_create_data["metadata_termin"], $sem_create_data["sem_start_time"], $sem_create_data["sem_duration_time"],TRUE);
+        if ($RESOURCES_ENABLE) {
+            $tmp_metadate = new Metadate();
+            $tmp_assigns = array();
+            $tmp_metadate->setSeminarStartTime($sem_create_data['sem_start_time']);
+            $tmp_metadate->setSeminarDurationTime($sem_create_data['sem_duration_time']);
+            foreach ($sem_create_data["metadata_termin"]["turnus_data"] as $key => $val) {
+                $metadate_id = $tmp_metadate->addCycle($sem_create_data["metadata_termin"]["turnus_data"][$key], false);
+                $tmp_assigns = array_merge($tmp_assigns, $tmp_metadate->getVirtualMetaAssignObjects($metadate_id, $sem_create_data["metadata_termin"]["turnus_data"][$key]["resource_id"]));
             }
+            $checkResult = $resAssign->changeMetaAssigns(null, null, null, true, $tmp_assigns);
         }
     } else {
         for ($i=0; $i<$sem_create_data["term_count"]; $i++) {
@@ -1308,7 +1313,6 @@ if (($form == 4) && ($jump_next_x)) {
     if ($RESOURCES_ENABLE) {
         $errormsg.=getFormattedResult($checkResult);
     }
-
     if (!$errormsg)
         $level=5;
     else

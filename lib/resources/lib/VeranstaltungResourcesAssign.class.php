@@ -149,10 +149,6 @@ class VeranstaltungResourcesAssign {
         if (func_num_args() == 1)
             $assignObjects = func_get_arg(0);
 
-        //load the assign-objects, if not given
-        if (!$assignObjects) {
-            $assignObjects =& $this->getMetaAssignObjects($term_data, $veranstaltung_start_time, $veranstaltung_duration_time);
-        }
         //check and save the assigns
         $i=0;
         if (is_array($assignObjects))

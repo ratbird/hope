@@ -90,6 +90,7 @@ class QuickSearch
     private $withAttributes = array();
     private $box_width = "233"; //width of the box withButton
     private $box_align = "right";//align of the lookingglass in the withButton-box
+    private $autocomplete_disabled = false;
     
     /**
      * returns an instance of QuickSearch so you can use it as singleton
@@ -221,6 +222,19 @@ class QuickSearch
     }
     
     /**
+     * disables the ajax autocomplete for this searchfield
+     * If you want to disable all QuickSearches, you better use the 
+     * config variable global -> AJAX_AUTOCOMPLETE_DISABLED
+     * @param disable boolean: true (default) to disable, false to enable
+     * autocomplete via ajax.
+     * @return QuickSearch
+     */
+    public function disableAutocomplete($disable = true) {
+        $this->autocomplete_disabled = $disable;
+        return $this;
+    }
+    
+    /**
      * set a JavaScript-function to be fired after the user has selected a
      * value in the QuickSearch field. Arguments are: 
      * function fireme(id_of_item, text_of_item)
@@ -305,7 +319,7 @@ class QuickSearch
             $template->set_attribute('defaultName', $this->defaultName);
             $template->set_attribute('inputClass', $this->inputClass);
             $template->set_attribute('withAttributes', $this->withAttributes ? $this->withAttributes : array());
-            $template->set_attribute('jsfunction', $this->jsfunction);
+            $template->set_attribute('autocomplete_disabled', Config::get()->getValue("AJAX_AUTOCOMPLETE_DISABLED") || $this->autocomplete_disabled);
             $template->set_attribute('count_QS', self::$count_QS);
             $template->set_attribute('id', $this->getId());
             $template->set_attribute('query_id', $query_id);

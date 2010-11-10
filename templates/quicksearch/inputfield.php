@@ -25,9 +25,11 @@
                     "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
                     <?= $jsfunction ? htmlReady($jsfunction) : "null" ?>,
                     <? if ($beschriftung && !$defaultID) : ?>
-                    '<?= $beschriftung ?>');
+                    '<?= $beschriftung ?>',
                     <? else : ?>
-                    null);
+                    null,
                     <? endif ?>
+                    <?= $autocomplete_disabled ? "true" : "false" ?>
+                    );
             });
         </script>

@@ -985,47 +985,47 @@ STUDIP.QuickSearch = {
    *        when user has selected something
    * @return: void
    */
-  autocomplete: function (name, url, func, title) {
-    jQuery('#' + name).autocomplete({
-      minLength: 3,
-      source: function (input, add) {
-        //get the variables that should be sent:
-        var send_vars = {
-          form_data: STUDIP.QuickSearch.formToJSON('#' + name),
-          request: input.term
-        };
-        jQuery.ajax({
-          url: url,
-          type: "post",
-          dataType: "json",
-          data: send_vars,
-          success: function (data) {
-            var stripTags = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
-            var suggestions = [];  //an array of possible selections
-            jQuery.each(data, function (i, val) {
-              //adding a label and a hidden item_id - don't use "value":
-              suggestions.push({
-                label: val.item_name,                       //what is displayed in the drobdown-boc
-                item_id: val.item_id,                       //the hidden ID of the item
-                value: val.item_name !== null 
-                  ? $("<div/>").html(val.item_name.replace(stripTags, "")).text() 
-                  : "" //what is inserted in the visible input-box
+  autocomplete: function (name, url, func, title, disabled) {
+    if (typeof disabled === "undefined" || disabled !== true) {
+      jQuery('#' + name).autocomplete({
+        minLength: 3,
+        source: function (input, add) {
+          //get the variables that should be sent:
+          var send_vars = {
+            form_data: STUDIP.QuickSearch.formToJSON('#' + name),
+            request: input.term
+          };
+          jQuery.ajax({
+            url: url,
+            type: "post",
+            dataType: "json",
+            data: send_vars,
+            success: function (data) {
+              var stripTags = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
+              var suggestions = [];  //an array of possible selections
+              jQuery.each(data, function (i, val) {
+                //adding a label and a hidden item_id - don't use "value":
+                suggestions.push({
+                  label: val.item_name,                       //what is displayed in the drobdown-boc
+                  item_id: val.item_id,                       //the hidden ID of the item
+                  value: val.item_name !== null ? $("<div/>").html(val.item_name.replace(stripTags, "")).text() : "" //what is inserted in the visible input-box
+                });
               });
-            });
-            //pass it to the function of UI-widget:
-            add(suggestions);
+              //pass it to the function of UI-widget:
+              add(suggestions);
+            }
+          });
+        },
+        select: function (event, ui) {
+          //inserts the ID of the selected item in the hidden input:
+          jQuery('#' + name + "_realvalue").attr("value", ui.item.item_id);
+          //and execute a special function defined before by the programmer:
+          if (func) {
+            func(ui.item.item_id, ui.item.label);
           }
-        });
-      },
-      select: function (event, ui) {
-        //inserts the ID of the selected item in the hidden input:
-        jQuery('#' + name + "_realvalue").attr("value", ui.item.item_id);
-        //and execute a special function defined before by the programmer:
-        if (func) {
-          func(ui.item.item_id, ui.item.label);
         }
-      }
-    });
+      });
+    }
     if (title) {
       jQuery('#' + name).bind("focus", function () {
         if (this.value === title) {

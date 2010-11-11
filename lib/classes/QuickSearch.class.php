@@ -319,6 +319,7 @@ class QuickSearch
             $template->set_attribute('defaultName', $this->defaultName);
             $template->set_attribute('inputClass', $this->inputClass);
             $template->set_attribute('withAttributes', $this->withAttributes ? $this->withAttributes : array());
+            $template->set_attribute('jsfunction', $this->jsfunction); 
             $template->set_attribute('autocomplete_disabled', Config::get()->getValue("AJAX_AUTOCOMPLETE_DISABLED") || $this->autocomplete_disabled);
             $template->set_attribute('count_QS', self::$count_QS);
             $template->set_attribute('id', $this->getId());

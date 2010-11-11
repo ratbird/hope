@@ -124,7 +124,7 @@ $width_namecolumn = 60;
         <li style="text-align: left; padding-left: 0px;">
             <span style="display: inline-block; vertical-align: middle;">
                 <?= Avatar::getAvatar($dozent["user_id"], $dozent['username'])->getImageTag(Avatar::SMALL) ?>
-            <span>
+            </span>
             <? if ($perm_dozent) : ?>
             <span style="white-space: nowrap; width: 32px; display: inline-block; vertical-align: middle;">
                 <? if ($num > 0) : ?>
@@ -137,7 +137,7 @@ $width_namecolumn = 60;
             </span>
             <? endif; ?>
             <span style="display: inline-block; padding-left: 3px; vertical-align: middle;">
-                <?= get_fullname($dozent["user_id"], 'full_rev', true)." (".$dozent["username"].")" ?>
+                <?= get_fullname($dozent["user_id"], 'full_rev', true)."<br>(".$dozent["username"].")" ?>
             </span>
             <? if ($perm_dozent) : ?>
             <span style="display: inline-block; vertical-align: middle;">

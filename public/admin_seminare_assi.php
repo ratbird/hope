@@ -2602,31 +2602,36 @@ if ($level == 2)
                 print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\"> ";
 
                 if ($SEM_CLASS[$SEM_TYPE[$sem_create_data["sem_status"]]["class"]]["only_inst_user"]) {
-                    $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
+                    $onlyFromInstituteOfSeminarClause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
                     if (is_array($sem_create_data["sem_bet_inst"])) {
                         foreach($sem_create_data["sem_bet_inst"] as $val) {
-                            $clause.=",'$val'";
+                            $onlyFromInstituteOfSeminarClause.=",'$val'";
                         }
                     }
-                    $clause.=") ";
+                    $onlyFromInstituteOfSeminarClause.=") ";
+
+                   $excludeUsersWithoutInstituteJoin =  "LEFT JOIN user_inst ON (user_inst.user_id = auth_user_md5.user_id) ";
                 }
-                $add_teacher_query = "SELECT DISTINCT auth_user_md5.username, " .
+
+                 $add_teacher_query = "SELECT DISTINCT auth_user_md5.username, " .
                             $_fullname_sql['full_rev'] ." AS fullname " .
-                        "FROM user_inst " .
-                                "LEFT JOIN auth_user_md5 ON (user_inst.user_id = auth_user_md5.user_id) " .
+                        "FROM auth_user_md5 " .
                                 "LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
+                                $excludeUsersWithoutInstituteJoin .
                         "WHERE (auth_user_md5.username LIKE :input " .
                                 "OR auth_user_md5.Vorname LIKE :input " .
                                 "OR auth_user_md5.Nachname LIKE :input) " .
                             "AND auth_user_md5.perms IN %s " .
-                            $clause .
+                            $onlyFromInstituteOfSeminarClause .
                         "ORDER BY auth_user_md5.Nachname DESC ";
-                $Dozentensuche = new SQLSearch(sprintf($add_teacher_query, "('dozent')"),
+
+                $searchForDozentUser = new SQLSearch(sprintf($add_teacher_query, "('dozent')"),
                         sprintf(_("%s auswählen"),
                         get_title_for_status('dozent', 1, $seminar_type)), "username");
-                print QuickSearch::get("add_doz", $Dozentensuche)
+                print QuickSearch::get("add_doz", $searchForDozentUser)
                             ->withButton()
                             ->render();
+
                 ?>
                 <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
                 </td>
@@ -2754,18 +2759,11 @@ if ($level == 2)
                         print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('tutor', 1, $seminar_type));
                         print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_tut\"> ";
 
-                        $clause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
-                        if ($sem_create_data["sem_bet_inst"]) {
-                            foreach($sem_create_data["sem_bet_inst"] as $val) {
-                                $clause.=",'$val'";
-                            }
-                        }
-                        $clause.=") ";
-                        $Tutorensuche = new SQLSearch(sprintf($add_teacher_query, "('dozent', 'tutor')"),
+                        $searchForTutorUser = new SQLSearch(sprintf($add_teacher_query, "('dozent', 'tutor')"),
                                 sprintf(_("%s auswählen"),
                                     get_title_for_status('tutor', 1, $seminar_type)
                                 ), "username");
-                        print QuickSearch::get("add_tut", $Tutorensuche)
+                        print QuickSearch::get("add_tut", $searchForTutorUser)
                                 ->withButton()
                                 ->render();
                         ?>

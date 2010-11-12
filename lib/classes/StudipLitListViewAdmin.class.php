@@ -328,97 +328,228 @@ class StudipLitListViewAdmin extends TreeView
         return false;
     }
 
-    function getItemContent($item_id){
+    function getItemContent($item_id) {
         $edit_content = false;
-        if ($item_id == $this->edit_item_id){
-            $edit_content = $this->getEditItemContent();
-        }
+
         $content .= "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"0\" align=\"center\" style=\"font-size:10pt\">";
         $content .= $this->getItemMessage($item_id);
-        if (!$edit_content){
-            if ($item_id == "root" && $this->tree->range_type != 'user'){
-                $user_lists = $this->tree->GetListsByRange($GLOBALS['auth']->auth['uid']);
-                $content .= "\n<tr><td class=\"steel1\" align=\"left\">";
-                $content .= "\n<form name=\"userlist_form\" action=\"" . $this->getSelf("cmd=CopyUserList") . "\" method=\"POST\">";
-                $content .= "<b>" . _("Pers&ouml;nliche Literaturlisten:")
-                ."</b><br><br>\n<select name=\"user_list\" style=\"vertical-align:middle;width:70%;\">";
-                if (is_array($user_lists)){
-                    foreach ($user_lists as $list_id => $list_name){
-                        $content .= "\n<option value=\"$list_id\">" . htmlReady($list_name) . "</option>";
-                    }
-                }
-                $content .= "\n</select>&nbsp;&nbsp;" .
-                    makeButton("kopieerstellen", "input", _("Eine Kopie der ausgewählten Liste erstellen")) .
-                    "</td></tr></form>";
-            }
-            if ($this->tree->isElement($item_id)) {
-                //$content .= "\n<tr><td class=\"steelkante\" align=\"left\" style=\"font-size:10pt\">" . _("Anmerkung:") ." </td></tr>";
-                //$content .= "\n<tr><td class=\"steel1\" align=\"left\" style=\"font-size:10pt\">" . formatReady($this->tree->tree_data[$item_id]['note']) ." &nbsp;</td></tr>";
-                $content .= "\n<tr><td class=\"steelgraulight\" align=\"left\" style=\"border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\">" . _("Vorschau:") ."<br>";
-                $content .= "\n<tr><td class=\"steel1\" align=\"left\" style=\"border-left: 1px solid black;border-right: 1px solid black;\">" . formatReady($this->tree->getFormattedEntry($item_id), false, true) ." </td></tr>";
-            } elseif ($item_id != 'root') {
-                $content .= "\n<tr><td class=\"steelgraulight\" align=\"left\" style=\"border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\">" . _("Formatierung:") ." </td></tr>";
-                $content .= "\n<tr><td class=\"steel1\" align=\"left\" style=\"border-left: 1px solid black;border-right: 1px solid black;\">" . htmlReady($this->tree->tree_data[$item_id]['format'],false,true) ." &nbsp;</td></tr>";
-                $content .= "\n<tr><td class=\"steelgraulight\" align=\"left\" style=\"border-left: 1px solid black;border-right: 1px solid black;\">" . _("Sichtbarkeit:") . "</td></tr>";
-                $content .= "\n<tr><td class=\"steel1\" align=\"left\" style=\"border-left: 1px solid black;border-right: 1px solid black;\">"
-                . ($this->tree->tree_data[$item_id]['visibility']
-                ? "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/visibility-visible.png\" border=\"0\" style=\"vertical-align:bottom;\">&nbsp;" . _("Sichtbar")
-                : "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/visibility-invisible.png\" border=\"0\" style=\"vertical-align:bottom;\">&nbsp;" . _("Unsichtbar")) . " </td></tr>";
-            }
-        } else {
+
+        if ($item_id == $this->edit_item_id) {
+            $edit_content = $this->getEditItemContent();
             $content .= "\n<tr><td class=\"steel1\" align=\"left\">$edit_content</td></tr>";
         }
-        if (!$edit_content && $item_id != 'root'){
-            $content .= "\n<tr><td class=\"steelgraulight\" align=\"right\" style=\"border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\">" . _("Letzte &Auml;nderung:") . strftime(" %d.%m.%Y ", $this->tree->tree_data[$item_id]['chdate'])
-                            . "(<a href=\"about.php?username=" . $this->tree->tree_data[$item_id]['username'] . "\">" . htmlReady($this->tree->tree_data[$item_id]['fullname']) . "</a>) </td></tr>";
+        else {
+            if ($item_id == "root" && $this->tree->range_type != 'user') {
+                $content .= $this->getTableRowForRootInLiteratur();
+            }
+
+            if ($this->tree->isElement($item_id)) {
+                $content .= $this->getTopRowForTableBox(_("Vorschau:"));
+                $content .= $this->getLiteratureEntryRowForTableBox($item_id);
+                $content .= $this->getBottomRowForTableBox($item_id);
+            } elseif ($item_id != 'root') {
+                $content .= $this->getTopRowForTableBox(_("Formatierung:"));
+                $content .= $this->getFormatRowForTableBox($item_id);
+                $content .= $this->getSubTitleRowForTableBox(_("Sichtbarkeit:"));
+                $content .= $this->getVisibilityStatusRowForTableBox($item_id);
+                $content .= $this->getBottomRowForTableBox($item_id);
+            }          
         }
+
         $content .= "</table>";
-        if (!$edit_content){
+
+
+        if (!$edit_content) {
             $content .= "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt\">";
             $content .= "\n<tr><td align=\"center\">&nbsp;</td></tr>";
             $content .= "\n<tr><td align=\"center\">";
-            if ($item_id == "root"){
-                $content .= "<a href=\"" . $this->getSelf("cmd=NewItem&item_id=$item_id") . "\">"
-                . "<img " .makeButton("neueliteraturliste","src") . tooltip(_("Eine neue Literaturliste anlegen."))
-                . " border=\"0\"></a>&nbsp;";
+
+            if ($item_id == "root") {
+                $content .= $this->getNewLiteratureButton($item_id);
             }
-            if ($this->mode != "NewItem"){
-                if ($item_id != "root"){
-                    $content .= "<a href=\"" . $this->getSelf("cmd=EditItem&item_id=$item_id") . "\">"
-                    . "<img " .makeButton("bearbeiten","src") . tooltip(_("Dieses Element bearbeiten"))
-                    . " border=\"0\"></a>&nbsp;";
-                    if ($this->tree->isElement($item_id)){
-                        $cmd = "DeleteItem";
-                        $content .= "<a href=\"admin_lit_element.php?_catalog_id={$this->tree->tree_data[$item_id]['catalog_id']}\">"
-                        . "<img " .makeButton("details","src") . tooltip(_("Detailansicht dieses Eintrages ansehen."))
-                        . " border=\"0\"></a>&nbsp;";
-                    } else {
-                        $cmd = "AssertDeleteItem";
-                        $content .= "<a href=\"" . $this->getSelf("cmd=CopyList&item_id=$item_id") . "\">"
-                        . "<img " .makeButton("kopieerstellen","src") . tooltip(_("Eine Kopie dieser Liste erstellen"))
-                        . " border=\"0\"></a>&nbsp;";
-                        $content .= "<a href=\"" . $this->getSelf("cmd=SortKids&item_id=$item_id") . "\">"
-                        . "<img " .makeButton("sortieren","src") . tooltip(_("Elemente dieser Liste alphabetisch sortieren"))
-                        . " border=\"0\"></a>&nbsp;";
-                        $content .= '<a href="' . GetDownloadLink('', $this->tree->tree_data[$item_id]['name'] . '.txt', 5, 'force', $this->tree->range_id, $item_id) . '">'
-                        . "<img " .makeButton("export","src") . tooltip(_("Export der Liste in EndNote kompatiblem Format"))
-                        . " border=\"0\"></a>&nbsp;";
-                    }
-                    $content .= "<a href=\"" . $this->getSelf("cmd=$cmd&item_id=$item_id") . "\">"
-                    . "<img " .makeButton("loeschen","src") . tooltip(_("Dieses Element löschen"))
-                    . " border=\"0\"></a>&nbsp;";
-                    if ($this->tree->isElement($item_id)){
-                        if (!$this->clip_board->isInClipboard($this->tree->tree_data[$item_id]["catalog_id"])){
-                            $content .= "<a href=\"". $this->getSelf("cmd=InClipboard&item_id=$item_id") . "\">"
-                                        . "<img " . makeButton("merkliste","src") . " border=\"0\" " .
-                                        tooltip(_("Eintrag in Merkliste aufnehmen")) . "></a>";
-                        }
+            elseif ($this->mode != "NewItem") {
+                if ($this->tree->isElement($item_id)) {
+                    $content .= $this->getEditLiteratureEntryButton($item_id);
+                    $content .= $this->getDetailsButton($item_id);
+                    $content .= $this->getDeleteButton($item_id, "DeleteItem");
+                } else {
+                    $content .= $this->getEditFormatingButton($item_id);
+                    $content .= $this->getCopyListButton($item_id);
+                    $content .= $this->getSortButton($item_id);
+                    $content .= $this->getExportButton($item_id);
+                    $content .= $this->getDeleteButton($item_id, "AssertDeleteItem");
+                }
+
+                if ($this->tree->isElement($item_id)) {
+                    if (!$this->isInClipboard($item_id)) {
+                        $content .= $this->getToClipboardButton($item_id);
                     }
                 }
             }
+            
             $content .= "</form></td></tr></table>";
         }
+
         return $content;
+    }
+
+
+    function getTableRowForRootInLiteratur() {
+        $user_lists = $this->tree->GetListsByRange($GLOBALS['auth']->auth['uid']);
+
+        $content .= "\n<tr><td class=\"steel1\" align=\"left\">";
+        $content .= "\n<form name=\"userlist_form\" action=\"" . $this->getSelf("cmd=CopyUserList") . "\" method=\"POST\">";
+        $content .= "<b>" . _("Pers&ouml;nliche Literaturlisten:")
+                . "</b><br><br>\n<select name=\"user_list\" style=\"vertical-align:middle;width:70%;\">";
+        if (is_array($user_lists)) {
+            foreach ($user_lists as $list_id => $list_name) {
+                $content .= "\n<option value=\"$list_id\">" . htmlReady($list_name) . "</option>";
+            }
+        }
+        $content .= "\n</select>&nbsp;&nbsp;" .
+                makeButton("kopieerstellen", "input", _("Eine Kopie der ausgewählten Liste erstellen")) .
+                "</form></td></tr>";
+
+        return $content;
+    }
+
+
+    function getTopRowForTableBox($title){
+        $content .= "\n<tr><td class=\"steelgraulight\" align=\"left\" style=\"border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\">";
+        $content .= $title;
+        $content .= " </td></tr>";
+
+        return $content;
+    }
+
+
+    function getLiteratureEntryRowForTableBox($item_id){
+        $content .= "\n<tr><td class=\"steel1\" align=\"left\" style=\"border-left: 1px solid black;border-right: 1px solid black;\">";
+        $content .= formatReady($this->tree->getFormattedEntry($item_id), false, true);
+        $content .= " </td></tr>";
+
+        return $content;
+    }
+
+
+    function getFormatRowForTableBox($item_id){
+        $content .= "\n<tr><td class=\"steel1\" align=\"left\" style=\"border-left: 1px solid black;border-right: 1px solid black;\">";
+        $content .= htmlReady($this->tree->tree_data[$item_id]['format'], false, true);
+        $content .= " &nbsp;</td></tr>";
+
+        return $content;
+    }
+
+    function getVisibilityStatusRowForTableBox($item_id){
+        $content .= "\n<tr><td class=\"steel1\" align=\"left\" style=\"border-left: 1px solid black;border-right: 1px solid black;\">";
+
+        if ($this->tree->tree_data[$item_id]['visibility']){
+            $content .= "<img src=\"" . $GLOBALS['ASSETS_URL'] . "images/icons/16/black/visibility-visible.png\" border=\"0\" style=\"vertical-align:bottom;\">&nbsp;" . _("Sichtbar");
+        }
+        else{
+            $content .="<img src=\"" . $GLOBALS['ASSETS_URL'] . "images/icons/16/black/visibility-invisible.png\" border=\"0\" style=\"vertical-align:bottom;\">&nbsp;" . _("Unsichtbar");
+        }
+
+        $content .=  " </td></tr>";
+
+        return $content;
+    }
+
+
+    function getSubTitleRowForTableBox($title){
+        $content .= "\n<tr><td class=\"steelgraulight\" align=\"left\" style=\"border-left: 1px solid black;border-right: 1px solid black;\">"; 
+        $content .= $title;
+        $content .= "</td></tr>";
+
+        return $content;
+    }
+
+    
+    function getBottomRowForTableBox($item_id){
+        $content .= "\n<tr><td class=\"steelgraulight\" align=\"right\" style=\"border-bottom: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\">";
+        $content .= _("Letzte &Auml;nderung:");
+        $content .= strftime(" %d.%m.%Y ", $this->tree->tree_data[$item_id]['chdate']);
+        $content .= "(<a href=\"about.php?username=";
+        $content .= $this->tree->tree_data[$item_id]['username'];
+        $content .= "\">" . htmlReady($this->tree->tree_data[$item_id]['fullname']) . "</a>) </td></tr>";
+
+        return $content;
+    }
+
+    function getNewLiteratureButton($item_id){
+        $content .= "<a href=\"" . $this->getSelf("cmd=NewItem&item_id=$item_id") . "\">";
+        $content .= "<img " . makeButton("neueliteraturliste", "src") . tooltip(_("Eine neue Literaturliste anlegen."));
+        $content .= " border=\"0\"></a>&nbsp;";
+
+        return $content;
+    }
+
+    function getEditFormatingButton($item_id){
+        $content .= "<a href=\"" . $this->getSelf("cmd=EditItem&item_id=$item_id") . "\">";
+        $content .= "<img " . makeButton("bearbeiten", "src") . tooltip(_("Dieses Element bearbeiten"));
+        $content .= " border=\"0\"></a>&nbsp;";
+
+        return $content;
+    }
+
+    function getEditLiteratureEntryButton($item_id){
+        $content .= "<a href=\"" . $this->getSelf("cmd=EditItem&item_id=$item_id") . "\">";
+        $content .= "<img " . makeButton("anmerkung", "src") . tooltip(_("Dieses Element bearbeiten"));
+        $content .= " border=\"0\"></a>&nbsp;";
+
+        return $content;
+    }
+
+    function getDetailsButton($item_id){
+        $content .= "<a href=\"admin_lit_element.php?_catalog_id={$this->tree->tree_data[$item_id]['catalog_id']}\">";
+        $content .= "<img " . makeButton("details", "src") . tooltip(_("Detailansicht dieses Eintrages ansehen."));
+        $content .= " border=\"0\"></a>&nbsp;";
+
+        return $content;
+    }
+
+    function getCopyListButton($item_id){
+        $content .= "<a href=\"" . $this->getSelf("cmd=CopyList&item_id=$item_id") . "\">";
+        $content .= "<img " . makeButton("kopieerstellen", "src") . tooltip(_("Eine Kopie dieser Liste erstellen"));
+        $content .= " border=\"0\"></a>&nbsp;";
+
+        return $content;
+    }
+
+    function getSortButton($item_id){
+        $content .= "<a href=\"" . $this->getSelf("cmd=SortKids&item_id=$item_id") . "\">";
+        $content .= "<img " . makeButton("sortieren", "src") . tooltip(_("Elemente dieser Liste alphabetisch sortieren"));
+        $content .= " border=\"0\"></a>&nbsp;";
+
+        return $content;
+    }
+
+    function getExportButton($item_id){
+        $content .= '<a href="' . GetDownloadLink('', $this->tree->tree_data[$item_id]['name'] . '.txt', 5, 'force', $this->tree->range_id, $item_id) . '">';
+        $content .= "<img " . makeButton("export", "src") . tooltip(_("Export der Liste in EndNote kompatiblem Format"));
+        $content .= " border=\"0\"></a>&nbsp;";
+
+        return $content;
+    }
+
+    function getDeleteButton($item_id, $cmd){
+        $content .= "<a href=\"" . $this->getSelf("cmd=$cmd&item_id=$item_id") . "\">";
+        $content .= "<img " . makeButton("loeschen", "src") . tooltip(_("Dieses Element löschen"));
+        $content .= " border=\"0\"></a>&nbsp;";
+
+        return $content;
+    }
+
+    function getToClipboardButton($item_id){
+        $content .= "<a href=\"" . $this->getSelf("cmd=InClipboard&item_id=$item_id") . "\">";
+        $content .= "<img " . makeButton("merkliste", "src") . " border=\"0\" ";
+        $content .= tooltip(_("Eintrag in Merkliste aufnehmen")) . "></a>";
+
+        return $content;
+    }
+
+    function isInClipboard($item_id){
+        return $this->clip_board->isInClipboard($this->tree->tree_data[$item_id]["catalog_id"]);
     }
 
     function getItemHead($item_id)

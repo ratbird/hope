@@ -137,7 +137,7 @@ $fields[] = 'seminar_user.status';
 $tables[] = 'LEFT JOIN seminar_user ON (auth_user_md5.user_id = seminar_user.user_id)';
     if (!$perm->have_perm('admin')) {
     $filter[] = "IF(:sem_id != '0', seminar_user.Seminar_id = :sem_id, TRUE)";
-	$tables[] = 'LEFT JOIN seminar_user AS su2 ON (su2.Seminar_id = seminar_user.Seminar_id AND su2.user_id = '.$db->quote($user-id).')';
+    $tables[] = 'LEFT JOIN seminar_user AS su2 ON (su2.Seminar_id = seminar_user.Seminar_id AND su2.user_id = '.$db->quote($user-id).')';
 }
 $arguments[":sem_id"] = $sem_id;
 

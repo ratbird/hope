@@ -106,11 +106,11 @@ $termine = getAllSortedSingleDates($sem);
 if (Request::get('export') && $rechte) {
     ob_end_clean();
 
-	header("Content-type: application/vnd.ms-word");
-	header("Content-Disposition: attachment; filename=ablaufplan.doc");
-	header("Expires: 0");
-	header("Cache-Control: private");
-	header("Pragma: cache");
+    header("Content-type: application/vnd.ms-word");
+    header("Content-Disposition: attachment; filename=ablaufplan.doc");
+    header("Expires: 0");
+    header("Cache-Control: private");
+    header("Pragma: cache");
 ?>
 <html>
     <head>

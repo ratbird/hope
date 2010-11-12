@@ -188,7 +188,8 @@ class Course_BasicdataController extends AuthenticatedController
                 htmlReady($inst['Name']) .
                 ($inst['is_fak'] ? "</span>" : "");
         }
-        $inst = array_flip($sem->getInstitutes());
+        $sem_institutes = $sem->getInstitutes();
+        $inst = array_flip($sem_institutes);
         unset($inst[$sem->institut_id]);
         $inst = array_flip($inst);
         $this->institutional[] = array(
@@ -202,32 +203,22 @@ class Course_BasicdataController extends AuthenticatedController
 
 
         //Dritter Reiter: Personal
-        if (SeminarCategories::getByTypeId($sem->status)->only_inst_user) {
-            $onlyFromInstituteOfSeminarClause="AND user_inst.Institut_id IN (".
-                    "SELECT institut_id FROM seminar_inst " .
-                    "WHERE seminar_id = '".$this->course_id."' " .
-                ") ";
-
-            $excludeUsersWithoutInstituteJoin =  "LEFT JOIN user_inst ON (user_inst.user_id = auth_user_md5.user_id) ";
-        }
-
-        $query = "SELECT DISTINCT auth_user_md5.user_id, " .
-                            $_fullname_sql['full_rev'] ." AS fullname " .
-                        "FROM auth_user_md5 " .
-                                "LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
-                                $excludeUsersWithoutInstituteJoin .
-                        "WHERE (auth_user_md5.username LIKE :input " .
-                                "OR auth_user_md5.Vorname LIKE :input " .
-                                "OR auth_user_md5.Nachname LIKE :input) " .
-                            "AND auth_user_md5.perms IN %s " .
-                            $onlyFromInstituteOfSeminarClause .
-                        "ORDER BY auth_user_md5.Nachname DESC ";
-
         $this->dozenten = $sem->getMembers('dozent');
-        $dozentUserSearch = new SQLSearch(
-                        sprintf($query, "('dozent')"),
-                        sprintf(_("Name %s"), get_title_for_status('dozent', 1, $sem->status)),
-                        "user_id");
+        if (SeminarCategories::getByTypeId($sem->status)->only_inst_user) {
+            $search_template = "user_id_inst_not_already_in_sem";
+        } else {
+            $search_template = "user_id_not_already_in_sem";
+        }
+        $dozentUserSearch = new PermissionSearch(
+                            $search_template,
+                            sprintf(_("Name %s"), get_title_for_status('dozent', 1, $sem->status)),
+                            "user_id",
+                            array('permission' => 'dozent',
+                                  'seminar_id' => $this->course_id,
+                                  'sem_perm' => 'dozent',
+                                  'institute' => $sem_institutes
+                                 )
+                            );
         $this->dozentensuche = QuickSearch::get("new_doz", $dozentUserSearch)
                                     ->withButton()
                                     ->render();
@@ -236,10 +227,10 @@ class Course_BasicdataController extends AuthenticatedController
         if ($this->deputies_enabled) {
             $this->deputies = getDeputies($this->course_id);
             $deputysearch = new PermissionSearch(
-                    "user_id",
+                    "user_id_not_already_tutor_dozent_deputy",
                     sprintf(_("Name %s"), get_title_for_status('deputy', 1, $sem->status)),
                     "user_id",
-                    array('permission' => getValidDeputyPerms())
+                    array('permission' => getValidDeputyPerms(), 'seminar_id' => $this->course_id)
                 );
             $this->deputysearch = QuickSearch::get('new_dep', $deputysearch)
                                     ->withButton()
@@ -247,16 +238,23 @@ class Course_BasicdataController extends AuthenticatedController
             $this->deputy_title = get_title_for_status('deputy', 1, $sem->status);
         }
         $this->tutoren = $sem->getMembers('tutor');
-        $tutorUserSearch = new SQLSearch(
-                        sprintf($query, "('tutor', 'dozent')"),
-                        sprintf(_("Name %s"), get_title_for_status('tutor', 1, $sem->status)),
-                        "user_id");
+
+        $tutorUserSearch = new PermissionSearch(
+                            $search_template,
+                            sprintf(_("Name %s"), get_title_for_status('dozent', 1, $sem->status)),
+                            "user_id",
+                            array('permission' => array('dozent','tutor'),
+                                  'seminar_id' => $this->course_id,
+                                  'sem_perm' => array('dozent','tutor'),
+                                  'institute' => $sem_institutes
+                                 )
+                            );
         $this->tutorensuche = QuickSearch::get("new_tut", $tutorUserSearch)
                                     ->withButton()
                                     ->render();
         $this->tutor_title = get_title_for_status('tutor', 1, $sem->status);
 
-        
+
         //Vierter Reiter: Beschreibungen (darunter Datenfelder)
         $this->descriptions[] = array(
             'title' => _("Teilnehmer/-innen"),

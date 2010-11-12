@@ -29,9 +29,9 @@ class PermissionSearch extends SQLSearch {
     private $title;
 
     /**
-     * 
-     * @param string $query: SQL with at least ":input" as parameter 
-     * @param array $presets: variables from the same form that should be used 
+     *
+     * @param string $query: SQL with at least ":input" as parameter
+     * @param array $presets: variables from the same form that should be used
      * in this search. array("input_name" => "placeholder_in_sql_query")
      * @return void
      */
@@ -75,7 +75,7 @@ class PermissionSearch extends SQLSearch {
                     if (is_array($value)) {
                         $sql = str_replace(':'.$name, "'".implode("', '", $value)."'", $sql);
                     } else {
-                        $sql = str_replace(':'.$name, "'".$value."'");
+                        $sql = str_replace(':'.$name, "'".$value."'", $sql);
                     }
                 }
             }
@@ -104,7 +104,7 @@ class PermissionSearch extends SQLSearch {
     private function getSQL() {
         switch ($this->search) {
             case "username":
-                return "SELECT DISTINCT auth_user_md5.username, ".$GLOBALS['_fullname_sql']['full_rev']." AS fullname " .
+                return "SELECT DISTINCT auth_user_md5.username, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
                         "FROM auth_user_md5 " .
                         " LEFT JOIN user_info USING(user_id) " .
                         "WHERE ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
@@ -113,7 +113,7 @@ class PermissionSearch extends SQLSearch {
                         "ORDER BY auth_user_md5.Nachname ASC " .
                         "LIMIT 10";
             case "username_inst":
-                return "SELECT DISTINCT auth_user_md5.username, ".$GLOBALS['_fullname_sql']['full_rev']." AS fullname " .
+                return "SELECT DISTINCT auth_user_md5.username, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
                         "FROM auth_user_md5 LEFT JOIN user_inst ON (user_inst.user_id = auth_user_md5.user_id) " .
                         " LEFT JOIN user_info USING(user_id) " .
                         "WHERE ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
@@ -123,7 +123,7 @@ class PermissionSearch extends SQLSearch {
                         "ORDER BY auth_user_md5.Nachname ASC " .
                         "LIMIT 10";
             case "user_id":
-                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev']." AS fullname " .
+                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
                         "FROM auth_user_md5 " .
                         " LEFT JOIN user_info USING(user_id) " .
                         "WHERE ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
@@ -131,14 +131,43 @@ class PermissionSearch extends SQLSearch {
                             "AND auth_user_md5.perms IN (:permission) ".
                         "ORDER BY auth_user_md5.Nachname ASC " .
                         "LIMIT 10";
-            case "user_id_inst":
-                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev']." AS fullname " .
+            case "user_id_not_already_in_sem":
+                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
                         "FROM auth_user_md5 " .
-                        " LEFT JOIN user_info USING(user_id) " .
+                        "LEFT JOIN seminar_user su ON su.user_id = auth_user_md5.user_id AND seminar_id=:seminar_id AND status IN (:sem_perm) " .
+                        " LEFT JOIN user_info ON auth_user_md5.user_id = user_info.user_id  " .
+                        "WHERE su.user_id IS NULL AND ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
+                            "OR auth_user_md5.username LIKE :input ) " .
+                            "AND auth_user_md5.perms IN (:permission) ".
+                        "ORDER BY auth_user_md5.Nachname ASC " .
+                        "LIMIT 10";
+            case "user_id_inst":
+                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
+                        "FROM auth_user_md5 LEFT JOIN user_inst ON (user_inst.user_id = auth_user_md5.user_id) " .
+                        " LEFT JOIN user_info ON auth_user_md5.user_id = user_info.user_id  " .
                         "WHERE ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input ) " .
                             "AND user_inst.Institut_id IN (:institute) " .
                             "AND user_inst.inst_perms IN (:permission) ".
+                        "ORDER BY auth_user_md5.Nachname ASC " .
+                        "LIMIT 10";
+           case "user_id_inst_not_already_in_sem":
+                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
+                        "FROM auth_user_md5 LEFT JOIN user_inst ON (user_inst.user_id = auth_user_md5.user_id) " .
+                        "LEFT JOIN seminar_user su ON su.user_id = auth_user_md5.user_id AND seminar_id=:seminar_id AND status IN (:sem_perm) LEFT JOIN user_info ON auth_user_md5.user_id = user_info.user_id  " .
+                        "WHERE su.user_id IS NULL AND ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
+                            "OR auth_user_md5.username LIKE :input ) " .
+                            "AND user_inst.Institut_id IN (:institute) " .
+                            "AND user_inst.inst_perms IN (:permission) ".
+                        "ORDER BY auth_user_md5.Nachname ASC " .
+                        "LIMIT 10";
+           case "user_id_not_already_tutor_dozent_deputy":
+                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
+                        "FROM auth_user_md5 LEFT JOIN seminar_user su ON su.user_id = auth_user_md5.user_id AND seminar_id=:seminar_id AND status IN ('tutor','dozent') " .
+                        " LEFT JOIN deputies d ON d.user_id = auth_user_md5.user_id AND range_id=:seminar_id LEFT JOIN user_info ON auth_user_md5.user_id = user_info.user_id " .
+                        "WHERE su.user_id IS NULL AND d.user_id IS NULL AND ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
+                            "OR auth_user_md5.username LIKE :input ) " .
+                            "AND auth_user_md5.perms IN (:permission) ".
                         "ORDER BY auth_user_md5.Nachname ASC " .
                         "LIMIT 10";
         }

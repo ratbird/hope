@@ -279,6 +279,9 @@ echo "</td></tr>";
 ?>
 </table>
 </td>
+
+<?= $_the_form->getHiddenField(md5("is_sended"),1) ?>  
+
 <td class="blank" width="270" align="right" valign="top">
 <?
 $infobox[0] = array ("kategorie" => _("Information:"),

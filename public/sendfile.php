@@ -67,13 +67,15 @@ if ($object_id && in_array($type, array(0,6))){
     $object_type = get_object_type($object_id);
     //download from institute is always allowed
     if ($object_type == "inst" || $object_type == "fak"){
-        $no_access = false;
+        if (get_config('ENABLE_FREE_ACCESS') || $perm->have_perm('user')) {
+            $no_access = false;
+        }
     }
     //download from course is allowed if course is free for all or user is participant
     if($object_type == 'sem'){
         $no_access = !$perm->have_studip_perm('user', $object_id);
         $seminar = Seminar::GetInstance($object_id);
-        if($seminar->read_level == 0){
+        if ($seminar->isPublic()) {
             $no_access = false;
         }
     }

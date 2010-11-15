@@ -104,6 +104,8 @@ if (get_config('NEWS_RSS_EXPORT_ENABLE') && $SessSemName[1]){
 
 checkObject();
 
+mark_public_course();
+
 PageLayout::setHelpKeyword("Basis.Einrichtungen");
 PageLayout::setTitle($SessSemName["header_line"]. " - " ._("Kurzinfo"));
 Navigation::activateItem('/course/main/info');

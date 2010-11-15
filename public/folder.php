@@ -263,7 +263,7 @@ checkObject();
 checkObjectModule('documents');
 object_set_visit_module('documents');
 
-//mark_public_course();
+mark_public_course();
 
 // Start of Output
 

@@ -139,7 +139,7 @@ function selectSem ($sem_id) {
         $rechte = $perm->have_studip_perm("tutor", $row["Seminar_id"]);
         if( !($SemUserStatus = $perm->get_studip_perm($row["Seminar_id"])) ){
             $SemUserStatus = "nobody";
-            if ($SemSecLevelRead > 0){
+            if ($SemSecLevelRead > 0 || !get_config('ENABLE_FREE_ACCESS')) {
                 throw new AccessDeniedException(_("Keine Berechtigung."));
             }
         }
@@ -190,6 +190,10 @@ function selectInst ($inst_id) {
     $db = DBManager::get();
 
     closeObject();
+
+    if (!get_config('ENABLE_FREE_ACCESS') && !$perm->have_perm('user')) {
+        throw new AccessDeniedException(_("Keine Berechtigung."));
+    }
 
     $st = $db->prepare("SELECT Name, Institut_id, type,fakultaets_id, IF(Institut_id=fakultaets_id,1,0) AS is_fak FROM Institute WHERE Institut_id = ?");
     $st->execute(array($inst_id));
@@ -1394,8 +1398,8 @@ function studip_utf8decode($string){
 
 function mark_public_course($course = NULL) {
 
-    // only mark course if user is logged in
-    if ($GLOBALS['auth']->auth['uid'] == 'nobody') {
+    // only mark course if user is logged in and free access enabled
+    if ($GLOBALS['auth']->auth['uid'] == 'nobody' || !get_config('ENABLE_FREE_ACCESS')) {
         return;
     }
 

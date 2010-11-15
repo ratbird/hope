@@ -1989,12 +1989,12 @@ class Seminar
     }
 
     /**
-     * @return void       returns TRUE if this course is publicly visible,
+     * @return boolean    returns TRUE if this course is publicly visible,
      *                    FALSE otherwise
      */
     function isPublic()
     {
-        return $this->read_level == 0 && $this->visible == 1;
+        return get_config('ENABLE_FREE_ACCESS') && $this->read_level == 0;
     }
 
     /**

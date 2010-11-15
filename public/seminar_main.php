@@ -100,7 +100,7 @@ if (get_config('NEWS_RSS_EXPORT_ENABLE') && $SessSemName[1]){
 
 checkObject();
 
-mark_public_course($sem);
+mark_public_course();
 
 PageLayout::setHelpKeyword("Basis.InVeranstaltungKurzinfo");
 PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Kurzinfo"));

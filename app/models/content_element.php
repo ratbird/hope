@@ -53,7 +53,7 @@ class StudipContentElementForum extends StudipContentElement {
             $type = get_object_type($this->data['Seminar_id']);
             if($type == 'sem'){
                 $seminar = Seminar::GetInstance($this->data['Seminar_id']);
-                if($seminar->read_level == 0){
+                if ($seminar->isPublic()) {
                     return true;
                 } else if ($seminar->read_level == 1){
                     return $user_id && $user_id != 'nobody';

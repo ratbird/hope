@@ -14,7 +14,7 @@
                     $name ?>_parameter" value="<?= $defaultName ?>">
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>
-            <input class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>" title="<?= _("Suche starten") ?>">
+            <input <?=($search_button_name ? 'name="'.$search_button_name.'"' : '')?> class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>" title="<?= _("Suche starten") ?>">
     <? endif ?>
         </div>
 <? endif ?>

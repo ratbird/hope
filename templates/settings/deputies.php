@@ -13,7 +13,7 @@
         <td class="blank" align="left" width="50%">
             <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('view' => 'deputies', 'cmd' => 'set_deputy', 'studipticket' => get_ticket())); ?>">
                 <input type="IMAGE" src="<?= Assets::image_path('icons/16/yellow/arr_2left.png'); ?>" <?= tooltip(_("NutzerIn hinzufügen")); ?> border="0" name="add_deputy">
-                <?php print QuickSearch::get("deputy_id", new PermissionSearch("user_id", _("Vor-, Nach- oder Benutzername"), "user_id", array('permission' => $permission)))
+                <?php print QuickSearch::get("deputy_id", new PermissionSearch("user", _("Vor-, Nach- oder Benutzername"), "user_id", array('permission' => $permission)))
                 ->withButton()
                 ->render(); ?>
              </form>

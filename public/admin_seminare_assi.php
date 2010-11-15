@@ -815,14 +815,16 @@ if (!$jump_back_x
     && !$add_turnus_field_x
     && !$delete_turnus_field_x
     && !$send_doz_x
+    && !$send_tut_x
+    && !$send_dep_x
     && !$reset_search_x
     && !$add_term_field_x
     && !$delete_term_field_x
     && !$add_studg_x
     && !$delete_studg_x
-    && !$search_doz
-    && !$search_dep
-    && !$search_tut
+    && !$search_doz_x
+    && !$search_dep_x
+    && !$search_tut_x
     && !$search_room_x
     && !$reset_room_search_x
     && !$send_room_x
@@ -834,7 +836,6 @@ if (!$jump_back_x
     && !$toggle_admission_quota_x) {
     $jump_next_x=TRUE;
 }
-
 
 //Check auf korrekte Eingabe und Sprung in naechste Level, hier auf Schritt 2
 if (($form == 1) && ($jump_next_x))
@@ -1278,7 +1279,7 @@ if (($form == 4) && ($jump_next_x)) {
     }
 
     //checks for direct ressources-assign
-    if ($sem_create_data["term_art"]==0) {
+    if ($sem_create_data["term_art"]==0 && is_array($sem_create_data["metadata_termin"]["turnus_data"])) {
         if ($RESOURCES_ENABLE) {
             $tmp_metadate = new Metadate();
             $tmp_assigns = array();
@@ -2601,35 +2602,23 @@ if ($level == 2)
                 print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type));
                 print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\"> ";
 
-                if ($SEM_CLASS[$SEM_TYPE[$sem_create_data["sem_status"]]["class"]]["only_inst_user"]) {
-                    $onlyFromInstituteOfSeminarClause="AND Institut_id IN ('".$sem_create_data["sem_inst_id"]."'";
-                    if (is_array($sem_create_data["sem_bet_inst"])) {
-                        foreach($sem_create_data["sem_bet_inst"] as $val) {
-                            $onlyFromInstituteOfSeminarClause.=",'$val'";
-                        }
-                    }
-                    $onlyFromInstituteOfSeminarClause.=") ";
 
-                   $excludeUsersWithoutInstituteJoin =  "LEFT JOIN user_inst ON (user_inst.user_id = auth_user_md5.user_id) ";
-                }
+		        if (SeminarCategories::getByTypeId($sem_create_data["sem_status"])->only_inst_user) {
+		            $search_template = "user_inst";
+		        } else {
+		            $search_template = "user";
+		        }
 
-                 $add_teacher_query = "SELECT DISTINCT auth_user_md5.username, " .
-                            $_fullname_sql['full_rev'] ." AS fullname " .
-                        "FROM auth_user_md5 " .
-                                "LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
-                                $excludeUsersWithoutInstituteJoin .
-                        "WHERE (auth_user_md5.username LIKE :input " .
-                                "OR auth_user_md5.Vorname LIKE :input " .
-                                "OR auth_user_md5.Nachname LIKE :input) " .
-                            "AND auth_user_md5.perms IN %s " .
-                            $onlyFromInstituteOfSeminarClause .
-                        "ORDER BY auth_user_md5.Nachname DESC ";
-
-                $searchForDozentUser = new SQLSearch(sprintf($add_teacher_query, "('dozent')"),
-                        sprintf(_("%s auswählen"),
-                        get_title_for_status('dozent', 1, $seminar_type)), "username");
+		        $searchForDozentUser = new PermissionSearch($search_template,
+                                       sprintf(_("%s auswählen"), get_title_for_status('dozent', 1, $seminar_type)),
+                                       "username",
+                                       array('permission' => 'dozent',
+                                             'exclude_user' => array_keys((array)$sem_create_data["sem_doz"]),
+		                                     'institute' => array_merge((array)$sem_create_data["sem_inst_id"], (array)$sem_create_data["sem_bet_inst"])
+		                                  )
+		                               );
                 print QuickSearch::get("add_doz", $searchForDozentUser)
-                            ->withButton()
+                            ->withButton(array('search_button_name' => 'search_doz', 'reset_button_name' => 'reset_search'))
                             ->render();
 
                 ?>
@@ -2659,7 +2648,7 @@ if ($level == 2)
                                                             echo "</a>";
                                                             echo "</td>";
                               echo "<td>";
-                              echo "<font size=\"-1\">&nbsp;<b>".$val['fullname'].
+                              echo "<font size=\"-1\">&nbsp;<b>".htmlReady($val['fullname']).
                            " (". $val['username'] . ", "._("Status").": ".$val['perms'].")</b></font>";
 
                               echo "</td>";
@@ -2683,10 +2672,16 @@ if ($level == 2)
                         print _("Vertretung hinzuf&uuml;gen");
                         print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_dep\"> ";
 
-                        $deputysearch = new PermissionSearch('username', _("Vertretung auswählen"), 'username', array('permission' => getValidDeputyPerms()));
+                        $deputysearch = new PermissionSearch('user',
+                                        sprintf(_("%s auswählen"), get_title_for_status('deputy', 1, $seminar_type)),
+                                        'username',
+                                        array('permission' => getValidDeputyPerms(),
+                                              'exclude_user' => array_keys((array)$sem_create_data["sem_dep"])
+                                            )
+                                        );
                         print QuickSearch::get("add_dep", $deputysearch)
-                                ->withButton()
-                                ->render();
+                              ->withButton(array('search_button_name' => 'search_dep', 'reset_button_name' => 'reset_search'))
+                              ->render();
                         ?>
                         <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
                         </td>
@@ -2759,13 +2754,17 @@ if ($level == 2)
                         print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('tutor', 1, $seminar_type));
                         print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_tut\"> ";
 
-                        $searchForTutorUser = new SQLSearch(sprintf($add_teacher_query, "('dozent', 'tutor')"),
-                                sprintf(_("%s auswählen"),
-                                    get_title_for_status('tutor', 1, $seminar_type)
-                                ), "username");
+                        $searchForTutorUser = new PermissionSearch($search_template,
+                                       sprintf(_("%s auswählen"), get_title_for_status('tutor', 1, $seminar_type)),
+                                       "username",
+                                       array('permission' => array('tutor','dozent'),
+	                                         'exclude_user' => array_merge(array_keys((array)$sem_create_data["sem_tut"]), array_keys((array)$sem_create_data["sem_doz"])),
+	                                         'institute' => array_merge((array)$sem_create_data["sem_inst_id"], (array)$sem_create_data["sem_bet_inst"])
+                                          )
+                                       );
                         print QuickSearch::get("add_tut", $searchForTutorUser)
-                                ->withButton()
-                                ->render();
+                              ->withButton(array('search_button_name' => 'search_tut', 'reset_button_name' => 'reset_search'))
+                              ->render();
                         ?>
                         <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
                         </td>

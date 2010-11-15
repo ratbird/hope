@@ -53,13 +53,13 @@ require_once 'lib/classes/searchtypes/SeminarSearch.class.php';
  * constructor 'new Quicksearch' is the name of the variable in your form and is
  * completely free to name. The (optional) second parameter describes what you are
  * searching for: username, user_id, Seminar_id or Institut_id.
- * 
+ *
  * Also you can do method-chaining with this class, so you can press everything
  * you need infront of your semicolon. Watch this example:
  *  //code-begin
  *  print QuickSearch::get("username", "username")->withButton->render();
  *  //code-end
- *  
+ *
  * Lastly you can replace the second argument of the constructor (or get-method)
  * by an object whose class extends the SearchType-class. This might be
  * useful to create your own searches and handle them with oop-style or even
@@ -72,15 +72,15 @@ require_once 'lib/classes/searchtypes/SeminarSearch.class.php';
  *  $searcher = new TeacherSearch();
  *  print QuickSearch::get("username", $searcher)->withButton->render();
  *  //code-end
- * Watch the SearchType class in lib/classes/searchtypes/SearchType.class.php 
+ * Watch the SearchType class in lib/classes/searchtypes/SearchType.class.php
  * for details.
  * Enjoy!
  */
 class QuickSearch
 {
-    
+
     static $count_QS = 0;       //static counter of all instances of this class
-    
+
     private $name;              //name of the input/select field
     private $search;            //may be an object or a string
     private $avatarLike;        //like "user_id", "username", "Seminar_id" or stuff
@@ -91,7 +91,10 @@ class QuickSearch
     private $box_width = "233"; //width of the box withButton
     private $box_align = "right";//align of the lookingglass in the withButton-box
     private $autocomplete_disabled = false;
-    
+    private $search_button_name;
+    private $reset_button_name;
+
+
     /**
      * returns an instance of QuickSearch so you can use it as singleton
      *
@@ -103,12 +106,12 @@ class QuickSearch
      *
      * @return object of type QuickSearch
      */
-    public static function get($name, $search = NULL) 
+    public static function get($name, $search = NULL)
     {
         return new QuickSearch($name, $search);
     }
-    
-    
+
+
     /**
      * constructor which prepares a searchfield for persons, courses, institutes or
      * special items you may want to search for. This is a GUI-class, see
@@ -122,7 +125,7 @@ class QuickSearch
      *
      * @return void
      */
-    public function QuickSearch($name, $search = NULL) 
+    public function QuickSearch($name, $search = NULL)
     {
         self::$count_QS++;
         $this->name = $name;
@@ -134,7 +137,7 @@ class QuickSearch
             $this->search = NULL;
         }
     }
-    
+
     /**
      * if set to true, the searchfield will be a nice-looking grey searchfield with
      * a magnifier-symbol as a submit-button. Set this to false to create your own
@@ -143,27 +146,29 @@ class QuickSearch
      *
      * @return QuickSearch
      */
-    public function withButton($design = array()) 
+    public function withButton($design = array())
     {
         $this->withButton = true;
         if (isset($design['width'])) {
             $this->box_width = $design['width'];
         }
         $this->box_align = $design['align'] ? $design['align'] : "right";
+        $this->search_button_name = $design['search_button_name'];
+        $this->reset_button_name = $design['reset_button_name'];
         return $this;
     }
-    
+
     /**
      * this will disable a submit button for the searchfield
      *
      * @return QuickSearch
      */
-    public function withoutButton() 
+    public function withoutButton()
     {
         $this->withButton = false;
         return $this;
     }
-    
+
     /**
      * Here you can set a default-value for the searchfield
      *
@@ -174,13 +179,13 @@ class QuickSearch
      *
      * @return QuickSearch
      */
-    public function defaultValue($valueID, $valueName) 
+    public function defaultValue($valueID, $valueName)
     {
         $this->defaultID = $valueID;
         $this->defaultName = $valueName;
         return $this;
     }
-    
+
     /**
      * defines a css class for the searchfield
      *
@@ -188,12 +193,12 @@ class QuickSearch
      *
      * @return QuickSearch
      */
-    public function setInputClass($class) 
+    public function setInputClass($class)
     {
         $this->withAttributes['class'] = $class;
         return $this;
     }
-    
+
     /**
      * defines css-proporties for searchfield that will be included as 'style="$style"'
      *
@@ -201,29 +206,29 @@ class QuickSearch
      *
      * @return QuickSearch
      */
-    public function setInputStyle($style) 
+    public function setInputStyle($style)
     {
         $this->withAttributes['style'] = $style;
         return $this;
     }
-    
+
     /**
-     * disables the select-box, which is displayed for non-JS users who will 
+     * disables the select-box, which is displayed for non-JS users who will
      * choose with this box, which item they want to have.
      *
      * @param bool $set false if we DO want a select-box, false otherwise
      *
      * @return QuickSearch
      */
-    public function noSelectbox($set = true) 
+    public function noSelectbox($set = true)
     {
         $this->selectBox = !$set;
         return $this;
     }
-    
+
     /**
      * disables the ajax autocomplete for this searchfield
-     * If you want to disable all QuickSearches, you better use the 
+     * If you want to disable all QuickSearches, you better use the
      * config variable global -> AJAX_AUTOCOMPLETE_DISABLED
      * @param disable boolean: true (default) to disable, false to enable
      * autocomplete via ajax.
@@ -233,10 +238,10 @@ class QuickSearch
         $this->autocomplete_disabled = $disable;
         return $this;
     }
-    
+
     /**
      * set a JavaScript-function to be fired after the user has selected a
-     * value in the QuickSearch field. Arguments are: 
+     * value in the QuickSearch field. Arguments are:
      * function fireme(id_of_item, text_of_item)
      * example setting: QS->fireJSFunctionOnSelect('fireme');
      *
@@ -244,12 +249,12 @@ class QuickSearch
      *
      * @return QuickSearch
      */
-    public function fireJSFunctionOnSelect($function_name) 
+    public function fireJSFunctionOnSelect($function_name)
     {
         $this->jsfunction = $function_name;
         return $this;
     }
-    
+
     /**
      * assigns special attributes to the html-element of the searchfield
      *
@@ -257,14 +262,14 @@ class QuickSearch
      *
      * @return QuickSearch
      */
-    public function setAttributes($attr_array) 
+    public function setAttributes($attr_array)
     {
         if (is_array($attr_array)) {
             $this->withAttributes = $attr_array;
         }
         return $this;
     }
-    
+
     /**
      * last step: display everything and be happy!
      * comment: the Ajax-Result (for the javascript-instant-search) will be also displayed here,
@@ -272,10 +277,10 @@ class QuickSearch
      *
      * @return string
      */
-    public function render() 
+    public function render()
     {
-        if (trim(Request::get($this->name.'_parameter')) 
-               && (Request::get($this->name.'_parameter') != $this->beschriftung()) 
+        if (trim(Request::get($this->name.'_parameter'))
+               && (Request::get($this->name.'_parameter') != $this->beschriftung())
                && !Request::get($this->name)
                && $this->selectBox) {
             //No Javascript activated and having searched:
@@ -289,6 +294,8 @@ class QuickSearch
             $template->set_attribute('searchresults', $searchresults);
             $template->set_attribute('name', $this->name);
             $template->set_attribute('inputClass', $this->inputClass);
+            $template->set_attribute('search_button_name', $this->search_button_name);
+            $template->set_attribute('reset_button_name', $this->reset_button_name);
             return $template->render();
 
         } else {
@@ -319,29 +326,31 @@ class QuickSearch
             $template->set_attribute('defaultName', $this->defaultName);
             $template->set_attribute('inputClass', $this->inputClass);
             $template->set_attribute('withAttributes', $this->withAttributes ? $this->withAttributes : array());
-            $template->set_attribute('jsfunction', $this->jsfunction); 
+            $template->set_attribute('jsfunction', $this->jsfunction);
             $template->set_attribute('autocomplete_disabled', Config::get()->getValue("AJAX_AUTOCOMPLETE_DISABLED") || $this->autocomplete_disabled);
             $template->set_attribute('count_QS', self::$count_QS);
             $template->set_attribute('id', $this->getId());
             $template->set_attribute('query_id', $query_id);
+            $template->set_attribute('search_button_name', $this->search_button_name);
+            $template->set_attribute('reset_button_name', $this->reset_button_name);
             return $template->render();
         }
     }
-    
+
     /**
      * returns the id string used for the input field
-     * 
+     *
      * @return string
      */
     public function getId()
     {
         return $this->name . '_' . (int)self::$count_QS;
     }
-    
+
     //////////////////////////////////////////////////////////////////////////////
     //                               private-methods                            //
     //////////////////////////////////////////////////////////////////////////////
-    
+
     /**
      * private method to get a result-array in the way of array(array(item_id, item-name)).
      *
@@ -349,7 +358,7 @@ class QuickSearch
      *
      * @return array array(array(item_id, item-name), ...) mostly limited to 5.
      */
-    private function searchresults($request) 
+    private function searchresults($request)
     {
         if ($this->search instanceof SearchType) {
             try {
@@ -364,14 +373,14 @@ class QuickSearch
             return $result;
         }
     }
-    
+
     /**
      * get the label of the searchfield that is written in javascript and disappears
      * when the user focusses on the searchfield.
      *
      * @return string localized-string
      */
-    private function beschriftung() 
+    private function beschriftung()
     {
         if ($this->search instanceof SearchType) {
             return $this->search->getTitle();

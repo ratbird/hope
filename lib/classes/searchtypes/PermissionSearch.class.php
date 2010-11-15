@@ -35,11 +35,11 @@ class PermissionSearch extends SQLSearch {
      * in this search. array("input_name" => "placeholder_in_sql_query")
      * @return void
      */
-    public function __construct($search, $title = "", $avatarLike = "", $presets = array()) {
+    public function __construct($search, $title = "", $avatarLike = "user_id", $presets = array()) {
         $this->search = $search;
         $this->presets = $presets;
         $this->title = $title;
-        $this->avatarLike = $avatarLike;
+        $this->avatarLike = (in_array($avatarLike, words('user_id, username')) ? $avatarLike : 'user_id');
     }
 
     /**
@@ -102,37 +102,21 @@ class PermissionSearch extends SQLSearch {
     }
 
     private function getSQL() {
+        $first_column = 'auth_user_md5.' . $this->avatarLike;
         switch ($this->search) {
-            case "username":
-                return "SELECT DISTINCT auth_user_md5.username, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
+            case "user":
+                $sql = "SELECT DISTINCT $first_column, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
                         "FROM auth_user_md5 " .
                         " LEFT JOIN user_info USING(user_id) " .
                         "WHERE ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input ) " .
                             "AND auth_user_md5.perms IN (:permission) ".
+                            "AND auth_user_md5.user_id NOT IN(:exclude_user) " .
                         "ORDER BY auth_user_md5.Nachname ASC " .
                         "LIMIT 10";
-            case "username_inst":
-                return "SELECT DISTINCT auth_user_md5.username, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
-                        "FROM auth_user_md5 LEFT JOIN user_inst ON (user_inst.user_id = auth_user_md5.user_id) " .
-                        " LEFT JOIN user_info USING(user_id) " .
-                        "WHERE ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
-                            "OR auth_user_md5.username LIKE :input )" .
-                            "AND user_inst.Institut_id IN (:institute) " .
-                            "AND user_inst.inst_perms IN (:permission) ".
-                        "ORDER BY auth_user_md5.Nachname ASC " .
-                        "LIMIT 10";
-            case "user_id":
-                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
-                        "FROM auth_user_md5 " .
-                        " LEFT JOIN user_info USING(user_id) " .
-                        "WHERE ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
-                            "OR auth_user_md5.username LIKE :input ) " .
-                            "AND auth_user_md5.perms IN (:permission) ".
-                        "ORDER BY auth_user_md5.Nachname ASC " .
-                        "LIMIT 10";
-            case "user_id_not_already_in_sem":
-                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
+            break;
+            case "user_not_already_in_sem":
+                $sql =  "SELECT DISTINCT $first_column, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
                         "FROM auth_user_md5 " .
                         "LEFT JOIN seminar_user su ON su.user_id = auth_user_md5.user_id AND seminar_id=:seminar_id AND status IN (:sem_perm) " .
                         " LEFT JOIN user_info ON auth_user_md5.user_id = user_info.user_id  " .
@@ -141,18 +125,21 @@ class PermissionSearch extends SQLSearch {
                             "AND auth_user_md5.perms IN (:permission) ".
                         "ORDER BY auth_user_md5.Nachname ASC " .
                         "LIMIT 10";
-            case "user_id_inst":
-                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
+            break;
+            case "user_inst":
+                $sql =  "SELECT DISTINCT $first_column, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
                         "FROM auth_user_md5 LEFT JOIN user_inst ON (user_inst.user_id = auth_user_md5.user_id) " .
                         " LEFT JOIN user_info ON auth_user_md5.user_id = user_info.user_id  " .
                         "WHERE ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input ) " .
                             "AND user_inst.Institut_id IN (:institute) " .
                             "AND user_inst.inst_perms IN (:permission) ".
+                            "AND auth_user_md5.user_id NOT IN(:exclude_user) " .
                         "ORDER BY auth_user_md5.Nachname ASC " .
                         "LIMIT 10";
-           case "user_id_inst_not_already_in_sem":
-                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
+           break;
+           case "user_inst_not_already_in_sem":
+                $sql =  "SELECT DISTINCT $first_column, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
                         "FROM auth_user_md5 LEFT JOIN user_inst ON (user_inst.user_id = auth_user_md5.user_id) " .
                         "LEFT JOIN seminar_user su ON su.user_id = auth_user_md5.user_id AND seminar_id=:seminar_id AND status IN (:sem_perm) LEFT JOIN user_info ON auth_user_md5.user_id = user_info.user_id  " .
                         "WHERE su.user_id IS NULL AND ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
@@ -161,8 +148,9 @@ class PermissionSearch extends SQLSearch {
                             "AND user_inst.inst_perms IN (:permission) ".
                         "ORDER BY auth_user_md5.Nachname ASC " .
                         "LIMIT 10";
-           case "user_id_not_already_tutor_dozent_deputy":
-                return "SELECT DISTINCT auth_user_md5.user_id, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
+           break;
+           case "user_not_already_tutor_dozent_deputy":
+                $sql =  "SELECT DISTINCT $first_column, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
                         "FROM auth_user_md5 LEFT JOIN seminar_user su ON su.user_id = auth_user_md5.user_id AND seminar_id=:seminar_id AND status IN ('tutor','dozent') " .
                         " LEFT JOIN deputies d ON d.user_id = auth_user_md5.user_id AND range_id=:seminar_id LEFT JOIN user_info ON auth_user_md5.user_id = user_info.user_id " .
                         "WHERE su.user_id IS NULL AND d.user_id IS NULL AND ( CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
@@ -170,7 +158,11 @@ class PermissionSearch extends SQLSearch {
                             "AND auth_user_md5.perms IN (:permission) ".
                         "ORDER BY auth_user_md5.Nachname ASC " .
                         "LIMIT 10";
+           break;
+           default:
+               throw new InvalidArgumentException("search parameter not valid");
         }
+        return $sql;
     }
 
     /**
@@ -182,10 +174,8 @@ class PermissionSearch extends SQLSearch {
     public function getAvatar($id) {
         switch ($this->avatarLike) {
             case "username":
-            case "username_inst":
                 return Avatar::getAvatar(NULL, get_userid($id))->getURL(Avatar::SMALL);
             case "user_id":
-            case "user_id_inst":
                 return Avatar::getAvatar(NULL, $id)->getURL(Avatar::SMALL);
         }
     }
@@ -199,10 +189,8 @@ class PermissionSearch extends SQLSearch {
     public function getAvatarImageTag($id, $size = Avatar::SMALL) {
         switch ($this->avatarLike) {
             case "username":
-            case "username_inst":
                 return Avatar::getAvatar(get_userid($id))->getImageTag($size);
             case "user_id":
-            case "user_id_inst":
                 return Avatar::getAvatar($id)->getImageTag($size);
         }
     }

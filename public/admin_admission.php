@@ -873,6 +873,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
 
             </td>
         </tr>
+        <? if ($admin_admission_data["admission_type"] != 3) : ?>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="4%"></td>
             <td class="<? echo $cssSw->getClass() ?>" colspan="2">
@@ -947,7 +948,9 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                 </table>
             </td>
         </tr>
+        <? endif ?>
 
+        <? if ($admin_admission_data["admission_type"] != 3) : ?>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="4%"></td>
             <td class="<? echo $cssSw->getClass() ?>" colspan="2">
@@ -981,6 +984,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
 
             </td>
         </tr>
+        <? endif ?>
         <? if ($admin_admission_data["admission_prelim"] == 1) { ?>
             <tr>
             <td class="<? echo $cssSw->getClass() ?>" width="4%"></td>
@@ -1000,7 +1004,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         </tr>
         <?
         }
-        if (!$admin_admission_data["admission_type"]  || $admin_admission_data["admission_type"] == 3) {
+        if (!$admin_admission_data["admission_type"]  || $admin_admission_data["admission_type"] != 3) {
         ?>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
@@ -1030,7 +1034,11 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                     <font color=#BBBBBb>&nbsp; &nbsp; &nbsp;  <?=_("freier Zugriff")?> &nbsp;</font><br>
                 <?}?>
                 <input type="radio" name="read_level" value="1" <?php print $admin_admission_data["read_level"] == 1 ? "checked" : ""?>> <?=_("in Stud.IP angemeldet")?> &nbsp;<br>
-                <input type="radio" name="read_level" value="2" <?php print $admin_admission_data["read_level"] == 2 ? "checked" : ""?>> <?=_("nur mit Passwort")?> &nbsp;<br>
+                <? if ($admin_admission_data["admission_type"] == 0 ) : ?>
+                    <input type="radio" name="read_level" value="2" <?php print $admin_admission_data["read_level"] == 2 ? "checked" : ""?>> <?=_("nur mit Passwort")?> &nbsp;<br>
+                <? else: ?>
+                    <span style="color:#BBBBBB">&nbsp;&nbsp;&nbsp; <?=_("Nur mit Passwort") ?>&nbsp; </span> <br>
+                <? endif ?>
                 </font>
         <? else: ?>
           <font size=-1>
@@ -1064,7 +1072,11 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                 }
                 ?>
                 <input type="radio" name="write_level" value="1" <?php print $admin_admission_data["write_level"] == 1 ? "checked" : ""?>> <?=_("in Stud.IP angemeldet")?> &nbsp;<br>
-                <input type="radio" name="write_level" value="2" <?php print $admin_admission_data["write_level"] == 2 ? "checked" : ""?>> <?=_("nur mit Passwort")?> &nbsp;<br>
+                <? if($admin_admission_data["admission_type"] == 0) : ?>
+                    <input type="radio" name="write_level" value="2" <?php print $admin_admission_data["write_level"] == 2 ? "checked" : ""?>> <?=_("nur mit Passwort")?> &nbsp;<br>
+               <? else : ?>
+                    <span style="color:#BBBBBB">&nbsp;&nbsp;&nbsp; <?=_("Nur mit Passwort") ?>&nbsp; </span> <br>
+               <? endif ?>
         <? else : ?>
           <font size=-1>
             <b>
@@ -1087,7 +1099,9 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
                     <font size=-1><b><?=_("Passwort:")?> </b></font><br>
-          <? if (! LockRules::Check($seminar_id, 'Passwort')) : ?>
+          <? if ($admin_admission_data["admission_type"] == 3) :?>
+                    <span><?=_("Diese Veranstaltung ist gesperrt. Es kann kein Passwort vergeben werden.") ?></span><br>
+          <? elseif (! LockRules::Check($seminar_id, 'Passwort')) : ?>
                     <font size=-1><?=_("Bitte geben Sie hier ein Passwort ein, wenn sie <b>Zugriff nur mit Passwort</b> gew&auml;hlt haben.")?></font><br><br>
                     <?
                     if ($admin_admission_data["passwort"]!="") {
@@ -1118,7 +1132,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                 </td>
             </tr>
         <?
-        } else {
+        } else if ($admin_admission_data["admission_type"] != 3)  {
         ?>
             <tr <? $cssSw->switchClass() ?>>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">

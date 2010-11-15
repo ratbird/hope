@@ -205,9 +205,9 @@ class Course_BasicdataController extends AuthenticatedController
         //Dritter Reiter: Personal
         $this->dozenten = $sem->getMembers('dozent');
         if (SeminarCategories::getByTypeId($sem->status)->only_inst_user) {
-            $search_template = "user_id_inst_not_already_in_sem";
+            $search_template = "user_inst_not_already_in_sem";
         } else {
-            $search_template = "user_id_not_already_in_sem";
+            $search_template = "user_not_already_in_sem";
         }
         $dozentUserSearch = new PermissionSearch(
                             $search_template,
@@ -227,7 +227,7 @@ class Course_BasicdataController extends AuthenticatedController
         if ($this->deputies_enabled) {
             $this->deputies = getDeputies($this->course_id);
             $deputysearch = new PermissionSearch(
-                    "user_id_not_already_tutor_dozent_deputy",
+                    "user_not_already_tutor_dozent_deputy",
                     sprintf(_("Name %s"), get_title_for_status('deputy', 1, $sem->status)),
                     "user_id",
                     array('permission' => getValidDeputyPerms(), 'seminar_id' => $this->course_id)
@@ -241,7 +241,7 @@ class Course_BasicdataController extends AuthenticatedController
 
         $tutorUserSearch = new PermissionSearch(
                             $search_template,
-                            sprintf(_("Name %s"), get_title_for_status('dozent', 1, $sem->status)),
+                            sprintf(_("Name %s"), get_title_for_status('tutor', 1, $sem->status)),
                             "user_id",
                             array('permission' => array('dozent','tutor'),
                                   'seminar_id' => $this->course_id,

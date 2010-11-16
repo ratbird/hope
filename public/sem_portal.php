@@ -56,7 +56,6 @@ require_once 'lib/classes/StmBrowse.class.php';
 
 $db=new DB_Seminar;
 
-echo "\n".cssClassSwitcher::GetHoverJSFunction()."\n";
 
 
 //Einstellungen fuer Reitersystem
@@ -86,6 +85,7 @@ if (!$sem_portal["toplist"])
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
+PageLayout::addBodyElements(cssClassSwitcher::GetHoverJSFunction());
 
 //function to display toplists
 function getToplist($rubrik, $query, $type="count") {

@@ -356,12 +356,14 @@ class Course_StudygroupController extends AuthenticatedController {
             if ($this->flash['deactivate_modules']) {
                 $amodules = new AdminModules();
                 foreach ($this->flash['deactivate_modules'] as $key) {
-                        $this->deactivate_modules_names .= "- ".$amodules->registered_modules[$key]['name']."\n";
+                        $this->deactivate_modules_names .= "- ".$amodules->registered_modules[$key]['name'] . "\n";
                 }
             }
             if ($this->flash['deactivate_plugins']) {
                 foreach ($this->flash['deactivate_plugins'] as $key => $name) {
-                        $this->deactivate_modules_names .= "- ".$name."\n";
+                    $plugin = PluginManager::getInstance()->getPluginById($key);
+                    $p_warning = $plugin::deactivationWarning($id);
+                    $this->deactivate_modules_names .= "- ".$name . " : " . $p_warning ."\n";
                 }
             }
 
@@ -389,14 +391,12 @@ class Course_StudygroupController extends AuthenticatedController {
             $founders = StudygroupModel::getFounders($id);
 
             if (Request::get('abort_deactivate')) {
-                // abort confirmtion dialog
-                $this->flash['info'] .= _("Es wurden keine Inhaltselemente deaktiviert.");
-                // let's go to the studygroup
+                // let's do nothing and go back to the studygroup
                 return $this->redirect('course/studygroup/edit/' . $id);
 
             } else if (Request::get('really_deactivate')) {
                 // really deactive modules
-
+  
                 // 1. Modules
                 if (is_array($this->flash['deactivate_modules'])) {
                     $sem  = new Seminar($id);
@@ -533,8 +533,8 @@ class Course_StudygroupController extends AuthenticatedController {
             }
         }
 
-        if (!$this->flash['errors']) {
-             // Everything seems fine
+        if (!$this->flash['errors'] && !$deactivate_modules && !$deactivate_plugins) {
+           // Everything seems fine
             $this->flash['success'] = _("Die Änderungen wurden erfolgreich übernommen.");
         }
         // let's go to the studygroup

@@ -1613,6 +1613,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         <input type="hidden" name="seminar_id" value="<?= $SessSemName[1] ?>">
         </td>
         <td class="steel1" width="20%" align="center">
+            <? if($sem->isAdmissionEnabled()) : ?>
             <select name="consider_contingent">
                 <option value=""><?= _("Kein Kontingent") ?></option>
                 <? if(is_array($sem->admission_studiengang)) 
@@ -1622,6 +1623,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                     </option>
                 <? endforeach ?>
             </select>
+            <? endif ?>
         </td>
         <td class="steel1" width="20%" align="center">
         <input type="image" name="add_user" <?=makeButton("eintragen", "src")?> border=0 value=" <?=_("eintragen")?> "></td>

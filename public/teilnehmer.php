@@ -155,6 +155,9 @@ $db4=new DB_Seminar;
 
 $csv_not_found = array();
 
+// check, if a the add-user button has been pressed and set cmd accordingly
+if (Request::submitted('add_user')) $cmd = 'add_user';
+
 /*
  * This function checks if a the given user has to be shown (is in the array
  * of downpulled users)
@@ -1585,12 +1588,12 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         </td>
     </tr>
     <tr><td class=blank colspan=2>
-    <form action="<?= URLHelper::getLink("", array('cmd' => 'add_user')) ?>" method="POST">
+    <form action="<?= URLHelper::getLink() ?>" method="POST">
     <table width="99%" border="0" cellpadding="2" cellspacing="0" border=0 align="center">
     <tr>
         <td class="steel1" width="40%" align="left">&nbsp; <font size=-1><b><?=_("Nutzer in die Veranstaltung eintragen")?></b></font>
         <br><font size=-1>&nbsp; <? printf(_("Bitte geben Sie den Vornamen, Nachnamen %s oder Benutzernamen zur Suche ein"), "<br>&nbsp;")?> </font></td>
-        <td class="steel1" width="40%" align="left">
+        <td class="steel1" width="20%" align="left">
         <input type="hidden" name="studipticket" value="<?=$studipticket?>">
         <?php
         $NutzerSuchen = new SQLSearch("SELECT auth_user_md5.username, CONCAT(auth_user_md5.Nachname, \", \", auth_user_md5.Vorname, \" (\", auth_user_md5.username, \") - \" , auth_user_md5.perms) " .
@@ -1603,11 +1606,22 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             "ORDER BY user_info.score DESC " .
             "LIMIT 5", _("Teilnehmer suchen"), "username");
         print QuickSearch::get("username", $NutzerSuchen)
-                ->withoutButton()
+                ->withButton()
                 ->setInputStyle("width: 240px")
                 ->render();
         ?>
         <input type="hidden" name="seminar_id" value="<?= $SessSemName[1] ?>">
+        </td>
+        <td class="steel1" width="20%" align="center">
+            <select name="consider_contingent">
+                <option value=""><?= _("Kein Kontingent") ?></option>
+                <? if(is_array($sem->admission_studiengang)) 
+                    foreach($sem->admission_studiengang as $studiengang => $data) : ?>
+                    <option value="<?= $studiengang ?>" <?= $_REQUEST['consider_contingent'] == $studiengang ? 'selected' : '' ?>>
+                        <?= htmlReady($data['name'] . ' ' . '('.$sem->getFreeAdmissionSeats($studiengang).')') ?>
+                    </option>
+                <? endforeach ?>
+            </select>
         </td>
         <td class="steel1" width="20%" align="center">
         <input type="image" name="add_user" <?=makeButton("eintragen", "src")?> border=0 value=" <?=_("eintragen")?> "></td>
@@ -1633,7 +1647,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
         echo '<br>' . _("<b>Eingabeformat: Nutzername &crarr;</b>");
         echo '<br>' . _("Geben Sie dazu in jede Zeile den Stud.IP Nutzernamen ein.");
         echo "</div></td>\n";
-        echo "<td width=\"40%\" class=\"steel1\">";
+        echo '<td width="40%" colspan="2" class="steel1">';
         echo '<div style="margin-top:10px;margin-bottom:10px;">' . _("Eingabeformat:");
         echo '<select style="margin-left:10px;" name="csv_import_format">';
         echo '<option value="realname">'._("Nachname, Vorname").' &crarr;</option>';

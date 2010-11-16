@@ -476,7 +476,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             $this->msg[$item_id] = "info§" . sprintf(_("Der Typ dieses Elementes verbietet eine Bearbeitung."));
         }
         if ($item_id == $this->move_item_id){
-            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben / Kopieren markiert. Bitte w&auml;hlen sie ein Einfügesymbol %s aus, um das Element zu verschieben / kopieren."), "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')." " .tooltip(_("Einfügesymbol")) . ">");
+            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben / Kopieren markiert. Bitte w&auml;hlen sie ein Einfügesymbol %s aus, um das Element zu verschieben / kopieren."), "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png').'" ' .tooltip(_("Einfügesymbol")) . ">");
         }
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt;\">";
         $content .= $this->getItemMessage($item_id);
@@ -730,7 +730,7 @@ class StudipSemTreeViewAdmin extends TreeView {
         && ($this->move_item_id != $item_id) && ($this->tree->tree_data[$this->move_item_id]['parent_id'] != $item_id)
         && !$this->tree->isChildOf($this->move_item_id,$item_id)){
             $head .= "<a href=\"" . $this->getSelf("cmd=Do" . $this->mode . "&item_id=$item_id") . "\">"
-            . "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')." " .tooltip(_("An dieser Stelle einfügen")) . "></a>&nbsp;";
+            . "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png').'" ' .tooltip(_("An dieser Stelle einfügen")) . "></a>&nbsp;";
         }
         $head .= parent::getItemHead($item_id);
         if ($item_id != "root"){

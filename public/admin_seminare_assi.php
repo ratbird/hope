@@ -2603,20 +2603,20 @@ if ($level == 2)
                 print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\"> ";
 
 
-		        if (SeminarCategories::getByTypeId($sem_create_data["sem_status"])->only_inst_user) {
-		            $search_template = "user_inst";
-		        } else {
-		            $search_template = "user";
-		        }
+                if (SeminarCategories::getByTypeId($sem_create_data["sem_status"])->only_inst_user) {
+                    $search_template = "user_inst";
+                } else {
+                    $search_template = "user";
+                }
 
-		        $searchForDozentUser = new PermissionSearch($search_template,
+                $searchForDozentUser = new PermissionSearch($search_template,
                                        sprintf(_("%s auswählen"), get_title_for_status('dozent', 1, $seminar_type)),
                                        "username",
                                        array('permission' => 'dozent',
                                              'exclude_user' => array_keys((array)$sem_create_data["sem_doz"]),
-		                                     'institute' => array_merge((array)$sem_create_data["sem_inst_id"], (array)$sem_create_data["sem_bet_inst"])
-		                                  )
-		                               );
+                                             'institute' => array_merge((array)$sem_create_data["sem_inst_id"], (array)$sem_create_data["sem_bet_inst"])
+                                          )
+                                       );
                 print QuickSearch::get("add_doz", $searchForDozentUser)
                             ->withButton(array('search_button_name' => 'search_doz', 'reset_button_name' => 'reset_search'))
                             ->render();
@@ -2758,8 +2758,8 @@ if ($level == 2)
                                        sprintf(_("%s auswählen"), get_title_for_status('tutor', 1, $seminar_type)),
                                        "username",
                                        array('permission' => array('tutor','dozent'),
-	                                         'exclude_user' => array_merge(array_keys((array)$sem_create_data["sem_tut"]), array_keys((array)$sem_create_data["sem_doz"])),
-	                                         'institute' => array_merge((array)$sem_create_data["sem_inst_id"], (array)$sem_create_data["sem_bet_inst"])
+                                             'exclude_user' => array_merge(array_keys((array)$sem_create_data["sem_tut"]), array_keys((array)$sem_create_data["sem_doz"])),
+                                             'institute' => array_merge((array)$sem_create_data["sem_inst_id"], (array)$sem_create_data["sem_bet_inst"])
                                           )
                                        );
                         print QuickSearch::get("add_tut", $searchForTutorUser)

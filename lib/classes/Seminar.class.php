@@ -1907,7 +1907,11 @@ class Seminar
         }
         if (is_array($ret)) foreach($ret as $studiengang_id => $data){
             $ret[$studiengang_id]['num_occupied'] = 0;
-            $this->db->query("SELECT COUNT(user_id) FROM seminar_user WHERE seminar_id = '".$this->getId()."' AND admission_studiengang_id='$studiengang_id'");
+            $this->db->query("SELECT COUNT(user_id) FROM seminar_user 
+                WHERE seminar_id = '".$this->getId()."' 
+                    AND admission_studiengang_id='$studiengang_id'
+                    AND status != 'tutor'
+                    AND status != 'dozent'");
             $this->db->next_record();
             $ret[$studiengang_id]['num_occupied'] += $this->db->f(0);
             $this->db->query("SELECT COUNT(IF(status='accepted',user_id,NULL)) as accepted,COUNT(IF(status='claiming',user_id,NULL)) as claiming,COUNT(IF(status='awaiting',user_id,NULL)) as awaiting  FROM admission_seminar_user WHERE seminar_id = '".$this->getId()."' AND studiengang_id='$studiengang_id'");

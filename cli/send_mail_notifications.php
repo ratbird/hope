@@ -61,7 +61,7 @@ while($db->next_record()){
     $mailmessage = $notification->getAllNotifications($db->f('user_id'));
     if ($mailmessage) {
         $user_cfg = UserConfig::get($db->f("user_id"));
-        if ($user_cfg->getValue('MAIL_AS_HTML') == 'yes') {
+        if ($user_cfg->getValue('MAIL_AS_HTML')) {
             $smail = new StudipMail();
             $ok = $smail->setSubject($title)
                         ->addRecipient($to)

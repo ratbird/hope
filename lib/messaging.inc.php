@@ -245,38 +245,31 @@ class messaging
             $reply_to = $GLOBALS["UNI_CONTACT"];
         }
 
-        // Generate "Header" of the message
-        $mailmessage = _("Von: ")."$snd_fullname\n";
-        $mailmessage .= _("An: ")."$rec_fullname\n";
-        $mailmessage .= _("Betreff: ")."".stripslashes(kill_format($subject))."\n";
-        $mailmessage .= _("Datum: ").date("d.m. Y, H:i",time())."\n\n";
-        $mailmessage .= kill_format($message)."\n-- \n";
+        $template = $GLOBALS['template_factory']->open('mail/text');
+        $template->set_attribute('message', kill_format(stripslashes($message)));
+        $template->set_attribute('rec_fullname', $rec_fullname);
+        $mailmessage = $template->render();
 
-        // generate signature of the message
-        $mailmessage .= sprintf(_("Diese E-Mail ist eine Kopie einer systeminternen Nachricht, die in Stud.IP an %s versendet wurde."), $rec_fullname)."\n";
-        $mailmessage .= sprintf(_("Sie erreichen Stud.IP unter %s"), $GLOBALS['ABSOLUTE_URI_STUDIP']);
-        //rescue escaped newlines if mysql_escape_string() was used
-        $mailmessage = str_replace('\n', "\n", $mailmessage);
-        $mailmessage = stripslashes($mailmessage);
+        $template = $GLOBALS['template_factory']->open('mail/html');
+        $template->set_attribute('lang', getUserLanguagePath($rec_user_id));
+        $template->set_attribute('message', stripslashes($message));
+        $template->set_attribute('rec_fullname', $rec_fullname);
+        $mailhtml = $template->render();
+
+        restoreLanguage();
 
         // Now, let us send the message
         $mail = new StudipMail();
         $mail->setSubject($title)
-            ->addRecipient($to, $rec_fullname)
-            ->setReplyToEmail($reply_to)
-            ->setReplyToName($snd_fullname)
-            ->setSenderName($snd_fullname)
-            ->setBodyText($mailmessage);
-        $mail->setSenderEmail($reply_to);
+             ->addRecipient($to, $rec_fullname)
+             ->setSenderEmail($reply_to)
+             ->setSenderName($snd_fullname)
+             ->setReplyToEmail('')
+             ->setBodyText($mailmessage);
         $user_cfg = UserConfig::get($rec_user_id);
-        if ($user_cfg->getValue('MAIL_AS_HTML') == 'yes') {
-            $template = $GLOBALS['template_factory']->open('mail_html');
-            $template->set_attribute('lang',getUserLanguagePath($rec_user_id));
-            $template->set_attribute('message', formatReady(stripslashes($message),TRUE,TRUE));
-            $mail->setBodyHtml($template->render());
+        if ($user_cfg->getValue('MAIL_AS_HTML')) {
+            $mail->setBodyHtml($mailhtml);
         }
-
-        restoreLanguage();
 
         if($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]){
             foreach(get_message_attachments($message_id) as $attachment){

@@ -57,6 +57,9 @@ set_error_handler('CliErrorHandler');
 
 require_once $STUDIP_BASE_PATH . "/lib/bootstrap.php";
 
+// set base url for URLHelper class
+URLHelper::setBaseUrl($ABSOLUTE_URI_STUDIP);
+
 //cli scripts run always as faked (Stud.IP) root
 $auth = new Seminar_Auth();
 $auth->auth = array('uid' => 'cli',

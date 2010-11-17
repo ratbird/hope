@@ -67,10 +67,6 @@ class StudipMail
      * @var string
      */
     private $reply_to;
-    /**
-     * @var string
-     */
-    private $return_path;
 
     /**
      * Sets the default transporter used in StudipMail::send()
@@ -134,7 +130,6 @@ class StudipMail
         $this->setSenderEmail($GLOBALS['MAIL_ENV_FROM'] == "" ? "wwwrun@" . $mail_localhost : $GLOBALS['MAIL_ENV_FROM']);
         $this->setSenderName($GLOBALS['MAIL_FROM'] == "" ? "Stud.IP" : $GLOBALS['MAIL_FROM']);
         $this->setReplyToEmail($GLOBALS['MAIL_ABUSE'] == "" ? "abuse@" . $mail_localhost : $GLOBALS['MAIL_ABUSE']);
-        $this->return_path = $this->getReplyToEmail();
     }
 
     /**
@@ -362,12 +357,10 @@ class StudipMail
             throw new Exception('no mail transport defined');
         }
         $transporter->ResetMessage();
-        $transporter->SetHeader("Sender", $this->getSenderEmail());
         $transporter->SetEncodedEmailHeader("From", $this->getSenderEmail(), $this->getSenderName());
         if($this->getReplyToEmail()){
             $transporter->SetEncodedEmailHeader("Reply-To", $this->getReplyToEmail(), $this->getReplyToName());
         }
-        $transporter->SetHeader("Return-Path", $this->return_path);
         foreach($this->getRecipients() as $recipient) {
             $recipients_by_type[$recipient['type']][ $recipient['mail']] = $recipient['name'];
         }

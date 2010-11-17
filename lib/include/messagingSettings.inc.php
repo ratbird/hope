@@ -76,7 +76,7 @@ if ($messaging_cmd=="change_view_insert" && !$set_msg_default_x && $newmsgset_x)
     $user_cfg->store("FOAF_SHOW_IDENTITY", (int)isset($foaf_show_identity));
     $user_cfg->store("ONLINE_NAME_FORMAT", $_REQUEST['online_format']);
     $user_cfg->store("CHAT_USE_AJAX_CLIENT", (int)($_REQUEST['chat_client_version'] == 'ajax'));
-    $user_cfg->store("MAIL_AS_HTML", (Request::option('mail_format') == 'html' ? 'yes' : 'no'));
+    $user_cfg->store("MAIL_AS_HTML", Request::int('mail_format'));
 
     $my_messaging_settings["changed"] = TRUE;
     $my_messaging_settings["show_only_buddys"] = $show_only_buddys;
@@ -234,8 +234,8 @@ function change_messaging_view()
                     <font size="-1"><?print _("Email in folgendem Format versenden");?></font>
                   </td>
                   <td <?=$cssSw->getFullClass()?>>
-                     <input type="radio" name="mail_format" value="text" <?=($user_cfg->getValue('MAIL_AS_HTML') == 'no' || !$user_cfg->getValue('MAIL_AS_HTML') ? 'checked' : '')?>>&nbsp;<?=_("Text")?><br>
-                     <input type="radio" name="mail_format" value="html" <?=($user_cfg->getValue('MAIL_AS_HTML') == 'yes' ? 'checked' : '')?>>&nbsp;<?=_("HTML")?>
+                     <input type="radio" name="mail_format" value="0" <?= !$user_cfg->getValue('MAIL_AS_HTML') ? 'checked' : '' ?>>&nbsp;<?=_("Text")?><br>
+                     <input type="radio" name="mail_format" value="1" <?= $user_cfg->getValue('MAIL_AS_HTML') ? 'checked' : '' ?>>&nbsp;<?=_("HTML")?>
                    </td>
                  </tr>
                 <? } ?>

@@ -534,10 +534,11 @@ $txt['008'] = _("Lesebestätigung");
     if ($quote) {
         $db->query ("SELECT subject, message FROM message WHERE message_id = '$quote' ");
         $db->next_record();
-        if(substr($db->f("subject"), 0, 3) != "RE:") {
-            $messagesubject = "RE: ".$db->f("subject");
+        $tmp_subject = addslashes($db->f("subject"));
+        if(substr($tmp_subject, 0, 3) != "RE:") {
+            $messagesubject = "RE: ".$tmp_subject;
         } else {
-            $messagesubject = $db->f("subject");
+            $messagesubject = $tmp_subject;
         }
         if (strpos($db->f("message"),$msging->sig_string)) {
             $tmp_sms_content = substr($db->f("message"), 0, strpos($db->f("message"),$msging->sig_string));
@@ -549,10 +550,11 @@ $txt['008'] = _("Lesebestätigung");
     else if (!isset($_REQUEST['messagesubject']) && $_REQUEST['answer_to']) {
         $db->query ("SELECT subject, message FROM message WHERE message_id = '". $_REQUEST['answer_to']. "' ");
         $db->next_record();
-        if(substr($db->f("subject"), 0, 3) != "RE:") {
-            $messagesubject = "RE: ".$db->f("subject");
+        $tmp_subject = addslashes($db->f("subject"));
+        if(substr($tmp_subject, 0, 3) != "RE:") {
+            $messagesubject = "RE: ".$tmp_subject;
         } else {
-            $messagesubject = $db->f("subject");
+            $messagesubject = $tmp_subject;
         }
     }
 

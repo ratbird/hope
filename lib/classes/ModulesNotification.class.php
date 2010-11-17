@@ -221,16 +221,14 @@ class ModulesNotification extends Modules {
             }
         }
         if (count($news)) {
-            $cssSw = new cssClassSwitcher;
-            $template = $GLOBALS['template_factory']->open('mail_notification_html');
+            $template = $GLOBALS['template_factory']->open('mail/notification_html');
             $template->set_attribute('lang', getUserLanguagePath($user_id));
             $template->set_attribute('news', $news);
-            $template->set_attribute('cssSw', $cssSw);
 
-            $template_text = $GLOBALS['template_factory']->open('mail_notification_text');
+            $template_text = $GLOBALS['template_factory']->open('mail/notification_text');
             $template_text->set_attribute('news', $news);
 
-            return array('text'=>$template_text->render(), 'html'=>$template->render());;
+            return array('text' => $template_text->render(), 'html' => $template->render());;
         } else {
             return FALSE;
         }
@@ -246,7 +244,7 @@ class ModulesNotification extends Modules {
                 } else if ($r_data['neuepostings'] > 0) {
                     $text = _("1 neuer Beitrag im Forum:");
                 }
-                $redirect = '&again=yes&redirect_to=forum.php&view=neue&sort=age';
+                $redirect = '&redirect_to=forum.php&view=neue&sort=age';
                 $icon = "icons/16/blue/forum.png";
                 break;
             case 'documents' :
@@ -255,7 +253,7 @@ class ModulesNotification extends Modules {
                 } else if ($r_data['neuedokumente'] > 0) {
                     $text = _("1 neues Dokument hochgeladen:");
                 }
-                $redirect = '&again=yes&redirect_to=folder.php&cmd=all';
+                $redirect = '&redirect_to=folder.php&cmd=all';
                 $icon = "icons/16/blue/files.png";
                 break;
             case 'schedule' :
@@ -264,7 +262,7 @@ class ModulesNotification extends Modules {
                 } else if ($r_data['neuetermine'] > 0) {
                     $text = _("1 neuer Termin angelegt:");
                 }
-                $redirect = '&again=yes&redirect_to=dates.php#a';
+                $redirect = '&redirect_to=dates.php#a';
                 $icon = "icons/16/blue/date.png";
                 break;
             case 'literature' :
@@ -273,7 +271,7 @@ class ModulesNotification extends Modules {
                 } else if ($r_data['neuelitlist'] > 0) {
                     $text = _("1 neue Literaturliste angelegt");
                 }
-                $redirect = '&again=yes&redirect_to=literatur.php';
+                $redirect = '&redirect_to=literatur.php';
                 $icon = "icons/16/blue/literature.png";
                 break;
             case 'elearning_interface' :
@@ -283,7 +281,7 @@ class ModulesNotification extends Modules {
                     } else if ($r_data['neuecontentmodule'] > 0) {
                         $text = _("1 neues Content-Modul angelegt");
                     }
-                    $redirect = "&again=yes&redirect_to=elearning_interface.php&seminar_id=$range_id&view=show";
+                    $redirect = "&redirect_to=elearning_interface.php&seminar_id=$range_id&view=show";
                     $icon = "icons/16/blue/learnmodule.png";
                 }
                 break;
@@ -293,14 +291,14 @@ class ModulesNotification extends Modules {
                 } else if ($r_data['neuewikiseiten'] > 0) {
                     $text = _("1 Wikiseite wurde angelegt oder bearbeitet:");
                 }
-                $redirect = '&again=yes&redirect_to=wiki.php&view=listnew';
+                $redirect = '&redirect_to=wiki.php&view=listnew';
                 $icon = "icons/16/blue/wiki.png";
                 break;
             case 'scm' :
                 if ($r_data['neuscmcontent']) {
                     $text = sprintf(_("Die Seite \"%s\" wurde neu angelegt oder bearbeitet:"), $r_data['scmtabname']);
                 }
-                $redirect = '&again=yes&redirect_to=scm.php';
+                $redirect = '&redirect_to=scm.php';
                 $icon = "icons/16/blue/infopage.png";
                 break;
             case 'votes' :
@@ -311,7 +309,7 @@ class ModulesNotification extends Modules {
                         $text = _("1 neue Umfrage oder Evaluation wurde angelegt:");
                     }
                 }
-                $redirect = '&again=yes#votes';
+                $redirect = '#votes';
                 $icon = "icons/16/blue/vote.png";
                 break;
             case 'news' :
@@ -320,21 +318,22 @@ class ModulesNotification extends Modules {
                 } else if ($r_data['neuenews']) {
                     $text = _("Eine neue Ankündigung wurde angelegt:");
                 }
-                $redirect = '&again=yes';
+                $redirect = '';
                 $icon = "icons/16/blue/breaking-news.png";
                 break;
             case 'basic_data' :
                 if ($r_data['chdate'] > $r_data['visitdate']) {
                     $text = _("Die Grunddaten wurden geändert:");
                 }
-                $redirect = '&again=yes&redirect_to=details.php';
+                $redirect = '&redirect_to=details.php';
                 $icon = "icons/16/blue/home.png";
                 break;
             default :
                 $redirect = '';
         }
         if ($range == 'sem' && $text != '') {
-            return array('txt'=>$text, 'url'=>$GLOBALS['ABSOLUTE_URI_STUDIP'].URLHelper::getURL("seminar_main.php?auswahl=".$range_id.$redirect), 'icon'=>$icon, 'range_id'=>$range_id);
+            $url = 'seminar_main.php?again=yes&auswahl='.$range_id.$redirect;
+            return compact('text', 'url', 'icon', 'range_id');
         }
         return $text;
     }

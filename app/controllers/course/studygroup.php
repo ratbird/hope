@@ -362,7 +362,7 @@ class Course_StudygroupController extends AuthenticatedController {
             if ($this->flash['deactivate_plugins']) {
                 foreach ($this->flash['deactivate_plugins'] as $key => $name) {
                     $plugin = PluginManager::getInstance()->getPluginById($key);
-                    $p_warning = $plugin::deactivationWarning($id);
+                    $p_warning = $plugin->deactivationWarning($id);
                     $this->deactivate_modules_names .= "- ".$name . " : " . $p_warning ."\n";
                 }
             }

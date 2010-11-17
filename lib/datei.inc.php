@@ -1510,7 +1510,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         $box = sprintf ("<input type=\"CHECKBOX\" %s name=\"download_ids[]\" value=\"%s\">",($check_all) ? "checked" : "" , $datei["dokument_id"]);
         print $box;
       } else {
-        print "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+        printf('<input type="checkbox"name="dummy" title="%s" disabled>', _("Verlinkte Dateien können nicht als ZIP-Archiv heruntergeladen werden") );;
     }
     }
     print "</td></tr>";

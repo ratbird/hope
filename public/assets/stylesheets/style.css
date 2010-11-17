@@ -593,7 +593,7 @@ A:hover.calhead {
     text-decoration: none;
 }
 .celltoday {
-    background-image: url('../assets/images/celltoday.gif');
+    background-image: url('../images/celltoday.gif');
 }
 th.inccal {
 }

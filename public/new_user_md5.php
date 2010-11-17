@@ -309,21 +309,6 @@ if (check_ticket($_REQUEST['studipticket'])){
                     $_SESSION['pers_browse_search_string'] .= "$field LIKE '%" . mysql_escape_string($_SESSION['pers_browse_old'][$field]) . "%' AND ";
                 }
             }
-
-            //Datafields
-            $datafields_list = DataFieldStructure::getDataFieldStructures("user");
-            foreach($datafields_list as $datafield){
-                if(DataFieldStructure::permMask($GLOBALS["auth"]->auth["perm"]) < DataFieldStructure::permMask($datafield->getViewPerms()))
-                    continue;
-                $_SESSION['pers_browse_old']['datafields'][$datafield->getID()] = Request::get('pers_browse_datafields_' . $datafield->getID());
-                if($_SESSION['pers_browse_old']['datafields'][$datafield->getID()]){
-                    $_SESSION['pers_browse_search_string'] .= "auth_user_md5.user_id IN(SELECT range_id FROM datafields_entries " .
-                        "WHERE datafield_id = '" . $datafield->getID() . "' " .
-                        "AND content LIKE '%" . mysql_escape_string($_SESSION['pers_browse_old']['datafields'][$datafield->getID()]) . "%') " .  
-                        "AND ";
-                }
-            }
-
             if ($_SESSION['pers_browse_old']['locked'])
                 $_SESSION['pers_browse_search_string'] .= "locked = 1 AND ";
             if ($_SESSION['pers_browse_old']['perms'] && $_SESSION['pers_browse_old']['perms'] != _("alle"))
@@ -934,50 +919,6 @@ if (isset($_GET['details']) || $showform ) {
     print "\n<td class=steel1 align=\"left\" width=\"35%\"><input name=\"pers_browse_Email\" type=\"text\" value=\"".htmlReady($_SESSION['pers_browse_old']['Email'])."\" size=30 maxlength=255></td>\n";
     print "\n<td class=steel1 align=\"right\" width=\"15%\">" . _("Nachname:") . " </td>";
     print "\n<td class=steel1 colspan=2 align=\"left\" width=\"35%\"><input name=\"pers_browse_Nachname\" type=\"text\" value=\"".htmlReady($_SESSION['pers_browse_old']['Nachname'])."\" size=30 maxlength=255></td></tr>\n";
-    
-    
-    //Datafields
-    $datafields_empty = true;
-    if(isset($_SESSION['pers_browse_old']['datafields']))
-        foreach($_SESSION['pers_browse_old']['datafields'] as $df){if($df != ""){$datafields_empty = false; break;}}
-
-    if($_GET['extSearch'] == '1')
-        $_SESSION['extSearch'] = 1;
-    else if($_GET['extSearch'] == '0')
-        $_SESSION['extSearch'] = 0;
-        
-    $i=0;
-    $datafields_list = DataFieldStructure::getDataFieldStructures("user");
-    foreach($datafields_list as $datafield){
-        if(DataFieldStructure::permMask($GLOBALS["auth"]->auth["perm"]) < DataFieldStructure::permMask($datafield->getViewPerms()))
-            continue;
-        if($i%2 == 0)
-            echo '<tr class="pers_browse_datafields" ' . (((!$datafields_empty && $auth->auth['jscript']) || $_SESSION['extSearch'] == 1) ? '' : 'style="display:none"') . '>';
-        echo '<td class=steel1 align="right" width="15%">' . htmlReady($datafield->getName()) . '</td>';
-        echo '<td ' . (($i%2!=0) ? 'colspan="2"' : '') . ' class=steel1 align="left" width="35%">';
-        echo '<input name="pers_browse_datafields_' . $datafield->getID() . '" type="text" ' . 
-            'value="' . htmlReady($_SESSION['pers_browse_old']['datafields'][$datafield->getID()]) . '" size=30 maxlength=255></td>';
-        if($i%2 != 0)
-            echo '</tr>';
-        $i++;
-    }
-    if($i%2 != 0)
-        echo '<td class=steel1>&nbsp;</td><td class=steel1 colspan="2">&nbsp;</td>';
-    
-    
-    echo '<tr><td class=steel1 align="right" colspan="5">';
-    
-    if(!$auth->auth['jscript']){
-        echo '<a href="' . URLHelper::getLink('', array('extSearch' => ($_SESSION['extSearch'] == 1) ? 0 : 1)) . '">';
-        echo (($_SESSION['extSearch'] == 1) ?  _('Zuklappen') : _('Erweiterte Suche')) . '</a>';
-    }else{
-        echo "<a href=\"#\" onClick=\"jQuery('.pers_browse_datafields').toggle(); this.innerHTML=(!jQuery('.pers_browse_datafields').is(':visible'))?'" . _("Erweiterte Suche") . "':'" . _("Zuklappen") . "';\">";
-        echo (($datafields_empty) ? _('Erweiterte Suche') : _('Zuklappen')) . '</a>';
-    }
-    
-    echo '</td></tr>';
-
-
     print "\n<tr><td class=steel1 align=\"right\" width=\"15%\">" . _("Status:") . " </td>";
     print "\n<td class=steel1 align=\"left\" width=\"35%\">";
     echo '<select name="pers_browse_perms">';

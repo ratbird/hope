@@ -586,52 +586,55 @@ function jumpTo ($month, $day, $year, $colsp = 1) {
     echo ">&nbsp;</td></tr>\n";
 }
 
-function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
+function includeMonth ($atime, $href, $mod = "", $js_include = "", $monthTime = "") {
     global $RELATIVE_PATH_CALENDAR, $CANONICAL_RELATIVE_PATH_STUDIP;
     require_once($RELATIVE_PATH_CALENDAR . "/lib/CalendarMonth.class.php");
-
-
-    //$js_include = " " . $js_include;
-
-    $amonth = new CalendarMonth($imt);
-    $now = mktime(12, 0, 0, date("n", time()), date("j", time()), date("Y", time()), 0);
-    $width = "25";
+    
+    if (!$monthTime){
+        $monthTime = $atime;
+    }
+    
+    $amonth = new CalendarMonth($monthTime);
+    $selectedDay = mktime(12, 0, 0, date("n", $atime), date("j", $atime), date("Y", $atime), 0);
+    $width = "32";
     $height = "25";
+    $tableWidth = $width * (($mod == 'NOKW')? 7:8);
 
-    $ret = "<table class=\"blank\" border=\"0\" cellspacing=\"1\" cellpadding=\"0\">\n";
+    $ret = "<table class=\"blank\" width=\"$tableWidth\" border=\"0\" cellspacing=\"1\" cellpadding=\"0\">\n";
     $ret .= "<tr><td class=\"steelgroup0\" align=\"center\">\n";
     $ret .= "<table border=\"0\" cellspacing=\"1\" cellpadding=\"1\">\n";
     $ret .= "<tr>\n";
 
     // navigation arrows left
-    $ret .= "<td align=\"center\" class=\"steelgroup0\" valign=\"top\">\n";
+    $ret .= "<td align=\"left\" class=\"steelgroup0\" valign=\"top\" colspan='2'>\n";
     if ($mod == 'NONAV') {
         $ret .= '&nbsp;';
     } else {
-        $ret .= "<a href=\"$href$ptime&imt=";
+        $ret .= "<a href=\"$href$atime&mtime=";
         $ret .= mktime(0, 0, -1, $amonth->mon, 15, $amonth->year - 1) . "\">";
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_eol-left.png') . "\"";
-        $ret .= tooltip(_("ein Jahr zurück")) . "></a>";
-        $ret .= "<a href=\"$href$ptime&imt=" . ($amonth->getStart() - 1) . "\">";
+        $ret .= tooltip(_("ein Jahr zurück")) . "> </a>";
+
+        $ret .= "<a href=\"$href$atime&mtime=" . ($amonth->getStart() - 1) . "\">";
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_2left.png') . "\"";
         $ret .= tooltip(_("einen Monat zurück")) . "></a>\n";
     }
     $ret .= "</td>\n";
 
     // month and year
-    $ret .= '<td class="precol1w" colspan="'. (($mod == 'NOKW')? 5:6). '" align="center">';
+    $ret .= '<td class="precol1w" colspan="'. (($mod == 'NOKW')? 3:4). '" align="center">';
     $ret .= sprintf("%s %s</td>\n",
             htmlentities(strftime("%B", $amonth->getStart()), ENT_QUOTES), $amonth->getYear());
 
     // navigation arrows right
-    $ret .= "<td class=\"steelgroup0\" align=\"center\" valign=\"top\">";
+    $ret .= "<td class=\"steelgroup0\" align=\"right\" valign=\"top\" colspan='2'>";
     if ($mod == 'NONAV' || $mod == 'NONAVARROWS') {
         $ret .= '&nbsp;';
     } else {
-        $ret .= "<a href=\"$href$ptime&imt=" . ($amonth->getEnd() + 1) . "\">";
+        $ret .= "<a href=\"$href$atime&mtime=" . ($amonth->getEnd() + 1) . "\">";
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_2right.png') . "\"";
-        $ret .= tooltip(_("einen Monat vor")) . "></a>";
-        $ret .= "<a href=\"$href$ptime&imt=";
+        $ret .= tooltip(_("einen Monat vor")) . "> </a>";
+        $ret .= "<a href=\"$href$atime&mtime=";
         $ret .= (mktime(0, 0, 1, $amonth->mon, 1, $amonth->year + 1)) . "\">";
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_eol-right.png') . "\"";
         $ret .= tooltip(_("ein Jahr vor")) . "></a>\n";
@@ -666,6 +669,7 @@ function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
     $last_day = ((42 - ($adow + date("t", $amonth->getStart()))) % 7 + $cor) * 86400
                 + $amonth->getEnd() - 43199;
 
+    $today = mktime(12, 0, 0, date("n", time()), date("j", time()), date("Y", time()), 0);
     for ($i = $first_day, $j = 0; $i <= $last_day; $i += 86400, $j++) {
         $aday = date("j", $i);
         // Tage des vorangehenden und des nachfolgenden Monats erhalten andere
@@ -680,12 +684,15 @@ function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
         if ($j % 7 == 0)
             $ret .= "<tr>";
 
-        if (abs($now - $i) < 43199 && !($mod == 'NONAV' && $style == 'light'))
+        if (abs($selectedDay - $i) < 43199 && !($mod == 'NONAV' && $style == 'light')){
             $ret .= "<td class=\"celltoday\" ";
-        elseif (date('m', $i) != $amonth->mon)
+        }
+        elseif (date('m', $i) != $amonth->mon){
             $ret .= "<td class=\"lightmonth\"";
-        else
+        }
+        else{
             $ret .= "<td class=\"month\"";
+        }
 
         $ret .= "align=\"center\" width=\"$width\" height=\"$height\">";
 
@@ -696,9 +703,12 @@ function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
                 $js_inc .= implode(", ", $js_include['parameters']) . ", ";
             $js_inc .= "'" . date('m', $i) . "', '$aday', '" . date('Y', $i) . "')\"";
         }
-        if (abs($ptime - $i) < 43199 )
+
+        // den heutigen Tag markieren
+        if (abs($today - $i) < 43199){
             $aday = "<span style=\"border-width: 2px; border-style: solid; "
                     . "border-color: #DD0000; padding: 2px;\">$aday</span>";
+        }
 
         if (($j + 1) % 7 == 0) {
             if ($mod == 'NONAV' && $style == 'light') {

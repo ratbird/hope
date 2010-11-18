@@ -1877,14 +1877,15 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     if ($isissuefolder) {
         $issue_id = $db->query("SELECT range_id FROM folder WHERE folder_id = ".$db->quote($folder_id))->fetch();
         $dates_for_issue = IssueDB::getDatesforIssue($issue_id['range_id']);
-    $dates_title = array();
-    foreach ($dates_for_issue as $date) {
-      $dates_title[] .= date('d.m.y, H:i', $date['date']).' - '.date('H:i', $date['end_time']);
-    }
+        $dates_title = array();
+        foreach ($dates_for_issue as $date) {
+            $dates_title[] .= date('d.m.y, H:i', $date['date']).' - '.date('H:i', $date['end_time']);
+        }
         $tmp_titel = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title)) .
              ", " . ($tmp_titel ? $tmp_titel : _("ohne Titel"));
     }
     if (($change == $folder_id)
+            && (!$isissuefolder)
             && ((count($folder_tree->getParents($folder_id)) > 1)
              || $result['range_id'] == md5($SessSemName[1] . 'top_folder')
              || $folder_tree->isGroupFolder($result['folder_id'])
@@ -1908,11 +1909,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     }
     print $titel;
 
-    $is_issue_folder = ((count($folder_tree->getParents($folder_id)) > 1) && IssueDB::isIssue($result["range_id"]));
-    if ($is_issue_folder) {
-        $dates_for_issue = IssueDB::getDatesforIssue($result['range_id']);
-    }
-    if ($is_issue_folder) {
+    if ($isissuefolder) {
         $dates_title = array();
         foreach ($dates_for_issue as $date) {
             $dates_title[] .= date('d.m.y, H:i', $date['date']).' - '.date('H:i', $date['end_time']);

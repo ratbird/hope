@@ -10,7 +10,7 @@
 *
 * @author           Peter Tienel <pthienel@web.de>, Till Glöggler <tgloeggl@uos.de>
 * @access           public
-* @module           insert_date_popup.ph
+* @module           insert_date_popup.php
 */
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
@@ -347,7 +347,7 @@ if ($mcount > 3) {
         while ($kalender && ($i < $mcount)) {
             if (($i % $mcounth == 0) && $i > 0) echo '</tr><tr valign=top>', "\n";
             echo '<td class="blank">';
-            echo includeMonth(mktime(12,0,0,$atimex['mon'] + $i++,10,$atimex['year']), 'javascript:void(0);//', 'NONAV', $js, $atime);
+            echo includeMonth(mktime(12,0,0,$atimex['mon'] + $i++,10,$atimex['year']), 'javascript:void(0);//', array(), 'NONAV', $js, $atime);
             echo '</td>';
         }
         if (!$kalender) echo '<td class="blank" colspan="',$mcounth,'">&nbsp;</td>';
@@ -423,9 +423,19 @@ if ($mcount > 3) {
     }
 } else { // nur einen Monat anzeigen
     if ($studipform) {
-        echo includeMonth($imt, "$PHP_SELF?form_name=$form_name&submit=$submit&element_switch=$element_switch&c=$c&atime=", 'NOKW', $js, $atime);
+        $params = array();
+        $params["form_name"] = $form_name;
+        $params["submit"] = $submit;
+        $params["element_switch"] = $element_switch;
+        $params["c"] = $c;
+        $params["atime"] = $imt;
+        echo includeMonth($imt, $PHP_SELF, $params, 'NOKW', $js, $atime);
     } else {
-        echo includeMonth($imt, "$PHP_SELF?element_switch=$element_switch&c=$c&atime=", 'NOKW', $js, $atime);
+        $params = array();
+        $params["element_switch"] = $element_switch;
+        $params["c"] = $c;
+        $params["atime"] = $imt;
+        echo includeMonth($imt, $PHP_SELF, $params, array(), 'NOKW', $js, $atime);
     }
 }
 echo "</body>\n</html>";

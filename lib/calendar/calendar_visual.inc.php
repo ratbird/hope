@@ -586,7 +586,7 @@ function jumpTo ($month, $day, $year, $colsp = 1) {
     echo ">&nbsp;</td></tr>\n";
 }
 
-function includeMonth ($atime, $href, $mod = "", $js_include = "", $monthTime = "") {
+function includeMonth ($atime, $href, $params, $mod = "", $js_include = "", $monthTime = "") {
     global $RELATIVE_PATH_CALENDAR, $CANONICAL_RELATIVE_PATH_STUDIP;
     require_once($RELATIVE_PATH_CALENDAR . "/lib/CalendarMonth.class.php");
     
@@ -596,9 +596,15 @@ function includeMonth ($atime, $href, $mod = "", $js_include = "", $monthTime = 
     
     $amonth = new CalendarMonth($monthTime);
     $selectedDay = mktime(12, 0, 0, date("n", $atime), date("j", $atime), date("Y", $atime), 0);
-    $width = "32";
+
+    $width = (($mod == 'NONAV')? "24":"32");
     $height = "25";
     $tableWidth = $width * (($mod == 'NOKW')? 7:8);
+    $sideColSpan = (($mod == 'NONAV')? 1:2);
+    $centerColSpan = (($mod == 'NOKW')? 3:4);
+    if ($mod == 'NONAV'){
+        $centerColSpan = 6;
+    }
 
     $ret = "<table class=\"blank\" width=\"$tableWidth\" border=\"0\" cellspacing=\"1\" cellpadding=\"0\">\n";
     $ret .= "<tr><td class=\"steelgroup0\" align=\"center\">\n";
@@ -606,36 +612,43 @@ function includeMonth ($atime, $href, $mod = "", $js_include = "", $monthTime = 
     $ret .= "<tr>\n";
 
     // navigation arrows left
-    $ret .= "<td align=\"left\" class=\"steelgroup0\" valign=\"top\" colspan='2'>\n";
+    $ret .= "<td align=\"left\" class=\"steelgroup0\" valign=\"top\" colspan=\"$sideColSpan\">\n";
     if ($mod == 'NONAV') {
         $ret .= '&nbsp;';
     } else {
-        $ret .= "<a href=\"$href$atime&mtime=";
-        $ret .= mktime(0, 0, -1, $amonth->mon, 15, $amonth->year - 1) . "\">";
+        $params["imt"] = mktime(0, 0, -1, $amonth->mon, 15, $amonth->year - 1);
+        $url = URLHelper::getLink($href, $params);
+        $ret .= "<a href=\"$url\">";
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_eol-left.png') . "\"";
         $ret .= tooltip(_("ein Jahr zurück")) . "> </a>";
 
-        $ret .= "<a href=\"$href$atime&mtime=" . ($amonth->getStart() - 1) . "\">";
+        $params["imt"] = $amonth->getStart() - 1;
+        $url = URLHelper::getLink($href, $params);
+        $ret .= "<a href=\"$url\">";
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_2left.png') . "\"";
         $ret .= tooltip(_("einen Monat zurück")) . "></a>\n";
     }
     $ret .= "</td>\n";
 
     // month and year
-    $ret .= '<td class="precol1w" colspan="'. (($mod == 'NOKW')? 3:4). '" align="center">';
+    $ret .= "<td class=\"precol1w\" colspan=\"$centerColSpan\" align=\"center\">";
     $ret .= sprintf("%s %s</td>\n",
             htmlentities(strftime("%B", $amonth->getStart()), ENT_QUOTES), $amonth->getYear());
 
     // navigation arrows right
-    $ret .= "<td class=\"steelgroup0\" align=\"right\" valign=\"top\" colspan='2'>";
+    $ret .= "<td class=\"steelgroup0\" align=\"right\" valign=\"top\" colspan=\"$sideColSpan\">";
     if ($mod == 'NONAV' || $mod == 'NONAVARROWS') {
         $ret .= '&nbsp;';
     } else {
-        $ret .= "<a href=\"$href$atime&mtime=" . ($amonth->getEnd() + 1) . "\">";
+        $params["imt"] = $amonth->getEnd() + 1;
+        $url = URLHelper::getLink($href, $params);
+        $ret .= "<a href=\"$url\">";
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_2right.png') . "\"";
         $ret .= tooltip(_("einen Monat vor")) . "> </a>";
-        $ret .= "<a href=\"$href$atime&mtime=";
-        $ret .= (mktime(0, 0, 1, $amonth->mon, 1, $amonth->year + 1)) . "\">";
+
+        $params["imt"] = (mktime(0, 0, 1, $amonth->mon, 1, $amonth->year + 1));
+        $url = URLHelper::getLink($href, $params);
+        $ret .= "<a href=\"$url\">";   
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_eol-right.png') . "\"";
         $ret .= tooltip(_("ein Jahr vor")) . "></a>\n";
     }
@@ -710,11 +723,20 @@ function includeMonth ($atime, $href, $mod = "", $js_include = "", $monthTime = 
                     . "border-color: #DD0000; padding: 2px;\">$aday</span>";
         }
 
+        if ($mod == 'NONAV'){
+            $url = URLHelper::getLink($href.$i);
+        }
+        else{
+            $params["imt"] = "";
+            $params["atime"] = $i;
+            $url = URLHelper::getLink($href, $params);
+        }
+        
         if (($j + 1) % 7 == 0) {
             if ($mod == 'NONAV' && $style == 'light') {
                 $ret .= '&nbsp;'; // Tag gehört nicht zu diesem Monat
             } else {
-                $ret .= "<a class=\"{$style}sdaymin\" href=\"$href$i\"";
+                $ret .= "<a class=\"{$style}sdaymin\" href=\"$url\"";
                 if ($hday['name'])
                     $ret .= ' ' . tooltip($hday['name']);
                 $ret .= "$js_inc>$aday</a>";
@@ -737,16 +759,16 @@ function includeMonth ($atime, $href, $mod = "", $js_include = "", $monthTime = 
                 // unterschiedliche Darstellung je nach Art des Tages (Rang des Feiertages)
                 switch ($hday["col"]) {
                     case 1:
-                        $ret .= "<a class=\"{$style}daymin\" href=\"$href$i\" ";
+                        $ret .= "<a class=\"{$style}daymin\" href=\"$url\" ";
                         $ret .= tooltip($hday['name']) . "$js_inc>$aday</a>";
                         break;
                     case 2:
                     case 3;
-                        $ret .= "<a class=\"{$style}hdaymin\" href=\"$href$i\" ";
+                        $ret .= "<a class=\"{$style}hdaymin\" href=\"$url\" ";
                         $ret .= tooltip($hday['name']) . "$js_inc>$aday</a>";
                         break;
                     default:
-                        $ret .= "<a class=\"{$style}daymin\" href=\"$href$i\"$js_inc>$aday</a>";
+                        $ret .= "<a class=\"{$style}daymin\" href=\"$url\"$js_inc>$aday</a>";
                 }
             }
             $ret .= "</td>\n";

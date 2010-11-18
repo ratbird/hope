@@ -1510,7 +1510,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         $box = sprintf ("<input type=\"CHECKBOX\" %s name=\"download_ids[]\" value=\"%s\">",($check_all) ? "checked" : "" , $datei["dokument_id"]);
         print $box;
       } else {
-        printf('<input type="checkbox" name="dummy" disabled>');
+        echo Assets::img('icons/16/grey/link-extern.png', array('title' => _("Verlinkte Datei"), 'style' => 'padding-left:5px;'));
     }
     }
     print "</td></tr>";

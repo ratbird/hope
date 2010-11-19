@@ -538,6 +538,57 @@ STUDIP.Tabs = (function () {
 }());
 
 /* ------------------------------------------------------------------------
+ * automatic compression of page title
+ * ------------------------------------------------------------------------ */
+STUDIP.Title = (function () {
+
+  var title, reference;
+
+  // truncates an item
+  function truncate(item) {
+    var text = jQuery(item).html(),
+      length = Math.max(text.length - 4, 4);
+    if (length < text.length) {
+      jQuery(item).html(text.substr(0, length) + "\u2026");
+    }
+  }
+
+  return {
+    // initializes, observes resize events and compresses the title
+    initialize: function () {
+      title = jQuery('#barBottommiddle');
+      reference = jQuery('#barBottomright');
+      jQuery(title).data('old_width', jQuery(window).width());
+
+      // strip contents and set titles
+      title.html(jQuery.trim(title.html()));
+      title.attr('title', title.html());
+
+      jQuery(window).bind('resize', this.resize);
+      this.compress();
+    },
+
+
+    // try to fit the title into a single line
+    compress: function () {
+      while (title.height() > reference.height()) {
+        truncate(title);
+      }
+    },
+
+    // event handler called when resizing the browser
+    resize: function () {
+      var new_width = jQuery(window).width();
+      if (new_width > jQuery(title).data('old_width')) {
+        title.html(title.attr('title'));
+      }
+      jQuery(title).data('old_width', new_width);
+      STUDIP.Title.compress();
+    }
+  };
+}());
+
+/* ------------------------------------------------------------------------
  * Dialogbox
  * ------------------------------------------------------------------------ */
 
@@ -1097,6 +1148,7 @@ jQuery(function () {
 
   // compress tabs
   STUDIP.Tabs.initialize();
+  STUDIP.Title.initialize();
 
   STUDIP.study_area_selection.initialize();
 

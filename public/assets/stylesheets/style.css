@@ -1618,3 +1618,9 @@ h3.eval {
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
 }
+
+/* lists in Stud.IP --------------------------------------------------------- */
+ul.default {
+    padding-left: 14px;
+    margin: 0;
+}

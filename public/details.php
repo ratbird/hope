@@ -382,40 +382,39 @@ echo $template_factory->render(
             </tr>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top">
-                <?
-                //wer macht den Dozenten?
-                $db->query ("SELECT " . $_fullname_sql['full'] . " AS fullname, seminar_user.user_id, username, status FROM seminar_user LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE seminar_user.Seminar_id = '$sem_id' AND status = 'dozent' ORDER BY position, Nachname");
-                if ($db->num_rows() > 0)
-                    printf("<font size=-1><b>%s:</b></font><br>", get_title_for_status('dozent', $db->num_rows(), $db2->f('status')));
-                else
-                    print "&nbsp; ";
-                while ($db->next_record()) {
-                    if ($db->num_rows() > 1)
-                        print "<li>";
-                    printf( "<font size=\"-1\"><a href=\"%s\">%s</a></font>", URLHelper::getLink("about.php?username=".$db->f("username")), htmlReady($db->f("fullname")) );
-                    if ($db->num_rows() > 1)
-                        print "</li>";
-                }
-                ?>
+                <? foreach (array('dozent', 'tutor') as $status) { ?>
+                    <td class="<? echo $cssSw->getClass() ?>" valign="top">
+                    <?
+                    // fetch lecturers/tutors from db with full name
+                    $stmt = DBManager::get()->prepare('SELECT ' . $_fullname_sql['full'] . 'AS fullname,'
+                        . 'seminar_user.user_id, username, status FROM seminar_user '
+                        . 'LEFT JOIN auth_user_md5 USING (user_id) '
+                        . 'LEFT JOIN user_info USING(user_id) '
+                        . "WHERE seminar_user.Seminar_id = ? AND status = ? "
+                        . 'ORDER BY position, Nachname');
+                    $stmt->execute(array($sem_id, $status));
+
+                    $data = array();
+                    if ($users = $stmt->fetchAll(PDO::FETCH_ASSOC)) {
+                        // fill data for template
+                        foreach ($users as $entry) {
+                            $data[] = array(
+                                'name' => $entry['fullname'],
+                                'link' => URLHelper::getLink('about.php?username=' . $entry['username'])
+                            );
+                        }
+                        
+                        // set config-defined title for this status
+                        $title = get_title_for_status($status, sizeof($data), $db2->f('status'));
+
+                        // show template
+                        $template = $GLOBALS['template_factory']->open('details/list');
+                        echo $template->render(compact('title', 'data'));
+                    } else { ?>
+                    &nbsp;
+                    <? } ?>
                 </td>
-                <td class="<? echo $cssSw->getClass() ?>" valign="top">
-                <?
-                //und wer ist Tutor?
-                $db->query ("SELECT seminar_user.user_id, " . $_fullname_sql['full'] . " AS fullname, username, status FROM seminar_user LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE seminar_user.Seminar_id = '$sem_id' AND status = 'tutor' ORDER BY position, Nachname");
-                if ($db->num_rows() > 0)
-                    printf ("<font size=-1><b>%s:</b></font><br>", get_title_for_status('tutor', $db->num_rows(), $db2->f('status')));
-                else
-                    print "&nbsp; ";
-                while ($db->next_record()) {
-                    if ($db->num_rows() > 1)
-                        print "<li>";
-                    printf( "<font size=\"-1\"><a href=\"%s\">%s</a></font>", URLHelper::getLink("about.php?username=".$db->f("username")), htmlReady($db->f("fullname")) );
-                    if ($db->num_rows() > 1)
-                        print "</li>";
-                }
-                ?>
-                </td>
+                <? } ?>
             </tr>
         </table>
         <table width="100%" border="0" cellpadding="2" cellspacing="0">
@@ -606,21 +605,31 @@ echo $template_factory->render(
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
                 <?
+                // show the studyareas
                 if (is_array($sem_path) && count($sem_path)){
-                    if (count($sem_path) ==1)
-                    printf ("<font size=-1><b>" . _("Studienbereich:") . "</b></font><br>");
-                    else
-                    printf ("<font size=-1><b>" . _("Studienbereiche:") . "</b></font><br>");
-                    foreach ($sem_path as $sem_tree_id => $path_name) {
-                        if (count($sem_path) >= 2)
-                        print "<li>";
-                        printf ("<font size=\"-1\"><a href=\"%s\">%s</a></font>", URLHelper::getLink("show_bereich.php?level=sbb&id=".$sem_tree_id),
-                        htmlReady($path_name));
-                        if (count($sem_path) >= 2)
-                        print "</li>";
+                    // set pluralized title if necessary
+                    if (count($sem_path) == 1) {
+                        $title = _("Studienbereich:");
+                    } else {
+                        $title = _("Studienbereiche:");
                     }
+
+    
+                    // fill data for template
+                    $data = array();
+                    foreach ($sem_path as $sem_tree_id => $path_name) {
+                        $data[] = array(
+                            'name' => htmlReady($path_name),
+                            'link' => URLHelper::getLink("show_bereich.php?level=sbb&id=".$sem_tree_id)
+                        );
+                    }
+
+                    // show template
+                    $template = $GLOBALS['template_factory']->open('details/list');
+                    echo $template->render(compact('title', 'data'));
                 }
-                ?>&nbsp;
+                ?>
+                &nbsp;
                 </td>
             </tr>
             <? } ?>

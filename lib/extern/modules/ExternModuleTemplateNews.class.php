@@ -175,9 +175,7 @@ class ExternModuleTemplateNews extends ExternModule {
             $content['NEWS']['NO-NEWS']['NO-NEWS_TEXT'] = $this->config->getValue('Main', "nodatatext");
         }
 
-        $studip_link = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'institut_main.php?auswahl=' . $this->config->range_id;
-        $studip_link .= "&redirect_to=admin_news.php&cmd=new_entry&view=inst&new_inst=TRUE&range_id=";
-        $studip_link .= $this->config->range_id;
+        $studip_link = URLHelper::getLink('admin_news.php?view=news_inst&cid='. $this->config->range_id);
         $content['__GLOBAL__']['STUDIP-LINK'] = $studip_link;
 
         $dateform = $this->config->getValue("Main", "dateformat");

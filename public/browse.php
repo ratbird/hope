@@ -110,56 +110,55 @@ if (!$perm->have_perm('admin'))
 $template->set_attribute('institutes', $institutes);
 $template->set_attribute('courses', $courses);
 
-/* --- Results -------------------------------------------------------------- */
+$vis_query = get_vis_query('auth_user_md5', 'search') . ' AS visible';
 
-$fields = array('username', 
-                $_fullname_sql['full_rev'].' AS fullname', 
-                'perms', 
-                'auth_user_md5.user_id', 
-                get_vis_query('auth_user_md5', 'search').' AS visible');
-$tables = array('auth_user_md5', 
-                'LEFT JOIN user_info ON (auth_user_md5.user_id = user_info.user_id)', 
-                'LEFT JOIN user_visibility ON (auth_user_md5.user_id = user_visibility.user_id)');
-$arguments = array();
+// quick search
+$search_object = new SQLSearch("SELECT username, CONCAT(Vorname, ' ', Nachname, ' (', username, ')'), $vis_query" .
+                               " FROM auth_user_md5 LEFT JOIN user_visibility USING (user_id)" .
+                               " WHERE CONCAT(Vorname, ' ', Nachname) LIKE :input HAVING visible = 1".
+                               " ORDER BY Nachname, Vorname LIMIT 10", '', 'username');
 
-//Admin-Abfrage
-$fields[] = 'user_inst.inst_perms';
-$tables[] = 'LEFT JOIN user_inst ON (auth_user_md5.user_id = user_inst.user_id)';
-if (!$perm->have_perm('root')) {
-    $tables[] = 'LEFT JOIN user_inst AS ui2 ON (ui2.Institut_id = user_inst.Institut_id AND ui2.user_id = '.$db->quote($user-id).')';
-}
-$filter[] = "IF(:inst_id != '0', user_inst.Institut_id = :inst_id AND user_inst.inst_perms != 'user', TRUE)";
-$arguments[":inst_id"] = $inst_id;
-
-
-//Admin-Abfrage
-$fields[] = 'seminar_user.status';
-$tables[] = 'LEFT JOIN seminar_user ON (auth_user_md5.user_id = seminar_user.user_id)';
-    if (!$perm->have_perm('admin')) {
-    $filter[] = "IF(:sem_id != '0', seminar_user.Seminar_id = :sem_id, TRUE)";
-    $tables[] = 'LEFT JOIN seminar_user AS su2 ON (su2.Seminar_id = seminar_user.Seminar_id AND su2.user_id = '.$db->quote($user-id).')';
-}
-$arguments[":sem_id"] = $sem_id;
-
-// freie Suche
-$name = str_replace('%', '\%', $name);
-$name = str_replace('_', '\_', $name);
-$filter[] = "IF(:input != '', CONCAT(Vorname, ' ', Nachname, ', ', Vorname, ',', Nachname, ',', Vorname) LIKE :input, TRUE)";
-$arguments[":input"] = "%".addslashes($name)."%";
-
-$query = 'SELECT '.join(',', $fields).' ' .
-        'FROM '.join(' ', $tables).' ' .
-        'WHERE '.join(' AND ', $filter).' ' .
-        'GROUP BY user_id ' .
-        'ORDER BY '.$sortby;
-$search_object = new SQLSearch($query, "", "username");
 $template->set_attribute('search_object', $search_object);
 
-if ($name || $inst_id || $sem_id) 
+/* --- Results -------------------------------------------------------------- */
+
+$fields = array($_fullname_sql['full_rev'].' AS fullname', 'username', 'perms', 'auth_user_md5.user_id', $vis_query);
+$tables = array('auth_user_md5', 'LEFT JOIN user_info USING (user_id)', 'LEFT JOIN user_visibility USING (user_id)');
+
+if ($inst_id) {
+    $result = $db->query("SELECT Institut_id FROM user_inst WHERE Institut_id = '".$inst_id."' AND user_id = '$user->id'");
+
+    // entweder wir gehoeren auch zum Institut oder sind global admin
+    if ($result->rowCount() > 0 || $perm->have_perm('admin')) {
+        $fields[] = 'user_inst.inst_perms';
+        $tables[] = 'JOIN user_inst USING (user_id)';
+        $filter[] = "user_inst.Institut_id = '".$inst_id."'";
+        $filter[] = "user_inst.inst_perms != 'user'";
+    }
+}
+
+if ($sem_id) {
+    $result = $db->query("SELECT Seminar_id FROM seminar_user WHERE Seminar_id = '".$sem_id."' AND user_id = '$user->id' $exclude_sem");
+
+    // wir gehoeren auch zum Seminar
+    if ($result->rowCount() > 0) {
+        $fields[] = 'seminar_user.status';
+        $tables[] = 'JOIN seminar_user USING (user_id)';
+        $filter[] = "seminar_user.Seminar_id = '".$sem_id."'";
+    }
+}
+
+// freie Suche
+if (strlen($name) > 2) {
+    $name = str_replace('%', '\%', $name);
+    $name = str_replace('_', '\_', $name);
+    $filter[] = "(Vorname LIKE '%".addslashes($name)."%' OR Nachname LIKE '%".addslashes($name)."%')";
+}
+
+if (count($filter))
 {
-    $statement = $db->prepare($query);
-    $statement->execute($arguments);
-    $result = $statement->fetchAll();
+    $query = 'SELECT '.join(',', $fields).' FROM '.join(' ', $tables).' WHERE '.join(' AND ', $filter).' ORDER BY '.$sortby;
+    $result = $db->query($query);
 
     foreach ($result as $row)
     {
@@ -191,4 +190,4 @@ if ($name || $inst_id || $sem_id)
 
 echo $template->render();
 page_close();
-
+?>

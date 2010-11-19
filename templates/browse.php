@@ -15,7 +15,7 @@
             <b><?=_("in Einrichtungen:")?></b>
         </td>
         <td width="90%">
-        <select name="inst_id" style="width: 99%">
+        <select name="inst_id" style="min-width: 400px;">
             <option value="0">- - -</option>
             <? foreach ($institutes as $institute): ?>
             <option value="<?=$institute['id']?>" <?= $institute['id'] == $inst_id ? 'selected="selected"' : '' ?>><?= htmlReady($institute['name']) ?></option>
@@ -31,7 +31,7 @@
             <b><?=_("in Veranstaltungen:")?></b>
         </td>
         <td width="90%">
-        <select name="sem_id" style="width: 99%">
+        <select name="sem_id" style="min-width: 400px;">
             <option value="0">- - -</option>
             <? foreach ($courses as $course): ?>
             <option value="<?=$course['id']?>" <?= $course['id'] == $sem_id ? 'selected="selected"' : '' ?>><?= htmlReady($course['name']) ?></option>
@@ -46,12 +46,11 @@
             <b><?=_("Name:")?></b>
         </td>
         <td width="90%">
-            <?= QuickSearch::get("name", $search_object)
-                    ->setInputStyle("width: 99%;")
-                    ->withoutButton()
+            <?= QuickSearch::get('name', $search_object)
+                    ->setInputStyle('width: 400px')
+                    ->defaultValue('', $name)
+                    ->fireJSFunctionOnSelect('STUDIP.Browse.selectUser')
                     ->noSelectbox()
-                    ->defaultValue("", $name)
-                    ->fireJSFunctionOnSelect("STUDIP.Browse.selectUser")
                     ->render() ?>
         </td>
     </tr>

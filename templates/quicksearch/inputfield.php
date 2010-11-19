@@ -23,7 +23,7 @@
             jQuery(function () {
                 STUDIP.QuickSearch.autocomplete("<?= $id ?>",
                     "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
-                    <?= $jsfunction ? htmlReady($jsfunction) : "null" ?>,
+                    <?= $jsfunction ? $jsfunction : "null" ?>,
                     <? if ($beschriftung && !$defaultID) : ?>
                     '<?= $beschriftung ?>',
                     <? else : ?>

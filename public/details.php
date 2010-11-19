@@ -400,7 +400,7 @@ echo $template_factory->render(
                         foreach ($users as $entry) {
                             $data[] = array(
                                 'name' => $entry['fullname'],
-                                'link' => URLHelper::getLink('about.php?username=' . $entry['username'])
+                                'link' => 'about.php?username=' . $entry['username']
                             );
                         }
                         
@@ -619,8 +619,8 @@ echo $template_factory->render(
                     $data = array();
                     foreach ($sem_path as $sem_tree_id => $path_name) {
                         $data[] = array(
-                            'name' => htmlReady($path_name),
-                            'link' => URLHelper::getLink("show_bereich.php?level=sbb&id=".$sem_tree_id)
+                            'name' => $path_name,
+                            'link' => 'show_bereich.php?level=sbb&id=' . $sem_tree_id
                         );
                     }
 
@@ -647,19 +647,32 @@ echo $template_factory->render(
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="48%" valign="top">
                 <?
-                $db3->query("SELECT Name, url, Institute.Institut_id FROM Institute LEFT JOIN seminar_inst USING (institut_id) WHERE seminar_id = '$sem_id' AND Institute.institut_id != '".$db2->f("Institut_id")."'");
-                if ($db3->num_rows() ==1)
-                    printf ("<font size=-1><b>" . _("beteiligte Einrichtung:") . "</b></font><br>");
-                elseif ($db3->num_rows() >=2)
-                    printf ("<font size=-1><b>" . _("beteiligte Einrichtungen:") . "</b></font><br>");
-                else
-                    print "&nbsp; ";
-                while ($db3->next_record()) {
-                    if ($db3->num_rows() >= 2)
-                        print "<li>";
-                    printf("<font size=-1><a href=\"%s\">%s</a></font><br>", URLHelper::getLink("institut_main.php?auswahl=".$db3->f("Institut_id")), htmlReady($db3->f("Name")));
-                    if ($db3->num_rows() > 2)
-                        print "</li>";
+                // fetch associated institutes and/or faculties
+                $stmt = DBManager::get()->prepare('SELECT Name, url, Institute.Institut_id FROM Institute '
+                    . 'LEFT JOIN seminar_inst USING (institut_id) '
+                    . 'WHERE seminar_id = ? AND Institute.institut_id != ?');
+                $stmt->execute(array($sem_id, $db2->f("Institut_id")));
+                if ($entries = $stmt->fetchAll(PDO::FETCH_ASSOC)) {
+                    // get pluralized title if necessary
+                    if (sizeof($data) == 1) {
+                        $title = _("beteiligte Einrichtung:");
+                    } else {
+                        $title = _("beteiligte Einrichtungen:");
+                    }
+
+                    $data = array();
+                    foreach ($entries as $entry) {
+                        $data[] = array(
+                            'name' => $entry['Name'],
+                            'link' => 'institut_main.php?auswahl=' . $entry['Institut_id'] 
+                        );
+                    }
+
+                    // show template
+                    $template = $GLOBALS['template_factory']->open('details/list');
+                    echo $template->render(compact('title', 'data'));
+                } else {
+                    print '&nbsp; ';
                 }
                 ?>
                 </td>

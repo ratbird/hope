@@ -34,7 +34,7 @@ class QuicksearchController extends AuthenticatedController
      *
      * @param string query_id first argument of url -> id of query in session
      */
-    public function response_action($query_id) 
+    public function response_action($query_id)
     {
         $this->extraInclude($query_id);
         $this->cleanUp();
@@ -53,7 +53,7 @@ class QuicksearchController extends AuthenticatedController
      *
      * @return object|string ready search-object or string
      */
-    private function getSearch($query_id) 
+    private function getSearch($query_id)
     {
         if (isset($_SESSION['QuickSearches'][$query_id])) {
             $search_query = $_SESSION['QuickSearches'][$query_id]['query'];
@@ -72,7 +72,7 @@ class QuicksearchController extends AuthenticatedController
      *
      * @return void
      */
-    private function extraInclude($query_id) 
+    private function extraInclude($query_id)
     {
         if ($_SESSION['QuickSearches'][$query_id]['includePath']) {
             include_once($_SESSION['QuickSearches'][$query_id]['includePath']);
@@ -80,14 +80,14 @@ class QuicksearchController extends AuthenticatedController
     }
 
     /**
-     * formats the results so that the searchword is marked bold and all 
-     * htmlentities from the result of the searchtype-object are escaped. 
+     * formats the results so that the searchword is marked bold and all
+     * htmlentities from the result of the searchtype-object are escaped.
      *
      * @param array $results array of searchresults
      *
      * @return array array of searchresults formatted
      */
-    private function extraResultFormat($results) 
+    private function extraResultFormat($results)
     {
         $input = preg_quote(htmlReady(studip_utf8decode(Request::get('request'))), "/");
         foreach ($results as $key => $result) {
@@ -103,7 +103,7 @@ class QuicksearchController extends AuthenticatedController
      *
      * @return array array(array(item_id, item-name), ...) mostly limited to 5.
      */
-    private function getResults($request) 
+    private function getResults($request)
     {
         if ($this->search instanceof SearchType) {
             try {
@@ -123,7 +123,7 @@ class QuicksearchController extends AuthenticatedController
      *
      * @return void
      */
-    private function cleanUp() 
+    private function cleanUp()
     {
         $count = 0;
         $lifetime = $GLOBALS['AUTH_LIFETIME'] ? $GLOBALS['AUTH_LIFETIME'] : 30;
@@ -140,10 +140,10 @@ class QuicksearchController extends AuthenticatedController
      * method to recursively convert an array from uft8 to iso-1
      *
      * @param array $input
-     * 
+     *
      * @return array
      */
-    private function utf8_array_decode($input) 
+    private function utf8_array_decode($input)
     {
         $return = array();
         foreach ($input as $key => $val) {

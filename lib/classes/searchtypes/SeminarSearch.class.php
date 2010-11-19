@@ -74,7 +74,7 @@ class SeminarSearch extends SearchType
          }
          $db = DBManager::get();
          $style = isset($this->styles[$this->resultstyle]) ?  $this->styles[$this->resultstyle] : $this->styles['name'];
-         return $db->query("SELECT s.Seminar_id, $style FROM seminare s
+         return $db->query("SELECT s.Seminar_id, $style, Name FROM seminare s
                             LEFT JOIN seminar_user su ON su.Seminar_id=s.Seminar_id AND su.status='dozent'
                             LEFT JOIN auth_user_md5 USING (user_id)
                             WHERE s.Seminar_id IN ('".join("','", array_slice($result, 0, 10))."') GROUP BY s.Seminar_id"

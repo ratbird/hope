@@ -45,6 +45,10 @@ class MetaDate
     var $seminarDurationTime = 0;
     var $cycles = Array();
 
+    /**
+     * Constructor
+     * @param string $seminar_id
+     */
     function MetaDate($seminar_id = '')
     {
         if ($seminar_id != '') {
@@ -54,11 +58,25 @@ class MetaDate
 
     }
 
+    /**
+     * art is no longer used and always 1
+     *
+     * @deprecated
+     * @return number
+     */
     function getArt()
     {
         return 1;
     }
 
+    /**
+     * returns start week (Semesterwoche) for a cycledate
+     * for compatibility the first cycledate is chosen if no one is specified
+     *
+     * @deprecated
+     * @param string id of cycledate
+     * @return int
+     */
     function getStartWoche($metadate_id = null)
     {
         if ($metadate_id) {
@@ -69,6 +87,15 @@ class MetaDate
         }
     }
 
+    /**
+     * sets start week (Semesterwoche) for a cycledate
+     * for compatibility the first cycledate is chosen if no one is specified
+     *
+     * @deprecated
+     * @param int $start_woche
+     * @param string $metadate_id
+     * @return null|Ambigous <NULL, unknown>
+     */
     function setStartWoche($start_woche, $metadate_id = null)
     {
         if ($metadate_id) {
@@ -79,12 +106,25 @@ class MetaDate
         }
     }
 
+    /**
+     * returns first cycledate
+     *
+     * @return CycleData
+     */
     function getFirstMetadate()
     {
         $first_metadate_id = array_shift(array_keys($this->cycles));
         return $first_metadate_id ? $this->cycles[$first_metadate_id] : null;
     }
 
+    /**
+     * returns the cycle for a cycledate
+     * for compatibility the first cycledate is chosen if no one is specified
+     *
+     * @deprecated
+     * @param string $metadate_id
+     * @return int 0,1,2 for weekly, biweekly ...
+     */
     function getTurnus($metadate_id = null)
     {
         if ($metadate_id) {
@@ -95,6 +135,15 @@ class MetaDate
         }
     }
 
+    /**
+     * set the cycle for a cycledate
+     * for compatibility the first cycledate is chosen if no one is specified
+     *
+     * @deprecated
+     * @param int 0,1,2 for weekly, biweekly ...
+     * @param string $metadate_id
+     * @return int
+     */
     function setTurnus($turnus, $metadate_id = null)
     {
         if ($metadate_id) {
@@ -120,6 +169,15 @@ class MetaDate
         return $this->seminar_id;
     }
 
+    /**
+     * internal method to apply cycledate data from assoc array to a given
+     * CycleData object. checks the start and endtime and retruns false if wrong
+     *
+     * @deprecated
+     * @param array assoc, see CycleData, metadate_id must be in $data['cycle_id']
+     * @param CycleData $cycle
+     * @return boolean
+     */
     function setCycleData($data = array(), &$cycle)
     {
         $cycle->seminar_id = $this->getSeminarId();
@@ -155,8 +213,13 @@ class MetaDate
         return FALSE;
     }
 
-    /*
-     * adds a regular time entry
+
+    /**
+     * adds a new cycledate, single dates are created if second param is true
+     *
+     * @param array assoc, see CycleData, metadate_id must be in $data['cycle_id']
+     * @param bool $create_single_dates
+     * @return string|boolean metadate_id of created cycle
      */
     function addCycle($data = array(), $create_single_dates = true)
     {
@@ -176,6 +239,12 @@ class MetaDate
         return FALSE;
     }
 
+    /**
+     * change existing cycledate, changes also corresponding single dates
+     *
+     * @param array assoc, see CycleData, metadate_id must be in $data['cycle_id']
+     * @return number|boolean
+     */
     function editCycle($data = array())
     {
         $cycle = $this->cycles[$data['cycle_id']];
@@ -269,6 +338,12 @@ class MetaDate
         return FALSE;
     }
 
+    /**
+     * completey remove cycledate
+     * @see CycleData::delete()
+     * @param string $cycle_id
+     * @return boolean
+     */
     function deleteCycle($cycle_id)
     {
         $this->cycles[$cycle_id]->delete();
@@ -286,6 +361,10 @@ class MetaDate
         return $this->cycles[$cycle_id]->unDeleteSingleDate($date_id, $filterStart, $filterEnd);
     }
 
+    /**
+     * store all changes to cycledates for the course, removed cycles are deleted from database
+     * @return int > 0 if changes where made
+     */
     function store()
     {
         $old_cycle_dates = array();
@@ -304,6 +383,9 @@ class MetaDate
     }
 
 
+    /**
+     * load all cycledates from database
+     */
     function restore()
     {
        $this->cycles = array();
@@ -331,11 +413,18 @@ class MetaDate
         return ($a->sorter < $b->sorter) ? -1 : 1;
     }
 
+    /**
+     * sort cycledates by sorter column and date
+     */
     function sortCycleData()
     {
         uasort($this->cycles, array($this, 'sortCycleDataHelper'));
     }
 
+    /**
+     * returns cycledates as arrays
+     * @return array assoc of cycledate data arrays
+     */
     function getCycleData()
     {
         $ret = array();
@@ -345,11 +434,21 @@ class MetaDate
         return $ret;
     }
 
+    /**
+     * returns the cycledate objects
+     * @return array of CycleData objects
+     */
     function getCycles()
     {
         return $this->cycles;
     }
 
+    /**
+     * returns old style metadata_dates array (more or less)
+     *
+     * @deprecated
+     * @return array
+     */
     function getMetaDataAsArray()
     {
         $ret['turnus_data'] = $this->getCycleData();
@@ -359,7 +458,16 @@ class MetaDate
         return $ret;
     }
 
-    function &getSingleDates($metadate_id, $filterStart = 0, $filterEnd = 0)
+    /**
+     * returns an array of SingleDate objects corresponding to the given cycle id
+     * use the optional params to specify a timerange
+     *
+     * @param string a cycle id
+     * @param int unix timestamp
+     * @param int unix timestamp
+     * @return array of SingleDate objects
+     */
+    function getSingleDates($metadate_id, $filterStart = 0, $filterEnd = 0)
     {
         if (!$this->cycles[$metadate_id]->termine) {
             $this->readSingleDates($metadate_id, $filterStart, $filterEnd);
@@ -368,6 +476,14 @@ class MetaDate
         return $this->cycles[$metadate_id]->termine;
     }
 
+    /**
+     * reload SingleDate objects for a given cycle id
+     *
+     * @param string $metadate_id
+     * @param int $start
+     * @param int $end
+     * @return bool
+     */
     function readSingleDates($metadate_id, $start = 0, $end = 0)
     {
         return $this->cycles[$metadate_id]->readSingleDates($start, $end);

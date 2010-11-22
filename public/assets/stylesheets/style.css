@@ -593,7 +593,7 @@ A:hover.calhead {
     text-decoration: none;
 }
 .celltoday {
-    background-image: url('../images/celltoday.gif');
+    background-image: url('../images/celltoday.jpg');
 }
 th.inccal {
 }
@@ -622,7 +622,7 @@ td.currenttoday {
     border-width: 2px;
     border-style: solid;
     border-color: #DD0000;
-    background-image: url('../images/celltoday.gif');
+    background-image: url('../images/celltoday.jpg');
 }
 td.month {
     background-image: url('../images/steelcal.jpg');

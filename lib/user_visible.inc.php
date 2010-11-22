@@ -112,58 +112,40 @@ function get_vis_query($table_alias = 'auth_user_md5', $context='') {
     if ($perm->have_perm("root")) return "1";
 
     $my_domains = UserDomain::getUserDomainsForUser($auth->auth['uid']);
-    $query = "($table_alias.visible = 'global'";
-    
+    $query = "$table_alias.visible = 'global'";
+
     /*
-     *  Check if the user has set own visibilities or if the system default 
+     *  Check if the user has set own visibilities or if the system default
      *  should be used.
      */
     if ($context) {
-        $contextQuery = " AND IFNULL(user_visibility.$context, ".
-            "(SELECT $context FROM user_visibility WHERE user_id='studip' LIMIT 1)) = 1";
+        $context_default = (int)DbManager::get()->query("SELECT $context FROM user_visibility WHERE user_id='studip' LIMIT 1")->fetchColumn();
+        $contextQuery = " AND (IFNULL(user_visibility.$context, ".
+            "$context_default) = 1 OR $table_alias.visible = 'always')";
     }
-    
+
     // are users with visibility "unknown" treated as visible?
     $unknown = get_config('USER_VISIBILITY_UNKNOWN');
-
-    if ($context) {
-        $query .= $contextQuery.")";
-    } else {
-        $query .= ")";
-    }
 
     foreach ($my_domains as $domain) {
         $my_domain_ids[] = $domain->getID();
     }
 
     if (count($my_domains) == 0) {
-        $query .= " OR (SELECT COUNT(*) FROM user_userdomains WHERE user_id = $table_alias.user_id) = 0";
+        $query .= " OR NOT EXISTS (SELECT * FROM user_userdomains WHERE user_id = $table_alias.user_id)";
     } else {
-        $query .= " OR (SELECT COUNT(*) FROM user_userdomains WHERE user_id = $table_alias.user_id 
-                    AND userdomain_id IN ('".implode("','", $my_domain_ids)."')) > 0";
+        $query .= " OR EXISTS (SELECT * FROM user_userdomains WHERE user_id = $table_alias.user_id
+                    AND userdomain_id IN ('".implode("','", $my_domain_ids)."'))";
     }
 
-    $query .= " AND ($table_alias.visible = 'always'";
-
-    if ($context) {
-        $query .= " OR ($table_alias.visible = 'yes'".$contextQuery."))";
-    } else {
-        $query .= " OR $table_alias.visible = 'yes')";
-    }
+    $query .= " AND ($table_alias.visible = 'always' OR $table_alias.visible = 'yes'";
 
     if ($unknown) {
-        $query .= " OR ($table_alias.visible = 'unknown'";
+        $query .= " OR $table_alias.visible = 'unknown'";
     }
+    $query .= ")";
 
-    if ($context) {
-        $query .= $contextQuery;
-    }
-    
-    if ($unknown) {
-        $query .= ")";
-    }
-
-    return "($query)";
+    return "($query) $contextQuery";
 }
 
 function get_ext_vis_query($table_alias = 'aum') {

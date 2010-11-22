@@ -44,7 +44,7 @@
                             } else {
                                 if ($global_visibility == 'never') {
                                     echo "<i>"._('Ihre Kennung wurde von einem Administrator unsichtbar geschaltet.')."</i>";
-                                } else if ($my_perm == 'dozent' && get_config('DOZENT_ALWAYS_VISIBLE')) {
+                                } else if ($user_perm == 'dozent' && get_config('DOZENT_ALWAYS_VISIBLE')) {
                                     echo "<i>"._('Sie haben Dozentenrechte und sind daher immer global sichtbar.')."</i>";
                                 } else {
                                     echo "<i>"._('Sie sind immer global sichtbar.')."</i>";
@@ -57,11 +57,11 @@
                     <?php
                     if (($global_visibility == 'yes' || $global_visibility == 'global' ||
                         ($global_visibility == 'unknown' && get_config('USER_VISIBILITY_UNKNOWN')) ||
-                        ($my_perm == 'dozent' && get_config('DOZENT_ALWAYS_VISIBLE'))) &&
-                        (!$NOT_HIDEABLE_FIELDS[$my_perm]['online'] ||
-                        !$NOT_HIDEABLE_FIELDS[$my_perm]['chat'] ||
-                        !$NOT_HIDEABLE_FIELDS[$my_perm]['search'] ||
-                        !$NOT_HIDEABLE_FIELDS[$my_perm]['email'])) {
+                        ($user_perm == 'dozent' && get_config('DOZENT_ALWAYS_VISIBLE'))) &&
+                        (!$NOT_HIDEABLE_FIELDS[$user_perm]['online'] ||
+                        !$NOT_HIDEABLE_FIELDS[$user_perm]['chat'] ||
+                        !$NOT_HIDEABLE_FIELDS[$user_perm]['search'] ||
+                        !$NOT_HIDEABLE_FIELDS[$user_perm]['email'])) {
                     ?>
                     <tr>
                         <td align="right" class="blank" style="border-bottom:1px dotted black;">
@@ -71,7 +71,7 @@
                             <font size="-1">
                             <?= _("Stellen Sie hier ein, in welchen Bereichen des Systems Sie erscheinen wollen."); ?>
                             <?php
-                            if (!$NOT_HIDEABLE_FIELDS[$my_perm]['email']) {
+                            if (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']) {
                                 echo '<br>';
                                 echo _("Wenn Sie hier Ihre E-Mail-Adresse verstecken, wird stattdessen die E-Mailadresse Ihrer (Standard-)Einrichtung angezeigt.");
                             }
@@ -80,22 +80,22 @@
                             </div>
                         </td>
                         <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>">
-                            <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['online']) {?>
+                            <?php if (!$NOT_HIDEABLE_FIELDS[$user_perm]['online']) {?>
                             <input type="checkbox" name="online"<?= $online_visibility ? ' checked="checked"' : '' ?>>
                             <?= _('sichtbar in "Wer ist online"'); ?>
                             <br>
                             <?php } ?>
-                            <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['chat'] && get_config('CHAT_ENABLE')) {?>
+                            <?php if (!$NOT_HIDEABLE_FIELDS[$user_perm]['chat'] && get_config('CHAT_ENABLE')) {?>
                             <input type="checkbox" name="chat"<?= $chat_visibility ? ' checked="checked"' : '' ?>>
                             <?= _('eigener Chatraum sichtbar'); ?>
                             <br>
                             <?php } ?>
-                            <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['search']) {?>
+                            <?php if (!$NOT_HIDEABLE_FIELDS[$user_perm]['search']) {?>
                             <input type="checkbox" name="search"<?= $search_visibility ? ' checked="checked"' : '' ?>>
                             <?= _('auffindbar über die Personensuche'); ?>
                             <br>
                             <?php } ?>
-                            <?php if (!$NOT_HIDEABLE_FIELDS[$my_perm]['email']) {?>
+                            <?php if (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']) {?>
                             <input type="checkbox" name="email"<?= $email_visibility ? ' checked="checked"' : '' ?>>
                             <?= _('eigene E-Mail-Adresse sichtbar'); ?>
                             <br>

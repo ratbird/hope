@@ -235,56 +235,8 @@ function dump_sem($sem_id, $print_view = false) {
 
     // Ablaufplan
     if ($Modules["schedule"]) {
-        $db->query("SELECT termine.*, themen.title as th_title, themen.description as th_desc  FROM termine LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen USING (issue_id) WHERE range_id='$sem_id' AND date_typ IN " . getPresenceTypeClause() . " ORDER BY date");
-        if ($db->num_rows()) {
-            $dump.="<br>";
-            $dump.="<table width=100% border=1 cellpadding=2 cellspacing=0>";
-            $dump .= " <tr><td colspan=2 align=left class=\"topic\">";
-            $dump .= "<H2 class=\"topic\">&nbsp;" . _("Ablaufplan") . "</H2>";
-            $dump.= "</td></tr>\n";
-
-            while ($db->next_record()) {
-                $dump.="<tr align=\"center\"> ";
-                $dump.= "<td width=\"25%\" align=\"left\" >";
-                $dump.= strftime("%d. %b. %Y, %H:%M", $db->f("date"));
-                $dump.= ' - ' .  strftime("%H:%M", $db->f("end_time"));
-                $dump.= "</td>";
-                $dump.= "<td width=\"75%\" align=\"left\"> ";
-                $dump.= $TERMIN_TYP[$db->f("date_typ")]["name"].": ".htmlReady($db->f("th_title"),1,1);
-                $dump.= "&nbsp;</td></tr>\n";
-                if ($db->f("th_desc")) {
-                    $dump.="<tr><td width=\"25%\">&nbsp;</td>";
-                    $dump.= "<td width=\"75%\">".formatReady($db->f("th_desc"),1,1)."</td></tr>\n";
-                }
-            }
-        $dump .= "</table>\n";
-        }
-
-        // zusaetzliche Termine
-        $db->query("SELECT termine.*, themen.title as th_title, themen.description as th_desc  FROM termine LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen USING (issue_id) WHERE range_id='$sem_id'  AND date_typ NOT IN " . getPresenceTypeClause() . " ORDER BY date");
-        if ($db->num_rows()) {
-            $dump.="<br>";
-            $dump.="<table width=100% border=1 cellpadding=2 cellspacing=0>";
-            $dump .= " <tr><td colspan=2 align=left class=\"topic\">";
-            $dump .= "<H2 class=\"topic\">&nbsp;" . _("zus&auml;tzliche Termine") . "</H2>";
-            $dump.= "</td></tr>\n";
-
-            while ($db->next_record()) {
-                $dump.="<tr align=\"center\"> ";
-                $dump.= "<td width=\"25%\" align=\"left\" >";
-                $dump.= strftime("%d. %b. %Y, %H:%M", $db->f("date"));
-                $dump.= ' - ' .  strftime("%H:%M", $db->f("end_time"));
-                $dump.= "</td>";
-                $dump.= "<td width=\"75%\" align=\"left\"> ";
-                $dump.= $TERMIN_TYP[$db->f("date_typ")]["name"].": ".htmlReady($db->f("th_title"),1,1);
-                $dump.= "&nbsp;</td></tr>\n";
-                if ($db->f("th_desc")) {
-                    $dump.="<tr><td width=\"25%\">&nbsp;</td>";
-                    $dump.= "<td width=\"75%\">".formatReady($db->f("th_desc"),1,1)."</td></tr>\n";
-                }
-            }
-        $dump .= "</table>\n";
-        }
+        $dump.= dumpRegularDatesSchedule($sem_id);
+        $dump.= dumpExtraDatesSchedule($sem_id);
     }
 
     //SCM
@@ -417,6 +369,112 @@ function dump_sem($sem_id, $print_view = false) {
     return $dump;
 
 } // end function dump_sem($sem_id)
+
+
+/**
+ * Returns the regular dates for one seminar.
+ * @param  $sem_id the id of the seminar
+ * @return the HTML for the schedule table
+ */
+function dumpRegularDatesSchedule($sem_id)
+{
+    $db=new DB_Seminar;
+
+    $db->query("SELECT termine.*, themen.title as th_title, themen.description as th_desc FROM termine LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen USING (issue_id) WHERE range_id='$sem_id' AND date_typ IN " . getPresenceTypeClause() . " ORDER BY date");
+    $title = _("Ablaufplan");
+
+    return dumpScheduleTable($db, $title);
+}
+
+/**
+ * Returns the extra dates for one seminar
+ * @param  $sem_id the id of the seminar
+ * @return the HTML for the schedule table for the extra dates
+ */
+function dumpExtraDatesSchedule($sem_id)
+{
+    $db = new DB_Seminar;
+
+    $db->query("SELECT termine.*, themen.title as th_title, themen.description as th_desc FROM termine LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen USING (issue_id) WHERE range_id='$sem_id'  AND date_typ NOT IN " . getPresenceTypeClause() . " ORDER BY date");
+    $title = _("zus&auml;tzliche Termine");
+
+    return dumpScheduleTable($db, $title);
+}
+
+/**
+ * Returns the schedule table for one query as HTML.
+ * The query has to start like this:
+ * SELECT termine.*, themen.title as th_title, themen.description as th_desc FROM termine LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen USING (issue_id)
+ * @param  $db the result of an query for date entries
+ * @param  $title the title for the table header
+ * @return the HTML for the schedule table
+ */
+function dumpScheduleTable($db, $title)
+{
+    if ($db->num_rows()) {
+        $dump .= "<br>";
+        $dump .= "<table width=100% border=1 cellpadding=2 cellspacing=0>";
+        $dump .= dumpDateTableHeader($title);
+        $dump .= dumpDateTableRows($db);
+        $dump .= "</table>\n";
+    }
+    
+    return $dump;
+}
+
+/**
+ * Returns the first row (the header row) for the tables listing dates.
+ * @param  $title title to show in first table row
+ * @return the HTML for the first table row
+ */
+function dumpDateTableHeader($title)
+{
+    $dump .= "<tr><td colspan=2 align=left class=\"topic\">";
+    $dump .= "<H2 class=\"topic\">&nbsp;" . $title . "</H2>";
+    $dump .= "</td></tr>\n";
+
+    return $dump;
+}
+
+/**
+ * Returns the HTML table rows for the date entries in $db.
+ * The query has to start like this:
+ * SELECT termine.*, themen.title as th_title, themen.description as th_desc FROM termine LEFT JOIN themen_termine USING (termin_id) LEFT JOIN themen USING (issue_id)
+ * @param  $db the result of an query for date entries
+ * @return the HTML for the table rows
+ */
+function dumpDateTableRows($db)
+{
+    global $TERMIN_TYP;
+    
+    $lastTerminId = NULL;
+    while ($db->next_record()) {
+        $currentTerminId = $db->f("termin_id");
+        if ($lastTerminId != $currentTerminId) {
+            $dump .= "<tr align=\"center\"> ";
+            $dump .= "<td width=\"25%\" align=\"left\" valign=\"top\">";
+            $dump .= strftime("%d. %b. %Y, %H:%M", $db->f("date"));
+            $dump .= ' - ' . strftime("%H:%M", $db->f("end_time"));
+            $dump .= "&nbsp;(" . $TERMIN_TYP[$db->f("date_typ")]["name"] . ")";
+            $dump .= "</td>";
+        }
+        else {
+            $dump .= "<tr><td width=\"25%\"></td>";
+        }
+        
+        $dump .= "<td width=\"75%\" align=\"left\"> ";
+        $dump .= htmlReady($db->f("th_title"), 1, 1);
+        if ($db->f("th_desc")) {
+            $dump .= "<br/>";
+            $dump .= formatReady($db->f("th_desc"), 1, 1);
+        }
+        $dump .= "&nbsp;</td></tr>\n";
+
+        $lastTerminId = $currentTerminId;
+    }
+
+    return $dump;
+}
 
 
 /////// die beiden Funktionen um das Forum zu exportieren

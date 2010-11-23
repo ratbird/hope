@@ -159,6 +159,7 @@ class CalendarScheduleModel
                 }
 
                 // add the lecturer
+                $lecturers = array();
                 $members = $sem->getMembers('dozent');
 
                 foreach ($members as $member) {

@@ -86,7 +86,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         // set the user-defined semester and start/end-times
         if ($my_schedule_settings['glb_sem']) {
             foreach ($this->semesters as $semester) {
-                if ($semester['semester_id'] == $my_schedule_settings['glb_sem'] && $semester['ende'] > time()) {
+                if ($semester['semester_id'] == $my_schedule_settings['glb_sem']) {
                     $this->current_semester = $semester;
                     break;
                 }

@@ -1004,7 +1004,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         </tr>
         <?
         }
-        if (!$admin_admission_data["admission_type"]  || $admin_admission_data["admission_type"] != 3) {
+        if (!$admin_admission_data["admission_type"]  || $admin_admission_data["admission_type"] == 3) {
         ?>
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" width="4%" align="right">
@@ -1029,26 +1029,26 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
         <?if (! LockRules::Check($seminar_id, 'Lesezugriff')) : ?>
                 <font size=-1>
                 <?if (get_config('ENABLE_FREE_ACCESS')) {?>
-                    <input type="radio" name="read_level" value="0" <?php print $admin_admission_data["read_level"] == 0 ? "checked" : ""?>> <?=_("freier Zugriff")?> &nbsp;<br>
+                    <input type="radio" name="read_level" value="0" <?= $admin_admission_data["read_level"] == 0 ? "checked" : ""?>> <?=_("freier Zugriff")?><br>
                 <?} else {?>
-                    <font color=#BBBBBb>&nbsp; &nbsp; &nbsp;  <?=_("freier Zugriff")?> &nbsp;</font><br>
+                    <input type="radio" name="read_level" disabled> <span class="quiet"><?=_("freier Zugriff")?></span><br>
                 <?}?>
-                <input type="radio" name="read_level" value="1" <?php print $admin_admission_data["read_level"] == 1 ? "checked" : ""?>> <?=_("in Stud.IP angemeldet")?> &nbsp;<br>
+                <input type="radio" name="read_level" value="1" <?= $admin_admission_data["read_level"] == 1 ? "checked" : ""?>> <?=_("in Stud.IP angemeldet")?><br>
                 <? if ($admin_admission_data["admission_type"] == 0 ) : ?>
-                    <input type="radio" name="read_level" value="2" <?php print $admin_admission_data["read_level"] == 2 ? "checked" : ""?>> <?=_("nur mit Passwort")?> &nbsp;<br>
+                    <input type="radio" name="read_level" value="2" <?= $admin_admission_data["read_level"] == 2 ? "checked" : ""?>> <?=_("nur mit Passwort")?><br>
                 <? else: ?>
-                    <span style="color:#BBBBBB">&nbsp;&nbsp;&nbsp; <?=_("Nur mit Passwort") ?>&nbsp; </span> <br>
+                    <input type="radio" name="read_level" disabled> <span class="quiet"><?=_("Nur mit Passwort") ?></span><br>
                 <? endif ?>
                 </font>
         <? else: ?>
           <font size=-1>
           <b>
             <? if($admin_admission_data["read_level"] == 0) : ?>
-              <?= _("freier Zugriff") ?> &nbsp; <br>
+              <?= _("freier Zugriff") ?><br>
             <? elseif ($admin_admission_data["read_level"] == 1) : ?>
-              <?= _("in Stud.IP angemeldet") ?> &nbsp; <br>
+              <?= _("in Stud.IP angemeldet") ?><br>
             <? elseif ($admin_admission_data["read_level"] == 2) : ?>
-              <?=_("nur mit Passwort")?> &nbsp; <br>
+              <?=_("nur mit Passwort")?><br>
             <? endif; ?>
           </b>
           </font><br>
@@ -1064,28 +1064,28 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
 
                 if (get_config('ENABLE_FREE_ACCESS') && $SEM_CLASS[$SEM_TYPE[$admin_admission_data["status"]]["class"]]["write_access_nobody"]) {
                 ?>
-                <input type="radio" name="write_level" value="0" <?php print $admin_admission_data["write_level"] == 0 ? "checked" : ""?>> <?=_("freier Zugriff")?> &nbsp;<br>
+                <input type="radio" name="write_level" value="0" <?= $admin_admission_data["write_level"] == 0 ? "checked" : ""?>> <?=_("freier Zugriff")?><br>
                 <?
           } else { ?>
-                <font color="#BBBBBB">&nbsp; &nbsp; &nbsp;  <?=_("freier Zugriff")?> &nbsp;</font><br>
+                <input type="radio" name="write_level" disabled> <span class="quiet"><?=_("freier Zugriff")?></span><br>
                 <?
                 }
                 ?>
-                <input type="radio" name="write_level" value="1" <?php print $admin_admission_data["write_level"] == 1 ? "checked" : ""?>> <?=_("in Stud.IP angemeldet")?> &nbsp;<br>
+                <input type="radio" name="write_level" value="1" <?= $admin_admission_data["write_level"] == 1 ? "checked" : ""?>> <?=_("in Stud.IP angemeldet")?><br>
                 <? if($admin_admission_data["admission_type"] == 0) : ?>
-                    <input type="radio" name="write_level" value="2" <?php print $admin_admission_data["write_level"] == 2 ? "checked" : ""?>> <?=_("nur mit Passwort")?> &nbsp;<br>
+                    <input type="radio" name="write_level" value="2" <?= $admin_admission_data["write_level"] == 2 ? "checked" : ""?>> <?=_("nur mit Passwort")?><br>
                <? else : ?>
-                    <span style="color:#BBBBBB">&nbsp;&nbsp;&nbsp; <?=_("Nur mit Passwort") ?>&nbsp; </span> <br>
+                    <input type="radio" name="write_level" disabled> <span class="quiet"><?=_("Nur mit Passwort") ?></span><br>
                <? endif ?>
         <? else : ?>
           <font size=-1>
             <b>
               <? if($admin_admission_data["write_level"] == 0 ) : ?>
-                <?=_("freier Zugriff")?> &nbsp;<br>
+                <?=_("freier Zugriff")?><br>
               <? elseif($admin_admission_data["write_level"] == 1 ) : ?>
-                <?=_("in Stud.IP angemeldet")?> &nbsp; <br>
+                <?=_("in Stud.IP angemeldet")?><br>
               <? elseif ($admin_admission_data["write_level"] == 2 ) : ?>
-                <?=_("nur mit Passwort")?> &nbsp; <br>
+                <?=_("nur mit Passwort")?><br>
               <? endif; ?>
             </b>
           </font><br>
@@ -1132,7 +1132,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                 </td>
             </tr>
         <?
-        } else if ($admin_admission_data["admission_type"] != 3)  {
+        } else {
         ?>
             <tr <? $cssSw->switchClass() ?>>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">

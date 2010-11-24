@@ -98,7 +98,14 @@ function temporaly_accepted($sem_name, $user_id, $sem_id, $ask = "TRUE", $studie
             $comment = '';
         }
         admission_seminar_user_insert($user_id, $sem_id, 'accepted', $studiengang_id, $comment);
-        parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>vorl&auml;ufig akzeptiert</b> in die Veranstaltung %s eingetragen. F&uuml;r weitere Informationen lesen Sie den Abschnitt 'Anmeldeverfahren' in der &Uuml;bersichtsseite zu dieser Veranstaltung."), '<b>'.$sem_name.'</b>'));
+
+        $current_seminar = Seminar::getInstance($sem_id);
+
+        if (!SeminarCategories::GetByTypeId($current_seminar->status)->studygroup_mode) {
+            parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>vorl&auml;ufig akzeptiert</b> in die Veranstaltung %s eingetragen. F&uuml;r weitere Informationen lesen Sie den Abschnitt 'Anmeldeverfahren' in der &Uuml;bersichtsseite zu dieser Veranstaltung."), '<b>'.$sem_name.'</b>'));
+        } else {
+            parse_msg(sprintf("msg§"._("Sie wurden auf die Anmeldeliste der Studiengruppe %s eingetragen. Die Moderatoren der Studiengruppe können Sie jetzt freischalten."), $sem_name));
+        }
         echo "<tr><td class=\"blank\" colspan=2>";
 
         // LOGGING

@@ -4,7 +4,7 @@
 # Lifter007: TODO
 # Lifter003: TODO
 /*
-teilnehmer.php - Anzeige der Teilnehmer eines Seminares
+teilnehmer_aux.php - Anzeige der Teilnehmer eines Seminares
 Copyright (C) 2000 Stefan Suchi <suchi@gmx.de>, Ralf Stockmann <rstockm@gwdg.de>
 
 This program is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@ PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Zusatzangaben"));
 Navigation::activateItem('/course/members/aux_data');
 
 if (!$_REQUEST['display_type']) {
-    // Start  of Output
+    // Start of Output
     include ("lib/include/html_head.inc.php"); // Output of html head
     include ("lib/include/header.php");   //hier wird der "Kopf" nachgeladen
 }

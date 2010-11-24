@@ -124,7 +124,7 @@ function check_semester_default(){
         $GLOBALS['_default_sem'] = $actual_sem['semester_id'];
     }
 }
-//redirect the user whre he want to go today....
+//redirect the user where he want to go today....
 function startpage_redirect($page_code) {
     switch ($page_code) {
         case 1:

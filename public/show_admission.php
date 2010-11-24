@@ -795,8 +795,11 @@ if(is_object($group_obj)){
                 echo '</td>';
             }
         }
+
+        $url = getUrlToSeminar($seminar_id);
+        
         printf ("<td class=\"%s\">
-        <a title=\"%s\" href=\"".URLHelper::getLink('teilnehmer.php?cid=%s')."\">
+        <a title=\"%s\" href=\"$url\">
                 %s%s%s
                 </a></td>
                 <td class=\"%s\" align=\"center\">
@@ -811,7 +814,6 @@ if(is_object($group_obj)){
                 <td class=\"%s\" align=\"center\">%s</td>",
                 $cssSw->getClass(),
                 _("Teilnehmerliste aufrufen"),
-                $seminar_id,
                 $semdata['VeranstaltungsNummer'] ? htmlready('('. $semdata['VeranstaltungsNummer'] . ')') .' ' : '',
                 htmlready(substr($semdata['Name'], 0, 50)), (strlen($semdata['Name'])>50) ? "..." : "",
                 $cssSw->getClass(),
@@ -853,4 +855,33 @@ if(is_object($group_obj)){
 <?php
 include ('lib/include/html_end.inc.php');
 page_close();
+
+/**
+ * Returns the URL to the participants page of the seminar.
+ * If no participants page is available the URL to the main page is returned.
+ * @param  $seminar_id the id of the seminar
+ * @return string the url
+ */
+function getUrlToSeminar($seminar_id)
+{
+    if (hasSeminarAnActivatedParticipantsModule($seminar_id)) {
+        return URLHelper::getLink("teilnehmer.php?cid=$seminar_id");
+    }
+    else {
+        return URLHelper::getLink("seminar_main.php?cid=$seminar_id");
+    }
+}
+
+/**
+ * Checks if a seminar has an activated participants module.
+ * @param  $seminarId the id of the seminar
+ * @return bool
+ */
+function hasSeminarAnActivatedParticipantsModule($seminarId)
+{
+    $modules = new Modules();
+    $participantsModuleName = "participants";
+
+    return $modules->checkLocal($participantsModuleName, $seminarId);
+}
 ?>

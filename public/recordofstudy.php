@@ -376,7 +376,7 @@ function createInfoxboxArray($mode){
             array ("kategorie"  => "Information:",
                 "eintrag" => array  (
                         array    (  "icon" => 'icons/16/black/info.png',
-                                "text"  => _("Um eine Druckansicht Ihrer Veranstaltungen zu erstellen, wählen Sie bitte zunächst das entsprechende Semester aus und engen gegebenenfalls ihre Suchabfrage ein.")
+                                "text"  => _("Um eine Druckansicht Ihrer Veranstaltungen zu erstellen, wählen Sie bitte zunächst das entsprechende Semester aus und engen gegebenenfalls Ihre Suchabfrage ein.")
                                 ),
                         array    (  "icon" => 'icons/16/black/info.png',
                                 "text" => $GLOBALS['FDF_USAGE_HINT']
@@ -389,7 +389,7 @@ function createInfoxboxArray($mode){
             array  ("kategorie"  => "Information:",
                     "eintrag" =>    array (
                             array ( "icon" => 'icons/16/black/info.png',
-                                    "text"  => _("Erstellen Sie ihre Veranstaltungsübersicht und bearbeiten Sie fehlende oder falsche Einträge.")
+                                    "text"  => _("Erstellen Sie Ihre Veranstaltungsübersicht und bearbeiten Sie fehlende oder falsche Einträge.")
                                     ),
                         array    (  "icon" => 'icons/16/black/info.png',
                                 "text" => $GLOBALS['FDF_USAGE_HINT']

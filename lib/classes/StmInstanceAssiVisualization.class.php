@@ -21,7 +21,7 @@ class StmInstanceAssiVisualization{
         echo $table->openRow();
             echo $table->cell(
             "<b>" . _("Wahl eines Konkreten Moduls") . "</b><br>
-            " . _("Bitte w&auml;hlen sie die entsprechende Aktion f&uuml;r ein vorhandenes Konkretes Modul aus. Sie k&ouml;nnen alternativ auch ein neues Modul instanziieren.")
+            " . _("Bitte w&auml;hlen Sie die entsprechende Aktion f&uuml;r ein vorhandenes Konkretes Modul aus. Sie k&ouml;nnen alternativ auch ein neues Modul instanziieren.")
             , array('align' => 'center', 'class' => 'blank'));
             echo $table->cell(Assets::img('infobox/archiv.jpg'));
         echo $table->close();
@@ -426,7 +426,7 @@ class StmInstanceAssiVisualization{
             "<b>" . _("Zusammenfassung") . "</b><br><br>
             " . _("Hier werden alle Daten des Konkreten Moduls dargestellt.") .
             ( ($is_new)?
-              _("Wenn sie ein konkretes Modul als vollst&auml;ndig deklarieren, kann es danach nicht mehr bearbeitet oder gel&ouml;scht werden! Bitte &uuml;berpr&uuml;fen sie noch einmal Ihre Angaben und speichern dann das Modul ab.")
+              _("Wenn Sie ein konkretes Modul als vollst&auml;ndig deklarieren, kann es danach nicht mehr bearbeitet oder gel&ouml;scht werden! Bitte &uuml;berpr&uuml;fen Sie noch einmal Ihre Angaben und speichern dann das Modul ab.")
              : "" )
             , array('align' => 'center', 'class' => 'blank'));
             if ($is_new)
@@ -545,7 +545,7 @@ class StmInstanceAssiVisualization{
         echo $table->openRow();
             echo $table->cell(
             "<b>" . _("Zusammenfassung") . "</b><br><br>
-            " . _("Hier werden noch einmal alle Daten des Allgemeinen Moduls dargestellt. Bitte &uuml;berpr&uuml;fen Sie, ob sie das richtige Modul gew&auml;hlt haben.")
+            " . _("Hier werden noch einmal alle Daten des Allgemeinen Moduls dargestellt. Bitte &uuml;berpr&uuml;fen Sie, ob Sie das richtige Modul gew&auml;hlt haben.")
             , array('align' => 'center', 'class' => 'blank'));
             echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands01_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $form->getFormStart();

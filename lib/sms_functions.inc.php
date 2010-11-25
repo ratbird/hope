@@ -752,7 +752,7 @@ function show_addrform() {
 
     if (empty($adresses_array)) { // user with no adress-members at all
 
-        $tmp .= sprintf("<font size=\"-1\">"._("Sie haben noch keine Personen in ihrem Adressbuch. %s Klicken sie %s hier %s um dorthin zu gelangen.")."</font>", "<br>", "<a href=\"contact.php\">", "</a>");
+        $tmp .= sprintf("<font size=\"-1\">"._("Sie haben noch keine Personen in Ihrem Adressbuch. %s Klicken Sie %s hier %s um dorthin zu gelangen.")."</font>", "<br>", "<a href=\"contact.php\">", "</a>");
 
     } else if (!empty($adresses_array)) { // test if all adresses are added?
 

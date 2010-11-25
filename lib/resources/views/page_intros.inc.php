@@ -273,7 +273,7 @@ switch ($view) {
     break;
     //all the intros in an open object (Veranstaltung, Einrichtung)
     case "openobject_main":
-        $page_intro=sprintf(_("Auf dieser Seite sehen sie alle der %s zugeordneten Ressourcen."), $SessSemName["art_generic"]);
+        $page_intro=sprintf(_("Auf dieser Seite sehen Sie alle der %s zugeordneten Ressourcen."), $SessSemName["art_generic"]);
         PageLayout::setTitle($SessSemName["header_line"]." - "._("Ressourcenübersicht"));
         Navigation::activateItem('/course/resources/overview');
         $infobox = array(

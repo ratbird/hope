@@ -118,11 +118,11 @@ if ($_the_clip_form->isClicked("clip_ok")){
             if ($inserted){
                 $_the_tree->init();
                 $_the_treeview->open_ranges[$clip_cmd[1]] = true;
-                $_msg .= "msg§" . sprintf(_("%s Eintr&auml;ge aus ihrer Merkliste wurden in <b>%s</b> eingetragen."),
+                $_msg .= "msg§" . sprintf(_("%s Eintr&auml;ge aus Ihrer Merkliste wurden in <b>%s</b> eingetragen."),
                 $inserted, htmlReady($_the_tree->tree_data[$clip_cmd[1]]['name'])) . "§";
             }
         } else {
-            $_msg .= "info§" . _("Sie haben keinen Eintrag in ihrer Merkliste ausgew&auml;hlt!") . "§";
+            $_msg .= "info§" . _("Sie haben keinen Eintrag in Ihrer Merkliste ausgew&auml;hlt!") . "§";
         }
     }
     $_the_clipboard->doClipCmd();

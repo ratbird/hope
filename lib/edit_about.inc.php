@@ -633,7 +633,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
                     }
                     $check_uname = StudipAuthAbstract::CheckUsername($new_username);
                     if ($check_uname['found']) {
-                        $this->msg .= "error§" . _("Der Benutzername wird bereits von einem anderen Benutzer verwendet. Bitte wählen sie einen anderen Usernamen!") . "§";
+                        $this->msg .= "error§" . _("Der Benutzername wird bereits von einem anderen Benutzer verwendet. Bitte wählen Sie einen anderen Usernamen!") . "§";
                         return false;
                     } else {
                         //$this->msg .= "info§" . $check_uname['error'] ."§";

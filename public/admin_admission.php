@@ -562,7 +562,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
                         $db4->query("DELETE FROM admission_seminar_user WHERE user_id='".$db3->f("user_id")."' AND seminar_id='".$admin_admission_data["sem_id"]."' AND status='awaiting'");
                         if ($db4->affected_rows()){
                             setTempLanguage($db3->f("user_id"));
-                            $message= sprintf(_("Die Warteliste der Veranstaltung **%s** wurde von einem/r DozentIn oder AdministratorIn deaktiviert, sie sind damit __nicht__ zugelassen worden."), $admin_admission_data["name"]);
+                            $message= sprintf(_("Die Warteliste der Veranstaltung **%s** wurde von einem/r DozentIn oder AdministratorIn deaktiviert, Sie sind damit __nicht__ zugelassen worden."), $admin_admission_data["name"]);
                             $messaging->insert_message(addslashes($message), $db3->f('username'), "____%system%____", FALSE, FALSE, "1", FALSE, _("Systemnachricht:")." "._("nicht zugelassen in Veranstaltung"), TRUE);
                             restoreLanguage();
                         }
@@ -829,9 +829,9 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                 <? if (($admin_admission_data["admission_type_org"] && $admin_admission_data["admission_type_org"] != 3) && (!$perm->have_perm("admin"))) {
                     $db->query("SELECT username, ". $_fullname_sql['full'] . "  as fullname FROM user_inst LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE institut_id ='".$admin_admission_data["heimat_inst_id"]."' AND perms = 'admin'");
                     if  (!$db->num_rows())
-                        printf ("<font size=-1>"._("Sie haben ein Anmeldeverfahren aktiviert. Dieser Schritt kann %s nicht %s r&uuml;ckg&auml;ngig gemacht werden! Bei Problemen wenden sie sich bitte an eine Administratorin oder einen Administrator.")."<br></font>", "</font><font size=-1 color=\"red\"><b>", "</b></font><font size=-1>");
+                        printf ("<font size=-1>"._("Sie haben ein Anmeldeverfahren aktiviert. Dieser Schritt kann %s nicht %s r&uuml;ckg&auml;ngig gemacht werden! Bei Problemen wenden Sie sich bitte an eine Administratorin oder einen Administrator.")."<br></font>", "</font><font size=-1 color=\"red\"><b>", "</b></font><font size=-1>");
                     else
-                        printf ("<font size=-1>"._("Sie haben ein Anmeldeverfahren aktiviert. Dieser Schritt kann %s nicht %s r&uuml;ckg&auml;ngig gemacht werden! Bei Problemen wenden sie sich bitte an eineN der hier aufgef&uuml;hrten AdministratorInnen.")."<br></font>", "</font><font size=-1 color=\"red\"><b>", "</b></font><font size=-1>");
+                        printf ("<font size=-1>"._("Sie haben ein Anmeldeverfahren aktiviert. Dieser Schritt kann %s nicht %s r&uuml;ckg&auml;ngig gemacht werden! Bei Problemen wenden Sie sich bitte an eineN der hier aufgef&uuml;hrten AdministratorInnen.")."<br></font>", "</font><font size=-1 color=\"red\"><b>", "</b></font><font size=-1>");
                     printf ("<input type=\"HIDDEN\" name=\"commit_no_admission_data\" value=\"TRUE\">");
                     while ($db->next_record()) {
                         echo "<li><font size=-1><a href=\"". URLHelper::getLink('about.php?username='.$db->f("username")) ."\">". htmlReady($db->f("fullname")) ."</a></font></li>";
@@ -846,7 +846,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
           <? elseif(is_object($group_obj)) :
                         ?>
                         <font size="-1">
-                        <?=_("Diese Veranstaltung ist Mitglied einer Gruppe. Die Art des Anmeldeverfahrens können sie nur für die Gruppe insgesamt ändern.")?>
+                        <?=_("Diese Veranstaltung ist Mitglied einer Gruppe. Die Art des Anmeldeverfahrens können Sie nur für die Gruppe insgesamt ändern.")?>
                         <br>
                         <a href="<?=URLHelper::getLink('show_admission.php?group_sem_x=1&group_id='.$group_obj->getId())?>">
                         <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/black/schedule.png" border="0"> <?=_("Gruppenverwaltung")?></a>
@@ -962,9 +962,9 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                         echo _("Sie haben den Anmeldemodus \"Vorl&auml;ufiger Eintrag\" aktiviert. ");
                         printf ("<font size=-1>"._("Dieser Schritt kann %s nicht %s r&uuml;ckg&auml;ngig gemacht werden! ")."</font>", "</font><font size=-1 color=\"red\"><b>", "</b></font><font size=-1>");
                         if  (!$db->num_rows())
-                            echo _("Bei Problemen wenden sie sich bitte an eine Administratorin oder einen Administrator.");
+                            echo _("Bei Problemen wenden Sie sich bitte an eine Administratorin oder einen Administrator.");
                         else
-                            echo _("Bei Problemen wenden sie sich bitte an eineN der hier aufgef&uuml;hrten AdministratorInnen.");
+                            echo _("Bei Problemen wenden Sie sich bitte an eineN der hier aufgef&uuml;hrten AdministratorInnen.");
                         printf ("<input type=\"HIDDEN\" name=\"commit_no_admission_data\" value=\"TRUE\">");
                         while ($db->next_record()) {
                             echo "<li><font size=-1><a href=\"". URLHelper::getLink('about.php?username='.$db->f("username")) ."\">". htmlReady($db->f("fullname")) ."</a></font></li>";
@@ -1102,7 +1102,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
           <? if ($admin_admission_data["admission_type"] == 3) :?>
                     <span><?=_("Diese Veranstaltung ist gesperrt. Es kann kein Passwort vergeben werden.") ?></span><br>
           <? elseif (! LockRules::Check($seminar_id, 'Passwort')) : ?>
-                    <font size=-1><?=_("Bitte geben Sie hier ein Passwort ein, wenn sie <b>Zugriff nur mit Passwort</b> gew&auml;hlt haben.")?></font><br><br>
+                    <font size=-1><?=_("Bitte geben Sie hier ein Passwort ein, wenn Sie <b>Zugriff nur mit Passwort</b> gew&auml;hlt haben.")?></font><br><br>
                     <?
                     if ($admin_admission_data["passwort"]!="") {
                         echo "<font size=-1><input type=\"password\" ";

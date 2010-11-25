@@ -507,7 +507,7 @@ if(is_object($group_obj)){
         <div style="font-weight:bold;"><?=_("Gruppierte Veranstaltungen bearbeiten")?></div>
         <div>
         <?=_("Gruppierte Veranstaltungen müssen ein identisches Anmeldeverfahren benutzen.")?>
-        <?=_("Alle Einstellungen die sie an dieser Stelle vornehmen können, werden in allen Veranstaltungen dieser Gruppe gesetzt, wenn sie die entsprechende Option auswählen.")?>
+        <?=_("Alle Einstellungen die Sie an dieser Stelle vornehmen können, werden in allen Veranstaltungen dieser Gruppe gesetzt, wenn Sie die entsprechende Option auswählen.")?>
         <?=_("Veranstaltungen dieser Gruppe, die noch kein Anmeldeverfahren eingestellt haben, werden automatisch mit einem Kontingent für alle Studiengänge versehen.")?>
         <br><br>
         <b><?=_("Veranstaltungen in dieser Gruppe:")?></b>

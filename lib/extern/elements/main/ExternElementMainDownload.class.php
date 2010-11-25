@@ -208,7 +208,7 @@ class ExternElementMainDownload extends ExternElementMain {
                 _("Geben Sie die URL eines Bildes ein, dass als Icon für komprimierte Dateien dienen soll. Erlaubte Formate: jpg, png, gif. "),
                 _("Geben Sie die URL eines Bildes ein, dass als Icon für alle anderen Dateiformate dienen soll. ")
         );
-        $info_add = _("Wenn sie keine URL angeben, wird ein Standard-Icon ausgegeben.");
+        $info_add = _("Wenn Sie keine URL angeben, wird ein Standard-Icon ausgegeben.");
         
         $table = "";
         for ($i = 0; $i < sizeof($icon_attributes); $i++) {

@@ -1435,9 +1435,9 @@ class EvalOverview {
             if ( $counter_no_permisson > 0 ) {
 
             if ( $counter_no_permisson == 1 )
-                     $safeguard .= $this->createSafeguard("ausruf", _("Sie wollen die Evaluation aus einem Bereich aushängen für den sie keine Berechtigung besitzten.<br> Die Aktion wurde nicht ausgeführt."));
+                     $safeguard .= $this->createSafeguard("ausruf", _("Sie wollen die Evaluation aus einem Bereich aushängen für den Sie keine Berechtigung besitzten.<br> Die Aktion wurde nicht ausgeführt."));
             else
-                     $safeguard .= $this->createSafeguard("ausruf", sprintf(_("Sie wollen die Evaluation aus %s% Bereichen aushängen für die sie keine Berechtigung besitzten.<br> Die Aktion wurde nicht ausgeführt."), $counter_no_permisson));
+                     $safeguard .= $this->createSafeguard("ausruf", sprintf(_("Sie wollen die Evaluation aus %s% Bereichen aushängen für die Sie keine Berechtigung besitzten.<br> Die Aktion wurde nicht ausgeführt."), $counter_no_permisson));
                return $safeguard;
             }
 
@@ -2279,7 +2279,7 @@ class EvalOverview {
        $td->addContent ($b);
        $td->addContent (EvalCommon::createImage(EVAL_PIC_HELP,
                        "",
-                       tooltip(_("Hängen Sie  die Evaluation in die gewünschten Bereiche ein (abhängige Kopie mit gemeinsamer Auswertung) oder kopieren Sie sie in Bereiche (unabhängige Kopie mit getrennter Auswertung)."),
+                       tooltip(_("Hängen Sie die Evaluation in die gewünschten Bereiche ein (abhängige Kopie mit gemeinsamer Auswertung) oder kopieren Sie sie in Bereiche (unabhängige Kopie mit getrennter Auswertung)."),
                           TRUE, TRUE)));
        $td->addContent (($results)
               ? $table_s

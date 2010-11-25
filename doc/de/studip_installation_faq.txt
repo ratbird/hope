@@ -13,14 +13,14 @@ die Option auftauchen und unten unter dem Block "gettext" ein "GetTextSupport en
 Q: Jetzt komme ich gerade mal bis zur Eingangs-Hintergrundgrafik. Der Fehler, den ich jetzt erhalte ist: Fatal error: 
 Call to undefined function: sem_get() in /srv/www/htdocs/studip/chat/ShmHandler.class.php on line 88
 
-A: Die Fehlermeldung, die sie bekommen bedeutet, dass die Semaphoren Funktionen für den Zugriff auf gemeinsam 
+A: Die Fehlermeldung, die Sie bekommen bedeutet, dass die Semaphoren Funktionen für den Zugriff auf gemeinsam
 genutzte Speicherbereiche nicht korrekt in PHP einkompiliert wurden. Diese Funktionen werden für den Chat benötigt. 
-Überprüfen können sie das mit einem phpinfo(), in der Ausgabe sollte unter 'Additional Modules' (ziemlich weit unten) 
+Überprüfen können Sie das mit einem phpinfo(), in der Ausgabe sollte unter 'Additional Modules' (ziemlich weit unten)
 sysvshm (shared memory) und sysvsem (semaphores) angezeigt werden.
-Wenn sich der Fehler durch erneutes Konpilieren nicht beheben läßt, so haben sie die Möglichkeit, den Chat auf dateibasierte 
-Speicherung umzustellen. Dazu müssen sie in der Datei local.inc im PHPLIB-Verzeichnis die Variable $CHAT_SERVER_NAME auf 
+Wenn sich der Fehler durch erneutes Konpilieren nicht beheben läßt, so haben Sie die Möglichkeit, den Chat auf dateibasierte
+Speicherung umzustellen. Dazu müssen Sie in der Datei local.inc im PHPLIB-Verzeichnis die Variable $CHAT_SERVER_NAME auf
 "ChatFileServer" umstellen. Dies führt aber u.U. zu einer erhöhten Belastung des Webservers, wenn mehrere Chaträume 
-gleichzeitig aktiv sind. Alternativ können sie den Chat an dieser Stelle in der local.inc auch deaktivieren 
+gleichzeitig aktiv sind. Alternativ können Sie den Chat an dieser Stelle in der local.inc auch deaktivieren
 ($CHAT_ENABLE = FALSE)
 
 3. Die Startseite kommt immer wieder

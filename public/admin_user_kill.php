@@ -107,7 +107,7 @@ if (count($msg) > 0) {
 ?>
 <div style="padding-left: 1em;padding-right:1em;">
 <form action="<?=UrlHelper::getLink('?userlist_submit=1')?>" method="POST">
-<?=_("Geben sie eine Liste von Nutzernamen (username) ein, die zum Löschen vorgesehen sind. Die Namen können mit Komma, Semikolon, oder whitespaces getrennt sein.")?>
+<?=_("Geben Sie eine Liste von Nutzernamen (username) ein, die zum Löschen vorgesehen sind. Die Namen können mit Komma, Semikolon, oder whitespaces getrennt sein.")?>
 <br>
 <br>
 <textarea name="kill_user_list" rows="10" cols="80" wrap="virtual"><?=(is_array($_kill_user) ? join("\n", array_keys($_kill_user)): '')?></textarea>

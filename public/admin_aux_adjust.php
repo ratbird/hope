@@ -208,7 +208,7 @@ switch ($_REQUEST['cmd']) {
 
     case 'doAdd':
         if (!Request::get('name')) {
-            $msg['error'][] = sprintf(_("Bitte geben sie der Regel einen Namen!"));
+            $msg['error'][] = sprintf(_("Bitte geben Sie der Regel einen Namen!"));
             $view = 'add';
         } 
 
@@ -232,7 +232,7 @@ switch ($_REQUEST['cmd']) {
     case 'doEdit':
         $edit_id = Request::get('id');
         if (!Request::get('name')) {
-            $msg['error'][] = sprintf(_("Bitte geben sie der Regel einen Namen!"));
+            $msg['error'][] = sprintf(_("Bitte geben Sie der Regel einen Namen!"));
             $view = 'edit';
         }
 

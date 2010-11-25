@@ -254,7 +254,7 @@ if (check_ticket($_REQUEST['studipticket'])){
 
                 }
                 else{
-                    $pass_msg .= "error§" . _("Bei der Wiederholung des Passwortes ist ein Fehler aufgetreten! Bitte geben sie das exakte Passwort ein!") . "§";
+                    $pass_msg .= "error§" . _("Bei der Wiederholung des Passwortes ist ein Fehler aufgetreten! Bitte geben Sie das exakte Passwort ein!") . "§";
                     $showform = true;
                 }
 

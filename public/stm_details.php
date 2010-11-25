@@ -71,7 +71,7 @@ if (!$stm_obj->isNew()){
     }
     if ($_REQUEST['cmd'] == 'enter' && $stm_obj->isAllowedToEnter($GLOBALS['user']->id, true) && !$stm_obj->isParticipant($GLOBALS['user']->id)){
         $out = _("Sie haben sich entschieden dieses Modul zu belegen.");
-        if ($stm_obj->getGroupCount() > 1) $out .= '<br>' . _("Für dieses Modul existieren verschiedene Ausprägungen. Bitte wählen sie eine davon aus:");
+        if ($stm_obj->getGroupCount() > 1) $out .= '<br>' . _("Für dieses Modul existieren verschiedene Ausprägungen. Bitte wählen Sie eine davon aus:");
         ?>
         <tr><td class="blank">
         <div style="margin:20px;font-size:10pt;">

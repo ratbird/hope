@@ -455,7 +455,7 @@ class UserManagement
                 }
                 $check_uname = StudipAuthAbstract::CheckUsername($newuser['auth_user_md5.username']);
                 if ($check_uname['found']) {
-                    $this->msg .= "error§" . _("Der Benutzername wird bereits von einem anderen Benutzer verwendet. Bitte wählen sie einen anderen Benutzernamen!") . "§";
+                    $this->msg .= "error§" . _("Der Benutzername wird bereits von einem anderen Benutzer verwendet. Bitte wählen Sie einen anderen Benutzernamen!") . "§";
                     return false;
                 } else {
                     //$this->msg .= "info§" . $check_uname['error'] ."§";
@@ -756,7 +756,7 @@ class UserManagement
             $this->db->query($query);
             $this->db->next_record();
             if ($this->db->f("count")) {
-                $this->msg .= sprintf("info§" . _("%s Ordner konnten nicht gel&ouml;scht werden, da sie noch Dokumente anderer BenutzerInnen enthalten.") . "§", $this->db->f("count"));
+                $this->msg .= sprintf("info§" . _("%s Ordner konnten nicht gel&ouml;scht werden, da Sie noch Dokumente anderer BenutzerInnen enthalten.") . "§", $this->db->f("count"));
             }
         }
         // kill all the ressources that are assigned to the user (and all the linked or subordinated stuff!)

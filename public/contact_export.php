@@ -70,7 +70,7 @@ if ($mode == "select_group"){
         array ("kategorie"  => "Information:",
             "eintrag" => array  (
                 array ( "icon" => "icons/16/black/info.png",
-                    "text"  => _("Bitte wählen sie eine bestimme Gruppe ihres Adressbuches oder ihr vollständiges Adressbuch und drücken anschließend auf 'Export'.")
+                    "text"  => _("Bitte wählen Sie eine bestimme Gruppe Ihres Adressbuches oder Ihr vollständiges Adressbuch und drücken anschließend auf 'Export'.")
                 ),
             )
         ),
@@ -150,7 +150,7 @@ function printSelectGroup($infobox, $groups)
         . "  <table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n"
         . "  <tr>"
         . "   <td valign=\"top\"><font size=\"-1\">\n"
-        . _("Bitte wählen sie ein Gruppe aus, deren Daten sie in eine vCard-Datei exportieren möchten:")."\n"
+        . _("Bitte wählen Sie ein Gruppe aus, deren Daten Sie in eine vCard-Datei exportieren möchten:")."\n"
         . "    <form action=\"$PHP_SELF\" method=post>\n"
         . "       &nbsp;<select name=\"groupid\" style=\"vertical-align:middle;\">\n";
     // the groups

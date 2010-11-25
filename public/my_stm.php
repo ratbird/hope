@@ -95,7 +95,7 @@ while($db->next_record()){
 }
 
 if (!count($my_stm))
-    $meldung.= "info§" . _("Es sind zur Zeit keine ihrer Veranstaltungen zu Modulen zugeordnet.");
+    $meldung.= "info§" . _("Es sind zur Zeit keine Ihrer Veranstaltungen zu Modulen zugeordnet.");
 
 ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -190,7 +190,7 @@ $infobox = array    (
                                 "text"  => sprintf(_("Sie sind in %s Modulen als Verantwortlicher eingetragen."), $num_my_mod)
             ),
             array    (  "icon" => "icons/16/black/search.png",
-                                "text"  => _("Um mehr Informationen &uuml;ber ein Studienmodul anzuzeigen, klicken sie bitte aus den Namen des Moduls.")
+                                "text"  => _("Um mehr Informationen &uuml;ber ein Studienmodul anzuzeigen, klicken Sie bitte aus den Namen des Moduls.")
             )
         )
     ),

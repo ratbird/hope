@@ -59,14 +59,14 @@ class StartupChecks {
         $this->registered_checks["institutes"]["link"] = "admin_institut.php?i_view=new";
         $this->registered_checks["institutes"]["link_name"] = _("neue Einrichtung anlegen");
     
-        $this->registered_checks["institutesRange"]["msg_fak_admin"] = _("Es existieren keine Studienbereiche in der Veranstaltungshierarchie. Jede Fakult&auml;t sollte &uuml;ber mindestens einen Studienbereich verf&uuml;gen, damit Veranstaltungen angelegt werden k&ouml;nnen. Nutzen sie daf&uuml;r die Veranstaltunghierarchie, um Studienbereiche zu verwalten.");
+        $this->registered_checks["institutesRange"]["msg_fak_admin"] = _("Es existieren keine Studienbereiche in der Veranstaltungshierarchie. Jede Fakult&auml;t sollte &uuml;ber mindestens einen Studienbereich verf&uuml;gen, damit Veranstaltungen angelegt werden k&ouml;nnen. Nutzen Sie daf&uuml;r die Veranstaltunghierarchie, um Studienbereiche zu verwalten.");
         $this->registered_checks["institutesRange"]["msg"] = _("Es existieren keine Studienbereiche in der Veranstaltungshierarchie. Jede Fakult&auml;t sollte &uuml;ber mindestens einen Studienbereich verf&uuml;gen, damit Veranstaltungen angelegt werden k&ouml;nnen. Bitte wenden Sie sich an einen der Administratoren des Systems.");
         $this->registered_checks["institutesRange"]["link_fak_admin"] = "admin_sem_tree.php";
         $this->registered_checks["institutesRange"]["link"] = "dispatch.php/siteinfo/show";
         $this->registered_checks["institutesRange"]["link_name_fak_admin"] = _("Studienbereiche verwalten");
         $this->registered_checks["institutesRange"]["link_name"] = _("Kontakt zu den Administratoren");
 
-        $this->registered_checks["myInstituteRange"]["msg"] = _("Das Anlegen einer Veranstaltung ist nicht m&ouml;glich, da keine Studienbereiche an ihrer Fakult&auml;t existieren. Bitte wenden Sie sich an einen der Administratoren des Systems.");
+        $this->registered_checks["myInstituteRange"]["msg"] = _("Das Anlegen einer Veranstaltung ist nicht m&ouml;glich, da keine Studienbereiche an Ihrer Fakult&auml;t existieren. Bitte wenden Sie sich an einen der Administratoren des Systems.");
         $this->registered_checks["myInstituteRange"]["link"] = "dispatch.php/siteinfo/show";
         $this->registered_checks["myInstituteRange"]["link_name"] = _("Kontakt zu den Administratoren");
 
@@ -74,7 +74,7 @@ class StartupChecks {
         $this->registered_checks["myAdminInstitute"]["link"] = "dispatch.php/siteinfo/show";
         $this->registered_checks["myAdminInstitute"]["link_name"] = _("Kontakt zu den Administratoren");
 
-        $this->registered_checks["dozent"]["msg"] = _("Sie ben&ouml;tigen mindestens einen Dozentenaccount, um Veranstaltungen anlegen zu k&ouml;nnen. Nutzen sie die globale Nutzerverwaltung, um einen neuen Nutzer mit dem Status Dozent anzulegen oder den Status eines bestehenden Nutzers auf &raquo;dozent&laquo; zu setzen.");
+        $this->registered_checks["dozent"]["msg"] = _("Sie ben&ouml;tigen mindestens einen Dozentenaccount, um Veranstaltungen anlegen zu k&ouml;nnen. Nutzen Sie die globale Nutzerverwaltung, um einen neuen Nutzer mit dem Status Dozent anzulegen oder den Status eines bestehenden Nutzers auf &raquo;dozent&laquo; zu setzen.");
         $this->registered_checks["dozent"]["link"] = "new_user_md5.php";
         $this->registered_checks["dozent"]["link_name"] = _("Dozentenaccount anlegen oder anderen Account hochstufen");
 
@@ -86,7 +86,7 @@ class StartupChecks {
         $this->registered_checks["myInstitutesDozent"]["link"] = "inst_admin.php?list=TRUE";
         $this->registered_checks["myInstitutesDozent"]["link_name"] = _("Dozent der Einrichtung zuordnen");
     
-        $this->registered_checks["myInstitutes"]["msg"] = _("Um Veranstaltungen anlegen zu k&ouml;nnen, muss ihr Account der Einrichtung, f&uuml;r die Sie eine Veranstaltung anlegen m&ouml;chten, zugeordnet werden. Bitte wenden Sie sich an einen der Administratoren des Systems.");
+        $this->registered_checks["myInstitutes"]["msg"] = _("Um Veranstaltungen anlegen zu k&ouml;nnen, muss Ihr Account der Einrichtung, f&uuml;r die Sie eine Veranstaltung anlegen m&ouml;chten, zugeordnet werden. Bitte wenden Sie sich an einen der Administratoren des Systems.");
         $this->registered_checks["myInstitutes"]["link"] = "dispatch.php/siteinfo/show";
         $this->registered_checks["myInstitutes"]["link_name"] = _("Kontakt zu den Administratoren");
 

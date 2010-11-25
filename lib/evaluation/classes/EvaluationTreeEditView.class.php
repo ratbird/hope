@@ -348,10 +348,10 @@ function showEvalTree(){
     $font->addAttr ("color","black");
     $font->addHTMLContent ( $msg );
     $font->addHTMLContent ( " " . sprintf(
-        _("Benutzen sie dieses %s Symbol, um den Block zu verschieben."),
+        _("Benutzen Sie dieses %s Symbol, um den Block zu verschieben."),
         $this->createImage(EVAL_PIC_MOVE_GROUP,_("Block verschieben Symbol")) ));
     $font->addHTMLContent ("<br><br>"
-        . _("Oder wollen sie die Aktion abbrechen?")
+        . _("Oder wollen Sie die Aktion abbrechen?")
         . " "
         . $this->createLinkButton("abbrechen",
             _("abbrechen"),
@@ -586,7 +586,7 @@ function getItemHeadPics ( $itemID ){
 
     case ROOT_BLOCK:
 
-        $tooltip = _("Dies ist ihre Evaluation.");
+        $tooltip = _("Dies ist Ihre Evaluation.");
         $image = EVAL_PIC_ICON;
         break;
 
@@ -1352,7 +1352,7 @@ function execCommandAssertDeleteItem(){
                 $title);
         }
         $this->msg[$this->itemID] .= "<br>"
-            . _("Wollen sie diesen Fragenblock wirklich l&ouml;schen?");
+            . _("Wollen Sie diesen Fragenblock wirklich l&ouml;schen?");
     } else {
         if ($numberofchildren){
             $this->msg[$this->itemID] .= ""
@@ -1367,7 +1367,7 @@ function execCommandAssertDeleteItem(){
                 $title);
         }
         $this->msg[$this->itemID] .= "<br>"
-        . _("Wollen sie diesen Gruppierungsblock wirklich l&ouml;schen?");
+        . _("Wollen Sie diesen Gruppierungsblock wirklich l&ouml;schen?");
     }
 
     $this->msg[$this->itemID] .= "<br><br>"
@@ -2116,7 +2116,7 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
             _("Einen neuen Gruppierungsblock erstellen."),
             "cmd[AddGroup]");
     $infotext .= "\n"
-        . _("- einen neuen Gruppierungsblock innerhalb dieses Blockes erstellen, in welchem sie weitere Gruppierungs- oder Fragenblöcke anlegen können.");
+        . _("- einen neuen Gruppierungsblock innerhalb dieses Blockes erstellen, in welchem Sie weitere Gruppierungs- oder Fragenblöcke anlegen können.");
    }
 
     // the new question-group-button
@@ -2128,7 +2128,7 @@ function createButtonbar ( $show = ARRANGMENT_BLOCK ){
             _("Einen neuen Fragenblock mit der ausgewählten Antwortenvorlage erstellen."),
             "cmd[AddQGroup]");
     $infotext .= "\n"
-        . _("- einen neuen Fragenblock innherhalb dieses Blockes erstellen. Geben sie dazu bitte eine Antwortenvorlage an, welche für alle Fragen des neuen Fragenblockes verwendet wird.");
+        . _("- einen neuen Fragenblock innherhalb dieses Blockes erstellen. Geben Sie dazu bitte eine Antwortenvorlage an, welche für alle Fragen des neuen Fragenblockes verwendet wird.");
    }
 
     // the move-button
@@ -2864,7 +2864,7 @@ function createQuestionForm(){
      // hat noch keine antworten
      if ($question->getChildren() == NULL){
         $image = EVAL_PIC_CREATE_ANSWERS;
-        $text = _("Dieser Frage wurden noch keine Antwortenmöglichkeiten zugewiesen. Drücken sie auf den Doppelfpeil, um dies jetzt zu tun.");
+        $text = _("Dieser Frage wurden noch keine Antwortenmöglichkeiten zugewiesen. Drücken Sie auf den Doppelfpeil, um dies jetzt zu tun.");
         $tooltip = tooltip (_("Dieser Frage Antwortenmöglichkeiten zuweisen."));
     } else {
         $image = EVAL_PIC_EDIT_ANSWERS;

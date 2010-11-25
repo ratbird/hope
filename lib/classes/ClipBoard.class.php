@@ -91,9 +91,9 @@ class ClipBoard {
             }
         }
         if ($inserted == 1){
-            $this->msg .= "msg§" . _("Es wurde ein Verweis in ihre Merkliste aufgenommen.") . "§";
+            $this->msg .= "msg§" . _("Es wurde ein Verweis in Ihre Merkliste aufgenommen.") . "§";
         } else if ($inserted){
-            $this->msg .= "msg§" . sprintf(_("Es wurden %s Verweise in ihre Merkliste aufgenommen."), $inserted) . "§";
+            $this->msg .= "msg§" . sprintf(_("Es wurden %s Verweise in Ihre Merkliste aufgenommen."), $inserted) . "§";
         }
         $this->setDefaultValue();
         return $inserted;
@@ -111,9 +111,9 @@ class ClipBoard {
             }
         }
         if ($deleted == 1){
-            $this->msg .= "msg§" . _("Es wurde ein Verweis aus ihrer Merkliste entfernt.") . "§";
+            $this->msg .= "msg§" . _("Es wurde ein Verweis aus Ihrer Merkliste entfernt.") . "§";
         } else if ($deleted){
-            $this->msg .= "msg§" . sprintf(_("Es wurden %s Verweis aus ihrer Merkliste entfernt."), $deleted) . "§";
+            $this->msg .= "msg§" . sprintf(_("Es wurden %s Verweis aus Ihrer Merkliste entfernt."), $deleted) . "§";
         }
         $this->setDefaultValue();
         return $deleted;

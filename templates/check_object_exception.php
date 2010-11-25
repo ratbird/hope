@@ -12,11 +12,11 @@ $current_page = _('Kein Objekt gewählt')
 <div style="background-color: white; width: 70%; padding: 1em; margin: auto;">
     <?= MessageBox::exception(htmlentities($exception->getMessage()), array(
             _('Dieser Teil des Systems kann nur genutzt werden, wenn Sie vorher ein Objekt (Veranstaltung oder Einrichtung) gewählt haben.'),
-            sprintf(_('Dieser Fehler tritt auch auf, wenn Ihre Session abgelaufen ist. Wenn sie sich länger als %s Minuten nicht im System bewegt haben, werden Sie automatisch abgemeldet. Bitte nutzen Sie in diesem Fall den untenstehenden Link, um zurück zur Anmeldung zu gelangen.'), $GLOBALS['AUTH_LIFETIME']))) ?>
+            sprintf(_('Dieser Fehler tritt auch auf, wenn Ihre Session abgelaufen ist. Wenn Sie sich länger als %s Minuten nicht im System bewegt haben, werden Sie automatisch abgemeldet. Bitte nutzen Sie in diesem Fall den untenstehenden Link, um zurück zur Anmeldung zu gelangen.'), $GLOBALS['AUTH_LIFETIME']))) ?>
 
     <? if ($last_edited = Request::get('content') . Request::get('description') . Request::get('body')) : ?>
         <p>
-            <?= _('Folgender von ihnen eingegebene Text konnte nicht gespeichert werden:') ?>
+            <?= _('Folgender von Ihnen eingegebene Text konnte nicht gespeichert werden:') ?>
         </p>
         <div class="steel1" style="padding: 5px; border: 1px solid;">
             <?= htmlentities($last_edited) ?>

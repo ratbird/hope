@@ -202,7 +202,7 @@ function first_decision($userid) {
     <table width="80%" align="center" border=0 cellpadding=0 cellspacing=0>
     <tr>
         <td class="topic" colspan="3" valign="top">
-            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/white/door-enter.png" border="0"><b>&nbsp;<?=_("Bitte wählen Sie ihren Sichtbarkeitsstatus aus!")?></b>
+            <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/white/door-enter.png" border="0"><b>&nbsp;<?=_("Bitte wählen Sie Ihren Sichtbarkeitsstatus aus!")?></b>
         </td>
     </tr>
     <tr>

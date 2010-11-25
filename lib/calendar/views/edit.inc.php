@@ -659,7 +659,7 @@ else {
         // max number of events reached
         $info_box['count'] = _("Sie k&ouml;nnen keine weiteren Termine mehr speichern!")
                 . '<br><br>'
-                . sprintf(_("L&ouml;schen Sie &auml;ltere Termine, oder w&auml;hlen Sie eine automatische L&ouml;schfunktion in ihren %sKalenderoptionen%s."),
+                . sprintf(_("L&ouml;schen Sie &auml;ltere Termine, oder w&auml;hlen Sie eine automatische L&ouml;schfunktion in Ihren %sKalenderoptionen%s."),
                 "<a href=\"" . URLHelper::getLink('edit_about.php?view=calendar') . "\">",
                 "</a>");
     }

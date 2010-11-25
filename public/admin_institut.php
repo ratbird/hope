@@ -86,7 +86,7 @@ while ( is_array($_REQUEST)
         }
         // Do we have all necessary data?
         if (empty($Name)) {
-            $msg="error§<b>" . _("Bitte geben sie eine Bezeichnung f&uuml;r die Einrichtung ein!") . "</b>";
+            $msg="error§<b>" . _("Bitte geben Sie eine Bezeichnung f&uuml;r die Einrichtung ein!") . "</b>";
             $i_view="new";
             break;
         }

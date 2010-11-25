@@ -264,7 +264,7 @@ $EditTree = new EvaluationTreeEditView($itemID, $evalID);
 
 if ( $_REQUEST["newButton_x"] ) {
     $EditTree->msg["root"] = "msg§"
-        . _("Erstellen Sie nun eine Evaluation.<br> Der erste Gruppierungsblock ist bereits angelegt worden. Wenn sie ihn öffnen, können sie dort weitere Gruppierungsblöcke oder Fragenblöcke anlegen.");
+        . _("Erstellen Sie nun eine Evaluation.<br> Der erste Gruppierungsblock ist bereits angelegt worden. Wenn Sie ihn öffnen, können Sie dort weitere Gruppierungsblöcke oder Fragenblöcke anlegen.");
 }
 
 # ============================================ end: Send messages to the tree #

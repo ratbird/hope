@@ -199,7 +199,7 @@ if (($num_hits = $_the_search->getNumHits())){
 <table width="99%" border="0" cellpadding="2" cellspacing="0" style="font-size:10pt">
 <tr>
 <td class="steel2" align="left">
-<?printf(_("%s Treffer in ihrem Suchergebnis."), $num_hits);?>
+<?printf(_("%s Treffer in Ihrem Suchergebnis."), $num_hits);?>
 </td><td class="steel2" align="right">
 <?
 echo _("Anzeige: ");
@@ -227,7 +227,7 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
         $link=URLHelper::getLink('',array('cmd'=>'add_to_clipboard','catalog_id'=>$element->getValue("catalog_id")));
         if ($_the_clipboard->isInClipboard($element->getValue("catalog_id"))) {
             $addon="<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/exclaim.png\" hspace=\"4\"  border=\"0\" " .
-                tooltip(_("Dieser Eintrag ist bereits in ihrer Merkliste")) . ">";
+                tooltip(_("Dieser Eintrag ist bereits in Ihrer Merkliste")) . ">";
         } else {
             $addon="<a href=\"$link\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" hspace=\"4\"  border=\"0\" " .
                 tooltip(_("Eintrag in Merkliste aufnehmen")) . "></a>";
@@ -266,7 +266,7 @@ for ($i = $_the_search->start_result; $i <= $end_result; ++$i){
 </td></tr>
 <tr>
 <td class="steel2" align="left">
-<?printf(_("%s Treffer in ihrem Suchergebnis."), $num_hits);?>
+<?printf(_("%s Treffer in Ihrem Suchergebnis."), $num_hits);?>
 </td><td class="steel2" align="right">
 <?
 echo _("Anzeige: ");

@@ -498,7 +498,7 @@ if (!($perm->have_perm("root"))) {
                 break;
             case 1 :
                 if ($perm->have_perm("autor"))
-                    $error_msg=$error_msg."info§" . _("Sie müssen sich erneut für diese Veranstaltung anmelden, um Dateien hochzuladen und Beitr&auml;ge im Forum schreiben zu können!") . "<br>" . sprintf(_("Hier kommen sie zur %sFreischaltung%s der Veranstaltung."), "<a href=\"sem_verify.php\">", "</a>") . "§";
+                    $error_msg=$error_msg."info§" . _("Sie müssen sich erneut für diese Veranstaltung anmelden, um Dateien hochzuladen und Beitr&auml;ge im Forum schreiben zu können!") . "<br>" . sprintf(_("Hier kommen Sie zur %sFreischaltung%s der Veranstaltung."), "<a href=\"sem_verify.php\">", "</a>") . "§";
                 elseif ($perm->have_perm("user"))
                     $error_msg=$error_msg."info§" . _("Bitte folgen Sie den Anweisungen in der Registrierungsmail.") . "§";
                 else
@@ -509,7 +509,7 @@ if (!($perm->have_perm("root"))) {
                 //$error_msg=$error_msg."Bitte melden Sie sich an.<br><br><a href=\"register1.php\"><b>Registrierung</b></a> wenn Sie noch keinen Account im System haben.<br><a href=\"index.php?again=yes\"><b>Login</b></a> f&uuml;r registrierte Benutzer.<br><br>";
                 break;
             }
-        $error_msg=$error_msg."info§" . _("Dieser Fehler kann auch auftreten, wenn Sie zu lange inaktiv gewesen sind.") . " <br>" . sprintf(_("Wenn sie l&auml;nger als %s Minuten keine Aktion mehr ausgef&uuml;hrt haben, m&uuml;ssen sie sich neu anmelden."), $AUTH_LIFETIME) . "§";
+        $error_msg=$error_msg."info§" . _("Dieser Fehler kann auch auftreten, wenn Sie zu lange inaktiv gewesen sind.") . " <br>" . sprintf(_("Wenn Sie l&auml;nger als %s Minuten keine Aktion mehr ausgef&uuml;hrt haben, m&uuml;ssen Sie sich neu anmelden."), $AUTH_LIFETIME) . "§";
         }
     }
 return $error_msg;

@@ -36,7 +36,7 @@ $infobox['content'] = array(
         'kategorie' => _("Information"),
         'eintrag'   => array(
             array(
-                'text' => _("Hier sehen Sie weitere Informationen zur Studiengruppe. Außerdem können sie ihr beitreten/eine Mitgliedschaft beantragen."),
+                'text' => _("Hier sehen Sie weitere Informationen zur Studiengruppe. Außerdem können Sie ihr beitreten/eine Mitgliedschaft beantragen."),
                 "icon" => "icons/16/black/info.png"
             )
         )

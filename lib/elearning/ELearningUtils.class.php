@@ -491,7 +491,7 @@ class ELearningUtils
                 $output .= "<br>\n<br>\n";
             }
             else
-                $output .= sprintf(_("Wenn Sie innerhalb von %s bereits &uuml;ber einen BenutzerInnen-Account verf&uuml;gen, k&ouml;nnen Sie ihn jetzt \"zuordnen\". Anderenfalls wird automatisch ein neuer Account in %s f&uuml;r Sie erstellt, wenn sie auf \"weiter\" klicken."),  $connected_cms[$new_account_cms]->getName(),  $connected_cms[$new_account_cms]->getName()) . "<br>\n<br>\n";
+                $output .= sprintf(_("Wenn Sie innerhalb von %s bereits &uuml;ber einen BenutzerInnen-Account verf&uuml;gen, k&ouml;nnen Sie ihn jetzt \"zuordnen\". Anderenfalls wird automatisch ein neuer Account in %s f&uuml;r Sie erstellt, wenn Sie auf \"weiter\" klicken."),  $connected_cms[$new_account_cms]->getName(),  $connected_cms[$new_account_cms]->getName()) . "<br>\n<br>\n";
             $output .= "<input type=\"HIDDEN\" name=\"new_account_step\" value=\"" . $new_account_step . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
             $output .= "<input type=\"HIDDEN\" name=\"ref_id\" value=\"" . $ref_id . "\">\n";

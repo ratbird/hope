@@ -78,7 +78,7 @@ function print_js_export () {
             msg_window.document.write(\"<html><head><title>" . _("Daten-Export") . "</title></head>\");
             msg_window.document.write(\"<body bgcolor='#ffffff'><center><p><img src='".$GLOBALS['ASSETS_URL']."images/alienupload.gif' width='165' height='125'></p>\");
             msg_window.document.write(\"<p><font face='arial, helvetica, sans-serif'><b>&nbsp;";
-    printf(_("Die Daten werden exportiert. %sBitte haben sie etwas Geduld!"),"<br>&nbsp;");
+    printf(_("Die Daten werden exportiert. %sBitte haben Sie etwas Geduld!"),"<br>&nbsp;");
     echo "<br></font></p></body></html>\");
             exportproc=true;
             return true;
@@ -143,7 +143,7 @@ function print_js_import () {
     msg_window=window.open("","messagewindow","height=250,width=200,left=20,top=20,scrollbars=no,resizable=no,toolbar=no");
     msg_window.document.write("<html><head><title>Datei Upload</title></head>");
     msg_window.document.write("<body bgcolor='#ffffff'><center><p><img src='".$GLOBALS['ASSETS_URL']."images/alienupload.gif' width='165' height='125'></p>");
-    msg_window.document.write("<p><font face='arial, helvetica, sans-serif'><b>&nbsp;"+file_only+"</b><br>&nbsp;<?=_("wird hochgeladen.")?><br>&nbsp;<?=_("Bitte haben sie etwas Geduld!")?><br></font></p></body></html>");
+    msg_window.document.write("<p><font face='arial, helvetica, sans-serif'><b>&nbsp;"+file_only+"</b><br>&nbsp;<?=_("wird hochgeladen.")?><br>&nbsp;<?=_("Bitte haben Sie etwas Geduld!")?><br></font></p></body></html>");
 
     upload=true;
 

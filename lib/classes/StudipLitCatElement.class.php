@@ -337,7 +337,7 @@ class StudipLitCatElement {
             }
         }
         if (is_array($missing_fields)){
-            $this->msg .= "error§" . sprintf(_("Bitte f&uuml;llen sie folgende Felder aus: %s"), "\"" . join("\", \"",$missing_fields)) ."\"§";
+            $this->msg .= "error§" . sprintf(_("Bitte f&uuml;llen Sie folgende Felder aus: %s"), "\"" . join("\", \"",$missing_fields)) ."\"§";
         }
         return is_array($missing_fields) ? false : true;
     }

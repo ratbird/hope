@@ -171,7 +171,7 @@ if ($sms_show['folder'][$sms_data['view']] != "all") { // ist ein persoenlicher
 // insert new folder
 if ($new_folder != "" && $new_folder_button_x) {
     if ($msging->check_newmsgfoldername($new_folder) == FALSE) { // check auf erlaubte ordnernamen
-        $msg = "error§".sprintf(_("Der gewählte Ordnername ist vom System belegt. Bitte wählen sie einen anderen."));
+        $msg = "error§".sprintf(_("Der gewählte Ordnername ist vom System belegt. Bitte wählen Sie einen anderen."));
     } else { // ordnername ok und los
         $my_messaging_settings["folder"][$sms_data["view"]][] = $new_folder;
         $msg = "msg§".sprintf(_("Der Ordner %s wurde angelegt."), htmlready(stripslashes($new_folder)));

@@ -842,7 +842,7 @@ class Seminar_Perm extends Perm {
 
     function perm_invalid($does_have, $must_have) {
         if ($GLOBALS['user']->id == 'nobody') {
-            $message = _('Sie sind nicht im System angemeldet und können daher nicht auf diesen Teil des Systems zugreifen. Um den vollen Funktionsumfang des Systems benutzen zu können, müssen sie sich mit ihrem Nutzernamen und Passwort anmelden.');
+            $message = _('Sie sind nicht im System angemeldet und können daher nicht auf diesen Teil des Systems zugreifen. Um den vollen Funktionsumfang des Systems benutzen zu können, müssen Sie sich mit Ihrem Nutzernamen und Passwort anmelden.');
         } else {
             $message = _('Sie haben keine ausreichende Berechtigung, um auf diesen Teil des Systems zuzugreifen.');
         }

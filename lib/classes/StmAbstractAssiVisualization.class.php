@@ -24,7 +24,7 @@ class StmAbstractAssiVisualization {
         echo $table->openRow();
             echo $table->cell(
             "<b>" . _("Wahl eines Allgemeinen Moduls") . "</b><br>"
-            . _("Bitte w&auml;hlen sie das Modul aus, welches sie editieren wollen oder l&ouml;schen Sie ein Allgemeines Modul mit dem entsprechenden Knopf. Sie k&ouml;nnen alternativ auch ein neues Modul anlegen. Beachten Sie bitte, dass sie nur Allgemeine Module bearbeiten und l&ouml;schen k&ouml;nnen, zu denen kein Konkretes Modul existiert!")
+            . _("Bitte w&auml;hlen Sie das Modul aus, welches Sie editieren wollen oder l&ouml;schen Sie ein Allgemeines Modul mit dem entsprechenden Knopf. Sie k&ouml;nnen alternativ auch ein neues Modul anlegen. Beachten Sie bitte, dass Sie nur Allgemeine Module bearbeiten und l&ouml;schen k&ouml;nnen, zu denen kein Konkretes Modul existiert!")
             , array('align' => 'center', 'class' => 'blank'));
             echo $table->cell(Assets::img('infobox/archiv.jpg'));
         echo $table->close();
@@ -166,7 +166,7 @@ class StmAbstractAssiVisualization {
         echo $table->open(array('class' => 'steelgraulight'));
         $table->setCellColspan(5);
         echo $table->openRow(array('class' => 'steel1'));
-            echo $table->cell("<font size=-1>Bitte f&uuml;gen sie erst alle Zeilen mit dem entsprechenden Knopf zu den Kombinationen hinzu, bevor sie auf \"weiter\" klicken.</font>");
+            echo $table->cell("<font size=-1>Bitte f&uuml;gen Sie erst alle Zeilen mit dem entsprechenden Knopf zu den Kombinationen hinzu, bevor Sie auf \"weiter\" klicken.</font>");
         echo $form->getFormStart();
 
         for ($i=0; $i<$blocks; $i++) {
@@ -261,7 +261,7 @@ class StmAbstractAssiVisualization {
         echo $table->open(array('class' => 'steelgraulight'));
         $table->setCellColspan(8);
         echo $table->openRow(array('class' => 'steel1'));
-            echo $table->cell("<font size=-1>Bitte f&uuml;gen sie erst alle Zeilen mit dem entsprechenden Knopf hinzu, bevor sie auf \"weiter\" klicken.</font>");
+            echo $table->cell("<font size=-1>Bitte f&uuml;gen Sie erst alle Zeilen mit dem entsprechenden Knopf hinzu, bevor Sie auf \"weiter\" klicken.</font>");
         echo $form->getFormStart();
 
         $table->setCellColspan(1);
@@ -342,7 +342,7 @@ class StmAbstractAssiVisualization {
         echo $table->openRow();
             echo $table->cell(
             "<b>" . _("Zusammenfassung") . "</b><br><br>
-            " . _("Hier werden alle Daten des Allgemeinen Moduls dargestellt. Bitte &uuml;berpr&uuml;fen sie die Angaben und fahren dann entsprechend fort.")
+            " . _("Hier werden alle Daten des Allgemeinen Moduls dargestellt. Bitte &uuml;berpr&uuml;fen Sie die Angaben und fahren dann entsprechend fort.")
             , array('align' => 'center', 'class' => 'blank'));
             echo $table->cell('<img src="'.$GLOBALS['ASSETS_URL'].'images/hands04_04.jpg" border="0" align=right">', array('align' => 'right', 'class' => 'blank'));
         echo $form->getFormStart();

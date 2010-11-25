@@ -1445,7 +1445,7 @@ if (($form == 5) && ($jump_next_x))
         }
         if (($sem_create_data["sem_admission_date"] < time()) && ($sem_create_data["sem_admission_date"] != -1)) {
                 if ($sem_create_data["sem_admission"] == 1)
-                    $errormsg.=sprintf ("error§"._("Das Losdatum liegt in der Vergangenheit. Bitte &auml;ndern sie das Losdatum!")."§");
+                    $errormsg.=sprintf ("error§"._("Das Losdatum liegt in der Vergangenheit. Bitte &auml;ndern Sie das Losdatum!")."§");
                 else
                     $errormsg.=sprintf ("error§"._("Das Enddatum der Kontingentierung liegt in der Vergangenheit. Bitte &auml;ndern Sie das Enddatum der Kontingentierung!")."§");
                 $level=5;
@@ -1453,7 +1453,7 @@ if (($form == 5) && ($jump_next_x))
                 if ($sem_create_data["sem_admission"] == 1)
                     $errormsg.=sprintf ("error§"._("Das Losdatum liegt zu nah am aktuellen Datum. Bitte &auml;ndern Sie das Losdatum!")."§");
                 else
-                    $errormsg.=sprintf ("error§"._("Das Enddatum der Kontingentierung liegt zu nah am aktuellen Datum. Bitte &auml;ndern sie das Enddatum der Kontingentierung!")."§");
+                    $errormsg.=sprintf ("error§"._("Das Enddatum der Kontingentierung liegt zu nah am aktuellen Datum. Bitte &auml;ndern Sie das Enddatum der Kontingentierung!")."§");
                 $level=5;
         }
     }
@@ -2472,7 +2472,7 @@ elseif ((!$level) || ($level == 1))
                             ?>
                             </select>
                             <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
-                                <? echo tooltip(sprintf(_("Bitte markieren Sie hier alle Einrichtungen, an denen die Veranstaltung ebenfalls angeboten wird. Bitte beachten Sie: Sie können später nur %s aus den Einrichtungen auswählen, die entweder als Heimat- oder als beteiligte Einrichtung markiert worden sind. Sie können mehrere Einträge markieren, indem sie die STRG bzw. APPLE Taste gedrückt halten und dann auf die Einträge klicken."), get_title_for_status('dozent', 2, $sem_create_data["sem_status"])), TRUE, TRUE) ?>
+                                <? echo tooltip(sprintf(_("Bitte markieren Sie hier alle Einrichtungen, an denen die Veranstaltung ebenfalls angeboten wird. Bitte beachten Sie: Sie können später nur %s aus den Einrichtungen auswählen, die entweder als Heimat- oder als beteiligte Einrichtung markiert worden sind. Sie können mehrere Einträge markieren, indem Sie die STRG bzw. APPLE Taste gedrückt halten und dann auf die Einträge klicken."), get_title_for_status('dozent', 2, $sem_create_data["sem_status"])), TRUE, TRUE) ?>
                             >
                         </td>
                     </tr>
@@ -3230,7 +3230,7 @@ if ($level == 4) {
                 if ($RESOURCES_ENABLE) {
                     if ($RESOURCES_ALLOW_ROOM_REQUESTS) {
                         if ($resList->roomsExist())
-                            print _("Bitte geben Sie hier ein, welche Angaben zu R&auml;umen gemacht werden, buchen Sie konkrete R&auml;ume oder stellen sie Raumw&uuml;nsche an die zentrale Raumverwaltung.")."<br><br>";
+                            print _("Bitte geben Sie hier ein, welche Angaben zu R&auml;umen gemacht werden, buchen Sie konkrete R&auml;ume oder stellen Sie Raumw&uuml;nsche an die zentrale Raumverwaltung.")."<br><br>";
                         else
                             print _("Bitte geben Sie hier ein, welche Angaben zu R&auml;umen gemacht werden oder stellen Sie Raumw&uuml;nsche an die zentrale Raumverwaltung.")."<br><br>";
                     } elseif ($resList->roomsExist())
@@ -3999,7 +3999,7 @@ if ($level == 5)
                                         print "&nbsp;&nbsp;".$entry->getHTML("sem_datafields");
                                     } else {
                                     ?>
-                                    &nbsp;<font size="-1"><?=_("Diese Daten werden von ihrem zust&auml;ndigen Administrator erfasst.")?></font>
+                                    &nbsp;<font size="-1"><?=_("Diese Daten werden von Ihrem zust&auml;ndigen Administrator erfasst.")?></font>
                                     <img  src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/grey/info-circle.png"
                                         <? echo tooltip(_("Diese Felder werden zentral durch die zuständigen Administratoren erfasst."), TRUE, TRUE) ?>
                                     >

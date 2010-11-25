@@ -74,9 +74,9 @@ class StudipLitClipBoard {
             }
         }
         if ($inserted == 1){
-            $this->msg .= "msg§" . _("Es wurde ein Literaturverweis in ihre Merkliste aufgenommen.") . "§";
+            $this->msg .= "msg§" . _("Es wurde ein Literaturverweis in Ihre Merkliste aufgenommen.") . "§";
         } else if ($inserted){
-            $this->msg .= "msg§" . sprintf(_("Es wurden %s Literaturverweise in ihre Merkliste aufgenommen."), $inserted) . "§";
+            $this->msg .= "msg§" . sprintf(_("Es wurden %s Literaturverweise in Ihre Merkliste aufgenommen."), $inserted) . "§";
         }
         $this->setDefaultValue();
         return $inserted;
@@ -94,9 +94,9 @@ class StudipLitClipBoard {
             }
         }
         if ($deleted == 1){
-            $this->msg .= "msg§" . _("Es wurde ein Literaturverweis aus ihrer Merkliste gel&ouml;scht.") . "§";
+            $this->msg .= "msg§" . _("Es wurde ein Literaturverweis aus Ihrer Merkliste gel&ouml;scht.") . "§";
         } else if ($deleted){
-            $this->msg .= "msg§" . sprintf(_("Es wurden %s Literaturverweise aus ihrer Merkliste gel&ouml;scht."), $deleted) . "§";
+            $this->msg .= "msg§" . sprintf(_("Es wurden %s Literaturverweise aus Ihrer Merkliste gel&ouml;scht."), $deleted) . "§";
         }
         $this->setDefaultValue();
         return $deleted;
@@ -177,7 +177,7 @@ class StudipLitClipBoard {
                     $this->deleteElement($selected);
                     $this->form_obj->doFormReset();
                 } else {
-                    $this->msg .= "info§" . _("Sie haben keinen Eintrag in ihrer Merkliste ausgew&auml;hlt!") . "§";
+                    $this->msg .= "info§" . _("Sie haben keinen Eintrag in Ihrer Merkliste ausgew&auml;hlt!") . "§";
                 }
                 break;
         }

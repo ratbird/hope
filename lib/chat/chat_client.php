@@ -103,7 +103,7 @@ function chatCommand_quit($msgStr){
     $chatServer->addMsg("system",$chatid,sprintf(_("%s verl&auml;sst den Chat und sagt: %s"),htmlReady($full_nick),formatReady($msgStr)));
     echo _("Sie haben den Chat verlassen!") . "<br>";
     if (is_array($chatServer->chatDetail[$chatid]['users'][$user->id]['log'])){
-        echo _("Ihre letzte Aufzeichnung wird noch einmal zum Download angeboten.<br>Nachdem sie dieses Fenster schlieﬂen wird diese Aufzeichnung gel&ouml;scht.");
+        echo _("Ihre letzte Aufzeichnung wird noch einmal zum Download angeboten.<br>Nachdem Sie dieses Fenster schlieﬂen wird diese Aufzeichnung gel&ouml;scht.");
         printJs("if (parent.frames['frm_dummy'].location.href) parent.frames['frm_dummy'].location.href = parent.frames['frm_dummy'].location.href;");
         flush();
         sleep(3);

@@ -722,7 +722,7 @@ echo $template_factory->render(
         echo "</font>";
     }
     if ($db2->f("admission_type") == 3) {
-                echo '<font size="-1" color="red">'. _("Diese Veranstaltung ist gesperrt, sie k&ouml;nnen sich nicht selbst eintragen!");
+                echo '<font size="-1" color="red">'. _("Diese Veranstaltung ist gesperrt, Sie k&ouml;nnen sich nicht selbst eintragen!");
                 echo "<td class=\"".$cssSw->getClass()."\" colspan=2 width=\"48%\" valign=\"top\"><td>";
         } elseif ($db2->f("admission_type")) {
         if ($db2->f("admission_selection_take_place") == 1) {

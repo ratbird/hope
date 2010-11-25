@@ -175,7 +175,7 @@ class ConnectedCMS
             if (! $SOAP_ENABLE)
                 $msg["soap"]["error"] = sprintf(_("Das Stud.IP-Modul f&uuml;r die SOAP-Schnittstelle ist nicht aktiviert. &Auml;ndern Sie den entsprechenden Eintrag in der Konfigurationsdatei \"local.inc\"."));
             elseif (! is_array($this->soap_data))
-                $msg["soap"]["error"] = sprintf(_("Die SOAP-Verbindungsdaten sind f&uuml;r dieses System nicht gesetzt. Erg&auml;nzen sie die Einstellungen f&uuml;r dieses Systems um den Eintrag \"soap_data\" in der Konfigurationsdatei \"local.inc\"."));
+                $msg["soap"]["error"] = sprintf(_("Die SOAP-Verbindungsdaten sind f&uuml;r dieses System nicht gesetzt. Erg&auml;nzen Sie die Einstellungen f&uuml;r dieses Systems um den Eintrag \"soap_data\" in der Konfigurationsdatei \"local.inc\"."));
             else
             {
                 require_once($RELATIVE_PATH_SOAP."/StudipSoapClient" . ($GLOBALS['SOAP_USE_PHP5'] && in_array($this->CLASS_PREFIX, words('Ilias3 Ilias4')) ? "_PHP5" : "") .".class.php");

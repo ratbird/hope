@@ -12,7 +12,7 @@
             <?= Assets::img('icons/16/black/info.png') ?>
           </td>
           <td width="99%" align="left">
-            <?= _("Hier können Sie ihre Kontaktdaten für die Einrichtungen angeben, an denen Sie tätig sind.") ?>
+            <?= _("Hier können Sie Ihre Kontaktdaten für die Einrichtungen angeben, an denen Sie tätig sind.") ?>
           </td>
       </tr>
     </table>

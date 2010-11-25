@@ -402,7 +402,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                                     );
 
             $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/add/learnmodule.png" ,
-                                        "text"  => sprintf(_("Um neue Lernmodule zu erstellen, wechseln Sie auf die Seite %s, auf der sie Ihre Lernmodule und externen Nutzer-Accounts verwalten k&ouml;nnen."), "<a href=\"my_elearning.php\">\"" . _("Meine Lernmodule") . "\"</a>")
+                                        "text"  => sprintf(_("Um neue Lernmodule zu erstellen, wechseln Sie auf die Seite %s, auf der Sie Ihre Lernmodule und externen Nutzer-Accounts verwalten k&ouml;nnen."), "<a href=\"my_elearning.php\">\"" . _("Meine Lernmodule") . "\"</a>")
                                     );
 
         if ($course_output["courses"]) {
@@ -420,7 +420,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
         array ("kategorie"  => _("Information:"),
             "eintrag" => array  (
                             array ( "icon" => "icons/16/black/learnmodule.png",
-                                    "text"  => _("Hier sehen sie die Lernmodule, die an diese Veranstaltung angeh&auml;ngt wurden.")
+                                    "text"  => _("Hier sehen Sie die Lernmodule, die an diese Veranstaltung angeh&auml;ngt wurden.")
                                  )
                             )
             )
@@ -431,7 +431,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                                     );
 
             $infobox[1]["eintrag"][] = array (  "icon" => "icons/16/black/learnmodule.png" ,
-                                        "text"  => sprintf(_("Um neue Lernmodule zu erstellen, wechseln Sie auf die Seite %s, auf der sie Ihre Lernmodule und externen Nutzer-Accounts verwalten k&ouml;nnen."), "<a href=\"my_elearning.php\">\"" . _("Meine Lernmodule") . "\"</a>")
+                                        "text"  => sprintf(_("Um neue Lernmodule zu erstellen, wechseln Sie auf die Seite %s, auf der Sie Ihre Lernmodule und externen Nutzer-Accounts verwalten k&ouml;nnen."), "<a href=\"my_elearning.php\">\"" . _("Meine Lernmodule") . "\"</a>")
                                     );
 
         $cssSw = new cssClassSwitcher;                                  // Klasse für Zebra-Design

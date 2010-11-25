@@ -84,7 +84,7 @@ if ($chat_entry_level != "admin" && $chatServer->isActiveChat($chatid) && ($chat
     }
     if (!$chat_entry_check && $chat_entry_level){
         $msg .= "info§" . "<form name=\"chatlogin\" method=\"post\" onSubmit=\"doSubmit();return false;\"action=\"$PHP_SELF?chatid=$chatid\"><b>" ._("Passwort erforderlich")
-            . "</b><br><font size=\"-1\" color=\"black\">" . _("Um an diesem Chat teilnehmen zu k&ouml;nnen, m&uuml;ssen sie das Passwort eingeben.")
+            . "</b><br><font size=\"-1\" color=\"black\">" . _("Um an diesem Chat teilnehmen zu k&ouml;nnen, m&uuml;ssen Sie das Passwort eingeben.")
             . "<br><input type=\"password\" style=\"vertical-align:middle;\" name=\"chat_password\">&nbsp;&nbsp;<input style=\"vertical-align:middle;\" type=\"image\" name=\"submit\""
             . makeButton("absenden","src") . " border=\"0\" value=\"senden\"></font></form>§";
             }
@@ -99,7 +99,7 @@ if ($chat_entry_check){
     if (!$chatServer->addUser($user->id,$chatid,$auth->auth["uname"],get_fullname(),(($chat_entry_level == "admin") ? true : false))){
         $chat_entry_check = false;
         $msg = "error§<b>" ._("Chatlogin nicht m&ouml;glich"). "</b><br><font size=\"-1\" color=\"black\">"
-            . _("Vermutlich sind sie noch aus einer fr&uuml;heren Chat-Session angemeldet. Es dauert ca. 3-5 Sekunden bis sie automatisch aus dem Chat entfernt werden. Versuchen Sie es etwas sp&auml;ter noch einmal.")
+            . _("Vermutlich sind Sie noch aus einer fr&uuml;heren Chat-Session angemeldet. Es dauert ca. 3-5 Sekunden bis Sie automatisch aus dem Chat entfernt werden. Versuchen Sie es etwas sp&auml;ter noch einmal.")
             . "</font>§";
     }
 }

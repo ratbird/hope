@@ -104,7 +104,7 @@ class ExternElementStudipLink extends ExternElement {
         $content .= $edit_form->editCheckboxGeneric("image", $title, $info, $value, "");
 
         $title = _("Bild-URL:");
-        $info = _("Geben Sie die URL eines Bildes ein, dass als Link dienen soll. Wenn sie keine URL angeben, wird ein Standard-Bild (Pfeile) ausgegeben.");
+        $info = _("Geben Sie die URL eines Bildes ein, dass als Link dienen soll. Wenn Sie keine URL angeben, wird ein Standard-Bild (Pfeile) ausgegeben.");
         $content .= $edit_form->editTextfieldGeneric("imageurl", $title, $info, 40, 150);
 
         $content_table .= $edit_form->editContentTable($headline, $content);

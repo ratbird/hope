@@ -150,7 +150,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             $this->tree->storeItem($new_item_id,$item_id,_("Neuer Eintrag") , $this->tree->getNumKids($item_id) +1);
             $this->openItem($new_item_id);
             $this->edit_item_id = $new_item_id;
-            if ($this->mode != "NewItem") $this->msg[$new_item_id] = "info§" . _("Hier k&ouml;nnen sie die Bezeichnung und die Kurzinformation zu diesem Bereich eingeben.");
+            if ($this->mode != "NewItem") $this->msg[$new_item_id] = "info§" . _("Hier k&ouml;nnen Sie die Bezeichnung und die Kurzinformation zu diesem Bereich eingeben.");
             $this->mode = "NewItem";
         }
         return false;
@@ -163,9 +163,9 @@ class StudipSemTreeViewAdmin extends TreeView {
             $this->anchor = $item_id;
             $this->edit_item_id = $item_id;
             if($this->tree->tree_data[$this->edit_item_id]['studip_object_id']){
-                $this->msg[$item_id] = "info§" . _("Hier k&ouml;nnen sie die Kurzinformation zu diesem Bereich eingeben. Der Name kann nicht ge&auml;ndert werden, da es sich um eine Stud.IP Einrichtung handelt.");
+                $this->msg[$item_id] = "info§" . _("Hier k&ouml;nnen Sie die Kurzinformation zu diesem Bereich eingeben. Der Name kann nicht ge&auml;ndert werden, da es sich um eine Stud.IP Einrichtung handelt.");
             } else {
-                $this->msg[$item_id] = "info§" . _("Hier k&ouml;nnen sie die Bezeichnung und die Kurzinformation zu diesem Bereich eingeben");
+                $this->msg[$item_id] = "info§" . _("Hier k&ouml;nnen Sie die Bezeichnung und die Kurzinformation zu diesem Bereich eingeben");
             }
         }
         return false;
@@ -210,7 +210,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             $this->open_items[$item_id] = true;
             $this->msg[$item_id] = "info§" ._("Sie beabsichtigen diesen Bereich inklusive aller Unterbereiche zu l&ouml;schen. ")
             . sprintf(_("Es werden insgesamt %s Bereiche gel&ouml;scht!"),count($this->tree->getKidsKids($item_id))+1)
-            . "<br>" . _("Wollen sie diese Bereiche wirklich l&ouml;schen?") . "<br>"
+            . "<br>" . _("Wollen Sie diese Bereiche wirklich l&ouml;schen?") . "<br>"
             . "<a href=\"" . $this->getSelf("cmd=DeleteItem&item_id=$item_id") . "\">"
             . "<img " .makeButton("ja2","src") . tooltip(_("löschen"))
             . " border=\"0\"></a>&nbsp;"
@@ -476,7 +476,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             $this->msg[$item_id] = "info§" . sprintf(_("Der Typ dieses Elementes verbietet eine Bearbeitung."));
         }
         if ($item_id == $this->move_item_id){
-            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben / Kopieren markiert. Bitte w&auml;hlen sie ein Einfügesymbol %s aus, um das Element zu verschieben / kopieren."), "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png').'" ' .tooltip(_("Einfügesymbol")) . ">");
+            $this->msg[$item_id] = "info§" . sprintf(_("Dieses Element wurde zum Verschieben / Kopieren markiert. Bitte w&auml;hlen Sie ein Einfügesymbol %s aus, um das Element zu verschieben / kopieren."), "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png').'" ' .tooltip(_("Einfügesymbol")) . ">");
         }
         $content = "\n<table width=\"90%\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\" style=\"font-size:10pt;\">";
         $content .= $this->getItemMessage($item_id);

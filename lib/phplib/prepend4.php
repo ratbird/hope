@@ -57,7 +57,7 @@
       Entfernen Sie daher bitte die genannte Zeile aus Ihrer Konfiguration,
       um diese Fehlermeldung zu verhindern.
       </mark>
-      Typischerweise finden sie diese in einer der folgenden Dateien:
+      Typischerweise finden Sie diese in einer der folgenden Dateien:
       <code>php.ini</code>, <code>httpd.conf</code> oder in einer
       <code>.htaccess</code> Datei.
     </p>

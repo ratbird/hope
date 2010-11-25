@@ -76,7 +76,7 @@ $infobox[1] = array (
     "kategorie" => _("Aktionen:"),
     "eintrag" => array(array(
         "icon" => "icons/16/black/add/literature.png",
-        "text" => _("Sie k&ouml;nnen jede dieser Listen in ihren pers&ouml;nlichen Literaturbereich kopieren, um erweiterte Informationen über die Eintr&auml;ge zu erhalten.")
+        "text" => _("Sie k&ouml;nnen jede dieser Listen in Ihren pers&ouml;nlichen Literaturbereich kopieren, um erweiterte Informationen über die Eintr&auml;ge zu erhalten.")
     ))
 );
 

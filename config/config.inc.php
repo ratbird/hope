@@ -186,7 +186,7 @@ $SEM_CLASS[2]=array("name"=>_("Forschung"),
                     "literature"=>TRUE,
                     "chat"=>TRUE,
                     "description"=>_("Hier finden Sie virtuelle Veranstaltungen zum Thema Forschung an der Universit&auml;t"),
-                    "create_description"=>_("In dieser Kategorie k&ouml;nnen sie virtuelle Veranstaltungen f&uuml;r Forschungsprojekte anlegen."));
+                    "create_description"=>_("In dieser Kategorie k&ouml;nnen Sie virtuelle Veranstaltungen f&uuml;r Forschungsprojekte anlegen."));
 
 $SEM_CLASS[3]=array("name"=>_("Organisation"),
                     "compact_mode"=>TRUE,
@@ -268,7 +268,7 @@ $SEM_CLASS[6]=array("name"=>_("importierte Kurse"),
                     "participants"=>TRUE,
                     "literature"=>TRUE,
                     "chat"=>TRUE,
-                    "description"=> "Hier finden sie importierte Kurse",
+                    "description"=> "Hier finden Sie importierte Kurse",
                     "create_description"=> "Sie sollten diesen Text garnicht sehen.");
 //weitere Klassen koennen hier angefuegt werden. Bitte Struktur wie oben exakt uebernehmen.
 

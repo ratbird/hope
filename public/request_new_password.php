@@ -180,7 +180,7 @@ if ($_GET['id'] != '') {
                 $msg[] = array('info', $admin_link);
             }
         } else {
-            $msg[] = array( 'error', _("Fehler beim Aufruf dieser Seite. Stellen Sie sicher, dass sie den gesamten Link in die Adressleiste eingetragen haben. Bitte wiederholen Sie den Vorgang oder fordern Sie ein neues Passwort per E-Mail an."));
+            $msg[] = array( 'error', _("Fehler beim Aufruf dieser Seite. Stellen Sie sicher, dass Sie den gesamten Link in die Adressleiste eingetragen haben. Bitte wiederholen Sie den Vorgang oder fordern Sie ein neues Passwort per E-Mail an."));
             $msg[] = array('info', $admin_link);
         }
     } else {

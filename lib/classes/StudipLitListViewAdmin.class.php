@@ -575,7 +575,7 @@ class StudipLitListViewAdmin extends TreeView
             if ($this->tree->isElement($item_id)){
                 $head .= ($this->clip_board->isInClipboard($this->tree->tree_data[$item_id]["catalog_id"]))
                         ? "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/exclaim.png\" " .
-                        tooltip(_("Dieser Eintrag ist bereits in ihrer Merkliste")) . ">"
+                        tooltip(_("Dieser Eintrag ist bereits in Ihrer Merkliste")) . ">"
                         :"<a href=\"". $this->getSelf("cmd=InClipboard&item_id=$item_id") .
                         "\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/exclaim.png\" " .
                         tooltip(_("Eintrag in Merkliste aufnehmen")) . "></a>";

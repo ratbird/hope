@@ -188,7 +188,7 @@ function chat_get_content($chatid, $chatter, $chatinv, $password, $is_active, $c
         }
     } else {
         $ret .=  Assets::img('icons/16/grey/decline/chat.png', array('class' => 'text-top'));
-        $ret .= "&nbsp;&nbsp;". _("Um diesen Chatraum zu betreten, brauchen sie eine g&uuml;ltige Einladung.");
+        $ret .= "&nbsp;&nbsp;". _("Um diesen Chatraum zu betreten, brauchen Sie eine g&uuml;ltige Einladung.");
     }
     $ret .= "</p></td><td class=\"steel1\" width=\"50%\" valign=\"center\"><p class=\"info\">";
     if (!$chatter){

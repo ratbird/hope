@@ -582,7 +582,7 @@ function createLabel(){
 
         // labels for printSearchResults
         "searchresults_title" => _("Suchergebnisse"),
-        "searchresults_no_string" => _("Bitte geben sie ein l&auml;ngeres Suchmuster ein."),
+        "searchresults_no_string" => _("Bitte geben Sie ein l&auml;ngeres Suchmuster ein."),
         "searchresults_no_results" => _("Keine Suchergebnisse."),
         "searchresults_no_results_range" => _("Keine Suchergebnisse in diesem Bereich."),
 

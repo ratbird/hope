@@ -57,7 +57,7 @@ function printSelectSemester($infobox,$semestersAR){
           . "    <tr>"
           . "     <td><font size=\"-1\">\n"
           . MessageBox::info($GLOBALS['FDF_USAGE_HINT'])
-          . _("Bitte wählen sie ein Semester aus:")."\n"
+          . _("Bitte wählen Sie ein Semester aus:")."\n"
           . "      <form action=\"".$_SERVER['PHP_SELF']."\" method=post>\n"
           . "       &nbsp;<select name=\"semesterid\" style=\"vertical-align:middle;\">\n";
     // the semester
@@ -121,7 +121,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
         $html .="       <tr>\n"
               . "        <td colspan=\"4\">\n";
         if ($notice == "empty")
-            $html .= MessageBox::info(_("Keine Veranstaltungen zum Anzeigen vorhanden."), array(_("Bitte fügen sie Veranstaltungen mit Hilfe des Buttons \"hinzufügen\" ein oder ändern Sie ihre Auswahl.")));
+            $html .= MessageBox::info(_("Keine Veranstaltungen zum Anzeigen vorhanden."), array(_("Bitte fügen Sie Veranstaltungen mit Hilfe des Buttons \"hinzufügen\" ein oder ändern Sie Ihre Auswahl.")));
         elseif ($notice == "above_limit")
             $html .= MessageBox::info(_("Sie haben mehr als 10 Veranstaltungen in diesem Semester ausgewählt."), array(_("Es werden automatisch mehrere Veranstaltungsübersichtseiten erstellt.")));
         $html .="        <br></td>\n"
@@ -202,7 +202,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     print_infobox($infobox, "infobox/folders.jpg");
     $html = "      <br>\n"
           . createButton("zurueck",_("Abbrechen und ein anderes Semester auswählen."),"select_new_semester")
-          . createButton("weiter",_("Weiter zum Download ihrer Veranstaltungsübersicht."),"create_pdf")
+          . createButton("weiter",_("Weiter zum Download Ihrer Veranstaltungsübersicht."),"create_pdf")
           . "     <br><br></td>\n"
           . "    </tr>\n"
           . "   </table>\n"
@@ -229,9 +229,9 @@ function printPdfAssortment($infobox,$seminars){
           . "   <table align=\"center\" width=\"99%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=0>\n"
           . "    <tr>\n"
           . "     <td align=\"left\" valign=\"top\"><font size=\"-1\">\n"
-          . sprintf(_("Sie haben %s Einträge für ihre Veranstaltungsübersicht ausgewählt. "),$seminars["numberofseminars"]);
+          . sprintf(_("Sie haben %s Einträge für Ihre Veranstaltungsübersicht ausgewählt. "),$seminars["numberofseminars"]);
     $html .= ($seminars["numberofpages"]>1)
-          ? sprintf(_("Deshalb werden ihre Einträge auf %s Seiten verteilt."),$seminars["numberofpages"])."\n"
+          ? sprintf(_("Deshalb werden Ihre Einträge auf %s Seiten verteilt."),$seminars["numberofpages"])."\n"
           : sprintf(_("Ihre Einträge können auf einer Seite untergebracht werden."),$seminars["numberofseminars"])."\n";
     $html .="     <br><br>\n"
           . _("Ihre Studiendaten:")."<br>\n"
@@ -245,8 +245,8 @@ function printPdfAssortment($infobox,$seminars){
           . "<br><br>\n";
 
     $html .= ($seminars["numberofpages"]>1)
-          ? sprintf(_("Klicken sie nun auf die einzelnen Links, um ihre Veranstaltungsübersicht zu erstellen."),$seminars["numberofpages"])."\n"
-          : sprintf(_("Klicken sie nun auf den Link, um ihre Veranstaltungsübersicht zu erstellen."),$seminars["numberofseminars"])."\n";
+          ? sprintf(_("Klicken Sie nun auf die einzelnen Links, um Ihre Veranstaltungsübersicht zu erstellen."),$seminars["numberofpages"])."\n"
+          : sprintf(_("Klicken Sie nun auf den Link, um Ihre Veranstaltungsübersicht zu erstellen."),$seminars["numberofseminars"])."\n";
 
     $html .="     <br>\n";
     if ($seminars["numberofpages"]>1)
@@ -268,7 +268,7 @@ function printPdfAssortment($infobox,$seminars){
 //        . "       <a href=\"recordofstudy.php\">\n"
 //        . "        "._("Zurück zur Semesterauswahl")."\n"
 //        . "       </a>\n"
-//        . createButton("speichern",_("Erstellt sie mit diesem Button ein PDF, wenn sie die benötigten Daten eingegeben haben."),"create_pdf")
+//        . createButton("speichern",_("Erstellt Sie mit diesem Button ein PDF, wenn Sie die benötigten Daten eingegeben haben."),"create_pdf")
 //        . createButton("zurueck",_("Abbrechen und eine Studienbuchseite für ein anderes Semester erstellen."),"select_new_semester")
 //        . "     <br><br></center></form></td>\n"
 

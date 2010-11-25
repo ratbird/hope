@@ -267,7 +267,7 @@ function raumzeit_doAddCycle() {
         $info = $sem->metadate->cycles[$cycle_id]->toString();
         $sem->createMessage(sprintf(_("Die regelmäßige Veranstaltungszeit \"%s\" wurde hinzugefügt!"),'<b>'.$info.'</b>'));
     } else {
-        $sem->createError(_("Die regelmäßige Veranstaltungszeit konnte nicht hinzugefügt werden! Bitte überprüfen Sie ihre Eingabe."));
+        $sem->createError(_("Die regelmäßige Veranstaltungszeit konnte nicht hinzugefügt werden! Bitte überprüfen Sie Ihre Eingabe."));
         $newCycle = true;
     }
 }

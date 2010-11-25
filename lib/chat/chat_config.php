@@ -142,12 +142,12 @@ $chatCmd = array("quit" => _(" [msg] - Sie verlassen den Chat mit der Botschaft 
             "me" => _(" [msg] - Ihr Name wird zusammen mit [msg] vom Chatbot ausgegeben"),
             "private" => _(" [username][msg] - Die Botschaft [msg] wird geheim an [username] übermittelt"),
             "help" => _(" - Zeigt diesen Hilfetext"),
-            "kick" => _(" [username] - Wirft [username] aus dem Chat wenn sie Chat-Admin sind, mit /kick all werfen sie alle anderen Nutzer aus dem Chat"),
+            "kick" => _(" [username] - Wirft [username] aus dem Chat wenn Sie Chat-Admin sind, mit /kick all werfen Sie alle anderen Nutzer aus dem Chat"),
             "sms" => _(" [username][msg] - Verschickt eine systeminterne SMS [msg] an [username]"),
             "invite" => _(" [username][msg] - Verschickt eine Chat-Einladung an [username] mit optionaler Nachricht [msg]"),
             "lock" => _(" - Setzt ein zufälliges Paßwort und wirft alle NutzerInnen aus dem Chat, die nicht Chat-Admins sind."),
             "unlock" => _(" - Ein eventuell gesetztes Passwort wird gelöscht, der Chat wird damit wieder frei zugänglich."),
             "password" => _(" [password] - Setzt das Passwort für den Chat, wenn [password] leer ist wird ein eventuell vorhandenes Passwort gelöscht"),
-            "log" => _(" [start | stop | send] - Startet, beendet oder versendet eine Aufzeichnung, wenn sie Chat-Admin sind"));
+            "log" => _(" [start | stop | send] - Startet, beendet oder versendet eine Aufzeichnung, wenn Sie Chat-Admin sind"));
 
 ?>

@@ -36,8 +36,8 @@ Mit der aktuellen Version wurde das Stud.IP-Hilfe-System auf ein zentrales Wiki,
 Stand der Hilfe enthält, umgestellt. Wenn Sie das Migrationsscript durchführen, wird das Hilfesytem automatisch auf die neue Hilfe 
 umgestellt. Sie können jedoch die alte Hilfe weiterhin nutzen, indem Sie im Konfigurationseditor (Adminbereich, globale Einstellungen,
 Konfigurationseditor) den Wert "EXTERNAL_HELP" auf 0 setzen.
-Dazu besteht nun die Möglichkeit, über den Wert "EXTERNAL_HELP_LOCATIONID" eine vom Default abweichende ID für ihre Installation 
-anzugeben, um für Sie angepasste Hilfetexte im Hilfe-Wiki zu verfassen und ihren Nutzern anzuzeigen.
+Dazu besteht nun die Möglichkeit, über den Wert "EXTERNAL_HELP_LOCATIONID" eine vom Default abweichende ID für Ihre Installation
+anzugeben, um für Sie angepasste Hilfetexte im Hilfe-Wiki zu verfassen und Ihren Nutzern anzuzeigen.
 Für weitere Informationen wenden Sie sich bitte an die Entwickler.
 
 

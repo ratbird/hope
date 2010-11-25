@@ -82,7 +82,7 @@ if ($SessSemName[1]) {
         <blockquote>
         <? 
         printf(_("Die Veranstaltung wurde zum Kopieren ausgewählt."). " ");
-        printf(_("Um die vorgewählte Veranstaltung zu kopieren klicken sie %shier%s."),
+        printf(_("Um die vorgewählte Veranstaltung zu kopieren klicken Sie %shier%s."),
             '<a href="'.URLHelper::getLink('admin_seminare_assi.php?cmd=do_copy&cp_id='.$SessSemName[1].'&start_level=TRUE&class=1').'">',
             '</a>'); 
         ?>

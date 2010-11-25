@@ -255,7 +255,7 @@ class ExternEditModule extends ExternEditHtml {
             return FALSE;
 
         $title = _("Gruppen auswählen:");
-        $info = _("Wählen sie die Statusgruppen aus, die ausgegeben werden sollen.");
+        $info = _("Wählen Sie die Statusgruppen aus, die ausgegeben werden sollen.");
         $groups_config = $this->getValue("groups");
 
         // this value is always necessary, even there is an error in the users inputs, so

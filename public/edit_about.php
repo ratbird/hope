@@ -82,7 +82,7 @@ if ($logout && $auth->auth["uid"] == "nobody")  // wir wurden gerade ausgeloggt.
 
     $my_about->parse_msg($my_about->msg);
     $temp_string = '<br><font color="black">'
-        . sprintf(_("Um eine korrekte Authentifizierung mit ihren neuen Daten sicherzustellen, wurden sie automatisch ausgeloggt.<br>Wenn sie ihre E-Mail-Adresse ge&auml;ndert haben, m&uuml;ssen sie das Ihnen an diese Adresse zugesandte Passwort verwenden!<br><br>Ihr aktueller Benutzername ist: %s"), '<b>'. $username. '</b>')
+        . sprintf(_("Um eine korrekte Authentifizierung mit Ihren neuen Daten sicherzustellen, wurden Sie automatisch ausgeloggt.<br>Wenn Sie Ihre E-Mail-Adresse ge&auml;ndert haben, m&uuml;ssen Sie das Ihnen an diese Adresse zugesandte Passwort verwenden!<br><br>Ihr aktueller Benutzername ist: %s"), '<b>'. $username. '</b>')
         . '<br>---&gt; <a href="index.php?again=yes">' . _("Login") . '</a> &lt;---</font>';
     $my_about->my_info($temp_string);
 
@@ -101,7 +101,7 @@ if (!$my_about->check) {
     include ('lib/include/header.php');   // Output of Stud.IP head
     parse_window('error§' . _("Zugriff verweigert.").
                  "<br>\n<font size=-1 color=black>".
-                 sprintf(_("Wahrscheinlich ist Ihre Session abgelaufen. Wenn sie sich länger als %s Minuten nicht im System bewegt haben, werden Sie automatisch abgemeldet. Bitte nutzen Sie in diesem Fall den untenstehenden Link, um zurück zur Anmeldung zu gelangen.<br> <br> Eine andere Ursache kann der Versuch des Zugriffs auf Userdaten, die Sie nicht bearbeiten d&uuml;rfen, sein. Nutzen Sie den untenstehenden Link, um zurück auf die Startseite zu gelangen."), $AUTH_LIFETIME).
+                 sprintf(_("Wahrscheinlich ist Ihre Session abgelaufen. Wenn Sie sich länger als %s Minuten nicht im System bewegt haben, werden Sie automatisch abgemeldet. Bitte nutzen Sie in diesem Fall den untenstehenden Link, um zurück zur Anmeldung zu gelangen.<br> <br> Eine andere Ursache kann der Versuch des Zugriffs auf Userdaten, die Sie nicht bearbeiten d&uuml;rfen, sein. Nutzen Sie den untenstehenden Link, um zurück auf die Startseite zu gelangen."), $AUTH_LIFETIME).
                  '</font>', '§', _("Zugriff auf Userdaten verweigert"),
                  sprintf(_("%s Hier%s geht es wieder zur Anmeldung beziehungsweise Startseite."),'<a href="index.php"><b>&nbsp;','</b></a>')."<br>\n&nbsp;");
 
@@ -583,7 +583,7 @@ function checkpassword(){
  var checked = true;
 
  if (document.pers.update_pw.checked && document.pers.new_passwd_1.value != document.pers.new_passwd_2.value) {
-    alert("<?=_("Bei der Wiederholung des Paßwortes ist ein Fehler aufgetreten! Bitte geben sie das  exakte Paßwort ein!")?>");
+    alert("<?=_("Bei der Wiederholung des Paßwortes ist ein Fehler aufgetreten! Bitte geben Sie das exakte Paßwort ein!")?>");
     document.pers.new_passwd_2.focus();
     checked = false;
  }
@@ -724,11 +724,11 @@ if ($view != 'Forum'
     </table>
     <table class="blank" cellspacing="0" cellpadding="2" border="0" width="100%">
         <? if ($view == 'Daten' || $view == 'Lebenslauf' || $view == 'Studium' || $view == 'userdomains') :
-        $info_text['Studium'] = _("Hier können Sie Angaben &uuml;ber ihre Studienkarriere machen.");
+        $info_text['Studium'] = _("Hier können Sie Angaben &uuml;ber Ihre Studienkarriere machen.");
         $info_text['userdomains'] = _("Hier können Sie die Liste Ihrer Nutzerdomänen einsehen.");
-        $info_text['Daten'] = _("Hier k&ouml;nnen sie Ihre Benutzerdaten ver&auml;ndern.") . '<br>' .
+        $info_text['Daten'] = _("Hier k&ouml;nnen Sie Ihre Benutzerdaten ver&auml;ndern.") . '<br>' .
             sprintf(_("Alle mit einem Sternchen %s markierten Felder m&uuml;ssen ausgef&uuml;llt werden."), '</font><font color="red" size="+1"><b>*</b></font><font size="-1">');
-        $info_text['Lebenslauf'] = _("Hier können Sie Angaben &uuml;ber ihre privaten Kontaktdaten sowie Lebenslauf und Hobbys machen.") . '<br>' .
+        $info_text['Lebenslauf'] = _("Hier können Sie Angaben &uuml;ber Ihre privaten Kontaktdaten sowie Lebenslauf und Hobbys machen.") . '<br>' .
             sprintf(_("Alle Angaben die Sie hier machen sind freiwillig!"));
         ?>
         <tr>
@@ -783,7 +783,7 @@ if ($view == 'Bild') {
 
     echo '</td><td class="'.$cssSw->getClass().'" width="70%" align="left" valign="top">';
     echo '<form enctype="multipart/form-data" action="' . $_SERVER['PHP_SELF'] . '?cmd=copy&username=' . $username . '&view=Bild&studipticket='.get_ticket().'" method="POST">';
-    echo "<br>\n" . _("Hochladen eines Bildes:") . "<br><br>\n" . _("1. Wählen Sie mit <b>Durchsuchen</b> eine Bilddatei von ihrer Festplatte aus.") . "<br><br>\n";
+    echo "<br>\n" . _("Hochladen eines Bildes:") . "<br><br>\n" . _("1. Wählen Sie mit <b>Durchsuchen</b> eine Bilddatei von Ihrer Festplatte aus.") . "<br><br>\n";
     echo '&nbsp;&nbsp;<input name="imgfile" type="file" style="width: 80%" cols="'.round($max_col*0.7*0.8)."\"><br><br>\n";
     echo _("2. Klicken Sie auf <b>absenden</b>, um das Bild hochzuladen.") . "<br><br>\n";
     echo '&nbsp;&nbsp;<input type="image" ' . makeButton('absenden', 'src') . ' border="0" value="' . _("absenden") . "\"><br><br>\n";
@@ -1415,7 +1415,7 @@ if ($view == 'notification') {
 if ($view == 'Login') {
     echo '<tr><td colspan="2" class="blank">'."<br><br>\n" ;
     if ($my_about->check == 'user' && !$perm->have_perm('admin')) {
-        echo _("Um die automatische Anmeldung zu nutzen, m&uuml;ssen Sie Ihre pers&ouml;nliche Login-Datei auf ihren Rechner kopieren. Mit dem folgenden Link &ouml;ffnet sich ein Fenster, indem Sie ihr Passwort eingeben m&uuml;ssen.") . " ";
+        echo _("Um die automatische Anmeldung zu nutzen, m&uuml;ssen Sie Ihre pers&ouml;nliche Login-Datei auf Ihren Rechner kopieren. Mit dem folgenden Link &ouml;ffnet sich ein Fenster, indem Sie Ihr Passwort eingeben m&uuml;ssen.") . " ";
         echo _("Dann wird die Datei erstellt und zu Ihrem Rechner geschickt.") . "<br><br>\n";
         echo '<div align="center"><b><a href="javascript:oeffne();">' . _("Auto-Login-Datei erzeugen") . '</a></b></div>';
         echo "<br><br>\n" . _("<b>ACHTUNG!</b> Die automatische Anmeldung stellt eine große Sicherheitslücke dar. Jeder, der Zugriff auf Ihren Rechner hat, kann sich damit unter Ihrem Namen in Stud.IP einloggen!");

@@ -29,7 +29,10 @@ require_once 'lib/raumzeit/IssueDB.class.php';
 require_once 'lib/classes/SeminarCycleDate.class.php';
 
 /**
- * CylceData.class.php
+ * This class is subject to change, for now it wraps getter
+ * and setter to SeminarCycleDate. For compatibility reasons it has
+ * magic __get() __set() __isset, and it combines the old metadata_dates
+ * keys and the new fields from SeminarCycleDate (see CycleData::$alias)
  *
  *
  * @author      Till Glöggler <tgloeggl@uos.de>
@@ -40,8 +43,10 @@ require_once 'lib/classes/SeminarCycleDate.class.php';
 class CycleData
 {
     /**
-     * Enter description here ...
-     * @var unknown_type
+     * list of aliases to translate old style metadata_dates keys to
+     * new fields of SeminarCycleDate
+     *
+     * @var array
      */
     private $alias = array( 'start_stunde' => 'start_hour',
                             'end_stunde' => 'end_hour',
@@ -49,20 +54,22 @@ class CycleData
                             'desc' => 'description');
 
     /**
-     * Enter description here ...
-     * @var unknown_type
+     * this is mostly filtered, see readSingleDates()
+     * should not be public
+     *
+     * @var array of SingleDate
      */
     public $termine = NULL; // Array
 
     /**
      * Enter description here ...
-     * @var unknown_type
+     * @var SeminarCycleDate
      */
     private $cycle_date = null;
 
     /**
-     * Enter description here ...
-     * @param unknown_type $cycle_data
+     * Constructor
+     * @param SeminarCycleDate|array
      */
     function __construct($cycle_data = FALSE)
     {
@@ -163,11 +170,24 @@ class CycleData
         return isset($this->cycle_date->$field);
     }
 
+    /**
+     * stores only the cycledate data
+     *
+     * @return boolean
+     */
     function storeCycleDate()
     {
         return $this->cycle_date->store();
     }
 
+    /**
+     * stores the single dates belonging to this cycledate,
+     * but only the ones which are currently loaded!
+     * (see readSingleDates())
+     * should be private
+     *
+     * @return boolean
+     */
     function store()
     {
         foreach ($this->termine as $val) {
@@ -177,6 +197,13 @@ class CycleData
         return TRUE;
     }
 
+    /**
+     * refreshes the currently loaded single dates from database,
+     * does not reload cycledate data!
+     * should be private
+     *
+     * @return boolean
+     */
     function restore()
     {
         foreach ($this->termine as $key => $val) {
@@ -186,6 +213,12 @@ class CycleData
         return TRUE;
     }
 
+    /**
+     * deletes cycledate and corresponding single dates
+     *
+     * @param boolean $removeSingles
+     * @return boolean
+     */
     function delete($removeSingles = TRUE)
     {
         if ($removeSingles) {
@@ -210,6 +243,15 @@ class CycleData
         return $this->cycle_date->delete();
     }
 
+    /**
+     * this does not delete a single date, but set it to be marked
+     * as to not take place. do not use!
+     *
+     * @deprecated
+     * @param sting $date_id
+     * @param int $filterStart
+     * @param int $filterEnd
+     */
     function deleteSingleDate($date_id, $filterStart, $filterEnd)
     {
         if (!$this->termine) {
@@ -220,6 +262,15 @@ class CycleData
         $this->termine[$date_id]->store();
     }
 
+    /**
+     * this should ressurect a single date whis is marked
+     * as to not take place. do not use!
+     *
+     * @deprecated
+     * @param sting $date_id
+     * @param int $filterStart
+     * @param int $filterEnd
+     */
     function unDeleteSingleDate($date_id, $filterStart, $filterEnd)
     {
         if (!$this->termine) {
@@ -235,6 +286,14 @@ class CycleData
         return true;
     }
 
+    /**
+     * load corresponding single dates from database
+     * give timestamps as params to filter by time range
+     *
+     * @param int $start
+     * @param int $end
+     * @return boolean
+     */
     function readSingleDates($start = 0, $end = 0)
     {
         $this->termine = array();
@@ -253,6 +312,12 @@ class CycleData
         return FALSE;
     }
 
+    /**
+     * get the currently loaded single dates, or all when no dates
+     * are loaded. you must use readSingleDates() before to be shure what to get!
+     *
+     * @return array of SingleDate
+     */
     function getSingleDates()
     {
         if (!$this->termine) {
@@ -261,6 +326,14 @@ class CycleData
         return $this->termine;
     }
 
+    /**
+     * returns an assoc array, keys are room names values are number of dates for this room
+     * give timestamps as params to filter by time range
+     *
+     * @param int $filterStart
+     * @param int $filterEnd
+     * @return array
+     */
     function getFreeTextPredominantRoom($filterStart = 0, $filterEnd = 0)
     {
         if ($room = CycleDataDB::getFreeTextPredominantRoomDB($this->metadate_id, $filterStart, $filterEnd)) {
@@ -268,6 +341,14 @@ class CycleData
         }
     }
 
+    /**
+     * returns an assoc array, keys are resource_id of rooms values are number of dates for this room
+     * give timestamps as params to filter by time range
+     *
+     * @param int $filterStart
+     * @param int $filterEnd
+     * @return array
+     */
     function getPredominantRoom($filterStart = 0, $filterEnd = 0)
     {
         if ($rooms = CycleDataDB::getPredominantRoomDB($this->metadate_id, $filterStart, $filterEnd)) {
@@ -277,6 +358,13 @@ class CycleData
         return FALSE;
     }
 
+    /**
+     * returns a formatted string for cycledate
+     *
+     * @see SeminarCycleDate::toString()
+     * @param boolean $short
+     * @return string
+     */
     function toString($short = false)
     {
         if($short === false) {
@@ -288,6 +376,12 @@ class CycleData
         }
     }
 
+    /**
+     * return all fields from SeminarCycleDate and old style
+     * metadata_dates, combined with info about rooms
+     *
+     * @return array
+     */
     function toArray()
     {
         $ret = $this->cycle_date->toArray();
@@ -304,6 +398,15 @@ class CycleData
         return $ret;
     }
 
+    /**
+     * assign single dates one by one to a list of issues
+     * seems not to be the right place for this method
+     *
+     * @deprecated
+     * @param array $themen
+     * @param int $filterStart
+     * @param int $filterEnd
+     */
     function autoAssignIssues($themen, $filterStart, $filterEnd)
     {
         $this->readSingleDates($filterStart, $filterEnd);
@@ -319,6 +422,14 @@ class CycleData
         $this->store();
     }
 
+    /**
+     * use SingleDate::removeRequest()
+     *
+     * @deprecated
+     * @param string $singledate_id
+     * @param int $filterStart
+     * @param int $filterEnd
+     */
     function removeRequest($singledate_id, $filterStart, $filterEnd)
     {
         $this->readSingleDates($filterStart, $filterEnd);

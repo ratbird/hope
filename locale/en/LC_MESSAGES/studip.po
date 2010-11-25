@@ -10360,7 +10360,7 @@ msgstr "Customize general settings"
 #
 #: ../public/edit_about.php:537 ../lib/navigation/StudipNavigation.php:109
 msgid "Privatsphäre"
-msgstr "Private sphere"
+msgstr "Privacy"
 
 #
 #: ../public/edit_about.php:547 ../lib/navigation/StudipNavigation.php:128

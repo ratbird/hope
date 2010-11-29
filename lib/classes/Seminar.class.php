@@ -1907,8 +1907,8 @@ class Seminar
         }
         if (is_array($ret)) foreach($ret as $studiengang_id => $data){
             $ret[$studiengang_id]['num_occupied'] = 0;
-            $this->db->query("SELECT COUNT(user_id) FROM seminar_user 
-                WHERE seminar_id = '".$this->getId()."' 
+            $this->db->query("SELECT COUNT(user_id) FROM seminar_user
+                WHERE seminar_id = '".$this->getId()."'
                     AND admission_studiengang_id='$studiengang_id'
                     AND status != 'tutor'
                     AND status != 'dozent'");
@@ -2137,6 +2137,7 @@ class Seminar
         $db->query($query);
 
         if(get_config('ELEARNING_INTERFACE_ENABLE')){
+            global $connected_cms;
             $cms_types = ObjectConnections::GetConnectedSystems($s_id);
             if(count($cms_types)){
                 foreach($cms_types as $system){

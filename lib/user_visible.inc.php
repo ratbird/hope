@@ -400,6 +400,9 @@ function is_element_visible_for_user($user_id, $owner_id, $element_visibility) {
 function is_element_visible_externally($owner_id, $owner_perm, $field_name, $element_visibility) {
     global $NOT_HIDEABLE_FIELDS;
     $is_visible = false;
+    if (!isset($element_visibility)) {
+        $element_visibility = get_default_homepage_visibility($owner_id);
+    }
     if ($element_visibility == VISIBILITY_EXTERN || $NOT_HIDEABLE_FIELDS[$owner_perm][$field_name])
         $is_visible = true;
     return $is_visible;

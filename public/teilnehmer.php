@@ -99,7 +99,7 @@ PageLayout::setTitle($SessSemName["header_line"]. " - " . _("TeilnehmerInnen"));
 Navigation::activateItem('/course/members/view');
 
 //Subject for sms
-$stmt =DBManager::get()->query("SELECT VeranstaltungsNummer as sn FROM seminare WHERE Seminar_id = '".$SessSemName[1]."'");
+$stmt = DBManager::get()->query("SELECT VeranstaltungsNummer as sn FROM seminare WHERE Seminar_id = '".$SessSemName[1]."'");
 $result = $stmt->fetch();
 $subject = ( $result["sn"] == "" ) ? "[".$SessSemName['0']."]" : "[".$result['sn'].": ".$SessSemName['0']."]";
 

@@ -36,11 +36,12 @@
 // +---------------------------------------------------------------------------+
 
 
-require_once ('lib/messaging.inc.php');
+require_once 'lib/messaging.inc.php';
 require_once 'lib/functions.php';
-require_once ('lib/language.inc.php');
-require_once ('lib/dates.inc.php');
-require_once('lib/classes/StudipAdmissionGroup.class.php');
+require_once 'lib/language.inc.php';
+require_once 'lib/dates.inc.php';
+require_once 'lib/classes/StudipAdmissionGroup.class.php';
+require_once 'app/models/calendar/schedule.php';
 
 
 
@@ -56,10 +57,13 @@ require_once('lib/classes/StudipAdmissionGroup.class.php');
 * @return       boolean
 *
 */
-function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse = false, $consider_contingent = false) {
-    $db=new DB_Seminar;
-    $db2=new DB_Seminar;
-        
+function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse = false, $consider_contingent = false)
+{
+    $db = new DB_Seminar;
+    $db2 = new DB_Seminar;
+
+    $seminarEntriesBeforeInsert = CalendarScheduleModel::getSeminarEntry($seminar_id, $user_id);
+
     $query = sprintf("SELECT comment, studiengang_id FROM admission_seminar_user WHERE user_id = '%s' AND seminar_id ='%s' ", $user_id, $seminar_id);
     $db->query($query);
     if ($db->next_record()) {
@@ -70,36 +74,56 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
         else
             $studiengang_id = '';
     }
-    if(strlen($consider_contingent) > 1) $studiengang_id = $consider_contingent;
-    
+    if (strlen($consider_contingent) > 1) $studiengang_id = $consider_contingent;
+
     $sem = Seminar::GetInstance($seminar_id);
-    if($copy_studycourse && $consider_contingent && $sem->isAdmissionEnabled() && !$sem->getFreeAdmissionSeats($studiengang_id)){
+    if ($copy_studycourse && $consider_contingent && $sem->isAdmissionEnabled() && !$sem->getFreeAdmissionSeats($studiengang_id)) {
         return false;
     } else {
-        
-        $group = select_group($sem->getSemesterStartTime(), $user_id); //ok, here ist the "colored-group" meant (for grouping on meine_seminare), not the grouped seminars as above!
-        
+        $group = select_group($sem->getSemesterStartTime(), $user_id); //ok, here ist the "colored-group" meant (for grouping on meine_seminare), not the grouped seminars as above!       
+
         // LOGGING
-        log_event('SEM_USER_ADD', $seminar_id, $user_id, $status, 'Wurde in die Veranstaltung eingetragen, Kontingent: '.$studiengang_id); 
-        
+        log_event('SEM_USER_ADD', $seminar_id, $user_id, $status, 'Wurde in die Veranstaltung eingetragen, Kontingent: ' . $studiengang_id);
+
         $query = sprintf("INSERT INTO seminar_user SET Seminar_id = '%s', user_id = '%s', status= '%s', admission_studiengang_id ='%s', comment ='%s', gruppe='%s', mkdate = '%s' ", $seminar_id, $user_id, $status, $studiengang_id, mysql_escape_string($comment), $group, time());
         $db->query($query);
-        
+
         if ($ret = $db->affected_rows()) {
             $query2 = sprintf("DELETE FROM admission_seminar_user WHERE user_id = '%s' AND seminar_id ='%s'", $user_id, $seminar_id);
             $db2->query($query2);
         }
-        
+
         if ($db2->affected_rows()) {
             //renumber the waiting list, if a user was deleted from it
             renumber_admission($seminar_id);
             return 2;
         }
+
+        removeScheduleEntriesMarkedAsVirtual($seminarEntriesBeforeInsert, $user_id);
+
         $sem->restore();
         return $ret;
     }
 }
 
+/**
+ * Removes entries marked in the schedule as virtual.
+ * This function serves the following scenario:
+ * If a user first added the dates of one seminar to his or her schedule and later did participate in the seminar
+ * then the previously as 'virtual' added dates should be removed with this function.
+ *
+ * @param  $scheduleEntries entries with the type 'virtual'
+ * @param  $user_id the id of the user the schedule belongs to
+ */
+function removeScheduleEntriesMarkedAsVirtual($scheduleEntries, $user_id)
+{
+    foreach ($scheduleEntries as $entry) {
+        if ($entry['type'] == 'virtual') {
+            $seminar_id = $entry['id'];
+            CalendarScheduleModel::deleteSeminarEntries($user_id, $seminar_id);
+        }
+    }
+}
 
 /**
 * This function calculate the remaining places for the "alle"-allocation

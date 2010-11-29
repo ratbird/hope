@@ -2361,27 +2361,33 @@ class Seminar
         }
         $db = DBManager::get();
         $rangordnung = array_flip(array('user', 'autor', 'tutor', 'dozent'));
+
         if (!$force) {
             $old_status = $db->query("SELECT status " .
                     "FROM seminar_user " .
                     "WHERE user_id = ".$db->quote($user_id)." " .
                         "AND Seminar_id = ".$db->quote($this->id))->fetch(PDO::FETCH_COLUMN, 0);
         }
+
         $new_position = $db->query("SELECT MAX(position)+1 " .
                 "FROM seminar_user " .
                 "WHERE status = ".$db->quote($status)." " .
                     "AND Seminar_id = ".$db->quote($this->id)."")->fetch(PDO::FETCH_COLUMN, 0);
+
         $numberOfTeachers = $db->query("SELECT COUNT(*) " .
                 "FROM seminar_user " .
                 "WHERE Seminar_id = ".$db->quote($this->id)." ".
                     "AND status = 'dozent' ")->fetch(PDO::FETCH_COLUMN, 0);
+        
         if (!$old_status) {
+            $seminarEntriesBeforeInsert = CalendarScheduleModel::getSeminarEntry($this->id, $user_id);
             $db->exec("INSERT INTO seminar_user " .
                    "SET status = ".$db->quote($status).", " .
                        "Seminar_id = ".$db->quote($this->id).", " .
                        "user_id = ".$db->quote($user_id).", " .
                        "position = ".$db->quote($new_position)." " .
                        "");
+            removeScheduleEntriesMarkedAsVirtual($seminarEntriesBeforeInsert, $user_id);
             return $this;
         } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])
                 && ($old_status !== "dozent" || $numberOfTeachers > 1)) {
@@ -2390,7 +2396,7 @@ class Seminar
                        "position = ".$db->quote($new_position)." " .
                    "WHERE Seminar_id = ".$db->quote($this->id)." " .
                        "AND user_id = ".$db->quote($user_id)." " .
-                       "");
+                       "");            
             return $this;
         } else {
             if ($old_status === "dozent" && $numberOfTeachers <= 1) {

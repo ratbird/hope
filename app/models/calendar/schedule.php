@@ -236,6 +236,19 @@ class CalendarScheduleModel
     }
 
     /**
+     * Deletes the schedule entries of one user for one seminar.
+     * @static
+     * @param  $user_id the user of the schedule
+     * @param  $seminar_id the seminar which entries should be deleted
+     */
+    static function deleteSeminarEntries($user_id, $seminar_id)
+    {
+        $db = DBManager::get();
+        $deleteVirtualEntries = "DELETE FROM schedule_seminare WHERE user_id = '$user_id' AND seminar_id ='$seminar_id'";
+        $db->query($deleteVirtualEntries);
+    }
+
+    /**
      * Returns an schedule entry of a course
      *
      * @param string  the ID of the user

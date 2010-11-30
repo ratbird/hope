@@ -619,7 +619,7 @@ function kontakt ($module, $db, $separate = FALSE) {
                 }
                 break;
             default:
-                if (!$separate && is_element_visible_externally($db->f("user_id"), $module->owner_perm, $data_field, $module->visibilities[$data_field])) {
+                if (!$separate) {
                     $out .= "<tr$attr_tr>";
                     $out .= "<td$attr_td>";
                     $out .= "<font$attr_fonttitle>";

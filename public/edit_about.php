@@ -60,15 +60,11 @@ if($edit_about_msg){
     $edit_about_msg = '';
     $sess->unregister('edit_about_msg');
 }
-if($nobodymsg && $logout && $auth->auth["uid"] == "nobody"){
-    $msg = $nobodymsg;
-}
 
 checkExternDefaultForUser(get_userid($username));
 
 $my_about = new about($username,$msg);
 $cssSw = new cssClassSwitcher;
-#$DataFields = new DataFields($my_about->auth_user["user_id"]);
 
 if ($logout && $auth->auth["uid"] == "nobody")  // wir wurden gerade ausgeloggt...
     {
@@ -79,10 +75,8 @@ if ($logout && $auth->auth["uid"] == "nobody")  // wir wurden gerade ausgeloggt.
 
     echo '<table cellspacing="0" cellpadding="0" border="0" width="100%">';
     echo '<tr><td class="topic" colspan="2"><b>&nbsp;'. _("Daten ge&auml;ndert!") .'</b></td></tr>';
-
-    $my_about->parse_msg($my_about->msg);
     $temp_string = '<br><font color="black">'
-        . sprintf(_("Um eine korrekte Authentifizierung mit Ihren neuen Daten sicherzustellen, wurden Sie automatisch ausgeloggt.<br>Wenn Sie Ihre E-Mail-Adresse ge&auml;ndert haben, m&uuml;ssen Sie das Ihnen an diese Adresse zugesandte Passwort verwenden!<br><br>Ihr aktueller Benutzername ist: %s"), '<b>'. $username. '</b>')
+        . sprintf(_("Um eine korrekte Authentifizierung mit Ihren neuen Daten sicherzustellen, wurden Sie automatisch ausgeloggt.<br>Wenn Sie Ihre E-Mail-Adresse ge&auml;ndert haben, m&uuml;ssen Sie das Ihnen an diese Adresse zugesandte Passwort verwenden!<br><br>Ihr aktueller Benutzername ist: %s"), '<b>'. htmlReady($username). '</b>')
         . '<br>---&gt; <a href="index.php?again=yes">' . _("Login") . '</a> &lt;---</font>';
     $my_about->my_info($temp_string);
 

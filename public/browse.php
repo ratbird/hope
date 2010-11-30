@@ -152,7 +152,7 @@ if ($sem_id) {
 if (strlen($name) > 2) {
     $name = str_replace('%', '\%', $name);
     $name = str_replace('_', '\_', $name);
-    $filter[] = "(Vorname LIKE '%".addslashes($name)."%' OR Nachname LIKE '%".addslashes($name)."%')";
+    $filter[] = "CONCAT(Vorname, ' ', Nachname) LIKE '%".addslashes($name)."%'";
 }
 
 if (count($filter))

@@ -261,9 +261,8 @@ if ($indikator) {
 }
 
 // use whitelist to prevent sql-injections
-if (Request::get('sort') && in_array(Request::get('sort'), 
-    words('age viewcount rating score fav nachname root_name x.name'))) {
-    $forum['sort'] = Request::get('sort');
+if (Request::option('sort')) {
+    $forum['sort'] = Request::option('sort');
     URLHelper::addLinkParam('sort', $sort);
 }
 

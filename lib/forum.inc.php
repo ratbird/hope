@@ -951,7 +951,7 @@ function forum_print_toolbar ($id="") {
                 $tmp["fav"] = _("Favoriten");
                 $tmp["nachname"] = _("Autor");
                 $tmp["root_name"] = _("Thema");
-                $tmp["x.name"] = _("Titel");
+                $tmp["name"] = _("Titel");
                 while(list($key,$value) = each($tmp)) {
                     $print .= "<option value=\"$key\"";
                     if ($key == $forum["sort"]) $print.= " selected";
@@ -1411,7 +1411,7 @@ if ($forum["view"]=="flatfolder") {
 }
 $order = "DESC";
 
-if (($forum["sort"] == "rating" || $forum["sort"]== "nachname" || $forum["sort"]== "root_name" || $forum["sort"]== "x.name") && ($forum["view"] != "tree" && $forum["view"] != "mixed"))
+if (($forum["sort"] == "rating" || $forum["sort"]== "nachname" || $forum["sort"]== "root_name" || $forum["sort"]== "name") && ($forum["view"] != "tree" && $forum["view"] != "mixed"))
     $order = "ASC";
 
 if ($forum["view"]=="search") {

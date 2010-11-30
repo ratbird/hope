@@ -6,7 +6,7 @@
 // This file is part of Stud.IP
 // StudipLitSearch.class.php
 // Class to build search formular and execute search
-// 
+//
 // Copyright (c) 2003 André Noack <noack@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -28,41 +28,41 @@ require_once("lib/classes/StudipForm.class.php");
 /**
 *
 *
-* 
 *
-* @access   public  
+*
+* @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 **/
 class StudipLitSearch {
-    
+
     var $start_result;
     var $form_template;
     var $inner_form;
     var $outer_form;
     var $term_count;
     var $search_plugin;
-    
-    
+
+
     function StudipLitSearch(){
         global $sess, $_lit_search_plugins;
-        
+
         #if (!$sess->is_registered("_start_result")){
         #   $sess->register("_start_result");
         #}
         URLHelper::bindLinkParam("_start_result",$this->start_result);
         #$this->start_result =& $GLOBALS['_start_result'];
-        
+
         $this->form_template = array('search_term'  =>  array('type' => 'text', 'caption' => _("Suchbegriff"), 'info' => _("Bitte geben Sie hier einen beliebigen Suchbegriff ein.")),
                                     'search_field'  =>  array('type' => 'select', 'caption' => _("Suchfeld"), 'info' => _("Mögliche Suchfelder"),
                                                             'options_callback' => array($this,"getSearchFields")),
-                                    'search_truncate'=> array('type' => 'select', 'caption' => _("Trunkieren"), 'info' => _("Wenn Sie eine der Trunkierungsoptionen wählen, werden alle Treffer angezeigt, die mit dem Suchbegriff beginnen (Rechts trunkieren) bzw. enden (Links trunkieren)."), 
+                                    'search_truncate'=> array('type' => 'select', 'caption' => _("Trunkieren"), 'info' => _("Wenn Sie eine der Trunkierungsoptionen wählen, werden alle Treffer angezeigt, die mit dem Suchbegriff beginnen (Rechts trunkieren) bzw. enden (Links trunkieren)."),
                                                             'options' => array(array('name' => _("Nein"), "value" => 'none'),
                                                                                 array('name' => _("Rechts trunkieren"), "value" => 'right'),
                                                                                 /*array('name' => _("Links trunkieren"), "value" => 'left')*/)),
                                     'search_operator'=> array('type' => 'radio', 'options' => array(array('name' =>_("UND"),'value' => 'AND'),
                                                                                                     array('name' =>_("ODER"),'value' => 'OR'),
-                                                                                                    array('name' =>_("NICHT"),'value' => 'NOT')), 
+                                                                                                    array('name' =>_("NICHT"),'value' => 'NOT')),
                                                             'caption' => _("Verknüpfung") ,'info'=>_("Wählen Sie eine Verknüpfungsart"), 'separator' => "&nbsp;", 'default_value' => "AND")
                                     );
         $search_plugins = $this->getAvailablePlugins();
@@ -88,9 +88,9 @@ class StudipLitSearch {
                                     'change' => array('type' => 'auswaehlen', 'info' => _("Anderen Katalog auswählen")),
                                     'search_add' => array('type' => 'hinzufuegen', 'info' => _("Suchfeld hinzufügen")),
                                     'search_sub' => array('type' => 'entfernen', 'info' => _("Suchfeld entfernen")));
-        
+
         $this->outer_form = new StudipForm($outer_form_fields,$outer_form_buttons,"lit_search");
-        
+
         if ($this->outer_form->isClicked("search_add")){
             $this->outer_form->form_values['search_term_count'] = $this->outer_form->getFormFieldValue('search_term_count') + 1;
         }
@@ -103,7 +103,7 @@ class StudipLitSearch {
             if($this->outer_form->isClicked("reset")) $this->outer_form->doFormReset();
             $this->outer_form->form_values["search_plugin"] = $plugin_name;
         }
-        
+
         $this->term_count = $this->outer_form->getFormFieldValue('search_term_count');
         for ($i = 0 ; $i < $this->term_count; ++$i){
             foreach($this->form_template as $name => $value){
@@ -115,35 +115,40 @@ class StudipLitSearch {
             if($this->outer_form->isClicked("reset")) $this->inner_form->doFormReset();
             $this->outer_form->form_values["search_plugin"] = $plugin_name;
         }
-        if ( ($init_plugin_name = $this->outer_form->getFormFieldValue("search_plugin")) ){
+        if ( ($init_plugin_name = $this->outer_form->getFormFieldValue("search_plugin")) &&
+            in_array($init_plugin_name, array_keys($search_plugins)) ){
             $init_plugin_name = "StudipLitSearchPlugin" . $init_plugin_name;
             include_once "lib/classes/lit_search_plugins/" . $init_plugin_name .".class.php";
             $this->search_plugin = new $init_plugin_name();
+        } else {
+            $plugin_name = false;
+            $this->outer_form->doFormReset();
+            throw new Exception("Invalid SearchPlugin requested.");
         }
         if ($plugin_name !== false){
             $this->search_plugin->doResetSearch();
             $this->start_result = 1;
         }
-        
+
         $this->outer_form->form_fields['search_plugin']['info'] = $this->search_plugin->description;
     }
-    
+
     function getSearchFields($caller, $name){
         return $this->search_plugin->getSearchFields();
     }
-    
+
     function doSearch(){
         return $this->search_plugin->doSearch($this->getSearchValues());
     }
-    
+
     function getNumHits(){
         return $this->search_plugin->getNumHits();
     }
-    
+
     function getSearchResult($num_hit){
         return $this->search_plugin->getSearchResult($num_hit);
     }
-    
+
     function getSearchValues(){
         $search_values = null;
         for ($i = 0 ; $i < $this->term_count; ++$i){
@@ -153,7 +158,7 @@ class StudipLitSearch {
         }
         return $search_values;
     }
-    
+
     function GetPreferredPlugin(){
         $dbv = new DbView();
         $dbv->params[0] = $GLOBALS['user']->id;
@@ -161,7 +166,7 @@ class StudipLitSearch {
         $rs->next_record();
         return $rs->f('lit_plugin_name');
     }
-    
+
     function GetAvailablePlugins(){
         global $_lit_search_plugins;
         static $available_plugins;
@@ -172,7 +177,7 @@ class StudipLitSearch {
         }
         return $available_plugins;
     }
-    
+
     function GetExternalLink($plugin_name){
         global $_lit_search_plugins;
         static $available_plugins_links;
@@ -183,19 +188,19 @@ class StudipLitSearch {
         }
         return $available_plugins_links[$plugin_name];
     }
-    
+
     function GetPluginDisplayName($plugin_name){
         $plugins = StudipLitSearch::GetAvailablePlugins();
         return $plugins[$plugin_name];
     }
-    
+
     function GetAvailablePluginsOptions(){
         foreach(StudipLitSearch::GetAvailablePlugins() as $value => $name){
             $ret[] = array('name' => $name, 'value' => $value);
         }
         return $ret;
     }
-    
+
     function CheckZ3950($accession_number, $one_plugin_name = false){
         global $_lit_search_plugins;
         static $plugin_list;

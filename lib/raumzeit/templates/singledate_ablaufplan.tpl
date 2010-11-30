@@ -44,7 +44,7 @@
                 <TD class="steel1" valign="top" nowrap="nowrap">
                     <font size="-1">
                         <? if ($modules['forum'] || $modules['documents']) : ?>
-                        <b><?=_("Verknüfpungen mit diesem Termin:")?></b><br>
+                        <b><?=_("Verknüpfungen mit diesem Termin:")?></b><br>
                         <?
                         if ($modules['forum']) :
                             if ($tpl['forumEntry']) :

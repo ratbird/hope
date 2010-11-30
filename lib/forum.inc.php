@@ -1391,9 +1391,9 @@ function flatview ($open=0, $mehr=1, $show=0, $update="", $name="", $description
 $forum["openlist"] = $open;
 $forum["zitat"] = $zitat;
 $forum["update"] = $update;
-if (!$forum["postingsperside"])
+if (!(int)$forum["postingsperside"])
     $forum["postingsperside"] = 15;
-$postingsperside = $forum["postingsperside"];
+$postingsperside = (int)$forum["postingsperside"];
 if (!(int)$flatviewstartposting) {
     $forum["flatviewstartposting"] = 0;
     $flatviewstartposting = 0;

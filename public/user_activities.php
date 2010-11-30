@@ -357,7 +357,9 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
     }
     ?>
     </div>
-    <?} elseif (substr($_user_activities['details'],0,7) == 'seminar') {?>
+    <?} elseif (in_array($_user_activities['details'], words('seminar seminar_closed seminar_wait'))) {
+        $table = $status = $desc = $where = '';
+    ?>
     <div style="margin-left:20px;">
     <?
         switch ($_user_activities['details']){

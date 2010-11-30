@@ -570,8 +570,7 @@ if (get_config('VOTE_ENABLE') && is_element_visible_for_user($user->id, $user_id
 
 
 // show Guestbook
-$guestpage = isset($_REQUEST['guestpage']) ? $_REQUEST['guestpage'] : 0;
-$guest = new Guestbook($user_id,$admin_darf,$guestpage);
+$guest = new Guestbook($user_id,$admin_darf, Request::int('guestpage', 0));
 
 if ($_REQUEST['guestbook'] && $perm->have_perm('autor'))
     $guest->actionsGuestbook($_REQUEST['guestbook'],$_REQUEST['post'],$_REQUEST['deletepost'],$_REQUEST['studipticket']);

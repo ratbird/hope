@@ -120,10 +120,6 @@ function getToplist($rubrik, $query, $type="count") {
     return $result;
 }
 
-?>
-<body>
-<?
-
 if ($sem_portal["bereich"] != "all" && $sem_portal["bereich"] != "mod") {
     $_sem_status = array();
     foreach ($SEM_CLASS as $key => $value){
@@ -245,13 +241,7 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
                     );
     }
 } elseif ($sem_portal['bereich'] != 'mod') {
-    //create TOP-lists
-    if (!$mehr) {
-        $count=5; // wieviel zeigen wir von den Listen?
-        $mehr = 1;
-    }
-    else
-        $count = 5 * $mehr;
+    $toplist = $toplist_links = '';
     $sql_where_query_seminare = " WHERE 1 ";
     if (!$GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))) $sql_where_query_seminare .= " AND seminare.visible=1  ";
 
@@ -262,16 +252,16 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
     switch ($sem_portal["toplist"]) {
         case 4:
         default:
-            $toplist =  getToplist(_("neueste Veranstaltungen"),"SELECT seminare.seminar_id, seminare.name, mkdate as count FROM seminare ".$sql_where_query_seminare." ORDER BY mkdate DESC LIMIT $count", "date");
+            $toplist =  getToplist(_("neueste Veranstaltungen"),"SELECT seminare.seminar_id, seminare.name, mkdate as count FROM seminare ".$sql_where_query_seminare." ORDER BY mkdate DESC LIMIT 5", "date");
         break;
         case 1:
-            $toplist = getToplist(_("Teilnehmeranzahl"), "SELECT seminare.seminar_id, seminare.name, count(seminare.seminar_id) as count FROM seminare LEFT JOIN seminar_user USING(seminar_id) ".$sql_where_query_seminare." GROUP BY seminare.seminar_id ORDER BY count DESC LIMIT $count");
+            $toplist = getToplist(_("Teilnehmeranzahl"), "SELECT seminare.seminar_id, seminare.name, count(seminare.seminar_id) as count FROM seminare LEFT JOIN seminar_user USING(seminar_id) ".$sql_where_query_seminare." GROUP BY seminare.seminar_id ORDER BY count DESC LIMIT 5");
         break;
         case 2:
-            $toplist =  getToplist(_("die meisten Materialien"),"SELECT dokumente.seminar_id, seminare.name, count(dokumente.seminar_id) as count FROM seminare INNER JOIN  dokumente USING(seminar_id) ".$sql_where_query_seminare." GROUP BY dokumente.seminar_id  ORDER BY count DESC LIMIT $count");
+            $toplist =  getToplist(_("die meisten Materialien"),"SELECT dokumente.seminar_id, seminare.name, count(dokumente.seminar_id) as count FROM seminare INNER JOIN  dokumente USING(seminar_id) ".$sql_where_query_seminare." GROUP BY dokumente.seminar_id  ORDER BY count DESC LIMIT 5");
         break;
         case 3:
-            $toplist =  getToplist(_("aktivste Veranstaltungen"),"SELECT px_topics.seminar_id, seminare.name, count(px_topics.seminar_id) as count FROM px_topics INNER JOIN seminare USING(seminar_id) ".$sql_where_query_seminare." AND px_topics.mkdate > ".(time()-1209600) . " GROUP BY px_topics.seminar_id  ORDER BY count DESC LIMIT $count");
+            $toplist =  getToplist(_("aktivste Veranstaltungen"),"SELECT px_topics.seminar_id, seminare.name, count(px_topics.seminar_id) as count FROM px_topics INNER JOIN seminare USING(seminar_id) ".$sql_where_query_seminare." AND px_topics.mkdate > ".(time()-1209600) . " GROUP BY px_topics.seminar_id  ORDER BY count DESC LIMIT 5");
         break;
     }
 
@@ -286,7 +276,7 @@ if ($sem_browse_obj->show_result && count($sem_browse_data['search_result'])){
         $toplist_links .= "<a href=\"$PHP_SELF?choose_toplist=3\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/red/arr_1right.png\" border=\"0\"> "._("aktivste Veranstaltungen")."</a><br>";
     // if ($sem_portal["bereich"] == "all")
     $infotxt = _("Sie können hier nach allen Veranstaltungen suchen, sich Informationen anzeigen lassen und Veranstaltungen abonnieren.");
-
+    $infobox = array();
     $infobox[] =
         array  ("kategorie" => _("Information:"),
             "eintrag" => array        (

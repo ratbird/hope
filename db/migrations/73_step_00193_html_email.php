@@ -28,7 +28,7 @@ class Step00193HtmlEmail extends Migration
         $stmt->execute(array(
             'name' => 'MAIL_AS_HTML',
             'description' => 'Benachrichtigungen werden im HTML-Format versandt',
-            'section' => 'global',
+            'section' => '',
             'range' => 'user',
             'type' => 'boolean',
             'value' => 0

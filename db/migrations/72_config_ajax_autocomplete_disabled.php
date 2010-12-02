@@ -12,7 +12,7 @@ class ConfigAjaxAutocompleteDisabled extends Migration {
             'name'        => 'AJAX_AUTOCOMPLETE_DISABLED',
             'type'        => 'boolean',
             'value'       => 0,
-            'section'     => 'global',
+            'section'     => '',
             'description' => 'Sollen alle QuickSearches deaktiviertes Autocomplete haben? Wenn es zu Performanceproblemen kommt, kann es sich lohnen, diese Variable auf true zu stellen.'
             );
 

@@ -16,7 +16,7 @@ class Step00202EnhancedSeminarCycle extends Migration
             'name'        => 'ALLOW_METADATE_SORTING',
             'type'        => 'boolean',
             'value'       => 0,
-            'section'     => 'allow_views',
+            'section'     => 'permissions',
             'description' => 'Soll es erlaubt sein, dass regelmäßige Zeiten einer Veranstaltung frei sortiert werden können?'
             );
 

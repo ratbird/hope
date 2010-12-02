@@ -9,7 +9,7 @@ class Step00184Html5Video extends Migration
         array(
             'name' => 'LOAD_EXTERNAL_MEDIA',
             'description' => 'Sollen externe Medien über [img/flash/audio/video] eingebunden werden? deny=nicht erlaubt, allow=erlaubt, proxy=proxy benutzen.',
-            'section' => 'global',
+            'section' => '',
             'type' => 'string',
             'value' => 'deny'
         )
@@ -22,13 +22,13 @@ class Step00184Html5Video extends Migration
         array(
             'name' => 'EXTERNAL_IMAGE_EMBEDDING',
             'description' => 'Sollen externe Bilder über [img] eingebunden werden? deny=nicht erlaubt, allow=erlaubt, proxy=image proxy benutzen',
-            'section' => 'global',
+            'section' => '',
             'type' => 'string',
             'value' => 'deny'
         ), array(
             'name' => 'EXTERNAL_FLASH_MOVIE_EMBEDDING',
             'description' => 'Sollen externe Flash-Filme mit Hilfe des [flash]-Tags der Schnellformatierung eingebunden werden? deny=nicht erlaubt, allow=erlaubt, proxy=image proxy benutzen',
-            'section' => 'global',
+            'section' => '',
             'type' => 'string',
             'value' => 'deny'
         )

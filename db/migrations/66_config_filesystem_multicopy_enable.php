@@ -12,7 +12,7 @@ class ConfigFilesystemMulticopyEnable extends Migration {
             'name'        => 'FILESYSTEM_MULTICOPY_ENABLE',
             'type'        => 'boolean',
             'value'       => 1,
-            'section'     => 'modules',
+            'section'     => '',
             'description' => 'Soll es erlaubt sein, das Dozenten Ordner oder Dateien in mehrere Veranstaltungen bzw. Institute verschieben oder kopieren dürfen?'
             );
 

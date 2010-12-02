@@ -19,7 +19,7 @@ class Step00199ForcedCourseGrouping extends Migration
     function up()
     {
         $db = DBManager::get();
-        $query = $db->prepare("INSERT IGNORE INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES (MD5(?), '', ?, ?, '1', ?, 'global', 'global', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, '', '')");
+        $query = $db->prepare("INSERT IGNORE INTO `config` (`config_id`, `parent_id`, `field`, `value`, `is_default`, `type`, `range`, `section`, `position`, `mkdate`, `chdate`, `description`, `comment`, `message_template`) VALUES (MD5(?), '', ?, ?, '1', ?, 'global', '', '0', UNIX_TIMESTAMP(), UNIX_TIMESTAMP(), ?, '', '')");
 
         // insert new configuration entries
         foreach (self::$config_entries as $entry) {

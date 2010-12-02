@@ -12,9 +12,9 @@ class Tic1207Config extends Migration
         $db = DBManager::get();
 
         //changing sections
-        $db->exec("UPDATE config SET section = 'resources' WHERE field LIKE 'resources%'");
-        $db->exec("UPDATE config SET section = 'studygroups' WHERE field LIKE '%studygroup%'");
-        $db->exec("UPDATE config SET section = 'elearning_interface' WHERE field LIKE '%elearning_interface%'");
+        $db->exec("UPDATE config SET section = 'resources' WHERE field LIKE 'RESOURCES%'");
+        $db->exec("UPDATE config SET section = 'studygroups' WHERE field LIKE 'STUDYGROUP%'");
+        $db->exec("UPDATE config SET section = 'elearning_interface' WHERE field LIKE 'ELEARNING\_INTERFACE%' AND field != 'ELEARNING_INTERFACE_ENABLE'");
         $db->exec("UPDATE config SET section = 'permissions' WHERE field IN ("
                  ."'ALLOW_ADMIN_USERACCESS','ALLOW_DOZENT_ARCHIV','ALLOW_DOZENT_VISIBILITY',"
                  ."'ALLOW_SELFASSIGN_INSTITUTE','AUX_RULE_ADMIN_PERM','LOCK_RULE_ADMIN_PERM',"
@@ -28,22 +28,22 @@ class Tic1207Config extends Migration
         $db->exec("UPDATE config SET section = 'files' WHERE field LIKE 'ZIP_%' OR "
                  ."field IN ('ENABLE_PROTECTED_DOWNLOAD_RESTRICTION', 'DOCUMENTS_EMBEDD_FLASH_MOVIES', "
                  ."'SENDFILE_LINK_MODE')");
-        $db->exec("UPDATE config SET section = 'evaluation' WHERE field LIKE 'EVAL_%'");
-        $db->exec("UPDATE config SET section = 'archiv' WHERE field LIKE 'AUTO_ARCHIV%'");
+        $db->exec("UPDATE config SET section = 'evaluation' WHERE field LIKE 'EVAL\_%'");
+        $db->exec("UPDATE config SET section = 'archiv' WHERE field LIKE 'AUTO\_ARCHIV%'");
 
         //adding descriptions
-        $db->exec("UPDATE config SET description = 'Schaltet ein oder aus, ob die Studiengruppen global verfügbar ist.' WHERE field = 'STUDYGROUPS_ENABLE'");
+        $db->exec("UPDATE config SET description = 'Schaltet ein oder aus, ob die Studiengruppen global verfügbar sind.' WHERE field = 'STUDYGROUPS_ENABLE'");
         $db->exec("UPDATE config SET description = 'Die Standardeinrichtung für Studiengruppen kann hier gesetzt werden.' WHERE field = 'STUDYGROUP_DEFAULT_INST'");
         $db->exec("UPDATE config SET description = 'Hier werden die globalen Einstellungen aller Studiengruppen hinterlegt.' WHERE field = 'STUDYGROUP_SETTINGS'");
-        $db->exec("UPDATE config SET description = 'Hier werden die Nutzungsbedinungen der Studiengruppen hinterlegt.' WHERE field =  'STUDYGROUP_TERMS'");
+        $db->exec("UPDATE config SET description = 'Hier werden die Nutzungsbedinungen der Studiengruppen hinterlegt.' WHERE field = 'STUDYGROUP_TERMS'");
 
         //adding missing types, if not existing, use default "string"
-        $db->exec("UPDATE config SET `type` = 'string' WHERE `type` =  ''");
-        $db->exec("UPDATE config SET `type` = 'string' "
-                 ."WHERE `field` LIKE  'ELEARNING_INTERFACE%' "
-                 ."AND `field` <>  'ELEARNING_INTERFACE_ENABLE' "
-                 ."AND `field` NOT LIKE 'ELEARNING_INTERFACE%ACTIVE' "
-                 ."AND `type` = 'boolean'");
+        $db->exec("UPDATE config SET type = 'string' WHERE type = ''");
+        $db->exec("UPDATE config SET type = 'string' "
+                 ."WHERE field LIKE 'ELEARNING\_INTERFACE%' "
+                 ."AND field != 'ELEARNING_INTERFACE_ENABLE' "
+                 ."AND field NOT LIKE '%ACTIVE' "
+                 ."AND type = 'boolean'");
     }
 
     function down()

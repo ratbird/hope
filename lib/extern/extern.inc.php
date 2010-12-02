@@ -53,6 +53,9 @@ if ($page_url) {
     exit;
 }
 
+// set base url for URLHelper class
+URLHelper::setBaseUrl($ABSOLUTE_URI_STUDIP);
+
 // range_id and module are always necessary
 if ($range_id && $module) {
     // $module = ucfirst(strtolower($module));

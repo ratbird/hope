@@ -294,10 +294,10 @@ if (check_ticket($_REQUEST['studipticket'])){
             break;
 
         case 'pers_browse_search_x':
-            $_SESSION['pers_browse_old']['username'] = remove_magic_quotes($_POST['pers_browse_username']);
-            $_SESSION['pers_browse_old']['Vorname'] = remove_magic_quotes($_POST['pers_browse_Vorname']);
-            $_SESSION['pers_browse_old']['Email'] = remove_magic_quotes($_POST['pers_browse_Email']);
-            $_SESSION['pers_browse_old']['Nachname'] = remove_magic_quotes($_POST['pers_browse_Nachname']);
+            $_SESSION['pers_browse_old']['username'] = trim(remove_magic_quotes($_POST['pers_browse_username']));
+            $_SESSION['pers_browse_old']['Vorname'] = trim(remove_magic_quotes($_POST['pers_browse_Vorname']));
+            $_SESSION['pers_browse_old']['Email'] = trim(remove_magic_quotes($_POST['pers_browse_Email']));
+            $_SESSION['pers_browse_old']['Nachname'] = trim(remove_magic_quotes($_POST['pers_browse_Nachname']));
             $_SESSION['pers_browse_old']['perms'] = remove_magic_quotes($_POST['pers_browse_perms']);
             $_SESSION['pers_browse_old']['crit'] = remove_magic_quotes($_POST['pers_browse_crit']);
             $_SESSION['pers_browse_old']['changed'] = strlen($_POST['pers_browse_changed']) ? abs($_POST['pers_browse_changed']) : null;

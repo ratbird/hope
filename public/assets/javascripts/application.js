@@ -176,32 +176,8 @@ var STUDIP = STUDIP || {};
  *  [/code]
  * Returns something like:
  * "http://uni-adresse.de/studip/adresse.php?hello=world&mandatory=parameter#anchor"
- *
- * That is now extended by a parameter that has earlier been identified as mandatory
- * so that all links returned by the URLHelper extend this adress by the parameter.
- *
- * The javascript-code that opens the item can now manipulate these parameters:
- *  [code]
- *  URLHelper.setParam("data[open]", "Item_id"):
- *  [/code]
- * and
- *  [code]
- *  link.href = STUDIP.URLHelper.getURL("adresse.php?hello=world#anchor");
- *  [/code]
- * returns:
- * "http://uni-adresse.de/studip/adresse.php?hello=world&data[open]=Item_id#anchor"
- *
- * For even bigger purposes you may want to change the URLs of ALL links on a page.
- * Then you write:
- *
- *  [code]
- *  URLHelper.setParam("data[open]", "Item_id"):
- *  URLHelper.updateAllLinks();
- *  [/code]
  */
 STUDIP.URLHelper = {
-  params: {},     //static variable to save and serve variables
-  badParams: {},  //static variable for variables that should not appear in links
   base_url: null, //the base url for all links
   /**
    * base URL for all links generated from relative URLs
@@ -212,53 +188,45 @@ STUDIP.URLHelper = {
   /**
    * method to extend short URLs like "about.php" to "http://.../about.php"
    */
-  resolveURL: function (adress) {
+  resolveURL: function (url) {
     if (this.base_url === null) {
       this.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
     }
     if (this.base_url === "" ||
-        adress.match(/^[a-z]+:/) !== null ||
-        adress.charAt(0) === "?") {
+        url.match(/^[a-z]+:/) !== null ||
+        url.charAt(0) === "?") {
       //this method cannot do any more:
-      return adress;
+      return url;
     }
     var base_url = this.base_url;
-    if (adress.charAt(0) === "/") {
+    if (url.charAt(0) === "/") {
       var host = this.base_url.match(/^[a-z]+:\/\/[\w:.\-]+/);
       base_url = host ? host : '';
     }
-    return base_url + adress;
+    return base_url + url;
   },
   /**
    * Creates an URL with the mandatory parameters
-   * @param adress string: any adress-string
+   * @param url string: any url-string
    * @param param_object map: associative object for extra values
-   * @return: adress with all necessary parameters - non URI-encoded!
+   * @return: url with all necessary parameters - non URI-encoded!
    */
-  getURL: function (adress, param_object) {
+  getURL: function (url, param_object) {
     if (param_object === undefined) {
       param_object = {};
     }
-    adress = STUDIP.URLHelper.resolveURL(adress);
-    // splitting the adress:
-    adress = adress.split("#");
-    var anchor = (adress.length > 1) ? adress[adress.length - 1] : "";
-    adress = adress[0].split("?");
-    var url_parameters = (adress.length > 1) ? adress[adress.length - 1].split("&") : [];
+    url = STUDIP.URLHelper.resolveURL(url);
+    // splitting the url:
+    url = url.split("#");
+    var anchor = (url.length > 1) ? url[url.length - 1] : "";
+    url = url[0].split("?");
+    var url_parameters = (url.length > 1) ? url[url.length - 1].split("&") : [];
     var parameters = {};
     jQuery.each(url_parameters, function (index, value) {
       var assoc = value.split("=");
       parameters[assoc[0]] = assoc[1];
     });
-    adress = adress[0];
-    // add new parameter:
-    parameters = jQuery.extend(parameters, this.params);
-    // delete unwanted parameters:
-    jQuery.each(this.badParams, function (badParam) {
-      if (parameters[badParam] !== undefined) {
-        delete parameters[badParam];
-      }
-    });
+    url = url[0];
     //merging in the param_object - as you see this has got priority:
     parameters = jQuery.extend(parameters, param_object);
     // glueing together:
@@ -267,74 +235,13 @@ STUDIP.URLHelper = {
       param_strings.push(param + "=" + value);
     });
     if (param_strings.length > 0) {
-      adress += "?" + param_strings.join("&");
+      url += "?" + param_strings.join("&");
     }
     if (anchor !== "") {
-      adress += "#" + anchor;
+      url += "#" + anchor;
     }
-    return adress;
+    return url;
   },
-  /**
-   * Creates a link-adress with the mandatory parameters
-   *  - like getURL but URI-encoded.
-   * @param adress string: any string as an adress
-   * @param param_object map: associative object for extra values
-   * @return: URI-encoded adress
-   */
-  getLink: function (adress, param_object) {
-    if (param_object === undefined) {
-      param_object = {};
-    }
-    adress = decodeURI(adress);
-    adress = STUDIP.URLHelper.getURL(adress, param_object);
-    return encodeURI(adress);
-  },
-  /**
-   * remarks a parameter as mandatory - it will be added to all URLs the
-   * URLHelper returns
-   * @param param string: name of the parameter
-   * @param value string: value of the parameter
-   */
-  addLinkParam: function (param, value) {
-    if (value !== "") {
-      this.params[param] = value;
-      if (this.badParams[param] === true) {
-        delete this.badParams[param];
-      }
-    } else {
-      STUDIP.URLHelper.stronglyRemoveLinkParam(param);
-    }
-  },
-  /**
-   * Removes the parameter from the list of the mandatory params
-   */
-  removeLinkParam: function (param) {
-    delete this.params[param];
-  },
-  /**
-   * Removes the parameter from the list of the mandatory params and adds it to
-   * a list of unallowed parameters. These parameters will be deleted when found
-   * in URLs.
-   */
-  stronglyRemoveLinkParam: function (param) {
-    STUDIP.URLHelper.removeLinkParam(param);
-    if (!this.badParams[param]) {
-      this.badParams[param] = true;
-    }
-  },
-  /**
-   * updates the URL of all links in the document
-   */
-  updateAllLinks: function (context_selector) {
-    if (context_selector === undefined) {
-      context_selector = "";
-    }
-    jQuery(context_selector + ' a:not(.fixed, .extern)').each(function (index, anchor) {
-      var href = jQuery(anchor).attr('href');   //the adress of the link to be modified
-      href = STUDIP.URLHelper.getLink(href);
-      jQuery(anchor).attr('href', href);
-    });
-  }
 };
 
 /* ------------------------------------------------------------------------
@@ -831,8 +738,6 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
       jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead2')
                                                .removeClass('printhead3');
       jQuery("#folder_" + md5_id + "_body").slideUp(400);
-      STUDIP.URLHelper.removeLinkParam('data[open][' + md5_id + ']');
-      STUDIP.URLHelper.updateAllLinks("#filesystem_area");
     } else {
       if (jQuery("#folder_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
@@ -845,8 +750,6 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
           STUDIP.Filesystem.setdraggables();
           STUDIP.Filesystem.setdroppables();
           jQuery("#folder_" + md5_id + "_body").slideDown(400);
-          STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
-          STUDIP.URLHelper.updateAllLinks("#filesystem_area");
         });
       } else {
         jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
@@ -857,8 +760,6 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
         STUDIP.Filesystem.setdraggables();
         STUDIP.Filesystem.setdroppables();
         jQuery("#folder_" + md5_id + "_body").slideDown(400);
-        STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
-        STUDIP.URLHelper.updateAllLinks("#filesystem_area");
       }
     }
   }
@@ -881,8 +782,6 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
       jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead2')
                                              .removeClass('printhead3');
       jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
-      STUDIP.URLHelper.removeLinkParam('data[open][' + md5_id + ']');
-      STUDIP.URLHelper.updateAllLinks("#filesystem_area");
     } else {
       if (jQuery("#file_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL();
@@ -892,8 +791,6 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
           jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3')
                                                  .removeClass('printhead2');
           jQuery("#file_" + md5_id + "_body").slideDown(400);
-          STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
-          STUDIP.URLHelper.updateAllLinks("#filesystem_area");
         });
       } else {
         //Falls der Dateikörper schon geladen ist.
@@ -903,8 +800,6 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
                                                .removeClass('printhead2');
         jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
         jQuery("#file_" + md5_id + "_body").slideDown(400);
-        STUDIP.URLHelper.addLinkParam('data[open][' + md5_id + ']', 1);
-        STUDIP.URLHelper.updateAllLinks("#filesystem_area");
       }
     }
   }

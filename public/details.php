@@ -325,11 +325,13 @@ echo $template_factory->render(
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">
+                    <font size="-1">
                     <b><?= _("Zeit:") ?></b><br>
                     <? if (($mein_status || $perm->have_studip_perm("admin", $sem_id)) && $modules->getStatus('schedule', $sem_id)) :
                         $show_link = true;
                     endif ?>
                     <?= $sem->getDatesHTML(array('link_to_dates' => $show_link, 'show_room' => true)) ?>
+                    </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">
                 <?
@@ -367,9 +369,11 @@ echo $template_factory->render(
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">
+                    <font size="-1">
                     <b><?= _("Veranstaltungsort:") ?></b>
                     <br>
                     <?= $sem->getDatesTemplate('dates/seminar_html_location') ?>
+                    </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">
                 <?
@@ -384,6 +388,7 @@ echo $template_factory->render(
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;</td>
                 <? foreach (array('dozent', 'tutor') as $status) { ?>
                     <td class="<? echo $cssSw->getClass() ?>" valign="top">
+                    <font size="-1">
                     <?
                     // fetch lecturers/tutors from db with full name
                     $stmt = DBManager::get()->prepare('SELECT ' . $_fullname_sql['full'] . 'AS fullname,'
@@ -405,15 +410,14 @@ echo $template_factory->render(
                         }
                         
                         // set config-defined title for this status
-                        $title = get_title_for_status($status, sizeof($data), $db2->f('status'));
+                        $title = get_title_for_status($status, sizeof($data), $db2->f('status')) . ':';
 
                         // show template
                         $template = $GLOBALS['template_factory']->open('details/list');
                         echo $template->render(compact('title', 'data'));
-                    } else { ?>
-                    &nbsp;
-                    <? } ?>
-                </td>
+                    } ?>
+                    </font>
+                    </td>
                 <? } ?>
             </tr>
         </table>
@@ -604,16 +608,12 @@ echo $template_factory->render(
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp;
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=4 width="99%" valign="top">
+                    <font size="-1">
                 <?
                 // show the studyareas
                 if (is_array($sem_path) && count($sem_path)){
                     // set pluralized title if necessary
-                    if (count($sem_path) == 1) {
-                        $title = _("Studienbereich:");
-                    } else {
-                        $title = _("Studienbereiche:");
-                    }
-
+                    $title = ngettext('Studienbereich:', 'Studienbereiche:', count($sem_path));
     
                     // fill data for template
                     $data = array();
@@ -630,6 +630,7 @@ echo $template_factory->render(
                 }
                 ?>
                 &nbsp;
+                    </font>
                 </td>
             </tr>
             <? } ?>
@@ -646,6 +647,7 @@ echo $template_factory->render(
                 ?>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" colspan=2 width="48%" valign="top">
+                    <font size="-1">
                 <?
                 // fetch associated institutes and/or faculties
                 $stmt = DBManager::get()->prepare('SELECT Name, url, Institute.Institut_id FROM Institute '
@@ -653,13 +655,6 @@ echo $template_factory->render(
                     . 'WHERE seminar_id = ? AND Institute.institut_id != ?');
                 $stmt->execute(array($sem_id, $db2->f("Institut_id")));
                 if ($entries = $stmt->fetchAll(PDO::FETCH_ASSOC)) {
-                    // get pluralized title if necessary
-                    if (sizeof($data) == 1) {
-                        $title = _("beteiligte Einrichtung:");
-                    } else {
-                        $title = _("beteiligte Einrichtungen:");
-                    }
-
                     $data = array();
                     foreach ($entries as $entry) {
                         $data[] = array(
@@ -668,13 +663,15 @@ echo $template_factory->render(
                         );
                     }
 
+                    // get pluralized title if necessary
+                    $title = ngettext('beteiligte Einrichtung:', 'beteiligte Einrichtungen:', sizeof($data));
+
                     // show template
                     $template = $GLOBALS['template_factory']->open('details/list');
                     echo $template->render(compact('title', 'data'));
-                } else {
-                    print '&nbsp; ';
                 }
                 ?>
+                    </font>
                 </td>
     </tr>
             <?

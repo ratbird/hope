@@ -7,7 +7,7 @@
 *******************************************************************************/
 
 /* --- Schrift (Vorgaben: Typ, Größe, Farbe --------------------------------- */
-body, input, textarea, td, th, blockquote, p, form, ul {
+body, input, textarea, td, th, blockquote, p, form {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 10pt;
     color: #000000;
@@ -1617,10 +1617,4 @@ h3.eval {
     color: #000000;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
-}
-
-/* lists in Stud.IP --------------------------------------------------------- */
-ul.default {
-    padding-left: 14px;
-    margin: 0;
 }

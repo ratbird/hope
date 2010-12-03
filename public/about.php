@@ -645,8 +645,25 @@ $categories = DBManager::get()->query("SELECT * FROM kategorien WHERE range_id =
 while ($category = $categories->fetch())  {
     $head=$category["name"];
     $body=$category["content"];
-    if ($visibilities['kat_'.$category['kategorie_id']] == VISIBILITY_ME) {
-        $head .= ' ('._('für andere unsichtbar').')';
+    if ($user->id == $user_id) {
+        switch ($visibilities['kat_'.$category['kategorie_id']]) {
+            case VISIBILITY_ME:
+                $vis_text = _("sichtbar für mich selbst");
+                break;
+            case VISIBILITY_BUDDIES:
+                $vis_text = _("sichtbar für meine Buddies");
+                break;
+            case VISIBILITY_DOMAIN:
+                $vis_text = _("sichtbar für meine Nutzerdomäne");
+                break;
+            case VISIBILITY_STUDIP:
+                $vis_text = _("sichtbar für alle Stud.IP-Nutzer");
+                break;
+            case VISIBILITY_EXTERN:
+                $vis_text = _("sichtbar auf externen Seiten");
+                break;
+        }
+        $head .= ' ('.$vis_text.')';
     }
     // oeffentliche Rubrik oder eigene Homepage
     if (is_element_visible_for_user($user->id, $user_id, $visibilities['kat_'.$category['kategorie_id']])) {

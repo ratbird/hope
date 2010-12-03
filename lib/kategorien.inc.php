@@ -36,9 +36,9 @@ function print_freie($username) {
     $db->query("SELECT * FROM auth_user_md5 LEFT JOIN kategorien ON(range_id=user_id) WHERE username='$username' AND NOT ISNULL(range_id) ORDER BY priority ");
 
     echo '<tr><td align="left" valign="top" class="blank"><p class="info"><br>'. "\n";
-    echo _("Hier können Sie beliebige eigene Kategorien anlegen. Diese Kategorien erscheinen auf Ihrer Profilseite. Mit den Pfeilsymbolen k&ouml;nnen Sie die Reihenfolge, in der die Kategorien angezeigt werden, ver&auml;ndern.");
+    echo _("Hier können Sie beliebige eigene Kategorien anlegen. Diese Kategorien erscheinen je nach eingestellter Sichtbarkeit auf Ihrer Profilseite. Mit den Pfeilsymbolen k&ouml;nnen Sie die Reihenfolge, in der die Kategorien angezeigt werden, ver&auml;ndern.");
     echo "<br>\n";
-    echo _("Verwenden Sie die Option \"f&uuml;r andere unsichtbar\", um Memos anzulegen, die nur f&uuml;r Sie selbst auf der Profilseite sichtbar werden - andere Nutzer k&ouml;nnen diese Daten nicht einsehen.");
+    echo sprintf(_("Für wen Ihre angelegten Kategorien genau sichtbar sein sollen, können Sie in Ihren %sPrivatsphäre-Einstellungen%s festlegen."), '<a href="'.URLHelper::getUrl('edit_about.php', array('view'=>'privacy')).'">', '</a>');
     echo "\n<br><br></p></td></tr>\n".'<tr><td class="blank">';
     echo '<form action="'. URLHelper::getLink('?freie=update_freie&username='.$username.'&view='.$view) .'" method="POST" name="edit_freie">';
     echo '<table width="100%" class="blank" border="0" cellpadding="0" cellspacing="0">';
@@ -60,10 +60,28 @@ function print_freie($username) {
                 echo "<br>\n";
             echo '<input type="hidden" name="freie_id[]" value="'.$db->f("kategorie_id")."\">\n";
             echo '<p class="info"><input type="text" name="freie_name[]" style="width: 50%" value="' . htmlReady($db->f("name")).'" size="40">';
-            echo '&nbsp; &nbsp; &nbsp; <input type=checkbox name="freie_secret['.$count.']" value="1"';
-            IF ($visibility == VISIBILITY_ME)
-                echo " checked";
-            echo ">" . _("f&uuml;r andere unsichtbar") . "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
+            //echo '&nbsp; &nbsp; &nbsp; <input type=checkbox name="freie_secret['.$count.']" value="1"';
+            //IF ($visibility == VISIBILITY_ME)
+            //    echo " checked";
+            //echo ">" . _("f&uuml;r andere unsichtbar") . "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
+            switch ($visibility) {
+                case VISIBILITY_ME:
+                    $vis_text = _("sichtbar für mich selbst");
+                    break;
+                case VISIBILITY_BUDDIES:
+                    $vis_text = _("sichtbar für meine Buddies");
+                    break;
+                case VISIBILITY_DOMAIN:
+                    $vis_text = _("sichtbar für meine Nutzerdomäne");
+                    break;
+                case VISIBILITY_STUDIP:
+                    $vis_text = _("sichtbar für alle Stud.IP-Nutzer");
+                    break;
+                case VISIBILITY_EXTERN:
+                    $vis_text = _("sichtbar auf externen Seiten");
+                    break;
+            }
+            echo "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;".$vis_text."&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
             if ($count){
                 echo "\n".'<a href="'.URLHelper::getLink('?freie=order_freie&direction=up&username='.$username.'&view='.$view.'&cat_id=' . $db->f('kategorie_id'))
                 . '">' . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('Kategorie nach oben verschieben'))) 

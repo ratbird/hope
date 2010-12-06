@@ -143,6 +143,8 @@ if (($cmd == "write_chatinv") && (!is_array($admin_chats))) $cmd='';
 // send message
 if ($cmd_insert_x) {
 
+    $count = 0;
+
     if (!empty($sms_data["p_rec"])) {
         $time = date("U");
         $tmp_message_id = md5(uniqid("321losgehtes"));
@@ -236,10 +238,9 @@ if ($msgid) {
     $sms_data["p_rec"] = "";
 }
 
-global $perm;
 // send message at group of a study profession
 // created by nimuelle, step00194
-if (Request::get('sp_id') && $perm->have_perm("admin")) {
+if (Request::get('sp_id') && $perm->have_perm("root")) {
 
     // be sure to send it as email
     if(Request::get('emailrequest') == 1) {
@@ -248,10 +249,10 @@ if (Request::get('sp_id') && $perm->have_perm("admin")) {
 
     // predefine subject
     if(Request::get('subject')) {
-        $messagesubject = Request::get('subject');
+        $messagesubject = Request::quoted('subject');
     }
 
-    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE studiengang_id = '%s' ", Request::get('sp_id'));
+    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE studiengang_id = '%s' ", Request::option('sp_id'));
     $add_group_members = $db->query($query)->fetchAll(PDO::FETCH_COLUMN);
 
     $sms_data["p_rec"] = "";
@@ -268,7 +269,7 @@ if (Request::get('sp_id') && $perm->have_perm("admin")) {
 
 // if send message at group of a study degree
 // created by nimuelle, step00194
-if (Request::get('sd_id') && $perm->have_perm("admin")) {
+if (Request::get('sd_id') && $perm->have_perm("root")) {
 
     // be sure to send it as email
     if(Request::get('emailrequest') == 1) {
@@ -277,17 +278,17 @@ if (Request::get('sd_id') && $perm->have_perm("admin")) {
 
     // predefine subject
     if(Request::get('subject')) {
-        $messagesubject = Request::get('subject');
+        $messagesubject = Request::quoted('subject');
     }
 
-    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE abschluss_id = '%s' ", Request::get('sd_id'));
+    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE abschluss_id = '%s' ", Request::option('sd_id'));
     $add_group_members = $db->query($query)->fetchAll(PDO::FETCH_COLUMN);
 
     $sms_data["p_rec"] = "";
     if (is_array($add_group_members)) {
         $sms_data["p_rec"] = array_add_value($add_group_members, $sms_data["p_rec"]);
     } else {
-        $msg = "error§"._("Die gewählte Studienabschluss enthält keine Mitglieder.");
+        $msg = "error§"._("Der gewählte Studienabschluss enthält keine Mitglieder.");
         unset($sms_data["p_rec"]);
     }
 
@@ -297,7 +298,7 @@ if (Request::get('sd_id') && $perm->have_perm("admin")) {
 
 // if send message at group studys with profession and degree
 // created by nimuelle, step00194
-if (Request::get('prof_id') && Request::get('deg_id') && ($perm->have_perm("root") || $perm->have_perm("admin"))) {
+if (Request::get('prof_id') && Request::get('deg_id') && $perm->have_perm("root")) {
 
     // be sure to send it as email
     if(Request::get('emailrequest') == 1) {
@@ -306,10 +307,10 @@ if (Request::get('prof_id') && Request::get('deg_id') && ($perm->have_perm("root
 
     // predefine subject
     if(Request::get('subject')) {
-        $messagesubject = Request::get('subject');
+        $messagesubject = Request::quoted('subject');
     }
 
-    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE studiengang_id = '%s' and abschluss_id = '%s'", Request::get('prof_id'), Request::get('deg_id'));
+    $query = sprintf("SELECT DISTINCT auth_user_md5.username FROM user_studiengang LEFT JOIN auth_user_md5 USING (user_id) WHERE studiengang_id = '%s' and abschluss_id = '%s'", Request::option('prof_id'), Request::option('deg_id'));
     $add_group_members = $db->query($query)->fetchAll(PDO::FETCH_COLUMN);
 
     $sms_data["p_rec"] = "";
@@ -465,7 +466,7 @@ if ($add_allreceiver_button_x) {
 
 // add receiver from freesearch
 if ($add_freesearch_x && Request::get("adressee")) {
-    $sms_data["p_rec"] = array_add_value(array(Request::get("adressee")), $sms_data["p_rec"]);
+    $sms_data["p_rec"] = array_add_value(array(Request::quoted("adressee")), $sms_data["p_rec"]);
 }
 
 
@@ -502,7 +503,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 
 check_messaging_default();
 
-
+$txt = array();
 $txt['001'] = _("aktuelle Empf&auml;ngerInnen");
 $txt['002'] = _("m&ouml;gliche Empf&auml;ngerInnen");
 $txt['attachment'] = _("Dateianhang");
@@ -527,8 +528,8 @@ $txt['008'] = _("Lesebestätigung");
     if($_REQUEST['answer_to']) {
          echo '<input type="hidden" name="answer_to" value="'. htmlReady($_REQUEST['answer_to']). '">';
     }
-    echo '<input type="hidden" name="sms_source_page" value="'.$sms_source_page.'">';
-    echo '<input type="hidden" name="cmd" value="'.$cmd.'">';
+    echo '<input type="hidden" name="sms_source_page" value="'.htmlReady($sms_source_page).'">';
+    echo '<input type="hidden" name="cmd" value="'.htmlReady($cmd).'">';
 
     // we like to quote something
     if ($quote) {
@@ -676,6 +677,7 @@ $txt['008'] = _("Lesebestätigung");
         </table>
         <?
 
+    $emailforwardinfo = '';
 
     if($GLOBALS["MESSAGING_FORWARD_AS_EMAIL"] == TRUE) {
         if($sms_data["tmpemailsnd"] == 1) {

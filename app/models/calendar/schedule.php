@@ -243,9 +243,9 @@ class CalendarScheduleModel
      */
     static function deleteSeminarEntries($user_id, $seminar_id)
     {
-        $db = DBManager::get();
-        $deleteVirtualEntries = "DELETE FROM schedule_seminare WHERE user_id = '$user_id' AND seminar_id ='$seminar_id'";
-        $db->query($deleteVirtualEntries);
+        $stmt = DBManager::get()->prepare("DELETE FROM schedule_seminare
+            WHERE user_id = ? AND seminar_id = ?");
+        return $stmt->exec(array($user_id, $seminar_id));
     }
 
     /**

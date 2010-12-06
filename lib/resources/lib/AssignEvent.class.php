@@ -4,9 +4,9 @@
 # Lifter003: TODO
 /**
 * AssignEvent.class.php
-* 
+*
 * class for an assign-event
-* 
+*
 *
 * @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -39,7 +39,7 @@ require_once ('lib/datei.inc.php');
 require_once ($GLOBALS['RELATIVE_PATH_RESOURCES'] . '/lib/AssignObject.class.php');
 
 /*****************************************************************************
-AssignEvent, the assigned events 
+AssignEvent, the assigned events
 /*****************************************************************************/
 class AssignEvent {
     var $db;                    //Database
@@ -69,7 +69,7 @@ class AssignEvent {
     function setRepeatMode ($value) {
         $this->repeat_mode = ($value);
     }
-    
+
     function getRepeatMode ($check_corresponding_metadata = FALSE) {
         if (($this->repeat_mode == "na") && ($check_corresponding_metadata) && $this->getAssignUserId()) {
             if (isMetadateCorrespondingDate($this->getAssignUserId()))
@@ -86,7 +86,7 @@ class AssignEvent {
     function getAssignId() {
         return $this->assign_id;
     }
-    
+
     function getAssignUserId() {
         return $this->assign_user_id;
     }
@@ -98,26 +98,26 @@ class AssignEvent {
     function getUserFreeName() {
         return $this->user_free_name;
     }
-    
+
     function getOwnerType() {
         if ($this->getAssignUserId()){
-            $type = get_object_type($this->getAssignUserId());
-            return $type == "fak" ? "inst" : $type;
+            $type = get_object_type($this->getAssignUserId(), array('date','user'));
+            return $type;
         } else {
             return false;
         }
     }
-    
+
     function getUsername($use_free_name=TRUE, $explain=true) {
-        if ($this->assign_user_id) 
+        if ($this->assign_user_id)
             // return user and free text description
             return assignObject::getOwnerName($explain, $this)."\n".$this->getUserFreeName();
         elseif ($use_free_name)
             return $this->getUserFreeName();
-        else 
+        else
             return FALSE;
     }
-    
+
     function getName($explain = true) {
         return $this->getUsername(true, $explain);
     }

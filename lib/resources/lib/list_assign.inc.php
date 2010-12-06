@@ -4,9 +4,9 @@
 # Lifter003: TODO
 /**
 * list_assign.inc.php
-* 
+*
 * library, contains functions to create the AssinEvents
-* 
+*
 *
 * @author       Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -63,10 +63,10 @@ function list_restore_assign(&$assEvtLst, $resource_id, $begin, $end, $user_id='
 
     //send the query
     $db->query($query);
-    
+
     //handle the assigns und create all the repeated stuff
     while($db->next_record()) {
-        $assign_object = AssignObject::Factory($db->f("assign_id"));
+        $assign_object = new AssignObject($db->f("assign_id"));
         create_assigns($assign_object, $assEvtLst, $begin, $end, $filter);
     }
 }
@@ -78,16 +78,16 @@ function create_assigns($assign_object, &$assEvtLst, $begin=0, $end=0, $filter =
     $day_offset=0;
     $quantity=0;
     $temp_ts=0;
-    
+
     // fetch all Holidays
-    $all_holidays = HolidayData::GetAllHolidaysArray(); 
-    
+    $all_holidays = HolidayData::GetAllHolidaysArray();
+
     //if no begin/end-date submitted, we create all the assigns from the given assign-object
     if (!$begin)
         $begin = $assign_object->getBegin();
     if (!$end)
         $end = $assign_object->getRepeatEnd();
-        
+
         //take a whole day!
     if(!($begin == -1 && $end == -1)){
         $begin = mktime(0,0,0,date("m", $begin), date("d", $begin), date("Y", $begin));
@@ -99,27 +99,28 @@ function create_assigns($assign_object, &$assEvtLst, $begin=0, $end=0, $filter =
     $ao_r_end = $assign_object->getRepeatEnd();
     $ao_r_q = $assign_object->getRepeatQuantity();
     $ao_r_i = $assign_object->getRepeatInterval();
-    $ao_owner_type = $assign_object->getOwnerType();
+    //$ao_owner_type = $assign_object->getOwnerType();
     if ($ao_repeat_mode == "na") {
         // date without repeatation, we have to create only one event (object = event)
         $assEvt = new AssignEvent($assign_object->getId(), $ao_begin, $ao_end,
-                                $assign_object->getResourceId(), $assign_object->getAssignUserId(), 
+                                $assign_object->getResourceId(), $assign_object->getAssignUserId(),
                                 $assign_object->getUserFreeName());
         $assEvt->setRepeatMode($ao_repeat_mode);
-        if (!isFiltered($filter, $assEvt->getRepeatMode(TRUE)))
+
+        if (!$filter || !isFiltered($filter, $assEvt->getRepeatMode(TRUE)))
             $assEvtLst->events[] = $assEvt;
     } elseif ($ao_repeat_mode == "sd") {
         // several days mode, we create multiple assigns
-        
+
         //first day
         $temp_ts_end=mktime(23, 59, 59,
-                    date("n",$ao_begin), 
+                    date("n",$ao_begin),
                     date("j",$ao_begin),
                     date("Y",$ao_begin));
 
         if (($temp_ts_end <= $end) && ($ao_begin >= $begin)) {
             $assEvt = new AssignEvent($assign_object->getId(), $ao_begin, $temp_ts_end,
-                                $assign_object->getResourceId(), $assign_object->getAssignUserId(), 
+                                $assign_object->getResourceId(), $assign_object->getAssignUserId(),
                                 $assign_object->getUserFreeName());
             $assEvt->setRepeatMode($ao_repeat_mode);
             if (!isFiltered($filter, $assEvt->getRepeatMode()))
@@ -128,63 +129,63 @@ function create_assigns($assign_object, &$assEvtLst, $begin=0, $end=0, $filter =
         //in between days
         for ($d=date("j",$ao_begin)+1; $d < date("j",$ao_begin) + date("z",$ao_r_end) - date("z",$ao_begin); $d++) {
             $temp_ts=mktime(0, 0, 0,
-                    date("n",$ao_begin), 
+                    date("n",$ao_begin),
                     $d,
                     date("Y",$ao_begin));
 
             $temp_ts_end=mktime(23, 59, 59,
-                    date("n",$ao_begin), 
+                    date("n",$ao_begin),
                     $d,
                     date("Y",$ao_begin));
 
             if (($temp_ts_end <= $end) && ($temp_ts >= $begin)) {
                 $assEvt = new AssignEvent($assign_object->getId(), $temp_ts, $temp_ts_end,
-                                $assign_object->getResourceId(), $assign_object->getAssignUserId(), 
+                                $assign_object->getResourceId(), $assign_object->getAssignUserId(),
                                 $assign_object->getUserFreeName());
                 $assEvt->setRepeatMode($ao_repeat_mode);
                 if (!isFiltered($filter, $assEvt->getRepeatMode()))
-                    $assEvtLst->events[] = $assEvt;                             
+                    $assEvtLst->events[] = $assEvt;
             }
         }
-                
+
         //last_day
         $temp_ts=mktime(0, 0, 0,
                     date("n",$ao_r_end),
                     date("j",$ao_r_end),
                     date("Y",$ao_r_end));
 
-        $temp_ts_end=mktime(date("G",$ao_end), 
-                    date("i",$ao_end), 
-                    0, 
-                    date("n",$ao_r_end), 
+        $temp_ts_end=mktime(date("G",$ao_end),
+                    date("i",$ao_end),
+                    0,
+                    date("n",$ao_r_end),
                     date("j",$ao_r_end),
                     date("Y",$ao_r_end));
 
         if (($temp_ts_end <= $end) && ($temp_ts >= $begin)) {
             $assEvt = new AssignEvent($assign_object->getId(), $temp_ts, $temp_ts_end,
-                                $assign_object->getResourceId(), $assign_object->getAssignUserId(), 
+                                $assign_object->getResourceId(), $assign_object->getAssignUserId(),
                                 $assign_object->getUserFreeName());
             $assEvt->setRepeatMode($ao_repeat_mode);
             if (!isFiltered($filter, $assEvt->getRepeatMode()))
-                $assEvtLst->events[] = $assEvt;                             
+                $assEvtLst->events[] = $assEvt;
         }
-        
+
     } elseif ((($ao_r_end >= $begin) && ($ao_begin <= $end)) ||
             (($begin == -1) &&($end == -1) && ($ao_r_q  >0)))
-        do { 
+        do {
 
         //create a temp_ts to try every possible repeatation
-        $temp_ts=mktime(date("G",$ao_begin), 
-                    date("i",$ao_begin), 
-                    0, 
-                    date("n",$ao_begin)+($month_offset * $ao_r_i), 
-                    date("j",$ao_begin)+($week_offset * $ao_r_i * 7) + ($day_offset * $ao_r_i), 
+        $temp_ts=mktime(date("G",$ao_begin),
+                    date("i",$ao_begin),
+                    0,
+                    date("n",$ao_begin)+($month_offset * $ao_r_i),
+                    date("j",$ao_begin)+($week_offset * $ao_r_i * 7) + ($day_offset * $ao_r_i),
                     date("Y",$ao_begin)+($year_offset * $ao_r_i));
-        $temp_ts_end=mktime(date("G",$ao_end), 
-                    date("i",$ao_end), 
-                    0, 
-                    date("n",$ao_begin) + ($month_offset * $ao_r_i), 
-                    date("j",$ao_end)+($week_offset * $ao_r_i * 7)  + ($day_offset * $ao_r_i),  
+        $temp_ts_end=mktime(date("G",$ao_end),
+                    date("i",$ao_end),
+                    0,
+                    date("n",$ao_begin) + ($month_offset * $ao_r_i),
+                    date("j",$ao_end)+($week_offset * $ao_r_i * 7)  + ($day_offset * $ao_r_i),
                     date("Y",$ao_end)+($year_offset * $ao_r_i));
         //change the offsets
         if ($ao_repeat_mode == "y") $year_offset++;
@@ -195,6 +196,7 @@ function create_assigns($assign_object, &$assEvtLst, $begin=0, $end=0, $filter =
         //inc the count
         $quantity++;
         //check for holidays (we do this only for repeated assign (means only here) and only for assigns by seminars!))
+        /*
         if ($ao_owner_type == "sem") {
             $holiday_skipping = FALSE;
             foreach ($all_holidays as $val) {
@@ -205,33 +207,34 @@ function create_assigns($assign_object, &$assEvtLst, $begin=0, $end=0, $filter =
                 if ($red_letter_day["col"]==3){
                     $holiday_skipping = TRUE;
                 }
-            } 
+            }
         }
-        
+
         if (!$holiday_skipping) {
+        */
             //check if we want to show the event and if it is not outdated
             if (($begin == -1) && ($end == -1) && ($ao_r_q  >0))
                     $assEvtLst->events[] = new AssignEvent($assign_object->getId(), $temp_ts, $temp_ts_end,
-                                            $assign_object->getResourceId(), $assign_object->getAssignUserId(), 
+                                            $assign_object->getResourceId(), $assign_object->getAssignUserId(),
                                             $assign_object->getUserFreeName());
             elseif ($temp_ts >= $begin) {
                  if (($temp_ts <=$end) && ($temp_ts <= $ao_r_end) && (($quantity <= $ao_r_q ) || ($ao_r_q  == -1)))  {
                     $assEvt = new AssignEvent($assign_object->getId(), $temp_ts, $temp_ts_end,
-                                            $assign_object->getResourceId(), $assign_object->getAssignUserId(), 
+                                            $assign_object->getResourceId(), $assign_object->getAssignUserId(),
                                             $assign_object->getUserFreeName());
                     $assEvt->setRepeatMode($ao_repeat_mode);
 
                     if (!isFiltered($filter, $assEvt->getRepeatMode()))
-                        $assEvtLst->events[] = $assEvt;                                     
+                        $assEvtLst->events[] = $assEvt;
                 }
             }
-        }
-            
+        //}
+
         //security break
         if ($quantity > 150)
             break;
-            
-        } while((($temp_ts <=$end) && ($temp_ts <= $ao_r_end) && ($quantity < $ao_r_q  || $ao_r_q  == -1)) || 
+
+        } while((($temp_ts <=$end) && ($temp_ts <= $ao_r_end) && ($quantity < $ao_r_q  || $ao_r_q  == -1)) ||
                 (($begin == -1) &&($end == -1) &&($ao_r_q ) >0) && ($quantity < $ao_r_q ));
 }
 
@@ -268,7 +271,7 @@ function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name 
             $seminar_id = $sem_doz_names = false;
             unset($sem_obj);
             $repmode = $a_obj->getRepeatMode();
-            if ($repmode == 'na' && $a_obj->getAssignUserId() 
+            if ($repmode == 'na' && $a_obj->getAssignUserId()
             && ($seminar_id = isMetadateCorrespondingDate($a_obj->getAssignUserId())) ){
                 $repmode = 'meta';
                 $sem_obj = Seminar::GetInstance($seminar_id);
@@ -298,7 +301,7 @@ function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name 
                                                 'name' => $a_obj->getUserName(false,$explain_user_name),
                                                 'sem_doz_names' => $sem_doz_names
                                                 );
-                                                
+
                 }
             } else if ($repmode == 'w'){
                 $events[$a_obj->getId()] = array('begin' => $a_obj->getBegin(),
@@ -312,7 +315,7 @@ function createNormalizedAssigns($resource_id, $begin, $end, $explain_user_name 
                                                 'sem_doz_names' => $sem_doz_names
                                                 );
             }
-            
+
         }
     }
     return $events;

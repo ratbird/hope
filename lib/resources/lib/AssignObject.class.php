@@ -144,7 +144,7 @@ class AssignObject {
             $id = $event_obj->assign_user_id;
         }
 
-        switch (get_object_type($id)) {
+        switch (get_object_type($id, array('date', 'user'))) {
             case "user":
                 if (!$explain)
                     return get_fullname($id,'full');
@@ -206,8 +206,8 @@ class AssignObject {
     }
 
     function getOwnerType() {
-        $type = get_object_type($this->getAssignUserId());
-        return $type == "fak" ? "inst" : $type;
+        $type = get_object_type($this->getAssignUserId(), array('date','user'));
+        return $type;
     }
 
     function getResourceId() {

@@ -307,7 +307,7 @@ class ShowList extends ShowTreeRow{
         while ($db->next_record()) {
             $found_resources[$db->f("resource_id")] = TRUE;
         }
-
+        $day_of_week = false;
         //do further checks to determine free resources inthe given time range
         if ($search_array["search_assign_begin"] && $check_assigns) {
             $multiOverlaps = new CheckMultipleOverlaps;
@@ -327,9 +327,9 @@ class ShowList extends ShowTreeRow{
                 $assObj->setRepeatInterval(1);
                 $assObj->setRepeatQuantity(-1);
 
-                                // calculate stud.IP-day-of-week
-                                $day_of_week = date("w", $search_array["search_assign_begin"]);
-                                $day_of_week = $day_of_week == 0 ? 7 : $day_of_week-1;
+                // calculate stud.IP-day-of-week
+                $day_of_week = date("w", $search_array["search_assign_begin"]);
+                $day_of_week = $day_of_week == 0 ? 7 : $day_of_week;
 
                 $assObj->setRepeatDayOfWeek($day_of_week);
                 // set time range for checks
@@ -352,7 +352,7 @@ class ShowList extends ShowTreeRow{
 
             //add the found resources to the check-set
             foreach ($found_resources as $key=>$val) {
-                $multiOverlaps->addResource($key);
+                $multiOverlaps->addResource($key, $day_of_week);
             }
 
             $multiOverlaps->checkOverlap($event, $result);

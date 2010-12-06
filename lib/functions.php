@@ -386,41 +386,56 @@ function lastActivity ($sem_id) {
 * @return       string  return "inst" (Einrichtung), "sem" (Veranstaltung), "fak" (Fakultaeten), "group" (Statusgruppe), "dokument" (Dateien)
 *
 */
-function get_object_type($id) {
+function get_object_type($id, $check_only = array()) {
     static $object_type_cache;
+    $check_all = !count($check_only);
     if ($id){
         if (!$object_type_cache[$id]){
             if ($id == 'studip'){
                 return 'global';
             }
             $db=new DB_Seminar;
-            $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id = '$id' ");
-            if ($db->next_record())
+            if ($check_all || in_array('sem', $check_only)) {
+                $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id = '$id' ");
+                if ($db->next_record())
                 return $object_type_cache[$id] = "sem";
-
-            $db->query("SELECT Institut_id,IF(Institut_id=fakultaets_id,1,0) AS is_fak FROM Institute WHERE Institut_id = '$id' ");
-            if ($db->next_record())
+            }
+            if ($check_all || in_array('inst', $check_only)) {
+                $db->query("SELECT Institut_id,IF(Institut_id=fakultaets_id,1,0) AS is_fak FROM Institute WHERE Institut_id = '$id' ");
+                if ($db->next_record())
                 return $object_type_cache[$id] = ($db->f("is_fak")) ? "fak" : "inst";
+            }
 
-            $db->query("SELECT termin_id FROM termine WHERE termin_id = '$id' ");
-            if ($db->next_record())
+            if ($check_all || in_array('date', $check_only)) {
+
+                $db->query("SELECT termin_id FROM termine WHERE termin_id = '$id' ");
+                if ($db->next_record())
                 return $object_type_cache[$id] = "date";
+            }
+            if ($check_all || in_array('user', $check_only)) {
 
-            $db->query("SELECT user_id FROM auth_user_md5 WHERE user_id = '$id' ");
-            if ($db->next_record())
+                $db->query("SELECT user_id FROM auth_user_md5 WHERE user_id = '$id' ");
+                if ($db->next_record())
                 return $object_type_cache[$id] = "user";
+            }
 
-            $db->query("SELECT statusgruppe_id FROM statusgruppen WHERE statusgruppe_id = '$id' ");
-            if ($db->next_record())
+            if ($check_all || in_array('group', $check_only)) {
+                $db->query("SELECT statusgruppe_id FROM statusgruppen WHERE statusgruppe_id = '$id' ");
+                if ($db->next_record())
                 return $object_type_cache[$id] = "group";
+            }
+            if ($check_all || in_array('dokument', $check_only)) {
 
-            $db->query("SELECT dokument_id FROM dokumente WHERE dokument_id = '$id' ");
-            if ($db->next_record())
+                $db->query("SELECT dokument_id FROM dokumente WHERE dokument_id = '$id' ");
+                if ($db->next_record())
                 return $object_type_cache[$id] = "dokument";
+            }
+            if ($check_all || in_array('range_tree', $check_only)) {
 
-            $db->query("SELECT item_id FROM range_tree WHERE item_id = '$id' ");
-            if ($db->next_record())
+                $db->query("SELECT item_id FROM range_tree WHERE item_id = '$id' ");
+                if ($db->next_record())
                 return $object_type_cache[$id] = "range_tree";
+            }
         } else {
             return $object_type_cache[$id];
         }

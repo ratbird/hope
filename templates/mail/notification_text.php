@@ -2,6 +2,7 @@
 
 <?= _("Sie erhalten hiermit in regelmäßigen Abständen Informationen über Neuigkeiten und Änderungen in Ihren abonnierten Veranstaltungen.") ?>
 
+
 <?= _("Über welche Inhalte Sie informiert werden wollen, können Sie hier einstellen:") ?>
 
 <?= URLHelper::getURL('sem_notification.php') ?>

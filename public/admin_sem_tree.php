@@ -55,6 +55,8 @@ $search_obj = new StudipSemSearch();
 
 $_open_items =& $the_tree->open_items;
 $_open_ranges =& $the_tree->open_ranges;
+$_possible_open_items = array();
+
 if(!Config::GetInstance()->getValue('SEM_TREE_ALLOW_BRANCH_ASSIGN')){
     if(is_array($_open_items)){
         foreach($_open_items as $item_id => $value){
@@ -64,7 +66,16 @@ if(!Config::GetInstance()->getValue('SEM_TREE_ALLOW_BRANCH_ASSIGN')){
 } else {
     $_possible_open_items = $_open_items;
 }
-    
+
+// allow add only for items where use has admin permission
+if (is_array($_possible_open_items)) {
+    foreach ($_possible_open_items as $item_id => $value) {
+        if (!$the_tree->isItemAdmin($item_id)) {
+            unset($_possible_open_items[$item_id]);
+        }
+    }
+}
+
 if ($search_obj->search_done){
     if ($search_obj->search_result->numRows > 50){
         $_msg = "error§" . _("Es wurden mehr als 50 Veranstaltungen gefunden! Bitte schr&auml;nken Sie Ihre Suche weiter ein.");

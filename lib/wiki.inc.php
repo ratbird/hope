@@ -14,6 +14,9 @@ $wiki_keyword_regex = "(^|\s|\A|\>)(([A-Z]|&[AOU]uml;)([a-z0-9]|&[aou]uml;|&szli
 $wiki_link_regex = "\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+)\]\]";
 $wiki_extended_link_regex = "\[\[(([\w\.\-\:\(\)_§\/@# ]|&[AOUaou]uml;|&szlig;)+)\|([^\]]+)\]\]";
 
+// protect $wiki_directives from register_globals
+$GLOBALS['wiki_directives'] = array();
+
 /**
 * Retrieve a WikiPage version from current seminar's WikiWikiWeb.
 *

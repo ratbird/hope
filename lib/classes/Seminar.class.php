@@ -37,6 +37,7 @@ require_once 'lib/classes/StudipNews.class.php';
 require_once $GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . "/ObjectConnections.class.php";
 require_once $GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . "/ELearningUtils.class.php";
 require_once 'lib/classes/LockRules.class.php';
+require_once 'lib/classes/DateFormater.class.php';
 
 
 class Seminar
@@ -202,87 +203,22 @@ class Seminar
         return $this->semester_duration_time;
     }
 
-    function formatRoom($return_mode = 'string', $termin)
-    {
-        $ret = '';
-
-        switch ($return_mode) {
-            case 'int':
-                break;
-
-            case 'export':
-                if ($termin->getResourceID()) {
-                    $ret .= ', '._("Ort:").' ';
-                    $resObj = ResourceObject::Factory($termin->getResourceID());
-                    $ret .= $resObj->getName();
-                }
-            break;
-
-            case 'string':
-                if ($termin->getResourceID()) {
-                    $resObj = ResourceObject::Factory($termin->getResourceID());
-                    $ret .= $resObj->getFormattedLink(TRUE, TRUE, TRUE);
-                } else if ($termin->getFreeRoomText()) {
-                    $ret .= ', ('.htmlReady($termin->getFreeRoomText()).')';
-                }
-            break;
-        }
-
-        return $ret;
-    }
-
-    function formatDate($return_mode = 'string', $termin)
-    {
-        switch ($return_mode) {
-            case 'int':
-                return $termin->getStartTime();
-                break;
-
-            case 'export':
-                $ret = $termin->toString();
-                $ret .= $this->formatRoom('export', $termin);
-                return $ret;
-            break;
-
-            case 'string':
-            default:
-                $ret = $termin->toString();
-                if ($termin->getResourceID()) {
-                    $ret .= ', '._("Ort:").' ';
-                }
-                $ret .= $this->formatRoom('string', $termin);
-                return $ret;
-            break;
-
-        }
-
-        return false;
-    }
-
     function getNextDate($return_mode = 'string')
     {
         if ($return_mode == 'int') {
             echo __class__.'::'.__function__.', line '.__line__.', return_mode "int" ist not supported by this function!';die;
         }
 
-        if (!$termine = SeminarDB::getNextDate($this->id)) return false;
+        if (!$termine = SeminarDB::getNextDate($this->id))
+            return false;
 
-        if ($termine['termin']) {
-            // if we have multiple rooms at the same time we display them all
-            foreach ($termine['termin'] as $num => $termin_id) {
-                $date = new SingleDate($termin_id);
-                if ($num == 0) {
-                    $next_date = $this->formatDate($return_mode, $date);
-                } else {
-                    $next_date .= ', '. $this->formatRoom($return_mode, $date);
-                }
-            }
-        }
+        $next_date = DateFormater::formatDateWithAllRooms($termine, $return_mode);
 
         if ($termine['ex_termin']) {
             $ex_termin = new SingleDate($termine['ex_termin']);
+
             $missing_date  = '<div style="border:1px solid black; background:#FFFFDD;">';
-            $missing_date .= sprintf(_("Der Termin am %s findet nicht statt."), $this->formatDate($return_mode, $ex_termin));
+            $missing_date .= sprintf(_("Der Termin am %s findet nicht statt."), DateFormater::formatDateAndRoom($ex_termin, $return_mode));
             $missing_date .= '<br>Kommentar: '.$ex_termin->getComment();
             $missing_date .= '</div>';
 
@@ -302,18 +238,10 @@ class Seminar
     }
 
     function getFirstDate($return_mode = 'string') {
-        if (!$termine = SeminarDB::getFirstDate($this->id)) return FALSE;
+        if (!$dates = SeminarDB::getFirstDate($this->id))
+            return FALSE;
 
-        foreach ($termine as $num => $termin_id) {
-            $date = new SingleDate($termin_id);
-            if ($num == 0) {
-                $first_date = $this->formatDate($return_mode, $date);
-            } else {
-                $first_date .= ', '. $this->formatRoom($return_mode, $date);
-            }
-        }
-
-        return $first_date;
+        return DateFormater::formatDateWithAllRooms($dates, $return_mode);
     }
 
     /**

@@ -12,7 +12,7 @@ if (($assigned && sizeof($assigned)) || sizeof($freetext)) :
             if ($name) $rooms[] = '('. ($plain ? $name : htmlReady($name)) . ')';
         endforeach;
     endif;
-    $ort .= ' Ort: ';
+    $ort .= ', ' . _('Ort') .': ';
     $ort .= implode(', ', array_slice($rooms, 0, 3));
 else :
     $ort = ' ' . _('k.A.');

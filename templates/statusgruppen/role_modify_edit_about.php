@@ -1,7 +1,7 @@
 <?
 $cssSw = new CSSClassSwitcher();
 $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."');"
-    ." background-position: right;"
+    ." background-position: left;"
     ." background-repeat: repeat-y;"
     ."\" ";
 ?>

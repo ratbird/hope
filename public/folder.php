@@ -1102,8 +1102,12 @@ div.droppable.hover {
                         $open_id);
                 }
             }
-
-    print "<div>";
+        } else {
+            //Infomeldung, wenn keine Dateien existieren:
+            $msg = _("Es existieren noch keine Dateien in dieser Veranstaltung.");
+            echo MessageBox::info($msg, $rechte ? array(sprintf(_("Klicken Sie auf %sOrdneransicht%s, um welche hochzuladen oder zu verlinken."), "<a href=\"".URLHelper::getLink('?cmd=tree')."\">", "</a>")) : array());
+        }
+    }
 
     //und Form wieder schliessen
     if ($change)
@@ -1126,8 +1130,8 @@ div.droppable.hover {
     </script>
 <? endif; ?>
 <?php
-    } else { //if $all
-        if (!$folder_system_data["upload"] && !$folder_system_data["link"])
+    } else if (count($result2)) { //if $all
+        if (!$folder_system_data["upload"] && !$folder_system_data["link"]) {
             print "<tr><td class=\"blank\">&nbsp;</td><td>";
             print " <table border=0 cellpadding=0 cellspacing=0 width=\"100%\">";
             print " <tr><td class=\"blank\"></td><td class=\"blank\" style=\"font-size: 4px;\">&nbsp;</td><td class=\"blank\"></td></tr>";
@@ -1136,7 +1140,8 @@ div.droppable.hover {
             print " &nbsp;</td></tr></table>";
             print "</td><td class=\"blank\">&nbsp;</td></tr>";
 
-            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br><a href=\"".URLHelper::getLink("?check_all=TRUE")."\">".makeButton("alleauswaehlen")."</a>&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src").">&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
+            print "<tr><td class=\"blank\"></td><td class=\"blank\"><div align=\"right\"><br><a href=\"".URLHelper::getLink("?check_all=TRUE")."\">".makeButton("alleauswaehlen")."</a>&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src").">&nbsp;</div></td><td class=\"blank\"></td></tr> <tr><td class=\"blank\"></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
+        }
     }
     print "</table></form>";
 
@@ -1145,13 +1150,6 @@ div.droppable.hover {
     </tr>
 </table>";
 
-        } else {
-            //Infomeldung, wenn keine Dateien existieren:
-            $msg = _("Es existieren noch keine Dateien in dieser Veranstaltung.");
-            echo MessageBox::info($msg, ($rechte) ? array(sprintf(_("Klicken Sie auf %sOrdneransicht%s, um welche hochzuladen oder zu verlinken."), "<a href=\"".URLHelper::getLink(Navigation::getItem("/course/files/tree")->getUrl())."\">", "</a>")) : array());
-        }
-        //display_folder_system($range_id, 0,$folder_system_data["open"], '', $change, $folder_system_data["move"], $folder_system_data["upload"], TRUE, $folder_system_data["refresh"], $folder_system_data["link"]);
-    }
 ?>
 <br>
 <div id="fehler_seite"></div>

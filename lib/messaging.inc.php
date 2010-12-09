@@ -388,7 +388,6 @@ class messaging
             // system-signatur
             $snd_user_id = "____%system%____";
             setTempLanguage();
-            $user_cfg = UserConfig::get(get_userid($rec_uname));
             $message .= $this->sig_string . _("Diese Nachricht wurde automatisch vom Stud.IP-System generiert. Sie können darauf nicht antworten.");
 
             restoreLanguage();

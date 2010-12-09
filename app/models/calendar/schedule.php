@@ -245,7 +245,7 @@ class CalendarScheduleModel
     {
         $stmt = DBManager::get()->prepare("DELETE FROM schedule_seminare
             WHERE user_id = ? AND seminar_id = ?");
-        return $stmt->exec(array($user_id, $seminar_id));
+        return $stmt->execute(array($user_id, $seminar_id));
     }
 
     /**

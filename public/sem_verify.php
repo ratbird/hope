@@ -142,6 +142,12 @@ function seminar_preliminary($seminar_id,$user_id=NULL) {
     }
 }
 
+$id = Request::option('id');
+if ($id) {
+    $current_seminar = Seminar::getInstance($id);
+} else {
+    throw new Exception("no valid id in request");
+}
 // Start of Output
 PageLayout::setTitle(_("Veranstaltungsfreischaltung"));
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -194,8 +200,6 @@ $db6=new DB_Seminar;
         $seminar_domains = UserDomain::getUserDomainsForSeminar($id);
         $same_domain = count(array_intersect($seminar_domains, $user_domains)) > 0;
     }
-
-    $current_seminar = Seminar::getInstance($id);
 
     if (!$same_domain && !SeminarCategories::GetByTypeId($current_seminar->status)->studygroup_mode)
     {
@@ -887,10 +891,10 @@ $db6=new DB_Seminar;
         }
     }
 
-  if ($SemSecLevelRead==0) {//nur wenn das Seminar wirklich frei ist geht's hier weiter
-    printf('<tr><td class="blank" colspan=2>&nbsp; &nbsp; '._("Die Veranstaltung %s erfordert keine Anmeldung. %sHier kommen Sie zu der Veranstaltung%s!").'<br><br></td></tr></table>', '<b>'.$SeminarName.'</b>', "<a href=\"seminar_main.php?auswahl=$id\">", '</a>');
+  if ($current_seminar->read_level == 0) {//nur wenn das Seminar wirklich frei ist geht's hier weiter
+    printf('<tr><td class="blank" colspan=2>&nbsp; &nbsp; '._("Die Veranstaltung %s erfordert keine Anmeldung. %sHier kommen Sie zu der Veranstaltung%s!").'<br><br></td></tr></table>', '<b>'.htmlready($current_seminar->getName()).'</b>', "<a href=\"seminar_main.php?auswahl=$id\">", '</a>');
   } else {//keine Rechte f&uuml;r das Seminar
-        parse_msg ('error§' . sprintf(_("Sie haben nicht die erforderlichen Rechte, um an der Veranstaltung %s teilnehmen zu d&uuml;rfen!"), '<b>'.$SeminarName.'</b>'));
+        parse_msg ('error§' . sprintf(_("Sie haben nicht die erforderlichen Rechte, um an der Veranstaltung %s teilnehmen zu d&uuml;rfen!"), '<b>'.htmlready($current_seminar->getName()).'</b>'));
         echo "<tr><td class=\"blank\" colspan=2><a href=\"index.php\">&nbsp;&nbsp; "._("Zur&uuml;ck zur Startseite")."</a>";
         if ($send_from_search)
                 echo "&nbsp; |&nbsp;<a href=\"$send_from_search_page\">"._("Zur&uuml;ck zur letzten Auswahl")."</a>";

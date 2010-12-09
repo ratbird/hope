@@ -64,7 +64,7 @@ if ($_REQUEST['cmd'] == 'tree') {
 }
 
 if (strpos($open, "_") !== false) {
-    $folder_system_data["open"][substr($open, 0, strpos($open, "_")+1)] = true;
+    $folder_system_data["open"][substr($open, 0, strpos($open, "_"))] = true;
 }
 
 if ($_REQUEST['orderby']) {
@@ -83,11 +83,11 @@ if ($_REQUEST["getfilebody"]) {
     ob_start();
     $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
     try {
-        $result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = ".$db->quote($_REQUEST["getfilebody"]))->fetch();
+        //$result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = ".$db->quote($_REQUEST["getfilebody"]))->fetch();
         if ($folder_tree->isReadable($result['range_id'] , $user->id)) {
             $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, a.user_id, a.*, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.dokument_id = ".$db->quote($_REQUEST["getfilebody"])."";
             $datei = $db->query($query)->fetch();
-            display_file_body($datei, $result['range_id'], $folder_system_data["open"], $change, $folder_system_data["move"], FALSE, FALSE, FALSE, $folder_system_data["link"], NULL);
+            display_file_body($datei, null, $folder_system_data["open"], null, $folder_system_data["move"], $folder_system_data["upload"], FALSE, $folder_system_data["refresh"], $folder_system_data["link"]);
         }
     } catch(Exception $e) {
         header("HTTP/1.0 500 Internal Server Error");
@@ -321,7 +321,6 @@ if($folder_system_data["mode"] != '' && ($open_cmd && !in_array($open_cmd, array
     $folder_system_data["mode"]='';
 }
 if ($open_cmd) {
-    unset($folder_system_data["move"]);
     unset($folder_system_data["refresh"]);
     unset($folder_system_data["upload"]);
 }

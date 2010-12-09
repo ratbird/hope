@@ -155,7 +155,10 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 PageLayout::setHelpKeyword("Basis.SymboleFreieVeranstaltungen");
 PageLayout::setTitle(_("Öffentliche Veranstaltungen"));
-Navigation::activateItem('/browse');
+
+if (get_config('ENABLE_FREE_ACCESS')) {
+    Navigation::activateItem('/browse');
+}
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head

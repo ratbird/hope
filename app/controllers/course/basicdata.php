@@ -542,7 +542,6 @@ class Course_BasicdataController extends AuthenticatedController
         $this->msg = array();
         if ($perm->have_studip_perm("dozent", $sem->getId())) {
             $sem->deleteMember($tutor);
-            $this->messages = array_merge($this->messages, $sem->getStackedMessages());
             foreach($sem->getStackedMessages() as $key => $messages) {
                 foreach($messages['details'] as $message) {
                     $this->msg[] = array(($key !== "success" ? $key : "msg"), $message);

@@ -599,7 +599,8 @@ STUDIP.Filesystem = {
   hovered_folder : '',            //letzter Ordner, über den eine gezogene Datei bewegt wurde.
   movelock       : false,         //wenn auf true gesetzt, findet gerade eine Animation statt.
   sendstop       : false,         //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lädt sich gerade neu.
-  getURL         : function () {
+  getURL         : function (url) {
+	if (url) return url.split("#", 1)[0];
     return document.URL.split("#", 1)[0];
   },
   /**
@@ -697,6 +698,7 @@ STUDIP.Filesystem.setdroppables = function () {
             movefile: file_md5_id
           },
           success: function () {
+        	  console.log(adress);
             location.href = adress + '&cmd=tree&open=' + folder_md5_id;
           }
         });
@@ -740,7 +742,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
       jQuery("#folder_" + md5_id + "_body").slideUp(400);
     } else {
       if (jQuery("#folder_" + md5_id + "_body").html() === "") {
-        var adress = STUDIP.Filesystem.getURL();
+        var adress = STUDIP.Filesystem.getURL(jQuery("#folder_" + md5_id + "_arrow_img").parent()[0].href);
         jQuery("#folder_" + md5_id + "_body").load(adress, { getfolderbody: md5_id }, function () {
           jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
           jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
@@ -784,7 +786,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
       jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgrau2.png");
     } else {
       if (jQuery("#file_" + md5_id + "_body").html() === "") {
-        var adress = STUDIP.Filesystem.getURL();
+        var adress = STUDIP.Filesystem.getURL(jQuery("#file_" + md5_id + "_arrow_img").parent()[0].href);
         jQuery("#file_" + md5_id + "_body").load(adress, { getfilebody: md5_id }, function () {
           jQuery("#file_" + md5_id + "_header").css('fontWeight', 'bold');
           jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");

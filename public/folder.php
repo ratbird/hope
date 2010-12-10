@@ -539,10 +539,9 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     ob_start();
     //Frage den Dateienkörper ab
     if ($_REQUEST["getfilebody"]) {
-        //$result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = ".$db->quote($_REQUEST["getfilebody"]))->fetch();
-        if ($folder_tree->isReadable($result['range_id'] , $user->id)) {
-            $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, a.user_id, a.*, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.dokument_id = ".$db->quote($_REQUEST["getfilebody"])."";
-            $datei = $db->query($query)->fetch();
+        $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, a.user_id, a.*, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.dokument_id = ".$db->quote($_REQUEST["getfilebody"]);
+        $datei = $db->query($query)->fetch(PDO::FETCH_ASSOC);
+        if ($folder_tree->isReadable($datei['range_id'] , $user->id)) {
             display_file_body($datei, null, $folder_system_data["open"], null, $folder_system_data["move"], $folder_system_data["upload"], FALSE, $folder_system_data["refresh"], $folder_system_data["link"]);
         }
     }

@@ -600,7 +600,9 @@ STUDIP.Filesystem = {
   movelock       : false,         //wenn auf true gesetzt, findet gerade eine Animation statt.
   sendstop       : false,         //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lädt sich gerade neu.
   getURL         : function (url) {
-	if (url) return url.split("#", 1)[0];
+    if (url) {
+      return url.split("#", 1)[0];
+    }
     return document.URL.split("#", 1)[0];
   },
   /**

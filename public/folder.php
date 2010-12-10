@@ -167,10 +167,11 @@ if($folder_system_data["mode"] != '' && ($open_cmd && !in_array($open_cmd, array
     $folder_system_data["move"]='';
     $folder_system_data["mode"]='';
 }
-if ($open_cmd) {
-    unset($folder_system_data["refresh"]);
-    unset($folder_system_data["upload"]);
+//bei edit und upload Aktionen alle anderen Objekte schlieﬂen
+if (in_array($open_cmd, words('n a c rfu led u z l'))) {
+    unset($folder_system_data["open"]);
 }
+
 
 if ($rechte || $owner || $create_folder_perm) {
     //wurde Code fuer Anlegen von Ordnern ubermittelt (=id+"_n_"), wird entsprechende Funktion aufgerufen
@@ -944,7 +945,6 @@ div.droppable.hover {
                             $change,
                             $folder_system_data["move"],
                             $folder_system_data["upload"],
-                            FALSE,
                             $folder_system_data["refresh"],
                             $folder_system_data["link"],
                             $open_id,

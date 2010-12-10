@@ -698,7 +698,6 @@ STUDIP.Filesystem.setdroppables = function () {
             movefile: file_md5_id
           },
           success: function () {
-        	  console.log(adress);
             location.href = adress + '&cmd=tree&open=' + folder_md5_id;
           }
         });

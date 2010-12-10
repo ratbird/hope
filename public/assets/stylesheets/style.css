@@ -155,8 +155,8 @@ td.infoboxrahmen {
     background-color: #dee2e8;
 }
 
-/* --- image preview -------------------------------------------------------- */
-img.preview {
+/* --- media preview -------------------------------------------------------- */
+img.preview, video.preview, audio.preview {
     max-height: 500px;
     max-width: 750px;
 }

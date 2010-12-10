@@ -1314,18 +1314,19 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     } else {
         $content = '';
         $media_url = GetDownloadLink($datei['dokument_id'], $datei['filename'], $type);
-        if (strtolower(getFileExtension($datei['filename'])) == 'flv') {
+        $media_type = get_mime_type($datei['filename']);
+        if ($media_type == 'video/x-flv') {
             $cfg = Config::GetInstance();
             $DOCUMENTS_EMBEDD_FLASH_MOVIES = $cfg->getValue('DOCUMENTS_EMBEDD_FLASH_MOVIES');
             if (trim($DOCUMENTS_EMBEDD_FLASH_MOVIES) != 'deny') {
                 $flash_player = get_flash_player($datei['dokument_id'], $datei['filename'], $type);
                 $content = "<div style=\"margin-bottom: 10px; height: {$flash_player['height']}; width: {$flash_player['width']};\">" . $flash_player['player'] . '</div>';
             }
-        } else if (in_array(strtolower(getFileExtension($datei['filename'])), words('ogg ogv mp4 webm'))) {
-            $content = sprintf('<video class="preview" src="%s" controls></video><br>', htmlspecialchars($media_url));
-        } else if (in_array(strtolower(getFileExtension($datei['filename'])), words('oga mp3 wav'))) {
-            $content = sprintf('<audio class="preview" src="%s" controls></audio><br>', htmlspecialchars($media_url));
-        } else if (in_array(strtolower(getFileExtension($datei['filename'])), words('jpg jpeg gif png'))) {
+        } else if (strpos($media_type, 'video/') === 0 || $media_type == 'application/ogg') {
+            $content = sprintf('<video class="preview" controls><source src="%s" type="%s"></video><br>', htmlspecialchars($media_url), $media_type);
+        } else if (strpos($media_type, 'audio/') === 0) {
+            $content = sprintf('<audio class="preview" controls><source src="%s" type="%s"></audio><br>', htmlspecialchars($media_url), $media_type);
+        } else if (strpos($media_type, 'image/') === 0) {
             $content = sprintf('<img class="preview" src="%s" alt=""><br>', htmlspecialchars($media_url));
         }
         if ($datei["description"]) {
@@ -2000,6 +2001,66 @@ function GetFileIcon($ext, $with_img_tag = false){
         break;
     }
     return ($with_img_tag ? '<img src="'.$GLOBALS['ASSETS_URL'].'images/'.$icon.'" border="0">' : $icon);
+}
+
+/**
+ * Determines an appropriate MIME type for a file based on the
+ * extension of the file name.
+ *
+ * @param string $filename      file name to check
+ */
+function get_mime_type($filename)
+{
+    static $mime_types = array(
+        // archive types
+        'gz'   => 'application/x-gzip',
+        'tgz'  => 'application/x-gzip',
+        'bz2'  => 'application/x-bzip2',
+        'zip'  => 'application/zip',
+        // document types
+        'txt'  => 'text/plain',
+        'css'  => 'text/css',
+        'csv'  => 'text/csv',
+        'rtf'  => 'application/rtf',
+        'pdf'  => 'application/pdf',
+        'doc'  => 'application/msword',
+        'xls'  => 'application/ms-excel',
+        'ppt'  => 'application/ms-powerpoint',
+        'swf'  => 'application/x-shockwave-flash',
+        // image types
+        'gif'  => 'image/gif',
+        'jpeg' => 'image/jpeg',
+        'jpg'  => 'image/jpeg',
+        'jpe'  => 'image/jpeg',
+        'png'  => 'image/png',
+        'bmp'  => 'image/x-ms-bmp',
+        // audio types
+        'mp3'  => 'audio/mp3',
+        'oga'  => 'audio/ogg',
+        'wav'  => 'audio/wave',
+        'ra'   => 'application/x-pn-realaudio',
+        'ram'  => 'application/x-pn-realaudio',
+        // video types
+        'mpeg' => 'video/mpeg',
+        'mpg'  => 'video/mpeg',
+        'mpe'  => 'video/mpeg',
+        'qt'   => 'video/quicktime',
+        'mov'  => 'video/quicktime',
+        'avi'  => 'video/x-msvideo',
+        'flv'  => 'video/x-flv',
+        'ogg'  => 'application/ogg',
+        'ogv'  => 'video/ogg',
+        'mp4'  => 'video/mp4',
+        'webm' => 'video/webm',
+    );
+
+    $extension = strtolower(getFileExtension($filename));
+
+    if (isset($mime_types[$extension])) {
+        return $mime_types[$extension];
+    } else {
+        return 'application/octet-stream';
+    }
 }
 
 /**

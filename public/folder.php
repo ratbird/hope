@@ -63,14 +63,8 @@ if ($_REQUEST['cmd'] == 'tree') {
     $folder_system_data['cmd'] = 'all';
 }
 
-if (strpos($open, "_") !== false) {
-    $folder_system_data["open"][substr($open, 0, strpos($open, "_"))] = true;
-}
-
-if ($_REQUEST['orderby']) {
-    $folder_system_data['orderby'] = $_REQUEST['orderby'];
-} else {
-    unset($folder_system_data['orderby']);
+if (Request::option('orderby')) {
+    $folder_system_data['orderby'] = Request::option('orderby');
 }
 
 ///////////////////////////////////////////////////////////
@@ -544,67 +538,52 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     ob_start();
     //Frage den Dateienkörper ab
     if ($_REQUEST["getfilebody"]) {
-        try {
-            //$result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = ".$db->quote($_REQUEST["getfilebody"]))->fetch();
-            if ($folder_tree->isReadable($result['range_id'] , $user->id)) {
-                $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, a.user_id, a.*, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.dokument_id = ".$db->quote($_REQUEST["getfilebody"])."";
-                $datei = $db->query($query)->fetch();
-                display_file_body($datei, null, $folder_system_data["open"], null, $folder_system_data["move"], $folder_system_data["upload"], FALSE, $folder_system_data["refresh"], $folder_system_data["link"]);
-            }
-        } catch(Exception $e) {
-            header("HTTP/1.0 500 Internal Server Error");
-            print _("Fehler tauchte auf:")."\n\n".$e->getMessage();
+        //$result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = ".$db->quote($_REQUEST["getfilebody"]))->fetch();
+        if ($folder_tree->isReadable($result['range_id'] , $user->id)) {
+            $query = "SELECT ". $_fullname_sql['full'] ." AS fullname, username, a.user_id, a.*, IF(IFNULL(a.name,'')='', a.filename,a.name) AS t_name FROM dokumente a LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING (user_id) WHERE a.dokument_id = ".$db->quote($_REQUEST["getfilebody"])."";
+            $datei = $db->query($query)->fetch();
+            display_file_body($datei, null, $folder_system_data["open"], null, $folder_system_data["move"], $folder_system_data["upload"], FALSE, $folder_system_data["refresh"], $folder_system_data["link"]);
         }
     }
 
     //Frage den Ordnerkörper ab
     if ($_REQUEST["getfolderbody"]) {
-        try {
-            if ($folder_tree->isExecutable($_REQUEST["getfolderbody"] , $user->id)) {
-                display_folder_body($_REQUEST["getfolderbody"], $folder_system_data["open"], null, $folder_system_data["move"], null, null, null, null);
-            }
-        } catch(Exception $e) {
-            header("HTTP/1.0 500 Internal Server Error");
-            print _("Fehler tauchte auf:")."\n\n".$e->getMessage();
+        if ($folder_tree->isExecutable($_REQUEST["getfolderbody"] , $user->id)) {
+            display_folder_body($_REQUEST["getfolderbody"], $folder_system_data["open"], null, $folder_system_data["move"], null, null, null, null);
         }
     }
 
     //Dateien eines Ordners sollen sortiert werden nach einem Array
     if ($_REQUEST["folder_sort"]) {
-        try {
-            if (($rechte) && ($_REQUEST["folder_sort"] == "root")) {
+        if (($rechte) && ($_REQUEST["folder_sort"] == "root")) {
 
-            } else {
-                if (($rechte) || ($folder_tree->isWriteable($_REQUEST["folder_sort"] , $user->id))) {
-                    $file_order = explode(",", $file_order);
-                    $sorttype = "";
-                    if ($file_order) {
-                        $result = $db->query("SELECT 1 FROM dokumente WHERE dokument_id = ".$db->quote($file_order[0]))->fetch();
+        } else {
+            if (($rechte) || ($folder_tree->isWriteable($_REQUEST["folder_sort"] , $user->id))) {
+                $file_order = explode(",", $file_order);
+                $sorttype = "";
+                if ($file_order) {
+                    $result = $db->query("SELECT 1 FROM dokumente WHERE dokument_id = ".$db->quote($file_order[0]))->fetch();
+                    if ($result) {
+                        $sorttype = "file";
+                    } else {
+                        $result = $db->query("SELECT 1 FROM folder WHERE folder_id = ".$db->quote($file_order[0]))->fetch();
                         if ($result) {
-                            $sorttype = "file";
-                        } else {
-                            $result = $db->query("SELECT 1 FROM folder WHERE folder_id = ".$db->quote($file_order[0]))->fetch();
-                            if ($result) {
-                                $sorttype = "folder";
-                            }
-                        }
-                    }
-                    if ($sorttype == "file") {
-                        //Dateien werden sortiert:
-                        for ($i=0; $i < count($file_order); $i++) {
-                            $db->query("UPDATE dokumente SET priority = ".($i+1)." WHERE dokument_id = ".$db->quote($file_order[$i]));
-                        }
-                    } elseif ($sorttype == "folder") {
-                        //Ordner werden sortiert:
-                        for ($i=0; $i < count($file_order); $i++) {
-                            $db->query("UPDATE folder SET priority = ".($i+1)." WHERE folder_id = ".$db->quote($file_order[$i]));
+                            $sorttype = "folder";
                         }
                     }
                 }
+                if ($sorttype == "file") {
+                    //Dateien werden sortiert:
+                    for ($i=0; $i < count($file_order); $i++) {
+                        $db->query("UPDATE dokumente SET priority = ".($i+1)." WHERE dokument_id = ".$db->quote($file_order[$i]));
+                    }
+                } elseif ($sorttype == "folder") {
+                    //Ordner werden sortiert:
+                    for ($i=0; $i < count($file_order); $i++) {
+                        $db->query("UPDATE folder SET priority = ".($i+1)." WHERE folder_id = ".$db->quote($file_order[$i]));
+                    }
+                }
             }
-        } catch(Exception $e) {
-            header("HTTP/1.0 500 Internal Server Error");
-            print _("Fehler tauchte auf:")."\n\n".$e->getMessage();
         }
     }
 
@@ -837,7 +816,7 @@ if ($question) {
 
     //when changing, uploading or show all (for download selector), create a form
     if ((($change) || ($folder_system_data["cmd"]=="all")) && (!$folder_system_data["upload"])) {
-        echo "<form method=\"post\" action=\"".URLHelper::getLink('')."\">";
+        echo "<form method=\"post\" action=\"".URLHelper::getLink('#anker')."\">";
         }
 
     print "<tr><td class=\"blank\" colspan=\"3\" width=\"100%\">";

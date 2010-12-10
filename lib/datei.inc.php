@@ -1306,10 +1306,10 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
         if ($datei["protected"]==1)
             $protect = "checked";
         $content.= "\n&nbsp;<input type=\"CHECKBOX\" name=\"change_protected\" $protect>&nbsp;"._("geschützter Inhalt")."</br>";
-        $content.= "<br><textarea name=\"change_description\" rows=3 cols=40>".$datei["description"]."</textarea><br>";
+        $content.= "<br><textarea name=\"change_description\" rows=3 cols=40>".htmlReady($datei["description"])."</textarea><br>";
         $content.= "<input type=\"image\" " . makeButton("uebernehmen", "src") . " border=0 value=\""._("&Auml;nderungen speichern")."\">";
         $content.= "&nbsp;<input type=\"image\" " . makeButton("abbrechen", "src") . " border=0 name=\"cancel\" value=\""._("Abbrechen")."\">";
-        $content.= "<input type=\"hidden\" name=\"open\" value=\"".$datei["dokument_id"]."_sc_\">";
+        $content.= "<input type=\"hidden\" name=\"open\" value=\"".htmlReady($datei["dokument_id"])."_sc_\">";
         $content.= "<input type=\"hidden\" name=\"type\" value=\"0\">";
     } else {
         $content = '';

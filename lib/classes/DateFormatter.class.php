@@ -18,7 +18,15 @@ require_once 'lib/raumzeit/SingleDate.class.php';
  * Formates one SingleDate object or a series of SingleDate objects into a nice format. 
  */
 class DateFormatter {
+    /**
+     * @var array holds the dates use for formatting
+     */
     private $dates;
+    
+    /**
+     * @var string holds the return-type, may be int or string 
+     */
+    private $return_mode;
 
     /**
      * @param $dates an array with an array of SingleDate objects.
@@ -27,8 +35,8 @@ class DateFormatter {
      */
     private function __construct($dates, $return_mode = 'string')
     {
-        var_dump($dates);
         $this->dates = $dates;
+        $this->return_mode = $return_mode;
     }
 
     /**
@@ -54,8 +62,8 @@ class DateFormatter {
      */
     public static function formatDateWithAllRooms($dates, $return_mode = 'string')
     {
-        $dateFormater = new DateFormatter($dates, $return_mode);
-        return $dateFormater->internalFormatDateWithAllRooms();
+        $dateFormatter = new DateFormatter($dates, $return_mode);
+        return $dateFormatter->internalFormatDateWithAllRooms();
     }
 
     private static function wrapDateWithArray($date)
@@ -72,9 +80,15 @@ class DateFormatter {
             // if we have multiple rooms at the same time we display them all
             foreach ($this->dates['termin'] as $num => $termin_id) {
                 $date = new SingleDate($termin_id);
+
+                // if we want an int and format the date ourself
+                if ($this->return_mode == 'int') {
+                    return $date->getStartTime();
+                }
+
                 $isFirstDate = ($num == 0);
                 if ($isFirstDate) {
-                    $dateWithRooms = $this->internalFormatDateAndRoom($date);
+                    $dateWithRooms = $this->internalFormatDateAndRoom($date);                    
                 } else {
                     $dateWithRooms .= ', ' . $this->formatRoom($date);
                 }

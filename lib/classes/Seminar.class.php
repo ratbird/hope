@@ -242,7 +242,7 @@ class Seminar
             return false;
         }
 
-        return DateFormatter::formatDateWithAllRooms($dates, $return_mode);
+        return DateFormatter::formatDateWithAllRooms(array('termin' => $dates), $return_mode);
     }
 
     /**

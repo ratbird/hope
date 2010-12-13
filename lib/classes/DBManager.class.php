@@ -9,31 +9,43 @@
  * the License, or (at your option) any later version.
  */
 
-
 /**
  * This class provides a singleton instance that is used to manage PDO database
  * connections.
  *
  * Example of use:
+ * @code
+ *   # get hold of the DBManager's singleton
+ *   $manager = DBManager::getInstance();
  *
- *   # getting a PDO connection
- *   $key = 'studip';
- *   $db = DBManager::get($key);
+ *   # set PDO connections using a DSN
+ *   $manager->setConnection('example',
+ *                           'mysql:host=localhost;dbname=example',
+ *                           'root', '');
+ *   # or an existing instance of PDO
+ *   $manager->setConnection('example2', $existingPdo);
+ *
+ *   # retrieve a PDO connection later in your code
+ *   $db = $manager->getConnection("studip");
+ *
+ *   # or as a shortcut
+ *   $db = DBManager::get("studip");
+ *
+ *   # or even shorter ("studip" is the default key)
+ *   $db = DBManager::get();
+ *
+ *   # and use the connection
  *   $db->query('SELECT * FROM user_info');
  *
- *   # setting a PDO connection
- *   $manager = DBManager::getInstance();
- *   $manager->setConnection('example', 'mysql:host=localhost;dbname=example',
- *                           'root', '');
+ *   # you may even alias connections
+ *   $manager->aliasConnection("studip", "studip-slave");
  *
+ *   # but this is just sugar for
+ *   $studip = $manager->getConnection("studip");
+ *   $manager->setConnection("studip-slave", $studip);
  *
- * @package     studip
- * @subpackage  lib
- *
- * @author    mlunzena
- * @copyright (c) Authors
+ * @endcode
  */
-
 class DBManager
 {
 
@@ -85,7 +97,17 @@ class DBManager
      * This method returns the database connection to the given key. Throws a
      * DBManagerException if there is no such connection.
      *
-     * @param  string  the database connection's key
+     * Example usage:
+     * @code
+     * try {
+     *     $db = DBManager::getInstance()->getConnection("foo");
+     *     $db->exec($sql);
+     * } catch (DBManagerException $e) {
+     *     echo "oops";
+     * }
+     * @endcode
+     *
+     * @param  string  the key
      *
      * @throw DBManagerException
      *
@@ -109,6 +131,9 @@ class DBManager
      * You can either use an instance of class PDO or specify a DSN (optionally
      * with username/password).
      *
+     * The (possibly newly created) connection is configured to throw exceptions
+     * and to buffer queries if it is a MySQL connection.
+     *
      * Examples:
      * @code
      *    $dbManager = DBManager::getInstance();
@@ -128,7 +153,8 @@ class DBManager
      *
      * @return DBManager this instance, useful for cascading method calls
      */
-    public function setConnection($database, $dsnOrConnection, $user = NULL, $pass = NULL)
+    public function setConnection($database, $dsnOrConnection, $user = NULL,
+                                  $pass = NULL)
     {
         $connection = $dsnOrConnection instanceof PDO
             ? $dsnOrConnection
@@ -153,12 +179,15 @@ class DBManager
     /**
      * This method creates an alias for a database connection.
      *
-     * @param  string    the new key of the database connection
+     * This is useful if you want to use different keys but access the same
+     * database, e.g. if you want to use master-slave replication in the future
+     *
      * @param  string    the old key of the database connection
+     * @param  string    the new key of the database connection
      *
      * @return DBManager this instance, useful for cascading method calls
      */
-    public function aliasConnection($new, $old)
+    public function aliasConnection($old, $new)
     {
 
         if (!isset($this->connections[$old])) {
@@ -172,9 +201,22 @@ class DBManager
 
 
     /**
-     * Shortcut static method to retrieve the database connection for a given key.
+     * Shortcut static method to retrieve the database connection for a given
+     * key.
      *
-     * @param  string  the database connection's key
+     * Example usage:
+     * @code
+     * // instead of
+     * $db = DBManager::getInstance()->getConnection("studip");
+     *
+     * // this can be shortened to
+     * $db = DBManager::get("studip");
+     *
+     * // or in this case (as "studip" is the default key)
+     * $db = DBManager::get();
+     * @endcode
+     *
+     * @param  string  the key
      *
      * @return PDO     the database connection
      */
@@ -187,16 +229,11 @@ class DBManager
 
 
 /**
- * @package     studip
- * @subpackage  lib
- *
- * @author    mlunzena
- * @copyright (c) Authors
+ * The DBManager throws this exception if it cannot find a connection using
+ * a non existant key.
  */
-
 class DBManagerException extends Exception
 {
-
 
     /**
      * @param  string   the message of this exception

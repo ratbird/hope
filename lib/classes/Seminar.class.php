@@ -37,7 +37,7 @@ require_once 'lib/classes/StudipNews.class.php';
 require_once $GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . "/ObjectConnections.class.php";
 require_once $GLOBALS['RELATIVE_PATH_ELEARNING_INTERFACE'] . "/ELearningUtils.class.php";
 require_once 'lib/classes/LockRules.class.php';
-require_once 'lib/classes/DateFormater.class.php';
+require_once 'lib/classes/DateFormatter.class.php';
 
 
 class Seminar
@@ -212,13 +212,13 @@ class Seminar
         if (!$termine = SeminarDB::getNextDate($this->id))
             return false;
 
-        $next_date = DateFormater::formatDateWithAllRooms($termine, $return_mode);
+        $next_date = DateFormatter::formatDateWithAllRooms($termine, $return_mode);
 
         if ($termine['ex_termin']) {
             $ex_termin = new SingleDate($termine['ex_termin']);
 
             $missing_date  = '<div style="border:1px solid black; background:#FFFFDD;">';
-            $missing_date .= sprintf(_("Der Termin am %s findet nicht statt."), DateFormater::formatDateAndRoom($ex_termin, $return_mode));
+            $missing_date .= sprintf(_("Der Termin am %s findet nicht statt."), DateFormatter::formatDateAndRoom($ex_termin, $return_mode));
             $missing_date .= '<br>Kommentar: '.$ex_termin->getComment();
             $missing_date .= '</div>';
 
@@ -238,10 +238,11 @@ class Seminar
     }
 
     function getFirstDate($return_mode = 'string') {
-        if (!$dates = SeminarDB::getFirstDate($this->id))
-            return FALSE;
+        if (!$dates = SeminarDB::getFirstDate($this->id)) {
+            return false;
+        }
 
-        return DateFormater::formatDateWithAllRooms($dates, $return_mode);
+        return DateFormatter::formatDateWithAllRooms($dates, $return_mode);
     }
 
     /**

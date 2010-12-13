@@ -17,7 +17,7 @@ require_once 'lib/raumzeit/SingleDate.class.php';
 /**
  * Formates one SingleDate object or a series of SingleDate objects into a nice format. 
  */
-class DateFormater {
+class DateFormatter {
     private $dates;
 
     /**
@@ -27,6 +27,7 @@ class DateFormater {
      */
     private function __construct($dates, $return_mode = 'string')
     {
+        var_dump($dates);
         $this->dates = $dates;
     }
 
@@ -39,8 +40,8 @@ class DateFormater {
      */
     public static function formatDateAndRoom($date, $return_mode = 'string')
     {
-        $dates = DateFormater::wrapDateWithArray($date);
-        return DateFormater::formatDateWithAllRooms($dates, $return_mode);
+        $dates = DateFormatter::wrapDateWithArray($date);
+        return DateFormatter::formatDateWithAllRooms($dates, $return_mode);
     }
 
     /**
@@ -53,7 +54,7 @@ class DateFormater {
      */
     public static function formatDateWithAllRooms($dates, $return_mode = 'string')
     {
-        $dateFormater = new DateFormater($dates, $return_mode);
+        $dateFormater = new DateFormatter($dates, $return_mode);
         return $dateFormater->internalFormatDateWithAllRooms();
     }
 

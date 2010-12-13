@@ -151,7 +151,9 @@ class SeminarDB {
     function getFirstDate($seminar_id)
     {
         $termine = array();
-        $db = new DB_Seminar("SELECT termin_id, date, end_time FROM termine WHERE range_id = '$seminar_id' AND date_typ IN ".getPresenceTypeClause()." ORDER BY date");
+        $db = new DB_Seminar("SELECT termin_id, date, end_time FROM termine 
+            WHERE range_id = '$seminar_id' AND date_typ IN ".getPresenceTypeClause()." 
+            ORDER BY date");
         $start = 0;
         $end = 0;
         while ($db->next_record()) {

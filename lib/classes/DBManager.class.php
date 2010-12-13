@@ -102,27 +102,52 @@ class DBManager {
   }
 
 
-  /**
-   * This method creates a database connection and stores it under the given
-   * key.
-   *
-   * @param  string    the key of the database connection
-   * @param  string    the connection's DSN
-   * @param  string    the connection's username
-   * @param  string    the connection's password
-   *
-   * @return DBManager this instance, useful for cascading method calls
-   */
-  public function setConnection($database, $dsn, $user, $pass) {
-    $this->connections[$database] = new PDO($dsn, $user, $pass);
-    $this->connections[$database]->setAttribute(PDO::ATTR_ERRMODE,
-                                                PDO::ERRMODE_EXCEPTION);
-    if ($this->connections[$database]->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql') {
-      $this->connections[$database]->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
-    }
-    return $this;
-  }
+    /**
+     * This method maps the specified key to the specified database connection.
+     *
+     * You can either use an instance of class PDO or specify a DSN (optionally
+     * with username/password).
+     *
+     * Examples:
+     * @code
+     *    $dbManager = DBManager::getInstance();
+     *
+     *    // using an existing PDO connection
+     *    $existingPdo = new LoggingPDO($dsn);
+     *    $dbManager->setConnection('studip', $pdo);
+     *
+     *    // using a DSN with username and password
+     *    $dbManager->setConnection('studip', $dsn , $username, $password);
+     * @endcode
+     *
+     * @param  string      the key
+     * @param  string|PDO  either a DSN or an existing PDO connection
+     * @param  string      (optional) the connection's username
+     * @param  array       (optional) the connection's password
+     *
+     * @return DBManager this instance, useful for cascading method calls
+     */
+    public function setConnection($database, $dsnOrConnection, $user = NULL, $pass = NULL)
+    {
+        $connection = $dsnOrConnection instanceof PDO
+            ? $dsnOrConnection
+            : new PDO($dsnOrConnection, $user, $pass);
 
+        $this->configureConnection($connection);
+        $this->connections[$database] = $connection;
+
+        return $this;
+    }
+
+
+    // PDO connection should throw exceptions and use buffered queries
+    private function configureConnection($connection)
+    {
+        $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if ($connection->getAttribute(PDO::ATTR_DRIVER_NAME) == 'mysql') {
+            $connection->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        }
+    }
 
   /**
    * This method creates an alias for a database connection.

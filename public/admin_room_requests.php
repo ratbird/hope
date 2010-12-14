@@ -414,7 +414,7 @@ if ($perm->have_perm("admin"))
                                         printf ("<option value=\"%s\">%s </option>", $db->f("category_id"), htmlReady(my_substr($db->f("name"), 0, 30)));
                                     }
                                 print "</select></font>";
-                                print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".Assets::image_path('icons/16/blue/accept.png')." ".tooltip(_("Raumtyp auswählen")).">";
+                                print "&nbsp;<input type=\"IMAGE\" value=\""._("Raumtyp ausw&auml;hlen")."\" name=\"send_room_type\" src=\"".Assets::image_path('icons/16/blue/accept.png')."\" ".tooltip(_("Raumtyp auswählen")).">";
                             }
                             ?>
                             </font>

@@ -6,14 +6,14 @@ class Step00199ForcedCourseGrouping extends Migration
         array(
             'name'        => 'MY_COURSES_FORCE_GROUPING',
             'type'        => 'string',
-            'value'       => 'not_grouped',
-            'description' => 'Legt fest, ob die persönliche Veranstaltungsübersicht systemweit zwangsgruppiert werden soll, wenn keine eigene Gruppierung eingestellt ist. Werte: "not_grouped", "sem_number", "sem_tree_id", "sem_status", "gruppe", "dozent_id".'
+            'value'       => 'sem_number',
+            'description' => 'Legt fest, ob die persönliche Veranstaltungsübersicht systemweit zwangsgruppiert werden soll, wenn keine eigene Gruppierung eingestellt ist. Werte: not_grouped, sem_number, sem_tree_id, sem_status, gruppe, dozent_id.'
         )
     );
 
     function description()
     {
-        return 'add configuration entry for forced grouping of "My courses" for all users who haven\'t grouped for themselves';
+        return 'add configuration entry for forced grouping of My courses for all users who haven\'t grouped for themselves';
     }
 
     function up()

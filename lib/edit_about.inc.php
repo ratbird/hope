@@ -947,9 +947,9 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         // Votes
         if (get_config('VOTE_ENABLE')) {
             $voteDB = new VoteDB();
+            $activeVotes  = $voteDB->getActiveVotes($this->auth_user['user_id']);
+            $stoppedVotes = $voteDB->getStoppedVisibleVotes($this->auth_user['user_id']);
         }
-        $activeVotes  = $voteDB->getActiveVotes($this->auth_user['user_id']);
-        $stoppedVotes = $voteDB->getStoppedVisibleVotes($this->auth_user['user_id']);
         // Evaluations
         $evalDB = new EvaluationDB();
         $activeEvals = $evalDB->getEvaluationIDs($this->auth_user['user_id'], EVAL_STATE_ACTIVE);

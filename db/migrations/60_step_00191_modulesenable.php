@@ -6,55 +6,60 @@ class Step00191ModulesEnable extends Migration
         return 'renaming, adding and reorganisation of all studip core-modules into the database.';
     }
 
+    private function getValue($field, $default = 1)
+    {
+        return isset($GLOBALS[$field]) ? (int) $GLOBALS[$field] : $default;
+    }
+
     function getModules()
     {
         return array(
             array('field' => 'CHAT_ENABLE',
-                  'value' => (int) get_config('CHAT_ENABLE'),
+                  'value' => $this->getValue('CHAT_ENABLE'),
                   'comment' => 'Schaltet ein oder aus, ob der Chat global verfügbar ist.',
             ),
             array('field' => 'CALENDAR_ENABLE',
-                  'value' => (int) get_config('CALENDAR_ENABLE'),
+                  'value' => $this->getValue('CALENDAR_ENABLE'),
                   'comment' => 'Schaltet ein oder aus, ob der Kalender global verfügbar ist.',
             ),
             array('field' => 'EXPORT_ENABLE',
-                  'value' => (int) get_config('EXPORT_ENABLE'),
+                  'value' => $this->getValue('EXPORT_ENABLE'),
                   'comment' => 'Schaltet ein oder aus, ob der Export global verfügbar ist.',
             ),
             array('field' => 'EXTERN_ENABLE',
-                  'value' => (int) get_config('EXTERN_ENABLE'),
+                  'value' => $this->getValue('EXTERN_ENABLE'),
                   'comment' => 'Schaltet ein oder aus, ob die externen Seiten global verfügbar sind.',
             ),
             array('field' => 'VOTE_ENABLE',
-                  'value' => (int) get_config('VOTE_ENABLE'),
+                  'value' => $this->getValue('VOTE_ENABLE'),
                   'comment' => 'Schaltet ein oder aus, ob die Umfragen global verfügbar sind.',
             ),
             array('field' => 'ELEARNING_INTERFACE_ENABLE',
-                  'value' => (int) get_config('ELEARNING_INTERFACE_ENABLE'),
+                  'value' => $this->getValue('ELEARNING_INTERFACE_ENABLE', 0),
                   'comment' => 'Schaltet ein oder aus, ob die Lernmodule global verfügbar sind.',
             ),
             array('field' => 'STM_ENABLE',
-                  'value' => (int) get_config('STM_ENABLE'),
+                  'value' => $this->getValue('STM_ENABLE', 0),
                   'comment' => 'Schaltet ein oder aus, ob die Studienmodule global verfügbar sind.',
             ),
             array('field' => 'WIKI_ENABLE',
-                  'value' => (int) get_config('WIKI_ENABLE'),
+                  'value' => $this->getValue('WIKI_ENABLE'),
                   'comment' => 'Schaltet ein oder aus, ob das Wiki global verfügbar ist.',
             ),
             array('field' => 'SMILEYADMIN_ENABLE',
-                  'value' => (int) get_config('SMILEYADMIN_ENABLE'),
+                  'value' => $this->getValue('SMILEYADMIN_ENABLE'),
                   'comment' => 'Schaltet ein oder aus, ob die Administration der Smileys verfügbar ist.',
             ),
             array('field' => 'LOG_ENABLE',
-                  'value' => (int) get_config('LOG_ENABLE'),
+                  'value' => $this->getValue('LOG_ENABLE'),
                   'comment' => 'Schaltet ein oder aus, ob das Log global verfügbar ist.',
             ),
             array('field' => 'SCM_ENABLE',
-                  'value' => (int) get_config('SCM_ENABLE'),
+                  'value' => $this->getValue('SCM_ENABLE'),
                   'comment' => 'Schaltet ein oder aus, ob freie Informationsseiten global verfügbar sind.',
             ),
             array('field' => 'BANNER_ADS_ENABLE',
-                  'value' => (int) get_config('BANNER_ADS_ENABLE'),
+                  'value' => $this->getValue('BANNER_ADS_ENABLE', 0),
                   'comment' => 'Schaltet ein oder aus, ob die Bannerwerbung global verfügbar ist.',
             )
         );

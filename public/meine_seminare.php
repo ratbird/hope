@@ -240,12 +240,14 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
         'not_grouped';
     if (!$user->is_registered('_my_sem_group_field')){
         $user->register('_my_sem_group_field');
-        $_my_sem_group_field = $forced_grouping;
-        $_my_sem_open[$forced_grouping] = true;
+        $_my_sem_group_field = 'not_grouped';
+        $_my_sem_open['not_grouped'] = true;
     }
     if ($_my_sem_group_field == 'not_grouped' && $forced_grouping != 'not_grouped') {
         $_my_sem_group_field = $forced_grouping;
-        $_my_sem_open[$forced_grouping] = true;
+        if ($forced_grouping == 'sem_number') {
+            $_my_sem_open[SemesterData::GetSemesterIndexById(Semester::findCurrent()->semester_id)] = true;
+        }
     }
     $group_field = $_my_sem_group_field;
 

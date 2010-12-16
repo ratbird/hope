@@ -83,25 +83,23 @@ class StudipStmInstanceTreeViewSimple {
     function showKids($item_id){
         $num_kids = $this->tree->getNumKids($item_id);
         $kids = $this->tree->getKids($item_id);
-        echo "\n<table width=\"95%\" border=\"0\" cellpadding=\"0\" cellspacing=\"10\"><tr>\n<td class=\"steel1\" width=\"50%\" align=\"left\" valign=\"top\">";
+        echo "\n<table width=\"95%\" border=\"0\" cellpadding=\"0\" cellspacing=\"10\"><tr>\n<td class=\"steel1\" width=\"50%\" align=\"left\" valign=\"top\"><ul class=\"semtree\">";
         for ($i = 0; $i < $num_kids; ++$i){
             $num_entries = $this->tree->getNumEntries($kids[$i],true);
-            echo "<b><a " . tooltip(sprintf(_("%s Einträge in allen Unterebenen vorhanden"), $num_entries)) . " href=\"" .$this->getSelf("start_item_id={$kids[$i]}", false) . "\">";
-            echo "<span style=\"font-size:10pt;\">" . htmlReady($this->tree->tree_data[$kids[$i]]['name']);
-            echo "&nbsp;($num_entries)</span>";
-            echo "</a></b>";
+            echo "<li><a " . tooltip(sprintf(_("%s Einträge in allen Unterebenen vorhanden"), $num_entries)) . " href=\"" .$this->getSelf("start_item_id={$kids[$i]}", false) . "\">";
+            echo htmlReady($this->tree->tree_data[$kids[$i]]['name']);
+            echo " ($num_entries)";
+            echo "</a></li>";
             if ($i == ceil($num_kids / 2)-1){
-                echo "</td>\n<td class=\"steel1\" align=\"left\" valign=\"top\">";
-            } else {
-                echo "<br><img src=\"{$GLOBALS['ASSETS_URL']}images/blank.gif\"><br>";
+                echo "</ul></td>\n<td class=\"steel1\" align=\"left\" valign=\"top\"><ul class=\"semtree\">";
             }
         }
         if (!$num_kids){
-            echo "<p style=\"font-size:10pt\"><b>";
+            echo "<li>";
             echo _("Auf dieser Ebene existieren keine weiteren Unterebenen.");
-            echo "</b></p>";
+            echo "</li>";
         }
-        echo "\n</td></tr></table>";
+        echo "\n</ul></td></tr></table>";
     }
 
     function getTooltip($item_id){

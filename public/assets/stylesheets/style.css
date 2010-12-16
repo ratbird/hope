@@ -476,6 +476,12 @@ td.tree-elbow-end img {
     background-image: url('../images/plastic_red.jpg');
 }
 
+.semtree li {
+    padding-bottom: 5px;
+    list-style: none;
+    font-weight: bold;
+}
+
 /* descriptional texts */
 p.info {
     padding: 10px;

@@ -54,7 +54,7 @@
             <? endif; ?>
             </td>
             <td><?= $conf['type'] ?></td>
-            <td><?= $conf['description'] ?></td>
+            <td><?= htmlReady($conf['description']) ?></td>
             <td align="right">
                 <a class="load-in-new-row" href="<?=$controller->url_for('admin/configuration/edit_configuration/'.$conf['config_id'])?>">
                 <?= Assets::img('icons/16/blue/edit.png', array('title' => 'Konfigurationsparameter bearbeiten')) ?></a>

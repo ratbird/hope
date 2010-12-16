@@ -73,10 +73,12 @@ abstract class SearchType
      *
      * @param string $keyword
      * @param string $contextual_data
+     * @param int $limit maximum number of results (default: all)
+     * @param int $offset return results starting from this row (default: 0)
      *
      * @return array
      */
-    public function getResults($keyword, $contextual_data = array()) 
+    public function getResults($keyword, $contextual_data = array(), $limit = PHP_INT_MAX, $offset = 0) 
     {
         return array(array("", _("Die Suchklasse, die Sie verwenden, enthält keine Methode getResults.")));
     }

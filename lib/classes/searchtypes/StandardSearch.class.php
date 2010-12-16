@@ -33,7 +33,6 @@ class StandardSearch extends SQLSearch
 {
 
     private $search;
-    private $avatarLike;
 
     /**
      *
@@ -44,6 +43,7 @@ class StandardSearch extends SQLSearch
     public function __construct($search)
     {
         $this->avatarLike = $this->search = $search;
+        $this->sql = $this->getSQL();
     }
 
     /**
@@ -55,7 +55,7 @@ class StandardSearch extends SQLSearch
      */
     static public function get($search)
     {
-        return new SQLSearch($search);
+        return new StandardSearch($search);
     }
 
     /**
@@ -79,35 +79,6 @@ class StandardSearch extends SQLSearch
     }
 
     /**
-     * returns the results of a search
-     * Use the contextual_data variable to send more variables than just the input
-     * to the SQL. QuickSearch for example sends all other variables of the same
-     * <form>-tag here.
-     *
-     * @param string input the search-word(s)
-     * @param array contextual_data an associative array with more variables
-     *
-     * @return array array(array(), ...)
-     */
-    public function getResults($input, $contextual_data = array())
-    {
-        $db = DBManager::get();
-        $statement = $db->prepare($this->getSQL(), array(PDO::FETCH_NUM));
-        $data = array();
-        if (is_array($contextual_data)) {
-            foreach ($contextual_data as $name => $value) {
-               if (($name !== "input") && (strpos($this->SQL, ":".$name) !== FALSE)) {
-                  $data[":".$name] = $value;
-               }
-            }
-        }
-        $data[":input"] = "%".$input."%";
-        $statement->execute($data);
-        $results = $statement->fetchAll();
-        return $results;
-    }
-
-    /**
      * returns a sql-string appropriate for the searchtype of the current class
      *
      * @return string
@@ -120,15 +91,13 @@ class StandardSearch extends SQLSearch
                         "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
                         "WHERE CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input " .
-                        "ORDER BY user_info.score DESC " .
-                        "LIMIT 5";
+                        "ORDER BY Vorname, Nachname";
             case "user_id":
                 return "SELECT DISTINCT auth_user_md5.user_id, CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname, \" (\", auth_user_md5.username,\")\") " .
                         "FROM auth_user_md5 LEFT JOIN user_info ON (user_info.user_id = auth_user_md5.user_id) " .
                         "WHERE CONCAT(auth_user_md5.Vorname, \" \", auth_user_md5.Nachname) LIKE :input " .
                             "OR auth_user_md5.username LIKE :input " .
-                        "ORDER BY user_info.score DESC " .
-                        "LIMIT 5";
+                        "ORDER BY Vorname, Nachname";
             case "Seminar_id":
                 return "SELECT DISTINCT seminare.Seminar_id, seminare.Name " .
                         "FROM seminare " .
@@ -143,7 +112,7 @@ class StandardSearch extends SQLSearch
                             "OR seminare.Sonstiges LIKE :input) " .
                             "AND seminare.visible = 1 " .
                             "AND seminare.status NOT IN ('".implode("', '", studygroup_sem_types())."') " .
-                        "LIMIT 5";
+                        "ORDER BY seminare.Name";
             case "Arbeitsgruppe_id":
                 return "SELECT DISTINCT seminare.Seminar_id, seminare.Name " .
                         "FROM seminare " .
@@ -158,7 +127,7 @@ class StandardSearch extends SQLSearch
                             "OR seminare.Sonstiges LIKE :input) " .
                             "AND seminare.visible = 1 " .
                             "AND seminare.status IN ('".implode("', '", studygroup_sem_types())."') " .
-                        "LIMIT 5";
+                        "ORDER BY seminare.Name";
             case "Institut_id":
                 return "SELECT DISTINCT Institute.Institut_id, Institute.Name " .
                         "FROM Institute " .
@@ -167,8 +136,7 @@ class StandardSearch extends SQLSearch
                             "OR Institute.Strasse LIKE :input " .
                             "OR Institute.email LIKE :input " .
                             "OR range_tree.name LIKE :input " .
-                        "ORDER BY Institute.Name " .
-                        "LIMIT 5";
+                        "ORDER BY Institute.Name";
         }
     }
 

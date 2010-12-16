@@ -36,23 +36,22 @@ require_once 'lib/functions.php';
 class SQLSearch extends SearchType
 {
     
-    private $sql;
-    private $avatarLike;
+    protected $sql;
+    protected $avatarLike;
+    protected $title;
     
     /**
      * 
      * @param string $query SQL with at least ":input" as parameter 
      * @param string $title
      * @param string $avatarLike
-     * @param array $presets variables from the same form that should be used 
      * in this search. array("input_name" => "placeholder_in_sql_query")
      *
      * @return void
      */
-    public function __construct($query, $title = "", $avatarLike = "", $presets = array()) 
+    public function __construct($query, $title = "", $avatarLike = "") 
     {
         $this->sql = $query;
-        $this->presets = $presets;
         $this->title = $title;
         $this->avatarLike = $avatarLike;
     }
@@ -63,14 +62,13 @@ class SQLSearch extends SearchType
      * @param string $query SQL with at least ":input" as parameter 
      * @param string $title
      * @param string $avatarLike
-     * @param array $presets variables from the same form that should be used 
      * in this search. array("input_name" => "placeholder_in_sql_query")
      *
      * @return SQLSearch
      */
-    static public function get($query, $title = "", $avatarLike = "", $presets = array()) 
+    static public function get($query, $title = "", $avatarLike = "") 
     {
-        return new SQLSearch($query, $title, $avatarLike, $presets);
+        return new SQLSearch($query, $title, $avatarLike);
     }
 
     /**
@@ -137,19 +135,25 @@ class SQLSearch extends SearchType
      *
      * @param string $input the search-word(s)
      * @param array $contextual_data an associative array with more variables
+     * @param int $limit maximum number of results (default: all)
+     * @param int $offset return results starting from this row (default: 0)
      *
      * @return array  array(array(), ...)
      */
-    public function getResults($input, $contextual_data = array()) 
+    public function getResults($input, $contextual_data = array(), $limit = PHP_INT_MAX, $offset = 0) 
     {
         $db = DBManager::get();
-        $statement = $db->prepare($this->sql, array(PDO::FETCH_NUM));
+        $sql = $this->sql;
+        if ($offset || $limit != PHP_INT_MAX) {
+            $sql .= sprintf(' LIMIT %d, %d', $offset, $limit);
+        }
+        $statement = $db->prepare($sql, array(PDO::FETCH_NUM));
         $data = array();
         if (is_array($contextual_data)) {
             foreach ($contextual_data as $name => $value) {
-               if (($name !== "input") && (strpos($this->sql, ":".$name) !== FALSE)) {
-                  $data[":".$name] = $value;
-               }
+                if ($name !== "input" && strpos($sql, ":".$name) !== false) {
+                    $data[":".$name] = $value;
+                }
             }
         }
         $data[":input"] = "%".$input."%";

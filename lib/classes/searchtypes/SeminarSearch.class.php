@@ -51,9 +51,12 @@ class SeminarSearch extends SearchType
      * where $key is an identifier like user_id and $name is a displayed text
      * that should appear to represent that ID.
      * @param keyword: string
+     * @param array $contextual_data an associative array with more variables
+     * @param int $limit maximum number of results (default: all)
+     * @param int $offset return results starting from this row (default: 0)
      * @return array
      */
-     public function getResults($keyword, $contextual_data = array()) {
+     public function getResults($keyword, $contextual_data = array(), $limit = PHP_INT_MAX, $offset = 0) {
          $search_helper = new StudipSemSearchHelper();
          $search_helper->setParams(
              array(
@@ -77,7 +80,7 @@ class SeminarSearch extends SearchType
          return $db->query("SELECT s.Seminar_id, $style, Name FROM seminare s
                             LEFT JOIN seminar_user su ON su.Seminar_id=s.Seminar_id AND su.status='dozent'
                             LEFT JOIN auth_user_md5 USING (user_id)
-                            WHERE s.Seminar_id IN ('".join("','", array_slice($result, 0, 10))."') GROUP BY s.Seminar_id"
+                            WHERE s.Seminar_id IN ('".join("','", array_slice($result, $offset, $limit))."') GROUP BY s.Seminar_id"
                           )->fetchAll(PDO::FETCH_NUM);
      }
 

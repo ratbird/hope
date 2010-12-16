@@ -583,8 +583,8 @@ class Course_StudygroupController extends AuthenticatedController {
                                     . "AND seminar_user.Seminar_id IS NULL "
                                     . "AND " . get_vis_query()
                                     . " AND (username LIKE :input OR Vorname LIKE :input "
-                                    . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input)"
-                                    . "LIMIT 50", _("Nutzer suchen"), "user_id");
+                                    . "OR Nachname LIKE :input OR {$GLOBALS['_fullname_sql']['full_rev']} LIKE :input)",
+                                    _("Nutzer suchen"), "user_id");
         $this->rechte           = $GLOBALS['perm']->have_studip_perm("tutor", $id);
     }
 

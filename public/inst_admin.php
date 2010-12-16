@@ -604,7 +604,7 @@ if ($inst_id != "" && $inst_id !="0") {
                 "WHERE perms !='root' " .
                     "AND (user_inst.inst_perms = 'user' OR user_inst.inst_perms IS NULL) " .
                     "AND (Vorname LIKE :input OR Nachname LIKE :input OR username LIKE :input) " .
-                "ORDER BY Nachname ", _("Nutzer eintragen"), "user_id");
+                "ORDER BY Nachname, Vorname", _("Nutzer eintragen"), "user_id");
             ?>
             <!-- Suche mit Ergebnissen -->
             <td class="blank" width="50%" valign="top" align="center">

@@ -1603,8 +1603,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
                 "OR auth_user_md5.username LIKE :input) " .
                 "AND auth_user_md5.perms IN ('autor', 'tutor', 'dozent') " .
                 "AND auth_user_md5.user_id NOT IN (SELECT user_id FROM seminar_user WHERE Seminar_id = :seminar_id ) " .
-            "ORDER BY user_info.score DESC " .
-            "LIMIT 5", _("Teilnehmer suchen"), "username");
+            "ORDER BY Vorname, Nachname", _("Teilnehmer suchen"), "username");
         print QuickSearch::get("username", $NutzerSuchen)
                 ->withButton()
                 ->setInputStyle("width: 240px")

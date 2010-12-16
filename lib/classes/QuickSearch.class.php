@@ -356,7 +356,7 @@ class QuickSearch
      *
      * @param string $request the request from the searchfield typed by the user.
      *
-     * @return array array(array(item_id, item-name), ...) mostly limited to 5.
+     * @return array array(array(item_id, item-name), ...).
      */
     private function searchresults($request)
     {

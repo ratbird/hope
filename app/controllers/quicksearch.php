@@ -101,13 +101,13 @@ class QuicksearchController extends AuthenticatedController
      *
      * @param array $request the request from the searchfield typed by the user.
      *
-     * @return array array(array(item_id, item-name), ...) mostly limited to 5.
+     * @return array array(array(item_id, item-name), ...) limited to 10.
      */
     private function getResults($request)
     {
         if ($this->search instanceof SearchType) {
             try {
-                $results = $this->search->getResults($request, $this->form_data);
+                $results = $this->search->getResults($request, $this->form_data, 10);
             } catch (Exception $exception) {
                 //Der Programmierer will ja seine Fehler sehen:
                 return array(array("", $exception->getMessage()));

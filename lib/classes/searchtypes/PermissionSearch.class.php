@@ -24,9 +24,7 @@ require_once "lib/functions.php";
 class PermissionSearch extends SQLSearch {
 
     private $search;
-    private $avatarLike;
     private $presets;
-    private $title;
 
     /**
      *
@@ -39,7 +37,7 @@ class PermissionSearch extends SQLSearch {
         $this->search = $search;
         $this->presets = $presets;
         $this->title = $title;
-        $this->avatarLike = (in_array($avatarLike, words('user_id, username')) ? $avatarLike : 'user_id');
+        $this->avatarLike = in_array($avatarLike, words('user_id, username')) ? $avatarLike : 'user_id';
     }
 
     /**
@@ -50,46 +48,28 @@ class PermissionSearch extends SQLSearch {
     }
 
     /**
-     * returns the title/description of the searchfield
-     * @return string: title/description
-     */
-    public function getTitle() {
-        return $this->title;
-    }
-
-    /**
      * returns the results of a search
      * Use the contextual_data variable to send more variables than just the input
      * to the SQL. QuickSearch for example sends all other variables of the same
      * <form>-tag here.
      * @param input string: the search-word(s)
      * @param contextual_data array: an associative array with more variables
+     * @param limit int: maximum number of results (default: all)
+     * @param offset int: return results starting from this row (default: 0)
      * @return array: array(array(), ...)
      */
-    public function getResults($input, $contextual_data = array()) {
+    public function getResults($input, $contextual_data = array(), $limit = PHP_INT_MAX, $offset = 0) {
         $db = DBManager::get();
         $sql = $this->getSQL();
-        if (is_array($this->presets)) {
-            foreach ($this->presets as $name => $value) {
-                if (($name !== 'input' && strpos($sql, ':'.$name) !== false)) {
-                    if (is_array($value)) {
-                        $sql = str_replace(':'.$name, "'".implode("', '", $value)."'", $sql);
-                    } else {
-                        $sql = str_replace(':'.$name, "'".$value."'", $sql);
-                    }
-                }
-            }
+        if ($offset || $limit != PHP_INT_MAX) {
+            $sql .= sprintf(' LIMIT %d, %d', $offset, $limit);
         }
-        if (is_array($contextual_data)) {
-            foreach ($contextual_data as $name => $value) {
+        foreach ($this->presets + $contextual_data as $name => $value) {
+            if ($name !== "input" && strpos($sql, ":".$name) !== false) {
                 if (is_array($value)) {
-                    if (($name !== "input") && (strpos($sql, ":".$name) !== FALSE)) {
-                        $sql = str_replace(":".$name, "'".implode("', '", $value)."'", $sql);
-                    }
+                    $sql = str_replace(":".$name, implode(',', array_map(array($db, 'quote'), $value)), $sql);
                 } else {
-                    if (($name !== "input") && (strpos($sql, ":".$name) !== FALSE)) {
-                        $sql = str_replace(":".$name, "'".$value."'", $sql);
-                    }
+                    $sql = str_replace(":".$name, $db->quote($value), $sql);
                 }
             }
         }
@@ -112,8 +92,7 @@ class PermissionSearch extends SQLSearch {
                             "OR auth_user_md5.username LIKE :input ) " .
                             "AND auth_user_md5.perms IN (:permission) ".
                             "AND auth_user_md5.user_id NOT IN(:exclude_user) " .
-                        "ORDER BY auth_user_md5.Nachname ASC " .
-                        "LIMIT 10";
+                        "ORDER BY auth_user_md5.Nachname";
             break;
             case "user_not_already_in_sem":
                 $sql =  "SELECT DISTINCT $first_column, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
@@ -123,8 +102,7 @@ class PermissionSearch extends SQLSearch {
                         "WHERE su.user_id IS NULL AND ( ".$GLOBALS['_fullname_sql']['full_rev_username']." LIKE :input " .
                             "OR auth_user_md5.username LIKE :input ) " .
                             "AND auth_user_md5.perms IN (:permission) ".
-                        "ORDER BY auth_user_md5.Nachname ASC " .
-                        "LIMIT 10";
+                        "ORDER BY auth_user_md5.Nachname";
             break;
             case "user_inst":
                 $sql =  "SELECT DISTINCT $first_column, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
@@ -135,8 +113,7 @@ class PermissionSearch extends SQLSearch {
                             "AND user_inst.Institut_id IN (:institute) " .
                             "AND user_inst.inst_perms IN (:permission) ".
                             "AND auth_user_md5.user_id NOT IN(:exclude_user) " .
-                        "ORDER BY auth_user_md5.Nachname ASC " .
-                        "LIMIT 10";
+                        "ORDER BY auth_user_md5.Nachname";
            break;
            case "user_inst_not_already_in_sem":
                 $sql =  "SELECT DISTINCT $first_column, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
@@ -146,8 +123,7 @@ class PermissionSearch extends SQLSearch {
                             "OR auth_user_md5.username LIKE :input ) " .
                             "AND user_inst.Institut_id IN (:institute) " .
                             "AND user_inst.inst_perms IN (:permission) ".
-                        "ORDER BY auth_user_md5.Nachname ASC " .
-                        "LIMIT 10";
+                        "ORDER BY auth_user_md5.Nachname";
            break;
            case "user_not_already_tutor_dozent_deputy":
                 $sql =  "SELECT DISTINCT $first_column, ".$GLOBALS['_fullname_sql']['full_rev_username']." AS fullname " .
@@ -156,43 +132,12 @@ class PermissionSearch extends SQLSearch {
                         "WHERE su.user_id IS NULL AND d.user_id IS NULL AND ( ".$GLOBALS['_fullname_sql']['full_rev_username']." LIKE :input " .
                             "OR auth_user_md5.username LIKE :input ) " .
                             "AND auth_user_md5.perms IN (:permission) ".
-                        "ORDER BY auth_user_md5.Nachname ASC " .
-                        "LIMIT 10";
+                        "ORDER BY auth_user_md5.Nachname";
            break;
            default:
                throw new InvalidArgumentException("search parameter not valid");
         }
         return $sql;
-    }
-
-    /**
-     * returns an adress of the avatar of the searched item (if avatar enabled)
-     * @param id string: id of the item which can be username, user_id, Seminar_id or Institut_id
-     * @param size enum(NORMAL, SMALL, MEDIUM): size of the avatar-image
-     * @return string: adress of an image
-     */
-    public function getAvatar($id) {
-        switch ($this->avatarLike) {
-            case "username":
-                return Avatar::getAvatar(NULL, get_userid($id))->getURL(Avatar::SMALL);
-            case "user_id":
-                return Avatar::getAvatar(NULL, $id)->getURL(Avatar::SMALL);
-        }
-    }
-
-    /**
-     * returns an html tag of the image of the searched item (if avatar enabled)
-     * @param id string: id of the item which can be username, user_id, Seminar_id or Institut_id
-     * @param size enum(NORMAL, SMALL, MEDIUM): size of the avatar
-     * @return string: like "<img src="...avatar.jpg" ... >"
-     */
-    public function getAvatarImageTag($id, $size = Avatar::SMALL) {
-        switch ($this->avatarLike) {
-            case "username":
-                return Avatar::getAvatar(get_userid($id))->getImageTag($size);
-            case "user_id":
-                return Avatar::getAvatar($id)->getImageTag($size);
-        }
     }
 
     /**

@@ -42,10 +42,12 @@ class PluginAdministration
         $packagedir = get_config('PLUGINS_PATH').'/tmp_'.md5($filename);
 
         // extract plugin files
-        if (mkdir($packagedir) === FALSE) {
-        	throw new PluginInstallationException(_('Kann das Plugin-Verzeichnis "'.$packagedir.'" nicht erstellen.'));
-        };
-        unzip_file($filename, $packagedir);
+        mkdir($packagedir);
+
+        if (unzip_file($filename, $packagedir)) {
+            rmdirr($packagedir);
+            throw new PluginInstallationException(_('Fehler beim Entpacken des Plugins.'));
+        }
 
         // load the manifest
         $manifest = $this->getPluginManifest($packagedir);

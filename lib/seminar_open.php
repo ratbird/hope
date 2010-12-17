@@ -233,7 +233,7 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
     if ($my_messaging_settings['start_messenger_at_startup'] && $auth->auth['jscript'] &&
         !$seminar_open_redirected && !$_SESSION['messenger_started']) {
         PageLayout::addHeadElement('script', array('type' => 'text/javascript'),
-                'fenster = window.open("studipim.php", "im_'.$user->id.'", "scrollbars=yes,width=400,height=300", "resizable=no");');
+                'fenster = window.open("'.URLHelper::getURL('studipim.php').'", "im_'.$user->id.'", "scrollbars=yes,width=400,height=300", "resizable=no");');
         $_SESSION['messenger_started'] = true;
     }
 }

@@ -278,8 +278,8 @@ if (is_array(json_decode($visibilities, true))) {
 ?>
 <script language="Javascript">
 function open_im() {
-  fenster = window.open("studipim.php",
-                        "im_<?=$GLOBALS['user']->id;?>",
+  fenster = window.open("<?= URLHelper::getURL('studipim.php') ?>",
+                        "im_<?= $GLOBALS['user']->id ?>",
                         "scrollbars=yes,width=400,height=300",
                         "resizable=no");
 }

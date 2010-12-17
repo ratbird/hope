@@ -46,7 +46,7 @@ echo "<tr><td class=\"blank\" width=\"100%\">\n";
 echo "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n";
 echo "<td align=\"center\" width=\"10%\" height=\"40\">";
 echo "<a href=\"";
-echo URLHelper::getLink($PHP_SELF, array("cmd" => "showday", "atime" => $atime - 86400));
+echo URLHelper::getLink('', array("cmd" => "showday", "atime" => $atime - 86400));
 echo "\">";
 
 $tooltip = tooltip(_("zurück"));
@@ -60,7 +60,7 @@ if ($hday = holiday($atime))
 
 echo "</b></td>\n";
 echo "<a href=\"";
-echo URLHelper::getLink($PHP_SELF, array("cmd" => "showday", "atime" => $atime + 86400));
+echo URLHelper::getLink('', array("cmd" => "showday", "atime" => $atime + 86400));
 echo "\">";
 $tooltip = tooltip(_("vor"));
 echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2right.png')."\"$tooltip></a></td>\n";
@@ -69,7 +69,7 @@ echo "</tr>\n";
 if ($st > 0) {
     echo "<tr><td align=\"center\" colspan=\"3\">";
     echo "<a href=\"";
-    echo URLHelper::getLink($PHP_SELF, array("cmd" => "showday", "atime" => ($atime - ($at - $st + 1) * 3600)));
+    echo URLHelper::getLink('', array("cmd" => "showday", "atime" => ($atime - ($at - $st + 1) * 3600)));
     echo "\">";
 
     $tooltip = tooltip(_("zeig davor"));
@@ -83,7 +83,7 @@ echo $tab["table"];
 if ($et < 23) {
     echo "<tr><td align=\"center\" colspan=\"" . $tab["max_columns"] . "\">";
     echo "<a href=\"";
-    echo URLHelper::getLink($PHP_SELF, array("cmd" => "showday", "atime" => ($atime + ($et - $at + 1) * 3600)));
+    echo URLHelper::getLink('', array("cmd" => "showday", "atime" => ($atime + ($et - $at + 1) * 3600)));
     echo "\">";
     $tooltip = tooltip(_("zeig danach"));
     echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2down.png')."\"$tooltip></a></td></tr>\n";
@@ -97,7 +97,7 @@ echo "<tr><td>\n";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 jumpTo($jmp_m, $jmp_d, $jmp_y);
 echo "</table></td></tr>\n";
-$link = $PHP_SELF;
+$link = '';
 $params = array("cmd" => "showday", "atime" => $atime);
 echo "<tr><td align=\"center\">".includeMonth($atime, $link, $params, "", "", $monthTime)."</td></tr>\n";
 echo "</table>\n";

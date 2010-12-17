@@ -146,7 +146,7 @@ $grenze = 0;
 $termine = getAllSortedSingleDates($sem);
 
 ?>
-<form action="<?= URLHelper::getLink($PHP_SELF) ?>" method="post">
+<form action="<?= URLHelper::getLink() ?>" method="post">
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
         <td class="blank" valign="top">
@@ -162,7 +162,7 @@ $termine = getAllSortedSingleDates($sem);
                 <? if (is_array($termine) && sizeof($termine) > 0) : ?>
                 <tr>
                     <td class="steelgraulight" colspan="6" height="24" align="center">
-                        <a href="<?= URLHelper::getLink($PHP_SELF."?cmd=".(($openAll) ? 'close' : 'open')."All") ?>">
+                        <a href="<?= URLHelper::getLink("?cmd=".(($openAll) ? 'close' : 'open')."All") ?>">
                             <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/<?=($openAll) ? 'close' : 'open'?>_all.png" border="0" <?=tooltip(sprintf("Alle Termine %sklappen", ($openAll) ? 'zu' : 'auf'))?>>
                         </a>
                     </td>
@@ -183,7 +183,7 @@ $termine = getAllSortedSingleDates($sem);
                     <td class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
                         <input type="hidden" name="allOpen" value="TRUE">
                         <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
-                        <a href="<?= URLHelper::getLink($PHP_SELF."?cmd=closeAll") ?>">
+                        <a href="<?= URLHelper::getLink("?cmd=closeAll") ?>">
                             <img <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
                         </a>
                     </td>
@@ -276,7 +276,7 @@ $termine = getAllSortedSingleDates($sem);
                     <td class="steelgraulight" colspan="6" align="center" height="30" valign="middle">
                         <input type="hidden" name="allOpen" value="TRUE">
                         <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="editAll" align="absmiddle">&nbsp;&nbsp;&nbsp;
-                        <a href="<?= URLHelper::getLink($PHP_SELF."?cmd=closeAll") ?>">
+                        <a href="<?= URLHelper::getLink("?cmd=closeAll") ?>">
                             <IMG <?=makebutton('abbrechen', 'src')?> border="0" align="absmiddle">
                         </a>
                     </td>

@@ -105,7 +105,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                             </td>
 
                             <td width="3%" class="<?= $cssSw->getClass() ?>" align="center">
-                                <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('auswahl' => $wait['seminar_id'], 'cmd' => 'suppose_to_kill_admission')) ?>">
+                                <a href="<?= URLHelper::getLink('', array('auswahl' => $wait['seminar_id'], 'cmd' => 'suppose_to_kill_admission')) ?>">
                                     <?= Assets::img('icons/16/grey/door-leave.png', tooltip2(_("aus der Veranstaltung abmelden"))) ?>
                                 </a>
                             </td>
@@ -176,7 +176,7 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                                         <?= Assets::img("blank.gif", array('size' => '16')) ?>
                                     <? } ?>
 
-                                        <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('auswahl' => $instid, 'cmd' => 'inst_kill')) ?>">
+                                        <a href="<?= URLHelper::getLink('', array('auswahl' => $instid, 'cmd' => 'inst_kill')) ?>">
                                             <?= Assets::img('icons/16/grey/door-leave.png', tooltip2(_("aus der Einrichtung austragen"))) ?>
                                         </a>
                                 <? } else { ?>

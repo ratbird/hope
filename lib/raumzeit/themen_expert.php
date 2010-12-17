@@ -166,7 +166,7 @@ $sem->processCommands();
 unset($themen);
 $themen =& $sem->getIssues(true);   // read again, so we have the actual sort order and so on
 ?>
-<form action="<?= URLHelper::getLink($PHP_SELF) ?>" method="post">
+<form action="<?= URLHelper::getLink() ?>" method="post">
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td class="blank" colspan="2">
@@ -256,7 +256,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                 </tr>
                 <tr>
                     <td class="steelgraulight" colspan="3" align="center">
-                        <a href="<?= URLHelper::getLink($PHP_SELF."?cmd=openAll") ?>">
+                        <a href="<?= URLHelper::getLink("?cmd=openAll") ?>">
                             <IMG src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/blue/arr_1down.png" title="<?=_("Alle Themen aufklappen")?>" border="0">
                         </a>
                     </td>
@@ -327,7 +327,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                     <td class="blank" colspan="3" align="center">
                         <input type="hidden" name="allOpen" value="1">
                         <input type="image" <?=makebutton('allesuebernehmen', 'src')?> name="saveAll">&nbsp;
-                        <a href="<?= URLHelper::getLink($PHP_SELF) ?>">
+                        <a href="<?= URLHelper::getLink() ?>">
                             <IMG <?=makebutton('abbrechen', 'src')?> border="0">
                         </a>
                     </td>
@@ -366,7 +366,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                             </td>
                             <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel2.jpg">
                                 <font size="-1">
-                                    <a href="<?= URLHelper::getLink($PHP_SELF."?cmd=changeChronoGroupedFilter&newFilter=chrono") ?>">
+                                    <a href="<?= URLHelper::getLink("?cmd=changeChronoGroupedFilter&newFilter=chrono") ?>">
                                         &nbsp;&nbsp;<?=_("chronologisch")?>&nbsp;&nbsp;
                                     </a>
                                 </font>
@@ -374,7 +374,7 @@ $themen =& $sem->getIssues(true);   // read again, so we have the actual sort or
                         <? } else { ?>
                             <td background="<?= $GLOBALS['ASSETS_URL'] ?>images/steel2.jpg">
                                 <font size="-1">
-                                    <a href="<?= URLHelper::getLink($PHP_SELF."?cmd=changeChronoGroupedFilter&newFilter=grouped") ?>">
+                                    <a href="<?= URLHelper::getLink("?cmd=changeChronoGroupedFilter&newFilter=grouped") ?>">
                                         &nbsp;&nbsp;<?=_("gruppiert")?>&nbsp;&nbsp;
                                     </a>
                                 </font>

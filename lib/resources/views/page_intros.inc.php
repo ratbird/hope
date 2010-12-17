@@ -151,7 +151,7 @@ switch ($view) {
 
         $infobox[0]["eintrag"][] = array (
             "icon" => "icons/16/black/print.png",
-            "text" => '<a href="'. URLHelper::getLink($PHP_SELF, array('view' => 'view_schedule', 'print_view' => '1')) . '" target="_blank">' . _("Druckansicht") . '</a>'
+            "text" => '<a href="'. URLHelper::getLink('', array('view' => 'view_schedule', 'print_view' => '1')) . '" target="_blank">' . _("Druckansicht") . '</a>'
         );
     break;
     case "view_sem_schedule":

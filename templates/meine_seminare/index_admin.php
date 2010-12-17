@@ -8,7 +8,7 @@ global $SEM_TYPE;
         <tr>
             <td class="blank">
 
-                <form action="<?= URLHelper::getLink($_SERVER['PHP_SELF']) ?>" method="post">
+                <form action="<?= URLHelper::getLink() ?>" method="post">
 
                     <div style="font-weight:bold;font-size:10pt;margin-left:10px;">
                         <?= _("Bitte w&auml;hlen Sie eine Einrichtung aus:") ?>
@@ -65,15 +65,15 @@ global $SEM_TYPE;
                             </th>
 
                             <th width="6%" align="left">
-                                <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('sortby' => 'VeranstaltungsNummer')) ?>"><?=_("Nr.")?></a>
+                                <a href="<?= URLHelper::getLink('', array('sortby' => 'VeranstaltungsNummer')) ?>"><?=_("Nr.")?></a>
                             </th>
 
                             <th width="50%" align="left">
-                                <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('sortby' => 'Name')) ?>"><?=_("Name")?></a>
+                                <a href="<?= URLHelper::getLink('', array('sortby' => 'Name')) ?>"><?=_("Name")?></a>
                             </th>
 
                             <th width="10%" align="left">
-                                <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('sortby' => 'status')) ?>"><?=_("Veranstaltungstyp")?></a>
+                                <a href="<?= URLHelper::getLink('', array('sortby' => 'status')) ?>"><?=_("Veranstaltungstyp")?></a>
                             </th>
 
                             <th width="15%" align="left">
@@ -85,7 +85,7 @@ global $SEM_TYPE;
                             </th>
 
                             <th width="5%">
-                                <a href="<?= URLHelper::getLink($_SERVER['PHP_SELF'], array('sortby' => 'teilnehmer')) ?>"><?=_("TeilnehmerInnen")?></a>
+                                <a href="<?= URLHelper::getLink('', array('sortby' => 'teilnehmer')) ?>"><?=_("TeilnehmerInnen")?></a>
                             </th>
 
                             <th width="2%">

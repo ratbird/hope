@@ -20,14 +20,14 @@ foreach ($groups as $group_id => $group_members) {
                 <? if (isset($_my_sem_open[$group_id])) { ?>
 
                     <a class="tree" style="font-weight:bold;" name="<?= $group_id ?>"
-                       href="<?= URLHelper::getLink($_SERVER['PHP_SELF'] . '#' . $group_id, array('view' => $view, 'close_my_sem' => $group_id)) ?>"
+                       href="<?= URLHelper::getLink('#' . $group_id, array('view' => $view, 'close_my_sem' => $group_id)) ?>"
                        <?= tooltip(_("Gruppierung schließen"), true) ?>>
 
                         <?= Assets::img($last_modified ? 'icons/16/red/arr_1down.png' : 'icons/16/grey/arr_1down.png') ?>
                     </a>
                 <? } else { ?>
                     <a class="tree" name="<?= $group_id ?>"
-                       href="<?= URLHelper::getLink($_SERVER['PHP_SELF'] . '#' . $group_id, array('view' => $view, 'open_my_sem' => $group_id)) ?>"
+                       href="<?= URLHelper::getLink('#' . $group_id, array('view' => $view, 'open_my_sem' => $group_id)) ?>"
                        <?= tooltip(_("Gruppierung öffnen"), true) ?>>
 
                         <?= Assets::img($last_modified ? 'icons/16/red/arr_1right.png' : 'icons/16/grey/arr_1right.png') ?>
@@ -52,7 +52,7 @@ foreach ($groups as $group_id => $group_members) {
 
                 <a class="tree" <?= $_my_sem_open[$group_id] ? 'style="font-weight:bold"' : '' ?>
                    name="<?= $group_id ?>"
-                   href="<?= URLHelper::getLink($_SERVER['PHP_SELF'] . '#' . $group_id, array('view' => $view, ($_my_sem_open[$group_id] ? 'close_my_sem' : 'open_my_sem' ) => $group_id)) ?>"
+                   href="<?= URLHelper::getLink('#' . $group_id, array('view' => $view, ($_my_sem_open[$group_id] ? 'close_my_sem' : 'open_my_sem' ) => $group_id)) ?>"
                    <?= tooltip(_("Gruppierung öffnen"), true) ?>>
 
                     <?= htmlReady($group_field == "sem_tree_id" ? $group_names[$group_id][0] : $group_names[$group_id]) ?>

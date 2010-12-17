@@ -434,9 +434,9 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                         $inc_possible = TRUE;
                 }
                 if ($inc_possible) {
-                    printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink($PHP_SELF."?dec=TRUE"), makeButton("vorherige", "img"));
+                    printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?dec=TRUE"), makeButton("vorherige", "img"));
                 }
-                printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink($PHP_SELF."?archive_kill=TRUE"), makeButton("archivieren", "img"));
+                printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?archive_kill=TRUE"), makeButton("archivieren", "img"));
                 if (!$links_admin_data["sem_id"]) {
                     echo '&nbsp;<a href="';
 
@@ -459,7 +459,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                         $dec_possible = TRUE;
                 }
                 if ($dec_possible) {
-                    printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink($PHP_SELF."?inc=TRUE"), makeButton("naechster", "img"));
+                    printf("&nbsp;<a href=\"%s\">%s</a>", URLHelper::getLink("?inc=TRUE"), makeButton("naechster", "img"));
                 }
                 if (sizeof($archiv_assi_data["sems"]) > 1)
                     printf ("<br><font size=\"-1\">" . _("noch <b>%s</b> von <b>%s</b> Veranstaltungen zum Archivieren ausgew&auml;hlt.") . "</font>", sizeof($archiv_assi_data["sem_check"]), sizeof($archiv_assi_data["sems"]));

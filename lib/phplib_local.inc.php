@@ -28,9 +28,20 @@
 //
 require_once('lib/deputies_functions.inc.php');
 
-$_never_globalize_request_params = array('msg','_msg','errormsg','meldung','sms_msg','_html_head_title','_include_stylesheet',
-                                    '_include_extra_stylesheet','_include_additional_header','_include_additional_html'
-                                    );
+$_never_globalize_request_params = array(
+    '_html_head_title',
+    '_include_additional_header',
+    '_include_additional_html',
+    '_include_extra_stylesheet',
+    '_include_stylesheet',
+    '_msg',
+    'DB_STUDIP_SLAVE_HOST',
+    'errormsg',
+    'meldung',
+    'msg',
+    'sms_msg'
+);
+
 foreach($_never_globalize_request_params as $one_param){
     if (isset($_REQUEST[$one_param])){
         unset($GLOBALS[$one_param]);

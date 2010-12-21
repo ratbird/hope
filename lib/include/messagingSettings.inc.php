@@ -278,7 +278,7 @@ function change_messaging_view()
                             } else {
                                 $db->query("SELECT username, ".$_fullname_sql['full_rev']." AS fullname, perms FROM auth_user_md5 LEFT JOIN user_info USING(user_id) WHERE (username LIKE '%$search_exp%' OR Vorname LIKE '%$search_exp%' OR Nachname LIKE '%$search_exp%') AND ".get_vis_query('auth_user_md5')." ORDER BY Nachname ASC");
                                 if (!$db->num_rows()) { // wenn keine treffer
-                                    echo "&nbsp;".Assets::image_path('icons/16/blue/refresh.png', array('class' => 'text-top', 'title' =>_('setzt die Suche zurück')));
+                                    echo '<input type="image" name="reset_serach" src="' . Assets::image_path('icons/16/blue/refresh.png') . '" class="text-top" value="' . _("Suche zurücksetzen") . '" ' . tooltip(_("setzt die Suche zurück")) . '>';
                                     echo "<font size=\"-1\">&nbsp;"._("keine Treffer")."</font>";
                                 } else { // treffer auswählen
                                     echo "<input type=\"image\" name=\"add_smsforward_rec\" ".tooltip(_("als Empfänger weitergeleiteter Nachrichten eintragen"))." value=\""._("als Empfänger auswählen")."\" src=\"" . Assets::image_path('icons/16/blue/accept.png') . "\" border=\"0\">&nbsp;&nbsp;";

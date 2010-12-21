@@ -1,45 +1,42 @@
-<?
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
+<?php
 /**
-* SemesterData.class.php
-* 
-* 
-*
-* @author       Mark Sievers <msievers@uos.de> 
-* @access       public
-* @modulegroup  core
-* @module           
-* @package      studip_core
-*/
+ * HolidayData.class.php
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Mark Sievers <msievers@uos.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ */
 
-// +---------------------------------------------------------------------------+
-// This file is part of Stud.IP
-// SemesterData.class.php
-// Klasse für SemesterVerwaltung
-// Copyright (C) 2003 Cornelis Kater <ckater@gwdg.de>, Suchi & Berg GmbH <info@data-quest.de>
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
-
-
-
-class HolidayData {
-    
+class HolidayData
+{
     var $db;
-    
+
+    /**
+     * get an instance of this class
+     *
+     * @param boolean $refresh_cache
+     * @return object HolidayData
+     */
+    static function GetInstance($refresh_cache = false)
+    {
+        static $holiday_object;
+
+        if ($refresh_cache) {
+            $holiday_object = null;
+        }
+        if (is_object($holiday_object)) {
+            return $holiday_object;
+        } else {
+            $holiday_object = new HolidayData();
+            return $holiday_object;
+        }
+    }
+
     function GetAllHolidaysArray(){
         static $all_holiday;
         if (is_null($all_holiday)){
@@ -69,7 +66,7 @@ class HolidayData {
         }
         return $holidaydata;
     }
-    
+
     function getHolidaysInPeriod($start,$end) {
         $i=0;
         $sql = "SELECT * FROM semester_holiday WHERE beginn >= '".$start."' AND ende <= '".$end."'";
@@ -86,7 +83,7 @@ class HolidayData {
         }
         return $holidaydata;
     }
-    
+
     function deleteHoliday($holiday_id) {
         $sql = "DELETE FROM semester_holiday WHERE holiday_id = '".$holiday_id."'";
         if (!$this->db->query($sql)) {
@@ -95,7 +92,7 @@ class HolidayData {
         }
         return 1;
     }
-    
+
     function getHolidayData($holiday_id) {
         $sql = "SELECT * FROM semester_holiday WHERE holiday_id='".$holiday_id."'";
         if (!$this->db->query($sql)) {
@@ -108,7 +105,7 @@ class HolidayData {
         $this->db->next_record();
         return $this->wrapHolidayData();
     }
-    
+
     function insertNewHoliday($holidaydata) {
         $holiday_id = md5(uniqid("Legolas"));
         $sql =  "INSERT INTO semester_holiday (holiday_id,semester_id,name,description,beginn,ende) ".
@@ -119,7 +116,7 @@ class HolidayData {
         }
         return $holiday_id;
     }
-    
+
     function updateExistingHoliday($holidaydata) {
         $sql =  "UPDATE semester_holiday SET ".
                 "name = '".$holidaydata["name"]."', ".
@@ -133,7 +130,7 @@ class HolidayData {
         }
         return 1;
     }
-    
+
     function wrapHolidayData() {
         $holidaydata = array();
         $holidaydata["holiday_id"]  = $this->db->f("holiday_id");
@@ -144,4 +141,3 @@ class HolidayData {
         return $holidaydata;
     }
 }
-?>

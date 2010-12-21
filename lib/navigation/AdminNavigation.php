@@ -153,12 +153,8 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation('banner_ads', new Navigation(_('Werbebanner'), 'admin_banner_ads.php'));
             }
 
-            if (get_config('SMILEYADMIN_ENABLE')) {
-                $navigation->addSubNavigation('smileys', new Navigation(_('Smileys'), 'admin_smileys.php'));
-            }
-
             if (get_config('SEMESTER_ADMINISTRATION_ENABLE')) {
-                $navigation->addSubNavigation('semester', new Navigation(_('Semester'), 'admin_semester.php'));
+                $navigation->addSubNavigation('semester', new Navigation(_('Semester'), 'dispatch.php/admin/semester'));
 
             }
 
@@ -171,6 +167,10 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('studygroup', new Navigation(_('Studiengruppen'), 'dispatch.php/course/studygroup/globalmodules'));
 
             $navigation->addSubNavigation('studycourse', new Navigation(_('Studiengänge'), 'dispatch.php/admin/studycourse/profession'));
+
+            if (get_config('SMILEYADMIN_ENABLE')) {
+                $navigation->addSubNavigation('smileys', new Navigation(_('Smileys'), 'admin_smileys.php'));
+            }
         }
 
         $this->addSubNavigation('config', $navigation);

@@ -9,7 +9,6 @@
  * the License, or (at your option) any later version.
  *
  * @author      André Noack <noack@data-quest.de>
- * @copyright   2010 Stud.IP Core-Group
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
 */
@@ -17,7 +16,6 @@ require_once "lib/classes/SimpleORMap.class.php";
 
 class Semester extends SimpleORMap
 {
-
     /**
      * cache
      */
@@ -173,5 +171,93 @@ class Semester extends SimpleORMap
         } else {
             return false;
         }
+    }
+
+    /**
+     * Return the number of continuous seminars in a semester
+     *
+     * @param md5 $id of the semester
+     * @return int count of seminars
+     */
+    public static function countContinuousSeminars($id)
+    {
+        $semesters = SemesterData::getInstance()->getAllSemesterData();
+        $seminars = DBManager::get()->query("SELECT start_time FROM seminare WHERE duration_time = -1")->fetchAll(PDO::FETCH_COLUMN);
+        $continuous_seminars = array();
+        foreach ($semesters as $semester) {
+            $continuous_seminars[$semester['semester_id']] = 0;
+        }
+
+        foreach ($seminars as $seminar) {
+            foreach ($semesters as $i => $semester) {
+                if (($seminar >= $semester["beginn"]) && ($seminar < $semester["ende"])) {
+                    for ($j=$i; $j < count($semesters); $j++) {
+                        $continuous_seminars[$semesters[$j]["semester_id"]]++;
+                    }
+                }
+            }
+        }
+        return $continuous_seminars[$id];
+    }
+
+    /**
+     * This method was adopted from the old version.
+     *
+     * @param md5 $id of the semester
+     * @return int count of seminars
+     */
+    public static function countDurationSeminars($id)
+    {
+        $semesters = SemesterData::getInstance()->getAllSemesterData();
+        $duration_seminars = array();
+        foreach ($semesters as $semester) {
+            $duration_seminars[$semester['semester_id']] = 0;
+        }
+
+        $sql =  "SELECT start_time, duration_time FROM seminare WHERE ".
+                "duration_time != 0 AND duration_time != -1";
+        $seminars = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($seminars as $seminar) {
+            $endtime = $seminar["start_time"] + $seminar["duration_time"];
+            foreach ($semesters as $i => $semester) {
+                if ($seminar["start_time"] >= $semester["beginn"] && $seminar["start_time"] < $semester["ende"]) {
+                    for ($j=$i; $j<count($semesters); $j++) {
+                        if ($endtime >= $semesters[$j]["beginn"]) {
+                            $duration_seminars[$semesters[$j]["semester_id"]]++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return (int)$duration_seminars[$id];
+    }
+
+    /**
+     * Returns the number of absolute seminars in a semester
+     *
+     * @param md5 $id of the semester
+     * return int count of seminars
+     */
+    public static function countAbsolutSeminars($id)
+    {
+        $semesterdata = SemesterData::getInstance()->getSemesterData($id);
+
+        $sql = "SELECT COUNT(*) FROM seminare WHERE "
+              ."start_time >= '".$semesterdata["beginn"]."' "
+              ."AND start_time <= '".$semesterdata["ende"]."' "
+              ."AND duration_time = '0'";
+        return DBManager::get()->query($sql)->fetchColumn();
+    }
+
+    /**
+     * This method was adopted from the old version.
+     *
+     * @param md5 $id of the semester
+     * return int count of seminars
+     */
+    public static function getAbsolutAndDurationSeminars($id)
+    {
+        return (int)self::countAbsolutSeminars($id) + self::countDurationSeminars($id);
     }
 }

@@ -59,15 +59,16 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
 
     if ($new_account_cms != "")
         $new_account_form = ELearningUtils::getNewAccountForm($new_account_cms);
-    foreach($ELEARNING_INTERFACE_MODULES as $cms => $cms_preferences)
+    foreach($ELEARNING_INTERFACE_MODULES as $cms => $cms_preferences) {
         if (ELearningUtils::isCMSActive($cms) AND ($cms_preferences["auth_necessary"] == true))
         {
             ELearningUtils::loadClass($cms);
             ELearningUtils::bench("load cms $cms");
             $new_module_form[$cms] = ELearningUtils::getNewModuleForm($cms);
         } else {
-            $messages['error'] = sprintf(_("Das Lernmodul %s ist momentan nicht erreichbar. Bitte wenden Sie sich an Ihren Systemadministrator."),$cms);
+            $messages['error'] = sprintf(_("Das System %s ist momentan nicht erreichbar. Bitte wenden Sie sich an Ihren Systemadministrator."),$cms);
         }
+    }
     if ($messages["info"] != "")
     {
         echo MessageBox::info($messages["info"]);

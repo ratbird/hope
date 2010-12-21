@@ -68,6 +68,7 @@ class NewsController extends StudipController
         $newscontent = $news->toArray();
         $newscontent['open'] = $open;
         object_set_visit($id, "news", $GLOBALS['user']->id);
+        object_add_view($id);
         $content = show_news_item_content($newscontent,
                                           array(),
                                           $show_admin,

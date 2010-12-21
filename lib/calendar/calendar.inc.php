@@ -37,8 +37,6 @@ $atime = (int)$_REQUEST['atime'];
 if (!$atime && !$termin_id)
     $atime = time();
 
-$monthTime = Request::int('imt', $atime);
-
 if (isset($mod_s_x)) $mod = 'SINGLE';
 if (isset($mod_d_x)) $mod = 'DAILY';
 if (isset($mod_w_x)) $mod = 'WEEKLY';

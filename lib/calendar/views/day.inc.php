@@ -44,11 +44,8 @@ echo "<tr><td class=\"blank\" width=\"60%\"><br>\n";
 echo "<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "<tr><td class=\"blank\" width=\"100%\">\n";
 echo "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n";
-echo "<td align=\"center\" width=\"10%\" height=\"40\">";
-echo "<a href=\"";
-echo URLHelper::getLink('', array("cmd" => "showday", "atime" => $atime - 86400));
-echo "\">";
-
+echo "<td align=\"center\" width=\"10%\" height=\"40\"><a href=\"$PHP_SELF?cmd=showday&atime=";
+echo $atime - 86400 . "\">\n";
 $tooltip = tooltip(_("zurück"));
 echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2left.png')."\"$tooltip></a></td>\n";
 echo "<td class=\"calhead\" width=\"80%\" class=\"cal\"><b>\n";
@@ -59,19 +56,15 @@ if ($hday = holiday($atime))
     echo "<br>" . $hday["name"];
 
 echo "</b></td>\n";
-echo "<a href=\"";
-echo URLHelper::getLink('', array("cmd" => "showday", "atime" => $atime + 86400));
-echo "\">";
+echo "<td align=\"center\" width=\"10%\"><a href=\"$PHP_SELF?cmd=showday&atime=";
+echo $atime + 86400 . "\">\n";
 $tooltip = tooltip(_("vor"));
 echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2right.png')."\"$tooltip></a></td>\n";
 echo "</tr>\n";
 
 if ($st > 0) {
-    echo "<tr><td align=\"center\" colspan=\"3\">";
-    echo "<a href=\"";
-    echo URLHelper::getLink('', array("cmd" => "showday", "atime" => ($atime - ($at - $st + 1) * 3600)));
-    echo "\">";
-
+    echo "<tr><td align=\"center\" colspan=\"3\"><a href=\"$PHP_SELF?cmd=showday&atime=";
+    echo ($atime - ($at - $st + 1) * 3600) . "\">";
     $tooltip = tooltip(_("zeig davor"));
     echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2up.png')."\"$tooltip></a></td></tr>\n";
 }
@@ -82,9 +75,8 @@ echo $tab["table"];
 
 if ($et < 23) {
     echo "<tr><td align=\"center\" colspan=\"" . $tab["max_columns"] . "\">";
-    echo "<a href=\"";
-    echo URLHelper::getLink('', array("cmd" => "showday", "atime" => ($atime + ($et - $at + 1) * 3600)));
-    echo "\">";
+    echo "<a href=\"$PHP_SELF?cmd=showday&atime=";
+    echo ($atime + ($et - $at + 1) * 3600) . "\">";
     $tooltip = tooltip(_("zeig danach"));
     echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2down.png')."\"$tooltip></a></td></tr>\n";
 }
@@ -97,8 +89,7 @@ echo "<tr><td>\n";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 jumpTo($jmp_m, $jmp_d, $jmp_y);
 echo "</table></td></tr>\n";
-$link = '';
-$params = array("cmd" => "showday", "atime" => $atime);
-echo "<tr><td align=\"center\">".includeMonth($atime, $link, $params, "", "", $monthTime)."</td></tr>\n";
+$link = "$PHP_SELF?cmd=showday&atime=";
+echo "<tr><td align=\"center\">".includeMonth($atime, $link)."</td></tr>\n";
 echo "</table>\n";
 ?>

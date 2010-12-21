@@ -67,8 +67,13 @@ class NewsController extends StudipController
         }
         $newscontent = $news->toArray();
         $newscontent['open'] = $open;
-        object_set_visit($id, "news", $GLOBALS['user']->id);
-        object_add_view($id);
+
+        // use the same logic here as in show_news_item()
+        if ($newscontent['user_id'] != $GLOBALS['auth']->auth['uid']) {
+            object_add_view($id);
+        }
+
+        object_set_visit($id, "news");
         $content = show_news_item_content($newscontent,
                                           array(),
                                           $show_admin,

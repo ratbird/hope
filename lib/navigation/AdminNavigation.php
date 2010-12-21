@@ -137,11 +137,11 @@ class AdminNavigation extends Navigation
         }
 
         if ($perm->have_perm(get_config('AUX_RULE_ADMIN_PERM') ? get_config('AUX_RULE_ADMIN_PERM') : 'admin')) {
-            $navigation->addSubNavigation('aux_data', new Navigation(_('Zusatzangaben definieren'), 'admin_aux_adjust.php'));
+            $navigation->addSubNavigation('specification', new Navigation(_('Zusatzangaben'), 'dispatch.php/admin/specification'));
         }
 
         if ($perm->have_perm(get_config('LOCK_RULE_ADMIN_PERM') ? get_config('LOCK_RULE_ADMIN_PERM') : 'admin') && get_config('SEMINAR_LOCK_ENABLE')) {
-            $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperrebenen anpassen'), 'admin_lock_adjust.php'));
+            $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperrebenen'), 'admin_lock_adjust.php'));
         }
 
         if ($perm->have_perm('root')) {
@@ -159,6 +159,7 @@ class AdminNavigation extends Navigation
 
             if (get_config('SEMESTER_ADMINISTRATION_ENABLE')) {
                 $navigation->addSubNavigation('semester', new Navigation(_('Semester'), 'admin_semester.php'));
+
             }
 
             $navigation->addSubNavigation('member_view', new Navigation(_('Teilnehmeransicht'), 'admin_teilnehmer_view.php'));

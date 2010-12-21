@@ -454,7 +454,7 @@ if (!isset($details) || isset($set)) {
 
     // Jemand soll ans Institut...
     //if (isset($berufen_x) && $ins_id != "" && ($perm->have_perm("root") || (!$SessSemName["is_fak"] && $perm->have_studip_perm("admin",$SessSemName["fak"])))) {
-    if (isset($berufen_x) && $ins_id != "" && $u_id && $u_id !== _("Nutzer eintragen")) {
+    if (isset($berufen_x) && $ins_id != "" && $u_id != "") {
         $db->query("SELECT *  FROM user_inst WHERE Institut_id = '$ins_id' AND user_id = '$u_id'");
         if (($db->next_record()) && ($db->f("inst_perms") != "user")) {
             // der Admin hat Tomaten auf den Augen, der Mitarbeiter sitzt schon im Institut
@@ -594,8 +594,6 @@ if ($inst_id != "" && $inst_id !="0") {
     echo '</td></tr>';
 
     if ($admin_view) {
-        if ((isset($search_exp) && strlen($search_exp) > 2) || !isset($set)) {
-            $search_exp = trim($search_exp);
             // Der Admin will neue Sklaven ins Institut berufen...
             $InstituteUser = new SQLSearch("SELECT DISTINCT auth_user_md5.user_id, " . $_fullname_sql['full_rev'] . " AS fullname " .
                 "FROM auth_user_md5 " .
@@ -639,10 +637,6 @@ if ($inst_id != "" && $inst_id !="0") {
                     </table>
                 </form>
             </td>
-            <? // Ende der Berufung
-            
-        }
-            ?>
 
             <!-- Mail an alle MitarbeiterInnen -->
             <td class="blank" valign="top" width="50%" align="center">

@@ -89,7 +89,6 @@ echo "<tr><td>\n";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 jumpTo($jmp_m, $jmp_d, $jmp_y);
 echo "</table></td></tr>\n";
-$link = "$PHP_SELF?cmd=showday&atime=";
-echo "<tr><td align=\"center\">".includeMonth(Request::int('imt', $atime), $link, '', '', $atime)."</td></tr>\n";
+echo "<tr><td align=\"center\">".includeMonth(Request::int('imt', $atime), '?cmd=showday', '', '', $atime)."</td></tr>\n";
 echo "</table>\n";
 ?>

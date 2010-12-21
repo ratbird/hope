@@ -590,9 +590,6 @@ function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
     global $RELATIVE_PATH_CALENDAR, $CANONICAL_RELATIVE_PATH_STUDIP;
     require_once($RELATIVE_PATH_CALENDAR . "/lib/CalendarMonth.class.php");
 
-
-    //$js_include = " " . $js_include;
-
     $amonth = new CalendarMonth($imt);
     $now = mktime(12, 0, 0, date("n", time()), date("j", time()), date("Y", time()), 0);
     $width = "25";
@@ -608,11 +605,10 @@ function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
     if ($mod == 'NONAV') {
         $ret .= '&nbsp;';
     } else {
-        $ret .= "<a href=\"$href$ptime&imt=";
-        $ret .= mktime(0, 0, -1, $amonth->mon, 15, $amonth->year - 1) . "\">";
+        $ret .= "<a href=\"" . URLHelper::getLink($href, array('atime' => $ptime, 'imt' => mktime(0, 0, -1, $amonth->mon, 15, $amonth->year - 1))) . "\">";
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_eol-left.png') . "\"";
         $ret .= tooltip(_("ein Jahr zurück")) . "></a>";
-        $ret .= "<a href=\"$href$ptime&imt=" . ($amonth->getStart() - 1) . "\">";
+        $ret .= "<a href=\"" . URLHelper::getLink($href, array('atime' => $ptime, 'imt' => $amonth->getStart() - 1)) . "\">";
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_2left.png') . "\"";
         $ret .= tooltip(_("einen Monat zurück")) . "></a>\n";
     }
@@ -628,11 +624,10 @@ function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
     if ($mod == 'NONAV' || $mod == 'NONAVARROWS') {
         $ret .= '&nbsp;';
     } else {
-        $ret .= "<a href=\"$href$ptime&imt=" . ($amonth->getEnd() + 1) . "\">";
+        $ret .= "<a href=\"" . URLHelper::getLink($href, array('atime' => $ptime, 'imt' => $amonth->getEnd() + 1)) . "\">";
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_2right.png') . "\"";
         $ret .= tooltip(_("einen Monat vor")) . "></a>";
-        $ret .= "<a href=\"$href$ptime&imt=";
-        $ret .= (mktime(0, 0, 1, $amonth->mon, 1, $amonth->year + 1)) . "\">";
+        $ret .= "<a href=\"" . URLHelper::getLink($href, array('atime' => $ptime, 'imt' => mktime(0, 0, 1, $amonth->mon, 1, $amonth->year + 1))) . "\">";
         $ret .= "<img src=\"" . Assets::image_path('icons/16/blue/arr_eol-right.png') . "\"";
         $ret .= tooltip(_("ein Jahr vor")) . "></a>\n";
     }
@@ -704,7 +699,7 @@ function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
             if ($mod == 'NONAV' && $style == 'light') {
                 $ret .= '&nbsp;'; // Tag gehört nicht zu diesem Monat
             } else {
-                $ret .= "<a class=\"{$style}sdaymin\" href=\"$href$i\"";
+                $ret .= "<a class=\"{$style}sdaymin\" href=\"" . URLHelper::getLink($href, array('atime' => $i)) . "\"";
                 if ($hday['name'])
                     $ret .= ' ' . tooltip($hday['name']);
                 $ret .= "$js_inc>$aday</a>";
@@ -727,16 +722,16 @@ function includeMonth ($imt, $href, $mod = "", $js_include = "", $ptime = "") {
                 // unterschiedliche Darstellung je nach Art des Tages (Rang des Feiertages)
                 switch ($hday["col"]) {
                     case 1:
-                        $ret .= "<a class=\"{$style}daymin\" href=\"$href$i\" ";
+                        $ret .= "<a class=\"{$style}daymin\" href=\"" . URLHelper::getLink($href, array('atime' => $i)) . "\" ";
                         $ret .= tooltip($hday['name']) . "$js_inc>$aday</a>";
                         break;
                     case 2:
-                    case 3;
-                        $ret .= "<a class=\"{$style}hdaymin\" href=\"$href$i\" ";
+                    case 3:
+                        $ret .= "<a class=\"{$style}hdaymin\" href=\"" . URLHelper::getLink($href, array('atime' => $i)) . "\" ";
                         $ret .= tooltip($hday['name']) . "$js_inc>$aday</a>";
                         break;
                     default:
-                        $ret .= "<a class=\"{$style}daymin\" href=\"$href$i\"$js_inc>$aday</a>";
+                        $ret .= "<a class=\"{$style}daymin\" href=\"" . URLHelper::getLink($href, array('atime' => $i)) . "\"$js_inc>$aday</a>";
                 }
             }
             $ret .= "</td>\n";

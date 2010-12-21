@@ -423,9 +423,9 @@ if ($mcount > 3) {
     }
 } else { // nur einen Monat anzeigen
     if ($studipform) {
-        echo includeMonth($imt, "$PHP_SELF?form_name=$form_name&submit=$submit&element_switch=$element_switch&c=$c&atime=", 'NOKW', $js, $atime);
+        echo includeMonth($imt, "?form_name=$form_name&submit=$submit&element_switch=$element_switch&c=$c", 'NOKW', $js, $atime);
     } else {
-        echo includeMonth($imt, "$PHP_SELF?element_switch=$element_switch&c=$c&atime=", 'NOKW', $js, $atime);
+        echo includeMonth($imt, "?element_switch=$element_switch&c=$c", 'NOKW', $js, $atime);
     }
 }
 echo "</body>\n</html>";

@@ -1428,13 +1428,36 @@ if ($forum["view"]=="search") {
     $addon = " AND x.chdate > '$datumtmp'";
 }
 
-$query = "SELECT x.topic_id FROM px_topics x, px_topics y WHERE x.root_id = y.topic_id AND x.Seminar_id = '$SessionSeminar' "
-    ."AND (x.chdate>=x.mkdate OR x.user_id='$user->id' OR x.author='unbekannt')"
-    .$addon;
-$db->query($query);
-if ($db->num_rows() > 0 || isset($new_topic)) {  // Forum ist nicht leer
+function countTopics($db, $addon) {
+    global $user, $SessionSeminar;
+    $query = "SELECT x.topic_id ".
+             "FROM px_topics x, px_topics y ".
+             "WHERE x.root_id = y.topic_id ".
+             "AND x.Seminar_id = '$SessionSeminar' ".
+             "AND (x.chdate>=x.mkdate OR x.user_id='$user->id' OR x.author='unbekannt')".
+             $addon;
+    $db->query($query);
+    return $db->num_rows();
+}
+
+// Forum ist nicht leer
+if (countTopics($db, $addon) > 0 || isset($new_topic)) {
     $forum["forumsum"] = $db->num_rows();
-} else { // das Forum ist leer
+}
+
+// keine neuen, aber alte
+elseif ($forum["view"] === "neue" && countTopics($db, "")) {
+    $forum["view"] = "flat";
+    $addon = "";
+    ?>
+    <div class="white" style="padding: 0.5em 0;">
+    <?= MessageBox::info(_("Es liegen keine neuen Beiträge vor.")) ?>
+    </div>
+    <?
+}
+
+// das Forum ist leer
+else {
     echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
     echo ForumNoPostings();
     echo "</table>";

@@ -1,6 +1,6 @@
 <?
 $cssSw = new CSSClassSwitcher();
-$style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."');"
+$style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif') ."');"
     ." background-position: left;"
     ." background-repeat: repeat-y;"
     ."\" ";
@@ -31,7 +31,7 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."
         //if ($sgroup = GetSingleStatusgruppe($role_id, $userID)) {
             //$groupOptions = getOptionsOfStGroups($userID);
             ?>
-        <table cellspacing="0" cellpadding="0" border="0" class="blank" width="90%">
+        <table cellspacing="0" cellpadding="1" border="0" class="blank" width="90%">
             <tr>
                 <td align="left" colspan="4" class="topic">
                     &nbsp;<b><?= _("Daten für diese Funktion") ?></b>

@@ -47,9 +47,9 @@ if (is_array($institutes) && sizeof($institutes) > 0) :
     <td class="blank">
         <?
         if ($max_roles > $pos_role) :
-            echo Assets::img('forumstrich3');
+            echo Assets::img('forumstrich3.gif', array('class' => 'text-bottom'));
         else :
-            echo Assets::img('forumstrich2');
+            echo Assets::img('forumstrich2.gif', array('class' => 'text-bottom'));
         endif;
         ?>
     </td>

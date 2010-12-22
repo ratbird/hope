@@ -12,7 +12,7 @@
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * @author      Till Glöggler <tgloeggl@uni-osnabrueck.de>
+ * @author      Till Glï¿½ggler <tgloeggl@uni-osnabrueck.de>
  * @author      Stefan Suchi <suchi@data-quest>
  * @author      Suchi & Berg GmbH <info@data-quest.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
@@ -536,8 +536,8 @@ class Seminar
             // logging <<<<<<
             $this->semester_start_time = $start;
             $this->metadate->setSeminarStartTime($start);
-            $this->createMessage(_("Das Startsemester wurde geändert."));
-            $this->createInfo(_("Beachten Sie, dass Termine, die nicht mit den Einstellungen der regelmäßigen Zeit übereinstimmen (z.B. auf Grund einer Verschiebung der regelmäßigen Zeit), teilweise gelöscht sein könnten!"));
+            $this->createMessage(_("Das Startsemester wurde geï¿½ndert."));
+            $this->createInfo(_("Beachten Sie, dass Termine, die nicht mit den Einstellungen der regelmï¿½ï¿½igen Zeit ï¿½bereinstimmen (z.B. auf Grund einer Verschiebung der regelmï¿½ï¿½igen Zeit), teilweise gelï¿½scht sein kï¿½nnten!"));
             return TRUE;
         }
         return FALSE;
@@ -594,7 +594,7 @@ class Seminar
                 $this->metadate->setSeminarDurationTime($this->semester_duration_time);
             }
 
-            $this->createMessage(_("Die Dauer wurde geändert."));
+            $this->createMessage(_("Die Dauer wurde geï¿½ndert."));
 
             /*
              * If the duration has been changed, we have to create new SingleDates
@@ -864,7 +864,7 @@ class Seminar
 
                     case 'success':
                         $ret['success'] = array(
-                            'title'   => _("Ihre Änderungen wurden gespeichert!"),
+                            'title'   => _("Ihre ï¿½nderungen wurden gespeichert!"),
                             'details' => $this->message_stack['success']
                         );
                     break;
@@ -900,7 +900,7 @@ class Seminar
      */
     function createError($text)
     {
-        $this->messages[] = 'error§'.$text.'§';
+        $this->messages[] = 'errorï¿½'.$text.'ï¿½';
         $this->message_stack['error'][] = $text;
     }
 
@@ -911,7 +911,7 @@ class Seminar
      */
     function createInfo($text)
     {
-        $this->messages[] = 'info§'.$text.'§';
+        $this->messages[] = 'infoï¿½'.$text.'ï¿½';
         $this->message_stack['info'][] = $text;
     }
 
@@ -922,7 +922,7 @@ class Seminar
      */
     function createMessage($text)
     {
-        $this->messages[] = 'msg§'.$text.'§';
+        $this->messages[] = 'msgï¿½'.$text.'ï¿½';
         $this->message_stack['success'][] = $text;
     }
 
@@ -990,8 +990,8 @@ class Seminar
                     'day' => $data['day'],
                     'really_change' => 'true'
                 );
-                $question = _("Wenn Sie die regelmäßige Zeit auf %s ändern, verlieren Sie die Raumbuchungen für alle in der Zukunft liegenden Termine!")
-                    ."\n". _("Sind Sie sicher, dass Sie die regelmäßige Zeit ändern möchten?");
+                $question = _("Wenn Sie die regelmï¿½ï¿½ige Zeit auf %s ï¿½ndern, verlieren Sie die Raumbuchungen fï¿½r alle in der Zukunft liegenden Termine!")
+                    ."\n". _("Sind Sie sicher, dass Sie die regelmï¿½ï¿½ige Zeit ï¿½ndern mï¿½chten?");
                 $question_time = '**'. getWeekday($data['day'], FALSE) .', '. $data['start_stunde'] .':'. $data['start_minute']
                     .' - '. $data['end_stunde'] .':'. $data['end_minute'] .'**';
 
@@ -1008,7 +1008,7 @@ class Seminar
         $same_time = false;
 
         if ($data['description'] != $cycle->getDescription()) {
-            $this->createMessage(_("Die Beschreibung des regelmäßigen Eintrags wurde geändert."));
+            $this->createMessage(_("Die Beschreibung des regelmï¿½ï¿½igen Eintrags wurde geï¿½ndert."));
             $message = true;
             $do_changes = true;
         }
@@ -1033,7 +1033,7 @@ class Seminar
         }
         if (round(str_replace(',','.', $data['sws']),1) != $cycle->sws) {
             $cycle->sws = $data['sws'];
-            $this->createMessage(_("Die Semesterwochenstunden für Dozenten des regelmäßigen Eintrags wurden geändert."));
+            $this->createMessage(_("Die Semesterwochenstunden fï¿½r Dozenten des regelmï¿½ï¿½igen Eintrags wurden geï¿½ndert."));
             $message = true;
             $do_changes = true;
         }
@@ -1045,12 +1045,12 @@ class Seminar
                     // logging >>>>>>
                     log_event("SEM_CHANGE_CYCLE", $this->getId(), NULL, $change_from .' -> '. $cycle->toString());
                     // logging <<<<<<
-                    $this->createMessage(sprintf(_("Die regelmäßige Veranstaltungszeit wurde auf \"%s\" für alle in der Zukunft liegenden Termine geändert!"), '<b>'.$cycle->toString().'</b>'));
+                    $this->createMessage(sprintf(_("Die regelmï¿½ï¿½ige Veranstaltungszeit wurde auf \"%s\" fï¿½r alle in der Zukunft liegenden Termine geï¿½ndert!"), '<b>'.$cycle->toString().'</b>'));
                     $message = true;
                 }
             } else {
                 if (!$same_time) {
-                    $this->createInfo(sprintf(_("Die regelmäßige Veranstaltungszeit wurde auf \"%s\" geändert, jedoch gab es keine Termine die davon betroffen waren."), '<b>'.$cycle->toString().'</b>'));
+                    $this->createInfo(sprintf(_("Die regelmï¿½ï¿½ige Veranstaltungszeit wurde auf \"%s\" geï¿½ndert, jedoch gab es keine Termine die davon betroffen waren."), '<b>'.$cycle->toString().'</b>'));
                     $message = true;
                 }
             }
@@ -1058,7 +1058,7 @@ class Seminar
         }
 
         if (!$message) {
-            $this->createInfo("Sie haben keine Änderungen vorgenommen!");
+            $this->createInfo("Sie haben keine ï¿½nderungen vorgenommen!");
         }
 
     }
@@ -1077,7 +1077,7 @@ class Seminar
         if ($this->metadate->getTurnus($metadate_id) != $turnus) {
             $this->metadate->setTurnus($turnus, $metadate_id);
             $key = $metadate_id ? $metadate_id : $this->metadate->getFirstMetadate()->metadate_id;
-            $this->createMessage(sprintf(_("Der Turnus für den Termin %s wurde geändert."), $this->metadate->cycles[$key]->toString()));
+            $this->createMessage(sprintf(_("Der Turnus fï¿½r den Termin %s wurde geï¿½ndert."), $this->metadate->cycles[$key]->toString()));
             $this->metadate->createSingleDates($key);
             $this->metadate->cycles[$key]->termine = null;
         }
@@ -1509,7 +1509,7 @@ class Seminar
         } else {
             $this->metadate->setStartWoche($week, $metadate_id);
             $key = $metadate_id ? $metadate_id : $this->metadate->getFirstMetadate()->metadate_id;
-            $this->createMessage(sprintf(_("Die Startwoche für den Termin %s wurde geändert."), $this->metadate->cycles[$key]->toString()));
+            $this->createMessage(sprintf(_("Die Startwoche fï¿½r den Termin %s wurde geï¿½ndert."), $this->metadate->cycles[$key]->toString()));
             $this->metadate->createSingleDates($key);
             $this->metadate->cycles[$key]->termine = null;
         }
@@ -1822,7 +1822,7 @@ class Seminar
         $dont_check_quota = !$this->isAdmissionQuotaEnabled();
         $this->db->query("SELECT quota, name, ass.studiengang_id FROM admission_seminar_studiengang ass LEFT JOIN studiengaenge st USING(studiengang_id) WHERE seminar_id = '".$this->getId()."' ORDER BY (ass.studiengang_id <> 'all'),name");
         while($this->db->next_record()){
-            $ret[$this->db->f('studiengang_id')]['name'] = $this->db->f("studiengang_id") == 'all' ? _("Alle Studiengänge") : $this->db->f("name");
+            $ret[$this->db->f('studiengang_id')]['name'] = $this->db->f("studiengang_id") == 'all' ? _("Alle Studiengï¿½nge") : $this->db->f("name");
             if($this->db->f("studiengang_id") != 'all' && !$dont_check_quota) {
                 $ret[$this->db->f('studiengang_id')]['num_total'] = round($admission_turnout * ($this->db->f("quota") / 100));
                 $count += $ret[$this->db->f('studiengang_id')]['num_total'];
@@ -1838,8 +1838,7 @@ class Seminar
             $ret[$studiengang_id]['num_occupied'] = 0;
             $this->db->query("SELECT COUNT(user_id) FROM seminar_user
                 WHERE seminar_id = '".$this->getId()."'
-                    AND admission_studiengang_id='$studiengang_id'
-                    AND status != 'tutor'
+                    AND admission_studiengang_id='$studiengang_id'                    
                     AND status != 'dozent'");
             $this->db->next_record();
             $ret[$studiengang_id]['num_occupied'] += $this->db->f(0);
@@ -2019,7 +2018,7 @@ class Seminar
             $this->createMessage(sprintf(_("%s Dokumente und Ordner archiviert."), $db_ar));
         }
 
-        // Freie Seite zu diesem Seminar löschen
+        // Freie Seite zu diesem Seminar lï¿½schen
         $query = "DELETE FROM scm where range_id='$s_id'";
         $db->query($query);
         if (($db_ar = $db->affected_rows()) > 0) {
@@ -2032,9 +2031,9 @@ class Seminar
             $this->createMessage(sprintf(_("%s Literaturlisten archiviert."),$del_lit['list']));
         }
 
-        // Alle News-Verweise auf dieses Seminar löschen
+        // Alle News-Verweise auf dieses Seminar lï¿½schen
         if ( ($db_ar = StudipNews::DeleteNewsRanges($s_id)) ) {
-            $this->createMessage(sprintf(_("%s Ankündigungen gel&ouml;scht."), $db_ar));
+            $this->createMessage(sprintf(_("%s Ankï¿½ndigungen gel&ouml;scht."), $db_ar));
         }
         //delete entry in news_rss_range
         StudipNews::UnsetRssId($s_id);
@@ -2073,7 +2072,7 @@ class Seminar
                     ELearningUtils::loadClass($system);
                     $del_cms += $connected_cms[$system]->deleteConnectedModules($s_id);
                 }
-                $this->createMessage(sprintf(_("%s Verknüpfungen zu externen Systemen gel&ouml;scht."), $del_cms ));
+                $this->createMessage(sprintf(_("%s Verknï¿½pfungen zu externen Systemen gel&ouml;scht."), $del_cms ));
             }
         }
 
@@ -2098,7 +2097,7 @@ class Seminar
         $query = "DELETE FROM seminare where Seminar_id= '$s_id'";
         $db->query($query);
         if ($db->affected_rows() == 0) {
-            throw new Exception(_("Fehler beim Löschen der Veranstaltung"));
+            throw new Exception(_("Fehler beim Lï¿½schen der Veranstaltung"));
         }
         return true;
     }
@@ -2109,7 +2108,7 @@ class Seminar
      * @param  array  optional variables which are passed to the template
      * @return  string  the html-representation of the dates
      *
-     * @author Till Glöggler <tgloeggl@uos.de>
+     * @author Till Glï¿½ggler <tgloeggl@uos.de>
      */
     function getDatesHTML($params = array())
     {
@@ -2122,7 +2121,7 @@ class Seminar
      * @param  array  optional variables which are passed to the template
      * @return  string  the representation of the dates without html
      *
-     * @author Till Glöggler <tgloeggl@uos.de>
+     * @author Till Glï¿½ggler <tgloeggl@uos.de>
      */
     function getDatesExport($params = array())
     {
@@ -2135,7 +2134,7 @@ class Seminar
      * @param  array  optional variables which are passed to the template
      * @return  string  the xml-representation of the dates
      *
-     * @author Till Glöggler <tgloeggl@uos.de>
+     * @author Till Glï¿½ggler <tgloeggl@uos.de>
      */
     function getDatesXML($params = array())
     {
@@ -2149,7 +2148,7 @@ class Seminar
      * @param  array  optional parameters which are passed to the template
      * @return  string  the template output of the dates
      *
-     * @author Till Glöggler <tgloeggl@uos.de>
+     * @author Till Glï¿½ggler <tgloeggl@uos.de>
      */
     function getDatesTemplate($template, $params = array())
     {
@@ -2270,7 +2269,7 @@ class Seminar
             }
             return $todelete || $toinsert;
         } else {
-            $this->createError(_("Ungültige Eingabe der Institute. Es muss " .
+            $this->createError(_("Ungï¿½ltige Eingabe der Institute. Es muss " .
                 "mindestens ein Institut angegeben werden."));
             return false;
         }
@@ -2285,7 +2284,7 @@ class Seminar
     public function addMember($user_id, $status = 'autor', $force = false)
     {
         if (in_array(get_global_perm($user_id), array("admin", "root"))) {
-            throw Exception(_("Root und Admin dürfen nicht in Veranstaltungen eingetragen werden."));
+            throw Exception(_("Root und Admin dï¿½rfen nicht in Veranstaltungen eingetragen werden."));
             return;
         }
         $db = DBManager::get();
@@ -2331,7 +2330,7 @@ class Seminar
             if ($old_status === "dozent" && $numberOfTeachers <= 1) {
                 $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),
                                    get_title_for_status('dozent', 1, $this->status)) .
-                                   ' ' . _("Tragen Sie zunächst einen anderen ein, um diesen herabzustufen."));
+                                   ' ' . _("Tragen Sie zunï¿½chst einen anderen ein, um diesen herabzustufen."));
             }
             return false;
         }
@@ -2362,7 +2361,7 @@ class Seminar
         } else {
             $this->createError(sprintf(_("Die Veranstaltung muss wenigstens <b>einen/eine</b> VeranstaltungsleiterIn (%s) eingetragen haben!"),
                                    get_title_for_status('dozent', 1, $this->status)) .
-                                   ' ' . _("Tragen Sie zunächst einen anderen ein, um diesen zu löschen."));
+                                   ' ' . _("Tragen Sie zunï¿½chst einen anderen ein, um diesen zu lï¿½schen."));
             return false;
         }
     }

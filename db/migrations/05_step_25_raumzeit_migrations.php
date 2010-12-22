@@ -1,11 +1,6 @@
 <?
 class Step25RaumzeitMigrations extends DBMigration
 {
-    function __construct()
-    {
-        throw new Exception(_("Die Ausgangsversion der Datenbank ist zu alt. Die Migration kann nicht durchgeführt werden."));
-    }
-
     function description ()
     {
         return 'modify db schema for StEP00025; see logfile in $TMP_PATH';
@@ -13,6 +8,9 @@ class Step25RaumzeitMigrations extends DBMigration
 
     function up ()
     {
+        // StEP202 causes this migration to fail, see #1551
+        throw new Exception(_('Die Ausgangsversion der Datenbank ist zu alt. Die Migration kann nicht durchgeführt werden.'));
+
         // open log file
         $logfile_handle = fopen( $GLOBALS["TMP_PATH"] ."/Stud.IP_date_conversion.log", "ab");
         if(!$logfile_handle) {

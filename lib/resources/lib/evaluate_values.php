@@ -1268,6 +1268,7 @@ if (($start_multiple_mode_x) || ($single_request)) {
     } else {
         $resources_data['resolve_requests_one_res'] = null;
     }
+    $selected_requests = array();
     //filter the requests
     foreach($requests as $key => $val) {
         if (!$val["closed"] && !($resolve_requests_no_time && !$val['have_times'])) {
@@ -1296,6 +1297,7 @@ if (($start_multiple_mode_x) || ($single_request)) {
         }
     } elseif (is_array($selected_requests)) {
         //order requests
+        $order = '';
         $in =  "('".join("','",array_keys($selected_requests))."')";
         if ($resolve_requests_order == "complex")
             $order = "seats DESC, complexity DESC";

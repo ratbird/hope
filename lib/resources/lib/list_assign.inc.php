@@ -46,7 +46,7 @@ function list_restore_assign(&$assEvtLst, $resource_id, $begin, $end, $user_id='
     $year = date("Y", $begin);
     $month = date("n", $begin);
     if ($day_of_week){
-        $day_of_week = (++$day_of_week == 8 ? 1 : $day_of_week);
+        $day_of_week = (++$day_of_week == 8 ? 1 : (int)$day_of_week);
     }
     //create the query
     $query = sprintf("SELECT assign_id, resource_id, begin, end, repeat_end, repeat_quantity, "

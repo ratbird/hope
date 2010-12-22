@@ -146,7 +146,7 @@ class AdminNavigation extends Navigation
 
         if ($perm->have_perm('root')) {
             $navigation->addSubNavigation('user_domains', new Navigation(_('Nutzerdomänen'), 'dispatch.php/domain_admin/show'));
-            $navigation->addSubNavigation('data_fields', new Navigation(_('Datenfelder'), 'admin_datafields.php'));
+            $navigation->addSubNavigation('datafields', new Navigation(_('Datenfelder'), 'dispatch.php/admin/datafields'));
             $navigation->addSubNavigation('configuration', new Navigation(_('Konfiguration'), 'dispatch.php/admin/configuration/configuration'));
 
             if (get_config('BANNER_ADS_ENABLE'))  {
@@ -155,7 +155,6 @@ class AdminNavigation extends Navigation
 
             if (get_config('SEMESTER_ADMINISTRATION_ENABLE')) {
                 $navigation->addSubNavigation('semester', new Navigation(_('Semester'), 'dispatch.php/admin/semester'));
-
             }
 
             $navigation->addSubNavigation('member_view', new Navigation(_('Teilnehmeransicht'), 'admin_teilnehmer_view.php'));

@@ -2,31 +2,22 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-
-/*
- * DataFieldStructure.class.php - <short-description>
- *
- * Copyright (C) 2005 - Martin Gieseking  <mgieseki@uos.de>
- * Copyright (C) 2007 - Marcus Lunzenauer <mlunzena@uos.de>
+/**
+ *  DataFieldStructure.class.php
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Martin Gieseking  <mgieseki@uos.de>
+ * @author      Marcus Lunzenauer <mlunzena@uos.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
 
-
-/**
- * <ClassDescription>
- *
- * @package     studip
- * @subpackage  datafields
- *
- * @author    mgieseki, mlunzena
- * @copyright (c) Authors
- */
-class DataFieldStructure {
-
+class DataFieldStructure
+{
 
   /**
    * <FieldDescription>
@@ -46,7 +37,8 @@ class DataFieldStructure {
   var $numEntries;
 
 
-  function DataFieldStructure($data='') {
+  function DataFieldStructure($data='')
+  {
     $this->data = $data ? $data : array();
     if (!$this->data['datafield_id'])
       $this->data['datafield_id'] = !$this->data['datafield_id'] ? md5(uniqid('fdhdgg')) : $id;  # we always need a valid unique ID
@@ -122,6 +114,20 @@ class DataFieldStructure {
     return $this->numEntries = $db->f('count');
   }
 
+    /**
+     *
+     */
+    function getDataClass()
+    {
+        return array(
+            "sem"          => _("Veranstaltungen"),
+            "inst"         => _("Einrichtungen"),
+            "user"         => _("Benutzer"),
+            "userinstrole" => _("Benutzerrollen in Einrichtungen"),
+            "usersemdata"  => _("Benutzer-Zusatzangaben in VA"),
+            "roleinstdata" => _("Rollen in Einrichtungen")
+        );
+    }
 
   /**
    * Return the mask for the given permission
@@ -226,7 +232,7 @@ class DataFieldStructure {
       $data['name'] = $db->f("name");
 
     if (!$data['type'])
-      $data['type'] = $db->f('type');
+      $data['type'] = $db->f("type");
 
     if (in_array($data['type'], array('selectbox', 'radio', 'combo')))
       $data['typeparam'] = $data['typeparam'] ? $data['typeparam'] : $db->f('typeparam');
@@ -237,7 +243,7 @@ class DataFieldStructure {
       $data['object_type'] = $db->f("object_type");
 
     if (!$data['object_class'])
-      $data['object_class'] = $db->f('object_class') ? $db->f('object_class') : 'NULL';
+      $data['object_class'] = $db->f("object_class") ? $db->f("object_class") : 'NULL';
 
     if (!$data['edit_perms'])
       $data['edit_perms'] = $db->f("edit_perms");
@@ -250,7 +256,7 @@ class DataFieldStructure {
 
     $db->queryf("REPLACE INTO datafields ".
                 "SET datafield_id='%s', name='%s', object_type='%s', ".
-                "object_class=%s, edit_perms='%s', priority='%s', ".
+                "object_class='%s', edit_perms='%s', priority='%s', ".
                 "view_perms='%s', type='%s', typeparam='%s'",
                 $data['datafield_id'], $data['name'],       $data['object_type'],
                 $data['object_class'], $data['edit_perms'], $data['priority'],

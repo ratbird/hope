@@ -80,7 +80,7 @@ $infobox = array(
                     "text" => sprintf(_('Es können nur neue Regeln für Zusatzangaben erstellt werden, '
                                .'wenn mindestens ein Eintrag im Bereich %sDatenfelder%s in der Kategorie '
                                .'<i>Datenfelder für Nutzer-Zusatzangaben in Veranstaltungen</i> erstellt wurde.'),
-                               '<a href="' . URLHelper::getLink('admin_datafields.php') . '">', '</a>')
+                               '<a href="' . URLHelper::getLink('dispatch.php/admin/datafields') . '">', '</a>')
                 ),
                 array(
                     "icon" => "icons/16/black/info.png",

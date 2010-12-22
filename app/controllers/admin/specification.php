@@ -69,7 +69,7 @@ class Admin_SpecificationController extends AuthenticatedController
         if (count($this->entries_semdata) == 0) {
             $this->flash['info'] = sprintf(_('Sie müssen zuerst im Bereich %sDatenfelder%s in der Kategorie '
             .'<i>Datenfelder für Nutzer-Zusatzangaben in Veranstaltungen</i> einen neuen Eintrag erstellen.'),
-            '<a href="' . URLHelper::getLink('admin_datafields.php') . '">', '</a>');
+            '<a href="' . URLHelper::getLink('dispatch.php/admin/datafields') . '">', '</a>');
         }
 
         // save action

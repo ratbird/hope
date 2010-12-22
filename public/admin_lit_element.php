@@ -42,6 +42,7 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
 //html attributes for form
+$_attributes = array();
 $_attributes['text'] = array('style' => 'width:98%');
 $_attributes['textarea'] = array('style' => 'width:98%','rows'=>2);
 $_attributes['select'] = array();
@@ -53,13 +54,13 @@ $_attributes['lit_select'] = array('style' => 'font-size:8pt;width:98%');
 if ($_REQUEST['cmd'] == "new_entry"){
     $_catalog_id = "new_entry";
 } else {
-    $_catalog_id = isset($_REQUEST['_catalog_id']) ? $_REQUEST['_catalog_id'] : "new_entry";
+    $_catalog_id = isset($_REQUEST['_catalog_id']) ? Request::option('_catalog_id') : "new_entry";
 }
 
 //dump data into db if $_catalog_id points to a search result
 if ($_catalog_id{0} == "_"){
         $parts = explode("__", $_catalog_id);
-        if ( ($fields = $GLOBALS[$parts[0]][$parts[1]]) ){
+        if ( ($fields = $_SESSION[$parts[0]][$parts[1]]) ){
             $cat_element = new StudipLitCatElement();
             $cat_element->setValues($fields);
             $cat_element->setValue("catalog_id", "new_entry");
@@ -69,13 +70,13 @@ if ($_catalog_id{0} == "_"){
             }
             $cat_element->insertData();
             $_catalog_id = $cat_element->getValue("catalog_id");
-            $GLOBALS[$parts[0]][$parts[1]]['catalog_id'] = $_catalog_id;
+            $_SESSION[$parts[0]][$parts[1]]['catalog_id'] = $_catalog_id;
             unset($cat_element);
         }
 }
 
 if ($_REQUEST['cmd'] == 'clone_entry'){
-    $_the_element =& StudipLitCatElement::GetClonedElement($_catalog_id);
+    $_the_element = StudipLitCatElement::GetClonedElement($_catalog_id);
     if ($_the_element->isNewEntry()){
         $_msg = "msg§" . _("Der Eintrag wurde kopiert, Sie können die Daten jetzt ändern.") . "§";
         $_msg .= "info§" . _("Der kopierte Eintrag wurde noch nicht gespeichert.") . "§";
@@ -89,9 +90,9 @@ if ($_REQUEST['cmd'] == 'clone_entry'){
 if(!is_object($_the_element)){
     $_the_element = new StudipLitCatElement($_catalog_id, true);
 }
-$_the_form =& $_the_element->getFormObject();
+$_the_form = $_the_element->getFormObject();
 $_the_clipboard = StudipLitClipBoard::GetInstance();
-$_the_clip_form =& $_the_clipboard->getFormObject();
+$_the_clip_form = $_the_clipboard->getFormObject();
 
 if (isset($old_cat_id) && $_the_clipboard->isInClipboard($old_cat_id)){
     $_the_clipboard->deleteElement($old_cat_id);
@@ -178,6 +179,7 @@ $_catalog_id = $_the_element->getValue("catalog_id");
 $_msg .= $_the_element->msg;
 $_msg .= $_the_clipboard->msg;
 
+echo $_the_form->getFormStart("$PHP_SELF?_catalog_id=$_catalog_id");
 ?>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
@@ -191,7 +193,6 @@ if ($_msg)  {
 } else {
     echo "<br><br>";
 }
-echo $_the_form->getFormStart("$PHP_SELF?_catalog_id=$_catalog_id");
 ?>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
 <?
@@ -280,8 +281,6 @@ echo "</td></tr>";
 </table>
 </td>
 
-<?= $_the_form->getHiddenField(md5("is_sended"),1) ?>  
-
 <td class="blank" width="270" align="right" valign="top">
 <?
 $infobox[0] = array ("kategorie" => _("Information:"),
@@ -323,7 +322,7 @@ print_infobox($infobox, "infobox/literaturelist.jpg");
 </tr>
 </table>
 <?
-$_the_form->getFormEnd();
+echo $_the_form->getFormEnd();
 
 include ('lib/include/html_end.inc.php');
 page_close();

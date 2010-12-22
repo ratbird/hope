@@ -1839,7 +1839,6 @@ class Seminar
             $this->db->query("SELECT COUNT(user_id) FROM seminar_user
                 WHERE seminar_id = '".$this->getId()."'
                     AND admission_studiengang_id='$studiengang_id'
-                    AND status != 'tutor'
                     AND status != 'dozent'");
             $this->db->next_record();
             $ret[$studiengang_id]['num_occupied'] += $this->db->f(0);

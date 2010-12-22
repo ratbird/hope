@@ -51,10 +51,6 @@ class Admin_DomainController extends AuthenticatedController
      */
     function index_action()
     {
-        if (count($this->domains) == 0) {
-            $this->message = MessageBox::info(_('Es sind keine Nutzerdomänen vorhanden.'));
-            $this->no_domains = true;
-        }
     }
 
     /**

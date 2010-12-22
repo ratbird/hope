@@ -262,8 +262,8 @@ class StudipLitListViewAdmin extends TreeView
         $this->mode = "AssertDeleteItem";
         
         $template = $GLOBALS['template_factory']->open('shared/question');
-        $question = _("Sie beabsichtigen diese Liste inklusive aller Einträge, zu löschen. ")
-                    . sprintf(_("Es werden insgesamt %s Einträge gelöscht!"),count($this->tree->getKidsKids($item_id)))
+        $question = _("Sie beabsichtigen, diese Liste inklusive aller Einträge zu löschen. ")
+                    . sprintf(_("Es werden insgesamt %s Einträge gelöscht!"), count($this->tree->getKidsKids($item_id)))
                     . "\n" . _("Wollen Sie diese Liste wirklich löschen?");
         
         $template->set_attribute('approvalLink', $this->getSelf("cmd=DeleteItem&item_id=$item_id"));

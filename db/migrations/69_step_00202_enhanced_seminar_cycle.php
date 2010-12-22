@@ -81,6 +81,7 @@ class Step00202EnhancedSeminarCycle extends Migration
     {
         $db = DBManager::get();
         $db->exec("DROP TABLE `seminar_cycle_dates`");
+        $db->exec("ALTER TABLE `seminare` ADD `metadata_dates` TEXT NOT NULL DEFAULT ''");
         $db->exec("DELETE FROM config WHERE field LIKE 'ALLOW_METADATE_SORTING'");
     }
 }

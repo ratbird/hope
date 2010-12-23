@@ -900,7 +900,7 @@ function ForumStriche($forumposting) {
             $striche .= "<td class=\"blank tree-indent\" nowrap background='".$GLOBALS['ASSETS_URL']."images/forumstrich.gif'><img src='".$GLOBALS['ASSETS_URL']."images/forumleer2.gif'></td>";
     }
     if ($forumposting["lonely"]==FALSE)
-        $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrich.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
+        $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/forumstrichgrau.gif\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
     else
         $striche.= "<td class=\"blank tree-indent\" nowrap background=\"".$GLOBALS['ASSETS_URL']."images/steel1.jpg\"><img src=\"".$GLOBALS['ASSETS_URL']."images/forumleer.gif\"></td>";
     return $striche;

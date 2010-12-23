@@ -352,18 +352,8 @@ function ShowContact ($contact_id)
                         .Assets::img('icons/16/blue/arr_1up.png', array('class' => 'text-top', 'title' =>_('Kontakte schlieﬂen')))
                         ."</a></td></tr>";
         } else {
-            if ($forum["jshover"]==1) { // Hovern
-                $hoverlink = "<a href=\"$PHP_SELF?view=$view&filter=$filter&open=".$contact_id."#anker\" ";
-                $txt = "<hr>"._("Klicken zum Bearbeiten");
-                $bild = $GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png";
-                if ($description == "")
-                    $description = "<br>"._("Keine eingegeben")."<br>";
-                $link = $hoverlink
-                        ."onmouseover=\"return STUDIP.OverDiv.BindInline({position:'middle right',width:280, id: '".$contact_id."',
-                        content_element_type: 'contact', is_moveable: false, initiator: this}, event);\"><img src=\"".$bild."\" border=0></a>";
-            } else {
-                $link = "<a href=\"$PHP_SELF?view=$view&filter=$filter&open=".$contact_id."#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png\" border=\"0\"></a>";
-            }
+
+            $link = "<a href=\"$PHP_SELF?view=$view&filter=$filter&open=".$contact_id."#anker\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/arr_1down.png\" border=\"0\"></a>";
 
             $lastrow = "<tr><td colspan=\"3\" class=\"steelgraulight\" align=\"center\">".$link."</td></tr>";
         }

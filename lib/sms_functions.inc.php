@@ -65,13 +65,7 @@ function MessageIcon($message_hovericon)
 {
     global $my_messaging_settings, $PHP_SELF, $auth, $forum;
 
-    if ($message_hovericon["content"]!="" && $message_hovericon["openclose"]=="close" &&  $forum["jshover"] == "1") {
-        $hovericon = "<img onmouseover=\"return STUDIP.OverDiv.BindInline(
-        {position:'middle right', id: '".$message_hovericon["id"]."',
-        content_element_type: 'message', initiator: this}, event);\" src=\"".Assets::image_path($message_hovericon["picture"])."\" class=\"text-bottom\">";
-    } else {
-        $hovericon = "<a href=\"".$message_hovericon['link']."\">".Assets::img($message_hovericon["picture"], array('class' => 'text-bottom'))."</a>";
-    }
+    $hovericon = "<a href=\"".$message_hovericon['link']."\">".Assets::img($message_hovericon["picture"], array('class' => 'text-bottom'))."</a>";
     return $hovericon;
 }
 
@@ -830,14 +824,14 @@ function show_addrform() {
         ->render();
     ?>
 
-    <input style="vertical-align: text-top;" 
-           type="image" 
-           name="search_person" 
+    <input style="vertical-align: text-top;"
+           type="image"
+           name="search_person"
            title="<?= !(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen") )
                         ? _("Suche starten")
                         : _("Suche zurücksetzen") ?>"
            src="<?= !(Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen") )
-                        ? Assets::image_path('icons/16/blue/search.png') 
+                        ? Assets::image_path('icons/16/blue/search.png')
                         : Assets::image_path('icons/16/blue/refresh.png') ?>">
 
     <?

@@ -764,12 +764,7 @@ function fit_title ($title, $cols, $rows, $max_length, $end_str = "...", $pad = 
 }
 
 function js_hover ($aterm) {
-    global $forum, $auth;
 
-    if ($forum["jshover"] == 1) { // Hovern
-        return " onmouseover=\"return STUDIP.OverDiv.BindInline({position:'middle right',width:250, id: '".$aterm->getId()."',
-                content_element_type: 'calendarevent', is_moveable: false, initiator: this}, event);\"";
-    }
     return "";
 }
 

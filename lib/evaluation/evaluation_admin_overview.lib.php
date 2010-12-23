@@ -1028,9 +1028,9 @@ class EvalOverview {
 
         if ($no_permisson > 0){
             if ( $no_permisson == 1 )
-                $no_permission_msg .= sprintf(_("Die Evaluation <b>%s</b> ist einem Bereich zugeordnet für den Sie keine Veränderungsrechte besitzen."), $evalName);
+                $no_permission_msg .= sprintf(_("Die Evaluation <b>%s</b> ist einem Bereich zugeordnet, für den Sie keine Veränderungsrechte besitzen."), $evalName);
             else
-                $no_permission_msg .= sprintf (_("Die Evaluation <b>%s</b> ist %s Bereichen zugeordnet für die Sie keine Veränderungsrechte besitzen."), $evalName, $no_permisson);
+                $no_permission_msg .= sprintf (_("Die Evaluation <b>%s</b> ist %s Bereichen zugeordnet, für die Sie keine Veränderungsrechte besitzen."), $evalName, $no_permisson);
 
             if ( $evalAction != "save" ){
 
@@ -1435,9 +1435,9 @@ class EvalOverview {
             if ( $counter_no_permisson > 0 ) {
 
             if ( $counter_no_permisson == 1 )
-                     $safeguard .= $this->createSafeguard("ausruf", _("Sie wollen die Evaluation aus einem Bereich aushängen für den Sie keine Berechtigung besitzten.<br> Die Aktion wurde nicht ausgeführt."));
+                     $safeguard .= $this->createSafeguard("ausruf", _("Sie wollen die Evaluation aus einem Bereich aushängen, für den Sie keine Berechtigung besitzten.<br> Die Aktion wurde nicht ausgeführt."));
             else
-                     $safeguard .= $this->createSafeguard("ausruf", sprintf(_("Sie wollen die Evaluation aus %s% Bereichen aushängen für die Sie keine Berechtigung besitzten.<br> Die Aktion wurde nicht ausgeführt."), $counter_no_permisson));
+                     $safeguard .= $this->createSafeguard("ausruf", sprintf(_("Sie wollen die Evaluation aus %d Bereichen aushängen, für die Sie keine Berechtigung besitzten.<br> Die Aktion wurde nicht ausgeführt."), $counter_no_permisson));
                return $safeguard;
             }
 

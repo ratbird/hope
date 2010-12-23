@@ -975,22 +975,7 @@ STUDIP.QuickSearch = {
         }
       });
     }
-    if (title) {
-      jQuery('#' + name).bind("focus", function () {
-        if (this.value === title) {
-          jQuery(this).css("opacity", 1);
-          this.value = "";
-        }
-      });
-      jQuery('#' + name).bind("blur", function () {
-        if (!this.value) {
-          jQuery(this).css("opacity", 0.7);
-          this.value = title;
-        }
-      });
-      jQuery('#' + name).css("opacity", 0.7);
-      jQuery('#' + name).val(title);
-    }
+    jQuery('#' + name).placehold();
   }
 };
 

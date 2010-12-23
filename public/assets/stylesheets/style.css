@@ -37,6 +37,18 @@ blockquote {
     margin: 0px;
 }
 
+input.placeholder {
+    opacity: 0.7;
+}
+
+::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+:-moz-placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
 /* --- Überschriften -------------------------------------------------------- */
 h1.content, h2.content, h3.content {
     color: #24437c;

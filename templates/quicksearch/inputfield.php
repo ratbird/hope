@@ -11,7 +11,7 @@
                     print ' '.$attr_name.'="'.$attr_value.'"';
                 }
                 ?> id="<?= $id ?>"<?= ($clear_input ? $clear_input : "") ?> type=text name="<?=
-                    $name ?>_parameter" value="<?= $defaultName ?>">
+                    $name ?>_parameter" value="<?= $defaultName ?>" placeholder="<?= $beschriftung && !$defaultID ? $beschriftung : '' ?>">
 <? if ($withButton) : ?>
     <? if ($box_align !== "left") : ?>
             <input <?=($search_button_name ? 'name="'.$search_button_name.'"' : '')?> class="text-bottom" type="image" src="<?= Assets::image_path("icons/16/blue/search.png")?>" title="<?= _("Suche starten") ?>">
@@ -24,11 +24,6 @@
                 STUDIP.QuickSearch.autocomplete("<?= $id ?>",
                     "<?= URLHelper::getURL("dispatch.php/quicksearch/response/".$query_id) ?>",
                     <?= $jsfunction ? $jsfunction : "null" ?>,
-                    <? if ($beschriftung && !$defaultID) : ?>
-                    '<?= $beschriftung ?>',
-                    <? else : ?>
-                    null,
-                    <? endif ?>
                     <?= $autocomplete_disabled ? "true" : "false" ?>
                     );
             });

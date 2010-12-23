@@ -1221,19 +1221,30 @@ function format_help_url($keyword) {
     global $auth, $_language;
 
     $helppage=$keyword;
-    // encode current user's global perms for help wiki
-    $helppage.="?setstudipview=".$auth->auth["perm"];
-    // encode locationid for help wiki if set
+
+    // $loc is only set if special help view for installation is known
+    //
+    $loc="";
     $locationid=get_config("EXTERNAL_HELP_LOCATIONID");
-    if ($locationid) {
-        $helppage.="&setstudiplocationid=".$locationid;
+    if ($locationid && $locationid!="default") {
+	$loc = $locationid."/";
     }
+
+    // all help urls need short language tag (de, en)
+    // 
+    $lang="de";
     if ($_language) {
-        list($language) = explode('_', $_language);
-        $helppage.="&setlang=".$language;
+        list($lang) = explode('_', $_language);
     }
-    // insert into URL-Template from config
-    $help_query=sprintf(get_config("EXTERNAL_HELP_URL"),$helppage);
+
+    // determine Stud.IP version as of MAJOR.MINOR
+    // from SOFTWARE_VERSION. That variable MUST match pattern MAJOR.MINOR.*
+    //
+    $v=array();
+    preg_match("/^([0-9]+\.[0-9]+)/", $GLOBALS['SOFTWARE_VERSION'], $v);
+    $version=$v[0];
+
+    $help_query="http://docs.studip.de/help/".$version."/".$lang."/".$loc.$helppage;
     return $help_query;
 }
 

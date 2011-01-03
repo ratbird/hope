@@ -14,6 +14,7 @@
  *
  */
 
+require_once ('lib/messaging.inc.php');
 
 class StudygroupModel
 {
@@ -492,5 +493,38 @@ class StudygroupModel
     {
         $stmt = DBManager::get()->query("SELECT * FROM seminare WHERE Seminar_id = '$sem_id' AND status IN ('". implode("','", studygroup_sem_types())."')");
         return $stmt->fetch();
+    }
+
+    /**
+     * Sends a notice to all moderators and founders of a studygroup
+     *
+     * @param string $sem_id
+     * @param strimg $user_id
+     * 
+     * @return int number of recipients
+     */
+    function applicationNotice($sem_id, $user_id)
+    {
+        $sem        = new Seminar($sem_id);
+        $dozenten   = $sem->getMembers();
+        $tutors     = $sem->getMembers('tutor');
+        $recipients = array();
+        $msging     = new Messaging();
+
+        foreach(array_merge($dozenten, $tutors) as $uid => $user) {
+            $recipients[] = $user['username'];
+        }
+
+        if (studip_strlen($sem->getName()) > 32) //cut subject if to long
+            $subject = sprintf(_("[Studiengruppe: %s...]"),studip_substr($sem->getName(), 0, 30));
+        else
+            $subject = sprintf(_("[Studiengruppe: %s]"),$sem->getName());
+
+        $subject .= " " ._("Neuer Mitgliedsantrag");
+        $message  = sprintf(_("%s möchte der Studiengruppe %s beitreten. Klicken Sie auf den untenstehenden Link um direkt zur Studiengruppe zu gelangen.\n\n [Direkt zur Studiengruppe]%s"),
+                get_fullname($user_id) ,$sem->getName(),URLHelper::getlink($GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/course/studygroup/members/" . $sem->id, array('cid' => NULL)));
+
+        return $msging->insert_message(addslashes($message), $recipients,"____%system%____", '', '', '', '', addslashes($subject));
+
     }
 }

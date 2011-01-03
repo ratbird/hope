@@ -43,6 +43,7 @@
 
 
 require '../lib/bootstrap.php';
+require_once 'app/models/studygroup.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
@@ -104,6 +105,7 @@ function temporaly_accepted($sem_name, $user_id, $sem_id, $ask = "TRUE", $studie
         if (!SeminarCategories::GetByTypeId($current_seminar->status)->studygroup_mode) {
             parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>vorl&auml;ufig akzeptiert</b> in die Veranstaltung %s eingetragen. F&uuml;r weitere Informationen lesen Sie den Abschnitt 'Anmeldeverfahren' in der &Uuml;bersichtsseite zu dieser Veranstaltung."), '<b>'.$sem_name.'</b>'));
         } else {
+            StudygroupModel::applicationNotice($sem_id, $user_id);
             parse_msg(sprintf("msg§"._("Sie wurden auf die Anmeldeliste der Studiengruppe %s eingetragen. Die Moderatoren der Studiengruppe können Sie jetzt freischalten."), $sem_name));
         }
         echo "<tr><td class=\"blank\" colspan=2>";

@@ -522,7 +522,7 @@ class StudygroupModel
 
         $subject .= " " ._("Neuer Mitgliedsantrag");
         $message  = sprintf(_("%s möchte der Studiengruppe %s beitreten. Klicken Sie auf den untenstehenden Link um direkt zur Studiengruppe zu gelangen.\n\n [Direkt zur Studiengruppe]%s"),
-                get_fullname($user_id) ,$sem->getName(),URLHelper::getlink($GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/course/studygroup/members/" . $sem->id, array('cid' => NULL)));
+                get_fullname($user_id) ,$sem->getName(),URLHelper::getlink($GLOBALS['ABSOLUTE_URI_STUDIP']."dispatch.php/course/studygroup/members/" . $sem->id, array('cid' => $sem_id)));
 
         return $msging->insert_message(addslashes($message), $recipients,"____%system%____", '', '', '', '', addslashes($subject));
 

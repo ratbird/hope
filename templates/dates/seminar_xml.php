@@ -12,6 +12,11 @@ if (is_array($cycle['freetext_rooms'])){
    $freitext = implode(', ', array_keys($cycle['freetext_rooms']));
 }
 
+$plainRooms = '';
+if (is_array($cycle['assigned_rooms'])){
+    $plainRooms = implode(', ', getPlainRooms($cycle['assigned_rooms']));
+}
+
 
 if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
 ?>
@@ -20,7 +25,7 @@ if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turn
     <wochentag><?= getWeekDay($cycle['day']) ?></wochentag>
     <zeit><?= $cycle['start_hour'] ?>:<?= $cycle['start_minute'] ?>-<?= $cycle['end_hour'] ?>:<?= $cycle['end_minute'] ?></zeit>
     <raum>
-        <gebucht><?= htmlspecialchars(implode(', ', getPlainRooms($cycle['assigned_rooms']))) ?></gebucht>
+        <gebucht><?= htmlspecialchars($plainRooms) ?></gebucht>
         <freitext><?= htmlspecialchars($freitext) ?></freitext>
     </raum>
 </raumzeit>

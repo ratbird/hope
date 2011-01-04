@@ -42,14 +42,14 @@ class Course_StudyAreasController extends AuthenticatedController
     }
 
     /**
-     * Every string is a valid course ID except the string '-'
+     * Every (non-empty) string is a valid course ID except the string '-'
      *
      * @param mixed  the value to check
      * @return bool  TRUE if it is courseID-ish, FALSE otherwise
      */
     static function isCourseId($id)
     {
-        return is_string($id) && $id !== '-';
+        return is_string($id) && $id !== '' && $id !== '-';
     }
 
 
@@ -78,6 +78,7 @@ class Course_StudyAreasController extends AuthenticatedController
 
         // w/o a course ID show the admin search form
         if (!self::isCourseId($course_id)) {
+
             PageLayout::setTitle(_('Studienbereichsauswahl'));
 
             require_once 'lib/admin_search.inc.php';
@@ -85,8 +86,9 @@ class Course_StudyAreasController extends AuthenticatedController
             include 'lib/include/html_head.inc.php';
             include 'lib/include/header.php';
             include 'lib/include/admin_search_form.inc.php';  // will not return
+            page_close();
+            die(); //must not return
         }
-
         $this->set_course($course_id);
 
         PageLayout::setTitle(sprintf('%s - %s',

@@ -122,14 +122,6 @@ if ($download_selected_x) {
     }
 }
 
-if($zip_file_id === false){
-    $msg = 'error§'
-    . sprintf(_("Der Zip Download ist fehlgeschlagen. Bitte beachten Sie das Limit von maximal %s Dateien und die maximale Größe der zu zippenden Dateien von %s MB."),
-    (int)Config::GetInstance()->getValue('ZIP_DOWNLOAD_MAX_FILES'),
-    (int)Config::GetInstance()->getValue('ZIP_DOWNLOAD_MAX_SIZE') )
-    . '§';
-}
-
 checkObject();
 checkObjectModule('documents');
 object_set_visit_module('documents');
@@ -139,6 +131,14 @@ mark_public_course();
 $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
 $question = $msg = '';
+
+if($zip_file_id === false){
+    $msg = 'error§'
+    . sprintf(_("Der Zip Download ist fehlgeschlagen. Bitte beachten Sie das Limit von maximal %s Dateien und die maximale Größe der zu zippenden Dateien von %s MB."),
+    (int)Config::GetInstance()->getValue('ZIP_DOWNLOAD_MAX_FILES'),
+    (int)Config::GetInstance()->getValue('ZIP_DOWNLOAD_MAX_SIZE') )
+    . '§';
+}
 
 //obskuren id+_?_ string zerpflücken
 if (strpos($open, "_") !== false){

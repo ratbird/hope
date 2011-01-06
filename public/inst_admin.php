@@ -49,7 +49,6 @@ if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
 }
 
 $css_switcher = new CssClassSwitcher();
-echo $css_switcher->GetHoverJSFunction();
 
 // this page is used for administration (if the user has the proper rights)
 // or for just displaying the workers and their roles
@@ -86,6 +85,7 @@ if ($header_line)
 // Start of Output
 include ("lib/include/html_head.inc.php"); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
+PageLayout::addBodyElements(cssClassSwitcher::GetHoverJSFunction());
 
 if ($admin_view || !isset($inst_id)) {
     include 'lib/include/admin_search_form.inc.php';

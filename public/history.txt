@@ -1,3 +1,29 @@
+__06.01.2011 v 2.0__
+- Anzeige-API für Zeiten & Räume von Veranstaltungen
+- Dateien eines Nutzers nicht löschen, wenn der Nutzer gelöscht wird
+- Kopieren/Verschieben von Dateien und Ordner in mehrere Veranstaltungen/Einrichtungen
+- Erweiterter Veranstaltungsturnus
+- Renovierung von Adminbereich/Veranstaltungen/Grunddaten
+- Erweiterte Schnittstelle zu Ilias 4
+- Zwangsgruppierung "Meine Veranstaltungen"
+- Dozierendenvertretung
+- Umstellung der Konfiguration im Adminbereich auf trails
+- Umbau der Studiengangsseiten im User- und Adminbereich
+- Erweiterung der von Stud.IP ausgehenden Mails um eine HTML-Variante
+- API für Eingriffe in den Seitenaufbau
+- Zentrale Konfiguration für alle Stud.IP-Module
+- Dynamische Sitemap erstellen
+- prototype und scriptaculous durch jQuery + UI ersetzen
+- Verzicht auf auto_prepend_file
+- Einheitliche und barrierefreie Suchfelder
+- Einbindung von Video- und Audiodateien (HTML 5)
+- Neuer Stundenplan
+- Entfernung wap-Seiten
+- Neue Adminnavigation für Dozenten
+- Neue Icons für das System
+- Überarbeitung der Reiterstruktur
+- Feineinstellung von Sichtbarkeiten und Privatsphäre
+
 __20.04.2010 v 1.11__
 - Dateibasiertes caching als default
 - Event-System für Stud.IP

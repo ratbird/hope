@@ -38,7 +38,7 @@
   <body>
     <h1>Fehler in der PHP-Konfiguration Ihrer Stud.IP-Installation</h1>
     <p>
-        Für den Betrieb von Stud.IP bis zur Version 1.12 war es erforderlich,
+        Für den Betrieb von Stud.IP bis zur Version 2.0 war es erforderlich,
         die Konfiguration des PHP-Moduls Ihres Webservers anzupassen, damit
         folgende Zeile – evtl. leicht verändert – enthalten ist:
     </p>
@@ -48,7 +48,7 @@
     </code>
 
     <p>
-      Diese Konfigurationsoption wird für Stud.IP ab der Version 1.12 nicht mehr
+      Diese Konfigurationsoption wird für Stud.IP ab der Version 2.0 nicht mehr
       verwendet.
     </p>
 

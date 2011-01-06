@@ -206,19 +206,22 @@ function createSelectedZip ($file_ids, $perm_check = TRUE, $size_check = false) 
             //create temporary Folder
             $tmp_full_path = "$TMP_PATH/$zip_file_id";
             mkdir($tmp_full_path,0700);
-
+            $filelist = array();
             //create folder content
             $in = "('".join("','",$file_ids)."')";
-            $query = sprintf ("SELECT dokument_id, filename FROM dokumente WHERE dokument_id IN %s %s ORDER BY chdate, name, filename", $in, ($perm_check) ? "AND seminar_id = '".$SessSemName[1]."' $folders_cond" : "");
+            $query = sprintf ("SELECT dokument_id, filename, author_name, filesize, name, description, FROM_UNIXTIME(chdate) as chdate FROM dokumente WHERE dokument_id IN %s %s ORDER BY chdate, name, filename", $in, ($perm_check) ? "AND seminar_id = '".$SessSemName[1]."' $folders_cond" : "");
             $db->query($query);
             while ($db->next_record()) {
                 if(check_protected_download($db->f('dokument_id'))){
-                    $docs++;
-                    @copy(get_upload_file_path($db->f('dokument_id')), $tmp_full_path . '/[' . $docs . ']_' . escapeshellcmd(prepareFilename($db->f("filename"), FALSE)));
+                    $filename = prepareFilename($db->f('filename'), FALSE, $tmp_full_path);
+                    if (@copy(get_upload_file_path($db->f('dokument_id')), $tmp_full_path.'/'.$filename)) {
                     TrackAccess($db->f('dokument_id'),'dokument');
+                        $filelist[] = $db->Record + array('path' => substr($tmp_full_path.'/'.$filename, strlen("$TMP_PATH/$zip_file_id/")));
                 }
             }
-
+            }
+            $caption = array('filename' => _("Dateiname"), 'filesize' => _("Größe"), 'author_name' => _("Ersteller"), 'chdate' => _("Datum"), 'name' =>  _("Name"), 'description' => _("Beschreibung"), 'path' => _("Pfad"));
+            array_to_csv($filelist, $tmp_full_path . '/' . _("dateiliste.csv"), $caption);
             //zip stuff
             create_zip_from_directory($tmp_full_path, $tmp_full_path);
             rmdirr($tmp_full_path);
@@ -242,9 +245,11 @@ function createFolderZip ($folder_id, $perm_check = TRUE, $size_check = false) {
         $tmp_full_path = "$TMP_PATH/$zip_file_id";
         mkdir($tmp_full_path,0700);
 
-        //create folder comntent
-        createTempFolder($folder_id, $tmp_full_path, $perm_check, $size_check);
+        //create folder content
+        $filelist = createTempFolder($folder_id, $tmp_full_path, $perm_check);
 
+        $caption = array('filename' => _("Dateiname"), 'filesize' => _("Größe"), 'author_name' => _("Ersteller"), 'chdate' => _("Datum"), 'name' =>  _("Name"), 'description' => _("Beschreibung"), 'path' => _("Pfad"));
+        array_to_csv($filelist, $tmp_full_path . '/' . _("dateiliste.csv"), $caption);
         //zip stuff
         create_zip_from_directory($tmp_full_path, $tmp_full_path);
         rmdirr($tmp_full_path);
@@ -253,8 +258,14 @@ function createFolderZip ($folder_id, $perm_check = TRUE, $size_check = false) {
     return $zip_file_id;
 }
 
-function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE) {
+function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_recursion = false) {
     global $SessSemName;
+    static $filelist;
+
+    if ($in_recursion === false) {
+        $filelist = array();
+        $tmp_path = $tmp_full_path;
+    }
     $db = new DB_Seminar();
     if ($perm_check){
         $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
@@ -262,18 +273,20 @@ function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE) {
     }
     //copy all documents from this folder to the temporary folder
     $linkinfo = FALSE;
-    $query = sprintf ("SELECT dokument_id, filename, url FROM dokumente WHERE range_id = '%s' %s ORDER BY name, filename", $folder_id, ($perm_check) ? "AND seminar_id = '".$SessSemName[1]."'" : "");
+    $query = sprintf ("SELECT dokument_id, filename, url, author_name, filesize, name, description, FROM_UNIXTIME(chdate) as chdate FROM dokumente WHERE range_id = '%s' %s ORDER BY name, filename", $folder_id, ($perm_check) ? "AND seminar_id = '".$SessSemName[1]."'" : "");
     $db->query($query);
     while ($db->next_record()) {
         if ($db->f("url") != "") {  // just a linked file
             $linkinfo .= "\r\n".$db->f("filename");
         } else {
             if(check_protected_download($db->f('dokument_id'))){
-                $docs++;
-                @copy(get_upload_file_path($db->f('dokument_id')), $tmp_full_path.'/['.$docs.']_'.escapeshellcmd(prepareFilename($db->f('filename'), FALSE)));
+                $filename = prepareFilename($db->f('filename'), FALSE, $tmp_full_path);
+                if (copy(get_upload_file_path($db->f('dokument_id')), $tmp_full_path.'/'.$filename)) {
                 TrackAccess($db->f('dokument_id'),'dokument');
+                    $filelist[] = $db->Record + array('path' => $tmp_full_path.'/'.$filename);
             }
         }
+    }
     }
     if ($linkinfo) {
         $linkinfo = _("Hinweis: die folgenden Dateien sind nicht im Archiv enthalten, da sie lediglich verlinkt wurden:").$linkinfo;
@@ -284,12 +297,17 @@ function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE) {
 
     $db->query("SELECT folder_id, name FROM folder WHERE range_id = '$folder_id' ORDER BY name");
     while ($db->next_record()) {
-        $folders++;
-        $tmp_sub_full_path = $tmp_full_path.'/['.$folders.']_'.escapeshellcmd(prepareFilename($db->f('name'), FALSE));
+        $foldername = prepareFilename($db->f('name'), FALSE, $tmp_full_path);
+        $tmp_sub_full_path = $tmp_full_path.'/'.$foldername;
         mkdir($tmp_sub_full_path, 0700);
-        createTempFolder($db->f("folder_id"), $tmp_sub_full_path, $perm_check);
+        createTempFolder($db->f("folder_id"), $tmp_sub_full_path, $perm_check, true);
     }
-    return TRUE;
+    if ($in_recursion === false) {
+       array_walk($filelist, create_function('&$a', '$a["path"] = substr($a["path"], ' . (int)strlen($tmp_path) . ');'));
+       return $filelist;
+    } else {
+        return true;
+}
 }
 
 
@@ -736,7 +754,7 @@ function form($refresh = FALSE) {
 }
 
 //kill the forbidden characters, shorten filename to 31 Characters
-function prepareFilename($filename, $shorten = FALSE) {
+function prepareFilename($filename, $shorten = FALSE, $checkfolder = false) {
     $bad_characters = array (":", chr(92), "/", "\"", ">", "<", "*", "|", "?", " ", "(", ")", "&", "[", "]", "#", chr(36), "'", "*", ";", "^", "`", "{", "}", "|", "~", chr(255));
     $replacements = array ("", "", "", "", "", "", "", "", "", "_", "", "", "+", "", "", "", "", "", "", "-", "", "", "", "", "-", "", "");
 
@@ -749,7 +767,19 @@ function prepareFilename($filename, $shorten = FALSE) {
         $ext = getFileExtension ($filename);
         $filename = substr(substr($filename, 0, strrpos($filename,$ext)-1), 0, (30 - strlen($ext))).".".$ext;
     }
-    return ($filename);
+    if ($checkfolder !== false) {
+        $c = 0;
+        $ext = getFileExtension($filename);
+        if ($ext) {
+          $name = substr($filename, 0, strrpos($filename,$ext)-1);
+        } else {
+            $name = $filename;
+}
+        while (file_exists($checkfolder . '/' . $filename)) {
+            $filename = $name . '['.++$c.']' . ($ext ? '.' . $ext : '');
+        }
+    }
+    return $filename;
 }
 
 //Diese Funktion dient zur Abfrage der Dateierweiterung
@@ -2593,5 +2623,61 @@ function check_protected_download($document_id)
         }
     }
     return $ok;
+}
+
+/**
+ * converts a given array to a csv format
+ *
+ * @param array $data the data to convert, each row should be an array
+ * @param string $filename full path to a file to write to, if omitted the csv content is returned
+ * @param array $caption assoc array with captions, is written to the first line, $data is filtered by keys
+ * @param string $delimiter sets the field delimiter (one character only)
+ * @param string $enclosure sets the field enclosure (one character only)
+ * @param string $eol sets the end of line format
+ * @return mixed if $filename is given the number of written bytes, else the csv content as string
+ */
+function array_to_csv($data, $filename = null, $caption = null, $delimiter = ';' , $enclosure = '"', $eol = "\r\n" )
+{
+    $fp = fopen('php://temp', 'r+');
+    $fp2 = fopen('php://temp', 'r+');
+    if (is_array($caption)) {
+        fputcsv($fp, array_values($caption), $delimiter, $enclosure);
+        rewind($fp);
+        $csv = stream_get_contents($fp);
+        if ($eol != PHP_EOL) {
+            $csv = trim($csv);
+            $csv .= $eol;
+        }
+        fwrite($fp2, $csv);
+        ftruncate($fp, 0);
+        rewind($fp);
+    }
+    foreach ($data as $row) {
+        if (is_array($caption)) {
+            $fields = array();
+            foreach(array_keys($caption) as $fieldname) {
+                $fields[] = $row[$fieldname];
+            }
+        } else {
+            $fields = $row;
+        }
+        fputcsv($fp, $fields, $delimiter, $enclosure);
+        rewind($fp);
+        $csv = stream_get_contents($fp);
+        if ($eol != PHP_EOL) {
+            $csv = trim($csv);
+            $csv .= $eol;
+        }
+        fwrite($fp2, $csv);
+        ftruncate($fp, 0);
+        rewind($fp);
+    }
+    fclose($fp);
+    rewind($fp2);
+    if ($filename === null) {
+        return stream_get_contents($fp2);
+    } else {
+        return file_put_contents($filename, $fp2);
+    }
 }
 ?>

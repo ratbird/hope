@@ -954,6 +954,7 @@ STUDIP.QuickSearch = {
               var suggestions = [];  //an array of possible selections
               jQuery.each(data, function (i, val) {
                 //adding a label and a hidden item_id - don't use "value":
+                console.log(val);
                 suggestions.push({
                   label: val.item_name,                       //what is displayed in the drobdown-boc
                   item_id: val.item_id,                       //the hidden ID of the item
@@ -977,6 +978,14 @@ STUDIP.QuickSearch = {
     }
     jQuery('#' + name).placehold();
   }
+};
+
+//must be overridden to display html in autocomplete like avatars:
+jQuery.ui.autocomplete.prototype._renderItem = function (ul, item) {
+  return jQuery("<li></li>")
+    .data("item.autocomplete", item)
+    .append(jQuery("<a></a>").html(item.label))
+    .appendTo(ul);
 };
 
 /* ------------------------------------------------------------------------

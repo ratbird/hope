@@ -571,7 +571,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-autocomplete.ui-menu.ui-widget-content, .ui-dialog, .ui-datepicker { background: #ffffff; border: thin solid #aaaaaa; }
 
 .ui-widget-header .ui-icon { background-image: url(../images/vendor/jquery-ui/ui-icons_d5d6d5_256x240.png); }
-.ui-widget-header .ui-state-hover { top: 2px; left: 2px; }
+.ui-widget-header .ui-state-hover {  }
 .ui-widget-header .ui-state-hover .ui-icon { background-image: url(../images/vendor/jquery-ui/ui-icons_ff3333_256x240.png); }
 .ui-widget-header .ui-corner-all { background: none; border: none; }
 .ui-widget-content { background-color: #ECECFF}

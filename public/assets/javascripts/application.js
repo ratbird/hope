@@ -453,10 +453,10 @@ STUDIP.Title = (function () {
 
   // truncates an item
   function truncate(item) {
-    var text = jQuery(item).html(),
+    var text = jQuery(item).text(),
       length = Math.max(text.length - 4, 4);
     if (length < text.length) {
-      jQuery(item).html(text.substr(0, length) + "\u2026");
+      jQuery(item).text(text.substr(0, length) + "\u2026");
     }
   }
 
@@ -465,11 +465,11 @@ STUDIP.Title = (function () {
     initialize: function () {
       title = jQuery('#barBottommiddle');
       reference = jQuery('#barBottomright');
-      jQuery(title).data('old_width', jQuery(window).width());
+      title.data('old_width', jQuery(window).width());
 
       // strip contents and set titles
-      title.html(jQuery.trim(title.html()));
-      title.attr('title', title.html());
+      title.text(jQuery.trim(title.text()));
+      title.attr('title', title.text());
 
       jQuery(window).bind('resize', this.resize);
       this.compress();
@@ -487,7 +487,7 @@ STUDIP.Title = (function () {
     resize: function () {
       var new_width = jQuery(window).width();
       if (new_width > jQuery(title).data('old_width')) {
-        title.html(title.attr('title'));
+        title.text(title.attr('title'));
       }
       jQuery(title).data('old_width', new_width);
       STUDIP.Title.compress();

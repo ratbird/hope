@@ -1,9 +1,4 @@
 # translation of studip-2010-11-22-intermediate.po to
-# translation of studip-2010-11-21-intermediate.po to
-# translation of studip.po to
-# translation of studip-2010-09-23.po to
-# translation of studip-2010-09-22.po to
-# translation of studip-2010-09-21.po to
 # This file is distributed under the same license as the Stud.IP package.
 # Copyright (C) 2010 Hartje Kriete.
 #
@@ -5290,7 +5285,7 @@ msgstr "fortnightly"
 #: ../lib/classes/SeminarCycleDate.class.php:180
 #: ../templates/dates/seminar_xml.php:5
 msgid "dreiwöchentlich"
-msgstr "fortnightly"
+msgstr "every third week"
 
 #: ../public/admin_seminare_assi.php:3073
 msgid "erster Termin in der"
@@ -16041,7 +16036,7 @@ msgid "Sie können beliebig viele Studienbereiche auswählen."
 msgstr "Here, you can select arbitrarily many fields of study."
 
 #: ../lib/extern/views/ExternEditModule.class.php:465
-#, fuzzy, php-format
+#, php-format
 msgid "Geben Sie '%%%' ein, um alle Studienbereiche zu finden."
 msgstr "In order to search for all fields of study enter '%%%'."
 

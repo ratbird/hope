@@ -189,6 +189,7 @@ class MetaDate
         }
         if(isset($data['weekday'])) $cycle->weekday = (int)$data['weekday'];
         if(isset($data['week_offset'])) $cycle->week_offset = (int)$data['week_offset'];
+        if(isset($data['cycle'])) $cycle->cycle = (int)$data['cycle'];
         if(isset($data['sws'])) $cycle->sws = $data['sws'];
 
         if (isset($data['day']) && isset($data['start_stunde']) && isset($data['start_minute']) && isset($data['end_stunde']) && isset($data['end_minute'])) {

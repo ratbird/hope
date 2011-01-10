@@ -168,10 +168,10 @@ class Assets {
    *   like "rss.png", that gets expanded to "/images/rss.png"
    *
    * file name without extension,
-   *   like "logo", that gets expanded to "/images/logo.gif"
+   *   like "logo", that gets expanded to "/images/logo.png"
    */
   static function image_path($source) {
-    return Assets::compute_public_path($source, 'images', 'gif');
+    return Assets::compute_public_path($source, 'images', 'png');
   }
 
 

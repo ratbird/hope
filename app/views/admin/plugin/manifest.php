@@ -30,7 +30,7 @@
 </table>
 
 <p>
-    <a href="<?= $controller->url_for('plugin_admin') ?>">
+    <a href="<?= $controller->url_for('admin/plugin') ?>">
         <?= makeButton('zurueck', 'img', _('zurück zur Plugin-Verwaltung')) ?>
     </a>
 </p>
@@ -42,7 +42,7 @@ $infobox_content = array(
         'eintrag'   => array(
             array(
                 'icon' => 'icons/16/black/schedule.png',
-                'text' => '<a href="'.$controller->url_for('plugin_admin').'">'._('Verwaltung von Plugins').'</a>'
+                'text' => '<a href="'.$controller->url_for('admin/plugin').'">'._('Verwaltung von Plugins').'</a>'
             )
         )
     ), array(

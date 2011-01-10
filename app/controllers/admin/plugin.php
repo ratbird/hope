@@ -1,19 +1,22 @@
 <?php
-/*
- * plugin_admin.php - plugin administration controller
- *
- * Copyright (c) 2009  Elmar Ludwig
+/**
+ * plugin.php - plugin administration controller
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Elmar Ludwig
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @package     admin
  */
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/plugin_administration.php';
 
-class PluginAdminController extends AuthenticatedController
+class Admin_PluginController extends AuthenticatedController
 {
     private $plugin_admin;
 
@@ -115,7 +118,7 @@ class PluginAdminController extends AuthenticatedController
         }
 
         $this->flash['message'] = _('Die Änderungen wurden gespeichert.');
-        $this->redirect('plugin_admin?plugin_filter='.$plugin_filter);
+        $this->redirect('admin/plugin?plugin_filter='.$plugin_filter);
     }
 
     /**
@@ -193,7 +196,7 @@ class PluginAdminController extends AuthenticatedController
             unlink($upload_file);
         }
 
-        $this->redirect('plugin_admin');
+        $this->redirect('admin/plugin');
     }
 
     /**
@@ -230,7 +233,7 @@ class PluginAdminController extends AuthenticatedController
             $this->plugin_admin->uninstallPlugin($plugin);
         }
 
-        $this->redirect('plugin_admin?plugin_filter='.$plugin_filter);
+        $this->redirect('admin/plugin?plugin_filter='.$plugin_filter);
     }
 
     /**
@@ -298,7 +301,7 @@ class PluginAdminController extends AuthenticatedController
             $this->flash['message'] = _('Update erfolgreich installiert.');
         }
 
-        $this->redirect('plugin_admin?plugin_filter='.$plugin_filter);
+        $this->redirect('admin/plugin?plugin_filter='.$plugin_filter);
     }
 
     /**
@@ -352,6 +355,6 @@ class PluginAdminController extends AuthenticatedController
                 count($selected_inst));
         }
 
-        $this->redirect('plugin_admin/default_activation/'.$plugin_id);
+        $this->redirect('admin/plugin/default_activation/'.$plugin_id);
     }
 }

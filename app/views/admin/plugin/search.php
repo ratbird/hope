@@ -1,9 +1,9 @@
-<form action="<?= $controller->url_for('plugin_admin/search') ?>" method="post" style="float: right;">
+<form action="<?= $controller->url_for('admin/plugin/search') ?>" method="post" style="float: right;">
     <?= _('Suche nach Plugins:') ?>
     <input name="search" type="text" size="20" value="<?= htmlReady($search) ?>">
     <?= makeButton('suchen', 'input' , _('Suche starten')) ?>
     &nbsp;
-    <a href="<?= $controller->url_for('plugin_admin/search') ?>">
+    <a href="<?= $controller->url_for('admin/plugin/search') ?>">
         <?= makeButton('zuruecksetzen', 'img', _('Suche zurücksetzen')) ?>
     </a>
 </form>
@@ -62,7 +62,7 @@
                     <? endfor ?>
                 </td>
                 <td class="plugin_install">
-                    <form action="<?= $controller->url_for('plugin_admin/install', $name) ?>" method="post">
+                    <form action="<?= $controller->url_for('admin/plugin/install', $name) ?>" method="post">
                         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
                         <input type="image" name="install" src="<?= Assets::image_path('icons/16/blue/install.png') ?>" title="<?= _('Plugin installieren') ?>">
                     </form>
@@ -77,7 +77,7 @@
         <?= _('Plugin als ZIP-Datei hochladen') ?>
     </h3>
 
-    <form action="<?= $controller->url_for('plugin_admin/install') ?>" enctype="multipart/form-data" method="post">
+    <form action="<?= $controller->url_for('admin/plugin/install') ?>" enctype="multipart/form-data" method="post">
         <?= _('Plugin-Datei:') ?>
         <input name="upload_file" type="file" size="40">
         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
@@ -93,7 +93,7 @@ $infobox_content = array(
         'eintrag'   => array(
             array(
                 'icon' => 'icons/16/black/plugin.png',
-                'text' => '<a href="'.$controller->url_for('plugin_admin').'">'._('Verwaltung von Plugins').'</a>'
+                'text' => '<a href="'.$controller->url_for('admin/plugin').'">'._('Verwaltung von Plugins').'</a>'
             )
         )
     ), array(

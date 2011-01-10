@@ -1,4 +1,4 @@
-<form action="<?= $controller->url_for('plugin_admin') ?>" method="post">
+<form action="<?= $controller->url_for('admin/plugin') ?>" method="post">
     <select name="plugin_filter" onchange="this.form.submit();">
         <option value="">
             <?= _('alle anzeigen') ?>

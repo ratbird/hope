@@ -10,7 +10,7 @@
     <?= _('Wählen Sie die Einrichtungen, in deren Veranstaltungen das Plugin automatisch aktiviert sein soll:') ?>
 </p>
 
-<form action="<?= $controller->url_for('plugin_admin/save_default_activation', $plugin_id) ?>" method="post">
+<form action="<?= $controller->url_for('admin/plugin/save_default_activation', $plugin_id) ?>" method="post">
     <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
     <select name="selected_inst[]" multiple size="20">
         <? foreach ($institutes as $id => $institute): ?>
@@ -30,7 +30,7 @@
     <p>
         <?= makeButton('uebernehmen', 'input', _('Einstellungen speichern'), 'save') ?>
         &nbsp;
-        <a href="<?= $controller->url_for('plugin_admin') ?>">
+        <a href="<?= $controller->url_for('admin/plugin') ?>">
             <?= makeButton('zurueck', 'img',  _('Zurück zur Plugin-Verwaltung')) ?>
         </a>
     </p>
@@ -43,7 +43,7 @@ $infobox_content = array(
         'eintrag'   => array(
             array(
                 'icon' => 'icons/16/black/schedule.png',
-                'text' => '<a href="'.$controller->url_for('plugin_admin').'">'._('Verwaltung von Plugins').'</a>'
+                'text' => '<a href="'.$controller->url_for('admin/plugin').'">'._('Verwaltung von Plugins').'</a>'
             )
         )
     ), array(

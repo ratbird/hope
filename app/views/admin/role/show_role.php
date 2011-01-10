@@ -1,10 +1,10 @@
-<?= $this->render_partial('role_admin/status_message') ?>
+<?= $this->render_partial('admin/role/status_message') ?>
 
 <h3>
     <?= _('Rollenzuweisungen anzeigen') ?>
 </h3>
 
-<form action="<?= $controller->url_for('role_admin/show_role') ?>" method="post">
+<form action="<?= $controller->url_for('admin/role/show_role') ?>" method="post">
     <select name="role" style="width: 300px">
         <? foreach ($roles as $getrole): ?>
             <option value="<?= $getrole->getRoleid() ?>" <?= $getrole->getRoleid() == $roleid ? 'selected' : '' ?>>
@@ -36,7 +36,7 @@
                         <?= ++$index ?>.
                     </td>
                     <td>
-                        <a href="<?= $controller->url_for('role_admin/assign_role', $user['user_id']) ?>">
+                        <a href="<?= $controller->url_for('admin/role/assign_role', $user['user_id']) ?>">
                             <?= htmlReady(sprintf('%s %s (%s)', $user['Vorname'], $user['Nachname'], $user['username'])) ?>
                         </a>
                     </td>
@@ -69,7 +69,7 @@
                         <?= ++$index ?>.
                     </td>
                     <td>
-                        <a href="<?= $controller->url_for('role_admin/assign_plugin_role', $plugin['id']) ?>">
+                        <a href="<?= $controller->url_for('admin/role/assign_plugin_role', $plugin['id']) ?>">
                             <?= htmlspecialchars($plugin['name']) ?>
                         </a>
                     </td>
@@ -91,16 +91,16 @@ $infobox_content = array(
         'eintrag'   => array(
             array(
                 'icon' => 'icons/16/black/roles.png',
-                'text' => '<a href="'.$controller->url_for('role_admin').'">'._('Rollen verwalten').'</a>'
+                'text' => '<a href="'.$controller->url_for('admin/role').'">'._('Rollen verwalten').'</a>'
             ), array(
                 'icon' => 'icons/16/black/person.png',
-                'text' => '<a href="'.$controller->url_for('role_admin/assign_role').'">'._('Benutzerzuweisungen bearbeiten').'</a>'
+                'text' => '<a href="'.$controller->url_for('admin/role/assign_role').'">'._('Benutzerzuweisungen bearbeiten').'</a>'
             ), array(
                 'icon' => 'icons/16/black/plugin.png',
-                'text' => '<a href="'.$controller->url_for('role_admin/assign_plugin_role').'">'._('Pluginzuweisungen bearbeiten').'</a>'
+                'text' => '<a href="'.$controller->url_for('admin/role/assign_plugin_role').'">'._('Pluginzuweisungen bearbeiten').'</a>'
             ), array(
                 'icon' => 'icons/16/black/log.png',
-                'text' => '<a href="'.$controller->url_for('role_admin/show_role').'">'._('Rollenzuweisungen anzeigen').'</a>'
+                'text' => '<a href="'.$controller->url_for('admin/role/show_role').'">'._('Rollenzuweisungen anzeigen').'</a>'
             )
         )
     ), array(

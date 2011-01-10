@@ -7,14 +7,14 @@
 <? elseif (isset($flash['message'])): ?>
     <?= MessageBox::success($flash['message']) ?>
 <? elseif ($num_updates): ?>
-    <?= MessageBox::info($this->render_partial('plugin_admin/update_info')) ?>
+    <?= MessageBox::info($this->render_partial('admin/plugin/update_info')) ?>
 <? endif ?>
 
 <? if ($delete_plugin): ?>
     <?= $GLOBALS['template_factory']->render('shared/question',
         array('question' => sprintf(_('Wollen Sie wirklich "%s" deinstallieren?'), $delete_plugin['name']),
-              'approvalLink' => $controller->url_for('plugin_admin/delete', $delete_plugin['id']).'?ticket='.get_ticket(),
-              'disapprovalLink' => $controller->url_for('plugin_admin'))) ?>
+              'approvalLink' => $controller->url_for('admin/plugin/delete', $delete_plugin['id']).'?ticket='.get_ticket(),
+              'disapprovalLink' => $controller->url_for('admin/plugin'))) ?>
 <? endif ?>
 
 <h3>
@@ -25,9 +25,9 @@
     <?= MessageBox::info(_('Es sind noch keine Plugins in diesem Stud.IP vorhanden.'), array(
             _('Sie können Plugins aus dem Marktplatz installieren oder manuell hochladen.'),
             sprintf(_('Benutzen Sie dafür die Funktion "%sweitere Plugins installieren%s" in der Info-Box.'),
-                '<a href="'.$controller->url_for('plugin_admin/search').'">', '</a>'))) ?>
+                '<a href="'.$controller->url_for('admin/plugin/search').'">', '</a>'))) ?>
 <? else: ?>
-    <form action="<?= $controller->url_for('plugin_admin/save') ?>" method="post">
+    <form action="<?= $controller->url_for('admin/plugin/save') ?>" method="post">
         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
         <input type="hidden" name="plugin_filter" value="<?= $plugin_filter ?>">
         <table class="default">
@@ -47,11 +47,11 @@
                         <input type="checkbox" name="enabled_<?= $pluginid ?>" value="1" <?= $plugin['enabled'] ? 'checked' : '' ?>>
                     </td>
                     <td>
-                        <a href="<?= $controller->url_for('plugin_admin/manifest', $pluginid) ?>">
+                        <a href="<?= $controller->url_for('admin/plugin/manifest', $pluginid) ?>">
                             <?= htmlspecialchars($plugin['name']) ?>
                         </a>
                         <? if (in_array('StandardPlugin', $plugin['type'])): ?>
-                            <a href="<?= $controller->url_for('plugin_admin/default_activation', $pluginid) ?>">
+                            <a href="<?= $controller->url_for('admin/plugin/default_activation', $pluginid) ?>">
                                 <?= Assets::img('icons/16/blue/tools.png', array('class' => 'text-top', 'title' => _('Default-Aktivierung'))) ?>
                             </a>
                         <? endif ?>
@@ -66,20 +66,20 @@
                         <input name="position_<?= $pluginid ?>" type="text" size="2" value="<?= $plugin['position'] ?>" <?= $plugin['enabled'] ? '' : 'disabled' ?>>
                     </td>
                     <td width="20">
-                        <a href="<?= $controller->url_for('role_admin/assign_plugin_role', $pluginid) ?>">
+                        <a href="<?= $controller->url_for('admin/role/assign_plugin_role', $pluginid) ?>">
                             <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Zugriffsrechte bearbeiten'))) ?>
                         </a>
                     </td>
                     <td width="20">
                         <? if (!$plugin['depends']): ?>
-                            <a href="<?= $controller->url_for('plugin_admin/download', $pluginid) ?>">
+                            <a href="<?= $controller->url_for('admin/plugin/download', $pluginid) ?>">
                                 <?= Assets::img('icons/16/blue/download.png', array('title' => _('Herunterladen'))) ?>
                             </a>
                         <? endif ?>
                     </td>
                     <td width="20">
                         <? if (!$plugin['depends']): ?>
-                            <a href="<?= $controller->url_for('plugin_admin/ask_delete', $pluginid) ?>">
+                            <a href="<?= $controller->url_for('admin/plugin/ask_delete', $pluginid) ?>">
                                 <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Deinstallieren'))) ?>
                             </a>
                         <? endif ?>
@@ -101,7 +101,7 @@ $infobox_content = array(
         'eintrag'   => array(
             array(
                 'icon' => 'icons/16/black/add/plugin.png',
-                'text' => '<a href="'.$controller->url_for('plugin_admin/search').'">'._('Weitere Plugins installieren').'</a>'
+                'text' => '<a href="'.$controller->url_for('admin/plugin/search').'">'._('Weitere Plugins installieren').'</a>'
             )
         )
     ), array(
@@ -109,7 +109,7 @@ $infobox_content = array(
         'eintrag'   => array(
             array(
                 'icon' => 'icons/16/black/search.png',
-                'text' => $this->render_partial('plugin_admin/plugin_filter')
+                'text' => $this->render_partial('admin/plugin/plugin_filter')
             )
         )
     ), array(

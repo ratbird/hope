@@ -1,20 +1,22 @@
 <?php
 /**
- * role_admin.php - role administration controller
- *
- * @author      Dennis Reil
- * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
- * @copyright   2009 Stud.IP
+ * plugin.php - role administration controller
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Dennis Reil
+ * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @package     admin
  */
 
 require_once 'app/controllers/authenticated_controller.php';
 
-class RoleAdminController extends AuthenticatedController
+class Admin_RoleController extends AuthenticatedController
 {
     /**
      * Common tasks for all actions.
@@ -98,7 +100,7 @@ class RoleAdminController extends AuthenticatedController
             $this->flash['error'] = _('Sie haben keinen Namen eingegeben.');
         }
 
-        $this->redirect('role_admin');
+        $this->redirect('admin/role');
     }
 
     /**
@@ -128,7 +130,7 @@ class RoleAdminController extends AuthenticatedController
         RolePersistence::deleteRole($roles[$roleid]);
 
         $this->flash['success'] = _('Die Rolle und alle dazugehörigen Zuweisungen wurden gelöscht.');
-        $this->redirect('role_admin');
+        $this->redirect('admin/role');
     }
 
     /**
@@ -220,7 +222,7 @@ class RoleAdminController extends AuthenticatedController
         }
 
         $this->flash['success'] = _('Die Rollenzuweisungen wurden gespeichert.');
-        $this->redirect('role_admin/assign_role/'.$userid);
+        $this->redirect('admin/role/assign_role/'.$userid);
     }
 
     /**
@@ -258,7 +260,7 @@ class RoleAdminController extends AuthenticatedController
         }
 
         $this->flash['success'] = _('Die Rechteeinstellungen wurden gespeichert.');
-        $this->redirect('role_admin/assign_plugin_role/'.$pluginid);
+        $this->redirect('admin/role/assign_plugin_role/'.$pluginid);
     }
 
     /**

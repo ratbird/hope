@@ -187,8 +187,8 @@ class AdminNavigation extends Navigation
 
         // plugin and role administration
         if ($perm->have_perm('root')) {
-            $navigation->addSubNavigation('plugins', new Navigation(_('Pluginverwaltung'), 'dispatch.php/plugin_admin'));
-            $navigation->addSubNavigation('roles', new Navigation(_('Rollenverwaltung'), 'dispatch.php/role_admin'));
+            $navigation->addSubNavigation('plugins', new Navigation(_('Pluginverwaltung'), 'dispatch.php/admin/plugin'));
+            $navigation->addSubNavigation('roles', new Navigation(_('Rollenverwaltung'), 'dispatch.php/admin/role'));
         }
 
         $navigation->addSubNavigation('show_admission', new Navigation(_('Laufende Anmeldeverfahren'), 'show_admission.php'));

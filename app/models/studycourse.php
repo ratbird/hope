@@ -17,14 +17,11 @@
  */
 
 /**
- * @uses        StudipCacheFactory
  * @uses        DBManager
  *
  */
 class StudycourseModel
 {
-    const STUDYCOURSE_CACHE_KEY = "/admin/studycourse/";
-    const STUDYDEGREE_CACHE_KEY = "/admin/studydegree/";
 
     /**
      * Get all course of study (profession with all degrees) (if $sci == null)
@@ -35,49 +32,44 @@ class StudycourseModel
      */
     public static function getStudyCourses($sci = NULL)
     {
-        $cache = StudipCacheFactory::getCache();
-        $studycourses = unserialize($cache->read(self::STUDYCOURSE_CACHE_KEY.$sci));
-
-        if (empty($studycourses)) {
-            if (!is_null($sci)) {
-                //one profession with id and count studys
-                $query = "SELECT s.studiengang_id, s.name,s.beschreibung, "
-                       . "count(user_studiengang.studiengang_id) AS count_user, "
-                       . "count(admission_seminar_studiengang.seminar_id) AS count_sem "
-                       . "FROM studiengaenge s "
-                       . "LEFT JOIN user_studiengang USING(studiengang_id) "
-                       . "LEFT JOIN admission_seminar_studiengang USING(studiengang_id)"
-                       . "WHERE s.studiengang_id='{$sci}' "
-                       . "GROUP BY studiengang_id ORDER BY name";
-                $studycourses = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                // all profession
-                  $query1 = "SELECT studiengang_id, name, beschreibung "
-                        . "FROM studiengaenge ORDER BY name";
-                  $query2 = "SELECT studiengang_id, count(user_id) AS count_user "
-                        . "FROM user_studiengang GROUP BY studiengang_id";
-                  $query3 = "SELECT studiengang_id, count(seminar_id) AS count_sem "
-                        . "FROM admission_seminar_studiengang GROUP BY studiengang_id";
-                $studycourses = DBManager::get()->query($query1)->fetchAll(PDO::FETCH_ASSOC);
-                $users = DBManager::get()->query($query2)->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
-                $seminars = DBManager::get()->query($query3)->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
-                foreach ($studycourses as $index => $course) {
-                    $studycourses[$index]['count_user'] = $users[$course['studiengang_id']][0];
-                    $studycourses[$index]['count_sem'] = $seminars[$course['studiengang_id']][0];
-                }
+        if (!is_null($sci)) {
+            //one profession with id and count studys
+            $query = "SELECT s.studiengang_id, s.name,s.beschreibung, "
+                   . "count(user_studiengang.studiengang_id) AS count_user, "
+                   . "count(admission_seminar_studiengang.seminar_id) AS count_sem "
+                   . "FROM studiengaenge s "
+                   . "LEFT JOIN user_studiengang USING(studiengang_id) "
+                   . "LEFT JOIN admission_seminar_studiengang USING(studiengang_id)"
+                   . "WHERE s.studiengang_id='{$sci}' "
+                   . "GROUP BY studiengang_id ORDER BY name";
+            $studycourses = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            // all profession
+              $query1 = "SELECT studiengang_id, name, beschreibung "
+                    . "FROM studiengaenge ORDER BY name";
+              $query2 = "SELECT studiengang_id, count(user_id) AS count_user "
+                    . "FROM user_studiengang GROUP BY studiengang_id";
+              $query3 = "SELECT studiengang_id, count(seminar_id) AS count_sem "
+                    . "FROM admission_seminar_studiengang GROUP BY studiengang_id";
+            $studycourses = DBManager::get()->query($query1)->fetchAll(PDO::FETCH_ASSOC);
+            $users = DBManager::get()->query($query2)->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
+            $seminars = DBManager::get()->query($query3)->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
+            foreach ($studycourses as $index => $course) {
+                $studycourses[$index]['count_user'] = $users[$course['studiengang_id']][0];
+                $studycourses[$index]['count_sem'] = $seminars[$course['studiengang_id']][0];
             }
-
-            foreach ($studycourses as $index => $row) {
-                // get one profession with all degrees
-                $query = "SELECT DISTINCT abschluss.name, abschluss.abschluss_id, "
-                       . "count(user_studiengang.abschluss_id) AS count_user "
-                       . "FROM abschluss LEFT JOIN user_studiengang USING(abschluss_id) "
-                       . "WHERE user_studiengang.studiengang_id='{$row['studiengang_id']}' "
-                       . "GROUP BY abschluss_id ORDER BY name";
-                $studycourses[$index]['degree'] = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
-            }
-            $cache->write(self::STUDYCOURSE_CACHE_KEY.$sci, serialize($studycourses));
         }
+
+        foreach ($studycourses as $index => $row) {
+            // get one profession with all degrees
+            $query = "SELECT DISTINCT abschluss.name, abschluss.abschluss_id, "
+                   . "count(user_studiengang.abschluss_id) AS count_user "
+                   . "FROM abschluss LEFT JOIN user_studiengang USING(abschluss_id) "
+                   . "WHERE user_studiengang.studiengang_id='{$row['studiengang_id']}' "
+                   . "GROUP BY abschluss_id ORDER BY name";
+            $studycourses[$index]['degree'] = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        }
+
         return $studycourses;
     }
 
@@ -90,42 +82,37 @@ class StudycourseModel
      */
     public static function getStudyDegrees($sdi = NULL)
     {
-        $cache = StudipCacheFactory::getCache();
-        $studydegrees = unserialize($cache->read(self::STUDYDEGREE_CACHE_KEY.$sdi));
+        if (isset($sdi)) {
+            // one degree with count user
+            $query = "SELECT a.abschluss_id, a.name, count(us.abschluss_id) AS count_user "
+                   . "FROM abschluss a LEFT JOIN user_studiengang us USING (abschluss_id) "
+                   . "WHERE a.abschluss_id = '{$sdi}' "
+                   . "GROUP BY a.abschluss_id ORDER BY a.name";
+            $studydegrees = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            // get  all degrees
+            $query1 = "SELECT abschluss_id, name FROM abschluss ORDER BY name";
+            $query2 = "SELECT abschluss_id, count(abschluss_id) AS count_user "
+                    . "FROM user_studiengang GROUP BY abschluss_id";
 
-        if (empty($studydegrees)) {
-            if (isset($sdi)) {
-                // one degree with count user
-                $query = "SELECT a.abschluss_id, a.name, count(us.abschluss_id) AS count_user "
-                       . "FROM abschluss a LEFT JOIN user_studiengang us USING (abschluss_id) "
-                       . "WHERE a.abschluss_id = '{$sdi}' "
-                       . "GROUP BY a.abschluss_id ORDER BY a.name";
-                $studydegrees = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
-            } else {
-                // get  all degrees
-                $query1 = "SELECT abschluss_id, name FROM abschluss ORDER BY name";
-                $query2 = "SELECT abschluss_id, count(abschluss_id) AS count_user "
-                        . "FROM user_studiengang GROUP BY abschluss_id";
+            $studydegrees = DBManager::get()->query($query1)->fetchAll(PDO::FETCH_ASSOC);
+            $users = DBManager::get()->query($query2)->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
 
-                $studydegrees = DBManager::get()->query($query1)->fetchAll(PDO::FETCH_ASSOC);
-                $users = DBManager::get()->query($query2)->fetchAll(PDO::FETCH_COLUMN|PDO::FETCH_GROUP);
-
-                foreach ($studydegrees as $index => $degree) {
-                    $studydegrees[$index]['count_user'] = $users[$degree['abschluss_id']][0];
-                }
+            foreach ($studydegrees as $index => $degree) {
+                $studydegrees[$index]['count_user'] = $users[$degree['abschluss_id']][0];
             }
-
-            foreach ($studydegrees as $index => $row) {
-                // one degree with all professions
-                $query = "SELECT DISTINCT studiengaenge.name, studiengaenge.studiengang_id, "
-                       . "count(user_studiengang.studiengang_id) AS count_user "
-                       . "FROM studiengaenge LEFT JOIN user_studiengang USING(studiengang_id) "
-                       . "WHERE user_studiengang.abschluss_id='{$row['abschluss_id']}' "
-                       . "GROUP BY studiengang_id ORDER BY name";
-                $studydegrees[$index]['profession'] = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
-            }
-            $cache->write(self::STUDYDEGREE_CACHE_KEY.$sdi, serialize($studydegrees));
         }
+
+        foreach ($studydegrees as $index => $row) {
+            // one degree with all professions
+            $query = "SELECT DISTINCT studiengaenge.name, studiengaenge.studiengang_id, "
+                   . "count(user_studiengang.studiengang_id) AS count_user "
+                   . "FROM studiengaenge LEFT JOIN user_studiengang USING(studiengang_id) "
+                   . "WHERE user_studiengang.abschluss_id='{$row['abschluss_id']}' "
+                   . "GROUP BY studiengang_id ORDER BY name";
+            $studydegrees[$index]['profession'] = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        }
+
         return $studydegrees;
     }
 
@@ -137,10 +124,6 @@ class StudycourseModel
      */
     public static function deleteStudyCourse($prof_id)
     {
-        $cache = StudipCacheFactory::getCache();
-        $cache->expire(self::STUDYCOURSE_CACHE_KEY.$prof_id);
-        $cache->expire(self::STUDYCOURSE_CACHE_KEY);
-
         return DBManager::get()->exec("DELETE FROM studiengaenge WHERE studiengang_id = '{$prof_id}'");
     }
 
@@ -151,10 +134,6 @@ class StudycourseModel
      */
     public static function deleteStudyDegree($deg_id)
     {
-        $cache = StudipCacheFactory::getCache();
-        $cache->expire(self::STUDYDEGREE_CACHE_KEY.$deg_id);
-        $cache->expire(self::STUDYDEGREE_CACHE_KEY);
-
         return DBManager::get()->exec("DELETE FROM abschluss WHERE abschluss_id = '{$deg_id}'");
     }
 
@@ -200,9 +179,6 @@ class StudycourseModel
      */
     public static function saveNewProfession($prof_name, $prof_desc)
     {
-        $cache = StudipCacheFactory::getCache();
-        $cache->expire(self::STUDYCOURSE_CACHE_KEY);
-
         // Create an id
         $prof_id = md5(uniqid($prof_name.$prof_desc));
         $stmt = DBManager::get()->prepare("INSERT INTO studiengaenge (studiengang_id, name, beschreibung, mkdate, chdate) VALUES(?, ?, ?, ?, ?)");
@@ -217,9 +193,6 @@ class StudycourseModel
      */
     public static function saveNewDegree($deg_name, $deg_desc)
     {
-        $cache = StudipCacheFactory::getCache();
-        $cache->expire(self::STUDYDEGREE_CACHE_KEY);
-
         // Create an id
         $deg_id = md5(uniqid($deg_name.$deg_desc));
         $stmt = DBManager::get()->prepare("INSERT INTO abschluss (abschluss_id, name, beschreibung, mkdate, chdate) VALUES (?, ?, ?, ?, ?)");
@@ -269,10 +242,6 @@ class StudycourseModel
      */
     public static function saveEditProfession($prof_id, $prof_name, $prof_desc)
     {
-        $cache = StudipCacheFactory::getCache();
-        $cache->expire(self::STUDYCOURSE_CACHE_KEY.$prof_id);
-        $cache->expire(self::STUDYCOURSE_CACHE_KEY);
-
         $stmt = DBManager::get()->prepare("UPDATE studiengaenge SET name=?, beschreibung=?, chdate=? WHERE studiengang_id=?");
         $stmt->execute(array($prof_name, $prof_desc, time(), $prof_id));
     }
@@ -286,10 +255,6 @@ class StudycourseModel
      */
     public static function saveEditDegree($deg_id, $deg_name, $deg_desc)
     {
-        $cache = StudipCacheFactory::getCache();
-        $cache->expire(self::STUDYDEGREE_CACHE_KEY.$deg_id);
-        $cache->expire(self::STUDYDEGREE_CACHE_KEY);
-
         $stmt = DBManager::get()->prepare("UPDATE abschluss SET name=?, beschreibung=?, chdate=? WHERE abschluss_id=?");
         $stmt->execute(array($deg_name , $deg_desc , time() , $deg_id));
     }

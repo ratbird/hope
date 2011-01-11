@@ -20,6 +20,7 @@ require_once("lib/classes/Institute.class.php");
 class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
 {
     var $user_category_node_id;
+    var $ldap_enable;
     /**
      * constructor
      *
@@ -221,7 +222,7 @@ class Ilias4ConnectedCMS extends Ilias3ConnectedCMS
         $template->set_attribute('user_role_template_name', ELearningUtils::getConfigValue("user_role_template_name", $this->cms_type));
         $template->set_attribute('user_role_template_id', $this->user_role_template_id);
         $template->set_attribute('encrypt_passwords', $encrypt_passwords);
-        $template->set_attribute('ldap_options', count($ldap_options) ? join("\n", array('<option></option>') + $ldap_options) : '');
+        $template->set_attribute('ldap_options', count($ldap_options) ? join("\n", array_merge(array('<option></option>'), $ldap_options)) : '');
         $template->set_attribute('module_types', $module_types);
         echo $template->render();
     }

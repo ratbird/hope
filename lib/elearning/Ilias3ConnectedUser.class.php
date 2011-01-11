@@ -283,11 +283,11 @@ class Ilias3ConnectedUser extends ConnectedUser
     * @param string user_type user-type
     * @return boolean returns false on error
     */
-    function setConnection($user_type)
+    function setConnection($user_type, $ignore_encrypt_passwords = false)
     {
         global $connected_cms;
 
-        if ($connected_cms[$this->cms_type]->encrypt_passwords == "md5")
+        if (!$ignore_encrypt_passwords && $connected_cms[$this->cms_type]->encrypt_passwords == "md5")
         {
 //          echo "PASSWORD-ENCRYPTION";
             $this->external_password = $this->getCryptedPassword( $this->external_password );

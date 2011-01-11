@@ -28,11 +28,10 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser
      */
     function Ilias4ConnectedUser($cms, $user_id = false)
     {
-        parent::Ilias3ConnectedUser($cms, $user_id);
-
         // get auth_plugin
-        $this->auth_mode = DBManager::get()->query("SELECT IFNULL(auth_plugin, 'standard') FROM auth_user_md5 WHERE user_id = '" . $this->studip_id . "'")->fetchColumn();
-
+        $user_id = $user_id ? $user_id : $GLOBALS['user']->id;
+        $this->auth_plugin = DBManager::get()->query("SELECT IFNULL(auth_plugin, 'standard') FROM auth_user_md5 WHERE user_id = '" . $user_id . "'")->fetchColumn();
+        parent::Ilias3ConnectedUser($cms, $user_id);
     }
 
     /**
@@ -48,10 +47,14 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser
 
         if ($this->getLoginData($this->login)) {
             //automatische Zuordnung von bestehenden Ilias Accounts
+            //nur wenn ldap Modus benutzt wird und Stud.IP Nutzer passendes ldap plugin hat
             if ($connected_cms[$this->cms_type]->USER_AUTO_CREATE == true &&
-            $connected_cms[$this->cms_type]->USER_PREFIX == '') {
-                $this->setConnection(USER_TYPE_CREATED);
+            $connected_cms[$this->cms_type]->USER_PREFIX == '' &&
+            $this->auth_plugin &&
+            $this->auth_plugin != "standard" &&
+            $this->auth_plugin  == $connected_cms[$this->cms_type]->ldap_enable) {
                 $ok = $connected_cms[$this->cms_type]->soap_client->updatePassword($this->id, $this->external_password);
+                parent::setConnection($this->getUserType(), true);
                 if ($ok) {
                     $messages["info"] .= sprintf(_("Verbindung mit Nutzer ID %s wiederhergestellt."), $this->id);
                 }
@@ -78,7 +81,7 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser
         // new values for ILIAS 4
         $user_data["agree_date"] = date('Y-m-d H:i:s');
         $user_data["external_account"] = $this->login;
-        if ($this->auth_plugin && $this->auth_plugin != "standard" &&  ($this->auth_plugin  == $connected_cms->ldap_enable)) {
+        if ($this->auth_plugin && $this->auth_plugin != "standard" &&  ($this->auth_plugin  == $connected_cms[$this->cms_type]->ldap_enable)) {
             $user_data["auth_mode"] = "ldap";
         } else {
             $user_data["auth_mode"] = "default";
@@ -134,7 +137,7 @@ class Ilias4ConnectedUser extends Ilias3ConnectedUser
             $this->category = $connected_cms[$this->cms_type]->soap_client->addObject($object_data, $connected_cms[$this->cms_type]->user_category_node_id);
         }
         if ($this->category != false) {
-            ConnectedUser::setConnection( $this->getUserType() );
+            parent::setConnection($this->getUserType(), true);
         } else {
             echo "CATEGORY_ERROR".$connected_cms[$this->cms_type]->user_category_node_id ."-";
             return false;

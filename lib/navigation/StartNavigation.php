@@ -96,7 +96,7 @@ class StartNavigation extends Navigation
                 if (get_config('STUDYGROUPS_ENABLE')) {
                     $navigation->addSubNavigation('new_studygroup', new Navigation(_('Studiengruppe anlegen'), 'dispatch.php/course/studygroup/new'));
                 }
-            
+
             }
         }
 
@@ -134,8 +134,8 @@ class StartNavigation extends Navigation
 
         // plugin and role administration
         if ($perm->have_perm('root')) {
-            $navigation = new Navigation(_('Verwaltung von Plugins'), 'dispatch.php/plugin_admin');
-            $navigation->addSubNavigation('admin_roles', new Navigation(_('Verwaltung von Rollen'), 'dispatch.php/role_admin'));
+            $navigation = new Navigation(_('Verwaltung von Plugins'), 'dispatch.php/admin/plugin');
+            $navigation->addSubNavigation('admin_roles', new Navigation(_('Verwaltung von Rollen'), 'dispatch.php/admin/role'));
             $this->addSubNavigation('admin_plugins', $navigation);
         }
 

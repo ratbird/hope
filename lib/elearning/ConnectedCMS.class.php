@@ -170,7 +170,7 @@ class ConnectedCMS
             $msg["auth"]["info"] = sprintf(_("Eine Authentifizierung ist f&uuml;r dieses System nicht vorgesehen."));
 
         // check for SOAP-Interface
-        if ($this->ABSOLUTE_PATH_SOAP != "")
+        if ($this->ABSOLUTE_PATH_SOAP != "" && in_array($this->CLASS_PREFIX, words('Ilias3 Ilias4')))
         {
             if (! $SOAP_ENABLE)
                 $msg["soap"]["error"] = sprintf(_("Das Stud.IP-Modul f&uuml;r die SOAP-Schnittstelle ist nicht aktiviert. &Auml;ndern Sie den entsprechenden Eintrag in der Konfigurationsdatei \"local.inc\"."));
@@ -178,7 +178,7 @@ class ConnectedCMS
                 $msg["soap"]["error"] = sprintf(_("Die SOAP-Verbindungsdaten sind f&uuml;r dieses System nicht gesetzt. Erg&auml;nzen Sie die Einstellungen f&uuml;r dieses Systems um den Eintrag \"soap_data\" in der Konfigurationsdatei \"local.inc\"."));
             else
             {
-                require_once($RELATIVE_PATH_SOAP."/StudipSoapClient" . ($GLOBALS['SOAP_USE_PHP5'] && in_array($this->CLASS_PREFIX, words('Ilias3 Ilias4')) ? "_PHP5" : "") .".class.php");
+                require_once($RELATIVE_PATH_SOAP."/StudipSoapClient" . ($GLOBALS['SOAP_USE_PHP5'] ? "_PHP5" : "") .".class.php");
                 $this->soap_client = new StudipSoapClient($this->ABSOLUTE_PATH_SOAP);
                 $msg["soap"]["info"] = sprintf(_("Das SOAP-Modul ist aktiv."));
             }

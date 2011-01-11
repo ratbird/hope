@@ -33,7 +33,6 @@ Navigation::activateItem('/tools/elearning');
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
 
-require_once ('lib/elearning/ConnectedCMS.class.php');
 
 if (get_config('ELEARNING_INTERFACE_ENABLE')) {
     require_once ($RELATIVE_PATH_ELEARNING_INTERFACE . "/ELearningUtils.class.php");
@@ -64,12 +63,10 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
         // TODO: Sind die Checks so in ordnung?
         if (ELearningUtils::isCMSActive($cms))
         {
+            ELearningUtils::loadClass($cms);
             if ( $cms_preferences["auth_necessary"] == true) {
-                ELearningUtils::loadClass($cms);
-                ELearningUtils::bench("load cms $cms");
                 $new_module_form[$cms] = ELearningUtils::getNewModuleForm($cms);
             }
-            $connected_cms[$cms] = new ConnectedCMS();
             $connection_status = $connected_cms[$cms]->getConnectionStatus($cms);
 
             foreach ($connection_status as $type => $msg)
@@ -99,6 +96,8 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
     {
         if (ELearningUtils::isCMSActive($cms))
         {
+            $connected_cms = array();
+            ELearningUtils::loadClass($cms);
             if (($cms_preferences["auth_necessary"] == true))
             {
                 if ($GLOBALS["module_type_" . $cms] != "")

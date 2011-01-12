@@ -60,7 +60,6 @@ if (get_config('ELEARNING_INTERFACE_ENABLE')) {
     if ($new_account_cms != "")
         $new_account_form = ELearningUtils::getNewAccountForm($new_account_cms);
     foreach($ELEARNING_INTERFACE_MODULES as $cms => $cms_preferences) {
-        // TODO: Sind die Checks so in ordnung?
         if (ELearningUtils::isCMSActive($cms))
         {
             ELearningUtils::loadClass($cms);

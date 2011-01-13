@@ -60,7 +60,7 @@ if (isset($_SERVER['SERVER_NAME'])) {
 }
 
 // default ASSETS_URL, customize if required
-# $ASSETS_URL = $ABSOLUTE_URI_STUDIP . 'assets/';
+//$ASSETS_URL = $ABSOLUTE_URI_STUDIP . 'assets/';
 $ASSETS_URL = "http://develop.studip.de:8080/studip/assets/";
 
 // construct absolute URL for ASSETS_URL
@@ -84,8 +84,8 @@ $EXTERN_CONFIG_FILE_PATH =  $STUDIP_BASE_PATH . "/data/extern_config/";
 
 
 // path and url for dynamically generated static content like smilies..
-//$DYNAMIC_CONTENT_PATH = $ABSOLUTE_PATH_STUDIP . "/pictures";
-//$DYNAMIC_CONTENT_URL  = $ABSOLUTE_URI_STUDIP . "/pictures";
+$DYNAMIC_CONTENT_PATH = $ABSOLUTE_PATH_STUDIP . "/pictures";
+$DYNAMIC_CONTENT_URL  = $ABSOLUTE_URI_STUDIP . "/pictures";
 $DYNAMIC_CONTENT_PATH = "/srv/www2/htdocs/studip/pictures";
 $DYNAMIC_CONTENT_URL  = "http://develop.studip.de:8080/studip/pictures";
 
@@ -156,7 +156,7 @@ $SEMINAR_LOCK_ENABLE = TRUE; // locking of fields in seminar administration
 $ELEARNING_INTERFACE_MODULES["ilias40x"] = array(
     "name" => "ILIAS 4.0.X develop",
     "ABSOLUTE_PATH_ELEARNINGMODULES" => "http://develop.studip.de/ilias_4_0_x/",
-    "ABSOLUTE_PATH_SOAP" => "http://develop.studip.de/ilias_4_0_x/webservice/soap/server.php?wsdl",
+    "ABSOLUTE_PATH_SOAP" => "http://localhost/ilias_4_0_x/webservice/soap/server.php?wsdl",
     "CLASS_PREFIX" => "Ilias4",
     "auth_necessary" => true,
     "USER_PREFIX" => "studip_",
@@ -166,7 +166,7 @@ $ELEARNING_INTERFACE_MODULES["ilias40x"] = array(
     "soap_data" => array(
         "username" => "soap_admin",
         "password" => "soapsucks",
-        "client" => "foobar38"),
+        "client" => "hrm-test"),
     "types" => array(
                    "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
                    "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),

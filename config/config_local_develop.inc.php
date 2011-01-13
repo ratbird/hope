@@ -147,30 +147,36 @@ $EXTERN_SRI_ENABLE_BY_ROOT = FALSE;                         //only root allows t
 $EXTERN_ALLOW_ACCESS_WITHOUT_CONFIG = FALSE;                        //free access to external pages (without the need of a configuration), independent of SRI settings above
 
 $SOAP_ENABLE = TRUE;
+$SOAP_USE_PHP5 = TRUE;
 
 $WEBSERVICES_ENABLE = TRUE;
 
 $SEMINAR_LOCK_ENABLE = TRUE; // locking of fields in seminar administration
 
-$ELEARNING_INTERFACE_MODULES["ilias38x"] = array(
-    "name" => "ILIAS 3.8.X Testserver",
-    "ABSOLUTE_PATH_ELEARNINGMODULES" => "http://develop.studip.de/ilias38/",
-    "ABSOLUTE_PATH_SOAP" => "http://develop.studip.de/ilias38/webservice/soap/server.php?wsdl",
-    "CLASS_PREFIX" => "Ilias3",
+$ELEARNING_INTERFACE_MODULES["ilias40x"] = array(
+    "name" => "ILIAS 4.0.X develop",
+    "ABSOLUTE_PATH_ELEARNINGMODULES" => "http://develop.studip.de/ilias_4_0_x/",
+    "ABSOLUTE_PATH_SOAP" => "http://develop.studip.de/ilias_4_0_x/webservice/soap/server.php?wsdl",
+    "CLASS_PREFIX" => "Ilias4",
     "auth_necessary" => true,
-    "USER_PREFIX" => "studilias38x_",
+    "USER_PREFIX" => "studip_",
+    "USER_AUTO_CREATE" => true,
     "target_file" => "studip_referrer.php",
     "logo_file" => "assets/images/logos/ilias_logo.png",
     "soap_data" => array(
         "username" => "soap_admin",
         "password" => "soapsucks",
         "client" => "foobar38"),
-    "types" =>  array(
-        "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
-        "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" =>  "assets/images/icons/16/grey/learnmodule.png"),
-        "lm" => array("name" => "ILIAS-Lerneinheit", "icon" =>  "assets/images/icons/16/grey/learnmodule.png"),
-        "tst" => array("name" => "ILIAS-Test", "icon" =>  "assets/images/icons/16/grey/learnmodule.png")
-    ),
+    "types" => array(
+                   "htlm" => array("name" => "HTML-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
+                   "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
+                   "lm" => array("name" => "ILIAS-Lerneinheit", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
+                   "glo" => array("name" => "ILIAS-Glossar", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
+                   "tst" => array("name" => "ILIAS-Test", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
+                   "svy" => array("name" => "ILIAS-Umfrage", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
+                   "exc" => array("name" => "ILIAS-&Uuml;bung", "icon" => "assets/images/icons/16/grey/learnmodule.png"),
+                   "dbk" => array("name" => "ILIAS Digilib Book", "icon" => "assets/images/icons/16/grey/learnmodule.png")
+                   ),
     "global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
     "roles" =>  array(
         "autor" => "4",
@@ -188,40 +194,7 @@ $ELEARNING_INTERFACE_MODULES["ilias38x"] = array(
     )
 );
 
-$ELEARNING_INTERFACE_MODULES["ilias371"] =
-array(
-    "name" => "ILIAS 3.7.1 Testserver",
-    "ABSOLUTE_PATH_ELEARNINGMODULES" => "http://develop.studip.de/ilias3/",
-    "ABSOLUTE_PATH_SOAP" => "http://develop.studip.de/ilias3/webservice/soap/server.php?wsdl",
-    "CLASS_PREFIX" => "Ilias3",
-    "auth_necessary" => true,
-    "USER_PREFIX" => "studip371_",
-    "target_file" => "studip_referrer.php",
-    "logo_file" =>  "assets/images/logos/ilias_logo.png",
-    "soap_data" => array(
-        "username" => "soap_admin",
-        "password" => "hochgeheim",
-        "client" => "foobar2"),
-    "types" => array(
-        "htlm" => array("name" => "HTML-Lerneinheit", "icon" =>  "assets/images/icons/16/grey/learnmodule.png"),
-        "sahs" => array("name" => "SCORM/AICC-Lerneinheit", "icon" =>  "assets/images/icons/16/grey/learnmodule.png"),
-        "lm" => array("name" => "ILIAS-Lerneinheit", "icon" =>  "assets/images/icons/16/grey/learnmodule.png"),
-        "tst" => array("name" => "ILIAS-Test", "icon" =>  "assets/images/icons/16/grey/learnmodule.png")),
-    "global_roles" => array(4,5,14), // put here the ilias role-ids for User, Guest and Anonymous
-    "roles" => array(
-        "autor" => "4",
-        "tutor" => "4",
-        "dozent" => "4",
-        "admin" => "4",
-        "root" => "2"
-        ),
-    "crs_roles" =>  array(
-        "autor" => "member",
-        "tutor" => "tutor",
-        "dozent" => "admin",
-        "admin" => "admin",
-        "root" => "admin")
-);
+
 
 $PLUGINS_UPLOAD_ENABLE = TRUE;                  //Upload of Plugins is enabled
                                                 //if disabled for security reasons, uploads have to go into $NEW_PLUGINS_PATH

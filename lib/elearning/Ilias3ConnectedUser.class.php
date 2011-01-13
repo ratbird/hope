@@ -35,7 +35,7 @@ class Ilias3ConnectedUser extends ConnectedUser
         if (! $this->isConnected() AND ($connected_cms[$this->cms_type]->USER_AUTO_CREATE == true))
         {
             $this->setPassword(md5(uniqid("4dfmjsnll")));
-            $this->newUser();
+            $this->newUser(true);
             $this->readData();
         }
         $this->roles = array($connected_cms[$cms]->roles[$perm->get_perm($this->studip_id)]);
@@ -190,7 +190,7 @@ class Ilias3ConnectedUser extends ConnectedUser
     * @access public
     * @return boolean returns false on error
     */
-    function newUser()
+    function newUser($ignore_encrypt_passwords = false)
     {
         global $connected_cms, $auth, $messages;
 
@@ -232,7 +232,7 @@ class Ilias3ConnectedUser extends ConnectedUser
 
 //          $this->newUserCategory();
 
-            $this->setConnection(USER_TYPE_CREATED);
+            $this->setConnection(USER_TYPE_CREATED, $ignore_encrypt_passwords);
             return true;
         }
         echo $connected_cms[$this->cms_type]->soap_client->getError();

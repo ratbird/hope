@@ -288,7 +288,7 @@ class Ilias3Soap extends StudipSoapClient
         $param = array(
             'sid' => $this->getSID(),
             'types' => $types,
-            'key' => utf8_encode($key),
+            'key' => studip_utf8encode($key),
             'combination' => $combination
             );
          if ($user_id != "")
@@ -377,7 +377,7 @@ class Ilias3Soap extends StudipSoapClient
     {
         $param = array(
             'sid' => $this->getSID(),
-            'title'         => utf8_encode($key)
+            'title'         => studip_utf8encode($key)
             );
         $result = $this->call('getObjectsByTitle', $param);
         if ($result != false)
@@ -410,7 +410,7 @@ class Ilias3Soap extends StudipSoapClient
     {
         $param = array(
             'sid' => $this->getSID(),
-            'title'         => utf8_encode($key)
+            'title'         => studip_utf8encode($key)
             );
         $result = $this->call('getObjectsByTitle', $param);
         if ($result != false)
@@ -445,8 +445,8 @@ class Ilias3Soap extends StudipSoapClient
     function addObject($object_data, $ref_id)
     {
     $type = $object_data["type"];
-    $title = utf8_encode($object_data["title"]);
-    $description = utf8_encode($object_data["description"]);
+    $title = htmlspecialchars(studip_utf8encode($object_data["title"]));
+    $description = htmlspecialchars(studip_utf8encode($object_data["description"]));
 
     $xml = "<!DOCTYPE Objects SYSTEM \"http://www.ilias.uni-koeln.de/download/dtd/ilias_object_0_1.dtd\">
 <Objects>
@@ -658,8 +658,8 @@ class Ilias3Soap extends StudipSoapClient
     function addRole($role_data, $ref_id)
     {
     $type = "role";
-    $title = utf8_encode($role_data["title"]);
-    $description = utf8_encode($role_data["description"]);
+    $title = htmlspecialchars(studip_utf8encode($role_data["title"]));
+    $description = htmlspecialchars(studip_utf8encode($role_data["description"]));
 
     $xml = "<!DOCTYPE Objects SYSTEM \"http://www.ilias.uni-koeln.de/download/dtd/ilias_object_0_1.dtd\">
 <Objects>
@@ -698,8 +698,8 @@ class Ilias3Soap extends StudipSoapClient
     function addRoleFromTemplate($role_data, $ref_id, $role_id)
     {
     $type = "role";
-    $title = utf8_encode($role_data["title"]);
-    $description = utf8_encode($role_data["description"]);
+    $title = htmlspecialchars(studip_utf8encode($role_data["title"]));
+    $description = htmlspecialchars(studip_utf8encode($role_data["description"]));
 
     $xml = "<!DOCTYPE Objects SYSTEM \"http://www.ilias.uni-koeln.de/download/dtd/ilias_object_0_1.dtd\">
 <Objects>
@@ -820,7 +820,7 @@ class Ilias3Soap extends StudipSoapClient
     {
         $param = array(
             'sid' => $this->getSID(),
-            'user_name'         => utf8_encode($username),
+            'user_name'         => studip_utf8encode($username),
             );
         return $this->call('lookupUser', $param); // returns user_id
     }
@@ -840,11 +840,6 @@ class Ilias3Soap extends StudipSoapClient
             'user_id'         => $user_id,
             );
         $result = $this->call('getUser', $param); // returns user-data-array
-        /*
-        if (is_array($result))
-            foreach($result as $key => $value)
-                $result[$key] = utf8_decode($result[$key]);
-        */
         return $result;
     }
 
@@ -860,7 +855,7 @@ class Ilias3Soap extends StudipSoapClient
     function addUser($user_data, $role_id)
     {
         foreach($user_data as $key => $value)
-            $user_data[$key] = utf8_encode($user_data[$key]);
+            $user_data[$key] = studip_utf8encode($user_data[$key]);
 
         $param = array(
             'sid' => $this->getSID(),
@@ -881,7 +876,7 @@ class Ilias3Soap extends StudipSoapClient
     function updateUser($user_data)
     {
         foreach($user_data as $key => $value)
-            $user_data[$key] = utf8_encode($user_data[$key]);
+            $user_data[$key] = studip_utf8encode($user_data[$key]);
 
         $param = array(
             'sid' => $this->getSID(),
@@ -904,7 +899,7 @@ class Ilias3Soap extends StudipSoapClient
         $param = array(
             'sid' => $this->getSID(),
             'user_id'         => $user_id,
-            'new_password'         => utf8_encode($password)
+            'new_password'         => studip_utf8encode($password)
             );
         return $this->call('updatePassword', $param); // returns boolean
     }
@@ -986,7 +981,7 @@ class Ilias3Soap extends StudipSoapClient
     function addCourse($course_data, $ref_id)
     {
         foreach($course_data as $key => $value)
-            $course_data[$key] = utf8_encode($course_data[$key]);
+            $course_data[$key] = htmlspecialchars(studip_utf8encode($course_data[$key]));
 
         $xml = $this->getCourseXML($course_data);
         $param = array(
@@ -1073,7 +1068,7 @@ class Ilias3Soap extends StudipSoapClient
     {
         $param = array(
         'sid' => $this->getSID(),
-        'reference_id'         => utf8_encode($id)
+        'reference_id'         => studip_utf8encode($id)
         );
         $result = $this->call('getObjectByReference', $param);
         if ($result != false)

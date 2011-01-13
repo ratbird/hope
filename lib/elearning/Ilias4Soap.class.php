@@ -49,7 +49,7 @@ class Ilias4Soap extends Ilias3Soap
     function addUser($user_data, $role_id)
     {
         foreach($user_data as $key => $value) {
-            $user_data[$key] = studip_utf8encode($user_data[$key]);
+            $user_data[$key] = htmlspecialchars(studip_utf8encode($user_data[$key]));
         }
 
         $usr_xml = "<Users>

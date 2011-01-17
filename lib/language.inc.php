@@ -104,7 +104,7 @@ function init_i18n($_language) {
 function makeButton($name, $mode = "img", $tooltip = false, $inputname = false) {
 
     $url = localeButtonUrl($name . '-button.png');
-    $tooltext = ($tooltip ? tooltip($tooltip, false) : '');
+    $tooltext = ($tooltip ? tooltip($tooltip) : '');
 
     switch ($mode) {
 

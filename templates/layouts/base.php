@@ -30,7 +30,7 @@
                               'content' => array(
                                              array('kategorie' => _("Infobox fehlt."))
                                            )) ?>
-        <?= $this->render_partial('infobox/infobox_generic_content', $infobox) ?>
+        <?= $GLOBALS['template_factory']->render('infobox/infobox_generic_content', $infobox) ?>
       </div>
       <div id="layout_content">
         <?= $content_for_layout ?>

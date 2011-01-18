@@ -7,6 +7,8 @@ $turnus_list = array(
 
 $output = array();
 
+if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
+
 $freitext = '';
 if (is_array($cycle['freetext_rooms'])){
    $freitext = implode(', ', array_keys($cycle['freetext_rooms']));
@@ -17,8 +19,6 @@ if (is_array($cycle['assigned_rooms'])){
     $plainRooms = implode(', ', getPlainRooms($cycle['assigned_rooms']));
 }
 
-
-if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
 ?>
 <raumzeit>
     <datum><?= $turnus_list[$cycle['cycle']] ?></datum>

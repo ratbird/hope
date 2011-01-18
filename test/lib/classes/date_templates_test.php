@@ -89,7 +89,7 @@ class DateTemplatesTests extends UnitTestCase
     public function testHTMLTemplatesWithLink()
     {
         $data = renderTemplate('dates/seminar_html', $this->testData);
-        $compare = 'Montag: 10:00 - 12:00 (ab 18.10.2010), <i>Vorlesung</i> Ort: '
+        $compare = 'Montag: 10:00 - 12:00 (ab 18.10.2010), <i>Vorlesung</i>, Ort: '
                  . '<a onclick="window.open(...)">Hörsaal 1</a>, '
                  . '(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)<br>'
                  . 'Termine am 12.05. 09:00 - 13:00';
@@ -122,7 +122,7 @@ class DateTemplatesTests extends UnitTestCase
     public function testHTMLTemplatesWithoutLink()
     {
         $data = renderTemplate('dates/seminar_html', $this->testData, array('link' => false));
-        $compare = 'Montag: 10:00 - 12:00 (ab 18.10.2010), <i>Vorlesung</i> Ort: H&ouml;rsaal 1 &lt;br&gt;, '
+        $compare = 'Montag: 10:00 - 12:00 (ab 18.10.2010), <i>Vorlesung</i>, Ort: H&ouml;rsaal 1 &lt;br&gt;, '
                  . '(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)<br>'
                  . 'Termine am 12.05. 09:00 - 13:00';
         $this->assertEqual($data, $compare);

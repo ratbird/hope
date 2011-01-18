@@ -15,7 +15,7 @@ if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
       $cycle_output .= ' - '. $cycle['desc'];
 
     if ($show_room) :
-        $cycle_output .= ',' . $this->render_partial('dates/_seminar_rooms', 
+        $cycle_output .= $this->render_partial('dates/_seminar_rooms', 
             array(
                 'assigned' => $cycle['assigned_rooms'],
                 'freetext' => $cycle['freetext_rooms'],

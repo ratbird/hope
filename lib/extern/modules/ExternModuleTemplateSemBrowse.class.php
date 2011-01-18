@@ -702,16 +702,17 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                             'SUBLEVEL_INFO_' . $level => $info
                     );
                     if ($this->config->getValue('LinkInternShowCourses', 'config') && $tree->getNumEntries($kid, false)) {
-                        $content[$count]['SUBLEVEL' . $level]['LINK_TO_COURSES_' . $level] = $level_content;
-                        $content[$count]['SUBLEVEL' . $level]['LINK_TO_COURSES_' . $level]['SUBLEVEL-HREF_' . $level] = $this->getLinkToSelf(array('start_item_id' => $kid, 'show_result' => '1', 'withkids' => '1', 'do_search' => '0'), true, 'LinkInternShowCourses');
-                        $content[$count]['SUBLEVEL' . $level]['NO_LINK_TO_COURSES_' . $level] = '';
+                        $content['SUBLEVEL_' . $level][$count]['LINK_TO_COURSES_' . $level] = $level_content;
+                        $content['SUBLEVEL_' . $level][$count]['LINK_TO_COURSES_' . $level]['SUBLEVEL-HREF_SHOW_COURSES_' . $level] = $this->getLinkToSelf(array('start_item_id' => $kid, 'show_result' => '1', 'withkids' => '1', 'do_search' => '0'), true, 'LinkInternShowCourses');
+                        $content['SUBLEVEL_' . $level][$count]['NO_LINK_TO_COURSES_' . $level]['SUBLEVEL-HREF_' . $level] = $this->getLinkToSelf(array('start_item_id' => $kid, 'show_result' => '1', 'withkids' => '1', 'do_search' => '0'), true, 'LinkInternTree');
+                        $content['SUBLEVEL_' . $level][$count]['NO_LINK_TO_COURSES_' . $level] = false;
                     } else {
-                        $content[$count]['SUBLEVEL' . $level]['NO_LINK_TO_COURSES_' . $level] = $level_content;
-                        $content[$count]['SUBLEVEL' . $level]['NO_LINK_TO_COURSES_' . $level]['SUBLEVEL-HREF_' . $level] = $this->getLinkToSelf(array('start_item_id' => $kid, 'show_result' => '1', 'withkids' => '1', 'do_search' => '0'), true, 'LinkInternTree');
-                        $content[$count]['SUBLEVEL' . $level]['LINK_TO_COURSES_' . $level] = '';
+                        $content['SUBLEVEL_' . $level][$count]['NO_LINK_TO_COURSES_' . $level] = $level_content;
+                        $content['SUBLEVEL_' . $level][$count]['NO_LINK_TO_COURSES_' . $level]['SUBLEVEL-HREF_' . $level] = $this->getLinkToSelf(array('start_item_id' => $kid, 'show_result' => '1', 'withkids' => '1', 'do_search' => '0'), true, 'LinkInternTree');
+                        $content['SUBLEVEL_' . $level][$count]['LINK_TO_COURSES_' . $level] = false;
                     }
                     if ($sublevel = $this->getAllTreeLevelContent($tree, $kid, $max_level, $level)) {
-                        $content[$count]['SUBLEVEL' . $level]['SUBLEVELS_' . ($level + 1)] = $sublevel;
+                        $content['SUBLEVEL_' . $level][$count]['SUBLEVELS_' . ($level + 1)] = $sublevel;
                     }
                     $count++;
                 }

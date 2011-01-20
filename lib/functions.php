@@ -1227,7 +1227,7 @@ function format_help_url($keyword) {
     $loc="";
     $locationid=get_config("EXTERNAL_HELP_LOCATIONID");
     if ($locationid && $locationid!="default") {
-	$loc = $locationid."/";
+    $loc = $locationid."/";
     }
 
     // all help urls need short language tag (de, en)

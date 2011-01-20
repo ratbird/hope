@@ -411,10 +411,29 @@ class Seminar
             $this->members = array();
             $this->admission_members = array();
             $this->admission_studiengang = null;
+
+            $this->old_settings = $this->getSettings();
+
             return TRUE;
 
         }
+
         return FALSE;
+    }
+
+    /**
+     * returns an array of variables from the seminar-object, excluding variables
+     * containing objects or arrays
+     *
+     * @return  array
+     */
+    function getSettings() {
+        $settings = get_object_vars($this);
+        foreach ($settings as $key => $val) {
+            if (is_object($val) || is_array($val)) unset($settings[$key]);
+        }
+
+        return $settings;
     }
 
     function store($trigger_chdate = true)
@@ -2257,12 +2276,21 @@ class Seminar
             ->fetchAll(PDO::FETCH_COLUMN, 0);
             $todelete = array_diff($old_inst, $institutes);
             foreach($todelete as $inst) {
+                /* * * * * L O G G I N G * * * * */
+                log_event('SEM_DEL_INSTITUTE', $this->id, $inst);
+                /* E N D * O F * L O G G I N G * */
+                
                 $db->exec("DELETE FROM seminar_inst " .
                     "WHERE seminar_id = ".$db->quote($this->id)." " .
                         "AND institut_id = ".$db->quote($inst));
             }
+            
             $toinsert = array_diff($institutes, $old_inst);
             foreach($toinsert as $inst) {
+                /* * * * * L O G G I N G * * * * */
+                log_event('SEM_ADD_INSTITUTE', $this->id, $inst);
+                /* E N D * O F * L O G G I N G * */
+
                 $db->exec("INSERT INTO seminar_inst " .
                     "SET seminar_id = ".$db->quote($this->id).", " .
                         "institut_id = ".$db->quote($inst));

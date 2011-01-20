@@ -349,13 +349,6 @@ class Course_BasicdataController extends AuthenticatedController
                     } elseif ($sem->{$varname} != $req_value) {
                         $sem->{$varname} = $req_value;
                         $changemade = true;
-                        if (in_array($varname, array("participants",
-                                "requirements",
-                                "orga",
-                                "leistungsnachweis",
-                                "location",
-                                "misc"))) {
-                        }
                     }
                 }
             }
@@ -383,7 +376,19 @@ class Course_BasicdataController extends AuthenticatedController
             if (count($invalid_datafields)) {
                 $this->msg[] = array("error", _("Die Eingaben für folgende Felder sind ungültig und wurden nicht gespeichert:") . '<br>' . join(', ', array_map('htmlready', $invalid_datafields)));
             }
+
             $sem->store();
+
+            /* * * * * L O G G I N G * * * * */
+            $before = array_diff($sem->old_settings, $sem->getSettings());
+            $after  = array_diff($sem->getSettings(), $sem->old_settings);
+
+            if (sizeof($before) && sizeof($after)) {
+                $log_message = "Before:\n" . implode("\n", $before) . "\n\nAfter:\n" . implode("\n", $after);
+                log_event('CHANGE_BASIC_DATA', $sem->getId(), " ", $log_message, $GLOBALS['user']->id);
+            }
+            /* E N D * O F * L O G G I N G * */
+
             if ($changemade) {
                 $this->msg[] = array("msg", _("Die Grunddaten der Veranstaltung wurden verändert."));
             } else {

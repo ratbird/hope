@@ -937,7 +937,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
 
         foreach ($dates as $date) {
             if (in_array('all', $selected_types) || (in_array('meeting', $selected_types) && $GLOBALS['TERMIN_TYP'][$date['date_typ']]['sitzung']) || (in_array('other', $selected_types) && !$GLOBALS['TERMIN_TYP'][$date['date_typ']]['sitzung']) || in_array($date['date_typ'], $selected_types)) {
-                $cont['IRREGULAR_DATES'][$i] = array(
+                $cont['IRREGULAR_DATES']['IRREGULAR_DATE'][$i] = array(
                     'DAY_OF_WEEK' => $dow_array[date('w', $date['date'])],
                     'START_TIME' => date('H:i', $date['date']),
                     'END_TIME' => date('H:i', $date['end_time']),
@@ -945,23 +945,23 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                     'IRREGULAR_DESCRIPTION' => ExternModule::ExtHtmlReady(trim($date['description'])),
                     'IRREGULAR_DELIMITER' => true);
                 if ($GLOBALS['TERMIN_TYP'][$date['date_typ']]['sitzung']) {
-                    $cont['IRREGULAR_DATES'][$i]['IRREGULAR_TYPE_MEETING'] = $GLOBALS['TERMIN_TYP'][$date['date_typ']]['name'];
+                    $cont['IRREGULAR_DATES']['IRREGULAR_DATE'][$i]['IRREGULAR_TYPE_MEETING'] = $GLOBALS['TERMIN_TYP'][$date['date_typ']]['name'];
                 } else {
-                    $cont['IRREGULAR_DATES'][$i]['IRREGULAR_TYPE_OTHER'] = $GLOBALS['TERMIN_TYP'][$date['date_typ']]['name'];
+                    $cont['IRREGULAR_DATES']['IRREGULAR_DATE'][$i]['IRREGULAR_TYPE_OTHER'] = $GLOBALS['TERMIN_TYP'][$date['date_typ']]['name'];
                 }
                 if ($GLOBALS['RESOURCES_ENABLE'] && $date['resource_id']) {
-                    $cont['IRREGULAR_DATES'][$i]['IRREGULAR_ROOM'] = ExternModule::ExtHtmlReady(trim(ResourceObject::Factory($date['resource_id'])->getName()));
+                    $cont['IRREGULAR_DATES']['IRREGULAR_DATE'][$i]['IRREGULAR_ROOM'] = ExternModule::ExtHtmlReady(trim(ResourceObject::Factory($date['resource_id'])->getName()));
                 } else if (trim($date['raum'])) {
-                    $cont['IRREGULAR_DATES'][$i]['IRREGULAR_ROOM'] = ExternModule::ExtHtmlReady(trim($date['raum']));
+                    $cont['IRREGULAR_DATES']['IRREGULAR_DATE'][$i]['IRREGULAR_ROOM'] = ExternModule::ExtHtmlReady(trim($date['raum']));
                 } else {
-                    $cont['IRREGULAR_DATES'][$i]['IRREGULAR_NO_ROOM'] = true;
+                    $cont['IRREGULAR_DATES']['IRREGULAR_DATE'][$i]['IRREGULAR_NO_ROOM'] = true;
                 }
             }
             $i++;
         }
         // remove last delimiter
         if ($i) {
-            unset($cont['IRREGULAR_DATE'][$i - 1]['IRREGULAR_DELIMITER']);
+            unset($cont['IRREGULAR_DATES']['IRREGULAR_DATE'][$i - 1]['IRREGULAR_DELIMITER']);
         }
         return $cont;
     }

@@ -213,19 +213,37 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
 
         $j = -1;
         if ($seminar->visible == 1) {
-
-            //$data["name"] = htmlReady($this->db->f("Name"));
             $content['LECTUREDETAILS']['TITLE'] = ExternModule::ExtHtmlReady($seminar->getName());
-            $content['LECTUREDETAILS']['NUMBER'] = ExternModule::ExtHtmlReady($seminar->seminar_number);
-            $content['LECTUREDETAILS']['SUBTITLE'] = ExternModule::ExtHtmlReady($seminar->subtitle);
-            $content['LECTUREDETAILS']['DESCRIPTION'] = ExternModule::ExtHtmlReady($seminar->description, TRUE);
-            $content['LECTUREDETAILS']['MISC'] = ExternModule::ExtHtmlReady($seminar->misc, TRUE);
-            $content['LECTUREDETAILS']['PARTICIPANTS'] = ExternModule::ExtHtmlReady($seminar->participants);
-            $content['LECTUREDETAILS']['REQUIREMENTS'] = ExternModule::ExtHtmlReady($seminar->requirements);
-            $content['LECTUREDETAILS']['ORGA'] = ExternModule::ExtHtmlReady($seminar->orga);
-            $content['LECTUREDETAILS']['LEISTUNGSNACHWEIS'] = ExternModule::ExtHtmlReady($seminar->leistungsnachweis);
-            $content['LECTUREDETAILS']['FORM'] = ExternModule::ExtHtmlReady($seminar->form);
-            $content['LECTUREDETAILS']['ECTS'] = ExternModule::ExtHtmlReady($seminar->ects);
+            if (trim($seminar->seminar_number)) {
+                $content['LECTUREDETAILS']['NUMBER'] = ExternModule::ExtHtmlReady($seminar->seminar_number);
+            }
+            if (trim($seminar->subtitle)) {
+                $content['LECTUREDETAILS']['SUBTITLE'] = ExternModule::ExtHtmlReady($seminar->subtitle);
+            }
+            if (trim($seminar->description)) {
+                $content['LECTUREDETAILS']['DESCRIPTION'] = ExternModule::ExtHtmlReady($seminar->description, TRUE);
+            }
+            if (trim($seminar->misc)) {
+                $content['LECTUREDETAILS']['MISC'] = ExternModule::ExtHtmlReady($seminar->misc, TRUE);
+            }
+            if (trim($seminar->participants)) {
+                $content['LECTUREDETAILS']['PARTICIPANTS'] = ExternModule::ExtHtmlReady($seminar->participants);
+            }
+            if (trim($seminar->requirements)) {
+                $content['LECTUREDETAILS']['REQUIREMENTS'] = ExternModule::ExtHtmlReady($seminar->requirements);
+            }
+            if (trim($seminar->orga)) {
+                $content['LECTUREDETAILS']['ORGA'] = ExternModule::ExtHtmlReady($seminar->orga);
+            }
+            if (trim($seminar->leistungsnachweis)) {
+                $content['LECTUREDETAILS']['LEISTUNGSNACHWEIS'] = ExternModule::ExtHtmlReady($seminar->leistungsnachweis);
+            }
+            if (trim($seminar->form)) {
+                $content['LECTUREDETAILS']['FORM'] = ExternModule::ExtHtmlReady($seminar->form);
+            }
+            if (trim($seminar->ects)) {
+                $content['LECTUREDETAILS']['ECTS'] = ExternModule::ExtHtmlReady($seminar->ects);
+            }
 
             if (!$name_sql = $this->config->getValue("Main", "nameformat")) {
                 $name_sql = "full";
@@ -283,11 +301,17 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
                 $content['LECTUREDETAILS']['SEMTYPE-SUBSTITUTE'] = ExternModule::ExtHtmlReady($GLOBALS["SEM_TYPE"][$seminar->status]["name"]);
             }
             $content['LECTUREDETAILS']['SEMTYPE'] = ExternModule::ExtHtmlReady($GLOBALS["SEM_TYPE"][$seminar->status]["name"]);
-            $content['LECTUREDETAILS']['ROOM'] = Seminar::getInstance($this->seminar_id)->getDatesTemplate('dates/seminar_export_location');
+            if ($room = getRoom($this->seminar_id, FALSE)) {
+                $content['LECTUREDETAILS']['ROOM'] = Seminar::getInstance($this->seminar_id)->getDatesTemplate('dates/seminar_export_location');
+            }
             $content['LECTUREDETAILS']['SEMESTER'] = get_semester($this->seminar_id);
             $content['LECTUREDETAILS']['CYCLE'] = ExternModule::ExtHtmlReady(Seminar::getInstance($this->seminar_id)->getDatesExport());
-            $content['LECTUREDETAILS']['PRELIM-DISCUSSION'] = vorbesprechung($this->seminar_id);
-            $content['LECTUREDETAILS']['FIRST-MEETING'] = veranstaltung_beginn($this->seminar_id);
+            if ($vorbesprechung = vorbesprechung($this->seminar_id)) {
+                $content['LECTUREDETAILS']['PRELIM-DISCUSSION'] = vorbesprechung($this->seminar_id);
+            }
+            if ($veranstaltung_beginn = veranstaltung_beginn($this->seminar_id)) {
+                $content['LECTUREDETAILS']['FIRST-MEETING'] = veranstaltung_beginn($this->seminar_id);
+            }
 
             $range_path_level = $this->config->getValue('Main', 'rangepathlevel');
             $pathes = get_sem_tree_path($this->seminar_id, $range_path_level);
@@ -305,7 +329,7 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
                 $k = 1;
                 foreach ($generic_datafields as $datafield) {
                     if (isset($localEntries[$datafield]) && is_object($localEntries[$datafield])) {
-                        $localEntry = $localEntries[$datafield]->getDisplayValue();
+                        $localEntry = trim($localEntries[$datafield]->getDisplayValue());
                         if ($localEntry) {
                             $content['LECTUREDETAILS']["DATAFIELD_$k"] = $localEntry;
                         }

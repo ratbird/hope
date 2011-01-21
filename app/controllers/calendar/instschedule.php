@@ -12,7 +12,7 @@
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/calendar/instschedule.php';
 require_once 'app/models/calendar/calendar.php';
-require_once 'app/models/calendar/view.php';
+require_once 'lib/calendar/CalendarWeekView.class.php';
 require_once 'lib/classes/SemesterData.class.php';
 
 /**
@@ -66,7 +66,7 @@ class Calendar_InstscheduleController extends AuthenticatedController
         }
 
         $this->entries = (array)CalendarInstscheduleModel::getInstituteEntries($GLOBALS['user']->id,
-                         $this->current_semester, 8, 20, $institute_id);
+                         $this->current_semester, 8, 20, $institute_id, $this);
 
         Navigation::activateItem('/course/main/schedule');
         PageLayout::setHelpKeyword('Basis.TerminkalenderStundenplan');
@@ -76,24 +76,24 @@ class Calendar_InstscheduleController extends AuthenticatedController
         if ($this->flash['entry']) {
             $this->show_entry = $this->flash['entry'];
         }
-
-        if (!$days) {
+        if ($days === false) {
             if (Request::getArray('days')) {
                 $this->days = array_keys(Request::getArray('days'));
             } else {
-                $this->days = array(1,2,3,4,5,6,0);
+                $this->days = array(0,1,2,3,4,5,6);
             }
         } else {
             $this->days = explode(',', $days);
         }
 
         $this->controller = $this;
-        $this->calendar_view = new CalendarView($this->entries, 'instschedule');
+        $this->calendar_view = new CalendarWeekView($this->entries, 'instschedule');
         $this->calendar_view->setHeight(40 + (20 * Request::get('zoom', 0)));
-        $this->calendar_view->setDays($this->days);
+        $this->calendar_view->setDays($this->days, $this);
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
         $this->calendar_view->setReadOnly();
         $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
+
 
         $style_parameters = array(
             'whole_height' => $this->calendar_view->getOverallHeight(),

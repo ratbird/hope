@@ -81,8 +81,10 @@ class CalendarScheduleModel
      * @param string  optional; the ID of the course
      * @return array  an array containing the entries
      */
-    static function getScheduleEntries($user_id, $start_hour, $end_hour, $id = false)
+    static function getScheduleEntries($user_id, $start_hour, $end_hour, $id = false, $controller)
     {
+        $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
+
         $ret = array();
 
         // fetch user-generated entries
@@ -115,7 +117,13 @@ class CalendarScheduleModel
             $entry['onClick']      = "STUDIP.Schedule.showScheduleDetails('". $entry['id'] ."'); return false;";
             $entry['visible']      = true;
 
-            $ret[$entry['day']][] = $entry;
+            $day_number = ($entry['day']-1) % 7;
+            if (!isset($ret[$day_number])) {
+                $ret[$day_number] = CalendarColumn::create($day_number);
+                $ret[$day_number]->setTitle($day_names[$day_number]);
+                $ret[$day_number]->setURL($controller->url_for('calendar/' .(get_class($controller) == "Calendar_InstscheduleController" ? "instschedule" : "schedule"). '/index/'. $day_number));
+            }
+            $ret[$day_number]->addEntry($entry);
         }
 
         return $ret;
@@ -154,7 +162,7 @@ class CalendarScheduleModel
                 $entry['title']   = '';
                 // check, if the date is assigned to a room
                 if ($rooms = $cycle->getPredominantRoom()) {
-                    $entry['title'] .= implode('', getFormattedRooms(array_slice($rooms, 0, 1))) 
+                    $entry['title'] .= implode('', getFormattedRooms(array_slice($rooms, 0, 1)))
                                     . (sizeof($rooms) > 1 ? ', u.a.' : '');
                 }
 
@@ -165,7 +173,7 @@ class CalendarScheduleModel
                 foreach ($members as $member) {
                     $lecturers[] = $member['Nachname'];
                 }
-                $entry['content'] .= " (". implode(', ', array_slice($lecturers, 0, 3)) 
+                $entry['content'] .= " (". implode(', ', array_slice($lecturers, 0, 3))
                                   . (sizeof($members) > 3 ? ' et al.' : '').')';
 
 
@@ -176,7 +184,7 @@ class CalendarScheduleModel
 
 
                 // check the settings for this entry
-                $stmt2 = DBManager::get()->prepare("SELECT sc.*, IF(su.user_id IS NULL, 'virtual', 'sem') as type 
+                $stmt2 = DBManager::get()->prepare("SELECT sc.*, IF(su.user_id IS NULL, 'virtual', 'sem') as type
                     FROM schedule_seminare as sc
                     LEFT JOIN seminar_user as su ON (su.user_id = sc.user_id AND su.Seminar_id = sc.seminar_id)
                     WHERE sc.seminar_id = ? AND sc.user_id = ? AND sc.metadate_id = ?");
@@ -204,7 +212,7 @@ class CalendarScheduleModel
                 if (!$entry['visible']) {
                     $entry['url'] .= '/?show_hidden=true';
 
-                    $bind_url = UrlHelper::getLink('dispatch.php/calendar/schedule/bind/' 
+                    $bind_url = UrlHelper::getLink('dispatch.php/calendar/schedule/bind/'
                               . $seminar_id . '/' . $cycle->getMetaDateId() . '/?show_hidden=true');
 
                     $entry['icons'][] = array(
@@ -214,15 +222,15 @@ class CalendarScheduleModel
                         'title' => _("Diesen Eintrag wieder einblenden")
                     );
                 }
-                
+
                 // show a hide-icon if the entry is not virtual
                 else if ($entry['type'] != 'virtual') {
-                    $unbind_url = UrlHelper::getLink('dispatch.php/calendar/schedule/unbind/' 
+                    $unbind_url = UrlHelper::getLink('dispatch.php/calendar/schedule/unbind/'
                                 . $seminar_id . '/' . $cycle->getMetaDateId());
                     $entry['icons'][] = array(
                         'url'     => $unbind_url,
                         'image'   => Assets::image_path('icons/16/white/visibility-visible.png'),
-                        'onClick' => "STUDIP.Schedule.hideEntry(this, '$seminar_id', '". $cycle->getMetaDateId() ."'); return false;", 
+                        'onClick' => "STUDIP.Schedule.hideEntry(this, '$seminar_id', '". $cycle->getMetaDateId() ."'); return false;",
                         'title'   => _("Diesen Eintrag ausblenden")
                     );
 
@@ -243,9 +251,9 @@ class CalendarScheduleModel
      */
     static function deleteSeminarEntries($user_id, $seminar_id)
     {
-        $stmt = DBManager::get()->prepare("DELETE FROM schedule_seminare
-            WHERE user_id = ? AND seminar_id = ?");
-        return $stmt->execute(array($user_id, $seminar_id));
+        $db = DBManager::get();
+        $deleteVirtualEntries = "DELETE FROM schedule_seminare WHERE user_id = '$user_id' AND seminar_id ='$seminar_id'";
+        $db->query($deleteVirtualEntries);
     }
 
     /**
@@ -258,8 +266,10 @@ class CalendarScheduleModel
      * @param string  optional; true to show hidden, false otherwise
      * @return array  an array containing the properties of the entry
      */
-    static function getSeminarEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false)
+    static function getSeminarEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false, $controller)
     {
+        $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
+
         // get all virtually added seminars
         $stmt = DBManager::get()->prepare("SELECT * FROM schedule_seminare as c
             LEFT JOIN seminare as s ON (s.Seminar_id = c.Seminar_id)
@@ -272,7 +282,7 @@ class CalendarScheduleModel
             );
         }
 
-        // fetch seminar-entries 
+        // fetch seminar-entries
         $stmt = DBManager::get()->prepare("SELECT * FROM seminar_user as su
             LEFT JOIN seminare as s USING (Seminar_id)
             WHERE su.user_id = :userid AND (s.start_time = :begin
@@ -283,18 +293,23 @@ class CalendarScheduleModel
         $stmt->bindParam(':userid', $user_id);
         $stmt->execute();
 
-        while ($entry = $stmt->fetch()) {
-            $seminars[$entry['Seminar_id']] = $entry;
-        }
-        
-        if (is_array($seminars)) foreach ($seminars as $data) {
+        $seminars = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $ret = array();
+        foreach ($seminars as $data) {
             $entries = self::getSeminarEntry($data['Seminar_id'], $user_id);
 
             foreach ($entries as $entry) {
                 if (($entry['start'] >= $start_hour * 100 && $entry['start'] <= $end_hour * 100
                     || $entry['end'] >= $start_hour * 100 && $entry['end'] <= $end_hour * 100)
                     && ($show_hidden || (!$show_hidden && $entry['visible']))) {
-                    $ret[$entry['day']][] = $entry;
+                    $day_number = ($entry['day']-1) % 7;
+                    if (!isset($ret[$day_number])) {
+                        $ret[$day_number] = new CalendarColumn();
+                        $ret[$day_number]->setTitle($day_names[$entry['day']]);
+                        $ret[$day_number]->setURL($controller->url_for('calendar/'. (get_class($controller) == "Calendar_InstscheduleController" ? "instschedule" : "schedule") .'/index/'. $entry['day']));
+                    }
+
+                    $ret[$day_number]->addEntry($entry);
                 }
             }
         }
@@ -314,20 +329,22 @@ class CalendarScheduleModel
      * @param string  the ID of the institute
      * @return array  an array containing the entries
      */
-    static function getSeminarEntriesForInstitute($user_id, $semester, $start_hour, $end_hour, $institute_id)
+    static function getSeminarEntriesForInstitute($user_id, $semester, $start_hour, $end_hour, $institute_id, $controller)
     {
-        // fetch seminar-entries 
+        $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
+
+        $ret = array();
+
+        // fetch seminar-entries
         $stmt = DBManager::get()->prepare("SELECT * FROM seminare as s
             WHERE Institut_id = ? AND (start_time = ?
                 OR (start_time < ? AND duration_time = -1)
                 OR (start_time + duration_time >= ?))");
         $stmt->execute(array($institute_id, $semester['beginn'], $semester['beginn'], $semester['beginn']));
 
-        while ($entry = $stmt->fetch()) {
-            $seminars[$entry['Seminar_id']] = $entry;
-        }
-        
-        if (is_array($seminars)) foreach ($seminars as $data) {
+        $seminars = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($seminars as $data) {
             $entries = self::getSeminarEntry($data['Seminar_id'], $user_id);
 
             foreach ($entries as $entry) {
@@ -339,7 +356,14 @@ class CalendarScheduleModel
 
                     $entry['color'] = DEFAULT_COLOR_SEM;
 
-                    $ret[$entry['day']][] = $entry;
+                    $day_number = ($entry['day']-1) % 7;
+                    if (!isset($ret[$day_number])) {
+                        $ret[$day_number] = CalendarColumn::create($entry['day']);
+                        $ret[$day_number]->setTitle($day_names[$entry['day']]);
+                        $ret[$day_number]->setURL($controller->url_for('calendar/'. get_class($controller) .'/index/'. $entry['day']));
+                    }
+
+                    $ret[$day_number]->addEntry($entry);
                 }
             }
         }
@@ -356,7 +380,7 @@ class CalendarScheduleModel
      * @param  string   the end of the cycle
      * @return string   the ID of the cycle
      */
-    static function getSeminarCycleId(Seminar $seminar, $start, $end) 
+    static function getSeminarCycleId(Seminar $seminar, $start, $end)
     {
         foreach ($seminar->getCycles() as $cycle) {
             if (leadingZero($cycle->getStartStunde()) . leadingZero($cycle->getStartMinute()) == $start
@@ -371,7 +395,7 @@ class CalendarScheduleModel
      * @param  string the ID of the cycle
      * @return bool true if visible, false otherwise
      */
-    static function isSeminarVisible($seminar_id, $cycle_id) 
+    static function isSeminarVisible($seminar_id, $cycle_id)
     {
         $stmt = DBManager::get()->prepare("SELECT visible
             FROM schedule_seminare
@@ -385,7 +409,7 @@ class CalendarScheduleModel
     }
 
     /**
-     * Returns a merged array consisting of normal and courses' entries 
+     * Returns a merged array consisting of normal and courses' entries
      *
      * @param string  the user's ID
      * @param string  the course's ID
@@ -395,17 +419,22 @@ class CalendarScheduleModel
      * @param bool    filters hidden entries
      * @return array  an array of entries
      */
-    static function getInstituteEntries($user_id, $semester, $start_hour, $end_hour, $institute_id, $show_hidden = false)
+    static function getInstituteEntries($user_id, $semester, $start_hour, $end_hour, $institute_id, $show_hidden = false, $controller)
     {
+        $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
         // merge the schedule and seminar-entries
-        $entries = self::getScheduleEntries($user_id, $start_hour, $end_hour);
-        $seminar = self::getSeminarEntriesForInstitute($user_id, $semester, $start_hour, $end_hour, $institute_id, $show_hidden);
-        if (is_array($seminar)) foreach($seminar as $day => $sem_entries) {
-            foreach ($sem_entries as $entry) {
-                $entries[$day][] = $entry;
+        $entries = self::getScheduleEntries($user_id, $start_hour, $end_hour, false, $controller);
+        $seminar = self::getSeminarEntriesForInstitute($user_id, $semester, $start_hour, $end_hour, $institute_id, $show_hidden, $controller);
+        foreach($seminar as $day => $entry_column) {
+            foreach ($entry_column->getEntries() as $entry) {
+                if (!isset($entries[$day])) {
+                    $entries[$day] = CalendarColumn::create($day);
+                    $entries[$day]->setTitle($day_names[$day]);
+                    $entries[$day]->setURL($controller->url_for('calendar/'. get_class($controller) .'/index/'. $day));
+                }
+                $entries[$day]->addEntry($entry);
             }
         }
-
         return $entries;
     }
 
@@ -415,17 +444,22 @@ class CalendarScheduleModel
      * @param  string  $user_id
      * @param  mixed   $semester  the data for the semester to be displayed
      */
-    static function getEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false)
+    static function getEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false, $controller)
     {
+        $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
         // merge the schedule and seminar-entries
-        $entries = self::getScheduleEntries($user_id, $start_hour, $end_hour);
-        $seminar = self::getSeminarEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden);
-        if (is_array($seminar)) foreach($seminar as $day => $sem_entries) {
-            foreach ($sem_entries as $entry) {
-                $entries[$day][] = $entry;
+        $entries = self::getScheduleEntries($user_id, $start_hour, $end_hour, false, $controller);
+        $seminar = self::getSeminarEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden, $controller);
+        foreach($seminar as $day => $entry_column) {
+            foreach ($entry_column->getEntries() as $entry) {
+                if (!isset($entries[$day])) {
+                    $entries[$day] = CalendarColumn::create($day);
+                    $entries[$day]->setTitle($day_names[$day]);
+                    $entries[$day]->setURL($controller->url_for('calendar/'. get_class($controller) .'/index/'. $day));
+                }
+                $entries[$day]->addEntry($entry);
             }
         }
-
         return $entries;
     }
 
@@ -437,7 +471,7 @@ class CalendarScheduleModel
      * @param  bool    the value to switch to
      * @return void
      */
-    static function adminBind($seminar_id, $cycle_id, $visible = true) 
+    static function adminBind($seminar_id, $cycle_id, $visible = true)
     {
         $stmt = DBManager::get()->prepare("SELECT * FROM schedule_seminare
             WHERE seminar_id = ? AND user_id = ? AND metadate_id = ?");
@@ -455,7 +489,7 @@ class CalendarScheduleModel
 
         var_dump('set visibility to: '. $visible);
         $stmt->execute(array($visible ? '1' : '0', $seminar_id, $GLOBALS['user']->id, $cycle_id));
-       
+
     }
 
     /**
@@ -469,7 +503,7 @@ class CalendarScheduleModel
     {
         $stmt = DBManager::get()->prepare("SELECT su.*, sc.seminar_id as present
             FROM seminar_user as su
-            LEFT JOIN schedule_seminare as sc ON (su.Seminar_id = sc.seminar_id 
+            LEFT JOIN schedule_seminare as sc ON (su.Seminar_id = sc.seminar_id
                 AND sc.user_id = su.user_id AND sc.metadate_id = ?)
             WHERE su.Seminar_id = ? AND su.user_id = ?");
         $stmt->execute(array($cycle_id, $seminar_id, $GLOBALS['user']->id));

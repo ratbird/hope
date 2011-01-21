@@ -56,7 +56,6 @@ class CalendarInstscheduleModel
                                   . $cycle->getMetaDateId() ."'); return false;";
 
                 $entry['title']   = '';
-
                 $ret[] = $entry;
             }
         }
@@ -75,8 +74,9 @@ class CalendarInstscheduleModel
      * @param string  the ID of the institute
      * @return array  an array containing the entries
      */
-    static function getInstituteEntries($user_id, $semester, $start_hour, $end_hour, $institute_id)
+    static function getInstituteEntries($user_id, $semester, $start_hour, $end_hour, $institute_id, $controller)
     {
+        $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
         // fetch seminar-entries 
         $stmt = DBManager::get()->prepare("SELECT * FROM seminare as s
             WHERE Institut_id = ? AND (start_time = ?
@@ -101,7 +101,13 @@ class CalendarInstscheduleModel
 
                     $entry['color'] = DEFAULT_COLOR_SEM;
 
-                    $ret[$entry['day']][] = $entry;
+                    $day_number = ($entry['day']-1) % 7;
+                    if (!isset($ret[$day_number])) {
+                        $ret[$day_number] = CalendarColumn::create($day_number);
+                        $ret[$day_number]->setTitle($day_names[$day_number]);
+                        $ret[$day_number]->setURL($controller->url_for('calendar/' .(get_class($controller) == "Calendar_InstscheduleController" ? "instschedule" : "schedule"). '/index/'. $day_number));
+                    }
+                    $ret[$day_number]->addEntry($entry);
                 }
             }
         }

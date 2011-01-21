@@ -1,6 +1,5 @@
 <?php
-
-if (!$calendar_view || strtolower(get_class($calendar_view)) != 'calendarview') {
+if (!$calendar_view || get_class($calendar_view) != 'CalendarWeekView') {
     throw new Exception('You need to pass a variable named $calendar_view, which holds an instance of CalendarView, to this template ('. __FILE__ .')!');
 }
 
@@ -37,13 +36,13 @@ $cell_steps = $cell_height / 60;
 <div id="schedule_headings">
     <table style="width: 100%;" class="schedule_headings" cellspacing="0" cellpadding="0">
         <tr>
-            <? foreach ($calendar_view->getDays() as $day) : ?>
+            <? foreach ($calendar_view->getColumns() as $number => $column) : ?>
             <td style="text-align: center; width: <?= floor(100 / sizeof($days)) ?>%">
-                <a href="<?= $controller->url_for('calendar/'. $calendar_view->getContext() .'/index/'. $day) ?>">
-                    <?= getWeekday($day, false) ?>
+                <a href="<?= URLHelper::getLink($column->getURL()) ?>">
+                    <?= $column->getTitle() ?>
                 </a>
                 <? if (sizeof($calendar_view->getDays()) == 1) : ?>
-                (<a href="<?= $controller->url_for('calendar/'. $calendar_view->getContext()) ?>"><?= _("zurück zur Wochenansicht") ?></a>)
+                (<a href="<?= URLHelper::getLink($controller->url_for('calendar/'. $calendar_view->getContext())) ?>"><?= _("zurück zur Wochenansicht") ?></a>)
                 <? endif ?>
             </td>
             <? endforeach; ?>
@@ -73,13 +72,13 @@ $cell_steps = $cell_height / 60;
             <div class="schedule_hours"><?= ($i < 10) ? '0'.$i : $i ?>:00</div>
             <? endfor; ?>
         </td>
-        <? foreach ($calendar_view->getDays() as $day) : ?>
+        <? foreach ($calendar_view->getColumns() as $column) : ?>
         <td style="vertical-align: top">
             <!-- the days with the date for the timetable -->
-            <div id="day_<?= $day ?>" class="schedule_day" style="overflow: hidden">
-                <? if (!empty($entries['day_'. $day])) :
-                $width = floor( 98 / sizeof($entries['day_'. $day])); $col = 0;
-                foreach ($entries['day_'. $day] as $grouped_entries) : 
+            <div id="day_<?= $column->getId() ?>" class="schedule_day" style="overflow: hidden">
+                <? if (!empty($entries['day_'. $column->getId()])) :
+                $width = floor( 98 / sizeof($entries['day_'. $column->getId()])); $col = 0;
+                foreach ($column->getGroupedEntries() as $grouped_entries) :
 
                     foreach ($grouped_entries as $entry) :
                         // if we have a grouped entry, use start- and end-time of any entry, the are all the same
@@ -104,7 +103,7 @@ $cell_steps = $cell_height / 60;
                         // how many concurring entries has this entry?
                         $max = 0;
                         for ($i = ($calc_entry['start'] + 1 + ($start_hour * 100)); $i < $calc_entry['end'] + ($start_hour * 100); $i++) {
-                            $max = max($max, $matrix['day_'.$day][$i]);
+                            $max = max($max, $matrix['day_'.$column->getId()][$i]);
                         }
 
                         // set height and width

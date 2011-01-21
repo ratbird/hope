@@ -1125,13 +1125,13 @@ STUDIP.Calendar = {
   noNewEntry: false,
 
   day_names: [
-    "Sonntag",
     "Montag",
     "Dienstag",
     "Mittwoch",
     "Donnerstag",
     "Freitag",
-    "Samstag"
+    "Samstag",
+    "Sonntag"
   ],
 
   /**
@@ -1146,6 +1146,13 @@ STUDIP.Calendar = {
     return Math.floor(((e.pageY - Math.ceil(jQuery('#day_' + day).offset().top)) - 2) / this.cell_height) + STUDIP.Calendar.start_hour;
   },
 
+  clickEngine: function (func, target, event) {
+    event.cancelBubble = true;
+    var id = jQuery(target).parent()[0].id;
+    id = id.substr(id.lastIndexOf("_")+1);
+    func(id);
+  },
+  
   newEntry: function (e, day) {
     this.cancelNewEntry();
 
@@ -1303,7 +1310,7 @@ STUDIP.Schedule = {
   showDetails: function () {
 
     // set the values for detailed view
-    jQuery('select[name=entry_day]').val(jQuery('#new_entry_day').val());
+    jQuery('select[name=entry_day]').val(Number(jQuery('#new_entry_day').val())+1);
     jQuery('input[name=entry_start_hour]').val(jQuery('#new_entry_hour').val());
     jQuery('input[name=entry_start_minute]').val('00');
     jQuery('input[name=entry_end_hour]').val(parseInt(jQuery('#new_entry_hour').val(), 10) + 1);

@@ -13,6 +13,8 @@
  * Pseudo-namespace containing helper methods for the calendar.
  *
  * @since      2.0
+ *
+ * @deprecated
  */
 
 class CalendarModel

@@ -12,7 +12,10 @@
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/calendar/schedule.php';
 require_once 'app/models/calendar/calendar.php';
-require_once 'app/models/calendar/view.php';
+//require_once 'app/models/calendar/view.php';
+//require_once 'app/models/calendar/calendar_column.php';
+require_once 'lib/calendar/CalendarColumn.class.php';
+require_once 'lib/calendar/CalendarWeekView.class.php';
 require_once 'lib/classes/SemesterData.class.php';
 
 /**
@@ -99,13 +102,13 @@ class Calendar_ScheduleController extends AuthenticatedController
         if ($inst_mode) {
             // get the entries to be displayed in the schedule
             $this->entries = CalendarScheduleModel::getInstituteEntries($GLOBALS['user']->id, $this->current_semester,
-                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $institute_id, $show_hidden);
+                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $institute_id, $show_hidden, $this);
 
             Navigation::activateItem('/browse/my_courses/schedule');
         } else {
             // get the entries to be displayed in the schedule
             $this->entries = CalendarScheduleModel::getEntries($GLOBALS['user']->id, $this->current_semester,
-                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $show_hidden);
+                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $show_hidden, $this);
 
             Navigation::activateItem('/calendar/schedule');
         }
@@ -118,7 +121,7 @@ class Calendar_ScheduleController extends AuthenticatedController
                 $this->show_entry = $this->flash['entry'];
             } else {
                 foreach ($this->entries as $entry_days) {
-                    foreach ($entry_days as $entry) {
+                    foreach ($entry_days->getEntries() as $entry) {
                         if ($entry['id'] == $this->flash['entry']['id']) {
                             if ($this->flash['entry']['cycle_id']) {
                                 if ($this->flash['entry']['cycle_id'] == $entry['cycle_id']) {
@@ -140,15 +143,18 @@ class Calendar_ScheduleController extends AuthenticatedController
                 $this->days = array_keys(Request::getArray('days'));
             } else {
                 $this->days = $my_schedule_settings['glb_days'];
+                foreach ($this->days as $key => $day_number) {
+                    $this->days[$key] = ($day_number + 6) % 7;
+                }
             }
         } else {
             $this->days = explode(',', $days);
         }
 
         $this->controller = $this;
-        $this->calendar_view = new CalendarView($this->entries, 'schedule');
+        $this->calendar_view = new CalendarWeekView($this->entries, 'schedule');
         $this->calendar_view->setHeight(40 + (20 * Request::get('zoom', 0)));
-        $this->calendar_view->setDays($this->days);
+        $this->calendar_view->setDays($this->days, $this);
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
 
         if ($inst_mode) {
@@ -189,11 +195,12 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
 
         $error = false;
-
-        if (Request::get('hour') || Request::get('day')) {
+        if (Request::submitted('hour') || Request::submitted('day')) {
+            print Request::get('day');
+            //exit;
             $data['start']   = Request::int('hour') * 100;
             $data['end']     = (Request::int('hour')  + 1) * 100;
-            $data['day']     = Request::int('day');
+            $data['day']     = Request::int('day')+1;
 
             // validate the submitted data
             if ($data['start'] >= $data['end'] || Request::int('hour') < 0 || Request::int('hour') > 23) {
@@ -273,7 +280,9 @@ class Calendar_ScheduleController extends AuthenticatedController
             $this->show_entry = array_pop(CalendarScheduleModel::getSeminarEntry($id, $GLOBALS['user']->id, $cycle_id));
             $this->render_template('calendar/schedule/_entry_course');
         } else {
-            $this->show_entry = array_pop(array_pop(CalendarScheduleModel::getScheduleEntries($GLOBALS['user']->id, 0, 0, $id)));
+            $entry_columns = CalendarScheduleModel::getScheduleEntries($GLOBALS['user']->id, 0, 0, $id, $this);
+            $entries = array_pop($entry_columns)->getEntries();
+            $this->show_entry = array_pop($entries);
             $this->render_template('calendar/schedule/_entry_schedule');
         }
     }

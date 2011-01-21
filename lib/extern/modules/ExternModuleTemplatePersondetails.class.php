@@ -180,6 +180,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         $markers['TemplateLectures'][] = array('<!-- BEGIN LECTURE -->', '');
         $markers['TemplateLectures'][] = array('###TITLE###', '');
         $markers['TemplateLectures'][] = array('###SUBTITLE###', '');
+        $markers['TemplateLectures'][] = array('###NUMBER###', _("Die Veranstaltungsnummer"));
         $markers['TemplateLectures'][] = array('###LECTUREDETAILS-HREF###', '');
         $markers['TemplateLectures'][] = array('<!-- END LECTURE -->', '');
         $markers['TemplateLectures'][] = array('<!-- END SEMESTER -->', '');
@@ -485,13 +486,13 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             }
         }
 
-        if (is_element_visible_externally($this->user_id, $this->user_perm, 'lebenslauf', $this->visibilities['lebenslauf'])) {
+        if (is_element_visible_externally($this->user_id, $this->user_perm, 'lebenslauf', $this->visibilities['lebenslauf']) && trim($row['lebenslauf']) != '') {
             $content['PERSONDETAILS']['CV'] = ExternModule::ExtFormatReady($row['lebenslauf']);
         }
-        if (is_element_visible_externally($this->user_id, $this->user_perm, 'schwerp', $this->visibilities['schwerp'])) {
+        if (is_element_visible_externally($this->user_id, $this->user_perm, 'schwerp', $this->visibilities['schwerp']) && trim($row['schwerp']) != '') {
             $content['PERSONDETAILS']['RESEARCH-INTERESTS'] = ExternModule::ExtFormatReady($row['schwerp']);
         }
-        if (is_element_visible_externally($this->user_id, $this->user_perm, 'lebenslauf', $this->visibilities['publi'])) {
+        if (is_element_visible_externally($this->user_id, $this->user_perm, 'lebenslauf', $this->visibilities['publi']) && trim($row['publi']) != '') {
             $content['PERSONDETAILS']['PUBLICATIONS'] = ExternModule::ExtFormatReady($row['publi']);
         }
 
@@ -644,7 +645,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             }
         }
         $stm = DBManager::get()->prepare(sprintf(
-            "SELECT s.Name, s.Seminar_id, s.Untertitel "
+            "SELECT s.Name, s.Seminar_id, s.Untertitel, s.VeranstaltungsNummer "
             . "FROM seminar_user su "
             . "LEFT JOIN seminare s USING(seminar_id) "
             . "WHERE user_id = ? AND su.status LIKE 'dozent' "
@@ -672,9 +673,12 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 foreach ($result as $row) {
                     $content['LECTURES']['SEMESTER'][$i]['LECTURE'][$k]['TITLE'] = ExternModule::ExtHtmlReady($row['Name']);
                     $content['LECTURES']['SEMESTER'][$i]['LECTURE'][$k]['LECTUREDETAILS-HREF'] = $this->elements['LinkInternLecturedetails']->createUrl(array('link_args' => 'seminar_id=' . $row['Seminar_id']));
-                    if ($row['Untertitel'] != '') {
+                    if (trim($row['Untertitel']) != '') {
                         $content['LECTURES']['SEMESTER'][$i]['LECTURE'][$k]['SUBTITLE'] = ExternModule::ExtHtmlReady($row['Untertitel']);
                     }
+                    if (trim($row['VeranstaltungsNummer']) != '') {
+                        $content['LECTURES']['SEMESTER'][$i]['LECTURE'][$k]['NUMBER'] = ExternModule::ExtHtmlReady($row['VeranstaltungsNummer']);
+					}
                     $k++;
                 }
             }

@@ -4,13 +4,13 @@
  * Authors:
  *  Michael Aufreiter (quasipartikel.at)
  *  Yanick Rochon (yanick.rochon[at]gmail[dot]com)
- * 
+ *
  * Dual licensed under the MIT (MIT-LICENSE.txt)
  * and GPL (GPL-LICENSE.txt) licenses.
- * 
+ *
  * http://www.quasipartikel.at/multiselect/
  *
- * 
+ *
  * Depends:
  *	ui.core.js
  *	ui.sortable.js
@@ -18,7 +18,7 @@
  * Optional:
  * localization (http://plugins.jquery.com/project/localisation)
  * scrollTo (http://plugins.jquery.com/project/ScrollTo)
- * 
+ *
  * Todo:
  *  Make batch actions faster
  *  Implement dynamic insertion through remote calls
@@ -45,7 +45,10 @@ $.widget("ui.multiselect", {
 	_create: function() {
 		this.element.hide();
 		this.id = this.element.attr("id");
-		this.container = $('<div class="ui-multiselect ui-helper-clearfix ui-widget"></div>').insertAfter(this.element);
+		this.container = $('<div class="ui-multiselect ui-helper-clearfix ui-widget"></div>').insertAfter(this.element).resizable({
+          handles: 's',
+          minHeight: 100
+        });;
 		this.count = 0; // number of currently selected options
 		this.selectedContainer = $('<div class="selected"></div>').appendTo(this.container);
 		this.availableContainer = $('<div class="available"></div>').appendTo(this.container);
@@ -55,7 +58,7 @@ $.widget("ui.multiselect", {
 		this.availableList = $('<ul class="available connected-list"><li class="ui-helper-hidden-accessible"></li></ul>').bind('selectstart', function(){return false;}).appendTo(this.availableContainer);
 		//this.element.width()
 		this.container.width(this.element.width());
-		
+
 		var that = this;
 
 		// set dimensions
@@ -66,15 +69,15 @@ $.widget("ui.multiselect", {
 		// fix list height to match <option> depending on their individual header's heights
 		this.selectedList.height(Math.max(this.element.height()-this.selectedActions.height(),1));
 		this.availableList.height(Math.max(this.element.height()-this.availableActions.height(),1));
-		
+
 		if ( !this.options.animated ) {
 			this.options.show = 'show';
 			this.options.hide = 'hide';
 		}
-		
+
 		// init lists
 		this._populateLists(this.element.find('option'));
-		
+
 		// make selection sortable
 		if (this.options.sortable) {
 			this.selectedList.sortable({
@@ -92,7 +95,7 @@ $.widget("ui.multiselect", {
 					// increment count
 					that.count += 1;
 					that._updateCount();
-					// workaround, because there's no way to reference 
+					// workaround, because there's no way to reference
 					// the new element, see http://dev.jqueryui.com/ticket/4303
 					that.selectedList.children('.ui-draggable').each(function() {
 						$(this).removeClass('ui-draggable');
@@ -100,27 +103,27 @@ $.widget("ui.multiselect", {
 						$(this).data('idx', ui.item.data('idx'));
 						that._applyItemState($(this), true);
 					});
-			
+
 					// workaround according to http://dev.jqueryui.com/ticket/4088
 					setTimeout(function() { ui.item.remove(); }, 1);
 				},
 				handle: false
 			});
 		}
-		
+
 		// set up livesearch
 		if (this.options.searchable) {
 			this._registerSearchEvents(this.availableContainer.find('input.search'));
 		} else {
 			$('.search').hide();
 		}
-		
+
 		// batch actions
 		this.container.find(".remove-all").click(function() {
 			that._populateLists(that.element.find('option').removeAttr('selected'));
 			return false;
 		});
-		
+
 		this.container.find(".add-all").click(function() {
 			that._populateLists(that.element.find('option').attr('selected', 'selected'));
 			return false;
@@ -130,7 +133,7 @@ $.widget("ui.multiselect", {
 		this.element.show();
 		this.container.remove();
 
-		$.widget.prototype.destroy.apply(this, arguments);
+		$.Widget.prototype.destroy.apply(this, arguments);
 	},
 	_populateLists: function(options) {
 		this.selectedList.children('.ui-element').remove();
@@ -146,7 +149,7 @@ $.widget("ui.multiselect", {
 			item.data('idx', i);
 			return item[0];
     }));
-		
+
 		// update count
 		this._updateCount();
   },
@@ -174,11 +177,11 @@ $.widget("ui.multiselect", {
 			var selectedItem = this._cloneWithData(item);
 			item[this.options.hide](this.options.animated, function() { $(this).remove(); });
 			selectedItem.appendTo(this.selectedList).hide()[this.options.show](this.options.animated);
-			
+
 			this._applyItemState(selectedItem, true);
 			return selectedItem;
 		} else {
-			
+
 			// look for successor based on initial option index
 			var items = this.availableList.find('li'), comparator = this.options.nodeComparator;
 			var succ = null, i = item.data('idx'), direction = comparator(item, $(items[i]));
@@ -196,19 +199,19 @@ $.widget("ui.multiselect", {
 			} else {
 				succ = items[i];
 			}
-			
+
 			var availableItem = this._cloneWithData(item);
 			succ ? availableItem.insertBefore($(succ)) : availableItem.appendTo(this.availableList);
 			item[this.options.hide](this.options.animated, function() { $(this).remove(); });
 			availableItem.hide()[this.options.show](this.options.animated);
-			
+
 			this._applyItemState(availableItem, false);
 			return availableItem;
 		}
 	},
 	_applyItemState: function(item, selected) {
-		//var gripIcon = 'ui-icon-arrowthick-2-n-s'; 
-		var gripIcon = 'ui-icon-grip-solid-horizontal'; 
+		//var gripIcon = 'ui-icon-arrowthick-2-n-s';
+		var gripIcon = 'ui-icon-grip-solid-horizontal';
 		if (selected) {
 			if (this.options.sortable)
 				item.children('span').addClass(gripIcon).removeClass('ui-helper-hidden').addClass('ui-icon');
@@ -216,13 +219,13 @@ $.widget("ui.multiselect", {
 				item.children('span').removeClass(gripIcon).addClass('ui-helper-hidden').removeClass('ui-icon');
 			item.find('a.action span').addClass('ui-icon-minus').removeClass('ui-icon-plus');
 			this._registerRemoveEvents(item.find('a.action'));
-			
+
 		} else {
 			item.children('span').removeClass(gripIcon).addClass('ui-helper-hidden').removeClass('ui-icon');
 			item.find('a.action span').addClass('ui-icon-plus').removeClass('ui-icon-minus');
 			this._registerAddEvents(item.find('a.action'));
 		}
-		
+
 		this._registerHoverEvents(item);
 	},
 	// taken from John Resig's liveUpdate script
@@ -230,12 +233,12 @@ $.widget("ui.multiselect", {
 		var input = $(this);
 		var rows = list.children('li'),
 			cache = rows.map(function(){
-				
+
 				return $(this).text().toLowerCase();
 			});
-		
+
 		var term = $.trim(input.val().toLowerCase()), scores = [];
-		
+
 		if (!term) {
 			rows.show();
 		} else {
@@ -267,7 +270,7 @@ $.widget("ui.multiselect", {
 			that._updateCount();
 			return false;
 		});
-		
+
 		// make draggable
 		if (this.options.sortable) {
   		elements.each(function() {
@@ -282,7 +285,7 @@ $.widget("ui.multiselect", {
   				containment: that.container,
   				revert: 'invalid'
   	    });
-  		});		  
+  		});
 		}
 	},
 	_registerRemoveEvents: function(elements) {
@@ -312,7 +315,7 @@ $.widget("ui.multiselect", {
 		});
 	}
 });
-		
+
 $.extend($.ui.multiselect, {
 	locale: {
 		addAll:'Add all',

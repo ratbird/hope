@@ -33,6 +33,9 @@ class NewsController extends StudipController
 
         // set up user session
         include 'lib/seminar_open.php';
+
+        // allow only "word" characters in arguments
+        $this->validate_args($args);
     }
 
     /**

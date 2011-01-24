@@ -35,6 +35,9 @@ class SiteinfoController extends StudipController
         // set up user session
         include 'lib/seminar_open.php';
 
+        // allow only "word" characters in arguments
+        $this->validate_args($args);
+
         //Siteinfo-Class is defined in models/siteinfo.php
         $this->si = new Siteinfo();
 

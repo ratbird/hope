@@ -12,6 +12,36 @@
 abstract class StudipController extends Trails_Controller
 {
     /**
+     * Validate arguments based on a list of given types. The types are:
+     * 'int', 'float', 'option' and 'string'. If the list of types is NULL
+     * or shorter than the argument list, 'option' is assumed for all
+     * remaining arguments.
+     *
+     * @param array   an array of arguments to the action
+     * @param array   list of argument types (optional)
+     */
+    function validate_args(&$args, $types = NULL) {
+        foreach ($args as $i => &$arg) {
+            $type = isset($types[$i]) ? $types[$i] : 'option';
+
+            switch ($type) {
+                case 'int':
+                    $arg = (int) $arg;
+                    break;
+
+                case 'float':
+                    $arg = (float) strtr($arg, ',', '.');
+                    break;
+
+                case 'option':
+                    if (preg_match('/\\W/', $arg)) {
+                        throw new Trails_Exception(400);
+                    }
+            }
+        }
+    }
+
+    /**
     * Returns a URL to a specified route to your Trails application.
     *
     * @param  string   a string containing a controller and optionally an action

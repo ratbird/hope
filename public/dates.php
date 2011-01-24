@@ -1,8 +1,5 @@
 <?php
-# Lifter001: TEST
-# Lifter002: TODO
 # Lifter007: TODO
-# Lifter003: TODO
 /**
  * dates.php - schedule for students
  *
@@ -21,14 +18,15 @@ require '../lib/bootstrap.php';
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("autor");
 
-include ("lib/seminar_open.php"); // initialise Stud.IP-Session
-
 $id = $SessSemName[1];
 $issue_open = array();
+$raumzeitFilter = Request::get('raumzeit_filter');
 
-URLHelper::bindLinkParam('dates_data',$showDatesFilter);
-URLHelper::bindLinkParam('raumzeit_data',$raumzeitFilter);
-URLHelper::bindLinkParam('rzsem_data',$rzSeminar);
+URLHelper::bindLinkParam('date_type', Request::get('date_type'));
+URLHelper::bindLinkParam('raumzeit_filter', $raumzeitFilter);
+URLHelper::bindLinkParam('rzSeminar', $rzSeminar);
+
+include ("lib/seminar_open.php"); // initialise Stud.IP-Session
 
 require_once ('lib/classes/Seminar.class.php');
 require_once ('lib/datei.inc.php');
@@ -52,20 +50,15 @@ mark_public_course($sem);
 
 PageLayout::setTitle($SessSemName["header_line"].' - '._("Ablaufplan"));
 
-if ($type == '1') {
+if (Request::get('date_type') == '1') {
     Navigation::activateItem('/course/schedule/type1');
     UrlHelper::bindLinkParam('type', $type);
-} else if ($type == 'other') {
+} else if (Request::get('date_type') == 'other') {
     Navigation::activateItem('/course/schedule/other');
     UrlHelper::bindLinkParam('type', $type);
 } else {
     Navigation::activateItem('/course/schedule/all');
 }
-
-ob_start();
-// Start of Output
-include ('lib/include/html_head.inc.php'); // Output of html head
-include ('lib/include/header.php');   // Output of Stud.IP head
 
 $semester = new SemesterData();
 $data = $semester->getCurrentSemesterData();
@@ -89,234 +82,133 @@ function dates_close() {
     unset ($issue_open[$_REQUEST['open_close_id']]);
 }
 
-function dates_settype() {
-    global $showDatesFilter, $type;
-
-    $showDatesFilter = $type;
-}
-
 $sem->registerCommand('open', 'dates_open');
 $sem->registerCommand('close', 'dates_close');
-$sem->registerCommand('setType', 'dates_settype');
 $sem->processCommands();
 
 $termine = getAllSortedSingleDates($sem);
 
 // Export the dates
 if (Request::get('export') && $rechte) {
-    ob_end_clean();
-
     header("Content-type: application/vnd.ms-word");
     header("Content-Disposition: attachment; filename=ablaufplan.doc");
     header("Expires: 0");
     header("Cache-Control: private");
     header("Pragma: cache");
-?>
-<html>
-    <head>
-        <title>Ablaufplan</title>
-    </head>
-    <body>
 
-    <?
-    $semester = new SemesterData();
-    $all_semester = $semester->getAllSemesterData();
+    $dates = array();
 
     if (is_array($termine) && sizeof($termine) > 0) {
-        echo '<table cellspacing="0" cellpadding="0" border="0" width="100%">';
+        foreach ($termine as $singledate_id => $singledate) {
+            if (!$singledate->isExTermin()) {
+                $tmp_ids = $singledate->getIssueIDs();
+                $title = '';
+                if (is_array($tmp_ids)) {
+                    $title = $themen[array_pop($tmp_ids)]->getTitle();
+                }
 
+                $dates[] = array(
+                    'date'  => $singledate->toString(),
+                    'title' => $title,
+                    'start' => $singledate->getStartTime()
+                );
+            }
+        }
+    }
+
+    echo $GLOBALS['template_factory']->open('dates_export')->render(compact('dates'));
+} else {
+    // Start of Output
+    include ('lib/include/html_head.inc.php'); // Output of html head
+    include ('lib/include/header.php');   // Output of Stud.IP head
+
+    if ($cmd == 'openAll') $openAll = true;
+    $dates = array();
+
+    if (is_array($termine) && sizeof($termine) > 0) {
         foreach ($termine as $singledate_id => $singledate) {
 
-            if ( ($grenze == 0) || ($grenze < $singledate->getStartTime()) ) {
-                foreach ($all_semester as $zwsem) {
-                    if ( ($zwsem['beginn'] < $singledate->getStartTime()) && ($zwsem['ende'] > $singledate->getStartTime()) ) {
-                        $grenze = $zwsem['ende'];
-                        ?>
-                        <tr>
-                            <td colspan="2">
-                                <h1><?= $zwsem['name'] ?></h1>
-                            </td>
-                        </tr>
-                        <?
+            $showSpecialDays = FALSE;
+            $tpl = null;
+            $tpl = getTemplateDataForSingleDate($singledate, $metadate_id);
+            // If "Sitzung" shall not be shown, uncomment this
+            /*if ($tpl['type'] == 1 || $tpl['type'] == 7) {
+                unset($tpl['art']);
+            }*/
+
+            //calendar jump
+            $tpl['calendar'] = $GLOBALS['template_factory']->open('raumzeit/calendar_jump')
+                    ->render(array('start' => $singledate->getStartTime()));
+
+            if (Request::get('date_type')) {
+                switch (Request::get('date_type')) {
+                    case 'all':
+                        break;
+
+                    case 'other':
+                        if ($tpl['type'] == 1) {
+                            $tpl['deleted'] = true;
+                        }
+                        break;
+
+                    default:
+                        if ($tpl['type'] != Request::get('date_type')) {
+                            $tpl['deleted'] = true;
+                        }
+                        break;
+                }
+            }
+
+            if ($openAll) $tpl['openall'] = true;
+
+            if (!$tpl['deleted'] || $tpl['comment'])  {
+                $tpl['class'] = 'printhead';
+                $tpl['cycle_id'] = $metadate_id;
+
+                $issue_id = '';
+                if (is_array($tmp_ids = $singledate->getIssueIDs())) {
+                    foreach ($tmp_ids as $val) {
+                        if (empty($issue_id)) {
+                            if (is_object($themen[$val])) {
+                                $issue_id = $val;
+                            }
+                        } else {
+                            if (is_object($themen[$val])) {
+                                $tpl['additional_themes'][] = array('title' => $themen[$val]->getTitle(), 'desc' => formatReady($themen[$val]->getDescription()));
+                            }
+                        }
                     }
                 }
-            }
 
-            $tmp_ids = $singledate->getIssueIDs();
-            $title = '';
-            if (is_array($tmp_ids)) {
-                $title = $themen[array_pop($tmp_ids)]->getTitle();
-            }
-            ?>
-            <tr>
-                <td width="50%"><?= htmlReady($singledate->toString()) ?></td>
-                <td width="50%"><?= htmlReady($title); ?></td>
-            </tr>
-            <?
-        }
-
-        echo '</table>';
-    }
-} else {
-
-if ($cmd == 'openAll') $openAll = true;
-?>
-
-<table width="100%" border="0" cellpadding="2" cellspacing="0">
-  <tr>
-        <td class="blank" valign="top">
-            <table width="99%" cellspacing="0" cellpadding="0" border="0">
-                <? if (is_array($termine) && sizeof($termine) > 0) : ?>
-                <tr>
-                    <td class="steelgraulight" colspan="10" height="24" align="center">
-                        <a href="<?= URLHelper::getLink('?cmd='.(($openAll) ? 'close' : 'open') .'All') ?>">
-                            <? if ($openAll) : ?>
-                            <?= Assets::img('close_all.png', array('title' => _("Alle Termine zuklappen"))) ?>
-                            <? else : ?>
-                            <?= Assets::img('open_all.png', array('title' => _("Alle Termine aufklappen"))) ?>
-                            <? endif ?>
-                        </a>
-                    </td>
-                </tr>
-                <? endif; ?>
-                <tr>
-                    <td colspan="10" height="3">
-                    </td>
-                </tr>
-                <?
-
-                $semester = new SemesterData();
-                $all_semester = $semester->getAllSemesterData();
-
-                if (is_array($termine) && sizeof($termine) > 0) {
-
-                    foreach ($termine as $singledate_id => $singledate) {
-
-                        if ( ($grenze == 0) || ($grenze < $singledate->getStartTime()) ) {
-                            foreach ($all_semester as $zwsem) {
-                                if ( ($zwsem['beginn'] < $singledate->getStartTime()) && ($zwsem['ende'] > $singledate->getStartTime()) ) {
-                                    $grenze = $zwsem['ende'];
-                                    ?>
-                                    <tr>
-                                        <td class="steelgraulight" align="center" colspan="9">
-                                            <font size="-1"><b><?=$zwsem['name']?></b></font>
-                                        </td>
-                                    </tr>
-                                    <?
-                                }
-                            }
-                        }
-
-                        // Template fuer einzelnes Datum
-                        $showSpecialDays = FALSE;
-                        $tpl = getTemplateDataForSingleDate($singledate, $metadate_id);
-                        // If "Sitzung" shall not be shown, uncomment this
-                        /*if ($tpl['type'] == 1 || $tpl['type'] == 7) {
-                            unset($tpl['art']);
-                        }*/
-
-                        //calendar jump
-                        $tpl['calendar'] = "&nbsp;<a href=\"".URLHelper::getLink("calendar.php?cmd=showweek&atime=" . $singledate->getStartTime());
-                        $tpl['calendar'] .= "\"><img style=\"vertical-align:bottom\" src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/schedule.png\" ";
-                        $tpl['calendar'] .= tooltip(sprintf(_("Zum %s in den persönlichen Terminkalender springen"), date("d.m", $singledate->getStartTime())));
-                        $tpl['calendar'] .= ' border="0"></a>';
-
-                        if ($showDatesFilter) {
-                            switch ($showDatesFilter) {
-                                case 'all':
-                                    break;
-
-                                case 'other':
-                                    if ($tpl['type'] == 1) {
-                                        $tpl['deleted'] = true;
-                                    }
-                                    break;
-
-                                default:
-                                    if ($tpl['type'] != $type) {
-                                        $tpl['deleted'] = true;
-                                    }
-                                    break;
-                            }
-                        }
-
-                            if ($openAll) $tpl['openall'] = true;
-
-                        if (!$tpl['deleted'] || $tpl['comment'])  {
-                            $tpl['class'] = 'printhead';
-                            $tpl['cycle_id'] = $metadate_id;
-
-                            $issue_id = '';
-                            if (is_array($tmp_ids = $singledate->getIssueIDs())) {
-                                foreach ($tmp_ids as $val) {
-                                    if (empty($issue_id)) {
-                                        if (is_object($themen[$val])) {
-                                            $issue_id = $val;
-                                        }
-                                    } else {
-                                        if (is_object($themen[$val])) {
-                                            $tpl['additional_themes'][] = array('title' => $themen[$val]->getTitle(), 'desc' => formatReady($themen[$val]->getDescription()));
-                                        }
-                                    }
-                                }
-                            }
-                            if (is_object($themen[$issue_id])) {
-                                $tpl['issue_id'] = $issue_id;
-                                $thema =& $themen[$issue_id];
-                                $tpl['theme_title'] = $thema->getTitle();
-                                $tpl['theme_description'] = formatReady($thema->getDescription());
-                                $tpl['folder_id'] = $thema->getFolderID();
-                                $tpl['forumEntry'] = $thema->hasForum();
-                                $tpl['fileEntry'] = $thema->hasFile();
-                                if($tpl['forumEntry']) {
-                                    $tpl['forumCount'] = forum_count($thema->getIssueId(), $id);
-                                } else {
-                                    $tpl['forumCount'] = 0;
-                                }
-                                if($tpl['fileEntry']){
-                                    $tpl['fileCountAll'] = doc_count($thema->getFolderId());
-                                } else {
-                                    $tpl['fileCountAll'] = 0;
-                                }
-                            }
-
-                            include('lib/raumzeit/templates/singledate_student.tpl');
-                        }
-           }
-                } else {
-                ?>
-                    <tr>
-                        <td align="center">
-                            <br>
-                            <?= _("Im ausgewählten Zeitraum sind keine Termine vorhanden."); ?>
-                        </td>
-                    </tr>
-                <?
+                if (is_object($themen[$issue_id])) {
+                    $tpl['issue_id'] = $issue_id;
+                    $thema =& $themen[$issue_id];
+                    $tpl['theme_title'] = $thema->getTitle();
+                    $tpl['theme_description'] = formatReady($thema->getDescription());
+                    $tpl['folder_id'] = $thema->getFolderID();
+                    $tpl['forumEntry'] = $thema->hasForum();
+                    $tpl['fileEntry'] = $thema->hasFile();
+                    if($tpl['forumEntry']) {
+                        $tpl['forumCount'] = forum_count($thema->getIssueId(), $id);
+                    } else {
+                        $tpl['forumCount'] = 0;
+                    }
+                    if($tpl['fileEntry']){
+                        $tpl['fileCountAll'] = doc_count($thema->getFolderId());
+                    } else {
+                        $tpl['fileCountAll'] = 0;
+                    }
                 }
-                ?>
-            </table>
-        </td>
-        <td class="blank" align="right" valign="top" width="270">
-        <?
-            //Build an infobox
-            $infobox_template = $GLOBALS['template_factory']->open('infobox/infobox_dates');
 
-            // get a list of semesters (as display options)
-            $semester_selectionlist = raumzeit_get_semesters($sem, $semester, $raumzeitFilter);
+                $dates[] = $tpl;
+            }
+        }
+    }
 
-            // fill attributes
-            $infobox_template->set_attribute('picture', 'infobox/schedules.jpg');
-            $infobox_template->set_attribute("selectionlist_title", "Semesterauswahl");
-            $infobox_template->set_attribute('selectionlist', $semester_selectionlist);
-            $infobox_template->set_attribute('rechte', $rechte);
 
-            // render template
-            echo $infobox_template->render();
-        ?>
-        </td>
-    </tr>
-</table>
-<?php
+    $template = $GLOBALS['template_factory']->open('dates');
+    echo $template->render(compact('dates', 'sem', 'rechte', 'openAll', 'issue_open', 'raumzeitFilter'));
+
 }
 include ('lib/include/html_end.inc.php');
 page_close();

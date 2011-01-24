@@ -40,6 +40,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
     $tpl['art'] = $val->getTypeName();
     $tpl['freeRoomText'] = htmlReady($val->getFreeRoomText());
     $tpl['comment'] = htmlReady($val->getComment());
+    $tpl['start_time'] = $val->getStartTime();
 
     /* css-Klasse und deleted-Status für das Template festlegen,
    * je nachdem ob es sich um einen gelöschten Termin handelt oder nicht */
@@ -224,38 +225,6 @@ function getFilterForSemester($semester_id) {
     }
 }
 
-/*
-function get_not_visited($type, $seminar_id, $range_id = '') {
-    global $user;
-    $db = new DB_Seminar();
-    switch ($type) {
-        case 'forum':
-            $db->query("SELECT visitdate as date FROM object_user_visits WHERE object_id = '$seminar_id' AND user_id = '{$user->id}' AND type='forum'");
-            if ($db->next_record()) {
-                $d = $db->f('date');
-                $db->query("SELECT COUNT(*) AS count FROM px_topics WHERE mkdate >= $d AND Seminar_id = '$seminar_id' AND parent_id != '0' AND root_id = '$range_id'");
-                $db->next_record();
-                return $db->f('count');
-            } else {
-                return 0;
-            }
-            break;
-
-        case 'document':
-            $db->query("SELECT visitdate as date FROM object_user_visits WHERE object_id = '$seminar_id' AND user_id = '{$user->id}' AND type='documents'");
-            if ($db->next_record()) {
-                $d = $db->f('date');
-                $db->query("SELECT COUNT(*) AS count FROM dokumente WHERE mkdate >= $d AND seminar_id = '$seminar_id' AND range_id = '$range_id'");
-                $db->next_record();
-                return $db->f('count');
-            } else {
-                return 0;
-            }
-            break;
-    }
-}
-*/
-
 function unQuoteAll() {
     function cleanArray(&$arr) {
         foreach($arr as $k => $v)
@@ -314,7 +283,7 @@ function raumzeit_parse_messages($msgs) {
 
 function raumzeit_get_semesters(&$sem, &$semester, $filter) {
     // this function works like raumzeit_get_semester_chooser() but it
-    // returns a data structure fpr a selectionlist template instead of html code
+    // returns a data structure for a selectionlist template instead of html code
 
     $all_semester = $semester->getAllSemesterData();
     $passed = false;

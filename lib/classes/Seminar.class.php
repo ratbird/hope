@@ -2276,9 +2276,7 @@ class Seminar
             ->fetchAll(PDO::FETCH_COLUMN, 0);
             $todelete = array_diff($old_inst, $institutes);
             foreach($todelete as $inst) {
-                /* * * * * L O G G I N G * * * * */
                 log_event('CHANGE_INSTITUTE_DATE', $this->id, $inst, 'Die beteiligte Einrichtung '. get_object_name($inst, 'inst') .' wurde gelöscht.');
-                /* E N D * O F * L O G G I N G * */
                 
                 $db->exec("DELETE FROM seminar_inst " .
                     "WHERE seminar_id = ".$db->quote($this->id)." " .
@@ -2287,9 +2285,7 @@ class Seminar
             
             $toinsert = array_diff($institutes, $old_inst);
             foreach($toinsert as $inst) {
-                /* * * * * L O G G I N G * * * * */
                 log_event('CHANGE_INSTITUTE_DATE', $this->id, $inst, 'Die beteiligte Einrichtung '. get_object_name($inst, 'inst') .' wurde hinzugefügt.');
-                /* E N D * O F * L O G G I N G * */
 
                 $db->exec("INSERT INTO seminar_inst " .
                     "SET seminar_id = ".$db->quote($this->id).", " .
@@ -2336,14 +2332,13 @@ class Seminar
                     "AND status = 'dozent' ")->fetch(PDO::FETCH_COLUMN, 0);
         
         if (!$old_status) {
-            $seminarEntriesBeforeInsert = CalendarScheduleModel::getSeminarEntry($this->id, $user_id);
             $db->exec("INSERT INTO seminar_user " .
                    "SET status = ".$db->quote($status).", " .
                        "Seminar_id = ".$db->quote($this->id).", " .
                        "user_id = ".$db->quote($user_id).", " .
                        "position = ".$db->quote($new_position)." " .
                        "");
-            removeScheduleEntriesMarkedAsVirtual($seminarEntriesBeforeInsert, $user_id);
+            removeScheduleEntriesMarkedAsVirtual($user_id, $this->getId());
             return $this;
         } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])
                 && ($old_status !== "dozent" || $numberOfTeachers > 1)) {

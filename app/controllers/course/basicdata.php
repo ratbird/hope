@@ -402,14 +402,14 @@ class Course_BasicdataController extends AuthenticatedController
 
             $sem->store();
 
-            /* * * * * L O G G I N G * * * * */
+            // Logging
             $before = array_diff_assoc($sem->old_settings, $sem->getSettings());
             $after  = array_diff_assoc($sem->getSettings(), $sem->old_settings);
             if (sizeof($before) && sizeof($after)) {
                 foreach($before as $k => $v) $log_message .= "$k: $v => " . $after[$k] . " \n";
                 log_event('CHANGE_BASIC_DATA', $sem->getId(), " ", $log_message);
             }
-            /* E N D * O F * L O G G I N G * */
+            // end of logging
 
             if ($changemade) {
                 $this->msg[] = array("msg", _("Die Grunddaten der Veranstaltung wurden verändert."));

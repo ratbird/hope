@@ -62,8 +62,6 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
     $db = new DB_Seminar;
     $db2 = new DB_Seminar;
 
-    $seminarEntriesBeforeInsert = CalendarScheduleModel::getSeminarEntry($seminar_id, $user_id);
-
     $query = sprintf("SELECT comment, studiengang_id FROM admission_seminar_user WHERE user_id = '%s' AND seminar_id ='%s' ", $user_id, $seminar_id);
     $db->query($query);
     if ($db->next_record()) {
@@ -77,7 +75,7 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
     if (strlen($consider_contingent) > 1) $studiengang_id = $consider_contingent;
 
     $sem = Seminar::GetInstance($seminar_id);
-    if ($copy_studycourse && $consider_contingent && $sem->isAdmissionEnabled() && !$sem->getFreeAdmissionSeats($studiengang_id)) {
+    if ($copy_studycourse && $consider_contingent && $sem->isAdmissionEnabled() && !$sem->getFreeAdmissionSeats($studiengang_id)) {        
         return false;
     } else {
         $group = select_group($sem->getSemesterStartTime(), $user_id); //ok, here ist the "colored-group" meant (for grouping on meine_seminare), not the grouped seminars as above!       
@@ -99,7 +97,7 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
             return 2;
         }
 
-        removeScheduleEntriesMarkedAsVirtual($seminarEntriesBeforeInsert, $user_id);
+        removeScheduleEntriesMarkedAsVirtual($user_id, $seminar_id);
 
         $sem->restore();
         return $ret;
@@ -112,17 +110,12 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
  * If a user first added the dates of one seminar to his or her schedule and later did participate in the seminar
  * then the previously as 'virtual' added dates should be removed with this function.
  *
- * @param  $scheduleEntries entries with the type 'virtual'
- * @param  $user_id the id of the user the schedule belongs to
+ * @param $user_id the id of the user the schedule belongs to
+ * @param $seminar_id the id of the seminar the schedule belongs to
  */
-function removeScheduleEntriesMarkedAsVirtual($scheduleEntries, $user_id)
+function removeScheduleEntriesMarkedAsVirtual($user_id, $seminar_id)
 {
-    foreach ($scheduleEntries as $entry) {
-        if ($entry['type'] == 'virtual') {
-            $seminar_id = $entry['id'];
-            CalendarScheduleModel::deleteSeminarEntries($user_id, $seminar_id);
-        }
-    }
+    CalendarScheduleModel::deleteSeminarEntries($user_id, $seminar_id);    
 }
 
 /**

@@ -2277,7 +2277,7 @@ class Seminar
             $todelete = array_diff($old_inst, $institutes);
             foreach($todelete as $inst) {
                 /* * * * * L O G G I N G * * * * */
-                log_event('SEM_DEL_INSTITUTE', $this->id, $inst);
+                log_event('CHANGE_INSTITUTE_DATE', $this->id, $inst, 'Die beteiligte Einrichtung '. get_object_name($inst, 'inst') .' wurde gelöscht.');
                 /* E N D * O F * L O G G I N G * */
                 
                 $db->exec("DELETE FROM seminar_inst " .
@@ -2288,7 +2288,7 @@ class Seminar
             $toinsert = array_diff($institutes, $old_inst);
             foreach($toinsert as $inst) {
                 /* * * * * L O G G I N G * * * * */
-                log_event('SEM_ADD_INSTITUTE', $this->id, $inst);
+                log_event('CHANGE_INSTITUTE_DATE', $this->id, $inst, 'Die beteiligte Einrichtung '. get_object_name($inst, 'inst') .' wurde hinzugefügt.');
                 /* E N D * O F * L O G G I N G * */
 
                 $db->exec("INSERT INTO seminar_inst " .

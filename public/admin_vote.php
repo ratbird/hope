@@ -52,9 +52,11 @@ PageLayout::setTitle(_("Verwaltung von Umfragen und Tests"));
 require_once 'lib/admin_search.inc.php';
 
 if ($list || $view) {
-    $view_mode = get_object_type($the_range);
-    if ($view_mode == "fak"){
-        $view_mode = "inst";
+    if ($the_range) {
+        $view_mode = get_object_type($the_range);
+        if ($view_mode == "fak"){
+            $view_mode = "inst";
+        }
     }
     if ($perm->have_perm('admin')) {
         if ($links_admin_data['topkat'] == 'sem') {
@@ -73,6 +75,8 @@ include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');
 
 if ($list || $view) {
+    URLHelper::bindLinkParam('list', $list);
+    URLHelper::bindLinkParam('view_mode', $view_mode);
     include 'lib/include/admin_search_form.inc.php';
 }
 

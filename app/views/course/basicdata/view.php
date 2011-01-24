@@ -78,9 +78,7 @@ $width_namecolumn = 60;
                  <?= $attribute['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
              </td>
              <td style="text-align: left" width="<?= 100-$width_column1 ?>%"><?=
-             $attribute['locked']
-                 ? formatReady($attribute['title'])
-                 : $this->render_partial("course/basicdata/_input", array('input' => $attribute))
+              $this->render_partial("course/basicdata/_input", array('input' => $attribute))
              ?></td>
           </tr>
       <? endforeach;
@@ -103,9 +101,7 @@ $width_namecolumn = 60;
                 <?= $inst['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
              </td>
              <td style="text-align: left" width="<?= 100-$width_column1 ?>%"><?=
-             $inst['locked']
-                 ? formatReady($inst['title'])
-                 : $this->render_partial("course/basicdata/_input", array('input' => $inst))
+             $this->render_partial("course/basicdata/_input", array('input' => $inst))
              ?></td>
           </tr>
       <? endforeach;
@@ -125,7 +121,7 @@ $width_namecolumn = 60;
             <span style="display: inline-block; vertical-align: middle;">
                 <?= Avatar::getAvatar($dozent["user_id"], $dozent['username'])->getImageTag(Avatar::SMALL) ?>
             </span>
-            <? if ($perm_dozent) : ?>
+            <? if ($perm_dozent && !$dozent_is_locked) : ?>
             <span style="white-space: nowrap; width: 32px; display: inline-block; vertical-align: middle;">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $dozent["user_id"], "dozent") ?>">
@@ -137,9 +133,9 @@ $width_namecolumn = 60;
             </span>
             <? endif; ?>
             <span style="display: inline-block; padding-left: 3px; vertical-align: middle;">
-                <?= get_fullname($dozent["user_id"], 'full_rev', true)."<br>(".$dozent["username"].")" ?>
+                <?= get_fullname($dozent["user_id"], 'full_rev', true)." (".$dozent["username"].")" ?>
             </span>
-            <? if ($perm_dozent) : ?>
+            <? if ($perm_dozent && !$dozent_is_locked) : ?>
             <span style="display: inline-block; vertical-align: middle;">
                 <a href="<?= $controller->url_for('course/basicdata/deletedozent', $course_id, $dozent["user_id"]) ?>">
                 <?= Assets::img("icons/16/blue/trash.png") ?>
@@ -150,7 +146,7 @@ $width_namecolumn = 60;
     <? $num++; endforeach; ?>
         </ul>
     </td>
-    <? if ($perm_dozent) : ?>
+    <? if ($perm_dozent && !$dozent_is_locked) : ?>
     <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
         <?= sprintf(_("%s hinzufügen"), $dozenten_title) ?>
         <br>
@@ -167,16 +163,16 @@ $width_namecolumn = 60;
   <tr>
     <td style="width: <?= $width_column1/2 ?>%; font-weight: bold; vertical-align: top;"><?= $deputy_title ?></td>
     <td style="width: <?= 100-$width_column1-($width_column1/2) ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%">
-    <ul style="list-style-type: none; text-indent: -25px;">
+    <ul style="list-style-type: none; padding-left: 0px;">
     <? foreach($deputies as $deputy) : ?>
-        <li>
-            <span style="vertical-align: middle; text-align: left">
+        <li style="text-align: left; padding-left: 0px;">
+            <span style="display: inline-block; vertical-align: middle;">
                 <?= Avatar::getAvatar($deputy["user_id"], $deputy["username"])->getImageTag(Avatar::SMALL) ?>
+            </span>
+            <span style="display: inline-block; padding-left: 3px; vertical-align: middle;">
                 <?= get_fullname($deputy["user_id"], 'full_rev', true)." (".$deputy["username"].", "._("Status").": ".$deputy['perms'].")" ?>
             </span>
-            <? if ($perm_dozent) : ?>
-            <span style="margin: 3px; vertical-align: middle; width: 40px; white-space: nowrap;">
-            </span>
+            <? if ($perm_dozent && !$dozent_is_locked) : ?>
             <span style="vertical-align: middle">
                 <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $course_id, $deputy["user_id"]) ?>">
                 <?= Assets::img("icons/16/blue/trash.png") ?></a>
@@ -187,7 +183,7 @@ $width_namecolumn = 60;
     <? endforeach; ?>
     </ul>
     </td>
-    <? if ($perm_dozent) : ?>
+    <? if ($perm_dozent && !$dozent_is_locked) : ?>
     <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
         <?= sprintf(_("%s hinzufügen"), $deputy_title) ?>
         <br>
@@ -211,7 +207,7 @@ $width_namecolumn = 60;
             <span style="display: inline-block; vertical-align: middle;">
                 <?= Avatar::getAvatar($tutor["user_id"], $tutor["username"])->getImageTag(Avatar::SMALL) ?>
             </span>
-            <? if ($perm_dozent) : ?>
+            <? if ($perm_dozent && !$tutor_is_locked) : ?>
             <span style="white-space: nowrap; width: 32px; display: inline-block; vertical-align: middle;">
                 <? if ($num > 0) : ?>
                 <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $tutor["user_id"], "tutor") ?>">
@@ -223,9 +219,9 @@ $width_namecolumn = 60;
             </span>
             <? endif; ?>
             <span style="display: inline-block; padding-left: 3px; vertical-align: middle;">
-                <?= get_fullname($tutor["user_id"], 'full_rev', true)."<br>(".$tutor["username"].")" ?>
+                <?= get_fullname($tutor["user_id"], 'full_rev', true)." (".$tutor["username"].")" ?>
             </span>
-            <? if ($perm_dozent) : ?>
+            <? if ($perm_dozent && !$tutor_is_locked) : ?>
             <span style="display: inline-block; vertical-align: middle;">
                 <a href="<?= $controller->url_for('course/basicdata/deletetutor', $course_id, $tutor["user_id"]) ?>">
                 <?= Assets::img("icons/16/blue/trash.png") ?>
@@ -236,7 +232,7 @@ $width_namecolumn = 60;
     <? $num++; endforeach; ?>
     </ul>
     </td>
-    <? if ($perm_dozent) : ?>
+    <? if ($perm_dozent && !$tutor_is_locked) : ?>
     <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
         <?= sprintf(_("%s hinzufügen"), $tutor_title) ?>
         <br>
@@ -271,9 +267,7 @@ $width_namecolumn = 60;
                 <?= $description['must'] ? "<span style=\"color: red; font-size: 1.6em\">*</span>" : "" ?>
              </td>
              <td style="text-align: left; width: <?= 100-$width_column1 ?>%"><?=
-             $description['locked']
-                 ? formatReady($description['title'])
-                 : $this->render_partial("course/basicdata/_input", array('input' => $description))
+                $this->render_partial("course/basicdata/_input", array('input' => $description))
              ?></td>
           </tr>
       <? endforeach;

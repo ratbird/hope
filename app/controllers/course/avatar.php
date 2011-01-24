@@ -28,6 +28,9 @@ class Course_AvatarController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
+        // allow only "word" characters in arguments
+        $this->validate_args($args);
+
         $this->course_id = current($args);
         if ($this->course_id === '' || get_object_type($this->course_id) !== 'sem'
             || !$GLOBALS['perm']->have_studip_perm("tutor", $this->course_id)) {

@@ -32,6 +32,9 @@ class Course_StudyAreasController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
+        // allow only "word" characters in arguments
+        $this->validate_args($args);
+
         // user must have tutor permission
         $course_id = current($args);
         if (self::isCourseId($course_id)

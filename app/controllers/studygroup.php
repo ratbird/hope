@@ -23,6 +23,17 @@ if (!defined('ELEMENTS_PER_PAGE')) define("ELEMENTS_PER_PAGE", 20);
 class StudygroupController extends AuthenticatedController {
 
     /**
+     * common tasks for all actions
+     */
+    function before_filter(&$action, &$args)
+    {
+        parent::before_filter($action, $args);
+
+        // allow only "word" characters in arguments
+        $this->validate_args($args);
+    }
+
+    /**
      * Displays a pageable and sortable overview of all studygoups combined with
      * a search form to query for specific studygroup 
      * 

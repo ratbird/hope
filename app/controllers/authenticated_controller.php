@@ -44,9 +44,6 @@ abstract class AuthenticatedController extends StudipController {
     // set up user session
     include 'lib/seminar_open.php';
 
-    // allow only "word" characters in arguments
-    $this->validate_args($args);
-
     # Set base layout
     #
     # If your controller needs another layout, overwrite your controller's

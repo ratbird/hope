@@ -251,9 +251,9 @@ class CourseNavigation extends Navigation
         // schedule
         if ($modules['schedule'] && $user->id != 'nobody') {
             $navigation = new Navigation(_('Ablaufplan'));
-            $navigation->addSubNavigation('all', new Navigation(_('Alle Termine'), 'dates.php?date_type=all'));
-            $navigation->addSubNavigation('type1', new Navigation(_('Sitzungstermine'), 'dates.php?date_type=1'));
-            $navigation->addSubNavigation('other', new Navigation(_('Andere Termine'), 'dates.php?date_type=other'));
+            $navigation->addSubNavigation('all', new Navigation(_('Alle Termine'), 'dates.php?cmd=setType&type=all'));
+            $navigation->addSubNavigation('type1', new Navigation(_('Sitzungstermine'), 'dates.php?cmd=setType&type=1'));
+            $navigation->addSubNavigation('other', new Navigation(_('Andere Termine'), 'dates.php?cmd=setType&type=other'));
 
             if ($perm->have_studip_perm('tutor', $SessSemName[1])) {
                 $navigation->addSubNavigation('edit', new Navigation(_('Ablaufplan bearbeiten'), 'themen.php?seminar_id='.$SessSemName[1]));

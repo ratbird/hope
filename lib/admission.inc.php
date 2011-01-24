@@ -44,64 +44,6 @@ require_once 'lib/classes/StudipAdmissionGroup.class.php';
 require_once 'app/models/calendar/schedule.php';
 
 
-/**
- * Insert a user into a seminar with optional log-message and contingent
- *
- * @param string $seminar_id
- * @param string $user_id
- * @param string $status       status of user in the seminar (user, autor, tutor, dozent)
- * @param string $log_message  optional log-message. if no log-message is given a default one is used
- * @param string $contingent   optional studiengang_id, if no id is given, no contingent is considered
- * @return void
- */
-function insertUserIntoSeminar($seminar_id, $user_id, $status, $log_message = false, $contingent = '') {
-    // get the seminar-object
-    $sem = Seminar::GetInstance($seminar_id);
-
-    // check if there are places left in the submitted contingent (if any)
-    if ($contingent && $sem->isAdmissionEnabled() && !$sem->getFreeAdmissionSeats($contingent)) {
-        return false;
-    }
-
-    // get coloured group as used on meine_seminare
-    $colour_group = select_group($sem->getSemesterStartTime(), $user_id);
-
-    // LOGGING
-    // if no log message is submitted use a default one
-    if (!$log_message) {
-        $log_message = 'Wurde in die Veranstaltung eingetragen, Kontingent: ' . $contingent;
-    }
-    log_event('SEM_USER_ADD', $seminar_id, $user_id, $status, $log_message);
-
-    // actually insert the user into the seminar
-    $stmt = DBManager::get()->prepare('INSERT INTO seminar_user
-        (Seminar_id, user_id, status, admission_studiengang_id, comment, gruppe, mkdate)
-        VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())');
-    $stmt->execute(array($seminar_id, $user_id, $status, $contingent, '', $colour_group));
-
-
-    // check if there are any entries on the waiting/accepted/lot-list
-    $stmt = DBManager::get()->prepare('SELECT COUNT(*) as c FROM admission_seminar_user
-        WHERE user_id = ? AND seminar_id = ?');
-    $stmt->execute(array($user_id, $seminar_id));
-
-    if ($stmt->fetchColumn()) {
-
-        // delete the entries, user is now in the seminar
-        $stmt = DBManager::get()->prepare('DELETE FROM admission_seminar_user
-            WHERE user_id = ? AND seminar_id = ?');
-        $stmt->execute(array($user_id, $seminar_id));
-
-
-        //renumber the waiting/accepted/lot list, a user was deleted from it
-        renumber_admission($seminar_id);
-    }
-
-    removeScheduleEntriesMarkedAsVirtual($user_id, $seminar_id);
-
-    // reload the seminar, the contingents have changed
-    $sem->restore();
-}
 
 /**
 * This function inserts an user into the seminar_user and does consitency checks with admission_seminar_user

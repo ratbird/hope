@@ -40,6 +40,7 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
     $tpl['art'] = $val->getTypeName();
     $tpl['freeRoomText'] = htmlReady($val->getFreeRoomText());
     $tpl['comment'] = htmlReady($val->getComment());
+    $tpl['start_time'] = $val->getStartTime();
 
     /* css-Klasse und deleted-Status für das Template festlegen,
    * je nachdem ob es sich um einen gelöschten Termin handelt oder nicht */
@@ -314,7 +315,7 @@ function raumzeit_parse_messages($msgs) {
 
 function raumzeit_get_semesters(&$sem, &$semester, $filter) {
     // this function works like raumzeit_get_semester_chooser() but it
-    // returns a data structure fpr a selectionlist template instead of html code
+    // returns a data structure for a selectionlist template instead of html code
 
     $all_semester = $semester->getAllSemesterData();
     $passed = false;

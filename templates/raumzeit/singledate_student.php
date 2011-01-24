@@ -1,5 +1,5 @@
 <? if (!$tpl['deleted']) : ?>
-<TR>
+<tr>
     <TD width="1%" align="left" valign="top" bgcolor="<?=$tpl['aging_color']?>" class="<?=$tpl['class']?><?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ? '3' : '2'?>" nowrap><A href="<?=URLHelper::getLink("?cmd=".($issue_open[$tpl['sd_id']] ? 'close' : 'open')."&open_close_id=".$tpl['sd_id']."#".$tpl['sd_id'])?>"><?=($issue_open[$tpl['sd_id']] || $tpl['openall']) ? Assets::img('forumgraurunt2.png') : Assets::img('forumgrau2.png') ?></A></TD>
 
     <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap>
@@ -24,7 +24,7 @@
         <font size="-1" color="#000000">
             <?=$tpl['room']?>&nbsp;&nbsp;
         </font>
-    </font>
+    </td>
 
     <td width="1%" class="<?=$tpl['class']?>" valign="bottom" nowrap="nowrap">
     <? if ($tpl['forumCount'] > 0) :

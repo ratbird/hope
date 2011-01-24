@@ -439,10 +439,8 @@ $db6=new DB_Seminar;
             $db->next_record();
             if ($db->f("Lesezugriff") <= 1 && $perm->have_perm("autor")) {
                 if (!seminar_preliminary($id,$user->id)) {  // we have to change behaviour, depending on preliminary
-                    // LOGGING
-                    log_event('SEM_USER_ADD', $id, $user->id, 'user', 'Mit Leserechten - ohne Schreibrechte - eingetragen');
-                    $db->query("INSERT INTO seminar_user SET Seminar_id = '$id', user_id = '$user->id', status = 'user', gruppe = '$group', mkdate = '".time()."'");
-                    removeScheduleEntriesMarkedAsVirtual($user_id, $id);
+
+                    insertUserIntoSeminar($id, $GLOBALS['user']->id, 'user', 'Mit Leserechten - ohne Schreibrechte - eingetragen');
 
                     parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>Leser</b> in die Veranstaltung %s eingetragen."), '<b>'.htmlReady($db->f("Name")).'</b>'));
                     echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
@@ -496,10 +494,8 @@ $db6=new DB_Seminar;
             elseif ($perm->have_perm("autor"))
             {
                 if (!seminar_preliminary($id,$user->id)) {
-                    // LOGGING
-                    log_event('SEM_USER_ADD', $id, $user->id, 'autor', 'Mit Schreibrechten eingetragen');
-                    $db->query("INSERT INTO seminar_user SET Seminar_id = '$id', user_id = '$user->id', status = 'autor', gruppe = '$group', mkdate = '".time()."'");
-                    removeScheduleEntriesMarkedAsVirtual($user_id, $id);
+
+                    insertUserIntoSeminar($id, $GLOBALS['user']->id, 'autor', 'Mit Schreibrechten eingetragen');
 
                     parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>Autor</b> in die Veranstaltung %s eingetragen."), '<b>'.$SeminarName.'</b>'));
                     echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
@@ -711,10 +707,8 @@ $db6=new DB_Seminar;
                         if (!$current_seminar->isAdmissionQuotaChecked()) { //Variante Eintragen nach Lostermin oder Enddatum der Kontigentierrung. Wenn noch Platz ist fuellen wir einfach auf, ansonsten Warteliste
                             if ($current_seminar->getFreeAdmissionSeats()) { //Wir koennen einfach eintragen, Platz ist noch
                                 if (!seminar_preliminary($id,$user->id)) {
-                                    // LOGGING
-                                    log_event('SEM_USER_ADD', $id, $user->id, 'autor', 'Mit Kontingent und Schreibrechten eingetragen, Studiengane: '.$sem_verify_suggest_studg);
-                                    $db4->query("INSERT INTO seminar_user SET user_id = '$user->id', Seminar_id = '$id', admission_studiengang_id = '$sem_verify_suggest_studg', status='autor', gruppe='$group', mkdate='".time()."' ");
-                                    removeScheduleEntriesMarkedAsVirtual($user_id, $id);
+
+                                    insertUserIntoSeminar($id, $GLOBALS['user']->id, 'autor', 'Mit Kontingent und Schreibrechten eingetragen, Studiengänge: '.$sem_verify_suggest_studg, $sem_verify_suggest_studg);
 
                                     parse_msg ('msg§' . sprintf(_("Sie wurden mit dem Status <b>Autor</b> in die Veranstaltung %s eingetragen. Damit sind Sie zugelassen."), '<b>' . $SeminarName .'</b>'));
                                     echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
@@ -762,10 +756,8 @@ $db6=new DB_Seminar;
                             } else { //Variante chronologisches Anmelden
                                 if ($current_seminar->getFreeAdmissionSeats($sem_verify_suggest_studg)) {//noch Platz in dem Kontingent --> direkt in seminar_user
                                     if (!seminar_preliminary($id,$user->id)) {
-                                        // LOGGING
-                                        log_event('SEM_USER_ADD', $id, $user->id, 'autor', 'Mit Schreibrechten und Kontingent eingetragen, Kontingent: '.$sem_verify_suggest_studg);
-                                        $db4->query("INSERT INTO seminar_user SET user_id = '$user->id', Seminar_id = '$id', status='autor', gruppe='$group', admission_studiengang_id = '$sem_verify_suggest_studg', mkdate='".time()."' ");
-                                        removeScheduleEntriesMarkedAsVirtual($user_id, $id);
+
+                                        insertUserIntoSeminar($id, $GLOBALS['user']->id, 'autor', 'Mit Kontingent und Schreibrechten eingetragen, Studiengänge: '.$sem_verify_suggest_studg, $sem_verify_suggest_studg);
 
                                         parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>Autor</b> in die Veranstaltung <b>%s</b> eingetragen. Damit sind Sie zugelassen."), $SeminarName));
                                         echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
@@ -893,10 +885,8 @@ $db6=new DB_Seminar;
 
         if (isset($InsertStatus)) {//Status reinschreiben
             if (!seminar_preliminary($id,$user->id)) {
-                // LOGGING
-                log_event('SEM_USER_ADD', $id, $user->id, $InsertStatus, 'Eingetragen');
-                $db->query("INSERT INTO seminar_user SET seminar_id = '$id', user_id = '$user->id', status = '$InsertStatus', gruppe = '$group', mkdate = '".time()."'");
-                removeScheduleEntriesMarkedAsVirtual($user_id, $id);
+
+                insertUserIntoSeminar($id, $GLOBALS['user']->id, $InsertStatus);
 
                 parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>%s</b> in die Veranstaltung <b>%s</b> eingetragen."), $InsertStatus, $SeminarName));
                 echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";

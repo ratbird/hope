@@ -52,9 +52,7 @@
            <img src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/black/add/date.png">
          </td>
          <td width="99%" align="left">
-
-                       <a href="<?= URLHelper::getLink("raumzeit.php?cmd=createNewSingleDate#newSingleDate")?>"><?= _("Einen neuen Termin anlegen") ?></a>
-
+           <a href="<?= URLHelper::getLink("raumzeit.php?cmd=createNewSingleDate#newSingleDate")?>"><?= _("Einen neuen Termin anlegen") ?></a>
            <br>
          </td>
       </tr>

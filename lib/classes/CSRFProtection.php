@@ -54,7 +54,7 @@ class CSRFProtection
 
     static function checkSecurityToken()
     {
-        return self::token() === $_REQUEST[self::TOKEN];
+        return isset($_POST[self::TOKEN]) && self::token() === $_POST[self::TOKEN];
     }
 
     static function token()

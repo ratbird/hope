@@ -5,7 +5,8 @@
 </tr>
 <tr>
     <td width="100%" align="center" colspan="2">
-        <form action="<?= URLHelper::getLink() ?>">
+        <form action="<?= URLHelper::getLink() ?>" method="post">
+            <?= CSRFProtection::tokenTag() ?> 
             <table border="0" cellspacing="0" cellpadding="0">
                 <tbody><tr>
                     <td valign="center">

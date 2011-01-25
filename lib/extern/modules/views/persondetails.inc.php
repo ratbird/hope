@@ -277,7 +277,7 @@ function termine (&$module, $db, $alias_content, $text_div, $text_div_end) {
 function kategorien (&$module, $db, $alias_content, $text_div, $text_div_end) {
     $db_kategorien = new DB_Seminar();
     $query = "SELECT * FROM auth_user_md5 aum LEFT JOIN kategorien k ON (k.range_id=user_id) "
-           ."WHERE username='" . $db->f("username") . "'";
+           ."WHERE username='" . $db->f("username") . "' ORDER BY priority";
 
     $db_kategorien->query($query);
     while ($db_kategorien->next_record()) {

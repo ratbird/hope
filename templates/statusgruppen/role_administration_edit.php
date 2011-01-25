@@ -7,6 +7,7 @@
     <tr>
         <td colspan="5" class="printcontent">
             <form action="<?= URLHelper::getLink('#'. $role->getId()) ?>" method="post">
+            <?= CSRFProtection::insertToken() ?>
             <table cellspacing="0" cellpadding="1" border="0" width="100%">
                 <tr>
                     <td class="<?= $cssSw->getClass() ?>" width="50%" nowrap>

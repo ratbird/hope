@@ -4,6 +4,7 @@
     <?= $this->render_partial('statusgruppen/sem_edit_role.php') ?>
 </div>
 <form action="<?= URLHelper::getLink('') ?>" method="post">
+<?= CSRFProtection::insertToken() ?>
 <table cellspacing="0" cellpadding="2" border="0" width="100%">
     <tr>
         <td width="30%" valign="top">

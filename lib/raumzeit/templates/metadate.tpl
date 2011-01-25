@@ -76,6 +76,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                 </TD>
                 <TD width="93%" nowrap="nowrap" class="<?=$tpl['class']?>">
                     <FORM action="<?= URLHelper::getLink() ?>" method="post" name="EditCycle" style="display: inline">
+                        <?= CSRFProtection::insertToken() ?>
                         <FONT size="-1"><B>
                             <SELECT name="day">
                             <? foreach(range(1,6) + array(0) as $d) : ?>

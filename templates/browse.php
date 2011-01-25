@@ -1,5 +1,6 @@
 <!-- SEARCHBOX -->
 <form action="<?= URLHelper::getLink() ?>" method="post">
+<?= CSRFProtection::insertToken() ?>
 <div class="topic"><b><?=_("Suche nach Personen")?></b></div>
 
 <? if($sms_msg):?>

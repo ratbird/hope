@@ -72,6 +72,14 @@ class CSRFProtection
         return $_SESSION[self::TOKEN];
     }
 
+    static function insertToken()
+    {
+        return sprintf('<input type="hidden" name="%s" value="%s">',
+                       self::TOKEN,
+                       self::token()
+        );
+    }
+
 
     /**
      * Returns a string of highly randomized bytes (over the full 8-bit range).

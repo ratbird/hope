@@ -571,6 +571,7 @@ function jumpTo ($month, $day, $year, $colsp = 1) {
         echo " colspan=\"$colsp\"";
     echo ">\n\n";
     echo "<form action=\"$PHP_SELF?cmd=$cmd\" method=\"post\">\n";
+    echo CSRFProtection::insertToken();
     $currentDate = ($month < 10 ? "0".$month : $month)."/".($day < 10 ? "0".$day : $day)."/".$year;
     echo "<input type=\"text\" style=\"visibility:hidden; width: 0px\" name=\"realdate\" id=\"realdate\" value=\"".$currentDate."\">";
     echo "<b>" . _("Gehe zu:") . "</b>&nbsp;&nbsp;";

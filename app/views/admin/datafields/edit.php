@@ -10,6 +10,7 @@
 <? endif; ?>
 
 <form action="<?= $controller->url_for('admin/datafields/edit/'.$item->getID()) ?>" method=post>
+    <?= CSRFProtection::insertToken() ?>
     <table class="default">
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td>

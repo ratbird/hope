@@ -147,6 +147,7 @@ $termine = getAllSortedSingleDates($sem);
 
 ?>
 <form action="<?= URLHelper::getLink() ?>" method="post">
+<?= CSRFProtection::insertToken() ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
         <td class="blank" valign="top">

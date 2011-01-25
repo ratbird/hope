@@ -1,5 +1,6 @@
 <? $search_exp = $GLOBALS['search_exp']; ?>
 <form action="<?= URLHelper::getLink("#$anker") ?>" method="post" style="display: inline">
+    <?= CSRFProtection::insertToken() ?>
     <?
     if ($search_exp) :
         $users = getSearchResults(trim($GLOBALS['search_exp']), $role_id);

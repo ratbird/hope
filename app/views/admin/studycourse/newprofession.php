@@ -1,5 +1,6 @@
 <?= (isset($flash['error'])) ? MessageBox::error($flash['error'], $flash['error_detail']) : '' ?>
 <form action="<?= $controller->url_for('admin/studycourse/newprofession/'.Request::get('professionname').'/'.Request::get('description')) ?>" method="post">
+    <?= CSRFProtection::insertToken() ?>
     <table class="default">
         <tr class="steelgraulight">
             <td><?= _("Name des Studienfaches:") ?> </td>

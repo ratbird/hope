@@ -4,6 +4,7 @@
         <?= _("Einstellungen des Stundenplans ändern") ?>
     </div>
     <form method="post" action="<?= $controller->url_for('calendar/schedule/storesettings') ?>" style="margin: 10px;">
+        <?= CSRFProtection::insertToken() ?>
         <div class="settings" style="width: 100%">
             <div><?= _("Angezeigtes Semester") ?>:</div>
             <select name="semester_id">

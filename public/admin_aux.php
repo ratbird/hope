@@ -97,6 +97,7 @@ echo $zt->closeRow();
 // a Seminar is selected!
 if (isset($SessSemName[1]) && isset($selected)) {
     $form    =  "<form name=\"\" action=\"". URLHelper::getLink() ."\" method=\"post\">";
+    $form   .= CSRFProtection::insertToken();
     $form   .=  "<input type=\"hidden\" name=\"make_aux\" value=1>";
     $form .=    "<select name=aux_sem[".$SessSemName[1]."]>";
     $form .= "<option value=\"null\">-- ". _("keine Zusatzangaben"). " --</option>";

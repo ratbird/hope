@@ -37,6 +37,7 @@ $cssSw = new cssClassSwitcher();
     <? if ($can_deactivate) : ?>
         <?= MessageBox::info( _("Die Studiengruppen sind aktiviert.")) ?>
         <form action="<?= $controller->url_for('course/studygroup/deactivate') ?>" method="post">
+        <?= CSRFProtection::insertToken() ?>
         <?= makebutton('deaktivieren', 'input') ?>
         </form>
     <? else: ?>
@@ -45,6 +46,7 @@ $cssSw = new cssClassSwitcher();
     <br>
 <?php endif;?>
 <form action="<?= $controller->url_for('course/studygroup/savemodules') ?>" method="post">
+    <?= CSRFProtection::insertToken() ?>
     <!-- Title -->
 <table class="default">
     <tr>

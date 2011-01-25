@@ -1,4 +1,5 @@
 <form method="post" action="<?= UrlHelper::getLink('?change_object_perms='. $resObject->getId()) ?>">
+<?= CSRFProtection::insertToken() ?>
 <table border="0" celpadding="2" cellspacing="0" width="99%" align="center">
     <tr>
         <td class="<?= $cssSw->getClass() ?>" width="4%">

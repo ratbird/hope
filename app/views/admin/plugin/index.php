@@ -28,6 +28,7 @@
                 '<a href="'.$controller->url_for('admin/plugin/search').'">', '</a>'))) ?>
 <? else: ?>
     <form action="<?= $controller->url_for('admin/plugin/save') ?>" method="post">
+        <?= CSRFProtection::insertToken() ?>
         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
         <input type="hidden" name="plugin_filter" value="<?= $plugin_filter ?>">
         <table class="default">

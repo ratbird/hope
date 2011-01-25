@@ -165,6 +165,7 @@ function printFormStart ( $voteID, $rangeID, $referer ) {
                  Assets::image_path($type."-icon.gif"),"","","","",
                  "blank" );
     $html .= "<form action=\"".$GLOBALS['PHP_SELF']."?page=edit&type=".$type."\" name=\"voteform\" method=post>"
+    . CSRFProtection::insertToken()
     . "<input type=hidden name=\"voteID\" value=\"".$voteID."\">"
     . "<input type=hidden name=\"rangeID\" value=\"".$rangeID."\">"
     . "<input type=hidden name=\"referer\" value=\"".$referer."\">"

@@ -182,7 +182,9 @@ $this->msg[42] = array (
         "msg"=> _("Folgenden Einzelterminen wurde kein Raum zugewiesen, da gesonderte Anfragen zu diesem Termine vorliegen, die einzeln bearbeitet werden m&uuml;ssen:")."<font size=\"-1\" color=\"black\">%s</font>");
 $this->msg[43] = array (
         "mode" => "info",
-        "msg"=> "<form action=\"%s\" method=\"post\"><table border=\"0\" cellspacing=\"5\" cellpadding=\"0\"><tr><td valign=\"top\">"
+        "msg"=> "<form action=\"%s\" method=\"post\">"
+            . CSRFProtection::insertToken()
+            ."<table border=\"0\" cellspacing=\"5\" cellpadding=\"0\"><tr><td valign=\"top\">"
             . _("Wollen Sie die Anfrage wirklich ablehnen?")
             ."<br><input type=\"image\" ".makeButton('ja2', 'src')." align=\"middle\"></a>"
             ."&nbsp;<a href=\"%s?decline_request=0\">".makeButton("nein")."</a><br>"

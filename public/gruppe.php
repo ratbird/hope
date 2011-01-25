@@ -71,6 +71,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     <tr>
         <td class="blank">
     <form method="post" action="meine_seminare.php">
+    <?= CSRFProtection::insertToken() ?>
     <table border="0" cellpadding="0" cellspacing="0" width="90%" align="center">
     <tr>
         <td class="blank" align="right">

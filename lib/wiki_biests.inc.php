@@ -90,6 +90,7 @@ function wiki_biestform($template_name) {
         <input type=\"hidden\" name=\"biest_action\" value=\"new_biest\">
         <input type=\"hidden\" name=\"biest_template\" value=\"$template_name\">
         <input type=\"hidden\" name=\"keyword\" value=\"$keyword\">";
+    $form.= CSRFProtection::insertToken();
     $form.=$template['formbody'];
     $form.="</form>";
     return $form;

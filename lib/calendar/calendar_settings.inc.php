@@ -73,6 +73,7 @@ $css_switcher->switchClass();
                 <b><?= _("Hier k&ouml;nnen Sie die Ansicht Ihres pers&ouml;nlichen Terminkalenders anpassen."); ?></b>
             </p>
             <form method="post" action="<? echo $PHP_SELF ?>?cmd_cal=chng_cal_settings">
+            <?= CSRFProtection::insertToken() ?>
             <table width ="70%" align="center" cellspacing="0" cellpadding="8" border="0">
                 <tr>
                     <th width="50%" align=center><?=_("Option")?></th>

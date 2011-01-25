@@ -18,6 +18,7 @@ $link = "dispatch.php/studygroup/browse/%s/".$sort;
 
 ?>
 <form action="<?= $controller->url_for('studygroup/browse') ?>" method=post>
+    <?= CSRFProtection::insertToken() ?>
     <div class="search_box" align="center">
         <input name="searchtext" type="text" size="45" style="vertical-align: middle;" value="<?=$search?>" />
         <input type="image" <?= makeButton('suchestarten','src')?> style="vertical-align: middle;"/>

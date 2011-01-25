@@ -1,5 +1,6 @@
 <?= $message ?>
 <form method="post" action="<?= $controller->url_for('admin/semester/edit_holidays') ?><?= ($holiday['holiday_id'])? '/'.$holiday['holiday_id'] : '' ?>">
+<?= CSRFProtection::insertToken() ?>
 <table class="default">
     <tr>
     <? if(!$is_new) : ?>

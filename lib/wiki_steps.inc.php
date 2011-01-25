@@ -100,6 +100,7 @@ function wiki_stepform($template_name) {
         <input type=\"hidden\" name=\"step_action\" value=\"new_step\">
         <input type=\"hidden\" name=\"step_template\" value=\"$template_name\">
         <input type=\"hidden\" name=\"keyword\" value=\"$keyword\">";
+    $form.= CSRFProtection::insertToken();
     $form.=$template['formbody'];
     $form.="</form>";
     return $form;

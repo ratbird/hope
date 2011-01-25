@@ -10,6 +10,7 @@ if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COL
     <TD class="steel1" colspan="9">
         <A name="newCycle" />
         <FORM action="<?= URLHelper::getLink() ?>" method="post" name="Formular">
+        <?= CSRFProtection::insertToken() ?>
         <TABLE cellpadding="2" cellspacing="0" border="0" width="100%">
             <TR>
                 <TD width="2%" align="right" valign="top" class="<?=$class?>">

@@ -1,4 +1,5 @@
 <form action="<?= URLHelper::getLink('') ?>" method="post" style="display: inline;">
+    <?= CSRFProtection::insertToken() ?>
     <select size="10" name="persons_to_add[]" multiple="multiple" style="width:100%;">
     <? if (is_array($inst_persons)) foreach ($inst_persons as $key => $val) : ?>
         <option <?=($val['hasgroup'])?'style="color: #777777"':''?> value="<?=$val['username']?>">

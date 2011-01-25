@@ -4,6 +4,7 @@ $sem = Seminar::getInstance($show_entry['id']);
 <div id="edit_sem_entry" class="schedule_edit_entry">
     <div id="edit_sem_entry_drag" class="window_heading">Veranstaltungsdetails bearbeiten</div>
     <form action="<?= $controller->url_for('calendar/schedule/editseminar/'. $show_entry['id'] .'/'. $show_entry['cycle_id'] ) ?>" method="post" name="edit_entry" style="padding-left: 10px; padding-top: 10px; margin-right: 10px;">
+        <?= CSRFProtection::insertToken() ?>
         <b><?= _("Farbe des Termins") ?>:</b>
         <? foreach ($GLOBALS['PERS_TERMIN_KAT'] as $data) : ?>
         <span style="background-color: <?= $data['color'] ?>; vertical-align: middle; padding-top: 3px;">

@@ -33,6 +33,7 @@ $infobox['content'][1]['eintrag'][] = array (
 );
 
 $semester_chooser  = '<form method="post" action="'. $controller->url_for('calendar/instschedule') .'">';
+$semester_chooser .= CSRFProtection::insertToken();
 $semester_chooser .= '<select name="semester_id">';
 foreach (array_reverse($semesters) as $semester) :
     $semester_chooser .= '<option value="'. $semester['semester_id'] .'"';

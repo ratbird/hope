@@ -7,6 +7,7 @@
             <b><?= _("Maximale Gr&ouml;&szlig;e:") ?> <?= ($max_filesize / 1024) ?></b> <?= _("Kilobyte") ?><br>
 
             <form enctype="multipart/form-data" name="upload_form" action="<?= UrlHelper::getLink() ?>" method="post">
+                <?= CSRFProtection::insertToken() ?>
                 <div width="100%" class="steelgraudunkel" style="padding : 2px; margin: 10px 0px 10px 0px">
                     <?= _("1. Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuw&auml;hlen.") ?>
                 </div>

@@ -61,6 +61,7 @@ $width_namecolumn = 60;
 <div style="min-width: 600px">
 
 <form name="details" method="post" action="<?= $controller->url_for('course/basicdata/set' , $course_id) ?>">
+<?= CSRFProtection::insertToken() ?>
 <div style="text-align:center" id="settings" class="steel1">
 
   <h2 id="bd_basicsettings" class="steelgraulight"><?= _("Grundeinstellungen") ?></h2>

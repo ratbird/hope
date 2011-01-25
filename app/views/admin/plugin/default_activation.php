@@ -11,6 +11,7 @@
 </p>
 
 <form action="<?= $controller->url_for('admin/plugin/save_default_activation', $plugin_id) ?>" method="post">
+    <?= CSRFProtection::insertToken() ?>
     <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
     <select name="selected_inst[]" multiple size="20">
         <? foreach ($institutes as $id => $institute): ?>

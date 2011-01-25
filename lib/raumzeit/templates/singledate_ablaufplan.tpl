@@ -30,7 +30,10 @@
 <? if ($issue_open[$tpl['sd_id']] || $openAll) { ?>
 <TR>
     <TD colspan="6" class="steel1" align="center">
-        <? if (!$openAll) { ?><FORM action="<?= URLHelper::getLink() ?>" method="post"><? } ?>
+        <? if (!$openAll) { ?>
+        <FORM action="<?= URLHelper::getLink() ?>" method="post">
+        <?= CSRFProtection::insertToken() ?>
+        <? } ?>
         <TABLE border="0" cellspacing="0" cellpadding="1" width="99%">
             <TR>
                 <TD width="70%" class="steel1">

@@ -153,6 +153,7 @@ function change_messaging_view()
                 <b><?= _("Auf dieser Seite k&ouml;nnen Sie die Eigenschaften des Stud.IP-Messagingsystems an Ihre Bed&uuml;rfnisse anpassen.") ?></b>
             </p>
             <form action="<?=$PHP_SELF?>?messaging_cmd=change_view_insert" method="post">
+            <?= CSRFProtection::insertToken() ?>
             <? if ($reset_txt) {
                 ?><table width="70%" align="center" cellpadding=8 cellspacing=0 border=0><tr><td align="left" class="steel1"><?
                 echo $reset_txt; ?>

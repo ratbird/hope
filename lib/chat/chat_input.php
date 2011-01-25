@@ -144,6 +144,7 @@ if ($chatInput) {
 
 ?>
 <form method="post" action="chat_dispatcher.php?target=chat_input.php" name="inputform" onSubmit="return doCheck();">
+<?= CSRFProtection::insertToken() ?>
 <input type="hidden" name="chatid" value="<?=$chatid?>">
 <div align="center">
     <table width="98%" border="0" bgcolor="white" cellspacing="0" cellpadding="0" align="center">

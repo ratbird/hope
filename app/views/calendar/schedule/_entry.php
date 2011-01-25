@@ -6,6 +6,7 @@
 
     <form id="new_entry_form" action="<?= $controller->url_for('calendar/schedule/addEntry') ?>" method="post" style="margin: 10px;">
 
+        <?= CSRFProtection::insertToken() ?>
         <b><?= _("Titel") ?>:</b><br>
         <input id="entry_title" name="entry_title" type="text" style="width: 98%">
         <br>

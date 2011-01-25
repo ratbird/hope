@@ -51,6 +51,7 @@ $infobox['content'] = array(
 <?php  endif; ?>
 
 <form action="<?= $controller->url_for('course/studygroup/update/'.$sem_id) ?>" method=post>
+<?= CSRFProtection::insertToken() ?>
 
 <table class="blank" width="75%" cellspacing="5" cellpadding="0" border="0">
 

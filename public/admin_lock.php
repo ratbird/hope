@@ -88,6 +88,7 @@ if (isset($SessSemName[1]) && isset($selected)) {
         $form = htmlReady($rule['name']);
     } else {
         $form    =  "<form name=\"\" action=\"".$PHP_SELF."\" method=\"post\">";
+        $form   .= CSRFProtection::insertToken();
         $form   .=  "<input type=\"hidden\" name=\"make_lock\" value=\"1\">";
         $form   .=  "<select name=\"lock_sem[{$SessSemName[1]}]\">";
         for ($i=0;$i<count($all_lock_rules);$i++) {

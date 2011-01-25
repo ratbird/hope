@@ -10,6 +10,8 @@ global $SEM_TYPE;
 
                 <form action="<?= URLHelper::getLink() ?>" method="post">
 
+                    <?= CSRFProtection::insertToken() ?>
+
                     <div style="font-weight:bold;font-size:10pt;margin-left:10px;">
                         <?= _("Bitte w&auml;hlen Sie eine Einrichtung aus:") ?>
                     </div>

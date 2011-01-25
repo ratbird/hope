@@ -115,6 +115,7 @@ function checkdata(){
     <?=_("Bitte f&uuml;llen Sie zur Anmeldung das Formular aus:")?>
     <br><br>
 <form name=login action="<?=$_SERVER['REQUEST_URI']?>" method="post" onsubmit="return checkdata()">
+<?= CSRFProtection::insertToken() ?>
 <table border=0 bgcolor="#eeeeee" align="center" cellspacing=2 cellpadding=4>
  <tr valign=top align=left>
   <td colspan="2"><?=_("Benutzername:")?></td>

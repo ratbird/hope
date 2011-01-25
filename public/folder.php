@@ -687,6 +687,7 @@ if ($question) {
             asort($my_inst, SORT_STRING);
             $button_name = ($folder_system_data["mode"] == 'move' ? 'verschieben' : 'kopieren');
             echo '<form action="'.URLHelper::getLink('').'" method="post">';
+            echo CSRFProtection::insertToken();
             echo "\n" . '<tr><td class="blank" colspan="3" width="100%" style="font-size:80%;">';
             echo "\n" . '<div style="margin-left:25px;">';
             echo "\n<b>" . ($folder_system_data["mode"] == 'move' ? _("Verschiebemodus") : _("Kopiermodus")) . "</b><br>";
@@ -797,6 +798,7 @@ if ($question) {
                 <tr>
                 <td class="blank" colspan="3" width="100%" style="padding-left:10px;">
                 <form action="<? echo URLHelper::getLink('#anker') ?>" method="POST">
+                    <?= CSRFProtection::insertToken() ?>
                     <select name="open" style="vertical-align:middle">
                         <? echo $select ?>
                     </select>
@@ -817,6 +819,7 @@ if ($question) {
     //when changing, uploading or show all (for download selector), create a form
     if ((($change) || ($folder_system_data["cmd"]=="all")) && (!$folder_system_data["upload"])) {
         echo "<form method=\"post\" action=\"".URLHelper::getLink('#anker')."\">";
+        echo CSRFProtection::insertToken();
         }
 
     print "<tr><td class=\"blank\" colspan=\"3\" width=\"100%\">";

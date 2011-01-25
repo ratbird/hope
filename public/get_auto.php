@@ -26,6 +26,7 @@ if (!$_POST["pass"])
     <body style="background-image: url('<?= $GLOBALS['ASSETS_URL'] ?>images/steel1.jpg');font-family: Arial, Helvetica, sans-serif;">
     <?
     echo "<div align=\"center\"><form action=\"$PHP_SELF\" method=\"post\" >";
+    echo CSRFProtection::insertToken();
     printf(_("Bitte Passwort eingeben für User: <b>%s</b>"), $auth->auth["uname"]);
         echo "<br><br>";
     echo "<input type=\"password\" size=\"15\" name=\"pass\"><br><br><a href=\"javascript:doSubmit();\"><img " . makeButton("herunterladen", "src") . " border=\"0\" " . tooltip(_("Die heruntergeladene Datei bitte mit der Endung .html speichern!")) . "></a>";

@@ -215,6 +215,7 @@ echo "</td></tr>";
 if ($EXTERN_SRI_ENABLE_BY_ROOT && $perm->have_perm('root')) {
     echo "<tr><td class=\"blank\">\n";
     echo '<form method="post" action="' . URLHelper::getLink('?com=enable_sri') . '">';
+    echo CSRFProtection::insertToken();
     echo '<blockquote><font size="2">';
     echo _("SRI-Schnittstelle freigeben");
     echo ' <input type="checkbox" name="sri_enable" value="1"';
@@ -262,6 +263,7 @@ if ($_REQUEST['com'] != 'copychoose') {
 if ($choose_module_form != '') {
     if ($_REQUEST['com'] != 'copychoose') {
         echo '<form method="post" action="' . URLHelper::getLink('?com=new') . '">';
+        echo CSRFProtection::insertToken();
         echo "<blockquote><font size=\"2\">";
         $choose_module_form = "<select name=\"mod\">\n$choose_module_form</select>\n";
         printf(_("Neue Konfiguration f&uuml;r Modul %s anlegen."), $choose_module_form);
@@ -272,6 +274,7 @@ if ($choose_module_form != '') {
         $conf_institutes = ExternConfig::GetInstitutesWithConfigurations(($GLOBALS['perm']->have_perm('root') && $_REQUEST['view'] == 'extern_global') ? 'global' : array('inst', 'fak'));
         if (sizeof($conf_institutes)) {
             echo '<form method="post" action="' . URLHelper::getLink('?com=copychoose') . '">';
+            echo CSRFProtection::insertToken();
             echo "<blockquote><font size=\"2\">";
             $choose_institute_copy = "<select name=\"copychooseinst\">\n";
             foreach ($conf_institutes as $conf_institute) {
@@ -302,6 +305,7 @@ if ($choose_module_form != '') {
             }
 
             echo '<form method="post" action="' . URLHelper::getLink('?com=copyconfig') . '">';
+            echo CSRFProtection::insertToken();
             echo "<blockquote><font size=\"2\">";
             printf(_("Konfiguration %s aus Einrichtung kopieren."), $choose_module_select . '</select>');
             echo "&nbsp; <input type=\"image\" " . makeButton('kopieren', 'src') . " border=\"0\" align=\"absmiddle\">&nbsp; &nbsp";

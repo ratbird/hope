@@ -1,4 +1,5 @@
 <form action="<?= $controller->url_for('admin/plugin') ?>" method="post">
+    <?= CSRFProtection::insertToken() ?>
     <select name="plugin_filter" onchange="this.form.submit();">
         <option value="">
             <?= _('alle anzeigen') ?>

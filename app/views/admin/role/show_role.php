@@ -5,6 +5,7 @@
 </h3>
 
 <form action="<?= $controller->url_for('admin/role/show_role') ?>" method="post">
+    <?= CSRFProtection::insertToken() ?>
     <select name="role" style="width: 300px">
         <? foreach ($roles as $getrole): ?>
             <option value="<?= $getrole->getRoleid() ?>" <?= $getrole->getRoleid() == $roleid ? 'selected' : '' ?>>

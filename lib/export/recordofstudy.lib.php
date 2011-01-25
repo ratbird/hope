@@ -59,6 +59,7 @@ function printSelectSemester($infobox,$semestersAR){
           . MessageBox::info($GLOBALS['FDF_USAGE_HINT'])
           . _("Bitte wählen Sie ein Semester aus:")."\n"
           . "      <form action=\"".$_SERVER['PHP_SELF']."\" method=post>\n"
+          . CSRFProtection::insertToken()
           . "       &nbsp;<select name=\"semesterid\" style=\"vertical-align:middle;\">\n";
     // the semester
     foreach ($semestersAR as $semester){
@@ -107,6 +108,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
     global $semesterid;
     $html = "<table border=\"0\" class=\"blank\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
         . " <form action=\"{$_SERVER['PHP_SELF']}\" method=post>\n"
+        . CSRFProtection::insertToken()
         . " <input type=\"hidden\" name=\"semesterid\" value=\"".$semesterid."\">\n"
         . " <tr valign=\"top\">\n"
         . "  <td width=\"99%\" class=\"blank\">&nbsp;\n"

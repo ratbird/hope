@@ -229,6 +229,7 @@ class Guestbook
         $text = "<p align=\"center\">"._("Geben Sie hier Ihren Gästebuchbeitrag ein!")."</p>";
 
             $form = "<form name=\"guestbook\" method=\"post\" action=\"".$PHP_SELF."?studipticket=".get_ticket()."#guest\">"
+            . CSRFProtection::insertToken()
             ."<input type=hidden name=guestbook value='$this->user_id'>"
             ."<input type=hidden name=username value='$this->username'>"
             .$text

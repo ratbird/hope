@@ -27,6 +27,7 @@ $(function () {
         <p><?=_("Bitte identifizieren Sie sich mit Benutzername und Passwort:")?></p>
 
         <form name="login" method="post" action="<?=$_SERVER['REQUEST_URI']?>">
+          <?= CSRFProtection::insertToken() ?>
           <input type="hidden" name="login_ticket" value="<?=Seminar_Session::get_ticket();?>">
           <input type="hidden" name="resolution"  value="">
           <table border="0" cellspacing="0" cellpadding="4">

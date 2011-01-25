@@ -1,4 +1,5 @@
 <form action="<?= $controller->url_for('admin/datafields') ?>" method="post">
+    <?= CSRFProtection::insertToken() ?>
     <select name="class_filter" onchange="this.form.submit();">
         <option value="-1"><?= _('alle anzeigen') ?></option>
    <? foreach ($allclasses as $key => $class): ?>

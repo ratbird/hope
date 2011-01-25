@@ -6,6 +6,7 @@ foreach ($show_entry['seminars'] as $sem_id) {
 <div id="edit_inst_entry" class="schedule_edit_entry">
     <div id="edit_inst_entry_drag" class="window_heading"><?= _('Liste der Veranstaltungen') ?></div>
     <form action="<?= $controller->url_for('calendar/schedule/editseminar/'. $show_entry['id'] .'/'. $show_entry['cycle_id'] ) ?>" method="post" name="edit_entry" style="padding-left: 10px; padding-top: 10px; margin-right: 10px;">
+        <?= CSRFProtection::insertToken() ?>
         <table class="default">
             <thead>
                 <tr>

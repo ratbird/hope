@@ -326,6 +326,7 @@ if(isset($_REQUEST['admissiongroupdelete_x']) && isset($_REQUEST['group_id'])){
     $msg[] = array('info', _("Wollen Sie die Gruppierung f&uuml;r die ausgew&auml;hlte Gruppe aufl&ouml;sen?")
                             . '<br>' . _("Beachten Sie, dass f&uuml;r bereits eingetragene / auf der Warteliste stehende TeilnehmerInnen keine &Auml;nderungen vorgenommen werden.")
                             . '<form action="'.URLHelper::getLink().'" method="post">'
+                            . CSRFProtection::insertToken()
                             . '<input type="hidden" name="group_sem_x" value="1"><div style="padding:3px;">'
                             . '<input type="hidden" name="group_id" value="'.$_REQUEST['group_id'].'">'
                             . makeButton('ja', 'input', _("Gruppe auflösen"), 'admissiongroupreallydelete')
@@ -503,6 +504,7 @@ if(is_object($group_obj)){
     <tr>
         <td class="blank" width="100%">
         <form action="<?=URLHelper::getLink()?>" name="Formular" method="post">
+        <?= CSRFProtection::insertToken() ?>
         <div class="steel1" style="margin:10px;padding:5px;border: 1px solid;">
         <div style="font-weight:bold;"><?=_("Gruppierte Veranstaltungen bearbeiten")?></div>
         <div>
@@ -673,6 +675,7 @@ if(is_object($group_obj)){
     ?>
         <tr>
             <form action="<?=URLHelper::getLink()?>" method="post">
+            <?= CSRFProtection::insertToken() ?>
             <td class="blank" width="100%" >
                 <div style="font-weight:bold;margin:10px;">
                 <?=_("Bitte w&auml;hlen Sie eine Einrichtung aus:")?>
@@ -745,6 +748,7 @@ if(is_object($group_obj)){
                 }
                 echo "\n</tr>";
         printf("\n<form action=\"%s\" method=\"post\">\n",URLHelper::getLink());
+        echo CSRFProtection::insertToken();
     } elseif ($institut_id) {
         echo "\n<table width=\"99%\" align=\"center\" border=\"0\" cellspacing=\"2\" cellpadding=\"2\">";
         parse_msg ("info§"._("Im gew&auml;hlten Bereich existieren keine teilnahmebeschr&auml;nkten Veranstaltungen")."§", "§", "steel1",2, FALSE);

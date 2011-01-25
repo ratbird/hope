@@ -213,7 +213,9 @@ function aux_html() {
     $data = get_aux_data();
 
     echo $zt->openRow();
-    $cell = '<form action="'.URLHelper::getLink().'" method="post"><select name="display_type"><option value="rtf">RTF</option><option value="csv">Excel kompatibel</option></select>';
+    $cell = '<form action="'.URLHelper::getLink().'" method="post">';
+    $cell .= CSRFProtection::insertToken();
+    $cell .= '<select name="display_type"><option value="rtf">RTF</option><option value="csv">Excel kompatibel</option></select>';
     $cell .= '&nbsp;&nbsp;&nbsp;<input type="image" '.makebutton('export','src').' style="vertical-align: middle"></form>';
     echo $zt->cell($cell, array('colspan' => '20', 'class' => 'blank'));
     echo $zt->closeRow();
@@ -300,6 +302,7 @@ function aux_enter_data() {
     $entries = aux_sort_entries($entries, $rule);
 
     echo '<form action="'.URLHelper::getLink().'" method="post">';
+    echo CSRFProtection::insertToken();
     foreach ($entries as $id => $entry) {
         if ($entry->structure->accessAllowed($perm)) {
             $color = 'black';

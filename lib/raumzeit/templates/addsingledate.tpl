@@ -9,6 +9,7 @@
     <TD class="steelgraulight" colspan="9">
         <A name="newSingleDate" />
         <FORM action="<?= URLHelper::getLink() ?>" method="post">
+        <?= CSRFProtection::insertToken() ?>
         <TABLE cellpadding="2" cellspacing="0" border="0" width="100%">
             <TR>
                 <TD width="2%" align="right" valign="top" class="<?=$tpl['class']?>">

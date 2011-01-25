@@ -11,6 +11,7 @@
 <form enctype="multipart/form-data"
       action="<?= $controller->url_for('institute/avatar/put/' . $institute_id) ?>"
       method="post" style="float: left">
+    <?= CSRFProtection::insertToken() ?>
     <input type="hidden" name="MAX_FILE_SIZE" value="1000000">
     <label for="upload-input"><?= _("Wählen Sie ein Bild für die Einrichtung:") ?></label>
     <input id="upload-input" name="avatar" type="file">

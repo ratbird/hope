@@ -51,6 +51,7 @@ class EvalTemplateGUI {
      $form = new HTM( "form" );
      $form->attr( "action", UrlHelper::getLink("?page=edit") );
      $form->attr( "method", "post" );
+     $form->html(CSRFProtection::insertToken());
 
      $table = new HTML("table");
      $table->addAttr("border","0");
@@ -363,6 +364,7 @@ class EvalTemplateGUI {
     $form = new HTM( "form" );
     $form->attr( "action", UrlHelper::getLink("?page=edit"));
     $form->attr( "method", "post" );
+    $form->html(CSRFProtection::insertToken());
     /* template name --------------------------------- */
     if($onthefly!=1){
        $b = new HTM( "b" );
@@ -831,6 +833,7 @@ class EvalTemplateGUI {
      $form = new HTM( "form" );
      $form->attr( "action", UrlHelper::getLink("?page=edit") );
      $form->attr( "method", "post" );
+     $form->html(CSRFProtection::insertToken());
 
      $b = new HTM( "b" );
      $b->cont( _("Name").": " );

@@ -104,6 +104,7 @@ function wiki_liftersform($template_name) {
         <input type=\"hidden\" name=\"lifters_action\" value=\"new_lifters\">
         <input type=\"hidden\" name=\"lifters_template\" value=\"$template_name\">
         <input type=\"hidden\" name=\"keyword\" value=\"$keyword\">";
+    $form.= CSRFProtection::insertToken();
     $form.=$template['formbody'];
     $form.="</form>";
     return $form;

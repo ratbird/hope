@@ -78,6 +78,7 @@ function temporaly_accepted($sem_name, $user_id, $sem_id, $ask = "TRUE", $studie
         echo "<br><br>\n";
 
         printf("<form action=\"%s\" method=\"post\">\n",$url);
+        echo CSRFProtection::insertToken();
         printf("<input type=\"hidden\" name=\"pass\" value=\"$pass\">");
         if (get_config('ADMISSION_PRELIM_COMMENT_ENABLE')){
             echo _("Bemerkungen zu Teilnahmevoraussetzungen:");
@@ -526,6 +527,7 @@ $db6=new DB_Seminar;
                         </td></tr>
                         <tr><td class="blank" colspan=2>
                         <form name="details" action="<? echo $sess->pself_url(); ?>" method="POST">
+                        <?= CSRFProtection::insertToken() ?>
                         &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
                         <input type="hidden" name="id" value="<? echo $id;?>">
                         <input type="image" <?=makeButton("abschicken", "src")?> border="0" value="<?=_("abschicken") ?>">
@@ -652,6 +654,7 @@ $db6=new DB_Seminar;
                             ?>
                             <tr><td class="blank" colspan=2>
                             <form action="<? echo $sess->pself_url(); ?>" method="POST" >
+                                <?= CSRFProtection::insertToken() ?>
                                 <input type="hidden" name="sem_verify_selection_send" value="TRUE">
                                    <?
                                 foreach($current_seminar->admission_studiengang as $studiengang_id => $studiengang) {
@@ -799,6 +802,7 @@ $db6=new DB_Seminar;
                     </td></tr>
                     <tr><td class="blank" colspan=2>
                     <form name="details" action="<? echo $sess->pself_url(); ?>" method="POST">
+                    <?= CSRFProtection::insertToken() ?>
                     &nbsp; &nbsp; <input type="PASSWORD" name="pass" size="12">
                     <input type="hidden" name="id" value="<? echo $id;?>">
                     <input type="image" <?=makeButton("abschicken", "src")?> border="0" value="<?=_("abschicken") ?>">
@@ -818,6 +822,7 @@ $db6=new DB_Seminar;
                 }
                 elseif ($SemSecLevelWrite==2) {//nur passwort fuer Schreiben, User koennte ohne Passwort als 'User' in das Seminar
                     print "<form name=\"details\" action=\"".$sess->self_url()."\" method=\"POST\">";
+                    echo CSRFProtection::insertToken();
                     print "<tr><td class=\"blank\" colspan=\"2\">";
                     print "<table width=\"97%\" align=\"center\" border=\"0\" cellapdding=\"2\" cellspacing=\"0\">";
                     print "<tr><td width=\"48%\" class=\"blank\">";

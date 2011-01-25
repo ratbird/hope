@@ -970,7 +970,10 @@ while (list ($key, $val) = each ($gruppe)) {
         $info_is_open = false;
         $tutor_count = 0;
     // die eigentliche Teil-Tabelle
-    if ($key != 'dozent') echo "<form name=\"$key\" action=\"".URLHelper::getLink("?studipticket=$studipticket")."\" method=\"post\">";
+    if ($key != 'dozent') {
+        echo "<form name=\"$key\" action=\"".URLHelper::getLink("?studipticket=$studipticket")."\" method=\"post\">";
+        echo CSRFProtection::insertToken();
+    }
     if ($key == 'accepted') echo '<input type="hidden" name="accepted" value="1">';
 
     if($rechte && $key == 'autor'   && $sem->isAdmissionEnabled()){
@@ -1367,6 +1370,7 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
 
                 <td colspan="<?= $colspan - 2 - ($show_user_picture ? 1 : 0) - ($showscore ? 1 : 0)?>">
                     <form action="<?= URLHelper::getLink('#'.$db->f("username")) ?>" method="POST">
+                        <?= CSRFProtection::insertToken() ?>
                         <font size="-1"><?=_("Bemerkungen:")?></font><br>
                         <textarea name="userinfo" rows="3" cols="50"><?= $db->f("comment") ?></textarea>
                         <br>
@@ -1433,6 +1437,7 @@ if ($rechte) {
         <?
         // die eigentliche Teil-Tabelle
         echo '<form name="waitlist" action="'.URLHelper::getLink('?studipticket='.$studipticket).'" method="post">';
+        echo CSRFProtection::insertToken();
         echo "<tr><td class=\"blank\" colspan=\"2\">";
         echo "<table width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
         echo "<tr height=\"28\">";
@@ -1505,6 +1510,7 @@ if (!LockRules::Check($id, 'participants') && $rechte
 
     <table width="99%" border="0" cellpadding="2" cellspacing="0" border="0" align="center">
     <form action="<?= URLHelper::getLink() ?>" method="POST">
+    <?= CSRFProtection::insertToken() ?>
     <input type="hidden" name="studipticket" value="<?=$studipticket?>">
     <tr>
         <td class="steel1" width="40%" align="left">&nbsp; <font size="-1"><b><?=_("MitarbeiterInnen der Einrichtung(en)")?></b></font></td>
@@ -1542,6 +1548,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     <tr><td class="blank" colspan="2">
     <a name="freesearch"></a>
     <form action="<?= URLHelper::getLink('?cmd=add_user') ?>" method="POST">
+    <?= CSRFProtection::insertToken() ?>
     <input type="hidden" name="studipticket" value="<?=$studipticket?>">
     <table width="99%" border="0" cellpadding="2" cellspacing="0" border=0 align="center">
         <tr>
@@ -1589,6 +1596,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     </tr>
     <tr><td class=blank colspan=2>
     <form action="<?= URLHelper::getLink() ?>" method="POST">
+    <?= CSRFProtection::insertToken() ?>
     <table width="99%" border="0" cellpadding="2" cellspacing="0" border=0 align="center">
     <tr>
         <td class="steel1" width="40%" align="left">&nbsp; <font size=-1><b><?=_("Nutzer in die Veranstaltung eintragen")?></b></font>
@@ -1634,6 +1642,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
     echo "<tr>\n<td class=\"blank\" colspan=\"2\">&nbsp;</td></tr>\n";
     echo "<tr><td class=\"blank\" colspan=\"2\">\n";
     echo "<form action=\"".URLHelper::getLink()."\" method=\"post\">\n";
+    echo CSRFProtection::insertToken();
     echo "<input type=\"hidden\" name=\"studipticket\" value=\"$studipticket\">\n";
     echo "<input type=\"hidden\" name=\"cmd\" value=\"csv\">\n";
     echo "<table width=\"99%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\" border=\"0\" ";

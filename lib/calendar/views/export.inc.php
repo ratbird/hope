@@ -146,7 +146,8 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
             $params['content'] = $info['export'];
             $params['button'] = "<input type=\"image\" " . makeButton("zurueck", "src"). " border=\"0\">";
         }
-        $params['form'] = "<form action=\"$send_sync\" method=\"post\">\n";
+        $params['form'] = "<form action=\"$send_sync\" method=\"post\">\n"
+            . CSRFProtection::insertToken();
         $send_file = "";
 
         echo "<tr><th align=\"left\" width=\"100%\">\n<font size=\"-1\">";
@@ -179,7 +180,8 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         echo _("Exportieren Ihrer Kalenderdaten")."</font>\n</th></tr>\n";
 
         $tooltip = _("Es werden nur Termine von Veranstaltungen exportiert, die zuvor im Menüpunkt \"Veranstaltungstermine\" ausgewählt wurden.");
-        $params['form'] = "<form name=\"Formular\" action=\"$PHP_SELF?cmd=export&atime=$atime\" method=\"post\">\n";
+        $params['form'] = "<form name=\"Formular\" action=\"$PHP_SELF?cmd=export&atime=$atime\" method=\"post\">\n"
+            . CSRFProtection::insertToken();
         $params['content'] = _("Bitte w&auml;hlen Sie, welche Termine exportiert werden sollen:") . "</font></div>\n"
                 . "<br>&nbsp; &nbsp; <select name=\"extype\" size=\"1\">\n"
                 . "<option value=\"PERS\"" . ($extype == 'PERS' ? 'selected="selected"' : '')
@@ -227,7 +229,8 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         echo _("Importieren Ihrer Kalenderdaten")."</font>\n</th></tr>\n";
 
         $params['form'] = "<form action=\"$PHP_SELF?cmd=export&atime=$atime\" method=\"post\" "
-                . "enctype=\"multipart/form-data\" name=\"import_form\">\n";
+            . "enctype=\"multipart/form-data\" name=\"import_form\">\n"
+            . CSRFProtection::insertToken();
         $params['content'] = _("Sie k&ouml;nnen Termine importieren, die sich in einer iCalendar-Datei befinden.")
                 . "<br><br>" . _("Klicken Sie auf \"Durchsuchen\", um eine Datei auszuwählen.")
                 . "</div>\n<br>&nbsp; &nbsp; <input type=\"file\" name=\"importfile\" size=\"40\">\n";
@@ -240,7 +243,8 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         echo _("Synchronisieren Ihrer Kalenderdaten")."</font>\n</th></tr>\n";
 
         $params['form'] = "<form action=\"$PHP_SELF?cmd=export&atime=$atime\" method=\"post\" "
-                . "enctype=\"multipart/form-data\" name=\"sync_form\">\n";
+            . "enctype=\"multipart/form-data\" name=\"sync_form\">\n"
+            . CSRFProtection::insertToken();
         $params['content'] = _("Sie k&ouml;nnen Termine synchronisieren, die sich in einer iCalendar-Datei befinden.")
                 . "<br><br>" . _("Klicken Sie auf \"Durchsuchen\", um eine Datei auszuwählen.")
                 . "</div>\n<br>&nbsp; &nbsp; <input type=\"file\" name=\"importfile\" size=\"40\">\n";

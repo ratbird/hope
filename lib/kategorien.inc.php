@@ -61,10 +61,6 @@ function print_freie($username) {
                 echo "<br>\n";
             echo '<input type="hidden" name="freie_id[]" value="'.$db->f("kategorie_id")."\">\n";
             echo '<p class="info"><input type="text" name="freie_name[]" style="width: 50%" value="' . htmlReady($db->f("name")).'" size="40">';
-            //echo '&nbsp; &nbsp; &nbsp; <input type=checkbox name="freie_secret['.$count.']" value="1"';
-            //IF ($visibility == VISIBILITY_ME)
-            //    echo " checked";
-            //echo ">" . _("f&uuml;r andere unsichtbar") . "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
             switch ($visibility) {
                 case VISIBILITY_ME:
                     $vis_text = _("sichtbar für mich selbst");
@@ -169,10 +165,10 @@ function verify_delete_freie($kategorie_id) {
 }
 
 function update_freie() {
-    global $user, $freie_id,$freie_name,$freie_content,$freie_secret;
+    global $user, $freie_id,$freie_name,$freie_content;
     $db = new DB_Seminar;
     $max = sizeof($freie_id);
-    FOR ($i=0; $i < $max; $i++) {
+    for ($i=0; $i < $max; $i++) {
         $now = time();
         $name = $freie_name[$i];
         if ($name === '') {
@@ -180,18 +176,8 @@ function update_freie() {
             continue;
         }
         $content = $freie_content[$i];
-        $secret = $freie_secret[$i];
-        if ($content === '' && !$secret) {
-            $secret = 1;
-            parse_msg ('info§' . _("Kategorie ohne Inhalt wurde versteckt!"));
-        }
         $id = $freie_id[$i];
         $db->query("UPDATE kategorien SET name='$name', content='$content', chdate='$now' WHERE kategorie_id='$id'");
-        if ($secret) {
-            set_homepage_element_visibility($user->id, 'kat_'.$id, VISIBILITY_ME);
-        } else {
-            set_homepage_element_visibility($user->id, 'kat_'.$id, get_default_homepage_visibility($user->id));
-        }
     }
     parse_msg ("msg§" . _("Kategorien ge&auml;ndert!"));
 }

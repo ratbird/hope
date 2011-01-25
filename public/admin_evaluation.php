@@ -102,9 +102,6 @@ include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');
 
 if ($list || $view) {
-    URLHelper::bindLinkParam('list', $list);
-    URLHelper::bindLinkParam('view_mode', $view_mode);
-    URLHelper::bindLinkParam('view', $view);
     include 'lib/include/admin_search_form.inc.php';
 }
 

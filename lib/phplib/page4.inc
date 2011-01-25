@@ -60,22 +60,7 @@ function page_open($feature) {
   }
 
   require_once 'lib/classes/CSRFProtection.php';
-  // TODO (mlunzena): scharf schalten sobald die Formulare umgestellt sind
-  // CSRFProtection::verifySecurityToken();
-  if (!CSRFProtection::verifyRequest()) {
-      require_once 'lib/classes/PageLayout.php';
-      PageLayout::addStyle(
-          ".invalid-security-token {
-              position: absolute;
-              top: 0;
-              right: 0;
-              background: white;
-              color: red;
-              z-index: 100;
-              padding: 0.5em;
-          }");
-      PageLayout::addBodyElements('<div class="invalid-security-token">Ungültiges Token (StEP212)</div>');
-  }
+  CSRFProtection::verifySecurityToken();
 }
 
 function page_close() {

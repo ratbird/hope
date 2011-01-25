@@ -1,5 +1,5 @@
 <form action="<?= $controller->url_for('admin/plugin/search') ?>" method="post" style="float: right;">
-    <?= CSRFProtection::insertToken() ?>
+    <?= CSRFProtection::tokenTag() ?>
     <?= _('Suche nach Plugins:') ?>
     <input name="search" type="text" size="20" value="<?= htmlReady($search) ?>">
     <?= makeButton('suchen', 'input' , _('Suche starten')) ?>
@@ -64,7 +64,7 @@
                 </td>
                 <td class="plugin_install">
                     <form action="<?= $controller->url_for('admin/plugin/install', $name) ?>" method="post">
-                        <?= CSRFProtection::insertToken() ?>
+                        <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
                         <input type="image" name="install" src="<?= Assets::image_path('icons/16/blue/install.png') ?>" title="<?= _('Plugin installieren') ?>">
                     </form>
@@ -80,7 +80,7 @@
     </h3>
 
     <form action="<?= $controller->url_for('admin/plugin/install') ?>" enctype="multipart/form-data" method="post">
-        <?= CSRFProtection::insertToken() ?>
+        <?= CSRFProtection::tokenTag() ?>
         <?= _('Plugin-Datei:') ?>
         <input name="upload_file" type="file" size="40">
         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">

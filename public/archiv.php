@@ -223,7 +223,7 @@ include('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
                     <?= MessageBox::success($message, $details) ?>
                 <? endif ?>
                 <form  name="search" method="post" action="<?= URLHelper::getLink() ?>" >
-                    <?= CSRFProtection::insertToken() ?>
+                    <?= CSRFProtection::tokenTag() ?>
                     <table border=0 cellspacing=0 cellpadding=2>
                         <tr <? $cssSw->switchClass() ?>>
                             <td class="<? echo $cssSw->getClass() ?>" colspan=2>

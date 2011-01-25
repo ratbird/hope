@@ -152,7 +152,7 @@ function printSelectGroup($infobox, $groups)
         . "   <td valign=\"top\"><font size=\"-1\">\n"
         . _("Bitte wählen Sie ein Gruppe aus, deren Daten Sie in eine vCard-Datei exportieren möchten:")."\n"
         . "    <form action=\"$PHP_SELF\" method=post>\n"
-        . CSRFProtection::insertToken()
+        . CSRFProtection::tokenTag()
         . "       &nbsp;<select name=\"groupid\" style=\"vertical-align:middle;\">\n";
     // the groups
     for ($i=0;$i<=sizeof($groups)-1;$i++){

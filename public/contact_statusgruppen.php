@@ -271,7 +271,7 @@ if (is_array($msgs)) {
     if ($cmd!="edit_statusgruppe") { // normale Anzeige
 ?>
         <form action="<? echo URLHelper::getLink('?cmd=add_new_statusgruppe') ?>" method="post">
-        <?= CSRFProtection::insertToken() ?>
+        <?= CSRFProtection::tokenTag() ?>
         <?
           echo"<input type=\"HIDDEN\" name=\"range_id\" value=\"$range_id\">";
               echo"<input type=\"HIDDEN\" name=\"view\" value=\"$view\">";
@@ -287,7 +287,7 @@ if (is_array($msgs)) {
     } else { // editieren einer bestehenden Statusgruppe
 ?>
         <form action="<? echo URLHelper::getLink('?cmd=edit_existing_statusgruppe') ?>" method="POST">
-        <?= CSRFProtection::insertToken() ?>
+        <?= CSRFProtection::tokenTag() ?>
         <?
         $db = new DB_Seminar("SELECT name, size FROM statusgruppen WHERE statusgruppe_id = '$edit_id'");
         if ($db->next_record()) {
@@ -319,7 +319,7 @@ $db->query ("SELECT name, statusgruppe_id, size FROM statusgruppen WHERE range_i
 if ($db->num_rows()>0) {   // haben wir schon Gruppen? dann Anzeige
     ?>
 <form action="<? echo URLHelper::getLink('?cmd=move_person') ?>" method="post">
-<?= CSRFProtection::insertToken() ?>
+<?= CSRFProtection::tokenTag() ?>
 <table width="100%" border="0" cellspacing="0">
     <tr>
         <td class="steel1" valign="top" width="50%">

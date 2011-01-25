@@ -3,7 +3,7 @@
 <h2><?=_("Bearbeiten von Konfigurationsparameter für den Nutzer: ")?><?=$search_user['fullname']?></h2>
 <? endif; ?>
 <form action="<?= $controller->url_for('admin/configuration/user_configuration/update') ?>" method=post>
-    <?= CSRFProtection::insertToken() ?>
+    <?= CSRFProtection::tokenTag() ?>
     <table class="default">
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td><?=_("Name:")?>(<em>field</em>) </td>

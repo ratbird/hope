@@ -18,7 +18,7 @@ $infobox['content'] = array(
 <h1><?= _("Studiengruppe anlegen") ?></h1>
 
 <form action="<?= $controller->url_for('course/studygroup/create') ?>" method=post>
-<?= CSRFProtection::insertToken() ?>
+<?= CSRFProtection::tokenTag() ?>
 
 <table class="blank" width="85%" cellspacing="5" cellpadding="0" border="0">
 <tr>

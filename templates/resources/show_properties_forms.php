@@ -1,6 +1,6 @@
 <table border="0" celpadding="2" cellspacing="0" width="99%" align="center">
 <form method="post" action="<?= UrlHelper::getLink('?change_object_properties='. $resObject->getId()) ?>">
-    <?= CSRFProtection::insertToken() ?>
+    <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="view" value="edit_object_properties">
     <tr>
         <td class="<?= $cssSw->getClass() ?>" width="4%">

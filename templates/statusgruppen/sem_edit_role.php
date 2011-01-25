@@ -1,5 +1,5 @@
 <form action="<?= URLHelper::getLink() ?>" method="post">
-    <?= CSRFProtection::insertToken() ?>
+    <?= CSRFProtection::tokenTag() ?>
     <? if (!$edit_role) : ?>
     <?= _("Vorlagen") ?>: <select name="presetName">
         <?

@@ -720,7 +720,7 @@ function form($refresh = FALSE) {
             . "</font></td></tr>";
     }
     $print.= "\n<form enctype=\"multipart/form-data\" name=\"upload_form\" action=\"" . URLHelper::getLink('#anker') . "\" method=\"post\">";
-    $print.= CSRFProtection::insertToken();
+    $print.= CSRFProtection::tokenTag();
     $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("1. Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuw&auml;hlen.") . " </font></td></tr>";
     $print.= "\n<tr>";
     $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
@@ -1279,7 +1279,7 @@ function link_form ($range_id, $updating=FALSE) {
 
     $print.="</font></td></tr>";
     $print.= "\n<form enctype=\"multipart/form-data\" name=\"link_form\" action=\"" . URLHelper::getLink('#anker') . "\" method=\"post\">";
-    $print.= CSRFProtection::insertToken();
+    $print.= CSRFProtection::tokenTag();
     $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("1. Geben Sie hier den <b>vollständigen Pfad</b> zu der Datei an, die Sie verlinken wollen.") . " </font></td></tr>";
     $print.= "\n<tr>";
     $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";

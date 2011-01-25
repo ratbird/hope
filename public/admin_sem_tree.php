@@ -210,7 +210,7 @@ $the_tree->showSemTree();
     <b><?=_("Merkliste:")?></b>
     </p>
     <form action="<?=$the_tree->getSelf("cmd=MarkList")?>" method="post">
-    <?= CSRFProtection::insertToken() ?>
+    <?= CSRFProtection::tokenTag() ?>
     <select multiple size="20" name="sem_mark_list[]" style="font-size:8pt;width:100%">
     <?
     $cols = 50;

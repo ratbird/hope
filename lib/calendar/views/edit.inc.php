@@ -51,7 +51,7 @@ if (!empty($err))
 
 echo "<tr><td class=\"blank\" valign=\"top\">\n";
 echo "<form name=\"Formular\" action=\"$PHP_SELF?cmd=edit\" method=\"post\">";
-echo CSRFProtection::insertToken();
+echo CSRFProtection::tokenTag();
 echo "<table align=\"center\" class=\"blank\" width=\"98%\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">\n";
 
 if (isset($atermin) && strtolower(get_class($atermin)) == "seminarevent") {

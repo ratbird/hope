@@ -268,7 +268,7 @@ class ExternEdit {
         $out = "\n<!-- BEGIN Content -->\n";
         $out .= "<tr><td class=\"$class\" width=\"100%\" align=\"left\">\n";
         $out .= '<form name="edit_form" action="' . URLHelper::getLink('?com=store#anker') .  '" method="post">';
-        $out .= CSRFProtection::insertToken();
+        $out .= CSRFProtection::tokenTag();
         $out .= "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n";
         $out .= "<tr>" . printcontent("100%", FALSE, $content, "", FALSE) . "</tr>";
         $out .= "$submit</table>\n</form>\n</td></tr>\n";

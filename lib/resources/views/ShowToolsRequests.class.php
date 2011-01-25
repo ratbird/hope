@@ -153,7 +153,7 @@ class ShowToolsRequests
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
         <form method="POST" name="tools_requests_form" action="<?echo $PHP_SELF ?>?tools_requests_start=1">
-            <?= CSRFProtection::insertToken() ?>
+            <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="view" value="edit_request">
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
@@ -287,7 +287,7 @@ class ShowToolsRequests
             }';
             echo chr(10) . '</script>';
             echo chr(10) . '<form name="list_requests_form" method="post" action="'.$GLOBALS['PHP_SELF'].'">';
-            echo CSRFProtection::insertToken();
+            echo CSRFProtection::tokenTag();
             echo chr(10) . '<div align="right">
                 <a href="#" onClick="auswahl_umkehr();return false;">'
                 . makeButton('auswahlumkehr', 'img', _("Auswahl umkehren"))
@@ -379,7 +379,7 @@ class ShowToolsRequests
             . rawurlencode($PHP_SELF . "?working_on_request=$request_id");
         ?>
         <form method="POST" action="<?echo $PHP_SELF ?>?working_on_request=<?=$request_id?>">
-        <?= CSRFProtection::insertToken() ?>
+        <?= CSRFProtection::tokenTag() ?>
         <input type="hidden" name="view" value="edit_request">
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
             <tr>

@@ -167,7 +167,7 @@ unset($themen);
 $themen =& $sem->getIssues(true);   // read again, so we have the actual sort order and so on
 ?>
 <form action="<?= URLHelper::getLink() ?>" method="post">
-<?= CSRFProtection::insertToken() ?>
+<?= CSRFProtection::tokenTag() ?>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <tr>
         <td class="blank" colspan="2">

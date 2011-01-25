@@ -199,7 +199,7 @@ while ($tmp_first_date < $end_date) {
                 <td colspan="9" class="blank">
                     <? if (!$_LOCKED) { ?>
                         <form action="<?= URLHelper::getLink() ?>" method="post">
-                        <?= CSRFProtection::insertToken() ?>
+                        <?= CSRFProtection::tokenTag() ?>
                         <? } ?>
                         <font size="-1">
                         &nbsp;<?=_("Startsemester")?>:&nbsp;
@@ -322,7 +322,7 @@ while ($tmp_first_date < $end_date) {
                             $termine =& $sem->getSingleDatesForCycle($metadate_id);
                             ?>
                             <form action="<?= URLHelper::getLink() ?>" method="post" name="Formular">
-                            <?= CSRFProtection::insertToken() ?>
+                            <?= CSRFProtection::tokenTag() ?>
                             <input type="hidden" name="cycle_id" value="<?=$metadate_id?>">
                 <tr>
                     <td align="center" colspan="9" class="steel1">
@@ -432,7 +432,7 @@ while ($tmp_first_date < $end_date) {
                 <tr>
                     <td align="left" colspan="9" class="steel1">
                         <form action="<?= URLHelper::getLink() ?>" method="post" name="Formular">
-                        <?= CSRFProtection::insertToken() ?>
+                        <?= CSRFProtection::tokenTag() ?>
                         <table cellpadding="1" cellspacing="0" border="0" width="100%">
                             <?
                             $count = 0;

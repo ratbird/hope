@@ -920,7 +920,7 @@ function forum_print_toolbar ($id="") {
         if ($forum["toolbar"] == "open") {
             if ($forum["view"] != "tree" && $forum["view"] != "mixed") {
                 $print .= "<form name=\"sortierung\" method=\"post\" action=\"".URLHelper::getLink("#anker")."\">";
-                $print .= CSRFProtection::insertToken();
+                $print .= CSRFProtection::tokenTag();
             }
             $print .= "<table class=\"blank\" width=\"100%\" border=0 cellpadding=0 cellspacing=0><tr><td class=\"blank\">&nbsp;</td></tr><tr>";
             $print .= "<td class=\"steelkante\" valign=\"middle\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"22\" width=\"5\"></td>";
@@ -979,7 +979,7 @@ function forum_print_toolbar ($id="") {
         $print .= "</td></tr></table>\n";
         if ($id) {  // Schreibmodus, also form einbauen
             $print .= '<form name="forumwrite" method="post" action="'.URLHelper::getLink('#anker').'">';
-            $print .= CSRFProtection::insertToken();
+            $print .= CSRFProtection::tokenTag();
         }
 
         return $print;
@@ -1339,7 +1339,7 @@ function printposting ($forumposting) {
             } else {
                 if (object_check_user($forumposting["id"], "rate") == FALSE) {  // wenn er noch nicht bewertet hat
                     $addon .= "<div align=\"center\"><font size=\"-1\">Dieser Beitrag war<br><font size=\"-2\">(Schulnote)</font><br><form method=post action=".URLHelper::getLink("#anker").">";
-                    $addon .= CSRFProtection::insertToken();
+                    $addon .= CSRFProtection::tokenTag();
                     $addon .= "<b>&nbsp;<font size=\"2\" color=\"009900\">1";
                     $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=1>";
                     $addon .= "<input type=radio name=rate[".$forumposting["id"]."] value=2>";
@@ -1870,7 +1870,7 @@ $searchfield = "
 <td class=\"blank\">&nbsp;</td></tr>
 <td class=\"blank\" width=\"302\" align=\"center\">
    <form name=\"search\" method=\"post\" action=\"".URLHelper::getLink('')."\">
-   ". CSRFProtection::insertToken() ."
+   ". CSRFProtection::tokenTag() ."
     <table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" valign=\"top\">
         <tr class=\"steel1\">
             <td style=\"vertical-align: top;\">
@@ -1960,7 +1960,7 @@ function forum_move_navi ($topic_id) {
                 </td>
                 <td class="steel1" width="80%">
             <?      echo "<form action=\"".URLHelper::getLink('')."\" method=\"POST\">"; ?>
-                    <?= CSRFProtection::insertToken() ?>
+                    <?= CSRFProtection::tokenTag() ?>
                     <input type="image" name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr_2right.png" border="0" <?=tooltip(_("dahin verschieben"))?>>&nbsp;
                     <select Name="sem_id" size="1">
             <?      while ($db->next_record()) {
@@ -1986,7 +1986,7 @@ function forum_move_navi ($topic_id) {
                 </td>
                 <td class="steel1" width="80%">
             <?      echo "<form action=\"".URLHelper::getLink('')."\" method=\"POST\">"; ?>
-                    <?= CSRFProtection::insertToken() ?>
+                    <?= CSRFProtection::tokenTag() ?>
                     <input type=image name="SUBMIT" value="Verschieben" src="<?= $GLOBALS['ASSETS_URL'] ?>images/icons/16/yellow/arr_2right.png" border=0 <?=tooltip(_("dahin verschieben"))?>>&nbsp;
                 <select Name="inst_id" size="1">
             <?      while ($db2->next_record()) {

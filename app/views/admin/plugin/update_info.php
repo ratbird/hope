@@ -1,7 +1,7 @@
 <?= sprintf(ngettext('Es ist ein Update für ein Plugin verfügbar', 'Es sind Updates für %d Plugins verfügbar', $num_updates), $num_updates) ?>
 
 <form action="<?= $controller->url_for('admin/plugin/install_updates') ?>" method="post">
-    <?= CSRFProtection::insertToken() ?>
+    <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
     <div style="margin: 1ex;">
         <? foreach ($plugins as $plugin): ?>

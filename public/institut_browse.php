@@ -102,7 +102,7 @@ $infobox = array(array("kategorie"  => _("Information:"),
                         )
                 );
 $such_form = "<form action=\"".URLHelper::getLink("?cmd=suche")."\" method=\"post\">" . _("Bitte geben Sie hier Ihre Suchkriterien ein:") . "<br>"
-            . CSRFProtection::insertToken()
+            . CSRFProtection::tokenTag()
             . _("Name der Einrichtung:") . "<br>"
             . "<input type=\"text\" name=\"search_name\" style=\"width:95%;\"><br>"
             . _("Einrichtung dieses Mitarbeiters:") . "<br>"

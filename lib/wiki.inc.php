@@ -1024,7 +1024,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     }
 
     $cont .= "<p><form method=\"post\" action=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=edit")."\">";
-    $cont .= CSRFProtection::insertToken();
+    $cont .= CSRFProtection::tokenTag();
     $cont .= "<textarea name=\"body\" class=\"add_toolbar resizable\" cols=\"80\" rows=\"15\">".htmlready($body)."</textarea>\n";
     $cont .= "<input type=\"hidden\" name=\"wiki\" value=\"".urlencode($keyword)."\">";
     $cont .= "<input type=\"hidden\" name=\"version\" value=\"$version\">";
@@ -1199,7 +1199,7 @@ function getSearchbox($preselection, $keyword)
 {
     // search
     $search_text="<form method='post' action='".URLHelper::getLink('')."'>";
-    $search_text.= CSRFProtection::insertToken();
+    $search_text.= CSRFProtection::tokenTag();
     $search_text.="<input type='hidden' name='view' value='search'>";
     $search_text.="<input type='hidden' name='keyword' value='".htmlReady($keyword)."'>";
     $search_text.="<input type='text' size='10' name='searchfor' value='".htmlReady($preselection)."'>";

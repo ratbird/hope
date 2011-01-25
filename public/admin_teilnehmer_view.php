@@ -98,7 +98,7 @@ while ($db->next_record()) {
     $active[$db->f("seminar_id")][$db->f("datafield_id")] = TRUE;
 }
 echo "<form action=\"". URLHelper::getLink() ."\" method=\"post\">";
-echo CSRFProtection::insertToken();
+echo CSRFProtection::tokenTag();
 foreach ($SEM_CLASS as $key => $val) {
     echo $tbl2->headerRow(array("&nbsp;<b>". $val["name"]."</b>", "<b>Status</b>", "<b>Anzeige</b>"));
     echo $tbl2->closeRow();

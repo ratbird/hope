@@ -631,7 +631,7 @@ function makeNewVoteSelectForm($action){
     $arraysize = count($range);
     $html = "    <td class=\"steel1\" style=\"vertical-align:middle;\" nowrap>\n"
           . "     <form action=\"".URLHelper::getLink($action)."\" method=post><br>&nbsp;\n"
-          .       CSRFProtection::insertToken()
+          .       CSRFProtection::tokenTag()
 
           // vote/test selection
           . "     <select name=\"type\" style=\"vertical-align:middle;\">"
@@ -684,7 +684,7 @@ function makeDisplaySelectForm($action){
     $arraysize = count($range);
     $html .="     <td class=\"steelkante\" style=\"vertical-align:middle;\" nowrap>\n"
           . "       <form action=\"".URLHelper::getLink($action)."\" method=post>"
-          . CSRFProtection::insertToken()
+          . CSRFProtection::tokenTag()
           . "<font size=\"-1\"><br>&nbsp;\n"
           . "      ".$label["selections_selectrange_text"]."\n"
      // Auswahlliste erstellen
@@ -722,7 +722,7 @@ function makeSearchForm(){
     global $label, $searchRange;
     $html .="     <td class=\"steelgraulight\" style=\"vertical-align:middle;\" nowrap>\n"
           . "       <form action=\"".URLHelper::getLink($action)."\" method=post>"
-          .          CSRFProtection::insertToken()
+          .          CSRFProtection::tokenTag()
           . "        <font size=\"-1\" style=\"vertical-align:middle;\"><br>&nbsp;\n"
           . "        ".$label["search_text"]."\n"
           . "        <input type=\"text\" name=\"searchRange\"  value=\"$searchRange\" size=\"30\" style=\"vertical-align:middle;\">"

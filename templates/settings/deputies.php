@@ -12,7 +12,7 @@
         </td>
         <td class="blank" align="left" width="50%">
             <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('view' => 'deputies', 'cmd' => 'set_deputy', 'studipticket' => get_ticket())); ?>">
-                <?= CSRFProtection::insertToken() ?>
+                <?= CSRFProtection::tokenTag() ?>
                 <input type="IMAGE" src="<?= Assets::image_path('icons/16/yellow/arr_2left.png'); ?>" <?= tooltip(_("NutzerIn hinzufügen")); ?> border="0" name="add_deputy">
                 <?php print QuickSearch::get("deputy_id", new PermissionSearch("user", _("Vor-, Nach- oder Benutzername"), "user_id", array('permission' => $permission)))
                 ->withButton()
@@ -24,7 +24,7 @@
        <td class="blank" colspan="2" align="center">
             <br/>
             <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('view' => 'deputies', 'cmd' => 'change_deputies', 'studipticket' => get_ticket())); ?>">
-            <?= CSRFProtection::insertToken() ?>
+            <?= CSRFProtection::tokenTag() ?>
             <table width="50%" align="center" cellpadding="8" cellspacing="0" border="0">
                 <tr>
                 <?php if ($deputies) { ?>

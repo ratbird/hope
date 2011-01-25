@@ -26,7 +26,7 @@
             <?=_("Geben Sie Ihre E-Mail-Adresse ein:")?><br>
         </div>
         <form name="newpwd" method="post" action="<?=$_SERVER['REQUEST_URI']?>">
-            <?= CSRFProtection::insertToken() ?>
+            <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="step" value="1">
             <table border="0" cellspacing="0" cellpadding="4">
                 <tr valign=top align=left>

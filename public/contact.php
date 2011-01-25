@@ -122,7 +122,7 @@ $size_of_book = GetSizeofBook()
 
 ?>
 <form action="<? echo $PHP_SELF ?>?cmd=search#anker" method="post">
-<?= CSRFProtection::insertToken() ?>
+<?= CSRFProtection::tokenTag() ?>
 <table width = "100%" cellspacing="0" border="0" cellpadding="0">
     <tr>
         <td class="blank" align="left">

@@ -513,7 +513,7 @@ class StudipSemTreeViewAdmin extends TreeView {
             $view = new DbView();
             $rs = $view->get_query("view:SEM_TREE_GET_LONELY_FAK");
             $content .= "\n<p><form action=\"" . $this->getSelf("cmd=InsertFak") . "\" method=\"post\">"
-                . CSRFProtection::insertToken()
+                . CSRFProtection::tokenTag()
                 . _("Stud.IP Fakult&auml;t einf&uuml;gen:")
                 . "&nbsp;\n<select style=\"width:200px;vertical-align:middle;\" name=\"insert_fak\">";
             while($rs->next_record()){
@@ -564,7 +564,7 @@ class StudipSemTreeViewAdmin extends TreeView {
         $form_name = DbView::get_uniqid();
         $content = "<form name=\"$form_name\" action=\"" . $this->getSelf("cmd=MarkSem") ."\" method=\"post\">
         <input type=\"hidden\" name=\"item_id\" value=\"$item_id\">";
-        $content .= CSRFProtection::insertToken();
+        $content .= CSRFProtection::tokenTag();
         $group_by_data = $snap->getGroupedResult("sem_number", "seminar_id");
         $sem_data = $snap->getGroupedResult("seminar_id");
         $group_by_duration = $snap->getGroupedResult("sem_number_end", array("sem_number","seminar_id"));
@@ -660,7 +660,7 @@ class StudipSemTreeViewAdmin extends TreeView {
 
     function getEditItemContent(){
         $content = "\n<form name=\"item_form\" action=\"" . $this->getSelf("cmd=InsertItem&item_id={$this->edit_item_id}") . "\" method=\"POST\">";
-        $content .= CSRFProtection::insertToken();
+        $content .= CSRFProtection::tokenTag();
         $content .= "\n<input type=\"HIDDEN\" name=\"parent_id\" value=\"{$this->tree->tree_data[$this->edit_item_id]['parent_id']}\">";
         $content .= "\n<table width=\"90%\" border =\"0\" style=\"border-style: solid; border-color: #000000;  border-width: 1px;font-size: 10pt;\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\">";
         $content .=  $this->getItemMessage($this->edit_item_id,2);

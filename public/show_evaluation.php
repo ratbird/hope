@@ -100,7 +100,7 @@ $br = new HTMpty( "br" );
 $form = new HTM( "form" );
 $form->attr( "action", $PHP_SELF."?evalID=".$evalID );
 $form->attr( "method", "post" );
-$form->html(CSRFProtection::insertToken());
+$form->html(CSRFProtection::tokenTag());
 
 $titlebar = EvalCommon::createTitle( _("Stud.IP Online-Evaluation"), Assets::image_path('icons/16/white/test.png') );
 $form->cont( $titlebar );

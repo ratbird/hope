@@ -183,7 +183,7 @@ $this->msg[42] = array (
 $this->msg[43] = array (
         "mode" => "info",
         "msg"=> "<form action=\"%s\" method=\"post\">"
-            . CSRFProtection::insertToken()
+            . CSRFProtection::tokenTag()
             ."<table border=\"0\" cellspacing=\"5\" cellpadding=\"0\"><tr><td valign=\"top\">"
             . _("Wollen Sie die Anfrage wirklich ablehnen?")
             ."<br><input type=\"image\" ".makeButton('ja2', 'src')." align=\"middle\"></a>"

@@ -28,7 +28,7 @@
  * input[@type=hidden] element. This is easily done by calling:
  *
  * \code
- * echo CSRFProtection::insertToken();
+ * echo CSRFProtection::tokenTag();
  * \endcode
  *
  * Checking the token is implicitly done when calling #page_open in file
@@ -137,7 +137,7 @@ class CSRFProtection
      *
      * @return string  the HTML snippet containing the input element
      */
-    static function insertToken()
+    static function tokenTag()
     {
         return sprintf('<input type="hidden" name="%s" value="%s">',
                        self::TOKEN,

@@ -5,7 +5,7 @@
 <tr>
     <td colspan="5" class="blank">
         <form action="<?= URLHelper::getLink('#'. $role_data['id']) ?>" method="post">
-        <?= CSRFProtection::insertToken() ?>
+        <?= CSRFProtection::tokenTag() ?>
         <table cellspacing="0" cellpadding="1" border="0" width="100%">
             <tr>
                 <td class="printhead" colspan="2">

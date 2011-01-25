@@ -76,7 +76,7 @@ if (!$stm_obj->isNew()){
         <tr><td class="blank">
         <div style="margin:20px;font-size:10pt;">
         <form action="<? echo $PHP_SELF.'?cmd=do_enter&stm_instance_id='.$stm_obj->getId().'&send_from_search=1&send_from_search_page='.urlencode($send_from_search_page)?>" method="post">
-        <?= CSRFProtection::insertToken() ?>
+        <?= CSRFProtection::tokenTag() ?>
         <?=$out?>
         <br><br>
         <table style="font-size:10pt;"  border="0" cellpadding="2" cellspacing="0">

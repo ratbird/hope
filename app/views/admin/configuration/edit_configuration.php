@@ -10,7 +10,7 @@
 <? endif; ?>
 
 <form action="<?= $controller->url_for('admin/configuration/edit_configuration/'.$edit['config_id']) ?>" method=post>
-    <?= CSRFProtection::insertToken() ?>
+    <?= CSRFProtection::tokenTag() ?>
     <table class="default">
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td><?= _("Name") ?>:</td>

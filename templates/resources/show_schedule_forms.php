@@ -1,5 +1,5 @@
 <form name="Formular" method="post" action="<?= URLHelper::getLink('?change_object_schedules='. (!$resAssign->isNew() ?  $resAssign->getId() : 'NEW')); ?>#anker">
-<?= CSRFProtection::insertToken() ?>
+<?= CSRFProtection::tokenTag() ?>
 <table border="0" cellpadding="2" cellspacing="0" width="99%" align="center">
     <input type="hidden" name="quick_view" value="<?=$used_view ?>">
     <input type="hidden" name="quick_view_mode" value="<?=$view_mode ?>">

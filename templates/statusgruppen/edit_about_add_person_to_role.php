@@ -5,7 +5,7 @@
     <td class="blank" valign="top">
         <div style="padding-left: 10px; background-image: url('<?=$GLOBALS['ASSETS_URL']?>/images/steel1.jpg');">
         <form action="<?= URLHelper::getLink('?view=Karriere') ?>" method="post">
-            <?= CSRFProtection::insertToken() ?>
+            <?= CSRFProtection::tokenTag() ?>
             <br>
             <? if (!$subview_id || !($groups = GetAllStatusgruppen($subview_id))) { ?>
             <?=_("Einrichtung auswählen")?>:<br>

@@ -3,7 +3,7 @@
         <?= formatReady($question) ?>
         <div style="margin-top: 0.5em;">
             <form action="<?= $action ?>" method="post">
-                <?= CSRFProtection::insertToken() ?>
+                <?= CSRFProtection::tokenTag() ?>
                 <?foreach($elements as $e) :?>
                     <div style="margin-top: 0.5em; text-align: left;">
                         <?= $e?>

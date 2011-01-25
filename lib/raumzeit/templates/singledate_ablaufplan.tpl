@@ -32,7 +32,7 @@
     <TD colspan="6" class="steel1" align="center">
         <? if (!$openAll) { ?>
         <FORM action="<?= URLHelper::getLink() ?>" method="post">
-        <?= CSRFProtection::insertToken() ?>
+        <?= CSRFProtection::tokenTag() ?>
         <? } ?>
         <TABLE border="0" cellspacing="0" cellpadding="1" width="99%">
             <TR>

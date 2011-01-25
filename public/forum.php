@@ -92,7 +92,7 @@ STUDIP.Forum.pruefe_name = function(){
 STUDIP.Forum.rate_template = function (id) {
   STUDIP.Dialogbox.openBox("Rating_for_<?= $open ?>", "<?= _("Bewertung des Beitrags") ?>",
 '<form method="post" action="<?=URLHelper::getLink("?view=$view&open=$open&flatviewstartposting=$flatviewstartposting#anker")?>">\
-<?= CSRFProtection::insertToken() ?>\
+<?= CSRFProtection::tokenTag() ?>\
 <div style="text-align:center">\
 <?=_("Schulnote")?>\
 <br>\
@@ -555,7 +555,7 @@ elseif ($user->id == "nobody" || $cmd=="move") {
     echo "\n<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td class=\"blank\"><br></td></tr></table>";
     if ($edit_id) {
         echo "<form name=\"forumwrite\" onsubmit=\"return STUDIP.Forum.pruefe_name()\" method=\"post\" action=\"".URLHelper::getLink("#anker")."\">";
-        echo CSRFProtection::insertToken();
+        echo CSRFProtection::tokenTag();
     }
 }
 //////////////////////////////////////////////////////////////////////////////////

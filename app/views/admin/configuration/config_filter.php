@@ -1,5 +1,5 @@
 <form action="<?= $controller->url_for('admin/configuration/configuration') ?>" method="post">
-    <?= CSRFProtection::insertToken() ?>
+    <?= CSRFProtection::tokenTag() ?>
     <select name="config_filter" onchange="this.form.submit();">
         <option value="-1"><?= _('alle anzeigen') ?></option>
     <? foreach ($allsections as $section): ?>

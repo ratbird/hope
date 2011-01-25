@@ -50,7 +50,7 @@
             <br>
 
             <form action="<?= URLHelper::getLink('') ?>" method="post" style="display: inline;">
-                <?= CSRFProtection::insertToken() ?>
+                <?= CSRFProtection::tokenTag() ?>
                 <input type="hidden" name="cmd" value="sort_person">
                 <input type="hidden" name="role_id" value="<?= $role_id ?>">
                 <table cellspacing="0" cellpadding="0" border="0" width="95%" style="margin: auto;">

@@ -34,7 +34,7 @@ function export_form($range_id, $ex_type = "", $filename = "", $format = "", $fi
     $filename = $xslt_filename;
     require_once ($PATH_EXPORT . "/export_xslt_vars.inc.php");
     $export_string .= "<form action=\"" . "export.php\" method=\"post\">";
-    $export_string .= CSRFProtection::insertToken();
+    $export_string .= CSRFProtection::tokenTag();
     $export_string .= "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr><td class=\"steel1\"> &nbsp; &nbsp; &nbsp; ";
 
     $export_string .= "<font size=\"-1\"><b> "._("Diese Daten exportieren: ") .  "</b></font>";

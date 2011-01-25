@@ -3,7 +3,7 @@
 <? if (empty($object_typ)) : ?>
 <h3><?= _('Verwaltung von generischen Datenfeldern') ?></h3>
 <form action="<?= $controller->url_for('admin/datafields/new/') ?>" method="post">
-<?= CSRFProtection::insertToken() ?>
+<?= CSRFProtection::tokenTag() ?>
 <table class="default">
     <tr class="steel1">
         <td>
@@ -31,7 +31,7 @@
 
 <h3><?= sprintf(_('Einen neuen Datentyp für die Kategorie "%s" erstellen'), $type_name) ?></h3>
 <form action="<?= $controller->url_for('admin/datafields/new/'.$object_typ) ?>" method=post>
-    <?= CSRFProtection::insertToken() ?>
+    <?= CSRFProtection::tokenTag() ?>
     <table class="default">
         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
             <td><?= _("Name") ?>:</td>

@@ -11,7 +11,7 @@
 <? endif ?>
 </h3>
 <form action="<?= $controller->url_for('admin/specification/edit') ?><?= ($rule) ? '/' . $rule['lock_id'] : '' ?>" method="post">
-    <?= CSRFProtection::insertToken() ?>
+    <?= CSRFProtection::tokenTag() ?>
     <table class="default">
         <tr class="steelgraulight">
             <td><?= _("Name der Regel *:") ?> </td>

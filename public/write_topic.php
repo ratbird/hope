@@ -104,7 +104,7 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
         else
             echo "<form name=Create method=post action=\"".URLHelper::getLink("?Create=TRUE")."\">";
 
-        echo CSRFProtection::insertToken();
+        echo CSRFProtection::tokenTag();
         echo "<input type=hidden name=\"parent_id\" value=\"$topic_id\">";
         echo "<input type=hidden name=\"root_id\" value=\"$root_id\">";
         print _("&Uuml;berschrift:") . " <br><input type=text name=name value=\"";

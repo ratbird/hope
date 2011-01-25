@@ -60,7 +60,7 @@ function createFormHeader(&$vote)
       "value=\"".(isset($_POST["changeAnswerButton_x"]) ||
           (isset($_POST["answerChanged"]) && !isset($_POST["answer"]))
           ? YES : NO). "\">\n";
-   $html .= CSRFProtection::insertToken();
+   $html .= CSRFProtection::tokenTag();
    return $html;
 }
 

@@ -171,7 +171,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     echo "<tr><td class=\"blank\" width=\"100%\">\n";
     echo "\n<table width=\"75%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n";
     echo "<form method=\"post\" action=\"".URLHelper::getLink()."\">\n";
-    echo CSRFProtection::insertToken();
+    echo CSRFProtection::tokenTag();
     echo '<tr><td class="blank" colspan="' . (sizeof($enabled_modules) + 3);
     echo "\">&nbsp;</td></tr>\n";
     echo '<tr><td class="blank" align="center" colspan="' . (sizeof($enabled_modules) + 3) . '">';

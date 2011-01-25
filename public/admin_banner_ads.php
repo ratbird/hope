@@ -233,7 +233,7 @@ function edit_banner_pic($banner_data) {
     echo $table->closeRow();
 
     print "<form enctype=\"multipart/form-data\" action=\"$PHP_SELF?cmd=upload&view=edit\" method=\"POST\">";
-    echo CSRFProtection::insertToken();
+    echo CSRFProtection::tokenTag();
     print $table->row(array(_("1. Bilddatei auswählen:")." <input name=\"imgfile\" type=\"file\" cols=45>"),"",0);
     print $table->row(array(_("2. Bilddatei hochladen:")." <input type=\"IMAGE\" " . makeButton("absenden", "src") . " border=0 value=\"absenden\">"),"",0);
     print "</form>";
@@ -255,7 +255,7 @@ function edit_banner_data($banner_data) {
     echo $table->open();
 
     print "<form action=\"$PHP_SELF?cmd=edit&i_view=edit\" method=\"post\">";
-    echo CSRFProtection::insertToken();
+    echo CSRFProtection::tokenTag();
     if ($banner_data["ad_id"]) {
         print "<input type=hidden name=\"ad_id\" value=\"" . $banner_data["ad_id"] . "\">";
     }

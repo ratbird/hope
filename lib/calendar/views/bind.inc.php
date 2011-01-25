@@ -65,7 +65,7 @@ if (!empty($calendar_sess_control_data["view_prv"]))
     echo "<form action=\"$PHP_SELF?cmd={$calendar_sess_control_data['view_prv']}\" method=\"post\">";
 else
     echo "<form action=\"$PHP_SELF?cmd=showweek\" method=\"post\">";
-echo CSRFProtection::insertToken();
+echo CSRFProtection::tokenTag();
 echo "\n<tr>\n";
 echo "<th width=\"2%\" nowrap colspan=\"2\" align=\"center\">";
 echo "&nbsp;<a href=\"gruppe.php\">";

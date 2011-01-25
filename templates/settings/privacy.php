@@ -5,7 +5,7 @@
                 <b><?= _("Hier können Sie Ihre Sichtbarkeit im System einstellen."); ?></b>
             </p>
             <form method="post" action="<?= URLHelper::getLink('edit_about.php', array('cmd' => 'change_global_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
-                <?= CSRFProtection::insertToken() ?>
+                <?= CSRFProtection::tokenTag() ?>
                 <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0">
                     <tr>
                         <th width="50%"><?= _("Option"); ?></th>
@@ -114,7 +114,7 @@
             </form>
             <br/>
             <form method="post" action="<?= URLHelper::getLink('edit_about.php', array('cmd' => 'change_homepage_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
-                <?= CSRFProtection::insertToken() ?>
+                <?= CSRFProtection::tokenTag() ?>
                 <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0">
                     <tr>
                         <td colspan="<?= $user_domains ? 6 : 5; ?>" class="steelgraulight" style="border-bottom: 1px dotted black; border-top: 1px dotted black;" align="center">

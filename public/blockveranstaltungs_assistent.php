@@ -77,7 +77,7 @@ $cssSw = new cssClassSwitcher();
 // HTML Template
 ?>
 <form method="post" action="<?=$PHP_SELF?>">
-<?= CSRFProtection::insertToken() ?>
+<?= CSRFProtection::tokenTag() ?>
 <table width="100%" border="0" cellspacing="0" cellpadding="1" >
     <tr>
         <td class="topic"><b><?=_("Blockveranstaltungstermine anlegen")?></b></td>

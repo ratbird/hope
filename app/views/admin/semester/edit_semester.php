@@ -3,7 +3,7 @@
 <? endif ?>
 <?= $message ?>
 <form method="post" action="<?= $controller->url_for('admin/semester/edit_semester') ?><?= ($semester['semester_id']) ? '/'.$semester['semester_id'] : '' ?>">
-<?= CSRFProtection::insertToken() ?>
+<?= CSRFProtection::tokenTag() ?>
 <table class="default">
     <tr>
     <?if ($semester) : ?>

@@ -607,7 +607,7 @@ if ($inst_id != "" && $inst_id !="0") {
             <!-- Suche mit Ergebnissen -->
             <td class="blank" width="50%" valign="top" align="center">
                 <form action="<?= URLHelper::getLink("?inst_id=".$inst_id) ?>" method="POST">
-                    <?= CSRFProtection::insertToken() ?>
+                    <?= CSRFProtection::tokenTag() ?>
                     <table width="90%" border="0" cellpadding="2" cellspacing="0">
                         <tr>
                             <td class="steelkante">
@@ -858,7 +858,7 @@ echo "<tr><td class=\"blank\">\n";
 
 if ($perm->have_perm("admin")) {
     echo '<form action="'.URLHelper::getLink().'" method="post">', "\n";
-    echo CSRFProtection::insertToken();
+    echo CSRFProtection::tokenTag();
 }
 
 echo "<table border=\"0\" width=\"99%\" cellpadding=\"4\" cellspacing=\"0\" align=\"center\">\n";

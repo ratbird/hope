@@ -433,7 +433,7 @@ if (isset($_GET['details']) || $showform ) {
             <td class="blank" colspan="2">
             <table border=0 bgcolor="#eeeeee" align="center" cellspacing=0 cellpadding=2>
             <form name="edit" method="post" action="<?=URLHelper::getLink('')?>">
-                <?= CSRFProtection::insertToken() ?>
+                <?= CSRFProtection::tokenTag() ?>
                 <tr>
                     <td colspan="2"><b>&nbsp;<?=_("Benutzername:")?></b></td>
                     <td>&nbsp;<input type="text" name="username" size=24 maxlength=63 value="<?=htmlReady(remove_magic_quotes($_POST['username']))?>"></td>
@@ -582,7 +582,7 @@ if (isset($_GET['details']) || $showform ) {
             <tr><td class="blank" colspan=2>
             <table border=0 bgcolor="#eeeeee" align="center" cellspacing=0 cellpadding=2>
             <form name="edit" method="post" action="<?=URLHelper::getLink('')?>">
-                <?= CSRFProtection::insertToken() ?>
+                <?= CSRFProtection::tokenTag() ?>
                 <tr>
                     <td colspan="2" class="steel1"><b>&nbsp;<?=_("Benutzername:")?></b></td>
                     <td class="steel1">&nbsp;
@@ -911,7 +911,7 @@ if (isset($_GET['details']) || $showform ) {
 
     // Suchformular
     print "<form action=\"".URLHelper::getLink()."\" method=\"post\">\n";
-    echo CSRFProtection::insertToken();
+    echo CSRFProtection::tokenTag();
     print "<table border=0 align=\"center\" cellspacing=0 cellpadding=2 width = \"80%\">\n";
     print "<tr><th colspan=5>" . _("Suchformular") . "</th></tr>";
     print "\n<tr><td class=steel1 align=\"right\" width=\"15%\">" . _("Benutzername:") . " </td>";

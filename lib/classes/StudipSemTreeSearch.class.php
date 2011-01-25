@@ -207,7 +207,7 @@ class StudipSemTreeSearch {
             $action = $GLOBALS['PHP_SELF'];
         }
         $ret = "\n<form action=\"$action\" method=\"post\" name=\"{$this->form_name}\">";
-        $ret .= CSRFProtection::insertToken();
+        $ret .= CSRFProtection::tokenTag();
         return $ret;
     }
 

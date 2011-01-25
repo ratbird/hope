@@ -542,7 +542,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
                 $rs = $view->get_query("SELECT i1.Name,i1.Institut_id,COUNT(i2.Institut_id) as num FROM Institute i1 LEFT JOIN Institute i2 ON i1.Institut_id = i2.fakultaets_id AND i2.fakultaets_id<>i2.Institut_id WHERE i1.fakultaets_id=i1.Institut_id GROUP BY i1.Institut_id ORDER BY Name");
                 $content .= "\n<tr><td align=\"center\">";
                 $content .= "\n<form action=\"" . $this->getSelf("cmd=InsertFak") . "\" method=\"post\">"
-                    .  CSRFProtection::insertToken()
+                    .  CSRFProtection::tokenTag()
                     . _("Stud.IP Fakult&auml;t einf&uuml;gen:")
                     . "&nbsp;\n<select style=\"width:300px;vertical-align:middle;\" name=\"insert_fak\">";
                 while($rs->next_record()){
@@ -631,7 +631,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
 
     function getEditItemContent(){
         $content = "\n<form name=\"item_form\" action=\"" . $this->getSelf("cmd=InsertItem&item_id={$this->edit_item_id}") . "\" method=\"POST\">";
-        $content .= CSRFProtection::insertToken();
+        $content .= CSRFProtection::tokenTag();
         $content .= "\n<input type=\"HIDDEN\" name=\"parent_id\" value=\"{$this->tree->tree_data[$this->edit_item_id]['parent_id']}\">";
         $content .= "\n<table width=\"90%\" border =\"0\" style=\"border-style: solid; border-color: #000000;  border-width: 1px;font-size: 10pt;\" cellpadding=\"2\" cellspacing=\"2\" align=\"center\">";
         $content .=  $this->getItemMessage($this->edit_item_id,2);
@@ -662,7 +662,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         }
         $content .= "</select></td></tr></form>";
         $content .= "\n<form name=\"link_form\" action=\"" . $this->getSelf("cmd=SearchStudIP&item_id={$this->edit_item_id}") . "\" method=\"POST\"><tr><td class=\"steel1\">" . _("Stud.IP-Einrichtung suchen:") . "&nbsp;";
-        $content .= CSRFProtection::insertToken();
+        $content .= CSRFProtection::tokenTag();
         $content .= "\n<input type=\"HIDDEN\" name=\"parent_id\" value=\"{$this->tree->tree_data[$this->edit_item_id]['parent_id']}\">";
         $content .= "\n<input type=\"TEXT\" name=\"edit_search\" size=\"30\"></td><td class=\"steel1\" align=\"left\"><input type=\"image\" "
                 . makeButton("suchen","src") . tooltip("Einrichtung suchen") . " border=\"0\"></td></tr>";
@@ -679,7 +679,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
         $content .= "\n<tr><td colspan=\"2\" class=\"blank\">&nbsp;</td></tr>";
         if ($cat_snap->numRows){
             $content .= "\n<form name=\"cat_form_$item_id\" action=\"" . $this->getSelf("cmd=UpdateCat&item_id=$item_id") . "\" method=\"POST\">";
-            $content .= CSRFProtection::insertToken();
+            $content .= CSRFProtection::tokenTag();
             while($cat_snap->nextRow()){
                 $content .= "\n<tr><td class=\"topic\"><input type=\"TEXT\" style=\"width:90%;font-size:8pt;border:0px\" size=\"30\"  name=\"cat_name[". $cat_snap->getField("kategorie_id")
                         . "]\" value=\"" . htmlReady($cat_snap->getField("name")) . "\"><input type=\"HIDDEN\" name=\"cat_prio["

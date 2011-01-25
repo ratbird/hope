@@ -1,7 +1,7 @@
 <div id="edit_entry" class="schedule_edit_entry" <?= $show_entry ? '' : 'style="display: none"' ?>>
     <div id="edit_entry_drag" class="window_heading">Termindetails bearbeiten</div>
     <form action="<?= $controller->url_for('calendar/schedule/addentry'. ($show_entry['id'] ? '/'. $show_entry['id'] : '') ) ?>" method="post" name="edit_entry" style="padding-left: 10px; padding-top: 10px; margin-right: 10px;" onSubmit="return STUDIP.Schedule.checkFormFields()">
-        <?= CSRFProtection::insertToken() ?>
+        <?= CSRFProtection::tokenTag() ?>
         <b><?= _("Tag") ?>:</b> <select name="entry_day">
             <? foreach (array(1,2,3,4,5,6,7) as $index) : ?>
             <option value="<?= $index ?>" <?= (isset($show_entry['day']) && $show_entry['day'] == $index) ? 'selected="selected"' : '' ?>><?= getWeekDay($index%7, false) ?></option>

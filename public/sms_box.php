@@ -368,7 +368,7 @@ $query_time = $query_time_sort;
             }
             $titel = "  <input type=\"text\" name=\"".$tmp[0]."\"".$tmp[3]." style=\"font-size: 8pt\">";
             echo "\n<form action=\"".$PHP_SELF."\" method=\"post\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";
-            echo CSRFProtection::insertToken();
+            echo CSRFProtection::tokenTag();
             printhead(0, 0, FALSE, "open", FALSE, ' ' . Assets::img('icons/16/blue/add/folder-empty.png', array('class' => 'text-top')) . ' ', $titel, FALSE);
             echo "</tr></table> ";
             $content_content = $tmp[1]."<div align=\"center\">".$tmp[4]."
@@ -402,12 +402,12 @@ $query_time = $query_time_sort;
         if (!$move_to_folder) {
             $content_content = "<div align=\"center\">
                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">" .
-                CSRFProtection::insertToken() .
+                CSRFProtection::tokenTag() .
                 "<input type=\"hidden\" name=\"cmd\" value=\"select_all\">
                 <input type=\"image\" name=\"select\" ".makeButton("alleauswaehlen", "src")." value=\"loeschen\" align=\"absmiddle\">
                 </form>
                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
-                CSRFProtection::insertToken() .
+                CSRFProtection::tokenTag() .
                 "<input type=\"image\" name=\"delete_selected_button\" ".makeButton("loeschen", "src")." value=\"delete_selected\" align=\"absmiddle\">";
                 if (have_msgfolder($sms_data['view']) == TRUE) {
                     $content_content .= "&nbsp;<input type=\"image\" name=\"move_selected_button\" ".makeButton("verschieben", "src")." value=\"move\" align=\"absmiddle\">";
@@ -460,12 +460,12 @@ $query_time = $query_time_sort;
                         if ($open == "open") {
                             $content_content = "<div align=\"center\">"._("Ordneroptionen:")."
                                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
-                                    CSRFProtection::insertToken() .
+                                    CSRFProtection::tokenTag() .
                                     "<input type=\"hidden\" name=\"delete_folder\" value=\"".$x."\">
                                     <input type=\"image\" name=\"delete_folder_button\" ".makeButton("loeschen", "src")." value=\"a\" align=\"absmiddle\">
                                 </form>
                                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
-                                    CSRFProtection::insertToken() .
+                                    CSRFProtection::tokenTag() .
                                     "<input type=\"hidden\" name=\"cmd\" value=\"admin_folder\">
                                     <input type=\"hidden\" name=\"ren_folder\" value=\"".$x."\">
                                     <input type=\"image\" name=\"x\" ".makeButton("umbenennen", "src")." value=\"a\" align=\"absmiddle\">
@@ -474,12 +474,12 @@ $query_time = $query_time_sort;
                                 $content_content .= "
                                     <br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" height=\"5\"><br>"._("markierte Nachrichten:")."
                                     <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
-                                        CSRFProtection::insertToken() .
+                                        CSRFProtection::tokenTag() .
                                         "<input type=\"hidden\" name=\"cmd\" value=\"select_all\">
                                         <input type=\"image\" name=\"select\" ".makeButton("alleauswaehlen", "src")." value=\"loeschen\" align=\"absmiddle\">
                                         </form>
                                         <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
-                                        CSRFProtection::insertToken() .
+                                        CSRFProtection::tokenTag() .
                                         "<input type=\"image\" name=\"delete_selected_button\" ".makeButton("loeschen", "src")." value=\"delete_selected\" align=\"absmiddle\">
                                         <input type=\"image\" name=\"move_selected_button\" ".makeButton("verschieben", "src")." value=\"move\" align=\"absmiddle\"><br>";
                             }

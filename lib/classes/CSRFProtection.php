@@ -50,8 +50,6 @@ class CSRFProtection
     static function verifySecurityToken()
     {
         if (!self::verifyRequest()) {
-            // TODO (mlunzena): more stuff to log?
-            error_log("Forged Request: ");
             throw new InvalidSecurityTokenException();
         }
     }

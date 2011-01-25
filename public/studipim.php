@@ -229,6 +229,7 @@ if ($auth->auth["uid"] != "nobody"){
             echo    sprintf(_("Ihre Nachricht an <b>%s:</b>"),get_fullname_from_uname($msg_rec,'full',true)) . "</font>";
             echo "</td></tr>";
             echo "\n<form  name='eingabe' action='$PHP_SELF?cmd=send_msg' method='POST'>";
+            echo CSRFProtection::tokenTag();
             echo "<input type='HIDDEN'  name='msg_rec' value='".$msg_rec."'>";
             echo "<input type='HIDDEN'  name='msg_subject' value='".HtmlReady($msg_subject)."'>";
             echo "\n<tr><td class='blank' colspan='2' valign='middle'>";

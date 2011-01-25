@@ -56,6 +56,7 @@
           </table>
           <p></p>
           <form method="POST">
+            <?= CSRFProtection::tokenTag() ?>
             <? if (isset($target)): ?>
               <input type="hidden" name="target" value="<?= $target ?>">
             <? endif ?>

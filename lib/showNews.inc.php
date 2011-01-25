@@ -444,6 +444,7 @@ function show_news_item_content($news_item, $cmd_data, $show_admin, $admin_link)
             $comments .= "</table>";
             $content  .= $comments;
             $formular=" <br>\n<form action=\"".URLHelper::getLink("#anker")."\" method=\"POST\">";
+            $formular.= CSRFProtection::tokenTag();
             $formular.="<input type=hidden name=\"comsubmit\" value=\"".$id."\">";
             $formular.="<input type=hidden name=\"username\" value=\"$uname\">";
             $formular.="<p align=\"center\">"._("Geben Sie hier Ihren Kommentar ein!")."</p>";

@@ -264,6 +264,7 @@ if ($admin_modules_data["range_id"])
     <tr>
     <td class="blank" colspan="2">
     <form method="POST" name="modules" action="<?=URLHelper::getLink()?>">
+        <?= CSRFProtection::tokenTag() ?>
         <table width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr><? $cssSw->switchClass() ?>
             <td class="<?= $cssSw->getClass() ?>" align="center" colspan="3">

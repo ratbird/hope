@@ -314,6 +314,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
                         $options .= "<option value=\"".$db->f("object_id")."\">".htmlReady(my_substr($db->f("Name"),0,60))." ".sprintf(_("(Kurs-ID %s)"), $db->f("module_id"))."</option>";
 
                 echo  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+                echo CSRFProtection::tokenTag();
                 echo ELearningUtils::getHeader(_("Leeren Kurs anlegen"));
                 echo "<div align=\"center\">";
                 echo "<br>\n";
@@ -328,6 +329,7 @@ if ($ELEARNING_INTERFACE_ENABLE AND (($view == "edit") OR ($view == "show")))
 
                 if ($options) {
                     echo  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+                    echo CSRFProtection::tokenTag();
                     echo ELearningUtils::getHeader(_("Verkn&uuml;pfung mit einem bestehenden Kurs"));
                     echo "<div align=\"center\">";
                     echo "<br>\n";

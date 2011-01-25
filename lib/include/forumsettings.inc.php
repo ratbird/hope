@@ -55,6 +55,7 @@ if ($forumsend=="bla"){
 
         <?
         echo "<form action=\"$PHP_SELF?view=$view\" method=\"POST\">";
+        echo CSRFProtection::tokenTag();
         ?>
         <table width="70%" align="center" cellpadding=8 cellspacing=0 border=0>
             <tr>

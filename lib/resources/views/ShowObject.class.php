@@ -74,6 +74,7 @@ class ShowObject {
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
         <form method="POST" action="<?echo $PHP_SELF ?>?change_object_properties=<? echo $this->resObject->getId() ?>">
+            <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="view" value="edit_object_properties">
             <tr>
                 <td class="<? echo $this->cssSw->getClass() ?>" width="4%">&nbsp; 

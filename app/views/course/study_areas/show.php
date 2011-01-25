@@ -24,6 +24,7 @@
     <form method="POST" name="details"
           action="<?= $controller->url_for('course/study_areas/show/' . $course_id) ?>">
 
+      <?= CSRFProtection::tokenTag() ?>
       <?= $this->render_partial('course/study_areas/form') ?>
 
     </form>

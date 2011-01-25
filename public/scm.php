@@ -212,6 +212,7 @@ function scm_edit_content($range_id, $scm_id) {
     $header_table = scm_seminar_header($range_id, $scm->getValue("tab_name"));
 
     print("<form action=\"".URLHelper::getLink('')."\" method=\"POST\">");
+    echo CSRFProtection::tokenTag();
 
     $frame_table=new Table();
     $frame_table->setTableWidth("100%");

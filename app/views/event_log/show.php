@@ -1,7 +1,7 @@
 <h3><?= _('Anzeige der Log-Events') ?></h3>
 
 <form action="<?= $controller->url_for('event_log/show') ?>" method="POST">
-
+  <?= CSRFProtection::tokenTag() ?>
   <p style="font-size: smaller;">
     <select name="action_id">
       <option value="all"><?= _('Alle Aktionen') ?></option>

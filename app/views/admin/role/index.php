@@ -49,6 +49,7 @@
 </h3>
 
 <form action="<?= $controller->url_for('admin/role/create_role') ?>" method="POST">
+    <?= CSRFProtection::tokenTag() ?>
     <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
     Name: <input type="text" name="name" size="25" value="">
     <?= makeButton('anlegen', 'input', _('Rolle anlegen'), 'createrolebtn') ?>

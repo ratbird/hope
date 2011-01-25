@@ -766,6 +766,7 @@ if ($view == 'Bild') {
     if (Avatar::getAvatar($my_about->auth_user['user_id'])->is_customized()) {
         ?>
         <form name="bild_loeschen" method="POST" action="<?= $GLOBALS['PHP_SELF'] ?>?studipticket=<?= get_ticket() ?>">
+            <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="user_id" value="<?= $my_about->auth_user["user_id"] ?>">
             <input type="hidden" name="username" value="<?= $username ?>">
             <input type="hidden" name="view" value="Bild">
@@ -777,6 +778,7 @@ if ($view == 'Bild') {
 
     echo '</td><td class="'.$cssSw->getClass().'" width="70%" align="left" valign="top">';
     echo '<form enctype="multipart/form-data" action="' . $_SERVER['PHP_SELF'] . '?cmd=copy&username=' . $username . '&view=Bild&studipticket='.get_ticket().'" method="POST">';
+    echo CSRFProtection::tokenTag();
     echo "<br>\n" . _("Hochladen eines Bildes:") . "<br><br>\n" . _("1. Wählen Sie mit <b>Durchsuchen</b> eine Bilddatei von Ihrer Festplatte aus.") . "<br><br>\n";
     echo '&nbsp;&nbsp;<input name="imgfile" type="file" style="width: 80%" cols="'.round($max_col*0.7*0.8)."\"><br><br>\n";
     echo _("2. Klicken Sie auf <b>absenden</b>, um das Bild hochzuladen.") . "<br><br>\n";
@@ -797,6 +799,7 @@ if ($view == 'Daten') {
     echo '<tr><td class=blank>';
 
     echo '<form action="'. $PHP_SELF. '?cmd=edit_pers&username='. $username. '&view='. $view. '&studipticket=' . get_ticket(). '" method="POST" name="pers"';
+    echo CSRFProtection::tokenTag();
     //Keine JavaScript überprüfung bei adminzugriff
     if ($my_about->check == 'user' && $auth->auth['jscript'] ) {
         echo ' onsubmit="return checkdata()" ';
@@ -953,6 +956,7 @@ if ($view == 'Studium') {
         echo '<h3>' . _("Ich studiere folgende Fächer und Abschlüsse:") . '</h3>';
         if ($allow_change_sg){
             echo '<form action="'. $_SERVER['PHP_SELF']. '?cmd=fach_abschluss_edit&username=' . $username . '&view=' . $view . '&studipticket=' . get_ticket() . '#studiengaenge" method="POST">';
+            echo CSRFProtection::tokenTag();
         }
         echo '<table class="default">'."\n";
         echo '<tr><td><table width="100%" border="0" cellspacing="0" cellpadding="2">';
@@ -1035,7 +1039,10 @@ if ($view == 'Studium') {
         $cssSw->switchClass();
         echo '<tr><td class="blank">';
         echo "<h3>" . _("Ich studiere an folgenden Einrichtungen:") . "</h3>";
-        if ($allow_change_in) echo '<form action="' . $_SERVER['PHP_SELF'] . '?cmd=inst_edit&username='.$username.'&view='.$view.'&studipticket=' . get_ticket() . '#einrichtungen" method="POST">'. "\n";
+        if ($allow_change_in) {
+            echo '<form action="' . $_SERVER['PHP_SELF'] . '?cmd=inst_edit&username='.$username.'&view='.$view.'&studipticket=' . get_ticket() . '#einrichtungen" method="POST">'. "\n";
+            echo CSRFProtection::tokenTag();
+        }
         echo '<table class="default">'."\n";
         echo '<tr><td><table width="100%" border="0" cellspacing="0" cellpadding="2">';
         reset ($my_about->user_inst);
@@ -1102,6 +1109,7 @@ if ($view == 'userdomains') {
     echo '<b>&nbsp; ' . _("Ich bin folgenden Nutzerdomänen zugeordnet:") . '</b>';
     if ($allow_change_ud){
         echo '<form action="'.URLHelper::getLink('?cmd=userdomain_edit&username='.$username.'&view='.$view.'&studipticket='.get_ticket().'#userdomains').'" method="POST">';
+        echo CSRFProtection::tokenTag();
     }
     echo '<table width="99%" align="center" border="0" cellpadding="2" cellspacing="0">'."\n";
     echo '<tr><td width="30%" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">';
@@ -1243,6 +1251,7 @@ if ($view == 'Lebenslauf') {
 
     echo "<tr><td class=blank>";
     echo '<form action="' . $_SERVER['PHP_SELF'] . '?cmd=edit_leben&username=' . $username . '&view=' . $view . '&studipticket=' . get_ticket() . '" method="POST" name="pers">';
+    echo CSRFProtection::tokenTag();
     echo '<table align="center" width="99%" align="center" border="0" cellpadding="2" cellspacing="0">' . "\n";
 
      $cssSw->switchClass();

@@ -181,6 +181,9 @@ class form {
     
     $str .= ">";
     
+    if (strcasecmp($method, "POST") === 0) {
+        $str .= CSRFProtection::tokenTag();
+    }
     return $str;
   }
 

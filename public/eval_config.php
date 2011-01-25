@@ -155,6 +155,7 @@ if (isset($eval_id) && $can_change) {
     echo "  <tr>";
     echo "    <td class=\"blank\" width=\"1%\">&nbsp;</td>\n";
     echo "<form name=\"temp\" action=\"".$PHP_SELF."\" method=\"POST\">\n";
+    echo CSRFProtection::tokenTag();
     echo "    <td class=\"blank\">\n";
     echo "  <input type=\"hidden\" name=\"cmd\" value=\"\">\n";
     echo "  <input type=\"hidden\" name=\"template_id\" value=\"".$db_template->f("template_id")."\">\n";

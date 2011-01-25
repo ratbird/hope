@@ -317,6 +317,7 @@ class smiley {
     function show_upload_form() {
         if ($this->error) return false;
         echo '<form enctype="multipart/form-data" action="'.URLHelper::getLink('').'" method="POST">';
+        echo CSRFProtection::tokenTag();
         echo '<input type="hidden" name="cmd" value="upload">';
         echo '<input type="hidden" name="fc" value="',$this->fc,'">';
         $table=new ZebraTable(array('bgcolor'=>'#eeeeee', 'align'=>'center', 'padding'=>2));
@@ -399,6 +400,7 @@ class smiley {
     function show_smiley_list() {
         if ($this->error) return false;
         echo '<form action="'.URLHelper::getLink('').'" method="POST">', "\n";
+        echo CSRFProtection::tokenTag();
         echo '<input type="hidden" name="cmd" value="update">';
         echo '<input type="hidden" name="fc" value="',$this->fc,'">';
         $table = new ZebraTable(array('bgcolor'=>'#eeeeee', 'align'=>'center', 'padding'=>'2'));

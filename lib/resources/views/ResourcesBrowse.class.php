@@ -477,6 +477,7 @@ class ResourcesBrowse {
         global $view_mode, $resources_data;
         ?>
         <form method="POST" action="<?echo $PHP_SELF ?>?search_send=yes&quick_view=search&quick_view_mode=<?=$view_mode?>">
+            <?= CSRFProtection::tokenTag() ?>
             <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
                 <?
                 $this->searchForm();

@@ -50,6 +50,7 @@ function print_rss($username) {
 
     echo "\n<br></p></td></tr>\n<tr><td class=blank><table width=100% class=blank border=0 cellpadding=0 cellspacing=0>";
     echo "<form action=\"$PHP_SELF?rss=update_rss&username=$username&view=$view&show_rss_bsp=$show_rss_bsp\" method=\"POST\" name=\"edit_rss\">";
+    echo CSRFProtection::tokenTag();
     if (!$db->num_rows())
         echo "<tr><td class=\"".$cssSw->getClass()."\"><b><p class=\"info\">" . _("Es existieren zur Zeit keine eigenen RSS-Feeds.") . "</p></b></td></tr>\n";
     echo "<tr><td class=\"".$cssSw->getClass()."\"><p class=\"info\">" . _("RSS-Feed") . "&nbsp; <a href='$PHP_SELF?rss=create_rss&view=$view&username=$username&show_rss_bsp=$show_rss_bsp'>" . makeButton("neuanlegen") . "</a></p></td></tr>";

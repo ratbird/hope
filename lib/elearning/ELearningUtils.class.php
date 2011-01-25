@@ -108,6 +108,7 @@ class ELearningUtils
             die();
         }
         $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+        $output .= CSRFProtection::tokenTag();
         $output .= "<table border=\"0\" cellspacing=0 cellpadding=0 width = \"99%\">";
         $output .= "<tr><td class=\"steel1\" align=\"center\" valign=\"middle\" ><font size=\"-1\">";
         $output .=  ELearningUtils::getHeader(_("Angebundenes System"));
@@ -189,6 +190,7 @@ class ELearningUtils
     {
         global $PHP_SELF, $cms_select, $search_key, $view;
         $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+        $output .= CSRFProtection::tokenTag();
         $output .= "<table border=\"0\" cellspacing=0 cellpadding=0 width = \"99%\">";
         $output .= "<tr><td class=\"steel1\" align=\"center\" valign=\"middle\" ><font size=\"-1\">";
         $output .= "<br>\n";
@@ -232,6 +234,7 @@ class ELearningUtils
             return false;
         $output .= ELearningUtils::getHeader(sprintf(_("Neues Lernmodul erstellen")));
         $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+        $output .= CSRFProtection::tokenTag();
         $output .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"6\" width=\"100%\">";
         $output .= "<tr><td>";
         foreach ($ELEARNING_INTERFACE_MODULES as $cms_type => $cms_data)
@@ -265,6 +268,7 @@ class ELearningUtils
         global $PHP_SELF, $connected_cms;
 
         $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+        $output .= CSRFProtection::tokenTag();
         $output .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"6\" width=\"100%\">";
         $output .= "<tr><td>";
         $output .= "<font size=\"-1\">";
@@ -365,6 +369,7 @@ class ELearningUtils
             // Assign existing Account
             $output .= "<a name='anker'></a>";
             $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+            $output .= CSRFProtection::tokenTag();
             $output .= "<table border=\"0\" cellspacing=0 cellpadding=6 width = \"99%\">";
             $output .= "<tr><td class=\"steel1\" align=\"left\" valign=\"middle\" colspan=\"2\"><br>\n";
             $output .= "<font size=\"-1\">";
@@ -412,6 +417,7 @@ class ELearningUtils
             // Create new Account: ask for new password
             $output .= "<a name='anker'></a>";
             $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+            $output .= CSRFProtection::tokenTag();
             $output .= "<table border=\"0\" cellspacing=0 cellpadding=6 width = \"99%\">";
             $output .= "<tr><td class=\"steel1\" align=\"left\" valign=\"middle\" colspan=\"2\"><br>\n";
             $output .= "<font size=\"-1\">";
@@ -479,6 +485,7 @@ class ELearningUtils
         {
             $output .= "<a name='anker'></a>";
             $output .=  "<form method=\"POST\" action=\"" . $PHP_SELF . "#anker\">\n";
+            $output .= CSRFProtection::tokenTag();
             $output .= "<table border=\"0\" cellspacing=0 cellpadding=6 width = \"99%\">";
             $output .= "<tr><td>\n";
             $output .= "<font size=\"-1\">";
@@ -691,6 +698,7 @@ class ELearningUtils
                 $output["courses"] = _("Diese Veranstaltung ist mit einem Ilias-Kurs verkn&uuml;pft. Hier gelangen Sie direkt in den Kurs: ") . "<br>".implode($course_output, "<br>")."<br><br>";
             $output["update"] .=  "<font style=\"font-size: -1\">" . _("Hier k&ouml;nnen Sie die Zuordnungen zu den verkn&uuml;pften Kursen aktualisieren."). "<br></font>";
             $output["update"] .=  "<form method=\"POST\" action=\"" . UrlHelper::getLink() . "#anker\">\n";
+            $output["update"] .= CSRFProtection::tokenTag();
             $output["update"] .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
             $output["update"] .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";
             $output["update"] .= "<input type=\"IMAGE\" " . makeButton("aktualisieren", "src") . " border=0 value=\"1\" name=\"update\">";
@@ -728,6 +736,7 @@ class ELearningUtils
 
         if (isset($_REQUEST['delete_x'])) {
             $messages["info"] .= "<form method=\"POST\" action=\"" . UrlHelper::getLink() . "\">";
+            $messages["info"] .= CSRFProtection::tokenTag();
             $messages["info"] .= "<table>";
             $messages["info"] .= "<tr><td>&nbsp;</td></tr>";
             $messages["info"] .= "<tr><td>" . sprintf(_("Durch das L&ouml;schen der Daten zum System mit dem Index \"%s\" werden %s Konfigurationseintr&auml;ge und Verkn&uuml;pfungen von Stud.IP-Veranstaltungen und -User-Accounts unwiederbringlich aus der Stud.IP_Datenbank entfernt. Wollen Sie diese Daten jetzt l&ouml;schen?"), $_REQUEST['delete_cms'], $cmsystems[$_REQUEST['delete_cms']]["accounts"]+$cmsystems[$_REQUEST['delete_cms']]["modules"]+$cmsystems[$_REQUEST['delete_cms']]["config"] ) . "</td></tr>";
@@ -770,6 +779,7 @@ class ELearningUtils
             else {
                 $output .= ELearningUtils::getCMSHeader("<font color=FF0000> Unbekanntes System: " . $cms_type . "</font>");
                 $output .= "<form method=\"POST\" action=\"" . UrlHelper::getLink() . "\">";
+                $output .= CSRFProtection::tokenTag();
                 $output .= "<table>";
                 $output .= "<tr><td colspan=\"2\">&nbsp;</td></tr>";
                 $output .= "<tr><td>" . Assets::img('icons/16/red/decline.png', array('class' => 'text-top')) . "</td><td><i>".sprintf(_("F&uuml;r das System mit dem Index \"%s\" existieren keine Voreinstellungen in den Konfigurationsdateien mehr."), $cms_type) . "</i></td></tr>";

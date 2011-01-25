@@ -122,6 +122,7 @@ elseif (!isset($page) or ($page == 0)) // Seite 1 : Auswahl des Dateiformats
     $export_info = _("Bitte wählen Sie, in welchem Format die Daten ausgegeben werden sollen!") . "<br>";
 
     $export_pagecontent .= "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
+    $export_pagecontent .= CSRFProtection::tokenTag();
 
     $export_pagecontent .= "";
     $export_pagecontent .= "<b><font size=\"-1\">"._("Ausgabeformat:") .  "</font></b><br><select name=\"format\">";
@@ -177,6 +178,7 @@ elseif ($page == 1) // Seite 2 : Auswahl des XSLT-Scripts
     $export_info = _("W&auml;hlen Sie bitte eine der folgenden XSLT-Dateien und klicken Sie auf 'weiter'");
 
     $export_pagecontent .= "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
+    $export_pagecontent .= CSRFProtection::tokenTag();
     $export_pagecontent .= "";
     $export_pagecontent .= "<table cellspacing=\"0\" cellpadding=\"1\" border=\"0\" width=\"100%\">";
     $export_pagecontent .= "<tr align=\"center\" valign=\"top\">";
@@ -245,6 +247,7 @@ elseif ($page == 2)  // Seite 3 : Download der Dateien
 
     $export_info = _("Die ben&ouml;tigten Dateien liegen nun zum Download bereit.");
     $export_pagecontent .= "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
+    $export_pagecontent .= CSRFProtection::tokenTag();
 
     $xml_printimage = '<a href="'. GetDownloadLink($xml_file_id, $xml_filename, 2) . '"><img src="'.$GLOBALS['ASSETS_URL'].'images/' . $export_icon['xml'] . '" border=0></a>';
     $xml_printlink = '<a href="' . GetDownloadLink($xml_file_id, $xml_filename, 2) . '">' . $xml_filename . '</a>';

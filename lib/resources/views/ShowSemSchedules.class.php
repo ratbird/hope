@@ -77,6 +77,7 @@ class ShowSemSchedules extends ShowSchedules {
         ?>
         <table border="0" celpadding="2" cellspacing="0" width="99%" align="center">
         <form method="POST" name="schedule_form" action="<?echo $PHP_SELF ?>?navigate=TRUE&quick_view=view_sem_schedule&quick_view_mode=<?=$view_mode?>">
+            <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>

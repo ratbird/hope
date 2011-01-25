@@ -93,6 +93,7 @@ class Ilias3ConnectedLink extends ConnectedLink
         global $connected_cms, $view, $search_key, $cms_select, $current_module;
 
         $output .= "<form method=\"POST\" action=\"" . $GLOBALS["PHP_SELF"] . "\">\n";
+        $output .= CSRFProtection::tokenTag();
         $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";

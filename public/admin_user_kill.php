@@ -107,6 +107,7 @@ if (count($msg) > 0) {
 ?>
 <div style="padding-left: 1em;padding-right:1em;">
 <form action="<?=UrlHelper::getLink('?userlist_submit=1')?>" method="POST">
+<?= CSRFProtection::tokenTag() ?>
 <?=_("Geben Sie eine Liste von Nutzernamen (username) ein, die zum Löschen vorgesehen sind. Die Namen können mit Komma, Semikolon, oder whitespaces getrennt sein.")?>
 <br>
 <br>
@@ -121,6 +122,7 @@ if (count($msg) > 0) {
 if (count($_kill_user)) {
     echo chr(10).'<div style="padding-left: 1em;padding-right:1em;;">';
     echo chr(10).'<form name="admin_user_kill" method="POST" action="'.UrlHelper::getLink('', array('kill' => 1)).'">';
+    echo CSRFProtection::tokenTag();
     echo chr(10).'<input type="hidden" name="studipticket" value="'.get_ticket().'">';
     echo chr(10).'<div style="text-align:right">';
     echo chr(10).'<img '.makeButton('auswahlumkehr','src').' '.tooltip(_("Auswahl umkehren")) .' onClick="$(\'input[name^=selected_user]\').attr(\'checked\', function (_, v) { return !v; })">';

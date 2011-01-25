@@ -193,6 +193,7 @@ if (!$cmd OR $cmd=="show") {
             echo "<tr><td class=\"blank\"><p class=\"info\">";
             echo "<table width=\"50%\" cellspacing=0 cellpadding=2 border=0>";
             echo "<form action=\"". URLHelper::getLink("?cmd=search") ."\" method=\"POST\">";
+            echo CSRFProtection::tokenTag();
             echo "<tr><td class=\"steel1\">";
             echo "&nbsp; <font size=-1>" . _("Geben Sie einen Suchbegriff ein, um weitere Bereiche zu finden!") . "</font><br><br>";
             echo "&nbsp; <input type=\"TEXT\" style=\"vertical-align:middle;\" name=\"search\" size=\"20\">&nbsp;&nbsp;";
@@ -255,6 +256,7 @@ if (!$cmd OR $cmd=="show") {
     }
     echo "\n<tr><td class=\"blank\"><br><p class=\"info\">";
     echo "<form action=\"". URLHelper::getLink("?cmd=new_entry&range_id=$news_range_id&view_mode=$view_mode")."\" method=\"POST\">";
+    echo CSRFProtection::tokenTag();
     if ($perm->have_perm('admin') || $perm->have_perm('autor') && $view_mode == 'user') {
         echo "<hr width=\"100%\"><br><b>" . _("gew&auml;hlter Bereich:") . " </b>".htmlReady($news_range_name). "<br><br>";
     }

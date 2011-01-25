@@ -5,6 +5,7 @@
 </h3>
 
 <form action="<?= $controller->url_for('admin/role/assign_role') ?>" style="margin-bottom: 1em;" method="POST">
+    <?= CSRFProtection::tokenTag() ?>
     <? if (empty($users)): ?>
         <?= _('Name der Person:') ?>
         <input type="text" name="username" value="<?= htmlReady($username) ?>" style="width: 300px;">
@@ -27,6 +28,7 @@
 
 <? if (isset($currentuser)): ?>
     <form action="<?= $controller->url_for('admin/role/save_role', $currentuser->getUserid()) ?>" method="POST">
+        <?= CSRFProtection::tokenTag() ?>
         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
         <table class="default">
             <tr>

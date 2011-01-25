@@ -5,6 +5,7 @@
 </h3>
 
 <form action="<?= $controller->url_for('admin/role/assign_plugin_role') ?>" style="margin-bottom: 1em;" method="POST">
+    <?= CSRFProtection::tokenTag() ?>
     <select name="pluginid" style="min-width: 300px;">
         <? foreach ($plugins as $plugin): ?>
             <option value="<?= $plugin['id'] ?>" <?= $plugin['id'] == $pluginid ? 'selected' : '' ?>>
@@ -18,6 +19,7 @@
 
 <? if ($pluginid): ?>
     <form action="<?= $controller->url_for('admin/role/save_plugin_role', $pluginid) ?>" method="POST">
+        <?= CSRFProtection::tokenTag() ?>
         <input type="hidden" name="ticket" value="<?= get_ticket() ?>">
         <table class="default">
             <tr>

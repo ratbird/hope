@@ -399,6 +399,7 @@ class StudipLitListViewAdmin extends TreeView
 
         $content .= "\n<tr><td class=\"steel1\" align=\"left\">";
         $content .= "\n<form name=\"userlist_form\" action=\"" . $this->getSelf("cmd=CopyUserList") . "\" method=\"POST\">";
+        $content .= CSRFProtection::tokenTag();
         $content .= "<b>" . _("Pers&ouml;nliche Literaturlisten:")
                 . "</b><br><br>\n<select name=\"user_list\" style=\"vertical-align:middle;width:70%;\">";
         if (is_array($user_lists)) {
@@ -620,6 +621,7 @@ class StudipLitListViewAdmin extends TreeView
 
     function getEditItemContent(){
         $content .= "\n<form name=\"item_form\" action=\"" . $this->getSelf("cmd=InsertItem&item_id={$this->edit_item_id}") . "\" method=\"POST\">";
+        $content .= CSRFProtection::tokenTag();
         $content .= "\n<input type=\"HIDDEN\" name=\"parent_id\" value=\"{$this->tree->tree_data[$this->edit_item_id]['parent_id']}\">";
         if ($this->tree->isElement($this->edit_item_id)){
             $content .= "\n<tr><td class=\"steelgraulight\"style=\"border-top: 1px solid black;border-left: 1px solid black;border-right: 1px solid black;\" ><b>". _("Anmerkung zu einem Eintrag bearbeiten:") . "</b></td></tr>";

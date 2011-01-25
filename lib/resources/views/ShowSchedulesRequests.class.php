@@ -71,6 +71,7 @@ class ShowSchedulesRequests extends ShowSchedules{
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
         <form method="POST" action="<?echo $PHP_SELF ?>?navigate=TRUE&quick_view=<?=$view?>">
+            <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
@@ -226,6 +227,7 @@ class ShowSchedulesRequests extends ShowSchedules{
         $semester = SemesterData::getInstance()->getSemesterDataByDate($start_time);
         ?>
         <form method="POST" action="<?echo $PHP_SELF ?>?quick_view=<?=$view?>">
+        <?= CSRFProtection::tokenTag() ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">

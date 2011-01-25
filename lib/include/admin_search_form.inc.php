@@ -75,6 +75,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         <tr>
             <td class="blank" colspan=2>&nbsp;
                 <form name="links_admin_search" action="<?=URLHelper::getLink()?>" method="POST">
+                <?= CSRFProtection::tokenTag() ?>
                 <table cellpadding="0" cellspacing="0" border="0" width="99%" align="center">
                     <tr>
                         <td class="steel1">
@@ -148,6 +149,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         if ($perm->have_perm("admin")) {
         ?>
             <form name="links_admin_search" action="<?=URLHelper::getLink()?>" method="POST">
+                <?= CSRFProtection::tokenTag() ?>
                 <table cellpadding="0" cellspacing="0" border="0" width="99%" align="center">
                     <tr>
                         <td class="steel1" colspan=5>
@@ -377,6 +379,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
         ?>
         <form name="links_admin_action" action="<?=URLHelper::getLink()?>" method="POST">
+        <?= CSRFProtection::tokenTag() ?>
         <table border=0  cellspacing=0 cellpadding=2 align=center width="99%">
         <?
         $show_rooms_check_url= ($_REQUEST['show_rooms_check']=="on") ? "&show_rooms_check=on" : null;

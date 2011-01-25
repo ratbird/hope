@@ -808,6 +808,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
     <tr>
     <td class="blank" colspan="2">
     <form method="POST" name="Formular" action="<?=URLHelper::getLink()?>"
+    <?= CSRFProtection::tokenTag() ?>
     <? if (!$admin_admission_data["admission_type"] && !(LockRules::Check($seminar_id, 'Passwort'))) echo " onSubmit=\"return doCrypt();\" "; ?>>
         <input type="hidden" name="admin_admission_data" value="<?= base64_encode(serialize($admin_admission_data)) ?>">
         <input type="hidden" name="admin_admission_data_original" value="<?= base64_encode(serialize($admin_admission_data_original)) ?>">

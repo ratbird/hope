@@ -50,6 +50,8 @@ $export_pagename = _("Datenexport - Startseite");
 
     $export_pagecontent .= "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
 
+    $export_pagecontent .= CSRFProtection::tokenTag();
+
     $export_pagecontent .="<br><b><font size=\"-1\">". _("Bitte w&auml;hlen Sie eine Einrichtung: ") .  "</font></b><br><select name=\"range_id\">";
 
 /*  if ($auth->auth['perm'] == "root")

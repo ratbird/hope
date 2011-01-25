@@ -1,6 +1,7 @@
 <h3><?= _('Liste der Nutzerdomänen') ?></h3>
 
 <form action="<?= $controller->url_for('admin/domain/save') ?>" method="POST">
+<?= CSRFProtection::tokenTag() ?>
 <table class="default" style="margin-bottom: 1em;">
     <?= $this->render_partial('admin/domain/domains') ?>
 

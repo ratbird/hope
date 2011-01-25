@@ -114,6 +114,7 @@ class EditSettings {
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
             <form method="POST" action="<?echo $PHP_SELF ?>?add_root_user=TRUE">
+            <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? echo $cssSw->getHeaderClass() ?>" width="4%">
                     <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width=1 height=20>&nbsp;
@@ -211,6 +212,7 @@ class EditSettings {
                 </td>
             </tr>
             <form method="POST" action="<?echo $PHP_SELF ?>#a">
+            <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
@@ -227,6 +229,7 @@ class EditSettings {
             </tr>
             </form>
             <form method="POST" action="<?echo $PHP_SELF ?>?change_categories=TRUE">
+            <?= CSRFProtection::tokenTag() ?>
             <?
             $this->selectTypes();
             while ($this->db->next_record()) {
@@ -400,6 +403,7 @@ class EditSettings {
                 </td>
             </tr>
             <form method="POST" action="<?echo $PHP_SELF ?>?add_type_category_id=<? echo $this->db2->f("category_id")?>">
+            <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
@@ -419,6 +423,7 @@ class EditSettings {
             </tr>
             </form>
             <form method="POST" action="<?echo $PHP_SELF ?>?change_properties=TRUE">
+            <?= CSRFProtection::tokenTag() ?>
             <?
             $this->selectProperties($dummy, TRUE);
             while ($this->db2->next_record()) {
@@ -512,6 +517,7 @@ class EditSettings {
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
         <form method="POST" action="<?echo $PHP_SELF ?>?change_global_settings=TRUE">
+            <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="4%">&nbsp;
                 </td>
@@ -763,6 +769,7 @@ class EditSettings {
         ?>
         <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
         <form method="POST" action="<?echo $PHP_SELF ?>">
+        <?= CSRFProtection::tokenTag() ?>
         </table>
         <br><br>
         <?

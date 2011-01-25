@@ -74,6 +74,7 @@ class Ilias4ConnectedLink extends Ilias3ConnectedLink
             $output .= "<i>Pfad: ". $connected_cms[$this->cms_type]->soap_client->getPath($connected_cms[$this->cms_type]->content_module[$current_module]->getId()) . "</i><br><br>";
         }
         $output .= "<form method=\"POST\" action=\"" . $GLOBALS["PHP_SELF"] . "\">\n";
+        $output .= CSRFProtection::tokenTag();
         $output .= "<input type=\"HIDDEN\" name=\"view\" value=\"" . $view . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"search_key\" value=\"" . $search_key . "\">\n";
         $output .= "<input type=\"HIDDEN\" name=\"cms_select\" value=\"" . $cms_select . "\">\n";

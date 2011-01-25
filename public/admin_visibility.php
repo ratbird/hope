@@ -128,6 +128,7 @@ if ($SessSemName[1] && (!$change_visible)) {
     if ($db->next_record()) {
         if(!LockRules::Check($SessSemName[1], 'seminar_visibility')) {
             $form   =   "<form name=\"asd\" action=\"". URLHelper::getLink() ."\" method=\"POST\">";
+            $form   .= CSRFProtection::tokenTag();
             $form   .=  "<input type=\"checkbox\" name=\"visibility_sem[".$SessSemName[1]."]\"";
             if ($db->f("visible")) {
                 $form .= " checked ";

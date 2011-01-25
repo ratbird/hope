@@ -426,7 +426,8 @@ function ShowEditContact ($contact_id)
                         </td>
                     </tr>"
                         .ShowUserInfo ($contact_id)."</table><table cellspacing=\"0\" width=\"700\" class=\"blank\">"
-                        ."<form action=\"$PHP_SELF?edit_id=$contact_id\" method=\"POST\">";
+                        ."<form action=\"$PHP_SELF?edit_id=$contact_id\" method=\"POST\">"
+                        . CSRFProtection::tokenTag();
 
         $db2->query ("SELECT * FROM contact_userinfo WHERE contact_id = '$contact_id' ORDER BY priority");
         $i = 0;

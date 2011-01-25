@@ -2151,6 +2151,7 @@ elseif ((!$level) || ($level == 1))
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" action="<? echo URLHelper::getLink() ?>">
+            <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=1>
                 <table cellspacing=0 cellpadding=2 border=0 width="99%" align="center">
                     <tr <? $cssSw->switchClass() ?>>
@@ -2516,6 +2517,7 @@ if ($level == 2)
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" action="<? echo URLHelper::getLink() ?>#anker">
+            <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=2>
             <input type="hidden" name="level" value=2>
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
@@ -2968,6 +2970,7 @@ if ($level == 3) {
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" name="Formular" action="<? echo URLHelper::getLink() ?>">
+            <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=3>
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
                     <tr <? $cssSw->switchClass() ?>>
@@ -3239,6 +3242,7 @@ if ($level == 4) {
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" name="form_4" action="<? echo URLHelper::getLink() ?>#anker">
+            <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=4>
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
                     <tr <? $cssSw->switchClass() ?>>
@@ -3664,6 +3668,7 @@ if ($level == 5)
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" name="form_5" action="<? echo URLHelper::getLink() ?>">
+            <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=5>
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
                     <tr <? $cssSw->switchClass() ?>>
@@ -4071,6 +4076,7 @@ if ($level == 6)
                 <b><?=_("Schritt 6: Bereit zum Anlegen der Veranstaltung"); ?></b><br><br>
                 <?=_("Sie haben nun alle n&ouml;tigen Daten zum Anlegen der Veranstaltung eingegeben. Wenn Sie auf &raquo;anlegen&laquo; klicken, wird die Veranstaltung in Stud.IP &uuml;bernommen. Wenn Sie sich nicht sicher sind, ob alle Daten korrekt sind, &uuml;berpr&uuml;fen Sie noch einmal Ihre Eingaben auf den vorhergehenden Seiten."); ?><br><br>
                 <form method="POST" action="<? echo URLHelper::getLink() ?>">
+                    <?= CSRFProtection::tokenTag() ?>
                     <input type="hidden" name="form" value=6>
                     <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?> >>" name="jump_back">&nbsp;<input type="image" <?=makeButton("anlegen", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                 </form>
@@ -4105,6 +4111,7 @@ if ($level == 7)
                     <b><?=_("Die Veranstaltung konnte nicht angelegt werden."); ?></b><br><br>
                     <?=_("Bitte korrigieren Sie die Daten."); ?>
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
+                        <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=7>
                         <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">
                     </form>
@@ -4134,6 +4141,7 @@ if ($level == 7)
                     ?>
                     <br><br>
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
+                        <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=7>
                         <input type="image" <?=makeButton("abbrechen", "src"); ?> border=0 value="<?=_("abbrechen");?>" name="cancel">
                         <?
@@ -4172,6 +4180,7 @@ if ($level == 7)
                     }
                     ?><br><br>
                     <form method="POST" action="<?= URLHelper::getLink() ?>">
+                        <?= CSRFProtection::tokenTag() ?>
                         <input type="hidden" name="form" value=7>
                         <?
                         if (($sem_create_data["modules_list"]["schedule"]) || ($sem_create_data["modules_list"]["scm"])) {
@@ -4192,6 +4201,7 @@ if ($level == 7)
                 <td class="blank" colspan=2>
                 <br>
                 <form method="POST" action="<? echo URLHelper::getLink() ?>">
+                    <?= CSRFProtection::tokenTag() ?>
                     <table width ="60%" cellspacing=1 cellpadding=1>
                         <tr>
                             <td width="10%" class="blank">&nbsp; </td>
@@ -4307,6 +4317,7 @@ if ($level == 8)
         <tr>
             <td class="blank" colspan=2>
             <form method="POST" name="form_8" action="<? echo URLHelper::getLink() ?>">
+            <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="form" value=8>
                 <table width ="99%" cellspacing=0 cellpadding=2 border=0 align="center">
                     <tr<? $cssSw->switchClass() ?>>

@@ -242,6 +242,7 @@ if ($perm->have_perm("admin"))
     <tr>
     <td class="blank" colspan=2>
     <form method="POST" name="room_requests" action="<? UrlHelper::getLink() ?>#anker" >
+        <?= CSRFProtection::tokenTag() ?>
         <table width="99%" border=0 cellpadding=2 cellspacing=0 align="center">
         <tr <? $cssSw->switchClass() ?>>
             <td class="<? echo $cssSw->getClass() ?>" align="center" colspan=4>

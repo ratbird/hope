@@ -41,6 +41,7 @@ function print_freie($username) {
     echo sprintf(_("Für wen Ihre angelegten Kategorien genau sichtbar sein sollen, können Sie in Ihren %sPrivatsphäre-Einstellungen%s festlegen."), '<a href="'.URLHelper::getUrl('edit_about.php', array('view'=>'privacy')).'">', '</a>');
     echo "\n<br><br></p></td></tr>\n".'<tr><td class="blank">';
     echo '<form action="'. URLHelper::getLink('?freie=update_freie&username='.$username.'&view='.$view) .'" method="POST" name="edit_freie">';
+    echo CSRFProtection::tokenTag();
     echo '<table width="100%" class="blank" border="0" cellpadding="0" cellspacing="0">';
     if (!$db->num_rows())
         echo '<tr><td class="'.$cssSw->getClass().'"><font size="-1"><b><p class="info">' . _("Es existieren zur Zeit keine eigenen Kategorien.") . "</p></b></font></td></tr>\n";

@@ -675,6 +675,7 @@ function getItemContent($itemID){
 
     $content .= "<form action=\"".$this->getSelf("item_id={$itemID}",1)
             . "\" method=\"POST\" style=\"display:inline;\">\n";
+    $content .= CSRFProtection::tokenTag();
 
     $content .= "<br>";
 

@@ -135,6 +135,7 @@ else
 
 
         $export_weiter_button = "<form method=\"POST\" action=\"" . $PHP_SELF . "\">";
+        $export_weiter_button .= CSRFProtection::tokenTag();
         $export_weiter_button .= "<input type=\"hidden\" name=\"page\" value=\"4\">";
         $export_weiter_button .= "<input type=\"hidden\" name=\"choose\" value=\"" . $choose . "\">";
         $export_weiter_button .= "<input type=\"hidden\" name=\"format\" value=\"" . $format . "\">";

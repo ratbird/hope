@@ -22,6 +22,7 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich') ."
             <br><br>
         <? endif; ?>
         <form action="<?= URLHelper::getLink('#'. $inst_id) ?>" method="POST">
+            <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="cmd" value="special_edit">
             <input type="hidden" name="inst_id" value="<?= $inst_id ?>">
             <input type="hidden" name="studipticket" value="<?=get_ticket()?>">

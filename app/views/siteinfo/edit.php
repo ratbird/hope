@@ -3,6 +3,7 @@
     <?= MessageBox::error($error_msg) ?>
   <? endif ?>
     <form action="<?= $controller->url_for('siteinfo/save') ?>" method="POST">
+    <?= CSRFProtection::tokenTag() ?>
   <? if($edit_rubric): ?>
         <label for="rubric_name"><?= _('Titel der Rubrik')?></label><br>
         <input type="text" name="rubric_name" id="rubric_name" value="<?= htmlReady($rubric_name) ?>"><br>

@@ -135,6 +135,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
         echo "<br>\n";
         echo ELearningUtils::getCMSHeader($connected_cms[$cms_select]->getName());
         echo "<form method=\"POST\" action=\"" . $PHP_SELF . "\">\n";
+        echo CSRFProtection::tokenTag();
         echo "<font size=\"-1\">";
         echo "<br>\n";
         if (ELearningUtils::isCMSActive($cms_select))
@@ -168,6 +169,7 @@ if ($ELEARNING_INTERFACE_ENABLE)
         echo "<br>\n";
 
         echo "<form method=\"POST\" action=\"" . $PHP_SELF . "\">\n";
+        echo CSRFProtection::tokenTag();
         echo "<font size=\"-1\">";
         if ($error_count == 0)
         {

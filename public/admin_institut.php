@@ -388,6 +388,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
 <tr>
     <td class="blank" valign="top">
     <form method="POST" name="edit" action="<?= UrlHelper::getLink() ?>">
+    <?= CSRFProtection::tokenTag() ?>
     <table class="default">
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Name:")?> </td>

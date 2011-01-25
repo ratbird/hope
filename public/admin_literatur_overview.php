@@ -195,6 +195,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
     <tr>
         <td class="blank" colspan=2>&nbsp;
             <form name="choose_institute" action="<?=$PHP_SELF?>?send=1" method="POST">
+            <?= CSRFProtection::tokenTag() ?>
             <table cellpadding="0" cellspacing="0" border="0" width="99%" align="center">
                 <tr>
                     <td class="steel1">
@@ -276,6 +277,7 @@ if ($preferred_plugin && in_array($preferred_plugin, $_search_plugins)){
             </tr>
         </form>
         <form name="check_elements" action="<?=$PHP_SELF?>?cmd=check" method="POST">
+            <?= CSRFProtection::tokenTag() ?>
             <tr>
                 <td class="steel1" align="right">
                     <select name="_check_plugin" style="vertical-align:middle">

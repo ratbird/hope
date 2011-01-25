@@ -235,6 +235,7 @@ if ($view == "resources"){
 
     if ($edit_structure_object) {
         echo"<form method=\"POST\" action=\"$PHP_SELF\">";
+        echo CSRFProtection::tokenTag();
     }
 
     $range_id = $user->id;
@@ -277,6 +278,7 @@ if ($view == "lists" || $view == "openobject_main") {
 
     if ($edit_structure_object) {
         echo"<form method=\"POST\" action=\"$PHP_SELF\">";
+        echo CSRFProtection::tokenTag();
     }
 
     if ($view == "openobject_main") {

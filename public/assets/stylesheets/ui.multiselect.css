@@ -1,7 +1,7 @@
 /* Multiselect
 ----------------------------------*/
 
-.ui-multiselect { height: 200px; overflow: hidden; border: 1px solid #555588; font-size: 0.8em; margin: 5px; display: inline-block; vertical-align: middle; }
+.ui-multiselect { height: 200px; border: 1px solid #555588; font-size: 0.8em; margin: 5px; display: inline-block; vertical-align: middle; }
 .ui-multiselect ul { -moz-user-select: none; }
 .ui-multiselect li { margin: 0; padding: 0; cursor: default; line-height: 20px; height: 20px; font-size: 11px; list-style: none; }
 .ui-multiselect li a { color: #999; text-decoration: none; padding: 0; display: block; float: left; cursor: pointer;}
@@ -24,9 +24,9 @@
 .ui-multiselect .search { float: left; padding: 4px; color: #ffffff; }
 .ui-multiselect .count { float: left; padding: 7px; color: #ffffff; }
 
-.ui-multiselect li span.ui-icon-grip-solid-horizontal { left: 2px; }
+.ui-multiselect li span.ui-icon-grip-solid-horizontal { left: 2px; display: none; }
 .ui-multiselect li a.action { right: 2px; top: 2px; }
  
 .ui-multiselect input.search { height: 14px; padding: 1px; opacity: 0.5; margin: 4px; width: 100px; border: 1px solid #bbbbdd; border-radius: 0px; -moz-border-radius: 0px; }
 
-.ui-multiselect .connected-list { min-height: 10000px; }
+.ui-multiselect .connected-list { min-height: 160px; }

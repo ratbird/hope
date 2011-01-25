@@ -1003,7 +1003,11 @@ STUDIP.MultiSelect = {
       jQuery(id).attr('multiple', 'multiple');
       jQuery(id).css('height', '120px');
     }
-    jQuery(id).multiselect({sortable: false, itemName: itemName});
+    jQuery(id).multiselect({
+      sortable: true,
+      itemName: itemName,
+      draggable: true
+    });
   }
 };
 jQuery(function () {
@@ -1465,3 +1469,4 @@ jQuery(function ($) {
   };
   $.datepicker.setDefaults($.datepicker.regional.de);
 });
+

@@ -47,8 +47,11 @@ $.widget("ui.multiselect", {
 		this.id = this.element.attr("id");
 		this.container = $('<div class="ui-multiselect ui-helper-clearfix ui-widget"></div>').insertAfter(this.element).resizable({
           handles: 's',
-          minHeight: 100
-        });;
+          minHeight: 120,
+          resize: function (event, ui) {
+            $("ul.connected-list", this).css('min-height', (ui.size.height - 42) + "px");
+          }
+        });
 		this.count = 0; // number of currently selected options
 		this.selectedContainer = $('<div class="selected"></div>').appendTo(this.container);
 		this.availableContainer = $('<div class="available"></div>').appendTo(this.container);

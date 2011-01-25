@@ -59,7 +59,6 @@ function page_open($feature) {
     } 
   }
 
-  require_once 'lib/classes/CSRFProtection.php';
   CSRFProtection::verifySecurityToken();
 }
 

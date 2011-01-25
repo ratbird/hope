@@ -14,49 +14,104 @@
  */
 
 /**
- * TODO
+ * To protect Stud.IP from forged request from other sites a security token is
+ * generated and stored in the session and all forms (or rather POST request)
+ * have to contain that token which is then compared on the server side to
+ * verify the authenticity of the request. GET request are not checked as these
+ * are assumed to be idempotent anyway.
+ *
+ * If a forgery is detected, an InvalidSecurityTokenException is thrown and a
+ * log entry is recorded in the error log.
+ *
+ * The (form or request) parameter is named "security token". If you are
+ * authoring an HTML form, you have to include this as an
+ * input[@type=hidden] element. This is easily done by calling:
+ *
+ * \code
+ * echo CSRFProtection::insertToken();
+ * \endcode
+ *
+ * Checking the token is implicitly done when calling #page_open in file
+ * lib/phplib/page4.inc
  */
 class CSRFProtection
 {
+    /**
+     * The name of the parameter.
+     */
     const TOKEN = 'security_token';
 
+    /**
+     * This checks the request and throws an InvalidSecurityTokenException if
+     * fails to verify its authenticity.
+     *
+     * @throws InvalidSecurityTokenException  request is invalid
+     */
     static function verifySecurityToken()
     {
         if (!self::verifyRequest()) {
+            // TODO (mlunzena): more stuff to log?
+            error_log("Forged Request: ");
             throw new InvalidSecurityTokenException();
         }
     }
 
+    /**
+     * This checks the request and returns either true or false. It is
+     * implicitly called by CSRFProtection::verifySecurityToken() and
+     * it should never be needed to call this.
+     *
+     * @returns boolean  returns true if the request is valid
+     */
     static function verifyRequest()
     {
         return
-            !self::protectionEnabled() ||
             self::isGETRequest() ||
             self::isXHR() ||
             self::checkSecurityToken();
     }
 
-    static function protectionEnabled()
-    {
-        return true;
-    }
-
-    static function isGETRequest()
+    /**
+     * Returns true if the request is a GET request.
+     *
+     * @return boolean  true if it is a GET request
+     */
+    static private function isGETRequest()
     {
         return strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') === 0;
     }
 
-    static function isXHR()
+    /**
+     * Returns true if the request was made by jQuery (or prototype).
+     * Both libraries send a special header "X-Requested-With" with a
+     * value of "XMLHttpRequest" with every Ajax request.
+     *
+     * @return boolean true if an XHR
+     */
+    static private function isXHR()
     {
         return $_SERVER['HTTP_X_REQUESTED_WITH'] &&
             strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest') === 0;
     }
 
-    static function checkSecurityToken()
+    /**
+     * Verifies the equality of the request parameter "security_token" and
+     * the token stored in the session.
+     *
+     * @return boolean  true if equal
+     */
+    static private function checkSecurityToken()
     {
         return isset($_POST[self::TOKEN]) && self::token() === $_POST[self::TOKEN];
     }
 
+    /**
+     * Returns the token stored in the session generating it first
+     * if required.
+     *
+     * @return string  a base64 encoded string of 32 random bytes
+     * @throws SessionRequiredException  there is no session to store the token in
+     */
     static function token()
     {
         // w/o a session, throw an exception
@@ -72,6 +127,16 @@ class CSRFProtection
         return $_SESSION[self::TOKEN];
     }
 
+    /**
+     * Returns a snippet of HTML containing an input[@type=hidden] element
+     * like this:
+     *
+     * \code
+     * <input type="hidden" name="security_token" value="012345678901234567890123456789==">
+     * \endcode
+     *
+     * @return string  the HTML snippet containing the input element
+     */
     static function insertToken()
     {
         return sprintf('<input type="hidden" name="%s" value="%s">',
@@ -93,7 +158,7 @@ class CSRFProtection
      *
      * @param integer $count The number of characters (bytes) to return in the string.
      */
-    static function randomBytes($count)
+    static private function randomBytes($count)
     {
         static $random_state, $bytes;
 
@@ -137,21 +202,28 @@ class CSRFProtection
 }
 
 /**
- * TODO
+ * This exception is thrown when a request does not verify its authenticity.
  */
 class InvalidSecurityTokenException extends AccessDeniedException
 {
-    function __construct() {
+    /**
+     * @param string this parameter is ignored but required by PHP
+     */
+    function __construct($message = NULL) {
         parent::__construct(_("Ungültiges oder fehlendes Sicherheits-Token."));
     }
 }
 
 /**
- * TODO
+ * This exception is thrown when a token should have been stored in a
+ * non-existant session.
  */
 class SessionRequiredException extends Exception
 {
-    function __construct() {
+    /**
+     * @param string this parameter is ignored but required by PHP
+     */
+    function __construct($message = NULL) {
         parent::__construct(_("Fehlende Session."));
     }
 }

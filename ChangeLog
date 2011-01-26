@@ -1,4 +1,4 @@
-25.01.2011 v 2.0
+26.01.2011 v 2.0
 http://develop.studip.de/trac/query?milestone=Stud.IP+2.0
 - Fehler, wenn Dozent neue Veranstaltung anlegen moechte [#1341]
 - Anlegen von Veranstaltungen (mehrere Fehler) [#1230]
@@ -194,6 +194,8 @@ http://develop.studip.de/trac/query?milestone=Stud.IP+2.0
 - "Bild ändern" bei Studiengruppen aktiviert falsche Navigation [#1449]
 - "Ressourcen" taucht manchmal in der Navigation auf [#1451]
 - fehlende Infobox-Bilder in der Ressourcenverwaltung [#1452]
+- Navigation wechselt beim Aufklappen einer Ressource [#1453]
+- Navigation wechselt beim Anzeigen der Eigenschaften [#1454]
 - Nutzersuche liefert SQL-Fehler bei Admins [#1456]
 - Navigation defekt im IE7 [#1457]
 - Exception in cli-Skripten erzeugt HTML-Ausgabe [#1468]

@@ -39,9 +39,6 @@ class Course_StudygroupController extends AuthenticatedController {
     {
         parent::before_filter($action, $args);
 
-        // allow only "word" characters in arguments
-        $this->validate_args($args);
-
         if (Config::Get()->STUDYGROUPS_ENABLE
             || in_array($action, words('globalmodules savemodules deactivate'))) {
 

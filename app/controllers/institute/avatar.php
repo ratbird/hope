@@ -26,9 +26,6 @@ class Institute_AvatarController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
-        // allow only "word" characters in arguments
-        $this->validate_args($args);
-
         $this->institute_id = current($args);
         if ($this->institute_id === '' || !in_array(get_object_type($this->institute_id), words('inst fak'))
             || !$GLOBALS['perm']->have_studip_perm("admin", $this->institute_id)) {

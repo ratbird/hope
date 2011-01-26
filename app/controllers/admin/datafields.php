@@ -38,9 +38,6 @@ class Admin_DatafieldsController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
-        // allow only "word" characters in arguments
-        $this->validate_args($args);
-
         // ajax
         if (@$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
             $this->via_ajax = true;

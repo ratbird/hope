@@ -22,17 +22,6 @@ class Course_BasicdataController extends AuthenticatedController
     public $msg = array();
 
     /**
-     * common tasks for all actions
-     */
-    function before_filter(&$action, &$args)
-    {
-        parent::before_filter($action, $args);
-
-        // allow only "word" characters in arguments
-        $this->validate_args($args);
-    }
-
-    /**
      * Zeigt die Grunddaten an. Man beachte, dass eventuell zuvor eine andere
      * Action wie Set ausgeführt wurde, von der hierher weitergeleitet worden ist.
      * Wichtige Daten dazu wurden dann über $this->flash übertragen.

@@ -32,9 +32,6 @@ class Admin_SpecificationController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
-        // allow only "word" characters in arguments
-        $this->validate_args($args);
-
         # user must have special permission
         if (!$perm->have_perm(get_config('AUX_RULE_ADMIN_PERM') ? get_config('AUX_RULE_ADMIN_PERM') : 'admin')) {
             throw new AccessDeniedException(_("Keine Berechtigung."));

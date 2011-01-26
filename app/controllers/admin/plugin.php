@@ -29,9 +29,6 @@ class Admin_PluginController extends AuthenticatedController
 
         parent::before_filter($action, $args);
 
-        // allow only "word" characters in arguments
-        $this->validate_args($args);
-
         // user must have root permission
         $perm->check('root');
 

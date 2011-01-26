@@ -16,8 +16,6 @@ class MessagesController extends AuthenticatedController {
 
   function before_filter(&$action, &$args) {
     parent::before_filter($action, $args);
-    // allow only "word" characters in arguments
-    $this->validate_args($args);
     $this->set_layout(NULL);
   }
 

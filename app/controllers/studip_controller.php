@@ -15,7 +15,9 @@ abstract class StudipController extends Trails_Controller
      * Validate arguments based on a list of given types. The types are:
      * 'int', 'float', 'option' and 'string'. If the list of types is NULL
      * or shorter than the argument list, 'option' is assumed for all
-     * remaining arguments.
+     * remaining arguments. 'option' differs from Request::option() in
+     * that it also accepts the charaters '-' and ',' in addition to all
+     * word charaters.
      *
      * @param array   an array of arguments to the action
      * @param array   list of argument types (optional)
@@ -34,7 +36,7 @@ abstract class StudipController extends Trails_Controller
                     break;
 
                 case 'option':
-                    if (preg_match('/\\W/', $arg)) {
+                    if (preg_match('/[^\\w,-]/', $arg)) {
                         throw new Trails_Exception(400);
                     }
             }

@@ -55,7 +55,7 @@ switch ($view) {
     case "search":
         $page_intro=_("Sie können hier nach Ressourcen suchen. Sie haben die Möglichkeit, über ein Stichwort oder bestimmte Eigenschaften Ressourcen zu suchen oder sich durch die Ebenen zu navigieren.");
         PageLayout::setTitle(_("Suche nach Ressourcen"));
-        Navigation::activateItem('/resources/view/hierarchy');
+        Navigation::activateItem('/search/resources');
 
         $infobox = array(
                     array  ("kategorie" => _("Aktionen:"),
@@ -371,14 +371,6 @@ switch ($view) {
         PageLayout::setTitle(_("Übersicht der Ressourcen"));
         Navigation::activateItem('/resources/view/hierarchy');
     break;
-}
-
-// using the search page not inside the resources
-if (Request::get('view_mode') == 'search' OR Request::get('quick_view_mode') == 'search') {
-        Navigation::activateItem('/search/resources');
-        if(!$perm->have_perm('admin')){
-            Navigation::removeItem('/resources');
-        }
 }
 
 //general naming of resources management pages

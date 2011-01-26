@@ -162,7 +162,7 @@ class CalendarScheduleModel
                 $entry['title']   = '';
                 // check, if the date is assigned to a room
                 if ($rooms = $cycle->getPredominantRoom()) {
-                    $entry['title'] .= implode('', getFormattedRooms(array_slice($rooms, 0, 1)))
+                    $entry['title'] .= implode('', getPlainRooms(array_slice($rooms, 0, 1)))
                                     . (sizeof($rooms) > 1 ? ', u.a.' : '');
                 }
 

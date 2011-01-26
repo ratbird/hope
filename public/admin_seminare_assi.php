@@ -4173,7 +4173,7 @@ if ($level == 7)
                         if (($sem_create_data["modules_list"]["schedule"]) && ($sem_create_data["modules_list"]["scm"]))
                             print " "._("Sie haben die M&ouml;glichkeit, eine Informationsseite anzulegen und können den Terminen im Ablaufplan Themen zuordnen.");
                         if (($sem_create_data["modules_list"]["schedule"]) && (!$sem_create_data["modules_list"]["scm"]))
-                            print " "._("Sie haben können den Terminen im Ablaufplan Themen zuordnen.");
+                            print " "._("Sie können den Terminen im Ablaufplan Themen zuordnen.");
                         if ((!$sem_create_data["modules_list"]["schedule"]) && ($sem_create_data["modules_list"]["scm"]))
                             print " "._("Sie haben die M&ouml;glichkeit,  eine Informationsseite anzulegen.");
                         print "<br><br><font size=-1>"._("Sie haben jederzeit die M&ouml;glichkeit, die bereits erfassten Daten zu &auml;ndern und die n&auml;chsten Schritte sp&auml;ter nachzuholen.")."</font>";

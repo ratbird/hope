@@ -44,9 +44,7 @@ page_open (array ("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
 $perm->check ("autor");
 
 if (Request::get('admin_inst_id')) {
-    $the_range = Request::get('admin_inst_id');
-    $showrangeID = $the_range;
-    // openInst($the_range);
+    $showrangeID = Request::get('admin_inst_id');
     $view = 'vote_inst';
 }
 
@@ -59,12 +57,6 @@ PageLayout::setTitle(_("Verwaltung von Umfragen und Tests"));
 require_once 'lib/admin_search.inc.php';
 
 if ($list || $view) {
-    if ($the_range) {
-        $view_mode = get_object_type($the_range);
-        if ($view_mode == "fak"){
-            $view_mode = "inst";
-        }
-    }
     if ($perm->have_perm('admin')) {
         if ($links_admin_data['topkat'] == 'sem') {
             Navigation::activateItem('/admin/course/vote');
@@ -81,9 +73,7 @@ if ($list || $view) {
 include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');
 
-if ($list || $view) {
-    include 'lib/include/admin_search_form.inc.php';
-}
+include 'lib/include/admin_search_form.inc.php';
 
 if ($page == "edit")
     include 'lib/vote/vote_edit.inc.php';

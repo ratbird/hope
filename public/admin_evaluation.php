@@ -47,8 +47,6 @@ page_open (array ("sess" => "Seminar_Session",
 $perm->check ("autor");
 
 if (Request::get('admin_inst_id')) {
-    $the_range = Request::get('admin_inst_id');
-    openInst($the_range);
     $view = 'eval_inst';
 }
 
@@ -107,9 +105,7 @@ if ($the_range != $auth->auth['uname'] && $the_range != 'studip' && !$isUserrang
 include_once('lib/include/html_head.inc.php');
 include_once('lib/include/header.php');
 
-if ($list || $view) {
-    include 'lib/include/admin_search_form.inc.php';
-}
+include 'lib/include/admin_search_form.inc.php';
 
 if ($_REQUEST["page"] == "edit")
     include (EVAL_PATH.EVAL_FILE_EDIT);

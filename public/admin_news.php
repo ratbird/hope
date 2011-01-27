@@ -40,8 +40,7 @@ URLHelper::bindLinkParam('news_range_id',$news_range_id);
 URLHelper::bindLinkParam('news_range_name',$news_range_name);
 
 if (Request::get('admin_inst_id')) {
-    openInst(Request::get('admin_inst_id'));
-    $news_range_id = $SessSemName[1];
+    $news_range_id = Request::get('admin_inst_id');
     $view_mode = 'inst';
 }
 

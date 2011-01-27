@@ -392,4 +392,67 @@ class Request implements ArrayAccess, IteratorAggregate
 
         return $value;
     }
+
+    /**
+     * Returns the (uppercase) request method.
+     *
+     * @return string  the uppercased method of the request
+     */
+    public static function method()
+    {
+        return strtoupper($_SERVER['REQUEST_METHOD']);
+    }
+
+    /**
+     * @return boolean  true if this a GET request
+     */
+    public static function isGet()
+    {
+        return self::method() === 'GET';
+    }
+
+    /**
+     * @return boolean  true if this a POST request
+     */
+    public static function isPost()
+    {
+        return self::method() === 'POST';
+    }
+
+    /**
+     * @return boolean  true if this a PUT request
+     */
+    public static function isPut()
+    {
+        return self::method() === 'PUT';
+    }
+
+    /**
+     * @return boolean  true if this a DELETE request
+     */
+    public static function isDelete()
+    {
+        return self::method() === 'DELETE';
+    }
+
+
+    /**
+     * @return boolean  true if this an XmlHttpRequest sent by jQuery/prototype
+     */
+    public static function isXhr()
+    {
+        return $_SERVER['HTTP_X_REQUESTED_WITH'] &&
+            strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest') === 0;
+    }
+
+    /**
+     * This is an alias of Request::isXhr
+     *
+     * @return boolean  true if this an XmlHttpRequest sent by jQuery/prototype
+     */
+    public static function isAjax()
+    {
+        return self::isXhr();
+    }
+
 }

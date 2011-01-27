@@ -64,32 +64,9 @@ class CSRFProtection
     static function verifyRequest()
     {
         return
-            self::isGETRequest() ||
-            self::isXHR() ||
+            Request::isGet() ||
+            Request::isXhr() ||
             self::checkSecurityToken();
-    }
-
-    /**
-     * Returns true if the request is a GET request.
-     *
-     * @return boolean  true if it is a GET request
-     */
-    static private function isGETRequest()
-    {
-        return strcasecmp($_SERVER['REQUEST_METHOD'], 'GET') === 0;
-    }
-
-    /**
-     * Returns true if the request was made by jQuery (or prototype).
-     * Both libraries send a special header "X-Requested-With" with a
-     * value of "XMLHttpRequest" with every Ajax request.
-     *
-     * @return boolean true if an XHR
-     */
-    static private function isXHR()
-    {
-        return $_SERVER['HTTP_X_REQUESTED_WITH'] &&
-            strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest') === 0;
     }
 
     /**

@@ -408,7 +408,7 @@ STUDIP.Tabs = (function () {
       if (list.length === 0) {
         return;
       }
-      items = jQuery('li a', list);
+      items = jQuery('li a span', list);
       jQuery(list).data('old_width', jQuery(window).width());
 
       // strip contents and set titles

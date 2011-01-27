@@ -4,10 +4,16 @@
             <li<?= $nav->isActive() ? ' class="current"' : '' ?>>
                 <? if ($nav->isEnabled()) : ?>
                     <a href="<?= URLHelper::getLink($nav->getURL()) ?>">
-                        <?= htmlReady($nav->getTitle()) ?>
+                        <? if ($image = $nav->getImage()) : ?>
+                            <img class="tab-icon" src="<?=$image['src']?>" title="<?= htmlReady($nav->getTitle()) ?>" />
+                        <? endif ?>
+                        <span><?= htmlReady($nav->getTitle()) ?></span>
                     </a>
                 <? else: ?>
                     <span class="quiet">
+                        <? if ($image = $nav->getImage()) : ?>
+                            <img class="tab-icon" src="<?=$image['src']?>" title="<?= htmlReady($nav->getTitle()) ?>" />
+                        <? endif ?>
                         <?= htmlReady($nav->getTitle()) ?>
                     </span>
                 <? endif ?>

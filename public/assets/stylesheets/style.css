@@ -955,10 +955,11 @@ div.clear {
     background-color: #9A9A9A;
 }
 
-#tabs a, #tabs span {
+#tabs a, #tabs span.quiet {
     display: block;
-    padding-left: 1.5em;
-    padding-right: 1.5em;
+    padding-left: 1.3em;
+    padding-right: 1.3em;
+    white-space: nowrap;
 }
 
 #tabs li.current {
@@ -966,12 +967,15 @@ div.clear {
     background-color: #F1F5Fe;
 }
 
-#tabs li.current a, #tabs li.current span {
+#tabs li.current a, #tabs li.current span.quiet {
     background: url("../images/current_left.png") no-repeat left top;
 }
 
-#tabs li.current + li a, #tabs li.current + li span {
+#tabs li.current + li a, #tabs li.current + li span.quiet {
     background: url("../images/reiter2.jpg") no-repeat left top;
+}
+#tabs .quiet img {
+    opacity: 0.25;
 }
 
 #tabs2 {
@@ -996,7 +1000,14 @@ div.clear {
 #tabs2 li.current {
     background: url("../images/icons/16/red/arr_1right.png") no-repeat left center;
 }
+#tabs span {
+    padding: 0;
+}
 
+.tab-icon {
+    float: left;
+    margin: 4px 5px 0 -0.5em;
+}
 
 /* --- Studienbereichsauswahl ----------------------------------------------- */
 #study_area_selection {

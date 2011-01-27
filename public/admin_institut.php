@@ -72,6 +72,8 @@ $db2 = new DB_Seminar;
 $cssSw = new cssClassSwitcher;
 $Modules = new Modules;
 
+print_r($_REQUEST);
+
 // Check if there was a submission
 while ( is_array($_REQUEST)
      && list($key, $val) = each($_REQUEST)) {
@@ -93,7 +95,11 @@ while ( is_array($_REQUEST)
 
         // Does the Institut already exist?
         // NOTE: This should be a transaction, but it is not...
-        $db->query("select * from Institute where Name='$Name'");
+        $sql = "SELECT * FROM Institute WHERE Name='$Name'";
+        if ($Fakultaet){
+           $sql .= " AND fakultaets_id='$Fakultaet'";
+        }
+        $db->query($sql);
         if ($db->nf()>0) {
             $msg="error§<b>" . sprintf(_("Die Einrichtung \"%s\" existiert bereits!"), htmlReady(stripslashes($Name)));
             break;

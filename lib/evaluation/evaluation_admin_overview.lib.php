@@ -358,7 +358,7 @@ class EvalOverview {
       $form->addAttr( "action", UrlHelper::getLink("?rangeID=".$GLOBALS["rangeID"]));
       $form->addAttr( "method", "post" );
       $form->addAttr( "style", "display:inline;" );
-      $form->html(CSRFProtection::tokenTag());
+      $form->addHTMLContent(CSRFProtection::tokenTag());
 
       $input = new HTMLEmpty ("input");
       $input->addAttr( "type", "hidden" );
@@ -512,7 +512,7 @@ class EvalOverview {
             $GLOBALS["rangeID"]."&openID=".$evalID."#open"));
       $form->addAttr( "method", "post" );
       $form->addAttr( "style", "display:inline;" );
-      $form->html(CSRFProtection::tokenTag());
+      $form->addHTMLContent(CSRFProtection::tokenTag());
 
       $input = new HTMLEmpty ("input");
       $input->addAttr( "type", "hidden" );
@@ -759,7 +759,7 @@ class EvalOverview {
     $form = new HTML ("form");
     $form->addAttr ("method", "post");
     $form->addAttr ("action", UrlHelper::getLink());
-    $form->html(CSRFProtection::tokenTag());
+    $form->addHTMLContent(CSRFProtection::tokenTag());
 
     $hidden = new HTMLempty ("input");
     $hidden->addAttr ("type", "hidden");
@@ -813,7 +813,7 @@ class EvalOverview {
     $form = new HTML ("form");
     $form->addAttr ("method", "post");
     $form->addAttr ("action", UrlHelper::getLink());
-    $form->html(CSRFProtection::tokenTag());
+    $form->addHTMLContent(CSRFProtection::tokenTag());
 
     $form->addContent (_("Evaluationen aus dem Bereich "));
 
@@ -870,7 +870,7 @@ class EvalOverview {
     $form = new HTML ("form");
     $form->addAttr ("method", "post");
     $form->addAttr ("action", UrlHelper::getLink("?rangeID=".$GLOBALS["rangeID"]));
-    $form->html(CSRFProtection::tokenTag());
+    $form->addHTMLContent(CSRFProtection::tokenTag());
 
     $form->addContent (_("Öffentliche Evaluationsvorlage suchen: "));
 

@@ -31,7 +31,6 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
 $perm->check("autor");
 
 if (Request::get('admin_inst_id')) {
-    $_range_id = Request::get('admin_inst_id');
     $view = 'lit_inst';
 }
 

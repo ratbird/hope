@@ -617,6 +617,9 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 case 'admin_vote.php':
                     printf("<font size=-1>" . _("Umfragen und Tests") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?view=vote_sem&showrangeID=' . $seminar_id), makeButton("bearbeiten"));
                     break;
+                case 'admin_evaluation.php':
+                    printf("<font size=-1>" . _("Evaluationen") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('?view=eval_sem&rangeID=' . $seminar_id), makeButton("bearbeiten"));
+                    break;
                 case "copy_assi.php":
                     printf("<font size=-1>" . _("Veranstaltung") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('admin_seminare_assi.php?cmd=do_copy&start_level=TRUE&class=1&cp_id=' . $seminar_id), makeButton("kopieren"));
                     break;

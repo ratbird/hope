@@ -43,6 +43,13 @@ page_open (array ("sess" => "Seminar_Session", "auth" => "Seminar_Auth",
           "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check ("autor");
 
+if (Request::get('admin_inst_id')) {
+    $the_range = Request::get('admin_inst_id');
+    $showrangeID = $the_range;
+    // openInst($the_range);
+    $view = 'vote_inst';
+}
+
 require_once 'lib/functions.php';
 include_once 'lib/seminar_open.php';
 
@@ -52,9 +59,11 @@ PageLayout::setTitle(_("Verwaltung von Umfragen und Tests"));
 require_once 'lib/admin_search.inc.php';
 
 if ($list || $view) {
-    $view_mode = get_object_type($the_range);
-    if ($view_mode == "fak"){
-        $view_mode = "inst";
+    if ($the_range) {
+        $view_mode = get_object_type($the_range);
+        if ($view_mode == "fak"){
+            $view_mode = "inst";
+        }
     }
     if ($perm->have_perm('admin')) {
         if ($links_admin_data['topkat'] == 'sem') {
@@ -77,9 +86,9 @@ if ($list || $view) {
 }
 
 if ($page == "edit")
-    include ('lib/vote/vote_edit.inc.php');
+    include 'lib/vote/vote_edit.inc.php';
 else
-    include ('lib/vote/vote_overview.inc.php');
+    include 'lib/vote/vote_overview.inc.php';
 
 include 'lib/include/html_end.inc.php';
 page_close ();

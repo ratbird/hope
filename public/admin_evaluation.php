@@ -46,6 +46,12 @@ page_open (array ("sess" => "Seminar_Session",
                   "user" => "Seminar_User"));
 $perm->check ("autor");
 
+if (Request::get('admin_inst_id')) {
+    $the_range = Request::get('admin_inst_id');
+    openInst($the_range);
+    $view = 'eval_inst';
+}
+
 require_once 'lib/functions.php';
 include_once 'lib/seminar_open.php';
 

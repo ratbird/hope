@@ -29,6 +29,12 @@ require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $perm->check("autor");
+
+if (Request::get('admin_inst_id')) {
+    $_range_id = Request::get('admin_inst_id');
+    $view = 'lit_inst';
+}
+
 require_once ('lib/visual.inc.php');
 require_once ('lib/classes/StudipLitListViewAdmin.class.php');
 require_once ('lib/classes/StudipLitClipBoard.class.php');

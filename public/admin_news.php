@@ -39,6 +39,12 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 URLHelper::bindLinkParam('news_range_id',$news_range_id);
 URLHelper::bindLinkParam('news_range_name',$news_range_name);
 
+if (Request::get('admin_inst_id')) {
+    openInst(Request::get('admin_inst_id'));
+    $news_range_id = $SessSemName[1];
+    $view_mode = 'inst';
+}
+
 if ($_REQUEST['range_id'] == "self"){
     $news_range_id = $auth->auth['uid'];
 } else if (isset($_REQUEST['range_id'])){

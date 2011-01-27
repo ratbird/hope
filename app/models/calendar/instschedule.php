@@ -77,11 +77,15 @@ class CalendarInstscheduleModel
     static function getInstituteEntries($user_id, $semester, $start_hour, $end_hour, $institute_id, $controller)
     {
         $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
-        // fetch seminar-entries 
+
+        // fetch seminar-entries, show invisible seminars if the user has enough perms
+        $visibility_perms = $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'));
         $stmt = DBManager::get()->prepare("SELECT * FROM seminare as s
             WHERE Institut_id = ? AND (start_time = ?
                 OR (start_time < ? AND duration_time = -1)
-                OR (start_time + duration_time >= ?))");
+                OR (start_time + duration_time >= ?)) "
+                . (!$visibility_perms ? " AND s.visible='1'" : ""));
+
         $stmt->execute(array($institute_id, $semester['beginn'], $semester['beginn'], $semester['beginn']));
 
         while ($entry = $stmt->fetch()) {

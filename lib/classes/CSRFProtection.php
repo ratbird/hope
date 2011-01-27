@@ -43,6 +43,35 @@ class CSRFProtection
      */
     const TOKEN = 'security_token';
 
+
+    /**
+     * This checks the request and throws an InvalidSecurityTokenException if
+     * fails to verify its authenticity.
+     *
+     * @throws MethodNotAllowed               The request has to be unsafe
+     *                                        in terms of RFC 2616.
+     * @throws InvalidSecurityTokenException  The request is invalid as the
+     *                                        security token does not match.
+     */
+    static function verifyUnsafeRequest()
+    {
+        if (self::isSafeRequestMethod()) {
+            throw new MethodNotAllowedException();
+        }
+
+        if (!Request::isXhr() && !self::checkSecurityToken()) {
+            throw new InvalidSecurityTokenException();
+        }
+    }
+
+    /**
+     * @return boolean true if the request method is either GET or HEAD
+     */
+    private static function isSafeRequestMethod()
+    {
+        return in_array(Request::method(), array('GET', 'HEAD'));
+    }
+
     /**
      * This checks the request and throws an InvalidSecurityTokenException if
      * fails to verify its authenticity.
@@ -203,4 +232,11 @@ class SessionRequiredException extends Exception
     function __construct($message = NULL) {
         parent::__construct(_("Fehlende Session."));
     }
+}
+
+/**
+ * This exceptions is thrown when a request's method is not allowed.
+ */
+class MethodNotAllowedException extends Exception
+{
 }

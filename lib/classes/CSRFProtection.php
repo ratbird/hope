@@ -13,6 +13,8 @@
  * @category    Stud.IP
  */
 
+require_once 'lib/classes/Request.class.php';
+
 /**
  * To protect Stud.IP from forged request from other sites a security token is
  * generated and stored in the session and all forms (or rather POST request)

@@ -84,6 +84,7 @@ class CourseNavigation extends Navigation
 
         // general information
         $navigation = new Navigation(_('Übersicht'));
+        $navigation->setImage('icons/16/grey/seminar.png');
 
         if ($sem_class == 'sem') {
             $navigation->addSubNavigation('info', new Navigation(_('Kurzinfo'), 'seminar_main.php'));
@@ -114,6 +115,7 @@ class CourseNavigation extends Navigation
 
         // admin area
         $navigation = new Navigation(_('Verwaltung'));
+        $navigation->setImage('icons/16/grey/admin.png');
 
         if ($studygroup_mode) {
             if ($perm->have_studip_perm('dozent', $SessSemName[1])) {

@@ -72,8 +72,6 @@ $db2 = new DB_Seminar;
 $cssSw = new cssClassSwitcher;
 $Modules = new Modules;
 
-print_r($_REQUEST);
-
 // Check if there was a submission
 while ( is_array($_REQUEST)
      && list($key, $val) = each($_REQUEST)) {

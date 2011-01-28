@@ -97,8 +97,8 @@ class ProfileNavigation extends Navigation
 
         // profile data
         $navigation = new Navigation(_('Nutzerdaten'));
-        $navigation->addSubNavigation('profile', new Navigation(_('Allgemein'), 'edit_about.php', array('view' => 'Daten')));
-        $navigation->addSubNavigation('private', new Navigation(_('Privat'), 'edit_about.php', array('view' => 'Lebenslauf')));
+        $navigation->addSubNavigation('profile', new Navigation(_('Grunddaten'), 'edit_about.php', array('view' => 'Daten')));
+        $navigation->addSubNavigation('private', new Navigation(_('Weitere Daten'), 'edit_about.php', array('view' => 'Lebenslauf')));
 
         if ($my_about->auth_user['perms'] != 'admin' && $my_about->auth_user['perms'] != 'root') {
             $navigation->addSubNavigation('study_data', new Navigation(_('Studiendaten'), 'edit_about.php', array('view' => 'Studium')));

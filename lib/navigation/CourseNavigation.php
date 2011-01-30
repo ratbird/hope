@@ -115,7 +115,7 @@ class CourseNavigation extends Navigation
 
         // admin area
         $navigation = new Navigation(_('Verwaltung'));
-        $navigation->setImage('icons/16/grey/admin.png');
+        
 
         if ($studygroup_mode) {
             if ($perm->have_studip_perm('dozent', $SessSemName[1])) {
@@ -184,7 +184,8 @@ class CourseNavigation extends Navigation
                 $navigation->addSubNavigation('evaluation', $item);
             }
         }
-
+        
+        $navigation->setImage('icons/16/grey/admin.png');
         $this->addSubNavigation('admin', $navigation);
 
         // forum

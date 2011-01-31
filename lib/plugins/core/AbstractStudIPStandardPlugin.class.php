@@ -33,6 +33,8 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
     function setNavigation(StudipPluginNavigation $navigation) {
         parent::setNavigation($navigation);
 
+        $navigation->setImage($this->getPluginiconname());
+
         // prepend copy of navigation to its sub navigation
         $item_names = array_keys($navigation->getSubNavigation());
         $navigation_copy = clone $navigation;

@@ -16,7 +16,6 @@
 require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-$perm->check("autor");
 
 $id = $SessSemName[1];
 $issue_open = array();
@@ -137,8 +136,10 @@ if (Request::get('export') && $rechte) {
             }*/
 
             //calendar jump
-            $tpl['calendar'] = $GLOBALS['template_factory']->open('raumzeit/calendar_jump')
-                    ->render(array('start' => $singledate->getStartTime()));
+            if ($user->id != 'nobody') {
+                $tpl['calendar'] = $GLOBALS['template_factory']->open('raumzeit/calendar_jump')
+                        ->render(array('start' => $singledate->getStartTime()));
+            }
 
             if (Request::get('date_type')) {
                 switch (Request::get('date_type')) {

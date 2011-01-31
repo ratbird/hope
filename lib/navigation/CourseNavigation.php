@@ -257,7 +257,7 @@ class CourseNavigation extends Navigation
         }
 
         // schedule
-        if ($modules['schedule'] && $user->id != 'nobody') {
+        if ($modules['schedule']) {
             $navigation = new Navigation(_('Ablaufplan'));
             $navigation->setImage('icons/16/grey/schedule.png');
 

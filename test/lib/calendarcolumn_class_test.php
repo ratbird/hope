@@ -73,13 +73,13 @@ class CalendarColumnCase extends UnitTestCase {
     }
 
     function test_wrong_entry() {
+        $this->expectException("Exception");
         $entry1 = array('start' => "0800", 'end' => "1000");
         $entry2 = array('start' => "1000", 'title' => "test_title");
         $entry3 = array('end' => "1500", 'title' => "test_title");
         $column = CalendarColumn::create()->addEntry($entry1);
         $column = CalendarColumn::create()->addEntry($entry2);
         $column = CalendarColumn::create()->addEntry($entry3);
-        $this->expectException("Exception");
     }
 
     function test_add_entries() {

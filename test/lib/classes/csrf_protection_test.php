@@ -16,13 +16,14 @@ class CSRFProtectionTokenTest extends UnitTestCase
 {
     function setUp()
     {
-        session_start();
+        if (session_id() === '') {
+            session_id("test-session");
+        }
         $_SESSION = array();
     }
 
     function tearDown()
     {
-        session_destroy();
         $_SESSION = array();
     }
 
@@ -42,9 +43,7 @@ class CSRFProtectionTokenTest extends UnitTestCase
     {
         $token1 = CSRFProtection::token();
 
-        session_destroy();
         $_SESSION = array();
-        session_start();
 
         $token2 = CSRFProtection::token();
 
@@ -69,7 +68,9 @@ class CSRFRequestTest extends UnitTestCase
 
     function setUp()
     {
-        session_start();
+        if (session_id() === '') {
+            session_id("test-session");
+        }
         $_SESSION = array();
         $_POST = array();
         $this->token = CSRFProtection::token();
@@ -77,7 +78,7 @@ class CSRFRequestTest extends UnitTestCase
 
     function tearDown()
     {
-        session_destroy();
+        $_SESSION = array();
     }
 
     function testInvalidUnsafeRequest()

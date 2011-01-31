@@ -6,15 +6,15 @@
 *             2001, Maxim Derkachev <kot@books.ru>
 * @package    PHPLib
 * @access     public
-*/ 
+*/
 class User {
 
   /**
   *
   */
   var $classname = "User";
-  
-  
+
+
   /**
   * AC storage name
   *
@@ -22,46 +22,46 @@ class User {
   */
   var $name = "";
 
-  
+
   /**
   * AC storage  ID
   *
   * @var  string
   */
   var $id = "";
-  
-  
+
+
   /**
   * An array where references to registered user vars are stored.
   *
   * @var  string
   */
   var $user_vars = null;
-  
-  
+
+
   /**
   * Do we need to push user vars into global namespace?
-  * 
-  * 
+  *
+  *
   * @var  boolean
   */
-  var $register_globals = true;     
-  
-  
+  var $register_globals = true;
+
+
   /**
   * Name of data storage container
-  * 
+  *
   * var string
   */
   var $that_class = '';
-  
-  
+
+
   /**
   *
   * @var  object CT_*
-  */        
+  */
   var $that;
-  
+
   /**
   *
   * @param  string
@@ -75,8 +75,8 @@ class User {
     $this->that->ac_start();
     $this->thaw();
   } // end func start
-  
-  
+
+
   /**
   * registers a global as user variables
   *
@@ -86,7 +86,7 @@ class User {
       if ($this->register_globals){
           foreach (explode(',',$things) as $thing) {
               $thing = trim($thing);
-              if (!isset($GLOBALS[$thing])){ 
+              if (!isset($GLOBALS[$thing])){
                   $GLOBALS[$thing] = null;
               }
               $this->user_vars[$thing] =& $GLOBALS[$thing];
@@ -112,14 +112,14 @@ class User {
   *
   */
   function unregister($things) {
-  
+
     foreach (explode(',',$things) as $thing) {
         $thing = trim($thing);
         unset($this->user_vars[$thing]);
     }
-    
+
   } // end func unregister
-  
+
   /**
   *
   * @param string
@@ -127,16 +127,16 @@ class User {
   function get_id($id = "") {
     $this->id = $id;
   } // end func get_id
-  
+
 
   /**
-  * Delete the current user record 
+  * Delete the current user record
   */
   function delete() {
       $this->that->ac_delete($this->id, $this->name);
   } // end func delete
 
-  
+
   /**
   * serializes user data
   */
@@ -164,19 +164,21 @@ class User {
       }
       return true;
   } // end func freeze
-    
-  
-  /* 
+
+
+  /*
   * restore saved registered user variables
   **/
   function thaw() {
-  
+    if ($this->id == 'nobody'){
+          return;
+    }
     $vals = $this->that->ac_get_value($this->id, $this->name);
-   
+
     $this->checksum = hash('md5', $vals);
-    
+
     $vars = @unserialize($vals);
-    
+
     if (is_array ($vars)) {
         if($this->register_globals){
             foreach($vars as $key => $value){

@@ -8,17 +8,17 @@
  *                    Massimiliano Masserelli
  *
  *
- */ 
+ */
 
 class Auth {
   var $classname = "Auth";
   var $persistent_slots = array("auth","classname");
-  
+
   var $lifetime = 15;             ## Max allowed idle time before
                                   ## reauthentication is necessary.
                                   ## If set to 0, auth never expires.
-  
-  var $refresh = 0;               ## Refresh interval in minutes. 
+
+  var $refresh = 0;               ## Refresh interval in minutes.
                                   ## When expires auth data is refreshed
                                   ## from db using auth_refreshlogin()
                                   ## method. Set to 0 to disable refresh
@@ -30,7 +30,7 @@ class Auth {
 
   var $nobody = false;            ## If true, a default auth is created...
 
-  var $cancel_login = "cancel_login"; ## The name of a button that can be 
+  var $cancel_login = "cancel_login"; ## The name of a button that can be
                                       ## used to cancel a login form
 
   ## End of user qualifiable settings.
@@ -44,8 +44,8 @@ class Auth {
   ##
   function check_feature($f)
       {
-      if ($this->classname != $f) ### needs the new __sleep funct  
-         {  
+      if ($this->classname != $f) ### needs the new __sleep funct
+         {
          $clone=new $f;
          $clone->auth=$this->auth;
          return $clone;
@@ -67,7 +67,7 @@ class Auth {
       $sess->register("auth");
       $this->in = true;
     }
-    
+
     ## back compatibility: if database_class is set, create db object
     if(isset($this->database_class)) {
       $this->db = new $this->database_class;
@@ -82,9 +82,9 @@ class Auth {
       switch ($uid) {
         case "form":
           # Login in progress
-          if ((isset($_POST[$this->cancel_login]) && $_POST[$this->cancel_login]) or 
+          if ((isset($_POST[$this->cancel_login]) && $_POST[$this->cancel_login]) or
               (isset($_GET[$this->cancel_login]) && $_GET[$this->cancel_login])) {
-            # If $this->cancel_login is set, delete all auth info and set 
+            # If $this->cancel_login is set, delete all auth info and set
             # state to "Not logged in", so eventually default or automatic
             # authentication may take place
             $this->unauth();
@@ -108,16 +108,17 @@ class Auth {
     switch ($state) {
       case 1:
         # No valid auth info or auth is expired
-        
-        # Check for user supplied automatic login procedure 
+
+        # Check for user supplied automatic login procedure
         if ( $uid = $this->auth_preauth() ) {
           $this->auth["uid"] = $uid;
           $this->auth["exp"] = time() + (60 * $this->lifetime);
           $this->auth["refresh"] = time() + (60 * $this->refresh);
+          $sess->regenerate_session_id(array('auth'));
           $sess->freeze();
           return true;
         }
-        
+
         # Check for "log" vs. "reg" mode
         switch ($this->mode) {
           case "yes":
@@ -180,6 +181,7 @@ class Auth {
               $this->auth["uid"] = $uid;
               $this->auth["exp"] = time() + (60 * $this->lifetime);
               $this->auth["refresh"] = time() + (60 * $this->refresh);
+              $sess->regenerate_session_id(array('auth', '_language'));
               $sess->freeze();
               return true;
             } else {
@@ -226,7 +228,7 @@ class Auth {
   function login_if( $t ) {
     if ( $t ) {
       $this->unauth();  # We have to relogin, so clear current auth info
-      $this->nobody = false; # We are forcing login, so default auth is 
+      $this->nobody = false; # We are forcing login, so default auth is
                              # disabled
       $this->start(); # Call authentication code
     }
@@ -250,11 +252,11 @@ class Auth {
       $this->auth["exp"]   = 0x7fffffff;
     }
   }
-  
+
 
   function logout($nobody = "") {
     global $sess;
-    
+
     $sess->unregister("auth");
     unset($this->auth["uname"]);
     $this->unauth($nobody == "" ? $this->nobody : $nobody);
@@ -264,18 +266,18 @@ class Auth {
     if (
       isset($this->auth["uid"])
         &&
-      $this->auth["uid"] 
-        && 
+      $this->auth["uid"]
+        &&
       (($this->lifetime <= 0) || (time() < $this->auth["exp"]))
     ) {
       # If more than $this->refresh minutes are passed since last check,
       # perform auth data refreshing. Refresh is only done when current
       # session is valid (registered, not expired).
       if (
-        ($this->refresh > 0) 
-         && 
+        ($this->refresh > 0)
+         &&
         ($this->auth["refresh"])
-         && 
+         &&
         ($this->auth["refresh"] < time())
       ) {
         if ( $this->auth_refreshlogin() ) {
@@ -290,7 +292,7 @@ class Auth {
       return false;
     }
   }
-    
+
   ########################################################################
   ##
   ## Helper functions
@@ -302,22 +304,22 @@ class Auth {
   function purl() {
     print $GLOBALS["sess"]->self_url();
   }
-  
+
   ## This method can authenticate a user before the loginform
-  ## is being displayed. If it does, it must set a valid uid 
+  ## is being displayed. If it does, it must set a valid uid
   ## (i.e. nobody IS NOT a valid uid) just like auth_validatelogin,
   ## else it shall return false.
 
   function auth_preauth() { return false; }
-  
+
   ##
   ## Authentication dummies. Must be overridden by user.
   ##
-  
+
   function auth_loginform() { ; }
 
   function auth_validatelogin() { ; }
-  
+
   function auth_refreshlogin() { ; }
 
   function auth_registerform() { ; }

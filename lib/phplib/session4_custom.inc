@@ -545,5 +545,26 @@ class Session {
     print $this->self_url();
   } // end func pself_url
 
+  function regenerate_session_id($keep_session_vars = array())
+  {
+      if (is_array($_SESSION)) {
+          foreach(array_keys($_SESSION) as $k) {
+              if (ini_get('register_globals')) {
+                  unset($GLOBALS[$k]);
+              }
+              if (in_array($k, $keep_session_vars)) {
+                  $keep[$k] = $_SESSION[$k];
+              }
+          }
+      }
+      session_destroy();
+      $this->start();
+      foreach($keep_session_vars as $k) {
+          $_SESSION[$k] = $keep[$k];
+          if (ini_get('register_globals')) {
+              $GLOBALS[$k] = $_SESSION[$k];
+          }
+      }
+  }
 } // end class Session4_Custom
 ?>

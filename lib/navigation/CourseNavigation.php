@@ -115,14 +115,13 @@ class CourseNavigation extends Navigation
 
         // admin area
         $navigation = new Navigation(_('Verwaltung'));
+        $navigation->setImage('icons/16/grey/admin.png');
         
-
         if ($studygroup_mode) {
             if ($perm->have_studip_perm('dozent', $SessSemName[1])) {
                 $navigation->addSubNavigation('main', new Navigation(_('Verwaltung'), 'dispatch.php/course/studygroup/edit/'.$SessSemName[1]));
             }
         } else if ($perm->have_studip_perm('tutor', $SessSemName[1]) && !$perm->have_perm('admin')) {
-            $navigation = new Navigation(_('Verwaltung'));
             $main = new Navigation(_('Verwaltung'), 'dispatch.php/course/management');
             $navigation->addSubNavigation('main', $main);
 
@@ -185,7 +184,6 @@ class CourseNavigation extends Navigation
             }
         }
         
-        $navigation->setImage('icons/16/grey/admin.png');
         $this->addSubNavigation('admin', $navigation);
 
         // forum
@@ -236,6 +234,7 @@ class CourseNavigation extends Navigation
                 }
             } else if ($modules['personal']) {
                 $navigation = new Navigation(_('Personal'));
+                $navigation->setImage('icons/16/grey/community.png');
                 $navigation->addSubNavigation('view', new Navigation(_('MitarbeiterInnen'), 'institut_members.php'));
 
                 if ($perm->have_studip_perm('tutor', $SessSemName[1]) && $perm->have_perm('admin')) {

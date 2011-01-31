@@ -1007,6 +1007,8 @@ div.clear {
 .tab-icon {
     float: left;
     margin: 4px 5px 0 -0.5em;
+    height: 16px;
+    width: 16px;
 }
 
 /* --- Studienbereichsauswahl ----------------------------------------------- */

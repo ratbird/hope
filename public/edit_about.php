@@ -799,12 +799,13 @@ if ($view == 'Daten') {
     echo '<tr><td class=blank>';
 
     echo '<form action="'. $PHP_SELF. '?cmd=edit_pers&username='. $username. '&view='. $view. '&studipticket=' . get_ticket(). '" method="POST" name="pers"';
-    echo CSRFProtection::tokenTag();
     //Keine JavaScript überprüfung bei adminzugriff
     if ($my_about->check == 'user' && $auth->auth['jscript'] ) {
         echo ' onsubmit="return checkdata()" ';
     }
-    echo '><table align="center" width="99%" class="blank" border="0" cellpadding="2" cellspacing="0">';
+    echo '>';
+    echo CSRFProtection::tokenTag();
+    echo '<table align="center" width="99%" class="blank" border="0" cellpadding="2" cellspacing="0">';
     if ($my_about->check == 'user') {
         echo "<tr><td class=\"".$cssSw->getClass()."\" width=\"25%\" align=\"left\"><b>" . _("Username:") . " </b></td><td class=\"".$cssSw->getClass()."\" colspan=2 width=\"75%\" align=\"left\">&nbsp;";
         if (($ALLOW_CHANGE_USERNAME && !StudipAuthAbstract::CheckField("auth_user_md5.username",$my_about->auth_user['auth_plugin'])) ) {

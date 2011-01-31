@@ -24,9 +24,8 @@ require_once 'lib/messaging.inc.php';
 require_once 'lib/user_visible.inc.php';
 
 // classes required for global-module-settings
-require_once('lib/classes/AdminModules.class.php');
+require_once 'lib/classes/AdminModules.class.php';
 
-if (!defined('ELEMENTS_PER_PAGE')) define("ELEMENTS_PER_PAGE", 20);
 
 /**
  * This controller realises the basal functionalities of a studygroup.
@@ -396,7 +395,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
             } else if (Request::get('really_deactivate')) {
                 // really deactive modules
-  
+
                 // 1. Modules
                 if (is_array($this->flash['deactivate_modules'])) {
                     $sem  = new Seminar($id);
@@ -564,10 +563,10 @@ class Course_StudygroupController extends AuthenticatedController {
         $this->page   = $page;
         $this->anzahl = StudygroupModel::countMembers($id);
 
-        if($this->page < 1 || $this->page > ceil($this->anzahl/ELEMENTS_PER_PAGE)) $this->page = 1;
+        if($this->page < 1 || $this->page > ceil($this->anzahl/get_config('ENTRIES_PER_PAGE'))) $this->page = 1;
 
-        $this->lower_bound      = ($this->page - 1) * ELEMENTS_PER_PAGE;
-        $this->cmembers         = StudygroupModel::getMembers($id, $this->lower_bound, ELEMENTS_PER_PAGE);
+        $this->lower_bound      = ($this->page - 1) * get_config('ENTRIES_PER_PAGE');
+        $this->cmembers         = StudygroupModel::getMembers($id, $this->lower_bound, get_config('ENTRIES_PER_PAGE'));
         usort($this->cmembers, array('StudygroupModel','compare_status'));
         $this->groupname        = $sem->name;
         $this->sem_id           = $id;

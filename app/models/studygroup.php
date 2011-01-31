@@ -14,7 +14,7 @@
  *
  */
 
-require_once ('lib/messaging.inc.php');
+require_once 'lib/messaging.inc.php';
 
 class StudygroupModel
 {
@@ -236,7 +236,7 @@ class StudygroupModel
 
     /**
      * retrieves the count of all studygroups
-     * 
+     *
      *  param string search a filter term
      *
      * @return string count
@@ -251,7 +251,7 @@ class StudygroupModel
             $search = DBManager::get()->quote('%' . $search . '%');
             $sql .= " AND seminare.Name LIKE {$search}";
         }
-        
+
         return DBManager::get()->query($sql)->fetchColumn();
     }
 
@@ -265,8 +265,11 @@ class StudygroupModel
      *
      * @return array studygroups
      */
-    function getAllGroups($sort = '', $lower_bound = 1, $elements_per_page = 20, $search = null)
+    function getAllGroups($sort = '', $lower_bound = 1, $elements_per_page = NULL, $search = null)
     {
+        if (is_null($elements_per_page)) {
+            $elements_per_page = get_config('ENTRIES_PER_PAGE');
+        }
 
         $status = studygroup_sem_types();
         $sql = "SELECT * FROM seminare WHERE status IN('" . implode("','", $status) . "')";
@@ -442,8 +445,12 @@ class StudygroupModel
      *
      * @return array members
      */
-    function getMembers($sem_id, $lower_bound = 1, $elements_per_page = 20)
+    function getMembers($sem_id, $lower_bound = 1, $elements_per_page = NULL)
     {
+        if (is_null($elements_per_page)) {
+            $elements_per_page = get_config('ENTRIES_PER_PAGE');
+        }
+
         $query = "SELECT username,user_id ,perms, seminar_user.status, ". $GLOBALS['_fullname_sql']['full_rev']
                . " as fullname FROM seminar_user "
                . "LEFT JOIN auth_user_md5 USING (user_id) "
@@ -500,7 +507,7 @@ class StudygroupModel
      *
      * @param string $sem_id
      * @param strimg $user_id
-     * 
+     *
      * @return int number of recipients
      */
     function applicationNotice($sem_id, $user_id)

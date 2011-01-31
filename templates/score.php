@@ -12,7 +12,7 @@
 </tr>
 <? foreach ($persons as $index=>$person): ?>
 <tr class="<?=TextHelper::cycle('cycle_odd', 'cycle_even')?>">
-    <td align="right"><?= $index+(($page-1)*ELEMENTS_PER_PAGE)+1 ?>. </td>
+    <td align="right"><?= $index+(($page-1)*get_config('ENTRIES_PER_PAGE'))+1 ?>. </td>
     <td> <?=$person['avatar']?></td>
     <td>
         <a href="<?=URLHelper::getLink("about.php?username=". $person['username'])?>"><?=$person['name']?></a>
@@ -26,8 +26,8 @@
 </tr>
 <? endforeach ?>
 </table>
-<? if (ceil($numberOfPersons / ELEMENTS_PER_PAGE) > 1) : ?>
-<div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel"><?= $this->render_partial("shared/pagechooser", array("perPage" => ELEMENTS_PER_PAGE, "num_postings" => $numberOfPersons,
+<? if (ceil($numberOfPersons / get_config('ENTRIES_PER_PAGE')) > 1) : ?>
+<div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel"><?= $this->render_partial("shared/pagechooser", array("perPage" => get_config('ENTRIES_PER_PAGE'), "num_postings" => $numberOfPersons,
     "page"=>$page, "pagelink" => "score.php?page=%s"));
 ?></div>
 </div>

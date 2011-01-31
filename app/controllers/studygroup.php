@@ -17,15 +17,12 @@
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/studygroup.php';
 
-if (!defined('ELEMENTS_PER_PAGE')) define("ELEMENTS_PER_PAGE", 20);
-
-
 class StudygroupController extends AuthenticatedController {
 
     /**
      * Displays a pageable and sortable overview of all studygoups combined with
-     * a search form to query for specific studygroup 
-     * 
+     * a search form to query for specific studygroup
+     *
      * @param $page
      * @param $sort
      */
@@ -47,14 +44,14 @@ class StudygroupController extends AuthenticatedController {
             $reset = true;
         }
 
-        $this->lower_bound = ($this->page - 1) * ELEMENTS_PER_PAGE;
+        $this->lower_bound = ($this->page - 1) * get_config('ENTRIES_PER_PAGE');
         list ($this->sort_type, $this->sort_order) = explode('_', $this->sort);
-        
+
         if (empty($this->search) && isset($this->flash['searchterm']))  {
             $this->search = $this->flash['searchterm'];
         }
         if (!empty($this->search)) {
-            $groups = StudygroupModel::getAllGroups($this->sort, $this->lower_bound, ELEMENTS_PER_PAGE, $this->search);
+            $groups = StudygroupModel::getAllGroups($this->sort, $this->lower_bound, get_config('ENTRIES_PER_PAGE'), $this->search);
             $this->flash['searchterm'] = $this->search;
             $this->flash->keep('searchterm');
             $this->anzahl = StudygroupModel::countGroups($this->search);
@@ -71,10 +68,10 @@ class StudygroupController extends AuthenticatedController {
                 }
             }
             $this->anzahl = StudygroupModel::countGroups();
-            $this->groups = StudygroupModel::getAllGroups($this->sort, $this->lower_bound, ELEMENTS_PER_PAGE);
+            $this->groups = StudygroupModel::getAllGroups($this->sort, $this->lower_bound, get_config('ENTRIES_PER_PAGE'));
         } elseif (!$check || $this->groups) {
             unset($this->flash['info']);
-            if($this->page < 1 || $this->page > ceil($this->anzahl/ELEMENTS_PER_PAGE)) $this->page = 1;
+            if($this->page < 1 || $this->page > ceil($this->anzahl/get_config('ENTRIES_PER_PAGE'))) $this->page = 1;
         }
     }
 }

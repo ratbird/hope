@@ -39,8 +39,6 @@ PageLayout::setHelpKeyword("Basis.VerschiedenesScore"); // external help keyword
 PageLayout::setTitle(_("Rangliste"));
 Navigation::activateItem('/community/score');
 
-define("ELEMENTS_PER_PAGE", 20);
-
 /* --- Actions -------------------------------------------------------------- */
 $score = new Score($user->id);
 if($_REQUEST['cmd']=="write")
@@ -62,10 +60,10 @@ if($_REQUEST['page']){
     $page=1;
 }
 
-if($page < 1 || $page > ceil($anzahl/ELEMENTS_PER_PAGE)) $page = 1;
+if($page < 1 || $page > ceil($anzahl/get_config('ENTRIES_PER_PAGE'))) $page = 1;
 
 // Liste aller die mutig (oder eitel?) genug sind
-$query = "SELECT a.user_id,username,score,geschlecht, " .$_fullname_sql['full'] ." AS fullname FROM user_info a LEFT JOIN auth_user_md5 b USING (user_id) WHERE score > 0 AND locked=0 AND ".get_vis_query('b')." ORDER BY score DESC LIMIT ".(($page-1)*ELEMENTS_PER_PAGE).",".ELEMENTS_PER_PAGE;
+$query = "SELECT a.user_id,username,score,geschlecht, " .$_fullname_sql['full'] ." AS fullname FROM user_info a LEFT JOIN auth_user_md5 b USING (user_id) WHERE score > 0 AND locked=0 AND ".get_vis_query('b')." ORDER BY score DESC LIMIT ".(($page-1)*get_config('ENTRIES_PER_PAGE')).",".get_config('ENTRIES_PER_PAGE');
 $result = DBManager::get()->query($query);
 while ($row = $result->fetch()) {
     $is_king = StudipKing::is_king($row["user_id"], TRUE);

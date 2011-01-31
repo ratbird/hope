@@ -90,7 +90,7 @@ class StudipNavigation extends Navigation
         // resource managment, if it is enabled
         if (get_config('RESOURCES_ENABLE')) {
             //TODO: suboptimal, es sollte eine ResourcesNavigation geben
-            $navigation = new Navigation(_('Ressourcen'), 'resources.php');
+            $navigation = new Navigation(_('Ressourcen'), 'resources.php', array('view' => 'resources'));
 
             if (is_object($user) && $perm->have_perm('admin')) {
                 $navigation->setImage('header/resources.png', array('title' => _('Zur Ressourcenverwaltung')));

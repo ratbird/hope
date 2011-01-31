@@ -73,8 +73,6 @@ switch ($view) {
     break;
     //Reiter "Listen"
     case "lists":
-    case "export_lists":
-    case "search_list":
         if ($resources_data["list_open"])
             $page_intro= sprintf(_("Sie sehen alle Einträge in der Ebene <b>%s</b>"), getResourceObjectName($resources_data["list_open"]));
         PageLayout::setTitle(_("Bearbeiten und ausgeben von Listen"));

@@ -71,16 +71,15 @@ $resources_nav = Navigation::getItem('/resources');
 
 // Reiter "Uebersicht"
 $navigation = new Navigation(_('Übersicht'));
-//$navigation->addSubNavigation('browse', new Navigation(_('Suchen'), 'resources.php?reset=TRUE', array('view' => 'search')));
 $navigation->addSubNavigation('hierarchy', new Navigation(_('Struktur'), 'resources.php#a', array('view' => 'resources')));
-
-if (get_config('RESOURCES_ALLOW_CREATE_TOP_LEVEL') || getGlobalPerms($user->id) == 'admin') {
-    $navigation->addSubNavigation('create_entry', new Navigation(_('Neue Hierarchieebene erzeugen'), 'resources.php#a', array('view' => 'create_hierarchie')));
-}
 
 if (get_config('RESOURCES_ENABLE_GROUPING')) {
     $navigation->addSubNavigation('group_schedule_daily', new Navigation(_('Gruppen-Belegungspläne'), 'resources.php', array('view' => 'view_group_schedule_daily')));
     $navigation->addSubNavigation('group_schedule', new Navigation(_('Gruppen-Belegungspläne (Semester)'), 'resources.php', array('view' => 'view_group_schedule')));
+}
+
+if (get_config('RESOURCES_ALLOW_CREATE_TOP_LEVEL') || getGlobalPerms($user->id) == 'admin') {
+    $navigation->addSubNavigation('create_entry', new Navigation(_('Neue Hierarchieebene erzeugen'), 'resources.php#a', array('view' => 'create_hierarchie')));
 }
 
 $resources_nav->addSubNavigation('view', $navigation);
@@ -89,8 +88,6 @@ $resources_nav->addSubNavigation('view', $navigation);
 if ($resources_data['list_open']) {
     $navigation = new Navigation(_('Liste'));
     $navigation->addSubNavigation('show', new Navigation(_('Listenausgabe'), 'resources.php#a', array('view' => 'lists')));
-    // $navigation->addSubNavigation('search', new Navigation(_('Suchen'), 'resources.php', array('view' => 'search_lists')));
-    // $navigation->addSubNavigation('export', new Navigation(_('Listen exportieren'), 'resources.php', array('view' => 'export_lists')));
     $resources_nav->addSubNavigation('lists', $navigation);
 }
 

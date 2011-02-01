@@ -221,31 +221,30 @@ $queries[$c]['details'] = "details=files";
 include ('lib/seminar_open.php');       // initialise Stud.IP-Session
 
 PageLayout::setTitle(_('Informationen zu einem Nutzer'));
-Navigation::activateItem('/admin/config/new_user');
+Navigation::activateItem('/admin/config/user');
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');  //hier wird der "Kopf" nachgeladen
 $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
 ?>
-<table border="0" bgcolor="#000000" align="center" cellspacing="0" cellpadding="0" width="100%">
+<table class="default">
     <tr>
-        <td class="topic" align="left"><b>&nbsp;<?=_("Informationen zu einem Nutzer:")?> <?=htmlReady(get_fullname($user_id))?> (<?=$perm->get_perm($user_id)?>)</b></td>
-    </tr>
-    <tr>
-        <td class="blank">&nbsp;</td>
-    </tr>
-    <?
-    if (count($msg)){
+        <td class="blank" align="center">
+        <?
+        if (count($msg)){
         echo "\n<tr><td class=\"blank\"><table width=\"99%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">";
         parse_msg_array($msg, "blank", 1 ,false);
         echo "\n</table></td></tr>";
-    }
-    $cssSw = new cssClassSwitcher();
-    ?>
-    <tr>
-    <td class="blank">
-        <table style="margin-left:20px;font-size:10pt;" cellpadding="2" cellspacing="2" bgcolor="#eeeeee"  width="75%">
+        }
+        ?>
+        <table width="99%" cellpadding="2" cellspacing="0">
+        <tr>
+            <td class="topic" colspan="3">
+                <b><?=_("Informationen zu einem Nutzer:")?> <?=htmlReady(get_fullname($user_id))?> (<?=$perm->get_perm($user_id)?>)</b>
+            </td>
+        </tr>
+    <? $cssSw = new cssClassSwitcher(); ?>
         <?php
         foreach($queries as $one){
             $db->query($one['query']);
@@ -435,12 +434,12 @@ $pic_path = $GLOBALS['ASSETS_URL'] . 'images';
         ?>
         </div>
     <?}?>
-    </td>
+        </td>
+    </tr>
     <tr>
         <td class="blank">&nbsp;</td>
     </tr>
 </table>
 <?
-include ('lib/include/html_end.inc.php'); // Output of html head
+include ('lib/include/html_end.inc.php');
 page_close();
-?>

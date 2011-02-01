@@ -190,11 +190,11 @@ class UserManagement
             }
 
         }
-        $this->db->query("UPDATE user_info SET chdate='".time()."' WHERE user_id = '".$this->user_data['auth_user_md5.user_id']."'");
         if ($this->db->affected_rows() == 0) {
-            return FALSE;
+            $this->db->query("UPDATE user_info SET chdate='".time()."' WHERE user_id = '".$this->user_data['auth_user_md5.user_id']."'");
+            return true;
         }
-        return TRUE;
+        return false;
     }
 
 
@@ -353,7 +353,7 @@ class UserManagement
         }
 
         if (!$this->storeToDatabase()) {
-            $this->msg .= "error§" . _("Die &Auml;nderung konnte nicht in die Datenbank geschrieben werden.") . "§";
+            $this->msg .= "info§" . _("Es wurden keine Veränderungen vorgenommen.") . "§";
             return FALSE;
         }
 
@@ -484,8 +484,8 @@ class UserManagement
         }
 
         if (!$this->storeToDatabase()) {
-            $this->msg .= "error§" . _("Die &Auml;nderung konnte nicht in die Datenbank geschrieben werden.") . "§";
-            return FALSE;
+            $this->msg .= "info§" . _("Es wurden keine Veränderungen vorgenommen.") . "§";
+            return true;
         }
 
         $this->autoInsertSem($old_perms);
@@ -579,18 +579,19 @@ class UserManagement
     * @access   public
     * @return   bool Password change successful?
     */
-    function setPassword() {
+    function setPassword()
+    {
         global $perm, $auth;
 
         // Do we have permission to do so?
         if (!$perm->have_perm("admin")) {
-            $this->msg .= "error§" . _("Sie haben keine Berechtigung Accounts zu ver&auml;ndern.") . "§";
+            $this->msg .= "error§" . _("Sie haben keine Berechtigung Accounts zu verändern.") . "§";
             return FALSE;
         }
 
         if (!$perm->have_perm("root")) {
             if ($this->user_data['auth_user_md5.perms'] == "root") {
-                $this->msg .= "error§" . _("Sie haben keine Berechtigung <em>Root-Accounts</em> zu ver&auml;ndern.") . "§";
+                $this->msg .= "error§" . _("Sie haben keine Berechtigung <em>Root-Accounts</em> zu verändern.") . "§";
                 return FALSE;
             }
             if ($perm->is_fak_admin() && $this->user_data['auth_user_md5.perms'] == "admin"){
@@ -600,7 +601,7 @@ class UserManagement
                             WHERE a.user_id ='" . $this->user_data['auth_user_md5.user_id'] . "' AND a.inst_perms = 'admin'");
                 $this->db->next_record();
                 if (!$this->db->f("admin_ok")) {
-                    $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Admin-Account zu ver&auml;ndern.") . "§";
+                    $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Admin-Account zu verändern.") . "§";
                     return FALSE;
                 }
             }
@@ -615,11 +616,10 @@ class UserManagement
         $this->user_data['auth_user_md5.password'] = md5($password);
 
         if (!$this->storeToDatabase()) {
-            $this->msg .= "error§" . _("Die &Auml;nderung konnte nicht in die Datenbank geschrieben werden.") . "§";
-            return FALSE;
+            $this->msg .= "info§" . _("Es wurden keine Veränderungen vorgenommen.") . "§";
         }
 
-        $this->msg .= "msg§" . sprintf(_("Passwort von Benutzer \"%s\" neu gesetzt."), $this->user_data['auth_user_md5.username']) . "§";
+        $this->msg .= "msg§" . _("Das Passwort wurde neu gesetzt.") . "§";
 
         // include language-specific subject and mailbody
         $user_language = getUserLanguagePath($this->user_data['auth_user_md5.user_id']);
@@ -630,7 +630,6 @@ class UserManagement
         StudipMail::sendMessage($this->user_data['auth_user_md5.Email'],$subject, $mailbody);
         log_event("USER_NEWPWD",$this->user_data['auth_user_md5.user_id']);
         return TRUE;
-
     }
 
 
@@ -708,7 +707,7 @@ class UserManagement
                         StudygroupModel::promote_user($new_founder['username'], $sem->getId(), 'dozent');
                         continue;
                     }
-                // since no suitable successor was found, we are allowed to remove the studygroup    
+                // since no suitable successor was found, we are allowed to remove the studygroup
                 } else {
                     $sem->delete();
                 }
@@ -949,16 +948,17 @@ class UserManagement
     /**
     * Change an existing user password
     *
-    * @access   public
-    * @return   bool change successful?
+    * @param string $password
+    * @return bool change successful?
     */
-    function changePassword($password) {
+    function changePassword($password)
+    {
         global $perm, $auth;
 
         $this->user_data['auth_user_md5.password'] = md5($password);
         $this->storeToDatabase();
 
-        $this->msg .= "msg§" . sprintf(_("Passwort von Benutzer \"%s\" neu gesetzt."), $this->user_data['auth_user_md5.username']) . "§";
+        $this->msg .= "msg§" . _("Das Passwort wurde neu gesetzt.") . "§";
 
         // include language-specific subject and mailbody
         $user_language = getUserLanguagePath($this->user_data['auth_user_md5.user_id']);
@@ -968,10 +968,6 @@ class UserManagement
         // send mail
         StudipMail::sendMessage($this->user_data['auth_user_md5.Email'],$subject, $mailbody);
 
-
         return TRUE;
-
     }
-
 }
-?>

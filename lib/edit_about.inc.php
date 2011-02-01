@@ -685,7 +685,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
     function select_userdomain() {  //Hilfsfunktion, erzeugt eine Auswahlbox mit noch auswählbaren Nutzerdomänen
 
-        echo '<select name="new_userdomain" style="width:30ex;"><option selected></option>'."\n";
+        echo '<select name="new_userdomain"><option selected="selected"> -- Bitte Nutzerdomäne auswählen --</option>'."\n";
         $user_domains = UserDomain::getUserDomainsForUser($this->auth_user['user_id']);
         $domains = UserDomain::getUserDomains();
 
@@ -701,7 +701,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
     function select_inst()
     {
 
-        echo '<select name="new_inst"><option selected="selected"></option>'."\n";
+        echo '<select name="new_inst"><option selected="selected"> -- Bitte Einrichtung auswählen -- </option>'."\n";
         $this->db->query("SELECT a.Institut_id,a.Name FROM Institute AS a LEFT JOIN user_inst AS b ON (b.user_id='".$this->auth_user["user_id"]."' AND a.Institut_id=b.Institut_id) WHERE b.Institut_id IS NULL ORDER BY a.Name");
         while ($this->db->next_record()) {
             echo "<option value=\"".$this->db->f("Institut_id")."\">".htmlReady(my_substr($this->db->f("Name"),0,50))."</option>\n";

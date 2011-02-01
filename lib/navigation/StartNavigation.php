@@ -125,10 +125,10 @@ class StartNavigation extends Navigation
 
         // user administration
         if ($perm->have_perm('root')) {
-            $navigation = new Navigation(_('Verwaltung globaler Einstellungen'), 'new_user_md5.php');
+            $navigation = new Navigation(_('Verwaltung globaler Einstellungen'), 'dispatch.php/admin/user/');
             $this->addSubNavigation('admin_user', $navigation);
         } else if ($perm->have_perm('admin') && !get_config('RESTRICTED_USER_MANAGEMENT')) {
-            $navigation = new Navigation(_('globale Benutzerverwaltung'), 'new_user_md5.php');
+            $navigation = new Navigation(_('globale Benutzerverwaltung'), 'dispatch.php/admin/user/');
             $this->addSubNavigation('admin_user', $navigation);
         }
 

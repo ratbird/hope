@@ -125,7 +125,7 @@ class AdminNavigation extends Navigation
         $navigation = new Navigation(_('Globale Einstellungen'));
 
         if (!get_config('RESTRICTED_USER_MANAGEMENT') || $perm->have_perm('root')) {
-            $navigation->addSubNavigation('new_user', new Navigation(_('Benutzer'), 'new_user_md5.php'));
+            $navigation->addSubNavigation('user', new Navigation(_('Benutzer'), 'dispatch.php/admin/user/'));
         }
 
         if ($perm->have_perm(get_config('RANGE_TREE_ADMIN_PERM') ? get_config('RANGE_TREE_ADMIN_PERM') : 'admin')) {

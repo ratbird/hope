@@ -63,13 +63,9 @@ function showlog_format_resource($res_id) {
     return $ret;
 }
 
-function showlog_format_username($uid) {
-    $uname=get_username($uid);
-    if ($uname) {
-        return '<a href="'.URLHelper::getLink('new_user_md5.php', array('details' => $uname)).'">'.htmlReady(get_fullname($uid)).'</a>';
-    } else {
-        return $uid;
-    }
+function showlog_format_username($uid)
+{
+    return '<a href="'.URLHelper::getLink('dispatch.php/admin/user/edit/' . $uid) . '">'.htmlReady(get_fullname($uid)).'</a>';
 }
 
 function showlog_format_sem($sem_id, $maxlen=100) {

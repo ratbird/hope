@@ -333,6 +333,7 @@ td.tree-elbow-end img {
 .collapsable .toggle-indicator a {
     background: url(../images/icons/16/blue/arr_1down.png) left center no-repeat;
     color: #000;
+    cursor: pointer;
 }
 
 .collapsable .empty .toggle-indicator a {
@@ -341,6 +342,7 @@ td.tree-elbow-end img {
 .collapsable .collapsed .toggle-indicator a {
     background-image: url(../images/icons/16/blue/arr_1right.png);
     font-weight: normal;
+    cursor: pointer;
 }
 
 /* --- Table details -------------------------------------------------------- */
@@ -1305,6 +1307,11 @@ div.quicksearch_frame input, div.quicksearch_frame select {
 img.plugin_preview {
     height: 60px;
     width: 80px;
+}
+
+/* --- User Administration -------------------------------------------------- */
+.user_form {
+    width: 250px;
 }
 
 /* --- Veranstaltungsverwaltung --------------------------------------------- */

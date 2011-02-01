@@ -46,9 +46,11 @@ $all->collect(dirname(__FILE__) . '/lib', $collector);
 $all->collect(dirname(__FILE__) . '/lib/classes', $collector);
 
 # use text reporter if cli
-if (sizeof($_SERVER['argv']))
-  $all->run(new TextReporter());
+if (sizeof($_SERVER['argv'])) {
+  exit($all->run(new TextReporter()) ? 0 : 1);
+}
 
 # use html reporter if cgi
-else
+else {
   $all->run(new HtmlReporter());
+}

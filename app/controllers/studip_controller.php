@@ -41,6 +41,8 @@ abstract class StudipController extends Trails_Controller
                     }
             }
         }
+
+        reset($args);
     }
 
     /**

@@ -1,9 +1,10 @@
-26.01.2011 v 2.0
+01.02.2011 v 2.0
 http://develop.studip.de/trac/query?milestone=Stud.IP+2.0
 - Fehler, wenn Dozent neue Veranstaltung anlegen moechte [#1341]
 - Anlegen von Veranstaltungen (mehrere Fehler) [#1230]
 - Dozenten / Tutorensortierung  auf Grunddaten funktioniert nicht [#1328]
 - Fehler bei Zuordnung von Studienbereichen beim Anlegen von Veranstaltungen [#1411]
+- Link zu Ressourcen in der Nav.-Leiste führt zu falscher Navigation [#1730]
 - Fehlender Username beim Link "Meine Lernmodule" (BIEST00135) [#216]
 - Externe Seitene - Mehrere SRI-Urls [#504]
 - Ungelesene News automatisch aufgeklappt beim betreten einer VA oder Einrichtung [#569]
@@ -299,6 +300,9 @@ http://develop.studip.de/trac/query?milestone=Stud.IP+2.0
 - Externe Seiten: Nicht angegebene Seminardaten erzeugen leere Felder [#1712]
 - Externe Seiten: Nicht angegebene Daten erzeugen leere Felder [#1715]
 - Sperregeln bei "Grunddaten der Veranstaltung" [#1721]
+- versteckte Seminare werden im Einrichtungsstundenplan angezeigt [#1727]
+- Veranstaltungsavatare lassen sich nicht mehr ändern. [#1736]
+- reiter-Klasse zeigt in Plugins keine Reiter mehr an [#1737]
 - Admins dürfen Einrichtungen anlegen und löschen, das sollen sie aber nicht [#502]
 - ILIAS Schnittstelle kommt mit Kaufmannsund (&) nicht klar [#1704]
 - Neuer Stundenplan: nested link [#1566]

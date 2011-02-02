@@ -14,9 +14,21 @@
             <form method="post" action="<?php echo URLHelper::getLink('edit_about.php', array('view' => 'deputies', 'cmd' => 'set_deputy', 'studipticket' => get_ticket())); ?>">
                 <?= CSRFProtection::tokenTag() ?>
                 <input type="IMAGE" src="<?= Assets::image_path('icons/16/yellow/arr_2left.png'); ?>" <?= tooltip(_("NutzerIn hinzufügen")); ?> border="0" name="add_deputy">
-                <?php print QuickSearch::get("deputy_id", new PermissionSearch("user", _("Vor-, Nach- oder Benutzername"), "user_id", array('permission' => $permission)))
-                ->withButton()
-                ->render(); ?>
+                <?php
+                $exclude_users = array($GLOBALS['user']->id);
+                if (is_array($deputies)) {
+                    $exclude_users = array_merge($exclude_users, array_map(create_function('$d', 'return $d["user_id"];'), $deputies));
+                }
+                print QuickSearch::get("deputy_id",
+                                       new PermissionSearch(
+                                           "user",
+                                           _("Vor-, Nach- oder Benutzername"),
+                                           "user_id",
+                                           array('permission' => $permission, 'exclude_user' => $exclude_users)
+                                           )
+                                      )
+                                      ->withButton()
+                                      ->render(); ?>
              </form>
         </td>
     </tr>
@@ -39,7 +51,7 @@
                 <tr class="<?=TextHelper::cycle('steelgraulight', 'steel1')?>">
                     <td>
                         <?php echo Avatar::getAvatar($boss['user_id'])->getImageTag(Avatar::SMALL); ?>
-                        <?php echo $deputy['fullname'].' ('.$deputy['username'].', '._('Status').': '.$deputy['perms'].')'; ?>
+                        <?php echo htmlReady($deputy['fullname'].' ('.$deputy['username'].', '._('Status').': '.$deputy['perms'].')'); ?>
                         <input type="hidden" name="deputy_ids[]" value="<?php echo $deputy['user_id'] ?>"/>
                         <input type="hidden" name="deputy_saved_edit_about[]" value="<?php echo $deputy['edit_about'] ?>"/>
                         <?php if ($edit_about_enabled) { ?>

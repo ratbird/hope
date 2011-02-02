@@ -359,11 +359,11 @@ if (check_ticket($studipticket)) {
     }
 
     if (Request::submitted('add_deputy') && Request::get('deputy_id')) {
-        if (!isDeputy(Request::get('deputy_id'), $my_about->auth_user["user_id"])) {
-            if (Request::get('deputy_id') != $my_about->auth_user["user_id"]) {
-                $success = addDeputy(Request::get('deputy_id'), $my_about->auth_user["user_id"]);
+        if (!isDeputy(Request::option('deputy_id'), $my_about->auth_user["user_id"])) {
+            if (Request::option('deputy_id') != $my_about->auth_user["user_id"]) {
+                $success = addDeputy(Request::option('deputy_id'), $my_about->auth_user["user_id"]);
                 if ($success) {
-                    $my_about->msg .= 'msg§'.sprintf(_('%s wurde als Vertretung eingetragen.'), get_fullname(Request::get('deputy_id'), 'full'));
+                    $my_about->msg .= 'msg§'.sprintf(_('%s wurde als Vertretung eingetragen.'), htmlReady(get_fullname(Request::option('deputy_id'), 'full')));
                 } else {
                     $my_about->msg .= 'error§'._('Fehler beim Eintragen der Vertretung!');
                 }
@@ -371,12 +371,12 @@ if (check_ticket($studipticket)) {
                 $my_about->msg .= 'error§'._('Sie können sich nicht als Ihre eigene Vertretung eintragen!');
             }
         } else {
-            $my_about->msg .= 'error§'.sprintf(_('%s ist bereits als Vertretung eingetragen.'), get_fullname(Request::get('deputy_id'), 'full'));
+            $my_about->msg .= 'error§'.sprintf(_('%s ist bereits als Vertretung eingetragen.'), htmlReady(get_fullname(Request::option('deputy_id'), 'full')));
         }
     }
 
     if ($cmd == 'change_deputies') {
-        $deputyArray = Request::getArray('delete_deputy');
+        $deputyArray = Request::optionArray('delete_deputy');
         if ($deputyArray) {
             $deleted = deleteDeputy($deputyArray, $my_about->auth_user["user_id"]);
             foreach ($deputyArray as $deputy) {
@@ -390,11 +390,11 @@ if (check_ticket($studipticket)) {
         }
         $success = false;
         $changed_deputies = array();
-        $given_ids = Request::getArray('deputy_ids');
-        $saved_values = Request::getArray('deputy_saved_edit_about');
+        $given_ids = Request::optionArray('deputy_ids');
+        $saved_values = Request::intArray('deputy_saved_edit_about');
         for ($i=0 ; $i<sizeof($given_ids) ; $i++) {
-            if (Request::get('edit_about_'.$given_ids[$i]) &&
-                    Request::get('edit_about_'.$given_ids[$i]) != $saved_values[$i]) {
+            if (Request::int('edit_about_'.$given_ids[$i]) !== null &&
+                    Request::int('edit_about_'.$given_ids[$i]) != $saved_values[$i]) {
                 $success = setDeputyHomepageRights($given_ids[$i], $my_about->auth_user["user_id"], Request::int('edit_about_'.$given_ids[$i]));
                 $changed_deputies[] = $given_ids[$i];
             }
@@ -405,7 +405,7 @@ if (check_ticket($studipticket)) {
             $my_about->msg .= 'error§'._('Fehler beim Speichern der Einstellungen.');
         }
     }
-
+fb($my_about->msg );
     if ($my_about->logout_user)
      {
         $sess->delete();  // User logout vorbereiten

@@ -405,7 +405,7 @@ if (check_ticket($studipticket)) {
             $my_about->msg .= 'error§'._('Fehler beim Speichern der Einstellungen.');
         }
     }
-fb($my_about->msg );
+
     if ($my_about->logout_user)
      {
         $sess->delete();  // User logout vorbereiten

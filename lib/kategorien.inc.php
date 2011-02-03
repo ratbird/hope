@@ -95,7 +95,19 @@ function print_freie($username) {
             echo '<tr><td class="'.$cssSw->getClass(). '"><p class="info"><textarea  name="freie_content[]" style="width: 90%" cols="' . $cols . '" rows="7" wrap="virtual">' . htmlReady($db->f('content')) . '</textarea>';
             echo '<br><br><input type="image" name="update" border="0" align="absmiddle" ' . makeButton("uebernehmen", "src") . ' value="' . _("ver&auml;ndern") . '">';
             echo '&nbsp;<a href="'.URLHelper::getLink('?freie=verify_delete_freie&freie_id='.$id.'&view='.$view.'&username='.$username).'">';
-            echo makeButton("loeschen") . "</a><br>\n&nbsp; </p></td></tr>\n";
+            echo makeButton("loeschen") . '</a>';
+
+            // show help links
+            if (get_config("EXTERNAL_HELP")) {
+                $help_url = format_help_url("Basis.VerschiedenesFormat");
+            } else {
+                $help_url = "help/index.php?help_page=ix_forum6.htm";
+            }
+
+            echo '<a style="margin-left: 15px" href="'. URLHelper::getLink("show_smiley.php") .'" target="_blank">'. _("Smileys") .'</a>', "\n";
+            echo '<a style="margin-left: 10px" href="'. $help_url .'" target="_blank">'. _("Formatierungshilfen") .'</a>', "\n";
+
+            echo '<br>', "\n", '&nbsp; </p></td></tr>', "\n";
             $count++;
             }
         }

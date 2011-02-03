@@ -11,7 +11,7 @@
             <span style="color: red; font-size: 1.6em">*</span>
         </td>
         <td>
-            <input class="user_form" type="text" name="username" value="<?= $user['username'] ?>">
+            <input class="user_form" type="text" name="username" value="<?= $user['username'] ?>" required >
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
@@ -99,7 +99,7 @@
             <span style="color: red; font-size: 1.6em">*</span>
         </td>
         <td>
-            <input class="user_form" type="text" name="Email" value="<?= htmlReady($user['Email']) ?>">
+            <input class="user_form" type="email" name="Email" value="<?= htmlReady($user['Email']) ?>"required >
             <? if ($GLOBALS['MAIL_VALIDATE_BOX']) : ?>
                 <input type="checkbox" id="disable_mail_host_check" name="disable_mail_host_check" value="1">
                 <label for="disable_mail_host_check"><?= _("Mailboxüberprüfung deaktivieren") ?></label>

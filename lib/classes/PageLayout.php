@@ -71,6 +71,7 @@ class PageLayout
         self::addScript('jquery-ui-1.8.7.custom.min.js');
         self::addScript('jquery.metadata.js');
         self::addScript('jquery.placehold-0.3.js');
+        self::addScript('validator.min.js');
 
         // include Stud.IP JS
         self::addScript('l10n.js');

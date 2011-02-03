@@ -356,13 +356,13 @@ STUDIP.study_area_selection = {
  * ------------------------------------------------------------------------ */
 STUDIP.Markup = {
   buttonSet: [
-    { "name": "bold",          "label": "<strong>B</strong>", open: "**",     close: "**"},
-    { "name": "italic",        "label": "<em>i</em>",         open: "%%",     close: "%%"},
-    { "name": "underline",     "label": "<u>u</u>",           open: "__",     close: "__"},
-    { "name": "strikethrough", "label": "<del>u</del>",       open: "{-",     close: "-}"},
-    { "name": "code",          "label": "code",               open: "[code]", close: "[/code]"},
-    { "name": "larger",        "label": "A+",                 open: "++",     close: "++"},
-    { "name": "smaller",       "label": "A-",                 open: "--",     close: "--"}
+    {"name": "bold",          "label": "<strong>B</strong>", open: "**",     close: "**"},
+    {"name": "italic",        "label": "<em>i</em>",         open: "%%",     close: "%%"},
+    {"name": "underline",     "label": "<u>u</u>",           open: "__",     close: "__"},
+    {"name": "strikethrough", "label": "<del>u</del>",       open: "{-",     close: "-}"},
+    {"name": "code",          "label": "code",               open: "[code]", close: "[/code]"},
+    {"name": "larger",        "label": "A+",                 open: "++",     close: "++"},
+    {"name": "smaller",       "label": "A-",                 open: "--",     close: "--"}
   ]
 };
 
@@ -744,7 +744,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
     } else {
       if (jQuery("#folder_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL(jQuery("#folder_" + md5_id + "_arrow_img").parent()[0].href);
-        jQuery("#folder_" + md5_id + "_body").load(adress, { getfolderbody: md5_id }, function () {
+        jQuery("#folder_" + md5_id + "_body").load(adress, {getfolderbody: md5_id}, function () {
           jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
           jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
           jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead3')
@@ -788,7 +788,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
     } else {
       if (jQuery("#file_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL(jQuery("#file_" + md5_id + "_arrow_img").parent()[0].href);
-        jQuery("#file_" + md5_id + "_body").load(adress, { getfilebody: md5_id }, function () {
+        jQuery("#file_" + md5_id + "_body").load(adress, {getfilebody: md5_id}, function () {
           jQuery("#file_" + md5_id + "_header").css('fontWeight', 'bold');
           jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
           jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3')
@@ -1046,6 +1046,9 @@ jQuery(function () {
   STUDIP.Title.initialize();
 
   STUDIP.study_area_selection.initialize();
+
+  // validate forms
+  STUDIP.Forms.initialize();
 
   // autofocus for all browsers
   if (!("autofocus" in document.createElement("input"))) {
@@ -1470,3 +1473,50 @@ jQuery(function ($) {
   $.datepicker.setDefaults($.datepicker.regional.de);
 });
 
+/* ------------------------------------------------------------------------
+ * Forms
+ * ------------------------------------------------------------------------ */
+
+STUDIP.Forms = {
+    initialize :  function() {
+          jQuery("input,textarea").each(function(){
+              if (jQuery(this).attr('required')!== undefined){
+                  jQuery(this).attr('aria-required', true);
+              }
+              if (jQuery(this).attr('pattern') && jQuery(this).attr('title')) {
+                    jQuery(this).attr('data-message', jQuery(this).attr('title'));
+              }
+           });
+
+          //localized messages
+          jQuery.tools.validator.localize('de', {
+                '*'             : 'Bitte ändern Sie ihre Eingabe'.toLocaleString(),
+              	':email'  	: 'Bitte geben Sie gültige E-Mail-Adresse ein'.toLocaleString(),
+                ':number' 	: 'Bitte geben Sie eine Zahl ein'.toLocaleString(),
+                ':url' 		: 'Bitte geben Sie eine gültige Web-Adresse ein'.toLocaleString(),
+                '[max]'	 	: 'Bitte geben Sie maximal $1 Zeichen ein'.toLocaleString(),
+                '[min]'		: 'Bitte geben Sie mindestens $1 Zeichen ein'.toLocaleString(),
+                '[required]'	: 'Dies ist ein erforderliches Feld'.toLocaleString()
+
+          });
+
+          jQuery('form').validator({
+              position  : 'bottom left',
+              offset    : [8, 0],
+              message   : '<div><div class="arrow"/></div>',
+              lang      : 'de'
+          });
+
+         jQuery('form').bind("onBeforeValidate", function() {
+                jQuery("input").each(function() {
+                    jQuery(this).removeAttr('aria-invalid');
+                })
+          });
+
+          jQuery('form').bind("onFail", function(e, errors) {
+                jQuery.each(errors, function() {
+                    this.input.attr('aria-invalid','true');
+                })
+          }); 
+    }
+}

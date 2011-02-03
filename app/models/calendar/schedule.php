@@ -9,7 +9,7 @@
  * the License, or (at your option) any later version.
  */
 
-require_once('app/models/calendar/calendar.php');
+require_once('lib/calendar/CalendarColumn.class.php');
 define('DEFAULT_COLOR_SEM', $GLOBALS['PERS_TERMIN_KAT'][2]['color']);
 define('DEFAULT_COLOR_NEW', $GLOBALS['PERS_TERMIN_KAT'][3]['color']);
 define('DEFAULT_COLOR_VIRTUAL', $GLOBALS['PERS_TERMIN_KAT'][1]['color']);
@@ -81,7 +81,7 @@ class CalendarScheduleModel
      * @param string  optional; the ID of the course
      * @return array  an array containing the entries
      */
-    static function getScheduleEntries($user_id, $start_hour, $end_hour, $id = false, $controller)
+    static function getScheduleEntries($controller, $user_id, $start_hour, $end_hour, $id = false)
     {
         $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
 
@@ -121,7 +121,7 @@ class CalendarScheduleModel
             if (!isset($ret[$day_number])) {
                 $ret[$day_number] = CalendarColumn::create($day_number);
                 $ret[$day_number]->setTitle($day_names[$day_number]);
-                $ret[$day_number]->setURL($controller->url_for('calendar/' .(get_class($controller) == "Calendar_InstscheduleController" ? "instschedule" : "schedule"). '/index/'. $day_number));
+                $ret[$day_number]->setURL($controller->url_for('calendar/instschedule/index/'. $day_number));
             }
             $ret[$day_number]->addEntry($entry);
         }
@@ -268,7 +268,7 @@ class CalendarScheduleModel
      * @param string  optional; true to show hidden, false otherwise
      * @return array  an array containing the properties of the entry
      */
-    static function getSeminarEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false, $controller)
+    static function getSeminarEntries($controller, $user_id, $semester, $start_hour, $end_hour, $show_hidden = false)
     {
         $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
 
@@ -308,7 +308,7 @@ class CalendarScheduleModel
                     if (!isset($ret[$day_number])) {
                         $ret[$day_number] = new CalendarColumn();
                         $ret[$day_number]->setTitle($day_names[$entry['day']]);
-                        $ret[$day_number]->setURL($controller->url_for('calendar/'. (get_class($controller) == "Calendar_InstscheduleController" ? "instschedule" : "schedule") .'/index/'. $entry['day']));
+                        $ret[$day_number]->setURL($controller->url_for('calendar/schedule/index/'. $entry['day']));
                     }
 
                     $ret[$day_number]->addEntry($entry);
@@ -331,7 +331,7 @@ class CalendarScheduleModel
      * @param string  the ID of the institute
      * @return array  an array containing the entries
      */
-    static function getSeminarEntriesForInstitute($user_id, $semester, $start_hour, $end_hour, $institute_id, $controller)
+    static function getSeminarEntriesForInstitute($controller, $user_id, $semester, $start_hour, $end_hour, $institute_id)
     {
         $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
 
@@ -362,7 +362,7 @@ class CalendarScheduleModel
                     if (!isset($ret[$day_number])) {
                         $ret[$day_number] = CalendarColumn::create($entry['day']);
                         $ret[$day_number]->setTitle($day_names[$entry['day']]);
-                        $ret[$day_number]->setURL($controller->url_for('calendar/'. get_class($controller) .'/index/'. $entry['day']));
+                        $ret[$day_number]->setURL($controller->url_for('calendar/instschedule/index/'. $entry['day']));
                     }
 
                     $ret[$day_number]->addEntry($entry);
@@ -421,18 +421,18 @@ class CalendarScheduleModel
      * @param bool    filters hidden entries
      * @return array  an array of entries
      */
-    static function getInstituteEntries($user_id, $semester, $start_hour, $end_hour, $institute_id, $show_hidden = false, $controller)
+    static function getInstituteEntries($controller, $user_id, $semester, $start_hour, $end_hour, $institute_id, $show_hidden = false)
     {
         $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
         // merge the schedule and seminar-entries
-        $entries = self::getScheduleEntries($user_id, $start_hour, $end_hour, false, $controller);
-        $seminar = self::getSeminarEntriesForInstitute($user_id, $semester, $start_hour, $end_hour, $institute_id, $show_hidden, $controller);
+        $entries = self::getScheduleEntries($controller, $user_id, $start_hour, $end_hour, false);
+        $seminar = self::getSeminarEntriesForInstitute($controller, $user_id, $semester, $start_hour, $end_hour, $institute_id, $show_hidden);
         foreach($seminar as $day => $entry_column) {
             foreach ($entry_column->getEntries() as $entry) {
                 if (!isset($entries[$day])) {
                     $entries[$day] = CalendarColumn::create($day);
                     $entries[$day]->setTitle($day_names[$day]);
-                    $entries[$day]->setURL($controller->url_for('calendar/'. get_class($controller) .'/index/'. $day));
+                    $entries[$day]->setURL($controller->url_for('calendar/instschedule/index/'. $day));
                 }
                 $entries[$day]->addEntry($entry);
             }
@@ -446,18 +446,18 @@ class CalendarScheduleModel
      * @param  string  $user_id
      * @param  mixed   $semester  the data for the semester to be displayed
      */
-    static function getEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden = false, $controller)
+    static function getEntries($controller, $user_id, $semester, $start_hour, $end_hour, $show_hidden = false)
     {
         $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
         // merge the schedule and seminar-entries
-        $entries = self::getScheduleEntries($user_id, $start_hour, $end_hour, false, $controller);
-        $seminar = self::getSeminarEntries($user_id, $semester, $start_hour, $end_hour, $show_hidden, $controller);
+        $entries = self::getScheduleEntries($controller, $user_id, $start_hour, $end_hour, false);
+        $seminar = self::getSeminarEntries($controller, $user_id, $semester, $start_hour, $end_hour, $show_hidden);
         foreach($seminar as $day => $entry_column) {
             foreach ($entry_column->getEntries() as $entry) {
                 if (!isset($entries[$day])) {
                     $entries[$day] = CalendarColumn::create($day);
                     $entries[$day]->setTitle($day_names[$day]);
-                    $entries[$day]->setURL($controller->url_for('calendar/'. get_class($controller) .'/index/'. $day));
+                    $entries[$day]->setURL($controller->url_for('calendar/schedule/index/'. $day));
                 }
                 $entries[$day]->addEntry($entry);
             }

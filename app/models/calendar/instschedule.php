@@ -9,7 +9,7 @@
  * the License, or (at your option) any later version.
  */
 
-require_once('app/models/calendar/calendar.php');
+require_once('lib/calendar/CalendarColumn.class.php');
 define('DEFAULT_COLOR_SEM', $GLOBALS['PERS_TERMIN_KAT'][2]['color']);
 define('DEFAULT_COLOR_NEW', $GLOBALS['PERS_TERMIN_KAT'][3]['color']);
 define('DEFAULT_COLOR_VIRTUAL', $GLOBALS['PERS_TERMIN_KAT'][1]['color']);
@@ -74,7 +74,7 @@ class CalendarInstscheduleModel
      * @param string  the ID of the institute
      * @return array  an array containing the entries
      */
-    static function getInstituteEntries($user_id, $semester, $start_hour, $end_hour, $institute_id, $controller)
+    static function getInstituteEntries($controller, $user_id, $semester, $start_hour, $end_hour, $institute_id)
     {
         $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
 
@@ -109,7 +109,7 @@ class CalendarInstscheduleModel
                     if (!isset($ret[$day_number])) {
                         $ret[$day_number] = CalendarColumn::create($day_number);
                         $ret[$day_number]->setTitle($day_names[$day_number]);
-                        $ret[$day_number]->setURL($controller->url_for('calendar/' .(get_class($controller) == "Calendar_InstscheduleController" ? "instschedule" : "schedule"). '/index/'. $day_number));
+                        $ret[$day_number]->setURL($controller->url_for('calendar/instschedule/index/'. $day_number));
                     }
                     $ret[$day_number]->addEntry($entry);
                 }

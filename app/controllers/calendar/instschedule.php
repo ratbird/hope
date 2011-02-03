@@ -11,7 +11,6 @@
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/calendar/instschedule.php';
-require_once 'app/models/calendar/calendar.php';
 require_once 'lib/calendar/CalendarWeekView.class.php';
 require_once 'lib/classes/SemesterData.class.php';
 
@@ -65,8 +64,8 @@ class Calendar_InstscheduleController extends AuthenticatedController
             $this->current_semester = $semdata->getCurrentSemesterData();
         }
 
-        $this->entries = (array)CalendarInstscheduleModel::getInstituteEntries($GLOBALS['user']->id,
-                         $this->current_semester, 8, 20, $institute_id, $this);
+        $this->entries = (array)CalendarInstscheduleModel::getInstituteEntries($this, $GLOBALS['user']->id,
+            $this->current_semester, 8, 20, $institute_id);
 
         Navigation::activateItem('/course/main/schedule');
         PageLayout::setHelpKeyword('Basis.TerminkalenderStundenplan');

@@ -11,9 +11,6 @@
 
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'app/models/calendar/schedule.php';
-require_once 'app/models/calendar/calendar.php';
-//require_once 'app/models/calendar/view.php';
-//require_once 'app/models/calendar/calendar_column.php';
 require_once 'lib/calendar/CalendarColumn.class.php';
 require_once 'lib/calendar/CalendarWeekView.class.php';
 require_once 'lib/classes/SemesterData.class.php';
@@ -101,14 +98,14 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         if ($inst_mode) {
             // get the entries to be displayed in the schedule
-            $this->entries = CalendarScheduleModel::getInstituteEntries($GLOBALS['user']->id, $this->current_semester,
-                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $institute_id, $show_hidden, $this);
+            $this->entries = CalendarScheduleModel::getInstituteEntries($this, $GLOBALS['user']->id, $this->current_semester,
+                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $institute_id, $show_hidden);
 
             Navigation::activateItem('/browse/my_courses/schedule');
         } else {
             // get the entries to be displayed in the schedule
-            $this->entries = CalendarScheduleModel::getEntries($GLOBALS['user']->id, $this->current_semester,
-                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $show_hidden, $this);
+            $this->entries = CalendarScheduleModel::getEntries($this, $GLOBALS['user']->id, $this->current_semester,
+                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $show_hidden);
 
             Navigation::activateItem('/calendar/schedule');
         }
@@ -156,7 +153,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         $this->calendar_view->setHeight(40 + (20 * Request::get('zoom', 0)));
         $this->calendar_view->setDays($this->days, $this);
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
-
+        
         if ($inst_mode) {
             $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
             $this->calendar_view->setReadOnly();

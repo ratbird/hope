@@ -11,7 +11,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/models/calendar/calendar.php';
 require_once 'lib/calendar/CalendarColumn.class.php';
 
 /**
@@ -30,11 +29,12 @@ class CalendarView
     protected $start_hour     = 8;
     protected $end_hour       = 21;
     protected $insertFunction = "";
-    
+    protected $templates      = array();
+
     static protected $number_of_instances = 1;
     protected $view_id;
 
-    
+
     /**
      * You need to pass an instance of this class to the template. The constructor
      * expects an array of entries of the following type:
@@ -163,7 +163,7 @@ class CalendarView
      *   with new_entry_dom_object: a real dom-object of the div of the entry
      *   column_id: id of the column
      *   hour: integer number from 0 to 23
-     * If js_function_object is an empty string, tothing will be done.
+     * If js_function_object is an empty string, nothing will be done.
      * @param string $js_function_object: name of js-function or anonymous js-function
      * @return CalendarView
      */
@@ -270,5 +270,44 @@ class CalendarView
      */
     public function getColumns() {
         return $this->entries;
+    }
+
+    /**
+     * You can set your own template for one of the available hooks
+     * in the calendar. At the moment these hooks are:
+     *  - entry
+     *  - newEntry
+     *  - entryDetails
+     *
+     * @param Flexi_Template $template the template to use for the passed hook
+     *  instead of the default one
+     * @param string $type  the place/hook, where the template will be used
+     */
+    public function setTemplate($template, $type) {
+        if (!$template instanceof Flexi_Template) {
+            throw new Exception('You need to pass a Flexi_Template to this function!');
+        }
+
+        if (!in_array($type, array('entry', 'newEntry', 'entryDetails'))) {
+            throw new Exception('You need to pass a valid hook to this function!');
+        }
+
+        $this->templates[$type] = $template;
+    }
+
+
+    /**
+     * This function returns a user-specified template (if any) for the passed
+     * hook, false otherwise
+     *
+     * @param string $type the hook, you want the template for
+     * @return Flexi_Template
+     */
+    public function getTemplate($type) {
+        if (!in_array($type, array('entry', 'newEntry', 'entryDetails'))) {
+            throw new Exception('You need to pass a valid hook to this function!');
+        }
+
+        return isset($this->templates[$type]) ? $this->templates[$type] : false;
     }
 }

@@ -118,10 +118,14 @@ $cell_steps = $cell_height / 60;
                         // if we have no concurring entries set the maximum useful width
                         if ($max == 1) $this->width = '98';
 
-                        if ($calendar_view->isGrouped()) :
-                            echo $this->render_partial('calendar/grouped_entry', array('controller' => $controller, 'context' => $calendar_view->getContext()));
+                        if ($calendar_view->getTemplate('entry')) :
+                            echo $calendar_view->getTemplate('entry')->render();
                         else :
-                            echo $this->render_partial('calendar/entry', array('controller' => $controller, 'context' => $calendar_view->getContext()));
+                            if ($calendar_view->isGrouped()) :
+                                echo $this->render_partial('calendar/grouped_entry', array('controller' => $controller, 'context' => $calendar_view->getContext()));
+                            else :
+                                echo $this->render_partial('calendar/entry', array('controller' => $controller, 'context' => $calendar_view->getContext()));
+                            endif;
                         endif;
 
                     endforeach; /* cycle thrugh entries  */
@@ -138,6 +142,15 @@ $cell_steps = $cell_height / 60;
 
 <!-- new entry and entry-edit-dialog -->
 <? if (!$calendar_view->isReadOnly()) : ?>
-    <?= $this->render_partial('calendar/'. $calendar_view->getContext() .'/_entry') ?>
+    <? if ($calendar_view->getTemplate('newEntry')) : ?>
+        <?= $calendar_view->getTemplate('newEntry')->render() ?>
+    <? else : ?>
+        <?= $this->render_partial('calendar/'. $calendar_view->getContext() .'/_entry') ?>
+    <? endif ?>
 <? endif ?>
+
+<? if ($calendar_view->getTemplate('entryDetails')) : ?>
+    <?= $calendar_view->getTemplate('entryDetails')->render() ?>
+<? else : ?>
 <?= $this->render_partial('calendar/'. $calendar_view->getContext() .'/_entry_details') ?>
+<? endif ?>

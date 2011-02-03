@@ -11,7 +11,6 @@
  * the License, or (at your option) any later version.
  */
 
-require_once 'app/models/calendar/calendar.php';
 require_once 'lib/calendar/CalendarView.class.php';
 
 /**

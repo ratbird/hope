@@ -121,6 +121,7 @@ require_once ('lib/visual.inc.php');
 require_once ('lib/forum.inc.php');
 require_once ('lib/object.inc.php');
 require_once ('lib/msg.inc.php');
+require_once 'lib/classes/NotificationCenter.class.php';
 require_once ('lib/dates.inc.php');
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -470,11 +471,15 @@ if ($update) {
         $root_id = $parent_id != "0" ? $_REQUEST['root_id'] : "0";
         $user_id = $auth->auth['uid'];
         $author = $user_id == 'nobody' ? $_REQUEST['nobodysname'] : get_fullname();
+        NotificationCenter::postNotification('PostingWillCreate', $update);
         $update = CreateTopic($titel, $author, $description, $parent_id, $root_id, 0, $user_id, true, $_REQUEST['anonymous']);
+        NotificationCenter::postNotification('PostingDidCreate', $update);
     } else {
         if (!ForumFreshPosting($update)) // editiert von nur dranhängen wenn nicht frisch erstellt
             $description = forum_append_edit($description);
+        NotificationCenter::postNotification('PostingWillUpdate', $update);
         UpdateTopic ($titel, $update, $description, $_REQUEST['anonymous']);
+        NotificationCenter::postNotification('PostingDidUpdate', $update);
     }
     $open = $update; //gerade bearbeiteten Beitrag aufklappen
     $forum["lostposting"] = "";

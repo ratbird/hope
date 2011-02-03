@@ -328,7 +328,9 @@ function delete_topic($topic_id, &$deleted)  //rekursives löschen von topics VOR
             delete_topic($next_topic,$deleted);
         }
     }
+    NotificationCenter::postNotification('PostingWillDelete', $topic_id);
     $db->query("DELETE FROM px_topics WHERE topic_id='$topic_id'");
+    NotificationCenter::postNotification('PostingDidDelete', $topic_id);
     $deleted++;
 
     // gehoerte dieses Posting zu einem Termin?

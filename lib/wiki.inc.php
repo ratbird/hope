@@ -1070,6 +1070,19 @@ function printWikiPage($keyword, $version) {
     include ('lib/include/html_end.inc.php');
 }
 
+function exportWikiPagePDF($keyword, $version) {
+    global $SessSemName;
+    $wikiData=getWikiPage($keyword,$version);
+    
+    $document = new ExportPDF();
+    $document->SetTitle(_('Wiki: ').htmlReady($keyword));
+    $document->setHeaderTitle(sprintf(_("Wiki von \"%s\""), $SessSemName[0]));
+    $document->setHeaderSubtitle(sprintf(_("Seite: %s"), $keyword));
+    $document->addPage();
+    $document->addContent($wikiData['body']);
+    $document->dispatch($SessSemName[header_line]." - ".$keyword);
+}
+
 /**
 * Show export all dialog
 *
@@ -1243,6 +1256,7 @@ function getShowPageInfobox($keyword, $latest_version)
         $viewtext .= "<br><a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=showcombo&view=combodiff")."\">"._("Text mit AutorInnenzuordnung anzeigen")."</a>";
     }
     $printtext = "<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=wikiprint&version=$version")."\" target=\"_blank\">"._("Druckansicht")."</a>";
+    $pdftext = "<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=export_pdf&version=$version")."\" target=\"_blank\">"._("PDF-Ausgabe")."</a>";
 
     $views = array(
     array(
@@ -1252,7 +1266,12 @@ function getShowPageInfobox($keyword, $latest_version)
     array(
         'icon' => "icons/16/black/print.png",
         'text' => $printtext
-    ));
+    ),
+    array(
+        'icon' => "icons/16/black/file-pdf.png",
+        'text' => $pdftext
+    )
+    );
 
     $backlinktext="";
     $first=1;

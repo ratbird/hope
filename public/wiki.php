@@ -38,9 +38,9 @@ $auth->login_if($again && ($auth->auth["uid"] == "nobody"));
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
-require_once('lib/wiki.inc.php');
+require_once 'lib/wiki.inc.php';
 require_once 'lib/functions.php';
-require_once('lib/visual.inc.php');
+require_once 'lib/visual.inc.php';
 
 // -- Load Wiki Plugins -------------------
 // $WIKI_PLUGINS is defined in local.inc
@@ -62,6 +62,9 @@ if ($view=="wikiprint") {
     printAllWikiPages($SessSemName[1], $SessSemName[header_line]);
     page_close();
     die();
+} elseif ($view=="export_pdf") {
+    include_once 'lib/classes/exportdocument/ExportPDF.class.php';
+    exportWikiPagePDF($keyword, $version);
 }
 
 checkObject(); // do we have an open object?

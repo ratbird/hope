@@ -62,33 +62,9 @@ $object_id = $document->getValue('seminar_id');
 
 $no_access = true;
 
-//download from course or institute
-if ($object_id && in_array($type, array(0,6))){
-    $object_type = get_object_type($object_id);
-    //download from institute is always allowed
-    if ($object_type == "inst" || $object_type == "fak"){
-        if (get_config('ENABLE_FREE_ACCESS') || $perm->have_perm('user')) {
-            $no_access = false;
-        }
-    }
-    //download from course is allowed if course is free for all or user is participant
-    if($object_type == 'sem'){
-        $no_access = !$perm->have_studip_perm('user', $object_id);
-        $seminar = Seminar::GetInstance($object_id);
-        if ($seminar->isPublic()) {
-            $no_access = false;
-        }
-    }
-    //if allowed basically, check for closed folders and protected documents
-    if($no_access == false){
-        $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $object_id));
-        if (!$folder_tree->isDownloadFolder($document->getValue('range_id'), $GLOBALS['user']->id)) {
-            $no_access = true;
-        }
-        if(!check_protected_download($file_id)){
-            $no_access = true;
-        }
-    }
+//download from course or institute or document is a message attachement
+if ($object_id && in_array($type, array(0, 6, 7))) {
+    $no_access = !$document->checkAccess($GLOBALS['user']->id);
 }
 //download from archive, allowed if former participant
 if ($type == 1){
@@ -104,14 +80,6 @@ if ($type == 5){
         $no_access = false;
         $the_data = StudipLitList::GetTabbedList($range_id, $list_id);
     }
-}
-//download message attachment
-if ($type == 7){
-    $st = $db->prepare("SELECT dokument_id FROM dokumente
-        INNER JOIN message_user ON message_id=range_id AND message_user.user_id = ?
-        WHERE dokument_id = ?");
-    $st->execute(array($user->id, $file_id));
-    $no_access = !($st->fetchColumn());
 }
 //download ad hoc created files, always allowed
 if(in_array($type, array(2,3,4))){

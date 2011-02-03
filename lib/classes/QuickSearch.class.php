@@ -136,6 +136,7 @@ class QuickSearch
         } else {
             $this->search = NULL;
         }
+        $this->setAttributes(array());
     }
 
     /**
@@ -266,6 +267,11 @@ class QuickSearch
     {
         if (is_array($attr_array)) {
             $this->withAttributes = $attr_array;
+        }
+        if (!isset($this->withAttributes['aria-label'])
+                && !isset($this->withAttributes['aria-labelledby'])
+                && $this->search) {
+            $this->withAttributes['aria-label'] = $this->search->getTitle();
         }
         return $this;
     }

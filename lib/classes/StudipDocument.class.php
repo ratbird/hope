@@ -140,7 +140,6 @@ class StudipDocument extends SimpleORMap {
     {
         $to_delete = clone $this;
         NotificationCenter::postNotification('DocumentWillDelete', $to_delete);
-        exit;
         if ($ret = parent::delete()) {
             NotificationCenter::postNotification('DocumentDidDelete', $to_delete);
         }

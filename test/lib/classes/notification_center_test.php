@@ -171,4 +171,23 @@ class NotificationCenterTest extends UnitTestCase
         NotificationCenter::postNotification('bar', 'other');
         $this->observer->expectCallCount('update', 1);
     }
+
+
+    public function testWildCardObserver()
+    {
+        // register observer
+        $wildcard = new MockObserver();
+        NotificationCenter::addObserver($wildcard, 'update', NULL);
+
+        // prepare fixtures
+        $user_data = array(42);
+        $subject = new stdClass();
+
+        // expect notication
+        $wildcard->expect('update', array('foo', $subject, $user_data));
+        NotificationCenter::postNotification('foo', $subject, $user_data);
+
+        // remove observer
+        NotificationCenter::removeObserver($wildcard);
+    }
 }

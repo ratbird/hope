@@ -98,9 +98,9 @@ class NotificationCenter
      */
     public static function postNotification($event, $object, $user_data = NULL)
     {
-        foreach (array('', $event) as $event) {
-            if (isset(self::$observers[$event])) {
-                foreach (self::$observers[$event] as $list) {
+        foreach (array('', $event) as $e) {
+            if (isset(self::$observers[$e])) {
+                foreach (self::$observers[$e] as $list) {
                     if ($list['object'] === NULL || $list['object'] === $object) {
                         call_user_func($list['observer'], $event, $object, $user_data);
                     }

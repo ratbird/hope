@@ -107,4 +107,43 @@ class StudipDocument extends SimpleORMap {
         $this->db_table = 'dokumente';
         parent::__construct($id);
     }
+
+    /**
+     * Store entry in database; if data is actually changed triggerChdate() is called.
+     * Posts the Notifications "Document(Will|Did)(Create|Update)" if successful.
+     * The subject of the notification is this document.
+     *
+     * @return number|boolean  either false or the number of the affected rows
+     */
+    function store()
+    {
+        $notifications = $this->isNew()
+            ? array('DocumentWillCreate', 'DocumentDidCreate')
+            : array('DocumentWillUpdate', 'DocumentDidUpdate');
+
+        NotificationCenter::postNotification($notifications[0], $this);
+        if ($ret = parent::store() !== false) {
+            NotificationCenter::postNotification($notifications[1], $this);
+        }
+        return $ret;
+    }
+
+    /**
+     * Delete entry from database.
+     * The object is cleared and turned to new state.
+     * Posts the Notifications "Document(Will|Did)Delete" if successful.
+     * The subject of the notification is the former document.
+     *
+     * @return boolean  always true
+     */
+    function delete()
+    {
+        $to_delete = clone $this;
+        NotificationCenter::postNotification('DocumentWillDelete', $to_delete);
+        exit;
+        if ($ret = parent::delete()) {
+            NotificationCenter::postNotification('DocumentDidDelete', $to_delete);
+        }
+        return $ret;
+    }
 }

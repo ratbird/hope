@@ -114,7 +114,9 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
     } else if ($latestVersion && ($version!="") && ($lastchange < 30*60) && ($user_id == $latestVersion[user_id])) {
         // if same author changes again within 30 minutes,
         // no new verison is created
+        NotificationCenter::postNotification('WikiPageWillUpdate', array($range_id, $keyword));
         $result=$db->query("UPDATE wiki SET body='$body', chdate='$date' WHERE keyword='$keyword' AND range_id='$range_id' AND version='$version'");
+        NotificationCenter::postNotification('WikiPageDidUpdate', array($range_id, $keyword));
         begin_blank_table();
         $message="msg§" . _("Update ok, keine neue Version, da erneute Änderung innerhalb 30 Minuten.");
     } else {
@@ -124,7 +126,9 @@ function submitWikiPage($keyword, $version, $body, $user_id, $range_id) {
             $version=$latestVersion['version']+1;
         }
         $date=time();
+        NotificationCenter::postNotification('WikiPageWillCreate', array($range_id, $keyword));
         $result=$db->query("INSERT INTO wiki (range_id, user_id, keyword, body, chdate, version) VALUES ('$range_id', '$user_id', '$keyword','$body','$date','$version')");
+        NotificationCenter::postNotification('WikiPageDidCreate', array($range_id, $keyword));
         $message="msg§" . _("Update ok, neue Version angelegt.");
     }
 
@@ -607,7 +611,9 @@ function deleteWikiPage($keyword, $version, $range_id) {
     }
     $q="DELETE FROM wiki WHERE keyword='$keyword' AND version='$version' AND range_id='$range_id'";
     $db=new DB_Seminar;
+    NotificationCenter::postNotification('WikiPageWillDelete', array($range_id, $keyword));
     $db->query($q);
+    NotificationCenter::postNotification('WikiPageDidDelete', array($range_id, $keyword));
     if (!keywordExists($keyword)) { // all versions have gone
         $addmsg = '<br>' . sprintf(_("Damit ist die Seite %s mit allen Versionen gelöscht."),'<b>'.$keyword.'</b>');
         $newkeyword = "WikiWikiWeb";

@@ -14,6 +14,7 @@
 
 require_once "lib/classes/exportdocument/ExportDocument.interface.php";
 require_once "vendor/tcpdf/tcpdf.php";
+require_once 'app/models/media_proxy.php';
 
 class ExportPDF extends TCPDF implements ExportDocument {
 

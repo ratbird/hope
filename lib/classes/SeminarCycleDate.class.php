@@ -73,7 +73,13 @@ class SeminarCycleDate extends SimpleORMap
      */
     static function deleteBySql($where)
     {
-        return SimpleORMap::deleteBySql(__CLASS__, $where);
+        $ret = SimpleORMap::deleteBySql(__CLASS__, $where);
+        $db = DBManager::get();
+        $db->exec("DELETE FROM termin_related_persons WHERE range_id NOT IN (" .
+            "SELECT termin_id FROM termine " .
+            "UNION SELECT metadate_id FROM seminar_cycle_dates " .
+        ")");
+        return $ret;
     }
 
     /**
@@ -160,7 +166,7 @@ class SeminarCycleDate extends SimpleORMap
     function toArray()
     {
         $ret = parent::toArray();
-        foreach(array('start_hour', 'start_minute', 'end_hour', 'end_minute') as $additional) {
+        foreach(array('start_hour', 'start_minute', 'end_hour', 'end_minute', 'related_persons') as $additional) {
             $ret[$additional] = $this->$additional;
         }
         return $ret;

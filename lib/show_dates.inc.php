@@ -283,6 +283,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
 
                 echo "</tr></table> ";
             if (($open == $db->f("termin_id")) || ($open == "all") || ($new)) {
+                $termin = new SingleDate($db->f("termin_id"));
                 $content='';
                 if ($db->f("Info"))
                     $content.= formatReady($db->f("Info"), TRUE, FALSE)."<br><br>";
@@ -290,7 +291,13 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                     $content.=_("Keine Beschreibung vorhanden") . "<br><br>";
 
                 $content.="<b>" . _("Art des Termins:") . "</b> ".$TERMIN_TYP[$db->f("date_typ")]["name"].", ";
-                $content.="<b>" . _("angelegt von:") . "</b> ".get_fullname($db->f("autor_id"),'full',true)."<br>";
+                //$content.="<b>" . _("angelegt von:") . "</b> ".get_fullname($db->f("autor_id"),'full',true)."<br>";
+                $content.="<b>" . _("durchführende Dozenten:") . "</b> ";
+                foreach ($termin->getRelatedPersons() as $key => $dozent_id) {
+                    $key < 1 || ($content.= ", ");
+                    $content .= get_fullname($dozent_id);
+                }
+                $content .= "<br>";
 
                 if ($show_admin)
                     $content .= "<br><div align=\"center\"><a href=\"".URLHelper::getLink("raumzeit.php?cmd=open&open_close_id=".$db->f("termin_id")."#".$db->f("termin_id"))."\">" . makeButton("bearbeiten", "img") . "</a></div>";

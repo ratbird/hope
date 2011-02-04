@@ -61,6 +61,12 @@
                 <BR/>
                 <B><?=_("Art des Termins:")?></B>&nbsp;<?=$tpl['art']?><BR/>
                 <BR/>
+                <B><?=_("Durchführende Dozenten:")?></B>
+                    <? foreach ($tpl['related_persons'] as $key => $dozent_id) {
+                        $key < 1 || print ",";
+                        print " ".get_fullname($dozent_id);
+                    }?><BR/>
+                <BR/>
                 <? if ($tpl['additional_themes']) { ?>
                 <U><?=_("Weitere Themen:")?></U><BR/>
                 <?  foreach ($tpl['additional_themes'] as $val) { ?>

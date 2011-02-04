@@ -43,6 +43,7 @@ class SingleDate {
     var $messages = NULL;
     var $content = '';
     var $room_request = NULL;
+    var $related_persons = array();
 
     /**
      * Return the SingleDate instance of the given id
@@ -251,7 +252,6 @@ class SingleDate {
         if ($this->orig_ex != $this->ex_termin) {
             SingleDateDB::deleteSingleDate($this->termin_id, $this->orig_ex);
         }
-
         return SingleDateDB::storeSingleDate($this);
     }
 
@@ -325,6 +325,7 @@ class SingleDate {
         $this->raum = $daten['raum'];
         $this->content = $daten['content'];
         $this->update = TRUE;
+        $this->related_persons = $daten['related_persons'];
         return TRUE;
     }
 
@@ -689,6 +690,36 @@ class SingleDate {
 
         $template->set_attribute('date', $this);
         return $template->render();
+    }
+
+    public function addRelatedPerson($user_id) {
+        $this->related_persons[] = $user_id;
+        $this->related_persons = array_unique($this->related_persons);
+    }
+
+    public function deleteRelatedPerson($user_id) {
+        if (!$this->related_persons) {
+            $sem = new Seminar($this->getSeminarID());
+            $this->related_persons = array_keys($sem->getMembers('dozent'));
+        }
+        foreach ($this->related_persons as $key => $related_person) {
+            if ($related_person === $user_id) {
+                unset($this->related_persons[$key]);
+            }
+        }
+    }
+
+    public function getRelatedPersons() {
+        if (count($this->related_persons)) {
+            return $this->related_persons;
+        } else {
+            $sem = new Seminar($this->range_id);
+            return array_keys($sem->getMembers('dozent'));
+        }
+    }
+
+    public function clearRelatedPersons() {
+        $this->related_persons = array();
     }
 
 }

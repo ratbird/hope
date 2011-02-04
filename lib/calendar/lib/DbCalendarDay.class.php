@@ -166,7 +166,7 @@ class DbCalendarDay extends CalendarDay {
     // public
     function bindSeminarEvents ($sem_id = "") {
         global $TERMIN_TYP;
-    
+
         if ($sem_id == "")
             $query = sprintf("SELECT t.*, th.title, th.description as details, s.Name "
                 . "FROM termine t LEFT JOIN themen_termine tt ON tt.termin_id = t.termin_id "
@@ -178,7 +178,7 @@ class DbCalendarDay extends CalendarDay {
         else if ($sem_id != "") {
             if (is_array($sem_id))
                 $sem_id = implode("','", $sem_id);
-            $query = sprintf("SELECT t.*, th.title, th.description as details, s.Name "
+            $query = sprintf("SELECT t.*, th.title, th.description as details, s.Name, su.status "
                 . "FROM termine t LEFT JOIN themen_termine tt ON tt.termin_id = t.termin_id "
                         . "LEFT JOIN themen th ON th.issue_id = tt.issue_id "
                         . "LEFT JOIN seminar_user su ON su.Seminar_id=t.range_id "
@@ -195,6 +195,13 @@ class DbCalendarDay extends CalendarDay {
         
         if ($db->num_rows() != 0) {
             while ($db->next_record()) {
+                if ($db->f('status') === 'dozent') {
+                    //wenn ich Dozent bin, zeige den Termin nur, wenn ich durchführender Dozent bin:
+                    $termin = new SingleDate($db->f('termin_id'));
+                    if (!in_array($this->user_id, $termin->getRelatedPersons())) {
+                        continue;
+                    }
+                }
                 $app = new SeminarEvent($db->f('termin_id'), array(
                         'DTSTART'            => $db->f('date'),
                         'DTEND'              => $db->f('end_time'),

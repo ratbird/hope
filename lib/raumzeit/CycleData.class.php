@@ -435,4 +435,17 @@ class CycleData
         $this->readSingleDates($filterStart, $filterEnd);
         $this->termine[$singledate_id]->removeRequest();
     }
+
+    /**
+     * sets the related persons of this cycle
+     * @param array $user_array : array of user_id
+     */
+    function setRelatedPersons($user_array) {
+        $this->cycle_date['related_persons'] = $user_array;
+    }
+
+    function getRelatedPersons() {
+        return $this->cycle_date['related_persons'];
+    }
+
 }

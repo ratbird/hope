@@ -324,6 +324,12 @@ function raumzeit_doAddSingleDate() {
             $sem->addSingleDate($termin);
             $sem->bookRoomForSingleDate($termin->getSingleDateID(), Request::get('room'));
         }
+        $teachers = $sem->getMembers('dozent');
+        foreach (Request::getArray('related_teachers') as $dozent_id) {
+            if (in_array($dozent_id, array_keys($teachers))) {
+                $termin->addRelatedPerson($dozent_id);
+            }
+        }
         $sem->createMessage(sprintf(_("Der Termin %s wurde hinzugefügt!"), '<b>'.$termin->toString().'</b>'));
         $sem->store();
     }
@@ -426,6 +432,13 @@ function raumzeit_editSingleDate() {
 
             $termin->setDateType($_REQUEST['dateType']);
             $termin->setFreeRoomText($_REQUEST['freeRoomText_sd']);
+            $termin->clearRelatedPersons();
+            $teachers = $sem->getMembers('dozent');
+            foreach (Request::getArray('related_teachers') as $dozent_id) {
+                if (in_array($dozent_id, array_keys($teachers))) {
+                    $termin->addRelatedPerson($dozent_id);
+                }
+            }
             $termin->store();
             if ($bookRoom) {
                 $sem->bookRoomForSingleDate($_REQUEST['singleDateID'], $_REQUEST['room_sd']);
@@ -512,4 +525,39 @@ function raumzeit_MoveCycle() {
     $sem->metadate->sortCycleData();
     $sem->createMessage(_("Die regelmäßigen Zeiten wurden neu geordnet."));
 }
-?>
+
+
+function raumzeit_related_persons_action_do() {
+    global $sem;
+    //rights-check?
+    $singledates = Request::getArray('singledate');
+    $persons = Request::getArray('related_persons');
+    $action = Request::get('related_persons_action');
+    $something_done = false;
+    if (in_array($action, array('add', 'delete'))) {
+        foreach ($singledates as $singledate) {
+            $singledate = new SingleDate($singledate);
+            if ($singledate->getSeminarID() === $sem->getId()) {
+                foreach ($persons as $user_id) {
+                    $singledate->{$action."RelatedPerson"}($user_id);
+                    $something_done = true;
+                }
+            }
+            $singledate->store();
+        }
+    } elseif($action === "set") {
+        foreach ($singledates as $singledate) {
+            $singledate = new SingleDate($singledate);
+            if ($singledate->getSeminarID() === $sem->getId()) {
+                $singledate->clearRelatedPersons();
+                foreach ($persons as $user_id) {
+                    $singledate->addRelatedPerson($user_id);
+                    $something_done = true;
+                }
+            }
+            $singledate->store();
+        }
+    }
+    return $something_done;
+}
+

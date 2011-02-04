@@ -60,7 +60,12 @@ class SeminarDB {
         }
 
         while($db->next_record()) {
-            $ret[] = $db->Record;
+            $data = $db->Record;
+            $data['related_persons'] = DBManager::get()->query(
+                "SELECT user_id FROM termin_related_persons " .
+                "WHERE range_id = ".DBManager::get()->quote($data['termin_id'])." " .
+            "")->fetchAll(PDO::FETCH_COLUMN, 0);
+            $ret[] = $data;
         }
 
         return $ret;

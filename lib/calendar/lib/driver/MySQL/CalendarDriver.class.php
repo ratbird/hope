@@ -76,7 +76,7 @@ class CalendarDriver extends MysqlDriver {
         switch ($this->mod) {
             case 'EVENTS':
                 $select_cal = '*';
-                $select_sem = 't.*, s.Name, th.title, th.description as details';
+                $select_sem = 't.*, s.Name, th.title, th.description as details, su.* ';
                 break;
             
             case 'COUNT':
@@ -155,6 +155,13 @@ class CalendarDriver extends MysqlDriver {
             return $properties;
         }
         elseif (is_object($this->db['sem']) && $this->db['sem']->next_record()) {
+            if ($this->db['sem']->f('status') === 'dozent') {
+                //wenn ich Dozent bin, zeige den Termin nur, wenn ich durchführender Dozent bin:
+                $termin = new SingleDate($this->db['sem']->f('termin_id'));
+                if (!in_array($this->db['sem']->f('user_id'), $termin->getRelatedPersons())) {
+                    return FALSE;
+                }
+            }
             $this->_create_sem_object = TRUE;
             $properties = array(
                     'DTSTART'         => $this->db['sem']->f('date'),

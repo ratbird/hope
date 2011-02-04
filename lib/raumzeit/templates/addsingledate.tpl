@@ -71,6 +71,19 @@
                 </TD>
             </TR>
             <TR>
+                <TD class="steelgraulight">&nbsp;</TD>
+                <TD class="steelgraulight">
+                    <label><?= _("Durchführende Dozenten:") ?>
+                    <SELECT name="related_teachers[]" multiple>
+                    <? foreach ($sem->getMembers('dozent') as $dozent) : ?>
+                        <OPTION value="<?= $dozent['user_id'] ?>"><?= get_fullname($dozent['user_id']) ?></OPTION>
+                    <? endforeach ?>
+                    </SELECT>
+                    </label>
+                </TD>
+                <TD class="steelgraulight">&nbsp;</TD>
+            </TR>
+            <TR>
                 <TD colspan="9" class="steelgraulight" align="center">
                     <INPUT type="hidden" name="cmd" value="doAddSingleDate">
                     <INPUT type="image" <?=makebutton('uebernehmen', 'src')?>>

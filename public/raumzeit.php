@@ -148,6 +148,7 @@ $sem->registerCommand('freeText', 'raumzeit_freeText');
 $sem->registerCommand('removeRequest', 'raumzeit_removeRequest');
 $sem->registerCommand('removeSeminarRequest', 'raumzeit_removeSeminarRequest');
 $sem->registerCommand('moveCycle', 'raumzeit_moveCycle');
+$sem->registerCommand('related_persons_action_do', 'raumzeit_related_persons_action_do');
 $sem->processCommands();
 
 // get possible start-weeks
@@ -315,7 +316,7 @@ while ($tmp_first_date < $end_date) {
                         $tpl['mdStartMinute'] = $cycle_element['start_minute'];
                         $tpl['mdEndMinute'] = $cycle_element['end_minute'];
                         $tpl['mdDescription'] = htmlReady($cycle_element['desc']);
-
+                        
                         include('lib/raumzeit/templates/metadate.tpl');
 
                         if ($sd_open[$metadate_id]) {
@@ -355,9 +356,11 @@ while ($tmp_first_date < $end_date) {
                                 }
                                 // Template fuer einzelnes Datum
                                 $tpl['checked'] = '';
+                                $val->restore();
                                 $tpl = getTemplateDataForSingleDate($val, $metadate_id);
                                 $tpl['cycle_sd'] = TRUE;
-
+                                
+                                
                                 if ($sd_open[$singledate_id] && ($open_close_id == $singledate_id)) {
                                     include('lib/raumzeit/templates/openedsingledate.tpl');
                                 } else {

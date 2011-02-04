@@ -25,6 +25,35 @@
         <TD align="left" class="steelgraulight">&nbsp;</TD>
         <TD align="left" class="steelgraulight">
             <FONT size="-1">
+                <B><?=_("ausgewählte Termine Dozenten zuordnen")?>&nbsp;</B>
+            </FONT><BR/>
+    </TR>
+    <TR>
+        <TD align="left" class="steelgraulight">&nbsp;</TD>
+        <TD colspan="8" class="steelgraulight" align="left">
+            <select name="related_persons_action" aria-label="<?= _("Sollen an die ausgewählten regelmäßigen Termine durchführende Dozenten hinzugefügt oder gestrichen oder genau definiert werden?") ?>">
+                <option value=""><?= _("-- Aktion auswählen --") ?></option>
+                <option value="add"><?= _("durchführende Dozenten hinzufügen") ?></option>
+                <option value="delete"><?= _("durchführende Dozenten streichen") ?></option>
+                <option value="set"><?= _("durchführende Dozenten definieren") ?></option>
+            </select>
+            <select name="related_persons[]" multiple style="vertical-align: top;" aria-label="<?= _("Wählen Sie hier die Dozenten aus, die an regelmäßigen Termine hinzugefügt oder davon weggestrichen werden sollen.") ?>">
+                <? foreach ($sem->getMembers('dozent') as $dozent) : ?>
+                <option value="<?= htmlReady($dozent['user_id']) ?>"><?= htmlReady($dozent['Vorname']." ".$dozent['Nachname']) ?></option>
+                <? endforeach ?>
+            </select>
+            <input type="image" <?=makebutton('uebernehmen', 'src')?> name="related_persons_action_do" align="absmiddle">
+        </TD>
+    </TR>
+    <TR>
+        <TD colspan="2" class="steel1">
+            &nbsp;
+        </TD>
+    </TR>
+    <TR>
+        <TD align="left" class="steelgraulight">&nbsp;</TD>
+        <TD align="left" class="steelgraulight">
+            <FONT size="-1">
                 <B><?=_("ausgew&auml;hlte Termine")?>&nbsp;</B>
             </FONT><BR/>
     </TR>

@@ -66,21 +66,41 @@ class SingleDateDB {
         } else {
             $db->query($query = "REPLACE INTO $table (metadate_id, date_typ, date, end_time, mkdate, chdate, termin_id, range_id, autor_id, raum, content) VALUES ('".$termin->getMetaDateID()."', '".$termin->getDateType()."', '".$termin->getStartTime()."', '".$termin->getEndTime()."', '".$termin->getMkDate()."', '".$termin->getChDate()."', '".$termin->getTerminID()."', '".$termin->getRangeID()."', '".$termin->getAuthorID()."', '".mysql_escape_string($termin->getFreeRoomText())."', '".$termin->getComment()."')");
         }
+
+        $db = DBManager::get();
+        $db->exec(
+           "DELETE FROM termin_related_persons WHERE range_id = ".$db->quote($termin->getTerminId())." " .
+        "");
+        if (count($termin->related_persons)) {
+            $query = "INSERT INTO termin_related_persons (range_id, user_id) VALUES ";
+            foreach ($termin->getRelatedPersons() as $number => $user_id) {
+                $query .= $number > 0 ? ", " : "";
+                $query .= "(".$db->quote($termin->getTerminId()).", ".$db->quote($user_id).") ";
+            }
+            $db->exec($query);
+        }
+
         return TRUE;
     }
 
     static function restoreSingleDate($termin_id) {
         $db = new DB_Seminar();
         $db->query("SELECT termine.*, resource_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termin_id = '$termin_id'");
+        $related_persons = DBManager::get()->query(
+            "SELECT user_id FROM termin_related_persons " .
+            "WHERE range_id = ".DBManager::get()->quote($termin_id)." " .
+        "")->fetchAll(PDO::FETCH_COLUMN, 0);
         if ($db->next_record() && $db->f('termin_id')) {
             $ret = $db->Record;
             $ret['ex_termin'] = FALSE;
+            $ret['related_persons'] = $related_persons;
             return $ret;
         } else {
             $db->query("SELECT * FROM ex_termine WHERE termin_id = '$termin_id'");
             if ($db->next_record()) {
                 $ret = $db->Record;
                 $ret['ex_termin'] = TRUE;
+                $ret['related_persons'] = $related_persons;
                 return $ret;
             } else {
                 return FALSE;
@@ -98,6 +118,7 @@ class SingleDateDB {
 
         $db->query("DELETE FROM $table WHERE termin_id = '$id'");
         $db->query("DELETE FROM themen_termine WHERE termin_id = '$id'");
+        $db->query("DELETE FROM termin_related_persons WHERE termin_id = '$id'");
 
         return TRUE;
     }

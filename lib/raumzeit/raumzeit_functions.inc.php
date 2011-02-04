@@ -157,6 +157,8 @@ function getTemplateDataForSingleDate($val, $cycle_id = '') {
     $tpl['start_minute'] = date('i',$val->getStartTime());
     $tpl['end_stunde'] = date('H',$val->getEndTime());
     $tpl['end_minute'] = date('i',$val->getEndTime());
+    $tpl['related_persons'] = $val->getRelatedPersons();
+
 
     if ($val->hasRoomRequest()) {
         $tpl['room_request'] = true;

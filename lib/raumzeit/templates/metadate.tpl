@@ -115,7 +115,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
                         <?=_("SWS Dozent:")?>
                         &nbsp;
                         <INPUT type="text" name="sws" maxlength="3" size="1" value="<?=$tpl['sws']?>">
-                    </FORM></TD>
+                </TD>
                 <TD width="5%" nowrap="nowrap" class="<?=$tpl['class']?>" align="right">
                     <? if ($show_sorter) : ?>
 	                    <a href="<?=URLHelper::getLink('?cmd=moveCycle&direction=up&cycle_id='. $tpl['md_id']) ?>">
@@ -131,6 +131,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
 
                 </TD>
             </TR>
+            
         </TABLE>
     </TD>
 <?

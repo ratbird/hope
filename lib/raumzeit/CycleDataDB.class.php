@@ -48,7 +48,12 @@ class CycleDataDB
         $ret = array();
 
         while ($db->next_record()) {
-            $ret[] = $db->Record;
+            $data = $db->Record;
+            $data['related_persons'] = DBManager::get()->query(
+                "SELECT user_id FROM termin_related_persons " .
+                "WHERE range_id = ".DBManager::get()->quote($zw['termin_id'])." " .
+            "")->fetchAll(PDO::FETCH_COLUMN, 0);
+            $ret[] = $data;
         }
 
         if (($start != 0) || ($end != 0)) {
@@ -60,6 +65,10 @@ class CycleDataDB
         while ($db->next_record()) {
             $zw = $db->Record;
             $zw['ex_termin'] = TRUE;
+            $zw['related_persons'] = DBManager::get()->query(
+                "SELECT user_id FROM termin_related_persons " .
+                "WHERE range_id = ".DBManager::get()->quote($zw['termin_id'])." " .
+            "")->fetchAll(PDO::FETCH_COLUMN, 0);
             $ret[] = $zw;
         }
 

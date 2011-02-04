@@ -145,4 +145,49 @@ class StudipDocument extends SimpleORMap {
         }
         return $ret;
     }
+
+    /**
+     * checks access to the document for user with given user_id
+     * the number of deleted rows.
+     * @param string user_id: id of the user
+     * @return boolean: true if user has access to the document
+     */
+    public function checkAccess ($user_id) {
+        if (!$this->getValue('dokument_id')) return false;
+        $object_type = get_object_type($this->getValue('seminar_id'));
+        $access = false;
+
+        if ($object_type == 'inst' || $object_type == 'fak') {
+            //download from institute is always allowed
+            if (get_config('ENABLE_FREE_ACCESS') || $GLOBALS['perm']->have_perm('user', $user_id)) {
+                $access = true;
+            }
+        } else if($object_type == 'sem') {
+            //download from course is allowed if course is free for all or user is participant
+            if (Seminar::GetInstance($this->getValue('seminar_id'))->isPublic()) {
+                $access = true;
+            } else {
+                $access = $GLOBALS['perm']->have_studip_perm('user', $this->getValue('seminar_id'), $user_id);
+            }
+        } else {
+            // message attachement
+            $st = DBManager::get()->prepare("SELECT dokument_id FROM dokumente
+                INNER JOIN message_user ON message_id=range_id AND message_user.user_id = ?
+                WHERE dokument_id = ?");
+            $st->execute(array($user_id, $this->getValue('dokument_id')));
+            return ($st->fetchColumn() == true);
+        }
+
+        //if allowed basically, check for closed folders and protected documents
+        if ($access) {
+            $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $this->getValue('seminar_id')));
+            if (!$folder_tree->isDownloadFolder($this->getValue('range_id'), $user_id)) {
+                $access = false;
+            }
+            if(!check_protected_download($this->getValue('dokument_id'))){
+                $access = false;
+            }
+        }
+        return $access;
+    }
 }

@@ -1478,45 +1478,44 @@ jQuery(function ($) {
  * ------------------------------------------------------------------------ */
 
 STUDIP.Forms = {
-  initialize :  function() {
-      jQuery("input,textarea").each(function(){
-        if (jQuery(this).attr('required')!== undefined){
-          jQuery(this).attr('aria-required', true);
-        }
-        if (jQuery(this).attr('pattern') && jQuery(this).attr('title')) {
-          jQuery(this).attr('data-message', jQuery(this).attr('title'));
-        }
-       });
+  initialize : function () {
+    jQuery("input,textarea").each(function () {
+      if (jQuery(this).attr('required') !== undefined) {
+        jQuery(this).attr('aria-required', true);
+      }
+      if (jQuery(this).attr('pattern') && jQuery(this).attr('title')) {
+        jQuery(this).attr('data-message', jQuery(this).attr('title'));
+      }
+    });
 
-      //localized messages
-      jQuery.tools.validator.localize('de', {
-        '*'          : 'Bitte ändern Sie ihre Eingabe'.toLocaleString(),
-          ':email' :'Bitte geben Sie gültige E-Mail-Adresse ein'.toLocaleString(),
-        ':number'    : 'Bitte geben Sie eine Zahl ein'.toLocaleString(),
-        ':url'      : 'Bitte geben Sie eine gültige Web-Adresse ein'.toLocaleString(),
-        '[max]'      : 'Bitte geben Sie maximal $1 Zeichen ein'.toLocaleString(),
-        '[min]'     : 'Bitte geben Sie mindestens $1 Zeichen ein'.toLocaleString(),
-        '[required]' : 'Dies ist ein erforderliches Feld'.toLocaleString()
+    //localized messages
+    jQuery.tools.validator.localize('de', {
+      '*'          : 'Bitte ändern Sie ihre Eingabe'.toLocaleString(),
+      ':email'     : 'Bitte geben Sie gültige E-Mail-Adresse ein'.toLocaleString(),
+      ':number'    : 'Bitte geben Sie eine Zahl ein'.toLocaleString(),
+      ':url'       : 'Bitte geben Sie eine gültige Web-Adresse ein'.toLocaleString(),
+      '[max]'      : 'Bitte geben Sie maximal $1 Zeichen ein'.toLocaleString(),
+      '[min]'      : 'Bitte geben Sie mindestens $1 Zeichen ein'.toLocaleString(),
+      '[required]' : 'Dies ist ein erforderliches Feld'.toLocaleString()
+    });
 
+    jQuery('form').validator({
+      position : 'bottom left',
+      offset   : [8, 0],
+      message  : '<div><div class="arrow"/></div>',
+      lang     : 'de'
+    });
+
+    jQuery('form').bind("onBeforeValidate", function () {
+      jQuery("input").each(function () {
+        jQuery(this).removeAttr('aria-invalid');
       });
+    });
 
-      jQuery('form').validator({
-        position : 'bottom left',
-        offset   : [8, 0],
-        message  : '<div><div class="arrow"/></div>',
-        lang     : 'de'
+    jQuery('form').bind("onFail", function (e, errors) {
+      jQuery.each(errors, function () {
+        this.input.attr('aria-invalid', 'true');
       });
-
-     jQuery('form').bind("onBeforeValidate", function() {
-        jQuery("input").each(function() {
-          jQuery(this).removeAttr('aria-invalid');
-        });
-      });
-
-      jQuery('form').bind("onFail", function(e, errors) {
-        jQuery.each(errors, function() {
-          this.input.attr('aria-invalid','true');
-        });
-      });
+    });
   }
 };

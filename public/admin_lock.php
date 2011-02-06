@@ -64,8 +64,7 @@ if (isset($SessSemName[1]) && (!$make_lock)) {
     $selected = 1;
 }
 // # Get a database connection
-$lock_rules = new LockRules();
-$all_lock_rules = array_merge(array(array('name' => '--' . _("keine Sperrebene") . '--','lock_id' => 'none')), (array)$lock_rules->getAllLockRules($perm->have_perm('root')));
+$all_lock_rules = array_merge(array(array('name' => '--' . _("keine Sperrebene") . '--','lock_id' => 'none')), LockRule::findAllByType('sem'));
 
 //echo "<body>";
 $containerTable=new ContainerTable();
@@ -83,7 +82,7 @@ echo $zt->closeRow();
 
 // a Seminar is selected!
 if (isset($SessSemName[1]) && isset($selected)) {
-    $rule = $lock_rules->getLockRule($seminar_row["lock_rule"]);
+    $rule = LockRule::find($seminar_row["lock_rule"]);
     if(!$perm->have_perm('root') && ($rule['permission'] == 'admin' || $rule['permission'] == 'root')){
         $form = htmlReady($rule['name']);
     } else {
@@ -126,7 +125,7 @@ if (!Request::submitted('general_lock') && is_array($lock_sem) && !$selected) {
         $stmt->execute(array($key));
         if ($row = $stmt->fetch()) {
 
-            $rule = $lock_rules->getLockRule($val);
+            $rule = LockRules::get($val);
             echo $zt->row(array(htmlReady($row["Veranstaltungsnummer"]),
                                 htmlReady($row["Name"]),
                                 htmlReady($rule["name"])));

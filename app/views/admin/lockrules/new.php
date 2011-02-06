@@ -1,0 +1,17 @@
+<h3><?=_("Neue Sperrebene eingeben")?></h3>
+<?
+echo $message;
+echo $this->render_partial('admin/lockrules/_form.php', array('action' => $this->controller->url_for('admin/lockrules/new')));
+
+$infobox_content = array(
+           array(
+               'kategorie' => _('Sperrebenen verwalten'),
+               'eintrag'   => array(
+                array(
+                'icon' => 'icons/16/black/minus.png',
+                'text' => '<a href="'.$controller->url_for('admin/lockrules').'">'._('Bearbeiten abbrechen').'</a>'
+                ))
+            )
+);
+
+$infobox = array('picture' => 'infobox/administration.jpg', 'content' => $infobox_content);

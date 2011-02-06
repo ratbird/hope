@@ -84,9 +84,7 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('visibility', new Navigation(_('Sichtbarkeit'), 'admin_visibility.php?list=TRUE'));
         }
 
-        if (get_config('SEMINAR_LOCK_ENABLE')) {
-            $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperren'), 'admin_lock.php?list=TRUE'));
-        }
+        $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperren'), 'admin_lock.php?list=TRUE'));
 
         $navigation->addSubNavigation('aux_data', new Navigation(_('Zusatzangaben'), 'admin_aux.php?list=TRUE'));
         $this->addSubNavigation('course', $navigation);
@@ -140,8 +138,8 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('specification', new Navigation(_('Zusatzangaben'), 'dispatch.php/admin/specification'));
         }
 
-        if ($perm->have_perm(get_config('LOCK_RULE_ADMIN_PERM') ? get_config('LOCK_RULE_ADMIN_PERM') : 'admin') && get_config('SEMINAR_LOCK_ENABLE')) {
-            $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperrebenen'), 'admin_lock_adjust.php'));
+        if ($perm->have_perm(get_config('LOCK_RULE_ADMIN_PERM') ? get_config('LOCK_RULE_ADMIN_PERM') : 'admin')) {
+            $navigation->addSubNavigation('lock_rules', new Navigation(_('Sperrebenen'), 'dispatch.php/admin/lockrules'));
         }
 
         if ($perm->have_perm('root')) {

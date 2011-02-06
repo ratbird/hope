@@ -53,8 +53,6 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     $db4=new DB_Seminar;
     $cssSw=new cssClassSwitcher;
     $semester=new SemesterData;
-    $lock_rules=new LockRules;
-    $all_lock_rules=$lock_rules->getAllLockRules($perm->have_perm('root'));
     $aux_rules=new AuxLockRules();
     $all_aux_rules=$aux_rules->getAllLockRules();
 
@@ -462,6 +460,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             }
         //more Options for lock changing
         if ($i_page == "admin_lock.php") {
+            $seminar_lock_rules = array_filter(LockRule::findAllByType('sem'), create_function('$lr','return ' . (int)$GLOBALS['perm']->have_perm('root') . ' || (!in_array($lr->permission, array("root","admin")));'));
             ?>
             <tr class="steel2">
                 <td colspan="3">
@@ -469,15 +468,16 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 </td>
                 <td colspan="4" align="right">
                 <?
+                    $lock_all = Request::option('lock_all');
                     printf("<select name=\"lock_all\" size=1>");
                     printf("<option value='-1'>"._("Bitte wählen")."</option>");
                     printf("<option value='none' %s>--"._("keine Sperrebene")."--</option>", $lock_all == 'none' ? 'selected=selected' : '' );
-                    for ($i=0;$i<count($all_lock_rules);$i++) {
-                        printf("<option value=\"".$all_lock_rules[$i]["lock_id"]."\" ");
-                        if (isset($lock_all) && $lock_all==$all_lock_rules[$i]["lock_id"]) {
+                    foreach($seminar_lock_rules as $lr) {
+                        printf("<option value=\"".$lr["lock_id"]."\" ");
+                        if (isset($lock_all) && $lock_all==$lr["lock_id"]) {
                             printf(" selected=selected ");
                         }
-                        printf(">".htmlReady($all_lock_rules[$i]["name"])."</option>");
+                        printf(">".htmlReady($lr["name"])."</option>");
                     }
                     // ab hier die verschiedenen Sperrlevel für alle Veranstaltungen
                     echo '</select> ';
@@ -624,8 +624,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                     printf("<font size=-1>" . _("Veranstaltung") . "<br><a href=\"%s\">%s</a></font>", URLHelper::getLink('admin_seminare_assi.php?cmd=do_copy&start_level=TRUE&class=1&cp_id=' . $seminar_id), makeButton("kopieren"));
                     break;
                 case "admin_lock.php":
-                    $lock_rules = new LockRules();
-                    $rule = $lock_rules->getSemLockRule($seminar_id);
+                    $rule = LockRules::getObjectRule($seminar_id);
                     if(!$perm->have_perm('root') && ($rule['permission'] == 'admin' || $rule['permission'] == 'root')){
                         echo '<div style="margin-bottom:3px;font-weight:bold;text-align:left">'._("zugewiesen") . ': ' . htmlReady($rule['name']).'</div>';
                     } else {
@@ -634,14 +633,12 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         <select name=lock_sem[<? echo $seminar_id ?>]>
                         <option value="none">-- <?= _("keine Sperrebene") ?> --</option>
                         <?
-                            for ($i=0;$i<count($all_lock_rules);$i++) {
-                                echo "<option value=".$all_lock_rules[$i]["lock_id"]."";
-                                if (isset($lock_all) && $lock_all==$all_lock_rules[$i]["lock_id"]) {
-                                    echo " selected ";
-                                } elseif (!isset($lock_all) && ($all_lock_rules[$i]["lock_id"]==$rule["lock_id"])) {
+                            foreach($seminar_lock_rules as $lr) {
+                                echo "<option value=".$lr["lock_id"]."";
+                                if (Request::option('lock_all') == $lr["lock_id"] || $lr["lock_id"] == $rule["lock_id"]) {
                                     echo " selected ";
                                 }
-                                echo ">".htmlReady($all_lock_rules[$i]["name"])."</option>";
+                                echo ">".htmlReady($lr["name"])."</option>";
                             }
                         ?>
                         </select>

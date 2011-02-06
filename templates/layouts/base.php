@@ -33,6 +33,7 @@
         <?= $this->render_partial('infobox/infobox_generic_content', $infobox) ?>
       </div>
       <div id="layout_content">
+        <?= implode(PageLayout::getMessages()) ?>
         <?= $content_for_layout ?>
         <div class="clear"></div>
       </div>

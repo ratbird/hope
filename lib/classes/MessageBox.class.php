@@ -2,7 +2,7 @@
 /**
  * MessageBox.class.php
  *
- * html-boxes for different kinds of messages
+ * html boxes for different kinds of messages
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,7 +24,7 @@
  *
  * echo MessageBox::error('Nachricht', array('optional details'));
  *
- * use the optional parameter $close_details for displaying the messagebox with
+ * use the optional parameter $close_details for displaying the message box with
  * closed details
  *
  * echo MessageBox::success('Nachricht', array('optional details'), true);
@@ -33,73 +33,96 @@
 class MessageBox
 {
     /**
-     * This function shows an exception-messagebox. Use it only for systemerrors
+     * type and contents of the message box
+     */
+    protected $class, $message, $details, $close_details;
+
+    /**
+     * This function returns an exception message box. Use it only for system errors
      * or security related problems.
      *
      * @param string $message
      * @param array() $details
      * @param boolean $close_details
-     * @return string html-output of the messagebox
+     * @return object MessageBox object
      */
     public static function exception($message, $details = array(), $close_details = false)
     {
-        return self::render('exception', $message, $details, $close_details);
+        return new MessageBox('exception', $message, $details, $close_details);
     }
 
     /**
-     * This function shows an error-messagebox. Use it for validation errors,
+     * This function returns an error message box. Use it for validation errors,
      * problems and other wrong user input.
      *
      * @param string $message
      * @param array() $details (optional)
      * @param boolean $close_details (optional)
-     * @return string html-output of the messagebox
+     * @return object MessageBox object
      */
     public static function error($message, $details = array(), $close_details = false)
     {
-        return self::render('error', $message, $details, $close_details);
+        return new MessageBox('error', $message, $details, $close_details);
     }
 
     /**
-     * This function shows a success messagebox. Use it for confirmation of user
+     * This function returns a success message box. Use it for confirmation of user
      * interaction.
      *
      * @param string $message
      * @param array() $details (optional)
      * @param boolean $close_details (optional)
-     * @return string html-output of the messagebox
+     * @return object MessageBox object
      */
     public static function success($message, $details = array(), $close_details = false)
     {
-        return self::render('success', $message, $details, $close_details);
+        return new MessageBox('success', $message, $details, $close_details);
     }
 
     /**
-     * This function shows an info messagebox. Use it to report neutral
+     * This function returns an info message box. Use it to report neutral
      * informations.
      *
      * @param string $message
      * @param array() $details (optional)
      * @param boolean $close_details (optional)
-     * @return string html-output of the messagebox
+     * @return object MessageBox object
      */
     public static function info($message, $details = array(), $close_details = false)
     {
-        return self::render('info', $message, $details, $close_details);
+        return new MessageBox('info', $message, $details, $close_details);
     }
 
-
     /**
-     * This method actually renders a message.
+     * Initializes a new MessageBox object of the given class.
      *
      * @param string $class the type of this message
      * @param string $message
-     * @param array() $details
-     * @param boolean $close_details
-     * @return string html-output of the messagebox
+     * @param array() $details (optional)
+     * @param boolean $close_details (optional)
      */
-    private static function render($class, $message, $details, $close_details)
+    protected function __construct($class, $message, $details = array(), $close_details = false)
     {
-        return $GLOBALS['template_factory']->render('shared/message_box', compact('class', 'message', 'details', 'close_details'));
+        $this->class         = $class;
+        $this->message       = $message;
+        $this->details       = $details;
+        $this->close_details = $close_details;
+    }
+
+    /**
+     * This method renders a MessageBox object to a string.
+     *
+     * @return string   html output of the message box
+     */
+    public function __toString()
+    {
+        $params = array(
+            'class'         => $this->class,
+            'message'       => $this->message,
+            'details'       => $this->details,
+            'close_details' => $this->close_details
+        );
+
+        return $GLOBALS['template_factory']->render('shared/message_box', $params);
     }
 }

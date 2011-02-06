@@ -54,3 +54,4 @@
     <body id="<?= PageLayout::getBodyElementId() ?>">
       <?= PageLayout::getBodyElements() ?>
       <div id="overdiv_container"></div>
+      <? PageLayout::clearMessages() ?>

@@ -355,4 +355,41 @@ class PageLayout
     {
         return preg_replace('/\W/', '_', basename($_SERVER['PHP_SELF'], '.php'));
     }
+
+    /**
+     * Registers a MessageBox object for display the next time a layout
+     * is rendered. Note: This will only work for pages that use layout
+     * templates.
+     *
+     * @param MessageBox  message object to display
+     */
+    public static function postMessage(MessageBox $message)
+    {
+        $_SESSION['messages'][] = $message;
+    }
+
+    /**
+     * Clears all messages pending for display.
+     */
+    public static function clearMessages()
+    {
+        unset($_SESSION['messages']);
+    }
+
+    /**
+     * Returns the list of pending messages and clears the list.
+     *
+     * @return array    list of MessageBox objects
+     */
+    public static function getMessages()
+    {
+        $messages = array();
+
+        if (isset($_SESSION['messages'])) {
+            $messages = $_SESSION['messages'];
+            self::clearMessages();
+        }
+
+        return $messages;
+    }
 }

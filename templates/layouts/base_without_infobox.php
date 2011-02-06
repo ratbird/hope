@@ -23,6 +23,7 @@
     <? include 'lib/include/header.php' ?>
 
     <div id="layout_container" style="padding: 1em;">
+        <?= implode(PageLayout::getMessages()) ?>
         <?= $content_for_layout ?>
         <div class="clear"></div>
     </div>

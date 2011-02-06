@@ -5,8 +5,8 @@
 // This file is part of Stud.IP
 // StudipAuthAbstract.class.php
 // Abstract class, used as a template for authentication plugins
-// 
-// Copyright (c) 2003 André Noack <noack@data-quest.de> 
+//
+// Copyright (c) 2003 André Noack <noack@data-quest.de>
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -33,8 +33,8 @@ DbView::addView('core');
 * abstract base class for authentication plugins
 *
 * abstract base class for authentication plugins
-* to write your own authentication plugin, derive it from this class and 
-* implement the following abstract methods: isUsedUsername($username) and 
+* to write your own authentication plugin, derive it from this class and
+* implement the following abstract methods: isUsedUsername($username) and
 * isAuthenticated($username, $password, $jscript)
 * don't forget to call the parents constructor if you implement your own, php
 * won't do that for you !
@@ -42,28 +42,28 @@ DbView::addView('core');
 * @abstract
 * @access   public
 * @author   André Noack <noack@data-quest.de>
-* @package  
+* @package
 */
 class StudipAuthAbstract {
-    
+
     /**
     * contains error message, if authentication fails
     *
-    * 
+    *
     * @access   public
     * @var      string
     */
     var $error_msg;
-    
+
     /**
     * indicates whether the authenticated user logs in for the first time
     *
-    * 
+    *
     * @access   public
     * @var      bool
     */
     var $is_new_user = false;
-    
+
     /**
      * array of user domains to assign to each user, can be set in local.inc
      *
@@ -84,7 +84,7 @@ class StudipAuthAbstract {
     * @var      array $user_data_mapping
     */
     var $user_data_mapping = null;
-    
+
     /**
     * database connection
     *
@@ -94,25 +94,25 @@ class StudipAuthAbstract {
     * @var      object DbView
     */
     var $dbv;
-    
+
     /**
-    * name of the plugin 
+    * name of the plugin
     *
     * name of the plugin (last part of class name) is set in the constructor
     * @access   public
     * @var      string
     */
     var $plugin_name;
-    
+
     /**
     * text, which precedes error message for the plugin
     *
-    * 
+    *
     * @access   public
     * @var      string
     */
     var $error_head;
-    
+
     /**
     * static method to instantiate and retrieve a reference to an object (singleton)
     *
@@ -123,7 +123,7 @@ class StudipAuthAbstract {
     * @param    string  name of plugin, if omitted an array with all plugin objects will be returned
     * @return   mixed   either a reference to the plugin with the passed name, or an array with references to all plugins
     */
-    
+
     function GetInstance( $plugin_name = false){
         static $plugin_instance;    //container to hold the plugin objects
         if (!is_array($plugin_instance)){
@@ -135,7 +135,7 @@ class StudipAuthAbstract {
         }
         return ($plugin_name) ? $plugin_instance[strtoupper("StudipAuth" . $plugin_name)] : $plugin_instance;
     }
-    
+
     /**
     * static method to check authentication in all plugins
     *
@@ -195,7 +195,7 @@ class StudipAuthAbstract {
     * @access public
     * @static
     * @param    string the username
-    * @return   array   
+    * @return   array
     */
     function CheckUsername($username){
         $plugins = StudipAuthAbstract::GetInstance();
@@ -213,7 +213,7 @@ class StudipAuthAbstract {
     /**
     * static method to check for a mapped field
     *
-    * this method checks in the plugin with the passed name, if the passed 
+    * this method checks in the plugin with the passed name, if the passed
     * Stud.IP DB field is mapped to an external data source
     *
     * @access public
@@ -229,8 +229,8 @@ class StudipAuthAbstract {
         $plugin = StudipAuthAbstract::GetInstance($plugin_name);
         return (is_object($plugin) ? $plugin->isMappedField($field_name) : false);
     }
-    
-    
+
+
     /**
     * Constructor
     *
@@ -238,9 +238,9 @@ class StudipAuthAbstract {
     * to get a reference to a plugin object. Make sure the constructor in the base class is called
     * when deriving your own plugin class, it assigns the settings from local.inc as members of the plugin
     * each key of the $STUDIP_AUTH_CONFIG_<plugin name> array will become a member of the object
-    * 
+    *
     * @access private
-    * 
+    *
     */
     function StudipAuthAbstract() {
         $this->plugin_name = strtolower(substr(get_class($this),10));
@@ -254,7 +254,7 @@ class StudipAuthAbstract {
         }
         $this->dbv = new DbView();
     }
-    
+
     /**
     * authentication method
     *
@@ -273,21 +273,21 @@ class StudipAuthAbstract {
         if ($this->isAuthenticated($username, $password, $jscript)){
             if ($uid = $this->getStudipUserid($username)){
                 $this->doDataMapping($uid);
-                $this->setUserDomains($uid);
                 if ($this->is_new_user){
                     $this->doNewUserInit($uid);
                 }
+                $this->setUserDomains($uid);
             }
             return $uid;
         } else {
             return false;
         }
     }
-    
+
     /**
     * method to retrieve the Stud.IP user id to a given username
     *
-    * 
+    *
     * @access   private
     * @param    string  the username
     * @return   string  the Stud.IP user id or false if an error occurs
@@ -312,9 +312,8 @@ class StudipAuthAbstract {
         $this->is_new_user = true;
         return $uid;
     }
-    
-    
-    /**
+
+   /**
     * initialize a new user
     *
     * this method is invoked for one time, if a new user logs in ($this->is_new_user is true)
@@ -323,24 +322,18 @@ class StudipAuthAbstract {
     * @param    string  the user id
     * @return   bool
     */
-    function doNewUserInit($uid){
-        // auto insertion of new users, according to $AUTO_INSERT_SEM[] (defined in local.inc)
-        $permlist = array('autor','tutor','dozent');
+    function doNewUserInit($uid) {
+
+       // auto insertion of new users, according to $AUTO_INSERT_SEM[] (defined in local.inc)
         $this->dbv->params[] = $uid;
         $db = $this->dbv->get_query("view:AUTH_USER_UID");
-        $db->next_record();
-        if (in_array($db->f("perms"), $permlist)){
-            if (is_array($GLOBALS['AUTO_INSERT_SEM'])){
-                foreach ($GLOBALS['AUTO_INSERT_SEM'] as $sem_id) {
-                    $this->dbv->params = array($sem_id, $uid, 'autor', 0);
-                    $db = $this->dbv->get_query("view:SEM_USER_INSERT");
-                }
-            }
-        return true;
+        if ($db->next_record()) {
+            AutoInsert::checkNewUser($db->f("perms"), $uid);
+            return true;
         }
         return false;
     }
-    
+
     /**
      * This method sets the user domains for the current user.
      *
@@ -409,11 +402,11 @@ class StudipAuthAbstract {
         }
         return false;
     }
-    
+
     /**
     * method to check, if a given db field is mapped by the plugin
     *
-    * 
+    *
     * @access   private
     * @param    string  the name of the db field (<table_name>.<field_name>)
     * @return   bool    true if the field is mapped
@@ -421,11 +414,11 @@ class StudipAuthAbstract {
     function isMappedField($name){
         return isset($this->user_data_mapping[$name]);
     }
-    
+
     /**
     * method to eliminate bad characters in the given username
     *
-    * 
+    *
     * @access   private
     * @param    string  the username
     * @return   string  the username
@@ -438,12 +431,12 @@ class StudipAuthAbstract {
             return trim($username);
         }
     }
-    
+
     /**
-    * method to check, if username is used 
+    * method to check, if username is used
     *
     * abstract MUST be realized
-    * 
+    *
     * @access   private
     * @param    string  the username
     * @return   bool    true if the username exists
@@ -452,12 +445,12 @@ class StudipAuthAbstract {
         $this->error_msg = sprintf(_("Methode %s nicht implementiert!"),get_class($this) . "::isUsedUsername()");
         return false;
     }
-    
+
     /**
     * method to check the authentication of a given username and a given password
     *
     * abstract, MUST be realized
-    * 
+    *
     * @access private
     * @param    string  the username
     * @param    string  the password

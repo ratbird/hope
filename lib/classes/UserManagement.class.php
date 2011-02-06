@@ -38,6 +38,7 @@ require_once 'lib/object.inc.php';
 require_once 'lib/log_events.inc.php';  // Event logging
 require_once 'lib/classes/Avatar.class.php'; // remove Avatarture
 require_once 'app/models/studygroup.php';
+require_once 'lib/classes/AutoInsert.class.php'; // automatic Insert for user in seminars
 
 if ($GLOBALS['RESOURCES_ENABLE']) {
     include_once ($GLOBALS['RELATIVE_PATH_RESOURCES']."/lib/DeleteResourcesUser.class.php");
@@ -244,57 +245,6 @@ class UserManagement
         return TRUE;
     }
 
-
-    /**
-    * Do auto inserts, if we created an autor, tutor or dozent
-    *
-    * @access   public
-    * @param    string  old status before changes
-    */
-    function autoInsertSem($old_status = FALSE) {
-        global $AUTO_INSERT_SEM, $perm, $auth;
-
-        if (!$perm->have_perm("admin") && $this->user_data['auth_user_md5.user_id'] != $auth->auth["uid"]) {
-            $this->msg .= "error§" . _("Sie haben keine Berechtigung diesen Account zu ver&auml;ndern.") . "§";
-            return FALSE;
-        }
-        if (($old_status != "autor") && ($old_status != "tutor") && ($old_status != "dozent")) {
-            if (($this->user_data['auth_user_md5.perms'] == "autor") || ($this->user_data['auth_user_md5.perms'] == "tutor") || ($this->user_data['auth_user_md5.perms'] == "dozent")) {
-                if (is_array($AUTO_INSERT_SEM)){
-                    foreach ($AUTO_INSERT_SEM as $sem) {
-                        $this->db->query("SELECT Name, start_time, Schreibzugriff FROM seminare WHERE Seminar_id = '$sem'");
-                        if ($this->db->num_rows()) {
-                            $this->db->next_record();
-                            if ($this->db->f("Schreibzugriff") < 2) { // seminar exists and no password is set
-                                $this->db2->query("SELECT status FROM seminar_user WHERE Seminar_id = '$sem' AND user_id='".$this->user_data['auth_user_md5.user_id']."'");
-                                if ($this->db2->num_rows()) { // user has already subscribed
-                                    $this->db2->next_record();
-                                    if ($this->db2->f("status") == "user") { // we could uplift him
-                                        $this->db2->query("UPDATE seminar_user SET status = 'autor' WHERE Seminar_id = '$sem' AND user_id='".$this->user_data['auth_user_md5.user_id']."'");
-                                        if ($this->user_data['auth_user_md5.user_id'] == $auth->auth["uid"]) {
-                                            $this->msg .= sprintf("msg§" . _("Ihnen wurden Schreibrechte in der Veranstaltung <em>%s</em> erteilt.") . "§", $this->db->f("Name"));
-                                        } else {
-                                            $this->msg .= sprintf("msg§" . _("Der Person wurden Schreibrechte in der Veranstaltung <em>%s</em> erteilt.") . "§", $this->db->f("Name"));
-                                        }
-                                    }
-                                } else {  // user has not subscribed until now, lets do it...
-                                    $group = select_group ($this->db->f("start_time"));
-                                    $this->db2->query("INSERT into seminar_user (Seminar_id, user_id, status, gruppe) values ('$sem', '".$this->user_data['auth_user_md5.user_id']."', 'autor', '$group')");
-                                    if ($this->user_data['auth_user_md5.user_id'] == $auth->auth["uid"]) {
-                                        $this->msg .= sprintf("msg§" . _("Sie wurden automatisch in die Veranstaltung <em>%s</em> eingetragen.") . "§", $this->db->f("Name"));
-                                    } else {
-                                        $this->msg .= sprintf("msg§" . _("Die Person wurde automatisch in die Veranstaltung <em>%s</em> eingetragen.") . "§", $this->db->f("Name"));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-
     /**
     * Create a new studip user with the given parameters
     *
@@ -357,8 +307,13 @@ class UserManagement
             return FALSE;
         }
 
-        $this->autoInsertSem();
         $this->msg .= "msg§" . sprintf(_("BenutzerIn \"%s\" angelegt."), $newuser['auth_user_md5.username']) . "§";
+
+        // Automated entering new users, based on their status (perms)
+        $result = AutoInsert::checkNewUser($this->user_data['auth_user_md5.perms'], $this->user_data['auth_user_md5.user_id']);
+        foreach ($result as $item) {
+            $this->msg .= "msg§".sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
+        }
 
         // include language-specific subject and mailbody
         $user_language = getUserLanguagePath($this->user_data['auth_user_md5.user_id']); // user has been just created, so we will get $DEFAULT_LANGUAGE
@@ -488,8 +443,13 @@ class UserManagement
             return true;
         }
 
-        $this->autoInsertSem($old_perms);
         $this->msg .= "msg§" . sprintf(_("Benutzer \"%s\" ver&auml;ndert."), $this->user_data['auth_user_md5.username']) . "§";
+
+        // Automated entering new users, based on their status (perms)
+        $result = AutoInsert::checkOldUser($old_perms,$newuser['auth_user_md5.perms'], $this->user_data['auth_user_md5.user_id']);
+        foreach ($result as $item) {
+            $this->msg .= "msg§".sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
+        }
 
         // include language-specific subject and mailbody
         $user_language = getUserLanguagePath($this->user_data['auth_user_md5.user_id']);

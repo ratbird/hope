@@ -471,18 +471,6 @@ $ENABLE_REQUEST_NEW_PASSWORD_BY_USER = TRUE;            //if true, users are abl
 $ENABLE_SELF_REGISTRATION = TRUE;                       //should it be possible for an user to register himself
 $ENABLE_FREE_ACCESS = TRUE;                         //if true, courses with public access are available
 
-/*IDs of courses, in which users were entered when they are promoted to 'autor'
------------------------------------------------------------------*/
-
-$AUTO_INSERT_SEM[1]="28e888802838a57bc1fbac4e39f0b13a";
-$AUTO_INSERT_SEM[3]="3039f73267a276064c5aa26fcf8446d3";
-$AUTO_INSERT_SEM[4]="a70c45ca747f0ab2ea4acbb17398d370";
-$AUTO_INSERT_SEM[5]="c2b5ace2c9b866c6baecd3f70207f68a";
-$AUTO_INSERT_SEM[6]="1927f2b86d6b185aa6c6697810ad42f1";
-$AUTO_INSERT_SEM[7]="16eab3dfcfd488f713a262e95bb3da43";
-//further courses can be added with their IDs here
-
-
 /*format templates for LaTex renderer
 -----------------------------------------------------------------
 you can define specified templates, e.g. phonetic or arab fonts*/

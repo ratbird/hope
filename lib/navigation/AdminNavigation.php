@@ -146,6 +146,7 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('user_domains', new Navigation(_('Nutzerdomänen'), 'dispatch.php/admin/domain'));
             $navigation->addSubNavigation('datafields', new Navigation(_('Datenfelder'), 'dispatch.php/admin/datafields'));
             $navigation->addSubNavigation('configuration', new Navigation(_('Konfiguration'), 'dispatch.php/admin/configuration/configuration'));
+            $navigation->addSubNavigation('auto_insert', new Navigation(_('Automatisiertes Eintragen'), 'dispatch.php/admin/autoinsert'));
 
             if (get_config('BANNER_ADS_ENABLE'))  {
                 $navigation->addSubNavigation('banner_ads', new Navigation(_('Werbebanner'), 'admin_banner_ads.php'));

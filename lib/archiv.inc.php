@@ -224,7 +224,7 @@ function dump_sem($sem_id, $print_view = false) {
         } else {
             $unreadable_folders = array();
         }
-        $db3->query("SELECT count(*) as anzahl FROM dokumente 
+        $db3->query("SELECT count(*) as anzahl FROM dokumente
                     WHERE seminar_id = '$sem_id'" . (count($unreadable_folders) ? " AND range_id NOT IN('".join("','", $unreadable_folders)."')" : ""));
         $db3->next_record();
         $docs=$db3->f("anzahl");
@@ -280,9 +280,9 @@ function dump_sem($sem_id, $print_view = false) {
             }
         }
         $i=0;
-        $db->query("SELECT dokument_id, dokumente.description, dokumente.name , 
-                filename, dokumente.mkdate, filesize, dokumente.user_id, username, Nachname, dokumente.url  
-                FROM dokumente LEFT JOIN auth_user_md5 ON auth_user_md5.user_id = dokumente.user_id 
+        $db->query("SELECT dokument_id, dokumente.description, dokumente.name ,
+                filename, dokumente.mkdate, filesize, dokumente.user_id, username, Nachname, dokumente.url
+                FROM dokumente LEFT JOIN auth_user_md5 ON auth_user_md5.user_id = dokumente.user_id
                 WHERE seminar_id = '$sem_id'" . (count($unreadable_folders) ? " AND range_id NOT IN('".join("','", $unreadable_folders)."')" : ""));
         while($db->next_record()){
             if ($db->f("url")!="")
@@ -317,7 +317,7 @@ function dump_sem($sem_id, $print_view = false) {
 
     // Teilnehmer
     if ($Modules["participants"]) {
-        if (!is_array($AUTO_INSERT_SEM) || (is_array($AUTO_INSERT_SEM) && !in_array($sem_id, $AUTO_INSERT_SEM))) {
+        if ($AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM || !in_array($sem_id, AutoInsert::getAllSeminars(true))) {
             $gruppe = array("dozent", "tutor", "autor", "user");
             $dump.="<br>";
             foreach ($gruppe as $key) {
@@ -326,7 +326,7 @@ function dump_sem($sem_id, $print_view = false) {
 
                 $sortby = "doll DESC";
                 $db->query ("SELECT seminar_user.user_id, " . $_fullname_sql['full'] . " AS fullname, username, status, count(topic_id) AS doll,
-                            " . get_ext_vis_query('seminar_user') . " as user_is_visible 
+                            " . get_ext_vis_query('seminar_user') . " as user_is_visible
                             FROM seminar_user LEFT JOIN px_topics USING (user_id,Seminar_id)
                             LEFT JOIN auth_user_md5 ON (seminar_user.user_id=auth_user_md5.user_id)
                             LEFT JOIN user_info ON (auth_user_md5.user_id=user_info.user_id)
@@ -418,7 +418,7 @@ function dumpScheduleTable($db, $title)
         $dump .= dumpDateTableRows($db);
         $dump .= "</table>\n";
     }
-    
+
     return $dump;
 }
 
@@ -446,7 +446,7 @@ function dumpDateTableHeader($title)
 function dumpDateTableRows($db)
 {
     global $TERMIN_TYP;
-    
+
     $lastTerminId = NULL;
     while ($db->next_record()) {
         $currentTerminId = $db->f("termin_id");
@@ -461,7 +461,7 @@ function dumpDateTableRows($db)
         else {
             $dump .= "<tr><td width=\"25%\"></td>";
         }
-        
+
         $dump .= "<td width=\"75%\" align=\"left\"> ";
         $dump .= htmlReady($db->f("th_title"), 1, 1);
         if ($db->f("th_desc")) {

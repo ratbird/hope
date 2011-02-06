@@ -118,24 +118,6 @@ if (isset($_REQUEST['do_send_msg_x']) && isset($_REQUEST['send_msg']) && Seminar
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 
-    // participants shall not see participant list in AUTO_INSERT_SEM seminars
-    if (is_array($GLOBALS['AUTO_INSERT_SEM']) && in_array($SessSemName[1], $GLOBALS['AUTO_INSERT_SEM']) && !$rechte) {
-        $msg="error§"._("Sie haben keine Berechtigung, die Teilnehmerliste abzurufen."); ?>
-        <table class="blank" width="100%"><tr>
-        <td class="blank" width="100%" colspan="2">&nbsp;
-            <?
-            if ($msg) parse_msg($msg);
-            ?>
-        </td>
-        </tr></table>
-        <?
-        include ('lib/include/html_end.inc.php');
-        page_close();
-        die();
-    }
-
-
-
 $messaging=new messaging;
 $cssSw=new cssClassSwitcher;
 
@@ -1623,7 +1605,7 @@ if (!LockRules::Check($id, 'participants') && $rechte) {
             <? if($sem->isAdmissionEnabled()) : ?>
             <select name="consider_contingent">
                 <option value=""><?= _("Kein Kontingent") ?></option>
-                <? if(is_array($sem->admission_studiengang)) 
+                <? if(is_array($sem->admission_studiengang))
                     foreach($sem->admission_studiengang as $studiengang => $data) : ?>
                     <option value="<?= $studiengang ?>" <?= $_REQUEST['consider_contingent'] == $studiengang ? 'selected' : '' ?>>
                         <?= htmlReady($data['name'] . ' ' . '('.$sem->getFreeAdmissionSeats($studiengang).')') ?>

@@ -73,11 +73,7 @@ if ($sms_msg)
 }
 
 // exclude AUTO_INSERT_SEM courses
-if (count($GLOBALS['AUTO_INSERT_SEM'])) {
-    $exclude_sem = "AND Seminar_id NOT IN ('".join("','", $GLOBALS['AUTO_INSERT_SEM'])."')";
-} else {
-    $exclude_sem = '';
-}
+$exclude_sem = "AND Seminar_id NOT IN (SELECT seminar_id FROM auto_insert_sem)";
 
 //List of Institutes
 if ($perm->have_perm('admin'))

@@ -579,13 +579,6 @@ $REQUEST_NEW_PASSWORD_SECRET = 'jh*d ajshHuwd7z237zd hGfaMhlf'; // if the above 
 
 $ENABLE_FREE_ACCESS = TRUE;                 //if true, courses with public access are available
 
-/*IDs of courses, in which users were entered when they are promoted to 'autor'
------------------------------------------------------------------*/
-
-//$AUTO_INSERT_SEM[1]="<seminar_id>";
-//further courses can be added with their IDs here
-
-
 /*format templates for LaTex renderer
 -----------------------------------------------------------------
 you can define specified templates, e.g. phonetic or arab fonts*/

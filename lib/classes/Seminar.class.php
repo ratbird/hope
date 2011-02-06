@@ -2330,13 +2330,14 @@ class Seminar
                 "FROM seminar_user " .
                 "WHERE Seminar_id = ".$db->quote($this->id)." ".
                     "AND status = 'dozent' ")->fetch(PDO::FETCH_COLUMN, 0);
-        
+
         if (!$old_status) {
             $db->exec("INSERT INTO seminar_user " .
-                   "SET status = ".$db->quote($status).", " .
-                       "Seminar_id = ".$db->quote($this->id).", " .
-                       "user_id = ".$db->quote($user_id).", " .
-                       "position = ".$db->quote($new_position)." " .
+                      "SET status = ".$db->quote($status).", " .
+                      "Seminar_id = ".$db->quote($this->id).", " .
+                      "user_id = ".$db->quote($user_id).", " .
+                      "position = ".$db->quote($new_position).", " .
+                      "mkdate = ".time()." " .
                        "");
             removeScheduleEntriesMarkedAsVirtual($user_id, $this->getId());
             return $this;
@@ -2347,7 +2348,7 @@ class Seminar
                        "position = ".$db->quote($new_position)." " .
                    "WHERE Seminar_id = ".$db->quote($this->id)." " .
                        "AND user_id = ".$db->quote($user_id)." " .
-                       "");            
+                       "");
             return $this;
         } else {
             if ($old_status === "dozent" && $numberOfTeachers <= 1) {

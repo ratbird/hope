@@ -17,7 +17,7 @@ body, input, textarea, td, th, blockquote, p, form {
 /* //TODO: the Body-Background color should be similar to A:link.toolbar and A:visited.toolbar for best effect!! */
 body {
     margin: 0px;
-    background: url('../images/background.png');
+    background: url('../images/background_verlauf.png');
     background-repeat: repeat-x;
     background-color: #1e3e70;
 }

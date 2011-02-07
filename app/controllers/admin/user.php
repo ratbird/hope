@@ -314,8 +314,6 @@ class Admin_UserController extends AuthenticatedController
 
             //changing studiendaten
             if (in_array($editPerms[0], array('autor', 'tutor', 'dozent'))) {
-                echo "|".Request::get('new_studiengang')."|<br>";
-                echo "|".Request::get('new_abschluss')."|";
                 //change studycourses
                 if (Request::get('new_studiengang') != 'none' &&
                     Request::get('new_abschluss') != 'none') {

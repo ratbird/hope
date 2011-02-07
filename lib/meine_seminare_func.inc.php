@@ -552,10 +552,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             $nav = new Navigation('participants', 'teilnehmer.php');
 
             if ($db2->f('neue')) {
-                $nav->setImage('icons/16/red/new/community.png', array('title' =>
+                $nav->setImage('icons/16/red/new/persons.png', array('title' =>
                     sprintf(_('%s TeilnehmerInnen, %s neue'), $db2->f('count'), $db2->f('neue'))));
             } else if ($db2->f('count')) {
-                $nav->setImage('icons/16/grey/community.png', array('title' => sprintf(_('%s TeilnehmerInnen'), $db2->f('count'))));
+                $nav->setImage('icons/16/grey/persons.png', array('title' => sprintf(_('%s TeilnehmerInnen'), $db2->f('count'))));
             }
 
             $my_obj[$object_id]['participants'] = $nav;

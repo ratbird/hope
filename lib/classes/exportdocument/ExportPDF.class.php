@@ -25,6 +25,7 @@ class ExportPDF extends TCPDF implements ExportDocument {
     private $h_title = '';
     private $h_string = '';
     private $domains;
+    static protected $countEndnote = 0;
 
     public function __construct($orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = false, $encoding = 'ISO-8859-1')
     {
@@ -59,9 +60,23 @@ class ExportPDF extends TCPDF implements ExportDocument {
      */
     public function addContent($content)
     {
+        preg_match_all("#\[comment(=.*)?\](.*)\[/comment\]#msU", $content, $matches);
+        if (count($matches[0])) {
+            $endnote .= "<br><br>"._("Kommentare")."<hr>";
+            for ($i=0; $i < count($matches[0]); $i++) {
+                $endnote .= ($i+1).") ".htmlReady(substr($matches[1][$i], 1)).": ".htmlReady($matches[2][$i])."<br>";
+            }
+        }
+        $content = preg_replace("#\[comment(=.*)?\](.*)\[/comment\]#emsU", '$this->addEndnote("//1", "//2")', $content);
         $content = formatReady($content, true, true, true, null);
         $content = str_replace("<table", "<table border=\"1\"", $content);
-        $this->writeHTML($content);
+        $this->writeHTML($content.$endnote);
+    }
+
+    public function addEndnote($commented_by, $text)
+    {
+        self::$countEndnote++;
+        return ">>"._("Kommentar")." ".self::$countEndnote.">>";
     }
 
     /**

@@ -9,12 +9,13 @@
 */
 
 require_once "Log.php";
+require_once "FirePHPCore/fb.php";
 
 class StudipDebug {
-    
+
     static private $logger;
     static private $total_query_time;
-    
+
     public static function log($msg) {
         if(is_null(self::$logger)){
             self::$logger = Log::factory('file', $GLOBALS['TMP_PATH'] . '/studip-debug.log', '', array('append' => false));
@@ -23,7 +24,7 @@ class StudipDebug {
         }
         self::$logger->log($msg);
     }
-    
+
     public static function log_query($query_string, $starttime) {
         $query_time = microtime(true) - $starttime;
         self::$total_query_time += $query_time;

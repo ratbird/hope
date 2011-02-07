@@ -95,7 +95,7 @@ class Admin_LockrulesController extends AuthenticatedController
     function delete_action($lock_rule_id)
     {
         $this->lock_rule = LockRule::find($lock_rule_id);
-        if (!$this->lock_rule->isNew() && ($GLOBALS['perm']->have_perm('root') || $this->lock_rule->user_id == $GLOBALS['user']->id)) {
+        if (!(!$this->lock_rule->isNew() && ($GLOBALS['perm']->have_perm('root') || $this->lock_rule->user_id == $GLOBALS['user']->id))) {
             throw new Trails_Exception(403);
         }
         if (Request::isGet()) {

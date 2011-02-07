@@ -209,6 +209,10 @@ class AdminNavigation extends Navigation
                 $navigation->addSubNavigation('elearning', new Navigation(_('Lernmodul-Schnittstelle'), 'admin_elearning_interface.php'));
             }
 
+            if (get_config('WEBSERVICES_ENABLE')) {
+                $navigation->addSubNavigation('webservice_access', new Navigation(_('Webservice Zugriff'), 'dispatch.php/admin/webservice_access'));
+            }
+
             $navigation->addSubNavigation('db_integrity', new Navigation(_('DB Integrität'), 'admin_db_integrity.php'));
         }
 

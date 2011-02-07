@@ -103,7 +103,7 @@ class StudipNavigation extends Navigation
         $links = new Navigation('Links');
 
         // settings
-        if (is_object($user) && $user->id != 'nobody') {
+        if (is_object($user) && $user->id != 'nobody' && $perm->have_perm('autor')) {
             $navigation = new Navigation(_('Einstellungen'));
             $navigation->addSubNavigation('general', new Navigation(_('Allgemeines'), 'edit_about.php', array('view' => 'allgemein')));
             $navigation->addSubNavigation('privacy', new Navigation(_('Privatsphäre'), 'edit_about.php', array('view' => 'privacy')));

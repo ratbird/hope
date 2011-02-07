@@ -206,11 +206,9 @@ if (isset($seminar_id) && !LockRules::check($seminar_id, 'user_domain') && $_REQ
 
 // new stuff start
 
-if (isset($seminar_id) && $SEMINAR_LOCK_ENABLE) {
+if (isset($seminar_id)) {
 
-    $lock_rules = new LockRules();
-    $lockdata = $lock_rules->getSemLockRule($seminar_id);
-
+  $lockdata = LockRules::getObjectRule($seminar_id);
 
   $db->query("SELECT * FROM seminare WHERE Seminar_id = '$seminar_id' ");
   $db->next_record();

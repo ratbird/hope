@@ -53,6 +53,7 @@ require_once ('lib/classes/Seminar.class.php');
 require_once ('lib/raumzeit/raumzeit_functions.inc.php');
 require_once ('lib/dates.inc.php');
 require_once 'lib/admin_search.inc.php';
+require_once 'lib/classes/LockRules.class.php';
 
 if ($RESOURCES_ENABLE) {
     include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
@@ -96,16 +97,13 @@ $sem->checkFilter();
 
 $semester = new SemesterData();
 $_LOCKED = FALSE;
-if ($SEMINAR_LOCK_ENABLE) {
-    require_once ('lib/classes/LockRules.class.php');
-    $lockRule = new LockRules();
-    $data = $lockRule->getSemLockRule($id);
-    if (LockRules::Check($id, 'room_time')) {
-        $_LOCKED = TRUE;
-        $sem->createInfo(_("Diese Seite ist für die Bearbeitung gesperrt. Sie können die Daten einsehen, jedoch nicht verändern.")
-            . ($data['description'] ? '<br>'.fixLinks($data['description']) : ''));
-    }
+if (LockRules::Check($id, 'room_time')) {
+    $_LOCKED = TRUE;
+    $data = LockRules::getObjectRule($id);
+    $sem->createInfo(_("Diese Seite ist für die Bearbeitung gesperrt. Sie können die Daten einsehen, jedoch nicht verändern.")
+    . ($data['description'] ? '<br>'.fixLinks($data['description']) : ''));
 }
+
 
 // Workaround for multiple submit buttons
 foreach ($_REQUEST as $key => $val) {
@@ -316,7 +314,7 @@ while ($tmp_first_date < $end_date) {
                         $tpl['mdStartMinute'] = $cycle_element['start_minute'];
                         $tpl['mdEndMinute'] = $cycle_element['end_minute'];
                         $tpl['mdDescription'] = htmlReady($cycle_element['desc']);
-                        
+
                         include('lib/raumzeit/templates/metadate.tpl');
 
                         if ($sd_open[$metadate_id]) {
@@ -359,8 +357,8 @@ while ($tmp_first_date < $end_date) {
                                 $val->restore();
                                 $tpl = getTemplateDataForSingleDate($val, $metadate_id);
                                 $tpl['cycle_sd'] = TRUE;
-                                
-                                
+
+
                                 if ($sd_open[$singledate_id] && ($open_close_id == $singledate_id)) {
                                     include('lib/raumzeit/templates/openedsingledate.tpl');
                                 } else {

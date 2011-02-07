@@ -82,11 +82,12 @@ class UserConfig extends Config
             $this->data = array();
             foreach(Config::get()->getFields('user') as $field){
                 $this->data[$field] = Config::get()->$field;
+                $metadata[$field] = Config::get()->getMetadata($field);
             }
             $db = DbManager::get();
-            $rs = $db->query("SELECT DISTINCT uc.field,uc.value,c.type FROM user_config uc LEFT JOIN config c USING(field) WHERE user_id = " . $db->quote($this->user_id));
+            $rs = $db->query("SELECT field, value FROM user_config WHERE user_id = " . $db->quote($this->user_id));
             while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
-                switch ($row['type']) {
+                switch ($metadata[$row['field']]['type']) {
                     case 'integer':
                         $value = (int)$row['value'];
                         break;

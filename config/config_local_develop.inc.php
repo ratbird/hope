@@ -151,8 +151,6 @@ $SOAP_USE_PHP5 = TRUE;
 
 $WEBSERVICES_ENABLE = TRUE;
 
-$SEMINAR_LOCK_ENABLE = TRUE; // locking of fields in seminar administration
-
 $ELEARNING_INTERFACE_MODULES["ilias40x"] = array(
     "name" => "ILIAS 4.0.X develop",
     "ABSOLUTE_PATH_ELEARNINGMODULES" => "http://develop.studip.de/ilias_4_0_x/",

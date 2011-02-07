@@ -138,8 +138,7 @@ if (($cmd == 'do_copy' && SeminarCategories::GetBySeminarId($cp_id)->course_crea
 //
 if (isset($cmd) && ($cmd == 'do_copy') && $perm->have_studip_perm('tutor',$cp_id)) {
     if(LockRules::Check($cp_id, 'seminar_copy')) {
-        $lockRule = new LockRules();
-        $lockdata = $lockRule->getSemLockRule($cp_id);
+        $lockdata = LockRules::getObjectRule($cp_id);
         $errormsg = 'error§' . _("Die Veranstaltung kann nicht kopiert werden.").'§';
         if ($lockdata['description']){
             $errormsg .= "info§" . fixlinks($lockdata['description']).'§';
@@ -546,7 +545,7 @@ if ($form == 3)
                                                                 );
                 }
 
-            if (is_array($tmp_metadata_termin["turnus_data"])) {                
+            if (is_array($tmp_metadata_termin["turnus_data"])) {
                 //sortieren
                 sort ($tmp_metadata_termin["turnus_data"]);
 

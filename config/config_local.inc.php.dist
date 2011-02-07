@@ -160,8 +160,6 @@ $WEBSERVICES_ENABLE = FALSE;                            //Stud.IP module: webser
 
 $STUDIP_API_KEY=''; // webservice api key
 
-$SEMINAR_LOCK_ENABLE = FALSE; // locking of fields in seminar administration
-
 $ELEARNING_INTERFACE_MODULES = array(
     "ilias3" => array(
         "name" => "ILIAS 3",

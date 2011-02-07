@@ -59,8 +59,7 @@ include 'lib/include/admin_search_form.inc.php';
 require_once 'lib/visual.inc.php';
 if ($SessSemName[1]) {
     if(LockRules::Check($SessSemName[1], 'seminar_copy')) {
-        $lockRule = new LockRules();
-        $lockdata = $lockRule->getSemLockRule($SessSemName[1]);
+        $lockdata = LockRules::getObjectRule($SessSemName[1]);
         $msg = 'error§' . _("Die Veranstaltung kann nicht kopiert werden.").'§';
         if ($lockdata['description']){
             $msg .= "info§" . fixlinks($lockdata['description']).'§';
@@ -80,11 +79,11 @@ if ($SessSemName[1]) {
         <tr><td class="blank" colspan=2>&nbsp;</td></tr>
         <tr><td class="blank" colspan=2>
         <blockquote>
-        <? 
+        <?
         printf(_("Die Veranstaltung wurde zum Kopieren ausgewählt."). " ");
         printf(_("Um die vorgewählte Veranstaltung zu kopieren klicken Sie %shier%s."),
             '<a href="'.URLHelper::getLink('admin_seminare_assi.php?cmd=do_copy&cp_id='.$SessSemName[1].'&start_level=TRUE&class=1').'">',
-            '</a>'); 
+            '</a>');
         ?>
         </blockquote>
         <br>

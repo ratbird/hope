@@ -230,8 +230,7 @@ $db6=new DB_Seminar;
 
     if (LockRules::Check($id, 'participants'))
     {
-        $lockRule = new LockRules();
-        $lockdata = $lockRule->getSemLockRule($id);
+        $lockdata = LockRules::getObjectRule($id);
         parse_msg ("error§"._("In diese Veranstaltung k&ouml;nnen Sie sich nicht eintragen!") . ($lockdata['description'] ? '§info§' . fixLinks($lockdata['description']) : ''));
         echo"<tr><td class=\"blank\" colspan=2><a href=\"index.php\">&nbsp;&nbsp; "._("Zur&uuml;ck zur Startseite")."</a>";
         if ($send_from_search)

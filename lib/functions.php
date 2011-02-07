@@ -723,7 +723,7 @@ function get_userid($username="") {
 */
 function TrackAccess ($id, $object_type = null) {
     if (!$object_type){
-        $object_type = get_object_type($id);
+        $object_type = get_object_type($id, array('dokument'));
     }
     switch ($object_type) {         // what kind ob object shall we track
         case "dokument":                // the object is a dokument, so downloads will be increased
@@ -1231,7 +1231,7 @@ function format_help_url($keyword) {
     }
 
     // all help urls need short language tag (de, en)
-    // 
+    //
     $lang="de";
     if ($_language) {
         list($lang) = explode('_', $_language);

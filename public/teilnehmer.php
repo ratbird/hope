@@ -670,13 +670,10 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
 //Alle fuer das Losen anstehenden Veranstaltungen bearbeiten (wenn keine anstehen wird hier nahezu keine Performance verbraten!)
 check_admission();
 
-if($SEMINAR_LOCK_ENABLE && $perm->have_studip_perm('tutor', $SessSemName[1])){
-    $lock_ruler = new LockRules();
-    $lockdata = $lock_ruler->getSemLockRule($SessSemName[1]);
-
+if($perm->have_studip_perm('tutor', $SessSemName[1])){
+    $lockdata = LockRules::getObjectRule($SessSemName[1]);
     if ($lockdata['description'] && LockRules::CheckLockRulePermission($SessSemName[1], $lockdata['permission'])){
         $msg .= "info§" . fixlinks($lockdata['description']);
-
     }
 }
 

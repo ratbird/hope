@@ -126,8 +126,7 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
     //Sicherheitsabfrage fuer abonnierte Veranstaltungen
     if ($cmd == "suppose_to_kill") {
         if(LockRules::Check($current_seminar->getId(), 'participants')){
-            $lockRule = new LockRules();
-            $lockdata = $lockRule->getSemLockRule($current_seminar->getId());
+            $lockdata = LockRules::getObjectRule($current_seminar->getId());
             $meldung = "error§" . sprintf(_("Sie können das Abonnement der Veranstaltung <b>%s</b> nicht aufheben."), htmlReady($current_seminar->getName()));
             if($lockdata['description']) $meldung .= '§info§' . fixLinks($lockdata['description']);
         } else {

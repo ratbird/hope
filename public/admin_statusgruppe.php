@@ -80,8 +80,7 @@ if ($_range_type != 'sem' || !$perm->have_studip_perm('tutor', $range_id)) {
 }
 
 if(LockRules::Check($range_id, 'groups')) {
-        $lockRule = new LockRules();
-        $lockdata = $lockRule->getSemLockRule($range_id);
+        $lockdata = LockRules::getObjectRule($range_id);
         $msg = 'error§' . _("Die Gruppenfunktionen der Veranstaltung können nicht verändert werden.").'§';
         if ($lockdata['description']){
             $msg .= "info§" . fixlinks($lockdata['description']).'§';

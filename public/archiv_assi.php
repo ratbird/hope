@@ -124,8 +124,7 @@ if ($dec)
 
 
 if(LockRules::Check($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"], 'seminar_archive')) {
-        $lockRule = new LockRules();
-        $lockdata = $lockRule->getSemLockRule($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"]);
+        $lockdata = LockRules::getObjectRule($archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"]);
         if ($lockdata['description']){
             $details = fixlinks($lockdata['description']);
         } else {
@@ -155,12 +154,12 @@ if ($archive_kill) {
         in_archiv($s_id);
         $sem = new Seminar($s_id);
         // Delete that Seminar.
-        
+
         $sem->delete();
-        
+
         $messages = $sem->getStackedMessages();
         unset($sem);
-            
+
         // Successful archived, if we are here
         $msg .= "msg§" . sprintf(_("Die Veranstaltung %s wurde erfolgreich archiviert und aus der Liste der aktiven Veranstaltungen gel&ouml;scht. Sie steht nun im Archiv zur Verf&uuml;gung."), "<b>" . htmlReady(stripslashes($tmp_name)) . "</b>") . "§";
 
@@ -441,7 +440,7 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                     echo '&nbsp;<a href="';
 
                     if ($perm->have_perm('admin')) {
-                        echo URLHelper::getLink((($SessSemName[1]) 
+                        echo URLHelper::getLink((($SessSemName[1])
                             ? 'dispatch.php/course/basicdata/view/'. $SessSemName[1] .'?list=TRUE'
                             : '?list=TRUE&new_session=TRUE'));
                     } else {

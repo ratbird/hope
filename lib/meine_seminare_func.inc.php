@@ -248,7 +248,7 @@ function get_obj_clause($table_name, $range_field, $count_field, $if_clause,
     } else {
         $table_name .= $on_clause;
     }
-    
+
     return "SELECT " . ($add_fields ? $add_fields . ", " : "" ) . " my.object_id, COUNT($count_field) as count, COUNT(IF($if_clause, $count_field, NULL)) AS neue,
     MAX(IF($if_clause, $max_field, 0)) AS last_modified FROM myobj_{$user_id} my INNER JOIN $table_name LEFT JOIN object_user_visits b ON (b.object_id = $object_field AND b.user_id = '$user_id' AND b.type $type_sql)
     GROUP BY my.object_id ORDER BY NULL";
@@ -539,7 +539,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
     }
 
     // TeilnehmerInnen
-    $db2->query(get_obj_clause('seminar_user a','seminar_id','a.user_id',"(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", false, false, false, false, NULL, 'mkdate'));
+    $db2->query(get_obj_clause('seminar_user a','seminar_id','a.user_id',"(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", 'sem', false, false, false, NULL, 'mkdate'));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
         if ($my_obj[$object_id]["modules"]["participants"]) {

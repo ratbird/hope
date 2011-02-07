@@ -234,9 +234,8 @@ function fill_groups(&$groups, $group_key, $group_entry)
  */
 function get_obj_clause($table_name, $range_field, $count_field, $if_clause,
         $type = false, $add_fields = false, $add_on = false, $object_field = false,
-        $user_id = NULL)
+        $user_id = NULL, $max_field = 'chdate')
 {
-
     if (is_null($user_id)) {
         $user_id = $GLOBALS['user']->id;
     }
@@ -249,7 +248,7 @@ function get_obj_clause($table_name, $range_field, $count_field, $if_clause,
     } else {
         $table_name .= $on_clause;
     }
-    $max_field = 'chdate';
+    
     return "SELECT " . ($add_fields ? $add_fields . ", " : "" ) . " my.object_id, COUNT($count_field) as count, COUNT(IF($if_clause, $count_field, NULL)) AS neue,
     MAX(IF($if_clause, $max_field, 0)) AS last_modified FROM myobj_{$user_id} my INNER JOIN $table_name LEFT JOIN object_user_visits b ON (b.object_id = $object_field AND b.user_id = '$user_id' AND b.type $type_sql)
     GROUP BY my.object_id ORDER BY NULL";
@@ -538,6 +537,31 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
             }
         }
     }
+
+    // TeilnehmerInnen
+    $db2->query(get_obj_clause('seminar_user a','seminar_id','a.user_id',"(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", false, false, false, false, NULL, 'mkdate'));
+    while($db2->next_record()) {
+        $object_id = $db2->f('object_id');
+        if ($my_obj[$object_id]["modules"]["participants"]) {
+            $my_obj[$object_id]["newparticipants"] = $db2->f("neue");
+            $my_obj[$object_id]["participants"] = $db2->f("count");
+            if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
+                $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
+            }
+
+            $nav = new Navigation('participants', 'teilnehmer.php');
+
+            if ($db2->f('neue')) {
+                $nav->setImage('icons/16/red/new/community.png', array('title' =>
+                    sprintf(_('%s TeilnehmerInnen, %s neue'), $db2->f('count'), $db2->f('neue'))));
+            } else if ($db2->f('count')) {
+                $nav->setImage('icons/16/grey/community.png', array('title' => sprintf(_('%s TeilnehmerInnen'), $db2->f('count'))));
+            }
+
+            $my_obj[$object_id]['participants'] = $nav;
+        }
+    }
+
 
     $db2->query("DROP TABLE IF EXISTS myobj_" . $user_id);
     return;

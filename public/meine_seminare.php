@@ -38,7 +38,7 @@ ob_start(); //Outputbuffering für maximal Performance
  */
 function print_seminar_content($semid, $my_obj_values, $type = 'seminar')
 {
-    foreach (words('forum files news scm schedule wiki vote literature elearning') as $key) {
+    foreach (words('forum files news scm schedule wiki vote literature elearning participants') as $key) {
         $navigation[$key] = $my_obj_values[$key];
     }
 

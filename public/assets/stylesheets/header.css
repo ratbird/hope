@@ -81,13 +81,14 @@ div#barBottomright li {
 }
 div#barBottomright a {
     text-decoration: none;
-    color: #e3e3e3;
+    color: #ffffff;
+    opacity: 0.7;
     padding-left: 6px;
     padding-right: 6px;
 }
 
 div#barBottomright a:hover {
-    color: #ff3353;
+    opacity: 1.0;
 }
 
 div#barBottomshadow {

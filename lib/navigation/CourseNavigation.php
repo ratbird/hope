@@ -213,7 +213,7 @@ class CourseNavigation extends Navigation
         if ($user->id != 'nobody') {
             if ($modules['participants']) {
                 $navigation = new Navigation(_('TeilnehmerInnen'));
-                $navigation->setImage('icons/16/grey/community.png');
+                $navigation->setImage('icons/16/grey/persons.png');
 
 
                 if ($studygroup_mode) {
@@ -236,7 +236,7 @@ class CourseNavigation extends Navigation
                 }
             } else if ($modules['personal']) {
                 $navigation = new Navigation(_('Personal'));
-                $navigation->setImage('icons/16/grey/community.png');
+                $navigation->setImage('icons/16/grey/persons.png');
                 $navigation->addSubNavigation('view', new Navigation(_('MitarbeiterInnen'), 'institut_members.php'));
 
                 if ($perm->have_studip_perm('tutor', $SessSemName[1]) && $perm->have_perm('admin')) {

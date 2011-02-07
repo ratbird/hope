@@ -96,25 +96,24 @@ class Admin_LockrulesController extends AuthenticatedController
     {
         $this->lock_rule = LockRule::find($lock_rule_id);
         if (!$this->lock_rule->isNew() && ($GLOBALS['perm']->have_perm('root') || $this->lock_rule->user_id == $GLOBALS['user']->id)) {
-            if (Request::isGet()) {
-                $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views/');
-                $template = $factory->open('admin/lockrules/_del.php');
-                $template->action = $this->url_for('admin/lockrules/delete/' . $this->lock_rule->getid());
-
-                if ($this->lock_rule->getUsage()) {
-                    $template->question = sprintf(_("Sie beabsichtigen die Ebene %s zu löschen. Diese Ebene wird von %s Objekten benutzt. Soll sie trotzdem gelöscht werden?"), $this->lock_rule->name, $this->lock_rule->getUsage());
-                    $this->flash['message'] = $template->render();
-                } else {
-                    $template->question = sprintf(_("Möchten Sie die Ebene %s löschen?"), $this->lock_rule->name);
-                    $this->flash['message'] = $template->render();
-                }
+            throw new Trails_Exception(403);
+        }
+        if (Request::isGet()) {
+            $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views/');
+            $template = $factory->open('admin/lockrules/_del.php');
+            $template->action = $this->url_for('admin/lockrules/delete/' . $this->lock_rule->getid());
+            if ($this->lock_rule->getUsage()) {
+                $template->question = sprintf(_("Sie beabsichtigen die Ebene %s zu löschen. Diese Ebene wird von %s Objekten benutzt. Soll sie trotzdem gelöscht werden?"), $this->lock_rule->name, $this->lock_rule->getUsage());
             } else {
-               CSRFProtection::verifyUnsafeRequest();
-               if (Request::submitted('kill')) {
-                   if ($this->lock_rule->delete()) {
-                       $this->flash['message'] = MessageBox::success("Die Sperrebene wurde gelöscht.");
-                   }
-               }
+                $template->question = sprintf(_("Möchten Sie die Ebene %s löschen?"), $this->lock_rule->name);
+            }
+            $this->flash['message'] = $template->render();
+        } else {
+            CSRFProtection::verifyUnsafeRequest();
+            if (Request::submitted('kill')) {
+                if ($this->lock_rule->delete()) {
+                    $this->flash['message'] = MessageBox::success("Die Sperrebene wurde gelöscht.");
+                }
             }
         }
         $this->redirect($this->url_for('admin/lockrules'));

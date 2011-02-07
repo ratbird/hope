@@ -72,7 +72,7 @@
                     ->setAttributes(array(
                         "title" => sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)),
                         "class" => "quicksearchbox",
-                        "style" => "width: 130px; color: #ffffff;"
+                        "style" => "width: 130px; color: #ffffff; vertical-align: top; margin-top: -3px;"
                     ))
                     ->fireJSFunctionOnSelect("selectSem")
                     ->noSelectbox()

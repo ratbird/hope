@@ -89,6 +89,8 @@ class Admin_UserController extends AuthenticatedController
             $this->sortby = Request::get('sortby', 'username');
             $this->order = (Request::get('order', 'asc') == 'asc') ? 'desc' : 'asc';
             $this->order_icon = Request::get('order', 'asc');
+            $request['vorname'] = ($request['vorname']) ? $request['vorname'] : NULL;
+            $request['nachname'] = ($request['nachname']) ? $request['nachname'] : NULL;
 
             //Daten abrufen
             $this->users = UserModel::getUsers($request['username'], $request['vorname'],
@@ -312,23 +314,22 @@ class Admin_UserController extends AuthenticatedController
 
             //changing studiendaten
             if (in_array($editPerms[0], array('autor', 'tutor', 'dozent'))) {
+                echo "|".Request::get('new_studiengang')."|<br>";
+                echo "|".Request::get('new_abschluss')."|";
                 //change studycourses
-                if (Request::get('new_studiengang') != '-- Bitte Fach auswählen --' &&
-                    Request::get('new_abschluss') != '-- Bitte Abschluss auswählen --') {
+                if (Request::get('new_studiengang') != 'none' &&
+                    Request::get('new_abschluss') != 'none') {
                     $db = DbManager::get()->prepare("INSERT IGNORE INTO user_studiengang "
                                                    ."(user_id, studiengang_id, abschluss_id, semester) "
                                                    ."VALUES (?,?,?,?)");
                     $db->execute(array($user_id, Request::get('new_studiengang'), Request::get('new_abschluss'), Request::get('fachsem')));
                     $details[] = _('Der Studiengang wurde hinzugefügt.');
-                } elseif ((Request::get('new_studiengang') == '-- Bitte Fach auswählen --' ||
-                    Request::get('new_abschluss') == '-- Bitte Abschluss auswählen --') &&
-                    (Request::get('new_studiengang') != '-- Bitte Fach auswählen --' &&
-                    Request::get('new_abschluss') != '-- Bitte Abschluss auswählen --')) {
-                    $details[] = _('Der Studiengang wurde nicht hinzugefügt. Bitte geben Sie Fach und Abschluss ein.');
+                } elseif (Request::get('new_studiengang') == 'none' || Request::get('new_abschluss') == 'none') {
+                    $details[] = _('<b>Der Studiengang wurde nicht hinzugefügt.</b> Bitte geben Sie Fach und Abschluss ein.');
                 }
 
                 //change institute
-                if (Request::get('new_student_inst') != '-- Bitte Einrichtung auswählen --' && Request::get('new_student_inst') != Request::get('new_inst')) {
+                if (Request::get('new_student_inst') != 'none' && Request::get('new_student_inst') != Request::get('new_inst')) {
                     log_event('INST_USER_ADD', Request::get('new_student_inst'), $user_id, 'user');
                     $db = DbManager::get()->prepare("INSERT IGNORE INTO user_inst (user_id, Institut_id, inst_perms) "
                                                    ."VALUES (?,?,'user')");
@@ -338,13 +339,13 @@ class Admin_UserController extends AuthenticatedController
             }
 
             //change institute
-            if (Request::get('new_inst') != '-- Bitte Einrichtung auswählen --' && Request::get('new_student_inst') != Request::get('new_inst')) {
+            if (Request::get('new_inst') != 'none' && Request::get('new_student_inst') != Request::get('new_inst')) {
                 log_event('INST_USER_ADD', Request::get('new_inst'), $user_id, $editPerms[0]);
                 $db = DbManager::get()->prepare("INSERT IGNORE INTO user_inst (user_id, Institut_id, inst_perms) "
                                                ."VALUES (?,?,?)");
                 $db->execute(array($user_id, Request::get('new_inst'), $editPerms[0]));
                 $details[] = _('Die Einrichtung wurde hinzugefügt.');
-            } elseif (Request::get('new_inst') != '-- Bitte Einrichtung auswählen --' && Request::get('new_student_inst') == Request::get('new_inst')) {
+            } elseif (Request::get('new_inst') != 'none' && Request::get('new_student_inst') == Request::get('new_inst')) {
                 $details[] = _('<b>Die Einrichtung wurde nicht hinzugefügt.</b> Sie können keinen Benutzer gleichzeitig als Student und Mitarbeiter einer Einrichtung hinzufügen.');
             }
 
@@ -569,13 +570,12 @@ class Admin_UserController extends AuthenticatedController
                 //get message
                 $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($UserManagement->msg, 0, -1)));
                 $this->flash['message'] = MessageBox::success(_('Der Benutzer wurde erfolgreich angelegt.'), $details);
-
-                //umleiten zur edit
                 $this->redirect('admin/user/edit/' . $user_id);
             } else {
                 //get message
                 $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($UserManagement->msg, 0, -1)));
                 $this->flash['message'] = Messagebox::error(_('Der Benutzer konnte nicht angelegt werden.'), $details);
+                $this->flash->discard('message');
             }
         }
 
@@ -602,7 +602,6 @@ class Admin_UserController extends AuthenticatedController
         $this->domains = $domains;
         $this->faks = $faks;
         $this->perms = $perm;
-        $this->flash->discard('message');
     }
 
     /**
@@ -707,7 +706,7 @@ class Admin_UserController extends AuthenticatedController
      */
     public function delete_institute_action($user_id, $institut_id)
     {
-        $db = DBManager::get()->prepare("DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ? AND inst_perms = 'user'");
+        $db = DBManager::get()->prepare("DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ?");
         if ($db->execute(array($user_id, $institut_id))) {
             $this->flash['message'] = MessageBox::success(_('Die Einrichtung wurde erfolgreich gelöscht.'));
         } else {

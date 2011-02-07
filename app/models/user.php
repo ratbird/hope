@@ -106,10 +106,22 @@ class UserModel
                 ."LEFT JOIN datafields_entries de ON de.range_id=au.user_id "
                 ."LEFT JOIN user_data ud ON au.user_id = ud.sid "
                 ."LEFT JOIN user_info ui ON (au.user_id = ui.user_id) "
-                ."WHERE au.username like '%".$username."%' "
-                ."AND au.vorname like '%".$vorname."%'"
-                ."AND au.nachname like '%".$nachname."%' "
-                ."AND au.Email like '%".$email."%' ";
+                ."WHERE au.username like '%".$username."%' ";
+
+        //vorname
+        if (!is_null($vorname)) {
+            $query .= "AND au.vorname like '%".$vorname."%' ";
+        }
+
+        //nachname
+        if (!is_null($nachname)) {
+            $query .= "AND au.nachname like '%".$nachname."%' ";
+        }
+
+        //email
+        if (!is_null($email)) {
+            $query .= "AND au.Email like '%".$email."%' ";
+        }
 
         //permissions
         if (!is_null($perms) && $perms != "alle") {

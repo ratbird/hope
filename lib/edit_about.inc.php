@@ -660,7 +660,8 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      */
     public function select_studiengang()
     {
-        echo '<select name="new_studiengang"><option selected="selected"> -- Bitte Fach auswählen -- </option>'."\n";
+        echo '<select name="new_studiengang">'."\n";
+        echo '<option selected="selected" value="none">' . _('-- Bitte Fach auswählen --') . '</option>'."\n";
         $this->db->query("SELECT a.studiengang_id,a.name FROM studiengaenge AS a LEFT JOIN user_studiengang AS b ON (b.user_id='".$this->auth_user["user_id"]."' AND a.studiengang_id=b.studiengang_id) WHERE b.studiengang_id IS NULL ORDER BY a.name");
         while ($this->db->next_record()) {
             echo "<option value=\"".$this->db->f("studiengang_id")."\">".htmlReady(my_substr($this->db->f("name"),0,50))."</option>\n";
@@ -674,7 +675,8 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      */
    public function select_abschluss()
    {
-        echo '<select name="new_abschluss"><option selected="selected"> -- Bitte Abschluss auswählen -- </option>'."\n";
+        echo '<select name="new_abschluss">'."\n";
+        echo '<option selected="selected" value="none">'. _('-- Bitte Abschluss auswählen --') . '</option>'."\n";
         $this->db->query("SELECT abschluss_id,name FROM abschluss ORDER BY name");
         while ($this->db->next_record()) {
             echo "<option value=\"".$this->db->f("abschluss_id")."\">".htmlReady(my_substr($this->db->f("name"),0,50))."</option>\n";

@@ -274,7 +274,7 @@
         </td>
         <td colspan="2">
             <select name="new_student_inst">
-                <option selected="selected">-- Bitte Einrichtung auswählen --</option>
+                <option selected="selected" value="none"><?= _('-- Bitte Einrichtung auswählen --') ?></option>
                 <? foreach ($available_institutes as $i) : ?>
                 <option value="<?= $i['Institut_id'] ?>"><?= htmlReady($i['Name']) ?></option>
                 <? endforeach ?>
@@ -313,7 +313,7 @@
         </td>
         <td colspan="2">
             <select name="new_inst">
-                <option selected="selected">-- Bitte Einrichtung auswählen --</option>
+                <option selected="selected" value="none"><?= _('-- Bitte Einrichtung auswählen --') ?></option>
                 <? foreach ($available_institutes as $i) : ?>
                 <option value="<?= $i['Institut_id'] ?>"><?= htmlReady($i['Name']) ?></option>
                 <? endforeach ?>

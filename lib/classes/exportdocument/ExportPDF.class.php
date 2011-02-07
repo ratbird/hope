@@ -59,7 +59,7 @@ class ExportPDF extends TCPDF implements ExportDocument {
      */
     public function addContent($content)
     {
-        $content = formatReady($content, true, true, true, "all");
+        $content = formatReady($content, true, true, true, null);
         $content = str_replace("<table", "<table border=\"1\"", $content);
         $this->writeHTML($content);
     }
@@ -73,33 +73,29 @@ class ExportPDF extends TCPDF implements ExportDocument {
         $this->Output($filename.".pdf", 'I');
     }
 
+    /**
+     * saves the content as a file in the filesystem and returns a Stud.IP-document object
+     */
     public function save($filename, $folder_id = null)
     {
         global $user;
-        do {
-            $id = uniqid();
-        } while (file_exists(get_upload_file_path($id)));
-        $contents = $this->Output(get_upload_file_path($id), "F");
-        $db = DBManager::get();
-        $seminar_id = $db->query(
+        $doc = new StudipDocument();
+        $doc['folder_id'] = $folder_id;
+        $doc['seminar_id'] = $db->query(
             "SELECT seminar_id " .
             "FROM dokumente " .
             "WHERE range_id = ".$db->quote($folder_id)." " .
         "")->fetch(PDO::FETCH_COLUMN, 0);
-        $db->exec(
-            "INSERT INTO dokumente " .
-            "SET dokument_id = ".$db->quote($id).", " .
-                "range_id = ".$db->quote($folder_id).", " .
-                "user_id = ".$db->quote($user->id).", " .
-                "seminar_id = ".$db->quote($seminar_id).", " .
-                "name = ".$db->quote($filename).", " .
-                "filename = ".$db->quote($filename.".pdf")." " .
-                "mkdate = UNIX_TIMESTAMP(), " .
-                "chdate = UNIX_TIMESTAMP(), ".
-                "filesize = ".$db->quote(filesize(get_upload_file_path($id)))." " .
-                "author_host = ".$db->quote(getenv('REMOTE_ADDR'))." " .
-                "author_name = ".$db->quote(get_fullname($user->id))." "
-        );
+        $doc['user_id'] = $user->id;
+        $doc['name'] = $filename;
+        $doc['author_host'] = getenv('REMOTE_ADDR');
+        $doc['author_name'] = get_fullname($user->id);
+        if ($doc->store()) {
+            $doc['filesize'] = filesize(get_upload_file_path($doc->getId()));
+            $doc-store();
+            return $doc;
+        }
+        return false;
     }
 
     private function setDefaults ()

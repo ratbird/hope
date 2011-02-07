@@ -16,6 +16,9 @@
 
 interface ExportDocument {
 
+    /**
+     * adding a new page to write new content on it
+     */
     public function addPage();
 
     /**
@@ -23,50 +26,15 @@ interface ExportDocument {
      */
     public function addContent($content);
 
-    //outputs the content as a file with MIME-type and aborts any other output:
+    /**
+     * outputs the content as a file with MIME-type and aborts any other output:
+     */
     public function dispatch($filename);
 
-    //saves the content as a file in the filesystem and returns a Stud.IP document_id
+    /**
+     * saves the content as a file in the filesystem and returns a Stud.IP-document object
+     */
     public function save($filename, $folder_id = null);
 
 }
 
-
-
-/*
-class ExportSpreadsheet implements ExportDocument {
-
-    //represents table-sheets:
-    public function addPage();
-
-    //adds a 10-column formatted content like desciptional text:
-    public function addContent();
-
-    //object of a 2-dimensional table
-    public function addTable($table);
-
-    //does nothing?
-    public function dispatch($filename);
-
-    public function save($folder_id = null);
-}
-
-class ExportXLS extends ExportSpreadsheet {
-
-    public function dispatch($filename);
-
-    public function save($folder_id = null);
-}
-
-class ExportODS extends ExportSpreadsheet {
-
-    public function dispatch($filename);
-
-    public function save($folder_id = null);
-}
-
-
-*/
-
-//Das Rahmenlayout wird über die globale Config gesteuert
-//(Schriftfarbe, Schriftart, Schriftgröße, Headerlogo, Headerschriftzug, etc.)

@@ -56,7 +56,6 @@ h1.content, h2.content, h3.content {
 }
 
 h1.topic {
-    color: #FFFFFF;
     font-weight: bold;
     font-size: 1.6em;
     margin-bottom: 0.1em;
@@ -66,7 +65,6 @@ h1.topic {
 }
 
 h2.topic, h3.topic {
-    color: #FFFFFF;
     font-weight: bold;
     font-size: 1.2em;
     margin-bottom: 0.1em;
@@ -77,11 +75,11 @@ h2.topic, h3.topic {
 
 .topic {
     border: 0px;
-    background-image: url('../images/fill1.gif');
-    background-color:#4A5681;
+    border-bottom: 1px solid #1E3E70;
+    background-color:#899AB9;
     color:#FFFFFF;
     font-size: 12pt;
-    padding: 2px;
+    padding: 3px 5px;
 }
 
 .topic img {
@@ -129,6 +127,10 @@ a.printhead {
 
 
 /* --- Layouts -------------------------------------------------------------- */
+#layout_page {
+    margin: 1em;
+}
+
 #layout_container {
     background-color: white;
     padding: 0 0 1em 0;
@@ -141,6 +143,14 @@ a.printhead {
 #layout_infobox {
     float: right;
     width: 250px;
+}
+
+#layout_footer {
+    /*border-top:1px solid #1E3E70;
+    padding: 4px;
+    background-color: #899AB9;
+    color: #FFF;
+    text-align: right;*/
 }
 
 table.infobox td {
@@ -759,9 +769,7 @@ dd {
 
 /* --- index.php anpassungen an den boxen zur vereinheitlichung ------------- */
 div.index_container {
-    width: 70%;
-    margin: auto;
-    min-width: 750px;
+    margin: 0;
 }
 
 table.index_box {
@@ -1222,23 +1230,25 @@ div.messagebox.details_hidden .messagebox_details {
 }
 
 /* --- Quicksearch ---------------------------------------------------------- */
-
 form#quicksearch {
     display: inline;
 }
 
 input.quicksearchbox {
-    background-color:#ABB7CE;
+    background-color:#FFFFFF;
     border:1px solid #485979;
-    color:#FFFFFF;
-    width:100px;
-    vertical-align: middle;
+    color:#ABB7CE;
+    vertical-align: top;
+    font-size: 11px;
+    width: 130px;
+    margin-top: -1px;
+    padding-left: 2px;
 }
-
 input.quicksearchbutton {
     border: 0px;
     padding: 0px;
-    vertical-align: middle;
+    margin-right: 10px;
+    vertical-align: text-top;
 }
 
 div.quicksearch_frame {

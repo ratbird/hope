@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="WINDOWS-1252">
     <title>
       <?= htmlReady(PageLayout::getTitle() . ' - ' . $GLOBALS['UNI_NAME_CLEAN']) ?>
@@ -14,9 +14,9 @@
       STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";
       String.locale = "<?= strtr($_SESSION['_language'], '_', '-') ?>";
     </script>
-  </head>
+</head>
 
-  <body id="<?= $body_id ? $body_id : PageLayout::getBodyElementId() ?>">
+<body id="<?= $body_id ? $body_id : PageLayout::getBodyElementId() ?>">
     <?= PageLayout::getBodyElements() ?>
     <div id="overdiv_container"></div>
 
@@ -27,5 +27,10 @@
         <?= $content_for_layout ?>
         <div class="clear"></div>
     </div>
-  </body>
+</div>
+<!-- Ende Page -->
+
+    <? include 'templates/footer.php'; ?>
+
+</body>
 </html>

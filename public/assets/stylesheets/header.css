@@ -19,8 +19,8 @@ div#barBottomContainer {
     width: 100%;
     background-color: #899ab9;
     border-color: #1e3e70;
-	border-top-style:solid;    
-	border-bottom-style:solid;
+    border-top-style: solid;
+    border-bottom-style: solid;
 }
 
 div#barBottomLeft {
@@ -34,8 +34,8 @@ div#barBottomLeft {
     display: table-cell;
     border-color: #1e3e70;
     border-width: 1px;
-	border-top-style:solid;    
-	border-bottom-style:solid;    
+    border-top-style: solid;
+    border-bottom-style: solid;
 }
 
 div#barBottommiddle {
@@ -52,8 +52,8 @@ div#barBottommiddle {
     display: table-cell;
     border-color: #1e3e70;
     border-width: 1px;
-	border-top-style:solid;    
-	border-bottom-style:solid;    
+    border-top-style: solid;
+    border-bottom-style: solid;
 }
 
 div#barBottomright {
@@ -67,12 +67,12 @@ div#barBottomright {
     display: table-cell;
     border-color: #1e3e70;
     border-width: 1px; 
-	border-top-style:solid;    
-	border-bottom-style:solid;    
+    border-top-style: solid;
+    border-bottom-style: solid;
 }
 
 div#barBottomright ul {
-    margin: 5px;
+    margin: 4px;
 }
 
 div#barBottomright li {
@@ -82,13 +82,11 @@ div#barBottomright li {
 div#barBottomright a {
     text-decoration: none;
     color: #ffffff;
-    opacity: 0.7;
-    padding-left: 6px;
-    padding-right: 6px;
+    margin: 0 6px;
 }
 
 div#barBottomright a:hover {
-    opacity: 1.0;
+    text-decoration: underline;
 }
 
 div#barBottomshadow {
@@ -121,7 +119,6 @@ div#barTopTools a {
 }
 div#barTopTools a:hover {
     color: #FFF;
-    background-image: url('../images/fill1.gif');
 }
 div#barTopTools {
     position: absolute;
@@ -132,7 +129,7 @@ div#barTopTools {
 
 div#barTopStudip {
     position: absolute;
-    top: 50px;
+    top: 45px;
     right: 5px;
     text-align: right;
     border: none;

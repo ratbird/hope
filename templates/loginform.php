@@ -7,7 +7,7 @@ $(function () {
 });
 // -->
 </script>
-<div class="index_container" style="width: 750px;">
+<div class="index_container" style="width: 750px; margin: 0 auto !important;">
 <? if ($loginerror): ?>
 <!-- failed login code -->
   <?= MessageBox::error(_("Bei der Anmeldung trat ein Fehler auf!"), array(

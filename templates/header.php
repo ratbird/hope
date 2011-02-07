@@ -71,8 +71,7 @@
               print QuickSearch::get("search_sem_quick_search", new SeminarSearch())
                     ->setAttributes(array(
                         "title" => sprintf(_('Nach Veranstaltungen suchen (%s)'), htmlready($search_semester_name)),
-                        "class" => "quicksearchbox",
-                        "style" => "width: 130px; color: #ffffff; vertical-align: top; margin-top: -3px;"
+                        "class" => "quicksearchbox"
                     ))
                     ->fireJSFunctionOnSelect("selectSem")
                     ->noSelectbox()
@@ -97,9 +96,7 @@
                     <? else : ?>
                         href="<?= htmlspecialchars($url) ?>" target="_blank"
                     <? endif ?>
-                    >
-                    <?= htmlReady($nav->getTitle()) ?>
-                    </a>
+                    ><?= htmlReady($nav->getTitle()) ?></a>
                     </li>
                 <? endif ?>
             <? endforeach ?>
@@ -107,9 +104,10 @@
         </ul>
     </div>
 </div>
-<div id="barBottomshadow">
-</div>
+<!-- Ende Header -->
+
+<!-- Beginn Page -->
+<div id="layout_page">
 <? if (isset($navigation)) : ?>
     <?= $this->render_partial('tabs') ?>
 <? endif ?>
-<!-- Ende Header -->

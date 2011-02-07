@@ -313,27 +313,27 @@ class Admin_UserController extends AuthenticatedController
             }
 
             //changing studiendaten
-            if (in_array($editPerms[0], array('autor', 'tutor', 'dozent'))) {
+            if (in_array($editPerms[0], array('autor', 'tutor', 'dozent')) && Request::get('new_studiengang') != 'none' && Request::get('new_abschluss') != 'none') {
                 //change studycourses
-                if (Request::get('new_studiengang') != 'none' &&
-                    Request::get('new_abschluss') != 'none') {
+                if (Request::get('new_studiengang') == 'none' || Request::get('new_abschluss') == 'none') {
+                    $details[] = _('<b>Der Studiengang wurde nicht hinzugefügt.</b> Bitte geben Sie Fach und Abschluss ein.');
+                } else {
                     $db = DbManager::get()->prepare("INSERT IGNORE INTO user_studiengang "
                                                    ."(user_id, studiengang_id, abschluss_id, semester) "
                                                    ."VALUES (?,?,?,?)");
                     $db->execute(array($user_id, Request::get('new_studiengang'), Request::get('new_abschluss'), Request::get('fachsem')));
                     $details[] = _('Der Studiengang wurde hinzugefügt.');
-                } elseif (Request::get('new_studiengang') == 'none' || Request::get('new_abschluss') == 'none') {
-                    $details[] = _('<b>Der Studiengang wurde nicht hinzugefügt.</b> Bitte geben Sie Fach und Abschluss ein.');
                 }
+            }
 
-                //change institute
-                if (Request::get('new_student_inst') != 'none' && Request::get('new_student_inst') != Request::get('new_inst')) {
-                    log_event('INST_USER_ADD', Request::get('new_student_inst'), $user_id, 'user');
-                    $db = DbManager::get()->prepare("INSERT IGNORE INTO user_inst (user_id, Institut_id, inst_perms) "
-                                                   ."VALUES (?,?,'user')");
-                    $db->execute(array($user_id, Request::get('new_student_inst')));
-                    $details[] = _('Die Einrichtung wurde hinzugefügt.');
-                }
+            //change institute for studiendaten
+            if (in_array($editPerms[0], array('autor', 'tutor', 'dozent')) && Request::get('new_student_inst') != 'none' &&
+                Request::get('new_student_inst') != Request::get('new_inst')) {
+                log_event('INST_USER_ADD', Request::get('new_student_inst'), $user_id, 'user');
+                $db = DbManager::get()->prepare("INSERT IGNORE INTO user_inst (user_id, Institut_id, inst_perms) "
+                                               ."VALUES (?,?,'user')");
+                $db->execute(array($user_id, Request::get('new_student_inst')));
+                $details[] = _('Die Einrichtung wurde hinzugefügt.');
             }
 
             //change institute

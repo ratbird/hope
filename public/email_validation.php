@@ -90,13 +90,12 @@ include ('lib/include/header.php');   // Output of Stud.IP head
             echo MessageBox::error(_("Fehler! Bitte wenden Sie sich an den Systemadministrator."), array($query));
         } else {
             echo MessageBox::success(_("Ihr Status wurde erfolgreich auf <em>autor</em> gesetzt.<br>
-            Damit dürfen Sie in den meisten Veranstaltungen schreiben,<br>für die Sie sich anmelden."),
+            Damit dürfen Sie in den meisten Veranstaltungen schreiben, für die Sie sich anmelden."),
             array(_("Einige Veranstaltungen erfordern allerdings bei der Anmeldung die Eingabe eines Passwortes.
             Dieses Passwort erfahren Sie von der Dozentin oder dem Dozenten der Veranstaltung.")));
 
-            // Auto-Eintrag in Boards
-            $UserManagement = new UserManagement($user->id);
-            $UserManagement->autoInsertSem('user');
+            // Auto-Inserts
+            AutoInsert::checkNewUser("autor", $user->id);
 
             $auth->logout();    // einen Logout durchführen, um erneuten Login zu erzwingen
             echo MessageBox::info(sprintf(_("Die Statusänderung wird erst nach einem erneuten %sLogin%s wirksam!<br>

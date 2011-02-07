@@ -446,7 +446,7 @@ class UserManagement
         $this->msg .= "msg§" . sprintf(_("Benutzer \"%s\" ver&auml;ndert."), $this->user_data['auth_user_md5.username']) . "§";
 
         // Automated entering new users, based on their status (perms)
-        $result = AutoInsert::checkOldUser($old_perms,$newuser['auth_user_md5.perms'], $this->user_data['auth_user_md5.user_id']);
+        $result = AutoInsert::checkOldUser($old_perms, $newuser['auth_user_md5.perms'], $this->user_data['auth_user_md5.user_id']);
         foreach ($result as $item) {
             $this->msg .= "msg§".sprintf(_("Der automatische Eintrag in die Veranstaltung <em>%s</em> wurde durchgeführt."), $item) . "§";
         }

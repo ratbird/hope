@@ -441,11 +441,20 @@ function move_item($item_id, $new_parent, $change_sem_to = false) {
         }
     }
 
+
     if ($item_id != $new_parent) {
-        $db->query ("UPDATE dokumente SET "
-                    . (($change_sem_to && $new_folder_id) ? "range_id='$new_folder_id', seminar_id='$change_sem_to' " : "range_id='$new_parent'")
-                    . " WHERE dokument_id = '$item_id'");
-        if (!$db->affected_rows()) {
+
+        $doc = new StudipDocument($item_id);
+
+        if ($change_sem_to && $new_folder_id) {
+            $doc['range_id'] = $new_folder_id;
+            $doc['seminar_id'] = $change_sem_to;
+        }
+        else {
+            $doc['range_id'] = $new_parent;
+        }
+
+        if (!$doc->store()) {
             //we want to move a folder, so we have first to check if we want to move a folder in a subordinated folder
 
             $folder = getFolderId($item_id);
@@ -456,6 +465,7 @@ function move_item($item_id, $new_parent, $change_sem_to = false) {
                 if ($change_sem_to){
                     $db->query("UPDATE folder SET range_id='".$new_parent."' WHERE folder_id = '$item_id'");
                     $folder[] = $item_id;
+                    // TODO (mlunzena): notify these documents
                     $db->query("UPDATE dokumente SET seminar_id='$change_sem_to' WHERE range_id IN('".join("','", $folder)."')");
                     $folder_tree->init();
                     return array(count($folder), (int)$db->affected_rows());
@@ -531,17 +541,29 @@ function copy_doc($doc_id, $new_range, $new_sem = false){
                 return false;
             }
         }
-        $db->query("INSERT INTO dokumente (seminar_id, range_id,dokument_id,
-                    user_id, name, description, filename, mkdate, chdate,
-                    filesize, autor_host, downloads, url, protected, author_name) VALUES ( "
-                    . ($new_sem ? "'$new_sem'," : "'" . $db->f('seminar_id')."',")
-                    . "'$new_range','$new_id', '" . $db->f('user_id')
-                    ."','".mysql_escape_string($db->f('name'))."','"
-                    .mysql_escape_string($db->f('description'))."', '"
-                    .mysql_escape_string($db->f('filename'))."', ".$db->f('mkdate')
-                    .",". time().",".$db->f('filesize').", '".$db->f('autor_host')
-                    ."', 0,'".mysql_escape_string($db->f('url'))."',". $db->f('protected').",'".mysql_escape_string($db->f('author_name'))."' )");
-        return $db->affected_rows();
+
+
+        $doc = new StudipDocument();
+        $doc->setData(
+            array(
+                'seminar_id'  => $new_sem ? $new_sem : $db->f('seminar_id'),
+                'range_id'    => $new_range,
+
+                'user_id'     => $db->f('user_id'),
+                'name'        => $db->f('name'),
+                'description' => $db->f('description'),
+                'filename'    => $db->f('filename'),
+                'mkdate'      => $db->f('mkdate'),
+                'chdate'      => time(),
+                'filesize'    => $db->f('filesize'),
+                'autor_host'  => $db->f('autor_host'),
+                'author_name' => $db->f('author_name'),
+                'download'    => 0,
+                'url'         => $db->f('url'),
+                'protected'   => $db->f('protected'),
+                'priority'    => 0
+            ));
+        return $doc->store();
     } else {
         return false;
     }
@@ -613,13 +635,24 @@ function edit_item ($item_id, $type, $name, $description, $protected=0, $url = "
             if ($_REQUEST["perm_folder"]) $folder_tree->setPermission($item_id, 'f');
             else $folder_tree->unsetPermission($item_id, 'f');
         }
-    }
-    elseif ($url != "")
-    $db->query("UPDATE dokumente SET name='$name', filesize='$filesize', description='$description', protected='$protected', url='$url', filename='$the_file_name' WHERE dokument_id ='$item_id'");
-    else
-    $db->query("UPDATE dokumente SET name='$name', description='$description', protected='$protected' WHERE dokument_id ='$item_id'");
+        return !!$db->affected_rows();
+    } else {
 
-    if ($db->affected_rows()) return TRUE;
+        $doc = new StudipDocument($item_id);
+        $doc->setData(
+            array(
+                'name'        => $name,
+                'description' => $description,
+                'protected'   => $protected
+            ));
+
+        if ($url != "") {
+            $doc["url"] = $url;
+            $doc["filename"] = $the_file_name;
+        }
+
+        return !!$doc->store();
+    }
 }
 
 function create_folder ($name, $description, $parent_id, $permission = 7) {
@@ -2176,21 +2209,15 @@ function delete_document($dokument_id, $delete_only_file = FALSE) {
         }
     }
 
-
     // eintrag aus der Datenbank werfen
-    $db->query("DELETE FROM dokumente WHERE dokument_id='$dokument_id'");
-
-    return $db->affected_rows();
+    $doc = new StudipDocument($dokument_id);
+    return $doc->delete();
 }
 
 function delete_link($dokument_id) {
-    $db = new DB_Seminar;
     // eintrag aus der Datenbank werfen
-    $db->query("DELETE FROM dokumente WHERE dokument_id='$dokument_id'");
-    if ($db->affected_rows())
-        return TRUE;
-    else
-        return FALSE;
+    $doc = new StudipDocument($dokument_id);
+    return $doc->delete();
 }
 
 /*

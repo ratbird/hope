@@ -42,6 +42,7 @@ require_once('lib/visual.inc.php');
 require_once('config.inc.php');
 require_once 'lib/functions.php';
 require_once('lib/classes/StudipDocumentTree.class.php');
+require_once('lib/classes/StudipDocument.class.php');
 require_once 'lib/raumzeit/Issue.class.php';
 
 $db = DBManager::get();
@@ -600,22 +601,25 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
     if (($_REQUEST["copyintofolder"]) && ($_REQUEST["copyfile"])) {
         $result = $db->query("SELECT * FROM dokumente WHERE dokument_id = ".$db->quote($_REQUEST["copyfile"]))->fetch();
         if (($rechte) || ($folder_tree->isWriteable($result['moveintofolder'] , $user->id))) {
-            $db->query("INSERT INTO dokumente " .
-                "SET dokument_id = '".md5(uniqid("helloGOOdByE"))."', " .
-                        "range_id = ".$db->quote($_REQUEST["copyintofolder"]).", " .
-                        "user_id = ".$db->quote($user->id).", " .
-                        "seminar_id = ".$db->quote($SessionSeminar).", " .
-                        "name = ".$db->quote($result['name']).", " .
-                        "description = ".$db->quote($result['description']).", " .
-                        "filename = ".$db->quote($result['filename']).", " .
-                        "mkdate = ".$db->quote($result['mkdate']).", " .
-                        "chdate = ".$db->quote(time()).", " .
-                        "filesize = ".$db->quote($result['filesize']).", " .
-                        "autor_host = ".$db->quote($result['autor_host']).", " .
-                        "downloads = ".$db->quote(0).", " .
-                        "url = ".$db->quote($result['url']).", " .
-                        "protected = ".$db->quote($result['protected']).", " .
-                        "priority = '0'");
+            $doc = new StudipDocument();
+            $doc->setData(
+                array(
+                    'range_id'    => $_REQUEST["copyintofolder"],
+                    'user_id'     => $user->id,
+                    'seminar_id'  => $SessionSeminar,
+                    'name'        => $result['name'],
+                    'description' => $result['description'],
+                    'filename'    => $result['filename'],
+                    'mkdate'      => $result['mkdate'],
+                    'chdate'      => time(),
+                    'filesize'    => $result['filesize'],
+                    'autor_host'  => $result['autor_host'],
+                    'download'    => 0,
+                    'url'         => $result['url'],
+                    'protected'   => $result['protected'],
+                    'priority'    => 0
+                ));
+            $doc->store();
         }
     }
     $output = ob_get_clean();

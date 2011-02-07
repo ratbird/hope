@@ -250,6 +250,7 @@ class UserModel
         DBManager::get()->exec($query);
 
         // Dateieintragungen und Ordner
+        // TODO (mlunzena) should post a notification
         $query = "UPDATE IGNORE dokumente SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";
         DBManager::get()->exec($query);
         $query = "UPDATE IGNORE folder SET user_id='{$new_id}' WHERE user_id = '{$old_id}'";

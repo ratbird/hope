@@ -17,7 +17,7 @@
 
 require_once('lib/webservices/api/studip_institute.php');
 
-class InstituteService extends Studip_Ws_Service
+class InstituteService extends AccessControlledService
 {
     function InstituteService()
     {
@@ -30,14 +30,6 @@ class InstituteService extends Studip_Ws_Service
                           array('string', 'string'),
                           array('string'),
                           'gets lecturers for institute');
-    }
-  function before_filter($name, &$args) 
-    {
-    # get api_key
-    $api_key = current($args);
-    
-    if ($api_key != $GLOBALS['STUDIP_API_KEY'])
-      return new Studip_Ws_Fault('Could not authenticate client.');
     }
 
     function get_admins_for_institute_action($api_key, $institute_id)

@@ -14,40 +14,10 @@
  * the License, or (at your option) any later version.
  */
 
-
-# set include path
-
 require '../lib/bootstrap.php';
+require '../lib/webservices/webservices_bootstrap.php';
 
-$include_path = ini_get('include_path');
-$include_path .= PATH_SEPARATOR . dirname(__FILE__) . '/..';
-ini_set('include_path', $include_path);
-
-# requiring nusoap
-require_once 'vendor/nusoap/nusoap.php';
-require_once 'vendor/nusoap/class.delegating_soap_server.php';
-require_once 'vendor/nusoap/class.soap_server_delegate.php';
-
-
-# requiring soap_server_delegate
-require_once 'vendor/studip_ws/studip_ws.php';
-require_once 'vendor/studip_ws/soap_dispatcher.php';
-
-# requiring all the webservices
-require_once 'lib/webservices/services/user_webservice.php';
-require_once 'lib/webservices/services/session_webservice.php';
-require_once 'lib/webservices/services/contentmodule_webservice.php';
-require_once 'lib/webservices/services/seminar_webservice.php';
-require_once 'lib/webservices/services/lecture_tree_webservice.php';
-require_once 'lib/webservices/services/institute_webservice.php';
-
-if (empty($GLOBALS['STUDIP_API_KEY'])
-        || ! $GLOBALS['WEBSERVICES_ENABLE'])
-{
-    die("Webservices not available");
-}
-
-$delegate = new Studip_Ws_SoapDispatcher('UserService', 'SessionService', 'SeminarService', 'ContentmoduleService', 'LectureTreeService', 'InstituteService');
+$delegate = new Studip_Ws_SoapDispatcher($AVAILABLE_SERVICES);
 $server   = new DelegatingSoapServer($delegate);
 
 # creating WSDL

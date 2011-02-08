@@ -68,9 +68,8 @@ class Admin_WebserviceAccessController extends AuthenticatedController
         $rule = $this->ws_rules[$id];
         if ($rule && !$rule->isNew() && $rule->delete()) {
             PageLayout::postMessage(MessageBox::success(_("Die Regel wurde gelöscht.")));
-            $this->get_all_rules();
         }
-        $this->render_action('index');
+        $this->redirect($this->url_for('admin/webservice_access'));
     }
 
     function update_action()
@@ -91,22 +90,53 @@ class Admin_WebserviceAccessController extends AuthenticatedController
         if (strlen($rule->api_key) < 5) {
             $msg['error'][] = _("Bitte geben Sie einen API-KEY mit min. 5 Zeichen an.");
         }
+        foreach ($rule->ip_range as $key => $ip) {
+            if (!$ip) {
+                unset($rule->ip_range[$key]);
+                continue;
+            }
+            list($ip_address, $mask) = split('/', $ip);
+            if (!ip2long($ip_address) || ($mask && ($mask < 8 || $mask > 30))) {
+                $msg['error'][] = sprintf(_("Der IP Bereich %s ist ungültig."), htmlready($ip));
+                unset($rule->ip_range[$key]);
+            }
+        }
         if (!$rule->method) {
             $msg['info'][] = _("Eine Regel ohne angegebene Methode gilt für alle Methoden!");
         }
-        if (!$rule->ip_range) {
+        if (!count($rule->ip_range)) {
             $msg['info'][] = _("Eine Regel ohne IP Bereich gilt für alle IP Adressen!");
         }
         if ($msg['error']) {
             PageLayout::postMessage(MessageBox::error(_("Die Regel wurde nicht gespeichert."), $msg['error']));
             $this->edit = $rule->id;
+            $this->render_action('index');
+            return;
         } else {
             if ($rule->store()) {
                 PageLayout::postMessage(MessageBox::success(_("Die Regel wurde gespeichert."), $msg['info']));
-                $this->get_all_rules();
             }
         }
-        $this->render_action('index');
+        $this->redirect($this->url_for('admin/webservice_access'));
+    }
+
+    function test_action()
+    {
+        if (Request::submitted('ok')) {
+            CSRFProtection::verifyUnsafeRequest();
+
+            $test_api_key = trim(Request::get("test_api_key"));
+            $test_method = trim(Request::get("test_method"));
+            $test_ip = trim(Request::get("test_ip"));
+
+            if ($test_api_key && $test_method && $test_ip) {
+                if (WebserviceAccessRule::checkAccess($test_api_key, $test_method, $test_ip)) {
+                    PageLayout::postMessage(MessageBox::success(_("Zugriff erlaubt.")));
+                } else {
+                    PageLayout::postMessage(MessageBox::error(_("Zugriff verboten.")));
+                }
+            }
+        }
     }
 
     function get_all_rules()

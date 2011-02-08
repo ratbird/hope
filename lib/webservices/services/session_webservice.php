@@ -17,7 +17,7 @@
 
 require_once('lib/webservices/api/studip_session.php');
 
-class SessionService extends Studip_Ws_Service
+class SessionService extends AccessControlledService
 {
     function SessionService()
     {
@@ -36,15 +36,6 @@ class SessionService extends Studip_Ws_Service
                           'string',
                           'returns prefixed username for session-id');
     }
-
-  function before_filter($name, &$args) {
-    # get api_key
-    $api_key = current($args);
-    
-        $db = new DB_Seminar();
-    if ($api_key != $GLOBALS['STUDIP_API_KEY'])
-      return new Studip_Ws_Fault('Could not authenticate client.');
-        }
 
     function is_session_valid_action($api_key, $session_id)
     {

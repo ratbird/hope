@@ -17,7 +17,7 @@
 
 require_once('lib/webservices/api/studip_contentmodule.php');
 
-class ContentmoduleService extends Studip_Ws_Service
+class ContentmoduleService extends AccessControlledService
 {
     function ContentmoduleService()
     {
@@ -31,16 +31,6 @@ class ContentmoduleService extends Studip_Ws_Service
                           array('string'),
                           '');
 
-    }
-
-  function before_filter($name, &$args) 
-    {
-
-    # get api_key
-    $api_key = current($args);
-    
-    if ($api_key != $GLOBALS['STUDIP_API_KEY'])
-      return new Studip_Ws_Fault('Could not authenticate client.');
     }
 
     function find_seminars_using_contentmodule_action($api_key, $system_type, $module_id)

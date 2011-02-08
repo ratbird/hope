@@ -17,7 +17,7 @@
 
 # using UserManagement class for now
 # TODO shall be removed afterwards
-#require_once 'lib/classes/UserManagement.class.php';
+require_once 'lib/classes/UserManagement.class.php';
 
 
 /**
@@ -39,9 +39,11 @@ class Studip_User {
   var $first_name;
   var $last_name;
   var $email;
-    var $permission;
-    var $fullname;
- 
+  var $permission;
+  var $fullname;
+  var $auth_plugin;
+  var $visibility;
+
 
   #  Constructor
   function Studip_User($user) {
@@ -50,12 +52,12 @@ class Studip_User {
     foreach ($fields as $field)
       if (isset($user[$field]))
                 $this->$field = $user[$field];
-        
+
         $this->fullname = get_fullname($this->id);
 
   }
-  
-  
+
+
   /**
    * <MethodDescription>
    *
@@ -63,10 +65,13 @@ class Studip_User {
    */
   function save() {
 
-    array_walk($user = Studip_User::get_fields(),
+    /*array_walk($user = Studip_User::get_fields(),
                create_function('&$v,$k,$user', '$v=$user->$v;'),
                $this);
-
+    */
+    foreach(Studip_User::get_fields() as $v => $k){
+        if(isset($this->$k)) $user[$v] = $this->$k;
+    }
     # no id, create
     if (!$this->id) {
       $user_management = new UserManagement();
@@ -74,11 +79,11 @@ class Studip_User {
         $this->error = $user_management->msg; # TODO
         return FALSE;
       }
-      
+
       # set id
       $this->id = $user_management->user_data['auth_user_md5.user_id'];
     }
-    
+
     # update
     else {
       $user_management = new UserManagement($this->id);
@@ -90,8 +95,8 @@ class Studip_User {
 
     return TRUE;
   }
-  
-  
+
+
   /**
    * <MethodDescription>
    *
@@ -103,11 +108,11 @@ class Studip_User {
       $this->error = $user_management->msg; # TODO
       return FALSE;
     }
-    
+
     return TRUE;
   }
-  
-  
+
+
   /**
    * <MethodDescription>
    *
@@ -116,13 +121,13 @@ class Studip_User {
    * @return mixed <description>
    */
   function &find_by_user_name($user_name) {
-  
+
     $result = NULL;
-  
+
     $db = new DB_Seminar;
     $db->queryf("SELECT * FROM auth_user_md5 WHERE username = '%s'",
                 $user_name);
-     
+
     if ($db->next_record()) {
 
       $user = array();
@@ -131,7 +136,7 @@ class Studip_User {
       $result = new Studip_User($user);
     return $result;
     }
-    
+
   }
 
   /**
@@ -142,13 +147,13 @@ class Studip_User {
    * @return mixed <description>
    */
   function &find_by_user_id($user_id) {
-  
+
     $result = NULL;
-  
+
     $db = new DB_Seminar;
     $db->queryf("SELECT * FROM auth_user_md5 WHERE user_id = '%s'",
                 $user_id);
-     
+
     if ($db->next_record()) {
 
       $user = array();
@@ -157,9 +162,9 @@ class Studip_User {
       $result = new Studip_User($user);
     return $result;
     }
-    
+
   }
-  
+
   /**
    * <MethodDescription>
    *
@@ -168,9 +173,9 @@ class Studip_User {
    * @return mixed <description>
    */
   function &find_by_status($status) {
-  
+
     $result = NULL;
-  
+
     $db = new DB_Seminar;
     $db->queryf("SELECT username FROM auth_user_md5 WHERE perms = '%s'",
                 $status);
@@ -179,10 +184,10 @@ class Studip_User {
 
       $userlist [] = $db->f("username");
     }
-    
-    return $userlist;     
+
+    return $userlist;
   }
-  
+
   /**
    * <MethodDescription>
    *
@@ -194,7 +199,9 @@ class Studip_User {
                     'auth_user_md5.Vorname'  => 'first_name',
                     'auth_user_md5.Nachname' => 'last_name',
                     'auth_user_md5.Email'    => 'email',
-                    'auth_user_md5.perms'    => 'permission');
+                    'auth_user_md5.perms'    => 'permission',
+                    'auth_user_md5.auth_plugin' => 'auth_plugin',
+                    'auth_user_md5.visible' => 'visibility');
     return $fields;
   }
 }

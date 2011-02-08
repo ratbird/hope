@@ -16,6 +16,22 @@
 
 require_once 'SimpleORMap.class.php';
 
+class CSVArrayObject extends ArrayObject
+{
+    function __construct($input)
+    {
+        if (is_string($input)) {
+            $input = strlen($input) ? array_map('trim', explode(',', $input)) : array();
+        }
+        parent::__construct((array)$input);
+    }
+
+    function __toString()
+    {
+        return implode(',', (array)$this);
+    }
+}
+
 class WebserviceAccessRule extends SimpleORMap
 {
 
@@ -44,6 +60,25 @@ class WebserviceAccessRule extends SimpleORMap
         return SimpleORMap::deleteBySql(__CLASS__, $where);
     }
 
+    static function checkAccess($api_key, $method, $ip)
+    {
+        $rules = self::findByApiKey($api_key);
+        $access = false;
+        foreach ($rules as $rule) {
+            if ($rule->type == 'allow'
+                && $rule->checkIpInRange($ip)
+                && $rule->checkMethodName($method)) {
+                $access = true;
+            }
+            if ($rule->type == 'deny'
+                && $rule->checkIpInRange($ip)
+                && $rule->checkMethodName($method)) {
+                $access = false;
+            }
+        }
+        return $access;
+    }
+
     /**
      *
      * @param string $id primary key of table
@@ -52,6 +87,24 @@ class WebserviceAccessRule extends SimpleORMap
     {
         $this->db_table = 'webservice_access_rules';
         parent::__construct($id);
+        if ($this->isNew() && !$this->content['ip_range'] instanceof CSVArrayObject) {
+            $this->content['ip_range'] = new CSVArrayObject($this->content['ip_range']);
+        }
+    }
+
+    function setData($data, $reset)
+    {
+        $ret = parent::setData($data, $reset);
+        $this->content['ip_range'] = new CSVArrayObject($this->content['ip_range']);
+        return $ret;
+    }
+
+    function setValue($field, $value)
+    {
+        if ($field == 'ip_range' && !$value instanceof CSVArrayObject) {
+            $value = new CSVArrayObject($value);
+        }
+        return parent::setValue($field, $value);
     }
 
     function getNewId()
@@ -59,6 +112,28 @@ class WebserviceAccessRule extends SimpleORMap
         return 0;
     }
 
+    function checkIpInRange($check_ip)
+    {
+        if (!ip2long($check_ip)) {
+            return false;
+        }
+        if (!count($this->ip_range)) {
+            return true;
+        }
+        foreach($this->ip_range as $range) {
+            list($ip, $mask) = explode('/', $range);
+            if (!$mask) {
+                $mask = 32;
+            }
+            if ( (ip2long($check_ip) & ~((1 << (32 - $mask)) - 1)) == ip2long($ip)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-
+    function checkMethodName($method)
+    {
+        return ($method && (!$this->method || strpos($method, $this->method) !== false));
+    }
 }

@@ -65,15 +65,6 @@ class SeminarService extends Studip_Ws_Service
   #                        array('string'),
     #                                               'validates permissions in institute');
     }
-  function before_filter($name, &$args) 
-    {
-
-    # get api_key
-    $api_key = current($args);
-    
-    if ($api_key != $GLOBALS['STUDIP_API_KEY'])
-      return new Studip_Ws_Fault('Could not authenticate client.');
-    }
 
     function validate_seminar_permission_action($api_key, $ticket, $seminar_id, $permission)
     {

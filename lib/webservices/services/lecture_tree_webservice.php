@@ -25,20 +25,10 @@ class LectureTreeService extends Studip_Ws_Service
     function LectureTreeService()
     {
         $this->add_api_method('get_seminars_by_sem_tree_id',
-                                                        array('string', 
-                                                                    'string', 
+                                                        array('string',
+                                                                    'string',
                                                                     'string'),
                                                         array('Studip_Seminar_Info'));
-    }
-
-  function before_filter($name, &$args) 
-    {
-
-    # get api_key
-    $api_key = current($args);
-    
-    if ($api_key != $GLOBALS['STUDIP_API_KEY'])
-      return new Studip_Ws_Fault('Could not authenticate client.');
     }
 
     function get_seminars_by_sem_tree_id_action($api_key, $sem_tree_id, $term_id)
@@ -69,6 +59,6 @@ class LectureTreeService extends Studip_Ws_Service
         return $seminar_infos;
     }
 
-    
+
 
 }

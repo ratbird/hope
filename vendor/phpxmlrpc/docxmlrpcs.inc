@@ -33,6 +33,18 @@
 		/// relative path to the visual xmlrpc editing dialog
 		var $editorpath = '';
 
+
+		function checkAuth()
+		{
+		    require_once "lib/classes/WebserviceAccessRule.class.php";
+
+		    $rules = WebserviceAccessRule::findByApiKey($_SERVER['PHP_AUTH_PW']);
+		    if (!count($rules)) {
+		        Header("WWW-Authenticate: Basic realm=\"Please enter valid api key as password\"");
+                Header("HTTP/1.0 401 Unauthorized");
+                die('Please enter valid api key as password');
+            }
+		}
 		/**
 		* Override xmlrpc_server service method:
 		*   in case of GET requests show docs about implemented methods;
@@ -46,7 +58,8 @@
 		{
 			if($_SERVER['REQUEST_METHOD'] != 'POST')
 			{
-				if ($doctype == '' || !in_array($doctype, $this->supported_doctypes))
+                $this->checkAuth();
+			    if ($doctype == '' || !in_array($doctype, $this->supported_doctypes))
 				{
 					$doctype = $this->default_doctype;
 				}
@@ -76,7 +89,8 @@
 					&& $_SERVER['CONTENT_TYPE'] == 'application/x-www-form-urlencoded'
 					&& isset($_POST['methodCall']))
 				{
-					if (get_magic_quotes_gpc())
+					$this->checkAuth();
+				    if (get_magic_quotes_gpc())
 					{
 						$_POST['methodCall'] = stripslashes($_POST['methodCall']);
 					}

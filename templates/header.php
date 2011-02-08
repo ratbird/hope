@@ -32,16 +32,6 @@
     <? endforeach ?>
     </ul>
 </div>
-<!--Statische Text Links -->
-<div id="barTopTools">
-    <ul>
-        <li>
-            <a href="http://blog.studip.de" target="_blank">
-            <?=_("Stud.IP Blog")?>
-            </a>
-        </li>
-    </ul>
-</div>
 <!-- Stud.IP Logo -->
 <div id="barTopStudip">
     <a href="http://www.studip.de/" title="Studip Homepage">
@@ -105,10 +95,9 @@
         </ul>
     </div>
 </div>
+<div id="barBottomshadow"> </div>
 <!-- Ende Header -->
 
-<!-- Beginn Page -->
-<div id="layout_page">
 <? if (isset($navigation)) : ?>
     <?= $this->render_partial('tabs') ?>
 <? endif ?>

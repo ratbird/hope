@@ -17,8 +17,9 @@
 </head>
 
 <body id="<?= $body_id ? $body_id : PageLayout::getBodyElementId() ?>">
-  	<? SkipLinks::insertContainer(); ?>
-  	<? SkipLinks::addIndex(_("Hauptinhalt"), 'layout_content', 100, true); ?>
+<div id="layout_wrapper">
+    <? SkipLinks::insertContainer(); ?>
+    <? SkipLinks::addIndex(_("Hauptinhalt"), 'layout_content', 100, true); ?>
     <?= PageLayout::getBodyElements() ?>
     <div id="overdiv_container"></div>
 
@@ -40,8 +41,8 @@
         <div class="clear"></div>
       </div>
     </div>
+    <div id="layout_push"></div>
 </div>
-<!-- Ende Page -->
 
     <? include 'templates/footer.php'; ?>
 

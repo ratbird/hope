@@ -5,6 +5,9 @@
   - Farben nur in hex (#666666)
   - mehrere Klassen mit gleichen eigenschaften zusammenfassen
 *******************************************************************************/
+html, body {
+    height: 100%;
+}
 
 /* --- Schrift (Vorgaben: Typ, Größe, Farbe --------------------------------- */
 body, input, textarea, td, th, blockquote, p, form {
@@ -127,13 +130,10 @@ a.printhead {
 
 
 /* --- Layouts -------------------------------------------------------------- */
-#layout_page {
-    margin: 1em;
-}
-
 #layout_container {
     background-color: white;
     padding: 0 0 1em 0;
+    margin: 0 0 1em 0;
 }
 
 #layout_content {
@@ -145,12 +145,28 @@ a.printhead {
     width: 250px;
 }
 
+#layout_wrapper {
+    clear: both;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -31px; /* the bottom margin is the negative value of the footer's height */
+}
+
+#layout_push {
+    height: 31px; /* must be the same height as #layout_footer */
+
+}
+
 #layout_footer {
-    /*border-top:1px solid #1E3E70;
-    padding: 4px;
+    position: relative;
+    clear: both;
+    margin: 0;
+    border-top:1px solid #1E3E70;
+    padding: 3px;
     background-color: #899AB9;
     color: #FFF;
-    text-align: right;*/
+    text-align: right;
 }
 
 table.infobox td {

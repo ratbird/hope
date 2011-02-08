@@ -18,6 +18,7 @@ require_once 'BrowseNavigation.php';
 require_once 'CalendarNavigation.php';
 require_once 'CommunityNavigation.php';
 require_once 'CourseNavigation.php';
+require_once 'FooterNavigation.php';
 require_once 'HelpNavigation.php';
 require_once 'LoginNavigation.php';
 require_once 'MessagingNavigation.php';
@@ -131,14 +132,6 @@ class StudipNavigation extends Navigation
             $links->addSubNavigation('settings', $navigation);
         }
 
-        // sitemap
-        if (is_object($user) && $user->id != 'nobody') {
-            $links->addSubNavigation('sitemap', new Navigation(_('Sitemap'), 'dispatch.php/sitemap/'));
-        }
-
-        // imprint
-        $links->addSubNavigation('siteinfo', new Navigation(_('Impressum'), 'dispatch.php/siteinfo/show'));
-
         // help
         if (get_config('EXTERNAL_HELP')) {
             $links->addSubNavigation('help', new HelpNavigation(_('Hilfe')));
@@ -160,6 +153,9 @@ class StudipNavigation extends Navigation
         }
 
         $this->addSubNavigation('links', $links);
+
+        // footer links
+        $this->addSubNavigation('footer', new FooterNavigation(_('Footer')));
 
         // login page
         $this->addSubNavigation('login', new LoginNavigation(_('Login')));

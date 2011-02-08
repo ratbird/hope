@@ -19,13 +19,13 @@ div#barBottomContainer {
     width: 100%;
     background-color: #899ab9;
     border-color: #1e3e70;
-	border-top-style:solid;    
-	border-bottom-style:solid;
+    border-top-style: solid;
+    border-bottom-style: solid;
 }
 
 div#barBottomLeft {
     background-color: #899ab9;
-    padding:0  15px;
+    padding:0 0 0 15px;
     height: 24px;
     text-align: right;
     vertical-align: middle;
@@ -34,8 +34,8 @@ div#barBottomLeft {
     display: table-cell;
     border-color: #1e3e70;
     border-width: 1px;
-	border-top-style:solid;    
-	border-bottom-style:solid;    
+    border-top-style: solid;
+    border-bottom-style: solid;
 }
 
 div#barBottommiddle {
@@ -52,8 +52,8 @@ div#barBottommiddle {
     display: table-cell;
     border-color: #1e3e70;
     border-width: 1px;
-	border-top-style:solid;    
-	border-bottom-style:solid;    
+    border-top-style: solid;
+    border-bottom-style: solid;
 }
 
 div#barBottomright {
@@ -67,29 +67,27 @@ div#barBottomright {
     display: table-cell;
     border-color: #1e3e70;
     border-width: 1px; 
-	border-top-style:solid;    
-	border-bottom-style:solid;    
+    border-top-style: solid;
+    border-bottom-style: solid;
 }
 
-div#barBottomright ul {
-    margin: 5px;
+div#barBottomright ul, #layout_footer ul {
+    margin: 4px;
 }
 
-div#barBottomright li {
+div#barBottomright li, #layout_footer li {
     display: inline;
     list-style-type: none;
 }
 
-div#barBottomright a {
+div#barBottomright a, #layout_footer a {
     text-decoration: none;
-    color: #ffffff;
-    opacity: 0.7;
-    padding-left: 6px;
-    padding-right: 6px;
+    color: #dfdfdf;
+    margin: 0 6px;
 }
 
-div#barBottomright a:hover {
-    opacity: 1.0;
+div#barBottomright a:hover, #layout_footer a:hover {
+    color: #ffffff;
 }
 
 div#barBottomshadow {
@@ -104,36 +102,9 @@ div#barTopFont {
     color: #cccccc;
 }
 
-div#barTopTools ul {
-    margin: 0px;
-    padding: 0px;
-}
-div#barTopTools li {
-    display: inline;
-    list-style-type: none;
-    font-size: 9pt;
-}
-div#barTopTools a {
-    text-decoration: none;
-    font-weight: bold;
-    color: #7387ac;
-    padding-left: 6px;
-    padding-right: 6px;
-}
-div#barTopTools a:hover {
-    color: #FFF;
-    background-image: url('../images/fill1.gif');
-}
-div#barTopTools {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    text-align: right;
-}
-
 div#barTopStudip {
     position: absolute;
-    top: 50px;
+    top: 45px;
     right: 5px;
     text-align: right;
     border: none;

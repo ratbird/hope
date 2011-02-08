@@ -1,5 +1,5 @@
+    <div id="layout_push"></div>
 </div>
-<!-- Ende Page -->
 
     <? include 'templates/footer.php'; ?>
 

@@ -52,7 +52,8 @@
 </head>
 
 <body id="<?= PageLayout::getBodyElementId() ?>">
-  <? SkipLinks::insertContainer(); ?>
-  <?= PageLayout::getBodyElements() ?>
-  <div id="overdiv_container"></div>
-  <? PageLayout::clearMessages() ?>
+<div id="layout_wrapper">
+    <? SkipLinks::insertContainer(); ?>
+    <?= PageLayout::getBodyElements() ?>
+    <div id="overdiv_container"></div>
+    <? PageLayout::clearMessages() ?>

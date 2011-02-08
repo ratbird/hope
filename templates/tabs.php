@@ -2,7 +2,7 @@
 # Lifter010: TODO
 ?>
 <? SkipLinks::addIndex(_("Erste Reiternavigation"), 'tabs', 10); ?>
-<ul id="tabs">
+<ul id="tabs" role="navigation">
     <? foreach ($navigation as $nav) : ?>
         <? if ($nav->isVisible()) : ?>
             <li<?= $nav->isActive() ? ' class="current"' : '' ?>>
@@ -25,7 +25,7 @@
         <? endif ?>
     <? endforeach ?>
 </ul>
-<ul id="tabs2">
+<ul id="tabs2" role="navigation">
     <? $subnavigation = $navigation->activeSubNavigation() ?>
     <? if (isset($subnavigation)) : ?>
         <? foreach ($subnavigation as $nav) : ?>

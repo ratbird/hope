@@ -746,7 +746,7 @@ function listPages($mode, $sortby=NULL) {
     begin_blank_table();
     echo "<tr><td class=\"blank\" colspan=\"2\">&nbsp;</td></tr>\n";
     echo "<tr><td class=\"blank\" colspan=\"2\">";
-    echo "<table id=\"main_content\" width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
+    echo "<table id=\"main_content\" role=\"main\" width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
     echo "<tr height=28>";
     $s = "<td class=\"steel\" width=\"%d%%\" align=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\">%s</td>";
     printf($s, 3, "left", "&nbsp;");
@@ -1188,7 +1188,7 @@ function getAllWikiPages($range_id, $header, $fullhtml=TRUE) {
 **/
 function showPageFrameStart() {
     print "<table width=\"100%\" class=\"blank\" cellpadding=0 cellspacing=0>";
-    print "<tr class=\"blank\"><td class=\"blank\" nowrap width=\"1%\">&nbsp;</td><td id=\"main_content\" class=\"blank\" valign=\"top\">";
+    print "<tr class=\"blank\"><td class=\"blank\" nowrap width=\"1%\">&nbsp;</td><td id=\"main_content\" role=\"main\" class=\"blank\" valign=\"top\">";
 }
 
 /**

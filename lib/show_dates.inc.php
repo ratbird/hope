@@ -144,7 +144,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
 
         // Ausgabe der Kopfzeile
         $colspan = 1;
-        echo "\n<table id=\"appointments_box\" class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">";
+        echo "\n<table id=\"appointments_box\" role=\"article\" class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">";
         if ($show_as_window) {
             if ($show_admin) {
                 $colspan++;
@@ -178,7 +178,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
 
         //open/close all (show header to switch)
         if (!$show_as_window) {
-            echo "\n<table id=\"appointments_box\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\">"; //WTF?
+            echo "\n<table id=\"appointments_box\" role=\"article\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\">"; //WTF?
             print "\n<tr>";
             print "\n<td width=\"5%\" class=\"steelgraulight\" align=\"left\"> ";
             if ($rechte)
@@ -198,6 +198,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
 
         while ($db->next_record()) {
 
+            echo '<div role="article">';
             $zusatz = '';
             if (!$range_id || is_array($range_id)) {
                 $zusatz .= "<a href=\"".URLHelper::getLink("seminar_main.php?auswahl=" . $db->f("range_id"))
@@ -309,6 +310,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 printcontent(0,0, $content, $edit);
                 echo "</tr></table> ";
                 }
+            echo '</div>';
         }
         echo "</td></tr></table>";
         return TRUE;
@@ -318,7 +320,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
         // set skip link
         SkipLinks::addIndex(_("Termine"), 'appointments_box');
 
-        print("\n<table id=\"appointments_box\" class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">");
+        print("\n<table id=\"appointments_box\" role=\"article\" class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">");
         printf("\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\"><b>  %s</b></td>",_("Termine"));
         printf("\n<td align =\"right\" class=\"topic\"> %s<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" %s></a> </td></tr>", $admin_link, tooltip(_("Termine einstellen")));
         ?>
@@ -338,7 +340,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
         // set skip link
         SkipLinks::addIndex(_("Termine"), 'appointments_box');
 
-        print("\n<table id=\"appointments_box\" class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">");
+        print("\n<table id=\"appointments_box\" role=\"article\" class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">");
         print("\n<tr><td class=\"blank\" colspan=\"2\">");
         parse_msg ("info§"._("Es sind keine aktuellen Termine vorhanden."));
         print("\n</td></tr></table>\n");
@@ -376,7 +378,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
 
         // Ausgabe der Kopfzeile
         $colspan = 1;
-        echo "\n<table id=\"appointments_box\" class=\"index_box\" style=\"width: 100%;\">";
+        echo "\n<table id=\"appointments_box\" role=\"article\" class=\"index_box\" style=\"width: 100%;\">";
         if ($show_admin) {
             $colspan++;
             echo "\n<tr><td class=\"topic\"> <img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" " . tooltip(_("Termine. Klicken Sie rechts auf die Zahnräder, um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")) . "> <b>";
@@ -399,6 +401,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
             $add_to_link = "&username=$username";
 
         while ($termin = $list->nextEvent()) {
+            echo '<div role="article">';
             $icon = Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom'));
 
             $zusatz = '';
@@ -487,6 +490,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
                 printcontent(0,0, $content, $edit);
                 echo "</tr></table> ";
                 }
+            echo '</div>';
         }
         echo "</td></tr></table></td></tr></table>";
         return TRUE;
@@ -496,7 +500,7 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
         // set skip link
         SkipLinks::addIndex(_("Termine"), 'appointments_box');
 
-        echo "\n<table id=\"appointments_box\" class=\"index_box\" style=\"width: 100%;\">";
+        echo "\n<table id=\"appointments_box\" role=\"article\" class=\"index_box\" style=\"width: 100%;\">";
         echo "\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\"> <b>" . _("Termine") . "</b></td>";
         echo "\n<td align =\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Termine einstellen")) . "></a> </td></tr>";
         ?>
@@ -546,7 +550,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
         SkipLinks::addIndex(_("Termine"), 'appointments_box');
 
         // Ausgabe der Kopfzeile
-        echo "<table id=\"appointments_box\" class=\"index_box\">";
+        echo "<table id=\"appointments_box\" role=\"article\" class=\"index_box\">";
         echo "\n<tr><td class=\"topic\" align=\"left\">\n";
         echo "<img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" ";
         echo tooltip(_("Termine. Klicken Sie rechts auf die Zahnräder, um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen."));
@@ -559,6 +563,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
         echo "<tr><td class=\"blank\" colspan=\"2\">";
 
         while ($termin = $list->nextEvent()) {
+            echo '<div role="article">';
             $icon = Assets::img('icons/16/grey/date.png', array('class' => 'text-bottom'));
             $have_write_permission = ((strtolower(get_class($termin)) == 'seminarevent' && $termin->haveWritePermission())
                     || (strtolower(get_class($termin)) != 'seminarevent'));
@@ -702,6 +707,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                 printcontent(0, FALSE, $content, $edit);
                 echo "</tr></table> ";
             }
+            echo '</div>';
         }
         echo "\n</td></tr>\n</table>";
         return TRUE;
@@ -711,7 +717,7 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
         // set skip link
         SkipLinks::addIndex(_("Termine"), 'appointments_box');
 
-        echo "\n<table id=\"appointments_box\" class=\"index_box\">";
+        echo "\n<table id=\"appointments_box\" role=\"article\" class=\"index_box\">";
         echo "\n<tr><td class=\"topic\">" . Assets::img('icons/16/white/schedule.png', array('class' => 'text-top', 'title' =>_('Termine'))) . "<b>  " . _("Termine") . "</b></td>";
         echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Termine einstellen")) . "></a> </td></tr>";
         ?>

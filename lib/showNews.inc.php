@@ -64,7 +64,7 @@ function process_news_commands(&$cmd_data)
 function commentbox($num, $authorname, $authoruname, $date, $dellink, $content)
 {
     $out=array();
-    $out[]="<table style=\"border: 1px black solid;\" cellpadding=3 cellspacing=0 width=100%>";
+    $out[]="<table role=\"article\" style=\"border: 1px black solid;\" cellpadding=3 cellspacing=0 width=100%>";
     $out[].="<tr style=\"background:#ffffcc\">";
     $out[].="<td align=left style=\"border-bottom: 1px black dotted\">";
     $out[].="<font size=-1>#$num - ";
@@ -156,7 +156,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
             // set skip link
             SkipLinks::addIndex(_("Ankündigungen"), 'news_box');
 
-            echo"\n<table id=\"news_box\" class=\"index_box\"$width>";
+            echo"\n<table id=\"news_box\" role=\"article\" class=\"index_box\"$width>";
             echo"\n<tr><td class=\"topic\" colspan=\"2\"><img src=\"".Assets::image_path('icons/16/white/breaking-news.png')."\" ". tooltip(_("Newsticker. Klicken Sie rechts auf die Zahnräder, um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b> " . _("Ankündigungen") . "</b></td>";
             echo"\n<td align=\"right\" class=\"topic\">";
             echo "<a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Ankündigungen einstellen")) . "></a> ";
@@ -174,7 +174,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
         $colspan=2;
 
         //Ausgabe der Kopfzeile vor erster auszugebener Ankündigungen
-        echo"\n<table id=\"news_box\" class=\"index_box\"$width>";
+        echo"\n<table id=\"news_box\" role=\"article\" class=\"index_box\"$width>";
         echo"\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/breaking-news.png')."\" ". tooltip(_("Newsticker. Klicken Sie rechts auf die Zahnräder, um neue Ankündigungen in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b>" . _("Ankündigungen") . "</b></td>";
         if ($rss_id) {
             $colspan++;
@@ -193,7 +193,7 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
         // Ausgabe der Daten
         foreach ($news as $id => $news_item) {
             $news_item['open'] = ($id == $open);
-            echo '<div id="news_item_'.$id.'">';
+            echo '<div id="news_item_'.$id.'" role="article">';
             echo show_news_item($news_item, $cmd_data, $show_admin, $admin_link);
             echo '</div>';
         }

@@ -76,7 +76,7 @@ function createBoxHeader ($title, $width, $extraTitle = "",
 {
     SkipLinks::addIndex(_("Umfragen"), 'votes_box');
    $html =
-      "<table id=\"votes_box\" class=\"index_box\" $width>\n";
+      "<table id=\"votes_box\" role=\"article\" class=\"index_box\" $width>\n";
 
    if ($title) {
 
@@ -134,7 +134,7 @@ function createBoxFooter () {
 
 function createBoxLineHeader () {
    $html = "";
-   $html .= "<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n";
+   $html .= "<table role=\"article\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n";
    return $html;
 }
 

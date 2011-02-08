@@ -11,7 +11,7 @@
     <?= htmlentities($GLOBALS['UNI_NAME_CLEAN']) ?>
     </div>
     <? SkipLinks::addIndex(_("Hauptnavigation"), 'barTopMenu', 1); ?>
-    <ul id="barTopMenu">
+    <ul id="barTopMenu" role="navigation">
     <? $accesskey = 0 ?>
     <? foreach (Navigation::getItem('/') as $nav) : ?>
         <? if ($nav->isVisible(true)) : ?>
@@ -54,7 +54,7 @@
         <ul>
             <? if (isset($search_semester_nr)) : ?>
             <li>
-            <form id="quicksearch" action="<?= URLHelper::getLink('sem_portal.php', array('send' => 'yes', 'group_by' => '0') + $link_params) ?>" method="post">
+            <form id="quicksearch" role="search" action="<?= URLHelper::getLink('sem_portal.php', array('send' => 'yes', 'group_by' => '0') + $link_params) ?>" method="post">
               <?= CSRFProtection::tokenTag() ?>
               <script>
                 var selectSem = function (seminar_id, name) {

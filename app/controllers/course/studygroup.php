@@ -409,10 +409,10 @@ class Course_StudygroupController extends AuthenticatedController {
                             $admin_mods->$methodDeactivate($sem->id);
                         }
                     }
-                }
 
-                $sem->modules = $bitmask;
-                $sem->store();
+                    $sem->modules = $bitmask;
+                    $sem->store();
+                }
 
                 // 2. Plugins
 

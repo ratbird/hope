@@ -1,7 +1,7 @@
 <? if ($noteditable) : ?>
 <?= MessageBox::info(_("Das Startdatum kann nur bei Semestern geändert werden, in denen keine Veranstaltungen liegen!")) ?>
 <? endif ?>
-<?= $message ?>
+
 <form method="post" action="<?= $controller->url_for('admin/semester/edit_semester') ?><?= ($semester['semester_id']) ? '/'.$semester['semester_id'] : '' ?>">
 <?= CSRFProtection::tokenTag() ?>
 <table class="default">
@@ -64,7 +64,7 @@
     </tr>
     <tr>
         <td colspan="5" align="center">
-        <? if (isset($semester)) : ?>
+        <? if ($semester['semester_id']) : ?>
             <?= makeButton("speichern", 'input', _('Die Änderungen speichern')) ?>
         <? else : ?>
             <?= makeButton("anlegen", 'input', _('Neues Semester anlegen')) ?>

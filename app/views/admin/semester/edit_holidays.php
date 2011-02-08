@@ -1,4 +1,3 @@
-<?= $message ?>
 <form method="post" action="<?= $controller->url_for('admin/semester/edit_holidays') ?><?= ($holiday['holiday_id'])? '/'.$holiday['holiday_id'] : '' ?>">
 <?= CSRFProtection::tokenTag() ?>
 <table class="default">

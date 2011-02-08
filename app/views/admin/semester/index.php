@@ -1,10 +1,4 @@
-<? if (isset($flash['error'])): ?>
-    <?= MessageBox::error($flash['error'], $flash['error_detail']) ?>
-<? elseif (isset($flash['message'])): ?>
-    <?= MessageBox::info($flash['message']) ?>
-<? elseif (isset($flash['success'])): ?>
-    <?= MessageBox::success($flash['success'], $flash['success_detail']) ?>
-<? elseif (isset($flash['delete'])): ?>
+<? if (isset($flash['delete'])): ?>
     <? if ($flash['mode']=='semester'): ?>
         <?= createQuestion(sprintf(_('Wollen Sie das Semester "%s" wirklich löschen?'), $flash['delete']['name']), array('delete' => 1), array('back' => 1), $controller->url_for('admin/semester/delete/') . $flash['delete']['semester_id']."/semester"); ?>
     <? elseif ($flash['mode']=='holiday'): ?>
@@ -13,6 +7,7 @@
 <? endif; ?>
 
 <h3><?= _("Semester") ?></h3>
+
 <table class="default">
 <tr>
     <th><?= _("Name") ?></th>

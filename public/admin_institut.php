@@ -56,6 +56,8 @@ require_once('lib/classes/StudipLitSearch.class.php');
 require_once('lib/classes/StudipNews.class.php');
 require_once('lib/log_events.inc.php');
 require_once 'lib/classes/InstituteAvatar.class.php';
+require_once 'lib/classes/LockRules.class.php';
+require_once 'lib/classes/Institute.class.php';
 
 if (get_config('RESOURCES_ENABLE')) {
     include_once($RELATIVE_PATH_RESOURCES."/lib/DeleteResourcesUser.class.php");
@@ -114,7 +116,7 @@ while ( is_array($_REQUEST)
             }
         }
 
-        $query = "insert into Institute (Institut_id,Name,fakultaets_id,Strasse,Plz,url,telefon,email,fax,type,lit_plugin_name,mkdate,chdate) values('$i_id','$Name','$Fakultaet','$strasse','$plz', '$home', '$telefon', '$email', '$fax', '$type','$lit_plugin_name', '".time()."', '".time()."')";
+        $query = "insert into Institute (Institut_id,Name,fakultaets_id,Strasse,Plz,url,telefon,email,fax,type,lit_plugin_name,lock_rule,mkdate,chdate) values('$i_id','$Name','$Fakultaet','$strasse','$plz', '$home', '$telefon', '$email', '$fax', '$type','$lit_plugin_name','$lock_rule', '".time()."', '".time()."')";
 
         $db->query($query);
 
@@ -157,7 +159,7 @@ while ( is_array($_REQUEST)
         }
 
         //update Institut information.
-        $query = "UPDATE Institute SET Name='$Name', fakultaets_id='$Fakultaet', Strasse='$strasse', Plz='$plz', url='$home', telefon='$telefon', fax='$fax', email='$email', type='$type', lit_plugin_name='$lit_plugin_name' ,chdate=".time()." where Institut_id = '$i_id'";
+        $query = "UPDATE Institute SET Name='$Name', fakultaets_id='$Fakultaet', Strasse='$strasse', Plz='$plz', url='$home', telefon='$telefon', fax='$fax', email='$email', type='$type', lit_plugin_name='$lit_plugin_name',lock_rule='$lock_rule' ,chdate=".time()." where Institut_id = '$i_id'";
         $db->query($query);
         if ($db->affected_rows() == 0) {
             $msg="error§<b>" . _("Datenbankoperation gescheitert:") . " " . $query . "</b>";
@@ -463,6 +465,23 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
         ?>
         </select>
         </td></tr>
+        <?
+    }
+    if ($perm->have_perm('root')) {
+        ?>
+        <tr <? $cssSw->switchClass(); echo $cssSw->getFullClass()  ?>>
+        <td>
+        <?=_("Sperrebene")?>
+        </td>
+        <td>
+        <select name="lock_rule" style="width: 98%">
+            <option value=""></option>
+            <? foreach(LockRule::findAllByType('inst') as $rule) :?>
+            <option value="<?=$rule->getId()?>" <?=($rule->getId() == $db->f('lock_rule') ? 'selected' : '')?>><?=htmlReady($rule->name)?></option>
+            <? endforeach;?>
+        </select>
+        </td>
+        </tr>
         <?
     }
     //add the free administrable datafields

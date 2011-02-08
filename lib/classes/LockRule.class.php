@@ -71,22 +71,32 @@ class LockRule extends SimpleORMap
     {
         $this->db_table = 'lock_rules';
         parent::__construct($id);
-        if ($this->isNew()) {
-            $this->content['attributes'] = new ArrayObject((array)json_decode($this->content['attributes'], true));
+        if ($this->isNew() && !$this->content['attributes'] instanceof ArrayObject) {
+            $this->content['attributes'] = $this->convertJsonToArray($this->content['attributes']);
         }
     }
 
-    function restore()
+    function setData($data, $reset)
     {
-        $ret = parent::restore();
-        $this->content['attributes'] = new ArrayObject((array)json_decode($this->content['attributes'], true));
+        $ret = parent::setData($data, $reset);
+        $this->content['attributes'] = $this->convertJsonToArray($this->content['attributes']);
         return $ret;
     }
 
     function store()
     {
-        $this->content['attributes'] = json_encode((array)$this->content['attributes']);
+        $this->content['attributes'] = $this->convertArrayToJson($this->content['attributes']);
         return parent::store();
+    }
+
+    function convertJsonToArray($attributes_json)
+    {
+        return new ArrayObject((array)json_decode($attributes_json, true));
+    }
+
+    function convertArrayToJson($attributes_array)
+    {
+        return json_encode((array)$attributes_array);
     }
 
     function delete()

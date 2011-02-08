@@ -99,9 +99,9 @@ class Admin_UserController extends AuthenticatedController
 
             // Fehler abfangen
             if ($this->users == 0) {
-                $this->flash['message'] = MessageBox::info(_('Sie haben keine Suchkriterien ausgewählt!'));
+                PageLayout::postMessage(MessageBox::info(_('Sie haben keine Suchkriterien ausgewählt!')));
             } elseif (count($this->users) < 1) {
-                $this->flash['message'] = MessageBox::info(_('Es wurden keine Benutzer mit diesen Suchkriterien gefunden.'));
+                PageLayout::postMessage(MessageBox::info(_('Es wurden keine Benutzer mit diesen Suchkriterien gefunden.')));
             } else {
                 $_SESSION['admin']['user']['results'] = true;
             }
@@ -111,7 +111,6 @@ class Admin_UserController extends AuthenticatedController
         if ($advanced || count($search_datafields) > 0) {
             $this->advanced = true;
         }
-        $this->flash->discard('message');
     }
 
     /**
@@ -127,7 +126,7 @@ class Admin_UserController extends AuthenticatedController
 
             //check user
             if (empty($user)) {
-                $this->flash['message'] = MessageBox::error(_('Fehler! Der zu löschende Benutzer ist nicht vorhanden.'));
+                PageLayout::postMessage(MessageBox::error(_('Fehler! Der zu löschende Benutzer ist nicht vorhanden.')));
             //antwort ja
             } elseif (!empty($user) && Request::submitted('delete')) {
 
@@ -147,10 +146,10 @@ class Admin_UserController extends AuthenticatedController
                 //delete
                 if ($umanager->deleteUser(Request::get('documents', false))) {
                     $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
-                    $this->flash['message'] = MessageBox::success(sprintf(_('Der Benutzer "%s %s (%s)" wurde erfolgreich gelöscht'), $user['Vorname'], $user['Nachname'], $user['username']), $details);
+                    PageLayout::postMessage(MessageBox::success(sprintf(_('Der Benutzer "%s %s (%s)" wurde erfolgreich gelöscht'), $user['Vorname'], $user['Nachname'], $user['username']), $details));
                 } else {
                     $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
-                    $this->flash['message'] = MessageBox::error(sprintf(_('Fehler! Der Benutzer "%s %s (%s)" konnte nicht gelöscht werden'), $user['Vorname'], $user['Nachname'], $user['username']), $details);
+                    PageLayout::postMessage(MessageBox::error(sprintf(_('Fehler! Der Benutzer "%s %s (%s)" konnte nicht gelöscht werden'), $user['Vorname'], $user['Nachname'], $user['username']), $details));
                 }
 
                 //reavtivate messages
@@ -172,7 +171,7 @@ class Admin_UserController extends AuthenticatedController
             $user_ids = Request::getArray('user_ids');
 
             if (count($user_ids) == 0) {
-                 $this->flash['message'] = MessageBox::error(_('Bitte wählen Sie mindestens einen Benutzer zum Löschen aus.'));
+                 PageLayout::postMessage(MessageBox::error(_('Bitte wählen Sie mindestens einen Benutzer zum Löschen aus.')));
                 $this->redirect('admin/user/'.$parent);
                 return;
             }
@@ -198,10 +197,10 @@ class Admin_UserController extends AuthenticatedController
                     //delete
                     if ($umanager->deleteUser(Request::get('documents', false))) {
                         $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
-                        $this->flash['message'] .= MessageBox::success(sprintf(_('Der Benutzer "%s %s (%s)" wurde erfolgreich gelöscht'), $users[$i]['Vorname'], $users[$i]['Nachname'], $users[$i]['username']), $details);
+                        PageLayout::postMessage(MessageBox::success(sprintf(_('Der Benutzer "%s %s (%s)" wurde erfolgreich gelöscht'), $users[$i]['Vorname'], $users[$i]['Nachname'], $users[$i]['username']), $details));
                     } else {
                         $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
-                        $this->flash['message'] .= MessageBox::error(sprintf(_('Fehler! Der Benutzer "%s %s (%s)" konnte nicht gelöscht werden'), $users[$i]['Vorname'], $users[$i]['Nachname'], $users[$i]['username']), $details);
+                        PageLayout::postMessage(MessageBox::error(sprintf(_('Fehler! Der Benutzer "%s %s (%s)" konnte nicht gelöscht werden'), $users[$i]['Vorname'], $users[$i]['Nachname'], $users[$i]['username']), $details));
                     }
                 }
 
@@ -242,7 +241,7 @@ class Admin_UserController extends AuthenticatedController
             if (Request::get('user')) {
                 $user_id = Request::get('user');
             } else {
-                $this->flash['message'] = MessageBox::info(_('Sie haben keinen Benutzer ausgewählt!'));
+                PageLayout::postMessage(MessageBox::info(_('Sie haben keinen Benutzer ausgewählt!')));
                 //liste wieder anzeigen
                 $this->redirect('admin/user/');
                 return;
@@ -380,11 +379,11 @@ class Admin_UserController extends AuthenticatedController
             //save action and messages
             #print_r($um->user_data);
             if ($um->changeUser($editUser)) {
-                $this->flash['message'] = Messagebox::success(_('Die Änderungen wurden erfolgreich gespeichert.'), $details);
+                PageLayout::postMessage(Messagebox::success(_('Die Änderungen wurden erfolgreich gespeichert.'), $details));
             } else {
                 //get message
                 $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($um->msg, 0, -1)));
-                $this->flash['message'] = Messagebox::error(_('Die Änderungen konnten nicht gespeichert werden.'), $details);
+                PageLayout::postMessage(Messagebox::error(_('Die Änderungen konnten nicht gespeichert werden.'), $details));
             }
         }
 
@@ -399,8 +398,6 @@ class Admin_UserController extends AuthenticatedController
         $this->datafields = DataFieldStructure::getDataFieldStructures("user");
         $this->userfields = DataFieldEntry::getDataFieldEntries($user_id);
         $this->userdomains = UserDomain::getUserDomainsForUser($user_id);
-
-        $this->flash->discard('message');
     }
 
     /*
@@ -414,7 +411,7 @@ class Admin_UserController extends AuthenticatedController
 
         //check auth_plugins
         if (!in_array("Standard", $GLOBALS['STUDIP_AUTH_PLUGIN'])) {
-            $this->flash['message'] = MessageBox::info(_("Die Standard-Authentifizierung ist ausgeschaltet. Das Anlegen von neuen Benutzern ist nicht möglich!"));
+            PageLayout::postMessage(MessageBox::info(_("Die Standard-Authentifizierung ist ausgeschaltet. Das Anlegen von neuen Benutzern ist nicht möglich!")));
             $this->redirect('admin/user');
         }
 
@@ -567,13 +564,12 @@ class Admin_UserController extends AuthenticatedController
 
                 //get message
                 $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($UserManagement->msg, 0, -1)));
-                $this->flash['message'] = MessageBox::success(_('Der Benutzer wurde erfolgreich angelegt.'), $details);
+                PageLayout::postMessage(MessageBox::success(_('Der Benutzer wurde erfolgreich angelegt.'), $details));
                 $this->redirect('admin/user/edit/' . $user_id);
             } else {
                 //get message
                 $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($UserManagement->msg, 0, -1)));
-                $this->flash['message'] = Messagebox::error(_('Der Benutzer konnte nicht angelegt werden.'), $details);
-                $this->flash->discard('message');
+                PageLayout::postMessage(Messagebox::error(_('Der Benutzer konnte nicht angelegt werden.'), $details));
             }
         }
 
@@ -636,11 +632,10 @@ class Admin_UserController extends AuthenticatedController
                     StudipMail::setDefaultTransporter($default_mailer);
                 }
 
-                $this->flash['message'] = MessageBox::success(_('Die Benutzer wurden erfolgreich migriert.'), $details);
+                PageLayout::postMessage(MessageBox::success(_('Die Benutzer wurden erfolgreich migriert.'), $details));
                 $this->redirect('admin/user/edit/' . $new_id);
             } else {
-                $this->flash['message'] = MessageBox::error(_("Bitte wählen Sie zwei gültige Benutzer aus."));
-                $this->flash->discard('message');
+                PageLayout::postMessage(MessageBox::error(_("Bitte wählen Sie zwei gültige Benutzer aus.")));
             }
         }
     }
@@ -654,10 +649,10 @@ class Admin_UserController extends AuthenticatedController
     {
         $UserManagement = new UserManagement($user_id);
         if ($UserManagement->setPassword()) {
-            $this->flash['message'] = Messagebox::success(_('Das Passwort wurde neu gesetzt.'));
+            PageLayout::postMessage(Messagebox::success(_('Das Passwort wurde neu gesetzt.')));
         } else {
             $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($UserManagement->msg, 0, -1)));
-            $this->flash['message'] = Messagebox::error(_('Die Änderungen konnten nicht gespeichert werden.'), $details);
+            PageLayout::postMessage(Messagebox::error(_('Die Änderungen konnten nicht gespeichert werden.'), $details));
         }
         $this->redirect('admin/user/edit/' . $user_id);
     }
@@ -671,9 +666,9 @@ class Admin_UserController extends AuthenticatedController
     {
         $db = DBManager::get()->prepare("UPDATE auth_user_md5 SET locked = 0, lock_comment = NULL, locked_by = NULL WHERE user_id = ?");
         if ($db->execute(array($user_id))) {
-            $this->flash['message'] = Messagebox::success(_('Der Benutzer wurde erfolgreich entsperrt.'));
+            PageLayout::postMessage(Messagebox::success(_('Der Benutzer wurde erfolgreich entsperrt.')));
         } else {
-            $this->flash['message'] = Messagebox::error(_('Der Benutzer konnte nicht entsperrt werden.'));
+            PageLayout::postMessage(Messagebox::error(_('Der Benutzer konnte nicht entsperrt werden.')));
         }
         $this->redirect('admin/user/edit/' . $user_id);
     }
@@ -689,9 +684,9 @@ class Admin_UserController extends AuthenticatedController
     {
         $db = DBManager::get()->prepare("DELETE FROM user_studiengang WHERE user_id = ? AND studiengang_id = ? AND abschluss_id = ?");
         if ($db->execute(array($user_id, $fach_id, $abschlus_id))) {
-            $this->flash['message'] = MessageBox::success(_('Der Studiengang wurde erfolgreich gelöscht.'));
+            PageLayout::postMessage(MessageBox::success(_('Der Studiengang wurde erfolgreich gelöscht.')));
         } else {
-            $this->flash['message'] = MessageBox::error(_('Der Studiengang konnte nicht gelöscht werden.'));
+            PageLayout::postMessage(MessageBox::error(_('Der Studiengang konnte nicht gelöscht werden.')));
         }
         $this->redirect('admin/user/edit/' . $user_id);
     }
@@ -706,9 +701,9 @@ class Admin_UserController extends AuthenticatedController
     {
         $db = DBManager::get()->prepare("DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ?");
         if ($db->execute(array($user_id, $institut_id))) {
-            $this->flash['message'] = MessageBox::success(_('Die Einrichtung wurde erfolgreich gelöscht.'));
+            PageLayout::postMessage(MessageBox::success(_('Die Einrichtung wurde erfolgreich gelöscht.')));
         } else {
-            $this->flash['message'] = MessageBox::error(_('Die Einrichtung konnte nicht gelöscht werden.'));
+            PageLayout::postMessage(MessageBox::error(_('Die Einrichtung konnte nicht gelöscht werden.')));
         }
         $this->redirect('admin/user/edit/' . $user_id);
     }
@@ -723,7 +718,7 @@ class Admin_UserController extends AuthenticatedController
     {
         $domain = new UserDomain($domain_id);
         $domain->removeUser($user_id);
-        $this->flash['message'] = MessageBox::success(_('Die Zuordnung zur Nutzerdomäne wurde erfolgreich gelöscht.'));
+        PageLayout::postMessage(MessageBox::success(_('Die Zuordnung zur Nutzerdomäne wurde erfolgreich gelöscht.')));
         $this->redirect('admin/user/edit/' . $user_id);
     }
 }

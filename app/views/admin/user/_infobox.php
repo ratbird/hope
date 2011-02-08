@@ -1,5 +1,4 @@
 <?
-
 $aktionen[] = array(
     "text" => '<a href="'.$controller->url_for('admin/user').'">'._('Benutzer verwalten').'</a>',
     "icon" => "icons/16/black/persons.png"

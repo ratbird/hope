@@ -1,8 +1,4 @@
-<?= ($flash['message']) ? $flash['message'] : '' ?>
-
-<h2>
-    <?= _('Benutzermigration') ?>
-</h2>
+<h2><?= _('Benutzermigration') ?></h2>
 
 <form action="<?= $controller->url_for('admin/user/migrate') ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>

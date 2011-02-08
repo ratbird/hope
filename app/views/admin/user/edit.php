@@ -1,5 +1,3 @@
-<?= ($flash['message']) ? $flash['message'] : '' ?>
-
 <? if ($flash['delete']) : ?>
 <?= $this->render_partial("admin/user/_delete", array('data' => $flash['delete'])) ?>
 <? endif ?>

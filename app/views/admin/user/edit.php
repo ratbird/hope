@@ -301,6 +301,7 @@
 </tbody>
 <? endif ?>
 
+<? if ($user['perms'] != 'root') : ?>
 <tbody>
     <tr class="steel header-row">
         <td colspan="3" class="toggle-indicator">
@@ -338,6 +339,7 @@
     <? endforeach ?>
     <? endif ?>
 </tbody>
+<? endif ?>
 
 <? if (count($userdomains) > 0 || $user['perms'] != 'root') : ?>
 <tbody>

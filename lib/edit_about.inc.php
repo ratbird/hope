@@ -687,7 +687,8 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
 
     function select_userdomain() {  //Hilfsfunktion, erzeugt eine Auswahlbox mit noch auswählbaren Nutzerdomänen
 
-        echo '<select name="new_userdomain"><option selected="selected"> -- Bitte Nutzerdomäne auswählen --</option>'."\n";
+        echo '<select name="new_userdomain">'."\n";
+        echo '<option selected="selected" value="none">' . _('-- Bitte Nutzerdomäne auswählen --') . '</option>'."\n";
         $user_domains = UserDomain::getUserDomainsForUser($this->auth_user['user_id']);
         $domains = UserDomain::getUserDomains();
 

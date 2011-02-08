@@ -337,18 +337,18 @@ class Admin_UserController extends AuthenticatedController
             }
 
             //change institute
-            if (Request::get('new_inst') != 'none' && Request::get('new_student_inst') != Request::get('new_inst')) {
+            if (Request::get('new_inst') != 'none' && Request::get('new_student_inst') != Request::get('new_inst') && $editPerms[0] != 'root') {
                 log_event('INST_USER_ADD', Request::get('new_inst'), $user_id, $editPerms[0]);
                 $db = DbManager::get()->prepare("INSERT IGNORE INTO user_inst (user_id, Institut_id, inst_perms) "
                                                ."VALUES (?,?,?)");
                 $db->execute(array($user_id, Request::get('new_inst'), $editPerms[0]));
                 $details[] = _('Die Einrichtung wurde hinzugefügt.');
-            } elseif (Request::get('new_inst') != 'none' && Request::get('new_student_inst') == Request::get('new_inst')) {
+            } elseif (Request::get('new_inst') != 'none' && Request::get('new_student_inst') == Request::get('new_inst') && $editPerms[0] != 'root') {
                 $details[] = _('<b>Die Einrichtung wurde nicht hinzugefügt.</b> Sie können keinen Benutzer gleichzeitig als Student und Mitarbeiter einer Einrichtung hinzufügen.');
             }
 
             //change userdomain
-            if (Request::get('new_userdomain') != '-- Bitte Nutzerdomäne auswählen --') {
+            if (Request::get('new_userdomain') != 'none' && $editPerms[0] != 'root') {
                 $domain = new UserDomain(Request::get('new_userdomain'));
                 $domain->addUser($user_id);
                 $details[] = _('Die Nutzerdomäne wurde hinzugefügt.');

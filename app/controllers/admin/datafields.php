@@ -93,6 +93,7 @@ class Admin_DatafieldsController extends AuthenticatedController
      */
     public function edit_action($datafield_id)
     {
+        $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
         if (Request::submitted('uebernehmen')) {
             $struct = new DataFieldStructure(compact('datafield_id'));
             $struct->load();
@@ -153,7 +154,7 @@ class Admin_DatafieldsController extends AuthenticatedController
                 $struct->store();
 
                 $this->flash['success'] = sprintf(_('Das neue generische Datenfeld wurde angelegt.'));
-                $this->redirect('admin/datafields/datafields/'.$struct->getObjectType().'#item_'.$struct->getID());
+                $this->redirect('admin/datafields/'.$struct->getObjectType().'#item_'.$struct->getID());
             } else {
                 $this->flash['error'] = _('Es wurde keine Bezeichnung eingetragen!');
             }
@@ -189,6 +190,6 @@ class Admin_DatafieldsController extends AuthenticatedController
             $this->flash['delete'] = compact('datafield_id', 'name');
         }
 
-        $this->redirect('admin/datafields/index/'.$type.'#'.$type);
+        $this->redirect('admin/datafields/'.$type.'#'.$type);
     }
 }

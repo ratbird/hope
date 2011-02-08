@@ -539,7 +539,9 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
     }
 
     // TeilnehmerInnen
-    $db2->query(get_obj_clause('seminar_user a','seminar_id','a.user_id',"(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", 'sem', false, false, false, NULL, 'mkdate'));
+    $db2->query(get_obj_clause('seminar_user a {ON_CLAUSE} LEFT JOIN admission_seminar_user as asu USING (seminar_id)', 'seminar_id','a.user_id',
+        "(a.mkdate > IFNULL(b.visitdate, 0) OR asu.mkdate > IFNULL(b.visitdate, 0)) AND a.user_id !='$user_id' AND asu.user_id != '$user_id'",
+        'sem', false, false, false, NULL, 'IF (a.mkdate > asu.mkdate, a.mkdate, asu.mkdate)'));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
         if ($my_obj[$object_id]["modules"]["participants"]) {

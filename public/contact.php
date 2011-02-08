@@ -44,6 +44,8 @@ $cssSw = new cssClassSwitcher;                                  // Klasse für Ze
 $cssSw->enableHover();
 PageLayout::setTitle(_("Mein Adressbuch"));
 Navigation::activateItem('/community/contacts/' . Request::get('view'));
+// add skip links
+SkipLinks::addIndex(Navigation::getItem('/community/contacts/' . Request::get('view'))->getTitle(), 'main_content', 100);
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head

@@ -295,6 +295,7 @@ if (check_ticket($studipticket)) {
         $my_studip_settings["startpage_redirect"] = $personal_startpage;
         UserConfig::get($user->id)->store('ACCESSKEY_ENABLE', (int)$_REQUEST['accesskey_enable']);
         UserConfig::get($user->id)->store('SHOWSEM_ENABLE', (int)$_REQUEST['showsem_enable']);
+        UserConfig::get($user->id)->store('SKIPLINKS_ENABLE', (int)$_REQUEST['skiplinks_enable']);
     }
 
     if (Request::submitted('change_global_visibility')) {
@@ -463,6 +464,7 @@ switch($view) {
         PageLayout::setHelpKeyword("Basis.HomepageUniversitäreDaten");
         PageLayout::setTitle(_("Einrichtungsdaten bearbeiten"));
         Navigation::activateItem('/profile/edit/inst_data');
+        SkipLinks::addIndex(_("Einrichtungsdaten bearbeiten"), 'main_content', 100);
         break;
     case 'Studium':
         PageLayout::setHelpKeyword("Basis.HomepageUniversitäreDaten");
@@ -486,24 +488,28 @@ switch($view) {
         PageLayout::setHelpKeyword("Basis.HomepageSonstiges");
         PageLayout::setTitle(_("Eigene Kategorien bearbeiten"));
         Navigation::activateItem('/profile/sections');
+        SkipLinks::addIndex(_("Eigene Kategorien bearbeiten"), 'main_content', 100);
         break;
     case "Login":
         PageLayout::setHelpKeyword("Basis.MyStudIPAutoLogin");
         PageLayout::setTitle(_("Auto-Login einrichten"));
         Navigation::activateItem('/links/settings/login');
         PageLayout::setTabNavigation('/links/settings');
+        SkipLinks::addIndex(_("Auto-Login einrichten"), 'main_content', 100);
         break;
     case "Forum":
         PageLayout::setHelpKeyword("Basis.MyStudIPForum");
         PageLayout::setTitle(_("Einstellungen des Forums anpassen"));
         Navigation::activateItem('/links/settings/forum');
         PageLayout::setTabNavigation('/links/settings');
+        SkipLinks::addIndex(_("Einstellungen des Forums anpassen"), 'main_content', 100);
         break;
     case "calendar":
         PageLayout::setHelpKeyword("Basis.MyStudIPTerminkalender");
         PageLayout::setTitle(_("Einstellungen des Terminkalenders anpassen"));
         Navigation::activateItem('/links/settings/calendar');
         PageLayout::setTabNavigation('/links/settings');
+        SkipLinks::addIndex(_("Einstellungen des Terminkalenders anpassen"), 'main_content', 100);
         break;
     case "Tools":
         PageLayout::setHelpKeyword("Basis.HomepageTools");
@@ -514,26 +520,31 @@ switch($view) {
         PageLayout::setTitle(_("Einstellungen des Nachrichtensystems anpassen"));
         Navigation::activateItem('/links/settings/messaging');
         PageLayout::setTabNavigation('/links/settings');
+        SkipLinks::addIndex(_("Einstellungen des Nachrichtensystems anpassen"), 'main_content', 100);
         break;
     case "rss":
         PageLayout::setHelpKeyword("Basis.MyStudIPRSS");
         PageLayout::setTitle(_("Einstellungen der RSS-Anzeige anpassen"));
         Navigation::activateItem('/links/settings/rss');
         PageLayout::setTabNavigation('/links/settings');
+        SkipLinks::addIndex(_("Einstellungen der RSS-Anzeige anpassen"), 'main_content', 100);
         break;
     case "allgemein":
         PageLayout::setTitle(_("Allgemeine Einstellungen anpassen"));
         Navigation::activateItem('/links/settings/general');
         PageLayout::setTabNavigation('/links/settings');
+        SkipLinks::addIndex(_("Allgemeine Einstellungen anpassen"), 'main_content', 100);
         break;
     case "privacy":
         PageLayout::setHelpKeyword("Basis.MyStudIPPrivacy");
         PageLayout::setTitle(_("Privatsphäre"));
         if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE') && $my_about->auth_user["user_id"] != $user->id) {
             Navigation::activateItem('/profile/privacy');
+            SkipLinks::addIndex(Navigation::getItem('/profile/privacy')->getTitle(), 'main_content', 100);
         } else {
             Navigation::activateItem('/links/settings/privacy');
             PageLayout::setTabNavigation('/links/settings');
+            SkipLinks::addIndex(Navigation::getItem('/links/settings/privacy')->getTitle(), 'main_content', 100);
         }
         break;
     case "deputies":
@@ -541,6 +552,7 @@ switch($view) {
         PageLayout::setTitle(_("Standardvertretung"));
         Navigation::activateItem('/links/settings/deputies');
         PageLayout::setTabNavigation('/links/settings');
+        SkipLinks::addIndex(Navigation::getItem('/links/settings/deputies')->getTitle(), 'main_content', 100);
         break;
     default:
         PageLayout::setHelpKeyword("Basis.MyStudIP");
@@ -758,14 +770,16 @@ if ($my_about->msg) {
 if ($view == 'Bild') {
     // hier wird das Bild ausgegeben
     $cssSw->switchClass();
+    SkipLinks::addIndex(_("Eigenes Bild hochladen"), 'upload_picture');
     echo '<tr><td colspan=2 class="blank" style="padding-left:20px;">' . _("Auf dieser Seite können Sie ein Profilbild hochladen.") . "<br><br><br></td></tr>\n";
     echo '<tr><td width="30%" class="'.$cssSw->getClass().'" align="center">';
     echo '<font size="-1"><b>' . _("Aktuell angezeigtes Bild:") . '<br><br></b></font>';
 
     echo Avatar::getAvatar($my_about->auth_user['user_id'])->getImageTag(Avatar::NORMAL);
     if (Avatar::getAvatar($my_about->auth_user['user_id'])->is_customized()) {
+        SkipLinks::addIndex(_("Eigenes Bild löschen"), 'delete_picture');
         ?>
-        <form name="bild_loeschen" method="POST" action="<?= $GLOBALS['PHP_SELF'] ?>?studipticket=<?= get_ticket() ?>">
+        <form id="delete_picture" name="bild_loeschen" method="POST" action="<?= $GLOBALS['PHP_SELF'] ?>?studipticket=<?= get_ticket() ?>">
             <?= CSRFProtection::tokenTag() ?>
             <input type="hidden" name="user_id" value="<?= $my_about->auth_user["user_id"] ?>">
             <input type="hidden" name="username" value="<?= $username ?>">
@@ -777,7 +791,7 @@ if ($view == 'Bild') {
     }
 
     echo '</td><td class="'.$cssSw->getClass().'" width="70%" align="left" valign="top">';
-    echo '<form enctype="multipart/form-data" action="' . $_SERVER['PHP_SELF'] . '?cmd=copy&username=' . $username . '&view=Bild&studipticket='.get_ticket().'" method="POST">';
+    echo '<form id="upload_picture" enctype="multipart/form-data" action="' . $_SERVER['PHP_SELF'] . '?cmd=copy&username=' . $username . '&view=Bild&studipticket='.get_ticket().'" method="POST">';
     echo CSRFProtection::tokenTag();
     echo "<br>\n" . _("Hochladen eines Bildes:") . "<br><br>\n" . _("1. Wählen Sie mit <b>Durchsuchen</b> eine Bilddatei von Ihrer Festplatte aus.") . "<br><br>\n";
     echo '&nbsp;&nbsp;<input name="imgfile" type="file" style="width: 80%" cols="'.round($max_col*0.7*0.8)."\"><br><br>\n";
@@ -790,6 +804,7 @@ if ($view == 'Bild') {
 
 if ($view == 'Daten') {
     $cssSw->switchClass();
+    SkipLinks::addIndex(_("Benutzerkonto bearbeiten"), 'edit_userdata');
     //persönliche Daten...
     if ($my_about->auth_user['auth_plugin'] != "standard"){
         echo '<tr><td align="left" valign="top" class="blank" style="padding-left:20px;">';
@@ -798,7 +813,7 @@ if ($view == 'Daten') {
     }
     echo '<tr><td class=blank>';
 
-    echo '<form action="'. $PHP_SELF. '?cmd=edit_pers&username='. $username. '&view='. $view. '&studipticket=' . get_ticket(). '" method="POST" name="pers"';
+    echo '<form id="edit_userdata" action="'. $PHP_SELF. '?cmd=edit_pers&username='. $username. '&view='. $view. '&studipticket=' . get_ticket(). '" method="POST" name="pers"';
     //Keine JavaScript überprüfung bei adminzugriff
     if ($my_about->check == 'user' && $auth->auth['jscript'] ) {
         echo ' onsubmit="return checkdata()" ';
@@ -950,10 +965,10 @@ if ($view == 'Studium') {
     if (($my_about->auth_user['perms'] == 'autor' || $my_about->auth_user['perms'] == 'tutor' || $my_about->auth_user['perms'] == 'dozent')) {
         // nur für Autoren und Tutoren und Dozenten
         $allow_change_sg = (!StudipAuthAbstract::CheckField("studiengang_id", $my_about->auth_user['auth_plugin']) && ($GLOBALS['ALLOW_SELFASSIGN_STUDYCOURSE'] || $perm->have_perm('admin')))? TRUE : FALSE;
-
+        SkipLinks::addIndex(_("Fächer und Abschlüsse auswählen"), 'select_fach_abschluss');
         $cssSw->resetClass();
         $cssSw->switchClass();
-        echo '<tr><td class="blank">';
+        echo '<tr><td class="blank" id="select_fach_abschluss">';
         echo '<h3>' . _("Ich studiere folgende Fächer und Abschlüsse:") . '</h3>';
         if ($allow_change_sg){
             echo '<form action="'. $_SERVER['PHP_SELF']. '?cmd=fach_abschluss_edit&username=' . $username . '&view=' . $view . '&studipticket=' . get_ticket() . '#studiengaenge" method="POST">';
@@ -1036,9 +1051,10 @@ if ($view == 'Studium') {
     //Institute, an denen studiert wird
     if (($my_about->auth_user["perms"]=="autor" || $my_about->auth_user["perms"]=="tutor" || $my_about->auth_user["perms"]=="dozent")) {
         $allow_change_in = ($GLOBALS['ALLOW_SELFASSIGN_INSTITUTE'] || $perm->have_perm('admin'))? TRUE:FALSE;
+        SkipLinks::addIndex(_("Zu Einrichtungen zuordnen"), 'select_institute');
         $cssSw->resetClass();
         $cssSw->switchClass();
-        echo '<tr><td class="blank">';
+        echo '<tr><td class="blank" id="select_institute">';
         echo "<h3>" . _("Ich studiere an folgenden Einrichtungen:") . "</h3>";
         if ($allow_change_in) {
             echo '<form action="' . $_SERVER['PHP_SELF'] . '?cmd=inst_edit&username='.$username.'&view='.$view.'&studipticket=' . get_ticket() . '#einrichtungen" method="POST">'. "\n";
@@ -1103,10 +1119,10 @@ if ($view == 'userdomains') {
 
     // Nutzerdomänen, die mir zugeordnet sind
     $allow_change_ud = !StudipAuthAbstract::CheckField("userdomain_id", $my_about->auth_user['auth_plugin']) && $perm->have_perm('admin');
-
+    SkipLinks::addIndex(_("Zugeordnete Nutzerdomänen"), 'assigned_userdomains');
     $cssSw->resetClass();
     $cssSw->switchClass();
-    echo '<tr><td class="blank" valign="top">';
+    echo '<tr><td class="blank" valign="top" id="assigned_userdomains">';
     echo '<b>&nbsp; ' . _("Ich bin folgenden Nutzerdomänen zugeordnet:") . '</b>';
     if ($allow_change_ud){
         echo '<form action="'.URLHelper::getLink('?cmd=userdomain_edit&username='.$username.'&view='.$view.'&studipticket='.get_ticket().'#userdomains').'" method="POST">';
@@ -1142,8 +1158,9 @@ if ($view == 'userdomains') {
     $cssSw->switchClass();
     echo '</table></td><td class="'.$cssSw->getClass().'" width="70%" align="left" valign="top"><br>';
     if($allow_change_ud){
+        SkipLinks::addIndex(_("Nutzerdomäne auswählen"), 'select_userdomains');
         echo _("Wählen Sie eine Nutzerdomäne aus der folgenden Liste aus:") . "<br>\n";
-        echo '<br><div align="center"><a name="userdomains">&nbsp;</a>';
+        echo '<br><div align="center" id="select_userdomains"><a name="userdomains">&nbsp;</a>';
         $my_about->select_userdomain();
         echo '</div><br></b>' . _("Wenn Sie Nutzerdomänen wieder entfernen möchten, markieren Sie die entsprechenden Felder in der linken Tabelle.") . "<br>\n";
         echo _("Mit einem Klick auf <b>&Uuml;bernehmen</b> werden die gewählten Änderungen durchgeführt.") . "<br><br>\n";
@@ -1249,9 +1266,9 @@ if ($view == 'Karriere') {
 
 if ($view == 'Lebenslauf') {
     $cssSw->switchClass();
-
+    SkipLinks::addIndex(_("Private Daten bearbeiten"), 'edit_private');
     echo "<tr><td class=blank>";
-    echo '<form action="' . $_SERVER['PHP_SELF'] . '?cmd=edit_leben&username=' . $username . '&view=' . $view . '&studipticket=' . get_ticket() . '" method="POST" name="pers">';
+    echo '<form id="edit_private" action="' . $_SERVER['PHP_SELF'] . '?cmd=edit_leben&username=' . $username . '&view=' . $view . '&studipticket=' . get_ticket() . '" method="POST" name="pers">';
     echo CSRFProtection::tokenTag();
     echo '<table align="center" width="99%" align="center" border="0" cellpadding="2" cellspacing="0">' . "\n";
 
@@ -1417,7 +1434,7 @@ if ($view == 'notification') {
 }
 
 if ($view == 'Login') {
-    echo '<tr><td colspan="2" class="blank">'."<br><br>\n" ;
+    echo '<tr><td id="main_content" colspan="2" class="blank">'."<br><br>\n" ;
     if ($my_about->check == 'user' && !$perm->have_perm('admin')) {
         echo _("Um die automatische Anmeldung zu nutzen, m&uuml;ssen Sie Ihre pers&ouml;nliche Login-Datei auf Ihren Rechner kopieren. Mit dem folgenden Link &ouml;ffnet sich ein Fenster, indem Sie Ihr Passwort eingeben m&uuml;ssen.") . " ";
         echo _("Dann wird die Datei erstellt und zu Ihrem Rechner geschickt.") . "<br><br>\n";

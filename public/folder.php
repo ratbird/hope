@@ -129,6 +129,9 @@ object_set_visit_module('documents');
 
 mark_public_course();
 
+    // add skip links
+    SkipLinks::addIndex(Navigation::getItem('/course/files/all')->getTitle(), 'main_content', 100);
+    SkipLinks::addIndex(Navigation::getItem('/course/files/tree')->getTitle(), 'main_content', 100);
 $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
 
 $question = $msg = '';
@@ -661,7 +664,7 @@ JS_for_upload();
 //we need this <body> tag, sad but true :)
 echo "\n<body onUnLoad=\"upload_end()\">";
 ?>
-<table cellspacing="0" cellpadding="0" border="0" width="100%">
+<table cellspacing="0" cellpadding="0" border="0" width="100%" id="main_content">
 
 <?
 if ($msg) {

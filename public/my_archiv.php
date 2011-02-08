@@ -74,6 +74,9 @@ if (isset($_SESSION['archive_message'])) {
     unset($_SESSION['archive_message']);
 }
 
+// add skip link
+SkipLinks::addIndex(_("Hauptinhalt"), 'main_content', 100);
+
 echo "\n" . $cssSw->GetHoverJSFunction() . "\n";
 
 $sortby = Request::option('sortby', 'name');
@@ -94,7 +97,7 @@ if (!$num_my_sem)
 
 if ($num_my_sem) {
     ?>
-            <table cellpadding="1" cellspacing="0" width="98%">
+            <table cellpadding="1" cellspacing="0" width="98%" id="main_content">
                 <? if ($meldung) : ?>
                     <? parse_msg($meldung) ?>
                 <? endif ?>
@@ -150,7 +153,7 @@ if ($num_my_sem) {
 } else {  // es sind keine Veranstaltungen abboniert
 
  ?>
-        <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center" class="blank">
+        <table border="0" cellpadding="0" cellspacing="0" width="100%" align="center" class="blank" id="main_content">
     <?
     if ($meldung)   {
         parse_msg($meldung);

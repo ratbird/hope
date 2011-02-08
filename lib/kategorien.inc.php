@@ -29,13 +29,14 @@ function print_freie($username) {
 
     global $view,$PHP_SELF,$auth, $user;
     $db=new DB_Seminar;
+    SkipLinks::addIndex(_("Eigene Kategorien bearbeiten"), 'edit_categories');
     $cssSw=new cssClassSwitcher;
 
     $cssSw->switchClass();
 
     $db->query("SELECT * FROM auth_user_md5 LEFT JOIN kategorien ON(range_id=user_id) WHERE username='$username' AND NOT ISNULL(range_id) ORDER BY priority ");
 
-    echo '<tr><td align="left" valign="top" class="blank"><p class="info"><br>'. "\n";
+    echo '<tr><td align="left" valign="top" class="blank" id="edit_categories"><p class="info"><br>'. "\n";
     echo _("Hier können Sie beliebige eigene Kategorien anlegen. Diese Kategorien erscheinen je nach eingestellter Sichtbarkeit auf Ihrer Profilseite. Mit den Pfeilsymbolen k&ouml;nnen Sie die Reihenfolge, in der die Kategorien angezeigt werden, ver&auml;ndern.");
     echo "<br>\n";
     echo sprintf(_("Für wen Ihre angelegten Kategorien genau sichtbar sein sollen, können Sie in Ihren %sPrivatsphäre-Einstellungen%s festlegen."), '<a href="'.URLHelper::getUrl('edit_about.php', array('view'=>'privacy')).'">', '</a>');
@@ -57,8 +58,9 @@ function print_freie($username) {
             $cssSw->switchClass();
             $id = $db->f("kategorie_id");
             echo '<tr><td class="'.$cssSw->getClass().'">';
-            if ($count)
+            if ($count) {
                 echo "<br>\n";
+            }
             echo '<input type="hidden" name="freie_id[]" value="'.$db->f("kategorie_id")."\">\n";
             echo '<p class="info"><input type="text" name="freie_name[]" style="width: 50%" value="' . htmlReady($db->f("name")).'" size="40">';
             switch ($visibility) {
@@ -81,12 +83,12 @@ function print_freie($username) {
             echo "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;".$vis_text."&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
             if ($count){
                 echo "\n".'<a href="'.URLHelper::getLink('?freie=order_freie&direction=up&username='.$username.'&view='.$view.'&cat_id=' . $db->f('kategorie_id'))
-                . '">' . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('Kategorie nach oben verschieben'))) 
+                . '">' . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('Kategorie nach oben verschieben')))
                 . '</a>';
             }
             if (($count+$hidden_count) != ($db->num_rows()-1) ){
                 echo "\n".'<a href="'.URLHelper::getLink('?freie=order_freie&direction=down&username='.$username.'&view='.$view.'&cat_id=' . $db->f("kategorie_id"))
-                . '">' . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' =>_('Kategorie nach unten verschieben'))) 
+                . '">' . Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' =>_('Kategorie nach unten verschieben')))
                 . '</a>';
             }
             echo "<br>\n&nbsp;</p></td></tr>\n";

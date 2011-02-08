@@ -219,9 +219,13 @@ class SemBrowse {
 
     function print_qs(){
         global $PHP_SELF;
+        // add skip link
+        SkipLinks::addIndex(_("Suchformular"), 'search_sem_qs', 100);
+        // add a skip link for advanced search here
+     //   SkipLinks::addLink(_("Erweiterte Suche"), URLHelper::getLink('sem_portal.php', array('cmd' => 'xts', 'level' => 'f')), 120);
         //Quicksort Formular... fuer die eiligen oder die DAUs....
         echo $this->search_obj->getFormStart(UrlHelper::getLink());
-        echo "<table border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
+        echo "<table id=\"search_sem_qs\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
         echo "<tr><td class=\"steel1\" align=\"center\" valign=\"middle\"><font size=\"-1\">";
         echo _("Schnellsuche:") . "&nbsp;";
         echo $this->search_obj->getSearchField("qs_choose",array('style' => 'vertical-align:middle;font-size:9pt;'));
@@ -261,9 +265,13 @@ class SemBrowse {
 
     function print_xts(){
         global $PHP_SELF;
+        // add skip link
+        SkipLinks::addIndex(_("Suchformular"), 'search_sem_xts', 100);
+        // add skip link for simple search here
+        SkipLinks::addLink(_("Schnellsuche"), URLHelper::getURL('sem_portal.php', array('cmd' => 'qs', 'level' => 'f')), 120);
         $this->search_obj->attributes_default = array('style' => 'width:100%;font-size:10pt;');
         $this->search_obj->search_fields['type']['size'] = 40 ;
-        echo "<table border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
+        echo "<table id=\"search_sem_xts\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
         echo $this->search_obj->getFormStart("$PHP_SELF?send=yes");
         echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\">" . _("Titel:") . " </td>";
         echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
@@ -323,7 +331,10 @@ class SemBrowse {
     function print_level(){
         ob_start();
         global $PHP_SELF;
-        echo "\n<table border=\"0\" align=\"center\" cellspacing=0 cellpadding=0 width = \"99%\">\n";
+
+        SkipLinks::addIndex(_("Gefundene Bereiche"), 'sem_search_level', 110);
+
+        echo "\n<table id=\"sem_search_level\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=0 width = \"99%\">\n";
         if ($this->sem_browse_data['level'] == "f"){
 
             echo "\n<tr><td align=\"center\" class=\"steelgraulight\" height=\"40\" valign=\"middle\"><div style=\"margin-top:10px;margin-bottom:10px;\"><font size=\"-1\">";
@@ -335,8 +346,10 @@ class SemBrowse {
             } else {
                 printf ("<table align=\"center\" cellspacing=\"10\"><tr><td nowrap align=\"center\"><a href=\"%s?level=ev&cmd=qs&sset=0\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/institute.jpg\" %s border=\"0\"></a></td>", $PHP_SELF, _("Suche in Einrichtungen"), tooltip(_("Suche im Einrichtungsverzeichnis")));
                 if ($this->show_class()){
+                    SkipLinks::addLink(_("Suche im Vorlesungsverzeichnis"), URLHelper::getLink('sem_portal.php', array('level' => 'vv', 'cmd' => 'qs', 'sset' => '0')));
                     printf ("<td nowrap align=\"center\"><a href=\"%s?level=vv&cmd=qs&sset=0\"><b>%s</b><br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/kommentar.jpg\" %s border=\"0\"></a></td>", $PHP_SELF, _("Suche im Vorlesungsverzeichnis"), tooltip(_("Suche im Vorlesungsverzeichnis")));
                 }
+                SkipLinks::addLink(_("Suche im Einrichtungsverzeichnis"), URLHelper::getLink('sem_portal.php', array('level' => 'ev', 'cmd' => 'qs', 'sset' => '0')));
                 printf ("</tr></table>");
             }
             echo "</font></div>";
@@ -367,8 +380,11 @@ class SemBrowse {
                                                               !(is_object($GLOBALS['perm']) && $GLOBALS['perm']->have_perm(get_config('SEM_VISIBILITY_PERM'))));
             }
             $the_tree = $this->sem_tree->tree;
+
+            SkipLinks::addIndex(_("Suchergebnis"), 'sem_search_result', 90);
+
             list($group_by_data, $sem_data) = $this->get_result();
-            echo "\n<table border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
+            echo "\n<table id=\"sem_search_result\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
             echo "\n<tr><td class=\"steelgraulight\" colspan=\"4\"><div style=\"margin-top:10px;margin-bottom:10px;\"><font size=\"-1\"><b>&nbsp;"
                 . sprintf(_(" %s Veranstaltungen gefunden %s, Gruppierung: %s"),count($sem_data),
                 (($this->sem_browse_data['sset']) ? _("(Suchergebnis)") : ""),
@@ -406,9 +422,9 @@ class SemBrowse {
                 ob_end_flush();
                 ob_start();
                 if (is_array($sem_ids['Seminar_id'])){
-                    if ($this->sem_browse_data["default_sem"] != 'all') {
-                        $current_semester_id = SemesterData::GetSemesterIdByIndex($this->sem_browse_data["default_sem"]);
-                    }
+	                if ($this->sem_browse_data["default_sem"] != 'all') {
+	                    $current_semester_id = SemesterData::GetSemesterIdByIndex($this->sem_browse_data["default_sem"]);
+	                }
                     while(list($seminar_id,) = each($sem_ids['Seminar_id'])){
                         // create instance of seminar-object
                         $seminar_obj = new Seminar($seminar_id);

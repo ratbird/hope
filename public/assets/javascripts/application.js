@@ -1059,8 +1059,8 @@ jQuery(function () {
     handles: 's',
     minHeight: 50
   });
-  
-  
+
+
 });
 
 
@@ -1471,6 +1471,142 @@ jQuery(function ($) {
     yearSuffix: ''
   };
   $.datepicker.setDefaults($.datepicker.regional.de);
+});
+
+STUDIP.SkipLinks = {
+  cssclass: "skiplink_highlight",
+  box: null,
+  activeElement : null,
+  navigationIn : false,
+  focused : false,
+
+  /**
+   * Displays the skip link navigation after first hitting the tab-key
+   * @param event: event-object of type keyup
+   */
+  showSkipLinkNavigation: function (event) {
+    if (event.keyCode === 9) { //tab-key
+      STUDIP.SkipLinks.moveSkipLinkNavigationIn();
+      jQuery('.focus_box').removeClass('focus_box');
+    }
+    return false;
+  },
+
+  /**
+   * shows the skiplink-navigation window by moving it from the left
+   */
+  moveSkipLinkNavigationIn: function () {
+    if (!STUDIP.SkipLinks.navigationIn) {
+      var VpWidth = jQuery(window).width();
+      jQuery('#skip_link_navigation li:first a').focus();
+      jQuery('#skip_link_navigation').show().css({left: VpWidth / 2, opacity: 0});
+      jQuery('#skip_link_navigation').animate({opacity: 1.0}, 500);
+      STUDIP.SkipLinks.navigationIn = true;
+    }
+  },
+
+  /**
+   * removes the skiplink-navigation window by moving it out of viewport
+   */
+  moveSkipLinkNavigationOut: function () {
+    if (STUDIP.SkipLinks.navigationIn) {
+      jQuery(STUDIP.SkipLinks.box).hide();
+      jQuery('#skip_link_navigation').animate({opacity: 0}, 500).css('left', '-600');
+    }
+  },
+
+  getFragment: function () {
+	  var fragmentStart = document.location.hash.indexOf('#');
+	  if (fragmentStart < 0) {
+		  return '';
+	  }
+	  STUDIP.SkipLinks.focused = true;
+	  return document.location.hash.substring(fragmentStart);
+  },
+
+  /**
+   * Inserts the list with skip links
+   */
+  insertSkipLinks: function () {
+    jQuery('#skip_link_navigation').prepend(jQuery('#skiplink_list'));
+    jQuery('#skip_link_navigation').attr('aria-busy', 'false');
+    jQuery('#skip_link_navigation').attr('tabindex', '-1');
+    STUDIP.SkipLinks.insertHeadLines();
+    return false;
+  },
+
+  /**
+   * sets the area (of the id) as the current area for tab-navigation
+   * and highlights it
+   */
+  setActiveTarget: function (id) {
+    var fragment = null;
+
+    if (id) {
+      fragment = id;
+    } else {
+      fragment = STUDIP.SkipLinks.getFragment();
+    }
+    if (jQuery('*').is(fragment) && fragment.length > 0 && fragment != STUDIP.SkipLinks.activeElement) {
+      STUDIP.SkipLinks.moveSkipLinkNavigationOut();
+      STUDIP.SkipLinks.navigationIn = true;
+      STUDIP.SkipLinks.highlightBox(fragment, false);
+      jQuery(fragment).attr('tabindex', '-1').click().focus();
+      STUDIP.SkipLinks.activeElement = fragment;
+      return true;
+    } else {
+      jQuery('#skip_link_navigation li a').first().focus();
+    }
+    return false;
+  },
+
+  highlightBox: function (id, marker) {
+    jQuery('.focus_box').removeClass('focus_box');
+    jQuery(id).addClass('focus_box');
+  },
+
+  injectAriaRoles: function () {
+    jQuery('#main_content').attr({
+      role: 'main',
+      'aria-labelledby': 'main_content_landmark_label'
+    });
+    jQuery('#layout_content').attr({
+      role: 'main',
+      'aria-labelledby': 'layout_content_landmark_label'
+    });
+    jQuery('#layout_infobox').attr({
+      role: 'complementary',
+      'aria-labelledby': 'layout_infobox_landmark_label'
+    });
+  },
+
+  insertHeadLines: function () {
+    var target = null;
+    jQuery('#skip_link_navigation a').each(function () {
+      target = jQuery(this).attr('href');
+      if (jQuery(target).is('li,td')) {
+        jQuery(jQuery(this).attr('href'))
+          .prepend('<h2 id="' + jQuery(target).attr('id') + '_landmark_label" class="skip_target">' + jQuery(this).text() + '</h2>');
+      } else {
+        jQuery(jQuery(this).attr('href'))
+          .before('<h2 id="' + jQuery(target).attr('id') + '_landmark_label" class="skip_target">' + jQuery(this).text() + '</h2>');
+      }
+    });
+  },
+
+  initialize: function () {
+    STUDIP.SkipLinks.insertSkipLinks();
+    STUDIP.SkipLinks.injectAriaRoles();
+  }
+
+};
+
+jQuery(window.document).bind('keyup', STUDIP.SkipLinks.showSkipLinkNavigation);
+jQuery(window.document).bind('ready', STUDIP.SkipLinks.initialize);
+jQuery(window.document).bind('click', function (event) {
+  if (!jQuery(event.target).is('#skip_link_navigation a')) {
+    STUDIP.SkipLinks.moveSkipLinkNavigationOut();
+  }
 });
 
 /* ------------------------------------------------------------------------

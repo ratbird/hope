@@ -854,12 +854,15 @@ if ($sms_msg) {
 
 echo "<tr><td class=\"blank\">";
 echo "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"5\"></td></tr>\n";
-echo "<tr><td class=\"blank\">\n";
+echo "<tr><td class=\"blank\" id=\"list_institute_members\">\n";
 
 if ($perm->have_perm("admin")) {
     echo '<form action="'.URLHelper::getLink().'" method="post">', "\n";
     echo CSRFProtection::tokenTag();
 }
+
+// add skip links
+SkipLinks::addIndex(_("Mitarbeiterliste"), 'list_institute_members');
 
 echo "<table border=\"0\" width=\"99%\" cellpadding=\"4\" cellspacing=\"0\" align=\"center\">\n";
 echo "<tr>\n";

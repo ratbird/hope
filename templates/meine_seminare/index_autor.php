@@ -12,10 +12,11 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                     <? if (isset($meldung)) { parse_msg($meldung); } ?>
                 </table>
     <? } else { ?>
+        <? SkipLinks::addIndex(_("Meine Veranstaltungen"), 'my_seminars') ?>
         <tr valign="top">
             <td valign="top" class="blank" align="center">
                 <br>
-                <table border="0" cellpadding="1" cellspacing="0" width="98%" valign="top">
+                <table border="0" cellpadding="1" cellspacing="0" width="98%" valign="top" id="my_seminars">
 
                     <? if (isset($meldung)) { parse_msg($meldung, "§", "blank", 5); }?>
 
@@ -36,8 +37,8 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
 
 
             <? if (sizeof($waitlists)) { ?>
-
-                <table border="0" cellpadding="2" cellspacing="0" width="98%" align="center" class="blank">
+                <? SkipLinks::addIndex(_("Wartelisten"), 'my_waitlists') ?>
+                <table border="0" cellpadding="2" cellspacing="0" width="98%" align="center" class="blank" id="my_waitlists">
                     <tr>
                         <th width="67%" align="left" colspan="3"><?= _("Anmelde- und Wartelisteneintr&auml;ge") ?></th>
                         <th width="10%"><b><?= _("Datum") ?></b></th>
@@ -135,8 +136,8 @@ global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
                 </table>
 
             <? } else { ?>
-
-                <table border="0" cellpadding="1" cellspacing="0" width="98%" align="center" class="blank">
+                <? SkipLinks::addIndex(_("Meine Einrichtungen"), 'my_institutes')?>
+                <table border="0" cellpadding="1" cellspacing="0" width="98%" align="center" class="blank" id="my_institutes">
                     <tr valign="top" align="center">
                         <th width="1%">&nbsp; </th>
                         <th width="86%" align="left"><?= _("Meine Einrichtungen") ?></th>

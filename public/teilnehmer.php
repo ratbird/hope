@@ -97,6 +97,8 @@ if ($rechte) {
 }
 PageLayout::setTitle($SessSemName["header_line"]. " - " . _("TeilnehmerInnen"));
 Navigation::activateItem('/course/members/view');
+// add skip link
+SkipLinks::addIndex(Navigation::getItem('/course/members/view')->getTitle(), 'main_content', 100);
 
 //Subject for sms
 $stmt = DBManager::get()->query("SELECT VeranstaltungsNummer as sn FROM seminare WHERE Seminar_id = '".$SessSemName[1]."'");
@@ -716,7 +718,7 @@ $anzahl_teilnehmer_kontingent = $db->f('teilnehmer_kontingent');
         </script>
         <table cellspacing="0" border="0" width="100%">
         <tr>
-        <td colspan="2" class="blank">
+        <td colspan="2" class="blank" id="change_visibility">
             <?
             $db3->query("SELECT status, visible FROM seminar_user WHERE user_id = '".$auth->auth['uid']."' AND Seminar_id = '$SessionSeminar'");
             $visible_mode = "false";
@@ -746,6 +748,8 @@ $anzahl_teilnehmer_kontingent = $db->f('teilnehmer_kontingent');
                 $visible_mode = "awaiting";
             }
         if (!$perm->have_studip_perm('tutor',$SessSemName[1])) {
+            // add skip link
+            SkipLinks::addIndex(_("Sichtbarkeit ändern"), 'change_visibility');
             if ($iam_visible) {
         ?>
         <br>
@@ -981,7 +985,10 @@ while (list ($key, $val) = each ($gruppe)) {
 
     print "</td>";
 
-    echo '<td class="steel" width="19%" align="left">'.
+    // add skip link
+    SkipLinks::addIndex($val, 'member_group_' . $key);
+
+    echo '<td class="steel" width="19%" align="left" id="member_group_' . $key . '">'.
            '<img src="'.$GLOBALS['ASSETS_URL'].'images/blank.gif" width="1" height="20">'.
            '<font size="-1"><b>' . $val . '</b></font>'.
          '</td>';

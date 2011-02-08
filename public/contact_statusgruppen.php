@@ -42,6 +42,8 @@ require_once ('lib/user_visible.inc.php');
 
 PageLayout::setTitle(_("Kontaktgruppen"));
 Navigation::activateItem('/community/contacts/admin_groups');
+// add skip link
+SkipLinks::addIndex(Navigation::getItem('/community/contacts/admin_groups')->getTitle(), 'main_content', 100);
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head
@@ -256,7 +258,7 @@ function PrintAktualContacts ($range_id)
 
 // Anfang Edit-Bereich
 ?>
-<table class="blank" width="100%" border="0" cellspacing="0">
+<table class="blank" width="100%" border="0" cellspacing="0" id="main_content">
 <?
 if (is_array($msgs)) {
     foreach ($msgs as $msg) {

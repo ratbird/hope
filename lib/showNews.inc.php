@@ -152,7 +152,10 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
 
     if (!count($news)) {
         if ($show_admin) {
-            echo"\n<table class=\"index_box\"$width>";
+            // set skip link
+            SkipLinks::addIndex(_("Ankündigungen"), 'news_box');
+
+            echo"\n<table id=\"news_box\" class=\"index_box\"$width>";
             echo"\n<tr><td class=\"topic\" colspan=\"2\"><img src=\"".Assets::image_path('icons/16/white/breaking-news.png')."\" ". tooltip(_("Newsticker. Klicken Sie rechts auf die Zahnräder, um neue News in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b> " . _("Ankündigungen") . "</b></td>";
             echo"\n<td align=\"right\" class=\"topic\">";
             echo "<a href=\"".URLHelper::getLink("admin_news.php?$admin_link&cmd=new_entry")."\"><img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Ankündigungen einstellen")) . "></a> ";
@@ -164,10 +167,13 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
             return FALSE;
         }
     } else {
+        // set skip link
+        SkipLinks::addIndex(_("Ankündigungen"), 'news_box');
+
         $colspan=2;
 
         //Ausgabe der Kopfzeile vor erster auszugebener Ankündigungen
-        echo"\n<table class=\"index_box\"$width>";
+        echo"\n<table id=\"news_box\" class=\"index_box\"$width>";
         echo"\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/breaking-news.png')."\" ". tooltip(_("Newsticker. Klicken Sie rechts auf die Zahnräder, um neue Ankündigungen in diesen Bereich einzustellen. Klicken Sie auf die Pfeile am linken Rand, um den ganzen Nachrichtentext zu lesen.")) . "> <b>" . _("Ankündigungen") . "</b></td>";
         if ($rss_id) {
             $colspan++;

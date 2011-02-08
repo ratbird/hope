@@ -176,11 +176,14 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
             $insert_date_end = '';
         }
 
+        // add skip link
+        SkipLinks::addIndex(_("Exportieren Ihrer Kalenderdaten"), 'calendar_export', 100);
+
         echo "<tr><th align=\"left\" width=\"100%\">\n<font size=\"-1\">";
         echo _("Exportieren Ihrer Kalenderdaten")."</font>\n</th></tr>\n";
 
         $tooltip = _("Es werden nur Termine von Veranstaltungen exportiert, die zuvor im Menüpunkt \"Veranstaltungstermine\" ausgewählt wurden.");
-        $params['form'] = "<form name=\"Formular\" action=\"$PHP_SELF?cmd=export&atime=$atime\" method=\"post\">\n"
+        $params['form'] = "<form name=\"Formular\" action=\"$PHP_SELF?cmd=export&atime=$atime\" method=\"post\" id=\"calendar_export\">\n"
             . CSRFProtection::tokenTag();
         $params['content'] = _("Bitte w&auml;hlen Sie, welche Termine exportiert werden sollen:") . "</font></div>\n"
                 . "<br>&nbsp; &nbsp; <select name=\"extype\" size=\"1\">\n"
@@ -225,11 +228,14 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         $params['expmod'] = "exp";
         print_cell($params);
 
+        // add skip link
+        SkipLinks::addIndex(_("Importieren Ihrer Kalenderdaten"), 'calendar_import');
+
         echo "<tr><th colspan=\"2\" align=\"left\" width=\"100%\">\n<font size=\"-1\">";
         echo _("Importieren Ihrer Kalenderdaten")."</font>\n</th></tr>\n";
 
         $params['form'] = "<form action=\"$PHP_SELF?cmd=export&atime=$atime\" method=\"post\" "
-            . "enctype=\"multipart/form-data\" name=\"import_form\">\n"
+                . "enctype=\"multipart/form-data\" name=\"import_form\" id=\"calendar_import\">\n"
             . CSRFProtection::tokenTag();
         $params['content'] = _("Sie k&ouml;nnen Termine importieren, die sich in einer iCalendar-Datei befinden.")
                 . "<br><br>" . _("Klicken Sie auf \"Durchsuchen\", um eine Datei auszuwählen.")
@@ -239,11 +245,14 @@ if (($expmod != 'exp' && $expmod != 'imp' && $expmod != 'sync') || ($expmod == '
         $params['expmod'] = 'imp';
         print_cell($params);
 
+        // add skip link
+        SkipLinks::addIndex(_("Synchronisieren Ihrer Kalenderdaten"), 'calendar_sync');
+
         echo "<tr><th colspan=\"2\" align=\"left\" width=\"100%\">\n<font size=\"-1\">";
         echo _("Synchronisieren Ihrer Kalenderdaten")."</font>\n</th></tr>\n";
 
         $params['form'] = "<form action=\"$PHP_SELF?cmd=export&atime=$atime\" method=\"post\" "
-            . "enctype=\"multipart/form-data\" name=\"sync_form\">\n"
+                . "enctype=\"multipart/form-data\" name=\"sync_form\" id=\"calendar_sync\">\n"
             . CSRFProtection::tokenTag();
         $params['content'] = _("Sie k&ouml;nnen Termine synchronisieren, die sich in einer iCalendar-Datei befinden.")
                 . "<br><br>" . _("Klicken Sie auf \"Durchsuchen\", um eine Datei auszuwählen.")

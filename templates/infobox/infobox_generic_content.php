@@ -5,7 +5,7 @@
 //           It's provided for compatibility reasons only.
 //
 ?>
-
+<? SkipLinks::addIndex('Infobox', 'infobox_content', 10000); ?>
 <table class="infobox" align="center" width="250" cellpadding="0" cellspacing="0">
 
     <? if ($picture) : ?>
@@ -20,7 +20,7 @@
 
     <tr>
       <td class="infoboxrahmen">
-        <table cellpadding="4" cellspacing="0">
+        <table id="infobox_content" cellpadding="4" cellspacing="0">
 
           <? foreach ($content as $category) : ?>
             <tr>

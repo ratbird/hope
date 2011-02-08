@@ -39,8 +39,11 @@ include('lib/include/html_head.inc.php');
 
 include('lib/include/header.php');
 
+// add skip link
+SkipLinks::addIndex(_("Tagesansicht"), 'main_content', 100);
+
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
-echo "<tr><td class=\"blank\" width=\"60%\"><br>\n";
+echo "<tr><td class=\"blank\" width=\"60%\" id=\"main_content\"><br>\n";
 echo "<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "<tr><td class=\"blank\" width=\"100%\">\n";
 echo "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr>\n";

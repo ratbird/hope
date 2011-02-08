@@ -39,6 +39,9 @@
 include('lib/include/html_head.inc.php');
 include('lib/include/header.php');
 
+// add skip link
+SkipLinks::addIndex(_("Veranstaltungstermine"), 'main_content', 100);
+
 // alle vom user abonnierten Seminare
 $db = new DB_Seminar;
 $sortby = Request::option('sortby', 'seminar_user.gruppe, seminare.Name');
@@ -59,7 +62,7 @@ $db->query($query);
 
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
 echo "<tr><td class=\"blank\">\n";
-echo "<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"1\" class=\"blank\">\n";
+echo "<table border=\"0\" width=\"100%\" cellspacing=\"0\" cellpadding=\"1\" class=\"blank\" id=\"main_content\">\n";
 
 if (!empty($calendar_sess_control_data["view_prv"]))
     echo "<form action=\"$PHP_SELF?cmd={$calendar_sess_control_data['view_prv']}\" method=\"post\">";

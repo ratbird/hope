@@ -37,6 +37,9 @@
 include('lib/include/html_head.inc.php');
 include('lib/include/header.php');
 
+// add skip link
+SkipLinks::addIndex(_("Termine anlegen/bearbeiten"), 'main_content', 100);
+
 echo "<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "<tr><td class=\"blank\" valign=\"top\">\n";
 echo "<table class=\"blank\" width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n";
@@ -50,7 +53,7 @@ if (!empty($err))
 }
 
 echo "<tr><td class=\"blank\" valign=\"top\">\n";
-echo "<form name=\"Formular\" action=\"$PHP_SELF?cmd=edit\" method=\"post\">";
+echo "<form name=\"Formular\" action=\"$PHP_SELF?cmd=edit\" method=\"post\" id=\"main_content\">";
 echo CSRFProtection::tokenTag();
 echo "<table align=\"center\" class=\"blank\" width=\"98%\" border=\"0\" cellspacing=\"0\" cellpadding=\"10\">\n";
 

@@ -1252,13 +1252,13 @@ input.quicksearchbutton {
 }
 
 div.quicksearch_frame {
-    background-color: #ffffff; 
-    border: 1px #999999 solid; 
+    background-color: #ffffff;
+    border: 1px #999999 solid;
     display:inline-block;
 }
 
 div.quicksearch_frame input, div.quicksearch_frame select {
-    background-color:#ffffff; 
+    background-color:#ffffff;
     border: 0px;
 }
 
@@ -1673,7 +1673,32 @@ h3.eval {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/* skiplink-area highlighting -------------------------------------------- */
+#skip_link_navigation {
+	position: fixed;
+    left: -600px;
+	top: 20px;
+	z-index: 1000;
+	background-color: #ffffff;
+	border: 2px solid #ff6600;
+    padding: 10px;
+	margin: 0px;
+}
 
+#skip_link_navigation ul {
+	padding: 0px;
+	margin: 0px;
+	list-style-type: none;
+}
+
+.focus_box {
+    outline: 2px dashed #ff6600;
+}
+
+.skip_target {
+    position: absolute;
+    left: -600px;
+}
 
 /* error message */
 .error {
@@ -1689,7 +1714,6 @@ h3.eval {
 .error p {
 	margin:0;
 }
-
 
 .error div.arrow {
 	border:10px solid;

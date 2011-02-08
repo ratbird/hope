@@ -31,6 +31,9 @@ class StudygroupController extends AuthenticatedController {
         PageLayout::setTitle(_('Studiengruppen suchen'));
         Navigation::activateItem('/community/studygroups/browse');
         PageLayout::setHelpKeyword('Basis.SuchenStudiengruppen');
+        // add skip link
+        SkipLinks::addIndex(Navigation::getItem('/community/studygroups/browse')->getTitle(), 'layout_content', 100);
+
         $this->sort = preg_replace('/\\W/', '', $sort);
         $this->page = intval($page);
         $this->userid = $GLOBALS['auth']->auth['uid'];

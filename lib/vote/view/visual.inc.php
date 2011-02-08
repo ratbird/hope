@@ -73,8 +73,9 @@ function createBoxHeader ($title, $width, $extraTitle = "",
               $adminURL = "", $adminImgURL = "", $adminTitle = "",
               $cssClass = "steel1")
 {
+    SkipLinks::addIndex(_("Umfragen"), 'votes_box');
    $html =
-      "<table class=\"index_box\" $width>\n";
+      "<table id=\"votes_box\" class=\"index_box\" $width>\n";
 
    if ($title) {
 

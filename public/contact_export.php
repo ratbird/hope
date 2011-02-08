@@ -35,6 +35,8 @@ if (!( (isset($_POST["export_vcard_x"]))
     || (isset($_GET["groupid"])) )){
     PageLayout::setTitle(_("Adressbuch exportieren"));
     Navigation::activateItem('/community/contacts/export');
+    // add skip link
+    SkipLinks::addIndex(Navigation::getItem('/community/contacts/export')->getTitle(), 'main_content', 100);
 
     require_once('lib/include/html_head.inc.php');
     require_once('lib/include/header.php');
@@ -149,7 +151,7 @@ function printSelectGroup($infobox, $groups)
         . "  <td class=\"blank\" valign=\"top\">\n"
         . "  <table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n"
         . "  <tr>"
-        . "   <td valign=\"top\"><font size=\"-1\">\n"
+        . "   <td valign=\"top\" id=\"main_content\"><font size=\"-1\">\n"
         . _("Bitte wählen Sie ein Gruppe aus, deren Daten Sie in eine vCard-Datei exportieren möchten:")."\n"
         . "    <form action=\"$PHP_SELF\" method=post>\n"
         . CSRFProtection::tokenTag()

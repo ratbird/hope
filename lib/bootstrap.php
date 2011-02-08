@@ -38,4 +38,4 @@ require 'config_local.inc.php';
 
 require_once 'lib/classes/CSRFProtection.php';
 require 'lib/phplib/page4.inc';
-
+require_once 'lib/classes/SkipLinks.php';

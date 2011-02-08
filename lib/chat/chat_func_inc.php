@@ -134,9 +134,11 @@ function chat_show_info($chatid)
         $is_active = $chatServer->isActiveUser($auth->auth['uid'],$chatid);
         $chatname = ($chatter) ? $chatServer->chatDetail[$chatid]['name'] : chat_get_name($chatid);
         if (chat_get_entry_level($chatid) || $is_active || $chatinv){
+            // add skip link
+            SkipLinks::addIndex(_("Chatraum"), 'chat_show_info');
             //Ausgabe der Kopfzeile
             chat_get_javascript();
-            echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
+            echo "\n<table class=\"index_box\" style=\"width: 100%;\" id=\"chat_show_info\">";
             echo "\n<tr><td class=\"topic\" colspan=\"2\">";
             echo "\n" . chat_get_chat_icon($chatter, $chatinv, $is_active, false, 'white', 'white');
             echo "\n <b>" . _("Chatraum:") . " " . htmlReady($chatname) . "</b></td></tr>";

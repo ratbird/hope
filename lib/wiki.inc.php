@@ -745,7 +745,7 @@ function listPages($mode, $sortby=NULL) {
     begin_blank_table();
     echo "<tr><td class=\"blank\" colspan=\"2\">&nbsp;</td></tr>\n";
     echo "<tr><td class=\"blank\" colspan=\"2\">";
-    echo "<table width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
+    echo "<table id=\"main_content\" width=\"99%\" border=\"0\"  cellpadding=\"2\" cellspacing=\"0\" align=\"center\">";
     echo "<tr height=28>";
     $s = "<td class=\"steel\" width=\"%d%%\" align=\"%s\"><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"1\" height=\"20\">%s</td>";
     printf($s, 3, "left", "&nbsp;");
@@ -1100,7 +1100,7 @@ function exportWiki() {
     $infobox = array ();
     $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=>_("Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert."))));
     print "</tr><tr align=center><td>";
-    print "<a href=\"".URLHelper::getLink("?view=wikiprintall")."\" target=\"_blank\"><img ".makebutton("weiter","src"). " border=0></a></td></tr>";
+    print "<a id=\"wiki_export\" href=\"".URLHelper::getLink("?view=wikiprintall")."\" target=\"_blank\"><img ".makebutton("weiter","src"). " border=0></a></td></tr>";
     end_blank_table();
     echo "</td>"; // end of content area
     showPageFrameEnd($infobox);
@@ -1187,7 +1187,7 @@ function getAllWikiPages($range_id, $header, $fullhtml=TRUE) {
 **/
 function showPageFrameStart() {
     print "<table width=\"100%\" class=\"blank\" cellpadding=0 cellspacing=0>";
-    print "<tr class=\"blank\"><td class=\"blank\" nowrap width=\"1%\">&nbsp;</td><td class=\"blank\" valign=\"top\">";
+    print "<tr class=\"blank\"><td class=\"blank\" nowrap width=\"1%\">&nbsp;</td><td id=\"main_content\" class=\"blank\" valign=\"top\">";
 }
 
 /**
@@ -1216,20 +1216,21 @@ function showPageFrameEnd($infobox)
 **/
 function getSearchbox($preselection, $keyword)
 {
+    SkipLinks::addIndex(_("Im Wiki suchen"), 'wiki_search');
     // search
-    $search_text="<form method='post' action='".URLHelper::getLink('')."'>";
-    $search_text.= CSRFProtection::tokenTag();
-    $search_text.="<input type='hidden' name='view' value='search'>";
-    $search_text.="<input type='hidden' name='keyword' value='".htmlReady($keyword)."'>";
-    $search_text.="<input type='text' size='10' name='searchfor' value='".htmlReady($preselection)."'>";
-    $search_text.="&nbsp;".makeButton("suchen","input");
-    $search_text.="<br>";
-    $search_text.="<input type='checkbox' name='searchcurrentversions' checked>&nbsp;"._("Nur in aktuellen Versionen");
-    $search_text.="</form>";
+    $search_text = '<form role=\"search\" id="wiki_search" method="post" action="' . URLHelper::getLink('') . '">';
+    $search_text .= CSRFProtection::tokenTag();
+    $search_text .= '<input type="hidden" name="view" value="search">';
+    $search_text .= '<input type="hidden" name="keyword" value="' . htmlReady($keyword) . '">';
+    $search_text .= '<input type="text" size="10" name="searchfor" value="' . htmlReady($preselection) . '">';
+    $search_text .= "&nbsp;" . makeButton("suchen", "input", _("suchen"));
+    $search_text .= "<br>";
+    $search_text .= '<input type="checkbox" name="searchcurrentversions" checked>&nbsp;' . _("Nur in aktuellen Versionen");
+    $search_text .= "</form>";
     return array("kategorie"=> _("Suche:"),
         "eintrag" => array(array(
             "icon" => "icons/16/black/search.png",
-            "text"=>$search_text)));
+            "text" => $search_text)));
 }
 
 /**
@@ -1470,7 +1471,6 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
     }
 
     // show page logic
-    //
     wikiSinglePageHeader($wikiData, $keyword);
 
     if ($perm->have_studip_perm("autor", $SessSemName[1])) {

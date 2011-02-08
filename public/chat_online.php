@@ -70,6 +70,10 @@ function print_chat_info($chatids)
 PageLayout::setHelpKeyword("Basis.InteraktionChat");
 PageLayout::setTitle(_("Chat-Online"));
 Navigation::activateItem('/community/chat');
+// add skip link
+SkipLinks::addIndex(_("Allgemeiner Chatraum"), 'chat_studip', 100);
+SkipLinks::addIndex(html_entity_decode(_("Pers&ouml;nlicher Chatraum")), 'chat_own');
+
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -125,7 +129,7 @@ chat_get_javascript();
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="chat_studip">
                     <? print_chat_info(array('studip'));?>
                     </td>
                 </tr>
@@ -140,7 +144,7 @@ chat_get_javascript();
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="chat_own">
                     <? print_chat_info(array($auth->auth['uid']));?>
                     </td>
                 </tr>
@@ -148,6 +152,7 @@ chat_get_javascript();
                     <td class="blank">&nbsp;</td>
                 </tr>
 <?if(is_array($active_user_chats) || is_array($hidden_user_chats)){?>
+<? SkipLinks::addIndex(html_entity_decode(_("Chatr&auml;ume anderer NutzerInnen")), 'chat_user') ?>
                 <tr>
                     <td class="topic" >
                     <font size="-1">
@@ -156,7 +161,7 @@ chat_get_javascript();
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="chat_user">
                     <? print_chat_info($active_user_chats);?>
                     <?php
                     if (is_array($hidden_user_chats)) {
@@ -174,6 +179,7 @@ chat_get_javascript();
                 </tr>
 <? } ?>
 <?if(is_array($active_sem_chats)){?>
+<? SkipLinks::addIndex(html_entity_decode(_("Chatr&auml;ume f&uuml;r Veranstaltungen")), 'chat_sem') ?>
                 <tr>
                     <td class="topic" >
                     <font size="-1">
@@ -182,7 +188,7 @@ chat_get_javascript();
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="chat_sem">
                     <? print_chat_info($active_sem_chats);?>
                     </td>
                 </tr>
@@ -191,6 +197,7 @@ chat_get_javascript();
                 </tr>
 <? } ?>
 <?if(is_array($active_inst_chats)){?>
+<? SkipLinks::addIndex(html_entity_decode(_("Chatr&auml;ume f&uuml;r Einrichtungen")), 'chat_inst') ?>
                 <tr>
                     <td class="topic" >
                     <font size="-1">
@@ -199,7 +206,7 @@ chat_get_javascript();
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td id="chat_inst">
                     <? print_chat_info($active_inst_chats);?>
                     </td>
                 </tr>

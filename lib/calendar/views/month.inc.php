@@ -39,8 +39,11 @@ include('lib/include/html_head.inc.php');
 
 include('lib/include/header.php');
 
+// add skip link
+SkipLinks::addIndex(_("Monatsansicht"), 'main_content', 100);
+
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
-echo "<tr><td class=\"blank\" width=\"100%\"><br>\n";
+echo "<tr><td class=\"blank\" width=\"100%\" id=\"main_content\"><br>\n";
 echo "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\" align=\"center\">\n";
 echo "<tr><td>\n";
 echo "<table width=\"100%\" class=\"steelgroup0\" border=\"0\" cellspacing=\"1\" cellpadding=\"0\" align=\"center\">\n";

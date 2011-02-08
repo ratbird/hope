@@ -52,6 +52,8 @@ $cssSw=new cssClassSwitcher;
 PageLayout::setHelpKeyword("Basis.InteraktionWhosOnline");
 PageLayout::setTitle(_("Wer ist online?"));
 Navigation::activateItem('/community/online');
+// add skip link
+SkipLinks::addIndex(_("Wer ist Online?"), 'main_content', 100);
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -166,7 +168,7 @@ if (is_array($non_group_buddies))
     $cssSw->switchClass();
     //Anzeige
 ?>
-    <table width="98%" cellspacing="0" border="0" cellpadding="2">
+    <table width="98%" cellspacing="0" border="0" cellpadding="2" id="main_content">
         <tr>
 
 <?  //Kopfzeile

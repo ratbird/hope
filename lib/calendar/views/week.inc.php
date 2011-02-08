@@ -64,8 +64,11 @@ include('lib/include/html_head.inc.php');
 
 include('lib/include/header.php');
 
+// add skip link
+SkipLinks::addIndex(_("Wochenansicht"), 'main_content', 100);
+
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\" align=\"center\">\n";
-echo "<tr><td class=\"blank\" width=\"100%\" align=\"center\"><br>\n";
+echo "<tr><td class=\"blank\" width=\"100%\" align=\"center\" id=\"main_content\"><br>\n";
 echo "<table border=\"0\" width=\"100%\" cellspacing=\"1\" cellpadding=\"0\" class=\"steelgroup0\">\n";
 echo "<tr><td colspan=\"$colspan_2\">\n";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\" align=\"center\" class=\"steelgroup0\">\n";

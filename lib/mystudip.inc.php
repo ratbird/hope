@@ -51,7 +51,7 @@ function select_language($selected_language = "") {
         $selected_language = $DEFAULT_LANGUAGE;
     }
 
-    echo "<select name=\"forced_language\" width=30>";
+    echo "<select name=\"forced_language\" id=\"forced_language\" width=30>";
     foreach ($INSTALLED_LANGUAGES as $temp_language => $temp_language_settings) {
         if ($temp_language == $selected_language) {
             echo "<option selected value=\"$temp_language\">" . $temp_language_settings["name"] . "</option>";
@@ -82,18 +82,18 @@ function change_general_view() {
     ?>
     <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
         <tr>
-            <td class="blank" colspan=2>&nbsp;
+            <td class="blank">&nbsp;
             </td>
         </tr>
         <tr>
 
-            <td class="blank" width="100%" colspan="2" align="center">
+            <td id="main_content" class="blank" width="100%" align="center">
             <p class="info">
                 <b><?= _("Hier k&ouml;nnen Sie die Ansicht von Stud.IP nach Ihren Vorstellungen anpassen.")?></b>
             </p>
             <form method="POST" action="<? echo $PHP_SELF ?>?cmd=change_general&studipticket=<?=get_ticket()?>">
             <?= CSRFProtection::tokenTag() ?>
-            <table width="70%" align="center"cellpadding=8 cellspacing=0 border=0>
+            <table width="70%" align="center" cellpadding=8 cellspacing=0 border=0>
                 <tr>
                     <th width="50%" align=center><?=_("Option")?></th>
                     <th align=center><?=_("Auswahl")?></th>
@@ -116,13 +116,15 @@ function change_general_view() {
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <?
-                        IF ($auth->auth["jscript"]) {
-                            echo "<input type=CHECKBOX name='jshover' value=1";
-                        IF($forum["jshover"]==1)
-                            echo " checked";
-                        echo ">";
-                        } else
-                        echo "<font size=\"-1\">"._("Sie müssen in Ihrem Browser Javascript aktivieren um dieses Feature nutzen zu können.")."</font>";
+                        if ($auth->auth["jscript"]) {
+                            echo '<input type=CHECKBOX name="jshover" value="1"';
+                            if ($forum["jshover"] == 1) {
+                                echo " checked";
+                            }
+                            echo ">";
+                        } else {
+                            echo "<font size=\"-1\">"._("Sie müssen in Ihrem Browser Javascript aktivieren um dieses Feature nutzen zu können.")."</font>";
+                        }
                         ?>
                         </font><br><br>
                     </td>
@@ -154,14 +156,32 @@ function change_general_view() {
                 ?>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><?print _("Tastenkombinationen f&uuml;r Hauptfunktionen");?></font><br>
+                        <label for="skiplinks_enable"><?print _("Skiplinks einblenden");?></label><br>
+                        <br><div align="left"><font size="-1">
+                        <? print _("Mit dieser Einstellung wird nach dem ersten Drücken der Tab-Taste eine Liste mit Skiplinks eingeblendet, mit deren Hilfe Sie mit der Tastatur schneller zu den Hauptinhaltsbereichen der Seite navigieren können.");?>
+                        </font></div>
+                    </td>
+                    <td <?=$cssSw->getFullClass()?>>
+                        <?
+                        echo "<input type=\"checkbox\" name=\"skiplinks_enable\" id=\"skiplinks_enable\" value=\"1\"";
+                        if ($user->cfg->getValue("SKIPLINKS_ENABLE")) {
+                            echo " checked";
+                        }
+                        echo ">";
+                        ?>
+                        </font><br><br>
+                    </td>
+                </tr>
+                <tr  <? $cssSw->switchClass() ?>>
+                    <td  align="right" class="blank" style="border-bottom:1px dotted black;">
+                        <label for="accesskey_enable"><?print _("Tastenkombinationen f&uuml;r Hauptfunktionen");?></label><br>
                         <br><div align="left"><font size="-1">
                         <?print _("Mit dieser Einstellung k&ouml;nnen Sie f&uuml;r die meisten in der Kopfzeile erreichbaren Hauptfunktionen eine Bedienung &uuml;ber Tastenkombinationen aktivieren. <br>Die Tastenkombination wird im Tooltip des jeweiligen Icons angezeigt.");?>
                         </font></div>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <?
-                        echo "<input type=\"CHECKBOX\" name=\"accesskey_enable\" value=\"1\"";
+                        echo "<input type=\"checkbox\" name=\"accesskey_enable\" id=\"accesskey_enable\" value=\"1\"";
                         IF ($user->cfg->getValue("ACCESSKEY_ENABLE")) {
                             echo " checked";
                         }

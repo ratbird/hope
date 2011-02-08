@@ -17,6 +17,8 @@
 </head>
 
 <body id="<?= $body_id ? $body_id : PageLayout::getBodyElementId() ?>">
+  	<? SkipLinks::insertContainer(); ?>
+  	<? SkipLinks::addIndex(_("Hauptinhalt"), 'layout_content', 100, true); ?>
     <?= PageLayout::getBodyElements() ?>
     <div id="overdiv_container"></div>
 

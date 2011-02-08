@@ -323,10 +323,11 @@ function aux_enter_data() {
     echo $zt->openRow();
     echo $zt->cell('<br><input type="image" '.makebutton('uebernehmen', 'src').'><br><br>', array('colspan' => '20', 'align' => 'center'));
     echo $zt->close();
+    echo '</form>';
 }
 
 $ct = new ContainerTable(array('width' => '100%', 'class' => 'blank'));
-$zt = new ZebraTable(array('width' => '100%', 'padding' => '2'));
+$zt = new ZebraTable(array('width' => '100%', 'padding' => '2', 'id' => 'main_content'));
 
 switch ($_REQUEST['display_type']) {
     case 'rtf':
@@ -349,8 +350,12 @@ switch ($_REQUEST['display_type']) {
         echo $ct->cell('&nbsp;', array('class' => 'blank'));
         echo $ct->openCell();
         if ($rechte) {
+            // add skip links
+            SkipLinks::addIndex(_("Zusatzangaben"), 'main_content', 100);
             aux_html();
         } else {
+            // add skip links
+            SkipLinks::addIndex(_("Zusatzangaben eingeben"), 'main_content', 100);
             aux_enter_data();
         }
         echo $ct->closeCell();

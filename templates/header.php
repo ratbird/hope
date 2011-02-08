@@ -7,6 +7,7 @@
     <div id="barTopFont">
     <?= htmlentities($GLOBALS['UNI_NAME_CLEAN']) ?>
     </div>
+    <? SkipLinks::addIndex(_("Hauptnavigation"), 'barTopMenu', 1); ?>
     <ul id="barTopMenu">
     <? $accesskey = 0 ?>
     <? foreach (Navigation::getItem('/') as $nav) : ?>

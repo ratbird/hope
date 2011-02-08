@@ -232,7 +232,8 @@ elseif($mode == 'create_pdf'){
 PageLayout::setTitle(_("Veranstaltungsübersicht erstellen"));
 PageLayout::setHelpKeyword("Basis.Allgemeines");
 Navigation::activateItem('/browse/my_courses/record_of_study');
-
+// add skip link
+SkipLinks::addIndex(_("Hauptinhalt"), 'main_content', 100);
 ob_start();
 if ($mode == "new"){
     printSelectSemester($infobox,$semestersAR);

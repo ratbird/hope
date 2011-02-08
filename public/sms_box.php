@@ -223,11 +223,15 @@ if ($sms_data['view'] == "in") {
     $info_text_002 = _("Posteingang");
     $no_message_text_box = _("im Posteingang");
     $tmp_snd_rec = "rec";
+    // add skip link
+    SkipLinks::addIndex(_("Posteingang"), 'main_content', 100);
 } else if ($sms_data['view'] == "out") {
     $info_text_001 = Assets::img('icons/16/blue/mail.png', array('class' => 'text-top', 'title' =>_('gesendete systeminterne Nachrichten anzeigen')))."</b>";
     $info_text_002 = _("Postausgang");
     $no_message_text_box = _("im Postausgang");
     $tmp_snd_rec = "snd";
+    // add skip link
+    SkipLinks::addIndex(_("Postausgang"), 'main_content', 100);
 }
 
 // memorize del-lock for selected items
@@ -329,7 +333,7 @@ $query_time = $query_time_sort;
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 <tr>
-    <td class="blank" valign="top"> <?
+    <td class="blank" valign="top" id="main_content"    > <?
         if ($msg) { // if info ($msg) for user
             print ("<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\" width=\"99%\"><tr><td valign=\"top\">");
             parse_msg($msg);

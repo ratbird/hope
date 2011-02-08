@@ -45,27 +45,33 @@ if ($forumsend && $forumsend!="bla") {
     PageLayout::setHelpKeyword("Basis.ForumEinstellungen");
     PageLayout::setTitle(_("Einstellungen des Forums anpassen"));
     Navigation::activateItem('/course/forum/settings');
+    SkipLinks::addIndex(Navigation::getItem('/course/forum/settings')->getTitle(), 'main_content', 100);
 } elseif(isset($neuesthema)) {
     PageLayout::setHelpKeyword("Basis.ForumBeteiligen");
     PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Forum"));
     Navigation::activateItem('/course/forum/view');
+    SkipLinks::addIndex(Navigation::getItem('/course/forum/view')->getTitle(), 'main_content', 100);
 } else {
     switch($view) {
         case "neue":
             PageLayout::setHelpKeyword("Basis.ForumNeu");
             Navigation::activateItem('/course/forum/unread');
+            SkipLinks::addIndex(Navigation::getItem('/course/forum/unread')->getTitle(), 'main_content', 100);
             break;
         case "flat":
             PageLayout::setHelpKeyword("Basis.Forumlast4");
             Navigation::activateItem('/course/forum/recent');
+            SkipLinks::addIndex(Navigation::getItem('/course/forum/recent')->getTitle(), 'main_content', 100);
             break;
         case "search":
             PageLayout::setHelpKeyword("Basis.ForumSuche");
             Navigation::activateItem('/course/forum/search');
+            SkipLinks::addIndex(Navigation::getItem('/course/forum/search')->getTitle(), 'main_content', 100);
             break;
         default:
             PageLayout::setHelpKeyword("Basis.Forum");
             Navigation::activateItem('/course/forum/view');
+            SkipLinks::addIndex(Navigation::getItem('/course/forum/view')->getTitle(), 'main_content', 100);
     }
     PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Forum"));
 }
@@ -115,7 +121,7 @@ if (!$update) {
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
 }
-            
+
 require_once 'lib/functions.php';
 require_once ('lib/visual.inc.php');
 require_once ('lib/forum.inc.php');
@@ -500,6 +506,8 @@ if ($neuesthema==TRUE && ($rechte || $SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"
         $edit_id = CreateNewTopic($name, "Beschreibung des Themas", 0, 0, $_REQUEST['anonymous']);
         $open = $edit_id;
         $forum["lostposting"] = $edit_id;
+        // add skip link right before the link to the main content
+        SkipLinks::addIndex(_("Neues Thema anlegen"), 'newposting_form', 99);
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -566,12 +574,12 @@ elseif ($user->id == "nobody" || $cmd=="move") {
 //////////////////////////////////////////////////////////////////////////////////
 // Verzweigung zu den Anzeigemodi
 //////////////////////////////////////////////////////////////////////////////////
-
+echo '<div id="main_content">';
 if ($forum["view"]=="flat" || $forum["view"]=="neue" || $forum["view"]=="flatfolder" || $forum["view"]=="search")
     flatview ($open, $mehr, $show, $edit_id, $name, $description, $zitat);
 else
     DisplayFolders ($open, $edit_id, $zitat);
-
+echo '</div>';
 //////////////////////////////////////////////////////////////////////////////////
 // Rest
 //////////////////////////////////////////////////////////////////////////////////

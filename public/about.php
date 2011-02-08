@@ -268,6 +268,9 @@ Navigation::activateItem('/profile/view');
 // TODO this can be removed when page output is moved to a template
 URLHelper::addLinkParam('username', $username);
 
+// add skip link
+SkipLinks::addIndex(_("Benutzerprofil"), 'user_profile', 100);
+
 $visibilities = get_local_visibility_by_username($username, 'homepage');
 if (is_array(json_decode($visibilities, true))) {
     $visibilities = json_decode($visibilities, true);
@@ -285,7 +288,7 @@ function open_im() {
 }
 </script>
 
-<table width="100%" border="0" cellpadding="1" cellspacing="0">
+<table id="user_profile" width="100%" border="0" cellpadding="1" cellspacing="0">
     <? if ($msg) : ?>
         <?= parse_msg($msg) ?>
     <? endif ?>

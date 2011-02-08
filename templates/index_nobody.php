@@ -19,6 +19,7 @@
                         <? else : ?>
                             <a class="index" href="<?= htmlspecialchars($url) ?>" target="_blank">
                         <? endif ?>
+                        <? SkipLinks::addLink($name, $url) ?>
                         <font size="4"><b><?= htmlReady($name) ?></b></font>
                         <font color="#555555" size="1"><br><?= htmlReady($title ? $title : $nav->getDescription()) ?></font>
                         </a>

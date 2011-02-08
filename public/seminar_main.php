@@ -105,6 +105,8 @@ mark_public_course();
 PageLayout::setHelpKeyword("Basis.InVeranstaltungKurzinfo");
 PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Kurzinfo"));
 Navigation::activateItem('/course/main/info');
+// add skip link
+SkipLinks::addIndex(Navigation::getItem('/course/main/info')->getTitle(), 'main_content', 100);
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -139,7 +141,7 @@ $quarter_year = 60 * 60 * 24 * 90;
 ?>
 <table width="100%" border=0 cellpadding=0 cellspacing=0>
     <tr>
-        <td class="blank" valign="top">
+        <td class="blank" valign="top" id="main_content">
         <div style="padding:0 1.5em 1.5em 1.5em">
     <?
     echo "<h3>".htmlReady($SessSemName["header_line"]). "</h3>";

@@ -53,6 +53,8 @@ PageLayout::setTitle(getHeaderLine($header_object_id). " - " . _("Details"));
 
 if (($SessSemName[1] != "") && (!isset($sem_id) || $SessSemName[1] == $sem_id)) {
     Navigation::activateItem('/course/main/details');
+    // add skip link
+    SkipLinks::addIndex(Navigation::getItem('/course/main/details')->getTitle(), 'main_content', 100);
 }
 
 ob_start();
@@ -182,7 +184,7 @@ else
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td class="blank">
-        <table align="center" width="100%" border="0" cellpadding="2" cellspacing="0">
+        <table   id="main_content" align="center" width="100%" border="0" cellpadding="2" cellspacing="0">
         <tr>
             <td class="<? $cssSw->switchClass(); echo $cssSw->getClass() ?>" width="1%">&nbsp; <img src="<?= $GLOBALS['ASSETS_URL'] ?>images/blank.gif" width="25" height="10" border="0">
             </td>

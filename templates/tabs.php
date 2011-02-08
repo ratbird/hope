@@ -1,3 +1,4 @@
+<? SkipLinks::addIndex(_("Erste Reiternavigation"), 'tabs', 10); ?>
 <ul id="tabs">
     <? foreach ($navigation as $nav) : ?>
         <? if ($nav->isVisible()) : ?>
@@ -26,6 +27,7 @@
     <? if (isset($subnavigation)) : ?>
         <? foreach ($subnavigation as $nav) : ?>
             <? if ($nav->isVisible()) : ?>
+            	<? SkipLinks::addIndex(_("Zweite Reiternavigation"), 'tabs2', 20); ?>
                 <li<?= $nav->isActive() ? ' class="current"' : '' ?>>
                     <? if ($nav->isEnabled()) : ?>
                         <a href="<?= URLHelper::getLink($nav->getURL()) ?>">

@@ -38,8 +38,11 @@
 include('lib/include/html_head.inc.php');
 include('lib/include/header.php');
 
+// add skip links
+SkipLinks::addIndex(_("Jahresansicht"), 'main_content', 100);
+
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"5\" cellspacing=\"0\">\n";
-echo "<tr><td class=\"blank\" width=\"100%\"><br>\n";
+echo "<tr><td class=\"blank\" width=\"100%\" id=\"main_content\"><br>\n";
 echo "<table class=\"blank\" border=\"0\" width=\"100%\" cellpadding=\"0\" cellspacing=\"0\">\n";
 echo "<tr><td class=\"blank\">\n";
 echo "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";

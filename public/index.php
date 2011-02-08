@@ -109,10 +109,13 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
         banner_show();
     }
 
+    // add skip link
+    SkipLinks::addIndex(_("Navigation Startseite"), 'index_navigation');
+
 // display menue
 ?>
     <div class="index_container">
-        <table class="index_box">
+        <table class="index_box" id="index_navigation">
             <tr>
                 <td class="topic" style="font-weight: bold;" colspan="2">
                     <?= Assets::img('icons/16/white/home.png', array('class' => 'middle')) ?>

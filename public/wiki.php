@@ -118,36 +118,42 @@ if ($view=="listall") {
     //
     // list all pages, default sorting = alphabetically
     //
+    SkipLinks::addIndex(_("Alle Seiten"), 'main_content', 100);
     listPages("all", $sortby);
 
 } else if ($view=="listnew") {
     //
     // list new pages, default sorting = newest first
     //
+    SkipLinks::addIndex(_("Neue Seiten"), 'main_content', 100);
     listPages("new", $sortby);
 
 } else if ($view=="diff") {
     //
     // show one large diff-file containing all changes
     //
+    SkipLinks::addIndex(_("Seite mit Änderungen"), 'main_content', 100);
     showDiffs($keyword, $versionssince);
 
 } else if ($view=="combodiff") {
     //
     // show one large diff-file containing all changes
     //
+    SkipLinks::addIndex(_("Seite mit Änderungen"), 'main_content', 100);
     showComboDiff($keyword);
 
 } else if ($view=="diffselect") {
     //
     // show only last changes in a diff
     //
+    SkipLinks::addIndex(_("Seite mit Änderungen"), 'main_content', 100);
     showDiffs($keyword, $diffmode);
 
 } else if ($view=="export") {
     //
     // show export dialog
     //
+    SkipLinks::addIndex(_("Seiten exportieren"), 'wiki_export', 100);
     exportWiki();
 
 } else if ($view=="search") {
@@ -175,6 +181,7 @@ if ($view=="listall") {
         include ('lib/include/html_end.inc.php');
         die;
     }
+    SkipLinks::addIndex(_("Seite bearbeiten"), 'main_content', 100);
 
     $wikiData=getWikiPage($keyword,0); // always get newest page
 
@@ -254,6 +261,7 @@ if ($view=="listall") {
     //
     // Show Page
     //
+    SkipLinks::addIndex(_("Aktuelle Seite"), 'main_content', 100);
     showWikiPage($keyword, $version, $special, $show_wiki_comments, stripslashes($_REQUEST["hilight"]));
 
 } // end default action

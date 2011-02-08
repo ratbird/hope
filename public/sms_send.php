@@ -488,6 +488,8 @@ if ($del_receiver_button_x && !empty($del_receiver)) {
 PageLayout::setHelpKeyword("Basis.InteraktionNachrichten");
 PageLayout::setTitle(_("Systeminterne Nachrichten"));
 Navigation::activateItem('/messaging/write');
+// add skip link
+SkipLinks::addIndex(_("Neue Nachricht schreiben"), 'main_content', 100);
 
 // includes
 include ('lib/include/html_head.inc.php'); // Output of html head
@@ -517,7 +519,7 @@ $txt['008'] = _("Lesebestätigung");
 ?>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
 <tr>
-    <td class="blank" valign="top"><?
+    <td class="blank" valign="top" id="main_content"><?
     if ($msg) {
         echo '<table width="100%">';
         parse_msg($msg);

@@ -138,10 +138,12 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
     $db->query($query);
 
     if ($db->num_rows()) {
+        // set skip link
+        SkipLinks::addIndex(_("Termine"), 'appointments_box');
 
         // Ausgabe der Kopfzeile
         $colspan = 1;
-        echo "\n<table class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">";
+        echo "\n<table id=\"appointments_box\" class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">";
         if ($show_as_window) {
             if ($show_admin) {
                 $colspan++;
@@ -175,7 +177,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
 
         //open/close all (show header to switch)
         if (!$show_as_window) {
-            echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\">"; //WTF?
+            echo "\n<table id=\"appointments_box\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" align=\"center\">"; //WTF?
             print "\n<tr>";
             print "\n<td width=\"5%\" class=\"steelgraulight\" align=\"left\"> ";
             if ($rechte)
@@ -312,7 +314,10 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
     }
 
     elseif (($show_admin) && ($show_as_window)) {   //no dates, but the possibility to create one (only, if show_dates is used in window-style)
-        print("\n<table class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">");
+        // set skip link
+        SkipLinks::addIndex(_("Termine"), 'appointments_box');
+
+        print("\n<table id=\"appointments_box\" class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">");
         printf("\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\"><b>  %s</b></td>",_("Termine"));
         printf("\n<td align =\"right\" class=\"topic\"> %s<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" %s></a> </td></tr>", $admin_link, tooltip(_("Termine einstellen")));
         ?>
@@ -329,7 +334,10 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
     }
 
     elseif (!$show_as_window) {
-        print("\n<table class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">");
+        // set skip link
+        SkipLinks::addIndex(_("Termine"), 'appointments_box');
+
+        print("\n<table id=\"appointments_box\" class=\"index_box\"".($full_width ? " style=\"width: 100%;\"" : '').">");
         print("\n<tr><td class=\"blank\" colspan=\"2\">");
         parse_msg ("info§"._("Es sind keine aktuellen Termine vorhanden."));
         print("\n</td></tr></table>\n");
@@ -362,10 +370,12 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
     $list = new DbCalendarEventList($range_id, $date_start, $date_end, TRUE);
 
     if ($list->existEvent()) {
+        // set skip link
+        SkipLinks::addIndex(_("Termine"), 'appointments_box');
 
         // Ausgabe der Kopfzeile
         $colspan = 1;
-        echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
+        echo "\n<table id=\"appointments_box\" class=\"index_box\" style=\"width: 100%;\">";
         if ($show_admin) {
             $colspan++;
             echo "\n<tr><td class=\"topic\"> <img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" " . tooltip(_("Termine. Klicken Sie rechts auf die Zahnräder, um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen.")) . "> <b>";
@@ -482,7 +492,10 @@ function show_personal_dates ($range_id, $date_start, $date_end, $show_docs=FALS
     }
     // keine Termine da, aber die Moeglichkeit welche einzustellen
     else if ($show_admin) {
-        echo "\n<table class=\"index_box\" style=\"width: 100%;\">";
+        // set skip link
+        SkipLinks::addIndex(_("Termine"), 'appointments_box');
+
+        echo "\n<table id=\"appointments_box\" class=\"index_box\" style=\"width: 100%;\">";
         echo "\n<tr><td class=\"topic\"><img src=\"".Assets::image_path('icons/16/white/schedule.png')."\"> <b>" . _("Termine") . "</b></td>";
         echo "\n<td align =\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Termine einstellen")) . "></a> </td></tr>";
         ?>
@@ -528,9 +541,11 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
     $list->bindSeminarEvents($bind_seminare);
 
     if ($list->existEvent()) {
+        // set skip link
+        SkipLinks::addIndex(_("Termine"), 'appointments_box');
 
         // Ausgabe der Kopfzeile
-        echo "<table class=\"index_box\">";
+        echo "<table id=\"appointments_box\" class=\"index_box\">";
         echo "\n<tr><td class=\"topic\" align=\"left\">\n";
         echo "<img src=\"".Assets::image_path('icons/16/white/schedule.png')."\" ";
         echo tooltip(_("Termine. Klicken Sie rechts auf die Zahnräder, um Termine in diesen Bereich zu bearbeiten. Klicken Sie auf den einfachen Pfeil, um die Terminbeschreibung zu lesen."));
@@ -692,7 +707,10 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
     }
     // keine Termine da, aber die Moeglichkeit welche einzustellen
     else if($show_admin) {
-        echo "\n<table class=\"index_box\">";
+        // set skip link
+        SkipLinks::addIndex(_("Termine"), 'appointments_box');
+
+        echo "\n<table id=\"appointments_box\" class=\"index_box\">";
         echo "\n<tr><td class=\"topic\">" . Assets::img('icons/16/white/schedule.png', array('class' => 'text-top', 'title' =>_('Termine'))) . "<b>  " . _("Termine") . "</b></td>";
         echo "\n<td align=\"right\" class=\"topic\"> $admin_link<img src=\"".Assets::image_path('icons/16/white/admin.png')."\" " . tooltip(_("Termine einstellen")) . "></a> </td></tr>";
         ?>

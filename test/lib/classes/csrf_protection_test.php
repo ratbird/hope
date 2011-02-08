@@ -19,12 +19,13 @@ class CSRFProtectionTokenTest extends UnitTestCase
         if (session_id() === '') {
             session_id("test-session");
         }
+        $this->original_session = $_SESSION;
         $_SESSION = array();
     }
 
     function tearDown()
     {
-        $_SESSION = array();
+        $_SESSION = $this->original_session;
     }
 
     function testTokenGeneration()
@@ -71,6 +72,7 @@ class CSRFRequestTest extends UnitTestCase
         if (session_id() === '') {
             session_id("test-session");
         }
+        $this->original_state = array($_SESSION, $_POST, $_SERVER);
         $_SESSION = array();
         $_POST = array();
         $this->token = CSRFProtection::token();
@@ -79,7 +81,7 @@ class CSRFRequestTest extends UnitTestCase
 
     function tearDown()
     {
-        $_SESSION = array();
+        list($_SESSION, $_POST, $_SERVER) = $this->original_state;
     }
 
     function testInvalidUnsafeRequest()

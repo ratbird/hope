@@ -1,6 +1,7 @@
 <?php
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /*
  * StudipAuthShib.class.php - Stud.IP authentication against Shibboleth server
  * Copyright (c) 2007  Elmar Ludwig, Universitaet Osnabrueck

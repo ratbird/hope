@@ -4,6 +4,7 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter005: TEST
+# Lifter010: TODO
 /**
 * helper functions for handling the board
 *

@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * Config.class.php
  * provides access to global configuration

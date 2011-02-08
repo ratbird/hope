@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <h3>
     <?= _('Plugin-Details') ?>
 </h3>

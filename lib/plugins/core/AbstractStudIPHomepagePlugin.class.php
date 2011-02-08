@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * AbstractStudIPHomepagePlugin.clayss.php - Abstract plugin for plugins shown on
  * the homepage of a user

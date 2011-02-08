@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /**
 * LaTeX Rendering Class
 * Copyright (C) 2003  Benjamin Zeiss <zeiss@math.uni-goettingen.de>

@@ -5,6 +5,7 @@
 # Lifter007: TODO
 # Lifter003: TODO
 # Lifter005: TEST
+# Lifter010: TODO
 /*
 folder.php - Anzeige und Verwaltung des Ordnersystems
 Copyright (C) 2001 Ralf Stockmann <rstockm@gwdg.de>, Cornelis Kater <ckater@gwdg.de>

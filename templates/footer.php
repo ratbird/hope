@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
     <!-- Beginn Footer -->
     <div id="layout_footer">
         <ul>

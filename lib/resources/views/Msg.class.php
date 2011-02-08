@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TEST
 # Lifter003: DONE
+# Lifter010: TODO
 /**
 * Msg.class.php
 * 

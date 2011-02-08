@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <div style="background-color: white; width: 70%; padding: 1em; margin: auto;">
     <?
     foreach ($messages as $type => $msg_array) :

@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * configuration.php - controller class for the configuration
  *

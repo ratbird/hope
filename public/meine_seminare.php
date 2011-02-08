@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /**
  * meine_seminare.php - Anzeige der eigenen Seminare (anhaengig vom Status)
  *

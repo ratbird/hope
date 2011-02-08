@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 # Include all required files ================================================ #
 require_once ("lib/classes/StudipObject.class.php");
 require_once ("lib/vote/VoteDB.class.php");

@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 
 /*
  * This class takes and checks all necessary parameters to display a calendar/schedule/time-table.

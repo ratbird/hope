@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /*
  * db_migration.php - database schema migration
  * Copyright (C) 2007  Elmar Ludwig

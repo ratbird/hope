@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? SkipLinks::addIndex(_("Erste Reiternavigation"), 'tabs', 10); ?>
 <ul id="tabs">
     <? foreach ($navigation as $nav) : ?>

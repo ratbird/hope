@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 require_once($RELATIVE_PATH_SOAP . "/StudipSoapClient" . ($GLOBALS['SOAP_USE_PHP5'] ? "_PHP5" : "") .".class.php");
 require_once($RELATIVE_PATH_ELEARNING_INTERFACE . "/" . "Ilias3ObjectXMLParser.class.php");
 

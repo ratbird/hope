@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <h3><?=_("Neue Sperrebene eingeben")?></h3>
 <?
 echo $message;

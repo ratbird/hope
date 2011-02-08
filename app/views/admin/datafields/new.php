@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <?= (isset($flash['error'])) ? MessageBox::error($flash['error'], $flash['error_detail']) : '' ?>
 
 <? if (empty($object_typ)) : ?>

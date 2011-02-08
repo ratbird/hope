@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (isset($error_msg)): ?>
   <?= MessageBox::error($error_msg) ?>
 <? endif ?>

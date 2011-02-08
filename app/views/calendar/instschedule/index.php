@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 $zoom = Request::get('zoom', 0);
 
 $text  = _("Der Stundenplan zeigt Ihre regelmäßigen Veranstaltungen dieses Semesters sowie von Ihnen selbst erstellte Belegungen.");

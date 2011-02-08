@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <div class="white" style="padding: 0.5em;">
 
   <? if (isset($error)) : ?>

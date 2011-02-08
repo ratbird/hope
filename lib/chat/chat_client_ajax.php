@@ -1,6 +1,7 @@
 <?php
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /**
 * client script for the chat using AJAX
 *

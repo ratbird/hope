@@ -1,8 +1,9 @@
 <?php
+# Lifter010: TODO
 unset($freetext['']);
 if (!isset($link)) $link = false;
 if (($assigned && sizeof($assigned)) || sizeof($freetext)) :
-  
+
     if ($assigned):
         $rooms = $plain ? getPlainRooms($assigned) : getFormattedRooms($assigned, $link);
     endif;

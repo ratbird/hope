@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (sizeof($navigation)) : ?>
     <ul role="navigation" id="skiplink_list">
     <? $i = 1 ?>

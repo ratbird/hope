@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /*
 rss.php - Ausgabe der persšnlcihen News als rss-Feed
 Copyright (C) 2005  Philipp HŸgelmeyer <phuegelm@uni-osnabrueck.de>

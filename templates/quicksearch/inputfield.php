@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if ($withButton) : ?>
 <div class="quicksearch_frame" style="width: <?= $box_width ?>px;">
 <? $withAttributes['style'] = "width: ".($box_width-23)."px;"; ?>

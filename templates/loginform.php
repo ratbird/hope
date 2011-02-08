@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <script type="text/javascript" language="javascript">
 //<![CDATA[
 $(function () {

@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if ($content_for_layout != ''): ?>
     <? if (!isset($admin_title)) $admin_title = _('Administration') ?>
 

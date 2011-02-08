@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <h3><?= _('Anzeige der Log-Events') ?></h3>
 
 <form action="<?= $controller->url_for('event_log/show') ?>" method="POST">

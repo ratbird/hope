@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
 * redirect script for studip-users
 * copy to Ilias webroot

@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (!$tpl['deleted']) { ?>
 <TR>
     <TD width="2%" align="right" valign="center" class="<?=$tpl['class']?>" nowrap="nowrap" height="25">

@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (!$tpl['deleted']) { ?>
 <TR>
     <? if ($tpl['space']) { ?>

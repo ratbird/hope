@@ -4,6 +4,7 @@
 # Lifter003: TEST
 # Lifter005: TODO
 # Lifter007: TODO
+# Lifter010: TODO
 /**
  * score.php - Stud.IP Highscore List
  *

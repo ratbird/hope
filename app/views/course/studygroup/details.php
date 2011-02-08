@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 $icon = 'icons/16/black/schedule.png';
 if ($GLOBALS['perm']->have_studip_perm('autor',$studygroup->getId())) {
     $action = _("Persönlicher Status:");

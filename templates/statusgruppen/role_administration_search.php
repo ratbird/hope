@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? $search_exp = $GLOBALS['search_exp']; ?>
 <form action="<?= URLHelper::getLink("#$anker") ?>" method="post" style="display: inline">
     <?= CSRFProtection::tokenTag() ?>

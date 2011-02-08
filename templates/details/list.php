@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <b><?= $title ?></b><br>
 <? if (sizeof($data) == 1) : ?>
     <a href="<?= URLHelper::getLink($data[0]['link']) ?>">

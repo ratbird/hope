@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <form action="<?=$controller->url_for('admin/lockrules')?>" method="post">
 <?=CSRFProtection::tokenTag()?>
     <select name="lock_rule_type" onchange="this.form.submit();">

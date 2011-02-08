@@ -1,4 +1,5 @@
-<? 
+<?
+# Lifter010: TODO
 if (!isset($show_room)) $show_room = true;
 
 if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
@@ -11,11 +12,11 @@ if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
     else :
       $cycle_output = $cycle['tostring_short'] . ' ' . _("(wöchentlich)");
     endif;
-    if ($cycle['desc']) 
+    if ($cycle['desc'])
       $cycle_output .= ' - '. $cycle['desc'];
 
     if ($show_room) :
-        $cycle_output .= $this->render_partial('dates/_seminar_rooms', 
+        $cycle_output .= $this->render_partial('dates/_seminar_rooms',
             array(
                 'assigned' => $cycle['assigned_rooms'],
                 'freetext' => $cycle['freetext_rooms'],
@@ -29,7 +30,7 @@ if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
   echo implode(", \n", $output);
 
   $presence_types = getPresenceTypes();
-  
+
   if (is_array($dates['irregular'])):
     foreach ($dates['irregular'] as $date) :
       if (in_array($date['typ'], $presence_types) !== false) :

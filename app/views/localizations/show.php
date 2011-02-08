@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 
 $translations = array(
     "suchen" => _("suchen")

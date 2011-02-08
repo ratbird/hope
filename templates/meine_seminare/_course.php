@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 global $SEM_CLASS, $SEM_TYPE, $auth;
 
 $cssSw->resetClass();

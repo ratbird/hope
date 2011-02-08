@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <html>
 <head>
   <?= Assets::stylesheet('style.css') ?>

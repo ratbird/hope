@@ -1,4 +1,7 @@
 <?
+# Lifter010: TODO
+?>
+<?
 $cssSw = new CSSClassSwitcher();
 $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif') ."');"
     ." background-position: left;"

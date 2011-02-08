@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <!-- SEARCHBOX -->
 <form action="<?= URLHelper::getLink() ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>

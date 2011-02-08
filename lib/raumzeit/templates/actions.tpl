@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (!$_LOCKED) { ?>
 <TABLE cellpadding="1" cellspacing="0" border="0" width="<?=$tpl['width']?>">
     <TR>

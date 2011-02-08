@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * MessageBox.class.php
  *

@@ -1,5 +1,6 @@
 <?php
 # Lifter005: TODO - form validation
+# Lifter010: TODO
     $cfg = Config::GetInstance();
     $email_restriction = $cfg->getValue('EMAIL_DOMAIN_RESTRICTION');
 ?>

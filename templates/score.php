@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <div class="topic"><b><?=_("Stud.IP-Rangliste")?></b></div>
 <? if(count($persons)>0) : ?>
 <div style="width: 100%;">

@@ -1,4 +1,7 @@
 <?
+# Lifter010: TODO
+?>
+<?
 if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
 <TR>
     <TD class="steel1" colspan="9">
@@ -131,7 +134,7 @@ if (!$sd_open[$tpl['md_id']] || $_LOCKED) { ?>
 
                 </TD>
             </TR>
-            
+
         </TABLE>
     </TD>
 <?

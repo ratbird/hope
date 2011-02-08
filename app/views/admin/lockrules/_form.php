@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <form action="<?=$action?>" method="post">
 <?=CSRFProtection::tokenTag();?>
 <table class="default">

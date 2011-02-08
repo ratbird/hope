@@ -4,6 +4,7 @@
 # Lifter005: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 
 // wiki regex pattern
 // IMPORTANT: Wiki Keyword has to be in 2nd paranthesed pattern!!

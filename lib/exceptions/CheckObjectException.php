@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * CheckObjectException.php - indicates that no object is selected
  *

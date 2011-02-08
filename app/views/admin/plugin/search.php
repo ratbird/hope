@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <form action="<?= $controller->url_for('admin/plugin/search') ?>" method="post" style="float: right;">
     <?= CSRFProtection::tokenTag() ?>
     <?= _('Suche nach Plugins:') ?>

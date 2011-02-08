@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 
 <div style="width: 750px; margin: auto;">
     <?= MessageBox::error(_("Cookies sind nicht aktiviert!"), array(

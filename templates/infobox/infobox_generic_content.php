@@ -1,4 +1,7 @@
 <?
+# Lifter010: TODO
+?>
+<?
 //
 // Standard Infobox-Layout as of july 2007 used by the method print_infobox() in visual.inc.php
 // WARNING : This type of infobox is deprecated and will be subject to changes!

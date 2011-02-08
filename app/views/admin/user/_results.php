@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <h3><?= sprintf(_("Es wurden %s Personen gefunden"), count($users)) ?></h3>
 
 <form action="<?= $controller->url_for('admin/user/delete') ?>" method="post">

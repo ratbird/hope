@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <ul id="study_area_selection_selected">
 
   <? foreach ($selection->getAreas() as $area) : ?>

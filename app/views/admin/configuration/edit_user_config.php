@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <?= (isset($flash['error']))?MessageBox::error($flash['error'], $flash['error_detail']):'' ?>
 <? if (empty($via_ajax)): ?>
 <h2><?=_("Bearbeiten von Konfigurationsparameter für den Nutzer: ")?><?=$search_user['fullname']?></h2>

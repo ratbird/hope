@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? SkipLinks::addIndex('Infobox', 'infobox_content', 10000); ?>
 <table class="infobox" align="center" width="250" border="0" cellpadding="0" cellspacing="0">
 

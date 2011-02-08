@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * ConfigEntry.class.php
  * model class for table user_config

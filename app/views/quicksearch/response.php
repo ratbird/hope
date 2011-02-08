@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 $search; //instance of SearchType ?
 $searchresults; //array
 

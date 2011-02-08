@@ -1,9 +1,10 @@
 <?
+# Lifter010: TODO
 if (!isset($link)) $link = true;
 
 // condense regular dates by room
 if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
-    if (is_array($cycle['assigned_rooms'])) foreach ($cycle['assigned_rooms'] as $room_id => $count) : 
+    if (is_array($cycle['assigned_rooms'])) foreach ($cycle['assigned_rooms'] as $room_id => $count) :
         $resObj = ResourceObject::Factory($room_id);
         if ($link) {
             $output[$resObj->getFormattedLink(TRUE, TRUE, TRUE)][] = $cycle['tostring_short'] .' ('. $count .'x)';
@@ -12,8 +13,8 @@ if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turn
         }
     endforeach;
 
-    if (is_array($cycle['freetext_rooms'])) foreach ($cycle['freetext_rooms'] as $room => $count) : 
-        if ($room) : 
+    if (is_array($cycle['freetext_rooms'])) foreach ($cycle['freetext_rooms'] as $room => $count) :
+        if ($room) :
             $output['('. htmlReady($room) .')'][] = $cycle['tostring_short']  .' ('. $count .'x)';
         endif;
     endforeach;

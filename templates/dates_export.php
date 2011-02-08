@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <html>
     <head>
         <title>Ablaufplan</title>
@@ -32,6 +35,6 @@ foreach ($dates as $date) :
         <td width="50%"><?= htmlReady($date['title']) ?></td>
     </tr>
 <? endforeach ?>
-    
+
 </table>
 <? endif ?>

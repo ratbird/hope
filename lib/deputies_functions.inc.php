@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
 * Helper functions for deputy handling
 *

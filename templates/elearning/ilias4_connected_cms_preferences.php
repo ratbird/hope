@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 if ($messages["error"] != "") {
     echo MessageBox::error($messages["error"]);
 }

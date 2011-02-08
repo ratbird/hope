@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <ul>
     <? foreach ($navigation as $nav) : ?>
         <? if ($nav->isVisible($needs_image) && $nav->isEnabled()) : ?>

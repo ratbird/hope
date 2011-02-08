@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <h1><?= _("Einrichtungsbild hochladen") ?></h1>
 
 <?= MessageBox::success(_("Die Bilddatei wurde erfolgreich hochgeladen.")) ?>

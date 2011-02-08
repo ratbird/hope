@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 $infobox = array();
 $infobox['picture'] = 'infobox/studygroup.jpg';
 $infobox['content'] = array(

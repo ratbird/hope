@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <!-- Dynamische Links mit Icons -->
 <div id='header'>
     <!--<div id='barTopLogo'>

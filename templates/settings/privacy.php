@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center">
     <tr>
         <td class="blank" width="100%" colspan="2" align="center">

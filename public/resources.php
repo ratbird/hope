@@ -1,5 +1,6 @@
 <?
 # Lifter002: TODO
+# Lifter010: TODO
 /**
  * resources.php - The startscript for the resources module
  *

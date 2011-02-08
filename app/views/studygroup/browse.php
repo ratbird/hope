@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 require_once 'lib/classes/StudygroupAvatar.class.php';
 
 

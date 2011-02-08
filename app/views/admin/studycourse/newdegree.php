@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <?= (isset($flash['error']))?MessageBox::error($flash['error'], $flash['error_detail']):'' ?>
 <form action="<?= $controller->url_for('admin/studycourse/newdegree/'.Request::get('degreenname').'/'.Request::get('description')) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>

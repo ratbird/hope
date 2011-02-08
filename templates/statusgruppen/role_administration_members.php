@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <form action="<?= URLHelper::getLink('') ?>" method="post" style="display: inline;">
     <?= CSRFProtection::tokenTag() ?>
     <select size="10" name="persons_to_add[]" multiple="multiple" style="width:100%;">

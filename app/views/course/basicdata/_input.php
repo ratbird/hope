@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 $is_locked = $input['locked'] ? 'disabled readonly' : '';
 if ($input['type'] === "text") : ?>
     <input <?=$is_locked ?> type="text" name="<?= $input['name'] ?>" value="<?= $input['value'] ?>" style="width: 80%">

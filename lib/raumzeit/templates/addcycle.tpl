@@ -1,4 +1,7 @@
 <?
+# Lifter010: TODO
+?>
+<?
 define('SELECTED', ' checked');
 if ($GLOBALS['RESOURCES_ENABLE'] && $GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COLORING']) {
     $class = 'steelred';

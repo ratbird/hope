@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <TR>
     <TD width="10%" class="steel" nowrap>
         <A name="<?=$tpl['issue_id']?>" />

@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 $infobox = array();
 $infobox['picture'] = StudygroupAvatar::getAvatar($sem_id)->getUrl(Avatar::NORMAL);
 

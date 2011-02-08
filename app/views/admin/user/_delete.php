@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <div class="modalshadow">
     <div class="messagebox messagebox_modal">
         <?= formatReady($data['question']) ?>

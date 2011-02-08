@@ -1,6 +1,7 @@
 <?php
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /*
  * siteinfo - display information about Stud.IP
  *

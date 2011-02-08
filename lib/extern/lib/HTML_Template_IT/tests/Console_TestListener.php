@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 class Console_TestListener extends PHPUnit_TestListener {
     function addError(&$test, &$t) {
         $this->_errors += 1;

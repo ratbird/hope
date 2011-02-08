@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <h3><?=sprintf("Sperrebene \"%s\" ändern", htmlready($lock_rule["name"]))?></h3>
 <?
 echo $message;

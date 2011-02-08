@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /*
  * AdministrationPlugin.class.php - administration plugin interface
  *

@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <html>
 <head>
   <?= Assets::stylesheet('style.css') ?>
@@ -12,7 +15,7 @@
       <br>
       <a href="<?= URLHelper::getLink('sem_notification.php') ?>"><?= URLHelper::getLink('sem_notification.php') ?></a>
     </p>
-  
+
     <table class="default">
       <? foreach ($news as $sem_titel => $data) : ?>
         <tr class="blue_gradient">
@@ -23,7 +26,7 @@
             </a>
           </td>
         </tr>
-  
+
         <? foreach ($data as $module) : ?>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
           <td>

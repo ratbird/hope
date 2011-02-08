@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * LockRule.class.php
  * model class for table lock_rule

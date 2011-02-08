@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <div id="study_area_selection">
 
   <em>

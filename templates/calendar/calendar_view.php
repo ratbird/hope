@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 
 if (!$calendar_view || !($calendar_view instanceof CalendarView)) {
     throw new Exception('You need to pass a variable named $calendar_view, which holds an instance of CalendarView, to this template ('. __FILE__ .')!');
@@ -14,7 +15,7 @@ $cell_steps = $cell_height / 60;
   STUDIP.Calendar.cell_height = <?= $cell_height ?>;
   STUDIP.Calendar.the_entry_content = '<?= str_replace("\n", '', $this->render_partial('calendar/entries/empty_entry')) ?>';
   STUDIP.Calendar.start_hour = <?= $start_hour ?>;
-    
+
   <? if ($js_function = $calendar_view->getInsertFunction()) : ?>
   jQuery(function() {
     jQuery('[id^=calendar_view_<?= $view_id ?>_column_]').bind('click', function(event) {

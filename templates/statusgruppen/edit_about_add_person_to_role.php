@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <tr>
     <td class="steelkante">&nbsp;<b><?=_("Person einer Gruppe zuordnen")?></b></td>
 </tr>

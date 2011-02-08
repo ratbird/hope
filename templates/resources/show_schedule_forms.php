@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <form name="Formular" method="post" action="<?= URLHelper::getLink('?change_object_schedules='. (!$resAssign->isNew() ?  $resAssign->getId() : 'NEW')); ?>#anker">
 <?= CSRFProtection::tokenTag() ?>
 <table border="0" cellpadding="2" cellspacing="0" width="99%" align="center">

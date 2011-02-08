@@ -3,6 +3,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /*
 smiley.class.php - Smiley-Verwaltung von Stud.IP.
 Copyright (C) 2004 Tobias Thelen <tthelen@uos.de>

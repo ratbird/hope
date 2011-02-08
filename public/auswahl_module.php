@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /*
 auswahl_suche.php - Uebersicht ueber die Suchfunktion von Stud.IP
 Copyright (C) 2001 Cornelis Kater <ckater@gwdg.de>

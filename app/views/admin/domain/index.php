@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (isset($message)): ?>
   <?= $message ?>
 <? endif ?>

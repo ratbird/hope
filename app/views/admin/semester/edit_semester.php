@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if ($noteditable) : ?>
 <?= MessageBox::info(_("Das Startdatum kann nur bei Semestern geändert werden, in denen keine Veranstaltungen liegen!")) ?>
 <? endif ?>

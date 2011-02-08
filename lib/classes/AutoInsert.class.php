@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /*
  * AutoInsert.class.php - administrate seminars for automatical logins
  *

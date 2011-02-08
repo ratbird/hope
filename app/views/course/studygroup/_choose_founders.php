@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <tr>
     <td style='text-align:right; vertical-align:top;'><?= _("Gruppengründer:") ?></td>
     <td nowrap>

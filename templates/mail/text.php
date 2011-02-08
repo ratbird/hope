@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <?= $message ?>
 
 --

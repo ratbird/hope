@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 $sem = Seminar::getInstance($show_entry['id']);
 ?>
 <div id="edit_sem_entry" class="schedule_edit_entry">

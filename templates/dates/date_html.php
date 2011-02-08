@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 if (!isset($link)) $link = true;
 echo $date->toString();
 if ($date->getResourceId()) :

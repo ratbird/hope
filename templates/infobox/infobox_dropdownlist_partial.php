@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <tr>
     <td width="100%" colspan="2">
         <b><?= $selectionlist_title ?>:</b>
@@ -6,7 +9,7 @@
 <tr>
     <td width="100%" align="center" colspan="2">
         <form action="<?= URLHelper::getLink() ?>" method="post">
-            <?= CSRFProtection::tokenTag() ?> 
+            <?= CSRFProtection::tokenTag() ?>
             <table border="0" cellspacing="0" cellpadding="0">
                 <tbody><tr>
                     <td valign="center">

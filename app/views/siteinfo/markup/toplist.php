@@ -1,7 +1,10 @@
+<?
+# Lifter010: TODO
+?>
 <h4><?= $heading ?></h4>
 <ol>
 <? foreach($lines as $line) : ?>
-    <? 
+    <?
         switch($type){
             case "seminar":
                 $link = URLHelper::getLink('details.php', array('sem_id' => $line["seminar_id"],

@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <div class="index_container" style="width: 750px;">
 <?if (sizeof($messages)):?>
 <table width="100%">

@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * UserLookup.class.php
  * provides an easy to look up user ids by certain filter criteria

@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (isset($flash['error'])) : ?>
     <?= MessageBox::error($flash['error'], $flash['error_detail']) ?>
 <? elseif (isset($flash['info'])): ?>

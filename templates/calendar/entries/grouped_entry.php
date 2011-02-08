@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 $cat = 1;
 
 // do we have a category-color?
@@ -28,14 +29,14 @@ endforeach;
     <a href="<?= $entry[0]['url'] ?>"
         <?= $entry[0]['onClick'] ? 'onClick="' . $entry[0]['onClick'] . '"' : '' ?> data="<?= $entry[0]['start'] .'/'. $entry[0]['end'] .'/'. implode(',', $ids) ?>">
     <!-- for safari5 we need to set the height for the dl as well -->
-    <dl class="hover" style="height: <?= $height ?>px; 
-        border: 1px solid <?= $entry[0]['color'] ?>; 
+    <dl class="hover" style="height: <?= $height ?>px;
+        border: 1px solid <?= $entry[0]['color'] ?>;
         background-image: url('<?= Assets::url('images/calendar/category'. $cat .'.jpg') ?>')">
         <dt style="background-color: <?= $entry[0]['color'] ?>">
             <?= $entry[0]['start_formatted'] ?> - <?= $entry[0]['end_formatted'] ?>, <b><?= htmlReady(implode(', ', $heading)) ?></b>
         </dt>
-        <dd> 
-            <? foreach ($entry as $element) : 
+        <dd>
+            <? foreach ($entry as $element) :
                 if (!isset($element['visible']) || $element['visible']) : ?>
                 <?= htmlReady($element['content']) ?><br>
                 <? elseif ($show_hidden) : ?>

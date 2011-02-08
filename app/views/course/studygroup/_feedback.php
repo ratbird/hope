@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 if ($errors = $flash['errors']) {
     if ($flash['create']) {
         echo MessageBox::error(_("Beim Anlegen der Studiengruppe traten folgende Fehler auf:"), $errors);

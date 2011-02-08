@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <div class="white" style="padding: 1ex;">
   <? if (isset($error_msg)): ?>
     <?= MessageBox::error($error_msg) ?>

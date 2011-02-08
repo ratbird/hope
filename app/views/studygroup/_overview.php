@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <table class="default">
     <tr class="sortable" title="<?=_("Klicken, um die Sortierung zu ändern")?>">
             <th class="nosort" width="1%"></th>

@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 require_once("Ilias3ConnectedCMS.class.php");
 require_once("lib/classes/Seminar.class.php");
 require_once("lib/classes/Institute.class.php");

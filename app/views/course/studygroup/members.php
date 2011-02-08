@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 if ($rechte) {
     $text = _('Hier können Sie die TeilnehmerInnen der Studiengruppen verwalten. TeilnehmerInnen können je nach Status zu einem Moderator hoch oder runtergestuft werden und aus der Studiengruppe entlassen werden.');
     $aktionen = array(

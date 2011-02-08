@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 sort_groups($group_field, $groups);
 $group_names = get_group_names($group_field, $groups);
 foreach ($groups as $group_id => $group_members) {

@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <TR>
     <TD height="3" class="steel1">
     </TD>
@@ -20,6 +23,6 @@
         </A>
     </TD>
 </TR>
-<? 
+<?
     unset($tpl)
 ?>

@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <?php
 require_once 'lib/classes/MessageBox.class.php';
 require_once 'lib/visual.inc.php';

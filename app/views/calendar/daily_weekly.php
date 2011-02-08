@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 if (!$calendar_view || get_class($calendar_view) != 'CalendarWeekView') {
     throw new Exception('You need to pass a variable named $calendar_view, which holds an instance of CalendarView, to this template ('. __FILE__ .')!');
 }

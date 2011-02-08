@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <ul>
     <? foreach ($subtree->getChildren() as $child) : ?>
         <li>

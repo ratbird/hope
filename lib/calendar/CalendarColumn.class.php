@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /*
  * This class represents an entry-column like "monday" in the calendar
  *

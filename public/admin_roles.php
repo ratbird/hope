@@ -3,6 +3,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /*
 admin_statusgruppe.php - Statusgruppen-Verwaltung von Stud.IP.
 Copyright (C) 2008 Till Glöggler <tgloeggl@uos.de>

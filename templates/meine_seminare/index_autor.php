@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 global $auth, $perm, $SEM_CLASS, $SEM_TYPE, $INST_TYPE;
 ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">

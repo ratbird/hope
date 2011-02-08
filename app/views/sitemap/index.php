@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <table class="default">
     <tr>
         <th width="50%"><?= _('Hauptnavigation') ?></th>

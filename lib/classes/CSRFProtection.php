@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 
 /**
  * CSRFProtection.php - protect from request forgery

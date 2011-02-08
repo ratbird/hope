@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <tr>
   <th style="width: 40%;">
     <?= _('Name') ?>

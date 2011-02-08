@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 
 /**
  * Overview of all existing votes ... vote_overview.inc.php

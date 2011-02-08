@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <form action="<?= URLHelper::getLink() ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <? if (!$edit_role) : ?>

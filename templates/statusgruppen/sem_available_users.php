@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <table class="steel1" cellspacing="0" cellpadding="2" border="0" width="95%">
     <tr>
         <td>&nbsp;<?= _("VeranstaltungsteilnehmerInnen") ?></td>

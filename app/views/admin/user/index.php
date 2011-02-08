@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if ($flash['delete']) : ?>
 <?= $this->render_partial("admin/user/_delete", array('data' => $flash['delete'])) ?>
 <? endif ?>

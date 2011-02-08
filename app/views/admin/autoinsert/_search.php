@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <table class="default">
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
         <td><label for="sem_select"><?= _('Semester:') ?></label></td>

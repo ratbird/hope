@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <form action="<?= $controller->url_for('admin/configuration/configuration') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <select name="config_filter" onchange="this.form.submit();">

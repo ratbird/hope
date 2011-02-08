@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <!-- Startseite (nicht eingeloggt) -->
 <? if ($logout) : ?>
     <?= MessageBox::success(_("Sie sind nun aus dem System abgemeldet."), array($GLOBALS['UNI_LOGOUT_ADD'])) ?>

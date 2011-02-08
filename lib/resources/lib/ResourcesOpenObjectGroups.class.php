@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 /**
 * ResourcesOpenObjectGroups.class.php
 * 

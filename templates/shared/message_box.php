@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <div class="messagebox messagebox_<?= $class ?> <? if (sizeof($details) && $close_details): ?>details_hidden<? endif; ?>">
     <div class="messagebox_buttons">
     <? if (sizeof($details) && $close_details) : ?>

@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 $cat = 1;
 
 // do we have a category-color?
@@ -13,14 +14,14 @@ endforeach;
     <a<?= $entry['url'] ? ' href="'.$entry['url'].'"' : "" ?>
         <?= $entry['onClick'] ? 'onClick="STUDIP.Calendar.clickEngine('. $entry['onClick'].', this, event);"' : '' ?>>
     <!-- for safari5 we need to set the height for the dl as well -->
-    <dl class="hover" style="height: <?= $height - 2 ?>px; 
+    <dl class="hover" style="height: <?= $height - 2 ?>px;
         border: 1px solid <?= $entry['color'] ?>;
         background-color: <?= $entry['color'] ?>;
         ">
         <dt style="background-color: <?= $entry['color'] ?>;">
             <?= floor($entry['start']/100).":".(($entry['start']%100) < 10 ? "0" : "").($entry['start']%100) ?> - <?= floor($entry['end']/100).":".(($entry['end']%100) < 10 ? "0" : "").($entry['end']%100) ?><?= $entry['title'] ? ', <b>'. htmlReady($entry['title']) .'</b>' : '' ?>
         </dt>
-        <dd> 
+        <dd>
             <?= nl2br(htmlReady($entry['content'])) ?><br>
         </dd>
     </dl>

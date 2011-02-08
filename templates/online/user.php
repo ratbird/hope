@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <tr class="<?= $background ? $background : 'steel1' ?>">
 
     <td width="1%" <?= $gruppe ? "class=\"$gruppe\"" : '' ?>>

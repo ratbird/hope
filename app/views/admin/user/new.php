@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <h2><?= _('Einen neuen Benutzer anlegen') ?></h2>
 
 <form method="post" action="<?= $controller->url_for('admin/user/new') ?>">

@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 $_id = htmlReady($area->getID());
 ?>
 <li id="study_area_selection_<?= $_id ?>" class="<?= TextHelper::cycle('odd', 'even') ?>">

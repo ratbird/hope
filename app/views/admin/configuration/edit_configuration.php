@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (isset($flash['success'])): ?>
     <?= MessageBox::info($flash['success']) ?>
 <? endif; ?>

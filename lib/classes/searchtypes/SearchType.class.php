@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * SQLSearch.class.php - A class-structure for alle search-objects in Stud.IP.
  *

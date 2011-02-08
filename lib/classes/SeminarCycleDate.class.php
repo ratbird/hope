@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * SeminarCycleDate.class.php
  * model class for table seminar_cycle_dates

@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <!-- upload extern config -->
 <tr>
     <td colspan="10" align="center" class="<?= $class ?>">

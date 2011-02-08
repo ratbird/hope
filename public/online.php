@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /**
  * online.php - Anzeigemodul fuer Personen die Online sind
  *

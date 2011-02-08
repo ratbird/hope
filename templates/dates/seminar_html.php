@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (!$dates['regular']['turnus_data'] && (!sizeof($dates['irregular']))) : ?>
   <?= _("Die Zeiten der Veranstaltung stehen nicht fest."); ?>
 <? else : ?>

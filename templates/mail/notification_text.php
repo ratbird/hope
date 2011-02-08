@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <?= _("Diese Email wurde automatisch vom Stud.IP-System verschickt. Sie können auf diese Nachricht nicht antworten.") ?>
 
 <?= _("Sie erhalten hiermit in regelmäßigen Abständen Informationen über Neuigkeiten und Änderungen in Ihren abonnierten Veranstaltungen.") ?>

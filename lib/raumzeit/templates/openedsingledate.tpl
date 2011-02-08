@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (!$tpl['deleted']) : ?>
 <TR>
     <TD class="printcontent" colspan="9">
@@ -34,7 +37,7 @@
                     <? } ?>
                 </TD>
                 <TD width="5%" class="<?=$tpl['class']?>" align="right">
-                    <A href="<?= URLHelper::getLink('?cmd=delete_singledate&sd_id='. $tpl['sd_id'] 
+                    <A href="<?= URLHelper::getLink('?cmd=delete_singledate&sd_id='. $tpl['sd_id']
                         .'&cycle_id='. ($tpl['cycle_id'] ? $tpl['cycle_id'] : '')) ?>">
                         <IMG src="<?=$GLOBALS['ASSETS_URL']?>images/icons/16/blue/trash.png" border="0" align="absmiddle">
                     </A>
@@ -150,7 +153,7 @@
                 </td>
                 <td width="20%" nowrap class="<?=$tpl['class']?>" align="right">
                     <? if (!$_LOCKED) { ?>
-                        <a href="<?= URLHelper::getLink('?cmd=undelete_singledate&sd_id='. $tpl['sd_id'] 
+                        <a href="<?= URLHelper::getLink('?cmd=undelete_singledate&sd_id='. $tpl['sd_id']
                             .'&cycle_id='. ($tpl['cycle_id'] ? $tpl['cycle_id'] : '')) ?>">
                             <?= Assets::img('icons/16/grey/decline/trash.png', array('class' => 'text-top', 'title' => _("Termin wiederherstellen"))) ?>
                         </a>
@@ -181,7 +184,7 @@
         <input type="hidden" name="singleDateID" value="<?=$tpl['sd_id']?>">
         <? if ($tpl['cycle_id']) { ?>
         <input type="hidden" name="cycle_id" value="<?=$tpl['cycle_id']?>">
-        <? } ?> 
+        <? } ?>
     </td>
 </tr>
 <? endif; ?>

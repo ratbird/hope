@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <TR style="height: 1.8em">
     <TD width="1%" align="right" valign="bottom" class="<?=$tpl['class']?>" nowrap="nowrap">
         <A href="<?= URLHelper::getLink('?cmd='. ($issue_open[$tpl['sd_id']] ? 'close' : 'open') .'&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id'])?>">

@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * QuickSearch.class.php - GUI class for quciksearch
  *

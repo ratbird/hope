@@ -1,4 +1,7 @@
 <?
+# Lifter010: TODO
+?>
+<?
     $cssSw = new cssClassSwitcher();
     $cssSw->switchClass();
     $num = 0;

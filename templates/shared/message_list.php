@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (is_array($messages)) foreach ($messages as $type => $content) : ?>
   <? switch ($type) :
      case 'info':

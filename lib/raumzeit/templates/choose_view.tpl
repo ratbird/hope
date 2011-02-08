@@ -1,4 +1,7 @@
-<TABLE cellspacing="0" cellpadding="0" border="0"> 
+<?
+# Lifter010: TODO
+?>
+<TABLE cellspacing="0" cellpadding="0" border="0">
     <TR>
         <TD colspan="5" class="blank" height="10"></TD>
     </TR>

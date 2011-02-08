@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? $color = "#2222aa" ?>
 <div id="schedule_entry__new" class="schedule_entry" style="width: 98%">
     <dl style="border: 1px solid <?= $color ?>;

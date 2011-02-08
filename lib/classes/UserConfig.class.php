@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * UserConfig.class.php
  * provides access to user preferences

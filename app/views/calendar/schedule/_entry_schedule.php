@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <div id="edit_entry" class="schedule_edit_entry" <?= $show_entry ? '' : 'style="display: none"' ?>>
     <div id="edit_entry_drag" class="window_heading">Termindetails bearbeiten</div>
     <form action="<?= $controller->url_for('calendar/schedule/addentry'. ($show_entry['id'] ? '/'. $show_entry['id'] : '') ) ?>" method="post" name="edit_entry" style="padding-left: 10px; padding-top: 10px; margin-right: 10px;" onSubmit="return STUDIP.Schedule.checkFormFields()">
@@ -10,11 +13,11 @@
 
         <div id="schedule_entry_hours">
             <?= _("von") ?>
-            <input type="text" size="2" name="entry_start_hour" value="<?= $show_entry['start_hour'] ?>" 
+            <input type="text" size="2" name="entry_start_hour" value="<?= $show_entry['start_hour'] ?>"
                 onChange="STUDIP.Calendar.validateHour(this)"> :
             <input type="text" size="2" name="entry_start_minute" value="<?= $show_entry['start_minute'] ?>"
                 onChange="STUDIP.Calendar.validateMinute(this)">
-    
+
             <?= _("bis") ?>
             <input type="text" size="2" name="entry_end_hour" value="<?= $show_entry['end_hour'] ?>"
                 onChange="STUDIP.Calendar.validateHour(this)"> :

@@ -4,6 +4,7 @@
 # Lifter005: TODO - studipim
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /*
 about.php - Anzeige der persoenlichen Userseiten von Stud.IP
 Copyright (C) 2000 Ralf Stockmann <rstockm@gwdg.de>, Stefan Suchi <suchi@gmx.de>, Niclas Nohlen <nnohlen@gwdg.de>

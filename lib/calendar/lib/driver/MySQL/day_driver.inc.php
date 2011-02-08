@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 
 function day_save (&$events_save, &$events_delete) {
     $db = new DB_Seminar();

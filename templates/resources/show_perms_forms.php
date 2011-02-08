@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <form method="post" action="<?= UrlHelper::getLink('?change_object_perms='. $resObject->getId()) ?>">
 <?= CSRFProtection::tokenTag() ?>
 <table border="0" celpadding="2" cellspacing="0" width="99%" align="center">

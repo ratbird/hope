@@ -1,4 +1,7 @@
 <?
+# Lifter010: TODO
+?>
+<?
 
 $roles_pos = 1;
 if (!isset($all_roles)) $all_roles = $roles;

@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <?=$this->render_partial('header');?>
 <div align="center">
   <table style="width: 80%;">

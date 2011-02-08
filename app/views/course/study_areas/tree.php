@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <input type="hidden" name="study_area_selection[last_selected]" value="<?= htmlReady($selection->getSelected()->getID()) ?>">
 
 <?

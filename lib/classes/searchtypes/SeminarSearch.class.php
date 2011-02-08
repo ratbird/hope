@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * SeminarSearch.class.php
  * class to adapt StudipSemSearch to Quicksearch

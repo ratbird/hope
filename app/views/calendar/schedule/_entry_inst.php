@@ -1,4 +1,5 @@
 <?
+# Lifter010: TODO
 foreach ($show_entry['seminars'] as $sem_id) {
     $seminars[] = Seminar::getInstance($sem_id);
 }

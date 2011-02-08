@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /*
 stm_details.php - Detail-Uebersicht eines konkreten Studienmoduls
 Copyright (C) 2006 André Noack <noack@data-quest.de>

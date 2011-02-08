@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <div id="schedule_new_entry" style="display: none;">
     <div id="new_entry_drag" class="window_heading">
         <span id="entry_day"></span>,

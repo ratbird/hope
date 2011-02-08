@@ -4,6 +4,7 @@
 # Lifter005: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /*
 show_admission.php - Instituts-Mitarbeiter-Verwaltung von Stud.IP
 Copyright (C) 2000 Ralf Stockmann <rstockm@gwdg.de>

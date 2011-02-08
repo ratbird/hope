@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (array_key_exists($m['user_id'], $moderators) && $GLOBALS['perm']->have_studip_perm('admin', $sem_id)) : ?>
     <a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$m['username'].'/promote/tutor') ?>" alt="NutzerIn runterstufen">
         <?= makebutton('runterstufen') ?>

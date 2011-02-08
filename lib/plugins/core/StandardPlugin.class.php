@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /*
  * StandardPlugin.class.php - course or institute plugin interface
  *

@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <SELECT name="checkboxAction">
     <OPTION value="noSelection">-- <?=_("Aktion ausw&auml;hlen")?> --</OPTION>
     <OPTION value="chooseAll"><?=_("alle ausw&auml;hlen")?></OPTION>

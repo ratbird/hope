@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <? if (isset($flash['delete'])): ?>
     <? if ($flash['mode']=='semester'): ?>
         <?= createQuestion(sprintf(_('Wollen Sie das Semester "%s" wirklich löschen?'), $flash['delete']['name']), array('delete' => 1), array('back' => 1), $controller->url_for('admin/semester/delete/') . $flash['delete']['semester_id']."/semester"); ?>

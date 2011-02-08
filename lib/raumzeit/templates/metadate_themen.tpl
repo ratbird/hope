@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <TR>
     <TD class="steelgraulight" colspan="3">
         <A name="<?=$tpl['md_id']?>" />

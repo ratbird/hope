@@ -4,6 +4,7 @@
 # Lifter005: TODO - passwortabsicherung
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 /**
 * sem_verify.php
 *

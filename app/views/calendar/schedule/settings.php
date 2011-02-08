@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <div id="schedule-settings-dialog-shadow"></div>
 <div id="schedule_settings" class="edit_entry">
     <div class="window_heading_nodrag">
@@ -32,9 +35,9 @@
                 </option>
             <? endfor ?>
             </select>
-    
+
             <?= _("bis") ?>
-    
+
             <select name="end_hour">
             <? for ($i = 0; $i <= 23; $i++) : ?>
                 <option value="<?= $i ?>" <?= $settings['glb_end_time'] == $i ? 'selected="selected"' : '' ?>>
@@ -42,7 +45,7 @@
                     </option>
             <? endfor ?>
             </select>
-    
+
             <?= _("Uhr") ?><br>
         </div>
 

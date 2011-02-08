@@ -1,4 +1,5 @@
 <?php
+# Lifter010: TODO
 /**
  * StandardSearch.class.php - Class of type SearchType used for searches with QuickSearch
  *

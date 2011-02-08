@@ -1,3 +1,6 @@
+<?
+# Lifter010: TODO
+?>
 <p class="info">
     <form enctype="multipart/form-data" action="<?= URLHelper::getLink('?_range_id='. $_range_id .'&username='. $username) ?>" method="post">
         <?= CSRFProtection::tokenTag() ?>

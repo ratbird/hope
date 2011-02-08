@@ -2,6 +2,7 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
+# Lifter010: TODO
 define('LANGUAGE_ID',"09c438e63455e3e1b3deabe65fdbc087");
 
 require_once ("lib/functions.php");

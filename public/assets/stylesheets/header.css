@@ -145,6 +145,8 @@ div#barTopLogo {
 }
 div#header {
     height: 100px;
+    background-image: url("../images/background_header.png");
+    background-repeat: repeat-x;
 }
 
 /* --- main navigation ------------------------------------------------------ */

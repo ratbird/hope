@@ -74,6 +74,7 @@ class CSRFRequestTest extends UnitTestCase
         $_SESSION = array();
         $_POST = array();
         $this->token = CSRFProtection::token();
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = null;
     }
 
     function tearDown()

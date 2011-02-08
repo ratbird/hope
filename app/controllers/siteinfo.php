@@ -54,7 +54,7 @@ class SiteinfoController extends StudipController
         }
         $this->set_layout($this->layout);
         PageLayout::setTitle(_('Impressum'));
-        PageLayout::setTabNavigation('/links/siteinfo');
+        PageLayout::setTabNavigation('/footer/siteinfo');
     }
 
     function populate_ids($args)
@@ -82,7 +82,7 @@ class SiteinfoController extends StudipController
             if ($rubric[1] == '') {
                 $rubric[1] = _('unbenannt');
             }
-            Navigation::addItem('/links/siteinfo/'.$rubric[0],
+            Navigation::addItem('/footer/siteinfo/'.$rubric[0],
                 new Navigation($rubric[1], $this->url_for('siteinfo/show/'.$rubric[0])));
         }
 
@@ -91,15 +91,15 @@ class SiteinfoController extends StudipController
             if ($detail[2] == '') {
                 $detail[2] = _('unbenannt');
             }
-            Navigation::addItem('/links/siteinfo/'.$detail[1].'/'.$detail[0],
+            Navigation::addItem('/footer/siteinfo/'.$detail[1].'/'.$detail[0],
                 new Navigation($detail[2], $this->url_for('siteinfo/show/'.$detail[1].'/'.$detail[0])));
         }
 
         if ($action != 'new') {
             if ($this->currentdetail > 0) {
-                Navigation::activateItem('/links/siteinfo/'.$this->currentrubric.'/'.$this->currentdetail);
+                Navigation::activateItem('/footer/siteinfo/'.$this->currentrubric.'/'.$this->currentdetail);
             } else {
-                Navigation::activateItem('/links/siteinfo/'.$this->currentrubric);
+                Navigation::activateItem('/footer/siteinfo/'.$this->currentrubric);
             }
         }
     }
@@ -152,7 +152,7 @@ class SiteinfoController extends StudipController
     function new_action ($givenrubric=NULL)
     {
         if($givenrubric===NULL){
-            Navigation::addItem('/links/siteinfo/rubric_new',
+            Navigation::addItem('/footer/siteinfo/rubric_new',
                 new AutoNavigation(_('neue Rubrik'), $this->url_for('siteinfo/new')));
             $this->edit_rubric = TRUE;
         } else {

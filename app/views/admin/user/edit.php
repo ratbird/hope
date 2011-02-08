@@ -276,7 +276,7 @@
             <select name="new_student_inst">
                 <option selected="selected" value="none"><?= _('-- Bitte Einrichtung auswählen --') ?></option>
                 <? foreach ($available_institutes as $i) : ?>
-                <option value="<?= $i['Institut_id'] ?>"><?= htmlReady($i['Name']) ?></option>
+                <option value="<?= $i['Institut_id'] ?>"><?= htmlReady(my_substr($i['Name'], 0, 50)) ?></option>
                 <? endforeach ?>
             </select>
         </td>
@@ -316,7 +316,7 @@
             <select name="new_inst">
                 <option selected="selected" value="none"><?= _('-- Bitte Einrichtung auswählen --') ?></option>
                 <? foreach ($available_institutes as $i) : ?>
-                <option value="<?= $i['Institut_id'] ?>"><?= htmlReady($i['Name']) ?></option>
+                <option value="<?= $i['Institut_id'] ?>"><?= htmlReady(my_substr($i['Name'], 0, 50)) ?></option>
                 <? endforeach ?>
             </select>
         </td>

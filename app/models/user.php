@@ -96,7 +96,7 @@ class UserModel
                                     $locked = NULL, $datafields= NULL, $sort = NULL, $order = 'DESC')
     {
         // keine suchkriterien
-        if (empty($username) && empty($vorname) && empty($nachname) && empty($email)
+        if (empty($username) && empty($email)
             && empty($locked) && empty($inaktiv) && empty($datafields)) {
             return 0;
         }

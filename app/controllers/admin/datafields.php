@@ -190,6 +190,6 @@ class Admin_DatafieldsController extends AuthenticatedController
             $this->flash['delete'] = compact('datafield_id', 'name');
         }
 
-        $this->redirect('admin/datafields/'.$type.'#'.$type);
+        $this->redirect('admin/datafields/index/'.$type.'#'.$type);
     }
 }

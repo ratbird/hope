@@ -1547,7 +1547,7 @@ STUDIP.SkipLinks = {
     } else {
       fragment = STUDIP.SkipLinks.getFragment();
     }
-    if (jQuery('*').is(fragment) && fragment.length > 0 && fragment != STUDIP.SkipLinks.activeElement) {
+    if (jQuery('*').is(fragment) && fragment.length > 0 && fragment !== STUDIP.SkipLinks.activeElement) {
       STUDIP.SkipLinks.moveSkipLinkNavigationOut();
       STUDIP.SkipLinks.navigationIn = true;
       STUDIP.SkipLinks.highlightBox(fragment, false);

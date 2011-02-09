@@ -150,11 +150,11 @@ a.printhead {
     min-height: 100%;
     height: auto !important;
     height: 100%;
-    margin: 0 auto -31px; /* the bottom margin is the negative value of the footer's height */
+    margin: 0 auto -25px; /* the bottom margin is the negative value of the footer's height */
 }
 
 #layout_push {
-    height: 31px; /* must be the same height as #layout_footer */
+    height: 25px; /* must be the same height as #layout_footer */
 
 }
 
@@ -162,11 +162,12 @@ a.printhead {
     position: relative;
     clear: both;
     margin: 0;
-    border-top:1px solid #1E3E70;
-    padding: 3px;
+    border-top: 1px solid #1E3E70;
+    padding: 0;
     background-color: #899AB9;
     color: #FFF;
     text-align: right;
+    height: 24px;
 }
 
 table.infobox td {

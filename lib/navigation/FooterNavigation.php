@@ -29,16 +29,21 @@ class FooterNavigation extends Navigation
 
         parent::initSubNavigation();
 
-        //studip
-        $this->addSubNavigation('studip', new Navigation(_('Stud.IP'), 'http://www.studip.de/'));
-
-        //blog
-        $this->addSubNavigation('blog', new Navigation(_('Blog'), 'http://blog.studip.de/'));
+        // help
+        if (get_config('EXTERNAL_HELP')) {
+            $this->addSubNavigation('help', new HelpNavigation(_('Hilfe')));
+        }
 
         // sitemap
         if (is_object($user) && $user->id != 'nobody') {
             $this->addSubNavigation('sitemap', new Navigation(_('Sitemap'), 'dispatch.php/sitemap/'));
         }
+
+        //studip
+        $this->addSubNavigation('studip', new Navigation(_('Stud.IP'), 'http://www.studip.de/'));
+
+        //blog
+        $this->addSubNavigation('blog', new Navigation(_('Blog'), 'http://blog.studip.de/'));
 
         // imprint
         $this->addSubNavigation('siteinfo', new Navigation(_('Impressum'), 'dispatch.php/siteinfo/show'));

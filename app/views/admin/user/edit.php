@@ -26,7 +26,7 @@
             <?= _("Benutzername:") ?>
         </td>
         <td colspan="2">
-        <? if (StudipAuthAbstract::CheckField("auth_user_md5.username", $user['auth_plugin'])) : ?>
+        <? if (StudipAuthAbstract::CheckField("auth_user_md5.username", $user['auth_plugin']) || LockRules::check($user['user_id'], 'username')) : ?>
             <?= htmlReady($user['username']) ?>
         <? else : ?>
             <input class="user_form" type="text" name="username" value="<?= $user['username'] ?>">
@@ -54,7 +54,7 @@
             <?= _("Vorname:") ?>
         </td>
         <td colspan="2">
-        <? if (StudipAuthAbstract::CheckField("auth_user_md5.Vorname", $user['auth_plugin'])) : ?>
+        <? if (StudipAuthAbstract::CheckField("auth_user_md5.Vorname", $user['auth_plugin']) || LockRules::check($user['user_id'], 'name')) : ?>
             <?=  htmlReady($user['Vorname']) ?>
         <? else : ?>
             <input class="user_form" type="text" name="Vorname" value="<?= htmlReady($user['Vorname']) ?>">
@@ -66,7 +66,7 @@
             <?= _("Nachname:") ?>
         </td>
         <td colspan="2">
-        <? if (StudipAuthAbstract::CheckField("auth_user_md5.Nachname", $user['auth_plugin'])) : ?>
+        <? if (StudipAuthAbstract::CheckField("auth_user_md5.Nachname", $user['auth_plugin']) || LockRules::check($user['user_id'], 'name')) : ?>
             <?= htmlReady($user['Nachname']) ?>
         <? else : ?>
             <input class="user_form" type="text" name="Nachname" value="<?= htmlReady($user['Nachname']) ?>">
@@ -78,9 +78,13 @@
             <?= _("Geschlecht:") ?>
         </td>
         <td colspan="2">
+        <? if (StudipAuthAbstract::CheckField("auth_user_md5.geschlecht", $user['auth_plugin']) || LockRules::check($user['user_id'], 'gender')) : ?>
+            <?=(!$user['geschlecht'] ? _("unbekannt") : ($user['geschlecht'] == 1 ? _("männlich") :  _("weiblich"))) ?>
+        <? else : ?>
             <input type="radio"<?= (!$user['geschlecht']) ? ' checked' : '' ?> name="geschlecht" value="0"><?= _("unbekannt") ?>
             <input type="radio"<?= ($user['geschlecht'] == 1) ? ' checked' : '' ?> name="geschlecht" value="1"><?= _("männlich") ?>
             <input type="radio"<?= ($user['geschlecht'] == 2) ? ' checked' : '' ?> name="geschlecht" value="2"><?= _("weiblich") ?>
+        <? endif ?>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
@@ -88,12 +92,16 @@
             <?= _("Titel:") ?>
         </td>
         <td colspan="2">
+        <? if (StudipAuthAbstract::CheckField("auth_user_md5.title_front", $user['auth_plugin']) || LockRules::check($user['user_id'], 'title')) : ?>
+            <?=htmlReady($user['title_front']) ?>
+        <? else : ?>
             <select name="title_front_chooser" onchange="jQuery('input[name=title_front]').val( jQuery(this).val() );">
             <? foreach(get_config('TITLE_FRONT_TEMPLATE') as $title) : ?>
                 <option value="<?= $title ?>" <?= ($title == $user['title_front']) ? 'selected' : '' ?>><?= $title ?></option>
             <? endforeach ?>
             </select>
             <input class="user_form" type="text" name="title_front" value="<?= htmlReady($user['title_front']) ?>">
+        <? endif ?>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
@@ -101,6 +109,9 @@
             <?=_("Titel nachgestellt:") ?>
         </td>
         <td colspan="2">
+        <? if (StudipAuthAbstract::CheckField("auth_user_md5.title_rear", $user['auth_plugin']) || LockRules::check($user['user_id'], 'title')) : ?>
+            <?=htmlReady($user['title_rear']) ?>
+        <? else : ?>
             <select name="title_rear_chooser" onchange="jQuery('input[name=title_rear]').val( jQuery(this).val() );">
             <? foreach(get_config('TITLE_REAR_TEMPLATE') as $rtitle) : ?>
                 <option value="<?= $rtitle ?>" <?= ($rtitle == $user['title_rear']) ? 'selected' : '' ?>><?= $rtitle ?></option>
@@ -108,6 +119,7 @@
             </select>
             <input class="user_form" type="text" name="title_rear" value="<?= htmlReady($user['title_rear']) ?>">
         </td>
+        <? endif ?>
     </tr>
 </tbody>
 <tbody>
@@ -154,8 +166,8 @@
             <?= _("E-Mail:") ?>
         </td>
         <td colspan="2">
-        <? if (StudipAuthAbstract::CheckField("auth_user_md5.Email", $auth_plugin)) : ?>
-            <?= htmlReady($db->f("Email")) ?>
+        <? if (StudipAuthAbstract::CheckField("auth_user_md5.Email", $auth_plugin) || LockRules::check($user['user_id'], 'email')) : ?>
+            <?= htmlReady($user["Email"]) ?>
         <? else : ?>
             <input class="user_form" type="text" name="Email" value="<?= htmlReady($user['Email']) ?>">
             <? if ($GLOBALS['MAIL_VALIDATE_BOX']) : ?>
@@ -377,6 +389,29 @@
 </tbody>
 <? endif ?>
 
+<? if ($GLOBALS['perm']->have_perm('root')) : ?>
+<tbody>
+    <tr class="steel header-row">
+        <td colspan="3" class="toggle-indicator">
+            <a class="toggler"><b><?= _('Sperrebene') ?></b></a>
+        </td>
+    </tr>
+    <tr class="steel1">
+        <td>
+            <?= _('Sperrebene')?>
+        </td>
+        <td colspan="2">
+            <select name="lock_rule">
+            <option value="none"><?= _('-- Bitte Sperrebene auswählen --') ?></option>
+            <? foreach (LockRule::findAllByType('user') as $rule) : ?>
+                <option value="<?=$rule->getId()?>" <?=($user['lock_rule'] == $rule->getId() ? 'selected' : '')?>><?=htmlReady($rule->name)?></option>
+            <? endforeach ?>
+            </select>
+        </td>
+    </tr>
+</tbody>
+<? endif ?>
+
 <? if (count($userfields) > 0) : ?>
 <tbody>
     <tr class="steel header-row">
@@ -391,7 +426,7 @@
                 <?= htmlReady($entry->getName()) ?>:
             </td>
             <td colspan="2">
-            <? if ($entry->isEditable()) : ?>
+            <? if ($entry->isEditable() && !LockRules::Check($user['user_id'], $entry->getId())) : ?>
                 <?= $entry->getHTML("datafields") ?>
             <? else : ?>
                 <?= $entry->getDisplayValue() ?>

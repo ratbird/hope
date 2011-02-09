@@ -160,7 +160,7 @@ class LockRules {
 
         $attributes['user']['name'] = array('name' => _("Vor- und Nachname"), 'group' => 'basic');
         $attributes['user']['username'] = array('name' => _("Nutzername"), 'group' => 'basic');
-        $attributes['user']['passwort'] = array('name' => _("Passwort"), 'group' => 'basic');
+        $attributes['user']['password'] = array('name' => _("Passwort"), 'group' => 'basic');
         $attributes['user']['email'] = array('name' => _("E-Mail"), 'group' => 'basic');
         $attributes['user']['title'] = array('name' => _("Titel"), 'group' => 'basic');
         $attributes['user']['gender'] = array('name' => _("Geschlecht"), 'group' => 'basic');

@@ -258,24 +258,20 @@ class Admin_UserController extends AuthenticatedController
             $um = new UserManagement($user_id);
 
             //new user data
-            $editUser = array(
-                'auth_user_md5.Vorname' => Request::get('Vorname'),
-                'auth_user_md5.Nachname' => Request::get('Nachname'),
-                'auth_user_md5.perms' => $editPerms[0],
-                'auth_user_md5.auth_plugin' => Request::get('auth_plugin'),
-                'auth_user_md5.visible' => Request::get('visible'),
-                'user_info.title_front' => Request::get('title_front'),
-                'user_info.title_rear' => Request::get('title_rear'),
-                'user_info.geschlecht' => Request::get('geschlecht'),
-            );
+            $editUser = array();
 
+            foreach(words('Vorname Nachname auth_plugin visible') as $param) {
+                if (Request::get($param)) $editUser['auth_user_md5.' . $param] = Request::get($param);
+            }
+            foreach(words('title_front title_rear geschlecht') as $param) {
+                if (Request::get($param)) $editUser['user_info.' . $param] = Request::get($param);
+            }
             //change username
-            if ($this->user['username'] != Request::get('username')) {
+            if (Request::get('username') && $this->user['username'] != Request::get('username')) {
                 $editUser['auth_user_md5.username'] = Request::get('username');
             }
-
             //change email
-            if ($this->user['Email'] != Request::get('Email')) {
+            if (Request::get('Email') && $this->user['Email'] != Request::get('Email')) {
                 //disable mailbox validation
                 if (Request::get('disable_mail_host_check')) {
                     $GLOBALS['MAIL_VALIDATE_BOX'] = false;
@@ -377,6 +373,14 @@ class Admin_UserController extends AuthenticatedController
                 }
             }
 
+            if ($perm->have_perm('root') && Request::get('lock_rule')) {
+                $st = DbManager::get()->prepare("UPDATE user_info SET lock_rule=? WHERE user_id=?");
+                $st->execute(array((Request::get('lock_rule') == 'none' ? '' : Request::option('lock_rule')), $user_id));
+                if ($st->rowCount()) {
+                    $details[] = _("Die Sperrebene wurde geändert.");
+                }
+            }
+
             //save action and messages
             #print_r($um->user_data);
             if ($um->changeUser($editUser)) {
@@ -399,6 +403,9 @@ class Admin_UserController extends AuthenticatedController
         $this->datafields = DataFieldStructure::getDataFieldStructures("user");
         $this->userfields = DataFieldEntry::getDataFieldEntries($user_id);
         $this->userdomains = UserDomain::getUserDomainsForUser($user_id);
+        if (LockRules::CheckLockRulePermission($user_id) && LockRules::getObjectRule($user_id)->description) {
+            PageLayout::postMessage(MessageBox::info(fixLinks(htmlReady(LockRules::getObjectRule($user_id)->description))));
+        }
     }
 
     /*

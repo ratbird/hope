@@ -120,7 +120,7 @@ class LockRule extends SimpleORMap
             $db = DBManager::get();
             $tables['sem'] = 'seminare';
             $tables['inst'] = 'Institute';
-            $tables['user'] = 'user_data';
+            $tables['user'] = 'user_info';
             return $db->query("SELECT COUNT(*) FROM " . $tables[$this->object_type] . " WHERE lock_rule = " . $db->quote($this->getId()))->fetchColumn();
         } else {
             return 0;

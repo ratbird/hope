@@ -812,6 +812,12 @@ if ($view == 'Daten') {
         echo '<font size="-1">' . sprintf(_("Ihre Authentifizierung (%s) benutzt nicht die Stud.IP Datenbank, daher k&ouml;nnen Sie einige Felder nicht ver&auml;ndern!"),$my_about->auth_user['auth_plugin']) . "</font>";
         echo "<br><br></td></tr>\n";
     }
+    if (LockRules::CheckLockRulePermission($my_about->auth_user["user_id"]) && LockRules::getObjectRule($my_about->auth_user["user_id"])->description) {
+        echo '<tr><td align="left" valign="top" class="blank" style="padding-left:20px;">';
+        echo MessageBox::info(fixLinks(htmlReady(LockRules::getObjectRule($my_about->auth_user["user_id"])->description)));
+        echo '</td</tr>';
+    }
+
     echo '<tr><td class=blank>';
 
     echo '<form id="edit_userdata" action="'. $PHP_SELF. '?cmd=edit_pers&username='. $username. '&view='. $view. '&studipticket=' . get_ticket(). '" method="POST" name="pers"';
@@ -824,7 +830,7 @@ if ($view == 'Daten') {
     echo '<table align="center" width="99%" class="blank" border="0" cellpadding="2" cellspacing="0">';
     if ($my_about->check == 'user') {
         echo "<tr><td class=\"".$cssSw->getClass()."\" width=\"25%\" align=\"left\"><b>" . _("Username:") . " </b></td><td class=\"".$cssSw->getClass()."\" colspan=2 width=\"75%\" align=\"left\">&nbsp;";
-        if (($ALLOW_CHANGE_USERNAME && !StudipAuthAbstract::CheckField("auth_user_md5.username",$my_about->auth_user['auth_plugin'])) ) {
+        if (($ALLOW_CHANGE_USERNAME && !StudipAuthAbstract::CheckField("auth_user_md5.username",$my_about->auth_user['auth_plugin']) && !LockRules::check($my_about->auth_user['user_id'], 'username')) ) {
             echo "&nbsp;<input type=\"text\" size=\"".round($max_col*0.25)."\" name=\"new_username\" value=\"".$my_about->auth_user["username"]."\">&nbsp; <font color=\"red\" size=+2>*</font>";
         } else {
             echo "&nbsp;<font size=\"-1\">".$my_about->auth_user["username"]."</font>";
@@ -832,7 +838,7 @@ if ($view == 'Daten') {
     echo "</td></tr>\n";
     $cssSw->switchClass();
     echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\"><div style=\"display:inline;float:left;\"><b>" . _("Passwort:") . " </b></div>";
-    if (StudipAuthAbstract::CheckField("auth_user_md5.password", $my_about->auth_user['auth_plugin'])) {
+    if (StudipAuthAbstract::CheckField("auth_user_md5.password", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'password')) {
         echo "<td class=\"".$cssSw->getClass()."\" colspan=\"2\" align=\"left\">&nbsp; <font size=\"-1\">*****</font>";
     } else {
         echo '<div style="display:inline;float:right;"> '._("ändern").'? <input type="checkbox" name="update_pw" id="update_pw" onclick="update_pw_fields();"></div></td>';
@@ -853,13 +859,13 @@ if ($view == 'Daten') {
 
     $cssSw->switchClass();
     echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\"><b>" . _("Name:") . " </b></td><td class=\"".$cssSw->getClass()."\" nowrap align=\"left\"><font size=-1>&nbsp; " . _("Vorname:") . "</font><br>";
-    if ((!$ALLOW_CHANGE_NAME) || StudipAuthAbstract::CheckField("auth_user_md5.Vorname", $my_about->auth_user['auth_plugin'])) {
+    if ((!$ALLOW_CHANGE_NAME) || StudipAuthAbstract::CheckField("auth_user_md5.Vorname", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'name')) {
             echo "&nbsp; <font size=\"-1\">" . htmlReady($my_about->auth_user["Vorname"])."</font>";
     } else {
             echo "&nbsp; <input type=\"text\" size=\"".round($max_col*0.25)."\" name=\"vorname\" value=\"".htmlReady($my_about->auth_user["Vorname"])."\">&nbsp; <font color=\"red\" size=+2>*</font>";
     }
     echo "</td><td class=\"".$cssSw->getClass()."\" nowrap align=\"left\"><font size=-1>&nbsp; " . _("Nachname:") . "</font><br>";
-    if ((!$ALLOW_CHANGE_NAME) || StudipAuthAbstract::CheckField("auth_user_md5.Nachname", $my_about->auth_user['auth_plugin'])) {
+    if ((!$ALLOW_CHANGE_NAME) || StudipAuthAbstract::CheckField("auth_user_md5.Nachname", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'name')) {
         echo "&nbsp; <font size=\"-1\">" . htmlReady($my_about->auth_user["Nachname"])."</font>";
     } else {
         echo "&nbsp; <input type=\"text\" size=\"".round($max_col*0.25)."\" name=\"nachname\" value=\"".htmlReady($my_about->auth_user["Nachname"])."\">&nbsp; <font color=\"red\" size=+2>*</font>";
@@ -869,7 +875,7 @@ if ($view == 'Daten') {
 
     $cssSw->switchClass();
     echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\"><b>" . _("E-Mail:") . " </b></td><td class=\"".$cssSw->getClass()."\" align=\"left\">&nbsp;";
-    if (($ALLOW_CHANGE_EMAIL && !(StudipAuthAbstract::CheckField("auth_user_md5.Email", $my_about->auth_user['auth_plugin'])))) {
+    if (($ALLOW_CHANGE_EMAIL && !StudipAuthAbstract::CheckField("auth_user_md5.Email", $my_about->auth_user['auth_plugin']) && !LockRules::check($my_about->auth_user['user_id'], 'email'))) {
         echo '<font size=-1>&nbsp; '. _("E-Mail:") .'</font><br>'.
              ' &nbsp; <input type="text" size="'. round($max_col*0.25). '" name="email1" value="'.$my_about->auth_user["Email"].'">&nbsp; <font color="red" size=+2>*</font>'.
              ' </td><td class="'. $cssSw->getClass() .'" align="left">'.
@@ -892,7 +898,7 @@ if ($view == 'Daten') {
     }
     $cssSw->switchClass();
     echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\"><b>" . _("Titel:") . " </b></td>";
-    if (!$ALLOW_CHANGE_TITLE || StudipAuthAbstract::CheckField("user_info.title_front", $my_about->auth_user['auth_plugin'])) {
+    if (!$ALLOW_CHANGE_TITLE || StudipAuthAbstract::CheckField("user_info.title_front", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'title')) {
         echo "<td class=\"".$cssSw->getClass()."\" colspan=\"2\" align=\"left\">&nbsp;" .  htmlReady($my_about->user_info['title_front']) . "</td></tr>";
     } else {
         echo "<td class=\"".$cssSw->getClass()."\" align=\"left\">&nbsp;";
@@ -909,7 +915,7 @@ if ($view == 'Daten') {
     }
     $cssSw->switchClass();
     echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\" nowrap><b>" . _("Titel nachgest.:") . " </b></td>";
-    if (!$ALLOW_CHANGE_TITLE || StudipAuthAbstract::CheckField("user_info.title_rear", $my_about->auth_user['auth_plugin'])) {
+    if (!$ALLOW_CHANGE_TITLE || StudipAuthAbstract::CheckField("user_info.title_rear", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'title')) {
         echo "<td class=\"".$cssSw->getClass()."\" colspan=\"2\" align=\"left\">&nbsp;" .  htmlReady($my_about->user_info['title_rear']) . "</td></tr>";
     } else {
         echo "<td class=\"".$cssSw->getClass()."\" align=\"left\">&nbsp;";
@@ -926,7 +932,7 @@ if ($view == 'Daten') {
     }
     $cssSw->switchClass();
     echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\"><b>" . _("Geschlecht:") . " </b></td><td class=\"".$cssSw->getClass()."\" colspan=2 nowrap align=\"left\"><font size=-1>";
-    if (StudipAuthAbstract::CheckField("user_info.geschlecht", $my_about->auth_user['auth_plugin'])) {
+    if (StudipAuthAbstract::CheckField("user_info.geschlecht", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'gender')) {
         echo "&nbsp;" . ($my_about->user_info["geschlecht"] == 1 ? _("m&auml;nnlich") : ($my_about->user_info["geschlecht"] == 2 ? _("weiblich") : _("unbekannt")));
     } else {
         echo "&nbsp; <input type=\"radio\" name=\"geschlecht\" value=\"0\" ";
@@ -1268,6 +1274,11 @@ if ($view == 'Karriere') {
 if ($view == 'Lebenslauf') {
     $cssSw->switchClass();
     SkipLinks::addIndex(_("Private Daten bearbeiten"), 'edit_private');
+    if (LockRules::CheckLockRulePermission($my_about->auth_user["user_id"]) && LockRules::getObjectRule($my_about->auth_user["user_id"])->description) {
+        echo '<tr><td align="left" valign="top" class="blank" style="padding-left:20px;">';
+        echo MessageBox::info(fixLinks(htmlReady(LockRules::getObjectRule($my_about->auth_user["user_id"])->description)));
+        echo '</td</tr>';
+    }
     echo "<tr><td class=blank>";
     echo '<form id="edit_private" action="' . $_SERVER['PHP_SELF'] . '?cmd=edit_leben&username=' . $username . '&view=' . $view . '&studipticket=' . get_ticket() . '" method="POST" name="pers">';
     echo CSRFProtection::tokenTag();
@@ -1282,13 +1293,13 @@ if ($view == 'Lebenslauf') {
             </font>
             <br>
     <?
-    if (StudipAuthAbstract::CheckField('user_info.privatnr', $my_about->auth_user['auth_plugin'])) {
+    if (StudipAuthAbstract::CheckField('user_info.privatnr', $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'privatnr') ) {
         echo '&nbsp;' . htmlReady($my_about->user_info['privatnr']);
     } else {
         echo '&nbsp; <input type="text" size="' .round($max_col*0.25).'" name="telefon" value="'. htmlReady($my_about->user_info["privatnr"]). '">';
     }
     echo '<td class="'.$cssSw->getClass(). '"  width="50%" align="left"><font size="-1">&nbsp; '. _("Mobiltelefon"). ":</font><br>\n";
-    if (StudipAuthAbstract::CheckField('user_info.privatcell', $my_about->auth_user['auth_plugin'])) {
+    if (StudipAuthAbstract::CheckField('user_info.privatcell', $my_about->auth_user['auth_plugin'])  || LockRules::check($my_about->auth_user['user_id'], 'privatcell')) {
         echo '&nbsp;' . htmlReady($my_about->user_info['privatcell']);
     } else {
         echo '&nbsp; <input type="text" size="' .round($max_col*0.25). '" name="cell" value="' .htmlReady($my_about->user_info['privatcell']).'">';
@@ -1296,7 +1307,7 @@ if ($view == 'Lebenslauf') {
     echo "</td></tr>\n";
      $cssSw->switchClass();
     echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\"><b>" . _("Adresse (privat):") . " </b></td><td class=\"".$cssSw->getClass()."\" colspan=2 align=\"left\">";
-    if (StudipAuthAbstract::CheckField("user_info.privadr", $my_about->auth_user['auth_plugin'])) {
+    if (StudipAuthAbstract::CheckField("user_info.privadr", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'privadr')) {
         echo "&nbsp;" . htmlReady($my_about->user_info["privadr"]);
     } else {
         echo "&nbsp; <input type=\"text\" size=\"".round($max_col*0.6)."\" name=\"anschrift\" value=\"".htmlReady($my_about->user_info["privadr"])."\">";
@@ -1321,7 +1332,7 @@ if ($view == 'Lebenslauf') {
     }   echo "</td></tr>\n";
     $cssSw->switchClass();
     echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\"><b>" . _("Homepage:") . " </b></td><td class=\"".$cssSw->getClass()."\" colspan=2 align=\"left\">";
-    if (StudipAuthAbstract::CheckField("user_info.Home", $my_about->auth_user['auth_plugin'])) {
+    if (StudipAuthAbstract::CheckField("user_info.Home", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'home')) {
         echo "&nbsp;" . htmlReady($my_about->user_info["Home"]);
     } else {
         echo "&nbsp; <input type=\"text\" size=\"".round($max_col*0.6)."\" name=\"home\" value=\"".htmlReady($my_about->user_info["Home"])."\">";
@@ -1330,7 +1341,7 @@ if ($view == 'Lebenslauf') {
     echo "</td></tr>\n";
     $cssSw->switchClass();
     echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\"><b>" . _("Hobbys:") . " </b></td><td class=\"".$cssSw->getClass()."\" colspan=2 align=\"left\">";
-    if (StudipAuthAbstract::CheckField("user_info.hobby", $my_about->auth_user['auth_plugin'])) {
+    if (StudipAuthAbstract::CheckField("user_info.hobby", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'hobby')) {
         echo "&nbsp;" . htmlReady($my_about->user_info["hobby"]);
     } else {
         echo "&nbsp; <textarea  name=\"hobby\"  style=\"width: 50%\" cols=".round($max_col*0.5)." rows=4 maxlength=250 wrap=virtual >".htmlReady($my_about->user_info["hobby"])."</textarea>";
@@ -1374,7 +1385,7 @@ if ($view == 'Lebenslauf') {
             echo "<tr><td class=\"".$cssSw->getClass()."\" align=\"left\" ><b>";
             echo "<font color=\"$color\">" . htmlReady($entry->getName()). ":</font></b></td>";
             echo '<td class="'. $cssSw->getClass() .'" colspan="2" align="left" valign="top">&nbsp;', "\n";
-            if ($entry->isEditable()) {
+            if ($entry->isEditable() && !LockRules::check($my_about->auth_user['user_id'], $entry->getId())) {
                 echo $entry->getHTML("datafields");
             }
             else {

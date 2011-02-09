@@ -1434,7 +1434,8 @@ function mark_public_course($course = NULL) {
     if ($GLOBALS['SessSemName']['class'] == 'inst') {
         $GLOBALS["SessSemName"]["header_line"] .=
             " (" . _("öffentliche Einrichtung") . ")";
-        PageLayout::addStyle('div#barBottommiddle { background-color: #c53d3d; }');
+        PageLayout::addStyle('div#barBottommiddle, div#barBottomright, div#barBottomLeft { background-color: #c53d3d; }'
+                            .'div#barBottommiddle { background-image: url(' .  Assets::image_path('header/header_bottom_isolator_public.png'). '); }');
         return;
     }
 
@@ -1451,7 +1452,8 @@ function mark_public_course($course = NULL) {
         $GLOBALS["SessSemName"]["header_line"] =
             getHeaderLine($course->getId(), compact('name', 'type')) .
             " (" . _("öffentliche Veranstaltung") . ")";
-        PageLayout::addStyle('div#barBottommiddle { background-color: #c53d3d; }');
+        PageLayout::addStyle('div#barBottommiddle, div#barBottomright, div#barBottomLeft { background-color: #c53d3d; }'
+                            .'div#barBottommiddle { background-image: url(' .  Assets::image_path('header/header_bottom_isolator_public.png'). '); }');
     }
 }
 

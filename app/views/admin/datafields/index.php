@@ -67,11 +67,11 @@
             </td>
             <td>
             <? if ($key == 'sem'): ?>
-                <?= $val->getObjectClass() ? $GLOBALS['SEM_CLASS'][$val->getObjectClass()]['name'] : _('alle')?>
+                <?= $val->getObjectClass() != 'NULL' ? $GLOBALS['SEM_CLASS'][$val->getObjectClass()]['name'] : _('alle')?>
             <? elseif ($key == 'inst'): ?>
-                <?=  $val->getObjectClass() ? $GLOBALS['INST_TYPE'][$val->getObjectClass()]['name'] : _('alle')?>
+                <?=  $val->getObjectClass() != 'NULL' ? $GLOBALS['INST_TYPE'][$val->getObjectClass()]['name'] : _('alle')?>
             <? else: ?>
-                <?= $val->getObjectClass() ? DataFieldStructure::getReadableUserClass($val->getObjectClass()) : _('alle')?>
+                <?= $val->getObjectClass() != 'NULL' ? DataFieldStructure::getReadableUserClass($val->getObjectClass()) : _('alle')?>
             <? endif; ?>
             </td>
             <td><?= $val->getEditPerms() ?></td>

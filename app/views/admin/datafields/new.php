@@ -58,7 +58,7 @@
             <td><? if ($object_typ == 'sem'): ?>Veranstaltungskategorie<? elseif ($object_typ == 'inst'): ?>Einrichtungstyp<? else: ?>Nutzerstatus<? endif; ?></td>
             <td>
                 <select name="object_class">;
-                    <option value="false"><?= _('alle') ?></option>
+                    <option value="NULL"><?= _('alle') ?></option>
                     <? if ($object_typ == 'sem'): ?>
                         <? foreach ($GLOBALS['SEM_CLASS'] as $key=>$val): ?>
                             <option value="<?= $key ?>"><?= $val['name']?> </option>

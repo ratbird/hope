@@ -154,8 +154,8 @@ class Admin_DatafieldsController extends AuthenticatedController
                 $struct->setType(Request::get('datafield_typ'));
                 $struct->store();
 
-                $this->flash['success'] = sprintf(_('Das neue generische Datenfeld wurde angelegt.'));
-                $this->redirect('admin/datafields/'.$struct->getObjectType().'#item_'.$struct->getID());
+                $this->flash['success'] = _('Das neue generische Datenfeld wurde angelegt.');
+                $this->redirect('admin/datafields/index/'.$struct->getObjectType().'#item_'.$struct->getID());
             } else {
                 $this->flash['error'] = _('Es wurde keine Bezeichnung eingetragen!');
             }
@@ -179,10 +179,11 @@ class Admin_DatafieldsController extends AuthenticatedController
      */
     public function delete_action($datafield_id, $name = null)
     {
+
         $struct = new DataFieldStructure(compact('datafield_id'));
         $struct->load();
         $type = $struct->getObjectType();
-
+//var_dump($struct);var_dump($type);die;
         if (Request::int('delete') == 1) {
             $struct->remove();
             $this->flash['success'] = _('Das Datenfeld wurde erfolgreich gelöscht!');

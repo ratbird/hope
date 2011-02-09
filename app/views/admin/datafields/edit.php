@@ -51,7 +51,7 @@
             </td>
             <td>
                 <select name="object_class" id="object_class">
-                    <option value="false">
+                    <option value="NULL">
                         <?= _('alle') ?>
                     </option>
                 <? if ($item->getObjectType() == 'sem'): ?>

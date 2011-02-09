@@ -71,18 +71,31 @@ class LockRules {
     {
         $lr = self::getObjectRule($object_id);
         if ($lr) {
-            return isset($lr['attributes'][strtolower($attribute)]) && LockRules::CheckLockRulePermission($object_id, $lr['permission']);
+            return isset($lr['attributes'][strtolower($attribute)]) && self::CheckLockRulePermission($object_id);
         } else {
             return false;
         }
     }
 
-    public static function CheckLockRulePermission($seminar_id, $permission)
+    public static function CheckLockRulePermission($object_id)
     {
-        if($permission == 'admin') $check_perm = 'root';
-        elseif($permission == 'dozent') $check_perm = 'admin';
-        else $check_perm = 'dozent';
-        return ($permission == 'root' || !$GLOBALS['perm']->have_studip_perm($check_perm, $seminar_id));
+        $perms = array('autor','tutor','dozent','admin','root','god');
+        $lr = self::getObjectRule($object_id);
+
+        if ($lr) {
+            $pk = array_search($lr->permission, $perms);
+            $check_perm = $perms[$pk + 1];
+            if ($lr->object_type == 'sem') {
+                return ($lr->permission == 'root' || !$GLOBALS['perm']->have_studip_perm($check_perm, $object_id));
+            }
+            if ($lr->object_type == 'inst') {
+                return ($lr->permission == 'root' || !$GLOBALS['perm']->have_perm('root'));
+            }
+            if ($lr->object_type == 'user') {
+                return ($lr->permission == 'root' || !$GLOBALS['perm']->have_perm($check_perm));
+            }
+        }
+        return false;
     }
 
     public static function getLockRuleConfig($type)

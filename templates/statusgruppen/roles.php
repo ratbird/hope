@@ -69,7 +69,10 @@ if (is_array($roles)) foreach ($roles as $id => $role) :
 
     // if we have opened an entry, we show edit fields
     if ($open == $id) :
-        echo $this->render_partial('statusgruppen/role_administration.php',
+        $partial = LockRules::Check($range_id, 'groups') ?
+                   'statusgruppen/role_administration_locked.php' :
+                   'statusgruppen/role_administration.php';
+        echo $this->render_partial($partial,
             array('indent' => $indent, 'followers' => $new_followers,
                 'persons' => getPersonsForRole($id), 'role_id' => $id, 'editRole' => ($editRole == $id), 'role' => $role['role'],
                 'role_size' => sizeof($roles), 'role_pos' => $pos, 'has_child' => ($role['child']) ? true : false, 'all_roles' => $all_roles)

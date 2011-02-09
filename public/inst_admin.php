@@ -266,7 +266,7 @@ function table_body ($db, $range_id, $structure, $css_switcher) {
             printf("title=\"%s\" border=\"0\" valign=\"baseline\"></a>", _("Nachricht an Benutzer verschicken"));
             echo '</td>';
 
-            if ($admin_view) {
+            if ($admin_view && !LockRules::Check($range_id, 'participants')) {
                 echo '<td '.$css_switcher->getFullClass().' width="1%" nowrap>';
                 if ($db->f('statusgruppe_id')) {    // if we are in a view grouping by statusgroups
                     echo '&nbsp;<a href="'.URLHelper::getLink('?cmd=removeFromGroup&username='.$db->f('username').'&role_id='. $db->f('statusgruppe_id')).'">';
@@ -320,8 +320,7 @@ function table_body ($db, $range_id, $structure, $css_switcher) {
                             echo '<td '.$css_switcher->getFullClass().'></td>';
                         }
                     }
-
-                    if ($admin_view) {
+                    if ($admin_view && !LockRules::Check($range_id, 'participants')) {
                         echo '<td '.$css_switcher->getFullClass().'>';
                         echo '<a href="'.URLHelper::getLink('edit_about.php?view=Karriere&username='.$db->f('username').'&switch='.$id).'"><font size="-1">';
                         echo Assets::img('icons/16/blue/edit.png');
@@ -540,6 +539,10 @@ if (!isset($details) || isset($set)) {
         $inst_id=$ins_id;
     }
 }
+$lockrule = LockRules::getObjectRule($inst_id);
+if ($admin_view && $lockrule->description && LockRules::Check($inst_id, 'participants')) {
+    my_info(fixlinks(htmlReady($lockrule->description)),'',3);
+}
 
 ?>
     <tr>
@@ -595,6 +598,7 @@ if ($inst_id != "" && $inst_id !="0") {
     echo '</td></tr>';
 
     if ($admin_view) {
+        if (!LockRules::Check($inst_id, 'participants')) {
             // Der Admin will neue Sklaven ins Institut berufen...
             $InstituteUser = new SQLSearch("SELECT DISTINCT auth_user_md5.user_id, " . $_fullname_sql['full_rev'] . " AS fullname " .
                 "FROM auth_user_md5 " .
@@ -639,9 +643,10 @@ if ($inst_id != "" && $inst_id !="0") {
                     </table>
                 </form>
             </td>
-
-            <!-- Mail an alle MitarbeiterInnen -->
             <td class="blank" valign="top" width="50%" align="center">
+
+            <? } else echo '<td colspan="2" class="blank" valign="top" style="padding-left:5px;">';
+            ?><!-- Mail an alle MitarbeiterInnen -->
                 <table width="90%" border="0" cellpadding="2" cellspacing="0">
                     <tr>
                         <td class="steelkante">

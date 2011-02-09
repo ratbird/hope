@@ -41,11 +41,11 @@ require_once ('lib/datei.inc.php');
 require_once ('lib/classes/Statusgruppe.class.php');
 require_once 'lib/admin_search.inc.php';
 
-/* 
+/*
  * no admin help yet (cf. http://develop.studip.de/trac/ticket/475 )
- * PageLayout::setHelpKeyword("Basis.EinrichtungenVerwaltenGruppen"); 
+ * PageLayout::setHelpKeyword("Basis.EinrichtungenVerwaltenGruppen");
  */
-PageLayout::setHelpKeyword("Basis.Allgemeines"); 
+PageLayout::setHelpKeyword("Basis.Allgemeines");
 PageLayout::setTitle(_("Verwaltung von Gruppen und Funktionen"));
 
 Navigation::activateItem('/admin/institute/groups');
@@ -84,7 +84,7 @@ if (!$perm->have_studip_perm("admin", $range_id) || ($_range_type != 'inst' && $
  * H E L P E R   F U N C T I O N S *
  * * * * * * * * * * * * * * * * * */
 
-/* 
+/*
  * this function has to stay here for the moment, because in other files someone already uses this function name.
  */
 function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgroup_mode=FALSE) {
@@ -113,7 +113,7 @@ function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgrou
                         insert_seminar_user($range_id, $user_id, "autor", FALSE);
                     }
                 } else {
-                    insert_seminar_user($range_id, $user_id, "autor", FALSE);                   
+                    insert_seminar_user($range_id, $user_id, "autor", FALSE);
                 }
             }
             checkExternDefaultForUser($user_id);
@@ -148,6 +148,11 @@ function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgrou
 $msgs = array();
 
 $open = false;
+
+$lockrule = LockRules::getObjectRule($range_id);
+if ($lockrule->description && LockRules::Check($range_id, 'groups')) {
+    $msgs['info'][] = fixlinks(htmlReady($lockrule->description));
+}
 
 // a role_id has been submitted, so open that role automatically
 if ($_REQUEST['role_id']) {
@@ -209,7 +214,7 @@ if ($_REQUEST['cmd'] == 'sortByName') {
 if ($_REQUEST['cmd'] == 'addPersonsToRoleDirect' ) {
     $msgs['msg'][]  = _("Die Personen wurden der Gruppe hinzugefügt.");
     $msgs['info'][] = _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
-    
+
     MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'direct', $_REQUEST['persons_to_add'], $workgroup_mode);
 }
 
@@ -217,7 +222,7 @@ if ($_REQUEST['cmd'] == 'addPersonsToRoleDirect' ) {
 if ($_REQUEST['cmd'] == 'addPersonsToRoleIndirect' ) {
     $msgs['msg'][]  = _("Die Personen wurden der Gruppe hinzugefügt.");
     $msgs['info'][] = _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
-    
+
     MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'indirect', $_REQUEST['persons_to_add'], $workgroup_mode);
 }
 
@@ -225,19 +230,19 @@ if ($_REQUEST['cmd'] == 'addPersonsToRoleIndirect' ) {
 if ($_REQUEST['cmd'] == 'addPersonsToRoleSearch' ) {
     $msgs['msg'][]  = _("Die Personen wurden der Gruppe hinzugefügt.");
     $msgs['info'][] = _("Beachten Sie, dass für die Personen die Standarddaten der Einrichtung übernommen wurden!");
-    
+
     MovePersonStatusgruppe ($range_id, $_REQUEST['role_id'], 'search', $_REQUEST['persons_to_add'], $workgroup_mode);
 }
 
 // delete a person from a statusgroup
 if ($_REQUEST['cmd'] == 'removePerson') {
     $msgs['msg'][] = _("Die Person wurde aus der Gruppe entfernt!");
-    RemovePersonStatusgruppe ($_REQUEST['username'], $_REQUEST['role_id']); 
+    RemovePersonStatusgruppe ($_REQUEST['username'], $_REQUEST['role_id']);
 }
 
 // edit the data of a role
 if ($_REQUEST['cmd'] == 'editRole') {
-    $statusgruppe = new Statusgruppe($_REQUEST['role_id']); 
+    $statusgruppe = new Statusgruppe($_REQUEST['role_id']);
     $name = htmlReady($statusgruppe->getName());
     if ($statusgruppe->checkData()) {
         $msgs['info'][] = sprintf(_("Die Daten der Gruppe %s wurden geändert!"), '<b>'. $name .'</b>');
@@ -248,7 +253,7 @@ if ($_REQUEST['cmd'] == 'editRole') {
 
 // ask, if the user really intends to delete the role
 if ($_REQUEST['cmd'] == 'deleteRole') {
-    $statusgruppe = new Statusgruppe($_REQUEST['role_id']); 
+    $statusgruppe = new Statusgruppe($_REQUEST['role_id']);
     if ($_REQUEST['really']) {
         $msgs['msg'][] = sprintf(_("Die Gruppe %s wurde gelöscht!"), htmlReady($statusgruppe->getName()));
         $statusgruppe->delete();
@@ -271,21 +276,21 @@ if ($_REQUEST['cmd'] == 'newRole') {
 
 if ($_REQUEST['cmd'] == 'addRole') {
     // to prevent url-hacking for changing the data of an existing role
-    if (!Statusgruppe::roleExists($_REQUEST['role_id'])) {      
+    if (!Statusgruppe::roleExists($_REQUEST['role_id'])) {
         $new_role = new Statusgruppe();
-        
-        // this is necessary, because it could be the second try to add after the user has corrected errors     
-        $new_role->setStatusgruppe_Id($_REQUEST['role_id']);        
-        $new_role->setRange_Id($range_id);      
 
-        if ($new_role->checkData()) {                   
+        // this is necessary, because it could be the second try to add after the user has corrected errors
+        $new_role->setStatusgruppe_Id($_REQUEST['role_id']);
+        $new_role->setRange_Id($range_id);
+
+        if ($new_role->checkData()) {
             $new_role->store();
             $open = $new_role->getId();
             $msgs['msg'][] = sprintf(_("Die Gruppe %s wurde hinzugefügt!"), '<b>'. htmlReady($new_role->getName()) .'</b>');
         } else {
             $displayNewRole = true;
         }
-        
+
         $msgs = $new_role->getMessages($msgs);
     }
 }
@@ -300,7 +305,7 @@ if ($_REQUEST['cmd'] == 'addRole') {
 $statusgruppen = GetAllStatusgruppen($range_id);
 
 // are we in the newRole-mode?
-if ($displayNewRole) {  
+if ($displayNewRole) {
     // open the template for inserting a new statusgroup
     $template = $GLOBALS['template_factory']->open('statusgruppen/new_role');
 
@@ -308,21 +313,21 @@ if ($displayNewRole) {
 
     // the layout defines where the infobox is located
     $template->set_layout('statusgruppen/layout.php');
-    
+
     // pass the messages to the infobox
     $template->set_attribute('messages', $msgs);
-    
-    // the role, emtpy and fresh or prefilled with posted data  
+
+    // the role, emtpy and fresh or prefilled with posted data
     $template->set_attribute('role_data', $new_role->getData());
-    $template->set_attribute('role', $new_role);    
+    $template->set_attribute('role', $new_role);
 
     // all statusgroups in a tree-structured array
-    $template->set_attribute('all_roles', $statusgruppen);  
+    $template->set_attribute('all_roles', $statusgruppen);
 
     // show the formula for entering a new statusgroup
     echo $template->render();
-    
-    
+
+
 }
 
 // do we have some roles already?
@@ -335,21 +340,21 @@ else if ($statusgruppen && sizeof($statusgruppen) > 0) {
 
     // the ids of the currently opened statusgroups
     $template->set_attribute('open', $open);
-    
+
     $template->set_attribute('range_id', $range_id);
-    
+
     // the persons of the institute who can be added directly
     $template->set_attribute('inst_persons', getPersons($range_id));
-    
+
     if ($_REQUEST['view'] == 'editRole') {
         $template->set_attribute('editRole', $_REQUEST['role_id']);
     }
-    
-    if ($_REQUEST['view'] == 'startMove') {     
-        $template->set_attribute('move', true);     
+
+    if ($_REQUEST['view'] == 'startMove') {
+        $template->set_attribute('move', true);
         $template->set_attribute('move_id', $_REQUEST['role_id']);
     }
-    
+
     if ($_REQUEST['view'] == 'sort') {
         $template->set_attribute('sort', true);
     }
@@ -357,12 +362,12 @@ else if ($statusgruppen && sizeof($statusgruppen) > 0) {
     $template->set_attribute('messages', $msgs);
 
     // all statusgroups in a tree-structured array
-    $template->set_attribute('roles', $statusgruppen);  
+    $template->set_attribute('roles', $statusgruppen);
 
     // show the tree-view of the statusgroups
     echo $template->render();
-    
-    
+
+
 }
 
 // there are no roles yet, so we show some informational text
@@ -371,9 +376,9 @@ else {
 
     // the layout defines where the infobox is located
     $template->set_layout('statusgruppen/layout.php');
-    
+
     $template->set_attribute('range_id', $range_id);
-    
+
     // no parameters necessary, just display a static page
     echo $template->render();
 }

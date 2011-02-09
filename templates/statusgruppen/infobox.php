@@ -34,7 +34,7 @@
             </a>
         </td>
       </tr>
-
+      <? if (!LockRules::Check($range_id, 'groups')) :?>
       <tr>
           <td align="center" width="1%" valign="top">
             <?= Assets::img('icons/16/black/add/community.png') ?>
@@ -56,7 +56,7 @@
 
           </td>
       </tr>
-
+      <? endif;?>
     </table>
     </td>
   </tr>

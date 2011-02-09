@@ -165,10 +165,9 @@ while ( is_array($_REQUEST)
         if ($db->affected_rows() == 0) {
             $msg="error§<b>" . _("Datenbankoperation gescheitert:") . " " . $query . "</b>";
             break;
+        } else {
+            $msg="msg§" . sprintf(_("Die Änderung der Einrichtung \"%s\" wurde erfolgreich gespeichert." . '§'), htmlReady(stripslashes($Name)));
         }
-
-        $msg="msg§" . sprintf(_("Die Änderung der Einrichtung \"%s\" wurde erfolgreich gespeichert."), htmlReady(stripslashes($Name)));
-
         // update additional datafields
         if (is_array($_REQUEST['datafields'])) {
             $invalidEntries = array();
@@ -367,6 +366,10 @@ include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen
 include 'lib/include/admin_search_form.inc.php';
 
+$lockrule = LockRules::getObjectRule($i_view);
+if ($lockrule->description && LockRules::CheckLockRulePermission($i_view)) {
+    $msg .= 'info§' . fixlinks(htmlReady($lockrule->description));
+}
 ?>
 <table class="blank" width="100%" cellpadding="2" cellspacing="0">
 <? if (isset($msg)) : ?><? parse_msg($msg) ?><? endif ?>
@@ -399,13 +402,13 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
     <table class="default">
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Name:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" name="Name" size=50 maxlength=254 value="<?php echo htmlReady($db->f("Name")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'name') ? 'readonly' : '')?> name="Name" size=50 maxlength=254 value="<?php echo htmlReady($db->f("Name")) ?>"></td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Fakult&auml;t:")?></td>
         <td class="<? echo $cssSw->getClass() ?>" align=left>
         <?php
-        if ($perm->is_fak_admin() && ($perm->have_studip_perm("admin",$db->f("fakultaets_id")) || $i_view == "new")) {
+        if ($perm->is_fak_admin() && !LockRules::Check($i_id, 'fakultaets_id') && ($perm->have_studip_perm("admin",$db->f("fakultaets_id")) || $i_id == "new")) {
             if ($_num_inst) {
                 echo "\n<font size=\"-1\"><b>" . _("Diese Einrichtung hat den Status einer Fakult&auml;t.") . "<br>";
                 printf(_("Es wurden bereits %s andere Einrichtungen zugeordnet."), $_num_inst) . "</b></font>";
@@ -432,27 +435,48 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Bezeichnung:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><select style="width: 98%" name="type">
-    <?
-    $i=0;
-    foreach ($INST_TYPE as $a) {
-        $i++;
-        if ($i==$db->f("type"))
-            echo "<option selected value=\"$i\">".$INST_TYPE[$i]["name"]."</option>";
-        else
-            echo "<option value=\"$i\">".$INST_TYPE[$i]["name"]."</option>";
-    }
-    ?></select></td>
+        <td class="<? echo $cssSw->getClass() ?>" >
+        <? if (!LockRules::Check($i_id, 'type')) : ?>
+        <select style="width: 98%" name="type">
+	    <?
+	    $i=0;
+	    foreach ($INST_TYPE as $a) {
+	        $i++;
+	        if ($i==$db->f("type"))
+	            echo "<option selected value=\"$i\">".htmlready($INST_TYPE[$i]["name"])."</option>";
+	        else
+	            echo "<option value=\"$i\">".htmlready($INST_TYPE[$i]["name"])."</option>";
+	    }
+	    ?></select>
+	    <? else :?>
+            <?=htmlReady($INST_TYPE[$db->f("type")]["name"])?><input type="hidden" name="type" value="<?=(int)$db->f('type') ?>">
+	    <? endif;?>
+        </td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Straße:")?> </td>
-        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" name="strasse" size=32 maxlength=254 value="<?php echo htmlReady($db->f("Strasse")) ?>"></td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'strasse') ? 'readonly' : '')?> name="strasse" size=32 maxlength=254 value="<?php echo htmlReady($db->f("Strasse")) ?>"></td>
     </tr>
-    <tr <? $cssSw->switchClass() ?>><td class="<? echo $cssSw->getClass() ?>" ><?=_("Ort:")?> </td><td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" name="plz" size=32 maxlength=254 value="<?php echo htmlReady($db->f("Plz")) ?>"></td></tr>
-    <tr <? $cssSw->switchClass() ?>><td class="<? echo $cssSw->getClass() ?>" ><?=_("Telefonnummer:")?> </td><td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" name="telefon" size=32 maxlength=254 value="<?php echo htmlReady($db->f("telefon")) ?>"></td></tr>
-    <tr <? $cssSw->switchClass() ?>><td class="<? echo $cssSw->getClass() ?>" ><?=_("Faxnummer:")?> </td><td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" name="fax" size=32 maxlength=254 value="<?php echo htmlReady($db->f("fax")) ?>"></td></tr>
-    <tr <? $cssSw->switchClass() ?>><td class="<? echo $cssSw->getClass() ?>" ><?=_("E-Mail-Adresse:")?> </td><td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" name="email" size=32 maxlength=254 value="<?php echo htmlReady($db->f("email")) ?>"></td></tr>
-    <tr <? $cssSw->switchClass() ?>><td class="<? echo $cssSw->getClass() ?>" ><?=_("Homepage:")?> </td><td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" name="home" size=32 maxlength=254 value="<?php echo htmlReady($db->f("url")) ?>"></td></tr>
+    <tr <? $cssSw->switchClass() ?>>
+        <td class="<? echo $cssSw->getClass() ?>" ><?=_("Ort:")?> </td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'plz') ? 'readonly' : '')?> name="plz" size=32 maxlength=254 value="<?php echo htmlReady($db->f("Plz")) ?>"></td>
+        </tr>
+    <tr <? $cssSw->switchClass() ?>>
+        <td class="<? echo $cssSw->getClass() ?>" ><?=_("Telefonnummer:")?> </td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'telefon') ? 'readonly' : '')?> name="telefon" size=32 maxlength=254 value="<?php echo htmlReady($db->f("telefon")) ?>"></td>
+    </tr>
+    <tr <? $cssSw->switchClass() ?>>
+        <td class="<? echo $cssSw->getClass() ?>" ><?=_("Faxnummer:")?> </td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'fax') ? 'readonly' : '')?> name="fax" size=32 maxlength=254 value="<?php echo htmlReady($db->f("fax")) ?>"></td>
+    </tr>
+    <tr <? $cssSw->switchClass() ?>>
+        <td class="<? echo $cssSw->getClass() ?>" ><?=_("E-Mail-Adresse:")?> </td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'email') ? 'readonly' : '')?> name="email" size=32 maxlength=254 value="<?php echo htmlReady($db->f("email")) ?>"></td>
+    </tr>
+    <tr <? $cssSw->switchClass() ?>>
+        <td class="<? echo $cssSw->getClass() ?>" ><?=_("Homepage:")?> </td>
+        <td class="<? echo $cssSw->getClass() ?>" ><input style="width: 98%" type="text" <?=(LockRules::Check($i_id, 'url') ? 'readonly' : '')?> name="home" size=32 maxlength=254 value="<?php echo htmlReady($db->f("url")) ?>"></td>
+    </tr>
     <?
     //choose preferred lit plugin
     if (get_config('LITERATURE_ENABLE') && $db->f("Institut_id") == $db->f("fakultaets_id")){
@@ -504,7 +528,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
                </td>
                 <td class="<? echo $cssSw->getClass() ?>" >
                     <?
-                    if ($perm->have_perm($entry->structure->getEditPerms())) {
+                    if ($perm->have_perm($entry->structure->getEditPerms()) && !LockRules::Check($i_id, $entry->getId())) {
                         print $entry->getHTML("datafields");
                     }
                     else

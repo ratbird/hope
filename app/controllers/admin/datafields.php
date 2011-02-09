@@ -122,7 +122,7 @@ class Admin_DatafieldsController extends AuthenticatedController
             $struct = new DataFieldStructure(compact('datafield_id'));
             $struct->setTypeParam(Request::get('typeparam'));
             $struct->store();
-            $this->flash['success'] = sprintf(_('Die Parameter wurden übernommen.'));
+            $this->flash['success'] = _('Die Parameter wurden übernommen.');
             $this->redirect('admin/datafields/index/'.$struct->getObjectType().'#item_'.$datafield_id);
         }
 
@@ -183,7 +183,7 @@ class Admin_DatafieldsController extends AuthenticatedController
         $struct = new DataFieldStructure(compact('datafield_id'));
         $struct->load();
         $type = $struct->getObjectType();
-//var_dump($struct);var_dump($type);die;
+
         if (Request::int('delete') == 1) {
             $struct->remove();
             $this->flash['success'] = _('Das Datenfeld wurde erfolgreich gelöscht!');

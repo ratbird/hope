@@ -1597,6 +1597,7 @@ STUDIP.SkipLinks = {
   initialize: function () {
     STUDIP.SkipLinks.insertSkipLinks();
     STUDIP.SkipLinks.injectAriaRoles();
+    STUDIP.SkipLinks.setActiveTarget();
   }
 
 };

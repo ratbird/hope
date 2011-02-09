@@ -222,48 +222,35 @@ class DataFieldStructure
 
 
   function store() {
-    $data = &$this->data;
-    $db = new DB_Seminar;
-    $query = "SELECT * FROM datafields WHERE datafield_id = '$data[datafield_id]'";
+    $data = $this->data;
+    $db = DbManager::get();
+    $query = "SELECT * FROM datafields WHERE datafield_id = " . $db->quote($data['datafield_id']);
 
-    $db->query($query);
-    $db->next_record();
+    $row = $db->query($query)->fetch(PDO::FETCH_ASSOC);
+    if ($row['datafield_id']) {
+        $data = array_merge($row, $data);
+    }
 
-    if (!$data['name'])
-      $data['name'] = $db->f("name");
+    if (!in_array($data['type'], array('selectbox', 'radio', 'combo'))) {
+        $data['typeparam'] = '';
+    }
+    $data['object_class'] = (int)$data['object_class'] ? (int)$data['object_class'] : null;
+    if ($row['datafield_id']) {
+        $st = $db->prepare("UPDATE datafields ".
+                "SET name=?, object_type=?, ".
+                "object_class=?, edit_perms=?, priority=?, ".
+                "view_perms=?, type=?, typeparam=?, chdate=UNIX_TIMESTAMP() WHERE datafield_id=?");
+    } else {
+        $st = $db->prepare("INSERT INTO datafields ".
+                "SET name=?, object_type=?, ".
+                "object_class=?, edit_perms=?, priority=?, ".
+                "view_perms=?, type=?, typeparam=?, chdate=UNIX_TIMESTAMP(), mkdate=UNIX_TIMESTAMP(), datafield_id=?");
+    }
 
-    if (!$data['type'])
-      $data['type'] = $db->f("type");
-
-    if (in_array($data['type'], array('selectbox', 'radio', 'combo')))
-      $data['typeparam'] = $data['typeparam'] ? $data['typeparam'] : $db->f('typeparam');
-    else
-      $data['typeparam'] = '';
-
-    if (!$data['object_type'])
-      $data['object_type'] = $db->f("object_type");
-
-    if (!$data['object_class'])
-      $data['object_class'] = $db->f("object_class") ? $db->f("object_class") : 'NULL';
-
-    if (!$data['edit_perms'])
-      $data['edit_perms'] = $db->f("edit_perms");
-
-    if (!$data['view_perms'])
-      $data['view_perms'] = $db->f('view_perms');
-
-    if (!$data['priority'])
-      $data['priority'] = $db->f("priority");
-
-    $db->queryf("REPLACE INTO datafields ".
-                "SET datafield_id='%s', name='%s', object_type='%s', ".
-                "object_class='%s', edit_perms='%s', priority='%s', ".
-                "view_perms='%s', type='%s', typeparam='%s'",
-                $data['datafield_id'], $data['name'],       $data['object_type'],
-                $data['object_class'], $data['edit_perms'], $data['priority'],
-                $data['view_perms'],   $data['type'],       $data['typeparam']);
-
-    return $db->affected_rows() > 0;
+    $st->execute(array($data['name'], $data['object_type'],
+                $data['object_class'], $data['edit_perms'], (int)$data['priority'],
+                $data['view_perms'], (string)$data['type'], (string)$data['typeparam'], $data['datafield_id']));
+    return $st->rowCount();
   }
 
 

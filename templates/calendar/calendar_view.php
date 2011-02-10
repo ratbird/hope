@@ -9,6 +9,7 @@ list($start_hour, $end_hour) = $calendar_view->getRange();
 
 $cell_height = $calendar_view->getHeight() + 2;
 $cell_steps = $cell_height / 60;
+$cell_width = floor (100 / sizeof($calendar_view->getColumns()));
 ?>
 
 <script>
@@ -45,7 +46,7 @@ $cell_steps = $cell_height / 60;
             <td style="width: 40px;">
             </td>
             <? foreach ($calendar_view->getColumns() as $column) : ?>
-            <td style="text-align: center; vertical-align: top; background-color: #E8EEF7; padding-right: 2px; padding: 0px;">
+            <td style="text-align: center; vertical-align: top; background-color: #E8EEF7; padding-right: 2px; padding: 0px; width: <?= $cell_width ?>%">
                 <? $link_or_not = $column->getURL() ? '<a href="'.URLHelper::getLink($column->getURL()).'">%s</a>' : '%s';
                 printf($link_or_not, htmlReady($column->getTitle()));
                 ?>
@@ -125,9 +126,9 @@ $cell_steps = $cell_height / 60;
                             if ($max == 1) $this->width = '98';
 
                             if ($calendar_view->isGrouped()) {
-                                echo $this->render_partial('calendar/entries/grouped_entry', array());
+                                echo $this->render_partial('calendar/entries/grouped_entry');
                             } else {
-                                echo $this->render_partial('calendar/entries/entry', array());
+                                echo $this->render_partial('calendar/entries/entry');
                             }
 
                         endforeach; /* cycle thrugh entries  */

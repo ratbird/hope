@@ -53,8 +53,8 @@ class CalendarInstscheduleModel
                 $entry['content'] = $sem->getNumber() . ' ' . $sem->getName();
                 $entry['url']     = UrlHelper::getLink('dispatch.php/calendar/instschedule/entry/' . $seminar_id
                                   . '/' . $cycle->getMetaDateId());
-                $entry['onClick'] = "STUDIP.Instschedule.showSeminarDetails('$seminar_id', '"
-                                  . $cycle->getMetaDateId() ."'); return false;";
+                $entry['onClick'] = "function(id) { STUDIP.Instschedule.showSeminarDetails('$seminar_id', '"
+                                  . $cycle->getMetaDateId() ."'); }";
 
                 $entry['title']   = '';
                 $ret[] = $entry;
@@ -98,7 +98,7 @@ class CalendarInstscheduleModel
 
             foreach ($entries as $entry) {
                 unset($entry['url']);
-                $entry['onClick'] = 'STUDIP.Instschedule.showInstituteDetails(this); return false;';
+                $entry['onClick'] = 'function(id) { STUDIP.Instschedule.showInstituteDetails(id); }';
                 $entry['visible'] = 1;
 
                 if (($entry['start'] >= $start_hour * 100 && $entry['start'] <= $end_hour * 100

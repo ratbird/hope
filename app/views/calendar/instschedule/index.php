@@ -55,4 +55,7 @@ $infobox['content'][1]['eintrag'][] = array (
     <?= $GLOBALS['SessSemName']['header_line'] ?>  <?= _("im") ?>
     <?= $current_semester['name'] ?>
 </div>
-<?= $this->render_partial('calendar/daily_weekly.php', compact('calendar_view')); ?>
+
+<?= $calendar_view->render() ?>
+<?= $this->render_partial('calendar/schedule/_entry.php'); ?>
+<?= $this->render_partial('calendar/schedule/_entry_details') ?>

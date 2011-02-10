@@ -115,7 +115,7 @@ class CalendarScheduleModel
             $entry['start_minute'] = sprintf("%02d", $entry['start'] % 100);
             $entry['end_hour']     = sprintf("%02d", floor($entry['end'] / 100));
             $entry['end_minute']   = sprintf("%02d", $entry['end'] % 100);
-            $entry['onClick']      = "STUDIP.Schedule.showScheduleDetails('". $entry['id'] ."'); return false;";
+            $entry['onClick']      = "function (id) { STUDIP.Schedule.showScheduleDetails('". $entry['id'] ."'); }";
             $entry['visible']      = true;
 
             $day_number = ($entry['day']-1) % 7;
@@ -148,7 +148,7 @@ class CalendarScheduleModel
             if (!$cycle_id || $cycle->getMetaDateID() == $cycle_id) {
                 $entry = array();
 
-                $entry['id'] = $seminar_id;
+                $entry['id'] = $seminar_id .'-'. $cycle->getMetaDateId();
                 $entry['cycle_id'] = $cycle->getMetaDateId();
                 $entry['start_formatted'] = sprintf("%02d", $cycle->getStartStunde()) .':'
                     . sprintf("%02d", $cycle->getStartMinute());
@@ -180,8 +180,10 @@ class CalendarScheduleModel
 
                 $entry['url']     = UrlHelper::getLink('dispatch.php/calendar/schedule/entry/' . $seminar_id
                                   . '/' . $cycle->getMetaDateId());
-                $entry['onClick'] = "STUDIP.Schedule.showSeminarDetails('$seminar_id', '"
-                                  . $cycle->getMetaDateId() ."'); return false;";
+                $entry['onClick'] = "function (id) {
+                    var ids = id.split('-');
+                    STUDIP.Schedule.showSeminarDetails(ids[0], ids[1]);
+                }";
 
 
                 // check the settings for this entry
@@ -219,7 +221,7 @@ class CalendarScheduleModel
                     $entry['icons'][] = array(
                         'url'   => $bind_url,
                         'image' => Assets::image_path('icons/16/white/visibility-invisible.png'),
-                        'onClick' => 'STUDIP.Calendar.noNewEntry = true;',
+                        'onClick' => "function(id) { window.location = '". $bind_url ."'; }",
                         'title' => _("Diesen Eintrag wieder einblenden")
                     );
                 }
@@ -231,7 +233,7 @@ class CalendarScheduleModel
                     $entry['icons'][] = array(
                         'url'     => $unbind_url,
                         'image'   => Assets::image_path('icons/16/white/visibility-visible.png'),
-                        'onClick' => "STUDIP.Schedule.hideEntry(this, '$seminar_id', '". $cycle->getMetaDateId() ."'); return false;",
+                        'onClick' => "function(id) { STUDIP.Schedule.hideEntry(id, '$seminar_id', '". $cycle->getMetaDateId() ."'); }",
                         'title'   => _("Diesen Eintrag ausblenden")
                     );
 
@@ -352,7 +354,7 @@ class CalendarScheduleModel
 
             foreach ($entries as $entry) {
                 unset($entry['url']);
-                $entry['onClick'] = 'STUDIP.Schedule.showInstituteDetails(this); return false;';
+                $entry['onClick'] = 'function(id) { STUDIP.Schedule.showInstituteDetails(id); }';
 
                 if (($entry['start'] >= $start_hour * 100 && $entry['start'] <= $end_hour * 100
                     || $entry['end'] >= $start_hour * 100 && $entry['end'] <= $end_hour * 100)) {

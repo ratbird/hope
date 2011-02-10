@@ -21,13 +21,17 @@ foreach ($entry as $element) :
     $ids[] = $element['id'];
     if ($element['visible']) $show = true;
 endforeach;
+$element_id = md5(uniqid());
 ?>
 
 <? if ($show || $show_hidden) : ?>
-<div class="schedule_entry <?= !$show ? 'invisible_entry' : '' ?>" style="top: <?= $top ?>px; height: <?= $height ?>px; width: <?= $width ?>%<?= ($col > 0) ? ';left:'. ($col * $width) .'%' : '' ?>" title="<?= htmlReady(implode(', ', $title)) ?>">
+<div id="schedule_entry_<?= $element_id ?>_<?= $entry[0]['start'] .'/'. $entry[0]['end'] .'/'. implode(',', $ids) ?>" class="schedule_entry <?= !$show ? 'invisible_entry' : '' ?>" 
+    style="top: <?= $top ?>px; height: <?= $height ?>px; width: <?= $width ?>%<?= ($col > 0) ? ';left:'. ($col * $width) .'%' : '' ?>"
+    title="<?= htmlReady(implode(', ', $title)) ?>">
 
-    <a href="<?= $entry[0]['url'] ?>"
-        <?= $entry[0]['onClick'] ? 'onClick="' . $entry[0]['onClick'] . '"' : '' ?> data="<?= $entry[0]['start'] .'/'. $entry[0]['end'] .'/'. implode(',', $ids) ?>">
+    <a <? /* href="<?= $entry[0]['url'] ?>" */ ?>
+        <?= $entry[0]['onClick'] ? 'onClick="STUDIP.Calendar.clickEngine(' . $entry[0]['onClick'] . ', this, event); return false;"' : '' ?>>
+
     <!-- for safari5 we need to set the height for the dl as well -->
     <dl class="hover" style="height: <?= $height ?>px;
         border: 1px solid <?= $entry[0]['color'] ?>;
@@ -48,18 +52,7 @@ endforeach;
     </a>
 
     <div class="snatch" style="display: none"><div> </div></div>
-
-    <div style="position: absolute; right: 0px; top: 0px;">
-        <? if (is_array($entry['icons'])) foreach ($entry['icons'] as $icon) : ?>
-            <? if($icon['url']) : ?>
-            <a href="<?= $icon['url'] ?>" <?= $icon['onClick'] ? 'onClick="'. $icon['onClick'] .'"' : '' ?>>
-                <?= Assets::img($icon['image'], array('title' => htmlReady($icon['title']), 'alt' => htmlReady($icon['title']))) ?>
-            </a>
-            <? else : ?>
-            <?= Assets::img($icon['image'], array('title' => htmlReady($icon['title']))) ?>
-            <? endif; ?>
-        <? endforeach ?>
-    </div>
+    <?= $this->render_partial('calendar/entries/icons', compact('element_id')) ?>
 
 </div>
 <? endif ?>

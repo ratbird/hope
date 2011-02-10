@@ -35,6 +35,8 @@ class Calendar_ScheduleController extends AuthenticatedController
     {
         global $my_schedule_settings;
 
+        if (Request::get('zoom')) URLHelper::bindLinkParam('zoom', Request::get('zoom'));
+
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
         if ($inst_mode) {
@@ -175,6 +177,8 @@ class Calendar_ScheduleController extends AuthenticatedController
             PageLayout::addStylesheet('style_print.css', array('media' => 'print'));
         }
 
+        $this->calendar_view->setInsertFunction("function (entry, column, hour) { STUDIP.Schedule.newEntry(entry, column, hour) }");
+
         $this->show_hidden    = $show_hidden;
         $this->inst_mode      = $inst_mode;
     }
@@ -276,9 +280,10 @@ class Calendar_ScheduleController extends AuthenticatedController
         $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
         if ($cycle_id) {
             $this->show_entry = array_pop(CalendarScheduleModel::getSeminarEntry($id, $GLOBALS['user']->id, $cycle_id));
+            $this->show_entry['id'] = $id;
             $this->render_template('calendar/schedule/_entry_course');
         } else {
-            $entry_columns = CalendarScheduleModel::getScheduleEntries($GLOBALS['user']->id, 0, 0, $id, $this);
+            $entry_columns = CalendarScheduleModel::getScheduleEntries($this, $GLOBALS['user']->id, 0, 0, $id);
             $entries = array_pop($entry_columns)->getEntries();
             $this->show_entry = array_pop($entries);
             $this->render_template('calendar/schedule/_entry_schedule');
@@ -296,9 +301,18 @@ class Calendar_ScheduleController extends AuthenticatedController
      */
     function groupedentry_action($start, $end, $seminars, $ajax = false)
     {
+        // strucutre of an id: seminar_id-cycle_id
+        // we do not need the cycle id here, so we trash it. 
+        $seminar_list = array();
+
+        foreach (explode(',', $seminars) as $seminar) {
+            $zw = explode('-', $seminar);
+            $seminar_list[] = $zw[0];
+        }
+
         $this->show_entry = array(
             'type'     => 'inst',
-            'seminars' => (array)explode(',', $seminars),
+            'seminars' => $seminar_list, 
             'start'    => $start,
             'end'      => $end
         );

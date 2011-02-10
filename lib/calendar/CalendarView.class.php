@@ -176,9 +176,12 @@ class CalendarView
 
     /**
      * outputs the CalendarView with all (grouped) dates in columns.
+     *
+     * @param  array  you can pass some additional variables to the templates
+     *
      * @return string
      */
-    public function render()
+    public function render($params = array())
     {
         $style_parameters = array(
             'whole_height' => $this->getOverallHeight(),
@@ -190,7 +193,7 @@ class CalendarView
         $template = $GLOBALS['template_factory']->open("calendar/calendar_view.php");
         $template->set_attribute("calendar_view", $this);
         $template->set_attribute("view_id", $this->view_id);
-        return $template->render();
+        return $template->render($params);
     }
 
 
@@ -271,44 +274,5 @@ class CalendarView
      */
     public function getColumns() {
         return $this->entries;
-    }
-
-    /**
-     * You can set your own template for one of the available hooks
-     * in the calendar. At the moment these hooks are:
-     *  - entry
-     *  - newEntry
-     *  - entryDetails
-     *
-     * @param Flexi_Template $template the template to use for the passed hook
-     *  instead of the default one
-     * @param string $type  the place/hook, where the template will be used
-     */
-    public function setTemplate($template, $type) {
-        if (!$template instanceof Flexi_Template) {
-            throw new Exception('You need to pass a Flexi_Template to this function!');
-        }
-
-        if (!in_array($type, array('entry', 'newEntry', 'entryDetails'))) {
-            throw new Exception('You need to pass a valid hook to this function!');
-        }
-
-        $this->templates[$type] = $template;
-    }
-
-
-    /**
-     * This function returns a user-specified template (if any) for the passed
-     * hook, false otherwise
-     *
-     * @param string $type the hook, you want the template for
-     * @return Flexi_Template
-     */
-    public function getTemplate($type) {
-        if (!in_array($type, array('entry', 'newEntry', 'entryDetails'))) {
-            throw new Exception('You need to pass a valid hook to this function!');
-        }
-
-        return isset($this->templates[$type]) ? $this->templates[$type] : false;
     }
 }

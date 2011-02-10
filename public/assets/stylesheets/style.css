@@ -1434,15 +1434,6 @@ h1:hover .arrow_down, h2:hover .arrow_down, h3:hover .arrow_down, h4:hover .arro
     background-color: #E8EEF7;
 }
 
-#schedule_empty_entry dl {
-    border: 1px solid #5C2D64;
-    background-image: url('../images/calendar/category3.jpg');
-}
-
-#schedule_empty_entry dt {
-    background-color: #5C2D64;
-}
-
 table.schedule_headings td {
     background-color: #E8EEF7;
 }
@@ -1533,6 +1524,15 @@ div.snatch div {
     z-index: 3;
 }
 
+#schedule_entry_new dl {
+    border: 1px solid #5C2D64;
+    background-image: url('../images/calendar/category3.jpg');
+}
+
+#schedule_entry_new dt {
+    background-color: #5C2D64;
+}
+
 div.schedule_edit_entry, #schedule_settings {
     position: absolute;
     left: 50%;
@@ -1578,7 +1578,7 @@ div.window_heading_nodrag {
     padding: 2px;
 }
 
-#schedule_icons {
+.schedule_icons {
     position: absolute;
     right: 0px;
     top: 0px;

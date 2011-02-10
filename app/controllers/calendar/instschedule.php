@@ -121,9 +121,18 @@ class Calendar_InstscheduleController extends AuthenticatedController
      */
     function groupedentry_action($start, $end, $seminars, $ajax = false)
     {
+        // strucutre of an id: seminar_id-cycle_id
+        // we do not need the cycle id here, so we trash it. 
+        $seminar_list = array();
+
+        foreach (explode(',', $seminars) as $seminar) {
+            $zw = explode('-', $seminar);
+            $seminar_list[] = $zw[0];
+        }
+
         $this->show_entry = array(
             'type'     => 'inst',
-            'seminars' => (array)explode(',', $seminars),
+            'seminars' => $seminar_list,
             'start'    => $start,
             'end'      => $end
         );

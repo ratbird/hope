@@ -51,9 +51,9 @@
             <? endif ?>
 
             <? if ($show_entry) : ?>
-            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="jQuery('#edit_entry').fadeOut('fast');return false"><?= makebutton('abbrechen') ?></a>
+            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="STUDIP.Schedule.cancelNewEntry(); return false;"><?= makebutton('abbrechen') ?></a>
             <? else: ?>
-            <a href="javascript:STUDIP.Calendar.cancelNewEntry(true)"><?= makebutton('abbrechen') ?></a>
+            <a href="javascript:STUDIP.Schedule.cancelNewEntry()"><?= makebutton('abbrechen') ?></a>
             <? endif ?>
         </div>
     </form>

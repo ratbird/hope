@@ -25,7 +25,7 @@
             <input type="image" <?= makebutton('speichern', 'src') ?>>
             <input type="hidden" id="new_entry_hour" name="hour" value="">
             <input type="hidden" id="new_entry_day" name="day" value="">
-            <span onClick="STUDIP.Calendar.cancelNewEntry(true);"><?= makebutton('abbrechen') ?></span>
+            <span onClick="STUDIP.Schedule.cancelNewEntry();"><?= makebutton('abbrechen') ?></span>
         </div>
 
     </form>

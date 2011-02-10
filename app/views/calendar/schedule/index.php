@@ -81,4 +81,7 @@ $infobox['content'][2]['eintrag'] = array (
 <? if (Request::get('show_settings')) : ?>
     <?= $this->render_partial('calendar/schedule/settings', array('settings' => $GLOBALS['my_schedule_settings']));?>
 <? endif ?>
-<?= $this->render_partial('calendar/daily_weekly.php', compact('calendar_view')); ?>
+
+<?= $calendar_view->render(array('show_hidden' => $show_hidden)) ?>
+<?= $this->render_partial('calendar/schedule/_entry.php'); ?>
+<?= $this->render_partial('calendar/schedule/_entry_details') ?>

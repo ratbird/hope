@@ -600,7 +600,7 @@ if ($inst_id != "" && $inst_id !="0") {
     if ($admin_view) {
         if (!LockRules::Check($inst_id, 'participants')) {
             // Der Admin will neue Sklaven ins Institut berufen...
-            $InstituteUser = new SQLSearch("SELECT DISTINCT auth_user_md5.user_id, " . $_fullname_sql['full_rev'] . " AS fullname " .
+            $InstituteUser = new SQLSearch("SELECT DISTINCT auth_user_md5.user_id, " . $_fullname_sql['full_rev_username'] . " AS fullname " .
                 "FROM auth_user_md5 " .
                     "LEFT JOIN user_info USING(user_id) " .
                     "LEFT JOIN user_inst ON user_inst.user_id=auth_user_md5.user_id AND Institut_id = :ins_id " .

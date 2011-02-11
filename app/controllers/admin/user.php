@@ -259,7 +259,9 @@ class Admin_UserController extends AuthenticatedController
 
             //new user data
             $editUser = array();
-
+            if (count($editPerms)) {
+                $editUser['auth_user_md5.perms'] = $editPerms[0];
+            }
             foreach(words('Vorname Nachname auth_plugin visible') as $param) {
                 if (Request::get($param)) $editUser['auth_user_md5.' . $param] = Request::get($param);
             }

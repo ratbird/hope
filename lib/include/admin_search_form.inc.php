@@ -461,7 +461,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
             }
         //more Options for lock changing
         if ($i_page == "admin_lock.php") {
-            $seminar_lock_rules = array_filter(LockRule::findAllByType('sem'), create_function('$lr','return ' . (int)$GLOBALS['perm']->have_perm('root') . ' || (!in_array($lr->permission, array("root","admin")));'));
+            $seminar_lock_rules = LockRules::getAvailableSeminarRules($GLOBALS['user']->id);
             ?>
             <tr class="steel2">
                 <td colspan="3">
@@ -471,8 +471,8 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 <?
                     $lock_all = Request::option('lock_all');
                     printf("<select name=\"lock_all\" size=1>");
-                    printf("<option value='-1'>"._("Bitte wählen")."</option>");
-                    printf("<option value='none' %s>--"._("keine Sperrebene")."--</option>", $lock_all == 'none' ? 'selected=selected' : '' );
+                    printf("<option value=\"-1\">"._("Bitte wählen")."</option>");
+                    printf("<option value=\"none\" %s>--"._("keine Sperrebene")."--</option>", $lock_all == 'none' ? 'selected=selected' : '' );
                     foreach($seminar_lock_rules as $lr) {
                         printf("<option value=\"".$lr["lock_id"]."\" ");
                         if (isset($lock_all) && $lock_all==$lr["lock_id"]) {
@@ -524,22 +524,12 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
         while ($db->next_record()) {
             $seminar_id = $db->f("Seminar_id");
-            $sem = Seminar::getInstance($db->f('Seminar_id'));
-            $semester = new SemesterData();
-
-            if (!$semdata = $semester->getSemesterData($links_admin_data['srch_sem'])) {
-                $semdata = $semester->getSemesterDataByDate($db->f('start_time'));
-            }
-
             // if "show room-data" is enabled
             if (!$show_rooms_check_url) {
                 $_room = "&nbsp;";
             } else {
-                $_room = $sem->getDatesHTML();
-                if (!$_room) {
-                    $semdata = $semester->getSemesterDataByDate($db->f('start_time'));
-                    $_room = $sem->getDatesHTML(array('semester_id' => $semdata['semester_id']));
-                }
+                $sem = Seminar::getInstance($db->f('Seminar_id'));
+                $_room = $sem->getDatesHTML(array('semester_id' => $links_admin_data['search_sem']));
                 $_room = $_room ? $_room : "nicht angegeben";
             }
             $user_id = $auth->auth["uid"];
@@ -632,11 +622,11 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                         ?>
                         <input type="hidden" name="make_lock" value=1>
                         <select name=lock_sem[<? echo $seminar_id ?>]>
-                        <option value="none">-- <?= _("keine Sperrebene") ?> --</option>
+                        <option value="none" <?= (Request::option('lock_all') == 'none' || !$rule['lock_id'] ? 'selected' : '')?> >-- <?= _("keine Sperrebene") ?> --</option>
                         <?
                             foreach($seminar_lock_rules as $lr) {
                                 echo "<option value=".$lr["lock_id"]."";
-                                if (Request::option('lock_all') == $lr["lock_id"] || $lr["lock_id"] == $rule["lock_id"]) {
+                                if (Request::option('lock_all') == $lr["lock_id"] || (!Request::option('lock_all') && $lr["lock_id"] == $rule["lock_id"])) {
                                     echo " selected ";
                                 }
                                 echo ">".htmlReady($lr["name"])."</option>";

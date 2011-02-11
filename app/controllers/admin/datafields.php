@@ -100,7 +100,7 @@ class Admin_DatafieldsController extends AuthenticatedController
             $struct->load();
             if (Request::get('datafield_name')) {
                 $struct->setName(Request::get('datafield_name'));
-                $struct->setObjectClass(Request::get('object_class'));
+                $struct->setObjectClass(array_sum(Request::getArray('object_class')));
                 $struct->setEditPerms(Request::get('edit_perms'));
                 $struct->setViewPerms(Request::get('visibility_perms'));
                 $struct->setPriority(Request::get('priority'));
@@ -147,7 +147,7 @@ class Admin_DatafieldsController extends AuthenticatedController
                 $struct = new DataFieldStructure(compact('datafield_id'));
                 $struct->setName(Request::get('datafield_name'));
                 $struct->setObjectType($type);
-                $struct->setObjectClass(Request::get('object_class'));
+                $struct->setObjectClass(array_sum(Request::getArray('object_class')));
                 $struct->setEditPerms(Request::get('edit_perms'));
                 $struct->setViewPerms(Request::get('visibility_perms'));
                 $struct->setPriority(Request::get('priority'));

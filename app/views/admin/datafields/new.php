@@ -57,25 +57,29 @@
         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
             <td><? if ($object_typ == 'sem'): ?>Veranstaltungskategorie<? elseif ($object_typ == 'inst'): ?>Einrichtungstyp<? else: ?>Nutzerstatus<? endif; ?></td>
             <td>
-                <select name="object_class">;
-                    <option value="NULL"><?= _('alle') ?></option>
-                    <? if ($object_typ == 'sem'): ?>
+                <? if ($object_typ == 'sem'): ?>
+                    <select name="object_class">;
+                        <option value="NULL"><?= _('alle') ?></option>
                         <? foreach ($GLOBALS['SEM_CLASS'] as $key=>$val): ?>
                             <option value="<?= $key ?>"><?= $val['name']?> </option>
                         <? endforeach; ?>
-                    <? elseif ($object_typ== 'inst'): ?>
+                <? elseif ($object_typ== 'inst'): ?>
+                    <select name="object_class">;
+                        <option value="NULL"><?= _('alle') ?></option>
                         <? foreach ($GLOBALS['INST_TYPE'] as $key=>$val): ?>
                             <option value="<?= $key ?>"><?= $val['name']?> </option>
                         <? endforeach; ?>
-                    <? else: ?>
-                        <option value="1">user</option>
-                        <option value="2">autor</option>
-                        <option value="4">tutor</option>
-                        <option value="8">dozent</option>
-                        <option value="16">admin</option>
-                        <option value="32">root</option>
-                    <? endif; ?>
-                </select>
+                <? else: ?>
+                     <select multiple size="7" name="object_class[]">
+                        <option value="NULL"><?= _('alle') ?></option>
+                            <option value="1">user</option>
+                            <option value="2">autor</option>
+                            <option value="4">tutor</option>
+                            <option value="8">dozent</option>
+                            <option value="16">admin</option>
+                            <option value="32">root</option>
+                <? endif; ?>
+                    </select>
             </td>
         </tr>
         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">

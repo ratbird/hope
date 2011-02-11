@@ -50,23 +50,31 @@
                 </label>
             </td>
             <td>
+                <? if ($item->getObjectType() == 'sem'): ?>
                 <select name="object_class" id="object_class">
                     <option value="NULL">
                         <?= _('alle') ?>
                     </option>
-                <? if ($item->getObjectType() == 'sem'): ?>
                     <? foreach ($GLOBALS['SEM_CLASS'] as $key=>$val): ?>
                     <option <?= $item->getObjectClass() == $key ? 'selected="selected"' : '' ?> value="<?= $key ?>">
                         <?= $val['name'] ?>
                     </option>
                     <? endforeach; ?>
                 <? elseif ($item->getObjectType() == 'inst'): ?>
+                <select name="object_class" id="object_class">
+                    <option value="NULL">
+                        <?= _('alle') ?>
+                    </option>
                     <? foreach ($GLOBALS['INST_TYPE'] as $key=>$val): ?>
                     <option <?= $item->getObjectClass() == $key ? "selected" : ""?> value="<?= $key ?>">
                         <?= $val['name'] ?>
                     </option>
                     <? endforeach; ?>
                 <? else: ?>
+                <select multiple size="7" name="object_class[]" id="object_class">
+                    <option value="NULL">
+                        <?= _('alle') ?>
+                    </option>
                     <? foreach ($controller->user_status as $key => $value): ?>
                     <option <?= ($item->getObjectClass() & DataFieldStructure::permMask($key)) ? 'selected="selected"' : '' ?> value="<?= $value ?>"><?= $key ?></option>
                     <? endforeach; ?>

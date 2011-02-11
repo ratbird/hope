@@ -465,8 +465,8 @@ class ExternSemBrowseTemplate extends SemBrowse {
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['CYCLE'] = ExternModule::ExtHtmlReady($sem_turnus);
 
                         $doz_name = array_keys($sem_data[$seminar_id]['fullname']);
-                        $doz_lastname = array_keys($sem_data[$seminar_id]['Vorname']);
-                        $doz_firstname = array_keys($sem_data[$seminar_id]['Nachname']);
+                        $doz_lastname = array_keys($sem_data[$seminar_id]['Nachname']);
+                        $doz_firstname = array_keys($sem_data[$seminar_id]['Vorname']);
                         $doz_titlefront = array_keys($sem_data[$seminar_id]['title_front']);
                         $doz_titlerear = array_keys($sem_data[$seminar_id]['title_rear']);
                         $doz_uname = array_keys($sem_data[$seminar_id]['username']);

@@ -38,8 +38,15 @@ class Admin_LockrulesController extends AuthenticatedController
 
         URLHelper::bindLinkParam('lock_rule_type', $this->lock_rule_type);
 
-        if (!$this->lock_rule_type) {
+        if (!$this->lock_rule_type || !$GLOBALS['perm']->have_perm('root')) {
             $this->lock_rule_type = 'sem';
+        }
+        if ($this->lock_rule_type == 'sem') {
+            $this->lock_rule_permissions = $GLOBALS['perm']->have_perm('root') ? array('tutor','dozent','admin','root') : array('tutor','dozent');
+        } elseif ($this->lock_rule_type == 'inst') {
+            $this->lock_rule_permissions = array('admin','root');
+        } elseif ($this->lock_rule_type == 'user') {
+            $this->lock_rule_permissions = array('tutor','dozent','admin','root');
         }
         if ($this->flash['message']) {
             $this->message = $this->flash['message'];
@@ -52,10 +59,11 @@ class Admin_LockrulesController extends AuthenticatedController
      */
     function index_action()
     {
-        $lock_rules = LockRule::findAllByType($this->lock_rule_type);
-        $filter = create_function('$lr',
-        'return ' . (int)$GLOBALS['perm']->have_perm('root') . ' || (in_array($lr->user_id, array("","'.$GLOBALS['user']->id.'")) && !in_array($lr->permission, array("root","admin")));');
-        $this->lock_rules = array_filter($lock_rules, $filter);
+        if ($this->lock_rule_type = 'sem') {
+           $this->lock_rules = LockRules::getAdministrableSeminarRules($GLOBALS['user']->id);
+        } else {
+            $this->lock_rules = LockRule::findAllByType($this->lock_rule_type);
+        }
     }
 
     /**

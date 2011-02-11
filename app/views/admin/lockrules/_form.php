@@ -27,7 +27,7 @@
 </td>
 <td>
 <select name="lockdata_permission">
-<?foreach(($GLOBALS['perm']->have_perm('root') ? array('autor','tutor','dozent','admin','root') : array('autor','tutor','dozent')) as $p) :?>
+<?foreach($lock_rule_permissions as $p) :?>
 	<option <?=($lock_rule['permission'] == $p ? 'selected' : '')?>><?=$p?></option>
 <? endforeach;?>
 </select>

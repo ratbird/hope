@@ -36,7 +36,8 @@ echo $message;
         $infobox_content = array(
             array(
                 'kategorie' => _('Sperrebenen verwalten'),
-                'eintrag'   => array(array(
+                'eintrag'   => array(
+            array(
                 'icon' => 'icons/16/black/search.png',
                 'text' => $this->render_partial('admin/lockrules/_chooser.php')
             ),
@@ -46,5 +47,7 @@ echo $message;
                 ))
             ),
         );
-
+if (!$GLOBALS['perm']->have_perm('root')) {
+    unset($infobox_content[0]['eintrag'][0]);
+}
 $infobox = array('picture' => 'infobox/administration.jpg', 'content' => $infobox_content);

@@ -39,13 +39,26 @@ class LockRules {
     private static $lockmap = array();
     private static $lockrules = array();
 
-
     public static function get($lock_id)
     {
         if(!array_key_exists($lock_id, self::$lockrules)) {
             self::$lockrules[$lock_id] = LockRule::find($lock_id);
         }
         return self::$lockrules[$lock_id];
+    }
+
+    public static function getAdministrableSeminarRules($user_id)
+    {
+        $filter = create_function('$lr',
+        'return ' . (int)($GLOBALS['perm']->get_perm($user_id) == 'root') . ' || (in_array($lr->user_id, array("'.$user_id.'")) && !in_array($lr->permission, array("root","admin")));');
+        return array_filter(LockRule::findAllByType('sem'), $filter);
+    }
+
+    public static function getAvailableSeminarRules($user_id)
+    {
+        $filter = create_function('$lr',
+        'return ' . (int)($GLOBALS['perm']->get_perm($user_id) == 'root') . ' || (!in_array($lr->permission, array("root","admin")));');
+        return array_filter(LockRule::findAllByType('sem'), $filter);
     }
 
     public static function getObjectRule($object_id)

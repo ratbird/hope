@@ -1183,7 +1183,6 @@ if ($view == 'userdomains') {
 
 
 if ($view == 'Karriere') {
-
     $all_rights = false;
     if ($my_about->auth['username'] != $username) {
         $db_r = new DB_Seminar();
@@ -1223,7 +1222,14 @@ if ($view == 'Karriere') {
             }
         }
     }
-
+    if (LockRules::Check($my_about->auth_user["user_id"], 'institute_data') && LockRules::getObjectRule($my_about->auth_user["user_id"])->description) {
+        echo '<tr><td align="left" valign="top" class="blank" style="padding-left:20px;">';
+        echo MessageBox::info(fixLinks(htmlReady(LockRules::getObjectRule($my_about->auth_user["user_id"])->description)));
+        echo '</td</tr>';
+        $locked = true;
+    } else {
+        $locked = false;
+    }
     // a group has been chosen to be opened / closed
     if ($_REQUEST['switch']) {
         if ($edit_about_data['open'] == $_REQUEST['switch']) {
@@ -1265,6 +1271,8 @@ if ($view == 'Karriere') {
     $template->set_attribute('subview_id', $subview_id);
     $template->set_attribute('admin_insts', $admin_insts);
     $template->set_attribute('sub_admin_insts', $sub_admin_insts);
+
+    $template->set_attribute('locked', $locked);
 
     echo $template->render();
 
@@ -1349,27 +1357,34 @@ if ($view == 'Lebenslauf') {
     echo "</td></tr>\n";
     $cssSw->switchClass();
 
-
-    /*echo '<tr><td align="left" valign="top" class="blank"><br>'."\n";
-    if ($my_about->auth_user['perms'] == 'dozent') {
-         echo _("Hier k&ouml;nnen Sie Lebenslauf, Publikationen und Arbeitschwerpunkte bearbeiten.");
-    } else {
-        echo  _("Hier k&ouml;nnen Sie Ihren Lebenslauf bearbeiten.");
-    }
-    echo "<br>&nbsp; </td></tr>\n"; */
-
     echo '<tr><td class="'.$cssSw->getClass().'" align="left"><b>' . _("Lebenslauf:") . "</b></td>\n";
-    echo '<td class="'. $cssSw->getClass() .'" colspan="2" align="left" valign="top">&nbsp;', "\n";
-    echo '<textarea  name="lebenslauf" style=" width: 80%" cols="'.round($max_col/1.3).'" rows="7" wrap="virtual">' . htmlReady($my_about->user_info['lebenslauf']).'</textarea><a name="lebenslauf"></a></td></tr>'."\n";
+    echo '<td class="'. $cssSw->getClass() .'" colspan="2" align="left" valign="top">' . "\n";
+    if (StudipAuthAbstract::CheckField("user_info.lebenslauf", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'lebenslauf')) {
+        echo "&nbsp;" . htmlReady($my_about->user_info["lebenslauf"], true, true);
+    } else {
+        echo '&nbsp; <textarea  name="lebenslauf" style=" width: 80%" cols="'.round($max_col/1.3).'" rows="7" wrap="virtual">' . htmlReady($my_about->user_info['lebenslauf']).'</textarea>';
+    }
+    echo '<a name="lebenslauf"></a></td></tr>'."\n";
+
     if ($my_about->auth_user["perms"] == "dozent") {
         $cssSw->switchClass();
         echo '<tr><td class="'.$cssSw->getClass().'" align="left"><b>' . _("Schwerpunkte:") . "</b></td>\n";
         echo '<td class="'. $cssSw->getClass() .'" colspan="2" align="left" valign="top">&nbsp;', "\n";
-        echo '<textarea  name="schwerp" style="width: 80%" cols="'.round($max_col/1.3).'" rows="7" wrap="virtual">'.htmlReady($my_about->user_info["schwerp"]).'</textarea><a name="schwerpunkte"></a></td></tr>'."\n";
+        if (StudipAuthAbstract::CheckField("user_info.schwerp", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'schwerp')) {
+            echo htmlReady($my_about->user_info["schwerp"], true, true);
+        } else {
+            echo '<textarea  name="schwerp" style="width: 80%" cols="'.round($max_col/1.3).'" rows="7" wrap="virtual">'.htmlReady($my_about->user_info["schwerp"]).'</textarea>'."\n";
+        }
+        echo '<a name="schwerpunkte"></a></td></tr>';
         $cssSw->switchClass();
         echo "<tr><td class=\"".$cssSw->getClass(). '" align="left" ><b>' . _("Publikationen:") . "</b></td>\n";
         echo '<td class="'. $cssSw->getClass() .'" colspan="2" align="left" valign="top">&nbsp;', "\n";
-        echo '<textarea  name="publi" style=" width: 80%" cols="'.round($max_col/1.3) . '" rows="7" wrap="virtual">'.htmlReady($my_about->user_info['publi']).'</textarea><a name="publikationen"></a></td></tr>'."\n";
+        if (StudipAuthAbstract::CheckField("user_info.publi", $my_about->auth_user['auth_plugin']) || LockRules::check($my_about->auth_user['user_id'], 'publi')) {
+            echo htmlReady($my_about->user_info["publi"], true, true);
+        } else {
+            echo '<textarea  name="publi" style=" width: 80%" cols="'.round($max_col/1.3) . '" rows="7" wrap="virtual">'.htmlReady($my_about->user_info['publi']).'</textarea>'."\n";
+        }
+        echo '<a name="publikationen"></a></td></tr>';
     }
 
     //add the free administrable datafields

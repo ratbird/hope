@@ -21,9 +21,9 @@ if (is_array($institutes) && sizeof($institutes) > 0) :
         </a>
     </td>
     <td class="printhead" nowrap="nowrap" width="1%" valign="bottom">
-        <? if ($pos_inst > 1) : ?>
+        <? if ($pos_inst > 1 && !$locked) : ?>
         <a href="<?= URLHelper::getLink('?view=Karriere&username='. $username .'&cmd=move&direction=up&move_inst='. $inst_id .'&studipticket='. get_ticket()) ?>"><?= Assets::img('icons/16/yellow/arr_2up.png'); ?></a>
-        <? endif; if ($pos_inst < sizeof($institutes)) : ?>
+        <? endif; if ($pos_inst < sizeof($institutes) && !$locked) : ?>
         <a href="<?= URLHelper::getLink('?view=Karriere&username='. $username .'&cmd=move&direction=down&move_inst='. $inst_id .'&studipticket='. get_ticket()) ?>"><?= Assets::img('icons/16/yellow/arr_2down.png'); ?></a>
         <? endif; ?>
         &nbsp;
@@ -100,7 +100,7 @@ endif;
 <br>
 <table class="blank" width="100%">
 <?
-if ($GLOBALS['perm']->have_perm('admin'))
+if ($GLOBALS['perm']->have_perm('admin') && !$locked)
     echo $this->render_partial('statusgruppen/edit_about_add_person_to_role',
         array('subview_id' => $subview_id, 'admin_insts' => $admin_insts, 'sub_admin_insts' => $sub_admin_insts));
 ?>

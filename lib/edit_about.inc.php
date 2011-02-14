@@ -47,7 +47,7 @@ function edit_email($uid, $email, $force=False) {
         return array(True, $msg);
     }
 
-    if(StudipAuthAbstract::CheckField("auth_user_md5.Email", $auth_plugin)) {
+    if(StudipAuthAbstract::CheckField("auth_user_md5.Email", $auth_plugin) || LockRules::check($uid, 'email')) {
         return array(False, $msg);
     }
 
@@ -494,24 +494,24 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $home = '';
         }
 
-        if (!StudipAuthAbstract::CheckField("user_info.privatnr", $this->auth_user['auth_plugin'])){
+        if (!StudipAuthAbstract::CheckField("user_info.privatnr", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'privatnr')){
             $query .= "privatnr='$telefon',";
         }
 
-        if (!StudipAuthAbstract::CheckField("user_info.privatcell", $this->auth_user['auth_plugin'])){
+        if (!StudipAuthAbstract::CheckField("user_info.privatcell", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'privatcell')){
             $query .= "privatcell='$cell',";
         }
 
-        if (!StudipAuthAbstract::CheckField("user_info.privadr", $this->auth_user['auth_plugin'])){
+        if (!StudipAuthAbstract::CheckField("user_info.privadr", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'privadr')){
             $query .= "privadr='$anschrift',";
         }
-        if (!StudipAuthAbstract::CheckField("user_info.Home", $this->auth_user['auth_plugin'])){
+        if (!StudipAuthAbstract::CheckField("user_info.Home", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'home')){
             $query .= "Home='$home',";
         }
         if (!StudipAuthAbstract::CheckField("user_info.motto", $this->auth_user['auth_plugin'])){
             $query .= "motto='$motto',";
         }
-        if (!StudipAuthAbstract::CheckField("user_info.hobby", $this->auth_user['auth_plugin'])){
+        if (!StudipAuthAbstract::CheckField("user_info.hobby", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'hobby')){
             $query .= "hobby='$hobby',";
         }
 
@@ -538,6 +538,11 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         //check ob die blobs verändert wurden...
         $this->db->query("SELECT  lebenslauf, schwerp, publi FROM user_info WHERE user_id='".$this->auth_user["user_id"]."'");
         $this->db->next_record();
+        foreach(words('lebenslauf schwerp publi') as $param) {
+            if (LockRules::check($this->auth_user['user_id'], $param)) {
+                $$param = $this->db->f($param);
+            }
+        }
         if ($lebenslauf!=$this->db->f("lebenslauf") || $schwerp!=$this->db->f("schwerp") || $publi!=$this->db->f("publi") || $resultDataFields) {
             $this->db->query("UPDATE user_info SET lebenslauf='$lebenslauf', schwerp='$schwerp', publi='$publi', chdate='".time()."' WHERE user_id='".$this->auth_user["user_id"]."'");
             $this->msg = $this->msg . "msg§" . _("Daten im Lebenslauf u.a. wurden ge&auml;ndert") . "§";
@@ -559,13 +564,13 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         if($title_rear == "")
             $title_rear = $title_rear_chooser;
         $query = "";
-        if (!StudipAuthAbstract::CheckField("user_info.geschlecht", $this->auth_user['auth_plugin'])){
+        if (!StudipAuthAbstract::CheckField("user_info.geschlecht", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'gender')){
             $query .= "geschlecht='$geschlecht',";
         }
-        if ($ALLOW_CHANGE_TITLE && !StudipAuthAbstract::CheckField("user_info.title_front", $this->auth_user['auth_plugin'])){
+        if ($ALLOW_CHANGE_TITLE && !StudipAuthAbstract::CheckField("user_info.title_front", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'title')){
             $query .= "title_front='$title_front',";
         }
-        if ($ALLOW_CHANGE_TITLE && !StudipAuthAbstract::CheckField("user_info.title_rear", $this->auth_user['auth_plugin'])){
+        if ($ALLOW_CHANGE_TITLE && !StudipAuthAbstract::CheckField("user_info.title_rear", $this->auth_user['auth_plugin']) && !LockRules::check($this->auth_user['user_id'], 'title')){
             $query .= "title_rear='$title_rear',";
         }
         if ($query != "") {
@@ -590,7 +595,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $validator=new email_validation_class; ## Klasse zum Ueberpruefen der Eingaben
             $validator->timeout=10;
 
-            if (!StudipAuthAbstract::CheckField("auth_user_md5.password", $this->auth_user['auth_plugin']) && $password!="*****") {      //Passwort verändert ?
+            if (!StudipAuthAbstract::CheckField("auth_user_md5.password", $this->auth_user['auth_plugin']) && $password!="*****" && !LockRules::check($this->auth_user['user_id'], 'password')) {      //Passwort verändert ?
 
                 // auf doppelte Vergabe wird weiter unten getestet.
                 if (!$validator->ValidatePassword($password)) {
@@ -603,7 +608,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
                 $this->msg=$this->msg . "msg§" . _("Ihr Passwort wurde ge&auml;ndert!") . "§";
             }
 
-            if (!StudipAuthAbstract::CheckField('auth_user_md5.Vorname', $this->auth_user['auth_plugin']) && $vorname != $this->auth_user['Vorname']) { //Vornamen verändert ?
+            if (!StudipAuthAbstract::CheckField('auth_user_md5.Vorname', $this->auth_user['auth_plugin']) && $vorname != $this->auth_user['Vorname'] && !LockRules::check($this->auth_user['user_id'], 'name')) { //Vornamen verändert ?
                 if ($ALLOW_CHANGE_NAME) {
                     if (!$validator->ValidateName($vorname)) {
                         $this->msg=$this->msg . "error§" . _("Der Vorname fehlt oder ist unsinnig!") . "§";
@@ -614,7 +619,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
                 } else $vorname = $this->auth_user['Vorname'];
             }
 
-            if (!StudipAuthAbstract::CheckField('auth_user_md5.Nachname', $this->auth_user['auth_plugin']) && $nachname != $this->auth_user['Nachname']) { //Namen verändert ?
+            if (!StudipAuthAbstract::CheckField('auth_user_md5.Nachname', $this->auth_user['auth_plugin']) && $nachname != $this->auth_user['Nachname'] && !LockRules::check($this->auth_user['user_id'], 'name')) { //Namen verändert ?
                 if ($ALLOW_CHANGE_NAME) {
                     if (!$validator->ValidateName($nachname)) {
                         $this->msg=$this->msg . "error§" . _("Der Nachname fehlt oder ist unsinnig!") . "§";
@@ -626,7 +631,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             }
 
 
-            if (!StudipAuthAbstract::CheckField('auth_user_md5.username', $this->auth_user['auth_plugin']) && $this->auth_user['username'] != $new_username) {
+            if (!StudipAuthAbstract::CheckField('auth_user_md5.username', $this->auth_user['auth_plugin']) && $this->auth_user['username'] != $new_username && !LockRules::check($this->auth_user['user_id'], 'username')) {
                 if ($ALLOW_CHANGE_USERNAME) {
                     if (!$validator->ValidateUsername($new_username)) {
                         $this->msg=$this->msg . "error§" . _("Der gewählte Benutzername ist nicht lang genug!") . "§";

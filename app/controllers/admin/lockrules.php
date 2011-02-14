@@ -59,7 +59,7 @@ class Admin_LockrulesController extends AuthenticatedController
      */
     function index_action()
     {
-        if ($this->lock_rule_type = 'sem') {
+        if ($this->lock_rule_type == 'sem') {
            $this->lock_rules = LockRules::getAdministrableSeminarRules($GLOBALS['user']->id);
         } else {
             $this->lock_rules = LockRule::findAllByType($this->lock_rule_type);

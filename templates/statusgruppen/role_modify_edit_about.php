@@ -13,7 +13,7 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif'
     <td width="99%" class="printcontent">
         <center>
         <br>
-        <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id)) : ?>
+        <? if ($GLOBALS['perm']->have_studip_perm('admin', $inst_id) && !$locked) : ?>
         <a href="<?= URLHelper::getLink('?view=Karriere&username='. $username .'&cmd=removeFromGroup&role_id='. $role_id .'&studipticket='. get_ticket()) ?>">
             <?= makebutton('loeschen') ?>
         </a>
@@ -62,7 +62,7 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif'
                     <td colspan="1" class="<?=$cssSw->getClass()?>">&nbsp;
                 <?
                 global $auth;
-                if ($entry->structure->editAllowed($auth->auth['perm']) && ($entry->getValue() != 'default_value')) {
+                if ($entry->structure->editAllowed($auth->auth['perm']) && ($entry->getValue() != 'default_value') && !$locked) {
                     echo $entry->getHTML('datafields');
                     echo '</td>';
 
@@ -78,7 +78,7 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif'
 
                         // UnSet-Default Checkbox
                         echo '<td class="'.$cssSw->getClass().'" align="right">';
-                        if ($entry->structure->editAllowed($auth->auth['perm'])) {
+                        if ($entry->structure->editAllowed($auth->auth['perm']) && !$locked) {
                             echo '<a href="'. URLHelper::getLink('?cmd=unset_default&username='.$username.'&view='.$view.'&subview='.$subview.'&role_id='.$role_id.'&chgdef_entry_id='.$id.'&cor_inst_id='.$inst_id.'&sec_range_id='.$role_id.'&subview_id='.$subview_id.'&studipticket='.get_ticket()) .'" >';
                             echo Assets::img('icons/16/blue/checkbox-checked.png', array('class' => 'text-top', 'title' =>_("Diese Daten NICHT von den Standarddaten übernehmen")));
                             echo '</a>';
@@ -98,6 +98,7 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif'
         ?>
             <tr>
                 <td colspan="4" class="<?= $cssSw->getClass() ?>" align="right">
+                    <? if (!$locked) :?>
                     <font size="-1">
                         <?= _("Standarddaten übernehmen:") ?>
                         <a href="<?= URLHelper::getLink('?view=Karriere&username='. $username .'&inst_id='. $inst_id .'&cmd=makeAllSpecial&role_id='. $role_id .'&studipticket='. get_ticket()) ?>">
@@ -108,17 +109,26 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif'
                             <?=_("alle") ?>
                         </a>
                         </font>
+                    <? else :?>
+                    	&nbsp;
+                    <? endif;?>
                     </td>
                     <td class="blank">&nbsp;</td>
                     <td class="<?= $cssSw->getClass() ?>" align="center">
+                    <? if (!$locked) :?>
                         <a href="<?= URLHelper::getLink('?view=Karriere&open='. $inst_id .'&username='. $username .'#'. $inst_id) ?>">
                         <?=_("ändern")?>
                         </a>
+                    <? else :?>
+                    	&nbsp;
+                    <? endif;?>
                     </td>
                 </tr>
             </table>
         <br>
-        <input type="image" <?=makeButton('speichern', 'src')?> value="<?=_("Änderungen speichern")?>" align="absbottom">
+        <? if (!$locked) :?>
+        	<input type="image" <?=makeButton('speichern', 'src')?> value="<?=_("Änderungen speichern")?>" align="absbottom">
+        <? endif;?>
         <br>
         <br>
         </center>

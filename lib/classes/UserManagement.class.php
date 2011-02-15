@@ -192,7 +192,7 @@ class UserManagement
             }
 
         }
-        if ($this->db->affected_rows() == 0) {
+        if ($this->db->affected_rows() != 0) {
             $this->db->query("UPDATE user_info SET chdate='".time()."' WHERE user_id = '".$this->user_data['auth_user_md5.user_id']."'");
             return true;
         }

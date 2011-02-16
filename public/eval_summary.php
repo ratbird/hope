@@ -276,9 +276,9 @@ function answers($parent_id, $anz_nutzer, $question_type)
             $antwort_durchschnitt += $answer_counter * $antwort_nummer;
         }
         $prozente_wo_residual = 0;
-        if ($has_residual && ($db_answers_sum->f("anz")-$has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($db_answers_sum->f("anz")-$has_residual));
+        if ($has_residual && ($db_answers_sum->f("anz")-$has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($anz_nutzer-$has_residual));
         $prozente = 0;
-        if ($db_answers_sum->f("anz")>0) $prozente = ROUND($answer_counter*100/$db_answers_sum->f("anz"));
+        if ($db_answers_sum->f("anz")>0) $prozente = ROUND($answer_counter*100/$anz_nutzer);
         $edit .= "<tr class=\"".($i==1?"steel1kante":$css->getClass())."\"><td width=\"1%\"><font size=\"-1\"><b>".$antwort_nummer.".&nbsp;</b></font></td><td width=\"70%\"><font size=\"-1\">".($db_answers->f("text")!="" ? formatReady($db_answers->f("text")) : $db_answers->f("value"))."</font></td>";
         if ($has_residual) $edit .= "<td width=\"29%\"><font size=\"-1\">".$answer_counter." (".$prozente."%) ".($db_answers->f("residual")==0 ? "(".$prozente_wo_residual."%)<b>*</b>" : "" )."</font></td></tr>\n";
         else $edit .= "<td width=\"29%\"><font size=\"-1\">".$answer_counter." (".$prozente."%)</font></td></tr>\n";

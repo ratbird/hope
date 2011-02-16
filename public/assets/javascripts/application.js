@@ -356,13 +356,13 @@ STUDIP.study_area_selection = {
  * ------------------------------------------------------------------------ */
 STUDIP.Markup = {
   buttonSet: [
-    { "name": "bold",          "label": "<strong>B</strong>", open: "**",     close: "**"},
-    { "name": "italic",        "label": "<em>i</em>",         open: "%%",     close: "%%"},
-    { "name": "underline",     "label": "<u>u</u>",           open: "__",     close: "__"},
-    { "name": "strikethrough", "label": "<del>u</del>",       open: "{-",     close: "-}"},
-    { "name": "code",          "label": "code",               open: "[code]", close: "[/code]"},
-    { "name": "larger",        "label": "A+",                 open: "++",     close: "++"},
-    { "name": "smaller",       "label": "A-",                 open: "--",     close: "--"}
+    {"name": "bold",          "label": "<strong>B</strong>", open: "**",     close: "**"},
+    {"name": "italic",        "label": "<em>i</em>",         open: "%%",     close: "%%"},
+    {"name": "underline",     "label": "<u>u</u>",           open: "__",     close: "__"},
+    {"name": "strikethrough", "label": "<del>u</del>",       open: "{-",     close: "-}"},
+    {"name": "code",          "label": "code",               open: "[code]", close: "[/code]"},
+    {"name": "larger",        "label": "A+",                 open: "++",     close: "++"},
+    {"name": "smaller",       "label": "A-",                 open: "--",     close: "--"}
   ]
 };
 
@@ -408,7 +408,7 @@ STUDIP.Tabs = (function () {
       if (list.length === 0) {
         return;
       }
-      items = jQuery('li a', list);
+      items = jQuery('li a span', list);
       jQuery(list).data('old_width', jQuery(window).width());
 
       // strip contents and set titles
@@ -744,7 +744,7 @@ STUDIP.Filesystem.changefolderbody = function (md5_id) {
     } else {
       if (jQuery("#folder_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL(jQuery("#folder_" + md5_id + "_arrow_img").parent()[0].href);
-        jQuery("#folder_" + md5_id + "_body").load(adress, { getfolderbody: md5_id }, function () {
+        jQuery("#folder_" + md5_id + "_body").load(adress, {getfolderbody: md5_id}, function () {
           jQuery("#folder_" + md5_id + "_header").css('fontWeight', 'bold');
           jQuery("#folder_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
           jQuery("#folder_" + md5_id + "_arrow_td").addClass('printhead3')
@@ -788,7 +788,7 @@ STUDIP.Filesystem.changefilebody = function (md5_id) {
     } else {
       if (jQuery("#file_" + md5_id + "_body").html() === "") {
         var adress = STUDIP.Filesystem.getURL(jQuery("#file_" + md5_id + "_arrow_img").parent()[0].href);
-        jQuery("#file_" + md5_id + "_body").load(adress, { getfilebody: md5_id }, function () {
+        jQuery("#file_" + md5_id + "_body").load(adress, {getfilebody: md5_id}, function () {
           jQuery("#file_" + md5_id + "_header").css('fontWeight', 'bold');
           jQuery("#file_" + md5_id + "_arrow_img").attr('src', STUDIP.ASSETS_URL + "images/forumgraurunt2.png");
           jQuery("#file_" + md5_id + "_arrow_td").addClass('printhead3')
@@ -1003,7 +1003,11 @@ STUDIP.MultiSelect = {
       jQuery(id).attr('multiple', 'multiple');
       jQuery(id).css('height', '120px');
     }
-    jQuery(id).multiselect({sortable: false, itemName: itemName});
+    jQuery(id).multiselect({
+      sortable: true,
+      itemName: itemName,
+      draggable: true
+    });
   }
 };
 jQuery(function () {
@@ -1043,6 +1047,9 @@ jQuery(function () {
 
   STUDIP.study_area_selection.initialize();
 
+  // validate forms
+  STUDIP.Forms.initialize();
+
   // autofocus for all browsers
   if (!("autofocus" in document.createElement("input"))) {
     jQuery('[autofocus]').first().focus();
@@ -1052,8 +1059,8 @@ jQuery(function () {
     handles: 's',
     minHeight: 50
   });
-  
-  
+
+
 });
 
 
@@ -1122,117 +1129,34 @@ jQuery.ui.accordion.prototype.options.icons = {
 STUDIP.Calendar = {
   cell_height: 20,
   the_entry_content: null,
-  noNewEntry: false,
+  entry: null,
 
   day_names: [
-    "Sonntag",
     "Montag",
     "Dienstag",
     "Mittwoch",
     "Donnerstag",
     "Freitag",
-    "Samstag"
+    "Samstag",
+    "Sonntag"
   ],
 
   /**
-   * calculate the hour the user has clicked
-   *
-   * @param event e: the onClick-event
-   * @param string day: the day, that has benn clicked (0-6)
-   *
-   * @return: int
+   * this function is called, whenever an existing entry in the 
+   * calendar is clicked. It calls the passed function with the
+   * calculcate id of the clicked element
+   * 
+   * @param  object  a function or a reference to a function
+   * @param  object  the element in the dom, that has been clicked
+   * @param  object  the click-event itself
    */
-  clickedHour: function (e, day) {
-    return Math.floor(((e.pageY - Math.ceil(jQuery('#day_' + day).offset().top)) - 2) / this.cell_height) + STUDIP.Calendar.start_hour;
+  clickEngine: function (func, target, event) {
+    event.cancelBubble = true;
+    var id = jQuery(target).parent()[0].id;
+    id = id.substr(id.lastIndexOf("_") + 1);
+    func(id);
   },
 
-  newEntry: function (e, day) {
-    this.cancelNewEntry();
-
-    if (STUDIP.Calendar.noNewEntry) {
-      STUDIP.Calendar.noNewEntry = false;
-      return;
-    }
-
-    // calculate clicked hour
-    var hour = STUDIP.Calendar.clickedHour(e, day);
-
-    // fill values of overlay
-    jQuery('#entry_hour_start').text(hour);
-    jQuery('#entry_hour_end').text(hour + 1);
-    jQuery('#entry_day').text(STUDIP.Calendar.day_names[day].toLocaleString());
-
-    // the entry in the schedule
-    var the_entry = jQuery('<div/>')
-      .addClass('schedule_entry')
-      .attr('id', 'schedule_empty_entry')
-      .css({
-        height: STUDIP.Calendar.cell_height,
-        width: '100%',
-        display: 'none'
-      })
-      .html(STUDIP.Calendar.the_entry_content);
-
-    jQuery('#day_' + day).append(the_entry);
-    jQuery('#schedule_empty_entry').css('top', ((hour - STUDIP.Calendar.start_hour) * STUDIP.Calendar.cell_height) + 'px');
-
-    // the formula to fill in the data
-    jQuery('#empty_entry_start').text(hour);
-    jQuery('#empty_entry_end').text(hour + 1);
-
-    // jQuery('new_entry_form').action = '<?= jQuerycontroller->url_for('calendar/schedule/addEntry') ?>/'+ hour +'/'+ day;
-    jQuery('#new_entry_hour').val(hour);
-    jQuery('#new_entry_day').val(day);
-
-    // show the entry in data-view of the timetable
-    jQuery('#schedule_empty_entry').fadeIn('fast');
-
-
-    // show the overlay
-    jQuery('#schedule_new_entry').show();
-
-    // set the position of the overlay
-    jQuery('#schedule_new_entry').css({
-      top: Math.floor(the_entry.offset().top - jQuery('#schedule_new_entry').height() - 20),
-      left: Math.floor(the_entry.offset().left)
-    });
-
-    if (jQuery('#schedule_new_entry').offset().top < 0) {
-      jQuery('#schedule_new_entry').css({
-        top:  Math.floor(the_entry.offset().top + the_entry.height() + 20)
-      });
-    }
-  },
-
-  /**
-   * cancel adding of a new entry and fade out/remove all faded in/added boxes
-   *
-   * @param bool fade: if fade is true, fade out all boxes, otherwise just hide them
-   *
-   * @return: void
-   */
-  cancelNewEntry: function (fade) {
-    if (jQuery('#schedule_new_entry').is(':visible') ||
-        jQuery('#edit_entry').is(':visible') ||
-        jQuery('#edit_sem_entry').is(':visible') ||
-        jQuery('#edit_inst_entry').is(':visible')
-    ) {
-      if (fade) {
-        jQuery('#edit_sem_entry').fadeOut('fast');
-        jQuery('#edit_inst_entry').fadeOut('fast');
-        jQuery('#schedule_empty_entry').fadeOut('fast');
-        jQuery('#schedule_new_entry').fadeOut('fast');
-        jQuery('#edit_entry').fadeOut('fast');
-      } else {
-        jQuery('#edit_sem_entry').hide();
-        jQuery('#edit_inst_entry').hide();
-        jQuery('#schedule_new_entry').hide();
-        jQuery('#edit_entry').hide();
-      }
-
-      jQuery('#schedule_empty_entry').remove();
-    }
-  },
 
   /**
    * check, that the submited input-field cotains of a valid hour
@@ -1295,6 +1219,71 @@ STUDIP.Schedule = {
   inst_changed : false,
 
   /**
+   * this function is called, when an entry shall be created in the calendar
+   * 
+   * @param  object  the empty entry in the calendar
+   * @param  int     the day that has been clicked
+   * @param  int     the start-hour that has been clicked
+   */
+  newEntry: function (entry, day, hour) {
+    // do not allow creation of new entry, if one of the following popups is visible!
+    if (jQuery('#edit_sem_entry').is(':visible') ||
+      jQuery('#edit_entry').is(':visible') ||
+      jQuery('#edit_inst_entry').is(':visible')) {
+      jQuery(entry).remove();
+      return;
+    }
+ 
+    // if there is already an entry set, kick him first before showing a new one
+    if (this.entry) {
+      jQuery(this.entry).fadeOut('fast');
+      jQuery(this.entry).remove();
+    }
+
+    this.entry = entry;
+
+    // fill values of overlay
+    jQuery('#entry_hour_start').text(hour);
+    jQuery('#entry_hour_end').text(hour + 1);
+    jQuery('#entry_day').text(STUDIP.Calendar.day_names[day].toLocaleString());
+
+    jQuery('#new_entry_hour').val(hour);
+    jQuery('#new_entry_day').val(day);
+
+    // show the overlay
+    jQuery('#schedule_new_entry').show();
+
+    // set the position of the overlay
+    jQuery('#schedule_new_entry').css({
+      top: Math.floor(entry.offset().top - jQuery('#schedule_new_entry').height() - 20),
+      left: Math.floor(entry.offset().left)
+    });
+
+    if (jQuery('#schedule_new_entry').offset().top < 0) {
+      jQuery('#schedule_new_entry').css({
+        top:  Math.floor(entry.offset().top + entry.height() + 20)
+      });
+    }
+  },
+
+  /**
+   * cancel adding of a new entry and fade out/remove all faded in/added boxes
+   *
+   * @param bool fade: if fade is true, fade out all boxes, otherwise just hide them
+   *
+   * @return: void
+   */
+  cancelNewEntry: function () {
+    if (jQuery(this.entry).is(':visible')) {
+      jQuery('#schedule_new_entry').fadeOut('fast');
+      jQuery(this.entry).fadeOut('fast').remove();
+    }
+
+    jQuery('#edit_entry').fadeOut('fast');
+    jQuery('#edit_inst_entry').fadeOut('fast');
+  },
+
+  /**
    * this function morphs from the quick-add box for adding a new entry to the schedule
    * to the larger box with more details to edit
    *
@@ -1303,7 +1292,7 @@ STUDIP.Schedule = {
   showDetails: function () {
 
     // set the values for detailed view
-    jQuery('select[name=entry_day]').val(jQuery('#new_entry_day').val());
+    jQuery('select[name=entry_day]').val(Number(jQuery('#new_entry_day').val()) + 1);
     jQuery('input[name=entry_start_hour]').val(jQuery('#new_entry_hour').val());
     jQuery('input[name=entry_start_minute]').val('00');
     jQuery('input[name=entry_end_hour]').val(parseInt(jQuery('#new_entry_hour').val(), 10) + 1);
@@ -1334,8 +1323,16 @@ STUDIP.Schedule = {
     });
   },
 
+  /**
+   * show a popup conatining the details of the passed seminar
+   * at the passed cycle
+   *
+   * @param  string  the seminar to be shown
+   * @param  string  the cycle-id of the regular time-entry to be shown
+   *                 (a seminar can have multiple of these
+   */
   showSeminarDetails: function (seminar_id, cycle_id) {
-    STUDIP.Calendar.noNewEntry = true;
+    STUDIP.Schedule.cancelNewEntry();
     jQuery('#edit_sem_entry').fadeOut('fast');
     jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/entryajax/' + seminar_id + '/' + cycle_id, function (data) {
       jQuery('#edit_sem_entry').remove();
@@ -1343,8 +1340,13 @@ STUDIP.Schedule = {
     });
   },
 
+  /**
+   * show a popup with the details of a regular schedule entry with passed id
+   *
+   * @param  string  the id of the schedule-entry
+   */
   showScheduleDetails: function (id) {
-    STUDIP.Calendar.noNewEntry = true;
+    STUDIP.Schedule.cancelNewEntry();
     jQuery('#edit_entry').fadeOut('fast');
     jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/entryajax/' + id, function (data) {
       jQuery('#edit_entry').remove();
@@ -1353,10 +1355,15 @@ STUDIP.Schedule = {
 
   },
 
-  showInstituteDetails: function (link) {
-    STUDIP.Calendar.noNewEntry = true;
+  /**
+   * show a popup with the details of a group entry, containing several seminars
+   *
+   * @param  string  the id of the grouped entry to be displayed
+   */
+  showInstituteDetails: function (id) {
+    STUDIP.Schedule.cancelNewEntry();
     jQuery('#edit_inst_entry').fadeOut('fast');
-    jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/groupedentry/' + jQuery(link).attr('data') + '/true', function (data) {
+    jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/groupedentry/' + id + '/true', function (data) {
       jQuery('#edit_inst_entry').remove();
       jQuery('body').append(data);
     });
@@ -1364,6 +1371,13 @@ STUDIP.Schedule = {
     return false;
   },
 
+  /**
+   * hide a seminar-entry in the schedule (admin-version)
+   *
+   * @param  string  the seminar to be shown
+   * @param  string  the cycle-id of the regular time-entry to be shown
+   *                 (a seminar can have multiple of these
+   */
   instSemUnbind : function (seminar_id, cycle_id) {
     STUDIP.Schedule.inst_changed = true;
     jQuery.ajax({
@@ -1376,6 +1390,13 @@ STUDIP.Schedule = {
     });
   },
 
+  /**
+   * make a hidden seminar-entry visible in the schedule again
+   *
+   * @param  string  the seminar to be shown
+   * @param  string  the cycle-id of the regular time-entry to be shown
+   *                 (a seminar can have multiple of these
+   */
   instSemBind : function (seminar_id, cycle_id) {
     STUDIP.Schedule.inst_changed = true;
     jQuery.ajax({
@@ -1388,6 +1409,15 @@ STUDIP.Schedule = {
     });
   },
 
+  /**
+   * hide the popup of grouped-entry, containing a list of seminars.
+   * returns true if the visiblity of one of the entries has been changed,
+   * false otherwise
+   *
+   * @param  object  the element to be hidden
+   *
+   * @return  bool  true if the visibility of one seminar hase changed, false otherwise
+   */
   hideInstOverlay: function (element) {
     if (STUDIP.Schedule.inst_changed) {
       return true;
@@ -1396,15 +1426,28 @@ STUDIP.Schedule = {
     return false;
   },
 
-  hideEntry: function (element, seminar_id, cycle_id) {
-    STUDIP.Calendar.noNewEntry = true;
+  /**
+   * hide a seminar-entry in the schedule an remove it from display immediately
+   *
+   * @param  string  the id of the entry in the schedule
+   * @param  string  the seminar to be shown
+   * @param  string  the cycle-id of the regular time-entry to be shown
+   *                 (a seminar can have multiple of these
+   */
+  hideEntry: function (id, seminar_id, cycle_id) {
+    STUDIP.Schedule.cancelNewEntry();
     jQuery.ajax({
       type: 'GET',
-      url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/unbind/' + seminar_id + '/' + cycle_id
+      url: STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/schedule/unbind/' + seminar_id + '/' + cycle_id + '/true'
     });
-    jQuery(element).parents('.schedule_entry').fadeOut('fast');
+    jQuery('#schedule_entry_' + id + '_' + seminar_id + '-' + cycle_id).fadeOut('fast').remove();
   },
 
+  /**
+   * calls STUDIP.Calendar.checkTimeslot to check that the time is valid
+   *
+   * @param  bool  returns true if the time is valid, false otherwise
+   */
   checkFormFields: function () {
     if (!STUDIP.Calendar.checkTimeslot(jQuery('#schedule_entry_hours > input[name=entry_start_hour]'),
       jQuery('#schedule_entry_hours > input[name=entry_start_minute]'),
@@ -1421,10 +1464,15 @@ STUDIP.Schedule = {
 };
 
 STUDIP.Instschedule = {
-  showInstituteDetails: function (link) {
-    STUDIP.Calendar.noNewEntry = true;
+  /**
+   * show the details of a grouped-entry in the isntitute-calendar, containing several seminars
+   *
+   * @param  string  the id of the grouped-entry to be displayed
+   */
+  showInstituteDetails: function (id) {
+    STUDIP.Schedule.cancelNewEntry();
     jQuery('#edit_inst_entry').fadeOut('fast');
-    jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/instschedule/groupedentry/' + jQuery(link).attr('data') + '/true', function (data) {
+    jQuery.get(STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/calendar/instschedule/groupedentry/' + id + '/true', function (data) {
       jQuery('#edit_inst_entry').remove();
       jQuery('body').append(data);
     });
@@ -1458,3 +1506,187 @@ jQuery(function ($) {
   };
   $.datepicker.setDefaults($.datepicker.regional.de);
 });
+
+STUDIP.SkipLinks = {
+  cssclass: "skiplink_highlight",
+  box: null,
+  activeElement : null,
+  navigationIn : false,
+  focused : false,
+
+  /**
+   * Displays the skip link navigation after first hitting the tab-key
+   * @param event: event-object of type keyup
+   */
+  showSkipLinkNavigation: function (event) {
+    if (event.keyCode === 9) { //tab-key
+      STUDIP.SkipLinks.moveSkipLinkNavigationIn();
+      jQuery('.focus_box').removeClass('focus_box');
+    }
+    return false;
+  },
+
+  /**
+   * shows the skiplink-navigation window by moving it from the left
+   */
+  moveSkipLinkNavigationIn: function () {
+    if (!STUDIP.SkipLinks.navigationIn) {
+      var VpWidth = jQuery(window).width();
+      jQuery('#skip_link_navigation li:first a').focus();
+      jQuery('#skip_link_navigation').show().css({left: VpWidth / 2, opacity: 0});
+      jQuery('#skip_link_navigation').animate({opacity: 1.0}, 500);
+      STUDIP.SkipLinks.navigationIn = true;
+    }
+  },
+
+  /**
+   * removes the skiplink-navigation window by moving it out of viewport
+   */
+  moveSkipLinkNavigationOut: function () {
+    if (STUDIP.SkipLinks.navigationIn) {
+      jQuery(STUDIP.SkipLinks.box).hide();
+      jQuery('#skip_link_navigation').animate({opacity: 0}, 500).css('left', '-600');
+    }
+  },
+
+  getFragment: function () {
+    var fragmentStart = document.location.hash.indexOf('#');
+    if (fragmentStart < 0) {
+      return '';
+    }
+    STUDIP.SkipLinks.focused = true;
+    return document.location.hash.substring(fragmentStart);
+  },
+
+  /**
+   * Inserts the list with skip links
+   */
+  insertSkipLinks: function () {
+    jQuery('#skip_link_navigation').prepend(jQuery('#skiplink_list'));
+    jQuery('#skip_link_navigation').attr('aria-busy', 'false');
+    jQuery('#skip_link_navigation').attr('tabindex', '-1');
+    STUDIP.SkipLinks.insertHeadLines();
+    return false;
+  },
+
+  /**
+   * sets the area (of the id) as the current area for tab-navigation
+   * and highlights it
+   */
+  setActiveTarget: function (id) {
+    var fragment = null;
+
+    if (id) {
+      fragment = id;
+    } else {
+      fragment = STUDIP.SkipLinks.getFragment();
+    }
+    if (jQuery('*').is(fragment) && fragment.length > 0 && fragment !== STUDIP.SkipLinks.activeElement) {
+      STUDIP.SkipLinks.moveSkipLinkNavigationOut();
+      STUDIP.SkipLinks.navigationIn = true;
+      STUDIP.SkipLinks.highlightBox(fragment, false);
+      jQuery(fragment).attr('tabindex', '-1').click().focus();
+      STUDIP.SkipLinks.activeElement = fragment;
+      return true;
+    } else {
+      jQuery('#skip_link_navigation li a').first().focus();
+    }
+    return false;
+  },
+
+  highlightBox: function (id, marker) {
+    jQuery('.focus_box').removeClass('focus_box');
+    jQuery(id).addClass('focus_box');
+  },
+
+  injectAriaRoles: function () {
+    jQuery('#main_content').attr({
+      role: 'main',
+      'aria-labelledby': 'main_content_landmark_label'
+    });
+    jQuery('#layout_content').attr({
+      role: 'main',
+      'aria-labelledby': 'layout_content_landmark_label'
+    });
+    jQuery('#layout_infobox').attr({
+      role: 'complementary',
+      'aria-labelledby': 'layout_infobox_landmark_label'
+    });
+  },
+
+  insertHeadLines: function () {
+    var target = null;
+    jQuery('#skip_link_navigation a').each(function () {
+      target = jQuery(this).attr('href');
+      if (jQuery(target).is('li,td')) {
+        jQuery(jQuery(this).attr('href'))
+          .prepend('<h2 id="' + jQuery(target).attr('id') + '_landmark_label" class="skip_target">' + jQuery(this).text() + '</h2>');
+      } else {
+        jQuery(jQuery(this).attr('href'))
+          .before('<h2 id="' + jQuery(target).attr('id') + '_landmark_label" class="skip_target">' + jQuery(this).text() + '</h2>');
+      }
+    });
+  },
+
+  initialize: function () {
+    STUDIP.SkipLinks.insertSkipLinks();
+    STUDIP.SkipLinks.injectAriaRoles();
+    STUDIP.SkipLinks.setActiveTarget();
+  }
+
+};
+
+jQuery(window.document).bind('keyup', STUDIP.SkipLinks.showSkipLinkNavigation);
+jQuery(window.document).bind('ready', STUDIP.SkipLinks.initialize);
+jQuery(window.document).bind('click', function (event) {
+  if (!jQuery(event.target).is('#skip_link_navigation a')) {
+    STUDIP.SkipLinks.moveSkipLinkNavigationOut();
+  }
+});
+
+/* ------------------------------------------------------------------------
+ * Forms
+ * ------------------------------------------------------------------------ */
+
+STUDIP.Forms = {
+  initialize : function () {
+    jQuery("input,textarea").each(function () {
+      if (jQuery(this).attr('required') !== undefined) {
+        jQuery(this).attr('aria-required', true);
+      }
+      if (jQuery(this).attr('pattern') && jQuery(this).attr('title')) {
+        jQuery(this).attr('data-message', jQuery(this).attr('title'));
+      }
+    });
+
+    //localized messages
+    jQuery.tools.validator.localize('de', {
+      '*'          : 'Bitte ändern Sie ihre Eingabe'.toLocaleString(),
+      ':email'     : 'Bitte geben Sie gültige E-Mail-Adresse ein'.toLocaleString(),
+      ':number'    : 'Bitte geben Sie eine Zahl ein'.toLocaleString(),
+      ':url'       : 'Bitte geben Sie eine gültige Web-Adresse ein'.toLocaleString(),
+      '[max]'      : 'Bitte geben Sie maximal $1 Zeichen ein'.toLocaleString(),
+      '[min]'      : 'Bitte geben Sie mindestens $1 Zeichen ein'.toLocaleString(),
+      '[required]' : 'Dies ist ein erforderliches Feld'.toLocaleString()
+    });
+
+    jQuery('form').validator({
+      position : 'bottom left',
+      offset   : [8, 0],
+      message  : '<div><div class="arrow"/></div>',
+      lang     : 'de'
+    });
+
+    jQuery('form').bind("onBeforeValidate", function () {
+      jQuery("input").each(function () {
+        jQuery(this).removeAttr('aria-invalid');
+      });
+    });
+
+    jQuery('form').bind("onFail", function (e, errors) {
+      jQuery.each(errors, function () {
+        this.input.attr('aria-invalid', 'true');
+      });
+    });
+  }
+};

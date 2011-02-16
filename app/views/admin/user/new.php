@@ -115,7 +115,7 @@
             <select id="institut" class="user_form" name="institute" onchange="jQuery('#admin_special').toggle( jQuery('#institut').val() != '0' && jQuery('#perm').val() == 'admin')">
                 <option value="0"><?= _("-- bitte Einrichtung auswählen --") ?></option>
                 <? foreach ($faks as $fak) : ?>
-                    <option value="<?= $fak['Institut_id'] ?>"<?= ($user['inst'] == $fak['Institut_id']) ? 'selected' : '' ?><?= ($fak['is_fak']) ? 'style="font-weight: bold;"' : '' ?>><?= $fak['Name'] ?></option>
+                    <option value="<?= $fak['Institut_id'] ?>"<?= ($user['inst'] == $fak['Institut_id']) ? 'selected' : '' ?><?= ($fak['is_fak']) ? 'style="font-weight: bold;"' : '' ?>><?= htmlReady($fak['Name']) ?></option>
                     <? foreach ($fak['institutes'] as $institute) : ?>
                     <option value="<?= $institute['Institut_id'] ?>"<?= ($user['inst'] == $institute['Institut_id']) ? 'selected' : '' ?>>&nbsp;&nbsp;&nbsp;<?= htmlReady($institute['Name']) ?></option>
                     <? endforeach ?>

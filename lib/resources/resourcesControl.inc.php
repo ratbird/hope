@@ -721,7 +721,13 @@ if (!$suppress_infobox) {
                 if ($infobox) {
                     if (is_object($clipObj))  {
                         $formObj = $clipObj->getFormObject();
-                        $clip_form_action = ($quick_view) ? $PHP_SELF . "?quick_view=$quick_view&quick_view_mode=$quick_view_mode" : $PHP_SELF;
+
+                        if ($quick_view) {
+                            $clip_form_action = URLHelper::getLink('', compact('quick_view', 'quick_view_mode'));
+                        } else {
+                            $clip_form_action = URLHelper::getLink('', compact('view', 'quick_view_mode'));
+                        }
+
                         print $formObj->getFormStart($clip_form_action);
                     }
                     ?>

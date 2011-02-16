@@ -117,7 +117,7 @@
                 <? foreach ($faks as $fak) : ?>
                     <option value="<?= $fak['Institut_id'] ?>"<?= ($user['inst'] == $fak['Institut_id']) ? 'selected' : '' ?><?= ($fak['is_fak']) ? 'style="font-weight: bold;"' : '' ?>><?= $fak['Name'] ?></option>
                     <? foreach ($fak['institutes'] as $institute) : ?>
-                    <option value="<?= $institute['Institut_id'] ?>"<?= ($user['inst'] == $institute['Institut_id']) ? 'selected' : '' ?>>&nbsp;&nbsp;&nbsp;<?= $institute['Name'] ?></option>
+                    <option value="<?= $institute['Institut_id'] ?>"<?= ($user['inst'] == $institute['Institut_id']) ? 'selected' : '' ?>>&nbsp;&nbsp;&nbsp;<?= htmlReady($institute['Name']) ?></option>
                     <? endforeach ?>
                 <? endforeach ?>
             </select>

@@ -39,6 +39,13 @@ class Admin_UserController extends AuthenticatedController
         //PageLayout
         PageLayout::setHelpKeyword("Admins.Benutzerkonten");
         PageLayout::setTitle(_("Benutzerverwaltung"));
+
+        //ajax
+        if (@$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+            Header('Content-Type: text/plain;charset=windows-1252');
+            $this->via_ajax = true;
+            $this->set_layout(null);
+        }
     }
 
     /**
@@ -681,6 +688,52 @@ class Admin_UserController extends AuthenticatedController
             PageLayout::postMessage(Messagebox::error(_('Der Benutzer konnte nicht entsperrt werden.')));
         }
         $this->redirect('admin/user/edit/' . $user_id);
+    }
+
+    /**
+     *
+     * @param md5 $user_id
+     * @param md5 $institute_id
+     */
+    public function edit_institute_action($user_id, $institute_id)
+    {
+        //änderungen speichern
+        if (Request::submitted('uebernehmen')) {
+            //standard-values
+            $values=array();
+            foreach(words('inst_perms visible raum sprechzeiten Telefon Fax') as $param) {
+                $values[$param] = Request::get(strtolower($param), '');
+            }
+            foreach(words('externdefault visible') as $param) {
+                $values[$param] = Request::int($param, 0);
+            }
+
+            //change datafields
+            $datafields = Request::getArray('datafields');
+            foreach ($datafields as $id => $data) {
+                $struct = new DataFieldStructure(array("datafield_id" => $id));
+                $struct->load();
+                $entry  = DataFieldEntry::createDataFieldEntry($struct, array($user_id, $institute_id));
+                $entry->setValueFromSubmit($data);
+                if ($entry->isValid()) {
+                    $entry->store();
+                }
+            }
+
+
+            //store to database
+            UserModel::setInstitute($user_id, $institute_id, $values);
+
+            //output
+            PageLayout::postMessage(Messagebox::success(_('Die Einrichtungsdaten des Benutzers wurden erfolgreich geändert.')));
+            $this->redirect('admin/user/edit/' . $user_id);
+        }
+
+        $this->user = UserModel::getUser($user_id, NULL, true);
+        $this->institute = UserModel::getInstitute($user_id, $institute_id);
+        $about = new about($this->user['username'], '');
+        $this->perms = $about->allowedInstitutePerms();
+        $this->datafields = DataFieldEntry::getDataFieldEntries(array($user_id, $institute_id),'userinstrole');
     }
 
     /**

@@ -344,6 +344,9 @@
             <?= htmlReady($institute['Name']) ?>
         </td>
         <td align="right">
+            <a class="load-in-new-row" href="<?= $controller->url_for('admin/user/edit_institute/' . $user['user_id'] . '/' . $institute['Institut_id']) ?>">
+                <?= Assets::img('icons/16/blue/edit.png', array('class' => 'text-top', 'title' => _('Diese Einrichtung bearbeiten'))) ?>
+            </a>
             <a href="<?= $controller->url_for('admin/user/delete_institute/' . $user['user_id'] . '/' . $institute['Institut_id']) ?>">
                 <?= Assets::img('icons/16/blue/trash.png', array('class' => 'text-top', 'title' => _('Diese Einrichtung löschen'))) ?>
             </a>
@@ -389,7 +392,7 @@
 </tbody>
 <? endif ?>
 
-<? if ($GLOBALS['perm']->have_perm('root')) : ?>
+<? if ($GLOBALS['perm']->have_perm('root') && count(LockRule::findAllByType('user')) > 0) : ?>
 <tbody>
     <tr class="steel header-row">
         <td colspan="3" class="toggle-indicator">

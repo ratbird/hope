@@ -180,6 +180,38 @@ class UserModel
     }
 
     /**
+     *
+     * @param md5 $user_id
+     * @param md5 $inst_id
+     */
+    public static function getInstitute($user_id, $inst_id)
+    {
+        return DBManager::get()->query("SELECT * FROM user_inst WHERE user_id = '{$user_id}' AND Institut_id = '{$inst_id}'")->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function setInstitute($user_id, $inst_id, $values)
+    {
+        //change externdefault
+        if ($values['externdefault'] == 1) {
+            //first set all institutes externdefault to 0
+            DBManager::get()->exec("UPDATE user_inst SET externdefault = 0 WHERE user_id = '{$user_id}'");
+        }
+
+        //logging
+        $old = self::getInstitute($user_id, $inst_id);
+        if ($old['inst_perms'] != $values['inst_perms']) {
+            log_event("INST_USER_STATUS", $inst_id, $this->auth_user['user_id'], $user_id .' -> '. $values['inst_perms']);
+        }
+
+        //change values
+        foreach ($values as $index => $value) {
+            $sql = "UPDATE user_inst SET " . $index . "=? WHERE user_id='{$user_id}' AND Institut_id='{$inst_id}'";
+            $db = DBManager::get()->prepare($sql);
+            $db->execute(array($value));
+        }
+    }
+
+    /**
      * checks if a user exists
      *
      * @param md5 $user_id

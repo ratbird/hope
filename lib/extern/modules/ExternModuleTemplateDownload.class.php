@@ -167,7 +167,7 @@ class ExternModuleTemplateDownload extends ExternModule {
             $seminar_id = $this->config->range_id;
         }
 
-        $sort = $this->config->getValue('Main', 'sort');
+        $sort = (array) $this->config->getValue('Main', 'sort');
         $query_order = '';
         foreach ($sort as $key => $position) {
             if ($position > 0) {

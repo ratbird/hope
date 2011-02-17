@@ -214,7 +214,8 @@ class ExternModuleDownload extends ExternModule {
                     $picture_file = $GLOBALS['ASSETS_URL']."images/$icon";
                 }
                 
-                $download_link = GetDownloadLink($db->f('dokument_id'), $db->f('filename'));
+                // remove relative path segment from download link
+                $download_link = $GLOBALS['ABSOLUTE_URI_STUDIP'] . substr(GetDownloadLink($db->f('dokument_id'), $db->f('filename')), strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']));                 
                 
                 // Aufbereiten der Daten
                 $table_row_data["content"] = array(

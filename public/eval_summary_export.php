@@ -159,9 +159,9 @@ function answers ($parent_id, $anz_nutzer, $question_type) {
             $antwort_durchschnitt += $answer_counter * $antwort_nummer;
         }
         $prozente = 0;
-        if ($db_answers_sum->f("anz")>0) $prozente = ROUND($answer_counter*100/$db_answers_sum->f("anz"));
+        if ($db_answers_sum->f("anz")>0) $prozente = ROUND($answer_counter*100/$anz_nutzer);
         $prozente_wo_residual = 0;
-        if ($has_residual && ($db_answers_sum->f("anz")-$has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($db_answers_sum->f("anz")-$has_residual));
+        if ($has_residual && ($db_answers_sum->f("anz")-$has_residual)>0) $prozente_wo_residual = ROUND($answer_counter*100/($anz_nutzer-$has_residual));
         $edit .= "                <fo:table-row>\n";
         $edit .= "                  <fo:table-cell ><fo:block font-size=\"8pt\">".$antwort_nummer.". ".preg_replace($pattern,$replace,smile(htmlspecialchars(($db_answers->f("text")!="" ? $db_answers->f("text") : $db_answers->f("value"))),TRUE))."</fo:block></fo:table-cell>\n";
 
@@ -443,28 +443,28 @@ else $db->query(sprintf("SELECT * FROM eval WHERE eval_id='%s' AND author_id='%s
 
 if ($db->next_record()) {
     // Evaluation existiert auch...
-    
+
     $db_template->query(sprintf("SELECT t.* FROM eval_templates t, eval_templates_eval te WHERE te.eval_id='%s' AND t.template_id=te.template_id",$eval_id));
     if ($db_template->next_record()) $has_template = 1;
-    
+
     $db_owner = new DB_Seminar();
     $db_owner->query(sprintf("SELECT ".$_fullname_sql['no_title']." AS fullname FROM auth_user_md5 WHERE user_id='%s'", $db->f("author_id")));
     $db_owner->next_record();
-    
+
     $global_counter = 0;
     $local_counter  = 0;
-    
+
     $db_number_of_votes = new DB_Seminar();
     $db_number_of_votes->query(sprintf("SELECT COUNT(DISTINCT user_id) anz FROM eval_user WHERE eval_id='%s'", $eval_id));
     $db_number_of_votes->next_record();
-    
+
     if (file_exists($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo")) unlink($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo");
     if (file_exists($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".pdf")) unlink($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".pdf");
-    
+
     $fo_file = fopen($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo","w");
-    
+
     // ----- START HEADER -----
-    
+
     fputs($fo_file,"<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n");
     fputs($fo_file,"<fo:root xmlns:fo=\"http://www.w3.org/1999/XSL/Format\">\n");
     fputs($fo_file,"  <!-- defines the layout master -->\n");
@@ -491,11 +491,11 @@ if ($db->next_record()) {
     fputs($fo_file,"      "._("Stud.IP Evaluationsauswertung")."\n");
     fputs($fo_file,"    </fo:block>\n");
     fputs($fo_file,"    <!-- this defines a title level 2-->\n");
-    
+
     fputs($fo_file,"    <fo:block font-size=\"16pt\" font-weight=\"bold\" font-family=\"sans-serif\" space-before.optimum=\"10pt\" space-after.optimum=\"15pt\" text-align=\"center\">\n");
     fputs($fo_file,"      ".preg_replace($pattern,$replace,smile(htmlspecialchars($db->f("title")),TRUE))."\n");
     fputs($fo_file,"    </fo:block>\n");
-    
+
     if (do_template("show_total_stats")) {
         fputs($fo_file,"    <fo:block text-align=\"start\" line-height=\"10pt\" font-size=\"8pt\">\n");
         fputs($fo_file,"      ".$db_number_of_votes->f("anz")." "._("Teilnehmer insgesamt").".\n");
@@ -503,27 +503,27 @@ if ($db->next_record()) {
         fputs($fo_file,"      "._("Eigentümer").": ".$db_owner->f("fullname").". "._("Erzeugt am").": ".date("d.m.Y H:i:s")."\n");
         fputs($fo_file,"    </fo:block>\n");
     }
-    
+
     // ----- ENDE HEADER -----
-    
+
     groups($db->f("eval_id"));
-    
+
     // ----- START FOOTER -----
-    
+
     fputs($fo_file,"    </fo:flow>\n");
     fputs($fo_file,"  </fo:page-sequence>\n");
     fputs($fo_file,"</fo:root>\n");
-    
+
     // ----- ENDE FOOTER -----
-    
+
     fclose($fo_file);
-    
+
     $pdffile = "$tmp_path_export/" . md5($db->f("eval_id").$auth->auth["uid"]);
-    
+
     $str = $FOP_SH_CALL." $tmp_path_export/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo $pdffile";
-    
+
     $err = exec($str);
-    
+
     if (file_exists($pdffile) && filesize($pdffile)) {
         header('Location: ' . getDownloadLink( basename($pdffile), "evaluation.pdf", 2));
         unlink($tmp_path_export."/evalsum".$db->f("eval_id").$auth->auth["uid"].".fo");

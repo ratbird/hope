@@ -1099,7 +1099,7 @@ function getItemMessage($itemID, $colspan = 1)
             $msg[1] = array_shift($details);
         }
 
-        return MessageBox::$msg[0]($msg[1], $details);
+        return (string) MessageBox::$msg[0]($msg[1], $details);
     } else {
         return NULL;
     }

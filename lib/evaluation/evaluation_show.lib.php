@@ -69,11 +69,11 @@ class EvalShow
       $td2->cont( $br );
       if( $votedNow ) {
           $message = new HTML('div');
-          $message->_content = array(MessageBox::success(_("Vielen Dank für Ihre Teilnahme.")));
+          $message->_content = array((string) MessageBox::success(_("Vielen Dank für Ihre Teilnahme.")));
           $td2->cont($message);
       } elseif( $votedEarlier ) {
           $message = new HTML('div');
-          $message->_content = array(MessageBox::info(_("Sie haben an dieser Evaluation bereits teilgenommen.")));
+          $message->_content = array((string) MessageBox::info(_("Sie haben an dieser Evaluation bereits teilgenommen.")));
           $td2->cont($message);
       } else {
           $td2->html( formatReady($eval->getText()) );

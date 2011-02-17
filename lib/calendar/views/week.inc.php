@@ -168,4 +168,5 @@ echo "</td></tr>\n</table>\n";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n";
 jumpTo($jmp_m, $jmp_d, $jmp_y);
 echo "</table>\n";
+echo "</td></tr>\n</table>\n";
 ?>

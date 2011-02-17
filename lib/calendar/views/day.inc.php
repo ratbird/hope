@@ -95,4 +95,5 @@ jumpTo($jmp_m, $jmp_d, $jmp_y);
 echo "</table></td></tr>\n";
 echo "<tr><td align=\"center\">".includeMonth(Request::int('imt', $atime), '?cmd=showday', '', '', $atime)."</td></tr>\n";
 echo "</table>\n";
+echo "</td></tr>\n</table>\n";
 ?>

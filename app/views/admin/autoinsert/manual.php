@@ -22,7 +22,7 @@
     <?= _('Manuelles Eintragen von Nutzergruppen in Veranstaltungen') ?>
 </h2>
 <h3>
-    <?= _('Suche nach Seminaren')?>
+    <?= _('Suche nach Veranstaltungen')?>
 </h3>
 <form action="<?= $controller->url_for('admin/autoinsert/manual') ?>" method="post">
 <?= CSRFProtection::tokenTag() ?>
@@ -75,7 +75,7 @@
     <!-- #2 Auswahllisten anzeigen -->
     <? if (!empty($filtertype)): ?>
     <fieldset>
-        <legend><?= _('Ausgewählte Filtertypen')?>:</legend>
+        <legend><?= _('Ausgewählte Filterkriterien')?>:</legend>
         <table class="default filter_selection">
             <colgroup>
                 <col width="50%">
@@ -155,7 +155,7 @@ jQuery(function ($) {
 
 <?
 $aktionen[] = array(
-    "text" => '<a href="'.$controller->url_for('admin/autoinsert').'">'._('Zurück zur Startseite').'</a>',
+    "text" => '<a href="'.$controller->url_for('admin/autoinsert').'">'._('Zurück zum automatischen Eintragen').'</a>',
     "icon" => "icons/16/black/edit.png"
 );
 $aktionen[] = array(
@@ -174,7 +174,7 @@ $infobox = array(
             'kategorie' => _("Hinweise"),
             'eintrag'   => array(
                 array(
-                    "text" => _("Teilnehmer die bereits in ein und demselben Seminar eingetragen wurden, können nicht noch einmal eingetragen werden. Selbst wenn sie sich selbstständig ausgetragen haben."),
+                    "text" => _("Teilnehmer die bereits in eine Veranstaltung eingetragen wurden, können nicht erneut in die gleiche Veranstaltung eingetragen werden. Ein erneutes Eintragen ist auch dann nicht möglich, wenn sich ein Teilnehmer selbst ausgetragen hat."),
                     "icon" => "icons/16/black/info.png"
                 ),
                 array(

@@ -116,11 +116,11 @@ $infobox = array(
             'kategorie' => _("Hinweise"),
             'eintrag'   => array(
                 array(
-                    "text" => _("Wählen Sie Veranstaltungen aus, in die neue Benutzer oder bereits vorhandene Benutzer aufgrund ihrer Statusgruppe automatisch eingetragen werden sollen."),
+                    "text" => _("Wählen Sie Veranstaltungen aus, in die neue Benutzer oder bereits vorhandene Benutzer anhand ihrer Statusgruppe automatisch eingetragen werden sollen."),
                     "icon" => "icons/16/black/info.png"
                 ),
                 array(
-                    "text" => _("Es können nur Veranstaltungen ausgewählt werden, in denen keine Zugangsbeschränkungen aktiviert wurden."),
+                    "text" => _("Es können nur Veranstaltungen ohne gesetzte Zugangsberechtigungen ausgewählt werden."),
                     "icon" => "icons/16/black/info.png"
                 )
             )

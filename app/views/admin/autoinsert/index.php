@@ -15,7 +15,7 @@
     <?= _('Automatisches Eintragen von Erstnutzern in Veranstaltungen') ?>
 </h2>
 <h3>
-    <?= _('Suche nach Seminaren')?>
+    <?= _('Suche nach Veranstaltungen')?>
 </h3>
 
 <form action="<?= $controller->url_for('admin/autoinsert') ?>" method="post">

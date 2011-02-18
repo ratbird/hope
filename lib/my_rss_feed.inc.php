@@ -11,7 +11,7 @@
 *
 * @author               Jan Kulmann <jankul@tzi.de>
 */
- 
+
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // RSSFeed.class.php
@@ -43,7 +43,7 @@ function print_rss($username) {
     $cssSw->switchClass();
 
     $db->query(sprintf("SELECT * FROM auth_user_md5 a, rss_feeds r WHERE a.username='%s' AND a.user_id=r.user_id ORDER BY r.priority",$username));
-    echo "<tr><td align=\"left\" valign=\"top\" class=\"blank\"><p class=\"info\"><br>";
+    echo "<tr><td id=\"main_content\" align=\"left\" valign=\"top\" class=\"blank\"><p class=\"info\"><br>";
     echo _("Hier können Sie beliebige eigene RSS-Feeds einbinden. Diese RSS-Feeds erscheinen auf Ihrer pers&ouml;nlichen Startseite. Mit den Pfeilsymbolen k&ouml;nnen Sie die Reihenfolge, in der die RSS-Feeds angezeigt werden, ver&auml;ndern.");
     echo "<br>\n";
     echo _("<b>Achtung:</b> Je mehr RSS-Feeds Sie definieren, desto l&auml;nger ist die Ladezeit der Startseite f&uuml;r Sie!");
@@ -70,13 +70,13 @@ function print_rss($username) {
             echo ">" . _("Name des Feeds holen") . "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
             if ($count){
                 echo "\n<a href=\"$PHP_SELF?rss=order_rss&direction=up&username=$username&view=$view&cat_id=" . $db->f("feed_id")
-                . "&show_rss_bsp=$show_rss_bsp\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('RSS-Feed nach oben verschieben'))) 
+                . "&show_rss_bsp=$show_rss_bsp\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('RSS-Feed nach oben verschieben')))
                 . "</a>";
             }
             if ($count != ($db->num_rows()-1) ){
                 echo "\n<a href=\"$PHP_SELF?rss=order_rss&direction=down&username=$username&view=$view&cat_id=" . $db->f("feed_id")
-                . "&show_rss_bsp=$show_rss_bsp\">" .  Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' =>_('RSS-Feed nach unten verschieben'))) 
-                . "</a>"; 
+                . "&show_rss_bsp=$show_rss_bsp\">" .  Assets::img('icons/16/yellow/arr_2down.png', array('class' => 'text-top', 'title' =>_('RSS-Feed nach unten verschieben')))
+                . "</a>";
               }
             echo "<br>&nbsp;</div></td></tr>";
             echo "<tr><td class=\"".$cssSw->getClass()."\"><div style=\"padding: 10px; margin: 0px;\">"._("URL:")."<BR><input type='text' name='rss_url[]' style=\"width: 50%\" value='".htmlReady($db->f("url"))."' size=40>";

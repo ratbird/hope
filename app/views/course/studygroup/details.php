@@ -66,7 +66,7 @@ if ($send_from_search_page) {
  * * * O U T P U T * * *
  * * * * * * * * * * * */
 ?>
-<h1><?= $studygroup->getName() ?></h1>
+<h1><?= htmlReady($studygroup->getName()) ?></h1>
 <b><?= _("Moderiert von:") ?></b> <?= implode(',', $mods) ?><br>
 <br>
 <b><?= _("Beschreibung:") ?></b><br>

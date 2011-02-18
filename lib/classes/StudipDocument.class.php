@@ -42,7 +42,7 @@ require_once 'lib/classes/SimpleORMap.class.php';
 class StudipDocument extends SimpleORMap {
 
     /**
-     * returns new instance of StudipDocument for given id or null if id does 
+     * returns new instance of StudipDocument for given id or null if id does
      * not exist
      * @param id string primary key of table 'dokumente' in db
      * @return object of type StudipDocument that matches id or null if nothing matches id
@@ -54,9 +54,9 @@ class StudipDocument extends SimpleORMap {
 
     /**
      * returns array of instances of StudipDocument filtered by given sql-where-clause
-     * @param string: sql-where clause to use on the right side of WHERE to 
+     * @param string: sql-where clause to use on the right side of WHERE to
      * filter all StudipDocuments in an array
-     * @return array of StudipDocument filtered by where (sql-qhere-clause) or 
+     * @return array of StudipDocument filtered by where (sql-qhere-clause) or
      * empty array if no matches were found
      */
     static function findBySql($where)
@@ -66,7 +66,7 @@ class StudipDocument extends SimpleORMap {
 
     /**
      * returns array of StudipDocument-objects of given course id
-     * @param string cid: course_id in the db (Seminar_id) with which all 
+     * @param string cid: course_id in the db (Seminar_id) with which all
      * StudipDocuments should be filtered
      * @return array of all StudipDocument from the course with the given course_id
      */
@@ -78,7 +78,7 @@ class StudipDocument extends SimpleORMap {
     /**
      * returns array of document-objects of given folder with id folder_id
      * @param string folder_id: id of a folder whose documents we want to catch
-     * @return array of StudipDocument objects of the given folder_id's folder 
+     * @return array of StudipDocument objects of the given folder_id's folder
      * or empty if that folder contains no documents.
      */
     static function findByFolderId($folder_id)
@@ -87,11 +87,11 @@ class StudipDocument extends SimpleORMap {
     }
 
     /**
-     * deletes table rows which matches the given sql-where clause and returns 
-     * the number of deleted rows. 
-     * @param string sql clause to use on the right side of WHERE to delete 
+     * deletes table rows which matches the given sql-where clause and returns
+     * the number of deleted rows.
+     * @param string sql clause to use on the right side of WHERE to delete
      * all rows matching this clause
-     * @return int: number of rows deleted by the given sql-where-clause. 
+     * @return int: number of rows deleted by the given sql-where-clause.
      */
     static function deleteBySql($where)
     {
@@ -107,26 +107,6 @@ class StudipDocument extends SimpleORMap {
     {
         $this->db_table = 'dokumente';
         parent::__construct($id);
-    }
-
-    /**
-     * Store entry in database; if data is actually changed triggerChdate() is called.
-     * Posts the Notifications "Document(Will|Did)(Create|Update)" if successful.
-     * The subject of the notification is this document.
-     *
-     * @return number|boolean  either false or the number of the affected rows
-     */
-    function store()
-    {
-        $notifications = $this->isNew()
-            ? array('DocumentWillCreate', 'DocumentDidCreate')
-            : array('DocumentWillUpdate', 'DocumentDidUpdate');
-
-        NotificationCenter::postNotification($notifications[0], $this);
-        if ($ret = parent::store() !== false) {
-            NotificationCenter::postNotification($notifications[1], $this);
-        }
-        return $ret;
     }
 
     /**
@@ -190,5 +170,95 @@ class StudipDocument extends SimpleORMap {
             }
         }
         return $access;
+    }
+
+
+    /**
+     * Create a new document using the given file and metadata.
+     * This method makes sure that there are no inconsistencies between a real
+     * file and its database entry. Only if the file were copied/moved to the
+     * documents folder, the database entry is written. If this fails too, the
+     * file will be unlinked again.
+     * The first parameter can either be an uploaded file or the path to an
+     * already existing one. This file will either be moved using
+     * move_uploaded_file or it will be copied.
+     * The destination is determined this way: If the second parameter $data
+     * already contains a "dokument_id", this will be used as the file's
+     * destination. This is usually the case when refreshing a file.
+     * If there is no such parameter, a new "dokument_id" is generated as usual
+     * and is used as the file's destination.
+     *
+     * Before a document (and its file) is created, the notification
+     * "DocumentWillCreate" will be posted.
+     * If the document was created successfuly, the notification
+     * "DocumentDidCreate" will be posted.
+     * It the document was updated rather than created (see above), the
+     * notifications will be "DocumentWillUpdate" and "DocumentDidUpdate".
+     * The subject of the notification will always be that document.
+     *
+     * @param  $file  string  full path to a file (either uploaded or already existing)
+     * @param  $data  array   an array containing the metadata of the document;
+     *                        just use the same way as StudipDocument::setData
+     * @return StudipDocument|null  if successful the created document, null otherwise
+     */
+    static function createWithFile($file, $data)
+    {
+        $doc = new StudipDocument(@$data['dokument_id']);
+        $doc->setData($data);
+
+        // create new ID (and thus path)
+        if (!$doc->getId()) {
+            $doc->setId($doc->getNewId());
+        }
+
+        $notifications = !isset($data['dokument_id'])
+            ? array('DocumentWillCreate', 'DocumentDidCreate')
+            : array('DocumentWillUpdate', 'DocumentDidUpdate');
+
+        // send DocumentWill(Create|Update) notification
+        NotificationCenter::postNotification($notifications[0], $doc);
+
+        if (!$doc->attachFile($file) || !$doc->safeStore()) {
+            return null;
+        }
+
+        // send DocumentDid(Create|Update) notification
+        NotificationCenter::postNotification($notifications[1], $doc);
+
+        return $doc;
+    }
+
+    // attach a file to a document by moving or copying
+    private function attachFile($file)
+    {
+        $newpath = get_upload_file_path($this->getId());
+
+        // try moving uploaded file
+        if (is_uploaded_file($file)) {
+            if (!@move_uploaded_file($file, $newpath)) {
+                return false;
+            }
+        }
+        // copy regular file
+        else if (!@copy($file, $newpath)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // store a document, making sure that the file is unlinked on failure
+    private function safeStore()
+    {
+        try {
+            $result = (bool) $this->store();
+        } catch (Exception $e) {
+            $result = false;
+        }
+
+        if (!$result) {
+            @unlink(get_upload_file_path($this->getId()));
+        }
+        return $result;
     }
 }

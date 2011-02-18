@@ -96,8 +96,11 @@ if($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]){
                 $document->setValue('autor_host' , $_SERVER['REMOTE_ADDR']);
                 $document->setValue('user_id' , $user->id);
                 $document->setValue('description', Request::option('attachment_message_id'));
-                if($document->store()
-                && @move_uploaded_file($_FILES['the_file']['tmp_name'],get_upload_file_path($document->getId()))){
+
+                // TODO (mlunzena): Should one post a notification when attaching files?
+                if ($document->store()
+                    && @move_uploaded_file($_FILES['the_file']['tmp_name'],
+                                           get_upload_file_path($document->getId()))){
                     $msg = "msg§" . _("Die Datei wurde erfolgreich auf den Server &uuml;bertragen!");
                 } else {
                     $msg = "error§" . _("Datei&uuml;bertragung gescheitert!");

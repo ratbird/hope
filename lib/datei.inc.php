@@ -532,42 +532,37 @@ function copy_item($item_id, $new_parent, $change_sem_to = false) {
     return false;
 }
 
-function copy_doc($doc_id, $new_range, $new_sem = false){
-    $db = new DB_Seminar();
-    $new_id = md5(uniqid('blaofuasof',1));
-    $db->query("SELECT * FROM dokumente WHERE dokument_id = '$doc_id'");
-    if ($db->next_record()){
-        if ( !$db->f('url') ){
-            if (!@copy(get_upload_file_path($doc_id), get_upload_file_path($new_id))) {
-                return false;
-            }
-        }
-
-
-        $doc = new StudipDocument();
-        $doc->setData(
-            array(
-                'seminar_id'  => $new_sem ? $new_sem : $db->f('seminar_id'),
-                'range_id'    => $new_range,
-
-                'user_id'     => $db->f('user_id'),
-                'name'        => $db->f('name'),
-                'description' => $db->f('description'),
-                'filename'    => $db->f('filename'),
-                'mkdate'      => $db->f('mkdate'),
-                'chdate'      => time(),
-                'filesize'    => $db->f('filesize'),
-                'autor_host'  => $db->f('autor_host'),
-                'author_name' => $db->f('author_name'),
-                'download'    => 0,
-                'url'         => $db->f('url'),
-                'protected'   => $db->f('protected'),
-                'priority'    => 0
-            ));
-        return $doc->store();
-    } else {
+function copy_doc($doc_id, $new_range, $new_sem = false)
+{
+    $stmt = DBManager::get()->prepare(
+        "SELECT seminar_id, user_id, name, description, filename, mkdate, ".
+        "filesize, autor_host, author_name, url, protected ".
+        "FROM dokumente WHERE dokument_id = ?");
+    $stmt->execute(array($doc_id));
+    $src = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$src) {
         return false;
     }
+    $new = array_merge($src, array(
+        'range_id'    => $new_range,
+        'chdate'      => time(),
+        'download'    => 0,
+        'priority'    => 0
+    ));
+
+    if ($new_sem) {
+        $new['seminar_id'] = $new_sem;
+    }
+
+    // create a new document copying the original
+    if (!$new['url']) {
+        return (bool) StudipDocument::createWithFile(get_upload_file_path($doc_id), $new);
+    }
+
+    // this is just a link, just create the document
+    $doc = new StudipDocument();
+    $doc->setData($new);
+    return $doc->store();
 }
 
 function copy_folder($folder_id, $new_range, $seed = false){
@@ -996,71 +991,61 @@ function validate_upload($the_file, $real_file_name='') {
 }
 
 //der eigentliche Upload
-function upload($the_file, $refresh = false) {
-    global $dokument_id,$the_file_name, $msg;
+function upload($the_file, $refresh, $range_id)
+{
+    global $dokument_id, $the_file_name, $msg;
 
     if (!validate_upload($the_file)) {
         return FALSE;
-        }
-    else { # cool, es geht weiter
-
-        //Dokument_id erzeugen
-        $dokument_id=md5(uniqid('dokumente',1));
-
-        //Erzeugen des neuen Speicherpfads
-        $newfile = get_upload_file_path($dokument_id);
-
-        //Kopieren und Fehlermeldung
-        if (!@move_uploaded_file($the_file,$newfile)) {
-            $msg.= "error§" . _("Datei&uuml;bertragung gescheitert!");
-            return FALSE;
-        } else {
-            if ($refresh){
-                @copy($newfile, get_upload_file_path($refresh));
-                @unlink($newfile);
-                $dokument_id = $refresh;
-            }
-            $msg="msg§" . _("Die Datei wurde erfolgreich auf den Server &uuml;bertragen!");
-            return TRUE;
-        }
     }
+
+    $data = getUploadMetadata($range_id, $refresh);
+
+    $doc = StudipDocument::createWithFile($the_file, $data);
+    if ($doc === null) {
+        $msg.= "error§" . _("Dateiübertragung gescheitert!");
+        return false;
+    }
+
+    // wird noch in folder.php gebraucht
+    $dokument_id = $doc->getId();
+
+    $msg = "msg§" . _("Die Datei wurde erfolgreich auf den Server &uuml;bertragen!");
+    return TRUE;
 }
 
 
 //Erzeugen des Datenbankeintrags zur Datei
-function insert_entry_db($range_id, $sem_id=0, $refresh = FALSE) {
-    global $the_file_name, $the_file_size, $dokument_id, $description, $name, $user, $upload_seminar_id, $protected;
+function getUploadMetadata($range_id, $refresh = FALSE) {
+    global $the_file_name, $the_file_size, $description, $name, $user, $upload_seminar_id, $protected;
 
-    $the_file_name = addslashes(basename(stripslashes($the_file_name)));
 
-    $range_id = trim($range_id);        // laestige white spaces loswerden
-    $description = trim($description);      // laestige white spaces loswerden
-    $name = trim($name);            // laestige white spaces loswerden
+    $the_file_name = basename(stripslashes($the_file_name));
+    $name = trim($name);
 
-    if (!$name) $name = $the_file_name;
-
-    if ($the_file_size > 0) {
-        $doc = new StudipDocument($dokument_id);
-        if (!$refresh) {
-            $doc->setValue('range_id' , $range_id);
-            $doc->setValue('seminar_id' , $upload_seminar_id);
-            $doc->setValue('description' , stripslashes($description));
-            $doc->setValue('name' , stripslashes($name));
-            $doc->setValue('protected' , (int)$protected);
-        } else {
-            if (!$doc->getValue('name') || $doc->getValue('filename') == $doc->getValue('name')){
-                $doc->setValue('name' , stripslashes($name));
-            }
-        }
-        $doc->setValue('filename' , stripslashes($the_file_name));
-        $doc->setValue('filesize' , $the_file_size);
-        $doc->setValue('autor_host' , $_SERVER['REMOTE_ADDR']);
-        $doc->setValue('user_id' , $user->id);
-        $doc->setValue('author_name', get_fullname());
-        return $doc->store();
-    } else {
-        return false;
+    if (!$name) {
+        $name = addslashes($the_file_name);
     }
+
+    $result = array(
+        'filename'    => $the_file_name,
+        'filesize'    => $the_file_size,
+        'autor_host'  => $_SERVER['REMOTE_ADDR'],
+        'user_id'     => $user->id,
+        'author_name' => get_fullname()
+    );
+
+    if (!$refresh) {
+        $result['range_id']     = trim($range_id);
+        $result['seminar_id']   = $upload_seminar_id;
+        $result['description']  = stripslashes(trim($description));
+        $result['name']         = stripslashes($name);
+        $result['protected']    = (int) $protected;
+    } else {
+        $result['dokument_id'] = $refresh;
+    }
+
+    return $result;
 }
 
 
@@ -1188,19 +1173,17 @@ function upload_item ($range_id, $create = FALSE, $echo = FALSE, $refresh = FALS
     global $the_file;
 
     if ($create) {
-        if (upload($the_file, $refresh))
-            insert_entry_db($range_id, 0, $refresh);
-
+        upload($the_file, $refresh, $range_id);
         return;
-        }
-     else {
+    }
+    else {
         if ($echo) {
             echo form($refresh);
             return;
-            }
+        }
         else
             return form($refresh);
-        }
+    }
 }
 
 
@@ -2533,32 +2516,26 @@ function upload_zip_file($dir_id, $file) {
 
     global $user, $upload_seminar_id;
 
-    $doc = new StudipDocument();
-
-    // Dokument_id erzeugen
-    $dokument_id = $doc->getNewId();
-    $doc->setId($dokument_id);
-
-    // Erzeugen des neuen Speicherpfads
-    $newfile = get_upload_file_path($dokument_id);
-
-    if (@copy($file, $newfile)){
-        $pos = strrpos($file, "/");
-        $file_name = substr($file, $pos+1, strlen($file) - $pos);
-        $file_size = filesize($file);
-        if ($file_size > 0) {
-            $doc->setValue('filename' , $file_name);
-            $doc->setValue('name' , $file_name);
-            $doc->setValue('filesize' , $file_size);
-            $doc->setValue('autor_host' , $_SERVER['REMOTE_ADDR']);
-            $doc->setValue('user_id' , $user->id);
-            $doc->setValue('range_id' , $dir_id);
-            $doc->setValue('seminar_id' , $upload_seminar_id);
-            $doc->setValue('author_name', get_fullname());
-            return $doc->store();
-        }
+    $file_size = filesize($file);
+    if (!$file_size) {
+        return false;
     }
-    return false;
+
+    $pos = strrpos($file, "/");
+    $file_name = substr($file, $pos + 1, strlen($file) - $pos);
+
+    $data = array(
+        'filename'    => $file_name,
+        'name'        => $file_name,
+        'filesize'    => $file_size,
+        'autor_host'  => $_SERVER['REMOTE_ADDR'],
+        'user_id'     => $user->id,
+        'range_id'    => $dir_id,
+        'seminar_id'  => $upload_seminar_id,
+        'author_name' => get_fullname()
+    );
+
+    return StudipDocument::createWithFile($file, $data) ? 1 : 0;
 }
 
 function pclzip_convert_filename_cb($p_event, &$p_header) {

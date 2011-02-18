@@ -155,7 +155,7 @@ class LockRules {
         $attributes['sem']['schreibzugriff'] = array('name' => _("Schreibzugriff"), 'group' => 'access');
         $attributes['sem']['passwort'] = array('name' => _("Passwort"), 'group' => 'access');
         $attributes['sem']['user_domain'] = array('name' => _("Veranstaltung kopieren"), 'group' => 'access');
-        $attributes['sem']['seminar_copy'] = array('name' => _("Veranstaltung kopiere"), 'group' => 'actions');
+        $attributes['sem']['seminar_copy'] = array('name' => _("Veranstaltung kopieren"), 'group' => 'actions');
         $attributes['sem']['seminar_archive'] = array('name' => _("Veranstaltung archivieren"), 'group' => 'actions');
         $attributes['sem']['seminar_visibility'] = array('name' => _("Veranstaltung sichtbar/unsichtbar schalten"), 'group' => 'actions');
 

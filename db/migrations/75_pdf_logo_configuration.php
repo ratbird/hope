@@ -21,7 +21,7 @@ class PdfLogoConfiguration extends Migration
             'type'        => 'string',
             'value'       => '',
             'section'     => 'global',
-            'description' => 'Geben Sie hier den absoluten Pfad auf Ihrem Server (also ohne http) zu einem Logo an, der bei PDF-Exporten im Kopfbereich verwendet wird.'
+            'description' => 'Geben Sie hier den absoluten Pfad auf Ihrem Server (also ohne http) zu einem Logo an, das bei PDF-Exporten im Kopfbereich verwendet wird.'
             );
 
         $stmt = DBManager::get()->prepare("

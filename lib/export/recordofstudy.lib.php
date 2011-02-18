@@ -53,7 +53,7 @@ function printSelectSemester($infobox,$semestersAR){
     global $record_of_study_templates;
     $html = "<table border=\"0\" class=\"blank\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n"
           . " <tr valign=\"top\">\n"
-          . "  <td class=\"blank\">\n"
+          . "  <td class=\"blank\" id=\"main_content\">\n"
           . "   <table align=\"center\" class=\"blank\" border=\"0\" cellpadding=\"2\" cellspacing=3>\n"
           . "    <tr>"
           . "     <td><font size=\"-1\">\n"
@@ -115,7 +115,7 @@ function printRecordOfStudies($infobox, $basicdata, $seminare, $notice = NULL){
         . "  <td width=\"99%\" class=\"blank\">&nbsp;\n"
         . "   <table align=\"center\" width=\"99%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=0>\n"
         . "  <tr>"
-        . "   <td valign=\"top\">"
+        . "   <td valign=\"top\" id=\"main_content\">"
         . "    <table align=\"center\" width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=0>\n";
 
     // displays some infos for the user
@@ -231,7 +231,7 @@ function printPdfAssortment($infobox,$seminars){
           . "  <td class=\"blank\">&nbsp;\n"
           . "   <table align=\"center\" width=\"99%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=0>\n"
           . "    <tr>\n"
-          . "     <td align=\"left\" valign=\"top\"><font size=\"-1\">\n"
+          . "     <td align=\"left\" valign=\"top\" id=\"main_content\"><font size=\"-1\">\n"
           . sprintf(_("Sie haben %s Einträge für Ihre Veranstaltungsübersicht ausgewählt. "),$seminars["numberofseminars"]);
     $html .= ($seminars["numberofpages"]>1)
           ? sprintf(_("Deshalb werden Ihre Einträge auf %s Seiten verteilt."),$seminars["numberofpages"])."\n"

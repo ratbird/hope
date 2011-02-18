@@ -149,7 +149,7 @@ function change_messaging_view()
         </tr>
         <tr>
 
-            <td class="blank" width="100%" colspan="2" align="center">
+            <td id="main_content" class="blank" width="100%" colspan="2" align="center">
             <p class="info">
                 <b><?= _("Auf dieser Seite k&ouml;nnen Sie die Eigenschaften des Stud.IP-Messagingsystems an Ihre Bed&uuml;rfnisse anpassen.") ?></b>
             </p>

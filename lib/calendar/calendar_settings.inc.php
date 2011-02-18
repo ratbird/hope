@@ -69,7 +69,7 @@ $css_switcher->switchClass();
 ?>
 <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
     <tr>
-        <td class="blank" width="100%" colspan="2" align="center"><br>
+        <td id="main_content" class="blank" width="100%" colspan="2" align="center"><br>
             <p class="info">
                 <b><?= _("Hier k&ouml;nnen Sie die Ansicht Ihres pers&ouml;nlichen Terminkalenders anpassen."); ?></b>
             </p>

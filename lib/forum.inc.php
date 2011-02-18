@@ -1491,7 +1491,7 @@ $db->query($query);
 /////////////////////////////////////// HTML und Navigation
 
 ?>
-<table border=0 width="100%" cellspacing="0" cellpadding="0" align="center"><tr>
+<table border=0 width="100%" cellspacing="0" cellpadding="0" align="center" id="main_content"><tr>
 <td class="steelgraudunkel" align="left" width="45%">
 <?
 

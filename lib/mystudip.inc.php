@@ -159,7 +159,7 @@ function change_general_view() {
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                         <label for="skiplinks_enable"><?print _("Skiplinks einblenden");?></label><br>
                         <br><div align="left"><font size="-1">
-                        <? print _("Mit dieser Einstellung wird nach dem ersten Drücken der Tab-Taste eine Liste mit Skiplinks eingeblendet, mit deren Hilfe Sie mit der Tastatur schneller zu den Hauptinhaltsbereichen der Seite navigieren können.");?>
+                        <? print _("Mit dieser Einstellung wird nach dem ersten Drücken der Tab-Taste eine Liste mit Skiplinks eingeblendet, mit deren Hilfe Sie mit der Tastatur schneller zu den Hauptinhaltsbereichen der Seite navigieren können. Zusätzlich wird der aktive Bereich einer Seite hervorgehoben.");?>
                         </font></div>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>

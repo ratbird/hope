@@ -2,7 +2,6 @@
 # Lifter002: TODO
 # Lifter007: TODO
 # Lifter003: TODO
-# Lifter010: TODO
 
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -61,9 +60,9 @@ class LockRules {
         return array_filter(LockRule::findAllByType('sem'), $filter);
     }
 
-    public static function getObjectRule($object_id)
+    public static function getObjectRule($object_id, $renew = false)
     {
-        if(!array_key_exists($object_id, self::$lockmap)) {
+        if(!array_key_exists($object_id, self::$lockmap) || $renew) {
                 $object_type = get_object_type($object_id, words('sem inst user'));
                 $methodmap = array('sem'  => 'Seminar',
                                    'inst' => 'Institute',
@@ -84,7 +83,7 @@ class LockRules {
     {
         $lr = self::getObjectRule($object_id);
         if ($lr) {
-            return isset($lr['attributes'][strtolower($attribute)]) && self::CheckLockRulePermission($object_id);
+            return $lr['attributes'][strtolower($attribute)] == 1 && self::CheckLockRulePermission($object_id);
         } else {
             return false;
         }
@@ -100,7 +99,7 @@ class LockRules {
             $check_perm = $perms[$pk + 1];
             if ($lr->object_type == 'sem') {
                 return ($lr->permission == 'root' || !$GLOBALS['perm']->have_studip_perm($check_perm, $object_id));
-            }
+    }
             if ($lr->object_type == 'inst') {
                 return ($lr->permission == 'root' || !$GLOBALS['perm']->have_perm('root'));
             }
@@ -154,7 +153,7 @@ class LockRules {
         $attributes['sem']['lesezugriff'] = array('name' => _("Lesezugriff"), 'group' => 'access');
         $attributes['sem']['schreibzugriff'] = array('name' => _("Schreibzugriff"), 'group' => 'access');
         $attributes['sem']['passwort'] = array('name' => _("Passwort"), 'group' => 'access');
-        $attributes['sem']['user_domain'] = array('name' => _("Veranstaltung kopieren"), 'group' => 'access');
+        $attributes['sem']['user_domain'] = array('name' => _("Nutzerdomänen zuordnen"), 'group' => 'access');
         $attributes['sem']['seminar_copy'] = array('name' => _("Veranstaltung kopieren"), 'group' => 'actions');
         $attributes['sem']['seminar_archive'] = array('name' => _("Veranstaltung archivieren"), 'group' => 'actions');
         $attributes['sem']['seminar_visibility'] = array('name' => _("Veranstaltung sichtbar/unsichtbar schalten"), 'group' => 'actions');

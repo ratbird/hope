@@ -676,7 +676,7 @@ check_admission();
 if($perm->have_studip_perm('tutor', $SessSemName[1])){
     $lockdata = LockRules::getObjectRule($SessSemName[1]);
     if ($lockdata['description'] && LockRules::CheckLockRulePermission($SessSemName[1], $lockdata['permission'])){
-        $msg .= "info§" . fixlinks($lockdata['description']);
+        $msg .= "info§" . fixlinks(htmlReady($lockdata['description']));
     }
 }
 

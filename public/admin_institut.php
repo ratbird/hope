@@ -181,9 +181,9 @@ while ( is_array($_REQUEST)
                 }
             }
             if (count($invalidEntries)  > 0)
-                $msg='error§<b>' . _('ung&uuml;ltige Eingaben (s.u.) wurden nicht gespeichert') .'</b>';
+                $msg='error§<b>' . _('ung&uuml;ltige Eingaben (s.u.) wurden nicht gespeichert') .'</b>§';
             else
-                $msg="msg§<b>" . sprintf(_("Die Daten der Einrichtung \"%s\" wurden ver&auml;ndert."), htmlReady(stripslashes($Name))) . "</b>";
+                $msg="msg§<b>" . sprintf(_("Die Daten der Einrichtung \"%s\" wurden ver&auml;ndert."), htmlReady(stripslashes($Name))) . "</b>§";
         }
         break;
 

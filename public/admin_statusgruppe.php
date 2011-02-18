@@ -84,7 +84,7 @@ if(LockRules::Check($range_id, 'groups')) {
         $lockdata = LockRules::getObjectRule($range_id);
         $msg = 'error§' . _("Die Gruppenfunktionen der Veranstaltung können nicht verändert werden.").'§';
         if ($lockdata['description']){
-            $msg .= "info§" . fixlinks($lockdata['description']).'§';
+            $msg .= "info§" . fixlinks(htmlReady($lockdata['description'])).'§';
         }
         ?>
         <table border=0 align="center" cellspacing=0 cellpadding=0 width="100%">

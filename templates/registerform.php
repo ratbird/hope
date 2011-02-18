@@ -115,12 +115,12 @@ function checkdata(){
     <br>
     <?=_("Bitte f&uuml;llen Sie zur Anmeldung das Formular aus:")?>
     <br><br>
-<form name=login action="<?=$_SERVER['REQUEST_URI']?>" method="post" onsubmit="return checkdata()">
+<form name=login action="<?= URLHelper::getLink() ?>" method="post" onsubmit="return checkdata()">
 <?= CSRFProtection::tokenTag() ?>
 <table border=0 bgcolor="#eeeeee" align="center" cellspacing=2 cellpadding=4>
  <tr valign=top align=left>
   <td colspan="2"><?=_("Benutzername:")?></td>
-  <td><input type="text" name="username" onchange="checkusername()" value="<?php print (isset($username) ? $username : "" ) ?>" size=32 maxlength=63></td>
+  <td><input type="text" name="username" onchange="checkusername()" value="<?= isset($username) ? htmlReady($username) : "" ?>" size=32 maxlength=63></td>
  </tr>
 
  <tr valign=top align=left>
@@ -147,7 +147,7 @@ function checkdata(){
   ?>
   </select>
   </td>
-  <td><input type="text" name="title_front" value="<?php print (isset($title_front) ? $title_front : "" ) ?>" size=32 maxlength=63></td>
+  <td><input type="text" name="title_front" value="<?= isset($title_front) ? htmlReady($title_front) : "" ?>" size=32 maxlength=63></td>
  </tr>
 
   <tr valign=top align=left>
@@ -163,16 +163,16 @@ function checkdata(){
   }
   ?>
   </select></td>
-  <td><input type="text" name="title_rear" value="<?php print (isset($title_rear) ? $title_rear : "" ) ?>" size=32 maxlength=63></td>
+  <td><input type="text" name="title_rear" value="<?= isset($title_rear) ? htmlReady($title_rear) : "" ?>" size=32 maxlength=63></td>
  </tr>
  <tr valign=top align=left>
   <td colspan="2"><?=_("Vorname:")?></td>
-  <td><input type="text" name="Vorname" onchange="checkVorname()"  value="<?php print (isset($Vorname) ? $Vorname : "" ) ?>"size=32 maxlength=63></td>
+  <td><input type="text" name="Vorname" onchange="checkVorname()" value="<?= isset($Vorname) ? htmlReady($Vorname) : "" ?>"size=32 maxlength=63></td>
  </tr>
 
  <tr valign=top align=left>
   <td colspan="2"><?=_("Nachname:")?></td>
-  <td><input type="text" name="Nachname" onchange="checkNachname()"  value="<?php print (isset($Nachname) ? $Nachname : "" ) ?>"size=32 maxlength=63></td>
+  <td><input type="text" name="Nachname" onchange="checkNachname()" value="<?= isset($Nachname) ? htmlReady($Nachname) : "" ?>"size=32 maxlength=63></td>
  </tr>
 
 <tr valign=top align=left>

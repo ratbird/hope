@@ -710,7 +710,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
     function select_inst()
     {
 
-        echo '<select name="new_inst"><option selected="selected"> ' . _("-- Bitte Einrichtung auswählen --") . ' </option>'."\n";
+        echo '<select name="new_inst id="select_new_inst""><option selected="selected"> ' . _("-- Bitte Einrichtung auswählen --") . ' </option>'."\n";
         $this->db->query("SELECT a.Institut_id,a.Name FROM Institute AS a LEFT JOIN user_inst AS b ON (b.user_id='".$this->auth_user["user_id"]."' AND a.Institut_id=b.Institut_id) WHERE b.Institut_id IS NULL ORDER BY a.Name");
         while ($this->db->next_record()) {
             echo "<option value=\"".$this->db->f("Institut_id")."\">".htmlReady(my_substr($this->db->f("Name"),0,50))."</option>\n";

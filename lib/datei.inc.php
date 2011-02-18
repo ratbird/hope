@@ -760,21 +760,21 @@ function form($refresh = FALSE) {
     $print.= CSRFProtection::tokenTag();
     $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("1. Klicken Sie auf <b>'Durchsuchen...'</b>, um eine Datei auszuw&auml;hlen.") . " </font></td></tr>";
     $print.= "\n<tr>";
-    $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
-    $print.= "&nbsp;<input name=\"the_file\" type=\"file\"  style=\"width: 70%\" size=\"30\">&nbsp;</td></td>";
+    $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;<label for=\"the_file\">" . _("Dateipfad:") . "</label>&nbsp;</font><br>";
+    $print.= "&nbsp;<input name=\"the_file\" id=\"the_file\" aria-required=\"true\" type=\"file\"  style=\"width: 70%\" size=\"30\">&nbsp;</td></td>";
     $print.= "\n</tr>";
     if (!$refresh && !$folder_system_data['zipupload']) {
         $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("2. Schutz gem&auml;&szlig; Urhebberecht.") . "</font></td></tr>";
         $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>";
-        $print.= "\n&nbsp;<input type=\"RADIO\" name=\"protected\" value=\"0\"".(!$protect ? "checked" :"") .">"._("Ja, dieses Dokument ist frei von Rechten Dritter") ;
-        $print.= "\n&nbsp;<input type=\"RADIO\" name=\"protected\" value=\"1\"".($protect ? "checked" :"") .">"._("Nein, dieses Dokument ist <u>nicht</u> frei von Rechten Dritter");
-        $print.= "</td></tr>";
+        $print.= "\n&nbsp;<label><input type=\"RADIO\" name=\"protected\" value=\"0\"".(!$protect ? "checked" :"") .'>'._("Ja, dieses Dokument ist frei von Rechten Dritter") ;
+        $print.= "</label>\n&nbsp;<label><input type=\"RADIO\" name=\"protected\" value=\"1\"".($protect ? "checked" :"") .'>'._("Nein, dieses Dokument ist <u>nicht</u> frei von Rechten Dritter");
+        $print.= "</label></td></tr>";
 
         $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("3. Geben Sie eine kurze Beschreibung und einen Namen f&uuml;r die Datei ein.") . "</font></td></tr>";
-        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
-        $print.= "\n&nbsp;<input type=\"TEXT\" name=\"name\" style=\"width: 70%\" size=\"40\" maxlength\"255\"></td></tr>";
-        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
-        $print.= "\n&nbsp;<textarea name=\"description\" style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL></textarea>&nbsp;</td></tr>";
+        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
+        $print.= "\n&nbsp;<input type=\"TEXT\" name=\"name\" style=\"width: 70%\" size=\"40\" maxlength\"255\"></label></td></tr>";
+        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
+        $print.= "\n&nbsp;<textarea name=\"description\" style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL></textarea></label>&nbsp;</td></tr>";
         $print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen") . "</font></td></tr>";
     } else if ($folder_system_data['zipupload']) {
         $print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um das Ziparchiv hochzuladen und in diesem Ordner zu entpacken.") . "</font></td></tr>";
@@ -782,8 +782,8 @@ function form($refresh = FALSE) {
         $print.= "\n<tr><td class=\"steelgraudunkel\" colspan=2 ><font size=-1>" . _("3. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
     }
     $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"center\" valign=\"center\">";
-    $print.= "\n<input type=\"image\" " . makeButton("absenden", "src") . " value=\"Senden\" align=\"absmiddle\" onClick=\"return upload_start();\" name=\"create\" border=\"0\">";
-    $print.="&nbsp;<a href=\"".URLHelper::getLink("?cancel_x=true#anker")."\">" . makeButton("abbrechen", "img") . "</a></td></tr>";
+    $print.= "\n<input type=\"image\" " . makeButton("absenden", "src") . tooltip(_("absenden")) . " value=\"Senden\" align=\"absmiddle\" onClick=\"return upload_start();\" name=\"create\" border=\"0\">";
+    $print.="&nbsp;<a href=\"".URLHelper::getLink("?cancel_x=true#anker")."\">" . makeButton("abbrechen", "img", _("abbrechen")) . "</a></td></tr>";
     $print.= "\n<input type=\"hidden\" name=\"cmd\" value=\"upload\">";
     $print.= "\n<input type=\"hidden\" name=\"upload_seminar_id\" value=\"".$SessSemName[1]."\">";
     $print.= "\n</form></table><br></center>";
@@ -1319,31 +1319,31 @@ function link_form ($range_id, $updating=FALSE) {
     $print.= CSRFProtection::tokenTag();
     $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("1. Geben Sie hier den <b>vollständigen Pfad</b> zu der Datei an, die Sie verlinken wollen.") . " </font></td></tr>";
     $print.= "\n<tr>";
-    $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
+    $print.= "\n<td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Dateipfad:") . "&nbsp;</font><br>";
     if ($hiddenurl)
-        $print.= "&nbsp;<input name=\"the_link\" type=\"text\"  style=\"width: 70%\" size=\"30\" value=\"***\">&nbsp;</td></td>";
+        $print.= "&nbsp;<input name=\"the_link\" type=\"text\"  style=\"width: 70%\" size=\"30\" value=\"***\"></label>&nbsp;</td></td>";
     else
-        $print.= '&nbsp;<input name="the_link" type="text"  style="width: 70%" size="30" value="'.$the_link.'">&nbsp;</td></td>';
+        $print.= '&nbsp;<input name="the_link" type="text"  style="width: 70%" size="30" value="'.$the_link.'"></label>&nbsp;</td></td>';
     $print.= "\n</tr>";
     if (!$refresh) {
 
         $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("2. Schutz gem&auml;&szlig; Urhebberecht.") . "</font></td></tr>";
         $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Dieses Dokument ist frei von Rechten Dritter:") . "&nbsp;";
-        $print.= "\n&nbsp;<input type=\"RADIO\" name=\"protect\" value=\"0\"".(!$protect ? "checked" :"") .">"._("Ja");
-        $print.= "\n&nbsp;<input type=\"RADIO\" name=\"protect\" value=\"1\"".($protect ? "checked" :"") .">"._("Nein");
+        $print.= "\n&nbsp;<label><input type=\"RADIO\" name=\"protect\" value=\"0\"".(!$protect ? "checked" :"") .'>'._("Ja");
+        $print.= "</label>\n&nbsp;<label><input type=\"RADIO\" name=\"protect\" value=\"1\"".($protect ? "checked" :"") .'>'._("Nein");
 
-        $print.= "<tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("3. Geben Sie eine kurze Beschreibung und einen Namen für die Datei ein.") . "</font></td></tr>";
-        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
-        $print.= "\n".'&nbsp;<input type="text" name="name" style="width: 70%" size="40" maxlength"255" value="'.$name.'"></td></tr>';
+        $print.= "</label><tr><td class=\"steelgraudunkel\" colspan=2><font size=-1>" . _("3. Geben Sie eine kurze Beschreibung und einen Namen für die Datei ein.") . "</font></td></tr>";
+        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Name:") . "&nbsp;</font><br>";
+        $print.= "\n".'&nbsp;<input type="text" name="name" id="name" style="width: 70%" size="40" maxlength"255" value="'.$name.'"></label></td></tr>';
 
-        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
-        $print.= "\n&nbsp;<textarea name=\"description\"  style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL>$description</textarea>&nbsp;</td></tr>";
+        $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"left\" valign=\"center\"><label><font size=-1>&nbsp;" . _("Beschreibung:") . "&nbsp;</font><br>";
+        $print.= "\n&nbsp;<textarea name=\"description\" id=\"description\" style=\"width: 70%\" COLS=40 ROWS=3 WRAP=PHYSICAL>$description</textarea></label>&nbsp;</td></tr>";
         $print.= "\n<tr><td class=\"steelgraudunkel\"colspan=2 ><font size=-1>" . _("4. Klicken Sie auf <b>'absenden'</b>, um die Datei zu verlinken") . "</font></td></tr>";
     } else
         $print.= "\n<tr><td class=\"steelgraudunkel\"colspan=2 ><font size=-1>" . _("2. Klicken Sie auf <b>'absenden'</b>, um die Datei hochzuladen und damit die alte Version zu &uuml;berschreiben.") . "</font></td></tr>";
     $print.= "\n<tr><td class=\"steel1\" colspan=2 align=\"center\" valign=\"center\">";
-    $print.= "\n<input type=\"image\" " . makeButton("absenden", "src") . " value=\"Senden\" align=\"absmiddle\" name=\"create\" border=\"0\">";
-    $print.="&nbsp;<a href=\"".URLHelper::getLink("?cancel_x=true#anker")."\">" . makeButton("abbrechen", "img") . "</a></td></tr>";
+    $print.= "\n" . makeButton("absenden", 'input', _("absenden"), 'create');
+    $print.="&nbsp;<a href=\"".URLHelper::getLink("?cancel_x=true#anker")."\">" . makeButton("abbrechen", 'img', _("abbrechen")) . "</a></td></tr>";
     $print.= "\n<input type=\"hidden\" name=\"upload_seminar_id\" value=\"".$SessSemName[1]."\">";
     if ($updating == TRUE) {
         $print.= "\n<input type=\"hidden\" name=\"cmd\" value=\"link_update\">";
@@ -1375,9 +1375,9 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
         if ($datei["protected"]==1)
             $protect = "checked";
         $content.= "\n&nbsp;<input type=\"CHECKBOX\" name=\"change_protected\" $protect>&nbsp;"._("geschützter Inhalt")."</br>";
-        $content.= "<br><textarea name=\"change_description\" rows=3 cols=40>".htmlReady($datei["description"])."</textarea><br>";
-        $content.= "<input type=\"image\" " . makeButton("uebernehmen", "src") . " border=0 value=\""._("&Auml;nderungen speichern")."\">";
-        $content.= "&nbsp;<input type=\"image\" " . makeButton("abbrechen", "src") . " border=0 name=\"cancel\" value=\""._("Abbrechen")."\">";
+        $content.= "<br><textarea name=\"change_description\" aria-label=\"Beschreibung des Ordners eingeben\" rows=\"3\" cols=\"40\">".htmlReady($datei["description"])."</textarea><br>";
+        $content.= makeButton("uebernehmen", 'input', _("&Auml;nderungen speichern"));
+        $content.= "&nbsp;" . makeButton("abbrechen", 'input', _("Abbrechen", 'cancel'));
         $content.= "<input type=\"hidden\" name=\"open\" value=\"".htmlReady($datei["dokument_id"])."_sc_\">";
         $content.= "<input type=\"hidden\" name=\"type\" value=\"0\">";
     } else {
@@ -1419,26 +1419,26 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
     $edit='';
     if (($change != $datei["dokument_id"]) && ($upload != $datei["dokument_id"]) && $filelink != $datei["dokument_id"]) {
         if (check_protected_download($datei['dokument_id'])) {
-            $edit= '&nbsp;<a href="' . GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'force') .'" class="extern">' . makeButton('herunterladen', 'img') . '</a>';
+            $edit= '&nbsp;<a href="' . GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'force') .'" class="extern">' . makeButton('herunterladen', 'img', _("herunterladen")) . '</a>';
 
             $fext = getFileExtension(strtolower($datei['filename']));
             if (($type != '6') && ($fext != 'zip') && ($fext != 'tgz') && ($fext != 'gz') && ($fext != 'bz2')) {
-                $edit.= '&nbsp;<a href="'. GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'zip') . '" class="extern">' . makeButton('alsziparchiv', 'img') . '</a>';
+                $edit.= '&nbsp;<a href="'. GetDownloadLink( $datei['dokument_id'], $datei['filename'], $type, 'zip') . '" class="extern">' . makeButton('alsziparchiv', 'img', _("als ZIP-Archiv herunterladen")) . '</a>';
             }
         }
         if (($rechte) || ($datei["user_id"] == $user->id && $folder_tree->isWritable($datei["range_id"], $user->id))) {
             if ($type!=6) {
-              $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_c_#anker")."\">" . makeButton("bearbeiten", "img") . "</a>";
-              $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_rfu_#anker")."\">" . makeButton("aktualisieren", "img") . "</a>";
+              $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_c_#anker")."\">" . makeButton("bearbeiten", "img", _("bearbeiten")) . "</a>";
+              $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_rfu_#anker")."\">" . makeButton("aktualisieren", "img", _("aktualisieren")) . "</a>";
             } else {
                 //wenn Datei ein Link ist:
-                $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_led_#anker")."\">" . makeButton("bearbeiten", "img") . "</a>";
+                $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_led_#anker")."\">" . makeButton("bearbeiten", "img", _("bearbeiten")) . "</a>";
             }
             if (!$all){
-                $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_m_#anker")."\">" . makeButton("verschieben", "img") . "</a>";
-                $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_co_#anker")."\">" . makeButton("kopieren", "img") . "</a>";
+                $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_m_#anker")."\">" . makeButton("verschieben", "img", _("verschieben")) . "</a>";
+                $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_co_#anker")."\">" . makeButton("kopieren", "img", _("kopieren")) . "</a>";
             }
-            $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_fd_")."\">" . makeButton("loeschen", "img") . "</a>";
+            $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$datei["dokument_id"]."_fd_")."\">" . makeButton("loeschen", "img", _("löschen")) . "</a>";
         }
     }
 
@@ -1528,7 +1528,7 @@ function display_file_line ($datei, $folder_id, $open, $change, $move, $upload, 
         print "<span id=\"file_".$datei["dokument_id"]."_header\" style=\"font-weight: bold\"><a href=\"".URLHelper::getLink("?close=".$datei["dokument_id"]."#anker")."\" class=\"tree\"";
         print ' name="anker"></a>';
         print "<img src=\"".$GLOBALS['ASSETS_URL']."images/".GetFileIcon(getFileExtension($datei['filename']))."\">";
-        print "<input style=\"font-size: 8pt; width: 50%;\" type=\"text\" size=20 maxlength=255 name=\"change_name\" value=\"".htmlReady($datei["name"])."\"></b>";
+        print "<input style=\"font-size: 8pt; width: 50%;\" type=\"text\" size=\"20\" maxlength=\"255\" name=\"change_name\" aria-label=\"Ordnername eingeben\" value=\"".htmlReady($datei["name"])."\"></b>";
     } else {
         if (($move == $datei["dokument_id"]) ||  ($upload == $datei["dokument_id"]) || ($anchor_id == $datei["dokument_id"])) {
             print "<a name=\"anker\"></a>";
@@ -1660,20 +1660,20 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
     if ($change == $folder_id) { //Aenderungsmodus, zweiter Teil
         $content .= chr(10) . '<table cellpadding="2" cellspacing="2" border="0">';
         $content .= chr(10) . '<tr><td>';
-        $content.="\n<textarea name=\"change_description\" rows=3 cols=40>".htmlReady($result["description"])."</textarea>";
+        $content.="\n<textarea name=\"change_description\" aria-label=\"Beschreibung des Ordners eingeben\" rows=\"3\" cols=\"40\">".htmlReady($result["description"])."</textarea>";
         $content .= chr(10) . '</td><td><font size="-1">';
         if($rechte){
             if ($folder_tree->permissions_activated){
-                $content.= "\n<input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isReadable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_read\">&nbsp;";
-                $content.= "<b>r</b> - " . _("Lesen (Dateien k&ouml;nnen heruntergeladen werden)");
-                $content.= "\n<br><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isWritable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_write\">&nbsp;";
-                $content.= "<b>w</b> - " . _("Schreiben (Dateien k&ouml;nnen heraufgeladen werden)");
-                $content.= "\n<br><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isExecutable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_exec\">&nbsp;";
-                $content.= "<b>x</b> - " . _("Sichtbarkeit (Ordner wird angezeigt)");
+                $content.= "\n<label><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isReadable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_read\">&nbsp;";
+                $content.= '<b>r</b> - ' . _("Lesen (Dateien k&ouml;nnen heruntergeladen werden)");
+                $content.= "</label>\n<br><label><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isWritable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_write\">&nbsp;";
+                $content.= '<b>w</b> - ' . _("Schreiben (Dateien k&ouml;nnen heraufgeladen werden)");
+                $content.= "</label>\n<br><label><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->isExecutable($folder_id) ? "CHECKED" : "" ) . " name=\"perm_exec\">&nbsp;";
+                $content.= '<b>x</b> - ' . _("Sichtbarkeit (Ordner wird angezeigt)") . '</label>';
             }
             if($level == 0 && $folder_tree->entity_type == 'sem'){
-                $content .= "\n<br><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->checkCreateFolder($folder_id) ? "CHECKED" : "" ) . " name=\"perm_folder\">&nbsp;";
-                $content .= "<b>f</b> - " . _("Ordner erstellen (Alle Nutzer können Ordner erstellen)");
+                $content .= "\n<br><label><input style=\"vertical-align:middle\" type=\"checkbox\" value=\"1\" ".($folder_tree->checkCreateFolder($folder_id) ? "CHECKED" : "" ) . " name=\"perm_folder\">&nbsp;";
+                $content .= '<b>f</b> - ' . _("Ordner erstellen (Alle Nutzer können Ordner erstellen)") . '</label>';
             } else {
                 $content .= '&nbsp;';
             }
@@ -1682,8 +1682,8 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
         }
         $content .= chr(10) . '</font></td></tr>';
         $content .= chr(10) . '<tr><td colspan="2">';
-        $content.="\n<input type=\"image\"" . makeButton("uebernehmen", "src") . " align=\"absmiddle\" value=\""._("&Auml;nderungen speichern")."\">&nbsp;";
-        $content.="\n<input type=\"image\"" . makeButton("abbrechen", "src") . " align=\"absmiddle\" name=\"cancel\" value=\""._("Abbrechen")."\">";
+        $content.="\n" . makeButton("uebernehmen", 'input', _("&Auml;nderungen speichern")) . "&nbsp;";
+        $content.="\n" . makeButton("abbrechen", 'input', _("Abbrechen"), 'cancel');
         $content.= "\n<input type=\"hidden\" name=\"open\" value=\"".$folder_id."_sc_\">";
         $content.="\n<input type=\"hidden\" name=\"type\" value=\"1\">";
         $content .= chr(10) . '</td></tr></table>';
@@ -1708,17 +1708,17 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
     //Editbereich erstellen
     if (($change != $folder_id) && ($upload != $folder_id) && ($filelink != $folder_id)) {
         if ($perm->have_studip_perm('autor', $SessionSeminar) && $folder_tree->isWritable($folder_id, $user->id))
-            $edit= "<a href=\"".URLHelper::getLink("?open=".$folder_id."_u_&rand=".rand()."#anker")."\">" . makeButton("dateihochladen", "img") . "</a>";
+            $edit= "<a href=\"".URLHelper::getLink("?open=".$folder_id."_u_&rand=".rand()."#anker")."\">" . makeButton("dateihochladen", "img", _("Datei hochladen")) . "</a>";
         if ($rechte)
-            $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_l_&rand=".rand()."#anker")."\">" . makeButton("link", "img") . "</a>";
+            $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_l_&rand=".rand()."#anker")."\">" . makeButton("link", "img", _("Datei verlinken")) . "</a>";
         if ($document_count && $folder_tree->isReadable($folder_id, $user->id))
-            $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?folderzip=".$folder_id)."\">" . makeButton("ordneralszip", "img") . "</a>";
+            $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?folderzip=".$folder_id)."\">" . makeButton("ordneralszip", "img", _("Ordner als ZIP hochladen")) . "</a>";
         if ($perm->have_studip_perm('autor', $SessionSeminar) && $folder_tree->checkCreateFolder($folder_id, $user->id)) {
             if ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)) {
-                $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_n_#anker")."\">" . makeButton("neuerordner", "img") . "</a>";
+                $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_n_#anker")."\">" . makeButton("neuerordner", "img", _("Ordner anlegen")) . "</a>";
             if ($rechte && get_config('ZIP_UPLOAD_ENABLE')) {
                 $edit .= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_z_&rand="
-                    . rand()."#anker")."\">" . makeButton("ziphochladen", "img") . "</a>";
+                    . rand()."#anker")."\">" . makeButton("ziphochladen", "img", _("als ZIP hochladen")) . "</a>";
                 }
             }
             if ($rechte ||
@@ -1727,22 +1727,22 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
                     $folder_tree->isWritable($folder_tree->getValue($folder_id, 'parent_id'), $user->id) &&
                         !$folder_tree->isExerciseFolder($folder_id, $user->id))
                 )
-                    ) $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_d_")."\">" . makeButton("loeschen", "img") . "</a>";
+                    ) $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_d_")."\">" . makeButton("loeschen", "img", _("löschen")) . "</a>";
             if ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id))
-                $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_c_#anker")."\">" . makeButton("bearbeiten", "img") . "</a>";
+                $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_c_#anker")."\">" . makeButton("bearbeiten", "img", _("bearbeiten")) . "</a>";
             if (($rechte && $result['range_id'] != $SessSemName[1]) ||
                 ($level !=0 &&
                     ($folder_tree->isWritable($folder_id, $user->id) &&
                     $folder_tree->isWritable($folder_tree->getValue($folder_id, 'parent_id'), $user->id) &&
                     !$folder_tree->isExerciseFolder($folder_id, $user->id))
                     )
-                ) $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_m_#anker")."\">" . makeButton("verschieben", "img") . "</a>";
+                ) $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_m_#anker")."\">" . makeButton("verschieben", "img", _("verschieben")) . "</a>";
             if ($rechte || ($level !=0 && !$folder_tree->isExerciseFolder($folder_id, $user->id))) {
-                $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_co_#anker")."\">" . makeButton("kopieren", "img") . "</a>";
+                $edit.= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_co_#anker")."\">" . makeButton("kopieren", "img", _("kopieren")) . "</a>";
             }
         }
         if ($rechte) {
-            $edit .= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_az_#anker")."\"".tooltip("Dateien alphabetisch sortieren").">" . makeButton("sortieren", "img") . "</a>";
+            $edit .= " <a href=\"".URLHelper::getLink("?open=".$folder_id."_az_#anker")."\"".tooltip("Dateien alphabetisch sortieren").">" . makeButton("sortieren", "img", _("sortieren")) . "</a>";
         }
     }
 
@@ -1961,7 +1961,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
              || $folder_tree->isGroupFolder($result['folder_id'])
              )
             ) { //Aenderungsmodus, Anker + Formular machen, Font tag direkt ausgeben (muss ausserhalb einer td stehen!
-        $titel= "</a><input style=\"font-size:8 pt; width: 400px;\" type=\"text\" size=20 maxlength=255 name=\"change_name\" value=\"".htmlReady($result['name'])."\" >";
+        $titel= "</a><input style=\"font-size:8 pt; width: 400px;\" type=\"text\" size=\"20\" maxlength=\"255\" aria-label=\"Ordnername eingeben\" name=\"change_name\" value=\"".htmlReady($result['name'])."\" >";
         if ($rechte && $folder_tree->permissions_activated)
             $titel .= '&nbsp;<font color="red">['.$folder_tree->getPermissionString($result["folder_id"]).']</font>';
     }   else {

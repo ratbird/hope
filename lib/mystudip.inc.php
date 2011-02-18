@@ -101,7 +101,7 @@ function change_general_view() {
                 </tr>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><?print _("Sprache");?></font>
+                        <label for="forced_language"><?print _("Sprache");?></label>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <? select_language($_language); ?>
@@ -110,15 +110,15 @@ function change_general_view() {
 
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><?print _("Java-Script Hovereffekte");?></font><br>
-                        <br><div align="left"><font size="-1">
+                        <label for="jshover"><?print _("Java-Script Hovereffekte");?></label><br>
+                        <br><div align="left" id="jshover_description"><font size="-1">
                         <?print _("Mit dieser Funktion k&ouml;nnen Sie durch reines &Uuml;berfahren bestimmter Icons mit dem Mauszeiger (z.B. in den Foren oder im Adressbuch) die entsprechenden Eintr&auml;ge anzeigen lassen. Sie k&ouml;nnen sich so sehr schnell und effizient auch durch gr&ouml;&szlig;ere Informationsmengen arbeiten. Da jedoch die Ladezeiten der Seiten erheblich ansteigen, empfehlen wir diese Einstellung nur für NutzerInnen die mindestens &uuml;ber eine ISDN Verbindung verf&uuml;gen.");?>
                         </font></div>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <?
                         if ($auth->auth["jscript"]) {
-                            echo '<input type=CHECKBOX name="jshover" value="1"';
+                            echo '<input type=CHECKBOX name="jshover" id="jshover" aria-describedby="jshover_description" value="1"';
                             if ($forum["jshover"] == 1) {
                                 echo " checked";
                             }
@@ -135,13 +135,13 @@ function change_general_view() {
                 ?>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><?print _("pers&ouml;nliche Startseite");?></font><br>
-                        <br><div align="left"><font size="-1">
+                        <label for="personal_startpage"><?print _("pers&ouml;nliche Startseite");?></label><br>
+                        <br><div align="left" id="personal_startpage_description"><font size="-1">
                         <?print _("Sie k&ouml;nnen hier einstellen, welcher Systembereich automatisch nach dem Login oder Autologin aufgerufen wird. Wenn Sie zum Beispiel regelm&auml;&szlig;ig die Seite &raquo;Meine Veranstaltungen&laquo;. nach dem Login aufrufen, so k&ouml;nnen Sie dies hier direkt einstellen.");?></font><br><br>
                         </font></div>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
-                        <select name="personal_startpage">
+                        <select name="personal_startpage" id="personal_startpage" aria-describedby="personal_startpage_description">
                             <?
                             printf ("<option %s value=\"\">"._("keine")."</option>", (!$my_studip_settings["startpage_redirect"]) ? "selected" : "");
                             printf ("<option %s value=\"1\">"._("Meine Veranstaltungen")."</option>", ($my_studip_settings["startpage_redirect"] ==  1) ? "selected" : "");
@@ -158,13 +158,13 @@ function change_general_view() {
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                         <label for="skiplinks_enable"><?print _("Skiplinks einblenden");?></label><br>
-                        <br><div align="left"><font size="-1">
+                        <br><div align="left" id="skiplinks_enable_description"><font size="-1">
                         <? print _("Mit dieser Einstellung wird nach dem ersten Drücken der Tab-Taste eine Liste mit Skiplinks eingeblendet, mit deren Hilfe Sie mit der Tastatur schneller zu den Hauptinhaltsbereichen der Seite navigieren können. Zusätzlich wird der aktive Bereich einer Seite hervorgehoben.");?>
                         </font></div>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <?
-                        echo "<input type=\"checkbox\" name=\"skiplinks_enable\" id=\"skiplinks_enable\" value=\"1\"";
+                        echo "<input type=\"checkbox\" name=\"skiplinks_enable\" id=\"skiplinks_enable\" aria-describedby=\"skiplinks_enable_description\" value=\"1\"";
                         if ($user->cfg->getValue("SKIPLINKS_ENABLE")) {
                             echo " checked";
                         }
@@ -176,13 +176,13 @@ function change_general_view() {
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
                         <label for="accesskey_enable"><?print _("Tastenkombinationen f&uuml;r Hauptfunktionen");?></label><br>
-                        <br><div align="left"><font size="-1">
+                        <br><div align="left" id="accesskey_enable_description"><font size="-1">
                         <?print _("Mit dieser Einstellung k&ouml;nnen Sie f&uuml;r die meisten in der Kopfzeile erreichbaren Hauptfunktionen eine Bedienung &uuml;ber Tastenkombinationen aktivieren. <br>Die Tastenkombination wird im Tooltip des jeweiligen Icons angezeigt.");?>
                         </font></div>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <?
-                        echo "<input type=\"checkbox\" name=\"accesskey_enable\" id=\"accesskey_enable\" value=\"1\"";
+                        echo "<input type=\"checkbox\" name=\"accesskey_enable\" id=\"accesskey_enable\" aria-describedby=\"accesskey_enable_description\" value=\"1\"";
                         IF ($user->cfg->getValue("ACCESSKEY_ENABLE")) {
                             echo " checked";
                         }
@@ -193,14 +193,14 @@ function change_general_view() {
                 </tr>
                 <tr  <? $cssSw->switchClass() ?>>
                     <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><?print _("Semesteranzeige auf &raquo;Meine Veranstaltungen&laquo;");?></font><br>
-                        <br><div align="left"><font size="-1">
+                        <label for="showsem_enable"><?print _("Semesteranzeige auf &raquo;Meine Veranstaltungen&laquo;");?></label><br>
+                        <br><div align="left" id="showsem_enable_description"><font size="-1">
                         <?print _("Mit dieser Einstellung k&ouml;nnen Sie auf der Seite &raquo;Meine Veranstaltungen&laquo; die Einblendung des Start- und Endsemesters hinter jeder Veranstaltung aktivieren.");?>
                         </font></div>
                     </td>
                     <td <?=$cssSw->getFullClass()?>>
                         <?
-                        echo "<input type=\"CHECKBOX\" name=\"showsem_enable\" value=\"1\"";
+                        echo "<input type=\"CHECKBOX\" name=\"showsem_enable\" id=\"showsem_enable\" aria-describedby=\"showsem_enable_description\" value=\"1\"";
                         IF ($user->cfg->getValue("SHOWSEM_ENABLE")) {
                             echo " checked";
                         }

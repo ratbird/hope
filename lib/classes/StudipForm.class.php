@@ -364,7 +364,7 @@ class StudipForm {
         } else {
             $ret .= ' src="'.$GLOBALS['ASSETS_URL'].'images/' . $this->form_buttons[$name]['type'] . '" ';
         }
-        $ret .= tooltip($this->form_buttons[$name]['info']);
+        $ret .= tooltip($this->form_buttons[$name]['info'], true);
         $ret .= $this->getAttributes($attributes);
         $ret .= " border=\"0\">";
         return $ret;

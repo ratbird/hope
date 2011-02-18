@@ -527,10 +527,10 @@ function showDeleteDialog($keyword, $version) {
         $msg .= _("Diese Version ist die derzeit einzige. Nach dem Löschen ist die Seite komplet gelöscht.") . "<br>";
     }
     //TODO: modaler dialog benutzen
-    $msg.="<a href=\"".URLHelper::getLink("?cmd=really_delete&keyword=".urlencode($keyword)."&version=$version&dellatest=$islatest")."\">" . makeButton("ja2", "img") . "</a>&nbsp; \n";
+    $msg.="<a href=\"".URLHelper::getLink("?cmd=really_delete&keyword=".urlencode($keyword)."&version=$version&dellatest=$islatest")."\">" . makeButton("ja2", "img", _("Ja")) . "</a>&nbsp; \n";
     $lnk = "?keyword=".urlencode($keyword); // what to do when delete is aborted
     if (!$islatest) $lnk .= "&version=$version";
-    $msg.="<a href=\"".URLHelper::getLink($lnk)."\">" . makeButton("nein", "img") . "</a>\n";
+    $msg.="<a href=\"".URLHelper::getLink($lnk)."\">" . makeButton("nein", "img", _("Nein")) . "</a>\n";
     $msg.='<p>'. sprintf(_("Um alle Versionen einer Seite auf einmal zu löschen, klicken Sie %shier%s."),'<a href="'.URLHelper::getLink('?cmd=delete_all&keyword='.urlencode($keyword)).'">','</a>');
     parse_msg($msg, '§', 'blank', '1', FALSE);
     end_blank_table();
@@ -569,10 +569,10 @@ function showDeleteAllDialog($keyword) {
         }
     }
     //TODO: modaler dialog benutzen
-    $msg.="<a href=\"".URLHelper::getLink("?cmd=really_delete_all&keyword=".urlencode($keyword))."\">" . makeButton("ja2", "img") . "</a>&nbsp; \n";
+    $msg.="<a href=\"".URLHelper::getLink("?cmd=really_delete_all&keyword=".urlencode($keyword))."\">" . makeButton("ja2", "img", _("Ja")) . "</a>&nbsp; \n";
     $lnk = "?keyword=".urlencode($keyword); // what to do when delete is aborted
     if (!$islatest) $lnk .= "&version=$version";
-    $msg.="<a href=\"".URLHelper::getLink($lnk)."\">" . makeButton("nein", "img") . "</a>\n";
+    $msg.="<a href=\"".URLHelper::getLink($lnk)."\">" . makeButton("nein", "img", _("Nein")) . "</a>\n";
     parse_msg($msg, '§', 'blank', '1', FALSE);
     end_blank_table();
 }
@@ -1037,7 +1037,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $cont .= "<input type=\"hidden\" name=\"version\" value=\"$version\">";
     $cont .= "<input type=\"hidden\" name=\"submit\" value=\"true\">";
     $cont .= "<input type=\"hidden\" name=\"cmd\" value=\"show\">";
-    $cont .= "<br><br><input type=image name=\"submit\" value=\"abschicken\" " . makeButton("abschicken", "src") . " align=\"absmiddle\" border=0 >&nbsp;<a href=\"".URLHelper::getLink("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage)."\"><img " . makeButton("abbrechen", "src") . " align=\"absmiddle\" border=0></a>";
+    $cont .= '<br><br>' . makeButton('abschicken', 'input', _("speichern")) . "&nbsp;<a href=\"".URLHelper::getLink("?cmd=abortedit&keyword=".urlencode($keyword).$lastpage)."\">" . makeButton('abbrechen', 'img', _("abbrechen")) . '</a>';
     $cont .= "</form>\n";
     printcontent(0,0,$cont,"");
     $infobox = array ();
@@ -1101,7 +1101,7 @@ function exportWiki() {
     $infobox = array ();
     $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=>_("Die Wiki-Seiten werden als eine zusammenhängende HTML-Datei ohne Links exportiert."))));
     print "</tr><tr align=center><td>";
-    print "<a id=\"wiki_export\" href=\"".URLHelper::getLink("?view=wikiprintall")."\" target=\"_blank\"><img ".makebutton("weiter","src"). " border=0></a></td></tr>";
+    print "<a id=\"wiki_export\" href=\"".URLHelper::getLink("?view=wikiprintall")."\" target=\"_blank\">" . makebutton("weiter","img", _("Seiten exportieren")) . '</a></td></tr>';
     end_blank_table();
     echo "</td>"; // end of content area
     showPageFrameEnd($infobox);
@@ -1480,10 +1480,10 @@ function showWikiPage($keyword, $version, $special="", $show_comments="icon", $h
         } else {
             $edit="";
             if ($perm->have_studip_perm("autor", $SessSemName[1])) {
-                $edit.="<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=edit")."\"><img ".makeButton("bearbeiten","src")." border=\"0\"></a>";
+                $edit.="<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&view=edit")."\">" . makeButton('bearbeiten', 'img', _("Seite bearbeiten")) . '</a>';
             }
             if ($perm->have_studip_perm("tutor", $SessSemName[1])) {
-                $edit.="&nbsp;<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=delete&version=latest")."\"><img ".makeButton("loeschen","src")." border=\"0\"></a>";
+                $edit.="&nbsp;<a href=\"".URLHelper::getLink("?keyword=".urlencode($keyword)."&cmd=delete&version=latest")."\">" . makeButton('loeschen', 'img', _("Seite löschen")) . '</a>';
             }
         }
         $edit .= "<br>&nbsp;";

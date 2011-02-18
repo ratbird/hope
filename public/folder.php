@@ -710,7 +710,7 @@ if ($question) {
                 echo "\n" . '<td class="blank" width="60%" style="font-size:80%;">';
                 echo "\n" . '<input type="image" border="0" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/yellow/arr_2right.png" class="middle" name="move_to_top_folder" ' . tooltip(_("Auf die obere Ebene verschieben / kopieren")) . '>';
                 echo '&nbsp;' . _("Auf die obere Ebene verschieben / kopieren") . '</td>';
-                echo "\n" . '<td class="blank"><input type="image" border="0" vspace="2" ' . makeButton($button_name,'src') . ' name="move_to_top_folder" ' . tooltip(_("Auf die obere Ebene verschieben / kopieren")) . '>';
+                echo "\n" . '<td class="blank">' . makeButton($button_name, 'input', _("Auf die obere Ebene verschieben / kopieren"), "move_to_top_folder");
                 echo "\n</td></tr><tr>";
             }
             echo "\n" .'<td class="blank" width="20%" style="font-size:80%;">';
@@ -727,7 +727,7 @@ if ($question) {
                 echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#sem_move_id', 'Veranstaltungen'); $(this).hide(); return false\">".Assets::img("icons/16/blue/plus.png", array('title' => _("Mehrere Veranstaltungen auswählen"), "class" => "middle"))."</a>";
             }
             echo "\n</td>";
-            echo "\n" . '<td class="blank"><input type="image" border="0" vspace="2"' . makeButton($button_name,'src') . ' name="move_to_sem" ' . tooltip(_("In diese Veranstaltung verschieben / kopieren")) . '>';
+            echo "\n" . '<td class="blank">' . makeButton($button_name, 'input', _("In diese Veranstaltung verschieben / kopieren"), "move_to_sem");
 
             echo "\n</td></tr><tr>";
             echo "\n" .'<td class="blank" width="20%"  style="font-size:80%;">';
@@ -744,11 +744,11 @@ if ($question) {
                 echo "\n<a href=\"\" onClick=\"STUDIP.MultiSelect.create('#inst_move_id', 'Institute'); $(this).hide(); return false\">".Assets::img("icons/16/blue/plus.png", array('title' => _("Mehrere Einrichtungen auswählen"), "class" => "middle"))."</a>";
             }
             echo "\n</td>";
-            echo "\n" . '<td class="blank"><input type="image" border="0" vspace="2" ' . makeButton($button_name,'src') . ' name="move_to_inst" ' . tooltip(_("In diese Einrichtung verschieben / kopieren")) . '>';
+            echo "\n" . '<td class="blank">' . makeButton($button_name, 'input', _("In diese Einrichtung verschieben / kopieren"), 'move_to_inst');
 
             echo "\n</td></tr><tr>";
             echo "\n" . '<td class="blank" align="center" colspan="3" width="100%" >';
-            echo "\n" . '<input type="image" border="0" vspace="2" '.makeButton("abbrechen", "src").' name="cancel" ' . tooltip(_("Verschieben / Kopieren abbrechen")) . '>';
+            echo "\n" . makeButton("abbrechen", "input", _("Verschieben / Kopieren abbrechen"), 'cancel');
             echo "\n" . '</td></tr></form>';
 
 
@@ -807,11 +807,11 @@ if ($question) {
                 <td class="blank" colspan="3" width="100%" style="padding-left:10px;">
                 <form action="<? echo URLHelper::getLink('#anker') ?>" method="POST">
                     <?= CSRFProtection::tokenTag() ?>
-                    <select name="open" style="vertical-align:middle">
+                    <select name="open" style="vertical-align:middle" aria-label="<?= _("Name für neuen Ordner auswählen") ?>">
                         <? echo $select ?>
                     </select>
-                    <input type="text" name="top_folder_name" size="50">
-                    <input type="image" name="anlegen" value="<?=_("Neuer Ordner")?>" <?=makeButton("neuerordner", "src")?> border="0">
+                    <input type="text" name="top_folder_name" size="50" aria-label="<?= _("Name für neuen Ordner eingeben") ?>">
+                    <?= makeButton("neuerordner", 'input', _("Neuer Ordner"), 'anlegen') ?>
                 </form>
                 <?
                 }
@@ -820,7 +820,7 @@ if ($question) {
         echo "\n" . '<td class="blank" align="center" colspan="3" width="100%" >';
         echo "\n" . '<span style="margin:25px;font-weight:bold;">';
         echo "\n" . ($folder_system_data["mode"] == 'move' ? _("Verschiebemodus") : _("Kopiermodus")) . "</span>";
-        echo "\n" . '<a href="'.URLHelper::getLink('?cmd=tree').'">'. makeButton("abbrechen", "img",_("Verschieben / Kopieren abbrechen")) . '</a>';
+        echo "\n" . '<a href="'.URLHelper::getLink('?cmd=tree').'">'. makeButton("abbrechen", "img", _("Verschieben / Kopieren abbrechen")) . '</a>';
         echo "\n" . '</td></tr>';
     }
 
@@ -852,7 +852,7 @@ if ($question) {
         print _("Es gibt ");
         print "<b>".(count($result)>1 ? count($result) : _("eine"))."</b>";
         print _(" neue/geänderte Dateie(n). Jetzt ");
-        print " <a href=\"".URLHelper::getLink("?zipnewest=".$lastvisit)."\">" . makeButton("herunterladen", "img") . "</a>";
+        print " <a href=\"".URLHelper::getLink("?zipnewest=".$lastvisit)."\">" . makeButton("herunterladen", 'img', _("herunterladen")) . "</a>";
         print "</p>";
     }
 
@@ -1004,8 +1004,8 @@ div.droppable.hover {
             print '<table border=0 cellpadding=0 cellspacing=0 width="100%">';
             print "<tr>" .
                     "<td class=\"blank\"></td><td class=\"blank\"><div align=\"right\">" .
-                        "<a href=\"".URLHelper::getLink("?check_all=TRUE")."\">".makeButton("alleauswaehlen")."</a>" .
-                        "&nbsp;<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"download_selected\" border=\"0\" ".makeButton("herunterladen", "src").">&nbsp;</div>" .
+                        "<a href=\"".URLHelper::getLink("?check_all=TRUE")."\">" . makeButton("alleauswaehlen", 'img', _("alle auswählen")) . "</a>" .
+                        "&nbsp;".makeButton("herunterladen", 'input', _("herunterladen"), 'download_selected')."&nbsp;</div>" .
                     "</td><td class=\"blank\"></td></tr> <tr><td></td><td class=\"blank\">&nbsp;</td><td class=\"blank\"></td></tr>";
             $dreieck_runter = "dreieck_down.png";
             $dreieck_hoch = "dreieck_up.png";

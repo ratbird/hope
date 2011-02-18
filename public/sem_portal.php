@@ -183,7 +183,7 @@ ob_end_flush();
 <table width="100%" border=0 cellpadding=0 cellspacing=0>
 <tr>
     <td class="blank" valign="top">
-    <table cellpadding="5" border="0" width="100%"><tr><td colspan="2">
+    <table cellpadding="5" border="0" width="100%" id="main_content"><tr><td colspan="2">
         <?
         //
         if ($sem_portal["bereich"] == "mod") {
@@ -197,14 +197,14 @@ ob_end_flush();
         echo "</td></tr><tr><td class=\"blank\" align=\"left\">";
         if ($sem_portal["bereich"] != "mod"){
                 if ($sem_browse_data['cmd'] == "xts"){
-                    echo "<a href=\"$PHP_SELF?cmd=qs&level=f\"><img " . makeButton("schnellsuche", "src") . tooltip(_("Zur Schnellsuche zurückgehen")) ." border=0></a>";
+                    echo "<a href=\"$PHP_SELF?cmd=qs&level=f\">" . makeButton('schnellsuche', 'img', _("Zur Schnellsuche zurückgehen")) . '</a>';
                 } else {
-                    echo "<a href=\"$PHP_SELF?cmd=xts&level=f\"><img " . makeButton("erweitertesuche","src") . tooltip(_("Erweitertes Suchformular aufrufen")) ." border=\"0\"></a>";
+                    echo "<a href=\"$PHP_SELF?cmd=xts&level=f\">" . makeButton('erweitertesuche', 'img', _("Erweitertes Suchformular aufrufen")) . '</a>';
                 }
         }
         echo "</td>\n";
         echo "<td class=\"blank\" align=\"right\">";
-        echo "<a href=\"$PHP_SELF?reset_all=1\"><img " . makeButton("zuruecksetzen", "src") . tooltip(_("zurücksetzen")) ." border=0></a>";
+        echo "<a href=\"$PHP_SELF?reset_all=1\">" . makeButton('zuruecksetzen', 'img', _("zurücksetzen")) . '</a>';
         echo "</td></tr>\n";
 
 

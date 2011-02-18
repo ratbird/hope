@@ -113,9 +113,9 @@ function editarea($forumposting) {
     if ($cols < 28) $cols = 28;
 
     if ($forumposting["writestatus"] == "new") // Abbrechen Button unterscheidet ob Anlegen abgebrochen oder Bearbeiten abgebrochen
-        $zusatz = "<a href=\"".URLHelper::getLink("?really_kill=".$forumposting["id"]."&nurneu=1#anker")."\">" . makeButton("abbrechen", "img") . "</a>";
+        $zusatz = "<a href=\"".URLHelper::getLink("?really_kill=".$forumposting["id"]."&nurneu=1#anker")."\">" . makeButton("abbrechen", "img", _("abbrechen")) . "</a>";
     else
-        $zusatz = "<a href=\"".URLHelper::getLink("?open=".$forumposting["rootid"]."#anker")."\">" . makeButton("abbrechen", "img") . "</a>";
+        $zusatz = "<a href=\"".URLHelper::getLink("?open=".$forumposting["rootid"]."#anker")."\">" . makeButton("abbrechen", "img", _("abbrechen")) . "</a>";
 
 
     if (get_config("EXTERNAL_HELP")) {
@@ -137,14 +137,14 @@ function editarea($forumposting) {
         $description="";
     }
     if ($user->id == "nobody") {  // nicht angemeldete muessen Namen angeben
-        $description =  "<b>" . _("Ihr Name:") . "</b>&nbsp; <input type=text size=50 name=nobodysname onchange=\"STUDIP.Forum.pruefe_name()\" value=\"" . _("unbekannt") . "\"><br><br><input type=hidden name=update value='".$forumposting["id"]."'>"
-                ."<div align=center><textarea name=\"description\" class=\"add_toolbar resizable\" style=\"width:70%\" cols=\"". $cols."\" rows=12 wrap=virtual>"
+        $description =  "<label><b>" . _("Ihr Name:") . "</b>&nbsp; <input id=\"namenobody\" type=text size=50 name=nobodysname onchange=\"STUDIP.Forum.pruefe_name()\" value=\"" . _("unbekannt") . "\"></label><br><br><input type=hidden name=update value='".$forumposting["id"]."'>"
+                ."<div align=center><textarea aria-label=\"" . _("Text des Beitrags") . "\" name=\"description\" class=\"add_toolbar resizable\" style=\"width:70%\" cols=\"". $cols."\" rows=12 wrap=virtual>"
                 .htmlReady($description)
                 .htmlReady($zitat)
                 ."</textarea>";
     } else {
         $description =  "<input type=hidden name=update value='".$forumposting["id"]."'>"
-                ."<div align=center><textarea name=\"description\" class=\"add_toolbar resizable\" style=\"width:70%\" cols=\"". $cols."\"  rows=12 wrap=virtual>"
+                ."<div align=center><textarea aria-label=\"" . _("Text des Beitrags") . "\" name=\"description\" class=\"add_toolbar resizable\" style=\"width:70%\" cols=\"". $cols."\"  rows=12 wrap=virtual>"
                 .htmlReady($description)
                 .htmlReady($zitat)
                 ."</textarea>";
@@ -153,14 +153,14 @@ function editarea($forumposting) {
         $description .= '<input type="hidden" name="root_id" value="'.$forumposting['rootid'].'">';
         $description .= '<input type="hidden" name="parent_id" value="'.$forumposting['parent_id'].'">';
         if (get_config('FORUM_ANONYMOUS_POSTINGS')) {
-          $description .= '<div align="center"><input type="checkbox" name="anonymous">'._('Beitrag anonym verfassen').'</div>';
+          $description .= '<div align="center"><label><input id="input_anonymous" type="checkbox" name="anonymous">'._('Beitrag anonym verfassen').'</label></div>';
         }
     } else {
         if (get_config('FORUM_ANONYMOUS_POSTINGS') && $forumposting['anonymous']) {
             $description .= '<input type="hidden" name="anonymous" value="true">';
         }
     }
-    $description .= "<br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"160\" height=\"1\"><input type=image name=create value=\"abschicken\" " . makeButton("abschicken", "src") . " align=\"absmiddle\" border=0>&nbsp;"
+    $description .= "<br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"160\" height=\"1\">" . makeButton('abschicken', 'input', _("abschicken"), 'create') . "&nbsp;"
         .$zusatz
         ."</div>";
     return $description;
@@ -604,24 +604,24 @@ function forum_get_buttons ($forumposting) {
     { if (!(have_sem_write_perm())) { // nur mit Rechten...
         if ($view=="search") $tmp = "&view=tree";
         if ($view=="mixed") $tmp = "&open=".$forumposting["id"]."&view=flatfolder";
-            $edit = "<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&flatviewstartposting=0&shrinkopen=".$forumposting["rootid"]."&sort=age".$tmp."#anker")."\">&nbsp;" . makeButton("antworten", "img") . "</a>";
-            $edit .= "<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=TRUE&flatviewstartposting=0&shrinkopen=".$forumposting["rootid"]."&sort=age".$tmp."#anker")."\">&nbsp;" . makeButton("zitieren", "img") . "</a>";
+            $edit = "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&flatviewstartposting=0&shrinkopen=".$forumposting["rootid"]."&sort=age".$tmp."#anker")."\">" . makeButton("antworten", "img", _("antworten")) . "</a>";
+            $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=TRUE&flatviewstartposting=0&shrinkopen=".$forumposting["rootid"]."&sort=age".$tmp."#anker")."\">" . makeButton("zitieren", "img", _("zitieren")) . "</a>";
             if ($forumposting["lonely"]==TRUE && ($rechte || $forumposting["perms"]=="write")) // ich darf bearbeiten
                 $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?edit_id=".$forumposting["id"]."&view=".$forum["view"]."&flatviewstartposting=".$forum["flatviewstartposting"]."#anker")."\">"
-                . makeButton("bearbeiten", "img") . "</a>";
+                . makeButton("bearbeiten", "img", _("bearbeiten")) . "</a>";
             if ($rechte || ($forumposting["lonely"]==TRUE && $forumposting["perms"]=="write")) // ich darf löschen
                 $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?delete_id=".$forumposting["id"]."&view=".$forum["view"]."&flatviewstartposting=".$forum["flatviewstartposting"])."\">"
-                . makeButton("loeschen", "img") . "</a>";
+                . makeButton("loeschen", "img", _("löschen")) . "</a>";
             if ($rechte){  // ich darf verschieben
                 $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?cmd=move&topic_id=".$forumposting["id"]."&view=tree")."\">"
-                . makeButton("verschieben", "img") . "</a>";
+                . makeButton("verschieben", "img", _("verschieben")) . "</a>";
             }
     } elseif ($user->id == "nobody") {  // darf Nobody hier schreiben?
         $db=new DB_Seminar;
         $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='$SessionSeminar' AND Schreibzugriff=0");
         if ($db->num_rows())  {
-            $edit = "<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&flatviewstartposting=0#anker")."\">&nbsp;" . makeButton("antworten", "img") . "</a>";
-            $edit .= "<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=TRUE&flatviewstartposting=0#anker")."\">&nbsp;" . makeButton("zitieren", "img") . "</a>";
+            $edit = "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&flatviewstartposting=0#anker")."\">" . makeButton("antworten", "img", _("antworten")) . "</a>";
+            $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=TRUE&flatviewstartposting=0#anker")."\">" . makeButton("zitieren", "img", _("zitieren")) . "</a>";
         } else
             $edit=""; // war kein nobody Seminar
     } else  // nix mit Rechten
@@ -1257,7 +1257,7 @@ function printposting ($forumposting) {
 
         if ($forumposting["writestatus"]!="none") {    //wir sind im Schreibmodus
             echo '<input type="hidden" name="topic_id" value="'.$forumposting['id'].'">';
-            $name = "<input type=text size=50 style='font-size:8 pt;font-weight:normal;' name=titel value='".htmlReady($forumposting["name"])."'>";
+            $name = "<input aria-label=\"" . _("Titel des Beitrags") . "\" type=text size=50 style='font-size:8 pt;font-weight:normal;' name=titel value='".htmlReady($forumposting["name"])."'>";
             $zusatz = ""; // beim editieren brauchen wir den Kram nicht
         } else {
             $name = "<a href=\"$link\" class=\"tree\" >".htmlReady(mila($forumposting["name"]))."</a>";
@@ -1350,7 +1350,7 @@ function printposting ($forumposting) {
                     $addon .= "<br><br>";
                     $addon .= "<input type=hidden name=open value='".$forumposting["id"]."'>";
                     $addon .= "<input type=hidden name=flatviewstartposting value='".$forum["flatviewstartposting"]."'>";
-                    $addon .= "<input type=image name=sidebar value='".$forumposting["id"]."' " . makeButton("bewerten", "src") . " align=\"absmiddle\" border=0>";
+                    $addon .= "<input type=image name=sidebar value='".$forumposting["id"]."' " . makeButton("bewerten", "src", _("bewerten")) . " align=\"absmiddle\" border=0>";
                 } else {
                     $addon .= "<font size=\"-1\">&nbsp;&nbsp;". sprintf(_("Sie haben diesen%sBeitrag bewertet."),'&nbsp;<br>&nbsp;&nbsp;');
                 }
@@ -1532,7 +1532,7 @@ if ($forum['view']=='flatfolder') {
     echo '<table cellpadding="0" cellspacing="0" border="0" width="100%">';
     echo '<tr>';
     echo '<td class="blank" align="center" style="padding-top:12px; padding-bottom:5px;">';
-    echo "Zu diesem Thema <a href=\"".URLHelper::getLink("?answer_id=".$folder_id."&flatviewstartposting=0&sort=age#anker")."\">&nbsp;" . makeButton("antworten", "img") . "</a>";
+    echo "Zu diesem Thema &nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$folder_id."&flatviewstartposting=0&sort=age#anker")."\">" . makeButton("antworten", "img", _("antworten")) . "</a>";
     echo '</td>';
     echo '</tr>';
     echo '</table>';
@@ -1875,24 +1875,24 @@ $searchfield = "
     <table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" valign=\"top\">
         <tr class=\"steel1\">
             <td style=\"vertical-align: top;\">
-                <b><font size=\"-1\">"._("Suchbegriff:")."</font></b>
+                <b><font size=\"-1\"><label for=\"suchbegriff\">"._("Suchbegriff:")."</label></font></b>
             </td>
             <td class=\"steel1\" style=\"text-align: right;\">
-                <input  type=\"TEXT\" name=\"suchbegriff\">
+                <input  type=\"TEXT\" name=\"suchbegriff\" id=\"suchbegriff\">
             </td>
         </tr>
         <tr class=\"steel1\">
         <td>
-            <b><font size=\"-1\">"._("Von:")."</font></b>
+            <b><font size=\"-1\"><label for=\"author\">"._("Von:")."</label></font></b>
         </td>
             <td>
-                <input  type=\"TEXT\" name=\"author\">
+                <input  type=\"TEXT\" name=\"author\" id=\"author\">
             </td>
         </tr>
         <tr>
             <td class=\"steelgraulight\" colspan=\"2\" align=\"center\">
                 <input type=\"hidden\" name=\"view\" value=\"search\">
-                <br>".makeButton("suchestarten", "input")."<br><br>
+                <br>".makeButton("suchestarten", "input", _("Suche starten"))."<br><br>
             </td>
         </tr>
     </table>
@@ -2012,7 +2012,7 @@ function forum_move_navi ($topic_id) {
                 </td>
                 <td class="steel1" width="80%">
                 <br>
-                <? echo "<a href=\"".URLHelper::getLink('')."\">".makeButton("abbrechen", "img")."</a>";?>
+                <? echo "<a href=\"".URLHelper::getLink('')."\">".makeButton("abbrechen", "img", _("abbrechen"))."</a>";?>
                 </td>
             </tr>
         </table></td></tr>

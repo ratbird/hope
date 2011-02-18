@@ -54,7 +54,7 @@ function print_rss($username) {
     echo CSRFProtection::tokenTag();
     if (!$db->num_rows())
         echo "<tr><td class=\"".$cssSw->getClass()."\"><b><p class=\"info\">" . _("Es existieren zur Zeit keine eigenen RSS-Feeds.") . "</p></b></td></tr>\n";
-    echo "<tr><td class=\"".$cssSw->getClass()."\"><p class=\"info\">" . _("RSS-Feed") . "&nbsp; <a href='$PHP_SELF?rss=create_rss&view=$view&username=$username&show_rss_bsp=$show_rss_bsp'>" . makeButton("neuanlegen") . "</a></p></td></tr>";
+    echo "<tr><td class=\"".$cssSw->getClass()."\"><p class=\"info\">" . _("RSS-Feed") . "&nbsp; <a href='$PHP_SELF?rss=create_rss&view=$view&username=$username&show_rss_bsp=$show_rss_bsp'>" . makeButton("neuanlegen", 'img', _("Neu anlegen")) . "</a></p></td></tr>";
     $count = 0;
     while ($db->next_record() ){
 
@@ -64,10 +64,10 @@ function print_rss($username) {
             if ($count)
                 echo "<br>";
             echo "<input type=\"hidden\" name=\"rss_id[]\" value=\"".$db->f("feed_id")."\">\n";
-            echo "<div style=\"padding: 10px; margin: 0px;\">"._("Name:")."<BR><input type='text' name='rss_name[]' style=\"width: 50%\" value='".htmlReady($db->f("name"))."' size=40>";
-            echo "&nbsp; &nbsp; &nbsp; <input type=checkbox name='rss_fetch_title[$count]' value='1'";
+            echo "<div style=\"padding: 10px; margin: 0px;\"><label>"._("Name:")."<BR><input type=\"text\" name=\"rss_name[]\" id=\"rss_name_$count\" style=\"width: 50%\" value='".htmlReady($db->f("name"))."' size=40></label>";
+            echo "&nbsp; &nbsp; &nbsp; <label><input type=checkbox name=\"rss_fetch_title[$count]\" value=\"1\"";
             IF ($db->f("fetch_title")=='1') echo " checked";
-            echo ">" . _("Name des Feeds holen") . "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
+            echo ">" . _("Name des Feeds holen") . "</label>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
             if ($count){
                 echo "\n<a href=\"$PHP_SELF?rss=order_rss&direction=up&username=$username&view=$view&cat_id=" . $db->f("feed_id")
                 . "&show_rss_bsp=$show_rss_bsp\">" . Assets::img('icons/16/yellow/arr_2up.png', array('class' => 'text-top', 'title' =>_('RSS-Feed nach oben verschieben')))
@@ -79,13 +79,13 @@ function print_rss($username) {
                 . "</a>";
               }
             echo "<br>&nbsp;</div></td></tr>";
-            echo "<tr><td class=\"".$cssSw->getClass()."\"><div style=\"padding: 10px; margin: 0px;\">"._("URL:")."<BR><input type='text' name='rss_url[]' style=\"width: 50%\" value='".htmlReady($db->f("url"))."' size=40>";
-            echo "&nbsp; &nbsp; &nbsp; <input type=checkbox name='rss_secret[$count]' value='1'";
+            echo "<tr><td class=\"".$cssSw->getClass()."\"><div style=\"padding: 10px; margin: 0px;\"><label>"._("URL:")."<BR><input type='text' name='rss_url[]' style=\"width: 50%\" value='".htmlReady($db->f("url"))."' size=40></label>";
+            echo "&nbsp; &nbsp; &nbsp; <label><input type=checkbox name='rss_secret[$count]' value='1'";
             IF ($db->f("hidden")=='1') echo " checked";
-            echo ">" . _("unsichtbar") . "&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
+            echo ">" . _("unsichtbar") . "</label>&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;";
             echo "<br><br>" . makeButton("uebernehmen", "input", _("verändern"));
             echo "&nbsp;<a href='$PHP_SELF?rss=delete_rss&rss_id=$id&view=$view&username=$username&show_rss_bsp=$show_rss_bsp'>";
-            echo makeButton("loeschen") . "</a><br>&nbsp; </div></td></tr>";
+            echo makeButton("loeschen", 'img', _("löschen")) . "</a><br>&nbsp; </div></td></tr>";
             $count++;
     }
     echo "</form></td></tr></table></td></tr>";

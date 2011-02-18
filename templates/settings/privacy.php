@@ -21,8 +21,8 @@
                     </tr>
                     <tr>
                         <td width="50%" align="right" class="blank" style="border-bottom:1px dotted black;" width="66%">
-                            <font size="-1"><?print _("globale Sichtbarkeit");?></font><br>
-                            <br><div align="left"><font size="-1">
+                            <font size="-1"><label for="global_vis"><?print _("globale Sichtbarkeit");?></label></font><br>
+                            <br><div align="left" id="global_vis_description"><font size="-1">
                             <?= _("Sie können wählen, ob Sie für andere NutzerInnen sichtbar sein und alle Kommunikationsfunktionen von Stud.IP nutzen können wollen, oder ob Sie unsichtbar sein möchten und dann nur eingeschränkte Kommunikationsfunktionen nutzen können.");?>
                             </font></div>
                         </td>
@@ -32,7 +32,7 @@
                                 ($user_perm != 'dozent' || !get_config('DOZENT_ALWAYS_VISIBLE'))) {
                                 // only show selection if visibility can be changed
                                 ?>
-                            <select name="global_visibility">
+                            <select name="global_visibility" aria-describedby="global_vis_description" id="global_vis">
                             <?php
                                 if (count($user_domains)) {
                                     printf ("<option %s value=\"global\">"._("sichtbar für alle Nutzer")."</option>", $global_visibility=='global' ? 'selected="selected"' : '');
@@ -85,23 +85,23 @@
                         </td>
                         <td class="<?=TextHelper::cycle('steel1', 'steelgraulight')?>">
                             <?php if (!$NOT_HIDEABLE_FIELDS[$user_perm]['online']) {?>
-                            <input type="checkbox" name="online"<?= $online_visibility ? ' checked="checked"' : '' ?>>
-                            <?= _('sichtbar in "Wer ist online"'); ?>
+                            <label><input type="checkbox" name="online"<?= $online_visibility ? ' checked="checked"' : '' ?>>
+                            <?= _('sichtbar in "Wer ist online"'); ?></label>
                             <br>
                             <?php } ?>
                             <?php if (!$NOT_HIDEABLE_FIELDS[$user_perm]['chat'] && get_config('CHAT_ENABLE')) {?>
-                            <input type="checkbox" name="chat"<?= $chat_visibility ? ' checked="checked"' : '' ?>>
-                            <?= _('eigener Chatraum sichtbar'); ?>
+                            <label><input type="checkbox" name="chat"<?= $chat_visibility ? ' checked="checked"' : '' ?>>
+                            <?= _('eigener Chatraum sichtbar'); ?></label>
                             <br>
                             <?php } ?>
                             <?php if (!$NOT_HIDEABLE_FIELDS[$user_perm]['search']) {?>
-                            <input type="checkbox" name="search"<?= $search_visibility ? ' checked="checked"' : '' ?>>
-                            <?= _('auffindbar über die Personensuche'); ?>
+                            <label><input type="checkbox" name="search"<?= $search_visibility ? ' checked="checked"' : '' ?>>
+                            <?= _('auffindbar über die Personensuche'); ?></label>
                             <br>
                             <?php } ?>
                             <?php if (!$NOT_HIDEABLE_FIELDS[$user_perm]['email']) {?>
-                            <input type="checkbox" name="email"<?= $email_visibility ? ' checked="checked"' : '' ?>>
-                            <?= _('eigene E-Mail-Adresse sichtbar'); ?>
+                            <label><input type="checkbox" name="email"<?= $email_visibility ? ' checked="checked"' : '' ?>>
+                            <?= _('eigene E-Mail-Adresse sichtbar'); ?></label>
                             <br>
                             <?php } ?>
                         </td>
@@ -126,7 +126,7 @@
                     </tr>
                     <tr>
                         <td class="steel1" colspan="<?= $user_domains ? 3 : 2; ?>">
-                            <?= _('neu hinzugefügte Profil-Elemente sind standardmäßig sichtbar für'); ?>
+                            <label><?= _('neu hinzugefügte Profil-Elemente sind standardmäßig sichtbar für'); ?>
                             <select name="default_homepage_visibility">
                                 <option value="">-- <?= _("bitte wählen"); ?> --</option>
                                 <option value="<?= VISIBILITY_ME; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_ME) ? ' selected="selected"' : '' ?>><?= _("nur mich selbst") ?></option>
@@ -136,7 +136,7 @@
                                 <?php } ?>
                                 <option value="<?= VISIBILITY_STUDIP; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_STUDIP) ? ' selected="selected"' : '' ?>><?= _("Stud.IP-intern") ?></option>
                                 <option value="<?= VISIBILITY_EXTERN; ?>"<?php echo ($default_homepage_visibility == VISIBILITY_EXTERN) ? ' selected="selected"' : '' ?>><?= _("externe Seiten") ?></option>
-                            </select>
+                            </select></label>
                         </td>
                         <td class="steel1" colspan="3">
                             <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_default_homepage_visibility'); ?>
@@ -144,7 +144,7 @@
                     </tr>
                     <tr>
                         <td class="steel1" colspan="<?= $user_domains ? 3 : 2; ?>">
-                            <?= _('alle Sichtbarkeiten setzen auf'); ?>
+                            <label><?= _('alle Sichtbarkeiten setzen auf'); ?>
                             <select name="all_homepage_visibility">
                                 <option value="">-- <?= _("bitte wählen"); ?> --</option>
                                 <option value="<?= VISIBILITY_ME; ?>"><?= _("nur mich selbst") ?></option>
@@ -154,7 +154,7 @@
                                 <?php } ?>
                                 <option value="<?= VISIBILITY_STUDIP; ?>"><?= _("Stud.IP-intern") ?></option>
                                 <option value="<?= VISIBILITY_EXTERN; ?>"><?= _("externe Seiten") ?></option>
-                            </select>
+                            </select></label>
                         </td>
                         <td class="steel1" colspan="3">
                             <?= makeButton('uebernehmen', 'input', _('Änderungen speichern'), 'set_all_homepage_visibility'); ?>

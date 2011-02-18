@@ -217,7 +217,7 @@ function aux_html() {
     $cell = '<form action="'.URLHelper::getLink().'" method="post">';
     $cell .= CSRFProtection::tokenTag();
     $cell .= '<select name="display_type"><option value="rtf">RTF</option><option value="csv">Excel kompatibel</option></select>';
-    $cell .= '&nbsp;&nbsp;&nbsp;<input type="image" '.makebutton('export','src').' style="vertical-align: middle"></form>';
+    $cell .= '&nbsp;&nbsp;&nbsp;' . makebutton('export', 'input', _("Zusatzangaben exportieren")) . '</form>';
     echo $zt->cell($cell, array('colspan' => '20', 'class' => 'blank'));
     echo $zt->closeRow();
 
@@ -322,12 +322,12 @@ function aux_enter_data() {
     }
 
     echo $zt->openRow();
-    echo $zt->cell('<br><input type="image" '.makebutton('uebernehmen', 'src').'><br><br>', array('colspan' => '20', 'align' => 'center'));
+    echo $zt->cell('<br>' . makebutton('uebernehmen', 'input', _("Zusatzangaben übernehmen")) . '<br><br>', array('colspan' => '20', 'align' => 'center'));
     echo $zt->close();
     echo '</form>';
 }
 
-$ct = new ContainerTable(array('width' => '100%', 'class' => 'blank'));
+$ct = new ContainerTable(array('width' => '100%', 'class' => 'blank', 'role' => 'main'));
 $zt = new ZebraTable(array('width' => '100%', 'padding' => '2', 'id' => 'main_content'));
 
 switch ($_REQUEST['display_type']) {

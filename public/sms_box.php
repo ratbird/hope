@@ -344,9 +344,9 @@ $query_time = $query_time_sort;
             <tr>
                 <td class="blank" align="right" valign="bottom">&nbsp; <?
                     if ($cmd != "admin_folder" && !$sms_data['tmp']['move_to_folder']) {
-                        echo "<a href=\"".$PHP_SELF."?cmd=admin_folder&cmd_2=new\">".makeButton("neuerordner", "img")."</a>";
+                        echo "<a href=\"".$PHP_SELF."?cmd=admin_folder&cmd_2=new\">".makeButton("neuerordner", "img", _("Ordner anlegen"))."</a>";
                     } else {
-                        echo "<a href=\"".$PHP_SELF."?cmd=\">".makeButton("abbrechen", "img")."</a>";
+                        echo "<a href=\"".$PHP_SELF."?cmd=\">".makeButton("abbrechen", "img", _("abbrechen"))."</a>";
                     }
                     ?>
                 </td>
@@ -377,8 +377,8 @@ $query_time = $query_time_sort;
             printhead(0, 0, FALSE, "open", FALSE, ' ' . Assets::img('icons/16/blue/add/folder-empty.png', array('class' => 'text-top')) . ' ', $titel, FALSE);
             echo "</tr></table> ";
             $content_content = $tmp[1]."<div align=\"center\">".$tmp[4]."
-            <input type=\"image\" name=\"".$tmp[2]."\" ".makeButton("uebernehmen", "src")." value=\"a\" align=\"absmiddle\">
-            <input type=\"image\" name=\"a\" ".makeButton("abbrechen", "src")." value=\"a\" align=\"absmiddle\"><div>";
+            <input type=\"image\" name=\"".$tmp[2]."\" ".makeButton("uebernehmen", "src") . tooltip("übernehmen", true, false) . " value=\"a\" align=\"absmiddle\">
+            <input type=\"image\" name=\"a\" ".makeButton("abbrechen", "src") . tooltip("abbrechen", true, false) . " value=\"a\" align=\"absmiddle\"><div>";
             echo "\n<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\"><tr>";
             printcontent("99%",0, $content_content, FALSE);
             echo "</form></tr></table>";
@@ -409,13 +409,13 @@ $query_time = $query_time_sort;
                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">" .
                 CSRFProtection::tokenTag() .
                 "<input type=\"hidden\" name=\"cmd\" value=\"select_all\">
-                <input type=\"image\" name=\"select\" ".makeButton("alleauswaehlen", "src")." value=\"loeschen\" align=\"absmiddle\">
+                <input type=\"image\" name=\"select\" ".makeButton("alleauswaehlen", "src") . tooltip("alle auswählen", true, false) . " value=\"loeschen\" align=\"absmiddle\">
                 </form>
                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
                 CSRFProtection::tokenTag() .
-                "<input type=\"image\" name=\"delete_selected_button\" ".makeButton("loeschen", "src")." value=\"delete_selected\" align=\"absmiddle\">";
+                "<input type=\"image\" name=\"delete_selected_button\" ".makeButton("loeschen", "src") . tooltip("löschen", true, false) . " value=\"delete_selected\" align=\"absmiddle\">";
                 if (have_msgfolder($sms_data['view']) == TRUE) {
-                    $content_content .= "&nbsp;<input type=\"image\" name=\"move_selected_button\" ".makeButton("verschieben", "src")." value=\"move\" align=\"absmiddle\">";
+                    $content_content .= "&nbsp;<input type=\"image\" name=\"move_selected_button\" ".makeButton("verschieben", "src") . tooltip("verschieben", true, false) . " value=\"move\" align=\"absmiddle\">";
                 }
                 $content_content .= "<br></div>";
             if (folder_openclose($sms_show['folder'][$sms_data['view']], "all") == "open") {
@@ -467,13 +467,13 @@ $query_time = $query_time_sort;
                                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
                                     CSRFProtection::tokenTag() .
                                     "<input type=\"hidden\" name=\"delete_folder\" value=\"".$x."\">
-                                    <input type=\"image\" name=\"delete_folder_button\" ".makeButton("loeschen", "src")." value=\"a\" align=\"absmiddle\">
+                                    <input type=\"image\" name=\"delete_folder_button\" ".makeButton("loeschen", "src") . tooltip("löschen", true, false) . " value=\"a\" align=\"absmiddle\">
                                 </form>
                                 <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
                                     CSRFProtection::tokenTag() .
                                     "<input type=\"hidden\" name=\"cmd\" value=\"admin_folder\">
                                     <input type=\"hidden\" name=\"ren_folder\" value=\"".$x."\">
-                                    <input type=\"image\" name=\"x\" ".makeButton("umbenennen", "src")." value=\"a\" align=\"absmiddle\">
+                                    <input type=\"image\" name=\"x\" ".makeButton("umbenennen", "src") . tooltip("umbenennen", true, false) . " value=\"a\" align=\"absmiddle\">
                                 </form>";
                             if ($count_timefilter != "0") {
                                 $content_content .= "
@@ -481,12 +481,12 @@ $query_time = $query_time_sort;
                                     <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
                                         CSRFProtection::tokenTag() .
                                         "<input type=\"hidden\" name=\"cmd\" value=\"select_all\">
-                                        <input type=\"image\" name=\"select\" ".makeButton("alleauswaehlen", "src")." value=\"loeschen\" align=\"absmiddle\">
+                                        <input type=\"image\" name=\"select\" ".makeButton("alleauswaehlen", "src") . tooltip("alle auswählen", true, false) . " value=\"loeschen\" align=\"absmiddle\">
                                         </form>
                                         <form action=\"".$PHP_SELF."\" method=\"post\" style=\"display: inline\">".
                                         CSRFProtection::tokenTag() .
-                                        "<input type=\"image\" name=\"delete_selected_button\" ".makeButton("loeschen", "src")." value=\"delete_selected\" align=\"absmiddle\">
-                                        <input type=\"image\" name=\"move_selected_button\" ".makeButton("verschieben", "src")." value=\"move\" align=\"absmiddle\"><br>";
+                                        "<input type=\"image\" name=\"delete_selected_button\" ".makeButton("loeschen", "src") . tooltip("löschen", true, false) . " value=\"delete_selected\" align=\"absmiddle\">
+                                        <input type=\"image\" name=\"move_selected_button\" ".makeButton("verschieben", "src") . tooltip("verschieben", true, false) . " value=\"move\" align=\"absmiddle\"><br>";
                             }
                             $content_content .= "</div>";
                             echo "\n<table cellpadding=\"0\" cellspacing=\"0\" width=\"99%\" align=\"center\">\n\t<tr>";

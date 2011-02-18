@@ -47,7 +47,7 @@ function print_freie($username) {
     echo '<table width="100%" class="blank" border="0" cellpadding="0" cellspacing="0">';
     if (!$db->num_rows())
         echo '<tr><td class="'.$cssSw->getClass().'"><font size="-1"><b><p class="info">' . _("Es existieren zur Zeit keine eigenen Kategorien.") . "</p></b></font></td></tr>\n";
-    echo '<tr><td class="'.$cssSw->getClass().'"> <p class="info">' . _("Kategorie") . '&nbsp; <a href="'.URLHelper::getLink('?freie=create_freie&view='.$view.'&username='.$username).'">' . makeButton("neuanlegen") . "</a></p></td></tr>\n";
+    echo '<tr><td class="'.$cssSw->getClass().'"> <p class="info">' . _("Kategorie") . '&nbsp; <a href="'.URLHelper::getLink('?freie=create_freie&view='.$view.'&username='.$username).'">' . makeButton('neuanlegen', 'img', _("Kategorie anlegen")) . "</a></p></td></tr>\n";
     $count = 0;
     $hidden_count = 0;
     while ($db->next_record() ){
@@ -63,7 +63,7 @@ function print_freie($username) {
                 echo "<br>\n";
             }
             echo '<input type="hidden" name="freie_id[]" value="'.$db->f("kategorie_id")."\">\n";
-            echo '<p class="info"><input type="text" name="freie_name[]" style="width: 50%" value="' . htmlReady($db->f("name")).'" size="40">';
+            echo '<p class="info"><input type="text" aria-label="' . _("Name der Kategorie") . '" name="freie_name[]" style="width: 50%" value="' . htmlReady($db->f("name")).'" size="40">';
             switch ($visibility) {
                 case VISIBILITY_ME:
                     $vis_text = _("sichtbar für mich selbst");
@@ -95,10 +95,11 @@ function print_freie($username) {
             echo "<br>\n&nbsp;</p></td></tr>\n";
             // Breite für textarea
             $cols = ($auth->auth["jscript"])? ceil($auth->auth["xres"]/13):50;
-            echo '<tr><td class="'.$cssSw->getClass(). '"><p class="info"><textarea  name="freie_content[]" style="width: 90%" cols="' . $cols . '" rows="7" wrap="virtual">' . htmlReady($db->f('content')) . '</textarea>';
-            echo '<br><br><input type="image" name="update" border="0" align="absmiddle" ' . makeButton("uebernehmen", "src") . ' value="' . _("ver&auml;ndern") . '">';
+            echo '<tr><td class="'.$cssSw->getClass(). '"><p class="info">';
+            echo '<textarea aria-label="' . _("Inhalt der Kategorie:") . '" name="freie_content[]" style="width: 90%" cols="' . $cols . '" rows="7" wrap="virtual">' . htmlReady($db->f('content')) . '</textarea>';
+            echo '<br><br>' . makeButton("uebernehmen", 'input', _("verändern"), 'update');
             echo '&nbsp;<a href="'.URLHelper::getLink('?freie=verify_delete_freie&freie_id='.$id.'&view='.$view.'&username='.$username).'">';
-            echo makeButton("loeschen") . '</a>';
+            echo makeButton("loeschen", 'img', _("löschen")) . '</a>';
 
             // show help links
             echo '<a style="margin-left: 15px" href="'. URLHelper::getLink("show_smiley.php") .'" target="_blank">'. _("Smileys") .'</a>', "\n";

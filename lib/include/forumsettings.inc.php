@@ -65,48 +65,47 @@ if ($forumsend=="bla"){
             </tr>
             <tr  <? $cssSw->switchClass() ?>>
                 <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <font size="-1">
-                    <?print _("Neue Beiträge immer aufgeklappt");?></font>
+                    <label for="neuauf">
+                    <?print _("Neue Beiträge immer aufgeklappt");?></label>
                 </td>
                 <td <?=$cssSw->getFullClass()?>>
-                    <input type="CHECKBOX" name="neuauf" value="1"<?IF($forum["neuauf"]==1) echo " checked";?>>
+                    <input type="CHECKBOX" name="neuauf" id="neuauf" value="1"<?IF($forum["neuauf"]==1) echo " checked";?>>
                 </td>
             </tr>
 
             <tr  <? $cssSw->switchClass() ?>>
                 <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <font size="-1">
-                    <?print _("Alle Beiträge im Flatview immer aufgeklappt");?></font>
+                    <label for="flatallopen">
+                    <?print _("Alle Beiträge im Flatview immer aufgeklappt");?></label>
                 </td>
                 <td <?=$cssSw->getFullClass()?>>
-                    <input type="CHECKBOX" name="flatallopen" value=TRUE<?if($forum["flatallopen"]==TRUE) echo " checked";?>>
+                    <input type="CHECKBOX" name="flatallopen" id="flatallopen" value=TRUE<?if($forum["flatallopen"]==TRUE) echo " checked";?>>
             </td>
             </tr>
             <tr  <? $cssSw->switchClass() ?>>
                 <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <font size="-1">
-                    <?print _("Bewertungsbereich bei geöffneten Postings immer anzeigen");?></font>
+                    <label for="rateallopen">
+                    <?print _("Bewertungsbereich bei geöffneten Postings immer anzeigen");?></label>
                 </td>
                 <td <?=$cssSw->getFullClass()?>>
-                    <input type="CHECKBOX" name="rateallopen" value=TRUE<?if($forum["rateallopen"]==TRUE) echo " checked";?>>
+                    <input type="CHECKBOX" name="rateallopen" id="rateallopen" value=TRUE<?if($forum["rateallopen"]==TRUE) echo " checked";?>>
             </td>
             </tr>
             <tr  <? $cssSw->switchClass() ?>>
                 <td  align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <font size="-1">
-                    <?print _("Bilder im Bewertungsbereich anzeigen");?></font>
+                    <label for="showimages">
+                    <?print _("Bilder im Bewertungsbereich anzeigen");?></label>
                 </td>
                 <td <?=$cssSw->getFullClass()?>>
-                    <input type="CHECKBOX" name="showimages" value=TRUE<?if($forum["showimages"]==TRUE) echo " checked";?>>
+                    <input type="CHECKBOX" name="showimages" id="showimages" value=TRUE<?if($forum["showimages"]==TRUE) echo " checked";?>>
             </td>
             </tr>
             <tr <? $cssSw->switchClass() ?>>
                 <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <font size=-1><?echo _("Anzahl der Postings pro Seite im Flatview");?></font>
+                    <label for="postingsperside"><?echo _("Anzahl der Postings pro Seite im Flatview");?></label>
                 </td>
                 <td <?=$cssSw->getFullClass()?>>
-                    <font size=-1>
-                    &nbsp;<select name="postingsperside">
+                    &nbsp;<select name="postingsperside" id="postingsperside">
                     <?
                     for ($i=5;$i<55;$i+=5) {
                         echo "<option value=\"$i\"";
@@ -119,43 +118,39 @@ if ($forumsend=="bla"){
             </tr>
             <tr <? $cssSw->switchClass() ?>>
                 <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <font size=-1><?echo _("Sortierung der Themenanzeige");?></font>
+                    <?echo _("Sortierung der Themenanzeige");?>
                 </td>
                 <td <?=$cssSw->getFullClass()?> align="left">
-                    <font size=-1>
-                    <input type=radio value="asc" name=sortthemes <?if ($forum["sortthemes"]=="asc") echo "checked"; echo "> "._("Alter des Ordners - neue unten");?><br>
-                    <input type=radio value="desc" name=sortthemes <?if ($forum["sortthemes"]=="desc") echo "checked";echo "> "._("Alter des Ordners - neue oben");?><br>
-                    <input type=radio value="last" name=sortthemes <?if ($forum["sortthemes"]=="last") echo "checked";echo "> "._("Alter des neuesten Beitrags - neue oben");?><br>
+                    <label><input type=radio value="asc" name="sortthemes" <?if ($forum["sortthemes"]=="asc") echo "checked"; echo '> '._("Alter des Ordners - neue unten");?></label><br>
+                    <label><input type=radio value="desc" name="sortthemes" <?if ($forum["sortthemes"]=="desc") echo "checked";echo '> '._("Alter des Ordners - neue oben");?></label><br>
+                    <label><input type=radio value="last" name="sortthemes" <?if ($forum["sortthemes"]=="last") echo "checked";echo '> '._("Alter des neuesten Beitrags - neue oben");?></label><br>
                 </td>
             </tr>
             <tr <? $cssSw->switchClass() ?>>
                 <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <font size=-1><?echo _("Anzeigemodus der Themenanzeige");?></font>
+                    <?echo _("Anzeigemodus der Themenanzeige");?>
                 </td>
                 <td align="left" <?=$cssSw->getFullClass()?>>
-                    <font size=-1>
-                    <input type=radio value="tree" name=themeview <?if ($forum["themeview"]=="tree") echo "checked"; echo "> "._("Treeview");?><br>
-                    <input type=radio value="mixed" name=themeview <?if ($forum["themeview"]=="mixed") echo "checked";echo "> "._("Flatview");?><br>
+                    <label><input type=radio value="tree" name="themeview" <?if ($forum["themeview"]=="tree") echo "checked"; echo '> '._("Treeview");?></label><br>
+                    <label><input type=radio value="mixed" name="themeview" <?if ($forum["themeview"]=="mixed") echo "checked";echo '> '._("Flatview");?></label><br>
                 </td>
             </tr>
             <tr <? $cssSw->switchClass() ?>>
                 <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <font size=-1><?echo _("Einsprungsseite des Forums");?></font>
+                    <?echo _("Einsprungsseite des Forums");?>
                 </td>
                 <td <?=$cssSw->getFullClass()?> align="left">
-                    <font size=-1>
-                    <input type=radio value="theme" name=presetview <?if ($forum["presetview"]=="tree" || $forum["presetview"]=="mixed") echo "checked"; echo "> "._("Themenansicht");?><br>
-                    <input type=radio value="neue" name=presetview <?if ($forum["presetview"]=="neue") echo "checked";echo "> "._("Neue Beiträge");?><br>
-                    <input type=radio value="flat" name=presetview <?if ($forum["presetview"]=="flat") echo "checked";echo "> "._("Letzte Beiträge");?><br>
+                    <label><input type=radio value="theme" name="presetview" <?if ($forum["presetview"]=="tree" || $forum["presetview"]=="mixed") echo "checked"; echo '> '._("Themenansicht");?></label><br>
+                    <label><input type=radio value="neue" name="presetview" <?if ($forum["presetview"]=="neue") echo "checked";echo '> '._("Neue Beiträge");?></label><br>
+                    <label><input type=radio value="flat" name="presetview" <?if ($forum["presetview"]=="flat") echo "checked";echo '> '._("Letzte Beiträge");?></label><br>
                 </td>
             </tr>
             <tr <? $cssSw->switchClass() ?>>
                 <td align="right" class=blank style="border-bottom:1px dotted black;">
-                    <font size=-1><?echo _("ForumAutoShrink-Engine aktivieren");?></font>
+                    <label for="shrink"><?echo _("ForumAutoShrink-Engine aktivieren");?></label>
                 </td>
                 <td align="left" <?=$cssSw->getFullClass()?>>
-                    <font size=-1>
-                    &nbsp;<select name="shrink">
+                    &nbsp;<select name="shrink" id="shrink">
                     <?
                     echo "<option value=0";
                     if ($forum["shrink"]==0) echo " selected";

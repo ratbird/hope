@@ -228,14 +228,14 @@ class SemBrowse {
         echo $this->search_obj->getFormStart(UrlHelper::getLink());
         echo "<table id=\"search_sem_qs\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
         echo "<tr><td class=\"steel1\" align=\"center\" valign=\"middle\"><font size=\"-1\">";
-        echo _("Schnellsuche:") . "&nbsp;";
-        echo $this->search_obj->getSearchField("qs_choose",array('style' => 'vertical-align:middle;font-size:9pt;'));
+        echo '<label for="search_sem_qs_choose">' . _("Schnellsuche:") . "</label>&nbsp;";
+        echo $this->search_obj->getSearchField("qs_choose",array('style' => 'vertical-align:middle;font-size:9pt;', 'id' => 'search_sem_qs_choose'));
         if ($this->sem_browse_data['level'] == "vv"){
             $this->search_obj->sem_tree =& $this->sem_tree->tree;
             if ($this->sem_tree->start_item_id != 'root'){
                 $this->search_obj->search_scopes[] = $this->sem_tree->start_item_id;
             }
-            echo "&nbsp;" . _("in:") . "&nbsp;" . $this->search_obj->getSearchField("scope_choose",array('style' => 'vertical-align:middle;font-size:9pt;'),$this->sem_tree->start_item_id);
+            echo "&nbsp;<label for=\"search_sem_scope_choose\">" . _("in:") . "</label>&nbsp;" . $this->search_obj->getSearchField("scope_choose",array('style' => 'vertical-align:middle;font-size:9pt;', 'id' => 'search_sem_scope_choose'),$this->sem_tree->start_item_id);
             echo "\n<input type=\"hidden\" name=\"level\" value=\"vv\">";
         }
         if ($this->sem_browse_data['level'] == "ev"){
@@ -243,21 +243,22 @@ class SemBrowse {
             if ($this->range_tree->start_item_id != 'root'){
                 $this->search_obj->search_ranges[] = $this->range_tree->start_item_id;
             }
-            echo "&nbsp;" . _("in:") . "&nbsp;" . $this->search_obj->getSearchField("range_choose",array('style' => 'vertical-align:middle;font-size:9pt;'),$this->range_tree->start_item_id);
+            echo "&nbsp;<label for=\"search_sem_range_choose\">" . _("in:") . "</label>&nbsp;" . $this->search_obj->getSearchField("range_choose",array('style' => 'vertical-align:middle;font-size:9pt;', 'id' => 'search_sem_range_choose'),$this->range_tree->start_item_id);
             echo "\n<input type=\"hidden\" name=\"level\" value=\"ev\">";
         }
-        echo "&nbsp;" . _("Semester:") . "&nbsp;";
-        echo $this->search_obj->getSearchField("sem",array('style' => 'vertical-align:middle;font-size:9pt;'),$this->sem_browse_data['default_sem']);
+        echo "&nbsp;<label for=\"search_sem_sem\">" . _("Semester:") . "</label>&nbsp;";
+        echo $this->search_obj->getSearchField("sem",array('style' => 'vertical-align:middle;font-size:9pt;', 'id' => 'search_sem_sem'),$this->sem_browse_data['default_sem']);
         echo "&nbsp;";
         echo $this->search_obj->getSemChangeButton(array('style' => 'vertical-align:middle'));
         echo "</font></td></tr><tr><td class=\"steel1\" align=\"center\" valign=\"middle\">";
         $quicksearch = QuickSearch::get($this->search_obj->form_name . "_quick_search", new SeminarSearch('number-name-lecturer'))
+                    ->setAttributes(array('aria-label' => _("Suchbegriff")))
                     ->setInputStyle("vertical-align:middle;font-size:9pt;width:50%;")
                     ->fireJSFunctionOnSelect("selectSem")
                     ->noSelectbox();
         echo $quicksearch->render();
         echo "&nbsp;";
-        echo $this->search_obj->getSearchButton(array('style' => 'vertical-align:middle', 'class' => "quicksearchbutton"));
+        echo $this->search_obj->getSearchButton(array('style' => 'vertical-align:middle', 'class' => "quicksearchbutton"), true);
         echo "</td></tr>";
         echo $this->search_obj->getFormEnd();
         echo "</table>\n";
@@ -274,38 +275,38 @@ class SemBrowse {
         $this->search_obj->search_fields['type']['size'] = 40 ;
         echo "<table id=\"search_sem_xts\" border=\"0\" align=\"center\" cellspacing=0 cellpadding=2 width = \"99%\">\n";
         echo $this->search_obj->getFormStart("$PHP_SELF?send=yes");
-        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\">" . _("Titel:") . " </td>";
+        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_title\">" . _("Titel:") . "</label> </td>";
         echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
-        echo $this->search_obj->getSearchField("title");
-        echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\">" . _("Typ:") . "</td><td class=\"steel1\" align=\"left\" width=\"35%\">";
-        echo $this->search_obj->getSearchField("type",array('style' => 'width:*;font-size:10pt;'));
+        echo $this->search_obj->getSearchField("title", array('id' => 'search_sem_title', 'style' => 'width:100%;font-size:10pt;'));
+        echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_type\">" . _("Typ:") . "</label></td><td class=\"steel1\" align=\"left\" width=\"35%\">";
+        echo $this->search_obj->getSearchField("type",array('style' => 'width:*;font-size:10pt;', 'id' => 'search_sem_type'));
         echo "</td></tr>\n";
-        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\">" . _("Untertitel:") . " </td>";
+        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_sub_title\">" . _("Untertitel:") . "</label> </td>";
         echo "<td  class=\"steel1\" align=\"left\" width=\"35%\">";
-        echo $this->search_obj->getSearchField("sub_title");
-        echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\">" . _("Semester:") . " </td>";
+        echo $this->search_obj->getSearchField("sub_title", array('id' => 'search_sem_sub_title', 'style' => 'width:100%;font-size:10pt;'));
+        echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_sem\">" . _("Semester:") . "</label> </td>";
         echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
-        echo $this->search_obj->getSearchField("sem",array('style' => 'width:*;font-size:10pt;'),$this->sem_browse_data['default_sem']);
+        echo $this->search_obj->getSearchField("sem",array('style' => 'width:*;font-size:10pt;', 'id' => 'search_sem_sem'),$this->sem_browse_data['default_sem']);
         echo "</td></tr>";
-        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\">" . _("Nummer:") . " </td>";
+        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_number\">" . _("Nummer:") . "</label> </td>";
         echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
-        echo $this->search_obj->getSearchField("number");
+        echo $this->search_obj->getSearchField("number", array('id' => 'search_sem_number', 'style' => 'width:100%;font-size:10pt;'));
         echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\">&nbsp;</td><td class=\"steel1\" align=\"left\" width=\"35%\">&nbsp; </td></tr>\n";
-        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\">" . _("Kommentar:") . " </td>";
+        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_comment\">" . _("Kommentar:") . "</label> </td>";
         echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
-        echo $this->search_obj->getSearchField("comment");
+        echo $this->search_obj->getSearchField("comment", array('id' => 'search_sem_comment', 'style' => 'width:100%;font-size:10pt;'));
         echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\">&nbsp;</td><td class=\"steel1\" align=\"left\" width=\"35%\">&nbsp; </td></tr>\n";
-        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\">" . _("DozentIn:") . " </td>";
+        echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_lecturer\">" . _("DozentIn:") . "</label> </td>";
         echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
-        echo $this->search_obj->getSearchField("lecturer");
-        echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\">" . _("Verkn&uuml;pfung:") . " </td>";
+        echo $this->search_obj->getSearchField("lecturer", array('id' => 'search_sem_lecturer', 'style' => 'width:100%;font-size:10pt;'));
+        echo "</td><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_combination\">" . _("Verkn&uuml;pfung:") . "</label> </td>";
         echo "<td class=\"steel1\" align=\"left\" width=\"35%\">";
-        echo $this->search_obj->getSearchField("combination",array('style' => 'width:*;font-size:10pt;'));
+        echo $this->search_obj->getSearchField("combination",array('style' => 'width:*;font-size:10pt;', 'id' => 'search_sem_combination'));
         echo "</td></tr>\n";
         if ($this->show_class()) {
-            echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\">" . _("Bereich:") . " </td>";
+            echo "<tr><td class=\"steel1\" align=\"right\" width=\"15%\"><label for=\"search_sem_scope\">" . _("Bereich:") . "</label> </td>";
             echo "<td class=\"steel1\" align=\"left\" width\"35%\">";
-            echo $this->search_obj->getSearchField("scope");
+            echo $this->search_obj->getSearchField("scope", array('id' => 'search_sem_scope', 'style' => 'width:100%;font-size:10pt;'));
             echo "</td><td class=\"steel1\" colspan=\"2\">&nbsp</td></tr>";
         }
         echo "<tr><td class=\"steel1\" align=\"center\" colspan=\"4\">";

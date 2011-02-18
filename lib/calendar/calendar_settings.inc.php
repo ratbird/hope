@@ -82,10 +82,10 @@ $css_switcher->switchClass();
                 </tr>
                 <tr>
                     <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><? echo _("Startansicht anpassen:"); ?></font>
+                        <label for="cal_view"><? echo _("Startansicht anpassen:"); ?></label>
                     </td>
                     <td class="<? echo $css_switcher->getClass(); ?>">
-                        <select name="cal_view" size="1">
+                        <select name="cal_view" id="cal_view" size="1">
                             <option value="showweek"<?
                                 if($calendar_user_control_data["view"] == "showweek")
                                     echo " selected";
@@ -107,12 +107,11 @@ $css_switcher->switchClass();
                 </tr>
                 <tr><? $css_switcher->switchClass(); ?>
                 <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                    <font size="-1"><? echo _("Zeitraum der Tages- und Wochenansicht:"); ?></font>
+                    <? echo _("Zeitraum der Tages- und Wochenansicht:"); ?>
                 </td>
                 <td class="<? echo $css_switcher->getClass(); ?>">
-                    <font size="-1">
                     <?
-                    echo "<select name=\"cal_start\">";
+                    echo '<select name="cal_start" aria-label="' . _("Startzeit der Tages- und Wochenansicht") . '">';
                         for ($i=0; $i<=23; $i++)
                             {
                             if ($i==$calendar_user_control_data["start"])
@@ -134,7 +133,7 @@ $css_switcher->switchClass();
                     ?>
                     &nbsp;<? echo _("Uhr bis"); ?>
                     <?
-                    echo"<select name=\"cal_end\">";
+                    echo '<select name=\"cal_end\" aria-label="' . _("Endzeit der Tages- und Wochenansicht") . '">';
                         for ($i=0; $i<=23; $i++)
                             {
                             if ($i==$calendar_user_control_data["end"])
@@ -155,15 +154,14 @@ $css_switcher->switchClass();
                         echo"</select>";
                     ?>
                     &nbsp;<? echo _("Uhr."); ?>
-                    </font>
                     </td>
                 </tr>
                 <tr><? $css_switcher->switchClass(); ?>
                     <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><? echo _("Zeitintervall der Tagesansicht:"); ?></font>
+                        <label for="cal_step_day"><? echo _("Zeitintervall der Tagesansicht:"); ?></label>
                     </td>
                     <td class="<? echo $css_switcher->getClass(); ?>">
-                        <select name="cal_step_day" size="1">
+                        <select name="cal_step_day" id="cal_step_day" size="1">
                             <option value="600"<?
                                 if($calendar_user_control_data["step_day"] == 600)
                                     echo " selected";
@@ -189,10 +187,10 @@ $css_switcher->switchClass();
                 </tr>
                 <tr><? $css_switcher->switchClass(); ?>
                     <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><? echo _("Zeitintervall der Wochenansicht:"); ?></font>
+                        <label for="cal_step_week"><? echo _("Zeitintervall der Wochenansicht:"); ?></label>
                     </td>
                     <td class="<? echo $css_switcher->getClass(); ?>">
-                        <select name="cal_step_week" size="1">
+                        <select name="cal_step_week" id="cal_step_week" size="1">
                             <option value="1800"<?
                                 if($calendar_user_control_data["step_week"] == 1800)
                                     echo " selected";
@@ -214,14 +212,14 @@ $css_switcher->switchClass();
                     </td>
                     <td class="<? echo $css_switcher->getClass(); ?>">
                         <font size="-1">
-                        <input type="radio" name="cal_type_week" value="LONG"<?
+                        <label><input type="radio" name="cal_type_week" value="LONG"<?
                             if($calendar_user_control_data["type_week"] == "LONG")
                                 echo " checked";
-                            echo ">&nbsp;" . _("7 Tage-Woche") . "<br>"; ?>
-                        <input type="radio" name="cal_type_week" value="SHORT"<?
+                            echo '>&nbsp;' . _("7 Tage-Woche") . "</label><br>"; ?>
+                        <label><input type="radio" name="cal_type_week" value="SHORT"<?
                             if($calendar_user_control_data["type_week"] == "SHORT")
                                 echo " checked";
-                            echo ">&nbsp;" . _("5 Tage-Woche"); ?>
+                            echo '>&nbsp;' . _("5 Tage-Woche") . '</label>'; ?>
                         </font>
                     </td>
                 </tr>
@@ -233,14 +231,14 @@ $css_switcher->switchClass();
                         </div>
                     </td>
                     <td class="<? echo $css_switcher->getClass(); ?>"><br>
-                        <input type="checkbox" name="cal_holidays" value="TRUE"<?
+                        <label><input type="checkbox" name="cal_holidays" value="TRUE"<?
                             if($calendar_user_control_data["holidays"])
                                 echo " checked";
-                            echo ">&nbsp;" . _("Feiertage anzeigen") . "<br>"; ?>
-                        <input type="checkbox" name="cal_sem_data" value="5"<?
+                            echo '>&nbsp;' . _("Feiertage anzeigen") . "</label><br>"; ?>
+                        <label><input type="checkbox" name="cal_sem_data" value="5"<?
                             if($calendar_user_control_data["sem_data"])
                                 echo " checked";
-                            echo ">&nbsp;" . _("Semesterdaten anzeigen"); ?>
+                            echo '>&nbsp;' . _("Semesterdaten anzeigen") . '</label>'; ?>
                     </td>
                 </tr>
         */ ?>
@@ -250,20 +248,20 @@ $css_switcher->switchClass();
                     </td>
                     <td class="<? echo $css_switcher->getClass(); ?>">
                         <font size="-1">
-                        <input type="checkbox" name="cal_link_edit" value="TRUE"<?
+                        <label><input type="checkbox" name="cal_link_edit" value="TRUE"<?
                             if($calendar_user_control_data["link_edit"])
                                 echo " checked";
-                            echo ">&nbsp;" . _("Bearbeiten-Link in Wochenansicht"); ?>
+                            echo '>&nbsp;' . _("Bearbeiten-Link in Wochenansicht") . '</label>'; ?>
                         </font>
                     </td>
                 </tr>
                 <tr><? $css_switcher->switchClass(); ?>
                     <td align="right" class="blank" style="border-bottom:1px dotted black;">
-                        <font size="-1"><? echo _("L&ouml;schen von Terminen:"); ?></font>
+                        <label for="cal_delete"><? echo _("L&ouml;schen von Terminen:"); ?></label>
                     </td>
                     <td class="<? echo $css_switcher->getClass(); ?>">
                         <font size="-1">
-                        <select name="cal_delete" size="1">
+                        <select name="cal_delete" id="cal_delete" size="1">
                             <option value="12"<?
                                 if($calendar_user_control_data["delete"] == 12)
                                     echo " selected";

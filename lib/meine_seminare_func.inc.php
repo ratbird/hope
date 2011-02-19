@@ -545,7 +545,14 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
         'sem', false, false, false, NULL, 'IF (a.mkdate > asu.mkdate, a.mkdate, asu.mkdate)'));
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
-        if ($my_obj[$object_id]["modules"]["participants"]) {
+
+        // show the participants-icon only if the module is activaed and it is not an auto-insert-sem
+        if ($my_obj[$object_id]["modules"]["participants"] && 
+            ($AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM ||
+            !in_array($object_id, AutoInsert::getAllSeminars(true)) ||
+            $GLOBALS['perm']->have_studip_perm('tutor', $object_id))
+        ) {
+
             $my_obj[$object_id]["newparticipants"] = $db2->f("neue");
             $my_obj[$object_id]["participants"] = $db2->f("count");
             if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){

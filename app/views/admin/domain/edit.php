@@ -23,7 +23,10 @@
     <? endif ?>
     <tr>
         <td colspan="4" align="center">
-            <?= makebutton('uebernehmen', 'input', _('Änderungen speichern')) ?>
+            <?= makebutton('uebernehmen2', 'input', _('Änderungen speichern')) ?>
+            <a href="<?= $controller->url_for('admin/domain') ?>">
+                <?= makeButton("abbrechen", "img", _("abbrechen"), 'abort') ?>
+            </a>
         </td>
     </tr>
 </table>

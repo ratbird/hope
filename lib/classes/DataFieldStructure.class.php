@@ -95,7 +95,7 @@ class DataFieldStructure
     $ret = '';
     if (in_array($this->getType(), array('selectbox', 'radio', 'combo'))) {
       $content = $this->getTypeParam();
-      $ret = "<textarea name=\"$name\" cols=\"20\" rows=\"8\" wrap=\"off\">$content</textarea>";
+      $ret = "<textarea name=\"$name\" cols=\"20\" rows=\"8\" wrap=\"off\">" . htmlReady($content) . "</textarea>";
     }
     return $ret;
   }

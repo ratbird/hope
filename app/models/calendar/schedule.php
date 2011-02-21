@@ -160,7 +160,7 @@ class CalendarScheduleModel
                 $entry['day']     = $cycle->getDay();
                 $entry['content'] = $sem->getNumber() . ' ' . $sem->getName();
 
-                $entry['title']   = '';
+                $entry['title']   = $cycle->getDescription();
                 // check, if the date is assigned to a room
                 if ($rooms = $cycle->getPredominantRoom()) {
                     $entry['title'] .= implode('', getPlainRooms(array_slice($rooms, 0, 1)))

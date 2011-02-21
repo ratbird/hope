@@ -299,14 +299,9 @@ class CalendarScheduleModel
         $stmt->execute();
 
         while ($entry = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            // if the entry is virtual and permantent at the same time, remove the virtual one!
-            if (isset($seminars[$entry['Seminar_id']])) {
-                self::deleteSeminarEntries($user_id, $entry['Seminar_id']);
-            } else {
-                $seminars[$entry['Seminar_id']] = array(
-                    'Seminar_id' => $entry['Seminar_id']
-                );
-            }
+            $seminars[$entry['Seminar_id']] = array(
+                'Seminar_id' => $entry['Seminar_id']
+            );
         }
 
         $ret = array();
@@ -502,7 +497,6 @@ class CalendarScheduleModel
                 VALUES(?, ?, ?, ?)");
         }
 
-        var_dump('set visibility to: '. $visible);
         $stmt->execute(array($visible ? '1' : '0', $seminar_id, $GLOBALS['user']->id, $cycle_id));
 
     }

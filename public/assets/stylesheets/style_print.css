@@ -130,7 +130,8 @@ div.window_heading {
 #header, #barTopFont, #barTopMenu, #barTopTools,
 #barTopStudip, #barBottomLeft, #barBottommiddle,
 #barBottomright, #barBottomshadow, #tabs, #tabs2,
-#layout_infobox, #schedule_icons, #edit_inst_entry {
+#layout_infobox, #schedule_icons, #edit_inst_entry,
+#layout_footer {
     display: none !important;
 }
 

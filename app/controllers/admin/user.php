@@ -94,9 +94,9 @@ class Admin_UserController extends AuthenticatedController
 
             //Suchparameter
             $this->user = $request;
-            $this->sortby = Request::get('sortby', 'username');
-            $this->order = (Request::get('order', 'asc') == 'asc') ? 'desc' : 'asc';
-            $this->order_icon = Request::get('order', 'asc');
+            $this->sortby = Request::option('sortby', 'username');
+            $this->order = (Request::option('order', 'asc') == 'asc') ? 'desc' : 'asc';
+            $this->order_icon = Request::option('order', 'asc');
             $request['vorname'] = ($request['vorname']) ? $request['vorname'] : NULL;
             $request['nachname'] = ($request['nachname']) ? $request['nachname'] : NULL;
 
@@ -152,7 +152,7 @@ class Admin_UserController extends AuthenticatedController
                 $umanager->getFromDatabase($user_id);
 
                 //delete
-                if ($umanager->deleteUser(Request::get('documents', false))) {
+                if ($umanager->deleteUser(Request::option('documents', false))) {
                     $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
                     PageLayout::postMessage(MessageBox::success(htmlReady(sprintf(_('Der Benutzer "%s %s (%s)" wurde erfolgreich gelöscht'), $user['Vorname'], $user['Nachname'], $user['username']), $details)));
                 } else {
@@ -203,7 +203,7 @@ class Admin_UserController extends AuthenticatedController
                     $umanager->getFromDatabase($user_id);
 
                     //delete
-                    if ($umanager->deleteUser(Request::get('documents', false))) {
+                    if ($umanager->deleteUser(Request::option('documents', false))) {
                         $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($umanager->msg, 0, -1)));
                         PageLayout::postMessage(MessageBox::success(htmlReady(sprintf(_('Der Benutzer "%s %s (%s)" wurde erfolgreich gelöscht'), $users[$i]['Vorname'], $users[$i]['Nachname'], $users[$i]['username']), $details)));
                     } else {
@@ -246,8 +246,8 @@ class Admin_UserController extends AuthenticatedController
 
         //check submitted user_id
         if (is_null($user_id)) {
-            if (Request::get('user')) {
-                $user_id = Request::get('user');
+            if (Request::option('user')) {
+                $user_id = Request::option('user');
             } else {
                 PageLayout::postMessage(MessageBox::info(_('Sie haben keinen Benutzer ausgewählt!')));
                 //liste wieder anzeigen
@@ -276,8 +276,8 @@ class Admin_UserController extends AuthenticatedController
                 if (Request::get($param)) $editUser['user_info.' . $param] = Request::get($param);
             }
             //change username
-            if (Request::get('username') && $this->user['username'] != Request::get('username')) {
-                $editUser['auth_user_md5.username'] = Request::get('username');
+            if (Request::option('username') && $this->user['username'] != Request::option('username')) {
+                $editUser['auth_user_md5.username'] = Request::option('username');
             }
             //change email
             if (Request::get('Email') && $this->user['Email'] != Request::get('Email')) {
@@ -318,43 +318,43 @@ class Admin_UserController extends AuthenticatedController
             }
 
             //changing studiendaten
-            if (in_array($editPerms[0], array('autor', 'tutor', 'dozent')) && Request::get('new_studiengang') != 'none' && Request::get('new_abschluss') != 'none') {
+            if (in_array($editPerms[0], array('autor', 'tutor', 'dozent')) && Request::option('new_studiengang') != 'none' && Request::option('new_abschluss') != 'none') {
                 //change studycourses
-                if (Request::get('new_studiengang') == 'none' || Request::get('new_abschluss') == 'none') {
+                if (Request::option('new_studiengang') == 'none' || Request::option('new_abschluss') == 'none') {
                     $details[] = _('<b>Der Studiengang wurde nicht hinzugefügt.</b> Bitte geben Sie Fach und Abschluss ein.');
                 } else {
                     $db = DbManager::get()->prepare("INSERT IGNORE INTO user_studiengang "
                                                    ."(user_id, studiengang_id, abschluss_id, semester) "
                                                    ."VALUES (?,?,?,?)");
-                    $db->execute(array($user_id, Request::get('new_studiengang'), Request::get('new_abschluss'), Request::get('fachsem')));
+                    $db->execute(array($user_id, Request::option('new_studiengang'), Request::option('new_abschluss'), Request::option('fachsem')));
                     $details[] = _('Der Studiengang wurde hinzugefügt.');
                 }
             }
 
             //change institute for studiendaten
-            if (in_array($editPerms[0], array('autor', 'tutor', 'dozent')) && Request::get('new_student_inst') != 'none' &&
-                Request::get('new_student_inst') != Request::get('new_inst')) {
-                log_event('INST_USER_ADD', Request::get('new_student_inst'), $user_id, 'user');
+            if (in_array($editPerms[0], array('autor', 'tutor', 'dozent')) && Request::option('new_student_inst') != 'none' &&
+                Request::option('new_student_inst') != Request::option('new_inst')) {
+                log_event('INST_USER_ADD', Request::option('new_student_inst'), $user_id, 'user');
                 $db = DbManager::get()->prepare("INSERT IGNORE INTO user_inst (user_id, Institut_id, inst_perms) "
                                                ."VALUES (?,?,'user')");
-                $db->execute(array($user_id, Request::get('new_student_inst')));
+                $db->execute(array($user_id, Request::option('new_student_inst')));
                 $details[] = _('Die Einrichtung wurde hinzugefügt.');
             }
 
             //change institute
-            if (Request::get('new_inst') != 'none' && Request::get('new_student_inst') != Request::get('new_inst') && $editPerms[0] != 'root') {
-                log_event('INST_USER_ADD', Request::get('new_inst'), $user_id, $editPerms[0]);
+            if (Request::option('new_inst') != 'none' && Request::option('new_student_inst') != Request::option('new_inst') && $editPerms[0] != 'root') {
+                log_event('INST_USER_ADD', Request::option('new_inst'), $user_id, $editPerms[0]);
                 $db = DbManager::get()->prepare("INSERT IGNORE INTO user_inst (user_id, Institut_id, inst_perms) "
                                                ."VALUES (?,?,?)");
-                $db->execute(array($user_id, Request::get('new_inst'), $editPerms[0]));
+                $db->execute(array($user_id, Request::option('new_inst'), $editPerms[0]));
                 $details[] = _('Die Einrichtung wurde hinzugefügt.');
-            } elseif (Request::get('new_inst') != 'none' && Request::get('new_student_inst') == Request::get('new_inst') && $editPerms[0] != 'root') {
+            } elseif (Request::option('new_inst') != 'none' && Request::option('new_student_inst') == Request::option('new_inst') && $editPerms[0] != 'root') {
                 $details[] = _('<b>Die Einrichtung wurde nicht hinzugefügt.</b> Sie können keinen Benutzer gleichzeitig als Student und Mitarbeiter einer Einrichtung hinzufügen.');
             }
 
             //change userdomain
             if (Request::get('new_userdomain') != 'none' && $editPerms[0] != 'root') {
-                $domain = new UserDomain(Request::get('new_userdomain'));
+                $domain = new UserDomain(Request::option('new_userdomain'));
                 $domain->addUser($user_id);
                 $details[] = _('Die Nutzerdomäne wurde hinzugefügt.');
             }
@@ -384,7 +384,7 @@ class Admin_UserController extends AuthenticatedController
 
             if ($perm->have_perm('root') && Request::get('lock_rule')) {
                 $st = DbManager::get()->prepare("UPDATE user_info SET lock_rule=? WHERE user_id=?");
-                $st->execute(array((Request::get('lock_rule') == 'none' ? '' : Request::option('lock_rule')), $user_id));
+                $st->execute(array((Request::option('lock_rule') == 'none' ? '' : Request::option('lock_rule')), $user_id));
                 if ($st->rowCount()) {
                     $details[] = _("Die Sperrebene wurde geändert.");
                 }
@@ -434,17 +434,17 @@ class Admin_UserController extends AuthenticatedController
 
         //get formdata
         $this->user = array(
-            'username' => Request::get('username'),
-            'perm' => Request::get('perm'),
+            'username' => Request::option('username'),
+            'perm' => Request::option('perm'),
             'visible' => Request::get('visible'),
             'Vorname' => Request::get('Vorname'),
             'Nachname' => Request::get('Nachname'),
-            'geschlecht' => Request::get('geschlecht'),
+            'geschlecht' => Request::option('geschlecht'),
             'title_front' => Request::get('title_front'),
             'title_rear' => Request::get('title_rear'),
             'Email' => Request::get('Email'),
             'auth_plugin' => Request::get('auth_plugin'),
-            'institute' => Request::get('institute'),
+            'institute' => Request::option('institute'),
         );
 
         //save new user
@@ -485,11 +485,11 @@ class Admin_UserController extends AuthenticatedController
                     && $UserManagement->user_data['auth_user_md5.perms'] != 'root') {
 
                     //log
-                    log_event('INST_USER_ADD', Request::get('institute'), $user_id, $UserManagement->user_data['auth_user_md5.perms']);
+                    log_event('INST_USER_ADD', Request::option('institute'), $user_id, $UserManagement->user_data['auth_user_md5.perms']);
 
                     //insert into database
                     $db = DBManager::get()->prepare("INSERT INTO user_inst (user_id, Institut_id, inst_perms) VALUES (?, ?, ?)");
-                    $check = $db->execute(array($user_id, Request::get('institute'), $UserManagement->user_data['auth_user_md5.perms']));
+                    $check = $db->execute(array($user_id, Request::option('institute'), $UserManagement->user_data['auth_user_md5.perms']));
 
                     //send email, if new user is an admin
                     if ($check) {
@@ -510,13 +510,13 @@ class Admin_UserController extends AuthenticatedController
                             $i = 0;
                             $notin = array();
 
-                            $sql = "SELECT Name FROM Institute WHERE Institut_id='" . Request::get('institute') . "'";
+                            $sql = "SELECT Name FROM Institute WHERE Institut_id='" . Request::option('institute') . "'";
                             $inst_name = DBManager::get()->query($sql)->fetch(PDO::FETCH_COLUMN);
 
                             //get admins
                             $sql = "SELECT a.user_id, b.Vorname, b.Nachname, b.Email FROM "
                                  . "user_inst a INNER JOIN auth_user_md5 b ON a.user_id = b.user_id "
-                                 . "WHERE a.Institut_id = '" . Request::get('institute') . "' "
+                                 . "WHERE a.Institut_id = '" . Request::option('institute') . "' "
                                  . "AND a.inst_perms IN ({$in}) AND a.user_id != '{$user_id}'";
                             $users = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
@@ -543,7 +543,7 @@ class Admin_UserController extends AuthenticatedController
                                      . "IN ('%s','%s') AND  a.Institut_id IN (SELECT fakultaets_id FROM Institute "
                                      . "WHERE Institut_id = '%s' AND fakultaets_id != Institut_id) AND "
                                      . "a.inst_perms = 'admin' AND a.user_id != '%s' ", implode("','",$notin),
-                                     $user_id, Request::get('institute'), $user_id);
+                                     $user_id, Request::option('institute'), $user_id);
                                 $fak_admins = DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
                                 foreach ($fak_admins as $admin) {
@@ -570,7 +570,7 @@ class Admin_UserController extends AuthenticatedController
 
                 //adding userdomain
                 if (Request::get('select_dom_id')) {
-                    $domain = new UserDomain(Request::get('select_dom_id'));
+                    $domain = new UserDomain(Request::option('select_dom_id'));
                     if ($perm->have_perm('root') || in_array($domain, UserDomain::getUserDomainsForUser($auth->auth["uid"]))) {
                         $domain->addUser($user_id);
                         $details[] = sprintf(_("Der Benutzer wurde in Nutzerdomäne \"%s\" eingetragen."), htmlReady($domain->getName()));
@@ -622,8 +622,8 @@ class Admin_UserController extends AuthenticatedController
     {
         //check submitted form
         if (Request::submitted('umwandeln')) {
-            $old_id = Request::get('old_id');
-            $new_id = Request::get('new_id');
+            $old_id = Request::option('old_id');
+            $new_id = Request::option('new_id');
 
             //check existing users
             if (UserModel::check($old_id) && UserModel::check($new_id)) {

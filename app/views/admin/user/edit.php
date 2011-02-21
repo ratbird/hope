@@ -233,7 +233,7 @@
             <?= _("Ablaufdatum:") ?>
         </td>
         <td colspan="2">
-            <input id="datepicker" class="user_form" type="text" name="expiration_date" value="<?= date('d.m.Y', UserConfig::get($user['user_id'])->EXPIRATION_DATE) ?>">
+            <input id="datepicker" class="user_form" type="text" name="expiration_date" value="<?= (UserConfig::get($user['user_id'])->EXPIRATION_DATE) ? date('d.m.Y', UserConfig::get($user['user_id'])->EXPIRATION_DATE) : '' ?>">
             <input type="checkbox" onchange="jQuery('input[name=expiration_date]').val('');" name="expiration_date_delete" value="1"> <?= _('löschen') ?>
         </td>
     </tr>

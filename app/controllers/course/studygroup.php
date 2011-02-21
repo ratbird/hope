@@ -53,7 +53,6 @@ class Course_StudygroupController extends AuthenticatedController {
         } else {
             throw new Exception(_("Die von Ihnen gewählte Option ist im System nicht aktiviert."));
         }
-        $this->set_layout("course/studygroup/layout");
     }
 
     /**
@@ -384,7 +383,6 @@ class Course_StudygroupController extends AuthenticatedController {
      */
     function update_action($id)
     {
-        
         global $perm;
         // if we are permitted to edit the studygroup get some data...
         if ($perm->have_studip_perm('dozent', $id)) {
@@ -393,12 +391,10 @@ class Course_StudygroupController extends AuthenticatedController {
             $founders = StudygroupModel::getFounders($id);
 
             if (Request::get('abort_deactivate')) {
-                var_dump(Request::get('deactivate_modules')); die;
                 // let's do nothing and go back to the studygroup
                 return $this->redirect('course/studygroup/edit/' . $id);
 
             } else if (Request::get('really_deactivate')) {
-                
                 // really deactive modules
 
                 // 1. Modules

@@ -506,10 +506,10 @@ class StudygroupModel
     /**
      * Sends a notice to all moderators and founders of a studygroup
      *
-     * @param string $sem_id
-     * @param strimg $user_id
+     * @param string    $sem_id    id of a seminar / studygroup
+     * @param strimg    $user_id   id of the applicant
      *
-     * @return int number of recipients
+     * @return int                 number of recipients
      */
     function applicationNotice($sem_id, $user_id)
     {

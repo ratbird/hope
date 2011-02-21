@@ -15,13 +15,13 @@
             <?= _("Benutzername:") ?>
         </td>
         <td width="35%">
-            <input name="username" type="text" value="<?= $user['username'] ?>">
+            <input name="username" type="text" value="<?= htmlReady($user['username']) ?>">
         </td>
         <td align="right" width="15%">
             <?=_('Vorname:')?>
         </td>
         <td width="35%">
-            <input name="vorname" type="text" value="<?= $user['vorname'] ?>">
+            <input name="vorname" type="text" value="<?= htmlReady($user['vorname']) ?>">
         </td>
     </tr>
     <tr class="steelgraulight">
@@ -29,13 +29,13 @@
             <?= _("E-Mail:")?>
         </td>
         <td width="35%">
-            <input name="email" type="text" value="<?= $user['email'] ?>">
+            <input name="email" type="text" value="<?= htmlReady($user['email']) ?>">
         </td>
         <td align="right" width="15%">
             <?= _("Nachname:")?>
         </td>
         <td width="35%">
-            <input name="nachname" type="text" value="<?= $user['nachname'] ?>">
+            <input name="nachname" type="text" value="<?= htmlReady($user['nachname']) ?>">
         </td>
     </tr>
     <tr class="steel1">
@@ -59,7 +59,7 @@
                 <option value="<?= $i ?>" <?= ($user['inaktiv'] == $one) ? 'selected' : ''?>><?= $one ?></option>
                 <? endforeach ?>
             </select>
-            <input name="inaktiv_tage" type="text" value="<?= $user['inaktiv_tage'] ?>" size="10"> Tage
+            <input name="inaktiv_tage" type="text" value="<?= htmlReady($user['inaktiv_tage']) ?>" size="10"> Tage
         </td>
     </tr>
     <? if (count($datafields) > 0) : ?>
@@ -84,11 +84,11 @@
                     <select name="<?= $datafield->getID()?>">
                         <option value="alle"><?= _('alle') ?></option>
                         <? foreach (array_map('trim', explode("\n", $datafield->getTypeParam())) as $entry) :?>
-                        <option value="<?= $entry ?>" <?= ($user[$datafield->getID()] == $entry) ? 'selected' : '' ?>><?= $entry ?></option>
+                        <option value="<?= $entry ?>" <?= ($user[$datafield->getID()] == $entry) ? 'selected' : '' ?>><?= htmlReady($entry) ?></option>
                         <? endforeach ?>
                     </select>
                 <? else : ?>
-                    <input type="text" name="<?= $datafield->getID()?>" value="<?= $user[$datafield->getID()] ?>">
+                    <input type="text" name="<?= $datafield->getID()?>" value="<?= htmlReady($user[$datafield->getID()]) ?>">
                 <? endif ?>
                 </td>
             <? if ($i % 2 != 0 && $i != 0) : ?>

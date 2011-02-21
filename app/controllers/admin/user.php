@@ -276,8 +276,8 @@ class Admin_UserController extends AuthenticatedController
                 if (Request::get($param)) $editUser['user_info.' . $param] = Request::get($param);
             }
             //change username
-            if (Request::option('username') && $this->user['username'] != Request::option('username')) {
-                $editUser['auth_user_md5.username'] = Request::option('username');
+            if (Request::get('username') && $this->user['username'] != Request::get('username')) {
+                $editUser['auth_user_md5.username'] = Request::get('username');
             }
             //change email
             if (Request::get('Email') && $this->user['Email'] != Request::get('Email')) {
@@ -434,12 +434,12 @@ class Admin_UserController extends AuthenticatedController
 
         //get formdata
         $this->user = array(
-            'username' => Request::option('username'),
+            'username' => Request::get('username'),
             'perm' => Request::option('perm'),
-            'visible' => Request::get('visible'),
+            'visible' => Request::int('visible'),
             'Vorname' => Request::get('Vorname'),
             'Nachname' => Request::get('Nachname'),
-            'geschlecht' => Request::option('geschlecht'),
+            'geschlecht' => Request::int('geschlecht'),
             'title_front' => Request::get('title_front'),
             'title_rear' => Request::get('title_rear'),
             'Email' => Request::get('Email'),

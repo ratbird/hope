@@ -93,11 +93,11 @@
         </td>
         <td colspan="2">
         <? if (StudipAuthAbstract::CheckField("auth_user_md5.title_front", $user['auth_plugin']) || LockRules::check($user['user_id'], 'title')) : ?>
-            <?=htmlReady($user['title_front']) ?>
+            <?= htmlReady($user['title_front']) ?>
         <? else : ?>
             <select name="title_front_chooser" onchange="jQuery('input[name=title_front]').val( jQuery(this).val() );">
             <? foreach(get_config('TITLE_FRONT_TEMPLATE') as $title) : ?>
-                <option value="<?= $title ?>" <?= ($title == $user['title_front']) ? 'selected' : '' ?>><?= $title ?></option>
+                <option value="<?= $title ?>" <?= ($title == $user['title_front']) ? 'selected' : '' ?>><?= htmlReady($title) ?></option>
             <? endforeach ?>
             </select>
             <input class="user_form" type="text" name="title_front" value="<?= htmlReady($user['title_front']) ?>">
@@ -110,11 +110,11 @@
         </td>
         <td colspan="2">
         <? if (StudipAuthAbstract::CheckField("auth_user_md5.title_rear", $user['auth_plugin']) || LockRules::check($user['user_id'], 'title')) : ?>
-            <?=htmlReady($user['title_rear']) ?>
+            <?= htmlReady($user['title_rear']) ?>
         <? else : ?>
             <select name="title_rear_chooser" onchange="jQuery('input[name=title_rear]').val( jQuery(this).val() );">
             <? foreach(get_config('TITLE_REAR_TEMPLATE') as $rtitle) : ?>
-                <option value="<?= $rtitle ?>" <?= ($rtitle == $user['title_rear']) ? 'selected' : '' ?>><?= $rtitle ?></option>
+                <option value="<?= $rtitle ?>" <?= ($rtitle == $user['title_rear']) ? 'selected' : '' ?>><?= htmlReady($rtitle) ?></option>
             <? endforeach ?>
             </select>
             <input class="user_form" type="text" name="title_rear" value="<?= htmlReady($user['title_rear']) ?>">

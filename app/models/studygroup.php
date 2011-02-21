@@ -261,7 +261,7 @@ class StudygroupModel
      *
      * @param string sort criteria
      * @param int lower bound of the resultset
-     * @param int elements per page / resultset
+     * @param int elements per page, if null get the global configuration value
      * @param string search term
      *
      * @return array studygroups
@@ -442,7 +442,7 @@ class StudygroupModel
      *
      * @param string id of a studygroup
      * @param int lower bound of the resultset
-     * @param int elements per page / resultset
+     * @param int elements per page, if null get the global configuration value
      *
      * @return array members
      */

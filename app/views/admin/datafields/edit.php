@@ -20,7 +20,7 @@
                 <label for="datafield_name"><?= _('Name') ?>:</label>
             </td>
             <td>
-                <input type="text" name="datafield_name" id="datafield_name" size="60" maxlength="254" value="<?= $item->getName() ?>">
+                <input type="text" name="datafield_name" id="datafield_name" size="60" maxlength="254" value="<?= htmlReady($item->getName()) ?>">
             </td>
         </tr>
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
@@ -31,7 +31,7 @@
                 <select name="datafield_type" id="datafield_type">
                 <? foreach (DataFieldEntry::getSupportedTypes() as $param): ?>
                     <option value="<?= $param ?>" <?= $item->getType() == $param ? 'selected="selected"' : ""?>>
-                        <?= $param ?>
+                        <?= htmlReady($param) ?>
                     </option>
                 <? endforeach; ?>
                 </select>
@@ -57,7 +57,7 @@
                     </option>
                     <? foreach ($GLOBALS['SEM_CLASS'] as $key=>$val): ?>
                     <option <?= $item->getObjectClass() == $key ? 'selected="selected"' : '' ?> value="<?= $key ?>">
-                        <?= $val['name'] ?>
+                        <?= htmlReady($val['name']) ?>
                     </option>
                     <? endforeach; ?>
                 <? elseif ($item->getObjectType() == 'inst'): ?>
@@ -67,7 +67,7 @@
                     </option>
                     <? foreach ($GLOBALS['INST_TYPE'] as $key=>$val): ?>
                     <option <?= $item->getObjectClass() == $key ? "selected" : ""?> value="<?= $key ?>">
-                        <?= $val['name'] ?>
+                        <?= htmlReady($val['name']) ?>
                     </option>
                     <? endforeach; ?>
                 <? else: ?>

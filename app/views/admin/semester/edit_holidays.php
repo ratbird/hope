@@ -17,7 +17,7 @@
             <?= _("Name der Ferien:") ?>
         </td>
         <td colspan="4">
-            <input type="text" size="60" value="<?= ($holiday['name']) ? $holiday['name'] : '' ?>" name="name" style="width: 350px;">
+            <input type="text" size="60" value="<?= ($holiday['name']) ? htmlReady($holiday['name']) : '' ?>" name="name" style="width: 350px;">
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
@@ -25,7 +25,7 @@
             <?= _("Beschreibung:") ?>
         </td>
         <td colspan="4">
-            <textarea name="description" rows="4" cols="50" style="width: 350px;"><?= ($holiday['description']) ? $holiday['description'] : '' ?></textarea>
+            <textarea name="description" rows="4" cols="50" style="width: 350px;"><?= ($holiday['description']) ? htmlReady($holiday['description']) : '' ?></textarea>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">

@@ -20,7 +20,7 @@
             <?= _("Name des Semesters:") ?>
         </td>
         <td colspan="4">
-            <input type="text" size="60" value="<?= ($semester['name']) ? $semester['name'] : '' ?>" name="name" style="width: 350px;">
+            <input type="text" size="60" value="<?= ($semester['name']) ? htmlReady($semester['name']) : '' ?>" name="name" style="width: 350px;">
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
@@ -28,7 +28,7 @@
             <?= _("Beschreibung:") ?>
         </td>
         <td colspan="4">
-            <textarea name="description" rows="4" cols="50" style="width: 350px;"><?= ($semester['description']) ? $semester['description'] : '' ?></textarea>
+            <textarea name="description" rows="4" cols="50" style="width: 350px;"><?= ($semester['description']) ? htmlReady($semester['description']) : '' ?></textarea>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">

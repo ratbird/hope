@@ -16,7 +16,7 @@
         <select name="datafield_type">
         <? foreach ($allclasses as $key => $class): ?>
              <option value = "<?= $key ?>">
-                 <?= $class ?>
+                 <?= htmlReady($class) ?>
              </option>
         <? endforeach; ?>
         </select>
@@ -48,7 +48,7 @@
             <select name="datafield_typ" id="datafield_typ">
                <? foreach (DataFieldEntry::getSupportedTypes() as $param): ?>
                     <option value="<?= $param ?>">
-                        <?= $param ?>
+                        <?= htmlReady($param) ?>
                     </option>
                 <? endforeach; ?>
             </select>
@@ -61,13 +61,13 @@
                     <select name="object_class">;
                         <option value="NULL"><?= _('alle') ?></option>
                         <? foreach ($GLOBALS['SEM_CLASS'] as $key=>$val): ?>
-                            <option value="<?= $key ?>"><?= $val['name']?> </option>
+                            <option value="<?= $key ?>"><?= htmlReady($val['name']) ?> </option>
                         <? endforeach; ?>
                 <? elseif ($object_typ== 'inst'): ?>
                     <select name="object_class">;
                         <option value="NULL"><?= _('alle') ?></option>
                         <? foreach ($GLOBALS['INST_TYPE'] as $key=>$val): ?>
-                            <option value="<?= $key ?>"><?= $val['name']?> </option>
+                            <option value="<?= $key ?>"><?= htmlReady($val['name']) ?> </option>
                         <? endforeach; ?>
                 <? else: ?>
                      <select multiple size="7" name="object_class[]">

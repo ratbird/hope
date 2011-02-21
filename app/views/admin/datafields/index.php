@@ -16,7 +16,7 @@
 <!-- Datenfelder für Veranstaltungen -->
 <table class="collapsable default" cellspacing="0" cellpadding="2">
 <? foreach ($datafields_list as $key => $data): ?>
-    <tbody <?= ((!is_null($current_class) and $current_class == $key) or !is_null($class_filter)) ? '': 'class="collapsed"' ?>>
+    <tbody <?= ((!is_null($current_class) && $current_class == $key) || !is_null($class_filter)) ? '': 'class="collapsed"' ?>>
         <tr class="steel header-row">
             <td class="toggle-indicator" colspan="8">
             <? if (empty($datafields_list[$key])): ?>
@@ -50,7 +50,7 @@
         <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
             <td>
                 <a name="item_<?= $val->getID() ?>"></a>
-                <?= $val->getName() ?>
+                <?= htmlReady($val->getName()) ?>
             </td>
             <td>
             <? if (in_array($val->getType(), array('selectbox', 'radio', 'combo'))): ?>
@@ -58,18 +58,18 @@
                     <?= Assets::img('icons/16/blue/edit.png', array('class'=> 'text-top', 'title' => 'Einträge bearbeiten')) ?>
                 </a>
             <? endif; ?>
-                <span><?=  $val->getType()?></span>
+                <span><?= htmlReady($val->getType()) ?></span>
             <? if (in_array($val->getType(), array('selectbox', 'radio', 'combo'))): ?>
                 <? if (true): ?>
-                    <?=$this->render_partial("admin/datafields/_param", array('datafield_id' => $val->getID(), 'typeparam' => $val->getTypeparam(), 'hidden' => true))?>
+                    <?= $this->render_partial("admin/datafields/_param", array('datafield_id' => $val->getID(), 'typeparam' => $val->getTypeparam(), 'hidden' => true))?>
                 <? endif;?>
             <? endif; ?>
             </td>
             <td>
             <? if ($key == 'sem'): ?>
-                <?= $val->getObjectClass() != null ? $GLOBALS['SEM_CLASS'][$val->getObjectClass()]['name'] : _('alle')?>
+                <?= $val->getObjectClass() != null ? htmlReady($GLOBALS['SEM_CLASS'][$val->getObjectClass()]['name']) : _('alle')?>
             <? elseif ($key == 'inst'): ?>
-                <?=  $val->getObjectClass() != null ? $GLOBALS['INST_TYPE'][$val->getObjectClass()]['name'] : _('alle')?>
+                <?=  $val->getObjectClass() != null ? htmlReady($GLOBALS['INST_TYPE'][$val->getObjectClass()]['name']) : _('alle')?>
             <? else: ?>
                 <?= $val->getObjectClass() != null ? DataFieldStructure::getReadableUserClass($val->getObjectClass()) : _('alle')?>
             <? endif; ?>

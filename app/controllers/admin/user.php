@@ -1,5 +1,4 @@
 <?php
-# Lifter010: TODO
 /**
  * user.php - controller class for the user-administration
  *
@@ -41,7 +40,7 @@ class Admin_UserController extends AuthenticatedController
         PageLayout::setTitle(_("Benutzerverwaltung"));
 
         //ajax
-        if (@$_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
+        if (Request::isXhr()) {
             Header('Content-Type: text/plain;charset=windows-1252');
             $this->via_ajax = true;
             $this->set_layout(null);
@@ -49,7 +48,9 @@ class Admin_UserController extends AuthenticatedController
     }
 
     /**
-     * Die Hauptseite mit Suchfunktion
+     * Display searchbox and all searched users (if any).
+     *
+     * @param bool $advanced open or close the advanced searchfields
      */
     public function index_action($advanced = false)
     {
@@ -125,6 +126,7 @@ class Admin_UserController extends AuthenticatedController
      * Deleting one or more users
      *
      * @param md5 $user_id
+     * @param string $parent redirect to this page after deleting users
      */
     public function delete_action($user_id = NULL, $parent = '')
     {
@@ -236,7 +238,8 @@ class Admin_UserController extends AuthenticatedController
     }
 
     /**
-     * Die Detailansicht eines Benutzers mit Lösch- und Editierfunktion
+     * Display all information according to the selected user. All details can
+     * be changed and deleted.
      *
      * @param md5 $user_id
      */
@@ -391,7 +394,6 @@ class Admin_UserController extends AuthenticatedController
             }
 
             //save action and messages
-            #print_r($um->user_data);
             if ($um->changeUser($editUser)) {
                 PageLayout::postMessage(Messagebox::success(_('Die Änderungen wurden erfolgreich gespeichert.'), $details));
             } else {
@@ -616,7 +618,7 @@ class Admin_UserController extends AuthenticatedController
     }
 
     /**
-     * Migrate 2 users to 1 account
+     * Migrate 2 users to 1 account. This is a part of the old numit-plugin
      */
     function migrate_action()
     {
@@ -658,7 +660,7 @@ class Admin_UserController extends AuthenticatedController
     }
 
     /**
-     * Ändert das Passwort eines Benutzers, ohne Sicherheitsabfrage
+     * Set the password of an user to a new random password, without security-query
      *
      * @param md5 $user_id
      */
@@ -675,14 +677,15 @@ class Admin_UserController extends AuthenticatedController
     }
 
     /**
-     * Entsperrt einen Benutzer, ohne Sicherheitsabfrage
+     * Unlock an user, without security-query
      *
      * @param md5 $user_id
      */
     public function unlock_action($user_id)
     {
         $db = DBManager::get()->prepare("UPDATE auth_user_md5 SET locked = 0, lock_comment = NULL, locked_by = NULL WHERE user_id = ?");
-        if ($db->execute(array($user_id))) {
+        $db->execute(array($user_id));
+        if ($db->rowCount() == 1) {
             PageLayout::postMessage(Messagebox::success(_('Der Benutzer wurde erfolgreich entsperrt.')));
         } else {
             PageLayout::postMessage(Messagebox::error(_('Der Benutzer konnte nicht entsperrt werden.')));
@@ -691,13 +694,13 @@ class Admin_UserController extends AuthenticatedController
     }
 
     /**
+     * Display institute informations of an user and save changes to it.
      *
      * @param md5 $user_id
      * @param md5 $institute_id
      */
     public function edit_institute_action($user_id, $institute_id)
     {
-        //änderungen speichern
         if (Request::submitted('uebernehmen')) {
             //standard-values
             $values=array();
@@ -720,7 +723,6 @@ class Admin_UserController extends AuthenticatedController
                 }
             }
 
-
             //store to database
             UserModel::setInstitute($user_id, $institute_id, $values);
 
@@ -737,7 +739,7 @@ class Admin_UserController extends AuthenticatedController
     }
 
     /**
-     * Löscht einen Studiengang des Benutzers, ohne Sicherheitsabfrage
+     * Delete an studycourse of an user , without a security-query
      *
      * @param md5 $user_id
      * @param md5 $fach_id
@@ -746,7 +748,8 @@ class Admin_UserController extends AuthenticatedController
     public function delete_studycourse_action($user_id, $fach_id, $abschlus_id)
     {
         $db = DBManager::get()->prepare("DELETE FROM user_studiengang WHERE user_id = ? AND studiengang_id = ? AND abschluss_id = ?");
-        if ($db->execute(array($user_id, $fach_id, $abschlus_id))) {
+        $db->execute(array($user_id, $fach_id, $abschlus_id));
+        if ($db->rowCount() == 1) {
             PageLayout::postMessage(MessageBox::success(_('Der Studiengang wurde erfolgreich gelöscht.')));
         } else {
             PageLayout::postMessage(MessageBox::error(_('Der Studiengang konnte nicht gelöscht werden.')));
@@ -755,7 +758,7 @@ class Admin_UserController extends AuthenticatedController
     }
 
     /**
-     * Löscht ein Institut des Benutzers, ohne Sicherheitsabfrage
+     * Delete an institute of an user , without a security-query
      *
      * @param md5 $user_id
      * @param md5 $institut_id
@@ -763,7 +766,8 @@ class Admin_UserController extends AuthenticatedController
     public function delete_institute_action($user_id, $institut_id)
     {
         $db = DBManager::get()->prepare("DELETE FROM user_inst WHERE user_id = ? AND Institut_id = ?");
-        if ($db->execute(array($user_id, $institut_id))) {
+        $db->execute(array($user_id, $institut_id));
+        if ($db->rowCount() == 1) {
             PageLayout::postMessage(MessageBox::success(_('Die Einrichtung wurde erfolgreich gelöscht.')));
         } else {
             PageLayout::postMessage(MessageBox::error(_('Die Einrichtung konnte nicht gelöscht werden.')));
@@ -772,7 +776,7 @@ class Admin_UserController extends AuthenticatedController
     }
 
     /**
-     * Löscht eine Zuordnung des Benutzers zu einer Nutzerdomäne, ohne Sicherheitsabfrage
+     * Delete an assignment of an user to an userdomain, without a security-query
      *
      * @param md5 $user_id
      * @param md5 $domain_id

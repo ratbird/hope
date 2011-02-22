@@ -17,20 +17,33 @@
  * @since       2.1
  */
 
+/**
+ *
+ *
+ */
 class UserModel
 {
     /**
-     * Holt alle Daten eines Nutzers oder ein Datenfeld (als String)
+     * Return all informations of an user, otherwise the selected field of the
+     * databse-table auth_user_md5, if field is set.
      *
      * @param md5 $user_id
      * @param string $field
-     * @return array()
+     * @param bool $full
+     *
+     * @return string (if field is set), otherwise array()
      */
     public static function getUser($user_id, $field = NULL, $full = false)
     {
+        //single field
         if(!is_null($field)) {
-            $dbquery = "SELECT {$field} FROM auth_user_md5 au WHERE au.user_id = '{$user_id}'";
-            return DBManager::get()->query($dbquery)->fetchColumn();
+            $dbquery = "SELECT ? FROM auth_user_md5 au WHERE au.user_id = ?";
+
+            $db = DBManager::get()->prepare($dbquery);
+            $db->execute(array($field, $user_id));
+            return $db->fetchColumn();
+
+        // all fields + optional user_info and user_data
         } else {
             if ($full) {
                 $dbquery = "SELECT *, UNIX_TIMESTAMP(ud.changed) as changed_timestamp FROM auth_user_md5 au"
@@ -39,16 +52,19 @@ class UserModel
             } else {
                 $dbquery = "SELECT * FROM auth_user_md5 au";
             }
-            $dbquery .= " WHERE au.user_id = '{$user_id}'";
+            $dbquery .= " WHERE au.user_id = ?";
 
-            return DBManager::get()->query($dbquery)->fetch(PDO::FETCH_ASSOC);
+            $db = DBManager::get()->prepare($dbquery);
+            $db->execute(array($user_id));
+            return $db->fetch(PDO::FETCH_ASSOC);
         }
     }
 
     /**
+     * Return the studycourses of an user
      *
      * @param md5 $user_id
-     * @return array()
+     * @return array() list of studycourses
      */
     public static function getUserStudycourse($user_id)
     {
@@ -57,11 +73,14 @@ class UserModel
              . "FROM user_studiengang AS us "
              . "LEFT JOIN studiengaenge AS s ON us.studiengang_id = s.studiengang_id "
              . "LEFT JOIN abschluss AS a ON us.abschluss_id = a.abschluss_id "
-             . "WHERE user_id='{$user_id}'";
-        return DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+             . "WHERE user_id=?";
+        $db = DBManager::get()->prepare($sql);
+        $db->execute(array($user_id));
+        return $db->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
+     *Return the Institutes of an user depending of the student-status
      *
      * @param md5 $user_id
      * @param bool $as_student
@@ -71,26 +90,33 @@ class UserModel
     {
         $sql = "SELECT ui.*, i.Name FROM Institute AS i "
              . "LEFT JOIN user_inst AS ui ON i.Institut_id = ui.Institut_id "
-             . "WHERE user_id='{$user_id}'";
+             . "WHERE user_id=?";
         if ($as_student) {
             $sql .= " AND inst_perms = 'user'";
         } else {
              $sql .= " AND inst_perms <> 'user'";
         }
-        return DBManager::get()->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+        $db = DBManager::get()->prepare($sql);
+        $db->execute(array($user_id));
+        return $db->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Sucht Benutzer die den Suchangaben entsprechen
+     * Search for users, depending of the used parameters
      *
      * @param string $username
      * @param string $vorname
      * @param string $nachname
      * @param string $email
-     * @param string $inaktiv
+     * @param int $inaktiv
      * @param string $perms
      * @param int $locked
-     * @param string $sortby
+     * @param array() $datafields
+     * @param string $sort
+     * @param string $order
+     *
+     * @return array() list of found users
      */
     public static function getUsers($username = NULL, $vorname = NULL, $nachname = NULL,
                                     $email = NULL, $inaktiv = NULL, $perms = NULL,
@@ -180,21 +206,36 @@ class UserModel
     }
 
     /**
+     * Return the institute information, depending on the selected user and
+     * institute.
      *
      * @param md5 $user_id
      * @param md5 $inst_id
+     *
+     * @return array()
      */
     public static function getInstitute($user_id, $inst_id)
     {
-        return DBManager::get()->query("SELECT * FROM user_inst WHERE user_id = '{$user_id}' AND Institut_id = '{$inst_id}'")->fetch(PDO::FETCH_ASSOC);
+        $sql = "SELECT * FROM user_inst WHERE user_id = ? AND Institut_id = ?";
+        $db = DBManager::get()->prepare($sql);
+        $db->execute(array($user_id, $inst_id));
+        return $db->fetch(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * Update the institute-informations of an user
+     *
+     * @param md5 $user_id
+     * @param md5 $inst_id
+     * @param array() $values list of changed entries
+     */
     public static function setInstitute($user_id, $inst_id, $values)
     {
         //change externdefault
         if ($values['externdefault'] == 1) {
             //first set all institutes externdefault to 0
-            DBManager::get()->exec("UPDATE user_inst SET externdefault = 0 WHERE user_id = '{$user_id}'");
+            $db = DBManager::get()->prepare("UPDATE user_inst SET externdefault = 0 WHERE user_id = ?");
+            $db->execute(array($user_id));
         }
 
         //logging
@@ -205,28 +246,35 @@ class UserModel
 
         //change values
         foreach ($values as $index => $value) {
-            $sql = "UPDATE user_inst SET " . $index . "=? WHERE user_id='{$user_id}' AND Institut_id='{$inst_id}'";
+            $sql = "UPDATE user_inst SET " . $index . "=? WHERE user_id=? AND Institut_id=?";
             $db = DBManager::get()->prepare($sql);
-            $db->execute(array($value));
+            $db->execute(array($value, $user_id, $inst_id));
         }
     }
 
     /**
-     * checks if a user exists
+     * Check if a user exists.
      *
      * @param md5 $user_id
-     * @return boolean
+     * @return bool
      */
     public static function check($user_id)
     {
-        return DBManager::get()->query("SELECT 1 FROM auth_user_md5 WHERE user_id = '{$user_id}'")->fetchColumn();
+        $sql = "SELECT 1 FROM auth_user_md5 WHERE user_id = ?";
+        $db = DBManager::get()->prepare($sql);
+        $db->execute(array($user_id, $inst_id));
+        return $db->fetchColumn();
     }
 
     /**
+     * Merge an user ($old_id) to another user ($new_id).  This is a part of the
+     * old numit-plugin.
      *
      * @param string $old_user
      * @param string $new_user
-     * @param boolean $identity
+     * @param boolean $identity merge identity (if true)
+     *
+     * @return array() messages to display after migration
      */
     public static function convert($old_id, $new_id, $identity = false)
     {
@@ -389,19 +437,24 @@ class UserModel
     }
 
     /**
+     *  Return a list of free and available institutes of an user.
      *
      * @param md5 $userid
-     * @return array()
+     * @return array() list of institutes
      */
     public static function getAvailableInstitutes($userid)
     {
-        return DBManager::get()->query("SELECT a.Institut_id, a.Name FROM Institute "
-                                      ."AS a LEFT JOIN user_inst AS b ON (b.user_id='{$userid}' "
-                                      ."AND a.Institut_id=b.Institut_id) WHERE b.Institut_id "
-                                      ."IS NULL ORDER BY a.Name")->fetchAll(PDO::FETCH_ASSOC);
+        $sql = "SELECT a.Institut_id, a.Name FROM Institute AS a LEFT JOIN user_inst "
+             . "AS b ON (b.user_id=? AND a.Institut_id=b.Institut_id) "
+             . "WHERE b.Institut_id IS NULL ORDER BY a.Name";
+        $db = DBManager::get()->prepare($sql);
+        $db->execute(array($user_id));
+        return $db->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
+     * Delete double entries of the old and new user. This is a part of the old
+     * numit-plugin.
      *
      * @param string $table
      * @param string $field

@@ -88,6 +88,18 @@ function semadmission_get_data($seminare_condition){
         if($db->f('admission_type') == 0) $status[] = _("kein Anmeldeverfahren");
         if($db->f('admission_prelim'))  $status[] = _("vorläufig");
         $ret[$seminar_id]['admission_status_text'] = join('/',$status);
+        if ($db->f('admission_group')) {
+            if($db->f('admission_group') != $last_group) {
+                unset($last_group);
+            }
+            if (!isset($last_group)) {
+                $last_group = $db->f('admission_group');
+                $group_obj = new StudipAdmissionGroup($db->f('admission_group'));
+                $groupname = $group_obj->getValue('name');
+                if(!$groupname) $groupname = _("Gruppe") . ++$groupcount;
+            }
+            $ret[$seminar_id]['groupname'] = $groupname;
+        }
         $sorter[$seminar_id] = $ret[$seminar_id][$_SESSION['show_admission']['sortby']['field']];
     }
     if($_SESSION['show_admission']['sortby']['field'] && count($ret) && count($ret) == count($sorter)){
@@ -189,21 +201,7 @@ function semadmission_create_result_xls($data){
             $startdatum = $semdata['admission_starttime'];
             $enddatum = $semdata['admission_endtime_sem'];
             $status = $semdata['admission_status_text'];
-            if (!$semdata['admission_group']) {
-                $groupname = '';
-                unset($last_group);
-            } else {
-                if($semdata['admission_group'] != $last_group) {
-                    unset($last_group);
-                }
-                if (!isset($last_group)) {
-                    $last_group = $semdata['admission_group'];
-                    $group_obj = new StudipAdmissionGroup($semdata['admission_group']);
-                    $groupname = $group_obj->getValue('name');
-                    if(!$groupname) $groupname = _("Gruppe") . ++$groupcount;
-                }
-            }
-            $worksheet1->write_string($row, 0, $groupname, $data_format);
+            $worksheet1->write_string($row, 0, $semdata['groupname'], $data_format);
             $worksheet1->write_string($row, 1, $semdata['Name'], $data_format);
             $worksheet1->write_string($row, 2, $status, $data_format);
             $worksheet1->write_number($row, 3, (int)$teilnehmer, $data_format);
@@ -618,7 +616,7 @@ if(is_object($group_obj)){
         </li>
         <?
         $no_admission_end = ($group_obj->getUniqueMemberValue('admission_type') != 1 && $group_admission_enable_quota === 0) ? 'disabled="disabled"' : '';
-        $group_admission_end = $group_obj->getUniqueMemberValue('admission_endtime');
+        $group_admission_end = ($group_admission_end = $group_obj->getUniqueMemberValue('admission_endtime')) || '-1';
         ?>
         <li id="admission_endtime" style="margin-top:5px;">
         <span style="display:block;float:left;width:200px;"><?=_("Ende Kontingente / Losdatum:")?></span>
@@ -779,30 +777,20 @@ if(is_object($group_obj)){
         echo "<tr>";
         if ($ALLOW_GROUPING_SEMINARS) {
             if (!$semdata['admission_group']) {
-                $groupname = '';
                 printf("<td class=\"%s\" align=\"center\">",$cssSw->getClass());
                 unset($last_group);
                 printf("<input type=\"checkbox\" name=\"gruppe[]\" value=\"%s\">",$seminar_id);
                 echo '</td>';
             } else {
-                if($semdata['admission_group'] != $last_group) {
-                    unset($last_group);
-                }
-                if (!isset($last_group)) {
-                    $last_group = $semdata['admission_group'];
-                    $group_obj = new StudipAdmissionGroup($semdata['admission_group']);
-                    $groupname = $group_obj->getValue('name');
-                    if(!$groupname) $groupname = _("Gruppe") . ++$groupcount;
-                }
                 echo '<td class="'.$cssSw->getClass().'" align="center">';
                 printf("<a title=\"%s\" href=\"".URLHelper::getLink('show_admission.php',array('group_id' => $semdata['admission_group'], 'group_sem_x'=>1))."\">%s</a>",
-                    _("Gruppe bearbeiten"), htmlReady($groupname));
+                    _("Gruppe bearbeiten"), htmlReady($semdata['groupname']));
                 echo '</td>';
             }
         }
 
         $url = getUrlToSeminar($seminar_id);
-        
+
         printf ("<td class=\"%s\">
         <a title=\"%s\" href=\"$url\">
                 %s%s%s

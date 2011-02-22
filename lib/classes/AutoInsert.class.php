@@ -18,6 +18,25 @@
 
 require_once 'lib/functions.php';
 
+/**
+ * AutoInsert.class.php
+ * Administrate seminars for automatical logins.
+ * Create new auto insert seminars.
+ * Update the required user status
+ * Delete unwanted auto insert seminars
+ *
+ *
+ * Example of use:
+ * @code
+ *
+ *   # show all auto insert seminars
+ *   $auto_sems = AutoInsert::getAllSeminars();
+ *
+ *   # Save a new auto insert seminar with the user status
+ *   AutoInsert::saveSeminar($sem_id, $rechte);
+ *
+ * @endcode
+ */
 class AutoInsert
 {
     /**

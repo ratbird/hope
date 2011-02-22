@@ -35,7 +35,7 @@ class Calendar_InstscheduleController extends AuthenticatedController
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
         // try to find the correct institute-id
-        $institute_id = Request::get('cid', $SessSemName[1]);
+        $institute_id = Request::option('cid', $SessSemName[1]);
 
         
         if (!$institute_id) {
@@ -59,8 +59,8 @@ class Calendar_InstscheduleController extends AuthenticatedController
         $semdata = new SemesterData();
         $this->semesters = $semdata->getAllSemesterData();
 
-        if (Request::get('semester_id')) {
-            $this->current_semester = $semdata->getSemesterData(Request::get('semester_id'));
+        if (Request::option('semester_id')) {
+            $this->current_semester = $semdata->getSemesterData(Request::option('semester_id'));
         } else {
             $this->current_semester = $semdata->getCurrentSemesterData();
         }
@@ -88,7 +88,7 @@ class Calendar_InstscheduleController extends AuthenticatedController
 
         $this->controller = $this;
         $this->calendar_view = new CalendarWeekView($this->entries, 'instschedule');
-        $this->calendar_view->setHeight(40 + (20 * Request::get('zoom', 0)));
+        $this->calendar_view->setHeight(40 + (20 * Request::option('zoom', 0)));
         $this->calendar_view->setDays($this->days, $this);
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
         $this->calendar_view->setReadOnly();
@@ -103,7 +103,7 @@ class Calendar_InstscheduleController extends AuthenticatedController
         $factory = new Flexi_TemplateFactory($this->dispatcher->trails_root . '/views');
         PageLayout::addStyle($factory->render('calendar/stylesheet', $style_parameters));
 
-        if (Request::get('printview')) {
+        if (Request::option('printview')) {
             PageLayout::addStylesheet('style_print.css');
         } else {
             PageLayout::addStylesheet('style_print.css', array('media' => 'print'));
@@ -140,7 +140,7 @@ class Calendar_InstscheduleController extends AuthenticatedController
         if ($ajax) {
             $this->render_template('calendar/instschedule/_entry_details');
         } else {
-            if (Request::get('show_hidden')) {
+            if (Request::option('show_hidden')) {
                 $this->flash['show_hidden'] = true;
             }
 

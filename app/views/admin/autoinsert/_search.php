@@ -19,8 +19,7 @@
         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
             <td><label for="sem_search"><?= _('Veranstaltung:') ?></label></td>
             <td>
-                <input type="text" name="sem_search" value="<?= $sem_search ?>" id="sem_search" class="user_form">
-                <i>(Suchbereiche: Titel, Lehrender, Studienbereich, Veranstaltungsnummer, Kommentare)</i>
+                <input type="text" name="sem_search" value="<?= $sem_search ?>" id="sem_search" class="user_form" required>
             </td>
         </tr>
     </tbody>

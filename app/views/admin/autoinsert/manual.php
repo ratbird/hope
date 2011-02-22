@@ -85,7 +85,7 @@
             </tr>
         <? endif ?>
         </tbody>
-        
+
         <!-- #2 Auswahllisten anzeigen -->
     <? if (!empty($filtertype)): ?>
         <tbody class="default filter_selection">
@@ -112,7 +112,7 @@
                         <option value="<?= $k ?>" style="padding-left: 10px;" <?= in_array($k, (array)@$filter[$type]) ? 'selected="selected"' : '' ?>><?= htmlReady($v) ?></option>
                       <? endforeach; ?>
                      <? else: ?>
-                        <option value="<?= $key ?>" <?= in_array($key, (array)@$filter[$type]) ? 'selected="selected"' : '' ?>><?= $value ?></option>
+                        <option value="<?= $key ?>" <?= in_array($key, (array)@$filter[$type]) ? 'selected="selected"' : '' ?>><?= htmlReady($value) ?></option>
                      <? endif ?>
                     <? endforeach; ?>
                     </select>

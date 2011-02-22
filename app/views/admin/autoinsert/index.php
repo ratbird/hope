@@ -34,11 +34,11 @@
         </thead>
         <tbody>
             <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-                <td>
+                <td width="30%">
                     <label for="sem_id"><?= _('Veranstaltung:') ?></label>
                 </td>
                 <td>
-                   <select name="sem_id" id="sem_id" style="width: 100%;">
+                   <select name="sem_id" id="sem_id">
                    <? foreach ($seminar_search as $seminar): ?>
                         <option value="<?= $seminar[0] ?>">
                             <?= htmlReady($seminar[1]) ?>
@@ -137,6 +137,10 @@ $infobox = array(
                 ),
                 array(
                     "text" => _("Es können nur Veranstaltungen ohne gesetzte Zugangsberechtigungen ausgewählt werden."),
+                    "icon" => "icons/16/black/info.png"
+                ),
+                array(
+                    "text" => _("Die Suche umfasst folgende Bereiche:<br> Titel, Lehrender, Studienbereich, Veranstaltungsnummer, Kommentare"),
                     "icon" => "icons/16/black/info.png"
                 )
             )

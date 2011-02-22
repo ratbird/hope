@@ -756,7 +756,7 @@ if (($seminar_id) && (!$uebernehmen_x) &&(!$adm_null_x) &&(!$adm_los_x) &&(!$adm
 }
 }
 
-if ($lockdata['description'] && LockRules::CheckLockRulePermission($s_id, $lockdata['permission'])){
+if ($lockdata['description'] && LockRules::CheckLockRulePermission($seminar_id, $lockdata['permission'])){
     $infomsg .= "info§" . fixlinks(htmlReady($lockdata['description']));
 }
 //Beim Umschalten keine Fehlermeldung

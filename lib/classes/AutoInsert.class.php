@@ -8,8 +8,9 @@
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * @author      Jan Hendrik Willms <jan.hendrik.willms@uni-oldenburg.de>
+ * @author      Nico Müller <nico.mueller@uni-oldenburg.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
+ * @author      Jan Hendrik Willms <jan.hendrik.willms@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.1
@@ -21,6 +22,7 @@ class AutoInsert
 {
     /**
      * Check if exist at least 1 seminar for the auto insert function
+     * @return bool
      */
     public static function existSeminars()
     {
@@ -34,6 +36,7 @@ class AutoInsert
      * Is there already an user entry
      * @param $user_id
      * @param $seminar_id
+     * @return bool
      */
     private static function checkUser($user_id, $seminar_id)
     {
@@ -48,6 +51,7 @@ class AutoInsert
      * Check user status
      * @param $user_id
      * @param $seminar_id
+     * @return string
      */
     private static function checkUserStatus($user_id,$seminar_id)
     {
@@ -68,21 +72,12 @@ class AutoInsert
         $stmt->execute(array($seminar_id, $user_id));
     }
 
-
-    /**
-     * Inserts a user into all matching seminars
-     * @param $user_id
-     */
-    public static function engage($user_id)
-    {
-
-    }
-
     /**
      * Insert a user in the seminar_user tabelle
      * @param $user_status (current user status )
      * @param $user_id
      * @param $sem (status which a user must have to be registered)
+     * @return bool
      */
     private static function saveUser($user_status, $user_id, $sem)
     {
@@ -99,6 +94,7 @@ class AutoInsert
     /**
      * Check of no duplicate entries
      * @param $seminar_id
+     * @return bool
      */
     public static function checkSeminar($seminar_id)
     {
@@ -112,7 +108,7 @@ class AutoInsert
     /**
      * Insert a new seminar, for the auto insert function
      * @param $seminar_id
-     * @param $status (array wiht string autor, tutor or dozent)
+     * @param $status (array with string autor, tutor or dozent)
      */
     public static function saveSeminar($seminar_id, $status)
     {
@@ -124,10 +120,12 @@ class AutoInsert
     }
 
     /**
+     * Delete (if $remove true) the autoinsert seminar
+     * Add a statusgroup (autor, tutor, dozent) to the autoinsert seminar
      *
-     * @param md5 $seminar_id
-     * @param string $status
-     * @param int $change
+     * @param $seminar_id
+     * @param $status
+     * @param $remove
      */
     public static function updateSeminar($seminar_id, $status, $remove)
     {
@@ -143,6 +141,7 @@ class AutoInsert
     /**
      * Delete a auto insert seminar
      * @param $seminar_id
+     * @return bool
      */
     public static function deleteSeminar($seminar_id)
     {
@@ -151,6 +150,8 @@ class AutoInsert
 
     /**
      * Show me all auto insert seminars
+     * @param $only_sem_id
+     * @return array
      */
     public static function getAllSeminars($only_sem_id = false)
     {
@@ -190,6 +191,7 @@ class AutoInsert
      * Insert the user, so you know in which courses he was already entered.
      * @param $user_id
      * @param $seminar_id
+     * @return bool
      */
     public static function saveAutoInsertUser($seminar_id,$user_id)
     {
@@ -205,6 +207,7 @@ class AutoInsert
      * Check of user exist
      * @param $seminar_id
      * @param $user_id
+     * @return bool
      */
     public static function checkAutoInsertUser($seminar_id, $user_id)
     {
@@ -219,6 +222,7 @@ class AutoInsert
      *
      * @param  $status (current user status)
      * @param  $new_user_id (new user id)
+     * @return array
      */
     public static function checkNewUser($status, $new_user_id)
     {
@@ -241,6 +245,7 @@ class AutoInsert
      * @param $old_status
      * @param $new_status
      * @param $user_id
+     * @return array
      */
     public static function checkOldUser($old_status, $new_status, $user_id)
     {

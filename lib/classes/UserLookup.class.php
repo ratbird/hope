@@ -1,9 +1,6 @@
 <?php
 # Lifter010: TODO
 /**
- * UserLookup.class.php
- * provides an easy to look up user ids by certain filter criteria
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -13,7 +10,31 @@
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
  * @category    Stud.IP
  * @since       2.1
-*/
+ */
+
+/**
+ * UserLookup.class.php
+ * provides an easy way to look up user ids by certain filter criteria
+ *
+ * Example of use:
+ * @code
+ *   # Create a new UserLookup object
+ *   $user_lookup = new UserLookup;
+ *
+ *   # Filter all users in their first to sixth fachsemester
+ *   $user_lookup->set_filter('fachsemester', range(1, 6));
+ *
+ *   # Filter all users that have an 'autor' or 'tutor' permission
+ *   $user_lookup->set_filter('status', array('autor', 'tutor'));
+ *   
+ *   # Get a list of all matching user ids (sorted by the user's names)
+ *   $user_ids = $user_lookup->execute(UserLookup::FLAG_SORT_NAME);
+ *
+ *   # Get another list of all matching user ids but this time we want
+ *   # the complete unordered dataset
+ *   $user_ids = $user_lookup->execute(UserLookup::FLAG_RETURN_FULL_INFO);
+ * @endcode
+ */
 
 final class UserLookup
 {
@@ -65,9 +86,9 @@ final class UserLookup
      * within this type while multiple filters across filter types result
      * in an OR filter across these types.
      *
-     * @param  string $type
-     * @param  string $value
-     * @return UserLookup
+     * @param  string $type   Type of filter to add
+     * @param  string $value  Value to filter against
+     * @return UserLookup     Returns itself to allow chaining
      */
     public function set_filter($type, $value)
     {
@@ -95,8 +116,10 @@ final class UserLookup
      *                           the ids (as an array with the user id as key
      *                           and an array containting the info as value)
      *
-     * @param  int $flags optional set of flags
-     * @return array
+     * @param  int $flags Optional set of flags as seen above
+     * @return array      Either a simple list of user ids or an associative
+     *                    array of user ids and user info if FLAG_RETURN_FULL_INFO
+     *                    is set
      */
     public function execute($flags = null)
     {
@@ -137,7 +160,7 @@ final class UserLookup
     /**
      * Clears all defined filters.
      *
-     * @return UserLookup
+     * @return UserLookup Returns itself to allow chaining
      */
     public function clear_filters()
     {
@@ -205,7 +228,7 @@ final class UserLookup
      *
      * @param  string $query  The query to execute
      * @param  array  $values Array containing the values to search for
-     * @return PDOStatement
+     * @return PDOStatement   Result of the query against the db
      */
     protected static function ArrayQuery($query, $values)
     {
@@ -217,8 +240,9 @@ final class UserLookup
     }
 
     /**
-     * Return all user with studiengang_id -$needles-
-     * @param $needles  //studiengang_id
+     * Return all user with matching studiengang_id in $needles
+     * @param  array $needles List of studiengang ids to filter against
+     * @return array List of user ids matching the given filter
      */
     protected static function FachFilter($needles)
     {
@@ -228,6 +252,7 @@ final class UserLookup
 
     /**
      * Return all studycourses
+     * @return array Associative array of studiengang ids and studiengang names
      */
     protected static function FachValues()
     {
@@ -237,8 +262,9 @@ final class UserLookup
     }
 
     /**
-     * Return all user with abschluss_id -$needles-
-     * @param $needles //abschluss_id
+     * Return all user with matching abschluss_id in $needles
+     * @param  array $needles List of abschluss ids to filter against
+     * @return array List of user ids matching the given filter
      */
     protected static function AbschlussFilter($needles)
     {
@@ -248,6 +274,7 @@ final class UserLookup
 
     /**
      * Return all studydegrees
+     * @return array Associative array of abschluss ids and abschluss names
      */
     protected static function AbschlussValues()
     {
@@ -257,8 +284,9 @@ final class UserLookup
     }
 
     /**
-     * Return all user_id's in one semester ($needles)
-     * @param $needles //semester
+     * Return all users with a matching fachsemester given in $needles
+     * @param  array $needles List of fachsemesters to filter against
+     * @return array List of user ids matching the given filter
      */
     protected static function FachsemesterFilter($needles)
     {
@@ -268,6 +296,8 @@ final class UserLookup
 
     /**
      * Create a array with all possible values for studysemesters
+     * @return array Associative array of fachsemesters and fachsemesters
+     *               (pretty dull, i know)
      */
     protected static function FachsemesterValues()
     {
@@ -278,8 +308,9 @@ final class UserLookup
     }
 
     /**
-     * Return all user_id's from this institut
-     * @param $needles //institut_id
+     * Return all users with a matching institut_id given in $needles
+     * @param  array $needles List of institut ids to filter against
+     * @return array List of user ids matching the given filter
      */
     protected static function InstitutFilter($needles)
     {
@@ -289,6 +320,8 @@ final class UserLookup
 
     /**
      * Return all faculty's and instituts
+     * @return array Associative array of institut ids and institut data
+     *               (Be aware that this array is multidimensional)
      */
     protected static function InstitutValues()
     {
@@ -311,8 +344,9 @@ final class UserLookup
     }
 
     /**
-     * Return all user_id's with the status ($needles)
-     * @param $needles //user-status(perms)
+     * Return all users with a matching status given in $needles
+     * @param  array $needles List of statusses to filter against
+     * @return array List of user ids matching the given filter
      */
     protected static function StatusFilter($needles)
     {
@@ -321,7 +355,8 @@ final class UserLookup
     }
 
     /**
-     * In array with all studip-status (perms)
+     * Return all valid statusses
+     * @return array Associative array of status name and description
      */
     protected static function StatusValues()
     {

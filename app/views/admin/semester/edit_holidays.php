@@ -17,7 +17,7 @@
             <?= _("Name der Ferien:") ?>
         </td>
         <td colspan="4">
-            <input type="text" size="60" value="<?= ($holiday['name']) ? htmlReady($holiday['name']) : '' ?>" name="name" style="width: 350px;">
+            <input type="text" size="60" value="<?= ($holiday['name']) ? htmlReady($holiday['name']) : '' ?>" name="name" style="width: 350px;" required>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
@@ -36,13 +36,13 @@
             <?= _("Beginn:") ?>
         </td>
         <td>
-            <input id="beginn" type="text" name="beginn" value="<?= ($holiday['beginn']) ? date('d.m.Y', $holiday['beginn']) : '' ?>">
+            <input id="beginn" type="text" name="beginn" value="<?= ($holiday['beginn']) ? date('d.m.Y', $holiday['beginn']) : '' ?>" required>
         </td>
         <td>
             <?= _("Ende:") ?>
         </td>
         <td>
-            <input id="ende" type="text" name="ende" value="<?= ($holiday['ende']) ? date('d.m.Y', $holiday['ende']) : '' ?>">
+            <input id="ende" type="text" name="ende" value="<?= ($holiday['ende']) ? date('d.m.Y', $holiday['ende']) : '' ?>" required>
         </td>
     </tr>
     <tr>

@@ -20,7 +20,7 @@
             <?= _("Name des Semesters:") ?>
         </td>
         <td colspan="4">
-            <input type="text" size="60" value="<?= ($semester['name']) ? htmlReady($semester['name']) : '' ?>" name="name" style="width: 350px;">
+            <input type="text" size="60" value="<?= ($semester['name']) ? htmlReady($semester['name']) : '' ?>" name="name" style="width: 350px;" required>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
@@ -39,13 +39,13 @@
             <?= _("Beginn:") ?>
         </td>
         <td>
-            <input id="beginn" type="text" name="beginn" value="<?= ($semester['beginn']) ? date('d.m.Y', $semester['beginn']) : '' ?>"<?= ($noteditable) ? ' disabled="disabled"' : '' ?>>
+            <input id="beginn" type="text" name="beginn" value="<?= ($semester['beginn']) ? date('d.m.Y', $semester['beginn']) : '' ?>"<?= ($noteditable) ? ' disabled="disabled"' : '' ?> required>
         </td>
         <td>
             <?= _("Ende:") ?>
         </td>
         <td>
-            <input id="ende" type="text" name="ende" value="<?= ($semester['ende']) ? date('d.m.Y', $semester['ende']) : '' ?>">
+            <input id="ende" type="text" name="ende" value="<?= ($semester['ende']) ? date('d.m.Y', $semester['ende']) : '' ?>" required>
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
@@ -56,13 +56,13 @@
             <?= _("Beginn:") ?>
         </td>
         <td>
-            <input id="vorles_beginn" type="text" name="vorles_beginn" value="<?= ($semester['vorles_beginn']) ? date('d.m.Y', $semester['vorles_beginn']) : '' ?>">
+            <input id="vorles_beginn" type="text" name="vorles_beginn" value="<?= ($semester['vorles_beginn']) ? date('d.m.Y', $semester['vorles_beginn']) : '' ?>" required>
         </td>
         <td>
             <?= _("Ende:") ?>
         </td>
         <td>
-            <input id="vorles_ende" type="text" name="vorles_ende" value="<?= ($semester['vorles_ende']) ? date('d.m.Y', $semester['vorles_ende']) : '' ?>">
+            <input id="vorles_ende" type="text" name="vorles_ende" value="<?= ($semester['vorles_ende']) ? date('d.m.Y', $semester['vorles_ende']) : '' ?>" required>
         </td>
     </tr>
     <tr>

@@ -19,80 +19,96 @@
 </h3>
 
 <form action="<?= $controller->url_for('admin/autoinsert') ?>" method="post">
-<?= CSRFProtection::tokenTag() ?>
-<?=$this->render_partial("admin/autoinsert/_search.php", array('semester_data' => $semester_data))?>
+    <?= CSRFProtection::tokenTag() ?>
+    <?= $this->render_partial("admin/autoinsert/_search.php", array('semester_data' => $semester_data)) ?>
 </form>
 
 <? if (count($seminar_search) > 0): ?>
 <form action="<?= $controller->url_for('admin/autoinsert/new') ?>" method="post">
-<?= CSRFProtection::tokenTag() ?>
-<table class="default">
-    <tr>
-        <th colspan="2"><?= _('Suchergegbnisse') ?></th>
-    </tr>
-    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-        <td>
-            <label for="sem_id"><?= _('Veranstaltung:') ?></label>
-        </td>
-        <td>
-           <select name="sem_id" id="sem_id">
-           <? foreach ($seminar_search as $seminar): ?>
-                <option value="<?= $seminar[0] ?>">
-                    <?= $seminar[1] ?>
-                </option>
-           <? endforeach; ?>
-            </select>
-        </td>
-    </tr>
-    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-        <td>
-            <?= _('Automatisches Eintragen mit Nutzerstatus:') ?>
-        </td>
-        <td>
-            <input type="checkbox" name="rechte[]" value="dozent" id="dozent">
-            <label for="dozent"><?= _('Dozent') ?></label>
-            <input type="checkbox" name="rechte[]" value="tutor" id="tutor">
-            <label for="tutor"><?= _('Tutor') ?></label>
-            <input type="checkbox" name="rechte[]" value="autor" id="autor">
-            <label for="autor"><?= _('Autor') ?></label>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2" align="center">
-            <?= makeButton('anlegen','input',_('anlegen'),'anlegen') ?>
-        </td>
-    </tr>
-</table>
+    <?= CSRFProtection::tokenTag() ?>
+    <table class="default">
+        <thead>
+            <tr>
+                <th colspan="2"><?= _('Suchergegbnisse') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+                <td>
+                    <label for="sem_id"><?= _('Veranstaltung:') ?></label>
+                </td>
+                <td>
+                   <select name="sem_id" id="sem_id" style="width: 100%;">
+                   <? foreach ($seminar_search as $seminar): ?>
+                        <option value="<?= $seminar[0] ?>">
+                            <?= htmlReady($seminar[1]) ?>
+                        </option>
+                   <? endforeach; ?>
+                    </select>
+                </td>
+            </tr>
+            <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+                <td>
+                    <?= _('Automatisches Eintragen mit Nutzerstatus:') ?>
+                </td>
+                <td>
+                    <label>
+                        <input type="checkbox" name="rechte[]" value="dozent">
+                        <?= _('Dozent') ?>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="rechte[]" value="tutor">
+                        <?= _('Tutor') ?>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="rechte[]" value="autor">
+                        <?= _('Autor') ?>
+                    </label>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2" align="center">
+                    <?= makeButton('anlegen', 'input', _('anlegen'), 'anlegen') ?>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 </form>
 <? endif;?>
 
-<h3>Vorhandene Zuordnungen</h3>
+<h3><?= _('Vorhandene Zuordnungen') ?></h3>
 <table width="100%" class="default">
-    <tr class="steel">
-        <td><b><?= _('Veranstaltungen') ?></b></td>
-        <td align="center"><b><?= _('Dozent') ?></b></td>
-        <td align="center"><b><?= _('Tutor') ?></b></td>
-        <td align="center"><b><?= _('Autor') ?></b></td>
-        <td align="right"><b><?= _('Aktionen') ?></b></td>
-    </tr>
-   <? foreach ($auto_sems as $auto_sem): ?>
-    <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
-        <td>
-            <a href="<?= URLHelper::getLink('seminar_main.php?auswahl='.$auto_sem['seminar_id']) ?>">
-                <?= htmlReady($auto_sem['Name'])?>
-            </a>
-        </td>
-        <?=$this->render_partial("admin/autoinsert/_status.php", array('status' => 'dozent', 'auto_sem' => $auto_sem))?>
-        <?=$this->render_partial("admin/autoinsert/_status.php", array('status' => 'tutor', 'auto_sem' => $auto_sem))?>
-        <?=$this->render_partial("admin/autoinsert/_status.php", array('status' => 'autor', 'auto_sem' => $auto_sem))?>
-        <td align="right">
-            <a href="<?=$controller->url_for('admin/autoinsert/delete')?>/<?= $auto_sem['seminar_id'] ?>">
-                <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Veranstaltung entfernen'), 'class' => 'text-top')) ?>
-            </a>
-        </td>
-    </tr>
-    <? $i ++?>
+    <thead>
+        <tr>
+            <th><?= _('Veranstaltungen') ?></th>
+            <th style="text-align: center;"><?= _('Dozent') ?></th>
+            <th style="text-align: center;"><?= _('Tutor') ?></th>
+            <th style="text-align: center;"><?= _('Autor') ?></th>
+            <th style="text-align: right;"><?= _('Aktionen') ?></th>
+        </tr>
+    </thead>
+    <tbody>
+    <? foreach ($auto_sems as $auto_sem): ?>
+        <tr class="<?= TextHelper::cycle('cycle_odd', 'cycle_even') ?>">
+            <td>
+                <a href="<?= URLHelper::getLink('seminar_main.php?auswahl='.$auto_sem['seminar_id']) ?>">
+                    <?= htmlReady($auto_sem['Name'])?>
+                </a>
+            </td>
+            <?= $this->render_partial("admin/autoinsert/_status.php", array('status' => 'dozent', 'auto_sem' => $auto_sem)) ?>
+            <?= $this->render_partial("admin/autoinsert/_status.php", array('status' => 'tutor', 'auto_sem' => $auto_sem)) ?>
+            <?= $this->render_partial("admin/autoinsert/_status.php", array('status' => 'autor', 'auto_sem' => $auto_sem)) ?>
+            <td align="right">
+                <a href="<?=$controller->url_for('admin/autoinsert/delete')?>/<?= $auto_sem['seminar_id'] ?>">
+                    <?= Assets::img('icons/16/blue/trash.png', array('title' => _('Veranstaltung entfernen'), 'class' => 'text-top')) ?>
+                </a>
+            </td>
+        </tr>
+        <? $i ++?>
     <? endforeach; ?>
+    </tbody>
 </table>
 
 <?

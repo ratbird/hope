@@ -82,7 +82,7 @@ class Admin_AutoinsertController extends AuthenticatedController
                 $this->flash['error'] = _('Mindestens ein Status sollte selektiert werden!');
             } elseif (!AutoInsert::checkSeminar($sem_id)) {
                 AutoInsert::saveSeminar($sem_id, $rechte);
-                $this->flash['success'] = _('Das Seminar wurde erfolgreich angelegt!');
+                $this->flash['success'] = _('Die Zuordnung wurde erfolgreich gespeichert!');
             } else {
                 $this->flash['error'] = _('Das Seminar wird bereits zu diesem Zweck verwendet!');
             }

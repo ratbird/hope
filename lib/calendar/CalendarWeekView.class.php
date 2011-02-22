@@ -69,14 +69,14 @@ class CalendarWeekView extends CalendarView
         foreach ($days as $day) {
             $exist = false;
             foreach ($this->entries as $column) {
-                if ($column->getTitle() === self::$day_names[$day]) {
+                if ($column->getTitle() === gettext(self::$day_names[$day])) {
                     $new_columns[] = $column;
                     $exist = true;
                 }
             }
             if (!$exist) {
                 $new_columns[] = CalendarColumn::create($day)
-                                    ->setTitle(self::$day_names[$day])
+                                    ->setTitle(gettext(self::$day_names[$day]))
                                     ->setURL($controller->url_for('calendar/'. $this->context .'/index/'. $day));
             }
         }

@@ -61,7 +61,7 @@ class UserModel
     }
 
     /**
-     * Return the studycourses of an user
+     * Return the studycourses of an user.
      *
      * @param md5 $user_id
      * @return array() list of studycourses
@@ -80,7 +80,7 @@ class UserModel
     }
 
     /**
-     *Return the Institutes of an user depending of the student-status
+     * Return the Institutes of an user depending of the student-status.
      *
      * @param md5 $user_id
      * @param bool $as_student
@@ -103,7 +103,7 @@ class UserModel
     }
 
     /**
-     * Search for users, depending of the used parameters
+     * Search for users, depending of the used parameters.
      *
      * @param string $username
      * @param string $vorname
@@ -223,7 +223,7 @@ class UserModel
     }
 
     /**
-     * Update the institute-informations of an user
+     * Update the institute-informations of an user.
      *
      * @param md5 $user_id
      * @param md5 $inst_id

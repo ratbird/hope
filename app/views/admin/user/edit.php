@@ -22,14 +22,14 @@
         </td>
     </tr>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-        <td>
+        <td width="25%">
             <?= _("Benutzername:") ?>
         </td>
         <td colspan="2">
         <? if (StudipAuthAbstract::CheckField("auth_user_md5.username", $user['auth_plugin']) || LockRules::check($user['user_id'], 'username')) : ?>
             <?= htmlReady($user['username']) ?>
         <? else : ?>
-            <input class="user_form" type="text" name="username" value="<?= $user['username'] ?>">
+            <input class="user_form" type="text" name="username" value="<?= $user['username'] ?>" required>
         <? endif ?>
         </td>
     </tr>
@@ -131,7 +131,7 @@
 
     <? if (!$user['locked']) : ?>
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-        <td>
+        <td width="25%">
             <?= _("Benutzer sperren:") ?>
         </td>
         <td colspan="2">
@@ -169,7 +169,7 @@
         <? if (StudipAuthAbstract::CheckField("auth_user_md5.Email", $auth_plugin) || LockRules::check($user['user_id'], 'email')) : ?>
             <?= htmlReady($user["Email"]) ?>
         <? else : ?>
-            <input class="user_form" type="text" name="Email" value="<?= htmlReady($user['Email']) ?>">
+            <input class="user_form" type="text" name="Email" value="<?= htmlReady($user['Email']) ?>" required>
             <? if ($GLOBALS['MAIL_VALIDATE_BOX']) : ?>
                 <input type="checkbox" id="disable_mail_host_check" name="disable_mail_host_check" value="1">
                 <label for="disable_mail_host_check"><?= _("Mailboxüberprüfung deaktivieren") ?></label>
@@ -248,7 +248,7 @@
     </tr>
     <? if (!StudipAuthAbstract::CheckField("studiengang_id", $auth_plugin)) : ?>
     <tr class="steel1">
-        <td>
+        <td width="25%">
             <?= _('Neuer Studiengang')?>
         </td>
         <td colspan="2">
@@ -322,7 +322,7 @@
         </td>
     </tr>
     <tr class="steel1">
-        <td>
+        <td width="25%">
             <?= _('Neue Einrichtung')?>
         </td>
         <td colspan="2">
@@ -365,7 +365,7 @@
         </td>
     </tr>
     <tr class="steel1">
-        <td>
+        <td width="25%">
             <?= _('Neue Nutzerdomäne')?>
         </td>
         <td colspan="2">
@@ -400,7 +400,7 @@
         </td>
     </tr>
     <tr class="steel1">
-        <td>
+       <td width="25%">
             <?= _('Sperrebene')?>
         </td>
         <td colspan="2">
@@ -425,7 +425,7 @@
 <? foreach ($userfields as $entry) : ?>
     <? if ($entry->isVisible()) : ?>
         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-            <td>
+            <td width="25%">
                 <?= htmlReady($entry->getName()) ?>:
             </td>
             <td colspan="2">

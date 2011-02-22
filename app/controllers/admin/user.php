@@ -283,7 +283,9 @@ class Admin_UserController extends AuthenticatedController
                 $editUser['auth_user_md5.username'] = Request::get('username');
             }
             //change email
+            echo "email: ".Request::get('Email');
             if (Request::get('Email') && $this->user['Email'] != Request::get('Email')) {
+                echo "ändern";
                 //disable mailbox validation
                 if (Request::get('disable_mail_host_check')) {
                     $GLOBALS['MAIL_VALIDATE_BOX'] = false;

@@ -7,7 +7,7 @@
 <?= CSRFProtection::tokenTag() ?>
 <table class="default">
     <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-        <td>
+        <td width="25%">
             <?= _("Benutzername:") ?>
             <span style="color: red; font-size: 1.6em">*</span>
         </td>
@@ -100,7 +100,7 @@
             <span style="color: red; font-size: 1.6em">*</span>
         </td>
         <td>
-            <input class="user_form" type="email" name="Email" value="<?= htmlReady($user['Email']) ?>" required >
+            <input class="user_form" type="email" name="Email" value="<?= htmlReady($user['Email']) ?>" required>
             <? if ($GLOBALS['MAIL_VALIDATE_BOX']) : ?>
                 <input type="checkbox" id="disable_mail_host_check" name="disable_mail_host_check" value="1">
                 <label for="disable_mail_host_check"><?= _("Mailboxüberprüfung deaktivieren") ?></label>

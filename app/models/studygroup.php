@@ -504,7 +504,9 @@ class StudygroupModel
     }
 
     /**
-     * Sends a notice to all moderators and founders of a studygroup
+     * If a new user applies, an application note to all moderators and founders
+     * of a studygroup will be automatically sent while calling this function.
+     * The note contains the user's name and a direct link to the member page of the studygroup.
      *
      * @param string    $sem_id    id of a seminar / studygroup
      * @param strimg    $user_id   id of the applicant

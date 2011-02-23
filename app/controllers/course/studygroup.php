@@ -53,6 +53,8 @@ class Course_StudygroupController extends AuthenticatedController {
         } else {
             throw new Exception(_("Die von Ihnen gewählte Option ist im System nicht aktiviert."));
         }
+
+        $this->set_layout('course/studygroup/layout');
     }
 
     /**
@@ -395,10 +397,17 @@ class Course_StudygroupController extends AuthenticatedController {
                 return $this->redirect('course/studygroup/edit/' . $id);
 
             } else if (Request::get('really_deactivate')) {
+
+                $deactivate_modules = Request::get('deactivate_modules');
+                $deactivate_plugins = Request::get('deactivate_plugins');
+                $modules = unserialize(stripslashes(htmlspecialchars_decode($deactivate_modules)));
+                $plugins = unserialize(stripslashes(htmlspecialchars_decode($deactivate_plugins)));
+
                 // really deactive modules
 
                 // 1. Modules
-                if (is_array($this->flash['deactivate_modules'])) {
+                if (is_array($modules)) {
+
                     $sem  = new Seminar($id);
                     $mods = new Modules();
                     $admin_mods = new AdminModules();
@@ -417,7 +426,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
                 // 2. Plugins
 
-                if (is_array($this->flash['deactivate_plugins'])) {
+                if (is_array($plugins)) {
                     $plugin_manager = PluginManager::getInstance();
                     foreach ($this->flash['deactivate_plugins'] as $plugin_id => $name) {
                         $plugin_manager->setPluginActivated($plugin_id, $id, false);
@@ -484,7 +493,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     $available_modules = StudygroupModel::getAvailableModules();
                     $orig_modules = $mods->getLocalModules($sem->id, "sem");
 
-                    $deactivate_modules=array();
+                    $deactivate_modules = array();
 
                     foreach (array_keys($available_modules) as $key){
                         if($key == 'participants') continue;
@@ -506,7 +515,7 @@ class Course_StudygroupController extends AuthenticatedController {
                         }
                     }
 
-                    $this->flash['deactivate_modules']=$deactivate_modules;
+                    $this->flash['deactivate_modules'] = $deactivate_modules;
 
                     $sem->modules = $bitmask;
                     $sem->store();

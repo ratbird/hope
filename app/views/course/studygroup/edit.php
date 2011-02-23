@@ -43,13 +43,6 @@ $infobox['content'] = array(
 <?= $this->render_partial("course/studygroup/_feedback") ?>
 <h1><?= _("Studiengruppe bearbeiten") ?></h1>
 
-<? if ($deactivate_modules_names): ?>
-    <?= createQuestion(_("Möchten Sie folgende Inhaltselemente wirklich deaktivieren? Vorhandene Inhalte werden in der Regel dabei gelöscht. ")."\n".
-               $deactivate_modules_names,
-               array("really_deactivate" => "1"),
-               array("abort_deactivate" => "1"),
-               $controller->url_for('course/studygroup/update/'.$sem_id)); ?>
-<?php  endif; ?>
 
 <form action="<?= $controller->url_for('course/studygroup/update/'.$sem_id) ?>" method=post>
 <?= CSRFProtection::tokenTag() ?>

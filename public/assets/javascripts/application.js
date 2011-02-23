@@ -1671,10 +1671,11 @@ STUDIP.Forms = {
     });
 
     jQuery('form').validator({
-      position : 'bottom left',
-      offset   : [8, 0],
-      message  : '<div><div class="arrow"/></div>',
-      lang     : 'de'
+      position   : 'bottom left',
+      offset     : [8, 0],
+      message    : '<div><div class="arrow"/></div>',
+      lang       : 'de',
+      inputEvent : 'change'
     });
 
     jQuery('form').bind("onBeforeValidate", function () {

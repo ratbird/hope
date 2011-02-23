@@ -398,10 +398,8 @@ class Course_StudygroupController extends AuthenticatedController {
 
             } else if (Request::get('really_deactivate')) {
 
-                $deactivate_modules = Request::get('deactivate_modules');
-                $deactivate_plugins = Request::get('deactivate_plugins');
-                $modules = unserialize(stripslashes(htmlspecialchars_decode($deactivate_modules)));
-                $plugins = unserialize(stripslashes(htmlspecialchars_decode($deactivate_plugins)));
+                $modules = Request::optionArray('deactivate_modules');
+                $plugins = Request::optionArray('deactivate_plugins');
 
                 // really deactive modules
 

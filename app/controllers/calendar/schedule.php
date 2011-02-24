@@ -2,12 +2,17 @@
 # Lifter010: TODO
 
 /*
- * Copyright (C) 2009-2010 - Till Glöggler <tgloeggl@uos.de>
+ * This class displays a seminar-schedule for
+ * users on a seminar-based view and for admins on an institute based view
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Till Glöggler <tgloeggl@uos.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
 
 require_once 'app/controllers/authenticated_controller.php';
@@ -25,10 +30,11 @@ class Calendar_ScheduleController extends AuthenticatedController
 {
 
     /**
-     * this action is the main action of the schedule-controller, setting the environment for the timetable,
-     * accepting a comma-separated list of days.
+     * this action is the main action of the schedule-controller, setting the environment
+     * for the timetable, accepting a comma-separated list of days.
      *
-     * @param  string  a list of an arbitrary mix of the numbers 0-6, separated with a comma (e.g. 1,2,3,4,5 (for Monday to Friday, the default))
+     * @param  string  $days  a list of an arbitrary mix of the numbers 0-6, separated
+     *                        with a comma (e.g. 1,2,3,4,5 (for Monday to Friday, the default))
      * @return void
      */
     function index_action($days = false)
@@ -96,19 +102,35 @@ class Calendar_ScheduleController extends AuthenticatedController
             }
         }
 
+        // check type-safe if days is false otherwise sunday (0) cannot be chosen
+        if ($days === false) {
+            if (Request::getArray('days')) {
+                $this->days = array_keys(Request::getArray('days'));
+            } else {
+                $this->days = $my_schedule_settings['glb_days'];
+                foreach ($this->days as $key => $day_number) {
+                    $this->days[$key] = ($day_number + 6) % 7;
+                }
+            }
+        } else {
+            $this->days = explode(',', $days);
+        }
+
+        
         PageLayout::setHelpKeyword('Basis.MyStudIPStundenplan');
         PageLayout::setTitle(_('Mein Stundenplan'));
 
         if ($inst_mode) {
             // get the entries to be displayed in the schedule
-            $this->entries = CalendarScheduleModel::getInstituteEntries($this, $GLOBALS['user']->id, $this->current_semester,
-                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $institute_id, $show_hidden);
+            $this->entries = CalendarScheduleModel::getInstituteEntries($GLOBALS['user']->id, $this->current_semester,
+                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'],
+                $institute_id, $this->days, $show_hidden);
 
             Navigation::activateItem('/browse/my_courses/schedule');
         } else {
             // get the entries to be displayed in the schedule
-            $this->entries = CalendarScheduleModel::getEntries($this, $GLOBALS['user']->id, $this->current_semester,
-                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $show_hidden);
+            $this->entries = CalendarScheduleModel::getEntries($GLOBALS['user']->id, $this->current_semester,
+                $my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time'], $this->days, $show_hidden);
 
             Navigation::activateItem('/calendar/schedule');
         }
@@ -137,24 +159,9 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         }
 
-        // check type-safe if days is false otherwise sunday (0) cannot be chosen
-        if ($days === false) {
-            if (Request::getArray('days')) {
-                $this->days = array_keys(Request::getArray('days'));
-            } else {
-                $this->days = $my_schedule_settings['glb_days'];
-                foreach ($this->days as $key => $day_number) {
-                    $this->days[$key] = ($day_number + 6) % 7;
-                }
-            }
-        } else {
-            $this->days = explode(',', $days);
-        }
-
         $this->controller = $this;
         $this->calendar_view = new CalendarWeekView($this->entries, 'schedule');
         $this->calendar_view->setHeight(40 + (20 * Request::option('zoom', 0)));
-        $this->calendar_view->setDays($this->days, $this);
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
         
         if ($inst_mode) {

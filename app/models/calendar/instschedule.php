@@ -2,15 +2,20 @@
 # Lifter010: TODO
 
 /*
- * Copyright (C) 2009-2010 - Till Glöggler <tgloeggl@uos.de>
+ * This class is the model for the institute-calendar for seminars
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Till Glöggler <tgloeggl@uos.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
 
 require_once('lib/calendar/CalendarColumn.class.php');
+require_once('app/models/calendar/schedule.php');
 define('DEFAULT_COLOR_SEM', $GLOBALS['PERS_TERMIN_KAT'][2]['color']);
 define('DEFAULT_COLOR_NEW', $GLOBALS['PERS_TERMIN_KAT'][3]['color']);
 define('DEFAULT_COLOR_VIRTUAL', $GLOBALS['PERS_TERMIN_KAT'][1]['color']);
@@ -26,9 +31,9 @@ class CalendarInstscheduleModel
     /**
      * Returns an schedule entry of a course
      *
-     * @param string  the ID of the course
-     * @param string  the ID of the user
-     * @param string  optional; if given, specifies the ID of the entry
+     * @param string  $seminar_id  the ID of the course
+     * @param string  $user_id     the ID of the user
+     * @param string  $cycle_id    optional; if given, specifies the ID of the entry
      * @return array  an array containing the properties of the entry
      */
     static function getSeminarEntry($seminar_id, $user_id, $cycle_id = false)
@@ -68,14 +73,15 @@ class CalendarInstscheduleModel
     /**
      * Returns the schedule entries of the specified institute
      *
-     * @param string  the ID of the user
-     * @param array   an array containing the "beginn" of the semester
-     * @param int     the start hour
-     * @param int     the end hour
-     * @param string  the ID of the institute
+     * @param string  $user_id       the ID of the user
+     * @param array   $semester      an array containing the "beginn" of the semester
+     * @param int     $start_hour    the start hour
+     * @param int     $end_hour      the end hour
+     * @param string  $institute_id  the ID of the institute
+     * @param array   $days          the days to be displayed
      * @return array  an array containing the entries
      */
-    static function getInstituteEntries($controller, $user_id, $semester, $start_hour, $end_hour, $institute_id)
+    static function getInstituteEntries($user_id, $semester, $start_hour, $end_hour, $institute_id, $days)
     {
         $day_names  = array(_("Montag"),_("Dienstag"),_("Mittwoch"),_("Donnerstag"),_("Freitag"),_("Samstag"),_("Sonntag"));
 
@@ -109,14 +115,12 @@ class CalendarInstscheduleModel
                     $day_number = ($entry['day']-1) % 7;
                     if (!isset($ret[$day_number])) {
                         $ret[$day_number] = CalendarColumn::create($day_number);
-                        $ret[$day_number]->setTitle($day_names[$day_number]);
-                        $ret[$day_number]->setURL($controller->url_for('calendar/instschedule/index/'. $day_number));
                     }
                     $ret[$day_number]->addEntry($entry);
                 }
             }
         }
 
-        return $ret;
+        return CalendarScheduleModel::addDayChooser($ret, $days, 'instschedule');
     }
 }

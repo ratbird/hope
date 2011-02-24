@@ -55,53 +55,9 @@ class CalendarWeekView extends CalendarView
     }
 
     /**
-     * set the visible days for the calendar. Pass an array with at least one of the numbers 0-6,
-     * which represent the numerical phplike-days respectively.
-     * it also sorts the days in the order of the days.
-     *
-     * @param  mixed  $days an array of at least one of the numbers 0-6
-     *
-     * deprecated ?
-     */
-    public function setDays($days, $controller)
-    {
-        $new_columns = array();
-        foreach ($days as $day) {
-            $exist = false;
-            foreach ($this->entries as $column) {
-                if ($column->getTitle() === gettext(self::$day_names[$day])) {
-                    $new_columns[] = $column;
-                    $exist = true;
-                }
-            }
-            if (!$exist) {
-                $new_columns[] = CalendarColumn::create($day)
-                                    ->setTitle(gettext(self::$day_names[$day]))
-                                    ->setURL($controller->url_for('calendar/'. $this->context .'/index/'. $day));
-            }
-        }
-        $this->entries = $new_columns;
-
-        // set the correct order for the days
-        $new_days = array();
-
-        for ($i = 1; $i <= 6; $i++) {
-            if (in_array($i, $days) !== false) {
-                $new_days[] = $i;
-            }
-        }
-
-        if (in_array(0, $days) === true) {
-            $new_days[] = 0;
-        }
-
-        $this->days = $new_days;
-    }
-
-    /**
      * Call this function th enable/disable the grouping of entries with the same start and end.
      *
-     * @param  bool  $group optional, defaults to true
+     * @param  bool  $group  optional, defaults to true
      */
     public function groupEntries($grouped = true)
     {
@@ -112,7 +68,7 @@ class CalendarWeekView extends CalendarView
     }
     
     /**
-     * @param bool true to make it read only, false otherwise
+     * @param bool  $readonly  true to make it read only, false otherwise
      * @return void
      */
     public function setReadOnly($readonly = true)

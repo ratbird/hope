@@ -25,12 +25,32 @@ $infobox['content'] = array(
 
     array(
         'kategorie' => _("Aktionen:")
+    ),
+
+    array(
+        'kategorie' => _("Darstellungsgrˆﬂe:")
     )
 );
 
 $infobox['content'][1]['eintrag'][] = array (
     'text' => '<a href="'. $controller->url_for('calendar/instschedule/index/'. implode(',', $days) .'?printview=true') .'" target="_blank">'._("Druckansicht") .'</a>',
     'icon' => 'icons/16/black/print.png'
+);
+
+// Infobox-entries for viewport size
+$infobox['content'][2]['eintrag'] = array (
+    array (
+        'icon' => 'icons/16/'. ($zoom == 0 ? 'red' : 'black') . '/schedule.png',
+        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 0)) .'">'. _("klein") .'</a>'
+    ),
+    array (
+        'icon' => 'icons/16/'. ($zoom == 2 ? 'red' : 'black') . '/schedule.png',
+        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 2)) .'">'. _("mittel") .'</a>'
+    ),
+    array (
+        'icon' => 'icons/16/'. ($zoom == 4 ? 'red' : 'black') . '/schedule.png',
+        'text' => '<a href="'. UrlHelper::getLink('', array('zoom' => 4)) .'">'. _("groﬂ") .'</a>'
+    )
 );
 
 $semester_chooser  = '<form method="post" action="'. $controller->url_for('calendar/instschedule') .'">';

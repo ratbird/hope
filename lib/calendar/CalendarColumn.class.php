@@ -22,7 +22,8 @@ class CalendarColumn {
 
     /**
      * creates instance of type CalendarColumn
-     * @param string $id necessary if you want JavaScript enabled for this calendar
+     *
+     * @param string  $id  necessary if you want JavaScript enabled for this calendar
      * @return CalendarColumn
      */
     static public function create($id = null) {
@@ -32,7 +33,8 @@ class CalendarColumn {
 
     /**
      * constructor
-     * @param string $id necessary if you want JavaScript enabled for this column
+     *
+     * @param string  $id  necessary if you want JavaScript enabled for this column
      */
     public function __construct($id = null) {
         $id !== null || $id = md5(uniqid("CalendarColumn_".self::$number++));
@@ -50,7 +52,8 @@ class CalendarColumn {
     /**
      * sets the id for this column, which is only necessary if you want
      * Javascript to be enabled for this calendar
-     * @param string $id new id for this column
+     *
+     * @param string  $id  new id for this column
      * @return CalendarColumn
      */
     public function setId($id) {
@@ -60,7 +63,8 @@ class CalendarColumn {
 
     /**
      * sets a title like "monday" for this column, which will be displayed in the calendar
-     * @param string $new_title new title
+     *
+     * @param string  $new_title  new title
      * @return CalendarColumn
      */
     public function setTitle($new_title) {
@@ -70,6 +74,7 @@ class CalendarColumn {
 
     /**
      * returns the title of this column like "monday"
+     *
      * @return string title of column
      */
     public function getTitle() {
@@ -79,7 +84,8 @@ class CalendarColumn {
     /**
      * sets the url to be directed to when clicking on the title of the column.
      * Usually this is a single-day-view of the calendar.
-     * @param string $new_url an url
+     *
+     * @param string  $new_url  an url
      * @return CalendarColumn
      */
     public function setURL($new_url) {
@@ -89,6 +95,7 @@ class CalendarColumn {
 
     /**
      * returns the URL of the column (see setURL)
+     *
      * @return string an url
      */
     public function getURL() {
@@ -98,7 +105,8 @@ class CalendarColumn {
     /**
      * adds a new entry in the column. The entry needs to be an associative array
      * with parameters as follows:
-     * @param array $entry_array: associative array for an entry in the column like
+     *
+     * @param array  $entry_array  associative array for an entry in the column like
      * array (
      *    'color' => the color in hex (css-like, without the #)
      *    'start' => the (start hour * 100) + (start minute)
@@ -119,7 +127,8 @@ class CalendarColumn {
 
     /**
      * adds many entries to the column. For the syntax of an entry see addEntry()
-     * @param array $entries_array
+     *
+     * @param array  $entries_array
      * @return CalendarColumn
      */
     public function addEntries($entries_array = array()) {
@@ -131,6 +140,7 @@ class CalendarColumn {
 
     /**
      * returns all entries of this column
+     *
      * @return array of arrays like
      * array (
      *    'color' => the color in hex (css-like, without the #)
@@ -148,6 +158,7 @@ class CalendarColumn {
      * deletes all entries of this column. So the only way to edit an entry is
      * getting all entries with getEntries, edit this entry, eraseEntries() and
      * addEntries(). Not very short, but at least it works.
+     *
      * @return CalendarColumn
      */
     public function eraseEntries() {
@@ -177,6 +188,7 @@ class CalendarColumn {
     /**
      * sorts and groups entries and returns them
      * only used by columns with grouped entries like instituteschedules
+     *
      * @return array
      */
     public function sortAndGroupEntries()
@@ -241,6 +253,7 @@ class CalendarColumn {
 
     /**
      * sorts entries and returns them
+     *
      * @return array
      */
     public function sortEntries()
@@ -297,6 +310,7 @@ class CalendarColumn {
 
     /**
      * returns a matrix that tells the number of entries for a given timeslot
+     *
      * @return array 
      */
     public function getMatrix() {
@@ -322,6 +336,8 @@ class CalendarColumn {
     }
 
     /**
+     * check, if a grouped view of the entries is requested
+     *
      * @return bool true if grouped, false otherwise
      */
     public function isGrouped()
@@ -333,6 +349,7 @@ class CalendarColumn {
      * Call this function th enable/disable the grouping of entries with the same start and end.
      *
      * @param  bool  $group optional, defaults to true
+     * @return void
      */
     public function groupEntries($grouped = true)
     {

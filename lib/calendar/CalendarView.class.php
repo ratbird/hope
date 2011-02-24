@@ -90,7 +90,7 @@ class CalendarView
     /**
      * does some plausability checks on an array of calendar-entries
      *
-     * @param  mixed  an array of calendar-entries
+     * @param  mixed  $entries  an array of calendar-entries
      *
      * @return  bool  false if check failed, true otherwise
      */
@@ -107,9 +107,9 @@ class CalendarView
     /**
      * adds a new column to this view. All entries created with addEntry will be
      * added to this column.
-     * @param string $title like "monday" to be displayed on top of the column
-     * @param string $url to be called when clicked on the title of the column
-     * @param string $id any kind of id of the column
+     * @param string  $title  like "monday" to be displayed on top of the column
+     * @param string  $url    to be called when clicked on the title of the column
+     * @param string  $id     any kind of id of the column
      * @return CalendarView
      */
     public function addColumn($title, $url = "", $id = null)
@@ -148,7 +148,7 @@ class CalendarView
     /**
      * Call this function to enable/disable the grouping of entries with the same start and end.
      *
-     * @param  bool  $group optional, defaults to true
+     * @param  bool  $group  optional, defaults to true
      */
     public function groupEntries($grouped = true)
     {
@@ -167,7 +167,8 @@ class CalendarView
      *   column_id: id of the column
      *   hour: integer number from 0 to 23
      * If js_function_object is an empty string, nothing will be done.
-     * @param string $js_function_object: name of js-function or anonymous js-function
+     * 
+     * @param string  $js_function_object  name of js-function or anonymous js-function
      * @return CalendarView
      */
     public function setInsertFunction($js_function_object)
@@ -179,7 +180,7 @@ class CalendarView
     /**
      * outputs the CalendarView with all (grouped) dates in columns.
      *
-     * @param  array  you can pass some additional variables to the templates
+     * @param  array  $params  you can pass some additional variables to the templates
      *
      * @return string
      */

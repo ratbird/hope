@@ -2,12 +2,16 @@
 # Lifter010: TODO
 
 /*
- * Copyright (C) 2009-2010 - Till Glöggler <tgloeggl@uos.de>
+ * This controller displays an institute-calendar for seminars
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
+ *
+ * @author      Till Glöggler <tgloeggl@uos.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
  */
 
 require_once 'app/controllers/authenticated_controller.php';
@@ -37,6 +41,16 @@ class Calendar_InstscheduleController extends AuthenticatedController
         // try to find the correct institute-id
         $institute_id = Request::option('cid', $SessSemName[1]);
 
+        // set the days to be displayed
+        if ($days === false) {
+            if (Request::getArray('days')) {
+                $this->days = array_keys(Request::getArray('days'));
+            } else {
+                $this->days = array(0,1,2,3,4,5,6);
+            }
+        } else {
+            $this->days = explode(',', $days);
+        }
         
         if (!$institute_id) {
             $institute_id = $GLOBALS['_my_admin_inst_id'] 
@@ -65,8 +79,8 @@ class Calendar_InstscheduleController extends AuthenticatedController
             $this->current_semester = $semdata->getCurrentSemesterData();
         }
 
-        $this->entries = (array)CalendarInstscheduleModel::getInstituteEntries($this, $GLOBALS['user']->id,
-            $this->current_semester, 8, 20, $institute_id);
+        $this->entries = (array)CalendarInstscheduleModel::getInstituteEntries($GLOBALS['user']->id,
+            $this->current_semester, 8, 20, $institute_id, $this->days);
 
         Navigation::activateItem('/course/main/schedule');
         PageLayout::setHelpKeyword('Basis.TerminkalenderStundenplan');
@@ -76,20 +90,10 @@ class Calendar_InstscheduleController extends AuthenticatedController
         if ($this->flash['entry']) {
             $this->show_entry = $this->flash['entry'];
         }
-        if ($days === false) {
-            if (Request::getArray('days')) {
-                $this->days = array_keys(Request::getArray('days'));
-            } else {
-                $this->days = array(0,1,2,3,4,5,6);
-            }
-        } else {
-            $this->days = explode(',', $days);
-        }
 
         $this->controller = $this;
         $this->calendar_view = new CalendarWeekView($this->entries, 'instschedule');
         $this->calendar_view->setHeight(40 + (20 * Request::option('zoom', 0)));
-        $this->calendar_view->setDays($this->days, $this);
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
         $this->calendar_view->setReadOnly();
         $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date

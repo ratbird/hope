@@ -58,7 +58,7 @@ $infobox['content'][1]['eintrag'][] = array (
     'icon' => 'icons/16/black/visibility-visible.png'
 );
 
-// Infobox-exntries for viewport size
+// Infobox-entries for viewport size
 $infobox['content'][2]['eintrag'] = array (
     array (
         'icon' => 'icons/16/'. ($zoom == 0 ? 'red' : 'black') . '/schedule.png',

@@ -28,7 +28,7 @@ class StudipPDO extends PDO
     {
         if (strpos($statement, ';') !== false) {
             // replace all strings with placeholders
-            $statement = preg_replace('/(["\'])(\1\1|\\\\.|.)*?\1/', '?', $statement);
+            $statement = preg_replace('/(["\'])(\1\1|\\\\.|.)*?\1/s', '?', $statement);
 
             if (preg_match('/;\s*\S/', $statement)) {
                 throw new PDOException('multiple statement execution not allowed');

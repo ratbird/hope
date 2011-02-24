@@ -76,7 +76,7 @@ if(isset($_REQUEST['key'])) {
         footer();
     } else {
         head(_('Warnung'), True);
-        echo _("Falcher Bestätigungscode.");
+        echo _("Falscher Bestätigungscode.");
         footer();
 
         head(PageLayout::getTitle());

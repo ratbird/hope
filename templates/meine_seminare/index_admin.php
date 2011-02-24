@@ -19,7 +19,7 @@ global $SEM_TYPE;
 
                     <div style="margin-left:10px;">
                         <select name="institut_id" style="vertical-align:middle;">
-                            <? foreach ($_my_inst as $key => $value) : ?>
+                            <? while (list($key, $value) = each($_my_inst)) : ?>
                                 <option <?= $key == $_my_admin_inst_id ? "selected" : "" ?>
                                         value="<?= $key ?>"
                                         style="<?= $value['is_fak'] ? 'font-weight: bold;' : '' ?>">
@@ -30,13 +30,13 @@ global $SEM_TYPE;
                                     <? for ($i = 0; $i < $value["num_inst"]; ++$i) { ?>
                                         <? list($inst_key, $inst_value) = each($_my_inst); ?>
                                         <option <?= $inst_key == $_my_admin_inst_id ? "selected" : "" ?>
-                                                value="<?= $key ?>">
+                                                value="<?= $inst_key ?>">
                                             &nbsp;&nbsp;&nbsp;&nbsp;
                                             <?= htmlReady($inst_value["name"]) ?> (<?= $inst_value["num_sem"] ?>)
                                         </option>
                                     <? } ?>
                                 <? } ?>
-                            <? endforeach ?>
+                            <? endwhile; ?>
                         </select>
 
                         <?= SemesterData::GetSemesterSelector(array('name'=>'select_sem', 'style'=>'vertical-align:middle;'), $_default_sem) ?>

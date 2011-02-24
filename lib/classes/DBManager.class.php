@@ -161,7 +161,7 @@ class DBManager
     {
         $connection = $dsnOrConnection instanceof PDO
             ? $dsnOrConnection
-            : new StudipPDO($dsnOrConnection, $user, $pass);
+            : new PDO($dsnOrConnection, $user, $pass);
 
         $this->configureConnection($connection);
         $this->connections[$database] = $connection;

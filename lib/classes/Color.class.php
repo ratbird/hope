@@ -174,22 +174,26 @@ class Color {
      * @author Till Glöggler <tgloeggl@uos.de>
      *
      * @param  string  $color  any type of css-valid color
+     * @param  int  $factor  percentage of brightning, 100 for white and 0 for no changes to color
      * @return string  brightened color in same format as the passed one
      */
-    static function brighten($color) {
+    static function brighten($color, $factor = 35) {
         // convert to color to rgba
         list($color, $format) = self::_normalize($color);
+        if ($factor > 100) {
+            $factor = 100;
+        } elseif($factor < 0) {
+            $factor = 0;
+        }
 
         // return the color itself, if the conversion failed
         if (!$format) return $color;
 
         // brighten the color
-        if ($color[0] < 150 && $color[1] < 150 && $$color[2] < 150) {
-            $color[0] += 60;
-            $color[1] += 60;
-            $color[2] += 60;
-        }
-
+        $color[0] = floor(($color[0] * (100 - $factor) + 255 * $factor) / 100);
+        $color[1] = floor(($color[1] * (100 - $factor) + 255 * $factor) / 100);
+        $color[2] = floor(($color[2] * (100 - $factor) + 255 * $factor) / 100);
+        
         // convert the color back (if possible)
         $func = "_array2" . $format;
         return self::$func($color);

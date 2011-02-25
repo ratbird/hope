@@ -1,13 +1,6 @@
 <?
-# Lifter010: TODO
-$cat = -1;
 
-// do we have a category-color?
-foreach ($GLOBALS['PERS_TERMIN_KAT'] as $key => $data) :
-    if ($data['color'] == $entry['color']) :
-        $cat = $key; break;
-    endif;
-endforeach;
+$color_background = Color::brighten($entry['color']);
 
 $element_id = md5(uniqid());
 ?>
@@ -18,8 +11,7 @@ $element_id = md5(uniqid());
     <!-- for safari5 we need to set the height for the dl as well -->
     <dl class="hover" style="height: <?= $height - 2 ?>px;
         border: 1px solid <?= $entry['color'] ?>;
-        background-image: url('<?= Assets::url('images/calendar/category'. $cat .'.jpg') ?>');
-        background-position: left top;">
+        background-color: <?= $color_background ?>;">
         <dt style="background-color: <?= $entry['color'] ?>;">
             <?= floor($entry['start']/100).":".(($entry['start']%100) < 10 ? "0" : "").($entry['start']%100) ?> - <?= floor($entry['end']/100).":".(($entry['end']%100) < 10 ? "0" : "").($entry['end']%100) ?><?= $entry['title'] ? ', <b>'. htmlReady($entry['title']) .'</b>' : '' ?>
         </dt>

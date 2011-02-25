@@ -1473,7 +1473,8 @@ div.schedule_entry dl {
     color: white;
     height: 100%;
     background-image: url('../images/calendar/category_neutral.png');
-    background-position: center center;
+    background-position: top left;
+    background-repeat: repeat-y;
     margin: 0px;
 }
 

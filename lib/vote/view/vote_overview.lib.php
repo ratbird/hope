@@ -36,52 +36,59 @@ function printSiteTitle(){
  */
 function printSafeguard($sign,$text,$mode = NULL, $voteID = NULL, $showrangeID = NULL, $referer = NULL){
     global $label;
-/*  $html = "<table class=\"blank\" cellspacing=0 cellpadding=0 border=0 width=\"100%\">\n"
-          . " <tr>\n"
-          . "  <td class=\"blank\">&nbsp;\n"
 
-          . "    <td width=\"34\" style=\"vertical-align:top;\">\n";
-*/
-    $html = "   <table align=\"center\" width=99% class=blank border=0 cellpadding=2 cellspacing=0>\n"
-          . "   <tr>\n"
-          . "    <td width=\"34\" valign=\"middle\" style=\"vertical-align:middle;\">\n";//style=\"vertical-align:top;\"
-    $color = "";
-    if ($sign != ""){
-        $html .="     <img src=\"".Assets::image_path($sign.'.gif')."\">\n";
-        if ($sign == "ausruf")
-            $color = VOTE_COLOR_ERROR;
-        elseif ($sign == "ok")
-            $color = VOTE_COLOR_SUCCESS;
-    }
-    $html .="    </td>\n";
-    $html .="    <td align=\"left\" valign=\"middle\" style=\"vertical-align:middle;\">\n";
-    $html .="     <font size=\"-1\" color=\"$color\"><br>$text</font><br><br>\n";
+    switch ($mode) {
 
-    if ($referer)
-        $linkreferer = "&referer=".$referer;
+        case "delete_request":
+            $approval = array(
+                'page'        => 'overview',
+                'voteaction'  => 'delete_confirmed',
+                'voteID'      => $voteID,
+                'showrangeID' => $showrangeID,
+                'referer'     => $referer
+            );
+            $abort = array(
+                'page'        => 'overview',
+                'voteaction'  => 'delete_aborted',
+                'voteID'      => $voteID,
+                'showrangeID' => $showrangeID,
+                'referer'     => $referer
+            );
+            $html = createQuestion(html_entity_decode($text), $approval, $abort);
+            break;
 
-    if (($mode == "delete_request") || ($mode == "NeverResultvisibility")){
-        if ($mode == "delete_request"){
-            $value1 = "delete_confirmed";
-            $value2 = "delete_aborted";
+        case "NeverResultvisibility":
+            $approval = array(
+                'page'        => 'overview',
+                'voteaction'  => 'setResultvisibility_confirmed',
+                'voteID'      => $voteID,
+                'showrangeID' => $showrangeID,
+                'referer'     => $referer
+            );
+
+            $abort = array(
+                'page'        => 'overview',
+                'voteaction'  => 'setResultvisibility_aborted',
+                'voteID'      => $voteID,
+                'showrangeID' => $showrangeID,
+                'referer'     => $referer
+            );
+            $html =  createQuestion($text, $approval, $abort);
+            break;
+
+        default:
+            switch($sign) {
+                case "ausruf":
+                    $html = MessageBox::error($text);
+                    break;
+                case "ok":
+                    $html = MessageBox::success($text);
+                    break;
+                default:
+                    break;
+        break;
         }
-        else{
-            $value1 = "setResultvisibility_confirmed";
-            $value2 = "setResultvisibility_aborted";
-        }
-        $html .="<font size=\"-1\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=overview&voteaction=".$value1."&voteID=".$voteID."&showrangeID=".$showrangeID.($referer ? "&referer=".$referer : ""));
-        $html .="\" title=\"".$label["yes"]."\">" . makeButton('ja','img',$label["yes"]) . "</a></font>\n";
-        $html .="<font size=\"-1\"><a href=\"".URLHelper::getLink(VOTE_FILE_ADMIN."?page=overview&voteaction=".$value2."&voteID=".$voteID."&showrangeID=".$showrangeID.($referer ? "&referer=".$referer : ""));
-        $html .="\" title=\"".$label["no"]."\">" . makeButton('nein','img',$label["no"]) . "</a></font>\n";
     }
-    $html .="    </td>\n"
-          . "   </tr>\n";
-    if ($referer)
-        $html .= "   <tr><td>&nbsp;</td><td><font size=\"-1\"><a href=\"".URLHelper::getLink($referer)."\">".$label["referer"]."</a></font></td></tr>";
-    $html .="   </table>\n";
-        /*  . "  </td>\n"
-          . " </tr>\n"
-          . "</table>\n";*/
     return $html;
 }
 

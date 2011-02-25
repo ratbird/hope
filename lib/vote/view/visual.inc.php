@@ -230,31 +230,17 @@ function createBoxContentFooter () {
  * @returns  String   The HTML-errortext
  */
 function createErrorReport (&$object, $errortitle = "") {
-   $html = "";
-   if (empty ($errortitle)) {
-       $errortitle = ( count( $object->getErrors() ) > 1 )
-       ? _("Es sind Fehler aufgetreten.")
-       : _("Es ist ein Fehler aufgetreten.");
-   }
-
-   $html .=  createReportMessage ($errortitle, VOTE_ICON_ERROR,
-                  VOTE_COLOR_ERROR);
-
-   $html .= "<ul>\n";
-   if(is_object($object)){
-       foreach ($object->getErrors () as $error) {
-          $html .= " <li><font size=\"-1\">".$error["string"]."</font>\n";
-          if ($error["type"] == ERROR_CRITICAL) {
-         $html .= "<ul>\n";
-         $html .= "<li>"._("Datei: ")."<b>".$error["file"]."</b></li>\n";
-         $html .= "<li>"._("Zeile: ")."<b>".$error["line"]."</b></li>\n";
-         $html .= "</ul>\n";
-          }
-          $html .= "</li>\n";
-       }
-   }
-   $html .= "</ul>\n";
-
+    $html = "";
+    if (empty ($errortitle)) {
+        $errortitle = ( count( $object->getErrors() ) > 1 )
+        ? _("Es sind Fehler aufgetreten.")
+        : _("Es ist ein Fehler aufgetreten.");
+    }
+    foreach ($object->getErrors () as $error) {
+        $errors[] = $error["string"];
+    }
+    $html = MessageBox::error($errortitle, $errors);
+   
    return $html;
 }
 # ===================================================== end: public functions #

@@ -1,6 +1,6 @@
 <?
 
-$color_background = Color::brighten($entry['color']);
+$color_background = Color::brighten($entry['color'], 20);
 
 $element_id = md5(uniqid());
 ?>

@@ -1,5 +1,4 @@
 <?php
-# Lifter010: TODO
 /*
  * AutoInsert.class.php - administrate seminars for automatical logins
  *
@@ -41,7 +40,7 @@ class AutoInsert
 {
     /**
      * Check if exist at least 1 seminar for the auto insert function
-     * @return bool
+     * @return boolean bool 1 -> if exist seminar, 0 -> no seminar was
      */
     public static function existSeminars()
     {
@@ -53,14 +52,14 @@ class AutoInsert
 
     /**
      * Is there already an user entry
-     * @param $user_id
-     * @param $seminar_id
-     * @return bool
+     * @param string $user_id The user_id for the check
+     * @param string $seminar_id The seminar_id for the check
+     * @return boolean bool 1 -> if exist at least 1 user, 0 -> no user in the seminar
      */
-    private static function checkUser($user_id, $seminar_id)
+    private static function checkUser($user_id,$seminar_id)
     {
         $stmt = DBManager::get()->prepare("SELECT count(*) FROM seminar_user WHERE user_id = ? and seminar_id = ?");
-        $stmt->execute(array($user_id, $seminar_id));
+        $stmt->execute(array($user_id,$seminar_id));
         $check = $stmt->fetchColumn();
 
         return ($check > 0);
@@ -68,9 +67,9 @@ class AutoInsert
 
     /**
      * Check user status
-     * @param $user_id
-     * @param $seminar_id
-     * @return string
+     * @param string $user_id The user_id for the status-check
+     * @param string $seminar_id The seminar_id for the user-status check
+     * @return PDOStatement Result of the query against the db
      */
     private static function checkUserStatus($user_id,$seminar_id)
     {
@@ -80,8 +79,8 @@ class AutoInsert
 
     /**
      * If exist user, update the status (relevant to the status "user")
-     * @param $user_id
-     * @param $seminar_id
+     * @param string $user_id The user_id is updated
+     * @param string $seminar_id The seminar_id for the user-update
      */
     private static function updateUserStatus($user_id,$seminar_id)
     {
@@ -93,10 +92,10 @@ class AutoInsert
 
     /**
      * Insert a user in the seminar_user tabelle
-     * @param $user_status (current user status )
-     * @param $user_id
-     * @param $sem (status which a user must have to be registered)
-     * @return bool
+     * @param string $user_status current user status
+     * @param string $user_id The user_id to add
+     * @param string $sem Status which a user must have to be registered
+     * @return boolean bool 0 -> Nothing todo, 1 -> User add successfully
      */
     private static function saveUser($user_status, $user_id, $sem)
     {
@@ -104,7 +103,7 @@ class AutoInsert
             // insert the user in the seminar_user table
             $stmt = DBManager::get()->prepare("INSERT IGNORE INTO seminar_user (Seminar_id, user_id, status, gruppe) "
                                               ."VALUES(?, ?, ?, ?)");
-            $stmt->execute(array($sem['seminar_id'], $user_id, 'autor', select_group($sem['start_time'])));
+            $stmt->execute(array($sem['seminar_id'], $user_id, 'autor',select_group($sem['start_time'])));
             return true;
         }
         return false;
@@ -112,8 +111,8 @@ class AutoInsert
 
     /**
      * Check of no duplicate entries
-     * @param $seminar_id
-     * @return bool
+     * @param string $seminar_id The seminar_id to check of exist
+     * @return boolean bool 0 -> seminar not in the list, 1 -> seminar exist in the list
      */
     public static function checkSeminar($seminar_id)
     {
@@ -126,8 +125,8 @@ class AutoInsert
 
     /**
      * Insert a new seminar, for the auto insert function
-     * @param $seminar_id
-     * @param $status (array with string autor, tutor or dozent)
+     * @param string $seminar_id The seminar_id to save in the auto-insert-table
+     * @param string $status Array with string autor, tutor or dozent
      */
     public static function saveSeminar($seminar_id, $status)
     {
@@ -142,9 +141,9 @@ class AutoInsert
      * Delete (if $remove true) the autoinsert seminar
      * Add a statusgroup (autor, tutor, dozent) to the autoinsert seminar
      *
-     * @param $seminar_id
-     * @param $status
-     * @param $remove
+     * @param string $seminar_id The seminar_id to check
+     * @param string $status The auto-insert-status for the new user
+     * @param boolean $remove 0 -> Add a new seminar-status, 1 -> Delete the seminar with the status from the auto-insert-table
      */
     public static function updateSeminar($seminar_id, $status, $remove)
     {
@@ -159,8 +158,8 @@ class AutoInsert
 
     /**
      * Delete a auto insert seminar
-     * @param $seminar_id
-     * @return bool
+     * @param string $seminar_id To deletet seminar_id
+     * @return PDOStatement Result of the query against the db
      */
     public static function deleteSeminar($seminar_id)
     {
@@ -169,8 +168,8 @@ class AutoInsert
 
     /**
      * Show me all auto insert seminars
-     * @param $only_sem_id
-     * @return array
+     * @param string $only_sem_id false -> give all seminar, true -> give only one seminar
+     * @return array $results Array containing the seminars data
      */
     public static function getAllSeminars($only_sem_id = false)
     {
@@ -192,7 +191,8 @@ class AutoInsert
 
     /**
      * Show me one auto inser seminar
-     * @param  $seminar_id
+     * @param  string $seminar_id The seminar_id for the result
+     * @return array $result Array containing the seminar information
      */
     public static function getSeminar($seminar_id)
     {
@@ -208,9 +208,9 @@ class AutoInsert
 
     /**
      * Insert the user, so you know in which courses he was already entered.
-     * @param $user_id
-     * @param $seminar_id
-     * @return bool
+     * @param string $user_id To add the user_id
+     * @param string $seminar_id The seminar_id from the auto-insert-seminar
+     * @return PDOStatement Result of the query against the db
      */
     public static function saveAutoInsertUser($seminar_id,$user_id)
     {
@@ -224,11 +224,11 @@ class AutoInsert
 
     /**
      * Check of user exist
-     * @param $seminar_id
-     * @param $user_id
-     * @return bool
+     * @param string $seminar_id The seminar_id for the check
+     * @param string $user_id The user_id for the check
+     * @return PDOStatement Result of the query against the db
      */
-    public static function checkAutoInsertUser($seminar_id, $user_id)
+    public static function checkAutoInsertUser($seminar_id,$user_id)
     {
         // if the user exist in this table, the user would not registred again in the seminar_user table
         $query = "SELECT IF(COUNT(*)>0,1,0) FROM auto_insert_user "
@@ -238,19 +238,18 @@ class AutoInsert
 
     /**
      * Check of the right status from the new user
-     *
-     * @param  $status (current user status)
-     * @param  $new_user_id (new user id)
-     * @return array
+     * @param  string $status Current user status
+     * @param  string $new_user_id User id to add the user
+     * @return array $seminars_added Containing the seminar names where the user entered
      */
-    public static function checkNewUser($status, $new_user_id)
+    public static function checkNewUser($status,$new_user_id)
     {
         $get_seminars = self::getAllSeminars();
         $seminars_added = array();
 
         foreach($get_seminars as $sem) {
-            if (!self::checkUser($new_user_id, $sem['seminar_id'])) {
-                if (self::saveUser($status, $new_user_id, $sem)){
+            if (!self::checkUser($new_user_id,$sem['seminar_id'])) {
+                if (self::saveUser($status,$new_user_id,$sem)){
                    array_push($seminars_added, $sem['Name']);
                 }
             }
@@ -261,12 +260,12 @@ class AutoInsert
     /**
      * If changing the status from a exist user
      * Exist a relevant seminar?
-     * @param $old_status
-     * @param $new_status
-     * @param $user_id
-     * @return array
+     * @param string $old_status The old status from the user
+     * @param string $new_status The new status from the user
+     * @param string $user_id The user_id to check
+     * @return array $seminars_added Containing the seminar names where the user entered
      */
-    public static function checkOldUser($old_status, $new_status, $user_id)
+    public static function checkOldUser($old_status,$new_status,$user_id)
     {
         if ($old_status == $new_status or !self::existSeminars()) {
             return array();
@@ -276,12 +275,12 @@ class AutoInsert
         $seminars_added = array();
 
         foreach($get_seminars as $sem) {
-            if (!self::checkUser($user_id, $sem['seminar_id'])) {
-                if(self::saveUser($new_status, $user_id, $sem)) {
+            if (!self::checkUser($user_id,$sem['seminar_id'])) {
+                if(self::saveUser($new_status,$user_id,$sem)) {
                     array_push($seminars_added, $sem['Name']);
                 }
-            } elseif(AutoInsert::checkUserStatus($user_id, $sem['seminar_id']) == 'user'){
-                AutoInsert::updateUserStatus($user_id, $sem['seminar_id']);
+            } elseif(AutoInsert::checkUserStatus($user_id,$sem['seminar_id']) == 'user'){
+                AutoInsert::updateUserStatus($user_id,$sem['seminar_id']);
                 array_push($seminars_added, $sem['Name']);
             }
         }

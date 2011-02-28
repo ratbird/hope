@@ -127,17 +127,22 @@ DBManager::getInstance()
                   $GLOBALS['DB_STUDIP_USER'],
                   $GLOBALS['DB_STUDIP_PASSWORD']);
 
- // set slave connection
- if (isset($GLOBALS['DB_STUDIP_SLAVE_HOST'])) {
-     DBManager::getInstance()
-         ->setConnection('studip-slave',
-                         'mysql:host='.$GLOBALS['DB_STUDIP_SLAVE_HOST'].
-                         ';dbname='.$GLOBALS['DB_STUDIP_SLAVE_DATABASE'],
-                         $GLOBALS['DB_STUDIP_SLAVE_USER'],
-                         $GLOBALS['DB_STUDIP_SLAVE_PASSWORD']);
- } else {
-     DBManager::getInstance()->aliasConnection('studip', 'studip-slave');
- }
+// set slave connection
+if (isset($GLOBALS['DB_STUDIP_SLAVE_HOST'])) {
+    try {
+        DBManager::getInstance()
+            ->setConnection('studip-slave',
+                            'mysql:host='.$GLOBALS['DB_STUDIP_SLAVE_HOST'].
+                            ';dbname='.$GLOBALS['DB_STUDIP_SLAVE_DATABASE'],
+                            $GLOBALS['DB_STUDIP_SLAVE_USER'],
+                            $GLOBALS['DB_STUDIP_SLAVE_PASSWORD']);
+    } catch (PDOException $exception) {
+        // if connection to slave fails, fall back to master instead
+        DBManager::getInstance()->aliasConnection('studip', 'studip-slave');
+    }
+} else {
+    DBManager::getInstance()->aliasConnection('studip', 'studip-slave');
+}
 
 
 /**

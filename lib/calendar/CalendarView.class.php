@@ -2,7 +2,9 @@
 # Lifter010: TODO
 
  /**
- *  This class takes and checks all necessary parameters to display a calendar/schedule/time-table.
+ * CalendarView.class.php - generates a calendar
+ *
+ * This class takes and checks all necessary parameters to display a calendar/schedule/time-table.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,6 +21,24 @@ require_once 'lib/classes/Color.class.php';
 
 /**
  * Kind of bean class for the calendar view.
+ *
+ * Example of use:
+ * 
+ *  // create a calendar-view and add a column
+ *  $plan = new CalendarView();
+ *  $plan->addColumn(_('Spalte 1'))
+ *      ->addEntry(array(
+ *          'id'    => 1,
+ *          'color' => '#5C2D64',
+ *          'start' => '0930',
+ *          'end'   => '1100',
+ *          'title' => 'Mathe 2',
+ *          'content' => 'Die Mathematiker kreiden sich mal wieder was an.'
+ *      )
+ *  );
+ *   
+ *  // display the calendar (containing one column)
+ *  print $plan->render();
  *
  * @since      2.0
  */

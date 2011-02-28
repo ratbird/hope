@@ -71,7 +71,11 @@ class CalendarInstscheduleModel
 
 
     /**
-     * Returns the schedule entries of the specified institute
+     * Returns an array of CalendarColumn's, containing the seminar-entries
+     * for the passed user (in the passed semester belonging to the passed institute)
+     * The start- and end-hour are used to constrain the returned
+     * entries to the passed time-period. The passed days constrain the entries
+     * to these.
      *
      * @param string  $user_id       the ID of the user
      * @param array   $semester      an array containing the "beginn" of the semester

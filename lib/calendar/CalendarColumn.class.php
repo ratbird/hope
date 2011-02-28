@@ -1,7 +1,10 @@
 <?php
 # Lifter010: TODO
 /**
+ * CalendarColumn.class.php - a column for a CalendarView
+ *
  * This class represents an entry-column like "monday" in the calendar
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -43,6 +46,7 @@ class CalendarColumn {
 
     /**
      * returns the id of the column
+     *
      * @return string
      */
     public function getId() {

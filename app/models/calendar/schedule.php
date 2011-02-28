@@ -78,7 +78,12 @@ class CalendarScheduleModel
 
 
     /**
-     * Returns the schedule entries (optionally of a given course)
+     * Returns an array of CalendarColumn's containing the
+     * schedule entries (optionally of a given id only).
+     * The start- and end-hour are used to constrain the returned
+     * entries to the passed time-period.
+     * If you pass an id, there will be only the single entry with that id in
+     * the CalendarColumn
      *
      * @param string  $user_id the  ID of the user
      * @param int     $start_hour   the start hour
@@ -131,7 +136,7 @@ class CalendarScheduleModel
     }
 
     /**
-     * Return an entry for the specified course
+     * Return an entry for the specified course.
      *
      * @param string  $seminar_id  the ID of the course
      * @param string  $user_id     the ID of the user
@@ -260,7 +265,12 @@ class CalendarScheduleModel
     }
 
     /**
-     * Returns an schedule entry of a course
+     * Returns an array of CalendarColumn's, containing the seminar-entries
+     * for the passed user in the passed semester.
+     * The start- and end-hour are used to constrain the returned
+     * entries to the passed time-period.
+     * Seminar-entries can be hidden, so you can opt-in to fetch the hidden
+     * ones as well.
      *
      * @param string  $user_id      the ID of the user
      * @param string  $semester     an array containing the "beginn" of the semester
@@ -326,7 +336,10 @@ class CalendarScheduleModel
 
 
     /**
-     * Returns the schedule entries of the specified institute
+     * Returns an array of CalendarColumn's, containing the seminar-entries
+     * for the passed user in the passed semester belonging to the passed institute.
+     * The start- and end-hour are used to constrain the returned
+     * entries to the passed time-period.
      *
      * @param string  $user_id       the ID of the user
      * @param array   $semester      an array containing the "beginn" of the semester
@@ -414,7 +427,14 @@ class CalendarScheduleModel
     }
 
     /**
-     * Returns a merged array consisting of normal and courses' entries
+     * Returns an array of CalendarColumn's, containing the seminar-entries
+     * for the passed user (in the passed semester belonging to the passed institute)
+     * and the user-defined schedule-entries.
+     * The start- and end-hour are used to constrain the returned
+     * entries to the passed time-period. The passed days constrain the entries
+     * to these.
+     * Seminar-entries can be hidden, so you can opt-in to fetch the hidden
+     * ones as well.
      *
      * @param string  $user_id       the user's ID
      * @param string  $semester      the data for the semester to be displayed
@@ -451,8 +471,13 @@ class CalendarScheduleModel
      */
 
     /**
-     * return an array of CalendarColumn-objects, containing entries
-     * in the schedule (personal ones and regular seminar-dates)
+     * Returns an array of CalendarColumn's, containing the seminar-entries
+     * for the passed user (in the passed semester) and the user-defined schedule-entries.
+     * The start- and end-hour are used to constrain the returned
+     * entries to the passed time-period. The passed days constrain the entries
+     * to these.
+     * Seminar-entries can be hidden, so you can opt-in to fetch the hidden
+     * ones as well.
      *
      * @param string  $user_id       the user's ID
      * @param string  $semester      the data for the semester to be displayed

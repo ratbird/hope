@@ -2127,7 +2127,7 @@ function get_mime_type($filename)
 */
 function GetDownloadLink($file_id, $file_name, $type = 0, $dltype = 'normal', $range_id = '', $list_id = ''){
     $mode = (isset($GLOBALS['SENDFILE_LINK_MODE']))? $GLOBALS['SENDFILE_LINK_MODE']:'normal';
-    $link[] = $GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'];
+    $link[] = $GLOBALS['ABSOLUTE_URI_STUDIP'];
     $wa = '';
     switch($mode) {
     case 'rewrite':

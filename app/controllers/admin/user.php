@@ -97,7 +97,7 @@ class Admin_UserController extends AuthenticatedController
             $this->user = $request;
             $this->sortby = Request::option('sortby', 'username');
             $this->order = (Request::option('order', 'asc') == 'asc') ? 'desc' : 'asc';
-            $this->order_icon = $this->order;
+            $this->order_icon = (Request::option('order', 'asc') == 'asc') ? 'asc' : 'desc';
             $request['vorname'] = ($request['vorname']) ? $request['vorname'] : NULL;
             $request['nachname'] = ($request['nachname']) ? $request['nachname'] : NULL;
 

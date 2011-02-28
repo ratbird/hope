@@ -7,8 +7,8 @@
 
 <h2>
     <?= _('Benutzerverwaltung für ') ?><?= htmlReady($user['Vorname']) ?> <?= htmlReady($user['Nachname']) ?>
-    <?= ($user['locked']) ? '<br><span style="color: red">(' . _('gesperrt von') . ' ' . get_fullname($user['locked_by']) : '' ?>
-    <?= ($user['lock_comment']) ? ', Kommentar: '. $user['lock_comment'] : '' ?>
+    <?= ($user['locked']) ? '<br><span style="color: red">(' . _('gesperrt von') . ' ' . htmlReady(get_fullname($user['locked_by'])) : '' ?>
+    <?= ($user['lock_comment']) ? ', Kommentar: '. htmlReady($user['lock_comment']) : '' ?>
     <?= ($user['locked']) ? ')</span>' : '' ?>
 </h2>
 

@@ -12,7 +12,7 @@
                     <ul>
                     <?foreach($data['users'] as $user) :?>
                         <li>
-                            <?= $user['Vorname'] ?> <?= $user['Nachname'] ?> (<?= $user['username'] ?>)
+                            <?= htmlReady($user['Vorname']) ?> <?= htmlReady($user['Nachname']) ?> (<?= htmlReady($user['username']) ?>)
                             <input type="hidden" name="user_ids[]" value="<?= $user['user_id'] ?>">
                         </li>
                     <?endforeach?>

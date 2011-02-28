@@ -246,8 +246,7 @@ class ExternModuleTemplateDownload extends ExternModule {
                 }
                 $content['FILES']['FILE'][$i]['FILE_NO'] = $i + 1;
 
-                // remove relative path segment from download link
-                $download_link = $GLOBALS['ABSOLUTE_URI_STUDIP'] . substr(GetDownloadLink($db->f('dokument_id'), $db->f('filename')), strlen($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP']));
+                $download_link = GetDownloadLink($db->f('dokument_id'), $db->f('filename'));
 
                 $content['FILES']['FILE'][$i]['FILE_HREF'] = $download_link;
                 $content['FILES']['FILE'][$i]['FILE_NAME'] = ExternModule::ExtHtmlReady($db->f('name'));

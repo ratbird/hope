@@ -837,8 +837,10 @@ function get_role_data_recursive($roles, $user_id, &$default_entries, $filter = 
       $entries = DataFieldEntry::getDataFieldEntries(array($user_id, $role_id));
 
         if ($role['user_there']) {
-            $out_zw .= '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="'.$GLOBALS['ASSETS_URL'].'/images/forumgrau2.png">&nbsp;</td><td colspan="2"><b>'.$new_pred.'</b></td></tr>';
-            $zw = '<td %class%></td><td %class%><font size="-1">'.$new_pred.'</font></td>';
+            $out_zw .= '<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                    .  '<img src="'.$GLOBALS['ASSETS_URL'].'/images/forumgrau2.png">'
+                    .  '&nbsp;</td><td colspan="2"><b>'. htmlReady($new_pred) .'</b></td></tr>';
+            $zw = '<td %class%></td><td %class%><font size="-1">'. htmlReady($new_pred) .'</font></td>';
         }
 
         $zw2 = '';
@@ -866,14 +868,14 @@ function get_role_data_recursive($roles, $user_id, &$default_entries, $filter = 
                     }
                     
                     if ($view) { // Sichtbarkeitsberechtigung
-                        $zw2 .= '<td %class%><font size="-1">'.trim($value);
+                        $zw2 .= '<td %class%><font size="-1">'. trim($value);
                         if ($show_star) $zw2 .= ' *';
                         $zw2 .= '</font></td>';
 
                         if (trim($value)) {
                             $has_value = true;
                             if (!$default) {
-                                $out_zw .= '<tr><td></td><td>'.$name.':&nbsp;&nbsp;</td><td>'.trim($value);
+                                $out_zw .= '<tr><td></td><td>'. htmlReady($name) .':&nbsp;&nbsp;</td><td>'.trim($value);
                                 if ($show_star) $out_zw .= ' *';
                                 $out_zw .= '</td></tr>';
                             }

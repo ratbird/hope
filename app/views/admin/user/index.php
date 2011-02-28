@@ -75,7 +75,7 @@
             <? if ($i % 2 == 0) : ?>
             <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
             <? endif ?>
-                <td align="right" nowrap><?= _($datafield->getName()) ?></td>
+                <td align="right" nowrap><?= htmlReady($datafield->getName()) ?></td>
                 <td>
                 <? if ($datafield->getType() == 'bool') : ?>
                     <input type="radio" name="<?= $datafield->getID()?>" value="1" <?= ($user[$datafield->getID()] === "1") ? 'checked' : '' ?>> <?= _('ja') ?>

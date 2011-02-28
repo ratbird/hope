@@ -222,16 +222,35 @@ function fill_groups(&$groups, $group_key, $group_entry)
 }
 
 /**
+ * This function generates a query to fetch information like (at least)
+ * last modification date (last_modified)
+ * number of entries      (count)
+ * number of new entries  (neue)
+ * from object_user_visits for a specific module, denoted by $type.
+ * You pass a table-name ($table_name), where the entries for the module are stored,
+ * the name of the field working as foreign-key ($range_field), the field to count
+ * the number of (new) entries ($count_field).
+ * The if-clause ($if_clause) is used to check if there are any new entries at all.
+ * With $add_fields you can specify some further fields to be fetched in the query
+ * With $add_on you can add some conditions to hold when joining object_user_visits.
+ * $object_field is the name of field in object_user_visits to join with
  *
- * @param unknown_type $table_name
- * @param unknown_type $range_field
- * @param unknown_type $count_field
- * @param unknown_type $if_clause
- * @param unknown_type $type
- * @param unknown_type $add_fields
- * @param unknown_type $add_on
- * @param unknown_type $object_field
- * @param unknown_type $user_id
+ *
+ * @param  string  $table_name    the name of the db-table where the entries for
+ *                                the module denoted by $type are stored in
+ * @param  string  $range_field   name of the field working as foreign-key, when
+ *                                joining object_user_visits
+ * @param  string  $count_field   field to count the (new) entries on
+ * @param  string  $if_clause     an sql-if-clause, used to check if there are any
+ *                                new entries at all
+ * @param  string  $type
+ * @param  string  $add_fields    some further fields to be fetched in the query
+ * @param  string  $add_on        some further conditions to hold when joining object_user_visits
+ * @param  string  $object_field  default: my.object_id.
+ * @param  string  $user_id       default: current user, user-id of user the query is built for
+ * @param  string  $max_field     default: chdate, denotes the field used to find out
+ *                                the last_modified-timestamp
+ * @return string  the query to operate on objects_user_visits
  */
 function get_obj_clause($table_name, $range_field, $count_field, $if_clause,
         $type = false, $add_fields = false, $add_on = false, $object_field = false,

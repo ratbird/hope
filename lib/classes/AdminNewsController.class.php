@@ -210,13 +210,13 @@ class AdminNewsController {
             $this->get_one_news($news_id);
         else {
             $this->news_query = array("news_id"=>"new_entry",
-                                        "topic" => "",
-                                        "body" => "",
-                                        "date" => $aktuell,
+                                        "topic" => Request::get('topic', ''),
+                                        "body" => Request::get('body', ''),
+                                        "date" => Request::get('date', $aktuell),
                                         "user_id" => $this->user_id,
                                         "author" => $this->full_username,
-                                        "expire" => 604800,
-                                        "allow_comments" => 0);
+                                        "expire" => Request::get('expire', 604800),
+                                        "allow_comments" => Request::get('allow_comments', 0));
             if ($perm->have_perm("admin")){
                 $this->search_result[$this->news_range] = array('type' => $this->range_type, 'name' => $this->range_name);
             }

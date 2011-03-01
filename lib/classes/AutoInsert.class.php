@@ -210,7 +210,7 @@ class AutoInsert
      */
     public static function getSeminar($seminar_id)
     {
-        $query  = "SELECT a.seminar_id, GROUP_CONCAT(a.status) AS status, s.Name "
+        $query  = "SELECT a.seminar_id, GROUP_CONCAT(a.status) AS status, s.Name ";
         $query .= "FROM auto_insert_sem a ";
         $query .= "JOIN seminare AS s USING (Seminar_id) ";
         $query .= "WHERE a.seminar_id = ? ";

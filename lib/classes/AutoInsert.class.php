@@ -5,7 +5,7 @@
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * @author      Nico MÃ¼ller <nico.mueller@uni-oldenburg.de>
+ * @author      Nico Müller <nico.mueller@uni-oldenburg.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @author      Jan Hendrik Willms <jan.hendrik.willms@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
@@ -69,7 +69,7 @@ class AutoInsert
      */
     private static function checkUserStatus($user_id,$seminar_id)
     {
-        $statement = DBManager::Get()->query("SELECT status FROM seminar_user WHERE user_id = ? AND seminar_id = ?");
+        $statement = DBManager::get()->query("SELECT status FROM seminar_user WHERE user_id = ? AND seminar_id = ?");
         $statement->execute(array($user_id, $seminar_id));
         $status = $statement->fetchColumn();
 
@@ -161,7 +161,7 @@ class AutoInsert
         $query = $remove
             ? "DELETE FROM auto_insert_sem WHERE seminar_id = ? AND status= ?"
             : "INSERT IGNORE INTO auto_insert_sem (seminar_id, status) VALUES (?, ?)";            
-        $statement = DBManager::Get()->prepare($query);
+        $statement = DBManager::get()->prepare($query);
         $statement->execute(array($seminar_id, $status));
     }
 
@@ -190,7 +190,7 @@ class AutoInsert
         $query .= "GROUP BY s.seminar_id ";
         $query .= "ORDER BY s.Name";
         
-        $statement = DBManager::Get()->query($query);
+        $statement = DBManager::get()->query($query);
 
         if ($only_sem_id) {
             $results = $statement->fetchAll(PDO::FETCH_COLUMN);
@@ -216,7 +216,7 @@ class AutoInsert
         $query .= "WHERE a.seminar_id = ? ";
         $query .= "GROUP BY s.seminar_id";
         
-        $statement = DBManager::Get()->prepare($query);
+        $statement = DBManager::get()->prepare($query);
         $statement->execute(array($seminar_id));
         
         $result = $statement->fetch(PDO::FETCH_ASSOC);

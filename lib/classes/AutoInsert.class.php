@@ -1,13 +1,11 @@
 <?php
 /*
- * AutoInsert.class.php - administrate seminars for automatical logins
- *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
  * the License, or (at your option) any later version.
  *
- * @author      Nico Müller <nico.mueller@uni-oldenburg.de>
+ * @author      Nico MÃ¼ller <nico.mueller@uni-oldenburg.de>
  * @author      Michael Riehemann <michael.riehemann@uni-oldenburg.de>
  * @author      Jan Hendrik Willms <jan.hendrik.willms@uni-oldenburg.de>
  * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
@@ -19,11 +17,9 @@ require_once 'lib/functions.php';
 
 /**
  * AutoInsert.class.php
- * Administrate seminars for automatical logins.
- * Create new auto insert seminars.
- * Update the required user status
- * Delete unwanted auto insert seminars
- *
+ * Provides functions required by StEP00216:
+ * - Assign seminars for automatic registration of certain user types
+ * - Maintenance of registration rules
  *
  * Example of use:
  * @code
@@ -39,252 +35,286 @@ require_once 'lib/functions.php';
 class AutoInsert
 {
     /**
-     * Check if exist at least 1 seminar for the auto insert function
-     * @return boolean bool 1 -> if exist seminar, 0 -> no seminar was
+     * Check if at least one seminar is used by the autoinsert functions
+     * @return bool Indicating whether at least one seminar is used
      */
     public static function existSeminars()
     {
-        $stmt = DBManager::get()->query("SELECT count(*) FROM auto_insert_sem");
-        $check = $stmt->fetchColumn();
+        $statement = DBManager::get()->query("SELECT COUNT(*) FROM auto_insert_sem");
+        $result = $statement->fetchColumn();
 
-        return ($check > 0);
+        return $result > 0;
     }
 
     /**
-     * Is there already an user entry
-     * @param string $user_id The user_id for the check
-     * @param string $seminar_id The seminar_id for the check
-     * @return boolean bool 1 -> if exist at least 1 user, 0 -> no user in the seminar
+     * Tests whether a user is already enregistered for a seminar
+     * @param  string $user_id    Id of the user
+     * @param  string $seminar_id Id of the seminar
+     * @return bool   Indicating whether the user is enregistered
      */
-    private static function checkUser($user_id,$seminar_id)
+    private static function checkUser($user_id, $seminar_id)
     {
-        $stmt = DBManager::get()->prepare("SELECT count(*) FROM seminar_user WHERE user_id = ? and seminar_id = ?");
-        $stmt->execute(array($user_id,$seminar_id));
-        $check = $stmt->fetchColumn();
+        $statement = DBManager::get()->prepare("SELECT COUNT(*) FROM seminar_user WHERE user_id = ? AND seminar_id = ?");
+        $statement->execute(array($user_id, $seminar_id));
+        $result = $statement->fetchColumn();
 
-        return ($check > 0);
+        return $result > 0;
     }
 
     /**
-     * Check user status
-     * @param string $user_id The user_id for the status-check
-     * @param string $seminar_id The seminar_id for the user-status check
-     * @return PDOStatement Result of the query against the db
+     * Returns the status of a user in a certain seminar
+     * @param  string $user_id    Id of the user
+     * @param  string $seminar_id Id of the seminar
+     * @return mixed  The user's status as a string or false if no record exists
      */
     private static function checkUserStatus($user_id,$seminar_id)
     {
-        $query = "SELECT status FROM seminar_user WHERE user_id = '{$user_id}' and seminar_id = '{$seminar_id}'";
-        return DBManager::get()->query($query)->fetchColumn();
+        $statement = DBManager::Get()->query("SELECT status FROM seminar_user WHERE user_id = ? AND seminar_id = ?");
+        $statement->execute(array($user_id, $seminar_id));
+        $status = $statement->fetchColumn();
+
+        return $status;
     }
 
     /**
-     * If exist user, update the status (relevant to the status "user")
-     * @param string $user_id The user_id is updated
-     * @param string $seminar_id The seminar_id for the user-update
+     * Updates a user's status in a certain seminar
+     * @param string $user_id    Id of the user
+     * @param string $seminar_id Id of the seminar
+     * @param string $status     New status for the user in the seminar
      */
-    private static function updateUserStatus($user_id,$seminar_id)
+    private static function updateUserStatus($user_id, $seminar_id, $status = 'autor')
     {
-        $stmt = DBManager::get()->prepare("UPDATE seminar_user SET status = 'autor' "
-                                         ."WHERE Seminar_id = ? "
-                                         ."AND user_id = ?");
-        $stmt->execute(array($seminar_id, $user_id));
+        $query = "UPDATE seminar_user SET status = ? WHERE Seminar_id = ? AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($status, $seminar_id, $user_id));
     }
 
     /**
-     * Insert a user in the seminar_user tabelle
-     * @param string $user_status current user status
-     * @param string $user_id The user_id to add
-     * @param string $sem Status which a user must have to be registered
-     * @return boolean bool 0 -> Nothing todo, 1 -> User add successfully
+     * Enregisters a user in a certain seminar by checking his status and the
+     * seminar's permissions
+     * @param  string $user_status Current user status
+     * @param  string $user_id     Id of the user
+     * @param  Array  $seminar     Array representation of the seminar
+     * @return boole  Indicating whether the user was actually inserted
      */
-    private static function saveUser($user_status, $user_id, $sem)
+    private static function saveUser($user_status, $user_id, $seminar)
     {
-        if (in_array($user_status, $sem['status']) && ($sem['Schreibzugriff']) < 2){
-            // insert the user in the seminar_user table
-            $stmt = DBManager::get()->prepare("INSERT IGNORE INTO seminar_user (Seminar_id, user_id, status, gruppe) "
-                                              ."VALUES(?, ?, ?, ?)");
-            $stmt->execute(array($sem['seminar_id'], $user_id, 'autor',select_group($sem['start_time'])));
-            return true;
-        }
-        return false;
+        if (!in_array($user_status, $seminar['status']) or $seminar['Schreibzugriff'] >= 2)
+            return false;
+            
+        // insert the user in the seminar_user table
+        $query  = "INSERT IGNORE INTO seminar_user (Seminar_id, user_id, status, gruppe)";
+        $query .= " VALUES (?, ?, 'autor', ?)";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array(
+            $seminar['seminar_id'],
+            $user_id,
+            select_group($seminar['start_time'])
+        ));
+        return true;
     }
 
     /**
-     * Check of no duplicate entries
-     * @param string $seminar_id The seminar_id to check of exist
-     * @return boolean bool 0 -> seminar not in the list, 1 -> seminar exist in the list
+     * Tests if a seminar already has an autoinsert record
+     * @param  string $seminar_id Id of the seminar
+     * @return bool   Indicating whether the seminar already has an autoinsert record
      */
     public static function checkSeminar($seminar_id)
     {
-        $stmt = DBManager::get()->prepare("SELECT count(*) FROM auto_insert_sem WHERE seminar_id=?");
-        $stmt->execute(array($seminar_id));
-        $check = $stmt->fetchColumn();
+        $query = "SELECT COUNT(*) FROM auto_insert_sem WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($seminar_id));
+        $result = $statement->fetchColumn();
 
-        return ($check > 0);
+        return $result > 0;
     }
 
     /**
-     * Insert a new seminar, for the auto insert function
-     * @param string $seminar_id The seminar_id to save in the auto-insert-table
-     * @param string $status Array with string autor, tutor or dozent
+     * Enables a seminar for autoinsertion of users with the given status(ses)
+     * @param string $seminar_id Id of the seminar
+     * @param mixed  $status     Either a single string or an array of strings
+     *                           containing the status(ses) to enable for 
+     *                           autoinsertion
      */
     public static function saveSeminar($seminar_id, $status)
     {
-        $stmt = DBManager::get()->prepare("INSERT INTO auto_insert_sem (seminar_id,status)  VALUES(?, ?)");
-        foreach ($status as $s)
+        $query = "INSERT INTO auto_insert_sem (seminar_id, status) VALUES (?, ?)";
+        $statement = DBManager::get()->prepare($query);
+
+        foreach ((array)$status as $s)
         {
-            $stmt->execute(array($seminar_id, $s));
+            $statement->execute(array($seminar_id, $s));            
         }
     }
 
     /**
-     * Delete (if $remove true) the autoinsert seminar
-     * Add a statusgroup (autor, tutor, dozent) to the autoinsert seminar
+     * Updates an autoinsert record for a given seminar, dependent on the
+     * parameter $remove it either inserts or removes the record for the given
+     * parameters
      *
-     * @param string $seminar_id The seminar_id to check
-     * @param string $status The auto-insert-status for the new user
-     * @param boolean $remove 0 -> Add a new seminar-status, 1 -> Delete the seminar with the status from the auto-insert-table
+     * @param string $seminar_id Id of the seminar
+     * @param string $status     Status for autoinsertion
+     * @param bool   $remove     Whether the record should be added or removed
      */
-    public static function updateSeminar($seminar_id, $status, $remove)
+    public static function updateSeminar($seminar_id, $status, $remove = false)
     {
-        if ($remove == 1) {
-            $stmt = DBManager::Get()->prepare("DELETE FROM auto_insert_sem WHERE seminar_id = ? AND status = ?");
-            $stmt->execute(array($seminar_id, $status));
-        } else {
-            $stmt = DBManager::Get()->prepare("INSERT IGNORE INTO auto_insert_sem (seminar_id, status) VALUES (?, ?)");
-            $stmt->execute(array($seminar_id, $status));
-        }
+        $query = $remove
+            ? "DELETE FROM auto_insert_sem WHERE seminar_id = ? AND status= ?"
+            : "INSERT IGNORE INTO auto_insert_sem (seminar_id, status) VALUES (?, ?)";            
+        $statement = DBManager::Get()->prepare($query);
+        $statement->execute(array($seminar_id, $status));
     }
 
     /**
-     * Delete a auto insert seminar
-     * @param string $seminar_id To deletet seminar_id
-     * @return PDOStatement Result of the query against the db
+     * Removes a seminar from the autoinsertion process.
+     * @param string $seminar_id Id of the seminar
      */
     public static function deleteSeminar($seminar_id)
     {
-        return DBManager::get()->exec("DELETE FROM auto_insert_sem WHERE seminar_id = '{$seminar_id}'");
+        $query = "DELETE FROM auto_insert_sem WHERE seminar_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($seminar_id));
     }
 
     /**
-     * Show me all auto insert seminars
-     * @param string $only_sem_id false -> give all seminar, true -> give only one seminar
-     * @return array $results Array containing the seminars data
+     * Returns a list of all seminars enabled for autoinsertion
+     * @param  bool  Indicates whether only the seminar ids (true) or the full 
+     *               dataset shall be returned (false)
+     * @return array The list of all enabled seminars (format according to $only_sem_id)
      */
     public static function getAllSeminars($only_sem_id = false)
     {
-        $query = "SELECT a.seminar_id, GROUP_CONCAT(a.status) AS status, seminare.Name, seminare.Schreibzugriff,seminare.start_time "
-                . "FROM auto_insert_sem a "
-                . "LEFT JOIN seminare USING (Seminar_id) "
-                . "GROUP BY seminare.seminar_id "
-                . "ORDER BY seminare.Name";
+        $query  = "SELECT a.seminar_id, GROUP_CONCAT(a.status) AS status, s.Name, s.Schreibzugriff, s.start_time ";
+        $query .= "FROM auto_insert_sem a ";
+        $query .= "JOIN seminare AS sUSING (Seminar_id) ";
+        $query .= "GROUP BY s.seminar_id ";
+        $query .= "ORDER BY s.Name";
+        
+        $statement = DBManager::Get()->query($query);
+
         if ($only_sem_id) {
-            $results = DBManager::get()->query($query)->fetchAll(PDO::FETCH_COLUMN);
+            $results = $statement->fetchAll(PDO::FETCH_COLUMN);
         } else {
-            $results = DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($results as $index=>$result ){
-                $results[$index]['status'] = explode(',',$result['status']);
+            $results = $statement->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($results as $index=>$result ) {
+                $results[$index]['status'] = explode(',', $result['status']);
             }
         }
         return $results;
     }
 
     /**
-     * Show me one auto inser seminar
-     * @param  string $seminar_id The seminar_id for the result
-     * @return array $result Array containing the seminar information
+     * Returns a seminar's info for autoinsertion
+     * @param  string $seminar_id Id of the seminar
+     * @return array  The seminar's data as an associative array
      */
     public static function getSeminar($seminar_id)
     {
-        $query = "SELECT a.seminar_id, GROUP_CONCAT(a.status) AS status, seminare.Name "
-                . "FROM auto_insert_sem a "
-                . "LEFT JOIN seminare USING (Seminar_id)"
-                . "WHERE a.seminar_id = '{$seminar_id}'"
-                . "GROUP BY seminare.seminar_id ";
-        $result = DBManager::get()->query($query)->fetch(PDO::FETCH_ASSOC);
-        $result['status'] = explode(',',$result['status']);
+        $query  = "SELECT a.seminar_id, GROUP_CONCAT(a.status) AS status, s.Name "
+        $query .= "FROM auto_insert_sem a ";
+        $query .= "JOIN seminare AS s USING (Seminar_id) ";
+        $query .= "WHERE a.seminar_id = ? ";
+        $query .= "GROUP BY s.seminar_id";
+        
+        $statement = DBManager::Get()->prepare($query);
+        $statement->execute(array($seminar_id));
+        
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        $result['status'] = explode(',', $result['status']);
         return $result;
     }
 
     /**
-     * Insert the user, so you know in which courses he was already entered.
-     * @param string $user_id To add the user_id
-     * @param string $seminar_id The seminar_id from the auto-insert-seminar
-     * @return PDOStatement Result of the query against the db
+     * Store the user's automatic registration in a seminar redundantly to
+     * avoid an annoying reregistration although the user explicitely left the
+     * according seminar
+     * @param string $user_id    Id of the user
+     * @param string $seminar_id Id of the seminar
      */
-    public static function saveAutoInsertUser($seminar_id,$user_id)
+    public static function saveAutoInsertUser($seminar_id, $user_id)
     {
-        // insert the user in the auto_insert_user table,
-        // if the user exist in this table, the user would not registred again in the seminar_user table
-        $stmt = DBManager::get()->prepare("INSERT INTO auto_insert_user (Seminar_id, user_id, mkdate) "
-                                          ."VALUES(?, ?, NOW())");
-        $stmt->execute(array($seminar_id, $user_id));
-        return true;
+        $query = "INSERT INTO auto_insert_user (Seminar_id, user_id, mkdate) VALUES (?, ?, NOW())";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($seminar_id, $user_id));
     }
 
     /**
-     * Check of user exist
-     * @param string $seminar_id The seminar_id for the check
-     * @param string $user_id The user_id for the check
-     * @return PDOStatement Result of the query against the db
+     * Tests whether a user was already automatically registered for a certain
+     * seminar.
+     * @param  string $seminar_id Id of the seminar
+     * @param  string $user_id    If of the user
+     * @return bool   Indicates whether the user was already registered
      */
-    public static function checkAutoInsertUser($seminar_id,$user_id)
+    public static function checkAutoInsertUser($seminar_id, $user_id)
     {
-        // if the user exist in this table, the user would not registred again in the seminar_user table
-        $query = "SELECT IF(COUNT(*)>0,1,0) FROM auto_insert_user "
-                ."WHERE seminar_id = '$seminar_id' AND user_id = '$user_id'";
-        return DBManager::get()->query($query)->fetchColumn();
+        $query = "SELECT 1 FROM auto_insert_user WHERE seminar_id = ? AND user_id = ?";
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute(array($seminar_id, $user_id));
+        $result = $statement->fetchColumn();
+        
+        return $result > 0;
     }
 
     /**
-     * Check of the right status from the new user
-     * @param  string $status Current user status
-     * @param  string $new_user_id User id to add the user
-     * @return array $seminars_added Containing the seminar names where the user entered
+     * Checks whether a user is already automatically registered for all
+     * seminars according to his status.
+     * PLEASE NOTE: The user <strong>will be registered</strong> in all seminars
+     * he's not yet registered in.
+     *
+     * @param  string $status  Current user status
+     * @param  string $user_id Id of the user
+     * @return array  List of all seminar names the user was registered in
      */
-    public static function checkNewUser($status,$new_user_id)
+    public static function checkNewUser($status, $user_id)
     {
-        $get_seminars = self::getAllSeminars();
-        $seminars_added = array();
+        $seminars = self::getAllSeminars();
+        $added    = array();
 
-        foreach($get_seminars as $sem) {
-            if (!self::checkUser($new_user_id,$sem['seminar_id'])) {
-                if (self::saveUser($status,$new_user_id,$sem)){
-                   array_push($seminars_added, $sem['Name']);
+        foreach ($seminars as $seminar)
+        {
+            if (!self::checkUser($user_id, $seminar['seminar_id'])) {
+                if (self::saveUser($status, $user_id, $seminar)) {
+                   $added[] = $seminar['Name'];
                 }
             }
         }
-        return $seminars_added;
+        
+        return $added;
     }
 
     /**
-     * If changing the status from a exist user
-     * Exist a relevant seminar?
-     * @param string $old_status The old status from the user
-     * @param string $new_status The new status from the user
-     * @param string $user_id The user_id to check
-     * @return array $seminars_added Containing the seminar names where the user entered
+     * Checks whether a user is already automatically registered for all
+     * seminars according to his _changed_ status.
+     * PLEASE NOTE: The user <strong>will be registered</strong> in all seminars
+     * he's not yet registered in.
+     *
+     * @param  string $old_status Old user status
+     * @param  string $new_status Current user status
+     * @param  string $user_id    Id of the user
+     * @return array  List of all seminar names the user was registered in
      */
-    public static function checkOldUser($old_status,$new_status,$user_id)
+    public static function checkOldUser($old_status, $new_status, $user_id)
     {
-        if ($old_status == $new_status or !self::existSeminars()) {
+        if ($old_status == $new_status) {
             return array();
         }
 
-        $get_seminars = self::getAllSeminars();
-        $seminars_added = array();
+        $seminars = self::getAllSeminars();
+        $added    = array();
 
-        foreach($get_seminars as $sem) {
-            if (!self::checkUser($user_id,$sem['seminar_id'])) {
-                if(self::saveUser($new_status,$user_id,$sem)) {
-                    array_push($seminars_added, $sem['Name']);
+        foreach ($seminars as $seminar)
+        {
+            if (!self::checkUser($user_id, $seminar['seminar_id'])) {
+                if (self::saveUser($new_status, $user_id, $seminar)) {
+                    $added[] = $seminar['Name'];
                 }
-            } elseif(AutoInsert::checkUserStatus($user_id,$sem['seminar_id']) == 'user'){
-                AutoInsert::updateUserStatus($user_id,$sem['seminar_id']);
-                array_push($seminars_added, $sem['Name']);
+            } elseif (self::checkUserStatus($user_id, $seminar['seminar_id']) == 'user') {
+                self::updateUserStatus($user_id, $seminar['seminar_id']);
+                $added[] = $seminar['Name'];
             }
         }
 
-        return $seminars_added;
+        return $added;
     }
 }
+

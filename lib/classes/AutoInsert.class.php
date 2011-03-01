@@ -186,7 +186,7 @@ class AutoInsert
     {
         $query  = "SELECT a.seminar_id, GROUP_CONCAT(a.status) AS status, s.Name, s.Schreibzugriff, s.start_time ";
         $query .= "FROM auto_insert_sem a ";
-        $query .= "JOIN seminare AS sUSING (Seminar_id) ";
+        $query .= "JOIN seminare AS s USING (Seminar_id) ";
         $query .= "GROUP BY s.seminar_id ";
         $query .= "ORDER BY s.Name";
         

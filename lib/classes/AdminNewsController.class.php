@@ -203,36 +203,37 @@ class AdminNewsController {
         return TRUE;
     }
 
+    function restore_edited_fields() {
+        $this->news_query['topic'] = Request::get('topic', $this->news_query['topic'] );
+        $this->news_query['body'] = Request::get('body', $this->news_query['body']);
+        $this->news_query['date'] = Request::int('date', $this->news_query['date']);
+        $this->news_query['expire'] = Request::int('expire', $this->news_query['expire']);
+        $this->news_query['allow_comments'] = Request::int('allow_comments', $this->news_query['allow_comments']);
+    }
+    
     function edit_news($news_id=0) {
         global $perm;
         $aktuell=mktime(0,0,0,strftime("%m",time()),strftime("%d",time()),strftime("%y",time()));
-        if ($news_id && $news_id != "new_entry")
+        if ($news_id && $news_id != "new_entry") {
             $this->get_one_news($news_id);
-        else {
-            $this->news_query = array("news_id"=>"new_entry",
-                                        "topic" => Request::get('topic', ''),
-                                        "body" => Request::get('body', ''),
-                                        "date" => Request::get('date', $aktuell),
+        } else {
+            $this->news_query = array("news_id"=> "new_entry",
+                                        "topic" => "",
+                                        "body" => "",
+                                        "date" => $aktuell,
                                         "user_id" => $this->user_id,
                                         "author" => $this->full_username,
-                                        "expire" => Request::get('expire', 604800),
-                                        "allow_comments" => Request::get('allow_comments', 0));
+                                        "expire" => 604800,
+                                        "allow_comments" => 0);
             if ($perm->have_perm("admin")){
                 $this->search_result[$this->news_range] = array('type' => $this->range_type, 'name' => $this->range_name);
             }
         }
-
+        $this->restore_edited_fields();
         // merge current range_detail into search result
         $this->search_result += $this->range_detail;
         uasort($this->search_result, array('AdminNewsController', 'compare_range'));
 
-        if (isset($_REQUEST['news_range_search_x'])) {
-            $this->news_query['topic'] = stripslashes($_REQUEST['topic']);
-            $this->news_query['body'] = stripslashes($_REQUEST['body']);
-            $this->news_query['date'] = $_REQUEST['date'];
-            $this->news_query['expire'] = $_REQUEST['expire'];
-            $this->news_query['allow_comments'] = $_REQUEST['allow_comments'];
-        }
         if ($this->news_query["user_id"]==$this->user_id)
             $this->modus="";
         echo "\n<tr> <td class=\"blank\" align=\"center\"><br>";

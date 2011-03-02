@@ -124,13 +124,18 @@ if ($cmd=="news_submit") {
     if (!trim(stripslashes($topic)) && trim(stripslashes($body))) $topic = addslashes(substr(trim(stripslashes($body)),0,30) . '...');
     if ($topic != "" && $add_range) {
         $edit_news = $news->update_news($news_id, $author, $topic, $body, $user_id, $date, $expire, $add_range, $allow_comments);
-        if ($edit_news) $cmd = "edit";
-        else $cmd = "";
+        if ($edit_news) {
+            $cmd = "edit";
+        } else {
+            $cmd = "";
+        }
     } else if ($topic == "") {
         $cmd = "edit";
+        $edit_news = Request::option('news_id');
         $news->msg .= "error§"._("Leere Ankündigungen k&ouml;nnen nicht gespeichert werden! Geben Sie immer &Uuml;berschrift oder Inhalt an!")."§";
     } else {
         $cmd = "edit";
+        $edit_news = Request::option('news_id');
         $news->msg .= "error§"._("Mindestens ein Bereich zum Anzeigen der Ankündigung muss gewählt sein!")."§";
     }
 }

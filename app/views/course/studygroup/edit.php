@@ -50,12 +50,12 @@ $infobox['content'] = array(
 <table class="blank" width="75%" cellspacing="5" cellpadding="0" border="0">
 
 <tr>
-  <td style='text-align:right; font-size:150%;'>Name:</td>
+  <td style='text-align:right; font-size:150%;'><?= _('Name:') ?></td>
   <td style='font-size:150%;'><input type='text' name='groupname' size='25' value='<?= htmlReady($sem->getName()) ?>' style='font-size:100%'></td>
 </tr>
 
 <tr>
-  <td style='text-align:right; vertical-align:top;'>Beschreibung:</td>
+  <td style='text-align:right; vertical-align:top;'><?= _('Beschreibung:') ?></td>
   <td><textarea name='groupdescription' rows=5 cols=50><?= htmlReady($sem->description) ?></textarea></td>
 </tr>
 
@@ -64,19 +64,19 @@ $infobox['content'] = array(
 <? endif; ?>
 
 <tr>
-  <td style='text-align:right; vertical-align:top;'>Module:</td>
+  <td style='text-align:right; vertical-align:top;'><?= _('Module:') ?></td>
   <td>
     <? foreach($available_modules as $key => $name) : ?>
         <? if ($key != 'participants') :?>
         <label>
-            <input name="groupmodule[<?= $key ?>]" type="checkbox" <?= ($modules->getStatus($key, $sem_id, 'sem')) ? 'checked="checked"' : '' ?>> <?= $name ?>
+            <input name="groupmodule[<?= $key ?>]" type="checkbox" <?= ($modules->getStatus($key, $sem_id, 'sem')) ? 'checked="checked"' : '' ?>> <?= htmlReady($name) ?>
         </label><br>
         <? endif;?>
     <? endforeach; ?>
 
     <? foreach($available_plugins as $key => $name) : ?>
         <label>
-            <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($enabled_plugins[$key]) ? 'checked="checked"' : '' ?>> <?= $name ?>
+            <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($enabled_plugins[$key]) ? 'checked="checked"' : '' ?>> <?= htmlReady($name) ?>
         </label><br>
     <? endforeach; ?>
   </td>
@@ -87,11 +87,11 @@ $infobox['content'] = array(
 </tr>
 
 <tr>
-  <td style='text-align:right;'>Zugang:</td>
+  <td style='text-align:right;'><?= _('Zugang:') ?></td>
   <td>
-      <select size=0 name="groupaccess">
-          <option <?= ($sem->admission_prelim == 0) ? 'selected="selected"':'' ?> value="all">Offen für alle
-         <option <?= ($sem->admission_prelim == 1) ? 'selected="selected"':'' ?> value="invite">Auf Anfrage
+      <select name="groupaccess">
+          <option <?= ($sem->admission_prelim == 0) ? 'selected="selected"':'' ?> value="all"><?= _('Offen für alle') ?></option>
+          <option <?= ($sem->admission_prelim == 1) ? 'selected="selected"':'' ?> value="invite"><?= _('Auf Anfrage') ?></option>
       </select>
   </td>
 </tr>

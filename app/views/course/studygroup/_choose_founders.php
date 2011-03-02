@@ -6,11 +6,10 @@
     <td nowrap>
         <div style="width: 49%; float: left;">
         <? if (is_array($founders) && sizeof($founders) > 0) :
-            foreach ($founders as $founder) :?>
-                <input type="image" name="remove_founder" value="<?= $founder['username'] ?>" src="<?= Assets::image_path('icons/16/blue/trash.png') ?>" <?= tooltip("NutzerIn entfernen") ?>>
-                <?= htmlReady($founder['fullname']) ?> (<?= $founder['username'] ?>)
-                <input type="hidden" name="founders[<?= $founder['username'] ?>][username]" value="<?= $founder['username'] ?>">
-                <input type="hidden" name="founders[<?= $founder['username'] ?>][fullname]" value="<?= htmlReady($founder['fullname']) ?>">
+            foreach ($founders as $user_id) :?>
+                <input type="image" name="remove_founder" src="<?= Assets::image_path('icons/16/blue/trash.png') ?>" <?= tooltip("NutzerIn entfernen") ?>>
+                <?= htmlReady(get_fullname($user_id, 'full_rev')) ?> (<?= get_username($user_id) ?>)
+                <input type="hidden" name="founders[]" value="<?= $user_id ?>">
                 <br>
             <? endforeach; ?>
             <br>
@@ -25,7 +24,7 @@
                 <input type="image" name="add_founder" src="<?= Assets::image_path('icons/16/yellow/arr_2left.png') ?>" title="<?= _("NutzerIn hinzufügen") ?>">
                 <select name="choose_founder">
                     <? foreach ($results_choose_founders as $user_id => $data) : ?>
-                    <option value="<?= $data['username'] ?>"><?= htmlReady(my_substr($data['fullname']." (".$data['username'],0,35)) ?>) - <?= $data['perms'] ?></option>
+                    <option value="<?= $user_id ?>"><?= htmlReady(my_substr($data['fullname']." (".$data['username'],0,35)) ?>) - <?= $data['perms'] ?></option>
                     <? endforeach; ?>
                 </select>
                 <input type="image" name="new_search" src="<?= Assets::image_path('icons/16/blue/refresh.png') ?>" title="<?= _("neue Suche starten") ?>">

@@ -124,8 +124,8 @@ class Course_StudygroupController extends AuthenticatedController {
         $errors = array();
 
         if (Request::getArray('founders')) {
-            $founders = Request::getArray('founders');
-            $this->flash['founders'] = Request::getArray('founders');
+            $founders = Request::optionArray('founders');
+            $this->flash['founders'] = $founders;
         }
         // search for founder
         if ($admin && Request::submitted('search_founder')) {
@@ -163,11 +163,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
         // add a new founder
         else if ($admin && Request::submitted('add_founder')) {
-
-            $founders[Request::get('choose_founder')] = array(
-                'username' => Request::get('choose_founder'),
-                'fullname' => get_fullname_from_uname(Request::get('choose_founder'), 'full_rev')
-            );
+            $founders = array(Request::option('choose_founder'));
 
             $this->flash['founders'] = $founders;
             $this->flash['create']   = true;
@@ -178,10 +174,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
         // remove a founder
         else if ($admin && Request::submitted('remove_founder')) {
-            $candidate = Request::getArray('founders');
-            if(in_array(current($candidate),$founders)) {
-                unset($founders);
-            }
+            unset($founders);
 
             $this->flash['founders']  = $founders;
             $this->flash['create']    = true;
@@ -258,12 +251,11 @@ class Course_StudygroupController extends AuthenticatedController {
 
                 if ($admin) {
                     // insert founder(s)
-                    foreach ($founders as $username => $fullname) {
-                        $cur_user_id = get_userid( $username );
+                    foreach ($founders as $user_id) {
                         $stmt = DBManager::get()->prepare("INSERT INTO seminar_user
                             (seminar_id, user_id, status, gruppe)
                             VALUES (?, ?, 'dozent', 8)");
-                        $stmt->execute(array( $sem->id, $cur_user_id ));
+                        $stmt->execute(array( $sem->id, $user_id ));
                     }
 
                     $this->founders = null;
@@ -445,7 +437,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 StudygroupModel::promote_user($old_dozent['uname'],$id,'tutor');
 
                 // add new founder
-                $new_founder = Request::quoted('choose_founder');
+                $new_founder = Request::option('choose_founder');
                 StudygroupModel::promote_user(get_username($new_founder), $id,'dozent');
 
             //checks
@@ -619,9 +611,9 @@ class Course_StudygroupController extends AuthenticatedController {
                 StudygroupModel::deny_user($user,$id);
                 $this->flash['success'] = sprintf(_("Der Nutzer %s wurde nicht akzeptiert."), get_fullname_from_uname($user, 'full', true));
             } elseif ($action == 'add_invites') {
-                if (Request::get('choose_member') && Request::get('add_member_x')) {
+                if (Request::get('choose_member') && Request::submitted('add_member')) {
                     $msg = new Messaging();
-                    $receiver = Request::get('choose_member');
+                    $receiver = Request::option('choose_member');
                     $sem = new Seminar($id);
                     $message = sprintf(_("%s möchte Sie auf die Studiengruppe %s aufmerksam machen. Klicken Sie auf den untenstehenden Link um direkt zur Studiengruppe zu gelangen.\n\n %s"),
                              get_fullname(), $sem->name, URLHelper::getlink("dispatch.php/course/studygroup/details/" . $id, array('cid' => NULL)));

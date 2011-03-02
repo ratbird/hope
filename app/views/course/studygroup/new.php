@@ -41,14 +41,14 @@ $infobox['content'] = array(
     <? foreach($available_modules as $key => $name) : ?>
         <? if ($key != 'participants') :?>
         <label>
-            <input name="groupmodule[<?= $key ?>]" type="checkbox" <?= ($this->flash['request']['groupmodule'][$key]) ? 'checked="checked"' : '' ?>> <?= $name ?>
+            <input name="groupmodule[<?= $key ?>]" type="checkbox" <?= ($this->flash['request']['groupmodule'][$key]) ? 'checked="checked"' : '' ?>> <?= htmlReady($name) ?>
         </label><br>
         <? endif; ?>
     <? endforeach; ?>
 
     <? foreach($available_plugins as $key => $name) : ?>
         <label>
-            <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($this->flash['request']['groupplugin'][$key]) ? 'checked="checked"' : '' ?>> <?= $name ?>
+            <input name="groupplugin[<?= $key ?>]" type="checkbox" <?= ($this->flash['request']['groupplugin'][$key]) ? 'checked="checked"' : '' ?>> <?= htmlReady($name) ?>
         </label><br>
     <? endforeach; ?>
   </td>
@@ -61,7 +61,7 @@ $infobox['content'] = array(
 <tr>
   <td style='text-align:right;'><?= _("Zugang:") ?></td>
   <td>
-      <select size=0 name="groupaccess">
+      <select name="groupaccess">
          <option <?= ($groupaccess == 'all') ? 'selected="selected"':'' ?> value="all"><?= _("Offen für alle") ?></option>
          <option <?= ($groupaccess == 'invite') ? 'selected="selected"':'' ?> value="invite"><?= _("Auf Anfrage") ?></option>
       </select>

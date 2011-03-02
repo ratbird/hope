@@ -65,7 +65,7 @@ $cssSw = new cssClassSwitcher();
     $cssSw->switchClass(); ?>
 
     <tr>
-        <td <?= $cssSw->getFullClass() ?>> <?= $name ?> </td>
+        <td <?= $cssSw->getFullClass() ?>> <?= htmlReady($name) ?> </td>
         <td <?= $cssSw->getFullClass() ?>>
             <select name='modules[<?= $key ?>]'>
                 <? if (!Config::getInstance()->getValue('STUDYGROUPS_ENABLE')):?>
@@ -129,7 +129,7 @@ $cssSw = new cssClassSwitcher();
     <tr>
         <td colspan="2" <?= $cssSw->getFullClass() ?>>
         <br>
-        <textarea name="terms" style="width: 90%" rows="10" style='align:middle;'><?= $terms ?></textarea>
+        <textarea name="terms" style="width: 90%" rows="10" style='align:middle;'><?= htmlReady($terms) ?></textarea>
         <br>
         </td>
     </tr>

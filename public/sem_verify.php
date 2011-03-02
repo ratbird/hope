@@ -174,7 +174,7 @@ $db6=new DB_Seminar;
 
 ?>
     <table width="100%" border=0 cellpadding=0 cellspacing=0>
-    <tr><td class="topic" colspan=2>&nbsp;<b><?=_("Veranstaltungsfreischaltung")?> - <?=getHeaderLine($id)?></b></td></tr>
+    <tr><td class="topic" colspan=2>&nbsp;<b><?=_("Veranstaltungsfreischaltung")?> - <?=htmlReady(getHeaderLine($id))?></b></td></tr>
     <tr><td class="blank" colspan=2>&nbsp;<br></td></tr>
 <?
 

@@ -42,8 +42,8 @@ require_once 'lib/classes/SemBrowse.class.php';
         URLHelper::bindLinkParam('level',$level);
     }
 
-    $level = Request::get('level');
-    $id = Request::get('id');
+    $level = Request::option('level');
+    $id = Request::option('id');
 
     $group_by = Request::int('group_by', 0);
 

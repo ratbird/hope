@@ -366,7 +366,7 @@ if (isset($_REQUEST['rec_uname'])  || isset($_REQUEST['filter']))
     unset($sms_data['tmpemailsnd']);
     $messagesubject = Request::quoted('subject');
     $course_id = Request::option('course_id');
-    $cid = Request::get('cid');
+    $cid = Request::option('cid');
 
     if ((in_array($_REQUEST['filter'], words('all prelim waiting')) && $course_id) || ($_REQUEST['filter'] == 'send_sms_to_all' && isset($_REQUEST['who'])) && $perm->have_studip_perm('tutor', $course_id) || ($_REQUEST['filter'] == 'inst_status' && isset($_REQUEST['who']) && $perm->have_perm('admin') && isset($cid)))
     {

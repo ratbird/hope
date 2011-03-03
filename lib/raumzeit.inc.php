@@ -417,10 +417,19 @@ function raumzeit_editSingleDate() {
                 $zw_termin->date = $start;
                 $zw_termin->end_time = $ende;
 
+                // parameters to be resent on positive answer
+                foreach (words('day month year start_stunde start_minute end_stunde '
+                    . 'end_minute related_teachers room_sd freeRoomText_sd dateType cmd '
+                    . 'singleDateID cycle_id') as $param) {
+                    $url_params[$param] = $_REQUEST[$param];
+                }
+
+                $url_params['approveChange'] = true;
+
                 echo createQuestion( sprintf(_("Wenn Sie den Termin am %s auf %s ändern,".
                         " verlieren Sie die Raumbuchung. Sind Sie sicher, dass Sie diesen Termin ändern möchten?"),
                         '**'. $termin->toString() .'**',  '**'. $zw_termin->toString() .'**'),
-                    array_merge($_REQUEST, array('approveChange' => true)));
+                        $url_params);
 
                 unset($zw_termin);
                 return;

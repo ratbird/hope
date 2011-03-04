@@ -46,8 +46,8 @@
             <TR>
                 <TD class="printcontent">&nbsp;</TD>
                 <TD class="printcontent">
-                    <label><?= _("Durchführende Dozenten:") ?>
-                    <SELECT name="related_teachers[]" multiple>
+                    <label><span style="vertical-align: top;"><?= _("Durchführende Dozenten:") ?></span>
+                    <SELECT id="related_teachers" name="related_teachers[]" multiple style="display: inline-block; vertical-align: top;">
                     <? foreach ($sem->getMembers('dozent') as $dozent) : ?>
                         <OPTION value="<?= $dozent['user_id'] ?>"<?= in_array($dozent['user_id'], $tpl['related_persons']) ? " selected" : "" ?>><?= get_fullname($dozent['user_id']) ?></OPTION>
                     <? endforeach ?>

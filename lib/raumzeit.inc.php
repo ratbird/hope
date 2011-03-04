@@ -298,7 +298,7 @@ function raumzeit_doDeleteCycle() {
 
 function raumzeit_doAddSingleDate() {
     global $sem, $cmd;
-
+    
     // check validity of the date
     if (!check_singledate($_REQUEST['day'], $_REQUEST['month'], $_REQUEST['year'], $_REQUEST['start_stunde'],
         $_REQUEST['start_minute'], $_REQUEST['end_stunde'], $_REQUEST['end_minute'])) {
@@ -401,6 +401,14 @@ function raumzeit_editSingleDate() {
             $sem->appendMessages($termin->getMessages());
         }
         $sem->readSingleDatesForCycle($_REQUEST['cycle_id'], true);
+        $termin->clearRelatedPersons();
+        $teachers = $sem->getMembers('dozent');
+        foreach (Request::getArray('related_teachers') as $dozent_id) {
+            if (in_array($dozent_id, array_keys($teachers))) {
+                $termin->addRelatedPerson($dozent_id);
+            }
+        }
+        $termin->store();
     }
 
     // unregelmäßiger Termin

@@ -110,7 +110,8 @@ if (Request::get('export') && $rechte) {
                 $dates[] = array(
                     'date'  => $singledate->toString(),
                     'title' => $title,
-                    'start' => $singledate->getStartTime()
+                    'start' => $singledate->getStartTime(),
+                    'related_persons' => $singledate->getRelatedPersons()
                 );
             }
         }

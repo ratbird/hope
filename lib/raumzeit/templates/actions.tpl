@@ -28,7 +28,7 @@
         <TD align="left" class="steelgraulight">&nbsp;</TD>
         <TD align="left" class="steelgraulight">
             <FONT size="-1">
-                <B><?=_("ausgewählte Termine Dozenten zuordnen")?>&nbsp;</B>
+                <B><?=_("ausgewählten Terminen Dozenten hinzufügen, entfernen oder für alle festlegen")?>&nbsp;</B>
             </FONT><BR/>
     </TR>
     <TR>
@@ -36,9 +36,9 @@
         <TD colspan="8" class="steelgraulight" align="left">
             <select name="related_persons_action" aria-label="<?= _("Wählen Sie aus, ob Dozenten den ausgewählten regelmäßigen Terminen hinzugefügt, von diesen entfernt oder für diese Termine definiert werden sollen.") ?>">
                 <option value=""><?= _("-- Aktion auswählen --") ?></option>
-                <option value="add"><?= _("durchführende Dozenten hinzufügen") ?></option>
-                <option value="delete"><?= _("durchführende Dozenten entfernen") ?></option>
-                <option value="set"><?= _("durchführende Dozenten definieren") ?></option>
+                <option value="add" title="<?= _("Die ausgewählten Dozenten werden den ausgewählten Terminen hinzugefügt. Die zuvor schon durchführenden Dozenten bleiben aber weiterhin zusätzlich eingetragen.") ?>"><?= _("durchführende Dozenten hinzufügen") ?></option>
+                <option value="delete" title="<?= _("Die ausgewählten Dozenten leiten nicht die ausgewählten Termine. Andere Dozenten bleiben bestehen.") ?>"><?= _("durchführende Dozenten entfernen") ?></option>
+                <option value="set" title="<?= _("Für alle ausgewählten Termine werden die durchführenden Dozenten festgelegt, die Angaben also überschrieben.") ?>"><?= _("durchführende Dozenten festlegen") ?></option>
             </select>
             <select name="related_persons[]" multiple style="vertical-align: top;" aria-label="<?= _("Wählen Sie die Dozenten aus, die regelmäßigen Terminen hinzugefügt oder von diesen entfernt werden sollen.") ?>">
                 <? foreach ($sem->getMembers('dozent') as $dozent) : ?>

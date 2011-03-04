@@ -21,7 +21,7 @@ foreach ($dates as $date) :
                 $grenze = $zwsem['ende'];
                 ?>
                 <tr>
-                    <td colspan="2">
+                    <td colspan="3">
                         <h1><?= $zwsem['name'] ?></h1>
                     </td>
                 </tr>
@@ -31,8 +31,13 @@ foreach ($dates as $date) :
     }
     ?>
     <tr>
-        <td width="50%"><?= htmlReady($date['date'])  ?></td>
-        <td width="50%"><?= htmlReady($date['title']) ?></td>
+        <td width="33%"><?= htmlReady($date['date'])  ?></td>
+        <td width="33%"><?= htmlReady($date['title']) ?></td>
+        <td width="33%">
+            <? foreach ($date['related_persons'] as $key => $user_id) {
+                echo ($key > 0 ? ", " : "").htmlReady(get_fullname($user_id));
+            } ?>
+        </td>
     </tr>
 <? endforeach ?>
 

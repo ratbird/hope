@@ -9,7 +9,6 @@
 */
 
 require_once "Log.php";
-require_once "FirePHPCore/fb.php";
 
 class StudipDebug {
 

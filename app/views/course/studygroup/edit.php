@@ -46,7 +46,7 @@ $infobox['content'] = array(
 
 <form action="<?= $controller->url_for('course/studygroup/update/'.$sem_id) ?>" method=post>
 <?= CSRFProtection::tokenTag() ?>
-
+<input type='submit' class="invisible" value="Änderungen übernehmen" aria-hidden="true">
 <table class="blank" width="75%" cellspacing="5" cellpadding="0" border="0">
 
 <tr>

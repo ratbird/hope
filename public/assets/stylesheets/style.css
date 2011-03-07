@@ -1413,6 +1413,10 @@ h1:hover .arrow_down, h2:hover .arrow_down, h3:hover .arrow_down, h4:hover .arro
     background: transparent url('../images/icons/16/red/arr_1down.png') top left no-repeat !important;
 }
 
+.invisible {
+    display: none;
+}
+
 /* --- calendar api --------------------------------------------------------- */
 .invalid { /* an invalid form entry */
     border: 2px dotted red;

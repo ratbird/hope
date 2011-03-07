@@ -2278,12 +2278,12 @@ class Seminar
             $todelete = array_diff($old_inst, $institutes);
             foreach($todelete as $inst) {
                 log_event('CHANGE_INSTITUTE_DATA', $this->id, $inst, 'Die beteiligte Einrichtung '. get_object_name($inst, 'inst') .' wurde gelöscht.');
-                
+
                 $db->exec("DELETE FROM seminar_inst " .
                     "WHERE seminar_id = ".$db->quote($this->id)." " .
                         "AND institut_id = ".$db->quote($inst));
             }
-            
+
             $toinsert = array_diff($institutes, $old_inst);
             foreach($toinsert as $inst) {
                 log_event('CHANGE_INSTITUTE_DATA', $this->id, $inst, 'Die beteiligte Einrichtung '. get_object_name($inst, 'inst') .' wurde hinzugefügt.');
@@ -2338,6 +2338,8 @@ class Seminar
                       "Seminar_id = ".$db->quote($this->id).", " .
                       "user_id = ".$db->quote($user_id).", " .
                       "position = ".$db->quote($new_position).", " .
+                      "gruppe = " . (int)select_group($this->getSemesterStartTime()) . ", " .
+                       (in_array($status, words('tutor dozent')) ? "visible='yes', " : "" ) .
                       "mkdate = ".time()." " .
                        "");
             removeScheduleEntriesMarkedAsVirtual($user_id, $this->getId());
@@ -2345,11 +2347,12 @@ class Seminar
         } elseif (($force || $rangordnung[$old_status] < $rangordnung[$status])
                 && ($old_status !== "dozent" || $numberOfTeachers > 1)) {
             $db->exec("UPDATE seminar_user " .
-                   "SET status = ".$db->quote($status).", " .
-                       "position = ".$db->quote($new_position)." " .
-                   "WHERE Seminar_id = ".$db->quote($this->id)." " .
-                       "AND user_id = ".$db->quote($user_id)." " .
-                       "");
+                      "SET status = ".$db->quote($status).", " .
+                      (in_array($status, words('tutor dozent')) ? "visible='yes', " : "" ) .
+                      "position = ".$db->quote($new_position)." " .
+                      "WHERE Seminar_id = ".$db->quote($this->id)." " .
+                      "AND user_id = ".$db->quote($user_id)
+                       );
             return $this;
         } else {
             if ($old_status === "dozent" && $numberOfTeachers <= 1) {

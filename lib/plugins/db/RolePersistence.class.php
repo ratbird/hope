@@ -240,7 +240,7 @@ class RolePersistence
      */
     public function assignPluginRoles($pluginid,$roleids)
     {
-        StudipCacheFactory::getCache()->expire(self::ROLES_PLUGINS_CACHE_KEY . $pluginid);
+        StudipCacheFactory::getCache()->expire(self::ROLES_PLUGINS_CACHE_KEY . (int) $pluginid);
 
         $stmt = DBManager::get()->prepare("REPLACE INTO roles_plugins (roleid, pluginid) VALUES (?, ?)");
         foreach ($roleids as $roleid) {
@@ -256,7 +256,7 @@ class RolePersistence
      */
     public function deleteAssignedPluginRoles($pluginid,$roleids)
     {
-        StudipCacheFactory::getCache()->expire(self::ROLES_PLUGINS_CACHE_KEY . $pluginid);
+        StudipCacheFactory::getCache()->expire(self::ROLES_PLUGINS_CACHE_KEY . (int) $pluginid);
 
         $stmt = DBManager::get()->prepare("DELETE FROM roles_plugins WHERE roleid=? AND pluginid=?");
         foreach ($roleids as $roleid) {

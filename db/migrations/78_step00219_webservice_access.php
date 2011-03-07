@@ -20,7 +20,7 @@ class Step00219WebserviceAccess extends Migration
                 ) ENGINE = MYISAM ;");
         SimpleORMap::expireTableScheme();
         if ($GLOBALS['STUDIP_API_KEY'] && $GLOBALS['WEBSERVICES_ENABLE']) {
-            $db->exec("INSERT INTO `webservice_access_rules`  (`api_key`, `method`, `ip_range`, `type`) VALUES (".$db->quote($GLOBALS['STUDIP_API_KEY']).", '%', '', 'allow')");
+            $db->exec("INSERT INTO `webservice_access_rules`  (`api_key`, `method`, `ip_range`, `type`) VALUES (".$db->quote($GLOBALS['STUDIP_API_KEY']).", '', '', 'allow')");
         }
     }
 

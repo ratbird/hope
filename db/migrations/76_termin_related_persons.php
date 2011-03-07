@@ -18,8 +18,8 @@ class TerminRelatedPersons extends Migration
         $db = DBManager::get();
         $db->exec(
             "CREATE TABLE IF NOT EXISTS `termin_related_persons` ( " .
-                "`range_id` varchar(32) COLLATE latin1_german1_ci NOT NULL, " .
-                "`user_id` varchar(32) COLLATE latin1_german1_ci NOT NULL, " .
+                "`range_id` varchar(32) NOT NULL, " .
+                "`user_id` varchar(32) NOT NULL, " .
                 "PRIMARY KEY (`range_id`,`user_id`) " .
             ") ENGINE=MyISAM ".
         "");

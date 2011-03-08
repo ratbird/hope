@@ -712,7 +712,7 @@ function show_precform() {
     if (sizeof($sms_data["p_rec"]) == "0") {
         $tmp .= "<font size=\"-1\">"._("Bitte w&auml;hlen Sie mindestens einen Empf&auml;nger aus.")."</font>";
     } else {
-        $tmp .= "<select size=\"$tmp_01\" name=\"del_receiver[]\" multiple style=\"width: 250\">";
+        $tmp .= "<select size=\"$tmp_01\" id=\"del_receiver\" name=\"del_receiver[]\" multiple style=\"width: 250\">";
         if ($sms_data["p_rec"]) {
             foreach ($sms_data["p_rec"] as $a) {
                 $tmp .= "<option value=\"$a\">".get_fullname_from_uname($a,'full',true)."</option>";
@@ -769,7 +769,7 @@ function show_addrform() {
             }
 
             $tmp_01 = min($tmp_count, 12);
-            $tmp .= "<select size=\"".$tmp_01."\" name=\"add_receiver[]\" multiple style=\"width: 250\">";
+            $tmp .= "<select size=\"".$tmp_01."\" id=\"add_receiver\" name=\"add_receiver[]\" multiple style=\"width: 250\">";
             $tmp .= $tmp_02;
             $tmp .= "</select><br>";
             $tmp .= "<input type=\"image\" name=\"add_receiver_button\" src=\"" . Assets::image_path($picture) . "\" class=\"text-top\" ".tooltip(_("fügt alle ausgewähtlen Personen der EmpfängerInnenliste hinzu")).">";
@@ -786,30 +786,6 @@ function show_addrform() {
 
     ob_start();
 
-    ?>
-    <script type="text/javascript">
-       if (typeof STUDIP.CURRENTPAGE === 'undefined') {
-           STUDIP.CURRENTPAGE = {};
-       }
-       STUDIP.CURRENTPAGE.setToAdressees = function (username, name) {
-           if (!$("select[name=del_receiver[]]").length) {
-               $("form[name=upload_form]")
-                   .attr("action", STUDIP.URLHelper.getURL("?", {
-                           "add_receiver[]": username,
-                           "add_receiver_button_x": true
-                       }))
-                   .submit();
-               return;
-           }
-           if (!$("select[name=del_receiver[]] [value=" + username + "]").length) {
-               $("select[name=del_receiver[]]")
-                   .append($('<option value="' + username + '">' + name + '</option>'))
-                   .attr("size", $(this).attr("size") + 1);
-               window.setTimeout("$('input[name=adressee_parameter]').val('');", 10);
-           }
-       };
-    </script>
-    <?php
 
     if ((Request::get("adressee_parameter") && Request::get("adressee_parameter") !== _("Nutzer suchen") )) {
         print "<input type=\"image\" name=\"add_freesearch\" ".
@@ -821,7 +797,7 @@ function show_addrform() {
     print QuickSearch::get("adressee", new StandardSearch("username"))
         ->setInputStyle("width: 211px;")
         ->withoutButton()
-        ->fireJSFunctionOnSelect("STUDIP.CURRENTPAGE.setToAdressees")
+        ->fireJSFunctionOnSelect("STUDIP.Messaging.addToAdressees")
         ->render();
     ?>
 

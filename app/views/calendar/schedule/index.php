@@ -2,14 +2,20 @@
 # Lifter010: TODO
 $zoom = Request::get('zoom', 0);
 
-$text  = _("Der Stundenplan zeigt Ihre regelmäßigen Veranstaltungen dieses Semesters sowie von Ihnen selbst erstellte Belegungen.");
-$text2 = sprintf( _("Um neue Veranstaltungen hinzuzufügen, verwenden Sie die %sVeranstaltungssuche%s."),
-        '<a href="'. UrlHelper::getLink('sem_portal.php') .'">', '</a>');
+if ($inst_mode) {
+    $text  = _("Der Stundenplan zeigt die regelmäßigen Veranstaltungen dieser
+        Einrichtung sowie von Ihnen selbst erstellte Belegungen.");
+} else {
+    $text  = _('Der Stundenplan zeigt Ihre regelmäßigen Veranstaltungen'
+        . ' dieses Semesters sowie von Ihnen selbst erstellte Belegungen.');
+}
 
 if (!$show_hidden) {
-    $hidden_text = '<a href="'. $controller->url_for('calendar/schedule/?show_hidden=true') .'">'. _("Ausgeblendete Veranstaltungen anzeigen") .'</a>';
+    $hidden_text = '<a href="'. $controller->url_for('calendar/schedule/?show_hidden=true') .'">'
+        . _("Ausgeblendete Veranstaltungen anzeigen") .'</a>';
 } else {
-    $hidden_text = '<a href="'. $controller->url_for('calendar/schedule') .'">'. _("Ausgeblendete Veranstaltungen verbergen") .'</a>';
+    $hidden_text = '<a href="'. $controller->url_for('calendar/schedule') .'">'
+        . _("Ausgeblendete Veranstaltungen verbergen") .'</a>';
 }
 
 $infobox = array();
@@ -20,7 +26,6 @@ $infobox['content'] = array(
         'kategorie' => _("Information:"),
         'eintrag'   => array(
             array("text" => $text, "icon" => "icons/16/black/info.png"),
-            array("text" => $text2, "icon" => "icons/16/black/search.png")
         )
     ),
 
@@ -35,6 +40,11 @@ $infobox['content'] = array(
 );
 
 if (!$inst_mode) {
+    $infobox['content'][0]['eintrag'][] = array(
+        'text' => $text2 = sprintf(
+            _("Um neue Veranstaltungen hinzuzufügen, verwenden Sie die %sVeranstaltungssuche%s."),
+            '<a href="'. UrlHelper::getLink('sem_portal.php') .'">', '</a>'),
+        'icon' => 'icons/16/black/search.png');
     $infobox['content'][1]['eintrag'][] = array (
         'text' => '<a href="'. $controller->url_for('calendar/schedule/entry') .'">'._("Neuer Eintrag") .'</a>',
         'icon' => 'icons/16/black/add/date.png'

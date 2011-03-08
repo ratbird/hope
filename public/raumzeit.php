@@ -167,6 +167,7 @@ while ($tmp_first_date < $end_date) {
     $i++;
     $tmp_first_date = mktime($date['hours'], $date['minutes'], $date['seconds'], $date['mon'], $date['mday'] + 7 * $i, $date['year']);
 }
+$dozenten = $sem->getMembers('dozent');
 
 // template-like output
 ?>

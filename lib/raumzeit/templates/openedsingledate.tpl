@@ -46,13 +46,12 @@
             <TR>
                 <TD class="printcontent">&nbsp;</TD>
                 <TD class="printcontent">
-                    <label><span style="vertical-align: top;"><?= _("Durchführende Dozenten:") ?></span>
-                    <SELECT id="related_teachers" name="related_teachers[]" multiple style="display: inline-block; vertical-align: top;">
-                    <? foreach ($sem->getMembers('dozent') as $dozent) : ?>
-                        <OPTION value="<?= $dozent['user_id'] ?>"<?= in_array($dozent['user_id'], $tpl['related_persons']) ? " selected" : "" ?>><?= get_fullname($dozent['user_id']) ?></OPTION>
-                    <? endforeach ?>
-                    </SELECT>
-                    </label>
+                    <b><?= _("Durchführende Dozenten:") ?></b>
+                    <? if (count($tpl['related_persons']) !== count($dozenten)) : ?>
+                    <? foreach ($tpl['related_persons'] as $key => $related_person) {
+                        echo ($key > 0 ? ", " : "").get_fullname($related_person);
+                    } ?>
+                    <? endif ?>
                 </TD>
                 <TD class="printcontent">&nbsp;</TD>
             </TR>

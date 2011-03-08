@@ -38,7 +38,6 @@
                 <option value=""><?= _("-- Aktion auswählen --") ?></option>
                 <option value="add" title="<?= _("Die ausgewählten Dozenten werden den ausgewählten Terminen hinzugefügt. Die zuvor schon durchführenden Dozenten bleiben aber weiterhin zusätzlich eingetragen.") ?>"><?= _("durchführende Dozenten hinzufügen") ?></option>
                 <option value="delete" title="<?= _("Die ausgewählten Dozenten leiten nicht die ausgewählten Termine. Andere Dozenten bleiben bestehen.") ?>"><?= _("durchführende Dozenten entfernen") ?></option>
-                <option value="set" title="<?= _("Für alle ausgewählten Termine werden die durchführenden Dozenten festgelegt, die Angaben also überschrieben.") ?>"><?= _("durchführende Dozenten festlegen") ?></option>
             </select>
             <select name="related_persons[]" multiple style="vertical-align: top;" aria-label="<?= _("Wählen Sie die Dozenten aus, die regelmäßigen Terminen hinzugefügt oder von diesen entfernt werden sollen.") ?>">
                 <? foreach ($sem->getMembers('dozent') as $dozent) : ?>
@@ -46,6 +45,7 @@
                 <? endforeach ?>
             </select>
             <input type="image" <?=makebutton('uebernehmen', 'src')?> name="related_persons_action_do" align="absmiddle">
+            <br>
         </TD>
     </TR>
     <TR>

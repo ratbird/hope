@@ -95,7 +95,10 @@ $infobox['content'] = array(
 
 <tr>
   <td></td>
-  <td><?= makebutton("speichern","input") ?></td>
+  <td>
+    <?= makebutton("speichern","input") ?>
+    <a href="<?=URLHelper::getLink("dispatch.php/studygroup/browse")?>"> <?=  makeButton('abbrechen', 'img') ?></a>
+  </td>
 </tr>
 
 </table>

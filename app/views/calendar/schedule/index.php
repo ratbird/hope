@@ -75,7 +75,11 @@ $infobox['content'][2]['eintrag'] = array (
 );
 ?>
 <div style="text-align: center; font-weight: bold; font-size: 1.2em">
-    <?= _("Mein Stundenplan im") ?>
+    <? if($inst_mode) : ?>
+    <?= $institute_name  ?>: <?= _('Stundenplan im') ?>
+    <? else : ?>
+    <?= _('Mein Stundenplan im') ?>
+    <? endif ?>
     <?= $current_semester['name'] ?>
 </div>
 <? if (Request::get('show_settings')) : ?>

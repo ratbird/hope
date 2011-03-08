@@ -187,7 +187,11 @@ class Calendar_ScheduleController extends AuthenticatedController
         $this->calendar_view->setInsertFunction("function (entry, column, hour) { STUDIP.Schedule.newEntry(entry, column, hour) }");
 
         $this->show_hidden    = $show_hidden;
+
+        $inst = get_object_name($institute_id, 'inst');
         $this->inst_mode      = $inst_mode;
+        $this->institute_name = $inst['name'];
+        $this->institute_id   = $institute_id;
     }
 
 

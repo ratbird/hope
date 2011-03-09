@@ -14,7 +14,7 @@ $infobox['content'] = array(
         )
     )
 );
-$sort_url = $controller->url_for("studygroup/browse/1/");
+$base_url = "studygroup/browse/1/";
 $link = "dispatch.php/studygroup/browse/%s/".$sort;
 
 ?>
@@ -33,5 +33,5 @@ $link = "dispatch.php/studygroup/browse/%s/".$sort;
 <?= $this->render_partial("course/studygroup/_feedback") ?>
 
 <? if ($anzahl >= 1):?>
-    <?=$this->render_partial("studygroup/_overview", array('sort_url' => $sort_url, 'link' => $link))?>
+    <?=$this->render_partial("studygroup/_overview", array('base_url' => $base_url, 'link' => $link))?>
 <? endif;?>

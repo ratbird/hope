@@ -48,7 +48,7 @@ if ($forumsend=="bla"){
         </td>
     </tr>
     <tr>
-        <td id="main_content" class="blank" width="100%" colspan="2" align="center">
+        <td class="blank" width="100%" colspan="2" align="center">
         <p class="info">
             <b><?= _("Auf dieser Seite k&ouml;nnen Sie die Bedienung des Stud.IP-Forensystems an Ihre Bed&uuml;rfnisse anpassen.") ?></b>
         </p>
@@ -58,7 +58,7 @@ if ($forumsend=="bla"){
         echo "<form action=\"$PHP_SELF?view=$view\" method=\"POST\">";
         echo CSRFProtection::tokenTag();
         ?>
-        <table width="70%" align="center" cellpadding=8 cellspacing=0 border=0>
+        <table width="70%" align="center" cellpadding="8" cellspacing="0" border="0" id="main_content">
             <tr>
                 <th width="50%" align=center><?=_("Option")?></th>
                 <th align=center><?=_("Auswahl")?></th>

@@ -63,6 +63,8 @@ PageLayout::setTitle(_("Benachrichtigung über neue Inhalte anpassen"));
 Navigation::activateItem('/links/settings/notification');
 PageLayout::setTabNavigation('/links/settings');
 
+SkipLinks::addIndex(PageLayout::getTitle(), 'main_content', 100);
+
 include('lib/include/html_head.inc.php'); // Output of html head
 include('lib/include/header.php');   // Output of Stud.IP head
 
@@ -146,7 +148,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     $db->query($query);
 
     if (!$db->num_rows()) {
-        echo "<table class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
+        echo "<table class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" id=\"main_content\">\n";
         echo "<tr><td class=\"blank\">&nbsp;</td></tr>";
         parse_msg("info§" . sprintf(_("Sie haben zur Zeit keine Veranstaltungen abonniert, an denen Sie teilnehmen k&ouml;nnen. Bitte nutzen Sie %s<b>Veranstaltung suchen / hinzuf&uuml;gen</b>%s um neue Veranstaltungen aufzunehmen."), "<a href=\"sem_portal.php\">", "</a>"),
                 '§', 'blank', 0);
@@ -170,7 +172,7 @@ if ($auth->is_authenticated() && $user->id != "nobody" && !$perm->have_perm("adm
     echo $css->GetHoverJSFunction();
     echo '<table class="blank" cellspacing="0" cellpadding="2" border="0" width="100%">';
     echo "<tr><td class=\"blank\" width=\"100%\">\n";
-    echo "\n<table width=\"75%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\">\n";
+    echo "\n<table width=\"75%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\" align=\"center\" id=\"main_content\">\n";
     echo "<form method=\"post\" action=\"".URLHelper::getLink()."\">\n";
     echo CSRFProtection::tokenTag();
     echo '<tr><td class="blank" colspan="' . (sizeof($enabled_modules) + 3);

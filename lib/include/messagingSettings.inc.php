@@ -149,7 +149,7 @@ function change_messaging_view()
         </tr>
         <tr>
 
-            <td id="main_content" class="blank" width="100%" colspan="2" align="center">
+            <td class="blank" width="100%" colspan="2" align="center">
             <p class="info">
                 <b><?= _("Auf dieser Seite k&ouml;nnen Sie die Eigenschaften des Stud.IP-Messagingsystems an Ihre Bed&uuml;rfnisse anpassen.") ?></b>
             </p>
@@ -164,7 +164,7 @@ function change_messaging_view()
                 <a href="<?=$PHP_SELF?>?change_view=TRUE"><?=makeButton("nein", "img")?></a></font><div>
                 </td></tr></table><br><?
             } ?>
-            <table width="70%" align="center"cellpadding=8 cellspacing=0 border=0>
+            <table width="70%" align="center"cellpadding=8 cellspacing=0 border=0  id="main_content">
                 <tr>
                     <th width="50%" align=center><?=_("Option")?></th>
                     <th align=center><?=_("Auswahl")?></th>

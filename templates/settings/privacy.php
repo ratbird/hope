@@ -9,7 +9,7 @@
             </p>
             <form method="post" action="<?= URLHelper::getLink('edit_about.php', array('cmd' => 'change_global_visibility', 'studipticket' => get_ticket(), 'username' => Request::get('username'))); ?>">
                 <?= CSRFProtection::tokenTag() ?>
-                <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0">
+                <table width="70%" align="center"cellpadding="8" cellspacing="0" border="0" id="main_content">
                     <tr>
                         <th width="50%"><?= _("Option"); ?></th>
                         <th width="50%"><?= _("Auswahl"); ?></th>

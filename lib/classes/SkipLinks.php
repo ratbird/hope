@@ -36,7 +36,6 @@ class SkipLinks
      */
     public static function insertContainer()
     {
-        self::$links = array();
         if (UserConfig::get($GLOBALS['user']->id)->getValue('SKIPLINKS_ENABLE')) {
             PageLayout::addBodyElements('<style> *:focus { outline: 2px dashed #ff6600; } </style>');
             if ($GLOBALS['auth']->is_authenticated()) {
@@ -56,7 +55,7 @@ class SkipLinks
     public static function addLink($name, $url, $position = null, $overwriteable = false)
     {
         $position = (is_null($position) || $position < 1) ? sizeof(self::$links) + 100 : intval($position);
-        $new_link = array('name' => $name, 'url' => html_entity_decode($url), 'position' => $position);
+        $new_link = array('name' => $name, 'url' => html_entity_decode($url), 'position' => $position, 'overwriteable' => $overwriteable);
         if (self::checkOverwrite($new_link)) {
             self::$links[$new_link['url']] = $new_link;
         }
@@ -66,17 +65,14 @@ class SkipLinks
      * Adds a link to an anker on the same page to the list of skip links.
      *
      * @param string $name the displayed name of the links
-     * @param string $url the url of the links
+     * @param string $id the id of the anker
      * @param integer $position the position of the link in the list
      * @param boolean $overwriteable false if position is not overwritable by another link
      */
     public static function addIndex($name, $id, $position = null, $overwriteable = false)
     {
-        $position = is_null($position) ? sizeof(self::$links) + 100 : intval($position);
-        $new_link = array('name' => $name, 'url' => html_entity_decode('#' . $id), 'position' => $position, 'overwriteable' => $overwriteable);
-        if (self::checkOverwrite($new_link)) {
-            self::$links[$new_link['url']] = $new_link;
-        }
+        $url = '#' . $id;
+        self::addLink($name, $url, $position, $overwritable);
     }
 
     /**

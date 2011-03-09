@@ -116,7 +116,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
 // display menue
 ?>
     <div class="index_container">
-        <table class="index_box" id="index_navigation">
+        <table class="index_box">
             <tr>
                 <td class="topic" style="font-weight: bold;" colspan="2">
                     <?= Assets::img('icons/16/white/home.png', array('class' => 'middle')) ?>
@@ -133,7 +133,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
             </tr>
             <? endif ?>
             <tr>
-                <td class="blank" valign="top" style="padding-left:25px; width:80%;">
+                <td class="blank" valign="top" style="padding-left:25px; width:80%;" id="index_navigation">
                 <? foreach (Navigation::getItem('/start') as $nav) : ?>
                     <? if ($nav->isVisible()) : ?>
                         <div class="mainmenu">

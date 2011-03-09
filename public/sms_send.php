@@ -523,7 +523,7 @@ $txt['008'] = _("Lesebestätigung");
 ?>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
 <tr>
-    <td class="blank" valign="top" id="main_content"><?
+    <td class="blank" valign="top"><?
     if ($msg) {
         echo '<table width="100%">';
         parse_msg($msg);
@@ -567,7 +567,7 @@ $txt['008'] = _("Lesebestätigung");
     }
 
     ?>
-        <table cellpadding="0" cellspacing="0" border="0" height="10" width="99%">
+        <table cellpadding="0" cellspacing="0" border="0" height="10" width="99%" id="main_content">
             <tr>
                 <td colspan="2" valign="top" width="30%" height="10" class="blank" style="border-right: dotted 1px">
 

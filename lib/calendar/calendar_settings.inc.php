@@ -69,13 +69,13 @@ $css_switcher->switchClass();
 ?>
 <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
     <tr>
-        <td id="main_content" class="blank" width="100%" colspan="2" align="center"><br>
+        <td class="blank" width="100%" colspan="2" align="center"><br>
             <p class="info">
                 <b><?= _("Hier k&ouml;nnen Sie die Ansicht Ihres pers&ouml;nlichen Terminkalenders anpassen."); ?></b>
             </p>
             <form method="post" action="<? echo $PHP_SELF ?>?cmd_cal=chng_cal_settings">
             <?= CSRFProtection::tokenTag() ?>
-            <table width ="70%" align="center" cellspacing="0" cellpadding="8" border="0">
+            <table width ="70%" align="center" cellspacing="0" cellpadding="8" border="0" id="main_content">
                 <tr>
                     <th width="50%" align=center><?=_("Option")?></th>
                     <th align=center><?=_("Auswahl")?></th>

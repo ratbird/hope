@@ -591,15 +591,18 @@ class Course_StudygroupController extends AuthenticatedController {
      * offers specific member functions wrt perms
      *
      * @param string id of a studypgroup
-     * @param string user username of a user
      * @param string action that has to be performed
      * @param string status if applicable (e.g. tutor)
      *
      * @return void
      */
-    function edit_members_action($id, $user, $action, $status = '', $studipticket = false)
+    function edit_members_action($id, $action, $status = '', $studipticket = false)
     {
         global $perm;
+
+        $user = Request::get('user');
+        $user = preg_replace('/[^\w@.-]/', '', $user);
+
         if ($perm->have_studip_perm('tutor', $id)) {
 
             if (!$action) {

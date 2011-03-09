@@ -37,7 +37,7 @@ if(isset($flash['question']) && isset($flash['candidate'])) {
     $dialog = $GLOBALS['template_factory']->open('shared/question');
     echo $this->render_partial($dialog,array(
                         "question" => $flash['question'],
-                        "approvalLink" => $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$flash['candidate'].'/remove_approved/todo/' . get_ticket()),
+                        "approvalLink" => $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/remove_approved/todo/' . get_ticket() . '?user=' . $flash['candidate']),
                         "disapprovalLink" => $controller->url_for('course/studygroup/members/'.$sem_id.'/'.$page)
                     ));
 }
@@ -139,10 +139,10 @@ list-style-position:outside;list-style-type:none;">
                     </a>
                 </td>
                 <td style='padding-left:1em;'>
-                    <a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$p['username'].'/accept') ?>">
+                    <a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/accept?user='.$p['username']) ?>">
                         <?= makebutton('eintragen') ?>
                     </a>
-                    <a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$p['username'].'/deny') ?>">
+                    <a href="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/deny?user='.$p['username']) ?>">
                         <?= makebutton('ablehnen') ?>
                     </a>
                 </td>

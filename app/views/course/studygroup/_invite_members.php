@@ -2,7 +2,7 @@
 # Lifter010: TODO
 ?>
 <h2><?= _("Neue Gruppenmitglieder einladen") ?></h2>
-<form action="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/'.$GLOBALS['user']->id.'/add_invites/') ?>" method=post>
+<form action="<?= $controller->url_for('course/studygroup/edit_members/'.$sem_id.'/add_invites') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
     <div>
         <?= _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.") ?><br>

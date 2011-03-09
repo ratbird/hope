@@ -34,7 +34,7 @@ class SkipLinks
     /**
      * Inserts container for skip links in page layout.
      */
-    public static function insertContainer ()
+    public static function insertContainer()
     {
         self::$links = array();
         if (UserConfig::get($GLOBALS['user']->id)->getValue('SKIPLINKS_ENABLE')) {
@@ -84,12 +84,11 @@ class SkipLinks
      *
      * @return string the formatted list of skip links
      */
-    public static function getHTML ()
+    public static function getHTML()
     {
         $html = '';
         if (UserConfig::get($GLOBALS['user']->id)->getValue('SKIPLINKS_ENABLE') && $GLOBALS['auth']->is_authenticated() && sizeof(self::$links)) {
             Navigation::addItem('/skiplinks', new Navigation(''));
-            //uasort($_SESSION['SkipLinks'], create_function('$a, $b', 'return $a["position"] > $b["position"];'));
             uasort(self::$links, create_function('$a, $b', 'return $a["position"] > $b["position"];'));
             $i = 1;
             $position = 0;
@@ -108,9 +107,9 @@ class SkipLinks
     }
 
     /**
-     * Checks if there is another link at the same position and if it is overwritabel.
+     * Checks if there is another link at the same position and if it is overwritable.
      *
-     * @return boolean true if the link at the same position is overwritabel
+     * @return boolean true if the link at the same position is overwritable
      */
     private static function checkOverwrite($link)
     {

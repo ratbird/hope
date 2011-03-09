@@ -141,7 +141,7 @@ class Admin_AutoinsertController extends AuthenticatedController
 
                 $userlookup = new UserLookup();
                 foreach ($filters as $type => $values) {
-                    $userlookup->set_filter($type, $values);
+                    $userlookup->setFilter($type, $values);
                 }
                 $user_ids = $userlookup->execute();
                 $real_users = 0;
@@ -200,7 +200,7 @@ class Admin_AutoinsertController extends AuthenticatedController
 
         $this->values = array();
         foreach ($this->filtertype as $type) {
-            $this->values[$type] = UserLookup::GetValuesForType($type);
+            $this->values[$type] = UserLookup::getValuesForType($type);
         }
 
         $this->available_filtertypes = array(
@@ -229,7 +229,7 @@ class Admin_AutoinsertController extends AuthenticatedController
         } else {
             $userlookup = new UserLookup();
             foreach ($filters as $type => $values) {
-                $userlookup->set_filter($type, $values);
+                $userlookup->setFilter($type, $values);
             }
 
             echo json_encode(array('users' => count($userlookup->execute())));

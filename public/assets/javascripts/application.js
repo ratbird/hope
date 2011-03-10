@@ -1142,10 +1142,10 @@ STUDIP.Calendar = {
   ],
 
   /**
-   * this function is called, whenever an existing entry in the 
+   * this function is called, whenever an existing entry in the
    * calendar is clicked. It calls the passed function with the
    * calculcate id of the clicked element
-   * 
+   *
    * @param  object  a function or a reference to a function
    * @param  object  the element in the dom, that has been clicked
    * @param  object  the click-event itself
@@ -1220,7 +1220,7 @@ STUDIP.Schedule = {
 
   /**
    * this function is called, when an entry shall be created in the calendar
-   * 
+   *
    * @param  object  the empty entry in the calendar
    * @param  int     the day that has been clicked
    * @param  int     the start-hour that has been clicked
@@ -1233,7 +1233,7 @@ STUDIP.Schedule = {
       jQuery(entry).remove();
       return;
     }
- 
+
     // if there is already an entry set, kick him first before showing a new one
     if (this.entry) {
       jQuery(this.entry).fadeOut('fast');
@@ -1508,11 +1508,8 @@ jQuery(function ($) {
 });
 
 STUDIP.SkipLinks = {
-  cssclass: "skiplink_highlight",
-  box: null,
   activeElement : null,
-  navigationIn : false,
-  focused : false,
+  navigationStatus : 0,
 
   /**
    * Displays the skip link navigation after first hitting the tab-key
@@ -1530,12 +1527,12 @@ STUDIP.SkipLinks = {
    * shows the skiplink-navigation window by moving it from the left
    */
   moveSkipLinkNavigationIn: function () {
-    if (!STUDIP.SkipLinks.navigationIn) {
+    if (STUDIP.SkipLinks.navigationStatus === 0) {
       var VpWidth = jQuery(window).width();
       jQuery('#skip_link_navigation li:first a').focus();
       jQuery('#skip_link_navigation').show().css({left: VpWidth / 2, opacity: 0});
       jQuery('#skip_link_navigation').animate({opacity: 1.0}, 500);
-      STUDIP.SkipLinks.navigationIn = true;
+      STUDIP.SkipLinks.navigationStatus = 1;
     }
   },
 
@@ -1543,10 +1540,13 @@ STUDIP.SkipLinks = {
    * removes the skiplink-navigation window by moving it out of viewport
    */
   moveSkipLinkNavigationOut: function () {
-    if (STUDIP.SkipLinks.navigationIn) {
+    if (STUDIP.SkipLinks.navigationStatus === 1) {
       jQuery(STUDIP.SkipLinks.box).hide();
-      jQuery('#skip_link_navigation').animate({opacity: 0}, 500).css('left', '-600');
+      jQuery('#skip_link_navigation').animate({opacity: 0}, 500, function() {
+          jQuery(this).css('left', '-600px');
+      });
     }
+    STUDIP.SkipLinks.navigationStatus = 2;
   },
 
   getFragment: function () {
@@ -1554,7 +1554,6 @@ STUDIP.SkipLinks = {
     if (fragmentStart < 0) {
       return '';
     }
-    STUDIP.SkipLinks.focused = true;
     return document.location.hash.substring(fragmentStart);
   },
 
@@ -1583,7 +1582,6 @@ STUDIP.SkipLinks = {
     }
     if (jQuery('*').is(fragment) && fragment.length > 0 && fragment !== STUDIP.SkipLinks.activeElement) {
       STUDIP.SkipLinks.moveSkipLinkNavigationOut();
-      STUDIP.SkipLinks.navigationIn = true;
       STUDIP.SkipLinks.highlightBox(fragment, false);
       jQuery(fragment).attr('tabindex', '-1').click().focus();
       STUDIP.SkipLinks.activeElement = fragment;

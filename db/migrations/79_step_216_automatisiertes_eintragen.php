@@ -15,7 +15,7 @@ class Step216AutomatisiertesEintragen extends Migration
         DBManager::get()->exec("
             CREATE TABLE IF NOT EXISTS `auto_insert_sem` (
                 `seminar_id` char(32) NOT NULL,
-                `status` varchar(32) NOT NULL,
+                `status` enum('user','autor','tutor','dozent') NOT NULL DEFAULT 'user',
                 PRIMARY KEY  (`seminar_id`,`status`)
                 ) ENGINE=MyISAM ;
         ");
@@ -24,7 +24,7 @@ class Step216AutomatisiertesEintragen extends Migration
            CREATE TABLE IF NOT EXISTS `auto_insert_user` (
                 `seminar_id` char(32) NOT NULL,
                 `user_id` char(32) NOT NULL,
-                `mkdate` DATETIME,
+                `mkdate` int(10) unsigned NOT NULL DEFAULT '0',
                 PRIMARY KEY  (`seminar_id`,`user_id`)
                 ) ENGINE=MyISAM ;
         ");
@@ -32,10 +32,10 @@ class Step216AutomatisiertesEintragen extends Migration
         $options[] =
             array(
             'name'        => 'AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM',
-            'type'        => 'boolean',
-            'value'       => 0,
+            'type'        => 'string',
+            'value'       => 'tutor',
             'section'     => 'global',
-            'description' => 'Sollen automatisch eingetragene Nutzer in Veranstaltungen auch den Teilnehmerreiter sehen? (TRUE =sichtbar, FALSE= versteckt)'
+            'description' => 'Ab welchem Status soll in Veranstaltungen mit automatisch eingetragenen Nutzern der Teilnehmerreiter zu sehen sein?'
             );
 
         $stmt = DBManager::get()->prepare("
@@ -49,11 +49,25 @@ class Step216AutomatisiertesEintragen extends Migration
             $stmt->execute($option);
         }
 
+        if (is_array($GLOBALS['AUTO_INSERT_SEM'])) {
+            $stmt = DBManager::get()->prepare("
+            INSERT INTO `auto_insert_sem` (
+			`seminar_id` , `status` ) VALUES
+			(:seminar_id, 'user') ,
+			(:seminar_id, 'autor') ,
+			(:seminar_id, 'tutor') ,
+			(:seminar_id, 'dozent')
+            ");
+            foreach ($GLOBALS['AUTO_INSERT_SEM'] as $seminar_id) {
+                $stmt->execute(array('seminar_id' => $seminar_id));
+            }
+        }
     }
 
     function down ()
     {
-        DBManager::get()->query("DROP TABLE auto_insert_sem");
-        DBManager::get()->query("DROP TABLE auto_insert_user");
+        DBManager::get()->exec("DROP TABLE auto_insert_sem");
+        DBManager::get()->exec("DROP TABLE auto_insert_user");
+        DBManager::get()->exec("DELETE FROM config WHERE field = 'AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM'");
     }
 }

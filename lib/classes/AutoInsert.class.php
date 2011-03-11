@@ -101,10 +101,10 @@ class AutoInsert
     {
         if (!in_array($user_status, $seminar['status']) or $seminar['Schreibzugriff'] >= 2)
             return false;
-            
+
         // insert the user in the seminar_user table
-        $query  = "INSERT IGNORE INTO seminar_user (Seminar_id, user_id, status, gruppe)";
-        $query .= " VALUES (?, ?, 'autor', ?)";
+        $query  = "INSERT IGNORE INTO seminar_user (Seminar_id, user_id, status, gruppe, mkdate)";
+        $query .= " VALUES (?, ?, 'autor', ?, UNIX_TIMESTAMP())";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array(
             $seminar['seminar_id'],
@@ -121,19 +121,19 @@ class AutoInsert
      */
     public static function checkSeminar($seminar_id)
     {
-        $query = "SELECT COUNT(*) FROM auto_insert_sem WHERE seminar_id = ?";
+        $query = "SELECT 1 FROM auto_insert_sem WHERE seminar_id = ? LIMIT 1";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($seminar_id));
         $result = $statement->fetchColumn();
 
-        return $result > 0;
+        return (bool)$result;
     }
 
     /**
      * Enables a seminar for autoinsertion of users with the given status(ses)
      * @param string $seminar_id Id of the seminar
      * @param mixed  $status     Either a single string or an array of strings
-     *                           containing the status(ses) to enable for 
+     *                           containing the status(ses) to enable for
      *                           autoinsertion
      */
     public static function saveSeminar($seminar_id, $status)
@@ -143,7 +143,7 @@ class AutoInsert
 
         foreach ((array)$status as $s)
         {
-            $statement->execute(array($seminar_id, $s));            
+            $statement->execute(array($seminar_id, $s));
         }
     }
 
@@ -160,7 +160,7 @@ class AutoInsert
     {
         $query = $remove
             ? "DELETE FROM auto_insert_sem WHERE seminar_id = ? AND status= ?"
-            : "INSERT IGNORE INTO auto_insert_sem (seminar_id, status) VALUES (?, ?)";            
+            : "INSERT IGNORE INTO auto_insert_sem (seminar_id, status) VALUES (?, ?)";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($seminar_id, $status));
     }
@@ -178,23 +178,24 @@ class AutoInsert
 
     /**
      * Returns a list of all seminars enabled for autoinsertion
-     * @param  bool  Indicates whether only the seminar ids (true) or the full 
+     * @param  bool  Indicates whether only the seminar ids (true) or the full
      *               dataset shall be returned (false)
      * @return array The list of all enabled seminars (format according to $only_sem_id)
      */
     public static function getAllSeminars($only_sem_id = false)
     {
-        $query  = "SELECT a.seminar_id, GROUP_CONCAT(a.status) AS status, s.Name, s.Schreibzugriff, s.start_time ";
-        $query .= "FROM auto_insert_sem a ";
-        $query .= "JOIN seminare AS s USING (Seminar_id) ";
-        $query .= "GROUP BY s.seminar_id ";
-        $query .= "ORDER BY s.Name";
-        
-        $statement = DBManager::get()->query($query);
 
         if ($only_sem_id) {
+            $query  = "SELECT DISTINCT seminar_id FROM auto_insert_sem";
+            $statement = DBManager::get()->query($query);
             $results = $statement->fetchAll(PDO::FETCH_COLUMN);
         } else {
+            $query  = "SELECT a.seminar_id, GROUP_CONCAT(a.status) AS status, s.Name, s.Schreibzugriff, s.start_time ";
+            $query .= "FROM auto_insert_sem a ";
+            $query .= "JOIN seminare AS s USING (Seminar_id) ";
+            $query .= "GROUP BY s.seminar_id ";
+            $query .= "ORDER BY s.Name";
+            $statement = DBManager::get()->query($query);
             $results = $statement->fetchAll(PDO::FETCH_ASSOC);
             foreach ($results as $index=>$result ) {
                 $results[$index]['status'] = explode(',', $result['status']);
@@ -215,10 +216,10 @@ class AutoInsert
         $query .= "JOIN seminare AS s USING (Seminar_id) ";
         $query .= "WHERE a.seminar_id = ? ";
         $query .= "GROUP BY s.seminar_id";
-        
+
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($seminar_id));
-        
+
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $result['status'] = explode(',', $result['status']);
         return $result;
@@ -233,7 +234,7 @@ class AutoInsert
      */
     public static function saveAutoInsertUser($seminar_id, $user_id)
     {
-        $query = "INSERT INTO auto_insert_user (Seminar_id, user_id, mkdate) VALUES (?, ?, NOW())";
+        $query = "INSERT INTO auto_insert_user (Seminar_id, user_id, mkdate) VALUES (?, ?, UNIX_TIMESTAMP())";
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($seminar_id, $user_id));
     }
@@ -251,7 +252,7 @@ class AutoInsert
         $statement = DBManager::get()->prepare($query);
         $statement->execute(array($seminar_id, $user_id));
         $result = $statement->fetchColumn();
-        
+
         return $result > 0;
     }
 
@@ -278,7 +279,7 @@ class AutoInsert
                 }
             }
         }
-        
+
         return $added;
     }
 

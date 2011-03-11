@@ -61,7 +61,7 @@ class CourseNavigation extends Navigation
      */
     public function initSubNavigation()
     {
-        global $AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM, $SEM_CLASS, $SEM_TYPE;
+        global $SEM_CLASS, $SEM_TYPE;
         global $SessSemName, $forum, $perm, $user;
 
         parent::initSubNavigation();
@@ -216,11 +216,10 @@ class CourseNavigation extends Navigation
                 $navigation = new Navigation(_('TeilnehmerInnen'));
                 $navigation->setImage('icons/16/grey/persons.png');
 
-
                 if ($studygroup_mode) {
                     $navigation->setURL('dispatch.php/course/studygroup/members/'.$SessSemName[1]);
                     $this->addSubNavigation('members', $navigation);
-                } else if ($AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM || !in_array($SessSemName[1], AutoInsert::getAllSeminars(true)) || $perm->have_studip_perm('tutor', $SessSemName[1])) {
+                } else if ($perm->have_studip_perm((AutoInsert::checkSeminar($SessSemName[1]) ? Config::get()->AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM : 'user') , $SessSemName[1])) {
                     $navigation->addSubNavigation('view', new Navigation(_('TeilnehmerInnen'), 'teilnehmer.php'));
 
                     if (is_array($rule['attributes']) && in_array(1, $rule['attributes'])) {

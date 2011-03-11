@@ -15,7 +15,7 @@ class Step216AutomatisiertesEintragen extends Migration
         DBManager::get()->exec("
             CREATE TABLE IF NOT EXISTS `auto_insert_sem` (
                 `seminar_id` char(32) NOT NULL,
-                `status` enum('user','autor','tutor','dozent') NOT NULL DEFAULT 'user',
+                `status` enum('autor','tutor','dozent') NOT NULL DEFAULT 'autor',
                 PRIMARY KEY  (`seminar_id`,`status`)
                 ) ENGINE=MyISAM ;
         ");
@@ -53,7 +53,6 @@ class Step216AutomatisiertesEintragen extends Migration
             $stmt = DBManager::get()->prepare("
             INSERT INTO `auto_insert_sem` (
 			`seminar_id` , `status` ) VALUES
-			(:seminar_id, 'user') ,
 			(:seminar_id, 'autor') ,
 			(:seminar_id, 'tutor') ,
 			(:seminar_id, 'dozent')

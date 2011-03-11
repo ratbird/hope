@@ -582,6 +582,8 @@ function raumzeit_related_persons_action_do() {
     }
     if ($something_done) {
         $sem->createMessage(_("Zuständige Personen für die Termine wurden geändert."));
+    } else {
+        $sem->createInfo(_("An den Zuordnungen von Personen zu Terminen hat sich nichts geändert."));
     }
     return $something_done;
 }

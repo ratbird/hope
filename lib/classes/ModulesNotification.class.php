@@ -60,7 +60,7 @@ class ModulesNotification extends Modules {
                 "forum" => array('mes' => TRUE, 'name' =>  _("Forum")),
                 "documents" => array('mes' => TRUE, 'name' => _("Dateiordner")),
                 "schedule" => array('mes' => TRUE, 'name' => _("Ablaufplan")),
-                "participants" => array('mes' => FALSE, 'name' => _("TeilnehmerInnen")),
+                "participants" => array('mes' => TRUE, 'name' => _("TeilnehmerInnen")),
                 "personal" => array('mes' => FALSE, 'name' => _("Personal")),
                 "literature" => array('mes' => TRUE, 'name' => _("Literatur")),
                 "chat" => array('mes' => FALSE, 'name' => _("Chat")),
@@ -247,6 +247,20 @@ class ModulesNotification extends Modules {
                 }
                 $redirect = '&redirect_to=forum.php&view=neue&sort=age';
                 $icon = "icons/16/blue/forum.png";
+                break;
+            case 'participants' :
+                if ($r_data['new_accepted_participants'] > 1) {
+                    $text = sprintf(_("%s neue vorläufige TeilnehmerInnen, "), $r_data['newparticipants']);
+                } else if ($r_data['new_accepted_participants'] > 0) {
+                    $text = _("1 neuer vorläufiger TeilnehmerIn, ");
+                }
+                if ($r_data['newparticipants'] > 1) {
+                    $text = sprintf(_("%s neue TeilnehmerInnen:"), $r_data['newparticipants']);
+                } else if ($r_data['newparticipants'] > 0) {
+                    $text = _("1 neuer TeilnehmerIn:");
+                }
+                $redirect = '&redirect_to=teilnehmer.php';
+                $icon = "icons/16/blue/persons.png";
                 break;
             case 'documents' :
                 if ($r_data['neuedokumente'] > 1) {

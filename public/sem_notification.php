@@ -102,6 +102,9 @@ function print_module_icons ($m_enabled)
             case 'basic_data' :
                 $m_icon = Assets::image_path('icons/16/white/seminar.png');
                 break;
+            case 'participants' :
+                $m_icon = Assets::image_path('icons/16/white/persons.png');
+                break;
             default :
                 break;
         }

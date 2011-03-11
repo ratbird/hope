@@ -33,8 +33,8 @@
 <? if (count($seminar_search) > 0 and $sem_search and $sem_select): ?>
 <form action="<?= $controller->url_for('admin/autoinsert/manual') ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
-    <input type="hidden" name="sem_search" value="<?= $sem_search ?>">
-    <input type="hidden" name="sem_select" value="<?= $sem_select ?>">
+    <input type="hidden" name="sem_search" value="<?= htmlReady($sem_search) ?>">
+    <input type="hidden" name="sem_select" value="<?= htmlReady($sem_select) ?>">
   <? foreach ($filtertype as $type): ?>
     <input type="hidden" name="filtertype[]" value="<?= $type ?>">
   <? endforeach; ?>

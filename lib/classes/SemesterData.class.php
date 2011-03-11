@@ -79,7 +79,7 @@ class SemesterData
     {
         $semester = SemesterData::GetSemesterArray();
         unset($semester[0]);
-        if ($include_all) $semester[] = array('name' => _("alle"), 'semester_id' => 0);
+        if ($include_all) $semester['all'] = array('name' => _("alle"), 'semester_id' => 0);
         $semester = array_reverse($semester, true);
         if (!$select_attributes['name']) $select_attributes['name'] = 'sem_select';
         $out = chr(10) . '<select ';

@@ -185,10 +185,23 @@ if ((($seminar_id) || ($termin_id)) && (!$uebernehmen_x) && (!$search_room_x) &&
         $admin_rooms_data["original"] = get_snapshot();
     }
     */
+
+    $semObj = Seminar::getInstance($admin_rooms_data["sem_id"]);
+    $hasDates = false;
+    if ($semObj->getSingleDates() || $semObj->getCycles()) {
+        $hasDates = true;
+    }
+
+
     //Save changes
     if (($uebernehmen_x) && (!$errormsg)) {
-        if ((!$admin_rooms_data["resRequest"]->getSettedPropertiesCount()) && (!$admin_rooms_data["resRequest"]->getResourceId())) {
-            $errormsg.="error§"._("Die Anfrage konnte nicht gespeichert werden, da Sie mindestens einen Raum oder mindestens eine Eigenschaft (z.B. Anzahl der Sitzpl&auml;tze) angeben m&uuml;ssen!");
+        if (((!$admin_rooms_data["resRequest"]->getSettedPropertiesCount()) && (!$admin_rooms_data["resRequest"]->getResourceId())) || !$hasDates) {
+            if(!$hasDates) {
+                $errormsg .= "error§"._('Die Anfrage konnte nicht gespeichert werden,'
+                          .  ' da in der Veranstaltung noch keine Termine vorhanden sind!');
+            } else {
+                $errormsg.="error§"._("Die Anfrage konnte nicht gespeichert werden, da Sie mindestens einen Raum oder mindestens eine Eigenschaft (z.B. Anzahl der Sitzpl&auml;tze) angeben m&uuml;ssen!");
+            }
         } else {
             $admin_rooms_data["resRequest"]->setClosed(0);
             if ($admin_rooms_data["resRequest"]->store()) {
@@ -200,7 +213,7 @@ if ((($seminar_id) || ($termin_id)) && (!$uebernehmen_x) && (!$search_room_x) &&
 }
 
 //initiate the seminar-class
-$semObj = new Seminar($admin_rooms_data["sem_id"]);
+$semObj = Seminar::getInstance($admin_rooms_data["sem_id"]);
 
 //load my request, if user is the appropriciate admin too
 if ($perm->have_perm("admin"))

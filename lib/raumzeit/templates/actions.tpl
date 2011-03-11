@@ -28,7 +28,7 @@
         <TD align="left" class="steelgraulight">&nbsp;</TD>
         <TD align="left" class="steelgraulight">
             <FONT size="-1">
-                <B><?=_("ausgewählten Terminen Dozenten hinzufügen, entfernen oder für alle festlegen")?>&nbsp;</B>
+                <B><?=_("Ausgewählten Terminen Dozenten hinzufügen oder entfernen.")?>&nbsp;</B>
             </FONT><BR/>
     </TR>
     <TR>

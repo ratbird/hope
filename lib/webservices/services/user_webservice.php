@@ -31,19 +31,13 @@ require_once 'lib/webservices/api/studip_user.php';
 
 class UserService extends AccessControlledService {
 
-  /**
-   * This method is called before every other service method and tries to
-   * authenticate an incoming request using the first argument as an so
-   * called "api key". If the "api key" matches a valid one, the request will
-   * be authorized, otherwise a fault is sent back to the caller.
-   *
-   * @param string the function's name.
-   * @param array an array of arguments that will be delivered to the function.
-   *
-   * @return mixed if this method returns a "soap_fault" or "FALSE", further
-   *               processing will be aborted and a "soap_fault" delivered.
-   */
 
+   /**
+    * This parses an old-style Stud.IP message string and strips off all markup
+    *
+    * @param string $long_msg Stud.IP messages, concatenated with $separator
+    * @param string $separator
+    */
    static function parse_msg_to_clean_text($long_msg,$separator="§") {
        $msg = explode ($separator,$long_msg);
        $ret = array();
@@ -76,24 +70,36 @@ class UserService extends AccessControlledService {
            'checks if given username and password match');
    }
 
-  function before_filter($name, &$args) {
-      global $auth, $user, $perm;
+   /**
+    * This method is called before every other service method and tries to
+    * authenticate an incoming request using the before_filter() in the parent.
+    * Additionaly it sets up a faked Stud.IP environment using globals $auth, $user, $perm,
+    * so that the service methods will run with Stud.IPs root permission.
+    *
+    * @param string the function's name.
+    * @param array an array of arguments that will be delivered to the function.
+    *
+    * @return mixed if this method returns a Studip_Ws_Fault, further
+    *               processing will be aborted
+    */
+   function before_filter($name, &$args) {
+       global $auth, $user, $perm;
 
-      $auth = new Seminar_Auth();
-      $auth->auth = array('uid' => 'ws',
+       $auth = new Seminar_Auth();
+       $auth->auth = array('uid' => 'ws',
           'uname' => 'ws',
           'perm' => 'root');
 
-      $user = new Seminar_User();
-      $user->fake_user = true;
-      $user->register_globals = false;
-      $user->start('ws');
-      $perm = new Seminar_Perm();
-      $GLOBALS['MAIL_VALIDATE_BOX'] = false;
+       $user = new Seminar_User();
+       $user->fake_user = true;
+       $user->register_globals = false;
+       $user->start('ws');
+       $perm = new Seminar_Perm();
+       $GLOBALS['MAIL_VALIDATE_BOX'] = false;
 
-      return parent::before_filter($name, $args);
+       return parent::before_filter($name, $args);
 
-  }
+   }
 
 
   /**

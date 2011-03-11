@@ -1,4 +1,13 @@
 <?php
+/* requires everything necessary for webservices
+ *
+ * Copyright (c) 2011  Stud.IP CoreGroup
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ */
 
 # requiring nusoap
 require_once 'vendor/nusoap/nusoap.php';

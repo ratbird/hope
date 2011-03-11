@@ -15,8 +15,26 @@
 
 require_once 'lib/classes/WebserviceAccessRule.class.php';
 
-class AccessControlledService extends Studip_Ws_Service
+/**
+ * Abstract class, implementing access check in the before_filter(). All
+ * webservices classes should be derived from this.
+ *
+ */
+abstract class AccessControlledService extends Studip_Ws_Service
 {
+    /**
+     * This method is called before every other service method and tries to
+     * authenticate an incoming request using the first argument as an so
+     * called "api key". If the "api key", the functions name and the remote IP
+     * pass the access rules, the request will be authorized, otherwise a fault
+     *  is sent back to the caller.
+     *
+     * @param string the function's name.
+     * @param array an array of arguments that will be delivered to the function.
+     *
+     * @return mixed if this method returns a Studip_Ws_Fault, further
+     *               processing will be aborted
+     */
     function before_filter($name, &$args)
     {
 

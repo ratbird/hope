@@ -1542,8 +1542,8 @@ STUDIP.SkipLinks = {
   moveSkipLinkNavigationOut: function () {
     if (STUDIP.SkipLinks.navigationStatus === 1) {
       jQuery(STUDIP.SkipLinks.box).hide();
-      jQuery('#skip_link_navigation').animate({opacity: 0}, 500, function() {
-          jQuery(this).css('left', '-600px');
+      jQuery('#skip_link_navigation').animate({opacity: 0}, 500, function () {
+        jQuery(this).css('left', '-600px');
       });
     }
     STUDIP.SkipLinks.navigationStatus = 2;

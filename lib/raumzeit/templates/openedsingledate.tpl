@@ -12,7 +12,7 @@
                         <?= Assets::img('icons/16/blue/arr_1down.png') ?>
                     </A>
                     <? if (!$_LOCKED) : ?>
-                    <INPUT type="checkbox" name="singledate[]" value="<?=$tpl['sd_id']?>" <?=$tpl['checked']?>>
+                    <INPUT type="checkbox" name="singledate[]" value="<?=$tpl['sd_id']?>" checked>
                     <? endif ?>
                 </TD>
                 <TD width="39%" nowrap class="<?=$tpl['class']?>">

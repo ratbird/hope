@@ -693,11 +693,19 @@ class SingleDate {
         return $template->render();
     }
 
+    /**
+     * adds a given user_id as a related person to the date
+     * @param string $user_id
+     */
     public function addRelatedPerson($user_id) {
         $this->related_persons[] = $user_id;
         $this->related_persons = array_unique($this->related_persons);
     }
 
+    /**
+     * unsets a given user_id from the array of related persons
+     * @param string $user_id
+     */
     public function deleteRelatedPerson($user_id) {
         if (!$this->related_persons) {
             $sem = new Seminar($this->getSeminarID());
@@ -710,6 +718,10 @@ class SingleDate {
         }
     }
 
+    /**
+     * gets all user_ids of related persons of this date
+     * @return array of user_ids
+     */
     public function getRelatedPersons() {
         if (count($this->related_persons)) {
             return $this->related_persons;
@@ -719,6 +731,10 @@ class SingleDate {
         }
     }
 
+    /**
+     * clears all related persons (in the interface this means that all dozents are
+     * marked as related to the date)
+     */
     public function clearRelatedPersons() {
         $this->related_persons = array();
     }

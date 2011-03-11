@@ -445,6 +445,10 @@ class CycleData
         $this->cycle_date['related_persons'] = $user_array;
     }
 
+    /**
+     * gets the user_ids of the related persons
+     * @return array of user_ids
+     */
     function getRelatedPersons() {
         return $this->cycle_date['related_persons'];
     }

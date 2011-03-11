@@ -51,6 +51,8 @@
                     <? foreach ($tpl['related_persons'] as $key => $related_person) {
                         echo ($key > 0 ? ", " : "").get_fullname($related_person);
                     } ?>
+                    <? else : ?>
+                    <?= _("alle") ?>
                     <? endif ?>
                 </TD>
                 <TD class="printcontent">&nbsp;</TD>

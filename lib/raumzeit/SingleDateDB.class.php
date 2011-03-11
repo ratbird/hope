@@ -74,9 +74,11 @@ class SingleDateDB {
         "");
         if (count($termin->related_persons)) {
             $query = "INSERT INTO termin_related_persons (range_id, user_id) VALUES ";
-            foreach ($termin->getRelatedPersons() as $number => $user_id) {
+            $number = 0;
+            foreach ($termin->getRelatedPersons() as $user_id) {
                 $query .= $number > 0 ? ", " : "";
                 $query .= "(".$db->quote($termin->getTerminId()).", ".$db->quote($user_id).") ";
+                $number++;
             }
             $db->exec($query);
         }

@@ -544,10 +544,14 @@ function raumzeit_MoveCycle() {
     $sem->createMessage(_("Die regelmäßigen Zeiten wurden neu geordnet."));
 }
 
-
+/**
+ * Adds/deletes or updates (sets) the related persons of a given date.
+ * This function is called from seminar-class, when something has changed in a
+ * single- or metadate. It needs request-params to do something.
+ * @return boolean true if something changed and false if nothing happened
+ */
 function raumzeit_related_persons_action_do() {
     global $sem;
-    //rights-check?
     $singledates = Request::getArray('singledate');
     $persons = Request::getArray('related_persons');
     $action = Request::get('related_persons_action');
@@ -575,6 +579,9 @@ function raumzeit_related_persons_action_do() {
             }
             $singledate->store();
         }
+    }
+    if ($something_done) {
+        $sem->createMessage(_("Zuständige Personen für die Termine wurden geändert."));
     }
     return $something_done;
 }

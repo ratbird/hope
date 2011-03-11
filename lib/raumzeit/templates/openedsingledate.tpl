@@ -7,12 +7,15 @@
         <a name="<?=$tpl['sd_id']?>" />
         <TABLE cellpadding="2" cellspacing="0" border="0" width="100%">
             <TR>
-                <TD width="2%" align="left" valign="top" class="<?=$tpl['class']?>">
+                <TD width="8%" align="left" valign="top" class="<?=$tpl['class']?>">
                     <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
                         <?= Assets::img('icons/16/blue/arr_1down.png') ?>
                     </A>
+                    <? if (!$_LOCKED) : ?>
+                    <INPUT type="checkbox" name="singledate[]" value="<?=$tpl['sd_id']?>" <?=$tpl['checked']?>>
+                    <? endif ?>
                 </TD>
-                <TD width="43%" nowrap class="<?=$tpl['class']?>">
+                <TD width="39%" nowrap class="<?=$tpl['class']?>">
                     <FONT size="-1">
                         <INPUT type="text" id="day" name="day" maxlength="2" size="2" value="<?=$tpl['day']?>">.
                         <INPUT type="text" id="month" name="month" maxlength="2" size="2" value="<?=$tpl['month']?>">.

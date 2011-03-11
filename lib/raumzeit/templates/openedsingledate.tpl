@@ -120,7 +120,7 @@
             <TR>
                 <TD align="center" class="printcontent" colspan="4" style="text-align: center">
                     <INPUT type="hidden" name="cmd" value="doAddSingleDate">
-                    <INPUT type="image" <?=makebutton('uebernehmen', 'src')?>>
+                    <INPUT type="image" <?=makebutton('uebernehmen', 'src')?> name="editSingleDate_button">
                     <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
                         <IMG <?=makebutton('abbrechen', 'src')?> border="0">
                     </A>

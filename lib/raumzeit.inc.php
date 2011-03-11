@@ -366,6 +366,9 @@ function raumzeit_editDeletedSingleDate() {
 
 function raumzeit_editSingleDate() {
     global $sem, $sd_open;
+    if (!Request::submitted("editSingleDate_button")) {
+        return;
+    }
     unset($sd_open[$_REQUEST['singleDateID']]); // we close the choosen singleDate, that it does not happen that we have multiple singleDates open -> could lead to confusion, which singleDate is meant to be edited
     // generate time-stamps to we can compare directly
     $start = mktime($_REQUEST['start_stunde'], $_REQUEST['start_minute'], 0, $_REQUEST['month'], $_REQUEST['day'], $_REQUEST['year']);

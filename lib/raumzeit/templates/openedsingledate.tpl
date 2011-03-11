@@ -7,7 +7,7 @@
         <a name="<?=$tpl['sd_id']?>" />
         <TABLE cellpadding="2" cellspacing="0" border="0" width="100%">
             <TR>
-                <TD width="8%" align="left" valign="top" class="<?=$tpl['class']?>">
+                <TD style="min-width: 40px;" align="left" valign="top" class="<?=$tpl['class']?>">
                     <A href="<?= URLHelper::getLink('?cmd=close&open_close_id='. $tpl['sd_id'] .'#'. $tpl['sd_id']) ?>">
                         <?= Assets::img('icons/16/blue/arr_1down.png') ?>
                     </A>

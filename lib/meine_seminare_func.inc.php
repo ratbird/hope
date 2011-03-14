@@ -283,7 +283,7 @@ function get_obj_clause($table_name, $range_field, $count_field, $if_clause,
 function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 {
     $db2 = new DB_seminar;
-    $db2->query("CREATE TEMPORARY TABLE IF NOT EXISTS myobj_".$user_id." ( object_id char(32) NOT NULL, PRIMARY KEY (object_id)) type=HEAP");
+    $db2->query("CREATE TEMPORARY TABLE IF NOT EXISTS myobj_".$user_id." ( object_id char(32) NOT NULL, PRIMARY KEY (object_id)) ENGINE = MEMORY");
     $db2->query("REPLACE INTO  myobj_" . $user_id . " (object_id) VALUES ('" . join("'),('", array_keys($my_obj)) . "')");
 
     // Postings
@@ -560,7 +560,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
 
     // TeilnehmerInnen
     //vorläufige Teilnahme
-    $db2->query(get_obj_clause('admission_seminar_user a','seminar_id','a.user_id',"(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", 'sem', false, " AND a.status='accepted' ", false, NULL, 'mkdate'));
+    $db2->query(get_obj_clause('admission_seminar_user a','seminar_id','a.user_id',
+        "(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')",
+        'participants', false, " AND a.status='accepted' ", false, NULL, 'mkdate'));
+
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
         if ($my_obj[$object_id]["modules"]["participants"]) {
@@ -574,14 +577,16 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
         }
     }
 
-    $db2->query(get_obj_clause('seminar_user a','seminar_id','a.user_id',"(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')", 'sem', false, false, false, NULL, 'mkdate'));
+    $db2->query(get_obj_clause('seminar_user a','seminar_id','a.user_id',
+        "(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')",
+        'participants', false, false, false, NULL, 'mkdate'));
 
     $all_auto_inserts = AutoInsert::getAllSeminars(true);
     $auto_insert_perm = Config::get()->AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM;
 
     while($db2->next_record()) {
         $object_id = $db2->f('object_id');
-        // show the participants-icon only if the module is activaed and it is not an auto-insert-sem
+        // show the participants-icon only if the module is activated and it is not an auto-insert-sem
         if ($my_obj[$object_id]["modules"]["participants"]) {
             if (in_array($object_id, $all_auto_inserts)) {
                 if ($GLOBALS['perm']->have_perm('admin', $user_id)

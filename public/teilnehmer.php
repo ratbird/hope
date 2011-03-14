@@ -88,6 +88,8 @@ if ($cmd == "make_me_invisible" && !$perm->have_studip_perm('tutor',$SessSemName
 
 checkObject();
 checkObjectModule("participants");
+object_set_visit_module('participants');
+$last_visitdate = object_get_visit($SessSemName[1], 'participants');
 
 mark_public_course();
 
@@ -1180,6 +1182,10 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
             <a href="<?= URLHelper::getLink('about.php?username='.$db->f("username")) ?>">
                 <?= Avatar::getAvatar($db->f("user_id"))->getImageTag(Avatar::SMALL) ?>
                 <?= htmlReady($db->f("fullname")) ?>
+                <?= $db->f('mkdate') >= $last_visitdate ?
+                    Assets::img('icons/16/red/new/person.png',
+                        array('title' => _('DieseR NutzerIn ist nach Ihrem letzten Besuch '.
+                        'dieser Veranstaltung beigetreten'))) : '' ?>
             </a>
         </font>
         </td>

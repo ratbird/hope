@@ -79,7 +79,7 @@
                     <label><?= _("Durchführende Dozenten:") ?>
                     <SELECT name="related_teachers[]" multiple>
                     <? foreach ($sem->getMembers('dozent') as $dozent) : ?>
-                        <OPTION value="<?= $dozent['user_id'] ?>"><?= get_fullname($dozent['user_id']) ?></OPTION>
+                        <OPTION value="<?= $dozent['user_id'] ?>"><?= htmlReady(get_fullname($dozent['user_id'])) ?></OPTION>
                     <? endforeach ?>
                     </SELECT>
                     </label>

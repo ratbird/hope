@@ -52,7 +52,7 @@
                     <b><?= _("Durchführende Dozenten:") ?></b>
                     <? if (count($tpl['related_persons']) !== count($dozenten)) : ?>
                     <? foreach ($tpl['related_persons'] as $key => $related_person) {
-                        echo ($key > 0 ? ", " : "").get_fullname($related_person);
+                        echo ($key > 0 ? ", " : "").htmlReady(get_fullname($related_person));
                     } ?>
                     <? else : ?>
                     <?= _("alle") ?>

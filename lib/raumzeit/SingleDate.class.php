@@ -695,7 +695,7 @@ class SingleDate {
 
     /**
      * adds a given user_id as a related person to the date
-     * @param string $user_id
+     * @param string $user_id  user_id from auth_user_md5 of the person to be added
      */
     public function addRelatedPerson($user_id) {
         $this->related_persons[] = $user_id;
@@ -704,7 +704,7 @@ class SingleDate {
 
     /**
      * unsets a given user_id from the array of related persons
-     * @param string $user_id
+     * @param string $user_id  user_id from auth_user_md5 of the person to be added
      */
     public function deleteRelatedPerson($user_id) {
         if (!$this->related_persons) {

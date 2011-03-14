@@ -41,35 +41,29 @@ class CycleDataDB
         $db = new DB_Seminar();
 
         if (($start != 0) || ($end != 0)) {
-            $db->query("SELECT termine.*, r.resource_id FROM termine LEFT JOIN resources_assign as r ON (termin_id = assign_user_id)  WHERE metadate_id = '$metadate_id' AND termine.date >= $start AND termine.date <= $end");
+            $db->query("SELECT termine.*, r.resource_id,GROUP_CONCAT(trp.user_id) as related_persons FROM termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id LEFT JOIN resources_assign as r ON (termin_id = assign_user_id)  WHERE metadate_id = '$metadate_id' AND termine.date >= $start AND termine.date <= $end GROUP BY termin_id ORDER BY NULL");
         } else {
-            $db->query("SELECT termine.*, r.resource_id FROM termine LEFT JOIN resources_assign as r ON (termin_id = assign_user_id)  WHERE metadate_id = '$metadate_id'");
+            $db->query("SELECT termine.*, r.resource_id,GROUP_CONCAT(trp.user_id) as related_persons FROM termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id LEFT JOIN resources_assign as r ON (termin_id = assign_user_id)  WHERE metadate_id = '$metadate_id' GROUP BY termin_id ORDER BY NULL");
         }
 
         $ret = array();
 
         while ($db->next_record()) {
             $data = $db->Record;
-            $data['related_persons'] = DBManager::get()->query(
-                "SELECT user_id FROM termin_related_persons " .
-                "WHERE range_id = ".DBManager::get()->quote($zw['termin_id'])." " .
-            "")->fetchAll(PDO::FETCH_COLUMN, 0);
+            $data['related_persons'] = $data['related_persons'] ? explode(',', $data['related_persons']) : array();
             $ret[] = $data;
         }
 
         if (($start != 0) || ($end != 0)) {
-            $db->query("SELECT * FROM ex_termine WHERE metadate_id = '$metadate_id' AND date >= $start AND date <= $end ORDER BY date ASC");
+            $db->query("SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) as related_persons FROM ex_termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id WHERE metadate_id = '$metadate_id' AND date >= $start AND date <= $end GROUP BY termin_id ORDER BY NULL");
         } else {
-            $db->query("SELECT * FROM ex_termine WHERE metadate_id = '$metadate_id' ORDER BY date ASC");
+            $db->query("SELECT ex_termine.*, GROUP_CONCAT(trp.user_id) as related_persons FROM ex_termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id WHERE metadate_id = '$metadate_id' GROUP BY termin_id ORDER BY NULL");
         }
 
         while ($db->next_record()) {
             $zw = $db->Record;
             $zw['ex_termin'] = TRUE;
-            $zw['related_persons'] = DBManager::get()->query(
-                "SELECT user_id FROM termin_related_persons " .
-                "WHERE range_id = ".DBManager::get()->quote($zw['termin_id'])." " .
-            "")->fetchAll(PDO::FETCH_COLUMN, 0);
+            $zw['related_persons'] = $zw['related_persons'] ? explode(',', $zw['related_persons']) : array();
             $ret[] = $zw;
         }
 

@@ -55,17 +55,14 @@ class SeminarDB {
         $ret = Array();
 
         if (($start != 0) || ($end != 0)) {
-            $db->query("SELECT termine.*, resources_assign.resource_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE range_id = '$seminar_id' AND (metadate_id IS NULL OR metadate_id = '') AND termine.date >= $start AND termine.date <= $end ORDER BY date");
+            $db->query("SELECT termine.*, resources_assign.resource_id,GROUP_CONCAT(trp.user_id) as related_persons FROM termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termine.range_id = '$seminar_id' AND (metadate_id IS NULL OR metadate_id = '') AND termine.date >= $start AND termine.date <= $end GROUP BY termin_id ORDER BY date");
         } else {
-            $db->query("SELECT termine.*, resources_assign.resource_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE range_id = '$seminar_id' AND (metadate_id IS NULL OR metadate_id = '') ORDER BY date");
+            $db->query("SELECT termine.*, resources_assign.resource_id,GROUP_CONCAT(trp.user_id) as related_persons FROM termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termine.range_id = '$seminar_id' AND (metadate_id IS NULL OR metadate_id = '') GROUP BY termin_id ORDER BY date");
         }
 
         while($db->next_record()) {
             $data = $db->Record;
-            $data['related_persons'] = DBManager::get()->query(
-                "SELECT user_id FROM termin_related_persons " .
-                "WHERE range_id = ".DBManager::get()->quote($data['termin_id'])." " .
-            "")->fetchAll(PDO::FETCH_COLUMN, 0);
+            $data['related_persons'] = $data['related_persons'] ? explode(',', $data['related_persons']) : array();
             $ret[] = $data;
         }
 
@@ -125,19 +122,19 @@ class SeminarDB {
     function removeOutRangedSingleDates($start, $end, $seminar_id) {
         $db = new DB_Seminar();
         $db->query("SELECT * FROM termine WHERE (date < $start OR date > $end) AND range_id = '$seminar_id' AND NOT (metadate_id IS NULL OR metadate_id = '')");
-        $in_list = '('; 
+        $in_list = '(';
         $i = 0;
         while ($db->next_record()) {
-            if ($i == 1) { 
-                $in_list .= ','; 
-            } 
-            $in_list .= "'".$db->f('termin_id')."'"; 
-            $i = 1; 
+            if ($i == 1) {
+                $in_list .= ',';
+            }
+            $in_list .= "'".$db->f('termin_id')."'";
+            $i = 1;
             $termin = new SingleDate($db->f('termin_id'));
             $termin->delete();
             unset($termin);
         }
-        $in_list .= ')'; 
+        $in_list .= ')';
 
         if ($in_list != '()') {
             $db->query($query = "DELETE FROM resources_assign WHERE assign_user_id IN $in_list");
@@ -157,8 +154,8 @@ class SeminarDB {
     function getFirstDate($seminar_id)
     {
         $termine = array();
-        $db = new DB_Seminar("SELECT termin_id, date, end_time FROM termine 
-            WHERE range_id = '$seminar_id' AND date_typ IN ".getPresenceTypeClause()." 
+        $db = new DB_Seminar("SELECT termin_id, date, end_time FROM termine
+            WHERE range_id = '$seminar_id' AND date_typ IN ".getPresenceTypeClause()."
             ORDER BY date");
         $start = 0;
         $end = 0;
@@ -201,5 +198,5 @@ class SeminarDB {
         $db->query("DELETE FROM resources_requests WHERE seminar_id = '$id' AND (termin_id = '' OR termin_id IS NULL)");
         return TRUE;
     }
-                                    
+
 }

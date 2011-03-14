@@ -326,7 +326,7 @@ class SingleDate {
         $this->raum = $daten['raum'];
         $this->content = $daten['content'];
         $this->update = TRUE;
-        $this->related_persons = $daten['related_persons'];
+        $this->related_persons = is_array($daten['related_persons']) ? $daten['related_persons'] : array();
         return TRUE;
     }
 
@@ -491,16 +491,16 @@ class SingleDate {
 
                 // no room request found
                 if (!$this->request_id) return FALSE;
-            }    
+            }
 
             // room-request found, parse int-status and return string-status
             if (!$this->room_request) {
                 $this->room_request = new RoomRequest($this->request_id);
                 if ($this->room_request->isNewObject) {
                     throw new Exception("Room-Request with the id {$this->request_id} does not exists!");
-                }    
-            }    
-    
+                }
+            }
+
             switch ($this->room_request->getClosed()) {
                 case '0'; return 'open'; break;
                 case '1'; return 'pending'; break;
@@ -508,7 +508,7 @@ class SingleDate {
                 case '3'; return 'declined'; break;
             }
 
-        }   
+        }
 
         return FALSE;
     }
@@ -708,7 +708,7 @@ class SingleDate {
      */
     public function deleteRelatedPerson($user_id) {
         if (!$this->related_persons) {
-            $sem = new Seminar($this->getSeminarID());
+            $sem = Seminar::getInstance($this->getSeminarID());
             $this->related_persons = array_keys($sem->getMembers('dozent'));
         }
         foreach ($this->related_persons as $key => $related_person) {
@@ -726,7 +726,7 @@ class SingleDate {
         if (count($this->related_persons)) {
             return $this->related_persons;
         } else {
-            $sem = new Seminar($this->range_id);
+            $sem = Seminar::getInstance($this->getSeminarID());
             return array_keys($sem->getMembers('dozent'));
         }
     }

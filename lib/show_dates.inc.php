@@ -299,7 +299,7 @@ function show_dates($date_start, $date_end, $open, $range_id = "", $show_not = 0
                 $content.="<b>" . _("durchführende Dozenten:") . "</b> ";
                 foreach ($termin->getRelatedPersons() as $key => $dozent_id) {
                     $key < 1 || ($content.= ", ");
-                    $content .= get_fullname($dozent_id);
+                    $content .= htmlReady(get_fullname($dozent_id));
                 }
                 $content .= "<br>";
 

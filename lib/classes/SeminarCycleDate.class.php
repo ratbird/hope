@@ -24,7 +24,7 @@ class SeminarCycleDate extends SimpleORMap
      * returns new instance of type SeminarCycleDate with metadate_id = id
      * when found in db, or null if no SeminarCycleDate matches that id.
      * @param string id: primary key of table seminar_cycle_dates
-     * @return object of type SeminarCycleDate for the given id of a SeminarCycleDate 
+     * @return object of type SeminarCycleDate for the given id of a SeminarCycleDate
      * or null if no SeminarCycleDate matches
      */
     static function find($id)
@@ -35,7 +35,7 @@ class SeminarCycleDate extends SimpleORMap
     /**
      * returns array of instances of SeminarCycleDates filtered by given sql where-clause
      * @param string where: clause to use on the right side of WHERE
-     * @return array of instances of SeminarCycleDates filtered by given sql 
+     * @return array of instances of SeminarCycleDates filtered by given sql
      * where-clause or an empty array if nothing matches the clause
      */
     static function findBySql($where)
@@ -46,7 +46,7 @@ class SeminarCycleDate extends SimpleORMap
     /**
      * returns array of instances of SeminarCycleDates of the given seminar_id
      * @param string seminar_id: selected seminar to search for SeminarCycleDates
-     * @return array of instances of SeminarCycleDates of the given seminar_id or 
+     * @return array of instances of SeminarCycleDates of the given seminar_id or
      * an empty array
      */
     static function findBySeminar($seminar_id)
@@ -68,18 +68,13 @@ class SeminarCycleDate extends SimpleORMap
 
     /**
      * deletes SeminarCycleDates specified by given sql where-clause
-     * @param string where clause to use on the right side of WHERE to delete all 
+     * @param string where clause to use on the right side of WHERE to delete all
      * SeminarCycleDate matching that clause
      * @return number of deleted SeminarCycleDates matching the given where-clause
      */
     static function deleteBySql($where)
     {
         $ret = SimpleORMap::deleteBySql(__CLASS__, $where);
-        $db = DBManager::get();
-        $db->exec("DELETE FROM termin_related_persons WHERE range_id NOT IN (" .
-            "SELECT termin_id FROM termine " .
-            "UNION SELECT metadate_id FROM seminar_cycle_dates " .
-        ")");
         return $ret;
     }
 
@@ -95,11 +90,11 @@ class SeminarCycleDate extends SimpleORMap
     }
 
     /**
-     * returns value of a column or for field start_hour, end_hour, start_minute 
+     * returns value of a column or for field start_hour, end_hour, start_minute
      * or end_minute the correct timestamp
-     * @param string field: name of the field or start_hour, 
+     * @param string field: name of the field or start_hour,
      * end_hour, start_minute or end_minute
-     * @return string for the attribute, or int (timestamp) if field is start_hour, 
+     * @return string for the attribute, or int (timestamp) if field is start_hour,
      * end_hour, start_minute or end_minute or null, if field does not exists
      */
     function getValue($field)
@@ -167,7 +162,7 @@ class SeminarCycleDate extends SimpleORMap
     function toArray()
     {
         $ret = parent::toArray();
-        foreach(array('start_hour', 'start_minute', 'end_hour', 'end_minute', 'related_persons') as $additional) {
+        foreach(array('start_hour', 'start_minute', 'end_hour', 'end_minute') as $additional) {
             $ret[$additional] = $this->$additional;
         }
         return $ret;

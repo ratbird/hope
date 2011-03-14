@@ -87,23 +87,22 @@ class SingleDateDB {
     }
 
     static function restoreSingleDate($termin_id) {
-        $db = new DB_Seminar();
-        $db->query("SELECT termine.*, resource_id FROM termine LEFT JOIN resources_assign ON (assign_user_id = termin_id) WHERE termin_id = '$termin_id'");
-        $related_persons = DBManager::get()->query(
-            "SELECT user_id FROM termin_related_persons " .
-            "WHERE range_id = ".DBManager::get()->quote($termin_id)." " .
-        "")->fetchAll(PDO::FETCH_COLUMN, 0);
-        if ($db->next_record() && $db->f('termin_id')) {
-            $ret = $db->Record;
+        $db = DBManager::get();
+        $rs = $db->query("SELECT termine.*, resource_id,GROUP_CONCAT(trp.user_id) as related_persons
+                    FROM termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id
+                    LEFT JOIN resources_assign ON (assign_user_id = termin_id)
+                    WHERE termin_id = " . $db->quote($termin_id) . " GROUP BY termin_id ORDER BY NULL");
+        if ($ret = $rs->fetch(PDO::FETCH_ASSOC)) {
             $ret['ex_termin'] = FALSE;
-            $ret['related_persons'] = $related_persons;
+            $ret['related_persons'] = $ret['related_persons'] ? explode(',', $ret['related_persons']) : array();
             return $ret;
         } else {
-            $db->query("SELECT * FROM ex_termine WHERE termin_id = '$termin_id'");
-            if ($db->next_record()) {
-                $ret = $db->Record;
+            $db->query("SELECT ex_termine.*,GROUP_CONCAT(trp.user_id) as related_persons
+                        FROM ex_termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id
+                        WHERE termin_id = " . $db->quote($termin_id) . " GROUP BY termin_id ORDER BY NULL");
+            if ($ret = $rs->fetch(PDO::FETCH_ASSOC)) {
                 $ret['ex_termin'] = TRUE;
-                $ret['related_persons'] = $related_persons;
+                $ret['related_persons'] = $ret['related_persons'] ? explode(',', $ret['related_persons']) : array();
                 return $ret;
             } else {
                 return FALSE;

@@ -28,7 +28,7 @@
         <td>
             <a name="edit"></a>
             <input name="ws_rule_id" type="hidden" value="<?=$rule->id?>">
-            <input name="ws_rule_api_key" style="width:90%" type="text" value="<?= htmlReady($rule->api_key) ?>">
+            <input name="ws_rule_api_key" style="width:90%" type="text" required value="<?= htmlReady($rule->api_key) ?>">
         </td>
         <td>
             <input name="ws_rule_method" style="width:90%" type="text" value="<?= htmlReady($rule->method) ?>">
@@ -43,7 +43,8 @@
             </select>
         </td>
         <td>
-        <?=makeButton("ok", "input", "", "ok")?>
+        <input type="image" name="ok" src="<?=Assets::image_path('icons/16/green/accept.png')?>" alt="<?=_("Änderungen speichern")?>" title="<?=_("Änderungen speichern")?>">
+        <input type="image" name="cancel" src="<?=Assets::image_path('icons/16/red/decline.png')?>" alt="<?=_("Abbrechen")?>" title="<?=_("Abbrechen")?>">
         </td>
     <? else : ?>
 	    <td>
@@ -85,6 +86,15 @@ $infobox_content = array(
                     'text' => '<a href="'.$controller->url_for('admin/webservice_access/new').'">'._('Neue Zugriffsregel anlegen').'</a>'
                 ))
             ),
+            array(
+                'kategorie' => _('Hinweise'),
+                'eintrag'   => array(array(
+                'icon' => 'icons/16/black/info.png',
+                'text' => '<div>' . _("Sie können für einen Api-Key beliebig viele Regeln hinterlegen.") . '</div>
+                           <div>' . _("Ein leerer Eintrag für die Methode gilt für alle Methoden. Sie können auch nur einen Teil eines Methodennamen eingeben.") . '</div>
+                           <div>' . _("Ein leerer Eintrag für den IP Bereich gilt für alle Adressen. Sie können mehrere IP Adressen/Bereiche durch Kommata getrennt angeben. Adressbereiche müssen in CIDR Notation angegeben werden, z.B. 192.168.0.0/24") . '</div>'
+                 ))
+            )
         );
 
 $infobox = array('picture' => 'infobox/administration.jpg', 'content' => $infobox_content);

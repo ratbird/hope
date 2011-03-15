@@ -3,26 +3,31 @@
 <?=CSRFProtection::tokenTag()?>
 <table class="default">
   <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-  <td><?= _('API KEY') ?></td>
-  <td><input type="text" name="test_api_key" value="<?=htmlReady(Request::get("test_api_key"))?>"></td>
+  <td style="width:200px;"><?= _('API KEY') ?></td>
+  <td><input type="text" name="test_api_key" size="50" required value="<?=htmlReady(Request::get("test_api_key"))?>"></td>
   </tr>
   <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
   <td><?= _('Methode') ?></td>
-  <td><input type="text" name="test_method" value="<?=htmlReady(Request::get("test_method"))?>"></td>
+  <td><input type="text" name="test_method" size="50" required value="<?=htmlReady(Request::get("test_method"))?>"></td>
   </tr>
   <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
   <td><?= _('IP Adresse') ?></td>
-  <td><input type="text" name="test_ip" value="<?=htmlReady(Request::get("test_ip"))?>"></td>
+  <td><input type="text" name="test_ip" size="50" required value="<?=htmlReady(Request::get("test_ip"))?>"></td>
   </tr>
-  <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
-  <td colspan="2" ><?=makeButton('abschicken', 'input', _("Test starten"), 'ok')?></td>
+  <tr>
+  <td style="text-align:center" colspan="2">
+  <?=makeButton('abschicken', 'input', _("Test starten"), 'ok')?>
+  <a href="<?=$controller->url_for('admin/webservice_access')?>">
+  <?=makeButton('abbrechen', 'img', _("Test abbrechen"), 'cancel')?>
+  </a>
+  </td>
   </tr>
 </table>
 </form>
 <?
 $infobox_content = array(
             array(
-                'kategorie' => _('Zugriffsregeln verwalten'),
+                'kategorie' => _('Zugriffsregeln testen'),
                 'eintrag'   => array(array(
                 'icon' => 'icons/16/black/plus.png',
                 'text' => '<a href="'.$controller->url_for('admin/webservice_access').'">'._('Liste der Zugriffsregeln').'</a>'
@@ -32,6 +37,13 @@ $infobox_content = array(
                     'text' => '<a href="'.$controller->url_for('admin/webservice_access/new').'">'._('Neue Zugriffsregel anlegen').'</a>'
                 ))
             ),
+            array(
+                'kategorie' => _('Hinweise'),
+                'eintrag'   => array(array(
+                'icon' => 'icons/16/black/info.png',
+                'text' => _("Hier können Sie testen ob der Zugriff mit einem Api-Key für eine konkrete Webservicemethode von einer bestimmten IP Adresse aus möglich ist.")
+                 ))
+            )
         );
 
 $infobox = array('picture' => 'infobox/administration.jpg', 'content' => $infobox_content);

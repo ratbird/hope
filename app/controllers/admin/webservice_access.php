@@ -51,12 +51,18 @@ class Admin_WebserviceAccessController extends AuthenticatedController
     {
     }
 
+     /**
+     * Mark one rule as editable and display the list of ws access rules
+     */
     function edit_action($id)
     {
         $this->edit = $id;
         $this->render_action('index');
     }
 
+     /**
+     * Add a new rule on top, mark as editable and display the list of ws access rules
+     */
     function new_action()
     {
         array_unshift($this->ws_rules, new WebserviceAccessRule());
@@ -76,46 +82,48 @@ class Admin_WebserviceAccessController extends AuthenticatedController
     function update_action()
     {
         CSRFProtection::verifyUnsafeRequest();
-        if (!($rule = $this->ws_rules[Request::int('ws_rule_id')])) {
-            $rule = new WebserviceAccessRule();
-            $rule->id = 0;
-            array_unshift($this->ws_rules, $rule);
-        }
-        $rule->api_key = trim(Request::get('ws_rule_api_key'));
-        $rule->method = trim(Request::get('ws_rule_method'));
-        $rule->ip_range = trim(Request::get('ws_rule_ip_range'));
-        $rule->type = trim(Request::get('ws_rule_type'));
-
-        $msg = array();
-
-        if (strlen($rule->api_key) < 5) {
-            $msg['error'][] = _("Bitte geben Sie einen API-KEY mit min. 5 Zeichen an.");
-        }
-        foreach ($rule->ip_range as $key => $ip) {
-            if (!$ip) {
-                unset($rule->ip_range[$key]);
-                continue;
+        if (Request::submitted('ok')) {
+            if (!($rule = $this->ws_rules[Request::int('ws_rule_id')])) {
+                $rule = new WebserviceAccessRule();
+                $rule->id = 0;
+                array_unshift($this->ws_rules, $rule);
             }
-            list($ip_address, $mask) = split('/', $ip);
-            if (!ip2long($ip_address) || ($mask && ($mask < 8 || $mask > 30))) {
-                $msg['error'][] = sprintf(_("Der IP Bereich %s ist ungültig."), htmlready($ip));
-                unset($rule->ip_range[$key]);
+            $rule->api_key = trim(Request::get('ws_rule_api_key'));
+            $rule->method = trim(Request::get('ws_rule_method'));
+            $rule->ip_range = trim(Request::get('ws_rule_ip_range'));
+            $rule->type = trim(Request::get('ws_rule_type'));
+
+            $msg = array();
+
+            if (strlen($rule->api_key) < 5) {
+                $msg['error'][] = _("Bitte geben Sie einen API-KEY mit min. 5 Zeichen an.");
             }
-        }
-        if (!$rule->method) {
-            $msg['info'][] = _("Eine Regel ohne angegebene Methode gilt für alle Methoden!");
-        }
-        if (!count($rule->ip_range)) {
-            $msg['info'][] = _("Eine Regel ohne IP Bereich gilt für alle IP Adressen!");
-        }
-        if ($msg['error']) {
-            PageLayout::postMessage(MessageBox::error(_("Die Regel wurde nicht gespeichert."), $msg['error']));
-            $this->edit = $rule->id;
-            $this->render_action('index');
-            return;
-        } else {
-            if ($rule->store()) {
-                PageLayout::postMessage(MessageBox::success(_("Die Regel wurde gespeichert."), $msg['info']));
+            foreach ($rule->ip_range as $key => $ip) {
+                if (!$ip) {
+                    unset($rule->ip_range[$key]);
+                    continue;
+                }
+                list($ip_address, $mask) = split('/', $ip);
+                if (!ip2long($ip_address) || ($mask && ($mask < 8 || $mask > 30))) {
+                    $msg['error'][] = sprintf(_("Der IP Bereich %s ist ungültig."), htmlready($ip));
+                    unset($rule->ip_range[$key]);
+                }
+            }
+            if (!$rule->method) {
+                $msg['info'][] = _("Eine Regel ohne angegebene Methode gilt für alle Methoden!");
+            }
+            if (!count($rule->ip_range)) {
+                $msg['info'][] = _("Eine Regel ohne IP Bereich gilt für alle IP Adressen!");
+            }
+            if ($msg['error']) {
+                PageLayout::postMessage(MessageBox::error(_("Die Regel wurde nicht gespeichert."), $msg['error']));
+                $this->edit = $rule->id;
+                $this->render_action('index');
+                return;
+            } else {
+                if ($rule->store()) {
+                    PageLayout::postMessage(MessageBox::success(_("Die Regel wurde gespeichert."), $msg['info']));
+                }
             }
         }
         $this->redirect($this->url_for('admin/webservice_access'));
@@ -140,6 +148,9 @@ class Admin_WebserviceAccessController extends AuthenticatedController
         }
     }
 
+     /**
+     * reload all rules from database
+     */
     function get_all_rules()
     {
         $this->ws_rules = array();

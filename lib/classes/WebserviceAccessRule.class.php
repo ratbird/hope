@@ -1,5 +1,4 @@
 <?php
-# Lifter010: TODO
 /**
  * WebserviceAccessRule.class.php
  * model class for table webservice_access_rules
@@ -17,8 +16,26 @@
 
 require_once 'SimpleORMap.class.php';
 
+/**
+ * This class works like an array.
+ * The internal array is constructed from a comma separated string
+ * When used in an string context, it is automatically converted to a comma
+ * separated string
+ *
+ * Usage:
+ * $csvarray = new CSVArrayObject('eins,zwei,drei');
+ * $csvarray[] = 'vier';
+ * echo $csvarray; // prints out "eins,zwei,drei,vier"
+ *
+ * @link http://www.php.net/manual/en/class.arrayobject.php
+*/
 class CSVArrayObject extends ArrayObject
 {
+    /**
+     * Construct an array object from a string of comma separated items
+     *
+     * @param string $input a string of comma separated items
+     */
     function __construct($input)
     {
         if (is_string($input)) {
@@ -27,40 +44,79 @@ class CSVArrayObject extends ArrayObject
         parent::__construct((array)$input);
     }
 
+    /**
+     * magic method for use of object in string context
+     *
+     * @return string internal array itmes converted to a comma separated list
+     */
     function __toString()
     {
         return implode(',', (array)$this);
     }
 }
 
+/**
+ * Enter description here ...
+ * @author noack
+ *
+ */
 class WebserviceAccessRule extends SimpleORMap
 {
 
+    /* (non-PHPdoc)
+     * @see SimpleORMap::find()
+     */
     static function find($id)
     {
         return SimpleORMap::find(__CLASS__, $id);
     }
 
+    /* (non-PHPdoc)
+     * @see SimpleORMap::findBySql()
+     */
     static function findBySql($where)
     {
         return SimpleORMap::findBySql(__CLASS__, $where);
     }
 
+    /**
+     * returns all rules for an given api key
+     *
+     * @param string $api_key
+     * @return array of WebserviceAccessRule objects
+     */
     static function findByApiKey($api_key)
     {
         return self::findBySQL("api_key = " . DbManager::get()->quote($api_key) . " ORDER BY type");
     }
 
+    /**
+     * returns all rules in db sorted by api key
+     *
+     * @return array of WebserviceAccessRule objects
+     */
     static function findAll()
     {
         return self::findBySQL("1 ORDER BY api_key, type");
     }
 
+    /* (non-PHPdoc)
+     * @see SimpleORMap::deleteBySql()
+     */
     static function deleteBySql($where)
     {
         return SimpleORMap::deleteBySql(__CLASS__, $where);
     }
 
+    /**
+     * Checks for given api key, methodname and IP Address if access
+     * is granted or not
+     *
+     * @param string $api_key an api key
+     * @param string $method a name of an webservice method
+     * @param string $ip an IP Address
+     * @return boolean returns true if access fpr given params is allowed
+     */
     static function checkAccess($api_key, $method, $ip)
     {
         $rules = self::findByApiKey($api_key);
@@ -93,6 +149,9 @@ class WebserviceAccessRule extends SimpleORMap
         }
     }
 
+    /* (non-PHPdoc)
+     * @see SimpleORMap::setData()
+     */
     function setData($data, $reset)
     {
         $ret = parent::setData($data, $reset);
@@ -100,6 +159,9 @@ class WebserviceAccessRule extends SimpleORMap
         return $ret;
     }
 
+    /* (non-PHPdoc)
+     * @see SimpleORMap::setValue()
+     */
     function setValue($field, $value)
     {
         if ($field == 'ip_range' && !$value instanceof CSVArrayObject) {
@@ -108,11 +170,24 @@ class WebserviceAccessRule extends SimpleORMap
         return parent::setValue($field, $value);
     }
 
+    /**
+     * the table uses an auto_increment as primary key, so this always
+     * return 0 to get new key on first insert
+     *
+     * @return integer always 0
+     */
     function getNewId()
     {
         return 0;
     }
 
+    /**
+     * checks, if a given IP Address is in the range specified
+     * for this rule. If there is no specified range, it returns true
+     *
+     * @param string $check_ip an IP Address
+     * @return boolean true if given Address is in specified range
+     */
     function checkIpInRange($check_ip)
     {
         if (!ip2long($check_ip)) {
@@ -133,6 +208,15 @@ class WebserviceAccessRule extends SimpleORMap
         return false;
     }
 
+    /**
+     * checks, if the specified method name for this rule
+     * is part of the given one.
+     * If there is no specified method name, it returns true
+     *
+     *
+     * @param string $method a webservice method name
+     * @return boolean true if given name matches the specified
+     */
     function checkMethodName($method)
     {
         return ($method && (!$this->method || strpos($method, $this->method) !== false));

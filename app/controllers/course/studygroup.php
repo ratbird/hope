@@ -559,6 +559,9 @@ class Course_StudygroupController extends AuthenticatedController {
 
         Request::set('choose_member_parameter', $this->flash['choose_member_parameter']);
 
+        object_set_visit_module('participants');
+        $this->last_visitdate = object_get_visit($id, 'participants');
+
         $sem          = new Seminar($id);
         $this->page   = $page;
         $this->anzahl = StudygroupModel::countMembers($id);

@@ -1178,16 +1178,20 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
         echo ">&nbsp;</a>";
     }
     ?>
-        <font size="-1">
+        <span style="position: relative">
             <a href="<?= URLHelper::getLink('about.php?username='.$db->f("username")) ?>">
-                <?= Avatar::getAvatar($db->f("user_id"))->getImageTag(Avatar::SMALL) ?>
+                <? $db->f('mkdate') >= $last_visitdate
+                    ? $options = array('title' => _('DieseR NutzerIn ist nach Ihrem '.
+                        'letzten Besuch dieser Veranstaltung beigetreten'))
+                    :  $options = array() ?>
+                <? $options['style'] = 'margin-right: 5px' ?>
+                <?= Avatar::getAvatar($db->f("user_id"))->getImageTag(Avatar::SMALL, $options) ?>
+                <?= $db->f('mkdate') >= $last_visitdate ? Assets::img('red_star.png', array(
+                    'style' => 'position: absolute; top: -4px; left: 13px'
+                )) : '' ?>
                 <?= htmlReady($db->f("fullname")) ?>
-                <?= $db->f('mkdate') >= $last_visitdate ?
-                    Assets::img('icons/16/red/new/person.png',
-                        array('title' => _('DieseR NutzerIn ist nach Ihrem letzten Besuch '.
-                        'dieser Veranstaltung beigetreten'))) : '' ?>
             </a>
-        </font>
+        </span>
         </td>
     <?
     if ($key != "dozent" && $rechte) {

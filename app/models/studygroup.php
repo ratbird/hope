@@ -453,7 +453,7 @@ class StudygroupModel
         }
 
         $query = "SELECT username,user_id ,perms, seminar_user.status, ". $GLOBALS['_fullname_sql']['full_rev']
-               . " as fullname FROM seminar_user "
+               . " as fullname, seminar_user.mkdate FROM seminar_user "
                . "LEFT JOIN auth_user_md5 USING (user_id) "
                . "LEFT JOIN user_info USING (user_id) "
                . "WHERE Seminar_id = ? "

@@ -55,7 +55,10 @@ if(isset($flash['question']) && isset($flash['candidate'])) {
 <ul style="overflow:hidden;display:block;list-style-type:none;list-style-image:none;
 list-style-position:outside;list-style-type:none;">
 <? foreach ($cmembers as $m) : ?>
-
+<? $last_visitdate <= $m['mkdate']
+    ? $options = array('style' => 'border: 3px solid rgb(255, 100, 100);'
+        . 'border: 3px solid rgba(255, 0, 0, 0.5)')
+    : $options = array() ?>
 <? $this->m = $m ?>
     <li style="position:relative;width:200px;display:inline-block;overflow:hidden;vertical-align:top;" align="left">
 
@@ -64,14 +67,15 @@ list-style-position:outside;list-style-type:none;">
                onMouseOut ="$('.invitation', this).fadeOut();"
                onClick    ="STUDIP.Arbeitsgruppen.toggleOption('<?= $m['user_id'] ?>')"
                title="klicken für weitere Optionen">
-                <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::MEDIUM, array("title" => _("klicken für weitere Optionen"))) ?>
+                <? $options['title'] = _('klicken für weitere Optionen'); ?>
+                <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::MEDIUM, $options) ?>
                 <div class='invitation' style="display:none; position:absolute; top:0px; left:83px; width:16px; height:16px">
                     <?= Assets::img('icons/16/blue/edit.png') ?>
                 </div>
             </div>
         <? else : ?>
             <div style="float:left;position:relative;">
-                <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::MEDIUM) ?>
+                <?= Avatar::getAvatar($m['user_id'])->getImageTag(Avatar::MEDIUM, $options) ?>
             </div>
         <? endif ?>
 

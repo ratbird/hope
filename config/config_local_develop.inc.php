@@ -381,9 +381,9 @@ $STUDIP_AUTH_PLUGIN[] = "Shib";
 
 $STUDIP_AUTH_CONFIG_SHIB = array(
     // SessionInitator URL for remote SP
-    'session_initiator' => 'https://shib.serv.uni-osnabrueck.de/secure/studip-sp.php',
+    'session_initiator' => 'https://shib-sp.uni-osnabrueck.de/secure/studip-sp.php',
     // validation URL for remote SP
-    'validate_url'      => 'https://shib.serv.uni-osnabrueck.de/auth/studip-sp.php',
+    'validate_url'      => 'https://shib-sp.uni-osnabrueck.de/auth/studip-sp.php',
     // standard user data mapping
     'user_data_mapping' => array(
         'auth_user_md5.username' => array('callback' => 'dummy', 'map_args' => ''),

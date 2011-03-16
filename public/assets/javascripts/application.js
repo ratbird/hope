@@ -1565,6 +1565,7 @@ STUDIP.SkipLinks = {
    */
   insertSkipLinks: function () {
     jQuery('#skip_link_navigation').prepend(jQuery('#skiplink_list'));
+    jQuery('#skiplink_list').show();
     jQuery('#skip_link_navigation').attr('aria-busy', 'false');
     jQuery('#skip_link_navigation').attr('tabindex', '-1');
     STUDIP.SkipLinks.insertHeadLines();

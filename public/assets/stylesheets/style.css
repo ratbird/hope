@@ -1722,6 +1722,10 @@ h3.eval {
     left: -600px;
 }
 
+#skiplink_list {
+    display: none;
+}
+
 /* error message */
 .error {
 	height:15px;

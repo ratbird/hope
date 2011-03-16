@@ -1620,12 +1620,13 @@ STUDIP.SkipLinks = {
     jQuery('#skip_link_navigation a').each(function () {
       target = jQuery(this).attr('href');
       if (jQuery(target).is('li,td')) {
-        jQuery(jQuery(this).attr('href'))
+        jQuery(target)
           .prepend('<h2 id="' + jQuery(target).attr('id') + '_landmark_label" class="skip_target">' + jQuery(this).text() + '</h2>');
       } else {
-        jQuery(jQuery(this).attr('href'))
+        jQuery(target)
           .before('<h2 id="' + jQuery(target).attr('id') + '_landmark_label" class="skip_target">' + jQuery(this).text() + '</h2>');
       }
+      jQuery(target).attr('aria-labelledby', jQuery(target).attr('id') + '_landmark_label');
     });
   },
 

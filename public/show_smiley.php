@@ -59,6 +59,7 @@ if ($sm->error) { // old code is used
     <head>
     <title><?=_("Alle Smilies")?> (<?=count($i_smile)?>)</title>
     <link rel="stylesheet" href="<?= $GLOBALS['ASSETS_URL'] ?>stylesheets/style.css" type="text/css">
+    <link rel="stylesheet" href="<?= $GLOBALS['ASSETS_URL'] ?>stylesheets/header.css" type="text/css">
     </head>
     <body>
     <div align="center"><b><?=_("Aktuelle Smiley Anzahl: ") . count($i_smile)?></b></div>
@@ -92,6 +93,7 @@ if ($sm->error) { // old code is used
     $info = $sm->get_info();
     echo '<html><head><title>',_("Smiley-&Uuml;bersicht"),' (',$info['count_all'],')</title>', "\n";
     echo '<link rel="stylesheet" href="'.$GLOBALS['ASSETS_URL'].'stylesheets/style.css" type="text/css">', "\n";
+    echo '<link rel="stylesheet" href="'.$GLOBALS['ASSETS_URL'].'stylesheets/header.css" type="text/css">', "\n";
     echo '</head>', "\n";
     echo '<body>', "\n";
     $cmd = (isset($_REQUEST['cmd']))? $_REQUEST['cmd']:'';

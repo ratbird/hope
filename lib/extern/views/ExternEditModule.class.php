@@ -88,7 +88,7 @@ class ExternEditModule extends ExternEditHtml {
 
             // name of column
             $out .= "<tr" . $this->css->getFullClass() . " valign=\"middle\">\n";
-            $out .= "<td><font size=\"2\">&nbsp;{$field_names[$order[$i]]}</font></td>";
+            $out .= '<td>&nbsp;' . htmlReady($field_names[$order[$i]]) . '</td>';
 
             // column headline
             if (!in_array('aliases', $hide)) {

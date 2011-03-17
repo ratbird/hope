@@ -128,6 +128,7 @@ class CalendarView
     /**
      * adds a new column to this view. All entries created with addEntry will be
      * added to this column.
+     * 
      * @param string  $title  like "monday" to be displayed on top of the column
      * @param string  $url    to be called when clicked on the title of the column
      * @param string  $id     any kind of id of the column
@@ -257,6 +258,9 @@ class CalendarView
 
 
     /**
+     * returns the previously set start- and end-hour, denoting the
+     * range of entries to be displayed in the current calendar-view
+     *
      * @return array consisting of the start and end hour
      */
     public function getRange()
@@ -265,6 +269,9 @@ class CalendarView
     }
 
     /**
+     * the calendar can be used in two modes. Use this function to check,
+     * if the grouping-mode is enabled for the current calendar-view
+     *
      * @return bool true if grouped, false otherwise
      */
     public function isGrouped()
@@ -273,6 +280,8 @@ class CalendarView
     }
 
     /**
+     * returns the previously set height for one hour
+     *
      * @return mixed the height
      */
     public function getHeight()
@@ -281,6 +290,8 @@ class CalendarView
     }
 
     /**
+     * returns the overall height of the calendar
+     *
      * @return mixed the overall height
      */
     public function getOverallHeight()
@@ -288,13 +299,19 @@ class CalendarView
         return $this->height * ($this->end_hour - $this->start_hour) + 60;
     }
 
+    /**
+     * returns the previously set javasscript insert-function
+     *
+     * @return  string  name of js-function or anonymous js-function
+     */
     public function getInsertFunction() {
         return $this->insertFunction;
     }
 
     /**
      * returns all columns of the calendar-view
-     * @return array of CalendarColumn
+     *
+     * @return  array  of CalendarColumn
      */
     public function getColumns() {
         return $this->entries;

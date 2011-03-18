@@ -1,9 +1,8 @@
 <?
 # Lifter010: TODO
 if ($rechte) {
-    $text = _('Hier können Sie die TeilnehmerInnen der Studiengruppen verwalten. '
-          . 'TeilnehmerInnen können je nach Status zu einem Moderator hoch oder '
-          . 'runtergestuft werden und aus der Studiengruppe entlassen werden.');
+    $text = _('Hier können Sie die TeilnehmerInnen der Studiengruppen verwalten.')
+          . ' ' . _('TeilnehmerInnen können je nach Status zu einem Moderator hoch oder runtergestuft werden und aus der Studiengruppe entlassen werden.');
     $aktionen = array(
         'kategorie' => _("Aktionen"),
         'eintrag'   => array(
@@ -15,8 +14,7 @@ if ($rechte) {
         )
     );
 } else {
-    $text = _('Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen '
-          . 'und anderen zusammenzuarbeiten. Jeder kann Studiengruppen anlegen.');
+    $text = _('Studiengruppen sind eine einfache Möglichkeit, mit Kommilitonen, Kollegen und anderen zusammenzuarbeiten. Jeder kann Studiengruppen anlegen.');
     $aktionen = array();
 }
 
@@ -30,8 +28,7 @@ $infobox['content'] = array(
         'eintrag'   => array(
             array("text" => $text, "icon" => "icons/16/black/info.png"),
             array(
-                'text' => _('Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, '
-                       . 'abzuberufen oder ein Mitglied der Studiengruppe zu entfernen.'),
+                'text' => _('Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglied der Studiengruppe zu entfernen.'),
                 'icon' => "icons/16/black/info.png"
             )
         )
@@ -56,8 +53,7 @@ if(isset($flash['question']) && isset($flash['candidate'])) {
 
 <? if ($rechte) : ?>
 <p>
-    <?= _('Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen '
-        . 'oder ein Mitglied der Studiengruppe zu entfernen.') ?>
+    <?= _('Klicken Sie auf ein Gruppenmitglied, um ModeratorInnen zu berufen, abzuberufen oder ein Mitglied der Studiengruppe zu entfernen.') ?>
 </p>
 <? endif; ?>
 <ul style="overflow:hidden;display:block;list-style-type:none;list-style-image:none;
@@ -93,8 +89,9 @@ list-style-position:outside;list-style-type:none;">
         <noscript>
             <div id="user_<?= $m['user_id']?>" style="float:left; margin-right: 10px; width: 110px;" align="left" valign="top">
                 <div id="user_opt_<?= $m['user_id'] ?>">
-                <div class="blue_gradient" style="text-align: center"><?= _('Optionen') ?></div>
-                <?= $this->render_partial('course/studygroup/_members_options.php') ?>
+                    <div class="blue_gradient" style="text-align: center"><?= _('Optionen') ?></div>
+                    <?= $this->render_partial('course/studygroup/_members_options.php') ?>
+                </div>
             </div>
         </noscript>
 

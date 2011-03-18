@@ -675,9 +675,9 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
 //Alle fuer das Losen anstehenden Veranstaltungen bearbeiten (wenn keine anstehen wird hier nahezu keine Performance verbraten!)
 check_admission();
 
-if($perm->have_studip_perm('tutor', $SessSemName[1])){
+if (LockRules::Check($SessSemName[1], 'participants')) {
     $lockdata = LockRules::getObjectRule($SessSemName[1]);
-    if ($lockdata['description'] && LockRules::CheckLockRulePermission($SessSemName[1], $lockdata['permission'])){
+    if ($lockdata['description']) {
         $msg .= "info§" . fixlinks(htmlReady($lockdata['description']));
     }
 }

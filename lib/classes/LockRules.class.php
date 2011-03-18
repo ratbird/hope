@@ -38,6 +38,11 @@ class LockRules {
     private static $lockmap = array();
     private static $lockrules = array();
 
+    /**
+     * Enter description here ...
+     * @param string $lock_id
+     * @return LockRule
+     */
     public static function get($lock_id)
     {
         if(!array_key_exists($lock_id, self::$lockrules)) {
@@ -46,6 +51,11 @@ class LockRules {
         return self::$lockrules[$lock_id];
     }
 
+    /**
+     * Enter description here ...
+     * @param string $user_id
+     * @return array of LockRule objects
+     */
     public static function getAdministrableSeminarRules($user_id)
     {
         $filter = create_function('$lr',
@@ -53,6 +63,11 @@ class LockRules {
         return array_filter(LockRule::findAllByType('sem'), $filter);
     }
 
+    /**
+     * Enter description here ...
+     * @param string $user_id
+     * @return array of LockRule objects
+     */
     public static function getAvailableSeminarRules($user_id)
     {
         $filter = create_function('$lr',
@@ -60,10 +75,17 @@ class LockRules {
         return array_filter(LockRule::findAllByType('sem'), $filter);
     }
 
+    /**
+     * Enter description here ...
+     * @param string $object_id
+     * @param bool $renew
+     * @return LockRule
+     */
     public static function getObjectRule($object_id, $renew = false)
     {
         if(!array_key_exists($object_id, self::$lockmap) || $renew) {
-                $object_type = get_object_type($object_id, words('sem inst user'));
+            $object_type = get_object_type($object_id, words('sem inst user'));
+            if ($object_type) {
                 $methodmap = array('sem'  => 'Seminar',
                                    'inst' => 'Institute',
                                    'fak'  => 'Institute',
@@ -75,10 +97,17 @@ class LockRules {
                 } else {
                     self::$lockmap[$object_id] = null;
                 }
+            }
         }
         return self::$lockmap[$object_id] ? self::$lockrules[self::$lockmap[$object_id]] : null;
     }
 
+    /**
+     * Enter description here ...
+     * @param string $object_id
+     * @param string $attribute
+     * @return boolean
+     */
     public static function Check($object_id, $attribute)
     {
         $lr = self::getObjectRule($object_id);
@@ -89,6 +118,11 @@ class LockRules {
         }
     }
 
+    /**
+     * Enter description here ...
+     * @param string $object_id
+     * @return boolean
+     */
     public static function CheckLockRulePermission($object_id)
     {
         $perms = array('autor','tutor','dozent','admin','root','god');
@@ -110,6 +144,11 @@ class LockRules {
         return false;
     }
 
+    /**
+     * Enter description here ...
+     * @param string $type
+     * @return array
+     */
     public static function getLockRuleConfig($type)
     {
         $groups['basic'] = _("Grunddaten");

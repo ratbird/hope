@@ -347,7 +347,7 @@ class Admin_UserController extends AuthenticatedController
             //change institute
             if (Request::option('new_inst') != 'none' && Request::option('new_student_inst') != Request::option('new_inst') && $editPerms[0] != 'root') {
                 log_event('INST_USER_ADD', Request::option('new_inst'), $user_id, $editPerms[0]);
-                $db = DbManager::get()->prepare("INSERT IGNORE INTO user_inst (user_id, Institut_id, inst_perms) "
+                $db = DbManager::get()->prepare("REPLACE INTO user_inst (user_id, Institut_id, inst_perms) "
                                                ."VALUES (?,?,?)");
                 $db->execute(array($user_id, Request::option('new_inst'), $editPerms[0]));
                 $details[] = _('Die Einrichtung wurde hinzugefügt.');

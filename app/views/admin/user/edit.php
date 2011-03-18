@@ -78,7 +78,7 @@
             <?= _("Geschlecht:") ?>
         </td>
         <td colspan="2">
-        <? if (StudipAuthAbstract::CheckField("auth_user_md5.geschlecht", $user['auth_plugin']) || LockRules::check($user['user_id'], 'gender')) : ?>
+        <? if (StudipAuthAbstract::CheckField("user_info.geschlecht", $user['auth_plugin']) || LockRules::check($user['user_id'], 'gender')) : ?>
             <?=(!$user['geschlecht'] ? _("unbekannt") : ($user['geschlecht'] == 1 ? _("männlich") :  _("weiblich"))) ?>
         <? else : ?>
             <input type="radio"<?= (!$user['geschlecht']) ? ' checked' : '' ?> name="geschlecht" value="0"><?= _("unbekannt") ?>
@@ -92,7 +92,7 @@
             <?= _("Titel:") ?>
         </td>
         <td colspan="2">
-        <? if (StudipAuthAbstract::CheckField("auth_user_md5.title_front", $user['auth_plugin']) || LockRules::check($user['user_id'], 'title')) : ?>
+        <? if (StudipAuthAbstract::CheckField("user_info.title_front", $user['auth_plugin']) || LockRules::check($user['user_id'], 'title')) : ?>
             <?= htmlReady($user['title_front']) ?>
         <? else : ?>
             <select name="title_front_chooser" onchange="jQuery('input[name=title_front]').val( jQuery(this).val() );">
@@ -109,7 +109,7 @@
             <?=_("Titel nachgestellt:") ?>
         </td>
         <td colspan="2">
-        <? if (StudipAuthAbstract::CheckField("auth_user_md5.title_rear", $user['auth_plugin']) || LockRules::check($user['user_id'], 'title')) : ?>
+        <? if (StudipAuthAbstract::CheckField("user_info.title_rear", $user['auth_plugin']) || LockRules::check($user['user_id'], 'title')) : ?>
             <?= htmlReady($user['title_rear']) ?>
         <? else : ?>
             <select name="title_rear_chooser" onchange="jQuery('input[name=title_rear]').val( jQuery(this).val() );">
@@ -357,7 +357,7 @@
 </tbody>
 <? endif ?>
 
-<? if (count($userdomains) > 0 || $user['perms'] != 'root') : ?>
+<? if (count($userdomains) > 0 && $user['perms'] != 'root') : ?>
 <tbody>
     <tr class="steel header-row">
         <td colspan="3" class="toggle-indicator">

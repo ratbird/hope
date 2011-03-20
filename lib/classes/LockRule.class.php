@@ -1,5 +1,4 @@
 <?php
-# Lifter010: TODO
 /**
  * LockRule.class.php
  * model class for table lock_rule
@@ -17,19 +16,42 @@
 
 require_once 'SimpleORMap.class.php';
 
+/**
+ * this class represents on record of the lock_rules table
+ * the column attributes is converted to an ArrayObject and vice-versa,
+ * to allow array-like access
+ * 
+ * e.g.
+ * $lockrule = LockRule::find($id);
+ * $lockrule['attributes']['name'] = 1;
+ * $lockrule->store();
+ *
+ */
 class LockRule extends SimpleORMap
 {
 
+    /* (non-PHPdoc)
+     * @see SimpleORMap::find()
+     */
     static function find($id)
     {
         return SimpleORMap::find(__CLASS__, $id);
     }
 
+    /* (non-PHPdoc)
+     * @see SimpleORMap::findBySql()
+     */
     static function findBySql($where)
     {
         return SimpleORMap::findBySql(__CLASS__, $where);
     }
 
+    /**
+     * returns the lockrule for a course
+     * 
+     * @param string $seminar_id id of a course
+     * @return LockRule
+     */
     static function findBySeminar($seminar_id)
     {
         $db = DBManager::get();
@@ -38,6 +60,12 @@ class LockRule extends SimpleORMap
         return self::find($lock_rule_id);
     }
 
+    /**
+     * returns the lockrule for an institute
+     * 
+     * @param string $institute_id id of an institute
+     * @return LockRule
+     */
     static function findByInstitute($institute_id)
     {
         $db = DBManager::get();
@@ -46,6 +74,12 @@ class LockRule extends SimpleORMap
         return self::find($lock_rule_id);
     }
 
+    /**
+     * returns the lockrule for a user
+     * 
+     * @param string $user_id id of a user
+     * @return LockRule
+     */
     static function findByUser($user_id)
     {
         $db = DBManager::get();
@@ -54,19 +88,29 @@ class LockRule extends SimpleORMap
         return self::find($lock_rule_id);
     }
 
+    /**
+     * returns all exisiting lockrules for a given entity type
+     * 
+     * @param string $type entity type, one of [sem,inst,user]
+     * @return array of LockRule objects
+     */
     static function findAllByType($type)
     {
         return self::findBySQL("object_type = " . DbManager::get()->quote($type) . " ORDER BY name");
     }
 
+    /* (non-PHPdoc)
+     * @see SimpleORMap::deleteBySql()
+     */
     static function deleteBySql($where)
     {
         return SimpleORMap::deleteBySql(__CLASS__, $where);
     }
 
     /**
+     * Constructor
      *
-     * @param string $id primary key of table
+     * @param string $id primary key of table lock_rules
      */
     function __construct($id = null)
     {
@@ -76,7 +120,10 @@ class LockRule extends SimpleORMap
             $this->content['attributes'] = $this->convertJsonToArray($this->content['attributes']);
         }
     }
-
+	
+	/* (non-PHPdoc)
+     * @see SimpleORMap::setData()
+     */
     function setData($data, $reset)
     {
         $ret = parent::setData($data, $reset);
@@ -84,22 +131,41 @@ class LockRule extends SimpleORMap
         return $ret;
     }
 
+    /* (non-PHPdoc)
+     * @see SimpleORMap::store()
+     */
     function store()
     {
         $this->content['attributes'] = $this->convertArrayToJson($this->content['attributes']);
         return parent::store();
     }
 
-    function convertJsonToArray($attributes_json)
+    /**
+     * converts a json encoded array to an ArrayObject
+     * 
+     * @param string $attributes_json a json encoded array
+     * @return ArrayObject
+     */
+    private function convertJsonToArray($attributes_json)
     {
         return new ArrayObject((array)json_decode($attributes_json, true));
     }
 
-    function convertArrayToJson($attributes_array)
+    /**
+     * converts an array (or an ArrayObject) to
+     * a json encoded string
+     *
+     * @param array $attributes_array
+     * @return string 
+     */
+    private function convertArrayToJson($attributes_array)
     {
         return json_encode((array)$attributes_array);
     }
-
+	
+	/* (non-PHPdoc)
+     * @see SimpleORMap::delete()
+     */
     function delete()
     {
         $id = $this->getId();
@@ -114,6 +180,11 @@ class LockRule extends SimpleORMap
         return $ret;
     }
 
+    /**
+     * returns the number of uses for this lockrule
+     * 
+     * @return integer
+     */
     function getUsage()
     {
         if (!$this->isNew()) {

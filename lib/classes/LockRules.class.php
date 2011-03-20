@@ -1,36 +1,27 @@
 <?php
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
-
-// +---------------------------------------------------------------------------+
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or any later version.
-// +---------------------------------------------------------------------------+
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// You should have received a copy of the GNU General Public License
-// along with this program; if not, write to the Free Software
-// Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-// +---------------------------------------------------------------------------+
-
+/**
+ * LockRules.class.php
+ * 
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Mark Sievers <msievers@uos.de>
+ * @author      André Noack <noack@data-quest.de>
+ * @copyright   2011 Stud.IP Core-Group
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+*/
 
 require_once 'lib/classes/LockRule.class.php';
 
 /**
 * LockRules.class.php
 *
+* This class contains only static methods dealing with lock rules
 *
-*
-* @author     Mark Sievers <msievers@uos.de>
-* @access     public
-* @modulegroup
-* @module
-* @package
 */
 
 class LockRules {
@@ -39,8 +30,10 @@ class LockRules {
     private static $lockrules = array();
 
     /**
-     * Enter description here ...
-     * @param string $lock_id
+     * get lockrule object for given id
+     * from static object pool
+     * 
+     * @param string $lock_id id of lockrule
      * @return LockRule
      */
     public static function get($lock_id)
@@ -52,8 +45,10 @@ class LockRules {
     }
 
     /**
-     * Enter description here ...
-     * @param string $user_id
+     * returns a list of lockrules that can be administrated
+     * with the given user id
+     * 
+     * @param string $user_id id of user
      * @return array of LockRule objects
      */
     public static function getAdministrableSeminarRules($user_id)
@@ -64,8 +59,10 @@ class LockRules {
     }
 
     /**
-     * Enter description here ...
-     * @param string $user_id
+     * returns a list of lockrules that can be applied to a course
+     * with the given user id
+     * 
+     * @param string $user_id id of user
      * @return array of LockRule objects
      */
     public static function getAvailableSeminarRules($user_id)
@@ -76,10 +73,11 @@ class LockRules {
     }
 
     /**
-     * Enter description here ...
-     * @param string $object_id
-     * @param bool $renew
-     * @return LockRule
+     * returns the lock rule object for the given id, else null
+     * 
+     * @param string $object_id id of course, institute or user
+     * @param bool $renew if true, reloads the rule from database
+     * @return LockRule 
      */
     public static function getObjectRule($object_id, $renew = false)
     {
@@ -103,10 +101,12 @@ class LockRules {
     }
 
     /**
-     * Enter description here ...
-     * @param string $object_id
-     * @param string $attribute
-     * @return boolean
+     * checks if an attribute of an entity is locked for the current user
+     * see self::getLockRuleConfig() for the list of attributes
+     * 
+     * @param string $object_id id of course, institute or user
+     * @param string $attribute the name of an lockable attribute
+     * @return boolean true if attribute is locked for the current user
      */
     public static function Check($object_id, $attribute)
     {
@@ -119,9 +119,10 @@ class LockRules {
     }
 
     /**
-     * Enter description here ...
-     * @param string $object_id
-     * @return boolean
+     * checks if given entity is locked for the current user
+     * 
+     * @param string $object_id id of course, institute or user
+     * @return boolean true if given entity is locked fpr the current user
      */
     public static function CheckLockRulePermission($object_id)
     {
@@ -145,8 +146,10 @@ class LockRules {
     }
 
     /**
-     * Enter description here ...
-     * @param string $type
+     * returns an array containing all lockable attributes for
+     * given entity type
+     * 
+     * @param string $type entity type, one of [sem,inst,user]
      * @return array
      */
     public static function getLockRuleConfig($type)

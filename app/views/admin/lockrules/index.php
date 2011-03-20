@@ -2,6 +2,11 @@
 # Lifter010: TODO
 echo $message;
 ?>
+<h3>
+	<?=_("Sperrebenen für den Bereich:")?>
+	&nbsp;
+	<?=$rule_type_names[$lock_rule_type];?>
+</h3>
     <table class="default">
         <tr>
             <th width="30%"><?= _('Name') ?></th>
@@ -43,7 +48,7 @@ echo $message;
             ),
             array(
                     'icon' => 'icons/16/black/plus.png',
-                    'text' => '<a href="'.$controller->url_for('admin/lockrules/new').'">'._('Neue Sperregel anlegen').'</a>'
+                    'text' => '<a href="'.$controller->url_for('admin/lockrules/new').'">'._('Neue Sperrebene anlegen').'</a>'
                 ))
             ),
         );

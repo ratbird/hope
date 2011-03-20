@@ -51,7 +51,7 @@ class Admin_LockrulesController extends AuthenticatedController
         if ($this->flash['message']) {
             $this->message = $this->flash['message'];
         }
-
+		$this->rule_type_names = array('sem' => _("Veranstaltung"), 'inst' => _("Einrichtung"), 'user' => _("Nutzer"));
     }
 
     /**

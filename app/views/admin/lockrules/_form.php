@@ -9,7 +9,7 @@
 <?= _("Name")?>
 </td>
 <td>
-<input type="text" style="width:90%" name="lockdata_name" value="<?=htmlReady($lock_rule['name'])?>">
+<input type="text" style="width:90%" required name="lockdata_name" value="<?=htmlReady($lock_rule['name'])?>">
 </td>
 </tr>
 <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
@@ -69,7 +69,7 @@ foreach($lock_config['groups'] as $group => $group_title) {
             <?
         }
         ?>
-        <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
+        <tr>
         <td colspan="3" style="text-align:center">
         <?=makeButton('uebernehmen', 'input', _("Einstellungen übernehmen"), 'ok')?>
         </td>

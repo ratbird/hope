@@ -1,7 +1,11 @@
 <?
 # Lifter010: TODO
 ?>
-<h3><?=_("Neue Sperrebene eingeben")?></h3>
+<h3>
+	<?=_("Neue Sperrebene eingeben für den Bereich:")?>
+	&nbsp;
+	<?=$rule_type_names[$lock_rule_type];?>
+</h3>
 <?
 echo $message;
 echo $this->render_partial('admin/lockrules/_form.php', array('action' => $this->controller->url_for('admin/lockrules/new')));

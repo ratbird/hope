@@ -14,26 +14,44 @@
  * @category    Stud.IP
  */
 
-
+/**
+ * This interface describes a basic structure for a class that exports content
+ * or many contents within a document. It is used in ExportPDF, but could be
+ * used for classes that export Excel or OpenDocument files as well. The main
+ * operation to get a document by stud.ip-formatted text is quite simple:
+ *
+ *  $doc = new ExportPDF();
+ *  $doc->addPage();
+ *  $doc->addContent('Hallo, %%wir%% benutzen :studip:-Formatierung.');
+ *  $doc->dispatch();
+ *  //lines following dispatch won't be accessed anymor, because dispatch 
+ *  //cancels all other output.
+ *
+ */
 interface ExportDocument {
 
     /**
-     * adding a new page to write new content on it
+     * Adding a new page to write new content on it. Must be called at least once
+     * before any call of addContent($text).
      */
     public function addPage();
 
     /**
-     * adding an area of Stud.IP formatted content:
+     * Adding an area of Stud.IP formatted content.
      */
     public function addContent($content);
 
     /**
-     * outputs the content as a file with MIME-type and aborts any other output:
+     * Outputs the content as a file with MIME-type and aborts any other output.
+     * @param string $filename name of the future file without the extension.
      */
     public function dispatch($filename);
 
     /**
-     * saves the content as a file in the filesystem and returns a Stud.IP-document object
+     * Saves the content as a file in the filesystem and returns a Stud.IP-document object.
+     * @param string $filename name of the future file without the extension.
+     * @param mixed $folder_id md5-id of a given folder in database or null for nothing
+     * @return StudipDocument of the exported file or false if creation of StudipDocument failed.
      */
     public function save($filename, $folder_id = null);
 

@@ -391,6 +391,8 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
         $sem_status = (is_array($this->sem_browse_data['sem_status'])) ? $this->sem_browse_data['sem_status'] : false;
 
         $params = $this->sem_browse_data;
+        // delete array of semester data from the search object's parameters
+        $params['sem_status'] = false;
         if ($this->config->getValue('Main', 'mode') == 'show_sem_range') {
             $params['scope_choose'] = $this->sem_browse_data['start_item_id'];
         } else {

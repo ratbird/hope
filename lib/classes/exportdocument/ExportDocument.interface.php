@@ -22,8 +22,8 @@
  *
  *  $doc = new ExportPDF();
  *  $doc->addPage();
- *  $doc->addContent('Hallo, %%wir%% benutzen :studip:-Formatierung.');
- *  $doc->dispatch();
+ *  $doc->addContent('Hallo, %%wir%% benutzen :studip: -Formatierung.');
+ *  $doc->dispatch("test_pdf");
  *  //lines following dispatch won't be accessed anymor, because dispatch 
  *  //cancels all other output.
  *

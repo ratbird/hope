@@ -783,7 +783,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                         $semester = SemesterData::GetSemesterArray();
                         while(list($seminar_id, ) = each($sem_ids['Seminar_id'])) {
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['TITLE'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['Name']));
-                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COUSE-NO'] = $k + 1;
+                            $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSE-NO'] = $k + 1;
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSEDETAILS-HREF'] = $this->elements['LinkInternLecturedetails']->createUrl(array('link_args' => 'seminar_id=' . $seminar_id));
                             $content['RESULT']['GROUP'][$j]['COURSE'][$k]['COURSE_NUMBER'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['VeranstaltungsNummer']));
 

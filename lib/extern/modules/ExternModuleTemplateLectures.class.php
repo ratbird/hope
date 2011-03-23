@@ -495,7 +495,7 @@ class ExternSemBrowseTemplate extends SemBrowse {
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SEMTYPE-SUBSTITUTE'] = $aliases_sem_type[$this->sem_types_position[key($sem_data[$seminar_id]['status'])] - 1];
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['SEMTYPE'] = ExternModule::ExtHtmlReady($SEM_TYPE[key($sem_data[$seminar_id]['status'])]['name']
                                     .' ('. $SEM_CLASS[$SEM_TYPE[key($sem_data[$seminar_id]['status'])]['class']]['name'] . ')');
-                        $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['ROOM'] = nl2br(Seminar::getInstance($seminar_id)->getDatesTemplate('dates/seminar_export_location'));
+                        $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['ROOM'] = ExternModule::ExtHtmlReady(Seminar::getInstance($seminar_id)->getDatesTemplate('dates/seminar_export_location'));
                         $content['LECTURES']['GROUP'][$i]['LECTURE'][$j]['FORM'] = ExternModule::ExtHtmlReady(key($sem_data[$seminar_id]['art']));
 
                         // generic data fields

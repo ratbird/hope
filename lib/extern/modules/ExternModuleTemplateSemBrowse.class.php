@@ -904,7 +904,7 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
             if ($GLOBALS['RESOURCES_ENABLE']) {
                 if ($resource_ids = CycleDataDB::getPredominantRoomDB($metadate_id, $start_time, $end_time)) {
                     foreach ($resource_ids as $resource_id) {
-                        $cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['ROOMS'][$k]['ROOM'] = ResourceObject::Factory($resource_id)->getName();
+                        $cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['ROOMS'][$k]['ROOM'] = ExternModule::ExtHtmlReady(trim(ResourceObject::Factory($resource_id)->getName()));
                         $cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['ROOMS'][$k]['ROOMS_DELIMITER'] = true;
                         $k++;
                     }

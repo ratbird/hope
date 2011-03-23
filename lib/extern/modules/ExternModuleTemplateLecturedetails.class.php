@@ -302,8 +302,9 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
                 $content['LECTUREDETAILS']['SEMTYPE-SUBSTITUTE'] = ExternModule::ExtHtmlReady($GLOBALS["SEM_TYPE"][$seminar->status]["name"]);
             }
             $content['LECTUREDETAILS']['SEMTYPE'] = ExternModule::ExtHtmlReady($GLOBALS["SEM_TYPE"][$seminar->status]["name"]);
-            if ($room = getRoom($this->seminar_id, FALSE)) {
-                $content['LECTUREDETAILS']['ROOM'] = Seminar::getInstance($this->seminar_id)->getDatesTemplate('dates/seminar_export_location');
+            $room = trim(Seminar::getInstance($this->seminar_id)->getDatesTemplate('dates/seminar_export_location'));
+            if ($room) {
+                $content['LECTUREDETAILS']['ROOM'] = $room;
             }
             $content['LECTUREDETAILS']['SEMESTER'] = get_semester($this->seminar_id);
             $content['LECTUREDETAILS']['CYCLE'] = ExternModule::ExtHtmlReady(Seminar::getInstance($this->seminar_id)->getDatesExport());

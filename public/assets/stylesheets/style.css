@@ -1713,10 +1713,6 @@ h3.eval {
 	list-style-type: none;
 }
 
-.focus_box {
-    outline: 2px dashed #ff6600;
-}
-
 .skip_target {
     position: absolute;
     left: -600px;

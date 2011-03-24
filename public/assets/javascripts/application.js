@@ -1578,7 +1578,10 @@ STUDIP.SkipLinks = {
    */
   setActiveTarget: function (id) {
     var fragment = null;
-
+    // set active area only if skip links are activated
+    if (!jQuery('*').is('#skip_link_navigation')) {
+        return false;
+    }
     if (id) {
       fragment = id;
     } else {
@@ -1586,7 +1589,6 @@ STUDIP.SkipLinks = {
     }
     if (jQuery('*').is(fragment) && fragment.length > 0 && fragment !== STUDIP.SkipLinks.activeElement) {
       STUDIP.SkipLinks.moveSkipLinkNavigationOut();
-      STUDIP.SkipLinks.highlightBox(fragment, false);
       jQuery(fragment).attr('tabindex', '-1').click().focus();
       STUDIP.SkipLinks.activeElement = fragment;
       return true;
@@ -1594,11 +1596,6 @@ STUDIP.SkipLinks = {
       jQuery('#skip_link_navigation li a').first().focus();
     }
     return false;
-  },
-
-  highlightBox: function (id, marker) {
-    jQuery('.focus_box').removeClass('focus_box');
-    jQuery(id).addClass('focus_box');
   },
 
   injectAriaRoles: function () {

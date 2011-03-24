@@ -141,6 +141,7 @@ $sem->registerCommand('editCycle', 'raumzeit_editCycle');
 $sem->registerCommand('deleteCycle', 'raumzeit_deleteCycle');
 $sem->registerCommand('doDeleteCycle', 'raumzeit_doDeleteCycle');
 $sem->registerCommand('doAddSingleDate', 'raumzeit_doAddSingleDate');
+$sem->registerCommand('editSingleDate_button', 'raumzeit_editSingleDate');
 $sem->registerCommand('editSingleDate', 'raumzeit_editSingleDate');
 $sem->registerCommand('editDeletedSingleDate', 'raumzeit_editDeletedSingleDate');
 $sem->registerCommand('freeText', 'raumzeit_freeText');

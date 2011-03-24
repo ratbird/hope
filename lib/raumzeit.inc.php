@@ -365,7 +365,7 @@ function raumzeit_editDeletedSingleDate() {
 }
 
 function raumzeit_editSingleDate() {
-    global $sem, $sd_open;
+    global $sem, $sd_open;    
     if (!Request::submitted("editSingleDate_button")) {
         return;
     }
@@ -423,7 +423,7 @@ function raumzeit_editSingleDate() {
         if ($start >= $termin->date && $ende <= $termin->end_time) {
             $bookRoom = true;
         } else {
-            if (!$_REQUEST['approveChange']) {
+            if (!$_REQUEST['approveChange'] && $termin->hasRoom()) {
                 $zw_termin = new SingleDate();
                 $zw_termin->date = $start;
                 $zw_termin->end_time = $ende;
@@ -436,6 +436,7 @@ function raumzeit_editSingleDate() {
                 }
 
                 $url_params['approveChange'] = true;
+                $url_params['editSingleDate_button'] = true;
 
                 echo createQuestion( sprintf(_("Wenn Sie den Termin am %s auf %s ändern,".
                         " verlieren Sie die Raumbuchung. Sind Sie sicher, dass Sie diesen Termin ändern möchten?"),
@@ -448,8 +449,8 @@ function raumzeit_editSingleDate() {
         }
 
         if ( $termin->setTime($start, $ende)
-      || $termin->getFreeRoomText()!=$_REQUEST['freeRoomText_sd']
-      || $termin->getDateType!=$_REQUEST['dateType'] ) {
+            || $termin->getFreeRoomText() != $_REQUEST['freeRoomText_sd']
+            || $termin->getDateType != $_REQUEST['dateType'] ) {
 
             $termin->setDateType($_REQUEST['dateType']);
             $termin->setFreeRoomText($_REQUEST['freeRoomText_sd']);

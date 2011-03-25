@@ -27,13 +27,55 @@ class StudipPDO extends PDO
     private function verify($statement)
     {
         if (strpos($statement, ';') !== false) {
-            // replace all strings with placeholders
-            $statement = preg_replace('/(["\'])(\1\1|\\\\.|.)*?\1/s', '?', $statement);
-
-            if (preg_match('/;\s*\S/', $statement)) {
+            if (preg_match('/;\s*\S/', self::replaceStrings($statement))) {
                 throw new PDOException('multiple statement execution not allowed');
             }
         }
+    }
+
+    /**
+     * Replaces all string literals in the statement with placeholders.
+     *
+     * @param string    SQL statement
+     * @return string   modified SQL statement
+     */
+    protected static function replaceStrings($statement)
+    {
+        $count = substr_count($statement, '"') + substr_count($statement, "'") + substr_count($statement, '\\');
+
+        // use fast preg_replace() variant if possible
+        if ($count < 1000) {
+            $result = preg_replace('/"(""|\\\\.|[^\\\\"]+)*"|\'(\'\'|\\\\.|[^\\\\\']+)*\'/s', '?', $statement);
+        } else {
+            // split string into parts at quotes and backslash
+            $parts = preg_split('/([\\\\"\'])/', $statement, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
+            $result = '';
+
+            for ($part = current($parts); $part !== false; $part = next($parts)) {
+                // inside quotes, "" is ", '' is ' and \x is x
+                if ($quote_chr !== NULL) {
+                    if ($part === $quote_chr) {
+                        $part = next($parts);
+
+                        if ($part !== $quote_chr) {
+                            // backtrack and terminate string
+                            prev($parts);
+                            $result .= '?';
+                            $quote_chr = NULL;
+                        }
+                    } else if ($part === '\\') {
+                        // skip next part
+                        next($parts);
+                    }
+                } else if ($part === "'" || $part === '"') {
+                    $quote_chr = $part;
+                } else {
+                    $result .= $part;
+                }
+            }
+        }
+
+        return $result;
     }
 
     /**

@@ -5,9 +5,9 @@
 # Lifter010: TODO
 /**
 * ExternModuleLecturedetails.class.php
-* 
-* 
-* 
+*
+*
+*
 *
 * @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -19,7 +19,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // ExternModuleLecturedetails.class.php
-// 
+//
 // Copyright (C) 2003 Peter Thienel <pthienel@web.de>,
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
@@ -93,12 +93,12 @@ class ExternModuleLecturedetails extends ExternModule {
                 _("ECTS-Kreditpunkte"));
         parent::ExternModule($range_id, $module_name, $config_id, $set_config, $global_id);
     }
-    
+
     function setup () {
         // extend $data_fields if generic datafields are set
         $config_datafields = $this->config->getValue("Main", "genericdatafields");
         $this->data_fields = array_merge((array)$this->data_fields, (array)$config_datafields);
-        
+
         // setup module properties
         $this->elements["SemName"]->real_name = _("Name der Veranstaltung");
         $this->elements["Headline"]->real_name = _("&Uuml;berschriften");
@@ -106,38 +106,38 @@ class ExternModuleLecturedetails extends ExternModule {
         $this->elements["LinkInternSimple"]->link_module_type = 2;
         $this->elements["LinkInternSimple"]->real_name = _("Link zum Modul Mitarbeiterdetails");
     }
-    
+
     function printout ($args) {
-        
+
         if ($this->config->getValue("Main", "wholesite"))
             echo html_header($this->config);
-        
+
         if (!$language = $this->config->getValue("Main", "language"))
             $language = "de_DE";
         init_i18n($language);
-        
+
         echo $this->toString($args);
-        
+
         if ($this->config->getValue("Main", "wholesite"))
             echo html_footer();
     }
-    
+
     function printoutPreview () {
-        
+
         if ($this->config->getValue("Main", "wholesite"))
             echo html_header($this->config);
-        
+
         if (!$language = $this->config->getValue("Main", "language"))
             $language = "de_DE";
         init_i18n($language);
-        
+
         include($GLOBALS["RELATIVE_PATH_EXTERN"]
                 . "/modules/views/lecturedetails_preview.inc.php");
-                
+
         if ($this->config->getValue("Main", "wholesite"))
             echo html_footer();
     }
-    
+
     function toString ($args) {
         $out = "";
         $this->seminar_id = $args["seminar_id"];
@@ -145,15 +145,15 @@ class ExternModuleLecturedetails extends ExternModule {
         $query = "SELECT * FROM seminare WHERE Seminar_id='$this->seminar_id'";
         $this->db->query($query);
         $visible = $this->config->getValue("Main", "visible");
-        
+
         $j = -1;
         if ($this->db->next_record()) {
-        
+
             $data["name"] = htmlReady($this->db->f("Name"));
-            
+
             if ($visible[++$j] && $this->db->f("Untertitel"))
                 $data["subtitle"] = htmlReady($this->db->f("Untertitel"));
-            
+
             if ($visible[++$j]) {
                 if (!$name_sql = $this->config->getValue("Main", "nameformat"))
                     $name_sql = "full";
@@ -172,10 +172,10 @@ class ExternModuleLecturedetails extends ExternModule {
                 if (is_array($data["lecturer"]))
                     $data["lecturer"] = implode(", ", $data["lecturer"]);
             }
-            
+
             if ($visible[++$j] && $this->db->f("art"))
                 $data["art"] = htmlReady($this->db->f("art"));
-            
+
             if ($visible[++$j]) {
                 // reorganize the $SEM_TYPE-array
                 foreach ($GLOBALS["SEM_CLASS"] as $key_class => $class) {
@@ -187,7 +187,7 @@ class ExternModuleLecturedetails extends ExternModule {
                         }
                     }
                 }
-                
+
                 $aliases_sem_type = $this->config->getValue("ReplaceTextSemType",
                         "class_" . $GLOBALS["SEM_TYPE"][$this->db->f("status")]['class']);
                 if ($aliases_sem_type[$sem_types_position[$this->db->f("status")] - 1])
@@ -195,41 +195,41 @@ class ExternModuleLecturedetails extends ExternModule {
                 else
                     $data["status"] = htmlReady($GLOBALS["SEM_TYPE"][$this->db->f("status")]["name"]);
             }
-            
+
             if ($visible[++$j] && $this->db->f("Beschreibung"))
                 $data["description"] = FixLinks(htmlReady($this->db->f("Beschreibung")), TRUE, TRUE, FALSE, TRUE);
-            
+
             if ($visible[++$j])
-                $data["location"] = Seminar::getInstance($this->seminar_id)->getDatesTemplate('dates/seminar_export_location'); 
-            
+                $data["location"] = htmlReady(Seminar::getInstance($this->seminar_id)->getDatesTemplate('dates/seminar_export_location'));
+
             if ($visible[++$j])
                 $data["semester"] = get_semester($this->seminar_id);
-            
+
             if ($visible[++$j]) {
-                $data["time"] = Seminar::getInstance($this->seminar_id)->getDatesExport();
+                $data["time"] = htmlReady(Seminar::getInstance($this->seminar_id)->getDatesExport());
                 if ($first_app = vorbesprechung($this->seminar_id, 'export')) {
-                    $data["time"] .= "<br>" . $this->config->getValue("Main", "aliaspredisc") . $first_app;
+                    $data["time"] .= "<br>" . $this->config->getValue("Main", "aliaspredisc") . htmlReady($first_app);
                 }
                 if ($begin = Seminar::getInstance($this->seminar_id)->getFirstDate('export')) {
-                    $data["time"] .= "<br>" . $this->config->getValue("Main", "aliasfirstmeeting") . $begin;
+                    $data["time"] .= "<br>" . $this->config->getValue("Main", "aliasfirstmeeting") . htmlReady($begin);
                 }
             }
-            
+
             if ($visible[++$j] && $this->db->f("VeranstaltungsNummer"))
                 $data["number"] = htmlReady($this->db->f("VeranstaltungsNummer"));
-            
+
             if ($visible[++$j] && $this->db->f("teilnehmer"))
                 $data["teilnehmer"] = htmlReady($this->db->f("teilnehmer"));
-            
+
             if ($visible[++$j] && $this->db->f("vorrausetzungen"))
                 $data["requirements"] = htmlReady($this->db->f("vorrausetzungen"));
-            
+
             if ($visible[++$j] && $this->db->f("lernorga"))
                 $data["lernorga"] = htmlReady($this->db->f("lernorga"));
-            
+
             if ($visible[++$j] && $this->db->f("leistungsnachweis"))
                 $data["leistung"] = htmlReady($this->db->f("leistungsnachweis"));
-            
+
             if ($visible[++$j]) {
                 $range_path_level = $this->config->getValue("Main", "rangepathlevel");
                 $pathes = get_sem_tree_path($this->seminar_id, $range_path_level);
@@ -237,13 +237,13 @@ class ExternModuleLecturedetails extends ExternModule {
                     $data["range_path"] = htmlReady(implode("\n", array_values($pathes)),true,true);
                 }
             }
-            
+
             if ($visible[++$j] && $this->db->f("Sonstiges"))
                 $data["misc"] = FixLinks(htmlReady($this->db->f("Sonstiges")), TRUE, TRUE, FALSE, TRUE);
-            
+
             if ($visible[++$j] && $this->db->f("ects"))
                 $data["ects"] = htmlReady($this->db->f("ects"));
-            
+
             // generic data fields
             if ($generic_datafields = $this->config->getValue("Main", "genericdatafields")) {
 //              $datafields_obj = new DataFields($this->seminar_id);
@@ -255,13 +255,13 @@ class ExternModuleLecturedetails extends ExternModule {
                     }
                 }
             }
-            $out = $this->toStringMainTable($data, FALSE); 
+            $out = $this->toStringMainTable($data, FALSE);
         }
-        
+
         return $out;
     }
-    
-    function toStringPreview ($args) {      
+
+    function toStringPreview ($args) {
         // reorganize the $SEM_TYPE-array
         foreach ($GLOBALS["SEM_CLASS"] as $key_class => $class) {
             $i = 0;
@@ -272,7 +272,7 @@ class ExternModuleLecturedetails extends ExternModule {
                 }
             }
         }
-        
+
         $data_sem["name"] = _("Name der Veranstaltung");
         $data_sem["subtitle"] = _("Untertitel der Veranstaltung");
         switch ($this->config->getValue("Main", "nameformat")) {
@@ -308,19 +308,19 @@ class ExternModuleLecturedetails extends ExternModule {
         $data_sem["range_path"] = _("Fakult&auml;t &gt; Studiengang &gt; Bereich");
         $data_sem["misc"] = str_repeat(_("Sonstiges") . " ", 6);
         $data_sem["ects"] = "4";
-        
-        
+
+
         setlocale(LC_TIME, $this->config->getValue("Main", "timelocale"));
         $order = $this->config->getValue("Main", "order");
         $visible = $this->config->getValue("Main", "visible");
         $aliases = $this->config->getValue("Main", "aliases");
         $j = -1;
-        
+
         $data["name"] = $data_sem["name"];
-        
+
         if ($visible[++$j])
             $data["subtitle"] = $data_sem["subtitle"];
-        
+
         if ($visible[++$j]) {
             $data["lecturer"][] = sprintf("<a href=\"\"%s>%s</a>",
                     $this->config->getAttributes("LinkInternSimple", "a"),
@@ -328,10 +328,10 @@ class ExternModuleLecturedetails extends ExternModule {
             if (is_array($data["lecturer"]))
                 $data["lecturer"] = implode(", ", $data["lecturer"]);
         }
-        
+
         if ($visible[++$j])
             $data["art"] = $data_sem["art"];
-        
+
         if ($visible[++$j]) {
             $aliases_sem_type = $this->config->getValue("ReplaceTextSemType",
                     "class_{$SEM_TYPE[$data_sem['semtype']]['class']}");
@@ -342,34 +342,34 @@ class ExternModuleLecturedetails extends ExternModule {
                         ." (". $SEM_CLASS[$SEM_TYPE[$data_sem['semtype']]["class"]]["name"].")");
             }
         }
-        
+
         if ($visible[++$j])
             $data["description"] = $data_sem["description"];
-        
+
         if ($visible[++$j])
             $data["location"] = $data_sem["location"];
-        
+
         if ($visible[++$j])
             $data["semester"] = $data_sem["semester"];
-        
+
         if ($visible[++$j])
             $data["time"] = $data_sem["time"];
-        
+
         if ($visible[++$j])
             $data["number"] = $data_sem["number"];
-        
+
         if ($visible[++$j])
             $data["teilnehmer"] = $data_sem["teilnehmer"];
-        
+
         if ($visible[++$j])
             $data["requirements"] = $data_sem["requirements"];
-        
+
         if ($visible[++$j])
             $data["lernorga"] = $data_sem["lernorga"];
-        
+
         if ($visible[++$j])
             $data["leistung"] = $data_sem["leistung"];
-        
+
         if ($visible[++$j]) {
             $pathes = array($data_sem["range_path"]);
             if (is_array($pathes)) {
@@ -384,30 +384,30 @@ class ExternModuleLecturedetails extends ExternModule {
                 $data["range_path"] = implode("<br>", $data["range_path"]);
             }
         }
-        
+
         if ($visible[++$j])
             $data["misc"] = $data_sem["misc"];
-        
+
         if ($visible[++$j])
             $data["ects"] = $data_sem["ects"];
-                
+
         return $this->toStringMainTable($data, TRUE);
     }
 
-    
+
     // private
     function toStringMainTable ($data, $preview) {
         $order = $this->config->getValue("Main", "order");
         $visible = $this->config->getValue("Main", "visible");
         $aliases = $this->config->getValue("Main", "aliases");
-        
+
         if ($this->config->getValue("Main", "studiplink")) {
             $out .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\"";
             if ($studiplink_width = $this->config->getValue("TableHeader", "table_width"))
                 $out .= " width=\"$studiplink_width\"";
             if ($studiplink_align = $this->config->getValue("TableHeader", "table_align"))
                 $out .= " align=\"$studiplink_align\">\n";
-            
+
             if ($preview)
                 $studip_link = "";
             else {
@@ -435,9 +435,9 @@ class ExternModuleLecturedetails extends ExternModule {
         }
         else
             $out .= "<table" . $this->config->getAttributes("TableHeader", "table") . ">";
-        
+
         $out .= $this->elements["SemName"]->toString(array("content" => $data["name"]));
-        
+
         if ($this->config->getValue("Main", "headlinerow")) {
             foreach ($order as $position) {
                 if ($visible[$position] && $data[$this->data_fields[$position]]) {
@@ -457,15 +457,15 @@ class ExternModuleLecturedetails extends ExternModule {
                 }
             }
         }
-        
+
         if ($this->config->getValue("Main", "studipinfo")) {
             $out .= $this->elements["Headline"]->toString(array("content" =>
                     $this->config->getValue("StudipInfo", "headline")));
             $out .= $this->toStringStudipInfo($preview);
         }
-        
+
         $out .= "</table>\n";
-        
+
         if ($this->config->getValue("Main", "studiplink")) {
             if ($this->config->getValue("Main", "studiplink") == "bottom") {
                 $args = array("width" => "100%", "height" => "40", "link" => $studip_link);
@@ -474,10 +474,10 @@ class ExternModuleLecturedetails extends ExternModule {
             }
             $out .= "</td></tr></table>\n";
         }
-        
+
         return $out;
     }
-    
+
     // private
     function toStringStudipInfo ($preview) {
         if ($preview) {
@@ -485,20 +485,20 @@ class ExternModuleLecturedetails extends ExternModule {
                     $this->config->getValue("StudipInfo", "homeinst") . "&nbsp;"));
             $studip_info .= sprintf("<a href=\"\"%s>%s</a><br>\n",
                     $this->config->getAttributes("LinkInternSimple", "a"),
-                    _("Heimatinstitut"));           
-            
+                    _("Heimatinstitut"));
+
             $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                     $this->config->getValue("StudipInfo", "involvedinst") . "&nbsp;"));
             $studip_info .= str_repeat(_("Beteiligte Institute") . " ", 5) . "<br>\n";
-            
+
             $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                     $this->config->getValue("StudipInfo", "countuser") . "&nbsp;"));
             $studip_info .= "23<br>\n";
-            
+
             $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                     $this->config->getValue("StudipInfo", "countpostings") . "&nbsp;"));
             $studip_info .= "42<br>\n";
-        
+
             $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                     $this->config->getValue("StudipInfo", "countdocuments") . "&nbsp;"));
             $studip_info .= "7<br>\n";
@@ -508,10 +508,10 @@ class ExternModuleLecturedetails extends ExternModule {
                                     USING(institut_id) WHERE Seminar_id='{$this->seminar_id}'");
             $this->db->next_record();
             $own_inst = $this->db->f("Institut_id");
-            
+
             $studip_info = $this->elements["StudipInfo"]->toString(array("content" =>
                     $this->config->getValue("StudipInfo", "homeinst") . "&nbsp;"));
-            
+
             if ($this->db->f("url")) {
                 $link_inst = htmlReady($this->db->f("url"));
                 if (!preg_match('{^https?://.+$}', $link_inst))
@@ -523,7 +523,7 @@ class ExternModuleLecturedetails extends ExternModule {
             else
                 $studip_info .= htmlReady($this->db->f("Name"));
             $studip_info .= "<br>\n";
-            
+
             $this->db->query("SELECT Name, url FROM seminar_inst LEFT JOIN Institute i USING(institut_id)
                                     WHERE seminar_id='{$this->seminar_id}' AND i.institut_id!='$own_inst'");
             $involved_insts = NULL;
@@ -539,45 +539,45 @@ class ExternModuleLecturedetails extends ExternModule {
                 else
                     $involved_insts[] = $this->db->f("Name");
             }
-            
+
             if ($involved_insts) {
                 $involved_insts = implode(", ", $involved_insts);
                 $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                         $this->config->getValue("StudipInfo", "involvedinst") . "&nbsp;"));
                 $studip_info .= $involved_insts . "<br>\n";
             }
-            
+
             $this->db->query("SELECT count(*) as count_user FROM seminar_user WHERE Seminar_id='{$this->seminar_id}'");
             $this->db->next_record();
-            
+
             if ($this->db->f("count_user")) {
                 $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                             $this->config->getValue("StudipInfo", "countuser") . "&nbsp;"));
                 $studip_info .= $this->db->f("count_user") . "<br>\n";
             }
-            
+
             $this->db->query("SELECT count(*) as count_postings FROM px_topics WHERE Seminar_id='{$this->seminar_id}'");
             $this->db->next_record();
-            
+
             if ($this->db->f("count_postings")) {
                 $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                             $this->config->getValue("StudipInfo", "countpostings") . "&nbsp;"));
                 $studip_info .= $this->db->f("count_postings") . "<br>\n";
             }
-            
+
             $this->db->query("SELECT count(*) as count_documents FROM dokumente WHERE seminar_id='{$this->seminar_id}'");
             $this->db->next_record();
-            
+
             if ($this->db->f("count_documents")) {
                 $studip_info .= $this->elements["StudipInfo"]->toString(array("content" =>
                             $this->config->getValue("StudipInfo", "countdocuments") . "&nbsp;"));
                 $studip_info .= $this->db->f("count_documents") . "\n";
             }
         }
-        
+
         return $this->elements["Content"]->toString(array("content" => $studip_info));
     }
-    
+
 }
 
 ?>

@@ -308,11 +308,11 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
             }
             $content['LECTUREDETAILS']['SEMESTER'] = get_semester($this->seminar_id);
             $content['LECTUREDETAILS']['CYCLE'] = ExternModule::ExtHtmlReady(Seminar::getInstance($this->seminar_id)->getDatesExport());
-            if ($vorbesprechung = vorbesprechung($this->seminar_id)) {
-                $content['LECTUREDETAILS']['PRELIM-DISCUSSION'] = vorbesprechung($this->seminar_id);
+            if ($vorbesprechung = vorbesprechung($this->seminar_id, 'export')) {
+                $content['LECTUREDETAILS']['PRELIM-DISCUSSION'] = ExternModule::ExtHtmlReady($vorbesprechung);
             }
-            if ($veranstaltung_beginn = veranstaltung_beginn($this->seminar_id)) {
-                $content['LECTUREDETAILS']['FIRST-MEETING'] = veranstaltung_beginn($this->seminar_id);
+            if ($veranstaltung_beginn = Seminar::getInstance($this->seminar_id)->getFirstDate('export')) {
+                $content['LECTUREDETAILS']['FIRST-MEETING'] = ExternModule::ExtHtmlReady($veranstaltung_beginn);
             }
 
             $range_path_level = $this->config->getValue('Main', 'rangepathlevel');

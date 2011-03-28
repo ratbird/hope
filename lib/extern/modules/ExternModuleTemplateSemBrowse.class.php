@@ -289,6 +289,8 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
             array('<!-- END NO_ROOM -->', ''),
             array('<!-- BEGIN FREE_ROOMS -->', ''),
             array('###FREE_ROOM###', ''),
+            array('<!-- BEGIN FREE_ROOMS_DELIMITER -->', ''),
+            array('<!-- END FREE_ROOMS_DELIMITER -->', ''),
             array('<!-- END FREE_ROOMS -->', ''),
         //  array('<!-- BEGIN NO_FREE_ROOM -->', _("Wird ausgegeben, wenn keine freie Raumangabe zum Termin angegeben ist")),
         //  array('<!-- END NO_FREE_ROOM -->', ''),
@@ -902,8 +904,8 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                 'REGULAR_DELIMITER' => true);
             $k = 0;
             if ($GLOBALS['RESOURCES_ENABLE']) {
-                if ($resource_ids = CycleDataDB::getPredominantRoomDB($metadate_id, $start_time, $end_time)) {
-                    foreach ($resource_ids as $resource_id) {
+                if (($resource_ids = CycleDataDB::getPredominantRoomDB($metadate_id, $start_time, $end_time)) !== false) {
+                    foreach ($resource_ids as $resource_id => $foo) {
                         $cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['ROOMS'][$k]['ROOM'] = ExternModule::ExtHtmlReady(trim(ResourceObject::Factory($resource_id)->getName()));
                         $cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['ROOMS'][$k]['ROOMS_DELIMITER'] = true;
                         $k++;
@@ -912,10 +914,13 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
                 }
             }
             if (!$k) {
-                if ($free_room = CycleDataDB::getFreeTextPredominantRoomDB($metadate_id, $start_time, $end_time)) {
-                    $cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['FREE_ROOMS'][$k]['FREE_ROOM'] = ExternModule::ExtHtmlReady(trim($free_room));
-                //  $cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['FREE_ROOMS'][$k]['FREE_ROOMS_DELIMITER'] = true;
-//                  unset($cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['FREE_ROOMS'][$k - 1]['FREE_ROOMS_DELIMITER']);
+                if (($free_rooms = CycleDataDB::getFreeTextPredominantRoomDB($metadate_id, $start_time, $end_time)) !== false) {
+                    foreach ($free_rooms as $free_room => $foo) {
+                        $cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['FREE_ROOMS'][$k]['FREE_ROOM'] = ExternModule::ExtHtmlReady(trim($free_room));
+                        $cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['FREE_ROOMS'][$k]['FREE_ROOMS_DELIMITER'] = true;
+                        $k++;
+                    }
+                    unset($cont['REGULAR_DATES']['REGULAR_DATE'][$i]['REGULAR_ROOMS']['FREE_ROOMS'][$k - 1]['FREE_ROOMS_DELIMITER']);
                 } else {
                     $cont['REGULAR_DATES']['REGULAR_DATE'][$i]['NO_ROOM'] = true;
                 }

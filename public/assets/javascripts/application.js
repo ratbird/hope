@@ -1580,7 +1580,7 @@ STUDIP.SkipLinks = {
     var fragment = null;
     // set active area only if skip links are activated
     if (!jQuery('*').is('#skip_link_navigation')) {
-        return false;
+      return false;
     }
     if (id) {
       fragment = id;

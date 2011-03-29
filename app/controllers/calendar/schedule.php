@@ -52,10 +52,10 @@ class Calendar_ScheduleController extends AuthenticatedController
                             $SessSemName[1] ? $SessSemName[1] :
                             Request::option('cid', false));
 
-            
+
             if (!$institute_id) {
-                $institute_id = $GLOBALS['_my_admin_inst_id'] 
-                              ? $GLOBALS['_my_admin_inst_id'] 
+                $institute_id = $GLOBALS['_my_admin_inst_id']
+                              ? $GLOBALS['_my_admin_inst_id']
                               : $GLOBALS['my_schedule_settings']["glb_inst_id"];
 
                 if (!$GLOBALS['my_schedule_settings']["glb_inst_id"]) {
@@ -116,7 +116,7 @@ class Calendar_ScheduleController extends AuthenticatedController
             $this->days = explode(',', $days);
         }
 
-        
+
         PageLayout::setHelpKeyword('Basis.MyStudIPStundenplan');
         PageLayout::setTitle(_('Mein Stundenplan'));
 
@@ -163,7 +163,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         $this->calendar_view = new CalendarWeekView($this->entries, 'schedule');
         $this->calendar_view->setHeight(40 + (20 * Request::option('zoom', 0)));
         $this->calendar_view->setRange($my_schedule_settings['glb_start_time'], $my_schedule_settings['glb_end_time']);
-        
+
         if ($inst_mode) {
             $this->calendar_view->groupEntries();  // if enabled, group entries with same start- and end-date
             $this->calendar_view->setReadOnly();
@@ -236,7 +236,7 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
 
         if ($error) {
-            $this->flash['messages'] = array('error' => 
+            $this->flash['messages'] = array('error' =>
                 array(_("Eintrag konnte nicht gespeichert werden, da die Start- und/oder Endzeit ungültigt ist!"))
              );
         } else {
@@ -292,7 +292,7 @@ class Calendar_ScheduleController extends AuthenticatedController
             $this->show_entry['id'] = $id;
             $this->render_template('calendar/schedule/_entry_course');
         } else {
-            $entry_columns = CalendarScheduleModel::getScheduleEntries($this, $GLOBALS['user']->id, 0, 0, $id);
+            $entry_columns = CalendarScheduleModel::getScheduleEntries($GLOBALS['user']->id, 0, 0, $id);
             $entries = array_pop($entry_columns)->getEntries();
             $this->show_entry = array_pop($entries);
             $this->render_template('calendar/schedule/_entry_schedule');
@@ -311,7 +311,7 @@ class Calendar_ScheduleController extends AuthenticatedController
     function groupedentry_action($start, $end, $seminars, $ajax = false)
     {
         // strucutre of an id: seminar_id-cycle_id
-        // we do not need the cycle id here, so we trash it. 
+        // we do not need the cycle id here, so we trash it.
         $seminar_list = array();
 
         foreach (explode(',', $seminars) as $seminar) {
@@ -321,7 +321,7 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         $this->show_entry = array(
             'type'     => 'inst',
-            'seminars' => $seminar_list, 
+            'seminars' => $seminar_list,
             'start'    => $start,
             'end'      => $end
         );
@@ -346,7 +346,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @param  string  $id  the id of the entry to delete
      * @return void
      */
-    function delete_action($id) 
+    function delete_action($id)
     {
         CalendarScheduleModel::deleteEntry($id);
         $this->redirect('calendar/schedule');
@@ -377,7 +377,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @param  string  the ID of the course
      * @return void
      */
-    function addvirtual_action($seminar_id) 
+    function addvirtual_action($seminar_id)
     {
         $sem = Seminar::getInstance($seminar_id);
         foreach ($sem->getCycles() as $cycle) {
@@ -403,7 +403,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @param  string  if you give this optional param, it signals an Ajax request
      * @return void
      */
-    function adminbind_action($seminar_id, $cycle_id, $visible, $ajax = false) 
+    function adminbind_action($seminar_id, $cycle_id, $visible, $ajax = false)
     {
         CalendarScheduleModel::adminBind($seminar_id, $cycle_id, $visible);
 
@@ -422,7 +422,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @param  string  if you give this optional param, it signals an Ajax request
      * @return void
      */
-    function unbind_action($seminar_id, $cycle_id = false, $ajax = false) 
+    function unbind_action($seminar_id, $cycle_id = false, $ajax = false)
     {
         CalendarScheduleModel::unbind($seminar_id, $cycle_id);
 
@@ -441,7 +441,7 @@ class Calendar_ScheduleController extends AuthenticatedController
      * @param  string  if you give this optional param, it signals an Ajax request
      * @return void
      */
-    function bind_action($seminar_id, $cycle_id, $ajax = false) 
+    function bind_action($seminar_id, $cycle_id, $ajax = false)
     {
         CalendarScheduleModel::bind($seminar_id, $cycle_id);
 

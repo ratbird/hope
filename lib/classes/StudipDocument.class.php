@@ -142,6 +142,10 @@ class StudipDocument extends SimpleORMap {
             //download from institute is always allowed
             if (get_config('ENABLE_FREE_ACCESS') || $GLOBALS['perm']->have_perm('user', $user_id)) {
                 $access = true;
+            } else { //check external download module (types 6 and 10)
+                $result = DBManager::get()->query("SELECT * FROM extern_config WHERE range_id = '"
+                        . $this->getValue('seminar_id') . "' AND config_type IN (6,10)")->fetchColumn();
+                    $access = (boolean) $result;
             }
         } else if($object_type == 'sem') {
             //download from course is allowed if course is free for all or user is participant

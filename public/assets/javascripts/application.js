@@ -1589,6 +1589,8 @@ STUDIP.SkipLinks = {
     }
     if (jQuery('*').is(fragment) && fragment.length > 0 && fragment !== STUDIP.SkipLinks.activeElement) {
       STUDIP.SkipLinks.moveSkipLinkNavigationOut();
+      jQuery('.focus_box').removeClass('focus_box');
+      jQuery(fragment).addClass('focus_box');
       jQuery(fragment).attr('tabindex', '-1').click().focus();
       STUDIP.SkipLinks.activeElement = fragment;
       return true;

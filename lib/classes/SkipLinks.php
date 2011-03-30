@@ -37,7 +37,7 @@ class SkipLinks
     public static function insertContainer()
     {
         if (UserConfig::get($GLOBALS['user']->id)->getValue('SKIPLINKS_ENABLE')) {
-            PageLayout::addBodyElements('<style> *:focus { outline: 2px dashed #ff6600; } </style>');
+            PageLayout::addBodyElements('<style> *:focus { outline: 2px dashed #ff6600; } .focus_box { outline: 2px dashed #ff6600; }</style>');
             if ($GLOBALS['auth']->is_authenticated()) {
                 PageLayout::addBodyElements('<div id="skip_link_navigation" aria-busy="true"></div>');
             }

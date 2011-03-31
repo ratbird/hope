@@ -241,6 +241,7 @@ if (!isset($SAJAX_INCLUDED)) {
                 if (sajax_request_type == "POST") {
                     x.setRequestHeader("Method", "POST " + uri + " HTTP/1.1");
                     x.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    x.setRequestHeader("X-Requested-With", "XMLHttpRequest");
                 }
             
                 x.onreadystatechange = function() {

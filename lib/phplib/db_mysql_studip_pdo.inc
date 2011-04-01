@@ -75,24 +75,13 @@ class DB_Sql {
             printf("Debug: query = %s<br>\n", $Query_String);
         }
         if(stripos($Query_String, 'select') === 0 || stripos($Query_String, 'show') === 0){
-            try {
-                $this->resultSet = $this->pdo->query($Query_String);
-            } catch (PDOException $p) {
-                $this->Errno = $this->pdo->errorCode();
-                $this->Error = $this->pdo->errorInfo();
-                $this->halt("Invalid SQL: ".$Query_String);
-            }
+
+            $this->resultSet = $this->pdo->query($Query_String);
 
             # Will return nada if it fails. That's fine.
             return $this->resultSet;
         } else {
-            try {
-                $this->RowCount = $this->pdo->exec($Query_String);
-            } catch (PDOException $p) {
-                $this->Errno = $this->pdo->errorCode();
-                $this->Error = $this->pdo->errorInfo();
-                $this->halt("Invalid SQL: ".$Query_String);
-            }
+            $this->RowCount = $this->pdo->exec($Query_String);
             return $this->RowCount;
         }
     }

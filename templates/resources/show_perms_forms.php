@@ -10,7 +10,7 @@
         </td>
         <td class="<?= $cssSw->getClass() ?>" colspan="2">
             <?=_("verantwortlich:")?><br>
-            <a href="<?= $resObject->getOwnerLink()?>"><?= $resObject->getOwnerName(TRUE) ?></a>
+            <a href="<?= $resObject->getOwnerLink()?>"><?= htmlReady($resObject->getOwnerName(TRUE)) ?></a>
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="50%">
         <? if ($owner_perms) : ?>
@@ -67,7 +67,7 @@
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="20%">
             <input type="hidden" name="change_user_id[]" value="<?= $db->f("user_id")?>">
-            <a href="<?= $resObject->getOwnerLink($db->f("user_id"))?>"><?= $resObject->getOwnerName(TRUE, $db->f("user_id")) ?></a>
+            <a href="<?= $resObject->getOwnerLink($db->f("user_id"))?>"><?= htmlReady($resObject->getOwnerName(TRUE, $db->f("user_id"))) ?></a>
         </td>
         <td class="<? echo $cssSw->getClass() ?>" width="*" nowrap style="padding-right: 20px">
             &nbsp;

@@ -68,7 +68,7 @@
         </td>
         <td class="<?= $cssSw->getClass() ?>" width="40%" valign="top">
             <?=_("verantwortlich:")?><br>
-            <a href="<?= $resObject->getOwnerLink()?>"><?= $resObject->getOwnerName(true) ?></a>
+            <a href="<?= $resObject->getOwnerLink()?>"><?= htmlReady($resObject->getOwnerName(true)) ?></a>
         </td>
     </tr>
     <tr>

@@ -290,6 +290,9 @@ if (check_ticket($studipticket)) {
 
     // general settings from mystudip: language, jshover, accesskey
     if ($cmd=="change_general") {
+        if(!array_key_exists($forced_language, $GLOBALS['INSTALLED_LANGUAGES'])) {
+            $forced_language = $GLOBALS['DEFAULT_LANGUAGE'];
+        }
         $my_about->db->query("UPDATE user_info SET preferred_language = '$forced_language' WHERE user_id='" . $my_about->auth_user["user_id"] ."'");
         $_language = $forced_language;
         $forum["jshover"]=$jshover;

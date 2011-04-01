@@ -38,6 +38,9 @@ if (isset($set_language)) {
 if ($auth->is_authenticated() && $user->id != 'nobody') {
     // store last language click
     if (isset($forced_language)) {
+        if(!array_key_exists($forced_language, $GLOBALS['INSTALLED_LANGUAGES'])) {
+            $forced_language = $GLOBALS['DEFAULT_LANGUAGE'];
+        }
         $db->query("UPDATE user_info SET preferred_language = '$forced_language' WHERE user_id='$user->id'");
         $_language = $forced_language;
         $sess->unregister('forced_language');

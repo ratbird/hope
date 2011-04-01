@@ -48,7 +48,7 @@
     <script>
         STUDIP.ABSOLUTE_URI_STUDIP = "<?= $GLOBALS['ABSOLUTE_URI_STUDIP'] ?>";
         STUDIP.ASSETS_URL = "<?= $GLOBALS['ASSETS_URL'] ?>";
-        String.locale = "<?= strtr($_SESSION['_language'], '_', '-') ?>";
+        String.locale = "<?= htmlReady(strtr($_SESSION['_language'], '_', '-')) ?>";
     </script>
 </head>
 

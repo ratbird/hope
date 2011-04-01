@@ -289,7 +289,7 @@ switch ($view) {
     case "openobject_details":
     case "view_details":
         if ($resources_data["actual_object"])
-            $page_intro= sprintf(_("Hier sehen Sie detaillierte Informationen der Ressource %s"), "<b>".$currentObject->getName()."</b> (".(($currentObject->getCategoryName()) ? $currentObject->getCategoryName() : _("Hierachieebene")).").");
+            $page_intro= sprintf(_("Hier sehen Sie detaillierte Informationen der Ressource %s"), "<b>".htmlReady($currentObject->getName())."</b> (".(($currentObject->getCategoryName()) ? $currentObject->getCategoryName() : _("Hierachieebene")).").");
         if ($view_mode == "oobj") {
             PageLayout::setTitle($SessSemName["header_line"]." - "._("Ressourcendetails").$currentObjectTitelAdd);
             Navigation::activateItem('/course/resources/view_details');

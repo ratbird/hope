@@ -106,9 +106,9 @@ class ShowThread extends ShowTreeRow {
                 $titel = "<a href=\"$link\" class=\"tree\" >$titel</a>";
 
             if ($resObject->getOwnerLink())
-                $zusatz=sprintf (_("verantwortlich:") . " <a href=\"%s\"><font color=\"#333399\">%s</font></a>", $resObject->getOwnerLink(), $resObject->getOwnerName());
+                $zusatz=sprintf (_("verantwortlich:") . " <a href=\"%s\"><font color=\"#333399\">%s</font></a>", $resObject->getOwnerLink(), htmlReady($resObject->getOwnerName()));
             else
-                $zusatz=sprintf (_("verantwortlich:") . " %s", $resObject->getOwnerName());
+                $zusatz=sprintf (_("verantwortlich:") . " %s", htmlReady($resObject->getOwnerName()));
             $new=TRUE;
             if ($open=="open") {
                 //load the perms

@@ -81,15 +81,15 @@ class ShowObject {
                 <td class="<? echo $this->cssSw->getClass() ?>" width="4%">&nbsp; 
                 </td>
                 <td class="<? echo $this->cssSw->getClass() ?>"><font size=-1><b><?=_("Name:")?></b></font><br>
-                <font size=-1><? echo $this->resObject->getName()." (".(($this->resObject->getCategoryName()) ? $this->resObject->getCategoryName() : _("Hierachieebene")).")" ?>
+                <font size=-1><? echo htmlReady($this->resObject->getName())." (".(($this->resObject->getCategoryName()) ? htmlReady($this->resObject->getCategoryName()) : _("Hierachieebene")).")" ?>
                 </td>
                 <td class="<? echo $this->cssSw->getClass() ?>" width="60%" valign="top"><font size=-1><b><?=_("verantwortlich:")?></b></font><br>
                 <font size=-1>
                 <? 
                 if ($view_mode == "no_nav")
-                    print $this->resObject->getOwnerName(TRUE);
+                    print htmlReady($this->resObject->getOwnerName(TRUE));
                 else
-                    print "<a href=\"".$this->resObject->getOwnerLink()."\">".$this->resObject->getOwnerName(TRUE)."</a>";
+                    print "<a href=\"".$this->resObject->getOwnerLink()."\">".htmlReady($this->resObject->getOwnerName(TRUE))."</a>";
                 ?>
                 </font>
                 </td>
@@ -98,7 +98,7 @@ class ShowObject {
                 <td class="<? $this->cssSw->switchClass(); echo $this->cssSw->getClass() ?>" width="4%">&nbsp; 
                 </td>
                 <td class="<? echo $this->cssSw->getClass() ?>" valign="top" colspan=2><font size=-1><b><?=_("Beschreibung:")?></b></font><br>
-                <font size=-1><? echo $this->resObject->getDescription() ?></font>
+                <font size=-1><? echo htmlReady($this->resObject->getDescription()) ?></font>
             </tr>
             <?
             if ($this->resObject->isParent())

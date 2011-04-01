@@ -44,8 +44,8 @@
         </td>
         <td width="35%">
             <select name="perm">
-            <? foreach(array(_("alle"), "user", "autor", "tutor", "dozent", "admin", "root") as $one) : ?>
-                <option <?= ($user['perm'] == $one) ? 'selected' : ''?>><?= $one ?></option>
+            <? foreach(array("alle", "user", "autor", "tutor", "dozent", "admin", "root") as $one) : ?>
+                <option <?= ($user['perm'] == $one) ? 'selected' : ''?> value="<?= $one ?>"><?= ($one=="alle")? _('alle') : $one ?></option>
             <? endforeach ?>
             </select>
             <input type="checkbox" name="locked" value="1" <?= ($user['locked'] == 1) ? 'checked':'' ?>> nur gesperrt

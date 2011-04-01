@@ -26,7 +26,7 @@
         <th align="left" <?= ($sortby == 'changed') ? 'class="sort' . $order_icon . '"' : ''?>>
             <a href="<?=URLHelper::getLink('?sortby=changed&order='.$order)?>"><?=_("inaktiv")?></a>
         </th>
-        <th <?= ($sortby == 'mkdate') ? 'class="sort' . $order_icon . '"' : ''?>>
+        <th align="left" <?= ($sortby == 'mkdate') ? 'class="sort' . $order_icon . '"' : ''?>>
             <a href="<?=URLHelper::getLink('?sortby=mkdate&order='.$order)?>"><?=_("registriert seit")?></a>
         </th>
         <th colspan="2" <?= ($sortby == 'auth_plugin') ? 'class="sort' . $order_icon . '"' : ''?>>
@@ -75,10 +75,10 @@
         endif ?>
         <?= $inactive ?>
         </td>
-        <td align="center">
+        <td>
             <?= ($user["mkdate"]) ? date("d.m.Y", $user["mkdate"]) : _('unbekannt') ?>
         </td>
-        <td align="center"><?= htmlReady($user['auth_plugin']) ?></td>
+        <td><?= htmlReady($user['auth_plugin']) ?></td>
         <td align="right" nowrap>
             <a href="<?= $controller->url_for('admin/user/edit/'.$user['user_id']) ?>" title="<?= _('Detailansicht des Benutzers anzeigen')?>">
                 <?= Assets::img('icons/16/blue/edit.png', array('title' => _('Diesen Benutzer bearbeiten'))) ?>
@@ -93,7 +93,7 @@
 
     <tr class="steel2">
         <td colspan="10" align="right">
-            <?= _('Alle ausgewählten Benutzer')?> <?= makeButton('loeschen', 'input', _('Alle ausgewählen Benutzer löschen')) ?>
+            <?= makeButton('loeschen', 'input', _('Alle ausgewählen Benutzer löschen')) ?>
             <input class="middle" type="checkbox" name="check_all" title="<?= _('Alle Benutzer auswählen') ?>">
         </td>
     </tr>

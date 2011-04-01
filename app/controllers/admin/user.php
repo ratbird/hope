@@ -97,14 +97,14 @@ class Admin_UserController extends AuthenticatedController
             $this->user = $request;
             $this->sortby = Request::option('sortby', 'username');
             $this->order = (Request::option('order', 'asc') == 'asc') ? 'asc' : 'desc';
-            $this->order_icon = (Request::option('order', 'asc') == 'asc') ? 'asc' : 'desc';
+            $this->order_icon = Request::option('order', 'asc');
             $request['vorname'] = ($request['vorname']) ? $request['vorname'] : NULL;
             $request['nachname'] = ($request['nachname']) ? $request['nachname'] : NULL;
 
             //Daten abrufen
             $this->users = UserModel::getUsers($request['username'], $request['vorname'],
                 $request['nachname'], $request['email'], $inaktiv, $request['perm'],
-                $request['locked'], $search_datafields, $this->sortby, $this->order);
+                $request['locked'], $search_datafields, $this->sortby, $this->order_icon);
 
             // Fehler abfangen
             if ($this->users == 0) {

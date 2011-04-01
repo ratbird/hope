@@ -188,16 +188,21 @@ class ShowGroupSchedules extends ShowSemSchedules {
                     if ($print_view && ($start_time < time())){
                         $a_start_time = $this->getNextMonday($a_start_time);
                     }
-
                     $a_end_time = ($print_view ? $a_start_time + 86400 * 14 : $end_time);
                     $assign_events = new AssignEventList ($a_start_time, $a_end_time, $room_id, '', '', TRUE, 'semschedulesingle', $this->dow);
                     while ($event = $assign_events->nextEvent()) {
-                        if(in_array($event->repeat_mode, array('d','m','y'))){
+                        //mehrtägige nur am passenden Tag anzeigen
+                        if ($event->repeat_mode == 'sd' && date('N', $event->begin) != $this->dow) continue;
+                        if(in_array($event->repeat_mode, array('w','d','m','y'))){
                             if(strftime('%u', $event->getBegin()) != $this->dow) continue;
                             $assign = AssignObject::Factory($event->getAssignId());
                             switch($event->repeat_mode){
                                 case 'd':
                                 $add_info = '('.sprintf(_("täglich, %s bis %s"), strftime('%x',$assign->getBegin()), strftime('%x',$assign->getRepeatEnd())).')';
+                                break;
+                                case 'w':
+                                if($assign->getRepeatInterval() == 1) $add_info = '('._("wöchentlich").')';
+                                else  $add_info = '('.$assign->getRepeatInterval().'-'._("wöchentlich").')';
                                 break;
                                 case 'm':
                                 if($assign->getRepeatInterval() == 1) $add_info = '('._("monatlich").')';
@@ -241,7 +246,7 @@ class ShowGroupSchedules extends ShowSemSchedules {
                 <br>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" width="10%" align="center">&nbsp;
-                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&next_day=1"><img  class="middle"  src="<?= Assets::image_path('icons/16/blue/arr_2left.png') ?>" <? echo tooltip (_("Nächsten Tag anzeigen")) ?>></a>
+                    <a href="<? echo $PHP_SELF ?>?quick_view=<?=$this->used_view?>&quick_view_mode=<?=$view_mode?>&next_day=1"><img  class="middle"  src="<?= Assets::image_path('icons/16/blue/arr_2right.png') ?>" <? echo tooltip (_("Nächsten Tag anzeigen")) ?>></a>
                 </td>
             </tr>
             <tr>

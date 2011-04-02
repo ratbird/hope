@@ -68,7 +68,9 @@ $width_namecolumn = 60;
 
 ?>
 
-<?= $adminTopLinks->render() ?>
+<? if ($adminTopLinks) : ?>
+    <?= $adminTopLinks->render() ?>
+<? endif ?>
 
 <div style="min-width: 600px">
 

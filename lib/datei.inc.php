@@ -182,6 +182,14 @@ function parse_link($link, $level=0) {
 }
 
 
+/**
+ * creates a zip file from given ids in tmp directory
+ * 
+ * @param array $file_ids array of document ids
+ * @param bool $perm_check if true, files are checked for folder permissions
+ * @param bool $size_check if true, number and size of files are checked against config values
+ * @return string filename(id) of the created zip without path 
+ */
 function createSelectedZip ($file_ids, $perm_check = TRUE, $size_check = false) {
     global $TMP_PATH, $ZIP_PATH, $SessSemName;
     $zip_file_id = false;
@@ -232,6 +240,14 @@ function createSelectedZip ($file_ids, $perm_check = TRUE, $size_check = false) 
     return $zip_file_id;
 }
 
+/**
+ * creates a zip file from all files in given folder, including subfolders
+ * 
+ * @param string $folder_id id of document folder
+ * @param bool $perm_check if true, files are checked for folder permissions
+ * @param bool $size_check if true, number and size of files are checked against config values
+ * @return string filename(id) of the created zip without path 
+ */
 function createFolderZip ($folder_id, $perm_check = TRUE, $size_check = false) {
     global $TMP_PATH, $ZIP_PATH;
     $zip_file_id = false;
@@ -259,6 +275,16 @@ function createFolderZip ($folder_id, $perm_check = TRUE, $size_check = false) {
     return $zip_file_id;
 }
 
+/**
+ * used by createFolderZip() to dive into subfolders
+ * collects a list of file metadata and returns it when recursion finishes
+ * 
+ * @param string $folder_id id of a folder
+ * @param string $tmp_full_path temporary path 
+ * @param bool $perm_check if true, files are checked for folder permissions
+ * @param bool $in_recursion used internally to indicate recursive call
+ * @return array assoc array with metadata from zipped files
+ */
 function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_recursion = false) {
     global $SessSemName;
     static $filelist;
@@ -786,7 +812,17 @@ function form($refresh = FALSE) {
     return $print;
 }
 
-//kill the forbidden characters, shorten filename to 31 Characters
+/**
+ * kills forbidden characters in filenames,
+ * shortens filename to 31 Characters if desired,
+ * checks for unique filename in given folder and modifies
+ * filename if needed
+ * 
+ * @param string $filename original filename
+ * @param bool $shorten if true, filename is shortened to 31 chars
+ * @param bool $checkfolder if true, uniqueness of filename in this folder is guaranteed
+ * @return string 
+ */
 function prepareFilename($filename, $shorten = FALSE, $checkfolder = false) {
     $bad_characters = array (":", chr(92), "/", "\"", ">", "<", "*", "|", "?", " ", "(", ")", "&", "[", "]", "#", chr(36), "'", "*", ";", "^", "`", "{", "}", "|", "~", chr(255));
     $replacements = array ("", "", "", "", "", "", "", "", "", "_", "", "", "+", "", "", "", "", "", "", "-", "", "", "", "", "-", "", "");

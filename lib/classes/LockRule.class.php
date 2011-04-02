@@ -17,7 +17,7 @@
 require_once 'SimpleORMap.class.php';
 
 /**
- * this class represents on record of the lock_rules table
+ * this class represents one record of the lock_rules table
  * the column attributes is converted to an ArrayObject and vice-versa,
  * to allow array-like access
  * 

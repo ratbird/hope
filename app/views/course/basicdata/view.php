@@ -45,19 +45,30 @@ $infobox = array(
         )
     )
 );
+if ($adminList) {
+    $infobox[] = array(
+        "kategorie" => _("Veranstaltungsliste:"),
+        "eintrag"   =>
+            array(
+                array(
+                      "icon" => "icons/16/black/link-intern.png",
+                      "text" => $adminList->render()
+                )
+            )
+    );
+}
 $infobox = array('content' => $infobox,
                  'picture' => CourseAvatar::getAvatar($course_id)->getUrl(Avatar::NORMAL)
 );
-//end of infobox;
-//print "<pre>";
-//var_dump($flash);
-//print "</pre>";
+
 parse_msg_array($flash['msg'], $class = "blank", $colspan = 2, $add_row='', $small='');
 
 $width_column1 = 20;
 $width_namecolumn = 60;
 
 ?>
+
+<?= $adminTopLinks->render() ?>
 
 <div style="min-width: 600px">
 

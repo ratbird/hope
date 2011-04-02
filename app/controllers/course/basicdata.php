@@ -17,6 +17,7 @@
 require_once 'app/controllers/authenticated_controller.php';
 require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/classes/Institute.class.php';
+require_once 'lib/classes/AdminList.class.php';
 
 class Course_BasicdataController extends AuthenticatedController
 {
@@ -42,7 +43,7 @@ class Course_BasicdataController extends AuthenticatedController
         }
         Request::set('new_tut_parameter', $this->flash['new_tut_parameter']);
 
-        $this->course_id = $course_id;
+        $this->course_id = Request::option('cid') ? Request::option('cid') : $course_id;
 
         if ($perm->have_perm('admin')) {
             //Navigation im Admin-Bereich:
@@ -81,6 +82,12 @@ class Course_BasicdataController extends AuthenticatedController
         //Daten sammeln:
         $sem = Seminar::getInstance($this->course_id);
         $data = $sem->getData();
+
+        //Admin-Liste für den Admin
+        if ($perm->have_studip_perm("admin",$this->course_id)) {
+            $this->adminList = AdminList::getInstance()->getSelectTemplate($this->course_id);
+            $this->adminTopLinks = AdminList::getInstance()->getTopLinkTemplate($this->course_id);
+        }
 
         //Erster Reiter des Akkordions: Grundeinstellungen
         $this->attributes = array();
@@ -639,7 +646,4 @@ class Course_BasicdataController extends AuthenticatedController
         $this->redirect($this->url_for('course/basicdata/view/' . $sem->getId()));
     }
 
-    private function convertMessage($msg) {
-        return explode("§", $msg);
-    }
 }

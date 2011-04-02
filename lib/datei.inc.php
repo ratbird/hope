@@ -1612,12 +1612,12 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
 
     $content='';
     if ($super_folder){
-        $content .=  '<img  src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/black/lock-locked.png">&nbsp;'
+        $content .=  '<img class=\"texttop\" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/grey/lock-locked.png">&nbsp;'
             . sprintf(_("Dieser Ordner ist nicht zugänglich, da der übergeordnete Ordner \"%s\" nicht lesbar oder nicht sichtbar ist!"), htmlReady($folder_tree->getValue($super_folder,'name')))
             . '<hr>';
     }
     if ($folder_tree->isExerciseFolder($folder_id)){
-        $content .=  '<img  src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/black/edit.png">&nbsp;'
+        $content .=  '<img  class=\"texttop\" src="'.$GLOBALS['ASSETS_URL'].'images/icons/16/grey/edit.png">&nbsp;'
                 . _("Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden.")
                 . (!$rechte ? _("Sie selbst haben folgende Dateien in diesen Ordner eingestellt:")
                 . '<br><b>' . htmlReady(join('; ', get_user_documents_in_folder($folder_id, $GLOBALS['user']->id))).'</b>' : '')
@@ -1907,15 +1907,6 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
     else
         print "<img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/folder-full.png\" border=0>&nbsp;";
 
-    // Schloss, wenn Folder gelockt
-    if ($folder_tree->isLockedFolder($folder_id))
-        print "<img ".tooltip(_("Dieser Ordner ist gesperrt."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/lock-locked.png\">";
-    //Wenn verdeckt durch gesperrten übergeordneten Ordner
-    else if ( ($super_folder = $folder_tree->getNextSuperFolder($folder_id)) )
-        print "<img ".tooltip(_("Dieser Ordner ist nicht zugänglich, da ein übergeordneter Ordner gesperrt ist."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/lock-locked.png\">";
-    // Wenn es ein Hausaufgabenordner ist
-    if ($folder_tree->isExerciseFolder($folder_id))
-        print "<img ".tooltip(_("Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/black/edit.png\" width=\"18\" HEIGTH=\"18\">";
     //Pfeile, wenn Datei bewegt werden soll
     if ($move && ($folder_id != $move) && $folder_tree->isWritable($folder_id, $user->id) && (!$folder_tree->isFolder($move) || ($folder_tree->checkCreateFolder($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)))){
         print "</a><span class=\"move_arrows\"><a href=\"".URLHelper::getLink("?open=".$folder_id."_md_")."\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/yellow/arr_2right.png\" border=0></a></span>";
@@ -1937,6 +1928,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         $tmp_titel = sprintf(_("Sitzung am: %s"), implode(', ', $dates_title)) .
              ", " . ($tmp_titel ? $tmp_titel : _("ohne Titel"));
     }
+    
     if (($change == $folder_id)
             && (!$isissuefolder)
             && ((count($folder_tree->getParents($folder_id)) > 1)
@@ -1977,7 +1969,19 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
         }
     }
 
-    print "</a></td>";
+    print "</a>&nbsp;";
+	
+	// Schloss, wenn Folder gelockt
+    if ($folder_tree->isLockedFolder($folder_id))
+        print "<img class=\"text-bottom\" ".tooltip(_("Dieser Ordner ist gesperrt."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/lock-locked.png\">";
+    //Wenn verdeckt durch gesperrten übergeordneten Ordner
+    else if ( ($super_folder = $folder_tree->getNextSuperFolder($folder_id)) )
+        print "<img class=\"text-bottom\" ".tooltip(_("Dieser Ordner ist nicht zugänglich, da ein übergeordneter Ordner gesperrt ist."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/lock-locked.png\">";
+    // Wenn es ein Hausaufgabenordner ist
+    if ($folder_tree->isExerciseFolder($folder_id))
+        print "<img class=\"text-bottom\" ".tooltip(_("Dieser Ordner ist ein Hausaufgabenordner. Es können nur Dateien eingestellt werden."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/edit.png\">";
+   
+    print "</td>";
 
     //So und jetzt die rechtsbündigen Sachen:
     print "</td><td align=right class=\"printhead\" valign=\"bottom\">";
@@ -2052,7 +2056,7 @@ function GetFileIcon($ext, $with_img_tag = false){
             $icon = 'icons/16/blue/file-generic.png';
         break;
     }
-    return ($with_img_tag ? '<img src="'.$GLOBALS['ASSETS_URL'].'images/'.$icon.'" border="0">' : $icon);
+    return ($with_img_tag ? '<img class=\"text-top\" src="'.$GLOBALS['ASSETS_URL'].'images/'.$icon.'" border="0">' : $icon);
 }
 
 /**

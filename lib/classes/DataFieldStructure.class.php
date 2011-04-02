@@ -116,9 +116,12 @@ class DataFieldStructure
   }
 
     /**
+     * Returns a list of all datatype classes with an id as key and a name as
+     * value.
      *
+     * @return array() list of all datatype classes
      */
-    function getDataClass()
+    public static function getDataClass()
     {
         return array(
             "sem"          => _("Veranstaltungen"),

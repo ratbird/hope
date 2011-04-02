@@ -19,6 +19,11 @@ require_once 'app/models/user.php';
 require_once 'lib/classes/UserManagement.class.php';
 require_once 'vendor/email_message/blackhole_message.php';
 
+/**
+ *
+ * controller class for the user-administration
+ *
+ */
 class Admin_UserController extends AuthenticatedController
 {
     /**

@@ -210,7 +210,7 @@ function change_general_view() {
                     </td>
                 </tr>
                 <tr <? $cssSw->switchClass() ?>>
-                    <td <?=$cssSw->getFullClass()?> colspan=2 align="middle">
+                    <td <?=$cssSw->getFullClass()?> colspan=2 align="center">
                         <?=makeButton("uebernehmen", "input", _("Änderungen übernehmen")) ?>&nbsp;
                         <input type="hidden" name="view" value="allgemein">
                     </td>

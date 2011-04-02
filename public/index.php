@@ -28,23 +28,21 @@ $db=new DB_Seminar;
 
 // evaluate language clicks
 // has to be done before seminar_open to get switching back to german (no init of i18n at all))
-if (isset($set_language)) {
-    $sess->register('forced_language');
-    $forced_language = $set_language;
-    $_language = $set_language;
+if (Request::get('set_language')) {
+    if(array_key_exists(Request::get('set_language'), $GLOBALS['INSTALLED_LANGUAGES'])) {
+        $_SESSION['forced_language'] = Request::get('set_language');
+        $_language = Request::get('set_language');
+    }
 }
 
 // store  user-specific language preference
 if ($auth->is_authenticated() && $user->id != 'nobody') {
     // store last language click
-    if (isset($forced_language)) {
-        if(!array_key_exists($forced_language, $GLOBALS['INSTALLED_LANGUAGES'])) {
-            $forced_language = $GLOBALS['DEFAULT_LANGUAGE'];
-        }
-        $db->query("UPDATE user_info SET preferred_language = '$forced_language' WHERE user_id='$user->id'");
-        $_language = $forced_language;
-        $sess->unregister('forced_language');
+    if (strlen($_SESSION['forced_language'])) {
+        $db->query("UPDATE user_info SET preferred_language = '".$_SESSION['forced_language']."' WHERE user_id='$user->id'");
+        $_language = $_SESSION['forced_language'];
     }
+    $_SESSION['forced_language'] = $forced_language = null;
 }
 
 include 'lib/seminar_open.php'; // initialise Stud.IP-Session

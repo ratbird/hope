@@ -277,7 +277,7 @@ class Score
         $db->next_record();
         $postings=$db->f("postings");
 
-        $db->query("SELECT count(*) as dokumente FROM dokumente WHERE user_id = '$user_id' ");
+        $db->query("SELECT count(*) as dokumente FROM dokumente WHERE user_id = '$user_id' AND range_id <> 'provisional' ");
         $db->next_record();
         $dokumente=$db->f("dokumente");
 

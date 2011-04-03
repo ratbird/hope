@@ -21,33 +21,36 @@
 
 <body id="<?= $body_id ? $body_id : PageLayout::getBodyElementId() ?>">
 <div id="layout_wrapper">
-    <? SkipLinks::insertContainer(); ?>
-    <? SkipLinks::addIndex(_("Hauptinhalt"), 'layout_content', 100, true); ?>
+    <? SkipLinks::insertContainer() ?>
+    <? SkipLinks::addIndex(_("Hauptinhalt"), 'layout_content', 100, true) ?>
     <?= PageLayout::getBodyElements() ?>
     <div id="overdiv_container"></div>
 
     <? include 'lib/include/header.php' ?>
 
-    <div id="layout_container" style="padding: 1em">
+    <div id="layout_container">
+      <div id="layout_sidebar">
+      <? if ($infobox) : ?>
       <div id="layout_infobox">
-        <? $infobox = isset($infobox)
-                      ? $infobox
-                      : array('picture' => 'infobox/warning.jpg',
-                              'content' => array(
-                                             array('kategorie' => _("Infobox fehlt."))
-                                           )) ?>
-        <?= $this->render_partial('infobox/infobox_generic_content', $infobox) ?>
+            <?= $this->render_partial('infobox/infobox_generic_content', $infobox) ?>
+      </div>
+      <? endif ?>
       </div>
       <div id="layout_content">
         <?= implode(PageLayout::getMessages()) ?>
         <?= $content_for_layout ?>
         <div class="clear"></div>
       </div>
+      <div class="clear"></div>
     </div>
+</div>
+<!-- Ende Page -->
     <div id="layout_push"></div>
 </div>
 
     <? include 'templates/footer.php'; ?>
+
+    <?= SkipLinks::getHTML() ?>
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 <?
 # Lifter010: TODO
 ?>
-<!-- Dynamische Links mit Icons -->
+<!-- Start Header -->
 <div id='header'>
     <!--<div id='barTopLogo'>
         <img src="<?=$GLOBALS['ASSETS_URL']?>images/logos/logoneu.jpg" alt="Logo Uni Göttingen">
@@ -98,9 +98,10 @@
         </ul>
     </div>
 </div>
-<div id="barBottomshadow"> </div>
 <!-- Ende Header -->
 
+<!-- Beginn Page -->
+<div id="layout_page">
 <? if (isset($navigation)) : ?>
     <?= $this->render_partial('tabs') ?>
 <? endif ?>

@@ -3,8 +3,7 @@
 ?>
 <div class="topic"><b><?=_("Stud.IP-Rangliste")?></b></div>
 <? if(count($persons)>0) : ?>
-<div style="width: 100%;">
-<table width="100%" border="0" cellpadding="2" cellspacing="0">
+<table class="default">
 <tr>
     <th width="3%" align="left"><?= _("Platz") ?></th>
     <th width="1%"></th>
@@ -12,6 +11,7 @@
     <th align="left" width="15%"></th>
     <th align="left" width="15%"><?= _("Punkte") ?></th>
     <th align="left" width="15%"><?= _("Titel") ?></th>
+    <th></th>
 </tr>
 <? foreach ($persons as $index=>$person): ?>
 <tr class="<?=TextHelper::cycle('cycle_odd', 'cycle_even')?>">
@@ -25,7 +25,8 @@
     </td>
     <td><?=$person['content']?></td>
     <td><?=$person['score']?></td>
-    <td><?=$person['title']?> <? if($person['userid']==$user->id): ?><a href="<?=URLHelper::getLink('score.php?cmd=kill')?>"><?= Assets::img('icons/16/blue/trash.png', array('title' => _("Ihren Wert von der Liste löschen"), 'class' => 'text-top')) ?></a><? endif; ?></td>
+    <td><?=$person['title']?></td>
+    <td align="right"><? if($person['userid']==$user->id): ?><a href="<?=URLHelper::getLink('score.php?cmd=kill')?>"><?= Assets::img('icons/16/blue/trash.png', array('title' => _("Ihren Wert von der Liste löschen"), 'class' => 'text-top')) ?></a><? endif; ?></td>
 </tr>
 <? endforeach ?>
 </table>
@@ -33,7 +34,6 @@
 <div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel"><?= $this->render_partial("shared/pagechooser", array("perPage" => get_config('ENTRIES_PER_PAGE'), "num_postings" => $numberOfPersons,
     "page"=>$page, "pagelink" => "score.php?page=%s"));
 ?></div>
-</div>
 <? endif ?>
 <? endif ?>
 

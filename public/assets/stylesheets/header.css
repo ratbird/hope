@@ -90,10 +90,6 @@ div#barBottomright a:hover, #layout_footer a:hover {
     color: #ffffff;
 }
 
-div#barBottomshadow {
-    padding-top: 20px;
-}
-
 div#barTopFont {
     position: absolute;
     top: 10px;

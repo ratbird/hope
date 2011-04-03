@@ -130,23 +130,49 @@ a.printhead {
 
 
 /* --- Layouts -------------------------------------------------------------- */
+#layout_page {
+    margin: 15px;
+}
+
 #layout_container {
     background-color: white;
-    padding: 0 0 1em 0;
-    margin: 0 0 1em 0;
+    padding: 20px;
+    margin: 0;
 }
 
 #layout_content {
-    margin-right: 270px;
+    /*margin-right: 291px;*/
+    overflow: auto;
+}
+
+/* for old pages without template layout */
+#layout_table {
+    width: 100%;
+    background-color: white;
+    border: 20px solid #fff;
+    margin: 0;
+    padding: 0;
+}
+
+/* for old pages without template layout */
+#layout_table td {
+    vertical-align: top;
+}
+
+#layout_sidebar {
+    float: right;
+    padding-left: 20px;
+    border-left: 1px dashed #1E3E70;
+    margin-left: 20px;
 }
 
 #layout_infobox {
-    float: right;
     width: 250px;
 }
 
 #layout_wrapper {
     clear: both;
+    min-width: 900px; /* 1024 breite ist minimum */
     min-height: 100%;
     height: auto !important;
     height: 100%;
@@ -154,6 +180,7 @@ a.printhead {
 }
 
 #layout_push {
+    clear: both;
     height: 25px; /* must be the same height as #layout_footer */
 
 }
@@ -163,7 +190,7 @@ a.printhead {
     clear: both;
     margin: 0;
     border-top: 1px solid #1E3E70;
-    padding: 0;
+    padding: 0 15px 0 0;
     background-color: #899AB9;
     color: #FFF;
     text-align: right;

@@ -361,7 +361,7 @@ class Admin_UserController extends AuthenticatedController
             }
 
             //change userdomain
-            if (Request::get('new_userdomain') != 'none' && $editPerms[0] != 'root') {
+            if (Request::get('new_userdomain', 'none') != 'none' && $editPerms[0] != 'root') {
                 $domain = new UserDomain(Request::option('new_userdomain'));
                 $domain->addUser($user_id);
                 $details[] = _('Die Nutzerdomäne wurde hinzugefügt.');
@@ -398,14 +398,22 @@ class Admin_UserController extends AuthenticatedController
                 }
             }
 
-            //save action and messages
-            if ($um->changeUser($editUser)) {
-                PageLayout::postMessage(Messagebox::success(_('Die Änderungen wurden erfolgreich gespeichert.'), $details));
-            } else {
-                //get message
-                $details = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($um->msg, 0, -1)));
-                PageLayout::postMessage(Messagebox::error(_('Die Änderungen konnten nicht gespeichert werden.'), $details));
+            if (!Request::int('u_edit_send_mail')) {
+                $dev_null = new blackhole_message_class();
+                $default_mailer = StudipMail::getDefaultTransporter();
+                StudipMail::setDefaultTransporter($dev_null);
+                $GLOBALS['MAIL_VALIDATE_BOX'] = false;
+                $GLOBALS['MAIL_VALIDATE_HOST'] = false;
             }
+            //save action and messages
+            $um->changeUser($editUser);
+            if (!Request::int('u_edit_send_mail')) {
+                StudipMail::setDefaultTransporter($default_mailer);
+            }
+                //get message
+            $umdetails = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($um->msg, 0, -1)));
+            $details = array_reverse(array_merge((array)$details,(array)$umdetails));
+            PageLayout::postMessage(Messagebox::info(_('Hinweise:'), $details));
         }
 
         //get user informations

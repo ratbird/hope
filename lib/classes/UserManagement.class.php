@@ -139,6 +139,7 @@ class UserManagement
         if (!$this->user_data['auth_user_md5.auth_plugin']) {
             $this->user_data['auth_user_md5.auth_plugin'] = "standard"; // just to be sure
         }
+        $changed = 0;
         foreach($this->user_data as $key => $value) {
             $split = explode(".",$key);
             $table = $split[0];
@@ -163,6 +164,7 @@ class UserManagement
 
                 // logging
                 if ($this->db->affected_rows() != 0) {
+                    ++$changed;
                     switch ($field) {
                         case 'username':
                             log_event("USER_CHANGE_USERNAME",$this->user_data['auth_user_md5.user_id'],NULL,$this->original_user_data['auth_user_md5.username']." -> ".$value);
@@ -192,11 +194,10 @@ class UserManagement
             }
 
         }
-        if ($this->db->affected_rows() != 0) {
+        if ($changed) {
             $this->db->query("UPDATE user_info SET chdate='".time()."' WHERE user_id = '".$this->user_data['auth_user_md5.user_id']."'");
-            return true;
         }
-        return false;
+        return (bool)$changed;
     }
 
 
@@ -304,7 +305,7 @@ class UserManagement
         }
 
         if (!$this->storeToDatabase()) {
-            $this->msg .= "info§" . _("Es wurden keine Veränderungen vorgenommen.") . "§";
+            $this->msg .= "error§" . sprintf(_("BenutzerIn \"%s\" konnte nicht angelegt werden."), $newuser['auth_user_md5.username']) . "§";
             return FALSE;
         }
 
@@ -440,8 +441,8 @@ class UserManagement
         }
 
         if (!$this->storeToDatabase()) {
-            $this->msg .= "info§" . _("Es wurden keine Veränderungen vorgenommen.") . "§";
-            return true;
+            $this->msg .= "info§" . _("Es wurden keine Veränderungen der Grunddaten vorgenommen.") . "§";
+            return false;
         }
 
         $this->msg .= "msg§" . sprintf(_("Benutzer \"%s\" ver&auml;ndert."), $this->user_data['auth_user_md5.username']) . "§";

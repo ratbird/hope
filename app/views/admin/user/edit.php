@@ -357,7 +357,7 @@
 </tbody>
 <? endif ?>
 
-<? if (count($userdomains) > 0 && $user['perms'] != 'root') : ?>
+<? if ($user['perms'] != 'root') : ?>
 <tbody>
     <tr class="steel header-row">
         <td colspan="3" class="toggle-indicator">
@@ -440,7 +440,12 @@
 <? endforeach ?>
 </tbody>
 <? endif ?>
-
+    <tr>
+        <td colspan="3">
+            <input id="u_edit_send_mail" name="u_edit_send_mail" value="1" checked type="checkbox">
+            <label style="padding-left:0.5em" for="u_edit_send_mail"><?=_("Emailbenachrichtigung bei Änderung der Daten verschicken?")?></label>
+        </td>
+    </tr>
     <tr>
         <td colspan="3" align="center">
             <?= makeButton("speichern", "input", _("Übernehmen"), 'edit') ?>

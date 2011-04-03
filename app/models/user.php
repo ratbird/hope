@@ -37,16 +37,17 @@ class UserModel
     {
         //single field
         if(!is_null($field)) {
-            $dbquery = "SELECT ? FROM auth_user_md5 au WHERE au.user_id = ?";
+            $dbquery = "SELECT * FROM auth_user_md5 au WHERE au.user_id = ?";
 
             $db = DBManager::get()->prepare($dbquery);
-            $db->execute(array($field, $user_id));
-            return $db->fetchColumn();
+            $db->execute(array($user_id));
+            $row = $db->fetch(PDO::FETCH_ASSOC);
+            return $row[$field];
 
         // all fields + optional user_info and user_data
         } else {
             if ($full) {
-                $dbquery = "SELECT *, UNIX_TIMESTAMP(ud.changed) as changed_timestamp FROM auth_user_md5 au"
+                $dbquery = "SELECT ui.*,au.*, UNIX_TIMESTAMP(ud.changed) as changed_timestamp FROM auth_user_md5 au"
                          . " LEFT JOIN user_info ui ON (au.user_id = ui.user_id)"
                          . " LEFT JOIN user_data ud ON au.user_id = ud.sid";
             } else {

@@ -24,7 +24,7 @@ endforeach;
 if (sizeof($output) > 0) :
     $pos = 1;
     foreach ($output as $room => $dates) :
-        echo $room .': '. implode(' ', $dates) . (sizeof($output) > $pos ? ', ' : '') . "\n";
+        echo $room .': '. implode("\n", $dates) . (sizeof($output) > $pos ? ', ' : '') . "\n";
         $pos++;
     endforeach;
 endif;

@@ -162,6 +162,7 @@ function shrink_dates($dates) {
         if ((!$dates[$i]["conjuncted"]) || (!$dates[$i+1]["conjuncted"])) {
             // if the current date is a conjunction, add the year
             // to receive an output of the format "dd.mm - dd.mm.yyyy"
+            $return_string .= ' ' . getWeekday(date('w', $dates[$i]['start_time'])) .'.';
             if ($dates[$i]['conjuncted']) {
                 $return_string .= date (" d.m.Y", $dates[$i]["start_time"]);
             } else {
@@ -180,10 +181,6 @@ function shrink_dates($dates) {
             $return_string .= ' ' . date("H:i", $dates[$i]["start_time"]);
             if (date("H:i", $dates[$i]["start_time"]) != date("H:i", $dates[$i]["end_time"])) {
                 $return_string .= ' - ' . date("H:i", $dates[$i]["end_time"]);
-            }
-            if ($i+1 != sizeof ($dates)) {
-
-                $return_string .= ',';
             }
         }
         

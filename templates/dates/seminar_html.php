@@ -46,7 +46,7 @@
     unset($irregular_rooms['']);
 
     if (is_array($irregular) && sizeof($irregular)) :
-        echo _("Termine am") . implode('', shrink_dates($irregular));
+        echo _("Termine am") . implode(', ', shrink_dates($irregular));
         if (is_array($irregular_rooms) && sizeof($irregular_rooms) > 0) :
             if (sizeof($irregular_rooms) > 3) :
                 $irregular_rooms = array_slice($irregular_rooms, sizeof($irregular_rooms) - 3, sizeof($irregular_rooms));

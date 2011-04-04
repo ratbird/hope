@@ -87,6 +87,26 @@
         </tr>
 
         <? endif; ?>
+      <? if ($adminList) : ?>
+      <tr>
+        <td width="100%" colspan="2">
+          <b><?= _("Veranstaltungsliste:") ?></b>
+          <br>
+        </td>
+      </tr>
+
+
+        <tr>
+          <td width="1%" align="center" valign="top">
+              <?= Assets::img("icons/16/black/link-intern.png")?>
+          </td>
+          <td width="99%" align="left">
+            <?= $adminList->render() ?>
+            <br>
+          </td>
+
+        </tr>
+        <? endif ?>
 
     </table>
     </td>

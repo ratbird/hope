@@ -29,6 +29,7 @@ $infobox = array('content' => $infobox,
 );
 
 ?>
+<?= $adminTopLinks ? $adminTopLinks->render() : "" ?>
 <div class="white" style="padding: 0.5em;">
 
   <? if (isset($error)) : ?>

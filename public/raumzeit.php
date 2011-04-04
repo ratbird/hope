@@ -55,6 +55,8 @@ require_once ('lib/raumzeit/raumzeit_functions.inc.php');
 require_once ('lib/dates.inc.php');
 require_once 'lib/admin_search.inc.php';
 require_once 'lib/classes/LockRules.class.php';
+require_once 'lib/classes/AdminList.class.php';
+
 
 if ($RESOURCES_ENABLE) {
     include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObject.class.php");
@@ -170,11 +172,17 @@ while ($tmp_first_date < $end_date) {
 }
 $dozenten = $sem->getMembers('dozent');
 
+if ($perm->have_studip_perm("admin",$sem->getId())) {
+    $adminList = AdminList::getInstance()->getSelectTemplate($sem->getId());
+    $adminTopLinks = AdminList::getInstance()->getTopLinkTemplate($sem->getId());
+}
+
 // template-like output
 ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td class="blank" width="100%" valign="top">
+            <?= $adminTopLinks ? $adminTopLinks->render() : "" ?>
             <table width="99%" border="0" cellpadding="2" cellspacing="0">
 
             <?php
@@ -609,6 +617,7 @@ $dozenten = $sem->getMembers('dozent');
                     $infobox_template->set_attribute('picture', 'infobox/schedules.jpg');
                     $infobox_template->set_attribute("selectionlist_title", "Semesterauswahl");
                     $infobox_template->set_attribute('selectionlist', $semester_selectionlist);
+                    $infobox_template->set_attribute("adminList", $adminList);
 
                     // render template
                     echo $infobox_template->render();

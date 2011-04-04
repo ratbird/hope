@@ -1,13 +1,23 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/*
+ * AdminList.class.php - contains AdminList
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * @author      Rasmus Fuhse <fuhse@data-quest.de>
+ * @license     http://www.gnu.org/licenses/gpl-2.0.html GPL version 2
+ * @category    Stud.IP
+ * @since       2.2
  */
 
 require_once 'lib/classes/SemesterData.class.php';
 
 /**
- * singleton class for the admin search list
+ * Singleton class for the admin search list. This is a singleton-class because
+ * the result set is dependend on the session.
  *
  * @author Rasmus Fuhse <fuhse@data-quest.de>
  */
@@ -29,9 +39,17 @@ class AdminList {
         $this->search();
     }
 
-    public function search() {
-        global $links_admin_data, $perm, $user;
-        $semester=new SemesterData;
+    /**
+     * Saves a search-result-set of seminars depending on the parameters of the session
+     * to the AdminList object.
+     */
+    public function search()
+    {
+        global $perm, $user;
+        //the search parameters are completely saved in the following session variable
+        global $links_admin_data;
+        //$links_admin_data = $SESSION['links_admin_data'];
+        $semester = new SemesterData;
         $db = DBManager::get();
         if (!$perm->have_perm("root")) {
             $my_inst = $db->query(
@@ -44,55 +62,64 @@ class AdminList {
             "")->fetchAll(PDO::FETCH_COLUMN, 0);
         }
 
-        $query="SELECT DISTINCT seminare.*, Institute.Name AS Institut,
-                sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem
-                FROM seminar_user LEFT JOIN seminare USING (seminar_id)
-                LEFT JOIN Institute USING (institut_id)
-                LEFT JOIN auth_user_md5 ON (seminar_user.user_id = auth_user_md5.user_id)
-                LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende)
-                LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
-                WHERE seminar_user.status = 'dozent' AND seminare.status NOT IN('". implode("','", studygroup_sem_types())."') ";
-        $conditions=0;
-
+        $query=
+            "SELECT DISTINCT seminare.*, Institute.Name AS Institut, sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem " .
+            "FROM seminar_user " .
+                "LEFT JOIN seminare USING (seminar_id) " .
+                "LEFT JOIN Institute USING (institut_id) " .
+                "LEFT JOIN auth_user_md5 ON (seminar_user.user_id = auth_user_md5.user_id) " .
+                "LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende) " .
+                "LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende) " .
+            "WHERE seminar_user.status = 'dozent' " .
+                "AND seminare.status NOT IN (:studygroup_sem_types) ";
+        $params = array('studygroup_sem_types' => studygroup_sem_types());
+        
         if ($links_admin_data["srch_sem"]) {
             $one_semester = $semester->getSemesterData($links_admin_data["srch_sem"]);
-            $query.="AND seminare.start_time <=".$one_semester["beginn"]." AND (".$one_semester["beginn"]." <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1) ";
-            $conditions++;
+            $query.="AND seminare.start_time <= :semester_begin AND (:semester_begin <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1) ";
+            $params['semester_begin'] = $one_semester["beginn"];
         }
 
         if (is_array($my_inst) && !$perm->have_perm("root")) {
-            $query.="AND Institute.Institut_id IN ('".join("','",$my_inst)."') ";
+            $query.="AND Institute.Institut_id IN (:my_inst) ";
+            $params['my_inst'] = $my_inst;
         }
 
         if ($links_admin_data["srch_inst"]) {
-            $query.="AND Institute.Institut_id ='".$links_admin_data["srch_inst"]."' ";
+            $query.="AND Institute.Institut_id = :special_institute ";
+            $params['special_institute'] = $links_admin_data["srch_inst"];
         }
 
         if ($links_admin_data["srch_fak"]) {
-            $query.="AND fakultaets_id ='".$links_admin_data["srch_fak"]."' ";
+            $query.="AND fakultaets_id = :special_faculty ";
+            $params['special_faculty'] = $links_admin_data["srch_fak"];
         }
 
         if ($links_admin_data["srch_doz"]) {
-            $query.="AND seminar_user.user_id ='".$links_admin_data["srch_doz"]."' ";
+            $query.="AND seminar_user.user_id = :dozent ";
+            $params['dozent'] = $links_admin_data["srch_doz"];
         }
 
         if ($links_admin_data["srch_exp"]) {
-            $query.="AND (seminare.Name LIKE '%".$links_admin_data["srch_exp"]."%' OR seminare.VeranstaltungsNummer LIKE '%".$links_admin_data["srch_exp"]."%' OR seminare.Untertitel LIKE '%".$links_admin_data["srch_exp"]."%' OR seminare.Beschreibung LIKE '%".$links_admin_data["srch_exp"]."%' OR auth_user_md5.Nachname LIKE '%".$links_admin_data["srch_exp"]."%') ";
-            $conditions++;
+            $query.="AND (seminare.Name LIKE :search_expression OR seminare.VeranstaltungsNummer LIKE :search_expression OR seminare.Untertitel LIKE :search_expression OR seminare.Beschreibung LIKE :search_expression OR auth_user_md5.Nachname LIKE :search_expression) ";
+            $params['search_expression'] = "%".$links_admin_data["srch_exp"]."%";
         }
 
-        $db = DBManager::get();
-        $this->results = $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        $statement = DBManager::get()->prepare($query);
+        $statement->execute($params);
+        $this->results = $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getSelectTemplate($course_id) {
+    public function getSelectTemplate($course_id)
+    {
         $adminList = $GLOBALS['template_factory']->open('admin/adminList.php');
         $adminList->set_attribute('adminList', $this->results);
         $adminList->set_attribute('course_id', $course_id);
         return $adminList;
     }
 
-    public function getTopLinkTemplate($course_id) {
+    public function getTopLinkTemplate($course_id)
+    {
         $adminTopLinks = $GLOBALS['template_factory']->open("admin/topLinks.php");
         $adminTopLinks->set_attribute('adminList', $this->results);
         $adminTopLinks->set_attribute('course_id', $course_id);

@@ -7,30 +7,30 @@
 <?= CSRFProtection::tokenTag() ?>
 <table class="default">
     <tr class="sortable">
-        <th align="left" colspan="2" <?= ($sortby == 'username') ? 'class="sort' . $order_icon . '"' : ''?>>
-            <a href="<?=URLHelper::getLink('?sortby=username&order='.$order)?>"><?=_("Benutzername")?></a>
+        <th align="left" colspan="2" <?= ($sortby == 'username') ? 'class="sort' . $order . '"' : ''?>>
+            <a href="<?=URLHelper::getLink('?sortby=username&order='.$order.'&toggle='.($sortby == 'username'))?>"><?=_("Benutzername")?></a>
             <span style="font-size:smaller; font-weight:normal; color:#f8f8f8;">(<?=_("Sichtbarkeit")?>)</span>
         </th>
-        <th align="left" <?= ($sortby == 'perms') ? 'class="sort' . $order_icon . '"' : ''?>>
-            <a href="<?=URLHelper::getLink('?sortby=perms&order='.$order)?>"><?=_("Status")?></a>
+        <th align="left" <?= ($sortby == 'perms') ? 'class="sort' . $order . '"' : ''?>>
+            <a href="<?=URLHelper::getLink('?sortby=perms&order='.$order.'&toggle='.($sortby == 'perms'))?>"><?=_("Status")?></a>
         </th>
-        <th align="left" <?= ($sortby == 'Vorname') ? 'class="sort' . $order_icon . '"' : ''?>>
-            <a href="<?=URLHelper::getLink('?sortby=Vorname&order='.$order)?>"><?=_("Vorname")?></a>
+        <th align="left" <?= ($sortby == 'Vorname') ? 'class="sort' . $order . '"' : ''?>>
+            <a href="<?=URLHelper::getLink('?sortby=Vorname&order='.$order.'&toggle='.($sortby == 'Vorname'))?>"><?=_("Vorname")?></a>
         </th>
-        <th align="left" <?= ($sortby == 'Nachname') ? 'class="sort' . $order_icon . '"' : ''?>>
-            <a href="<?=URLHelper::getLink('?sortby=Nachname&order='.$order)?>"><?=_("Nachname")?></a>
+        <th align="left" <?= ($sortby == 'Nachname') ? 'class="sort' . $order . '"' : ''?>>
+            <a href="<?=URLHelper::getLink('?sortby=Nachname&order='.$order.'&toggle='.($sortby == 'Nachname'))?>"><?=_("Nachname")?></a>
         </th>
-        <th align="left" <?= ($sortby == 'Email') ? 'class="sort' . $order_icon . '"' : ''?>>
-            <a href="<?=URLHelper::getLink('?sortby=Email&order='.$order)?>"><?=_("E-Mail")?></a>
+        <th align="left" <?= ($sortby == 'Email') ? 'class="sort' . $order . '"' : ''?>>
+            <a href="<?=URLHelper::getLink('?sortby=Email&order='.$order.'&toggle='.($sortby == 'Email'))?>"><?=_("E-Mail")?></a>
         </th>
-        <th align="left" <?= ($sortby == 'changed') ? 'class="sort' . $order_icon . '"' : ''?>>
-            <a href="<?=URLHelper::getLink('?sortby=changed&order='.$order)?>"><?=_("inaktiv")?></a>
+        <th align="left" <?= ($sortby == 'changed') ? 'class="sort' . $order . '"' : ''?>>
+            <a href="<?=URLHelper::getLink('?sortby=changed&order='.$order.'&toggle='.($sortby == 'changed'))?>"><?=_("inaktiv")?></a>
         </th>
-        <th align="left" <?= ($sortby == 'mkdate') ? 'class="sort' . $order_icon . '"' : ''?>>
-            <a href="<?=URLHelper::getLink('?sortby=mkdate&order='.$order)?>"><?=_("registriert seit")?></a>
+        <th align="left" <?= ($sortby == 'mkdate') ? 'class="sort' . $order . '"' : ''?>>
+            <a href="<?=URLHelper::getLink('?sortby=mkdate&order='.$order.'&toggle='.($sortby == 'mkdate'))?>"><?=_("registriert seit")?></a>
         </th>
-        <th colspan="2" <?= ($sortby == 'auth_plugin') ? 'class="sort' . $order_icon . '"' : ''?>>
-            <a href="<?=URLHelper::getLink('?sortby=auth_plugin&order='.$order)?>"><?=_("Authentifizierung")?></a>
+        <th colspan="2" <?= ($sortby == 'auth_plugin') ? 'class="sort' . $order . '"' : ''?>>
+            <a href="<?=URLHelper::getLink('?sortby=auth_plugin&order='.$order.'&toggle='.($sortby == 'auth_plugin'))?>"><?=_("Authentifizierung")?></a>
         </th>
     </tr>
 

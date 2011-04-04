@@ -101,15 +101,17 @@ class Admin_UserController extends AuthenticatedController
             //Suchparameter
             $this->user = $request;
             $this->sortby = Request::option('sortby', 'username');
-            $this->order = (Request::option('order', 'asc') == 'asc') ? 'asc' : 'desc';
-            $this->order_icon = Request::option('order', 'asc');
+            $this->order = Request::option('order', 'asc');
+            if (Request::int('toggle')) {
+                $this->order = $this->order == 'desc' ? 'asc' : 'desc';
+            }
             $request['vorname'] = ($request['vorname']) ? $request['vorname'] : NULL;
             $request['nachname'] = ($request['nachname']) ? $request['nachname'] : NULL;
 
             //Daten abrufen
             $this->users = UserModel::getUsers($request['username'], $request['vorname'],
                 $request['nachname'], $request['email'], $inaktiv, $request['perm'],
-                $request['locked'], $search_datafields, $this->sortby, $this->order_icon);
+                $request['locked'], $search_datafields, $this->sortby, $this->order);
 
             // Fehler abfangen
             if ($this->users == 0) {
@@ -410,7 +412,7 @@ class Admin_UserController extends AuthenticatedController
             if (!Request::int('u_edit_send_mail')) {
                 StudipMail::setDefaultTransporter($default_mailer);
             }
-                //get message
+            //get message
             $umdetails = explode('§', str_replace(array('msg§', 'info§', 'error§'), '', substr($um->msg, 0, -1)));
             $details = array_reverse(array_merge((array)$details,(array)$umdetails));
             PageLayout::postMessage(Messagebox::info(_('Hinweise:'), $details));

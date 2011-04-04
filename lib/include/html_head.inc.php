@@ -56,5 +56,4 @@
 <div id="layout_wrapper">
     <? SkipLinks::insertContainer() ?>
     <?= PageLayout::getBodyElements() ?>
-    <div id="overdiv_container"></div>
     <? PageLayout::clearMessages() ?>

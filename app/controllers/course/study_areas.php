@@ -20,6 +20,7 @@ require_once 'lib/classes/Seminar.class.php';
 require_once 'lib/webservices/api/studip_lecture_tree.php';
 require_once 'lib/classes/LockRules.class.php';
 require_once 'app/controllers/authenticated_controller.php';
+require_once 'lib/classes/AdminList.class.php';
 
 class Course_StudyAreasController extends AuthenticatedController
 {
@@ -65,10 +66,13 @@ class Course_StudyAreasController extends AuthenticatedController
     {
 
         global $perm;
+        if (Request::get("cid")) {
+            $course_id = Request::option("cid");
+        }
 
         // prepare layout
         $layout =
-            $GLOBALS['template_factory']->open('layouts/base_without_infobox');
+            $GLOBALS['template_factory']->open('layouts/base');
         $this->set_layout($layout);
 
         if ($perm->have_perm('admin')) {
@@ -126,6 +130,10 @@ class Course_StudyAreasController extends AuthenticatedController
             $this->update_selection($study_areas);
 
             $this->course->setStudyAreas($this->selection->getAreaIDs());
+        }
+        if ($perm->have_perm("admin")) {
+            $this->adminList = AdminList::getInstance()->getSelectTemplate($this->course_id);
+            $this->adminTopLinks = AdminList::getInstance()->getTopLinkTemplate($this->course_id);
         }
 
         $this->url = $this->url_for('course/study_areas/show/'.$course_id);

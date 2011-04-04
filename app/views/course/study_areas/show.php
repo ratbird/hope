@@ -1,5 +1,33 @@
 <?
 # Lifter010: TODO
+
+//Infobox:
+$aktionen = array();
+$aktionen[] = array(
+              "icon" => "icons/16/black/edit.png",
+              "text" => _("Navigieren Sie in der rechten Spalte und schieben Sie durch Klick auf den gelben Pfeil den Studienbereich in die linke Spalte.")
+);
+$infobox = array(
+    array("kategorie" => _("Aktionen:"),
+          "eintrag"   => $aktionen
+    )
+);
+if ($adminList) {
+    $infobox[] = array(
+        "kategorie" => _("Veranstaltungsliste:"),
+        "eintrag"   =>
+            array(
+                array(
+                      "icon" => "icons/16/black/link-intern.png",
+                      "text" => $adminList->render()
+                )
+            )
+    );
+}
+$infobox = array('content' => $infobox,
+                 'picture' => CourseAvatar::getAvatar($course_id)->getUrl(Avatar::NORMAL)
+);
+
 ?>
 <div class="white" style="padding: 0.5em;">
 

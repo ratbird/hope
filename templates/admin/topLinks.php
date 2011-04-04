@@ -14,10 +14,10 @@
         unset($next_one);
     }
     ?>
-<div style="width: 70%; margin: 10px; margin-left: auto; margin-right: auto;text-align: center;">
+<div style="width: 70%; margin: 10px; margin-left: auto; margin-right: auto;text-align: center;" id="admin_top_links">
     <? if (isset($last_one)) : ?>
     <div style="float: left;">
-        <a href="<?= URLHelper::getLink("?", array('cid' => $adminList[$last_one]['Seminar_id'])) ?>" title="<?= htmlReady($adminList[$last_one]['Name']) ?>">
+        <a href="<?= URLHelper::getLink("?#admin_top_links", array('cid' => $adminList[$last_one]['Seminar_id'])) ?>" title="<?= htmlReady($adminList[$last_one]['Name']) ?>">
             <?= Assets::img("icons/16/blue/arr_1left.png", array('class' => "text-bottom")) ?>
             <?= _("zurück") ?>
         </a>
@@ -25,7 +25,7 @@
     <? endif ?>
     <? if (isset($next_one)) : ?>
     <div style="float: right;">
-        <a href="<?= URLHelper::getLink("?", array('cid' => $adminList[$next_one]['Seminar_id'])) ?>" title="<?= htmlReady($adminList[$next_one]['Name']) ?>">
+        <a href="<?= URLHelper::getLink("?#admin_top_links", array('cid' => $adminList[$next_one]['Seminar_id'])) ?>" title="<?= htmlReady($adminList[$next_one]['Name']) ?>">
             <?= _("vor") ?>
             <?= Assets::img("icons/16/blue/arr_1right.png", array('class' => "text-bottom")) ?>
         </a>

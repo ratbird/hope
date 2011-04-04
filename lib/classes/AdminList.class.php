@@ -105,6 +105,11 @@ class AdminList {
             $params['search_expression'] = "%".$links_admin_data["srch_exp"]."%";
         }
 
+        $query.=" ORDER BY `".addslashes($links_admin_data["sortby"])."` ";
+        if ($links_admin_data["sortby"] === 'start_time') {
+            $query .= ' DESC';
+        }
+
         $statement = DBManager::get()->prepare($query);
         $statement->execute($params);
         $this->results = $statement->fetchAll(PDO::FETCH_ASSOC);

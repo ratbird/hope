@@ -1492,7 +1492,7 @@ $db->query($query);
 
 ?>
 <table border=0 width="100%" cellspacing="0" cellpadding="0" align="center" id="main_content"><tr>
-<td class="steelgraudunkel" align="left" width="45%">
+<td class="steelgraudunkel" align="left" width="45%" style="padding-left: 5px">
 <?
 
 if ($forum["view"]=="flatfolder")
@@ -1511,7 +1511,7 @@ if ($forum["search"]!="" && $forum["view"]=="search") {
     }
     echo "/ ". _('Treffer: ').$forum["forumsum"]."</font>";
 } else {
-    echo "<font size=\"-1\">: ". _('Forenbeiträge: ').$forum["forumsum"]."</font>";
+   echo _('Forenbeiträge: ') . $forum["forumsum"];
 }
 echo "</td>";
 

@@ -69,7 +69,7 @@ class AutoInsert
      */
     private static function checkUserStatus($user_id,$seminar_id)
     {
-        $statement = DBManager::get()->query("SELECT status FROM seminar_user WHERE user_id = ? AND seminar_id = ?");
+        $statement = DBManager::get()->prepare("SELECT status FROM seminar_user WHERE user_id = ? AND seminar_id = ?");
         $statement->execute(array($user_id, $seminar_id));
         $status = $statement->fetchColumn();
 

@@ -48,45 +48,46 @@ class AdminList {
         global $perm, $user;
         //the search parameters are completely saved in the following session variable
         global $links_admin_data;
-        //$links_admin_data = $SESSION['links_admin_data'];
+        //$links_admin_data = $_SESSION['links_admin_data'];
         $semester = new SemesterData;
         $db = DBManager::get();
         if (!$perm->have_perm("root")) {
             $my_inst = $db->query(
                 "SELECT a.Institut_id,Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak " .
-                "FROM user_inst a " .
-                    "LEFT JOIN Institute b USING (Institut_id) " .
+                "FROM user_inst AS a " .
+                    "LEFT JOIN Institute AS b USING (Institut_id) " .
                 "WHERE a.user_id='$user->id' " .
                     "AND a.inst_perms='admin' " .
-                "ORDER BY is_fak,Name" .
+                "ORDER BY is_fak, Name" .
             "")->fetchAll(PDO::FETCH_COLUMN, 0);
         }
 
+        $params = array();
         $query=
-            "SELECT DISTINCT seminare.*, Institute.Name AS Institut, sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem " .
-            "FROM seminar_user " .
-                "LEFT JOIN seminare USING (seminar_id) " .
-                "LEFT JOIN Institute USING (institut_id) " .
-                "LEFT JOIN auth_user_md5 ON (seminar_user.user_id = auth_user_md5.user_id) " .
-                "LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende) " .
-                "LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende) " .
-            "WHERE seminar_user.status = 'dozent' " .
-                "AND seminare.status NOT IN (:studygroup_sem_types) ";
-        $params = array('studygroup_sem_types' => studygroup_sem_types());
+            "SELECT DISTINCT sem.*, inst.Name AS Institut, sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem " .
+            "FROM seminar_user AS su " .
+                "LEFT JOIN seminare AS sem USING (seminar_id) " .
+                "LEFT JOIN Institute AS inst USING (institut_id) " .
+                "LEFT JOIN auth_user_md5 AS u ON (su.user_id = u.user_id) " .
+                "LEFT JOIN semester_data AS sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende) " .
+                "LEFT JOIN semester_data AS sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende) " .
+            "WHERE su.status = 'dozent' " .
+                "AND sem.status NOT IN ('".implode("', '", studygroup_sem_types())."') ";
+        //$params = array('studygroup_sem_types' => studygroup_sem_types());
         
         if ($links_admin_data["srch_sem"]) {
             $one_semester = $semester->getSemesterData($links_admin_data["srch_sem"]);
-            $query.="AND seminare.start_time <= :semester_begin AND (:semester_begin <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1) ";
+            $query.="AND sem.start_time <= :semester_begin AND (:semester_begin <= (sem.start_time + sem.duration_time) OR sem.duration_time = -1) ";
             $params['semester_begin'] = $one_semester["beginn"];
         }
 
         if (is_array($my_inst) && !$perm->have_perm("root")) {
-            $query.="AND Institute.Institut_id IN (:my_inst) ";
-            $params['my_inst'] = $my_inst;
+            $query.="AND inst.Institut_id IN ('".implode("', '", $my_inst)."') ";
+            //$params['my_inst'] = $my_inst;
         }
 
         if ($links_admin_data["srch_inst"]) {
-            $query.="AND Institute.Institut_id = :special_institute ";
+            $query.="AND inst.Institut_id = :special_institute ";
             $params['special_institute'] = $links_admin_data["srch_inst"];
         }
 
@@ -96,12 +97,12 @@ class AdminList {
         }
 
         if ($links_admin_data["srch_doz"]) {
-            $query.="AND seminar_user.user_id = :dozent ";
+            $query.="AND su.user_id = :dozent ";
             $params['dozent'] = $links_admin_data["srch_doz"];
         }
 
         if ($links_admin_data["srch_exp"]) {
-            $query.="AND (seminare.Name LIKE :search_expression OR seminare.VeranstaltungsNummer LIKE :search_expression OR seminare.Untertitel LIKE :search_expression OR seminare.Beschreibung LIKE :search_expression OR auth_user_md5.Nachname LIKE :search_expression) ";
+            $query.="AND (sem.Name LIKE :search_expression OR sem.VeranstaltungsNummer LIKE :search_expression OR sem.Untertitel LIKE :search_expression OR sem.Beschreibung LIKE :search_expression OR u.Nachname LIKE :search_expression) ";
             $params['search_expression'] = "%".$links_admin_data["srch_exp"]."%";
         }
 

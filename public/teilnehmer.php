@@ -1180,6 +1180,9 @@ if ($db->f('visible') == 'yes' || $i_see_everybody || $db->f('user_id') == $user
     ?>
         <span style="position: relative">
             <a href="<?= URLHelper::getLink('about.php?username='.$db->f("username")) ?>">
+                <? if (!$GLOBALS['perm']->have_studip_perm('tutor', $SessionSeminar)) :
+                    $last_visitdate = time()+10;
+                endif ?>
                 <? $db->f('mkdate') >= $last_visitdate
                     ? $options = array('title' => _('DieseR NutzerIn ist nach Ihrem '.
                         'letzten Besuch dieser Veranstaltung beigetreten'))

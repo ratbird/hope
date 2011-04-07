@@ -559,35 +559,70 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
     }
 
     // TeilnehmerInnen
-    //vorläufige Teilnahme
-    $db2->query(get_obj_clause('admission_seminar_user a','seminar_id','a.user_id',
-        "(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')",
-        'participants', false, " AND a.status='accepted' ", false, NULL, 'mkdate'));
+    if ($GLOBALS['perm']->have_perm('tutor')) {
+        //vorläufige Teilnahme
+        $db2->query(get_obj_clause('admission_seminar_user a','seminar_id','a.user_id',
+            "(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')",
+            'participants', false, " AND a.status='accepted' ", false, NULL, 'mkdate'));
 
-    while($db2->next_record()) {
-        $object_id = $db2->f('object_id');
-        if ($my_obj[$object_id]["modules"]["participants"]) {
-            if ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj[$object_id]['status'], words('dozent tutor'))) {
-                $my_obj[$object_id]["new_accepted_participants"] = $db2->f("neue");
-                $my_obj[$object_id]["count_accepted_participants"] = $db2->f("count");
-                if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
-                    $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
+        while($db2->next_record()) {
+            $object_id = $db2->f('object_id');
+            if ($my_obj[$object_id]["modules"]["participants"]) {
+                if ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj[$object_id]['status'], words('dozent tutor'))) {
+                    $my_obj[$object_id]["new_accepted_participants"] = $db2->f("neue");
+                    $my_obj[$object_id]["count_accepted_participants"] = $db2->f("count");
+                    if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
+                        $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
+                    }
                 }
             }
         }
-    }
 
-    $db2->query(get_obj_clause('seminar_user a','seminar_id','a.user_id',
-        "(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')",
-        'participants', false, false, false, NULL, 'mkdate'));
+        $db2->query(get_obj_clause('seminar_user a','seminar_id','a.user_id',
+            "(mkdate > IFNULL(b.visitdate,0) AND a.user_id !='$user_id')",
+            'participants', false, false, false, NULL, 'mkdate'));
 
-    $all_auto_inserts = AutoInsert::getAllSeminars(true);
-    $auto_insert_perm = Config::get()->AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM;
+        $all_auto_inserts = AutoInsert::getAllSeminars(true);
+        $auto_insert_perm = Config::get()->AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM;
 
-    while($db2->next_record()) {
-        $object_id = $db2->f('object_id');
-        // show the participants-icon only if the module is activated and it is not an auto-insert-sem
-        if ($my_obj[$object_id]["modules"]["participants"]) {
+        while($db2->next_record()) {
+            $object_id = $db2->f('object_id');
+            // show the participants-icon only if the module is activated and it is not an auto-insert-sem
+            if ($my_obj[$object_id]["modules"]["participants"]) {
+                if (in_array($object_id, $all_auto_inserts)) {
+                    if ($GLOBALS['perm']->have_perm('admin', $user_id)
+                    && !$GLOBALS['perm']->have_perm($auto_insert_perm, $user_id)) {
+                        continue;
+                    } else if ($GLOBALS['perm']->permissions[$auto_insert_perm]  > $GLOBALS['perm']->permissions[$my_obj[$object_id]['status']]) {
+                        continue;
+                    }
+                }
+                $my_obj[$object_id]["newparticipants"] = $db2->f("neue");
+                $my_obj[$object_id]["countparticipants"] = $db2->f("count");
+                if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
+                    $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
+                }
+                if (SeminarCategories::GetByTypeId($my_obj[$object_id]['sem_status'])->studygroup_mode) {
+                    $nav = new Navigation('participants', 'dispatch.php/course/studygroup/members/'. $object_id);
+                } else {
+                    $nav = new Navigation('participants', 'teilnehmer.php');
+                }
+                $neue = $my_obj[$object_id]["newparticipants"] + $my_obj[$object_id]["new_accepted_participants"];
+                $count = $my_obj[$object_id]["countparticipants"] + $my_obj[$object_id]["count_accepted_participants"];
+                if ($neue && $GLOBALS['perm']->have_studip_perm('tutor', $object_id)) {
+                    $nav->setImage('icons/16/red/new/persons.png', array('title' =>
+                        sprintf(_('%s TeilnehmerInnen, %s neue'), $count, $neue)));
+                } else if ($count) {
+                    $nav->setImage('icons/16/grey/persons.png', array('title' => sprintf(_('%s TeilnehmerInnen'), $count)));
+                }
+                $my_obj[$object_id]['participants'] = $nav;
+            }
+        }
+    } else {    // show only the participants-icon, no colouring!
+        foreach ($my_obj as $object_id => $data) {
+            $all_auto_inserts = AutoInsert::getAllSeminars(true);
+            $auto_insert_perm = Config::get()->AUTO_INSERT_SEM_PARTICIPANTS_VIEW_PERM;
+
             if (in_array($object_id, $all_auto_inserts)) {
                 if ($GLOBALS['perm']->have_perm('admin', $user_id)
                 && !$GLOBALS['perm']->have_perm($auto_insert_perm, $user_id)) {
@@ -596,25 +631,16 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                     continue;
                 }
             }
-            $my_obj[$object_id]["newparticipants"] = $db2->f("neue");
-            $my_obj[$object_id]["countparticipants"] = $db2->f("count");
-            if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
-                $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
-            }
-            if (SeminarCategories::GetByTypeId($my_obj[$object_id]['sem_status'])->studygroup_mode) {
-                $nav = new Navigation('participants', 'dispatch.php/course/studygroup/members/'. $object_id);
-            } else {
-                $nav = new Navigation('participants', 'teilnehmer.php');
-            }
-            $neue = $my_obj[$object_id]["newparticipants"] + $my_obj[$object_id]["new_accepted_participants"];
-            $count = $my_obj[$object_id]["countparticipants"] + $my_obj[$object_id]["count_accepted_participants"];
-            if ($neue) {
-                $nav->setImage('icons/16/red/new/persons.png', array('title' =>
-                    sprintf(_('%s TeilnehmerInnen, %s neue'), $count, $neue)));
-            } else if ($count) {
+
+            if ($my_obj[$object_id]["modules"]["participants"]) {
+                if (SeminarCategories::GetByTypeId($my_obj[$object_id]['sem_status'])->studygroup_mode) {
+                    $nav = new Navigation('participants', 'dispatch.php/course/studygroup/members/'. $object_id);
+                } else {
+                    $nav = new Navigation('participants', 'teilnehmer.php');
+                }
                 $nav->setImage('icons/16/grey/persons.png', array('title' => sprintf(_('%s TeilnehmerInnen'), $count)));
+                $my_obj[$object_id]['participants'] = $nav;
             }
-            $my_obj[$object_id]['participants'] = $nav;
         }
     }
 

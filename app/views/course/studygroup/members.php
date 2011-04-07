@@ -59,7 +59,7 @@ if(isset($flash['question']) && isset($flash['candidate'])) {
 <ul style="overflow:hidden;display:block;list-style-type:none;list-style-image:none;
 list-style-position:outside;list-style-type:none;">
 <? foreach ($cmembers as $m) : ?>
-<? $last_visitdate <= $m['mkdate']
+<? ($last_visitdate <= $m['mkdate'] && $GLOBALS['perm']->have_studip_perm('tutor', $sem_id))
     ? $options = array('style' => 'border: 3px solid rgb(255, 100, 100);'
         . 'border: 3px solid rgba(255, 0, 0, 0.5)')
     : $options = array() ?>

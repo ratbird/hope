@@ -21,7 +21,9 @@ if (is_array($dates['irregular'])) foreach ($dates['irregular'] as $cycle) :
 
 endforeach;
 
-if (sizeof($output) > 0) :
+if (sizeof($output) == 1) :
+    echo array_pop(array_keys($output));
+elseif (sizeof($output) > 0) :
     $pos = 1;
     foreach ($output as $room => $dates) :
         echo $room .': '. implode("\n", $dates) . (sizeof($output) > $pos ? ', ' : '') . "\n";

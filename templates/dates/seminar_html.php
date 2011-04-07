@@ -7,7 +7,15 @@
 
   <?
   if (!isset($link)) $link = true;
-  if (!isset($show_room)) $show_room = true;
+  if (!isset($show_room)) :
+    // show rooms only if there is more than one
+    if (sizeof($dates['rooms']) <= 1) :
+        $show_room = false;
+    else :
+        $show_room = true;
+    endif;
+  endif;
+
   $output = array();
 
   if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
@@ -52,8 +60,10 @@
                 $irregular_rooms = array_slice($irregular_rooms, sizeof($irregular_rooms) - 3, sizeof($irregular_rooms));
             endif;
 
-            echo _(", Ort:");
-            echo implode(', ', getFormattedRooms($irregular_rooms, $link));
+            if ($show_room) :
+                echo _(", Ort:");
+                echo implode(', ', getFormattedRooms($irregular_rooms, $link));
+            endif;
         endif;
     endif;
   endif;

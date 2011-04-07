@@ -255,9 +255,15 @@ class Seminar
     {
         $cycles = $this->metadate->getCycleData();
         $dates = $this->getSingleDates($filter, $filter);
+        $rooms = array();
 
         foreach (array_keys($cycles) as $id) {
             $cycles[$id]['first_date'] = CycleDataDB::getFirstDate($id);
+            if (!empty($cycles[$id]['assigned_rooms'])) {
+                foreach ($cycles[$id]['assigned_rooms'] as $room_id => $count) {
+                    $rooms[$room_id] += $count;
+                }
+            }
         }
         // besser wieder mit direktem Query statt Objekten
         if (is_array($cycles) && (sizeof($cycles) == 0)) {
@@ -269,25 +275,32 @@ class Seminar
         // the irregular single-dates
         foreach ($dates as $val) {
             $zw = array(
-                    'metadate_id' => $val->getMetaDateID(),
-                    'termin_id'   => $val->getTerminID(),
-                    'date_typ'    => $val->getDateType(),
-                    'start_time'  => $val->getStartTime(),
-                    'end_time'    => $val->getEndTime(),
-                    'mkdate'      => $val->getMkDate(),
-                    'chdate'      => $val->getMkDate(),
-                    'ex_termin'   => $val->isExTermin(),
-                    'orig_ex'     => $val->isExTermin(),
-                    'range_id'    => $val->getRangeID(),
-                    'author_id'   => $val->getAuthorID(),
-                    'resource_id' => $val->getResourceID(),
-                    'raum'        => $val->getFreeRoomText(),
-                    'typ'         => $val->getDateType(),
-                    'tostring'    => $val->toString()
-                );
+                'metadate_id' => $val->getMetaDateID(),
+                'termin_id'   => $val->getTerminID(),
+                'date_typ'    => $val->getDateType(),
+                'start_time'  => $val->getStartTime(),
+                'end_time'    => $val->getEndTime(),
+                'mkdate'      => $val->getMkDate(),
+                'chdate'      => $val->getMkDate(),
+                'ex_termin'   => $val->isExTermin(),
+                'orig_ex'     => $val->isExTermin(),
+                'range_id'    => $val->getRangeID(),
+                'author_id'   => $val->getAuthorID(),
+                'resource_id' => $val->getResourceID(),
+                'raum'        => $val->getFreeRoomText(),
+                'typ'         => $val->getDateType(),
+                'tostring'    => $val->toString()
+            );
+
+            if ($val->getResourceID()) {
+                $rooms[$val->getResourceID()]++;
+            }
 
             $ret['irregular'][$val->getTerminID()] = $zw;
         }
+
+        $ret['rooms'] = $rooms;
+
         return $ret;
     }
 

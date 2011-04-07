@@ -333,7 +333,7 @@ echo $template_factory->render(
                     <? if (($mein_status || $perm->have_studip_perm("admin", $sem_id)) && $modules->getStatus('schedule', $sem_id)) :
                         $show_link = true;
                     endif ?>
-                    <?= $sem->getDatesHTML(array('link_to_dates' => $show_link, 'show_room' => true)) ?>
+                    <?= $sem->getDatesHTML(array('link_to_dates' => $show_link)) ?>
                     </font>
                 </td>
                 <td class="<? echo $cssSw->getClass() ?>" valign="top">

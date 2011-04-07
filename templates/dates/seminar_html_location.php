@@ -47,6 +47,8 @@ endforeach;
 
 <? if (sizeof($output) == 0) : ?>
   <?= _("nicht angegeben") ?>
+<? elseif (sizeof($output) == 1) : ?>
+    <?= array_pop(array_keys($output)) ?>
 <? else: ?>
 <table class="default">
   <? foreach ($output as $room => $dates) : ?>

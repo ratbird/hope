@@ -1,6 +1,13 @@
 <?
 # Lifter010: TODO
-if (!isset($show_room)) $show_room = true;
+if (!isset($show_room)) :
+    // show rooms only if there is more than one
+    if (sizeof($dates['rooms']) <= 1) :
+        $show_room = false;
+    else :
+        $show_room = true;
+    endif;
+endif;
 
 if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
   $output = array();

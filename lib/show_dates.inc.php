@@ -665,14 +665,15 @@ function show_all_dates($date_start, $date_end, $show_docs=FALSE, $show_admin=TR
                     $have_category = TRUE;
                 }
 
-                if ($termin->getLocation()) {
-                    if ($have_category)
-                        $content .= "&nbsp; &nbsp; &nbsp; &nbsp; ";
-                    if (strtolower(get_class($termin)) == 'seminartermin')
-                        $content .= "<b>" . _("Raum:") . " </b>";
-                    else
-                        $content .= "<b>" . _("Ort:") . " </b>";
-                    $content .= htmlReady(mila($termin->getLocation(), 25));
+                $singledate = new SingleDate($termin->id);
+                if ($singledate->getRoom()) {
+                    $content .= "&nbsp; &nbsp; &nbsp; &nbsp; ";
+                    $content .= "<b>" . _("Raum:") . " </b>";
+                    $content .= htmlReady(mila($singledate->getRoom(), 25));
+                } else if ($singledate->getFreeRoomText()) {
+                    $content .= "&nbsp; &nbsp; &nbsp; &nbsp; ";
+                    $content .= "<b>" . _("Ort:") . " </b>";
+                    $content .= htmlReady(mila($singledate->getFreeRoomText(), 25));
                 }
 
                 if (strtolower(get_class($termin)) != 'seminarevent') {

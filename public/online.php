@@ -310,10 +310,10 @@ if (is_array($non_group_buddies))
     if (!$my_messaging_settings["show_only_buddys"])
     {
         echo "\n<td width=\"50%\" valign=\"top\">";
-        echo "\n<table width=\"100%\" cellspacing=0 cellpadding=1 border=0><tr>\n";
+        echo "\n<table width=\"100%\" cellspacing=0 cellpadding=1 border=0>\n";
 
         if (is_array($n_buddies)) {
-            echo "\n<td class=\"steelgraudunkel\"  colspan=3><font size=-1 color=\"white\"><b>&nbsp;" . _("Name") . "</b></font></td><td class=\"steelgraudunkel\" colspan=4><font size=-1 color=\"white\"><b>" . _("letztes Lebenszeichen") . "</b></font></td></tr>\n";
+            echo "<tr>\n<td class=\"steelgraudunkel\"  colspan=3><font size=-1 color=\"white\"><b>&nbsp;" . _("Name") . "</b></font></td><td class=\"steelgraudunkel\" colspan=4><font size=-1 color=\"white\"><b>" . _("letztes Lebenszeichen") . "</b></font></td></tr>\n";
             reset($n_buddies);
             $template = $GLOBALS['template_factory']->open('online/user');
             while (list($index)=each($n_buddies)) {
@@ -326,7 +326,7 @@ if (is_array($non_group_buddies))
                 $cssSw->switchClass();
             }
 
-           } else {
+        } else {
             // if we previously found unvisible users who are online
             if ($weitere > 0) {
             ?>
@@ -337,8 +337,6 @@ if (is_array($non_group_buddies))
                     </font>
                 </td>
             </tr>
-            </table>
-            </td>
             <?
             } else {
             ?>
@@ -348,16 +346,13 @@ if (is_array($non_group_buddies))
                 </font>
             </td>
             </tr>
-            </table>
-            </td>
             <?
             }
         }
+        echo "</table>\n";
     }
 ?>
-            </tr>
-            </table>
-            <? if ($user_count > 25) : ?>
+        <? if ($user_count > 25) : ?>
             <div style="text-align:right; padding-top: 2px; padding-bottom: 2px" class="steelgraudunkel">
             <?
             $pagination = $GLOBALS['template_factory']->open('shared/pagechooser');
@@ -369,10 +364,13 @@ if (is_array($non_group_buddies))
             echo $pagination->render("shared/pagechooser");
             ?>
             </div>
-            <? endif; ?>
-            <? if ($weitere > 0) : ?>
-                <div align="center"><font size="-1" align="center"><br><?=sprintf(_("+ %s unsichtbare NutzerInnen"), $weitere)?></font></div>
-            <? endif; ?>
+        <? endif; ?>
+        <? if ($weitere > 0) : ?>
+            <div align="center"><font size="-1" align="center"><br><?=sprintf(_("+ %s unsichtbare NutzerInnen"), $weitere)?></font></div>
+        <? endif; ?>
+        </td>
+        </tr>
+        </table>
     </div>
     <div class="clear"></div>
 </div>

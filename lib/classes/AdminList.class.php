@@ -53,9 +53,9 @@ class AdminList {
         $db = DBManager::get();
         if (!$perm->have_perm("root")) {
             $statement = $db->prepare(
-                "SELECT a.Institut_id, Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak " .
+                "SELECT b.Institut_id " .
                 "FROM user_inst AS a " .
-                    "INNER JOIN Institute AS b ON (b.Institut_id = a.Institut_id OR (a.Institut_id = b.fakultaets_id)) " .
+                    "INNER JOIN Institute AS b ON (a.Institut_id = b.fakultaets_id) " .
                 "WHERE a.user_id = :user_id " .
                     "AND a.inst_perms='admin' " .
             "");

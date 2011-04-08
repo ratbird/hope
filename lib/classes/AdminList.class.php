@@ -28,7 +28,7 @@ class AdminList {
 
     static public function getInstance() {
         if (!self::$instance) {
-            include_once 'lib/admin_search.inc.php';
+            //include_once 'lib/admin_search.inc.php';
             self::$instance = new AdminList();
         }
         return self::$instance;
@@ -48,18 +48,19 @@ class AdminList {
         global $perm, $user;
         //the search parameters are completely saved in the following session variable
         global $links_admin_data;
-        //$links_admin_data = $_SESSION['links_admin_data'];
+        $links_admin_data = $_SESSION['links_admin_data'];
         $semester = new SemesterData;
         $db = DBManager::get();
         if (!$perm->have_perm("root")) {
-            $my_inst = $db->query(
-                "SELECT a.Institut_id,Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak " .
+            $statement = $db->prepare(
+                "SELECT a.Institut_id, Name, IF(b.Institut_id=b.fakultaets_id,1,0) AS is_fak " .
                 "FROM user_inst AS a " .
-                    "LEFT JOIN Institute AS b USING (Institut_id) " .
-                "WHERE a.user_id='$user->id' " .
+                    "INNER JOIN Institute AS b ON (b.Institut_id = a.Institut_id OR (a.Institut_id = b.fakultaets_id)) " .
+                "WHERE a.user_id = :user_id " .
                     "AND a.inst_perms='admin' " .
-                "ORDER BY is_fak, Name" .
-            "")->fetchAll(PDO::FETCH_COLUMN, 0);
+            "");
+            $statement->execute(array('user_id' => $user->id));
+            $my_inst = $statement->fetchAll(PDO::FETCH_COLUMN, 0);
         }
 
         $params = array();

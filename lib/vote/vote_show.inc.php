@@ -65,7 +65,7 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
    /* ---------------------------------------------------------------------- */
 
    /* Start waiting votes -------------------------------------------------- */
-   $voteDB->startWaitingVotes ();
+   $voteDB->startWaitingVotes ($rangeID);
    if ($voteDB->isError ()) {
       echo createErrorReport ($voteDB,
                   _("Datenbankfehler bei Umfrageaktivierung"));

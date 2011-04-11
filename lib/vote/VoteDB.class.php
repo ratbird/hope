@@ -755,51 +755,26 @@ class VoteDB extends StudipObject {
 
    /**
     * Starts all votes in dependency to their startdate
+    * @param   string   $rangeID   The specified rangeID
     */
-# Die Funktion sollte noch umbenannt werden...[a]
-   function startWaitingVotes () {
+   function startWaitingVotes ($rangeID) {
      $this->db->query("UPDATE".
               " vote ".
               "SET".
-              " state='".VOTE_STATE_ACTIVE."' ".
+              " state = '".VOTE_STATE_ACTIVE."' ".
               "WHERE".
+              " range_id = '".$rangeID."' AND".
               " state = '".VOTE_STATE_NEW."' AND".
               " startdate <= '".time()."'");
 
      $this->db->query("UPDATE".
               " vote ".
               "SET".
-              " state='".VOTE_STATE_STOPINVIS."' ".
+              " state = IF(resultvisibility = '".VOTE_RESULTS_NEVER."', '".VOTE_STATE_STOPINVIS."', '".VOTE_STATE_STOPVIS."') ".
               "WHERE".
+              " range_id = '".$rangeID."' AND".
               " state = '".VOTE_STATE_ACTIVE."' AND".
-              " stopdate < '".time()."' AND".
-              " resultvisibility = '".VOTE_RESULTS_NEVER."'");
-
-
-     $this->db->query("UPDATE".
-              " vote ".
-              "SET".
-              " state='".VOTE_STATE_STOPVIS."' ".
-              "WHERE".
-              " state = '".VOTE_STATE_ACTIVE."' AND".
-              " stopdate < '".time()."'");
-
-     $this->db->query("UPDATE".
-              " vote ".
-              "SET".
-              " state='".VOTE_STATE_STOPVIS."' ".
-              "WHERE".
-              " state = '".VOTE_STATE_ACTIVE."' AND".
-              " (startdate+timespan) < '".time()."'");
-
-     $this->db->query("UPDATE".
-              " vote ".
-              "SET".
-              " state='".VOTE_STATE_STOPINVIS."' ".
-              "WHERE".
-              " state = '".VOTE_STATE_ACTIVE."' AND".
-              " (startdate+timespan) < '".time()."' AND".
-              " resultvisibility = '".VOTE_RESULTS_NEVER."'");
+              " (stopdate < '".time()."' OR startdate + timespan < '".time()."')");
    }
 
 

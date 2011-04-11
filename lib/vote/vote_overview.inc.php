@@ -177,7 +177,7 @@ printSelections($range,$searchRange,$safeguard);
 
 // starting waiting votes
 $voteDB = new VoteDB();
-$voteDB->startWaitingVotes ();
+$voteDB->startWaitingVotes ($showrangeID);
     if ($voteDB->isError ())
         printSafeguard("ausruf",_("Fehler beim Starten der wartenden Umfragen und Tests."));
 

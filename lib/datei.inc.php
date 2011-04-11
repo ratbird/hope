@@ -1396,7 +1396,7 @@ function display_file_body($datei, $folder_id, $open, $change, $move, $upload, $
         $content.= "\n&nbsp;<input type=\"CHECKBOX\" name=\"change_protected\" $protect>&nbsp;"._("geschützter Inhalt")."</br>";
         $content.= "<br><textarea name=\"change_description\" aria-label=\"Beschreibung des Ordners eingeben\" rows=\"3\" cols=\"40\">".htmlReady($datei["description"])."</textarea><br>";
         $content.= makeButton("uebernehmen", 'input', _("&Auml;nderungen speichern"));
-        $content.= "&nbsp;" . makeButton("abbrechen", 'input', _("Abbrechen", 'cancel'));
+        $content.= "&nbsp;" . makeButton("abbrechen", 'input', _("Abbrechen"), 'cancel');
         $content.= "<input type=\"hidden\" name=\"open\" value=\"".htmlReady($datei["dokument_id"])."_sc_\">";
         $content.= "<input type=\"hidden\" name=\"type\" value=\"0\">";
     } else {

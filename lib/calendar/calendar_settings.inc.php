@@ -133,7 +133,7 @@ $css_switcher->switchClass();
                     ?>
                     &nbsp;<? echo _("Uhr bis"); ?>
                     <?
-                    echo '<select name=\"cal_end\" aria-label="' . _("Endzeit der Tages- und Wochenansicht") . '">';
+                    echo '<select name="cal_end" aria-label="' . _("Endzeit der Tages- und Wochenansicht") . '">';
                         for ($i=0; $i<=23; $i++)
                             {
                             if ($i==$calendar_user_control_data["end"])

@@ -64,6 +64,8 @@ class CalendarWriteriCalendar extends CalendarWriter {
         $header .= "PRODID:-//Stud.IP//Stud.IP_iCalendar Library, Stud.IP ";
         $header .= $GLOBALS['SOFTWARE_VERSION'] . " //EN" . $this->newline;
         $header .= "METHOD:PUBLISH" . $this->newline;
+        $header .= "X-WR-TIMEZONE:Europe/Berlin". $this->newline;
+        $header .= "CALSCALE:GREGORIAN" . $this->newline;
         $header .= "BEGIN:VTIMEZONE" . $this->newline;
         $header .= "TZID:Europe/Berlin" . $this->newline;
         $header .= "X-LIC-LOCATION:Europe/Berlin" . $this->newline;

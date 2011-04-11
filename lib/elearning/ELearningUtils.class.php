@@ -688,7 +688,10 @@ class ELearningUtils
                     if ($_REQUEST["update_x"]) {
                         if ((method_exists($connected_cms[$system_type], "updateConnections"))) {
                             $connected_cms[$system_type]->updateConnections( $crs_id );
-                }
+                        }
+                    }
+                    if (method_exists($connected_cms[$system_type]->permissions, 'CheckUserPermissions')) {
+                        $connected_cms[$system_type]->permissions->CheckUserPermissions($crs_id);
                     }
                 }
 

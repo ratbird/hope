@@ -341,6 +341,7 @@ class Seminar_Session extends Session {
             StudipNews::DoGarbageCollect();
         }
         if (($zufall % 1000) < $this->gc_probability){
+            $db = new DB_Seminar();
             //messages aufräumen
             $db->query("SELECT message_id, count( message_id ) AS gesamt, count(IF (deleted =0, NULL , 1) ) AS geloescht
                         FROM message_user GROUP BY message_id HAVING gesamt = geloescht");

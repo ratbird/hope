@@ -147,6 +147,8 @@ class Admin_UserController extends AuthenticatedController
             //antwort ja
             } elseif (!empty($user) && Request::submitted('delete')) {
 
+                CSRFProtection::verifyUnsafeRequest();
+
                 //if deleting user, go back to mainpage
                 $parent = '';
 
@@ -193,12 +195,10 @@ class Admin_UserController extends AuthenticatedController
                 return;
             }
 
-            $users = array();
-            foreach ($user_ids as $user_id) {
-                $users[] = UserModel::getUser($user_id);
-            }
-
             if (Request::submitted('delete')) {
+
+                CSRFProtection::verifyUnsafeRequest();
+
                 //deactivate message
                 if (!Request::int('mail')) {
                     $dev_null = new blackhole_message_class();
@@ -228,6 +228,10 @@ class Admin_UserController extends AuthenticatedController
 
             //sicherheitsabfrage
             } elseif (!Request::submitted('back')) {
+                $users = array();
+                foreach ($user_ids as $user_id) {
+                    $users[] = UserModel::getUser($user_id);
+                }
                 $this->flash['delete'] = array(
                     'question' => _('Wollen Sie folgende Benutzer wirklich löschen?'),
                     'action' => $this->url_for('admin/user/delete'),

@@ -129,41 +129,51 @@ class UserModel
             return 0;
         }
 
-        $query = "SELECT DISTINCT au.*, UNIX_TIMESTAMP(ud.changed) as changed_timestamp, ui.mkdate "
+        $db = DBManager::get();
+        foreach (words('username vorname nachname email') as $param) {
+            if ($$param) $$param = $db->quote('%' . $$param . '%');
+        }
+        $query = "SELECT DISTINCT au.*,IFNULL(auth_plugin, 'standard') as auth_plugin, UNIX_TIMESTAMP(ud.changed) as changed_timestamp, ui.mkdate "
                 ."FROM auth_user_md5 au "
                 ."LEFT JOIN datafields_entries de ON de.range_id=au.user_id "
                 ."LEFT JOIN user_data ud ON au.user_id = ud.sid "
                 ."LEFT JOIN user_info ui ON (au.user_id = ui.user_id) "
-                ."WHERE au.username like '%".$username."%' ";
+                ."WHERE 1 ";
+
+        if ($username) {
+            $query .= "AND au.username like $username ";
+        }
 
         //vorname
-        if (!is_null($vorname)) {
-            $query .= "AND au.vorname like '%".$vorname."%' ";
+        if ($vorname) {
+            $query .= "AND au.vorname like $vorname ";
         }
 
         //nachname
-        if (!is_null($nachname)) {
-            $query .= "AND au.nachname like '%".$nachname."%' ";
+        if ($nachname) {
+            $query .= "AND au.nachname like $nachname ";
         }
 
         //email
-        if (!is_null($email)) {
-            $query .= "AND au.Email like '%".$email."%' ";
+        if ($email) {
+            $query .= "AND au.Email like $email ";
         }
 
         //permissions
         if (!is_null($perms) && $perms != "alle") {
-            $query .= "AND au.perms like '%".$perms."%' ";
+            $query .= "AND au.perms = " . $db->quote($perms) . " ";
         }
 
         //locked user
         if ($locked == 1) {
-            $query .= "AND au.locked = '1' ";
+            $query .= "AND au.locked = 1 ";
         }
 
         //inactivity
         if (!is_null($inaktiv) && $inaktiv[0] != 'nie') {
-            $query .= "AND ud.changed {$inaktiv[0]} TIMESTAMPADD(DAY, -{$inaktiv[1]}, NOW()) ";
+            $comp = in_array(trim($inaktiv[0]), array('=', '>', '<=')) ? $inaktiv[0] : '=';
+            $days = (int)$inaktiv[1];
+            $query .= "AND ud.changed {$comp} TIMESTAMPADD(DAY, -{$days}, NOW()) ";
         } elseif (!is_null($inaktiv)) {
             $query .= "AND ud.changed IS NULL ";
         }
@@ -171,7 +181,7 @@ class UserModel
         //datafields
         if (!is_null($datafields) && count($datafields) > 0) {
             foreach ($datafields as $id => $entry) {
-                $query .= "AND de.datafield_id = '{$id}' AND de.content = '{$entry}' ";
+                $query .= "AND de.datafield_id = '" . $db->quote($id) . "' AND de.content = '" . $db->quote($entry) . "' ";
             }
         }
 
@@ -196,14 +206,14 @@ class UserModel
                 $query .= "ORDER BY ui.mkdate {$order}, au.username";
                 break;
             case "auth_plugin":
-                $query .= "ORDER BY au.auth_plugin {$order}, au.username";
+                $query .= "ORDER BY auth_plugin {$order}, au.username";
                 break;
             default:
                 $query .= " ORDER BY au.username {$order}";
         }
 
         //ergebnisse zurückgeben
-        return DBManager::get()->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        return $db->query($query)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**

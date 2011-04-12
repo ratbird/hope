@@ -48,7 +48,7 @@
                 <option <?= ($user['perm'] == $one) ? 'selected' : ''?> value="<?= $one ?>"><?= ($one=="alle")? _('alle') : $one ?></option>
             <? endforeach ?>
             </select>
-            <input type="checkbox" name="locked" value="1" <?= ($user['locked'] == 1) ? 'checked':'' ?>> nur gesperrt
+            <input type="checkbox" name="locked" value="1" <?= ($user['locked'] == 1) ? 'checked':'' ?>> <?=_("nur gesperrt")?>
         </td>
         <td align="right" width="15%">
             <?= _("inaktiv:")?>
@@ -56,7 +56,7 @@
         <td width="35%">
             <select name="inaktiv">
                <? foreach(array("<=" => ">=", "=" => "=", ">" => "<", "nie" =>_("nie")) as $i => $one) : ?>
-                <option value="<?= $i ?>" <?= ($user['inaktiv'] == $one) ? 'selected' : ''?>><?= $one ?></option>
+                <option value="<?= htmlready($i) ?>" <?= ($user['inaktiv'] == $i) ? 'selected' : ''?>><?= htmlready($one) ?></option>
                 <? endforeach ?>
             </select>
             <input name="inaktiv_tage" type="text" value="<?= htmlReady($user['inaktiv_tage']) ?>" size="10"> Tage

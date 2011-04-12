@@ -1,9 +1,4 @@
 <?php
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
-
 /*
  * studip_contentmodule.php - base class for content modules
  *
@@ -19,40 +14,27 @@ class StudipContentmoduleHelper
 {
     function find_seminars_using_contentmodule($system_type, $module_id)
     {
-        $db = new DB_Seminar();
-        $db->query("SELECT s.Seminar_id FROM seminare s
-                                LEFT JOIN object_contentmodules oc
-                                ON (s.Seminar_id = oc.object_id)
-                                WHERE oc.module_id = '$module_id'
-                                AND oc.system_type = '$system_type';");
+        $db = DBManager::get();
 
-        $seminar_ids = array();
+        $stmt = $db->prepare('SELECT s.Seminar_id FROM seminare s
+                              LEFT JOIN object_contentmodules oc
+                              ON (s.Seminar_id = oc.object_id)
+                              WHERE oc.module_id = ? AND oc.system_type = ?');
+        $stmt->execute(array($module_id, $system_type));
 
-        while ($db->next_record())
-        {
-            $seminar_ids [] = $db->f("Seminar_id");
-        }
-        return $seminar_ids;
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
     function find_institutes_using_contentmodule($system_type, $module_id)
     {
-        $db = new DB_Seminar();
-        $db->query($query = "SELECT i.Institut_id FROM Institute i
-                                LEFT JOIN object_contentmodules oc
-                                ON (i.Institut_id = oc.object_id)
-                                WHERE oc.module_id = '$module_id'
-                                AND oc.system_type = '$system_type';");
+        $db = DBManager::get();
 
-        $institute_ids = array();
+        $stmt = $db->prepare('SELECT i.Institut_id FROM Institute i
+                              LEFT JOIN object_contentmodules oc
+                              ON (i.Institut_id = oc.object_id)
+                              WHERE oc.module_id = ? AND oc.system_type = ?');
+        $stmt->execute(array($module_id, $system_type));
 
-        while ($db->next_record())
-        {
-
-            $institute_ids [] = $db->f("Institut_id");
-        }
-        return $institute_ids;
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
-
 }
-

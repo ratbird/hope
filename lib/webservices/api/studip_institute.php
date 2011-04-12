@@ -1,9 +1,4 @@
 <?php
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
-
 /*
  * studip_institute.php - base class for institutes
  *
@@ -15,49 +10,32 @@
  * the License, or (at your option) any later version.
  */
 
-require_once("lib/webservices/api/studip_user.php");
+require_once 'lib/webservices/api/studip_user.php';
 
 class StudipInstituteHelper
 {
     function get_users_by_status($institute_id, $status)
     {
-        $db = new DB_Seminar();
+        $db = DBManager::get();
 
-        $db->query($query = "SELECT au.username FROM Institute i
-                                INNER JOIN user_inst ui
-                                ON (i.Institut_id = ui.Institut_id)
-                                INNER JOIN auth_user_md5 au
-                                ON (ui.user_id = au.user_id)
-                                WHERE inst_perms = '$status'
-                                AND i.Institut_id = '$institute_id'");
+        $stmt = $db->prepare('SELECT au.username FROM user_inst ui
+                              JOIN auth_user_md5 au USING(user_id)
+                              WHERE ui.inst_perms = ? AND ui.Institut_id = ?');
+        $stmt->execute(array($status, $institute_id));
 
-        $user_list = array();
-
-        while($db->next_record())
-        {
-            $user_list [] = $db->f('username');
-        }
-        return $user_list;
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
     function get_user_status($username, $institute_id)
     {
-        $db = new DB_Seminar();
+        $db = DBManager::get();
 
-        $db->query($query = "SELECT au.username, ui.inst_perms as status FROM Institute i
-                                INNER JOIN user_inst ui
-                                ON (i.Institut_id = ui.Institut_id)
-                                INNER JOIN auth_user_md5 au
-                                ON (ui.user_id = au.user_id)
-                                WHERE au.username = '$username'
-                                AND i.Institut_id = '$institute_id'");
+        $stmt = $db->prepare('SELECT ui.inst_perms FROM user_inst ui
+                              JOIN auth_user_md5 au USING(user_id)
+                              WHERE au.username = ? AND ui.Institut_id = ?');
+        $stmt->execute(array($username, $institute_id));
 
-        if($db->next_record())
-        {
-            return $db->f('status');
-        }
-
-        return FALSE;
+        return $stmt->fetchColumn();
     }
 
     function get_admins($institute_id)
@@ -82,34 +60,21 @@ class StudipInstituteHelper
 
     function get_higher_level_institute($institute_id)
     {
-        $db = new DB_Seminar();
+        $db = DBManager::get();
 
-        $db->query("SELECT i2.* FROM Institute i
-                                INNER JOIN Institute i2 
-                                ON (i.fakultaets_id = i2.Institut_id)
-                                WHERE i.Institut_id = '$institute_id'
-                                AND i2.fakultaets_id != '$institute_id'");
+        $stmt = $db->prepare('SELECT i2.Institut_id FROM Institute i
+                              JOIN Institute i2 ON (i.fakultaets_id = i2.Institut_id)
+                              WHERE i.Institut_id = ? AND i2.fakultaets_id != ?');
+        $stmt->execute(array($institute_id, $institute_id));
 
-        $institute_list = array();
-
-        if($db->next_record())
-        {
-            return $db->f("Institut_id");
-        }
-
-        return null;
+        return $stmt->fetchColumn();
     }
 
     function get_admins_upward_recursive($institute_id)
     {
-        $institute_list = array(StudipInstituteHelper::get_higher_level_institute($institute_id), $institute_id);
-        $admin_list = array();
+        $institute_fak = StudipInstituteHelper::get_higher_level_institute($institute_id);
 
-        foreach($institute_list as $institute_id)
-        {
-            $admin_list = array_merge($admin_list, StudipInstituteHelper::get_admins($institute_id));
-        }
-        return $admin_list;
+        return array_merge(StudipInstituteHelper::get_admins($institute_fak),
+                           StudipInstituteHelper::get_admins($institute_id));
     }
-
 }

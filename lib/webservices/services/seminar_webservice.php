@@ -18,9 +18,8 @@
 
 require_once('lib/webservices/api/studip_seminar.php');
 
-class SeminarService extends Studip_Ws_Service
+class SeminarService extends AccessControlledService
 {
-
     function SeminarService()
     {
     $this->add_api_method('get_participants',

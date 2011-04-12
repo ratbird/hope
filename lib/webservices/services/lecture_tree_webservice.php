@@ -21,7 +21,7 @@ require_once('lib/webservices/api/studip_user.php');
 require_once('lib/webservices/api/studip_seminar_info.php');
 require_once('lib/dates.inc.php');
 
-class LectureTreeService extends Studip_Ws_Service
+class LectureTreeService extends AccessControlledService
 {
     function LectureTreeService()
     {

@@ -1,9 +1,4 @@
 <?php
-# Lifter002: TODO
-# Lifter007: TODO
-# Lifter003: TODO
-# Lifter010: TODO
-
 /*
  * studip_seminar_info.php - base class for seminars
  *
@@ -15,12 +10,12 @@
  * the License, or (at your option) any later version.
  */
 
-class Studip_Seminar_Info extends Studip_Ws_Struct {
-
-  function init() {
-    Studip_Seminar_Info::add_element('title', 'string');
-    Studip_Seminar_Info::add_element('lecturers', array('Studip_User'));
-    Studip_Seminar_Info::add_element('turnus', 'string');
-    Studip_Seminar_Info::add_element('lecture_number', 'string');
-  }
+class Studip_Seminar_Info extends Studip_Ws_Struct
+{
+    function init() {
+        Studip_Seminar_Info::add_element('title', 'string');
+        Studip_Seminar_Info::add_element('lecturers', array('Studip_User'));
+        Studip_Seminar_Info::add_element('turnus', 'string');
+        Studip_Seminar_Info::add_element('lecture_number', 'string');
+    }
 }

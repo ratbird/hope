@@ -46,7 +46,9 @@ class StudipPDO extends PDO
         // use fast preg_replace() variant if possible
         if ($count < 1000) {
             $result = preg_replace('/"(""|\\\\.|[^\\\\"]+)*"|\'(\'\'|\\\\.|[^\\\\\']+)*\'/s', '?', $statement);
-        } else {
+        }
+        
+        if (!isset($result)) {
             // split string into parts at quotes and backslash
             $parts = preg_split('/([\\\\"\'])/', $statement, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
             $result = '';
@@ -72,6 +74,10 @@ class StudipPDO extends PDO
                 } else {
                     $result .= $part;
                 }
+            }
+
+            if ($quote_chr !== NULL) {
+                $result .= '?';
             }
         }
 

@@ -334,7 +334,7 @@ function createTempFolder($folder_id, $tmp_full_path, $perm_check = TRUE, $in_re
        return $filelist;
     } else {
         return true;
-}
+    }
 }
 
 
@@ -1731,7 +1731,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
         if ($rechte)
             $edit.= "&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_l_&rand=".rand()."#anker")."\">" . makeButton("link", "img", _("Datei verlinken")) . "</a>";
         if ($document_count && $folder_tree->isReadable($folder_id, $user->id))
-            $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?folderzip=".$folder_id)."\">" . makeButton("ordneralszip", "img", _("Ordner als ZIP hochladen")) . "</a>";
+            $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?folderzip=".$folder_id)."\">" . makeButton("ordneralszip", "img", _("Ordner als ZIP")) . "</a>";
         if ($perm->have_studip_perm('autor', $SessionSeminar) && $folder_tree->checkCreateFolder($folder_id, $user->id)) {
             if ($folder_tree->isWritable($folder_id, $user->id) && !$folder_tree->isExerciseFolder($folder_id, $user->id)) {
                 $edit.= "&nbsp;&nbsp;&nbsp;<a href=\"".URLHelper::getLink("?open=".$folder_id."_n_#anker")."\">" . makeButton("neuerordner", "img", _("Ordner anlegen")) . "</a>";

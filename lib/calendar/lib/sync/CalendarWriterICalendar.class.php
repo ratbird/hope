@@ -64,26 +64,6 @@ class CalendarWriteriCalendar extends CalendarWriter {
         $header .= "PRODID:-//Stud.IP//Stud.IP_iCalendar Library, Stud.IP ";
         $header .= $GLOBALS['SOFTWARE_VERSION'] . " //EN" . $this->newline;
         $header .= "METHOD:PUBLISH" . $this->newline;
-        $header .= "X-WR-TIMEZONE:Europe/Berlin". $this->newline;
-        $header .= "CALSCALE:GREGORIAN" . $this->newline;
-        $header .= "BEGIN:VTIMEZONE" . $this->newline;
-        $header .= "TZID:Europe/Berlin" . $this->newline;
-        $header .= "X-LIC-LOCATION:Europe/Berlin" . $this->newline;
-        $header .= "BEGIN:DAYLIGHT" . $this->newline;
-        $header .= "TZOFFSETFROM:+0100" . $this->newline;
-        $header .= "TZOFFSETTO:+0200" . $this->newline;
-        $header .= "TZNAME:CEST" . $this->newline;
-        $header .= "DTSTART:19700329T020000" . $this->newline;
-        $header .= "RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3" . $this->newline;
-        $header .= "END:DAYLIGHT" . $this->newline;
-        $header .= "BEGIN:STANDARD" . $this->newline;
-        $header .= "TZOFFSETFROM:+0200" . $this->newline;
-        $header .= "TZOFFSETTO:+0100" . $this->newline;
-        $header .= "TZNAME:CET" . $this->newline;
-        $header .= "DTSTART:19701025T030000" . $this->newline;
-        $header .= "RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10" . $this->newline;
-        $header .= "END:STANDARD" . $this->newline;
-        $header .= "END:VTIMEZONE" . $this->newline;
         
         return $header;
     }
@@ -143,12 +123,10 @@ class CalendarWriteriCalendar extends CalendarWriter {
                 case 'CREATED':
                 case 'COMPLETED':
                     $value = $this->_exportDateTime($value);
-                    $value .= "Z";
                     break;
                 
                 case 'DTSTAMP':
                     $value = $this->_exportDateTime(time());
-                    $value .= "Z";
                     break;
 
                 case 'DTEND':
@@ -344,6 +322,7 @@ class CalendarWriteriCalendar extends CalendarWriter {
      */
     function _exportTime ($value) {
         $time = date ("His", $value);
+        $time .= 'Z';
         
         return $time;
     }

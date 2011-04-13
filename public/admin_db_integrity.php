@@ -5,8 +5,8 @@
 # Lifter010: TODO
 /**
 * Frontend for the db integrity checks
-* 
-* 
+*
+*
 *
 * @author       André Noack <andre.noack@gmx.net>
 * @access       public
@@ -19,8 +19,8 @@
 // This file is part of Stud.IP
 // admin_db_integrity.php
 // Integrity checks for the Stud.IP database
-// 
-// Copyright (c) 2002 André Noack <noack@data-quest.de> 
+//
+// Copyright (c) 2002 André Noack <noack@data-quest.de>
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
 // This program is free software; you can redistribute it and/or
@@ -43,15 +43,15 @@ require '../lib/bootstrap.php';
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", 'user' => "Seminar_User"));
 $perm->check("root");
 
-require_once 'lib/msg.inc.php'; 
+require_once 'lib/msg.inc.php';
 require_once 'lib/visual.inc.php';
 
 PageLayout::setTitle(_("Überprüfen der Datenbank-Integrität"));
-Navigation::activateItem('/admin/tools/db_integrity');
+Navigation::activateItem('/tools/db_integrity');
 
 include 'lib/seminar_open.php'; //hier werden die sessions initialisiert
 include 'lib/include/html_head.inc.php';
-include 'lib/include/header.php';   //hier wird der "Kopf" nachgeladen 
+include 'lib/include/header.php';   //hier wird der "Kopf" nachgeladen
 
 //global variables
 $_integrity_plugins = array("User","Seminar","Institut","Archiv","Studiengang");
@@ -60,15 +60,15 @@ $_csw = new cssClassSwitcher();
 ?>
 <table class="blank" cellspacing="0" cellpadding="2" border="0" width="100%">
     <tr><td  align="center">
-        
+
 <?
 //check, if a plugin is activated
 if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
-    
+
     include_once $RELATIVE_PATH_ADMIN_MODULES."/IntegrityCheck".$_REQUEST['plugin'].".class.php";
     $plugin_name = "IntegrityCheck".$_REQUEST['plugin'];
     $plugin_obj = new $plugin_name;
-    
+
     //query the user, if he really wants to delete
     if($_REQUEST['cmd'] == "assure" AND isset($_REQUEST['checkid'])) {
         $result = $plugin_obj->doCheck($_REQUEST['checkid']);
@@ -84,7 +84,7 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
         ?>
         <tr><td class="blank">&nbsp; </td></tr>
         </table><?
-    
+
     //delete the rows in the according table
     } elseif($_REQUEST['cmd'] == "delete" AND isset($_REQUEST['checkid'])) {
         $result = $plugin_obj->doCheckDelete($_REQUEST['checkid']);
@@ -94,7 +94,7 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
             $msg = "msg§" . sprintf(_("Es wurden %s Datens&auml;tze der Tabelle <b>%s</b> gelöscht!"), $result, $plugin_obj->getCheckDetailTable($_REQUEST['checkid']));
         }
         unset($_REQUEST['plugin']);
-    
+
     //show the found rows in the according table
     } elseif($_REQUEST['cmd'] == "show" AND isset($_REQUEST['checkid'])) {
         ?>
@@ -107,20 +107,20 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
         print(makeButton("loeschen", "img")) . "</a> ";
         printf("<a href=\"%s\">", $PHP_SELF);
         print(makeButton("abbrechen", "img")) . "</a></td></tr>";
-        ?> 
+        ?>
         <tr><td class="blank" colspan="2">&nbsp; </td></tr>
         <tr><td class="steel1" align="center" colspan="2">
         <?
         $db = $plugin_obj->getCheckDetailResult($_REQUEST['checkid']);
         ?><table border=1 class="steelgraulight" style="font-size:smaller" align="center"><tr><?
         $meta = $db->metadata();
-        for($i = 0;$i < count($meta);++$i){ 
+        for($i = 0;$i < count($meta);++$i){
             echo "<th>" . $meta[$i]['name'] . "</th>";
         }
         echo "</tr>";
         while ($db->next_record()) {
             echo"<tr>";
-            for($i = 0;$i < count($meta);++$i){ 
+            for($i = 0;$i < count($meta);++$i){
                 echo "<td>&nbsp;".htmlReady(substr($db->f($i),0,50))."</td>";
                 }
             echo"</tr>";
@@ -128,7 +128,7 @@ if($_REQUEST['plugin'] AND in_array($_REQUEST['plugin'],$_integrity_plugins)) {
         ?></table></td></tr>
         <tr><td class="blank" colspan="2">&nbsp; </td></tr>
         </table><?
-    
+
     //no command is given, do all checks of the activated plugin
     } else {
         ?>

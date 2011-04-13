@@ -20,7 +20,7 @@ require_once ('config.inc.php');
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 PageLayout::setTitle(_("Übersicht verwendeter Literatur"));
-Navigation::activateItem('/admin/tools/literature');
+Navigation::activateItem('/tools/literature');
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   //hier wird der "Kopf" nachgeladen

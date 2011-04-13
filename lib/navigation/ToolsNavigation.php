@@ -78,16 +78,16 @@ class ToolsNavigation extends Navigation
             $this->addSubNavigation('show_admission', new Navigation(_('Laufende Anmeldeverfahren'), 'show_admission.php'));
 
             if (get_config('LITERATURE_ENABLE')) {
-                $navigation->addSubNavigation('literature', new Navigation(_('Literaturübersicht'), 'admin_literatur_overview.php'));
+                $this->addSubNavigation('literature', new Navigation(_('Literaturübersicht'), 'admin_literatur_overview.php'));
             }
 
             if (get_config('STM_ENABLE')) {
-                $navigation->addSubNavigation('modules', new Navigation(_('Konkrete Studienmodule'), 'stm_instance_assi.php'));
+                $this->addSubNavigation('modules', new Navigation(_('Konkrete Studienmodule'), 'stm_instance_assi.php'));
             }
         }
 
         if ($perm->have_perm('root')) {
-            $navigation->addSubNavigation('db_integrity', new Navigation(_('DB Integrität'), 'admin_db_integrity.php'));
+            $this->addSubNavigation('db_integrity', new Navigation(_('DB Integrität'), 'admin_db_integrity.php'));
         }
     }
 }

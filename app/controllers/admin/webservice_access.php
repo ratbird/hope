@@ -39,7 +39,7 @@ class Admin_WebserviceAccessController extends AuthenticatedController
         $this->set_layout($layout);
 
         PageLayout::setTitle(_('Verwaltung der Zugriffsregeln für Webservices'));
-        Navigation::activateItem('/admin/tools/webservice_access');
+        Navigation::activateItem('/admin/config/webservice_access');
 
         $this->get_all_rules();
     }

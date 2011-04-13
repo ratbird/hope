@@ -33,7 +33,7 @@ class Admin_RoleController extends AuthenticatedController
 
         // set page title and navigation
         PageLayout::setTitle(_('Verwaltung von Rollen'));
-        Navigation::activateItem('/admin/tools/roles');
+        Navigation::activateItem('/admin/config/roles');
     }
 
     /**

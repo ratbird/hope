@@ -34,33 +34,33 @@ class InstanceStmControl {
     var $abs_summary_form;
     var $add_info_form;
     var $sel_elementgroup_form;
-    var $fill_group_form;   
+    var $fill_group_form;
     var $summary_form;
     var $sem_browse;
     var $users_found;
     var $delete_form;
     var $info_form;
-    
-    
+
+
     function InstanceStmControl(){
     }
-    
+
     function setSelStmForm(){
 
         $stm_arr = $this->getMyStmInstances();
         global $perm;
-        
-        $form_fields = array();     
-        
+
+        $form_fields = array();
+
         if ($perm->have_perm('admin')) $form_buttons = array("neuanlegen" => array('type' => 'neuanlegen', 'info' => "neues Allgemeines Modul"));
         else $form_buttons = array();
-        
+
         foreach ($stm_arr as $id => $name) {
             $form_fields["$id"] = array('type' => 'NoForm', 'info' => $name);
             $form_buttons["sel_$id"] = array('type' => 'edit', 'info' => "Allgemeines Modul bearbeiten");
             if ($perm->have_perm("admin"))
                 $form_buttons["del_$id"] = array('type' => 'loeschen', 'info' => "Allgemeines Modul entfernen");
-            
+
             $form_buttons["info_$id"] = array('type' => 'details', 'info' => "Details des Allgemeines Modul");
         }
         if (!is_object($this->sel_stm_form)){
@@ -70,13 +70,13 @@ class InstanceStmControl {
             $this->sel_stm_form->form_buttons = $form_buttons;
         }
         return true;
-    }   
-    
+    }
+
     function setDeleteFormObject(){
-        
-                
-        $form_fields = array(   
-        );      
+
+
+        $form_fields = array(
+        );
 
         $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
                             'continue' => array('type' => 'loeschen', 'info' => _("Das Modul loeschen")),
@@ -88,13 +88,13 @@ class InstanceStmControl {
             $this->delete_form->form_fields = $form_fields;
         }
         return true;
-    }   
+    }
 
     function setInfoFormObject(){
-        
-                
-        $form_fields = array(   
-        );      
+
+
+        $form_fields = array(
+        );
 
         $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
                             );
@@ -105,38 +105,38 @@ class InstanceStmControl {
             $this->info_form->form_fields = $form_fields;
         }
         return true;
-    }   
-        
+    }
+
     function setStgInputFormObject($sel_abschl, $sel_stg, $sel_stm){
 
         $abschl = AbstractStm::GetAbschluesse();
         $abschl_arr = array();
-        
-        foreach($abschl as $abschlid => $name) 
+
+        foreach($abschl as $abschlid => $name)
             $abschl_arr[] = array('name' => $name, 'value' => $abschlid);
 
         if (!$sel_abschl)
-            $sel_abschl = $abschl_arr[0]['value'];  
+            $sel_abschl = $abschl_arr[0]['value'];
 
         $stgaenge = AbstractStm::GetStg($sel_abschl);
         $stg_arr = array();
-        foreach($stgaenge as $stg => $name) 
+        foreach($stgaenge as $stg => $name)
             $stg_arr[] = array('name' => $name, 'value' => $stg);
 
         if (!$sel_stg)
-            $sel_stg = $stg_arr[0]['value'];    
+            $sel_stg = $stg_arr[0]['value'];
 
         $abs_stms = AbstractStm::GetAbsStms($sel_abschl, $sel_stg , !$GLOBALS['perm']->have_perm('root'));
         $abs_stm_arr = array();
-        foreach($abs_stms as $name => $id) 
+        foreach($abs_stms as $name => $id)
             $abs_stm_arr[] = array('name' => $name, 'value' => $id);
 
         // Ja das stimmt so Studiengang (beamtendeutsch) = Abschluss (HIS) und Studienprogramm(beamtendeutsch) = Studiengang (HIS)
-        $form_fields = array(   
+        $form_fields = array(
             'abschl_list'   =>  array('type' => 'select', 'caption' => 'Studiengang', 'info' => "", 'options' => $abschl_arr, 'default_value' => $sel_abschl),
             'stg_list'  =>  array('type' => 'select', 'caption' => 'Studienprogramm', 'info' => '', 'options' => $stg_arr),
             'abs_stm_list'  =>  array('type' => 'select', 'caption' => 'Allgemeines Modul', 'info' => '', 'options' => $abs_stm_arr)
-        );      
+        );
 
         $form_buttons = array(
                             'back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
@@ -150,12 +150,12 @@ class InstanceStmControl {
             $this->stg_input_form->form_fields = $form_fields;
         }
         return true;
-    }   
+    }
 
     function setAbsSummaryForm(){
-        
-                
-        $form_fields = array();     
+
+
+        $form_fields = array();
 
         $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
                             'continue' => array('type' => 'weiter', 'info' => _("Das Modul abspeichern")),
@@ -167,15 +167,15 @@ class InstanceStmControl {
             $this->abs_summary_form->form_fields = $form_fields;
         }
         return true;
-    }   
-        
+    }
+
     function setAddInfoFormObject(){
         $semesterdata = new SemesterData();
-        
+
         $cur_data = $semesterdata->getAllSemesterData();
         $sem_arr = array();
-        
-        foreach ($cur_data as $sem) 
+
+        foreach ($cur_data as $sem)
                 $sem_arr[] = array('name' => $sem['name'], 'value' => $sem['semester_id']);
 
         $inst_arr = $this->getMyInst();
@@ -190,27 +190,27 @@ class InstanceStmControl {
             $cur_responsible = $this->inst_stm->getResponsible();
         }
         if(!$cur_sem_id) $cur_sem_id = $GLOBALS['_default_sem'];
-        
+
         $form_fields = array(   'title' =>  array('type' => 'text', 'caption' => 'semesterspezifischer Titel', 'info' => 'Der Name des anzulegenden Studienmoduls kann hier nochmal ge&auml;ndert werden. Das Allgemeine Modul bleibt davon unber&uuml;hrt.', 'default_value' => $title),
                                 'subtitle' =>   array('type' => 'text', 'caption' => 'semesterspezifischer Untertitel', 'info' => 'Der Untertitel des anzulegenden Studienmoduls kann hier nochmal ge&auml;ndert werden. Das Allgemeine Modul bleibt davon unber&uuml;hrt.', 'default_value' => $subtitle),
                                 'topics' =>     array('type' => 'textarea', 'caption' => 'semesterspezifische Inhalte', 'info' => 'Die behandelten Themen k&ouml;nnen hier noch einmal erweitert werden. Sie kommen zu den Themen des allgemeinen Moduls hinzu.', 'default_value' => $topics),
                                 'hints' =>  array('type' => 'textarea', 'caption' => 'semesterspezifische Hinweise', 'info' => 'Die behandelten Themen k&ouml;nnen hier noch einmal erweitert werden. Sie kommen zu den Themen des allgemeinen Moduls hinzu.', 'default_value' => $hints),
                                 'semester_id' => array('type' => 'select', 'caption' => 'Semester', 'info' => '', 'options' => $sem_arr, 'required' => 'true', 'default_value' => $cur_sem_id),
-                                'homeinst' => array('type' => 'select', 'caption' => 'Heimat-Einrichtung', 'info' => '', 'options' => $inst_arr, 'required' => 'true', 'default_value' => $cur_homeinst),                       
+                                'homeinst' => array('type' => 'select', 'caption' => 'Heimat-Einrichtung', 'info' => '', 'options' => $inst_arr, 'required' => 'true', 'default_value' => $cur_homeinst),
                                 'search_user' => array('type' => 'text', 'caption' => 'Modulverantwortlicher', 'info' => 'Hier muss der Modulverantwortliche angegeben werden. Nutzen Sie dazu die freie Suche, die allerdings nur nach Dozenten in der ausgew&auml;hlten Heimateinrichtung sucht.', 'required' => 'true')
-        );      
+        );
 
         if (!is_array($this->users_found))
             $this->users_found = array();
-            
-        if ($cur_responsible && 
+
+        if ($cur_responsible &&
                 array_search(array('name' => $this->inst_stm->getResponsibleName(),'value' => $cur_responsible), $this->users_found)==0)
             $this->users_found[] = array('name' => $this->inst_stm->getResponsibleName(),'value' => $cur_responsible);
-        
+
         if ($this->users_found) {
             $form_fields['responsible'] = array('type' => 'select', 'caption' => '', 'info' => '', 'options' => $this->users_found, 'default_value' => $cur_responsible);
         }
-        
+
         $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
                             'reset' => array('type' => 'zuruecksetzen', 'info' => _("Formularfelder leeren")),
                             'continue' => array('type' => 'weiter', 'info' => _("Dieses Formular abschicken")),
@@ -225,20 +225,20 @@ class InstanceStmControl {
             $this->add_info_form->form_fields = $form_fields;
         }
         return true;
-    }   
+    }
 
     function setSelElementgroupForm(){
 
-        $form_fields = array(   
-        );      
-        
+        $form_fields = array(
+        );
+
         $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
                             'continue' => array('type' => 'weiter', 'info' => _("Dieses Formular abschicken")));
 
-        for ($i = 0; $i < count($this->abs_stm->elements); $i++) {                  
+        for ($i = 0; $i < count($this->abs_stm->elements); $i++) {
             $form_buttons["sel_$i"] = array('type' => 'auswaehlen', 'info' => _("Diese Kombination benutzen"));
         }
-        
+
         if (!is_object($this->sel_elementgroup_form)){
             $this->sel_elementgroup_form = new StudipForm($form_fields, $form_buttons, "sel_elementgroup_form", false);
         } else {
@@ -246,18 +246,18 @@ class InstanceStmControl {
             $this->sel_elementgroup_form->form_buttons = $form_buttons;
         }
         return true;
-    }   
+    }
 
     function setFillGroupForm(){
         global $stm_inst_data;
 
         $group_index = $stm_inst_data["sel_group"];
-        $form_fields = array(   
-        );      
-        
+        $form_fields = array(
+        );
+
         $form_buttons = array('continue' => array('type' => 'fertigstellen', 'info' => _("Dieses Formular abschicken")));
-    
-        for ($i = 0; $i < count($this->sel_group); $i++) {                  
+
+        for ($i = 0; $i < count($this->sel_group); $i++) {
             $form_buttons["fill_$i"] = array('type' => 'zuweisen', 'info' => _("Gewaehlte Veranstaltung zuweisen"));
             for ($j = 0; $j < count($this->inst_stm->elements[$group_index][$i]); $j++) {
                 $form_buttons["remove_". $i . "_" . $j] = array('type' => Assets::image_path('icons/16/blue/trash.png'), 'info' => _("Diese Veranstaltung entfernen"), 'is_picture' => 'true');
@@ -271,16 +271,16 @@ class InstanceStmControl {
             $this->fill_group_form->form_buttons = $form_buttons;
         }
         return true;
-    }   
+    }
 
     function setSummaryForm(){
 
         if ($this->inst_stm)
             $cur_complete = $this->inst_stm->getComplete();
-        else 
-            $cur_complete = false;  
-        
-        $form_fields = array('complete' => array('type' => 'checkbox', 'caption' => 'Modul vollst&#228;ndig', 'info' => '', 'default_value' => $cur_complete));     
+        else
+            $cur_complete = false;
+
+        $form_fields = array('complete' => array('type' => 'checkbox', 'caption' => 'Modul vollst&#228;ndig', 'info' => '', 'default_value' => $cur_complete));
 
         $form_buttons = array('back' => array('type' => 'zurueck', 'info' => _("Zum vorherigen Formular")),
                             'continue' => array('type' => 'speichern', 'info' => _("Das Modul abspeichern")),
@@ -292,7 +292,7 @@ class InstanceStmControl {
             $this->summary_form->form_fields = $form_fields;
         }
         return true;
-    }   
+    }
 
     function getMyStmInstances() {
 
@@ -302,8 +302,8 @@ class InstanceStmControl {
         if ($perm->get_perm() == 'dozent'){
             $db->query("SELECT stm_instances.stm_instance_id, title FROM stm_instances  NATURAL JOIN  stm_instances_text WHERE stm_instances_text.lang_id='".LANGUAGE_ID."'  AND responsible='" . $user->id . "' ORDER BY title");
         } elseif ($perm->get_perm() == 'admin'){
-            $db->query("SELECT stm_instances.stm_instance_id, title 
-                        FROM stm_instances  NATURAL JOIN  stm_instances_text 
+            $db->query("SELECT stm_instances.stm_instance_id, title
+                        FROM stm_instances  NATURAL JOIN  stm_instances_text
                         WHERE stm_instances_text.lang_id='".LANGUAGE_ID."'
                         AND homeinst IN (
                         SELECT institut_id
@@ -319,15 +319,15 @@ class InstanceStmControl {
                         AND c.fakultaets_id != c.institut_id )
                         WHERE user_id = '" . $user->id . "'
                         AND inst_perms = 'admin'
-                        ) ORDER BY title");         
+                        ) ORDER BY title");
         } else {
-            $db->query("SELECT stm_instance_id, title FROM stm_instances_text WHERE lang_id='".LANGUAGE_ID."' ORDER BY title");         
+            $db->query("SELECT stm_instance_id, title FROM stm_instances_text WHERE lang_id='".LANGUAGE_ID."' ORDER BY title");
         }
-        if (!$db->num_rows()) 
+        if (!$db->num_rows())
             return array();
 
         $stm_arr = array();
-        
+
         while ($db->next_record()) {
             $stm_arr[$db->f('stm_instance_id')] = $db->f("title");
         }
@@ -338,32 +338,32 @@ class InstanceStmControl {
 
         static $vis;
         global $user, $perm;
-            
+
         $GLOBALS['sess']->register('stm_inst_data');
-        
+
         global $stm_inst_data;
-        
+
         // erstmal alle Daten wieder herstellen
-        
-        if (isset($stm_inst_data["abs_stm_id"])) 
+
+        if (isset($stm_inst_data["abs_stm_id"]))
             $this->abs_stm = AbstractStm::GetInstance($stm_inst_data['abs_stm_id']);
-                        
+
         $this->users_found = $stm_inst_data["users_found"];
 
-        if (isset($stm_inst_data["cur_sem_id"])) 
+        if (isset($stm_inst_data["cur_sem_id"]))
             $this->cur_seminar = Seminar::GetInstance($stm_inst_data['cur_sem_id']);
-            
-        if (isset($stm_inst_data["is_edit"])) 
-            $is_edit = $stm_inst_data["is_edit"];
-        else 
-            $is_edit = false;   
 
-        if (isset($stm_inst_data["inst_stm_vals"])) { 
+        if (isset($stm_inst_data["is_edit"]))
+            $is_edit = $stm_inst_data["is_edit"];
+        else
+            $is_edit = false;
+
+        if (isset($stm_inst_data["inst_stm_vals"])) {
             $this->inst_stm = InstanceStm::GetInstance();
             $this->inst_stm->setValues($stm_inst_data["inst_stm_vals"]);
         }
-        
-        if (isset($stm_inst_data["sel_group"])) 
+
+        if (isset($stm_inst_data["sel_group"]))
             $this->sel_group = $this->abs_stm->elements[$stm_inst_data["sel_group"]];
 
         if ($vis == null)
@@ -373,8 +373,8 @@ class InstanceStmControl {
         $this->sem_browse = new SemBrowse($init_data);
         $this->sem_browse->target_url = "stm_instance_assi.php";
         $this->sem_browse->target_id = "sem_id";
-        
-        $this->setSelStmForm(); 
+
+        $this->setSelStmForm();
         $this->setStgInputFormObject($stm_inst_data['cur_abschl'], $stm_inst_data['cur_stg'], $stm_inst_data['cur_abs_stm']);
         $this->setAbsSummaryForm();
         $this->setAddInfoFormObject();
@@ -393,7 +393,7 @@ class InstanceStmControl {
                 $GLOBALS['sess']->unregister('stm_inst_data');
                 $vis->showStgInputForm($this->stg_input_form);
             }
-            else {              
+            else {
                 foreach ($this->sel_stm_form->form_fields as $name => $field) {
                     if ($this->sel_stm_form->IsClicked("sel_$name")) {
                         $this->inst_stm = InstanceStm::GetInstance($name);
@@ -418,7 +418,7 @@ class InstanceStmControl {
                     }
                 }
             }
-        }       
+        }
         // INFOFORM
         elseif ($this->info_form->IsSended()) {
             if ($this->info_form->IsClicked("back")) {
@@ -436,13 +436,13 @@ class InstanceStmControl {
                     $vis->showError($this->inst_stm->msg);
                     $vis->showSummaryForm($this->delete_form, $this->inst_stm, $this->abs_stm);
                 }
-                else {  
+                else {
                     $GLOBALS['sess']->unregister('stm_inst_data');
                     unset($this->inst_stm);
                     unset($this->abs_stm);
                     unset($this->cur_seminar);
                     $this->setSelStmForm();
-                    $vis->showError(array(array('msg', sprintf(_("Das konkrete Modul wurde entfernt")))));  
+                    $vis->showError(array(array('msg', sprintf(_("Das konkrete Modul wurde entfernt")))));
                     $vis->showSelStmForm($this->sel_stm_form);
                     return;
                 }
@@ -459,7 +459,7 @@ class InstanceStmControl {
                     $vis->showError(array(array('error', sprintf(_("Es muss ein Allgemeines Modul ausgew&auml;hlt werden.")))));
                     $vis->showStgInputForm($this->stg_input_form);
                 }
-                else 
+                else
                 {
                     $this->abs_stm = AbstractStm::GetInstance($this->stg_input_form->form_values['abs_stm_list']);
                     $this->inst_stm = InstanceStm::GetInstance();
@@ -470,15 +470,15 @@ class InstanceStmControl {
                                                         'topics' => $this->abs_stm->getTopics(),
                                                         'hints' => $this->abs_stm->getHints()
                                                         ));
-                    $vis->showAbsSummaryForm($this->abs_summary_form, $this->abs_stm);      
+                    $vis->showAbsSummaryForm($this->abs_summary_form, $this->abs_stm);
                 }
             }
             elseif ($this->stg_input_form->IsClicked("back")) {
                 $vis->showSelStmForm($this->sel_stm_form);
             }
             else { // select-Felder geaendert
-                $stm_inst_data['cur_abschl'] = $this->stg_input_form->form_values['abschl_list'];//             
-                $stm_inst_data['cur_stg'] = $this->stg_input_form->form_values['stg_list'];//               
+                $stm_inst_data['cur_abschl'] = $this->stg_input_form->form_values['abschl_list'];//
+                $stm_inst_data['cur_stg'] = $this->stg_input_form->form_values['stg_list'];//
                 $this->setStgInputFormObject($stm_inst_data['cur_abschl'], $stm_inst_data['cur_stg'], $stm_inst_data['cur_abs_stm']);
                 $vis->showStgInputForm($this->stg_input_form);
             }
@@ -486,9 +486,9 @@ class InstanceStmControl {
         // ABSTRAKTE ZUSAMMENFASSUNG FORMULAR
         elseif ($this->abs_summary_form->IsSended()) {
             if ($this->abs_summary_form->IsClicked("continue")) {
-                    $vis->showAddInfoForm($this->add_info_form);        
+                    $vis->showAddInfoForm($this->add_info_form);
             }
-            else { 
+            else {
                 $vis->showStgInputForm($this->stg_input_form);
             }
         }
@@ -500,9 +500,9 @@ class InstanceStmControl {
                 if (count($this->inst_stm->msg) > 0) {
                     $vis->showError($this->inst_stm->msg);
                     $this->inst_stm = array();
-                    $vis->showAddInfoForm($this->add_info_form);        
-                } else 
-                    $vis->showSelElementgroupForm($this->sel_elementgroup_form,$this->abs_stm, $this->inst_stm);                                                
+                    $vis->showAddInfoForm($this->add_info_form);
+                } else
+                    $vis->showSelElementgroupForm($this->sel_elementgroup_form,$this->abs_stm, $this->inst_stm);
             }
             elseif ($this->add_info_form->IsClicked("preview")) {
                 $vis->showAddInfoForm($this->add_info_form);
@@ -510,13 +510,13 @@ class InstanceStmControl {
             elseif ($this->add_info_form->IsClicked("back")) {
                 if ($is_edit)
                     $vis->showSelStmForm($this->sel_stm_form);
-                else                    
+                else
                     $vis->showAbsSummaryForm($this->abs_summary_form, $this->abs_stm);
             }
             elseif ($this->add_info_form->IsClicked("reset")) {
                 $this->add_info_form->doFormReset();
                 $this->setAddInfoFormObject();
-                $vis->showAddInfoForm($this->add_info_form);        
+                $vis->showAddInfoForm($this->add_info_form);
             }
             elseif ($this->add_info_form->IsClicked("search")) {
                 $this->users_found = $this->searchUser($this->add_info_form->form_values['homeinst'], $this->add_info_form->form_values['search_user']);
@@ -524,15 +524,15 @@ class InstanceStmControl {
                     $stm_inst_data['users_found'] = $this->users_found;
                     $this->setAddInfoFormObject();
                 }
-                else 
-                    $vis->showError(array(array('info', sprintf(_("Es wurde kein Nutzer gefunden"))))); 
-                $vis->showAddInfoForm($this->add_info_form);        
+                else
+                    $vis->showError(array(array('info', sprintf(_("Es wurde kein Nutzer gefunden")))));
+                $vis->showAddInfoForm($this->add_info_form);
             }
             else { // select change
                 $this->users_found = null;
                 $stm_inst_data['users_found'] = $this->users_found;
                 $this->setAddInfoFormObject();
-                $vis->showAddInfoForm($this->add_info_form);        
+                $vis->showAddInfoForm($this->add_info_form);
             }
         }
         // DRITTES FORMULAR
@@ -541,7 +541,7 @@ class InstanceStmControl {
                 $vis->showSummaryForm($this->summary_form, $this->inst_stm, $this->abs_stm);
             }
             elseif ($this->sel_elementgroup_form->IsClicked("back")) {
-                $vis->showAddInfoForm($this->add_info_form);        
+                $vis->showAddInfoForm($this->add_info_form);
             }
             else { // pruefen, ob Element gewählt wurde
                 for ($i=0; $i<count($this->abs_stm->elements); $i++) {
@@ -549,45 +549,45 @@ class InstanceStmControl {
                         $stm_inst_data['sel_group'] = $i;
                         $this->sel_group = $this->abs_stm->elements[$i];
                         $this->setFillGroupForm();
-                        $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);                     
+                        $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);
                     }
                 }
             }
         }
         // FILL_GROUP FORMULAR
-        elseif ($this->fill_group_form->IsSended() 
+        elseif ($this->fill_group_form->IsSended()
         || $this->sem_browse->search_obj->search_button_clicked
         || $_REQUEST["send_from_search"]) {
             if ($this->fill_group_form->IsClicked("continue")) {
-                $vis->showSelElementgroupForm($this->sel_elementgroup_form,$this->abs_stm, $this->inst_stm);                                                
+                $vis->showSelElementgroupForm($this->sel_elementgroup_form,$this->abs_stm, $this->inst_stm);
             }
             elseif($_REQUEST["send_from_search"]) {
                 $this->cur_seminar = Seminar::GetInstance($_REQUEST["sem_id"]);
-                $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group'], $this->cur_seminar);                     
+                $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group'], $this->cur_seminar);
             }
-            else 
+            else
             {
                 $button_clicked = false;
                 for ($i=0; $i<count($this->sel_group); $i++) {
                     if ($this->fill_group_form->IsClicked("fill_$i")) {
-                        $button_clicked = true; 
+                        $button_clicked = true;
                         $this->inst_stm->addElement(array("sem_id" => $this->cur_seminar->getId(), "element_id" => $this->sel_group[$i]->getId()), $stm_inst_data['sel_group'], $i);
                         $this->setFillGroupForm();
-                        $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);                     
+                        $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);
                         break;
                     }
                     for ($j=0; $j<count($this->inst_stm->elements[($stm_inst_data['sel_group'])][$i]); $j++) {
                         if ($this->fill_group_form->IsClicked("remove_" . $i ."_" .$j)) {
-                            $button_clicked = true; 
+                            $button_clicked = true;
                             $this->inst_stm->removeElement($stm_inst_data['sel_group'], $i, $j);
                             $this->setFillGroupForm();
-                            $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);                     
+                            $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);
                             break;
                         }
                     }
                 }
-                if (!$button_clicked) 
-                    $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);                                         
+                if (!$button_clicked)
+                    $vis->showFillGroupForm($this->fill_group_form, $this->sel_group, $this->sem_browse, $this->inst_stm, $stm_inst_data['sel_group']);
             }
         }
         // SUMMARY FORMULAR
@@ -595,74 +595,74 @@ class InstanceStmControl {
             if ($this->summary_form->IsClicked("continue")) {
                 $this->inst_stm->complete = $this->summary_form->form_values['complete'];
                 $this->msg = $this->inst_stm->store($is_edit);
-                    
+
                 if (count($this->msg) != 0) {
                     $vis->showError($this->msg);
-                    $vis->showSummaryForm($this->summary_form, $this->inst_stm, $this->abs_stm);                
+                    $vis->showSummaryForm($this->summary_form, $this->inst_stm, $this->abs_stm);
                 }
-                else {  
+                else {
                     $GLOBALS['sess']->unregister('stm_inst_data');
                     $this->setStgInputFormObject(null, null, null);
-                    $vis->showError(array(array('msg', sprintf(_("Das Modul wurde erfolgreich angelegt")))));   
+                    $vis->showError(array(array('msg', sprintf(_("Das Modul wurde erfolgreich angelegt")))));
                     $this->setSelStmForm();
                     $vis->showSelStmForm($this->sel_stm_form);
                     return;
                 }
             }
-            else { 
-                $vis->showSelElementgroupForm($this->sel_elementgroup_form,$this->abs_stm, $this->inst_stm);                                                
+            else {
+                $vis->showSelElementgroupForm($this->sel_elementgroup_form,$this->abs_stm, $this->inst_stm);
             }
         }
         // sonst ANFANG
-        else 
+        else
             $vis->showSelStmForm($this->sel_stm_form);
-            
-            
-        // Sessionvariablen setzen  
+
+
+        // Sessionvariablen setzen
         if ($this->abs_stm) {
             $stm_inst_data['abs_stm_id'] = $this->abs_stm->GetId();
-        }   
+        }
 
         if ($this->inst_stm) {
             $stm_inst_data['inst_stm_vals'] = $this->inst_stm->getValues();
-        }   
+        }
 
         if ($this->cur_seminar) {
             $stm_inst_data['cur_sem_id'] = $this->cur_seminar->getId();
-        }   
-        
+        }
+
         $stm_inst_data["is_edit"] = $is_edit;
     }
-    
+
     function getMyInst() {
 
         global $perm;
         global $user;
-        
-        $db = new DB_Seminar;   
-        $db2 = new DB_Seminar;  
-        
+
+        $db = new DB_Seminar;
+        $db2 = new DB_Seminar;
+
         if (!$perm->have_perm('admin'))
-            $db->query("SELECT Name, a.Institut_id AS Institut_id,IF(a.Institut_id=fakultaets_id,1,0) AS is_fak,inst_perms FROM user_inst a LEFT JOIN Institute b ON a.Institut_id=b.Institut_id WHERE (user_id = '" . $user->id . "' AND inst_perms = 'dozent' ) ORDER BY is_fak,Name") ;      
+            $db->query("SELECT Name, a.Institut_id AS Institut_id,IF(a.Institut_id=fakultaets_id,1,0) AS is_fak,inst_perms FROM user_inst a LEFT JOIN Institute b ON a.Institut_id=b.Institut_id WHERE (user_id = '" . $user->id . "' AND inst_perms = 'dozent' ) ORDER BY is_fak,Name") ;
         elseif (!$perm->have_perm('root'))
-            $db->query("SELECT Name, a.Institut_id AS Institut_id ,IF(a.Institut_id=fakultaets_id,1,0) AS is_fak,inst_perms FROM user_inst a LEFT JOIN Institute b ON a.Institut_id=b.Institut_id WHERE (user_id = '" . $user->id . "' AND inst_perms = 'admin') ORDER BY is_fak,Name") ;       
-        else 
-            $db->query("SELECT Name, Institut_id, '1' AS is_fak,'admin' AS inst_perms FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name") ;      
-        
-        if (!$db->num_rows()) 
+            $db->query("SELECT Name, a.Institut_id AS Institut_id ,IF(a.Institut_id=fakultaets_id,1,0) AS is_fak,inst_perms FROM user_inst a LEFT JOIN Institute b ON a.Institut_id=b.Institut_id WHERE (user_id = '" . $user->id . "' AND inst_perms = 'admin') ORDER BY is_fak,Name") ;
+        else
+            $db->query("SELECT Name, Institut_id, '1' AS is_fak,'admin' AS inst_perms FROM Institute WHERE Institut_id=fakultaets_id ORDER BY Name") ;
+
+        if (!$db->num_rows())
             return array();
 
         $inst_arr = array();
         while ($db->next_record()) {
             $inst_arr[] = array('name' => $db->f("Name") , 'value' => $db->f('Institut_id'));
-                    
+
             if ($db->f("is_fak") && $db->f("inst_perms") == "admin") {
-                $db2->query("SELECT Institut_id, Name FROM Institute 
+                $db2->query("SELECT Institut_id, Name FROM Institute
                      WHERE fakultaets_id= '" . $db->f("Institut_id") . "' AND Institut_id!= '" . $db->f("Institut_id") . "' ORDER BY Name");
 
                 if ($db2->num_rows()) {
                     while ($db2->next_record()) {
-                        $inst_arr[] = array('name' => '&#160;&#160;&#160;&#160;' . $db2->f('Name') , 'value' => $db2->f('Institut_id'));    
+                        $inst_arr[] = array('name' => '&#160;&#160;&#160;&#160;' . $db2->f('Name') , 'value' => $db2->f('Institut_id'));
                     }
                 }
 
@@ -674,7 +674,7 @@ class InstanceStmControl {
 
     function searchUser($inst_id, $search_str) {
         global $_fullname_sql;
-        $db = new DB_Seminar;   
+        $db = new DB_Seminar;
 
         $db->query("SELECT DISTINCT user_info.user_id AS user_id, " . $_fullname_sql['full_rev'] . " AS fullname FROM user_inst LEFT JOIN auth_user_md5 USING (user_id) LEFT JOIN user_info USING(user_id) WHERE Institut_id = '" . $inst_id . "' AND inst_perms = 'dozent'  AND (username LIKE '%" . $search_str . "%' OR Vorname LIKE '%" . $search_str . "%' OR Nachname LIKE '%" . $search_str . "%') ORDER BY Nachname");
 
@@ -692,7 +692,7 @@ class InstanceStmControl {
 $perm->check("dozent");
 // Start of Output
 PageLayout::setTitle(_("Konkrete Studienmodule bearbeiten"));
-Navigation::activateItem('/admin/tools/modules');
+Navigation::activateItem('/tools/modules');
 include ("lib/include/html_head.inc.php"); // Output of html head
 include ("lib/include/header.php");   // Output of Stud.IP head
 

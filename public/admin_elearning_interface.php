@@ -40,7 +40,7 @@ require_once ('lib/elearning/ConnectedCMS.class.php');
 
 PageLayout::setHelpKeyword("Basis.Ilias");
 PageLayout::setTitle(_("Verwaltung der Lernmodul-Schnittstelle"));
-Navigation::activateItem('/admin/tools/elearning');
+Navigation::activateItem('/admin/config/elearning');
 
 include ('lib/include/html_head.inc.php'); // Output of html head
 include ('lib/include/header.php');   // Output of Stud.IP head

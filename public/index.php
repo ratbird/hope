@@ -40,7 +40,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
     // store last language click
     if (strlen($_SESSION['forced_language'])) {
         $db->query("UPDATE user_info SET preferred_language = '".$_SESSION['forced_language']."' WHERE user_id='$user->id'");
-        $_language = $_SESSION['forced_language'];
+        $_language = $_SESSION['_language'] = $_SESSION['forced_language'];
     }
     $_SESSION['forced_language'] = $forced_language = null;
 }

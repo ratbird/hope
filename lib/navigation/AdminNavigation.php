@@ -144,6 +144,8 @@ class AdminNavigation extends Navigation
         }
 
         if ($perm->have_perm('root')) {
+            $navigation->addSubNavigation('plugins', new Navigation(_('Plugins'), 'dispatch.php/admin/plugin'));
+            $navigation->addSubNavigation('roles', new Navigation(_('Rollen'), 'dispatch.php/admin/role'));
             $navigation->addSubNavigation('user_domains', new Navigation(_('Nutzerdomänen'), 'dispatch.php/admin/domain'));
             $navigation->addSubNavigation('datafields', new Navigation(_('Datenfelder'), 'dispatch.php/admin/datafields'));
             $navigation->addSubNavigation('configuration', new Navigation(_('Konfiguration'), 'dispatch.php/admin/configuration/configuration'));
@@ -170,6 +172,18 @@ class AdminNavigation extends Navigation
             if (get_config('SMILEYADMIN_ENABLE')) {
                 $navigation->addSubNavigation('smileys', new Navigation(_('Smileys'), 'admin_smileys.php'));
             }
+
+            if (get_config('STM_ENABLE')) {
+                $navigation->addSubNavigation('abstract_modules', new Navigation(_('Studienmodule'), 'stm_abstract_assi.php'));
+            }
+
+            if (get_config('ELEARNING_INTERFACE_ENABLE')) {
+                $navigation->addSubNavigation('elearning', new Navigation(_('Lernmodul-Schnittstelle'), 'admin_elearning_interface.php'));
+            }
+
+            if (get_config('WEBSERVICES_ENABLE')) {
+                $navigation->addSubNavigation('webservice_access', new Navigation(_('Webservice'), 'dispatch.php/admin/webservice_access'));
+            }
         }
 
         $this->addSubNavigation('config', $navigation);
@@ -181,43 +195,6 @@ class AdminNavigation extends Navigation
             $navigation->addSubNavigation('admin', new Navigation(_('Einstellungen'), 'dispatch.php/event_log/admin'));
             $this->addSubNavigation('log', $navigation);
         }
-
-        // admin tools
-        $navigation = new Navigation(_('Tools'));
-
-        // plugin and role administration
-        if ($perm->have_perm('root')) {
-            $navigation->addSubNavigation('plugins', new Navigation(_('Pluginverwaltung'), 'dispatch.php/admin/plugin'));
-            $navigation->addSubNavigation('roles', new Navigation(_('Rollenverwaltung'), 'dispatch.php/admin/role'));
-        }
-
-        $navigation->addSubNavigation('show_admission', new Navigation(_('Laufende Anmeldeverfahren'), 'show_admission.php'));
-
-        if (get_config('LITERATURE_ENABLE')) {
-            $navigation->addSubNavigation('literature', new Navigation(_('Literaturübersicht'), 'admin_literatur_overview.php'));
-        }
-
-        if (get_config('STM_ENABLE')) {
-            $navigation->addSubNavigation('modules', new Navigation(_('Konkrete Studienmodule'), 'stm_instance_assi.php'));
-        }
-
-        if ($perm->have_perm('root')) {
-            if (get_config('STM_ENABLE')) {
-                $navigation->addSubNavigation('abstract_modules', new Navigation(_('Allgemeine Studienmodule'), 'stm_abstract_assi.php'));
-            }
-
-            if (get_config('ELEARNING_INTERFACE_ENABLE')) {
-                $navigation->addSubNavigation('elearning', new Navigation(_('Lernmodul-Schnittstelle'), 'admin_elearning_interface.php'));
-            }
-
-            if (get_config('WEBSERVICES_ENABLE')) {
-                $navigation->addSubNavigation('webservice_access', new Navigation(_('Webservice Zugriff'), 'dispatch.php/admin/webservice_access'));
-            }
-
-            $navigation->addSubNavigation('db_integrity', new Navigation(_('DB Integrität'), 'admin_db_integrity.php'));
-        }
-
-        $this->addSubNavigation('tools', $navigation);
 
         // link to course
         if ($SessSemName['class'] == 'inst') {

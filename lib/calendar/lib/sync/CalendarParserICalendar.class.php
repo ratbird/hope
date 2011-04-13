@@ -5,12 +5,12 @@
 # Lifter010: TODO
 /**
 * CalendarParserICalendar.class.php
-* 
+*
 * Based on the iCalendar parser from The Horde Project
 * www.horde.org
 * horde/lib/iCalendar.php,v 1.19
 * Copyright 2003 Mike Cochrane <mike@graftonhall.co.nz>
-* 
+*
 *
 * @author       Peter Thienel <pthienel@web.de>, Suchi & Berg GmbH <info@data-quest.de>
 * @access       public
@@ -22,7 +22,7 @@
 // +---------------------------------------------------------------------------+
 // This file is part of Stud.IP
 // CalendarParserICalender.class.php
-// 
+//
 // Copyright (C) 2003 Peter Thienel <pthienel@web.de>,
 // Suchi & Berg GmbH <info@data-quest.de>
 // +---------------------------------------------------------------------------+
@@ -48,32 +48,32 @@ require_once("$RELATIVE_PATH_CALENDAR/lib/CalendarEvent.class.php");
 class CalendarParserICalendar extends CalendarParser {
 
     function CalendarParserICalendar () {
-        
+
         parent::CalendarParser();
         $this->type = "iCalendar";
     }
-    
+
     function getCount ($data) {
         global $_calendar_error;
-        
+
         if (!preg_match_all('/(BEGIN:VEVENT)/', $data, $matches)) {
             $_calendar_error->throwError(ERROR_MESSAGE,
                     _("Die Datei enthält keine Termine."));
         }
-        
+
         return sizeof($matches[1]);
     }
 
     /**
    * Parse a string containing vCalendar data.
-   * 
+   *
      * @access private
    * @param String $text  The data to parse
    *
    */
     function parse ($text, $ignore) {
         global $_calendar_error;
-        
+
         // UTF-8 decoding
         $text = utf8_decode($text);
         if (!preg_match('/(BEGIN:VCALENDAR(\r\n|\r|\n))([\W\w]*)(END:VCALENDAR\r?\n?)/', $text, $matches)) {
@@ -81,10 +81,10 @@ class CalendarParserICalendar extends CalendarParser {
                     _("Die Datei ist keine g&uuml;ltige iCalendar-Datei!"));
             return FALSE;
         }
-        
+
         // Unfold any folded lines
         $v_calendar = preg_replace('/(\r|\n)+ /', '', $matches[3]);
-        
+
         // All sub components
         $matches = null;
         if (!preg_match_all('/(BEGIN:VEVENT)(\r\n|\r|\n)([\w\W]*?)(END:VEVENT)(\r\n|\r|\n)/',
@@ -92,7 +92,7 @@ class CalendarParserICalendar extends CalendarParser {
             $_calendar_error->throwError(ERROR_MESSAGE, _("Die Datei enthält keine Termine."));
             return FALSE;
         }
-        
+
         foreach ($matches[0] as $v_event) {
             $properties['CLASS'] = 'PRIVATE';
             // Parse the remain attributes
@@ -104,26 +104,26 @@ class CalendarParserICalendar extends CalendarParser {
                     $tag = $parts[1];
                     $value = $parts[4];
                     $params = array();
-                    
+
                     if (!empty($parts[2])) {
                         preg_match_all('/;(([^;=]*)(=([^;]*))?)/', $parts[2], $param_parts);
                         foreach ($param_parts[2] as $key => $param_name)
                             $params[strtoupper($param_name)] = strtoupper($param_parts[4][$key]);
-                        
+
                         if ($params['ENCODING']) {
                             switch ($params['ENCODING']) {
                                 case 'QUOTED-PRINTABLE':
                                     $value = $this->_qp_decode($value);
                                     break;
-                                        
+
                                 case 'BASE64':
                                     $value = base64_decode($value);
                                     break;
                             }
                         }
-                        
+
                     }
-                                        
+
                     switch ($tag) {
                         // text fields
                         case 'DESCRIPTION':
@@ -134,7 +134,7 @@ class CalendarParserICalendar extends CalendarParser {
                             $value = preg_replace('/\\\\n/', "\n", $value);
                             $properties[$tag] = ($value);
                             break;
-    
+
                         // Date fields
                         case 'DCREATED': // vCalendar property name for "CREATED"
                             $tag = "CREATED";
@@ -144,7 +144,7 @@ class CalendarParserICalendar extends CalendarParser {
                         case 'LAST-MODIFIED':
                             $properties[$tag] = $this->_parseDateTime($value);
                             break;
-    
+
                         case 'DTSTART':
                         case 'DTEND':
                             // checking for day events
@@ -154,7 +154,7 @@ class CalendarParserICalendar extends CalendarParser {
                         case 'RECURRENCE-ID':
                             $properties[$tag] = $this->_parseDateTime($value);
                             break;
-    
+
                         case 'RDATE':
                             if (array_key_exists('VALUE', $params)) {
                                 if ($params['VALUE'] == 'PERIOD') {
@@ -168,7 +168,7 @@ class CalendarParserICalendar extends CalendarParser {
                                 $properties[$tag] = $this->_parseDateTime($value);
                             }
                             break;
-    
+
                         case 'TRIGGER':
                             if (array_key_exists('VALUE', $params)) {
                                 if ($params['VALUE'] == 'DATE-TIME') {
@@ -182,37 +182,30 @@ class CalendarParserICalendar extends CalendarParser {
                                 $properties[$tag] = $this->_parseDuration($value);
                             }
                             break;
-    
+
                         case 'EXDATE':
-                            $properties[$tag] = array();
-                            // comma seperated dates
-                            $values = array();
-                            $dates = array();
-                            preg_match_all('/,([^,]*)/', ',' . $value, $values);
-    
-                            foreach ($values as $value) {
+                            // exceptions as comma separated dates
+                            $exdates = explode(',', $value);
+                            foreach ($exdates as $exdate) {
                                 if (array_key_exists('VALUE', $params)) {
                                     if ($params['VALUE'] == 'DATE-TIME') {
-                                        $dates[] = $this->_parseDateTime($value);
+                                        $properties['EXDATE'][] = $this->_parseDateTime(trim($exdate));
                                     }
                                     else if ($params['VALUE'] == 'DATE') {
-                                        $dates[] = $this->_parseDate($value);
+                                        $properties['EXDATE'][] = $this->_parseDate(trim($exdate));
                                     }
                                 }
                                 else {
-                                    $dates[] = $this->_parseDateTime($value);
+                                    $properties['EXDATE'][] = $this->_parseDateTime(trim($exdate));
                                 }
                             }
-                            // some iCalendar exports (e.g. KOrganizer) use an EXDATE-entry for every
-                            // exception, so we have to merge them
-                            array_merge((array)$properties[$tag], (array)$dates);
                             break;
-    
+
                         // Duration fields
                         case 'DURATION':
                             $attibutes[$tag] = $this->_parseDuration($value);
                             break;
-    
+
                         // Period of time fields
                         case 'FREEBUSY':
                             $values = array();
@@ -221,20 +214,20 @@ class CalendarParserICalendar extends CalendarParser {
                             foreach ($values[1] as $value) {
                                 $periods[] = $this->_parsePeriod($value);
                             }
-    
+
                             $properties[$tag] = $periods;
                             break;
-    
+
                         // UTC offset fields
                         case 'TZOFFSETFROM':
                         case 'TZOFFSETTO':
                             $properties[$tag] = $this->_parseUtcOffset($value);
                             break;
-                        
+
                         case 'PRIORITY':
                             $properties[$tag] = $this->_parsePriority($value);
                             break;
-                        
+
                         case 'CLASS':
                             switch (trim($value)) {
                                 case 'PUBLIC':
@@ -247,14 +240,14 @@ class CalendarParserICalendar extends CalendarParser {
                                     $properties[$tag] = 'PRIVATE';
                             }
                             break;
-                            
+
                         // Integer fields
                         case 'PERCENT-COMPLETE':
                         case 'REPEAT':
                         case 'SEQUENCE':
                             $properties[$tag] = intval($value);
                             break;
-    
+
                         // Geo fields
                         case 'GEO':
                             $floats = explode(';', $value);
@@ -262,42 +255,46 @@ class CalendarParserICalendar extends CalendarParser {
                             $value['longitude'] = floatval($floats[1]);
                             $properties[$tag] = $value;
                             break;
-    
+
                         // Recursion fields
                         case 'EXRULE':
                         case 'RRULE':
                             $properties[$tag] = $this->_parseRecurrence($value);
                             break;
-                            
+
                         default:
                             // string fields
                             $properties[$tag] = trim($value);
                             break;
                     }
                 }
-                
+
                 if (!$properties['RRULE']['rtype'])
                     $properties['RRULE'] = array('rtype' => 'SINGLE');
-            
+
                 $properties['RRULE'] = CalendarEvent::createRepeat($properties['RRULE'],
                         $properties['DTSTART'], $properties['DTEND']);
-        
+
                 if (!$properties['LAST-MODIFIED'])
                     $properties['LAST-MODIFIED'] = $properties['CREATED'];
-                
+
                 if (!$properties['DTSTART'] || ($properties['EXDATE'] && !$properties['RRULE'])) {
                     $_calendar_error->throwError(ERROR_CRITICAL,
                             _("Die Datei ist keine g&uuml;ltige iCalendar-Datei!"));
                     return FALSE;
                 }
-                
+
                 if (!$properties['DTEND'])
                     $properties['DTEND'] = $properties['DTSTART'];
-                
+
                 // day events starts at 00:00:00 and ends at 23:59:59
                 if ($check['DAY_EVENT'])
                     $properties['DTEND']--;
-                
+
+                if (is_array($properties['EXDATE'])) {
+                    $properties['EXDATE'] = implode(',', $properties['EXDATE']);
+                }
+
                 $this->components[] = $properties;
             }
             else {
@@ -309,7 +306,7 @@ class CalendarParserICalendar extends CalendarParser {
 
         return TRUE;
   }
-        
+
     /**
     * Parse a UTC Offset field
     */
@@ -328,7 +325,7 @@ class CalendarParserICalendar extends CalendarParser {
             return FALSE;
         }
     }
-    
+
     /**
     * Parse a Time Period field
     */
@@ -344,7 +341,7 @@ class CalendarParserICalendar extends CalendarParser {
             return array('start' => $start, 'end' => $end);
         }
     }
-    
+
     /**
      * Parse a DateTime field
      */
@@ -375,7 +372,7 @@ class CalendarParserICalendar extends CalendarParser {
                         $date['month'], $date['mday'], $date['year']);
         }
     }
-    
+
     /**
     * Parse a Time field
     */
@@ -396,7 +393,7 @@ class CalendarParserICalendar extends CalendarParser {
             return FALSE;
         }
     }
-    
+
     /**
     * Parse a Date field
     */
@@ -451,13 +448,13 @@ class CalendarParserICalendar extends CalendarParser {
         $value = intval($value);
         if ($value > 0 && $value < 5)
             return 1;
-            
+
         if ($value == 5)
             return 2;
-        
+
         if ($value > 5 && $value < 10)
             return 3;
-        
+
         return 0;
     }
 
@@ -467,7 +464,7 @@ class CalendarParserICalendar extends CalendarParser {
     function _parseRecurrence ($text) {
         if (preg_match_all('/([A-Za-z]*?)=([^;]*);?/', $text, $matches, PREG_SET_ORDER)) {
             $r_rule = array();
-            
+
             foreach ($matches as $match) {
                 switch ($match[1]) {
                     case "FREQ" :
@@ -481,52 +478,52 @@ class CalendarParserICalendar extends CalendarParser {
                                 break;
                         }
                         break;
-                    
+
                     case "UNTIL" :
                         $r_rule["expire"] = $this->_parseDateTime($match[2]);
                         break;
-                        
+
                     case "COUNT" :
                         $r_rule["count"] = intval($match[2]);
                         break;
-                    
+
                     case "INTERVAL" :
                         $r_rule["linterval"] = intval($match[2]);
                         break;
-                    
+
                     case "BYSECOND" :
                     case "BYMINUTE" :
                     case "BYHOUR" :
                     case "BYWEEKNO" :
                     case "BYYEARDAY" :
                         break;
-                    
+
                     case "BYDAY" :
                         $byday = $this->_parseByDay($match[2]);
                         $r_rule["wdays"] = $byday["wdays"];
                         if ($byday["sinterval"])
                             $r_rule["sinterval"] = $byday["sinterval"];
                         break;
-                    
+
                     case "BYMONTH" :
                         $r_rule["month"] = $this->_parseByMonth($match[2]);
                         break;
-                        
+
                     case "BYMONTHDAY" :
                         $r_rule["day"] = $this->_parseByMonthDay($match[2]);
                         break;
-                    
+
                     case 'BYSETPOS':
                         $r_rule["sinterval"] = intval($match[2]);
                         break;
-                    
+
                     case "WKST" :
                         break;
-            
+
                 }
             }
         }
-        
+
         return $r_rule;
     }
 
@@ -549,31 +546,31 @@ class CalendarParserICalendar extends CalendarParser {
                     return FALSE;
             }
         }
-        
+
         return $wdays ? array('wdays' => $wdays, 'sinterval' => $sinterval) : FALSE;
     }
-    
+
     function _parseByMonthDay ($text) {
         $days = explode(',', $text);
         if (sizeof($days) > 1 || ((int) $days[0]) < 0)
             return FALSE;
-        
+
         return $days[0];
     }
-    
+
     function _parseByMonth ($text) {
         $months = explode(',', $text);
         if (sizeof($months) > 1)
             return FALSE;
-        
+
         return $months[0];
-    }   
-    
+    }
+
     function _qp_decode ($value) {
-    
+
         return preg_replace("/=([0-9A-F]{2})/e", "chr(hexdec('\\1'))", $value);
     }
-    
+
 }
 
 ?>

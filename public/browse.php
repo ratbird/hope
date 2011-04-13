@@ -50,6 +50,12 @@ if (!Request::submitted('reset')) {
 }
 
 //Eine Suche wurde abgeschickt
+
+// Suchstring merken für evtl. Sortieraktionen
+if(Request::get('name') && !Request::submitted('send') ) {
+    $name = Request::get('name');
+}
+
 if (isset($name))
 {
     $template->set_attribute('name', $name);

@@ -56,19 +56,54 @@ switch ($view) {
     case "search":
         $page_intro=_("Sie können hier nach Ressourcen suchen. Sie haben die Möglichkeit, über ein Stichwort oder bestimmte Eigenschaften Ressourcen zu suchen oder sich durch die Ebenen zu navigieren.");
         PageLayout::setTitle(_("Suche nach Ressourcen"));
-        Navigation::activateItem('/search/resources');
+        if (Request::get('context') == 'resources') {
+            URLHelper::bindLinkParam('context', Request::get('context'));
+            Navigation::activateItem('/resources/view/search');
+        } else {
+            Navigation::activateItem('/search/resources');
+        }
 
         $infobox = array(
-                    array  ("kategorie" => _("Aktionen:"),
-                            "eintrag" => array (
-                                array   ("icon" => "icons/16/black/search.png",
-                                    "text"  => (($resources_data["search_mode"] == "browse") || (!$resources_data["search_mode"]))? sprintf(_("Gewünschte Eigenschaften <br>%sangeben%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&mode=properties\">", "</a>") :  sprintf(_("Gewünschte Eigenschaften <br>%snicht angeben%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&mode=browse\">", "</a>")),
-                                array   ("icon" => "icons/16/black/schedule.png",
-                                    "text"  => (!$resources_data["check_assigns"])? sprintf(_("Gewünschte Belegungszeit %sberücksichtigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&check_assigns=TRUE\">", "</a>") :  sprintf(_("Gewünschte Belegungszeit <br>%snicht berücksichtigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&check_assigns=FALSE\">", "</a>")),
-                                array   ("icon" => "icons/16/black/resources.png",
-                                    "text"  => (!$resources_data["search_only_rooms"])? sprintf(_("Nur Räume %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=1\">", "</a>") :  sprintf(_("Alle Ressourcen %sanzeigen%s"), "<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&search_only_rooms=0\">", "</a>")),
-                                array("icon" => "icons/16/black/search.png",
-                                    "text"  => "<br><a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."&reset=TRUE\">".makeButton("neuesuche")."</a>"))));
+            array  ("kategorie" => _("Aktionen:"),
+                "eintrag" => array (
+                    array (
+                        "icon" => "icons/16/black/search.png",
+                        "text"  => (($resources_data["search_mode"] == "browse") || (!$resources_data["search_mode"]))
+                            ? sprintf(_("Gewünschte Eigenschaften <br>%sangeben%s"),
+                                '<a href="'. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&mode=properties') . '">',
+                                '</a>')
+                            : sprintf(_("Gewünschte Eigenschaften <br>%snicht angeben%s"),
+                                '<a href="'. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&mode=browse') .'">',
+                                '</a>')
+                    ),
+                    array (
+                        "icon" => "icons/16/black/schedule.png",
+                        "text"  => (!$resources_data["check_assigns"])
+                            ? sprintf(_("Gewünschte Belegungszeit %sberücksichtigen%s"),
+                                '<a href="'. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&check_assigns=TRUE') .'">',
+                                '</a>')
+                            : sprintf(_("Gewünschte Belegungszeit <br>%snicht berücksichtigen%s"),
+                                '<a href="'. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&check_assigns=FALSE') .'">',
+                                '</a>')
+                    ),
+                    array (
+                        "icon" => "icons/16/black/resources.png",
+                        "text"  => (!$resources_data["search_only_rooms"])
+                            ? sprintf(_("Nur Räume %sanzeigen%s"),
+                                '<a href="'. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&search_only_rooms=1') . '">',
+                                '</a>')
+                            : sprintf(_("Alle Ressourcen %sanzeigen%s"), 
+                                '<a href="'. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&search_only_rooms=0') . '">',
+                                '</a>')
+                    ),
+                    array(
+                        "icon" => "icons/16/black/search.png",
+                        "text"  => '<a href='. URLHelper::getLink('?view=search&quick_view_mode=' . $view_mode . '&reset=TRUE') . '>'
+                                . _('neue Suche') . '</a>'
+                    )
+                )
+            )
+        );
         $infopic = "infobox/rooms.jpg";
         $clipboard = TRUE;
     break;

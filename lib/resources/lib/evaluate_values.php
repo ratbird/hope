@@ -1130,7 +1130,8 @@ if ($view == "search") {
 
     if ((isset($start_search_x)) || ($search_send)) {
         unset($resources_data["search_array"]);
-        $resources_data["search_array"]["search_exp"]=$search_exp;
+        $resources_data["search_array"]["search_exp"] = Request::quoted('search_exp');
+
         $resources_data["search_array"]["resources_search_range"]=$resources_data["browse_open_level"]=$_REQUEST['resources_search_range'];
         if (is_array($search_property_val))
             foreach ($search_property_val as $key=>$val) {

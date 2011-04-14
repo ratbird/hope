@@ -110,13 +110,13 @@ class ShowList extends ShowTreeRow{
                 $icon="<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_res".$resObject->getCategoryIconnr().".gif\">";
 
             if ($resources_data["structure_opens"][$resObject->id]) {
-                $link=$PHP_SELF."?structure_close=".$resObject->id.$link_add."#a";
-                $open="open";
+                $link = URLHelper::getLink('?structure_close=' . $resObject->id . $link_add . '#a');
+                $open = 'open';
                 if ($resources_data["actual_object"] == $resObject->id)
-                    echo "<a name=\"a\"></a>";
+                    echo '<a name="a"></a>';
             } else {
-                $link=$PHP_SELF."?structure_open=".$resObject->id.$link_add."#a";
-                $open="close";
+                $link = URLHelper::getLink('?structure_open=' . $resObject->id . $link_add . '#a');
+                $open = 'close';
             }
 
             $titel='';

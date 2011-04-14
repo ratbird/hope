@@ -88,7 +88,7 @@ class ResourcesBrowse {
     }
 
     function setSearchArray($array) {
-        $this->searchArray=$array;
+        $this->searchArray = $array;
     }
 
     //private
@@ -96,7 +96,7 @@ class ResourcesBrowse {
         ?>
         <tr>
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> align="center" <? echo ($this->mode == "browse") ? "colspan=\"2\"" : "" ?>>
-                <font size=-1><?=_("freie Suche")?>:&nbsp;
+                <?=_("freie Suche")?>:&nbsp;
                     <select name="resources_search_range" style="vertical-align:middle">
                     <option value="0" selected><?=htmlReady($GLOBALS['UNI_NAME_CLEAN'])?></option>
                     <?if ($this->open_object){
@@ -108,7 +108,9 @@ class ResourcesBrowse {
                 <input name="search_exp" type="text" style="vertical-align: middle;" size=35 maxlength=255 value="<? echo htmlReady(stripslashes($this->searchArray["search_exp"])); ?>">
                 <input type="image" align="absmiddle"  <? echo makeButton ("suchestarten", "src") ?> name="start_search" border=0 value="<?=_("Suche starten")?>">
                 &nbsp;
-                <a href="<?=$PHP_SELF?>?view=search&quick_view_mode=<?=$GLOBALS['view_mode']?>&reset=TRUE"><?=makeButton("neuesuche")?></a>
+                <a href="<?= URLHelper::getLink('?view=search&quick_view_mode=' . $GLOBALS['view_mode'] . '&reset=TRUE') ?>">
+                    <?=makeButton("neuesuche")?>
+                </a>
             </td>
         </tr>
         <?
@@ -151,12 +153,19 @@ class ResourcesBrowse {
                     $top_level_name = _("pers&ouml;nliche Ressourcen");
                 break;
             }
-            $result = sprintf (" <font size=\"-1\">%s %s %s</font>", ($view=='search') ? "<a href=\"$PHP_SELF?view=search&quick_view_mode=$view_mode&reset=TRUE\">" : "", $top_level_name, ($view=='search') ? "</a>" : "");
+            $result = sprintf (" %s %s %s", ($view=='search')
+                ? '<a href="'. URLHelper::getLink('?view=search&quick_view_mode='. $view_mode .'&reset=TRUE') .'">'
+                : "", $top_level_name, ($view=='search') ? "</a>" : "");
             for ($i = sizeof($result_arr)-1; $i>=0; $i--) {
-                if ($view)
-                    $result.= sprintf (" > <a href=\"%s?quick_view=%s&quick_view_mode=%s&%s=%s\"><font size = -1>%s</font></a>", $PHP_SELF, (!$view) ? "search" : $view, $view_mode, ($view=='search') ? "open_level" : "actual_object", $result_arr[$i]["id"], htmlReady($result_arr[$i]["name"]));
-                else
+                if ($view) {
+                    $result .= '> <a href="';
+                    $result .= URLHelper::getLink(sprintf('?quick_view=%s&quick_view_mode=%s&%s=%s',
+                        $PHP_SELF, (!$view) ? "search" : $view, $view_mode,
+                        ($view=='search') ? "open_level" : "actual_object", $result_arr[$i]["id"]));
+                    $result .= '">'. htmlReady($result_arr[$i]["name"]) .'</a>';
+                } else {
                     $result.= sprintf (" > %s", htmlReady($result_arr[$i]["name"]));
+                }
             }
         return $result;
     }
@@ -167,7 +176,7 @@ class ResourcesBrowse {
         ?>
         <tr>
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> >
-                <font size="-1"><?=_("gefundene Ressourcen sollen zu folgender Zeit <u>nicht</u> belegt sein:")?></font>
+                <?=_("gefundene Ressourcen sollen zu folgender Zeit <u>nicht</u> belegt sein:")?>
             <br>
             </td>
         </tr>
@@ -177,12 +186,9 @@ class ResourcesBrowse {
                 <table cellspacing="0" cellpadding="0" border="0" width="100%">
                     <tr>
                         <td width="120">
-                            <font size="-1">
-                                <b>Einzeltermin:</b>
-                            </font>
+                            <b>Einzeltermin:</b>
                         </td>
                         <td>
-                            <font size="-1">
                             <?=_("Beginn")?>:
                             &nbsp;<input type="text" style="font-size:8pt;" name="search_begin_hour" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("H", $this->searchArray["search_assign_begin"]) : _("ss")?>">
                             <input type="text" style="font-size:8pt;" name="search_begin_minute" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("i", $this->searchArray["search_assign_begin"]) : _("mm")?>">&nbsp;<?=_("Uhr")?>
@@ -196,7 +202,6 @@ class ResourcesBrowse {
                             .<input type="text" style="font-size:8pt;" name="search_year" size="4" maxlength="4" value="<?=($this->searchArray["search_assign_begin"]) ? date("Y", $this->searchArray["search_assign_begin"]) : _("jjjj")?>">
                             &nbsp;&nbsp;&nbsp;&nbsp;    <input type="checkbox" style="font-size:8pt;" name="search_repeating" value="1" <?=($this->searchArray["search_repeating"]==1) ? "checked=checked" : ""?>> für restliches Semester prüfen &nbsp; <br>
                             <br>
-                            </font>
                         </td>
                     </tr>
                 </table>
@@ -207,12 +212,9 @@ class ResourcesBrowse {
                     <table cellspacing="0" cellpadding="0" border="0" width="100%">
                         <tr>
                             <td width="120">
-                                <font size="-1">
-                                    <b>Semestertermin:</b>
-                                </font>
+                                <b>Semestertermin:</b>
                             </td>
                             <td>
-                <font size="-1">
                     <br>
                 <?=_("Beginn")?>:
                     &nbsp;<input type="text" style="font-size:8pt;" name="search_begin_hour_2" size="2" maxlength="2" value="<?=($this->searchArray["search_assign_begin"]) ? date("H", $this->searchArray["search_assign_begin"]) : _("ss")?>">
@@ -261,7 +263,6 @@ class ResourcesBrowse {
                     }
                 ?>
                 </select> &nbsp;
-            </font>
                     </td>
                 </tr>
             </table>
@@ -280,7 +281,7 @@ class ResourcesBrowse {
         ?>
         <tr>
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> >
-                <font size="-1"><?=_("folgende Eigenschaften soll die Ressource besitzen (leer bedeutet egal):")?></font>
+                <?=_("folgende Eigenschaften soll die Ressource besitzen (leer bedeutet egal):")?>
             <br>
             </td>
         </tr>
@@ -304,7 +305,7 @@ class ResourcesBrowse {
                             print "<td colspan=\"2\"> \n";
                             if ($k)
                                 print "<hr><br>";
-                            printf ("<font size=-1><b>%s:</b></font>", htmlReady($this->db->f("name")));
+                            printf ("<b>%s:</b>", htmlReady($this->db->f("name")));
                             print "</td>\n";
                             print "</tr> \n";
                             print "<tr>\n";
@@ -325,7 +326,7 @@ class ResourcesBrowse {
                                 printf ("<input type=\"HIDDEN\" name=\"search_property_val[]\" value=\"%s\">", "_id_".$this->db2->f("property_id"));
                                 switch ($this->db2->f("type")) {
                                     case "bool":
-                                        printf ("<input type=\"CHECKBOX\" name=\"search_property_val[]\" %s><font size=-1>&nbsp;%s</font>", ($value) ? "checked":"", htmlReady($this->db2->f("options")));
+                                        printf ("<input type=\"CHECKBOX\" name=\"search_property_val[]\" %s>&nbsp;%s", ($value) ? "checked":"", htmlReady($this->db2->f("options")));
                                     break;
                                     case "num":
                                         printf ("<input type=\"TEXT\" name=\"search_property_val[]\" value=\"%s\" size=20 maxlength=255>", htmlReady($value));
@@ -403,11 +404,14 @@ class ResourcesBrowse {
             </td>
             <td <? echo $this->cssSw->getFullClass() ?>width="15%" align="right" nowrap valign="top">
                 <?
-                if ($way_back>=0) {
-                    printf ("<a href = \"%s?view=search&quick_view_mode=%s&%s\">", $PHP_SELF, $view_mode, (!$way_back) ? "reset=TRUE" : "open_level=$way_back");
-                    print Assets::img('icons/16/blue/arr_2left.png', array('class' => 'text-top', 'title' =>_('eine Ebene zur&uuml;ck'))). "</font></a>";
-                }
-                ?>
+                if ($way_back>=0) : ?>
+                    <a href="<?= URLHelper::getLink('?view=search&quick_view_mode='. $view_mode
+                            . '&' . (!$way_back) ? "reset=TRUE" : "open_level=$way_back") ?>">
+                    <?= Assets::img('icons/16/blue/arr_2left.png', array(
+                        'class' => 'text-top',
+                        'title' =>_('eine Ebene zur&uuml;ck'))) ?>
+                    </a>
+                <? endif ?>
             </td>
         </tr>
         <tr>
@@ -428,9 +432,11 @@ class ResourcesBrowse {
                         if (($i > ($this->db->num_rows() /2 )) && (!$switched)) {
                             print "</td><td width=\"40%\" valign=\"top\">";
                             $switched = TRUE;
-                        }
-                        printf ("<a href=\"$PHP_SELF?view=search&quick_view_mode=%s&open_level=%s\"><font size=\"-1\"><b>%s</b></font></a><br>", $view_mode, $this->db->f("resource_id"), htmlReady($this->db->f("name")));
-                        $i++;
+                        } ?>
+                        <a href="<?= URLHelper::getLink('?view=search&quick_view_mode='. $view_mode .'&open_level=' . $this->db->f("resource_id")) ?>">
+                            <b><?= htmlReady($this->db->f("name")) ?></b>
+                        </a><br>
+                        <? $i++;
                     }
                     print "</table>";
                 }
@@ -439,7 +445,7 @@ class ResourcesBrowse {
         </tr>
         <tr>
             <td <? $this->cssSw->switchClass(); echo $this->cssSw->getFullClass() ?> align="left" colspan="2">
-                <font size="-1"><?=_("Ressourcen auf dieser Ebene:")?></font>
+                <?=_("Ressourcen auf dieser Ebene:")?>
             </td>
         </tr>
         <?
@@ -477,7 +483,7 @@ class ResourcesBrowse {
     function showSearch() {
         global $view_mode, $resources_data;
         ?>
-        <form method="POST" action="<?echo $PHP_SELF ?>?search_send=yes&quick_view=search&quick_view_mode=<?=$view_mode?>">
+        <form method="post" action="<?= URLHelper::getLink('?search_send=yes&quick_view=search&quick_view_mode='. $view_mode) ?>">
             <?= CSRFProtection::tokenTag() ?>
             <table border=0 celpadding=2 cellspacing=0 width="99%" align="center">
                 <?

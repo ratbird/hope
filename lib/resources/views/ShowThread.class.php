@@ -83,13 +83,13 @@ class ShowThread extends ShowTreeRow {
                 $icon="&nbsp;<a href=\"$PHP_SELF?target_object=".$resObject->id."#a\"><img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')." alt=\""._("Objekt in diese Ebene verschieben")."\"></a>".$icon;
 
             if ($resources_data["structure_opens"][$resObject->id]) {
-                $link=$PHP_SELF."?structure_close=".$resObject->id."#a";
-                $open="open";
+                $link = URLHelper::getLink('?structure_close=' . $resObject->id . '#a');
+                $open = 'open';
                 if ($resources_data["actual_object"] == $resObject->id)
-                    echo "<a name=\"a\"></a>";
+                    echo '<a name="a"></a>';
             } else {
-                $link=$PHP_SELF."?structure_open=".$resObject->id."#a";
-                $open="close";
+                $link = URLHelper::getLink('?structure_open=' . $resObject->id . '#a');
+                $open = 'close';
             }
 
             if ($resObject->getCategoryName())

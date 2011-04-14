@@ -3,7 +3,7 @@
 $sem = Seminar::getInstance($show_entry['id']);
 ?>
 <div id="edit_sem_entry" class="schedule_edit_entry">
-    <div id="edit_sem_entry_drag" class="window_heading">Veranstaltungsdetails bearbeiten</div>
+    <div id="edit_sem_entry_drag" class="window_heading"><?=_("Veranstaltungsdetails bearbeiten")?></div>
     <form action="<?= $controller->url_for('calendar/schedule/editseminar/'. $show_entry['id'] .'/'. $show_entry['cycle_id'] ) ?>" method="post" name="edit_entry" style="padding-left: 10px; padding-top: 10px; margin-right: 10px;">
         <?= CSRFProtection::tokenTag() ?>
         <b><?= _("Farbe des Termins") ?>:</b>
@@ -21,7 +21,7 @@ $sem = Seminar::getInstance($show_entry['id']);
 
         <b><?= _("Veranstaltungsnummer") ?>:</b>
         <?= htmlReady($sem->getNumber()) ?><br><br>
-        
+
         <b><?= _("Name") ?>:</b>
         <?= htmlReady($sem->getName()) ?><br><br>
 
@@ -33,9 +33,9 @@ $sem = Seminar::getInstance($show_entry['id']);
             $pos++;
         endforeach ?>
         <br><br>
-        
+
         <b><?= _("Veranstaltungszeiten") ?>:</b><br>
-        <?= $sem->getDatesHTML() ?><br>
+        <?= $sem->getDatesHTML(array('show_room' => true)) ?><br>
 
         <?= Assets::img('icons/16/blue/link-intern.png') ?>
         <? if ($show_entry['type'] == 'virtual') : ?>

@@ -39,9 +39,9 @@ $sem = Seminar::getInstance($show_entry['id']);
 
         <?= Assets::img('icons/16/blue/link-intern.png') ?>
         <? if ($show_entry['type'] == 'virtual') : ?>
-        <a href="<?= URLHelper::getLink('details.php?sem_id='. $show_entry['id']) ?>">Zur Veranstaltung</a><br>
+        <a href="<?= URLHelper::getLink('details.php?sem_id='. $show_entry['id']) ?>"><?=_("Zur Veranstaltung") ?></a><br>
         <? else : ?>
-        <a href="<?= URLHelper::getLink('seminar_main.php?auswahl='. $show_entry['id']) ?>">Zur Veranstaltung</a><br>
+        <a href="<?= URLHelper::getLink('seminar_main.php?auswahl='. $show_entry['id']) ?>"><?=_("Zur Veranstaltung") ?></a><br>
         <? endif ?>
         <br>
 

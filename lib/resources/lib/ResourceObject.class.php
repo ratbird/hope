@@ -335,7 +335,7 @@ class ResourceObject {
         if (func_num_args() == 1) {
             $timestamp = func_get_arg(0);
         }
-        return  sprintf ("resources.php?actual_object=%s&%sview=%s&%sview_mode=%s%s", $this->id, ($quick_view) ? "quick_" : "", $view, ($quick_view) ? "quick_" : "", $view_mode, ($timestamp > 0) ? "&start_time=".$timestamp : "");   
+        return URLHelper::getLink(sprintf ("resources.php?actual_object=%s&%sview=%s&%sview_mode=%s%s", $this->id, ($quick_view) ? "quick_" : "", $view, ($quick_view) ? "quick_" : "", $view_mode, ($timestamp > 0) ? "&start_time=".$timestamp : ""));
     }
     
     function getFormattedLink($javaScript = TRUE, $target_new = TRUE, $quick_view = TRUE, $view ="view_schedule", $view_mode = "no_nav", $timestamp = FALSE, $link_text = FALSE) {

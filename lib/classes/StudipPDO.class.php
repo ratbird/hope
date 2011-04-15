@@ -27,7 +27,7 @@ class StudipPDO extends PDO
      * @param string    SQL statement to check
      * @throws PDOException when the query contains multiple statements
      */
-    private function verify($statement)
+    protected function verify($statement)
     {
         if (strpos($statement, ';') !== false) {
             if (preg_match('/;\s*\S/', self::replaceStrings($statement))) {
@@ -85,6 +85,46 @@ class StudipPDO extends PDO
         }
 
         return $result;
+    }
+
+    /**
+     * Quotes the given value in a form appropriate for the type.
+     * If no explicit type is given, the value's PHP type is used.
+     *
+     * @param string    PHP value to quote
+     * @param int       parameter type (e.g. PDO::PARAM_STR)
+     * @return string   quoted SQL string
+     */
+    public function quote($value, $type = NULL)
+    {
+        if (!isset($type)) {
+            if (is_null($value)) {
+                $type = PDO::PARAM_NULL;
+            } else if (is_bool($value)) {
+                $type = PDO::PARAM_BOOL;
+            } else if (is_int($value)) {
+                $type = PDO::PARAM_INT;
+            } else if (is_array($value)) {
+                $type = StudipPDO::PARAM_ARRAY;
+            } else {
+                $type = PDO::PARAM_STR;
+            }
+        }
+
+        switch ($type) {
+            case PDO::PARAM_NULL:
+                return 'NULL';
+            case PDO::PARAM_BOOL:
+                return $value ? '1' : '0';
+            case PDO::PARAM_INT:
+                return (int) $value;
+            case StudipPDO::PARAM_ARRAY:
+                return join(',', array_map(array($this, 'quote'), $value));
+            case StudipPDO::PARAM_COLUMN:
+                return preg_replace('/\\W/', '', $value);
+            default:
+                return parent::quote($value);
+        }
     }
 
     /**
@@ -194,6 +234,10 @@ class StudipPDOStatement implements IteratorAggregate
      */
     public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR)
     {
+        if (is_string($parameter) && $parameter[0] !== ':') {
+            $parameter = ':' . $parameter;
+        }
+
         $this->params[$parameter] = array('value' => &$variable, 'type' => $data_type);
         return true;
     }
@@ -204,6 +248,10 @@ class StudipPDOStatement implements IteratorAggregate
      */
     public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR)
     {
+        if (is_string($parameter) && $parameter[0] !== ':') {
+            $parameter = ':' . $parameter;
+        }
+
         $this->params[$parameter] = array('value' => $value, 'type' => $data_type);
         return true;
     }
@@ -274,42 +322,6 @@ class StudipPDOStatement implements IteratorAggregate
     }
 
     /**
-     * Quotes the given value in a form appropriate for the type.
-     * If no explicit type is given, the value's PHP type is used.
-     */
-    protected function quote($value, $type = NULL)
-    {
-        if (!isset($type)) {
-            if (is_null($value)) {
-                $type = PDO::PARAM_NULL;
-            } else if (is_bool($value)) {
-                $type = PDO::PARAM_BOOL;
-            } else if (is_int($value)) {
-                $type = PDO::PARAM_INT;
-            } else if (is_array($value)) {
-                $type = StudipPDO::PARAM_ARRAY;
-            } else {
-                $type = PDO::PARAM_STR;
-            }
-        }
-
-        switch ($type) {
-            case PDO::PARAM_NULL:
-                return 'NULL';
-            case PDO::PARAM_BOOL:
-                return $value ? '1' : '0';
-            case PDO::PARAM_INT:
-                return (int) $value;
-            case StudipPDO::PARAM_ARRAY:
-                return join(',', array_map(array($this, 'quote'), $value));
-            case StudipPDO::PARAM_COLUMN:
-                return preg_replace('/\\W/', '', $value);
-            default:
-                return $this->db->quote($value);
-        }
-    }
-
-    /**
      * Replaces a placeholder with the corresponding parameter value.
      * Throws an exception if there is no corresponding value.
      */
@@ -327,6 +339,6 @@ class StudipPDOStatement implements IteratorAggregate
             throw new PDOException('missing parameter in query: ' . $key);
         }
 
-        return $this->quote($this->params[$key]['value'], $this->params[$key]['type']);
+        return $this->db->quote($this->params[$key]['value'], $this->params[$key]['type']);
     }
 }

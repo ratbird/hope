@@ -122,8 +122,27 @@ if ($cmd == 'news_edit'){
 
 if ($cmd=="news_submit") {
     if (!trim(stripslashes($topic)) && trim(stripslashes($body))) $topic = addslashes(substr(trim(stripslashes($body)),0,30) . '...');
-    if ($topic != "" && $add_range) {
-        $edit_news = $news->update_news($news_id, $author, $topic, $body, $user_id, $date, $expire, $add_range, $allow_comments);
+       //Maximale Gültigkeitsdauer von News auf 24 Wochen festgelegt
+    $max_expire = 24 * 7 * 24 * 60 * 60;
+
+
+
+    if (Request::get('startdate') && Request::get('enddate')) {
+        if (preg_match('/^(\d{2}).(\d{2}).(\d{4})$/',Request::get('startdate'))
+            && preg_match('/^(\d{2}).(\d{2}).(\d{4})$/',Request::get('enddate'))) {
+
+            $start_array = explode(".", Request::get('startdate'));
+            $starttime = mktime(0, 0, 0, $start_array[1], $start_array[0], $start_array[2]);
+            $end_array = explode(".", Request::get('enddate'));
+            $endtime = mktime(23, 59, 59, $end_array[1], $end_array[0], $end_array[2]);
+            $expire = $endtime - $starttime;
+        }
+    }
+
+
+    $max_endtime = $starttime + $expire;
+    if ($topic != "" && $add_range && $expire > 0 && $expire <= $max_expire) {
+        $edit_news = $news->update_news($news_id, $author, $topic, $body, $user_id, $starttime, $expire, $add_range, $allow_comments);
         if ($edit_news) {
             $cmd = "edit";
         } else {
@@ -133,11 +152,21 @@ if ($cmd=="news_submit") {
         $cmd = "edit";
         $edit_news = Request::option('news_id');
         $news->msg .= "error§"._("Leere Ankündigungen k&ouml;nnen nicht gespeichert werden! Geben Sie immer &Uuml;berschrift oder Inhalt an!")."§";
+    } else if ($expire < 0) {
+        $cmd = "edit";
+        $news->msg .= "error§"._("Das Einstelldatum muss vor dem Ablaufdatum liegen!")."§";
+    } else if ($expire > $max_expire) {
+        $cmd = "edit";
+        $news->msg .= "error§".sprintf(_("Sie können Ankündigungen maximal bis zum %s einstellen!")."§", date('d M Y', $starttime + $max_expire));
+    } else if (!$add_range) {
+        $cmd = "edit";
+        $news->msg .= "error§"._("Mindestens ein Bereich zum Anzeigen der Ankündigung muss gewählt sein!")."§";
     } else {
         $cmd = "edit";
-        $edit_news = Request::option('news_id');
-        $news->msg .= "error§"._("Mindestens ein Bereich zum Anzeigen der Ankündigung muss gewählt sein!")."§";
+        $news->msg .= "error§"._("Bitte geben Sie Start- und Ablaufdatum an")."§";
     }
+
+
 }
 if ($cmd=="new_entry" &&
     isset($_REQUEST['change_rss_x']) &&

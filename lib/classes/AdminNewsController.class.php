@@ -257,52 +257,21 @@ class AdminNewsController {
         echo "\n<br><br>" . _("Klicken Sie danach hier, um die &Auml;nderungen zu &uuml;bernehmen.") . "<br><br><center>"
             . "<input type=\"IMAGE\" name=\"news_submit\" " . makeButton("uebernehmen","src") . tooltip(_("Änderungen übernehmen")) ."  border=\"0\" ></center></td></tr>";
 
-        $news_date = $this->news_query['date'];
-        if ($news_date != $aktuell) {
-            $date_offset = 0;
-        } else {
-            $date_offset = 1;
+        if ($this->news_query['date'] && !Request::get('startdate')) {
+            $beginn = date('d.m.Y',$this->news_query['date']);
+            $ende = date('d.m.Y' ,$this->news_query['date'] + $this->news_query['expire']);
+        } elseif (Request::option('startdate') && Request::option('enddate')) {
+            $beginn = Request::option('startdate');
+            $ende = Request::option('enddate');
         }
-        echo "\n<tr><td class=\"blank\" colspan=\"2\">" . _("Einstelldatum:") . " <select id=\"starttime\" name=\"date\"><option value=\"".$news_date."\" selected>".strftime("%d.%m.%y", $news_date)."</option>";
-        for ($i = $date_offset; $i <= $date_offset+13; ++$i) {
-            $temp = mktime(0,0,0,strftime("%m",$aktuell),strftime("%d",$aktuell) + $i,strftime("%y",$aktuell));
-            echo "\n<option value=\"".$temp."\">".strftime("%d.%m.%y",$temp)."</option>";
-        }
-        echo "</select>&nbsp;&nbsp;&nbsp;" . _("G&uuml;ltigkeitsdauer:") . " <select id=\"expire\" name=\"expire\">";
-        if ($this->news_query["news_id"] != "new_entry"){
-            if ($date_offset){
-                $this->news_query["expire"] = ($this->news_query['date'] + $this->news_query["expire"]) - $news_date;
-                if ($this->news_query['expire'] < mktime(23,59,59,strftime("%m",$news_date),strftime("%d",$news_date),strftime("%y",$news_date)) - $news_date){
-                    $this->news_query['expire'] = mktime(23,59,59,strftime("%m",$news_date),strftime("%d",$news_date),strftime("%y",$news_date)) - $news_date;
-                }
-            }
-            echo "\n<option value=\"" . $this->news_query["expire"] . "\" selected>";
-            printf(_("bis zum %s"), strftime("%d.%m.%y",($this->news_query["expire"] + $news_date)));
-            echo "</option>";
-        }
-        for ($i = 2; $i <= 24; $i += 2) {
-            $temp = mktime(23,59,59,strftime("%m",$news_date),strftime("%d",$news_date) + ($i * 7),strftime("%y",$news_date)) - $news_date;
-            echo "\n<option value=\"" . $temp . "\" ";
-            if ($this->news_query["expire"] == $temp) {
-                echo"selected";
-            }
-            echo ">";
-            printf(_("%s Wochen"),$i);
-            echo "</option>";
-        }
-        echo "</select></td></tr>";
-?>
-<script type="text/javascript">
-$('#starttime').change(function () {
-  var options = $('#expire option'), i, offset, date;
-  for (i = <?=($this->news_query["news_id"] != "new_entry" ? 1 : 0)?>; i < options.length; i++) {
-    offset = i + <?=($this->news_query["news_id"] == "new_entry" ? 1 : 0)?>;
-    date = new Date( parseInt($(this).val(), 10) * 1000 + 24 * 60 * 60 * 14 * 1000 * offset);
-    $(options.get(i)).html( offset*2 + " <?= _('Wochen') ?> (" + date.getDate() + "." + (date.getMonth()+1) + "." + date.getFullYear() + ")");
-  };
-}).change();
-</script>
-<?
+        echo "\n<tr><td class=\"blank\" colspan=\"2\">" . _("Einstelldatum:");
+        ?>
+        <input type="text" required ="required" class="datepickerbutton" name="startdate" maxlength="10" size="10" value="<?= $beginn ? htmlready($beginn) : date('d.m.Y')?>">
+        <? echo _("Ablaufdatum:");?>
+        <input type="text" required ="required" class="datepickerbutton" name="enddate" maxlength="10" size="10" value="<?= $ende ? htmlready($ende) : date('d.m.Y', time() + 7 * 24 * 60 * 60)?>">
+        <?
+        echo "\n</tr>";
+
         echo "<tr><td class=\"blank\">"._("Kommentare zulassen")."&nbsp;<input name=\"allow_comments\" value=\"1\" type=\"checkbox\" style=\"vertical-align:middle\"";
         if ($this->news_query["allow_comments"]) print " checked";
         echo "></td></tr>";
@@ -353,8 +322,12 @@ $('#starttime').change(function () {
     }
 
 
-    function update_news($news_id,$author,$topic,$body,$user_id,$date,$expire,$add_range, $allow_comments) {
+    function update_news($news_id,$author,$topic,$body,$user_id,$date,$expire,$add_range, $allow_comments ) {
         global $auth;
+
+        // null value is not allowed for this field
+        if ($allow_comments == null) $allow_comments = 0;
+
         if ($news_id) {
             if($this->check_news_perm($news_id)) {
                 if ($news_id == "new_entry") {
@@ -662,4 +635,3 @@ $('#starttime').change(function () {
     }
 
 }   //Ende Klassendefintion
-?>

@@ -23,7 +23,7 @@
         <td>
             <select class="user_form" name="perm" id="perm" onchange="jQuery('#admin_special').toggle( jQuery('#institut').val() != '0' && jQuery('#perm').val() == 'admin' )">
                 <option>user</option>
-                <option>autor</option>
+                <option selected="selected">autor</option>
                 <option>tutor</option>
                 <option>dozent</option>
                 <option>admin</option>

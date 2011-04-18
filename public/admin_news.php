@@ -121,11 +121,12 @@ if ($cmd == 'news_edit'){
 }
 
 if ($cmd=="news_submit") {
-    if (!trim(stripslashes($topic)) && trim(stripslashes($body))) $topic = addslashes(substr(trim(stripslashes($body)),0,30) . '...');
-       //Maximale Gültigkeitsdauer von News auf 24 Wochen festgelegt
+    if (!trim(stripslashes($topic)) && trim(stripslashes($body))) {
+        $topic = addslashes(substr(trim(stripslashes($body)),0,30) . '...');
+    }
+
+    //Maximale Gültigkeitsdauer von News auf 24 Wochen festgelegt
     $max_expire = 24 * 7 * 24 * 60 * 60;
-
-
 
     if (Request::get('startdate') && Request::get('enddate')) {
         if (preg_match('/^(\d{2}).(\d{2}).(\d{4})$/',Request::get('startdate'))

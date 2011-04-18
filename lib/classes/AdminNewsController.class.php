@@ -322,7 +322,7 @@ class AdminNewsController {
     }
 
 
-    function update_news($news_id,$author,$topic,$body,$user_id,$date,$expire,$add_range, $allow_comments ) {
+    function update_news($news_id,$author,$topic,$body,$user_id,$date,$expire,$add_range, $allow_comments) {
         global $auth;
 
         // null value is not allowed for this field

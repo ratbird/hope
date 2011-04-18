@@ -527,10 +527,10 @@ class CalendarScheduleModel
 
             if (sizeof($days) == 1) {
                 $ret[$day]->setTitle($day_names[$day] .' ('. _('zurück zur Wochenansicht') .')')
-                    ->setURL(URLHelper::getLink('dispatch.php/calendar/'. $controller .'/index'));
+                    ->setURL('dispatch.php/calendar/'. $controller .'/index');
             } else {
                 $ret[$day]->setTitle($day_names[$day])
-                    ->setURL(URLHelper::getLink('dispatch.php/calendar/'. $controller .'/index/'. $day));
+                    ->setURL('dispatch.php/calendar/'. $controller .'/index/'. $day);
             }
         }
 

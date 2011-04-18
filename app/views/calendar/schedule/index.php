@@ -11,10 +11,10 @@ if ($inst_mode) {
 }
 
 if (!$show_hidden) {
-    $hidden_text = '<a href="'. $controller->url_for('calendar/schedule/?show_hidden=true') .'">'
+    $hidden_text = '<a href="'. $controller->url_for('calendar/schedule/?show_hidden=1') .'">'
         . _("Ausgeblendete Veranstaltungen anzeigen") .'</a>';
 } else {
-    $hidden_text = '<a href="'. $controller->url_for('calendar/schedule') .'">'
+    $hidden_text = '<a href="'. $controller->url_for('calendar/schedule/?show_hidden=0') .'">'
         . _("Ausgeblendete Veranstaltungen verbergen") .'</a>';
 }
 
@@ -53,7 +53,7 @@ if (!$inst_mode) {
 
 $infobox['content'][1]['eintrag'][] = array (
     'text' => '<a href="'. $controller->url_for('calendar/schedule/index/'. implode(',', $days)
-           .  '?printview=true' . (Request::get('show_hidden') ? '&show_hidden=true' : ''))
+           .  '?printview=true' . (Request::get('show_hidden') ? '&show_hidden=1' : ''))
            .  '" target="_blank">'._("Druckansicht") .'</a>',
     'icon' => "icons/16/black/print.png"
 );

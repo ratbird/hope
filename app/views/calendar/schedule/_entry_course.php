@@ -49,7 +49,7 @@ $sem = Seminar::getInstance($show_entry['id']);
             <input type="image" <?= makebutton('speichern', 'src') ?> style="margin-right: 20px;">
 
             <? if (!$show_entry['visible']) : ?>
-                <a href="<?= $controller->url_for('calendar/schedule/bind/'. $show_entry['id'] .'/'. $show_entry['cycle_id'] .'/'. '?show_hidden=true') ?>" style="margin-right: 20px;">
+                <a href="<?= $controller->url_for('calendar/schedule/bind/'. $show_entry['id'] .'/'. $show_entry['cycle_id'] .'/'. '?show_hidden=1') ?>" style="margin-right: 20px;">
                     <?= makebutton('einblenden') ?>
                 </a>
             <? else : ?>

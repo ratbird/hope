@@ -41,7 +41,13 @@ class Calendar_ScheduleController extends AuthenticatedController
     {
         global $my_schedule_settings;
 
-        if (Request::get('zoom')) URLHelper::bindLinkParam('zoom', Request::get('zoom'));
+        if (Request::int('zoom')) {
+            URLHelper::bindLinkParam('zoom', Request::int('zoom'));
+        }
+
+        if (Request::int('show_hidden')) {
+            URLHelper::bindLinkParam('show_hidden', Request::int('show_hidden'));
+        }
 
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 

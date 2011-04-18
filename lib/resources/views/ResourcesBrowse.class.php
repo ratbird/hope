@@ -153,9 +153,15 @@ class ResourcesBrowse {
                     $top_level_name = _("pers&ouml;nliche Ressourcen");
                 break;
             }
-            $result = sprintf (" %s %s %s", ($view=='search')
-                ? '<a href="'. URLHelper::getLink('?view=search&quick_view_mode='. $view_mode .'&reset=TRUE') .'">'
-                : "", $top_level_name, ($view=='search') ? "</a>" : "");
+
+            if ($view == 'search') {
+                $result  = '<a href="'. URLHelper::getLink('?view=search&quick_view_mode='. $view_mode .'&reset=TRUE') .'">';
+                $result .=  $top_level_name;
+                $result .= '</a>';
+            }
+
+            $result = $top_level_name;
+
             for ($i = sizeof($result_arr)-1; $i>=0; $i--) {
                 if ($view) {
                     $result .= '> <a href="';
@@ -186,7 +192,7 @@ class ResourcesBrowse {
                 <table cellspacing="0" cellpadding="0" border="0" width="100%">
                     <tr>
                         <td width="120">
-                            <b>Einzeltermin:</b>
+                            <b><?= _('Einzeltermin:') ?></b>
                         </td>
                         <td>
                             <?=_("Beginn")?>:
@@ -212,7 +218,7 @@ class ResourcesBrowse {
                     <table cellspacing="0" cellpadding="0" border="0" width="100%">
                         <tr>
                             <td width="120">
-                                <b>Semestertermin:</b>
+                                <b><?= _('Semestertermin:') ?></b>
                             </td>
                             <td>
                     <br>

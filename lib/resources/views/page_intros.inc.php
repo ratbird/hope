@@ -129,7 +129,7 @@ switch ($view) {
         PageLayout::setTitle(_("Belegungen anzeigen/bearbeiten").$currentObjectTitelAdd);
         Navigation::activateItem('/resources/objects/edit_assign');
 
-        if (($view_mode == "no_nav") || ($view_mode == "search")) {
+        if ($view_mode == "no_nav") {
             $infobox = array(
                 array(
                     "kategorie" => _("Aktionen:"),
@@ -170,15 +170,11 @@ switch ($view) {
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/add/date.png",
                                     "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
 
-        if ($view_mode == "search")
-            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
-                                    "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
-
         if ($view_mode == "no_nav")
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
 
-        if ($view_mode != "search" && $view_mode != "no_nav") {
+        if ($view_mode != "no_nav") {
             if ($SessSemName["class"] == "sem")
                 $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                         "text"  => "<a href=\"seminar_main.php\">"._("zurück zur Veranstaltung")."</a>");
@@ -215,16 +211,12 @@ switch ($view) {
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/add/date.png",
                                     "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
 
-        if ($view_mode == "search")
-            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
-                                    "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
-
         if ($view_mode == "no_nav"){
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>sprintf (_("%sBelegungsplan%s anzeigen"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?quick_view=openobject_schedule&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?quick_view=view_schedule".(($view_mode == "no_nav") ? "&quick_view_mode=no_nav" : "")."\">", "</a>"));
         }
 
-        if ($view_mode != "search" && $view_mode != "no_nav") {
+        if ($view_mode != "no_nav") {
             if ($SessSemName["class"] == "sem")
                 $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                         "text"  => "<a href=\"seminar_main.php\">"._("zurück zur Veranstaltung")."</a>");
@@ -351,8 +343,9 @@ switch ($view) {
             Navigation::activateItem('/resources/objects/view_details');
         }
 
-        if (($view_mode == "no_nav") || ($view_mode == "search")) {
-            $infobox[0]["kategorie"] = _("Aktionen:");
+        $infobox[0]["kategorie"] = _("Aktionen:");
+
+        if ($view_mode == "no_nav") {
 
             if (is_object($currentObject)) {
                 if ($currentObject->getCategoryId())
@@ -363,34 +356,16 @@ switch ($view) {
                                             "text"  =>sprintf (_("Eine neue Belegung %serstellen%s"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=openobject_assign&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?cancel_edit_assign=1&quick_view=edit_object_assign&quick_view_mode=".$view_mode."\">", "</a>"));
             }
 
-            if ($view_mode == "no_nav")
-                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
-                                    "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
-
-            if ($view_mode != "search" && $view_mode != "no_nav") {
-                if ($SessSemName["class"] == "sem")
-                    $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
-                                            "text"  => "<a href=\"seminar_main.php\">"._("zurück zur Veranstaltung")."</a>");
-                if ($SessSemName["class"] == "inst")
-                    $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
-                                            "text"  => "<a href=\"institut_main.php\">"._("zurück zur Einrichtung")."</a>");
-            }
-
-            if ($view_mode == "search")
-                $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
-                                        "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
-            $infopic = "infobox/schedules.jpg";
-        } else {
-            $infobox[0]["kategorie"] = _("Aktionen:");
-            $infobox[0]['eintrag'][] = array(
-                'icon' => 'icons/16/black/search.png',
-                'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
-                       . _('zur Ressourcensuche') . '</a>'
-            );
-
-            $infopic = "infobox/schedules.jpg";
         }
+
+        $infobox[0]["kategorie"] = _("Aktionen:");
+        $infobox[0]['eintrag'][] = array(
+            'icon' => 'icons/16/black/search.png',
+            'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
+                   . _('zur Ressourcensuche') . '</a>'
+        );
     break;
+
     case "openobject_schedule":
         if ($resources_data["actual_object"])
             $page_intro=sprintf(_("Hier können Sie sich die Belegungszeiten der Ressource %s ausgeben lassen"), "<b>".$currentObject->getName()."</b> (".$currentObject->getCategoryName().")");

@@ -2082,10 +2082,10 @@ if ((!$sem_create_data["sem_class"]) && (!$level)){
         ?>
         <tr>
             <td class="blank" valign="top">
-                <blockquote><br>
+                <div class="info"><br>
                 <?=_("Willkommen beim Veranstaltungs-Assistenten. Der Veranstaltungs-Assistent wird Sie Schritt f&uuml;r Schritt durch die notwendigen Schritte zum Anlegen einer neuen Veranstaltung in Stud.IP leiten."); ?><br><br>
                 <?=_("Bitte geben Sie zun&auml;chst an, welche Art von Veranstaltung Sie neu anlegen m&ouml;chten:"); ?>
-                </blockquote>
+                </div>
             </td>
             <td class="blank" align="right" valign="top" rowspan="2">
                 <img src="<?= localePictureUrl('assistent.jpg') ?>" border="0">
@@ -2133,7 +2133,7 @@ elseif ((!$level) || ($level == 1))
         </tr>
         <tr>
             <td class="blank" valign="top">
-                <blockquote>
+                <div class="info">
                 <?=_("Willkommen beim Veranstaltungs-Assistenten. Der Veranstaltungs-Assistent wird Sie nun Schritt f&uuml;r Schritt durch die notwendigen Schritte zum Anlegen einer neuen Veranstaltung in Stud.IP leiten."); ?><br><br>
                 <?
                 if ($cmd=="do_copy") {
@@ -2141,8 +2141,8 @@ elseif ((!$level) || ($level == 1))
                 }
                 ?><br><br>
                 <b><?=_("Schritt 1: Grunddaten der Veranstaltung angeben"); ?></b><br><br>
-                <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
-                </blockquote>
+                <? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."<br><br>", "&nbsp;<font color=\"red\" size=+1><b>*</b></font>&nbsp;");?>
+                </div>
             </td>
             <td class="blank" align="right" valign="top">
                 <img src="<?= localePictureUrl('hands01.jpg') ?>" border="0">
@@ -2500,7 +2500,7 @@ if ($level == 2)
         </tr>
         <tr>
             <td class="blank" valign="top">
-                <blockquote>
+                <div class="info">
                 <?
                 if ($SEM_CLASS[$sem_create_data["sem_class"]]["bereiche"])
                     echo "<b>"._("Schritt 2: Personendaten, Studienbereiche und weitere Angaben zur Veranstaltung")."</b><br><br>";
@@ -2508,7 +2508,7 @@ if ($level == 2)
                     echo "<b>"._("Schritt 2: Personendaten und weitere Angaben zur Veranstaltung")." </b><br><br>";
                 ?>
                 <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
-                </blockquote>
+                </div>
             </td>
             <td class="blank" align="right" valign="top">
                 <img src="<?= localePictureUrl('hands02.jpg') ?>" border="0">
@@ -2953,7 +2953,7 @@ if ($level == 3) {
         </tr>
         <tr>
             <td class="blank" valign="top">
-                <blockquote>
+                <div class="info">
                 <b><?=_("Schritt 3: Termindaten"); ?></b><br><br>
                 <? if ($sem_create_data["term_art"] ==0)
                     print _("Bitte geben Sie hier ein, an welchen Tagen die Veranstaltung stattfindet. Wenn Sie nur einen Wochentag wissen, brauchen Sie nur diesen angeben.<br>Sie haben sp&auml;ter noch die M&ouml;glichkeit, weitere Einzelheiten zu diesen Terminen anzugeben.")."<br><br>";
@@ -2961,7 +2961,7 @@ if ($level == 3) {
                     print _("Bitte geben Sie hier die einzelnen Termine an, an denen die Veranstaltung stattfindet.<br> Sie haben sp&auml;ter noch die M&ouml;glichkeit, weitere Einzelheiten zu diesen Terminen anzugeben.")."<br><br>";
                 ?>
                 <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
-                </blockquote>
+                </div>
             </td>
             <td class="blank" align="right" valign="top">
                 <img src="<?= localePictureUrl('hands03.jpg') ?>" border="0">
@@ -3220,7 +3220,7 @@ if ($level == 4) {
         </tr>
         <tr>
             <td class="blank" valign="top">
-                <blockquote>
+                <div class="info">
                 <b><?=_("Schritt 4: Raumangaben"); ?></b><br><br>
                 <?
                 if ($RESOURCES_ENABLE) {
@@ -3656,10 +3656,10 @@ if ($level == 5)
         </tr>
         <tr>
             <td class="blank" valign="top">
-                <blockquote>
+                <div class="info">
                 <b><?=_("Schritt 5: Sonstige Daten zu der Veranstaltung"); ?></b><br><br>
-                <font size=-1><? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."</font><br><br>", "&nbsp;</font><font color=\"red\" size=+1><b>*</b></font><font size=-1>&nbsp;");?>
-                </blockquote>
+                <? printf (_("Alle mit einem Sternchen%smarkierten Felder <b>m&uuml;ssen</b> ausgef&uuml;llt werden, um eine Veranstaltung anlegen zu k&ouml;nnen.")."<br><br>", "&nbsp;<font color=\"red\" size=+1><b>*</b></font>&nbsp;");?>
+                </div>
             </td>
             <td class="blank" align="right" valign="top">
                 <img src="<?= localePictureUrl('hands05.jpg') ?>" border="0">
@@ -4072,7 +4072,7 @@ if ($level == 6)
         </tr>
         <tr>
             <td class="blank" valign="top">
-                <blockquote>
+                <div class="info">
                 <b><?=_("Schritt 6: Bereit zum Anlegen der Veranstaltung"); ?></b><br><br>
                 <?=_("Sie haben nun alle n&ouml;tigen Daten zum Anlegen der Veranstaltung eingegeben. Wenn Sie auf &raquo;anlegen&laquo; klicken, wird die Veranstaltung in Stud.IP &uuml;bernommen. Wenn Sie sich nicht sicher sind, ob alle Daten korrekt sind, &uuml;berpr&uuml;fen Sie noch einmal Ihre Eingaben auf den vorhergehenden Seiten."); ?><br><br>
                 <form method="POST" action="<? echo URLHelper::getLink() ?>">
@@ -4080,7 +4080,7 @@ if ($level == 6)
                     <input type="hidden" name="form" value=6>
                     <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?> >>" name="jump_back">&nbsp;<input type="image" <?=makeButton("anlegen", "src"); ?> border=0 value="<?=_("weiter >>");?>" name="jump_next">
                 </form>
-                </blockquote>
+                </div>
             </td>
             <td class="blank" align="right" valign="top">
                 <img src="<?= localePictureUrl('hands06.jpg') ?>" border="0">
@@ -4107,7 +4107,7 @@ if ($level == 7)
             { ?>
             <tr>
                 <td class="blank">
-                    <blockquote>
+                    <div class="info">
                     <b><?=_("Die Veranstaltung konnte nicht angelegt werden."); ?></b><br><br>
                     <?=_("Bitte korrigieren Sie die Daten."); ?>
                     <form method="POST" action="<? echo URLHelper::getLink() ?>">
@@ -4115,7 +4115,7 @@ if ($level == 7)
                         <input type="hidden" name="form" value=7>
                         <input type="image" <?=makeButton("zurueck", "src"); ?> border=0 value="<?=_("<< zur&uuml;ck");?>" name="jump_back">
                     </form>
-                    </blockquote>
+                    </div>
                 </td>
                 <td class="blank" align="right">
                     <img src="<?= localePictureUrl('hands06.jpg') ?>" border="0">
@@ -4126,7 +4126,7 @@ if ($level == 7)
             { ?>
             <tr>
                 <td class="blank" valign="top">
-                    <blockquote>
+                    <div class="info">
                     <?
                     print _("Sie haben die Veranstaltung bereits angelegt.");
                     if (($sem_create_data["modules_list"]["schedule"]) || ($sem_create_data["modules_list"]["scm"])) {
@@ -4152,7 +4152,7 @@ if ($level == 7)
                         }
                         ?>
                     </form>
-                    </blockquote>
+                    </div>
                 </td>
                 <td class="blank" align="right">
                     <img src="<?= localePictureUrl('hands06.jpg') ?>" border="0">
@@ -4164,7 +4164,7 @@ if ($level == 7)
             { ?>
             <tr>
                 <td class="blank" valign="top">
-                    <blockquote>
+                    <div class="info">
                     <b><?=_("Die Daten der Veranstaltung wurden in das System &uuml;bernommen"); ?></b><br><br>
                     <?
                     print _("Die Veranstaltung ist jetzt eingerichtet.");
@@ -4191,7 +4191,7 @@ if ($level == 7)
                         }
                         ?>
                     </form>
-                    </blockquote>
+                    </div>
                 </td>
                 <td class="blank" align="right" valign="top">
                     <img src="<?= localePictureUrl('hands06.jpg') ?>" border="0">
@@ -4300,7 +4300,7 @@ if ($level == 8)
         </tr>
         <tr>
             <td class="blank" valign="top">
-                <blockquote>
+                <div class="info">
                 <b><?=_("Schritt 7: Erstellen einer Informationsseite"); ?></b><br><br>
                 <? printf (_("Sie k&ouml;nnen nun eine frei gestaltbare Infomationsseite f&uuml;r die eben angelegte Veranstaltung <b>%s</b> eingeben."), $sem_create_data["sem_name"]);
                 print "<br>"._("Sie k&ouml;nnen die Bezeichnug dieser Seite frei bestimmten. Nutzen Sie sie etwa, um ungeordnete Literaturlisten oder weitere Informationen anzugeben.");
@@ -4308,7 +4308,7 @@ if ($level == 8)
                     print "<br> "._("Wenn Sie auf &raquo;weiter&laquo; klicken, haben Sie die M&ouml;glichkeit, mit dem Termin-Assistenten einen Ablaufplan f&uuml;r die Veranstaltung anzulegen.")
                 ?>
                 <br><br>
-                </blockquote>
+                </div>
             </td>
             <td class="blank" align="right" valign="top">
                 <img src="<?= localePictureUrl('hands07.jpg') ?>" border="0">

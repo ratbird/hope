@@ -28,9 +28,15 @@
                 $content[] = array('kategorie' => _("Informationen:"),
                     'eintrag' => array(
                         array(
-                            "icon" => "icons/16/black/info.png",
+                            'icon' => 'icons/16/black/info.png',
                             'text' => _("Hier können Sie Berechtigungen für den Zugriff auf die Ressource vergeben.") ."<br>".
                                 _("<b>Achtung:</b> Alle hier erteilten Berechtigungen gelten ebenfalls für die Ressourcen, die der gewählten Ressource untergeordnet sind!")
+                        ),
+
+                        array(
+                            'icon' => 'icons/16/black/search.png',
+                            'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
+                                   . _('zur Ressourcensuche') . '</a>'
                         )
                     )
                 );

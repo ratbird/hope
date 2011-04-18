@@ -43,8 +43,14 @@
                 $content[] = array('kategorie' => _("Informationen:"),
                     'eintrag' => array(
                         array(
-                            "icon" => "icons/16/black/info.png",
+                            'icon' => 'icons/16/black/info.png',
                             'text' => _("Hier können Sie Ressourcen-Eigenschaften bearbeiten.")
+                        ),
+
+                        array(
+                            'icon' => 'icons/16/black/search.png',
+                            'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
+                                   . _('zur Ressourcensuche') . '</a>'
                         )
                     )
                 );

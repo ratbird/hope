@@ -56,12 +56,7 @@ switch ($view) {
     case "search":
         $page_intro=_("Sie können hier nach Ressourcen suchen. Sie haben die Möglichkeit, über ein Stichwort oder bestimmte Eigenschaften Ressourcen zu suchen oder sich durch die Ebenen zu navigieren.");
         PageLayout::setTitle(_("Suche nach Ressourcen"));
-        if (Request::get('context') == 'resources') {
-            URLHelper::bindLinkParam('context', Request::get('context'));
-            Navigation::activateItem('/resources/view/search');
-        } else {
-            Navigation::activateItem('/search/resources');
-        }
+        Navigation::activateItem('/search/resources');
 
         $infobox = array(
             array  ("kategorie" => _("Aktionen:"),
@@ -136,10 +131,23 @@ switch ($view) {
 
         if (($view_mode == "no_nav") || ($view_mode == "search")) {
             $infobox = array(
-                        array  ("kategorie" => _("Aktionen:"),
-                                "eintrag" => array (
-                                    array   ("icon" => "icons/16/black/schedule.png",
-                                        "text"  => "<a href=\"$PHP_SELF?quick_view=view_schedule&quick_view_mode=".$view_mode."\">"._("zurück zum Belegungsplan")."</a>"))));
+                array(
+                    "kategorie" => _("Aktionen:"),
+                    "eintrag"   => array(
+                        array(
+                            "icon" => "icons/16/black/schedule.png",
+                            "text"  => '<a href="'. URLHelper::getLink('?quick_view=view_schedule&quick_view_mode=' . $view_mode) . '">'
+                                    . _("zurück zum Belegungsplan") . '</a>')
+                        )
+                )
+            );
+        } else {
+            $infobox[0]["kategorie"] = _("Aktionen:");
+            $infobox[0]['eintrag'][] = array(
+                'icon' => 'icons/16/black/search.png',
+                'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
+                       . _('zur Ressourcensuche') . '</a>'
+            );
         }
     break;
     case "edit_object_properties":
@@ -187,6 +195,12 @@ switch ($view) {
             "icon" => "icons/16/black/print.png",
             "text" => '<a href="'. URLHelper::getLink('', array('view' => 'view_schedule', 'print_view' => '1')) . '" target="_blank">' . _("Druckansicht") . '</a>'
         );
+
+       $infobox[0]['eintrag'][] = array(
+            'icon' => 'icons/16/black/search.png',
+            'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
+                   . _('zur Ressourcensuche') . '</a>'
+       );
     break;
     case "view_sem_schedule":
         $page_intro=_("Hier können Sie sich die Belegungszeiten der Ressource anzeigen  und auf unterschiedliche Art darstellen lassen.");
@@ -206,12 +220,10 @@ switch ($view) {
                                     "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
 
         if ($view_mode == "no_nav"){
-            $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
-                                    "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zur Ressourcensuche")."</a>");
             $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
                                     "text"  =>sprintf (_("%sBelegungsplan%s anzeigen"), ($view_mode == "oobj") ? "<a href=\"$PHP_SELF?quick_view=openobject_schedule&quick_view_mode=".$view_mode."\">" : "<a href=\"$PHP_SELF?quick_view=view_schedule".(($view_mode == "no_nav") ? "&quick_view_mode=no_nav" : "")."\">", "</a>"));
-
         }
+
         if ($view_mode != "search" && $view_mode != "no_nav") {
             if ($SessSemName["class"] == "sem")
                 $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/schedule.png",
@@ -225,6 +237,12 @@ switch ($view) {
                                 "text"  => "<a href=\"$PHP_SELF?view=view_sem_schedule&print_view=1\" target=\"_blank\">"
                                             . _("Druckansicht")
                                             . "</a>");
+        $infobox[0]['eintrag'][] = array(
+            'icon' => 'icons/16/black/search.png',
+            'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
+                   . _('zur Ressourcensuche') . '</a>'
+        );
+
         //$infopic = "infobox/schedules.jpg";
     break;
     case "view_group_schedule":
@@ -361,7 +379,16 @@ switch ($view) {
             if ($view_mode == "search")
                 $infobox[0]["eintrag"][] = array ("icon" => "icons/16/black/search.png",
                                         "text"  =>"<a href=\"$PHP_SELF?view=search&quick_view_mode=".$view_mode."\">"._("zurück zur Suche")."</a>");
-        $infopic = "infobox/schedules.jpg";
+            $infopic = "infobox/schedules.jpg";
+        } else {
+            $infobox[0]["kategorie"] = _("Aktionen:");
+            $infobox[0]['eintrag'][] = array(
+                'icon' => 'icons/16/black/search.png',
+                'text' => '<a href="'. URLHelper::getLink('resources.php?view=search&quick_view_mode=' . $view_mode) .'">'
+                       . _('zur Ressourcensuche') . '</a>'
+            );
+
+            $infopic = "infobox/schedules.jpg";
         }
     break;
     case "openobject_schedule":

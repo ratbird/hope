@@ -160,7 +160,7 @@ class ResourcesBrowse {
                 if ($view) {
                     $result .= '> <a href="';
                     $result .= URLHelper::getLink(sprintf('?quick_view=%s&quick_view_mode=%s&%s=%s',
-                        $PHP_SELF, (!$view) ? "search" : $view, $view_mode,
+                        (!$view) ? "search" : $view, $view_mode,
                         ($view=='search') ? "open_level" : "actual_object", $result_arr[$i]["id"]));
                     $result .= '">'. htmlReady($result_arr[$i]["name"]) .'</a>';
                 } else {

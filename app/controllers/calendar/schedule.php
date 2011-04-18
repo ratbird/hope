@@ -30,6 +30,31 @@ class Calendar_ScheduleController extends AuthenticatedController
 {
 
     /**
+     * Callback function being called before an action is executed. If this
+     * function does not return FALSE, the action will be called, otherwise
+     * an error will be generated and processing will be aborted. If this function
+     * already #rendered or #redirected, further processing of the action is
+     * withheld.
+     *
+     * @param string  Name of the action to perform.
+     * @param array   An array of arguments to the action.
+     *
+     * @return bool
+     */
+    function before_filter(&$action, &$args) {
+        parent::before_filter($action, $args);
+
+        // bind zoom and show_hidden for all actions, even preserving them after redirect
+        if (Request::int('zoom')) {
+            URLHelper::addLinkParam('zoom', Request::int('zoom'));
+        }
+
+        if (Request::int('show_hidden')) {
+            URLHelper::addLinkParam('show_hidden', Request::int('show_hidden'));
+        }
+    }
+
+    /**
      * this action is the main action of the schedule-controller, setting the environment
      * for the timetable, accepting a comma-separated list of days.
      *
@@ -40,14 +65,6 @@ class Calendar_ScheduleController extends AuthenticatedController
     function index_action($days = false)
     {
         global $my_schedule_settings;
-
-        if (Request::int('zoom')) {
-            URLHelper::bindLinkParam('zoom', Request::int('zoom'));
-        }
-
-        if (Request::int('show_hidden')) {
-            URLHelper::bindLinkParam('show_hidden', Request::int('show_hidden'));
-        }
 
         if ($GLOBALS['perm']->have_perm('admin')) $inst_mode = true;
 
@@ -76,7 +93,6 @@ class Calendar_ScheduleController extends AuthenticatedController
 
         // check, if the hidden seminar-entries shall be shown
         $show_hidden = Request::option('show_hidden', false);
-        if ($this->flash['show_hidden']) $show_hidden = true;
 
         // load semester-data and current semester
         $semdata = new SemesterData();
@@ -276,10 +292,6 @@ class Calendar_ScheduleController extends AuthenticatedController
             'cycle_id' => $cycle_id
         );
 
-        if (Request::option('show_hidden')) {
-            $this->flash['show_hidden'] = true;
-        }
-
         $this->redirect('calendar/schedule/');
     }
 
@@ -336,10 +348,6 @@ class Calendar_ScheduleController extends AuthenticatedController
             $this->response->add_header('Content-Type', 'text/html; charset=windows-1252');
             $this->render_template('calendar/schedule/_entry_inst');
         } else {
-            if (Request::option('show_hidden')) {
-                $this->flash['show_hidden'] = true;
-            }
-
             $this->flash['entry'] = $this->show_entry;
             $this->redirect('calendar/schedule/');
         }
@@ -450,10 +458,6 @@ class Calendar_ScheduleController extends AuthenticatedController
     function bind_action($seminar_id, $cycle_id, $ajax = false)
     {
         CalendarScheduleModel::bind($seminar_id, $cycle_id);
-
-        if (Request::option('show_hidden')) {
-            $this->flash['show_hidden'] = true;
-        }
 
         if (!$ajax) {
             $this->redirect('calendar/schedule');

@@ -101,7 +101,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
     }
 
     public function setup () {
-    
+
         // setup module properties
         $this->elements['LinkInternLecturedetails']->real_name = _("Link zum Modul Veranstaltungsdetails");
         $this->elements['LinkInternLecturedetails']->link_module_type = array(4, 13);
@@ -246,7 +246,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         if (!$nameformat = $this->config->getValue('Main', 'nameformat')) {
             $nameformat = 'full';
         }
-        
+
         $row = false;
         $global_view = false;
         $dbv = new DbView();
@@ -258,7 +258,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 return array();
             }
             // is user lecturer ?
-            if ($this->config->getValue('Main', 'onlylecturer')) {
+            if ($this->config->getValue('Main', 'onlylecturers')) {
                 $current_semester = get_sem_num(time());
                 $stm = DBManager::get()->prepare(sprintf(
                     "SELECT aum.user_id "
@@ -303,9 +303,9 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 }
             }
         }
-        
+
         $row = false;
-        
+
         // Mitarbeiter/in am Institut
         $stm_inst = DBManager::get()->prepare(
             "SELECT i.Institut_id "
@@ -315,7 +315,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             . "WHERE i.Institut_id = ? "
             . "AND aum.username = ? AND ui.inst_perms IN ('autor','tutor','dozent')");
         $stm_inst->execute(array($instituts_id, $username));
-        
+
         // Mitarbeiter/in am Heimatinstitut des Seminars
         if (!$row = $stm_inst->fetch(PDO::FETCH_ASSOC) && $sem_id) {
             $stm_inst = DBManager::get()->prepare(
@@ -403,7 +403,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             $stm->execute(array($username, $instituts_id));
             $row = $stm->fetch(PDO::FETCH_ASSOC);
         }
-        
+
         // the user with the given username does not fulfill the conditions above
         if (!$row) {
             return array();
@@ -461,10 +461,10 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             $localEntries = DataFieldEntry::getDataFieldEntries($this->user_id, 'user');
             $k = 1;
             foreach ($generic_datafields as $datafield) {
-                if (isset($localEntries[$datafield]) && 
+                if (isset($localEntries[$datafield]) &&
                         is_object($localEntries[$datafield]) &&
-                        is_element_visible_externally($this->user_id, 
-                            $uthis->ser_perm, $localEntries[$datafield]->getId(), 
+                        is_element_visible_externally($this->user_id,
+                            $uthis->ser_perm, $localEntries[$datafield]->getId(),
                             $this->visibilities[$localEntries[$datafield]->getId()])) {
                     $localEntry = $localEntries[$datafield]->getDisplayValue();
                     if ($localEntry) {
@@ -596,7 +596,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         $all_semester = $semester->getAllSemesterData();
         // old hard coded $SEMESTER-array starts with index 1
         array_unshift($all_semester, 0);
-        
+
         $types = array();
         $semclass = $this->config->getValue('PersondetailsLectures', 'semclass');
         if (is_null($semclass)) {
@@ -634,7 +634,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
         if (!isset($all_semester[$last_sem])) {
             $last_sem = sizeof($all_semester) - 1;
         }
-        
+
         $types = array();
         $semclass = $this->config->getValue('PersondetailsLectures', 'semclass');
         if (is_null($semclass)) {
@@ -655,7 +655,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             . "AND s.status IN ('%s') AND s.visible = 1 "
             . "ORDER BY s.mkdate DESC"
             , implode("','", $types)));
-        
+
         $i = 0;
         for (;$current_sem <= $last_sem; $last_sem--) {
             $stm->execute(array($this->user_id, $all_semester[$last_sem]['beginn'], $all_semester[$last_sem]['beginn'],$all_semester[$last_sem]['ende']));

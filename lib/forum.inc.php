@@ -101,7 +101,7 @@ function forum_parse_edit ($description, $anonymous) {
 *
 **/
 function editarea($forumposting) {
-    global $forum, $view, $user, $auth;
+    global $forum, $user, $auth;
 
     if ($auth->auth["jscript"]) {
         $max_col = round($auth->auth["xres"] / 12 );
@@ -112,11 +112,7 @@ function editarea($forumposting) {
     $cols = round($max_col*0.45);
     if ($cols < 28) $cols = 28;
 
-    if ($forumposting["writestatus"] == "new") // Abbrechen Button unterscheidet ob Anlegen abgebrochen oder Bearbeiten abgebrochen
-        $zusatz = "<a href=\"".URLHelper::getLink("?really_kill=".$forumposting["id"]."&nurneu=1#anker")."\">" . makeButton("abbrechen", "img", _("abbrechen")) . "</a>";
-    else
-        $zusatz = "<a href=\"".URLHelper::getLink("?open=".$forumposting["rootid"]."#anker")."\">" . makeButton("abbrechen", "img", _("abbrechen")) . "</a>";
-
+    $zusatz = "<a href=\"".URLHelper::getLink("?open=".$forumposting["rootid"]."#anker")."\">" . makeButton("abbrechen", "img", _("abbrechen")) . "</a>";
 
     if (get_config("EXTERNAL_HELP")) {
         $help_url=format_help_url("Basis.VerschiedenesFormat");
@@ -153,11 +149,11 @@ function editarea($forumposting) {
         $description .= '<input type="hidden" name="root_id" value="'.$forumposting['rootid'].'">';
         $description .= '<input type="hidden" name="parent_id" value="'.$forumposting['parent_id'].'">';
         if (get_config('FORUM_ANONYMOUS_POSTINGS')) {
-          $description .= '<div align="center"><label><input id="input_anonymous" type="checkbox" name="anonymous">'._('Beitrag anonym verfassen').'</label></div>';
+          $description .= '<div align="center"><label><input id="input_anonymous" type="checkbox" name="anonymous" value="1">'._('Beitrag anonym verfassen').'</label></div>';
         }
     } else {
         if (get_config('FORUM_ANONYMOUS_POSTINGS') && $forumposting['anonymous']) {
-            $description .= '<input type="hidden" name="anonymous" value="true">';
+            $description .= '<input type="hidden" name="anonymous" value="1">';
         }
     }
     $description .= "<br><br><img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"160\" height=\"1\">" . makeButton('abschicken', 'input', _("abschicken"), 'create') . "&nbsp;"
@@ -257,7 +253,7 @@ function move_topic2($topic_id, $root, &$verschoben,$thema)  //rekursives Versch
 *
 **/
 function lonely($topic_id)  //Sucht nach Kindern und den Rechten (für editieren)
-{   global $user,$auth,$rechte,$forumposting;
+{   global $user,$auth,$rechte;
     $lonely=TRUE;
     $db=new DB_Seminar;
     $db2=new DB_Seminar;
@@ -285,7 +281,7 @@ function lonely($topic_id)  //Sucht nach Kindern und den Rechten (für editieren)
 *
 **/
 function suche_kinder($topic_id)  //Sucht alle aufgeklappten Beitraege raus
-{   global $open,$view;
+{   global $_open;
     $db=new DB_Seminar;
     $db->query("SELECT topic_id FROM px_topics WHERE parent_id='$topic_id'");
     if ($db->num_rows()) {
@@ -294,8 +290,8 @@ function suche_kinder($topic_id)  //Sucht alle aufgeklappten Beitraege raus
             suche_kinder($next_topic);
             }
         }
-    $open .= ";".$topic_id;
-    return $open;
+    $_open .= ";".$topic_id;
+    return $_open;
 }
 
 /**
@@ -307,12 +303,12 @@ function suche_kinder($topic_id)  //Sucht alle aufgeklappten Beitraege raus
 *
 **/
 function ForumOpenClose ($forumposting) {
-    global $forum, $openall, $open, $folderopen, $delete_id;
+    global $forum;
     if (strstr($forum["openlist"],$forumposting["id"])!=TRUE
-    AND !($openall == "TRUE" && $forumposting["rootid"] == $folderopen)
+    AND !(Request::option('openall') == "TRUE" && $forumposting["rootid"] == Request::option('folderopen'))
     AND !(($forum["view"]=="flat" || $forum["view"]=="neue" || $forum["view"]=="flat" || $forum["view"]=="flatfolder" || $forum["view"]=="search") && $forum["flatallopen"]=="TRUE")
     AND !($forumposting["newold"]=="new" && $forum["neuauf"]==1)
-    AND !$delete_id
+    AND !Request::option('delete_id')
     AND ($forumposting["writestatus"]=="none")) {
         $forumposting["openclose"] = "close";
     } else {
@@ -510,7 +506,8 @@ function ForumGetAnonymity ($forumposting) {
 *
 **/
 function ForumIcon ($forumposting) {
-    global $cmd, $rechte, $topic_id, $forum, $auth, $perm;
+    global $rechte, $forum, $auth, $perm;
+    $topic_id = Request::option('topic_id');
     $anonymous = false;
     if (get_config('FORUM_ANONYMOUS_POSTINGS') && ($forumposting["anonymous"] || $perm->have_perm('root'))) {
         $anonymous = true;
@@ -540,7 +537,7 @@ function ForumIcon ($forumposting) {
         else
             $forumposting["icon"] = "<img src=\"".$bild."\" $addon>";
     }
-    if ($cmd=="move" && $rechte && $topic_id != $forumposting["id"] )  // ein Beitrag wird verschoben, gelbe Pfeile davor
+    if (Request::option('cmd') == "move" && $rechte && $topic_id != $forumposting["id"] )  // ein Beitrag wird verschoben, gelbe Pfeile davor
         $forumposting["icon"] =  "<a href=\"".URLHelper::getLink("?target=Thema&move_id=".$topic_id."&parent_id=".$forumposting["id"])."\">"
                     ."<img src=\"" . Assets::image_path('icons/16/yellow/arr_2right.png') . "\" " . tooltip(_("Forenbeiträge in dieses Thema verschieben")) . "></a>"
                     .$forumposting["icon"];
@@ -599,13 +596,14 @@ function ForumGetName($id)  {
 *
 **/
 function forum_get_buttons ($forumposting) {
-    global $rechte, $forum, $user, $SessionSeminar, $view;
+    global $rechte, $forum, $user;
 
-    { if (!(have_sem_write_perm())) { // nur mit Rechten...
+    $view = Request::option('view');
+    if (!(have_sem_write_perm())) { // nur mit Rechten...
         if ($view=="search") $tmp = "&view=tree";
         if ($view=="mixed") $tmp = "&open=".$forumposting["id"]."&view=flatfolder";
             $edit = "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&flatviewstartposting=0&shrinkopen=".$forumposting["rootid"]."&sort=age".$tmp."#anker")."\">" . makeButton("antworten", "img", _("antworten")) . "</a>";
-            $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=TRUE&flatviewstartposting=0&shrinkopen=".$forumposting["rootid"]."&sort=age".$tmp."#anker")."\">" . makeButton("zitieren", "img", _("zitieren")) . "</a>";
+            $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=1&flatviewstartposting=0&shrinkopen=".$forumposting["rootid"]."&sort=age".$tmp."#anker")."\">" . makeButton("zitieren", "img", _("zitieren")) . "</a>";
             if ($forumposting["lonely"]==TRUE && ($rechte || $forumposting["perms"]=="write")) // ich darf bearbeiten
                 $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?edit_id=".$forumposting["id"]."&view=".$forum["view"]."&flatviewstartposting=".$forum["flatviewstartposting"]."#anker")."\">"
                 . makeButton("bearbeiten", "img", _("bearbeiten")) . "</a>";
@@ -618,13 +616,13 @@ function forum_get_buttons ($forumposting) {
             }
     } elseif ($user->id == "nobody") {  // darf Nobody hier schreiben?
         $db=new DB_Seminar;
-        $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='$SessionSeminar' AND Schreibzugriff=0");
+        $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='{$_SESSION['SessionSeminar']}' AND Schreibzugriff=0");
         if ($db->num_rows())  {
             $edit = "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&flatviewstartposting=0#anker")."\">" . makeButton("antworten", "img", _("antworten")) . "</a>";
-            $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=TRUE&flatviewstartposting=0#anker")."\">" . makeButton("zitieren", "img", _("zitieren")) . "</a>";
+            $edit .= "&nbsp;<a href=\"".URLHelper::getLink("?answer_id=".$forumposting["id"]."&zitat=1&flatviewstartposting=0#anker")."\">" . makeButton("zitieren", "img", _("zitieren")) . "</a>";
         } else
             $edit=""; // war kein nobody Seminar
-    } else  // nix mit Rechten
+    } else { // nix mit Rechten
         $edit = "";
     }
     return $edit;
@@ -747,9 +745,9 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
 {
     static $count;
 
-    global $SessionSeminar,$auth, $user, $perm;
+    global $auth, $user, $perm;
     if (!$tmpSessionSeminar)
-        $tmpSessionSeminar=$SessionSeminar;
+        $tmpSessionSeminar = $_SESSION['SessionSeminar'];
     $db=new DB_Seminar;
     $mkdate = time();
 
@@ -785,7 +783,7 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
     $db=new DB_Seminar;
 
     if ($user->id == "nobody") {    // darf Nobody hier schreiben?
-        $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='$SessionSeminar' AND Schreibzugriff=0");
+        $db->query("SELECT Seminar_id FROM seminare WHERE Seminar_id='{$_SESSION['SessionSeminar']}' AND Schreibzugriff=0");
         if (!$db->num_rows()) {
             throw new AccessDeniedException(_("Ihnen fehlen die Rechte, in dieser Veranstaltung zu Schreiben."));
         }
@@ -814,7 +812,7 @@ function CreateTopic ($name="[no name]", $author="[no author]", $description="",
  */
 function CreateNewTopic ($name, $description, $parent_id="0", $root_id="0", $anonymous=false)
 {
-    global $SessionSeminar, $auth, $new_topic;
+    global $auth, $new_topic;
 
     $mkdate = time();
     $chdate = $mkdate-1;
@@ -916,7 +914,9 @@ function ForumStriche($forumposting) {
 *
 **/
 function forum_print_toolbar ($id="") {
-        global $user, $forum, $open, $flatviewstartposting, $indexvars;
+        global $user, $forum, $indexvars;
+        $open = Request::option('open');
+        $flatviewstartposting = Request::int('flatviewstartposting');
         $print = "<table class=\"blank\" width=\"100%\" border=0 cellpadding=0 cellspacing=0><tr><td class=\"blank\">";
         if ($forum["toolbar"] == "open") {
             if ($forum["view"] != "tree" && $forum["view"] != "mixed") {
@@ -1051,29 +1051,11 @@ function forum_check_edit($forumposting) {
 
 
 /**
-* prints the topicline
-*
-**/
-function forum_draw_topicline() {
-    global $user, $SessSemName, $view;
-/*
-
-    echo "\n<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-    echo "<tr><td class=\"topic\" width=\"99%\"><b>&nbsp;<img src='".$GLOBALS['ASSETS_URL']."images/icons/16/blue/forum.png' align=absmiddle>&nbsp; ". $SessSemName["header_line"] ." - " . _("Forum") . "</b></td><td class=\"topic\" width=\"1%\" align=\"right\" nowrap>";
-    if ($user->id != "nobody")
-        echo "<a href='".URLHelper::getLink("?forumsend=anpassen")."'><img src='".$GLOBALS['ASSETS_URL']."images/icons/16/white/admin.png' border=0 " . tooltip(_("Look & Feel anpassen")) . ">&nbsp;</a>";
-    echo "</td></tr>";
-*/
-echo "\n<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-
-}
-
-/**
 * prints the rating-bar
 *
 **/
 function print_rating($rate, $id, $username) {
-    global $openorig, $forum, $user, $auth;
+    global $forum, $user, $auth;
     if ($rate == "?"){
         $bar = "<img src=\"".$GLOBALS['ASSETS_URL']."images/rate_leer.gif\" width=\"50\" border=\"0\" height=\"11\">";
     } else {
@@ -1119,7 +1101,7 @@ function print_rating($rate, $id, $username) {
 *
 **/
 function printposting ($forumposting) {
-    global $forum,$view,$davor,$auth,$user, $SessSemName, $sidebar, $indexvars, $open, $openorig, $delete_id,$rechte, $perm;
+    global $forum,$auth,$user, $SessSemName, $indexvars, $openorig, $rechte, $perm;
 
   // Status des Postings holen
     // auf- zugeklappt
@@ -1200,7 +1182,9 @@ function printposting ($forumposting) {
 
     // Alter ausgeben
 
-        if ($forumposting["type"] == "folder" && ($view=="tree" || $view=="mixed") && !$delete_id && $forumposting["openclose"] == "close") {
+        $view = Request::option('view');
+
+        if ($forumposting["type"] == "folder" && ($view=="tree" || $view=="mixed") && !Request::option('delete_id') && $forumposting["openclose"] == "close") {
             $forumhead[] =  "&nbsp;".date("d.m.Y - H:i", $forumposting["folderlast"])."&nbsp;";
             $age_tmp = $forumposting["folderlast"];
         } else {
@@ -1245,13 +1229,13 @@ function printposting ($forumposting) {
             $favtxt = _("zu den Favoriten hinzufügen");
         }
         $rand = "&random=".rand();
-        if ($user->id != "nobody" && !$delete_id) // Nobody kriegt keine Favoriten, auch nicht in der Löschen-Ansicht
+        if ($user->id != "nobody" && !Request::option('delete_id')) // Nobody kriegt keine Favoriten, auch nicht in der Löschen-Ansicht
             $forumhead[] = "<a href=\"".URLHelper::getLink("?fav=".$forumposting["id"]."&open=$openorig".$rand."&flatviewstartposting=".$forum["flatviewstartposting"]."#anker")."\"><img src=\"".$favicon."\" border=\"0\" ".tooltip($favtxt).">&nbsp;</a>";
 
     // Antwort-Pfeil
 
-        if (!(have_sem_write_perm()) && !$delete_id)
-            $forumhead[] = "<a href=\"".URLHelper::getLink("write_topic.php?write=1&root_id=".$forumposting["rootid"]."&topic_id=".$forumposting["id"])."\" target=\"_blank\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/add/forum.png\" border=0 " . tooltip(_("Hier klicken um in einem neuen Fenster zu antworten")) . "></a>";
+        if (!(have_sem_write_perm()) && !Request::option('delete_id'))
+            $forumhead[] = "<a href=\"".URLHelper::getLink("write_topic.php?root_id=".$forumposting["rootid"]."&topic_id=".$forumposting["id"])."\" target=\"_blank\"><img src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/blue/add/forum.png\" border=0 " . tooltip(_("Hier klicken um in einem neuen Fenster zu antworten")) . "></a>";
 
         $zusatz = ForumParseZusatz($forumhead);
 
@@ -1314,7 +1298,7 @@ function printposting ($forumposting) {
 
     // Anzeigen der Sidebar /////////////
 
-        if (($sidebar==$forumposting["id"] || $forum["rateallopen"]==TRUE) && !$delete_id) {
+        if ((Request::option('sidebar')==$forumposting["id"] || $forum["rateallopen"]==TRUE) && !Request::option('delete_id')) {
 
             $addon = "<img src=\"".$GLOBALS['ASSETS_URL']."images/blank.gif\" width=\"140\" height=\"5\">";
 
@@ -1355,7 +1339,7 @@ function printposting ($forumposting) {
                     $addon .= "<font size=\"-1\">&nbsp;&nbsp;". sprintf(_("Sie haben diesen%sBeitrag bewertet."),'&nbsp;<br>&nbsp;&nbsp;');
                 }
             }
-        } elseif ($user->id != "nobody" && !$delete_id)  // nur Aufklapppfeil
+        } elseif ($user->id != "nobody" && !Request::option('delete_id'))  // nur Aufklapppfeil
             $addon = "open:".URLHelper::getLink("?open=".$forumposting["id"]."&flatviewstartposting=".$forum["flatviewstartposting"]."&sidebar=".$forumposting["id"]."#anker");
 
   // Kontentzeile ausgeben
@@ -1378,7 +1362,6 @@ function printposting ($forumposting) {
 * Builds the Flatview of a Board (for last Postings, New Postings, Search, Flatview)
 *
 * @param    string  open id of the opened posting
-* @param    string  mehr ?
 * @param    string  show ?
 * @param    string  update the id of the posting to be updated
 * @param    string  name ?
@@ -1386,9 +1369,9 @@ function printposting ($forumposting) {
 * @param    string  zitat id of the posting to be quoted
 *
 **/
-function flatview ($open=0, $mehr=1, $show=0, $update="", $name="", $description="",$zitat="")
+function flatview ($open=0, $show=0, $update="", $name="", $description="",$zitat="")
 
-{   global $SessionSeminar,$SessSemName,$view,$rechte,$forum,$user,$flatviewstartposting;
+{   global $SessSemName,$rechte,$forum,$user;
     global $new_topic;
 
 /////////////////////////////// Konstanten setzen bzw. zuweisen die für die ganze Seite gelten
@@ -1399,12 +1382,8 @@ $forum["update"] = $update;
 if (!(int)$forum["postingsperside"])
     $forum["postingsperside"] = 15;
 $postingsperside = (int)$forum["postingsperside"];
-if (!(int)$flatviewstartposting) {
-    $forum["flatviewstartposting"] = 0;
-    $flatviewstartposting = 0;
-} else {
-    $forum["flatviewstartposting"] = (int)$flatviewstartposting;
-}
+$flatviewstartposting = Request::int('flatviewstartposting', 0);
+$forum["flatviewstartposting"] = $flatviewstartposting;
 
 /////////////////////////////// Abfrage der Postings
 
@@ -1434,11 +1413,11 @@ if ($forum["view"]=="search") {
 }
 
 function countTopics($db, $addon) {
-    global $user, $SessionSeminar;
+    global $user;
     $query = "SELECT x.topic_id ".
              "FROM px_topics x, px_topics y ".
              "WHERE x.root_id = y.topic_id ".
-             "AND x.Seminar_id = '$SessionSeminar' ".
+             "AND x.Seminar_id = '{$_SESSION['SessionSeminar']}' ".
              "AND (x.chdate>=x.mkdate OR x.user_id='$user->id' OR x.author='unbekannt')".
              $addon;
     $db->query($query);
@@ -1480,7 +1459,7 @@ $query = "SELECT x.topic_id, x.name , x.author , x.mkdate, x.chdate as age, y.na
     .", ((6-(IFNULL(AVG(rate),3))-3)*5)+(IFNULL(views,0)/(((UNIX_TIMESTAMP()-x.mkdate)/604800)+1)) as score "
     ."FROM px_topics x LEFT JOIN object_views ON(object_views.object_id=x.topic_id) LEFT JOIN object_rate ON(object_rate.object_id=x.topic_id) "
     ."LEFT JOIN auth_user_md5 ON(auth_user_md5.user_id = x.user_id) LEFT OUTER JOIN object_user ON(object_user.object_id=x.topic_id AND object_user.user_id='$user->id' AND flag='fav') , px_topics y "
-    ."WHERE x.root_id = y.topic_id AND x.seminar_id = '$SessionSeminar' AND (x.chdate>=x.mkdate OR x.user_id='$user->id' OR x.author='unbekannt')".$addon." "
+    ."WHERE x.root_id = y.topic_id AND x.seminar_id = '{$_SESSION['SessionSeminar']}' AND (x.chdate>=x.mkdate OR x.user_id='$user->id' OR x.author='unbekannt')".$addon." "
     ."GROUP by x.topic_id ORDER BY ".$forum["sort"]." ".$order
     ." ,age DESC LIMIT $flatviewstartposting,$postingsperside";
 
@@ -1609,7 +1588,7 @@ if ($update)
 *
 **/
 function DisplayFolders ($open=0, $update="", $zitat="") {
-    global $SessionSeminar,$SessSemName,$rechte,$i_page,$view, $write,$all,$forum,$cmd,$move_id,$auth,$user, $shrinkopen, $SEM_CLASS, $SEM_TYPE, $perm;
+    global $SessSemName,$rechte, $forum,$auth,$user, $SEM_CLASS, $SEM_TYPE, $perm;
     global $new_topic;
 
 //Zeigt im Treeview die Themenordner an
@@ -1641,7 +1620,7 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
     ."FROM px_topics t LEFT JOIN px_topics s ON(s.root_id=t.root_id AND s.chdate >= s.mkdate) "
     ."LEFT JOIN object_views ON(object_views.object_id=t.topic_id) LEFT JOIN object_rate ON(object_rate.object_id=t.topic_id) "
     ."LEFT OUTER JOIN object_user ON(object_user.object_id=t.root_id AND object_user.user_id='$user->id' AND flag='fav') "
-    ."WHERE t.topic_id = t.root_id AND t.Seminar_id = '$SessionSeminar' AND (t.chdate>=t.mkdate OR t.user_id='$user->id' OR t.author='unbekannt') GROUP BY t.root_id  ORDER BY $order";
+    ."WHERE t.topic_id = t.root_id AND t.Seminar_id = '{$_SESSION['SessionSeminar']}' AND (t.chdate>=t.mkdate OR t.user_id='$user->id' OR t.author='unbekannt') GROUP BY t.root_id  ORDER BY $order";
     $db=new DB_Seminar;
     $db->query($query);
     if ($db->num_rows()==0 && !isset($new_topic)) {  // Das Forum ist leer
@@ -1668,6 +1647,7 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
             $forum["openlist"] .= ForumGetParent($update);
         $forum["openlist"] .= ";".$open.";".$root_id;
 
+        $shrinkopen = Request::option('shrinkopen');
         if ($shrinkopen) {
             $forum["shrinkopenlist"] = suche_kinder($shrinkopen);
             $forum["shrinkopenlist"] .= ";".$shrinkopen;
@@ -1708,7 +1688,7 @@ function DisplayFolders ($open=0, $update="", $zitat="") {
 
             $forumposting = printposting($forumposting);
 
-            if ($forum["view"] == "tree" && $forumposting["openclose"]=="open" && $cmd != "move") {
+            if ($forum["view"] == "tree" && $forumposting["openclose"]=="open" && Request::option('cmd') != "move") {
                 DisplayKids ($forumposting);
             }
         }
@@ -1769,7 +1749,7 @@ function indentPosting (&$forumposting, $level)
 *
 **/
 function DisplayKids ($forumposting, $level=0) {
-    global $SessionSeminar,$SessSemName,$anfang, $forum,$rechte,$view,$write,$all,$davor,$auth,$user, $age, $openall;
+    global $SessSemName, $forum,$rechte,$auth,$user, $age;
     global $new_topic;
 
 // stellt im Treeview alle Postings dar, die NICHT Thema sind
@@ -1823,7 +1803,7 @@ function DisplayKids ($forumposting, $level=0) {
 
         if (strstr($forum["shrinkopenlist"],$forumposting["id"])!=TRUE
             && strstr($forum["openlist"],$forumposting["id"])!=TRUE
-            && $forum["shrink"]!=0 && $openall != TRUE
+            && $forum["shrink"]!=0 && Request::option('openall') != 'TRUE'
             && !($forum["neuauf"] == 1 && $forumposting["newold"] == "new")) {
                 $age = ForumCheckShrink($forumposting["id"]);
                 $age = explode(";",$age);
@@ -1913,7 +1893,7 @@ return $searchfield;
 *
 **/
 function forum_move_navi ($topic_id) {
-    global $perm, $user, $forum, $view;
+    global $perm, $user, $forum;
 
     $mutter = suche_kinder($topic_id);
     $mutter = explode (";",$mutter);
@@ -1973,7 +1953,6 @@ function forum_move_navi ($topic_id) {
             ?>  </select>
                     <input type="hidden" name="target" value="Seminar">
                     <input type="hidden" name="topic_id" value="<?echo $topic_id;?>">
-                    <input type="hidden" name="view" value="<?echo $view;?>">
                 </form>
                 </td>
             </tr>
@@ -1999,7 +1978,6 @@ function forum_move_navi ($topic_id) {
             ?>  </select>
                     <input type="hidden" name="target" value="Institut">
                     <input type="hidden" name="topic_id" value="<?echo $topic_id;?>">
-                    <input type="hidden" name="view" value="<?echo $view;?>">
                 </form>
                 </td>
             </tr>

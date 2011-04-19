@@ -178,9 +178,3 @@ if ($forumsend=="bla"){
 </tr>
 </table>
 <br>
-
-
-<? IF ($forumsend=="anpassen") {
-    echo " </td></tr></table>";
-    die;
-    }

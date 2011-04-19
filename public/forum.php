@@ -30,11 +30,13 @@ page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" =>
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
+unregister_globals();
+
 // -- here you have to put initialisations for the current page
 $txt = $message = $count = $verschoben = '';
-$flatviewstartposting = (int)$flatviewstartposting;
-(isset($view) && preg_match('/^[a-z]*$/', $view)) or $view = '';
-(isset($open) && preg_match('/^[a-z0-9]{1,32}$/', $open)) or $open = '';
+$flatviewstartposting = Request::int('flatviewstartposting', 0);
+$view = Request::option('view');
+$open = Request::option('open');
 
 checkObject();
 checkObjectModule("forum");
@@ -42,12 +44,7 @@ object_set_visit_module("forum");
 
 mark_public_course();
 
-if ($forumsend && $forumsend!="bla") {
-    PageLayout::setHelpKeyword("Basis.ForumEinstellungen");
-    PageLayout::setTitle(_("Einstellungen des Forums anpassen"));
-    Navigation::activateItem('/course/forum/settings');
-    SkipLinks::addIndex(Navigation::getItem('/course/forum/settings')->getTitle(), 'main_content', 100);
-} elseif(isset($neuesthema)) {
+if (Request::option('neuesthema')) {
     PageLayout::setHelpKeyword("Basis.ForumBeteiligen");
     PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Forum"));
     Navigation::activateItem('/course/forum/view');
@@ -118,7 +115,7 @@ STUDIP.Forum.rate_template = function (id) {
 PageLayout::addHeadElement('script', array('type' => 'text/javascript'), ob_get_clean());
 
 // Start of Output
-if (!$update) {
+if (!Request::option('update')) {
     include ('lib/include/html_head.inc.php'); // Output of html head
     include ('lib/include/header.php');   // Output of Stud.IP head
 }
@@ -144,29 +141,6 @@ function getMsTime(){
 
 
 //////////////////////////////////////////////////////////////////////////////////
-//Daten aus der Einstellungsseite verarbeiten
-//////////////////////////////////////////////////////////////////////////////////
-
-if ($forumsend) {
-    if ($forumsend=="bla"){
-        if ($presetview == "theme")
-            $presetview = $themeview;
-        $forum["neuauf"] = $neuauf;
-        $forum["postingsperside"] = $postingsperside;
-        $forum["flatallopen"] = $flatallopen;
-        $forum["rateallopen"] = $rateallopen;
-        $forum["showimages"] = $showimages;
-        $forum["sortthemes"] = $sortthemes;
-        $forum["themeview"] = $themeview;
-        $forum["presetview"] = $presetview;
-        $forum["shrink"] = $shrink*604800; // Anzahl der Sekunden pro Woche
-        $forum["changed"] = "TRUE";
-        $txt = _("Anpassungen durchgeführt.");
-    } else
-        include('lib/include/forumsettings.inc.php');
-}
-
-//////////////////////////////////////////////////////////////////////////////////
 // Anzeige und View-Logik
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -178,10 +152,10 @@ if ($forum["view"]=="mixed" && $open) {
 if (!$forum["themeview"])
     $forum["themeview"]="tree";
 
-if ($themeview) { // Umschaltung tree/flat über die Kopfleiste
-    $forum["themeview"]=$themeview;
+if (Request::option('themeview')) { // Umschaltung tree/flat über die Kopfleiste
+    $forum["themeview"] = Request::option('themeview');
     if ($forum["presetview"]=="tree" || $forum["presetview"]=="mixed")
-        $forum["presetview"] = $themeview;
+        $forum["presetview"] = $forum["themeview"];
 }
 
 if ($presetview) {
@@ -218,9 +192,9 @@ URLHelper::addLinkParam('view', $view);
 
 $forum['search'] = '';
 
-if ($_REQUEST['suchbegriff'] != '' || $_REQUEST['author'] != '') {
-    $forum['searchstring'] = remove_magic_quotes($_REQUEST['suchbegriff']);
-    $forum['searchauthor'] = remove_magic_quotes($_REQUEST['author']);
+if (Request::get('suchbegriff') != '' || Request::get('author') != '') {
+    $forum['searchstring'] = Request::get('suchbegriff');
+    $forum['searchauthor'] = Request::get('author');
 
     $meta_search = array('_', '%', '*');
     $meta_replace = array('\_', '\%', '%');
@@ -256,7 +230,7 @@ if ($_REQUEST['suchbegriff'] != '' || $_REQUEST['author'] != '') {
     URLHelper::addLinkParam('author', $forum['searchauthor']);
 }
 
-if ($_REQUEST['reset']) {
+if (Request::int('reset')) {
     $forum['search'] = '';
 }
 
@@ -264,15 +238,15 @@ if ($_REQUEST['reset']) {
 // verschiedene GUI-Konstanten werden gesetzt
 //////////////////////////////////////////////////////////////////////////////////
 
-if ($indikator) {
-    $forum["indikator"] = $indikator;
-    URLHelper::addLinkParam('indikator', $indikator);
+if (Request::option('indikator')) {
+    $forum["indikator"] = Request::option('indikator');
+    URLHelper::addLinkParam('indikator', $forum['indikator']);
 }
 
 // use whitelist to prevent sql-injections
 if (Request::option('sort')) {
     $forum['sort'] = Request::option('sort');
-    URLHelper::addLinkParam('sort', $sort);
+    URLHelper::addLinkParam('sort', $forum['sort']);
 }
 
 if (!$forum["sort"])
@@ -281,11 +255,11 @@ if (!$forum["sort"])
 if (!$forum["indikator"])
     $forum["indikator"] = "age";
 
-if ($toolbar=="open") {
+if (Request::option('toolbar') == "open") {
     $forum["toolbar"] = "open";
-    URLHelper::addLinkParam('toolbar', $toolbar);
+    URLHelper::addLinkParam('toolbar', 'open');
 }
-if ($toolbar=="close")
+if (Request::option('toolbar') == "close")
     $forum["toolbar"] = "close";
 
 $indexvars["age"]["name"]=_("Alter");
@@ -302,7 +276,12 @@ $openorig = $open;  // wird gebraucht für den open-Link wenn im Treeview $open ü
 //////////////////////////////////////////////////////////////////////////////////
 // Sind wir da wo wir hinwollen?
 //////////////////////////////////////////////////////////////////////////////////
+
+$answer_id = Request::option('answer_id');
+$topic_id = Request::option('topic_id');
+$update = Request::option('update');
 $sql_topic_id = false;
+
 if ($topic_id AND !$update) {
     $sql_topic_id = $topic_id;
 } elseif ($open AND !$update) {
@@ -323,26 +302,10 @@ if ($sql_topic_id) {
 }
 
 //////////////////////////////////////////////////////////////////////////////////
-// loeschen von nicht zuende getippten Postings
-//////////////////////////////////////////////////////////////////////////////////
-
-if ($forum["lostposting"]!="" AND !isset($update)) {
-    $writemode = $forum["lostposting"];
-    $db=new DB_Seminar;
-    $db->query("SELECT topic_id FROM px_topics WHERE topic_id='$writemode' AND mkdate=chdate+1");
-    if ($db->num_rows()) {
-        $count = 0;
-        $result = forum_lonely(array('id'=>$writemode));
-        if ($result['lonely']==TRUE) // nur löschen wenn noch keine Antworten, sonst stehenlassen
-            delete_topic($writemode,$count);
-        unset($result);
-    }
-    $forum["lostposting"]="";
-}
-
-//////////////////////////////////////////////////////////////////////////////////
 // Rekursives Löschen von Postings, Warnung
 //////////////////////////////////////////////////////////////////////////////////
+
+$delete_id = Request::option('delete_id');
 
 if ($delete_id) {
     $db=new DB_Seminar;
@@ -367,7 +330,7 @@ if ($delete_id) {
             $forumposting["rating"] = $db->f("rating");
             $forumposting["anonymous"] = get_config('FORUM_ANONYMOUS_POSTINGS') ? $db->f("anonymous") : false;
             $forumposting = ForumGetAnonymity ($forumposting);
-            forum_draw_topicline();
+
             if ($forumposting["id"] == $forumposting["rootid"])
                 $tmp_label = _("das untenstehende Thema");
             else
@@ -378,7 +341,7 @@ if ($delete_id) {
             if ($count)
                 $msg.= sprintf(_("Alle %s Antworten auf diesen Beitrag werden ebenfalls gelöscht!"), $count) . "<br>\n<br>\n";
             $msg.="<a href=\"".URLHelper::getLink("?really_kill=$delete_id&view=$view#anker")."\">" . makeButton("ja2", "img") . "</a>&nbsp; \n";
-            $msg.="<a href=\"".URLHelper::getLink("?topic_id=$root&open=$topic_id&view=$view&mehr=$mehr#anker")."\">" . makeButton("nein", "img") . "</a>\n";
+            $msg.="<a href=\"".URLHelper::getLink("?topic_id=$root&open=$delete_id&view=$view#anker")."\">" . makeButton("nein", "img") . "</a>\n";
             parse_msg($msg, '§', 'blank', '1', FALSE);
             echo "</table>";
 
@@ -405,6 +368,10 @@ if ($delete_id) {
 // Verschieben von Postings
 //////////////////////////////////////////////////////////////////////////////////
 
+$target = Request::option('target');
+$move_id = Request::option('move_id');
+$parent_id = Request::option('parent_id');
+
 if ($target =="Seminar"){ //Es soll in ein anderes Seminar verschoben werden
     $verschoben = 0;
     move_topic($topic_id,$sem_id,$topic_id,$verschoben);
@@ -427,6 +394,8 @@ if ($target =="Thema"){ //Es soll in ein anderes Thema verschoben werden
 // Rekursives Löschen von Postings, jetzt definitiv!
 //////////////////////////////////////////////////////////////////////////////////
 
+$really_kill = Request::option('really_kill');
+
 if ($really_kill) {
     $db=new DB_Seminar;
     $db->query("SELECT * FROM px_topics WHERE topic_id='$really_kill' AND Seminar_id ='$SessSemName[1]'");
@@ -440,10 +409,7 @@ if ($really_kill) {
             $count = 0;
             delete_topic($really_kill, $count);
             $db->next_record();
-            if ($nurneu!=1) { // es wurde wirklich was gelöscht und nicht nur ein Anlegen unterbrochen
-                $message = "kill";
-            }
-            $forum["lostposting"]="";
+            $message = "kill";
         }
     }
 }
@@ -451,6 +417,8 @@ if ($really_kill) {
 //////////////////////////////////////////////////////////////////////////////////
 // neuer Beitrag als Antwort wird eingeleitet
 //////////////////////////////////////////////////////////////////////////////////
+
+$edit_id = Request::option('edit_id');
 
 if ($answer_id) {
     $db=new DB_Seminar;
@@ -461,9 +429,7 @@ if ($answer_id) {
             $name = "Re: ".$name; // Re: vor Überschriften bei Antworten
         $author = get_fullname();
         $postinginhalt = _("Dieser Beitrag wird gerade bearbeitet.");
-        $edit_id = CreateNewTopic($name, $postinginhalt, $answer_id, $db->f("root_id"), $_REQUEST['anonymous']);
-        $open = $edit_id;
-        $forum["lostposting"] = $edit_id;
+        $edit_id = CreateNewTopic($name, $postinginhalt, $answer_id, $db->f("root_id"), Request::int('anonymous'));
     }
 }
 
@@ -471,25 +437,26 @@ if ($answer_id) {
 // Update eines Beitrags
 //////////////////////////////////////////////////////////////////////////////////
 
+$titel = Request::quoted('titel');
+$description = Request::quoted('description');
+
 if ($update) {
     // check whether we should create a new posting or update an existing one
-    if (isset($_REQUEST['parent_id'])) {
-        $parent_id = $_REQUEST['parent_id'];
-        $root_id = $parent_id != "0" ? $_REQUEST['root_id'] : "0";
+    if (Request::option('parent_id') !== NULL) {
+        $parent_id = Request::option('parent_id');
+        $root_id = $parent_id != "0" ? Request::option('root_id') : "0";
         $user_id = $auth->auth['uid'];
-        $author = $user_id == 'nobody' ? $_REQUEST['nobodysname'] : get_fullname();
+        $author = $user_id == 'nobody' ? Request::get('nobodysname') : get_fullname();
         NotificationCenter::postNotification('PostingWillCreate', $update);
-        $update = CreateTopic($titel, $author, $description, $parent_id, $root_id, 0, $user_id, true, $_REQUEST['anonymous']);
+        $update = CreateTopic($titel, $author, $description, $parent_id, $root_id, 0, $user_id, true, Request::int('anonymous'));
         NotificationCenter::postNotification('PostingDidCreate', $update);
     } else {
         if (!ForumFreshPosting($update)) // editiert von nur dranhängen wenn nicht frisch erstellt
             $description = forum_append_edit($description);
         NotificationCenter::postNotification('PostingWillUpdate', $update);
-        UpdateTopic ($titel, $update, $description, $_REQUEST['anonymous']);
+        UpdateTopic($titel, $update, $description, Request::int('anonymous'));
         NotificationCenter::postNotification('PostingDidUpdate', $update);
     }
-    $open = $update; //gerade bearbeiteten Beitrag aufklappen
-    $forum["lostposting"] = "";
 
     // redirect to normal view to avoid duplicate postings on reload or back/forward
     header('Location: ' . URLHelper::getURL("?open=$update&flatviewstartposting=$flatviewstartposting#anker"));
@@ -501,12 +468,10 @@ if ($update) {
 // Neues Thema wird angelegt
 //////////////////////////////////////////////////////////////////////////////////
 
-if ($neuesthema==TRUE && ($rechte || $SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["topic_create_autor"])) {            // es wird ein neues Thema angelegt
+if (Request::option('neuesthema') && ($rechte || $SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["topic_create_autor"])) {            // es wird ein neues Thema angelegt
         $name = _("Name des Themas");
         $author = get_fullname();
-        $edit_id = CreateNewTopic($name, "Beschreibung des Themas", 0, 0, $_REQUEST['anonymous']);
-        $open = $edit_id;
-        $forum["lostposting"] = $edit_id;
+        $edit_id = CreateNewTopic($name, "Beschreibung des Themas", 0, 0, Request::int('anonymous'));
         // add skip link right before the link to the main content
         SkipLinks::addIndex(_("Neues Thema anlegen"), 'newposting_form', 99);
 }
@@ -515,22 +480,27 @@ if ($neuesthema==TRUE && ($rechte || $SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"
 // weitere Konstanten setzen
 //////////////////////////////////////////////////////////////////////////////////
 
-if ($zitat==TRUE)
+if (Request::int('zitat'))
     $zitat = $answer_id;
 
 if ($edit_id)
     $open = $edit_id;
 
-if ($flatallopen=="TRUE")
+if (Request::option('flatallopen') == "TRUE")
     $forum["flatallopen"] = "TRUE";
 
-if ($flatallopen=="FALSE")
+if (Request::option('flatallopen') == "FALSE")
     $forum["flatallopen"] = "FALSE";
 
-if ($fav)
-    $forum["anchor"] = $fav; // Anker auf Favoriten
-else
+if (Request::option('fav')) {
+    // zu den Favoriten hinzufügen/entfernen
+    object_switch_fav(Request::option('fav'));
+    $forum["anchor"] = Request::option('fav'); // Anker auf Favoriten
+} else {
     $forum["anchor"] = $open; // Anker setzen
+}
+
+$rate = Request::intArray('rate');
 
 if ($rate) { // Objekt bewerten
     while(list($key,$value) = each($rate)) {
@@ -539,33 +509,25 @@ if ($rate) { // Objekt bewerten
     }
 }
 
-if ($fav)   // zu den Favoriten hinzufügen/entfernen
-    $fav = object_switch_fav($fav);
-
-
-
 
 //////////////////////////////////////////////////////////////////////////////////
 //Anzeige des Kopfes mit Meldungen und Toolbar
 //////////////////////////////////////////////////////////////////////////////////
 
-if ($forumsend!="anpassen") {
+echo "\n<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 
-    forum_draw_topicline();
+// Ausgabe für Zusatzinfos
+if ($message=="kill") echo parse_msg("msg§" . sprintf(_("%s Posting(s) gel&ouml;scht"), $count));
+if ($message=="move") echo parse_msg("msg§" . sprintf(_("%s Posting(s) verschoben."), $verschoben));
+if ($txt) echo parse_msg("msg§" . $txt);
+if (Request::option('cmd') == "move" && $topic_id !="" && $rechte)
+    forum_move_navi ($topic_id);
 
-    // Ausgabe für Zusatzinfos
-    if ($message=="kill") echo parse_msg("msg§" . sprintf(_("%s Posting(s) gel&ouml;scht"), $count));
-    if ($message=="move") echo parse_msg("msg§" . sprintf(_("%s Posting(s) verschoben."), $verschoben));
-    if ($txt) echo parse_msg("msg§" . $txt);
-    if ($cmd == "move" && $topic_id !="" && $rechte)
-        forum_move_navi ($topic_id);
+echo "\n</table>\n";
 
-    echo "\n</table>\n";
-}
-
-if (($forum["view"] != "search" || $forum["search"] != "") && $user->id != "nobody" && $cmd != "move")   // wenn Suchformular aufgerufen wird keine toolbar
+if (($forum["view"] != "search" || $forum["search"] != "") && $user->id != "nobody" && Request::option('cmd') != "move")   // wenn Suchformular aufgerufen wird keine toolbar
     echo forum_print_toolbar($edit_id);
-elseif ($user->id == "nobody" || $cmd=="move") {
+elseif ($user->id == "nobody" || Request::option('cmd') == "move") {
     echo "\n<table width=\"100%\" class=\"blank\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\"><tr><td class=\"blank\"><br></td></tr></table>";
     if ($edit_id) {
         echo "<form name=\"forumwrite\" onsubmit=\"return STUDIP.Forum.pruefe_name()\" method=\"post\" action=\"".URLHelper::getLink("#anker")."\">";
@@ -577,7 +539,7 @@ elseif ($user->id == "nobody" || $cmd=="move") {
 //////////////////////////////////////////////////////////////////////////////////
 echo '<div id="main_content">';
 if ($forum["view"]=="flat" || $forum["view"]=="neue" || $forum["view"]=="flatfolder" || $forum["view"]=="search")
-    flatview ($open, $mehr, $show, $edit_id, $name, $description, $zitat);
+    flatview ($open, $show, $edit_id, $name, $description, $zitat);
 else
     DisplayFolders ($open, $edit_id, $zitat);
 echo '</div>';

@@ -32,8 +32,10 @@ $auth->login_if($again && ($auth->auth["uid"] == "nobody"));
 
 PageLayout::setHelpKeyword("Basis.Informationsseite");
 
-
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
+
+unregister_globals();
+
 require_once ('lib/classes/StudipScmEntry.class.php');
 require_once 'lib/functions.php';
 require_once('lib/msg.inc.php');
@@ -55,11 +57,12 @@ if ($_SESSION['scm-flash']) {
     unset($_SESSION['scm-flash']);
 }
 
+$i_view = Request::option('i_view');
 $_show_scm = Request::option('show_scm', $scms[0]['scm_id']);
 
 if ($perm->have_studip_perm('tutor', $SessSemName[1]) && in_array($i_view, words('change kill first_position'))) {
     if ($i_view == 'change') {
-        $_show_scm = scm_change_content($_show_scm, $SessSemName[1], $scm_name, $scm_preset, $content);
+        $_show_scm = scm_change_content($_show_scm, $SessSemName[1], Request::get('scm_name'), Request::int('scm_preset'), Request::get('content'));
         $msg = "msg§"._("Die Änderungen wurden übernommen.");
     } else if ($i_view == 'kill') {
         $scm = new StudipScmEntry($_show_scm);
@@ -243,7 +246,7 @@ function scm_edit_content($range_id, $scm_id) {
     $content.= "<input type=\"HIDDEN\" name=\"show_scm\" value=\"$scm_id\">";
     $content.= "<input type=\"HIDDEN\" name=\"i_view\" value=\"change\">";
 
-    $edit="<input style=\"vertical-align: middle;\" type=\"IMAGE\" name=\"send_scm\" value=\"&auml;nderungen vornehmen\" border=0 " . makeButton("uebernehmen", "src") . ">";
+    $edit="<input style=\"vertical-align: middle;\" type=\"image\" name=\"send_scm\" value=\"&auml;nderungen vornehmen\" border=0 " . makeButton("uebernehmen", "src") . ">";
     $edit.="&nbsp;<a href=\"".URLHelper::getLink('')."\">". makeButton("abbrechen") . "</a>";
     $edit .= "<font size=\"-1\">&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\">";
 
@@ -280,12 +283,12 @@ function scm_change_content($scm_id, $range_id, $name, $preset, $content) {
     if ($preset)
         $tab_name = $SCM_PRESET[$preset]["name"];
     else if (trim($name) != '')
-        $tab_name = stripslashes($name);
+        $tab_name = $name;
     else
         $tab_name = _('[kein Titel]');
 
     $scm->setValue('tab_name', $tab_name);
-    $scm->setValue('content', stripslashes($content));
+    $scm->setValue('content', $content);
     $scm->setValue('user_id', $user->id);
     $scm->setValue('range_id', $range_id);
 

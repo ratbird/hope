@@ -48,16 +48,30 @@ require_once 'app/models/calendar/schedule.php';
 /**
  * Insert a user into a seminar with optional log-message and contingent
  *
- * @param string $seminar_id
- * @param string $user_id
- * @param string $status       status of user in the seminar (user, autor, tutor, dozent)
- * @param string $log_message  optional log-message. if no log-message is given a default one is used
- * @param string $contingent   optional studiengang_id, if no id is given, no contingent is considered
+ * @param string   $seminar_id
+ * @param string   $user_id
+ * @param string   $status       status of user in the seminar (user, autor, tutor, dozent)
+ * @param boolean  $copy_studycourse  if true, the studycourse is copied from admission_seminar_user
+ *                                    to seminar_user. Overrides the $contingent-parameter
+ * @param string   $contingent   optional studiengang_id, if no id is given, no contingent is considered
+ * @param string   $log_message  optional log-message. if no log-message is given a default one is used
  * @return void
  */
-function insertUserIntoSeminar($seminar_id, $user_id, $status, $log_message = false, $contingent = '') {
+function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse = false, $contingent = false, $log_message = false) {
     // get the seminar-object
     $sem = Seminar::GetInstance($seminar_id);
+
+    // copy the studycourse from admission_seminar_user
+    if ($copy_studycourse) {
+        $stmt = DBManager::get()->prepare("SELECT studiengang_id FROM admission_seminar_user
+            WHERE seminar_id = ? AND user_id = ?");
+        $stmt->execute(array($seminar_id, $user_id));
+        
+        // overwrite only if an entry is found
+        if ($data = $stmt->fetchColumn()) {
+            $contingent = $data;
+        }
+    }
 
     // check if there are places left in the submitted contingent (if any)
     if ($contingent && $sem->isAdmissionEnabled() && !$sem->getFreeAdmissionSeats($contingent)) {
@@ -78,7 +92,7 @@ function insertUserIntoSeminar($seminar_id, $user_id, $status, $log_message = fa
     $stmt = DBManager::get()->prepare('INSERT INTO seminar_user
         (Seminar_id, user_id, status, admission_studiengang_id, comment, gruppe, mkdate)
         VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())');
-    $stmt->execute(array($seminar_id, $user_id, $status, $contingent, '', $colour_group));
+    $stmt->execute(array($seminar_id, $user_id, $status, ($contingent ? $contingent : ''), '', $colour_group));
 
 
     // check if there are any entries on the waiting/accepted/lot-list
@@ -87,12 +101,10 @@ function insertUserIntoSeminar($seminar_id, $user_id, $status, $log_message = fa
     $stmt->execute(array($user_id, $seminar_id));
 
     if ($stmt->fetchColumn()) {
-
         // delete the entries, user is now in the seminar
         $stmt = DBManager::get()->prepare('DELETE FROM admission_seminar_user
             WHERE user_id = ? AND seminar_id = ?');
         $stmt->execute(array($user_id, $seminar_id));
-
 
         //renumber the waiting/accepted/lot list, a user was deleted from it
         renumber_admission($seminar_id);
@@ -102,65 +114,8 @@ function insertUserIntoSeminar($seminar_id, $user_id, $status, $log_message = fa
 
     // reload the seminar, the contingents have changed
     $sem->restore();
-}
 
-/**
-* This function inserts an user into the seminar_user and does consitency checks with admission_seminar_user
-*
-* Please use this functions always to insert user to a seminar. Returns true, if user was on the admission_seminar_user
-*
-* @param        string seminar_id       the seminar_id of the seminar to calculate
-* @param        string user_id          the user_id
-* @param        string status           the perms the user should archive
-* @param        boolean copy_studycourse    should the entry for studycourse from admission_seminar_user into seminar user be copied?
-* @return       boolean
-*
-*/
-function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse = false, $consider_contingent = false)
-{
-    $db = new DB_Seminar;
-    $db2 = new DB_Seminar;
-
-    $query = sprintf("SELECT comment, studiengang_id FROM admission_seminar_user WHERE user_id = '%s' AND seminar_id ='%s' ", $user_id, $seminar_id);
-    $db->query($query);
-    if ($db->next_record()) {
-        $admission_entry = TRUE;
-        $comment = $db->f("comment");
-        if ($copy_studycourse)
-            $studiengang_id = $db->f("studiengang_id");
-        else
-            $studiengang_id = '';
-    }
-    if (strlen($consider_contingent) > 1) $studiengang_id = $consider_contingent;
-
-    $sem = Seminar::GetInstance($seminar_id);
-    if ($copy_studycourse && $consider_contingent && $sem->isAdmissionEnabled() && !$sem->getFreeAdmissionSeats($studiengang_id)) {
-        return false;
-    } else {
-        $group = select_group($sem->getSemesterStartTime(), $user_id); //ok, here ist the "colored-group" meant (for grouping on meine_seminare), not the grouped seminars as above!
-
-        // LOGGING
-        log_event('SEM_USER_ADD', $seminar_id, $user_id, $status, 'Wurde in die Veranstaltung eingetragen, Kontingent: ' . $studiengang_id);
-
-        $query = sprintf("INSERT INTO seminar_user SET Seminar_id = '%s', user_id = '%s', status= '%s', admission_studiengang_id ='%s', comment ='%s', gruppe='%s', mkdate = '%s' ", $seminar_id, $user_id, $status, $studiengang_id, mysql_escape_string($comment), $group, time());
-        $db->query($query);
-
-        if ($ret = $db->affected_rows()) {
-            $query2 = sprintf("DELETE FROM admission_seminar_user WHERE user_id = '%s' AND seminar_id ='%s'", $user_id, $seminar_id);
-            $db2->query($query2);
-        }
-
-        if ($db2->affected_rows()) {
-            //renumber the waiting list, if a user was deleted from it
-            renumber_admission($seminar_id);
-            return 2;
-        }
-
-        removeScheduleEntriesMarkedAsVirtual($user_id, $seminar_id);
-
-        $sem->restore();
-        return $ret;
-    }
+    return true;
 }
 
 /**

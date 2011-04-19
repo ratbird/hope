@@ -655,7 +655,7 @@ if (Seminar_Session::check_ticket($studipticket) && !LockRules::Check($id, 'part
                                 // Nicht das sich noch ein Dozent auf die Art und Weise selber degradiert!
                         }
                     } else {  // ok, einfach aufnehmen.
-                        insert_seminar_user($id, $u_id, "tutor", FALSE);
+                        insert_seminar_user($id, $u_id, "tutor");
 
                         $msg = "msg§" . sprintf(_("%s wurde als %s in die Veranstaltung aufgenommen."), get_fullname($u_id,'full',1), get_title_for_status('tutor', 1));
 

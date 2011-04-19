@@ -108,12 +108,12 @@ function MovePersonStatusgruppe ($range_id, $role_id, $type, $persons, $workgrou
                 if ($workgroup_mode == TRUE) {
                     $globalperms = get_global_perm($user_id);
                     if ($globalperms == "tutor" || $globalperms == "dozent") {
-                        insert_seminar_user($range_id, $user_id, "tutor", FALSE);
+                        insert_seminar_user($range_id, $user_id, "tutor");
                     } else {
-                        insert_seminar_user($range_id, $user_id, "autor", FALSE);
+                        insert_seminar_user($range_id, $user_id, "autor");
                     }
                 } else {
-                    insert_seminar_user($range_id, $user_id, "autor", FALSE);
+                    insert_seminar_user($range_id, $user_id, "autor");
                 }
             }
             checkExternDefaultForUser($user_id);

@@ -155,7 +155,7 @@ class StudipStmInstance extends SimpleORMap {
                                     (stm_instance_id,element_id,user_id,mkdate)
                                     VALUES ('%s','%s','%s',UNIX_TIMESTAMP())",
                                     $this->getId(),$element,$user_id));
-            insert_seminar_user($sem_to_insert, $user_id, 'autor', FALSE);
+            insert_seminar_user($sem_to_insert, $user_id, 'autor');
         }
         return ($inserted == count($this->el_struct[$elementgroup]));
     }

@@ -441,7 +441,7 @@ $db6=new DB_Seminar;
             if ($db->f("Lesezugriff") <= 1 && $perm->have_perm("autor")) {
                 if (!seminar_preliminary($id,$user->id)) {  // we have to change behaviour, depending on preliminary
 
-                    insertUserIntoSeminar($id, $GLOBALS['user']->id, 'user', 'Mit Leserechten - ohne Schreibrechte - eingetragen');
+                    insert_seminar_user($id, $GLOBALS['user']->id, 'user', false, false, 'Mit Leserechten - ohne Schreibrechte - eingetragen');
 
                     parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>Leser</b> in die Veranstaltung %s eingetragen."), '<b>'.htmlReady($db->f("Name")).'</b>'));
                     echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
@@ -496,7 +496,7 @@ $db6=new DB_Seminar;
             {
                 if (!seminar_preliminary($id,$user->id)) {
 
-                    insertUserIntoSeminar($id, $GLOBALS['user']->id, 'autor', 'Mit Schreibrechten eingetragen');
+                    insert_seminar_user($id, $GLOBALS['user']->id, 'autor', false, false, 'Mit Schreibrechten eingetragen');
 
                     parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>Autor</b> in die Veranstaltung %s eingetragen."), '<b>'.$SeminarName.'</b>'));
                     echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
@@ -711,7 +711,7 @@ $db6=new DB_Seminar;
                             if ($current_seminar->getFreeAdmissionSeats()) { //Wir koennen einfach eintragen, Platz ist noch
                                 if (!seminar_preliminary($id,$user->id)) {
 
-                                    insertUserIntoSeminar($id, $GLOBALS['user']->id, 'autor', 'Mit Kontingent und Schreibrechten eingetragen, Studiengänge: '.$sem_verify_suggest_studg, $sem_verify_suggest_studg);
+                                    insert_seminar_user($id, $GLOBALS['user']->id, 'autor', false, $sem_verify_suggest_studg, 'Mit Kontingent und Schreibrechten eingetragen, Studiengänge: ' . $sem_verify_suggest_studg);
 
                                     parse_msg ('msg§' . sprintf(_("Sie wurden mit dem Status <b>Autor</b> in die Veranstaltung %s eingetragen. Damit sind Sie zugelassen."), '<b>' . $SeminarName .'</b>'));
                                     echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
@@ -760,7 +760,7 @@ $db6=new DB_Seminar;
                                 if ($current_seminar->getFreeAdmissionSeats($sem_verify_suggest_studg)) {//noch Platz in dem Kontingent --> direkt in seminar_user
                                     if (!seminar_preliminary($id,$user->id)) {
 
-                                        insertUserIntoSeminar($id, $GLOBALS['user']->id, 'autor', 'Mit Kontingent und Schreibrechten eingetragen, Studiengänge: '.$sem_verify_suggest_studg, $sem_verify_suggest_studg);
+                                        insert_seminar_user($id, $GLOBALS['user']->id, 'autor', false, $sem_verify_suggest_studg, 'Mit Kontingent und Schreibrechten eingetragen, Studiengänge: ' . $sem_verify_suggest_studg);
 
                                         parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>Autor</b> in die Veranstaltung <b>%s</b> eingetragen. Damit sind Sie zugelassen."), $SeminarName));
                                         echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";
@@ -891,7 +891,7 @@ $db6=new DB_Seminar;
         if (isset($InsertStatus)) {//Status reinschreiben
             if (!seminar_preliminary($id,$user->id)) {
 
-                insertUserIntoSeminar($id, $GLOBALS['user']->id, $InsertStatus);
+                insert_seminar_user($id, $GLOBALS['user']->id, $InsertStatus);
 
                 parse_msg (sprintf("msg§"._("Sie wurden mit dem Status <b>%s</b> in die Veranstaltung <b>%s</b> eingetragen."), $InsertStatus, $SeminarName));
                 echo"<tr><td class=\"blank\" colspan=2><a href=\"seminar_main.php?auswahl=$id\">&nbsp; &nbsp; "._("Hier kommen Sie zu der Veranstaltung")."</a>";

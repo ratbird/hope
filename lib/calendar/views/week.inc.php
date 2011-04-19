@@ -92,7 +92,7 @@ echo "<tr><td nowrap=\"nowrap\" align=\"center\" width=\"$width\"$colspan_1>";
 if ($st > 0) {
     echo "<a href=\"calendar.php?cmd=showweek&atime=$atime&wtime=" . ($st - 1) . "\">";
     echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2up.png')."\"";
-    echo tooltip(_("zeig davor")) . "></a>";
+    echo tooltip(_("zeige davor")) . "></a>";
 }
 else
     echo "&nbsp;&nbsp;&nbsp;";
@@ -103,7 +103,7 @@ echo "<td nowrap=\"nowrap\" align=\"center\" width=\"$width\"$colspan_1>";
 if ($st > 0) {
     echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($st - 1) . "\">";
     echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2up.png')."\"";
-    echo tooltip(_("zeig davor")) . "></a>";
+    echo tooltip(_("zeige davor")) . "></a>";
 }
 else
     echo "&nbsp;&nbsp;&nbsp;";
@@ -151,7 +151,7 @@ echo "<tr><td$colspan_1 align=\"center\">";
 if ($et < 23) {
     echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($et + 1) . "\">";
     echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2down.png')."\"";
-    echo tooltip(_("zeig danach")) . "></a>";
+    echo tooltip(_("zeige danach")) . "></a>";
 }
 else
     echo "&nbsp";
@@ -160,7 +160,7 @@ echo "<td$colspan_1 align=\"center\">";
 if ($et < 23) {
     echo "<a href=\"$PHP_SELF?cmd=showweek&atime=$atime&wtime=" . ($et + 1) . "\">";
     echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2down.png')."\"";
-    echo tooltip(_("zeig danach")) . "></a>";
+    echo tooltip(_("zeige danach")) . "></a>";
 }
 else
     echo "&nbsp;";

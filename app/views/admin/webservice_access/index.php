@@ -7,7 +7,7 @@
 <table class="default">
 <tr>
   <th style="width: 30%;">
-    <?= _('API KEY') ?>
+    <?= _('API-Key') ?>
   </th>
   <th style="width: 30%;">
     <?= _('Methode') ?>
@@ -90,7 +90,7 @@ $infobox_content = array(
                 'kategorie' => _('Hinweise'),
                 'eintrag'   => array(array(
                 'icon' => 'icons/16/black/info.png',
-                'text' => '<div>' . _("Sie können für einen Api-Key beliebig viele Regeln hinterlegen.") . '</div>
+                'text' => '<div>' . _("Sie können für einen API-Key beliebig viele Regeln hinterlegen.") . '</div>
                            <div>' . _("Ein leerer Eintrag für die Methode gilt für alle Methoden. Sie können auch nur einen Teil eines Methodennamen eingeben.") . '</div>
                            <div>' . _("Ein leerer Eintrag für den IP Bereich gilt für alle Adressen. Sie können mehrere IP Adressen/Bereiche durch Kommata getrennt angeben. Adressbereiche müssen in CIDR Notation angegeben werden, z.B. 192.168.0.0/24") . '</div>'
                  ))

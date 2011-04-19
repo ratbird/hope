@@ -341,7 +341,7 @@ class AdminNewsController {
                     $news_obj->setValue('expire', $expire);
                     $news_obj->setValue('allow_comments', $allow_comments);
                     if ($news_obj->store()){
-                        $this->msg .= "msg§" . _("Ok, Ihre neue Ankündigung wurde gespeichert!") . "§";
+                        $this->msg .= "msg§" . _("Ihre neue Ankündigung wurde gespeichert!") . "§";
                     }
                 } else {
                     if ($this->news_query["topic"]!=stripslashes($topic)

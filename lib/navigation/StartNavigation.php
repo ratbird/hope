@@ -92,7 +92,7 @@ class StartNavigation extends Navigation
                 }
             } else {
                 if ($perm->have_perm($sem_create_perm)) {
-                    $navigation->addSubNavigation('new_course', new Navigation(_('neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
+                    $navigation->addSubNavigation('new_course', new Navigation(_('Neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
                 }
                 if (get_config('STUDYGROUPS_ENABLE')) {
                     $navigation->addSubNavigation('new_studygroup', new Navigation(_('Studiengruppe anlegen'), 'dispatch.php/course/studygroup/new'));
@@ -108,7 +108,7 @@ class StartNavigation extends Navigation
             $navigation = new Navigation(_('Verwaltung von Veranstaltungen'), 'adminarea_start.php?list=TRUE');
 
             if ($perm->have_perm($sem_create_perm)) {
-                $navigation->addSubNavigation('new_course', new Navigation(_('neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
+                $navigation->addSubNavigation('new_course', new Navigation(_('Neue Veranstaltung anlegen'), 'admin_seminare_assi.php?new_session=TRUE'));
             }
 
             if (get_config('STUDYGROUPS_ENABLE')) {
@@ -129,7 +129,7 @@ class StartNavigation extends Navigation
             $navigation = new Navigation(_('Verwaltung globaler Einstellungen'), 'dispatch.php/admin/user/');
             $this->addSubNavigation('admin_user', $navigation);
         } else if ($perm->have_perm('admin') && !get_config('RESTRICTED_USER_MANAGEMENT')) {
-            $navigation = new Navigation(_('globale Benutzerverwaltung'), 'dispatch.php/admin/user/');
+            $navigation = new Navigation(_('Globale Benutzerverwaltung'), 'dispatch.php/admin/user/');
             $this->addSubNavigation('admin_user', $navigation);
         }
 

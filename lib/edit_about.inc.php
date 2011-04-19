@@ -979,7 +979,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         // Now join all available elements with visibility settings.
         $homepage_elements = array();
         if (Avatar::getAvatar($this->auth_user['user_id'])->is_customized() && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['picture']) {
-            $homepage_elements["picture"] = array("name" => _("eigenes Bild"), "visibility" => $homepage_visibility["picture"] ? $homepage_visibility["picture"] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
+            $homepage_elements["picture"] = array("name" => _("Eigenes Bild"), "visibility" => $homepage_visibility["picture"] ? $homepage_visibility["picture"] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Allgemeine Daten');
         }
         if ($my_data["motto"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['motto'])
             $homepage_elements["motto"] = array("name" => _("Motto"), "visibility" => $homepage_visibility["motto"] ? $homepage_visibility["motto"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
@@ -992,11 +992,11 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             }
         }
         if ($my_data["privatnr"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['Private Daten_phone'])
-            $homepage_elements["private_phone"] = array("name" => _("private Telefonnummer"), "visibility" => $homepage_visibility["private_phone"] ? $homepage_visibility["private_phone"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
+            $homepage_elements["private_phone"] = array("name" => _("Private Telefonnummer"), "visibility" => $homepage_visibility["private_phone"] ? $homepage_visibility["private_phone"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
         if ($my_data["privatcell"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['private_cell'])
-            $homepage_elements["private_cell"] = array("name" => _("private Handynummer"), "visibility" => $homepage_visibility["private_cell"] ? $homepage_visibility["private_cell"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
+            $homepage_elements["private_cell"] = array("name" => _("Private Handynummer"), "visibility" => $homepage_visibility["private_cell"] ? $homepage_visibility["private_cell"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
         if ($my_data["privadr"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['privadr'])
-            $homepage_elements["privadr"] = array("name" => _("private Adresse"), "visibility" => $homepage_visibility["privadr"] ? $homepage_visibility["privadr"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
+            $homepage_elements["privadr"] = array("name" => _("Private Adresse"), "visibility" => $homepage_visibility["privadr"] ? $homepage_visibility["privadr"] : get_default_homepage_visibility($this->auth_user['user_id']), 'category' => 'Private Daten');
         if ($my_data["Home"] && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['homepage'])
             $homepage_elements["homepage"] = array("name" => _("Homepage-Adresse"), "visibility" => $homepage_visibility["homepage"] ? $homepage_visibility["homepage"] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
         if ($news && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']]['news'])

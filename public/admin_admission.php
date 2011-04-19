@@ -1374,7 +1374,7 @@ if (is_array($admin_admission_data["studg"]) && $admin_admission_data["admission
                 &nbsp;
             </td>
             <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan="2">
-                <font size=-1><b><?=_("zugelassenene Nutzerdomänen:")?> </b></font><br>
+                <font size=-1><b><?=_("Zugelassenene Nutzerdomänen:")?> </b></font><br>
                 <table border="0" cellpadding="2" cellspacing="0">
                     <tr>
                         <td class="<? echo $cssSw->getClass() ?>" colspan="3">

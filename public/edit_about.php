@@ -593,7 +593,7 @@ function checkpassword(){
  var checked = true;
 
  if (document.pers.update_pw.checked && document.pers.new_passwd_1.value != document.pers.new_passwd_2.value) {
-    alert("<?=_("Bei der Wiederholung des Paßwortes ist ein Fehler aufgetreten! Bitte geben Sie das exakte Paßwort ein!")?>");
+    alert("<?=_("Bei der Wiederholung des Passwortes ist ein Fehler aufgetreten! Bitte geben Sie das exakte Passwort ein!")?>");
     document.pers.new_passwd_2.focus();
     checked = false;
  }
@@ -849,9 +849,9 @@ if ($view == 'Daten') {
         $pw_input = "<label><font size=-1>&nbsp; %s</font><br>&nbsp;"
                     ."<input type=\"password\" size=\"".round($max_col*0.25)."\" id=\"new_passwd_%s\" name=\"new_passwd_%s\"  %s value=\"*****\"></label>";
 
-        echo '<script>document.write(\''.sprintf($pw_input, _("neues Passwort:"), '1', '1', 'disabled').'\');</script>';
+        echo '<script>document.write(\''.sprintf($pw_input, _("Neues Passwort:"), '1', '1', 'disabled').'\');</script>';
         // if javascript is disabled dont disable the input fields
-        printf('<noscript>'.$pw_input.'</noscript>', _("neues Passwort:"), '1', '1','');
+        printf('<noscript>'.$pw_input.'</noscript>', _("Neues Passwort:"), '1', '1','');
         echo "</td><td class=\"".$cssSw->getClass()."\" width=\"55%\" nowrap align=\"left\">";
 
         echo '<script>document.write(\''.sprintf($pw_input, _("Passwort Wiederholung:"), '2', '2','disabled').'\');</script>';
@@ -1487,7 +1487,7 @@ if ($view == 'notification') {
 if ($view == 'Login') {
     echo '<tr><td id="main_content" colspan="2" class="blank">'."<br><br>\n" ;
     if ($my_about->check == 'user' && !$perm->have_perm('admin')) {
-        echo _("Um die automatische Anmeldung zu nutzen, m&uuml;ssen Sie Ihre pers&ouml;nliche Login-Datei auf Ihren Rechner kopieren. Mit dem folgenden Link &ouml;ffnet sich ein Fenster, indem Sie Ihr Passwort eingeben m&uuml;ssen.") . " ";
+        echo _("Um die automatische Anmeldung zu nutzen, m&uuml;ssen Sie Ihre pers&ouml;nliche Login-Datei auf Ihren Rechner kopieren. Mit dem folgenden Link &ouml;ffnet sich ein Fenster, in dem Sie Ihr Passwort eingeben m&uuml;ssen.") . " ";
         echo _("Dann wird die Datei erstellt und zu Ihrem Rechner geschickt.") . "<br><br>\n";
         echo '<div align="center"><b><a href="javascript:oeffne();">' . _("Auto-Login-Datei erzeugen") . '</a></b></div>';
         echo "<br><br>\n" . _("<b>ACHTUNG!</b> Die automatische Anmeldung stellt eine große Sicherheitslücke dar. Jeder, der Zugriff auf Ihren Rechner hat, kann sich damit unter Ihrem Namen in Stud.IP einloggen!");

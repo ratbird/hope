@@ -247,7 +247,7 @@ if (!$cmd OR $cmd=="show") {
         echo "\n<tr><td class=\"blank\"><p class=\"info\">";
         if ($perm->have_perm("admin"))
         echo "<hr>";
-        echo "<br><b>" . _("verf&uuml;gbare Bereiche");
+        echo "<br><b>" . _("Verf&uuml;gbare Bereiche");
         echo "</b></p></td></tr>\n ";
         $typen = array( "user"=> array('name' => _("Benutzer"), 'view_mode' => 'user', 'id_param' => 'range_id'),
                         "sem"=>  array('name' => _("Veranstaltung"), 'view_mode' => 'sem', 'id_param' => 'range_id'),
@@ -299,7 +299,7 @@ if (!$cmd OR $cmd=="show") {
     echo "<form action=\"". URLHelper::getLink("?cmd=new_entry&range_id=$news_range_id&view_mode=$view_mode")."\" method=\"POST\">";
     echo CSRFProtection::tokenTag();
     if ($perm->have_perm('admin') || $perm->have_perm('autor') && $view_mode == 'user') {
-        echo "<hr width=\"100%\"><br><b>" . _("gew&auml;hlter Bereich:") . " </b>".htmlReady($news_range_name). "<br><br>";
+        echo "<hr width=\"100%\"><br><b>" . _("Gew&auml;hlter Bereich:") . " </b>".htmlReady($news_range_name). "<br><br>";
     }
     if (get_config('NEWS_RSS_EXPORT_ENABLE') && $news->get_news_range_perm($news_range_id) > 1){
         echo Assets::img('icons/16/grey/rss.png', array('class' => 'text-top'));

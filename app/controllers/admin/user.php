@@ -544,7 +544,7 @@ class Admin_UserController extends AuthenticatedController
                             foreach ($users as $admin) {
                                 $subject = _("Neuer Administrator in Ihrer Einrichtung angelegt");
                                 $mailbody = sprintf(_("Liebe(r) %s %s,\n\n"
-                                          . "In der Einrichtung '%s' wurde %s %s als Administrator eingetragen "
+                                          . "in der Einrichtung '%s' wurde %s %s als Administrator eingetragen "
                                           ." und steht Ihnen als neuer Ansprechpartner bei Fragen oder Problemen "
                                           ."in Stud.IP zur Verfügung. "),
                                           $admin['Vorname'], $admin['Nachname'],
@@ -570,7 +570,7 @@ class Admin_UserController extends AuthenticatedController
                                 foreach ($fak_admins as $admin) {
                                     $subject = _("Neuer Administrator in Ihrer Einrichtung angelegt");
                                     $mailbody = sprintf(_("Liebe(r) %s %s,\n\n"
-                                              . "In der Einrichtung '%s' wurde %s %s als Administrator eingetragen "
+                                              . "in der Einrichtung '%s' wurde %s %s als Administrator eingetragen "
                                               ." und steht Ihnen als neuer Ansprechpartner bei Fragen oder Problemen "
                                               ."in Stud.IP zur Verfügung. "),
                                               $admin['Vorname'], $admin['Nachname'],

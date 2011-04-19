@@ -96,7 +96,7 @@ class Admin_WebserviceAccessController extends AuthenticatedController
             $msg = array();
 
             if (strlen($rule->api_key) < 5) {
-                $msg['error'][] = _("Bitte geben Sie einen API-KEY mit min. 5 Zeichen an.");
+                $msg['error'][] = _("Bitte geben Sie einen API-Key mit min. 5 Zeichen an.");
             }
             foreach ($rule->ip_range as $key => $ip) {
                 if (!$ip) {

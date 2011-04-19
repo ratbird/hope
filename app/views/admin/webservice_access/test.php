@@ -41,7 +41,7 @@ $infobox_content = array(
                 'kategorie' => _('Hinweise'),
                 'eintrag'   => array(array(
                 'icon' => 'icons/16/black/info.png',
-                'text' => _("Hier können Sie testen ob der Zugriff mit einem Api-Key für eine konkrete Webservicemethode von einer bestimmten IP Adresse aus möglich ist.")
+                'text' => _("Hier können Sie testen ob der Zugriff mit einem API-Key für eine konkrete Webservicemethode von einer bestimmten IP Adresse aus möglich ist.")
                  ))
             )
         );

@@ -62,14 +62,14 @@ if ($hday = holiday($atime))
 echo "</b></td>\n";
 echo "<td align=\"center\" width=\"10%\"><a href=\"$PHP_SELF?cmd=showday&atime=";
 echo $atime + 86400 . "\">\n";
-$tooltip = tooltip(_("vor"));
+$tooltip = tooltip(_("vorwärts"));
 echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2right.png')."\"$tooltip></a></td>\n";
 echo "</tr>\n";
 
 if ($st > 0) {
     echo "<tr><td align=\"center\" colspan=\"3\"><a href=\"$PHP_SELF?cmd=showday&atime=";
     echo ($atime - ($at - $st + 1) * 3600) . "\">";
-    $tooltip = tooltip(_("zeig davor"));
+    $tooltip = tooltip(_("zeige davor"));
     echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2up.png')."\"$tooltip></a></td></tr>\n";
 }
 echo "</table>\n</td></tr>\n<tr><td class=\"blank\">\n";
@@ -81,7 +81,7 @@ if ($et < 23) {
     echo "<tr><td align=\"center\" colspan=\"" . $tab["max_columns"] . "\">";
     echo "<a href=\"$PHP_SELF?cmd=showday&atime=";
     echo ($atime + ($et - $at + 1) * 3600) . "\">";
-    $tooltip = tooltip(_("zeig danach"));
+    $tooltip = tooltip(_("zeige danach"));
     echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2down.png')."\"$tooltip></a></td></tr>\n";
 }
 else

@@ -56,7 +56,7 @@ echo "<font size=\"+2\"><b>" . $ayear->getYear() . "</b></font></td>\n";
 echo "<td align=\"center\" width=\"10%\"><a href=\"$PHP_SELF?cmd=showyear&atime=";
 echo ($ayear->getEnd() + 1) . "\">\n";
 echo "<img border=\"0\" src=\"".Assets::image_path('icons/16/blue/arr_2right.png')."\"";
-echo tooltip(_("vor")) . ">&nbsp;</a></td>\n";
+echo tooltip(_("vorwärts")) . ">&nbsp;</a></td>\n";
 echo "</tr></table>\n</td></tr>\n";
 echo "<tr><td class=\"blank\">";
 echo "<table class=\"steelgroup0\" width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"1\">\n";

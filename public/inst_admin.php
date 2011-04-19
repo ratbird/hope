@@ -617,7 +617,7 @@ if ($inst_id != "" && $inst_id !="0") {
                         <tr>
                             <td class="steelkante">
                                 <font size=-1>
-                                    <b>&nbsp;<?=_("neue Person der Einrichtung zuordnen")?></b>
+                                    <b>&nbsp;<?=_("Neue Person der Einrichtung zuordnen")?></b>
                                 </font>
                         </tr>
                         <tr>

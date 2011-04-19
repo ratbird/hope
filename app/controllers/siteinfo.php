@@ -111,7 +111,7 @@ class SiteinfoController extends StudipController
         if (!$rubrics_empty) {
             if ($this->currentrubric > 0) {
                 $infobox_actions[] = array('icon' => 'icons/16/black/plus.png',
-                                           'text' => '<a href="'.$this->url_for('siteinfo/new/'.$this->currentrubric).'">'._('neue Seite anlegen').'</a>');
+                                           'text' => '<a href="'.$this->url_for('siteinfo/new/'.$this->currentrubric).'">'._('Neue Seite anlegen').'</a>');
             }
             if ($this->currentdetail > 0) {
                 $infobox_actions[] = array('icon' => 'icons/16/black/edit.png',
@@ -121,7 +121,7 @@ class SiteinfoController extends StudipController
             }
         }
         $infobox_actions[] = array('icon' => 'icons/16/black/plus.png',
-                                   'text' => '<a href="'.$this->url_for('siteinfo/new').'">'._('neue Rubrik anlegen').'</a>');
+                                   'text' => '<a href="'.$this->url_for('siteinfo/new').'">'._('Neue Rubrik anlegen').'</a>');
         if ($this->currentrubric > 0) {
             $infobox_actions[] = array('icon' => 'icons/16/black/edit.png',
                                        'text' => '<a href="'.$this->url_for('siteinfo/edit/'.$this->currentrubric).'">'._('Rubrik bearbeiten').'</a>');
@@ -154,11 +154,11 @@ class SiteinfoController extends StudipController
     {
         if($givenrubric===NULL){
             Navigation::addItem('/footer/siteinfo/rubric_new',
-                new AutoNavigation(_('neue Rubrik'), $this->url_for('siteinfo/new')));
+                new AutoNavigation(_('Neue Rubrik'), $this->url_for('siteinfo/new')));
             $this->edit_rubric = TRUE;
         } else {
             Navigation::addItem('/links/siteinfo/'.$this->currentrubric.'/detail_new',
-                new AutoNavigation(_('neue Seite'), $this->url_for('siteinfo/new/'.$this->currentrubric)));
+                new AutoNavigation(_('Neue Seite'), $this->url_for('siteinfo/new/'.$this->currentrubric)));
             $this->rubrics = $this->si->get_all_rubrics();
         }
     }

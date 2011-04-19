@@ -404,9 +404,9 @@ if (($archiv_assi_data["sems"]) && (sizeof($archiv_assi_data["sem_check"]) > 0))
                 <?
                 $db2->query("SELECT Name, url, Institute.Institut_id FROM Institute LEFT JOIN seminar_inst USING (institut_id) WHERE seminar_id = '" . $archiv_assi_data["sems"][$archiv_assi_data["pos"]]["id"] . "' AND Institute.institut_id != '" . $db->f("Institut_id") . "'");
                 if ($db2->num_rows() == 1)
-                    printf ("<font size=-1><b>" . _("beteiligte Einrichtung:") . "</b></font><br>");
+                    printf ("<font size=-1><b>" . _("Beteiligte Einrichtung:") . "</b></font><br>");
                 elseif ($db2->num_rows() >= 2)
-                    printf ("<font size=-1><b>" . _("beteiligte Einrichtungen:") . "</b></font><br>");
+                    printf ("<font size=-1><b>" . _("Beteiligte Einrichtungen:") . "</b></font><br>");
                 else
                     print "&nbsp; ";
                 while ($db2->next_record()) {

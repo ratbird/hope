@@ -64,7 +64,7 @@ $infobox = array(
             'kategorie' => _("Information"),
             'eintrag'   => array(
                 array(
-                    "text" => _("Folgende Daten werden migriert:<br> Forumsbeiträge, Dateien, Kalender, Archiv, Evaluationen, Kategorien, Literatur, Nachrichten, Ankündigungen, Abstimmungen, Termine, umfragen, Wiki, Statusgruppen und Adressbuch."),
+                    "text" => _("Folgende Daten werden migriert:<br> Forumsbeiträge, Dateien, Kalender, Archiv, Evaluationen, Kategorien, Literatur, Nachrichten, Ankündigungen, Abstimmungen, Termine, Umfragen, Wiki, Statusgruppen und Adressbuch."),
                     "icon" => "icons/16/black/info.png"
                     ),
                 array(

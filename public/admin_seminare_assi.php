@@ -2439,7 +2439,7 @@ elseif ((!$level) || ($level == 1))
                     </tr>
                     <tr <? $cssSw->switchClass() ?>>
                         <td class="<? echo $cssSw->getClass() ?>" width="10%" align="right">
-                            <?=_("beteiligte Einrichtungen:"); ?>
+                            <?=_("Beteiligte Einrichtungen:"); ?>
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="90%" colspan=3>
                             &nbsp; <select  name="sem_bet_inst[]" MULTIPLE size=7>
@@ -2857,7 +2857,7 @@ if ($level == 2)
                             &nbsp;
                         </td>
                         <td class="<? echo $cssSw->getClass() ?>" width="96%" colspan=2>
-                            <font size=-1><b><?=_("zugelassenene Nutzerdomänen:")?> </b></font><br>
+                            <font size=-1><b><?=_("Zugelassenene Nutzerdomänen:")?> </b></font><br>
                             <table border=0 cellpadding=2 cellspacing=0>
                                 <tr>
                                     <td class="<? echo $cssSw->getClass() ?>" colspan=3 >

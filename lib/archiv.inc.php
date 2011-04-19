@@ -192,9 +192,9 @@ function dump_sem($sem_id, $print_view = false) {
     $db3->query("SELECT Name, url FROM seminar_inst LEFT JOIN Institute USING (institut_id) WHERE seminar_id = '$sem_id' AND Institute.institut_id != '$iid'");
     $cd=$db3->affected_rows();
     if ($db3->affected_rows() == 1)
-        $dump.="<tr><td width=\"15%\"><b>" . _("beteiligte Einrichtung:") . "&nbsp;</b></td><td>";
+        $dump.="<tr><td width=\"15%\"><b>" . _("Beteiligte Einrichtung:") . "&nbsp;</b></td><td>";
     else if ($db3->affected_rows() >= 2)
-        $dump.="<tr><td width=\"15%\"><b>" . _("beteiligte Einrichtungen:") . "&nbsp;</b></td><td>";
+        $dump.="<tr><td width=\"15%\"><b>" . _("Beteiligte Einrichtungen:") . "&nbsp;</b></td><td>";
 
     while ($db3->next_record()) {
         $cd--;

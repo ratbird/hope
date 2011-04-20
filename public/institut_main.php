@@ -56,7 +56,7 @@ if (get_config('VOTE_ENABLE')) {
     include_once ("lib/vote/vote_show.inc.php");
 }
 
-$institute_id = Request::option('cid');
+$institute_id = $_SESSION['SessionSeminar'];
 
 //set visitdate for institute, when coming from meine_seminare
 if (Request::get('auswahl')) {

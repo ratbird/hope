@@ -19,9 +19,11 @@
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open(array('sess' => 'Seminar_Session', 'auth' => 'Seminar_Default_Auth', 'perm' => 'Seminar_Perm', 'user' => 'Seminar_User'));
 
-$auth->login_if($again && ($auth->auth['uid'] == 'nobody'));
+$auth->login_if(Request::get('again') && ($auth->auth['uid'] == 'nobody'));
 
 // database object
 $db=new DB_Seminar;
@@ -31,7 +33,7 @@ $db=new DB_Seminar;
 if (Request::get('set_language')) {
     if(array_key_exists(Request::get('set_language'), $GLOBALS['INSTALLED_LANGUAGES'])) {
         $_SESSION['forced_language'] = Request::get('set_language');
-        $_language = Request::get('set_language');
+        $_SESSION['_language'] = Request::get('set_language');
     }
 }
 
@@ -40,9 +42,9 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
     // store last language click
     if (strlen($_SESSION['forced_language'])) {
         $db->query("UPDATE user_info SET preferred_language = '".$_SESSION['forced_language']."' WHERE user_id='$user->id'");
-        $_language = $_SESSION['_language'] = $_SESSION['forced_language'];
+        $_SESSION['_language'] = $_SESSION['forced_language'];
     }
-    $_SESSION['forced_language'] = $forced_language = null;
+    $_SESSION['forced_language'] = null;
 }
 
 include 'lib/seminar_open.php'; // initialise Stud.IP-Session
@@ -56,18 +58,19 @@ include_once 'lib/classes/RSSFeed.class.php';
 // -- wir sind jetzt definitiv in keinem Seminar, also... --
 closeObject();
 
-$sess->register('index_data');
+UrlHelper::bindLinkParam('index_data', $index_data);
 
 //Auf und Zuklappen News
 require_once 'lib/showNews.inc.php';
 process_news_commands($index_data);
 
 // Auf- und Zuklappen Termine
-if ($dopen)
-    $index_data['dopen']=$dopen;
-
-if ($dclose)
-    $index_data['dopen']='';
+if (Request::get('dopen')) {
+    $index_data['dopen'] = Request::option('dopen');
+}
+if (Request::get('dclose')) {
+    unset($index_data['dopen']);
+}
 
 if (get_config('NEWS_RSS_EXPORT_ENABLE') && ($auth->is_authenticated() && $user->id != 'nobody')){
     $rss_id = StudipNews::GetRssIdFromRangeId('studip');
@@ -168,7 +171,7 @@ if ($auth->is_authenticated() && $user->id != 'nobody') {
 <?
 
     // display news
-    show_news('studip', $perm->have_perm('root'), 0, $index_data['nopen'], "", $LastLogin, $index_data);
+    show_news('studip', $perm->have_perm('root'), 0, $index_data['nopen'], "", null, $index_data);
 
     // display dates
     if (!$perm->have_perm('admin')) { // only dozent, tutor, autor, user

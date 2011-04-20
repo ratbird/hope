@@ -58,6 +58,11 @@ if (get_config('VOTE_ENABLE')) {
 
 $institute_id = Request::option('cid');
 
+//set visitdate for institute, when coming from meine_seminare
+if (Request::get('auswahl')) {
+    object_set_visit($institute_id, "inst");
+}
+
 // gibt es eine Anweisung zur Umleitung?
 if(Request::get('redirect_to')) {
     $query_parts = explode('&', stristr($_SERVER['QUERY_STRING'], 'redirect_to'));

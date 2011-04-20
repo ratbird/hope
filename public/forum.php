@@ -26,11 +26,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-
-unregister_globals();
 
 // -- here you have to put initialisations for the current page
 $txt = $message = $count = $verschoben = '';
@@ -111,7 +111,7 @@ STUDIP.Forum.rate_template = function (id) {
 </div>\
 ', "center");
 }
-<?php 
+<?php
 PageLayout::addHeadElement('script', array('type' => 'text/javascript'), ob_get_clean());
 
 // Start of Output

@@ -117,12 +117,11 @@ function check_calendar_default(){
 
 function check_semester_default(){
     if ($GLOBALS['perm']->have_perm('user')){
-        $GLOBALS['sess']->register("_default_sem");
         $semester = SemesterData::GetInstance();
         $cfg = Config::GetInstance();
         $actual_sem = $semester->getSemesterDataByDate(time() + $cfg->getValue('SEMESTER_TIME_SWITCH') * 7 * 24 * 60 * 60);
         if (!is_array($actual_sem)) $actual_sem = $semester->getCurrentSemesterData();
-        $GLOBALS['_default_sem'] = $actual_sem['semester_id'];
+        $_SESSION['_default_sem'] = $actual_sem['semester_id'];
     }
 }
 //redirect the user where he want to go today....
@@ -150,12 +149,10 @@ function startpage_redirect($page_code) {
 
 require_once('lib/language.inc.php');
 
-global $i_page, $i_query,
-       $SessionStart, $SessionSeminar, $SessSemName,
-       $object_cache, $contact,
-       $_language, $DEFAULT_LANGUAGE,
+global $i_page,
+       $DEFAULT_LANGUAGE, $SessSemName, $SessionSeminar,
        $sess, $auth, $user, $perm,
-       $CurrentLogin, $LastLogin, $forum, $writemode,
+       $forum,$LastLogin, $CurrentLogin,
        $my_messaging_settings, $my_schedule_settings,
        $my_personal_sems, $my_studip_settings, $homepage_cache_own,
        $CALENDAR_ENABLE, $AUTH_LIFETIME, $_language_path;
@@ -163,43 +160,30 @@ global $i_page, $i_query,
 //get the name of the current page in $i_page
 $i_page = basename($_SERVER['PHP_SELF']);
 
-// function to get the parameters of the current page in array $i_query
-
-$i_query = explode('&',getenv("QUERY_STRING"));
-
 //INITS
 // session init starts here
-if ($SessionStart == 0) {
-    $SessionStart = time();
-    $SessionSeminar = '';
-    $SessSemName = array();
-    $sess->register("SessionStart");
-    $sess->register("SessionSeminar");
-    $sess->register("SessSemName");
-    $sess->register("object_cache");
-    $sess->register("contact");
-//??    $object_cache[] = " "; // sollte das Array hier geloescht oder initialisiert werden? js
-    $object_cache = array();
+if ($_SESSION['SessionStart'] == 0) {
+    $_SESSION['SessionStart'] = time();
+    $_SESSION['SessionSeminar'] = '';
+    $_SESSION['object_cache'] = array();
 
-    // Language Settings
-    $sess->register("_language");
     // try to get accepted languages from browser
-    if (!isset($_language))
-        $_language = get_accepted_languages();
-    if (!$_language)
-        $_language = $DEFAULT_LANGUAGE; // else use system default
+    if (!isset($_SESSION['_language']))
+        $_SESSION['_language'] = get_accepted_languages();
+    if (!$_SESSION['_language'])
+        $_SESSION['_language'] = $DEFAULT_LANGUAGE; // else use system default
 }
 
 // user init starts here
 if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
-    if ($SessionStart > $CurrentLogin) {      // just logged in
+    if ($_SESSION['SessionStart'] > $CurrentLogin) {      // just logged in
         // register all user variables
-        $LastLogin=$CurrentLogin;
-        $CurrentLogin=$SessionStart;
+        //TODO: was wird hier noch gebraucht? was kann in UserConfig?
+        $LastLogin = $CurrentLogin;
+        $CurrentLogin = $_SESSION['SessionStart'];
         $user->register("CurrentLogin");
         $user->register("LastLogin");
         $user->register("forum");
-        $user->register("writemode");  // forum postings
         $user->register("my_messaging_settings");
         $user->register("my_schedule_settings");
         $user->register("my_personal_sems");
@@ -241,21 +225,22 @@ if ($auth->is_authenticated() && is_object($user) && $user->id != "nobody") {
 
 
 // init of output via I18N
-$_language_path = init_i18n($_language);
+$_language_path = init_i18n($_SESSION['_language']);
 
 //force reload of config to get translated data
 include 'config.inc.php';
 
 // Try to select the course or institute given by the parameter 'cid'
-// in the current request. This also binds the global $SessionSeminar
+// in the current request. This also binds the global $_SESSION['SessionSeminar']
 // variable to the URL parameter 'cid' for all generated links.
 
-URLHelper::bindLinkParam('cid', $SessionSeminar);
+URLHelper::bindLinkParam('cid', $_SESSION['SessionSeminar']);
 
-if (isset($SessionSeminar) && $SessionSeminar != '') {
-    $course_id = $SessionSeminar;
+if (isset($_SESSION['SessionSeminar']) && $_SESSION['SessionSeminar'] != '') {
+    $course_id = $_SESSION['SessionSeminar'];
     selectSem($course_id) || selectInst($course_id);
     unset($course_id);
+    $_SESSION['SessionSeminar'] =& $SessionSeminar;
 }
 
 // load the default set of plugins

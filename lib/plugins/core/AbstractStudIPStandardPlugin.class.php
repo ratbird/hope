@@ -22,7 +22,7 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
 
     function AbstractStudIPStandardPlugin() {
         parent::__construct();
-        $this->id = $_SESSION['SessSemName'][1];
+        $this->id = $GLOBALS['SessSemName'][1];
         $this->user->permission->setPoiid($this->id);
     }
 
@@ -227,7 +227,7 @@ class AbstractStudIPStandardPlugin extends AbstractStudIPLegacyPlugin
         mark_public_course();
 
         $GLOBALS['CURRENT_PAGE'] =
-            $_SESSION['SessSemName']['header_line'] . ' - ' . $this->getDisplayTitle();
+            $GLOBALS['SessSemName']['header_line'] . ' - ' . $this->getDisplayTitle();
 
         parent::display_action($action);
     }

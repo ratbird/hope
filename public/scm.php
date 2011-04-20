@@ -27,14 +27,14 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-$auth->login_if($again && ($auth->auth["uid"] == "nobody"));
+$auth->login_if(Request::get('again') && ($auth->auth["uid"] == "nobody"));
 
 PageLayout::setHelpKeyword("Basis.Informationsseite");
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session
-
-unregister_globals();
 
 require_once ('lib/classes/StudipScmEntry.class.php');
 require_once 'lib/functions.php';

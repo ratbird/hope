@@ -25,12 +25,12 @@ class Course_ManagementController extends AuthenticatedController
     {
         parent::before_filter($action, $args);
 
-        if ($_SESSION['SessSemName']['class'] == 'sem') {
-            if (SeminarCategories::GetBySeminarId($_SESSION['SessSemName'][1])->studygroup_mode) {
+        if ($GLOBALS['SessSemName']['class'] == 'sem') {
+            if (SeminarCategories::GetBySeminarId($GLOBALS['SessSemName'][1])->studygroup_mode) {
                 throw new Exception(_('Dies ist eine Studiengruppe und kein Seminar!'));
             }
         }
-        PageLayout::setTitle(sprintf(_("%s - Verwaltung"), $_SESSION['SessSemName']['header_line']));
+        PageLayout::setTitle(sprintf(_("%s - Verwaltung"), $GLOBALS['SessSemName']['header_line']));
         PageLayout::setHelpKeyword('Basis.InVeranstaltungVerwaltung');
     }
 
@@ -43,7 +43,7 @@ class Course_ManagementController extends AuthenticatedController
     {
         Navigation::activateItem('course/admin/main');
 
-        if ($_SESSION['SessSemName']['class'] == 'inst') {
+        if ($GLOBALS['SessSemName']['class'] == 'inst') {
             $this->infotext = _('Als Mitarbeiter Ihrer Einrichtung können Sie für diese Inhalte in mehreren Kategorien bereitstellen. Inhalte in Ihrer Einrichtung können von allen Stud.IP-Nutzern abgerufen werden.');
         } else {
             $this->infotext = _('Sie können hier Ihre Veranstaltung in mehreren Kategorien anpassen. Informationen wie Grunddaten oder Termine und Einstellungen, Zugangsbeschränkungen und Funktionen können Sie hier administrieren.');

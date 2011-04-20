@@ -1287,7 +1287,7 @@ function unregister_globals ()
 
     $noUnset = array('GLOBALS', '_GET', '_POST', '_COOKIE',
                      '_REQUEST', '_SERVER', '_ENV', '_FILES',
-                     'auth', 'user', 'perm', 'SessSemName');
+                     'auth', 'SessionSeminar');
     $vars = array_merge($_GET, $_POST, $_COOKIE, $_SERVER, $_ENV, $_FILES);
 
     if (isset($_SESSION)) {

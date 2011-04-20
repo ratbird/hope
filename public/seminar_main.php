@@ -26,8 +26,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-$auth->login_if($again && ($auth->auth["uid"] == "nobody"));
+$auth->login_if(Request::get('again') && ($auth->auth["uid"] == "nobody"));
 
 if ($_REQUEST['auswahl']) {
     $_REQUEST['cid'] = $_REQUEST['auswahl'];
@@ -37,7 +39,6 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
 require_once('lib/dates.inc.php'); //Funktionen zur Anzeige der Terminstruktur
-require_once('config.inc.php');
 require_once('lib/visual.inc.php');
 require_once 'lib/functions.php';
 require_once 'lib/classes/CourseAvatar.class.php';
@@ -53,44 +54,21 @@ if (get_config('VOTE_ENABLE')) {
     include_once ("lib/vote/vote_show.inc.php");
 }
 
-if (isset($auswahl) && $auswahl!="") {
-        //just opened a seminar: we have to initialize the seminar for working with it
-        openSem($auswahl);
-} else {
-        $auswahl=$SessSemName[1];
-}
-
+$course_id = Request::option('cid');
 
 // gibt es eine Anweisung zur Umleitung?
-if(isset($redirect_to) && $redirect_to != "") {
-        $take_it = 0;
-
-        for ($i = 0; $i < count($i_query); $i++) { // alle Parameter durchwandern
-                $parts = explode('=',$i_query[$i]);
-                if ($parts[0] == "redirect_to") {
-                        // aha, wir haben die erste interessante Angabe gefunden
-                        $new_query = $parts[1];
-                        $take_it ++;
-                } elseif ($take_it) {
-                        // alle weiteren Parameter mit einsammeln
-                        if ($take_it == 1) { // hier kommt der erste
-                                $new_query .= '?';
-                        } else { // hier kommen alle weiteren
-                                $new_query .= '&';
-                        }
-                        $new_query .= $i_query[$i];
-                        $take_it ++;
-                }
-        }
-        unset($redirect_to);
-        page_close();
-        $new_query = preg_replace('/[^0-9a-z+_#?&=.-\/]/i', '', $new_query);
-        header('Location: '.URLHelper::getURL($new_query));
-        die;
+if(Request::get('redirect_to')) {
+    $query_parts = explode('&', stristr($_SERVER['QUERY_STRING'], 'redirect_to'));
+    list( , $where_to) = explode('=', array_shift($query_parts));
+    $new_query = $where_to . '?' . join('&', $query_parts);
+    page_close();
+    $new_query = preg_replace('/[^0-9a-z+_#?&=.-\/]/i', '', $new_query);
+    header('Location: '.URLHelper::getURL($new_query));
+    die;
 }
 
-if (get_config('NEWS_RSS_EXPORT_ENABLE') && $SessSemName[1]){
-    $rss_id = StudipNews::GetRssIdFromRangeId($SessSemName[1]);
+if (get_config('NEWS_RSS_EXPORT_ENABLE') && $course_id){
+    $rss_id = StudipNews::GetRssIdFromRangeId($course_id);
     if ($rss_id) {
         PageLayout::addHeadElement('link', array('rel'   => 'alternate',
                                                  'type'  => 'application/rss+xml',
@@ -104,7 +82,7 @@ checkObject();
 mark_public_course();
 
 PageLayout::setHelpKeyword("Basis.InVeranstaltungKurzinfo");
-PageLayout::setTitle($SessSemName["header_line"]. " - " . _("Kurzinfo"));
+PageLayout::setTitle($GLOBALS['SessSemName']["header_line"]. " - " . _("Kurzinfo"));
 Navigation::activateItem('/course/main/info');
 // add skip link
 SkipLinks::addIndex(Navigation::getItem('/course/main/info')->getTitle(), 'main_content', 100);
@@ -116,23 +94,23 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 include 'lib/showNews.inc.php';
 include 'lib/show_dates.inc.php';
 
-$studygroup_mode = $SEM_CLASS[$SEM_TYPE[$SessSemName["art_num"]]["class"]]["studygroup_mode"];
+$studygroup_mode = $SEM_CLASS[$SEM_TYPE[$GLOBALS['SessSemName']["art_num"]]["class"]]["studygroup_mode"];
 
 // list of used modules
 $Modules = new Modules;
-$modules = $Modules->getLocalModules($SessSemName[1]);
+$modules = $Modules->getLocalModules($course_id);
 
-$sem = Seminar::GetInstance($SessSemName[1]);
+$sem = Seminar::GetInstance($course_id);
 
 URLHelper::bindLinkParam("sem_data", $smain_data);
 
 //Auf und Zuklappen Termine
-if ($dopen)
-    $smain_data["dopen"]=$dopen;
-
-if ($dclose)
-    $smain_data["dopen"]='';
-
+if (Request::get('dopen')) {
+    $smain_data['dopen'] = Request::option('dopen');
+}
+if (Request::get('dclose')) {
+    unset($smain_data['dopen']);
+}
 //Auf und Zuklappen News
 process_news_commands($smain_data);
 
@@ -145,16 +123,16 @@ $quarter_year = 60 * 60 * 24 * 90;
         <td class="blank" valign="top" id="main_content">
         <div style="padding:0 1.5em 1.5em 1.5em">
     <?
-    echo "<h3>".htmlReady($SessSemName["header_line"]). "</h3>";
-    if ($SessSemName[3]) {
+    echo "<h3>".htmlReady($GLOBALS['SessSemName']["header_line"]). "</h3>";
+    if ($GLOBALS['SessSemName'][3]) {
         echo "<b>" . _("Untertitel:") . " </b>";
-        echo htmlReady($SessSemName[3]);
+        echo htmlReady($GLOBALS['SessSemName'][3]);
         echo "<br>";
     }
 
     if (!$studygroup_mode) {
         echo '<b>'. _("Zeit") .':</b><br>';
-        $show_link = ($perm->have_studip_perm('autor', $SessSemName[1]) && $modules['schedule']);
+        $show_link = ($perm->have_studip_perm('autor', $course_id) && $modules['schedule']);
         echo $sem->getDatesHTML(array('link_to_dates' => $show_link));
 
         echo '<br>';
@@ -191,13 +169,13 @@ $quarter_year = 60 * 60 * 24 * 90;
         // Ticket #68
         if (!$perm->have_perm('dozent')) {
             require_once('lib/classes/AuxLockRules.class.php');
-            $rule = AuxLockRules::getLockRuleBySemId($SessSemName[1]);
+            $rule = AuxLockRules::getLockRuleBySemId($course_id);
             if (isset($rule)) {
                 $show = false;
                 foreach ((array)$rule['attributes'] as $val) {
                     if ($val == 1) {
                         // Es gibt also Zusatzangaben. Nun noch überprüfen ob der Nutzer diese Angaben schon gemacht hat...
-                        $dbtg = new DB_Seminar($query = "SELECT * FROM datafields as d LEFT JOIN datafields_entries as de USING (datafield_id) WHERE d.object_type = 'usersemdata' AND de.sec_range_id = '".$SessSemName[1]."' AND de.range_id = '".$user->id."'");
+                        $dbtg = new DB_Seminar($query = "SELECT * FROM datafields as d LEFT JOIN datafields_entries as de USING (datafield_id) WHERE d.object_type = 'usersemdata' AND de.sec_range_id = '".$course_id."' AND de.range_id = '".$user->id."'");
                         if ($dbtg->num_rows() == 0) {
                             $show = true;
                         }
@@ -228,9 +206,9 @@ $quarter_year = 60 * 60 * 24 * 90;
         </td>
         <td class="blank" align="right" valign="top">
             <? if ($studygroup_mode) : ?>
-            <?= StudygroupAvatar::getAvatar($SessSemName[1])->getImageTag(Avatar::NORMAL) ?>
+            <?= StudygroupAvatar::getAvatar($course_id)->getImageTag(Avatar::NORMAL) ?>
             <? else: ?>
-            <?= CourseAvatar::getAvatar($SessSemName[1])->getImageTag(Avatar::NORMAL) ?>
+            <?= CourseAvatar::getAvatar($course_id)->getImageTag(Avatar::NORMAL) ?>
             <? endif; ?>
         </td>
     </tr>
@@ -240,28 +218,28 @@ $quarter_year = 60 * 60 * 24 * 90;
 <?php
 
 // Anzeige von News
-show_news($auswahl, $rechte, 0, $smain_data["nopen"], "100%", object_get_visit($SessSemName[1], "sem"), $smain_data);
+show_news($course_id, $rechte, 0, $smain_data["nopen"], "100%", object_get_visit($course_id, "sem"), $smain_data);
 
 // Anzeige von Terminen
 $start_zeit=time();
 $end_zeit=$start_zeit+1210000;
-$name = rawurlencode($SessSemName[0]);
-($rechte) ? $show_admin=URLHelper::getLink("admin_dates.php?range_id=$SessSemName[1]&ebene=sem&new_sem=TRUE") : $show_admin=FALSE;
+
+($rechte) ? $show_admin=URLHelper::getLink("admin_dates.php?range_id=".$course_id."&ebene=sem&new_sem=TRUE") : $show_admin=FALSE;
 if (!$studygroup_mode) {
-    show_dates($start_zeit, $end_zeit, $smain_data["dopen"], $auswahl, 0, TRUE, $show_admin);
+    show_dates($start_zeit, $end_zeit, $smain_data["dopen"], $course_id, 0, TRUE, $show_admin);
 }
 
 // include and show votes and tests
 if (get_config('VOTE_ENABLE')) {
-    show_votes ($auswahl, $auth->auth["uid"], $perm, YES);
+    show_votes ($course_id, $auth->auth["uid"], $perm, YES);
 }
 
 // display plugins
-$plugins = PluginEngine::getPlugins('StandardPlugin', $SessSemName[1]);
+$plugins = PluginEngine::getPlugins('StandardPlugin', $course_id);
 $layout = $GLOBALS['template_factory']->open('shared/index_box');
 
 foreach ($plugins as $plugin) {
-    $template = $plugin->getInfoTemplate($SessSemName[1]);
+    $template = $plugin->getInfoTemplate($course_id);
 
     if ($template) {
         echo $template->render(NULL, $layout);
@@ -271,7 +249,7 @@ foreach ($plugins as $plugin) {
 
 // show chat info
 if (get_config('CHAT_ENABLE') && $modules["chat"]) {
-    chat_show_info($auswahl);
+    chat_show_info($course_id);
 }
 
 include ('lib/include/html_end.inc.php');

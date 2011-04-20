@@ -26,8 +26,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 require '../lib/bootstrap.php';
 
+unregister_globals();
+
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
-$auth->login_if($again && ($auth->auth["uid"] == "nobody"));
+$auth->login_if(Request::get('again') && ($auth->auth["uid"] == "nobody"));
 
 if ($_REQUEST['auswahl']) {
     $_REQUEST['cid'] = $_REQUEST['auswahl'];
@@ -37,12 +39,11 @@ include ('lib/seminar_open.php'); // initialise Stud.IP-Session
 
 // -- here you have to put initialisations for the current page
 require_once 'lib/dates.inc.php'; //Funktionen zur Anzeige der Terminstruktur
-require_once 'lib/datei.inc.php';
-require_once 'config.inc.php';
 require_once 'lib/visual.inc.php';
 require_once 'lib/functions.php';
 require_once 'lib/classes/DataFieldEntry.class.php';
 require_once 'lib/classes/InstituteAvatar.class.php';
+require_once 'lib/classes/Institute.class.php';
 
 if (get_config('CHAT_ENABLE')){
     include_once $RELATIVE_PATH_CHAT."/chat_func_inc.php";
@@ -55,46 +56,21 @@ if (get_config('VOTE_ENABLE')) {
     include_once ("lib/vote/vote_show.inc.php");
 }
 
+$institute_id = Request::option('cid');
 
-// hier muessen Seiten-Initialisierungen passieren
-if (isset($auswahl) && $auswahl!="") {
-    //just opened Einrichtung... here follows the init
-    openInst ($auswahl);
-} else {
-    $auswahl=$SessSemName[1];
+// gibt es eine Anweisung zur Umleitung?
+if(Request::get('redirect_to')) {
+    $query_parts = explode('&', stristr($_SERVER['QUERY_STRING'], 'redirect_to'));
+    list( , $where_to) = explode('=', array_shift($query_parts));
+    $new_query = $where_to . '?' . join('&', $query_parts);
+    page_close();
+    $new_query = preg_replace('/[^0-9a-z+_#?&=.-\/]/i', '', $new_query);
+    header('Location: '.URLHelper::getURL($new_query));
+    die;
 }
 
-    // gibt es eine Anweisung zur Umleitung?
-    if(isset($redirect_to) && $redirect_to != "") {
-        $take_it = 0;
-
-        for ($i = 0; $i < count($i_query); $i++) { // alle Parameter durchwandern
-            $parts = explode('=',$i_query[$i]);
-            if ($parts[0] == "redirect_to") {
-                // aha, wir haben die erste interessante Angabe gefunden
-                $new_query = $parts[1];
-                $take_it ++;
-            } elseif ($take_it) {
-                // alle weiteren Parameter mit einsammeln
-                if ($take_it == 1) { // hier kommt der erste
-                    $new_query .= '?';
-                } else { // hier kommen alle weiteren
-                    $new_query .= '&';
-                }
-                $new_query .= $i_query[$i];
-                $take_it ++;
-            }
-
-        }
-        unset($redirect_to);
-        page_close();
-        $new_query = preg_replace('/[^0-9a-z+_#?&=.-\/]/i', '', $new_query);
-        header('Location: '.URLHelper::getURL($new_query));
-        die;
-    }
-
-if (get_config('NEWS_RSS_EXPORT_ENABLE') && $SessSemName[1]){
-    $rss_id = StudipNews::GetRssIdFromRangeId($SessSemName[1]);
+if (get_config('NEWS_RSS_EXPORT_ENABLE') && $institute_id){
+    $rss_id = StudipNews::GetRssIdFromRangeId($institute_id);
     if ($rss_id) {
         PageLayout::addHeadElement('link', array('rel'   => 'alternate',
                                                  'type'  => 'application/rss+xml',
@@ -119,7 +95,7 @@ include 'lib/showNews.inc.php';
 
 // list of used modules
 $Modules = new Modules;
-$modules = $Modules->getLocalModules($SessSemName[1]);
+$modules = $Modules->getLocalModules($institute_id);
 
 URLHelper::bindLinkParam("inst_data", $institut_main_data);
 
@@ -134,39 +110,36 @@ process_news_commands($institut_main_data);
         <div style="padding:0 1.5em 1.5em 1.5em">
         <ul style="list-style-type:none;padding:0px;">
     <?
-    $db = new DB_Seminar();
-    $db->query ("SELECT a.*, b.Name AS fakultaet_name  FROM Institute a LEFT JOIN Institute b ON (b.Institut_id = a.fakultaets_id) WHERE a.Institut_id='$auswahl'");
-    $db->next_record();
-
-    if ($db->f("Strasse")) {
-        echo "<li><b>" . _("Straﬂe:") . " </b>"; echo htmlReady($db->f("Strasse")); echo"</li>";
+    $institute = Institute::find($institute_id);
+    if ($institute->strasse) {
+        echo "<li><b>" . _("Straﬂe:") . " </b>"; echo htmlReady($institute->strasse); echo"</li>";
     }
 
-    if ($db->f("Plz")) {
-        echo "<li><b>" . _("Ort:") . " </b>"; echo htmlReady($db->f("Plz")); echo"</li>";
+    if ($institute->Plz) {
+        echo "<li><b>" . _("Ort:") . " </b>"; echo htmlReady($institute->Plz); echo"</li>";
     }
 
-    if ($db->f("telefon")) {
-        echo "<li><b>" . _("Tel.:") . " </b>"; echo htmlReady($db->f("telefon")); echo"</li>";
+    if ($institute->telefon) {
+        echo "<li><b>" . _("Tel.:") . " </b>"; echo htmlReady($institute->telefon); echo"</li>";
     }
 
-    if ($db->f("fax")) {
-        echo "<li><b>" . _("Fax:") . " </b>"; echo htmlReady($db->f("fax")); echo"</li>";
+    if ($institute->fax) {
+        echo "<li><b>" . _("Fax:") . " </b>"; echo htmlReady($institute->fax); echo"</li>";
     }
 
-    if ($db->f("url")) {
-        echo "<li><b>" . _("Homepage:") . " </b>"; echo formatReady($db->f("url")); echo"</li>";
+    if ($institute->url) {
+        echo "<li><b>" . _("Homepage:") . " </b>"; echo formatReady($institute->url); echo"</li>";
     }
 
-    if ($db->f("email")) {
-        echo "<li><b>" . _("E-Mail:") . " </b>"; echo formatReady($db->f("email")); echo"</li>";
+    if ($institute->email) {
+        echo "<li><b>" . _("E-Mail:") . " </b>"; echo formatReady($institute->email); echo"</li>";
     }
 
-    if ($db->f("fakultaet_name")) {
-        echo "<li><b>" . _("Fakult&auml;t:") . " </b>"; echo htmlReady($db->f("fakultaet_name")); echo"</li>";
+    if ($institute->fakultaets_id) {
+        echo "<li><b>" . _("Fakult&auml;t:") . " </b>"; echo htmlReady(Institute::find($institute->fakultaets_id)->name); echo"</li>";
     }
 
-    $localEntries = DataFieldEntry::getDataFieldEntries($SessSemName[1]);
+    $localEntries = DataFieldEntry::getDataFieldEntries($institute_id);
     foreach ($localEntries as $entry) {
         if ($entry->structure->accessAllowed($perm) && $entry->getValue()) {
             echo "<li><b>" .htmlReady($entry->getName()) . ": </b>";
@@ -180,7 +153,7 @@ process_news_commands($institut_main_data);
     </div>
     </td>
         <td class="blank" align="right" valign="top" style="padding:10px;">
-            <?= InstituteAvatar::getAvatar($SessSemName[1])->getImageTag(Avatar::NORMAL) ?>
+            <?= InstituteAvatar::getAvatar($institute_id)->getImageTag(Avatar::NORMAL) ?>
         </td>
         </tr>
     </table>
@@ -189,20 +162,20 @@ process_news_commands($institut_main_data);
 
 // Anzeige von News
 ($rechte) ? $show_admin=TRUE : $show_admin=FALSE;
-show_news($auswahl,$show_admin, 0, $institut_main_data["nopen"], "100%", object_get_visit($SessSemName[1], "inst"), $institut_main_data);
+show_news($institute_id,$show_admin, 0, $institut_main_data["nopen"], "100%", object_get_visit($institute_id, "inst"), $institut_main_data);
 
 // include and show votes and tests
 if (get_config('VOTE_ENABLE')) {
-    show_votes ($auswahl, $auth->auth["uid"], $perm, YES);
+    show_votes ($institute_id, $auth->auth["uid"], $perm, YES);
 }
 
 
 // display plugins
-$plugins = PluginEngine::getPlugins('StandardPlugin', $SessSemName[1]);
+$plugins = PluginEngine::getPlugins('StandardPlugin', $institute_id);
 $layout = $GLOBALS['template_factory']->open('shared/index_box');
 
 foreach ($plugins as $plugin) {
-    $template = $plugin->getInfoTemplate($SessSemName[1]);
+    $template = $plugin->getInfoTemplate($institute_id);
 
     if ($template) {
         echo $template->render(NULL, $layout);
@@ -212,7 +185,7 @@ foreach ($plugins as $plugin) {
 
 //show chat info
 if (get_config('CHAT_ENABLE') && $modules["chat"]) {
-    chat_show_info($auswahl);
+    chat_show_info($institute_id);
 }
 
 include ('lib/include/html_end.inc.php');

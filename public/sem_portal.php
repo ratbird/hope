@@ -153,7 +153,7 @@ $init_data = array( "level" => "f",
                     "cmd"=>"qs",
                     "show_class"=>$sem_portal['bereich'],
                     "group_by"=>0,
-                    "default_sem"=> ( ($default_sem = SemesterData::GetSemesterIndexById($GLOBALS['_default_sem'])) !== false ? $default_sem : "all"),
+                    "default_sem"=> ( ($default_sem = SemesterData::GetSemesterIndexById($_SESSION['_default_sem'])) !== false ? $default_sem : "all"),
                     "sem_status"=>$_sem_status);
 
 if ($reset_all) $sem_browse_data = null;

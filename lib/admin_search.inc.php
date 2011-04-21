@@ -73,7 +73,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         $archiv_assi_data='';
         $term_metadata='';
         $links_admin_data["select_old"]=TRUE;
-        $links_admin_data['srch_sem'] =& $GLOBALS['_default_sem'];
+        $links_admin_data['srch_sem'] =& $_SESSION['_default_sem'];
     }
 
 
@@ -204,13 +204,13 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
         $links_admin_data["topkat"]="sem";
     }
-    
+
     //here are all the pages/views listed, which require the search form for Veranstaltungen
     if ($i_page == "admin_extern.php" AND $links_admin_data["view"] == 'extern_global') {
-    
+
         $links_admin_data["topkat"] = 'global';
     }
-    
+
     //remember the open topkat
     if ($view_mode=="sem")
         $links_admin_data["topkat"]="sem";

@@ -471,11 +471,11 @@ elseif ($auth->auth["perm"]=="admin") {
     $db2=new DB_Seminar();
 
     if(isset($_REQUEST['select_sem'])){
-            $_default_sem = $_REQUEST['select_sem'];
+        $_SESSION['_default_sem'] = Request::option('select_sem');
     }
-    if ($_default_sem){
+    if ($_SESSION['_default_sem']){
         $semester = SemesterData::GetInstance();
-        $one_semester = $semester->getSemesterData($_default_sem);
+        $one_semester = $semester->getSemesterData($_SESSION['_default_sem']);
         $sem_condition = "AND seminare.start_time <=".$one_semester["beginn"]." AND (".$one_semester["beginn"]." <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1) ";
     } else {
         $sem_condition = '';
@@ -584,7 +584,8 @@ elseif ($auth->auth["perm"]=="admin") {
 
 
     $template = $GLOBALS["template_factory"]->open("meine_seminare/index_admin");
-    echo $template->render(compact(words("meldung _my_inst _my_admin_inst_id _default_sem num_my_sem Modules cssSw my_sem")));
+    $template->set_attribute('_default_sem', $_SESSION['_default_sem']);
+    echo $template->render(compact(words("meldung _my_inst _my_admin_inst_id num_my_sem Modules cssSw my_sem")));
 }
     include ('lib/include/html_end.inc.php');
     ob_end_flush(); //Outputbuffering beenden

@@ -359,7 +359,7 @@ if ($change_object_schedules) {
     }
 
     if (($ObjectPerms->havePerm("tutor")) && ($change_meta_to_single_assigns_x)) {
-        $assObj = AssignObject::Factory($change_object_schedules); 
+        $assObj = AssignObject::Factory($change_object_schedules);
         if ($assObj->getOwnerType() != 'sem'){
             $events = $assObj->getEvents();
             if (is_array($events)){
@@ -657,15 +657,15 @@ if ($change_object_schedules) {
                 } else {
                     $changeAssign->restore();
                 }
-            } 
-            
+            }
+
             // create a new assign
             elseif ( ($change_object_schedules == "NEW" || $new_assign_object)){
 
                 if (($change_schedule_assign_user_id) || ($change_schedule_user_free_name)) {
                     $overlaps = $changeAssign->checkOverlap(FALSE);
                     $locks = $changeAssign->checkLock();
-                } 
+                }
                 // show hint, that either a user or a free text must be provided
                 else if ($storeAssign) {
                     $msg->addMsg(46);
@@ -679,7 +679,7 @@ if ($change_object_schedules) {
                     } else {
                         $new_assign_object=serialize($changeAssign);  // store the submitted form-data
 
-                        if ( $storeAssign && !$do_search_user_x && !$reset_search_user_x 
+                        if ( $storeAssign && !$do_search_user_x && !$reset_search_user_x
                             && !$change_schedule_assign_user_id && $change_schedule_user_free_name) {
                                 $msg->addMsg(10);
                         }
@@ -700,8 +700,8 @@ if ($change_object_schedules) {
                         $new_assign_object=serialize($changeAssign);
                     }
                 }
-            } 
-            
+            }
+
             // change an existing assign
             else {
                 if (($change_schedule_assign_user_id) || ($change_schedule_user_free_name)) {
@@ -1035,7 +1035,7 @@ if (($kill_lock)) {
 evaluate the commands from schedule navigator
 /*****************************************************************************/
 
-// fixed BIEST0210; ermoeglicht sofortiges zurueckblaettern im Belegungsplan; 
+// fixed BIEST0210; ermoeglicht sofortiges zurueckblaettern im Belegungsplan;
 if ($resources_data['schedule_week_offset']==null)
 {
   $resources_data['schedule_week_offset']=0;
@@ -1106,11 +1106,11 @@ if ($time_range) {
 handle commands from the search 'n' browse module
 /*****************************************************************************/
 if ($view == "search") {
-    
+
     if(!isset($resources_data['search_only_rooms'])){
         $resources_data['search_only_rooms'] = 1;
     }
-    
+
     if ($open_level)
          $resources_data["browse_open_level"]=$open_level;
 
@@ -1547,7 +1547,7 @@ if ($save_state_x) {
         $_sendMessage['request_id'] = $reqObj->id;
         $_sendMessage['seminar_id'] = $reqObj->seminar_id;
         $_sendMessage['type'] = 'closed';
-        
+
         $reqObj->setClosed(1);
         $reqObj->store();
         unset($resources_data["requests_open"][$reqObj->getId()]);
@@ -1619,7 +1619,7 @@ if ($delete_request_x || $_REQUEST['approveDelete']) {
             $approval=array('approveDelete' => TRUE);
             echo createQuestion(_("Wollen Sie diese Raumanfrage wirklich löschen?"), $approval);
         }
-        
+
     if($_REQUEST['approveDelete']){
             require_once ($RELATIVE_PATH_RESOURCES."/lib/RoomRequest.class.php");
             $reqObj = new RoomRequest($resources_data["requests_working_on"][$resources_data["requests_working_pos"]]["request_id"]);//$_REQUEST['request_id']);
@@ -1912,10 +1912,10 @@ if ($_sendMessage) {
     if ($_sendMessage['type'] == 'declined') {
         $decline_message = remove_magic_quotes($_REQUEST['decline_message']);
         if ($semObj->seminar_number) {
-            $message = sprintf(_("ABGELEHNTE RAUMANFRAGE: Ihre Raumanfrage zur Veranstaltung %s (%s) wurde abgelehnt.") . "\n\n" . 
+            $message = sprintf(_("ABGELEHNTE RAUMANFRAGE: Ihre Raumanfrage zur Veranstaltung %s (%s) wurde abgelehnt.") . "\n\n" .
                 _("Nachricht des Raumadministrators:") . "\n" . $decline_message, $semObj->getName(), $semObj->seminar_number);
         } else {
-            $message = sprintf(_("ABGELEHNTE RAUMANFRAGE: Ihre Raumanfrage zur Veranstaltung %s wurde abgelehnt.") . "\n\n" . 
+            $message = sprintf(_("ABGELEHNTE RAUMANFRAGE: Ihre Raumanfrage zur Veranstaltung %s wurde abgelehnt.") . "\n\n" .
                 _("Nachricht des Raumadministrators:") . "\n" . $decline_message, $semObj->getName());
         }
 
@@ -1935,15 +1935,15 @@ if ($_sendMessage) {
         $reqObj->store();
         foreach ($users as $userid) {
             setTempLanguage($userid);
-            $messaging->insert_message(addslashes($message), get_username($userid), $user->id, FALSE, FALSE, FALSE, FALSE, 
+            $messaging->insert_message(addslashes($message), get_username($userid), $user->id, FALSE, FALSE, FALSE, FALSE,
                 addslashes(_("Raumanfrage abgelehnt:") .' '. implode(', ', $title)), TRUE, 'high');
             restoreLanguage();
         }
-    } 
-    
+    }
+
     // the room-request has been resolved
     else {
-        
+
         // create appropriate message
         if ($semObj->seminar_number)
             $message = sprintf (_("Ihre Raumanfrage zur Veranstaltung %s (%s) wurde bearbeitet.")." \n"._("Für folgende Belegungszeiten wurde der jeweils angegebene Raum gebucht:")."\n\n", $semObj->getName(), $semObj->seminar_number);
@@ -1959,7 +1959,7 @@ if ($_sendMessage) {
                 $messaging->insert_message(addslashes($message) . strip_tags(str_ireplace('<br>', "\n", $GLOBALS['messageForUsers'])), get_username($userid), $user->id, FALSE, FALSE, FALSE, FALSE, _("Raumanfrage bearbeitet"), TRUE);
                 restoreLanguage();
             }
-        } 
+        }
 
         //set more closed ;-)
         $reqObj->setClosed(2);
@@ -2034,7 +2034,7 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
         }
     }
     if (!$resources_data['sem_schedule_semester_id']){
-        $resources_data['sem_schedule_semester_id'] = $GLOBALS['_default_sem'];
+        $resources_data['sem_schedule_semester_id'] = $_SESSION['_default_sem'];
         $resources_data['sem_schedule_timespan'] = 'course_time';
         $resources_data["schedule_mode"] = "graphical";
         $resources_data["show_repeat_mode"] = 'all';
@@ -2045,7 +2045,7 @@ if ($view == "view_sem_schedule" || $view == "view_group_schedule" || $view == "
         $resources_data["show_repeat_mode"] = 'all';
         $resources_data['group_schedule_dow'] = 1;
     }
-    $GLOBALS['_default_sem'] = $resources_data['sem_schedule_semester_id'];
+    $_SESSION['_default_sem'] = $resources_data['sem_schedule_semester_id'];
 }
 
 if (($show_repeat_mode) && ($send_schedule_repeat_mode_x)) {

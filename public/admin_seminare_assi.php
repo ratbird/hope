@@ -317,8 +317,8 @@ if (($auth->lifetime != 0 && ((time() - $sem_create_data["timestamp"]) >$auth->l
     $sem_create_data["sem_bereich"] = array();
 
     if ($GLOBALS['ASSI_SEMESTER_PRESELECT']){
-        if ($_default_sem){
-            $one_sem = $semester->getSemesterData($_default_sem);
+        if ($_SESSION['_default_sem']){
+            $one_sem = $semester->getSemesterData($_SESSION['_default_sem']);
             if ($one_sem["vorles_ende"] > time()) $sem_create_data['sem_start_time'] = $one_sem['beginn'];
         }
     }
@@ -410,9 +410,9 @@ if ($form == 1)
         }
     }
 
-    if (isset($_default_sem)){
+    if (isset($_SESSION['_default_sem'])){
         $one_sem = $semester->getSemesterDataByDate($sem_create_data["sem_start_time"]);
-        $_default_sem = $one_sem['semester_id'];
+        $_SESSION['_default_sem'] = $one_sem['semester_id'];
     }
     if (($sem_duration_time == 0) || ($sem_duration_time == -1))
         $sem_create_data["sem_duration_time"]=$sem_duration_time;

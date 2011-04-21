@@ -189,7 +189,7 @@ class InstanceStmControl {
             $cur_homeinst = $this->inst_stm->getHomeinst();
             $cur_responsible = $this->inst_stm->getResponsible();
         }
-        if(!$cur_sem_id) $cur_sem_id = $GLOBALS['_default_sem'];
+        if(!$cur_sem_id) $cur_sem_id = $_SESSION['_default_sem'];
 
         $form_fields = array(   'title' =>  array('type' => 'text', 'caption' => 'semesterspezifischer Titel', 'info' => 'Der Name des anzulegenden Studienmoduls kann hier nochmal ge&auml;ndert werden. Das Allgemeine Modul bleibt davon unber&uuml;hrt.', 'default_value' => $title),
                                 'subtitle' =>   array('type' => 'text', 'caption' => 'semesterspezifischer Untertitel', 'info' => 'Der Untertitel des anzulegenden Studienmoduls kann hier nochmal ge&auml;ndert werden. Das Allgemeine Modul bleibt davon unber&uuml;hrt.', 'default_value' => $subtitle),

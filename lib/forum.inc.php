@@ -114,11 +114,7 @@ function editarea($forumposting) {
 
     $zusatz = "<a href=\"".URLHelper::getLink("?open=".$forumposting["rootid"]."#anker")."\">" . makeButton("abbrechen", "img", _("abbrechen")) . "</a>";
 
-    if (get_config("EXTERNAL_HELP")) {
-        $help_url=format_help_url("Basis.VerschiedenesFormat");
-    } else {
-        $help_url="help/index.php?help_page=ix_forum6.htm";
-    }
+    $help_url = format_help_url("Basis.VerschiedenesFormat");
     $zusatz .= "&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a>";
     if ($forumposting["writestatus"] == "new") { // es ist ein neuer Beitrag, der Autor sieht dann:
         $description = _("Ihr Beitrag");

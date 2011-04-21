@@ -2,11 +2,7 @@
 # Lifter010: TODO
 ?>
 <?
-if (get_config("EXTERNAL_HELP")) {
-    $help_url=format_help_url("Basis.VeranstaltungenVerwaltenGruppen");
-} else {
-    $help_url="help/index.php?referrer_page=admin_statusgruppe.php";
-}
+    $help_url = format_help_url("Basis.VeranstaltungenVerwaltenGruppen");
 ?>
 <br>
 <p class="info">

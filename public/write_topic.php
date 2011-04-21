@@ -135,11 +135,7 @@ if (!(have_sem_write_perm()) OR $pass==TRUE) {
         }
         echo "</textarea><br><br>";
         echo makeButton("abschicken", "input");
-        if (get_config("EXTERNAL_HELP")) {
-            $help_url=format_help_url("Basis.VerschiedenesFormat");
-        } else {
-            $help_url="help/index.php?help_page=ix_forum6.htm";
-        }
+        $help_url = format_help_url("Basis.VerschiedenesFormat");
         echo "&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\"><font size=\"-1\">"._("Smileys")."</a>&nbsp;&nbsp;"."<a href=\"".$help_url."\" target=\"_blank\"><font size=\"-1\">"._("Formatierungshilfen")."</a>";
         echo "</form>";
         

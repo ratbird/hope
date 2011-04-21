@@ -376,12 +376,7 @@ if ($db->num_rows()>0) {   // haben wir schon Gruppen? dann Anzeige
     <tr><td>
     <?
 
-    if (get_config("EXTERNAL_HELP"))
-    {
-        $help_url=format_help_url("Basis.VeranstaltungenVerwaltenGruppen");
-    } else {
-        $help_url="help/index.php?help_page=admin_statusgruppe.php";
-    }
+    $help_url = format_help_url("Basis.VeranstaltungenVerwaltenGruppen");
     $zusatz = array(
         _("Um f&uuml;r diesen Bereich Gruppen oder Funktionen anzulegen, nutzen Sie bitte die obere Zeile!"),
         _("Wenn Sie Gruppen angelegt haben, k&ouml;nnen Sie diesen Personen zuordnen. Jeder Gruppe k&ouml;nnen beliebig viele Personen zugeordnet werden. Jede Person kann beliebig vielen Gruppen zugeordnet werden."),

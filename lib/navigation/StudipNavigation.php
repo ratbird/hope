@@ -134,9 +134,7 @@ class StudipNavigation extends Navigation
         }
 
         // help
-        if (get_config('EXTERNAL_HELP')) {
-            $links->addSubNavigation('help', new HelpNavigation(_('Hilfe')));
-        }
+        $links->addSubNavigation('help', new HelpNavigation(_('Hilfe')));
 
         // login / logout
         if (is_object($user) && $user->id != 'nobody') {

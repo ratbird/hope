@@ -1041,11 +1041,7 @@ function wikiEdit($keyword, $wikiData, $user_id, $backpage=NULL)
     $cont .= "</form>\n";
     printcontent(0,0,$cont,"");
     $infobox = array ();
-    if (get_config("EXTERNAL_HELP")) {
-        $help_url=format_help_url("Basis.VerschiedenesFormat");
-    } else {
-        $help_url="help/index.php?help_page=ix_forum6.htm";
-    }
+    $help_url = format_help_url("Basis.VerschiedenesFormat");
     $infobox[] = array("kategorie" => _("Information"), "eintrag" => array(array('icon' => "icons/16/black/info.png", "text"=> sprintf(_("Sie k&ouml;nnen beliebigen Text einf&uuml;gen und vorhandenen Text &auml;ndern. Beachten Sie dabei die %sFormatierungsm&ouml;glichkeiten%s. Links entstehen automatisch aus W&ouml;rtern, die mit Gro&szlig;buchstaben beginnen und einen Gro&szlig;buchstaben in der Wortmitte enthalten."),'<a href="'.$help_url.'" target="_blank">','</a>'))));
     end_blank_table();
     echo "</td>"; // end of content area
@@ -1349,10 +1345,6 @@ function getShowPageInfobox($keyword, $latest_version)
             "eintrag" => array(array('icon' => "comment.png",
                     "text"=>$comment_text)));
 
-
-// export
-//  $infobox[] = array("kategorie"=> _("Export ab dieser Seite:"),
-//          "eintrag" => array(array('icon' => "blank.gif","text"=>"<a href=\"".URLHelper::getLink("?view=exportparts&keyword=".urlencode($keyword))."\">exportieren</a>")));
     return $infobox;
 }
 

@@ -30,9 +30,7 @@ class FooterNavigation extends Navigation
         parent::initSubNavigation();
 
         // help
-        if (get_config('EXTERNAL_HELP')) {
-            $this->addSubNavigation('help', new HelpNavigation(_('Hilfe')));
-        }
+        $this->addSubNavigation('help', new HelpNavigation(_('Hilfe')));
 
         // sitemap
         if (is_object($user) && $user->id != 'nobody') {

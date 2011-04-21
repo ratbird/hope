@@ -222,11 +222,7 @@ class Guestbook
         $cols = round($max_col*0.45);
         if ($cols < 28) $cols = 28;
 
-        if (get_config("EXTERNAL_HELP")) {
-            $help_url=format_help_url("Basis.VerschiedenesFormat");
-        } else {
-            $help_url="help/index.php?help_page=ix_forum6.htm";
-        }
+        $help_url = format_help_url("Basis.VerschiedenesFormat");
         $text = "<p align=\"center\"><label for=\"post\">"._("Geben Sie hier Ihren Gästebuchbeitrag ein!")."</label></p>";
 
             $form = "<form name=\"guestbook\" method=\"post\" action=\"".$PHP_SELF."?studipticket=".get_ticket()."#guest\">"

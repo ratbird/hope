@@ -37,11 +37,7 @@
                 </td>
                 <td width="99%" align="left">
                     <?
-                    if (get_config("EXTERNAL_HELP")) {
-                        $help_url=format_help_url("Basis.VeranstaltungenVerwaltenGruppen");
-                    } else {
-                        $help_url="help/index.php?referrer_page=admin_statusgruppe.php";
-                    }
+                    $help_url = format_help_url("Basis.VeranstaltungenVerwaltenGruppen");
                     ?>
                     <a href="<?= $help_url ?>">
                         <?= _("Bedienungshinweise in der Hilfe") ?>

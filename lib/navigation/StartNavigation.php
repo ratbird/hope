@@ -172,10 +172,8 @@ class StartNavigation extends Navigation
         $this->addSubNavigation('search', $navigation);
 
         // external help
-        if (get_config('EXTERNAL_HELP')) {
-            $navigation = new Navigation(_('Hilfe'), format_help_url('Basis.Allgemeines'));
-            $navigation->addSubNavigation('intro', new Navigation(_('Schnelleinstieg'), format_help_url('Basis.SchnellEinstiegKomplett')));
-            $this->addSubNavigation('help', $navigation);
-        }
+        $navigation = new Navigation(_('Hilfe'), format_help_url('Basis.Allgemeines'));
+        $navigation->addSubNavigation('intro', new Navigation(_('Schnelleinstieg'), format_help_url('Basis.SchnellEinstiegKomplett')));
+        $this->addSubNavigation('help', $navigation);
     }
 }

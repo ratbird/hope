@@ -250,11 +250,7 @@ function scm_edit_content($range_id, $scm_id) {
     $edit.="&nbsp;<a href=\"".URLHelper::getLink('')."\">". makeButton("abbrechen") . "</a>";
     $edit .= "<font size=\"-1\">&nbsp;&nbsp;<a href=\"".URLHelper::getLink("show_smiley.php")."\" target=\"_blank\">";
 
-    if (get_config("EXTERNAL_HELP")) {
-        $help_url=format_help_url("Basis.VerschiedenesFormat");
-    } else {
-        $help_url="help/index.php?help_page=ix_forum6.htm";
-    }
+    $help_url = format_help_url("Basis.VerschiedenesFormat");
     $edit .= "Smileys</a>&nbsp;&nbsp;<a href=\"".$help_url."\" ";
     $edit .= "target=\"_blank\">Formatierungshilfen</a></font>\n";
 

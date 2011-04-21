@@ -737,13 +737,8 @@ $txt['008'] = _("Lesebestätigung");
     </td>
     <td class="blank" width="270" align="right" valign="top">
 <?
-    if (get_config("EXTERNAL_HELP")) {
-        $help_url_smil=format_help_url("Basis.VerschiedenesSmileys");
-        $help_url_format=format_help_url("Basis.VerschiedenesFormat");
-    } else {
-        $help_url_smil="help/index.php?help_page=ix_forum7.htm";
-        $help_url_format="help/index.php?help_page=ix_forum6.htm";
-    }
+    $help_url_smil = format_help_url("Basis.VerschiedenesSmileys");
+    $help_url_format = format_help_url("Basis.VerschiedenesFormat");
     $infobox = array(
         $smsinfos,
         $emailforwardinfo,

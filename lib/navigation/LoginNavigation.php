@@ -51,10 +51,8 @@ class LoginNavigation extends Navigation
             $this->addSubNavigation('browse', $navigation);
         }
 
-        if (get_config('EXTERNAL_HELP')) {
-            $navigation = new Navigation(_('Hilfe'), format_help_url('Basis.Allgemeines'));
-            $navigation->setDescription(_('zu Bedienung und Funktionsumfang'));
-            $this->addSubNavigation('help', $navigation);
-        }
+        $navigation = new Navigation(_('Hilfe'), format_help_url('Basis.Allgemeines'));
+        $navigation->setDescription(_('zu Bedienung und Funktionsumfang'));
+        $this->addSubNavigation('help', $navigation);
     }
 }

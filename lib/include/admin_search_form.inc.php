@@ -529,7 +529,10 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
                 $_room = "&nbsp;";
             } else {
                 $sem = Seminar::getInstance($db->f('Seminar_id'));
-                $_room = $sem->getDatesHTML(array('semester_id' => $links_admin_data['search_sem']));
+                $_room = $sem->getDatesHTML(array(
+                    'semester_id' => $links_admin_data['search_sem'],
+                    'show_room'   => true
+                ));
                 $_room = $_room ? $_room : "nicht angegeben";
             }
             $user_id = $auth->auth["uid"];

@@ -1876,47 +1876,8 @@ if (($form == 6) && ($jump_next_x))
 
                 $vorbesprechung->addIssueId($issue->getIssueId());
                 $vorbesprechung->store();
-
-                /*//update/insert the assigned roomes
-                if ($RESOURCES_ENABLE && $db->affected_rows()) {
-                    $updateAssign = new VeranstaltungResourcesAssign($sem_create_data["sem_id"]);
-                    $updateResult = array_merge((array)$updateResult, (array)$updateAssign->insertDateAssign($termin_id, $sem_create_data["sem_vor_resource_id"]));
-                }
-
-                //create a request
-                if (!$sem_create_data['skip_room_request'] && is_object($sem_create_data["resRequest"])) {
-                    $sem_create_data["resRequest"]->copy();
-                    $sem_create_data["resRequest"]->setSeminarId($sem_create_data["sem_id"]);
-                    $sem_create_data["resRequest"]->setTerminId($termin_id);
-                    $sem_create_data["resRequest"]->store();
-                    $sem_create_data["resRequest"]->checkOpen(true);
-                }*/
             }
 
-            //Wenn der Veranstaltungs-Termintyp Blockseminar ist, dann tragen wir diese Termine auch schon mal ein
-            /* hmmm, nochmal?
-            if ($sem_create_data["term_art"] ==1) {
-                for ($i=0; $i<$sem_create_data["term_count"]; $i++)
-                    if (($sem_create_data["term_tag"][$i]) && ($sem_create_data["term_monat"][$i]) && ($sem_create_data["term_jahr"][$i]) && ($sem_create_data["term_start_stunde"][$i] !== '') && ($sem_create_data["term_end_stunde"][$i] !== '')) {
-                        $termin_id=md5(uniqid(rand()));
-                        $mkdate=time();
-                        $date=mktime((int)$sem_create_data["term_start_stunde"][$i], (int)$sem_create_data["term_start_minute"][$i], 0, (int)$sem_create_data["term_monat"][$i], (int)$sem_create_data["term_tag"][$i], (int)$sem_create_data["term_jahr"][$i]);
-                        $end_time=mktime((int)$sem_create_data["term_end_stunde"][$i], (int)$sem_create_data["term_end_minute"][$i], 0, (int)$sem_create_data["term_monat"][$i], (int)$sem_create_data["term_tag"][$i], (int)$sem_create_data["term_jahr"][$i]);
-
-                        //if we have a resource_id, we flush the room name
-                        if ($sem_create_data["term_resource_id"][$i])
-                            $sem_create_data["term_room"][$i]='';
-
-                        $db->query("INSERT INTO termine SET termin_id = '$termin_id', range_id='".$sem_create_data["sem_id"]."', autor_id='$user_id', content ='".($i+1).". Seminartermin (ohne Titel)', date='$date', mkdate='$mkdate', chdate='$mkdate', date_typ='1', end_time='$end_time', raum='".$sem_create_data["term_room"][$i]."' ");
-
-                        //update/insert the assigned roomes
-                        if ($RESOURCES_ENABLE && $db->affected_rows()) {
-                            $updateAssign = new VeranstaltungResourcesAssign($sem_create_data["sem_id"]);
-                            $updateResult = array_merge((array)$updateResult,(array)$updateAssign->insertDateAssign($termin_id, $sem_create_data["term_resource_id"][$i]));
-                        }
-                    }
-            }
-            */
             //Store the additional datafields
             if (is_array($sem_create_data["sem_datafields"])) {
                 foreach ($sem_create_data['sem_datafields'] as $id=>$val) {
@@ -1969,8 +1930,6 @@ if (($form == 7) && ($jump_next_x)) {
         header ('Location: ' . UrlHelper::getUrl('dispatch.php/course/basicdata/view/'.$sem_create_data["sem_id"]));
         die;
     } elseif (!$sem_create_data["modules_list"]["scm"]) {
-        //header ("Location: admin_dates.php?assi=yes&ebene=sem&range_id=".$sem_create_data["sem_id"]);
-        // ## RAUMZEIT : Welche Zeile ist hier die richtige? raumzeit.php oder themen.php?
         header ("Location: raumzeit.php?cid=".$sem_create_data["sem_id"]);
         die;
     }

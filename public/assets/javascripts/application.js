@@ -1509,7 +1509,7 @@ jQuery(function ($) {
     yearSuffix: ''
   };
   $.datepicker.setDefaults($.datepicker.regional.de);
-});
+}(jQuery));
 
 jQuery(function () {
   jQuery(".datepickerbutton").datepicker({

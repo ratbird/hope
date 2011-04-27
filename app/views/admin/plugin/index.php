@@ -41,7 +41,7 @@
                 <th><?= _('Typ') ?></th>
                 <th><?= _('Version') ?></th>
                 <th><?= _('Position') ?></th>
-                <th colspan="3"><?= _('Aktionen') ?></th>
+                <th colspan="4"><?= _('Aktionen') ?></th>
             </tr>
 
             <? foreach ($plugins as $plugin): ?>
@@ -54,11 +54,6 @@
                         <a href="<?= $controller->url_for('admin/plugin/manifest', $pluginid) ?>">
                             <?= htmlspecialchars($plugin['name']) ?>
                         </a>
-                        <? if (in_array('StandardPlugin', $plugin['type'])): ?>
-                            <a href="<?= $controller->url_for('admin/plugin/default_activation', $pluginid) ?>">
-                                <?= Assets::img('icons/16/blue/tools.png', array('class' => 'text-top', 'title' => _('Default-Aktivierung'))) ?>
-                            </a>
-                        <? endif ?>
                     </td>
                     <td <?= $plugin['enabled'] ? '' : 'class="quiet"' ?>>
                         <?= join(', ', $plugin['type']) ?>
@@ -68,6 +63,13 @@
                     </td>
                     <td>
                         <input name="position_<?= $pluginid ?>" type="text" size="2" value="<?= $plugin['position'] ?>" <?= $plugin['enabled'] ? '' : 'disabled' ?>>
+                    </td>
+                    <td width="20">
+                        <? if (in_array('StandardPlugin', $plugin['type'])): ?>
+                            <a href="<?= $controller->url_for('admin/plugin/default_activation', $pluginid) ?>">
+                                <?= Assets::img('icons/16/blue/add/seminar.png', array('class' => 'text-top', 'title' => _('In Veranstaltungen aktivieren'))) ?>
+                            </a>
+                        <? endif ?>
                     </td>
                     <td width="20">
                         <a href="<?= $controller->url_for('admin/role/assign_plugin_role', $pluginid) ?>">

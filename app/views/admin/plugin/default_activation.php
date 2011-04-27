@@ -6,12 +6,8 @@
 <? endif ?>
 
 <h3>
-    <?= _('Default-Aktivierung') ?>: <?= htmlspecialchars($plugin_name) ?>
+    <?= _('Standard-Aktivierung in Veranstaltungen') ?>: <?= htmlspecialchars($plugin_name) ?>
 </h3>
-
-<p>
-    <?= _('Wählen Sie die Einrichtungen, in deren Veranstaltungen das Plugin automatisch aktiviert sein soll:') ?>
-</p>
 
 <form action="<?= $controller->url_for('admin/plugin/save_default_activation', $plugin_id) ?>" method="post">
     <?= CSRFProtection::tokenTag() ?>
@@ -55,6 +51,10 @@ $infobox_content = array(
         'eintrag'   => array(
             array(
                 "icon" => "icons/16/black/info.png",
+                'text' => _('Wählen Sie die Einrichtungen, in deren Veranstaltungen das Plugin automatisch aktiviert sein soll.')
+            ),
+            array(
+                "icon" => "icons/16/black/info.png",
                 'text' => _('Eine Mehrfachauswahl in der Liste der Einrichtungen ist durch Drücken der Strg-Taste möglich.')
             )
         )
@@ -62,4 +62,3 @@ $infobox_content = array(
 );
 
 $infobox = array('picture' => 'infobox/modules.jpg', 'content' => $infobox_content);
-?>

@@ -904,7 +904,7 @@ function preg_call_link ($params, $mod, $img, $extern = FALSE, $wiki = FALSE) {
             if (!$intern && $LOAD_EXTERNAL_MEDIA == 'proxy') {
                 if (Seminar_Session::is_current_session_authenticated()) {
                     // flash player requires ABSOLUTE_URI_STUDIP here
-                    $media_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode($media_url);
+                    $media_url = $GLOBALS['ABSOLUTE_URI_STUDIP'] . 'dispatch.php/media_proxy?url=' . urlencode(decodeHTML($media_url));
                 }
             }
 

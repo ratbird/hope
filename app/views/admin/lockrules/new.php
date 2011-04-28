@@ -2,9 +2,9 @@
 # Lifter010: TODO
 ?>
 <h3>
-	<?=_("Neue Sperrebene eingeben für den Bereich:")?>
-	&nbsp;
-	<?=$rule_type_names[$lock_rule_type];?>
+    <?=_("Neue Sperrebene eingeben für den Bereich:")?>
+    &nbsp;
+    <?=$rule_type_names[$lock_rule_type];?>
 </h3>
 <?
 echo $message;

@@ -679,7 +679,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                     }
                     if (trim($row['VeranstaltungsNummer']) != '') {
                         $content['LECTURES']['SEMESTER'][$i]['LECTURE'][$k]['NUMBER'] = ExternModule::ExtHtmlReady($row['VeranstaltungsNummer']);
-					}
+                    }
                     $k++;
                 }
             }

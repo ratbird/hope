@@ -26,34 +26,34 @@
     endif; ?>
 
     <td class="printcontent" colspan="<?= 19 - $indent ?>" width="100%">
-	<table cellspacing="0" cellpadding="0" border="0" width="95%" style="margin: auto;padding-top:10px;padding-bottom:10px;">
-		<!-- Person assigned to this role - Heading -->
-		<tr>
-			<td colspan="2" class="steelkante">&nbsp;<b><?= $range_type == 'sem' ? _("Personen in dieser Gruppe") : _("Personen in dieser Rolle") ?></b>
-			</td>
-			<td class="steelkante" width="5%" nowrap><?= ($role->getSize()) ? sizeof($persons) .' '._("von").' '. $role->getSize() : '' ?>
-			&nbsp;</td>
-			<td class="steelkante" width="1%" nowrap><?= ($role->getSelfassign()) ? Assets::img('icons/16/grey/info-circle.png', array('title' => _("Personen können sich dieser Gruppe selbst zuordnen"))) : '' ?>
-			</td>
-		</tr>
-		<!-- Persons assigned to this role -->
-		<? if (is_array($persons)) foreach ($persons as $person) :
-		$cssSw->switchClass();
-		$pos ++;
-		?>
-		<tr>
-			<td class="<?= $cssSw->getClass() ?>" width="1%" nowrap>&nbsp;&nbsp;<?= $pos ?>&nbsp;
-			</td>
-			<td colspan="3" class="<?= $cssSw->getClass() ?>">
-			<? if ($range_type == 'sem') : ?>
-			     <a href="about.php?username=<?= $person['username'] ?>">
-			<? else: ?>
-			     <a href="edit_about.php?view=Karriere&open=<?= $role_id ?>&username=<?= $person['username'] ?>#<?= $role_id ?>">
-			<? endif; ?>
-			     <?= htmlReady($person['fullname']) ?> </a>
-			</td>
-		</tr>
-		<? endforeach; ?>
-	</table>
-	</td>
+    <table cellspacing="0" cellpadding="0" border="0" width="95%" style="margin: auto;padding-top:10px;padding-bottom:10px;">
+        <!-- Person assigned to this role - Heading -->
+        <tr>
+            <td colspan="2" class="steelkante">&nbsp;<b><?= $range_type == 'sem' ? _("Personen in dieser Gruppe") : _("Personen in dieser Rolle") ?></b>
+            </td>
+            <td class="steelkante" width="5%" nowrap><?= ($role->getSize()) ? sizeof($persons) .' '._("von").' '. $role->getSize() : '' ?>
+            &nbsp;</td>
+            <td class="steelkante" width="1%" nowrap><?= ($role->getSelfassign()) ? Assets::img('icons/16/grey/info-circle.png', array('title' => _("Personen können sich dieser Gruppe selbst zuordnen"))) : '' ?>
+            </td>
+        </tr>
+        <!-- Persons assigned to this role -->
+        <? if (is_array($persons)) foreach ($persons as $person) :
+        $cssSw->switchClass();
+        $pos ++;
+        ?>
+        <tr>
+            <td class="<?= $cssSw->getClass() ?>" width="1%" nowrap>&nbsp;&nbsp;<?= $pos ?>&nbsp;
+            </td>
+            <td colspan="3" class="<?= $cssSw->getClass() ?>">
+            <? if ($range_type == 'sem') : ?>
+                 <a href="about.php?username=<?= $person['username'] ?>">
+            <? else: ?>
+                 <a href="edit_about.php?view=Karriere&open=<?= $role_id ?>&username=<?= $person['username'] ?>#<?= $role_id ?>">
+            <? endif; ?>
+                 <?= htmlReady($person['fullname']) ?> </a>
+            </td>
+        </tr>
+        <? endforeach; ?>
+    </table>
+    </td>
 </tr>

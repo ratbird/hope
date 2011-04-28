@@ -110,7 +110,7 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif'
                         </a>
                         </font>
                     <? else :?>
-                    	&nbsp;
+                        &nbsp;
                     <? endif;?>
                     </td>
                     <td class="blank">&nbsp;</td>
@@ -120,14 +120,14 @@ $style = "style=\"background-image: url('". Assets::image_path('forumstrich.gif'
                         <?=_("ändern")?>
                         </a>
                     <? else :?>
-                    	&nbsp;
+                        &nbsp;
                     <? endif;?>
                     </td>
                 </tr>
             </table>
         <br>
         <? if (!$locked) :?>
-        	<input type="image" <?=makeButton('speichern', 'src')?> value="<?=_("Änderungen speichern")?>" align="absbottom">
+            <input type="image" <?=makeButton('speichern', 'src')?> value="<?=_("Änderungen speichern")?>" align="absbottom">
         <? endif;?>
         <br>
         <br>

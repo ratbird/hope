@@ -438,19 +438,19 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
         <td class="<? echo $cssSw->getClass() ?>" >
         <? if (!LockRules::Check($i_id, 'type')) : ?>
         <select style="width: 98%" name="type">
-	    <?
-	    $i=0;
-	    foreach ($INST_TYPE as $a) {
-	        $i++;
-	        if ($i==$db->f("type"))
-	            echo "<option selected value=\"$i\">".htmlready($INST_TYPE[$i]["name"])."</option>";
-	        else
-	            echo "<option value=\"$i\">".htmlready($INST_TYPE[$i]["name"])."</option>";
-	    }
-	    ?></select>
-	    <? else :?>
+        <?
+        $i=0;
+        foreach ($INST_TYPE as $a) {
+            $i++;
+            if ($i==$db->f("type"))
+                echo "<option selected value=\"$i\">".htmlready($INST_TYPE[$i]["name"])."</option>";
+            else
+                echo "<option value=\"$i\">".htmlready($INST_TYPE[$i]["name"])."</option>";
+        }
+        ?></select>
+        <? else :?>
             <?=htmlReady($INST_TYPE[$db->f("type")]["name"])?><input type="hidden" name="type" value="<?=(int)$db->f('type') ?>">
-	    <? endif;?>
+        <? endif;?>
         </td>
     </tr>
     <tr <? $cssSw->switchClass() ?>>

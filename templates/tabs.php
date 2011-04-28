@@ -30,7 +30,7 @@
     <? if (isset($subnavigation)) : ?>
         <? foreach ($subnavigation as $nav) : ?>
             <? if ($nav->isVisible()) : ?>
-            	<? SkipLinks::addIndex(_("Zweite Reiternavigation"), 'tabs2', 20); ?>
+                <? SkipLinks::addIndex(_("Zweite Reiternavigation"), 'tabs2', 20); ?>
                 <li<?= $nav->isActive() ? ' class="current"' : '' ?>>
                     <? if ($nav->isEnabled()) : ?>
                         <a href="<?= URLHelper::getLink($nav->getURL()) ?>">

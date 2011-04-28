@@ -424,9 +424,9 @@ class SemBrowse {
                 ob_end_flush();
                 ob_start();
                 if (is_array($sem_ids['Seminar_id'])){
-	                if ($this->sem_browse_data["default_sem"] != 'all') {
-	                    $current_semester_id = SemesterData::GetSemesterIdByIndex($this->sem_browse_data["default_sem"]);
-	                }
+                    if ($this->sem_browse_data["default_sem"] != 'all') {
+                        $current_semester_id = SemesterData::GetSemesterIdByIndex($this->sem_browse_data["default_sem"]);
+                    }
                     while(list($seminar_id,) = each($sem_ids['Seminar_id'])){
                         // create instance of seminar-object
                         $seminar_obj = new Seminar($seminar_id);

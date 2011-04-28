@@ -43,11 +43,11 @@ class ExportPDF extends TCPDF implements ExportDocument {
     /**
      * Create a basic document (without any content so far).
      * @param string $orientation page orientation. Possible values are (case insensitive):<ul><li>P or Portrait (default)</li><li>L or Landscape</li><li>'' (empty string) for automatic orientation</li></ul>
-	 * @param string $unit User measure unit. Possible values are:<ul><li>pt: point</li><li>mm: millimeter (default)</li><li>cm: centimeter</li><li>in: inch</li></ul><br />A point equals 1/72 of inch, that is to say about 0.35 mm (an inch being 2.54 cm). This is a very common unit in typography; font sizes are expressed in that unit.
-	 * @param mixed $format The format used for pages. It can be either: one of the string values specified at getPageSizeFromFormat() or an array of parameters specified at setPageFormat().
-	 * @param boolean $unicode TRUE means that the input text is unicode (default = false)
-	 * @param String $encoding charset encoding; default is ISO-8859-1
-	 */
+     * @param string $unit User measure unit. Possible values are:<ul><li>pt: point</li><li>mm: millimeter (default)</li><li>cm: centimeter</li><li>in: inch</li></ul><br />A point equals 1/72 of inch, that is to say about 0.35 mm (an inch being 2.54 cm). This is a very common unit in typography; font sizes are expressed in that unit.
+     * @param mixed $format The format used for pages. It can be either: one of the string values specified at getPageSizeFromFormat() or an array of parameters specified at setPageFormat().
+     * @param boolean $unicode TRUE means that the input text is unicode (default = false)
+     * @param String $encoding charset encoding; default is ISO-8859-1
+     */
     public function __construct($orientation = 'P', $unit = 'mm', $format = 'A4', $unicode = false, $encoding = 'ISO-8859-1')
     {
         $this->config = Config::GetInstance();
@@ -64,10 +64,10 @@ class ExportPDF extends TCPDF implements ExportDocument {
      * than for just one page. The pagebreak will be managed by tcpdf. But this function
      * will create a new pagebreak. Needs to be called at least once to addContent.
      * @param string $orientation page orientation. Possible values are (case insensitive):<ul><li>P or Portrait (default)</li><li>L or Landscape</li><li>'' (empty string) for automatic orientation</li></ul>
-	 * @param mixed $format The format used for pages. It can be either: one of the string values specified at getPageSizeFromFormat() or an array of parameters specified at setPageFormat().
-	 * @param boolean $keepmargins if true overwrites the default page margins with the current margins
-	 * @param boolean $tocpage if true set the tocpage state to true (the added page will be used to display Table Of Content).
-	 */
+     * @param mixed $format The format used for pages. It can be either: one of the string values specified at getPageSizeFromFormat() or an array of parameters specified at setPageFormat().
+     * @param boolean $keepmargins if true overwrites the default page margins with the current margins
+     * @param boolean $tocpage if true set the tocpage state to true (the added page will be used to display Table Of Content).
+     */
     public function addPage($orientation = '', $format = '', $keepmargins = false, $tocpage = false)
     {
         $this->page_added = true;
@@ -198,10 +198,10 @@ class ExportPDF extends TCPDF implements ExportDocument {
     /**
      * Creates a header for each page with a custom logo defined
      * @param string $ln header image logo
-	 * @param int $lw header image logo width in mm
-	 * @param string $ht string to print as title on document header
-	 * @param string $hs string to print on document header
-	 */
+     * @param int $lw header image logo width in mm
+     * @param string $ht string to print as title on document header
+     * @param string $hs string to print on document header
+     */
     public function setHeaderData($ln = '', $lw = 0, $ht = '', $hs = '') {
         $logo_path = get_config("PDF_LOGO");
         if (!$ln) {
@@ -218,12 +218,12 @@ class ExportPDF extends TCPDF implements ExportDocument {
      * Overrides writeHTML-method of tcpdf to convert image-urls, so that they
      * aren't accessed via proxy but directly.
      * @param string $html text to display
-	 * @param boolean $ln if true add a new line after text (default = true)
-	 * @param boolean $fill Indicates if the background must be painted (true) or transparent (false).
-	 * @param boolean $reseth if true reset the last cell height (default false).
-	 * @param boolean $cell if true add the current left (or right for RTL) padding to each Write (default false).
-	 * @param string $align Allows to center or align the text. Possible values are:<ul><li>L : left align</li><li>C : center</li><li>R : right align</li><li>'' : empty string : left for LTR or right for RTL</li></ul>
-	 */
+     * @param boolean $ln if true add a new line after text (default = true)
+     * @param boolean $fill Indicates if the background must be painted (true) or transparent (false).
+     * @param boolean $reseth if true reset the last cell height (default false).
+     * @param boolean $cell if true add the current left (or right for RTL) padding to each Write (default false).
+     * @param string $align Allows to center or align the text. Possible values are:<ul><li>L : left align</li><li>C : center</li><li>R : right align</li><li>'' : empty string : left for LTR or right for RTL</li></ul>
+     */
     public function writeHTML ($html, $ln = true, $fill = false, $reseth = false, $cell = false, $align = '')
     {
         $html = preg_replace('/src="(.*)"/Ue', "\$this->convertURL('\\1')", $html);

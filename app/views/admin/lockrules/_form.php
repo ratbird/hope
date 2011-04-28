@@ -28,7 +28,7 @@
 <td>
 <select name="lockdata_permission">
 <?foreach($lock_rule_permissions as $p) :?>
-	<option <?=($lock_rule['permission'] == $p ? 'selected' : '')?>><?=$p?></option>
+    <option <?=($lock_rule['permission'] == $p ? 'selected' : '')?>><?=$p?></option>
 <? endforeach;?>
 </select>
 </td>

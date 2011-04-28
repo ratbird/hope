@@ -52,10 +52,10 @@ class Step216AutomatisiertesEintragen extends Migration
         if (is_array($GLOBALS['AUTO_INSERT_SEM'])) {
             $stmt = DBManager::get()->prepare("
             INSERT INTO `auto_insert_sem` (
-			`seminar_id` , `status` ) VALUES
-			(:seminar_id, 'autor') ,
-			(:seminar_id, 'tutor') ,
-			(:seminar_id, 'dozent')
+            `seminar_id` , `status` ) VALUES
+            (:seminar_id, 'autor') ,
+            (:seminar_id, 'tutor') ,
+            (:seminar_id, 'dozent')
             ");
             foreach ($GLOBALS['AUTO_INSERT_SEM'] as $seminar_id) {
                 $stmt->execute(array('seminar_id' => $seminar_id));

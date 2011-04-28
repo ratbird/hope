@@ -100,28 +100,28 @@ class Color {
      * @return array   colors as rgba-quadruple
      */
     static function hsl2array($color) {
-    	preg_match("/hsl\(\s*(\d+),\s*(\d+)\%,\s*(\d+)\%\s*\)/", $color, $matches);
+        preg_match("/hsl\(\s*(\d+),\s*(\d+)\%,\s*(\d+)\%\s*\)/", $color, $matches);
         array_shift($matches);
         $matches[0] %= 360;
         $matches[3] = 1.0;
         $h = $matches[0];
-    	$s = $matches[1];
-    	$l = $matches[2];
-    	$m2 = ($l <= 0.5) ? $l * ($s + 1) : $l + $s - $l*$s;
-    	$m1 = $l * 2 - $m2;
-    	return array(self::_color_hue2rgb($m1, $m2, $h + 0.33333),
-    	    self::_color_hue2rgb($m1, $m2, $h),
-    	    self::_color_hue2rgb($m1, $m2, $h - 0.33333),
-    	    1.0
-    	);
+        $s = $matches[1];
+        $l = $matches[2];
+        $m2 = ($l <= 0.5) ? $l * ($s + 1) : $l + $s - $l*$s;
+        $m1 = $l * 2 - $m2;
+        return array(self::_color_hue2rgb($m1, $m2, $h + 0.33333),
+            self::_color_hue2rgb($m1, $m2, $h),
+            self::_color_hue2rgb($m1, $m2, $h - 0.33333),
+            1.0
+        );
     }
 
     static private function _color_hue2rgb($m1, $m2, $h) {
-    	$h = ($h < 0) ? $h + 1 : (($h > 1) ? $h - 1 : $h);
-    	if ($h * 6 < 1) return $m1 + ($m2 - $m1) * $h * 6;
-    	if ($h * 2 < 1) return $m2;
-    	if ($h * 3 < 2) return $m1 + ($m2 - $m1) * (0.66666 - $h) * 6;
-    	return $m1;
+        $h = ($h < 0) ? $h + 1 : (($h > 1) ? $h - 1 : $h);
+        if ($h * 6 < 1) return $m1 + ($m2 - $m1) * $h * 6;
+        if ($h * 2 < 1) return $m2;
+        if ($h * 3 < 2) return $m1 + ($m2 - $m1) * (0.66666 - $h) * 6;
+        return $m1;
     }
 
     /**
@@ -134,7 +134,7 @@ class Color {
         $percentOfColor1 = $percentOfColor1 > 100
                             ? 100
                             : ($percentOfColor1 < 0 ? 0 : $percentOfColor1);
-    	list($color1, $format1) = self::_normalize($color1);
+        list($color1, $format1) = self::_normalize($color1);
         list($color2, $format2) = self::_normalize($color2);
         $color_new[0] = floor(($color1[0] * $percentOfColor1
                             + $color2[0] * (100 - $percentOfColor1)) / 100);
@@ -208,14 +208,14 @@ class Color {
     private static function _normalize($color) {
         if ($color[0] === "#") {
             $format = "hex";
-    		$arr = self::hex2array($color);
+            $arr = self::hex2array($color);
         } elseif (preg_match("/\(.*\)/", $color)) {
-        	$format = substr($color, 0, strpos($color, "("));
-    	    $func = $format."2array";
-    	    $arr = self::$func($color);
+            $format = substr($color, 0, strpos($color, "("));
+            $func = $format."2array";
+            $arr = self::$func($color);
         } elseif (self::$colorstrings[strtolower($color)]) {
-    	    $format = "rgb"; //we don't want colors as strings like "red"
-    	    $arr = self::$colorstrings[strtolower($color)];
+            $format = "rgb"; //we don't want colors as strings like "red"
+            $arr = self::$colorstrings[strtolower($color)];
         }
         return array($arr, $format);
     }
@@ -283,10 +283,10 @@ class Color {
      * @return array  colors as css-hex
      */
     static private function _array2hex($arr) {
-    	return "#" .
-    	    ($arr[0] < 16 ? "0" : "").dechex($arr[0]) .
-    	    ($arr[1] < 16 ? "0" : "").dechex($arr[1]) .
-    	    ($arr[2] < 16 ? "0" : "").dechex($arr[2]);
+        return "#" .
+            ($arr[0] < 16 ? "0" : "").dechex($arr[0]) .
+            ($arr[1] < 16 ? "0" : "").dechex($arr[1]) .
+            ($arr[2] < 16 ? "0" : "").dechex($arr[2]);
     }
 
     /**
@@ -307,7 +307,7 @@ class Color {
      * @return array  colors as css-rgba
      */
     static private function _array2rgba($arr) {
-    	return "rgba(".implode(", ", $arr).")";
+        return "rgba(".implode(", ", $arr).")";
     }
 
     /**

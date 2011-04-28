@@ -47,26 +47,26 @@
         <input type="image" name="cancel" src="<?=Assets::image_path('icons/16/red/decline.png')?>" alt="<?=_("Abbrechen")?>" title="<?=_("Abbrechen")?>">
         </td>
     <? else : ?>
-	    <td>
-	        <?= htmlReady($rule->api_key) ?>
-	    </td>
-	    <td>
-	        <?= htmlReady($rule->method) ?>
-	    </td>
-	    <td>
-	        <?= htmlReady($rule->ip_range) ?>
-	    </td>
-	    <td>
-	        <?= htmlReady($rule->type) ?>
-	    </td>
-	    <td>
-	      <a href="<?= $controller->url_for('admin/webservice_access/edit/'.$rule->id.'#edit') ?>">
-	        <?= Assets::img('icons/16/blue/edit.png', array('title' => _('bearbeiten'))) ?>
-	      </a>
-	      <a href="<?= $controller->url_for('admin/webservice_access/delete/'.$rule->id) ?>">
-	          <?= Assets::img('icons/16/blue/trash.png', array('title' => _('löschen'))) ?>
-	      </a>
-	    </td>
+        <td>
+            <?= htmlReady($rule->api_key) ?>
+        </td>
+        <td>
+            <?= htmlReady($rule->method) ?>
+        </td>
+        <td>
+            <?= htmlReady($rule->ip_range) ?>
+        </td>
+        <td>
+            <?= htmlReady($rule->type) ?>
+        </td>
+        <td>
+          <a href="<?= $controller->url_for('admin/webservice_access/edit/'.$rule->id.'#edit') ?>">
+            <?= Assets::img('icons/16/blue/edit.png', array('title' => _('bearbeiten'))) ?>
+          </a>
+          <a href="<?= $controller->url_for('admin/webservice_access/delete/'.$rule->id) ?>">
+              <?= Assets::img('icons/16/blue/trash.png', array('title' => _('löschen'))) ?>
+          </a>
+        </td>
     <? endif;?>
   </tr>
 <? endforeach ?>

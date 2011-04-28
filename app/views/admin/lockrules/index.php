@@ -3,9 +3,9 @@
 echo $message;
 ?>
 <h3>
-	<?=_("Sperrebenen für den Bereich:")?>
-	&nbsp;
-	<?=$rule_type_names[$lock_rule_type];?>
+    <?=_("Sperrebenen für den Bereich:")?>
+    &nbsp;
+    <?=$rule_type_names[$lock_rule_type];?>
 </h3>
     <table class="default">
         <tr>

@@ -1991,7 +1991,7 @@ function display_folder ($folder_id, $open, $change, $move, $upload, $refresh=FA
 
     print "</a>&nbsp;";
 
-	// Schloss, wenn Folder gelockt
+    // Schloss, wenn Folder gelockt
     if ($folder_tree->isLockedFolder($folder_id))
         print "<img class=\"text-bottom\" ".tooltip(_("Dieser Ordner ist gesperrt."))." src=\"".$GLOBALS['ASSETS_URL']."images/icons/16/grey/lock-locked.png\">";
     //Wenn verdeckt durch gesperrten übergeordneten Ordner

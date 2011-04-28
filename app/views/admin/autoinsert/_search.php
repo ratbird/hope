@@ -6,7 +6,7 @@
         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">
             <td><label for="sem_select"><?= _('Semester:') ?></label></td>
             <td>
-	        <?=SemesterData::GetSemesterSelector(array('name' => 'sem_select', 'id' => 'sem_select', 'class' => 'user_form'), $sem_select, 'key', true)?>
+            <?=SemesterData::GetSemesterSelector(array('name' => 'sem_select', 'id' => 'sem_select', 'class' => 'user_form'), $sem_select, 'key', true)?>
             </td>
         </tr>
         <tr class="<?= TextHelper::cycle('steel1', 'steelgraulight') ?>">

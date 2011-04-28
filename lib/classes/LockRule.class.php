@@ -122,8 +122,8 @@ class LockRule extends SimpleORMap
             $this->content['attributes'] = $this->convertJsonToArray($this->content['attributes']);
         }
     }
-	
-	/* (non-PHPdoc)
+    
+    /* (non-PHPdoc)
      * @see SimpleORMap::setData()
      */
     function setData($data, $reset)
@@ -164,8 +164,8 @@ class LockRule extends SimpleORMap
     {
         return json_encode((array)$attributes_array);
     }
-	
-	/* (non-PHPdoc)
+    
+    /* (non-PHPdoc)
      * @see SimpleORMap::delete()
      */
     function delete()

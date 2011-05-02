@@ -17,10 +17,6 @@ function page_open($feature) {
     $sess = new $feature["sess"];
     $sess->start();
 
-    if (basename($_SERVER['PHP_SELF']) !== 'plugins.php') {
-        CSRFProtection::verifySecurityToken();
-    }
-
     # the auth feature depends on sess
     if (isset($feature["auth"])) {
       global $auth;

@@ -59,14 +59,14 @@ require_once ('lib/dates.inc.php');   // Datumsfunktionen
 function CheckParamXML()
 {
 global $range_id, $ex_type, $xml_file_id, $o_mode, $export_error, $export_error_num, $export_o_modes, $export_ex_types,$ex_person_details,$ex_tstamp,$ex_hash,$perm;
-    
+
     if ($ex_person_details && $ex_tstamp && !$perm->have_perm('admin')){
         list($y,$M,$d,$h,$m) = explode('-', $ex_tstamp);
         $tstamp = mktime($h,$m,0,$M,$d,$y);
         $hash = md5(get_config('UNIZENSUSPLUGIN_SHARED_SECRET1') . $ex_tstamp . get_config('UNIZENSUSPLUGIN_SHARED_SECRET2'));
-        if ($ex_hash != $hash || $tstamp < (time() - 60)) $ex_person_details = null;
+        if ($ex_hash != $hash || $tstamp < (time() - 600)) $ex_person_details = null;
     }
-    
+
     if ((($range_id != "") OR ($xml_file_id != "")) AND (in_array($o_mode, $export_o_modes) AND (in_array($ex_type, $export_ex_types))))
         return true;
     $export_error .= "<b>" . _("Unzulässiger Seitenaufruf!") . "</b><br>";
@@ -105,7 +105,7 @@ if ($o_mode != "direct")
 }
 
 if ($o_mode == 'direct'){
-    header("Content-type: text/xml; charset=us-ascii");
+    header("Content-type: text/xml; charset=utf-8");
     if ($export_error_num){
         echo '<?xml version="1.0"?>' . chr(10);
         echo xml_tag('studip_export_error_msg', strip_tags($export_error));

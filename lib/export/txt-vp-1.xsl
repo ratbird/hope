@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="WINDOWS-1252"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
-	<xsl:output method="text" encoding="iso-8859-1"/>
+	<xsl:output method="text" encoding="WINDOWS-1252"/>
 	<xsl:template match="/">
 	<xsl:for-each select="studip">
 	<xsl:for-each select="institut">

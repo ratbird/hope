@@ -46,6 +46,7 @@ require_once("lib/statusgruppe.inc.php");
 * This function converts special charakters in the given sring into unicode format UTF-8.
 *
 * @access   public
+* @deprecated
 * @param        string  $xml_string string to be converted
 * @return       string  converted string
 */
@@ -71,13 +72,25 @@ function string_to_unicode ($xml_string)
 * @param        string  $object_data    xml-stream
 * @param        string  $output_mode    switch for output target
 */
-function output_data($object_data, $output_mode = "file")
+function output_data($object_data, $output_mode = "file", $flush = false)
 {
     global $xml_file;
-    if (($output_mode == "file") OR ($output_mode == "processor") OR ($output_mode == "passthrough") OR ($output_mode == "choose"))
-        fputs($xml_file, string_to_unicode( $object_data ));
-    elseif ($output_mode == "direct")
-        echo string_to_unicode( $object_data );
+    static $fp;
+    if (is_null($fp)) {
+        $fp = fopen('php://temp', 'r+');
+    }
+
+    fwrite($fp, $object_data);
+
+    if($flush && is_resource($fp)) {
+        rewind($fp);
+        if (in_array($output_mode, words('file processor passthrough choose')) ) {
+            stream_copy_to_stream($fp, $xml_file);
+        } elseif ($output_mode == "direct") {
+            echo stream_get_contents($fp);
+        }
+        fclose($fp);
+    }
 }
 
 /**
@@ -91,10 +104,9 @@ function output_data($object_data, $output_mode = "file")
 */
 function export_range($range_id)
 {
-    global $db, $o_mode, $range_name,$ex_person_details,$persons;
+    global $db, $o_mode, $range_name,$ex_person_details,$persons, $ex_sem;
 
     $db=new DB_Seminar;
-    $db2=new DB_Seminar;
 
 //    Ist die Range-ID eine Einrichtungs-ID?
     $db->query("SELECT * FROM Institute WHERE Institut_id = '" . $range_id . "'");
@@ -108,12 +120,12 @@ function export_range($range_id)
     }
 
 //  Ist die Range-ID eine Fakultaets-ID? Dann auch untergeordnete Institute exportieren!
-    $db2->query("SELECT * FROM Institute WHERE fakultaets_id = '" . $range_id . "' ");
-    while ($db2->next_record())
-        if (($db2->f("Name") != "") And ($db2->f("Institut_id") != $range_id))
+    $db->query("SELECT * FROM Institute WHERE fakultaets_id = '" . $range_id . "' ");
+    while ($db->next_record())
+        if (($db->f("Name") != "") And ($db->f("Institut_id") != $range_id))
         {
 //          output_data ( xml_header(), $o_mode);
-            export_inst( $db2->f("Institut_id") );
+            export_inst( $db->f("Institut_id") );
         }
 
 //    Ist die Range-ID eine Seminar-ID?
@@ -159,20 +171,26 @@ function export_range($range_id)
     if ($db->next_record() || $range_id=='root'){
         if (!$output_startet)  output_data(xml_header(), $o_mode);
         $output_startet = true;
-        $the_tree = TreeAbstract::GetInstance('StudipSemTree');
+        if (isset($ex_sem) && $semester = Semester::find($ex_sem)){
+            $args = array('sem_number' => array(SemesterData::GetSemesterIndexById($ex_sem)));
+        } else {
+            $args = array();
+        }
+        $the_tree = TreeAbstract::GetInstance('StudipSemTree', $args);
         $sem_ids = $the_tree->getSemIds($range_id, true);
         if(is_array($sem_ids)){
-            $db2->query("SELECT DISTINCT Institut_id FROM seminare WHERE Seminar_id IN('".join("','", $sem_ids)."')");
-            while($db2->next_record()){
-                export_inst($db2->f('Institut_id'), $sem_ids);
+            $db->query("SELECT DISTINCT Institut_id FROM seminare WHERE Seminar_id IN('".join("','", $sem_ids)."')");
+            while($db->next_record()){
+                $to_export[] = $db->f('Institut_id');
             }
+            foreach($to_export as $inst) export_inst($inst, $sem_ids);
         }
     }
 
     if ($ex_person_details && is_array($persons)){
         export_persons(array_keys($persons));
     }
-    output_data ( xml_footer(), $o_mode);
+    output_data ( xml_footer(), $o_mode, $flush = true);
 }
 
 
@@ -256,7 +274,7 @@ function export_sem($inst_id, $ex_sem_id = "all")
     global $db, $db2, $range_id, $xml_file, $o_mode, $xml_names_lecture, $xml_groupnames_lecture, $object_counter, $SEM_TYPE, $SEM_CLASS, $filter, $ex_sem, $ex_sem_class,$ex_person_details,$persons;
 
     $ex_only_homeinst = (int)$_REQUEST['ex_only_homeinst'];
-    
+
     $db=new DB_Seminar;
     $db2=new DB_Seminar;
     $db3=new DB_Seminar;
@@ -288,7 +306,8 @@ function export_sem($inst_id, $ex_sem_id = "all")
 
     if ($ex_sem_id != "all"){
         if (!is_array($ex_sem_id)) $ex_sem_id = array($ex_sem_id);
-        $addquery .= " AND seminare.Seminar_id IN('" . join("','", $ex_sem_id) . "') AND seminare.Institut_id='$inst_id' ";
+        $ex_sem_id = array_flip($ex_sem_id);
+        //$addquery .= " AND seminare.Seminar_id IN('" . join("','", $ex_sem_id) . "') AND seminare.Institut_id='$inst_id' ";
     }
 
     if (!$GLOBALS['perm']->have_perm('root') && !$GLOBALS['perm']->have_studip_perm('admin', $inst_id)) $addquery .= " AND visible=1 ";
@@ -302,7 +321,7 @@ function export_sem($inst_id, $ex_sem_id = "all")
     } else {
         $addquery .= " AND seminare.status NOT IN (" . join(",", studygroup_sem_types()) . ")";
     }
-    
+
     if($ex_only_homeinst){
         $db->query("SELECT seminare.*,Seminar_id as seminar_id, Institute.Name as heimateinrichtung FROM seminare
                 LEFT JOIN Institute ON seminare.Institut_id=Institute.Institut_id
@@ -320,6 +339,7 @@ function export_sem($inst_id, $ex_sem_id = "all")
 
     while ($db->next_record())
         {
+            if (is_array($ex_sem_id) && !isset($ex_sem_id[$db->f("seminar_id")])) continue;
             $group_string = "";
             if (($do_group) AND ($group != $db->f($group_tab_zelle)))
             {
@@ -343,6 +363,7 @@ function export_sem($inst_id, $ex_sem_id = "all")
             $data_object .= $group_string;
             $object_counter++;
             $data_object .= xml_open_tag($xml_groupnames_lecture["object"], $db->f("seminar_id"));
+            $sem_obj = new Seminar($db->f("seminar_id"));
             while ( list($key, $val) = each($xml_names_lecture))
             {
                 if ($val == "") $val = $key;
@@ -350,7 +371,6 @@ function export_sem($inst_id, $ex_sem_id = "all")
                     $data_object .= xml_tag($val, $SEM_TYPE[$db->f($key)]["name"]);
 
                 elseif ($key == "ort") {
-                    $sem_obj = Seminar::getInstance($db->f("seminar_id"));
                     $data_object .= xml_tag($val, $sem_obj->getDatesTemplate('dates/seminar_export_location'));
 
                 } elseif (($key == "bereich") AND (($SEM_CLASS[$SEM_TYPE[$db->f("status")]["class"]]["bereiche"]))) {
@@ -376,12 +396,15 @@ function export_sem($inst_id, $ex_sem_id = "all")
                 }
                 elseif ($key == "metadata_dates")
                 {
-                    $sem_obj = Seminar::getInstance($db->f("seminar_id"));
                     $data_object .= xml_open_tag( $xml_groupnames_lecture["childgroup1"] );
                     $vorb = vorbesprechung($db->f("seminar_id"), 'export');
                     if ($vorb != false)
                         $data_object .= xml_tag($val[0], $vorb);
-                    $data_object .= xml_tag($val[1], $sem_obj->getFirstDate('export'));
+                    if (($first_date = SeminarDB::getFirstDate($db->f("seminar_id")))
+                        && count($first_date)) {
+                        $really_first_date = new SingleDate($first_date[0]);
+                        $data_object .= xml_tag($val[1], $really_first_date->getDatesExport());
+                    }
                     $data_object .= xml_tag($val[2], $sem_obj->getDatesExport());
                     $data_object .= xml_close_tag( $xml_groupnames_lecture["childgroup1"] );
                 }
@@ -725,7 +748,7 @@ function export_datafields($range_id, $childgroup_tag, $childobject_tag){
             if ($entry->structure->accessAllowed($GLOBALS['perm'], $GLOBALS['user']->id) && $entry->getDisplayValue()) {
                 if (!$d_fields) $ret .= xml_open_tag( $childgroup_tag );
                 $ret .= xml_open_tag($childobject_tag , $entry->getName());
-                $ret .= htmlspecialchars($entry->getDisplayValue(false));
+                $ret .= xml_escape($entry->getDisplayValue(false));
                 $ret .= xml_close_tag($childobject_tag);
                 $d_fields = true;
             }
@@ -747,9 +770,9 @@ function export_datafields($range_id, $childgroup_tag, $childobject_tag){
  function get_additional_data($user_id, $range_id)
  {
      $collected_data = array();
-     
+
      $db = new DB_Seminar();
-     
+
      if(is_array($GLOBALS['TEILNEHMER_VIEW']))
      {
          $db->query("SELECT status FROM seminare WHERE seminar_id = '$range_id'");
@@ -762,15 +785,15 @@ function export_datafields($range_id, $childgroup_tag, $childobject_tag){
                  $sem_view_rights[$db->f("datafield_id")] = TRUE;
              }
          }
-         
+
          $collected_data = array();
-         
+
          foreach($GLOBALS['TEILNEHMER_VIEW'] as $val) {
-             
+
              if (isset($sem_view_rights[$val["field"]])) {
-                 
+
                  $user_data = array();
-                 
+
                  switch ($val["table"]) {
                  case "datafields":
                      foreach (DataFieldEntry::getDataFieldEntries($user_id, 'user') as $entry) {
@@ -779,36 +802,36 @@ function export_datafields($range_id, $childgroup_tag, $childobject_tag){
                          }
                      }
                      break;
-                     
+
                  case "special":
                      switch ($val["field"]) {
                      case "groups":
                          $db->query("SELECT name FROM statusgruppen a, statusgruppe_user b WHERE a.range_id = '$range_id' AND a.statusgruppe_id = b.statusgruppe_id AND b.user_id = '$user_id'");
-                         
+
                          $zw = array();
-                         
+
                          while ($db->next_record()) {
                              $zw []= $db->f("name")." ";
                          }
-                         
+
                          $user_data = array("name" => $val["name"], "content" => $zw);
                          break;
-                         
+
                      case "user_picture":
                          $user_data = array('name' => 'user_picture', 'content' => true);
                          break;
                      }
                      break;
-                     
+
                  default:
                      $query = "SELECT ".$val["field"]." FROM ".$val["table"]." WHERE user_id = '$user_id'";
                      $db->query($query);
-                     
+
                      if ($db->next_record()) {
                          $content =  $db->f($val["field"]);
                          $user_data = array('name' => $val["field"], "content" => $content);
-                         
-                         
+
+
                          switch ($val["field"]) {
                          case "geschlecht":
                              if ($content == "1")
@@ -817,46 +840,46 @@ function export_datafields($range_id, $childgroup_tag, $childobject_tag){
                                  $content = _("weiblich");
                              else
                                  $content = _("unbekannt");
-                             
+
                              $user_data = array("name" => $val["name"], "content" => $content);
                              break;
-                             
+
                          case "preferred_language":
                              if (is_null($content) || $content == '')
                                  $content = $GLOBALS['DEFAULT_LANGUAGE'];
-                             
+
                              if ($content == "de_DE")
                                  $content = _("Deutsch");
                              else
                                 $content = _("Englisch");
-                             
+
                              $user_data = array("name" => $val["name"], "content" => $content);
                              break;
                          }
                      }
                      break;
-                     
+
                  }
-                 
+
                  // display by default, even if display isn't set in config
                  if (!isset($val['export']) || !empty($val["export"]))
                  {
                      $user_data['export'] = 1;
                  }
-                 
+
                  // display by default, even if display isn't set in config
                  if (!isset($val['display']) || !empty($val['display']))
                  {
                      $user_data['display'] = 1;
                  }
-                 
+
                  $collected_data [$val["field"]]= $user_data;
              }
          }
      }
-     
+
      return $collected_data;
-     
+
  }
 
 function export_additional_data($user_id, $range_id, $childgroup_tag)
@@ -877,10 +900,10 @@ function export_additional_data($user_id, $range_id, $childgroup_tag)
 
       if (is_array($val['content']))
       {
-        $ret .= htmlspecialchars (implode(',',$val['content']));
+        $ret .= xml_escape (implode(',',$val['content']));
       } else
       {
-        $ret .= htmlspecialchars($val['content']);
+        $ret .= xml_escape($val['content']);
       }
       $ret .= xml_close_tag($childobject_tag);
 

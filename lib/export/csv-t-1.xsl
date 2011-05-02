@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="WINDOWS-1252"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
 	xmlns:exsl="http://exslt.org/common" 
 	xmlns:func="http://exslt.org/functions">
 	
-	<xsl:output method="text" encoding="iso-8859-1"/>
+	<xsl:output method="text" encoding="WINDOWS-1252"/>
 
 	<xsl:key name="datafields-by-key" match="//datenfeld" use="@key"/>
 

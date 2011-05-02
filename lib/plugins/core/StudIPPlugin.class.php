@@ -99,7 +99,6 @@ abstract class StudIPPlugin {
             throw new Exception(_('unbekannte Plugin-Aktion: ') . $action);
         }
 
-        PageLayout::setTitle($this->getPluginName());
         call_user_func_array(array($this, $action), $args);
     }
 }

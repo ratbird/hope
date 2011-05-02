@@ -55,6 +55,9 @@ try {
     $plugin->initialize();
   }
 
+  // set default page title
+  PageLayout::setTitle($plugin->getPluginName());
+
   # let the show begin
   $plugin->perform($unconsumed);
 

@@ -273,7 +273,7 @@ class UserModel
     {
         $sql = "SELECT 1 FROM auth_user_md5 WHERE user_id = ?";
         $db = DBManager::get()->prepare($sql);
-        $db->execute(array($user_id, $inst_id));
+        $db->execute(array($user_id));
         return $db->fetchColumn();
     }
 
@@ -450,10 +450,10 @@ class UserModel
     /**
      *  Return a list of free and available institutes of an user.
      *
-     * @param md5 $userid
+     * @param md5 $user_id
      * @return array() list of institutes
      */
-    public static function getAvailableInstitutes($userid)
+    public static function getAvailableInstitutes($user_id)
     {
         $sql = "SELECT a.Institut_id, a.Name FROM Institute AS a LEFT JOIN user_inst "
              . "AS b ON (b.user_id=? AND a.Institut_id=b.Institut_id) "

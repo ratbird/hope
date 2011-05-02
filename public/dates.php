@@ -18,7 +18,6 @@ require '../lib/bootstrap.php';
 
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 
-$id = $SessSemName[1];
 $issue_open = array();
 $raumzeitFilter = Request::get('raumzeit_filter');
 
@@ -40,7 +39,7 @@ if ($RESOURCES_ENABLE) {
     include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
 }
 
-$sem = new Seminar($id);
+$sem = new Seminar($SessionSeminar);
 
 checkObject();
 checkObjectModule("schedule");
@@ -192,7 +191,7 @@ if (Request::get('export') && $rechte) {
                     $tpl['forumEntry'] = $thema->hasForum();
                     $tpl['fileEntry'] = $thema->hasFile();
                     if($tpl['forumEntry']) {
-                        $tpl['forumCount'] = forum_count($thema->getIssueId(), $id);
+                        $tpl['forumCount'] = forum_count($thema->getIssueId(), $sem->getId());
                     } else {
                         $tpl['forumCount'] = 0;
                     }

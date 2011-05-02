@@ -394,10 +394,14 @@ STUDIP.Tabs = (function () {
 
   // truncates an item
   function truncate(item) {
-    var text = jQuery(item).html(),
-      length = Math.max(text.length - 4, 4);
+    var text = jQuery(item).text();
+    if (text.charAt(text.length - 1) === "\u2026") {
+      text = text.substr(0, text.length - 1);
+    }
+    text = text.replace("\u2026", "");
+    var length = Math.max(text.length - 1, 4);
     if (length < text.length) {
-      jQuery(item).html(text.substr(0, length) + "\u2026");
+      jQuery(item).text(text.substr(0, length) + "\u2026");
     }
   }
 

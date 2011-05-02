@@ -181,7 +181,7 @@ class UserModel
         //datafields
         if (!is_null($datafields) && count($datafields) > 0) {
             foreach ($datafields as $id => $entry) {
-                $query .= "AND de.datafield_id = '" . $db->quote($id) . "' AND de.content = '" . $db->quote($entry) . "' ";
+                $query .= "AND de.datafield_id = " . $db->quote($id) . " AND de.content = " . $db->quote($entry) . " ";
             }
         }
 

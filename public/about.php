@@ -590,16 +590,19 @@ if (get_config('CHAT_ENABLE')) {
 
 $layout = $GLOBALS['template_factory']->open('shared/index_box');
 
-// Ausgabe von Literaturlisten
-$lit_list = StudipLitList::GetFormattedListsByRange($user_id);
-if ($user_id == $user->id){
-    $layout->admin_url = 'admin_lit_list.php?_range_id=self';
-    $layout->admin_title = _('Literaturlisten bearbeiten');
-}
+// show literature info
+if (get_config('LITERATURE_ENABLE')) {
+    // Ausgabe von Literaturlisten
+    $lit_list = StudipLitList::GetFormattedListsByRange($user_id);
+    if ($user_id == $user->id){
+        $layout->admin_url = 'admin_lit_list.php?_range_id=self';
+        $layout->admin_title = _('Literaturlisten bearbeiten');
+    }
 
-if (is_element_visible_for_user($user->id, $user_id, $visibilities['literature'])) {
-    echo $layout->render(array('title' => _('Literaturlisten'), 'content_for_layout' => $lit_list));
-    $layout->clear_attributes();
+    if (is_element_visible_for_user($user->id, $user_id, $visibilities['literature'])) {
+        echo $layout->render(array('title' => _('Literaturlisten'), 'content_for_layout' => $lit_list));
+        $layout->clear_attributes();
+    }
 }
 
 // Hier werden Lebenslauf, Hobbys, Publikationen und Arbeitsschwerpunkte ausgegeben:

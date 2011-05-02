@@ -31,8 +31,8 @@ unregister_globals();
 page_open(array("sess" => "Seminar_Session", "auth" => "Seminar_Default_Auth", "perm" => "Seminar_Perm", "user" => "Seminar_User"));
 $auth->login_if(Request::get('again') && ($auth->auth["uid"] == "nobody"));
 
-if ($_REQUEST['auswahl']) {
-    $_REQUEST['cid'] = $_REQUEST['auswahl'];
+if (Request::option('auswahl')) {
+    Request::set('cid', Request::option('auswahl'));
 }
 
 include ('lib/seminar_open.php'); // initialise Stud.IP-Session

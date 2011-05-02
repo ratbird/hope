@@ -159,6 +159,9 @@ function selectSem ($sem_id) {
             $SessSemName["art"] = $SEM_TYPE[$row["status"]]["name"];
         }
         $SessSemName["header_line"] = getHeaderLine ($sem_id, array('name' => $row["Name"], 'type' => $SessSemName["art"]));
+
+        $_SESSION['SessionSeminar'] =& $SessionSeminar;
+        URLHelper::addLinkParam('cid', $SessionSeminar);
         return true;
     } else {
         return false;
@@ -216,6 +219,9 @@ function selectInst ($inst_id) {
         $SessSemName["art_num"] = $row["type"];
         $SessSemName["fak"] = $row["fakultaets_id"];
         $SessSemName["header_line"] = getHeaderLine ($inst_id, array('name' => $row["Name"], 'type' => $SessSemName["art"]));
+
+        $_SESSION['SessionSeminar'] =& $SessionSeminar;
+        URLHelper::addLinkParam('cid', $SessionSeminar);
         return true;
     } else {
         return false;
@@ -292,6 +298,7 @@ function closeObject() {
     $SemUserStatus = null;
     $rechte = false;
 
+    URLHelper::removeLinkParam('cid');
     $sess->unregister('raumzeitFilter');
 }
 

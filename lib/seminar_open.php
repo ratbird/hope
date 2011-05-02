@@ -164,7 +164,6 @@ $i_page = basename($_SERVER['PHP_SELF']);
 // session init starts here
 if ($_SESSION['SessionStart'] == 0) {
     $_SESSION['SessionStart'] = time();
-    $_SESSION['SessionSeminar'] = '';
     $_SESSION['object_cache'] = array();
 
     // try to get accepted languages from browser
@@ -234,13 +233,11 @@ include 'config.inc.php';
 // in the current request. This also binds the global $_SESSION['SessionSeminar']
 // variable to the URL parameter 'cid' for all generated links.
 
-URLHelper::bindLinkParam('cid', $_SESSION['SessionSeminar']);
+$course_id = Request::option('cid');
 
-if (isset($_SESSION['SessionSeminar']) && $_SESSION['SessionSeminar'] != '') {
-    $course_id = $_SESSION['SessionSeminar'];
+if (isset($course_id)) {
     selectSem($course_id) || selectInst($course_id);
     unset($course_id);
-    $_SESSION['SessionSeminar'] =& $SessionSeminar;
 }
 
 // load the default set of plugins

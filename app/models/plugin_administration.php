@@ -86,6 +86,13 @@ class PluginAdministration
             }
 
             rmdirr($plugindir);
+
+            // on NFS file system, removing the plugin may fail (see ticket #1892)
+            if (file_exists($plugindir)) {
+                $plugindir_old = $plugindir . '.old';
+                rmdirr($plugindir_old);
+                rename($plugindir, $plugindir_old);
+            }
         }
 
         // move directory to final destination

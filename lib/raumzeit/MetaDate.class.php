@@ -179,7 +179,7 @@ class MetaDate
      * @param CycleData $cycle
      * @return boolean
      */
-    function setCycleData($data = array(), &$cycle)
+    function setCycleData($data = array(), $cycle)
     {
         $cycle->seminar_id = $this->getSeminarId();
         if ($last_one = array_pop(array_keys($this->cycles))) {

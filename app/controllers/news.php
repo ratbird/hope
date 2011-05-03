@@ -114,7 +114,7 @@ class NewsController extends StudipController
 
             else if (in_array($object_type, words('sem inst fak'))) {
 
-                if ($GLOBALS['SessSemName'][1] === (string)$range) {
+                if ($_SESSION['SessionSeminar'] === (string)$range) {
                     $permitted = TRUE;
                     $show_admin = $GLOBALS['perm']->have_studip_perm('tutor', $range);
                 }

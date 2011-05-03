@@ -68,7 +68,7 @@ class DateTemplatesTests extends UnitTestCase
 
     public function testExportTemplates()
     {
-        $data = renderTemplate('dates/seminar_export', $this->testData);
+        $data = renderTemplate('dates/seminar_export', $this->testData, array('show_room' => true));
         $compare = 'Mo. 10:00 - 12:00 (wöchentlich) - Vorlesung, Ort: Hörsaal 1 <br>, (<script>alert("böse");</script>), '
                  . "\n" . 'Termine am 12.05. 09:00 - 13:00';
         $this->assertEqual($data, $compare);
@@ -87,7 +87,7 @@ class DateTemplatesTests extends UnitTestCase
 
     public function testHTMLTemplatesWithLink()
     {
-        $data = renderTemplate('dates/seminar_html', $this->testData);
+        $data = renderTemplate('dates/seminar_html', $this->testData, array('show_room' => true));
         $compare = 'Montag: 10:00 - 12:00 (ab 10/18/10), <i>Vorlesung</i>, Ort: '
                  . '<a onclick="window.open(...)">Hörsaal 1</a>, '
                  . '(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)<br>'
@@ -98,11 +98,11 @@ class DateTemplatesTests extends UnitTestCase
         $data = renderTemplate('dates/seminar_html_location', $this->testData);
         $compare = '<table class="default">
     <tr>
-    <td><a onclick="window.open(...)">Hörsaal 1</a></td>
+    <td style="vertical-align: top"><a onclick="window.open(...)">Hörsaal 1</a></td>
     <td>Mo. 10:00 - 12:00 (2x)</td>
     <tr>
-    <td>(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)</td>
-    <td>Mo. 10:00 - 12:00 (16x),  12.05. 09:00 - 13:00</td>
+    <td style="vertical-align: top">(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)</td>
+    <td>Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00</td>
   </table>';
         $this->assertEqual($data, $compare);
 
@@ -120,7 +120,7 @@ class DateTemplatesTests extends UnitTestCase
 
     public function testHTMLTemplatesWithoutLink()
     {
-        $data = renderTemplate('dates/seminar_html', $this->testData, array('link' => false));
+        $data = renderTemplate('dates/seminar_html', $this->testData, array('link' => false, 'show_room' => true));
         $compare = 'Montag: 10:00 - 12:00 (ab 10/18/10), <i>Vorlesung</i>, Ort: H&ouml;rsaal 1 &lt;br&gt;, '
                  . '(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)<br>'
                  . 'Termine am 12.05. 09:00 - 13:00';
@@ -130,11 +130,11 @@ class DateTemplatesTests extends UnitTestCase
         $data = renderTemplate('dates/seminar_html_location', $this->testData, array('link' => false));
         $compare = '<table class="default">
     <tr>
-    <td>H&ouml;rsaal 1 &lt;br&gt;</td>
+    <td style="vertical-align: top">H&ouml;rsaal 1 &lt;br&gt;</td>
     <td>Mo. 10:00 - 12:00 (2x)</td>
     <tr>
-    <td>(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)</td>
-    <td>Mo. 10:00 - 12:00 (16x),  12.05. 09:00 - 13:00</td>
+    <td style="vertical-align: top">(&lt;script&gt;alert(&quot;b&ouml;se&quot;);&lt;/script&gt;)</td>
+    <td>Mo. 10:00 - 12:00 (16x)<br> 12.05. 09:00 - 13:00</td>
   </table>';
         $this->assertEqual($data, $compare);
 

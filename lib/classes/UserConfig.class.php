@@ -204,6 +204,15 @@ class UserConfig extends Config
             $entry->user_id = $this->user_id;
             $entry->field = $field;
         }
+        $metadata = Config::get()->getMetadata($field);
+        switch ($metadata['type']) {
+            case 'integer':
+            case 'boolean':
+                $value = (int)$value;
+            break;
+            default:
+                $value = (string)$value;
+        }
         $entry->value = $value;
         $ret = $entry->store();
         if ($ret) {

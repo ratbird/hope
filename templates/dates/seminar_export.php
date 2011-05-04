@@ -1,5 +1,4 @@
 <?
-# Lifter010: TODO
 if (!isset($show_room)) :
     // show rooms only if there is more than one
     if (sizeof($dates['rooms']) <= 1) :
@@ -40,14 +39,33 @@ if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
 
   if (is_array($dates['irregular'])):
     foreach ($dates['irregular'] as $date) :
-      if (in_array($date['typ'], $presence_types) !== false) :
-        $irregular[] = $date; $irregular_strings[] = $date['tostring'];
-      endif;
+        if (in_array($date['typ'], $presence_types) !== false) :
+            $irregular[] = $date;
+            $irregular_strings[] = $date['tostring'];
+            if ($date['resource_id']) :
+                $irregular_rooms[$date['resource_id']]++;
+            elseif ($date['raum']) :
+                $freetext_rooms['('. $date['raum'] .')']++;
+            endif;
+        endif;
     endforeach;
+    unset($irregular_rooms['']);
     echo sizeof($output) ? ", \n" : '';
 
-    if (sizeof($irregular)) :
-        echo _("Termine am") . implode('', shrink_dates($irregular));
+    $rooms = getFormattedRooms($irregular_rooms, false) + array_keys($freetext_rooms);
+
+    if (is_array($irregular) && sizeof($irregular)) :
+        echo _("Termine am") . implode(', ', shrink_dates($irregular));
+        if (is_array($rooms) && sizeof($rooms) > 0) :
+            if (sizeof($rooms) > 3) :
+                $rooms = array_slice($rooms, sizeof($rooms) - 3, sizeof($rooms));
+            endif;
+
+            if ($show_room) :
+                echo ', ' . _("Ort:") . ' ';
+                echo implode(', ', $rooms);
+            endif;
+        endif;
     endif;
   endif;
 endif;

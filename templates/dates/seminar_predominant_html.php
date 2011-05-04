@@ -1,5 +1,4 @@
 <?php
-# Lifter010: TODO
 if (!isset($show)) $show = 3;
 if (!isset($link)) $link = true;
 

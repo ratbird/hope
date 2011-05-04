@@ -1,5 +1,4 @@
 <?
-# Lifter010: TODO
 $turnus_list = array(
     0 => _("wöchentlich"),
     1 => _("zweiwöchentlich"),

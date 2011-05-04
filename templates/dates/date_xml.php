@@ -1,5 +1,4 @@
 <date><?
-# Lifter010: TODO
 echo $date->toString();
 if ($date->getResourceId()) :
     echo ', '. _("Ort:") .' ';

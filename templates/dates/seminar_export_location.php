@@ -1,5 +1,4 @@
 <?
-# Lifter010: TODO
 // condense regular dates by room
 if (is_array($dates['regular']['turnus_data'])) foreach ($dates['regular']['turnus_data'] as $cycle) :
   if (is_array($cycle['assigned_rooms'])) foreach ($cycle['assigned_rooms'] as $room_id => $count) :

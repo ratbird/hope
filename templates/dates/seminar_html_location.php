@@ -1,5 +1,4 @@
 <?
-# Lifter010: TODO
 if (!isset($link)) $link = true;
 
 // condense regular dates by room

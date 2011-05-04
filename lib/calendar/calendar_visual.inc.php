@@ -363,7 +363,7 @@ function createDayTable ($day_obj, $start = 6, $end = 19, $step = 900, $precol =
                     $tab[$zeile] .= $category_style['color'] . ";\">";
 
                     if (strtolower(get_class($term[$zeile][$j])) == 'seminarevent'
-                            && ($term[$zeile][$j]->getTitle() == "Kein Titel" || !$term[$zeile][$j]->getTitle()) ) {
+                            && ($term[$zeile][$j]->getTitle() == _("Kein Titel") || !$term[$zeile][$j]->getTitle()) ) {
                         $title_out = $term[$zeile][$j]->getSemName();
                     }
                     else

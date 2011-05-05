@@ -227,6 +227,8 @@ class Seminar
                 $termin = new SingleDate($termine['termin'][0]);
                 if ($ex_termin->getStartTime() < $termin->getStartTime()) {
                     return $next_date.'<br>'.$missing_date;
+                } else {
+                    return $next_date;
                 }
             } else {
                 return $missing_date;

@@ -97,7 +97,7 @@ class SingleDateDB {
             $ret['related_persons'] = $ret['related_persons'] ? explode(',', $ret['related_persons']) : array();
             return $ret;
         } else {
-            $db->query("SELECT ex_termine.*,GROUP_CONCAT(trp.user_id) as related_persons
+            $rs = $db->query("SELECT ex_termine.*,GROUP_CONCAT(trp.user_id) as related_persons
                         FROM ex_termine LEFT JOIN termin_related_persons trp ON termin_id=trp.range_id
                         WHERE termin_id = " . $db->quote($termin_id) . " GROUP BY termin_id ORDER BY NULL");
             if ($ret = $rs->fetch(PDO::FETCH_ASSOC)) {

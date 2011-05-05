@@ -219,8 +219,8 @@ class Seminar
             $ex_termin = new SingleDate($termine['ex_termin']);
 
             $missing_date  = '<div style="border:1px solid black; background:#FFFFDD;">';
-            $missing_date .= sprintf(_("Der Termin am %s findet nicht statt."), DateFormatter::formatDateAndRoom($ex_termin, $return_mode));
-            $missing_date .= '<br>Kommentar: '.$ex_termin->getComment();
+            $missing_date .= sprintf(_("Der Termin am %s findet nicht statt."), DateFormatter::formatDateAndRoom($termine['ex_termin'], $return_mode));
+            $missing_date .= '<br>' . _("Kommentar"). ': '.htmlReady($ex_termin->getComment());
             $missing_date .= '</div>';
 
             if ($termine['termin']) {

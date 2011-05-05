@@ -140,7 +140,7 @@ class CourseNavigation extends Navigation
                 $item->setDescription(_('Verändern Sie hier Angaben über regelmäßige Veranstaltungszeiten, Einzeltermine und Ortsangaben.'));
                 $navigation->addSubNavigation('dates', $item);
 
-                $item = new Navigation(_('Zugangseinstellungen'), 'admin_admission.php');
+                $item = new Navigation(_('Zugangsberechtigungen'), 'admin_admission.php');
                 $item->setDescription(_('Richten Sie hier verschiedene Zugangsbeschränkungen, Anmeldeverfahren oder einen Passwortschutz für Ihre Veranstaltung ein.'));
                 $navigation->addSubNavigation('admission', $item);
 

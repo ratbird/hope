@@ -104,9 +104,13 @@ class SingleDate {
                 $this->date = $start;
                 $this->end_time = $end;
                 if ($this->resource_id) {
-                    $tmp_resource_id = $this->resource_id;
-                    $this->killAssign();
-                    $this->bookRoom($tmp_resource_id);
+                    if ($start >= $this->date && $end <= $this->end_time) {
+                        $this->shrinkAssign();
+                    } else {
+                        $tmp_resource_id = $this->resource_id;
+                        $this->killAssign();
+                        $this->bookRoom($tmp_resource_id);
+                    }
                 }
 
                 $after = $this->toString();
@@ -436,6 +440,20 @@ class SingleDate {
             $killRequest = new RoomRequest ($request_id);
             $killRequest->delete();
         }*/
+    }
+
+    private function shrinkAssign() {
+        if ($assign_id = SingleDateDB::getAssignID($this->termin_id)) {
+            $changeAssign = AssignObject::Factory($assign_id);
+            $changeAssign->setResourceId($this->resource_id);
+
+            $changeAssign->chng_flag = TRUE;
+
+            $changeAssign->setBegin($this->date);
+            $changeAssign->setEnd($this->end_time);
+            $changeAssign->setRepeatEnd($this->end_time);
+            $changeAssign->store();
+        }
     }
 
     function hasRoom() {

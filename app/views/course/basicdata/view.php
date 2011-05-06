@@ -61,12 +61,15 @@ $infobox = array('content' => $infobox,
                  'picture' => CourseAvatar::getAvatar($course_id)->getUrl(Avatar::NORMAL)
 );
 
-parse_msg_array($flash['msg'], $class = "blank", $colspan = 2, $add_row='', $small='');
-
 $width_column1 = 20;
 $width_namecolumn = 60;
 
+$message_types = array('msg' => "success", 'error' => "error", 'info' => "info");
 ?>
+
+<? if (is_array($flash['msg'])) foreach ($flash['msg'] as $msg) : ?>
+     <?= MessageBox::$message_types[$msg[0]]($msg[1]) ?>
+<? endforeach ?>
 
 <? if ($adminTopLinks) : ?>
     <?= $adminTopLinks->render() ?>

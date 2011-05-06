@@ -21,6 +21,7 @@ if (is_array($cycle['assigned_rooms'])){
 
 ?>
 <raumzeit>
+    <startwoche><?= $cycle['cycle'] ?></startwoche>
     <datum><?= $turnus_list[$cycle['cycle']] ?></datum>
     <wochentag><?= getWeekDay($cycle['day']) ?></wochentag>
     <zeit><?= $cycle['start_hour'] ?>:<?= $cycle['start_minute'] ?>-<?= $cycle['end_hour'] ?>:<?= $cycle['end_minute'] ?></zeit>

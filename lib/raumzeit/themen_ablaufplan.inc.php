@@ -113,6 +113,7 @@ function themen_saveAll() {
     $sem->createMessage($msg);
 
     $msg = _("Folgende weitere Aktionen wurden durchgeführt:").'<br>';
+    $initial_length = strlen($msg);
 
     foreach ($themen as $val) {
         if ($zw = $val->getMessages()) {
@@ -121,7 +122,8 @@ function themen_saveAll() {
             }
         }
     }
-
-    // add additional changes to message
-    $sem->createMessage($msg);
+    if (strlen($msg) > $initial_length) {
+        // add additional changes to message
+        $sem->createMessage($msg);
+    }
 }

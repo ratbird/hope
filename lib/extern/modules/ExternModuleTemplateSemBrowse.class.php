@@ -579,8 +579,8 @@ class ExternModuleTemplateSemBrowse extends ExternModule {
         $select = '<select name="ext_templatesembrowse[type]" id="ext_templatesembrowse_type" size="1">';
         $select .= '<option value="all"' . ($this->sem_browse_data['type'] == 'all' ? ' selected="selected"' : '') . '>' . _("alle") . '</option>';
         foreach ($this->sem_browse_data['sem_status'] as $type_id) {
-            $select .= '<option value"' .  $type_id;
-            if ($this->sem_browse_data['sem_type'] == $type_id) {
+            $select .= '<option value="' .  $type_id;
+            if ($this->sem_browse_data['type'] == $type_id) {
                 $select .= '" selected="selected">';
             } else {
                 $select .= '">';

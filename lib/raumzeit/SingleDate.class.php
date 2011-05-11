@@ -151,6 +151,7 @@ class SingleDate {
             $this->metadate_id = $id;
             return TRUE;
         } else {
+            $this->metadate_id = 0;
             return FALSE;
         }
     }

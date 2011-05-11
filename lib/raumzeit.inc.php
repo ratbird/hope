@@ -369,15 +369,52 @@ function raumzeit_editSingleDate() {
     if (!Request::submitted("editSingleDate_button")) {
         return;
     }
-    unset($sd_open[$_REQUEST['singleDateID']]); // we close the choosen singleDate, that it does not happen that we have multiple singleDates open -> could lead to confusion, which singleDate is meant to be edited
-    // generate time-stamps to we can compare directly
+
+    // generate time-stamps we can compare directly
     $start = mktime($_REQUEST['start_stunde'], $_REQUEST['start_minute'], 0, $_REQUEST['month'], $_REQUEST['day'], $_REQUEST['year']);
     $ende = mktime($_REQUEST['end_stunde'], $_REQUEST['end_minute'], 0, $_REQUEST['month'], $_REQUEST['day'], $_REQUEST['year']);
 
-    if ($_REQUEST['cycle_id'] != '') {   // regelmäßiger Termin
+    // get request-variables
+    $termin_id = Request::get('singleDateID');      // TODO: SQL-Injection?
+    $cycle_id  = Request::get('cycle_id', null);
+
+    // we close the chosen singleDate, we do not want to have multiple singleDates open
+    //  -> could lead to confusion, which singleDate is meant to be edited
+    unset($sd_open[$_REQUEST['singleDateID']]);
+
+    if ($cycle_id) {   // regelmäßiger Termin
         // the choosen singleDate is connected to a cycleDate
-        $termin =& $sem->getSingleDate($_REQUEST['singleDateID'], $_REQUEST['cycle_id']);
-        if (($termin->getStartTime() != $start) || ($termin->getEndTime() != $ende)) {  // if we have changed the time of the date, it is not a regular time-slot any more, so we have to move it to the irregularSingleDates of the seminar
+        $termin =& $sem->getSingleDate($termin_id, $cycle_id);
+
+        // if we have changed the time of the date, it is not a regular time-slot
+        // any more, so we have to move it to the irregularSingleDates of the seminar
+        if (($termin->getStartTime() != $start) || ($termin->getEndTime() != $ende)) {
+            // duplicate the singledate, move on copy to seminars irregular ones,
+            // modify the other copy to remain at the regular ones as ex-termin
+            $ireg_termin = clone $termin;
+            $termin->termin_id = md5(uniqid());
+            $termin->setExTermin(true);
+            $termin->store();
+
+            $ireg_termin->setTime($start, $ende);
+            $ireg_termin->setMetaDateID(null);
+            $ireg_termin->store();
+            $sem->addSingleDate($ireg_termin);
+
+            $sem->createInfo(sprintf(_('Der Termin %s wurde aus der Liste der regelmäßigen Termine '
+                . 'gelöscht und als unregelmäßiger Termin eingetragen, da Sie die Zeiten des Termins '
+                . 'verändert haben, so dass dieser Termin nun nicht mehr regelmäßig ist.'),
+                '<b>'.$termin->toString().'</b>')
+            );
+
+            if ($ireg_termin->getStartTime() < $termin->getStartTime()
+                || $ireg_termin->getEndTime() > $termin->getEndTime()) {
+                $sem->createInfo(_('Die Raumbuchung für diesen Termin wurde aufgehoben, '
+                    . 'da sich der neue Zeitraum außerhalb des Alten befindet!'));
+            }
+            $sem->appendMessages($ireg_termin->getMessages());
+
+            /*
             $termin->setExTermin(true);     // deletes the singleDate out of the regular cycleData
             $termin->store();                           // save back to database directly
 
@@ -390,20 +427,23 @@ function raumzeit_editSingleDate() {
                 $sem->addSingleDate($new_termin);
                 $sem->bookRoomForSingleDate($new_termin->getSingleDateID(), $_REQUEST['room_sd']);
 
+
                 $sem->createInfo(sprintf(_("Der Termin %s wurde aus der Liste der regelmäßigen Termine gelöscht und als unregelmäßiger Termin eingetragen, da Sie die Zeiten des Termins verändert haben, so dass dieser Termin nun nicht mehr regelmäßig ist. Außerdem wurde die bisherige Raumbuchung aufgehoben."), '<b>'.$termin->toString().'</b>'));
             }
             $sem->appendMessages($new_termin->getMessages());
+             * 
+             */
 
         } else {
             // we did not change the times, so we can edit the regular singleDate
-            $sem->bookRoomForSingleDate($termin->getSingleDateID(), $_REQUEST['room_sd'], $_REQUEST['cycle_id']);
+            $sem->bookRoomForSingleDate($termin->getSingleDateID(), $_REQUEST['room_sd'], $cycle_id);
             $termin->setDateType($_REQUEST['dateType']);
             $termin->setFreeRoomText($_REQUEST['freeRoomText_sd']);
             $sem->createMessage(sprintf(_("Der Termin %s wurde geändert!"), '<b>'.$termin->toString().'</b>'));
             $termin->store();
             $sem->appendMessages($termin->getMessages());
         }
-        $sem->readSingleDatesForCycle($_REQUEST['cycle_id'], true);
+        $sem->readSingleDatesForCycle($cycle_id, true);
         $termin->clearRelatedPersons();
         $teachers = $sem->getMembers('dozent');
         foreach (Request::getArray('related_teachers') as $dozent_id) {
@@ -417,7 +457,7 @@ function raumzeit_editSingleDate() {
     // unregelmäßiger Termin
     else {
         // the choosen singleDate is irregular, so we can edit it directly
-        $termin =& $sem->getSingleDate($_REQUEST['singleDateID']);
+        $termin =& $sem->getSingleDate($termin_id);
 
         $bookRoom = false;
         if ($start >= $termin->date && $ende <= $termin->end_time) {
@@ -463,7 +503,7 @@ function raumzeit_editSingleDate() {
             }
             $termin->store();
             if ($bookRoom) {
-                $sem->bookRoomForSingleDate($_REQUEST['singleDateID'], $_REQUEST['room_sd']);
+                $sem->bookRoomForSingleDate($termin_id, $_REQUEST['room_sd']);
             } else {
                 $termin->killAssign();
                 $sem->createInfo(sprintf(_("Die Raumbuchung für den Termin %s wurde aufgehoben, da die neuen Zeiten außerhalb der Alten liegen!"), '<b>'. $termin->toString() .'</b>'));

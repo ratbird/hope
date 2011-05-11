@@ -54,7 +54,7 @@ if ($SessSemName[1]) {
     <table cellspacing="0" cellpadding="0" border="0" width="100%">
     <tr><td class="blank" colspan=2>&nbsp;</td></tr>
     <tr><td class="blank" colspan=2>
-    <blockquote>
+    <p class="info">
     <?
     if ($links_admin_data["referred_from"] == "sem") {
         printf(_("Hier k&ouml;nnen Sie die Daten der Veranstaltung <b>%s</b> direkt bearbeiten.") . "<br>", htmlReady($SessSemName[0]));
@@ -64,7 +64,7 @@ if ($SessSemName[1]) {
         print(_("Wenn Sie eine andere Veranstaltung bearbeiten wollen, klicken Sie bitte auf <b>Veranstaltungen</b> um zum Auswahlmenü zurückzukehren.") . "<br>&nbsp;");
     }
     ?>
-    </blockquote>
+    </p>
     </td></tr>
     </table>
 <?

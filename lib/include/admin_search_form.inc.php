@@ -48,6 +48,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     require_once 'lib/classes/SemesterData.class.php';
     require_once "lib/classes/LockRules.class.php";
     require_once "lib/classes/AuxLockRules.class.php";
+    require_once "lib/classes/AdminList.class.php";
 
     $db=new DB_Seminar;
     $db2=new DB_Seminar;
@@ -308,74 +309,9 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
     // display Seminar-List
     if ($links_admin_data["srch_on"] || $auth->auth["perm"] =="tutor" || $auth->auth["perm"] == "dozent") {
 
-        // Creation of Seminar-Query
-        if ($links_admin_data["srch_on"]) {
-            $query="SELECT DISTINCT seminare.*, Institute.Name AS Institut,
-                    sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem
-                    FROM seminar_user LEFT JOIN seminare USING (seminar_id)
-                    LEFT JOIN Institute USING (institut_id)
-                    LEFT JOIN auth_user_md5 ON (seminar_user.user_id = auth_user_md5.user_id)
-                    LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende)
-                    LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
-                    WHERE seminar_user.status = 'dozent' AND seminare.status NOT IN('". implode("','", studygroup_sem_types())."') ";
-            $conditions=0;
-
-            if ($links_admin_data["srch_sem"]) {
-                $one_semester = $semester->getSemesterData($links_admin_data["srch_sem"]);
-                $query.="AND seminare.start_time <=".$one_semester["beginn"]." AND (".$one_semester["beginn"]." <= (seminare.start_time + seminare.duration_time) OR seminare.duration_time = -1) ";
-                $conditions++;
-            }
-
-            if (is_array($my_inst) && $auth->auth["perm"] != "root") {
-                $query.="AND Institute.Institut_id IN ('".join("','",$my_inst)."') ";
-            }
-
-            if ($links_admin_data["srch_inst"]) {
-                $query.="AND Institute.Institut_id ='".$links_admin_data["srch_inst"]."' ";
-            }
-
-
-            if ($links_admin_data["srch_fak"]) {
-                $query.="AND fakultaets_id ='".$links_admin_data["srch_fak"]."' ";
-            }
-
-
-            if ($links_admin_data["srch_doz"]) {
-                $query.="AND seminar_user.user_id ='".$links_admin_data["srch_doz"]."' ";
-            }
-
-            if ($links_admin_data["srch_exp"]) {
-                $query.="AND (seminare.Name LIKE '%".$links_admin_data["srch_exp"]."%' OR seminare.VeranstaltungsNummer LIKE '%".$links_admin_data["srch_exp"]."%' OR seminare.Untertitel LIKE '%".$links_admin_data["srch_exp"]."%' OR seminare.Beschreibung LIKE '%".$links_admin_data["srch_exp"]."%' OR auth_user_md5.Nachname LIKE '%".$links_admin_data["srch_exp"]."%') ";
-                $conditions++;
-            }
-
-            //Extension to the query, if we want to show lectures which are archiveable
-            if (($i_page== "archiv_assi.php") && ($links_admin_data["select_old"]) && ($next_semester = Semester::findNext())) {
-                $query.="AND ((seminare.start_time + seminare.duration_time < ".$next_semester->beginn.") AND seminare.duration_time != '-1') ";
-                $conditions++;
-            }
-
-            // tutors and dozents only have a plain list
-            } elseif (($auth->auth["perm"] =="tutor") || ($auth->auth["perm"] == "dozent")) {
-                    $query="SELECT  seminare.*, Institute.Name AS Institut ,
-                            sd1.name AS startsem,IF(duration_time=-1, '"._("unbegrenzt")."', sd2.name) AS endsem
-                        FROM seminar_user LEFT JOIN seminare USING (Seminar_id)
-                        LEFT JOIN Institute USING (institut_id)
-                        LEFT JOIN semester_data sd1 ON ( start_time BETWEEN sd1.beginn AND sd1.ende)
-                        LEFT JOIN semester_data sd2 ON ((start_time + duration_time) BETWEEN sd2.beginn AND sd2.ende)
-                        WHERE seminar_user.status IN ('dozent'"
-                        .(($i_page != 'archiv_assi.php' && $i_page != 'admin_visibility.php') ? ",'tutor'" : "")
-                        . ") AND seminar_user.user_id='$user->id' AND seminare.status NOT IN('". implode("','", studygroup_sem_types())."')";
-
-            // should never be reached
-            } else {
-                $query = FALSE;
-            }
-
-            $query.=" ORDER BY  ".$links_admin_data["sortby"];
-            if ($links_admin_data["sortby"] == 'start_time') $query .= ' DESC';
-            $db->query($query);
-
+        //Suchresultate abholen:
+        $results = AdminList::getInstance()->getSearchResults();
+        
         ?>
         <form name="links_admin_action" action="<?=URLHelper::getLink()?>" method="POST">
         <?= CSRFProtection::tokenTag() ?>
@@ -383,7 +319,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         <?
         $show_rooms_check_url= ($_REQUEST['show_rooms_check']=="on") ? "&show_rooms_check=on" : null;
         // only show table header in case of hits
-        if ($db->num_rows()) {
+        if (count($results)) {
             ?>
             <tr height=28>
                 <td width="%10" class="steel" valign=bottom>
@@ -522,13 +458,14 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
         }
 
-        while ($db->next_record()) {
-            $seminar_id = $db->f("Seminar_id");
+        foreach ($results as $result) {
+        //while ($db->next_record()) {
+            $seminar_id = $result["Seminar_id"];
             // if "show room-data" is enabled
             if (!$show_rooms_check_url) {
                 $_room = "&nbsp;";
             } else {
-                $sem = Seminar::getInstance($db->f('Seminar_id'));
+                $sem = Seminar::getInstance($result['Seminar_id']);
                 $_room = $sem->getDatesHTML(array(
                     'semester_id' => $links_admin_data['search_sem'],
                     'show_room'   => true
@@ -539,14 +476,15 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
 
             $cssSw->switchClass();
             echo "<tr>";
-            echo "<td align=\"center\" class=\"".$cssSw->getClass()."\"><font size=\"-1\">".htmlReady($db->f('startsem'));
-            if ($db->f('startsem') != $db->f('endsem')) echo '<br>( - '.htmlReady($db->f('endsem')).')';
+            echo "<td align=\"center\" class=\"".$cssSw->getClass()."\"><font size=\"-1\">".htmlReady($result['startsem']);
+            if ($result['startsem'] != $result['endsem']) echo '<br>( - '.htmlReady($result['endsem']).')';
             echo "</font></td>";
-            echo "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\">".htmlReady($db->f("VeranstaltungsNummer"))."</font></td>";
-            echo "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\">".htmlReady(substr($db->f("Name"),0,100));
-            if (strlen ($db->f("Name")) > 100)
+            echo "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\">".htmlReady($result["VeranstaltungsNummer"])."</font></td>";
+            echo "<td class=\"".$cssSw->getClass()."\"><font size=\"-1\">".htmlReady(substr($result["Name"],0,100));
+            if (strlen($result["Name"]) > 100) {
                 echo "(...)";
-            if ($db->f("visible")==0) {
+            }
+            if ($result["visible"]==0) {
                 echo "&nbsp;". _("(versteckt)");
             }
 
@@ -708,7 +646,7 @@ if ($perm->have_perm("tutor")) {    // Navigationsleiste ab status "Tutor"
         </form>
         <?
         //Traurige Meldung wenn nichts gefunden wurde oder sonst irgendwie nichts da ist
-        if ($query && !$db->num_rows()) {
+        if (!count($results)) {
             if ($conditions) {
                 echo MessageBox::info(_("Leider wurden keine Veranstaltungen entsprechend Ihren Suchkriterien gefunden!"));
             } else {

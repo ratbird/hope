@@ -117,6 +117,13 @@ class AdminList {
         $this->results = $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getSearchResults($new_search = false) {
+        if ($new_search) {
+            $this->search();
+        }
+        return $this->results;
+    }
+
     public function getSelectTemplate($course_id)
     {
         $adminList = $GLOBALS['template_factory']->open('admin/adminList.php');

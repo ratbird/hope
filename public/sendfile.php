@@ -38,6 +38,7 @@
 
 
 require '../lib/bootstrap.php';
+unregister_globals();
 
 ob_start();
 page_open(array("sess" => "Seminar_Session",

@@ -52,14 +52,14 @@
             if ($date['resource_id']) :
                 $irregular_rooms[$date['resource_id']]++;
             elseif ($date['raum']) :
-                $freetext_rooms['('. $date['raum'] .')']++;
+                $freetext_rooms['('. htmlReady($date['raum']) .')']++;
             endif;
         endif;
     endforeach;
     unset($irregular_rooms['']);
 
-    $rooms = getFormattedRooms($irregular_rooms, $link) + array_keys($freetext_rooms);
-
+    $rooms = array_merge(getFormattedRooms($irregular_rooms, $link), array_keys($freetext_rooms));
+    
     if (is_array($irregular) && sizeof($irregular)) :
         echo _("Termine am") . implode(', ', shrink_dates($irregular));
         if (is_array($rooms) && sizeof($rooms) > 0) :
@@ -69,7 +69,7 @@
 
             if ($show_room) :
                 echo ', ' . _("Ort:") . ' ';
-                echo htmlReady(implode(', ', $rooms));
+                echo implode(', ', $rooms);
             endif;
         endif;
     endif;

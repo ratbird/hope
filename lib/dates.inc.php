@@ -621,7 +621,8 @@ function getFormattedRooms($rooms, $link = false)
             if ($room_id) {
                 $resObj =& ResourceObject::Factory($room_id);
                 if ($link) {
-                    $room_list[] = $resObj->getFormattedLink(TRUE, TRUE, TRUE);
+                    $room_list[] = $resObj->getFormattedLink(TRUE, TRUE, TRUE,
+                        'view_schedule', 'no_nav', false, htmlReady($resObj->getName()));
                 } else {
                     $room_list[] = htmlReady($resObj->getName());
                 }

@@ -169,6 +169,7 @@ class DateTemplatesTests extends UnitTestCase
     {
         $data = renderTemplate('dates/seminar_xml', $this->testData);
         $compare = '<raumzeit>
+    <startwoche>0</startwoche>
     <datum>wöchentlich</datum>
     <wochentag>Mo</wochentag>
     <zeit>10:00-12:00</zeit>

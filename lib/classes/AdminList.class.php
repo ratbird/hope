@@ -19,6 +19,9 @@ require_once 'lib/classes/SemesterData.class.php';
  * Singleton class for the admin search list. This is a singleton-class because
  * the result set is dependend on the session.
  *
+ * Get the results dependend on the current session with
+ *   AdminList::getInstance()->getSearchResults();
+ *
  * @author Rasmus Fuhse <fuhse@data-quest.de>
  */
 class AdminList {
@@ -26,6 +29,10 @@ class AdminList {
 
     protected $results = array();
 
+    /**
+     * returns an AdminList singleton object
+     * @return AdminList
+     */
     static public function getInstance() {
         if (!self::$instance) {
             //include_once 'lib/admin_search.inc.php';
@@ -34,6 +41,9 @@ class AdminList {
         return self::$instance;
     }
 
+    /**
+     * constructor that starts the first search for this instance
+     */
     public function __construct() {
         $GLOBALS['view_mode'] = "sem";
         $this->search();
@@ -117,6 +127,11 @@ class AdminList {
         $this->results = $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * returns the search results of this instance
+     * @param bool $new_search: if true a new search will be forced, default to false
+     * @return array of associative arrays (seminare.*, Institute.Name, startsem, endsem)
+     */
     public function getSearchResults($new_search = false) {
         if ($new_search) {
             $this->search();
@@ -124,6 +139,11 @@ class AdminList {
         return $this->results;
     }
 
+    /**
+     * returns a template for a selectbox with the current list of the adminsearch
+     * @param string $course_id : Seminar_id of the course that should be selected in the select-box
+     * @return Flexi_Template
+     */
     public function getSelectTemplate($course_id)
     {
         $adminList = $GLOBALS['template_factory']->open('admin/adminList.php');
@@ -132,6 +152,11 @@ class AdminList {
         return $adminList;
     }
 
+    /**
+     * returns a template for "back" and "forward" links on top of admin-pages
+     * @param string $course_id
+     * @return Flexi_Template
+     */
     public function getTopLinkTemplate($course_id)
     {
         $adminTopLinks = $GLOBALS['template_factory']->open("admin/topLinks.php");

@@ -27,6 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 
 require '../lib/bootstrap.php';
+unregister_globals();
 
 ob_start();
 page_open(array("sess" => "Seminar_Session",
@@ -48,6 +49,9 @@ require_once 'lib/raumzeit/Issue.class.php';
 
 $db = DBManager::get();
 $db2 = DBManager::get();
+
+$open = Request::option('open');
+$close = Request::option('close');
 
 //Switch fuer die Ansichten
 URLHelper::bindLinkParam('data', $folder_system_data);
@@ -86,10 +90,10 @@ if ($_REQUEST['folderzip']) {
 
 if ($_REQUEST['zipnewest']) {
     //Abfrage der neuen Dateien
-    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+    $folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
     $download_ids = $db->query("SELECT * " .
             "FROM dokumente " .
-            "WHERE seminar_id = '$SessionSeminar' " .
+            "WHERE seminar_id = '$SessSemName[1]' " .
             "AND user_id != '".$user->id."' " .
             "AND ( chdate > '".(($_REQUEST['zipnewest']) ? $_REQUEST['zipnewest'] : time())."' " .
                     "OR mkdate > '".(($_REQUEST['zipnewest']) ? $_REQUEST['zipnewest'] : time())."')")->fetchAll();
@@ -112,8 +116,9 @@ if ($_REQUEST['zipnewest']) {
     }
 }
 
-if ($download_selected_x) {
-    if (is_array($download_ids)) {
+if (Request::submitted('download_selected_x')) {
+    $download_ids = Request::getArray('download_ids');
+    if (count($download_ids)  > 0) {
         $zip_file_id = createSelectedZip($download_ids, true, true);
         if($zip_file_id){
             $zip_name = prepareFilename($SessSemName[0].'-'._("Dokumente").'.zip');
@@ -133,7 +138,7 @@ mark_public_course();
     // add skip links
     SkipLinks::addIndex(Navigation::getItem('/course/files/all')->getTitle(), 'main_content', 100);
     SkipLinks::addIndex(Navigation::getItem('/course/files/tree')->getTitle(), 'main_content', 100);
-$folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessionSeminar));
+$folder_tree = TreeAbstract::GetInstance('StudipDocumentTree', array('range_id' => $SessSemName[1]));
 
 $question = $msg = '';
 
@@ -180,29 +185,29 @@ if (in_array($open_cmd, words('n a c rfu led u z l'))) {
 
 if ($rechte || $owner || $create_folder_perm) {
     //wurde Code fuer Anlegen von Ordnern ubermittelt (=id+"_n_"), wird entsprechende Funktion aufgerufen
-    if ($open_cmd == 'n' && (!$cancel_x)) {
+    if ($open_cmd == 'n' && (!Request::submitted("cancel"))) {
         $change = create_folder(_("Neuer Ordner"), '', $open_id );
         $open_id = $change;
         //$open_cmd = null;
-        }
+    }
 
     //wurde Code fuer Anlegen von Ordnern der obersten Ebene ubermittelt (=id+"_a_"),
     //wird entsprechende Funktion aufgerufen
     if ($open_cmd == 'a') {
         $permission = 7;
-        if ($open_id == $SessionSeminar) {
+        if ($open_id == $SessSemName[1]) {
             $titel=_("Allgemeiner Dateiordner");
             $description= sprintf(_("Ablage für allgemeine Ordner und Dokumente der %s"), $SessSemName["art_generic"]);
         } else if ($open_id == md5('new_top_folder')){
             $titel = $_REQUEST['top_folder_name'] ? stripslashes($_REQUEST['top_folder_name']) : _("Neuer Ordner");
-            $open_id = md5($SessionSeminar . 'top_folder');
+            $open_id = md5($SessSemName[1] . 'top_folder');
         } elseif($titel = GetStatusgruppeName($open_id)) {
             $titel = _("Dateiordner der Gruppe:") . ' ' . $titel;
             $description = _("Ablage für Ordner und Dokumente dieser Gruppe");
             $permission = 15;
         } else if ($data = SingleDateDB::restoreSingleDate($open_id)) {
             // If we create a folder which has not yet an issue, we just create one
-            $issue = new Issue(array('seminar_id' => $SessionSeminar));
+            $issue = new Issue(array('seminar_id' => $SessSemName[1]));
             $issue->setTitle(_("Ohne Titel"));
             $termin = new SingleDate($open_id);
             $termin->addIssueID($issue->getIssueID());
@@ -269,26 +274,26 @@ if ($rechte || $owner || $create_folder_perm) {
             $msg.="msg§" . _("Die Verlinkung wurde gelöscht") . "§";
         else
             $msg.="error§" . _("Die Verlinkung konnte nicht gelöscht werden") . "§";
-        }
+    }
 
     //wurde Code fuer Aendern des Namens und der Beschreibung von Ordnern oder Dokumenten ubermittelt (=id+"_c_"), wird entsprechende Funktion aufgerufen
     if ($open_cmd ==  'c') {
         $change=$open_id;
-        }
+    }
 
     //wurde Code fuer Speichern von Aenderungen uebermittelt (=id+"_sc_"), wird entsprechende Funktion aufgerufen
-    if ($open_cmd == 'sc' && (!$cancel_x)) {
-        edit_item($open_id, $type, $change_name, $change_description, $change_protected);
-        }
+    if ($open_cmd == 'sc' && (!Request::submitted("cancel"))) {
+        edit_item($open_id, Request::int('type'), Request::get('change_name'), Request::get('change_description'), $change_protected);
+    }
 
     //wurde Code fuer Verschieben-Vorwaehlen uebermittelt (=id+"_m_"), wird entsprechende Funktion aufgerufen
-    if ($open_cmd == 'm' && (!$cancel_x)) {
+    if ($open_cmd == 'm' && (!Request::submitted("cancel"))) {
         $folder_system_data["move"]=$open_id;
         $folder_system_data["mode"]='move';
-        }
+    }
 
     //wurde Code fuer Hoch-Schieben einer Datei (=id+"_mfu_") in der Darstellungsreihenfolge ausgewählt?
-    if (($open_cmd == 'mfu') && (!$cancel_x)) {
+    if (($open_cmd == 'mfu') && (!Request::submitted("cancel"))) {
         $result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = ".$db->quote($open_id)."")->fetch();
         $result = $db->query("SELECT dokument_id FROM dokumente WHERE range_id = '".$result['range_id']."' ORDER BY priority ASC, chdate")->fetchAll();
         for ($i=1; $i < count($result); $i++) {
@@ -304,7 +309,7 @@ if ($rechte || $owner || $create_folder_perm) {
     }
 
     //wurde Code fuer Runter-Schieben einer Datei (=id+"_mfu_") in der Darstellungsreihenfolge ausgewählt?
-    if (($open_cmd == 'mfd') && (!$cancel_x)) {
+    if (($open_cmd == 'mfd') && (!Request::submitted("cancel"))) {
         $result = $db->query("SELECT range_id FROM dokumente WHERE dokument_id = ".$db->quote($open_id)."")->fetch();
         $result = $db->query("SELECT dokument_id FROM dokumente WHERE range_id = '".$result['range_id']."' ORDER BY priority ASC, chdate")->fetchAll();
         for ($i=count($result)-1; $i >=0 ; $i--) {
@@ -320,7 +325,7 @@ if ($rechte || $owner || $create_folder_perm) {
     }
 
     //wurde Code fuer Hoch-Schieben eines Ordners (=id+"_mfou_") in der Darstellungsreihenfolge ausgewählt?
-    if (($open_cmd == 'mfou') && (!$cancel_x)) {
+    if (($open_cmd == 'mfou') && (!Request::submitted("cancel"))) {
         $result = $db->query("SELECT range_id FROM folder WHERE folder_id = ".$db->quote($open_id))->fetch();
         $result = $db->query("SELECT folder_id FROM folder WHERE range_id = '".$result['range_id']."' ORDER BY priority ASC, chdate")->fetchAll();
         for ($i=1; $i < count($result); $i++) {
@@ -336,7 +341,7 @@ if ($rechte || $owner || $create_folder_perm) {
     }
 
     //wurde Code fuer Runter-Schieben einer Datei (=id+"_mfu_") in der Darstellungsreihenfolge ausgewählt?
-    if (($open_cmd == 'mfod') && (!$cancel_x)) {
+    if (($open_cmd == 'mfod') && (!Request::submitted("cancel"))) {
         $result = $db->query("SELECT range_id FROM folder WHERE folder_id = ".$db->quote($open_id))->fetch();
         $result = $db->query("SELECT folder_id FROM folder WHERE range_id = '".$result['range_id']."' ORDER BY priority ASC, chdate")->fetchAll();
         for ($i=count($result)-1; $i >=0 ; $i--) {
@@ -352,7 +357,7 @@ if ($rechte || $owner || $create_folder_perm) {
     }
 
     //wurde Code für alphabetisches Sortieren (=id+"_az_") fuer Ordner id ausgewählt?
-    if (($open_cmd == 'az') && (!$cancel_x)) {
+    if (($open_cmd == 'az') && (!Request::submitted("cancel"))) {
         $result = $db->query("SELECT dokument_id FROM dokumente WHERE range_id = ".$db->quote($open_id)." ORDER BY name ASC, chdate DESC")->fetchAll();
         for ($i=0; $i < count($result); $i++) {
             $db->query("UPDATE dokumente SET priority = ".($i+1)." WHERE dokument_id = '".$result[$i]['dokument_id']."'");
@@ -364,20 +369,20 @@ if ($rechte || $owner || $create_folder_perm) {
     }
 
     //wurde Code fuer Kopieren-Vorwaehlen uebermittelt (=id+"_co_"), wird entsprechende Funktion aufgerufen
-    if ($open_cmd == 'co' && (!$cancel_x)) {
+    if ($open_cmd == 'co' && (!Request::submitted("cancel"))) {
         $folder_system_data["move"]=$open_id;
         $folder_system_data["mode"]='copy';
         }
 
     //wurde Code fuer Aktualisieren-Hochladen uebermittelt (=id+"_rfu_"), wird entsprechende Variable gesetzt
-    if ($open_cmd == 'rfu' && (!$cancel_x)) {
+    if ($open_cmd == 'rfu' && (!Request::submitted("cancel"))) {
         $folder_system_data["upload"]=$open_id;
         $folder_system_data["refresh"]=$open_id;
         unset($folder_system_data["zipupload"]);
     }
 
     //wurde Code fuer Aktualisieren-Verlinken uebermittelt (=id+"_led_"), wird entsprechende Variable gesetzt
-    if ($open_cmd == 'led' && (!$cancel_x)) {
+    if ($open_cmd == 'led' && (!Request::submitted("cancel"))) {
         $folder_system_data["link"]=$open_id;
         $folder_system_data["update_link"]=TRUE;
     }
@@ -386,24 +391,25 @@ if ($rechte || $owner || $create_folder_perm) {
 //Upload, Check auf Konsistenz mit Seminar-Schreibberechtigung
 if (($SemUserStatus == "autor") || ($rechte)) {
     //wurde Code fuer Hochladen uebermittelt (=id+"_u_"), wird entsprechende Variable gesetzt
-    if ($open_cmd == 'u' && (!$cancel_x)) {
+    if ($open_cmd == 'u' && (!Request::submitted("cancel"))) {
         $folder_system_data["upload"]=$open_id;
         unset($folder_system_data["refresh"]);
         unset($folder_system_data["zipupload"]);
     }
-    if ($open_cmd == 'z' && $rechte  && !$cancel_x) {
+    if ($open_cmd == 'z' && $rechte  && !Request::submitted("cancel")) {
         $folder_system_data["upload"]=$open_id;
         $folder_system_data["zipupload"]=$open_id;
     }
 
 
     //wurde Code fuer Verlinken uebermittelt (=id+"_l_"), wird entsprechende Variable gesetzt
-    if ($open_cmd == 'l' && (!$cancel_x)) {
+    if ($open_cmd == 'l' && (!Request::submitted("cancel"))) {
         $folder_system_data["link"]=$open_id;
     }
 
     //wurde eine Datei hochgeladen/aktualisiert?
-    if (($cmd=="upload") && (!$cancel_x) && ($folder_system_data["upload"])) {
+    $cmd = Request::get("cmd");
+    if (($cmd=="upload") && (!Request::submitted("cancel")) && ($folder_system_data["upload"])) {
         if (!$folder_system_data["zipupload"]){
             upload_item ($folder_system_data["upload"], TRUE, FALSE, $folder_system_data["refresh"]);
             $open = $dokument_id;
@@ -419,7 +425,7 @@ if (($SemUserStatus == "autor") || ($rechte)) {
         }
 
     //wurde eine Datei verlinkt?
-    if (($cmd=="link") && (!$cancel_x) && ($folder_system_data["link"])) {
+    if (($cmd=="link") && (!Request::submitted("cancel")) && ($folder_system_data["link"])) {
         if (link_item ($folder_system_data["link"], TRUE, FALSE, $folder_system_data["refresh"],FALSE)) {
             $open = $dokument_id;
             $close = $folder_system_data["refresh"];
@@ -433,7 +439,7 @@ if (($SemUserStatus == "autor") || ($rechte)) {
     }
 
     //wurde ein Link aktualisiert?
-    if (($cmd=="link_update") && (!$cancel_x) && ($folder_system_data["link"])) {
+    if (($cmd=="link_update") && (!Request::submitted("cancel")) && ($folder_system_data["link"])) {
         if (link_item ($range_id, TRUE, FALSE, FALSE, $link_update)) {
             $open = $link_update;
             $close = $folder_system_data["refresh"];
@@ -477,7 +483,7 @@ if (($SemUserStatus == "autor") || ($rechte)) {
         $folder_system_data["mode"]='';
     }
 
-    if ($cancel_x)  {
+    if (Request::submitted("cancel"))  {
         $folder_system_data["upload"]='';
         $folder_system_data["refresh"]='';
         $folder_system_data["link"]='';
@@ -491,7 +497,7 @@ if (($SemUserStatus == "autor") || ($rechte)) {
 
 //verschieben / kopieren innerhalb der Veranstaltung
 //wurde Code fuer Starten der Verschiebung uebermittelt (=id+"_md_"), wird entsprechende Funktion aufgerufen (hier kein Rechtecheck noetig, da Dok_id aus Sess_Variable.
-if ($open_cmd == 'md' && $folder_tree->isWritable($open_id, $user->id) && !$cancel_x && (!$folder_tree->isFolder($folder_system_data["move"]) || ($folder_tree->isFolder($folder_system_data["move"]) && $folder_tree->checkCreateFolder($open_id, $user->id)))) {
+if ($open_cmd == 'md' && $folder_tree->isWritable($open_id, $user->id) && !Request::submitted("cancel") && (!$folder_tree->isFolder($folder_system_data["move"]) || ($folder_tree->isFolder($folder_system_data["move"]) && $folder_tree->checkCreateFolder($open_id, $user->id)))) {
     if ($folder_system_data["mode"] == 'move'){
         $done = move_item($folder_system_data["move"], $open_id);
         if (!$done){
@@ -564,7 +570,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
 
         } else {
             if (($rechte) || ($folder_tree->isWriteable($_REQUEST["folder_sort"] , $user->id))) {
-                $file_order = explode(",", $file_order);
+                $file_order = explode(",", Request::get('file_order'));
                 $sorttype = "";
                 if ($file_order) {
                     $result = $db->query("SELECT 1 FROM dokumente WHERE dokument_id = ".$db->quote($file_order[0]))->fetch();
@@ -610,7 +616,7 @@ if ($_SERVER['HTTP_X_REQUESTED_WITH'] == 'XMLHttpRequest') {
                 array(
                     'range_id'    => $_REQUEST["copyintofolder"],
                     'user_id'     => $user->id,
-                    'seminar_id'  => $SessionSeminar,
+                    'seminar_id'  => $SessSemName[1],
                     'name'        => $result['name'],
                     'description' => $result['description'],
                     'filename'    => $result['filename'],
@@ -658,7 +664,7 @@ include ('lib/include/header.php');   // Output of Stud.IP head
 // Hauptteil
 
  if (!isset($range_id))
-    $range_id = $SessionSeminar ;
+    $range_id = $SessSemName[1] ;
 
 //JS Routinen einbinden, wenn benoetigt. Wird in der Funktion gecheckt, ob noetig...
 JS_for_upload();
@@ -683,7 +689,7 @@ if ($question) {
             $module_check = new Modules();
             $my_sem = $my_inst = array();
             foreach(search_range('%') as $key => $value){
-                if ($module_check->getStatus('documents', $key, $value['type']) && $key != $SessionSeminar){
+                if ($module_check->getStatus('documents', $key, $value['type']) && $key != $SessSemName[1]){
                     if ($value['type'] == 'sem'){
                         $my_sem[$key] = $value['name'];
                     } else {
@@ -899,7 +905,7 @@ div.droppable.hover {
         //Weitere Ordner:
         $folders = $db->query("SELECT folder_id " .
                 "FROM folder " .
-                "WHERE range_id = '".md5($SessionSeminar . 'top_folder')."' " .
+                "WHERE range_id = '".md5($SessSemName[1] . 'top_folder')."' " .
                 "ORDER BY name")->fetchAll();
         foreach($folders as $general_folder) {
             if ($folder_tree->isExecutable($general_folder['folder_id'], $user->id) || $rechte) {

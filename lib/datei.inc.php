@@ -873,8 +873,11 @@ function getFileExtension($str) {
  * @return Can the given file be uploaded to Stud.IP?
  */
 function validate_upload($the_file, $real_file_name='') {
-    global $UPLOAD_TYPES,$the_file_size, $msg, $the_file_name, $SessSemName, $user, $auth, $i_page;
+    global $UPLOAD_TYPES, $msg, $SessSemName, $user, $auth, $i_page;
 
+    $the_file_size = $the_file['size'];
+    $the_file_name = $the_file['name'];
+    
     if ($i_page == "sms_send.php") {
         if (!$GLOBALS["ENABLE_EMAIL_ATTACHMENTS"] == true)
                 $emsg.= "error§" . _("Dateianhänge für Nachrichten sind in dieser Installation nicht erlaubt!") . "§";
@@ -893,7 +896,7 @@ function validate_upload($the_file, $real_file_name='') {
     }
 
     $error = FALSE;
-    if ($the_file == "none") { # haben wir eine Datei?
+    if (!$the_file) { # haben wir eine Datei?
         $emsg.= "error§" . _("Sie haben keine Datei zum Hochladen ausgew&auml;hlt!") . "§";
     } else { # pruefen, ob der Typ stimmt
 
@@ -1013,15 +1016,15 @@ function validate_upload($the_file, $real_file_name='') {
 //der eigentliche Upload
 function upload($the_file, $refresh, $range_id)
 {
-    global $dokument_id, $the_file_name, $msg;
-
+    global $dokument_id, $msg;
+    
     if (!validate_upload($the_file)) {
         return FALSE;
     }
 
     $data = getUploadMetadata($range_id, $refresh);
 
-    $doc = StudipDocument::createWithFile($the_file, $data);
+    $doc = StudipDocument::createWithFile($the_file['tmp_name'], $data);
     if ($doc === null) {
         $msg.= "error§" . _("Dateiübertragung gescheitert!");
         return false;
@@ -1037,16 +1040,16 @@ function upload($the_file, $refresh, $range_id)
 
 //Erzeugen des Datenbankeintrags zur Datei
 function getUploadMetadata($range_id, $refresh = FALSE) {
-    global $the_file_name, $the_file_size, $description, $name, $user, $upload_seminar_id, $protected;
+    global $user;
+    $upload_seminar_id = Request::option('upload_seminar_id');
+    $description = trim(Request::get('description'));
+    $name = trim(Request::get('name'));
+    $protected = Request::int('protected');
+    $the_file_name = basename($_FILES['the_file']['name']);
+    $the_file_size = $_FILES['the_file']['size'];
 
-
-    $the_file_name = basename(stripslashes($the_file_name));
-    $name = trim($name);
-
-    if (!$name) {
-        $name = addslashes($the_file_name);
-    }
-
+    $name || ($name = $the_file_name);
+    
     $result = array(
         'filename'    => $the_file_name,
         'filesize'    => $the_file_size,
@@ -1058,8 +1061,8 @@ function getUploadMetadata($range_id, $refresh = FALSE) {
     if (!$refresh) {
         $result['range_id']     = trim($range_id);
         $result['seminar_id']   = $upload_seminar_id;
-        $result['description']  = stripslashes(trim($description));
-        $result['name']         = stripslashes($name);
+        $result['description']  = $description;
+        $result['name']         = $name;
         $result['protected']    = (int) $protected;
     } else {
         $result['dokument_id'] = $refresh;
@@ -1190,8 +1193,8 @@ function JS_for_upload() {
 
 //Steuerungsfunktion
 function upload_item ($range_id, $create = FALSE, $echo = FALSE, $refresh = FALSE) {
-    global $the_file;
-
+    $the_file = $_FILES["the_file"];
+    
     if ($create) {
         upload($the_file, $refresh, $range_id);
         return;
@@ -1208,31 +1211,31 @@ function upload_item ($range_id, $create = FALSE, $echo = FALSE, $refresh = FALS
 
 
 function insert_link_db($range_id, $the_file_size, $refresh = FALSE) {
-    global $the_file_name, $the_link, $description, $name, $user, $upload_seminar_id, $protect;
-
+    global $the_file_name, $user;
+    $the_link = Request::get('the_link');
     $date = time();             //Systemzeit
     $user_id = $user->id;           // user_id erfragen...
     $range_id = trim($range_id);        // laestige white spaces loswerden
-    $description = trim($description);      // laestige white spaces loswerden
-    $name = trim($name);            // laestige white spaces loswerden
+    $description = trim(Request::get('description'));      // laestige white spaces loswerden
+    $name = trim(Request::get('name'));            // laestige white spaces loswerden
 
-    $url_parts = parse_url(remove_magic_quotes($the_link));
+    $url_parts = parse_url($the_link);
     $the_file_name = basename($url_parts['path']);
 
-    if ($protect=="on") $protect = 1;
-
-    if (!$name) $name = $the_file_name;
+    if (!$name) {
+        $name = $the_file_name;
+    }
     if (!$refresh) {
         $doc = new StudipDocument();
         $doc->description = remove_magic_quotes($description);
-        $doc->name = remove_magic_quotes($name);
+        $doc->name = $name;
         $doc->range_id = $range_id;
         $doc->user_id = $user_id;
         $doc->filename = $the_file_name;
-        $doc->seminar_id = $upload_seminar_id;
+        $doc->seminar_id = Request::option('upload_seminar_id');
         $doc->filesize = $the_file_size;
-        $doc->url = remove_magic_quotes($the_link);
-        $doc->protected = $protect;
+        $doc->url = $the_link;
+        $doc->protected = Request::int('protect');
         $doc->autor_host = $_SERVER['REMOTE_ADDR'];
         $doc->author_name = get_fullname($user_id);
 
@@ -1249,19 +1252,29 @@ function insert_link_db($range_id, $the_file_size, $refresh = FALSE) {
 
 
 function link_item ($range_id, $create = FALSE, $echo = FALSE, $refresh = FALSE, $link_update = FALSE) {
-    global $the_link, $name, $description, $protect, $filesize;
+    global $filesize;
 
     if ($create) {
-        $link_data = parse_link($the_link);
+        $link_data = parse_link(Request::get('the_link'));
         if ($link_data["HTTP/1.0 200 OK"] || $link_data["HTTP/1.1 200 OK"] || $link_data["HTTP/1.1 302 Found"] || $link_data["HTTP/1.0 302 Found"]) {
             if (!$link_update) {
-                if (insert_link_db($range_id, $link_data["Content-Length"], $refresh))
-                    if ($refresh)
+                if (insert_link_db($range_id, $link_data["Content-Length"], $refresh)) {
+                    if ($refresh) {
                         delete_link($refresh, TRUE);
+                    }
+                }
                 $tmp = TRUE;
             } else {
                 $filesize = $link_data["Content-Length"];
-                edit_item ($link_update, FALSE, $name, $description, $protect , $the_link, $filesize);
+                edit_item(
+                    $link_update,
+                    FALSE,
+                    Request::get('name'),
+                    Request::get('description'),
+                    Request::int('protect'),
+                    Request::get('the_link'),
+                    $filesize
+                );
                 $tmp = TRUE;
             }
         } else {

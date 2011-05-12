@@ -36,6 +36,7 @@ if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
   echo implode(", \n", $output);
 
   $presence_types = getPresenceTypes();
+  $freetext_rooms = array();
 
   if (is_array($dates['irregular'])):
     foreach ($dates['irregular'] as $date) :
@@ -52,7 +53,7 @@ if ($dates['regular']['turnus_data'] || sizeof($dates['irregular'])) :
     unset($irregular_rooms['']);
     echo sizeof($output) ? ", \n" : '';
 
-    $rooms = getFormattedRooms($irregular_rooms, false) + array_keys($freetext_rooms);
+    $rooms = array_merge(getFormattedRooms($irregular_rooms, false), array_keys($freetext_rooms));
 
     if (is_array($irregular) && sizeof($irregular)) :
         echo _("Termine am") . implode(', ', shrink_dates($irregular));

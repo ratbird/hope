@@ -296,7 +296,8 @@ class CalendarView
      */
     public function getOverallHeight()
     {
-        return $this->height * ($this->end_hour - $this->start_hour) + 60;
+        return $this->height * ($this->end_hour - $this->start_hour) + $this->height
+                + 2 + ($this->end_hour - $this->start_hour) * 2;
     }
 
     /**

@@ -1392,7 +1392,8 @@ else {
     $invisible++;
 }
 }
-if($key != 'dozent' && $rechte && !$info_is_open && !LockRules::Check($id, 'participants')) {
+
+if($key != 'dozent' && $rechte && !$info_is_open) {
     echo '<tr><td class="blank" colspan="'.($showscore ? 7 : 6).'">&nbsp;</td>';
 
     if (isset($multiaction[$key]['send'][0]))
@@ -1401,10 +1402,20 @@ if($key != 'dozent' && $rechte && !$info_is_open && !LockRules::Check($id, 'part
         echo '<td class="blank">&nbsp;</td>';
 
 
-    if (isset($multiaction[$key]['insert'][0]) && !($key == 'autor' && !$tutor_count)) echo '<td class="blank" align="center">' . makeButton('eintragen','input', $multiaction[$key]['insert'][1],'do_' . $multiaction[$key]['insert'][0]) . '</td>';
-    else echo '<td class="blank">&nbsp;</td>';
-    echo '<td class="blank" align="center">' . makeButton('entfernen','input', $multiaction[$key]['delete'][1],'do_' . $multiaction[$key]['delete'][0]) . '</td>';
-    if ($sem->isAdmissionEnabled()) echo '<td class="blank">&nbsp;</td>';
+    if (!LockRules::Check($id, 'participants')) {
+        if (isset($multiaction[$key]['insert'][0]) && !($key == 'autor' && !$tutor_count)) {
+            echo '<td class="blank" align="center">' . makeButton('eintragen','input', $multiaction[$key]['insert'][1],'do_' . $multiaction[$key]['insert'][0]) . '</td>';
+        } else {
+            echo '<td class="blank">&nbsp;</td>';
+        }
+
+        echo '<td class="blank" align="center">' . makeButton('entfernen','input', $multiaction[$key]['delete'][1],'do_' . $multiaction[$key]['delete'][0]) . '</td>';
+
+        if ($sem->isAdmissionEnabled()) {
+            echo '<td class="blank">&nbsp;</td>';
+        }        
+    }
+
     echo "</tr></form>";
 }
 echo "<tr><td class=\"blank\" colspan=\"$colspan\">&nbsp;</td></tr>";

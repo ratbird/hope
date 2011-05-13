@@ -80,13 +80,14 @@ function forum_parse_edit ($description, $anonymous) {
     global $perm;
     if (preg_match('/^.*(<admin_msg.*?)$/s',$description, $match)) { // wurde schon mal editiert
         $tmp = explode('"',$match[1]);
+        // Check if posting was anonymous and hide author accordingly.
         if (get_config('FORUM_ANONYMOUS_POSTINGS') && ($anonymous && !$perm->have_perm('root'))) {
             $message = _("Zuletzt editiert:").' ';
         } else {
             $message = _("Zuletzt editiert von").' '.$tmp[1].' - ';
         }
         // use special markup [admin_msg]. (cf. http://develop.studip.de/trac/ticket/335 )
-        $append = "\n\n[admin_msg]["._("Zuletzt editiert von"). ' '.$tmp[1]." - ".date ("d.m.y - H:i", $tmp[3])."][/admin_msg]";
+        $append = "\n\n[admin_msg][".$message.date ("d.m.y - H:i", $tmp[3])."][/admin_msg]";
         $description = forum_kill_edit($description) . $append;
     }
     return $description;

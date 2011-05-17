@@ -388,7 +388,7 @@ class Seminar_User extends User {
         if ($uid){
             if (!is_object($GLOBALS['auth']) ||
             (is_object($GLOBALS['auth']) && $uid != $GLOBALS['auth']->auth['uid'])){
-                $this->fake_user = true;
+                $this->fake_user = ($uid !== 'nobody');
                 $this->register_globals = false;
                 $this->start($uid);
             }
@@ -572,6 +572,12 @@ class Seminar_Auth extends Auth {
 
         global $_language, $_language_path;
 
+        // set up dummy user environment
+        if($GLOBALS['user']->id !== 'nobody') {
+            $GLOBALS['user'] = new Seminar_User('nobody');
+            $GLOBALS['perm'] = new Seminar_Perm();
+        }
+
         if (!isset($_language)) {
             $_language = get_accepted_languages();
         }
@@ -690,8 +696,12 @@ class Seminar_Register_Auth extends Seminar_Auth {
     function auth_registerform() {
 
         require_once('lib/visual.inc.php');
-        require_once('config.inc.php');
 
+        // set up dummy user environment
+        if($GLOBALS['user']->id !== 'nobody') {
+            $GLOBALS['user'] = new Seminar_User('nobody');
+            $GLOBALS['perm'] = new Seminar_Perm();
+        }
         // set up user session
         include 'lib/seminar_open.php';
 
@@ -886,7 +896,7 @@ class Seminar_Perm extends Perm {
             return $auth->auth['perm'];
         } else if ($user_id && $this->studip_perms['studip'][$user_id]){
             return $this->studip_perms['studip'][$user_id];
-        } else if ($user_id) {
+        } else if ($user_id && $user_id !== 'nobody') {
             $db = new DB_Seminar("SELECT perms FROM auth_user_md5 WHERE user_id = '$user_id'");
             if (!$db->next_record()){
                 return false;

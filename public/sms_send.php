@@ -83,7 +83,7 @@ if($GLOBALS["ENABLE_EMAIL_ATTACHMENTS"]){
         }
     }
     if(Request::submitted('upload')){
-        if ($_FILES['the_file']['error'] === UPLOAD_ERR_OK && validate_upload($_FILES['the_file']['tmp_name'])) {
+        if ($_FILES['the_file']['error'] === UPLOAD_ERR_OK && validate_upload($_FILES['the_file'])) {
             if($current_size_of_attachments + $_FILES['the_file']['size'] > $max_size_of_attachments){
                 $msg = "error§" . sprintf(_("Die Gesamtgröße der angehängten Dateien überschreitet die zulässige Größe von %sMB."), round($max_size_of_attachments/1048576,1));
             } else {

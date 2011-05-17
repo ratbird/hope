@@ -1,5 +1,5 @@
-/*global window, $, jQuery */
 /*jslint browser: true, white: true, undef: true, nomen: true, eqeqeq: true, plusplus: true, bitwise: true, newcap: true, immed: true, indent: 2, onevar: false */
+/*global window, $, jQuery, _ */
 /* ------------------------------------------------------------------------
  * application.js
  * This file is part of Stud.IP - http://www.studip.de
@@ -45,11 +45,7 @@ if ("metadata" in jQuery) {
         var notification = $('<span class="notification" />').hide().insertBefore(this),
           changes = {marginLeft: 0, marginRight: 0};
 
-        if (position === 'right') {
-          changes.marginRight = notification.outerWidth(true) + 'px';
-        } else {
-          changes.marginLeft = notification.outerWidth(true) + 'px';
-        }
+        changes[position === 'right' ? 'marginRight' : 'marginLeft'] = notification.outerWidth(true) + 'px';
 
         $(this).data({
           ajax_notification: notification
@@ -136,7 +132,7 @@ if ("metadata" in jQuery) {
         var $this = $(this),
           toolbar = $('<div class="editor_toolbar" />');
 
-        jQuery.each(button_set, function (index, value) {
+        _.each(button_set, function (value) {
           $('<button />')
             .html(value.label)
             .addClass(value.name)
@@ -212,34 +208,38 @@ STUDIP.URLHelper = {
    * @return: url with all necessary parameters - non URI-encoded!
    */
   getURL: function (url, param_object) {
-    if (param_object === undefined) {
-      param_object = {};
+
+    var params = param_object ? _.clone(param_object) : {},
+        tmp, fragment, query;
+
+    tmp = url.split("#");
+    url = tmp[0];
+    fragment = tmp[1];
+
+    tmp = url.split("?");
+    url = tmp[0];
+    query = tmp[1];
+
+    if (url !== '') {
+      url = STUDIP.URLHelper.resolveURL(url);
     }
-    url = STUDIP.URLHelper.resolveURL(url);
-    // splitting the url:
-    url = url.split("#");
-    var anchor = (url.length > 1) ? url[url.length - 1] : "";
-    url = url[0].split("?");
-    var url_parameters = (url.length > 1) ? url[url.length - 1].split("&") : [];
-    var parameters = {};
-    jQuery.each(url_parameters, function (index, value) {
-      var assoc = value.split("=");
-      parameters[assoc[0]] = assoc[1];
+
+    // split query string and merge with param_object
+    _.each(query && query.split("&") || [], function (e) {
+      var pair = e.split("=");
+      if (!(pair[0] in params)) {
+        params[pair[0]] = pair[1];
+      }
     });
-    url = url[0];
-    //merging in the param_object - as you see this has got priority:
-    parameters = jQuery.extend(parameters, param_object);
-    // glueing together:
-    var param_strings = [];
-    jQuery.each(parameters, function (param, value) {
-      param_strings.push(param + "=" + value);
-    });
-    if (param_strings.length > 0) {
-      url += "?" + param_strings.join("&");
+
+    if (_.keys(params).length || url === '') {
+      url += "?" + jQuery.param(params);
     }
-    if (anchor !== "") {
-      url += "#" + anchor;
+
+    if (fragment) {
+      url += "#" + fragment;
     }
+
     return url;
   }
 };
@@ -277,7 +277,7 @@ STUDIP.study_area_selection = {
     });
   },
 
-  url: function (action, args) {
+  url: function (/* action, args...*/) {
     return STUDIP.ABSOLUTE_URI_STUDIP + 'dispatch.php/course/study_areas/' +
            jQuery.makeArray(arguments).join('/');
   },
@@ -289,11 +289,10 @@ STUDIP.study_area_selection = {
     jQuery.ajax({
       type: 'POST',
       url: STUDIP.study_area_selection.url('add', course_id || '-'),
-      data: ({id: id}),
+      data: {id: id},
       dataType: 'html',
       async: false, // Critical request thus synchronous
       success: function (data) {
-//      STUDIP.study_area_selection.swishAndFlick(id, 'study_area_selection_selected');
         jQuery('#study_area_selection_none').fadeOut();
         jQuery('#study_area_selection_selected').replaceWith(data);
         STUDIP.study_area_selection.refreshSelection();
@@ -313,10 +312,10 @@ STUDIP.study_area_selection = {
     jQuery.ajax({
       type: 'POST',
       url: STUDIP.study_area_selection.url('remove', course_id || '-'),
-      data: ({id: id}),
+      data: {id: id},
       dataType: 'html',
       async: false, // Critical request thus synchronous
-      success: function (data) {
+      success: function () {
         jQueryselection.fadeOut(function () {
           jQuery(this).remove();
         });
@@ -380,16 +379,9 @@ STUDIP.Tabs = (function () {
 
   // returns the largest feasible item
   function getLargest() {
-    var largest = 5, item, letters;
-
-    items.each(function () {
-      letters = jQuery(this).html().length;
-      if (letters > largest) {
-        item = this;
-        largest = letters;
-      }
+    return _.max(items, function (item) {
+      return jQuery(item).html().length;
     });
-    return item;
   }
 
   // truncates an item
@@ -416,12 +408,15 @@ STUDIP.Tabs = (function () {
       jQuery(list).data('old_width', jQuery(window).width());
 
       // strip contents and set titles
-      items.each(function (index, element) {
-        jQuery(element).html(jQuery.trim(jQuery(element).html()));
-        jQuery(element).attr('title', jQuery(element).html());
-      });
+      items
+        .html(function () {
+          return jQuery.trim(jQuery(this).html());
+        })
+        .attr('title', function () {
+          return jQuery(this).html();
+        });
 
-      jQuery(window).bind('resize', this.resize);
+      jQuery(window).resize(this.resize);
       this.compress();
     },
 
@@ -435,11 +430,12 @@ STUDIP.Tabs = (function () {
     },
 
     // event handler called when resizing the browser
+    // TODO (mlunzena): Inline this function!
     resize: function () {
       var new_width = jQuery(window).width();
       if (new_width > jQuery(list).data('old_width')) {
-        items.each(function () {
-          jQuery(this).html(jQuery(this).attr('title'));
+        items.html(function () {
+          return jQuery(this).attr('title');
         });
       }
       jQuery(list).data('old_width', new_width);
@@ -475,7 +471,7 @@ STUDIP.Title = (function () {
       title.text(jQuery.trim(title.text()));
       title.attr('title', title.text());
 
-      jQuery(window).bind('resize', this.resize);
+      jQuery(window).resize(this.resize);
       this.compress();
     },
 
@@ -488,6 +484,7 @@ STUDIP.Title = (function () {
     },
 
     // event handler called when resizing the browser
+    // TODO (mlunzena): Inline this function!
     resize: function () {
       var new_width = jQuery(window).width();
       if (new_width > jQuery(title).data('old_width')) {
@@ -530,10 +527,10 @@ STUDIP.Dialogbox = {
         width: Math.min(600, jQuery(window).width() - 64),
         height: 'auto',
         maxHeight: jQuery(window).height(),
-        close: function (event, ui) {
+        close: function () {
           STUDIP.Dialogbox.closeBox(id, true);
         },
-        drag: function (event, ui) {
+        drag: function () {
           STUDIP.Dialogbox.closeBox(id, false);
         }
       });
@@ -569,9 +566,9 @@ STUDIP.Dialogbox = {
     STUDIP.Dialogbox.closeForumPosting(id);
     STUDIP.Dialogbox.forumTimeout = window.setTimeout(function () {
       if (!data) {
-        jQuery.getJSON("dispatch.php/content_element/get_formatted/forum/" + id, function (data) {
-          STUDIP.Dialogbox.cache["forum_" + id] = data;
-          STUDIP.Dialogbox.openBox(id, data.title, data.content, coord, "forum");
+        jQuery.getJSON("dispatch.php/content_element/get_formatted/forum/" + id, function (new_data) {
+          STUDIP.Dialogbox.cache["forum_" + id] = new_data;
+          STUDIP.Dialogbox.openBox(id, new_data.title, new_data.content, coord, "forum");
         });
       } else {
         STUDIP.Dialogbox.openBox(id, data.title, data.content, coord, "forum");
@@ -604,10 +601,7 @@ STUDIP.Filesystem = {
   movelock       : false,         //wenn auf true gesetzt, findet gerade eine Animation statt.
   sendstop       : false,         //wenn auf true gesetzt, wurde eine Datei in einen Ordner gedropped und die Seite lädt sich gerade neu.
   getURL         : function (url) {
-    if (url) {
-      return url.split("#", 1)[0];
-    }
-    return document.URL.split("#", 1)[0];
+    return (url || document.URL).split("#", 1)[0];
   },
   /**
    * Lässt die gelben Pfeile verschwinden und ersetzt sie durch Anfassersymbole.
@@ -615,9 +609,8 @@ STUDIP.Filesystem = {
    * sehen nur die gelben Pfeile zum Sortieren.
    */
   unsetarrows     : function () {
-    jQuery("span.move_arrows,span.updown_marker").hide();
-    jQuery(".sortable .draggable").css("cursor", "move");
-    jQuery(".sortable .draggable_folder").css("cursor", "move");
+    jQuery("span.move_arrows, span.updown_marker").hide();
+    jQuery(".sortable").find(".draggable, .draggable_folder").css("cursor", "move");
   }
 };
 
@@ -627,8 +620,6 @@ STUDIP.Filesystem = {
  */
 STUDIP.Filesystem.setdraggables = function () {
   jQuery("div.folder_container.sortable").each(function () {
-    var id = this.getAttribute('id');
-    var md5_id = id.substr(id.lastIndexOf('_') + 1);
     //wenn es einen Anfasser gibt, also wenn Nutzer verschieben darf
     jQuery(this).sortable({
       axis: "y",
@@ -638,7 +629,7 @@ STUDIP.Filesystem.setdraggables = function () {
       update: function () {
         var id = this.getAttribute('id');
         var sorttype = (id.lastIndexOf('subfolders') !== -1 ? "folder" : "file");
-        md5_id = id.substr(id.lastIndexOf('_') + 1);
+        var md5_id = id.substr(id.lastIndexOf('_') + 1);
         var order = jQuery(this).sortable('serialize', {key: "order"}).split("&");
         order = jQuery.map(order, function (component) {
           return component.substr(component.lastIndexOf('=') + 1);
@@ -693,7 +684,7 @@ STUDIP.Filesystem.setdroppables = function () {
             copyfile: file_md5_id
           },
           success: function () {
-            location.href = adress + '&cmd=tree&open=' + folder_md5_id;
+            window.location.href = adress + '&cmd=tree&open=' + folder_md5_id;
           }
         });
       } else {
@@ -704,7 +695,7 @@ STUDIP.Filesystem.setdroppables = function () {
             movefile: file_md5_id
           },
           success: function () {
-            location.href = adress + '&cmd=tree&open=' + folder_md5_id;
+            window.location.href = adress + '&cmd=tree&open=' + folder_md5_id;
           }
         });
       }
@@ -956,14 +947,17 @@ STUDIP.QuickSearch = {
             data: send_vars,
             success: function (data) {
               var stripTags = /<\w+(\s+("[^"]*"|'[^']*'|[^>])+)?>|<\/\w+>/gi;
-              var suggestions = [];  //an array of possible selections
-              jQuery.each(data, function (i, val) {
+              //an array of possible selections
+              var suggestions = _.map(data, function (val) {
                 //adding a label and a hidden item_id - don't use "value":
-                suggestions.push({
-                  label: val.item_name,                       //what is displayed in the drobdown-boc
-                  item_id: val.item_id,                       //the hidden ID of the item
-                  value: val.item_search_name !== null ? val.item_search_name : jQuery("<div/>").html(val.item_name.replace(stripTags, "")).text()  //what is inserted in the visible input-box
-                });
+                return {
+                  //what is displayed in the drop down box
+                  label: val.item_name,
+                  //the hidden ID of the item
+                  item_id: val.item_id,
+                  //what is inserted in the visible input box
+                  value: val.item_search_name !== null ? val.item_search_name : jQuery("<div/>").html(val.item_name.replace(stripTags, "")).text()
+                };
               });
               //pass it to the function of UI-widget:
               add(suggestions);
@@ -1008,8 +1002,7 @@ STUDIP.MultiSelect = {
    */
   create: function (id, itemName) {
     if (!jQuery(id).attr('multiple')) {
-      jQuery(id).attr('multiple', 'multiple');
-      jQuery(id).css('height', '120px');
+      jQuery(id).attr('multiple', 'multiple').css('height', '120px');
     }
     jQuery(id).multiselect({
       sortable: true,
@@ -1034,8 +1027,8 @@ jQuery(function () {
  * ------------------------------------------------------------------------ */
 
 STUDIP.Browse = {
-  selectUser: function (username, name) {
-    location.href = STUDIP.URLHelper.getURL("about.php", {"username": username});
+  selectUser: function (username) {
+    window.location.href = STUDIP.URLHelper.getURL("about.php", {"username": username});
   }
 };
 
@@ -1067,10 +1060,7 @@ jQuery(function () {
     handles: 's',
     minHeight: 50
   });
-
-
 });
-
 
 
 /* ------------------------------------------------------------------------
@@ -1094,12 +1084,15 @@ jQuery(function ($) {
 
     var that = this;
     $.get($(this).attr('href'), function (response) {
-      var row = $('<tr />').addClass('loaded-details'),
-        cell = $('<td />')
-          .attr('colspan', $(that).closest('td').siblings().length + 1)
-          .html(response)
-          .appendTo(row);
-      $(that).hideAjaxNotification()
+      var row = $('<tr />').addClass('loaded-details');
+
+      $('<td />')
+        .attr('colspan', $(that).closest('td').siblings().length + 1)
+        .html(response)
+        .appendTo(row);
+
+      $(that)
+        .hideAjaxNotification()
         .closest('tr').after(row);
     });
 
@@ -1722,8 +1715,8 @@ STUDIP.Messaging = {
     }
     if (!jQuery("select#del_receiver [value=" + username + "]").length) {
       jQuery("select#del_receiver")
-        .append($('<option value="' + username + '">' + name + '</option>'))
-        .attr("size", $(this).attr("size") + 1);
+        .append(jQuery('<option value="' + username + '">' + name + '</option>'))
+        .attr("size", jQuery(this).attr("size") + 1);
       jQuery.ajax({
         url: "?",
         data: {
@@ -1731,7 +1724,9 @@ STUDIP.Messaging = {
           "add_receiver": [username]
         }
       });
-      window.setTimeout("$('input[name=adressee_parameter]').val('');", 10);
+      window.setTimeout(function () {
+        jQuery('input[name=adressee_parameter]').val('');
+      }, 10);
     }
   }
 };

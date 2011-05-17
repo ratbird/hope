@@ -34,6 +34,6 @@ test("add single button to toolbar", function () {
 
   ok(buttons.first().hasClass("klass"));
   equals(buttons[0].innerHTML, "label");
-  $("#main").show(); buttons.first().trigger('click'); $("#main").hide();
+  buttons.first().trigger('click');
   equals(this.textarea.val(), "<>");
 });

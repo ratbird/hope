@@ -1,36 +1,3 @@
-
-STUDIP.URLHelper.gestURL = function (url, param_object) {
-    if (param_object === undefined) {
-      param_object = {};
-    }
-    url = STUDIP.URLHelper.resolveURL(url);
-    // splitting the url:
-    url = url.split("#");
-    var anchor = (url.length > 1) ? url[url.length - 1] : "";
-    url = url[0].split("?");
-    var url_parameters = (url.length > 1) ? url[url.length - 1].split("&") : [];
-    var parameters = {};
-    jQuery.each(url_parameters, function (index, value) {
-      var assoc = value.split("=");
-      parameters[assoc[0]] = assoc[1];
-    });
-    url = url[0];
-    //merging in the param_object - as you see this has got priority:
-    parameters = jQuery.extend(parameters, param_object);
-    // glueing together:
-    var param_strings = [];
-    jQuery.each(parameters, function (param, value) {
-      param_strings.push(param + "=" + value);
-    });
-    if (param_strings.length > 0) {
-      url += "?" + param_strings.join("&");
-    }
-    if (anchor !== "") {
-      url += "#" + anchor;
-    }
-    return url;
-  };
-
 module("URLHelper#resolveURL", {
     setup: function () {
         this.original_uri = STUDIP.ABSOLUTE_URI_STUDIP;

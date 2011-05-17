@@ -174,30 +174,24 @@ var STUDIP = STUDIP || {};
  * "http://uni-adresse.de/studip/adresse.php?hello=world&mandatory=parameter#anchor"
  */
 STUDIP.URLHelper = {
-  base_url: null, //the base url for all links
-  /**
-   * base URL for all links generated from relative URLs
-   */
-  setBaseURL: function (url) {
-    this.base_url = url;
-  },
+
+  //the base url for all links
+  base_url: STUDIP.ABSOLUTE_URI_STUDIP,
+
   /**
    * method to extend short URLs like "about.php" to "http://.../about.php"
    */
   resolveURL: function (url) {
-    if (this.base_url === null) {
-      this.base_url = STUDIP.ABSOLUTE_URI_STUDIP;
-    }
-    if (this.base_url === "" ||
-        url.match(/^[a-z]+:/) !== null ||
+    if (!_.isString(this.base_url) ||
+        url.match(/^[a-zA-Z][a-zA-Z0-9+-.]*:/) !== null ||
         url.charAt(0) === "?") {
       //this method cannot do any more:
       return url;
     }
     var base_url = this.base_url;
     if (url.charAt(0) === "/") {
-      var host = this.base_url.match(/^[a-z]+:\/\/[\w:.\-]+/);
-      base_url = host ? host : '';
+      var host = this.base_url.match(/^[a-zA-Z][a-zA-Z0-9+-.]*:\/\/[\w:.\-]+/);
+      base_url = host ? host[0] : '';
     }
     return base_url + url;
   },

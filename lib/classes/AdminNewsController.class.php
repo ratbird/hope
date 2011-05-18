@@ -532,6 +532,7 @@ class AdminNewsController {
                     );
                 }
             }
+        } else if (isset($query)) {
             $this->db->query($query);
             while ($this->db->next_record()) {
                 $ranges[$this->db->f('id')] = array(

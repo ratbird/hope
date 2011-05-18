@@ -69,7 +69,6 @@ class AdminNewsController {
         $this->db = new DB_Seminar;
         $this->full_username = get_fullname(false, 'full', false);
         $this->get_news_perm();
-
         if ($this->news_perm[$news_range_id]["perm"]>=2 OR $perm->have_perm("root")) {
             $this->modus = "admin";
             if ($this->news_perm[$news_range_id]["name"]){
@@ -305,6 +304,9 @@ class AdminNewsController {
                 echo _("Nein");
             echo"</td></tr>";
         }
+        if (isDeputyEditAboutActivated()) {
+            $this->list_range_details("user");
+        }
         $this->list_range_details("sem");
         $this->list_range_details("inst");
         $this->list_range_details("fak");
@@ -460,12 +462,27 @@ class AdminNewsController {
     }
 
     function search_range($search_str = false) {
+        global $_fullname_sql;
         $this->search_result = (array)$this->search_result + (array)search_range($search_str, true);
         if (is_array($this->search_result) && count($this->search_result)){
             $query="SELECT range_id,COUNT(range_id) AS anzahl FROM news_range WHERE range_id IN ('".implode("','",array_keys($this->search_result))."') GROUP BY range_id";
             $this->db->query($query);
             while($this->db->next_record()) {
                 $this->search_result[$this->db->f("range_id")]["anzahl"]=$this->db->f("anzahl");
+            }
+        }
+        if (get_config('DEPUTIES_ENABLE')) {
+            $query = "SELECT DISTINCT d.range_id, s.Name, s.status, s.VeranstaltungsNummer, sd.name as sem_name FROM deputies d JOIN seminare s ON (d.range_id = s.Seminar_id) JOIN semester_data sd ON (s.start_time = sd.beginn) WHERE d.user_id = '".$GLOBALS["auth"]->auth["uid"]."'";
+            $this->db->query($query);
+            while ($this->db->next_record()) {
+                $this->search_result[$this->db->f("range_id")] = array("type" => "sem", "name" => $GLOBALS["SEM_TYPE"][$this->db->f("status")]["name"].": ".$this->db->f("Name")." (".$this->db->f("sem_name").") ["._("Vertretung")."]");
+            }
+            if (isDeputyEditAboutActivated()) {
+                $query = "SELECT DISTINCT d.range_id, ".$_fullname_sql['full']." AS name, a.username FROM deputies d JOIN auth_user_md5 a ON (d.range_id = a.user_id) JOIN user_info u ON (a.user_id=u.user_id) WHERE d.user_id = '".$GLOBALS["auth"]->auth["uid"]."'";
+                $this->db->query($query);
+                while ($this->db->next_record()) {
+                    $this->search_result[$this->db->f("range_id")] = array("type" => "user", "name" => $this->db->f("name"), "perm" => 2, "username" => $this->db->f("username"));
+                }
             }
         }
     }
@@ -482,7 +499,7 @@ class AdminNewsController {
     }
 
     function list_range_details($type) {
-        global $perm;
+        global $perm, $_fullname_sql;
         $ranges = array();
 
         switch ($type) {
@@ -499,6 +516,11 @@ class AdminNewsController {
                 $group = _("Fakultäten");
                 $query = "SELECT Institute.Institut_id AS id,Name AS name FROM user_inst LEFT JOIN Institute ON(user_inst.Institut_id=Institute.Institut_id AND Institute.Institut_id=fakultaets_id) WHERE NOT ISNULL(Institute.Institut_id) AND user_inst.user_id='".$this->user_id."' AND user_inst.inst_perms='autor' ORDER BY Name";
                 break;
+
+            case "user" :
+                $group = _("Andere Nutzerinnen und Nutzer, deren Vertretung ich bin");
+                $query = "SELECT DISTINCT d.range_id AS id, ".$_fullname_sql['full']." AS name FROM deputies d JOIN auth_user_md5 a ON (d.range_id = a.user_id) JOIN user_info u ON (a.user_id=u.user_id) WHERE d.user_id = '".$this->user_id."'";
+                break;
         }
 
         if ($perm->have_perm('autor')) {
@@ -510,7 +532,6 @@ class AdminNewsController {
                     );
                 }
             }
-        } else if (isset($query)) {
             $this->db->query($query);
             while ($this->db->next_record()) {
                 $ranges[$this->db->f('id')] = array(
@@ -549,7 +570,7 @@ class AdminNewsController {
 
 
     function get_news_perm() {
-        global $auth,$perm;
+        global $auth,$perm,$_fullname_sql;
         $this->news_perm[$this->user_id]=array("name"=>$this->full_username,"perm"=>3);
         if ($auth->auth["perm"]=="root"){
             $this->news_perm["studip"]=array("name"=>"Stud.IP Ankündigungen","perm"=>3);
@@ -596,6 +617,20 @@ class AdminNewsController {
                 $this->db->query($query);
                 while($this->db->next_record()){
                     $this->news_perm[$this->db->f("Institut_id")]=array("name"=>$this->db->f("Name"),"perm"=>3);
+                }
+            }
+            if (get_config('DEPUTIES_ENABLE')) {
+                $query = "SELECT DISTINCT d.range_id, s.Name, s.status, sd.name as sem_name FROM deputies d JOIN seminare s ON (d.range_id = s.Seminar_id) JOIN semester_data sd ON (s.start_time = sd.beginn) WHERE d.user_id = '".$GLOBALS["auth"]->auth["uid"]."'";
+                $this->db->query($query);
+                while ($this->db->next_record()) {
+                    $this->news_perm[$this->db->f("range_id")] = array("name" => $this->db->f("Name"), "perm" => 2);
+                }
+                if (isDeputyEditAboutActivated()) {
+                    $query = "SELECT DISTINCT d.range_id, ".$_fullname_sql['full']." AS name, a.username FROM deputies d JOIN auth_user_md5 a ON (d.range_id = a.user_id) JOIN user_info u ON (a.user_id=u.user_id) WHERE d.user_id = '".$GLOBALS["auth"]->auth["uid"]."'";
+                    $this->db->query($query);
+                    while ($this->db->next_record()) {
+                        $this->news_perm[$this->db->f("range_id")] = array("name" => $this->db->f("name"), "perm" => 2, "username" => $this->db->f("username"));
+                    }
                 }
             }
         }

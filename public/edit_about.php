@@ -542,7 +542,7 @@ switch($view) {
     case "privacy":
         PageLayout::setHelpKeyword("Basis.MyStudIPPrivacy");
         PageLayout::setTitle(_("Privatsphäre"));
-        if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE') && $my_about->auth_user["user_id"] != $user->id) {
+        if (isDeputyEditAboutActivated() && $my_about->auth_user["user_id"] != $user->id && !$perm->have_perm('admin')) {
             Navigation::activateItem('/profile/privacy');
             SkipLinks::addIndex(Navigation::getItem('/profile/privacy')->getTitle(), 'main_content', 100);
         } else {

@@ -282,4 +282,27 @@ function getMyDeputySeminarsQuery($type, $sem_number_sql, $sem_number_end_sql, $
         $where;
     return $query;
 }
+
+/**
+ * Checks if persons may be assigned as default deputy of other persons.
+ * 
+ * @return activation status of the default deputy functionality.
+ */
+function isDefaultDeputyActivated() {
+    return get_config('DEPUTIES_ENABLE') && 
+        get_config('DEPUTIES_DEFAULTENTRY_ENABLE');
+}
+
+/**
+ * Checks if default deputies may get the rights to edit their bosses profile 
+ * page.
+ * 
+ * @return activation status of the deputy boss profile page editing 
+ *         functionality.
+ */
+function isDeputyEditAboutActivated() {
+    return get_config('DEPUTIES_ENABLE') && 
+        get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && 
+        get_config('DEPUTIES_EDIT_ABOUT_ENABLE');
+}
 ?>

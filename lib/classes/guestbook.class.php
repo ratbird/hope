@@ -79,7 +79,9 @@ class Guestbook
     {
         global  $user;
 
-        if ($this->user_id == $user->id || $this->rights == TRUE)
+        if ($this->user_id == $user->id || $this->rights == TRUE || 
+                (isDeputyEditAboutActivated() && 
+                isDeputy($user->id, $this->user_id, true)))
             $this->rights = TRUE;
         else
             $this->rights = FALSE;

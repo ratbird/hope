@@ -126,7 +126,7 @@ class StudipNavigation extends Navigation
                 $navigation->addSubNavigation('login', new Navigation(_('Login'), 'edit_about.php', array('view' => 'Login')));
             }
 
-            if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && $perm->get_perm() == 'dozent') {
+            if (isDefaultDeputyActivated() && $perm->get_perm() == 'dozent') {
                 $navigation->addSubNavigation('deputies', new Navigation(_('Standardvertretung'), 'edit_about.php', array('view' => 'deputies')));
             }
 

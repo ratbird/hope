@@ -61,7 +61,9 @@ if (isset($_REQUEST["voteID"])) {
    if( !$rangeID ) $rangeID = $_REQUEST["rangeID"];
 }
 
-if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) || $auth->auth["uname"] == $rangeID ) ) {
+if ( ! ( $perm->have_studip_perm( "tutor", $rangeID ) || 
+        $auth->auth["uname"] == $rangeID || (isDeputyEditAboutActivated() && 
+        isDeputy($auth->auth["uid"], get_userid($rangeID), true)) ) ) {
     $reason = ( ! is_object($vote)
         ? _("Es macht wenig Sinn, die Editierseite aufzurufen, ohne die zu editierende Umfrage anzugeben...")
         : ( ! $vote->voteDB->isExistant($voteID)

@@ -42,7 +42,7 @@ $voteaction                                 = $_POST['voteaction'];
     if (empty($voteaction))     $voteaction = NULL;
 $showrangeID                                = $_POST['rangeID'];
     if(empty($showrangeID)) $showrangeID    = $_GET['showrangeID'];
-    if(empty($showrangeID)) $showrangeID    = $_GET['rangeID'];
+    if(empty($showrangeID)) $showrangeID    = $_GET['cid'];
     if(empty($showrangeID)) $showrangeID    = $_POST['showrangeID'];
     //<workaround author='anoack'>
     if( empty($showrangeID)
@@ -91,7 +91,8 @@ else
 $userID = $user->id;
 if (($showrangeID) && ($voteaction != "search")){
     if (($perm->have_studip_perm("tutor",$showrangeID)) ||
-        (get_username($userID) == $showrangeID)){
+        (get_username($userID) == $showrangeID) ||
+        (isDeputyEditAboutActivated() && isDeputy($userID, get_userid($showrangeID), true))){
     }
     else{
         //TODO: MessageBox verwenden
@@ -150,8 +151,12 @@ elseif ($rangemode == "dozent" OR $rangemode == "tutor") {
     foreach ($rangeARUser as $k => $v) {
         while (list($typen_key,$typen_value)=each($typen)){
             if ($v["type"] == $typen_key){
-                $range[] = array($k,$typen_value.": ".$v["name"]);
+                if ($v['type'] == 'user') {
+                    $range[] = array($v["username"],_('Profil').": ".$v["name"]);
+                } else {
+                    $range[] = array($k,$typen_value.": ".$v["name"]);
                 }
+            }
         }
         reset($typen);
     }
@@ -221,7 +226,7 @@ elseif (($voteaction == "search") && (($rangemode == "root") || ($rangemode == "
  * @param voteaction    string comprised the action
  */
 function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search = NULL, $referer = NULL){
-    global $perm;
+    global $perm, $user;
     $voteDB = new voteDB;
     $votechanged = NULL;
     $safeguard = "";
@@ -238,13 +243,15 @@ function callSafeguard($voteaction, $voteID = "", $showrangeID = NULL, $search =
     $votename = htmlReady($vote->getTitle($voteID));
     //$vote->finalize ();
 
-    if($rangeID = $vote->getRangeID())
+    if($rangeID = $vote->getRangeID()) {
 
     if (!($perm->have_studip_perm("tutor",$vote->getRangeID())) &&
-        (get_username($userID) != $vote->getRangeID())){
+            (get_username($user->id) != $vote->getRangeID()) &&
+            (isDeputyEditAboutActivated() && !isDeputy($user->id, get_userid($vote->getRangeID()), true))){
         $safeguard .= printSafeguard("ausruf", sprintf(_("Die Umfrage \"%s\" ist einem Bereich zugeordnet für den Sie keine Veränderungsrechte besitzen. Die Aktion wurde nicht ausgeführt."),$votename));
         $voteaction = "nothing";
     }
+}
 
     switch ($voteaction){
         case "change_visibility":

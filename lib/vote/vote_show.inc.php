@@ -57,11 +57,12 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
    }
 
    if ($perm->have_studip_perm ("tutor", $rangeID) ||
-       get_username($userID) == $rangeID)
+       get_username($userID) == $rangeID || 
+       (isDeputyEditAboutActivated() && 
+       isDeputy($userID, get_userid($rangeID), true)))
       $haveFullPerm = true;
    else
       $haveFullPerm = false;
-
    /* ---------------------------------------------------------------------- */
 
    /* Start waiting votes -------------------------------------------------- */
@@ -101,7 +102,9 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
        empty ($activeEvals) &&
        empty ($stoppedEvals) &&
        !($perm->have_studip_perm ("tutor", $rangeID) ||
-     get_username($userID) == $rangeID)) {
+     get_username($userID) == $rangeID ||
+       (isHomepage && isDeputyEditAboutActivated() && isDeputy($userID, get_userid($rangeID), true)))
+     ) {
      $voteDB->finalize ();
      return;
    }
@@ -113,11 +116,12 @@ function show_votes ($rangeID, $userID, $perm, $isHomepage = NO) {
    $width = ($isHomepage)? ' style="width: 100%;"' : "";
 
    if (($perm->have_studip_perm ("tutor", $rangeID) && $perm->have_perm('autor')) OR   // allow creation of evaluations for global autors as well
-       get_username($userID) == $rangeID)
+       get_username($userID) == $rangeID ||
+       ($isHomepage && isDeputyEditAboutActivated() && isDeputy($userID, get_userid($rangeID), true)))
       echo createBoxHeader(_("Umfragen"), $width, "",
                 VOTE_ICON_BIG,
                 _("Umfragen und mehr..."),
-                VOTE_FILE_ADMIN."?page=overview&rangeID=".$rangeID.
+                VOTE_FILE_ADMIN."?page=overview&cid=".$rangeID.
                 (get_username($userID) == $rangeID ? '' :
                 ($GLOBALS['SessSemName']["class"]=="sem"
                  ? "&new_sem=TRUE&view=vote_sem"

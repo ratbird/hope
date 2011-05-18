@@ -145,6 +145,8 @@ function show_news($range_id, $show_admin = FALSE, $limit = "", $open, $width = 
         $admin_link = "range_id=self";
     } else if ($range_id == "studip"){
         $admin_link = "range_id=studip";
+    } else if (isDeputyEditAboutActivated() && isDeputy($auth->auth["uid"], $range_id, true)) {
+        $admin_link = "range_id=".$range_id;
     }
 
     if (!empty($width)) {

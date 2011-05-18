@@ -1217,6 +1217,38 @@ function search_range($search_str = false, $search_user = false, $show_sem = tru
             $search_result[$db->f("Institut_id")]=array("type"=>$db->f("inst_type"),"name"=>$db->f("Name"));
         }
     }
+    if (get_config('DEPUTIES_ENABLE')) {
+        $query = "SELECT s.Seminar_id, CONCAT(IF(s.visible=0,CONCAT(s.Name, ' "._("(versteckt)")."'), s.Name), ' ["._("Vertretung")."]') AS Name ".
+            ($show_sem ? $show_sem_sql1 : "").
+            "FROM seminare s JOIN deputies d ON (s.Seminar_id=d.range_id) ".
+            ($show_sem ? $show_sem_sql2 : "").
+            "WHERE s.Name LIKE '%$search_str%' AND d.user_id='$user->id'
+            ORDER BY s.start_time DESC, Name";
+        $db->query($query);
+        while ($db->next_record()) {
+            $name = $db->f("Name")
+                . ($show_sem ? " (".$db->f('startsem')
+                . ($db->f('startsem') != $db->f('endsem') ? " - ".$db->f('endsem') : "")
+                . ")" : "");
+            $search_result[$db->f("Seminar_id")] = array("type"=>"sem",
+                                                        "starttime"=>$db->f('start_time'),
+                                                        "startsem"=>$db->f('startsem'),
+                                                        "name"=>$name);
+        }
+        if (isDeputyEditAboutActivated()) {
+            $query = "SELECT a.user_id, a.username, ".$_fullname_sql['full']." AS name
+                FROM auth_user_md5 a
+                    JOIN user_info USING (user_id) 
+                    JOIN deputies d ON (a.user_id=d.range_id)
+                WHERE d.user_id='$user->id' ORDER BY name ASC";
+            $db->query($query);
+            while ($db->next_record()) {
+                $search_result[$db->f("user_id")] = array("type" => "user", 
+                    "name" => $db->f("name")." (".$db->f("username").")", 
+                    "username" => $db->f("username"));
+            }
+        }
+    }
     return $search_result;
 }
 

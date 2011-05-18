@@ -58,7 +58,10 @@ if ($_REQUEST['range_id'] == "self"){
 PageLayout::setHelpKeyword("Basis.News");
 PageLayout::setTitle(_("Verwaltung von Ankündigungen"));
 
-if ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user'){
+if ($list || $view || ($news_range_id != $user->id && 
+        $news_range_id != 'studip') && $view_mode != 'user' && 
+        !(isDeputyEditAboutActivated() && 
+        isDeputy($auth->auth["uid"], $news_range_id, true))){
     include 'lib/admin_search.inc.php';
 
     if ($perm->have_perm('admin')) {
@@ -79,7 +82,7 @@ if ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip'
 
 $news = new AdminNewsController();
 
-PageLayout::setTitle(($SessSemName[1] && ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip') && $view_mode != 'user' ) ?  $SessSemName["header_line"] : $news->range_name ) . " - " . _("Verwaltung von Ankündigungen"));
+PageLayout::setTitle(($SessSemName[1] && ($list || $view || ($news_range_id != $user->id && $news_range_id != 'studip' && !(isDeputyEditAboutActivated() && isDeputy($user->id, $news_range_id, true))) && $view_mode != 'user' ) ?  $SessSemName["header_line"] : $news->range_name ) . " - " . _("Verwaltung von Ankündigungen"));
 
 // Start of Output
 include ('lib/include/html_head.inc.php'); // Output of html head

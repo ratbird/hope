@@ -57,7 +57,7 @@ PageLayout::setTitle(_("Verwaltung von Umfragen und Tests"));
 
 require_once 'lib/admin_search.inc.php';
 
-if ($list || $view) {
+if ($list || $view && !(isDeputyEditAboutActivated() && isDeputy($auth->auth["uid"], get_userid(Request::get('cid')), true))) {
     if ($perm->have_perm('admin')) {
         if ($links_admin_data['topkat'] == 'sem') {
             Navigation::activateItem('/admin/course/vote');

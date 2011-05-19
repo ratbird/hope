@@ -20,6 +20,18 @@
  * Boston, MA  02110-1301  USA
  */
 
+
+
+/* ------------------------------------------------------------------------
+ * Remove "no-js" class from <html> element, if it exists:
+ * Add the new classes to the <html> element.
+ *
+ * Copied from https://github.com/Modernizr/Modernizr/blob/master/modernizr.js
+ * ------------------------------------------------------------------------ */
+(function (elem) {
+    elem.className = elem.className.replace(/\bno-js\b/, '') + ' js';
+}(document.documentElement));
+
 /* ------------------------------------------------------------------------
  * jQuery plugin "metadata" configuration
  * ------------------------------------------------------------------------ */

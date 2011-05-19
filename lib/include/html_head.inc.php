@@ -35,7 +35,7 @@
 // +---------------------------------------------------------------------------+
 ?>
 <!DOCTYPE html>
-<html>
+<html class="no-js">
 <head>
     <meta charset="WINDOWS-1252">
     <title>

@@ -384,10 +384,12 @@ STUDIP.Tabs = (function () {
   }
 
   // returns the largest feasible item
-  function getLargest() {
-    return _.max(items, function (item) {
+  function findCompressable() {
+    var largest = _.max(items, function (item) {
       return jQuery(item).html().length;
     });
+
+    return largest && jQuery(largest).html().length > 5 ? largest : null;
   }
 
   // truncates an item
@@ -430,7 +432,7 @@ STUDIP.Tabs = (function () {
     // try to fit all the tabs into a single line
     compress: function () {
       var item;
-      while (needs_compression() && (item = getLargest())) {
+      while (needs_compression() && (item = findCompressable())) {
         truncate(item);
       }
     },

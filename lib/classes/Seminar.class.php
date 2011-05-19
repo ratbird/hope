@@ -102,9 +102,9 @@ class Seminar
 
     function GetSemIdByDateId($date_id)
     {
-        $db = new DB_Seminar("SELECT range_id FROM termine WHERE termin_id = '$date_id'");
-        $db->next_record();
-        return $db->f(0);
+        $stmt = DBManager::get()->prepare("SELECT range_id FROM termine WHERE termin_id = ? LIMIT 1");
+        $stmt->execute(array($date_id));
+        return $stmt->fetchColumn();
     }
 
     /**
@@ -368,73 +368,71 @@ class Seminar
     *
     * the complete data of the object will be loaded from the db
     * @access   public
-    * @return   boolean succesfull restore?
+    * @throws   Exception  if there is no such course
+    * @return   boolean    always true
     */
     function restore()
     {
         $this->irregularSingleDates = null;
         $this->issues = null;
 
-        $query = sprintf("SELECT * FROM seminare WHERE Seminar_id='%s' ",$this->id);
-        $this->db->query($query);
-        if ($this->db->num_rows() == 0) {
-            throw new Exception( sprintf(_('Fehler: Konnte das Seminar mit der ID %s nicht finden!'),$this->id));
+        $stmt = DBManager::get()->prepare("SELECT * FROM seminare WHERE Seminar_id=? LIMIT 1");
+        $stmt->execute(array($this->id));
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            throw new Exception(sprintf(_('Fehler: Konnte das Seminar mit der ID %s nicht finden!'), $this->id));
         }
 
-        if ($this->db->next_record()) {
-            $this->seminar_number = $this->db->f("VeranstaltungsNummer");
-            $this->institut_id = $this->db->f("Institut_id");
-            $this->name = $this->db->f("Name");
-            $this->subtitle = $this->db->f("Untertitel");
-            $this->status = $this->db->f("status");
-            $this->description = $this->db->f("Beschreibung");
-            $this->location = $this->db->f("Ort");
-            $this->misc = $this->db->f("Sonstiges");
-            $this->password = $this->db->f("Passwort");
-            $this->read_level = $this->db->f("Lesezugriff");
-            $this->write_level = $this->db->f("Schreibzugriff");
-            $this->semester_start_time = $this->db->f("start_time");
-            $this->semester_duration_time = $this->db->f("duration_time");
-            $this->form = $this->db->f("art");
-            $this->participants = $this->db->f("teilnehmer");
-            $this->requirements = $this->db->f("vorrausetzungen");
-            $this->orga = $this->db->f("lernorga");
-            $this->leistungsnachweis = $this->db->f("leistungsnachweis");
+        $this->seminar_number         = $row["VeranstaltungsNummer"];
+        $this->institut_id            = $row["Institut_id"];
+        $this->name                   = $row["Name"];
+        $this->subtitle               = $row["Untertitel"];
+        $this->status                 = $row["status"];
+        $this->description            = $row["Beschreibung"];
+        $this->location               = $row["Ort"];
+        $this->misc                   = $row["Sonstiges"];
+        $this->password               = $row["Passwort"];
+        $this->read_level             = $row["Lesezugriff"];
+        $this->write_level            = $row["Schreibzugriff"];
+        $this->semester_start_time    = $row["start_time"];
+        $this->semester_duration_time = $row["duration_time"];
+        $this->form                   = $row["art"];
+        $this->participants           = $row["teilnehmer"];
+        $this->requirements           = $row["vorrausetzungen"];
+        $this->orga                   = $row["lernorga"];
+        $this->leistungsnachweis      = $row["leistungsnachweis"];
 
-            $this->metadate = new MetaDate($this->id);
-            $this->metadate->setSeminarStartTime($this->db->f('start_time'));
-            $this->metadate->setSeminarDurationTime($this->db->f('duration_time'));
+        $this->metadate = new MetaDate($this->id);
+        $this->metadate->setSeminarStartTime($row['start_time']);
+        $this->metadate->setSeminarDurationTime($row['duration_time']);
 
-            $this->mkdate = $this->db->f("mkdate");
-            $this->chdate = $this->db->f("chdate");
-            $this->ects = $this->db->f("ects");
-            $this->admission_endtime = $this->db->f("admission_endtime");
-            $this->admission_turnout = $this->db->f("admission_turnout");
-            $this->admission_binding = $this->db->f("admission_binding");
-            $this->admission_type = $this->db->f("admission_type");
-            $this->admission_selection_take_place = $this->db->f("admission_selection_take_place");
-            $this->admission_group = $this->db->f("admission_group");
-            $this->admission_prelim = $this->db->f("admission_prelim");
-            $this->admission_prelim_txt = $this->db->f("admission_prelim_txt");
-            $this->admission_starttime = $this->db->f("admission_starttime");
-            $this->admission_endtime_sem = $this->db->f("admission_endtime_sem");
-            $this->admission_disable_waitlist = $this->db->f("admission_disable_waitlist");
-            $this->admission_enable_quota = $this->db->f("admission_enable_quota");
-            $this->visible = $this->db->f("visible");
-            $this->showscore = $this->db->f("showscore");
-            $this->modules = $this->db->f("modules");
-            $this->is_new = false;
-            $this->members = array();
-            $this->admission_members = array();
-            $this->admission_studiengang = null;
+        $this->mkdate                         = $row["mkdate"];
+        $this->chdate                         = $row["chdate"];
+        $this->ects                           = $row["ects"];
+        $this->admission_endtime              = $row["admission_endtime"];
+        $this->admission_turnout              = $row["admission_turnout"];
+        $this->admission_binding              = $row["admission_binding"];
+        $this->admission_type                 = $row["admission_type"];
+        $this->admission_selection_take_place = $row["admission_selection_take_place"];
+        $this->admission_group                = $row["admission_group"];
+        $this->admission_prelim               = $row["admission_prelim"];
+        $this->admission_prelim_txt           = $row["admission_prelim_txt"];
+        $this->admission_starttime            = $row["admission_starttime"];
+        $this->admission_endtime_sem          = $row["admission_endtime_sem"];
+        $this->admission_disable_waitlist     = $row["admission_disable_waitlist"];
+        $this->admission_enable_quota         = $row["admission_enable_quota"];
+        $this->visible                        = $row["visible"];
+        $this->showscore                      = $row["showscore"];
+        $this->modules                        = $row["modules"];
+        $this->is_new                         = false;
+        $this->members                        = array();
+        $this->admission_members              = array();
+        $this->admission_studiengang          = null;
 
-            $this->old_settings = $this->getSettings();
+        $this->old_settings = $this->getSettings();
 
-            return TRUE;
-
-        }
-
-        return FALSE;
+        return TRUE;
     }
 
     /**
@@ -1782,50 +1780,48 @@ class Seminar
 
     function getNumberOfParticipantsBySeminarId($sem_id)
     {
-        $params = func_get_args();
+        $db = DBManager::get();
+        $stmt1 = $db->prepare("SELECT
+                               COUNT(Seminar_id) AS anzahl,
+                               COUNT(IF(status='dozent',Seminar_id,NULL)) AS anz_dozent,
+                               COUNT(IF(status='tutor',Seminar_id,NULL)) AS anz_tutor,
+                               COUNT(IF(status='autor',Seminar_id,NULL)) AS anz_autor,
+                               COUNT(IF(status='user',Seminar_id,NULL)) AS anz_user
+                               FROM seminar_user
+                               WHERE Seminar_id = ?
+                               GROUP BY Seminar_id");
+        $stmt1->execute(array($sem_id));
+        $numbers = $stmt1->fetch(PDO::FETCH_ASSOC);
 
-        // init vars
-        $db1 = new DB_Seminar();
-        $db2 = new DB_Seminar();
+        $stmt2 = $db->prepare("SELECT COUNT(*) as anzahl
+                               FROM admission_seminar_user
+                               WHERE seminar_id = ?
+                               AND status = 'accepted'");
+        $stmt2->execute(array($sem_id));
+        $acceptedUsers = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+
         $count = 0;
+        if ($numbers["anzahl"]) {
+            $count += $numbers["anzahl"];
+        }
+        if ($acceptedUsers["anzahl"]) {
+            $count += $acceptedUsers["anzahl"];
+        }
+
         $participant_count = array();
-
-        $db1->query($query = " SELECT
-                COUNT(Seminar_id) AS anzahl,
-                COUNT(IF(status='dozent',Seminar_id,NULL)) AS anz_dozent,
-                COUNT(IF(status='tutor',Seminar_id,NULL)) AS anz_tutor,
-                COUNT(IF(status='autor',Seminar_id,NULL)) AS anz_autor,
-                COUNT(IF(status='user',Seminar_id,NULL)) AS anz_user
-                FROM seminar_user
-                WHERE Seminar_id = '{$sem_id}'
-                GROUP BY Seminar_id");
-
-        $db1->next_record();
-
-        $db2->query(" SELECT COUNT(*) as anzahl
-                FROM admission_seminar_user
-                WHERE seminar_id = '$sem_id'
-                AND status = 'accepted'");
-
-        $db2->next_record();
-
-        if ($db1->f("anzahl")) $count += $db1->f("anzahl");
-        if ($db2->f("anzahl")) $count += $db2->f("anzahl");
-
-        $participant_count['total'] = $count ? $count : 0;
-        $participant_count['lecturers'] = $db1->f('anz_dozent') ? (int)$db1->f('anz_dozent') : 0;
-        $participant_count['tutors'] = $db1->f('anz_tutor') ? (int)$db1->f('anz_tutor') : 0;
-        $participant_count['authors'] = $db1->f('anz_autor') ? (int)$db1->f('anz_autor') : 0;
-        $participant_count['users'] = $db1->f('anz_user') ? (int)$db1->f('anz_user') : 0;
+        $participant_count['total']     = $count;
+        $participant_count['lecturers'] = $numbers['anz_dozent'] ? (int) $numbers['anz_dozent'] : 0;
+        $participant_count['tutors']    = $numbers['anz_tutor']  ? (int) $numbers['anz_tutor']  : 0;
+        $participant_count['authors']   = $numbers['anz_autor']  ? (int) $numbers['anz_autor']  : 0;
+        $participant_count['users']     = $numbers['anz_user']   ? (int) $numbers['anz_user']   : 0;
 
         // return specific parameter if
-        if (sizeof($params) > 1)
-        {
-            if (in_array($params[1], array_keys($participant_count)))
-            {
+        $params = func_get_args();
+        if (sizeof($params) > 1) {
+            if (in_array($params[1], array_keys($participant_count))) {
                 return $participant_count[$params[1]];
-            } else
-            {
+            } else {
                 trigger_error(get_class($this)."::__getParticipantInfos - unknown parameter requested");
             }
         }

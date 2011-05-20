@@ -125,7 +125,7 @@ $SEM_CLASS[1]=array("name"=>_("Lehre"),                     //the name of the cl
 $SEM_CLASS[2]=array("name"=>_("Organisation"),
                     "compact_mode"=>TRUE,
                     "workgroup_mode"=>TRUE,
-                    "only_inst_user"=>TRUE,
+                    "only_inst_user"=>FALSE,
                     "turnus_default"=>-1,
                     "default_read_level"=>2,
                     "default_write_level" =>2,
@@ -139,11 +139,12 @@ $SEM_CLASS[2]=array("name"=>_("Organisation"),
                     "literature"=>TRUE,
                     "chat"=>TRUE,
                     "wiki"=>TRUE,
-                    "description"=>_("Hier finden Sie virtuelle Veranstaltungen zum Thema Forschung an der Universit&auml;t"),
-                    "create_description"=>_("In dieser Kategorie k&ouml;nnen sie virtuelle Veranstaltungen f&uuml;r Forschungsprojekte anlegen."));
+                    "description"=>_("Hier finden Sie virtuelle Veranstaltungen zu verschiedenen Gremien an der Universit&auml;t"),
+                    "create_description"=>_("Um virtuelle Veranstaltungen f&uuml;r Uni-Gremien anzulegen, verwenden Sie diese Kategorie"));
 
 $SEM_CLASS[3]=array("name"=>_("Community"),
                     "compact_mode"=>TRUE,
+                    "only_inst_user"=>FALSE,
                     "turnus_default"=>-1,
                     "default_read_level"=>1,
                     "default_write_level" =>1,
@@ -156,8 +157,8 @@ $SEM_CLASS[3]=array("name"=>_("Community"),
                     "scm"=>FALSE,
                     "participants"=>TRUE,
                     "chat"=>TRUE,
-                    "description"=>_("Hier finden Sie virtuelle Veranstaltungen zu verschiedenen Gremien an der Universit&auml;t"),
-                    "create_description"=>_("Um virtuelle Veranstaltungen f&uuml;r Uni-Gremien anzulegen, verwenden Sie diese Kategorie"));
+                    "description"=>_("Hier finden Sie virtuelle Veranstaltungen zu unterschiedlichen Themen"),
+                    "create_description"=>_("Wenn Sie Veranstaltungen als Diskussionsgruppen zu unterschiedlichen Themen anlegen m&ouml;chten, verwenden Sie diese Kategorie"));
 
 // more classes can be added below (please adhere exactly to the structure given above)
 

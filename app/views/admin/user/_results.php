@@ -66,7 +66,7 @@
         <? if ($user["changed_timestamp"] != "") :
             $inactive = time() - $user['changed_timestamp'];
             if ($inactive < 3600 * 24) {
-                $inactive = date('H:i:s', $inactive);
+                $inactive = gmdate('H:i:s', $inactive);
             } else {
                 $inactive = floor($inactive / (3600 * 24)).' '._('Tage');
             }

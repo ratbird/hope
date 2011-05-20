@@ -1,7 +1,7 @@
 <?
 # Lifter010: TODO
 ?>
-<table cellspacing="0" cellpadding="0" border="0" width="99%">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
     <tr>
         <td class="blank" style="padding-left: 8px;" valign="top" width="80%">
             <?= $this->render_partial('shared/message_list', array('messages' => $messages)); ?>

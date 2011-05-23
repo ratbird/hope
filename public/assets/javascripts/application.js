@@ -1139,6 +1139,8 @@ STUDIP.Calendar = {
     cell_height: 20,
     the_entry_content: null,
     entry: null,
+    click_start_hour: -1,
+    click_entry: null,
 
     day_names: [
         "Montag",
@@ -1234,7 +1236,7 @@ STUDIP.Schedule = {
      * @param  int     the day that has been clicked
      * @param  int     the start-hour that has been clicked
      */
-    newEntry: function (entry, day, hour) {
+    newEntry: function (entry, day, start_hour, end_hour) {
         // do not allow creation of new entry, if one of the following popups is visible!
         if (jQuery('#edit_sem_entry').is(':visible') ||
             jQuery('#edit_entry').is(':visible') ||
@@ -1252,11 +1254,12 @@ STUDIP.Schedule = {
         this.entry = entry;
 
         // fill values of overlay
-        jQuery('#entry_hour_start').text(hour);
-        jQuery('#entry_hour_end').text(hour + 1);
+        jQuery('#entry_hour_start').text(start_hour);
+        jQuery('#entry_hour_end').text(end_hour);
         jQuery('#entry_day').text(STUDIP.Calendar.day_names[day].toLocaleString());
 
-        jQuery('#new_entry_hour').val(hour);
+        jQuery('#new_entry_start_hour').val(start_hour);
+        jQuery('#new_entry_end_hour').val(end_hour);
         jQuery('#new_entry_day').val(day);
 
         // show the overlay
@@ -1302,9 +1305,9 @@ STUDIP.Schedule = {
 
         // set the values for detailed view
         jQuery('select[name=entry_day]').val(Number(jQuery('#new_entry_day').val()) + 1);
-        jQuery('input[name=entry_start_hour]').val(jQuery('#new_entry_hour').val());
+        jQuery('input[name=entry_start_hour]').val(parseInt(jQuery('#new_entry_start_hour').val()));
         jQuery('input[name=entry_start_minute]').val('00');
-        jQuery('input[name=entry_end_hour]').val(parseInt(jQuery('#new_entry_hour').val(), 10) + 1);
+        jQuery('input[name=entry_end_hour]').val(parseInt(jQuery('#new_entry_end_hour').val(), 10));
         jQuery('input[name=entry_end_minute]').val('00');
 
         jQuery('input[name=entry_title]').val(jQuery('#entry_title').val());
@@ -1361,7 +1364,6 @@ STUDIP.Schedule = {
             jQuery('#edit_entry').remove();
             jQuery('body').append(data);
         });
-
     },
 
     /**

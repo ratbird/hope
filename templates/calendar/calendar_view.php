@@ -19,19 +19,48 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
 
   <? if ($js_function = $calendar_view->getInsertFunction()) : ?>
   jQuery(function() {
-    jQuery('[id^=calendar_view_<?= $view_id ?>_column_]').bind('click', function(event) {
+
+    jQuery('[id^=calendar_view_<?= $view_id ?>_column_]').bind('mousedown', function(event) {
         var column_id = this.id.substr(this.id.lastIndexOf("_")+1);
-        var stunde = Math.floor(((event.pageY - Math.ceil(jQuery(this).offset().top)) - 2) / STUDIP.Calendar.cell_height) + STUDIP.Calendar.start_hour;
-        var new_entry = jQuery(STUDIP.Calendar.the_entry_content);
-        jQuery("span.empty_entry_start", new_entry).text(stunde);
-        jQuery("span.empty_entry_end", new_entry).text(stunde + 1);
-        jQuery(new_entry).css("top", Math.floor((stunde - STUDIP.Calendar.start_hour) * STUDIP.Calendar.cell_height) + "px")
-                         .css("height", (STUDIP.Calendar.cell_height - 2) + "px")
-                         .css("display", "none")
-                         .appendTo('#calendar_view_<?= $view_id ?>_column_' + column_id)
-                         .fadeIn();
+        
+        STUDIP.Calendar.click_start_hour = Math.floor(((event.pageY - Math.ceil(jQuery(this).offset().top)) - 2)
+            / STUDIP.Calendar.cell_height) + STUDIP.Calendar.start_hour;
+
+        STUDIP.Calendar.click_entry = jQuery(STUDIP.Calendar.the_entry_content);
+        jQuery("span.empty_entry_start", STUDIP.Calendar.click_entry).text(STUDIP.Calendar.click_start_hour);
+        jQuery("span.empty_entry_end", STUDIP.Calendar.click_entry).text(STUDIP.Calendar.click_start_hour + 1);
+        jQuery(STUDIP.Calendar.click_entry).css("top", Math.floor((STUDIP.Calendar.click_start_hour - STUDIP.Calendar.start_hour) * STUDIP.Calendar.cell_height - 2) + "px")
+            .css("height", STUDIP.Calendar.cell_height + "px")
+            .css("display", "none")
+            .appendTo('#calendar_view_<?= $view_id ?>_column_' + column_id)
+            .fadeIn();
+    });
+
+    jQuery('[id^=calendar_view_<?= $view_id ?>_column_]').bind('mousemove', function(event) {
+        if (STUDIP.Calendar.click_entry) {
+            var end_stunde = Math.max(Math.floor(((event.pageY - Math.ceil(jQuery(this).offset().top)) - 2)
+                / STUDIP.Calendar.cell_height) + STUDIP.Calendar.start_hour, STUDIP.Calendar.click_start_hour);
+
+            jQuery("span.empty_entry_end", STUDIP.Calendar.click_entry).text(end_stunde + 1);
+            jQuery(STUDIP.Calendar.click_entry).css('height', (STUDIP.Calendar.cell_height * ((end_stunde + 1) - STUDIP.Calendar.click_start_hour) - 2) + 'px');
+            window.getSelection().removeAllRanges();
+        }
+    });
+
+    jQuery('[id^=calendar_view_<?= $view_id ?>_column_]').bind('mouseup', function(event) {
+        var column_id = this.id.substr(this.id.lastIndexOf("_")+1);
+        var end_stunde = Math.max(Math.floor(((event.pageY - Math.ceil(jQuery(this).offset().top)) - 2)
+            / STUDIP.Calendar.cell_height) + STUDIP.Calendar.start_hour, STUDIP.Calendar.click_start_hour);
+
         var func = <?= $js_function ?>;
-        func(new_entry, column_id, stunde);
+
+        jQuery("span.empty_entry_end", STUDIP.Calendar.click_entry).text(end_stunde + 1);
+        jQuery(STUDIP.Calendar.click_entry).css('height', (STUDIP.Calendar.cell_height * ((end_stunde + 1) - STUDIP.Calendar.click_start_hour) - 2) + 'px');
+
+        func(STUDIP.Calendar.click_entry, column_id, STUDIP.Calendar.click_start_hour, end_stunde + 1);
+
+        STUDIP.Calendar.click_entry = null;
+        STUDIP.Calendar.click_start_hour = null;
     });
   });
   <? endif ?>

@@ -206,7 +206,9 @@ class Calendar_ScheduleController extends AuthenticatedController
             PageLayout::addStylesheet('style_print.css', array('media' => 'print'));
         }
 
-        $this->calendar_view->setInsertFunction("function (entry, column, hour) { STUDIP.Schedule.newEntry(entry, column, hour) }");
+        $this->calendar_view->setInsertFunction("function (entry, column, hour, end_hour) {
+            STUDIP.Schedule.newEntry(entry, column, hour, end_hour)
+        }");
 
         $this->show_hidden    = $show_hidden;
 
@@ -230,13 +232,14 @@ class Calendar_ScheduleController extends AuthenticatedController
         }
 
         $error = false;
-        if (Request::submitted('hour') || Request::submitted('day')) {
-            $data['start']   = Request::int('hour') * 100;
-            $data['end']     = (Request::int('hour')  + 1) * 100;
-            $data['day']     = Request::int('day')+1;
+        if (Request::int('start_hour') && Request::int('day') && Request::int('end_hour')) {
+            $data['start']   = Request::int('start_hour') * 100;
+            $data['end']     = Request::int('end_hour')   * 100;
+            $data['day']     = Request::int('day') + 1;
 
             // validate the submitted data
-            if ($data['start'] >= $data['end'] || Request::int('hour') < 0 || Request::int('hour') > 23) {
+            if ($data['start'] >= $data['end'] || Request::int('start_hour') < 0 || Request::int('start_hour') > 23
+                || Request::int('end_hour') < 0 || Request::int('end_hour') > 24) {
                 $error = true;
             }
         } else {
@@ -252,9 +255,6 @@ class Calendar_ScheduleController extends AuthenticatedController
             ) {
                 $error = true;
             }
-
-
-
         }
 
         if ($error) {

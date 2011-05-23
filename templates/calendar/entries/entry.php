@@ -7,7 +7,7 @@ $element_id = md5(uniqid());
 
 <div id="schedule_entry_<?= $element_id ?>_<?= $entry['id'] ?>" class="schedule_entry <?= ((isset($entry['visible']) && !$entry['visible']) ? 'invisible_entry' : '') . ($entry['onClick'] ? " clickable" : "") ?>" style="top: <?= $top ?>px; height: <?= $height ?>px; width: <?= $width ?>%<?= ($col > 0) ? ';left:'. ($col * $width) .'%' : '' ?>" title="<?= htmlReady($entry['title']) ?>">
     <a<? /*  $entry['url'] ? ' href="'.$entry['url'].'"' : "" */ ?>
-        <?= $entry['onClick'] ? 'onClick="STUDIP.Calendar.clickEngine('. $entry['onClick'].', this, event); return false;"' : '' ?>>
+        <?= $entry['onClick'] ? 'onMouseDown="STUDIP.Calendar.clickEngine('. $entry['onClick'].', this, event); return false;"' : '' ?>>
     <!-- for safari5 we need to set the height for the dl as well -->
     <dl class="hover" style="height: <?= $height - 2 ?>px;
         border: 1px solid <?= $entry['color'] ?>;

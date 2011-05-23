@@ -23,7 +23,8 @@
         <br>
         <div style="text-align: center">
             <input type="image" <?= makebutton('speichern', 'src') ?>>
-            <input type="hidden" id="new_entry_hour" name="hour" value="">
+            <input type="hidden" id="new_entry_start_hour" name="start_hour" value="">
+            <input type="hidden" id="new_entry_end_hour" name="end_hour" value="">
             <input type="hidden" id="new_entry_day" name="day" value="">
             <span onClick="STUDIP.Schedule.cancelNewEntry();"><?= makebutton('abbrechen') ?></span>
         </div>

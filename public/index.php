@@ -58,20 +58,6 @@ include_once 'lib/classes/RSSFeed.class.php';
 // -- wir sind jetzt definitiv in keinem Seminar, also... --
 closeObject();
 
-UrlHelper::bindLinkParam('index_data', $index_data);
-
-//Auf und Zuklappen News
-require_once 'lib/showNews.inc.php';
-process_news_commands($index_data);
-
-// Auf- und Zuklappen Termine
-if (Request::get('dopen')) {
-    $index_data['dopen'] = Request::option('dopen');
-}
-if (Request::get('dclose')) {
-    unset($index_data['dopen']);
-}
-
 if (get_config('NEWS_RSS_EXPORT_ENABLE') && ($auth->is_authenticated() && $user->id != 'nobody')){
     $rss_id = StudipNews::GetRssIdFromRangeId('studip');
     if ($rss_id) {
@@ -93,6 +79,21 @@ include 'lib/include/header.php';
 
 // only for authenticated users
 if ($auth->is_authenticated() && $user->id != 'nobody') {
+
+    UrlHelper::bindLinkParam('index_data', $index_data);
+
+    //Auf und Zuklappen News
+    require_once 'lib/showNews.inc.php';
+    process_news_commands($index_data);
+
+    // Auf- und Zuklappen Termine
+    if (Request::get('dopen')) {
+        $index_data['dopen'] = Request::option('dopen');
+    }
+    if (Request::get('dclose')) {
+        unset($index_data['dopen']);
+    }
+
     if ($perm->have_perm('root')) { // root
         $ueberschrift = _("Startseite für Root bei Stud.IP");
     } elseif ($perm->have_perm('admin')) { // admin

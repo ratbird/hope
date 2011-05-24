@@ -493,21 +493,23 @@ class Seminar_Auth extends Auth {
     function auth_preauth() {
         global $auto_user,$auto_response,$auto_id,$resolution,$TMP_PATH;
         // is Single Sign On activated?
-        if ($GLOBALS["sso"]){
+        if ( ($provider = Request::option('sso')) ) {
             // then do login
-            $provider = $_REQUEST['sso'];
-            $authplugin = StudipAuthAbstract::GetInstance($provider);
-            $authplugin->authenticateUser("","","");
-            if ($authplugin->getUser()){
-                $uid = $authplugin->getStudipUserid($authplugin->getUser());
-                $this->db->query(sprintf("select username,perms,auth_plugin from %s where user_id = '%s'",$this->database_table,$uid));
-                $this->db->next_record();
-                $this->auth["jscript"] = true;
-                $this->auth["perm"]  = $this->db->f("perms");
-                $this->auth["uname"] = $this->db->f("username");
-                $this->auth["auth_plugin"]  = $this->db->f("auth_plugin");
-                $this->auth_set_user_settings($uid);
-                return $uid;
+            if ( ($authplugin = StudipAuthAbstract::GetInstance($provider)) ) {
+                $authplugin->authenticateUser("","","");
+                if ($authplugin->getUser()){
+                    $uid = $authplugin->getStudipUserid($authplugin->getUser());
+                    $this->db->query(sprintf("select username,perms,auth_plugin from %s where user_id = '%s'",$this->database_table,$uid));
+                    $this->db->next_record();
+                    $this->auth["jscript"] = true;
+                    $this->auth["perm"]  = $this->db->f("perms");
+                    $this->auth["uname"] = $this->db->f("username");
+                    $this->auth["auth_plugin"]  = $this->db->f("auth_plugin");
+                    $this->auth_set_user_settings($uid);
+                    return $uid;
+                }
+            } else {
+                return false;
             }
         }
         // end of single sign on

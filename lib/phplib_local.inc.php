@@ -491,7 +491,6 @@ class Seminar_Auth extends Auth {
     }
 
     function auth_preauth() {
-        global $auto_user,$auto_response,$auto_id,$resolution,$TMP_PATH;
         // is Single Sign On activated?
         if ( ($provider = Request::option('sso')) ) {
             // then do login
@@ -523,48 +522,11 @@ class Seminar_Auth extends Auth {
                 if ($aktuell-filemtime("$TMP_PATH/$entry") > 30){
                     unlink("$TMP_PATH/$entry");
                 }
-            }
-        }
-        $folder->close;
-        if (file_exists("$TMP_PATH/auto_key_$auto_id")){
-            $fp = @fopen("$TMP_PATH/auto_key_$auto_id","r");
-            $auto_challenge = fgets($fp,100);
-            fclose($fp);
-            unlink("$TMP_PATH/auto_key_$auto_id");
-        } else {
-            $this->error_msg= _("Fehler beim Auto-Login!") . "<br>";
-            return false;
-        }
-        $this->auth["uname"] = $auto_user;  // This provides access for "loginform.ihtml"
-        $this->auth["jscript"] = true;
-        $expected_response = "";
-        for ($i = 0;$i < strlen($auto_response)/2;$i++){
-            $s = (256-(ord(substr($auto_challenge,$i,1))-hexdec(substr($auto_response,$i*2,2)))) % 256;
-            $expected_response .= chr($s);
-        }
-        $check_auth = StudipAuthAbstract::CheckAuthentication($auto_user,$expected_response,$this->auth['jscript']);
-        if ($check_auth['uid']){
-            $uid = $check_auth['uid'];
-            $this->db->query(sprintf("select * from %s where user_id = '%s'",$this->database_table,$uid));
-            $this->db->next_record();
-            if ($this->db->f("perms") == "root" || $this->db->f("perms") == "admin"){
-                $this->error_msg= sprintf(_("Autologin ist mit dem Status: %s nicht möglich!"), $this->auth["perm"]);
+            } else {
                 return false;
             }
-            if($check_auth['need_email_activation'] == $uid){
-                $this->need_email_activation = $uid;
-                $_SESSION['semi_logged_in'] = $uid;
-                return false;
-            }
-            $this->auth["perm"]  = $this->db->f("perms");
-            $this->auth["uname"] = $this->db->f("username");
-            $this->auth["auth_plugin"]  = $this->db->f("auth_plugin");
-            $this->auth_set_user_settings($uid);
-            return $uid;
-        } else {
-            $this->error_msg = $check_auth['error'];
-            return false;
         }
+        // end of single sign on
     }
 
     function auth_loginform() {

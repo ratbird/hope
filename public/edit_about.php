@@ -294,7 +294,7 @@ if (check_ticket($studipticket)) {
             $my_about->db->query("UPDATE user_info SET preferred_language = '".Request::get('forced_language')."' WHERE user_id='" . $my_about->auth_user["user_id"] ."'");
             $_SESSION['_language'] = $_language = Request::get('forced_language');
         }
-        
+
         $forum["jshover"] = Request::int('jshover');
         $my_studip_settings["startpage_redirect"] = Request::int('personal_startpage');
         UserConfig::get($user->id)->store('ACCESSKEY_ENABLE', Request::int('accesskey_enable'));
@@ -684,19 +684,6 @@ function update_pw_fields() {
 
 <?
 } // end if view == Daten
-elseif( $view == 'Login') {
-?>
-<script type="text/javascript" language="javascript">
-<!--
-function oeffne()
-{
-    fenster=window.open('get_auto.php','','scrollbars=no,width=400,height=150','resizable=no');
-    fenster.focus();
-}
-// -->
-</SCRIPT>
-<?
-} // end if view == Login
 } // Ende nur wenn JS aktiv
 
 include ('lib/include/header.php');   // Output of Stud.IP head
@@ -1486,19 +1473,11 @@ if ($view == 'notification') {
 
 if ($view == 'Login') {
     echo '<tr><td id="main_content" colspan="2" class="blank">'."<br><br>\n" ;
-    if ($my_about->check == 'user' && !$perm->have_perm('admin')) {
-        echo _("Um die automatische Anmeldung zu nutzen, m&uuml;ssen Sie Ihre pers&ouml;nliche Login-Datei auf Ihren Rechner kopieren. Mit dem folgenden Link &ouml;ffnet sich ein Fenster, in dem Sie Ihr Passwort eingeben m&uuml;ssen.") . " ";
-        echo _("Dann wird die Datei erstellt und zu Ihrem Rechner geschickt.") . "<br><br>\n";
-        echo '<div align="center"><b><a href="javascript:oeffne();">' . _("Auto-Login-Datei erzeugen") . '</a></b></div>';
-        echo "<br><br>\n" . _("<b>ACHTUNG!</b> Die automatische Anmeldung stellt eine große Sicherheitslücke dar. Jeder, der Zugriff auf Ihren Rechner hat, kann sich damit unter Ihrem Namen in Stud.IP einloggen!");
-        echo "<br><br>\n";
+    if ($my_about->check == 'user') {
         echo _("Eine sichere Variante besteht aus folgendem Link:") . "<br>\n";
         echo '<div align="center"><b><a href="index.php?again=yes&shortcut=' . $auth->auth['uname'] . '">'. sprintf( _("Stud.IP - Login (%s)"), $auth->auth['uname']) ."</a></b></div><br>\n";
         echo _("Speichern Sie diesen Link als Bookmark oder Favoriten.") . "<br>\n";
         echo _("Er f&uuml;hrt Sie direkt zum Login-Bildschirm von Stud.IP mit Ihrem schon eingetragenen Benutzernamen. Sie m&uuml;ssen nur noch Ihr Passwort eingeben.");
-    } else {
-        echo _("Als Administrator d&uuml;rfen Sie dieses Feature nicht nutzen - Sie tragen Verantwortung!");
-
     }
     echo "<br>\n</td></tr>\n";
 }

@@ -277,3 +277,11 @@ INSERT INTO `siteinfo_details` (`detail_id`, `rubric_id`, `position`, `name`, `c
 
 INSERT INTO `siteinfo_rubrics` (`rubric_id`, `position`, `name`) VALUES(1, NULL, '[lang=de]Kontakt[/lang][lang=en]Contact[/lang]');
 INSERT INTO `siteinfo_rubrics` (`rubric_id`, `position`, `name`) VALUES(2, NULL, '[lang=de]Über Stud.IP[/lang][lang=en]About Stud.IP[/lang]');
+
+--
+-- Daten für Tabelle `user_visibility`
+--
+
+INSERT INTO `user_visibility` (`user_id`, `online`, `chat`, `search`, `email`, `homepage`, `default_homepage_visibility`, `mkdate`) VALUES
+('studip', 1, 1, 1, 1, '', 0, UNIX_TIMESTAMP());
+

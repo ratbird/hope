@@ -895,7 +895,7 @@ if ($view == 'Daten') {
     } else {
         echo "<b><label for=\"title_front\">" . _("Titel:") . "</label> </b></td>";
         echo "<td class=\"".$cssSw->getClass()."\" align=\"left\">&nbsp;";
-        echo "\n<select aria-label=\"" . _("Titel auswählen") . " name=\"title_front_chooser\" onChange=\"document.pers.title_front.value=document.pers.title_front_chooser.options[document.pers.title_front_chooser.selectedIndex].text;\">";
+        echo "\n<select aria-label=\"" . _("Titel auswählen") . "\" name=\"title_front_chooser\" onChange=\"document.pers.title_front.value=document.pers.title_front_chooser.options[document.pers.title_front_chooser.selectedIndex].text;\">";
         for($i = 0; $i < count($TITLE_FRONT_TEMPLATE); ++$i) {
             echo "\n<option";
             if ($TITLE_FRONT_TEMPLATE[$i] == $my_about->user_info['title_front']) {

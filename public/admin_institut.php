@@ -408,7 +408,7 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
         <td class="<? echo $cssSw->getClass() ?>" ><?=_("Fakult&auml;t:")?></td>
         <td class="<? echo $cssSw->getClass() ?>" align=left>
         <?php
-        if ($perm->is_fak_admin() && !LockRules::Check($i_id, 'fakultaets_id') && ($perm->have_studip_perm("admin",$db->f("fakultaets_id")) || $i_id == "new")) {
+        if ($perm->is_fak_admin() && !LockRules::Check($i_id, 'fakultaets_id') && ($perm->have_studip_perm("admin",$db->f("fakultaets_id")) || $i_view == "new")) {
             if ($_num_inst) {
                 echo "\n<font size=\"-1\"><b>" . _("Diese Einrichtung hat den Status einer Fakult&auml;t.") . "<br>";
                 printf(_("Es wurden bereits %s andere Einrichtungen zugeordnet."), $_num_inst) . "</b></font>";
@@ -568,17 +568,18 @@ if ($perm->have_studip_perm("admin",$i_view) || $i_view == "new") {
     <td width="270" class="blank" align="right" valign="top">
             <?
             $aktionen = array();
-            $aktionen[] = array(
-              "icon" => "icons/16/black/edit.png",
-              "text" => '<a href="' .
-                        URLHelper::getLink('dispatch.php/institute/avatar/update/' . $i_id) .
-                        '">' . _("Bild ändern") . '</a>');
-            $aktionen[] = array(
-              "icon" => "icons/16/black/trash.png",
-              "text" => '<a href="' .
-                        URLHelper::getLink('dispatch.php/institute/avatar/delete/'. $i_id) .
-                        '">' . _("Bild löschen") . '</a>');
-
+            if ($i_view != "new") {
+                $aktionen[] = array(
+                  "icon" => "icons/16/black/edit.png",
+                  "text" => '<a href="' .
+                            URLHelper::getLink('dispatch.php/institute/avatar/update/' . $i_id) .
+                            '">' . _("Bild ändern") . '</a>');
+                $aktionen[] = array(
+                  "icon" => "icons/16/black/trash.png",
+                  "text" => '<a href="' .
+                            URLHelper::getLink('dispatch.php/institute/avatar/delete/'. $i_id) .
+                            '">' . _("Bild löschen") . '</a>');
+            }
             $infobox = array(
                 array("kategorie" => _("Aktionen:"),
                       "eintrag"   => $aktionen

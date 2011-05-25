@@ -852,19 +852,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $new_data[$key]['category'] = $entry['category'];
             $db_result[$key] = $new_visibility;
         }
-        $existing = DBManager::get()->query(
-            "SELECT `user_id` FROM `user_visibility` WHERE `user_id`='".
-            $this->auth_user["user_id"]."'")->fetch();
-        // Write serialized data back to database.
-        if ($existing) {
-            $query = "UPDATE user_visibility SET homepage='".json_encode($db_result).
-                "' WHERE user_id='".$this->auth_user['user_id']."'";
-        } else {
-            $query = "INSERT INTO `user_visibility` SET `user_id`='".
-                $this->auth_user['user_id']."', `homepage`='".json_encode($db_result).
-                "', `mkdate`=".time();
-        }
-        $success = DBManager::get()->exec($query);
+        $success = $this->change_homepage_visibility($db_result);
         if ($success) {
             $result = $new_data;
         }
@@ -905,18 +893,20 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
      */
     function change_homepage_visibility($data) {
         $success = false;
-        $existing = DBManager::get()->query(
-            "SELECT `user_id` FROM `user_visibility` WHERE `user_id`='".
-            $this->auth_user["user_id"]."'")->fetch();
+        $db = DBManager::get();
+        $quoted_data = $db->quote($data);
+        $existing = $db->query(
+            "SELECT `user_id` FROM `user_visibility` WHERE `user_id`=".
+            $db->quote($this->auth_user["user_id"]))->fetch();
         if ($existing) {
-            $query = "UPDATE `user_visibility` SET `homepage`='".json_encode($data).
-                "' WHERE user_id='".$this->auth_user["user_id"]."'";
+            $query = "UPDATE `user_visibility` SET `homepage`=".$db->quote(json_encode($data)).
+                " WHERE user_id=".$db->quote($this->auth_user["user_id"]);
         } else {
-            $query = "INSERT INTO `user_visibility` SET `user_id`='".
-                $this->auth_user["user_id"]."', `homepage`='".
-                json_encode($data)."', `mkdate`=".time();
+            $query = "INSERT INTO `user_visibility` SET `user_id`=".
+                $db->quote($this->auth_user["user_id"]).", `homepage`=".
+                $db->quote(json_encode($data)).", `mkdate`=".time();
         }
-        $success = DBManager::get()->exec($query);
+        $success = $db->exec($query);
         return $success;
     }
 

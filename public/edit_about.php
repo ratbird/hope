@@ -343,8 +343,8 @@ if (check_ticket($studipticket)) {
 
     if (Request::submitted('change_homepage_visibility')) {
         $data = array();
-        foreach($my_about->get_homepage_elements() as $key => $value) {
-            $data[$key] = Request::int($key) !== null ? Request::int($key) : $value;
+        foreach(array_keys($my_about->get_homepage_elements()) as $key) {
+            if (Request::int($key) !== null) $data[$key] = Request::int($key);
         }
         $success = $my_about->change_homepage_visibility($data);
         if ($success) {

@@ -894,7 +894,6 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
     function change_homepage_visibility($data) {
         $success = false;
         $db = DBManager::get();
-        $quoted_data = $db->quote($data);
         $existing = $db->query(
             "SELECT `user_id` FROM `user_visibility` WHERE `user_id`=".
             $db->quote($this->auth_user["user_id"]))->fetch();

@@ -31,6 +31,8 @@ class RolePersistence
     const ROLES_CACHE_KEY = 'plugins/rolepersistence/roles';
     const ROLES_PLUGINS_CACHE_KEY = 'plugins/rolepersistence/roles_plugins/';
 
+    private static $user_roles = array();
+
     /**
      * Enter description here...
      *
@@ -71,6 +73,7 @@ class RolePersistence
     {
         // sweep roles cache, see #getAllRoles
         StudipCacheFactory::getCache()->expire(self::ROLES_CACHE_KEY);
+        self::$user_roles = array();
 
         $db = DBManager::get();
 
@@ -102,6 +105,7 @@ class RolePersistence
 
         // sweep roles cache
         StudipCacheFactory::getCache()->expire(self::ROLES_CACHE_KEY);
+        self::$user_roles = array();
 
         $db = DBManager::get();
         $stmt = $db->prepare("DELETE FROM roles WHERE roleid=? AND system='n'");
@@ -136,6 +140,7 @@ class RolePersistence
         $stmt = DBManager::get()->prepare("REPLACE INTO roles_user ".
           "(roleid, userid) VALUES (?, ?)");
         $stmt->execute(array($roleid, $user->getUserid()));
+        self::$user_roles = array();
     }
 
     /**
@@ -147,30 +152,28 @@ class RolePersistence
      */
     public function getAssignedRoles($userid, $implicit = false)
     {
-        if ($implicit && is_object($GLOBALS['perm']))
-        {
-            $global_perm = $GLOBALS['perm']->get_perm($userid);
+        $key = $userid . (int)$implicit;
+        if (!array_key_exists($key, self::$user_roles)) {
+            if ($implicit && is_object($GLOBALS['perm']))
+            {
+                $global_perm = $GLOBALS['perm']->get_perm($userid);
 
-            $stmt = DBManager::get()->prepare(
+                $stmt = DBManager::get()->prepare(
               "SELECT r.roleid FROM roles_user r ".
               "WHERE r.userid=? ".
               "UNION ".
               "SELECT rp.roleid FROM roles_studipperms rp WHERE rp.permname = ?");
-            $stmt->execute(array($userid, $global_perm));
-        }
-        else
-        {
-            $stmt = DBManager::get()->prepare("SELECT r.roleid FROM roles_user r WHERE r.userid=?");
-            $stmt->execute(array($userid));
+                $stmt->execute(array($userid, $global_perm));
+            }
+            else
+            {
+                $stmt = DBManager::get()->prepare("SELECT r.roleid FROM roles_user r WHERE r.userid=?");
+                $stmt->execute(array($userid));
+            }
+            self::$user_roles[$key] = $stmt->fetchAll(PDO::FETCH_COLUMN);
         }
 
-        $assignedroles = array();
-        $roles = self::getAllRoles();
-        while ($row = $stmt->fetch())
-        {
-            $assignedroles[] = $roles[$row["roleid"]];
-        }
-        return $assignedroles;
+        return array_intersect_key(self::getAllRoles(), array_keys(self::$user_roles[$key]));
     }
 
     /**
@@ -203,6 +206,7 @@ class RolePersistence
     {
         $stmt = DBManager::get()->prepare("DELETE FROM roles_user WHERE roleid=? AND userid=?");
         $stmt->execute(array($role->getRoleid(),$user->getUserid()));
+        self::$user_roles = array();
     }
 
     /**

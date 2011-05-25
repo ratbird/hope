@@ -599,8 +599,10 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 }
                 $my_obj[$object_id]["newparticipants"] = $db2->f("neue");
                 $my_obj[$object_id]["countparticipants"] = $db2->f("count");
-                if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
-                    $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
+                if ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj[$object_id]['status'], words('dozent tutor'))) {
+                    if ($my_obj[$object_id]['last_modified'] < $db2->f('last_modified')){
+                        $my_obj[$object_id]['last_modified'] = $db2->f('last_modified');
+                    }
                 }
                 if (SeminarCategories::GetByTypeId($my_obj[$object_id]['sem_status'])->studygroup_mode) {
                     $nav = new Navigation('participants', 'dispatch.php/course/studygroup/members/'. $object_id);
@@ -609,7 +611,7 @@ function get_my_obj_values (&$my_obj, $user_id, $modules = NULL)
                 }
                 $neue = $my_obj[$object_id]["newparticipants"] + $my_obj[$object_id]["new_accepted_participants"];
                 $count = $my_obj[$object_id]["countparticipants"] + $my_obj[$object_id]["count_accepted_participants"];
-                if ($neue && $GLOBALS['perm']->have_studip_perm('tutor', $object_id)) {
+                if ($neue && ($GLOBALS['perm']->have_perm('admin', $user_id) || in_array($my_obj[$object_id]['status'], words('dozent tutor')))) {
                     $nav->setImage('icons/16/red/new/persons.png', array('title' =>
                         sprintf(_('%s TeilnehmerInnen, %s neue'), $count, $neue)));
                 } else if ($count) {

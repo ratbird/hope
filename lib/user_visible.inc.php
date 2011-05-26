@@ -120,7 +120,7 @@ function get_vis_query($table_alias = 'auth_user_md5', $context='') {
      *  should be used.
      */
     if ($context) {
-        $context_default = (int)DbManager::get()->query("SELECT $context FROM user_visibility WHERE user_id='studip' LIMIT 1")->fetchColumn();
+        $context_default = (int) get_config(strtoupper($context).'_VISIBILITY_DEFAULT');
         $contextQuery = " AND (IFNULL(user_visibility.$context, ".
             "$context_default) = 1 OR $table_alias.visible = 'always')";
     }
@@ -276,11 +276,13 @@ function get_local_visibility_by_id($user_id, $context, $return_user_perm=false)
         "(u.`user_id`=a.`user_id`) WHERE a.`user_id`='".$user_id."'");
     $data = $stmt->fetch();
     if ($data[$context] === null) {
-        $stmt = DBManager::get()->query("SELECT `".$context.
-            "` FROM `user_visibility` WHERE `user_id`='studip'");
         $user_perm = $data['perm'];
-        $data = $stmt->fetch();
         $data['perms'] = $user_perm;
+        if (get_config(strtoupper($context).'_VISIBILITY_DEFAULT')) {
+            $data[$context] = true;
+        } else {
+            $data[$context] = false;
+        }
     }
     // Valid context given.
     if ($data[$context]) {

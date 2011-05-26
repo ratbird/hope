@@ -172,8 +172,7 @@ class RolePersistence
             }
             self::$user_roles[$key] = $stmt->fetchAll(PDO::FETCH_COLUMN);
         }
-
-        return array_intersect_key(self::getAllRoles(), array_keys(self::$user_roles[$key]));
+        return array_intersect_key(self::getAllRoles(), array_flip(self::$user_roles[$key]));
     }
 
     /**

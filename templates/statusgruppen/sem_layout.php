@@ -8,11 +8,11 @@
             <?= $content_for_layout ?>
         </td>
         <td class="blank">&nbsp;</td>
-        <td class="blank" width="240" valign="top">
+        <td class="blank" style="padding-right: 8px; vertical-align: top; width: 248px">
             <?= $this->render_partial('statusgruppen/sem_infobox.php') ?>
         </td>
     </tr>
     <tr>
         <td class="blank" colspan="3">&nbsp;</td>
     </tr>
-<table>
+</table>

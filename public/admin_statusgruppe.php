@@ -82,7 +82,7 @@ if ($_range_type != 'sem' || !$perm->have_studip_perm('tutor', $range_id)) {
 
 if(LockRules::Check($range_id, 'groups')) {
         $lockdata = LockRules::getObjectRule($range_id);
-        $msg = 'error§' . _("Die Gruppenfunktionen der Veranstaltung können nicht verändert werden.").'§';
+        $msg = 'error§' . _("Die Gruppen / Funktionen dieser Veranstaltung dürfen nicht verändert werden.").'§';
         if ($lockdata['description']){
             $msg .= "info§" . fixlinks(htmlReady($lockdata['description'])).'§';
         }
@@ -285,7 +285,7 @@ if ($_REQUEST['cmd'] == 'deleteRole') {
 }
 
 // adding a new role
-if ($_REQUEST['cmd'] == 'addRole' && !isset($_REQUEST['choosePreset'])) {
+if ($_REQUEST['cmd'] == 'addRole' && !Request::submitted('choosePreset')) {
     // to prevent url-hacking for changing the data of an existing role
     $role_id = md5(uniqid(rand()));
     if (!Statusgruppe::roleExists($role_id)) {
@@ -368,7 +368,7 @@ if ($statusgruppen && sizeof($statusgruppen) > 0) {
         $role = new Statusgruppe($_REQUEST['role_id']);
         $template->set_attribute('role_data', $role->getData());
         $template->set_attribute('edit_role', $role->getId());
-    } else if (isset($_REQUEST['choosePreset'])) {
+    } else if (Request::submitted('choosePreset')) {
         $template->set_attribute('role_data', array('name' => $_REQUEST['presetName']));
     }
     $template->set_attribute('show_search_and_members_form', !LockRules::Check($range_id, 'participants'));
@@ -388,7 +388,7 @@ else {
     $template->set_attribute('range_id', $range_id);
     $template->set_attribute('seminar_class', SeminarCategories::GetBySeminarId($range_id)->id);
 
-    if (isset($_REQUEST['choosePreset'])) {
+    if (Request::submitted('choosePreset')) {
         $template->set_attribute('role_data', array('name' => $_REQUEST['presetName']));
     }
 

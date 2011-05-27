@@ -1306,7 +1306,7 @@ STUDIP.Schedule = {
 
         // set the values for detailed view
         jQuery('select[name=entry_day]').val(Number(jQuery('#new_entry_day').val()) + 1);
-        jQuery('input[name=entry_start_hour]').val(parseInt(jQuery('#new_entry_start_hour').val()));
+        jQuery('input[name=entry_start_hour]').val(parseInt(jQuery('#new_entry_start_hour').val(), 10));
         jQuery('input[name=entry_start_minute]').val('00');
         jQuery('input[name=entry_end_hour]').val(parseInt(jQuery('#new_entry_end_hour').val(), 10));
         jQuery('input[name=entry_end_minute]').val('00');

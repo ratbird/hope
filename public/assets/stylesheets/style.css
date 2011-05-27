@@ -1558,7 +1558,8 @@ div.snatch div {
 
 #schedule_entry_new dl {
     border: 1px solid #5C2D64;
-    background-image: url('../images/calendar/category3.jpg');
+    background-color: #7C5783;
+    background-image: url('../images/calendar/category_neutral.png');
 }
 
 #schedule_entry_new dt {

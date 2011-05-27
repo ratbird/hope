@@ -1141,6 +1141,7 @@ STUDIP.Calendar = {
     entry: null,
     click_start_hour: -1,
     click_entry: null,
+    click_in_progress: false,
 
     day_names: [
         "Montag",
@@ -1434,6 +1435,9 @@ STUDIP.Schedule = {
             return true;
         }
         jQuery(element).fadeOut('fast');
+
+        STUDIP.Calendar.click_in_progress = false;
+
         return false;
     },
 

@@ -51,7 +51,7 @@
             <? endif ?>
 
             <? if ($show_entry) : ?>
-            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="STUDIP.Schedule.cancelNewEntry(); return false;"><?= makebutton('abbrechen') ?></a>
+            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="STUDIP.Schedule.cancelNewEntry(); STUDIP.Calendar.click_in_progress = false;return false;"><?= makebutton('abbrechen') ?></a>
             <? else: ?>
             <a href="javascript:STUDIP.Schedule.cancelNewEntry()"><?= makebutton('abbrechen') ?></a>
             <? endif ?>

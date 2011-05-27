@@ -62,7 +62,7 @@ $sem = Seminar::getInstance($show_entry['id']);
                 </a>
             <? endif ?>
 
-            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="jQuery('#edit_sem_entry').fadeOut('fast'); return false">
+            <a href="<?= $controller->url_for('calendar/schedule') ?>" onClick="jQuery('#edit_sem_entry').fadeOut('fast'); STUDIP.Calendar.click_in_progress = false; return false">
                 <?= makebutton('abbrechen') ?>
             </a>
         </div>

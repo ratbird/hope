@@ -20,7 +20,13 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
   <? if ($js_function = $calendar_view->getInsertFunction()) : ?>
   jQuery(function() {
 
+    jQuery('[id^=calendar_view_<?= $view_id ?>_column_] div.schedule_entry').bind('mousedown', function(event) {
+        STUDIP.Calendar.click_in_progress = true;
+    });
+
     jQuery('[id^=calendar_view_<?= $view_id ?>_column_]').bind('mousedown', function(event) {
+        if (STUDIP.Calendar.click_in_progress) return;
+
         var column_id = this.id.substr(this.id.lastIndexOf("_")+1);
         
         STUDIP.Calendar.click_start_hour = Math.floor(((event.pageY - Math.ceil(jQuery(this).offset().top)) - 2)
@@ -37,6 +43,8 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
     });
 
     jQuery('[id^=calendar_view_<?= $view_id ?>_column_]').bind('mousemove', function(event) {
+        if (STUDIP.Calendar.click_in_progress) return;
+
         if (STUDIP.Calendar.click_entry) {
             var end_stunde = Math.max(Math.floor(((event.pageY - Math.ceil(jQuery(this).offset().top)) - 2)
                 / STUDIP.Calendar.cell_height) + STUDIP.Calendar.start_hour, STUDIP.Calendar.click_start_hour);
@@ -48,6 +56,8 @@ $cell_width = floor (100 / sizeof($calendar_view->getColumns()));
     });
 
     jQuery('[id^=calendar_view_<?= $view_id ?>_column_]').bind('mouseup', function(event) {
+        if (STUDIP.Calendar.click_in_progress) return;
+
         var column_id = this.id.substr(this.id.lastIndexOf("_")+1);
         var end_stunde = Math.max(Math.floor(((event.pageY - Math.ceil(jQuery(this).offset().top)) - 2)
             / STUDIP.Calendar.cell_height) + STUDIP.Calendar.start_hour, STUDIP.Calendar.click_start_hour);

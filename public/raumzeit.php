@@ -181,7 +181,7 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
 ?>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
     <tr>
-        <td class="blank" width="100%" valign="top">
+        <td class="blank" width="100%" valign="top" style="padding-left: 8px">
             <?= $adminTopLinks ? $adminTopLinks->render() : "" ?>
             <table width="99%" border="0" cellpadding="2" cellspacing="0">
 
@@ -202,7 +202,7 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
 
             <tr>
                 <td colspan="9" class="blue_gradient">
-                    &nbsp;<b><?=_("Regelmäßige Zeiten")?></b>
+                    <b><?=_("Regelmäßige Zeiten")?></b>
                 </td>
             </tr>
             <tr>
@@ -211,8 +211,7 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                         <form action="<?= URLHelper::getLink() ?>" method="post">
                         <?= CSRFProtection::tokenTag() ?>
                         <? } ?>
-                        <font size="-1">
-                        &nbsp;<?=_("Startsemester")?>:&nbsp;
+                        <?=_("Startsemester")?>:
                         <?
                             if ($perm->have_perm('tutor') && !$_LOCKED) {
                                 echo "<select name=\"startSemester\">\n";
@@ -251,27 +250,8 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                                 }
                                 ?>
                                 <option value="-1"<?=($sem->getEndSemester() == -1) ? 'selected' : ''?>><?=_("unbegrenzt")?></option>
-                                <?
-                            /*} else {      // dozent or tutor may only selecte a duration of one or two semesters or what admin has choosen
-                                $sem2 = '';
-                                foreach ($all_semester as $val) {
-                                    if (($sem2 == '') && ($val['beginn'] > $sem->getStartSemester())) {
-                                        echo '<option value="'.$val['beginn'].'"'.(($sem->getEndSemester() == $val['beginn']) ? ' selected' : '').'>2 '._("Semester").'</option>';
-                                        $sem2 = $val['beginn'];
-                                    }
-                                    if ( ($val['beginn'] == $sem->getEndSemester() && ($sem2 != $val['beginn']))) {
-                                        echo '<option value="'.$val['beginn'].'"'.(($sem->getEndSemester() == $val['beginn']) ? ' selected' : '').'>'.$val['name'].'</option>';
-                                    }
-                                }
-                                if ($sem->getEndSemester() == -1) {
-                                    ?>
-                                    <option value="-1" selected>unbegrenzt</option>
-                                    <?
-                                }
-                            }*/
-                            ?>
                         </select>
-                        &nbsp;&nbsp;
+
                         <input type="image" <?=makebutton('uebernehmen', 'src')?> align="absmiddle">
                         <input type="hidden" name="cmd" value="selectSemester">
                         <? } else {
@@ -394,11 +374,11 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                 </tr>
                 <?
                 endif;
-                        }
-                        echo "</form>";
-                    }
+                } ?>
+                </form>
+            <? }
 
-                if ($newCycle) {
+            if ($newCycle) {
             ?>
                 <tr>
                     <?
@@ -421,13 +401,10 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                 <tr>
                     <td class="blank" colspan="9">
                         <br>
-                        <font size="-1">
-                            &nbsp;&nbsp;
-                            <?=_("Regelmäßigen Zeiteintrag")?>
-                            <a href="<?= URLHelper::getLink('?cmd=addCycle#newCycle') ?>">
-                                <img <?=makebutton('hinzufuegen', 'src')?> border="0" align="absmiddle">
-                            </a>
-                        </font>
+                        <?=_("Regelmäßigen Zeiteintrag")?>
+                        <a href="<?= URLHelper::getLink('?cmd=addCycle#newCycle') ?>">
+                            <?= makebutton('hinzufuegen') ?>
+                        </a>
                     </td>
                 </tr>
                 <? } ?>
@@ -437,7 +414,7 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                 <tr>
                     <td colspan="9" class="blue_gradient">
                         <a name="irregular_dates"></a>
-                        &nbsp;<b><?=_("Unregelm&auml;&szlig;ige Termine/Blocktermine")?></b>
+                        <b><?=_("Unregelm&auml;&szlig;ige Termine/Blocktermine")?></b>
                     </td>
                 </tr>
                 <? if ($termine =& $sem->getSingleDates(true, true)) { ?>
@@ -496,20 +473,6 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                 </tr>
 
                 <? if (!$_LOCKED) { ?>
-                <tr>
-                    <td>
-                    <SCRIPT type ="text/javascript">
-                    function block_fenster () {
-                        f1 = window.open("blockveranstaltungs_assistent.php?seminar_id=<?=$id?>", "Zweitfenster", "width=550,height=600,toolbar=no, menubar=no, scrollbars=yes");
-                        f1.focus();
-                    }
-                    </SCRIPT>
-                        <font size="-1">
-                            &nbsp;<?=_("Blockveranstaltungstermine")?>
-                        </font>
-                         <a href="javascript:window.block_fenster()"><?=makebutton("anlegen")?></a>
-                    </td>
-                </tr>
                 <? if (isset($cmd) && ($cmd == 'createNewSingleDate')) {
                     if ($GLOBALS['RESOURCES_ENABLE_BOOKINGSTATUS_COLORING']) {
                         $tpl['class'] = 'steelred';
@@ -520,13 +483,24 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                     include('lib/raumzeit/templates/addsingledate.tpl');
                 } else { ?>
                 <tr>
+                    <td>
+                         
+                    </td>
+                </tr>
+                <tr>
                     <td colspan="9" class="blank">
-                        <font size="-1">
-                            &nbsp;einen neuen Termin
-                            <a href="<?= URLHelper::getLink('?cmd=createNewSingleDate#newSingleDate') ?>">
-                                <IMG <?=makebutton('erstellen', 'src')?> align="absmiddle" border="0">
-                            </a>
-                        </font>
+                        <script type ="text/javascript">
+                            function block_fenster () {
+                                f1 = window.open("blockveranstaltungs_assistent.php?seminar_id=<?=$id?>", "Zweitfenster", "width=550,height=600,toolbar=no, menubar=no, scrollbars=yes");
+                                f1.focus();
+                            }
+                        </script>
+
+                        <?= sprintf (_('Einen neuen Termin %s oder mehrere Termine mit dem Blockveranstaltungsassistenten %s'),
+                            '<a href="'. URLHelper::getLink('?cmd=createNewSingleDate#newSingleDate') .'">'
+                            . makebutton('erstellen') . '</a>',
+                            '<a href="javascript:window.block_fenster()">'
+                            . makebutton("anlegen") . '</a>'); ?>
                     </td>
                 </tr>
                 <? } ?>
@@ -540,20 +514,16 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                 <tr>
                     <td colspan="9" class="blue_gradient">
                         <a name="irregular_dates"></a>
-                        &nbsp;<b><?=_("Raum anfordern")?></b>
+                        <b><?=_("Raum anfordern")?></b>
                     </td>
                 </tr>
                 <tr>
                     <td class="blank" colspan="9" style="padding-left: 6px">
-                        <font size="-1">
-                            <?=_("Hier können Sie für die gesamte Veranstaltung, also für alle regelmäßigen und unregelmäßigen Termine, eine Raumanfrage erstellen. Um für einen einzelnen Termin eine Raumanfrage zu erstellen, klappen Sie diesen auf und wählen dort \"Raumanfrage erstellen\"");?>
-                        </font>
+                        <?=_("Hier können Sie für die gesamte Veranstaltung, also für alle regelmäßigen und unregelmäßigen Termine, eine Raumanfrage erstellen. Um für einen einzelnen Termin eine Raumanfrage zu erstellen, klappen Sie diesen auf und wählen dort \"Raumanfrage erstellen\"");?>
                     </td>
                 </tr>
                 <tr>
-                    <td class="blank" colspan="9">
-                        &nbsp;
-                    </td>
+                    <td class="blank" colspan="9">&nbsp;</td>
                 </tr>
                 <tr>
                     <td class="blank" colspan="9">
@@ -564,7 +534,6 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                         ?>
                         <!-- the room-request has not yet been resolved -->
                         <?= MessageBox::info(_("Für diese Veranstaltung liegt eine noch offene Raumanfrage vor."), array(nl2br($req_info))) ?>
-                        </div>
                         <br>
 
                         <? elseif ($request_status && $request_status == 'declined') :
@@ -575,25 +544,23 @@ if ($perm->have_studip_perm("admin",$sem->getId())) {
                         <br>
                         <? endif; ?>
 
-                        <font size="-1">
-                            &nbsp;Raumanfrage
-                            <a href="<?= URLHelper::getLink('admin_room_requests.php?seminar_id='. $id) ?>">
-                                <? if ($request_status && $request_status == 'open') {
-                                ?>
-                                    <img <?=makebutton('bearbeiten', 'src')?> align="absmiddle" border="0">
-                                <?
-                                } else {
-                                ?>
-                                    <img <?=makebutton('erstellen', 'src')?> align="absmiddle" border="0">
-                                <?
-                                } ?>
-                            </a>
-                            <? if ($request_status && $request_status == 'open') { ?>
-                            &nbsp;oder&nbsp;
-                            <a href="<?= URLHelper::getLink('?cmd=removeSeminarRequest') ?>">
-                                <img <?=makebutton('zurueckziehen', 'src')?> align="absmiddle" border="0">
-                            </a>
-                        </font>
+                        Raumanfrage
+                        <a href="<?= URLHelper::getLink('admin_room_requests.php?seminar_id='. $id) ?>">
+                            <? if ($request_status && $request_status == 'open') {
+                            ?>
+                                <?= makebutton('bearbeiten') ?>
+                            <?
+                            } else {
+                            ?>
+                                <?= makebutton('erstellen') ?>
+                            <?
+                            } ?>
+                        </a>
+                        <? if ($request_status && $request_status == 'open') { ?>
+                        <?= _('oder') ?>
+                        <a href="<?= URLHelper::getLink('?cmd=removeSeminarRequest') ?>">
+                            <?= makebutton('zurueckziehen') ?>
+                        </a>
                         <? } ?>
                     </td>
                 </tr>

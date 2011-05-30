@@ -39,7 +39,7 @@ class Studip_Ws_Struct {
   function init() {
   }
 
-  
+
   /**
    * <MethodDescription>
    *
@@ -68,15 +68,15 @@ class Studip_Ws_Struct {
                       E_USER_ERROR);
         return;
       }
-      
+
       # store it
       $elements[$name] =& new Studip_Ws_StructElement($name, $type, $options);
 
       return;
     }
-    
+
     # getter functionality
-    return $elements;    
+    return $elements;
   }
 
 
@@ -99,7 +99,7 @@ class Studip_Ws_Struct {
         $backtrace = debug_backtrace();
         $class = $backtrace[0]['class'];
       }
-  	
+
       # call "class" constructor
       call_user_func(array($class, 'init'));
 
@@ -107,6 +107,10 @@ class Studip_Ws_Struct {
     }
 
     return $once;
+  }
+
+  function __toString() {
+      return get_class($this);
   }
 }
 
@@ -133,7 +137,7 @@ class Studip_Ws_StructElement {
    */
   var $name;
 
-  
+
   /**
    * The type of the element.
    *
@@ -141,8 +145,8 @@ class Studip_Ws_StructElement {
    * @var mixed
    */
   var $type;
-  
-  
+
+
   /**
    * Options for the element.
    *
@@ -165,5 +169,9 @@ class Studip_Ws_StructElement {
     $this->name    = (string) $name;
     $this->type    = Studip_Ws_Type::translate($type);
     $this->options = $options;
+  }
+
+  function __toString() {
+      return get_class($this);
   }
 }

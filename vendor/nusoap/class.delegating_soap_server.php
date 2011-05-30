@@ -26,7 +26,7 @@
  */
 
 class DelegatingSoapServer extends soap_server {
-  
+
   /**
    * The delegate which invokes soap functions.
    *
@@ -49,7 +49,7 @@ class DelegatingSoapServer extends soap_server {
     parent::soap_server($wsdl);
     $this->delegate =& $delegate;
   }
-  
+
 
   /**
    * Invokes a PHP function for the requested SOAP method.
@@ -77,7 +77,7 @@ class DelegatingSoapServer extends soap_server {
                      $this->methodname);
         $this->appendDebug('opData=' . $this->varDump($this->opData));
       }
-      
+
       else if ($this->opData = $this->wsdl->getOperationDataForSoapAction($this->SOAPAction)) {
 
         # Note: hopefully this case will only be used for doc/lit,
@@ -88,7 +88,7 @@ class DelegatingSoapServer extends soap_server {
         $this->appendDebug('opData=' . $this->varDump($this->opData));
         $this->methodname = $this->opData['name'];
       }
-      
+
       else {
         $this->debug('in invoke_method, no WSDL for operation=' .
                      $this->methodname);
@@ -97,7 +97,7 @@ class DelegatingSoapServer extends soap_server {
         return;
       }
     }
-    
+
     else {
       $this->debug('in invoke_method, no WSDL to validate method');
     }
@@ -132,7 +132,7 @@ class DelegatingSoapServer extends soap_server {
     $this->methodreturn = $this->delegate->invoke($this->methodname,
                                                   $this->methodparams);
 
-    $this->debug("in invoke_method, received $this->methodreturn of type " .
+    $this->debug("in invoke_method, received ".$this->varDump($this->methodreturn)." of type " .
                  gettype($this->methodreturn));
   }
 }

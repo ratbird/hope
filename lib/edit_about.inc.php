@@ -218,7 +218,7 @@ class about extends messaging {
         if ($auth->auth["uname"] == $username AND $perm->have_perm("autor"))
             $this->check="user";
         // Vertretungen dürfen auch, wenn das freigegeben ist
-        else if (get_config('DEPUTIES_ENABLE') && get_config('DEPUTIES_DEFAULTENTRY_ENABLE') && get_config('DEPUTIES_EDIT_ABOUT_ENABLE') && isDeputy($user->id, get_userid($username), true))
+        else if (isDeputyEditAboutActivated() && isDeputy($user->id, get_userid($username), true))
             $this->check='user';
         //bei admins schauen wir mal
         elseif ($auth->auth["perm"]=="admin") {
@@ -953,9 +953,6 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
         $lit_list = StudipLitList::GetFormattedListsByRange($this->auth_user['user_id']);
         // Free datafields
         $data_fields = DataFieldEntry::getDataFieldEntries($this->auth_user['user_id']);
-        if ($GLOBALS["PLUGINS_ENABLE"]) {
-            $homepageplugins = PluginEngine::getPlugins('HomepagePlugin');
-        }
         $guestbook = new Guestbook($this->auth_user['user_id'], true, 1);
         $guestbook = $guestbook->checkGuestbook();
         // Homepage plugins
@@ -1012,7 +1009,7 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
             $homepage_elements["schwerp"] = array("name" => _("Arbeitsschwerpunkte"), "visibility" => $homepage_visibility["schwerp"] ? $homepage_visibility["schwerp"] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Private Daten');
         if ($data_fields) {
             foreach ($data_fields as $key => $field) {
-                if (!$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']][$key]) {
+                if ($field->structure->accessAllowed($GLOBALS['perm']) && !$NOT_HIDEABLE_FIELDS[$this->auth_user['perms']][$key]) {
                     $homepage_elements[$key] = array("name" => _($field->structure->data['name']), "visibility" => $homepage_visibility[$key] ? $homepage_visibility[$key] : get_default_homepage_visibility($this->auth_user['user_id']), "extern" => true, 'category' => 'Zusätzliche Datenfelder');
                 }
             }

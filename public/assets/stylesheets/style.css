@@ -1494,6 +1494,7 @@ div.schedule_entry {
     padding: 0;
     overflow: hidden;
     padding-bottom: 2px;
+    font-size: 10px;
 }
 
 div.schedule_entry.clickable {

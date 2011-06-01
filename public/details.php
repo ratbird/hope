@@ -78,7 +78,7 @@ if (($SessSemName[1] != "") && (!isset($sem_id) || $SessSemName[1] == $sem_id)) 
     $sem_id = $SessSemName[1];
 }
 
-$sem = new Seminar($sem_id);
+$sem = Seminar::getInstance($sem_id);
 $modules = new Modules();
 #$DataFields = new DataFields($sem_id);
 

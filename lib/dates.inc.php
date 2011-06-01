@@ -81,7 +81,7 @@ function leadingZero($num) {
 /* veranstaltung_beginn liefert den tatsächlichen ersten Termin einer Veranstaltung */
 function veranstaltung_beginn($seminar_id = '', $return_mode = '') {
     if ($seminar_id == '') return 'dates.inc.php:veranstaltung_beginn - Fehlerhafter Aufruf!';
-    $sem = new Seminar($seminar_id);
+    $sem = Seminar::getInstance($seminar_id);
     return $sem->getFirstDate($return_mode);
 }
 
@@ -526,7 +526,7 @@ function getCorrespondingMetadates ($termin_id, $begin = '', $end = '', $seminar
         $seminar_id = $termin->getRangeID();
     }
 
-    $sem = new Seminar($seminar_id);
+    $sem = Seminar::getInstance($seminar_id);
     $turnus = $sem->getFormattedTurnusDates();
     return $turnus[$termin->getMetaDateID()];
 }

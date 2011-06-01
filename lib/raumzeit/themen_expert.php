@@ -57,7 +57,7 @@ define('NOT_SELECTED', '');
 
 $powerFeatures = true;
 
-$sem = new Seminar($id);
+$sem = Seminar::getInstance($id);
 $sem->checkFilter();
 $themen =& $sem->getIssues();
 if (isset($_REQUEST['cmd'])) {

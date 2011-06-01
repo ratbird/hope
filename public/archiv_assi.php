@@ -153,7 +153,7 @@ if ($archive_kill) {
     if ($run) {
         // Bevor es wirklich weg ist. kommt das Seminar doch noch schnell ins Archiv
         in_archiv($s_id);
-        $sem = new Seminar($s_id);
+        $sem = Seminar::getInstance($s_id);
         // Delete that Seminar.
 
         $sem->delete();

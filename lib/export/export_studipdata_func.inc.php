@@ -379,7 +379,7 @@ function export_sem($inst_id, $ex_sem_id = "all")
             $data_object .= $group_string;
             $object_counter++;
             $data_object .= xml_open_tag($xml_groupnames_lecture["object"], $db->f("seminar_id"));
-            $sem_obj = new Seminar($db->f("seminar_id"));
+            $sem_obj = Seminar::getInstance($db->f("seminar_id"));
             while ( list($key, $val) = each($xml_names_lecture))
             {
                 if ($val == "") $val = $key;

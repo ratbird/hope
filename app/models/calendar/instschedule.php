@@ -40,7 +40,7 @@ class CalendarInstscheduleModel
     {
         $ret = array();
 
-        $sem = new Seminar($seminar_id);
+        $sem = Seminar::getInstance($seminar_id);
         foreach ($sem->getCycles() as $cycle) {
             if (!$cycle_id || $cycle->getMetaDateID() == $cycle_id) {
                 $entry = array();

@@ -61,7 +61,7 @@ if (!$perm->have_studip_perm('tutor', $id)) {
 
 $powerFeatures = true;
 
-$sem = new Seminar($id);
+$sem = Seminar::getInstance($id);
 $sem->checkFilter();
 $themen =& $sem->getIssues();
 if (isset($_REQUEST['cmd'])) {

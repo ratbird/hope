@@ -515,7 +515,7 @@ class StudygroupModel
      */
     function applicationNotice($sem_id, $user_id)
     {
-        $sem        = new Seminar($sem_id);
+        $sem        = Seminar::getInstance($sem_id);
         $dozenten   = $sem->getMembers();
         $tutors     = $sem->getMembers('tutor');
         $recipients = array();

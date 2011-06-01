@@ -84,7 +84,7 @@ class Course_StudygroupController extends AuthenticatedController {
             $this->participant = false;
         }
 
-        $this->studygroup = new Seminar($id);
+        $this->studygroup = Seminar::getInstance($id);
         if (!preg_match('/^(' . preg_quote($GLOBALS['CANONICAL_RELATIVE_PATH_STUDIP'],'/') . ')?([a-zA-Z0-9_-]+\.php)([a-zA-Z0-9_?&=-]*)$/', $_REQUEST['send_from_search_page'])) {
             $this->send_from_search_page = '';
         } else {
@@ -336,7 +336,7 @@ class Course_StudygroupController extends AuthenticatedController {
             PageLayout::setTitle(getHeaderLine($id) . ' - ' . _('Studiengruppe bearbeiten'));
             Navigation::activateItem('/course/admin/main');
 
-            $sem                     = new Seminar($id);
+            $sem                     = Seminar::getInstance($id);
             $this->sem_id            = $id;
             $this->sem               = $sem;
             $this->tutors            = $sem->getMembers('tutor');
@@ -398,7 +398,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 // 1. Modules
                 if (is_array($modules)) {
 
-                    $sem  = new Seminar($id);
+                    $sem  = Seminar::getInstance($id);
                     $mods = new Modules();
                     $admin_mods = new AdminModules();
                     $bitmask = $sem->modules;
@@ -460,7 +460,7 @@ class Course_StudygroupController extends AuthenticatedController {
                     $this->flash['edit'] = true;
                 // Everything seems fine, let's update the studygroup
                 } else {
-                    $sem                 = new Seminar($id);
+                    $sem                 = Seminar::getInstance($id);
                     $sem->name           = Request::get('groupname');         // seminar-class quotes itself
                     $sem->description    = Request::get('groupdescription');  // seminar-class quotes itself
                     $sem->read_level     = 1;
@@ -562,7 +562,7 @@ class Course_StudygroupController extends AuthenticatedController {
         object_set_visit_module('participants');
         $this->last_visitdate = object_get_visit($id, 'participants');
 
-        $sem          = new Seminar($id);
+        $sem          = Seminar::getInstance($id);
         $this->page   = $page;
         $this->anzahl = StudygroupModel::countMembers($id);
 
@@ -620,7 +620,7 @@ class Course_StudygroupController extends AuthenticatedController {
                 if (Request::get('choose_member') && Request::submitted('add_member')) {
                     $msg = new Messaging();
                     $receiver = Request::option('choose_member');
-                    $sem = new Seminar($id);
+                    $sem = Seminar::getInstance($id);
                     $message = sprintf(_("%s möchte Sie auf die Studiengruppe %s aufmerksam machen. Klicken Sie auf den untenstehenden Link um direkt zur Studiengruppe zu gelangen.\n\n %s"),
                              get_fullname(), $sem->name, URLHelper::getlink("dispatch.php/course/studygroup/details/" . $id, array('cid' => NULL)));
                     $subject = _("Sie wurden in eine Studiengruppe eingeladen");
@@ -676,7 +676,7 @@ class Course_StudygroupController extends AuthenticatedController {
 
             if ($approveDelete && check_ticket($studipticket)) {
                 $messages = array();
-                $sem = new Seminar($id);
+                $sem = Seminar::getInstance($id);
                 $sem->delete();
                 if ($messages = $sem->getStackedMessages()) {
                     $this->flash['messages'] = $messages;

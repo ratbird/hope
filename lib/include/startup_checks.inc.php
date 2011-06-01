@@ -58,7 +58,7 @@ if ($problems_found) { ?>
     </tr>
     <tr>
          <td class="blank" colspan=2>
-            <?= MessageBox::info(_("Das Anlegen einer Veranstaltung ist leider zu diesem Zeitpunkt noch nicht möglich, da zunächst die folgenden Voraussetzungen geschaffen werden m&uuml;ssen."), ($problems_found > 1) ? array($_("(Beachten Sie bitte die angegebene Reihenfolge!)")) : ""); ?>
+            <?= MessageBox::info(_("Das Anlegen einer Veranstaltung ist leider zu diesem Zeitpunkt noch nicht möglich, da zunächst die folgenden Voraussetzungen geschaffen werden m&uuml;ssen."), ($problems_found > 1) ? array(_("(Beachten Sie bitte die angegebene Reihenfolge!)")) : ""); ?>
         </td>
     </tr>
     <tr>

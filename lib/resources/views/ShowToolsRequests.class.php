@@ -317,7 +317,7 @@ class ShowToolsRequests
             $i++;
             if ($resources_data['requests_open'][$val['request_id']] || !$resources_data['skip_closed_requests']) {
                 $reqObj = new RoomRequest($val['request_id']);
-                $semObj = Seminar::getInstance($reqObj->getSeminarId());
+                $semObj = new Seminar($reqObj->getSeminarId());
 
                 if ($semObj->getName() != "") {
                     echo $zt->openRow();
@@ -373,7 +373,7 @@ class ShowToolsRequests
         global $PHP_SELF, $cssSw, $resources_data, $perm;
 
         $reqObj = new RoomRequest($request_id);
-        $semObj = Seminar::getInstance($reqObj->getSeminarId());
+        $semObj = new Seminar($reqObj->getSeminarId());
         $sem_link = $perm->have_studip_perm('tutor', $semObj->getId()) ?
             "seminar_main.php?auswahl=" . $semObj->getId() :
             "details.php?sem_id=" . $semObj->getId() . "&send_from_search=1&send_from_search_page="

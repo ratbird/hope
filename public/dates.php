@@ -39,7 +39,7 @@ if ($RESOURCES_ENABLE) {
     include_once ($RELATIVE_PATH_RESOURCES."/lib/ResourceObjectPerms.class.php");
 }
 
-$sem = Seminar::getInstance($SessionSeminar);
+$sem = new Seminar($SessionSeminar);
 
 checkObject();
 checkObjectModule("schedule");

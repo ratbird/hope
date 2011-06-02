@@ -40,7 +40,7 @@ class LectureTreeService extends AccessControlledService
 
           foreach($seminar_ids as $seminar_id)
         {
-            $sem_obj = Seminar::getInstance($seminar_id['seminar_id']);
+            $sem_obj = new Seminar($seminar_id['seminar_id']);
 
             $lecturers = StudipSeminarHelper::get_participants($seminar_id['seminar_id'], 'dozent');
 

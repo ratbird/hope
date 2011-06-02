@@ -1901,7 +1901,7 @@ if ($_sendMessage) {
     }
 
     $reqObj = new RoomRequest($_sendMessage['request_id']);
-    $semObj = Seminar::getInstance($_sendMessage['seminar_id']);
+    $semObj = new Seminar($_sendMessage['seminar_id']);
 
     // first we have to get all users to which the message will be sent
     // -> creator of request

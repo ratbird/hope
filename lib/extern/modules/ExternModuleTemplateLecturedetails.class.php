@@ -205,7 +205,7 @@ class ExternModuleTemplateLecturedetails extends ExternModule {
 
     function getContent ($args = NULL, $raw = FALSE) {
         $this->seminar_id = $args["seminar_id"];
-        $seminar = Seminar::getInstance($this->seminar_id);
+        $seminar = new Seminar($this->seminar_id);
 
         $this->db = new DB_Seminar();
         $query = "SELECT * FROM seminare WHERE Seminar_id='$this->seminar_id'";

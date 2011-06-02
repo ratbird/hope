@@ -429,7 +429,7 @@ class SemBrowse {
                     }
                     while(list($seminar_id,) = each($sem_ids['Seminar_id'])){
                         // create instance of seminar-object
-                        $seminar_obj = Seminar::getInstance($seminar_id);
+                        $seminar_obj = new Seminar($seminar_id);
                         // is this sem a studygroup?
                         $studygroup_mode = SeminarCategories::GetByTypeId($seminar_obj->getStatus())->studygroup_mode;
 
@@ -647,7 +647,7 @@ class SemBrowse {
                             $sem_name .= " (" . $this->search_obj->sem_dates[$sem_number_start]['name'] . ")";
                         }
                         //create Turnus field
-                        $seminar_obj = Seminar::getInstance($seminar_id);
+                        $seminar_obj = new Seminar($seminar_id);
                         // is this sem a studygroup?
                         $studygroup_mode = SeminarCategories::GetByTypeId($seminar_obj->getStatus())->studygroup_mode;
                         if ($studygroup_mode) {

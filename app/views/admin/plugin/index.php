@@ -67,7 +67,7 @@
                     <td width="20">
                         <? if (in_array('StandardPlugin', $plugin['type'])): ?>
                             <a href="<?= $controller->url_for('admin/plugin/default_activation', $pluginid) ?>">
-                                <?= Assets::img('icons/16/blue/add/seminar.png', array('class' => 'text-top', 'title' => _('In Veranstaltungen aktivieren'))) ?>
+                                <?= Assets::img('icons/16/blue/add/seminar.png', array('title' => _('In Veranstaltungen aktivieren'))) ?>
                             </a>
                         <? endif ?>
                     </td>
@@ -77,7 +77,7 @@
                         </a>
                     </td>
                     <td width="20">
-                        <? if (!$plugin['depends']): ?>
+                        <? if (!$plugin['depends'] && isset($update_info[$pluginid]['version'])): ?>
                             <a href="<?= $controller->url_for('admin/plugin/download', $pluginid) ?>">
                                 <?= Assets::img('icons/16/blue/download.png', array('title' => _('Herunterladen'))) ?>
                             </a>

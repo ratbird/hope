@@ -77,7 +77,7 @@ class StudipSeminarHelper
         $stmt = $db->prepare($query);
         $stmt->execute($params);
 
-        return $stmt->fetchColumn();
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
     function get_main_institute($seminar_id)

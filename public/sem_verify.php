@@ -217,7 +217,7 @@ $db6=new DB_Seminar;
         die;
     }
 
-    if ($current_seminar->admission_type == 3)
+    if ($current_seminar->admission_type == 3 || !$current_seminar->isVisible() && !$perm->have_perm(get_config('SEM_VISIBILITY_PERM')))
     {
         parse_msg ("info§"._("Die Veranstaltung ist gesperrt, Sie k&ouml;nnen sich nicht eintragen!"));
         echo"<tr><td class=\"blank\" colspan=2><a href=\"index.php\">&nbsp;&nbsp; "._("Zur&uuml;ck zur Startseite")."</a>";

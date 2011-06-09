@@ -82,6 +82,10 @@ $sem = new Seminar($sem_id);
 $modules = new Modules();
 #$DataFields = new DataFields($sem_id);
 
+if ($SessSemName[1] != $sem_id && !$sem->isVisible() && !$perm->have_perm(get_config('SEM_VISIBILITY_PERM'))) {
+    throw new AccessDeniedException(_('Diese Veranstaltung ist versteckt. Hier gibt es nichts zu sehen.'));
+}
+
 $deputies_enabled = get_config('DEPUTIES_ENABLE');
 
 // redirect, if sem is a studygroup

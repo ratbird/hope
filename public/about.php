@@ -86,14 +86,13 @@ function print_kings($username) {
 
 function prettyViewPermString ($viewPerms) {
     switch ($viewPerms) {
-        case 'all'   : return 'alle';
-        case 'root'  : return 'Systemadministratoren';
-        case 'admin' : return 'Administratoren';
-        case 'dozent': return 'Dozenten';
-        case 'dozent': return 'Dozenten';
-        case 'tutor' : return 'Tutoren';
-        case 'autor' : return 'Studenten';
-        case 'user'  : return 'Nutzer';
+        case 'all'   : return _('alle');
+        case 'root'  : return _('SystemadministratorInnen');
+        case 'admin' : return _('AdministratorInnen');
+        case 'dozent': return _('DozentInnen');
+        case 'tutor' : return _('TutorInnen');
+        case 'autor' : return _('Studierenden');
+        case 'user'  : return _('NutzerInnen');
     }
     return '';
 }

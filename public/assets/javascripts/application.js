@@ -1673,13 +1673,9 @@ jQuery(window.document).bind('click', function (event) {
 
 STUDIP.Forms = {
     initialize : function () {
-        jQuery("input,textarea").each(function () {
-            if (jQuery(this).attr('required') !== undefined) {
-                jQuery(this).attr('aria-required', true);
-            }
-            if (jQuery(this).attr('pattern') && jQuery(this).attr('title')) {
-                jQuery(this).attr('data-message', jQuery(this).attr('title'));
-            }
+        jQuery("input[required],textarea[required]").attr('aria-required', true);
+        jQuery("input[pattern][title],textarea[pattern][title]").each(function () {
+            jQuery(this).attr('data-message', jQuery(this).attr('title'));
         });
 
         //localized messages

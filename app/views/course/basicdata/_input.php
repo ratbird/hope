@@ -12,6 +12,9 @@ if ($input['type'] === "textarea") : ?>
 <? endif;
 
 if ($input['type'] === "select") : ?>
+    <? if (!$input['choices'][$input['value']]) : ?>
+        <?= _("Keine Änderung möglich") ?>
+    <? else : ?>
     <select <?=$is_locked ?> name="<?= $input['name'] ?>" style="width: 80%">
     <? if ($input['choices']) : foreach ($input['choices'] as $choice_value => $choice_name) : ?>
         <option value="<?= $choice_value ?>"<?
@@ -19,6 +22,7 @@ if ($input['type'] === "select") : ?>
             ?>><?= $choice_name ?></option>
     <? endforeach; endif; ?>
     </select>
+    <? endif ?>
 <? endif;
 
 if ($input['type'] === "multiselect") : ?>

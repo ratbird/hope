@@ -221,7 +221,7 @@ class Course_BasicdataController extends AuthenticatedController
         }
         $dozentUserSearch = new PermissionSearch(
                             $search_template,
-                            sprintf(_("Name %s"), get_title_for_status('dozent', 1, $sem->status)),
+                            sprintf(_("%s suchen"), get_title_for_status('dozent', 1, $sem->status)),
                             "user_id",
                             array('permission' => 'dozent',
                                   'seminar_id' => $this->course_id,
@@ -238,7 +238,7 @@ class Course_BasicdataController extends AuthenticatedController
             $this->deputies = getDeputies($this->course_id);
             $deputysearch = new PermissionSearch(
                     "user_not_already_tutor_dozent_deputy",
-                    sprintf(_("Name %s"), get_title_for_status('deputy', 1, $sem->status)),
+                    sprintf(_("%s suchen"), get_title_for_status('deputy', 1, $sem->status)),
                     "user_id",
                     array('permission' => getValidDeputyPerms(), 'seminar_id' => $this->course_id)
                 );
@@ -251,7 +251,7 @@ class Course_BasicdataController extends AuthenticatedController
 
         $tutorUserSearch = new PermissionSearch(
                             $search_template,
-                            sprintf(_("Name %s"), get_title_for_status('tutor', 1, $sem->status)),
+                            sprintf(_("%s suchen"), get_title_for_status('tutor', 1, $sem->status)),
                             "user_id",
                             array('permission' => array('dozent','tutor'),
                                   'seminar_id' => $this->course_id,
@@ -457,6 +457,14 @@ class Course_BasicdataController extends AuthenticatedController
         } else {
             $this->msg[] = array("error", _("Sie haben keine Berechtigung diese Veranstaltung zu verändern."));
         }
+
+        //Labels/Funktionen für Dozenten und Tutoren
+        if ($perm->have_studip_perm("dozent", $sem->getId())) {
+            foreach (Request::getArray("label") as $user_id => $label) {
+                $sem->setLabel($user_id, $label);
+            }
+        }
+
         foreach($sem->getStackedMessages() as $key => $messages) {
             foreach($messages['details'] as $message) {
                 $this->msg[] = array(($key !== "success" ? $key : "msg"), $message);

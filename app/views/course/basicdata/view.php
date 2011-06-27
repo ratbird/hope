@@ -133,153 +133,146 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
   </table></div>
 
   <h2 id="bd_personal" class="steelgraulight"><?= _("Personal") ?></h2>
-  <div>
+  <div><table style="width: 100%">
+  <tr>
+    <td style="width: <?= $width_column1/2 ?>%; font-weight: bold; vertical-align: top;"><?= $dozenten_title ?></td>
+    <td style="width: <?= 100-$width_column1-($width_column1/2) ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
+        <ul style="list-style-type: none; padding-left: 0px;">
+        <? $num = 0;
+        foreach($dozenten as $dozent) : ?>
+        <li style="text-align: left; padding-left: 0px;">
+            <span style="display: inline-block; vertical-align: middle;">
+                <?= Avatar::getAvatar($dozent["user_id"], $dozent['username'])->getImageTag(Avatar::SMALL) ?>
+            </span>
+            <? if ($perm_dozent && !$dozent_is_locked) : ?>
+            <span style="white-space: nowrap; width: 32px; display: inline-block; vertical-align: middle;">
+                <? if ($num > 0) : ?>
+                <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $dozent["user_id"], "dozent") ?>">
+                <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
+                <? endif; if ($num < count($dozenten)-1) : ?>
+                <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $course_id, $dozent["user_id"], "dozent") ?>">
+                <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
+                <? endif; ?>
+            </span>
+            <? endif; ?>
+            <span style="display: inline-block; padding-left: 3px; vertical-align: middle;">
+                <?= get_fullname($dozent["user_id"], 'full_rev', true)." (".$dozent["username"].")" ?>
+            </span>
+            <? if ($perm_dozent && !$dozent_is_locked) : ?>
+            <span style="display: inline-block; vertical-align: middle;">
+                <a href="<?= $controller->url_for('course/basicdata/deletedozent', $course_id, $dozent["user_id"]) ?>">
+                <?= Assets::img("icons/16/blue/trash.png") ?>
+                </a>
+            </span>
+            <? endif; ?>
+        </li>
+    <? $num++; endforeach; ?>
+        </ul>
+    </td>
+    <? if ($perm_dozent && !$dozent_is_locked) : ?>
+    <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
+        <?= sprintf(_("%s hinzufügen"), $dozenten_title) ?>
+        <br>
+            <span style="white-space: nowrap">
+                <input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_dozent">
+                <?= $dozentensuche ?>
+            </span>
+        <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.") ?>
+    </td>
+    <? endif; ?>
+    </tr></table><hr style="clear:both"></td>
+  </tr>
+  <? if ($deputies_enabled) { ?>
+  <tr>
+    <td style="width: <?= $width_column1/2 ?>%; font-weight: bold; vertical-align: top;"><?= $deputy_title ?></td>
+    <td style="width: <?= 100-$width_column1-($width_column1/2) ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%">
+    <ul style="list-style-type: none; padding-left: 0px;">
+    <? foreach($deputies as $deputy) : ?>
+        <li style="text-align: left; padding-left: 0px;">
+            <span style="display: inline-block; vertical-align: middle;">
+                <?= Avatar::getAvatar($deputy["user_id"], $deputy["username"])->getImageTag(Avatar::SMALL) ?>
+            </span>
+            <span style="display: inline-block; padding-left: 3px; vertical-align: middle;">
+                <?= get_fullname($deputy["user_id"], 'full_rev', true)." (".$deputy["username"].", "._("Status").": ".$deputy['perms'].")" ?>
+            </span>
+            <? if ($perm_dozent && !$dozent_is_locked) : ?>
+            <span style="vertical-align: middle">
+                <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $course_id, $deputy["user_id"]) ?>">
+                <?= Assets::img("icons/16/blue/trash.png") ?></a>
+            </span>
+            <? endif; ?>
 
-      <style>
-          #leiterinnen_tabelle > tbody > tr > td {
-              vertical-align: top;
-          }
-      </style>
-      <script>
-          
-      </script>
-      <table style="margin-left: auto; margin-right: auto; text-align: left;" id="leiterinnen_tabelle">
-          <!-- Dozenten -->
-          <tr>
-              <td style="font-weight: bold;"><?= $dozenten_title ?></td>
-          </tr>
-          <? $num = 0; foreach($dozenten as $dozent) : ?>
-          <tr>
-              <td></td>
-              <td>
-              <? if ($perm_dozent && !$dozent_is_locked) : ?>
-                  <? if ($num > 0) : ?>
-                  <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $dozent["user_id"], "dozent") ?>">
-                  <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
-                  <? endif; if ($num < count($dozenten)-1) : ?>
-                  <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $course_id, $dozent["user_id"], "dozent") ?>">
-                  <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
-                  <? endif; ?>
-              <? endif ?>
-              </td>
-              <td>
-                  <a href="<?= URLHelper::getLink("about.php", array('username' => $dozent['username']))?>">
-                      <?= Avatar::getAvatar($dozent["user_id"], $dozent['username'])->getImageTag(Avatar::SMALL) ?>
-                  </a>
-              </td>
-              <td>
-                  <?= get_fullname($dozent["user_id"], 'full_rev', true)." (".$dozent["username"].")" ?>
-              </td>
-              <td>
-                  <? if ($perm_dozent && !$dozent_is_locked) : ?>
-                  <a href="<?= $controller->url_for('course/basicdata/deletedozent', $course_id, $dozent["user_id"]) ?>">
-                  <?= Assets::img("icons/16/blue/trash.png") ?>
-                  </a>
-                  <? endif ?>
-              </td>
-              <td>
-                  <input value="<?= htmlReady($dozent["label"]) ?>" type="text" name="label[<?= htmlReady($dozent["user_id"]) ?>]" placeholder="<?= _("Funktion") ?>" title="<?= _("Funktion") ?>">
-              </td>
-          </tr>
-          <? $num++; endforeach ?>
-          <tr>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_dozent" title="<?= sprintf(_("Neuen %s hinzufügen"), $dozenten_title) ?>"></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><?= $dozentensuche ?></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"></td>
-          </tr>
-
-          <? if ($deputies_enabled) : ?>
-          <!-- Stellvertreter -->
-          <tr>
-              <td style="font-weight: bold;"><?= $deputy_title ?></td>
-          </tr>
-          <tr>
-              <td colspan="6"><hr></td>
-          </tr>
-          <? foreach($deputies as $deputy) : ?>
-          <tr>
-              <td></td>
-              <td></td>
-              <td>
-                  <?= Avatar::getAvatar($deputy["user_id"], $deputy["username"])->getImageTag(Avatar::SMALL) ?>
-              </td>
-              <td>
-                  <?= get_fullname($deputy["user_id"], 'full_rev', true)." (".$deputy["username"].", "._("Status").": ".$deputy['perms'].")" ?>
-              </td>
-              <td>
-                  <a href="<?= $controller->url_for('course/basicdata/deletedeputy', $course_id, $deputy["user_id"]) ?>">
-                      <?= Assets::img("icons/16/blue/trash.png") ?>
-                  </a>
-              </td>
-              <td></td>
-          </tr>
-          <? endforeach ?>
-          <tr>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_deputy" title="<?= sprintf(_("Neuen %s hinzufügen"), $deputy_title) ?>"></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><?= $deputysearch ?></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"></td>
-          </tr>
-          <? endif ?>
-
-          <!-- Tutoren -->
-          <tr>
-              <td colspan="6"><hr></td>
-          </tr>
-          <tr>
-              <td style="font-weight: bold;"><?= $tutor_title ?></td>
-          </tr>
-          <? $num = 0; foreach($tutoren as $tutor) : ?>
-          <tr>
-              <td></td>
-              <td>
-              <? if ($perm_dozent && !$tutor_is_locked) : ?>
-                  <? if ($num > 0) : ?>
-                  <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $tutor["user_id"], "tutor") ?>">
-                  <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
-                  <? endif; if ($num < count($tutoren)-1) : ?>
-                  <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $course_id, $tutor["user_id"], "tutor") ?>">
-                  <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
-                  <? endif; ?>
-              <? endif ?>
-              </td>
-              <td>
-                  <a href="<?= URLHelper::getLink("about.php", array('username' => $tutor['username']))?>">
-                      <?= Avatar::getAvatar($tutor["user_id"], $tutor['username'])->getImageTag(Avatar::SMALL) ?>
-                  </a>
-              </td>
-              <td>
-                  <?= get_fullname($tutor["user_id"], 'full_rev', true)." (".$tutor["username"].")" ?>
-              </td>
-              <td>
-                  <? if ($perm_dozent && !$tutor_is_locked) : ?>
-                  <a href="<?= $controller->url_for('course/basicdata/deletetutor', $course_id, $tutor["user_id"]) ?>">
-                  <?= Assets::img("icons/16/blue/trash.png") ?>
-                  </a>
-                  <? endif ?>
-              </td>
-              <td><input value="<?= htmlReady($tutor["label"]) ?>" type="text" name="label[<?= htmlReady($tutor["user_id"]) ?>]" placeholder="<?= _("Funktion") ?>" title="<?= _("Funktion") ?>"></td>
-          </tr>
-          <? $num++; endforeach ?>
-          <tr>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2up.png") ?>" name="add_tutor" title="<?= sprintf(_("Neuen %s hinzufügen"), $tutor_title) ?>"></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"><?= $tutorensuche ?></td>
-              <td style="padding-top: 15px"></td>
-              <td style="padding-top: 15px"></td>
-          </tr>
-
-      </table>
-      
-
-      
-  </div>
+        </li>
+    <? endforeach; ?>
+    </ul>
+    </td>
+    <? if ($perm_dozent && !$dozent_is_locked) : ?>
+    <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
+        <?= sprintf(_("%s hinzufügen"), $deputy_title) ?>
+        <br>
+            <span style="white-space: nowrap">
+                <input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_deputy">
+                <?= $deputysearch ?>
+            </span>
+        <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.") ?>
+    </td>
+    <? endif; ?>
+    </tr></table><hr style="clear:both"></td>
+  </tr>
+  <? } ?>
+  <tr>
+    <td style="width: <?= $width_column1/2 ?>%;  font-weight: bold; vertical-align: top;"><?= $tutor_title ?></td>
+    <td style="width: <?= 100-$width_column1-($width_column1/2) ?>%"><table><tr><td style="width: <?= $width_namecolumn ?>%; text-align: left">
+    <ul style="list-style-type: none; padding-left: 0px;">
+    <? $num = 0;
+        foreach($tutoren as $tutor) : ?>
+        <li style="text-align: left; padding-left: 0px;">
+            <span style="display: inline-block; vertical-align: middle;">
+                <?= Avatar::getAvatar($tutor["user_id"], $tutor["username"])->getImageTag(Avatar::SMALL) ?>
+            </span>
+            <? if ($perm_dozent && !$tutor_is_locked) : ?>
+            <span style="white-space: nowrap; width: 32px; display: inline-block; vertical-align: middle;">
+                <? if ($num > 0) : ?>
+                <a href="<?= $controller->url_for('course/basicdata/priorityupfor', $course_id, $tutor["user_id"], "tutor") ?>">
+                <?= Assets::img("icons/16/yellow/arr_2up.png", array('class' => 'middle')) ?></a>
+                <? endif; if ($num < count($tutoren)-1) : ?>
+                <a href="<?= $controller->url_for('course/basicdata/prioritydownfor', $course_id, $tutor["user_id"], "tutor") ?>">
+                <?= Assets::img("icons/16/yellow/arr_2down.png", array('class' => 'middle')) ?></a>
+                <? endif; ?>
+            </span>
+            <? endif; ?>
+            <span style="display: inline-block; padding-left: 3px; vertical-align: middle;">
+                <?= get_fullname($tutor["user_id"], 'full_rev', true)." (".$tutor["username"].")" ?>
+            </span>
+            <? if ($perm_dozent && !$tutor_is_locked) : ?>
+            <span style="display: inline-block; vertical-align: middle;">
+                <a href="<?= $controller->url_for('course/basicdata/deletetutor', $course_id, $tutor["user_id"]) ?>">
+                <?= Assets::img("icons/16/blue/trash.png") ?>
+                </a>
+            </span>
+            <? endif; ?>
+        </li>
+    <? $num++; endforeach; ?>
+    </ul>
+    </td>
+    <? if ($perm_dozent && !$tutor_is_locked) : ?>
+    <td style="text-align: left; width: <?= 100-$width_namecolumn ?>%">
+        <?= sprintf(_("%s hinzufügen"), $tutor_title) ?>
+        <br>
+            <span style="white-space: nowrap">
+                <input class="middle" type="image" src="<?= Assets::image_path("icons/16/yellow/arr_2left.png") ?>" name="add_tutor">
+                <?= $tutorensuche ?>
+            </span>
+        <br><?= _("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.") ?>
+    </td>
+    <? endif; ?>
+    </tr></table>
+    <? if (!$perm_dozent) : ?>
+        <span style="color: #ff0000"><?= _("Die Personendaten können Sie mit Ihrem Status nicht bearbeiten!") ?></span>
+    <? endif; ?>
+    </td>
+  </tr>
+  </table></div>
 
 
   <h2 id="bd_description" class="steelgraulight"><?= _("Beschreibungen") ?></h2>
@@ -319,13 +312,6 @@ jQuery("#settings").accordion({
     change: function (event, ui) {
         jQuery('#open_variable').attr('value', ui.newHeader.attr('id'));
     }
-});
-jQuery(function () {
-    jQuery("input[name^=label]").autocomplete({
-        source: <?=
-        json_encode(preg_split("/[\s,;]+/", studip_utf8encode(Config::get()->getValue("PROPOSED_TEACHER_LABELS")), -1, PREG_SPLIT_NO_EMPTY));
-        ?>
-    });
 });
 </script>
 </div>

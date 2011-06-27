@@ -397,27 +397,18 @@ echo $template_factory->render(
                     <td class="<? echo $cssSw->getClass() ?>" valign="top">
                     <font size="-1">
                     <?
-                    // fetch lecturers/tutors from db with full name
-                    $stmt = DBManager::get()->prepare('SELECT ' . $_fullname_sql['full'] . 'AS fullname,'
-                        . 'seminar_user.user_id, username, status FROM seminar_user '
-                        . 'LEFT JOIN auth_user_md5 USING (user_id) '
-                        . 'LEFT JOIN user_info USING(user_id) '
-                        . "WHERE seminar_user.Seminar_id = ? AND status = ? "
-                        . 'ORDER BY position, Nachname');
-                    $stmt->execute(array($sem_id, $status));
-
                     $data = array();
-                    if ($users = $stmt->fetchAll(PDO::FETCH_ASSOC)) {
+                    if ($users = $sem->getMembers($status)) {
                         // fill data for template
                         foreach ($users as $entry) {
                             $data[] = array(
-                                'name' => $entry['fullname'],
+                                'name' => $entry['fullname'].($entry['label'] ? " (".htmlReady($entry['label']).")" : ""),
                                 'link' => 'about.php?username=' . $entry['username']
                             );
                         }
                         
                         // set config-defined title for this status
-                        $title = get_title_for_status($status, sizeof($data), $db2->f('status')) . ':';
+                        $title = get_title_for_status($status, sizeof($data), $sem->getStatus()) . ':';
 
                         // show template
                         $template = $GLOBALS['template_factory']->open('details/list');

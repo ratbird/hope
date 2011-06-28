@@ -2,12 +2,12 @@
 # Lifter010: TODO
 $is_locked = $input['locked'] ? 'disabled readonly' : '';
 if ($input['type'] === "text") : ?>
-    <input <?=$is_locked ?> type="text" name="<?= $input['name'] ?>" value="<?= $input['value'] ?>" style="width: 80%">
+    <input <?=$is_locked ?> type="text" name="<?= $input['name'] ?>" value="<?= htmlReady($input['value']) ?>" style="width: 80%">
 <? endif;
 
 if ($input['type'] === "textarea") : ?>
     <textarea <?=$is_locked ?> name="<?= $input['name'] ?>" style="width: 80%; height: 100px;" class=""><?=
-        $input['value']
+        htmlReady($input['value'])
     ?></textarea>
 <? endif;
 

@@ -123,7 +123,7 @@ $message_types = array('msg' => "success", 'error' => "error", 'info' => "info")
                     echo $this->render_partial("course/basicdata/_input", array('input' => $inst));
                 } else {
                     $name = get_object_name($inst['value'], "inst");
-                    echo $name['name'];
+                    echo htmlReady($name['name']);
                 }
              ?></td>
           </tr>

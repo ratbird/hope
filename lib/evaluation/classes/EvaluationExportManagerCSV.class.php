@@ -137,6 +137,7 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
       fputs ($this->filehandle, EVALEXPORT_DELIMITER._("Benutzername").EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
       fputs ($this->filehandle, EVALEXPORT_DELIMITER._("Nachname").EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
       fputs ($this->filehandle, EVALEXPORT_DELIMITER._("Vorname").EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+      fputs ($this->filehandle, EVALEXPORT_DELIMITER._("Email").EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
 
       $db      = new EvaluationAnswerDB ();
 
@@ -229,19 +230,22 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
       foreach ($this->users as $userID) {
 
          /* Userinformation if available ----------------------------------- */
+         $username = "";
+         $name     = "";
+         $surname  = "";
+         $email    = "";
          if (!$this->eval->isAnonymous ()) {
-             $username = get_username ($userID);
-             $name     = get_vorname ($userID);
-             $surname  = get_nachname ($userID);
-         } else {
-            $username = "";
-            $name     = "";
-            $surname  = "";
+             $data = DBManager::get()->query("SELECT username, Vorname, Nachname, Email FROM auth_user_md5 WHERE user_id = " . DBManager::get()->quote($userID))->fetchAll(PDO::FETCH_NUM);
+             if (is_array($data[0])) {
+                 list($username, $name, $surname, $email) = $data[0];
+             }
          }
          fputs ($this->filehandle, EVALEXPORT_DELIMITER.++$counter.EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
          fputs ($this->filehandle, EVALEXPORT_DELIMITER.$username.EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
          fputs ($this->filehandle, EVALEXPORT_DELIMITER.$surname.EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
          fputs ($this->filehandle, EVALEXPORT_DELIMITER.$name.EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+         fputs ($this->filehandle, EVALEXPORT_DELIMITER.$email.EVALEXPORT_DELIMITER.EVALEXPORT_SEPERATOR);
+
          /* ------------------------------------------------- end: user info */
 
          /* One colum for each question ------------------------------------ */
@@ -279,7 +283,7 @@ class EvaluationExportManagerCSV extends EvaluationExportManager {
             elseif ($type == EVALQUESTION_TYPE_MC) {
                if ($evalquestion->isMultiplechoice ()) {
                    foreach($db->getAllAnswers($evalquestion->getObjectID(), $userID) as $answer) {
-                     if ($answer['has_voted']) 
+                     if ($answer['has_voted'])
                         $entry = 1;
                      else
                         $entry = 0;

@@ -399,6 +399,12 @@ class Course_BasicdataController extends AuthenticatedController
             // Logging
             $before = array_diff_assoc($sem->old_settings, $sem->getSettings());
             $after  = array_diff_assoc($sem->getSettings(), $sem->old_settings);
+
+            //update admission, if turnout was raised
+            if($after['admission_turnout'] > $before['admission_turnout'] && $sem->isAdmissionEnabled()) {
+                update_admission($sem->getId());
+            }
+
             if (sizeof($before) && sizeof($after)) {
                 foreach($before as $k => $v) $log_message .= "$k: $v => " . $after[$k] . " \n";
                 log_event('CHANGE_BASIC_DATA', $sem->getId(), " ", $log_message);

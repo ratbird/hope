@@ -428,41 +428,45 @@ function fach_abschluss_edit($fach_abschluss_delete,$new_studiengang,$new_abschl
     }
 
     function special_edit ($raum, $sprech, $tel, $fax, $name, $default_inst, $visible, $datafields, $group_id, $role_id, $status) {
-        if (is_array($raum)) {
-            list($inst_id, $detail) = each($raum);
-                if ($default_inst == $inst_id) {
-                    $this->db->query("UPDATE user_inst SET externdefault = 0 WHERE user_id = '".$this->auth_user['user_id']."'");
-                }
-
+        if (!LockRules::Check($this->auth_user["user_id"], 'institute_data')) {
+            if (is_array($raum)) {
+                list($inst_id, $detail) = each($raum);
                 $query = "UPDATE user_inst SET raum='$detail', sprechzeiten='$sprech[$inst_id]', ";
-                $query .= "Telefon='$tel[$inst_id]', Fax='$fax[$inst_id]', externdefault=";
-                $query .= $default_inst == $inst_id ? '1' : '0';
-                $query .= ", visible=" . (isset($visible[$inst_id]) ? '0' : '1');
+                $query .= "Telefon='$tel[$inst_id]', Fax='$fax[$inst_id]'";
                 $query .= " WHERE Institut_id='$inst_id' AND user_id='" . $this->auth_user["user_id"] . "'";
                 $this->db->query($query);
-
                 if ($this->db->affected_rows()) {
                     $this->msg = $this->msg . "msg§" . sprintf(_("Ihre Daten an der Einrichtung %s wurden ge&auml;ndert"), htmlReady($name[$inst_id])) . "§";
                     setTempLanguage($this->auth_user["user_id"]);
                     $this->priv_msg = $this->priv_msg . sprintf(_("Ihre Daten an der Einrichtung %s wurden geändert.\n"), htmlReady($name[$inst_id]));
                     restoreLanguage();
                 }
-
-        }
-
-        $stmt = DBManager::get()->prepare("SELECT inst_perms FROM user_inst WHERE user_id = ? AND Institut_id = ?");
-        if ($stmt->execute(array($this->auth_user['user_id'], $status['inst_id']))) {
-            $data = $stmt->fetch();
-            if ($data['inst_perms'] != $status['status'] && in_array($status['status'], $this->allowedInstitutePerms())) {
-                $this->msg .= 'msg§'. _("Der Status wurde geändert!") .'§';
-
-                log_event("INST_USER_STATUS", $status['inst_id'], $this->auth_user['user_id'], $GLOBALS['user']->id .' -> '. $status['status']);
-
-                $stmt = DBManager::get()->prepare("UPDATE user_inst SET inst_perms = ? WHERE user_id = ? AND Institut_id = ?");
-                $stmt->execute(array($status['status'], $this->auth_user['user_id'], $status['inst_id']));
             }
         }
+        $inst_id = $status['inst_id'];
+        if ($default_inst == $inst_id) {
+            $this->db->query("UPDATE user_inst SET externdefault = 0 WHERE user_id = '".$this->auth_user['user_id']."'");
+        }
+        $query = "UPDATE user_inst SET externdefault=";
+        $query .= $default_inst == $inst_id ? '1' : '0';
+        $query .= ", visible=" . (isset($visible[$inst_id]) ? '0' : '1');
+        $query .= " WHERE Institut_id='$inst_id' AND user_id='" . $this->auth_user["user_id"] . "'";
+        $this->db->query($query);
 
+        if ($status['status'] && $status['inst_id']) {
+            $stmt = DBManager::get()->prepare("SELECT inst_perms FROM user_inst WHERE user_id = ? AND Institut_id = ?");
+            if ($stmt->execute(array($this->auth_user['user_id'], $status['inst_id']))) {
+                $data = $stmt->fetch();
+                if ($data['inst_perms'] != $status['status'] && in_array($status['status'], $this->allowedInstitutePerms())) {
+                    $this->msg .= 'msg§'. _("Der Status wurde geändert!") .'§';
+
+                    log_event("INST_USER_STATUS", $status['inst_id'], $this->auth_user['user_id'], $GLOBALS['user']->id .' -> '. $status['status']);
+
+                    $stmt = DBManager::get()->prepare("UPDATE user_inst SET inst_perms = ? WHERE user_id = ? AND Institut_id = ?");
+                    $stmt->execute(array($status['status'], $this->auth_user['user_id'], $status['inst_id']));
+                }
+            }
+        }
         // process user role datafields
         $sec_range_id = $inst_id ? $inst_id : $role_id;
         if (is_array($datafields)) {

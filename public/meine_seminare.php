@@ -190,7 +190,8 @@ if(in_array($cmd, words('no_kill suppose_to_kill suppose_to_kill_admission kill 
         else {
             //Warteliste neu sortieren
             renumber_admission($current_seminar->getId());
-
+            //Pruefen, ob es Nachruecker gibt
+            update_admission($current_seminar->getId());
             $meldung="msg§" . sprintf(_("Der Eintrag in der Anmelde- bzw. Warteliste der Veranstaltung <b>%s</b> wurde aufgehoben. Wenn Sie an der Veranstaltung teilnehmen wollen, m&uuml;ssen Sie sich erneut bewerben."), htmlReady($current_seminar->getName()));
         }
     }

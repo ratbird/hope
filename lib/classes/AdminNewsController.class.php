@@ -205,8 +205,9 @@ class AdminNewsController {
     function restore_edited_fields() {
         $this->news_query['topic'] = Request::get('topic', $this->news_query['topic'] );
         $this->news_query['body'] = Request::get('body', $this->news_query['body']);
-        $this->news_query['date'] = Request::int('date', $this->news_query['date']);
-        $this->news_query['expire'] = Request::int('expire', $this->news_query['expire']);
+        $this->news_query['date'] = Request::int('startdate', $this->news_query['date']);
+        $this->news_query['enddate'] = Request::int('enddate', $this->news_query['date'] + $this->news_query['expire']);
+        $this->news_query['expire'] = $this->news_query['enddate'] - $this->news_query['date'];
         $this->news_query['allow_comments'] = Request::int('allow_comments', $this->news_query['allow_comments']);
     }
     
@@ -256,18 +257,11 @@ class AdminNewsController {
         echo "\n<br><br>" . _("Klicken Sie danach hier, um die &Auml;nderungen zu &uuml;bernehmen.") . "<br><br><center>"
             . "<input type=\"IMAGE\" name=\"news_submit\" " . makeButton("uebernehmen","src") . tooltip(_("Änderungen übernehmen")) ."  border=\"0\" ></center></td></tr>";
 
-        if ($this->news_query['date'] && !Request::get('startdate')) {
-            $beginn = date('d.m.Y',$this->news_query['date']);
-            $ende = date('d.m.Y' ,$this->news_query['date'] + $this->news_query['expire']);
-        } elseif (Request::option('startdate') && Request::option('enddate')) {
-            $beginn = Request::option('startdate');
-            $ende = Request::option('enddate');
-        }
         echo "\n<tr><td class=\"blank\" colspan=\"2\">" . _("Einstelldatum:");
         ?>
-        <input type="text" required ="required" class="datepickerbutton" name="startdate" maxlength="10" size="10" value="<?= $beginn ? htmlready($beginn) : date('d.m.Y')?>">
+        <input type="text" required ="required" class="datepickerbutton" name="startdate" maxlength="10" size="10" value="<?= date('d.m.Y', $this->news_query['date'])?>">
         <? echo _("Ablaufdatum:");?>
-        <input type="text" required ="required" class="datepickerbutton" name="enddate" maxlength="10" size="10" value="<?= $ende ? htmlready($ende) : date('d.m.Y', time() + 7 * 24 * 60 * 60)?>">
+        <input type="text" required ="required" class="datepickerbutton" name="enddate" maxlength="10" size="10" value="<?= date('d.m.Y', $this->news_query['enddate'])?>">
         <?
         echo "\n</tr>";
 

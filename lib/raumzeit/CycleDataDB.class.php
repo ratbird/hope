@@ -125,9 +125,9 @@ class CycleDataDB
     function getFreeTextPredominantRoomDB($metadate_id, $filterStart = 0, $filterEnd = 0)
     {
         if (($filterStart == 0) && ($filterEnd == 0)) {
-            $query = "SELECT COUNT(raum) as c, raum FROM termine WHERE termine.metadate_id = '$metadate_id' GROUP BY raum ORDER BY c DESC";
+            $query = "SELECT COUNT(raum) as c, raum FROM termine LEFT JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' AND assign_user_id IS NULL GROUP BY raum ORDER BY c DESC";
         } else {
-            $query = "SELECT COUNT(raum) as c, raum FROM termine WHERE termine.metadate_id = '$metadate_id' AND termine.date >= $filterStart AND termine.end_time <= $filterEnd GROUP BY raum ORDER BY c DESC";
+            $query = "SELECT COUNT(raum) as c, raum FROM termine LEFT JOIN resources_assign ON (termin_id = assign_user_id) WHERE termine.metadate_id = '$metadate_id' AND assign_user_id IS NULL AND termine.date >= $filterStart AND termine.end_time <= $filterEnd GROUP BY raum ORDER BY c DESC";
         }
 
         $db = DBManager::get()->query($query);

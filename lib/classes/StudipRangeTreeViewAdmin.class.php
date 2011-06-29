@@ -610,7 +610,7 @@ class StudipRangeTreeViewAdmin extends TreeView{
             && ($this->move_item_id != $item_id) && ($this->tree->tree_data[$this->move_item_id]['parent_id'] != $item_id)
             && !$this->tree->isChildOf($this->move_item_id,$item_id)){
             $head .= "<a href=\"" . $this->getSelf("cmd=DoMoveItem&item_id=$item_id") . "\">"
-            . "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')." " .tooltip(_("An dieser Stelle einfügen")) . "></a>&nbsp;";
+            . "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')."\" " .tooltip(_("An dieser Stelle einfügen")) . "></a>&nbsp;";
         }
         $head .= parent::getItemHead($item_id);
         if ($item_id != $this->start_item_id && $this->isParentAdmin($item_id) && $item_id != $this->edit_item_id){

@@ -80,7 +80,7 @@ class ShowThread extends ShowTreeRow {
                 $icon="<img src=\"".$GLOBALS['ASSETS_URL']."images/cont_res".$resObject->getCategoryIconnr().".gif\">";
 
             if ($resources_data["move_object"])
-                $icon="&nbsp;<a href=\"$PHP_SELF?target_object=".$resObject->id."#a\"><img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')." alt=\""._("Objekt in diese Ebene verschieben")."\"></a>".$icon;
+                $icon="&nbsp;<a href=\"$PHP_SELF?target_object=".$resObject->id."#a\"><img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')."\" alt=\""._("Objekt in diese Ebene verschieben")."\"></a>".$icon;
 
             if ($resources_data["structure_opens"][$resObject->id]) {
                 $link = URLHelper::getLink('?structure_close=' . $resObject->id . '#a');
@@ -129,7 +129,7 @@ class ShowThread extends ShowTreeRow {
                     $content=htmlReady($resObject->getDescription());
                 }
                 if ($resources_data["move_object"] == $resObject->id)
-                    $content.= sprintf ("<br>"._("Dieses Objekt wurde zum Verschieben markiert. Bitte w&auml;hlen Sie das Einf&uuml;gen-Symbol %s, um es in die gew&uuml;nschte Ebene zu verschieben."), "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')." alt=\""._("Klicken Sie auf dieses Symbol, um dieses Objekt in eine andere Ebene zu verschieben")."\">");
+                    $content.= sprintf ("<br>"._("Dieses Objekt wurde zum Verschieben markiert. Bitte w&auml;hlen Sie das Einf&uuml;gen-Symbol %s, um es in die gew&uuml;nschte Ebene zu verschieben."), "<img src=\"".Assets::image_path('icons/16/yellow/arr_2right.png')."\" alt=\""._("Klicken Sie auf dieses Symbol, um dieses Objekt in eine andere Ebene zu verschieben")."\">");
 
                 if ($resObject->getCategoryId())
                     $edit.= "<a href=\"$PHP_SELF?show_object=$resObject->id&view=view_schedule\">".makeButton("belegung")."</a>&nbsp;";

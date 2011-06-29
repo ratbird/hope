@@ -131,7 +131,7 @@ class Seminar
         $this->members[$status] = array();
         $this->db->query("SELECT su.user_id,username,Vorname,Nachname,
                         ".$GLOBALS['_fullname_sql']['full']." as fullname,
-                        admission_studiengang_id, su.status
+                        admission_studiengang_id, su.status, su.label
                         FROM seminar_user su INNER JOIN auth_user_md5 USING(user_id)
                         LEFT JOIN user_info USING(user_id)
                         WHERE status='$status' AND su.seminar_id='".$this->getId()."' ORDER BY su.position, Nachname");
@@ -2423,5 +2423,23 @@ class Seminar
                         "AND user_id = ".$db->quote($member));
         }
         return $this;
+    }
+
+    public function setLabel($user_id, $label) {
+        $dozent_members = $this->getMembers('dozent');
+        $tutor_members = $this->getMembers('tutor');
+        if (isset($dozent_members[$user_id]) || isset($tutor_members[$user_id])) {
+            $statement = DBManager::get()->prepare(
+                "UPDATE seminar_user " .
+                "SET label = :label " .
+                "WHERE user_id = :user_id " .
+                    "AND Seminar_id = :seminar_id " .
+            "");
+            $statement->execute(array(
+                'user_id' => $user_id,
+                'seminar_id' => $this->getId(),
+                'label' => $label
+            ));
+        }
     }
 }

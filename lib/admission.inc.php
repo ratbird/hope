@@ -61,46 +61,46 @@ function insert_seminar_user($seminar_id, $user_id, $status, $copy_studycourse =
     // get the seminar-object
     $sem = Seminar::GetInstance($seminar_id);
 
-    // copy the studycourse from admission_seminar_user
-    if ($copy_studycourse) {
-        $stmt = DBManager::get()->prepare("SELECT studiengang_id FROM admission_seminar_user
+    $admission_status = '';
+    $admission_comment = '';
+    $mkdate = time();
+
+    $stmt = DBManager::get()->prepare("SELECT * FROM admission_seminar_user
             WHERE seminar_id = ? AND user_id = ?");
-        $stmt->execute(array($seminar_id, $user_id));
-        
-        // overwrite only if an entry is found
-        if ($data = $stmt->fetchColumn()) {
-            $contingent = $data;
+    $stmt->execute(array($seminar_id, $user_id));
+    if ($data = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        // copy the studycourse from admission_seminar_user
+        if ($copy_studycourse && $data['studiengang_id']) {
+            $contingent = $data['studiengang_id'];
         }
+        $admission_status = $data['status'];
+        $admission_comment = $data['comment'];
+        $mkdate = $data['mkdate'];
     }
 
     // check if there are places left in the submitted contingent (if any)
-    if ($contingent && $sem->isAdmissionEnabled() && !$sem->getFreeAdmissionSeats($contingent)) {
+    //ignore if preliminary
+    if ($admission_status != 'accepted' && $contingent && $sem->isAdmissionEnabled() && !$sem->getFreeAdmissionSeats($contingent)) {
         return false;
     }
 
     // get coloured group as used on meine_seminare
-    $colour_group = select_group($sem->getSemesterStartTime(), $user_id);
+    $colour_group = $sem->getDefaultGroup();
 
     // LOGGING
     // if no log message is submitted use a default one
     if (!$log_message) {
-        $log_message = 'Wurde in die Veranstaltung eingetragen, Kontingent: ' . $contingent;
+        $log_message = 'Wurde in die Veranstaltung eingetragen, admission_status: '. $admission_status . ' Kontingent: ' . $contingent;
     }
     log_event('SEM_USER_ADD', $seminar_id, $user_id, $status, $log_message);
 
     // actually insert the user into the seminar
     $stmt = DBManager::get()->prepare('INSERT INTO seminar_user
         (Seminar_id, user_id, status, admission_studiengang_id, comment, gruppe, mkdate)
-        VALUES (?, ?, ?, ?, ?, ?, UNIX_TIMESTAMP())');
-    $stmt->execute(array($seminar_id, $user_id, $status, ($contingent ? $contingent : ''), '', $colour_group));
+        VALUES (?, ?, ?, ?, ?, ?, ?)');
+    $stmt->execute(array($seminar_id, $user_id, $status, ($contingent ? $contingent : ''), $admission_comment, $colour_group, $mkdate));
 
-
-    // check if there are any entries on the waiting/accepted/lot-list
-    $stmt = DBManager::get()->prepare('SELECT COUNT(*) as c FROM admission_seminar_user
-        WHERE user_id = ? AND seminar_id = ?');
-    $stmt->execute(array($user_id, $seminar_id));
-
-    if ($stmt->fetchColumn()) {
+    if ($admission_status) {
         // delete the entries, user is now in the seminar
         $stmt = DBManager::get()->prepare('DELETE FROM admission_seminar_user
             WHERE user_id = ? AND seminar_id = ?');

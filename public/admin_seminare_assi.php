@@ -969,6 +969,7 @@ if (($send_doz_x) && (!$reset_search_x) && ($add_doz)) {
     $next_position = sizeof($sem_create_data["sem_doz"]) + 1;
     $doz_id = get_userid($add_doz);
     $sem_create_data["sem_doz"][$doz_id]= $next_position;
+    $sem_create_data["sem_doz_label"][$doz_id]= Request::get("sem_doz_label");
     if ($deputies_enabled) {
         // Unset person as deputy.
         if ($sem_create_data['sem_dep'][$doz_id]) {
@@ -1007,6 +1008,7 @@ if (($send_tut_x) && (!$reset_search_x) && ($add_tut)) {
     $next_position = sizeof($sem_create_data["sem_tut"]) + 1;
     $tut_id = get_userid($add_tut);
     $sem_create_data["sem_tut"][$tut_id]= $next_position;
+    $sem_create_data["sem_tut_label"][$tut_id]= Request::get("sem_tut_label");
     $level=2;
 }
 
@@ -1742,7 +1744,7 @@ if (($form == 6) && ($jump_next_x))
                     $query = "insert into seminar_user SET Seminar_id = '".
                     $sem_create_data["sem_id"]."', user_id = '".
                     $key."', status = 'dozent', gruppe = '$group', visible = 'yes',".
-                    " mkdate = '".time()."', position = '$next_pos'";
+                    " mkdate = '".time()."', position = '$next_pos', label = ".DBManager::get()->quote($sem_create_data["sem_doz_label"][$key])." ";
                     $db3->query($query);// Dozenten eintragen:w
 
                     if ($db3->affected_rows() >=1)
@@ -1758,7 +1760,8 @@ if (($form == 6) && ($jump_next_x))
 
                 $query = "insert into seminar_user SET Seminar_id = '".
                     $sem_create_data["sem_id"]."', user_id = '".
-                    $user_id."', status = 'dozent', gruppe = '$group', mkdate = '".time()."', position = '$next_pos'";
+                    $user_id."', status = 'dozent', gruppe = '$group', mkdate = '".time()."', position = '$next_pos', " .
+                    "label = ".DBManager::get()->quote($sem_create_data["sem_doz_label"][$user_id])." ";
                 $db3->query($query);
                 if ($db3->affected_rows() >=1)
                     $count_doz++;
@@ -1805,7 +1808,7 @@ if (($form == 6) && ($jump_next_x))
                   $next_pos = get_next_position("tutor",$sem_create_data["sem_id"]);
                         $query = "insert into seminar_user SET Seminar_id = '".
                             $sem_create_data["sem_id"]."', user_id = '".
-                            $key."', status = 'tutor', gruppe = '$group', mkdate = '".time()."', position = '$next_pos', visible='yes'";
+                            $key."', status = 'tutor', label=".DBManager::get()->quote($sem_create_data["sem_tut_label"][$key])." , gruppe = '$group', mkdate = '".time()."', position = '$next_pos', visible='yes'";
                         $db3->query($query);                 // Tutor eintragen
                             if ($db3->affected_rows() >= 1)
                                 $count_tut++;
@@ -2530,8 +2533,11 @@ if ($level == 2)
                            }
                            echo "</td>";
                               echo "<td>";
+                              $label = $sem_create_data["sem_doz_label"][$key]
+                                  ? " - ".$sem_create_data["sem_doz_label"][$key]
+                                  : "";
                               echo "<font size=\"-1\"><b>". get_fullname($key, "full_rev", true).
-                           " (". get_username($key) . ")</b></font>";
+                           " (". get_username($key) . ")</b>".htmlReady($label)."</font>";
 
                               echo "</td>";
 
@@ -2556,7 +2562,6 @@ if ($level == 2)
                 print sprintf(_("%s hinzuf&uuml;gen"), get_title_for_status('dozent', 1, $seminar_type));
                 print "<br><input type=\"IMAGE\" src=\"".Assets::image_path('icons/16/yellow/arr_2left.png')."\" ".tooltip(_("NutzerIn hinzufügen"))." border=\"0\" name=\"send_doz\"> ";
 
-
                 if (SeminarCategories::getByTypeId($sem_create_data["sem_status"])->only_inst_user) {
                     $search_template = "user_inst";
                 } else {
@@ -2574,6 +2579,7 @@ if ($level == 2)
                 print QuickSearch::get("add_doz", $searchForDozentUser)
                             ->withButton(array('search_button_name' => 'search_doz', 'reset_button_name' => 'reset_search'))
                             ->render();
+                print "<input type=\"text\" name=\"sem_doz_label\" placeholder=\""._("Label festlegen")."\">";
 
                 ?>
                 <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
@@ -2684,8 +2690,11 @@ if ($level == 2)
                            }
                            echo "</td>";
                               echo "<td>";
+                              $label = $sem_create_data["sem_tut_label"][$key]
+                                  ? " - ".$sem_create_data["sem_tut_label"][$key]
+                                  : "";
                               echo "<font size=\"-1\"><b>".get_fullname($key, "full_rev",true).
-                           " (". get_username($key) . ")</b></font>";
+                           " (". get_username($key) . ")</b>".htmlReady($label)."</font>";
 
                               echo "</td>";
 
@@ -2719,6 +2728,8 @@ if ($level == 2)
                         print QuickSearch::get("add_tut", $searchForTutorUser)
                               ->withButton(array('search_button_name' => 'search_tut', 'reset_button_name' => 'reset_search'))
                               ->render();
+                        
+                        print "<input type=\"text\" name=\"sem_tut_label\" placeholder=\""._("Label festlegen")."\">";
                         ?>
                         <br><font size=-1><?=_("Geben Sie zur Suche den Vor-, Nach- oder Benutzernamen ein.")?></font>
                         </td>
@@ -2894,6 +2905,13 @@ if ($level == 2)
             </td>
         </tr>
     </table>
+    <script>
+        jQuery("input[name=sem_doz_label], input[name=sem_tut_label]").autocomplete({
+            source: <?=
+                json_encode(preg_split("/[\s,;]+/", studip_utf8encode(Config::get()->getValue("PROPOSED_TEACHER_LABELS")), -1, PREG_SPLIT_NO_EMPTY));
+            ?>
+        });
+    </script>
     <?
     }
 

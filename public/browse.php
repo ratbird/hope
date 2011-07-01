@@ -118,7 +118,7 @@ $vis_query = get_vis_query('auth_user_md5', 'search') . ' AS visible';
 // quick search
 $search_object = new SQLSearch("SELECT username, CONCAT(Vorname, ' ', Nachname, ' (', username, ')'), CONCAT(Vorname, ' ', Nachname), $vis_query" .
                                " FROM auth_user_md5 LEFT JOIN user_visibility USING (user_id)" .
-                               " WHERE CONCAT(Vorname, ' ', Nachname, ', ', Vorname, ' ', username) LIKE :input HAVING visible = 1".
+                               " WHERE CONCAT(Vorname, ' ', Nachname) LIKE :input HAVING visible = 1".
                                " ORDER BY Nachname, Vorname", _('Nutzer suchen'), 'username');
 
 $template->set_attribute('search_object', $search_object);

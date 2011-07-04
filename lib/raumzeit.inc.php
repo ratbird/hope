@@ -389,9 +389,10 @@ function raumzeit_editSingleDate() {
         // if we have changed the time of the date, it is not a regular time-slot
         // any more, so we have to move it to the irregularSingleDates of the seminar
         if (($termin->getStartTime() != $start) || ($termin->getEndTime() != $ende)) {
-            // duplicate the singledate, move on copy to seminars irregular ones,
-            // modify the other copy to remain at the regular ones as ex-termin
+            // duplicate the singledate, move one copy to the seminar's irregular dates,
+            // modify the other copy to remain as a regular ex-termin
             $ireg_termin = clone $termin;
+
             $termin->termin_id = md5(uniqid());
             $termin->setExTermin(true);
             $termin->store();
@@ -401,6 +402,7 @@ function raumzeit_editSingleDate() {
             $ireg_termin->store();
             $sem->addSingleDate($ireg_termin);
 
+            // create messages
             $sem->createInfo(sprintf(_('Der Termin %s wurde aus der Liste der regelmäßigen Termine '
                 . 'gelöscht und als unregelmäßiger Termin eingetragen, da Sie die Zeiten des Termins '
                 . 'verändert haben, so dass dieser Termin nun nicht mehr regelmäßig ist.'),
@@ -413,26 +415,6 @@ function raumzeit_editSingleDate() {
                     . 'da sich der neue Zeitraum außerhalb des Alten befindet!'));
             }
             $sem->appendMessages($ireg_termin->getMessages());
-
-            /*
-            $termin->setExTermin(true);     // deletes the singleDate out of the regular cycleData
-            $termin->store();                           // save back to database directly
-
-            // create a new irregularSingleDate for the seminar
-            $new_termin = new SingleDate();
-            if ($new_termin->setTime($start, $ende)) {
-                $new_termin->setDateType($_REQUEST['dateType']);
-                $new_termin->setFreeRoomText($_REQUEST['freeRoomText_sd']);
-                $new_termin->store();
-                $sem->addSingleDate($new_termin);
-                $sem->bookRoomForSingleDate($new_termin->getSingleDateID(), $_REQUEST['room_sd']);
-
-
-                $sem->createInfo(sprintf(_("Der Termin %s wurde aus der Liste der regelmäßigen Termine gelöscht und als unregelmäßiger Termin eingetragen, da Sie die Zeiten des Termins verändert haben, so dass dieser Termin nun nicht mehr regelmäßig ist. Außerdem wurde die bisherige Raumbuchung aufgehoben."), '<b>'.$termin->toString().'</b>'));
-            }
-            $sem->appendMessages($new_termin->getMessages());
-             * 
-             */
 
         } else {
             // we did not change the times, so we can edit the regular singleDate

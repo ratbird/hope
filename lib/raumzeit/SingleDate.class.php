@@ -98,20 +98,23 @@ class SingleDate {
         if (($start == 0) || ($end == 0)) return FALSE;
 
         if (($this->date != $start) || ($this->end_time != $end)) {
+            // validate the passed variables: they have to be ints and $start
+            // has to be smaller than $end
             if ($this->validate($start, $end)) {
                 $before = $this->toString();
 
-                $this->date = $start;
-                $this->end_time = $end;
+                // if the time-span has been shortened, keep the room-assignment,
+                // otherwise remove it.
                 if ($this->resource_id) {
                     if ($start >= $this->date && $end <= $this->end_time) {
                         $this->shrinkAssign();
                     } else {
-                        $tmp_resource_id = $this->resource_id;
                         $this->killAssign();
-                        $this->bookRoom($tmp_resource_id);
                     }
                 }
+
+                $this->date = $start;
+                $this->end_time = $end;
 
                 $after = $this->toString();
                 // logging

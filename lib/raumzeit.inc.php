@@ -7,7 +7,6 @@
 require_once('log_events.inc.php');
 require_once('visual.inc.php');
 
-define('DO_NOT_APPEND_MESSAGES', false);
 /*
  * Command handlers
  */

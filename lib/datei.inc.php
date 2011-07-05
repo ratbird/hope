@@ -877,7 +877,7 @@ function validate_upload($the_file, $real_file_name='') {
 
     $the_file_size = $the_file['size'];
     $the_file_name = $the_file['name'];
-    
+
     if ($i_page == "sms_send.php") {
         if (!$GLOBALS["ENABLE_EMAIL_ATTACHMENTS"] == true)
                 $emsg.= "error§" . _("Dateianhänge für Nachrichten sind in dieser Installation nicht erlaubt!") . "§";
@@ -1017,7 +1017,7 @@ function validate_upload($the_file, $real_file_name='') {
 function upload($the_file, $refresh, $range_id)
 {
     global $dokument_id, $msg;
-    
+
     if (!validate_upload($the_file)) {
         return FALSE;
     }
@@ -1049,7 +1049,7 @@ function getUploadMetadata($range_id, $refresh = FALSE) {
     $the_file_size = $_FILES['the_file']['size'];
 
     $name || ($name = $the_file_name);
-    
+
     $result = array(
         'filename'    => $the_file_name,
         'filesize'    => $the_file_size,
@@ -1194,7 +1194,7 @@ function JS_for_upload() {
 //Steuerungsfunktion
 function upload_item ($range_id, $create = FALSE, $echo = FALSE, $refresh = FALSE) {
     $the_file = $_FILES["the_file"];
-    
+
     if ($create) {
         upload($the_file, $refresh, $range_id);
         return;
@@ -1668,7 +1668,7 @@ function display_folder_body($folder_id, $open, $change, $move, $upload, $refres
         }
         $content .=  '<hr>';
     }
-    if ($folder_tree->isGroupFolder(folder_id)){
+    if ($folder_tree->isGroupFolder($folder_id)){
         $content .=  sprintf(_("Dieser Ordner gehört der Gruppe <b>%s</b>. Nur Mitglieder dieser Gruppe können diesen Ordner sehen."),
         htmlReady(GetStatusgruppeName($result["range_id"]))) . '<hr>';
     }

@@ -42,18 +42,19 @@ $query_user_data = "SELECT i.Institut_id, i.Name, i.Strasse, i.Plz, i.url, ui.*,
                         . "uin.user_id, uin.lebenslauf, uin.publi, uin.schwerp, uin.Home "
                         . "FROM Institute i LEFT JOIN user_inst ui USING(Institut_id) "
               . "LEFT JOIN auth_user_md5 aum USING(user_id) "
-              . "LEFT JOIN user_info uin USING (user_id) WHERE ui.inst_perms IN ('autor','tutor','dozent') AND ";
+              . "LEFT JOIN user_info uin USING (user_id) WHERE ui.inst_perms IN ('autor','tutor','dozent') AND "
+              . get_ext_vis_query() . ' AND ';
 
 // Mitarbeiter/in am Institut
 $db_inst->query("SELECT i.Institut_id FROM Institute i LEFT JOIN user_inst ui USING(Institut_id) "
               ."LEFT JOIN auth_user_md5 aum USING(user_id) "
-              ."WHERE i.Institut_id = '$instituts_id' AND aum.username = '$username' AND ui.inst_perms IN ('autor','tutor','dozent')");
+              ."WHERE i.Institut_id = '$instituts_id' AND aum.username = '$username' AND ui.inst_perms IN ('autor','tutor','dozent') AND " . get_ext_vis_query());
 
 // Mitarbeiter/in am Heimatinstitut des Seminars
 if (!$db_inst->num_rows() && $sem_id) {
     $db_inst->query("SELECT s.Institut_id FROM seminare s LEFT JOIN user_inst ui USING(Institut_id) "
                    ."LEFT JOIN auth_user_md5 aum USING(user_id) WHERE s.Seminar_id = '$sem_id' "
-                                 ."AND aum.username = '$username' AND ui.inst_perms = 'dozent'");
+                                 ."AND aum.username = '$username' AND ui.inst_perms = 'dozent' AND " . get_ext_vis_query());
     if($db_inst->num_rows() && $db_inst->next_record())
         $instituts_id = $db_inst->f("Institut_id");
 }
@@ -63,7 +64,7 @@ if (!$db_inst->num_rows() && $sem_id) {
     $db_inst->query("SELECT si.institut_id FROM seminare s LEFT JOIN seminar_inst si ON(s.Seminar_id = si.seminar_id) "
                    ."LEFT JOIN user_inst ui ON(si.institut_id = ui.Institut_id) LEFT JOIN auth_user_md5 aum "
                                  ."USING(user_id) WHERE s.Seminar_id = '$sem_id' AND si.institut_id != '$instituts_id' "
-                                 ."AND ui.inst_perms = 'dozent' AND aum.username = '$username'");
+                                 ."AND ui.inst_perms = 'dozent' AND aum.username = '$username' AND " . get_ext_vis_query());
     if($db_inst->num_rows() && $db_inst->next_record())
         $instituts_id = $db_inst->f("institut_id");
 }
@@ -74,6 +75,7 @@ if (!$db_inst->num_rows() && $sem_id) {
     $query .= $GLOBALS['_fullname_sql'][$nameformat] . " AS fullname ";
     $query .= "FROM auth_user_md5 aum LEFT JOIN user_info USING(user_id) LEFT JOIN seminar_user su USING(user_id) ";
     $query .= "WHERE username = '$username' AND perms = 'dozent' AND su.seminar_id = '$sem_id' AND su.status = 'dozent'";
+    $query .= " AND " . get_ext_vis_query();
     $db->query($query);
 }
 elseif ($this->config->getValue('Contact', 'defaultadr')) {

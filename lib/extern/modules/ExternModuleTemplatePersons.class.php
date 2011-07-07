@@ -194,7 +194,8 @@ class ExternModuleTemplatePersons extends ExternModule {
             if ($query_order != '') {
                 $query .= "FROM statusgruppe_user LEFT JOIN auth_user_md5 aum USING(user_id) ";
                 $query .= "LEFT JOIN user_info USING(user_id) LEFT JOIN user_inst ui USING(user_id) ";
-                $query .= "WHERE statusgruppe_id IN ('$groups_ids') AND Institut_id = '" . $this->config->range_id . "'$query_order";
+                $query .= "WHERE statusgruppe_id IN ('$groups_ids') AND Institut_id = '" . $this->config->range_id
+                        . "' AND ".get_ext_vis_query()."$query_order";
             } else {
                 $query .= "FROM statusgruppen s LEFT JOIN statusgruppe_user su USING(statusgruppe_id) ";
                 $query .= "LEFT JOIN auth_user_md5 aum USING(user_id) ";

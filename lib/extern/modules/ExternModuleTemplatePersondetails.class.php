@@ -272,7 +272,8 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                     . "AND ((%s) = %s OR ((%s) <= %s  AND ((%s) >= %s OR (%s) = -1))) "
                     . "AND ui.Institut_id IN ('%s') "
                     . "AND ui.inst_perms = 'dozent' "
-                    . "AND ui.externdefault = 1 ",
+                    . "AND ui.externdefault = 1 "
+                    . "AND %s",
                     $dbv->sem_number_sql,
                     $current_semester,
                     $dbv->sem_number_sql,
@@ -280,7 +281,8 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                     $dbv->sem_number_end_sql,
                     $current_semester,
                     $dbv->sem_number_end_sql,
-                    implode("','", $selected_item_ids)));
+                    implode("','", $selected_item_ids),
+                    get_ext_vis_query()));
                 $stm->execute(array($username));
                 // user is not a lecturer
                 if (!$row = $stm->fetch()) {
@@ -294,8 +296,9 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                     . "LEFT JOIN user_inst ui USING(user_id) "
                     . "WHERE aum.username = ? "
                     . "AND ui.Institut_id IN ('%s') "
-                    . "AND ui.externdefault = 1 ",
-                    implode("','", $selected_item_ids)));
+                    . "AND ui.externdefault = 1 "
+                    . "AND %s",
+                    implode("','", $selected_item_ids), get_ext_vis_query()));
                 $stm->execute(array($username));
                 // user is not dozent at an institute that is in the list of accepted institutes
                 if (!$row = $stm->fetch()) {
@@ -313,7 +316,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
             . "LEFT JOIN user_inst ui USING(Institut_id) "
             . "LEFT JOIN auth_user_md5 aum USING(user_id) "
             . "WHERE i.Institut_id = ? "
-            . "AND aum.username = ? AND ui.inst_perms IN ('autor','tutor','dozent')");
+            . "AND aum.username = ? AND ui.inst_perms IN ('autor','tutor','dozent') AND " . get_ext_vis_query());
         $stm_inst->execute(array($instituts_id, $username));
 
         // Mitarbeiter/in am Heimatinstitut des Seminars
@@ -324,7 +327,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 . "LEFT JOIN user_inst ui USING(Institut_id) "
                 . "LEFT JOIN auth_user_md5 aum USING(user_id) "
                 . "WHERE s.Seminar_id = ? "
-                . "AND aum.username = ? AND ui.inst_perms = 'dozent'");
+                . "AND aum.username = ? AND ui.inst_perms = 'dozent' AND " . get_ext_vis_query());
             $stm_inst->execute(array($sem_id, $username));
             if ($row = $stm_inst->fetch(PDO::FETCH_ASSOC)) {
                 $instituts_id = $row['Institut_id'];
@@ -340,7 +343,7 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 . "LEFT JOIN user_inst ui ON(si.institut_id = ui.Institut_id) "
                 . "LEFT JOIN auth_user_md5 aum USING(user_id) "
                 . "WHERE s.Seminar_id = ? "
-                . "AND si.institut_id != ? AND ui.inst_perms = 'dozent' AND aum.username = ?");
+                . "AND si.institut_id != ? AND ui.inst_perms = 'dozent' AND aum.username = ? AND " . get_ext_vis_query());
             $stm_inst->execute(array($sem_id, $intituts_id, $username));
             if ($row = $stm_inst->fetch(PDO::FETCH_ASSOC)) {
                 $instituts_id = $row['institut_id'];
@@ -355,8 +358,8 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 . "LEFT JOIN user_info USING(user_id) "
                 . "LEFT JOIN seminar_user su "
                 . "WHERE username = ? "
-                . "AND perms = 'dozent' AND su.seminar_id = ? AND su.status = 'dozent'"
-                , $GLOBALS['_fullname_sql'][$nameformat]));
+                . "AND perms = 'dozent' AND su.seminar_id = ? AND su.status = 'dozent' AND %s"
+                , $GLOBALS['_fullname_sql'][$nameformat], get_ext_vis_query()));
             $stm->execute(array($username, $sem_id));
             $row = $stm->fetch(PDO::FETCH_ASSOC);
         } elseif ($global_view || $this->config->getValue('Main', 'defaultaddr')) {
@@ -369,8 +372,8 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 . "LEFT JOIN auth_user_md5 aum USING(user_id) "
                 . "LEFT JOIN user_info uin USING (user_id) "
                 . "WHERE ui.inst_perms IN ('autor','tutor','dozent') "
-                . "AND aum.username = ? AND ui.externdefault = 1"
-                , $GLOBALS['_fullname_sql'][$nameformat]));
+                . "AND aum.username = ? AND ui.externdefault = 1 AND %s"
+                , $GLOBALS['_fullname_sql'][$nameformat], get_ext_vis_query()));
             $stm->execute(array($username));
             $row = $stm->fetch(PDO::FETCH_ASSOC);
             if (!$row) {
@@ -383,8 +386,8 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                     . "LEFT JOIN auth_user_md5 aum USING(user_id) "
                     . "LEFT JOIN user_info uin USING (user_id) "
                     . "WHERE ui.inst_perms IN ('autor','tutor','dozent') "
-                    . "AND aum.username = ? AND i.Institut_id = ?"
-                    , $GLOBALS['_fullname_sql'][$nameformat]));
+                    . "AND aum.username = ? AND i.Institut_id = ? AND %s"
+                    , $GLOBALS['_fullname_sql'][$nameformat], get_ext_vis_query()));
                 $stm->execute(array($username, $instituts_id));
                 $row = $stm->fetch(PDO::FETCH_ASSOC);
             }
@@ -398,8 +401,8 @@ class ExternModuleTemplatePersondetails extends ExternModule {
                 . "LEFT JOIN auth_user_md5 aum USING(user_id) "
                 . "LEFT JOIN user_info uin USING (user_id) "
                 . "WHERE ui.inst_perms IN ('autor','tutor','dozent') "
-                . "AND aum.username = ? AND i.Institut_id = ?"
-                , $GLOBALS['_fullname_sql'][$nameformat]));
+                . "AND aum.username = ? AND i.Institut_id = ? AND %s"
+                , $GLOBALS['_fullname_sql'][$nameformat], get_ext_vis_query()));
             $stm->execute(array($username, $instituts_id));
             $row = $stm->fetch(PDO::FETCH_ASSOC);
         }

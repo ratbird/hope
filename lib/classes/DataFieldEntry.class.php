@@ -154,11 +154,19 @@ abstract class DataFieldEntry
      */
     function store()
     {
+        $st = DBManager::get()->prepare("SELECT content FROM datafields_entries WHERE datafield_id=? AND range_id=? AND sec_range_id=?");
+        $ok = $st->execute(array($this->structure->getID(), (string)$this->getRangeID() , (string)$this->getSecondRangeID()));
+        if ($ok) {
+            $old_value = $st->fetchColumn();
+        }
         $query = "INSERT INTO datafields_entries (content, datafield_id, range_id, sec_range_id, mkdate, chdate)
                      VALUES (?,?,?,?,UNIX_TIMESTAMP(), UNIX_TIMESTAMP())
                      ON DUPLICATE KEY UPDATE content=?, chdate=UNIX_TIMESTAMP()";
         $st = DBManager::get()->prepare($query);
         $ret = $st->execute(array($this->getValue() , $this->structure->getID() , $this->getRangeID() , $this->getSecondRangeID() , $this->getValue()));
+        if ($ret) {
+            NotificationCenter::postNotification('DatafieldDidUpdate', $this, array('changed' => $st->rowCount(), 'old_value' => $old_value));
+        }
         return $ret;
     }
 
